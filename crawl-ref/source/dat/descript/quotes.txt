@@ -382,6 +382,14 @@ Agony spell
 
 <Curse of Agony spell>
 %%%%
+Alistair's Walking Alembic spell
+
+Despite its unwieldy appearance, it is widely considered Alistair's most popular
+work; countless variations of this spell can be found in surface libraries,
+customised to prepare everything from floor polish to vegetable soup. In the
+depths of the dungeon, however, most mages favor the combat utility of the
+classic iteration.
+%%%%
 Animate Dead spell
 
 “Remember, I am not recording the vision of a madman. The sun does not more
@@ -392,6 +400,12 @@ Animate Dead spell
  myself capable of bestowing animation upon lifeless matter.”
     -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
      Vol. I, Chapter 3. 1818 (1st Ed.)
+%%%%
+Awaken Armour spell
+
+"A blacksmith shapes the heart of their steel just as much as any leader shapes
+the hearts of their soldiers. If this armour of mine could speak, I know it
+would say that we fight for the same cause."
 %%%%
 Awaken Forest spell
 
@@ -506,6 +520,12 @@ Ensorcelled Hibernation spell
 “Sweet dreams are made of this; who am I to disagree?”
     -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
+Eringya's Surprising Crocodile spell
+
+A popular legend states that Eringya first demonstrated this spell as the
+closing remark of a particularly acrimonious debate about wetlands conservation,
+but most modern scholars consider this apocryphal.
+%%%%
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
@@ -576,6 +596,12 @@ Mass Confusion spell
  upon the face of all the earth: and they left off to build the city.”
     -KJV Bible, Genesis 11:7-8.
 %%%%
+Maxwell's Portable Piledriver spell
+
+While originally designed for use in industrial construction, enterprising
+copycats were quick to discover a multitude of other problems that could be
+solved by moving one object into another, very, very quickly.
+%%%%
 Mephitic Cloud spell
 
 “Seit mehreren Jahren schon hatte die indische Cholera eine verstärkte
@@ -588,6 +614,24 @@ Mephitic Cloud spell
  Persien übergegriffen und, den Hauptstraßen des Karawanenverkehrs
  folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
     -Thomas Mann, _Der Tod in Venedig_, 1911.
+%%%%
+Mercury Arrow spell
+
+“During the course of the treatise, each element is allowed time to tout its
+ own virtues and usefulness to mankind, but when it comes time for Mercury,
+ he announces that he presides over all of the beings that have come before
+ him. Mercury is mother and father. He gives other metals their splendor and
+ makes them useful to humanity. Without Mercury, the other metals would have no
+ (use) value. Perhaps a seat on the throne would restrict him to a fixed
+ position of sovereignty. He reigns, but he must be mobile.”
+    -Karen Pinkus, _Alchemical Mercury: A Theory of Ambivalance_, 2009
+%%%%
+Nazja's Percussive Tempering spell
+
+Scholars long considered the hammer mere theatrics to mask the complex
+structural enhancement magics which must underpin this spell, and yet every
+attempt to remove it from the incantation has caused the spell to lose its
+effectiveness. The implications of this remain hotly debated.
 %%%%
 Passwall spell
 
@@ -661,9 +705,9 @@ Slouch ability
  And the void would be calling”
     -Richard O'Brien, “Time Warp”. 1975.
 %%%%
-Spellforged Servitor spell
+Spellspark Servitor spell
 
-<spellforged servitor>
+<spellspark servitor>
 %%%%
 Sticky Flame spell
 
@@ -708,6 +752,17 @@ Summon Illusion spell
 
 # Sadly, player illusions don't seem to work with the database, so I can't
 # associate this quote with player illusions themselves.
+%%%%
+Summon Seismosaurus Egg spell
+
+Zoologists famously considered this animal to have been extinct for centuries
+until copies of this spell were unearthed among the affairs of a misanthropic
+hermit who'd finally made the wrong noble's hair fall out.
+
+Several well-funded expeditions were launched in the wake of the discovery, but
+despite (or perhaps because of) the sometimes-violent competitiveness these
+naturalists had for each other, the location of the lizards' nesting grounds
+remains unknown to this day.
 %%%%
 Swiftness spell
 
@@ -1305,15 +1360,6 @@ potion of curing
  then certainly I am for it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
-potion of degeneration
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
 potion of enlightenment
 
 “Let go your earthly tether. Enter the void. Empty, and become wind.”
@@ -1341,6 +1387,15 @@ potion of lignification
  as clinging roots were fastened to the ground—
  her face was hidden with encircling leaves.”
     -Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
+%%%%
+potion of moonshine
+
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
+ scourge, the bloody monster, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 potion of resistance
 
@@ -1517,7 +1572,11 @@ ring of slaying
 %%%%
 ring of stealth
 
-<ring>
+“Then as part of the game
+ She completely forgot where she'd hidden herself
+ And she spent the rest of her time
+ Trying to find the parts”
+    -Howard Jones, “Hide and Seek”. 1984.
 %%%%
 ring of strength
 
@@ -2238,6 +2297,14 @@ the Lernaean hydra
  the flow of the blood.”
     -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
 %%%%
+Lodul
+
+“Cat:  But who can say what a thing is worth.
+ Girl: The free market, supposedly.
+ Cat:  What _price_ do we put on a _soul_?
+ Girl: $7.25 an hour.”
+    -Dorothy Gambrell, _Cat and Girl_, 2010.
+%%%%
 Mara
 
 “This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
@@ -2550,22 +2617,6 @@ __cap-K_suffix
     -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
 1635.
 %%%%
-__cap-O_suffix
-
-“The little princess, asleep in her cradle, floated on the water, and at last
- she was cast up on the shore of a beautiful country, where, however, very few
- people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
- there-for they ate up everybody. Ogres are terrible people. When once they
- have tasted raw human flesh they will hardly eat anything else, and
- Tourmentine always knew how to make some body come their way, for she was half
- a fairy.”
-    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
-l'Abeille”. 1697.
-
-“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
- it? We both have layers.”
-    -Shrek. 2001.
-%%%%
 __cap-S_suffix
 
 “The latter lived in the country, and before his house there was an oak, in
@@ -2608,6 +2659,18 @@ adder
 ADDER, n. A species of snake. So called from its habit of adding funeral outlays
 to the other expenses of living.
     -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
+alderking
+
+““My father, my father, he seizes me fast,
+ Full sorely the Erl-King has hurt me at last.”
+
+ The father now gallops, with terror half wild,
+ He grasps in his arms the poor shuddering child;
+ He reaches his courtyard with toil and with dread,
+ The child in his arms finds he motionless, dead.”
+    -Johann Wolfgang von Goethe, _Erlkönig_, 1782.
+    trans. Edgar Alfred Bowring, 1853.
 %%%%
 alligator
 
@@ -2899,6 +2962,12 @@ emperor scorpion
     -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
      trans. Earnest Cary, 1925.
 %%%%
+endoplasm
+
+“Sea horses floundering in the slimy mud,
+ Tossed up their heads, and dashed the ooze about them.”
+    -John Dryden. _All For Love_, I, i, 15-17. 1678.
+%%%%
 entropy weaver
 
 “SEE! warp is stretched
@@ -3071,6 +3140,17 @@ guardian golem
  ‘_That's_ right. Now, listen. Under the porch you'll find a lawnmower. Take
   it. And cut the lawn. Then come back. Go.’”
     -Avram Davidson, “The Golem”, 1955.
+%%%%
+guardian sphinx
+
+“The Second Coming! Hardly are those words out
+ When a vast image out of Spiritus Mundi
+ Troubles my sight: somewhere in sands of the desert
+ A shape with lion body and the head of a man,
+ A gaze blank and pitiless as the sun,
+ Is moving its slow thighs, while all about it
+ Reel shadows of the indignant desert birds.”
+    -W. B. Yeats, "The Second Coming". 1920.
 %%%%
 harpy
 
@@ -3455,6 +3535,26 @@ octopode
  presently gone.”
     -Thomas Pynchon, _Gravity's Rainbow_. 1973.
 %%%%
+ogre
+
+“The little princess, asleep in her cradle, floated on the water, and at last
+ she was cast up on the shore of a beautiful country, where, however, very few
+ people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
+ there-for they ate up everybody. Ogres are terrible people. When once they
+ have tasted raw human flesh they will hardly eat anything else, and
+ Tourmentine always knew how to make some body come their way, for she was half
+ a fairy.”
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
+l'Abeille”. 1697.
+
+“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
+ it? We both have layers.”
+    -Shrek. 2001.
+%%%%
+ogre mage
+
+<ogre>
+%%%%
 oklob plant
 
 “Carbonic acid is one of the three materials which together form the starting
@@ -3473,11 +3573,18 @@ oklob sapling
 
 <oklob plant>
 %%%%
-endoplasm
+oni incarcerator
 
-“Sea horses floundering in the slimy mud,
- Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
+“The popularity and longevity of the oni myth is no doubt partially based on
+ the beings’ conventional demonic accoutrements, which have remained
+ relatively constant through the ages: they are dreadful super-natural
+ beings emerging from the abyss of Buddhist hell to terrify wicked mortals;
+ their grotesque and savage demeanor and form instill instant fear; and the
+ oni’s omnipresence in the socio-historical and cultural archive of Japan is
+ directly attributable to the moral, social, and religious edification that
+ stories about oni engender.”
+    -Noriko T. Reider, _Japanese Demon Lore: Oni from Ancient Times to the
+     Present_, ch. 1, 2010.
 %%%%
 ophan
 
@@ -3606,13 +3713,6 @@ protean progenitor
     -_The Orphic Hymns_, XXV.
      trans. Apostolos N. Athanassakis and Benjamin M. Wolkow, 2013.
 %%%%
-quasit
-
-“You'll have to pay double reckoning; 'tis only fair you should pay for your
- dexterity.”
-    -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
-     trans. Anna Swanwick, 1914.
-%%%%
 rakshasa
 
 “Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a
@@ -3635,6 +3735,14 @@ reaper
  Come on baby, don't fear the reaper.”
 
     -Buck Dharma, Blue Öyster Cult, “(Don't Fear) The Reaper”. 1976.
+%%%%
+ribbon worm
+
+“While the angels, all pallid and wan,
+   Uprising, unveiling, affirm
+ That the play is the tragedy, ‘Man’,
+   And its hero, the Conqueror Worm.”
+    -Edgar Allan Poe
 %%%%
 royal mummy
 
@@ -3870,7 +3978,7 @@ spectral thing
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
 %%%%
-spellforged servitor
+spellspark servitor
 
 “When you think
  Your toys have gone berserk
@@ -3878,16 +3986,19 @@ spellforged servitor
  You cannot shirk”
     -Siouxsie and the Banshees, “Spellbound”
 %%%%
-sphinx
+sphinx marauder
 
-“The Second Coming! Hardly are those words out
- When a vast image out of Spiritus Mundi
- Troubles my sight: somewhere in sands of the desert
- A shape with lion body and the head of a man,
- A gaze blank and pitiless as the sun,
- Is moving its slow thighs, while all about it
- Reel shadows of the indignant desert birds.”
-    -W. B. Yeats, "The Second Coming". 1920.
+“Oedipus speaks: 'Far from me is the crime and shame of cowardice, and my
+ valour knows not dastard fears[...] The Sphinx, weaving her words in darkling
+ measures, I fled not; I faced the bloody jaws of the fell prophetess and the
+ ground white with scattered bones. And when from a lofty cliff, already
+ hovering over her prey, she prepared her pinions and, lashing her tail like
+ a savage lion, stirred up her threatening wrath, I asked her riddle.
+ Thereupon came a sound of dread; her jaws crashed, and her talons, brooking
+ no delay, eager for my vitals, tore at the rocks. The lot's intricate,
+ guile-entangled words, the grim riddle of the winged beast, I solved.'”
+    -Seneca, _Oedipus_, 1st cent. A.D.
+     trans. Frank Justus Miller, 1917.
 %%%%
 starcursed mass
 
@@ -4025,6 +4136,10 @@ training dummy
      Impression”. 15 January 1928.
      trans. Scott J. Thompson, 1997.
 %%%%
+two-headed ogre
+
+<ogre>
+%%%%
 tyrant leech
  Scully: “Where the hell did it come from?”
  Mulder: “I don’t know, but it looks like I’m going to have to tell Skinner
@@ -4156,11 +4271,7 @@ wight
 %%%%
 worm
 
-“While the angels, all pallid and wan,
-   Uprising, unveiling, affirm
- That the play is the tragedy, ‘Man’,
-   And its hero, the Conqueror Worm.”
-    -Edgar Allan Poe
+<ribbon worm>
 %%%%
 wraith
 
@@ -4181,6 +4292,20 @@ wretched star
  Whatever doesn’t kill you
  Only makes you stranger”
     -The Sunbeams, “The Tug”. 2020
+%%%%
+wyrmhole
+
+“My complete answer to the late 19th century question 'what is electrodynamics
+ trying to tell us' would simply be this:
+
+ Fields in empty space have physical reality; the medium that supports them does
+ not.
+
+ Having thus removed the mystery from electrodynamics, let me immediately do the
+ same for quantum mechanics:
+
+ Correlations have physical reality; that which they correlate does not.”
+    -N. David Mermin, _What is quantum mechanics trying to tell us?_, 1998.
 %%%%
 ynoxinul
 

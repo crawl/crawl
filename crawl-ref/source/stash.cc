@@ -159,9 +159,7 @@ static void _fully_identify_item(item_def *item)
     if (!item || !item->defined())
         return;
 
-    set_ident_flags(*item, ISFLAG_IDENT_MASK);
-    if (item->base_type != OBJ_WEAPONS)
-        set_ident_type(*item, true);
+    identify_item(*item);
 }
 
 // ----------------------------------------------------------------------
@@ -218,16 +216,38 @@ bool Stash::needs_stop() const
     return false;
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feature)
-{
-    // Count shops as boring features, because they are handled separately.
-    return !is_notable_terrain(feature) && !feat_is_trap(feature)
-        || feature == DNGN_ENTER_SHOP;
-}
-
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
     return you.visible_igrd(pos) != NON_ITEM;
+}
+
+static bool _grid_is_interesting(const coord_def& pos)
+{
+    const auto feat = env.grid(pos);
+    if (feat_is_staircase(feat)
+       || feat_is_escape_hatch(feat)
+       || (is_notable_terrain(feat)
+            // Count shops as boring features, because they are
+            // handled separately.
+            && feat != DNGN_ENTER_SHOP))
+    {
+        return true;
+    }
+
+    const auto trap = get_trap_type(pos);
+    if (trap == TRAP_UNASSIGNED)
+        return false;
+
+    // Certain traps we want to put in stashes, since they help navigate
+    // within or across levels, or can be used tactically (alarm), or might
+    // release goodies (plate).
+    return trap == TRAP_PLATE
+        || trap == TRAP_DISPERSAL
+        || trap == TRAP_TELEPORT
+        || trap == TRAP_TELEPORT_PERMANENT
+        || trap == TRAP_GOLUBRIA
+        || trap == TRAP_ALARM
+        || trap == TRAP_SHAFT;
 }
 
 bool Stash::unmark_trapping_nets()
@@ -241,23 +261,15 @@ bool Stash::unmark_trapping_nets()
 
 void Stash::update()
 {
-    feat = env.grid(pos);
-    trap = NUM_TRAPS;
-
-    if (is_boring_feature(feat))
-        feat = DNGN_FLOOR;
-
-    if (feat_is_trap(feat))
+    feat = DNGN_FLOOR;
+    trap = TRAP_UNASSIGNED;
+    feat_desc = "";
+    if (_grid_is_interesting(pos))
     {
+        feat = env.grid(pos);
         trap = get_trap_type(pos);
-        if (trap == TRAP_WEB)
-            feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
-    }
-
-    if (feat == DNGN_FLOOR)
-        feat_desc = "";
-    else
         feat_desc = feature_description_at(pos, false, DESC_A);
+    }
 
     int previous_size = items.size();
 
@@ -270,8 +282,8 @@ void Stash::update()
         return;
     }
 
-    // Squares are big, whole piles of loot can be seen on each so
-    // let's update them
+    // Squares are big, whole piles of loot can be seen on each,
+    // so let's update them.
 
     // There's something on this square. Take a squint at it.
     item_def *pitem = &env.item[you.visible_igrd(pos)];
@@ -282,7 +294,7 @@ void Stash::update()
     // Now, grab all items on that square and fill our vector
     for (stack_iterator si(pos, true); si; ++si)
     {
-        god_id_item(*si);
+        ash_id_item(*si);
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
@@ -429,7 +441,7 @@ void Stash::_update_identification()
 {
     for (int i = items.size() - 1; i >= 0; i--)
     {
-        god_id_item(items[i]);
+        ash_id_item(items[i]);
         maybe_identify_base_type(items[i]);
     }
 }
@@ -578,7 +590,7 @@ string ShopInfo::shop_item_desc(const item_def &it) const
     unwind_var<iflags_t>(item.flags);
 
     if (shoptype_identifies_stock(shop.type))
-        item.flags |= ISFLAG_IDENT_MASK;
+        item.flags |= ISFLAG_IDENTIFIED;
 
     if (is_dumpable_artefact(item))
     {
@@ -1074,7 +1086,7 @@ void StashTracker::update_visible_stashes()
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)
-                || !Stash::is_boring_feature(feat)))
+                || _grid_is_interesting(*ri)))
         {
             if (!lev)
                 lev = &get_current_level();
@@ -1153,7 +1165,7 @@ static bool _is_potentially_boring(stash_search_result res)
             || res.item.base_type == OBJ_ARMOUR
             || res.item.base_type == OBJ_MISSILES
             || res.item.base_type == OBJ_TALISMANS) // TODO: also misc?
-        && (item_type_known(res.item) || !item_is_branded(res.item))
+        && (res.item.is_identified() || !item_is_branded(res.item))
         || res.match_type == MATCH_FEATURE && feat_is_trap(res.feat);
 }
 

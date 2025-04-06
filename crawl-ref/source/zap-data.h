@@ -21,6 +21,8 @@ struct zap_info
     dungeon_char_type glyph;
     bool can_beam;
     bool is_explosion;
+    tileidx_t tile_beam;
+    tileidx_t tile_explode;
 }
 */
 
@@ -111,6 +113,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_METAL_SPLINTERS,
 },
 
 {
@@ -127,6 +130,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_CRYSTAL_SPEAR,
 },
 
 {
@@ -143,6 +147,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_SPLINTERSPRAY,
 },
 
 {
@@ -159,6 +164,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_SPLINTERSPRAY,
 },
 
 {
@@ -207,6 +213,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_DAMNATION,
 },
 
 {
@@ -271,6 +278,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_GHOSTLY_FIREBALL,
 },
 
 {
@@ -351,6 +359,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_MAGMA,
 },
 
 {
@@ -463,6 +472,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_FLAME,
 },
 
 {
@@ -479,6 +489,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_FROST,
 },
 
 {
@@ -527,6 +538,8 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_MEPHITIC_FLASK,
+    TILE_BOLT_DEFAULT_GREEN,
 },
 
 {
@@ -559,9 +572,11 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_MAGIC_DART,
 },
 
 _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
+_mon_hex_zap(ZAP_VEX, BEAM_VEX),
 
 {
     ZAP_BOLT_OF_FIRE,
@@ -695,6 +710,8 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_FLAME,
+    TILE_BOLT_DEFAULT_RED,
 },
 
 {
@@ -810,6 +827,7 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_DRAIN,
 },
 
 {
@@ -842,6 +860,7 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_CRYSTAL_SPEAR,
 },
 
 _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
@@ -943,6 +962,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_STING,
 },
 
 {
@@ -959,6 +979,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_DAMNATION,
 },
 
 {
@@ -975,6 +996,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_IRON_SHOT,
 },
 
 {
@@ -991,6 +1013,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_IRON_SHOT,
 },
 
 {
@@ -1007,6 +1030,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_STONE_ARROW,
 },
 
 {
@@ -1023,6 +1047,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_ZAP,
 },
 
 {
@@ -1263,6 +1288,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_ICICLE,
 },
 
 {
@@ -1281,7 +1307,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     false,
 },
 
-// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
+// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power_cap.
 _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {
@@ -1298,6 +1324,7 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_BOLT,
     false,
     false,
+    TILE_BOLT_SANDBLAST,
 },
 
 {
@@ -1314,6 +1341,7 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_MAGMA,
 },
 
 {
@@ -1346,6 +1374,7 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_POISON_ARROW,
 },
 
 _mon_hex_zap(ZAP_PETRIFY, BEAM_PETRIFY),
@@ -1415,6 +1444,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_FORCE_LANCE,
 },
 
 {
@@ -1431,6 +1461,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_SEARING_RAY,
 },
 
 {
@@ -1512,6 +1543,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_LIGHT,
 },
 
 {
@@ -1528,6 +1560,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     NUM_DCHAR_TYPES,
     false,
     false,
+    TILE_BOLT_IRRADIATE,
 },
 
 {
@@ -1544,6 +1577,8 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     true,
+    TILE_BOLT_ICICLE,
+    TILE_BOLT_ICEBLAST,
 },
 
 {
@@ -1560,6 +1595,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_STONE_ARROW,
 },
 
 {
@@ -1624,6 +1660,24 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_HARPOON_SHOT,
+},
+
+{
+    ZAP_BOLAS,
+    "whirling bolas",
+    50,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 5, 1, 20>,
+    new tohit_calculator<20, 1, 20>,
+    BROWN,
+    false,
+    BEAM_BOLAS,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+    TILE_BOLT_BOLAS,
 },
 
 _mon_hex_zap(ZAP_DIMENSION_ANCHOR, BEAM_DIMENSION_ANCHOR),
@@ -1664,6 +1718,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_FIRE_STORM,
 },
 
 {
@@ -1760,6 +1815,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_PIE,
 },
 
 {
@@ -1822,8 +1878,9 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
     BEAM_MMISSILE,
     DCHAR_FIRED_ZAP,
-    true,
     false,
+    false,
+    TILE_BOLT_MYSTIC_BLAST,
 },
 
 {
@@ -1952,6 +2009,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_UMBRAL_TORCHLIGHT,
 },
 
 {
@@ -1968,6 +2026,24 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_WARP_SPACE,
+},
+
+{
+    ZAP_SOJOURNING,
+    "destabilizing rupture",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 12>,
+    new tohit_calculator<40>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_WARP_SPACE,
 },
 
 {
@@ -2048,6 +2124,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_LIGHT,
 },
 
 {
@@ -2132,7 +2209,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 
 {
     ZAP_HOARFROST_BULLET,
-    "shard of alchemical ice",
+    "shard of frigid ice",
     100,
     nullptr,
     nullptr,
@@ -2144,11 +2221,12 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_ICICLE,
 },
 
 {
     ZAP_HOARFROST_BULLET_FINALE,
-    "salvo of alchemical ice",
+    "salvo of frigid ice",
     100,
     nullptr,
     nullptr,
@@ -2159,7 +2237,9 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     BEAM_ICE,
     DCHAR_FIRED_MISSILE,
     false,
-    true
+    true,
+    TILE_BOLT_ICICLE,
+    TILE_BOLT_ICEBLAST,
 },
 
 {
@@ -2192,6 +2272,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_PHANTOM_BLITZ,
 },
 
 {
@@ -2208,6 +2289,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_SHADOW_SHARD,
 },
 
 {
@@ -2224,6 +2306,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_SHADOW_BEAM,
 },
 
 {
@@ -2240,6 +2323,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_SHADOW_BLAST,
 },
 
 {
@@ -2256,6 +2340,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_SHADOW_BLAST,
 },
 
 {
@@ -2307,12 +2392,29 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_SHADOW_SHOT,
+    "shadow bullet",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 3, 1, 17>,
+    new tohit_calculator<15, 1, 15>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_BOLT_SHADOW_SHOT,
+},
+
+{
     ZAP_GRAVE_CLAW,
     "jagged bones",
     50,
     new dicedef_calculator<2, 7, 1, 7>,
     new tohit_calculator<AUTOMATIC_HIT>,
-    new dicedef_calculator<2, 4, 1, 9>,
+    new dicedef_calculator<2, 4, 1, 8>,
     new tohit_calculator<AUTOMATIC_HIT>,
     WHITE,
     false,
@@ -2368,6 +2470,302 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     false,
+    TILE_BOLT_BLOOD_ARROW,
+},
+
+{
+    ZAP_SPIKE_LAUNCHER,
+    "rocky spike",
+    50,
+    new dicedef_calculator<2, 3, 1, 12>,
+    new tohit_calculator<12, 1, 10>,
+    nullptr,
+    nullptr,
+    LIGHTGREY,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
+{
+    ZAP_KINETIC_GRAPNEL,
+    "kinetic grapnel",
+    25,
+    new dicedef_calculator<1, 4, 4, 25>,
+    new tohit_calculator<8, 1, 5>,
+    nullptr,
+    nullptr,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
+    ZAP_SHRED,
+    "shred",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 4, 1, 22>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
+    ZAP_PARAGON_IMPACT,
+    "shockwave",
+    200,
+    new dicedef_calculator<4, 10, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<4, 10, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
+    ZAP_MONARCH_DETONATION,
+    "detonation",
+    200,
+    new dicedef_calculator<4, 5, 1, 8>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new calcdice_calculator<4, 7, 2, 5>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    RED,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
+{
+    ZAP_DEPLOY_BOMBLET,
+    "bomblet",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 3, 1, 30>,
+    new tohit_calculator<14, 1, 35>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_BOLT_BOMBLET_LAUNCH,
+},
+
+{
+    ZAP_SPLINTERFROST_FRAGMENT,
+    "salvo of icicles",
+    200,
+    new calcdice_calculator<6, 24, 4, 5>,
+    new tohit_calculator<10, 1, 25>,
+    new dicedef_calculator<3, 8, 1, 11>,
+    new tohit_calculator<17, 1, 25>,
+    WHITE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_ICICLE_SALVO,
+},
+
+{
+    ZAP_PERCUSSIVE_TEMPERING,
+    "blast",
+    200,
+    new dicedef_calculator<4, 4, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<4, 4, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
+{
+    ZAP_FORTRESS_BLAST,
+    "fortress blast",
+    200,
+    new dicedef_calculator<6, 4, 3, 17>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<6, 4, 1, 6>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    TILE_BOLT_FORTRESS_BLAST,
+},
+
+{
+    ZAP_SEISMIC_STOMP,
+    "seismic shockwave",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 3, 1, 23>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    YELLOW,
+    false,
+    BEAM_SEISMIC,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
+    ZAP_RENDING_SLASH,
+    "condensed magic",
+    150,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 4, 1, 14>,
+    new tohit_calculator<30>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+{
+    ZAP_MAGMA_BARRAGE,
+    "bolt of magma",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 4, 2, 21>,
+    new tohit_calculator<17, 1, 25>,
+    RED,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_MAGMA,
+},
+
+{
+    ZAP_MERCURY_ARROW,
+    "glob of mercury",
+    50,
+    new calcdice_calculator<2, 11, 1, 5>,
+    new tohit_calculator<12, 1, 5>,
+    new dicedef_calculator<2, 4, 1, 10>,
+    new tohit_calculator<12, 1, 5>,
+    GREEN,
+    false,
+    BEAM_MERCURY,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_BOLT_STING,
+},
+
+{
+    ZAP_FREEZE,
+    "freeze",
+    25,
+    new dicedef_calculator<1, 3, 3, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<1, 3, 3, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_COLD,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+},
+
+{
+    ZAP_RAVENOUS_SWARM,
+    "swarm of vampire bats",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<0, 1, 1, 1>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BLUE,
+    false,
+    BEAM_BAT_CLOUD,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+{
+    ZAP_WATERY_GRAVE,
+    "grasping water",
+    200,
+    new calcdice_calculator<0, 1, 1, 1>,    // Overriden by Form::get_special_damage()
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTBLUE,
+    false,
+    BEAM_WATER,
+    DCHAR_WAVY,
+    false,
+    false,
+},
+
+{
+    ZAP_RUST_BREATH,
+    "billowing rust",
+    100,
+    nullptr,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    YELLOW,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+// Name and flavor filled in via cast_golden_breath
+{
+    ZAP_GOLDEN_BREATH,
+    "buggy blast",
+    200,
+    new dicedef_calculator<3, 2, 4, 3>,
+    new tohit_calculator<20, 1, 5>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_FROSTFIRE
 },
 
 };

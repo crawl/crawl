@@ -46,6 +46,10 @@ enum dungeon_feature_type
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
 
+#if TAG_MAJOR_VERSION > 34
+    DNGN_FRIGID_WALL,
+#endif
+
     DNGN_GRATE,
 
     // Misc solid features
@@ -91,6 +95,10 @@ enum dungeon_feature_type
     DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_TRAP_TYRANT,
+    DNGN_TRAP_ARCHMAGE,
+    DNGN_TRAP_HARLEQUIN,
+    DNGN_TRAP_DEVOURER,
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_TRAP_DISPERSAL,
@@ -99,6 +107,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
+    DNGN_SPIKE_LAUNCHER,
     DNGN_ORB_DAIS,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -250,6 +259,7 @@ enum dungeon_feature_type
     DNGN_CACHE_OF_BAKED_GOODS,
     DNGN_CACHE_OF_FRUIT,
     DNGN_CACHE_OF_MEAT,
+    DNGN_DECORATIVE_FLOOR, // XXX: dummy for redefinition until a rewrite
     DNGN_RUNELIGHT,
 #endif
 
@@ -278,6 +288,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ZIGGURAT,
     DNGN_ENTER_BAZAAR,
     DNGN_ENTER_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_NECROPOLIS,
+#endif
     DNGN_ENTER_SEWER,
     DNGN_ENTER_OSSUARY,
     DNGN_ENTER_BAILEY,
@@ -296,6 +309,9 @@ enum dungeon_feature_type
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
     DNGN_EXIT_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_NECROPOLIS,
+#endif
     DNGN_EXIT_SEWER,
     DNGN_EXIT_OSSUARY,
     DNGN_EXIT_BAILEY,
@@ -339,10 +355,10 @@ enum dungeon_feature_type
     DNGN_SEALED_CLEAR_DOOR,
     DNGN_TOXIC_BOG,
 
-    DNGN_TRAP_ARROW,
+    DNGN_TRAP_ARCHMAGE,
     DNGN_TRAP_SPEAR,
-    DNGN_TRAP_BLADE,
-    DNGN_TRAP_DART,
+    DNGN_TRAP_TYRANT,
+    DNGN_TRAP_HARLEQUIN,
     DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
@@ -372,7 +388,12 @@ enum dungeon_feature_type
     DNGN_EXIT_CRUCIBLE,
     DNGN_FOUNTAIN_EYES,
     DNGN_CACHE_OF_BAKED_GOODS,
-
+    DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
+    DNGN_SPIKE_LAUNCHER,
+    DNGN_TRAP_DEVOURER,
+    DNGN_ENTER_NECROPOLIS,
+    DNGN_EXIT_NECROPOLIS,
+    DNGN_FRIGID_WALL,
 #endif
 
     NUM_FEATURES

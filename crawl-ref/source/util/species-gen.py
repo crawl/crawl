@@ -180,7 +180,7 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'maces_and_flails', 'polearms', 'staves', 'ranged weapons',
     'throwing', 'armour', 'dodging', 'stealth', 'shields', 'unarmed_combat',
     'spellcasting', 'conjurations', 'hexes', 'summoning',
-    'necromancy', 'translocations', 'fire_magic',
+    'necromancy', 'forgecraft', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'alchemy', 'invocations',
     'evocations', 'shapeshifting')
 UNDEAD_TYPES = ('alive', 'undead', 'semi_undead')
@@ -347,6 +347,18 @@ def generate_species_type_data(s):
         return '    %s,\n' % s['enum']
 
 
+def maybe_write(filename, text):
+    """Write `text` to `filename`, but only if the file would be created or changed"""
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            cur = f.read()
+        if cur == text:
+            return
+
+    with open(filename, 'w') as f:
+        f.write(text)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate species-data.h')
     parser.add_argument('datadir', help='dat/species source dir')
@@ -398,7 +410,29 @@ def main():
                                                 'species-data-species.txt')
     aptitude_template = load_template(args.templatedir, 'aptitude-species.txt')
     species_groups = SPECIES_GROUPS_TEMPLATE
-    for species in all_species:
+
+    # Determine hard-coded enum order from species-type-header.txt
+    enum_order = []
+    header_lines = species_type_out_text.splitlines()
+    for ln in header_lines:
+        #print(ln)
+        trimmed = ln.lstrip()
+        if trimmed.startswith("SP_"):
+            enum_name = re.split(',|/s+', trimmed)[0]
+            if enum_name == "SP_FIRST_NONBASE_DRACONIAN" or enum_name == "SP_LAST_NONBASE_DRACONIAN":
+                continue
+            enum_order.append(enum_name)
+            #print(enum_name)
+
+    sorted_species = []
+    for enum_name in enum_order:
+        for species in all_species:
+            if species['enum'] == enum_name:
+                sorted_species.append(species)
+                #print("Appended " + enum_name)
+                break
+
+    for species in sorted_species:
         # species-data.h
         species_data_out_text += species_data_template.format(**species)
         # aptitudes.h
@@ -410,23 +444,16 @@ def main():
         species_groups = update_species_group(species_groups, species)
 
     species_data_out_text += load_template(args.templatedir,
-                                        'species-data-deprecated-species.txt')
-    species_data_out_text += load_template(args.templatedir,
                                         'species-data-footer.txt')
-    with open(args.species_data, 'w') as f:
-        f.write(species_data_out_text)
+    maybe_write(args.species_data, species_data_out_text)
 
     aptitudes_out_text += load_template(args.templatedir,
-                                        'aptitudes-deprecated-species.txt')
-    aptitudes_out_text += load_template(args.templatedir,
                                         'aptitudes-footer.txt')
-    with open(args.aptitudes, 'w') as f:
-        f.write(aptitudes_out_text)
+    maybe_write(args.aptitudes, aptitudes_out_text)
 
     species_type_out_text += load_template(args.templatedir,
                                         'species-type-footer.txt')
-    with open(args.species_type, 'w') as f:
-        f.write(species_type_out_text)
+    maybe_write(args.species_type, species_type_out_text)
 
     species_groups_out_text = ''
     species_groups_out_text += load_template(args.templatedir,
@@ -434,8 +461,7 @@ def main():
     species_groups_out_text += generate_species_groups(species_groups)
     species_groups_out_text += load_template(args.templatedir,
                                         'species-groups-footer.txt')
-    with open(args.species_groups, 'w') as f:
-        f.write(species_groups_out_text)
+    maybe_write(args.species_groups, species_groups_out_text)
 
 
 if __name__ == '__main__':

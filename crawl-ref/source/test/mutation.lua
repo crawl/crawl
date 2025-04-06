@@ -58,7 +58,7 @@ local function test_basic_mutation_stuff()
     assert(you.get_base_mutation_level("cold resistance") == 2)
 
     ------------------
-    -- test some physiology conflicts interactions (see mutation.cc:physiology_mutation_conflict)
+    -- test some physiology conflicts interactions (see mutation.cc:mut_is_compatible)
     -- this isn't exhaustive
     assert(not you.mutate("spit poison", "basic mutation test")) -- only for nagas
     -- could add other species conditions here using you.change_species

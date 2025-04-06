@@ -1,0 +1,28 @@
+enum: fortress_crab
+equivalent_mons: crab
+short_name: Crab
+description: a heavily-armoured crab.
+skill: {min: 12, max: 20}
+talisman: fortress
+melds: [offhand, aux]
+ac: {base: 3}
+resists: {poison: -1, corr: 1}
+unarmed: {base: 5, scaling: 5}
+unarmed_name: pincers
+unarmed_colour: green
+unarmed_verbs: [nip, snap, crush, mangle]
+can_swim: yes
+changes_anatomy: yes
+has_hair: no
+has_bones: no
+has_feet: yes
+has_ears: yes
+shout_verb: clack
+hand_name: pincers
+prayer_action: "scuttle before"
+flesh_name: shell
+fakemuts:
+  - ["armoured shell", "Your body armour is fused into your shell, multiplying its AC."]
+  - ["rust breath", "You can exhale clouds of rust."]
+badmuts:
+  - ["slow movement", "You cover ground slowly."]

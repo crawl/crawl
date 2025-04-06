@@ -7,7 +7,6 @@
 #include "conduct-type.h"
 #include "constrict-type.h"
 #include "energy-use-type.h"
-#include "equipment-type.h"
 #include "god-type.h"
 #include "item-prop-enum.h"
 #include "kill-method-type.h"
@@ -15,7 +14,6 @@
 #include "random-var.h"
 #include "ouch.h"
 #include "pronoun-type.h"
-#include "reach-type.h"
 #include "size-part-type.h"
 #include "size-type.h"
 #include "stat-type.h"
@@ -46,20 +44,24 @@ public:
     virtual bool      alive() const = 0;
 
     // Should return false for perma-summoned things.
-    virtual bool is_summoned(int* duration = nullptr,
-                             int* summon_type = nullptr) const = 0;
+    virtual bool is_summoned() const = 0;
+    virtual bool was_created_by(int summon_type) const = 0;
+    virtual bool was_created_by(const actor& summoner,
+                                int summon_type = SPELL_NO_SPELL) const = 0;
 
-    virtual bool is_perm_summoned() const = 0;
+    virtual bool is_firewood() const = 0;
+    virtual bool is_peripheral() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as env.mgrid.
-    virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
+    virtual void moveto(const coord_def &c, bool clear_net = true,
+                        bool clear_constrict = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
     virtual bool move_to_pos(const coord_def &c, bool clear_net = true,
-                             bool force = false) = 0;
+                             bool force = false, bool clear_constrict = true) = 0;
 
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,
@@ -111,30 +113,17 @@ public:
                                     bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
-    virtual item_def *slot_item(equipment_type eq,
-                                bool include_melded=false) const = 0;
-    virtual int wearing(equipment_type slot, int sub_type) const = 0;
-    virtual int wearing_ego(equipment_type slot, int sub_type) const = 0;
+    virtual item_def *body_armour() const = 0;
+    virtual int wearing(object_class_type obj_type, int sub_type,
+                        bool count_plus = 0, bool check_attuned = false) const = 0;
+    virtual int wearing_ego(object_class_type obj_type, int ego) const = 0;
+    int wearing_jewellery(int sub_type) const;
     virtual int scan_artefacts(artefact_prop_type which_property,
                                vector<const item_def *> *matches = nullptr) const = 0;
+    virtual bool unrand_equipped(int unrand_index, bool include_melded = false) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item,
                                        bool base = false) const;
-
-            bool can_wield(const item_def* item,
-                           bool ignore_curse = false,
-                           bool ignore_brand = false,
-                           bool ignore_shield = false,
-                           bool ignore_transform = false) const;
-    virtual bool can_wield(const item_def &item,
-                           bool ignore_curse = false,
-                           bool ignore_brand = false,
-                           bool ignore_shield = false,
-                           bool ignore_transform = false) const = 0;
-    virtual bool could_wield(const item_def &item,
-                             bool ignore_brand = false,
-                             bool ignore_transform = false,
-                             bool quiet = true) const = 0;
 
     virtual string name(description_level_type type,
                         bool force_visible = false,
@@ -155,7 +144,7 @@ public:
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
-    virtual reach_type reach_range() const = 0;
+    virtual int reach_range() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -180,8 +169,8 @@ public:
     virtual bool has_blood(bool temp = true) const = 0;
     virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
-    virtual bool malmutate(const string &reason) = 0;
-    virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
+    virtual bool malmutate(const actor* source, const string &reason = "") = 0;
+    virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -194,7 +183,7 @@ public:
     virtual bool heal(int amount) = 0;
     virtual void banish(const actor *agent, const string &who = "",
                         const int power = 0, bool force = false) = 0;
-    virtual void blink() = 0;
+    virtual void blink(bool ignore_stasis = false) = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
@@ -203,26 +192,26 @@ public:
                           string source = "") = 0;
     virtual void petrify(const actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(bool quiet = false) = 0;
+    virtual bool vex(const actor* who, int dur, string source = "", string special_msg = "") = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength,
+    virtual void put_to_sleep(actor *attacker, int duration,
                               bool hibernate = false) = 0;
     virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
+                                   const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;
-    virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
     virtual void splash_with_acid(actor *evildoer) = 0;
-    virtual void acid_corrode(int acid_strength) = 0;
-    virtual bool corrode_equipment(const char* corrosion_source = "the acid",
-                                   int degree = 1) = 0;
+    virtual bool corrode(const actor* source = nullptr,
+                         const char* corrosion_msg = "the acid",
+                         int amount = 4) = 0;
     virtual bool resists_dislodge(string /*event*/ = "") const { return false; };
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
     virtual bool can_feel_fear(bool include_unknown) const = 0;
@@ -244,7 +233,7 @@ public:
     virtual bool can_be_blinded() const = 0;
 
     virtual int armour_class() const = 0;
-    virtual int gdr_perc() const = 0;
+    virtual int gdr_perc(bool random = true) const = 0;
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
@@ -270,7 +259,7 @@ public:
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual bool is_amorphous() const = 0;
-    virtual int res_acid() const = 0;
+    virtual int res_corr() const = 0;
     virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
@@ -295,7 +284,6 @@ public:
     int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
     bool has_notele_item(vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool items = true) const;

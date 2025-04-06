@@ -965,7 +965,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
             else if (fg.MAY_STAB)
             {
-                this.draw_icon(icons.MAY_STAB_BRAND, x, y, undefined, undefined, img_scale);
+                this.draw_icon(icons.UNAWARE, x, y, undefined, undefined, img_scale);
                 status_shift += 7;
             }
             else if (fg.FLEEING)
@@ -1086,9 +1086,17 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.SHADOWLESS:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
-                case icons.PERM_SUMMON:
+                case icons.MINION:
+                case icons.UNREWARDING:
                 case icons.ANIMATED_WEAPON:
                 case icons.VENGEANCE_TARGET:
+                case icons.VAMPIRE_THRALL:
+                case icons.ENKINDLED_1:
+                case icons.ENKINDLED_2:
+                case icons.NOBODY_MEMORY_1:
+                case icons.NOBODY_MEMORY_2:
+                case icons.NOBODY_MEMORY_3:
+                case icons.PYRRHIC:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
@@ -1107,6 +1115,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.PARTIALLY_CHARGED:
                 case icons.FULLY_CHARGED:
                 case icons.VITRIFIED:
+                case icons.CONFUSED:
+                case icons.LACED_WITH_CHAOS:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1146,6 +1156,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.BIND:
                 case icons.SIGN_OF_RUIN:
                 case icons.WEAK_WILLED:
+                case icons.DOUBLED_HEALTH:
+                case icons.KINETIC_GRAPNEL:
+                case icons.TEMPERED:
+                case icons.HEART:
+                case icons.UNSTABLE:
+                case icons.VEXED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

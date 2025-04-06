@@ -6,6 +6,7 @@
 # generic (i.e. common), with the weirder or larger ones providing surprises.
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
 
 ###############################################################################
 # Bazaar entries
@@ -843,7 +844,7 @@ WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = scroll shop
 KFEAT:   B = distillery shop
-ITEM:    ring of flight ident:type no_pickup
+ITEM:    ring of flight pre_id no_pickup
 SHUFFLE: lAB/wBA
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
@@ -1550,11 +1551,11 @@ ORIENT:     encompass
 MONS:       plant / bush w:6, yak tile:mons_yak_bow att:neutral
 KFEAT:      ! = any shop
 SUBST:      " = """"111t
-KPROP:      "12t = no_tele_into
-FTILE:      - = dngn_garden_cobble
+KPROP:      -"12t = no_tele_into
 LFLOORTILE: floor_grass
 LFLOORCOL:  green
 : bazaar_setup(_G, false, false)
+: decorative_floor(_G, '-', "garden patch")
 MAP
 """"""""""""""""""""""""""""""""">
 """"""""""""""""""""""""""""""""""
@@ -1567,18 +1568,18 @@ MAP
 """"""""""""""""""""""""""""""""""
 """""""""mmmmm""""""mmmmm"""""""""
 """""""""m...mm""""mm...m"""""""""
-"""""""""m.!..mm"2mm..!.m"""""""""
+"""""""""m.!..mm-2mm..!.m"""""""""
 """""""""m.....mmmm.....m"""""""""
 """""""""mm............mm"""""""""
 """"""""""mm..........mm""""""""""
 """""""""""mm...-cc..mm"""""""""""
-""""""""""""m..cc>c..m""""""""""""
-""""""""""""m..c<c-..m""""""""""""
+""""""""""""m..cc>c..m-"""""""""""
+"""""""""""-m..c<c-..m""""""""""""
 """""""""""mm..ccc...mm"""""""""""
 """"""""""mm..........mm""""""""""
 """""""""mm............mm"""""""""
 """""""""m.....mmmm.....m"""""""""
-"""""""""m.!..mm2"mm..!.m"""""""""
+"""""""""m.!..mm2-mm..!.m"""""""""
 """""""""m...mm""""mm...m"""""""""
 """""""""mmmmm""""""mmmmm"""""""""
 """"""""""""""""""""""""""""""""""
@@ -1812,7 +1813,7 @@ TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
-KITEM:   ? = wand of digging ident:type no_pickup
+KITEM:   ? = wand of digging pre_id no_pickup
 KFEAT:   ? = antiques shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1
@@ -2015,13 +2016,13 @@ WEIGHT: 50
 # Heavily customized in flavour and power to emphasize Xom's love of risks.
 ##########################################################################
 
-NAME:    regret_index_bazaar_x_original
+NAME:    regret_index_bazaar_xom_original
 TAGS:    allow_dup xom_bazaar
 ORIENT:  encompass
 KMONS:   p = pile of debris
 KMONS:   E = demonic plant
 KMONS:   f = butterfly perm_ench:paralysis
-KITEM:   d = potion of degeneration ident:all
+KITEM:   d = potion of moonshine pre_id
 KITEM:   r = large rock
 KITEM:   s = human skeleton / kobold skeleton / orc skeleton / \
              naga skeleton / merfolk skeleton / spriggan skeleton
@@ -2057,17 +2058,13 @@ SUBST:   b = bbbn, - = ccxy
 SUBST:   " = bbbnnnnxycct^+g ":300
 KPROP:   "` = no_tele_into
 COLOUR:  W = lightgreen
-COLOUR:  g = shimmer_blue
-COLOUR:  G = mountain
 FTILE:   t = floor_nerves_magenta
-TILE:    g = misfortune_conduit
-TILE:    G = dngn_scintillating_statue
 TILE:    v = wall_crypt_metal
 MARKER:  F = lua:fog_machine { cloud_type = "magical condensation", \
              pow_min = 6, pow_max = 7, delay_min = 60, delay_max = 80, size = 8 }
 MARKER:  + = lua: props_marker { connected_exclude="true" }
-: set_feature_name("metal_statue", "misfortune conduit")
-: set_feature_name("granite_statue", "scintillating statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "g", "misfortune conduit")
 : bazaar_setup(_G, false, false, true)
 {{
 local magi_name = util.random_from({"type:Ever-Affordable suffix:Forbidden_Knowledge",
@@ -2094,9 +2091,12 @@ local necrospells = util.random_subset({ "kiss_of_death", "sublimation_of_blood"
 local tlocspells = util.random_subset({ "maxwell's_portable_piledriver",
                                         "volatile_blastmotes", "gell's_gavotte",
                                         "dispersal", "malign_gateway" }, 2)
-local summspells = util.random_subset({ "call_imp", "animate_armour",
-                                        "summon_blazeheart_golem", "summon_forest",
+local summspells = util.random_subset({ "call_imp", "martyr's_knell",
+                                        "summon_forest", "summon_cactus_giant",
                                         "summon_horrible_things" }, 2)
+local forgespells = util.random_subset({ "iskenderun's_battlesphere", "awaken_armour",
+                                         "forge_blazeheart_golem", "alistair's_walking_alembic",
+                                         "diamond_sawblades" }, 2)
 
 local hexbook = "randbook owner:Xom title:Mystic_Anarchy disc:hexes " ..
                 "numspells:2 spells:" .. table.concat(hexspells, '&&' )
@@ -2106,17 +2106,19 @@ local necrobook = "randbook owner:Xom title:Vocational_Suffering disc:necromancy
                   "numspells:2 spells:" .. table.concat(necrospells, '&&' )
 local tlocbook = "randbook owner:Xom title:Spontaneous_Journeys disc:translocation " ..
                  "numspells:2 spells:" .. table.concat(tlocspells, '&&' )
-local summbook = "randbook owner:Xom title:New_Friends disc:summoning " ..
+local summbook = "randbook owner:Xom title:Meeting_Friends disc:summoning " ..
                  "numspells:2 spells:" .. table.concat(summspells, '&&' )
+local forgebook = "randbook owner:Xom title:Making_Friends disc:forgecraft " ..
+                  "numspells:2 spells:" .. table.concat(forgespells, '&&' )
 
-local use_books = table.concat(util.random_subset({
-                  hexbook, alchbook, necrobook, tlocbook, summbook}, 3), ' | ')
+local use_books = table.concat(util.random_subset({hexbook, alchbook,
+                  necrobook, tlocbook, summbook, forgebook}, 3), ' | ')
 
 -- Manual options: above spell schools, other magical items offered in the same
 -- shop, and a joke dud of Stealth since Xom will break it constantly.
 local manuals = {"hexes", "alchemy", "necromancy", "translocations",
-                 "summonings", "evocations", "shapeshifting", "stealth",
-                 "stealth", "stealth"}
+                 "summonings", "forgecraft", "evocations", "shapeshifting",
+                 "stealth", "stealth", "stealth", "stealth"}
 local manual = "manual of " .. util.random_from(manuals)
 
 local wand = table.concat(util.random_subset({
@@ -2129,7 +2131,7 @@ local wand = table.concat(util.random_subset({
 -- or very niche build support.
 local equip_count = 7
 local weaps = { "demon blade", "double sword", "triple sword",
-                "demon trident", "glaive", "bardiche", "demon whip",
+                "demon trident", "partisan", "bardiche", "demon whip",
                 "eveningstar", "great mace", "broad axe", "battleaxe",
                 "executioner's axe", "lajatang", "hand cannon", "longbow",
                 "triple crossbow", "rapier", "quick blade"}
@@ -2150,10 +2152,11 @@ if crawl.x_chance_in_y(3, 4) then
                        "maxwell's_patent_armour", "orange_crystal_plate_armour",
                        "shield_of_the_gong", "tower_shield_of_ignorance",
                        "hat_of_the_bear_spirit", "mad_mage's_maulers",
-                       "ratskin_cloak", "slick_slippers", "seven-league_boots"}
+                       "ratskin_cloak", "slick_slippers", "seven-league_boots",
+                       "skull_of_zonguldrok", "fungal_fisticloak", "crown_of_vainglory"}
 
   local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
-                        "sword_of_zonguldrok", "maxwell's_thermic_engine",
+                        "maxwell's_thermic_engine",
                         "autumn_katana", "elemental_staff", "wrath_of_trog",
                         "frostbite", "consecrated_labrys", "wyrmbane",
                         "rift", "glaive_of_the_guard", "lochaber_axe",
@@ -2195,7 +2198,7 @@ local aux = table.concat(util.random_subset({
 -- this bazaar, the potions of mutation are fine to hand out.
 -- Only give out one each of the most potentially useful options.
 local darts = { "dart ego:atropa w:3", "dart ego:datura w:3",
-                "dart ego:dispersal w:3" }
+                "dart ego:disjunction w:3" }
 local interest = util.random_from({"potion of berserk rage w:12",
                                    "potion of ambrosia w:12",
                                    "scroll of silence w:12"})
@@ -2215,8 +2218,8 @@ end
 table.insert(cons, interest .. " q:" .. crawl.random_range(2, 3))
 
 -- Only Xom gets to get away with this particular lack of niceness.
-if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
-     and you.race() ~= "Vampire" then
+if you.race() ~= "Mummy" and you.race() ~= "Revenant"
+     and you.race() ~= "Poltergeist" then
     table.insert(cons, "scroll of torment w:5 q:" .. crawl.random_range(1, 4))
 end
 

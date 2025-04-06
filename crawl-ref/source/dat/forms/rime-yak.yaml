@@ -1,0 +1,33 @@
+enum: rime_yak
+equivalent_mons: yak
+short_name: Yak
+description: an ice-encrusted yak.
+skill: {min: 8, max: 14}
+talisman: rimehorn
+melds: [physical]
+resists: {cold: 2, fire: -1}
+size: large
+hp_mod: 115
+move_speed: 10
+ac: {base: 6, scaling: 6}
+can_cast: yes
+unarmed: {base: 4}
+unarmed_colour: lightblue
+unarmed_name: Horns
+unarmed_verbs: [hit, headbutt, gore, skewer]
+special_damage: 2d2+(3/5)
+special_damage_name: Frigid Wall Dmg
+can_swim: yes
+changes_anatomy: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: bellow
+hand_name: front hooves
+foot_name: hooves
+prayer_action: bow your head before
+flesh_name: icy fur
+fakemuts:
+  - ["frigid aura", "You freeze nearby walls in an area that expands as you fight."]
+  - ["ice wizardry", "You can cast Ice magic more easily."]

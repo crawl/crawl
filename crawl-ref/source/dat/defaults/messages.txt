@@ -32,6 +32,9 @@ msc += lightmagenta:malevolent force fills
 
 # Less urgent, but still significant messages
 #
+msc += $warning:solemn chanting
+msc += $warning:hear.*funeral chant
+msc += $warning:funeral rites reach a fever pitch
 msc += $warning:distant snort
 msc += $warning:beating.*drum
 msc += $warning:drumbeats cease
@@ -39,9 +42,10 @@ msc += $warning:floor suddenly vibrates
 msc += $warning:a sudden draft
 msc += $warning:coins.*counted
 msc += $warning:tolling.*bell
+msc += $warning:notes of the bell
 msc += $warning:roar of battle
 msc += $warning:creaking.*portcullis
-msc += $warning:portcullis is probably
+msc += $warning:portcullis has been lowered
 msc += $warning:wave of frost
 msc += $warning:crackling.*melting
 msc += $warning:hiss.*sand
@@ -70,14 +74,6 @@ msc += $warning:Beware. you cannot shaft yourself on this level
 #
 msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
-msc += $boring:disappears? in a (puff of smoke|burst of colours)
-msc += $boring:dissolves? into (sparkling lights|shadows)
-msc += $boring:(crumbles|melts) away
-msc += $boring:fades into mist
-msc += $boring:returns to the deep
-msc += $boring:shimmers and vanishes
-msc += $boring:turns back into a lifeless stick
-msc += $boring:returns to where it belongs
 msc += $boring:blood churns to no real effect
 #
 msc += $boring:plain:miss(es)? (the|you|it)
@@ -106,6 +102,7 @@ force_more_message += You cannot cast spells when silenced
 force_more_message += This is a scroll of acquirement
 force_more_message += create your gizmo
 force_more_message += malevolent force fills
+force_more_message += malevolence running through your instability
 
 ## Zot is coming!
 force_more_message += You have lingered too long
@@ -120,6 +117,7 @@ force_more_message += ^Careful!
 
 # Announcements of timed portal vaults:
 force_more_message += interdimensional caravan
+force_more_message += solemn chanting
 force_more_message += distant snort
 force_more_message += roar of battle
 force_more_message += wave of frost

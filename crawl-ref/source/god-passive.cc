@@ -386,16 +386,6 @@ void jiyva_eat_offlevel_items()
     }
 }
 
-static bool _two_handed()
-{
-    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
-    if (!wpn)
-        return false;
-
-    hands_reqd_type wep_type = you.hands_reqd(*wpn, true);
-    return wep_type == HANDS_TWO;
-}
-
 static void _curse_boost_skills(const item_def &item)
 {
     if (!item.props.exists(CURSE_KNOWLEDGE_KEY))
@@ -424,43 +414,30 @@ void ash_check_bondage()
     initialize_ashenzari_props();
 #endif
 
-    int num_cursed = 0, num_slots = 0;
-
     you.skill_boost.clear();
-    for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
+
+    int num_cursed = 0, num_slots = 0;
+    for (int j = SLOT_FIRST_STANDARD; j < NUM_EQUIP_SLOTS; ++j)
     {
-        const equipment_type i = static_cast<equipment_type>(j);
-
-        // handles missing hand, octopode ring slots, finger necklace, species
-        // armour restrictions, etc. Finger necklace slot counts.
-        if (!you_can_wear(i))
+        // Gizmos are not a curseable slot and should not be counted.
+        if (j == SLOT_GIZMO)
             continue;
 
-        // Coglin gizmo isn't a normal slot, not cursable.
-        if (j == EQ_GIZMO)
-            continue;
+        num_slots += you.equipment.num_slots[j];
+    }
 
-        // transformed away slots are still considered to be possibly bound
-        num_slots++;
-        if (you.equip[i] != -1)
+    // Find what percentage of available slots have a cursed item in them.
+    // Overflow slots are counted when determining piety (ie: a two-handed
+    // weapon is worth the same piety as a one-hander + shield), but only count
+    // a single time for the skill boost.
+    for (player_equip_entry& entry : you.equipment.items)
+    {
+        const item_def& item = entry.get_item();
+        if (item.cursed())
         {
-            const item_def& item = you.inv[you.equip[i]];
-            if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
-            {
-                if (i == EQ_WEAPON && _two_handed())
-                    num_cursed += 2;
-                else
-                {
-                    num_cursed++;
-                    if (i == EQ_BODY_ARMOUR
-                        && is_unrandom_artefact(item, UNRAND_LEAR))
-                    {
-                        num_cursed += 3;
-                    }
-                }
-                if (!item_is_melded(item))
-                    _curse_boost_skills(item);
-            }
+            ++num_cursed;
+            if (!entry.melded && !entry.is_overflow)
+                _curse_boost_skills(item);
         }
     }
 
@@ -471,49 +448,55 @@ void ash_check_bondage()
     calc_mp(true);
 }
 
+void ash_id_inventory()
+{
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
+        if (item.defined() && !item.is_identified())
+        {
+            ash_id_item(item, false);
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
+        }
+    }
+}
+
 // XXX: If this is called on an item in inventory, then auto_assign_item_slot
 // needs to be called subsequently. However, moving an item in inventory
 // invalidates its reference, which is a different behavior than for floor
 // items, so we don't do it in this function.
-bool god_id_item(item_def& item, bool silent)
+void ash_id_item(item_def& item, bool silent)
 {
-    iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
+    if (!have_passive(passive_t::identify_items))
+        return;
 
-    if (have_passive(passive_t::identify_items))
+    // Don't identify runes, gems, or the orb, since this has no purpose
+    // and might mess up other things.
+    if (item_is_collectible(item))
+        return;
+
+    if (item.is_identified())
+        return;
+
+    if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
+        && item_needs_autopickup(item))
     {
-        // Don't identify runes, gems, or the orb, since this has no purpose
-        // and might mess up other things.
-        if (item_is_collectible(item))
-            return false;
-
-        if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
-            && item_needs_autopickup(item))
-        {
-            item.props[NEEDS_AUTOPICKUP_KEY] = true;
-        }
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    iflags_t ided = item.flags & ISFLAG_IDENT_MASK;
+    identify_item(item);
 
-    if (ided & ~old_ided)
-    {
-        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-            item.props.erase(NEEDS_AUTOPICKUP_KEY);
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
-        if (&item == you.weapon())
-            you.wield_change = true;
+    if (!silent)
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
-        if (!silent)
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-
-        seen_item(item);
-        return true;
-    }
-
-    // nothing new
-    return false;
+    seen_item(item);
 }
 
 static bool is_ash_portal(dungeon_feature_type feat)
@@ -720,9 +703,9 @@ void qazlal_storm_clouds()
         if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
-        // Don't create clouds over firewood
+        // Don't create clouds over firewood (to avoid message spam)
         const monster * mon = monster_at(*ri);
-        if (mon != nullptr && mons_is_firewood(*mon))
+        if (mon && mon->is_firewood())
             continue;
 
         // No clouds in corridors.
@@ -863,7 +846,7 @@ bool does_ru_wanna_redirect(const monster &mon)
     return have_passive(passive_t::aura_of_power)
             && !mon.friendly()
             && you.see_cell_no_trans(mon.pos())
-            && !mons_is_firewood(mon)
+            && !mon.is_firewood()
             && !mons_is_projectile(mon.type);
 }
 
@@ -893,10 +876,8 @@ ru_interference get_ru_attack_interference_level()
 static bool _shadow_target_exists()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             return true;
-    }
 
     return false;
 }
@@ -906,10 +887,8 @@ static vector<monster*> _get_shadow_targets()
 {
     vector<monster*> valid_targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             valid_targs.push_back(*mi);
-    }
     shuffle_array(valid_targs);
     return valid_targs;
 }
@@ -1034,6 +1013,8 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     if (!friendly)
         mg.hp = mg.hp * 2;
+    else
+        mg.set_summoned(&you, SPELL_NO_SPELL, random_range(4, 6) * BASELINE_DELAY, false);
 
     monster* mon = create_monster(mg);
     if (!mon)
@@ -1057,12 +1038,6 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         // Randomize order, like for players
         if (coinflip())
             mon->swap_weapons(false);
-    }
-
-    if (friendly)
-    {
-        mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
-                                random_range(4, 6) * BASELINE_DELAY));
     }
 
     // Set damage based on xl, with a bonus for UC characters (since they won't
@@ -1195,16 +1170,14 @@ void dithmenos_shadow_melee(actor* initial_target)
     {
         for (distance_iterator di(you.pos(), true, true, reach); di; ++di)
         {
-            if (!monster_at(*di) || mons_aligned(&you, monster_at(*di))
-                || mons_is_firewood(*monster_at(*di)))
-            {
+            monster* mons = monster_at(*di);
+            if (!mons || mons->is_firewood() || mons_aligned(&you, mons))
                 continue;
-            }
 
             pos = _find_shadow_melee_position(*di, reach);
             if (!pos.origin())
             {
-                target = monster_at(*di);
+                target = mons;
                 break;
             }
         }
@@ -1299,10 +1272,10 @@ static bool _simple_shot_tracer(coord_def source, coord_def target,
     tracer.target = target;
     tracer.source_id = source_mid;
     tracer.damage = dice_def(100, 1);
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    return mons_should_fire(tracer);
+    return mons_should_fire(tracer, target_tracer);
 }
 
 // Gets all spots within a certain radius of the player where your shadow could
@@ -1463,7 +1436,7 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
     // one turn.
     if (!existing_target.origin())
     {
-        mon_enchant me = mon->get_ench(ENCH_FAKE_ABJURATION);
+        mon_enchant me = mon->get_ench(ENCH_SUMMON_TIMER);
         me.duration += you.time_taken;
         mon->update_ench(me);
     }
@@ -1543,13 +1516,13 @@ static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = MID_PLAYER_SHADOW_DUMMY;
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    if (tracer.friend_info.power > 0)
+    if (target_tracer.friend_info.power > 0)
         return 0;
     else
-        return tracer.foe_info.power;
+        return target_tracer.foe_info.power;
 }
 
 // Tries to find a vaguely 'best' spot to cast a given zap at some random
@@ -1768,6 +1741,8 @@ static spell_type _get_shadow_spell(spell_type player_spell)
         spells.push_back(SPELL_SHADOW_TORPOR);
     if (schools & spschool::summoning)
         spells.push_back(SPELL_SHADOW_PUPPET);
+    if (schools & spschool::forgecraft)
+        spells.push_back(SPELL_SHADOW_TURRET);
 
     return spells[random2(spells.size())];
 }
@@ -1812,6 +1787,7 @@ void dithmenos_shadow_spell(spell_type spell)
 
         default:
         case SPELL_SHADOW_PUPPET:
+        case SPELL_SHADOW_TURRET:
             // Don't cast this spell without any enemies in sight, to prevent
             // tedious pre-casting by the player.
             if (_shadow_target_exists())
@@ -1929,14 +1905,13 @@ void wu_jian_end_heavenly_storm()
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
     return you.attribute[ATTR_SERPENTS_LASH]
-           && attack_type != WU_JIAN_ATTACK_NONE
-           && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
+           && attack_type != WU_JIAN_ATTACK_NONE;
 }
 
 static bool _can_attack_martial(const monster* mons)
 {
     return !(mons->wont_attack()
-             || mons_is_firewood(*mons)
+             || mons->is_firewood()
              || mons_is_projectile(mons->type)
              || !you.can_see(*mons));
 }
@@ -2199,7 +2174,7 @@ static int _check_for_uskayaw_targets(coord_def where)
     monster* mons = monster_at(where);
     ASSERT(mons);
 
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         return 0;
 
     return 1;
@@ -2381,7 +2356,7 @@ void makhleb_celebrant_bloodrite()
     vector<coord_def> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+        if (!mi->wont_attack() && !mi->is_firewood())
             targs.push_back(mi->pos());
     }
 
@@ -2475,7 +2450,7 @@ bool makhleb_haemoclasm_trigger_check(const monster& victim)
     {
         if (monster* mons = monster_at(*ai))
         {
-            if (!mons->wont_attack() && !mons_is_firewood(*mons))
+            if (!mons->wont_attack() && !mons->is_firewood())
                 ++count;
         }
     }

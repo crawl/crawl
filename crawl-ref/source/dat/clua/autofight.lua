@@ -84,21 +84,8 @@ local function vector_move(a, dx, dy)
   end
 end
 
-local function reach_range()
-  local r = 1
-  local wp = items.equipped_at("weapon")
-  if wp and not wp.is_melded then
-      r = wp.reach_range
-  end
-  local o = items.equipped_at("shield")
-  if o and not o.is_melded and o.is_weapon and o.reach_range > r then
-      r = o.reach_range
-  end
-  return r
-end
-
 local function have_reaching()
-  return reach_range() > 1
+  return you.reach_range() > 1
 end
 
 local function have_ranged()
@@ -107,16 +94,19 @@ local function have_ranged()
 end
 
 local function have_quiver_action(no_move)
-  return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
-          and you.quiver_valid(1) and you.quiver_enabled(1)
-          -- TODO: armataur roll passes the following check, which may be
-          -- counterintuitive for the nomove case
-          and you.quiver_allows_autofight()
-          and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))
+    return (no_move and AUTOFIGHT_THROW_NOMOVE
+            or not no_move and AUTOFIGHT_THROW)
+        and you.quiver_valid(1) and you.quiver_enabled(1)
+        -- TODO: armataur roll passes the following check, which may be
+        -- counterintuitive for the nomove case.
+        and you.quiver_allows_autofight()
+        and (not you.quiver_uses_mp()
+            or not AUTOMAGIC_FIGHT
+            or not af_mp_is_low())
 end
 
 local function is_safe_square(dx, dy)
-    if view.feature_at(dx, dy) == "trap_web" then
+    if view.feature_at(dx, dy) == "trap_web" and not you.is_web_immune() then
         return false
     end
     return view.is_safe_square(dx, dy)
@@ -201,17 +191,19 @@ local function move_towards(dx, dy)
   local move = choose_move_towards(0, 0, dx, dy, can_move_now)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
-  else
-    if you.status("immotile") then
+  elseif you.status("immotile") then
+    if AUTOFIGHT_WAIT then
       crawl.do_commands({"CMD_WAIT"})
     else
-      crawl.do_commands({delta_to_cmd(move[1],move[2])})
+      crawl.mpr("Failed to move towards target because you cannot move.")
     end
+  else
+      crawl.do_commands({delta_to_cmd(move[1],move[2])})
   end
 end
 
 local function will_tab(ax, ay, bx, by)
-  local range = reach_range()
+  local range = you.reach_range()
   if abs(bx-ax) <= range and abs(by-ay) <= range then
     return true
   end
@@ -242,7 +234,7 @@ local function get_monster_info(dx,dy,no_move)
   elseif not have_reaching() then
     info.attack_type = (-info.distance < 2) and AF_MELEE or AF_MOVES
   else
-    local range = reach_range()
+    local range = you.reach_range()
     -- Assume extended reach (i.e. Rift) gets smite targeting.
     local can_reach = range > 2 and you.see_cell_no_trans or view.can_reach
     if -info.distance > range then

@@ -110,6 +110,11 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
+/*** The last turn the monster was seen at this location.
+ * @treturn int
+ * @function type
+ */
+MIRET1(number, last_seen_at_turn, last_seen_at_turn)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
@@ -221,7 +226,7 @@ MIRES1(res_shock, MR_RES_ELEC)
  * @treturn int resistance level
  * @function res_corr
  */
-MIRES1(res_corr, MR_RES_ACID)
+MIRES1(res_corr, MR_RES_CORR)
 /*** Can the monster currently be frenzied?
  * Is it possible to affect the monster with the discord spell or a datura
  * dart?
@@ -523,7 +528,7 @@ LUAFN(moninf_get_is)
 }
 
 /*** Get the monster's flags.
- * Returns all flags set for the moster, as a list of flag names.
+ * Returns all flags set for the monster, as a list of flag names.
  * @treturn array
  * @function flags
  */
@@ -562,20 +567,21 @@ LUAFN(moninf_get_spells)
     const vector<mon_spell_slot> &unique_slots = get_unique_spells(*mi);
     vector<string> spell_titles;
 
+    bool abjuration = false;
     for (const auto& slot : unique_slots)
+    {
         spell_titles.emplace_back(spell_title(slot.spell));
+
+        // XXX: Probably get_unique_spells() could just do this for us.
+        if (get_spell_flags(slot.spell) & spflag::mons_abjure)
+            abjuration = true;
+    }
+
+    if (abjuration)
+        spell_titles.emplace_back(spell_title(SPELL_ABJURATION));
+
     clua_stringtable(ls, spell_titles);
-
     return 1;
-}
-
-static bool cant_see_you(const monster_info *mi)
-{
-    if (mons_class_flag(mi->type, M_SEE_INVIS))
-        return false;
-    if (you.in_water())
-        return false;
-    return you.invisible() || mi->is(MB_BLIND);
 }
 
 /*** What quality of stab can you get on this monster?
@@ -593,17 +599,10 @@ static bool cant_see_you(const monster_info *mi)
 LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PETRIFIED)
-            || mi->is(MB_PARALYSED))
-    {
+    if (mi->is(MB_STABBABLE))
         lua_pushnumber(ls, 1.0);
-    }
-    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
-             || mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi)
-             || mi->is(MB_DISTRACTED))
-    {
+    else if (mi->is(MB_MAYBE_STABBABLE))
         lua_pushnumber(ls, 0.25);
-    }
     else
         lua_pushnumber(ls, 0);
 
@@ -676,7 +675,7 @@ LUAFN(moninf_get_can_be_constricted)
 {
     MONINF(ls, 1, mi);
     if (!mi->constrictor_name.empty()
-        || !form_keeps_mutations()
+        || form_changes_anatomy()
         || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
                 || you.is_constricting())
             && (you.has_mutation(MUT_TENTACLE_ARMS)
@@ -708,7 +707,41 @@ LUAFN(moninf_get_can_traverse)
     PLAYERCOORDS(p, 2, 3)
     lua_pushboolean(ls,
         map_bounds(p)
-        && monster_habitable_grid(mi->type, env.map_knowledge(p).feat()));
+        && monster_habitable_feat(mi->type, env.map_knowledge(p).feat()));
+    return 1;
+}
+
+/*** Returns the monster's items as an array of items.
+ * @treturn array
+ * @function items
+ */
+LUAFN(moninf_get_items)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        item_def* item = mi->inv[i].get();
+        if (item)
+        {
+            clua_push_item(ls, item);
+            lua_rawseti(ls, -2, ++index);
+        }
+
+    }
+    return 1;
+}
+
+/*** What's the monster's maximum range with a weapon, spell, or wand?
+ * @treturn int
+ * @function range
+ */
+LUAFN(moninf_get_range)
+{
+    MONINF(ls, 1, mi);
+
+    lua_pushnumber(ls, mi->range());
     return 1;
 }
 
@@ -841,6 +874,32 @@ LUAFN(moninf_get_name)
     return 1;
 }
 
+/*
+ * The x,y coordinates of the monster that summoned this monster, in player
+ * centered coordinates. If the monster was not summoned by another monster
+ * that's currently in LOS, return nil.
+ * @treturn int
+ * @treturn int
+ * @function pos
+ */
+LUAFN(moninf_get_summoner_pos)
+{
+    MONINF(ls, 1, mi);
+
+    const auto *summoner = mi->get_known_summoner();
+    if (summoner)
+    {
+        lua_pushnumber(ls, summoner->pos().x - you.pos().x);
+        lua_pushnumber(ls, summoner->pos().y - you.pos().y);
+        return 2;
+    }
+    else
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+}
+
 static const struct luaL_reg moninf_lib[] =
 {
     MIREG(type),
@@ -848,6 +907,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(number),
     MIREG(colour),
     MIREG(mname),
+    MIREG(last_seen_at_turn),
     MIREG(is),
     MIREG(flags),
     MIREG(is_safe),
@@ -863,6 +923,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
     MIREG(can_traverse),
+    MIREG(items),
+    MIREG(range),
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),
@@ -895,6 +957,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
+    MIREG(summoner_pos),
     MIREG(avg_local_depth),
     MIREG(avg_local_prob),
 

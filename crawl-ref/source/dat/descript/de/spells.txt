@@ -33,13 +33,6 @@ mächtige Nekromanten Armeen hirnloser Untoter beschwören. Man solte jedoch
 bedenken dass Untote unfähig sind die Ebene zu verlassen auf der sie geschaffen
 worden sind.
 %%%%
-Animate Skeleton spell
-
-Dieser Zauber erhebt das Skelett einer Leiche in den Status des Unlebens,
-selbst wenn das Skelett noch von Fleisch ummantelt ist.! Man solte jedoch
-bedenken dass Skelette unfähig sind die Ebene zu verlassen auf der sie
-erschaffen worden sind.
-%%%%
 Blade Hands spell
 
 Dieser Zauber verwandelt die Hände des Zauberers in große Sensen-artige

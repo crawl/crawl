@@ -31,6 +31,7 @@
 #include "items.h"
 #include "map-knowledge.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -46,6 +47,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "target-compass.h"
 #include "terrain.h"
 #include "traps.h"
@@ -64,7 +66,7 @@ static void _apply_move_time_taken();
 static void _swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
-    ASSERT(monster_habitable_grid(mons, env.grid(loc)));
+    ASSERT(monster_habitable_grid(mons, loc));
 
     if (monster_at(loc))
     {
@@ -77,7 +79,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     {
         simple_monster_message(*mons, " dissipates!", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(*mons, KILL_RESET, NON_MONSTER, true);
         return;
     }
 
@@ -553,7 +555,7 @@ bool prompt_descent_shortcut(dungeon_feature_type ftype)
 
 static coord_def _rampage_destination(coord_def move, monster* target)
 {
-    if (!player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+    if (!you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
         return you.pos() + move;
     const int dist = grid_distance(you.pos(), target->pos()) - 1;
     return you.pos() + move * dist;
@@ -589,10 +591,7 @@ monster* get_rampage_target(coord_def move)
     beam.thrower         = KILL_YOU;
     beam.pierce          = true;
     beam.affects_nothing = true;
-    beam.is_tracer       = true;
-    // is_targeting prevents bolt::do_fire() from interrupting with a message
-    // if our tracer crosses something that blocks line of fire.
-    beam.is_targeting    = true;
+    beam.set_is_tracer(true);
     beam.fire();
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
@@ -615,7 +614,7 @@ monster* get_rampage_target(coord_def move)
 
         if (mon->wont_attack()
             || mons_is_projectile(*mon)
-            || mons_is_firewood(*mon)
+            || mon->is_firewood()
             || adjacent(you.pos(), mon->pos()))
         {
             return nullptr;
@@ -648,7 +647,7 @@ static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const bool enhanced = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
     const bool rolling = you.has_mutation(MUT_ROLLPAGE);
     const string noun = enhanced ? "stride" :
                          rolling ? "roll" : "rampage";
@@ -993,6 +992,15 @@ void move_player_action(coord_def move)
 
     if (targ_monst)
     {
+        if (try_to_swap
+            && targ_monst->type == MONS_CLOCKWORK_BEE_INACTIVE)
+        {
+            if (clockwork_bee_recharge(*targ_monst))
+                you.turn_is_over = false;
+
+            return;
+        }
+
         if (try_to_swap && !beholder && !fmonger)
         {
             if (swap_check(targ_monst, mon_swap_dest))
@@ -1135,6 +1143,13 @@ void move_player_action(coord_def move)
         if (swap)
             targ_monst->apply_location_effects(targ);
 
+        if (swap && targ_monst->type == MONS_SOLAR_EMBER
+            && targ_monst->hit_points < targ_monst->max_hit_points)
+        {
+            targ_monst->heal(targ_monst->max_hit_points / 2);
+            mprf("You weave more energy into your solar ember.");
+        }
+
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
@@ -1224,7 +1239,7 @@ void move_player_action(coord_def move)
     you.apply_berserk_penalty = !attacking;
 
     if (rampaged && !you.has_mutation(MUT_ROLLPAGE)
-        || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+        || you.unrand_equipped(UNRAND_LIGHTNING_SCALES))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

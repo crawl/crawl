@@ -123,7 +123,7 @@ static void _do_wizard_command(int wiz_command)
     // case CONTROL('M'): break; // XXX do not use, menu command
 
     case 'n': wizard_set_zot_clock(); break;
-    // case 'N': break;
+    case 'N': wizard_get_god_tension(); break;
     // case CONTROL('N'): break;
 
     case 'o': wizard_create_spec_object(); break;
@@ -439,6 +439,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "<w>n</w>      set Zot clock to a value\n"
+                       "<w>N</w>      get current tension value\n"
                        "\n"
                        "<yellow>Dungeon features</yellow>\n"
                        "<w>T</w>      make a trap\n"

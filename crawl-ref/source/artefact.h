@@ -4,13 +4,19 @@
 **/
 
 #pragma once
+#include <cstdint>
+#include <string>
 
 #include "artefact-prop-type.h"
+#include "defines.h"
 #include "unique-item-status-type.h"
+#include "object-class-type.h"
+#include "killer-type.h"
+#include "fixedvector.h"
+
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
-#define KNOWN_PROPS_KEY     "artefact_known_props"
 #define ARTEFACT_PROPS_KEY  "artefact_props"
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
@@ -22,6 +28,10 @@
 #define VICTORY_CONDUCT_KEY "victory_conduct"
 
 struct bolt;
+struct item_def;
+class actor;
+class CrawlVector;
+class monster;
 
 enum unrand_flag_type
 {
@@ -37,6 +47,7 @@ enum unrand_flag_type
                               // =0x100,  // was UNRAND_FLAG_RANDAPP
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
+    UNRAND_FLAG_DELETED          =0x800,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
@@ -72,12 +83,10 @@ struct unrandart_entry
     void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 
-bool is_known_artefact(const item_def &item);
 bool is_artefact(const item_def &item);
 bool is_random_artefact(const item_def &item);
 bool is_unrandom_artefact(const item_def &item, int which = 0);
 bool is_special_unrandom_artefact(const item_def &item);
-void autoid_unrand(item_def &item);
 
 void artefact_fixup_props(item_def &item);
 
@@ -97,24 +106,14 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
                         bool in_abyss);
 
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
-typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
 
 void artefact_desc_properties(const item_def         &item,
-                              artefact_properties_t  &proprt,
-                              artefact_known_props_t &known);
-
-void artefact_known_properties(const item_def        &item,
-                              artefact_known_props_t &known);
+                              artefact_properties_t  &proprt);
 
 void artefact_properties(const item_def &item,
                               artefact_properties_t  &proprt);
 
 int artefact_property(const item_def &item, artefact_prop_type prop);
-
-bool artefact_property_known(const item_def &item, artefact_prop_type prop);
-int artefact_known_property(const item_def &item, artefact_prop_type prop);
-
-void artefact_learn_prop(item_def &item, artefact_prop_type prop);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
 void make_ashenzari_randart(item_def &item);
@@ -158,3 +157,5 @@ void unrand_reacts();
 void unrand_death_effects(monster* mons, killer_type killer);
 
 bool item_type_can_be_artefact(object_class_type typ);
+
+bool are_fixed_props_ok(item_def& item);

@@ -518,6 +518,7 @@ void debuff_player(bool ignore_resistance)
         {
             len = 0;
             mprf(MSGCH_DURATION, "You feel strangely stable.");
+            you.props.erase(SJ_TELEPORTITIS_SOURCE);
         }
         else if (duration == DUR_PETRIFYING)
         {
@@ -534,6 +535,11 @@ void debuff_player(bool ignore_resistance)
         {
             mprf(MSGCH_DURATION, "You are no longer on fire.");
             end_sticky_flame_player();
+        }
+        else if (duration == DUR_FORTRESS_BLAST_TIMER)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
         }
         else if (len > 1)
         {
@@ -590,7 +596,7 @@ bool monster_is_debuffable(const monster &mon)
 
 bool monster_can_be_unravelled(const monster& mon)
 {
-    return monster_is_debuffable(mon) || mon.is_summoned();
+    return monster_is_debuffable(mon) || mon.is_abjurable();
 }
 
 /**
@@ -623,7 +629,7 @@ int detect_items(int pow)
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
 
-    else if (you.has_mutation(MUT_STRONG_NOSE))
+    else if (you.has_mutation(MUT_TREASURE_SENSE))
         map_radius = get_los_radius();
     else
     {
@@ -1084,7 +1090,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
     holy_word_monsters(where, pow, source, attacker);
 }
 
-void torment_player(const actor *attacker, torment_source_type taux)
+int torment_player(const actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1132,7 +1138,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return;
+        return 0;
     }
 
     mpr("Your body is wracked with pain!");
@@ -1186,17 +1192,19 @@ void torment_player(const actor *attacker, torment_source_type taux)
 
     ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
 
-    return;
+    return hploss;
 }
 
-void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
+int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
+    int damage = 0;
+
     if (where == you.pos()
         // The Sceptre of Torment and pain card do not affect the user.
         && !(attacker && attacker->is_player()
             && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN)))
     {
-        torment_player(attacker, taux);
+        damage = torment_player(attacker, taux);
     }
     // Don't return, since you could be standing on a monster.
 
@@ -1204,13 +1212,13 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     if (!mons
         || !mons->alive()
         || mons->res_torment()
-        || attacker && god_protects(attacker, *mons, false)
+        || attacker && never_harm_monster(attacker, *mons, true)
         // Monsters can't currently use the sceptre, but just in case.
         || attacker
            && mons == attacker->as_monster()
            && taux == TORMENT_SCEPTRE)
     {
-        return;
+        return damage;
     }
 
     god_conduct_trigger conducts[3];
@@ -1260,6 +1268,9 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
+    damage += hploss;
+
+    return damage;
 }
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where)
@@ -1287,7 +1298,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     if (caster == cleansing_flame_source::generic
         || caster == cleansing_flame_source::tso)
     {
-        beam.thrower   = KILL_MISC;
+        beam.thrower   = KILL_NON_ACTOR;
         beam.source_id = MID_NOBODY;
     }
     else if (attacker->is_player())
@@ -1316,7 +1327,7 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 
 void majin_bo_vampirism(monster &mon, int damage)
 {
-    if (!player_equip_unrand(UNRAND_MAJIN) || crawl_state.is_god_acting())
+    if (!you.unrand_equipped(UNRAND_MAJIN) || crawl_state.is_god_acting())
         return;
 
     dprf("Majin bo might trigger, dam: %d.", damage);
@@ -1342,8 +1353,20 @@ void majin_bo_vampirism(monster &mon, int damage)
  **/
 void dreamshard_shatter()
 {
-    ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
-    you.slot_item(EQ_AMULET, true)->unrand_idx = UNRAND_DREAMDUST_NECKLACE;
+    ASSERT(you.unrand_equipped(UNRAND_DREAMSHARD_NECKLACE));
+    for (player_equip_entry& entry: you.equipment.items)
+    {
+        if (entry.slot != SLOT_AMULET)
+            continue;
+        item_def& item = entry.get_item();
+        if (is_unrandom_artefact(item, UNRAND_DREAMSHARD_NECKLACE))
+        {
+            you.equipment.remove(item);
+            item.unrand_idx = UNRAND_DREAMDUST_NECKLACE;
+            you.equipment.add(item, SLOT_AMULET);
+            break;
+        }
+    }
     mpr("Your necklace shatters, unleashing a wave of protective dreams!");
     mark_milestone("dreamshard", "was saved by the dreamshard necklace!");
     take_note(NOTE_DREAMSHARD);
@@ -1368,7 +1391,7 @@ void dreamshard_shatter()
         {
             mgen_data mg(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                          MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
-            mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_NO_GOD);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(4));
             if (create_monster(mg))
                 ++created;
         }
@@ -1388,5 +1411,5 @@ void dreamshard_shatter()
     // when dreams spill out into reality it wakes you up
     // put it here after the dream message so that a sleeping player who
     // gets dreamsharded gets a nice message order
-    you.check_awaken(500);
+    you.wake_up();
 }

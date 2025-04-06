@@ -10,6 +10,7 @@
 #define MAX_ENCH_DEGREE_ABJURATION  6
 
 #define SIMULACRUM_POWER_KEY "simulacrum power"
+#define FROZEN_IN_FEAR_KEY "mon_frozen_in_fear"
 
 class actor;
 class monster;
@@ -66,3 +67,4 @@ private:
 };
 
 enchant_type name_to_ench(const char *name);
+int summ_dur(int degree);

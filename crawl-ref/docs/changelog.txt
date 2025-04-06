@@ -1,3 +1,330 @@
+Stone Soup 0.33 (through 0.33-a0-570-f9d81107089)
+-------------------------------------------------
+
+Highlights
+----------
+* New skill and background: Forgewrights, building many explosive constructs.
+* Two new species: poltergeists and revenants.
+* Yet more new monsters, decorations, and traps spread throughout the Dungeon.
+
+Artefacts
+---------
+* New unrands:
+  * The Crown of Vainglory, a +3 hat that grants two extra ring slots, but also
+    makes entering floors wake up nearby enemies and temporarily prohibits
+    stair use.
+  * The fungal fisticloak, a +3 cloak that also takes up the hat slot, provides
+    another gloves slot, and grants a confusion-branded auxiliary fungus attack.
+  * The Justicar's Regalia, a +5 scale mail that grants an extra amulet slot and
+    gives allies summoned or created by the player the regeneration status.
+  * The Skull of Zonguldrok, a talkative off-hand item that grants Reaping brand
+    to one's attacks and another hat slot (on the skull).
+* The macabre finger necklace now also grants +7 HP.
+* Randart weapons can now be Reaping branded, which now creates spectres.
+* Removed unrands: the Sword of Zonguldrok.
+
+Branches, Environment
+---------------------
+* New traps, all of which activate when monsters or players step on them:
+  * Archmage's traps, which drain player mp and grant monsters empowered spells.
+  * Devourer's traps, which corrode players.
+  * Harlequin's traps, which grant monsters chaotic attacks.
+  * Tyrant's traps, which weaken players and grant monsters might.
+* New decorations:
+  * Walkable: caches of baked goods, floral vases (sometimes broken), flower and
+    garden patches, fountains of eyes, fur piles, infernal standards, mops and
+    buckets (sometimes bloodied), mourning vases, and orcish standards.
+  * Solid: enigmatic dynamos and nascence circuits.
+* Walking over fountains now has a chance to produce flavour messages, varying
+  based on the fountain, one's god, and the absence of hostile enemies in sight.
+* Zot traps now can inflict blindness.
+* The last floor of Crypt now has a 30% chance to contain a sanguine talisman.
+* The clouds of degeneration in Alistair's Party Mansion are now alcoholic mist,
+  inflicting Vertigo.
+* The orb chamber on Zot:5 no longer has a chance to be completely blocked off
+  by traps, and instead will deploy several of the above newer traps.
+* Frail pillars of rime can be found in Cocytus.
+* Ziggurats have even more exponential scaling for those doing multiple
+  ziggurats.
+* Sprint VII ("The Pits") has been rescaled and renewed heavily, with many more
+  monster options and mildly-less-aggressive earlier chamber difficulty scaling.
+
+Character
+---------
+* Stat drain has been removed.
+  - Reaching 0 in any stat (through e.g. items or mutations) now solely makes
+    the player permanently slow until their stats are raised again.
+  - Undead players being malmutated now have their HP drained instead.
+* New skill: Forgecraft, used for Forgecraft spells.
+  - Most species have Forgecraft apts similar to their Summoning apts,
+    with the exceptions of Mountain Dwarves, Coglins, Yellow Draconians (all
+    +2), Barachi (+1), Demonspawn, Felids (all -1), Ghouls, Minotaurs, and Tengu
+    (all -2).
+* New background: Forgewright, which starts with a +0 hammer (a reskinned mace),
+  a potion of magic, and a variety of Forgecraft spells.
+* Reavers now start with knowledge of Rending Blade.
+* Summoners start with knowledge of Eringya's Surprising Crocodile and Summon
+  Seismosaurus Egg instead of Summon Blazeheart Golem or Lightning Spire.
+* New mutations:
+  * efficient magic, making spells cost 1 less (to a minimum of 1 MP).
+  * ephemeral shield, granting +7 SH briefly after spells and invocations.
+  * poor constitution, inflicting Weak and then Slow on taking damage.
+  * time-warped blood, hasting some of your allies when you fall below 50%
+    health, and can only activate again after returning to full health.
+* Berserk players are now immune to fear.
+* Constructs the player makes with their own Forgecraft spells can be
+  nonviolently deconstructed by pressing ctrl+[direction] while adjacent.
+* Fungus Form and Tree Form are both immune to sleep.
+* Paralysis, sleep, petrification, and vex status inflicted on the player all
+  now share the same temporary immunity cooldown.
+* Removed mutations: deterioration.
+
+Gods
+----
+* Ashenzari's curse of Companions now supports Forgecraft as well as its prior
+  skills of Summoning and Necromancy.
+* Cheibriados worshippers are never hasted by potions of haste, and can't
+  enter penance by deliberately drinking potions of haste.
+* The wraths of Cheibriados and Trog have been simplified.
+* Dithmenos's shadow mimic also works for Forgecraft spells, creating a shadow
+  turret that can fire through allies.
+* Xom has received more adjustments:
+  * Xom's bazaars have more variety and are less common.
+  * Polymorph and draining effects are less dangerous early on.
+  * New actions: hyperbuff weak ally, burn webs.
+* All three good gods that care about injuring allies now consistently don't
+  care about injuring mindless non-living allies (like Forgecraft's).
+
+Interface and Options
+---------------------
+* Examining equipment and talismans now can show the changes to the player's
+  spell success chances for each spell if they switched to using that item.
+* Spell range is now indicated with numbers instead of diagrams.
+* Default target-picking behaviour for spells, abilities, and items has been
+  improved: it is now more consistent at avoiding the player or their allies
+  when aiming harmful area effects and choose more sensible default aims for
+  some utility effects.
+* Ranged autofight should no longer sometimes cast spells at invalid targets
+  (such as Dispel Undead against living monsters in melee).
+* Equipping an item that would require unequipping multiple other items (such
+  as with going from a 1-handed weapon + shield to a 2-hander) no longer needs
+  manual unequipping to work.
+* Players can no longer wield non-weapon items.
+* Equipment slots a player species doesn't have access to no longer show up on
+  the '%' screen.
+* The autopickup menu no longer groups together rings and amulets.
+* The screen is now tinted blue during paralysis and grey during petrification.
+* Examining monsters shows if they can open doors.
+* Confusion on monsters no longer shares an icon with monsters being distracted.
+* Non-monster UI now darkens quote text and can rarely contain flavour text
+  instead of just quotes.
+
+Items
+-----
+* New weapon: partisans, uncommon one-handed polearms with higher base damage
+  than demon tridents and the longest swing delay of any one-handed weapon.
+* New talisman: sanguine talismans, turning the player into a living-undead
+  vampire. They don't regenerate with enemies visible, get vampiric attacks at
+  50% health, can raise a vampiric thrall when killing monsters with stabs, can
+  transform into a swarm of bats that leave sleep-inducing clouds of bats, and
+  have partial torment resistance.
+* Potions of degeneration are now of moonshine and solely inflict Vertigo.
+* Darts of dispersal are now darts of disjunction, which now repeatedly blink
+  a target each turn for several turns and deal damage with each blink.
+* Experience-gated evokers now appear multiple times per game, stack up to a max
+  of +5, and decrease the experience needed to gain charges with each stack.
+* Rings of slaying are no longer rarer than other rings.
+* +Invis, Harm, and Rampage artifact properties can now be found on talisman
+  randarts.
+
+Monsters
+--------
+* New monsters:
+  * Alderkings, fae trees and necromantic masters of Depths.
+  * Fravashi, mid-tier warrior-summoning angels.
+  * Nekomata, self-cloning ranged cat demons for Pan.
+  * Oni incarcerators, Manifold Assault users for Gehenna.
+  * Sphinx marauders, masters of winds and minds for Shoals and Vaults.
+  * Vampire bloodprinces, sleep-inducing lords of Crypt.
+  * Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
+* Returning monster: ironbound beastmasters, now with a passive animal and slime
+  hasting aura plus the ability to throw bolas to bind foes in place.
+* Apises now have a passive aura that doubles the health of other monsters.
+* Arcanists now have more health and EV.
+* Ball pythons deal less damage.
+* Bennu deal more holy damage.
+* Blood saint and Mnoleg Call of Chaos now can temporarily double monster hp.
+* Monster deep elves and orc high priests now more consistently wear body
+  armour, mostly gaining robes.
+* Creeping infernos now have a fairly large amount of health, move normally
+  towards the player, and deal more damage when they explode.
+* Crystal echidnas deal more damage and are now speed 13.
+* Crystal guardians deal more damage.
+* Elementals in general now have animal intelligence instead of being mindless.
+* Endoplasms no longer have rPois.
+* Glowing orange brains are now unblindable.
+* Iron golems now have less health and EV.
+* Mummy death curses now more frequently drain hp, and the flat damage effects
+  no longer check rTorment.
+* Mutant beasts count as chaotic.
+* Occultists now have more health and EV.
+* Quicksilver oozes have been renamed, rethemed, and retiled to void oozes.
+* Searing wretches can now swim across lava.
+* Sin beasts now come in duos in Pan.
+* Plain sphinxes are now "guardian sphinxes", are stronger overall, and no
+  longer appear in D or in Shoals.
+* Sky beasts lose electric damage and random invisibility to instead deal damage
+  depending on the number of open spaces next to what they hit in melee.
+* Thermic dynamos and undying armouries reward more experience.
+* Water elementals and elemental wellsprings are now amorphous, gaining the
+  same immunity to nets, constriction, and webs jellies have.
+* Mindless non-living monster allies consistently don't get angry at the player
+  for being hit, and do not disappear if they were summoned or constructed.
+* Removed monsters: quasits.
+
+Species
+-------
+* New species: Poltergeists, ghostly trickster whirlwinds. Features:
+  - They have the resists and immunities of being both undead and insubstantial.
+  - They have six slots that can interchangeably wield auxiliary armour (hats,
+    helmets, cloaks, scarves, gloves, or boots), but cannot wear body armour.
+  - Whenever enemies are debuffed, they gain AC scaling to their XL.
+  - At XL 13, they gain the ability to expand into a whirling cacophony,
+    noisily animating each piece of armour worn into allies that try to stay
+    close to the player and which can inflict random debuffs.
+* New species: Revenants, memory-burning mystic skeletons. Features:
+  - Whenever they cast damage-dealing spells, they automatically attack a
+    nearby monster with the highest health.
+  - At XL 3, they start gathering memories from slain foes, charges they may
+    burn away all at once to make that many damage-dealing spells cost 0 mp,
+    be easier to cast while ignoring encumbrance penalties, and get extra power.
+    Spell-activated automatic attacks during this also heal the player.
+  - At XL 3, they also gain knowledge of a random level 1 destructive spell.
+* Formicids now may wield an additional pair of gloves.
+* Mountain Dwarf Summoning apt is lowered from 0 to -2.
+* Enhancer staves are now one-handed instead of two-handed for spriggans and
+  kobolds.
+* Vampires and ghouls have been removed.
+
+Spells
+------
+* New spell school of Forgecraft: thematically a school of constructing bombs,
+  cannons, and limited automata, mechanically a mostly-ally school more focused
+  on direct damage and blasting than Summoning, and design-wise a new means of
+  providing more cross-school spells and pivoting options.
+* New Forgecraft spells:
+  - Kinetic Grapnel (L1 FC): A weak physical projectile connected to one's
+    weapon that guarantees the next melee attack hits and deals extra damage.
+  - Construct Spike Launcher (L2 FC): Builds a spike launcher in a random
+    adjacent wall, which launches spikes at random adjacent targets.
+  - Launch Clockwork Bee (L3 FC): Targets a monster to wind up and ready a
+    clockwork bee over several turns, which can be rewound up when it collapses.
+  - Rending Blade (L4 FC / Conj): Temporarily transforms all of the caster's mp
+    into a blade that pierces through enemies whenever the caster attacks.
+  - Nazja’s Percussive Tempering (L5 FC): A healing and buffing spell for
+    Forgecraft summons that also produces an ally-avoiding physical explosion.
+  - Alistair's Walking Alembic (L5 FC / Alch): A summon that vents poisonous
+    fumes as it attacks to brew various beneficial potion effects.
+  - Fortress Blast (L6 FC): A highly-damaging blast that takes several turns to
+    charge up and pins the caster in place, but which solely scales off of AC.
+  - Forge Phalanx Beetle (L6 FC): A summon that always tries to stay by the
+    caster's side and protects them with an AC boost if adjacent.
+  - Forge Monarch Bomb (L6 FC / Fire): Creates a bomb factory that launches
+    bomblets on top of enemies, both of which only detonate on recast.
+  - Diamond Sawblades (L7 FC): Places up to four sawblades on diagonals around
+    the caster that shred everything around them each turn.
+  - Splinterfrost Shell (L7 FC / Ice): Raises up several sturdy walls around
+    the player that fire off as heavily damaging icicle salvos if broken.
+  - Platinum Paragon (L9 FC): A metallic apotheosis of a single ally that
+    replicates a given artefact weapon, blocks attacks for the caster, does
+    extra attacks with player attacks, and can hit large areas by recasting the
+    spell when charged-up.
+* The following spells have moved to Forgecraft:
+  - Summon Lightning Spire: now "Forge Lightning Spire", Summ/Air -> FC/Air.
+  - Summon Blazeheart Golem: now "Forge Blazeheart Golem", Summ/Fire -> FC/Fire.
+  - Animate Armour: now "Awaken Armour", Summ/Earth -> FC/Earth.
+  - Iskenderun's Battlesphere: L5 Conj -> L4 FC/Conj.
+  - Hoarfrost Cannonade: Alch/Ice -> FC/Ice.
+  - Spellforged Servitor: now "Spellspark Servitor", Summ/Conj -> FC/Conj.
+  - Hellfire Mortar: Fire/Earth -> FC/Fire/Earth.
+* New other spells:
+  - Eringya's Surprising Crocodile (L4 Summ): Creates temporary shallow water
+    and a lunging crocodile all at once to drag an enemy and the caster back.
+  - Summon Seismosaurus Egg (L4 Summ / Earth): Creates an egg that will hatch
+    into a mighty dinosaur if the caster stays next to it with visible enemies.
+* Spell changes:
+  * Awakened Armours now equip a replica of the body armour they're echoing.
+  * Battlespheres last longer at lower spell power, are better at pathing
+    towards their target, and will target the most proportionally damaged foe if
+    possible.
+  * Ensorcelled Hibernation's sleep no longer can be interrupted by noise or
+    failing stealth checks, and has a slightly higher minimum duration.
+  * Hellfire Mortar now scales heavily with spellpower, deals more damage,
+    has longer mortar range, and pushes back singular flying foes.
+  * Lightning Spires now target the furtherest-away foe, if possible.
+  * Maxwell's Portable Piledriver can now be aimed and can push a connected
+    line of lined-up enemies all at once.
+  * Mephitic Cloud is now flavoured as throwing a non-damaging flask of fumes.
+  * Mercury Vapours is now Poisonous Vapours, moved to level 1, no longer
+    inflicts Weak, inflicts less poison status, and deals a small amount of flat
+    AC-ignoring damage against targets without rPois.
+  * Rimeblight now chains to two other targets on cast and now reliably spreads
+    on death instead of also spreading through its explosions.
+  * Sting is now Mercury Arrow, moved to level 2, no longer inflicts the poison
+    status (but still partially checks rPois), and gains Mercury Vapours'
+    previous HD-check area-of-effect Weak status.
+  * Summon Horrible Things now has a chance to inflict a Will-lowering temporary
+    mutation with each cast.
+  * Teleport Other is now smite targetted.
+* Spells that can't miss are no longer affected by player blindness debuffs.
+
+Tiles and Other Art
+-------------------
+* New tiles for existing game elements:
+  * Abilities: Accepting Makhleb's infernal marks.
+  * Features: altars to Fedhas, altars to Xom, caches of meat, granite statues
+    in Depths and Zot.
+  * Items: all forms of leather armour.
+  * Monsters: apises, boggarts, brain worms, creeping infernos, culicivora,
+    great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
+    shapeshifters and glowing shapeshifters, sky beasts, all tengu types.
+  * Mutation icons: big wings, demonspawn demonic touch, mp-powered wands,
+    screaming, subdued magic, tendrils, wild magic.
+  * Plants, both regular and withered.
+  * Player dolls: Coglins.
+  * The prune curse from the glaive of Prune.
+  * Ru sacrifices: sacrificed eye, sacrificed hand.
+  * Species passives: barachi hops, demigod divine attributes, djinn flat hp,
+    human explore regen, mertails.
+  * Spell components: Hoarfrost Cannonade, Hellfire Mortar.
+  * Spell icons: Blazeheart Golem, Dazzling Flash, Fulsome Fusillade, Hellfire
+    Mortar, Hoarfrost Cannonade, Lightning Spire, Magnavolt, Permafrost
+    Eruption, Spellspark Servitor, all remaining monster-only spells.
+  * Starting screen icons: high scores.
+  * Unrands: the robe of Augmentation, Brilliance and its brand, Firestarter,
+    Punk's acid brand, the robe of Folly, the sword of the Doom Knight, and
+    the toga "Victory".
+  * Visual effects: airstrike, draining gaze, doom howl, entropic weave,
+    fire storm, fulsome fusillade, ice blasts, magma, manifold assault,
+    mephitic cloud, mystic blast, potion petition, sap magic, sentinel's mark,
+    wand of warping.
+  * Walls: Vaults and Trove rock.
+* Pandemonium now has unique stone wall tiles for regular floors and unique wall
+  tiles for each of the unrand Pan lord vaults.
+* Gehenna now has unique stone wall tiles.
+* Depths and Zot now have unique metal wall tiles.
+* Webtiles now has the banishment animation offline tiles uses.
+* New oni splash screen by benadryl.
+
+Stone Soup 0.32.1 (20240925)
+----------------------------
+
+Bugfix release
+--------------
+* Fix blockable beam attacks from monster spells being blocked 100% of the
+  time.
+* 40 other bug fixes, interface improvements, and documentation updates.
+
 Stone Soup 0.32.0 (20240829)
 ----------------------------
 

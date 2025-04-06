@@ -122,8 +122,7 @@ spret cast_polar_vortex(int powc, bool fail, bool no_prompt)
     if (!no_prompt && stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
                     return !act->res_polar_vortex()
-                        && (!act->is_monster()
-                            || !god_protects(&you, act->as_monster(), true));
+                        && !never_harm_monster(&you, act->as_monster());
                 }))
     {
         return spret::abort;
@@ -373,8 +372,7 @@ void polar_vortex_damage(actor *caster, int dur)
                     // the victim.
                     if (dur > 0 && victim->alive()
                         && (!caster->is_player()
-                            || !victim->is_monster()
-                            || !god_protects(caster, victim->as_monster(), true)))
+                            || !never_harm_monster(caster, victim->as_monster())))
                     {
                         const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg

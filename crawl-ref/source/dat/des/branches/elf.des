@@ -46,8 +46,8 @@ end
 
 -- Some thematic, limited extra rewards for opening the Hall of Blades.
 function hall_of_blades_extra_rewards(e)
-    e.kitem("d = scroll of enchant weapon ident:type q:1")
-    e.kitem("e = scroll of brand weapon ident:type q:1")
+    e.kitem("d = scroll of enchant weapon pre_id q:1")
+    e.kitem("e = scroll of brand weapon pre_id q:1")
     e.kitem("f = blade talisman / blade talisman randart w:2")
 end
 
@@ -629,18 +629,13 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_2
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
 SUBST:   l : .v, m : GGGv., v : vbcx
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = electricity
-TILE:    G = storm_conduit
-:   set_feature_name("metal_statue", "storm conduit")
+:   vault_metal_statue_setup(_G, "G", "storm conduit")
 : end
 MAP
   ...........
@@ -663,7 +658,6 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_3
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 : if crawl.coinflip() then
 SHUFFLE: bcegh
 SUBST:   b = .
@@ -675,13 +669,9 @@ SHUFFLE: abcdeghi
 SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
 SUBST:   j : GGGv., v : vbcx
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = vehumet
-TILE:    G = arcane_conduit
-:   set_feature_name("metal_statue", "arcane conduit")
+:   vault_metal_statue_setup(_G, "G", "arcane conduit")
 : end
 MAP
         .
@@ -769,16 +759,11 @@ ENDMAP
 NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
-KFEAT:   G = metal_statue
 SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvGG
 : if crawl.coinflip() then
-COLOUR:  G = vehumet
-TILE:    G = arcane_conduit
-:   set_feature_name("metal_statue", "arcane conduit")
+:   vault_metal_statue_setup(_G, "G", "arcane conduit")
 : else
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
         x
@@ -828,25 +813,20 @@ NAME:    nicolae_elf_glassroom_feature
 TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   O = any shop
-KFEAT:   G = metal_statue
 SHUFFLE: x_/m-
 SUBST:   S = GTOSSS
 : if you.depth() == 1 then
 SUBST:   S = )}]
-: elseif you.depth_fraction() < 1 then
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
 SUBST:   S = (){}[]
 : else
 SUBST:   S = ({[
 : end
 CLEAR:   _
 : if crawl.coinflip() then
-COLOUR:  G = warp
-TILE:    G = dimensional_conduit
-:   set_feature_name("metal_statue", "dimensional conduit")
+:   vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : else
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
 ---__.__---
@@ -1061,10 +1041,7 @@ MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
 KMONS:  2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM:  2 = randbook disc:conjuration disc2:summoning slevels:16
 SUBST:  x : xxc, G : Gm, m : mmcxb
-KFEAT:  G = metal_statue
-COLOUR: G = vehumet
-TILE:   G = arcane_conduit
-: set_feature_name("metal_statue", "arcane conduit")
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
 MAP
 ...........1............
 .Gmm.x..x......x..x.mmG.
@@ -1205,7 +1182,7 @@ KITEM:   A = any good_item
 KITEM:   B = any good_item
 KMONS:   A = patrolling deep elf knight / patrolling deep elf archer
 KMONS:   B = patrolling deep elf high priest / patrolling deep elf demonologist
-MONS:    ice dragon / fire dragon,  storm dragon / shadow dragon / iron dragon
+MONS:    ice dragon / fire dragon, storm dragon / shadow dragon / iron dragon
 MONS:    orc knight / orc sorcerer / orc high priest
 MONS:    orc warrior / orc wizard / orc priest
 MONS:    orc
@@ -1246,7 +1223,7 @@ MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
 MONS:    orc sorcerer / orc high priest / w:5 ogre mage
 MONS:    orc knight / deep troll / w:1 orc sorcerer / w:1 orc high priest
 # the arbiter(s):
-MONS:    great orb of eyes / sphinx
+MONS:    great orb of eyes / guardian sphinx
 # The orcs might have a unique with them. He or she will likely be outclassed
 # by the others in attendance, but perhaps has some special testimony to
 # present. None of the uniques really fits in with the deep elves...
@@ -1457,9 +1434,9 @@ MONS:    deep elf pyromancer, deep elf elementalist
 MONS:    deep elf zephyrmancer, deep elf annihilator
 MONS:    deep elf knight, deep elf blademaster, deep elf archer
 KMONS:   8 = deep elf master archer
-ITEM:    staff of fire ident:type / staff of air ident:type / \
-         ring of wizardry ident:type / ring of slaying ident:type / \
-         ring of dexterity ident:type / longbow good_item
+ITEM:    staff of fire pre_id / staff of air pre_id / \
+         ring of wizardry pre_id / ring of slaying pre_id / \
+         ring of dexterity pre_id / longbow good_item
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
 SHUFFLE: 12 / 34, 56 / 78
 SUBST:   ' : x., " : x.
@@ -1603,12 +1580,9 @@ TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
 MONS:   deep elf annihilator, deep elf elementalist / thermic dynamo w:4
-KFEAT:  G = metal_statue
 NSUBST: D = 2 / 3 / * = 1:60 .:60 1 2
 SUBST:  E = 1:140 .:140 1 2, % = %%%*., G : GGx
-COLOUR: G = vehumet
-TILE:   G = arcane_conduit
-: set_feature_name("metal_statue", "arcane conduit")
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
 MAP
 ccc..............ccc
 ccc..cc..cc..cc..ccc
@@ -1700,8 +1674,7 @@ KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf knight simulacrum
 KFEAT: 1V = V
 SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
-TILE:  G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
 cccccccccccccccccccccc
 ccccG*GcccG%GcccG%Gccc
@@ -1721,11 +1694,11 @@ ENDMAP
 NAME:  nicolae_gammafunk_elf_defective_weapons_storage
 TAGS:  transparent no_monster_gen
 DEPTH: Elf
-KITEM: 123 = % w:20 / scroll of enchant weapon ident:type w:5 \
-       / scroll of brand weapon ident:type w:5
+KITEM: 123 = % w:20 / scroll of enchant weapon pre_id w:5 \
+       / scroll of brand weapon pre_id w:5
 {{
 -- Fast dancing weapons. This will have chaos, but will be nerfed a lot by
--- confusion
+-- vitrification
 local chaos_types = { ["spear"] = 2, ["trident"] = 2, ["mace"] = 2,
     ["flail"] = 2, ["dire flail"] = 2, ["quarterstaff"] = 2,
     ["long sword"] = 2, ["scimitar"] = 2, ["short sword"] = 2, ["dagger"] = 2,
@@ -1735,11 +1708,11 @@ local chaos_types = { ["spear"] = 2, ["trident"] = 2, ["mace"] = 2,
 local disto_types = { ["halberd"] = 1, ["morningstar"] = 1, ["great mace"] = 1,
     ["giant club"] = 1, ["great sword"] = 1, ["battleaxe"] = 1}
 -- Highest quality types we'll degrade and will have venom.
-local venom_types = { ["demon trident"] = 1, ["bardiche"] = 2,
-    ["giant spiked club"] = 2, ["lajatang"] = 1, ["double sword"] = 1,
-    ["triple sword"] = 1, ["broad axe"] = 1, ["battleaxe"] = 2,
-    ["executioner's axe"] = 1 }
-kmons("1 = dancing weapon perm_ench:blind ; " ..
+local venom_types = { ["demon trident"] = 1, ["partisan"] = 1,
+    ["bardiche"] = 2, ["giant spiked club"] = 2, ["lajatang"] = 1,
+    ["double sword"] = 1, ["triple sword"] = 1, ["broad axe"] = 1,
+    ["battleaxe"] = 2, ["executioner's axe"] = 1 }
+kmons("1 = dancing weapon perm_ench:vitrified ; " ..
     dgn.random_item_def(chaos_types, "chaos", nil, "|"))
 kmons("2 = dancing weapon perm_ench:slow ; " ..
     dgn.random_item_def(disto_types, "distortion", nil, "|"))
@@ -2036,19 +2009,14 @@ MONS:    deep elf pyromancer, deep elf knight, thermic dynamo
 ITEM:    ring of fire, ring of ice
 ITEM:    staff of fire no_pickup, staff of cold no_pickup
 KFEAT:   - = closed_clear_door
-KFEAT:   G = metal_statue
 SUBST:   0 = 12, 9 = 33344455
 SHUFFLE: df, df / eg
 : if crawl.coinflip() then
 SUBST:   ! = l, ? = G, ~ = w
-COLOUR:  G = ice
-TILE:    G = icy_conduit
-:   set_feature_name("metal_statue", "icy conduit")
+:   vault_metal_statue_setup(_G, "G", "icy conduit")
 : else
 SUBST:   ! = G, ? = w, ~ = l
-COLOUR:  G = fire
-TILE:    G = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
+:   vault_metal_statue_setup(_G, "G", "fiery conduit")
 : end
 MAP
    xxxxxxxx
@@ -2168,11 +2136,13 @@ MAP
 .............
 ENDMAP
 
-NAME: nicolae_vaults_blade_armed_guards
-KMONS: 2 = deep elf knight ; battleaxe | broad axe | flail | glaive | great mace | \
-   halberd | hand axe | long sword | morningstar | scimitar | short sword | \
-   trident | war axe . chain mail | plate armour . \
-   kite shield | buckler w:20 | nothing w:60
+NAME:  nicolae_vaults_blade_armed_guards
+KMONS: 2 = deep elf knight ; hand axe | war axe | broad axe | battleaxe | \
+                             flail | morningstar | great mace | \
+                             short sword | long sword | scimitar | \
+                             trident | partisan | glaive | . \
+                             chain mail | plate armour .  kite shield | \
+                             buckler w:20 | nothing w:60
 : elven_blade_entry(_G)
 MAP
       =
@@ -2799,12 +2769,12 @@ xxxxxxxxxc..2..vv..1...1..vv.....cx
 xxxxxxxxxc2..6vvv....1....vvv64.4cx
 xxxxxxxxxc..vvvv...........vvvv..cx
 xxxxxxxxxc.vvv.....cc.cc.....vvv.cx
-xxxxxxxxxc.v.3...cccc.cccc.3...v.cx
-xxxxxxxxxc.3...cccxxc.cxxccc.3.3.cx
-xxxxxxxxxc...cccxxxxc.cxxxxccc...cx
-xxxxxxxxxc.cccxxxxxxc.cxxxxxxccc.cx
-xxxxxxxxxcccxxxxxxxxc.cxxxxxxxxcccx
-xxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxx
+xxxxxxxxxc.v.3...ccc...ccc.3...v.cx
+xxxxxxxxxc.3...cccc.....cccc.3.3.cx
+xxxxxxxxxc...ccccc..c.c..ccccc...cx
+xxxxxxxxxc.cccxxc..xc.cx..ccxccc.cx
+xxxxxxxxxcccxxxxcc..c.c..ccxxxxcccx
+xxxxxxxxxxxxxxxxxcc..@..ccxxxxxxxxx
 ENDMAP
 
 
@@ -2931,13 +2901,13 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxxx
+xxxxxxxxxxxxxccccxx@xxccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxc..x.....x..cxxxxxxxxxxxxx
+xxxxxxxxxxxxxc....x.x....cxxxxxxxxxxxxx
+xxxxxxxxxxxxxcx.........xcxxxxxxxxxxxxx
+xxxxxxxxxxxxxc....x.x....cxxxxxxxxxxxxx
+xxxxxxxxxxxxxc..x.....x..cxxxxxxxxxxxxx
+xxxxcccccxxxxcccccc.ccccccxxxxcccccxxxx
 xxccc...cccxxxxxccc.cccxxxxxccc...cccxx
 xcc.......cccxccc.....cccxccc.......ccx
 xc3.........ccc.........ccc.........4cx
@@ -3069,8 +3039,8 @@ xc...........cc...........cc...2....6..cx
 xccc...2...cccccc.......cccccc...5...cccx
 xxxcc.....ccxxxxcc.....ccxxxxcc.....ccxxx
 xxxxccc.cccxxxxxxccc.cccxxxxxxccc.cccxxxx
-xxxxxxcccxxxxxxxxxxc.cxxxxxxxxxxcccxxxxxx
-xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxcccxxxxxxxxcc...ccxxxxxxxxcccxxxxxx
+xxxxxxxxxxxxxxxxxc@...@cxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
@@ -3152,7 +3122,7 @@ xc+cc*$*$*$$*ccccccc.5ccccccc*|*$|$|$cc+cx
 xc*$*$*$*$|$*cxxxxxc3.cxxxxxc*|$|$|$|$|$cx
 xcccccc*$*|cccxxxxxc5.cxxxxxccc|$|$ccccccx
 xxxxxxccccccxxxxxxxc..cxxxxxxxccccccxxxxxx
-xxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxc@@cxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
@@ -3181,9 +3151,9 @@ xxc$||c*|$cc.................2cxx
 xcc*|cc**cc...5bbb7.......4...ccx
 xc$|*c|**c..1bbbbbbb..........2cx
 xc|$cc*|cc..bbbbbbbbb..4.......cx
-xc*|c|**c..6bbbbbbbbb..........cx
+xc*|c|**c..6bbbbbbbbb..........cc
 xc|*c$$|c..bbbbbbbbbbb..........@
-xc+ccc+cc6.bbbbbbbbbbb...1..3cccx
+xc+ccc+cc6.bbbbbbbbbbb...1..3cccc
 xc..1......bbbbbbbbbbb......2cxxx
 xc..........bbbbbbbbb.......ccxxx
 xc.7..5....4bbbbbbbbb.......cxxxx
@@ -3199,7 +3169,7 @@ xxxxxxcc3........3cccccxxxxxxxxxx
 xxxxxxxccc......cccxxxxxxxxxxxxxx
 xxxxxxxxxccc3...cxxxxxxxxxxxxxxxx
 xxxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc@cxxxxxxxxxxxxxxxx
 ENDMAP
 
 # The elves had created golems to guard their treasure.
@@ -3338,9 +3308,9 @@ xcc...ccxxxxxcc.......ccxxxxxcc4..ccx
 xxcc1ccxxxxxxxcc.....ccxxxxxxxcc.ccxx
 xxxcccxxxxxxxxxcc3..ccxxxxxxxxxcccxxx
 xxxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc2cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcc...ccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc..c..ccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc@.ccc.@cxxxxxxxxxxxxxx
 ENDMAP
 
 # Before transform: 31x$, 26x*, 31x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7

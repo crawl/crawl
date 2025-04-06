@@ -1,0 +1,17 @@
+name: "walking alembic"
+glyph: {char: "9", colour: etc_elven}
+flags: [fighter, no_exp_gain]
+resists: {elec: 1, fire: 1, cold: 1}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: punch, flavour: alembic, damage: 19}
+hd: 9
+hp_10x: 580
+ac: 9
+ev: 8
+intelligence: brainless
+uses: open_doors
+size: large
+shape: humanoid

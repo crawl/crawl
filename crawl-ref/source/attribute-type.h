@@ -53,10 +53,8 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
-#if TAG_MAJOR_VERSION == 34
-    ATTR_XP_DRAIN,             // Severity of current skill drain
-#endif
-    ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
+    ATTR_CHANNELLED_SPELL,     // Which spell are we currently channelling?
+    ATTR_CHANNEL_DURATION,     // How many turns have we been channelling it?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
 #if TAG_MAJOR_VERSION == 34
@@ -93,7 +91,8 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
 #endif
-    ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
+    ATTR_STAT_ZERO,            // Whether one of the player's stats has fallen
+                               // to zero or below (and they have been notified).
 #if TAG_MAJOR_VERSION == 34
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
@@ -105,5 +104,7 @@ enum attribute_type
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
 #endif
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
+    ATTR_VOUCHER,              // How many shop vouchers you have
+    ATTR_TRAITOR,              // God who has been abandoned with an invocations title
     NUM_ATTRIBUTES
 };

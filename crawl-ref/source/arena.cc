@@ -788,7 +788,7 @@ namespace arena
                          "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
-                    monster_die(other, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(other, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
                 }
                 else
                 {
@@ -1145,7 +1145,7 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
     // If the first band member makes it past the summon throttle cut,
     // let all of the rest of its band in too regardless of the summon
     // throttle.
-    if (mg.abjuration_duration > 0 && first_band_member)
+    if (mg.summon_duration > 0 && first_band_member)
     {
         if (mg.behaviour == BEH_FRIENDLY
             && arena::faction_a.active_members > arena::summon_throttle)
@@ -1207,7 +1207,7 @@ void arena_placed_monster(monster* mons)
 
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        ii->flags |= ISFLAG_IDENT_MASK;
+        ii->flags |= ISFLAG_IDENTIFIED;
 
         // Set the "drop" time here in case the monster drops the
         // item without dying, like being polymorphed.
@@ -1222,7 +1222,7 @@ void arena_placed_monster(monster* mons)
         // Real summons drop corpses and items.
         if (arena::real_summons)
         {
-            mons->del_ench(ENCH_ABJ, true, false);
+            mons->del_ench(ENCH_SUMMON_TIMER, true, false);
             for (mon_inv_iterator ii(*mons); ii; ++ii)
                 ii->flags &= ~ISFLAG_SUMMONED;
         }
@@ -1297,7 +1297,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         // Don't respawn when a slime 'dies' from merging with another
         // slime.
         && !(mons->type == MONS_SLIME_CREATURE && silent
-             && killer == KILL_MISC
+             && killer == KILL_NON_ACTOR
              && killer_index == NON_MONSTER))
     {
         arena::faction *fac = nullptr;

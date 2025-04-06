@@ -162,6 +162,18 @@ spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
 %%%%
+Forgecraft
+
+Forgecraft is the art of shaping tangible objects out of magic. Forgecraft
+spells can construct a wide array of mechanical creatures that will fight
+alongside the caster, as well as create traps and barricades and even turn the
+physical resilience of one's armour into a weapon.
+
+Being skilled in Forgecraft increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
+%%%%
 Necromancy
 
 Necromancy is the art of draining and gaining life, although most often
@@ -265,4 +277,3 @@ Shapeshifting enables the use of magical talismans to change oneself into other
 forms. Sufficient skill allows one to use more powerful forms without gravely
 damaging one's health. Being skilled in Shapeshifting also makes most forms
 somewhat stronger, in ways which vary between forms.
-%%%%

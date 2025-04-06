@@ -7,9 +7,9 @@ int: 2
 dex: 4
 equipment:
   - "animal skin"
-  - "potion of lignification"
-  - "beast talisman"
-  - "flux talisman"
+  - "flux bauble q:4"
+  - "quill talisman"
+  - "protean talisman"
 recommended_species:
   - naga
   - merfolk

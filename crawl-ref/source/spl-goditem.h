@@ -68,6 +68,12 @@ const enchant_type dispellable_enchantments[] =
     ENCH_CONTAM,
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,
+    ENCH_ARMED,
+    ENCH_VITRIFIED,
+    ENCH_CURSE_OF_AGONY,
+    ENCH_RIMEBLIGHT,
+    ENCH_MAGNETISED,
+    ENCH_BLINKITIS,
 };
 
 bool player_is_debuffable();
@@ -99,8 +105,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 void holy_word_player(holy_word_source_type source);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
-void torment_cell(coord_def where, actor *attacker, torment_source_type taux);
-void torment_player(const actor *attacker, torment_source_type taux);
+int torment_cell(coord_def where, actor *attacker, torment_source_type taux);
+int torment_player(const actor *attacker, torment_source_type taux);
 
 void setup_cleansing_flame_beam(bolt &beam, int pow,
                                 cleansing_flame_source caster,

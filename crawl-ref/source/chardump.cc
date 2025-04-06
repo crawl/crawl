@@ -317,6 +317,18 @@ static void _sdump_visits(dump_params &par)
     }
 
     {
+        const PlaceInfo place_info = you.get_place_info(BRANCH_NECROPOLIS);
+        if (place_info.num_visits > 0)
+        {
+            text += make_stringf("You %svisited the chambers of the Necropolis %d time",
+                                 have.c_str(), place_info.num_visits);
+            if (place_info.num_visits > 1)
+                text += "s";
+            text += ".\n";
+        }
+    }
+
+    {
         const PlaceInfo place_info = you.get_place_info(BRANCH_ZIGGURAT);
         if (place_info.num_visits > 0)
         {
@@ -741,19 +753,19 @@ static bool _dump_item_origin(const item_def &item)
         return true;
 
     if (fs(IODS_ARTEFACTS)
-        && is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && is_artefact(item) && item.is_identified())
     {
         return true;
     }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
-        && item_type_known(item))
+        && item.is_identified())
     {
         const int spec_ench = get_armour_ego_type(item);
         return spec_ench != SPARM_NORMAL;
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
-        && item_type_known(item))
+        && item.is_identified())
     {
         return get_weapon_brand(item) != SPWPN_NORMAL;
     }
@@ -1249,6 +1261,7 @@ static const char* _stab_names[] =
     "Paralysed",
     "Sleeping",
     "Betrayed ally",
+    "Blind",
 };
 
 static const char* _aux_attack_names[] =
@@ -1266,6 +1279,8 @@ static const char* _aux_attack_names[] =
     "Tentacles",
     "Maw",
     "Executioner Blades",
+    "Fungal Fists",
+    "Stingers",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 

@@ -75,7 +75,7 @@ public:
 extern const opacity_fully_no_trans opc_fully_no_trans;
 
 // Make immobile monsters block in addition to no_trans.
-// This is used for spellforged servitor AI.
+// This is used for spellspark servitor AI.
 // XXX: could use opacity_mons_immob? should?
 class opacity_immob : public opacity_func
 {

@@ -386,7 +386,7 @@ an apple. Crisp.
 
 an apricot. Delicious.
 
-a banana. Delcious.
+a banana. Delicious.
 
 a choko. Bland.
 
@@ -404,7 +404,7 @@ a snozzcumber. Putrid!
 
 # Other fruits.
 
-a tomato. Savory.
+a tomato. Savoury.
 
 a cherimoya. Tangy!
 
@@ -416,7 +416,7 @@ _meat_and_reaction_
 
 # Try to keep to dungeon animals.
 
-a smoked eel. Savory!
+a smoked eel. Savoury!
 
 a yak sausage. Delicious.
 
@@ -488,7 +488,7 @@ w:6
 some choko cake. Less bland than expected!
 
 w:2
-some [trollish|giant|giant] [wittenberger|grovbrød]. Savory.
+some [trollish|giant|giant] [wittenberger|grovbrød]. Savoury.
 
 w:2
 some tengu anpan. Delightful.
@@ -588,14 +588,6 @@ gargoyle baked goods cache
 
 @stone baked goods cache@
 %%%%
-ghoul fruit cache
-
-@carnivore fruit cache@
-%%%%
-ghoul baked goods cache
-
-@carnivore baked goods cache@
-%%%%
 kobold fruit cache
 
 @carnivore fruit cache@
@@ -628,6 +620,30 @@ oni baked goods cache
 
 You reach down and grab @_baked_good_and_reaction_@ You go for seconds.
 %%%%
+poltergeist fruit cache
+
+@inediate fruit cache@
+%%%%
+poltergeist meat cache
+
+@inediate meat cache@
+%%%%
+poltergeist baked goods cache
+
+@inediate baked goods cache@
+%%%%
+revenant fruit cache
+
+@inediate fruit cache@
+%%%%
+revenant meat cache
+
+@inediate meat cache@
+%%%%
+revenant baked goods cache
+
+@inediate baked goods cache@
+%%%%
 spriggan fruit cache
 
 @short fruit cache@
@@ -654,17 +670,6 @@ troll fruit cache
 troll baked goods cache
 
 @oni baked goods cache@
-%%%%
-vampire fruit cache
-
-You root around, looking for a blood orange, but fail to find any.
-
-w:4
-You reach down and find a blood orange. Delicious.
-%%%%
-vampire baked goods cache
-
-You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
 %%%%
@@ -777,3 +782,14 @@ tree meat cache
 tree baked goods cache
 
 @short baked goods cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+%%%%
+vampire baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.

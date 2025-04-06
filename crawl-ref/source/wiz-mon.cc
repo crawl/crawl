@@ -104,7 +104,7 @@ void wizard_create_spec_monster_name()
     {
         // Try again with habitat HT_LAND.
         // (Will be changed to the necessary terrain type in dgn_place_monster.)
-        place = find_newmons_square(MONS_NO_MONSTER, you.pos());
+        place = find_newmons_square(MONS_NO_MONSTER, you.pos(), 2, you.current_vision);
     }
 
     if (!in_bounds(place))
@@ -269,7 +269,7 @@ void debug_list_monsters()
             total_nonuniq_exp += exp;
 
         if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
-            || mi->has_ench(ENCH_ABJ))
+            || mi->is_summoned())
         {
             continue;
         }
@@ -428,7 +428,7 @@ void debug_stethoscope(int mon)
          mons.res_elec(),
          mons.res_poison(),
          mons.res_negative_energy(),
-         mons.res_acid(),
+         mons.res_corr(),
          mons.res_sticky_flame() ? "yes" : "no",
          mons.res_miasma() ? "yes" : "no");
 
@@ -749,8 +749,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 
 void wizard_make_monster_summoned(monster* mon)
 {
-    int summon_type = 0;
-    if (mon->is_summoned(nullptr, &summon_type) || summon_type != 0)
+    if (mon->is_summoned())
     {
         mprf(MSGCH_PROMPT, "Monster is already summoned.");
         return;
@@ -799,7 +798,7 @@ void wizard_make_monster_summoned(monster* mon)
         }
         type = (int) spell;
     }
-    mon->mark_summoned(dur, true, type);
+    mon->mark_summoned(type, dur);
     mpr("Monster is now summoned.");
 }
 

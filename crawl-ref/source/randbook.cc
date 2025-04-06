@@ -396,6 +396,7 @@ static void _make_book_randart(item_def &book)
         return;
 
     book.flags |= ISFLAG_RANDART;
+    book.flags |= ISFLAG_IDENTIFIED;
     if (!book.props.exists(ARTEFACT_APPEAR_KEY))
     {
         const string name = make_artefact_name(book, true);

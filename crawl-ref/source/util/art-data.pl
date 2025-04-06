@@ -31,6 +31,7 @@ my %field_type = (
     COLOUR   => "enum",
     CORRODE  => "bool",
     DBRAND   => "str",
+    DELETED  => "bool",
     DEX      => "num",
     DESCRIP  => "str",
     DRAIN    => "bool",
@@ -45,6 +46,7 @@ my %field_type = (
     ENH_AIR  => "bool",
     ENH_EARTH => "bool",
     ENH_ALCH => "bool",
+    ENH_FORGE => "bool",
     EV       => "num",
     EVIL     => "bool",
     FOG      => "bool",
@@ -78,11 +80,13 @@ my %field_type = (
     SEEINV   => "bool",
     SKIP_EGO => "bool",
     SH       => "num",
+    SILENCE  => "bool",
     SLAY     => "num",
     SPECIAL  => "bool",
     SLOW     => "bool",
     STEALTH  => "num",
     STR      => "num",
+    WIZ      => "bool",
     TYPE     => "str",
     UNIDED   => "bool",
     VALUE    => "num",
@@ -268,8 +272,8 @@ sub finish_art
 
     my $flags = "";
     my $flag;
-    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC", "NOGEN", "RANDAPP",
-                   "UNIDED", "SKIP_EGO")
+    foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC", "DELETED", "NOGEN",
+                   "RANDAPP", "UNIDED", "SKIP_EGO")
     {
         if ($artefact->{$flag})
         {
@@ -551,7 +555,7 @@ my @art_order = (
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-    "ACROBAT", "REGEN_MP",
+    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -566,7 +570,7 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT", "REGEN_MP",
+#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE",
 #     "}",
 # end TAG_MAJOR_VERSION
 

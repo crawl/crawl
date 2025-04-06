@@ -9,6 +9,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function bailey_portal(e, ptype)
   local timeout_turns = crawl.random_range(600, 800)
@@ -65,15 +67,15 @@ end
 
 -- Axes.
 function axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang ident:type q:2 | \
-                                  boomerang ident:type q:1 / \
-          generate_awake hobgoblin ; boomerang ident:type q:2 | \
-                                     boomerang ident:type q:1")
+  e.mons("generate_awake kobold ; boomerang pre_id q:2 | \
+                                  boomerang pre_id q:1 / \
+          generate_awake hobgoblin ; boomerang pre_id q:2 | \
+                                     boomerang pre_id q:1")
 end
 
 function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang ident:type q:2 | \
-                                  boomerang ident:type q:1")
+  e.mons("generate_awake kobold ; boomerang pre_id q:2 | \
+                                  boomerang pre_id q:1")
 end
 
 function easy_axe_fighter(e)
@@ -107,21 +109,22 @@ end
 
 function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5 | trident w:5 | halberd | glaive | bardiche w:1 . \
+          spear w:5 | trident w:5 | partisan w:1 | \
+          halberd | glaive | bardiche w:1 . \
           ring mail | scale mail | chain mail | plate armour |\
           crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5 | halberd | glaive | bardiche w:1 . \
+          trident w:5 | partisan w:2 | halberd | glaive | bardiche w:1 . \
           ring mail | scale mail | chain mail | plate armour | \
           crystal plate armour w:1")
 end
 
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd good_item | glaive good_item | bardiche good_item w:1 . \
+          partisan good_item | glaive good_item | bardiche good_item w:1 . \
           chain mail w:20 | plate armour | crystal plate armour w:1")
 end
 
@@ -177,12 +180,12 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; boomerang ident:type q:2 | \
-                 boomerang ident:type q:1 / \
-        hobgoblin ; boomerang ident:type q:2 | \
-                    boomerang ident:type q:1 / \
-        orc ; boomerang ident:type q:2 | \
-              boomerang ident:type q:1
+MONS:   goblin ; boomerang pre_id q:2 | \
+                 boomerang pre_id q:1 / \
+        hobgoblin ; boomerang pre_id q:2 | \
+                    boomerang pre_id q:1 / \
+        orc ; boomerang pre_id q:2 | \
+              boomerang pre_id q:1
 SUBST: 1 = 122
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -206,8 +209,8 @@ NAME: enter_bailey_5
 TAGS: transparent no_pool_fixup
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; boomerang ident:type q:2 | \
-               boomerang ident:type q:1
+MONS: goblin ; boomerang pre_id q:2 | \
+               boomerang pre_id q:1
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS: goblin ; spear
@@ -269,7 +272,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of degeneration q:2 ident:type
+KITEM:  ! = potion of moonshine q:2 pre_id
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP
@@ -313,8 +316,8 @@ TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: orc ; boomerang ident:type q:1 | \
-            boomerang ident:type q:2 . hand axe
+MONS: orc ; boomerang pre_id q:1 | \
+            boomerang pre_id q:2 . hand axe
 MONS: gnoll ; hand axe / goblin ; hand axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -381,22 +384,23 @@ NAME:   bailey_polearm_nasty_gnolls
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate
 : orc_with_polearm(_G)
-MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution ident:type
-MONS:   orc warrior ; halberd ego:electrocution ident:type . plate armour /\
+MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution pre_id
+MONS:   orc warrior ; halberd ego:electrocution pre_id . plate armour /\
         orc knight ; halberd
+KFEAT:  ^ = tyrant's trap
 NSUBST: d = 1:ddde / *:d, 1 = 5:1 / *=1., 2 = 5:2 / *=2.
 : item(dgn.loot_potions)
-ITEM:   potion of experience ident:type q:1 /\
-        scroll of acquirement ident:type q:1
+ITEM:   potion of experience pre_id q:1 /\
+        scroll of acquirement pre_id q:1
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
 cAccc1ccc2+2ccc1ccc1c
 cc+cc+cc+ccc+cc+cc+cc
  cc.....cc cc.....cc
-ccc.....ccccc.....ccc
+ccc.^...ccccc.^...ccc
 c1+..<..+1c1+..T..+1c
-ccc.....ccccc.....ccc
+ccc.....ccccc...^.ccc
  cc....dcc ccd....cc
 cc+cc+cc+ccc+cc+cc+cc
 c1ccc1ccc2c2ccc1ccc2c
@@ -406,7 +410,7 @@ cc+cc+cc+ccc+cc+cc+cc
  ccd.d.dcc ccd....cc
 ccc.d2d.ccccc.....ccc
 c1+d2U3d+1c1+..Y..+1c
-ccc.d2d.ccccc.....ccc
+ccc.d2d.ccccc...^.ccc
  ccd.d.dcc cc.....cc
 cc+cc+cc+ccc+cc+cc+cc
 c<ccc1ccc2+2ccc1ccc1c
@@ -479,9 +483,9 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
-ITEM:    potion of enlightenment ident:type
-ITEM:    ring of flight ident:type
-ITEM:    pair of boots ego:flying ident:type
+ITEM:    potion of enlightenment pre_id
+ITEM:    ring of flight pre_id
+ITEM:    pair of boots ego:flying pre_id
 SUBST:   e : eeef, g:eg
 NSUBST:  f = 1:f / *:e
 SHUFFLE: EB / XY / XY / XY
@@ -494,6 +498,7 @@ NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
 KFEAT:   ^ = alarm trap
+KFEAT:   - = tyrant's trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
@@ -501,8 +506,8 @@ SUBST:   H = W.
 SUBST:   ~ = W
 # the following KMONS duplicates monster 1 from kobold_axe_returning
 KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; boomerang ident:type q:2 | \
-                                     boomerang ident:type q:1
+KMONS:   ( = generate_awake kobold ; boomerang pre_id q:2 | \
+                                     boomerang pre_id q:1
 #
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
@@ -526,7 +531,7 @@ cccccccccc1.1...cEc...^.....^...ccc1Wwwwwwwxxxxxxxx
 xxxxxwwwwwwwW1.1..c1.cccc+cccc.1c1Hwwwwwwwxxxxxxxxx
 xxxxxxxwwwwwww~wW1cncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....~wwwwww(c.2.g.2.c(wwwwwxxxxxxxxxxxxxxx
-xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
+xxxxxxxxxx....-.Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxxx
@@ -554,8 +559,8 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:   potion of experience ident:type q:1 /\
-        scroll of acquirement ident:type q:1
+ITEM:   potion of experience pre_id q:1 /\
+        scroll of acquirement pre_id q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 : orc_warlord_with_axe(_G)
@@ -699,10 +704,10 @@ KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe /\
         good_item triple sword / good_item arbalest / good_item triple crossbow
-ITEM:   potion of experience ident:type q:1 / \
-        scroll of acquirement ident:type q:1 /\
-        scroll of enchant armour ident:type q:2 / \
-        scroll of enchant weapon ident:type q:3
+ITEM:   potion of experience pre_id q:1 / \
+        scroll of acquirement pre_id q:1 /\
+        scroll of enchant armour pre_id q:2 / \
+        scroll of enchant weapon pre_id q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -759,28 +764,29 @@ MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
-ITEM:   potion of experience ident:type q:1
+ITEM:   potion of experience pre_id q:1
 : item(dgn.loot_potions)
-ITEM:   scroll of brand weapon ident:type w:5 / \
-        scroll of acquirement ident:type q:1 w:5 /\
-        scroll of enchant weapon ident:type q:2
-ITEM:   scroll of enchant weapon ident:type /\
-        scroll of enchant armour ident:type /\
-        scroll of summoning ident:type no_pickup
+ITEM:   scroll of brand weapon pre_id w:5 / \
+        scroll of acquirement pre_id q:1 w:5 /\
+        scroll of enchant weapon pre_id q:2
+ITEM:   scroll of enchant weapon pre_id /\
+        scroll of enchant armour pre_id /\
+        scroll of summoning pre_id no_pickup
 KFEAT:  C = cache of meat
 SUBST:  1 = 11., 2 = 22., 3 = 32.
 SUBST:  4 = 43322.., 5 = 4333, C : CC.
 NSUBST: ! = 1:deee / *:e
 NSUBST: ? = 1:fffg / *:g
 : bailey_setup(_G)
+: decorative_floor(_G, 'B', "orcish standard")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
-c......c...12cccccc.....13c.....c.....14+....5......5c
+c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
 cA.....G...13+.$$.+..G..13+.!!!.+.....14+.......???.<c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
-c......c...12cccccc.....13c.....c.....14+....5......5c
+c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -793,8 +799,8 @@ ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
-MONS:   centaur ; javelin ident:type q:2 | \
-            javelin ident:type q:3 . spear | trident | halberd . \
+MONS:   centaur ; javelin pre_id q:2 | \
+            javelin pre_id q:3 . spear | trident | halberd . \
             ring mail | scale mail | chain mail
 NSUBST: _ = 8 = 2. / 10 = 1. / *:.
 NSUBST: ; = 9 = 22. / 9 = 11. / *:.
@@ -804,10 +810,10 @@ SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
             good_item bardiche / good_item executioner's axe /\
             good_item triple sword
-KITEM:  e = potion of experience ident:type q:1 / \
-            scroll of acquirement ident:type q:1 / \
-            scroll of enchant armour ident:type q:3 w:20 / \
-            scroll of enchant weapon ident:type q:3 w:20
+KITEM:  e = potion of experience pre_id q:1 / \
+            scroll of acquirement pre_id q:1 / \
+            scroll of enchant armour pre_id q:3 w:20 / \
+            scroll of enchant weapon pre_id q:3 w:20
 NSUBST: d = 1:e / * = d|
 : bailey_setup(_G)
 MAP
@@ -847,7 +853,7 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 MONS:   gnoll ; spear | trident | halberd . \
             ring mail | scale mail | chain mail . \
             throwing net | nothing
-MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
+MONS:   gnoll sergeant ; halberd | glaive w:11 | partisan w:1 | bardiche w:1 . \
             chain mail w:20 | plate armour | crystal plate armour w:1
 MONS:   gnoll bouda ; spear | trident | halberd . \
             ring mail | scale mail
@@ -914,13 +920,13 @@ KITEM:   D = any weapon good_item
 KITEM:   e = any armour
 KITEM:   E = any armour good_item
 : kitem("f = " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-KITEM:   F = scroll of enchant weapon ident:type q:2 / \
-             scroll of enchant armour ident:type q:2 / \
-             potion of experience ident:type q:1 / \
-             scroll of acquirement ident:type q:1 / \
+KITEM:   F = scroll of enchant weapon pre_id q:2 / \
+             scroll of enchant armour pre_id q:2 / \
+             potion of experience pre_id q:1 / \
+             scroll of acquirement pre_id q:1 / \
              any good_item book w:30
 KITEM:   h = stone q:1 no_pickup
-KITEM:   | = scroll of acquirement ident:type
+KITEM:   | = scroll of acquirement pre_id
 KITEM:   $ = gold
 KFEAT:   ^ = zot trap
 KFEAT:   B = altar_okawaru
@@ -985,8 +991,8 @@ NAME:   bailey_axe_bossmonster_kennysheep
 ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-ITEM:   potion of experience ident:type q:1 / \
-            scroll of acquirement ident:type q:1
+ITEM:   potion of experience pre_id q:1 / \
+            scroll of acquirement pre_id q:1
 : easy_axe_fighter(_G)
 : kobold_axe_returning(_G)
 : hard_axe_fighter(_G)
@@ -1097,19 +1103,19 @@ ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
 MONS:    orc zombie, orc warrior zombie
 MONS:    gargoyle
-MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
-             | bardiche ego:vampirism w:1 \
-             . scale mail | chain mail
+MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:2 | \
+                   bardiche ego:vampirism w:1 | partisan ego:vampirism w:1 . \
+                   scale mail | chain mail
 NSUBST:  d = 2=d / 2=e / | /  dde|, f = f / f..
 NSUBST:  ; = 20=t. / ., - = 4=G / 12=1. / .
 NSUBST:  2 = 5=2 / 2., 3 = 6=3 / 3..., 4 = 3=4 / 4., 5 = 5 / G
 NSUBST:  ! = 6 / G
 SHUFFLE: A<
-TILE:    t = dngn_tree_dead, G = dngn_gravestone
-COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
+TILE:    t = dngn_tree_dead
+COLOUR:  t = brown
 KITEM:   f = orc skeleton
 : set_feature_name("tree", "dead tree")
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 : bailey_setup(_G)
 MAP
    cccccc
@@ -1217,13 +1223,13 @@ NAME:   bailey_polearm_enchanted_keep_hellmonk
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   ogre ; halberd | glaive w:3
-MONS:   spriggan ; spear | trident
+MONS:   spriggan ; spear w:16 | trident w:16 | partisan w:1
 MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
                           halberd | glaive w:3 | bardiche w:1
 KMONS:  D = steam dragon / acid dragon w:3
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   rapier good_item / quarterstaff good_item / lajatang good_item w:5 / \
-        broad axe good_item w:5 / scimitar good_item w:5
+        broad axe good_item w:5 / partisan good_item w:5 / scimitar good_item w:5
 ITEM:   good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\

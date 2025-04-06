@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cloud.h"
 #include "corpse.h"
 #include "coordit.h"
@@ -52,6 +53,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "place.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -97,26 +99,29 @@ static bool _action_is_bad(xom_event_type action)
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
 // Spells later in the list require higher severity to have a chance of being
-// selected.
+// selected. Spells are sorted by level, then very roughly by power when
+// neither planned for nor capability to repeatedly cast it.
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_DAZZLING_FLASH,
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_ANIMATE_ARMOUR,
+    SPELL_BATTLESPHERE,
+    SPELL_AWAKEN_ARMOUR,
     SPELL_MARTYRS_KNELL,
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_SUMMON_BLAZEHEART_GOLEM,
-    SPELL_BATTLESPHERE,
-    SPELL_INTOXICATE,
+    SPELL_FORGE_BLAZEHEART_GOLEM,
     SPELL_ANIMATE_DEAD,
+    SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_WALKING_ALEMBIC,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
+    SPELL_DIAMOND_SAWBLADES,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
@@ -788,11 +793,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
            || item.base_type == OBJ_WEAPONS);
     ASSERT(!is_unrandom_artefact(item));
 
-    bool seen = false;
     if (mon && you.can_see(*mon) && item.base_type == OBJ_WEAPONS)
     {
-        seen = true;
-
         const description_level_type desc = mon->friendly() ? DESC_YOUR
                                                             : DESC_THE;
         mprf("%s %s erupts in a glittering mayhem of colour.",
@@ -804,18 +806,10 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
                                                       : (int) SPMSL_CHAOS;
 
     if (is_random_artefact(item))
-    {
         artefact_set_property(item, ARTP_BRAND, brand);
-
-        if (seen)
-            artefact_learn_prop(item, ARTP_BRAND);
-    }
     else
     {
         item.brand = brand;
-
-        if (seen)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
         // Make sure it's visibly special.
         if (!(item.flags & ISFLAG_COSMETIC_MASK))
@@ -831,14 +825,22 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 // with visuals pretending it's banishment.
 static void _xom_bazaar_trip(int /*sever*/)
 {
-    stop_delay(true);
-    god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
-    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
-    dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
-    down_stairs(DNGN_ENTER_BAZAAR);
-    you.props[XOM_BAZAAR_TRIP_COUNT].get_int()++;
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
+    if (brdepth[BRANCH_ABYSS] == -1)
+    {
+        // Only possible in wizmode, as the message implies, but it crashes.
+        mprf(MSGCH_ERROR, "Not even Xom can make wizards leave Sprint. "
+                          "Aborting Xom's Bazaar banishment.");
+    }
+    else
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
+        run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
+        dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
+        down_stairs(DNGN_ENTER_BAZAAR);
+        you.props[XOM_BAZAAR_TRIP_COUNT].get_int()++;
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
                   true);
+    }
 }
 
 static const vector<random_pick_entry<monster_type>> _xom_summons =
@@ -847,7 +849,6 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { -4, -1,   5, FLAT, MONS_QUOKKA },
   { -3,  6,  60, SEMI, MONS_CRIMSON_IMP },
   { -1,  6,  40, SEMI, MONS_IRON_IMP },
-  {  2,  8,  60, SEMI, MONS_QUASIT },
   {  2,  8,  40, SEMI, MONS_SHADOW_IMP },
   {  3,  8,  50, SEMI, MONS_UFETUBUS },
   {  3,  8,  40, SEMI, MONS_WHITE_IMP },
@@ -890,11 +891,12 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 16, 22,  10, SEMI, MONS_BUNYIP },
   { 16, 23,  50, SEMI, MONS_RADROACH },
   { 16, 25,  75, SEMI, MONS_VERY_UGLY_THING },
+  { 16, 24,  25, SEMI, MONS_SPHINX_MARAUDER },
   { 17, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
-  { 17, 25,  50, SEMI, MONS_SPHINX },
   { 17, 33,  35, SEMI, MONS_SHADOW_DEMON },
   { 17, 33,  65, SEMI, MONS_SIN_BEAST },
   { 17, 33,  15, SEMI, MONS_CACODEMON },
+  { 18, 25,  50, SEMI, MONS_GUARDIAN_SPHINX },
   { 18, 33,  35, SEMI, MONS_REAPER },
   { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },
   { 19, 26,   1, FLAT, MONS_ORANGE_STATUE },
@@ -1153,8 +1155,8 @@ static void _xom_send_allies(int sever)
     {
         monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
-        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
 
         // Even though the friendlies are charged to you for accounting,
         // they should still show as Xom's fault if one of them kills you.
@@ -1211,8 +1213,8 @@ static void _xom_send_one_ally(int sever)
     int strengthRoll = random2(1000 - (MAX_PIETY + sever) * 5);
     const monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
-    mg.set_summoned(&you, 6, MON_SUMM_AID, GOD_XOM);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(6));
 
     mg.non_actor_summoner = "Xom";
 
@@ -1220,7 +1222,7 @@ static void _xom_send_one_ally(int sever)
     {
         // Add a little extra length and regen. Make friends with your new pal.
         int extra = random_range(100, 200);
-        summons->add_ench(mon_enchant(ENCH_ABJ, MON_SUMM_AID, nullptr, extra));
+        summons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, MON_SUMM_AID, nullptr, extra));
         summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
                                        nullptr, 2000));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
@@ -1272,7 +1274,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
             mons.polymorph(PPT_SAME);
 
         if (you.experience_level < 10 && !helpful)
-            mons.malmutate("");
+            mons.malmutate(nullptr);
     }
 
     else
@@ -1303,13 +1305,15 @@ static monster* _xom_mons_poly_target()
 {
     vector<monster*> polymorphable;
 
-    // XXX: Polymorphing early bats over liquids turn into D:1 steam dragons
+    // XXX: Polymorphing early bats over liquids turn into D:1 acid dragons
     //      and killer bees, so skip them while polymorphing at low xls.
+    //      Likewise, there's very few plant polymorph options.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi)
-           && (you.experience_level < 4 && (env.grid(mi->pos()) != DNGN_DEEP_WATER)
-               && env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 3 )
+        if (_choose_mutatable_monster(**mi) && !mi->is_firewood()
+           && ((env.grid(mi->pos()) != DNGN_DEEP_WATER)
+               && (env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 4)
+           && (!(mi->holiness() & MH_PLANT) || you.experience_level > 8))
         {
             polymorphable.push_back(*mi);
         }
@@ -1510,7 +1514,74 @@ static void _xom_snakes_to_sticks(int /*sever*/)
 
         // Dismiss monster silently.
         move_item_to_grid(&item_slot, mi->pos());
-        monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true, false);
+        monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+    }
+}
+
+// Xom counts up webs to light on fire.
+static vector<coord_def> _xom_counts_webs()
+{
+    vector<coord_def> webs;
+
+    for (vision_iterator ri(you); ri; ++ri)
+    {
+        if (env.grid(*ri) == DNGN_TRAP_WEB)
+            webs.push_back(*ri);
+    }
+
+    return webs;
+}
+
+// Xom burns down all webs in sight, replacing them with fire clouds.
+// All other sorts of clouds are removed, and anybody in a web is freed.
+static void _xom_lights_up_webs(int /*sever*/)
+{
+    int webs_count = 0;
+    int blaze_time = 3 + random2(4) * 3;
+
+    vector<coord_def> candidates = _xom_counts_webs();
+
+    for (coord_def pos : candidates)
+    {
+        if (env.grid(pos) == DNGN_TRAP_WEB)
+        {
+            flash_tile(pos, RED, 0);
+            animation_delay(20, true);
+
+            if (cloud_at(pos))
+                delete_cloud(pos);
+
+            check_place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
+
+            webs_count++;
+            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            dungeon_terrain_changed(pos, DNGN_FLOOR);
+
+            if (get_trapping_net(pos, true) == NON_ITEM)
+            {
+                if (monster_at(pos) && monster_at(pos)->has_ench(ENCH_HELD))
+                {
+                    monster_web_cleanup(*monster_at(pos), true);
+                    monster_at(pos)->del_ench(ENCH_HELD);
+                }
+                else if (pos == you.pos() && you.attribute[ATTR_HELD])
+                {
+                    leave_web();
+                    stop_being_held();
+                }
+            }
+        }
+    }
+
+    view_clear_overlays();
+
+    if (webs_count > 0)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("lights up webs").c_str());
+        mprf("%s %s into flame!", number_in_words(webs_count).c_str(),
+              webs_count == 1 ? "web bursts" : "webs burst");
+        string note = make_stringf("lit up %d webs", webs_count);
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
     }
 }
 
@@ -1563,8 +1634,9 @@ static void _xom_animate_monster_weapon(int sever)
 
     const int dur = min(2 + (random2(sever) / 5), 6);
 
-    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex());
-    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE, GOD_XOM);
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex(),
+                 MG_NONE, GOD_XOM);
+    mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur));
 
     mg.non_actor_summoner = "Xom";
 
@@ -1574,8 +1646,7 @@ static void _xom_animate_monster_weapon(int sever)
         return;
 
     // Make the monster unwield its weapon.
-    mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
-    mon->inv[MSLOT_WEAPON] = NON_ITEM;
+    mon->unequip(MSLOT_WEAPON, false, true);
 
     mprf("%s %s dances into the air!",
          apostrophise(mon->name(DESC_THE)).c_str(),
@@ -1609,10 +1680,11 @@ static void _xom_harmless_flora(int /*sever*/)
             continue;
         }
 
-        if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
+        if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, *ri))
         {
-            mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
-            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_XOM);
+            mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU,
+                         MG_FORCE_BEH | MG_FORCE_PLACE, GOD_XOM);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(5));
 
             mg.non_actor_summoner = "Xom";
 
@@ -1681,7 +1753,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
             // Blink close a limited number of hostile enemies
             // adjacent or one tile away.
             if (!find_habitable_spot_near(you.pos(), mons_base_type(*moving_mons),
-                                          2, false, empty))
+                                          2, empty))
             {
                 continue;
             }
@@ -1708,7 +1780,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
             {
                 // Only look for unoccupied viable spaces
                 // outside the entire door ring.
-                if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                if (actor_at(*ri) || !monster_habitable_grid(moving_mons, *ri)
                     || grid_distance(*ri, you.pos()) < 6)
                 {
                     continue;
@@ -1724,7 +1796,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
                 for (radius_iterator ri(moving_mons->pos(), 9, C_SQUARE, LOS_NO_TRANS, true);
                     ri; ++ri)
                 {
-                    if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                    if (actor_at(*ri) || !monster_habitable_grid(moving_mons, *ri)
                         || grid_distance(*ri, you.pos()) < 6)
                     {
                         continue;
@@ -2032,7 +2104,7 @@ static void _xom_drop_lightning()
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
     beam.colour       = LIGHTCYAN;
-    beam.thrower      = KILL_MISC;
+    beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
     beam.ex_size      = 2;
@@ -2056,7 +2128,7 @@ static void _xom_spray_lightning(coord_def position)
         beam.target.x     += random_range(-1, 1);
         beam.target.y     += random_range(-1, 1);
     }
-    beam.thrower      = KILL_MISC;
+    beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
 
@@ -2234,8 +2306,8 @@ static void _xom_summon_butterflies()
     for (int i = 0; i < how_many; ++i)
     {
         mgen_data mg(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
-                     MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+                     MG_FORCE_BEH, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
         if (create_monster(mg))
             success = true;
     }
@@ -2483,7 +2555,7 @@ static void _xom_destruction(int sever, bool real)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monster(*mi);
+            backlight_monster(*mi, &you);
             continue;
         }
 
@@ -2499,7 +2571,7 @@ static void _xom_destruction(int sever, bool real)
         beam.target       = mi->pos();
         beam.name         = "sticky fireball";
         beam.colour       = RED;
-        beam.thrower      = KILL_MISC;
+        beam.thrower      = KILL_NON_ACTOR;
         beam.source_id    = MID_NOBODY;
         beam.aux_source   = "Xom's destruction";
         beam.ex_size      = 1;
@@ -2557,9 +2629,9 @@ static void _xom_force_lances(int /* sever */)
     for (int i = 0; i < count; ++i)
     {
         mgen_data mg(MONS_LIVING_SPELL, BEH_FRIENDLY, you.pos(),
-                     MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+                     MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, GOD_XOM);
 
-        mg.set_summoned(&you, 2, MON_SUMM_AID, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(2));
         mg.hd = strength;
         mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(SPELL_FORCE_LANCE);
         mg.non_actor_summoner = "Xom";
@@ -2643,7 +2715,7 @@ static void _xom_enchant_monster(int sever, bool helpful)
               (ench == ENCH_PETRIFYING || ench == ENCH_REGENERATION) ? "starts" : "looks",
               ench_name.c_str());
 
-        application->add_ench(mon_enchant(ench, 0, nullptr, time));
+        application->add_ench(mon_enchant(ench, 0, &you, time));
         affected++;
     }
 
@@ -2677,8 +2749,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
         // the same target multiple times by checking the most prominent ones.
         // Fuzz the HD range to make it harder to deliberately plan around.
         if (mons_attitude(**mi) == ATT_FRIENDLY
-            && !mons_is_conjured(mi->type)
-            && !mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mi->is_peripheral()
             && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
                  && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))
             && mi->get_hit_dice() < maximum_hd + (range ? random_range(-2, 1) : 0))
@@ -2699,7 +2770,8 @@ static void _xom_hyper_enchant_monster(int sever)
                                      ENCH_EMPOWERED_SPELLS, ENCH_REPEL_MISSILES,
                                      ENCH_RESISTANCE, ENCH_REGENERATION,
                                      ENCH_STRONG_WILLED, ENCH_TOXIC_RADIANCE,
-                                     ENCH_MIRROR_DAMAGE, ENCH_SWIFT };
+                                     ENCH_DOUBLED_HEALTH, ENCH_MIRROR_DAMAGE,
+                                     ENCH_SWIFT };
     vector<monster*> targetable = _xom_find_weak_monsters(true);
     int time = random_range(200, 200 + sever * 2);
     int xl = you.experience_level;
@@ -2734,8 +2806,8 @@ static void _xom_hyper_enchant_monster(int sever)
         }
 
         mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(),
-                    MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+                    MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
         mg.non_actor_summoner = "Xom";
         monster* mon = create_monster(mg);
 
@@ -2848,7 +2920,7 @@ static void _xom_mass_charm(int sever)
             && application->get_hit_dice() + random_range(-1, 1) <= hd_target))
         {
             simple_monster_message(*application, " is charmed.");
-            application->add_ench(mon_enchant(ENCH_CHARM, 0, nullptr, time));
+            application->add_ench(mon_enchant(ENCH_CHARM, 0, &you, time));
             affected++;
         }
 
@@ -2951,12 +3023,13 @@ static void _xom_time_control(int sever)
         xomline = "fast forward";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being hasted, but everything else in sight speeds up!";
+            message = "Your stasis prevents you from being hasted,"
+                      " but everything else in sight speeds up!";
             note = "hasted everything in sight";
         }
         else
         {
-            message = "You and everything else in sight speeds up!";
+            message = "You and everything else in sight speed up!";
             note = "hasted player and everything else in sight";
         }
         time = random_range(100, 200) + sever / 3;
@@ -2968,13 +3041,14 @@ static void _xom_time_control(int sever)
         xomline = "slow motion";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being slowed, but everything else in sight slows down!";
+            message = "Your stasis prevents you from being slowed,"
+                      " but everything else in sight slows down!";
             note = "slowed everything in sight";
             bad = false;
         }
         else
         {
-            message = "You and everything else in sight slows down!";
+            message = "You and everything else in sight slow down!";
             note = "slowed player and everything else";
         }
         time = random_range(100, 200) + sever / 3;
@@ -2986,18 +3060,20 @@ static void _xom_time_control(int sever)
         xomline = "pause";
         if (you.stasis())
         {
-            message = "Your stasis prevents you from being paralysed, but everything else in sight stops moving!";
+            message = "Your stasis prevents you from being paralysed,"
+                      " but everything else in sight stops moving!";
             note = "paralysed everything in sight";
             bad = false;
         }
         else
         {
-            message = "You and everything else in sight suddenly stops moving!";
+            message = "You and everything else in sight suddenly stop moving!";
             note = "paralysed player and everything else";
 
             // Less of a decent joke if it directly kills, so.
-            if (cloud_at(you.pos()) && !is_harmless_cloud(cloud_at(you.pos())->type))
-                delete_cloud(you.pos());
+            const auto pos = you.pos();
+            if (cloud_at(pos) && !is_harmless_cloud(cloud_at(pos)->type))
+                delete_cloud(pos);
         }
         time = random_range(30, 50);
     }
@@ -3014,7 +3090,7 @@ static void _xom_time_control(int sever)
         if ((!mons_has_attacks(**mi) && ench != ENCH_PARALYSIS) || mi->stasis())
             continue;
 
-        mi->add_ench(mon_enchant(ench, 0, nullptr, time));
+        mi->add_ench(mon_enchant(ench, 0, &you, time));
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
@@ -3030,17 +3106,7 @@ static void _xom_fog(int /*sever*/)
 
 static item_def* _xom_get_random_worn_ring()
 {
-    item_def* item;
-    vector<item_def*> worn_rings;
-
-    for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
-    {
-        if (slots == EQ_AMULET)
-            continue;
-
-        if (item = you.slot_item(static_cast<equipment_type>(slots)))
-            worn_rings.push_back(item);
-    }
+    vector<item_def*> worn_rings = you.equipment.get_slot_items(SLOT_RING);
 
     if (worn_rings.empty())
         return nullptr;
@@ -3097,6 +3163,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = _get_xom_speech("feature deep water");
         else if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
             str = _get_xom_speech("feature blood");
+        else if (in_view[iv] == DNGN_FOUNTAIN_EYES)
+            str = _get_xom_speech("feature eyes");
         else if (in_view[iv] == DNGN_DRY_FOUNTAIN)
             str = _get_xom_speech("feature dry");
         else if (feat_is_statuelike(in_view[iv]))
@@ -3187,7 +3255,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (get_form()->flesh_equivalent.empty()
         && starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true) != false)
+        && you_can_wear(SLOT_BODY_ARMOUR, true) != false)
     {
         string str = _get_xom_speech(
                 (!you.airborne() && !you.swimming()) ? "floor bandages"
@@ -3267,10 +3335,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_can_wear(EQ_WEAPON, true) != false
-        && !you.slot_item(EQ_WEAPON))
+    if (you_can_wear(SLOT_WEAPON, true) != false && !you.weapon())
     {
-        const bool one_handed = you.slot_item(EQ_OFFHAND)
+        const bool one_handed = you.equipment.get_first_slot_item(SLOT_OFFHAND)
                                 || you.get_mutation_level(MUT_MISSING_HAND);
         string str = _get_xom_speech(one_handed ? "unarmed one hand"
                                                 : "unarmed two hands");
@@ -3281,7 +3348,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_CLOAK))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_CLOAK))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
@@ -3292,7 +3359,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_HELMET))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_HELMET))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
@@ -3303,7 +3370,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_OFFHAND))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("offhand slot");
@@ -3314,7 +3381,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_GLOVES))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GLOVES))
     {
         string gloves_name = item->name(DESC_BASENAME, false, false, false);
         // XXX: If the gloves' name doesn't start with "pair of", make it do so,
@@ -3333,7 +3400,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_BOOTS))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_LOWER_BODY))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("boots slot");
@@ -3344,7 +3411,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_GIZMO))
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GIZMO))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("gizmo slot");
@@ -3367,26 +3434,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string ring_holder_singular;
         string ring_holder_plural;
 
-        // The ring on the amulet slot is on a neck/mantle, not a hand.
-        if (item == you.slot_item(EQ_RING_AMULET))
-        {
-            // XXX: Logic duplicated from item_def::name().
-            if (you.species == SP_OCTOPODE && form_keeps_mutations())
-            {
-                ring_holder_singular = "mantle";
-                ring_holder_plural = "mantles";
-            }
-            else
-            {
-                ring_holder_singular = "neck";
-                ring_holder_plural = "necks";
-            }
-        }
-        else
-        {
-            ring_holder_singular = you.hand_name(false);
-            ring_holder_plural = you.hand_name(true);
-        }
+        ring_holder_singular = you.hand_name(false);
+        ring_holder_plural = you.hand_name(true);
 
         str = replace_all(str, "@hand@", ring_holder_singular);
         str = replace_all(str, "@hands@", ring_holder_plural);
@@ -3394,7 +3443,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
+    if (item_def* item = you.body_armour())
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str;
@@ -3431,11 +3480,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     str = maybe_pick_random_substring(str);
     mpr(str);
-}
-
-static bool _miscast_is_nasty(int sever)
-{
-    return sever >= 5 && _xom_feels_nasty();
 }
 
 static void _xom_chaos_upgrade(int /*sever*/)
@@ -3777,30 +3821,6 @@ static void _xom_cloud_trail(int /*sever*/)
         simple_god_message(" purifies the foul vapours!");
 }
 
-static void _xom_statloss(int /*sever*/)
-{
-    const string speech = _get_xom_speech("draining or torment");
-
-    const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int loss = 1;
-
-    // Don't set the player to statzero unless Xom is being nasty.
-    if (_xom_feels_nasty())
-        loss = 1 + random2(3);
-    else if (you.stat(stat) <= loss)
-        return;
-
-    god_speaks(GOD_XOM, speech.c_str());
-    lose_stat(stat, loss);
-
-    const char* sstr[3] = { "Str", "Int", "Dex" };
-    const string note = make_stringf("stat loss: -%d %s (%d/%d)",
-                                     loss, sstr[stat], you.stat(stat),
-                                     you.max_stat(stat));
-
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-}
-
 static void _xom_draining(int /*sever*/)
 {
     int power = 100;
@@ -3857,8 +3877,8 @@ static monster* _xom_summon_hostile(monster_type hostile)
             spot = *ri;
     }
 
-    monster* mon = create_monster(mgen_data::hostile_at(hostile, true, spot)
-                          .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
+    monster* mon = create_monster(mgen_data::hostile_at(hostile, true, spot, GOD_XOM)
+                          .set_summoned(nullptr, MON_SUMM_WRATH, summ_dur(4))
                           .set_non_actor_summoner("Xom"));
 
     // To prevent high-stealth players from just ducking around a corner
@@ -4013,8 +4033,8 @@ static bool _xom_maybe_neutral_summon(int sever, bool threat,
     beh_type setting = (x_chance_in_y(sever, 300) || threat) ? BEH_HOSTILE
                                                              : BEH_NEUTRAL;
 
-    mgen_data mg(mon_type, setting, you.pos(), MHITYOU, MG_FORCE_BEH);
-    mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_XOM);
+    mgen_data mg(mon_type, setting, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(4));
     mg.non_actor_summoner = "Xom";
 
     return create_monster(mg);
@@ -4140,9 +4160,8 @@ static bool _valid_speaker_of_recall(monster* mon)
 {
     return mon->alive() && !mon->wont_attack() && _should_recall(mon)
             && !mon->berserk_or_frenzied() && you.can_see(*mon)
-            && !mons_is_tentacle_or_tentacle_segment(mon->type)
-            && !mons_is_firewood(*mon) && !mons_is_object(mon->type)
             && !mon->is_summoned() && !mons_is_confused(*mon)
+            && !mon->is_peripheral()
             && !mon->petrifying() && !mon->cannot_act() && !mon->asleep()
             && !mon->is_silenced() && !mon->has_ench(ENCH_WORD_OF_RECALL);
 }
@@ -4313,7 +4332,7 @@ static void _xom_blink_monsters(int /*sever*/)
         if (blink_to_player)
             blink_other_close(*mi, you.pos());
         else
-            monster_blink(*mi, false);
+            monster_blink(*mi, true);
 
         blinks++;
     }
@@ -4421,502 +4440,518 @@ static void _handle_accidental_death(const int orig_hp,
         you_teleport_now();
 }
 
+
 /**
- * Try to choose an action for Xom to take that is at least notionally 'good'
- * for the player.
- * TODO: Completely rewrite. Please.
+ * A formatting of Xom actions, their chance to happen, and if it should be done.
  *
- * @param sever         The intended magnitude of the action.
- * @param tension       How much danger we think the player's currently in.
- * @return              A good action for Xom to take, e.g. XOM_GOOD_ALLIES.
+ * xom_event_type name         An action for Xom to take.
+ * @param int tension_weight   The chance with visible monsters.
+ * @param int tension_weight   The chance without visible monsters.
+ * @param bool valid           A check to see if this action should be done.
+ * @param sever                The intended magnitude of the action.
+ * @param tension              How much danger we think the player's in.
  */
-static xom_event_type _xom_choose_good_action(int sever, int tension)
+struct xom_event_data
 {
-    // This series of random calls produces a poisson-looking
-    // distribution: initial hump, plus a long-ish tail.
-    // a wizard has pronounced a curse on the original author of this code
+    xom_event_type name;
+    int tension_weight;
+    int zero_tension_weight;
+    function<bool(int sever, int tension)> valid;
+};
 
-    // Don't make the player go berserk, etc. if there's no danger.
-    if (tension > random2(3) && x_chance_in_y(2, sever))
-        return XOM_GOOD_POTION;
-
-    if (x_chance_in_y(3, sever) && tension > 0
-        && _choose_random_spell(sever) != SPELL_NO_SPELL)
+static const vector<xom_event_data> _list_xom_good_actions = {
     {
-        return XOM_GOOD_SPELL;
-    }
-
-    if (x_chance_in_y(4, sever)
-        && (_exploration_estimate(false) < 80
-        || x_chance_in_y(_exploration_estimate(false), 120)))
+        XOM_GOOD_POTION, 500, 0, [](int /*sv*/, int tn) {return tn > 0;}
+    },
     {
-        // Detecting creatures is ...somewhat useful regardless of anything else.
-        return XOM_GOOD_DIVINATION;
-    }
-
-    if (tension <= 0 && x_chance_in_y(5, sever)
-        && !you.duration[DUR_CLOUD_TRAIL])
+        XOM_GOOD_SPELL, 450, 0, [](int sv, int tn)
+        {return tn > 0 && _choose_random_spell(sv) != SPELL_NO_SPELL;}
+    },
     {
-        return XOM_GOOD_CLOUD_TRAIL;
-    }
-
-    if (tension > 0 && x_chance_in_y(5, sever)
-        && mon_nearby([](monster& mon){ return !mon.wont_attack(); }))
+        XOM_GOOD_CONFUSION, 440, 0, [](int /*sv*/, int /*tn*/)
+        {return mon_nearby([](monster& mon){ return !mon.wont_attack(); });}
+    },
     {
-        return XOM_GOOD_CONFUSION;
-    }
-
-    if (tension > 0 && x_chance_in_y(6, sever)
-        && mon_nearby(_choose_enchantable_monster))
+        XOM_GOOD_ENCHANT_MONSTER, 420, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+    },
     {
-        return XOM_GOOD_ENCHANT_MONSTER;
-    }
-
-    if ((tension > random2(5)
-        || (_exploration_estimate(false) < 25) && one_chance_in(7))
-        && x_chance_in_y(7, sever)
-        && !you.allies_forbidden())
+        XOM_GOOD_SINGLE_ALLY, 400, 60, [](int /*sv*/, int tn)
+        {return (tn > 0 || (_exploration_estimate(false) < 25))
+                && !you.allies_forbidden();}
+    },
     {
-        return XOM_GOOD_SINGLE_ALLY;
-    }
-
-    if (tension < random2(5) && x_chance_in_y(8, sever)
-        && ((!_xom_scenery_candidates().empty() && one_chance_in(3))
-        || one_chance_in(8)))
+        XOM_GOOD_POLYMORPH, 275, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && _xom_mons_poly_target() != nullptr;}
+    },
     {
-        return XOM_GOOD_SCENERY;
-    }
-
-    if (x_chance_in_y(9, sever) && mon_nearby(_hostile_snake))
-        return XOM_GOOD_SNAKES;
-
-    if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !you.allies_forbidden())
+        XOM_GOOD_ALLIES, 280, 0, [](int /*sv*/, int tn)
+        {return tn > 4 && !you.allies_forbidden();}
+    },
     {
-        return XOM_GOOD_ALLIES;
-    }
-    if (tension > random2(8) && x_chance_in_y(11, sever)
-        && _find_monster_with_animateable_weapon()
-        && !you.allies_forbidden())
-    {
-        return XOM_GOOD_ANIMATE_MON_WPN;
-    }
-
-    if (x_chance_in_y(12, sever) && _xom_mons_poly_target() != nullptr)
-        return XOM_GOOD_POLYMORPH;
-
-    if (tension > random2(3) && x_chance_in_y(13, sever))
-    {
-        // Check if there's a reasonable amount of open terrain
-        // before placing down all the living spells.
-        int open_count = 0;
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
-             ri; ++ri)
+        XOM_GOOD_FORCE_LANCE_FLEET, 230, 0, [](int /*sv*/, int tn)
         {
-            if (!cell_is_solid(*ri))
-                open_count++;
-        }
+            if (tn <= 4)
+                return false;
 
-        if (open_count > 6)
-            return XOM_GOOD_FORCE_LANCE_FLEET;
-    }
-
-    if (tension > 0 && x_chance_in_y(14, sever))
-    {
-        const bool fake = one_chance_in(3);
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mons_is_projectile(**mi)
-                || mons_is_tentacle_or_tentacle_segment(mi->type))
+            // Check for a reasonable amount of open space to place
+            // these many living spells down in.
+            int open_count = 0;
+            for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+                 ri; ++ri)
             {
-                continue;
+                if (!cell_is_solid(*ri))
+                    open_count++;
             }
 
-            if (fake)
-                return XOM_GOOD_FAKE_DESTRUCTION;
-
-            // Skip adjacent monsters, and skip
-            // non-hostile monsters if not feeling nasty.
-            if (!adjacent(you.pos(), mi->pos())
-                 && (!mi->wont_attack() || _xom_feels_nasty()))
-            {
-                return XOM_GOOD_DESTRUCTION;
-            }
+            return open_count > 6;
         }
-    }
-
-    if (tension > random2(5) && x_chance_in_y(15, sever))
-        return XOM_GOOD_CLEAVING;
-
-    if (tension > random2(3) && x_chance_in_y(16, sever))
+    },
     {
-        int plant_capacity = 0;
-        int smiters = 0;
-
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
-             ri; ++ri)
+        XOM_GOOD_CLEAVING, 160, 0, [](int /*sv*/, int tn) {return tn > 0;}
+    },
+    {
+        XOM_GOOD_FLORA_RING, 130, 0, [](int /*sv*/, int tn)
         {
-            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
-                plant_capacity++;
-        }
+            if (tn == 0)
+                return false;
 
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-            if (_mons_has_smite_attack(*mi) && grid_distance(mi->pos(), you.pos()) > 2)
-                smiters++;
+            // Check both that there's at least some space to spawn plants
+            // and very few smiting-attack monsters around.
+            int plant_capacity = 0;
+            int smiters = 0;
 
-        if (plant_capacity >= 3
-            && smiters < div_rand_round(you.experience_level, 6) - 1)
-        {
-            return XOM_GOOD_FLORA_RING;
-        }
-    }
-
-    if (tension > random2(3) && x_chance_in_y(17, sever))
-    {
-        // Assess each if there's enough room to meaningfully raise a door ring,
-        // if there's adjacent hostiles to move so it does anything tactically,
-        // and if there's at least visible room to move them to.
-        int adjacent_hostiles = 0;
-        int replaceable = 0;
-        int spare_space_out = 0;
-        for (radius_iterator ri(you.pos(), 8, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-        {
-            if (grid_distance(*ri, you.pos()) <= 2
-              && monster_at(*ri) && !monster_at(*ri)->wont_attack())
-            {
-                adjacent_hostiles++;
-            }
-            else if (grid_distance(*ri, you.pos()) >= 6 && in_bounds(*ri)
-                     && feat_has_solid_floor(env.grid(*ri)))
-            {
-                spare_space_out++;
-            }
-        }
-
-        for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
-        {
-            if (grid_distance(*ri, you.pos()) >= 3
-              && in_bounds(*ri)
-              && _xom_door_replaceable(env.grid(*ri)))
-            {
-                replaceable++;
-            }
-        }
-
-        if (replaceable > 24 && adjacent_hostiles - 1 < spare_space_out)
-            return XOM_GOOD_DOOR_RING;
-    }
-
-    if (tension > 0 && x_chance_in_y(18, sever)
-        && mon_nearby(_choose_enchantable_monster))
-    {
-        return XOM_GOOD_MASS_CHARM;
-    }
-
-    if (tension > 0 && x_chance_in_y(19, sever) && !cloud_at(you.pos()))
-        return XOM_GOOD_FOG;
-
-    if (random2(tension) < 20 && x_chance_in_y(20, sever))
-    {
-        return x_chance_in_y(sever, 201) ? XOM_GOOD_ACQUIREMENT
-                                         : XOM_GOOD_RANDOM_ITEM;
-    }
-
-    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(21, sever)
-        && _teleportation_check())
-    {
-        // This is not very interesting if the level is already fully
-        // explored (presumably cleared). Even then, it may
-        // occasionally happen.
-        const int explored = _exploration_estimate(true);
-        if (explored < 80 || !x_chance_in_y(explored, 110))
-            return XOM_GOOD_TELEPORT;
-    }
-
-    if (random2(tension) < 5 && x_chance_in_y(22, sever)
-        && x_chance_in_y(16, you.how_mutated())
-        && you.can_safely_mutate())
-    {
-        return XOM_GOOD_MUTATION;
-    }
-
-    // The bazaar's most interesting in its first few trips, so it should be
-    // less likely each time unless it's a chance to escape big trouble.
-    // Always expect some minimum gold. Don't interrupt autotravel too much.
-    if ((tension > 27 || (one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 4)
-        && (_exploration_estimate(true) < 80
-        || x_chance_in_y(_exploration_estimate(true), 120))))
-        && you.gold > (777 + sever * (4 + (you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 2)))
-        && x_chance_in_y(23, sever)
-        && !player_in_branch(BRANCH_BAZAAR)
-        && !player_in_branch(BRANCH_ABYSS))
-    {
-        return XOM_GOOD_BAZAAR_TRIP;
-    }
-
-    if (tension > 0 && x_chance_in_y(24, sever)
-        && !you.allies_forbidden())
-    {
-        vector<monster*> potential = _xom_find_weak_monsters(false);
-        int space = 0;
-
-        // Check if there's space to summon something instead.
-        if (potential.empty() && one_chance_in(3))
-        {
             for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
                 ri; ++ri)
             {
-                if (!cell_is_solid(*ri))
-                    space++;
+                if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, *ri))
+                    plant_capacity++;
             }
-            if (space >= 0)
-                return XOM_GOOD_HYPER_ENCHANT_MONSTER;
+
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+                if (_mons_has_smite_attack(*mi) && grid_distance(mi->pos(), you.pos()) > 2)
+                    smiters++;
+
+            return plant_capacity >= 3
+                   && smiters < div_rand_round(you.experience_level, 6) - 1;
         }
-        else
-            return XOM_GOOD_HYPER_ENCHANT_MONSTER;
-    }
-
-    if (tension > 0 && x_chance_in_y(25, sever)
-        && player_in_a_dangerous_place())
+    },
     {
-        // Make sure there's at least one enemy within the lightning radius.
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID, true); ri;
-             ++ri)
+        XOM_GOOD_DESTRUCTION, 125, 0, [](int /*sv*/, int tn)
         {
-            const monster *mon = monster_at(*ri);
-            if (mon && !mon->wont_attack())
-                return XOM_GOOD_LIGHTNING;
-        }
-    }
-
-    if (tension > 0 && x_chance_in_y(26, sever)
-        && mon_nearby(_choose_enchantable_monster))
-    {
-        return XOM_GOOD_WAVE_OF_DESPAIR;
-    }
-
-    return XOM_DID_NOTHING; // sigh
-}
-
-/**
- * Try to choose an action for Xom to take that is at least notionally 'bad'
- * for the player.
- *
- * @param sever         The intended magnitude of the action.
- * @param tension       How much danger we think the player's currently in.
- * @return              A bad action for Xom to take, e.g. XOM_BAD_NOISE.
- */
-static xom_event_type _xom_choose_bad_action(int sever, int tension)
-{
-    const bool nasty = _miscast_is_nasty(sever);
-
-    if (!nasty && x_chance_in_y(3, sever) && !you.penance[GOD_XOM])
-        return XOM_BAD_MISCAST_PSEUDO;
-
-    // Sometimes do noise out of combat.
-    if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever)
-        && !you.penance[GOD_XOM])
-     {
-        return XOM_BAD_NOISE;
-     }
-
-    if (tension > 0 && x_chance_in_y(7, sever)
-        && mon_nearby(_choose_enchantable_monster))
-    {
-        return XOM_BAD_ENCHANT_MONSTER;
-    }
-
-    if (tension > 0 && x_chance_in_y(8, sever)
-        && mon_nearby(_mon_valid_blink_victim))
-    {
-        return XOM_BAD_BLINK_MONSTERS;
-    }
-
-    // It's pointless to confuse player if there's no danger nearby.
-    if (tension > 0 && x_chance_in_y(9, sever))
-        return XOM_BAD_CONFUSION;
-
-    if (tension > 0 && x_chance_in_y(10, sever)
-        && _rearrangeable_pieces().size())
-    {
-        return XOM_BAD_SWAP_MONSTERS;
-    }
-
-    if (x_chance_in_y(14, sever) && mon_nearby(_choose_chaos_upgrade))
-        return XOM_BAD_CHAOS_UPGRADE;
-    if (x_chance_in_y(15, sever) && !player_in_branch(BRANCH_ABYSS)
-        && _teleportation_check())
-    {
-        const int explored = _exploration_estimate(true);
-        if (!(nasty && (explored >= 40 || tension > 10)
-            || explored >= 60 + random2(40)))
-        {
-            return XOM_BAD_TELEPORT;
-        }
-    }
-
-    if (tension > 0 && x_chance_in_y(16, sever)
-        && _xom_mons_poly_target() != nullptr)
-    {
-        return XOM_BAD_POLYMORPH;
-    }
-
-    if (tension > random2(5) && x_chance_in_y(16, sever)
-        && (!_xom_door_candidates().empty() && one_chance_in(3)))
-    {
-        return XOM_BAD_FIDDLE_WITH_DOORS;
-    }
-
-     // Pushing stairs/exits is always hilarious in the Abyss!
-    if ((tension > 0 || player_in_branch(BRANCH_ABYSS))
-        && x_chance_in_y(17, sever) && !_nearby_stairs().empty()
-        && !you.duration[DUR_REPEL_STAIRS_MOVE]
-        && !you.duration[DUR_REPEL_STAIRS_CLIMB])
-    {
-        if (one_chance_in(5)
-            || feat_stair_direction(env.grid(you.pos())) != CMD_NO_CMD
-                && env.grid(you.pos()) != DNGN_ENTER_SHOP)
-        {
-            return XOM_BAD_CLIMB_STAIRS;
-        }
-        return XOM_BAD_MOVING_STAIRS;
-    }
-    if (random2(tension) < 11 && x_chance_in_y(18, sever)
-        && you.can_safely_mutate())
-    {
-        return XOM_BAD_MUTATION;
-    }
-
-    if (x_chance_in_y(19, sever))
-        return XOM_BAD_SUMMON_HOSTILES;
-
-    if (tension > 0 && x_chance_in_y(20, sever)
-        && !you.duration[DUR_HASTE] && !you.duration[DUR_SLOW]
-        && !you.duration[DUR_PARALYSIS])
-    {
-        return XOM_BAD_TIME_CONTROL;
-    }
-
-    if (tension > 0 && x_chance_in_y(20, sever)
-        && you.magic_points > 3)
-    {
-        return XOM_BAD_BRAIN_DRAIN;
-    }
-
-    if (tension > 0 && x_chance_in_y(21, sever))
-    {
-        // Check if there's a reasonable amount of features
-        // the weaker Xom shatter is likely to change.
-        int nearby_diggable = 0;
-        for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-        {
-            if (feat_is_diggable(env.grid(*ri)) || feat_is_door(env.grid(*ri)))
-                nearby_diggable++;
-        }
-        if (nearby_diggable >= 4)
-            return XOM_BAD_FAKE_SHATTER;
-    }
-
-    if (tension > 0 && tension < 25 && x_chance_in_y(22, sever) &&
-        _has_min_recall_level())
-    {
-        bool recall_ready = false;
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (_valid_speaker_of_recall(*mi))
-                recall_ready = true;
-        }
-
-        if (recall_ready)
-            return XOM_BAD_GRANT_WORD_OF_RECALL;
-    }
-
-    if (tension > 0 && x_chance_in_y(22, sever)
-        && !cloud_at(you.pos()))
-    {
-        return XOM_BAD_CHAOS_CLOUD;
-    }
-
-    if (tension > 0 && tension < 25
-        && mon_nearby([](monster& mon){ return !mon.wont_attack(); })
-        && x_chance_in_y(23, sever))
-    {
-        int clone_capacity = 0;
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
-             ri; ++ri)
-        {
-            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLAYER_ILLUSION, env.grid(*ri)))
-                clone_capacity++;
-        }
-
-        if (clone_capacity >= 3)
-            return XOM_BAD_SEND_IN_THE_CLONES;
-    }
-
-    if (tension > random2(5) && x_chance_in_y(24, sever))
-    {
-        // Calculate if there's enough room to raise a meaningful door ring
-        // and also if there's enough hostiles present either
-        // already adjacent or near enough to blink inwards.
-        int adjacent_hostiles = 0;
-        int moveable_hostiles = 0;
-        int adjacent_space = 0;
-        int replaceable = 0;
-        int adjascency_cap = 2 + div_rand_round(you.experience_level, 6);
-
-        for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-        {
-            if (monster_at(*ri) && !monster_at(*ri)->wont_attack())
-                if (grid_distance(*ri, you.pos()) <= 2)
-                    adjacent_hostiles++;
-                else
-                    moveable_hostiles++;
-            else if (feat_has_solid_floor(env.grid(*ri)))
-                adjacent_space++;
-        }
-
-        for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
-        {
-            if (grid_distance(*ri, you.pos()) >= 3
-              && in_bounds(*ri)
-              && _xom_door_replaceable(env.grid(*ri)))
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
-                replaceable++;
+                // Skip adjacent monsters, and skip
+                // non-hostile monsters if not feeling nasty.
+                if (!mons_is_projectile(**mi)
+                    && !mons_is_tentacle_or_tentacle_segment(mi->type)
+                    && !adjacent(you.pos(), mi->pos())
+                    && (!mi->wont_attack() || _xom_feels_nasty()))
+                {
+                    return tn > 0;
+                }
             }
+            return false;
         }
-
-        if (replaceable > 30 && adjacent_hostiles <= adjascency_cap
-            && (moveable_hostiles <= adjacent_space && moveable_hostiles >= 2
-            || (adjacent_hostiles >= 2)))
-        {
-            return XOM_BAD_DOOR_RING;
-        }
-    }
-
-
-    if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS)
-        && _allow_xom_banishment())
+    },
     {
-        return xom_maybe_reverts_banishment(true, true);
-    }
-
-    if (x_chance_in_y(27, sever))
-    {
-        if (coinflip())
-            return XOM_BAD_STATLOSS;
-        if (coinflip())
+        XOM_GOOD_DOOR_RING, 110, 0, [](int /*sv*/, int tn)
         {
-            if (player_prot_life() < 3)
-                return XOM_BAD_DRAINING;
-            // else choose something else
-        }
-        else if (!you.res_torment() && tension > 0)
-            return XOM_BAD_TORMENT;
-        // else give up?? >_>
-    }
+            if (tn == 0)
+                return false;
 
-    return XOM_DID_NOTHING; // ugh
-}
+            // Assess each if there's enough room to meaningfully raise a door
+            // ring, if there's adjacent hostiles to move so it does anything
+            // tactically, and if there's at least visible room to move them to.
+            int adjacent_hostiles = 0;
+            int replaceable = 0;
+            int spare_space_out = 0;
+
+            for (radius_iterator ri(you.pos(), 8, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+            {
+                if (grid_distance(*ri, you.pos()) <= 2
+                    && monster_at(*ri) && !monster_at(*ri)->wont_attack())
+                {
+                    adjacent_hostiles++;
+                }
+                else if (grid_distance(*ri, you.pos()) >= 6 && in_bounds(*ri)
+                         && feat_has_solid_floor(env.grid(*ri)))
+                {
+                    spare_space_out++;
+                }
+            }
+
+            for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
+            {
+                if (grid_distance(*ri, you.pos()) >= 3 && in_bounds(*ri)
+                    && _xom_door_replaceable(env.grid(*ri)))
+                {
+                    replaceable++;
+                }
+            }
+
+            return replaceable > 24 && adjacent_hostiles - 1 < spare_space_out;
+        }
+    },
+    {
+        XOM_GOOD_MASS_CHARM, 87, 0, [](int /*sv*/, int tn)
+        {return tn > 4 && mon_nearby(_choose_enchantable_monster);}
+    },
+    {
+        XOM_GOOD_HYPER_ENCHANT_MONSTER, 70, 0, [](int /*sv*/, int tn)
+        {
+            if (tn == 0)
+                return false;
+
+            // First, look for weak present monsters.
+            vector<monster*> potential = _xom_find_weak_monsters(false);
+
+            // If there isn't, check if there's space to summon something weak.
+            if (potential.empty() && x_chance_in_y(2, 5))
+            {
+                for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+                    ri; ++ri)
+                {
+                    if (!cell_is_solid(*ri))
+                        return true;
+                }
+            }
+
+            return !potential.empty();
+        }
+    },
+    {
+        XOM_GOOD_FOG, 65, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && !cloud_at(you.pos());}
+    },
+    {
+        XOM_GOOD_FAKE_DESTRUCTION, 60, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+    },
+    {
+        // Not the most interesting if the level is already nearly fully
+        // explored (presumably cleared), but it can still occasionally
+        // happen for runed door vaults and branch ends.
+        XOM_GOOD_TELEPORT, 40, 590, [](int /*sv*/, int /*tn*/)
+        {return (!player_in_branch(BRANCH_ABYSS) && _teleportation_check())
+                && (_exploration_estimate(true) < 80
+                || !x_chance_in_y(_exploration_estimate(true), 110));}
+    },
+    {
+        XOM_GOOD_LIGHTNING, 21, 0, [](int /*sv*/, int tn)
+        {
+            if (tn == 0 || !player_in_a_dangerous_place())
+                return false;
+
+            // Make sure there's at least one enemy within
+            // the initial lightning radius.
+            for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID, true); ri;
+                ++ri)
+            {
+                const monster *mon = monster_at(*ri);
+                if (mon && !mon->wont_attack())
+                    return true;
+            }
+
+            return false;
+        }
+    },
+    {
+        XOM_GOOD_WAVE_OF_DESPAIR, 15, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+    },
+
+    // Effects with very specific conditions, given a seemingly high weight
+    // despite their flashiness due to how rarely they'll actually come up.
+    // Might have more of these come in eventually...
+    {
+        XOM_GOOD_SNAKES, 405, 0, [](int /*sv*/, int /*tn*/)
+        {return mon_nearby(_hostile_snake);}
+    },
+    {
+        XOM_GOOD_LIGHT_UP_WEBS, 205, 0, [](int /*sv*/, int tn)
+        {
+            // Since this is meant to be a good action, don't set the player's
+            // tile on fire if they're close to death.
+            if (env.grid(you.pos()) == DNGN_TRAP_WEB
+                && you.hp <= (27 - you.res_fire() * 4))
+            {
+                return false;
+            }
+
+            return tn > 0 && !_xom_counts_webs().empty();
+        }
+    },
+    {
+        XOM_GOOD_ANIMATE_MON_WPN, 325, 0,[](int /*sv*/, int tn)
+        {return tn > 4 && _find_monster_with_animateable_weapon()
+                       && !you.allies_forbidden();}
+    },
+
+    // Strategic effects that don't care about greater than 0 tension.
+    // TODO: replace Xom mood with a visible tension bar, then use gift timeout
+    // in the background to choose providing strategic benefits when going
+    // to new floors, to make this more controllable, less scummable, to confuse
+    // people less about amusing Xom having nothing to do with mood, etc, etc.
+    {
+        XOM_GOOD_DIVINATION, 420, 500, [](int /*sv*/, int tn)
+        {return tn <= 24 && (_exploration_estimate(false) < 80
+                || x_chance_in_y(_exploration_estimate(false), 120));}
+    },
+    {
+        XOM_GOOD_SCENERY, 120, 135, [](int /*sv*/, int tn)
+        {return (tn <= 4) && (!(_xom_scenery_candidates().empty())
+                         || one_chance_in(3));}
+    },
+    {
+        XOM_GOOD_CLOUD_TRAIL, 0, 375, [](int /*sv*/, int tn)
+        {return (tn == 0) && (_exploration_estimate(false) < 100)
+                          && !you.duration[DUR_CLOUD_TRAIL];}
+    },
+    {
+        XOM_GOOD_BAZAAR_TRIP, 60, 280, [](int sv, int tn)
+        {
+           // Nesting bazaars makes exploration and shopping lists complain.
+           // No leaving Sprint floors in Sprint.
+           if (is_level_on_stack(level_id(BRANCH_BAZAAR))
+              || player_in_branch(BRANCH_BAZAAR)
+              || brdepth[BRANCH_ABYSS] == -1)
+           {
+              return false;
+           }
+
+           // Check if you have enough gold, increqased by each trip.
+           if (you.gold < (777 + sv * (4 +
+                          (you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 2))))
+           {
+              return false;
+           }
+
+           // Don't interrupt autotravel too often.
+           if (_exploration_estimate(true) > 80
+               && !x_chance_in_y(_exploration_estimate(true), 120))
+           {
+               return false;
+           }
+
+           // Each bazaar trip reduces the chance of the next, unless things
+           // are going badly enough it'd be funny to save the player.
+           return tn > 28
+                 || (one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 7));
+        }
+    },
+    {
+        XOM_GOOD_MUTATION, 32, 400, [](int /*sv*/, int tn)
+        {return (random2(tn) < 5 // should really revise strategic benefits....
+                 && x_chance_in_y(16, you.how_mutated())
+                 && you.can_safely_mutate());}
+    },
+    {
+        XOM_GOOD_RANDOM_ITEM, 33, 775, [](int /*sv*/, int tn) {return (tn < 20) ;}
+    },
+    {
+        XOM_GOOD_ACQUIREMENT, 21, 295, [](int /*sv*/, int tn) {return (tn < 20) ;}
+    },
+};
+
+static const vector<xom_event_data> _list_xom_bad_actions = {
+    {
+        XOM_BAD_NOISE, 975, 415, [](int /*sv*/, int tn)
+        {return (tn > 0 || !you.penance[GOD_XOM]);}
+    },
+    {
+        XOM_BAD_MISCAST_PSEUDO, 825, 715, [](int /*sv*/, int /*tn*/)
+        {return !you.penance[GOD_XOM];}
+    },
+    {
+        XOM_BAD_ENCHANT_MONSTER, 790, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+    },
+    {
+        XOM_BAD_BLINK_MONSTERS, 680, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && mon_nearby(_mon_valid_blink_victim);}
+    },
+    {
+        XOM_BAD_CONFUSION, 610, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && !you.clarity();}
+    },
+    {
+        XOM_BAD_CHAOS_UPGRADE, 590, 0, [](int /*sv*/, int /*tn*/)
+        {return mon_nearby(_choose_chaos_upgrade);}
+    },
+    {
+        XOM_BAD_SWAP_MONSTERS, 540, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && _rearrangeable_pieces().size();}
+    },
+    {
+        XOM_BAD_TELEPORT, 475, 1625, [](int /*sv*/, int tn)
+        {
+            const int explored = _exploration_estimate(true);
+
+            return ((!player_in_branch(BRANCH_ABYSS) || _teleportation_check()))
+                 && !((_xom_feels_nasty() && (explored >= 40 || tn > 10))
+                     || (explored >= 60 + random2(40)));
+        }
+    },
+    {
+        XOM_BAD_POLYMORPH, 380, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && _xom_mons_poly_target() != nullptr;}
+    },
+    {
+        XOM_BAD_SUMMON_HOSTILES, 170, 670, [](int /*sv*/, int tn)
+        {return tn <= 48;}
+    },
+    {
+        XOM_BAD_TIME_CONTROL, 133, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && !you.duration[DUR_HASTE]
+         && !you.duration[DUR_SLOW]
+         && !you.duration[DUR_PARALYSIS];}
+    },
+    {
+        XOM_BAD_BRAIN_DRAIN, 100, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && you.magic_points > 3;}
+    },
+    {
+        XOM_BAD_FAKE_SHATTER, 75, 0, [](int /*sv*/, int tn)
+        {
+            if (tn == 0)
+                return false;
+
+            // Check if there's a reasonable amount of features
+            // the fake Xom shatter is likely to collapse.
+            int nearby_diggable = 0;
+            for (radius_iterator ri(you.pos(), you.current_vision,
+                                    C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+            {
+                if (feat_is_diggable(env.grid(*ri))
+                    || feat_is_door(env.grid(*ri)))
+                {
+                    nearby_diggable++;
+                    if (nearby_diggable >= 4)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+    },
+    {
+        XOM_BAD_CHAOS_CLOUD, 58, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && !cloud_at(you.pos());}
+    },
+    {
+        XOM_BAD_GRANT_WORD_OF_RECALL, 80, 0, [](int /*sv*/, int tn)
+        {
+            if (tn == 0 || tn > 24 || !_has_min_recall_level())
+                return false;
+
+            bool recall_ready = false;
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+            {
+                if (_valid_speaker_of_recall(*mi))
+                    recall_ready = true;
+            }
+
+            return recall_ready;
+        }
+    },
+    {
+        XOM_BAD_SEND_IN_THE_CLONES, 45, 0, [](int /*sv*/, int tn)
+        {
+            if (tn == 0 || tn > 24)
+                return false;
+
+            int clone_capacity = 0;
+
+            for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+                ri; ++ri)
+            {
+                if (!monster_at(*ri) && monster_habitable_grid(MONS_PLAYER_ILLUSION, *ri))
+                    clone_capacity++;
+            }
+
+            return clone_capacity >= 3;
+        }
+    },
+    {
+        XOM_BAD_DOOR_RING, 38, 0, [](int /*sv*/, int tn)
+        {
+            if (tn <= 4)
+                return false;
+
+            // Calculate if there's enough room to raise a meaningful door ring
+            // and also if there's enough hostiles present either
+            // already adjacent or near enough to blink inwards.
+            int adjacent_hostiles = 0;
+            int moveable_hostiles = 0;
+            int adjacent_space = 0;
+            int replaceable = 0;
+            int adjascency_cap = 2 + div_rand_round(you.experience_level, 6);
+
+            for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+            {
+                if (monster_at(*ri) && !monster_at(*ri)->wont_attack())
+                    if (grid_distance(*ri, you.pos()) <= 2)
+                        adjacent_hostiles++;
+                    else
+                        moveable_hostiles++;
+                else if (feat_has_solid_floor(env.grid(*ri)))
+                    adjacent_space++;
+            }
+
+            for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
+            {
+                if (grid_distance(*ri, you.pos()) >= 3
+                && in_bounds(*ri)
+                && _xom_door_replaceable(env.grid(*ri)))
+                {
+                    replaceable++;
+                }
+            }
+
+           return (replaceable > 30 && adjacent_hostiles <= adjascency_cap)
+                   && ((moveable_hostiles <= adjacent_space
+                   && moveable_hostiles >= 2) || (adjacent_hostiles >= 2));
+        }
+    },
+    {
+        XOM_BAD_TORMENT, 6, 0, [](int /*sv*/, int tn)
+        {return tn > 0 && !you.res_torment();}
+    },
+
+    // Strategic effects.
+    {
+        XOM_BAD_MUTATION, 210, 1010, [](int /*sv*/, int tn)
+        {return tn <= 8 && you.can_safely_mutate();}
+    },
+    {
+        XOM_BAD_DRAINING, 6, 160, [](int /*sv*/, int /*tn*/)
+        {return player_prot_life() < 3;}
+    },
+    {
+        xom_maybe_reverts_banishment(true, true), 2, 1, [](int /*sv*/, int /*tn*/)
+        {return _allow_xom_banishment() && !player_in_branch(BRANCH_ABYSS)
+         && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
+    },
+
+    // Highly circumstantial effects with less total
+    // chances than their weight would seem to show.
+    {
+        XOM_BAD_MOVING_STAIRS, 215, 0, [](int /*sv*/, int /*tn*/)
+        {return !(_nearby_stairs().empty());} // Abyss is always min 2 tension!
+    },
+    {
+        XOM_BAD_FIDDLE_WITH_DOORS, 95, 5, [](int /*sv*/, int tn)
+        {return ((tn > 4 || (_exploration_estimate(false) < 5)
+                 && !_xom_feels_nasty())) && !_xom_door_candidates().empty();}
+    },
+    {
+        XOM_BAD_CLIMB_STAIRS, 55, 0, [](int /*sv*/, int tn)
+        { return tn > 0 && !(_nearby_stairs().empty()) &&
+                 (feat_stair_direction(env.grid(you.pos())) != CMD_NO_CMD
+                 && env.grid(you.pos()) != DNGN_ENTER_SHOP);}
+    },
+};
 
 /**
  * Try to choose an action for Xom to take.
@@ -4929,6 +4964,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
 xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 {
     sever = max(1, sever);
+    vector<pair<const xom_event_data&, int>> weighted_list;
+    const xom_event_data* action;
 
     if (_player_is_dead() && !you.pending_revival)
     {
@@ -4943,34 +4980,20 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_PLAYER_DEAD;
     }
 
-    if (niceness)
+    // Choosing any type of good act is less likely at zero tension, especially
+    // if Xom is in a bad mood. Choosing any type of bad action at non-zero
+    // tension is less likely, especially if Xom is in a good mood.
+    if (niceness && tension == 0 && you_worship(GOD_XOM)
+        && !x_chance_in_y(you.piety, MAX_PIETY))
     {
-        // Make good acts at zero tension less likely, especially if Xom
-        // is in a bad mood.
-        if (tension == 0
-            && you_worship(GOD_XOM) && !x_chance_in_y(you.piety, MAX_PIETY))
-        {
 #ifdef NOTE_DEBUG_XOM
-            take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
-                           "zero tension"), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
+                        "zero tension"), true);
 #endif
-            return XOM_DID_NOTHING;
-        }
-
-        // {sarcastically}: Good stuff. {seriously}: remove this loop
-        while (true)
-        {
-            const xom_event_type action = _xom_choose_good_action(sever,
-                                                                  tension);
-            if (action != XOM_DID_NOTHING)
-                return action;
-        }
+        return XOM_DID_NOTHING;
     }
-
-    // Make bad acts at non-zero tension less likely, especially if Xom
-    // is in a good mood.
-    if (!_xom_feels_nasty() && tension > random2(10)
-        && you_worship(GOD_XOM) && x_chance_in_y(you.piety, MAX_PIETY))
+    else if (!niceness && !_xom_feels_nasty() && tension > random2(10)
+             && you_worship(GOD_XOM) && x_chance_in_y(you.piety, MAX_PIETY))
     {
 #ifdef NOTE_DEBUG_XOM
         const string note = string("suppress bad act because of ") +
@@ -4980,14 +5003,57 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_DID_NOTHING;
     }
 
-    // try to do something bad
-    for (int i = 0; i < 100; i++)
+    // Compile the total list based on Xom's niceness and any degree of tension.
+    if (niceness)
     {
-        const xom_event_type action = _xom_choose_bad_action(sever, tension);
-        if (action != XOM_DID_NOTHING)
-            return action;
+        if (tension > 0)
+        {
+            for (const xom_event_data &effect : _list_xom_good_actions)
+                weighted_list.push_back({effect, effect.tension_weight});
+        }
+        else
+        {
+            for (const xom_event_data &effect : _list_xom_good_actions)
+                if (effect.zero_tension_weight > 0)
+                    weighted_list.push_back({effect, effect.zero_tension_weight});
+        }
     }
-    // player got lucky
+    else
+    {
+        if (tension > 0)
+        {
+            for (const xom_event_data &effect : _list_xom_bad_actions)
+                weighted_list.push_back({effect, effect.tension_weight});
+        }
+        else
+        {
+            for (const xom_event_data &effect : _list_xom_bad_actions)
+                if (effect.zero_tension_weight > 0)
+                    weighted_list.push_back({effect, effect.zero_tension_weight});
+        }
+    }
+
+    // With the list compiled, roll through action options to find one.
+    while (true)
+    {
+        action = random_choose_weighted(weighted_list);
+
+        // If there are somehow no valid actions at all (due to changes
+        // made to Xom action criteria), break out to do nothing.
+        if (!action)
+            break;
+
+        // If the action was invalid, set its weight to 0 and try again.
+        if (!action->valid(sever, tension))
+        {
+            find_if(weighted_list.begin(), weighted_list.end(),
+                    [action](const pair<const xom_event_data&, int>& entry)
+                    {return entry.first.name == action->name;})->second = 0;
+        }
+        else
+            return action->name;
+    }
+
     return XOM_DID_NOTHING;
 }
 
@@ -5404,6 +5470,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_FLORA_RING, {"flora ring", _xom_harmless_flora }},
     { XOM_GOOD_DOOR_RING, {"good door ring enclosure", _xom_good_door_ring }},
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
+    { XOM_GOOD_LIGHT_UP_WEBS, { "light up webs", _xom_lights_up_webs }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
     { XOM_GOOD_FORCE_LANCE_FLEET, {"living force lance fleet",
@@ -5418,7 +5485,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
-    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
+    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 20}},
     { XOM_BAD_NOISE, { "noise", _xom_noise, 10 }},
     { XOM_BAD_ENCHANT_MONSTER, { "bad enchant monster",
                                  _xom_bad_enchant_monster, 10}},
@@ -5443,7 +5510,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_GRANT_WORD_OF_RECALL, {"speaker of recall",
                                     _xom_grants_word_of_recall, 40}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
-    { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
     { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},

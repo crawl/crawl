@@ -23,6 +23,7 @@
 #include "god-abil.h"
 #include "god-passive.h"
 #include "monster.h"
+#include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-tentacle.h"
 #include "player.h"
@@ -70,6 +71,11 @@ static bool _mons_has_path_to_player(const monster* mon)
     {
         return false;
     }
+
+    // First do a *quick* check to see whether a straight path exists to the
+    // player before bothering with full pathfinding.
+    if (can_go_straight(mon, mon->pos(), you.pos()))
+        return true;
 
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
@@ -134,9 +140,8 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    // Short-circuit plants, some vaults have tons of those. Except for both
-    // active and inactive ballistos, players may still want these.
-    if (mons_is_firewood(*mon) && mon->type != MONS_BALLISTOMYCETE)
+    // Short-circuit plants, some vaults have tons of those.
+    if (mon->is_firewood())
         return true;
 
     int  dist    = grid_distance(you.pos(), mon->pos());
@@ -150,7 +155,10 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // monsters capable of throwing or zapping wands.
                            || !mons_can_hurt_player(mon)));
 
-    if (consider_user_options)
+    // If is_safe is true, ch_mon_is_safe will always immediately return true
+    // anyway, so let's skip constructing another monster_info and handling lua
+    // dispatch entirely in that case.
+    if (consider_user_options && !is_safe)
     {
         bool moving = you_are_delayed()
                        && current_delay()->is_run()
@@ -160,9 +168,8 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 
         bool result = is_safe;
 
-        monster_info mi(mon, MILEV_SKIP_SAFE);
-        if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
-                        &mi, is_safe, moving, dist,
+        if (clua.callfn("ch_mon_is_safe", "sbbd>b",
+                        mon->name(DESC_PLAIN).c_str(), is_safe, moving, dist,
                         &result))
         {
             is_safe = result;
@@ -469,7 +476,6 @@ void revive()
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.magic_contamination = 0;
-    restore_stat(STAT_ALL, 0, true);
 
     clear_trapping_net();
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
@@ -484,7 +490,7 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    end_wait_spells(true);
+    stop_channelling_spells();
 
     if (you.duration[DUR_FROZEN_RAMPARTS])
         end_frozen_ramparts();
@@ -509,6 +515,9 @@ void revive()
         {
             you.duration[dur] = 0;
         }
+
+        if (dur == DUR_TELEPORT)
+            you.props.erase(SJ_TELEPORTITIS_SOURCE);
     }
 
     update_vision_range(); // in case you had darkness cast before

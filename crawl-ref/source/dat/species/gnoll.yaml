@@ -26,6 +26,7 @@ aptitudes:
   conjurations: 6
   hexes: 6
   summoning: 6
+  forgecraft: 6
   necromancy: 6
   translocations: 6
   fire_magic: 6
@@ -42,7 +43,7 @@ dex: 7
 levelup_stat_frequency: 4
 mutations:
   1:
-    MUT_STRONG_NOSE: 1
+    MUT_TREASURE_SENSE: 1
     MUT_FANGS: 1
     MUT_DISTRIBUTED_TRAINING: 1
 recommended_jobs:
@@ -52,6 +53,7 @@ recommended_jobs:
   - hexslinger
   - shapeshifter
   - wanderer
+  - forgewright
 
 child_name: Pup
 orc_name: Hyenorc

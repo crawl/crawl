@@ -1,0 +1,29 @@
+enum: bat
+equivalent_mons: bat
+melds: [physical, ring]
+dex: 5
+size: tiny
+move_speed: 5
+can_cast: false
+can_cast: no
+unarmed: {base: 0, xl_based: yes}
+unarmed_colour: lightgrey
+unarmed_name: Teeth
+unarmed_verbs: animal
+can_fly: yes
+can_swim: false
+changes_anatomy: yes
+has_hair: yes
+has_bones: yes
+has_feet: yes
+has_ears: yes
+shout_verb: squeak
+shout_volume: -8
+hand_name: foreclaw
+prayer_action: perch on
+flesh_name: flesh
+fakemuts:
+  - ["extremely fast", "You cover ground extremely quickly."]
+  - ["", "You are tiny, dextrous, and very evasive."] #short-form "tiny" is automatically added
+badmuts:
+  - ["weak attacks", "Your unarmed attacks are very weak."]

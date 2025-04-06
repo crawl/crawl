@@ -5,6 +5,8 @@
 # <<M>>       Temple maps
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 -- Call this function, with the default being the top parameter,
 -- for any temple with variable altar totals.
@@ -3166,12 +3168,12 @@ cc......x.....x.......xxx............x.....x......x...x......cc
                           ccccccccccc
 ENDMAP
 
-NAME:    mainiacjoe_temple_hex_bubbles
-TAGS:    temple_altars_22
-PLACE:   Temple
-ORIENT:  encompass
-NSUBST:  B = 1:{ / *:B
-SUBST:   c : cvb
+NAME:   mainiacjoe_temple_hex_bubbles
+TAGS:   temple_altars_21
+PLACE:  Temple
+ORIENT: encompass
+NSUBST: B = 1:{ / *:B
+SUBST:  c : cvb
 MAP
                       ccccc
                      cc...cc
@@ -5279,7 +5281,6 @@ KFEAT:   I = altar_ignis
 MARKER:  I = lua:fog_machine { cloud_type = "grey smoke", \
              pow_max = 3, delay_min = 10, delay_max = 30, \
              start_clouds = 0, size = 1, excl_rad = -1 }
-: set_feature_name("granite_statue", "broken pillar")
 SUBST:   ^ = ^!!
 KFEAT:   ^ = web
 SUBST:   " = -!!
@@ -5290,11 +5291,11 @@ SUBST:   G = G!
 COLOUR:  - = brown
 COLOUR:  x! = red
 COLOUR:  b = lightred
-COLOUR:  AG = red
-TILE:    G = dngn_crumbled_column
+COLOUR:  A = red
 RTILE:   x = wall_volcanic
 FTILE:   AGI^! = floor_rough_red
 FTILE:   - = floor_rough_brown
+: vault_granite_statue_setup(_G, "G", "broken pillar")
 MAP
 xxxxxxxxxxxxxxcccccxx
 xxxxxxxxxxxxxcc.B.ccx
@@ -5445,11 +5446,9 @@ ORIENT:  encompass
 WEIGHT:  2
 NSUBST:  . = 2 = GG. / 8 = ^. / ._
 KFEAT:   ^ = web
-COLOUR:  G = white
-TILE:    G = dngn_crumbled_column
 COLOUR:  _ = brown
 FTILE:   _G = floor_rough_brown
-: set_feature_name("granite_statue", "broken pillar")
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
 : set_feature_name("stone_wall", "defaced carved stone wall")
 epilogue{{
     crawl.mpr("The air is stale and forgotten.")

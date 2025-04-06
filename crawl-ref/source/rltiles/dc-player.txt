@@ -101,6 +101,9 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
+poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
 djinni_red_f DJINNI
 djinni_red_m
 djinni_blue_f
@@ -157,8 +160,6 @@ merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
 merfolk_water_m
-vampire_f VAMPIRE
-vampire_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -217,8 +218,15 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
+
+### Must be before scarves to render behind the player!
+%sdir player/transform
+medusa_form_armataur_back MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
 
 ###Scarf
+%sdir player/cloak
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
 scarf_red SCARF_RED
 scarf_white SCARF_WHITE
@@ -256,6 +264,8 @@ mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
 slippers SLIPPERS
+april_boots1 APRIL1
+april_boots2 APRIL2
 
 ## Mutations
 hooves HOOVES
@@ -479,10 +489,16 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+justicar JUSTICAR
 
 %sdir player/transform
 maw_form0 MAW_FORM
 maw_form1
+quill_form_armataur QUILL_ARMATAUR
+quill_form_djinn QUILL_DJINN
+quill_form_humanoid QUILL_HUMANOID
+quill_form_naga QUILL_NAGA
+hive_form HIVE_FORM
 
 %end_ctg
 
@@ -699,6 +715,9 @@ trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
 trident_three TRIDENT3
+partisan_1 PARTISAN
+partisan_2
+partisan_3
 lance LANCE
 lance_two LANCE2
 scythe SCYTHE
@@ -726,6 +745,8 @@ lajatang1 LAJATANG
 lajatang2
 lajatang3
 xmas-scythe XMAS_SCYTHE
+april_staff1 APRIL_STAFF1
+april_staff2 APRIL_STAFF2
 
 ## staves
 
@@ -862,6 +883,7 @@ orb_of_dispater ORB_OF_DISPATER
 orb_of_wucad_mu ORB_OF_WUCAD_MU
 orb_of_battle ORB_OF_BATTLE
 charlatans_orb CHARLATANS_ORB
+skull_of_zonguldrok SKULL_OF_ZONGULDROK
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1071,6 +1093,8 @@ turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
 santa_hat SANTA
+april_hat1 APRIL1
+april_hat2 APRIL2
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
@@ -1121,6 +1145,8 @@ taiso_white
 bear BEAR
 dyrovepreva DYROVEPREVA
 eternal_torment ETERNAL_TORMENT
+fungal_fisticloak_front FUNGAL_FISTICLOAK_FRONT
+vainglory VAINGLORY
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
@@ -1173,6 +1199,11 @@ hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
+
+%sdir player/transform
+medusa_form_armataur_front MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
+
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

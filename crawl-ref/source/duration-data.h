@@ -5,9 +5,12 @@
 #pragma once
 
 #include "act-iter.h"
+#include "mon-death.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h"
+#include "spl-damage.h"
+#include "spl-other.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
 #include "timed-effects.h"
@@ -32,12 +35,8 @@ static void _end_death_channel()
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_SPECTRAL_THING && mi->summoner == MID_PLAYER)
-        {
-            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
-            abj.duration = 0;
-            mi->update_ench(abj);
-        }
+        if (mi->was_created_by(you, SPELL_DEATH_CHANNEL))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
     }
 }
 
@@ -76,6 +75,11 @@ static void _post_shackles_effect()
 static void _end_growing_destruction()
 {
     you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
+}
+
+static void _end_toxic_bog()
+{
+    end_terrain_change(TERRAIN_CHANGE_BOG);
 }
 
 // properties of the duration.
@@ -277,6 +281,14 @@ static const duration_def duration_data[] =
       RED, "Stone",
       "petrified", "",
       "You are petrified.", D_DISPELLABLE},
+    { DUR_VEXED,
+      RED, "Vexed",
+      "vexed", "vex",
+      "You are vexed.", D_DISPELLABLE,
+      {{ "", []() {
+            mprf(MSGCH_DURATION, "You feel more in control of yourself again.");
+            you.give_stun_immunity(random_range(1, 3));
+      }}}},
     { DUR_PETRIFYING,
       LIGHTRED, "Petr",
       "petrifying", "",
@@ -434,7 +446,12 @@ static const duration_def duration_data[] =
       RED, "-Move",
       "immotile", "",
       "You are unable to move around.", D_DISPELLABLE,
-      {{ "You are no longer robbed of momentum." }}},
+      {{ "You are able to move again." }}},
+    { DUR_VAINGLORY,
+      RED, "Vainglory",
+      "no stairs", "",
+      "You refuse to leave the level so soon after announcing yourself.", D_EXPIRES,
+      {{ "You feel willing to depart the floor again." }}},
     { DUR_ENLIGHTENED,
       BLUE, "Will+",
       "enlightened", "",
@@ -640,12 +657,21 @@ static const duration_def duration_data[] =
       YELLOW, "-Bloodrite",
       "on bloodrite cooldown", "bloodrite cooldown",
       "You are unable to performed a blood rite.", D_NO_FLAGS},
+    { DUR_HIVE_COOLDOWN,
+        YELLOW, "-Swarm",
+        "on swarm cooldown", "swarm cooldown",
+        "Your swarm has recently come to your defense.", D_NO_FLAGS},
+    { DUR_MEDUSA_COOLDOWN,
+        YELLOW, "-Lithotox",
+        "on lithotoxin cooldown", "lithotoxin cooldown",
+        "Your lithotoxin has recently activated.", D_NO_FLAGS},
     { DUR_JINXBITE, LIGHTBLUE, "Jinx",
       "jinxed", "jinxbite",
       "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
       {{ "The jinxing sprites lose interest in you." }}},
     { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
-      "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
+      "canine familiar cooldown", "You are unable to call your canine familiar.",
+      D_EXPIRES, {{ "",
         [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
     { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
       "You may recruit a defeated apostle into your service", D_EXPIRES,
@@ -677,6 +703,31 @@ static const duration_def duration_data[] =
       "growing destruction", "growing destruction",
       "Your Destruction is growing increasingly wild.", D_EXPIRES,
       {{ "", _end_growing_destruction}}},
+    { DUR_BLINKITIS, RED, "Unstable",
+      "blinking rapidly", "blinkitis",
+      "You are untethered in space.", D_DISPELLABLE, {{"You feel more stable."}} },
+    { DUR_CACOPHONY,
+      WHITE, "Cacophony",
+      "making a cacophony", "cacophony",
+      "You are making an unholy racket with your haunted armour.", D_EXPIRES},
+    { DUR_ENKINDLED, LIGHTCYAN, "Enkindled",
+      "enkindled", "enkindled",
+      "Your flames burn bright with remembrance.", D_EXPIRES,
+      {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_DETONATION_CATALYST, BLUE, "Catalyst",
+      "catalyst", "catalyst",
+      "Your strikes ignite an explosive catalyst.", D_EXPIRES},
+    { DUR_SHROUD_TIMEOUT,
+      DARKGREY, "Shroud",
+      "shroud timeout", "shroud timeout",
+      "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
+      {{ "Your slime shroud regrows." }}},
+    { DUR_WEREFURY,
+      BLUE, "Slay",
+      "full of bloodlust", "bloodlust",
+      "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
+      {{ "Your bloodlust subsides." },
+       { "You feel your bloodlust ebbing." }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -701,11 +752,10 @@ static const duration_def duration_data[] =
     { DUR_TIME_STEP, 0, "", "", "time step", "", D_NO_FLAGS},
     { DUR_ICEMAIL_DEPLETED, 0, "", "", "icemail depleted", "", D_NO_FLAGS,
       {{ "Your icy envelope is restored.", _redraw_armour }}},
-    { DUR_PARALYSIS_IMMUNITY, 0, "", "", "paralysis immunity", "", D_NO_FLAGS},
+    { DUR_STUN_IMMUNITY, 0, "", "", "immune to disabling effects", "", D_NO_FLAGS},
     { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
     { DUR_SICKENING, 0, "", "", "sickening", "", D_NO_FLAGS, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
-    { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
     // Regeneration information handled separately.
     { DUR_TROGS_HAND, 0, "", "strong-willed", "trogs hand",
       "Your willpower is greatly increased.", D_EXPIRES,
@@ -713,9 +763,6 @@ static const duration_def duration_data[] =
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
         {{ "", []() { you.props[GOZAG_GOLD_AURA_KEY] = 0; you.redraw_title = true;}}}},
-    { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
-    { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
-    { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
@@ -725,7 +772,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes.", end_toxic_bog }}},
+      {{ "Your noxious spew wanes.", _end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
@@ -739,7 +786,7 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_NO_SCROLLS, 0, "", "", "no scrolls", "", D_NO_FLAGS,
       {{ "", []() {
-          if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
+          if (!player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
@@ -754,6 +801,14 @@ static const duration_def duration_data[] =
     { DUR_CONSTRICTION_IMMUNITY, 0, "", "", "constrict immune", "", D_NO_FLAGS, {{""}}},
     { DUR_GRAVE_CLAW_RECHARGE, 0, "", "", "grave claw recharging", "", D_NO_FLAGS},
     { DUR_TIME_WARPED_BLOOD_COOLDOWN, 0, "", "", "time-warped blood cooldown", "", D_NO_FLAGS},
+    { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "spike launcher", "", D_NO_FLAGS, {{"", end_spike_launcher}}},
+    { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS},
+    { DUR_FORTRESS_BLAST_TIMER, 0, "", "", "fortress blast charging", "", D_DISPELLABLE},
+    { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
+    { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
+    { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
+    { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
+    { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -806,5 +861,9 @@ static const duration_def duration_data[] =
     { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
     { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
     { DUR_DUEL_COMPLETE, 0, "", "", "old duel complete", "", D_NO_FLAGS },
+    { DUR_COLLAPSE, 0, "", "", "old collapse", "", D_NO_FLAGS },
+    { DUR_BRAINLESS, 0, "", "", "old brainless", "", D_NO_FLAGS },
+    { DUR_CLUMSY, 0, "", "", "old clumsy", "", D_NO_FLAGS },
+    { DUR_SLEEP_IMMUNITY, 0, "", "", "old sleep immunity", "", D_NO_FLAGS, {{""}}},
 #endif
 };

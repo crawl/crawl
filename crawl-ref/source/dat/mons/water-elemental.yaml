@@ -12,7 +12,7 @@ hd: 6
 hp_10x: 420
 ac: 4
 ev: 7
-intelligence: brainless
+intelligence: animal
 habitat: amphibious
 energy: {swim: 6}
 size: large

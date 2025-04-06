@@ -103,7 +103,7 @@ static bool _evoke_horn_of_geryon()
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
         mgen_data mg(MONS_SIN_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3, SPELL_NO_SPELL);
+        mg.set_summoned(&you, SPELL_NO_SPELL, summ_dur(3));
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
@@ -156,7 +156,7 @@ int wand_power(spell_type wand_spell)
         return -1;
     const int mp_cost = wand_mp_cost();
     int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
-    if (player_equip_unrand(UNRAND_GADGETEER))
+    if (you.unrand_equipped(UNRAND_GADGETEER))
         pow = pow * 130 / 100;
     return min(pow, cap);
 }
@@ -198,10 +198,6 @@ void zap_wand(int slot, dist *_target)
     if (!item_currently_evokable(&wand))
         return;
 
-    // If you happen to be wielding the wand, its display might change.
-    if (you.equip[EQ_WEAPON] == item_slot)
-        you.wield_change = true;
-
     const int mp_cost = wand_mp_cost();
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -231,8 +227,8 @@ void zap_wand(int slot, dist *_target)
         finalize_mp_cost();
 
     // Take off a charge (unless gadgeteer procs)
-    if ((you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
-        || player_equip_unrand(UNRAND_GADGETEER))
+    if ((you.wearing_ego(OBJ_GIZMOS, SPGIZMO_GADGETEER)
+        || you.unrand_equipped(UNRAND_GADGETEER))
         && x_chance_in_y(3, 10))
     {
         mpr("You conserve a charge of your wand.");
@@ -284,7 +280,7 @@ static bool _box_of_beasts()
 
     mgen_data mg(MONS_MUTANT_BEAST, BEH_FRIENDLY, you.pos(), MHITYOU,
                  MG_AUTOFOE);
-    mg.set_summoned(&you, 3 + random2(3), 0);
+    mg.set_summoned(&you, 0, summ_dur(3 + random2(3)));
 
     mg.hd = beast_tiers[tier];
     dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
@@ -385,7 +381,7 @@ static bool _spill_out_spiders()
         monster_type mon = pick_monster_from(pop_spiders, evo_skill,
                                              _sack_of_spiders_veto_mon);
         mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3 + random2(4), 0);
+        mg.set_summoned(&you, 0, summ_dur(3 + random2(4)));
         if (create_monster(mg))
             made_mons = true;
     }
@@ -500,7 +496,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
     wind_beam.affects_nothing = true;
     wind_beam.source          = agent->pos();
     wind_beam.range           = LOS_RADIUS;
-    wind_beam.is_tracer       = true;
+    wind_beam.set_is_tracer(true);
 
     if (agent->is_player())
     {
@@ -639,7 +635,7 @@ static spret _phantom_mirror(dist *target)
     if (!target)
         target = &target_local;
 
-    targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
+    targeter_smite tgt(&you, LOS_RADIUS);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
@@ -685,7 +681,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(&you, power)) / 100));
 
-    mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
+    mon->mark_summoned(SPELL_PHANTOM_MIRROR, summ_dur(dur), true, true);
 
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
@@ -697,6 +693,10 @@ static spret _phantom_mirror(dist *target)
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
+    // If the original monster was unrewarding, and these flags are copied, the
+    // mirrored copy will not properly count as summoned for some purposes.
+    mon->flags &= ~(MF_HARD_RESET | MF_NO_REWARD);
+
     mprf("You reflect %s with the mirror!",
          victim->name(DESC_THE).c_str());
 
@@ -705,9 +705,8 @@ static spret _phantom_mirror(dist *target)
 
 static bool _valid_tremorstone_target(const monster &m)
 {
-    return !mons_is_firewood(m)
-        && !god_protects(m)
-        && !always_shoot_through_monster(&you, m);
+    return !m.is_firewood()
+        && !never_harm_monster(&you, m);
 }
 
 /**
@@ -974,10 +973,24 @@ static transformation _form_for_talisman(const item_def &talisman)
     return form_for_talisman(talisman);
 }
 
-static bool _evoke_talisman(const item_def &talisman)
+static bool _evoke_talisman(item_def &talisman)
 {
+    if (talisman.sub_type == TALISMAN_PROTEAN)
+    {
+        const talisman_type new_type = random_choose(TALISMAN_RIMEHORN,
+                                                     TALISMAN_SCARAB,
+                                                     TALISMAN_MEDUSA,
+                                                     TALISMAN_MAW);
+
+        mprf("%s responds to your shapeshifting skill and transforms into a %s!",
+             talisman.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());
+
+        talisman.sub_type = new_type;
+        return true;
+    }
+
     const transformation trans = _form_for_talisman(talisman);
-    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+    if (!check_transform_into(trans, false, &talisman))
         return false;
     if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
     {
@@ -1038,13 +1051,39 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_TALISMANS)
     {
+        if (item->sub_type == TALISMAN_PROTEAN && temp)
+        {
+            if (you.skill(SK_SHAPESHIFTING) < 6)
+            {
+                return "you lack the shapeshifting skill to coax this "
+                       "talisman into a stable form.";
+            }
+            else
+                return "";
+        }
+
         const transformation trans = _form_for_talisman(*item);
         const string form_unreason = cant_transform_reason(trans, false, temp);
         if (!form_unreason.empty())
             return lowercase_first(form_unreason);
 
-        if (you.form != you.default_form)
+        if (you.form != you.default_form && temp)
             return "you need to leave your temporary form first.";
+
+        if (trans == transformation::hive && you_worship(GOD_OKAWARU))
+            return "you have forsworn all allies in Okawaru's name.";
+
+        return "";
+    }
+
+    if (item->is_type(OBJ_BAUBLES, BAUBLE_FLUX))
+    {
+        if (you.form == transformation::flux && temp)
+            return "you are already filled with unstable energy.";
+
+        const string form_unreason = cant_transform_reason(transformation::flux, false, temp);
+        if (!form_unreason.empty())
+            return lowercase_first(form_unreason);
         return "";
     }
 
@@ -1119,23 +1158,17 @@ bool evoke_item(item_def& item, dist *preselect)
         zap_wand(item.link, preselect);
         return true;
 
-    case OBJ_WEAPONS:
-    {
-#ifdef ASSERTS
-        ASSERT(in_inventory(item));
-        const int equip = you.equip[EQ_WEAPON];
-        ASSERT(equip != -1 && item.link == equip);
-#endif
-        dist targ_local;
-        if (!preselect)
-            preselect = &targ_local;
-
-        quiver::get_primary_action()->trigger(*preselect);
-        return you.turn_is_over;
-    }
-
     case OBJ_TALISMANS:
         return _evoke_talisman(item);
+
+    case OBJ_BAUBLES:
+        mprf("You crush the flux bauble in your %s and feel its energy "
+            "flooding your body.", you.hand_name(false).c_str());
+        ASSERT(in_inventory(item));
+        dec_inv_item_quantity(item.link, 1);
+        transform(0, transformation::flux);
+        you.props[FLUX_ENERGY_KEY] = 40;
+        break;
 
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));

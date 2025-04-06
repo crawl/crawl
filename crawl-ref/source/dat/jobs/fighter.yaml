@@ -8,7 +8,7 @@ dex: 4
 equipment:
   - "scale mail"
   - "buckler"
-  - "potion of might"
+  - "potion of might q:2"
 weapon_choice: good
 recommended_species:
   - mountain dwarf
@@ -17,6 +17,7 @@ recommended_species:
   - gargoyle
   - armataur
   - formicid
+  - revenant
 skills:
   fighting: 3
   armour: 3

@@ -43,6 +43,10 @@ enum beam_type                  // bolt::flavour
     BEAM_QAZLAL,
     BEAM_HAEMOCLASM,
     BEAM_BLOODRITE,
+    BEAM_SEISMIC,
+    BEAM_BOLAS,
+    BEAM_MERCURY,
+    BEAM_BAT_CLOUD,
 
     // Enchantments
     BEAM_SLOW,
@@ -99,7 +103,9 @@ enum beam_type                  // bolt::flavour
     BEAM_CURSE_OF_AGONY,
     BEAM_RIMEBLIGHT,
     BEAM_SHADOW_TORPOR,
-    BEAM_LAST_ENCHANTMENT = BEAM_SHADOW_TORPOR,
+    BEAM_DOUBLE_HEALTH,
+    BEAM_VEX,
+    BEAM_LAST_ENCHANTMENT = BEAM_VEX,
 
     BEAM_MEPHITIC,
     BEAM_AIR,

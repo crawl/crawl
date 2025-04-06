@@ -8,6 +8,9 @@
 # fighters in a library), but that's kind of the point.
 #
 ##############################################################################
+
+: crawl_require('dlua/vault.lua')
+
 {{
 
 trove = {}
@@ -55,7 +58,7 @@ function trove.get_trove_item(e, value, base_item)
   floorlist, shoplist = dgn.stash_items(value, true)
   if #shoplist ~= 0 then
     shop_item = shoplist[crawl.random2(#shoplist)+1]
-    if not shop_item.identified() then
+    if not shop_item.is_identified then
       shop_item = shoplist[crawl.random2(#shoplist)+1]
     end
     local jwith_pluses = {"ring of protection", "ring of evasion",
@@ -64,7 +67,7 @@ function trove.get_trove_item(e, value, base_item)
                           "amulet of reflection"}
     local bt = shop_item.base_type
     if bt == "armour" or bt == "weapon" or bt == "jewellery" then
-      if shop_item.identified() then
+      if shop_item.is_identified then
         item.quantity = shop_item.quantity
         item.base_type = shop_item.base_type
         item.sub_type = shop_item.sub_type
@@ -122,6 +125,7 @@ function trove.get_trove_item(e, value, base_item)
 
   local is_armour_user = you.race() ~= "Felid"
       and you.race() ~= "Octopode"
+      and you.race() ~= "Poltergeist"
       and you.genus() ~= "draconian"
 
   if is_armour_user then
@@ -229,26 +233,54 @@ function trove.setup_features(e)
     e.kfeat("< = exit_trove")
 end
 
--- "any scroll good_item" still gets you 'scroll of noise' etc so let's
--- limit it to the enchant scrolls, tloc scrolls, identify scrolls, mapping
--- scrolls with a low chance of silence, vulnerability or acquirement (lowest)
+-- "any scroll good_item" still gets you 'scroll of noise' etc so let's limit
+-- it better scrolls: more varied than dgn.loot_scrolls with such handed
+-- out in higher numbers, but still weighted towards more value than before.
 function trove.good_scroll (e)
-    e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
-             scroll of enchant armour / scroll of immolation w:8 /
-             scroll of revelation w:8 / scroll of blinking /
-             scroll of silence w:2 / scroll of acquirement w:1 /
-             scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             scroll of fog w:8 / scroll of torment w:8 /
-             any ally scroll w:1 ]])
+    local scrolls = {"acquirement w:1", "teleportation w:15", "blinking w:8",
+                     "revelation w:8", "fear w:8", "poison w:3", "silence w:3",
+                     "vulnerability w:3", "torment w:1"}
+    local eq_scrolls = {"enchant weapon", "brand weapon w:3", "enchant armour"}
+
+    local item_def = "scroll of " .. table.concat(scrolls, " / scroll of ") ..
+                     " / any ally scroll w:8"
+
+    if you.race() ~= "Felid" then
+        item_def = item_def .. " / scroll of " ..
+                   table.concat(eq_scrolls, " / scroll of ")
+    end
+
+    e.item(item_def)
 end
 
 function trove.good_talisman (e)
-    e.item([[blade talisman randart / maw talisman randart /
-             serpent talisman randart w:8 / granite talisman w:4 /
-             granite talisman randart w:6 / dragon-blood talisman w:4 /
-             dragon-blood talisman randart w:6 / storm talisman w:8 /
-             storm talisman randart w:2 / talisman of death w:8 /
-             talisman of death randart w:2]])
+    -- XXX: should we just have talisman tier itemspec clauses?
+    --      doesn't help here very much, though, due to good gods.
+    --      acquirement's still not the best off due to neglecting blade tier.
+    local t = "blade talisman randart / lupine talisman randart" ..
+              "serpent talisman randart / wellspring talisman randart / " ..
+              "granite talisman w:4 / granite talisman randart w:6 / " ..
+              "dragon-coil talisman w:4 / dragon-coil talisman randart w:6 / " ..
+              "honeycomb talisman w:4 / honeycomb talisman randart w:6 / " ..
+              "riddle talisman w:4 / riddle talisman randart w:6 / " ..
+              "storm talisman w:8 / storm talisman randart w:2"
+
+    if you.genus() ~= "draconian" and you.race() ~= "Felid" and
+      you.race() ~= "octopode" then
+        t = t .. " / fortress talisman randart"
+    end
+
+    if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+        t = t .. " / sanguine talisman w:4 / sanguine talisman randart w:6 / " ..
+                 " talisman of death w:8 / talisman of death randart w:2"
+    end
+
+    -- If you're with Zin, there's only one form of shapeshifting allowed:
+    if you.god() == "Zin" then
+       e.item([[potion of mutation pre_id q:1]])
+    else
+       e.item(t)
+    end
 end
 
 function trove.place_fog(e, type, strength)
@@ -260,40 +292,22 @@ end
 function trove.weapon_skills (e)
     local weapon_skills = { "Short Blades", "Long Blades", "Axes",
         "Maces & Flails", "Polearms", "Staves", "Ranged Weapons" }
-    local skill_total = 0
-    local nonzero_skills = 0
+    local max = 0
     for _, skill in ipairs(weapon_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        max = math.max(you.base_skill(skill), max)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
-        return 0
-    end
+    return max
 end
 
 function trove.spell_skills (e)
     local spell_skills = { "Spellcasting", "Conjurations", "Hexes", "Summonings",
         "Necromancy", "Translocations", "Alchemy", "Fire Magic", "Ice Magic",
-        "Air Magic", "Earth Magic" }
-    local skill_total = 0
-    local nonzero_skills = 0
+        "Air Magic", "Earth Magic", "Forgecraft" }
+    local sum = 0
     for _, skill in ipairs(spell_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        sum = sum + you.base_skill(skill)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
-        return 0
-    end
+    return sum
 end
 }}
 
@@ -516,6 +530,16 @@ ENDMAP
 # Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
 # good to "worse". Some vaults have more than 16 items for specific reasons.
 #
+# TODO:
+# * Instead of relying on giant piles of mostly just item categories for
+#   high costs usually fulfilled pretty late, we should pivot more into
+#   smaller piles of specifically themed loot named after the owners
+#   of the trove, using unrand and spell namesake and god flavour, for
+#   somewhat lower costs fulfillable earlier. Consider weapon brands, jewellery
+#   types, armour artprops, and specific consumables / talismans / spells
+#   as can easily fit themes like "Ozocubu's Refridgerator" or "Nadja's Forge".
+#   (Might want the ability to combine acquirement and ego itemspecs?...)
+#
 ##############################################################################
 
 default-depth: Trove
@@ -640,7 +664,7 @@ ENDMAP
 NAME:   trove_library
 WEIGHT: 30
 veto {{ return crawl.game_started()
-          and trove.spell_skills() < trove.weapon_skills()
+          and trove.spell_skills() < 20
           and not crawl.one_chance_in(6) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
@@ -718,7 +742,7 @@ ENDMAP
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -746,7 +770,7 @@ ENDMAP
 # A simple treasure chamber.
 NAME:   trove_weapon_2
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -818,7 +842,7 @@ ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
-ITEM:    dragon-blood talisman good_item / any armour good_item
+ITEM:    dragon-coil talisman good_item / any armour good_item
 ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
          troll leather armour / any useful armour good_item
 ITEM:    javelin good_item / dart good_item
@@ -919,8 +943,16 @@ ORIENT:  encompass
 WEIGHT:  15
 ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
 ITEM:    any misc, maw talisman randart / blade talisman randart
-ITEM:    dragon-blood talisman randart / granite talisman randart
-ITEM:    storm talisman / talisman of death
+{{
+  local t3 = "dragon-coil talisman randart / granite talisman randart"
+  local t4 = "storm talisman"
+  if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
+    t3 = t3 .. " / sanguine talisman randart"
+    t4 = t4 .. " / talisman of death"
+  end
+  item(t3)
+  item(t4)
+}}
 ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
          any beam wand charges:8 / any blast wand charges:8
 SHUFFLE: hij
@@ -930,8 +962,9 @@ FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
 veto {{ return crawl.game_started()
         and (you.mutation("inability to use devices") == 1
-             or (you.mutation("no forms") == 1
-             and crawl.x_chance_in_y(2, 3))) }}
+             or (you.god == "Zin")
+             or ((you.mutation("no forms") == 1
+             and crawl.x_chance_in_y(2, 3)))) }}
 MAP
   xxxxx
   xdxex
@@ -954,7 +987,7 @@ ENDMAP
 NAME:   trove_trog_arena
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -1046,7 +1079,7 @@ ENDMAP
 NAME:   trove_weapons_four_rooms
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < trove.spell_skills()
+          and (trove.weapon_skills() < 10
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
@@ -1113,7 +1146,7 @@ NAME:   trove_books_scrolls
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_dj
 ORIENT: encompass
 veto {{ return crawl.game_started()
-          and trove.spell_skills() < trove.weapon_skills()
+          and trove.spell_skills() < 20
           and not crawl.one_chance_in(6) }}
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
@@ -1208,7 +1241,7 @@ ENDMAP
 NAME:    nicolae_trove_branded_display_cases
 TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 veto  {{ return crawl.game_started()
-           and (trove.weapon_skills() < trove.spell_skills()
+           and (trove.weapon_skills() < 10
              or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
            and not crawl.one_chance_in(3) }}
 ORIENT:  encompass
@@ -1217,7 +1250,7 @@ ORIENT:  encompass
 -- higher quality of weapons doesn't guarantee one gets their current weapon
 -- school, but it's much better than otherwise getting whips and short swords.
 local weaps = { "double sword", "great sword w:30", "triple sword w:5",
-                "halberd w:30", "glaive", "bardiche w:5", "morningstar w:30",
+                "partisan", "glaive w:30", "bardiche w:5", "morningstar w:30",
                 "eveningstar w:5", "great mace", "war axe w:30", "broad axe",
                 "battleaxe", "executioner's axe w:5", "quarterstaff w:40",
                 "lajatang w:15", "rapier w:45" }
@@ -1268,14 +1301,9 @@ item(genweap(egos2[1]))
 item(genweap(egos2[2]))
 }}
 KFEAT:   + = closed_clear_door
-KFEAT:   S = metal_statue
 SHUFFLE: defg
-COLOUR:  G = mountain
-COLOUR:  S = yellow
-TILE:    G = dngn_scintillating_statue
-TILE:    S = dngn_golden_statue
-: set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("metal_statue", "golden statue")
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: vault_metal_statue_setup(_G, "S", "golden statue")
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx
@@ -1444,8 +1472,8 @@ ITEM:   acquire jewellery / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   gold q:1
 KITEM:  D = stone mimic
-KITEM:  E = wand of flame mimic / potion of degeneration mimic / scroll of noise mimic
-KITEM:  F = any weapon damaged ident:all mimic / any armour damaged ident:all mimic
+KITEM:  E = wand of flame mimic / potion of moonshine mimic / scroll of noise mimic
+KITEM:  F = any weapon damaged pre_id mimic / any armour damaged pre_id mimic
 KFEAT:  X = rock_wall mimic
 : trove.setup_features(_G)
 MAP

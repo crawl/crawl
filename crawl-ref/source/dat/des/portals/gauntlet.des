@@ -1038,7 +1038,7 @@ dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
 
  -- Merfolk gladiator. 3 guaranteed items, 3.25 on-average.
 dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
-    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    "partisan good_item / demon trident / glaive good_item / bardiche" ..
     ", leather armour good_item w:100 / ring mail good_item w:100" ..
     "    / " .. light_scales .. " / " .. medium_scales ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
@@ -1061,7 +1061,7 @@ dgn.delayed_decay_extra(_G, "J", "orc skeleton",
 
  -- Ogre, maybe an ogre mage of some kind.
 dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
-    "trident good_item / demon trident / glaive good_item / bardiche" ..
+    " demon trident / partisan good_item / glaive good_item / bardiche" ..
     "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 / giant club good_item" ..
     "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..
@@ -1093,8 +1093,8 @@ dgn.delayed_decay_extra(_G, "M", "elf skeleton",
     ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
--- Deep Dwarf artificer.
-dgn.delayed_decay_extra(_G, "N", "dwarf skeleton",
+-- Coglin artificer.
+dgn.delayed_decay_extra(_G, "N", "goblin skeleton",
     "any wand, any misc, any wand / any misc / nothing w:20" ..
     ", any weapon good_item / any armour good_item / gold / any scroll" ..
     "    / any potion / nothing w:50")
@@ -1123,7 +1123,7 @@ dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "randbook disc:translocation / book of spatial translocations" ..
     "    / book of the warp" ..
     ", scroll of blinking / scroll of teleportation q:2" ..
-    "    / dart ego:dispersal" ..
+    "    / dart ego:disjunction" ..
     ", dagger good_item / short sword good_item / rapier good_item" ..
     "    / long sword good_item / double sword / demon blade" ..
     "    / sling randart / hand cannon good_item / shortbow randart" ..

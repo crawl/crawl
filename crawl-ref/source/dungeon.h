@@ -209,7 +209,7 @@ int dgn_builder_y();
 
 void dgn_clear_vault_placements();
 void dgn_erase_unused_vault_placements();
-void dgn_flush_map_memory();
+void dgn_reset_player_data();
 
 double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);

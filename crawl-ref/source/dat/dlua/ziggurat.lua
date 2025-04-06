@@ -274,16 +274,17 @@ mset(spec_fn(function ()
   local d = math.max(5, 30 - you.zigs_completed() * 3)
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
-         "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "guardian sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
          "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 6
-  local e = 10 + you.zigs_completed() * 9
-  return "place:Crypt:$ 9 w:260 / " ..
-         "curse skull w:" .. d .. " / revenant w:" .. e .. " / " ..
-         "ancient lich w:" .. d .. " / dread lich w:" .. e
+  local d = 10 + you.zigs_completed() * 3
+  local e = 10 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 9
+  return "place:Crypt:$ 9 w:250 / vampire bloodprince w:" .. d .. " / " ..
+         "curse skull w:" .. e .. " / revenant soulmonger w:" .. f .. " / " ..
+         "ancient lich w:" .. e .. " / dread lich w:" .. f
 end))
 
 mset(spec_fn(function ()
@@ -300,8 +301,8 @@ mset(spec_fn(function ()
   local e = 10 + you.zigs_completed() * you.zigs_completed() * 2
   return "place:Abyss:$ w:1910 / demonspawn corrupter w:" .. d .. " / " ..
          "starcursed mass w:" .. d .. " / wretched star w:" .. d .. " / " ..
-         "bone dragon w:" .. d / 2 .. " / daeva w:" .. d .. " / " ..
-         "silent spectre w:" .. e
+         "bone dragon w:" .. d / 2 .. " / wyrmhole w:" .. d / 2 .. " / " ..
+         "daeva w:" .. d .. " / " .. "silent spectre w:" .. e
 end))
 
 mset(with_props(spec_fn(function ()
@@ -309,7 +310,7 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 6
   local f = 10 + you.zigs_completed() * 15
   return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
+         "oni incarcerator w:" .. e .. " / brimstone fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
@@ -387,7 +388,7 @@ mset(with_props(spec_fn(function ()
   local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 5)
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
+         "eidolon w:" .. e .. " / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
          "player ghost w:" .. f
 end), { weight = 2 }))
@@ -433,8 +434,9 @@ mset(with_props(spec_fn(function ()
          "wyvern / hydra / steam dragon w:20 / acid dragon w:20 / " ..
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
-         "shadow dragon w:" .. d .. " / iron dragon w:" .. e .. " / " ..
-         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e
+         "shadow dragon w:" .. d .. " / iron dragon w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "wyrmhole w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()

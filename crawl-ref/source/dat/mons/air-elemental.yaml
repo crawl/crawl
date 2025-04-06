@@ -13,7 +13,7 @@ hp_10x: 330
 ac: 2
 ev: 18
 spells: air_elemental
-intelligence: brainless
+intelligence: animal
 speed: 25
 size: large
 shape: misc

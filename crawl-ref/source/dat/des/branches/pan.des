@@ -53,8 +53,8 @@ function pan_lord_setup(_G, name)
                  "golden eye band / eye of devastation / "..
                  "shining eye / demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:100 / sixfirhy w:100 / " ..
-                 "smoke demon w:200 / nekomata w:100 / green death w:200 / " ..
-                 "blizzard demon w:200 / glowing orange brain / rakshasa / " ..
+                 "smoke demon w:200 / nekomata w:50 / green death w:200 / " ..
+                 "blizzard demon w:250 / glowing orange brain / rakshasa / " ..
                  "nagaraja / merfolk aquamancer / jorogumo / " ..
                  "fenstrider witch / draconian annihilator / " ..
                  "deep elf annihilator / titan w:5 / lich w:5 / " ..
@@ -79,7 +79,7 @@ function pan_lord_setup(_G, name)
         _G.lrockcol("yellow")
         _G.lfloortile("floor_nerves")
         _G.lrocktile("wall_zot_yellow")
-        _G.tile ("c = dngn_stone_wall_yellow")
+        _G.tile ("c = stone_wall_flesh_cage")
         _G.kitem("O = glowing rune of Zot")
         _G.kmons("& = patrolling demonspawn corrupter")
         decName = "mnolegdec"
@@ -88,6 +88,7 @@ function pan_lord_setup(_G, name)
         _G.lrockcol("white")
         _G.lfloortile("floor_rough_lightgray")
         _G.lrocktile("wall_hall_white")
+        _G.tile ("b = wall_crystal_bookcase")
         _G.tile ("c = stone_wall_shoals")
         _G.kitem("O = magical rune of Zot")
         _G.kmons("& = patrolling demonspawn blood saint")
@@ -98,7 +99,7 @@ function pan_lord_setup(_G, name)
         _G.lfloortile("floor_volcanic")
         _G.lrocktile("wall_zot_red")
         _G.kitem("O = fiery rune of Zot")
-        _G.tile ("v = dngn_metal_wall_brown")
+        _G.tile ("v = dngn_metal_steel_blood")
         _G.kmons("& = patrolling demonspawn warmonger")
         decName = "cerebovdec"
     elseif name == "Gloorx Vloq" then
@@ -106,7 +107,7 @@ function pan_lord_setup(_G, name)
         _G.lrockcol("blue")
         _G.lfloortile("floor_nerves_darkgray")
         _G.lrocktile("wall_hall_darkgray")
-        _G.tile ("c = dngn_stone_dark")
+        _G.tile ("c = stone_wall_shadow_mesh")
         _G.kitem("O = dark rune of Zot")
         _G.kmons("& = patrolling demonspawn soul scholar")
         decName = "gloorxdec"
@@ -212,11 +213,11 @@ function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
                             demonspawn corrupter w:1 / \
                             demonspawn warmonger w:1")
     e.kmons(commonglyph .. " = common demon")
-    e.kmons(greaterglyph .. " = greater demon w:71 / nekomata w:1 / \
-                                demonspawn soul scholar w:2 / \
-                                demonspawn blood saint w:2 / \
-                                demonspawn corrupter w:2 / \
-                                demonspawn warmonger w:2")
+    e.kmons(greaterglyph .. " = greater demon w:107 / nekomata w:1 / \
+                                demonspawn soul scholar w:3 / \
+                                demonspawn blood saint w:3 / \
+                                demonspawn corrupter w:3 / \
+                                demonspawn warmonger w:3")
     e.kfeat('< = {')
 
     -- Have a small chance to fancify the floor afterwards.
@@ -415,7 +416,7 @@ NSUBST: ? = 1:O / 4:1 / 2:2 /*:.
 : pan_entry_vault_contents(_G, 'O')
 MAP
 ''''''''''''
-'xxx....xxx'
+'xxx''''xxx'
 'x?xx+xxx?x'
 'xx+....+xx'
 ''x.x++x.x''
@@ -645,7 +646,7 @@ MONS:     neqoxec / chaos spawn w:2, very ugly thing, brain worm
 MONS:     shadow demon, tentacled monstrosity, tormentor
 KMONS:    A = cacodemon
 KMONS:    B = protean progenitor
-ITEM:     potion of mutation q:1 ident:type
+ITEM:     potion of mutation q:1 pre_id
 SUBST:    D = 5:20 6 7 A B
 SHUFFLE:  qep
 NSUBST:   q = 2:6 / 1:7 / *:.,  e = 2:A / *:., p = 3:B / *:.
@@ -697,7 +698,7 @@ MONS:     patrolling mnoleg
 MONS:     glass eye / eye of devastation / golden eye w:2
 MONS:     protean progenitor, shadow demon / tentacled monstrosity
 MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
-ITEM:     potion of mutation ident:type
+ITEM:     potion of mutation pre_id
 KFEAT:    T = fountain_eyes
 SHUFFLE:  '-
 NSUBST:   O = 1:O / 1:d / *:|
@@ -755,7 +756,7 @@ ORIENT:   west
 MONS:     patrolling Mnoleg, patrolling cacodemon
 MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon, tentacled monstrosity, very ugly thing
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 SHUFFLE:  Od, 1e
 SUBST:    e = 4
 : pan_lord_setup(_G, 'Mnoleg')
@@ -807,7 +808,7 @@ MONS:     neqoxec / chaos spawn w:2, protean progenitor
 MONS:     shadow demon / tentacled monstrosity
 MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
           eye of devastation / great orb of eyes
-ITEM:     potion of mutation ident:type q:1
+ITEM:     potion of mutation pre_id q:1
 KFEAT:    T = fountain_eyes
 NSUBST:   O = 1:O / 1:d / *:|
 : pan_lord_setup(_G, 'Mnoleg')
@@ -1632,7 +1633,7 @@ NAME:   rand_demon_1
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-.xx.xx.x.xx.
+.xx.xxCx.xx.
 ..x.xC.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
@@ -1641,7 +1642,7 @@ MAP
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x.Cx.x..
-.xx.x.xx.xx.
+.xx.xCxx.xx.
 ............
 ENDMAP
 
@@ -1654,12 +1655,12 @@ MAP
 ............
 .xxxxxxxxBx.
 .B.....xx.x.
-.xxxxxxBx.x.
+.xxxxxxAx.x.
 .xxBx..xx.x.
 .x.x.C<.x.x.
 .x.x.PC.x.x.
 .x.xx..xBxx.
-.x.xBxxxxxx.
+.x.xAxxxxxx.
 .x.xx.....B.
 .xBxxxxxxxx.
 ............
@@ -1696,7 +1697,7 @@ SHUFFLE: $(|
 MAP
 ............
 .xxxxxxxxx..
-.x$+*+A+(x..
+.x$+*+C+(x..
 .xxxxxxx+x..
 .xA+A+A+|x..
 .x+xxxxx+x..
@@ -1716,16 +1717,16 @@ MONS:   pandemonium lord
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-...xxxxxx...
-..xx....xx..
+..mxxxxxxm..
+.mxx....xxm.
 .xx......xx.
-.x..AAAA..x.
+.x..AAAC..x.
 .x..A|PA..x.
 .x..A(|A..x.
-.x..A1AA..x.
+.x..C1AA..x.
 .xx......xx.
-..xx....xx..
-...xxxxxx...
+.mxx....xxm.
+..mxxxxxxm..
 ............
 ENDMAP
 
@@ -1739,12 +1740,12 @@ MAP
 ............
 ......A.....
 ............
-.A..........
+.C..........
 ..........A.
 .....(P.....
 ............
 ............
-.A.......A..
+.A.......C..
 ............
 ............
 ENDMAP
@@ -1761,8 +1762,8 @@ MAP
 .x|xx=xxx|x.
 .xx+....+xx.
 ..x.x++x.x..
-..x.+PA+.=..
-..=.+AC+.x..
+..x.+PC+.=..
+..=.+CA+.x..
 ..x.x++x.x..
 .xx+....+xx.
 .x|xxx=xx|x.
@@ -2430,7 +2431,7 @@ WEIGHT: 1
 KMONS:  p = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
-            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
@@ -2702,12 +2703,12 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   demonspawn soul scholar, sin beast, any demon
-KMONS:  6O = ghost moth
+MONS:   demonspawn soul scholar, sin beast, any demon, wyrmhole
+KMONS:  7O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2724,12 +2725,12 @@ MAP
   .............mmm...
 ....vvvvvvvvvvvm2mvv...
 ...vv.3.4......mmm*vv..
-..vv=mm6.5.........*v..
+..vv=mm7.5.........*v..
 ..v.mOm.5..........*v..
-..v3mmm5.0.........mmm.
-..v.6.510.5........m2m.
+..v3mmm5.6.........mmm.
+..v.7.510.5........m2m.
 ..v4.5.0{5.........mmm.
-..v.5.0.5...........v..
+..v.5.6.5...........v..
 ..v....5............v..
 ..v.........mmm.....v..
 ..v.........m2m....vv..
@@ -2802,7 +2803,7 @@ KMONS:   O = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 KFEAT:   { = {
 epilogue{{
 if not you.have_rune("demonic") then
@@ -2880,7 +2881,7 @@ MONS:    tormentor, smoke demon, any demon
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2952,7 +2953,7 @@ KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = potion of mutation ident:type, demonic rune of zot
+KITEM:  O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3047,7 +3048,7 @@ ITEM:    any potion
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KITEM:   O = potion of mutation pre_id, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3055,7 +3056,6 @@ end
 }}
 : end
 KFEAT:   D = granite_statue
-KFEAT:   S = metal_statue
 KFEAT:   X = rock_wall
 KFEAT:   _ = floor
 KFEAT: { = {
@@ -3063,16 +3063,14 @@ KFEAT: { = {
 NSUBST:  - = 2:7 / 7:0 / 5 = 00. / *:.
 SHUFFLE: 123, 456
 COLOUR:  D = random
-COLOUR:  P.xp01234567dO = disco
+COLOUR:  P.xp012345678dO = disco
 # WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases
 # for disco-coloured variants of the tiles thereof.
 RTILE:   x = wall_zot_blue
-FTILE:   D.xpP01234567dO = floor_pebble
+FTILE:   D.xpP012345678dO = floor_pebble
 FTILE:   _{+S = floor_hall
-COLOUR:  S = warp
-TILE:    S = dimensional_conduit
 TILE:    D = dngn_disco_ball
-: set_feature_name("metal_statue", "dimensional conduit")
+: vault_metal_statue_setup(_G, "S", "dimensional conduit")
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER:  D = lua:props_marker { veto_destroy="veto" }
 MAP
@@ -3185,10 +3183,8 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
-COLOUR:  G = mountain
 TILE:    x = wall_undead
-TILE:    G = dngn_scintillating_statue
-:   set_feature_name("granite_statue", "scintillating statue")
+:   vault_granite_statue_setup(_G, "G", "scintillating statue")
 : else
 SUBST:   T = Y
 : end
@@ -3213,10 +3209,8 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
-COLOUR:  G = mountain
 TILE:    x = wall_undead
-TILE:    G = dngn_scintillating_statue
-:   set_feature_name("granite_statue", "scintillating statue")
+:   vault_granite_statue_setup(_G, "G", "scintillating statue")
 : else
 SUBST:   T = Y
 : end
@@ -3243,6 +3237,7 @@ ENDMAP
 ##################################
 NAME:   reaverb_pan_chaos_star
 TAGS:   extra transparent pandec
+KFEAT:  ^ = devourer's trap
 MAP
         ...
  ....  ..x..  ....
@@ -3251,11 +3246,11 @@ MAP
  ...x.. .x. ..x...
    ..x...x...x..
     ..x.....x..
- ... ....x.... ...
+ ... ..^.x.... ...
 ..x.....xxx.....x..
 .x.xxx.xxxxx.xxx.x.
 ..x.....xxx.....x..
- ... ....x.... ...
+ ... ....x.^.. ...
     ..x.....x..
    ..x...x...x..
  ...x.. .x....x...
@@ -3444,7 +3439,7 @@ NAME: nicolae_pan_mnolegish_1
 TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: AB, DG/CH, EI/FJ
 SUBST: ACEHI : c, BDF : ., GI : @
-TILE: c = dngn_stone_wall_yellow
+TILE: c = stone_wall_flesh_cage
 MAP
 ccc.@.ccccccccc
 ccAA...ccc.cccD
@@ -3467,7 +3462,7 @@ NAME: nicolae_pan_mnolegish_2
 TAGS: extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: Aa/Bb, Dd/Ee, Ff/Gg, Hh/Ii, jklm
 SUBST: ADFH = @, adfh = ., BbEeGgIi = c, j : ., k : .c, l : .c, m : .c
-TILE: c = dngn_stone_wall_yellow
+TILE: c = stone_wall_flesh_cage
 MAP
 cccdDdccceEeccc
 ccccdddceeecccc
@@ -3490,7 +3485,7 @@ NAME: nicolae_pan_mnolegish_3
 TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: ABC
 SUBST: ' = @..., AB = ., C = c, D : .c, E : .c, F : .c
-TILE: c = dngn_stone_wall_yellow
+TILE: c = stone_wall_flesh_cage
 MAP
 cccccc'ccccccc
 ccccc...cccEcc
@@ -3512,7 +3507,7 @@ NAME: nicolae_pan_mnolegish_4
 TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: AB, CD, EFGH, IJKL, MN, OP, QR, ST
 SUBST: ACEI = ., BDFGHJKLNPRT = c, MOQS = @
-TILE: c = dngn_stone_wall_yellow
+TILE: c = stone_wall_flesh_cage
 MAP
 cMMcccccccccNNc
 T..BBB...FFF..O
@@ -3535,7 +3530,7 @@ NAME: nicolae_pan_mnolegish_5
 TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: ABCDEF
 SUBST: A : .c, B : .c, CDEF : ., G : .c, H : .c, I : .c
-TILE: c = dngn_stone_wall_yellow
+TILE: c = stone_wall_flesh_cage
 MAP
 ...............
 .cccccccAAAccc.
@@ -3554,70 +3549,76 @@ MAP
 ...............
 ENDMAP
 
-NAME: nicolae_pan_lom_lobonic_1
-TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
-SHUFFLE: BQ/BQ/''
+NAME:  nicolae_pan_lom_lobonic_1
+TAGS:  transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
+KFEAT: bz = b
+SHUFFLE: BQ / BQ / ''
 SUBST: ' = ., Q = b, B : wb
 COLOUR: x = white
 TILE: x = wall_hall_white
+TILE: z = wall_crystal_bookcase
 MAP
 @.xxxxxxxxxxx.@
 ...wwwwwwwww...
-x...wbbbbbw...x
+x...wbbzbbw...x
 xw...b...b...wx
 xww.........wwx
 xwbb..BBB..bbwx
 xwb..BQQQB..bwx
-xwb..BQQQB..bwx
+xwz..BQQQB..zwx
 xwb..BQQQB..bwx
 xwbb..BBB..bbwx
 xww.........wwx
 xw...b...b...wx
-x...wbbbbbw...x
+x...wbbzbbw...x
 ...wwwwwwwww...
 @.xxxxxxxxxxx.@
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_2
 TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
+KFEAT: bz = b
 SHUFFLE: Dd/Ee
 SUBST: A : .w, B : .w, C : .w, D = ., d = w, Ee = b, W = .w
 COLOUR: x = white
 TILE: x = wall_hall_white
+TILE: z = wall_crystal_bookcase
 MAP
    xxxxx..@..
  xxxwwwww...bb
  xwwwwwwww...bb
 xxwwbbbbbw...Ab
-xwwbbBBBbb...Ab
+xwwbbBBBbz...Ab
 xwbb.........bb
 xwb........bbb
 xwb..WwwDDddwbb
-xwb..wwwwwwwwwb
+xwz..wwwwwwwwwb
 xwb..wwwWWWwwwb
 xwb...w.....wW.
 xwww..........@
-xxwww...bbb....
+xxwww...bzb....
  xxw...bb bbCCC
   x..@bb   bbb
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_3
 TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
+KFEAT: bz = b
 SUBST: - = ..w, B = bw, X = ..x, p = ..b
 COLOUR: x = white
 TILE: x = wall_hall_white
+TILE: z = wall_crystal_bookcase
 MAP
         bbbbb
    xx  bbwwBbb
 @.xxxxbb--wwBbb
-..xxxxbp..-wwBbb
+..xxxxzp..-wwBbb
 ..XxxXp....-wwBb
 ............-wwb
-@...........-wwb
+@...........-wwz
 ............-wwb
 ..XxxXp....-wwBb
-..xxxxbp..-wwBbb
+..xxxxzp..-wwBbb
 @.xxxxbb--wwBbb
    xx  bbwwBbb
         bbbbb
@@ -3625,21 +3626,23 @@ ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_4
 TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
+KFEAT: bz = b
 SHUFFLE: IJKL
 SUBST: A : .w, B : .w, C : .w, D : .w, E : .w, F : .w, G : .w, H : .w, \
        I : .b, JKL : .
 COLOUR: x = white
 TILE: x = wall_hall_white
+TILE: z = wall_crystal_bookcase
 MAP
    bbbbbb
    bCCCCbbbb
   @....CbFFbb
-bb.....bbFFEbb
+bb.....zbFFEbb
 bD..BB.K..EEEb
 bD..BBBK..EEEb
-bD...BBbbIbbEb
+bD...BBbzIbbEb
 bDDbLLbbA..bbb
-bbbb..bAAA..b
+bbbz..zAAA..b
  bGG..J.AA..b
  bGGHHb.....b
  bbHHHbb...@
@@ -3650,7 +3653,7 @@ ENDMAP
 NAME: nicolae_pan_cerebovesque_1
 TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SUBST: A : .lv, B : .lv, C : .lv
-TILE: v = dngn_metal_wall_brown
+TILE: v = dngn_metal_steel_blood
 MAP
 ...............
 .vvvvv...vvvvv.
@@ -3673,7 +3676,7 @@ NAME: nicolae_pan_cerebovesque_2
 TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: Aa/Bb, CD
 SUBST: Bb : v, a : ., A : .lv, C : +, D : v+, E : .v, F : .v, L : .l, V : .v
-TILE: v = dngn_metal_wall_brown
+TILE: v = dngn_metal_steel_blood
 MAP
   ..........
   .vvv..vvv.
@@ -3695,7 +3698,7 @@ NAME: nicolae_pan_cerebovesque_3
 TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: EFG, HIJ
 SUBST: GJ = v, EFHI = +
-TILE: v = dngn_metal_wall_brown
+TILE: v = dngn_metal_steel_blood
 MAP
 @....vvvv....@
 .vvv.v..v.vvv.
@@ -3717,7 +3720,7 @@ NAME: nicolae_pan_cerebovesque_4
 TAGS: extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: AB/GH, CD, EF
 SUBST: A : .l, B = l, G : .v, CEH : v, DF : +
-TILE: v = dngn_metal_wall_brown
+TILE: v = dngn_metal_steel_blood
 MAP
      .@@.vvvvvvv
      ....D..v..v
@@ -3743,7 +3746,7 @@ SHUFFLE: Aa/Bb, de, DE
 SUBST: aD = x, be = ., A = +, B = c, d : .x, E : .x
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_dark
+TILE: c = stone_wall_shadow_mesh
 MAP
 xxxxxx.@.xxxxxx
 x..d.e.d.e.d..x
@@ -3767,7 +3770,7 @@ TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SUBST: A : .x, B : .x, C : .x, D : .x, E : .x, F : .x, G : Hc, H : ..c
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_dark
+TILE: c = stone_wall_shadow_mesh
 MAP
 ...............
 .A.B..D.D..B.A.
@@ -3802,7 +3805,7 @@ SHUFFLE: ab
 SUBST: a = x, b = .
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_dark
+TILE: c = stone_wall_shadow_mesh
 MAP
     ccccccc
    ccabdeacc
@@ -3827,7 +3830,7 @@ SHUFFLE: ab, de, fg
 SUBST: a = x, b = ., df = c, e : .ccc, g : .ccc
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_dark
+TILE: c = stone_wall_shadow_mesh
 MAP
 ...............
 .ababababababa.
@@ -4252,13 +4255,10 @@ MONS:   angel
 MONS:   fravashi
 MONS:   ophan
 MONS:   daeva
-KMONS:  8 = pearl dragon
-KMONS:  9 = pearl dragon
-KMONS:  0 = apis
-KMONS:  A = apis
-KMONS:  E = apis
-KMONS:  B = daeva god:Zin
-KMONS:  Z = daeva god:Zin
+KMONS:  89 = pearl dragon
+KMONS:  0A = apis
+KMONS:  BE = cherub god:Elyvilon
+KMONS:  DZ = daeva god:Zin
 KMONS:  S = patrolling seraph
 KMONS:  P = sacred lotus
 # There's a somewhat iffy interaction with pregen here. As long as only one
@@ -4277,21 +4277,20 @@ ITEM:   any
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
-KFEAT:  G = metal_statue
 KFEAT:  P = w
 NSUBST: . = 1:> / *:., i = 2=ghh / 3=ghhiii / *:i
 TILE:   c = wall_church
-COLOUR: cGH = yellow
+COLOUR: c = yellow
+TILE:   C = wall_stone_white
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
-TILE:   GH = dngn_golden_statue
-FTILE:  _124SDcG|*'O = floor_limestone
-FTILE:  "E80;$ = floor_grass
-COLOUR: "80;$ = green
-FTILE:  -ZBghi&v = floor_vault
-KPROP:  ;E80$ = no_tele_into
-SUBST:  D& = +, '"-; = ., H = G, C = c
-: set_feature_name("metal_statue", "golden statue")
+FTILE:  _124S~cG|*'O = floor_limestone
+FTILE:  "E80B;$ = floor_grass
+COLOUR: "80B;$ = green
+FTILE:  -ZDghi&v = floor_vault
+KPROP:  ;E8$ = no_tele_into
+SUBST:  ~& = +, '"-; = ., C = c
+: vault_metal_statue_setup(_G, "GH", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva /\
 :                      fravashi / apis w:20")
@@ -4308,7 +4307,7 @@ xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+..{.(..+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxx""0"""wwwwwPwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCC"""""""""wwwwwwww;;;;wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCd[+9......+""0"wPw0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd[+9......+""B"wPwB"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCCx""""ww"""""wwwww;;;wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxxx""""""""""wwwww;;wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
@@ -4336,7 +4335,7 @@ xxxx...........wwwxwwwwww.xxx..cc..c1'1cGw'2'cc1_1cc'2'wGc***c..cc......xxxxxxxx
 xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
 xxxx...xxx....wwwxxxwwww.xxx...cc..ccwwcGw''''c'''c''''wGcwwcc..cc.........xxxxx
 xxxxx..xxx...wwwwxxxwww.xxxx...cc..cc22ccw''''''G''''''wcc22cc..cc..........xxxx
-xxxxx...xxx..wwwxxxwww...xx....cc..cc''D'''''''''''''''''D''cc..cc..........xxxx
+xxxxx...xxx..wwwxxxwww...xx....cc..cc''~'''''''''''''''''~''cc..cc..........xxxx
 xxxxx...xx...wwwwwwww..........cc..cc''ccw'''''''''''''wcc''cc..cc.....xx....xxx
 xxxx...xxx..wwwwwwww...xx......cc..cc''cGw'''''''''''''wGc''cc..cc....xxxx...xxx
 xxx...xxx..wwwwwww...xxxxxx....cc..cc''ccwwwwwwwwwwwwwwwcc''cc..cc....xxxx...xxx
@@ -4345,25 +4344,25 @@ xxx.......wwwwww....xxxxxxxx...cc..cc''ccccccccccccccccccc''cc..cc.....x....xxxx
 xxx......wwwwwww...xxxxxxxxx...cc..cc'''''''''''''''''''''''cc..cc..........xxxx
 xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
 xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
-xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
+xx...wwwwwwwww.....xxxxxxxx....cc..cc''ccccccc~c~c~ccccccc''cc..cc........xxxxxx
 xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
 xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''4'''cccccccccc..cc...xx....xxxxx
-xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
+xxwwwwwwww....xx....xxx........cc...........ccc~~~ccc...........cc...xxx....xxxx
 xwwwwwww.....xxxx.........x....cc......5.................5......cc....xx....xxxx
 xwwwwww.....xxxx.........xx...ccc+.............................+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
 xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
 xxxx..xx...vvv----v-----iv.v................................x..........xxxxxxxxx
-xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
+xxxx...x..vvv-Dv-----vvDiv.vv...............H.......H......xxx........xxxxxxxxxx
 xxxxx.....vvi-----v-----iv........v........................xxx.........xxxxxxxxx
 xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
-xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
+xxxxx.....vv---------vDv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
 xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx
-xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
+xxxxxx....vv---------vDv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
 xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx.A.xxxxx..xxxx...x
-xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxxA.xxxx..xxx
-xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.A..xxxxxxx....xx
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxx3.xxxx..xxx
+xxxxxxxx..vvv-Dv-----vvDiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.6..xxxxxxx....xx
 xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$8$$$xxxxxx..x..xxx....x..x
 xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$$$xxxxxxx........xxxxAx
 xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$$$;;;xxxxxxx......xxxxxxx

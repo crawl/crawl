@@ -1,13 +1,13 @@
 name: "apis"
 glyph: {char: "Y", colour: white}
-flags: [warm_blood]
-xp_mult: 8
+flags: [warm_blood, has_aura]
+xp_mult: 13
 holiness: [holy]
 will: 100
 attacks:
- - {type: gore, flavour: holy, damage: 40}
+ - {type: gore, flavour: holy, damage: 44}
 hd: 16
-hp_10x: 1200
+hp_10x: 960
 ac: 9
 ev: 5
 has_corpse: true

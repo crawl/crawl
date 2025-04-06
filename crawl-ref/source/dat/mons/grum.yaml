@@ -1,5 +1,5 @@
 name: "Grum"
-glyph: {char: "g", colour: lightred}
+glyph: {char: "j", colour: lightred}
 flags: [speaks, warm_blood, unique, male]
 xp_mult: 19
 species: gnoll

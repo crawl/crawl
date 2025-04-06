@@ -409,7 +409,7 @@ static void _catchup_monster_move(monster* mon, int moves)
         const dungeon_feature_type feat = env.grid(next);
         if (feat_is_solid(feat)
             || monster_at(next)
-            || !monster_habitable_grid(mon, feat))
+            || !monster_habitable_feat(mon, feat))
         {
             break;
         }
@@ -536,7 +536,7 @@ void monster::timeout_enchantments(int levels)
         switch (entry.first)
         {
         case ENCH_POISON: case ENCH_CORONA: case ENCH_CONTAM:
-        case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
+        case ENCH_STICKY_FLAME: case ENCH_SUMMON_TIMER:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
@@ -544,7 +544,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_LOWERED_WL: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
         case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
-        case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
+        case ENCH_SILVER_CORONA: case ENCH_DAZED:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
@@ -556,7 +556,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
         case ENCH_SLOW: case ENCH_WEAK: case ENCH_EMPOWERED_SPELLS:
         case ENCH_BOUND: case ENCH_CONCENTRATE_VENOM: case ENCH_TOXIC_RADIANCE:
-        case ENCH_PAIN_BOND:
+        case ENCH_PAIN_BOND: case ENCH_PYRRHIC_RECOLLECTION:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -592,7 +592,7 @@ void monster::timeout_enchantments(int levels)
             // That triggered a behaviour_event, which could have made a
             // pacified monster leave the level.
             if (alive() && !is_stationary())
-                monster_blink(this, true);
+                monster_blink(this, true, true);
             break;
 
         case ENCH_TIDE:
@@ -606,7 +606,7 @@ void monster::timeout_enchantments(int levels)
         {
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(entry.first, actdur))
-                monster_die(*this, KILL_MISC, NON_MONSTER, true);
+                monster_die(*this, KILL_NON_ACTOR, NON_MONSTER, true);
             break;
         }
 
@@ -703,6 +703,10 @@ monster* update_monster(monster& mon, int turns)
     _catchup_monster_moves(&mon, turns);
 
     mon.foe_memory = max(mon.foe_memory - turns, 0);
+
+    // Yredelemnul bind soul requires the monster stay in our LOS
+    if (mon.has_ench(ENCH_SOUL_RIPE))
+        mon.del_ench(ENCH_SOUL_RIPE, true, false);
 
     // FIXME:  Convert literal string 10 to constant to convert to auts
     if (turns >= 10 && mon.alive())
@@ -836,8 +840,9 @@ void timeout_malign_gateways(int duration)
                                          mmark->behaviour,
                                          mmark->pos,
                                          MHITNOT,
-                                         MG_FORCE_PLACE);
-                mg.set_summoned(caster, 0, 0, mmark->god);
+                                         MG_FORCE_PLACE,
+                                         mmark->god);
+                mg.set_summoned(caster, 0);
                 if (!is_player)
                     mg.non_actor_summoner = mmark->summoner_string;
 
@@ -919,17 +924,23 @@ void timeout_binding_sigils()
         mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
-// Force-cancel the player's toxic bog (in cases of !cancellation or quicksilver)
-void end_toxic_bog()
+void end_terrain_change(terrain_change_type type)
 {
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
             dynamic_cast<map_terrain_change_marker*>(mark);
 
-        if (marker->change_type == TERRAIN_CHANGE_BOG)
-            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BOG);
+        if (marker->change_type == type)
+            revert_terrain_change(marker->pos, type);
     }
+}
+
+void end_enkindled_status()
+{
+    mprf(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
+    you.duration[DUR_ENKINDLED] = 0;
+    you.props.erase(ENKINDLE_CHARGES_KEY);
 }
 
 void timeout_terrain_changes(int duration, bool force)

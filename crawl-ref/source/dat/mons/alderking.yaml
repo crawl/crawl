@@ -1,0 +1,19 @@
+name: "alderking"
+glyph: {char: "f", colour: cyan}
+resists: {poison: 1, fire: -1}
+flags: [speaks]
+xp_mult: 18
+holiness: [plant]
+will: 100
+attacks:
+ - {type: hit, damage: 50}
+ - {type: hit, damage: 40}
+hd: 17
+hp_10x: 1250
+ac: 16
+ev: 12
+spells: alderking
+intelligence: human
+size: giant
+shape: plant
+tile_variance: random

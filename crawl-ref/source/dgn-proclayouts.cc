@@ -53,7 +53,7 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
     uint8_t cellSize = halfCell * 2;
     uint8_t x = abs(abs(p.x) % cellSize - halfCell);
     uint8_t y = abs(abs(p.y) % cellSize - halfCell);
-    if (x+y < w)
+    if (static_cast<uint32_t>(x+y) < w)
     {
         dungeon_feature_type feat = _pick_pseudorandom_wall(hash3(p.x/w, p.y/w, 2));
         return ProceduralSample(p, feat, offset + 4096);
@@ -202,6 +202,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
     {
         case DNGN_SEALED_DOOR:
             return DNGN_CLOSED_DOOR;
+        case DNGN_RUNED_CLEAR_DOOR:
         case DNGN_SEALED_CLEAR_DOOR:
             return DNGN_CLOSED_CLEAR_DOOR;
         case DNGN_PERMAROCK_WALL:
@@ -211,8 +212,10 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         case DNGN_SLIMY_WALL:
             return DNGN_CRYSTAL_WALL; // !?
         case DNGN_METAL_STATUE:
+        case DNGN_ORB_DAIS:
             return DNGN_GRANITE_STATUE;
         case DNGN_UNSEEN:
+        case DNGN_DECORATIVE_FLOOR:
         case DNGN_ENDLESS_SALT:
             return DNGN_FLOOR;
         case DNGN_OPEN_SEA:

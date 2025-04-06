@@ -14,22 +14,29 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Code Linting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history - Checkconventioncommit needs to know which commits are being merged
       - name: Checkwhite
         run: util/checkwhite -n
         working-directory: crawl-ref/source
       - name: Unbrace
         run: util/unbrace -n
         working-directory: crawl-ref/source
+      - name: Checkconventionalcommit # If not in crawl/crawl, or if it's a branch other than master or the release branches, run
+        if: (github.repository != 'crawl/crawl' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/stone_soup-')))
+        run: util/checkconventionalcommit.py
+        working-directory: crawl-ref/source
+        continue-on-error: true
 
   build_source:
     permissions:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Source Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +61,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -171,7 +178,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Linux AppImage ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     strategy:
       matrix:
@@ -222,7 +229,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Debian Packages ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -334,9 +341,10 @@ jobs:
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
-      - name: Install Dependencies
-        run: |
-          brew install pkg-config libpng
+      # this isn't needed with current GHA MacOS images
+      #- name: Install Dependencies
+      #  run: |
+      #    brew install pkg-config libpng
       # To fix an error running new version of pip3 in virtualised environments.
       # > You may restore the old behavior of pip by passing
       # > the '--break-system-packages' flag to pip, or by adding
@@ -377,7 +385,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: mingw64 ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_type:
@@ -446,12 +454,92 @@ jobs:
           file: ${{ steps.release-names.outputs.source }}
           asset_name: ${{ steps.release-names.outputs.dest }}
 
+  build_msvc:
+    # Note: since the project's code is GPLv2, which is an OSI approved license:
+    # https://opensource.org/license/gpl-2-0
+    # We can compile it with msvc under the terms of Microsoft's license
+    # This is true even if you consider the crawl dev team as "organization"
+    # See:
+    # https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
+    # "b. Organizational License. If you are an organization, your users may use the software as follows
+    #  i. Any number of your users may use the software to develop and test applications released under Open Source Initiative (OSI) approved open source software licenses."
+    # This explicitly includes "Build Devices and Visual Studio Build Tools."
+    # under section 3.b.
+    name: msvc ${{ matrix.build_type }} ${{ matrix.build_arch }}
+    # TODO: switch to windows-2025
+    # windows-2019 is the last version to have v141 toolset pre-installed
+    # We probably should update it, but some of the project files
+    # are in vendored repos
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        build_type:
+          - "Debug Console"
+          - "Debug Tiles"
+          - "Release Console"
+          - "Release Tiles"
+        build_arch:
+          - x64
+          - Win32
+          # TODO: consider ARM64?
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        if: github.event.release.tag_name != null
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
+      # Step 1 from INSTALL.md's Visual Studio section:
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      # Step 2 from INSTALL.md's Visual Studio section would be to install perl
+      # It's already installed, so we can skip this:
+      # https://github.com/actions/runner-images/blob/13666fe26513ca5e0e21f412b5d4c7fa0e8eb5a9/images/windows/Windows2025-Readme.md?plain=1#L25
+      #
+      # Step 3 from INSTALL.md's Visual Studio section is installing Python
+      # Python 3.9 is already installed. So we skip this too.
+      #
+      # Step 4 from INSTALL.md's Visual Studio section
+      - name: Install pyyaml
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+        working-directory: crawl-ref/source
+      # Msbuild is already installed:
+      # https://github.com/actions/runner-images/blob/13666fe26513ca5e0e21f412b5d4c7fa0e8eb5a9/images/windows/Windows2025-Readme.md?plain=1#L254
+      # But isn't in the path, so fix that:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      # From the troubleshooting tips:
+      # This link is Windows 8.1 SDK
+      # See e.g. https://github.com/actions/runner-images/issues/842#issuecomment-643382166
+      # and https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/
+      # TODO: Newer SDKs, such as Windows 10 and 11, are preinstalled
+      # Do we want to continue supporting 8.1?
+      - name: Install Windows 8.1 SDK
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
+          Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
+      # Step 5/6 from INSTALL.md's Visual Studio Section
+      # See https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022
+      - name: Build
+        run: |
+          msbuild /maxCpuCount /property:Configuration="${{ matrix.build_type }}" /p:Platform=${{ matrix.build_arch }} crawl-ref.sln
+        working-directory: crawl-ref/source/MSVC
+      # TODO: Consider uploading artifacts
+      # TODO: Header tests? unit tests?
+
   codecov_catch2:
     permissions:
       contents: read #  to fetch code (actions/checkout)
 
     name: Catch2 (GCC/Linux) + Codecov
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -466,7 +554,7 @@ jobs:
             pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
         working-directory: crawl-ref/source
       - name: Install dependencies
-        run: ./deps.py --coverage
+        run: ./deps.py --coverage --build-opts TILES=1
         working-directory: .github/workflows
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -478,7 +566,7 @@ jobs:
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
         run: "/usr/sbin/update-ccache-symlinks"
-      - run: make -j$(nproc) catch2-tests
+      - run: make -j$(nproc) catch2-tests TILES=1
         working-directory: crawl-ref/source
       - name: Generate LCOV data
         working-directory: crawl-ref/source
@@ -501,7 +589,7 @@ jobs:
     permissions:
       contents: read #  to fetch code (actions/checkout)
 
-    runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # oldest non-eol security release + current bugfix version
@@ -534,7 +622,7 @@ jobs:
       contents: read #  to fetch code (actions/checkout)
 
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -581,7 +669,7 @@ jobs:
 
   build_android:
     name: Android
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_opts:
@@ -627,6 +715,87 @@ jobs:
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
 
+  build_monster:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
+    name: Build monster ${{ matrix.compiler }}
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install requirements.txt
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }}
+        working-directory: .github/workflows
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: build-monster-${{ matrix.compiler }}
+          restore-keys: |
+            build-monster-${{ matrix.compiler }}
+            build-monster
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - run: make -j$(nproc) monster
+        working-directory: crawl-ref/source
+
+  build_docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Produce FAQ.html et cetera
+      - name: Generate non-Lua docs
+        run: make -j$(nproc) docs
+        working-directory: crawl-ref/source
+      # Installing everything to be able to do make api would be annoying.
+      # The action uses a docker container, which should make it less fragile.
+      - name: Lua LDoc
+        uses: lunarmodules/ldoc@v1.5.0
+        with:
+          args: --config crawl-ref/source/util/config.ld --dir $GITHUB_WORKSPACE/crawl-ref/docs/lua/ .
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: crawl-ref/docs/
+  deploy_docs:
+    name: Deploy docs
+    needs: build_docs
+    if: ${{ github.event_name == 'push' && github.repository == 'crawl/crawl' && github.ref == 'refs/heads/master' }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
@@ -634,10 +803,14 @@ jobs:
       - build_linux
       - build_macos
       - build_mingw64_crosscompile
+      - build_msvc
       - codecov_catch2
       - webserver
-    if: failure() && github.event_name == 'push'
-    runs-on: ubuntu-latest
+      - build_monster
+      - build_docs
+      - deploy_docs
+    if: failure() && github.event_name == 'push' && github.repository == 'crawl/crawl'
+    runs-on: ubuntu-22.04
     steps:
       - name: Build message
         id: message

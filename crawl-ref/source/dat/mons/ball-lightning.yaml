@@ -1,6 +1,6 @@
 name: "ball lightning"
 glyph: {char: "*", colour: lightcyan}
-flags: [flies, insubstantial, no_exp_gain, conjured]
+flags: [flies, insubstantial, no_exp_gain, peripheral, unstable]
 resists: {elec: 3, fire: 3, cold: 3}
 xp_mult: 20
 holiness: [nonliving]

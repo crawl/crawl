@@ -10,6 +10,8 @@
 #
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ###############################################################################
 # <<1>> Orcish Mines entries.
 ###############################################################################
@@ -30,8 +32,8 @@ ENDMAP
 NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
-ITEM: % / scroll of teleportation ident:type / scroll of identify ident:type
-ITEM: % / w:2 * / scroll of blinking ident:type / scroll of fear ident:type
+ITEM: % / scroll of identify pre_id / scroll of teleportation pre_id
+ITEM: % / w:2 * / scroll of blinking pre_id / scroll of fear pre_id
 SHUFFLE: %1
 ORIENT: float
 KFEAT: O = enter_orcish_mines
@@ -185,11 +187,11 @@ MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = gold w:5 / nothing / animal skin / \
-             potion of degeneration ident:type w:20 / \
-             potion of haste ident:type w:2 / \
-             potion of might ident:type w:2
-ITEM:    club, potion of degeneration ident:type, gold w:5
-ITEM:    gold w:2 / nothing, potion of degeneration ident:type
+             potion of moonshine pre_id w:20 / \
+             potion of haste pre_id w:2 / \
+             potion of might pre_id w:2
+ITEM:    club, potion of moonshine pre_id, gold w:5
+ITEM:    gold w:2 / nothing, potion of moonshine pre_id
 KFEAT:   C = cache of meat
 KFEAT:   O = enter_orcish_mines
 SHUFFLE: defO
@@ -1092,12 +1094,8 @@ ENDMAP
 # warg stables, with kobold stablehand
 NAME:   mines5_lemuel
 MONS:   warg / wolf, kobold blastminer
-KFEAT:  G = metal_statue
 SUBST:  ? : wx, G : GGG..
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
-
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 x???????x
 xwwwwwwwx
@@ -1355,6 +1353,7 @@ TAGS:   transparent
 DEPTH:  Orc
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
+: decorative_floor(_G, 'F', "orcish standard")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvv
 v$$$$$$$$v......9v||||v
@@ -1373,7 +1372,7 @@ vv...................vv
  vv......vvvvv......vv
   vv....vvvvvvv....vv
    vv++vvvvvvvvv++vv
-    .........0.....
+    F......F.0....F
     ....v.v.v.v.0..
     .0.............
     ...............
@@ -1467,7 +1466,7 @@ MAP
 ..aabbaxa...
  .xaaaax..
   .aaxa....
-   . . ..
+   ...x..
     ...
 ENDMAP
 
@@ -1623,12 +1622,9 @@ TAGS:   no_monster_gen transparent
 DEPTH:  Orc
 ORIENT: float
 MONS:   warg
-KFEAT:  G = metal_statue
 NSUBST: 1 = 3:1 / 4 = 1..
 SUBST:  G : GGI
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 xxx..@..xxx
 x1...1...1x
@@ -1700,7 +1696,7 @@ TAGS:  transparent
 DEPTH: Orc
 MONS:  orc priest
 KMONS: _ = orc high priest
-KITEM: _ = manual of invocations ident:all / amulet of faith ident:all w:40
+KITEM: _ = manual of invocations pre_id / amulet of faith pre_id w:40
 KFEAT: _ = altar_beogh
 SUBST: 1 = 1 .:15
 MAP
@@ -1752,14 +1748,11 @@ KMONS:   9 = ogre / two-headed ogre
 KMONS:   0 = ogre mage
 KFEAT:   S = any shop
 KFEAT:   _ = altar_beogh
-KFEAT:   G = metal_statue
 SHUFFLE: 34? / 56! / 78` / 90~, AC / BD / BD
 SUBST:   ? = 33444, ! = 55666, ` = 77888, ~ = 990
 SUBST:   1 = 1., 2 = 222.
 SUBST:   AC = +, BD = c, T : TIII, G : GGGcc
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 ...................................
 ...................................
@@ -1815,8 +1808,8 @@ MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar . \
          orc w:10 ; orcbow . trident | hand axe | mace . leather armour
 MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace . \
                                 leather armour | ring mail
-MONS:    orc knight ; arbalest . glaive | broad axe | great mace . \
-                                 leather armour | ring mail
+MONS:    orc knight ; arbalest . glaive w:7 | partisan w:3 | broad axe | \
+                                 great mace . leather armour | ring mail
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23

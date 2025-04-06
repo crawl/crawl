@@ -169,7 +169,7 @@ enum brand_type // item_def.special
     SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
 #endif
     SPWPN_PENETRATION,
-    SPWPN_REAPING, // Sword of Zonguldrok
+    SPWPN_REAPING,
     SPWPN_SPECTRAL,
 
 // From this point on save compat is irrelevant.
@@ -322,6 +322,7 @@ enum misc_item_type
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
     MISC_GRAVITAMBOURINE,
+    MISC_SHOP_VOUCHER,
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
@@ -354,6 +355,7 @@ const vector<misc_item_type> misc_types =
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
     MISC_GRAVITAMBOURINE,
+    MISC_SHOP_VOUCHER,
 };
 
 enum missile_type
@@ -552,6 +554,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 #endif
     SPMSL_FRENZY,                      // Datura
     SPMSL_BLINDING,                    // Atropa
+    SPMSL_DISJUNCTION,
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
@@ -569,6 +572,7 @@ enum stave_type
     STAFF_POWER,
 #endif
     STAFF_FIRE,
+    STAFF_FIRST_STAFF = STAFF_FIRE,
     STAFF_COLD,
     STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34
@@ -675,6 +679,9 @@ enum weapon_type
     WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
+#if TAG_MAJOR_VERSION > 34
+    WPN_PARTISAN,
+#endif
 #if TAG_MAJOR_VERSION == 34
     WPN_SCYTHE,
 #endif
@@ -706,6 +713,7 @@ enum weapon_type
 
     WPN_CUTLASS,
     WPN_ORCBOW,
+    WPN_PARTISAN,
 #endif
 
     NUM_WEAPONS,
@@ -846,7 +854,7 @@ enum item_set_type
 
 enum talisman_type
 {
-    TALISMAN_BEAST,
+    TALISMAN_QUILL,
     TALISMAN_MAW,
     TALISMAN_SERPENT,
     TALISMAN_BLADE,
@@ -854,8 +862,24 @@ enum talisman_type
     TALISMAN_DRAGON,
     TALISMAN_DEATH,
     TALISMAN_STORM,
-    TALISMAN_FLUX,
+    TALISMAN_PROTEAN,
+    TALISMAN_VAMPIRE,
+    TALISMAN_RIMEHORN,
+    TALISMAN_SPIDER,
+    TALISMAN_HIVE,
+    TALISMAN_AQUA,
+    TALISMAN_SPHINX,
+    TALISMAN_WEREWOLF,
+    TALISMAN_INKWELL,
+    TALISMAN_FORTRESS,
+    TALISMAN_SCARAB,
+    TALISMAN_MEDUSA,
     NUM_TALISMANS,
+};
+
+enum bauble_type
+{
+    BAUBLE_FLUX,
 };
 
 enum special_gizmo_type

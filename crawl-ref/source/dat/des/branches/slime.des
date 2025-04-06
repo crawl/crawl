@@ -39,6 +39,14 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
   triggerable:remove(marker)
 end
 
+function slime_pits_entry(e)
+  e.tags("slime_entry")
+  e.kfeat("O = enter_slime_pits")
+  e.kfeat("_ = altar_jiyva")
+  e.kfeat("S = slimy_wall")
+  e.subst("_ = __'")
+end
+
 function setup_slime_pit_ending(e)
   e.place("Slime:$")
   e.orient("encompass")
@@ -90,10 +98,8 @@ end
 ##############################################################################
 
 NAME:   slime_entry_1
-TAGS:   slime_entry
 WEIGHT: 40
-KFEAT:  _ = altar_jiyva / floor w:5
-KFEAT:  O = enter_slime_pits
+: slime_pits_entry(_G)
 MAP
 ....
 .O_.
@@ -101,13 +107,10 @@ MAP
 ENDMAP
 
 NAME:    slime_entry_2
-TAGS:    slime_entry
 MONS:    jelly / endoplasm, acid blob / slime creature w:5, azure jelly
-KFEAT:   O = enter_slime_pits
-KFEAT:   _ = altar_jiyva
 SHUFFLE: 1+ / 1+ / 1+ / 2= / 2= / 3=
 NSUBST:  1 = 3:1 / * = 1' , 2 = 1:2 / * = 2''' , 3 = 1:3 / * = 3''''
-SUBST:   _ = __'
+: slime_pits_entry(_G)
 KPROP:   123'O_ = no_tele_into
 MAP
 ccccc
@@ -118,10 +121,7 @@ ccccc
 ENDMAP
 
 NAME:  dpeg_slime_entry_enclosed
-TAGS:  slime_entry
-KFEAT: O = enter_slime_pits
-KFEAT: S = slimy_wall
-KFEAT: _ = altar_jiyva / floor w:5
+: slime_pits_entry(_G)
 MAP
   .....
  .ccccc.
@@ -136,12 +136,10 @@ MAP
 ENDMAP
 
 NAME:   minmay_slime_entry_eyes
-TAGS:   slime_entry ruin_lair
+TAGS:   ruin_lair
 WEIGHT: 2
 MONS:   eye of devastation, glass eye
-KFEAT:  O = enter_slime_pits
-KFEAT:  S = slimy_wall
-KFEAT:  _ = altar_jiyva / floor w:5
+: slime_pits_entry(_G)
 MAP
  ....   ....
 ..xx..x..xx..
@@ -159,10 +157,9 @@ MAP
 ENDMAP
 
 NAME:   minmay_slime_entry_pillars
-TAGS:   slime_entry ruin_lair
+TAGS:   ruin_lair
 MONS:   jelly / slime creature
-KFEAT:  O = enter_slime_pits
-KFEAT:  _ = altar_jiyva / floor w:5
+: slime_pits_entry(_G)
 MAP
 ...........
 .ccc...ccc.
@@ -179,13 +176,11 @@ ENDMAP
 
 # In-game the boxes rarely stay closed due to ruination; this is intentional.
 NAME:   minmay_slime_entry_jelly_boxes
-TAGS:   slime_entry ruin_lair
+TAGS:   ruin_lair
 WEIGHT: 5
 MONS:   jelly / endoplasm w:1
-KFEAT:  O = enter_slime_pits
-KFEAT:  _ = altar_jiyva
-SUBST:  _ = __.
 NSUBST: 1 = 2:1 / * = 1:11 .:1
+: slime_pits_entry(_G)
 MAP
 .............
 .xxxxx.xxxxx.
@@ -203,13 +198,10 @@ MAP
 ENDMAP
 
 NAME:   minmay_slime_entry_oklob_open
-TAGS:   slime_entry
 WEIGHT: 5
+KMONS:  1_ = oklob plant / nothing w:20
 NSUBST: 1 = 1:_ / *:1
-MONS:   oklob plant / nothing w:20
-KMONS:  _ = oklob plant / nothing w:20
-KFEAT:  _ = altar_jiyva / floor w:5
-KFEAT:  O = enter_slime_pits
+: slime_pits_entry(_G)
 MAP
  .....
 .......
@@ -221,13 +213,12 @@ MAP
 ENDMAP
 
 NAME:   minmay_slime_entry_oklob_enclosed
-TAGS:   slime_entry ruin_lair
+TAGS:   ruin_lair
 ORIENT: northeast
 WEIGHT: 5
-MONS:   oklob plant / nothing w:20
-KFEAT:  O = enter_slime_pits
-KFEAT:  S = slimy_wall
-KFEAT:  _ = altar_jiyva / floor w:5
+MONS:   oklob plant
+SUBST:  1 = 1..
+: slime_pits_entry(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx......xxxxxx
@@ -243,12 +234,10 @@ xxxxxxx.@..xxxxxxxxxx
 ENDMAP
 
 NAME:   dpeg_slime_entry_corner
-TAGS:   slime_entry ruin_lair
+TAGS:   ruin_lair
 ORIENT: northwest
 WEIGHT: 5
-KFEAT:  O = enter_slime_pits
-KFEAT:  S = slimy_wall
-KFEAT:  _ = altar_jiyva / floor w:5
+: slime_pits_entry(_G)
 MAP
 xxxxxxxxxxx
 xSSSxxxxxx
@@ -261,14 +250,12 @@ xx..
 ENDMAP
 
 NAME:    nicolae_slime_entry_slimehenge
-TAGS:    slime_entry transparent
-NSUBST:  A = . / A, B = . / B, C = . / C
+TAGS:    transparent
+NSUBST:  A = 1:. / *:A, B = 1:. / *:B, C = 1:. / *:C
 SHUFFLE: ABCD
-SUBST:   A = x, BCD = .
-KFEAT:   O = enter_slime_pits
+SUBST:   A = S, BCD = .
 KMONS:   1 = endoplasm / jelly
-KFEAT:   x = slimy_wall
-KFEAT:   _ = altar_jiyva / floor w:5
+: slime_pits_entry(_G)
 MAP
   .........
  ...........
@@ -286,12 +273,12 @@ MAP
 ENDMAP
 
 NAME:  nicolae_slime_entry_field_trip
-TAGS:  slime_entry transparent
+TAGS:  transparent
 KMONS: F = fungus
 KMONS: JO_ = jelly / nothing w:5
-KFEAT: O = enter_slime_pits
-KFEAT: _ = altar_jiyva / G w:5
 ITEM:  human skeleton
+: slime_pits_entry(_G)
+SUBST: ' = G
 MAP
 ...J..J...
 ....FF....
@@ -303,17 +290,16 @@ ENDMAP
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
-NAME: nicolae_slime_pool
-DEPTH: Slime, !Slime:$
-TAGS: transparent
-MONS: slime creature
-ORIENT: float
+NAME:    nicolae_slime_pool
+TAGS:    transparent
+DEPTH:   Slime, !Slime:$
+ORIENT:  float
+MONS:    slime creature
 SHUFFLE: abcd
-SUBST: ab : @, cd : .
-KPROP: f = no_tele_into
-SUBST: f = W'1
-KMASK: w = no_monster_gen
-KMASK: W = no_monster_gen
+SUBST:   ab : @, cd : .
+KPROP:   f = no_tele_into
+SUBST:   f = W'1
+KMASK:   wW = no_monster_gen
 MAP
    cccc
  ..........
@@ -333,9 +319,9 @@ ENDMAP
 NAME: nicolae_slime_jelly_donut
 DEPTH: Slime, !Slime:$
 ORIENT: float
+KMONS: j = jelly
 SHUFFLE: abcdefgh
 SUBST: a = @, b : @., c : @.., d : @..., efgh = .
-KMONS: j = jelly
 MAP
       aaaaa
     hh.....bb

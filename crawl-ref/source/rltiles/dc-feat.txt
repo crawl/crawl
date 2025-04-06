@@ -40,6 +40,18 @@ tree_dead3
 tree_dead4
 tree_dead5
 
+%variation DNGN_TREE blue
+tree_of_woe1 DNGN_TREE_OF_WOE
+tree_of_woe2
+tree_of_woe3
+tree_of_woe4
+
+%variation DNGN_TREE lightblue
+dead_tree_of_woe1 DNGN_DEAD_TREE_OF_WOE
+dead_tree_of_woe2
+dead_tree_of_woe3
+dead_tree_of_woe4
+
 %weight 10
 mangrove1 DNGN_MANGROVE
 %weight 8
@@ -315,6 +327,8 @@ statue_zot_serpent
 %weight 5
 statue_zot_old_guardian
 %syn DNGN_STATUE_ZOT_OLD_GUARDIAN
+statue_zot_tornado
+%syn DNGN_STATUE_ZOT_TORNADO
 %weight 1
 statue_zot_oldest_guardian
 %syn DNGN_STATUE_ZOT_OLDEST_GUARDIAN
@@ -338,10 +352,15 @@ statue_iron DNGN_STATUE_IRON
 ## Features only used in certain minivaults
 %sdir dngn/vaults
 
+##
+
 ## Renamed statues for undead vaults: gravestones
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
+necropolis_gravestone_0 DNGN_NECROPOLIS_GRAVESTONE
+necropolis_gravestone_1
+necropolis_gravestone_2
 zshrine DNGN_ZONGULDROK_SHRINE
 
 # start TAG_MAJOR_VERSION == 34
@@ -351,6 +370,11 @@ teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 ## golden statues for Gozag and TSO
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
+golden_iron_statue DNGN_GOLDEN_IRON_STATUE
+
+## blue iron statues for Oka
+oka_iron_statue_1 DNGN_OKA_IRON_STATUE
+oka_iron_statue_2
 
 #### Random tile animation for statuary starts here.
 
@@ -479,6 +503,9 @@ fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
 stone_smooth_beogh_0 STONE_SMOOTH_WALL_BEOGH
 stone_smooth_beogh_1
 
+%sdir dngn/wall
+spike_launcher DNGN_SPIKE_LAUNCHER
+
 ## Wall assets are not usable as is, edit on them top of the
 ## desired wall texture as needed (ie TILE_NAME_banner_beogh)
 
@@ -492,16 +519,20 @@ misc/error PLACEHOLDER3
 %sdir dngn/traps
 ## traps
 # start TAG_MAJOR_VERSION == 34
-dart DNGN_TRAP_DART
-arrow DNGN_TRAP_ARROW
-needle DNGN_TRAP_NEEDLE
 bolt DNGN_TRAP_BOLT
 spear DNGN_TRAP_SPEAR
-blade DNGN_TRAP_BLADE
 # end TAG_MAJOR_VERSION
 net DNGN_TRAP_NET
 alarm DNGN_TRAP_ALARM
 shaft DNGN_TRAP_SHAFT
+tyrant DNGN_TRAP_TYRANT
+archmage DNGN_TRAP_ARCHMAGE
+harlequin0 DNGN_TRAP_HARLEQUIN
+harlequin1
+harlequin2
+harlequin3
+harlequin4
+devourer DNGN_TRAP_DEVOURER
 dispersal DNGN_TRAP_DISPERSAL
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
@@ -642,6 +673,10 @@ exit_pandemonium DNGN_EXIT_PANDEMONIUM
 exit_pandemonium_flickering
 
 # portal vault entrances
+necropolis_portal DNGN_PORTAL_NECROPOLIS
+necropolis_gone DNGN_NECROPOLIS_GONE
+necropolis_exit0 DNGN_EXIT_NECROPOLIS
+necropolis_exit1
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
 volcano_exit DNGN_EXIT_VOLCANO
@@ -799,7 +834,14 @@ cache_of_meat_0 DNGN_CACHE_OF_MEAT
 cache_of_meat_1
 cache_of_baked_goods_1 DNGN_CACHE_OF_BAKED_GOODS
 cache_of_baked_goods_2
-garden_cobble DNGN_GARDEN_COBBLE
+garden_patch DNGN_GARDEN_PATCH
+%weight 10
+flower_patch_0 DNGN_FLOWER_PATCH
+%weight 7
+flower_patch_1
+flower_patch_2
+%weight 3
+flower_patch_3
 
 %sdir dngn
 # Remove this entry when TAG_MAJOR_VERSION == 34 is false.

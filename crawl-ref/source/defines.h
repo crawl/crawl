@@ -161,6 +161,9 @@ const int INSTANT_DEATH = -9999;
 const int MAX_WPN_ENCHANT = 9;
 const int MAX_SEC_ENCHANT = 2;
 
+// Maximum evoker enchantment
+const int MAX_EVOKER_ENCHANT = 5;
+
 // formula for MP from a potion of magic
 #define POT_MAGIC_MP (10 + random2avg(28, 3))
 
@@ -308,15 +311,9 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define FAKE_MON_KEY "fake"
 #define MMOV_KEY "mmov"
 #define BATTLESPHERE_KEY "battlesphere"
-#define BATTLESPHERE_FOE_KEY "bs_foe"
-#define BATTLESPHERE_IS_FIRING_KEY "bs_firing"
-#define BATTLESPHERE_IS_TRACKING_KEY "bs_tracking"
-#define TRACKING_TARGET_KEY "tracking_target"
 #define FOE_APPROACHING_KEY "foe_approaching"
 #define FAUX_PAS_KEY "foe_pos"
 #define SWOOP_COOLDOWN_KEY "swoop_cooldown"
-#define VINE_AWAKENER_KEY "vine_awakener"
-#define VINES_AWAKENED_KEY "vines_awakened"
 #define OUTWARDS_KEY "outwards"
 #define INWARDS_KEY "inwards"
 #define BASE_POSITION_KEY "base_position"
@@ -350,6 +347,8 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define STICKY_FLAME_POWER_KEY "sticky_flame_pow"
 #define WATER_HOLDER_KEY "water_holder"
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
+#define BLINKITIS_SOURCE_KEY "disjunctioner"
+#define BLINKITIS_AUX_KEY "disjunction_aux"
 #define CORROSION_KEY "corrosion_amount"
 #define CONFUSING_TOUCH_KEY "confusing touch power"
 #define NUM_SACRIFICES_KEY "num_sacrifice_muts"

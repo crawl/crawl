@@ -1203,6 +1203,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         case MSGCH_DIAGNOSTICS:
         case MSGCH_MULTITURN_ACTION:
         case MSGCH_DECOR_FLAVOUR:
+        case MSGCH_MONSTER_TIMEOUT:
             ret = MSGCOL_DARKGREY; // makes it easier to ignore at times -- bwr
             break;
 
@@ -2052,12 +2053,6 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
-            break;
-        case MSG_CALL_DEAD:
-            mpr("You call on the dead to rise...");
-            break;
-        case MSG_ANIMATE_REMAINS:
-            mpr("You attempt to give life to the dead...");
             break;
         case MSG_CANNOT_MOVE:
             mpr("You cannot move.");

@@ -4,6 +4,8 @@
 #           dis.des, geh.des, coc.des, or tar.des.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
@@ -12,6 +14,7 @@ function hell_entry_feature(e, glyph)
     e.depth_chance("D:21-", 10000)
 -- end TAG_MAJOR_VERSION
     e.kfeat(glyph .. " = enter_hell")
+    e.tile("v = dngn_metal_wall_darkgray")
 end
 
 function hell_entry_tier(e, tier)
@@ -77,8 +80,8 @@ MONS:   sun demon / smoke demon / soul eater / hell hog
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")
@@ -113,8 +116,8 @@ MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
-ITEM:   ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+ITEM:   ring of fire pre_id / Necronomicon / \
+        grand grimoire / scroll of torment pre_id
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.
@@ -341,7 +344,7 @@ SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
 SUBST:   = = c
 KMASK:   l = no_monster_gen
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -390,7 +393,7 @@ ENDMAP
 NAME:    pf_vacation_house_of_asmodeus
 TAGS:    transparent uniq_hell_entry_geh
 WEIGHT:  4
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 COLOUR:  c = red
 FTILE:  'O = floor_infernal_blank
 : hell_entry_feature(_G, 'O')
@@ -418,7 +421,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = reaper ; wand of flame / balrug ; wand of flame ident:type
+KMONS:  i = reaper ; wand of flame / balrug ; wand of flame pre_id
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank
@@ -743,7 +746,7 @@ WEIGHT: 2
 : hell_entry_tier(_G, "low")
 KMONS: S = balrug band / hell knight band / jiangshi band / \
            ancient champion band / deep troll shaman band / \
-           salamander tyrant band / wendigo band
+           salamander tyrant band / wyrmhole
 SUBST: L = l., ` = lx
 MAP
   xxxx
@@ -894,7 +897,7 @@ ENDMAP
 NAME: vestibule_tar_old
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / shadow dragon
+KMONS: T = revenant soulmonger / shadow dragon
 FTILE: +'T = floor_infernal_blank
 TILE: c = dngn_stone_dark
 MAP
@@ -950,8 +953,8 @@ TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie
-KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
-           curse skull / dread lich
+KMONS:  b = revenant soulmonger / lich / vampire mage / ancient lich / \
+            mummy priest / curse skull / dread lich
 TILE:   c = dngn_stone_dark
 MAP
 .......dd...............dd.......
@@ -975,7 +978,7 @@ ENDMAP
 NAME: vestibule_tar_grunt_deathgaze
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / lich / shadow dragon
+KMONS: T = revenant soulmonger / lich / shadow dragon
 MONS: ancient champion band, reaper / soul eater
 MONS: phantasmal warrior / vampire knight
 FTILE: +'T12 = floor_infernal_blank
@@ -1003,11 +1006,8 @@ NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
 KMONS:  1D = doom hound / nothing
 KFEAT:  D = enter_tartarus
-KFEAT:  G = metal_statue
-COLOUR: G = mist
 TILE:   c = dngn_stone_dark
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
 ccccccccccccccccccccccccccccccccc
  cccccccccccccc...cccccccccccccc
@@ -1057,7 +1057,7 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant
+KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth
@@ -1173,14 +1173,14 @@ MAP
                ...
 ENDMAP
 
-NAME: vestibule_geh_grunt_obsidian_fortress
-TAGS: vestibule_geh
-KFEAT: G = enter_gehenna
-MONS: balrug / hellion, sin beast / hell hog
-MONS: sun demon / smoke demon / hell knight
-NSUBST: 2 = 3:2 / *:.
-NSUBST: 3 = 3:3 / *:.
-FTILE: 123+G = floor_infernal_blank
+NAME:   vestibule_geh_grunt_obsidian_fortress
+TAGS:   vestibule_geh
+KFEAT:  G = enter_gehenna
+MONS:   balrug / hellion, sin beast / hell hog
+MONS:   sun demon / smoke demon / hell knight
+NSUBST: 2 = 3:2 / *:., 3 = 3:3 / *:.
+FTILE:  123+G = floor_infernal_blank
+TILE:   c = stone_wall_pyre
 : hell_lava_spawns(_G)
 MAP
 lllllllllccccccccccccccclllllllll
@@ -1235,7 +1235,7 @@ KMONS:   D = balrug band / sin beast band / hell hog band / \
 KFEAT:   D = enter_gehenna
 SHUFFLE: Pp/Qq/Rr/Ss
 SUBST:   P = +, p = ., QRS = c, qrs = l, L = l.
-TILE:    c = dngn_stone_wall_red
+TILE:    c = stone_wall_pyre
 FTILE:   +D' = floor_infernal_blank
 COLOUR:  c = red
 MAP

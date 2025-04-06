@@ -76,13 +76,6 @@ battleaxe
 
 A large war axe with a formidable double-sided head.
 %%%%
-beast talisman
-
-A large patch of fur around a shining, gold-glowing eye. Transforms the user
-into a monstrous, furry were-beast, limbs pulsing with murderous energy.
-Shapeshifting skill increases the killing power provided. While transformed,
-any gloves, cloaks, headgear and boots are melded.
-%%%%
 blade talisman
 
 A jagged cluster of blades, almost impossible to grasp without injury.
@@ -94,8 +87,6 @@ A jagged cluster of blades, almost impossible to grasp without injury.
 and reducing the effectiveness of body armour. Shapeshifting skill mitigates
 and eventually eliminates the latter effect, as well as increasing damage
 dealt.
-
-While transformed, equipped weapons, shields, and gloves are melded.
 %%%%
 book of air
 
@@ -167,6 +158,19 @@ book of conjurations
 A book containing an introduction to the destructive magical arts of
 Conjurations.
 %%%%
+book of contraptions
+
+A book of schematics and spells to construct a variety of elaborate mechanisms.
+The obvious safety hazards involved with many of them are relegated to a single
+footnote on page 157, but to an enterprising adventurer, that might be
+considered an upside.
+%%%%
+book of cryoformation
+
+An illustrated guide to shaping ice into both practical and artistic forms. An
+entire chapter is devoted to tables of mineral impurities and their effect on
+colour and melting point.
+%%%%
 book of dangerous friends
 
 A book describing the creation and use of magical entities best kept at arm's
@@ -200,6 +204,14 @@ book of dreams
 The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
 and cryptic digressions to describe spells drawn from the mystic's visions.
 %%%%
+book of duality
+
+An eclectic spellbook, mingled with rambling philosophical anecdotes about the
+twin nature of every action. Even by the end, it remains unclear whether the
+author considered there to be some spiritual purity to spells which incorporate
+offense and defense into a single motion, or if they just lived a life extremely
+pressed for time.
+%%%%
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from
@@ -223,10 +235,22 @@ book of frost
 A book of magic spells, often used as an introduction to the elemental magics
 of Ice. Its pages feel unusually brittle, as if they'd crumble at a touch.
 %%%%
+book of the fortress
+
+A book of spells that purports to make their caster as resilient as a stone
+fortress. Its cover is fashioned from thick, magically-reinforced steel, making
+the book unreasonably heavy for no obvious benefit.
+%%%%
 book of geomancy
 
 A book containing basic spells involving the element of Earth. Readers are
 recommended to wear a pair of gardening gloves.
+%%%%
+book of the grave
+
+A heavy tome whose vellum smells faintly of dirt and decay. Those who touch it
+frequently report a palpable sense of unease, as if something unwholesome were
+buried between its very pages.
 %%%%
 book of hexes
 
@@ -252,6 +276,12 @@ book of maladies
 A concise catalogue of afflictions, both magical and mundane, often described
 with a disquieting degree of cheerfulness. Most of them operate on timescales
 too slow to be useful to an adventurer, but a few sound remarkably efficacious.
+%%%%
+book of metalworking
+
+A tome of advanced Forgecraft magic. Its pages are regularly inlaid with
+technical figures made from elaborate metal filigree, perhaps as an illustration
+of the author's own skill with the art described herein.
 %%%%
 book of minor magic
 
@@ -366,7 +396,6 @@ book of the senses
 A scholarly work, describing the senses used by living creatures to perceive the
 world around them. A handful of spells are included to demonstrate the principles
 being described.
-%%%%
 %%%%
 book of transmutation
 
@@ -551,40 +580,23 @@ double sword
 
 A fearsome weapon with a forked, razor-sharp blade.
 %%%%
-dragon-blood talisman
+dragon-coil talisman
 
-A vial of pure dragon-blood, crystallized over many years. {{
+An intricate carving, inlaid with dragon tooth and scale. {{
     local desc = "Transforms the user into a mighty"
 
     if you.race():find("Draconian") then
-        desc = desc .. " dragon"
-        if you.race() ~= "Grey Draconian" then
-            desc = desc .. ", increasing the power of any innate breath attacks"
-        end
-        if you.race() == "Red Draconian" then
-            desc = desc .. ". The user becomes highly resistant to fire " ..
-                           "and resistant to poison, but vulnerable to cold"
-        elseif you.race() == "White Draconian" then
-            desc = desc .. ". The user becomes highly resistant to cold " ..
-                           "and resistant to poison, but vulnerable to fire"
-        elseif you.race() == "Green Draconian" then
-            desc = desc .. " and retaining their innate colour"
-        else
-            desc = desc .. ". The user retains their innate colour, and " ..
-                           "becomes resistant to poison"
-        end
+        desc = desc .. " dragon. The user retains their innate colour, " ..
+                       "becomes resistant to poison, and their breath weapon's " ..
+                       "power and recharge rate are greatly increased."
     else
-        desc = desc .. ", fire-breathing dragon. The user becomes highly " ..
-                       "resistant to fire and resistant to poison, but " ..
-                       "vulnerable to cold"
+        desc = desc .. " golden dragon. The user becomes resistant to fire, " ..
+                       "cold, and poison, and gains a powerful breath attack " ..
+                       "that inflicts all three types of damage at once, but " ..
+                       "only recharges as you gain XP."
     end
-
-    desc = desc .. "."
-
     return desc
-}} Shapeshifting skill increases damage from claws and armour from scales.
-
-While transformed, any equipped weapons and armour are melded.
+}}
 %%%%
 earthy gem
 
@@ -601,8 +613,7 @@ you ever see this message.
 eudemon blade
 
 A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
-favoured weapon of the Shining One's servants, and cannot be wielded by the
-forces of evil.
+favoured weapon of the Shining One's servants.
 %%%%
 eveningstar
 
@@ -643,16 +654,29 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-flux talisman
+flux bauble
 
-A canister holding an ominously glowing substance. Its user becomes unstable at
-a fundamental level, inflicting dangerous levels of magical contamination on
-foes with each touch. Sufficient contamination causes a highly localised meltdown,
-dealing enormous damage which increases with the user's Shapeshifting skill.
+A small glass bauble containing an ominously glowing substance. Crushing it will
+flood you with transmutational energy, leaving your physical form unstable at a
+fundamental level.
 
-However, this instability makes the user unable to use weapons, shields or body
-armour. They also glow, reducing stealth and preventing invisibility, and their
-melee damage is reduced, as their limbs sometimes destabilise mid-swing.
+In this state of flux, your melee attacks are much weaker, but each strike will
+contaminate whatever you hit with transmutational energy - growing so intense
+upon the third strike that it will cause their body to twist and deform,
+inflicting significant damage. The lack of certainty in your physical form also
+makes you much harder to hit, though you glow in a way that hinders stealth.
+
+The power contained in each bauble is finite, and once it is exhausted by
+spreading it to enemies, you will return to your previous form.
+%%%%
+fortress talisman
+
+A miniature battlement, carved from a piece of shell. Transforms the user into a
+heavily armoured crab, fusing whatever body armour they are wearing into the
+shell in the process. In this form, they are slow-moving, but well-defended and
+even capable of wielding a weapon in their large main claw. They can also
+breathe clouds of rust at the cost of their own HP, which corrode and weaken
+enemies.
 %%%%
 gell's gravitambourine
 
@@ -706,8 +730,6 @@ A heavy stone icon, bearing the countenance of some long-forgotten king or god.
 Transforms the user into a slow, stone statue. The user's stone body is
 immune to poison and miasma, and gains resistance to electricity, negative
 energy, and torment. Shapeshifting skill increases armour granted.
-
-While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
 grand grimoire
 
@@ -756,6 +778,11 @@ projectiles to fall forward instead of down, others bewitch the slugs with a
 fatal attraction to their targets. All are slow, loud, and blast out thick
 smoke with each shot.
 %%%%
+handbook of applied construction
+
+A practical introduction to Forgecraft, covering basic principles and their
+common applications.
+%%%%
 hat
 
 A cloth hat.
@@ -763,6 +790,14 @@ A cloth hat.
 helmet
 
 A piece of metal headgear.
+%%%%
+honeycomb talisman
+
+A preserved honeycomb, still dripping with ambrosial nectar. Transforms the user
+into a living beehive, filled with the buzz of countless insects labouring
+inside them. The nectar produced within greatly increases the user's health and
+magic regeneration and if they become seriously injured, angry bees will swarm
+out to defend their hive.
 %%%%
 horn of Geryon
 
@@ -779,6 +814,17 @@ ice dragon scales
 
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
+%%%%
+inkwell talisman
+
+A small bottle filled with mystical ink. Transforms the user into a walking
+scroll whose body is tattooed with the knowledge of a hundred mages. Being an
+omnibus of magical techniques gives them increased skill with all spell schools,
+which improves with Shapeshifting skill, but the form's ability to channel such
+magic is limited, and it cannot cast spells above level 4.
+
+Its attacks are also very weak, but have a chance of restoring 1 MP when they
+hit.
 %%%%
 ivory gem
 
@@ -848,6 +894,15 @@ longbow
 
 A long, strong bow made of yew.
 %%%%
+lupine talisman
+
+An painted eyepatch made from a scrap of wolf pelt. Transforms the user into a
+vicious werewolf, muscles surging with predatory instinct. Killing enemies in
+this form will give a stacking bonus to your damage and accuracy, and slaying
+enough of them in a row will cause you to unleash a vicious howl that makes
+any still alive cower in fear - and leaves them succeptible to a devastating
+leaping takedown.
+%%%%
 mace
 
 A short club with a metal head.
@@ -869,8 +924,13 @@ Transforms the user's midsection into a giant mouth, gnashing and ready to devou
 foes. The mouth may devour slain creatures, healing the user to an extent increased
 by the user's Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
+%%%%
+medusa talisman
 
-While transformed, any body armour is melded.
+A fossilised jellyfish polyp, inscribed with sigils. Causes a mane of long
+stinging tendrils to sprout from the user's head which lash out at nearby
+enemies whenever the user attacks, poisoning them. When they feel their host's
+life is in danger, they can even turn these poisoned foes to stone.
 %%%%
 midnight gem
 
@@ -900,6 +960,14 @@ Though it drips with mud and muck, still a peculiar dignity attaches itself to
 this gem. The people of the Swamp, who first carried this stone, struggled
 against insurmountable odds. They failed, but there is much to admire even in
 the ruin of their efforts.
+%%%%
+my sojourn through swampland
+
+While purporting itself to be the personal account of a famous naturalist, it
+becomes clear upon reading that this book was compiled from multiple unrelated
+sources, including notes from a stagehand of a travelling magical circus. The
+travelogue may be fictitious, but but some of the spell diagrams carefully
+transcribed in the margins seem quite real.
 %%%%
 necronomicon
 
@@ -932,6 +1000,10 @@ pair of gloves
 
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
+%%%%
+partisan
+
+A long polearm with sharp protrusions on either side of the spearhead.
 %%%%
 pearl dragon scales
 
@@ -988,10 +1060,6 @@ potion of curing
 A potion which restores a small amount of health, and cures poison and
 confusion.
 %%%%
-potion of degeneration
-
-A noxious concoction which reduces strength, intelligence and dexterity.
-%%%%
 potion of enlightenment
 
 A potion which uplifts both the body and mind of its drinkers, lifting them
@@ -1030,6 +1098,11 @@ potion of might
 
 A potion which greatly increases the power of the drinker's melee attacks.
 %%%%
+potion of moonshine
+
+A potent alcohol, distilled in some dubious corner of the dungeon. Drinking it
+reduces the imbiber's accuracy, evasion, and spellcasting success for a while.
+%%%%
 potion of mutation
 
 A potion which mutates the drinker, removing several mutations then
@@ -1054,6 +1127,15 @@ prismatic gem
 Shining with every colour of the rainbow and a few others besides, some
 consider this gem 'a bit tacky'. Preposterous!
 %%%%
+protean talisman
+
+An ever-changing fragment of something primordial; its substance seems to
+undulate between flesh and bone and perhaps even metal. A sufficiently skilled
+shapeshifter can stabilise it into a useable - if unpredictable - form.
+
+(If your Shapeshifting skill is at least 7, you can evoke this to transform it
+into a random one of: Rimehorn, Scarab, Medusa, or Maw talismans.)
+%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -1076,9 +1158,36 @@ quick blade
 A dagger with an uncanny enchantment upon it, allowing it to strike twice
 for every blow its wielder makes.
 %%%%
+quill talisman
+
+A spiny trinket reminiscent of a cactus. Causes sharp quills to grow all over
+the user's body which may cause injury to anyone unwise enough to attack them
+in melee.
+%%%%
 rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
+%%%%
+riddle talisman
+
+An intricate puzzlebox containing an unknowable prize. Transforms the user into
+a riddle-loving sphinx. In this form, they are capable of wearing a cloak and
+barding, and their melee attacks cause powerful winds to strike their foe which
+do increased damage for every open space next to them. They are also masterful
+enchanters, casting Hex spells much more easily and ignoring a portion of their
+foe's Willpower.
+
+Alas, their love of riddles is so compulsive that even the most hardened
+adventurer will be unable to resist posing them to new foes they encounter, no
+matter how unwise this may be.
+%%%%
+rimehorn talisman
+
+A crude ornament carved from the horn of a rare arctic beast - so cold to the
+touch that ice still clings to it. Transforms the user into a rime yak, a hardy
+ungulate that is highly resistant to cold and whose breath is so frigid that it
+freezes the walls around itself as it fights. Being so attuned to arctic
+temperatures also makes it easier for the user to cast Ice magic.
 %%%%
 ring mail
 
@@ -1183,6 +1292,15 @@ sacred scourge
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
 %%%%
+sanguine talisman
+
+A vial of roiling blood that pulses with the beat of an unseen heart. Transforms
+the user into a fearsome vampire - a creature that straddles the border between
+life and undeath. They can drink the lifeblood of the living to heal themselves,
+and even turn those they slay stealthily into vampiric thralls, but do not heal
+in the presence of monsters. At great effort, they may scatter into a swarm of
+bats - either to flee or to assail their enemies.
+%%%%
 sanguine gem
 
 [[gem]]
@@ -1197,6 +1315,16 @@ scale mail
 A leather suit covered with metal plates attached to each other in overlapping
 rows to provide full protection, but at the cost of reduced freedom of
 movement.
+%%%%
+scarab talisman
+
+A small golden cameo of a beetle. Transforms the user into a sun scarab, a
+fiery insect that carries around a mote of searing heat and light outside
+itself, like a tiny sun.
+
+This solar ember burns adjacent enemies whenever the scarab attacks, and can be
+healed by swapping with it. In addition, the scarab's own mandibles can reduce
+enemies' fire resistance and Fire spells are easier for the user to cast.
 %%%%
 scarf
 
@@ -1321,7 +1449,8 @@ scroll of torment
 
 A scroll that calls on the powers of darkness to inflict great pain on any
 nearby creature — including the reader! This halves the resilience of all
-living creatures, although it is never directly fatal.
+living creatures and cuts down all holy creature resilence by about a third,
+although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
@@ -1336,11 +1465,10 @@ it's quite similar to a halberd.
 %%%%
 serpent talisman
 
-A jade snake coiled around a nagaraja's name-day egg. Transforms the user into
-a giant, cold-blooded, poison-resistant serpent, ready to wind their coils
-around foes and crush them to death. Shapeshifting skill increases the armour
-provided by the snake's scales. While transformed, any equipped weapons and
-armour are melded.
+A jade snake coiled around a fossilised egg. Transforms the user into an
+amphisbaena - a legendary two-headed serpent. It is capable of wearing two hats
+at once and its powerful coils can wind around foes and crush them to death, but
+its cold blood leaves it succeptible to being slowed by cold attacks.
 %%%%
 shining gem
 
@@ -1358,6 +1486,14 @@ Unearthly energies gently flow along the surface of this gem, guided by the
 archmage who first built the Elven Halls. Countless generations of elves
 flocked to learn from her, but her foremost pursuit was always the perfection
 of this piece of art.
+%%%%
+shop voucher
+
+A coupon good for one item of any price from any store in the dungeon, to be
+used automatically when you would make a purchase that exceeds your funds. How
+generous! No refunds. One coupon per purchase per customer. Offer limited by
+availability. Void if defaced or otherwise altered. Valid only within the
+dungeon of Zot and its subsidiary branches. Additional purchase not required.
 %%%%
 shortbow
 
@@ -1379,6 +1515,13 @@ spear
 
 A hunting weapon consisting of a wooden shaft with a pointed metal head
 fastened on one end.
+%%%%
+spider talisman
+
+A strange charm made from shed arachnid exoskeletons bound together with silk.
+Transforms the user into an agile jumping spider who can move swiftly towards
+foes and inflict grievous damage on any it catches unaware. Its attacks can
+also ensnare its enemies in webs and it can leap briskly away from many dangers.
 %%%%
 staff of air
 
@@ -1462,8 +1605,6 @@ and strike all adjacent foes. The user also flies, gains immunity to poison,
 miasma, petrification, constriction, and sticky flame, and also resists
 electricity. They can launch themselves as a lightning bolt, blasting through
 everything in their way.
-
-While transformed, any equipped weapons and armour are melded.
 %%%%
 swamp dragon scales
 
@@ -1509,6 +1650,12 @@ always at risk of being hit. However, armour is extremely effective at
 repelling the lightweight fragments of rock from a tremorstone's explosion, so
 a well-armoured wielder has little to fear. Evocations skill increases the
 number of explosions.
+%%%%
+treatise on traps
+
+An analytical volume discussing methods and materials with which to construct a
+dizzying array of traps - from those intended to safeguard a pantry from ants to
+ones which would please even the most sadistic dungeon architect.
 %%%%
 trident
 
@@ -1579,7 +1726,7 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded. and
+those struck. Only living, demonic and angelic monsters can be blinded, and
 tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
@@ -1619,6 +1766,17 @@ everything caught in its wake and sometimes blinking them a short distance away.
 war axe
 
 A military axe with a long haft and a single-bladed head.
+%%%%
+wellspring talisman
+
+A small amphora from which pours a seemingly unending quantity of water.
+Transforms the user's flesh into elemental water, allowing them to move flexibly
+and reach to attack from a great distance. From time to time, they can even
+cause the water around them to rise up and drown their enemies.
+
+The malleability of this water even allows them to retain the benefits of their
+physical mutations, but cold attacks can freeze it solid and fire may cause it
+to erupt with steam.
 %%%%
 whip
 

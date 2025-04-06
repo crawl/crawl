@@ -1,12 +1,12 @@
 name: "hellfire mortar"
 glyph: {char: "I", colour: lightred}
-flags: [speaks, see_invis, stationary, conjured, no_regen, no_exp_gain]
+flags: [speaks, see_invis, stationary, peripheral, no_regen, no_exp_gain, unstable]
 resists: {elec: 1, fire: 3, cold: 1, petrify: 1}
 holiness: [nonliving]
 will: invuln
 attacks:
 hd: 10
-hp_10x: 1200
+hp_10x: 1000
 ac: 20
 ev: 0
 spells: hellfire_mortar

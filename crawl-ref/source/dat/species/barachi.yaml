@@ -26,6 +26,7 @@ aptitudes:
   conjurations: 1
   hexes: 1
   summoning: 2
+  forgecraft: 1
   necromancy: -1
   translocations: 1
   shapeshifting: 0
@@ -42,11 +43,10 @@ dex: 7
 levelup_stat_frequency: 4
 mutations:
   1:
-    MUT_SLOW: 1
-    MUT_HOP: 1
+    MUT_FROG_LEGS: 1
     MUT_DAYSTALKER: 1
   13:
-    MUT_HOP: 1
+    MUT_FROG_LEGS: 1
 recommended_jobs:
   - fighter
   - berserker
@@ -55,6 +55,8 @@ recommended_jobs:
   - summoner
   - ice elementalist
   - reaver
+  - forgewright
 
 child_name: Tadpole
 orc_name: Orcphibian
+walking_verb: Hop

@@ -1,6 +1,6 @@
 name: "blazeheart core"
 glyph: {char: "*", colour: lightred}
-flags: [insubstantial, stationary, no_exp_gain]
+flags: [insubstantial, stationary, no_exp_gain, unstable, peripheral]
 resists: {fire: 3}
 holiness: [nonliving]
 will: 10

@@ -42,6 +42,11 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_PERMAFROST_ERUPTION, ZAP_PERMAFROST_ERUPTION_COLD },
     { SPELL_FULSOME_FUSILLADE, ZAP_FULSOME_FUSILLADE },
     { SPELL_RIMEBLIGHT, ZAP_RIMEBLIGHT },
+    { SPELL_SPIKE_LAUNCHER, ZAP_SPIKE_LAUNCHER },
+    { SPELL_KINETIC_GRAPNEL, ZAP_KINETIC_GRAPNEL },
+    { SPELL_SHRED, ZAP_SHRED },
+    { SPELL_MAGMA_BARRAGE, ZAP_MAGMA_BARRAGE },
+    { SPELL_RUST_BREATH, ZAP_RUST_BREATH },
     // Wizard mode only.
     { SPELL_PORKALATOR, ZAP_PORKALATOR },
     { SPELL_HURL_DAMNATION, ZAP_HURL_DAMNATION },
@@ -53,6 +58,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SLEEP, ZAP_SLEEP },
     { SPELL_PARALYSE, ZAP_PARALYSE },
     { SPELL_PETRIFY, ZAP_PETRIFY },
+    { SPELL_VEX, ZAP_VEX },
     { SPELL_POLYMORPH, ZAP_POLYMORPH },
     { SPELL_TELEPORT_OTHER, ZAP_TELEPORT_OTHER },
     { SPELL_INNER_FLAME, ZAP_INNER_FLAME },
@@ -86,6 +92,12 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_HOARFROST_BULLET, ZAP_HOARFROST_BULLET },
     { SPELL_GRAVE_CLAW, ZAP_GRAVE_CLAW },
     { SPELL_UNLEASH_DESTRUCTION, ZAP_UNLEASH_DESTRUCTION },
+    { SPELL_PLATINUM_PARAGON, ZAP_PARAGON_IMPACT },
+    { SPELL_MONARCH_BOMB, ZAP_MONARCH_DETONATION },
+    { SPELL_SPLINTERFROST_SHELL, ZAP_SPLINTERFROST_FRAGMENT },
+    { SPELL_PERCUSSIVE_TEMPERING, ZAP_PERCUSSIVE_TEMPERING },
+    { SPELL_MERCURY_ARROW, ZAP_MERCURY_ARROW },
+    { SPELL_FREEZE, ZAP_FREEZE },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -149,9 +161,16 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SHADOW_BALL, ZAP_SHADOWBALL },
     { SPELL_SHADOW_SHARD, ZAP_SHADOW_SHARD },
     { SPELL_SHADOW_BEAM, ZAP_SHADOW_BOLT },
+    { SPELL_SHADOW_SHOT, ZAP_SHADOW_SHOT },
     { SPELL_SHADOW_TEMPEST, ZAP_SHADOW_JOLT },
     { SPELL_SHADOW_TORPOR, ZAP_SHADOW_TORPOR },
     { SPELL_CREEPING_SHADOW, ZAP_CREEPING_SHADOW },
+    { SPELL_DEPLOY_BOMBLET, ZAP_DEPLOY_BOMBLET },
+    { SPELL_SEISMIC_STOMP, ZAP_SEISMIC_STOMP },
+    { SPELL_THROW_BOLAS, ZAP_BOLAS },
+    { SPELL_SOJOURNING_BOLT, ZAP_SOJOURNING },
+    { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
+    { SPELL_GOLDEN_BREATH, ZAP_GOLDEN_BREATH },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },
@@ -177,7 +196,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
 static pair<ability_type, zap_type> _abil_zaps[] =
 {
     { ABIL_SPIT_POISON, ZAP_SPIT_POISON },
-    { ABIL_BREATHE_FIRE, ZAP_BREATHE_FIRE },
     { ABIL_BREATHE_POISON, ZAP_BREATHE_POISON },
     { ABIL_MAKHLEB_DESTRUCTION, ZAP_UNLEASH_DESTRUCTION },
 };
@@ -207,15 +225,6 @@ spell_type zap_to_spell(zap_type zap)
             return spzap.first;
 
     return SPELL_NO_SPELL;
-}
-
-int spell_zap_power(spell_type spell, int pow)
-{
-    switch (spell)
-    {
-    default:
-        return pow;
-    }
 }
 
 int spell_zap_power_cap(spell_type spell)

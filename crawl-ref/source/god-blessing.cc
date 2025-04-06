@@ -72,19 +72,19 @@ static bool _increase_ench_duration(monster* mon,
 
 static bool _tso_blessing_extend_stay(monster* mon)
 {
-    if (!mon->has_ench(ENCH_ABJ))
+    if (!mon->has_ench(ENCH_SUMMON_TIMER))
         return false;
 
-    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+    mon_enchant timer = mon->get_ench(ENCH_SUMMON_TIMER);
 
     // These numbers are tenths of a player turn. Holy monsters get a
     // much bigger boost than random beasties, which get at most double
     // their current summon duration.
     if (mon->is_holy())
-        return _increase_ench_duration(mon, abj, 1100 + random2(1100));
+        return _increase_ench_duration(mon, timer, 1100 + random2(1100));
     else
-        return _increase_ench_duration(mon, abj, min(abj.duration,
-                                                     500 + random2(500)));
+        return _increase_ench_duration(mon, timer, min(timer.duration,
+                                                       500 + random2(500)));
 }
 
 static bool _tso_blessing_friendliness(monster* mon)

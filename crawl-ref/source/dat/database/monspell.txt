@@ -136,6 +136,14 @@ Eruption cast
 
 @The_monster@ rends the earth beneath @target@!
 %%%%
+Grasping Roots cast
+
+@The_monster@ reaches out to the roots within the earth.
+%%%%
+Grasping Roots natural cast
+
+@The_monster@ runs its roots beneath @target@!
+%%%%
 Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
@@ -159,6 +167,10 @@ Holy Flames cast
 unseen Holy Flames cast
 
 Blessed flames are called forth!
+%%%%
+Launch Bomblet cast
+
+@The_monster@ launches a bomblet.
 %%%%
 Legendary Destruction cast
 
@@ -210,6 +222,14 @@ Pyroclastic Surge cast
 
 @The_monster@ calls gouts of flame from the lava!
 %%%%
+Shadow Shot cast
+
+@The_monster@ fires @at@ @target@.
+%%%%
+Siphon Essence cast
+
+@The_monster@ draws nearby souls into @reflexive@!
+%%%%
 Symbol of Torment cast
 
 @The_monster@ calls on the powers of darkness!
@@ -224,6 +244,10 @@ Sheza's Dance cast
 
 @The_monster@ gestures, and weapons take to the air!
 %%%%
+Sojourning Bolt cast
+
+@The_monster@ breathes a rupture in space-time @at@ @target@.
+%%%%
 Sticks to Snakes cast
 
 @The_monster@ drops twin branches, and they both wriggle to life!
@@ -235,6 +259,10 @@ Sticky Flame cast
 Stunning Burst cast
 
 @The_monster@ fires a burst of electricity @at@ @target@.
+%%%%
+Throw Bolas cast
+
+@The_monster@ hurls a bolas @at@ @target@.
 %%%%
 Throw Klown Pie cast
 
@@ -414,6 +442,10 @@ Weakening Gaze cast
 Woodweal cast
 
 @The_monster@ touches a tree and draws upon its vitality.
+%%%%
+Seismic Stomp cast
+
+@The_monster@ stomps @possessive@ heavy feet.
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -893,6 +925,22 @@ Throw Icicle shard shrike cast
 @The_monster@ spits a shard of ice @at@ @target@.
 %%%%
 # Sphinxes can't gesture or point.
+Confuse sphinx marauder cast
+
+@The_monster@ roars a[n obscure| perplexing] riddle with a strange tongue.
+%%%%
+Vex sphinx marauder cast
+
+@The_monster@ screeches a[n impossible| nonsensical| cliché] riddle in a mystic tongue.
+%%%%
+Smiting guardian sphinx cast
+
+@The_monster@ mutters an ancient curse @at@ @target@.
+%%%%
+Paralysis guardian sphinx cast
+
+@The_monster@ whispers a [stupefying|staggering] mystic riddle.
+%%%%
 sphinx cast
 
 @The_monster@ mumbles some strange words.
@@ -988,6 +1036,26 @@ Corrupting Pulse wretched star cast
 wretched star cast
 
 @The_monster@ glows turbulently.
+%%%%
+Grave Claw vampire bloodprince cast
+
+@The_monster@ reaches out @possessive@ hand.
+
+@The_monster@ snaps @possessive@ fingers.
+%%%%
+Ravenous Swarm vampire bloodprince cast
+
+@The_monster@ unfurls @possessive@ wings.
+
+@The_monster@ spreads @possessive@ arms wide.
+%%%%
+Dominate Undead vampire bloodprince cast
+
+@The_monster@ exerts the full weight of @possessive@ authority.
+
+@The_monster@ compels the dead to obey.
+
+@The_monster@ whispers, "Kneel."
 %%%%
 ########################################################################
 # Monster species and genus messages.

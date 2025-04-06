@@ -43,10 +43,10 @@ static monster_type _solo_tentacle_to_segment[][2] =
 static mgen_data _segment_data(const monster& head, coord_def pos,
                                monster_type type)
 {
-    mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE);
+    mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE, head.god);
     if (mons_is_zombified(head))
         mg.base_type = head.type;
-    mg.set_summoned(&head, 0, 0, head.god)
+    mg.set_summoned(&head, 0)
       .set_col(head.colour);
     return mg;
 }
@@ -181,7 +181,7 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
            && child->props[INWARDS_KEY].get_int() == (int) parent->mid;
 }
 
-const monster& get_tentacle_head(const monster& mon)
+monster& get_tentacle_head(const monster& mon)
 {
     const monster* m = &mon;
     // For tentacle segments, find the associated tentacle.
@@ -189,7 +189,7 @@ const monster& get_tentacle_head(const monster& mon)
     {
         monster* tentacle = monster_by_mid(m->tentacle_connect);
         if (!tentacle)
-            return *m;
+            return const_cast<monster&>(*m);
 
         m = tentacle;
     }
@@ -199,12 +199,12 @@ const monster& get_tentacle_head(const monster& mon)
     {
         monster* head = monster_by_mid(m->tentacle_connect);
         if (!head)
-            return *m;
+            return const_cast<monster&>(*m);
 
         m = head;
     }
 
-    return *m;
+    return const_cast<monster&>(*m);
 }
 
 static void _establish_connection(monster* tentacle,
@@ -346,14 +346,13 @@ struct tentacle_attack_constraints
             else
             {
                 actor * act_at = actor_at(temp.pos);
-                monster* mons_at = monster_at(temp.pos);
 
                 if (!act_at)
                     temp.path_distance += 1;
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
-                else if (mons_at && mons_is_firewood(*mons_at)
-                    && !mons_aligned(base_monster, mons_at))
+                else if (act_at->is_firewood()
+                            && !mons_aligned(base_monster, act_at))
                 {
                     temp.path_distance += 10;
                 }
@@ -612,7 +611,7 @@ static void _purge_connectors(monster* tentacle)
             if (hp > 0 && hp < tentacle->hit_points)
                 tentacle->hit_points = hp;
 
-            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
+            monster_die(**mi, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
         }
     }
     ASSERT(tentacle->alive());
@@ -633,7 +632,7 @@ static void _collect_foe_positions(monster *mons,
     for (monster_iterator mi; mi; ++mi)
     {
         const monster * const test = *mi;
-        if (!mons_is_firewood(*test)
+        if (!test->is_firewood()
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
             && sight_check(test))
@@ -871,7 +870,7 @@ void move_solo_tentacle(monster* tentacle)
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->move_to_pos(new_pos);
+    tentacle->move_to_pos(new_pos, true, false, false);
 
     if (pull_constrictee)
     {
@@ -881,16 +880,16 @@ void move_solo_tentacle(monster* tentacle)
                     constrictee->name(DESC_THE).c_str());
         }
 
-        if (constrictee->as_player())
-            move_player_to_grid(shift_pos, false);
-        else
-            constrictee->move_to_pos(shift_pos);
+        const coord_def old_constrictee_pos  = constrictee->pos();
+        constrictee->move_to_pos(shift_pos);
+        constrictee->apply_location_effects(old_constrictee_pos);
 
         // Interrupt stair travel and passwall.
         if (constrictee->is_player())
             stop_delay(true);
     }
     tentacle->clear_invalid_constrictions();
+    tentacle->clear_far_engulf();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -911,7 +910,7 @@ void move_solo_tentacle(monster* tentacle)
              old_pos.x, old_pos.y, tentacle->mid, visited_count);
 
         // Is it ok to purge the tentacle here?
-        monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
+        monster_die(*tentacle, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
         return;
     }
 
@@ -1003,7 +1002,7 @@ void move_child_tentacles(monster* mons)
             // Drop the tentacle if no enemies are in sight and it is
             // adjacent to the main body. This is to prevent players from
             // just sniping tentacles while outside the kraken's fov.
-            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
+            monster_die(*tentacle, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
             continue;
         }
 
@@ -1098,7 +1097,7 @@ void move_child_tentacles(monster* mons)
         if (!connected)
         {
             env.mgrid(tentacle->pos()) = tentacle->mindex();
-            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
+            monster_die(*tentacle, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
 
             continue;
         }
@@ -1140,14 +1139,14 @@ bool destroy_tentacle(monster* mons)
         if (mi->is_child_tentacle_of(head))
         {
             any = true;
-            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
+            monster_die(**mi, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
         }
     }
 
     if (mons != head)
     {
         any = true;
-        monster_die(*head, KILL_MISC, NON_MONSTER, true);
+        monster_die(*head, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
     }
 
     return any;
@@ -1163,7 +1162,7 @@ bool destroy_tentacles(monster* head)
             any |= destroy_tentacle(*mi);
             if (!mi->is_child_tentacle_segment())
             {
-                monster_die(*mi->as_monster(), KILL_MISC, NON_MONSTER, true);
+                monster_die(*mi->as_monster(), KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
                 any = true;
             }
         }
@@ -1209,7 +1208,7 @@ void mons_create_tentacles(monster* head)
     // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (monster_habitable_grid(tent_type, env.grid(*adj_it))
+        if (monster_habitable_grid(tent_type, *adj_it)
             && !actor_at(*adj_it))
         {
             adj_squares.push_back(*adj_it);

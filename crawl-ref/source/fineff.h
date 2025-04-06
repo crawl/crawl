@@ -8,6 +8,7 @@
 
 #include "actor.h"
 #include "beh-type.h"
+#include "env.h"
 #include "mgen-data.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -276,17 +277,19 @@ public:
     void fire() override;
 
     static void schedule(bolt &beam, string boom, string sanct,
-                         explosion_fineff_type typ, const actor* flame_agent)
+                         explosion_fineff_type typ, const actor* flame_agent,
+                         string poof)
     {
         final_effect::schedule(new explosion_fineff(beam, boom, sanct,
-                                                    typ, flame_agent));
+                                                    typ, flame_agent, poof));
     }
 protected:
     explosion_fineff(const bolt &beem, string boom, string sanct,
-                     explosion_fineff_type _typ, const actor* agent)
+                     explosion_fineff_type _typ, const actor* agent,
+                     string poof)
         : final_effect(0, 0, coord_def()), beam(beem),
           boom_message(boom), sanctuary_message(sanct),
-          typ(_typ), flame_agent(agent)
+          typ(_typ), flame_agent(agent), poof_message(poof)
     {
     }
     bolt beam;
@@ -294,6 +297,26 @@ protected:
     string sanctuary_message;
     explosion_fineff_type typ;
     const actor* flame_agent;
+    string poof_message;
+};
+
+class splinterfrost_fragment_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(bolt &beam, string msg)
+    {
+        final_effect::schedule(new splinterfrost_fragment_fineff(beam, msg));
+    }
+protected:
+    splinterfrost_fragment_fineff(bolt beem, string _msg)
+        : final_effect(0, 0, coord_def()), beam(beem), msg(_msg)
+    {
+    }
+    bolt beam;
+    string msg;
 };
 
 // A fineff that triggers a daction; otherwise the daction
@@ -431,23 +454,23 @@ public:
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
                          const string &agent, const string &msg,
-                         spell_type spell = SPELL_NO_SPELL)
+                         bool act_immediately = false)
     {
-        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg, spell));
+        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg, act_immediately));
     }
 protected:
     make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
                                const string &_agent, const string &_msg,
-                               spell_type _spell)
+                               bool _act_immediately)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
-          agent(_agent), message(_msg), spell(_spell)
+          agent(_agent), message(_msg), act_immediately(_act_immediately)
     {
     }
     mgen_data mg;
     int experience_level;
     string agent;
     string message;
-    spell_type spell;
+    bool act_immediately;
 };
 
 class mummy_death_curse_fineff : public final_effect
@@ -456,21 +479,24 @@ public:
     bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
-    static void schedule(const actor * attack, string name, killer_type killer, int pow)
+    static void schedule(const actor* attack, const monster* dead_mummy, killer_type killer, int pow)
     {
-        final_effect::schedule(new mummy_death_curse_fineff(attack, name, killer, pow));
+        final_effect::schedule(new mummy_death_curse_fineff(attack, dead_mummy, killer, pow));
     }
 protected:
-    mummy_death_curse_fineff(const actor * attack, string _name, killer_type _killer, int _pow)
-        : final_effect(fixup_attacker(attack), 0, coord_def()), name(_name),
+    mummy_death_curse_fineff(const actor* attack, const monster* source, killer_type _killer, int _pow)
+        : final_effect(fixup_attacker(attack), 0, coord_def()),
           killer(_killer), pow(_pow)
     {
+        // Cache the dying mummy so morgues can look up the monster source if it kills us.
+        env.final_effect_monster_cache.push_back(*source);
+        dead_mummy = source->mid;
     }
     const actor *fixup_attacker(const actor *a);
 
-    string name;
     killer_type killer;
     int pow;
+    mid_t dead_mummy;
 };
 
 class summon_dismissal_fineff : public final_effect
@@ -498,18 +524,18 @@ public:
     void fire() override;
 
     static void schedule(const actor &attack, const actor &defend,
-                         const item_def *weapon)
+                         item_def *weapon)
     {
         final_effect::schedule(new spectral_weapon_fineff(attack, defend, weapon));
     }
 protected:
     spectral_weapon_fineff(const actor &attack, const actor &defend,
-                           const item_def *wpn)
+                           item_def *wpn)
         : final_effect(&attack, &defend, coord_def()), weapon(wpn)
     {
     }
 
-    const item_def *weapon;
+    item_def *weapon;
 };
 
 class lugonu_meddle_fineff : public final_effect
@@ -584,17 +610,45 @@ public:
     bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
-    static void schedule(monster_type mon_type, coord_def pos, int dur)
+    static void schedule(monster_type mon_type, coord_def pos, int dur,
+                         int summon_type = SPELL_NO_SPELL)
     {
-        final_effect::schedule(new death_spawn_fineff(mon_type, pos, dur));
+        mgen_data _mg = mgen_data(mon_type, BEH_HOSTILE, pos,
+                                    MHITNOT, MG_FORCE_PLACE);
+        _mg.set_summoned(nullptr, summon_type, dur, false, false);
+        final_effect::schedule(new death_spawn_fineff(_mg));
+    }
+
+    static void schedule(mgen_data mg)
+    {
+        final_effect::schedule(new death_spawn_fineff(mg));
     }
 protected:
-    death_spawn_fineff(monster_type type, coord_def pos, int dur)
-        : final_effect(0, 0, pos), mon_type(type), duration(dur)
+    death_spawn_fineff(mgen_data _mg)
+        : final_effect(0, 0, _mg.pos), mg(_mg)
     {
     }
-    const monster_type mon_type;
-    const int duration;
+    const mgen_data mg;
 };
+
+class detonation_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return false; };
+    void fire() override;
+
+    static void schedule(const coord_def &pos, const item_def* wpn)
+    {
+        final_effect::schedule(new detonation_fineff(pos, wpn));
+    }
+protected:
+    detonation_fineff(const coord_def &pos, const item_def* wpn)
+        : final_effect(&you, nullptr, pos), weapon(wpn)
+    {
+    }
+
+    const item_def* weapon;
+};
+
 
 void fire_final_effects();

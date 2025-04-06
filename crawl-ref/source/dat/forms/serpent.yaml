@@ -1,0 +1,31 @@
+enum: serpent
+equivalent_mons: anaconda
+long_name: amphisbaena-form
+wiz_name: amphisbaena
+description: an enormous two-headed serpent.
+skill: {min: 12, max: 20}
+talisman: serpent
+melds: [weapon, offhand, body, boots, barding, gloves, cloak]
+resists: {poison: 1}
+str: 5
+size: large
+hp_mod: 120
+ac: {base: 10, scaling: 6}
+unarmed: {base: 7}
+unarmed_colour: lightgrey
+unarmed_verbs: [hit, lash, body-slam, crush]
+can_swim: yes
+changes_anatomy: yes
+has_hair: no
+has_bones: yes
+has_feet: no
+has_ears: no
+shout_verb: hiss
+shout_volume: -2
+hand_name: coils
+prayer_action: "coil in front of"
+flesh_name: flesh
+# cold-blooded and amphibious are added separately
+fakemuts:
+  - ["constrict", "You have a powerful constriction melee attack."]
+  - ["two hats", "You can wear a hat on each head."]

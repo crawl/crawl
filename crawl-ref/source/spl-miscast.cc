@@ -99,7 +99,7 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         else
         {
             ASSERT(mc_info.source != miscast_source::melee);
-            kt = KILL_MISCAST;
+            kt = KILL_NON_ACTOR;
         }
 
         monster* mon_target = target.as_monster();
@@ -171,12 +171,13 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 mgen_data data = mgen_data::hostile_at(MONS_NAMELESS, true,
                                                        target.pos());
                 data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+                data.god = mc_info.god;
 
                 // only give durable summons for true miscasts
-                int abj_dur = mc_info.source == miscast_source::spell ? 0 : 4;
-                data.set_summoned(source, abj_dur, SPELL_NO_SPELL, mc_info.god);
+                int dur = mc_info.source == miscast_source::spell ? 0 : 4;
+                data.set_summoned(source, SPELL_NO_SPELL, summ_dur(dur));
                 data.set_non_actor_summoner(cause);
-                if (abj_dur > 0)
+                if (dur > 0)
                     data.summon_type = MON_SUMM_MISCAST;
 
                 data.foe = target.mindex();
@@ -288,6 +289,16 @@ static const map<spschool, miscast_datum> miscast_effects = {
             {
                 target.poison(source, dam * 5 / 2);
             },
+        },
+    },
+    {
+        spschool::forgecraft,
+        {
+            BEAM_NONE,
+            [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
+                int /*dam*/, string /*cause*/) {
+                target.corrode(source, "wild magic");
+            }
         },
     },
 };

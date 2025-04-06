@@ -240,6 +240,12 @@ Xom feature blood
 
 @The_feature@ briefly coagulates.
 %%%%
+Xom feature eyes
+
+@The_feature@ looks at you curiously.
+
+@The_feature@ looks right through you.
+%%%%
 Xom feature dry
 
 Water briefly sprays from @the_feature@.
@@ -858,6 +864,15 @@ Xom transforms those around you.
 Xom touches your surroundings.
 
 @Xom good monster polymorph@
+%%%%
+Xom lights up webs
+
+Xom [gleefully|mirthfully] wrecks local arachnid artwork.
+
+The light of Xom [brushes upon|sweeps through] your surroundings.
+
+w:1
+@Xom fake destruction@
 %%%%
 Xom destruction
 
@@ -1479,6 +1494,8 @@ a delicious
 a mouldy
 
 a fake
+
+a moist
 
 w:2
 a kilgore

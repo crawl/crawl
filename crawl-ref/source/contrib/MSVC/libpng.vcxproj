@@ -119,58 +119,58 @@
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(SolutionDir)\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)\bin\8.0\$(PlatformName)\</OutDir>
+    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -199,7 +199,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\8.0\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
@@ -232,7 +232,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\8.0\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
@@ -325,7 +325,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\8.0\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
@@ -358,7 +358,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\8.0\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>

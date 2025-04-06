@@ -62,7 +62,7 @@ int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change();
 
 bool skill_default_shown(skill_type sk);
-void reassess_starting_skills();
+void reassess_starting_skills(bool balance_djinn = true);
 bool check_selected_skills();
 void init_train();
 void init_can_currently_train();
@@ -168,7 +168,7 @@ static const skill_type skill_display_order[] =
     SK_BLANK_LINE,
 
     SK_CONJURATIONS, SK_HEXES, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_ALCHEMY,
+    SK_NECROMANCY, SK_FORGECRAFT, SK_TRANSLOCATIONS, SK_ALCHEMY,
     SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
 
     SK_BLANK_LINE,

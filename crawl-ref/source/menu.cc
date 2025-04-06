@@ -222,6 +222,7 @@ void UIMenu::update_items()
     _invalidate_sizereq();
 
     item_info.resize(m_menu->items.size());
+    do_layout(m_region.width, m_num_columns, true);
     for (unsigned int i = 0; i < m_menu->items.size(); ++i)
         update_item(i);
 
@@ -2545,8 +2546,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILEI_FLEEING);
     else if (m->is(MB_STABBABLE))
         tileset.emplace_back(TILEI_STAB_BRAND);
-    else if (m->is(MB_DISTRACTED))
-        tileset.emplace_back(TILEI_MAY_STAB_BRAND);
+    else if (m->is(MB_DISTRACTED) || m->is(MB_UNAWARE) || m->is(MB_WANDERING)
+             || m->is(MB_CANT_SEE_YOU))
+    {
+        tileset.emplace_back(TILEI_UNAWARE);
+    }
 
     return true;
 }
@@ -3474,7 +3478,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    : columns()
+    :  prev_col(0), columns()
 {
     ASSERT(cols > 0);
 
@@ -3495,6 +3499,23 @@ column_composer::column_composer(int cols, ...)
     va_end(args);
 }
 
+column_composer::column_composer(int cols, vector<int> widths)
+    :  prev_col(0), columns()
+{
+    ASSERT(cols > 0 && (int)widths.size() >= cols);
+
+    columns.emplace_back(1);
+    int lastcol = 1;
+    for (int i = 0; i < cols; ++i)
+    {
+        int nextcol = widths[i];
+        ASSERT(nextcol > lastcol);
+
+        lastcol = nextcol;
+        columns.emplace_back(nextcol);
+    }
+}
+
 void column_composer::clear()
 {
     flines.clear();
@@ -3503,7 +3524,9 @@ void column_composer::clear()
 void column_composer::add_formatted(int ncol,
                                     const string &s,
                                     bool add_separator,
-                                    int  margin)
+                                    int  margin,
+                                    bool centered,
+                                    colour_t colour)
 {
     ASSERT_RANGE(ncol, 0, (int) columns.size());
 
@@ -3514,12 +3537,27 @@ void column_composer::add_formatted(int ncol,
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty())
-        newlines.emplace_back();
+        newlines.emplace_back(formatted_string::parse_string("", colour));
 
     for (const string &seg : segs)
-        newlines.push_back(formatted_string::parse_string(seg));
+        newlines.push_back(formatted_string::parse_string(seg, colour));
 
     strip_blank_lines(newlines);
+
+    if (centered && ncol < (int)columns.size() - 1)
+    {
+        for (size_t i = 0; i < newlines.size(); ++i)
+        {
+            const int delta = columns[ncol+1].margin - col.margin - newlines[i].width();
+            const int pad_left = max(0, delta / 2 - 1);
+            const int pad_right = delta - pad_left;
+
+            formatted_string new_str = formatted_string::parse_string(string(pad_left, ' '));
+            new_str += newlines[i];
+            new_str.cprintf("%-*s", pad_right, "");
+            newlines[i] = new_str;
+        }
+    }
 
     compose_formatted_column(newlines,
                               col.lines,

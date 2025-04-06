@@ -33,7 +33,6 @@
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
-#define MAX_GHOST_EVASION    50
 
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =
@@ -149,6 +148,14 @@ void ghost_demon::reset()
     umbra_rad        = -1;
 }
 
+// Set values to the bare minimum required to function, in cases where full
+// setup will be done later.
+void ghost_demon::barebones_init()
+{
+    max_hp = 1;
+    xl = 1;
+}
+
 #define ADD_SPELL(which_spell) \
     do { \
         const auto spell = (which_spell); \
@@ -228,9 +235,6 @@ void ghost_demon::set_pan_lord_special_attack()
         10, _brand_attack(SPWPN_VENOM),
         10, _brand_attack(SPWPN_DRAINING),
         2, _brand_attack(SPWPN_FOUL_FLAME),
-        4, _flavour_attack(AF_DRAIN_STR),
-        4, _flavour_attack(AF_DRAIN_INT),
-        2, _flavour_attack(AF_DRAIN_DEX),
         10, _flavour_attack(AF_DROWN),
         // Normal chance
         20, _brand_attack(SPWPN_FLAMING),
@@ -422,16 +426,13 @@ void ghost_demon::init_pandemonium_lord(bool friendly)
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
 
-static const set<brand_type> ghost_banned_brands =
-                { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
-
 void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes
     unwind_var<transformation> form(you.form, transformation::none);
-    unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
-                                                 FixedBitVector<NUM_EQUIP>());
+    unwind_var<player_equip_set> eq(you.equipment);
     unwind_var<bool> fishtail(you.fishtail, false);
+    you.equipment.unmeld_all_equipment(true);
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);
@@ -447,13 +448,13 @@ void ghost_demon::init_player_ghost()
     // clones might lack innate rPois, copy it. pghosts don't care.
     set_resist(resists, MR_RES_POISON, player_res_poison());
     set_resist(resists, MR_RES_NEG, you.res_negative_energy());
-    set_resist(resists, MR_RES_ACID, player_res_acid());
+    set_resist(resists, MR_RES_CORR, player_res_corrosion());
     // multi-level for players, boolean as an innate monster resistance
     set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
     set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
-    move_energy = 10;
+    move_energy = player_movement_speed(false, false);
     speed       = 10;
 
     damage = 4;
@@ -478,8 +479,8 @@ void ghost_demon::init_player_ghost()
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
 
-                // normalize banned weapon brands
-                if (ghost_banned_brands.count(brand) > 0)
+                // No holy weapons for ghosts.
+                if (brand == SPWPN_HOLY_WRATH)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
@@ -972,7 +973,7 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
         return MR_RES_FIRE * (very_ugly ? 2 : 1);
 
     case AF_ACID:
-        return MR_RES_ACID;
+        return MR_RES_CORR;
 
     case AF_POISON:
     case AF_POISON_STRONG:
@@ -1057,6 +1058,21 @@ void ghost_demon::init_inugami_from_player(int power)
     xl = 3 + div_rand_round(power, 15);
     move_energy = stats->energy_usage.move;
     see_invis = true;
+}
+
+void ghost_demon::init_platinum_paragon(int power)
+{
+    const monster_type type = MONS_PLATINUM_PARAGON;
+    const monsterentry* stats = get_monster_data(type);
+
+    speed = stats->speed;
+    ev = stats->ev;
+    ac = stats->AC + div_rand_round(power, 10);
+    max_hp = 50 + div_rand_round(power, 2);
+    xl = 10 + div_rand_round(power, 10);
+    move_energy = stats->energy_usage.move;
+    see_invis = true;
+    damage = 10 + div_rand_round(power, 5);
 }
 
 // Used when creating ghosts: goes through and finds spells for the

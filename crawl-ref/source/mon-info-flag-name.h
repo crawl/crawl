@@ -25,10 +25,10 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     // Attitudes
     { MB_CHARMED, "charmed", "charmed", "charmed"},
     { MB_HEXED, "hexed", "control wrested from you", "hexed"},
-    { MB_SUMMONED, "summoned", "summoned", "summoned"},
+    { MB_ABJURABLE, "summoned", "summoned", "summoned"},
+    { MB_MINION, "minion", "minion", "minion"},
+    { MB_UNREWARDING, "", "unrewarding", ""},
     { MB_WANDERING, "wandering", "wandering", "wandering"},
-    { MB_PERM_SUMMON, "", "durably summoned", ""},
-    { MB_SUMMONED_CAPPED, "expiring", "expiring", "expiring"},
     // Bad things for the player
     { MB_MESMERIZING, "mesmerising", "mesmerising", "mesmerising"},
     { MB_BERSERK, "berserk", "berserk", "berserk"},
@@ -75,6 +75,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
     { MB_SILENCE_IMMUNE, "unsilenced", "unaffected by silence", "unsilenced" },
+    { MB_DOUBLED_HEALTH, "doubled health", "doubled in health", "doubled health"},
     // Vulnerabilities
     { MB_POSSESSABLE, "soul-gripped", "soul-gripped", "soul-gripped"},
     { MB_CAUGHT, "caught", "entangled in a net", "caught"},
@@ -86,7 +87,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SLEEPING, "asleep", "asleep", "asleep"},
     { MB_UNAWARE, "unaware", "unaware", "unaware"},
     { MB_BLIND, "blind", "blind", "blind"},
-    { MB_DISTRACTED_ONLY, "distracted", "not watching you", "distracted"},
+    { MB_DISTRACTED, "distracted", "not watching you", "distracted"},
     { MB_CANT_SEE_YOU, "unable to see you", "unable to see you", "unable to see you"},
     { MB_INFESTATION, "infested", "infested", "infested"},
     // Debuffs
@@ -116,7 +117,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FIRE_VULN, "combustible", "more vulnerable to fire", "combustible"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
     { MB_WRETCHED, "misshapen", "misshapen and mutated", "misshapen"},
-    { MB_CORROSION, "corroded", "covered in acid", "corroded"},
+    { MB_CORROSION, "corroded", "corroded", "corroded"},
     { MB_FLAYED, "flayed", "covered in terrible wounds", "flayed"},
     { MB_GRASPING_ROOTS, "rooted", "constricted by roots", "rooted"},
     { MB_VILE_CLUTCH, "clutched", "constricted by zombie hands", "clutched"},
@@ -151,4 +152,10 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FROZEN_IN_TERROR, "paralysed with fear", "paralysed with fear", "paralysed with fear"},
     { MB_SOUL_SPLINTERED, "soul-splintered", "soul-splintered", "soul-splintered"},
     { MB_ENGULFING_PLAYER, "engulfing you", "engulfing you", "engulfing you"},
+    { MB_KINETIC_GRAPNEL, "grapneled", "grapneled", "grapneled"},
+    { MB_TEMPERED, "tempered", "tempered", "tempered"},
+    { MB_BLINKITIS, "untethered", "untethered in space", "untethered"},
+    { MB_CHAOS_LACE, "chaos-laced", "interlaced with chaos", "chaos-laced"},
+    { MB_VEXED, "vexed", "lashing out in frustration", "vexed"},
+    { MB_PYRRHIC_RECOLLECTION, "ablaze", "ablaze with memories", "ablaze"},
 };

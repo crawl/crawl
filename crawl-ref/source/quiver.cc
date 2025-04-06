@@ -23,6 +23,7 @@
 #include "items.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-death.h"
 #include "movement.h"
 #include "options.h"
 #include "player.h"
@@ -31,6 +32,7 @@
 #include "religion.h"
 #include "sound.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
 #include "tags.h"
@@ -249,7 +251,7 @@ namespace quiver
         const bool no_other_items = *get() == *next();
         string key_hint = no_other_items
                             ? ", <w>%</w> - select action"
-                            : ", <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle";
+                            : ", <w>%</w> - select action, <w>%</w> or <w>%</w> - cycle";
         insert_commands(key_hint,
                         { CMD_TARGET_SELECT_ACTION,
                           CMD_TARGET_CYCLE_QUIVER_BACKWARD,
@@ -361,7 +363,8 @@ namespace quiver
 
         int get_item() const override
         {
-            return you.equip[EQ_WEAPON];
+            const item_def* wpn = you.weapon();
+            return wpn ? wpn->link : -1;
         };
 
         string quiver_verb() const override
@@ -464,7 +467,7 @@ namespace quiver
                 return "punch";
             }
 
-            if (weapon_reach(*weapon) > REACH_NONE)
+            if (weapon_reach(*weapon) > 1)
                 return "reach";
             else if (attack_cleaves(you))
                 return "cleave";
@@ -575,7 +578,7 @@ namespace quiver
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code
-            const reach_type reach_range = you.reach_range();
+            const int reach_range = you.reach_range();
 
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -651,11 +654,11 @@ namespace quiver
 
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
-            // REACH_THREE entails smite targeting; this is a bit hacky in that
+            // Reach 3 entails smite targeting; this is a bit hacky in that
             // this is entirely for the sake of UNRAND_RIFT.
             // Cleaving reaches also will never fail to miss, since the player can
             // just attack another target in most cases to hit both.
-            if (reach_range < REACH_THREE
+            if (reach_range < 3
                 && !attack_cleaves(you)
                 && (x_distance > 1 || y_distance > 1))
             {
@@ -682,7 +685,7 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !god_protects(&you, *midmons, true)
+                    && !never_harm_monster(&you, *midmons)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())
                     && coinflip())
@@ -729,6 +732,14 @@ namespace quiver
             }
             else
             {
+                if (is_valid_tempering_target(*mons, you) && !you.confused())
+                {
+                    mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
+                    monster_die(*mons, KILL_RESET, NON_MONSTER);
+                    you.turn_is_over = true;
+                    return;
+                }
+
                 // something to attack, let's do it:
                 you.turn_is_over = true;
                 if (!fight_melee(&you, mons) && targ_mid)
@@ -748,7 +759,8 @@ namespace quiver
 
         int get_item() const override
         {
-            return you.equip[EQ_WEAPON];
+            const item_def* wpn = you.weapon();
+            return wpn ? wpn->link : -1;
         };
 
         vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true, bool=false) const override
@@ -986,27 +998,15 @@ namespace quiver
 
     bool toss_validate_item(int slot, string *err)
     {
-        // misc tossing restrictions go here
-
-        // No tossing cursed weapons.
-        // this check would be safe to remove, but it's useful for
-        // messaging purposes to see that the action is invalid. (It's
-        // otherwise handled by the unwield call.)
-        if (slot == you.equip[EQ_WEAPON]
-            && is_weapon(you.inv[slot])
-            && you.inv[slot].cursed())
-        {
-            if (err)
-                *err = "That weapon is stuck to your " + you.hand_name(false) + "!";
-            return false;
-        }
-
         // make people manually take stuff off if they want to toss it
-        // (weapons are still ok for some reason)
         if (item_is_worn(slot))
         {
             if (err)
-                *err = "You are wearing that object!";
+            {
+                *err = make_stringf("You are %s that object!",
+                            you.inv[slot].base_type == OBJ_WEAPONS ? "wielding"
+                                                                   : "wearing");
+            }
             return false;
         }
         return true;
@@ -1037,44 +1037,6 @@ namespace quiver
             return true;
         default:
             return false;
-        }
-    }
-
-    // for spells that are targeted, but should skip the lua target selection
-    // pass for one reason or another
-    static bool _spell_no_autofight_targeting(spell_type s)
-    {
-        // XX perhaps all spells should just use direction chooser target
-        // selection? This is how automagic.lua handled it.
-        auto h = find_spell_targeter(s, 100, LOS_RADIUS); // dummy values
-        // use smarter direction chooser target selection for spells that have
-        // explosition or cloud patterning, like fireball. This allows them
-        // to autoselect targets at the edge of their range, which autofire
-        // wouldn't handle.
-        if (!Options.simple_targeting && h && h->can_affect_outside_range())
-            return true;
-
-        switch (s)
-        {
-        case SPELL_SEARING_RAY:          // for autofight to work
-        case SPELL_FLAME_WAVE:           // these need to
-        case SPELL_MAXWELLS_COUPLING:    // skip autofight targeting
-        case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
-                        // fix on a close monster that can't be targeted. I'm
-                        // not quite sure what the right thing to do is?
-                        // An alternative would be to just error if the closest
-                        // monster can't be autotargeted, or pop out to manual
-                        // targeting for that case; the behavior involved in
-                        // listing it here just finds the closest targetable
-                        // monster.
-        case SPELL_BORGNJORS_VILE_CLUTCH: // BVC shouldn't retarget monsters
-                                          // that are clutched, and spell
-                                          // targeting handles this case.
-        case SPELL_APPORTATION: // Apport doesn't target monsters at all
-        case SPELL_MAGNAVOLT:
-            return true;
-        default:
-            return _spell_needs_manual_targeting(s);
         }
     }
 
@@ -1145,8 +1107,7 @@ namespace quiver
 
         bool use_autofight_targeting() const override
         {
-            return is_dynamic_targeted()
-                                && !_spell_no_autofight_targeting(spell);
+            return is_dynamic_targeted();
         }
 
         bool allow_autofight() const override
@@ -1163,9 +1124,9 @@ namespace quiver
             return is_valid();
         }
 
-        bool check_wait_spells() const
+        bool check_channelled_spells() const
         {
-            if (!target.needs_targeting() && wait_spell_active(spell))
+            if (!target.needs_targeting() && channelled_spell_active(spell))
             {
                 crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
                 update_acrobat_status();
@@ -1196,13 +1157,6 @@ namespace quiver
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
             }
-            else if (_spell_no_autofight_targeting(spell))
-            {
-                // use direction chooser find_target behavior unless interactive
-                // is set before the call:
-                target.target = coord_def(-1,-1);
-                target.find_target = true;
-            }
             else if (!is_dynamic_targeted())
             {
                 // this is a somewhat hacky way to allow non-interactive mode;
@@ -1211,11 +1165,14 @@ namespace quiver
                 // before the call, will still pop up an interactive targeter.
                 target.target = you.pos();
             }
+            // Use direction_chooser smart targeting by default.
+            else
+                target.find_target = true;
 
             if (autofight_check())
                 return;
 
-            if (!check_wait_spells())
+            if (!check_channelled_spells())
                 cast_a_spell(do_range_check, spell, &target);
 
             t = target; // copy back, in case they are different
@@ -1239,7 +1196,7 @@ namespace quiver
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
-            if (wait_spell_active(spell))
+            if (channelled_spell_active(spell))
                 qdesc.cprintf("Continue: ");
             else
                 qdesc.cprintf("Cast: ");
@@ -1327,7 +1284,6 @@ namespace quiver
         {
         case ABIL_END_TRANSFORMATION:
         case ABIL_BEGIN_UNTRANSFORM:
-        case ABIL_EXSANGUINATE:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
@@ -1343,8 +1299,6 @@ namespace quiver
         case ABIL_INVENT_GIZMO:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
-        // not entirely pseudo, but doesn't make a lot of sense to quiver:
-        case ABIL_TRAN_BAT:
             return true;
         default:
             return false;
@@ -1381,7 +1335,7 @@ namespace quiver
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_CAUSTIC_BREATH:
-        case ABIL_BREATHE_FIRE:
+        case ABIL_GOLDEN_BREATH:
         case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
         case ABIL_NULLIFYING_BREATH:
@@ -1766,8 +1720,6 @@ namespace quiver
                 return;
             }
 
-            // to apply smart targeting behavior for iceblast; should have no
-            // impact on other wands
             target.find_target = true;
             if (autofight_check())
                 return;
@@ -3152,7 +3104,7 @@ namespace quiver
     {
         if (Options.launcher_autoquiver && you.weapon()
             && is_range_weapon(*you.weapon())
-            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != false)
+            && _fireorder_inscription_ok(you.weapon()->link, false) != false)
         {
             you.quiver_action.set(get_primary_action());
         }

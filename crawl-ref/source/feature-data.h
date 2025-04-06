@@ -333,10 +333,7 @@ static feature_def feat_defs[] =
 
 #if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_ARROW, "arrow trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_SPEAR, "spear trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_BLADE, "blade trap", "trap_mechanical", LIGHTCYAN),
-TRAP(DNGN_TRAP_DART, "dart trap", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_BOLT, "bolt trap", "trap_mechanical", LIGHTCYAN),
 #endif
 TRAP(DNGN_TRAP_NET, "net trap", "trap_mechanical", LIGHTCYAN),
@@ -348,6 +345,10 @@ TRAP(DNGN_TRAP_TELEPORT_PERMANENT, "permanent teleport trap", "trap_teleport_per
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
 TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLUE),
 #endif
+TRAP(DNGN_TRAP_TYRANT, "tyrant's trap", "trap_tyrant", WHITE),
+TRAP(DNGN_TRAP_ARCHMAGE, "archmage's trap", "trap_archmage", BLUE),
+TRAP(DNGN_TRAP_HARLEQUIN, "harlequin's trap", "trap_harlequin", YELLOW),
+TRAP(DNGN_TRAP_DEVOURER, "devourer's trap", "trap_devourer", LIGHTGREEN),
 TRAP(DNGN_TRAP_ALARM, "alarm trap", "trap_alarm", LIGHTRED),
 TRAP(DNGN_TRAP_ZOT, "Zot trap", "trap_zot", LIGHTMAGENTA),
 TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GREEN),
@@ -494,6 +495,7 @@ PORTAL_ENTRANCE(DNGN_ENTER_PORTAL_VAULT, "gate leading to a distant place", "ent
 PORTAL_ENTRANCE(DNGN_ENTER_ZIGGURAT, "one-way gateway to a ziggurat", "enter_ziggurat", ETC_SHIMMER_BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_BAZAAR, "gateway to a bazaar", "enter_bazaar", ETC_SHIMMER_BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_TROVE, "portal to a secret trove of treasure", "enter_trove", BLUE),
+PORTAL_ENTRANCE(DNGN_ENTER_NECROPOLIS, "phantasmal passage", "enter_necropolis", LIGHTGREEN),
 PORTAL_ENTRANCE(DNGN_ENTER_SEWER, "glowing drain", "enter_sewer", LIGHTGREEN),
 PORTAL_ENTRANCE(DNGN_ENTER_OSSUARY, "sand-covered staircase", "enter_ossuary", BROWN),
 PORTAL_ENTRANCE(DNGN_ENTER_BAILEY, "flagged portal", "enter_bailey", LIGHTRED),
@@ -510,6 +512,7 @@ PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit
 PORTAL_EXIT(DNGN_EXIT_ZIGGURAT, "gate leading back out of this place", "exit_ziggurat", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_BAZAAR, "gate leading back out of this place", "exit_bazaar", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_TROVE, "gate leading back out of this place", "exit_trove", BLUE),
+PORTAL_EXIT(DNGN_EXIT_NECROPOLIS, "gate leading back out of this place", "exit_necropolis", LIGHTGREEN),
 PORTAL_EXIT(DNGN_EXIT_SEWER, "gate leading back out of this place", "exit_sewer", BROWN),
 PORTAL_EXIT(DNGN_EXIT_OSSUARY, "gate leading back out of this place", "exit_ossuary", BROWN),
 PORTAL_EXIT(DNGN_EXIT_BAILEY, "gate leading back out of this place", "exit_bailey", ETC_SHIMMER_BLUE),
@@ -657,6 +660,8 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_SPARKLING, "dry fountain", "non-fountain_sparkling", 
 FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGREY),
 #endif
 
+FOUNTAIN(DNGN_DECORATIVE_FLOOR, "decorative floor", "decorative_floor", DARKGREY),
+
 FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
 
 {
@@ -728,6 +733,20 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     DCHAR_TRAP, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(RED),
     FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_SPIKE_LAUNCHER, "spike launcher", "spike_launcher",
+    DCHAR_WALL, DCHAR_WALL_MAGIC,
+    COLOUR_IS(LIGHTRED),
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_FRIGID_WALL, "frigid wall", "frigid wall",
+    DCHAR_WALL, DCHAR_FLOOR,
+    COLOUR_IS(ETC_ICE),
+    FFT_OPAQUE | FFT_WALL | FFT_SOLID, MF_WALL,
 },
 
 };

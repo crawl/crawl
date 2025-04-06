@@ -11,10 +11,10 @@ Required tools
 
 The Stone Soup project uses git for version control. It is preferred, although
 not mandatory, for the contributors to get acquainted with the git workflow and
-submit their patches in the git format. For Windows, msysgit is a good,
-self-contained package of all the required tools for Windows.
+submit their patches in the git format. For Windows, use either MSYS2 or WSL to
+setup a development environment with all the required tools for Windows.
 
-    See develop/git/quickstart.txt for more information.
+    See INSTALL.MD and develop/git/quickstart.txt for more information.
 
 Main steps
 ----------
@@ -26,12 +26,19 @@ Main steps
     text files.
 
 1.) Make a local clone of the source code:
-    git clone https://github.com/crawl/crawl.git
+    First, create a fork of the crawl repository on github:
+
+    https://github.com/crawl/crawl
+
+    (This will enable you to submit pull requests through github later.)
+    Then, create a local clone of your forked repository:
+
+    git clone https://github.com/yourname/crawl.git
 
 2.) Compile the code. To do this you might have to install a compiler and/or
-    additional libraries. See INSTALL.txt for details. If you have any
-    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net,
-    or in #crawl-dev on Libera IRC.
+    additional libraries. See INSTALL.md for details. If you have any
+    questions, you can ask for help in #crawl-dev on Libera IRC, or in the #dcss
+    channel of the roguelikes discord: https://discord.gg/S5F2H32
 
 3.) Now you can start tweaking the code. Depending on your coding background
     you may want to experiment with smaller changes first. If you intend to
@@ -46,24 +53,16 @@ Main steps
 
 4.) Compile again to test your changes.
 
-5.) Once everything works as it should, run util/checkwhite to fix a few
-    formatting problems. Now, you should make a local commit (or several), and
-    use git format-patch to produce easily applicable patches:
-    git format-patch -n
+5.) Lint. Run util/checkwhite and util/unbrace to fix a few formatting problems.
 
-    Where n is the number of commits you made. Each is made into a separate
-    patch file.
-
-6.) Upload the patch file(s) on Mantis at
-    http://crawl.develz.org/mantis/main_page.php
+6.) Create a pull request on github at
+    https://github.com/crawl/crawl/pulls
 
     Here it is immensely helpful if you give a summary of what the patch is
     about. If you created it in response to a bug report or an "Implementable",
-    mention the id, and you might also want to post a reply in said item
-    pointing out your new patch. Please also mention the revision/version you
-    used for patching, e.g. 0.6 or 1d611744b (the first 7 or 8 characters
-    should suffice), and anything you think may still need to be improved or
-    modified.
+    mention the issue, and you might also want to post a reply in that issue
+    pointing out your new patch. Please also mention anything you think may
+    still need to be improved or modified.
 
     Thank you! :D
 

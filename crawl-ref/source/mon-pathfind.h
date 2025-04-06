@@ -26,10 +26,14 @@ public:
                        bool diag = true, bool msg = false,
                        bool pass_unmapped = false);
     bool init_pathfind(coord_def src, coord_def dest, bool doors = true,
-                       bool diag = true, bool msg = false);
+                       bool diag = true, bool no_actors = false,
+                       bool msg = false);
+    void fill_traversability(const monster* mon, int range,
+                             bool no_actors = false);
     bool start_pathfind(bool msg = false);
     vector<coord_def> backtrack();
     vector<coord_def> calc_waypoints();
+    bool is_reachable(const coord_def& pos);
 
 protected:
     // protected methods
@@ -65,6 +69,14 @@ protected:
     // For pathfinding without a specific monster agent, should we be able to
     // traverse closed doors?
     bool traverse_doors;
+
+    // If true, pathfinding will consider all spaces occupied by an actor to
+    // be opaque.
+    bool traverse_no_actors;
+
+    // If true, will test all reachable spaces within [range] of start, rather
+    // than care whether the destination is reachable.
+    bool fill_range;
 
     // Maximum range to search between start and target. None, if zero.
     int range;

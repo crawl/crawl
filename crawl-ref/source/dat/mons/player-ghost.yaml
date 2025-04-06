@@ -1,6 +1,6 @@
 name: "player ghost"
 glyph: {char: "W", colour: white}
-flags: [flies, fighter, speaks, ghost_demon, insubstantial, no_poly_to]
+flags: [flies, fighter, speaks, ghost_demon, insubstantial, no_poly_to, always_named]
 xp_mult: 15
 genus: phantom
 holiness: [undead]

@@ -151,6 +151,7 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_SPELLCASTING:
             case SK_SUMMONINGS:
             case SK_NECROMANCY:
+            case SK_FORGECRAFT:
             case SK_TRANSLOCATIONS:
             case SK_ALCHEMY:
             case SK_CONJURATIONS:
@@ -601,9 +602,17 @@ static void _wanderer_random_evokable()
 static void _wanderer_random_talisman()
 {
     talisman_type selected_talisman =
-        coinflip() ? TALISMAN_BEAST : TALISMAN_FLUX;
+        random_choose_weighted(10, TALISMAN_PROTEAN,
+                                5, TALISMAN_RIMEHORN,
+                                5, TALISMAN_SCARAB,
+                                5, TALISMAN_MEDUSA,
+                                5, TALISMAN_MAW,
+                               10, NUM_TALISMANS);
 
-    newgame_make_item(OBJ_TALISMANS, selected_talisman);
+    if (selected_talisman == NUM_TALISMANS)
+        newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(4, 6));
+    else
+        newgame_make_item(OBJ_TALISMANS, selected_talisman);
 }
 
 static void _give_wanderer_aux_armour(int plus = 0)
@@ -618,7 +627,7 @@ static void _give_wanderer_aux_armour(int plus = 0)
     for (armour_type aux : auxs)
     {
         dummy.sub_type = aux;
-        if (!can_wear_armour(dummy, false, true))
+        if (!can_equip_item(dummy))
             continue;
 
         if (one_chance_in(++seen))
@@ -650,7 +659,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
         break;
 
     case SK_ARMOUR:
-        if (you_can_wear(EQ_BODY_ARMOUR) != true)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             newgame_make_item(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
         else if (coinflip())
             newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
@@ -701,6 +710,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
@@ -738,6 +748,17 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
     return vector<spell_type>{};
 }
 
+static bool _wanderer_has_spell_skill(set<skill_type>& skills)
+{
+    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (skills.count(sk))
+            return true;
+    }
+
+    return false;
+}
+
 static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
                                                      set<skill_type> & gift_skills)
 {
@@ -770,7 +791,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         // Dragon scales/tla is too good for "decent" quality
         // Just give an aux piece to On/Tr/Sp. Note: armour skill will later be
         // converted to dodging skill by reassess_starting_skills in this case.
-        if (you_can_wear(EQ_BODY_ARMOUR) != true)
+        if (you_can_wear(SLOT_BODY_ARMOUR) != true)
             _give_wanderer_aux_armour();
         else if (coinflip())
             newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
@@ -786,6 +807,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
@@ -801,7 +823,12 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         break;
 
     case SK_SHAPESHIFTING:
-        newgame_make_item(OBJ_TALISMANS, TALISMAN_BEAST);
+        if (_wanderer_has_spell_skill(gift_skills) && one_chance_in(3))
+            newgame_make_item(OBJ_TALISMANS, TALISMAN_INKWELL);
+        else if (one_chance_in(3))
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(2, 5));
+        else
+            newgame_make_item(OBJ_TALISMANS, TALISMAN_QUILL);
         break;
 
     case SK_STEALTH:
@@ -832,14 +859,14 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
 // dungeon.
 static void _wanderer_cover_equip_holes()
 {
-    if (you.equip[EQ_BODY_ARMOUR] == -1)
+    if (!you.body_armour())
     {
         newgame_make_item(OBJ_ARMOUR,
                           you.strength() > you.intel() ? ARM_LEATHER_ARMOUR : ARM_ROBE);
     }
 
     // Give weapon, unless we started with some unarmed skill
-    if (you.equip[EQ_WEAPON] == -1 && you.skills[SK_UNARMED_COMBAT] == 0)
+    if (!you.weapon() && you.skills[SK_UNARMED_COMBAT] == 0)
     {
         newgame_make_item(OBJ_WEAPONS,
                           you.dex() > you.strength() ? WPN_DAGGER : WPN_CLUB);

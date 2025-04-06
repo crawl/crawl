@@ -4,6 +4,8 @@
 # See arrival_guide.txt for details.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ###############################################################################
 # Probably looks better in tiles
 NAME:   evilmike_arrival_home_sweet_home
@@ -286,8 +288,8 @@ ENDMAP
 NAME:    minmay_arrival_jagged
 TAGS:    arrival no_monster_gen
 ORIENT:  float
-SUBST:   A = xx., B = x..
 KPROP:   A = no_tele_into
+SUBST:   A = xx., B = x..
 MAP
 xxxxxxxxxxxx
 x{AAAAAAAAAA
@@ -1281,7 +1283,7 @@ TAGS:    arrival
 ORIENT:  float
 SHUFFLE: +'
 SUBST:   ' : x + ':40, '=x+
-FTILE:   p = dngn_garden_cobble
+: decorative_floor(_G, 'p', "garden patch")
 MAP
 xxxxxxx.@.xxxxxxx
 x.....+...x.....x
@@ -1624,24 +1626,28 @@ NAME:    dpeg_arrival_subterranean_lakeside_camping
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 MONS:    goblin, rat, bat
+SHUFFLE: ab, cd
 SUBST:   ? : . w ?:40, ' : . x ':40
 SUBST:   ? = .w, ' = .x
+SUBST:   ac = w, bd = .
+SUBST:   e = f.
+SUBST:   f : .wx
 MAP
       xxxxxxxxxxxxxxxxxxxx
    xxxx?xx1.'xxxxxxxx'.33x
- xxx'.??.xxx.xxx.x.x..xxxx
+ xxx'.c?.xxx.xxx.x.x..xxxx
 xx'..?w.....?.....x..xxx'x
 x'.?www?.?.?www?.xx...2x.'
-x'?www?.??w.wwww?...?.xx.@
-xx.???.?wwww.www.?ww..x..'
+x.?www?.??w.wwww?...?.xx.@
+xx.d??.?wwww.www.?ww..x..'
 xxx'..?wwww??.wwwww?.xx.xx
 ''xxx.?www?.{.?www?.xx.xxx
 @..x.?wwwww???wwwww?..xx'x
 ..xx..?wwwww.wwwww?..x..xx
 x'.xxx.??wwww.ww.??...xxxx
-xx..x....??www.??...xxxx'x
- xx...??....??.xx?.x.....x
-  xx'...'xxxxxxx''...'x.2x
+xx..x....??www.bb...xxxx'x
+ xx...??....aa.xxe.x.....x
+  xx'...'xxxxxxxf'...'x.2x
   x'.xxxxx'''xxxxxx''xx1xx
   xxxxxxxx.@.xxxxxxxxxxxxx
 ENDMAP
@@ -1691,20 +1697,19 @@ NAME:    dpeg_arrival_orchard
 TAGS:    arrival
 ORIENT:  float
 MONS:    plant
-SHUFFLE: 1x
-SUBST:   x = '
-NSUBST:  ' = 2:d / *:'
-NSUBST:  . = '.
-FTILE:   '1{ = floor_grass
+SUBST:   x : 1xp
+FTILE:   '1p{ = floor_grass
+FTILE:   " = floor_mud
 COLOUR:  ' = green
+: decorative_floor(_G, 'p', "flower patch")
 MAP
-  .....
- .x...x.
- '''''''
-..''{''..
- '''''''
- .x...x.
-  .....
+  "..."
+ "x"""x"
+ "'''''"
+."''{''".
+ "'''''"
+ "x"""x"
+  "..."
 ENDMAP
 
 ##############################################################################
@@ -2523,25 +2528,26 @@ NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 KPROP:   W = no_tele_into
-NSUBST:  { = 1:{ / 1:> / *:.
+NSUBST:  { = 1:{ / 1:> / 1:M. / *:.
+: decorative_floor(_G, 'M', "flower patch")
 MAP
 wwwwwwwwwcccccwwwwwwwww
 wcccccccwcWtWcwcccccccw
 wc{...GccccGccccG...{cw
 wc.....+.......+.....cw
-wcG...GccGc+cGccG...Gcw
+wcG...ccccc+ccccc...Gcw
 wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
 wttG.ctW.......Wtc.Gttw
-wcWc.Gc.........cG.cWcw
+wcWc.cc.........cc.cWcw
 wccc.cc...WtW...cc.cccw
 @++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
-wcWc.Gc.........cG.cWcw
+wcWc.cc.........cc.cWcw
 wttG.ctW.......Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
-wcG...GccGc+cGccG...Gcw
+wcG...ccccc+ccccc...Gcw
 wc.....+.......+.....cw
 wc{...GccccGccccG...{cw
 wcccccccwcWtWcwcccccccw
@@ -2665,7 +2671,7 @@ MAP
           ccccccccc
        cccctccccctcccc
       cctt1tc...ct1ttcc
-    ccctttttc.{.ctttttccc
+    cccttttnc.{.cnttttccc
     ccccccccn...ncccccccc
     WWcc..+.......+..ccWW
    @WWz..."'-----'"...zWW@
@@ -3256,9 +3262,8 @@ NAME:   wander_arrival_lonely_grave
 TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 FTILE:  ? = floor_pebble_darkgray:20 / none
-TILE:   t = dngn_tree_dead, \
-        G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+TILE:   t = dngn_tree_dead
+: vault_granite_statue_setup(_G, "G", "gravestone")
 COLOUR: ? = darkgrey:20 / lightgrey, \
         t = brown
 MAP
@@ -3276,8 +3281,7 @@ ENDMAP
 NAME:   wander_arrival_peaceful_grave
 TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
-TILE:   G = dngn_gravestone
-: set_feature_name("granite_statue", "a gravestone")
+: vault_granite_statue_setup(_G, "G", "gravestone")
 FTILE:  ? = floor_grass, \
         ! = floor_grass:20 / none, \
         { = floor_grass:20 / none, \
@@ -3342,8 +3346,8 @@ COLOUR:  .c = white
 : -- do the roll unconditionally, for seed stability
 : local humanoid_ally = util.random_from({"dwarf", "human"})
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
-: if (not crawl.game_started()) or race == "Vampire"
-:     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
+: if (not crawl.game_started()) or race == "Poltergeist"
+:     or race == "Mummy" or race == "Revenant" or race == "Octopode"
 :     or race == "Gargoyle" or race == "Vine Stalker"
 :     or race == "Djinni" or race == "Yak" or race == "Formicid" then
 :   ally = humanoid_ally
@@ -3544,7 +3548,7 @@ NAME:     amcnicky_arrival_wind_blow
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:p / 4=p:2 . / *=.
-KITEM:    p = deep dwarf skeleton
+KITEM:    p = dwarf skeleton
 MAP
       xxxxx
       x__{xxx
@@ -3566,7 +3570,7 @@ NAME:     amcnicky_arrival_abandoned_market
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:q / 4=q:2 . / *=.
-KITEM:    q = deep dwarf skeleton
+KITEM:    q = dwarf skeleton
 NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
 SUBST:    r = x.
 KFEAT:    p = abandoned_shop
@@ -3624,7 +3628,7 @@ TILE:    G = dngn_statue_sigmund
 # Bunch of player species
 KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
-             formicid skeleton / ghoul skeleton / gnoll skeleton / \
+             formicid skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
              merfolk skeleton / minotaur skeleton / naga skeleton / \
              octopode skeleton / oni skeleton / spriggan skeleton / \

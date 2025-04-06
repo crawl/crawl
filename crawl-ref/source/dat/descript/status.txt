@@ -17,6 +17,12 @@ You are about to teleport. While waiting to teleport, attempting to apply the
 status again (such as by using a scroll of teleportation) will cancel the
 teleportation.
 %%%%
+!Tele! status
+
+You are about to teleport towards hostile monsters, if possible. Before this
+happens, attempting to teleport again (such as by using a scroll of
+teleportation) will cancel this teleportation.
+%%%%
 Fly status
 
 You are flying above the ground, and are able to cross water and lava or fight
@@ -246,23 +252,10 @@ magic, briefly preventing you from casting any further spells.
 
 You are unable to cast spells.
 %%%%
-Brainless status
+Crippled status
 
-Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and cannot read scrolls. The status will persist for a short while even
-after recovering your intelligence.
-%%%%
-Clumsy status
-
-Your dexterity has fallen to 0. You are slowed, cannot sneak or use shields,
-and are almost entirely unable to dodge. The status will persist for a short
-while even after recovering your dexterity.
-%%%%
-Collapse status
-
-Your strength has fallen to 0. You are slowed, and you do not regenerate health
-while monsters are visible. The status will persist for a short while even after
-recovering your strength.
+At least one of your strength, intelligence, or dexterity has fallen to 0 or
+below. You will act slowly until this situation is remedied.
 %%%%
 DChan status
 
@@ -500,8 +493,6 @@ Beast status
 
 You have been transformed into a monstrous, furry were-beast. The ferocious
 energy pulsing through your limbs keeps you ready to kill.
-
-Any gloves, cloaks, headgear and boots are melded.
 %%%%
 Flux status
 
@@ -520,15 +511,11 @@ Blade status
     return "Long, needle-thin blades have grown from your " .. hands
 }}, and smaller fragments of metal have grown inside your body, deforming you
 and reducing the effectiveness of body armour.
-
-Any equipped weapons, shields, and gloves are melded.
 %%%%
 Serpent status
 
 You have been transformed into a giant, cold-blooded, poison-resistant serpent,
 ready to wind your coils around foes and crush them to death.
-
-Any equipped weapons and armour are melded.
 %%%%
 Maw status
 
@@ -536,8 +523,6 @@ Your midsection has transformed into a giant mouth, gnashing and ready to devour
 foes. The mouth may devour slain creatures, healing you to an extent increased
 by your Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
-
-While transformed, any body armour is melded.
 %%%%
 Statue status
 
@@ -545,8 +530,6 @@ You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is immune to poison and miasma, and gains resistance to
 electricity, negative energy and torment.
-
-Any equipped body armour, gloves and boots are melded.
 %%%%
 Dragon status
 
@@ -581,8 +564,6 @@ Dragon status
     return desc
 }} Your melee attacks deal incredible damage, and you are much more robust but
 less evasive.
-
-Any equipped weapons and armour are melded.
 %%%%
 Storm status
 
@@ -591,8 +572,6 @@ are strengthened and electrified, and strike all adjacent foes. You gain flight,
 increased evasion, immunity to poison, miasma, petrification, and constriction,
 and resistance to electricity. You gain the ability to launch yourself at foes
 as a lightning bolt.
-
-Any equipped weapons and armour are melded.
 %%%%
 Death status
 
@@ -610,13 +589,8 @@ You have been transformed into a swift-moving bat, increasing your evasion but
 substantially weakening your melee attacks.
 
 Any equipped weapons, armour and rings are melded, and you are unable to cast
-spells. {{
-    if you.race() ~= "Vampire" then
-        return "The effectiveness of your melee attacks while " ..
-               "in this form is based on experience level instead of on " ..
-               "Unarmed Combat skill."
-    end
-}}
+spells. The effectiveness of your melee attacks while in this form is based on
+experience level instead of on Unarmed Combat skill.
 %%%%
 Pig status
 
@@ -1060,3 +1034,171 @@ Escape! status
 
 A path out of the Crucible has opened. Find it and claim your freedom again. For
 a time.
+%%%%
+Shield status
+
+You are protected by a divine shield. Enemies that strike it in melee will have
+their attacks completely blocked, and they may also be blinded by its light.
+%%%%
+Blast status
+
+You are preparing to unleash a kinetic shockwave and cannot move until this is
+complete.
+%%%%
+Blast. status
+
+<Blast status>
+%%%%
+Blast.. status
+
+<Blast status>
+%%%%
+Blast... status
+
+<Blast status>
+%%%%
+Winding status
+
+You are winding up your clockwork bee. It cannot attack its target until it is
+fully wound up.
+%%%%
+Winding. status
+
+<Winding status>
+%%%%
+Winding.. status
+
+<Winding status>
+%%%%
+Winding... status
+
+<Winding status>
+%%%%
+Unstable status
+
+You have become untethered in space, blinking randomly each turn and suffering a
+small amount of damage each time you do so.
+%%%%
+Vainglory status
+
+You have recently announced your regal presence and it simply would not do to
+leave the floor again so soon afterward.
+%%%%
+Protected status
+
+Your platinum paragon is close enough to you to sometimes parry attacks directed
+at you.
+%%%%
+Vexed status
+
+Your mind is clouded by frustration. For the next several turns, you will
+uncontrollably attack random adjacent creatures (whether friendly or enemy) or
+even empty space.
+%%%%
+Drowsy status
+
+You are rapidly growing sleepy and may soon fall asleep completely.
+%%%%
+Vampire status
+
+You are a vampire - a creature that straddles the border between life and
+undeath. You can drink the lifeblood of the living to heal, and even turn those
+you slay stealthily into vampiric thralls, but do not heal in the presence of
+monsters.
+%%%%
+Swarm status
+
+You have transformed into a swarm of vampire bats, allowing you to move quickly
+and evasively. You may trail clouds of bats in your wake.
+%%%%
+Memories status
+
+This indicates how many spells you could cast from accumulated memories if you
+Enkindled now.
+%%%%
+Enkindled status
+
+You are burning accumulated memories for power. Each damage-dealing spell you
+cast will consume a memory. In exchange, their power and spell success are
+increased, encumbrance penalties are ignored, and your spellclaw attacks do
+bonus damage proportional to the spell level and heal you based on the damage
+dealt.
+%%%%
+Cacophony status
+
+You are noisily attacking with all of your armour. Every piece of armour you
+haunt currently moves of its own volition; any damage it takes will not affect
+you, you can freely fire through it, and its attacks may daze, drain, or confuse
+your enemies.
+%%%%
+Catalyst status
+
+You have an explosive catalyst readied. The catalyst will detonate, dealing fire
+damage to the primary target of each of your melee attacks and any enemy
+adjacent to them, with each hit. Attacking will extend the duration of the
+catalyst even if you miss.
+Shroud status
+
+You are covered by a thin shroud of slime that may deflect a melee attack. When
+it does, the shroud will break for a short time, though it will soon repair
+itself naturally.
+%%%%
+Yak status
+
+You are a rime yak, fur encrusted with ice.
+%%%%
+Spider status
+
+You are an agile jumping spider who attacks can web enemies.
+%%%%
+Quill status
+
+You have spiny quills growing out of your body which may damage melee attackers.
+%%%%
+Hive status
+
+You are a living beehive, abuzz with busy insects.
+%%%%
+-Swarm status
+
+The insects that dwell within you have recently swarmed to your defense. This
+will not happen again until your health fully recovers.
+%%%%
+Aqua status
+
+Your body is composed of elemental water that can reach to attack and drown
+enemies.
+%%%%
+Sphinx status
+
+You are a cunning, riddle-loving sphinx, with the force of a windstorm in your
+paws.
+%%%%
+Werewolf status
+
+You are a vicious werewolf.
+%%%%
+Slay status
+
+The damage and accuracy of your attacks is temporarily increased.
+%%%%
+Scroll status
+
+You are a walking scroll, parchment crisp and full of magic.
+%%%%
+Crab status
+
+You are a heavily-armoured crab with rusting breath.
+%%%%
+Scarab status
+
+You are a sun scarab, with solar fire blazing beside you.
+%%%%
+Medusa status
+
+You have a mane of venomous tendrils for hair.
+%%%%
+-Lithotox status
+
+Your lithotoxin has recently activated and will not do so again until you fully
+heal.

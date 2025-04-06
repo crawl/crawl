@@ -19,13 +19,13 @@ const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 const int GRAVE_CLAW_MAX_CHARGES = 3;
 
 #define COUPLING_TIME_KEY "maxwells_charge_time"
-#define FLAME_WAVE_KEY "flame_waves"
 #define FLAME_WAVE_POWER_KEY "flame_wave_power"
 #define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
 #define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
 #define FUSILLADE_POWER_KEY "fusillade_power"
 #define GRAVE_CLAW_CHARGES_KEY "grave_claw_charges"
+#define FORTRESS_BLAST_POS_KEY "fortress_blast_pos"
 
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
@@ -45,11 +45,11 @@ void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
-dice_def freeze_damage(int pow, bool random);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
 dice_def base_airstrike_damage(int pow, bool random = false);
 string describe_airstrike_dam(dice_def dice);
+string airstrike_intensity_display(int empty_space, tileidx_t& tile);
 string describe_resonance_strike_dam(dice_def dice);
 spret cast_momentum_strike(int pow, coord_def target, bool fail);
 spret cast_shatter(int pow, bool fail);
@@ -64,8 +64,11 @@ spret cast_unravelling(coord_def target, int pow, bool fail);
 string mons_inner_flame_immune_reason(const monster *mons);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
 int get_mercury_weaken_chance(int victim_hd, int pow);
-spret cast_mercury_vapours(int pow, const coord_def target, bool fail);
-bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only = false);
+dice_def poisonous_vapours_damage(int pow, bool random);
+spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail);
+bool safe_discharge(coord_def where, bool check_only = false,
+                    bool exclude_center = true, bool arc_blade = false);
+void discharge_at_location(int pow, const actor &agent, coord_def location);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);
@@ -107,7 +110,7 @@ bool dazzle_target(actor *victim, const actor *agent, int pow);
 spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer = false);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
-                               bool mon_tracer = false);
+                               bool tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
 
 dice_def glaciate_damage(int pow, int eff_range);
@@ -128,8 +131,7 @@ void foxfire_attack(const monster *foxfire, const actor *target);
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
 
 spret cast_flame_wave(int pow, bool fail);
-void handle_flame_wave();
-void end_flame_wave();
+void handle_flame_wave(int lvl);
 
 spret cast_imb(int pow, bool fail);
 
@@ -141,11 +143,8 @@ spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);
 
-bool wait_spell_active(spell_type spell);
-
 spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
-bool handle_searing_ray(actor& agent);
-void end_searing_ray(actor& agent);
+bool handle_searing_ray(actor& agent, int turn);
 
 vector<monster *> find_maxwells_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
@@ -180,6 +179,18 @@ spret cast_fulsome_fusillade(int pow, bool fail);
 void fire_fusillade();
 
 spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail);
-void gain_grave_claw_soul(bool silent = false);
+void gain_grave_claw_soul(bool silent = false, bool wizard = false);
 
-bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);
+spret cast_fortress_blast(actor& caster, int pow, bool fail);
+void unleash_fortress_blast(actor& caster);
+dice_def fortress_blast_damage(int AC, bool is_monster);
+
+dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn = nullptr);
+void do_catalyst_explosion(coord_def center, const item_def* wpn);
+
+bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray);
+void fire_life_bolt(actor& attacker, coord_def target);
+
+spret cast_watery_grave();
+
+spret cast_golden_breath(bolt& beam, int power, bool fail);

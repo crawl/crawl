@@ -116,8 +116,11 @@ function sroom_beehive(e)
         e.nsubst('1 = 3:M / *:1')
     end
 
-    e.kitem('12M = never_decay black bear corpse / \
-                   potion of ambrosia ident:all / nothing w:20')
+    e.kitem('1 = black bear skeleton / \
+                 potion of ambrosia pre_id / nothing w:20')
+    e.kitem('2M = potion of ambrosia pre_id / nothing w:25')
+    -- FIXME: layout_roguey's special room placements ignore vault definitions
+    -- decorative_floor(e, '2M', "flower patch")
 end
 
 function sroom_morgue(e)
@@ -128,13 +131,13 @@ function sroom_morgue(e)
     local bodies_chance
     local weap = ""
     if you.in_branch("Geh") then
-        weap = " ego:flaming ident:type"
+        weap = " ego:flaming pre_id"
     elseif you.in_branch("Coc") then
-        weap = " ego:freezing ident:type"
+        weap = " ego:freezing pre_id"
     elseif you.in_branch("Dis") then
         weap = " good_item"
     elseif you.in_branch("Tar") then
-        weap = " ego:draining ident:type"
+        weap = " ego:draining pre_id"
     end
 
     local mons = {}
@@ -173,7 +176,7 @@ function sroom_morgue(e)
         bodies_chance = 40
     elseif you.in_branch("Tar") or you.in_branch("Crypt") then
         mons[5] = "eidolon w:6 / jiangshi w:6"
-        mons[6] = "mummy priest w:2 / revenant w:6"
+        mons[6] = "mummy priest w:2 / revenant soulmonger w:6"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse"
         bodies_chance = 33
@@ -270,11 +273,11 @@ function sroom_mythical_zoo(e)
     end
     if Z >= 19 then
         mons[9] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[10] = "sphinx w:" .. (Z - 16)
+        mons[10] = "sphinx marauder w:" .. (Z - 16)
     end
 
     if Z >= 21 then
-       lord_mon = "catoblepas / sphinx w:60 / sin beast w:20"
+       lord_mon = "catoblepas / guardian sphinx w:60 / sin beast w:20"
     elseif Z >= 16 then
        lord_mon = "catoblepas / hydra w:40 / sin beast w:40"
     else

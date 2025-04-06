@@ -10,6 +10,8 @@
 ################################################################################
 
 {{
+crawl_require('dlua/vault.lua')
+
 function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     if uniq == "decor" then
         e.tags("uniq_wad_woods_decor decor extra")
@@ -960,7 +962,7 @@ tt.t1tt1WW1tt.tt
 ttt11tttWWttt1t1
 tt.ttt1WWWtt*ttt
 t.ttttWWWttttt1t
- tttt.WwWttt.tt
+ tttt.WwWtttttt
    tttWwW1tttt
    tttWwW..ttt
     ttWwWt..t
@@ -1622,14 +1624,14 @@ KFEAT:  e = cache of fruit
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
-SUBST:  '`"- = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:2 e:1 .:140 1:20 2:4
+SUBST:  '`"- = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:2 .:140 1:20 2:4
 : elseif size > 3 then
-SUBST:  "` = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
+SUBST:  "` = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:3 .:42 1:18 2:4
 : else
-SUBST:  '" = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
+SUBST:  '" = ^:35 ~:15 .
+NSUBST: . = 2:1 / * = d:3 .:42 1:18 2:4
 : end
 CLEAR:  `'"-
 COLOUR: ^d = green
@@ -1642,12 +1644,12 @@ MAP
    -``------------
  -``````-----------
  ```````"'''-------
--`````"""'''''-``----
+-`````e""'''''-``----
 --```"""'''''""````--
 ----`"''''''"""`````-
------'''''''"""`````-
+-----'''''''""e`````-
 -----'""'''''""````--
-----``""""''''-``----
+----``""e"''''-``----
  --`````"""'--------
  --````````---------
    -``````--------
@@ -1856,14 +1858,15 @@ DEPTH:   Lair
 KMONS:   P = plant
 KMASK:   ` = no_monster_gen
 SHUFFLE: xP'. / xP'. / .'xP
-SUBST:   '` = .
+SUBST:   '` = ., p : p.
+: decorative_floor(_G, 'p', "flower patch")
 MAP
            xPx
          xxPxPxx    ````..@
         xPP'.'PPx   ....'''
       xxP''.'.''Px...'''PPP
-   xxxPP'```.``'Px.''PPPxxx
-xxxPPP''.xP'``.```'PPxxx
+   xxxPP'```p``'Px.''PPPxxx
+xxxPPP''.xP'``p```'PPxxx
 PPP'''...xP''.'.''Pxx
 '''....   xPP'.'PPx
 @..````    xxPxPxx
@@ -2005,13 +2008,10 @@ ORIENT:  float
 DEPTH:   Lair:3-, !Lair:$
 MONS:    necromancer, elephant zombie
 MONS:    basilisk zombie / komodo dragon zombie
-KFEAT:   G = metal_statue
 SHUFFLE: 23
 NSUBST:  2 = 1:2 / * = 2., 3 = 1:3 / * = 3.
 SUBST:   % = %%%%%$$$**|, G = G.
-COLOUR:  G = mist
-TILE:    G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
+: vault_metal_statue_setup(_G, "G", "mystic cage")
 MAP
              wwwwwwwww
         wwwwwwwwwwwwwwwww
@@ -2244,9 +2244,11 @@ TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
-KITEM:  d = gold
+ITEM:   quill talisman / quill talisman randart w:2
 KFEAT:  C = cache of fruit / cache of baked goods w:4
-NSUBST: d = 1:d / 1:C / 1:* / 1:9 / 1:3 / * = d11223......., c = 5:Dc / *:c
+NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
+NSUBST: c = 5:Dc / *:c
+: decorative_floor(_G, 'F', "broken floral vase")
 MAP
       .......
 .......ccccc.........
@@ -2294,7 +2296,7 @@ ENDMAP
 
 NAME:   kennysheep_basilisk_garden
 TAGS:   transparent
-DEPTH:  Lair:3-
+DEPTH:  Lair:2-
 MONS:   basilisk, pile of debris
 NSUBST: . = 2:1 / 3 = 11G / *:., G = 2:G2 / *:G
 TILE:   G = dngn_statue_axe / dngn_statue_cat / dngn_statue_centaur / \
@@ -2318,18 +2320,19 @@ DEPTH:  Lair
 MONS:   torpor snail
 KFEAT:  a = altar_cheibriados
 NSUBST: 1 = 1:1 / * = 1.
+TILE:   c = wall_stone_puffball
 MAP
  @
 x.x   xxxxxxxxx
 x.x  xx...1....@
 x.x xx.xxxxxxxx
-x.x x.xxbbbbbbxxxx
-x.xxx.xbbWWWWW...xx
-x.xx.xbbWbbbbbbxx.xxx
+x.xxx.xxbbbbbbxxxx
+x.xx..xbbWWWWW...xx
+x.cc.xbbWbbbbbbcc.xxx
 x...1.WWW1a1WWW..1...@
 xxx.xxbbbbbbWbbx.xxxx
-  xx...WWWWWbbx.xx
-   xxxxxbbbbbxx.x
+  xx...WWWWWbbx..x
+   xxxxxbbbbbxx.xx
    xxxxxxxxxxx.xx
   @.......1...xx
    xxxxxxxxxxxx
@@ -2378,6 +2381,7 @@ KMASK:  Ww = no_monster_gen
 CLEAR:  E
 COLOUR: -|*2 = brown
 FTILE:  =-|*2GT = floor_pebble_brown
+: decorative_floor(_G, 'F', "flower patch")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ttccccccccccccccccccccccctt
@@ -2397,12 +2401,12 @@ Ettp...WwwwwWqqqttttttttE
 Ett.....Wwwwwqq..pttttttE
 Etttp....qWwwwWq..ppttttE
 Etttp......WwwWW...ptttttE
-Etttp.....WWwwWW....pptttE
+Etttp....FWWwwWW....pptttE
 Ettttp...WWWwwwWW....ptttE
 Ettttp...WWwwwwWW.....pttE
 Ettttt...WWwwwwWW....ptttE
- Ettttp...WWwwWWW...pptttE
-  Ettttp..WWWWWW...pttttE
+ Ettttp..FWWwwWWW...pptttE
+  Ettttp..WWWWWWF..pttttE
   Etttttp..WWWW....pttttE
    Ettttp.........ptttEE
     Etttt........tttttE
@@ -2411,29 +2415,39 @@ ENDMAP
 
 NAME:   nicolae_lair_yak_garden
 TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
-DEPTH:  Lair:4-
-KMONS:  Y = yak
-KMONS:  D = death yak
-KMONS:  C = catoblepas
+DEPTH:  Lair:2-, Crypt
+SUBST:  P = P., f = ffF.
+: local d = you.depth()
+: if you.in_branch("Lair") then
+MONS:   yak, death yak, catoblepas
 KMONS:  P = plant
-KITEM:  f = stone
-SUBST:  P = P., f = f...
-NSUBST: D = 1:D / *:.
+KFEAT:  F = cache of fruit
+:   d = d - 1
+: else
+TAGS:   no_pool_fixup
+MONS:   death yak zombie, lich / revenant soulmonger
+MONS:   ancient lich / dread lich / alderking
+KMONS:  P = withered plant
+KFEAT:  t = petrified_tree
+:   decorative_floor(_G, 'F', "mourning vase")
+: end
+KITEM:  f = large rock q:1
+: nsubst("2 = " .. d .. ":2 / *:.")
 MAP
         .@@@.
       .........
     tt...P.P....tt
    tttttPPPPPPPtttt.
-  .ttDfPP.Y....tDtt...
+  .tt2fPP.1....t2tt...
  .PPttP..P.P.PP.ftP...
  .P....PPP...PPP.PP..@
-..PP..PPPwwwC.P..PPP.@
-......Y.wwwwww.Y.ttP.@
+..PP..PPPwww3.P..PPP.@
+......1.wwwwww.1.ttP.@
 .@.PP..Pwwwwww...fttt.
  @..P..PP.wwwPP.ttttt
   @.PP.PPP..PP..PPttt
   ...Ptt.P.PPPPPP....
-  ...ttfDttPP.......
+  ...ttf2ttPP.......
     .tttttt......@
      ..tt.......
         .....
@@ -2462,10 +2476,11 @@ NAME:    hangedman_lair_generics_rect
 TAGS:    no_monster_gen
 DEPTH:   Lair
 MONS:    plant / fungus w:6
-NSUBST:  ' = 2:c / 2:. / * = c+....
 SHUFFLE: yY / yY / Yy
-SUBST:   y = ., Yz = xxxx1., Z = xx`
+SUBST:   y = ., Yz = xxxx1., Z = xx`, W : WV
+NSUBST:  ' = 2:c / 2:. / * = c+...., V = 1:V / *:.
 CLEAR:   `
+: decorative_floor(_G, 'V', "broken floral vase")
 MAP
 .............xZZ
 .c'c'c'c'c'cxxxZZ
@@ -2516,7 +2531,7 @@ ORIENT:  southeast
 KMONS:   A = adder
 KMONS:   B = water moccasin
 KMONS:   C = black mamba
-ITEM:    snakebite no_pickup
+KITEM:   d = serpent talisman randart, snakebite no_pickup
 SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
 SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
 MAP
@@ -2718,18 +2733,19 @@ NAME:   nicolae_lair_lil_pond
 TAGS:   transparent ruin decor extra
 DEPTH:  Lair
 NSUBST: D = 1:. / *:x
-SUBST:  - = .W
+SUBST:  - = .W, c : cx
+TILE:   c = wall_stone_puffball
 MAP
 ............
 ....xxxx....
-..DDDxxxxx..
+..DDDxxxxc..
 ..x------x..
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 .xx-wwww-xx.
 ..x------x..
-..xxxxxxxx..
+..cxxxxxxc..
 ....xxxx....
 ............
 ENDMAP
@@ -2836,14 +2852,14 @@ KMONS:   1 = human ; war axe ego:heavy good_item \
                    . leather armour good_item | ring mail good_item \
                        | scale mail good_item
 # Trying to get some good horror move trope representation
-KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior \
-                 / tentacled starspawn \
-             , reaper / vampire mage / phantasmal warrior / tentacled starspawn
+KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior / \
+             tentacled starspawn, \
+             reaper / vampire mage / phantasmal warrior / tentacled starspawn
 NSUBST:  a = a / c, p = p / c, q = q / c
 NSUBST:  r = r / c, s = s / c, u = u / c
 # These are distinct to preserve 'a' for the rune door.
 SHUFFLE: Er / ?u, Daqp / ?sur
-NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `
+NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `, ? = 1:B / *:?
 NSUBST:  T = 2=009 / * = .ttt
 NSUBST:  aq = 1:= / c, p = +
 SHUFFLE: rsu
@@ -2853,8 +2869,9 @@ KPROP:   ` = bloody
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
          size_max = 3, spread_rate = 33 }
-KITEM: S = human skeleton
+KITEM:   S = human skeleton
 CLEAR:   _
+: decorative_floor(_G, 'B', "broken floral vase")
 MAP
    _____________________
    @ttttttttttttttttttttt_
@@ -3181,7 +3198,7 @@ KMONS:   R = spectral anaconda
 # A necromancy-themed loot item behind the obsidian statue.
 ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
-         / demon blade ego:draining / sword of zonguldruk w:1 \
+         / demon blade ego:draining / skull of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
          / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
          / eveningstar ego:draining / sceptre of torment w:1 \
@@ -3258,7 +3275,6 @@ KITEM:   A = superb_item no_pickup, any good_item no_pickup \
              / no_pickup gold good_item w:15, % no_pickup \
              / nothing, % no_pickup / nothing
 KITEM:   _ = earthy gem
-KFEAT:   g = metal_statue
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
 KFEAT:   L = endless_lava
@@ -3269,10 +3285,8 @@ KPROP:   ` = bloody
 KMASK:   '"`456H = no_item_gen
 FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
-COLOUR:  g = warp
-TILE:    g = dimensional_conduit
 TILE:    b = bedevilled_crystal_gehenna
-: set_feature_name("metal_statue", "dimensional conduit")
+: vault_metal_statue_setup(_G, "g", "dimensional conduit")
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
   ...TTTT....  .............................
@@ -3423,10 +3437,9 @@ ITEM:   any good_item
 KITEM:  R = earthy gem
 MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
-# These are still living plants for all intents and purposes...
-KMONS:  P = plant perm_ench:petrified dbname:petrified_plant \
-            col:lightgrey tile:mons_withered_plant
-SUBST:  P = P.
+KMONS:  P = withered plant
+KMONS:  f = petrified flower
+SUBST:  P = P., f = f.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222
 COLOUR: d|*$4c-R = lightgrey
@@ -3438,8 +3451,8 @@ xxxxccc*cccxxxxxxxxxxxxxxxx
 xxxxcd|$$4cxxxxxxxxxxxxxxxx
 xxxxcc$R--ccxxxxxxxxxxxxxxxxxx
 xxxxxcc----ccxxx%PxxPxxxxxxxxxxx
-xxxxxxccc---cxxP......Pxxxxxxxxxxx
-xxxxxxxxcc-ccxP.9.0.x...xxxxxxxxxxx
+xxxxxxccc---cxxf......Pxxxxxxxxxxx
+xxxxxxxxcc-ccxf.9.0.x...xxxxxxxxxxx
 xxxxxxxxxc-cxx.0.9.xxxP..xxxxPP.%xxxx
 xxxxxxxxxc-cxxP...xxxxx...xxxx0.9xxxx
 xxxxxxxxxx.cxxxx..xxxxxxx...xx.1.0xxx
@@ -3449,13 +3462,13 @@ xxxxxxx.....xxxxxxx..Pxxxx..xxxxxxxxxx
 xxxxxx90.x..xxxxxxP..xxxx..xxxxcccxxxx
 xxxxxx0xxxx..xxxxxx..Pxxx.xxxccc4ccxxx
 xxxxxxxxxx..xxxxxx0.......xxcc----ccxx
-xxxxxxxxxP..Pxxxx01xxxP...Pcc------cxx
+xxxxxxxxxf..Pxxxx01xxxP...Pcc------cxx
 xxxxxxxxx.....xx..xxxxxxP..c------ccx
 xxxxxxxxP.G.G.....xxxxxxx..---cc--cxx
 xxx%xxx..G.P9.G.xxxxxxxxxxx-ccc---cxx
-x%P9Pxx..9..G....xxxxxxxxxxxxc---ccxx
-xx0..1....P0.G..PPxxxxxxPPxxx...xxxx
-xxxP1...xxxP..PxxxxxxxxxxP9....xxxxx
+x%f9fxx..9..G....xxxxxxxxxxxxc---ccxx
+xx0..1....f0.G..fPxxxxxxPPxxx...xxxx
+xxxf1...xxxf..PxxxxxxxxxxP9....xxxxx
 xxxxxPPxxxxxxxxxxxxxxxxxxx......xxx
 xxxxxxxxxxxxxxxxxxxxxxxx......G...
 xxxxxxxxxxxxxxxxxxxxxx....G.......
@@ -3530,10 +3543,10 @@ KITEM:   % = any
 KITEM:   * = star_item
 KITEM:   | = superb_item
 : kitem("d = " .. dgn.loot_potions)
-KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
-         / trident randart / trident of the octopus king w:2 \
-         / demon trident w:5 / phial of floods / ring of the octopus king w:2, \
-         earthy gem
+KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 / \
+             trident randart w:8 / trident of the octopus king w:2 / \
+             partisan good_item w:2 / demon trident w:5 / phial of floods / \
+             ring of the octopus king w:2, earthy gem
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake

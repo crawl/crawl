@@ -21,6 +21,9 @@ None
 This is a school reserved for spells with no type. This is only used for monster
 spells, when none of the below schools would fit.
 
+This includes: monsters producing tentacles (as extensions of one's body are
+not conjured, summoned, or constructed).
+
 Conjurations
 ============
 
@@ -31,7 +34,8 @@ This includes: creation of projectiles (such as Magic Dart), creation of clouds
 Fulminant Prism).
 
 This does not include: transmutations (creating something from something else),
-nor summoning (calling in a pre-existing entity).
+summoning (calling in a pre-existing entity), nor constructs with any degree
+of separate agency.
 
 Conjurations are always damage spells; this extends to the creation of
 damaging clouds or familiars that extend damaging spells, but anything more
@@ -55,10 +59,11 @@ frenzy, animating a foe's held weapon, creating fields of silence, and so on.
 Many Hexes have struggled with Willpower scaling somewhat arbitrarily throughout
 the game and being dissatisfying to roll unlucky with. Many newer or higher
 level Hexes sidestep the issue or check other resists and HD instead. Some work
-may be needed here eventually, but the current pool both provides a variety of
-useful utility effects and reasonably enables a stabbing playstyle of offense.
-New spells and spell revisions could involve more beguiling or illusions, as
-well as targetters beyond the whole screen or the beam for a single victim.
+may be needed here eventually (especially at either ends of spell levels), but
+the current pool both provides a variety of useful utility effects and
+reasonably enables a stabbing playstyle of offense. New spells and spell
+revisions could involve more beguiling or illusions, as well as targetters
+beyond the whole screen or a beam for a single victim.
 
 Some debuffs are over in Alchemy as is thematically appropriate for that school-
 most of Hexes has fewer limitations of matter and conditions needed to transmute
@@ -71,10 +76,11 @@ Necromancy is primarily the act of talking to the dead for divinatory purposes.
 In the Crawl mythos, it is any type of magic that involves death, undeath,
 corpses, souls, causing unholy pain, or the act of draining life force.
 
-This includes: all spells relating to the raising of slain foes as undead, be
-they as skeletons, zombies, or spectres. This also involves a variety of
-negative energy effects flavoured around suffering and usually centred around
-a given monster's holiness.
+This includes: all spells caring about the immediate deaths of foes (charges
+of Grave Claw, raising zombies and spectres), or the near-death state of foes
+(Cigotuvi's Putrefaction targetting, Rimeblight's instant-kill). This also
+includes a variety of negative energy effects flavoured around suffering,
+usually centred around a given monster's holiness.
 
 Notably, this also includes vampiric draining, revivification, and directly
 staving off death. All of these are flavoured as necromantic energy regenerating
@@ -84,9 +90,9 @@ Summonings
 ==========
 
 Summonings involves the magical transportation of creatures and terrain from
-another place to here. This is specifically not the creation of these beings: 
-when they are "killed", or if the summoning finishes while they are still alive,
-these beings return to wherever they came from.
+another place to here. This is specifically not the creation or construction of
+these beings:  when they are "killed", or if the summoning finishes while they
+are still alive, these beings return to wherever they came from.
 
 This "place" is undefined as far as Crawl's mythos is concerned. The Abyss is
 the flavour source for Summon Horrible Things, while locations unconnected to
@@ -98,8 +104,44 @@ that is, all monsters that have been brought here from another place.
 This specifically excludes: monsters that have been conjured from something,
 which only act as an extension of a spell's targeting or damage. In these
 instances the monsters are short-formed or short-lived (usually meaning, they
-die shortly after being created). All summoned monsters are Abjurable by
-monster summoners; all conjured or transmuted monsters are not.
+die shortly after being created). Additionally, they should avoid non-living
+status unless relying on otherworldly themes rather than construct themes, to
+avoid overlap with Forgecraft's flavour focus. All summoned monsters are
+Abjurable by monster summoners; all conjured, constructed, or transmuted
+monsters are not.
+
+Forgecraft
+==========
+
+In contrast to Summonings, Forgecraft involves the direct creation of transient,
+tangible constructs. Usually, they're set to fire or explode.
+
+Beyond the mechanical flavour of Forgecraft, all spells in the school before the
+recurring rule-breaking of level 9 spells are defined by their limitations. Many
+constructs can't move (Spike Launcher, Lightning Spire, Hoarfrost Cannonade,
+Diamond Sawblades), rely on the caster's position to move (Blazeheart Golem,
+Phalanx Beetle), or move automatically (Hellfire Mortar). They may rely on
+caster actions (Rending Blade and Battlesphere attacks, Monarch Bomb's
+detonation), the caster's own equipment and spells (Awaken Armour, Fortress
+Blast, Spellspark Servitor, Platinum Paragon), or limited attacks (Clockwork
+Bee, Walking Alembic). Frequently, they may not even have regular attacks
+(most cannons, Splinterfrost Barricade), and they share between them a repeated
+theme of charging up (Bee, Blade, Alembic, Fortress Blast, Bomb, Paragon).
+
+In exchange for all of these different types of limitations, Forgecraft allies
+sit between Summoning and Conjurations in providing physically-present entities
+that increasingly deal partially- or fully-irresistible damage across multiple
+turns, with relatively predictable behaviours that ignore player commands. They
+also have non-living resists, can be rapidly deconstructed if not made directly
+of magic (Battlesphere & Rending Blade), and cannot be Abjured.
+
+This also includes a limited number of ways to deal direct damage as long as
+they're directly tied to conditions and actions; Kinetic Grapnel mostly assists
+a follow-up attack, Fortress Blast gives the non-moving limitation to the
+caster, and Nazja's Percussive Tempering can only target one's own constructs.
+
+This specifically excludes: allies who do not have any limitations or
+dependencies, and allies that are considered obviously "alive".
 
 Translocations
 ==============
@@ -119,7 +161,8 @@ another, such as Apportation or Dimensional Bullseye.
 While some forms of direct damage have been tried for this school in the past,
 most of it has become highly reliant on the presence of other schools or sheer
 weapon skill. The ability to control movement is already a very broad and potent
-space in Crawl without also providing a direct means to kill.
+space in Crawl (also not easily provided elsewhere) without also providing a
+direct means to kill.
 
 Alchemy
 =======
@@ -162,9 +205,10 @@ All spells involving ice or cold of any kind.
 This includes: conjurations of ice, spells involving freezing or cooling, etc.
 
 Compared to other schools, Ice is a versatile yet diffuse element, with high mp
-efficiency in exchange for spells with limited range or aim or movement, or
-damage over multiple turns. It can also offer slowing and sleep effects,
-boosted against the cold-blooded and blocked by those cold-resistant.
+efficiency in exchange for spells with limited range or aim or movement, and
+often a focus on damage being stretched over multiple turns. It can also offer
+slowing and sleep effects, boosted against the cold-blooded and blocked by those
+cold-resistant.
 
 Air
 ===
@@ -194,7 +238,7 @@ Compared to other schools, the school is mainly focused on damaging spells with
 single projectiles; multi-target damage spells tend to be more limited in number
 and in targeting conditions than those provided by other elemental schools.
 It also uses 'fragment' damage, which is heavily affected by AC. In exchange,
-it provides the most straightforward irresistible spells in the game.
+it provides the most straightforward and direct irresistible spells in the game.
 
 Holy
 ====

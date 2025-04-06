@@ -515,18 +515,27 @@ static map<tileidx_t, int> status_icon_sizes = {
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
+    { TILEI_VAMPIRE_THRALL, FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
     { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_1,    FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_2,    FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
-    // (E.g. for summoned dancing weapons or animated armour.)
+    // (E.g. for summoned dancing weapons.)
     { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
     { TILEI_SUMMONED,        FIXED_LOC_ICON },
-    { TILEI_PERM_SUMMON,     FIXED_LOC_ICON },
+    { TILEI_MINION,          FIXED_LOC_ICON },
+    { TILEI_UNREWARDING,     FIXED_LOC_ICON },
     { TILEI_VENGEANCE_TARGET,FIXED_LOC_ICON },
 
     // Along the bottom of the monster.
     { TILEI_SHADOWLESS,      FIXED_LOC_ICON },
+
+    { TILEI_NOBODY_MEMORY_1, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_2, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_3, FIXED_LOC_ICON },
+    { TILEI_PYRRHIC, FIXED_LOC_ICON },
 };
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
@@ -594,7 +603,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
         else if (beh_flag == TILE_FLAG_MAY_STAB)
         {
-            m_buf_icons.add(TILEI_MAY_STAB_BRAND, x, y);
+            m_buf_icons.add(TILEI_UNAWARE, x, y);
             status_shift += 7;
         }
         else if (beh_flag == TILE_FLAG_FLEEING)

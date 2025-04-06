@@ -1,5 +1,5 @@
 name: "Grunn"
-glyph: {char: "g", colour: lightgreen}
+glyph: {char: "j", colour: lightgreen}
 flags: [speaks, unique, male]
 species: gnoll
 holiness: [undead]

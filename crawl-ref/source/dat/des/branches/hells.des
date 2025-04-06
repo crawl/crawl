@@ -26,7 +26,7 @@ NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
 KFEAT:   ^ = zot trap
 : if you.in_branch("Geh") then
 MONS:    zombie / skeleton
-MONS:    brimstone fiend / hellephant
+MONS:    brimstone fiend / oni incarcerator
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -54,11 +54,8 @@ COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
 MONS:    zombie / skeleton
 MONS:    hell sentinel / iron giant
-KFEAT:   G = metal_statue
 SUBST:   xc = v, F~ = G
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+: vault_metal_statue_setup(_G, "G", "iron statue")
 : end
 KPROP:   lw = no_tele_into
 MAP
@@ -78,10 +75,11 @@ TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:   Geh, Coc, Zot, !Zot:$
 :  if you.in_branch("Geh") then
 KMONS:   1 = brimstone fiend
-KMONS:   2 = searing wretch / balrug
+KMONS:   2 = oni incarcerator
 KMONS:   34 = fire giant / hellephant w:5
-KMONS:   56 = ancient champion ; plate armour . broad axe ego:flaming | \
-         halberd ego:flaming w:7 | morningstar ego:flaming
+KMONS:   5 = ancient champion ; plate armour . broad axe ego:flaming | \
+             partisan ego:flaming w:7 | morningstar ego:flaming
+KMONS:   6 = searing wretch / balrug
 KMONS:   7 = hell hog
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
@@ -90,7 +88,7 @@ KMONS:   1 = ice fiend
 KMONS:   2 = wendigo band / nargun
 KMONS:   34 = frost giant / shard shrike w:5
 KMONS:   56 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-         ego:freezing ident:type
+         ego:freezing pre_id
 KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
 :  else -- Zot
@@ -98,8 +96,8 @@ KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
 KMONS:   3 = orb of fire / hellephant w:5
 KMONS:   4 = draconian scorcher
-KMONS:   5 = red draconian ; cloak . mace ego:freezing ident:type
-KMONS:   6 = white draconian ; cloak . mace ego:flaming ident:type
+KMONS:   5 = red draconian ; cloak . mace ego:freezing pre_id
+KMONS:   6 = white draconian ; cloak . mace ego:flaming pre_id
 KFEAT:   1 = w
 KFEAT:   3 = l
 NSUBST:  0 = 1:5 / 1:6
@@ -128,7 +126,7 @@ DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }{ / **
 :  if you.in_branch("Geh") then
 MONS:    brimstone fiend / hellephant
-MONS:    searing wretch / balrug / stoker w:5
+MONS:    searing wretch / balrug / oni incarcerator w:4
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Coc") then
 MONS:    ice fiend / shard shrike
@@ -136,7 +134,7 @@ MONS:    wendigo band / simulacrum w:20
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Abyss") then
 MONS:    blizzard demon / frost giant / \
-         dancing weapon ; battleaxe ego:freezing ident:type w:5
+         dancing weapon ; battleaxe ego:freezing pre_id w:5
 MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
@@ -144,10 +142,10 @@ MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
          red very ugly thing w:15 / efreet w:12
 SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
 :  else
-KMONS:   123 = red draconian ; cloak . long sword ego:freezing ident:type
-KMONS:   456 = white draconian ; cloak . long sword ego:flaming ident:type
-KMONS:   789 = red draconian scorcher ; cloak . staff of fire ident:type
-KMONS:   ABC = white draconian knight ; cloak . staff of cold ident:type
+KMONS:   123 = red draconian ; cloak . long sword ego:freezing pre_id
+KMONS:   456 = white draconian ; cloak . long sword ego:flaming pre_id
+KMONS:   789 = red draconian scorcher ; cloak . staff of fire pre_id
+KMONS:   ABC = white draconian knight ; cloak . staff of cold pre_id
 KMONS:   D = golden dragon
 SUBST:   c : c:5 b:2 n:1
 SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
@@ -199,7 +197,7 @@ KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / balrug
 KMONS:  1 = ice fiend
 KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             blizzard demon
-: else
+: else -- Tar
 KMONS:  1 = tzitzimitl
 KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             green death
@@ -302,9 +300,7 @@ KMONS: 1 = ancient lich / dread lich / nothing
 KFEAT: ! = iron_grate
 : if you.in_branch("Dis") then
 SUBST: D : !c, E : Gvb, F : G., c : v
-KFEAT: G = metal_statue
-TILE:  G = dngn_statue_iron
-: set_feature_name("metal_statue", "iron statue")
+:   vault_metal_statue_setup(_G, "G", "iron statue")
 : elseif you.in_branch("Geh") then
 SUBST: D : xc., E : Glcx., F : ..Gl
 : elseif you.in_branch("Coc") then
@@ -312,8 +308,7 @@ KFEAT: 1 = W
 SUBST: D : wc, E : xw, F : .cw
 : elseif you.in_branch("Tar") then
 SUBST: D : cE, EF = ..G
-TILE:  G = dngn_crumbled_column
-: set_feature_name("granite_statue", "broken pillar")
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
 : end
 MAP
   ccccccccccc
@@ -337,7 +332,7 @@ KFEAT: ^ = shaft trap
     { Dis={ "mutagenic fog", "calcifying dust", "acidic fog"   },
       Geh={ "mutagenic fog", "flame",           "flame"        },
       Coc={ "mutagenic fog", "freezing vapour", "thunder"      },
-      Tar={ "mutagenic fog", "foul pestilence", "degeneration" } }
+      Tar={ "mutagenic fog", "foul pestilence", "excruciating misery" } }
   local hellcloud = util.random_from( cloudtypes[ you.branch() ] )
   lua_marker( '^', fog_machine{ cloud_type = hellcloud, pow_min = 5,
     pow_max = 40, delay = 15, size = 1, walk_dist = 1, spread_rate = 5 } )
@@ -366,7 +361,8 @@ KMONS:  2 = iron giant / juggernaut w:15
 KMONS:  3 = fire giant / frost giant / stone giant
 SUBST:  L = l
 : elseif you.in_branch("Geh") then
-KMONS:  2 = juggernaut
+# The oni are ready to catch them as they would for any other foolish mortals.
+KMONS:  2 = juggernaut / oni incarcerator w:5
 KMONS:  3 = fire giant / frost giant skeleton / stone giant skeleton
 SUBST:  L = l
 : elseif you.in_branch("Coc") then

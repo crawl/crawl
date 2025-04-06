@@ -13,7 +13,7 @@ all the same thing.
 Beogh
 
 A god of outcasts, pariahs, and the dispossessed, Beogh's altars are rarely
-found among those of other faiths, but their missionaries may always be sought
+found among those of other faiths, but Beogh's missionaries may always be sought
 by those looking for a place to belong. Worshippers will find many friends
 within the dungeon, and those who prove their strength to Beogh may gain
 lifelong companions the equal of any adventurer. To worship Beogh is to believe
@@ -210,9 +210,9 @@ Yredelemnul
 
 Cast down by the good gods eons ago, Yredelemnul seeks to despoil their
 creations and chain all living souls within their inexorable grip. Followers who
-would conquer in their name are granted the power to reap an army of the dead
-and bind powerful souls into eternal service - provided they can sweep across
-the land in a tide as inexorable as the god themself.
+would conquer in Yredelemnul's name are granted the power to reap an army of the
+dead and bind powerful souls into eternal service - provided they can sweep
+across the land in a tide as inexorable as their god.
 %%%%
 Zin
 
@@ -236,12 +236,12 @@ protect worshippers from the Dungeon's malevolent forces.
 Beogh powers
 
 Worshippers will gain the power to call down Beogh's wrath upon their
-oppressors, and other orcs will start to see you as one of their own. Especially
-promising adherents will find themselves beset by rivals for Beogh's favour, but
-overcoming these trials without fleeing will gain you loyal companions whom
-Beogh will resurrect time and time again - just so long as you continue to fight
-and avenge in their name. A true chosen one may even rally an entire orcish army
-to avenge a wrongful death.
+oppressors, and other orcs will start to see them as one of their own.
+Especially promising adherents will find themselves beset by rivals for Beogh's
+favour, but overcoming these trials without fleeing will gain them loyal
+companions whom Beogh will resurrect time and time again, so long as they
+continue to fight and avenge in Beogh's name. A true chosen one may even rally
+an entire orcish army to avenge a wrongful death.
 %%%%
 Cheibriados powers
 
@@ -317,13 +317,13 @@ will always grant followers resistance to fire.
 %%%%
 Jiyva powers
 
-Jiyva will gradually fill the dungeon with jellies. Your fellow slimes will
-rapidly consume nearby items as well as slowly consuming items from elsewhere
-in the dungeon. As they spread slime across more of the dungeon, Jiyva will
-grant followers increasingly rapid health and magic regeneration, and will
-begin mutating them to better reflect Jiyva's image. Followers will later
-become able to call forth acidic ooze from the walls of the dungeon, and to
-turn monsters to slime with a touch.
+Jiyva will gradually fill the dungeon with jellies. These and any other fellow
+slimes will rapidly consume nearby items, as well as slowly consuming items from
+elsewhere in the dungeon. As they spread slime across more of the dungeon, Jiyva
+will grant followers increasingly rapid health and magic regeneration, and will
+begin mutating them to better reflect Jiyva's image. Followers will later become
+able to call forth acidic ooze from the walls of the dungeon, and to turn
+monsters to slime with a touch.
 %%%%
 Kikubaaqudgha powers
 
@@ -483,7 +483,7 @@ the dead, and bind especially noteworthy souls to fight for them in death with
 the full capacities they held in life. Especially devout worshippers can even
 call down the inescapable grip of the Fallen directly, binding foes helplessly
 in place as the very life is sucked from them. Yredelemnul will also dispatch
-undead servants to aid their followers at the start of each new conquest.
+undead servants to aid followers at the start of each new conquest.
 %%%%
 Zin powers
 
@@ -514,9 +514,9 @@ Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
 the attention of Cheibriados remains upon them, and may have any magical hasting
-stripped away. They may also become further slowed, be put to sleep, or have
-their bodies decay as the unparalleled volume of the inevitable passage of
-time rings throughout the Dungeon.
+stripped away. They may also become further slowed, be put to sleep, or be
+beset by the unparalleled volume of the inevitable passage of time ringing
+throughout the Dungeon.
 %%%%
 Dithmenos wrath
 
@@ -553,17 +553,18 @@ Gozag wrath
 The first of Gozag's punishments is commercial: all shops opened through
 Gozag's intervention shut their doors forever. The disloyal are advised to
 finish their shopping before they launch their betrayal. For as long as Gozag
-remains angered, potions will have a chance to fail when quaffed, and any
-foes that are encountered may be granted potions of their own to assist them
-against the ex-worshipper. You may sometimes be bedazzled by the glint of coin.
+remains angered, ex-worshippers may sometimes be bedazzled by the glint of coin,
+and their potions will have a chance to fail when quaffed. Any foes that are
+encountered may also be granted potions of their own to assist them against
+those who resign from Gozag's service.
 %%%%
 Ignis wrath
 
 The wrath of Ignis is now weaker than that of most other gods. Apostates will
 find their resistance to fire stripped away completely, and will be periodically
 assaulted by fire elementals, find their enemies strengthened by fire, or even
-have the floor burned out from beneath them. Experienced and cautious adventurers
-will likely overmaster these assaults.
+have the floor burned out from beneath them. Experienced and cautious
+adventurers will likely overmaster these assaults.
 %%%%
 Jiyva wrath
 
@@ -646,9 +647,9 @@ silenced, and the Shining One will also shout to alert the victim's foes.
 Trog wrath
 
 Trog's wrath is incandescent. Offenders find themselves swarmed by berserkers –
-from packs of bears to, for the most powerful, mobs of giants and trolls. The
-bodies of those who anger Trog begin to decay, slow, and collapse, and Trog may
-simply smite them directly with fiery rage.
+from packs of bears to, for the most powerful, mobs of giants and trolls.
+Otherwise, those who anger Trog will regularly lose both their strength and
+self-control as they thoughtlessly thrash in place.
 %%%%
 Uskayaw wrath
 
@@ -680,14 +681,14 @@ Yredelemnul wrath
 
 Those who anger Yredelemnul find themselves beset by legions of the dead.
 Sometimes, the god will also intervene directly, binding the unfaithful in
-inescapable chains as their dark army demonstrates the price of betrayal.
+inescapable chains as Yredelemnul's dark army demonstrates the price of
+betrayal.
 %%%%
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
-their enemies alerted, and their senses confounded by the
-axioms of Law; confusion, fainting, blindness and complete paralysis will
-be their lot.
+their enemies alerted, and their senses confounded by the axioms of Law;
+confusion, fainting, blindness and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
 # any god extra screens need :nowrap

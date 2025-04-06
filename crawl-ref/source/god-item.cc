@@ -69,7 +69,7 @@ bool is_holy_item(const item_def& item, bool calc_unid)
     {
         if (is_blessed(item))
             return true;
-        if (calc_unid || item_brand_known(item))
+        if (calc_unid || item.is_identified())
             return get_weapon_brand(item) == SPWPN_HOLY_WRATH;
     }
 
@@ -79,13 +79,13 @@ bool is_holy_item(const item_def& item, bool calc_unid)
 bool is_potentially_evil_item(const item_def& item, bool calc_unid)
 {
     if (item.base_type == OBJ_WEAPONS
-        && item_brand_known(item)
+        && item.is_identified()
         && get_weapon_brand(item) == SPWPN_CHAOS)
     {
         return true;
     }
 
-    if (!calc_unid && !item_type_known(item))
+    if (!calc_unid && !item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -152,11 +152,11 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     {
         if (is_demonic(item) || testbits(item.flags, ISFLAG_CHAOTIC))
             return true;
-        if (calc_unid || item_brand_known(item))
+        if (calc_unid || item.is_identified())
             return is_evil_brand(get_weapon_brand(item));
     }
 
-    if (!calc_unid && !item_type_known(item))
+    if (!calc_unid && !item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -170,7 +170,8 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     case OBJ_BOOKS:
         return _is_book_type(item, is_evil_spell);
     case OBJ_TALISMANS:
-        return item.sub_type == TALISMAN_DEATH;
+        return item.sub_type == TALISMAN_DEATH
+                || item.sub_type == TALISMAN_VAMPIRE;
     default:
         return false;
     }
@@ -189,7 +190,7 @@ bool is_unclean_item(const item_def& item, bool calc_unid)
         }
     }
 
-    if (item.has_spells() && (item_type_known(item) || calc_unid))
+    if (item.has_spells() && (item.is_identified() || calc_unid))
         return _is_book_type(item, is_unclean_spell);
 
     return false;
@@ -209,12 +210,12 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     }
 
     if (item.base_type == OBJ_WEAPONS
-        && (calc_unid || item_brand_known(item)))
+        && (calc_unid || item.is_identified()))
     {
         return is_chaotic_brand(get_weapon_brand(item));
     }
 
-    if (!calc_unid && !item_type_known(item))
+    if (!calc_unid && !item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -233,6 +234,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
+    case OBJ_BAUBLES:
         return true;
     default:
         return false;
@@ -242,14 +244,13 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
 static bool _is_potentially_hasty_item(const item_def& item)
 {
     if (item.base_type == OBJ_WEAPONS
-        && (item_brand_known(item)
-        && get_weapon_brand(item) == SPWPN_CHAOS) ||
-        (testbits(item.flags, ISFLAG_CHAOTIC)))
+        && (item.is_identified() && get_weapon_brand(item) == SPWPN_CHAOS)
+        || (testbits(item.flags, ISFLAG_CHAOTIC)))
     {
         return true;
     }
 
-    if (!item_type_known(item))
+    if (!item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -273,7 +274,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 
     if (is_artefact(item) && item.base_type != OBJ_BOOKS)
     {
-        if ((calc_unid || item_ident(item, ISFLAG_KNOW_PROPERTIES)))
+        if ((calc_unid || item.is_identified()))
         {
             if (artefact_property(item, ARTP_RAMPAGING))
                 return true;
@@ -283,11 +284,11 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (calc_unid || item_brand_known(item))
+        if (calc_unid || item.is_identified())
             return get_weapon_brand(item) == SPWPN_SPEED;
     }
 
-    if (!calc_unid && !item_type_known(item))
+    if (!calc_unid && !item.is_identified())
         return false;
 
     switch (item.base_type)
@@ -309,7 +310,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)
 {
-    if ((calc_unid || item_brand_known(item))
+    if ((calc_unid || item.is_identified())
         && get_armour_ego_type(item) == SPARM_ENERGY)
     {
         return true;
@@ -392,11 +393,8 @@ vector<conduct_type> item_conducts(const item_def &item)
     if (item_is_spellbook(item))
         conducts.push_back(DID_SPELL_MEMORISE);
 
-    if ((item.sub_type == BOOK_MANUAL && item_type_known(item)
-         && is_magic_skill((skill_type)item.plus)))
-    {
+    if ((item.sub_type == BOOK_MANUAL && is_magic_skill((skill_type)item.plus)))
         conducts.push_back(DID_SPELL_PRACTISE);
-    }
 
     if (is_wizardly_item(item, false))
         conducts.push_back(DID_WIZARDLY_ITEM);
@@ -419,7 +417,8 @@ bool god_despises_item(const item_def &item, god_type which_god)
 {
     if (item.base_type != OBJ_TALISMANS)
         return false;
-    return item.sub_type == TALISMAN_DEATH && is_good_god(which_god)
+    return (item.sub_type == TALISMAN_DEATH || item.sub_type == TALISMAN_VAMPIRE)
+                && is_good_god(which_god)
            || which_god == GOD_ZIN;
 }
 

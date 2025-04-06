@@ -32,12 +32,6 @@ puissants magiciens peuvent lever une véritable armée de stupides
 morts-vivants. Notez que les zombies sont incapables de quitter le niveau où
 ils ont été créés.
 %%%%
-Animate Skeleton spell
-
-Ce sort insuffle la non-vie dans un squelette inerte, même si ce squelette est
-encore enfermé dans la chair ! Notez que les squelettes sont incapables de
-quitter le niveau où ils ont été créés.
-%%%%
 Apportation spell
 
 Ce sort permet au sorcier déplacer instantanément un objet, ou un groupe

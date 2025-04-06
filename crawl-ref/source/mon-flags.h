@@ -139,7 +139,9 @@ enum monclass_flag_type : uint64_t
     // has a double-sized tile
     M_TALL_TILE         = BIT(42),
 
-                        //BIT(43), // was M_WEB_SENSE
+    // If summoned, will disappear whenever the player leaves the floor, whether
+    // made by the player or something else.
+    M_UNSTABLE          = BIT(43),
 
     /// tries to maintain LOS/2 range from its target
     M_MAINTAIN_RANGE    = BIT(44),
@@ -159,7 +161,8 @@ enum monclass_flag_type : uint64_t
 
                         //BIT(50),
 
-    /// monster is a projectile (just OOD right now)
+    /// monster is an invulnerable projectile with momentum-based homing
+    /// movement
     M_PROJECTILE        = BIT(51),
 
     /// monster is an "avatar" (no independent attacks, only support)
@@ -167,8 +170,10 @@ enum monclass_flag_type : uint64_t
 
                         //BIT(53),
 
-    /// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
-    M_CONJURED          = BIT(54),
+    /// monster is a pseudo-projectile or manifestation of a spell effect (eg:
+    /// foxfires or ball lightnings) or otherwise not a 'full' monster for many
+    /// purposes (eg: tentacle segments).
+    M_PERIPHERAL        = BIT(54),
 
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),
@@ -193,7 +198,7 @@ DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 enum monster_flag_type : uint64_t
 {
     MF_NO_FLAGS           = 0,
-    /// no benefit from killing
+    /// no XP/piety from killing (even if the monster type would otherwise)
     MF_NO_REWARD          = BIT(0),
     /// monster skips next available action
     MF_JUST_SUMMONED      = BIT(1),
@@ -209,7 +214,7 @@ enum monster_flag_type : uint64_t
     /// Monster that has been banished.
     MF_BANISHED           = BIT(6),
 
-    /// Summoned, should not drop gear on reset
+    /// Never drops any items upon death
     MF_HARD_RESET         = BIT(7),
     /// mirror to CREATED_FRIENDLY for neutrals
     MF_WAS_NEUTRAL        = BIT(8),
@@ -296,6 +301,15 @@ enum monster_flag_type : uint64_t
 
     /// Will prefer not to approach enemies it's already in spellcast range of
     MF_CAUTIOUS           = BIT(41),
+
+    // Is abjurable and will disappear in a puff of smoke (or similar) when it
+    // times out, rather than appearing to die physically.
+    MF_ACTUAL_SUMMON      = BIT(42),
+
+    // Despite being temporarily created, will not expire upon its creator's
+    // death (eg: ball lightning)
+    MF_PERSISTS           = BIT(43),
+
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

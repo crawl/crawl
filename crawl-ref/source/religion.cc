@@ -67,6 +67,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-summoning.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -615,6 +616,17 @@ god_iterator god_iterator::operator++(int)
     return copy;
 }
 
+void maybe_clear_traitor(god_type god)
+{
+    const god_type betrayed_god = static_cast<god_type>(
+                                    you.attribute[ATTR_TRAITOR]);
+    if (betrayed_god == god ||
+        is_good_god(betrayed_god) && is_good_god(god))
+    {
+        you.attribute[ATTR_TRAITOR] = 0;
+        you.redraw_title = true;
+    }
+}
 
 bool active_penance(god_type god)
 {
@@ -760,6 +772,8 @@ void dec_penance(god_type god, int val)
         if (active_penance(*it))
             break;
     }
+
+    maybe_clear_traitor(god);
 
     if (it)
         return;
@@ -1049,7 +1063,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
   { 18,  25,  120, SEMI, MONS_EIDOLON },
   { 20,  25,  120, SEMI, MONS_VAMPIRE_KNIGHT },
   { 20,  25,  150, SEMI, MONS_GHOUL },
-  { 20,  27,   80, SEMI, MONS_REVENANT },
+  { 20,  27,   80, SEMI, MONS_REVENANT_SOULMONGER },
   { 22,  27,   60, FLAT, MONS_DEATH_COB },
   { 23,  27,  180, SEMI, MONS_ANCIENT_CHAMPION },
   { 24,  30,  110, SEMI, MONS_SEARING_WRETCH },
@@ -1074,16 +1088,17 @@ bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
     for (int i = 0; i < num; ++i)
     {
         mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 you.pos(), MHITYOU, MG_AUTOFOE);
+                 you.pos(), MHITYOU, MG_AUTOFOE, GOD_YREDELEMNUL);
 
         if (force_hostile)
         {
-            mg.set_summoned(0, 0, 0, GOD_YREDELEMNUL);
+            mg.set_summoned(nullptr, MON_SUMM_WRATH);
             mg.non_actor_summoner = "the anger of Yredelemnul";
             mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+            mg.set_range(2, you.current_vision);
         }
         else
-            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_YREDELEMNUL);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(5));
 
         if (create_monster(mg))
             created = true;
@@ -1098,11 +1113,14 @@ bool yred_reap_chance()
     int hd = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->friendly() || mi->is_summoned())
+        if (!mi->friendly())
             continue;
 
-        if (mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
+        if ((mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
+             && mi->was_created_by(you, MON_SUMM_YRED_REAP))
+        {
             hd += mi->get_experience_level();
+        }
     }
 
     // Always reap if we have no minions. Otherwise, use a sliding scale based
@@ -1666,7 +1684,7 @@ bool is_follower(const monster& mon)
     else
     {
         return mon.alive() && mon.attitude == ATT_FRIENDLY
-               && !mons_is_conjured(mon.type);
+                           && !mon.is_summoned();
     }
 }
 
@@ -1750,8 +1768,8 @@ mgen_data hepliaklqana_ancestor_gen_data()
     const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
         (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
         MONS_ANCESTOR;
-    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, 0, 0, GOD_HEPLIAKLQANA);
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE,
+                 GOD_HEPLIAKLQANA);
     mg.hd = _hepliaklqana_ally_hd();
     mg.hp = hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
@@ -1972,7 +1990,7 @@ void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item)
     item.brand = _hepliaklqana_weapon_brand(mtyp,
                                             _hepliaklqana_ally_hd());
     item.plus = 0;
-    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+    item.flags |= ISFLAG_IDENTIFIED | ISFLAG_SUMMONED;
 }
 
 /**
@@ -2017,7 +2035,7 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
     item.sub_type = shield_type;
     item.brand = _hepliaklqana_shield_ego(HD);
     item.plus = 0;
-    item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_SUMMONED;
+    item.flags |= ISFLAG_IDENTIFIED | ISFLAG_SUMMONED;
     item.quantity = 1;
 }
 
@@ -2447,7 +2465,7 @@ static void _gain_piety_point()
             you.duration[DUR_CONF] = 0;
         }
         if (rank >= rank_for_passive(passive_t::identify_items))
-            auto_id_inventory();
+            ash_id_inventory();
 
         // TODO: add one-time ability check in have_passive
         if (have_passive(passive_t::unlock_slime_vaults)
@@ -2685,116 +2703,6 @@ void lose_piety(int pgn)
     you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
 }
 
-// Fedhas worshipers are on the hook for most plants and fungi
-//
-// If fedhas worshipers kill a protected monster they lose piety,
-// if they attack a friendly one they get penance,
-// if a friendly one dies they lose piety.
-static bool _fedhas_protects_species(monster_type mc)
-{
-    return mons_class_is_plant(mc)
-           && mons_class_holiness(mc) & MH_PLANT;
-}
-
-/// Whether fedhas would protect `target` from harm if called on to do so.
-bool fedhas_protects(const monster &target)
-{
-    return _fedhas_protects_species(mons_base_type(target));
-}
-
-/**
- * Does some god protect monster `target` from harm triggered by `agent`?
- * @param agent  The source of the damage. If nullptr, the damage has no source.
- *               (Currently, no god does protect in this case.)
- * @param target A monster that is the target of the damage.
- * @param quiet  If false, do messaging to indicate that target has escaped
- *               damage.
- * @return       Whether target should escape damage.
- */
-bool god_protects(const actor *agent, const monster &target, bool quiet)
-{
-    // The alignment check is to allow a penanced player to continue to fight
-    // hostiles that would otherwise be protected, in case what they angered can
-    // fight back
-
-    const bool aligned = agent
-        && ((agent->is_player()
-                ? target.friendly()
-                : mons_atts_aligned(target.attitude,
-                                    agent->as_monster()->attitude))
-            || target.neutral());
-    // XX does it matter whether this just checks fedhas vs.
-    // the shoot_through_plants passive
-    if (aligned
-        && ((agent->is_player() || agent->as_monster()->friendly())
-                        && have_passive(passive_t::shoot_through_plants)
-            || agent->is_monster() && agent->deity() == GOD_FEDHAS) // purely theoretical?
-        && fedhas_protects(target))
-    {
-        if (!quiet && you.can_see(target))
-        {
-            simple_god_message(
-                        make_stringf(" protects %s plant from harm.",
-                            agent->is_player() ? "your" : "a").c_str(),
-                        false, GOD_FEDHAS);
-        }
-        return true;
-    }
-
-    if (agent && agent->is_player()
-        && mons_is_hepliaklqana_ancestor(target.type))
-    {
-        // TODO: this message does not work very well for all sorts of attacks
-        // should this be a god message?
-        if (!quiet && you.can_see(target))
-            mprf("%s avoids your attack.", target.name(DESC_THE).c_str());
-        return true;
-    }
-
-    if (aligned && agent->is_player()
-        && will_have_passive(passive_t::shadow_attacks)
-        && mons_is_player_shadow(target))
-    {
-        return true;
-    }
-
-    if (aligned
-        && agent->is_player()
-        && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(target))
-    {
-        if (!quiet && you.can_see(target))
-        {
-            simple_god_message(" protects your slime from harm.", false,
-                               GOD_JIYVA);
-        }
-        return true;
-    }
-    return false;
-}
-
-/**
- * Does some god protect monster `target` from harm triggered by the player?
- * @param target A monster that is the target of the damage.
- * @param quiet  If false, do messaging to indicate that target has escaped
- *               damage.
- * @return       Whether target should escape damage.
- */
-bool god_protects(const monster &target, bool quiet)
-{
-    return god_protects(&you, target, quiet);
-}
-
-bool god_protects(const monster *target, bool quiet)
-{
-    return target && god_protects(&you, *target, quiet);
-}
-
-bool god_protects(const actor *agent, const monster *target, bool quiet)
-{
-    return target && god_protects(agent, *target, quiet);
-}
-
 /// Whether Fedhas would set `target` to a neutral attitude
 bool fedhas_neutralises(const monster& target)
 {
@@ -2875,19 +2783,16 @@ static void _ash_uncurse()
     bool uncursed = false;
     // iterate backwards so we shatter a ring on the macabre finger
     // necklace before the amulet
-    for (int eq_typ = NUM_EQUIP - 1; eq_typ >= EQ_FIRST_EQUIP; eq_typ--)
+    for (player_equip_entry& entry : you.equipment.items)
     {
-        const int slot = you.equip[eq_typ];
-        if (slot == -1)
-            continue;
-        if (!you.inv[slot].cursed())
+        if (!entry.get_item().cursed())
             continue;
         if (!uncursed)
         {
             mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses shatter.");
             uncursed = true;
         }
-        unequip_item(static_cast<equipment_type>(eq_typ));
+        unequip_item(entry.get_item());
     }
 }
 
@@ -2934,6 +2839,12 @@ void excommunication(bool voluntary, god_type new_god)
     you.num_current_gifts[old_god] = 0;
 
     you.religion = GOD_NO_GOD;
+
+    if (best_skill(SK_FIRST_SKILL, SK_LAST_SKILL) == SK_INVOCATIONS
+       && you.attribute[ATTR_TRAITOR] == 0)
+    {
+        you.attribute[ATTR_TRAITOR] = static_cast<int>(old_god);
+    }
 
     you.redraw_title = true;
 
@@ -2997,7 +2908,10 @@ void excommunication(bool voluntary, god_type new_god)
         yred_end_blasphemy();
         for (monster_iterator mi; mi; ++mi)
             if (is_yred_undead_follower(**mi))
-                monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+            {
+                // Bound souls should still drop their equipment
+                monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+            }
         remove_all_companions(GOD_YREDELEMNUL);
         add_daction(DACT_OLD_CHARMD_SOULS_POOF);
         break;
@@ -3263,7 +3177,8 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
     monster_type species = fr.mons_species();
 
-    if (mons_is_object(species))
+    // Nobody minds you hurting inanimate objects
+    if ((fr.holiness() & MH_NONLIVING) && mons_intel(fr) == I_BRAINLESS)
         return false;
     switch (god)
     {
@@ -3284,6 +3199,9 @@ static bool _transformed_player_can_join_god(god_type which_god)
         return false; // zin hates everything
 
     if (is_good_god(which_god) && you.form == transformation::death)
+        return false;
+
+    if (which_god == GOD_OKAWARU && you.form == transformation::hive)
         return false;
 
     return true;
@@ -3359,30 +3277,40 @@ bool player_can_join_god(god_type which_god, bool temp)
 static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
-    item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH
-        && !you.has_mutation(MUT_FAITH)
-        && ignore_faith_reason().empty())
+    if (!you.has_mutation(MUT_FAITH) && ignore_faith_reason().empty()
+        && you.wearing_jewellery(AMU_FAITH))
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
     }
 
     if (have_passive(passive_t::identify_items))
-        auto_id_inventory();
+        ash_id_inventory();
 
     if (have_passive(passive_t::detect_portals))
         ash_detect_portals(true);
 
     // Give a reminder to remove any disallowed equipment.
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
+    vector<item_def*> all_eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
+    for (item_def* item : all_eq)
     {
-        const item_def* item = you.slot_item(static_cast<equipment_type>(i));
-        if (item && god_hates_item(*item))
+        if (god_hates_item(*item))
         {
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
+        }
+    }
+
+    if (you.props.exists(PARAGON_WEAPON_KEY))
+    {
+        item_def wpn = you.props[PARAGON_WEAPON_KEY].get_item();
+        if (god_hates_item(wpn))
+        {
+            mprf(MSGCH_GOD, "%s removes the imprint of %s from your paragon.",
+                 god_name(you.religion).c_str(),
+                 wpn.name(DESC_THE).c_str());
+            you.props.erase(PARAGON_WEAPON_KEY);
         }
     }
 
@@ -3421,13 +3349,6 @@ void set_god_ability_slots()
 {
     ASSERT(!you_worship(GOD_NO_GOD));
 
-    if (find(begin(you.ability_letter_table), end(you.ability_letter_table),
-             ABIL_RENOUNCE_RELIGION) == end(you.ability_letter_table)
-        && you.ability_letter_table[letter_to_index('X')] == ABIL_NON_ABILITY)
-    {
-        you.ability_letter_table[letter_to_index('X')] = ABIL_RENOUNCE_RELIGION;
-    }
-
     // Clear out other god invocations.
     for (ability_type& slot : you.ability_letter_table)
     {
@@ -3435,8 +3356,6 @@ void set_god_ability_slots()
         {
             if (slot == ABIL_NON_ABILITY)
                 break;
-            if (*it == you.religion)
-                continue;
             for (const god_power& power : get_all_god_powers()[*it])
                 if (slot == power.abil)
                     slot = ABIL_NON_ABILITY;
@@ -3646,6 +3565,8 @@ static void _set_initial_god_piety()
         break;
     }
 
+    maybe_clear_traitor(you.religion);
+
     // Tutorial needs berserk usable.
     if (crawl_state.game_is_tutorial())
         gain_piety(30, 1, false);
@@ -3700,13 +3621,9 @@ static void _join_okawaru()
     bool needs_message = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->is_summoned()
-            && mi->summoner == MID_PLAYER
-            && mi->friendly())
+        if (mi->was_created_by(you))
         {
-            mon_enchant abj = mi->get_ench(ENCH_ABJ);
-            abj.duration = 0;
-            mi->update_ench(abj);
+            mi->del_ench(ENCH_SUMMON_TIMER);
             needs_message = true;
         }
     }
@@ -4005,8 +3922,16 @@ void print_god_rejection(god_type which_god)
     }
     if (!_transformed_player_can_join_god(which_god))
     {
-        simple_god_message(" says: How dare you approach in such a loathsome "
-                           "form!", false, which_god);
+        if (which_god == GOD_OKAWARU)
+        {
+            simple_god_message(" says: You must forswear the aid of any and all "
+                               "before you are fit to worship.", false, which_god);
+        }
+        else
+        {
+            simple_god_message(" says: How dare you approach in such a loathsome "
+                               "form!", false, which_god);
+        }
         return;
     }
 
@@ -4109,13 +4034,6 @@ bool god_hates_killing(god_type god, const monster& mon)
 {
     if (invalid_monster(&mon))
         return false;
-    // Must be at least a creature of sorts. Smacking down an enchanted
-    // weapon or disrupting a lightning doesn't count. Technically, this
-    // might raise a concern about necromancy but zombies traditionally
-    // count as creatures and that's the average person's (even if not ours)
-    // intuition.
-    if (mons_is_object(mon.type))
-        return false;
 
     // kill as many illusions as you want.
     if (mon.is_illusion())
@@ -4128,9 +4046,6 @@ bool god_hates_killing(god_type god, const monster& mon)
         retval = (is_good_god(god));
     else if (holiness & MH_NATURAL)
         retval = (god == GOD_ELYVILON);
-
-    if (god == GOD_FEDHAS)
-        retval = fedhas_protects(mon);
 
     return retval;
 }
@@ -4544,7 +4459,7 @@ int get_monster_tension(const monster& mons, god_type god)
     // or bomb is offhand, but they should count for _some_ minimal tension.
     if (exper <= 0)
     {
-        if (mons_is_conjured(mons.type))
+        if (mons.is_peripheral())
             exper = 50;
         else
             return 0;
@@ -4603,33 +4518,30 @@ int get_monster_tension(const monster& mons, god_type god)
             exper *= 2;
     }
 
-    if (mons.is_silenced() && (mons.is_actual_spellcaster() || mons.is_priest()))
-        exper = exper * 2 / 3;
+    const vector<pair<bool, pair<int, int>>> tension_monster_status_checks {
+        { mons.has_ench(ENCH_HASTE),                        {3, 2} },
+        { mons.berserk_or_frenzied(),                       {3, 2} },
+        { mons.has_ench(ENCH_ARMED),                        {5, 4} },
+        { mons.has_ench(ENCH_CHAOS_LACE),                   {5, 4} },
+        { mons.has_ench(ENCH_MIGHT),                        {5, 4} },
+        { mons.has_ench(ENCH_EMPOWERED_SPELLS),             {5, 4} },
+        { mons.has_ench(ENCH_WORD_OF_RECALL),               {5, 4} },
+        { mons.has_ench(ENCH_SLOW),                         {2, 3} },
+        { mons.has_ench(ENCH_VEXED),                        {2, 3} },
+        { mons.is_silenced() && (mons.is_actual_spellcaster()
+            || mons.is_priest()),                           {2, 3} },
+        { mons.confused() || mons.caught(),                 {1, 2} },
+        { mons_is_fleeing(mons),                           {10, 1} },
+        { mons.asleep() || mons.has_ench(ENCH_PARALYSIS),  {20, 1} }
+    };
 
-    if (mons.confused() || mons.caught())
-        exper /= 2;
-
-    if (mons.has_ench(ENCH_SLOW))
-        exper = exper * 2 / 3;
-
-    if (mons.has_ench(ENCH_HASTE))
-        exper = exper * 3 / 2;
-
-    if (mons.has_ench(ENCH_MIGHT))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_EMPOWERED_SPELLS))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_WORD_OF_RECALL))
-        exper = exper * 5 / 4;
-
-    if (mons.has_ench(ENCH_ARMED))
-        exper = exper * 5 / 4;
-
-    // Health boost stacks further on top of haste and might bonuses
-    if (mons.berserk_or_frenzied())
-        exper = exper * 3 / 2;
+    for (auto &checks : tension_monster_status_checks) {
+        if (checks.first)
+        {
+            exper *= checks.second.first;
+            exper /= checks.second.second;
+        }
+    }
 
     return exper;
 }
@@ -4654,16 +4566,17 @@ int get_tension(god_type god)
         }
     }
 
-    // At least one monster has to be nearby, for tension to count.
-    if (!nearby_monster)
+    // At least one monster has to be (possibly) nearby, for tension to count.
+    if (!nearby_monster && !player_in_branch(BRANCH_ABYSS))
         return 0;
 
-    // XXX: Maybe too low?
+    // XXX: Probably too low, but needs tension use review first.
     const int scale = 1;
 
     int tension = total;
 
     // Tension goes up inversely proportional to the percentage of your max HP.
+    // Note: wizmoding up too much HP will break calculations here.
     tension *= (scale + 1) * you.hp_max;
     tension /= max(you.hp_max + scale * you.hp, 1);
 
@@ -4675,94 +4588,77 @@ int get_tension(god_type god)
 
     tension /= div;
 
-    // Indefinite spawns and unreliable / delayed escape.
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (tension < 2)
-            tension = 2;
-        else
-            tension = tension * 3 / 2;
-    }
-    else if (player_in_branch(BRANCH_PANDEMONIUM))
-        tension = tension * 9 / 8;
+    int tension_min = 0;
 
     if (player_on_orb_run())
-    {
-        if (tension < 3)
-            tension = 3;
-        else
-            tension = tension * 2;
+        tension_min = 3;
+    else if (player_in_branch(BRANCH_ABYSS) || you.cannot_act())
+        tension_min = 2;
+
+    tension = max(tension, tension_min);
+
+    // Condition, multiplier, and divisor trios for quite a few
+    // straightforward debuff or location-based tension checks.
+    const vector<pair<bool, pair<int, int>>> tension_player_status_checks {
+        { you.cannot_act(),                              {10, 1} },
+        { you.duration[DUR_VEXED] > 0,                   {2, 1} },
+        { player_on_orb_run(),                           {2, 1} },
+        { you.caught(),                                  {2, 1} },
+        { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
+        { silenced(you.pos()),                           {5, 3} },
+        { you.form == transformation::fungus
+            || you.form == transformation::pig
+            || you.form == transformation::tree,         {5, 3} },
+        { player_in_branch(BRANCH_ABYSS),                {3, 2} },
+        { you.duration[DUR_ATTRACTIVE] > 0,              {3, 2} },
+        { you.duration[DUR_NO_CAST] > 0,                 {3, 2} },
+        { you.duration[DUR_NO_MOMENTUM] > 0,             {3, 2} },
+        { you.duration[DUR_SENTINEL_MARK] > 0,           {3, 2} },
+        { you.duration[DUR_SIGN_OF_RUIN] > 0,            {3, 2} },
+        { you.duration[DUR_SLOW] > 0,                    {3, 2} },
+        { you.form == transformation::bat
+            || you.form == transformation::wisp,         {3, 2} },
+        { you.duration[DUR_NO_POTIONS] > 0,              {4, 3} },
+        { you.duration[DUR_NO_SCROLLS] > 0,              {4, 3} },
+        { you.duration[DUR_VITRIFIED] > 0,               {4, 3} },
+        { you.is_constricted(),                          {4, 3} },
+        { you.petrifying(),                              {4, 3} },
+        { you.duration[DUR_AFRAID] > 0,                  {6, 5} },
+        { you.duration[DUR_BLIND] > 0,                   {6, 5} },
+        { you.duration[DUR_MESMERISED] > 0,              {6, 5} },
+        { you.duration[DUR_WATER_HOLD] > 0,              {6, 5} },
+        { env.grid(you.pos()) == DNGN_SHALLOW_WATER && !you.airborne()
+            && !you.can_swim(),                          {6, 5} },
+        { player_in_branch(BRANCH_PANDEMONIUM),          {9, 8} },
+        { you.magic_points <= you.max_magic_points / 10, {9, 8} },
+        { you.duration[DUR_HASTE] > 0,                   {2, 3} },
+    };
+
+    for (auto &checks : tension_player_status_checks) {
+        if (checks.first)
+        {
+            tension *= checks.second.first;
+            tension /= checks.second.second;
+        }
     }
 
-    // Effects that'll still affect sleep / para / petrify go before those.
-    if (you.duration[DUR_VITRIFIED])
-        tension = tension * 4 / 3;
-
-    if (you.form == transformation::bat ||
-        you.form == transformation::wisp)
-    {
-        tension = tension * 3 / 2;
-    }
-    else if (you.form == transformation::fungus ||
-             you.form == transformation::pig ||
-             you.form == transformation::tree)
-    {
-        tension = tension * 5 / 3;
-    }
-
+    // A few more rather granular effects.
+    // TODO: Track sticky flame and poison here.
     if (you.duration[DUR_CORROSION])
         tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
 
-    if (you.cannot_act())
+    if (you.confused())
     {
-        tension *= 10;
-        tension = max(1, tension);
-
-        return tension;
+        // Later on, one only stays confused if the fight doesn't matter
+        // or if they can't cure it, so scale this slowly with XL and
+        // acknowledge its badness specifically when it's uncurable.
+        if (player_in_branch(BRANCH_COCYTUS) || you.can_drink() == false)
+            tension = tension * 5 / 2;
+        else
+            tension = tension * (9 - (you.experience_level / 10)) / 4;
     }
 
-    // Other effects are listed from highest influence to lowest to help with
-    // rounding on more minor effects.
-    if (you.confused())
-        tension *= 2;
-
-    if (you.caught())
-        tension *= 2;
-
-    if (silenced(you.pos()))
-        tension = tension * 5 / 3;
-
-    if (you.duration[DUR_SLOW])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_ATTRACTIVE])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_NO_CAST])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_SENTINEL_MARK])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_NO_POTIONS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_NO_SCROLLS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_MESMERISED])
-        tension = tension * 6 / 5;
-
-    if (you.duration[DUR_AFRAID])
-        tension = tension * 6 / 5;
-
-    if (you.magic_points <= you.max_magic_points / 10)
-        tension = tension * 9 / 8;
-
-    if (you.duration[DUR_HASTE])
-        tension = tension * 2 / 3;
-
-    return max(0, tension);
+    return max(tension_min, tension);
 }
 
 int get_fuzzied_monster_difficulty(const monster& mons)
@@ -4799,6 +4695,17 @@ void delayed_monster_done(string success, delayed_callback callback)
     _delayed_done_callbacks.push_back(callback);
 }
 
+static bool _needs_to_spawn_hepliaklqana_ancestor()
+{
+    return you_worship(GOD_HEPLIAKLQANA)
+            // You don't get an ancestor under penence
+           && !player_under_penance()
+           // You must have enough piety for an ancestor
+           && have_passive(passive_t::frail)
+           // An ancestor must not already exist
+           && hepliaklqana_ancestor() == MID_NOBODY;
+}
+
 static void _place_delayed_monsters()
 {
     // Last monster that was successfully placed (so far).
@@ -4818,7 +4725,23 @@ static void _place_delayed_monsters()
             prev_god = mg.god;
         }
 
-        monster *mon = create_monster(mg);
+        monster *mon = nullptr;
+        if (mons_is_hepliaklqana_ancestor(mg.cls))
+        {
+            // If the player gained enough piety to gain an ancestor on an
+            // enemy's turn or at the start of their turn (e.g. from an enemy
+            // digging or the player's passwal ending), they will get a turn
+            // to act before their ancestor is summoned. During this turn they
+            // can rename their ancestor or lose the piety needed to have one
+            // or lose their god etc.
+            if (_needs_to_spawn_hepliaklqana_ancestor())
+            {
+                mg = hepliaklqana_ancestor_gen_data();
+                mon = create_monster(mg);
+            }
+        }
+        else
+            mon = create_monster(mg);
 
         if (cback)
             (*cback)(mg, mon, placed);

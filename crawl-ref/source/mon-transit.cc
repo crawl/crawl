@@ -398,12 +398,13 @@ static bool _mons_can_follow_player_from(const monster &mons,
         || mons.incapacitated()
         || mons.is_stationary()
         || mons.is_constricted()
-        || mons.has_ench(ENCH_BOUND))
+        || mons.has_ench(ENCH_BOUND)
+        || mons.has_ench(ENCH_VEXED))
     {
         return false;
     }
 
-    if (!monster_habitable_grid(&mons, DNGN_FLOOR))
+    if (!monster_habitable_feat(&mons, DNGN_FLOOR))
         return false;
 
     // Only non-wandering friendly monsters or those actively

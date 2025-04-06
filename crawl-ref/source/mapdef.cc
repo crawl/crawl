@@ -3812,7 +3812,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
 {
     vector<string> ep = split_string(":", ench_str);
-    if (ep.size() > (perm ? 2 : 3))
+    if (ep.size() > static_cast<size_t>(perm ? 2 : 3))
     {
         error = make_stringf("bad %sench specifier: \"%s\"",
                              perm ? "perm_" : "",
@@ -3981,7 +3981,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         else if (dur < 1 || dur > 6)
             dur = 0;
 
-        mspec.abjuration_duration = dur;
+        // XXX: Hard-coding dependence on summon degree is awkward, but
+        //      actually randomizing the timer, per summon, in vault code is
+        //      also awkward.
+        if (dur > 0)
+            mspec.summon_duration = summ_dur(dur);
 
         // Orc apostle power and band power
         int pow = strip_number_tag(mon_str, "pow:");
@@ -4017,11 +4021,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                                 s_type.c_str());
                 return slot;
             }
-            if (mspec.abjuration_duration == 0)
+            if (mspec.summon_duration == 0)
             {
                 error = "marked summon with no duration";
                 return slot;
             }
+
+            // XXX: This shouldn't always be true, but is true for all current
+            //      uses of this in actual vaults.
+            mspec.extra_monster_flags |= MF_ACTUAL_SUMMON;
         }
 
         mspec.summon_type = summon_type;
@@ -4031,7 +4039,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         {
             non_actor_summoner = replace_all_of(non_actor_summoner, "_", " ");
             mspec.non_actor_summoner = non_actor_summoner;
-            if (mspec.abjuration_duration == 0)
+            if (mspec.summon_duration == 0)
             {
                 error = "marked summon with no duration";
                 return slot;
@@ -4268,8 +4276,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     ? unrand->sub_type : item.sub_type;
 
                 const auto def_slot = mons_class_is_animated_weapon(type)
-                    ? EQ_WEAPON
-                    : EQ_BODY_ARMOUR;
+                    ? SLOT_WEAPON
+                    : SLOT_BODY_ARMOUR;
 
                 if (get_item_slot(base, sub) != def_slot)
                 {
@@ -5041,6 +5049,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #endif
         "datura",
         "atropa",
+        "disjunction",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
@@ -5243,29 +5252,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     string ego_str  = strip_tag_prefix(s, "ego:");
 
-    string id_str = strip_tag_prefix(s, "ident:");
-    if (id_str == "all")
-        result.props[IDENT_KEY].get_int() = ISFLAG_IDENT_MASK;
-    else if (!id_str.empty())
-    {
-        vector<string> ids = split_string("|", id_str);
-        int id = 0;
-        for (const auto &is : ids)
-        {
-            if (is == "type")
-                id |= ISFLAG_KNOW_TYPE;
-            else if (is == "pluses")
-                id |= ISFLAG_KNOW_PLUSES;
-            else if (is == "properties")
-                id |= ISFLAG_KNOW_PROPERTIES;
-            else
-            {
-                error = make_stringf("Bad identify status: %s", id_str.c_str());
-                return false;
-            }
-        }
-        result.props[IDENT_KEY].get_int() = id;
-    }
+    if (strip_tag(s, "pre_id"))
+        result.props[IDENT_KEY] = true;
 
     if (strip_tag(s, "good_item"))
         result.level = ISPEC_GOOD_ITEM;

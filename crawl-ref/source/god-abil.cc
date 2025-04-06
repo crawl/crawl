@@ -1283,7 +1283,7 @@ spret zin_imprison(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
+    if (mons->is_peripheral())
     {
         mpr("You cannot imprison that!");
         return spret::abort;
@@ -1351,7 +1351,6 @@ void elyvilon_purification()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
-    restore_stat(STAT_ALL, 0, false);
     undrain_hp(9999);
     you.redraw_evasion = true;
 }
@@ -1438,7 +1437,7 @@ string yred_cannot_light_torch_reason()
     if (levels.exists(level_id::current().describe()))
     {
         return "You have raised the torch once already on this floor."
-               " Yredelemnul offers no second-chances.";
+               " Yredelemnul offers no second chances.";
     }
 
     return "";
@@ -1500,7 +1499,7 @@ void yred_end_conquest()
     int souls_remaining = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+        if (!mi->wont_attack() && !mi->is_firewood()
             && mons_can_be_spectralised(**mi, true)
             // Ignore monsters in no-tele-into areas, since these are often
             // literally unreachable, and we also don't want Yred to be unhappy
@@ -1516,16 +1515,16 @@ void yred_end_conquest()
     int ratio = kills * 100 / (kills + souls_remaining + 1);
 
     // Print a message about how happy Yred is about our performance this floor
-    string msg = "You return your torch's flame to Yredelemnul,";
+    string msg = "You offer up the Black Torch's flame,";
 
     if (ratio > 90)
-        msg+= " and they are glorified by your conquest!";
+        msg+= " and Yredelemnul is glorified by your conquest!";
     else if (ratio > 65)
-        msg+= " and they are satisfied with your conquest.";
+        msg+= " and Yredelemnul is satisfied with your conquest.";
     else if (ratio > 30)
-        msg+= " and feel their disappointment in your meagre crusade.";
+        msg+= " and feel Yredelemnul's disappointment in your meagre crusade.";
     else
-        msg+= " and feel their disdain for your failure.";
+        msg+= " and feel Yredelemnul's disdain for your failure.";
 
     mprf(MSGCH_GOD, "%s", msg.c_str());
 
@@ -1584,8 +1583,7 @@ static bool _is_isolated_soul(monster* mons)
         if (!act || !act->is_monster())
             continue;
 
-        const monster* mon = act->as_monster();
-        if (!mons_is_firewood(*mon) && mons_aligned(mons, mon))
+        if (!act->is_firewood() && mons_aligned(mons, act))
             return false;
     }
     return true;
@@ -1644,11 +1642,12 @@ void yred_fathomless_shackles_effect(int delay)
 
     int total_drained = 0;
     const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
-    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    int pow = delay > 0 ? div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay)
+                        : 0;
     for (monster_near_iterator mi(p); mi; ++mi)
     {
         if (grid_distance(mi->pos(), p) > radius
-            || mi->wont_attack() || mons_is_firewood(**mi))
+            || mi->wont_attack() || mi->is_firewood())
         {
             continue;
         }
@@ -1775,9 +1774,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
-    if (orig.halo_radius()
-        || orig.umbra_radius()
-        || orig.silence_radius())
+    // Monsters' haloes should be removed when their souls are bound.
+    if (mon->halo_radius() >= 0
+        || mon->umbra_radius() >= 0
+        || mon->silence_radius() >= 0
+        || mon->liquefying_radius() >= 0)
     {
         invalidate_agrid();
     }
@@ -2024,7 +2025,7 @@ static coord_def _find_displace_space(const monster* mon, coord_def start_pos)
     coord_def pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));
 
     int attempts = 0;
-    while ((!in_bounds(pos) || !monster_habitable_grid(mon, env.grid(pos))
+    while ((!in_bounds(pos) || !monster_habitable_grid(mon, pos)
            || you.see_cell_no_trans(pos) || actor_at(pos)) && attempts < 100)
     {
         pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));
@@ -2164,7 +2165,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
     } },
     { CURSE_COMPANIONS, {
         "Companions", "Comp",
-        { SK_SUMMONINGS, SK_NECROMANCY },
+        { SK_SUMMONINGS, SK_NECROMANCY, SK_FORGECRAFT },
     } },
     { CURSE_BEGUILING, {
         "Beguiling", "Bglg",
@@ -2316,7 +2317,7 @@ static void _do_curse_item(item_def &item)
     mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
     item.flags |= ISFLAG_CURSED;
 
-    if (you.equip[EQ_WEAPON] == item.link)
+    if (item.base_type == OBJ_WEAPONS)
     {
         // Redraw the weapon.
         you.wield_change = true;
@@ -2391,14 +2392,6 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
-    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
-        && you.equip[EQ_RING_AMULET] != -1)
-    {
-        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
-                           "the amulet's finger first!");
-        return false;
-    }
-
     if (item_is_melded(item))
     {
         mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
@@ -2419,8 +2412,20 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    vector<item_def*> to_remove = {&item};
+    if (!handle_chain_removal(to_remove, true))
+        return false;
+
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
-    unequip_item(item_equip_slot(you.inv[item_slot]));
+    item_skills(item, you.skills_to_hide);
+
+    for (item_def* _item : to_remove)
+    {
+        if (_item-> link != item_slot)
+            mprf("%s falls away from you.", _item->name(DESC_YOUR).c_str());
+        unequip_item(*_item);
+    }
+
     ash_check_bondage();
 
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
@@ -2602,13 +2607,13 @@ void beogh_blood_for_blood()
         }
 
         mgen_data mg(_get_orc_reinforcement_type(pow), BEH_FRIENDLY, *di,
-                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE);
-        mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE, GOD_BEOGH);
+        mg.set_summoned(&you, MON_SUMM_AID);
         monster* orc = create_monster(mg);
         if (orc)
         {
             orc->flags |= MF_HARD_RESET;
-            orc->mark_summoned(0, true, MON_SUMM_AID, false);
+            orc->mark_summoned(MON_SUMM_AID);
             orc->god = GOD_BEOGH;
             num_orcs -= 1;
 
@@ -2674,15 +2679,15 @@ static void _place_orcish_reinforcement()
 
     // Otherwise, generate an orc!
 
-    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE);
-    mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE, GOD_BEOGH);
+    mg.set_summoned(&you, MON_SUMM_AID);
     mg.cls = _get_orc_reinforcement_type(you.skill_rdiv(SK_INVOCATIONS, 7, 2));
 
     monster* orc = create_monster(mg);
     if (orc)
     {
         orc->flags |= MF_HARD_RESET;
-        orc->mark_summoned(0, true, MON_SUMM_AID, false);
+        orc->mark_summoned(MON_SUMM_AID);
         orc->god = GOD_BEOGH;
     }
 }
@@ -2916,7 +2921,7 @@ spret dithmenos_shadowslip(bool fail)
     int dur = random_range(40, 60 + you.skill(SK_INVOCATIONS, 2));
     for (monster_near_iterator mi(shadow->pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_is_firewood(**mi))
+        if (mi->is_firewood())
             continue;
 
         // For every monster in sight of both the player *and* their shadow, and
@@ -2952,9 +2957,9 @@ spret dithmenos_shadowslip(bool fail)
 
     // Extend our shadow's life to last at least as long as the misdirection,
     // and give it some additional health.
-    mon_enchant abj = shadow->get_ench(ENCH_FAKE_ABJURATION);
-    abj.duration = max(abj.duration, dur);
-    shadow->update_ench(abj);
+    mon_enchant timer = shadow->get_ench(ENCH_SUMMON_TIMER);
+    timer.duration = max(timer.duration, dur);
+    shadow->update_ench(timer);
     shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
     shadow->hit_points = shadow->max_hit_points;
     shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
@@ -3000,6 +3005,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
+        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:
@@ -3027,6 +3033,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_CORRUPTING_PULSE:
         case SPELL_SUMMON_ILLUSION:
         case SPELL_PHANTOM_BLITZ:
+        case SPELL_AWAKEN_FOREST:
             return false;
 
         default:
@@ -3061,7 +3068,7 @@ static vector<monster*> _get_marionette_targets()
     vector<monster*> valid_targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+        if (you.can_see(**mi) && !mi->wont_attack() && !mi->is_firewood())
             valid_targs.push_back(*mi);
     }
 
@@ -3110,7 +3117,7 @@ void dithmenos_cache_marionette_viability()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
             continue;
 
         if (!mi->has_ench(ENCH_SHADOWLESS))
@@ -3132,7 +3139,7 @@ string dithmenos_cannot_marionette_reason()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
             continue;
 
         if (!mi->has_ench(ENCH_SHADOWLESS))
@@ -3408,7 +3415,10 @@ bool gozag_potion_petition()
     you.attribute[ATTR_GOZAG_GOLD_USED] += prices[keyin];
 
     for (auto pot : *pots[keyin])
+    {
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
+        flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_POTION_PETITION);
+    }
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -3603,6 +3613,7 @@ static string _gozag_shop_spec(int index)
     const shop_type type = _gozag_shop_type(index);
     const string name =
         you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+    const int greed = 12 + random2avg(17,2);
 
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
@@ -3611,10 +3622,11 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag",
+    return make_stringf("%s shop name:%s%s greed:%d gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str());
+                        suffix.c_str(),
+                        greed);
 
 }
 
@@ -3920,13 +3932,9 @@ static bool _qazlal_affected(coord_def pos)
         if (act->is_monster())
         {
             const monster *mon = act->as_monster();
-            int summon_type = 0;
             // Never fire at elemental forces.
-            if (mon && mon->is_summoned(nullptr, &summon_type)
-                && summon_type == MON_SUMM_AID)
-            {
+            if (mon && mon->was_created_by(MON_SUMM_AID))
                 return false;
-            }
         }
     }
 
@@ -3962,9 +3970,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
-#ifdef USE_TILE
-    beam.tile_beam = -1;
-#endif
 
     if (target.origin())
     {
@@ -3972,7 +3977,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!player_target)
             player_target = &target_local;
 
-        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius);
+        targeter_smite tgt(&you, LOS_RADIUS, max_radius-1, max_radius, true);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
@@ -3998,9 +4003,9 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
         tempbeam.thrower   = KILL_YOU;
-        tempbeam.is_tracer = true;
-        tempbeam.explode(false);
-        if (tempbeam.beam_cancelled)
+        player_beam_tracer tracer;
+        tempbeam.explode(tracer, false);
+        if (cancel_beam_prompt(tempbeam, tracer))
             return spret::abort;
     }
     else
@@ -4013,23 +4018,26 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     switch (random2(4))
     {
         case 0:
-            beam.name     = "blast of magma";
-            beam.flavour  = BEAM_LAVA;
-            beam.colour   = RED;
-            beam.hit_verb = "engulfs";
-            message       = "Magma suddenly erupts from the ground!";
+            beam.name      = "blast of magma";
+            beam.flavour   = BEAM_LAVA;
+            beam.colour    = RED;
+            beam.hit_verb  = "engulfs";
+            beam.tile_beam = TILE_BOLT_MAGMA;
+            message        = "Magma suddenly erupts from the ground!";
             break;
         case 1:
-            beam.name    = "blast of ice";
-            beam.flavour = BEAM_ICE;
-            beam.colour  = WHITE;
-            message      = "A blizzard blasts the area with ice!";
+            beam.name      = "blast of ice";
+            beam.flavour   = BEAM_ICE;
+            beam.colour    = WHITE;
+            beam.tile_beam = TILE_BOLT_ICEBLAST;
+            message        = "A blizzard blasts the area with ice!";
             break;
         case 2:
-            beam.name    = "cutting wind";
-            beam.flavour = BEAM_AIR;
-            beam.colour  = LIGHTGRAY;
-            message      = "A storm cloud blasts the area with cutting wind!";
+            beam.name      = "cutting wind";
+            beam.flavour   = BEAM_AIR;
+            beam.colour    = LIGHTGRAY;
+            beam.tile_beam = TILE_BOLT_STRONG_AIR;
+            message        = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
             beam.name    = "blast of rubble";
@@ -4168,7 +4176,6 @@ spret qazlal_elemental_force(bool fail)
                                        1 + you.skill_rdiv(SK_INVOCATIONS, 1, 2)));
     mgen_data mg;
     mg.summon_type = MON_SUMM_AID;
-    mg.abjuration_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
     mg.summoner = &you;
     int placed = 0;
@@ -4185,6 +4192,7 @@ spret qazlal_elemental_force(bool fail)
         if (!mons_type)
             continue;
         mg.cls = *mons_type;
+        mg.summon_duration = summ_dur(1);
         if (!create_monster(mg))
             continue;
         delete_cloud(pos);
@@ -4340,6 +4348,7 @@ static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_HEXES_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
 };
 
 /// School-disabling mutations that are mostly easy to deal with.
@@ -4382,11 +4391,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     {
         return false;
     }
-
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
-        return false;
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -4603,12 +4607,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
 
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
-    if (sacrifice == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        piety_gain += _piety_for_skill(SK_STAVES);
-    }
+
     return piety_gain;
 }
 
@@ -5046,63 +5045,6 @@ static void _extra_sacrifice_code(ability_type sac)
 {
     switch (_get_sacrifice_def(sac).sacrifice)
     {
-    case ABIL_RU_SACRIFICE_HAND:
-    {
-        auto ring_slots = species::ring_slots(you.species, true);
-        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
-
-        item_def* const shield = you.slot_item(EQ_OFFHAND, true);
-        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(sac_ring_slot, true);
-        int ring_inv_slot = you.equip[sac_ring_slot];
-        equipment_type open_ring_slot = EQ_NONE;
-
-        // Drop your shield if there is one
-        if (shield != nullptr)
-        {
-            mprf("You can no longer hold %s!",
-                 shield->name(DESC_YOUR).c_str());
-            unequip_item(EQ_OFFHAND);
-        }
-
-        // And your two-handed weapon
-        if (weapon != nullptr)
-        {
-            if (you.hands_reqd(*weapon) == HANDS_TWO)
-            {
-                mprf("You can no longer hold %s!",
-                     weapon->name(DESC_YOUR).c_str());
-                unequip_item(EQ_WEAPON);
-            }
-        }
-
-        // And one ring
-        if (ring != nullptr)
-        {
-            // XX does not handle an open slot on the finger amulet
-            for (const auto &eq : ring_slots)
-                if (!you.slot_item(eq, true))
-                {
-                    open_ring_slot = eq;
-                    break;
-                }
-
-            const bool can_keep = open_ring_slot != EQ_NONE;
-
-            mprf("You can no longer wear %s!",
-                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, can_keep);
-            if (can_keep)
-            {
-                mprf("You put %s back on %s %s!",
-                     ring->name(DESC_YOUR).c_str(),
-                     (ring_slots.size() > 1 ? "another" : "your other"),
-                     you.hand_name(true).c_str());
-                equip_item(open_ring_slot, ring_inv_slot, false, true);
-            }
-        }
-        break;
-    }
     case ABIL_RU_SACRIFICE_EXPERIENCE:
         level_change();
         break;
@@ -5304,16 +5246,6 @@ bool ru_do_sacrifice(ability_type sac)
     }
     else if (sac_def.sacrifice_skill != SK_NONE)
         _ru_kill_skill(sac_def.sacrifice_skill);
-
-    // Maybe this should go in _extra_sacrifice_code, but it would be
-    // inconsistent for the milestone to have reduced Shields skill
-    // but not the others.
-    if (sac == ABIL_RU_SACRIFICE_HAND
-        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-    {
-        // No one-handed staves for small races.
-        _ru_kill_skill(SK_STAVES);
-    }
 
     mark_milestone("sacrifice", mile_text);
 
@@ -5555,7 +5487,7 @@ bool ru_power_leap()
     {
         direction_chooser_args args;
         args.restricts = DIR_ENFORCE_RANGE;
-        args.mode = TARG_ANY;
+        args.mode = TARG_HOSTILE;
         args.range = 3;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
@@ -5714,7 +5646,7 @@ static int _apply_apocalypse(coord_def where)
     enchant_type enchantment = ENCH_NONE;
 
     int effect = random2(4);
-    if (mons_is_firewood(*mons))
+    if (mons->is_firewood())
         effect = 99; // > 2 is just damage -- no slowed toadstools
 
     int num_dice;
@@ -5784,8 +5716,7 @@ bool ru_apocalypse()
 
 static bool _mons_stompable(const monster &mons)
 {
-    // Don't hurt your own demonic guardians
-    return !testbits(mons.flags, MF_DEMONIC_GUARDIAN) || !mons.friendly();
+    return !never_harm_monster(&you, &mons) || !mons.friendly();
 }
 
 dice_def uskayaw_stomp_extra_damage(bool allow_random)
@@ -5867,6 +5798,7 @@ bool uskayaw_line_pass()
     line_pass.range = range;
     line_pass.ench_power = pow;
     line_pass.pierce = true;
+    line_pass.aimed_at_spot = true;
 
     while (1)
     {
@@ -6068,7 +6000,7 @@ spret uskayaw_grand_finale(bool fail)
     // throw_monster_bits can cause mons to be killed already, e.g. via pain
     // bond or dismissing summons
     if (mons->alive())
-        monster_die(*mons, KILL_YOU, NON_MONSTER, false);
+        monster_die(*mons, KILL_YOU, NON_MONSTER);
 
     // a lost soul may sneak in here
     if (!mons->alive() && !monster_at(beam.target))
@@ -6222,7 +6154,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(*mon) || mons_is_firewood(*mon))
+        if (!mon || mon->is_firewood() || never_harm_monster(&you, *mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -6526,9 +6458,10 @@ bool wu_jian_do_wall_jump(coord_def targ)
     }
 
     auto initial_position = you.pos();
-    move_player_to_grid(wall_jump_landing_spot, false);
+    you.moveto(wall_jump_landing_spot);
     wu_jian_wall_jump_effects();
     you.clear_far_engulf(false, true);
+    you.apply_location_effects(initial_position);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
@@ -6599,7 +6532,7 @@ spret wu_jian_wall_jump_ability()
     {
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
-        args.mode = TARG_ANY;
+        args.mode = TARG_NON_ACTOR;
         args.range = 1;
         args.needs_path = false; // TODO: overridden by hitfunc?
         args.top_prompt = "Aiming: <white>Wall Jump</white>";
@@ -6675,9 +6608,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
         return spret::abort;
     }
 
-    if (mons_is_firewood(*mons)
-        || mons_is_conjured(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
+    if (mons->is_peripheral()
         || mons_primary_habitat(*mons) == HT_LAVA
         || mons_primary_habitat(*mons) == HT_WATER
         || mons->wont_attack())
@@ -6960,7 +6891,7 @@ static void _makhleb_atrocity_trigger(int power)
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+        if (!mi->wont_attack() && !mi->is_firewood())
             targs.push_back(*mi);
     }
 
@@ -7083,13 +7014,8 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     // First, find all possible valid enemies
     vector<monster*> targs;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mi->wont_attack() && !mons_is_firewood(**mi)
-            && you.can_see(**mi))
-        {
+        if (!mi->wont_attack() && !mi->is_firewood() && you.can_see(**mi))
             targs.push_back(*mi);
-        }
-    }
     shuffle_array(targs);
 
     // Now iterate through these in random order, looking for a place that this
@@ -7097,7 +7023,7 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     for (size_t i = 0; i < targs.size(); ++i)
     {
         coord_def pos;
-        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, false, pos, true))
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, pos, 0, &you))
         {
             demon_spot = pos;
             return targs[i];
@@ -7109,7 +7035,7 @@ static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_s
     for (size_t i = 0; i < targs.size(); ++i)
     {
         coord_def pos;
-        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, false, pos, true))
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, pos, 0, &you))
         {
             demon_spot = pos;
             return targs[i];
@@ -7139,8 +7065,8 @@ void makhleb_infernal_servant()
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, tyrant ? 6 : 4, MON_SUMM_AID, GOD_MAKHLEB);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE, GOD_MAKHLEB);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(tyrant ? 6 : 4));
 
     if (carnage)
     {
@@ -7240,7 +7166,7 @@ void makhleb_inscribe_mark(mutation_type mark)
 
     const int hploss = min(you.hp - 1, you.hp * 2 / 3);
     blood_spray(you.pos(), MONS_PLAYER, 50);
-    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER);
+    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER, nullptr, true, nullptr, true);
 
     perma_mutate(mark, 1, "inscribed by the player");
 
@@ -7259,8 +7185,8 @@ static void _summon_legion_demon()
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, 1, MON_SUMM_AID, GOD_MAKHLEB);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE, GOD_MAKHLEB);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(1));
     create_monster(mg);
 }
 
@@ -7315,7 +7241,7 @@ void makhleb_vessel_of_slaughter()
     mpr("You offer yourself as an instrument of Makhleb's will and feel "
         "overwhelming power flowing through you!");
 
-    transform(100, transformation::slaughter);
+    transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
     bolt damnation;

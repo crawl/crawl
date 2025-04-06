@@ -322,59 +322,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         return $popup;
     }
 
-    function mutations(desc)
-    {
-        var $popup = $(".templates > .mutations").clone();
-        var $body = $popup.find(".body");
-        var $footer = $popup.find(".footer");
-        var $muts = $body.children().first(), $vamp = $body.children().last();
-        $muts.html(fmt_body_txt(desc.mutations));
-        var s = scroller($muts[0]);
-        $popup.on("keydown keypress", function (event) {
-            scroller_handle_key(s, event);
-        });
-        paneset_cycle($body);
-
-        if (desc.vampire_alive !== undefined)
-        {
-            var css = ".vamp-attrs th:nth-child(%d) { background: #111; }";
-            css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
-            css = css.replace(/%d/g, desc.vampire_alive ? 2 : 3);
-            $vamp.children("style").html(css);
-            var vs = scroller($vamp[0]);
-            $popup.on("keydown keypress", function (event) {
-                scroller_handle_key(vs, event);
-            });
-            paneset_cycle($footer);
-        }
-        else
-        {
-            $vamp.remove();
-            $footer.remove();
-        }
-
-        $popup.on("keydown", function (event) {
-            if (event.key === "!" || event.key === "^")
-            {
-                paneset_cycle($body);
-                paneset_cycle($footer);
-            }
-        });
-        return $popup;
-    }
-
-    function mutations_update(msg)
-    {
-        var $popup = ui.top_popup();
-        if (!$popup.hasClass("mutations"))
-            return;
-        if (msg.pane !== undefined && client.is_watching())
-        {
-            paneset_cycle($popup.children(".body"), msg.pane);
-            paneset_cycle($popup.children(".footer"), msg.pane);
-        }
-    }
-
     function describe_god(desc)
     {
         var use_extra_pane = (desc.extra.length > 0);
@@ -412,7 +359,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                     .addClass("fg"+desc.colour).html(desc.favour);
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
-        var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
+        var re = /^(<[a-z]*>)?(.*\.) *(\(.*\))?$/;
         for (var i = 0; i < powers_list.length; i++)
         {
             var matches = powers_list[i].match(re);
@@ -481,6 +428,16 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         }
         if (msg.prompt !== undefined)
             $popup.children(".footer").html(msg.prompt).addClass("fg3");
+    }
+
+    function describe_item_spell_success(desc)
+    {
+        var $popup = ui.top_popup();
+        if (desc.body !== undefined)
+        {
+            var $body = $popup.find(".simplebar-content");
+            $body.html(fmt_body_txt(desc.body));
+        }
     }
 
     function describe_monster(desc)
@@ -1001,7 +958,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         "describe-item" : describe_item,
         "describe-spell" : describe_spell,
         "describe-cards" : describe_cards,
-        "mutations" : mutations,
         "describe-god" : describe_god,
         "describe-monster" : describe_monster,
         "version" : version,
@@ -1060,12 +1016,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function recv_ui_state(msg)
     {
         var ui_handlers = {
-            "mutations" : mutations_update,
             "describe-god" : describe_god_update,
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
             "progress-bar" : progress_bar_update,
             "newgame-choice" : newgame_choice_update,
+            "describe-spell-success" : describe_item_spell_success,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

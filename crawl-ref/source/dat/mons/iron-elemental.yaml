@@ -12,7 +12,7 @@ hp_10x: 1080
 ac: 20
 ev: 2
 spells: iron_elemental
-intelligence: brainless
+intelligence: animal
 speed: 6
 size: large
 shape: misc

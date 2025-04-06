@@ -23,6 +23,8 @@
 #define MAKHLEB_HAEMOCLASM_KEY "makhleb_haemoclasm"
 #define MAKHLEB_BLOODRITE_KILL_KEY "bloodrite_kill"
 
+#define VAMPIRIC_THRALL_KEY "vampiric_thrall"
+
 class actor;
 class monster;
 
@@ -34,6 +36,8 @@ class monster;
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
+#define RESET_KILL(x) ((x) == KILL_RESET || (x) == KILL_RESET_KEEP_ITEMS \
+                       || (x) == KILL_TENTACLE_CLEANUP)
 
 #define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
                           (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
@@ -43,11 +47,10 @@ class monster;
 struct bolt;
 
 item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
-                      bool wizard = false, bool fake = false);
+                      bool mount_death = false);
 
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent = false,
-                      bool wizard = false, bool fake = false);
+                      int killer_index, bool silent = false, bool mount_death = false);
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
@@ -62,12 +65,10 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
 
 void monster_cleanup(monster* mons);
 void record_monster_defeat(const monster* mons, killer_type killer);
-void unawaken_vines(const monster* mons, bool quiet);
 int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
 void end_flayed_effect(monster* ghost);
-
 
 bool damage_contributes_xp(const actor& agent);
 
@@ -76,8 +77,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
 int dismiss_monsters(string pattern);
 
-string summoned_poof_msg(const monster* mons, bool plural = false);
-string summoned_poof_msg(const monster* mons, const item_def &item);
+string summoned_poof_msg(const monster& mons);
 
 bool mons_is_mons_class(const monster* mons, monster_type type);
 void pikel_band_neutralise();
