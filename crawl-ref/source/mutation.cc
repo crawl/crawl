@@ -3143,14 +3143,15 @@ void check_monster_detect()
     if (radius <= 0)
         return;
 
+    MapKnowledge& map = env.map_knowledge;
+
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-        map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
         {
-            if (cell.detected_monster())
-                cell.clear_monster();
+            if (map.detected_monster(*ri))
+                map.clear_monster(*ri);
             continue;
         }
         if (mon->is_firewood())
@@ -3165,7 +3166,7 @@ void check_monster_detect()
         // forth, since every time it leaves LOS of the mimic, the
         // mimic is forgotten (replaced by MONS_SENSED).
         // XXX: since mimics were changed, is this safe to remove now?
-        const monster_type remembered_monster = cell.monster();
+        const monster_type remembered_monster = map.monster(*ri);
         if (remembered_monster == mon->type)
             continue;
 
@@ -3174,7 +3175,7 @@ void check_monster_detect()
             ? ash_monster_tier(mon)
             : MONS_SENSED;
 
-        env.map_knowledge(*ri).set_detected_monster(mc);
+        map.set_detected_monster(*ri, mc);
 
         // Don't bother warning the player (or interrupting autoexplore) about
         // friendly monsters or those known to be easy, or those recently

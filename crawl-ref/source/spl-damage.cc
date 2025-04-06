@@ -899,11 +899,11 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     int empty_space = 0;
     for (adjacent_iterator ai(target); ai; ++ai)
     {
-        if (!count_unseen && !env.map_knowledge(*ai).seen())
+        if (!count_unseen && !env.map_knowledge.seen(*ai))
             continue;
 
         const auto feat = count_unseen ? env.grid(*ai)
-                                       : env.map_knowledge(*ai).feat();
+                                       : env.map_knowledge.feat(*ai);
         if (feat_is_solid(feat))
             continue;
 
@@ -912,7 +912,7 @@ int airstrike_space_around(coord_def target, bool count_unseen)
             if (!actor_at(*ai))
                 ++empty_space;
         }
-        else if (you.pos() != *ai && !env.map_knowledge(*ai).monsterinfo())
+        else if (you.pos() != *ai && !env.map_knowledge.monsterinfo(*ai))
             ++empty_space;
     }
 
@@ -4651,7 +4651,7 @@ void end_frozen_ramparts()
                 spell_range(SPELL_FROZEN_RAMPARTS, -1)); di; di++)
     {
         env.pgrid(*di) &= ~FPROP_ICY;
-        env.map_knowledge(*di).flags &= ~MAP_ICY;
+        env.map_knowledge.flags(*di) &= ~MAP_ICY;
     }
 
     you.props.erase(FROZEN_RAMPARTS_KEY);

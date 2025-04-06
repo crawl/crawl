@@ -116,61 +116,61 @@ static void _update_feat_at(const coord_def &gp)
     if (feat_is_trap(feat))
         trap = get_trap_type(gp);
 
-    env.map_knowledge(gp).set_feature(feat, colour, trap);
+    env.map_knowledge.set_feature(gp, feat, colour, trap);
 
     if (haloed(gp))
-        env.map_knowledge(gp).flags |= MAP_HALOED;
+        env.map_knowledge.flags(gp) |= MAP_HALOED;
 
     if (umbraed(gp))
-        env.map_knowledge(gp).flags |= MAP_UMBRAED;
+        env.map_knowledge.flags(gp) |= MAP_UMBRAED;
 
     if (silenced(gp))
-        env.map_knowledge(gp).flags |= MAP_SILENCED;
+        env.map_knowledge.flags(gp) |= MAP_SILENCED;
 
     if (liquefied(gp, true))
-        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
+        env.map_knowledge.flags(gp) |= MAP_LIQUEFIED;
 
     if (orb_haloed(gp))
-        env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
+        env.map_knowledge.flags(gp) |= MAP_ORB_HALOED;
 
     if (quad_haloed(gp))
-        env.map_knowledge(gp).flags |= MAP_QUAD_HALOED;
+        env.map_knowledge.flags(gp) |= MAP_QUAD_HALOED;
 
     if (disjunction_haloed(gp))
-        env.map_knowledge(gp).flags |= MAP_DISJUNCT;
+        env.map_knowledge.flags(gp) |= MAP_DISJUNCT;
 
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
-            env.map_knowledge(gp).flags |= MAP_SANCTUARY_1;
+            env.map_knowledge.flags(gp) |= MAP_SANCTUARY_1;
         else if (testbits(env.pgrid(gp), FPROP_SANCTUARY_2))
-            env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
+            env.map_knowledge.flags(gp) |= MAP_SANCTUARY_2;
     }
 
     if (is_blasphemy(gp))
-        env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
+        env.map_knowledge.flags(gp) |= MAP_BLASPHEMY;
 
     if (you.get_beholder(gp))
-        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+        env.map_knowledge.flags(gp) |= MAP_WITHHELD;
 
     if (you.get_fearmonger(gp))
-        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+        env.map_knowledge.flags(gp) |= MAP_WITHHELD;
 
     if (you.is_nervous() && you.see_cell(gp) && !monster_at(gp))
-        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+        env.map_knowledge.flags(gp) |= MAP_WITHHELD;
 
     if ((feat_is_stone_stair(feat)
          || feat_is_escape_hatch(feat))
         && is_exclude_root(gp))
     {
-        env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
+        env.map_knowledge.flags(gp) |= MAP_EXCLUDED_STAIRS;
     }
 
     if (is_bloodcovered(gp))
-        env.map_knowledge(gp).flags |= MAP_BLOODY;
+        env.map_knowledge.flags(gp) |= MAP_BLOODY;
 
     if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
-        env.map_knowledge(gp).flags |= MAP_CORRODING;
+        env.map_knowledge.flags(gp) |= MAP_CORRODING;
 
     // We want to give non-solid terrain and the icy walls themselves MAP_ICY
     // so we can properly recolor both.
@@ -180,7 +180,7 @@ static void _update_feat_at(const coord_def &gp)
                 && count_adjacent_icy_walls(gp)
                 && you.see_cell_no_trans(gp)))
     {
-        env.map_knowledge(gp).flags |= MAP_ICY;
+        env.map_knowledge.flags(gp) |= MAP_ICY;
     }
 
     // XXX: This feels like is should be more separated somehow...
@@ -188,11 +188,11 @@ static void _update_feat_at(const coord_def &gp)
         && you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY)
         && tile_has_valid_bfb_corpse(gp))
     {
-        env.map_knowledge(gp).flags |= MAP_BFB_CORPSE;
+        env.map_knowledge.flags(gp) |= MAP_BFB_CORPSE;
     }
 
     if (emphasise(gp))
-        env.map_knowledge(gp).flags |= MAP_EMPHASIZE;
+        env.map_knowledge.flags(gp) |= MAP_EMPHASIZE;
 
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
@@ -273,7 +273,7 @@ void update_item_at(const coord_def &gp, bool wizard)
         if (stash.size() > 1)
             more_items = true;
     }
-    env.map_knowledge(gp).set_item(eitem, more_items);
+    env.map_knowledge.set_item(gp, eitem, more_items);
 }
 
 static void _update_cloud(cloud_struct& cloud)
@@ -288,7 +288,7 @@ static void _update_cloud(cloud_struct& cloud)
 
     cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
                   cloud.killer);
-    env.map_knowledge(gp).set_cloud(ci);
+    env.map_knowledge.set_cloud(gp, ci);
 }
 
 static void _check_monster_pos(const monster* mons)
@@ -323,7 +323,7 @@ static void _check_monster_pos(const monster* mons)
 static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
 {
     if (!you.see_cell(where) || where == you.pos()
-        || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
+        || env.map_knowledge.flags(where) & MAP_INVISIBLE_UPDATE)
     {
         return false;
     }
@@ -369,8 +369,8 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 static void _mark_invisible_at(const coord_def &where,
                                bool do_tiles_draw = false)
 {
-    env.map_knowledge(where).set_invisible_monster();
-    env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
+    env.map_knowledge.set_invisible_monster(where);
+    env.map_knowledge.flags(where) |= MAP_INVISIBLE_UPDATE;
 
     if (do_tiles_draw)
         show_update_at(where);
@@ -443,7 +443,7 @@ static void _update_monster(monster* mons)
     {
         mons->ensure_has_client_id();
         monster_info mi(mons);
-        env.map_knowledge(gp).set_monster(mi);
+        env.map_knowledge.set_monster(gp, mi);
         return;
     }
 
@@ -503,11 +503,11 @@ static void _update_monster(monster* mons)
 void show_update_at(const coord_def &gp, layers_type layers)
 {
     if (you.see_cell(gp))
-        env.map_knowledge(gp).clear_data();
-    else if (!env.map_knowledge(gp).known())
+        env.map_knowledge.clear_data(gp);
+    else if (!env.map_knowledge.known(gp))
         return;
     else
-        env.map_knowledge(gp).clear_monster();
+        env.map_knowledge.clear_monster(gp);
 
     force_show_update_at(gp, layers);
 }
@@ -525,7 +525,7 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
         monster* mons = monster_at(gp);
         if (mons && mons->alive())
             _update_monster(mons);
-        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
+        else if (env.map_knowledge.flags(gp) & MAP_INVISIBLE_UPDATE)
             _mark_invisible_at(gp);
     }
 
@@ -546,7 +546,7 @@ void show_init(layers_type layers)
         {
             show_update_at(*ri, layers);
             // Invis indicators and update flags not used in Arena.
-            env.map_knowledge(*ri).flags &= ~MAP_INVISIBLE_UPDATE;
+            env.map_knowledge.flags(*ri) &= ~MAP_INVISIBLE_UPDATE;
         }
         return;
     }
@@ -562,7 +562,7 @@ void show_init(layers_type layers)
 
     // Need to clear these update flags now so they don't persist.
     for (coord_def loc : update_locs)
-        env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
+        env.map_knowledge.flags(loc) &= ~MAP_INVISIBLE_UPDATE;
 }
 
 // Emphasis may change while off-level. This catches up.
@@ -577,10 +577,10 @@ void show_update_emphasis()
     vector<stair_info> stairs = level_info.get_stairs();
     for (const stair_info &stair : stairs)
         if (stair.destination.is_valid())
-            env.map_knowledge(stair.position).flags &= ~MAP_EMPHASIZE;
+            env.map_knowledge.flags(stair.position) &= ~MAP_EMPHASIZE;
 
     vector<transporter_info> transporters = level_info.get_transporters();
     for (const transporter_info &transporter: transporters)
         if (!transporter.destination.origin())
-            env.map_knowledge(transporter.position).flags &= ~MAP_EMPHASIZE;
+            env.map_knowledge.flags(transporter.position) &= ~MAP_EMPHASIZE;
 }

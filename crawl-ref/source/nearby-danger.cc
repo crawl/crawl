@@ -331,7 +331,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             [](const monster *mon){ return mon->visible_to(&you); });
     const bool sensed = any_of(monsters.begin(), monsters.end(),
                    [](const monster *mon){
-                       return env.map_knowledge(mon->pos()).flags
+                       return env.map_knowledge.flags(mon->pos())
                               & MAP_INVISIBLE_MONSTER;
                    });
 
@@ -354,7 +354,7 @@ bool can_rest_here(bool announce)
             continue;
         if (mi->visible_to(&you))
             visible.push_back(*mi);
-        else if (env.map_knowledge(mi->pos()).flags & MAP_INVISIBLE_MONSTER)
+        else if (env.map_knowledge.flags(mi->pos()) & MAP_INVISIBLE_MONSTER)
             sensed = true;
     }
 

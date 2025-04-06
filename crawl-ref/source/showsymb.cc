@@ -27,11 +27,12 @@
 #include "tilepick.h"
 #include "rltiles/tiledef-player.h"
 
-static unsigned short _cell_feat_show_colour(const map_cell& cell,
-                                             const coord_def& loc,
+static unsigned short _cell_feat_show_colour(const coord_def& loc,
                                              bool coloured)
 {
-    dungeon_feature_type feat = cell.feat();
+    const MapKnowledge& map = env.map_knowledge;
+    dungeon_feature_type feat = map.feat(loc);
+    const uint32_t flags = map.flags(loc);
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
@@ -47,9 +48,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         colour = Options.tc_excluded;
     else if (!coloured)
     {
-        if (cell.flags & MAP_EMPHASIZE)
+        if (flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour();
-        else if (cell.flags & MAP_MAGIC_MAPPED_FLAG)
+        else if (flags & MAP_MAGIC_MAPPED_FLAG)
             colour = fdef.unseen_colour();
         else
             colour = fdef.seen_colour();
@@ -58,11 +59,11 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             return colour;
     }
     else if (!feat_is_solid(feat)
-             && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
+             && (flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
     {
-        if (cell.flags & MAP_SANCTUARY_1)
+        if (flags & MAP_SANCTUARY_1)
             colour = YELLOW;
-        else if (cell.flags & MAP_SANCTUARY_2)
+        else if (flags & MAP_SANCTUARY_2)
         {
             if (!one_chance_in(4))
                 colour = WHITE;     // 3/4
@@ -72,33 +73,32 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
                 colour = LIGHTGREY; // 1/12
         }
     }
-    else if (cell.flags & MAP_BFB_CORPSE)
+    else if (flags & MAP_BFB_CORPSE)
         colour = LIGHTRED;
     else if (!feat_is_solid(feat)
-             && (cell.flags & MAP_BLASPHEMY))
+             && (flags & MAP_BLASPHEMY))
     {
         colour = LIGHTMAGENTA;
     }
-    else if (cell.flags & MAP_BLOODY && !norecolour && Options.show_blood)
+    else if (flags & MAP_BLOODY && !norecolour && Options.show_blood)
         colour = RED;
-    else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)
+    else if (flags & MAP_CORRODING && feat == DNGN_FLOOR)
         colour = LIGHTGREEN;
-    else if (cell.flags & MAP_ICY
-             && (feat_is_wall(feat) || feat == DNGN_FLOOR))
+    else if (flags & MAP_ICY && (feat_is_wall(feat) || feat == DNGN_FLOOR))
     {
         if (feat_is_wall(feat))
             colour = ETC_ICE;
         else
             colour = LIGHTCYAN;
     }
-    else if (cell.feat_colour() && !no_vault_recolour)
-        colour = cell.feat_colour();
+    else if (map.feat_colour(loc) && !no_vault_recolour)
+        colour = map.feat_colour(loc);
     else
     {
         colour = fdef.colour();
 
         if (fdef.em_colour() && fdef.em_colour() != fdef.colour()
-            && cell.flags & MAP_EMPHASIZE)
+            && flags & MAP_EMPHASIZE)
         {
             colour = fdef.em_colour();
         }
@@ -115,35 +115,35 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
     if (feat == DNGN_FLOOR)
     {
-        if (cell.flags & MAP_LIQUEFIED)
+        if (flags & MAP_LIQUEFIED)
             colour = ETC_LIQUEFIED;
-        else if (cell.flags & MAP_DISJUNCT)
+        else if (flags & MAP_DISJUNCT)
             colour = ETC_DISJUNCTION;
-        else if (cell.flags & MAP_HALOED)
+        else if (flags & MAP_HALOED)
         {
-            if (cell.flags & MAP_SILENCED && cell.flags & MAP_UMBRAED)
+            if (flags & MAP_SILENCED && flags & MAP_UMBRAED)
                 colour = CYAN; // Default for silence.
-            else if (cell.flags & MAP_SILENCED)
+            else if (flags & MAP_SILENCED)
                 colour = LIGHTCYAN;
-            else if (cell.flags & MAP_UMBRAED)
+            else if (flags & MAP_UMBRAED)
                 colour = fdef.colour(); // Cancels out!
             else
                 colour = YELLOW;
         }
-        else if (cell.flags & MAP_UMBRAED)
+        else if (flags & MAP_UMBRAED)
         {
-            if (cell.flags & MAP_SILENCED)
+            if (flags & MAP_SILENCED)
                 colour = BLUE; // Silence gets darker
             else
                 colour = MAGENTA; // If no holy or silence
         }
-        else if (cell.flags & MAP_SILENCED)
+        else if (flags & MAP_SILENCED)
             colour = CYAN; // Silence but no holy/unholy
         else if (env.pgrid(loc) & FPROP_SEISMOROCK)
             colour = BROWN;
-        else if (cell.flags & MAP_ORB_HALOED)
+        else if (flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
-        else if (cell.flags & MAP_QUAD_HALOED)
+        else if (flags & MAP_QUAD_HALOED)
             colour = BLUE;
     }
 
@@ -303,23 +303,25 @@ static cglyph_t _get_item_override(const item_def &item)
     return g;
 }
 
-show_class get_cell_show_class(const map_cell& cell,
-                               bool only_stationary_monsters)
+show_class get_cell_show_class(coord_def gc, bool only_stationary_monsters)
 {
-    if (cell.invisible_monster())
+    const MapKnowledge& map = env.map_knowledge;
+
+    if (map.invisible_monster(gc))
         return SH_INVIS_EXPOSED;
 
-    if (cell.monster() != MONS_NO_MONSTER
+    const monster_type mons = map.monster(gc);
+    if (mons != MONS_NO_MONSTER
         && (!only_stationary_monsters
-            || mons_class_is_stationary(cell.monster())))
+            || mons_class_is_stationary(mons)))
     {
         return SH_MONSTER;
     }
 
-    if (cell.cloud() != CLOUD_NONE)
+    if (map.cloud(gc) != CLOUD_NONE)
         return SH_CLOUD;
 
-    const dungeon_feature_type feat = cell.feat();
+    const dungeon_feature_type feat = map.feat(gc);
     if (feat && feat_is_solid(feat)
         || feat_has_dry_floor(feat)
            && feat != DNGN_FLOOR
@@ -333,10 +335,10 @@ show_class get_cell_show_class(const map_cell& cell,
         return SH_FEATURE;
     }
 
-    if (cell.item())
+    if (map.item(gc))
         return SH_ITEM;
 
-    if (cell.feat())
+    if (feat)
         return SH_FEATURE;
 
     return SH_NOTHING;
@@ -362,37 +364,38 @@ static const unsigned short ripple_table[] =
      LIGHTGREY,     // WHITE        => LIGHTGREY
 };
 
-static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
-                                           const coord_def& loc,
+static cglyph_t _get_cell_glyph_with_class(const coord_def& loc,
                                            const show_class cls,
                                            int colour_mode)
 {
-    const bool coloured = colour_mode == 0 ? cell.visible() : (colour_mode > 0);
+    const MapKnowledge& map = env.map_knowledge;
+
+    const bool coloured = colour_mode == 0 ? map.visible(loc) : (colour_mode > 0);
     cglyph_t g;
     show_type show;
 
     g.ch = 0;
-    const cloud_type cell_cloud = cell.cloud();
+    const cloud_type cell_cloud = map.cloud(loc);
 
     switch (cls)
     {
     case SH_INVIS_EXPOSED:
-        ASSERT(cell.invisible_monster());
+        ASSERT(map.invisible_monster(loc));
 
         show.cls = SH_INVIS_EXPOSED;
         if (cell_cloud != CLOUD_NONE)
-            g.col = cell.cloud_colour();
+            g.col = map.cloud_colour(loc);
         else
-            g.col = ripple_table[cell.feat_colour() & 0xf];
+            g.col = ripple_table[map.feat_colour(loc) & 0xf];
         break;
 
     case SH_MONSTER:
     {
-        show = cell.monster();
-        const monster_info* mi = cell.monsterinfo();
+        show = map.monster(loc);
+        const monster_info* mi = map.monsterinfo(loc);
         ASSERT(mi);
 
-        if (cell.detected_monster())
+        if (map.detected_monster(loc))
         {
             ASSERT(mi->type == MONS_SENSED);
             if (mons_is_sensed(mi->base_type))
@@ -480,15 +483,15 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         ASSERT(cell_cloud);
         show.cls = SH_CLOUD;
         if (coloured)
-            g.col = cell.cloud_colour();
+            g.col = map.cloud_colour(loc);
         else
             g.col = DARKGRAY;
 
-        if (cloud_type_tile_info(cell.cloudinfo()->type).variation
+        if (cloud_type_tile_info(map.cloudinfo(loc)->type).variation
             == CTVARY_DUR)
         {
             // duration is already clamped to 0-3
-            int dur = cell.cloudinfo()->duration;
+            int dur = map.cloudinfo(loc)->duration;
             switch (dur)
             {
             case 0:
@@ -510,39 +513,39 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         break;
 
     case SH_FEATURE:
-        show = cell.feat();
+        show = map.feat(loc);
         ASSERT(show);
 
-        g.col = _cell_feat_show_colour(cell, loc, coloured);
+        g.col = _cell_feat_show_colour(loc, coloured);
 
-        if (cell.item())
+        if (map.item(loc))
         {
             if (Options.feature_item_highlight
-                && (feat_is_critical(cell.feat())
-                    || feat_is_solid(cell.feat())))
+                && (feat_is_critical(map.feat(loc))
+                    || feat_is_solid(map.feat(loc))))
             {
                 g.col |= COLFLAG_FEATURE_ITEM;
             }
-            else if (Options.trap_item_highlight && feat_is_trap(cell.feat()))
+            else if (Options.trap_item_highlight && feat_is_trap(map.feat(loc)))
                 g.col |= COLFLAG_TRAP_ITEM;
         }
         break;
 
     case SH_ITEM:
     {
-        const item_def* eitem = cell.item();
+        const item_def* eitem = map.item(loc);
         ASSERT(eitem);
         show = *eitem;
 
         g = _get_item_override(*eitem);
 
-        if (!feat_has_dry_floor(cell.feat()))
-            g.col = _cell_feat_show_colour(cell, loc, coloured);
+        if (!feat_has_dry_floor(map.feat(loc)))
+            g.col = _cell_feat_show_colour(loc, coloured);
         else if (!g.col)
             g.col = eitem->get_colour();
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (cell.flags & MAP_MORE_ITEMS)
+        if (map.flags(loc) & MAP_MORE_ITEMS)
             g.col |= COLFLAG_ITEM_HEAP;
         break;
     }
@@ -569,8 +572,8 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
-        g.ch = !cell.seen() || cell.flags & MAP_EMPHASIZE ? fdef.magic_symbol()
-                                                          : fdef.symbol();
+        g.ch = !map.seen(loc) || map.flags(loc) & MAP_EMPHASIZE ? fdef.magic_symbol()
+                                                                : fdef.symbol();
     }
 
     if (g.col)
@@ -584,10 +587,9 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
 {
     // note: this does NOT determine output of the player glyph;
     // that's handled by itself in _draw_player() in view.cc
-    const map_cell& cell = env.map_knowledge(loc);
     const show_class cell_show_class =
-        get_cell_show_class(cell, only_stationary_monsters);
-    return _get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
+        get_cell_show_class(loc, only_stationary_monsters);
+    return _get_cell_glyph_with_class(loc, cell_show_class, colour_mode);
 }
 
 char32_t get_feat_symbol(dungeon_feature_type feat)

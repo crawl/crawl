@@ -1188,7 +1188,7 @@ static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
 
 static void _clear_env_map()
 {
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     env.map_forgotten.reset();
 }
 
@@ -2421,7 +2421,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             _learn_transporters();
             for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
             {
-                if (env.map_knowledge(*ri).seen())
+                if (env.map_knowledge.seen(*ri))
                 {
                     force_show_update_at(*ri);
 #ifdef USE_TILE

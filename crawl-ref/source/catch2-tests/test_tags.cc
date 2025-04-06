@@ -4,7 +4,7 @@
 
 #include "AppHdr.h"
 
-#include "map-cell.h"
+#include "map-knowledge.h"
 #include "random.h"
 #include "tags.h"
 
@@ -190,8 +190,8 @@ TEST_CASE( "Monster spell unmarshalling can remove removed spells", "[single-fil
 
 TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" ) {
 
-    void marshallMapCell (writer &, const map_cell &);
-    void unmarshallMapCell (reader &, map_cell& cell);
+    void marshallMapCell (writer &th, coord_def gc, const MapKnowledge &map);
+    void unmarshallMapCell (reader &th, coord_def gc, MapKnowledge& map);
 
     SECTION ("Short integers can be roundtripped.") {
         rng::subgenerator subgen(0, 0);
@@ -213,35 +213,37 @@ TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" )
     }
 
     SECTION ("Map cells can be roundtripped.") {
-        auto roundtrip_map_cell = [](const map_cell cell) {
+        auto roundtrip_map_cell = [](coord_def gc, const MapKnowledge map)
+        {
             vector<unsigned char> buf;
             auto w = writer(&buf);
-            marshallMapCell(w, cell);
+            marshallMapCell(w, gc, map);
 
             auto r = reader(buf);
-            map_cell roundtrip_cell;
-            unmarshallMapCell(r, roundtrip_cell);
+            MapKnowledge roundtrip_map;
+            unmarshallMapCell(r, gc, roundtrip_map);
 
             // TODO: Compare other members.
-            REQUIRE(cell.flags == roundtrip_cell.flags);
+            REQUIRE(map.flags(gc) == roundtrip_map.flags(gc));
             REQUIRE(r.valid() == false);
         };
 
-        map_cell cell;
+        coord_def gc(0, 0);
+        MapKnowledge map_knowledge;
 
-        cell.flags = 129;
-        roundtrip_map_cell(cell);
+        map_knowledge.flags(gc) = 129;
+        roundtrip_map_cell(gc, map_knowledge);
 
-        cell.flags = 32769;
-        roundtrip_map_cell(cell);
+        map_knowledge.flags(gc) = 32769;
+        roundtrip_map_cell(gc, map_knowledge);
 
         random_device rd;
         mt19937 generator(rd());
         uniform_int_distribution<uint32_t> distribution(0, UINT32_MAX);
         for (auto i = 0; i < 1000; i++)
         {
-            cell.flags = distribution(generator);
-            roundtrip_map_cell(cell);
+            map_knowledge.flags(gc) = distribution(generator);
+            roundtrip_map_cell(gc, map_knowledge);
         }
     }
 }

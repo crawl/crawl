@@ -2512,7 +2512,7 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
         // not leak info about unseen terrain.
         const bool seen = you.see_cell(pos);
         dungeon_feature_type feat = seen ? env.grid(pos)
-                                         : env.map_knowledge(pos).feat();
+                                         : env.map_knowledge.feat(pos);
 
         // Assume that monsters can pass through unknown terrain
         if (feat == DNGN_UNSEEN)
@@ -2539,7 +2539,7 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
         }
         else
         {
-            monster_info* mon_at_pos = env.map_knowledge(pos).monsterinfo();
+            const monster_info* mon_at_pos = env.map_knowledge.monsterinfo(pos);
             if (mon_at_pos)
             {
                 mons_in_way = true;

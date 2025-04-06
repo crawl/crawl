@@ -14,7 +14,6 @@
 #include <sys/un.h>
 
 #include "cursor-type.h"
-#include "map-cell.h"
 #include "map-knowledge.h"
 #include "status.h"
 #include "text-tag-type.h"
@@ -287,7 +286,8 @@ protected:
     bool is_dirty(const coord_def& gc);
     bool cell_needs_redraw(const coord_def& gc);
 
-    FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
+    MapKnowledge m_current_map_knowledge;
+    MapKnowledge m_rendering_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;
     bool m_need_full_map;
 
@@ -322,7 +322,6 @@ protected:
     void _send_map(bool force_full = false);
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
-                    const map_cell &current_mc, const map_cell &next_mc,
                     map<uint32_t, coord_def>& new_monster_locs,
                     bool force_full);
     void _send_monster(const coord_def &gc, const monster_info* m,

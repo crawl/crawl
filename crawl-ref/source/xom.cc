@@ -447,7 +447,7 @@ static int _exploration_estimate(bool seen_only = false)
         tries++;
 
         coord_def pos = random_in_bounds();
-        if (!seen_only && env.map_knowledge(pos).known() || env.map_knowledge(pos).seen())
+        if (!seen_only && env.map_knowledge.known(pos) || env.map_knowledge.seen(pos))
         {
             seen++;
             total++;
@@ -1554,7 +1554,7 @@ static void _xom_lights_up_webs(int /*sever*/)
             check_place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
 
             webs_count++;
-            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            env.map_knowledge.set_feature(pos, DNGN_FLOOR);
             dungeon_terrain_changed(pos, DNGN_FLOOR);
 
             if (get_trapping_net(pos, true) == NON_ITEM)

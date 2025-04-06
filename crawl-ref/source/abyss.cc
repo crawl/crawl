@@ -249,8 +249,8 @@ static bool _sync_rune_knowledge(coord_def p)
         return false;
     // somewhat convoluted because to update map knowledge properly, we need
     // an actual rune item
-    const bool already = env.map_knowledge(p).item();
-    const bool rune_memory = already && env.map_knowledge(p).item()->is_type(
+    const bool already = env.map_knowledge.item(p);
+    const bool rune_memory = already && env.map_knowledge.item(p)->is_type(
                                                     OBJ_RUNES, RUNE_ABYSSAL);
     for (stack_iterator si(p); si; ++si)
     {
@@ -258,23 +258,23 @@ static bool _sync_rune_knowledge(coord_def p)
         {
             // found! make sure map memory is up-to-date
             if (!rune_memory)
-                env.map_knowledge(p).set_item(*si, already);
+                env.map_knowledge.set_item(p, *si, already);
 
             if (!you.see_cell(p))
-                env.map_knowledge(p).flags |= MAP_DETECTED_ITEM;
+                env.map_knowledge.flags(p) |= MAP_DETECTED_ITEM;
             return true;
         }
     }
     // no rune found, clear as needed
     if (already && (!rune_memory
-                    || !!(env.map_knowledge(p).flags & MAP_MORE_ITEMS)))
+                    || !!(env.map_knowledge.flags(p) & MAP_MORE_ITEMS)))
     {
         // something else seems to have been there, clear the rune but leave
         // a remnant
-        env.map_knowledge(p).set_detected_item();
+        env.map_knowledge.set_detected_item(p);
     }
     else
-        env.map_knowledge(p).clear();
+        env.map_knowledge.clear(p);
     return false;
 }
 
@@ -584,7 +584,7 @@ private:
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-            if (env.grid(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
+            if (env.grid(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge.seen(*ri))
                 return true;
 
         return false;
@@ -594,7 +594,7 @@ private:
     {
         // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-            if (env.map_knowledge(*ri).seen() && _abyssal_rune_at(*ri))
+            if (env.map_knowledge.seen(*ri) && _abyssal_rune_at(*ri))
                 return true;
         return false;
     }
@@ -794,9 +794,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 
     remove_markers_and_listeners_at(p);
 
-    env.map_knowledge(p).clear();
+    env.map_knowledge.clear(p);
     if (env.map_forgotten)
-        (*env.map_forgotten)(p).clear();
+        (*env.map_forgotten).clear(p);
     env.map_seen.set(p, false);
 #ifdef USE_TILE
     tile_forget_map(p);

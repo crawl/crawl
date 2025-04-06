@@ -106,7 +106,10 @@ void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
             if (map_bounds(gc))
-                pack_cell_overlays(coord_def(x, y), m_vbuf);
+            {
+                pack_cell_overlays(gc, m_vbuf(coord_def(x, y)).tile,
+                                   env.map_knowledge);
+            }
         }
 
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
@@ -626,7 +629,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
     // else not on player...
     if (event.button == wm_mouse_event::RIGHT)
     {
-        if (map_bounds(gc) && env.map_knowledge(gc).known())
+        if (map_bounds(gc) && env.map_knowledge.known(gc))
         {
             full_describe_square(gc);
             return CK_MOUSE_CMD;
@@ -928,7 +931,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                     cmd.push_back(CMD_CLOSE_DOOR);
                 }
             }
-            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
+            else if (env.map_knowledge.feat(gc) != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))
                     _add_tip(tip, "[L-Click] Travel");
@@ -957,9 +960,9 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     // These apply both on the same square as the player's and elsewhere.
     if (!has_monster)
     {
-        if (you.see_cell(gc) && env.map_knowledge(gc).item())
+        if (you.see_cell(gc) && env.map_knowledge.item(gc))
         {
-            const item_def * const item = env.map_knowledge(gc).item();
+            const item_def * const item = env.map_knowledge.item(gc);
             if (item && !item_is_stationary(*item))
             {
                 _add_tip(tip, "[L-Click] Pick up items (%)");
@@ -967,7 +970,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             }
         }
 
-        const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+        const dungeon_feature_type feat = env.map_knowledge.feat(gc);
         const command_type dir = feat_stair_direction(feat);
         if (dir != CMD_NO_CMD)
         {
@@ -1035,7 +1038,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         }
     }
     else if (you.see_cell(gc)
-             && env.map_knowledge(gc).feat() != DNGN_UNSEEN)
+             && env.map_knowledge.feat(gc) != DNGN_UNSEEN)
     {
         _add_tip(tip, "[R-Click] Describe");
     }
@@ -1057,13 +1060,13 @@ bool DungeonRegion::update_alt_text(string &alt)
         return false;
     if (!map_bounds(gc))
         return false;
-    if (!env.map_knowledge(gc).seen())
+    if (!env.map_knowledge.seen(gc))
         return false;
     if (m_last_clicked_grid == gc)
         return false;
 
     describe_info inf;
-    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(gc);
     if (you.see_cell(gc))
         get_square_desc(gc, inf);
     else if (feat != DNGN_FLOOR && !feat_is_wall(feat) && !feat_is_tree(feat))

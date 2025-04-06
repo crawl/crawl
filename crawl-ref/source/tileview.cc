@@ -884,8 +884,8 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
         bg = tileidx_feature(gc);
 
         if (is_unknown_stair(gc)
-            && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
-            && !feat_is_hell_subbranch_exit(env.map_knowledge(gc).feat()))
+            && env.map_knowledge.feat(gc) != DNGN_ENTER_ZOT
+            && !feat_is_hell_subbranch_exit(env.map_knowledge.feat(gc)))
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
@@ -979,12 +979,12 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
     const coord_def ep = grid2show(gc);
-    const map_cell& cell = env.map_knowledge(gc);
+    const MapKnowledge& map = env.map_knowledge;
 
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
     // That tile is hidden by clouds though
-    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
+    if (map.feat(gc) != DNGN_SHALLOW_WATER || map.cloud(gc) != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             tile_env.fg(ep) = TILE_UNSEEN_MONSTER;
@@ -992,8 +992,8 @@ static void _tile_place_invisible_monster(const coord_def &gc)
             tile_env.bk_fg(gc) = TILE_UNSEEN_MONSTER;
     }
 
-    if (env.map_knowledge(gc).item())
-        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
+    if (map.item(gc))
+        _tile_place_item_marker(gc, *map.item(gc));
 }
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
@@ -1008,11 +1008,11 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
-        if (env.map_knowledge(gc).item())
+        if (env.map_knowledge.item(gc))
         {
             t |= TILE_FLAG_S_UNDER;
 
-            if (item_needs_autopickup(*env.map_knowledge(gc).item()))
+            if (item_needs_autopickup(*env.map_knowledge.item(gc)))
             {
                 if (you.see_cell(gc))
                     tile_env.bg(ep) |= TILE_FLAG_CURSOR3;
@@ -1098,25 +1098,26 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         tile_env.icons.erase(ep);
     }
 
-    const map_cell& cell = env.map_knowledge(gc);
+    const MapKnowledge& map = env.map_knowledge;
 
-    if (cell.invisible_monster())
+    if (map.invisible_monster(gc))
         _tile_place_invisible_monster(gc);
-    else if (cell.monsterinfo())
-        _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.item())
+    else if (map.monsterinfo(gc))
+        _tile_place_monster(gc, *map.monsterinfo(gc));
+    else if (map.item(gc))
     {
-        if (feat_is_stair(cell.feat()))
-            _tile_place_item_marker(gc, *cell.item());
+        const item_def* item = map.item(gc);
+        if (feat_is_stair(map.feat(gc)))
+            _tile_place_item_marker(gc, *item);
         else
-            _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
+            _tile_place_item(gc, *item, (map.flags(gc) & MAP_MORE_ITEMS) != 0);
     }
     else
         tile_env.bk_fg(gc) = 0;
 
     // Always place clouds now they have their own layer
-    if (cell.cloud() != CLOUD_NONE)
-        _tile_place_cloud(gc, *cell.cloudinfo());
+    if (map.cloud(gc) != CLOUD_NONE)
+        _tile_place_cloud(gc, *map.cloudinfo(gc));
     else
         tile_env.bk_cloud(gc) = 0;
 }
@@ -1461,9 +1462,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 }
 
 // If the top tile is a corpse, don't draw blood underneath.
-static bool _top_item_is_corpse(const map_cell& mc)
+static bool _top_item_is_corpse(coord_def gc)
 {
-    const item_def* item = mc.item();
+    const item_def* item = env.map_knowledge.item(gc);
     return item && item->is_type(OBJ_CORPSES, CORPSE_BODY);
 }
 
@@ -1495,24 +1496,25 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     apply_variations(tile_env.flv(gc), &cell.bg, gc);
 
-    const map_cell& mc = env.map_knowledge(gc);
+    const MapKnowledge& map = env.map_knowledge;
+    const uint32_t flags = map.flags(gc);
 
     bool print_blood = true;
-    if (mc.flags & MAP_HALOED)
+    if (flags & MAP_HALOED)
     {
-        if (mc.flags & MAP_UMBRAED)
+        if (flags & MAP_UMBRAED)
             cell.halo = HALO_NONE;
         else
             cell.halo = HALO_RANGE;
     }
-    else if (mc.flags & MAP_UMBRAED)
+    else if (flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
     else
         cell.halo = HALO_NONE;
 
-    if (mc.flags & MAP_LIQUEFIED)
+    if (flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
-    else if (print_blood && (feat_suppress_blood(mc.feat())
+    else if (print_blood && (feat_suppress_blood(map.feat(gc))
                              || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;
@@ -1521,7 +1523,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (print_blood)
     {
         // Corpses have a blood puddle of their own.
-        if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
+        if (flags & MAP_BLOODY && !_top_item_is_corpse(gc))
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
@@ -1529,33 +1531,33 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         }
     }
 
-    const dungeon_feature_type feat = mc.feat();
+    const dungeon_feature_type feat = map.feat(gc);
     if (feat_is_water(feat) || feat == DNGN_LAVA)
         cell.bg |= TILE_FLAG_WATER;
 
-    if ((mc.flags & MAP_SANCTUARY_1) || (mc.flags & MAP_SANCTUARY_2))
+    if ((flags & MAP_SANCTUARY_1) || (flags & MAP_SANCTUARY_2))
         cell.is_sanctuary = true;
 
-    if (mc.flags & MAP_BLASPHEMY)
+    if (flags & MAP_BLASPHEMY)
         cell.is_blasphemy = true;
 
-    if (mc.flags & MAP_SILENCED)
+    if (flags & MAP_SILENCED)
         cell.is_silenced = true;
 
     if (feat == DNGN_MANGROVE)
         cell.mangrove_water = true;
     cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 
-    if (mc.flags & MAP_ORB_HALOED)
+    if (flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 
-    if (mc.flags & MAP_QUAD_HALOED)
+    if (flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;
 
-    if (mc.flags & MAP_DISJUNCT)
+    if (flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
 
-    if (mc.flags & MAP_BFB_CORPSE)
+    if (flags & MAP_BFB_CORPSE)
         cell.has_bfb_corpse = true;
 
     if (you.rampage_hints.count(gc) > 0)
@@ -1584,17 +1586,14 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (env.level_state & LSTATE_SLIMY_WALL)
     {
         for (adjacent_iterator ai(gc); ai; ++ai)
-            if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
+            if (map.feat(*ai) == DNGN_SLIMY_WALL)
             {
                 cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
                 break;
             }
     }
-    else if (env.level_state & LSTATE_ICY_WALL
-             && env.map_knowledge(gc).flags & MAP_ICY)
-    {
+    else if (env.level_state & LSTATE_ICY_WALL && flags & MAP_ICY)
         cell.flv.floor = TILE_FLOOR_ICY;
-    }
     else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {
