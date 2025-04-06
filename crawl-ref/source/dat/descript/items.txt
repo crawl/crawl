@@ -1133,7 +1133,7 @@ An ever-changing fragment of something primordial; its substance seems to
 undulate between flesh and bone and perhaps even metal. A sufficiently skilled
 shapeshifter can stabilise it into a useable - if unpredictable - form.
 
-(If your Shapeshifting skill is at least 7, you can evoke this to transform it
+(If your Shapeshifting skill is at least 6, you can evoke this to transform it
 into a random one of: Rimehorn, Scarab, Medusa, or Maw talismans.)
 %%%%
 quad damage
