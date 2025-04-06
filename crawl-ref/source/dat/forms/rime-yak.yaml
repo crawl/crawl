@@ -26,6 +26,7 @@ has_ears: yes
 shout_verb: bellow
 hand_name: front hooves
 foot_name: hooves
+prayer_action: bow your head before
 flesh_name: icy fur
 fakemuts:
   - ["frigid aura", "You freeze nearby walls in an area that expands as you fight."]
