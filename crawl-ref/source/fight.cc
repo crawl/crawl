@@ -463,7 +463,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
             if (!simu && _autofire_at(defender))
-                return true;
+                return you.turn_is_over;
         }
 
         const bool was_firewood = defender->is_firewood();
