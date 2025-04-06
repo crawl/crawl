@@ -76,10 +76,10 @@ class Form(MutableMapping):
         # Derive some names from other names, if none are overrided
         if 'short_name' not in self:
             self['short_name'] = self['enum'].capitalize()
-        if 'long_name' not in self:
-            self['long_name'] = self['enum'] + "-form"
         if 'wiz_name' not in self:
-            self['wiz_name'] = self['enum']
+            self['wiz_name'] = self['enum'].lower().replace("_", " ")
+        if 'long_name' not in self:
+            self['long_name'] = self['short_name'].lower() + "-form"
 
         for key in defaults:
             if key not in self:

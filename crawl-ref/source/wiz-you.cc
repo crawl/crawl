@@ -910,20 +910,35 @@ void wizard_god_mollify()
 
 void wizard_transform()
 {
-    vector<WizardEntry> choices;
-    for (int i = 0; i < NUM_TRANSFORMS; ++i)
+    vector<pair<int, string>> form_names;
+    for (int i = 1; i < NUM_TRANSFORMS; ++i)
     {
-            const auto tr = static_cast<transformation>(i);
+        const auto tr = static_cast<transformation>(i);
 #if TAG_MAJOR_VERSION == 34
-            if (tr == transformation::jelly || tr == transformation::porcupine)
-                continue;
+        if (tr == transformation::jelly || tr == transformation::porcupine
+            || tr == transformation::hydra || tr == transformation::appendage
+            || tr == transformation::shadow)
+        {
+            continue;
+        }
 #endif
-        choices.emplace_back(WizardEntry(0, transform_name(tr), i));
+        form_names.push_back({i, transform_name(tr)});
     }
+    sort(form_names.begin(), form_names.end(),
+            [](const pair<int, string>& a, const pair<int, string>& b)
+                {
+                    return a.second < b.second;
+                });
+
+    vector<WizardEntry> choices;
+    choices.emplace_back(WizardEntry(0, "None", 0));
+    for (size_t i = 0; i < form_names.size(); ++i)
+        choices.emplace_back(WizardEntry(0, form_names[i].second, i));
+
     auto menu = WizardMenu("Which form (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
-    auto form = static_cast<transformation>(menu.result());
+    auto form = static_cast<transformation>(form_names[menu.result()].first);
 
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
