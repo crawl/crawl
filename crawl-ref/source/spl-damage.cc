@@ -4704,15 +4704,18 @@ vector<monster *> find_maxwells_possibles()
 
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 {
-    monster* const mon = _find_maxwells_target(tracer);
+    monster* const mon = _find_maxwells_target(true);
+
+    if (!mon || !you.can_see(*mon))
+    {
+        if (!tracer)
+            mpr("You can't see anything to vaporise!");
+        return spret::abort;
+    }
 
     if (tracer)
-    {
-        if (!mon || !you.can_see(*mon))
-            return spret::abort;
-        else
-            return spret::success;
-    }
+        return spret::success;
+
 
     fail_check();
 

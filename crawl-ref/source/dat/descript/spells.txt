@@ -1219,7 +1219,9 @@ Maxwell's Capacitive Coupling spell
 Gradually builds up electric charge in the caster, so long as they maintain
 focus (by waiting in place and not taking any other actions). When a threshold
 is reached, the charge couples with the nearest foe, vaporising them instantly.
-Higher spell power will allow the caster to accumulate charge more rapidly.
+Higher spell power will allow the caster to accumulate charge more rapidly. The
+spell requires a visible target to begin accumulating charge, though a different
+foe may be targeted when the charge is released.
 %%%%
 Maxwell's Portable Piledriver spell
 
