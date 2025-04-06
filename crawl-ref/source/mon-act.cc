@@ -1629,8 +1629,7 @@ static void _monster_add_energy(monster& mons)
     if (mons.speed > 0)
     {
         // Randomise to make counting off monster moves harder:
-        const int energy_gained =
-            max(1, div_rand_round(mons.speed * you.time_taken, 10));
+        const int energy_gained = div_rand_round(mons.speed * you.time_taken, 10);
         mons.speed_increment += energy_gained;
     }
 }
