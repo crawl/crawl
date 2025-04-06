@@ -7,7 +7,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "fprop.h"
-#include "map-cell.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "monster.h"
 #include "shopping.h"
@@ -21,8 +21,6 @@ typedef set<string> string_set;
 
 struct vault_placement;
 typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
-
-typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
 class final_effect;
 struct crawl_environment
@@ -63,9 +61,9 @@ struct crawl_environment
 
     map_bitmask                              map_seen;
     // Player-remembered terrain and LOS
-    MapKnowledge                             map_knowledge;
+    map_knowledge_type                       map_knowledge;
     // Forgotten map knowledge (X^F)
-    unique_ptr<MapKnowledge>                 map_forgotten;
+    unique_ptr<map_knowledge_type>           map_forgotten;
     set<coord_def> visible;
 
     vector<coord_def>                        travel_trail;

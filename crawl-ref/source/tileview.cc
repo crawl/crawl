@@ -984,7 +984,8 @@ static void _tile_place_invisible_monster(const coord_def &gc)
     // Shallow water has its own modified tile for disturbances
     // see tileidx_feature
     // That tile is hidden by clouds though
-    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
+    if (cell.feat() != DNGN_SHALLOW_WATER
+        || env.map_knowledge.cloud(cell) != CLOUD_NONE)
     {
         if (you.see_cell(gc))
             tile_env.fg(ep) = TILE_UNSEEN_MONSTER;
@@ -992,8 +993,8 @@ static void _tile_place_invisible_monster(const coord_def &gc)
             tile_env.bk_fg(gc) = TILE_UNSEEN_MONSTER;
     }
 
-    if (env.map_knowledge(gc).item())
-        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
+    if (env.map_knowledge.item(cell))
+        _tile_place_item_marker(gc, *env.map_knowledge.item(cell));
 }
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
@@ -1008,11 +1009,11 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
-        if (env.map_knowledge(gc).item())
+        if (env.map_knowledge.item(gc))
         {
             t |= TILE_FLAG_S_UNDER;
 
-            if (item_needs_autopickup(*env.map_knowledge(gc).item()))
+            if (item_needs_autopickup(*env.map_knowledge.item(gc)))
             {
                 if (you.see_cell(gc))
                     tile_env.bg(ep) |= TILE_FLAG_CURSOR3;
@@ -1102,21 +1103,22 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 
     if (cell.invisible_monster())
         _tile_place_invisible_monster(gc);
-    else if (cell.monsterinfo())
-        _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.item())
+    else if (env.map_knowledge.monsterinfo(cell))
+        _tile_place_monster(gc, *env.map_knowledge.monsterinfo(cell));
+    else if (env.map_knowledge.item(cell))
     {
+        const item_def* item = env.map_knowledge.item(cell);
         if (feat_is_stair(cell.feat()))
-            _tile_place_item_marker(gc, *cell.item());
+            _tile_place_item_marker(gc, *item);
         else
-            _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
+            _tile_place_item(gc, *item, (cell.flags & MAP_MORE_ITEMS) != 0);
     }
     else
         tile_env.bk_fg(gc) = 0;
 
     // Always place clouds now they have their own layer
-    if (cell.cloud() != CLOUD_NONE)
-        _tile_place_cloud(gc, *cell.cloudinfo());
+    if (env.map_knowledge.cloud(cell) != CLOUD_NONE)
+        _tile_place_cloud(gc, *env.map_knowledge.cloudinfo(cell));
     else
         tile_env.bk_cloud(gc) = 0;
 }
@@ -1463,7 +1465,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 // If the top tile is a corpse, don't draw blood underneath.
 static bool _top_item_is_corpse(const map_cell& mc)
 {
-    const item_def* item = mc.item();
+    const item_def* item = env.map_knowledge.item(mc);
     return item && item->is_type(OBJ_CORPSES, CORPSE_BODY);
 }
 

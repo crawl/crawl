@@ -88,11 +88,10 @@ bool travel_colour_override(const coord_def& p)
         return true;
 #endif
 
-    const map_cell& cell = env.map_knowledge(p);
-    show_class cls = get_cell_show_class(cell);
+    show_class cls = get_cell_show_class(p);
     if (cls == SH_FEATURE)
     {
-        switch (cell.feat())
+        switch (env.map_knowledge(p).feat())
         {
         case DNGN_FLOOR:
         case DNGN_LAVA:
@@ -289,7 +288,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
-                const show_class show = get_cell_show_class(env.map_knowledge(c));
+                const show_class show = get_cell_show_class(c);
 
                 if (show == SH_NOTHING && is_explore_horizon(c))
                 {
@@ -498,14 +497,14 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
 static void _unforget_map()
 {
     ASSERT(env.map_forgotten);
-    MapKnowledge &old(*env.map_forgotten);
+    map_knowledge_type &old(*env.map_forgotten);
 
     for (rectangle_iterator ri(0); ri; ++ri)
         if (!env.map_knowledge(*ri).seen() && old(*ri).seen())
         {
             // Don't overwrite known squares, nor magic-mapped with
             // magic-mapped data -- what was forgotten is less up to date.
-            env.map_knowledge(*ri) = old(*ri);
+            env.map_knowledge.copy_at(*ri, old, *ri);
             env.map_seen.set(*ri);
 #ifdef USE_TILE
             tiles.update_minimap(*ri);
@@ -523,7 +522,7 @@ static void _forget_map(bool wizard_forget = false)
             continue;
         if (wizard_forget)
         {
-            env.map_knowledge(*ri).clear();
+            env.map_knowledge.clear(*ri);
 #ifdef USE_TILE
             tile_forget_map(*ri);
 #endif
@@ -1044,7 +1043,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
                 break;
             if (env.map_forgotten)
                 _unforget_map();
-            MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+            map_knowledge_type *old = new map_knowledge_type(env.map_knowledge);
             // completely wipe out map
             _forget_map(true);
             env.map_forgotten.reset(old);
@@ -1058,7 +1057,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
             // Merge it with already forgotten data first.
             if (env.map_forgotten)
                 _unforget_map();
-            MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+            map_knowledge_type *old = new map_knowledge_type(env.map_knowledge);
             _forget_map();
             env.map_forgotten.reset(old);
             mpr("Level map cleared.");

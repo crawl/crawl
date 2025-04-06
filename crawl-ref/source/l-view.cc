@@ -60,7 +60,7 @@ LUAFN(view_cloud_at)
         lua_pushnil(ls);
         return 1;
     }
-    cloud_type c = env.map_knowledge(p).cloud();
+    cloud_type c = env.map_knowledge.cloud(p);
     if (c == CLOUD_NONE)
     {
         lua_pushnil(ls);
@@ -116,10 +116,10 @@ LUAFN(view_is_safe_square)
         PLUARET(boolean, false);
         return 1;
     }
-    cloud_type c = env.map_knowledge(p).cloud();
+    cloud_type c = env.map_knowledge.cloud(p);
     if (c != CLOUD_NONE
         && is_damaging_cloud(c, true,
-            YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
+            YOU_KILL(env.map_knowledge.cloudinfo(p)->killer)))
     {
         PLUARET(boolean, false);
         return 1;
@@ -301,21 +301,24 @@ LUAFN(view_get_map)
             if (lev && lev->shop_needs_visit(p))
                 LUA_PUSHBOOL("unvisited", true);
         }
-        if (cell.item() && cell.item()->defined())
+        const item_def* item = env.map_knowledge.item(cell);
+        if (item && item->defined())
             LUA_PUSHBOOL("item", true)
-        if (cell.monsterinfo())
+        monster_info* mons = env.map_knowledge.monsterinfo(cell);
+        if (mons)
         {
-            lua_push_moninf(ls, cell.monsterinfo());
+            lua_push_moninf(ls, mons);
             lua_setfield(ls, -2, "monster");
         }
         else if (cell.invisible_monster())
             LUA_PUSHBOOL("invisible_monster", true);
         bool unsafe = false;
-        if (cell.cloud() != CLOUD_NONE)
+        cloud_type cloud = env.map_knowledge.cloud(cell);
+        if (cloud != CLOUD_NONE)
         {
-            LUA_PUSHSTRING("cloud", cloud_type_name(cell.cloud()).c_str());
-            auto killer = cell.cloudinfo()->killer;
-            if (is_damaging_cloud(cell.cloud(), true, YOU_KILL(killer)))
+            LUA_PUSHSTRING("cloud", cloud_type_name(cloud).c_str());
+            auto killer = env.map_knowledge.cloudinfo(cell)->killer;
+            if (is_damaging_cloud(cloud, true, YOU_KILL(killer)))
                 unsafe = true;
         }
         if (!unsafe && cell.trap() != TRAP_UNASSIGNED)

@@ -258,7 +258,7 @@ void direction_chooser::print_key_hints() const
         if (you.see_cell(target()))
             prompt += ", v - describe";
         prompt += ", . - travel";
-        if (in_bounds(target()) && env.map_knowledge(target()).item())
+        if (in_bounds(target()) && env.map_knowledge.item(target()))
             prompt += ", g - get item";
     }
     else
@@ -1647,7 +1647,7 @@ bool direction_chooser::pickup_item()
 {
     item_def *ii = nullptr;
     if (in_bounds(target()))
-        ii = env.map_knowledge(target()).item();
+        ii = env.map_knowledge.item(target());
     if (!ii || !ii->is_valid(true))
     {
         mprf(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
@@ -2716,9 +2716,9 @@ void terse_describe_square(const coord_def &c, bool in_range)
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
-    const cloud_type cloud = env.map_knowledge(c).cloud();
+    const cloud_type cloud = env.map_knowledge.cloud(c);
 
-    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
+    if (const monster_info *mi = env.map_knowledge.monsterinfo(c))
     {
         // First priority: monsters.
         string desc = uppercase_first(get_monster_equipment_desc(*mi))
@@ -2736,7 +2736,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         bool temp = false;
         get_monster_db_desc(*mi, inf, temp);
     }
-    else if (const item_def *obj = env.map_knowledge(c).item())
+    else if (const item_def *obj = env.map_knowledge.item(c))
     {
         // Second priority: objects.
         get_item_desc(*obj, inf);
@@ -2765,7 +2765,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     int quantity = 0;
     bool action_taken = false;
 
-    const monster_info *mi = env.map_knowledge(c).monsterinfo();
+    const monster_info *mi = env.map_knowledge.monsterinfo(c);
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
 
     // warning: we use pointers to the elements of this vector past here for
@@ -2776,7 +2776,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     // actions can work.
     if (you.on_current_level && c == you.pos())
         list_items = item_list_on_square(you.visible_igrd(c));
-    else if (env.map_knowledge(c).item())
+    else if (env.map_knowledge.item(c))
     {
         // otherwise, use stash info. These are item copies, not the real
         // things.

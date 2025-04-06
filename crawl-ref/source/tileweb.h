@@ -287,7 +287,8 @@ protected:
     bool is_dirty(const coord_def& gc);
     bool cell_needs_redraw(const coord_def& gc);
 
-    FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
+    map_knowledge_type m_current_map_knowledge;
+    map_knowledge_type m_rendering_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;
     bool m_need_full_map;
 
