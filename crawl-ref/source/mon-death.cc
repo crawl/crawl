@@ -2396,7 +2396,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Take notes and mark milestones.
     record_monster_defeat(&mons, killer);
- 
+
     // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
     if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
         && !mons.is_firewood() && makhleb_haemoclasm_trigger_check(mons))
