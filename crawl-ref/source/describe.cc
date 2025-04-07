@@ -6131,6 +6131,7 @@ static string _res_name(mon_resist_flags res)
     case MR_RES_POISON: return "rPois";
     case MR_RES_ELEC:   return "rElec";
     case MR_RES_NEG:    return "rNeg";
+    case MR_RES_CORR:   return "rCorr";
     default:            return "rEggplant";
     }
 }
@@ -7267,7 +7268,8 @@ static void _desc_form_resist(TablePrinter& pr, mon_resist_flags resist, int amo
     if (amount == 0)
         return;
 
-    const int max = (resist == MR_RES_POISON || resist == MR_RES_ELEC) ? 1 : 3;
+    const int max = (resist == MR_RES_POISON || resist == MR_RES_ELEC || resist == MR_RES_CORR)
+                        ? 1 : 3;
     const string desc = desc_resist(amount, max, amount == 3, false);
     pr.AddCell(_res_name(resist), desc, amount < 0 ? RED : LIGHTGREY);
 }
@@ -7401,6 +7403,7 @@ static string _describe_talisman_form(transformation form_type, const item_def* 
 
     _desc_form_resist(pr, MR_RES_NEG, form->res_neg());
     _desc_form_resist(pr, MR_RES_ELEC, form->res_elec());
+    _desc_form_resist(pr, MR_RES_CORR, form->res_corr());
 
     // Various ad hoc properties of individual forms
     if (form_type == transformation::statue)
