@@ -743,10 +743,9 @@ To compensate, you are able to heal yourself via the
 %%%%
 treasure sense mutation
 
-You have a powerful nose adapted to the Dungeon's scents, allowing you to
-detect where treasures lay hidden. As you explore the dungeon, nearby item
-locations that you cannot directly see will gain a marker for
-as-yet-undiscovered items.
+You have an uncanny knack for knowing where items can be found. As you explore
+the dungeon, nearby item locations that you cannot directly see will gain a
+marker for as-yet-undiscovered items.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
