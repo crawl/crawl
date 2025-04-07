@@ -1657,8 +1657,8 @@ Gnolls (Gn)
 
   In order to survive with this limitation, Gnolls use their universal
   knowledge to take advantage of every resource they find in the Dungeon. They
-  also have powerful noses adapted to the Dungeon's scents, allowing them to
-  easily locate where treasures lay hidden.
+  also have a knack for finding items, allowing them to easily locate the
+  Dungeon's hidden treasures.
 
 
 Intermediate Species
