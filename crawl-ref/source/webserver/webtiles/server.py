@@ -60,6 +60,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         with util.SlowWarning("Slow IO: render client.html"):
             self.render("client.html", socket_server = protocol + host + "/socket",
+                    game_version = _crawl_version,
                     username = None,
                     config = config,
                     reset_token = recovery_token, reset_token_error = recovery_token_error)
