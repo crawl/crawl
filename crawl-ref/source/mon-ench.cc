@@ -1434,6 +1434,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DEEP_SLEEP:
     case ENCH_DROWSY:
     case ENCH_PYRRHIC_RECOLLECTION:
+    case ENCH_SPELL_CHARGED:
         decay_enchantment(en);
         break;
 
@@ -2133,7 +2134,7 @@ static const char *enchant_names[] =
     "grasping_roots_source",
 #endif
     "grasping_roots",
-    "iood_charged", "fire_vuln", "polar_vortex_cooldown", "merfolk_avatar_song",
+    "spell_charged", "fire_vuln", "polar_vortex_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34
     "building_charge",
