@@ -961,7 +961,10 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     const int cost = spell_mana(spell);
-    pay_mp(cost);
+    if (spell == SPELL_UNGOLDIFY)
+        you.del_gold(cost);
+    else
+        pay_mp(cost);
 
     // Majin Bo HP cost taken at the same time
     // (but after hp costs from HP casting)
@@ -977,7 +980,10 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         if (cast_result == spret::abort)
             crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
-        refund_mp(cost);
+        if (spell == SPELL_UNGOLDIFY)
+            you.add_gold(cost);
+        else
+            refund_mp(cost);
         if (_majin_charge_hp())
             refund_hp(hp_cost);
 
@@ -1368,6 +1374,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you,
                    get_ignition_blast_sources(&you, true));
+    case SPELL_UNGOLDIFY:
+        return make_unique<targeter_widebeam>(&you, range,
+                                              ungoldify_beam_width());
 
     // Summons. Most summons have a simple range 2 radius, see
     // find_newmons_square
@@ -2721,6 +2730,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PILEDRIVER:
         return cast_piledriver(beam.target, powc, fail);
 
+    case SPELL_UNGOLDIFY:
+        return cast_ungoldify(beam.target, powc, fail);
+
     // Just to do extra messaging; spell is handled by default zapping
     case SPELL_COMBUSTION_BREATH:
     case SPELL_GLACIAL_BREATH:
@@ -3154,6 +3166,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             else
                 return make_stringf("%dd%d", dmg.num, dmg.size);
         }
+        case SPELL_UNGOLDIFY:
+            return describe_ungoldify_damage(pow, terse);
         default:
             break;
     }
@@ -3173,6 +3187,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             break;
         case SPELL_TREMORSTONE:
             mult = make_stringf("%dx", tremorstone_count(pow));
+            break;
         default:
             break;
     }

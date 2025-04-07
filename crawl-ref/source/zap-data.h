@@ -2768,4 +2768,21 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     TILE_BOLT_FROSTFIRE
 },
 
+{
+    ZAP_UNGOLD,
+    "ungold silver",
+    200,
+    new multiply_dice_calculator<10, 1, 20, 8>,  // 20d8 at max power
+    new tohit_calculator<15, 1, 12>,
+    nullptr,
+    nullptr,
+    ETC_UNGOLD,
+    false,
+    BEAM_UNGOLD,
+    DCHAR_ITEM_GOLD,
+    true,
+    false,
+    TILE_BOLT_UNGOLD,
+}
+
 };

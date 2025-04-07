@@ -625,6 +625,18 @@ bool fill_status_info(int status, status_info& inf)
         _describe_channelled_spell(inf);
         break;
 
+    case STATUS_UNGOLDIFY:
+        if (you.props.exists(UNGOLDIFY_KEY) && can_cast_spells(true))
+        {
+            // It's only possible to hit the prop = 0 case if we reprint the
+            // screen after the spell was cast but before the end of the
+            // player's turn, which mostly happens in webtiles. Great!
+            const int lvl = max(you.props[UNGOLDIFY_KEY].get_int(), 1);
+            inf.light_colour = YELLOW;
+            inf.light_text   = "Gold (" + string(lvl, '$') + ")";
+        }
+        break;
+
     case STATUS_DIG:
         if (you.digging)
         {

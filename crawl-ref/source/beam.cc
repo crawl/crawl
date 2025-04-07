@@ -824,7 +824,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
     // Set default value if none specified.
     if (tile_beam == 0)
         tile_beam = tileidx_zap(colour);
-    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
+    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p, this));
 #endif
     const unsigned short c = colour == BLACK ? random_colour(true)
                                              : element_colour(colour);
@@ -1828,6 +1828,15 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         break;
+    case BEAM_UNGOLD:
+    {
+        string msg;
+        const int extra_dam = silver_damages_victim(mons, hurted, msg);
+        hurted += extra_dam;
+        if (extra_dam > 0 && doFlavouredEffects)
+            mpr(msg);
+        break;
+    }
 
     default:
         break;
@@ -5842,7 +5851,12 @@ void bolt::affect_monster(monster* mon)
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
-    extra_range_used += range_used_on_hit();
+    // Can't do this in range_used_on_hit as it's const. Right now this is
+    // only used against monsters anyway.
+    if (momentum > 0 && --momentum == 0)
+        extra_range_used += BEAM_STOP;
+    else
+        extra_range_used += range_used_on_hit();
 }
 
 bool bolt::ignores_monster(const monster* mon) const
@@ -6855,6 +6869,7 @@ int bolt::range_used_on_hit() const
     {
         return BEAM_STOP;
     }
+
     // Lightning that isn't an explosion goes through things.
     return 0;
 }
@@ -7715,6 +7730,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
     case BEAM_BAT_CLOUD:             return "cloud of bats";
+    case BEAM_UNGOLD:                return "silver";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

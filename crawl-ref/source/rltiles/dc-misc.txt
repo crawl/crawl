@@ -208,6 +208,19 @@ splinters_thornwood7
 
 entropic_weave BOLT_ENTROPIC_WEAVE
 
+ungold_1_1 BOLT_UNGOLD
+ungold_1_2
+ungold_1_3
+ungold_1_4
+ungold_3_1
+ungold_3_2
+ungold_3_3
+ungold_3_4
+ungold_4_1
+ungold_4_2
+ungold_4_3
+ungold_4_4
+
 draining_gaze BOLT_DRAINING_GAZE
 
 bolas BOLT_BOLAS

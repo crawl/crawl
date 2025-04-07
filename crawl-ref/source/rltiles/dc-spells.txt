@@ -130,6 +130,7 @@ olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
 poisonous_cloud POISONOUS_CLOUD
 sting STING
+ungoldify UNGOLDIFY
 venom_bolt VENOM_BOLT
 
 %sdir gui/spells/summoning

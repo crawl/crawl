@@ -41,6 +41,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "movement.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
@@ -2089,6 +2090,159 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
 
     if (caster.is_player())
         contaminate_player(1250 + random2(750));
+    return spret::success;
+}
+
+// Numerators and denominators are simplified into the roundings. Basically I'm multiplying
+// the gold amounts by (2*level-1)/level, which means:
+// 1x at level 1, 3/2x at level 2, 5/3x at level 3, 7/4x at level 4.
+// Base value is: 5 coins at 0 power; at max power 26-76 coins; then nearly doubled by
+// level factor at level 4.
+//  min(you.gold,
+//                           5 + div_rand_round(powc * (2 * level - 1), 8 * level)
+//                             + div_rand_round(random2avg(powc * (2 * level - 1), 3), 4 * level));
+dice_def ungoldify_damage(int pow, int position, bool random)
+{
+    return zap_damage(ZAP_UNGOLD, pow / (abs(position) + 1), false, random);
+    // return dice_def(per_beam - abs(position), 5 + pow / 15);
+}
+
+string describe_ungoldify_damage(int pow, bool terse)
+{
+    dice_def center_damage = ungoldify_damage(pow, 0);
+    const int beam_width = ungoldify_beam_width();
+    dice_def side_damage = ungoldify_damage(pow, beam_width / 2);
+
+    if (terse)
+    {
+        return make_stringf("%dx(%d-%d)d%d", beam_width, side_damage.num,
+                            center_damage.num, center_damage.size);
+    }
+    return make_stringf("%dd%d (center beam), %dd%d (side beams), x%d",
+                        center_damage.num, center_damage.size,
+                        side_damage.num, side_damage.size, beam_width);
+}
+
+int ungoldify_beam_width()
+{
+    // Five with Vehumet, otherwise 3
+    return have_passive(passive_t::spells_range) ? 5: 3;
+}
+
+static void _ungoldify_targets(vector<widebeam_beam> beams, int pow, int range)
+{
+    // Combine all the beams into a multibolt and fire them
+    bolt beam;
+    zappy(ZAP_UNGOLD, pow, false, beam);
+    beam.set_agent(&you);
+    beam.range             = range;
+    beam.hit_verb          = "peppers";
+    beam.draw_delay        = 0;
+    beam.aimed_at_spot     = true;
+    beam.momentum          = max(2, min(4, div_round_up(pow, 4)));
+    vector<bolt> bolts;
+    for (widebeam_beam item : beams)
+    {
+        bolt copy = beam;
+        copy.damage = ungoldify_damage(pow, item.position);
+        copy.target = item.end;
+        copy.source = item.start;
+        bolts.push_back(copy);
+    }
+    multi_bolt_fire(bolts, 50);
+}
+
+// XX: Started implementing this. But actually move_player_action *probably*
+// does everything right, and the cases that wouldn't work (e.g. being confused)
+// can't possibly apply if we just cast a spell successfully
+
+// static bool _ungoldify_move_player(coord_def target, bool check_only)
+// {
+//     // XX: Shouldn't have got here if this is true
+//     // if (is_stationary() || resists_dislodge("being knocked back"))
+//     //     return false;
+
+//     if (!in_bounds(target)
+//         || !you.is_habitable_feat(env.grid(target)))
+//     {
+//         return false;
+//     }
+
+//     if (monster* mons = monster_at(target))
+//     {
+//         if (!mons->friendly())
+//         {
+//             if (check_only)
+//                 return true;
+//             // XX: Maybe add a ::attack method on player instead of including melee-attack.h?
+//             melee_attack atk(&you, mons);
+//             atk.never_prompt = true;
+//             atk.launch_attack_set();
+//             return true;
+//         }
+//         coord_def swapdest;
+//         if (swap_check(mons, swapdest, true))
+//         {
+//             if (check_only)
+//                 return true;
+//             if (swap_with_monster(mons))
+//                 return true;
+//         }
+//     }
+
+//     you.apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
+//                                 actor_to_death_source(&cause));
+// }
+
+/**
+ * Attempt to cast the spell "Alistair's Pocket Shrapnel", beginning a transmutation of gold
+ * into base metals (lead, iron and silver) which can be released explosively on your
+ * next turn in a 3- 5- or 7- wide beam in your direction of movement.
+ *
+ * @param target Target coordinate for the spell.
+ * @param powc   The power at which the spell is being cast.
+ * @param fail   Whether the player has failed to cast the spell.
+ * @return       spret::abort if the player changed their mind about casting after
+ *               realizing they would hit an ally; spret::fail if they failed the
+ *               cast chance; spret::success otherwise.
+ */
+spret cast_ungoldify(coord_def target, int powc, bool fail)
+{
+    // TODO: Check danger to allies
+    fail_check();
+
+    // Coins have already been deducted in cast_a_spell
+    const int coins = spell_mana(SPELL_UNGOLDIFY);
+    mprf("You grab %d gold coin%s and they begin to pop and fizzle."
+         " You have %d gold remaining.",
+            coins, coins != 1 ? "s" : "", you.gold);
+
+    const int range = spell_range(SPELL_UNGOLDIFY, powc);
+
+    noisy(spell_effect_noise(SPELL_UNGOLDIFY), you.pos());
+
+    targeter_widebeam_compass flashfunc = targeter_widebeam_compass(&you, 3, 3);
+    flash_view_delay(UA_PLAYER, ETC_GOLD, 20, &flashfunc);
+
+    // Set up a list of potential projectile targets; use LOS_NONE so the beams
+    // are picked evenly regardless of terrain, even if they're aiming through a
+    // wall or something else impassible.
+    targeter_widebeam hitfunc(&you, range, ungoldify_beam_width());
+    // Aim from one back (should be where we originally were, assuming movement
+    // was 1 tile)
+    // hitfunc.origin = you;// you.pos() - move.sgn();
+    // hitfunc.origin = you.pos() - move.sgn();
+    const coord_def move = (target - you.pos()).sgn();
+    const coord_def normalised_target = you.pos() + move;
+    hitfunc.set_aim(normalised_target);
+
+    _ungoldify_targets(hitfunc.beams, powc, range);
+
+    mpr("You expel the base metals with the kinetic energy of your movement!");
+
+    // Move the player in the direction of the target
+    // _ungoldify_move_player(normalised_target);
+    move_player_action(move);
     return spret::success;
 }
 
@@ -4178,14 +4332,7 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
 {
     int range = spell_range(SPELL_STARBURST, pow);
 
-    vector<coord_def> offsets = { coord_def(range, 0),
-                                coord_def(range, range),
-                                coord_def(0, range),
-                                coord_def(-range, range),
-                                coord_def(-range, 0),
-                                coord_def(-range, -range),
-                                coord_def(0, -range),
-                                coord_def(range, -range) };
+    vector<coord_def> offsets = compass_offsets(range);
 
     bolt beam;
     beam.range        = range;

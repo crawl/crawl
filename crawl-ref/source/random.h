@@ -267,6 +267,16 @@ public:
     }
 };
 
+template<int num_adder, int num_mult, int num_denom, int size>
+class multiply_dice_calculator : public dam_deducer
+{
+public:
+    dice_def operator()(int pow, bool /*random*/) const override
+    {
+        return dice_def(num_adder + pow * num_mult / num_denom, size);
+    }
+};
+
 // I must be a random-access iterator.
 template <typename I>
 void shuffle_array(I begin, I end)
