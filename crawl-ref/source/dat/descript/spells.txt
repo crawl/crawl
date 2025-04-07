@@ -2074,6 +2074,9 @@ Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
 as hardy as a mountain, and its footfalls are capable of creating violent
 seismic shockwaves. Each shockwave deals considerable damage to non-flying
 enemies, and may sometimes even cause them to lose their footing altogether.
+
+Spell power increases the egg's durability and the strength of the seismosaur
+within, but not the time it takes to hatch.
 %%%%
 Summon Small Mammal spell
 
