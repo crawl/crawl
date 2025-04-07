@@ -11415,8 +11415,7 @@ ORIENT: float
 KMASK:  -QRHK012389def$*| = opaque
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
-item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
-     "pre_id")
+item("wand of digging pre_id charges:" .. tostring(5 + crawl.random2(6)))
 item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 }}
 ITEM:   any randart jewellery
