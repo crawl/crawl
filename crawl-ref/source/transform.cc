@@ -1073,16 +1073,6 @@ FormRimeYak() : Form(transformation::rime_yak) { }
     DISALLOW_COPY_AND_ASSIGN(FormRimeYak);
 public:
     static const FormRimeYak &instance() { static FormRimeYak inst; return inst; }
-
-        dice_def get_special_damage(bool random, int skill = -1) const override
-        {
-            const int pow = skill == -1 ? get_level(10) : skill * 10;
-
-            if (random)
-                return dice_def(2, 4 + div_rand_round(pow, 10));
-            else
-                return dice_def(2, 4 + pow / 10);
-        }
 };
 
 class FormHive : public Form
