@@ -308,7 +308,7 @@ void wu_jian_decrement_heavenly_storm();
 void wu_jian_end_heavenly_storm();
 monster *wu_jian_wall_jump_monster_at(const coord_def &pos);
 bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos);
-void wu_jian_wall_jump_effects();
+bool wu_jian_wall_jump_effects();
 bool wu_jian_has_momentum(wu_jian_attack_type);
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);

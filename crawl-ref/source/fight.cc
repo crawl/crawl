@@ -498,26 +498,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        if (!simu && will_have_passive(passive_t::shadow_attacks))
-            dithmenos_shadow_melee(defender);
-
-        // Executioner state doesn't wear off so long as you keep attacking.
-        if (you.duration[DUR_EXECUTION])
-            you.duration[DUR_EXECUTION] += you.time_taken;
-        if (you.duration[DUR_WEREFURY])
-            you.duration[DUR_WEREFURY] += you.time_taken;
-
-        if (you.duration[DUR_DETONATION_CATALYST])
-            you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
-
-        if (you.duration[DUR_PARAGON_ACTIVE])
-            paragon_attack_trigger();
-
-        if (you.form == transformation::sun_scarab && !was_firewood)
-            solar_ember_blast();
-
-        if (you.form == transformation::medusa)
-            _do_medusa_stinger();
+        do_player_post_attack(defender, was_firewood, simu);
 
         return true;
     }
@@ -622,6 +603,39 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         paragon_charge_up(*attacker->as_monster());
 
     return true;
+}
+
+/**
+ * Handle effects that should happen after each time the player performs a
+ * single 'attack action' (which might be either a normal attack, or a martial
+ * attack caused by movement).
+ *
+ * @param defender      The target the player attacked. (Which might be dead,
+ *                      or even null in the case of WJC martial attacks!)
+ * @param was_firewood  Whether the defender was firewood while alive.
+ * @param simu          Whether this is an fsim simulation.
+ */
+void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
+{
+    if (!simu && will_have_passive(passive_t::shadow_attacks))
+        dithmenos_shadow_melee(defender);
+
+    // Various status will not expire so long as the player keeps attacking.
+    if (you.duration[DUR_EXECUTION])
+        you.duration[DUR_EXECUTION] += you.time_taken;
+    if (you.duration[DUR_WEREFURY])
+        you.duration[DUR_WEREFURY] += you.time_taken;
+    if (you.duration[DUR_DETONATION_CATALYST])
+        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+
+    if (you.duration[DUR_PARAGON_ACTIVE])
+        paragon_attack_trigger();
+
+    if (you.form == transformation::sun_scarab && !was_firewood)
+        solar_ember_blast();
+
+    if (you.form == transformation::medusa)
+        _do_medusa_stinger();
 }
 
 /**

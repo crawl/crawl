@@ -6459,7 +6459,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
 
     auto initial_position = you.pos();
     you.moveto(wall_jump_landing_spot);
-    wu_jian_wall_jump_effects();
+    bool attacked = wu_jian_wall_jump_effects();
     you.clear_far_engulf(false, true);
     you.apply_location_effects(initial_position);
 
@@ -6469,6 +6469,10 @@ bool wu_jian_do_wall_jump(coord_def targ)
     you.time_taken = player_speed() * wall_jump_modifier
                      * player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
+
+    // Must be done after setting the time taken by this attack set.
+    if (attacked)
+        do_player_post_attack(nullptr, false, false);
 
     // need to set this here in case serpent's lash isn't active
     you.turn_is_over = true;
