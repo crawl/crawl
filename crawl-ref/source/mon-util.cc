@@ -2424,6 +2424,10 @@ int mons_max_hp(monster_type mc)
  */
 int exper_value(const monster& mon, bool real, bool legacy)
 {
+    // Specially defined by vaults eg. for sprint
+    if (mon.exp > 0)
+        return mon.exp;
+
     int x_val = 0;
 
     // These four are the original arguments.
