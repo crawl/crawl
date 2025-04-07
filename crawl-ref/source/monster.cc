@@ -79,7 +79,7 @@
 #include "xom.h"
 
 monster::monster()
-    : hit_points(0), max_hit_points(0),
+    : hit_points(0), max_hit_points(0), exp(0),
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
@@ -136,6 +136,7 @@ void monster::reset()
     base_monster    = MONS_NO_MONSTER;
     hit_points      = 0;
     max_hit_points  = 0;
+    exp             = 0;
     hit_dice        = 0;
     speed_increment = 0;
     attitude        = ATT_HOSTILE;
