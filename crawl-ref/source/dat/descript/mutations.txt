@@ -741,7 +741,7 @@ divine invocations can temporarily grant you the ability to regenerate.
 To compensate, you are able to heal yourself via the
 <input>$cmd[CMD_USE_ABILITY]</input> key, at the cost of permanent MP.
 %%%%
-strong nose mutation
+treasure sense mutation
 
 You have a powerful nose adapted to the Dungeon's scents, allowing you to
 detect where treasures lay hidden. As you explore the dungeon, nearby item
