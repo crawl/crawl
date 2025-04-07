@@ -252,6 +252,10 @@ spret zapping(zap_type ztype, int power, bolt &pbolt,
 
     if (ztype == ZAP_DIG)
         pbolt.aimed_at_spot = false;
+    // XXX: Not an explosion internally, which would do this automatically,
+    //      but is aimed like one and should behavior like one UI-wise.
+    else if (ztype == ZAP_RUST_BREATH)
+        pbolt.aimed_at_spot = true;
 
     pbolt.fire();
 
@@ -3324,7 +3328,8 @@ bool bolt::harmless_to_player() const
 
     if (origin_spell == SPELL_COMBUSTION_BREATH
         || origin_spell == SPELL_NULLIFYING_BREATH
-        || origin_spell == SPELL_RIMEBLIGHT)
+        || origin_spell == SPELL_RIMEBLIGHT
+        || origin_spell == SPELL_RUST_BREATH && you.form == transformation::fortress_crab)
     {
         return true;
     }

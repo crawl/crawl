@@ -1236,7 +1236,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_RUST_BREATH:
         return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, pow,
-                                          pow >= 25 ? 2 : 1, pow > 9 ? 2 : 1);
+                                          pow >= 25 ? 2 : 1, 2);
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
