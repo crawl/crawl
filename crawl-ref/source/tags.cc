@@ -3713,6 +3713,12 @@ static void _tag_read_you(reader &th)
     if (species::is_draconian(you.species))
         _fixup_species_mutations(MUT_ARMOURED_TAIL);
 
+    if ((you.species == SP_NAGA || you.species == SP_BARACHI)
+        && you.has_innate_mutation(MUT_SLOW))
+    {
+        _fixup_species_mutations(MUT_SLOW);
+    }
+
     #undef SP_MUT_FIX
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
