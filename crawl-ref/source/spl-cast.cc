@@ -960,15 +960,15 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    const int cost = spell_mana(spell);
+    const int mp_cost = spell_mana(spell);
     if (spell == SPELL_UNGOLDIFY)
-        you.del_gold(cost);
+        you.del_gold(ungoldify_cost());
     else
-        pay_mp(cost);
+        pay_mp(mp_cost);
 
     // Majin Bo HP cost taken at the same time
     // (but after hp costs from HP casting)
-    const int hp_cost = min(spell_mana(spell), you.hp - 1);
+    const int hp_cost = min(mp_cost, you.hp - 1);
     if (_majin_charge_hp())
         pay_hp(hp_cost);
 
@@ -981,9 +981,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         if (spell == SPELL_UNGOLDIFY)
-            you.add_gold(cost);
+            you.add_gold(ungoldify_cost());
         else
-            refund_mp(cost);
+            refund_mp(mp_cost);
         if (_majin_charge_hp())
             refund_hp(hp_cost);
 
@@ -993,7 +993,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     practise_casting(spell, cast_result == spret::success);
-    _handle_channelling(cost, cast_result);
+    _handle_channelling(mp_cost, cast_result);
     if (cast_result == spret::success)
     {
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))

@@ -1178,7 +1178,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell == SPELL_UNGOLDIFY)
         {
             // Use gold instead of mana
-            if (you.gold < spell_mana(spell))
+            if (you.gold < ungoldify_cost())
                 return "you don't have enough gold to cast this spell.";
         }
         else if (you.has_mutation(MUT_HP_CASTING))

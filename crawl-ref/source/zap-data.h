@@ -2772,7 +2772,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     ZAP_UNGOLD,
     "ungold silver",
     200,
-    new multiply_dice_calculator<10, 1, 20, 8>,  // 20d8 at max power
+    new multiply_dice_calculator<10, 1, 20, 10>,  // 20d10 at max power
     new tohit_calculator<15, 1, 12>,
     nullptr,
     nullptr,

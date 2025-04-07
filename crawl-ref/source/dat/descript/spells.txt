@@ -34,17 +34,18 @@ frequently used as an icebreaker at wizard parties.
 Alistair's Pocket Shrapnel spell
 
 The ultimate ambition of every alchemist has long been to achieve the elusive
-transmutation of base metals into gold. Many have died (or worse) in pursuit
-of this "Philosopher's Stone". The reverse, however, is rather more possible
-for one with sufficient mastery of the alchemical arts (although it is no less
+transmutation of base metals into gold, but most have perished in the attempt
+(or worse!) The reverse, however, is rather more achievable for one with
+sufficient mastery of the alchemical arts (although only marginally less
 hazardous).
 
-Begins a transmutation of a handful of gold coins into silver slugs. The
-reaction starts instantly and is highly energetic but must be supplied with
-kinetic energy from the caster's movement, by moving in the direction in which
-they wish to propel a wide beam of shrapnel. With each movement, more gold will
-be converted and pellets fired, until the reaction ends or the caster takes any
-action other than moving.
+Transmutes a handful of gold coins into silver slugs, and propels them towards
+your foes in a wide spread of shrapnel. The spell does not require the usual
+magic cost, instead unlocking the latent magic stored within gold itself, in
+combination with the caster's own kinetic energy. Consequently the caster must
+move forwards in the direction of casting while performing this effect, and may
+even perform a melee attack whilst doing so, should something attackable get in
+the way.
 
 Silver causes additional damage to chaotic beings.
 %%%%

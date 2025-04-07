@@ -2152,86 +2152,40 @@ static void _ungoldify_targets(vector<widebeam_beam> beams, int pow, int range)
     multi_bolt_fire(bolts, 50);
 }
 
-// XX: Started implementing this. But actually move_player_action *probably*
-// does everything right, and the cases that wouldn't work (e.g. being confused)
-// can't possibly apply if we just cast a spell successfully
-
-// static bool _ungoldify_move_player(coord_def target, bool check_only)
-// {
-//     // XX: Shouldn't have got here if this is true
-//     // if (is_stationary() || resists_dislodge("being knocked back"))
-//     //     return false;
-
-//     if (!in_bounds(target)
-//         || !you.is_habitable_feat(env.grid(target)))
-//     {
-//         return false;
-//     }
-
-//     if (monster* mons = monster_at(target))
-//     {
-//         if (!mons->friendly())
-//         {
-//             if (check_only)
-//                 return true;
-//             // XX: Maybe add a ::attack method on player instead of including melee-attack.h?
-//             melee_attack atk(&you, mons);
-//             atk.never_prompt = true;
-//             atk.launch_attack_set();
-//             return true;
-//         }
-//         coord_def swapdest;
-//         if (swap_check(mons, swapdest, true))
-//         {
-//             if (check_only)
-//                 return true;
-//             if (swap_with_monster(mons))
-//                 return true;
-//         }
-//     }
-
-//     you.apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
-//                                 actor_to_death_source(&cause));
-// }
+int ungoldify_cost()
+{
+    const int mp = spell_mana(SPELL_UNGOLDIFY);
+    const int beams =  ungoldify_beam_width();
+    return mp * beams * 2; // 52 right now (90 with Veh)
+}
 
 /**
- * Attempt to cast the spell "Alistair's Pocket Shrapnel", beginning a transmutation of gold
- * into base metals (lead, iron and silver) which can be released explosively on your
- * next turn in a 3- 5- or 7- wide beam in your direction of movement.
+ * Attempt to cast the spell "Alistair's Pocket Shrapnel", converting some of
+ * your gold into the base metal silver and releasing it explosively in a 3- or
+ * 5- wide beam, and moving you a step in that direction.
  *
  * @param target Target coordinate for the spell.
  * @param powc   The power at which the spell is being cast.
  * @param fail   Whether the player has failed to cast the spell.
- * @return       spret::abort if the player changed their mind about casting after
- *               realizing they would hit an ally; spret::fail if they failed the
- *               cast chance; spret::success otherwise.
+ * @return       spret::fail if they failed the cast chance; spret::success otherwise.
  */
 spret cast_ungoldify(coord_def target, int powc, bool fail)
 {
-    // TODO: Check danger to allies
-    fail_check();
-
-    // Coins have already been deducted in cast_a_spell
-    const int coins = spell_mana(SPELL_UNGOLDIFY);
+    // Coins have been deducted silently in cast_a_spell
+    const int coins = ungoldify_cost();
     mprf("You grab %d gold coin%s and they begin to pop and fizzle."
          " You have %d gold remaining.",
             coins, coins != 1 ? "s" : "", you.gold);
 
-    const int range = spell_range(SPELL_UNGOLDIFY, powc);
-
-    noisy(spell_effect_noise(SPELL_UNGOLDIFY), you.pos());
-
     targeter_widebeam_compass flashfunc = targeter_widebeam_compass(&you, 3, 3);
     flash_view_delay(UA_PLAYER, ETC_GOLD, 20, &flashfunc);
 
-    // Set up a list of potential projectile targets; use LOS_NONE so the beams
-    // are picked evenly regardless of terrain, even if they're aiming through a
-    // wall or something else impassible.
+    fail_check();
+
+    const int range = spell_range(SPELL_UNGOLDIFY, powc);
+
+    // Set up the beams using the targetter
     targeter_widebeam hitfunc(&you, range, ungoldify_beam_width());
-    // Aim from one back (should be where we originally were, assuming movement
-    // was 1 tile)
-    // hitfunc.origin = you;// you.pos() - move.sgn();
-    // hitfunc.origin = you.pos() - move.sgn();
     const coord_def move = (target - you.pos()).sgn();
     const coord_def normalised_target = you.pos() + move;
     hitfunc.set_aim(normalised_target);
@@ -2241,7 +2195,6 @@ spret cast_ungoldify(coord_def target, int powc, bool fail)
     mpr("You expel the base metals with the kinetic energy of your movement!");
 
     // Move the player in the direction of the target
-    // _ungoldify_move_player(normalised_target);
     move_player_action(move);
     return spret::success;
 }
