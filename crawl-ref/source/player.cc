@@ -6719,6 +6719,7 @@ bool player::res_petrify(bool temp) const
 bool player::res_constrict() const
 {
     return is_insubstantial()
+           || is_amorphous()
            || get_mutation_level(MUT_SPINY)
            || you.unrand_equipped(UNRAND_SLICK_SLIPPERS)
            || you.duration[DUR_CONSTRICTION_IMMUNITY];
