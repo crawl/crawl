@@ -673,6 +673,18 @@ troll baked goods cache
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
 %%%%
+amphisbaena fruit cache
+
+You distend one of your jaws to swallow @_fruit_and_reaction_@
+%%%%
+amphisbaena meat cache
+
+You distend one of your jaws to swallow @_meat_and_reaction_@
+%%%%
+amphisbaena baked goods cache
+
+You distend one of your jaws to swallow @_baked_good_and_reaction_@
+%%%%
 bat fruit cache
 
 You slurp up @_fruit_and_reaction_@
@@ -738,18 +750,6 @@ pig meat cache
 pig baked goods cache
 
 @short baked goods cache@
-%%%%
-snake fruit cache
-
-You distend your jaw to swallow @_fruit_and_reaction_@
-%%%%
-snake meat cache
-
-You distend your jaw to swallow @_meat_and_reaction_@
-%%%%
-snake baked goods cache
-
-You distend your jaw to swallow @_baked_good_and_reaction_@
 %%%%
 statue fruit cache
 
