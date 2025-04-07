@@ -2329,8 +2329,8 @@ void sun_scarab_spawn_ember(bool first_time)
     if (monster* mon = create_monster(mg))
     {
         you.props[SOLAR_EMBER_MID_KEY].get_int() = mon->mid;
-        mprf(MSGCH_DURATION, first_time ? "A tiny sun coalesceses beside you."
-                                        : "You reconstitue your solar ember.");
+        mprf(MSGCH_DURATION, first_time ? "A tiny sun coalesces beside you."
+                                        : "You reconstitute your solar ember.");
         you.props.erase(SOLAR_EMBER_REVIVAL_KEY);
     }
 }
