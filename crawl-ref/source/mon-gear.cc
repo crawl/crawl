@@ -704,6 +704,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_MERFOLK_AQUAMANCER, { { { WPN_RAPIER, 1 } }, {}, {}, 2 } },
         { MONS_MERFOLK_JAVELINEER, { { { WPN_SPEAR, 1 } } } },
+        { MONS_GOBLIN_RIDER, { { { WPN_SPEAR, 1 } } } },
         { MONS_SPRIGGAN_RIDER, { { { WPN_SPEAR, 1 } } } },
         { MONS_MERFOLK, { { { WPN_TRIDENT, 1 } } } },
         { MONS_MERFOLK_SIREN,
@@ -1130,6 +1131,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             item.sub_type  = WPN_SLING;
             break;
         }
+        break;
+
+    case MONS_GOBLIN_RIDER:
+        if (coinflip())
+            level = ISPEC_GOOD_ITEM;
         break;
 
     case MONS_GNOLL:

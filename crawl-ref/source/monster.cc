@@ -5846,7 +5846,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER)
+    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER)
     {
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
@@ -5864,7 +5864,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
+            if (type == MONS_SPRIGGAN_RIDER)
+                type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
+            else if (type == MONS_GOBLIN_RIDER)
+                type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
+
             define_monster(*this);
             hit_points = min(old_hp, hit_points);
             flags          = old_flags;

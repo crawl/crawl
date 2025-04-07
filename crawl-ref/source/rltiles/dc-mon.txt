@@ -1214,6 +1214,9 @@ goblin MONS_GOBLIN
 %rim 1
 hobgoblin MONS_HOBGOBLIN
 %rim 0
+goblin_rider MONS_GOBLIN_RIDER
+goblin_rider_good_spear MONS_GOBLIN_RIDER_GOOD_SPEAR
+goblin_rider_spearless MONS_GOBLIN_RIDER_SPEARLESS
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_BOUDA
 gnoll_sergeant MONS_GNOLL_SERGEANT

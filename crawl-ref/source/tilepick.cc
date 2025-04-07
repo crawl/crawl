@@ -1938,6 +1938,20 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_YAKTAUR_CAPTAIN:
             return base + (_bow_offset(mon) ? 1 : 0);
 
+
+        case MONS_GOBLIN_RIDER:
+        {
+            // Their tile only covers spears.
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_SPEAR))
+                if (get_weapon_brand(*weapon) != SPWPN_NORMAL)
+                    return TILEP_MONS_GOBLIN_RIDER_GOOD_SPEAR;
+                else
+                    return TILEP_MONS_GOBLIN_RIDER;
+            else
+                return TILEP_MONS_GOBLIN_RIDER_SPEARLESS;
+        }
+
         case MONS_CEREBOV:
         case MONS_SERAPH:
             return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);

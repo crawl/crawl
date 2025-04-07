@@ -1530,6 +1530,14 @@ A short, impatient and unfriendly humanoid. Goblins first appeared only a few
 years ago, but are now remarkably numerous. Sadly, no number of raucous goblin
 parties will put them in a welcoming mood toward adventurers.
 %%%%
+goblin rider
+
+Goblin clans fractured over the advent of steel exoskeletons long ago, prompting
+an experimental arms race for goblin hegemony. Some volunteered to join forces
+with other species, an alliance that has enabled capturing and taming wyverns.
+From uptop their majestic dragon-like mounts, these goblins swiftly soar about
+and skewer those who intrude upon their allies' domain.
+%%%%
 golden dragon
 
 A great winged dragon covered in shining golden scales. Legends say that its

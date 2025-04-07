@@ -261,7 +261,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
                 "w:20 fire bat / fire elemental",
-                "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
+                "steam dragon / w:5 goblin rider / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
                     w:15 rust devil / w:15 iron imp",

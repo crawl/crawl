@@ -402,6 +402,9 @@ enum monster_type                      // env.mons[].type
 
     MONS_GOBLIN,
     MONS_HOBGOBLIN,
+#if TAG_MAJOR_VERSION > 34
+    MONS_GOBLIN_RIDER,
+#endif
     MONS_GNOLL,
     MONS_GNOLL_BOUDA,
     MONS_GNOLL_SERGEANT,
@@ -1336,6 +1339,7 @@ enum monster_type                      // env.mons[].type
     MONS_NAMELESS_REVENANT,      // 'Nobody' (except with a less misleading enum name)
     MONS_PETRIFIED_FLOWER,
     MONS_SOLAR_EMBER,
+    MONS_GOBLIN_RIDER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
