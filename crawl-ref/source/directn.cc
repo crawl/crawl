@@ -3149,7 +3149,7 @@ string feature_description_at(const coord_def& where, bool covering,
             covering_description = ", covered with ice";
 
         if (is_temp_terrain(where))
-            covering_description = ", summoned";
+            covering_description = ", temporary";
 
         if (is_bloodcovered(where))
             covering_description += ", spattered with blood";
