@@ -6236,6 +6236,7 @@ void marshallMonster(writer &th, const monster& m)
 
     marshallShort(th, min(m.hit_points, MAX_MONSTER_HP));
     marshallShort(th, min(m.max_hit_points, MAX_MONSTER_HP));
+    marshallInt(th, m.exp);
     marshallInt(th, m.number);
     marshallMonType(th, m.base_monster);
     marshallShort(th, m.colour);
@@ -7198,6 +7199,13 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.hit_points     = unmarshallShort(th);
     m.max_hit_points = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SPECIFY_EXP)
+        m.exp = 0;
+    else
+#endif
+    m.exp            = unmarshallInt(th);
+    m.summoner       = unmarshallInt(th);
     m.number         = unmarshallInt(th);
     m.base_monster   = unmarshallMonType(th);
     m.colour         = unmarshallShort(th);
