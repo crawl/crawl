@@ -761,7 +761,6 @@ bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return (is_harmless_cloud(cloud.type) && !is_opaque_cloud(cloud.type))
            || cloud.type == CLOUD_STEAM
-           || cloud.type == CLOUD_BLASTMOTES
            || ct == CLOUD_VORTEX; // soon gone
 }
 
