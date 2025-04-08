@@ -31,6 +31,7 @@
 #include "items.h"
 #include "map-knowledge.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -590,10 +591,7 @@ monster* get_rampage_target(coord_def move)
     beam.thrower         = KILL_YOU;
     beam.pierce          = true;
     beam.affects_nothing = true;
-    beam.is_tracer       = true;
-    // is_targeting prevents bolt::do_fire() from interrupting with a message
-    // if our tracer crosses something that blocks line of fire.
-    beam.is_targeting    = true;
+    beam.set_is_tracer(true);
     beam.fire();
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
@@ -1144,6 +1142,13 @@ void move_player_action(coord_def move)
         // put a monster at the player's location.
         if (swap)
             targ_monst->apply_location_effects(targ);
+
+        if (swap && targ_monst->type == MONS_SOLAR_EMBER
+            && targ_monst->hit_points < targ_monst->max_hit_points)
+        {
+            targ_monst->heal(targ_monst->max_hit_points / 2);
+            mprf("You weave more energy into your solar ember.");
+        }
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());

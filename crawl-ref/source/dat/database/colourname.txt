@@ -795,6 +795,8 @@ leopard spots
 
 ogee
 
+ombre
+
 paisley
 
 pinstripes
@@ -848,6 +850,8 @@ gleaming
 glossy
 
 luminous
+
+lustrous
 
 mottled
 

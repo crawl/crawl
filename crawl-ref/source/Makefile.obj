@@ -504,7 +504,6 @@ randbook.h.o \
 random.h.o \
 random-pick.h.o \
 random-var.h.o \
-reach-type.h.o \
 recite-eligibility.h.o \
 recite-type.h.o \
 religion-enum.h.o \

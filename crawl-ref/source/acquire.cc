@@ -644,64 +644,49 @@ static int _acquirement_book_subtype(int & /*quantity*/,
     //or asserts will get set off
 }
 
-static vector<pair<talisman_type, int>> _base_talisman_tiers()
-{
-    vector<pair<talisman_type, int>> tiers = {
-        { TALISMAN_BEAST,   1 },
-        { TALISMAN_FLUX,    2 },
-        { TALISMAN_MAW,     3 },
-        { TALISMAN_SERPENT, 3 },
-        { TALISMAN_BLADE,   3 },
-        { TALISMAN_STATUE,  4 },
-        { TALISMAN_DRAGON,  4 },
-        { TALISMAN_STORM,   5 },
-        { TALISMAN_DEATH,   5 },
-        { NUM_TALISMANS,    5 },
-    };
-    return tiers;
-}
-
 // Scale talisman chances, strongly biased in favour of those we haven't
 // seen before, and also biased in favour of higher tier talismans when
 // we have more Shapeshifting skill.
-static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
-                                    int agent)
+static vector<pair<talisman_type, int>> _scale_talisman_weights(int agent)
 {
+    // Xom always selects a talisman purely at random.
+    if (agent == GOD_XOM)
+        return {{NUM_TALISMANS, 1000}};
+
     // This will produce a target tier between 3 and 6 depending on skill.
     // This is very roughly one tier higher than the tier of talisman you
     // can use with your current skill, because you probably already have a
     // talisman matching your current skill and are looking for an upgrade.
-    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 7) + 3);
+    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 8) + 3);
 
-    // Change all the tier values, other than the random option, to weights.
+    // Compile all talismans into one list and give them appropriate weights.
     // The random option will stay weight 5.
-    for (auto &tier : tiers)
+    vector<pair<talisman_type, int>> weights;
+    for (int tier = 1; tier <=5; ++tier)
     {
-        // Skip the random option.
-        if (tier.first == NUM_TALISMANS)
-            continue;
-
-        // Xom will set all weights but the one for the random option to 0.
-        if (agent == GOD_XOM)
+        vector<talisman_type> by_tier = talismans_by_tier(tier);
+        for (talisman_type type : by_tier)
         {
-            tier.second = 0;
-            continue;
+            int scale_value = 1;
+
+            if (!you.seen_talisman[type])
+                scale_value *= 10;
+
+            if (tier == target_tier)
+                scale_value *= 25;
+            else if (abs(tier - target_tier) == 1)
+                scale_value *= 15;
+            else if (abs(tier - target_tier) == 2)
+                scale_value *= 7;
+
+            weights.push_back({type, scale_value});
         }
-
-        int scale_value = 1;
-
-        if (!you.seen_talisman[tier.first])
-            scale_value *= 10;
-
-        if (tier.second == target_tier)
-            scale_value *= 30;
-        else if (abs(tier.second - target_tier) == 1)
-            scale_value *= 15;
-        else if (abs(tier.second - target_tier) == 2)
-            scale_value *= 5;
-
-        tier.second = scale_value;
     }
+
+    // Always a small chance for any talisman
+    weights.push_back({NUM_TALISMANS, 5});
+
+    return weights;
 }
 
 /**
@@ -717,10 +702,8 @@ static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
 static int _acquirement_talisman_subtype(int & /*quantity*/,
                                          int agent)
 {
-    vector<pair<talisman_type, int>> tiers = _base_talisman_tiers();
     talisman_type talisman = NUM_TALISMANS;
-
-    _scale_talisman_weights(tiers, agent);
+    vector<pair<talisman_type, int>> tiers = _scale_talisman_weights(agent);
     talisman = *random_choose_weighted(tiers);
 
     // Choose randomly.
@@ -756,6 +739,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_talisman_subtype,
     0, // no gems either
     0, // no gizmos (handled elsewhere)
+    0, // no baubles
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
@@ -1161,7 +1145,11 @@ static string _why_reject(const item_def &item, int agent)
     if (agent == GOD_TROG && is_unrandom_artefact(item, UNRAND_TROG))
         return "Destroying Trog-gifted Wrath of Trog!";
 
-    // Pain brand is useless if you've sacrificed Necromacy.
+    // Oka does not gift reaping weapons.
+    if (agent == GOD_OKAWARU && get_weapon_brand(item) == SPWPN_REAPING)
+        return "Destroying Oka-gifted reaping weapon.";
+
+    // Pain brand is useless if you've sacrificed Necromancy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
@@ -1314,6 +1302,11 @@ int acquirement_create_item(object_class_type class_wanted,
             // Don't acquire negative enchantment except via Xom.
             if (agent != GOD_XOM)
                 acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
+        }
+        else if (acq_item.base_type == OBJ_TALISMANS
+                 && !is_artefact(acq_item) && one_chance_in(4))
+        {
+            make_item_randart(acq_item);
         }
 
         // Last check: don't acquire items your god hates.

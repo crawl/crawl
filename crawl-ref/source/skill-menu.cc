@@ -3,10 +3,12 @@
  * @brief Skill menu.
 **/
 
+// this precompiled header must be the first include otherwise
+// includes before it will be ignored without any warning in MSVC
+#include "AppHdr.h"
+
 #include <cmath>
 #include <clocale>
-
-#include "AppHdr.h"
 
 #include "skill-menu.h"
 
@@ -578,6 +580,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("the Hermit's pendant");
             if (_charlatan_bonus())
                 causes.push_back("the Charlatan's Orb");
+            if (you.form == transformation::walking_scroll)
+                causes.push_back("scribal knowledge");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";

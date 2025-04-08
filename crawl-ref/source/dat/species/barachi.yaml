@@ -43,11 +43,10 @@ dex: 7
 levelup_stat_frequency: 4
 mutations:
   1:
-    MUT_SLOW: 1
-    MUT_HOP: 1
+    MUT_FROG_LEGS: 1
     MUT_DAYSTALKER: 1
   13:
-    MUT_HOP: 1
+    MUT_FROG_LEGS: 1
 recommended_jobs:
   - fighter
   - berserker
@@ -60,3 +59,4 @@ recommended_jobs:
 
 child_name: Tadpole
 orc_name: Orcphibian
+walking_verb: Hop

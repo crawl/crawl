@@ -28,6 +28,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -545,6 +546,9 @@ int spell_mana(spell_type which_spell, bool real_spell)
 
     if (real_spell)
     {
+        if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
+            return 0;
+
         int cost = level;
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
@@ -1189,6 +1193,9 @@ string casting_uselessness_reason(spell_type spell, bool temp)
                 return "your magic and health are inextricable.";
             return "your reserves of magic are already full.";
         }
+
+        if (you.form == transformation::walking_scroll && spell_difficulty(spell) > 4)
+            return "your cannot cast such powerful magic in your current form.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
@@ -1455,15 +1462,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no body armour to summon the spirit of.";
         break;
 
-    case SPELL_MANIFOLD_ASSAULT:
-        if (temp)
-        {
-            const string unproj_reason = weapon_unprojectability_reason(you.weapon());
-            if (unproj_reason != "")
-                return unproj_reason;
-        }
-        break;
-
     case SPELL_MOMENTUM_STRIKE:
         if (temp && !you.is_motile())
             return "you cannot redirect your momentum while unable to move.";
@@ -1654,6 +1652,24 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
 
+    case SPELL_POISONOUS_VAPOURS:
+    {
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
+             ri; ++ri)
+        {
+            const monster* mons = monster_at(*ri);
+            if (mons
+                && you.can_see(*mons)
+                && !mons->wont_attack()
+                && mons_is_threatening(*mons)
+                && mons->res_poison() <= 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
@@ -1787,16 +1803,12 @@ bool spell_no_hostile_in_range(spell_type spell)
         bool found = false;
         beam.source_id = MID_PLAYER;
         beam.range = range;
-        beam.is_tracer = true;
-        beam.is_targeting = true;
         beam.source  = you.pos();
-        beam.dont_stop_player = true;
-        beam.friend_info.dont_stop = true;
-        beam.foe_info.dont_stop = true;
         beam.attitude = ATT_FRIENDLY;
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
+        targeting_tracer tracer;
 
         const bool smite = testbits(flags, spflag::target);
 
@@ -1825,23 +1837,19 @@ bool spell_no_hostile_in_range(spell_type spell)
                 // be good to move basic explosion radius info into spell_desc
                 // or possibly zap_data. -gammafunk
                 tempbeam.ex_size = tempbeam.is_explosion ? 1 : 0;
-                tempbeam.explode();
+                tempbeam.explode(tracer);
             }
             else
-                tempbeam.fire();
-
-            int foes = tempbeam.foe_info.count;
-            int friends = tempbeam.friend_info.count;
+                tempbeam.fire(tracer);
 
             // Need to check both beam flavours for Plasma Beam.
             if (zap == ZAP_PLASMA)
             {
                 tempbeam.flavour = BEAM_ELECTRICITY;
-                tempbeam.fire();
-                foes += tempbeam.foe_info.count;
+                tempbeam.fire(tracer);
             }
 
-            if (foes > 0 || allow_friends && friends > 0)
+            if (tracer.foe_info.count > 0 || allow_friends && tracer.friend_info.count > 0)
             {
                 found = true;
                 break;
@@ -1951,6 +1959,31 @@ bool spell_has_variable_range(spell_type spell)
 {
     return spell_range(spell, 0, false)
             != spell_range(spell, spell_power_cap(spell), false);
+}
+
+bool spell_can_be_enkindled(spell_type spell)
+{
+    switch (spell)
+    {
+        // Veh-supported spells that aren't actually blasty.
+        case SPELL_BATTLESPHERE:
+        case SPELL_SPELLSPARK_SERVITOR:
+        case SPELL_MEPHITIC_CLOUD:
+            return false;
+
+        // Non-Veh-supported spells (for reasons of Kiku overlap) that are still
+        // sufficiently destructive for revenants.
+        case SPELL_GRAVE_CLAW:
+        case SPELL_VAMPIRIC_DRAINING:
+        case SPELL_BORGNJORS_VILE_CLUTCH:
+        case SPELL_PUTREFACTION:
+        case SPELL_DISPEL_UNDEAD:
+            return true;
+
+        // Everything else uses the standard destructive list.
+        default:
+            return vehumet_supports_spell(spell);
+    }
 }
 
 /* How to regenerate this:

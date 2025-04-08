@@ -16,6 +16,7 @@ spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
+spret spider_jump();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
@@ -45,7 +46,6 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real = true,
                             actor* katana_defender = nullptr);
-string weapon_unprojectability_reason(const item_def* wpn);
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
@@ -75,3 +75,6 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail);
 vector<monster*> gavotte_affected_monsters(const coord_def dir);
 
 spret cast_teleport_other(const coord_def& target, int power, bool fail);
+
+vector<coord_def> get_bestial_landing_spots(coord_def target);
+spret do_bestial_takedown(coord_def target);

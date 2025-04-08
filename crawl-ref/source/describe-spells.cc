@@ -292,13 +292,10 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!source_item)
         return spell_highlight_by_utility(spell, COL_UNKNOWN);
 
-    if (you.has_spell(spell))
-        return COL_MEMORIZED;
-
-    // this is kind of ugly.
-    if (!you_can_memorise(spell)
-        || you.experience_level < spell_difficulty(spell)
-        || player_spell_levels() < spell_levels_required(spell))
+    // note: Vehumet's gifts mean having a spell memorised does not imply that
+    // said spell is in your library
+    if (you.spell_library[spell] || you.has_spell(spell)
+        || !you_can_memorise(spell))
     {
         return COL_USELESS;
     }
@@ -306,10 +303,13 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (god_hates_spell(spell, you.religion))
         return COL_FORBIDDEN;
 
-    if (!you.has_spell(spell))
-        return COL_UNMEMORIZED;
+    if (you.experience_level < spell_difficulty(spell)
+        || player_spell_levels() < spell_levels_required(spell))
+    {
+        return COL_USEFUL_IN_FUTURE;
+    }
 
-    return spell_highlight_by_utility(spell, COL_UNKNOWN);
+    return COL_USEFUL_NOW;
 }
 
 /**
@@ -423,6 +423,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return prism_damage(prism_hd(pow, false), true);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(pow);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(pow, false);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers

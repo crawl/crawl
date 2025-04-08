@@ -240,6 +240,11 @@ A rock wall
 
 A wall consisting of simple rock.
 %%%%
+A frigid wall
+
+A wall that radiates a chill so intense it can damage enemies which stand next
+to it.
+%%%%
 ########################################################################
 ### Features
 ########################################################################
@@ -838,10 +843,10 @@ made for trapping {{ return you.genus(true) }} rather than flies.
 A Zot trap
 
 A trap which inflicts dangerously unpredictable magical effects on those
-unlucky enough to step on it. You may find yourself thrown into the Abyss,
-contaminated with enormous amounts of wild magic, have mighty fiends summoned
-against you, or the like. Hostile monsters may trigger this trap themselves to
-invoke its effects against you, but your allies will avoid stepping on it.
+unlucky enough to step on it. You may find yourself petrified, contaminated
+with enormous amounts of wild magic, have mighty fiends summoned against you,
+or the like. Hostile monsters may trigger this trap themselves to invoke its
+effects against you, but your allies will avoid stepping on it.
 %%%%
 ########################################################################
 ### Portal vault entrances
@@ -867,6 +872,12 @@ A gateway to a bazaar
 A portal leading to a bazaar, where itinerant merchants gather to sell their
 wares. They will wait for you, but once you get a chance to browse their
 inventory, the merchants will depart in search of other customers.
+%%%%
+A phantasmal passage
+
+A portal leading to one of many Necropolis repositories, where the freshly slain
+and deeply resentful are sealed away. This wandering rift will eventually move
+elsewhere to receive further dead.
 %%%%
 A frozen archway
 
@@ -917,6 +928,14 @@ A collapsed passage which cannot be used anymore.
 ########################################################################
 ### Portal redefinitions
 ########################################################################
+# Necropolis
+An archival metal wall
+
+An ensorcelled metal wall coated in an inscrutable non-linear script, recording
+the regrets of the interred and their visitors alike. As with all metal walls,
+it is next to impossible to destroy, and will ground all varieties of bounding
+lightning.
+%%%%
 # sewer_minmay_treatment (Sewer)
 A large window
 
@@ -1094,6 +1113,11 @@ A decorative floor
 
 A base floor type for various decorations one can walk over. If you see this,
 file a bug report.
+%%%%
+# Necropolis.
+A tree of woe
+
+A half-alive tree burdened with fruits of crystallised sorrow.
 %%%%
 A dead tree
 

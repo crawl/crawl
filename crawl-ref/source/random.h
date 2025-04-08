@@ -225,6 +225,48 @@ constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
 dice_def calc_dice(int num_dice, int max_damage, bool random = true);
 
+template<typename T>
+class power_deducer
+{
+public:
+    virtual T operator()(int pow, bool random = true) const = 0;
+    virtual ~power_deducer() {}
+};
+
+typedef power_deducer<int> tohit_deducer;
+
+template<int adder, int mult_num = 0, int mult_denom = 1>
+class tohit_calculator : public tohit_deducer
+{
+public:
+    int operator()(int pow, bool /*random*/) const override
+    {
+        return adder + pow * mult_num / mult_denom;
+    }
+};
+
+typedef power_deducer<dice_def> dam_deducer;
+
+template<int numdice, int adder, int mult_num, int mult_denom>
+class dicedef_calculator : public dam_deducer
+{
+public:
+    dice_def operator()(int pow, bool /*random*/) const override
+    {
+        return dice_def(numdice, adder + pow * mult_num / mult_denom);
+    }
+};
+
+template<int numdice, int adder, int mult_num, int mult_denom>
+class calcdice_calculator : public dam_deducer
+{
+public:
+    dice_def operator()(int pow, bool random) const override
+    {
+        return calc_dice(numdice, adder + pow * mult_num / mult_denom, random);
+    }
+};
+
 // I must be a random-access iterator.
 template <typename I>
 void shuffle_array(I begin, I end)

@@ -462,6 +462,16 @@ Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
 %%%%
+Detonation Catalyst spell
+
+Affixes a volatile catalyst to the caster's fists or melee weapon, causing each
+of their strikes to release a fiery explosion at its primary target. The caster
+and their allies are protected from the explosion's effects. The activity of the
+catalyst may be prolonged indefinitely as long as the caster continues to
+attack, but it rapidly loses potency when they take other actions. The base
+damage of the caster's weapon and the caster's spellpower each increase the
+explosion's damage.
+%%%%
 Diamond Sawblades spell
 
 Forges up to four razor-sharp sawblades at fixed positions around the caster
@@ -518,6 +528,17 @@ the caster's enemies under its own power.
 
 As it is a direct reflection of the caster's unique zeal, the weapon they
 receive from their god will be the same each time.
+%%%%
+Dominate Undead spell
+
+Attempts to forcibly change the allegiance of all nearby undead which are not
+already loyal to the caster.
+
+Adventurers, being famously headstrong, cannot be fully controlled by this
+spell. They will instead lash out randomly for the duration of its effect,
+attacking nearby friend and foe alike before regaining their wits.
+
+This spell can be broken prematurely by the death of its caster.
 %%%%
 Doom Howl spell
 
@@ -840,7 +861,7 @@ You can stockpile enough malice to cast this spell at most three times, and this
 can only be replenished by causing the death of a sufficient number of living
 beings.
 %%%%
-Greater Servant of Makhleb spell
+Infernal Servant spell
 
 Summons a major demon.
 %%%%
@@ -1025,7 +1046,7 @@ fae also reduces the caster's own willpower for a time.
 %%%%
 Kinetic Grapnel spell
 
-Weaves a thin kinetic filiment around the caster's melee weapon and launches the
+Weaves a thin kinetic filament around the caster's melee weapon and launches the
 other end of it at a nearby enemy. If this grapnel successfully hits and does
 damage, it will become lodged in them, allowing the next melee attack the caster
 performs against them to strike with perfect accuracy and a small slaying bonus.
@@ -1198,7 +1219,9 @@ Maxwell's Capacitive Coupling spell
 Gradually builds up electric charge in the caster, so long as they maintain
 focus (by waiting in place and not taking any other actions). When a threshold
 is reached, the charge couples with the nearest foe, vaporising them instantly.
-Higher spell power will allow the caster to accumulate charge more rapidly.
+Higher spell power will allow the caster to accumulate charge more rapidly. The
+spell requires a visible target to begin accumulating charge, though a different
+foe may be targeted when the charge is released.
 %%%%
 Maxwell's Portable Piledriver spell
 
@@ -1489,10 +1512,27 @@ Pyroclastic Surge spell
 Draws searing flames from lava. Any enemies of the caster standing
 next to or above lava will be burned.
 %%%%
+Pyrrhic Recollection spell
+
+Ignites a memory from the nimbus which surrounds Nobody, temporarily granting
+them the knowledge of a powerful spell and healing their injuries.
+
+This power is fleeting and will be extinguished after taking any significant
+amount of damage, but so long as any other memories remain, they cannot be
+put to rest for good.
+%%%%
 Quicksilver Bolt spell
 
 Fires a bolt of dispelling energy at a targeted creature, possibly removing
 some of its enchantments.
+%%%%
+Ravenous Swarm spell
+
+Unleashes a torrent of vampire bats, filling the air around a target.
+
+These vampires will gnaw on anything which isn't undead with a voracious hunger,
+and their bites will eventually even lull their victims to sleep, leaving them
+easy prey.
 %%%%
 Rebounding Blaze spell
 
@@ -1876,7 +1916,7 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Conjures a jagged shard of crystallized toxins. The stinger's impact will always
+Conjures a jagged shard of crystallised toxins. The stinger's impact will always
 poison a susceptible target. Even resistant targets have a chance to be poisoned
 and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%
@@ -1978,9 +2018,8 @@ Calls forth divine warriors to aid the caster.
 Summon Horrible Things spell
 
 Opens a gate to the Abyss and calls through two or more hideous abominations
-from that dreadful place. The opening of the gate may drain a portion of the
-caster's intellect. The number of abominations summoned increases with spell
-power.
+from that dreadful place. The opening of the gate may temporarily mutate the
+caster, reducing their willpower.
 %%%%
 Summon Hydra spell
 
@@ -2035,6 +2074,9 @@ Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
 as hardy as a mountain, and its footfalls are capable of creating violent
 seismic shockwaves. Each shockwave deals considerable damage to non-flying
 enemies, and may sometimes even cause them to lose their footing altogether.
+
+Spell power increases the egg's durability and the strength of the seismosaur
+within, but not the time it takes to hatch.
 %%%%
 Summon Small Mammal spell
 

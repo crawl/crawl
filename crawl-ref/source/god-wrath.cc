@@ -304,7 +304,7 @@ static bool _zin_retribution()
             confuse_player(5 + random2(3));
             break;
         case 1:
-            you.put_to_sleep(nullptr, 30 + random2(20));
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
@@ -344,7 +344,7 @@ static bool _cheibriados_retribution()
         if (you.hp >= (you.hp_max * 3 / 4))
         {
             mprf(MSGCH_DANGER, "You lose track of time!");
-            you.put_to_sleep(nullptr, 30 + random2(20));
+            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             dec_penance(god, 1);
         }
         else
@@ -1149,7 +1149,7 @@ static void _jiyva_transform()
                                               transformation::tree,
                                               transformation::wisp);
 
-    if (transform(random2(you.penance[god]) * 2, form, true))
+    if (transform(random_range(40, 70), form, true))
         you.transform_uncancellable = true;
 }
 /**
@@ -1767,7 +1767,7 @@ static bool _dithmenos_retribution()
     {
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
-        you.put_to_sleep(nullptr, 30 + random2(20));
+        you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
         break;
     }
     case 3:
@@ -1947,7 +1947,7 @@ static bool _wu_jian_retribution()
             break;
         case 3:
             wu_jian_sifu_message(" says: Suffer, mortal!");
-            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
+            you.corrode(nullptr, _god_wrath_name(god).c_str(), 8);
             break;
         }
     }

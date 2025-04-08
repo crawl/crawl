@@ -154,6 +154,8 @@ lajatang3
 
 staff_mummy WPN_STAFF_MUMMY
 xmas-scythe WPN_XMAS_SCYTHE
+april_staff1 WPN_APRIL_STAFF1
+april_staff2 WPN_APRIL_STAFF2
 %rim 1
 
 
@@ -492,6 +494,8 @@ hat_explorer THELM_HAT_EXPLORER
 hat_explorer2 THELM_HAT_EXPLORER2
 hat_wiglaf THELM_HAT_WIGLAF
 santa_hat THELM_HAT_SANTA
+april_hat1 THELM_HAT_APRIL1
+april_hat2 THELM_HAT_APRIL2
 
 %rim 0
 hat1 THELM_HAT THELM_HAT_FIRST
@@ -530,6 +534,8 @@ boots_ego1 ARM_BOOTS_EGO_FIRST
 boots_ego2 ARM_BOOTS_EGO_LAST
 boots_art1 ARM_BOOTS_ART_FIRST
 boots_art2 ARM_BOOTS_ART_LAST
+april_boots1 ARM_BOOTS_APRIL1
+april_boots2 ARM_BOOTS_APRIL2
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
@@ -1243,7 +1249,6 @@ generic_unfound_broken
 #OBJ_TALISMANS
 %sdir item/talisman
 %rim 0
-beast TALISMAN_BEAST
 flux TALISMAN_FLUX
 snake TALISMAN_SNAKE
 maw TALISMAN_MAW
@@ -1252,6 +1257,24 @@ statue TALISMAN_STATUE
 dragon TALISMAN_DRAGON
 storm TALISMAN_STORM
 death TALISMAN_DEATH
+vampire TALISMAN_VAMPIRE
+rimehorn TALISMAN_RIMEHORN
+spider TALISMAN_SPIDER
+quill TALISMAN_QUILL
+hive TALISMAN_HIVE
+water TALISMAN_AQUA
+sphinx TALISMAN_SPHINX
+lupine TALISMAN_WEREWOLF
+inkwell TALISMAN_INKWELL
+fortress TALISMAN_FORTRESS
+scarab TALISMAN_SCARAB
+medusa TALISMAN_MEDUSA
+protean TALISMAN_PROTEAN
+
+#OBJ_BAUBLES
+%sdir item/misc
+%rim 0
+bauble_flux BAUBLE_FLUX
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

@@ -46,6 +46,10 @@ enum dungeon_feature_type
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
 
+#if TAG_MAJOR_VERSION > 34
+    DNGN_FRIGID_WALL,
+#endif
+
     DNGN_GRATE,
 
     // Misc solid features
@@ -284,6 +288,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ZIGGURAT,
     DNGN_ENTER_BAZAAR,
     DNGN_ENTER_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_NECROPOLIS,
+#endif
     DNGN_ENTER_SEWER,
     DNGN_ENTER_OSSUARY,
     DNGN_ENTER_BAILEY,
@@ -302,6 +309,9 @@ enum dungeon_feature_type
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
     DNGN_EXIT_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_NECROPOLIS,
+#endif
     DNGN_EXIT_SEWER,
     DNGN_EXIT_OSSUARY,
     DNGN_EXIT_BAILEY,
@@ -381,7 +391,9 @@ enum dungeon_feature_type
     DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
     DNGN_SPIKE_LAUNCHER,
     DNGN_TRAP_DEVOURER,
-
+    DNGN_ENTER_NECROPOLIS,
+    DNGN_EXIT_NECROPOLIS,
+    DNGN_FRIGID_WALL,
 #endif
 
     NUM_FEATURES

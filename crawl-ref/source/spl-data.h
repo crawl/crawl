@@ -3086,7 +3086,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_GREATER_SERVANT_MAKHLEB, "Greater Servant of Makhleb",
+    SPELL_GREATER_SERVANT_MAKHLEB, "Infernal Servant",
     spschool::summoning,
     spflag::unholy | spflag::mons_abjure | spflag::monster,
     7,
@@ -4001,7 +4001,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     7,
     200,
-    7, 7,
+    5, 5,
     0,
     TILEG_PHANTOM_BLITZ,
 },
@@ -4381,6 +4381,73 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_VEX,
+},
+
+{
+    SPELL_RAVENOUS_SWARM, "Ravenous Swarm",
+    spschool::necromancy,
+    spflag::target | spflag::area | spflag::monster | spflag::needs_tracer
+        | spflag::cloud,
+    6,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_RAVENOUS_SWARM,
+},
+
+{
+    SPELL_DOMINATE_UNDEAD, "Dominate Undead",
+    spschool::hexes | spschool::necromancy,
+    spflag::area | spflag::WL_check | spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_DOMINATE_UNDEAD,
+},
+
+{
+    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
+    spschool::none,
+    spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ABILITY_ENKINDLE,
+},
+
+{
+    SPELL_DETONATION_CATALYST, "Detonation Catalyst",
+    spschool::fire | spschool::alchemy,
+    spflag::selfench,
+    5,
+    100,
+    -1, -1,
+    15,
+    TILEG_DETONATION_CATALYST,
+},
+
+{
+    SPELL_RUST_BREATH, "Rust Breath",
+    spschool::conjuration | spschool::alchemy | spschool::air,
+    spflag::dir_or_target | spflag::area | spflag::needs_tracer,
+    5,
+    200,
+    4, 4,
+    0,
+    TILEG_MEPHITIC_CLOUD,
+},
+
+{
+    SPELL_GOLDEN_BREATH, "Golden Breath",
+    spschool::conjuration | spschool::fire | spschool::ice | spschool::alchemy,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    5, 5,
+    0,
+    TILEG_FIRE_BREATH,
 },
 
 {

@@ -110,6 +110,11 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
+/*** The last turn the monster was seen at this location.
+ * @treturn int
+ * @function type
+ */
+MIRET1(number, last_seen_at_turn, last_seen_at_turn)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
@@ -221,7 +226,7 @@ MIRES1(res_shock, MR_RES_ELEC)
  * @treturn int resistance level
  * @function res_corr
  */
-MIRES1(res_corr, MR_RES_ACID)
+MIRES1(res_corr, MR_RES_CORR)
 /*** Can the monster currently be frenzied?
  * Is it possible to affect the monster with the discord spell or a datura
  * dart?
@@ -523,7 +528,7 @@ LUAFN(moninf_get_is)
 }
 
 /*** Get the monster's flags.
- * Returns all flags set for the moster, as a list of flag names.
+ * Returns all flags set for the monster, as a list of flag names.
  * @treturn array
  * @function flags
  */
@@ -670,7 +675,7 @@ LUAFN(moninf_get_can_be_constricted)
 {
     MONINF(ls, 1, mi);
     if (!mi->constrictor_name.empty()
-        || !form_keeps_mutations()
+        || form_changes_anatomy()
         || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
                 || you.is_constricting())
             && (you.has_mutation(MUT_TENTACLE_ARMS)
@@ -703,6 +708,40 @@ LUAFN(moninf_get_can_traverse)
     lua_pushboolean(ls,
         map_bounds(p)
         && monster_habitable_feat(mi->type, env.map_knowledge(p).feat()));
+    return 1;
+}
+
+/*** Returns the monster's items as an array of items.
+ * @treturn array
+ * @function items
+ */
+LUAFN(moninf_get_items)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        item_def* item = mi->inv[i].get();
+        if (item)
+        {
+            clua_push_item(ls, item);
+            lua_rawseti(ls, -2, ++index);
+        }
+
+    }
+    return 1;
+}
+
+/*** What's the monster's maximum range with a weapon, spell, or wand?
+ * @treturn int
+ * @function range
+ */
+LUAFN(moninf_get_range)
+{
+    MONINF(ls, 1, mi);
+
+    lua_pushnumber(ls, mi->range());
     return 1;
 }
 
@@ -868,6 +907,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(number),
     MIREG(colour),
     MIREG(mname),
+    MIREG(last_seen_at_turn),
     MIREG(is),
     MIREG(flags),
     MIREG(is_safe),
@@ -883,6 +923,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
     MIREG(can_traverse),
+    MIREG(items),
+    MIREG(range),
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),

@@ -13,6 +13,9 @@
 #define DRAGON_CLAWS 3
 #define DRAGON_FANGS 5
 
+#define FLUX_ENERGY_KEY "flux_energy"
+#define FLUX_ENERGY_WARNING 10
+
 enum form_capability
 {
     FC_DEFAULT,
@@ -40,31 +43,6 @@ public:
     const char * const devastating;
 };
 
-enum duration_power_scaling
-{
-    PS_NONE,                ///< no bonus
-    PS_SINGLE,              ///< bonus based on rand2(power)
-    PS_ONE_AND_A_HALF,      ///< bonus based on r(power) + r(power/2)
-    PS_DOUBLE               ///< bonus based on r(power) + r(power)
-};
-
-class FormDuration
-{
-public:
-    FormDuration(int _base, duration_power_scaling _scaling_type, int _max) :
-    base(_base), scaling_type(_scaling_type), max(_max) { };
-
-    int power_bonus(int pow) const;
-
-public:
-    /// base duration (in 10*aut, probably)
-    const int base;
-    /// the extent to which spellpower affects duration scaling
-    const duration_power_scaling scaling_type;
-    /// max duration (in 10*aut, probably)
-    const int max;
-};
-
 class FormScaling {
 public:
     FormScaling() : base(0), scaling(0), xl_based(false) {}
@@ -90,11 +68,9 @@ public:
     bool slot_is_blocked(equipment_slot slot) const;
     bool can_wield() const { return !slot_is_blocked(SLOT_WEAPON); }
 
-    int get_duration(int pow) const;
-
     int get_level(int scale) const;
 
-    int mult_hp(int base_hp, bool force_talisman = false) const;
+    int mult_hp(int base_hp, bool force_talisman = false, int skill = -1) const;
 
     /// Is the player below the minimum skill for this form?
     bool underskilled() const { return get_level(1) < min_skill; }
@@ -139,18 +115,18 @@ public:
     bool res_elec() const;
     int res_pois() const;
     bool res_rot() const;
-    bool res_acid() const;
+    bool res_corr() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
     /**
      * Base unarmed damage provided by the form.
      */
-    int get_base_unarmed_damage(bool random = true, bool max = false) const;
+    int get_base_unarmed_damage(bool random = true, int skill = -1) const;
 
     /// Damage done by a custom aux attack of this form.
     virtual int get_aux_damage(bool /*random*/ = true,
-                               bool /*max*/ = false) const {
+                               int /*skill*/ = -1) const {
         return 0;
     }
 
@@ -162,13 +138,26 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
-    virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
-    virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
-    virtual int contam_dam(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
-    virtual int get_ac_bonus(bool max = false) const;
-    virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
-    virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
+    virtual int slay_bonus(bool /*random*/ = true, int /*skill*/ = -1) const { return 0; }
+    virtual int will_bonus() const { return 0; };
+    virtual int get_ac_bonus(int skill = -1) const;
+    virtual int ev_bonus(int /*skill*/ = -1) const;
+    virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
+    virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
+    virtual int get_web_chance(int /*skill*/ = -1) const {return 0; }
+    virtual int regen_bonus(int /*skill*/ = -1) const {return 0; }
+    virtual int mp_regen_bonus(int /*skill*/ = -1) const {return 0; }
+    virtual int max_mp_bonus(int /*skill*/ = -1) const {return 0; }
+    virtual dice_def get_special_damage(bool /*random*/ = true, int /*skill*/ = -1) const;
+
+    // XXX: Werewolf-specific
+    virtual int get_werefury_kill_bonus(int /*skill*/ = -1) const { return 0; }
+    virtual int get_takedown_multiplier(int /*skill*/ = -1) const { return 0; }
+    virtual int get_howl_power(int /*skill*/ = -1) const { return 0; }
+
+    virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }
+    virtual int get_effect_chance(int /*skill*/ = -1) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -176,21 +165,19 @@ public:
     bool player_can_fly() const;
     bool player_can_swim() const;
     bool player_likes_water() const;
+    bool can_offhand_punch() const;
 
     string player_prayer_action() const;
-    string melding_description() const;
+    string melding_description(bool itemized) const;
 
-    virtual vector<string> get_fakemuts(bool terse) const;
-    virtual vector<string> get_bad_fakemuts(bool terse) const;
+    virtual vector<pair<string, string>> get_fakemuts() const;
+    virtual vector<pair<string, string>> get_bad_fakemuts() const;
 
 public:
     /// Status light ("Foo"); "" for none
     const string short_name;
     /// "foo"; used for wizmode transformation dialogue
     const string wiz_name;
-
-    /// A struct representing the duration of the form, based on power etc
-    const FormDuration duration;
 
     /// The skill level below which the player gets HP penalties for using the form.
     const int min_skill;
@@ -201,6 +188,9 @@ public:
     const int str_mod;
     /// flat dex bonus
     const int dex_mod;
+
+    /// base move speed
+    const int base_move_speed;
 
     /// Equipment types unusable in this form.
     /** A bitfield representing a union of (1 << equipment_slot) values for
@@ -219,9 +209,12 @@ public:
     const FormAttackVerbs uc_attack_verbs;
 
     /// "Used to mark forms which keep most form-based mutations."
-    const bool keeps_mutations;
+    const bool changes_anatomy;
     //
-    const bool changes_physiology;
+    const bool changes_substance;
+    /// What does this form change the player's holiness to? (MH_NONE if it leaves it unchanged)
+    /// Note that vampire is special-cased in player::holiness().
+    const mon_holy_type holiness;
 
     /// Does this form have blood (used for sublimation and bloodsplatters)?
     const form_capability has_blood;
@@ -246,6 +239,10 @@ public:
     /// The name of this form's flesh-equivalent; "" defaults to species.
     const string flesh_equivalent;
 
+    /// Identifier for the meaning of the special dice for this form (for the
+    /// form properties screen).
+    const string special_dice_name;
+
 protected:
     /// See Form::get_long_name().
     const string long_name;
@@ -261,15 +258,21 @@ protected:
     /// bonuses to AC when in this form, potentially scaling with skill or XL
     const FormScaling ac;
 
+    /// bonuses to EV when in this form, potentially scaling with skill or XL
+    const FormScaling ev;
+
     /// See Form::get_base_unarmed_damage().
     const FormScaling unarmed_bonus_dam;
 
+    vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
+
     /// Calculate the given FormScaling for this form, multiplied by scale.
     int scaling_value(const FormScaling &sc, bool random,
-                      bool max = false, int scale = 1) const;
+                      int level = -1, int scale = 1) const;
     /// Calculate the given FormScaling for this form, with math internally multiplied by scale.
     int divided_scaling(const FormScaling &sc, bool random,
-                        bool max = false, int scale = 1) const;
+                        int level = -1, int scale = 1) const;
 
 private:
     /// Can this form fly?
@@ -283,6 +286,8 @@ private:
      */
     const form_capability can_swim;
 
+    const form_capability offhand_punch;
+
     /// See Form::get_uc_brand().
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
@@ -294,32 +299,24 @@ private:
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
 
-    /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
+    /// 100 * multiplier to hp/mhp (that is, 100 is base, 150 is 1.5x, etc)
     const int hp_mod;
 
-    vector<pair<string,string>> fakemuts;
-    vector<pair<string,string>> badmuts;
+    /// Calculator for form-specific 'special' damage done by this form (eg:
+    /// Blinkbolt damage or Contam damage)
+    const dam_deducer* special_dice;
 };
 const Form* get_form(transformation form = you.form);
-const Form* cur_form(bool temp);
+const Form* cur_form(bool temp = true);
 
-enum undead_form_reason
-{
-    UFR_TOO_DEAD  = -1,
-    UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
-    UFR_TOO_ALIVE = 1,
-};
-undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false,
-                                          bool temp = true);
+bool lifeless_prevents_form(transformation form = you.form);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
-bool form_changes_physiology(transformation form = you.form);
-// Does the form keep the benefits of resistance, scale, and aux mutations?
-bool form_keeps_mutations(transformation form = you.form);
+bool form_changes_substance(transformation form = you.form);
+bool form_changes_anatomy(transformation form = you.form);
 bool form_has_blood(transformation form = you.form);
 bool form_has_hair(transformation form = you.form);
 bool form_has_bones(transformation form = you.form);
@@ -334,16 +331,16 @@ string cant_transform_reason(transformation which_trans, bool involuntary = fals
                              bool temp = true);
 bool check_transform_into(transformation which_trans, bool involuntary = false,
                           const item_def* talisman = nullptr);
-bool transform(int pow, transformation which_trans, bool involuntary = false,
+bool transform(int dur, transformation which_trans, bool involuntary = false,
                bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_move = false);
+void untransform(bool skip_move = false, bool scale_hp = true);
 
 void unset_default_form();
 void set_default_form(transformation t, const item_def *source);
 
-void set_form(transformation which_trans, int dur);
+void set_form(transformation which_trans, int dur, bool scale_hp = true);
 void return_to_default_form();
 
 monster_type transform_mons();
@@ -354,16 +351,14 @@ void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void vampire_update_transformations();
-int form_base_movespeed(transformation tran);
-bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
+void clear_form_info_on_exit();
 
-struct talisman_form_desc {
-    vector<pair<string, string>> skills;
-    vector<pair<string, string>> defenses;
-    vector<pair<string, string>> offenses; // heh
-};
-void describe_talisman_form(transformation form_type, talisman_form_desc &d,
-                            bool incl_special);
+void sphinx_notice_riddle_target(monster* mon);
+void sphinx_check_riddle();
+
+void sun_scarab_spawn_ember(bool first_time);
+monster* get_solar_ember();
+
+bool maw_growl_check(const monster* mon);

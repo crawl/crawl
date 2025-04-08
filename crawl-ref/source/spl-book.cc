@@ -254,6 +254,9 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_CAUSTIC_BREATH,
     SPELL_GALVANIC_BREATH,
     SPELL_MUD_BREATH,
+    // Form spells
+    SPELL_RUST_BREATH,
+    SPELL_GOLDEN_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -750,6 +753,7 @@ private:
         clear();
         hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
+        const bool show_enkindle = you.has_mutation(MUT_MNEMOPHAGE);
         menu_letter hotkey;
         text_pattern pat(search_text, true);
         for (auto& spell : spells)
@@ -796,10 +800,23 @@ private:
 
             if (you.divine_exegesis)
                 desc << string(9, ' ');
+            else if (show_enkindle && spell_can_be_enkindled(spell.spell))
+            {
+                const int enkindled_fail = failure_rate_to_int(raw_spell_fail(spell.spell, true));
+
+                const string fail_string = make_stringf("<%s>%d%%</%s><darkgrey> (%d%%)</darkgrey>",
+                                                            colour_to_str(spell.fail_rate_colour).c_str(),
+                                                            failure_rate_to_int(spell.raw_fail),
+                                                            colour_to_str(spell.fail_rate_colour).c_str(),
+                                                            enkindled_fail);
+
+                const int width = strwidth(formatted_string::parse_string(fail_string).tostring());
+                desc << fail_string << string(13 - width, ' ');
+            }
             else
             {
                 desc << "<" << colour_to_str(spell.fail_rate_colour) << ">";
-                desc << chop_string(failure_rate_to_string(spell.raw_fail), 9);
+                desc << chop_string(failure_rate_to_string(spell.raw_fail), show_enkindle ? 13 : 9);
                 desc << "</" << colour_to_str(spell.fail_rate_colour) << ">";
             }
 

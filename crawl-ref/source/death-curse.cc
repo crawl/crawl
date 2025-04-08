@@ -49,7 +49,7 @@ static void _do_msg(actor& target, string player_msg, string mon_seen_msg,
         mpr(do_mon_str_replacements(mon_seen_msg,
             *target.as_monster(), S_SILENT));
     }
-    else if (!mon_unseen_msg.empty())
+    else if (you.see_cell(target.pos()) && !mon_unseen_msg.empty())
     {
         mpr(do_mon_str_replacements(mon_unseen_msg,
             *target.as_monster(), S_SILENT));

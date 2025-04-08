@@ -676,31 +676,37 @@ void throw_it(quiver::action &a)
         pbolt.damage = dice_def(1, 100);
 
         // Init tracer variables.
-        pbolt.foe_info.reset();
-        pbolt.friend_info.reset();
-        pbolt.foe_ratio = 100;
-        pbolt.is_tracer = true;
+        player_beam_tracer tracer;
         pbolt.overshoot_prompt = false;
 
-        pbolt.fire();
+        pbolt.fire(tracer);
 
         pbolt.hit    = 0;
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
-        if (pbolt.foe_info.count)
+        if (tracer.has_hit_foe())
             aimed_at_foe = true; // dubious
 
-        // Should only happen if the player answered 'n' to one of those
-        // "Fire through friendly?" prompts.
-        if (pbolt.beam_cancelled)
+        if (cancel_beam_prompt(pbolt, tracer))
         {
             you.turn_is_over = false;
             return;
         }
-    }
 
-    pbolt.is_tracer = false;
+        // Warn about Mule potentially knocking the player back into a trap.
+        if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE))
+        {
+            const coord_def back = you.stumble_pos(a.target.target);
+            if (!back.origin()
+                && back != you.pos()
+                && !check_moveto(back, "potentially stumble back", false))
+            {
+                you.turn_is_over = false;
+                return;
+            }
+        }
+    }
 
     // Now start real firing!
     origin_set_unknown(item);
@@ -782,7 +788,7 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
-    pbolt.is_tracer = false;
+    pbolt.set_is_tracer(false);
 
     pbolt.loudness = item.base_type == OBJ_MISSILES
                    ? ammo_type_damage(item.sub_type) / 3

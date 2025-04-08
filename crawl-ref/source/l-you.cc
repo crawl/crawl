@@ -375,7 +375,7 @@ LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
  * @treturn int resistance level
  * @function res_corr
  */
-LUARET1(you_res_corr, boolean, you.res_corr(false))
+LUARET1(you_res_corr, boolean, player_res_corrosion(false))
 
 /*** Are you flying?
  * @treturn boolean
@@ -643,6 +643,12 @@ LUARET1(you_turns, number, you.num_turns)
  * @function time
  */
 LUARET1(you_time, number, you.elapsed_time)
+
+/*** Total elapsed real time in seconds.
+ * @treturn int
+ * @function real_time
+ */
+LUARET1(you_real_time, number, you.real_time())
 
 /*** How many spell levels are currently available.
  * @treturn int
@@ -1107,6 +1113,17 @@ LUAFN(you_caught)
     return 1;
 }
 
+/*** What is your current reaching range?
+ * @treturn int
+ * @function reach_range
+ */
+LUAFN(you_reach_range)
+{
+    lua_pushinteger(ls, you.reach_range());
+
+    return 1;
+}
+
 /*** Get the mutation level of a mutation.
  * If all optional parameters are false this returns zero.
  * @tparam string mutationname
@@ -1381,6 +1398,7 @@ static const struct luaL_reg you_clib[] =
     { "turn_is_over", you_turn_is_over },
     { "turns"       , you_turns },
     { "time"        , you_time },
+    { "real_time"   , you_real_time },
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
@@ -1481,6 +1499,7 @@ static const struct luaL_reg you_clib[] =
     { "constricting", you_constricting },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
+    { "reach_range", you_reach_range },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },

@@ -135,6 +135,8 @@ the Gibberer
 the Hated
 
 the Scorned
+
+the Abhorred
 %%%%
 _battle_or_war_
 
@@ -1358,8 +1360,9 @@ Stoicism
 
 Syndicalism
 
-the Ego
+Theistic Finitism
 
+the Ego
 %%%%
 _science_name_
 

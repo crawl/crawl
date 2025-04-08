@@ -217,6 +217,17 @@ who wanted to rifle through them.
 The items inside such troves are likely to be useful, but beware: the wizard is
 long dead, and even while alive he never offered a money-back guarantee.
 %%%%
+Necropolis
+
+While many locales across the Dungeon are dedicated to the long-interred
+restless dead, those whose remains are fresh or lost are collected in the
+floating ceremonial chambers of the Necropolis. Each soul is enshrined and
+tended to by the maintenance staff recreating both their lives and their moments
+of death, helping visitors bid farewell to the departed. With the advent of
+adventurers seeking the Orb of Zot, these realms have been repurposed: such
+ghosts are blinded by rage and impossible to control, so both they and their
+stolen possessions are sealed away in these realms of reconciliation.
+%%%%
 Sewer
 
 Every inhabited place needs to dispose of its waste products. The Dungeon too

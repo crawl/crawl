@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "options.h" // tile_grinch
 #include "state.h"
+#include "stringutil.h" // starts_with
 #include "terrain.h"
 #include "tileview.h"
 #include "traps.h"
@@ -125,7 +126,7 @@ void counted_monster_list::add(const monster* mons)
     list.emplace_back(mons, 1);
 }
 
-int counted_monster_list::count()
+int counted_monster_list::count() const
 {
     int nmons = 0;
     for (const auto &entry : list)
@@ -133,7 +134,7 @@ int counted_monster_list::count()
     return nmons;
 }
 
-string counted_monster_list::describe(description_level_type desc)
+string counted_monster_list::describe(description_level_type desc) const
 {
     string out;
 
@@ -153,6 +154,31 @@ string counted_monster_list::describe(description_level_type desc)
                : cm.first->name(desc);
     }
     return out;
+}
+
+void attacked_monster_list::add(const monster& mons, string adj, string suffix,
+                                bool penance)
+{
+    // record the adjectives for the first listed, or
+    // first that would cause penance
+    if (m_victims.empty() || penance && !m_penance)
+    {
+        m_adj = std::move(adj);
+        m_suffix = std::move(suffix);
+        m_penance = penance;
+    }
+    m_victims.add(&mons);
+}
+
+string attacked_monster_list::describe() const
+{
+    string mon_name = m_victims.describe(DESC_PLAIN);
+    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
+        mon_name = mon_name.substr(4); // strlen("the ")
+    const char* prefix = "";
+    if (!starts_with(m_adj, "your"))
+        prefix = "the ";
+    return prefix + m_adj + mon_name;
 }
 
 /**

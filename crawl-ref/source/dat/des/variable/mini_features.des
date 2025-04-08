@@ -3503,6 +3503,69 @@ MAP
                ....@
 ENDMAP
 
+# If there's ever a "cache of rotting food" decor feature, it should go here.
+NAME:   nicolae_abandoned_food_shop
+TAGS:   transparent decor extra
+DEPTH:  D:6-, Depths
+KFEAT:  a = abandoned_shop
+KFEAT:  ` = cache of meat / cache of fruit / cache of baked goods
+NSUBST: ` = 3=` / 2=`. / .
+MAP
+.....
+.```.
+.`a`.
+.```.
+.....
+ENDMAP
+
+NAME:    nicolae_escalator
+TAGS:    extra decor transparent
+DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$
+SHUFFLE: {}/[]/()
+SUBST:   + : +++@
+MAP
+xx+xxx
+x...vxx
++.}.vvxx
+x....vvxx
+xvv...vvxx
+xxvv...vvxx
+ xxvv...vvx
+  xxvv...vxx
+   xxvv....x
+    xxvv.{.+
+     xxv...x
+      xxx+xx
+ENDMAP
+
+NAME:   nicolae_shoulda_brought_a_snack
+TAGS:   transparent decor extra
+DEPTH:  D:6-, Depths
+: if crawl.coinflip() then
+KITEM:  S = spriggan skeleton
+KFEAT:  ` = cache of meat
+: else
+KITEM:  S = kobold skeleton
+KFEAT:  ` = cache of fruit
+: end
+NSUBST: ` = 4=` / - / `-
+KPROP:  S`- = no_tele_into
+KMASK:  S`- = opaque
+KMASK:  S`- = no_monster_gen
+KMASK:  S`- = no_item_gen
+KMASK:  S`- = no_trap_gen
+MAP
+.........
+.........
+..mmmmm..
+..m```m..
+..m`S`m..
+..m```m..
+..mmmmm..
+.........
+.........
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -4462,7 +4525,7 @@ NAME:   kilobyte_mutagenic_chamber
 TAGS:   ruin_abyss
 DEPTH:  Depths, Elf, Abyss
 ITEM:   randbook disc:alchemy numspells:4
-ITEM:   maw talisman randart / flux talisman randart / granite talisman
+ITEM:   maw talisman randart / protean talisman randart / granite talisman
 ITEM:   double sword ego:chaos / manual of alchemy / manual of shapeshifting
 : if you.in_branch("Abyss") then
 NSUBST: | = 1:def / 1:def$$ / *:$
@@ -4666,7 +4729,7 @@ ENDMAP
 NAME:  minivault_22
 TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:6-, Depths, !Depths:$, Abyss
-ITEM:  large rock q:4, flux talisman, demon blade / demon trident / demon whip
+ITEM:  large rock q:4, protean talisman, demon blade / demon trident / demon whip
 : if you.in_branch("Abyss") then
 SUBST: $ : def$$
 : else

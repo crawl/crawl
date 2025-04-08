@@ -6,8 +6,7 @@
 # This file contains a list of names for miscellaneous things.
 ######################################################
 %%%%
-# Used by Summon Horrible Things.
-SHT_int_loss
+summon_horrible_things
 
 Your mind reels, touched by the horrors through the portal.
 

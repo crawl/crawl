@@ -1990,22 +1990,21 @@ MONS:    jiangshi / sin beast / spectral caustic shrike w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
-MONS:    revenant / eidolon / lich w:5
-# Either Jory or a vampire knight with fancy equipment.
-: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
+MONS:    revenant soulmonger / eidolon / lich w:5
+: kmons("7 = jory / vampire bloodprince, vampire bloodprince w:20 / " .. vamp_def)
 # Depths
 : else
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / sin beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
-MONS:    spectral golden dragon / golden dragon simulacrum \
-         / spectral caustic shrike / caustic shrike simulacrum \
-         / spectral juggernaut / juggernaut simulacrum
+MONS:    spectral golden dragon / golden dragon simulacrum / \
+         spectral caustic shrike / caustic shrike simulacrum / \
+         spectral juggernaut / juggernaut simulacrum
 MONS:    vampire mage / deep elf death mage w:5
-MONS:    revenant / eidolon / lich w:5
-: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
+MONS:    revenant soulmonger / eidolon / lich w:5
+: kmons("7 = jory / " .. vamp_def .. ", vampire bloodprince / " .. vamp_def)
 : end
-KITEM:   _ = superb_item
+KITEM:   _ = sanguine talisman / $, superb_item
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: apqr
 SUBST:   a = +, pqr = x, D = 56, G : Ggg
@@ -2139,7 +2138,7 @@ SUBST:   @y = ., l = %
 NSUBST:  1 = 2 = *% / *:1
 CLEAR:   X
 : end
-ITEM:    staff of earth / granite talisman
+ITEM:    staff of earth / medusa talisman w:5 / granite talisman w:5
 TILE:    G = dngn_statue_angel / dngn_statue_imp / \
              dngn_statue_tengu / dngn_statue_dragon
 MAP
@@ -2766,13 +2765,21 @@ DEPTH:   D:11-, Depths, Crypt
 ORIENT:  float
 MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
-: if you.absdepth() > 19 then
+: if you.in_branch("Crypt") then
+MONS:    vampire knight / bone dragon w:5 / flayed ghost
+MONS:    lich / revenant soulmonger
+KMONS:   5 = Jory / vampire bloodprince / revenant, \
+             vampire bloodprince / revenant soulmonger
+SUBST:   x = v
+: elseif you.in_branch("Depths") then
 MONS:    vampire knight / jiangshi / flayed ghost
-MONS:    lich / revenant
-KMONS:   5 = Boris / lich / revenant, lich / revenant
+MONS:    lich / vampire mage
+KMONS:   5 = Boris / vampire bloodprince w:5 / ancient lich, \
+             vampire bloodprince w:5 / ancient lich
 : elseif you.absdepth() > 13 then
 MONS:    phantasmal warrior / skeletal warrior / eidolon
 MONS:    vampire mage / death knight
+# Really, nobody else even slightly undead? >_>
 KMONS:   5 = Frances / vampire mage / death knight, vampire mage / death knight
 : else
 MONS:    wight / wraith / shadowghast
@@ -2782,9 +2789,6 @@ KMONS:   5 = Josephine / skeletal warrior / necromancer, \
 : end
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff
 SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, EeFf = x
-: if you.in_branch("Crypt") then
-SUBST:   x = c
-: end
 MAP
    xxxxxxxxxxx
    xx2233322xx
@@ -3110,7 +3114,7 @@ KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
 KMONS:   L = great orb of eyes / rockslime / void ooze / azure jelly / \
              acid blob w:5
 KMONS:   M = ancient champion / vampire mage / vampire knight / \
-             eidolon / revenant / bone dragon / lich w:5
+             eidolon / revenant soulmonger / bone dragon / lich w:5
 KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
 KMONS:   P = balrug w:12 / blizzard demon w:12 / shadow demon w:12 / \
@@ -3154,7 +3158,8 @@ DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
 TAGS:    patrolling
 MONS:    skeletal warrior / eidolon, laughing skull band
 MONS:    necromancer band / vampire mage band w:6
-MONS:    vampire knight w:25 / bone dragon / revenant / lich
+MONS:    vampire knight w:25 / vampire bloodprince w:5 / \
+         bone dragon / revenant soulmonger / lich
 SUBST:   x = e
 : else
 KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
@@ -4953,7 +4958,7 @@ NSUBST:  ' = d2 / 2, 2 = 2=211- / 6=2 / 4=2--- / -
 MONS:    phantasmal warrior
 MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
          / eidolon
-MONS:    revenant / ancient champion / lich, ancient lich / dread lich
+MONS:    revenant soulmonger / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS:    glass eye
@@ -5355,8 +5360,7 @@ SUBST: = = +, E = D
 : end
 SUBST: D = 1., E = 2.
 NSUBST: 3 = 2:3 / 3.
-KITEM: - = troll skeleton / minotaur skeleton / deep dwarf skeleton /\
-           ogre skeleton
+KITEM: - = troll skeleton / minotaur skeleton / dwarf skeleton / ogre skeleton
 MAP
 ccccccccccc
 =.-...1.-.c
@@ -5525,6 +5529,96 @@ ccccc---kkk---ccccc
    ..ccc+++ccc..
     ...G...G...
      ...@@@...
+ENDMAP
+
+# Inspired by lemuel_castle_with_subvaults
+NAME:    gammafunk_gnarly_gnolls
+TAGS:    no_pool_fixup
+DEPTH:   D:3-8
+ORIENT:  float
+ITEM:    any manual
+ITEM:    any jewellery, any jewellery good_item, any jewellery randart
+KMONS:   p = plant
+MONS:    gnoll, gnoll bouda, gnoll sergeant, grum band
+KMONS:   D = gnoll ; wand of flame | any beam wand | \
+                wand of polymorph | wand of charming | \
+                wand of paralysis | wand of mindburst \
+            . spear w:20 | halberd | club | whip | flail | nothing w:15
+# Define some gnolls with reach weapons.
+{{
+    local basic_weapons = {["halberd"] = 1, ["spear"] = 1}
+    local sgt_weapons = {["trident"] = 1, ["spear"] = 1}
+    egos = {["venom"] = 15, ["vampirism"] = 5, ["pain"] = 5,
+            ["electrocution"] = 5, ["chaos"] = 5}
+
+    local basic_def = dgn.random_item_def(basic_weapons, egos, nil, "|")
+    local sgt_basic_def = dgn.random_item_def(sgt_weapons, egos, nil, "|")
+
+    local quality = crawl.one_chance_in(3) and "randart" or "good_item"
+    local good_def = dgn.random_item_def(basic_weapons, egos, quality, "|")
+    local sgt_good_def = dgn.random_item_def(sgt_weapons, egos, quality, "|")
+
+    kmons("E = gnoll ; " .. basic_def .. " . throwing net | nothing")
+    kmons("F = gnoll ; " .. good_def .. " . throwing net | nothing")
+    kmons("H = gnoll sergeant ; " .. sgt_basic_def ..
+          "    . buckler | kite shield | nothing w:40" ..
+          "    . ring mail | scale mail")
+    kmons("J = gnoll sergeant ; " .. sgt_good_def ..
+          "    . buckler good_item | buckler randart w:5 " ..
+          "        | kite shield good_item | kite shield randart w:5 " ..
+          "    . ring mail good_item | ring mail randart w:5 " ..
+          "        | scale mail good_item | scale mail randart w:5")
+}}
+# Sometimes add an additional pairs of doors near the landing area. Also
+# randomize exit transporters and tower inner walls.
+SHUFFLE: qK / rL
+NSUBST:  R = R / '
+SUBST:   q = c, r = ~, K = T, L = -, s : ccG-
+# Scale loot and monsters with depth.
+: if you.depth() < 5 then
+SUBST:   h = %$, ij= `, 2 = 2'
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / FFFJ / .
+NSUBST:  R = R / E / E.
+: elseif you.depth() < 7 then
+SUBST:   e = f, h = *, i = %$, j= `
+NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / 3 / H. / J / .
+: else
+SUBST:   e = g, h = |*, i = *, j = %$
+NSUBST:  - = 2=1 / 2=1. / D / 2=D. / ., ' = E / 2=E. / 3 / 3. / 2=H. / J / .
+:     if not you.uniques("Grum") and crawl.one_chance_in(3) then
+NSUBST:   3 = 4 / 3
+:     end
+: end
+KFEAT:   ~ = closed_clear_door
+MARKER:  P = lua:transp_loc("ghostless_gnarly_gnolls_entry")
+MARKER:  Q = lua:transp_dest_loc("ghostless_gnarly_gnolls_entry")
+MARKER:  R = lua:transp_loc("ghostless_gnarly_gnolls_exit")
+MARKER:  S = lua:transp_dest_loc("ghostless_gnarly_gnolls_exit")
+TILE:    c = wall_stone_smooth
+COLOUR:  `defghij|*%$O = cyan
+FTILE:   `defghij|*%$O = floor_cobble_blood
+COLOUR:  " = brown
+FTILE:   " = floor_mud
+MAP
+...........................
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwwwwwwwwwwwWwwwwwwwwwwww.
+.wwncccn...........ncccnww.
+.wwc's-c.cnc.S.cnc.c-s'cww.
+.wwc---cncRccnccRcnc---cww.
+.wwncc---------------ccnww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
+.ww.cc-cpKpcp-Gcej$c-cc.ww.
+.WW.n'-~-----QTcd9$~-2n.WW.
+.ww.cc-cpKpcp-Gchi$c-cc.ww.
+.ww.Gc-cnqncc~ccncnc-cG.ww.
+.wwncc---------------ccnww.
+.wwc---cncRccnccRcnc---cww.
+.wwc's-c.cnc.P.cnc.c-s'cww.
+.wwncccn...........ncccnww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+.wwwwwwwwwww"""wwwwwwwwwww.
+...........................
 ENDMAP
 
 NAME:   gammafunk_worm_tunnel
@@ -6124,10 +6218,10 @@ KPROP:   -! = bloody
 : set_feature_name("granite_statue", "a statue of a dwarf")
 TILE:    C = stone_wall_pyre
 TILE:    G = dngn_statue_dwarf
-: dgn.delayed_decay_extra(_G, "?", "deep dwarf corpse", "helmet / \
+: dgn.delayed_decay_extra(_G, "?", "dwarf corpse", "helmet / \
 : cloak, plate armour, war axe good_item / broad axe / \
 : battleaxe / executioner's axe / arga w:1")
-: dgn.delayed_decay(_G, "!", "deep dwarf corpse")
+: dgn.delayed_decay(_G, "!", "dwarf corpse")
 MAP
      wwwww
 wwwwwwcccwwwwww
@@ -6332,7 +6426,7 @@ NAME:   dreamdust_elfheim
 TAGS:   no_monster_gen transparent
 ORIENT: float
 DEPTH:  D:4-7
-KMONS:  1 = training dummy
+KMONS:  1 = generate_awake training dummy
 KMONS:  ? = duvessa band
 SUBST:  ? = ?-
 TILE:   G = dngn_statue_twins
@@ -6431,7 +6525,7 @@ MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
                           quarterstaff ego:chaos
 MONS:    vampire knight ; great sword ego:chaos | war axe ego:chaos . \
                           chain mail | plate armour
-MONS:    ancient champion, lich
+MONS:    ancient champion / vampire bloodprince w:2, lich
 MONS:    very ugly thing, cacodemon
 MONS:    dancing weapon ; great mace ego:draining | \
                           battleaxe ego:draining | glaive ego:draining
@@ -6448,8 +6542,8 @@ KFEAT:   ^ = harlequin's trap
 SUBST:   ^ = ^..., ; = ., ~ = ', X = c
 : end
 ITEM:    potion of mutation q:4 pre_id
-ITEM:    potion of ambrosia q:4 pre_id / \
-         flux talisman randart / talisman of death randart w:5 / \
+ITEM:    potion of ambrosia q:4 pre_id / protean talisman randart w:5 / \
+         sanguine talisman randart w:5 / talisman of death randart w:5 / \
          randbook owner:Xom disc:alchemy disc2:necromancy numspells:6
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic
@@ -7008,7 +7102,7 @@ MONS:    ice dragon, lich, golden dragon
 MONS:    white draconian stormcaller, black draconian knight
 KFEAT:   ) = enter_zot
 KFEAT:   ^ = alarm trap / zot trap
-KITEM:   R = smoky gem
+KITEM:   R = midnight gem
 NSUBST:  ^ = 2:^. / *:., 1 = 2 = 26 / *:1
 NSUBST:  D = 1:12 / *:D, E = 1:12 / *:E, F = 1:12 / *:F
 SHUFFLE: )]
@@ -7029,9 +7123,10 @@ MARKER:  U = lua:fog_machine { cloud_type = "freezing vapour", size = 1, \
              pow_max = 10, delay_min = 30, delay_max = 40, excl_rad = 0 }
 : end
 ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
-         ring of ice randart w:4 / staff of cold w:3
+         ring of ice randart w:4 / staff of cold w:3 / rimehorn talisman w:2
 ITEM:    ice dragon scales randart w:15 / tower shield ego:cold_resistance / \
-         ring of protection from cold randart w:4 / staff of cold randart w:3
+         ring of protection from cold randart w:4 / staff of cold randart w:3 / \
+         rimehorn talisman randart w:2
 ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannonade
 ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup
@@ -11320,8 +11415,7 @@ ORIENT: float
 KMASK:  -QRHK012389def$*| = opaque
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
-item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
-     "pre_id")
+item("wand of digging pre_id charges:" .. tostring(5 + crawl.random2(6)))
 item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 }}
 ITEM:   any randart jewellery

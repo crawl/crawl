@@ -41,15 +41,15 @@
   {  3, 13,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
   {  3, 13,   40, FLAT, MONS_IRON_DRAGON },\
   {  3, 13,   80, SEMI, MONS_GOLDEN_DRAGON },\
-  {  3, 15,   45, SEMI, MONS_WYRMHOLE },\
   {  3, 13,   50, RISE, MONS_FROSTBOUND_TOME },\
   {  3, 13,   50, RISE, MONS_EARTHEN_TOME },\
   {  3, 13,   50, RISE, MONS_CRYSTAL_TOME },\
   {  3, 13,   50, RISE, MONS_DIVINE_TOME },\
   {  4, 13,   50, FLAT, MONS_JUGGERNAUT },\
-  {  4, 22,   60, SEMI, MONS_ALDERKING },\
+  {  4, 22,   65, SEMI, MONS_ALDERKING },\
   {  4, 13,   50, FLAT, MONS_CAUSTIC_SHRIKE },\
   {  5, 13,   50, FLAT, MONS_TITAN },\
+  {  5, 15,   50, SEMI, MONS_WYRMHOLE },\
   {  9, 13,   10, FLAT, MONS_ANCIENT_LICH },\
   {  9, 13,   10, FLAT, MONS_DREAD_LICH },\
 }
@@ -594,12 +594,13 @@ static const vector<pop_entry> population[] =
   {  1,  5,   55, SEMI, MONS_SOUL_EATER },
   {  1,  6,  145, SEMI, MONS_EIDOLON },
   {  1,  6,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
-  {  1,  7,   85, SEMI, MONS_REVENANT },
-  {  1,  7,   75, SEMI, MONS_CURSE_SKULL },
+  {  1,  7,   85, SEMI, MONS_REVENANT_SOULMONGER },
+  {  1,  7,   60, SEMI, MONS_CURSE_SKULL },
   {  2,  5,  145, SEMI, MONS_FLAYED_GHOST },
   {  2,  5,   95, SEMI, MONS_SHADOW_WRAITH },
   {  2,  7,   40, SEMI, MONS_REAPER },
   {  2,  7,   55, PEAK, MONS_LICH },
+  {  2,  7,   30, PEAK, MONS_VAMPIRE_BLOODPRINCE },
   {  3,  7,   15, PEAK, MONS_ANCIENT_LICH },
   {  3,  7,   15, PEAK, MONS_DREAD_LICH },
 },
@@ -957,7 +958,7 @@ POP_DEPTHS,
   {  1,  7,   10, FLAT, MONS_SILENT_SPECTRE },
   {  1,  7,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
   {  1,  7,   80, FLAT, MONS_BONE_DRAGON },
-  {  1,  7,    9, FLAT, MONS_REVENANT },
+  {  1,  7,    9, FLAT, MONS_REVENANT_SOULMONGER },
   {  1,  7,   46, FLAT, MONS_LICH },
   {  1,  7,    8, FLAT, MONS_ANCIENT_LICH },
   {  1,  7,    8, FLAT, MONS_DREAD_LICH },
@@ -1151,6 +1152,10 @@ POP_DEPTHS,
   {  1,  1,   50, FLAT, MONS_EXECUTIONER },
 },
 
+{ // Necropolis
+  {  1,  1,  100, FLAT, MONS_WRAITH },
+  {  1,  1,  100, FLAT, MONS_SHADOWGHAST },
+},
 };
 
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
@@ -1304,6 +1309,7 @@ static const vector<pop_entry> population_water[] =
 #endif
     GENERIC_WATER_POP, // Arena
     GENERIC_WATER_POP, // Crucible
+    GENERIC_WATER_POP, // Necropolis
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1407,6 +1413,7 @@ static const vector<pop_entry> population_lava[] =
 #endif
     GENERIC_LAVA_POP, // Arena
     GENERIC_LAVA_POP, // Crucible
+    GENERIC_LAVA_POP, // Necropolis
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

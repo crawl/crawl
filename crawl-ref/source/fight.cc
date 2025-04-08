@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h"
 #include "areas.h" // silenced
 #include "art-enum.h"
 #include "coord.h"
@@ -31,6 +32,7 @@
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-place.h"
@@ -384,6 +386,27 @@ static bool _autofire_at(actor *defender)
     return true;
 }
 
+static void _do_medusa_stinger()
+{
+    vector<monster*> targs;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && grid_distance(you.pos(), mi->pos()) <= 2)
+        {
+            targs.push_back(*mi);
+        }
+    }
+
+    shuffle_array(targs);
+    int num = min(div_rand_round(get_form()->get_effect_size(), 10), (int)targs.size());
+    for (int i = 0; i < num; ++i)
+    {
+        melee_attack sting(&you, targs[i]);
+        sting.player_do_aux_attack(UNAT_MEDUSA_STINGER);
+    }
+}
+
 /**
  * Handle melee combat between attacker and defender.
  *
@@ -440,8 +463,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
             if (!simu && _autofire_at(defender))
-                return true;
+                return you.turn_is_over;
         }
+
+        const bool was_firewood = defender->is_firewood();
 
         melee_attack attk(&you, defender);
 
@@ -473,15 +498,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        if (!simu && will_have_passive(passive_t::shadow_attacks))
-            dithmenos_shadow_melee(defender);
-
-        // Executioner state doesn't wear off so long as you keep attacking.
-        if (you.duration[DUR_EXECUTION])
-            you.duration[DUR_EXECUTION] += you.time_taken;
-
-        if (you.duration[DUR_PARAGON_ACTIVE])
-            paragon_attack_trigger();
+        do_player_post_attack(defender, was_firewood, simu);
 
         return true;
     }
@@ -509,6 +526,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // Melee combat, tell attacker to wield its melee weapon.
     attacker->as_monster()->wield_melee_weapon();
 
+    bool was_hostile = !mons_aligned(attacker, defender);
+
     int effective_attack_number = 0;
     int attack_number;
     for (attack_number = 0; attack_number < nrounds && attacker->alive();
@@ -517,10 +536,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!attacker->alive())
             return false;
 
-        // Monster went away?
+        // Monster went away or become friendly?
         if (!defender->alive()
             || defender->pos() != pos
-            || defender->is_banished())
+            || defender->is_banished()
+            || was_hostile && mons_aligned(attacker, defender)
+               && !mons_is_confused(*attacker->as_monster())
+               && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
         {
             if (attacker == defender
                || !attacker->as_monster()->has_multitargeting())
@@ -539,6 +561,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
                     defender = &you;
+                    was_hostile = true;
                     end = false;
                     break;
                 }
@@ -547,6 +570,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 if (mons && !mons_aligned(attacker, mons))
                 {
                     defender = mons;
+                    was_hostile = true;
                     end = false;
                     pos = mons->pos();
                     break;
@@ -579,6 +603,39 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         paragon_charge_up(*attacker->as_monster());
 
     return true;
+}
+
+/**
+ * Handle effects that should happen after each time the player performs a
+ * single 'attack action' (which might be either a normal attack, or a martial
+ * attack caused by movement).
+ *
+ * @param defender      The target the player attacked. (Which might be dead,
+ *                      or even null in the case of WJC martial attacks!)
+ * @param was_firewood  Whether the defender was firewood while alive.
+ * @param simu          Whether this is an fsim simulation.
+ */
+void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
+{
+    if (!simu && will_have_passive(passive_t::shadow_attacks))
+        dithmenos_shadow_melee(defender);
+
+    // Various status will not expire so long as the player keeps attacking.
+    if (you.duration[DUR_EXECUTION])
+        you.duration[DUR_EXECUTION] += you.time_taken;
+    if (you.duration[DUR_WEREFURY])
+        you.duration[DUR_WEREFURY] += you.time_taken;
+    if (you.duration[DUR_DETONATION_CATALYST])
+        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+
+    if (you.duration[DUR_PARAGON_ACTIVE])
+        paragon_attack_trigger();
+
+    if (you.form == transformation::sun_scarab && !was_firewood)
+        solar_ember_blast();
+
+    if (you.form == transformation::medusa)
+        _do_medusa_stinger();
 }
 
 /**
@@ -739,7 +796,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
-            return defender->res_acid();
+            return defender->res_corr();
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
         case BEAM_MERCURY:
@@ -937,20 +994,10 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only)
 {
-    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
-    {
+    const monster* defending_monster = defender ? defender->as_monster() :
+        nullptr;
 
-        targeter_smite hitfunc(&you, 1, 1, 1);
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                                  [](const actor *act)
-                                  {
-                                      return !never_harm_monster(&you, act->as_monster());
-                                  }, nullptr, defender->as_monster(),
-                                  check_only);
-    }
-    else if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
+    if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(weapon, UNRAND_SINGING_SWORD)
                 && !silenced(you.pos()))
     {
@@ -960,7 +1007,7 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                [](const actor *act)
                                {
                                    return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                               }, nullptr, defending_monster,
                                check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
@@ -973,28 +1020,75 @@ bool player_unrand_bad_attempt(const item_def &weapon,
                                    return !m->res_torment()
                                        && !never_harm_monster(&you, m->as_monster());
                                },
-                                  nullptr, defender->as_monster(),
+                                  nullptr, defending_monster,
                                 check_only);
     }
-    if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
+
+    if (!defender)
+        return false;
+
+    return player_unrand_bad_target(weapon, *defender, check_only);
+}
+
+bool player_unrand_bad_attempt(const item_def *weapon,
+    const item_def *offhand,
+    const actor *defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
+}
+
+bool player_unrand_bad_target(const item_def &weapon,
+    const actor &defender,
+    bool check_only)
+{
+    const monster* defending_monster = defender.as_monster();
+
+    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
     {
-        vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude, check_only);
-    }
-    if (is_unrandom_artefact(weapon, UNRAND_POWER))
-    {
-        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
-        hitfunc.beam.aimed_at_spot = false;
-        hitfunc.set_aim(defender->pos());
+        targeter_smite hitfunc(&you, LOS_RADIUS, 1, 1);
+        hitfunc.set_aim(defender.pos());
 
         return stop_attack_prompt(hitfunc, "attack",
                                [](const actor *act)
                                {
                                    return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defender->as_monster(),
+                               }, nullptr, defending_monster,
+                               check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
+    {
+        if (you.pos().distance_from(defender.pos()) <= 1)
+            return !safe_discharge(you.pos(), check_only, true, true);
+
+        return !safe_discharge(defender.pos(), check_only, false, true);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_POWER))
+    {
+        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.chose_ray = true;
+        hitfunc.beam.aimed_at_spot = false;
+        find_life_bolt_ray(hitfunc.beam.source, defender.pos(), hitfunc.beam.ray);
+        hitfunc.set_aim(defender.pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !never_harm_monster(&you, act->as_monster());
+                               }, nullptr, defending_monster,
                                check_only);
     }
     return false;
+}
+
+bool player_unrand_bad_target(const item_def *weapon,
+    const item_def *offhand,
+    const actor &defender,
+    bool check_only)
+{
+    return weapon && ::player_unrand_bad_target(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_target(*offhand, defender, check_only);
 }
 
 /**
@@ -1117,8 +1211,6 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         return;
 
     const coord_def atk = attacker.pos();
-    //If someone adds a funky reach which isn't just a number
-    //They will need to special case it here.
     const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
@@ -1127,7 +1219,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         actor *target = actor_at(*di);
         if (!target || dont_harm(attacker, *target))
             continue;
-        if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
+        if (di.radius() > 1 && !can_reach_attack_between(atk, *di, cleave_radius))
             continue;
         targets.push_back(target);
     }
@@ -1138,19 +1230,30 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  *
  * @param attacker                  The attacking creature.
  * @param targets                   The targets to cleave.
- * @param attack_number             ?
- * @param effective_attack_number   ?
+ * @param attack_number             For monsters, which of their 4 possible attacks this
+ *                                  corresponds to. For players, usually 0, but can be 1
+ *                                  for the second of a Coglin's two weapons per round
+ * @param effective_attack_number   Like attack_number, if invalid attacks were skipped
+ *                                  (ie: fake attacks or ones outside of their max range.)
+ * @param wu_jian_attack            The type of martial attack being performed (if any).
+ * @param is_projected              Whether the attack is projected (ie: Manifold Assault)
+ * @param is_cleaving               Whether this is a cleaving attack.
+ * @param weapon                    The weapon this attack is being performed with (if any).
+ *
+ * @return  The total amount of damage inflicted directly by all attacks caused by this function.
  */
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number, int effective_attack_number,
                              wu_jian_attack_type wu_jian_attack,
                              bool is_projected, bool is_cleaving,
                              item_def *weapon)
 {
     if (!attacker.alive())
-        return;
+        return 0;
+
+    int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
-    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
+    const bool reaching = weap && weapon_reach(*weap) > 1;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
@@ -1170,9 +1273,13 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
             attck.cleaving = is_cleaving;
             attck.is_multihit = !is_cleaving; // heh heh heh
             attck.attack();
+
+            total_damage += attck.total_damage_done;
         }
         targets.pop_front();
     }
+
+    return total_damage;
 }
 
 /**
@@ -1402,10 +1509,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (you.confused() && !check_only)
         return false;
 
-    string adj, suffix;
-    bool penance = false;
+    attacked_monster_list victims;
     bool defender_ok = true;
-    counted_monster_list victims;
     for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
     {
         if (hitfunc.is_affected(*di) <= AFF_NO)
@@ -1418,16 +1523,11 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         if (affects && !affects(mon))
             continue;
 
-        string adjn, suffixn;
-        bool penancen = false;
-        if (bad_attack(mon, adjn, suffixn, penancen))
+        string adj, suffix;
+        bool penance = false;
+        if (bad_attack(mon, adj, suffix, penance))
         {
-            // record the adjectives for the first listed, or
-            // first that would cause penance
-            if (victims.empty() || penancen && !penance)
-                adj = adjn, suffix = suffixn, penance = penancen;
-
-            victims.add(mon);
+            victims.add(*mon, std::move(adj), std::move(suffix), penance);
 
             if (defender && defender == mon)
                 defender_ok = false;
@@ -1442,16 +1542,12 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         return true;
 
     // Listed in the form: "your rat", "Blorkula the orcula".
-    string mon_name = victims.describe(DESC_PLAIN);
-    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
-        mon_name = mon_name.substr(4); // strlen("the ")
-    if (!starts_with(adj, "your"))
-        adj = "the " + adj;
-    mon_name = adj + mon_name;
+    string mon_name = victims.describe();
+    const bool penance = victims.penance();
 
     const string prompt = make_stringf("Really %s%s %s%s?%s",
              verb, defender_ok ? " near" : "", mon_name.c_str(),
-             suffix.c_str(),
+             victims.suffix(),
              penance ? " This attack would place you under penance!" : "");
 
     if (prompted)
@@ -1483,13 +1579,15 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
 }
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore)
+                            function<bool(const monster&)> should_ignore,
+                            const char* msg)
 {
-    return warn_about_bad_targets(spell_title(spell), targets, should_ignore);
+    return warn_about_bad_targets(spell_title(spell), targets, should_ignore, msg);
 }
 
 bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore)
+                            function<bool(const monster&)> should_ignore,
+                            const char* msg)
 {
     vector<const monster*> bad_targets;
     for (coord_def p : targets)
@@ -1522,10 +1620,11 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     const string and_more = bad_targets.size() > 1 ?
             make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
+    const string prompt = make_stringf("%s might hit %s%s. %s",
                                        source_name,
                                        ex_mon->name(DESC_THE).c_str(),
-                                       and_more.c_str());
+                                       and_more.c_str(),
+                                       msg);
     if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -1569,8 +1668,7 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     return true;
 }
 
-bool can_reach_attack_between(coord_def source, coord_def target,
-                              reach_type range)
+bool can_reach_attack_between(coord_def source, coord_def target, int range)
 {
     // The foe should be on the map (not stepped from time).
     if (!in_bounds(target))
@@ -1580,7 +1678,7 @@ bool can_reach_attack_between(coord_def source, coord_def target,
     const int grid_distance(delta.rdist());
 
     // Unrand only - Rift is smite-targeted and up to 3 range.
-    if (range == REACH_THREE)
+    if (range >= 3)
     {
         return cell_see_cell(source, target, LOS_NO_TRANS)
                && grid_distance > 1 && grid_distance <= range;

@@ -730,7 +730,8 @@ public:
             mpr("You're too dead to put down roots!");
             return false;
         }
-        return transform(30, transformation::tree, !was_known);
+        const int dur = 15 + random2(30) + random2(15);
+        return transform(dur, transformation::tree, !was_known);
     }
 
     bool quaff(bool was_known) const override

@@ -167,7 +167,12 @@ const char* EquipOnDelay::get_verb()
         else
             return "wielding";
     }
-    return "putting on";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "haunting";
+    else if (equip.base_type == OBJ_ARMOUR && you.form == transformation::fortress_crab)
+        return "fusing with";
+    else
+        return "putting on";
 }
 
 bool EquipOnDelay::try_interrupt(bool force)
@@ -178,13 +183,13 @@ bool EquipOnDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -204,7 +209,12 @@ const char* EquipOffDelay::get_verb()
         else
             return "unwielding";
     }
-    return "removing";
+    else if (you.has_mutation(MUT_FORMLESS))
+        return "removing yourself from";
+    else if (equip.base_type == OBJ_ARMOUR && you.form == transformation::fortress_crab)
+        return "unfusing";
+    else
+        return "removing";
 }
 
 bool EquipOffDelay::try_interrupt(bool force)
@@ -220,13 +230,13 @@ bool EquipOffDelay::try_interrupt(bool force)
                                && get_armour_slot(equip) != SLOT_OFFHAND;
         const char* verb = is_armour ? "disrobing" : "removing your equipment";
         const string prompt = make_stringf("Keep %s?", verb);
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno(prompt.c_str(), false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -268,56 +278,6 @@ bool ShaftSelfDelay::try_interrupt(bool /*force*/)
     return true;
 }
 
-bool ExsanguinateDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep bloodletting?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop emptying yourself of blood.");
-        return true;
-    }
-    return false;
-}
-
-bool RevivifyDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Continue your ritual?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop revivifying.");
-        return true;
-    }
-    return false;
-}
-
 bool TransformDelay::try_interrupt(bool force)
 {
     bool interrupt = false;
@@ -326,13 +286,13 @@ bool TransformDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep transforming yourself?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (!interrupt)
@@ -349,13 +309,13 @@ bool ImbueDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep imbuing your servitor?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -453,8 +413,11 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (Options.rest_delay >= 0 && tiles.need_redraw())
+        if (Options.rest_delay >= 0
+            && tiles.need_redraw(Options.tile_runrest_rate))
+        {
             tiles.redraw();
+        }
 #endif
 
         if (!is_resting() && you.running.hp == you.hp
@@ -469,7 +432,14 @@ static command_type _get_running_command()
         return CMD_WAIT;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
-        delay(Options.explore_delay);
+    {
+#ifdef USE_TILE
+        if (tiles.need_redraw(Options.tile_runrest_rate))
+            tiles.redraw();
+#endif
+        if (Options.explore_delay > 0)
+            delay(Options.explore_delay);
+    }
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 
@@ -515,16 +485,6 @@ void PasswallDelay::start()
 void ShaftSelfDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
-}
-
-void ExsanguinateDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin bloodletting.");
-}
-
-void RevivifyDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
 }
 
 void ImbueDelay::start()
@@ -904,25 +864,6 @@ void DescendingStairsDelay::finish()
     down_stairs();
 }
 
-void ExsanguinateDelay::finish()
-{
-    blood_spray(you.pos(), MONS_PLAYER, 10);
-    you.vampire_alive = false;
-    you.redraw_status_lights = true;
-    calc_hp(true);
-    mpr("You become bloodless.");
-    vampire_update_transformations();
-}
-
-void RevivifyDelay::finish()
-{
-    you.vampire_alive = true;
-    you.redraw_status_lights = true;
-    mpr("You return to life.");
-    temp_mutate(MUT_FRAIL, "vampire revification");
-    vampire_update_transformations();
-}
-
 void ImbueDelay::finish()
 {
     mpr("You finish imbuing your servitor.");
@@ -947,7 +888,7 @@ void TransformDelay::finish()
     if (form == transformation::none)
     {
         unset_default_form();
-        untransform();
+        untransform(false, false);
         return;
     }
 
@@ -1188,9 +1129,10 @@ static inline bool _monster_warning(activity_interrupt ai,
         else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
-            if (mons_primary_habitat(*mon) == HT_LAVA)
+            const habitat_type habitat = mons_habitat(*mon);
+            if (habitat & HT_LAVA)
                 text += "lava";
-            else if (mons_primary_habitat(*mon) == HT_WATER)
+            else if (habitat & HT_WATER)
                 text += "water";
             else
                 text += "realm of bugdom";
@@ -1275,6 +1217,8 @@ static inline bool _monster_warning(activity_interrupt ai,
         }
         if (should_shout_at_mons(*mon))
             yell(mon);
+        else if (you.form == transformation::maw)
+            maw_growl_check(mon);
         mons_set_just_seen(mon);
     }
 

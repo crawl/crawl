@@ -602,9 +602,17 @@ static void _wanderer_random_evokable()
 static void _wanderer_random_talisman()
 {
     talisman_type selected_talisman =
-        coinflip() ? TALISMAN_BEAST : TALISMAN_FLUX;
+        random_choose_weighted(10, TALISMAN_PROTEAN,
+                                5, TALISMAN_RIMEHORN,
+                                5, TALISMAN_SCARAB,
+                                5, TALISMAN_MEDUSA,
+                                5, TALISMAN_MAW,
+                               10, NUM_TALISMANS);
 
-    newgame_make_item(OBJ_TALISMANS, selected_talisman);
+    if (selected_talisman == NUM_TALISMANS)
+        newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(4, 6));
+    else
+        newgame_make_item(OBJ_TALISMANS, selected_talisman);
 }
 
 static void _give_wanderer_aux_armour(int plus = 0)
@@ -740,6 +748,17 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
     return vector<spell_type>{};
 }
 
+static bool _wanderer_has_spell_skill(set<skill_type>& skills)
+{
+    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (skills.count(sk))
+            return true;
+    }
+
+    return false;
+}
+
 static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
                                                      set<skill_type> & gift_skills)
 {
@@ -804,7 +823,12 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         break;
 
     case SK_SHAPESHIFTING:
-        newgame_make_item(OBJ_TALISMANS, TALISMAN_BEAST);
+        if (_wanderer_has_spell_skill(gift_skills) && one_chance_in(3))
+            newgame_make_item(OBJ_TALISMANS, TALISMAN_INKWELL);
+        else if (one_chance_in(3))
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(2, 5));
+        else
+            newgame_make_item(OBJ_TALISMANS, TALISMAN_QUILL);
         break;
 
     case SK_STEALTH:

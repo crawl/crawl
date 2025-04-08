@@ -15,7 +15,7 @@ enum unarmed_attack_type
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_PECK,
-    UNAT_TAILSLAP,
+    UNAT_TAIL,
     UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,
@@ -24,8 +24,9 @@ enum unarmed_attack_type
     UNAT_MAW,
     UNAT_EXECUTIONER_BLADE,
     UNAT_FUNGAL_FISTICLOAK,
+    UNAT_MEDUSA_STINGER,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_FUNGAL_FISTICLOAK,
+    UNAT_LAST_ATTACK = UNAT_MEDUSA_STINGER,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -39,11 +40,17 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
+
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_multihit;     // quick blade follow-up attack
     bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
+    bool         is_bestial_takedown;   // bestial takedown attack
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, but still do 100% damage
@@ -96,7 +103,7 @@ private:
     void check_autoberserk();
     bool check_unrand_effects() override;
 
-    void rot_defender(int amount);
+    void sear_defender();
 
     bool consider_decapitation(int damage_done);
     bool attack_chops_heads(int damage_done);
@@ -153,6 +160,7 @@ private:
     void apply_sign_of_ruin_effects();
     void do_ooze_engulf();
     void try_parry_disarm();
+    void do_vampire_lifesteal();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -173,7 +181,7 @@ private:
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
-    void player_announce_aux_hit();
+    void player_announce_aux_hit(unarmed_attack_type atk);
     string charge_desc();
     string weapon_desc();
     void player_warn_miss();
@@ -184,11 +192,11 @@ private:
     void _defender_die();
     void handle_spectral_brand();
 
+    // Spell effects.
+    void maybe_trigger_detonation();
+
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    bool _player_vampire_draws_blood(const monster* mon, const int damage,
-                                     bool needs_bite_msg = false);
-    bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach(int dist);
 
@@ -209,3 +217,6 @@ string mut_aux_attack_desc(mutation_type mut);
 vector<string> get_player_aux_names();
 
 bool coglin_spellmotor_attack();
+bool spellclaws_attack(int spell_level);
+
+dice_def player_airstrike_melee_damage(int pow, int open_spaces);

@@ -34,7 +34,7 @@
 
 static void _setup_base_explosion(bolt & beam, const monster& origin)
 {
-    beam.is_tracer    = false;
+    beam.set_is_tracer(false);
     beam.is_explosion = true;
     beam.is_death_effect = true;
     beam.source_id    = origin.mid;

@@ -39,9 +39,9 @@
 #include "viewchar.h"
 
 static noise_grid _noise_grid;
-static void _actor_apply_noise(actor *act,
-                               const coord_def &apparent_source,
-                               int noise_intensity_millis);
+static void _monster_apply_noise(monster *mons,
+                                 const coord_def &apparent_source,
+                                 int noise_intensity_millis);
 
 /// By default, what database lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
@@ -254,9 +254,9 @@ bool check_awaken(monster* mons, int stealth)
     if (!mons->see_cell(you.pos()))
         return false;
 
-    // Monsters put to sleep by ensorcelled hibernation will sleep
-    // at least one turn.
-    if (mons_just_slept(*mons))
+    // Monsters forcibly put to sleep should never wake up of their own accord
+    // until it wears off.
+    if (mons_is_deep_asleep(*mons))
         return false;
 
     // Berserkers aren't really concerned about stealth.
@@ -488,12 +488,6 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
-/// Does the player have a 'previous target' to issue targeting orders at?
-static bool _can_target_prev()
-{
-    return !(you.prev_targ == MID_NOBODY || you.prev_targ == MID_PLAYER);
-}
-
 /// Prompt the player to issue orders. Returns the key pressed.
 static int _issue_orders_prompt()
 {
@@ -507,15 +501,7 @@ static int _issue_orders_prompt()
 
     if (!you.berserk() && !you.confused())
     {
-        string previous;
-        if (_can_target_prev())
-        {
-            const monster* target = monster_by_mid(you.prev_targ);
-            if (target && target->alive() && you.can_see(*target))
-                previous = "   p - Attack previous target.";
-        }
-
-        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
+        mpr("Orders for allies: a - Attack new target.");
         mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   g - Guard the area.      f - Follow me.");
     }
@@ -577,17 +563,6 @@ static bool _issue_order(int keyn, int &mons_targd)
             _set_allies_patrol_point();
             break;
 
-        case 'p':
-
-            if (_can_target_prev())
-            {
-                monster* mon = monster_by_mid(you.prev_targ);
-                if (mon)
-                    mons_targd = mon->mindex();
-                break;
-            }
-
-            // fall through
         case 'a':
             if (env.sanctuary_time > 0)
             {
@@ -1110,40 +1085,25 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 
     if (you.pos() == pos)
     {
-        // The bizarre arrangement of those code into two functions that each
-        // check whether the actor is the player, but work at different types,
-        // probably ought to be refactored. I put the noise updating code here
-        // because the type is correct here.
-
-        _actor_apply_noise(&you, noise.noise_source,
-                           noise_intensity_millis);
-
-        // The next bit stores noise heard at the player's position for
+        // This stores noise heard at the player's position for
         // display in the HUD. A more interesting (and much more complicated)
         // way of doing this might be to sample from the noise grid at
         // selected distances from the player. Dealing with terrain is a bit
         // nightmarish for this alternative, though, so I'm going to keep it
         // simple.
-        you.los_noise_level = you.asleep()
-                            // noise may awaken the player but this should be
-                            // dealt with in `_actor_apply_noise`. We want only
-                            // noises after awakening (or the awakening noise)
-                            // to be shown.
-                            ? 0
-                            : max(you.los_noise_level, noise_intensity_millis);
-        ++affected_actor_count;
+        you.los_noise_level = max(you.los_noise_level, noise_intensity_millis);
     }
 
     if (monster *mons = monster_at(pos))
     {
         if (mons->alive()
-            && !mons_just_slept(*mons)
+            && !mons_is_deep_asleep(*mons)
             && mons->mid != noise.noise_producer_mid)
         {
             const coord_def perceived_position =
                 noise_perceived_position(mons, pos, noise);
-            _actor_apply_noise(mons, perceived_position,
-                               noise_intensity_millis);
+            _monster_apply_noise(mons, perceived_position,
+                                 noise_intensity_millis);
             ++affected_actor_count;
         }
     }
@@ -1334,9 +1294,9 @@ void noise_grid::dump_noise_grid(const string &filename) const
 }
 #endif
 
-static void _actor_apply_noise(actor *act,
-                               const coord_def &apparent_source,
-                               int noise_intensity_millis)
+static void _monster_apply_noise(monster *mons,
+                                 const coord_def &apparent_source,
+                                 int noise_intensity_millis)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
@@ -1348,34 +1308,26 @@ static void _actor_apply_noise(actor *act,
          noise.noise_source.x, noise.noise_source.y,
          grid_distance(act->pos(), noise.noise_source),
          noise_travel_distance);
+#else
+    UNUSED(noise_intensity_millis);
 #endif
 
-    const bool player = act->is_player();
-    if (player)
-    {
-        const int loudness = div_rand_round(noise_intensity_millis, 1000);
-        act->check_awaken(loudness);
-    }
+    // If the perceived noise came from within the player's LOS, any
+    // monster that hears it will have a chance to guess that the
+    // noise was triggered by the player, depending on how close it was to
+    // the player. This happens independently of actual noise source.
+    //
+    // The probability is calculated as p(x) = (-90/R)x + 100, which is
+    // linear from p(0) = 100 to p(R) = 10. This replaces a version that
+    // was 100% from 0 to 3, and 0% outward.
+    //
+    // behaviour around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
+
+    const int player_distance = grid_distance(apparent_source, you.pos());
+    const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);
+
+    if (x_chance_in_y(alert_prob, 100))
+        behaviour_event(mons, ME_ALERT, &you, apparent_source); // shout + set you as foe
     else
-    {
-        monster *mons = act->as_monster();
-        // If the perceived noise came from within the player's LOS, any
-        // monster that hears it will have a chance to guess that the
-        // noise was triggered by the player, depending on how close it was to
-        // the player. This happens independently of actual noise source.
-        //
-        // The probability is calculated as p(x) = (-90/R)x + 100, which is
-        // linear from p(0) = 100 to p(R) = 10. This replaces a version that
-        // was 100% from 0 to 3, and 0% outward.
-        //
-        // behaviour around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
-
-        const int player_distance = grid_distance(apparent_source, you.pos());
-        const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);
-
-        if (x_chance_in_y(alert_prob, 100))
-            behaviour_event(mons, ME_ALERT, &you, apparent_source); // shout + set you as foe
-        else
-            behaviour_event(mons, ME_DISTURB, 0, apparent_source); // wake
-    }
+        behaviour_event(mons, ME_DISTURB, 0, apparent_source); // wake
 }

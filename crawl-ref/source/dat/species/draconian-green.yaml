@@ -31,10 +31,11 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_ARMOURED_TAIL: 1
   7:
     MUT_POISON_RESISTANCE: 1
   14:
-    MUT_STINGER: 1
+    MUT_STINGER: 2
 fake_mutations:
   - long: You can breathe blasts of noxious fumes.
     short: noxious breath

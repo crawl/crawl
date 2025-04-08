@@ -392,6 +392,10 @@ NAME:   uniq_grunn
 DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Grunn band")
 
+NAME:   uniq_nameless_revenant
+DEPTH:  Depths, Vaults:2-, Crypt
+: place_unique(_G, "Nobody")
+
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
 ################################################################################

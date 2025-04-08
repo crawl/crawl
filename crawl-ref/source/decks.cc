@@ -1129,7 +1129,7 @@ static void _damaging_card(card_type card, int power,
                 return !mons.wont_attack()
                        && mons_is_threatening(mons)
                        && coinflip()
-                       && mons.corrode_equipment();
+                       && mons.corrode(&you);
             });
         }
         ztype = acidzaps[power_level];
@@ -1493,7 +1493,6 @@ static void _storm_card(int power)
     {
         bolt beam;
         beam.flavour           = BEAM_ELECTRICITY;
-        beam.is_tracer         = false;
         beam.is_explosion      = true;
         beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
         beam.name              = "electrical discharge";
@@ -1563,7 +1562,7 @@ static void _degeneration_card(int power)
                if (mons.can_polymorph())
                {
                    mons.polymorph(PPT_LESS);
-                   mons.malmutate("");
+                   mons.malmutate(&you);
                }
                else
                {
@@ -1708,7 +1707,7 @@ void card_effect(card_type which_card,
         break;
 
     case CARD_SWINE:
-        if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
+        if (transform(roll_dice(10, 10), transformation::pig, true))
             you.transform_uncancellable = true;
         else
             mpr("You feel a momentary urge to oink.");

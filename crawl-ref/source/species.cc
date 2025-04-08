@@ -223,8 +223,9 @@ namespace species
         case SP_PALE_DRACONIAN:
             return MONS_STEAM_DRAGON;
         case SP_RED_DRACONIAN:
-        default:
             return MONS_FIRE_DRAGON;
+        default:
+            return MONS_GOLDEN_DRAGON;
         }
     }
 
@@ -359,6 +360,9 @@ namespace species
     {
         if (sp == SP_ARMATAUR)
             return "Roll";
+        // XXX: To form 'hopping' and 'hopper' properly
+        else if (sp == SP_BARACHI)
+            return "Hopp";
         return walking_verb(sp);
     }
 
@@ -405,6 +409,7 @@ namespace species
     static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
     static const string frog_shout_verbs[] = {"croak", "ribbit", "bellow"};
     static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
+    static const string ghost_shout_verbs[] = {"wail", "shriek", "howl"};
 
     /**
      * What verb should be used to describe the species' shouting?
@@ -429,6 +434,8 @@ namespace species
             if (screaminess == 0 && directed)
                 return "hiss"; // hiss at, not meow at
             return felid_shout_verbs[screaminess];
+        case SP_POLTERGEIST:
+            return ghost_shout_verbs[screaminess];
         default:
             return shout_verbs[screaminess];
         }
@@ -455,6 +462,10 @@ namespace species
             return adj ? "bandage-wrapped" : "bandages";
         else if (species == SP_GARGOYLE)
             return adj ? "stony" : "stone";
+        else if (species == SP_POLTERGEIST)
+            return adj ? "ectoplasmic" : "ectoplasm";
+        else if (species == SP_REVENANT)
+            return adj ? "bony" : "bones";
         else
             return adj ? "fleshy" : "skin";
     }
@@ -465,6 +476,8 @@ namespace species
             return "tentacle";
         else if (species == SP_FELID)
             return "leg";
+        else if (species == SP_POLTERGEIST)
+            return "tendril";
         else
             return "arm";
     }
@@ -480,6 +493,8 @@ namespace species
             return "claw"; // overridden for felids by first check
         else if (species == SP_COGLIN)
             return "grasper";
+        else if (species == SP_POLTERGEIST)
+            return "tendril";
         else
             return "hand";
     }
@@ -592,7 +607,7 @@ namespace species
 
 int draconian_breath_uses_available()
 {
-    if (!species::is_draconian(you.species))
+    if (!species::is_draconian(you.species) && you.form != transformation::dragon)
         return 0;
 
     if (!you.props.exists(DRACONIAN_BREATH_USES_KEY))

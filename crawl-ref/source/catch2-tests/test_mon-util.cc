@@ -49,9 +49,16 @@ TEST_CASE("mons_habitat_type returns correct habitats", "[single-file]")
 
     SECTION("Water monsters should be HT_WATER")
     {
-        const auto habitat = mons_habitat_type(MONS_KRAKEN, MONS_KRAKEN);
+        const auto habitat = mons_habitat_type(MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL);
 
         REQUIRE(habitat == HT_WATER);
+    }
+
+    SECTION("Deep water monsters should be HT_DEEP_WATER")
+    {
+        const auto habitat = mons_habitat_type(MONS_KRAKEN, MONS_KRAKEN);
+
+        REQUIRE(habitat == HT_DEEP_WATER);
     }
 
     SECTION("Amphibious monsters should be HT_AMPHIBIOUS")
@@ -96,10 +103,10 @@ TEST_CASE("mons_habitat_type returns correct habitats", "[single-file]")
         REQUIRE(habitat == HT_AMPHIBIOUS);
     }
 
-    SECTION("Simulacrum Salamanders should show HT_LAND")
+    SECTION("Simulacrum Salamanders should show HT_AMPHIBIOUS")
     {
         const auto habitat = mons_habitat_type(MONS_SIMULACRUM, MONS_SALAMANDER);
 
-        REQUIRE(habitat == HT_LAND);
+        REQUIRE(habitat == HT_AMPHIBIOUS);
     }
 }

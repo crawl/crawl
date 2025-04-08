@@ -40,6 +40,18 @@ tree_dead3
 tree_dead4
 tree_dead5
 
+%variation DNGN_TREE blue
+tree_of_woe1 DNGN_TREE_OF_WOE
+tree_of_woe2
+tree_of_woe3
+tree_of_woe4
+
+%variation DNGN_TREE lightblue
+dead_tree_of_woe1 DNGN_DEAD_TREE_OF_WOE
+dead_tree_of_woe2
+dead_tree_of_woe3
+dead_tree_of_woe4
+
 %weight 10
 mangrove1 DNGN_MANGROVE
 %weight 8
@@ -340,10 +352,15 @@ statue_iron DNGN_STATUE_IRON
 ## Features only used in certain minivaults
 %sdir dngn/vaults
 
+##
+
 ## Renamed statues for undead vaults: gravestones
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
+necropolis_gravestone_0 DNGN_NECROPOLIS_GRAVESTONE
+necropolis_gravestone_1
+necropolis_gravestone_2
 zshrine DNGN_ZONGULDROK_SHRINE
 
 # start TAG_MAJOR_VERSION == 34
@@ -353,6 +370,11 @@ teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 ## golden statues for Gozag and TSO
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
+golden_iron_statue DNGN_GOLDEN_IRON_STATUE
+
+## blue iron statues for Oka
+oka_iron_statue_1 DNGN_OKA_IRON_STATUE
+oka_iron_statue_2
 
 #### Random tile animation for statuary starts here.
 
@@ -651,6 +673,10 @@ exit_pandemonium DNGN_EXIT_PANDEMONIUM
 exit_pandemonium_flickering
 
 # portal vault entrances
+necropolis_portal DNGN_PORTAL_NECROPOLIS
+necropolis_gone DNGN_NECROPOLIS_GONE
+necropolis_exit0 DNGN_EXIT_NECROPOLIS
+necropolis_exit1
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
 volcano_exit DNGN_EXIT_VOLCANO

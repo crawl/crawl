@@ -4014,7 +4014,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const vector<pop_entry>
         mg.pos = places[i];
 
         // Amphibious creatures placed with water should hang around it
-        if (mons_class_primary_habitat(mon) == HT_LAND)
+        if (mons_class_habitat(mon) & HT_DRY_LAND)
             mg.flags |= MG_PATROLLING;
 
         if (allow_zombies
@@ -4905,7 +4905,7 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY,
+            4, OBJ_MISCELLANY,
             1, OBJ_TALISMANS);
 }
 
@@ -5063,8 +5063,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     // Get rid of existing equipment.
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
-        mon->unequip(*ii, false, true);
-        destroy_item(ii->index(), true);
+        item_def &item = *ii;
+        mon->unequip(ii.slot(), false, true);
+        destroy_item(item, true);
     }
 
     item_list &list = mspec.items;
@@ -5207,13 +5208,11 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         }
 
         const monster_type montype = mons_class_is_zombified(type)
-                                                         ? mspec.monbase
-                                                         : type;
-
-        const habitat_type habitat = mons_class_primary_habitat(montype);
+                                     ? fixup_zombie_type(type, mspec.monbase)
+                                     : type;
 
         if (in_bounds(where) && !monster_habitable_grid(montype, where))
-            dungeon_terrain_changed(where, habitat2grid(habitat));
+            dungeon_terrain_changed(where, preferred_feature_type(montype));
     }
 
     if (type == RANDOM_MONSTER)
@@ -6000,13 +5999,15 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
+    const int level_greed = level_number / 6 + random2(level_number * 2 / 3);
+
     if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
-        return 15 + rand + random2(level_number);
+        return 15 + rand + level_greed;
     }
     const int rand = random2(5);
-    return 10 + rand + random2(level_number / 2);
+    return 10 + rand + level_greed;
 }
 
 /**
@@ -6024,12 +6025,12 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
     const int base_greed = greed_for_shop_type(type, level_number);
     int adj_greed = base_greed;
 
-    // Allow bargains in bazaars, prices randomly between 60% and 95%.
+    // Allow bargains in bazaars, prices randomly between 50% and 85%.
     if (player_in_branch(BRANCH_BAZAAR))
     {
         // divided by 20, so each is 5% of original price
-        // 12-19 = 60-95%, per above
-        const int factor = random2(8) + 12;
+        // 10-17 = 50-85%, per above
+        const int factor = random2(8) + 10;
 
         dprf(DIAG_DNGN, "Shop type %d: original greed = %d, factor = %d,"
              " discount = %d%%.",
@@ -6294,6 +6295,8 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_GENERAL:
     case SHOP_GENERAL_ANTIQUE:
+        if (one_chance_in(10))
+            return OBJ_MISCELLANY;
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:

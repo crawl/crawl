@@ -754,15 +754,12 @@ static void _animate_weapon(int pow, actor* target)
 {
     item_def * const wpn = target->weapon();
     ASSERT(wpn);
-    // If sac love, the weapon will go after you, not the target.
-    const bool hostile = you.allies_forbidden();
     const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
-    mgen_data mg(MONS_DANCING_WEAPON,
-                 hostile ? BEH_HOSTILE : BEH_FRIENDLY,
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY,
                  target->pos(),
-                 hostile ? MHITYOU : target->mindex(),
-                 hostile ? MG_NONE : MG_FORCE_BEH);
+                 target->mindex(),
+                 MG_FORCE_BEH);
     mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur), false);
     mg.set_range(1, 2);
     mg.props[TUKIMA_WEAPON] = *wpn;
@@ -776,13 +773,9 @@ static void _animate_weapon(int pow, actor* target)
         return;
     }
 
-    // Don't haunt yourself under sac love.
-    if (!hostile)
-    {
-        mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
-                                   INFINITE_DURATION));
-        mons->foe = target->mindex();
-    }
+    mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
+                                INFINITE_DURATION));
+    mons->foe = target->mindex();
 
     // We are successful. Unwield the weapon, removing any wield effects.
     mprf("%s dances into the air!", wpn->name(DESC_THE).c_str());
@@ -795,8 +788,7 @@ static void _animate_weapon(int pow, actor* target)
     ASSERT(montarget->inv[wp_slot] != NON_ITEM);
     ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
 
-    montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
-    montarget->inv[wp_slot] = NON_ITEM;
+    montarget->unequip(wp_slot, false, true);
 
     // Find out what our god thinks before killing the item.
     conduct_type why = god_hates_item_handling(*wpn);
@@ -1087,26 +1079,86 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
+static bool _is_malign_gateway_summoning_spot(const actor& caster,
+    const coord_def location,
+    bool targeting)
+{
+    if (!in_bounds(location)
+        || !feat_is_malign_gateway_suitable(env.grid(location)))
+    {
+        return false;
+    }
+
+    const actor* const creature = actor_at(location);
+    if (creature)
+    {
+        if (!targeting)
+            return false;
+
+        if (creature->visible_to(&caster))
+            return false;
+    }
+
+    if (targeting)
+    {
+        for (adjacent_iterator ai(location); ai; ++ai)
+        {
+            const map_cell& map_info = env.map_knowledge(*ai);
+            if (map_info.seen() && feat_is_solid(map_info.feat()))
+                return false;
+        }
+    }
+    else if (count_neighbours_with_func(location, &feat_is_solid) != 0)
+        return false;
+
+    if (!caster.see_cell_no_trans(location))
+        return false;
+
+    return true;
+}
+
+bool is_gateway_target(const actor& caster, coord_def location)
+{
+    const coord_def delta = location - caster.pos();
+
+    // location is to close
+    if (delta.rdist() < 2)
+        return false;
+
+    int abs_x = abs(delta.x);
+    int abs_y = abs(delta.y);
+
+    // Monster range of vision is equal to player range of vision, so this
+    // is accurate for mosters to.
+    const int current_vision = you.current_vision;
+
+    // location is to far
+    if (abs_x > current_vision || abs_y > current_vision)
+        return false;
+
+    return _is_malign_gateway_summoning_spot(caster, location, true);
+}
+
 coord_def find_gateway_location(actor* caster)
 {
     vector<coord_def> points;
 
-    for (coord_def delta : Compass)
+    // Monster range of vision is equal to player range of vision, so this
+    // is accurate for mosters to.
+    const int current_vision = you.current_vision;
+
+    for (int x = -current_vision; x <= current_vision; ++x)
     {
-        coord_def test = coord_def(-1, -1);
-
-        for (int t = 0; t < 11; t++)
+        for (int y = -current_vision; y <= current_vision; ++y)
         {
-            test = caster->pos() + (delta * (2+t));
-            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(env.grid(test))
-                || actor_at(test)
-                || count_neighbours_with_func(test, &feat_is_solid) != 0
-                || !caster->see_cell_no_trans(test))
-            {
+            const coord_def delta{ x, y };
+            // location is to close
+            if (delta.rdist() < 2)
                 continue;
-            }
 
-            points.push_back(test);
+            const coord_def test = caster->pos() + delta;
+            if (_is_malign_gateway_summoning_spot(*caster, test, false))
+                points.push_back(test);
         }
     }
 
@@ -1180,7 +1232,7 @@ spret cast_summon_horrible_things(int pow, bool fail)
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
-        mpr(getMiscString("SHT_int_loss"));
+        mpr(getMiscString("summon_horrible_things"));
 
         // XXX: Temporary effect until something else is implemented.
         temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");
@@ -1610,9 +1662,14 @@ static dice_def _battlesphere_damage(int hd)
     return dice_def(2, 6 + hd);
 }
 
-dice_def battlesphere_damage(int pow)
+dice_def battlesphere_damage_from_power(int pow)
 {
     return _battlesphere_damage(_battlesphere_hd(pow, false));
+}
+
+dice_def battlesphere_damage_from_hd(int hd)
+{
+    return _battlesphere_damage(hd);
 }
 
 spret cast_battlesphere(actor* agent, int pow, bool fail)
@@ -1766,14 +1823,13 @@ static bool _battlesphere_should_fire(actor* target,
 {
     beam.source = firing_pos;
     beam.target = target->pos();
-    beam.foe_info.reset();
-    beam.friend_info.reset();
+    targeting_tracer tracer;
 
     // Fire tracer.
-    beam.fire();
+    beam.fire(tracer);
 
     // If we hit at least *something*, mark this as a possible fallback
-    if (beam.friend_info.count == 0 && beam.foe_info.count > 0)
+    if (tracer.friend_info.count == 0 && tracer.foe_info.count > 0)
     {
         // And if we hit our primary target, actually fire
         if (beam.hit_count.count(target->mid))
@@ -1788,7 +1844,7 @@ static bool _battlesphere_should_fire(actor* target,
 static void _fire_battlesphere(monster* battlesphere, bolt& beam)
 {
     beam.thrower = battlesphere->summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
-    beam.is_tracer = false;
+    beam.set_is_tracer(false);
 
     battlesphere->foe = actor_at(beam.target)->mindex();
     battlesphere->target = beam.target;
@@ -1855,7 +1911,6 @@ bool trigger_battlesphere(actor* agent)
     beam.target      = target->pos();
     beam.source_id   = battlesphere->mid;
     beam.attitude    = mons_attitude(*battlesphere);
-    beam.is_tracer   = true;
 
     coord_def fallback_pos;
     // First, just try to fire from our present position
@@ -2014,12 +2069,52 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
     return spret::success;
 }
 
-monster* find_spectral_weapon(const actor* agent)
+monster* find_spectral_weapon(const item_def& weapon)
 {
-    if (agent->props.exists(SPECTRAL_WEAPON_KEY))
-        return monster_by_mid(agent->props[SPECTRAL_WEAPON_KEY].get_int());
+    if (weapon.props.exists(SPECTRAL_WEAPON_KEY))
+        return monster_by_mid(weapon.props[SPECTRAL_WEAPON_KEY].get_int());
     else
         return nullptr;
+}
+
+static bool _is_item_for_spectral_weapon(item_def* weapon, mid_t mid)
+{
+    return weapon
+           && weapon->props.exists(SPECTRAL_WEAPON_KEY)
+           && (mid_t)weapon->props[SPECTRAL_WEAPON_KEY].get_int() == mid;
+}
+
+static item_def* _find_spectral_weapon_item(const monster& mons)
+{
+    actor *owner = actor_by_mid(mons.summoner);
+    if (!owner)
+        return nullptr;
+
+    if (owner->is_player())
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        for (item_def* weapon : weapons)
+        {
+            if (_is_item_for_spectral_weapon(weapon, mons.mid))
+                return weapon;
+        }
+    }
+    else
+    {
+        monster* owning_mons = owner->as_monster();
+
+        item_def* primary_weapon = owning_mons->mslot_item(MSLOT_WEAPON);
+        if (_is_item_for_spectral_weapon(primary_weapon, mons.mid))
+            return primary_weapon;
+
+        item_def* secondary_weapon = owning_mons->mslot_item(MSLOT_ALT_WEAPON);
+        if (mons_wields_two_weapons(*owning_mons)
+            && _is_item_for_spectral_weapon(secondary_weapon, mons.mid))
+        {
+            return secondary_weapon;
+        }
+    }
+    return nullptr;
 }
 
 void end_spectral_weapon(monster* mons, bool killed, bool quiet)
@@ -2028,10 +2123,9 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (!mons)
         return;
 
-    actor *owner = actor_by_mid(mons->summoner);
-
-    if (owner)
-        owner->props.erase(SPECTRAL_WEAPON_KEY);
+    item_def* item = _find_spectral_weapon_item(*mons);
+    if (item)
+        item->props.erase(SPECTRAL_WEAPON_KEY);
 
     if (!quiet && you.can_see(*mons))
         simple_monster_message(*mons, " disappears.");
@@ -2042,10 +2136,79 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
 void check_spectral_weapon(actor &agent)
 {
-    if (!agent.triggered_spectral)
-        if (monster* sw = find_spectral_weapon(&agent))
-            end_spectral_weapon(sw, false, false);
-    agent.triggered_spectral = false;
+    if (agent.triggered_spectral)
+    {
+        agent.triggered_spectral = false;
+        return;
+    }
+
+    if (agent.is_player())
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        for (item_def* weapon : weapons)
+        {
+            monster* sw = find_spectral_weapon(*weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+    }
+    else
+    {
+        monster* owning_mons = agent.as_monster();
+
+        item_def* primary_weapon = owning_mons->mslot_item(MSLOT_WEAPON);
+        if (primary_weapon)
+        {
+            monster* sw = find_spectral_weapon(*primary_weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+
+        item_def* secondary_weapon = owning_mons->mslot_item(MSLOT_ALT_WEAPON);
+        if (secondary_weapon && mons_wields_two_weapons(*owning_mons))
+        {
+            monster* sw = find_spectral_weapon(*secondary_weapon);
+            if (sw)
+                end_spectral_weapon(sw, false, false);
+        }
+    }
+}
+
+monster* create_spectral_weapon(const actor &agent, coord_def pos,
+                                item_def& weapon)
+{
+    mgen_data mg(MONS_SPECTRAL_WEAPON,
+                 agent.is_player() ? BEH_FRIENDLY
+                                  : SAME_ATTITUDE(agent.as_monster()),
+                 pos,
+                 agent.mindex(),
+                 MG_FORCE_BEH | MG_FORCE_PLACE);
+    mg.set_summoned(&agent, 0);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.props[TUKIMA_WEAPON] = weapon;
+    mg.props[TUKIMA_POWER] = 50;
+
+    dprf("spawning at %d,%d", pos.x, pos.y);
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+        return nullptr;
+
+    // We successfully made a new one! Kill off the old one,
+    // and don't spam the player with a spawn message.
+    monster* old_weapon = find_spectral_weapon(weapon);
+    if (old_weapon)
+    {
+        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
+        end_spectral_weapon(old_weapon, false, true);
+    }
+
+    dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
+
+    mons->summoner = agent.mid;
+    mons->behaviour = BEH_SEEK; // for display
+    weapon.props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
+    return mons;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
@@ -2539,7 +2702,7 @@ void kiku_unearth_wretches()
         // Die in 2-3 turns.
         mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
                                    20 + random2(10)));
-        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you, 9999));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, 9999));
     }
     if (!created)
         simple_god_message(" has no space to call forth the wretched!");
@@ -2985,7 +3148,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     beam.source = agent.pos();
     beam.source_id = agent.mid;
     beam.origin_spell = SPELL_HELLFIRE_MORTAR;
-    beam.is_tracer = true;
+    beam.set_is_tracer(true);
     beam.fire();
 
     // Check whether the path ends because it reached max range, or because it
@@ -3185,10 +3348,10 @@ void handle_clockwork_bee_spell(int turn)
     if (!targ || !targ->alive() || !targ->visible_to(&you)
         || !you.see_cell(targ->pos()))
     {
-        targ = _get_clockwork_bee_target();
+        monster* new_targ = _get_clockwork_bee_target();
 
         // Couldn't find anything, so just deposit an inert bee near us
-        if (!targ)
+        if (!new_targ)
         {
             mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE_INACTIVE,
                                         random_range(80, 120),
@@ -3203,10 +3366,28 @@ void handle_clockwork_bee_spell(int turn)
                 // reactivate us.
                 if (targ)
                     bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
-
-                return;
             }
+            else
+            {
+                // Unable to create inert bee, probably the player was flying
+                // over deep water / lava. Rather than try to work out what
+                // happened, just self destruct.
+                mprf("Without a target and with nowhere to land, your clockwork "
+                     "bee falls apart in a shower of cogs and coils.");
+
+                for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+                {
+                    if (!in_bounds(*ai) || cell_is_solid(*ai) || cloud_at(*ai))
+                        continue;
+
+                    place_cloud(CLOUD_DUST, *ai, random_range(3, 5), &you, 0, -1);
+                    break;
+                }
+            }
+            return;
         }
+
+        targ = new_targ;
     }
 
     mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE, random_range(400, 500),
@@ -3350,9 +3531,10 @@ void clockwork_bee_pick_new_target(monster& bee)
     }
 }
 
+// For spell menu display only
 dice_def diamond_sawblade_damage(int power)
 {
-    return zap_damage(ZAP_SHRED, (1 + div_rand_round(power, 10)) * 12, true, false);
+    return zap_damage(ZAP_SHRED, (1 + power/ 10) * 12, true, false);
 }
 
 vector<coord_def> diamond_sawblade_spots(bool actual)
@@ -3536,7 +3718,7 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     mg.pos = start_pos;
     mg.set_range(0);
     mg.foe = victim->mindex();
-    mg.hd = 4 + div_rand_round(pow, 15);
+    mg.hd = 3 + div_rand_round(pow, 15);
     monster* croc = create_monster(mg);
 
     // Probably only possible if the monster array is filled?
@@ -3564,7 +3746,7 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     if (victim->alive())
     {
         atk.needs_message = true;
-        atk.dmg_mult = 20 + pow;
+        atk.dmg_mult = 15 + div_rand_round(pow * 2, 3);
         atk.to_hit = AUTOMATIC_HIT;
         atk.attack();
     }
@@ -3668,12 +3850,6 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
         return spret::success;
     }
 
-    if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, target))
-    {
-        mpr("You cannot deploy your paragon there!");
-        return spret::abort;
-    }
-
     const int dur = summ_dur(4);
     mgen_data mg = _pal_data(MONS_PLATINUM_PARAGON, dur,
                              SPELL_PLATINUM_PARAGON, false);
@@ -3707,7 +3883,7 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     }
 
     mpr("You craft a gleaming metal champion and it leaps into the fray!");
-    you.duration[DUR_PARAGON_ACTIVE] = dur;
+    you.duration[DUR_PARAGON_ACTIVE] = 1;
 
     // Grab our imprinted weapon
     if (you.props.exists(PARAGON_WEAPON_KEY))
@@ -4232,7 +4408,6 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     beam.source = block.pos();
     beam.attitude = block.attitude;
     beam.set_agent(agent);
-    beam.dont_stop_player = true;
     beam.target = aim_spot;
     beam.range = steps_taken;
     beam.aimed_at_spot = true;

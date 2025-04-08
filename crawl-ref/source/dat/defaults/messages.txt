@@ -32,6 +32,9 @@ msc += lightmagenta:malevolent force fills
 
 # Less urgent, but still significant messages
 #
+msc += $warning:solemn chanting
+msc += $warning:hear.*funeral chant
+msc += $warning:funeral rites reach a fever pitch
 msc += $warning:distant snort
 msc += $warning:beating.*drum
 msc += $warning:drumbeats cease
@@ -114,6 +117,7 @@ force_more_message += ^Careful!
 
 # Announcements of timed portal vaults:
 force_more_message += interdimensional caravan
+force_more_message += solemn chanting
 force_more_message += distant snort
 force_more_message += roar of battle
 force_more_message += wave of frost

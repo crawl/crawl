@@ -1272,10 +1272,10 @@ static bool _simple_shot_tracer(coord_def source, coord_def target,
     tracer.target = target;
     tracer.source_id = source_mid;
     tracer.damage = dice_def(100, 1);
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    return mons_should_fire(tracer);
+    return mons_should_fire(tracer, target_tracer);
 }
 
 // Gets all spots within a certain radius of the player where your shadow could
@@ -1516,13 +1516,13 @@ static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = MID_PLAYER_SHADOW_DUMMY;
-    tracer.is_tracer = true;
-    tracer.fire();
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-    if (tracer.friend_info.power > 0)
+    if (target_tracer.friend_info.power > 0)
         return 0;
     else
-        return tracer.foe_info.power;
+        return target_tracer.foe_info.power;
 }
 
 // Tries to find a vaguely 'best' spot to cast a given zap at some random
@@ -1905,8 +1905,7 @@ void wu_jian_end_heavenly_storm()
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
     return you.attribute[ATTR_SERPENTS_LASH]
-           && attack_type != WU_JIAN_ATTACK_NONE
-           && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
+           && attack_type != WU_JIAN_ATTACK_NONE;
 }
 
 static bool _can_attack_martial(const monster* mons)
@@ -2072,6 +2071,12 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
     if (have_passive(passive_t::wu_jian_whirlwind))
         attacked |= _wu_jian_whirlwind(old_pos, new_pos, check_only);
 
+    // Trigger post-attack effects. (We don't track which monsters were
+    // actually attacked, but it's safe to say they weren't firewood, since
+    // martial attacks aren't launched against those in general.)
+    if (attacked && !check_only)
+        do_player_post_attack(nullptr, false, false);
+
     return attacked;
 }
 
@@ -2100,7 +2105,9 @@ bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
     return !_wu_jian_wall_jump_monsters(pos).empty();
 }
 
-void wu_jian_wall_jump_effects()
+// Returns true if at least one monster could have been attacked (even if our
+// attack speed was somehow too slow to succeed at doing so.)
+bool wu_jian_wall_jump_effects()
 {
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
         if (!cell_is_solid(*ai))
@@ -2145,6 +2152,8 @@ void wu_jian_wall_jump_effects()
             aerial.launch_attack_set();
         }
     }
+
+    return !targets.empty();
 }
 
 bool wu_jian_post_move_effects(bool did_wall_jump,

@@ -236,6 +236,7 @@ Fw JOB_FORGEWRIGHT
 %sdir player
 %texture none
 felids/cat3 SP_RECOMMENDED_FELID
+base/poltergeist SP_RECOMMENDED_POLTERGEIST
 %start
 %compose base/armataur
 %compose body/animal_skin
@@ -271,10 +272,6 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose base/gargoyle_m
 %compose body/animal_skin
 %finish SP_RECOMMENDED_GARGOYLE
-%start
-%compose base/ghoul_m
-%compose body/animal_skin
-%finish SP_RECOMMENDED_GHOUL
 %start
 %compose base/gnoll_m
 %compose body/animal_skin
@@ -317,6 +314,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/short_black
 %finish SP_RECOMMENDED_ONI
 %start
+%compose base/revenant
+%compose body/animal_skin
+%finish SP_RECOMMENDED_REVENANT
+%start
 %compose base/spriggan_m
 %compose body/animal_skin
 %compose beard/medium_green
@@ -332,11 +333,6 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/troll
 %compose gloves/claws
 %finish SP_RECOMMENDED_TROLL
-%start
-%compose base/vampire_f
-%compose body/animal_skin
-%compose hair/arwen
-%finish SP_RECOMMENDED_VAMPIRE
 %start
 %compose base/vine_stalker_green_f
 %compose body/animal_skin
@@ -360,6 +356,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %sdir gui/backgrounds
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
+enum:SP_RECOMMENDED_POLTERGEIST SP_POLTERGEIST
 enum:SP_RECOMMENDED_ARMATAUR SP_ARMATAUR
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF
 enum:SP_RECOMMENDED_DEMIGOD SP_DEMIGOD
@@ -368,7 +365,6 @@ enum:SP_RECOMMENDED_BASE_DRACONIAN SP_DRACONIAN
 enum:SP_RECOMMENDED_FORMICID SP_FORMICID
 enum:SP_RECOMMENDED_BARACHI SP_BARACHI
 enum:SP_RECOMMENDED_GARGOYLE SP_GARGOYLE
-enum:SP_RECOMMENDED_GHOUL SP_GHOUL
 enum:SP_RECOMMENDED_GNOLL SP_GNOLL
 enum:SP_RECOMMENDED_HUMAN SP_HUMAN
 enum:SP_RECOMMENDED_KOBOLD SP_KOBOLD
@@ -379,10 +375,10 @@ enum:SP_RECOMMENDED_MUMMY SP_MUMMY
 enum:SP_RECOMMENDED_NAGA SP_NAGA
 enum:SP_RECOMMENDED_OCTOPODE SP_OCTOPODE
 enum:SP_RECOMMENDED_ONI SP_ONI
+enum:SP_RECOMMENDED_REVENANT SP_REVENANT
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU
 enum:SP_RECOMMENDED_TROLL SP_TROLL
-enum:SP_RECOMMENDED_VAMPIRE SP_VAMPIRE
 enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_DJINNI SP_DJINNI
 enum:SP_RECOMMENDED_METEORAN SP_METEORAN

@@ -248,6 +248,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VAULT;
         return;
 
+    case BRANCH_NECROPOLIS:
+        flv.wall  = TILE_WALL_CATACOMBS;
+        flv.floor = TILE_FLOOR_NECROPOLIS_SQUARES;
+        return;
+
 #if TAG_MAJOR_VERSION == 34
     case BRANCH_LABYRINTH:
 #endif
@@ -475,7 +480,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     }
 
     // Should never reach this place
-    ASSERT(false);
+    die("couldn't find tile");
 }
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
@@ -1137,7 +1142,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 
     // Wizlab entries, conduits, and harlequin traps both have spinning
     // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB || bg_idx == TILE_DNGN_EXIT_NECROPOLIS
        || bg_idx == TILE_DNGN_ALTAR_JIYVA || bg_idx == TILE_DNGN_TRAP_HARLEQUIN
        || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
         && Options.tile_misc_anim)
@@ -1438,6 +1443,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             *bg = orig + min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
+             || orig == TILE_DNGN_EXIT_NECROPOLIS
              || orig == TILE_DNGN_TRAP_HARLEQUIN)
     {
         *bg = orig + flv.special % tile_dngn_count(orig);

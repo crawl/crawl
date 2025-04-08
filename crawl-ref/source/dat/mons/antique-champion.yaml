@@ -7,11 +7,11 @@ species: ancient_champion
 holiness: [undead]
 will: 120
 attacks:
- - {type: hit, damage: 35}
+ - {type: hit, damage: 30}
 hd: 20
-hp_10x: 980
-ac: 20
-ev: 15
+hp_10x: 820
+ac: 18
+ev: 14
 spells: antique_champion
 intelligence: human
 uses: weapons_armour

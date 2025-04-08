@@ -588,14 +588,6 @@ gargoyle baked goods cache
 
 @stone baked goods cache@
 %%%%
-ghoul fruit cache
-
-@carnivore fruit cache@
-%%%%
-ghoul baked goods cache
-
-@carnivore baked goods cache@
-%%%%
 kobold fruit cache
 
 @carnivore fruit cache@
@@ -628,6 +620,30 @@ oni baked goods cache
 
 You reach down and grab @_baked_good_and_reaction_@ You go for seconds.
 %%%%
+poltergeist fruit cache
+
+@inediate fruit cache@
+%%%%
+poltergeist meat cache
+
+@inediate meat cache@
+%%%%
+poltergeist baked goods cache
+
+@inediate baked goods cache@
+%%%%
+revenant fruit cache
+
+@inediate fruit cache@
+%%%%
+revenant meat cache
+
+@inediate meat cache@
+%%%%
+revenant baked goods cache
+
+@inediate baked goods cache@
+%%%%
 spriggan fruit cache
 
 @short fruit cache@
@@ -654,19 +670,20 @@ troll fruit cache
 troll baked goods cache
 
 @oni baked goods cache@
-%%%%
-vampire fruit cache
-
-You root around, looking for a blood orange, but fail to find any.
-
-w:4
-You reach down and find a blood orange. Delicious.
-%%%%
-vampire baked goods cache
-
-You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
+%%%%
+amphisbaena fruit cache
+
+You distend one of your jaws to swallow @_fruit_and_reaction_@
+%%%%
+amphisbaena meat cache
+
+You distend one of your jaws to swallow @_meat_and_reaction_@
+%%%%
+amphisbaena baked goods cache
+
+You distend one of your jaws to swallow @_baked_good_and_reaction_@
 %%%%
 bat fruit cache
 
@@ -734,18 +751,6 @@ pig baked goods cache
 
 @short baked goods cache@
 %%%%
-snake fruit cache
-
-You distend your jaw to swallow @_fruit_and_reaction_@
-%%%%
-snake meat cache
-
-You distend your jaw to swallow @_meat_and_reaction_@
-%%%%
-snake baked goods cache
-
-You distend your jaw to swallow @_baked_good_and_reaction_@
-%%%%
 statue fruit cache
 
 @stone fruit cache@
@@ -777,3 +782,14 @@ tree meat cache
 tree baked goods cache
 
 @short baked goods cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+%%%%
+vampire baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.

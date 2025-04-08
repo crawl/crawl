@@ -33,6 +33,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mutation.h"
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
@@ -536,7 +537,7 @@ bool attack::distortion_affects_defender()
 void attack::antimagic_affects_defender(int pow)
 {
     obvious_effect =
-        enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
+        enchant_actor_with_flavour(defender, attacker, BEAM_DRAIN_MAGIC, pow);
 }
 
 void attack::pain_affects_defender()
@@ -1008,6 +1009,9 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
 {
     int margin = AUTOMATIC_HIT;
 
+    if (defender->is_player() && you.duration[DUR_AUTODODGE])
+        return -1000;
+
     if (randomise_ev)
         ev = random2avg(2*ev, 2);
     if (to_land >= AUTOMATIC_HIT)
@@ -1176,7 +1180,7 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
-        defender->expose_to_element(BEAM_COLD, 2);
+        defender->expose_to_element(BEAM_COLD, 2, attacker);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1377,7 +1381,6 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker);
         break;
 
-
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
             attacker->god_conduct(DID_EVIL, 2 + random2(3));
@@ -1428,12 +1431,15 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
     {
         // XXX: assumes "what" is singular
         special_damage_message = make_stringf(
-            "%s %s %s%s",
+            "%s %s %s%s%s",
             what ? what : atk_name(DESC_THE).c_str(),
             what ? conjugate_verb(verb, false).c_str()
                  : attacker->conj_verb(verb).c_str(),
             // Don't allow reflexive if the subject wasn't the attacker.
             defender_name(!what).c_str(),
+            flavour == BEAM_FIRE && defender->res_fire() < 0
+             || flavour == BEAM_COLD && defender->res_cold() < 0 ? " terribly"
+                : "",
             attack_strength_punctuation(special_damage).c_str());
     }
 }
@@ -1508,7 +1514,9 @@ void attack::player_stab_check()
 {
     // Stabbing monsters is unchivalric, and disabled under TSO!
     // (And also requires more finesse than just stumbling into a monster.)
-    if (you.confused() || have_passive(passive_t::no_stabbing))
+    // Water form also cannot stab from a distance.
+    if (you.confused() || have_passive(passive_t::no_stabbing)
+        || you.form == transformation::aqua && !adjacent(you.pos(), defender->pos()))
     {
         stab_attempt = false;
         stab_bonus = 0;
@@ -1607,22 +1615,15 @@ void attack::maybe_trigger_autodazzler()
         proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
         proj.attitude = ATT_FRIENDLY;
-        proj.is_tracer = true;
-        proj.is_targeting = true;
-
-        // To suppress prompts for aiming at allies. We'll never fire in that
-        // situation anyway.
-        proj.thrower = KILL_MON_MISSILE;
+        proj.thrower = KILL_YOU_MISSILE;
+        targeting_tracer tracer;
 
         // Make sure the beam path is clear
-        proj.fire();
-        if (proj.friend_info.count == 0)
+        proj.fire(tracer);
+        if (tracer.friend_info.count == 0)
         {
             mpr("Your autodazzler retaliates!");
 
-            proj.thrower = KILL_YOU_MISSILE;
-            proj.is_tracer = false;
-            proj.is_targeting = false;
             proj.fire();
         }
     }

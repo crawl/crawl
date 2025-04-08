@@ -48,7 +48,7 @@ actor_near_iterator& actor_near_iterator::operator++()
 actor_near_iterator actor_near_iterator::operator++(int)
 {
     actor_near_iterator copy = *this;
-    ++(*this);
+    advance();
     return copy;
 }
 
@@ -124,7 +124,7 @@ bool monster_near_iterator::operator!=(const monster_near_iterator &other)
 monster_near_iterator monster_near_iterator::operator++(int)
 {
     monster_near_iterator copy = *this;
-    ++(*this);
+    advance();
     return copy;
 }
 
@@ -188,16 +188,14 @@ monster* monster_iterator::operator->() const
 
 monster_iterator& monster_iterator::operator++()
 {
-    while (++i <= max)
-        if (env.mons[i].alive())
-            break;
+    advance();
     return *this;
 }
 
 monster_iterator monster_iterator::operator++(int)
 {
     monster_iterator copy = *this;
-    ++(*this);
+    advance();
     return copy;
 }
 

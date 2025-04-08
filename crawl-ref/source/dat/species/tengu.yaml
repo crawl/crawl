@@ -5,7 +5,6 @@ difficulty: Intermediate
 difficulty_priority: 40
 species_flags:
   - no_hair
-  - no_feet
   - no_ears
 aptitudes:
   xp: 0

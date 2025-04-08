@@ -1,0 +1,9 @@
+enum: medusa
+equivalent_mons: formless_jellyfish
+skill: {min: 8, max: 14}
+talisman: medusa
+melds: [helmet, cloak]
+resists: {poison: 1}
+fakemuts:
+  - ["stinger hair", "Your tendrils poison nearby enemies when you attack."]
+  - ["lithotoxin", "When significantly injured, you may petrify poisoned enemies."]

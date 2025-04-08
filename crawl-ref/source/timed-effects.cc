@@ -439,9 +439,9 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
 
     // Don't move non-land or stationary monsters around.
-    if (mons_primary_habitat(*mon) != HT_LAND
+    if (!(mons_habitat(*mon) & HT_DRY_LAND)
         || mons_is_zombified(*mon)
-           && mons_class_primary_habitat(mon->base_monster) != HT_LAND
+           && !(mons_class_habitat(mon->base_monster) & HT_DRY_LAND)
         || mon->is_stationary())
     {
         return;
@@ -556,7 +556,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
         case ENCH_SLOW: case ENCH_WEAK: case ENCH_EMPOWERED_SPELLS:
         case ENCH_BOUND: case ENCH_CONCENTRATE_VENOM: case ENCH_TOXIC_RADIANCE:
-        case ENCH_PAIN_BOND:
+        case ENCH_PAIN_BOND: case ENCH_PYRRHIC_RECOLLECTION:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -703,6 +703,10 @@ monster* update_monster(monster& mon, int turns)
     _catchup_monster_moves(&mon, turns);
 
     mon.foe_memory = max(mon.foe_memory - turns, 0);
+
+    // Yredelemnul bind soul requires the monster stay in our LOS
+    if (mon.has_ench(ENCH_SOUL_RIPE))
+        mon.del_ench(ENCH_SOUL_RIPE, true, false);
 
     // FIXME:  Convert literal string 10 to constant to convert to auts
     if (turns >= 10 && mon.alive())
@@ -920,17 +924,23 @@ void timeout_binding_sigils()
         mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
-// Force-cancel the player's toxic bog (in cases of !cancellation or quicksilver)
-void end_toxic_bog()
+void end_terrain_change(terrain_change_type type)
 {
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
             dynamic_cast<map_terrain_change_marker*>(mark);
 
-        if (marker->change_type == TERRAIN_CHANGE_BOG)
-            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BOG);
+        if (marker->change_type == type)
+            revert_terrain_change(marker->pos, type);
     }
+}
+
+void end_enkindled_status()
+{
+    mprf(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
+    you.duration[DUR_ENKINDLED] = 0;
+    you.props.erase(ENKINDLE_CHARGES_KEY);
 }
 
 void timeout_terrain_changes(int duration, bool force)

@@ -170,7 +170,8 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     case OBJ_BOOKS:
         return _is_book_type(item, is_evil_spell);
     case OBJ_TALISMANS:
-        return item.sub_type == TALISMAN_DEATH;
+        return item.sub_type == TALISMAN_DEATH
+                || item.sub_type == TALISMAN_VAMPIRE;
     default:
         return false;
     }
@@ -233,6 +234,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
+    case OBJ_BAUBLES:
         return true;
     default:
         return false;
@@ -415,7 +417,8 @@ bool god_despises_item(const item_def &item, god_type which_god)
 {
     if (item.base_type != OBJ_TALISMANS)
         return false;
-    return item.sub_type == TALISMAN_DEATH && is_good_god(which_god)
+    return (item.sub_type == TALISMAN_DEATH || item.sub_type == TALISMAN_VAMPIRE)
+                && is_good_god(which_god)
            || which_god == GOD_ZIN;
 }
 

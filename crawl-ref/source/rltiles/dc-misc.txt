@@ -110,6 +110,9 @@ percussive_tempering BOLT_PERCUSSIVE_TEMPERING
 
 fortress_blast BOLT_FORTRESS_BLAST
 
+bomblet_launch0 BOLT_BOMBLET_LAUNCH
+bomblet_launch1
+
 bomblet_blast0 BOLT_BOMBLET_BLAST
 bomblet_blast1
 
@@ -240,6 +243,15 @@ sap_magic BOLT_SAP_MAGIC
 doom_howl BOLT_DOOM_HOWL
 
 phantom_blitz BOLT_PHANTOM_BLITZ
+
+frostfire0 BOLT_FROSTFIRE
+frostfire1
+frostfire2
+frostfire3
+frostfire4
+frostfire5
+frostfire6
+frostfire7
 
 # Divine bolts
 shadow_beam0 BOLT_SHADOW_BEAM
@@ -410,6 +422,16 @@ cloud_blastmotes2
 cloud_magnetic0 CLOUD_MAGNETISED_DUST
 cloud_magnetic2
 cloud_magnetic2
+
+cloud_bat_mist0 CLOUD_BATS
+cloud_bat_mist1
+cloud_bat_mist2
+cloud_bat_mist3
+
+cloud_rust0 CLOUD_RUST
+cloud_rust1
+cloud_rust2
+cloud_rust3
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

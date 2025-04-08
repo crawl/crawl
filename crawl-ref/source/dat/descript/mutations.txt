@@ -220,12 +220,14 @@ stronger.
 %%%%
 naga tail mutation
 
-You have a long, snake-like tail in place of feet. The second level of this
-mutation allows you to constrict foes with your tail when attacking in melee.
-Your tail can constrict only one enemy at a time, and every attack at this
-mutation level will begin or renew a constriction attempt. The chances of
-succeeding are determined primarily by Dexterity, Fighting skill, and any
-slaying bonuses.
+You have a long, snake-like tail in place of feet. This gives you stability in
+water, but causes you to move much more slowly than most species.
+
+The second level of this mutation allows you to constrict foes with your tail
+when attacking in melee. Your tail can constrict only one enemy at a time, and
+every attack at this mutation level will begin or renew a constriction attempt.
+The chances of succeeding are determined primarily by Dexterity, Fighting skill,
+and any slaying bonuses.
 %%%%
 stinger mutation
 
@@ -235,14 +237,14 @@ sharper, longer, and stronger.
 %%%%
 weakness stinger mutation
 
-You have a thin, red tail, allowing you to tail-slap foes when launching melee
+You have a thin, orange tail, allowing you to attack foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
 into a sharp stinger. The third level of this mutation prevents wearing cloaks
 or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
-You have a large armoured tail, allowing you to tail-slap foes when launching
+You have a large scaly tail, allowing you to tail-slap foes when launching
 melee attacks.
 %%%%
 pseudopods mutation
@@ -630,12 +632,13 @@ extra vitality mutation
 You are built differently from most species, making you slightly harder to kill.
 Each level of this mutation increases your maximum health by 4 points.
 %%%%
-strong legs mutation
+frog-like legs mutation
 
-You have big, strong legs, allowing you to hop about with
-<input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
-land. The second level of this mutation allows you to hop farther. Each time
-you hop, you need to rest for a bit before you can hop again.
+Your uniquely muscular legs allow you to hop short distances in the blink of an
+eye with <input>$cmd[CMD_USE_ABILITY]</input>, though your walking speed is
+below average.
+
+The second level of this mutation allows you to hop farther.
 %%%%
 forlorn mutation
 
@@ -651,9 +654,11 @@ seen from.
 You are born to the light, increasing the distance that you can see and be seen
 from.
 %%%%
-petrification resistance mutation
+stone body mutation
 
-You are immune to petrification.
+You are made of living stone which is very resistant to damage. You gain a
+large bonus to your AC, which increases with your experience level, and are
+immune to petrification, poison, disease, sleep, and certain other effects.
 %%%%
 cold-blooded mutation
 
@@ -694,12 +699,6 @@ nimble swimmer mutation
 You can blend into the waves while swimming through water or flying above it,
 gaining Stealth+. The second level of this mutation also grants you improved
 evasion and increases your movement speed when in or above water.
-%%%%
-vampiric mutation
-
-You are cursed with vampirism, torn between false life and a bloodless,
-dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
-exsanguinate yourself or to fill once more with blood.
 %%%%
 divine attributes mutation
 
@@ -742,12 +741,11 @@ divine invocations can temporarily grant you the ability to regenerate.
 To compensate, you are able to heal yourself via the
 <input>$cmd[CMD_USE_ABILITY]</input> key, at the cost of permanent MP.
 %%%%
-strong nose mutation
+treasure sense mutation
 
-You have a powerful nose adapted to the Dungeon's scents, allowing you to
-detect where treasures lay hidden. As you explore the dungeon, nearby item
-locations that you cannot directly see will gain a marker for
-as-yet-undiscovered items.
+You have an uncanny knack for knowing where items can be found. As you explore
+the dungeon, nearby item locations that you cannot directly see will gain a
+marker for as-yet-undiscovered items.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -883,6 +881,170 @@ inviolate magic mutation
 Your magic is resistant to distruption by outside forces. Hostile effects which
 drain your MP drain only 1/3 as much and you are immune to having your magical
 effects be removed by anyone but yourself.
+%%%%
+formless mutation
+
+You have no physical body and instead interact with the world through haunting
+objects. This allows you to 'equip' up to 6 boots, gloves, cloaks, or helmets in
+any combination, but body armour is too large for you to usefully manipulate in
+this fashion.
+
+At higher levels, you can even send the armour you are haunting out to attack
+enemies independently for short periods of time.
+%%%%
+trickster mutation
+
+Your connection to the realm of the living grows stronger as you spread
+misfortune.
+
+Whenever you or your allies inflict new negative status effects upon nearby
+enemies (other than poison), your AC temporarily increases. This bonus improves
+with the number of different enemies affected, but will decay over time if you
+do not continue to inflict new misfortune.
+
+At your current XL, you can gain a maximum bonus of
+{{return 6 + you.xl() * 4 / 5;}} AC this way.
+%%%%
+mnemnophage mutation
+
+You devour the memories and even the very existence of those you kill, subsuming
+them in the unholy fire that wreathes your body.
+
+Once you have accumulated enough memories, you may choose to burn them all away
+as fuel to greatly enhance your spellcasting for a short period of time.
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+%%%%
+spellclaws mutation
+
+You instinctually channel destructive magic through your claws. When casting a
+damage-dealing spell, you also perform a melee attack against the most healthy
+enemy in your attack range.
+
+This attack does reduced damage if your attack speed is slower than your casting
+speed.
+# ------ Fakemut descriptions ------
+%%%%
+vampire fangs mutation
+
+When you perform a stab attack against a living monster with blood, you heal for
+a portion of the total damage dealt. When you are at 50% of your max HP or less,
+this has a chance to happen on all melee attacks which increases with your
+Shapeshifting skill.
+%%%%
+bloodcurse mutation
+
+When you kill a living monster with a stab attack, they may rise again to serve
+you as a vampiric thrall. Thralls possess all the abilities they had in life,
+but are undead, and gain a vampiric bite attack. Spellcaster thralls will also
+gain knowledge of the Vampiric Draining spell.
+
+You can only create a thrall if you do not have one already, and they will
+inevitably turn to dust after a short time.
+%%%%
+insubstantial mutation
+
+You are insubstantial and immune to many effects that require a solid body. You
+cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
+flame, or caught by webs, nets, or bolas.
+%%%%
+frigid aura mutation
+
+Your breath radiates an intense chill which freezes nearby walls solid as you
+fight.
+
+Whenever you attack, you turn a random wall adjacent to your target or yourself
+frigid. Frigid walls deal damage to any enemies adjacent to them each turn - up
+to twice as much when an enemy is adjacent to as many as possible. This damage
+increases with your shapeshifting skill.
+
+The walls will rapidly melt again if you stop attacking.
+%%%%
+hive swarm mutation
+
+Whenever an injury reduces your health to less than 50%, angry bees will swarm
+out of your body to defend you.
+
+This effect cannot happen again until your health is fully recovered.
+%%%%
+water reaching mutation
+
+Your body is formed of elemental water that changes shape flexibly, allowing you
+to reach and perform melee attacks from several tiles away - including auxiliary
+attacks of all sorts.
+
+The precision required to preform stab attacks is still impossible unless you're
+adjacent to your target.
+%%%%
+water splatter mutation
+
+When injured, parts of your watery body may splatter as puddles of shallow
+water nearby. The more damage you take at once, the more water is spread around.
+%%%%
+freeze response mutation
+
+Whenever you are exposed to cold damage, you have a chance to become Frozen,
+lowering your movement speed for a short while.
+%%%%
+steam response mutation
+
+Whenever you take fire damage from a projectile, you have a chance (increasing
+with the damage suffered) to spread steam clouds around yourself.
+%%%%
+airstrike attack mutation
+
+Whenever you strike an enemy in melee, the wind twists around and strikes them
+for additional damage which is increased for each empty space adjacent to them.
+%%%%
+hex mastery mutation
+
+Your Hexes spells are much easier to cast (reduced miscast chance and severity)
+and enemies have reduced willpower versus against all your effects.
+%%%%
+riddle compulsion mutation
+
+You compulsively pose riddles to enemies when you encounter them. Every now and
+again, these may confuse or vex them, but mostly they just attract their
+attention.
+%%%%
+werefury mutation
+
+Whenever you kill an enemy with a melee attack, you gain a temporary slaying
+bonus that increases with your Shapeshifting skill.
+
+This bonus stacks up to +12 and will not expire so long as you continue to
+perform melee attacks.
+%%%%
+werehowl mutation
+
+When you kill an enemy in melee, if your werefury bonus is at least 5, you may
+unleash a terrifying howl that attempts to freeze all nearby enemies in place
+with fear if it overcomes their willpower.
+%%%%
+stinger hair mutation
+
+Your hair is made of long prehensile jellyfish-like tendrils. Whenever you
+attack in melee, they will lash out and attempt to poison several enemies
+within 2 tiles of the player at random.
+
+The number of enemies they can afflict at once is improved by Shapeshifting
+skill.
+%%%%
+lithotoxin mutation
+
+When your health drops to 60% of your max HP or less, your tendrils reflexively
+attempt to petrify all poisoned enemies within 3 tiles of you.
+
+This effect cannot activate again until you fully heal and its success chance
+improves with your Shapeshifting skill.
+%%%%
+contaminating mutation
+
+When you strike an enemy in melee, a portion of the transmutational energy
+surging through will contaminate them. Upon landing the third strike in a row,
+this contamination will grow so acute that it will twist their bodily form,
+inflicting significant AC-ignoring damage and malmutating them.
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
@@ -1148,4 +1310,3 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
-%%%%

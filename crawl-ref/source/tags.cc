@@ -1315,6 +1315,121 @@ static void _shunt_monsters_out_of_walls()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
+static bool _is_spectral_weapon(const item_def& weapon)
+{
+    return get_weapon_brand(weapon) == SPWPN_SPECTRAL
+           || is_unrandom_artefact(weapon, UNRAND_GUARD);
+}
+
+static void _fix_player_spectral_weapon()
+{
+    if (!you.props.exists(SPECTRAL_WEAPON_KEY))
+        return;
+
+    mid_t weapon_mid = you.props[SPECTRAL_WEAPON_KEY].get_int();
+    you.props.erase(SPECTRAL_WEAPON_KEY);
+
+    monster* spectral_weapon = monster_by_mid(weapon_mid);
+    if (!spectral_weapon)
+        return;
+
+    vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+    weapons.erase(remove_if(weapons.begin(), weapons.end(),
+        [](const item_def* w) { return !_is_spectral_weapon(*w); }),
+        weapons.end());
+
+    item_def* spectral_item = spectral_weapon->mslot_item(MSLOT_WEAPON);
+
+    if (weapons.empty() || !spectral_item)
+    {
+        monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
+        return;
+    }
+
+    // Because the spectral weapon monster holds a copy of the weapon and
+    // the weapon can be changed afterwards (e.g. by being inscribed), we may
+    // not be able to find an exact match.
+    item_def* best_match = weapons[0];
+    for (size_t i = 1; i < weapons.size(); ++i)
+    {
+        item_def* weapon = weapons[i];
+
+        if (weapon->sub_type == spectral_item->sub_type
+            && best_match->sub_type != spectral_item->sub_type)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        if (weapon->plus == spectral_item->plus
+            && best_match->plus != spectral_item->plus)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        string spectral_item_name = "";
+        if (spectral_item->props.exists(WEAPON_NAME_KEY))
+            spectral_item_name = spectral_item->props[WEAPON_NAME_KEY].get_string();
+        string best_match_name = "";
+        if (best_match->props.exists(WEAPON_NAME_KEY))
+            best_match_name = best_match->props[WEAPON_NAME_KEY].get_string();
+        string weapon_name = "";
+        if (weapon->props.exists(WEAPON_NAME_KEY))
+            weapon_name = weapon->props[WEAPON_NAME_KEY].get_string();
+        if (weapon_name == spectral_item_name
+            && best_match_name != spectral_item_name)
+        {
+            best_match = weapon;
+            break;
+        }
+
+        if (weapon->inscription == spectral_item->inscription
+            && best_match->inscription != spectral_item->inscription)
+        {
+            best_match = weapon;
+            break;
+        }
+    }
+    best_match->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+}
+
+static void _fix_spectral_weapons()
+{
+    _fix_player_spectral_weapon();
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monster* mons = *mi;
+        // Monsters as of TAG_MINOR_SPECTRAL_DUAL_WIELDING can only have one
+        // spectral weapon that we'd have to fix.
+        if (mons->props.exists(SPECTRAL_WEAPON_KEY))
+        {
+            mid_t weapon_mid = mons->props[SPECTRAL_WEAPON_KEY].get_int();
+            mons->props.erase(SPECTRAL_WEAPON_KEY);
+
+            item_def* weapon = mons->mslot_item(MSLOT_WEAPON);
+            if (weapon && _is_spectral_weapon(*weapon))
+            {
+                weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+                continue;
+            }
+
+            weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
+            if (weapon && _is_spectral_weapon(*weapon))
+            {
+                weapon->props[SPECTRAL_WEAPON_KEY].get_int() = weapon_mid;
+                continue;
+            }
+
+            monster* spectral_weapon = monster_by_mid(weapon_mid);
+            if (spectral_weapon)
+                monster_die(*spectral_weapon, KILL_RESET, NON_MONSTER, true);
+        }
+    }
+}
+#endif
+
 // Read a piece of data from inf into memory, then run the appropriate reader.
 //
 // minorVersion is available for any sub-readers that need it
@@ -1443,6 +1558,13 @@ void tag_read(reader &inf, tag_type tag_id)
                 }
             }
 
+#if TAG_MAJOR_VERSION == 34
+        // We must do this after loading the player, monsters, and items, but
+        // before removing any items.
+        if (th.getMinorVersion() < TAG_MINOR_SPECTRAL_DUAL_WIELDING)
+            _fix_spectral_weapons();
+#endif
+
         // These you-related changes have to be after terrain is loaded,
         // because they might cause you to lose flight. That will check
         // the terrain below you and crash if the map hasn't loaded yet.
@@ -1526,7 +1648,6 @@ static void _tag_construct_you(writer &th)
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
     marshallBoolean(th, you.fishtail);
-    marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
     _marshall_as_int(th, you.default_form);
     CANARY;
@@ -2790,12 +2911,11 @@ static void _tag_read_you(reader &th)
 #endif
     you.fishtail        = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT)
-        you.vampire_alive = unmarshallBoolean(th);
-    else
-        you.vampire_alive = true;
-#else
-    you.vampire_alive   = unmarshallBoolean(th);
+    if (th.getMinorVersion() >= TAG_MINOR_VAMPIRE_NO_EAT
+        && th.getMinorVersion() < TAG_MINOR_REMOVE_VAMPIRES)
+    {
+        unmarshallBoolean(th);
+    }
 #endif
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
@@ -3035,7 +3155,8 @@ static void _tag_read_you(reader &th)
         if (th.getMinorVersion() < TAG_MINOR_NEW_DRACONIAN_BREATH
             && species::is_draconian(you.species) && you.experience_level >= 7)
         {
-            if (a == ABIL_BREATHE_FIRE)
+            // XXX: Used to be ABIL_BREATHE_FIRE
+            if (a == ABIL_GOLDEN_BREATH)
                 a = ABIL_COMBUSTION_BREATH;
 
             // Give some charges to existing draconians
@@ -3549,7 +3670,6 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DISTRIBUTED_TRAINING, SP_GNOLL);
     SP_MUT_FIX(MUT_MERTAIL, SP_MERFOLK);
     SP_MUT_FIX(MUT_TENTACLE_ARMS, SP_OCTOPODE);
-    SP_MUT_FIX(MUT_VAMPIRISM, SP_VAMPIRE);
     SP_MUT_FIX(MUT_FLOAT, SP_DJINNI);
     SP_MUT_FIX(MUT_INNATE_CASTER, SP_DJINNI);
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
@@ -3561,6 +3681,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
     SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
     SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
+    SP_MUT_FIX(MUT_ARMOURED_TAIL, SP_ARMATAUR);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
@@ -3581,14 +3702,22 @@ static void _tag_read_you(reader &th)
     }
     // not sure this is safe for SP_MUT_FIX, leaving it out for now
     if (you.species == SP_GREY_DRACONIAN || you.species == SP_GARGOYLE
-        || you.species == SP_GHOUL || you.species == SP_MUMMY
-        || you.species == SP_VAMPIRE)
+        || you.species == SP_GHOUL || you.species == SP_MUMMY)
     {
         _fixup_species_mutations(MUT_UNBREATHING);
     }
 
     if (you.species == SP_FELID && you.has_innate_mutation(MUT_FAST))
         _fixup_species_mutations(MUT_FAST);
+
+    if (species::is_draconian(you.species))
+        _fixup_species_mutations(MUT_ARMOURED_TAIL);
+
+    if ((you.species == SP_NAGA || you.species == SP_BARACHI)
+        && you.has_innate_mutation(MUT_SLOW))
+    {
+        _fixup_species_mutations(MUT_SLOW);
+    }
 
     #undef SP_MUT_FIX
 
@@ -6446,7 +6575,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (mi.mresists & MR_OLD_RES_ACID)
-        set_resist(mi.mresists, MR_RES_ACID, 3);
+        set_resist(mi.mresists, MR_RES_CORR, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
@@ -7638,7 +7767,7 @@ static void _tag_read_level_monsters(reader &th)
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
 
-    env.max_mon_index = count;
+    env.max_mon_index = max(0, count - 1);
     for (int i = 0; i < count; i++)
     {
         monster& m = env.mons[i];
@@ -8080,6 +8209,8 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.xl               = unmarshallShort(th);
     ghost.max_hp           = unmarshallShort(th);
     ghost.ev               = unmarshallShort(th);
+    if (ghost.ev > MAX_GHOST_EVASION)
+        ghost.ev = MAX_GHOST_EVASION;
     ghost.ac               = unmarshallShort(th);
     ghost.damage           = unmarshallShort(th);
     ghost.speed            = unmarshallShort(th);
@@ -8090,11 +8221,11 @@ static ghost_demon _unmarshallGhost(reader &th)
 #endif
     ghost.move_energy      = unmarshallShort(th);
     // fix up ghost_demons that forgot to have move_energy initialized
-    if (ghost.move_energy < FASTEST_PLAYER_MOVE_SPEED
-        || ghost.move_energy > 15) // Ponderous naga
-    {
-        ghost.move_energy = 10;
-    }
+    if (ghost.move_energy < FASTEST_PLAYER_MOVE_SPEED)
+        ghost.move_energy = FASTEST_PLAYER_MOVE_SPEED;
+    else if (ghost.move_energy > 30)
+        ghost.move_energy = 30;
+
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
@@ -8102,7 +8233,7 @@ static ghost_demon _unmarshallGhost(reader &th)
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (ghost.resists & MR_OLD_RES_ACID)
-        set_resist(ghost.resists, MR_RES_ACID, 3);
+        set_resist(ghost.resists, MR_RES_CORR, 3);
     if (th.getMinorVersion() < TAG_MINOR_NO_GHOST_SPELLCASTER)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_MON_COLOUR_LOOKUP)

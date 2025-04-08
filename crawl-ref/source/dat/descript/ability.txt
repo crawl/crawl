@@ -64,24 +64,6 @@ Uses your peerless coglin ingenuity to invent and assemble a one-of-a-kind
 piece of equipment and permanently install it in yourself. Such inspiration
 does not strike twice, so choose wisely.
 %%%%
-Bat Form ability
-
-Transforms the user into a swift-moving vampire bat, increasing evasion but
-substantially weakening melee attacks. The transformation drains the user's
-attributes.
-
-While transformed, any equipped weapons, armour and rings are melded, and the
-user becomes unable to cast spells.
-%%%%
-Exsanguinate ability
-
-Remove all of your blood, transitioning to a bloodless state.
-%%%%
-Revivify ability
-
-Return to life, transitioning from bloodless to alive. This process renders
-the user temporarily frail.
-%%%%
 Hurl Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
@@ -133,10 +115,6 @@ Turns the user invisible. Turning invisible in this way causes magical
 contamination. Reaching high levels of contamination will cause you to glow
 brightly, nullifying the invisibility.
 %%%%
-Evoke Thunderclouds ability
-
-Creates a mighty thundercloud surrounding the user.
-%%%%
 End Transformation ability
 
 Reverts you to your normal form.
@@ -161,6 +139,59 @@ Imprint Weapon ability
 Analyzes the structural composition of an artefact melee weapon in your
 inventory and imprints it upon your Platinum Paragon spell, allowing it to wield
 a functional replica of it whenever you create one.
+%%%%
+Cacophony ability
+
+Fully manifests your poltergeist nature, making all the armour you are haunting
+fly out and attack independently of your other actions for a short while - boots
+and scarves and helmets assailing your foes from all directions while a gleeful
+din fills the air.
+
+These items are still tethered to you and cannot be directed more than a short
+distance away, but you do not share any damage they suffer and can freely fire
+through them. Their attacks may inflict a variety of minor maladies on your
+foes - sometimes dazing, draining, or even confusing them.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Bat Swarm ability
+
+Scatters your physical form into a swarm of vampire bats, melding your equipment
+but allowing you to move quickly and evasively. The number of bats that issue
+from your body is so immense that it even fills nearby spaces like a choking
+cloud, assailing enemies and gradually putting them to sleep.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Enkindle ability
+
+Stokes your ghostly flames to a fever pitch, greatly enhancing your spellcasting
+at the cost of burning away all accumulated memories.
+
+While in this state, your damage-dealing spells cost no MP, are unaffected by
+encumbrance, and you receive a bonus to their spell success and power (the
+latter of which increases with your experience level). Any spellclaw attack made
+while Enkindled inflicts bonus damage proportional to the level of spell cast,
+and heals you for a percentage of the damage dealt.
+
+Each spell you cast while Enkindled consumes a memory, and the state will end
+once you have no more left (or after a short period of time, regardless).
+
+At your current experience level, you can hold enough memories to cast a maximum
+of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+%%%%
+Breathe Rust ability
+
+Exhales a blast of oxidizing vapour that continuously corrodes and weakens the
+attacks of creatures which stand inside it. These clouds are long-lasting, but
+do only minimal damage.
+%%%%
+Golden Breath ability
+
+Exhales a powerful blast of elemental devastation, which inflicts both fire and
+cold damage, and leaves clouds of poisonous vapour in its wake.
 %%%%
 # Zin
 Recite ability
@@ -1041,3 +1072,32 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+Jump ability
+
+Leaps through the air in the blink of an eye. While it is impossible to control
+your destination, the movement is so abrupt and agile that no monster will be
+able to land a blow on you until you can act again, and many may lose track of
+your position entirely.
+
+You must spend a short while recovering between each use of this ability.
+%%%%
+Watery Grave ability
+
+Turns all of the water near you into a surging tide that attempts to drown every
+enemy standing in or above it. Those who need air to breathe it will also become
+Waterlogged, preventing them from casting spells affected by Silence for several
+turns.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Bestial Takedown ability
+
+Unleashes the full power of your predatory instincts to leap towards a terrified
+enemy and perform a vicious melee attack against them. This attack receives a
+damage multiplier based on your Shapeshifting skill. If it kills them, you will
+always perform a Howl afterward.
+
+Can only target an enemy who is afraid, and who has at least one occupiable tile
+adjacent to them.

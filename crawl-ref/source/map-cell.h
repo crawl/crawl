@@ -1,5 +1,7 @@
 #pragma once
 
+#include <libutil.h>
+
 #include "enum.h"
 #include "mon-info.h"
 #include "tag-version.h"
@@ -48,9 +50,24 @@ struct cloud_info
         : type(t), colour(c), duration(dur), tile(til), pos(gc), killer(kill)
     { }
 
+    friend bool operator==(const cloud_info &lhs, const cloud_info &rhs) {
+        return lhs.type == rhs.type
+               && lhs.colour == rhs.colour
+               && lhs.duration == rhs.duration
+               && lhs.tile == rhs.tile
+               && lhs.pos == rhs.pos
+               && lhs.killer == rhs.killer;
+    }
+
+    friend bool operator!=(const cloud_info &lhs, const cloud_info &rhs) {
+        return !(lhs == rhs);
+    }
+
+
     cloud_type type:8;
     colour_t colour;
     uint8_t duration; // decay/20, clamped to 0-3
+    // TODO: should this be tileidx_t?
     unsigned short tile;
     coord_def pos;
     killer_type killer;
@@ -59,63 +76,69 @@ struct cloud_info
 /*
  * A map_cell stores what the player knows about a cell.
  * These go in env.map_knowledge.
+ * TODO: this can shrink to 32 bytes by shrinking enums
  */
 struct map_cell
 {
-    map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _trap(TRAP_UNASSIGNED), _cloud(0), _item(0), _mons(0)
+    // TODO: in C++20 we can give these a default member initializer
+    map_cell() : _feat(DNGN_UNSEEN),
+                 _trap(TRAP_UNASSIGNED)
     {
     }
 
-    map_cell(const map_cell& c)
+    ~map_cell() = default;
+
+    // copy constructor
+    map_cell(const map_cell& o)
     {
-        memcpy(this, &c, sizeof(map_cell));
-        if (_cloud)
-            _cloud = new cloud_info(*_cloud);
-        if (_mons)
-            _mons = new monster_info(*_mons);
-        if (_item)
-            _item = new item_def(*_item);
+        *this = o;
     }
 
-    ~map_cell()
+    // copy assignment
+    map_cell& operator=(const map_cell& o)
     {
-        if (_cloud)
-            delete _cloud;
-        if (!(flags & MAP_DETECTED_MONSTER) && _mons)
-            delete _mons;
-        if (_item)
-            delete _item;
-    }
-
-    map_cell& operator=(const map_cell& c)
-    {
-        if (&c == this)
+        if (this == &o)
             return *this;
-        if (_cloud)
-            delete _cloud;
-        if (_mons)
-            delete _mons;
-        if (_item)
-            delete _item;
-        memcpy(this, &c, sizeof(map_cell));
-        if (_cloud)
-            _cloud = new cloud_info(*_cloud);
-        if (_mons)
-            _mons = new monster_info(*_mons);
-        if (_item)
-            _item = new item_def(*_item);
+
+        flags = o.flags;
+        _feat = o._feat;
+        _feat_colour = o._feat_colour;
+        _trap = o._trap;
+        _cloud = o._cloud ? make_unique<cloud_info>(*o._cloud) : nullptr;
+        _item = o._item ? make_unique<item_def>(*o._item) : nullptr;
+        _mons = o._mons ? make_unique<monster_info>(*o._mons) : nullptr;
+
         return *this;
     }
 
-    bool operator ==(const map_cell &other) const
+    // move constructor
+    map_cell(map_cell&& o) noexcept = default;
+    // move assignment
+    // XXX: Using the default implementation causes a compiler error on gcc
+    // 4.7, so we specify the implementation for now.
+    map_cell& operator=(map_cell&& o) noexcept
     {
-        return memcmp(this, &other, sizeof(map_cell)) == 0;
+        flags = o.flags;
+        _feat = o._feat;
+        _feat_colour = o._feat_colour;
+        _trap = o._trap;
+        _cloud = std::move(o._cloud);
+        _item = std::move(o._item);
+        _mons = std::move(o._mons);
+        return *this;
     }
 
-    bool operator !=(const map_cell &other) const
-    {
-        return memcmp(this, &other, sizeof(map_cell)) != 0;
+    friend bool operator==(const map_cell &lhs, const map_cell &rhs) {
+        // TODO: consider providing a proper equality operator
+        // item_def and monster_info currently lack such operators
+        // Which makes it impossible for map_cell to provide one
+        // As far as I can tell, packed_cell is the only user of this
+        // And packed_cell operator== doesn't *seem* to be used
+        return &lhs == &rhs;
+    }
+
+    friend bool operator!=(const map_cell &lhs, const map_cell &rhs) {
+        return !(lhs == rhs);
     }
 
     void clear()
@@ -137,7 +160,7 @@ struct map_cell
         // Ugh; MSVC makes the bit field signed even though that means it can't
         // actually hold all the enum values. That seems to be in contradiction
         // of the standard (§9.6 [class.bit] paragraph 4) but what can you do?
-        return static_cast<dungeon_feature_type>(uint8_t(_feat));
+        return static_cast<dungeon_feature_type>(static_cast<uint8_t>(_feat));
     }
 
     unsigned feat_colour() const
@@ -155,7 +178,7 @@ struct map_cell
 
     item_def* item() const
     {
-        return _item;
+        return _item.get();
     }
 
     bool detected_item() const
@@ -173,7 +196,7 @@ struct map_cell
     void set_item(const item_def& ii, bool more_items)
     {
         clear_item();
-        _item = new item_def(ii);
+        _item = make_unique<item_def>(ii);
         if (more_items)
             flags |= MAP_MORE_ITEMS;
     }
@@ -182,31 +205,25 @@ struct map_cell
 
     void clear_item()
     {
-        if (_item)
-        {
-            delete _item;
-            _item = 0;
-        }
+        // TODO: internal callers are doing a bit of duplicate work here
+        _item.reset();
         flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS);
     }
 
     monster_type monster() const
     {
-        if (_mons)
-            return _mons->type;
-        else
-            return MONS_NO_MONSTER;
+        return _mons ? _mons->type : MONS_NO_MONSTER;
     }
 
     monster_info* monsterinfo() const
     {
-        return _mons;
+        return _mons.get();
     }
 
     void set_monster(const monster_info& mi)
     {
         clear_monster();
-        _mons = new monster_info(mi);
+        _mons = make_unique<monster_info>(mi);
     }
 
     bool detected_monster() const
@@ -222,7 +239,7 @@ struct map_cell
     void set_detected_monster(monster_type mons)
     {
         clear_monster();
-        _mons = new monster_info(MONS_SENSED);
+        _mons = make_unique<monster_info>(MONS_SENSED);
         _mons->base_type = mons;
         flags |= MAP_DETECTED_MONSTER;
     }
@@ -235,47 +252,35 @@ struct map_cell
 
     void clear_monster()
     {
-        if (_mons)
-            delete _mons;
+        // TODO: internal callers are doing a bit of duplicate work here
+        _mons.reset();
         flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
-        _mons = 0;
     }
 
     cloud_type cloud() const
     {
-        if (_cloud)
-            return _cloud->type;
-        else
-            return CLOUD_NONE;
+        return _cloud ? _cloud->type : CLOUD_NONE;
     }
 
+    // TODO: should this be colour_t?
     unsigned cloud_colour() const
     {
-        if (_cloud)
-            return _cloud->colour;
-        else
-            return 0;
+        return _cloud ? _cloud->colour : static_cast<colour_t>(0);
     }
 
     cloud_info* cloudinfo() const
     {
-        return _cloud;
+        return _cloud.get();
     }
 
     void set_cloud(const cloud_info& ci)
     {
-        if (_cloud)
-            delete _cloud;
-        _cloud = new cloud_info(ci);
+        _cloud = make_unique<cloud_info>(ci);
     }
 
     void clear_cloud()
     {
-        if (_cloud)
-        {
-            delete _cloud;
-            _cloud = 0;
-        }
+        _cloud.reset();
     }
 
     bool update_cloud_state();
@@ -311,12 +316,13 @@ struct map_cell
     }
 
 public:
-    uint32_t flags;   // Flags describing the mappedness of this square.
+    uint32_t flags = 0;   // Flags describing the mappedness of this square.
 private:
+    // TODO: shrink enums, shrink/re-order cloud_info and inline it
     dungeon_feature_type _feat:8;
-    colour_t _feat_colour;
+    colour_t _feat_colour = 0;
     trap_type _trap:8;
-    cloud_info* _cloud;
-    item_def* _item;
-    monster_info* _mons;
+    unique_ptr<cloud_info> _cloud;
+    unique_ptr<item_def> _item;
+    unique_ptr<monster_info> _mons;
 };

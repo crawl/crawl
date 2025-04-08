@@ -11,6 +11,7 @@
 #include <functional>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
 #include "branch.h"
@@ -499,7 +500,7 @@ bool feat_is_diggable(dungeon_feature_type feat)
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
            || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE
-           || feat == DNGN_PETRIFIED_TREE;
+           || feat == DNGN_PETRIFIED_TREE || feat == DNGN_FRIGID_WALL;
 }
 
 /** Is this feature a type of trap?
@@ -514,15 +515,30 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
+/** Is this feature a type of water that is too deep for most creatures to
+*   wade through?
+*/
+bool feat_is_deep_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_DEEP_WATER
+           || feat == DNGN_OPEN_SEA;
+}
+
+/** Is this feature a type of water that is shallow enough to wade through?
+*/
+bool feat_is_shallow_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_SHALLOW_WATER
+           || feat == DNGN_TOXIC_BOG
+           || feat == DNGN_MANGROVE;
+}
+
 /** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
-    return feat == DNGN_SHALLOW_WATER
-           || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA
-           || feat == DNGN_TOXIC_BOG
-           || feat == DNGN_MANGROVE;
+    return feat_is_shallow_water(feat)
+           || feat_is_deep_water(feat);
 }
 
 /** Is this feature a kind of lava?
@@ -2552,7 +2568,51 @@ void ice_wall_damage(monster &mons, int delay)
         if (mons.alive())
         {
             behaviour_event(&mons, ME_WHACK, &you);
-            mons.expose_to_element(BEAM_COLD, orig_dam);
+            mons.expose_to_element(BEAM_COLD, orig_dam, &you);
+        }
+    }
+}
+
+void frigid_walls_damage(int delay)
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (mi->wont_attack())
+            continue;
+
+        int wall_count = 0;
+        for (adjacent_iterator ai(mi->pos()); ai; ++ai)
+            if (env.grid(*ai) == DNGN_FRIGID_WALL)
+                ++wall_count;
+
+        if (wall_count == 0)
+            continue;
+
+        int base_dmg = get_form()->get_special_damage().roll();
+        const int wall_bonus = (wall_count - 1) * 100 / 6;
+        base_dmg = div_rand_round(base_dmg * (100 + wall_bonus), 100);
+
+        const int post_ac_dam = mi->apply_ac(base_dmg);
+        const int orig_dam = div_rand_round(delay * post_ac_dam, BASELINE_DELAY);
+
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+        int dam = mons_adjust_flavoured(*mi, beam, orig_dam);
+        mprf("The frigid air chills %s%s%s",
+            you.can_see(**mi) ? mi->name(DESC_THE).c_str() : "something",
+            dam ? "" : " but does no damage",
+            attack_strength_punctuation(dam).c_str());
+
+        if (dam > 0)
+        {
+            mi->hurt(&you, dam, BEAM_COLD);
+
+            if (mi->alive())
+            {
+                behaviour_event(*mi, ME_WHACK, &you);
+                mi->expose_to_element(BEAM_COLD, orig_dam, &you);
+            }
         }
     }
 }

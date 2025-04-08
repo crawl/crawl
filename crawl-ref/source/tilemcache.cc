@@ -271,10 +271,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     switch (mon_tile)
     {
     // No shift necessary.
-    case TILEP_MONS_DEEP_ELF_ARCHER:
-    case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
-    case TILEP_MONS_DEEP_ELF_BLADEMASTER:
-    case TILEP_MONS_HEADMASTER:
     case TILEP_MONS_CRIMSON_IMP:
     case TILEP_MONS_CERULEAN_IMP:
     case TILEP_MONS_IRON_IMP:
@@ -299,11 +295,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_WIGLAF:
     case TILEP_MONS_PLAYER_SHADOW_DRACONIAN:
     case TILEP_MONS_PLAYER_SHADOW_ONI:
+    case TILEP_MONS_XAKKRIXIS:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
     // Shift to the left.
-    case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
     case TILEP_MONS_DEMONSPAWN:
     case TILEP_MONS_PLAYER_SHADOW_DEMONSPAWN:
     case TILEP_MONS_DEMONSPAWN_BLOOD_SAINT:
@@ -390,8 +386,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift upwards.
     case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
-    case TILEP_MONS_DEEP_ELF_SORCERER:
-    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
     case TILEP_MONS_HELL_KNIGHT:
     case TILEP_MONS_DEATH_KNIGHT:
     case TILEP_MONS_MUMMY:
@@ -429,7 +423,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -4;
         break;
     // Shift downwards.
-    case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_DEEP_DWARF:
     case TILEP_MONS_PLAYER_SHADOW_DWARF:
@@ -444,15 +437,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 2;
         break;
     // Shift upwards and to the left.
-    case TILEP_MONS_DEEP_ELF_AIR_MAGE:
-    case TILEP_MONS_DEEP_ELF_FIRE_MAGE:
-    case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
-    case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
     case TILEP_MONS_FRAVASHI:
     case TILEP_MONS_MINOTAUR:
     case TILEP_MONS_PLAYER_SHADOW_MINOTAUR:
     case TILEP_MONS_VAMPIRE:
-    case TILEP_MONS_PLAYER_SHADOW_VAMPIRE:
         *ofs_x = -1;
         *ofs_y = -2;
         break;
@@ -501,13 +489,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_NECROMANCER:
     case TILEP_MONS_IRONBOUND_BEASTMASTER:
-    case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
-    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_1:
-    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
-    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
     case TILEP_MONS_FORMICID:
     case TILEP_MONS_PLAYER_SHADOW_FORMICID:
-    case TILEP_MONS_XAKKRIXIS:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -550,6 +533,39 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -3;
         *ofs_y = -1;
         break;
+    case TILEP_MONS_DEEP_ELF_ARCHER:
+    case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
+    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
+    case TILEP_MONS_DEEP_ELF_KNIGHT:
+    case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
+    case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
+    case TILEP_MONS_PLAYER_SHADOW_ELF:
+    case TILEP_MONS_ELF:
+        *ofs_x = -2;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_DEEP_ELF_SORCERER:
+    case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
+    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_1:
+    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
+    case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
+        *ofs_x = -2;
+        *ofs_y = -3;
+        break;
+    case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
+        *ofs_x = -3;
+        *ofs_y = -3;
+        break;
+    case TILEP_MONS_DEEP_ELF_BLADEMASTER:
+    case TILEP_MONS_HEADMASTER:
+        *ofs_x = -3;
+        *ofs_y = -4;
+        break;
+    case TILEP_MONS_DEEP_ELF_AIR_MAGE:
+    case TILEP_MONS_DEEP_ELF_FIRE_MAGE:
+        *ofs_x = -1;
+        *ofs_y = -4;
+        break;
     // Shift upwards and to the right.
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
@@ -582,11 +598,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MAD_ACOLYTE_OF_LUGONU:
         *ofs_x = -3;
         *ofs_y = -2;
-        break;
-    case TILEP_MONS_ELF:
-    case TILEP_MONS_PLAYER_SHADOW_ELF:
-        *ofs_x = 2;
-        *ofs_y = -3;
         break;
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_HUMAN_1:
@@ -661,6 +672,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = -10;
         break;
+    case TILEP_TRAN_FORTRESS_CRAB:
+        *ofs_x = -1;
+        *ofs_y = 3;
+        break;
     // Shift downwards and to the right.
     case TILEP_MONS_OGRE:
     case TILEP_MONS_SWAMP_OGRE:
@@ -688,7 +703,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 11;
         break;
     case TILEP_MONS_GHOUL:
-    case TILEP_MONS_PLAYER_SHADOW_GHOUL:
         *ofs_x = -3;
         *ofs_y = -3;
         break;
@@ -744,6 +758,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_STARCURSED_MASS:
     case TILEP_MONS_EXECUTIONER:
+    case TILEP_MONS_PLAYER_SHADOW_REVENANT:
         *ofs_x = -4;
         *ofs_y = 4;
         break;
@@ -764,6 +779,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
     case TILEP_MONS_HELL_SENTINEL:
+    case TILEP_MONS_PLAYER_SHADOW_POLTERGEIST:
         *ofs_x = -1;
         *ofs_y = 4;
         break;
@@ -905,6 +921,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 0;
         break;
 
+    case TILEP_MONS_XAKKRIXIS:
+        *ofs_x = 3;
+        *ofs_y = -2;
+        break;
+
     case TILEP_MONS_ARACHNE_STAVELESS:
         *ofs_x = -6;
         *ofs_y = 1;
@@ -932,14 +953,18 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 1;
         break;
 
+    // Second weapons
+    case TILEP_MONS_DEEP_ELF_BLADEMASTER:
+    case TILEP_MONS_HEADMASTER:
+        *ofs_x = 2;
+        *ofs_y = -2;
+        break;
+
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_HUMAN_1:
     case TILEP_MONS_HUMAN_2:
-    case TILEP_MONS_DEEP_ELF_BLADEMASTER: // second weapon
-    case TILEP_MONS_HEADMASTER:
     case TILEP_MONS_LOUISE:
     case TILEP_MONS_FORMICID:
-    case TILEP_MONS_XAKKRIXIS:
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_CHERUB:

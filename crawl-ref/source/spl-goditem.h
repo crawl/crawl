@@ -69,6 +69,11 @@ const enchant_type dispellable_enchantments[] =
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,
     ENCH_ARMED,
+    ENCH_VITRIFIED,
+    ENCH_CURSE_OF_AGONY,
+    ENCH_RIMEBLIGHT,
+    ENCH_MAGNETISED,
+    ENCH_BLINKITIS,
 };
 
 bool player_is_debuffable();

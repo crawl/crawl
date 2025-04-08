@@ -1093,8 +1093,8 @@ dgn.delayed_decay_extra(_G, "M", "elf skeleton",
     ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
--- Deep Dwarf artificer.
-dgn.delayed_decay_extra(_G, "N", "dwarf skeleton",
+-- Coglin artificer.
+dgn.delayed_decay_extra(_G, "N", "goblin skeleton",
     "any wand, any misc, any wand / any misc / nothing w:20" ..
     ", any weapon good_item / any armour good_item / gold / any scroll" ..
     "    / any potion / nothing w:50")

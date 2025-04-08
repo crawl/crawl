@@ -5,7 +5,6 @@
 #include "beam.h"
 #include "coordit.h"
 #include "los-type.h"
-#include "reach-type.h"
 
 using std::vector;
 
@@ -204,8 +203,8 @@ public:
 class targeter_reach : public targeter
 {
 public:
-    targeter_reach(const actor* act, reach_type ran = REACH_NONE);
-    reach_type range;
+    targeter_reach(const actor* act, int ran = 1);
+    int range;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };
@@ -558,6 +557,15 @@ public:
     targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_poisonous_vapours : public targeter_smite
+{
+public:
+    targeter_poisonous_vapours(const actor *act, int range);
+    bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_boulder : public targeter_beam
 {
 public:
@@ -724,5 +732,39 @@ class targeter_teleport_other : public targeter_smite
 {
 public:
     targeter_teleport_other(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_malign_gateway : public targeter
+{
+public:
+    targeter_malign_gateway(actor& caster);
+    aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def) override { return true; }
+};
+
+class targeter_watery_grave : public targeter_radius
+{
+public:
+    targeter_watery_grave();
+    aff_type is_affected(coord_def loc) override;
+};
+
+class targeter_bestial_takedown : public targeter_smite
+{
+public:
+    targeter_bestial_takedown();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    vector<coord_def> landing_spots;
+};
+
+class targeter_paragon_deploy : public targeter_smite
+{
+public:
+    targeter_paragon_deploy(int range);
     bool valid_aim(coord_def a) override;
 };

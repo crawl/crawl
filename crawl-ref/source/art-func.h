@@ -47,7 +47,7 @@
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
-#include "spl-damage.h"    // For the Singing Sword.
+#include "spl-damage.h"    // For the Singing Sword and the Sword of Power.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
@@ -296,17 +296,7 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
     coord_def targ = defender->pos();
 
     for (int i = 0; i < num_beams; i++)
-    {
-        bolt beam;
-        beam.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
-        beam.source    = attacker->pos();
-        beam.source_id = attacker->mid;
-        beam.attitude  = attacker->temp_attitude();
-        beam.range = 4;
-        beam.target = targ;
-        zappy(ZAP_SWORD_BEAM, 100, false, beam);
-        beam.fire();
-    }
+        fire_life_bolt(*attacker, targ);
 }
 
 ////////////////////////////////////////////////////
@@ -466,23 +456,6 @@ static void _TROG_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "You feel less violent.");
-}
-
-///////////////////////////////////////////////////
-
-// XXX: Always getting maximal vampiric drain is hardcoded in
-// attack::apply_damage_brand()
-
-static void _VAMPIRES_TOOTH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
-{
-    if (!you.has_mutation(MUT_VAMPIRISM))
-        _equip_mpr(show_msgs, "You feel strangely empty.");
-    else if (you.vampire_alive)
-    {
-        _equip_mpr(show_msgs,
-                   "You feel a strange hunger, and smell blood in the air...");
-    }
-    // else let player-equip.cc handle message
 }
 
 ///////////////////////////////////////////////////
@@ -831,12 +804,12 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
 
         if (one_chance_in(10))
         {
-            defender->polymorph(0); // Low duration if applied to the player.
+            defender->polymorph(random_range(7, 14)); // Low duration if applied to the player.
             return;
         }
 
         if (defender->is_monster())
-            defender->malmutate("the plutonium sword");
+            defender->malmutate(attacker, "the plutonium sword");
         else
         {
             mpr(random_choose("Your body deforms painfully.",
@@ -990,7 +963,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     defender->hurt(attacker, bonus_dam, flavour);
 
     if (defender->alive() && flavour != BEAM_NONE)
-        defender->expose_to_element(flavour, 2);
+        defender->expose_to_element(flavour, 2, attacker);
 }
 
 ///////////////////////////////////////////////////
@@ -1006,7 +979,7 @@ static void _ARC_BLADE_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                     actor* /*defender*/, bool /*mondied*/,
+                                     actor* defender, bool /*mondied*/,
                                      int /*dam*/)
 {
     if (one_chance_in(3))
@@ -1018,7 +991,10 @@ static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
         else
             mpr("You hear the crackle of electricity.");
 
-        cast_discharge(pow, *attacker, false, false);
+        if (attacker->pos().distance_from(defender->pos()) <= 1)
+            cast_discharge(pow, *attacker, false, false);
+        else
+            discharge_at_location(pow, *attacker, defender->pos());
     }
 }
 
@@ -1348,15 +1324,6 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 // Vampiric effect triggers on every hit, see attack::apply_damage_brand()
 
-static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
-{
-    if (!you.has_mutation(MUT_VAMPIRISM))
-        _equip_mpr(show_msgs, "You feel very empty.");
-    else if (you.vampire_alive)
-        _equip_mpr(show_msgs, "You feel a powerful hunger.");
-    // else let player-equip.cc handle message
-}
-
 // Big killing blows give a bloodsplosion effect sometimes
 static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,
                                  actor* defender, bool mondied, int dam)
@@ -1414,7 +1381,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
 
         defender->hurt(attacker, bonus_dam, BEAM_COLD);
         if (defender->alive())
-            defender->expose_to_element(BEAM_COLD, 2);
+            defender->expose_to_element(BEAM_COLD, 2, attacker);
     }
 }
 
@@ -1594,9 +1561,9 @@ static void _SALAMANDER_world_reacts(item_def * /* item */)
 
 ////////////////////////////////////////////////////
 
-static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
+static void _GUARD_unequip(item_def *item, bool * show_msgs)
 {
-    monster *spectral_weapon = find_spectral_weapon(&you);
+    monster *spectral_weapon = find_spectral_weapon(*item);
     if (spectral_weapon)
     {
         _equip_mpr(show_msgs, "Your spectral weapon disappears.");
@@ -1925,4 +1892,9 @@ static void _VAINGLORY_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 {
     if (!unmeld)
         _equip_mpr(show_msgs, "You feel supremely confident.");
+}
+
+static void _VAINGLORY_unequip(item_def */*item*/, bool */*show_msgs*/)
+{
+    invalidate_agrid(true);
 }

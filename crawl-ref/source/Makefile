@@ -1265,7 +1265,7 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
 # Headers that need to exist before attempting to compile cc files
-GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h
+GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h form-data.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
@@ -1804,8 +1804,8 @@ endif
 icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
-config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+config.h: util/configure.py .cflags
+	$(QUIET_PYTHON)$(PYTHON) util/configure.py "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Header build tests.
@@ -1850,6 +1850,9 @@ mi-enum.h: mon-info.h util/gen-mi-enum
 
 mon-data.h: dat/mons/*.yaml util/mon-gen.py util/mon-gen/*.txt
 	$(QUIET_PYTHON)$(PYTHON) util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
+
+form-data.h: dat/forms/*.yaml util/form-gen.py util/form-gen/*.txt
+	$(QUIET_PYTHON)$(PYTHON) util/form-gen.py dat/forms/ util/form-gen/ transformation.h form-data.h
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
 # per target file by adding all the files into a single dependency chain.

@@ -58,7 +58,6 @@
 #include "notes.h"
 #include "options.h"
 #include "random.h"
-#include "reach-type.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "species.h"
@@ -88,10 +87,6 @@ struct mon_display
 };
 
 static mon_display monster_symbols[NUM_MONSTERS];
-
-static bool initialised_randmons = false;
-static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
-static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
 #include "mon-spell.h"
 #include "mon-data.h"
@@ -129,76 +124,18 @@ bool monster_inherently_flies(const monster &mons)
         || mons.has_facet(BF_BAT);
 }
 
-static habitat_type _grid2habitat(dungeon_feature_type grid)
+dungeon_feature_type preferred_feature_type(monster_type mt)
 {
-    if (feat_is_water(grid))
-        return HT_WATER;
-
-    switch (grid)
-    {
-    case DNGN_LAVA:
-        return HT_LAVA;
-    case DNGN_FLOOR:
-    default:
-        return HT_LAND;
-    }
-}
-
-dungeon_feature_type habitat2grid(habitat_type ht)
-{
-    switch (ht)
-    {
-    case HT_WATER:
-        return DNGN_DEEP_WATER;
-    case HT_LAVA:
-        return DNGN_LAVA;
-    case HT_LAND:
-    case HT_AMPHIBIOUS:
-    case HT_AMPHIBIOUS_LAVA:
-    default:
+    const habitat_type ht = mons_class_habitat(mt);
+    if (ht & HT_LAND)
         return DNGN_FLOOR;
-    }
-}
+    if (ht & HT_LAVA)
+        return DNGN_LAVA;
+    if (ht & HT_DEEP_WATER)
+        return DNGN_DEEP_WATER;
 
-static void _initialise_randmons()
-{
-    for (int i = 0; i < NUM_HABITATS; ++i)
-    {
-        set<monster_type> tmp_species;
-        const dungeon_feature_type feat = habitat2grid(habitat_type(i));
-
-        for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
-        {
-            if (invalid_monster_type(mt))
-                continue;
-
-            if (monster_habitable_feat(mt, feat))
-                monsters_by_habitat[i].push_back(mt);
-
-            const monster_type species = mons_species(mt);
-            if (monster_habitable_feat(species, feat))
-                tmp_species.insert(species);
-
-        }
-
-        for (auto type : tmp_species)
-            species_by_habitat[i].push_back(type);
-    }
-    initialised_randmons = true;
-}
-
-monster_type random_monster_at_grid(const coord_def& p, bool species)
-{
-    if (!initialised_randmons)
-        _initialise_randmons();
-
-    const habitat_type ht = _grid2habitat(env.grid(p));
-    const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
-                                                     : monsters_by_habitat[ht];
-
-    ASSERT(!valid_mons.empty());
-    return valid_mons.empty() ? MONS_PROGRAM_BUG
-                              : valid_mons[ random2(valid_mons.size()) ];
+    // Nothing should have none of these habitats, but we need to return something.
+    return DNGN_FLOOR;
 }
 
 typedef map<string, monster_type> mon_name_map;
@@ -528,6 +465,13 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
         break;
 
     case OBJ_ARMOUR:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special)
+        {
+            ret++;
+        }
+
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->base_type == OBJ_ARMOUR
             && get_armour_ego_type(*item) == special)
@@ -1670,7 +1614,8 @@ bool mons_class_is_remnant(monster_type mc)
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
-        || type == MONS_ARMOUR_ECHO;
+        || type == MONS_ARMOUR_ECHO
+        || type == MONS_HAUNTED_ARMOUR;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2035,6 +1980,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         if (mon.type == MONS_SOUL_WISP)
             attk.damage = 2 + mon.get_hit_dice();
 
+        if (mon.type == MONS_HAUNTED_ARMOUR)
+            attk.damage = 5 + (mon.get_hit_dice() * 3 / 4);
+
         // Boulder beetles get double attack damage and a normal 'hit' attack.
         if (mon.has_ench(ENCH_ROLLING))
         {
@@ -2089,6 +2037,16 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage = 2 + m.get_hit_dice() * 1 / 3;
         else
             attk.damage = 2 + (m.get_hit_dice() * 3 / 2);
+    }
+
+    // Vampires get a bite aux in addition to normal attacks.
+    if (mon.has_ench(ENCH_VAMPIRE_THRALL)
+            && attk.type == AT_NONE
+            && smc->attack[attk_number - 1].type != AT_NONE)
+    {
+        attk.type = AT_BITE;
+        attk.flavour = AF_VAMPIRIC;
+        attk.damage = 5 + mon.get_experience_level() * 5 / 4;
     }
 
     if (!base_flavour)
@@ -2692,6 +2650,10 @@ mon_spellbook_type get_spellbook(const monster_info &mon)
 vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
                                mon_spell_slot_flags flags)
 {
+    vector<mon_spell_slot> slots;
+    if (!mi.has_spells())
+        return slots;
+
     // No entry for MST_GHOST
     COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
 
@@ -2702,8 +2664,6 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
     for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
         if (mspell_list[msidx].type == book)
             break;
-
-    vector<mon_spell_slot> slots;
 
     if (mons_genus(mi.type) == MONS_DRACONIAN)
     {
@@ -3012,6 +2972,10 @@ void define_monster(monster& mons, bool friendly)
         break;
     }
 
+    case MONS_NAMELESS_REVENANT:
+        initialize_nobody_memories(mons);
+        break;
+
     default:
         break;
     }
@@ -3299,8 +3263,7 @@ mon_intel_type mons_intel(const monster& m)
     return mons_class_intel(mon.type);
 }
 
-static habitat_type _mons_class_habitat(monster_type mc,
-                                        bool real_amphibious = false)
+habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
 {
     const monsterentry *me = get_monster_data(mc);
     habitat_type ht = (me ? me->habitat
@@ -3319,8 +3282,8 @@ static habitat_type _mons_class_habitat(monster_type mc,
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious)
 {
-    return _mons_class_habitat(fixup_zombie_type(t, base_t),
-                               real_amphibious);
+    return mons_class_habitat(fixup_zombie_type(t, base_t),
+                              real_amphibious);
 }
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
@@ -3329,32 +3292,6 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious)
         ? draconian_subspecies(mon) : mon.type;
 
     return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
-}
-
-habitat_type mons_class_primary_habitat(monster_type mc)
-{
-    habitat_type ht = _mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS || ht == HT_AMPHIBIOUS_LAVA)
-        ht = HT_LAND;
-    return ht;
-}
-
-habitat_type mons_primary_habitat(const monster& mon)
-{
-    const monster_type type = mons_is_draconian_job(mon.type)
-        ? draconian_subspecies(mon) : mons_base_type(mon);
-
-    return mons_class_primary_habitat(type);
-}
-
-habitat_type mons_class_secondary_habitat(monster_type mc)
-{
-    habitat_type ht = _mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS)
-        ht = HT_WATER;
-    if (ht == HT_AMPHIBIOUS_LAVA)
-        ht = HT_LAVA;
-    return ht;
 }
 
 int mons_power(monster_type mc)
@@ -3498,9 +3435,19 @@ bool mons_is_fleeing_sanctuary(const monster& m)
            && mons_is_influenced_by_sanctuary(m);
 }
 
+// Monster was just put to sleep and should not awaken for any reason until the
+// next player action.
 bool mons_just_slept(const monster& m)
 {
     return bool(m.flags & MF_JUST_SLEPT);
+}
+
+// Monster has an enchanted sleep effect and should not awaken from noise or
+// automatic stealth checks until it is over (but directly harming them will
+// still do it).
+bool mons_is_deep_asleep(const monster& m)
+{
+    return mons_just_slept(m) || m.has_ench(ENCH_DEEP_SLEEP);
 }
 
 // Moving body parts, turning oklob flowers and so on counts as motile here.
@@ -3605,7 +3552,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mons_att_changed(&mon);
 }
 
-static bool _mons_should_fire_beneficial(bolt &beam)
+static bool _mons_should_fire_beneficial(const bolt &beam,
+                                         const targeting_tracer &tracer)
 {
     // Should monster heal other, haste other or might other be able to
     // target the player? Saying no for now. -cao
@@ -3615,8 +3563,8 @@ static bool _mons_should_fire_beneficial(bolt &beam)
     // Assuming all beneficial beams are enchantments if a foe is in
     // the path the beam will definitely hit them so we shouldn't fire
     // in that case.
-    if (beam.friend_info.count == 0
-        || beam.foe_info.count != 0)
+    if (tracer.friend_info.count == 0
+        || tracer.foe_info.count != 0)
     {
         return false;
     }
@@ -3648,18 +3596,19 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
-bool mons_should_fire(bolt &beam, bool ignore_good_idea)
+bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
+                      bool ignore_good_idea)
 {
     dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d",
-         beam.foe_info.count, beam.foe_info.power,
-         beam.friend_info.count, beam.friend_info.power,
+         tracer.foe_info.count, tracer.foe_info.power,
+         tracer.friend_info.count, tracer.friend_info.power,
          beam.foe_ratio);
 
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
-        return _mons_should_fire_beneficial(beam);
+        return _mons_should_fire_beneficial(beam, tracer);
 
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return false;
@@ -3686,7 +3635,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
             return false;
     }
 
-    return beam.good_to_fire() >= ai_action::good();
+    return tracer.good_to_fire(beam.foe_ratio) >= ai_action::good();
 }
 
 /**
@@ -3700,8 +3649,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
  *                      etc).
  * @return              Whether the given spell should be considered 'ranged'.
  */
-static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
-                             bool ench_too = true)
+bool ms_ranged_spell(spell_type monspell, bool attack_only, bool ench_too)
 {
     // summoning spells are usable from ranged, but not direct attacks.
     if (spell_typematch(monspell, spschool::summoning))
@@ -3755,7 +3703,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
 
     for (const mon_spell_slot &slot : mon.spells)
     {
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
+        if (ms_ranged_spell(slot.spell, attack_only, ench_too)
             // Assume spells with no defined range are always effective at
             // range.
             && mons_spell_range(mon, slot.spell) != 1)
@@ -3784,7 +3732,7 @@ bool mons_has_ranged_attack(const monster& mon)
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
            || mon.missiles()
-           || mon.reach_range() != REACH_NONE
+           || mon.reach_range() > 1
            || _mons_has_attack_wand(mon);
 }
 
@@ -3887,6 +3835,10 @@ bool monster_shover(const monster& m)
         return false;
     }
 
+    // Allow the ember to push back to its scarab
+    if (m.type == MONS_SOLAR_EMBER)
+        return true;
+
     // Monsters too stupid to use stairs (e.g. non-spectral zombified undead)
     // are also disqualified.
     // However, summons *can* push past pals & cause trouble.
@@ -3922,6 +3874,10 @@ bool monster_shover(const monster& m)
  */
 bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
 {
+    // A sun scarab's ember can push past anything to get back to it.
+    if (m1.type == MONS_SOLAR_EMBER)
+        return true;
+
     // non-fleeing smiters won't push past anything.
     if (_mons_has_smite_attack(&m1) && !fleeing)
         return false;
@@ -3934,7 +3890,7 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     // (revenants, ghost crabs).
     // XXX: unify this logic with Fannar's & Geryon's? (summon-buddies?)
     if (m1.type == MONS_SPECTRAL_THING
-        && (m2.type == MONS_REVENANT || m2.type == MONS_GHOST_CRAB))
+        && (m2.type == MONS_REVENANT_SOULMONGER || m2.type == MONS_GHOST_CRAB))
     {
         return true;
     }
@@ -4195,7 +4151,7 @@ string random_body_part_name(bool plural, int part_class)
         body_parts.push_back("soul");
 
         plural_parts.push_back(true);
-        body_parts.push_back("muscles");
+        body_parts.push_back("sinews");
 
         if (you.has_blood())
         {
@@ -4212,8 +4168,11 @@ string random_body_part_name(bool plural, int part_class)
 
     if (part_class & BPART_EXTERNAL)
     {
-        plural_parts.push_back(false);
-        body_parts.push_back("head");
+        if (!you.get_mutation_level(MUT_FORMLESS))
+        {
+            plural_parts.push_back(false);
+            body_parts.push_back("head");
+        }
 
         string hands;
         if (you.get_mutation_level(MUT_MISSING_HAND))
@@ -5670,7 +5629,7 @@ void throw_monster_bits(const monster& mon)
 
         // Because someone will get a kick out of this some day.
         if (mons_class_flag(mons_base_type(mon), M_ACID_SPLASH))
-            target->corrode_equipment("a flying bit", 1);
+            target->corrode(&you, "a flying bit");
 
         behaviour_event(target, ME_ANNOY, &you, you.pos());
         target->hurt(&you, damage);
@@ -5835,6 +5794,9 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
         return true;
     }
 
+    if (agent->is_player() && mon.type == MONS_HAUNTED_ARMOUR)
+        return true;
+
     return false;
 }
 
@@ -5875,4 +5837,21 @@ bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
 bool never_harm_monster(const actor* agent, const monster* mon, bool do_message)
 {
     return mon && never_harm_monster(agent, *mon, do_message);
+}
+
+/**
+ * Returns the maximum distance this type of monster is allowed to be from its
+ * creator. It will refuse to move further away than this under its own power,
+ * and if circumstances cause it to exceed this, it will abandon other plans to
+ * return to this range instead.
+ */
+int mons_leash_range(monster_type mc)
+{
+    switch (mc)
+    {
+        case MONS_SOLAR_EMBER:
+        case MONS_PHALANX_BEETLE:   return 1;
+        case MONS_HAUNTED_ARMOUR:   return 2;
+        default:                    return 0; // No leashing
+    }
 }

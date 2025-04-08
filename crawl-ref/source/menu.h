@@ -509,17 +509,21 @@ class column_composer
 public:
     // Number of columns and left margins for 2nd, 3rd, ... nth column.
     column_composer(int ncols, ...);
+    column_composer(int cols, vector<int> widths);
 
     void clear();
     void add_formatted(int ncol,
             const string &tagged_text,
             bool  add_separator = true,
-            int   margin = -1);
+            int   margin = -1,
+            bool  centered = false,
+            colour_t colour = LIGHTGREY);
 
     vector<formatted_string> formatted_lines() const;
 
 private:
     struct column;
+    int prev_col;   // For performing auto-wrapping
     void compose_formatted_column(
             const vector<formatted_string> &lines,
             int start_col,

@@ -1,0 +1,33 @@
+enum: wisp
+equivalent_mons: insubstantial_wisp
+description: an insubstantial wisp.
+melds: [all]
+resists: {fire: 2, cold: 2, elec: 1, neg: 3, corr: 1}
+size: tiny
+ac: {base: 5, scaling: 14, xl_based: yes}
+can_cast: no
+unarmed: {base: 2, xl_based: yes}
+unarmed_colour: lightgrey
+unarmed_name: Misty tendrils
+unarmed_verbs: [touch, touch, engulf, engulf]
+can_fly: yes
+can_swim: no
+changes_anatomy: yes
+changes_substance: yes
+holiness: nonliving
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: whoosh
+shout_volume: -8
+hand_name: misty tendril
+foot_name: strand
+prayer_action: swirl around
+flesh_name: vapour
+fakemuts:
+  - ["", "You are tiny and evasive."]
+  - ["insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire."]
+  - ["torment immunity", "You are immune to unholy pain and torment."]
+  - ["highly resistant", "You are highly resistant to most damage types. (rF++, rC++, rN+++, rElec, rCorr)"]

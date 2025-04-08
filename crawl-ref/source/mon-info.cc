@@ -32,13 +32,16 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-info-flag-name.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "nearby-danger.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-book.h"
 #include "spl-goditem.h" // dispellable_enchantments
 #include "spl-summoning.h"
 #include "state.h"
@@ -144,6 +147,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BLINKITIS,       MB_BLINKITIS },
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
+    { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -242,7 +246,8 @@ static bool _is_public_key(string key)
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
      || key == VAULT_HD_KEY
-     || key == POLY_SET_KEY)
+     || key == POLY_SET_KEY
+     || key == NOBODY_MEMORIES_KEY)
     {
         return true;
     }
@@ -400,6 +405,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     client_id = MID_NOBODY;
     summoner_id = MID_NOBODY;
+    last_seen_at_turn = -1;
 }
 
 static description_level_type _article_for(const actor* a)
@@ -540,6 +546,8 @@ monster_info::monster_info(const monster* m, int milev)
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
+    if (m->has_ench(ENCH_VAMPIRE_THRALL))
+        mb.set(MB_VAMPIRE_THRALL);
 
     if (milev <= MILEV_NAME)
     {
@@ -554,8 +562,11 @@ monster_info::monster_info(const monster* m, int milev)
                     env.item[m->inv[MSLOT_MISSILE]]));
             }
         }
-        else if (type == MONS_ARMOUR_ECHO && m->get_defining_object())
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
+        {
             inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
+        }
         return;
     }
 
@@ -871,6 +882,7 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     client_id = m->get_client_id();
+    last_seen_at_turn = you.num_turns;
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
@@ -1056,6 +1068,14 @@ string monster_info::_core_name() const
             }
             break;
 
+        case MONS_HAUNTED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "haunted " + item.name(DESC_QUALNAME);
+            }
+            break;
+
         case MONS_PLAYER_GHOST:
             s = apostrophise(mname) + " ghost";
             break;
@@ -1137,6 +1157,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
+
+    if (is(MB_VAMPIRE_THRALL))
+        ss << "vampire ";
 
     if (type == MONS_SENSED && !mons_is_sensed(base_type))
         ss << "sensed ";
@@ -1397,6 +1420,7 @@ string monster_info::pluralised_name(bool fullname) const
     else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
                 || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
                 || type == MONS_ARMOUR_ECHO || type == MONS_MUTANT_BEAST
+                || type == MONS_HAUNTED_ARMOUR
                 || !fullname)
             && !is(MB_NAME_REPLACE))
 
@@ -1506,6 +1530,13 @@ vector<string> monster_info::attributes() const
                                     "@possessive@",
                                     pronoun(PRONOUN_POSSESSIVE)));
         }
+    }
+
+    if (type == MONS_NAMELESS_REVENANT)
+    {
+        const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
+        v.push_back(make_stringf("%d %s left", num_memories,
+                                               num_memories > 1 ? "memories" : "memory"));
     }
 
     return v;
@@ -1684,20 +1715,45 @@ bool monster_info::can_regenerate() const
     return !is(MB_NO_REGEN);
 }
 
-reach_type monster_info::reach_range(bool items) const
+int monster_info::range() const
+{
+    int range = reach_range(true);
+    // wielding ranged weapon?
+    const item_def *weapon = inv[MSLOT_WEAPON].get();
+    if (weapon && is_range_weapon(*weapon))
+        range = LOS_DEFAULT_RANGE;
+    // quivering something?
+    const item_def *missile = inv[MSLOT_MISSILE].get();
+    if (missile)
+        range = LOS_DEFAULT_RANGE;
+    // ranged attack spells?
+    const vector<mon_spell_slot> &unique_slots = get_unique_spells(*this);
+    for (const auto& slot : unique_slots)
+        if (ms_ranged_spell(slot.spell, true, true))
+            range = max(range, mons_spell_range_for_hd(slot.spell, hd));
+    // has attack wand?
+    const item_def *wand = inv[MSLOT_WAND].get();
+    if (wand && is_offensive_wand(*wand)) {
+        const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
+        range = max(range, calc_spell_range(spell, spell_power_cap(spell), true, true));
+    }
+    return range;
+}
+
+int monster_info::reach_range(bool items) const
 {
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
     ASSERT(e);
-    reach_type range = REACH_NONE;
+    int range = 1;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const attack_flavour fl = e->attack[i].flavour;
         if (fl == AF_RIFT)
-            range = REACH_THREE;
+            range = 3;
         else if (flavour_has_reach(fl))
-            range = max(REACH_TWO, range);
+            range = max(2, range);
     }
 
     if (items)
@@ -1934,10 +1990,10 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) >= REACH_TWO;
+        return weapon && weapon_reach(*weapon) >= 2;
     }
     else
-        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= REACH_TWO;
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= 2;
 }
 
 static bool _has_launcher(const monster_info& mi)
@@ -2014,7 +2070,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 launcher_count++;
             else if (_has_missile(mi[j]))
                 missile_count++;
-            if (mi[j].reach_range(false) > REACH_NONE)
+            if (mi[j].reach_range(false) > 1)
                 reach_count++;
             if (_has_attack_flavour(mi[j], AF_CRUSH))
                 constrict_count++;

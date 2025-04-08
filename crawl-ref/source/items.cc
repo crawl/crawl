@@ -1529,6 +1529,7 @@ bool is_stackable_item(const item_def &item)
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         case OBJ_GOLD:
+        case OBJ_BAUBLES:
 #if TAG_MAJOR_VERSION == 34
         case OBJ_FOOD:
 #endif
@@ -3346,6 +3347,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_TALISMANS,
         NUM_GEM_TYPES,
         1,
+        1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3909,20 +3911,42 @@ colour_t item_def::talisman_colour() const
 
     switch (sub_type)
     {
-    case TALISMAN_BEAST:
-        return YELLOW; // brown taken by staves
-    case TALISMAN_FLUX:
-        return CYAN; // could maybe swap this and death
+    case TALISMAN_QUILL:
+        return BROWN;
+    case TALISMAN_INKWELL:
+        return BLUE;
+    case TALISMAN_PROTEAN:
+        return ETC_RANDOM;
+    case TALISMAN_RIMEHORN:
+        return LIGHTBLUE;
+    case TALISMAN_SPIDER:
+        return LIGHTGREEN;
+    case TALISMAN_AQUA:
+        return ETC_WATER;
+    case TALISMAN_SCARAB:
+        return ETC_FIRE;
+    case TALISMAN_MEDUSA:
+        return ETC_POISON;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:
         return ETC_POISON;
     case TALISMAN_BLADE:
         return ETC_IRON;
+    case TALISMAN_FORTRESS:
+        return GREEN;
+    case TALISMAN_WEREWOLF:
+        return LIGHTRED;
     case TALISMAN_STATUE:
         return ETC_EARTH;
+    case TALISMAN_HIVE:
+        return YELLOW;
     case TALISMAN_DRAGON:
         return ETC_FIRE;
+    case TALISMAN_SPHINX:
+        return ETC_MAGIC;
+    case TALISMAN_VAMPIRE:
+        return LIGHTMAGENTA;
     case TALISMAN_DEATH:
         return MAGENTA;
     case TALISMAN_STORM:

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "terrain-change-type.h"
+
 void update_level(int elapsedTime);
 monster* update_monster(monster& mon, int turns);
 void handle_time();
@@ -15,7 +17,9 @@ int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
 void timeout_binding_sigils();
-void end_toxic_bog();
+void end_terrain_change(terrain_change_type type);
+
+void end_enkindled_status();
 
 void timeout_terrain_changes(int duration, bool force = false);
 

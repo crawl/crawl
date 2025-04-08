@@ -167,6 +167,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 static ai_action::goodness _seracfall_goodness(const monster &caster);
 static bool _prepare_seracfall(monster &caster, bolt &beam);
 static void _setup_seracfall_beam(bolt& beam, const monster& caster, int power);
+static ai_action::goodness _grave_claw_goodness(const monster &caster);
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell);
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
@@ -184,6 +185,7 @@ static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
 static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -826,7 +828,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
         } } },
     { SPELL_GRAVE_CLAW, {
-       _always_worthwhile,
+       _grave_claw_goodness,
        [](monster &caster, mon_spell_slot, bolt& beam) {
             const int pow = mons_spellpower(caster, SPELL_GRAVE_CLAW);
             cast_grave_claw(caster, beam.target, pow, false);
@@ -879,6 +881,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             beam.target = targ;
             beam.draw_delay = 80;
             beam.fire();
+            flash_tile(targ, WHITE, 110, TILE_BOLT_BOMBLET_LAUNCH);
             monarch_deploy_bomblet(caster, targ, true);
         },
         _zap_setup(SPELL_DEPLOY_BOMBLET) } },
@@ -896,6 +899,16 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_SIPHON_ESSENCE, { _foe_siphon_essence_goodness,
                               _cast_siphon_essence } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
+    { SPELL_DOMINATE_UNDEAD, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(_cast_dominate_undead(caster, 100, true));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_DOMINATE_UNDEAD);
+            _cast_dominate_undead(caster, pow, false);
+        },
+        nullptr, MSPELL_LOGIC_NONE, 30
+    } }
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -1659,8 +1672,9 @@ static monster* _get_allied_target(const monster &caster, bolt &tracer)
         {
             // Make sure we won't hit someone other than we're aiming at.
             tracer.target = targ->pos();
-            fire_tracer(&caster, tracer);
-            if (!mons_should_fire(tracer)
+            targeting_tracer target_tracer;
+            fire_tracer(&caster, target_tracer, tracer);
+            if (!mons_should_fire(tracer, target_tracer)
                 || tracer.path_taken.back() != tracer.target)
             {
                 continue;
@@ -1708,8 +1722,9 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
         {
             // Make sure we won't hit an invalid target with this aim.
             pbolt.target = targ->pos();
-            fire_tracer(caster, pbolt);
-            if (!mons_should_fire(pbolt)
+            targeting_tracer tracer;
+            fire_tracer(caster, tracer, pbolt);
+            if (!mons_should_fire(pbolt, tracer)
                 || pbolt.path_taken.back() != pbolt.target)
             {
                 continue;
@@ -1776,6 +1791,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
         case SPELL_IGNITE_POISON:
+        case SPELL_ARCJOLT:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
@@ -2193,6 +2209,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.short_name   = "flames";
         break;
 
+    case SPELL_RAVENOUS_SWARM:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.hit_verb     = "envelopes";
+        break;
+
     case SPELL_THROW_BARBS:
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.hit_verb    = "skewers";
@@ -2493,7 +2514,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     if (!theBeam.target.origin())
         pbolt.target = theBeam.target;
     pbolt.source = mons->pos();
-    pbolt.is_tracer = false;
+    pbolt.set_is_tracer(false);
     if (pbolt.aux_source.empty() && !pbolt.is_enchantment())
         pbolt.aux_source = pbolt.name;
 
@@ -2540,8 +2561,6 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
             // partial resistance.
             return ai_action::good();
         case US_SEMI_UNDEAD:
-            // Non-bloodless vampires do not appear immune.
-            return ai_action::good_or_bad(you.vampire_alive);
         default:
             return ai_action::bad();
         }
@@ -3344,8 +3363,9 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
 {
     vector<coord_def> targets = arcjolt_targets(caster, false);
 
-    bolt tracer;
-    tracer.foe_ratio = 100; // safety first
+    bolt beam;
+    targeting_tracer tracer;
+    beam.foe_ratio = 100; // safety first
                             // XXX: rethink this if we put this on an enemy
 
     for (coord_def t : targets)
@@ -3368,7 +3388,7 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
         }
     }
 
-    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+    return mons_should_fire(beam, tracer) ? ai_action::good() : ai_action::bad();
 }
 
 static ai_action::goodness _scorch_goodness(const monster& caster)
@@ -3836,7 +3856,7 @@ static bool _already_bramble_wall(const monster* mons, coord_def targ)
     tracer.source    = mons->pos();
     tracer.target    = targ;
     tracer.range     = 12;
-    tracer.is_tracer = true;
+    tracer.set_is_tracer(true);
     tracer.pierce    = true;
     tracer.fire();
 
@@ -3967,7 +3987,7 @@ static void _corrupting_pulse(monster *mons)
         if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
             && !mons_aligned(mons, m))
         {
-            m->corrupt();
+            m->malmutate(mons);
         }
     }
 }
@@ -4022,8 +4042,9 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
 
 static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*))
 {
-    bolt tracer;
-    tracer.foe_ratio = 0;
+    bolt beam;
+    targeting_tracer tracer;
+    beam.foe_ratio = 0;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (agent == *ai || !vulnerable(*ai))
@@ -4044,7 +4065,7 @@ static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*))
                                     : ai->as_monster()->get_experience_level();
         }
     }
-    return mons_should_fire(tracer);
+    return mons_should_fire(beam, tracer);
 }
 
 static bool _vortex_vulnerable(const actor* victim)
@@ -4120,7 +4141,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
  * Get the fraction of damage done by the given beam that's to enemies,
  * multiplied by the given scale.
  */
-static int _get_dam_fraction(const bolt &tracer, int scale)
+static int _get_dam_fraction(const targeting_tracer &tracer, int scale)
 {
     if (!tracer.foe_info.power)
         return 0;
@@ -4135,14 +4156,14 @@ static int _get_dam_fraction(const bolt &tracer, int scale)
  *  @return The target square, or an out of bounds coord if none was found.
  */
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
-                                                bolt tracer)
+                                                bolt beam)
 {
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
     if (!in_bounds(caster.pos()))
         return best_target;
-    tracer.ex_size = 1;
+    beam.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -4155,8 +4176,9 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
         if (mons_is_projectile(mi->type))
             continue;
 
-        tracer.target = mi->pos();
-        fire_tracer(&caster, tracer, true, true);
+        beam.target = mi->pos();
+        targeting_tracer tracer;
+        fire_tracer(&caster, tracer, beam, true, true);
         if (mons_is_threatening(**mi)) // only care about sacrificing real mons
             tracer.friend_info.power += mi->get_experience_level() * 2;
 
@@ -4278,13 +4300,13 @@ static bool _can_injury_bond(const monster &protector, const monster &protectee)
  */
 static coord_def _mons_seracfall_source(const monster &caster)
 {
-    bolt tracer;
-    setup_mons_cast(&caster, tracer, SPELL_ICEBLAST);
+    bolt beam;
+    setup_mons_cast(&caster, beam, SPELL_ICEBLAST);
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_source = coord_def(GXM+1, GYM+1); // initially out of bounds
-    tracer.target  = caster.target;
-    tracer.ex_size = 1;
+    beam.target  = caster.target;
+    beam.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -4297,14 +4319,15 @@ static coord_def _mons_seracfall_source(const monster &caster)
         if (!you.see_cell(mi->pos()))
             continue; // don't hurl simulacra from out of player los
 
+        targeting_tracer tracer;
         // beam is shot as if the simulac is falling onto the player
         // so we treat the simulacrum as the "caster"
-        fire_tracer(*mi, tracer);
+        fire_tracer(*mi, tracer, beam);
 
         const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
         dprf("if seracfalling %s (aim %d,%d): ratio %d/%d",
              mi->name(DESC_A, true).c_str(),
-             tracer.target.x, tracer.target.y, dam_fraction, dam_scale);
+            beam.target.x, beam.target.y, dam_fraction, dam_scale);
         if (dam_fraction > best_dam_fraction)
         {
             best_source = mi->pos();
@@ -4320,6 +4343,24 @@ static ai_action::goodness _seracfall_goodness(const monster &caster)
 {
     return ai_action::good_or_impossible(in_bounds(_mons_seracfall_source(caster)));
 }
+
+static ai_action::goodness _grave_claw_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe || !caster.can_see(*foe)
+        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW, 0))
+    {
+        return ai_action::impossible();
+    }
+
+    // Slightly reduce spamming against players, to avoid locking them in place
+    // on bad rolls.
+    if (foe->is_player() && you.duration[DUR_NO_MOMENTUM])
+        return ai_action::bad();
+
+    return ai_action::good();
+}
+
 
 /// Everything short of the actual explosion. Returns whether to fire.
 static bool _prepare_seracfall(monster &caster, bolt &beam)
@@ -4532,9 +4573,10 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     if (get_spell_flags(spell) & spflag::needs_tracer)
     {
         const bool explode = spell_is_direct_explosion(spell);
-        fire_tracer(&mons, beem, explode);
+        targeting_tracer tracer;
+        fire_tracer(&mons, tracer, beem, explode);
         // Good idea?
-        return mons_should_fire(beem, ignore_good_idea);
+        return mons_should_fire(beem, tracer, ignore_good_idea);
     }
 
     // Spells with custom marionette logic get to bypass certain normal checks
@@ -4599,7 +4641,9 @@ static string _ru_spell_stop_desc(monster &mons)
 /// What spells can the given monster currently use?
 static monster_spells _find_usable_spells(monster &mons)
 {
-    // TODO: make mons param const (requires waste_of_time param to be const)
+    // TODO: Ideally mons would be a const here but, digging into
+    // monster_spell_goodness, this would require a large refactor of spells
+    // to extract "tracer" casting to separate functions with const actors...
 
     monster_spells hspell_pass(mons.spells);
 
@@ -4617,6 +4661,10 @@ static monster_spells _find_usable_spells(monster &mons)
         // it never will.
         || t.spell == SPELL_DIG;
     });
+
+    // Erase zero-frequency spells
+    erase_if(hspell_pass, [](const mon_spell_slot &t) {
+        return t.freq == 0;});
 
     return hspell_pass;
 }
@@ -5425,7 +5473,7 @@ static bool _mons_cast_freeze(monster* mons)
 
     if (target->alive())
     {
-        target->expose_to_element(BEAM_COLD, damage);
+        target->expose_to_element(BEAM_COLD, damage, mons);
         _whack(*mons, *target);
     }
 
@@ -5534,8 +5582,10 @@ static ai_action::goodness _should_irradiate(const monster &mons)
     tracer.source = tracer.target = mons.pos();
     tracer.hit = AUTOMATIC_HIT;
     tracer.damage = dice_def(999, 1);
-    fire_tracer(&mons, tracer, true, true);
-    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+    targeting_tracer target_tracer;
+    fire_tracer(&mons, target_tracer, tracer, true, true);
+    return mons_should_fire(tracer, target_tracer) ? ai_action::good()
+                                                   : ai_action::bad();
 }
 
 // Check whether targets might be scared.
@@ -5713,14 +5763,15 @@ static coord_def _mons_fragment_target(const monster &mon)
         }
 
         beam.range = range;
-        fire_tracer(mons, beam, true);
-        if (!mons_should_fire(beam))
+        targeting_tracer tracer;
+        fire_tracer(mons, tracer, beam, true);
+        if (!mons_should_fire(beam, tracer))
             continue;
 
-        if (beam.foe_info.count > 0
-            && beam.foe_info.power > maxpower)
+        if (tracer.foe_info.count > 0
+            && tracer.foe_info.power > maxpower)
         {
-            maxpower = beam.foe_info.power;
+            maxpower = tracer.foe_info.power;
             target = *di;
         }
     }
@@ -5864,7 +5915,7 @@ static branch_summon_pair _planerend_summons[] =
     { // Crypt enemies
       {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
       {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
-      {  1,   1,   80, FLAT, MONS_REVENANT },
+      {  1,   1,   80, FLAT, MONS_REVENANT_SOULMONGER },
     }},
   { BRANCH_TOMB,
     { // Tomb enemies
@@ -6292,7 +6343,10 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 
     // Put the player to sleep.
     if (sleep_pow)
-        foe.put_to_sleep(&mons, sleep_pow, false);
+    {
+        const int dur = (sleep_pow / 20 + random_range(1, 3) + 3) * BASELINE_DELAY;
+        foe.put_to_sleep(&mons, dur, false);
+    }
 }
 
 // Draconian stormcaller upheaval. Simplified compared to the player version.
@@ -6700,7 +6754,7 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
         tracer.target = possible_targets[i];
         tracer.source_id = caster.mid;
         tracer.origin_spell = SPELL_HELLFIRE_MORTAR;
-        tracer.is_tracer = true;
+        tracer.set_is_tracer(true);
         tracer.fire();
 
         // Skip paths that are less than 3 tiles long (which generally requires
@@ -6736,11 +6790,11 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
             magma_tracer.target = foe.pos();
             magma_tracer.source_id = caster.mid;
             magma_tracer.attitude = mons_attitude(caster);
-            magma_tracer.is_tracer = true;
+            targeting_tracer magma_target_tracer;
             magma_tracer.foe_ratio = 100;
-            magma_tracer.fire();
+            magma_tracer.fire(magma_target_tracer);
 
-            if (mons_should_fire(magma_tracer))
+            if (mons_should_fire(magma_tracer, magma_target_tracer))
                 useful_count++;
 
             // This path has enough useful shots to take!
@@ -6768,6 +6822,65 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     bolt beam = mons_spell_beam(&caster, SPELL_HELLFIRE_MORTAR, pow);
     beam.target = found_target;
     cast_hellfire_mortar(caster, beam, pow, false);
+
+    return true;
+}
+
+static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only)
+{
+    vector<actor*> targs;
+    for (actor_near_iterator ai(caster.pos()); ai; ++ai)
+    {
+        if (mons_aligned(&caster, *ai) || !(ai->holiness() & MH_UNDEAD)
+            || ai->willpower() == WILL_INVULN)
+        {
+            continue;
+        }
+
+        // Not friendly, but already 'charmed'
+        if (ai->is_player() && you.duration[DUR_VEXED])
+            continue;
+
+        // Found at least one valid target
+        if (check_only)
+            return true;
+
+        targs.push_back(*ai);
+    }
+
+    if (check_only && targs.empty())
+        return false;
+
+    for (actor* targ : targs)
+    {
+        if (targ->is_monster())
+        {
+            monster* mon = targ->as_monster();
+            const int res_margin = mon->check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+            {
+                simple_monster_message(*mon,
+                    mon->resist_margin_phrase(res_margin).c_str());
+                continue;
+            }
+
+            simple_monster_message(*mon, " is compelled to serve!");
+            mon->add_ench(mon_enchant(ENCH_HEXED, 0, &caster));
+            flash_tile(mon->pos(), BLUE);
+        }
+        else if (targ->is_player())
+        {
+            const int res_margin = you.check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            if (res_margin > 0)
+                canned_msg(MSG_YOU_RESIST);
+            else
+            {
+                const string msg = make_stringf("lash out against %s attempt to control you!",
+                                                caster.name(DESC_ITS).c_str());
+                you.vex(&caster, random_range(3, 5), caster.name(DESC_A).c_str(), msg);
+            }
+        }
+    }
 
     return true;
 }
@@ -7376,6 +7489,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         sumcount2 = 1 + random2(2); // sequence point
         sumcount2 += random2(mons->spell_hd(spell_cast) / 4 + 1);
 
+        // Spell has a summon cap of 4
+        sumcount2 = min(sumcount2, 4);
+
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
@@ -7748,7 +7864,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
         ASSERT(foe);
         flash_tile(foe->pos(), YELLOW, 120, TILE_BOLT_ENTROPIC_WEAVE);
-        foe->corrode_equipment("the entropic weave");
+        foe->corrode(mons, "the entropic weave");
         return;
 
     case SPELL_SUMMON_EXECUTIONERS:
@@ -8100,12 +8216,13 @@ static void _speech_fill_target(string& targ_prep, string& target,
     targ_prep = "at";
     target    = "nothing";
 
-    bolt tracer = pbolt;
+    bolt tracer_beam = pbolt;
+    targeting_tracer tracer;
     // For a targeted but rangeless spell make the range positive so that
     // fire_tracer() will fill out path_taken.
     if (pbolt.range == 0 && pbolt.target != mons->pos())
-        tracer.range = ENV_SHOW_DIAMETER;
-    fire_tracer(mons, tracer);
+        tracer_beam.range = ENV_SHOW_DIAMETER;
+    fire_tracer(mons, tracer, tracer_beam);
 
     if (pbolt.target == you.pos())
         target = "you";
@@ -8169,7 +8286,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
         bool mons_targ_aligned = false;
 
-        for (const coord_def &pos : tracer.path_taken)
+        for (const coord_def &pos : tracer_beam.path_taken)
         {
             if (pos == mons->pos())
                 continue;
@@ -8423,7 +8540,7 @@ static monster* _find_ally_to_throw(const monster &mons)
     int furthest_dist = -1;
 
     monster* best = nullptr;
-    for (fair_adjacent_iterator ai(mons.pos(), true); ai; ++ai)
+    for (fair_adjacent_iterator ai(mons.pos()); ai; ++ai)
     {
         monster* throwee = monster_at(*ai);
 
@@ -8760,9 +8877,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_DISPEL_UNDEAD:
     case SPELL_DISPEL_UNDEAD_RANGE:
-        // [ds] How is dispel undead intended to interact with vampires?
-        // Currently if the vampire's undead state returns MH_UNDEAD it
-        // affects the player.
         ASSERT(foe);
         return ai_action::good_or_bad(!!(foe->holiness() & MH_UNDEAD));
 
@@ -8863,7 +8977,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
             tracer.target = foe->pos();
             tracer.range  = LOS_RADIUS;
             tracer.hit    = AUTOMATIC_HIT;
-            fire_tracer(mon, tracer);
+            targeting_tracer target_tracer;
+            fire_tracer(mon, target_tracer, tracer);
 
             actor* act = actor_at(tracer.path_taken.back());
             // XX does this handle multiple actors?
@@ -9080,8 +9195,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                                    5 + (7 * mon->spell_hd(spell)) / 12,
                                    cleansing_flame_source::spell,
                                    mon->pos(), mon);
-        fire_tracer(mon, tracer, true);
-        return ai_action::good_or_bad(mons_should_fire(tracer));
+        targeting_tracer target_tracer;
+        fire_tracer(mon, target_tracer, tracer, true);
+        return ai_action::good_or_bad(mons_should_fire(tracer, target_tracer));
     }
 
     case SPELL_DOOM_HOWL:
@@ -9132,6 +9248,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_CHAOS_BREATH:
     case SPELL_DEATH_RATTLE:
     case SPELL_MIASMA_BREATH:
+    case SPELL_RAVENOUS_SWARM:
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_MARCH_OF_SORROWS:

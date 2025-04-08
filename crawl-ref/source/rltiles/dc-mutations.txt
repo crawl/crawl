@@ -202,10 +202,12 @@ word_of_chaos WORD_OF_CHAOS
 # Per-species effects mutations
 hop_1 HOP
 hop_2
+divine_attributes DIVINE_ATTRIBUTES
 forlorn FORLORN
 flat_hp_1 FLAT_HP
 flat_hp_2
 flat_hp_3
+hp_casting HP_CASTING
 cold_blooded COLD_BLOODED
 acid_res ACID_RES
 acidic_bite ACIDIC_BITE
@@ -217,6 +219,7 @@ no_armour NO_ARMOUR
 no_grasping NO_GRASPING
 paws PAWS
 petrification_res PETRIFICATION_RES
+explore_regen EXPLORE_REGEN
 nightstalker_1 NIGHTSTALKER
 nightstalker_2
 nightstalker_3
@@ -230,6 +233,12 @@ acrobatic ACROBATIC
 antimagic_bite ANTIMAGIC_BITE
 no_potion_heal_1 NO_POTION_HEAL
 no_potion_heal_2
+float FLOAT
+formless_1 FORMLESS
+formless_2
+trickster TRICKSTER
+spellclaws SPELLCLAWS
+mnemophage MNEMOPHAGE
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS
@@ -255,7 +264,11 @@ eyeballs_3
 gelatinous_body_1 GELATINOUS_BODY
 gelatinous_body_2
 gelatinous_body_3
+jelly_absorbing_missiles JELLY_ABSORBING_MISSILES
 jelly_growth JELLY_GROWTH
+pseudopods_1 PSEUDOPODS
+pseudopods_2
+pseudopods_3
 tendrils TENDRILS
 
 # Ru sacrifices

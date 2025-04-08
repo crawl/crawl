@@ -1,5 +1,5 @@
 name: "gnoll bouda"
-glyph: {char: "g", colour: white}
+glyph: {char: "j", colour: white}
 flags: [speaks, warm_blood]
 xp_mult: 40
 species: gnoll

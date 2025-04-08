@@ -854,7 +854,7 @@ enum item_set_type
 
 enum talisman_type
 {
-    TALISMAN_BEAST,
+    TALISMAN_QUILL,
     TALISMAN_MAW,
     TALISMAN_SERPENT,
     TALISMAN_BLADE,
@@ -862,8 +862,24 @@ enum talisman_type
     TALISMAN_DRAGON,
     TALISMAN_DEATH,
     TALISMAN_STORM,
-    TALISMAN_FLUX,
+    TALISMAN_PROTEAN,
+    TALISMAN_VAMPIRE,
+    TALISMAN_RIMEHORN,
+    TALISMAN_SPIDER,
+    TALISMAN_HIVE,
+    TALISMAN_AQUA,
+    TALISMAN_SPHINX,
+    TALISMAN_WEREWOLF,
+    TALISMAN_INKWELL,
+    TALISMAN_FORTRESS,
+    TALISMAN_SCARAB,
+    TALISMAN_MEDUSA,
     NUM_TALISMANS,
+};
+
+enum bauble_type
+{
+    BAUBLE_FLUX,
 };
 
 enum special_gizmo_type

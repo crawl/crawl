@@ -279,11 +279,12 @@ mset(spec_fn(function ()
 end))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 6
-  local e = 10 + you.zigs_completed() * 9
-  return "place:Crypt:$ 9 w:260 / " ..
-         "curse skull w:" .. d .. " / revenant w:" .. e .. " / " ..
-         "ancient lich w:" .. d .. " / dread lich w:" .. e
+  local d = 10 + you.zigs_completed() * 3
+  local e = 10 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 9
+  return "place:Crypt:$ 9 w:250 / vampire bloodprince w:" .. d .. " / " ..
+         "curse skull w:" .. e .. " / revenant soulmonger w:" .. f .. " / " ..
+         "ancient lich w:" .. e .. " / dread lich w:" .. f
 end))
 
 mset(spec_fn(function ()
@@ -387,7 +388,7 @@ mset(with_props(spec_fn(function ()
   local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 5)
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
+         "eidolon w:" .. e .. " / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
          "player ghost w:" .. f
 end), { weight = 2 }))

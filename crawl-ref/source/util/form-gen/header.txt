@@ -1,0 +1,85 @@
+#pragma once
+
+#include "tag-version.h"
+
+/*
+ * This file is auto-generated. See util/form-gen.py and dat/forms.
+ */
+
+struct form_entry
+{
+    // Row 1:
+    transformation tran;
+    monster_type equivalent_mons;
+    const char *short_name;
+    const char *long_name;
+    const char *wiz_name;
+
+    // Row 2:
+    const char *description;
+
+    // Row 3:
+    int min_skill;
+    int max_skill;
+    talisman_type talisman;
+
+    // Row 4:
+    int blocked_slots;
+    int resists;
+
+    // Row 5:
+    int str_mod;
+    int dex_mod;
+    size_type size;
+    int hp_mod;
+    int move_speed;
+
+    // Row 6:
+    FormScaling ac;
+    FormScaling ev;
+    bool can_cast;
+    FormScaling unarmed_bonus_dam;
+
+    // Row 7:
+    brand_type uc_brand;
+    int uc_colour;
+    const char *uc_attack;
+    FormAttackVerbs uc_attack_verbs;
+
+    // Row 8:
+    form_capability can_fly;
+    form_capability can_swim;
+    form_capability offhand_punch;
+    bool changes_anatomy;
+    bool changes_substance;
+    mon_holy_type holiness;
+
+    // Row 9:
+    form_capability has_blood;
+    form_capability has_hair;
+    form_capability has_bones;
+    form_capability has_feet;
+    form_capability has_ears;
+
+    // Row 10:
+    const char *shout_verb;
+    int shout_volume_modifier;
+    const char *hand_name;
+    const char *foot_name;
+    const char *prayer_action;
+    const char *flesh_equivalent;
+
+    // Row 11:
+    const dam_deducer* special_dice;
+    const char* special_dice_name;
+
+    // pairs of the form {terse_description, full_description} for display in
+    // `A` and `%`. Either can be empty.
+    // Resistances (except rTorm), flight, amphibious, no grasping,
+    // melded equipment are added separately in mutation.cc:_get_form_badmuts
+    vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
+};
+
+static const form_entry formdata[] =
+{

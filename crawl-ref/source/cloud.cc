@@ -332,6 +332,21 @@ static const cloud_data clouds[] = {
       ETC_ELECTRICITY,                                 // colour
       { TILE_CLOUD_MAGNETISED_DUST, CTVARY_RANDOM },   // tile
     },
+    // CLOUD_BATS,
+    { "bats", nullptr,                                 // terse, verbose name
+      ETC_DARK,                                        // colour
+      { TILE_CLOUD_BATS, CTVARY_DUR },                 // tile
+      BEAM_BAT_CLOUD,
+      { 4, 11, true },
+    },
+    // CLOUD_RUST,
+    { "rust", nullptr,                            // terse, verbose name
+        BROWN,                                    // colour
+        { TILE_CLOUD_RUST, CTVARY_DUR },          // tile
+        BEAM_ACID,                                // beam_effect
+        { 2, 3, false },                          // base, random damage
+      },
+
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -746,7 +761,6 @@ bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return (is_harmless_cloud(cloud.type) && !is_opaque_cloud(cloud.type))
            || cloud.type == CLOUD_STEAM
-           || cloud.type == CLOUD_BLASTMOTES
            || ct == CLOUD_VORTEX; // soon gone
 }
 
@@ -814,9 +828,14 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 
     // There's already a cloud here. See if we can overwrite it.
+    // (Clouds can overwrite weaker cloud types OR clouds of the same type with
+    // less remaining duration)
     const cloud_struct *cloud = cloud_at(ctarget);
-    if (cloud && !cloud_is_stronger(cl_type, *cloud))
+    if (cloud && (!cloud_is_stronger(cl_type, *cloud)
+                  && (cloud->type != cl_type || cloud->decay > cl_range * 10)))
+    {
         return;
+    }
 
     // If the old cloud was opaque, may need to recalculate los. It *is*
     // possible to overwrite an opaque cloud with a non-opaque one; OOD will do
@@ -865,6 +884,8 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_ACID:
     case CLOUD_MISERY:
     case CLOUD_BLASTMOTES:
+    case CLOUD_BATS:
+    case CLOUD_RUST:
         return true;
     default:
         return false;
@@ -959,7 +980,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
                    || act.is_player()
                       && have_passive(passive_t::r_spectral_mist);
         case CLOUD_ACID:
-            return act.res_acid() > 0;
+            return act.res_corr() > 0;
         case CLOUD_STORM:
             return act.res_elec() >= 3;
         case CLOUD_MISERY:
@@ -968,6 +989,10 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.res_polar_vortex();
         case CLOUD_RAIN:
             return !act.is_fiery();
+        case CLOUD_BATS:
+            return bool(act.holiness() & MH_UNDEAD);
+        case CLOUD_RUST:
+            return act.is_player() && you.form == transformation::fortress_crab;
         default:
             return false;
     }
@@ -1024,7 +1049,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_PETRIFY:
         return act->res_petrify();
     case CLOUD_ACID:
-        return act->res_acid();
+        return act->res_corr();
     case CLOUD_STORM:
         return act->res_elec();
     case CLOUD_MISERY:
@@ -1142,7 +1167,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             // min 2 turns to yellow, max 4
             return true;
         }
-        else if (coinflip() && mons->malmutate("mutagenic cloud"))
+        else if (coinflip() && mons->malmutate(cloud.agent(), "mutagenic cloud"))
         {
             if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
                 did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
@@ -1168,7 +1193,13 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-        act->acid_corrode(5);
+        if (!one_chance_in(3))
+            act->corrode(cloud.agent());
+        return true;
+
+    case CLOUD_RUST:
+        act->corrode(cloud.agent(), "the rust", 1);
+        act->weaken(cloud.agent(), 1);
         return true;
 
     case CLOUD_MISERY:
@@ -1204,6 +1235,36 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             return false;
         explode_blastmotes_at(cloud.pos);
         return true;
+
+    case CLOUD_BATS:
+        // Don't build up more sleep while already asleep.
+        if (act->asleep())
+            break;
+
+        if (act->is_player())
+        {
+            if (!you.can_sleep())
+                break;
+
+            you.duration[DUR_DROWSY] += random_range(30, 45) * you.time_taken / 10;
+            if (you.duration[DUR_DROWSY] >= 100)
+            {
+                you.duration[DUR_DROWSY] = 0;
+                you.put_to_sleep(cloud.agent(), random_range(3, 5) * BASELINE_DELAY);
+            }
+        }
+        else
+        {
+            monster* mon = act->as_monster();
+            mon->add_ench(mon_enchant(ENCH_DROWSY, 0, cloud.agent(), random_range(25, 40)));
+            if (mon->get_ench(ENCH_DROWSY).duration >= 100)
+            {
+                mon->del_ench(ENCH_DROWSY);
+                simple_monster_message(*mon, " falls asleep!");
+                mon->put_to_sleep(cloud.agent(), random_range(3, 5) * BASELINE_DELAY);
+            }
+        }
+        break;
 
     default:
         break;
@@ -1266,6 +1327,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_STORM:
+    case CLOUD_RUST:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type),
                                  cloud_base_damage,
@@ -1304,7 +1366,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
     if (cloud_flavour != BEAM_NONE)
-        act->expose_to_element(cloud_flavour, 7);
+        act->expose_to_element(cloud_flavour, 7, cloud.agent());
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
@@ -1325,7 +1387,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
              oppr_name.c_str(),
              cloud.cloud_name().c_str());
 
-        act->hurt(oppressor, final_damage, BEAM_MISSILE,
+        act->hurt(oppressor, final_damage, cloud_flavour,
                   KILLED_BY_CLOUD, "", cloud.cloud_name(true));
     }
 }
@@ -1671,7 +1733,21 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     if (!you.can_see(*act))
         return;
 
-    if (type != CLOUD_RAIN)
+    if (type == CLOUD_RAIN)
+    {
+        mprf("%s %s in the rain.",
+            act->name(DESC_THE).c_str(),
+            act->conj_verb(silenced(act->pos())?
+                        "steam" : "sizzle").c_str());
+    }
+    else if (type == CLOUD_BATS)
+    {
+        mprf("%s %s %s.",
+             act->name(DESC_THE).c_str(),
+             (act->conj_verb("are") + " swarmed by").c_str(),
+             cloud_name().c_str());
+    }
+    else
     {
         mprf("%s %s in %s.",
              act->name(DESC_THE).c_str(),
@@ -1679,12 +1755,8 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
                         : (act->conj_verb("are") + " engulfed").c_str(),
              cloud_name().c_str());
         return;
-    } else {
-        mprf("%s %s in the rain.",
-            act->name(DESC_THE).c_str(),
-            act->conj_verb(silenced(act->pos())?
-                        "steam" : "sizzle").c_str());
     }
+
 }
 
 /**
@@ -1981,7 +2053,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "resistance", 10, [](const actor &victim) {
         return victim.res_fire() < 3 && victim.res_cold() < 3 &&
                victim.res_elec() < 3 && victim.res_poison() < 3 &&
-               victim.res_acid() < 3; }, BEAM_RESISTANCE, },
+               victim.res_corr() < 3; }, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     { "confusing", 12, [](const actor &victim) {
         return !victim.clarity() && !victim.is_peripheral(); },
@@ -1996,9 +2068,9 @@ static const vector<chaos_effect> chaos_effects = {
     }, BEAM_VULNERABILITY, },
     { "blinking", 3, nullptr, BEAM_BLINK },
     { "corroding", 5, [](const actor &victim) {
-        return victim.res_acid() < 3; },
-        BEAM_NONE, [](actor* victim, actor* /*source*/) {
-           victim->corrode_equipment();
+        return victim.res_corr() < 3; },
+        BEAM_NONE, [](actor* victim, actor* source) {
+           victim->corrode(source);
            return you.can_see(*victim);
        },
     },

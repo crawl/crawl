@@ -7,7 +7,7 @@ genus: draconian
 will: 40
 attacks:
  - {type: hit, damage: 20}
- - {type: tail_slap, flavour: poison, damage: 15}
+ - {type: sting, flavour: poison, damage: 15}
 hd: 14
 hp_10x: 980
 ac: 9

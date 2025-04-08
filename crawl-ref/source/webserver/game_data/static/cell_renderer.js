@@ -1090,6 +1090,13 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.UNREWARDING:
                 case icons.ANIMATED_WEAPON:
                 case icons.VENGEANCE_TARGET:
+                case icons.VAMPIRE_THRALL:
+                case icons.ENKINDLED_1:
+                case icons.ENKINDLED_2:
+                case icons.NOBODY_MEMORY_1:
+                case icons.NOBODY_MEMORY_2:
+                case icons.NOBODY_MEMORY_3:
+                case icons.PYRRHIC:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
@@ -1109,6 +1116,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.FULLY_CHARGED:
                 case icons.VITRIFIED:
                 case icons.CONFUSED:
+                case icons.LACED_WITH_CHAOS:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1153,6 +1161,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.TEMPERED:
                 case icons.HEART:
                 case icons.UNSTABLE:
+                case icons.VEXED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

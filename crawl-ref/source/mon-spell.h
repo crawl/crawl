@@ -326,7 +326,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_WYRMHOLE,
       {
-       { SPELL_SOJOURNING_BOLT, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+       { SPELL_SOJOURNING_BOLT, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                         | MON_SPELL_NOISY },
       }
     },
@@ -1136,6 +1136,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_NAMELESS_REVENANT,
+      {
+       { SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL },
+       { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD},
+      }
+    },
+
     {  MST_LICH,
       {
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
@@ -1434,6 +1441,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 50, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_VAMPIRE_BLOODPRINCE,
+      {
+       { SPELL_GRAVE_CLAW, 30, MON_SPELL_WIZARD },
+       { SPELL_DRAIN_LIFE, 30, MON_SPELL_WIZARD },
+       { SPELL_RAVENOUS_SWARM, 40, MON_SPELL_WIZARD },
+       { SPELL_DOMINATE_UNDEAD, 22, MON_SPELL_WIZARD },
       }
     },
 

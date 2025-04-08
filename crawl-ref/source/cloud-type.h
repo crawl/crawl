@@ -47,6 +47,8 @@ enum cloud_type
     CLOUD_ELECTRICITY,
     CLOUD_FAINT_MIASMA,
     CLOUD_MAGNETISED_DUST,
+    CLOUD_BATS,
+    CLOUD_RUST,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

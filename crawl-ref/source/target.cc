@@ -18,6 +18,7 @@
 #include "libutil.h"
 #include "los-def.h"
 #include "losglobal.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "religion.h"
 #include "ray.h"
@@ -202,14 +203,10 @@ targeter_beam::targeter_beam(const actor *act, int r, zap_type zap,
     origin = aim = act->pos();
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, pow, false, beam);
-    beam.is_tracer = true;
-    beam.is_targeting = true;
+    beam.set_is_tracer(true);
     beam.range = range;
     beam.source = origin;
     beam.target = aim;
-    beam.dont_stop_player = true;
-    beam.friend_info.dont_stop = true;
-    beam.foe_info.dont_stop = true;
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
 
@@ -546,6 +543,9 @@ targeter_passwall::targeter_passwall(int max_range) :
 
 bool targeter_passwall::valid_aim(coord_def a)
 {
+    // Don't allow casting with 0 LOS
+    if (!you.see_cell(a))
+        return notify_fail("You cannot see that place.");
     passwall_path tmp_path(you, a - you.pos(), range);
     string failmsg;
     tmp_path.is_valid(&failmsg);
@@ -556,6 +556,8 @@ bool targeter_passwall::valid_aim(coord_def a)
 
 bool targeter_passwall::set_aim(coord_def a)
 {
+    if (!you.see_cell(a))
+        return false;
     cur_path = make_unique<passwall_path>(you, a - you.pos(), range);
     return true;
 }
@@ -950,7 +952,7 @@ bool targeter_fragment::set_aim(coord_def a)
     return true;
 }
 
-targeter_reach::targeter_reach(const actor* act, reach_type ran) :
+targeter_reach::targeter_reach(const actor* act, int ran) :
     range(ran)
 {
     ASSERT(act);
@@ -981,9 +983,8 @@ aff_type targeter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    // hacks: REACH_THREE entails smite targeting, because it exists entirely
-    // for the sake of UNRAND_RIFT. So, don't show the tracer.
-    if (range == REACH_TWO
+    // Reach 3 entails smite targeting, so don't show the tracer.
+    if (range == 2
         && ((loc - origin) * 2 - (aim - origin)).abs() < 1
         && feat_is_reachable_past(env.grid(loc)))
     {
@@ -1966,6 +1967,31 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mon.is(MB_ANGUISH);
 }
 
+targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
+    : targeter_smite(act, r)
+{
+}
+
+bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
+}
+
+bool targeter_poisonous_vapours::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info *mon = env.map_knowledge(a).monsterinfo();
+    if (mon && !affects_monster(*mon))
+    {
+        return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
+                           "poisonous vapours.");
+    }
+
+    return true;
+}
+
 targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
     : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0), hp(boulder_hp)
 {
@@ -2715,6 +2741,94 @@ bool targeter_teleport_other::valid_aim(coord_def a)
 
     if (mi->willpower() == WILL_INVULN)
         return false;
+
+    return true;
+}
+
+targeter_malign_gateway::targeter_malign_gateway(actor& caster)
+{
+    agent = &caster;
+}
+
+aff_type targeter_malign_gateway::is_affected(coord_def loc)
+{
+    if (is_gateway_target(*agent, loc))
+        return AFF_MAYBE;
+
+    return AFF_NO;
+}
+
+targeter_watery_grave::targeter_watery_grave()
+    : targeter_radius(&you, LOS_NO_TRANS, 4)
+{
+}
+
+aff_type targeter_watery_grave::is_affected(coord_def loc)
+{
+    if (!targeter_radius::is_affected(loc))
+        return AFF_NO;
+
+    if (feat_is_water(env.grid(loc)))
+        return AFF_YES;
+    else
+        return AFF_MAYBE;
+}
+
+targeter_bestial_takedown::targeter_bestial_takedown()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_bestial_takedown::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (monster* mon = monster_at(a))
+    {
+        if (!mon->friendly() && mon->has_ench(ENCH_FEAR))
+        {
+            if (get_bestial_landing_spots(a).empty())
+                return notify_fail("You can see nowhere safe to land near that.");
+            else
+                return true;
+        }
+    }
+
+    return notify_fail("You must target an enemy who is afraid.");
+}
+
+bool targeter_bestial_takedown::set_aim(coord_def a)
+{
+    landing_spots = get_bestial_landing_spots(a);
+
+    return true;
+}
+
+aff_type targeter_bestial_takedown::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return AFF_YES;
+
+    for (coord_def p : landing_spots)
+        if (loc == p)
+            return AFF_LANDING;
+
+    return AFF_NO;
+}
+
+targeter_paragon_deploy::targeter_paragon_deploy(int _range)
+    : targeter_smite(&you, _range, 1, 1, true, false, false)
+{
+}
+
+bool targeter_paragon_deploy::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))
+        return notify_fail("Your paragon could not survive being deployed there.");
 
     return true;
 }

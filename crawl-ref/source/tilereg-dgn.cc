@@ -567,14 +567,15 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 {
                     // if on stairs, travel them
                     const dungeon_feature_type feat = env.grid(gc);
-                    switch (feat_stair_direction(feat))
+                    const command_type cmd = feat_stair_direction(feat);
+                    switch (cmd)
                     {
                     case CMD_GO_DOWNSTAIRS:
                     case CMD_GO_UPSTAIRS:
-                        return command_to_key(feat_stair_direction(feat));
+                        return encode_command_as_key(cmd);
                     default:
                         // otherwise wait
-                        return command_to_key(CMD_WAIT);
+                        return encode_command_as_key(CMD_WAIT);
                     }
                 }
                 else
@@ -590,26 +591,32 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         update_screen();
                         return CK_MOUSE_CMD;
                     }
-                    return command_to_key(CMD_PICKUP);
+                    return encode_command_as_key(CMD_PICKUP);
                 }
             }
 
             const dungeon_feature_type feat = env.grid(gc);
-            switch (feat_stair_direction(feat))
+            const command_type cmd = feat_stair_direction(feat);
+            switch (cmd)
             {
             case CMD_GO_DOWNSTAIRS:
             case CMD_GO_UPSTAIRS:
-                return command_to_key(feat_stair_direction(feat));
+                return encode_command_as_key(cmd);
             default:
                 return 0;
             }
         }
         case wm_mouse_event::RIGHT:
             if (!(event.mod & TILES_MOD_SHIFT))
-                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
+            {
+                // Character overview.
+                return encode_command_as_key(CMD_RESISTS_SCREEN);
+            }
             if (!you_worship(GOD_NO_GOD))
-                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
-
+            {
+                // Religion screen.
+                return encode_command_as_key(CMD_DISPLAY_RELIGION);
+            }
             // fall through...
         default:
             return 0;
@@ -643,11 +650,12 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
             return CK_MOUSE_CMD;
     }
 
-    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & (TILES_MOD_CTRL | TILES_MOD_SHIFT)) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-        if (cmd != CK_MOUSE_CMD)
-            process_command((command_type) cmd);
+        const command_type cmd = click_travel(gc, mod & TILES_MOD_CTRL,
+                                              mod & TILES_MOD_SHIFT);
+        if (cmd != CMD_NO_CMD)
+            process_command(cmd);
 
         return CK_MOUSE_CMD;
     }
@@ -658,9 +666,9 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         return CK_MOUSE_CMD;
 
     dprf("click_travel");
-    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-    if (cmd != CK_MOUSE_CMD)
-        process_command((command_type) cmd);
+    const command_type cmd = click_travel(gc, false, false);
+    if (cmd != CMD_NO_CMD)
+        process_command(cmd);
 
     return CK_MOUSE_CMD;
 }
@@ -909,7 +917,14 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
+            {
                 _add_tip(tip, "[L-Click] Move");
+                if (feat_is_open_door(env.grid(gc)))
+                {
+                    _add_tip(tip, "[Shift + L-Click] Close (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
             else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))

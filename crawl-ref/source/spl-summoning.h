@@ -72,6 +72,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 spret cast_malign_gateway(actor* caster, int pow, bool fail = false,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
+bool is_gateway_target(const actor& caster, coord_def location);
 spret cast_summon_forest(actor* caster, int pow, bool fail, bool test=false);
 spret cast_forge_blazeheart_golem(int pow, bool fail);
 
@@ -97,16 +98,19 @@ void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
 vector<spell_type> player_battlesphere_spells();
 bool trigger_battlesphere(actor* agent);
-dice_def battlesphere_damage(int pow);
+dice_def battlesphere_damage_from_power(int pow);
+dice_def battlesphere_damage_from_hd(int hd);
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail,
                                   bool is_shadow = false);
 int prism_hd(int pow, bool random = true);
 
-monster* find_spectral_weapon(const actor* agent);
+monster* find_spectral_weapon(const item_def& weapon);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 void check_spectral_weapon(actor &agent);
+monster* create_spectral_weapon(const actor &agent, coord_def pos,
+                                item_def& weapon);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 

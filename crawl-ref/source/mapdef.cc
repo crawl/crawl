@@ -3812,7 +3812,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
 {
     vector<string> ep = split_string(":", ench_str);
-    if (ep.size() > (perm ? 2 : 3))
+    if (ep.size() > static_cast<size_t>(perm ? 2 : 3))
     {
         error = make_stringf("bad %sench specifier: \"%s\"",
                              perm ? "perm_" : "",

@@ -861,6 +861,173 @@ MAP
   ---.
 ENDMAP
 
+NAME:    nicolae_shop_bimaterial_pillars
+TAGS:    allow_dup extra shop transparent
+KFEAT:   O = any shop
+SHUFFLE: cvbn
+MAP
+ ... ...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ...O...
+..c...c..
+.cvc.cvc.
+..c...c..
+ ... ...
+ENDMAP
+
+NAME:    nicolae_shopburst
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DE, FH, JK, LM
+SUBST:   DFJL = c, EHKM = .
+MAP
+  FHF
+ cFHFc
+DD...JJ
+EE.S.KK
+DD...JJ
+ cLMLc
+  LML
+ENDMAP
+
+NAME:   nicolae_shop_closed_for_inventory
+TAGS:   extra shop transparent
+DEPTH:  D:8-, Depths, Snake, Shoals
+WEIGHT: 1
+KFEAT:  - = iron_grate
+KFEAT:  O = any shop
+KPROP:  O = no_tele_into
+KMASK:  O = opaque
+MAP
+.---
+.-O-
+.---
+ENDMAP
+
+NAME:    nicolae_shop_cornered_store
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: DEF
+SUBST:   D = ., E : am, F : am.
+SHUFFLE: ma
+SUBST:   a = x
+MAP
+xxxxx
+x...D.
+x.S.E.
+x...F.
+xDEFa.
+ ....@
+ENDMAP
+
+NAME:  nicolae_shop_flopsided
+TAGS:  allow_dup extra shop transparent
+KFEAT: O = any shop
+SUBST: c : cvbnt
+MAP
+c.c.c
+......
+ c.O.c
+ ......
+  c.c.c
+ENDMAP
+
+NAME:    nicolae_shop_glassy
+TAGS:    allow_dup extra shop transparent
+KFEAT:   + = closed_clear_door
+KFEAT:   S = any shop
+SHUFFLE: +m`p/m+p`
+SUBST:   ` = ., p = m
+MAP
+ .....
+..`p`..
+.`m+m`.
+.p+S+p.
+.`m+m`.
+..`p`..
+ .....
+ENDMAP
+
+# Unwind by reading under a tree by a pond. :)
+NAME:   nicolae_shop_relaxation
+TAGS:   no_pool_fixup allow_dup extra shop transparent
+KFEAT:  S = scroll shop / book shop
+: if crawl.coinflip() then
+SUBST:  pq = t
+NSUBST: r = W / w
+: else
+SUBST:  r = t, p = w
+NSUBST: q = W / w
+: end
+MAP
+  ...
+ ..p..
+..qrq..
+.prSrp.
+..qrq..
+ ..p..
+  ...
+ENDMAP
+
+NAME:  nicolae_shop's_first_dollar
+TAGS:  extra shop transparent
+KITEM: $ = gold q:1
+KFEAT: O = any shop
+KPROP: $ = no_tele_into
+KMASK: $ = no_monster_gen
+KMASK: $ = no_item_gen
+KMASK: $ = no_trap_gen
+KMASK: $ = opaque
+MAP
+xxxxx
+xxm...
+x$m.O.
+xxm...
+xxxxx
+ENDMAP
+
+NAME:  nicolae_shop_swords_in_saltire
+TAGS:  extra shop transparent
+KFEAT: S = weapon shop / antique weapon shop
+MAP
+v.....v
+.v.T.v.
+..v.v..
+.T.v.T.
+v.v.v.v
+.v.S.v.
+v.v.v.v
+ENDMAP
+
+NAME:    nicolae_shop_targeted
+TAGS:    allow_dup extra shop transparent
+KFEAT:   S = any shop
+SHUFFLE: -G
+TILE:    G : dngn_statue_orb
+MAP
+xx.G.
+xx.-@
+xS.G.
+xx.-@
+xx.G.
+ENDMAP
+
+NAME:   nicolae_shop_well_armoured
+TAGS:   allow_dup extra shop transparent
+KFEAT:  S = armour shop / antique armour shop
+NSUBST: - = 2:@ / v
+MAP
+ v v v
+vv-v-vv
+ -...-
+vv.S.vv
+ -...-
+vv-v-vv
+ v v v
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -872,14 +1039,15 @@ ENDMAP
 # Custom venom shop
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen transparent
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Snake
 MONS:    ball python w:5 / adder, water moccasin
 MONS:    black mamba w:20 / naga ; sling, naga mage / naga ritualist, nagaraja
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          dart ego:poisoned w:8 | dart ego:curare w:4 | scroll of poison w:5 | \
          ring of poison resistance w:3 | randbook disc:alchemy w:6 | \
          staff of alchemy w:2 | any weapon ego:venom w:4 | \
-         partisan ego:venom w:1 | serpent talisman randart w:2 | \
+         partisan ego:venom w:1 | medusa talisman w:2 | \
+         serpent talisman randart w:2 | \
          any armour ego:poison_resistance w:6 | w:1 swamp dragon scales
 NSUBST:  ? = 2:? / 2 = ?.. / *:.
 : if you.absdepth() < 7 then
@@ -905,22 +1073,26 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
-KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
-             iron dragon w:4
+KMONS:   2 = stone giant / walking earthen tome w:4 / \
+             deep troll earth mage / iron dragon w:4
 KMONS:   D = pile of debris
 ITEM:    stone
-KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
-             stone w:15 | large rock w:15 | sling w:8  | \
-             tin of tremorstones w:7 | wand of digging w:8 | \
-             staff of earth w:4 | granite talisman w:4 | \
-             randbook disc:earth w:5 | book of the earth w:2 | \
-             book of geomancy w:2 | book of iron w:2 | book of the moon w:2 | \
-             book of blasting w:2 | crystal plate armour w:1
-SUBST:   ? = 2dd
+: local inv = "tin of tremorstones w:7 | wand of digging w:8 | \
+:              staff of earth w:4 randbook disc:earth w:5 | \
+:              book of the earth w:2 | book of iron w:2 | \
+:              book of the moon w:2 | crystal plate armour w:1 | "
+SUBST:   ? = 1dd
 : if you.absdepth() < 16 then
-SUBST:   2 = 1
+:   inv = inv .. "stone w:14 | large rock w:14 | sling w:8 | \
+:                 medusa talisman w:6 |  book of geomancy w:2"
+: else
+:   inv = inv .. "large rock w:20 | sling randart w:4 | \
+:                 medusa talisman randart w:4 | granite talisman w:2 | \
+:                 compendium of siegecraft w:2 | book of annihilation w:2"
+SUBST:   1 = 2
 : end
 SUBST:   B : D., C : D.
+: kfeat("S = general shop type:Pet suffix:Rocks count:7 ; " .. inv)
 MAP
 B.....C
 .xx+xx.
@@ -935,11 +1107,12 @@ ENDMAP
 # Custom blood shop
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen transparent
-DEPTH:   D:12-, Depths
+DEPTH:   D:11-, Depths
 KMONS:   1 = vampire / vampire bat
 KMONS:   2 = vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:8 ; \
-             dagger ego:vampirism w:30 | any weapon ego:vampirism w:15 | \
+             dagger ego:vampirism w:20 | any weapon ego:vampirism w:15 | \
+             sanguine talisman w:8 | sanguine talisman randart w:2 | \
              randbook numspells:2 spells:sublimation_of_blood w:20 | \
              randbook disc:necromancy w:9 | w:1 book of annihilations
 SHUFFLE: ABCD
@@ -1348,10 +1521,10 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
 -- unrandart axes aren't included here since one of the above axes can already
 -- get turned into them.
 if not you.unrands("devastator") then
-      kstr = kstr .. "|devastator w:1"
+      kstr = kstr .. "| devastator w:1"
 end
 if not you.unrands("firestarter") then
-      kstr = kstr .. "|firestarter w:1"
+      kstr = kstr .. "| firestarter w:1"
 end
 
 kfeat(kstr)
@@ -1429,7 +1602,7 @@ ENDMAP
 NAME:   nicolae_shop_firing_range
 TAGS:   transparent no_monster_gen no_item_gen no_tide
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KMONS:  DE = training dummy
+KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
 KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
 KITEM:  E = throwing net q:1
@@ -1912,7 +2085,7 @@ NAME:   tekkud_shop_of_orbs
 TAGS:   no_monster_gen no_item_gen no_trap_gen patrolling
 TAGS:   vaults_hard vaults_orient_s
 DEPTH:  D:13-, Snake:2-, Elf:2-, Vaults, Crypt, Depths, Zot, !Zot:$
-WEIGHT: 1 (Zot), 3
+WEIGHT: 1 (Zot, Crypt), 3
 {{
 local shopname = util.random_from({"type:Orb suffix:Outfitters",
    "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
@@ -1949,7 +2122,7 @@ MONS:  lich / fire giant, crystal guardian
 MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
 SUBST: + = .
 : elseif you.in_branch("Crypt") then
-MONS:  revenant / curse skull w:5 / lich
+MONS:  revenant soulmonger / curse skull w:5 / lich
 MONS:  vampire knight / deep elf death mage
 MONS:  orb spider zombie / weeping skull / laughing skull
 : elseif you.in_branch("Depths") then
@@ -2059,6 +2232,69 @@ MAP
  . .
 G.S.G
  . .
+ENDMAP
+
+# Only in early D, since by later on you'd probably know what most things are,
+# and then there's not much point to it being antique.
+NAME:   nicolae_shop_antique_consumables
+TAGS:   allow_dup transparent extra luniq
+DEPTH:  D:2-8
+KMONS:  P = pile of debris
+KFEAT:  S = antiques shop type:Antique suffix:Scrolls ; any scroll / \
+            antiques shop type:Antique suffix:Potions ; any potion
+NSUBST: P = 1=. / 2=P / ...PP
+MAP
+cPcPc
+P...P
+c.S.c
+P...P
+cPcPc
+ENDMAP
+
+# In case you have some spare change and some open slots.
+NAME:   nicolae_shop_hand_me_the_aux
+TAGS:   transparent extra
+DEPTH:  D:4-7
+WEIGHT: 5
+# Having duplicates of mundane aux armors is a little boring, so do some lua
+# to get only one of each.
+: local auxes = {"hat mundane", "helmet mundane", "pair of gloves mundane",
+:   "cloak mundane", "pair of boots mundane", "barding mundane",
+:   "buckler mundane"}
+: local inventory = util.random_subset(auxes, 5)
+: kfeat("S = armour shop type:Wardrobe suffix:Accessories count:5 use_all ; " ..
+:   util.join(" | ", inventory))
+KFEAT:  - = iron_grate
+SUBST:  a : vv., p : v-., q : v-, r : v-., s : vv.
+NSUBST: ` = 2:@ / .
+MAP
+   .`.
+ vvs.avv
+ vqr.pqv
+.ap...rs.
+`...S...`
+.sr...pa.
+ vqp.rqv
+ vva.svv
+   .`.
+ENDMAP
+
+NAME:  nicolae_shop_information_kiosk
+TAGS:  transparent extra no_rotate no_vmirror no_pool_fixup
+DEPTH: D:1-7
+KFEAT: S = general shop type:Information suffix:Kiosk count:4 use_all ; \
+           scroll of identify q:1 | scroll of identify q:2 | \
+           scroll of revelation q:1 | scroll of revelation q:2
+MAP
+   ...
+  .WWW.
+ .WwSwW.
+.WwwwwwW.
+.WwwcwwW.
+.WwwcwwW.
+ .WwcwW.
+  .WWW.
+   ...
 ENDMAP
 
 ###############################################################################
@@ -2282,4 +2518,43 @@ xxtSt...tStxx
 xxtSt...tStxx
 xxxxxtStxxxxx
 xxxxxxxxxxxxx
+ENDMAP
+
+# Just 2 shops
+NAME:  nicolae_shops_duplex
+TAGS:  extra luniq_floating_shops transparent
+DEPTH: D:4-, Depths, Elf
+KFEAT: S = any shop
+MAP
+xxx.@.xxx
+xcccncccx
+xcT...Tcx
+.c.cSc.c.
+@..ccc..@
+.c.cSc.c.
+xcT...Tcx
+xcccncccx
+xxx.@.xxx
+ENDMAP
+
+# 2-4 shops
+NAME:    nicolae_shops_little_town_plaza
+TAGS:    extra luniq_floating_shops transparent
+DEPTH:   D:4-, Depths, Elf
+KFEAT:   p = general shop / antiques shop
+KFEAT:   q = book shop
+KFEAT:   r = distillery shop
+KFEAT:   s = scroll shop
+SHUFFLE: GT-/TG`
+SUBST:   - = ., ` : x., G : GGt
+SHUFFLE: xc
+NSUBST:  S = p / q / rt / st
+MAP
+xx-G-xx
+xS...Sx
+-..T..-
+G.TxT.G
+-..T..-
+xS...Sx
+xx-G-xx
 ENDMAP

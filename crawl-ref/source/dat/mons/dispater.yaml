@@ -1,7 +1,7 @@
 name: "Dispater"
 glyph: {char: "&", colour: magenta}
 flags: [fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
-resists: {elec: 3, poison: 1, fire: 1, cold: 1, acid: 3, damnation: 1}
+resists: {elec: 3, poison: 1, fire: 1, cold: 1, corr: 3, damnation: 1}
 xp_mult: 5159
 genus: hell_lord
 holiness: [demonic]

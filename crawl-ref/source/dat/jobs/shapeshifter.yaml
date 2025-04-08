@@ -7,9 +7,10 @@ int: 2
 dex: 4
 equipment:
   - "animal skin"
+  - "flux bauble q:3"
   - "potion of lignification"
-  - "beast talisman"
-  - "flux talisman"
+  - "quill talisman"
+  - "protean talisman"
 recommended_species:
   - naga
   - merfolk
@@ -18,7 +19,7 @@ recommended_species:
   - demonspawn
   - troll
 skills:
-  fighting: 1
+  fighting: 2
   unarmed combat: 3
   dodging: 2
   shapeshifting: 3

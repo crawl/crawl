@@ -299,8 +299,6 @@ void blink_fineff::fire()
     if (!pal || !pal->alive() || pal->no_tele())
         return;
 
-    int cells_seen = 0;
-    coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
         // No blinking into teleport closets.
@@ -309,14 +307,10 @@ void blink_fineff::fire()
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;
-        cells_seen++;
-        if (one_chance_in(cells_seen))
-            target = *ai;
-    }
-    if (!cells_seen)
-        return;
 
-    pal->blink_to(target);
+        pal->blink_to(*ai);
+        break;
+    }
 }
 
 void teleport_fineff::fire()
@@ -750,6 +744,13 @@ void make_derived_undead_fineff::fire()
 
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
+
+    if (act_immediately)
+    {
+        undead->flags &= ~MF_JUST_SUMMONED;
+        undead->speed_increment = 80;
+        queue_monster_for_action(undead);
+    }
 }
 
 const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)
@@ -826,17 +827,20 @@ void spectral_weapon_fineff::fire()
     if (!defend || !atkr || !defend->alive() || !atkr->alive())
         return;
 
+    if (!weapon || !weapon->defined())
+        return;
+
     const coord_def target = defend->pos();
 
     // Do we already have a spectral weapon?
-    monster* sw = find_spectral_weapon(atkr);
+    monster* sw = find_spectral_weapon(*weapon);
     if (sw)
     {
         if (sw == defend)
             return; // don't attack yourself. too silly.
         // Is it already in range?
-        const reach_type sw_range = sw->reach_range();
-        if (sw_range > REACH_NONE
+        const int sw_range = sw->reach_range();
+        if (sw_range > 1
             && can_reach_attack_between(sw->pos(), target, sw_range)
             || adjacent(sw->pos(), target))
         {
@@ -848,7 +852,7 @@ void spectral_weapon_fineff::fire()
     }
 
     // Can we find a nearby space to attack from?
-    const reach_type atk_range = atkr->reach_range();
+    const int atk_range = atkr->reach_range();
     int seen_valid = 0;
     coord_def chosen_pos;
     // Try only spaces adjacent to the attacker.
@@ -861,7 +865,7 @@ void spectral_weapon_fineff::fire()
         }
         // ... and only spaces the weapon could attack the defender from.
         if (grid_distance(*ai, target) > 1
-            && (atk_range <= REACH_NONE
+            && (atk_range <= 1
                 || !can_reach_attack_between(*ai, target, atk_range)))
         {
             continue;
@@ -871,42 +875,15 @@ void spectral_weapon_fineff::fire()
         if (one_chance_in(seen_valid))
             chosen_pos = *ai;
     }
-    if (!seen_valid || !weapon || !weapon->defined())
+    if (!seen_valid)
         return;
 
-    mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 atkr->is_player() ? BEH_FRIENDLY
-                                  : SAME_ATTITUDE(atkr->as_monster()),
-                 chosen_pos,
-                 atkr->mindex(),
-                 MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(atkr, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-    mg.props[TUKIMA_WEAPON] = *weapon;
-    mg.props[TUKIMA_POWER] = 50;
-
-    dprf("spawning at %d,%d", chosen_pos.x, chosen_pos.y);
-
-    monster *mons = create_monster(mg);
+    monster *mons = create_spectral_weapon(*atkr, chosen_pos, *weapon);
     if (!mons)
         return;
 
-    // We successfully made a new one! Kill off the old one,
-    // and don't spam the player with a spawn message.
-    if (sw)
-    {
-        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
-        end_spectral_weapon(sw, false, true);
-    }
-
-    dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
-
     melee_attack melee_attk(mons, defend);
     melee_attk.attack();
-
-    mons->summoner = atkr->mid;
-    mons->behaviour = BEH_SEEK; // for display
-    atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 
 void lugonu_meddle_fineff::fire() {
@@ -951,6 +928,11 @@ void splinterfrost_fragment_fineff::fire()
         mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
 
     beam.fire();
+}
+
+void detonation_fineff::fire()
+{
+    do_catalyst_explosion(posn, weapon);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

@@ -467,7 +467,7 @@ namespace quiver
                 return "punch";
             }
 
-            if (weapon_reach(*weapon) > REACH_NONE)
+            if (weapon_reach(*weapon) > 1)
                 return "reach";
             else if (attack_cleaves(you))
                 return "cleave";
@@ -578,7 +578,7 @@ namespace quiver
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code
-            const reach_type reach_range = you.reach_range();
+            const int reach_range = you.reach_range();
 
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -654,11 +654,11 @@ namespace quiver
 
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
-            // REACH_THREE entails smite targeting; this is a bit hacky in that
+            // Reach 3 entails smite targeting; this is a bit hacky in that
             // this is entirely for the sake of UNRAND_RIFT.
             // Cleaving reaches also will never fail to miss, since the player can
             // just attack another target in most cases to hit both.
-            if (reach_range < REACH_THREE
+            if (reach_range < 3
                 && !attack_cleaves(you)
                 && (x_distance > 1 || y_distance > 1))
             {
@@ -1284,7 +1284,6 @@ namespace quiver
         {
         case ABIL_END_TRANSFORMATION:
         case ABIL_BEGIN_UNTRANSFORM:
-        case ABIL_EXSANGUINATE:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
@@ -1300,8 +1299,6 @@ namespace quiver
         case ABIL_INVENT_GIZMO:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
-        // not entirely pseudo, but doesn't make a lot of sense to quiver:
-        case ABIL_TRAN_BAT:
             return true;
         default:
             return false;
@@ -1338,7 +1335,7 @@ namespace quiver
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_CAUSTIC_BREATH:
-        case ABIL_BREATHE_FIRE:
+        case ABIL_GOLDEN_BREATH:
         case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
         case ABIL_NULLIFYING_BREATH:

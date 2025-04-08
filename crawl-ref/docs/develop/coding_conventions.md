@@ -18,7 +18,9 @@ effectively" treatise.
 **Formatting**: Please use max 72 character width for your commit messages.
 Include a blank line between the title and the body. In vim, you can enforce
 this with `:set tw=72`, and then if needed use `gqap` to manually reflow a
-paragraph.
+paragraph. You can copy the script `crawl-ref/docs/develop/git/commit-msg` to
+`.git/hooks` in order to automatically prevent you from creating misformatted
+commit messages.
 
 **Commit titles**: you should use a brief but informative commit message that
 is interpretable by someone viewing only the commit message with no context.
@@ -66,10 +68,11 @@ low vision or other accessibility constraints, future (perhaps very
 distant future) contributors who may need to decipher your code out
 of context.
 
-**TLDR version**: spaces, 4 space indents, 80 columns, brackets on
-their own line, use the `checkwhite` and `unbrace` scripts to fix
-spacing/bracketing issues or your commit will error, write useful
-comments.
+**TLDR version**: spaces, 4 space indents, 80 columns, brackets on their own
+line, use the `checkwhite` and `unbrace` scripts to fix spacing/bracketing
+issues or your commit will error, write useful comments. You can copy the
+script `crawl-ref/docs/develop/git/pre-commit` to `.git/hooks` to run many of
+these checks automatically before you make your code public.
 
 **Please fix old code** that does not meet these guidelines!
 

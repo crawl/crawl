@@ -108,6 +108,7 @@ struct player_equip_set
 private:
     equipment_slot find_slot_to_equip_item(equipment_slot base_slot,
                                            vector<item_def*>& to_replace,
+                                           FixedVector<int, NUM_EQUIP_SLOTS>& slot_count,
                                            bool ignore_curses) const;
 
     void handle_unmelding(vector<item_def*>& to_unmeld, bool skip_effects);
@@ -115,6 +116,7 @@ private:
 
 int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullptr);
 FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots();
+const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 
 bool can_equip_item(const item_def& item, bool include_form = false,
                     string* veto_reason = nullptr);

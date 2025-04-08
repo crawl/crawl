@@ -110,6 +110,9 @@ static string _describe_weapon_brand(const item_def &item);
 struct property_descriptor;
 static const property_descriptor & _get_artp_desc_data(artefact_prop_type p);
 
+static string _describe_talisman(const item_def &item, bool verbose);
+static string _describe_talisman_form(transformation form_type, const item_def* item = nullptr);
+
 int show_description(const string &body, const tile_def *tile)
 {
     describe_info inf;
@@ -443,6 +446,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_WIZARDRY,
             "It increases the success rate of your magical spells.",
             prop_note::plain },
+        { ARTP_SILENCE,
+            "It may silence you when you take damage.",
+            prop_note::plain },
     };
     return data;
 }
@@ -483,6 +489,7 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     ARTP_CORRODE,
     ARTP_DRAIN,
     ARTP_SLOW,
+    ARTP_SILENCE,
     ARTP_FRAGILE,
 
     // Evokable abilities come second
@@ -2520,152 +2527,6 @@ string describe_item_rarity(const item_def &item)
     }
 }
 
-static string _int_with_plus(int i)
-{
-    if (i < 0)
-        return make_stringf("%d", i);
-    return make_stringf("+%d", i);
-}
-
-static string _maybe_desc_prop(const char* name, int val, int max = -1)
-{
-    if (val == 0 && max <= 0)
-        return "";
-    const int len_delta = strlen("Minimum skill") - strlen(name);
-    const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
-    const string base = make_stringf("\n%s: %s%s",
-                        name,
-                        padding.c_str(),
-                        _int_with_plus(val).c_str());
-    if (max == val || max == -1)
-        return base;
-    return base + make_stringf(" (%s at max skill)",
-                               _int_with_plus(max).c_str());
-}
-
-static string _describe_talisman_form(const item_def &item, bool monster)
-{
-    const transformation form_type = form_for_talisman(item);
-    const Form* form = get_form(form_type);
-    string description;
-    description += make_stringf("Minimum skill: %d", form->min_skill);
-    const bool below_target = _is_below_training_target(item, true);
-    if (below_target)
-        description += " (insufficient skill lowers this form's max HP)";
-    description += make_stringf("\nMaximum skill: %d\n", form->max_skill);
-    const int target_skill = _item_training_target(item);
-    const bool can_set_target = below_target && in_inventory(item)
-                                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-    description += _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
-                                    target_skill, "   ");
-    if (below_target)
-        _append_skill_target_desc(description, SK_SHAPESHIFTING, target_skill);
-
-    // defenses
-    const int hp = form->mult_hp(100, true);
-    const int ac = form->get_ac_bonus();
-    const int ev = form->ev_bonus();
-    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(SLOT_BODY_ARMOUR) != false;
-    if (below_target || hp != 100 || ac || ev || loses_body_ac)
-    {
-        if (!monster)
-            description += "\n\nDefence:";
-        if (below_target || hp != 100)
-        {
-            description += make_stringf("\nHP:            %d%%", hp);
-            if (below_target)
-                description += " (reduced by your low skill)";
-        }
-        description += _maybe_desc_prop("Bonus AC", ac / 100,
-                                        form->get_ac_bonus(true) / 100);
-        description += _maybe_desc_prop("Bonus EV", ev, form->ev_bonus(true));
-
-        if (body_ac_loss_percent)
-        {
-            const item_def *body_armour = you.body_armour();
-            const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
-            const int ac_penalty = form->get_base_ac_penalty(base_ac);
-            description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
-                                        ac_penalty, body_ac_loss_percent, base_ac);
-        }
-
-        if (form->size != SIZE_CHARACTER)
-            description += "\nSize:          " + uppercase_first(get_size_adj(form->size));
-    }
-
-    // offense
-    if (!monster)
-        description += "\n\nOffence:";
-    const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
-                                                         // folks don't know nudists have 3
-    const int max_uc = form->get_base_unarmed_damage(false, true);
-    description += make_stringf("\nUC base dam.:  %d%s",
-                                uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
-    description += _maybe_desc_prop("Slay", form->slay_bonus(false),
-                                    form->slay_bonus(false, true));
-    if (form_type == transformation::statue)
-        description += "\nMelee damage:  +50%";
-    if (form_type == transformation::flux)
-    {
-        description += "\nMelee damage:  -33%";
-        const int contam_dam = form->contam_dam(false);
-        const int max_contam_dam = form->contam_dam(false, true);
-        description += make_stringf("\nContam Damage: %d", contam_dam);
-        if (max_contam_dam != contam_dam)
-            description += make_stringf(" (max %d)", max_contam_dam);
-    }
-    description += _maybe_desc_prop("Str", form->str_mod);
-    description += _maybe_desc_prop("Dex", form->dex_mod);
-
-    if (form_type == transformation::maw)
-    {
-        const int aux_dam = form->get_aux_damage(false);
-        const int max_aux_dam = form->get_aux_damage(false, true);
-        description += "\n\nMaw attack:" + aux_attack_desc(UNAT_MAW, aux_dam);
-        if (max_aux_dam != aux_dam)
-            description += make_stringf(" (max %d)", max_aux_dam);
-    }
-    else if (form_type == transformation::dragon)
-    {
-        // These are both dubious and that's fine.
-        // Duplicates AuxBite:
-        description += "\n\nBite:" + aux_attack_desc(UNAT_BITE, 1 + DRAGON_FANGS * 2);
-        // Wrong if the player doesn't have muts melded and is e.g. an At:
-        description += "\n\nTail slap:" + aux_attack_desc(UNAT_TAILSLAP);
-    }
-
-    // TODO: show resists (find an example of this elsewhere) (remember to include holiness)
-
-    // misc (not covered):
-    // uc brand, slots merged
-
-    return description;
-}
-
-static string _describe_talisman(const item_def &item, bool verbose, bool monster)
-{
-    string description;
-
-    if (verbose && !is_useless_item(item))
-    {
-        if (!monster)
-        {
-            description += "\n\nA period of sustained concentration is needed to "
-                           "enter or leave forms. To leave this form, evoke the "
-                           "talisman again.";
-        }
-        description += "\n\n" + _describe_talisman_form(item, monster);
-    }
-
-    // Artefact properties.
-    string art_desc = _artefact_descrip(item);
-    if (!art_desc.empty())
-        description += "\n\n" + art_desc;
-
-    return description;
-}
-
 static string _describe_jewellery(const item_def &item, bool verbose)
 {
     string description;
@@ -2822,6 +2683,7 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     {
     case OBJ_SCROLLS: return cannot_read_item_reason(&item, temp);
     case OBJ_POTIONS: return cannot_drink_item_reason(&item, temp);
+    case OBJ_BAUBLES:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
     default: return "";
@@ -3179,7 +3041,8 @@ string get_item_description(const item_def &item,
         break;
 
     case OBJ_TALISMANS:
-        desc = _describe_talisman(item, verbose, mode == IDM_MONSTER);
+        if (mode != IDM_MONSTER)
+            desc = _describe_talisman(item, verbose);
         if (desc.empty())
             need_extra_line = false;
         else
@@ -3188,6 +3051,13 @@ string get_item_description(const item_def &item,
 
     case OBJ_GIZMOS:
         description << _describe_gizmo(item);
+        break;
+
+    case OBJ_BAUBLES:
+        if (!is_useless_item(item, false))
+            description << "\n" << _describe_talisman_form(transformation::flux);
+        if (verbose)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_ORBS:
@@ -4047,7 +3917,7 @@ static level_id _item_level_id(const item_def &item)
     {
         loc = level_id::parse_level_id(item.props["level_id"].get_string());
     }
-    catch (const bad_level_id &err)
+    catch (const bad_level_id&)
     {
         // die?
     }
@@ -4428,6 +4298,13 @@ static string _player_spell_stats(const spell_type spell)
     string failure;
     if (you.divine_exegesis)
         failure = "0%";
+    else if (spell_can_be_enkindled(spell) && you.has_mutation(MUT_MNEMOPHAGE)
+             && !you.duration[DUR_ENKINDLED])
+    {
+        failure = make_stringf("%d%% <darkgrey>(%d%%)</darkgrey>",
+                                    failure_rate_to_int(raw_spell_fail(spell)),
+                                    failure_rate_to_int(raw_spell_fail(spell, true)));
+    }
     else
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
@@ -4525,10 +4402,7 @@ static int _hex_pow(const spell_type spell, const int hd)
 int hex_chance(const spell_type spell, const monster_info* mi)
 {
     const int capped_pow = _hex_pow(spell, mi->spell_hd());
-    const bool guile = mi->inv[MSLOT_SHIELD]
-                       && get_armour_ego_type(*mi->inv[MSLOT_SHIELD]) == SPARM_GUILE;
-    const int will = guile ? guile_adjust_willpower(you.willpower())
-                           : you.willpower();
+    const int will = apply_willpower_bypass(*mi, you.willpower());
     const int chance = hex_success_chance(will, capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
@@ -4678,6 +4552,9 @@ static string _player_spell_desc(spell_type spell)
         description << uppercase_first(god_name(you.religion))
                     << " supports the use of this spell.\n";
     }
+
+    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
+        description << "This spell is empowered while you are enkindled.";
 
     if (!you_can_memorise(spell))
     {
@@ -5039,7 +4916,7 @@ static string _describe_draconian(const monster_info& mi)
         description += "Acidic fumes swirl around it.";
         break;
     case MONS_GREEN_DRACONIAN:
-        description += "Venom drips from its jaws.";
+        description += "Venom drips from its jaws and stinger tail.";
         break;
     case MONS_PURPLE_DRACONIAN:
         description += "Its outline shimmers with magical energy.";
@@ -5077,8 +4954,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "steam";
     case MR_RES_COLD:
         return "cold";
-    case MR_RES_ACID:
-        return "acid";
+    case MR_RES_CORR:
+        return "acid and corrosion";
     case MR_RES_MIASMA:
         return "miasma";
     case MR_RES_NEG:
@@ -5158,6 +5035,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ALEMBIC,           "vent poison clouds" },
         { AF_BOMBLET,           "deploy bomblets" },
         { AF_AIRSTRIKE,         "open air damage" },
+        { AF_TRICKSTER,         "drain, daze, or confuse" },
         { AF_PLAIN,             "" },
     };
 
@@ -6131,8 +6009,18 @@ class TablePrinter
 {
 private:
     vector<vector<TableCell>> rows;
+    int fixed_column_num;
+    int fixed_column_width;
 
 public:
+    TablePrinter()
+        : fixed_column_num(0), fixed_column_width(0)
+    {}
+
+    TablePrinter(int column_num, int total_width)
+        : fixed_column_num(column_num), fixed_column_width(total_width / column_num)
+    {}
+
     void AddRow()
     {
         rows.push_back({});
@@ -6140,7 +6028,18 @@ public:
 
     void AddCell(string label = "", string value = "", colour_t colour = LIGHTGREY)
     {
+        if (fixed_column_num > 0 && (int)rows[rows.size() - 1].size() >= fixed_column_num)
+            AddRow();
         rows[rows.size() - 1].push_back({label, value, colour});
+    }
+
+    int NumCells() const
+    {
+        int count = 0;
+        for (const auto& row : rows)
+            count += row.size();
+
+        return count;
     }
 
     void Print(ostringstream &result)
@@ -6157,7 +6056,8 @@ public:
                     labels_lengths_by_col[col] = max(labels_lengths_by_col[col], label_len);
             }
         }
-        const int cell_len = 80 / labels_lengths_by_col.size();
+        const int cell_len = fixed_column_width > 0 ? fixed_column_width
+                                : 80 / max(1, (int)labels_lengths_by_col.size());
 
         for (const auto &row : rows)
         {
@@ -6231,6 +6131,7 @@ static string _res_name(mon_resist_flags res)
     case MR_RES_POISON: return "rPois";
     case MR_RES_ELEC:   return "rElec";
     case MR_RES_NEG:    return "rNeg";
+    case MR_RES_CORR:   return "rCorr";
     default:            return "rEggplant";
     }
 }
@@ -6332,7 +6233,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     const mon_resist_flags special_resists[] =
     {
-        MR_RES_STEAM,     MR_RES_ACID,
+        MR_RES_STEAM,     MR_RES_CORR,
         MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 
@@ -6533,6 +6434,12 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
+
+    if (mi.type == MONS_BATTLESPHERE)
+    {
+        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+    }
 
     // Flying monsters can't be forced to fall into liquids these days.
     if (!(mi.airborne()))
@@ -7221,6 +7128,395 @@ string get_command_description(const command_type cmd, bool terse)
     return result.substr(0, result.length() - 1);
 }
 #endif
+
+static string _format_data_label(int value, bool show_sign, bool is_percent,
+                                 int divisor = 0)
+{
+    const bool red = value < 0;
+
+    if (divisor > 0)
+    {
+        float fvalue = (float)value / (float) divisor;
+        const char* fstring = show_sign ? "%s%+.2f%s%s" : "%s%.2f%s%s";
+
+        return make_stringf(fstring, red ? "<red>" : "",
+                                     fvalue, is_percent ?  "%" : "",
+                                     red ? "</red>" : "");
+    }
+
+    const char* fstring = show_sign ? "%s%+d%s%s" : "%s%d%s%s";
+    return make_stringf(fstring, red ? "<red>" : "",
+                                 value, is_percent ?  "%" : "",
+                                 red ? "</red>" : "");
+}
+
+static void _maybe_note_armour_modifier(vector<vector<string>>& items,
+                                        const Form& form,
+                                        const int skill[3])
+{
+    int penalty[2][3];
+    for (int i = 0; i < 3; ++i)
+        penalty[0][i] = form.get_base_ac_penalty(100, skill[i]);
+
+    if (penalty[0][0] == 0 && penalty[0][1] == 0 && penalty[0][2] == 0)
+        return;
+
+    const item_def *body_armour = you.body_armour();
+    const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
+
+    for (int i = 0; i < 3; ++i)
+        penalty[1][i] = form.get_base_ac_penalty(base_ac, skill[i]);
+
+    vector<string> labels;
+    labels.push_back("Body Armour AC");
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (penalty[0][i] != 0)
+            labels.push_back(make_stringf("%+d (%+d%%)", -penalty[1][i], -penalty[0][i]));
+        else
+            labels.push_back("0");
+    }
+
+    items.push_back(labels);
+}
+
+static void _maybe_note_form_dice(vector<vector<string>>& items,
+                                  function<dice_def(int)> func, string label,
+                                  const int skill[3], const string suffix = "")
+{
+    dice_def data[3];
+    for (int i = 0; i < 3; ++i)
+        data[i] = func(skill[i]);
+
+    // This parameter is never non-zero, so don't bother noting is.
+    if (data[0].num == 0 && data[1].num == 0 && data[2].num == 0)
+    return;
+
+    vector<string> labels;
+    labels.push_back(label);
+    labels.push_back(make_stringf("%dd%d%s", data[0].num, data[0].size, suffix.c_str()));
+    labels.push_back(make_stringf("%dd%d%s", data[1].num, data[1].size, suffix.c_str()));
+    labels.push_back(make_stringf("%dd%d%s", data[2].num, data[2].size, suffix.c_str()));
+
+    items.push_back(labels);
+}
+
+static void _maybe_note_airstrike_damage(vector<vector<string>>& items,
+                                         const int skill[3])
+{
+    dice_def data[3][2];
+    for (int i = 0; i < 3; ++i)
+    {
+        data[i][0] = player_airstrike_melee_damage(skill[i], 0);
+        data[i][1] = player_airstrike_melee_damage(skill[i], 7);
+    }
+
+    vector<string> labels;
+    labels.push_back("Airstrike Dmg");
+    labels.push_back(make_stringf("(%d-%d)d%d", data[0][0].num, data[0][1].num, data[0][0].size));
+    labels.push_back(make_stringf("(%d-%d)d%d", data[1][0].num, data[1][1].num, data[1][0].size));
+    labels.push_back(make_stringf("(%d-%d)d%d", data[2][0].num, data[2][1].num, data[2][0].size));
+
+    items.push_back(labels);
+}
+
+/**
+ * Possibly add a column of data to the form properties table.
+ *
+ * @param items The list of table entries to append this property to.
+ * @param func  A function that takes shapeshifting skill to return numerical
+ *              values (ie: Form::get_base_unarmed_damage).
+ * @param skill In order: [minimum, maximum, and current] shapeshifting skill
+ *              for this form.
+ * @param flat_factor A flat number to subtract from the return value of func.
+ *                    (eg: so that "100%" HP can be converted into "+0%".)
+ * @param is_percent Whether to add a percentage sign to each entry.
+ * @param show_sign  Whether to show +/- in front of each entry.
+ * @param divisor   A number to divide the return value of func by.
+ * @param show_decimal Show a decimals for divided numbers, instead of truncating.
+ */
+static void _maybe_populate_form_table(vector<vector<string>>& items,
+                                       function<int(int)> func, string label,
+                                       const int skill[3],
+                                       int flat_factor = 0, bool is_percent = false,
+                                       bool show_sign = true,
+                                       int divisor = 1, bool show_decimal = false)
+{
+    int data[3];
+    // Collect the data values. (Apply the divisor immediately if we're doing
+    // int division; otherwise, apply it in _format_data_label)
+    for (int i = 0; i < 3; ++i)
+        data[i] = (func(skill[i]) + flat_factor) / (show_decimal ? 1 : divisor);
+
+    // This parameter is never non-zero, so don't bother noting is.
+    if (data[0] == 0 && data[1] == 0 && data[2] == 0)
+        return;
+
+    vector<string> labels;
+    labels.push_back(label);
+    labels.push_back(_format_data_label(data[0], show_sign, is_percent, show_decimal ? divisor : 0));
+    labels.push_back(_format_data_label(data[1], show_sign, is_percent, show_decimal ? divisor : 0));
+    labels.push_back(_format_data_label(data[2], show_sign, is_percent, show_decimal ? divisor : 0));
+
+    items.push_back(labels);
+}
+
+static void _desc_form_resist(TablePrinter& pr, mon_resist_flags resist, int amount)
+{
+    // Don't bother mentioning non-existant resists
+    if (amount == 0)
+        return;
+
+    const int max = (resist == MR_RES_POISON || resist == MR_RES_ELEC || resist == MR_RES_CORR)
+                        ? 1 : 3;
+    const string desc = desc_resist(amount, max, amount == 3, false);
+    pr.AddCell(_res_name(resist), desc, amount < 0 ? RED : LIGHTGREY);
+}
+
+static void _desc_form_val(TablePrinter& pr, string label, int val)
+{
+    if (val == 0)
+        return;
+
+    pr.AddCell(label, make_stringf("%+d", val).c_str(), val < 0 ? RED : LIGHTGREY);
+}
+
+static int _get_scroll_skill_boost(int skill)
+{
+    return 5 + skill * 5;
+}
+
+static string _describe_talisman_form(transformation form_type, const item_def* item)
+{
+    const Form* form = get_form(form_type);
+
+    // First comes the big table of scaling values
+    const int skill[3] = {form->min_skill, form->max_skill, form->get_level(1)};
+    vector<vector<string>> items;
+
+    items.push_back({" ", "Min", "Max", "Cur"});
+
+    const int shapeshifting = you.skill(SK_SHAPESHIFTING, 1);
+    const string cur_skill = (shapeshifting < form->min_skill ? make_stringf("<red>%d</red>", shapeshifting)
+                             : (shapeshifting >= form->max_skill ? make_stringf("[%d]", form->max_skill)
+                             : make_stringf("%d", shapeshifting)));
+    items.push_back({"Skill", to_string(skill[0]), to_string(skill[1]), cur_skill});
+
+    _maybe_populate_form_table(items, bind(&Form::mult_hp, form, 100, true, placeholders::_1), "HP", skill, -100, true, true, 1);
+    _maybe_populate_form_table(items, bind(&Form::get_base_unarmed_damage, form, false, placeholders::_1), "UC Base Dmg", skill, -3);
+    _maybe_populate_form_table(items, bind(&Form::get_ac_bonus, form, placeholders::_1), "AC", skill, 0, false, true, 100);
+    _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill);
+    _maybe_populate_form_table(items, bind(&Form::max_mp_bonus, form, placeholders::_1), "MP", skill);
+    _maybe_populate_form_table(items, bind(&Form::slay_bonus, form, false, placeholders::_1), "Slay", skill);
+    _maybe_populate_form_table(items, bind(&Form::regen_bonus, form, placeholders::_1), "Regen", skill, 0, false, true, 100, true);
+    _maybe_populate_form_table(items, bind(&Form::mp_regen_bonus, form, placeholders::_1), "MP Regen", skill, 0, false, true, 100, true);
+    _maybe_populate_form_table(items, bind(&Form::get_vamp_chance, form, placeholders::_1), "Vamp Chance (while <50% HP)", skill, 0, true, false);
+    _maybe_populate_form_table(items, bind(&Form::get_web_chance, form, placeholders::_1), "Ensnare Chance", skill, 0, true, false);
+    _maybe_note_armour_modifier(items, *form, skill);
+
+    _maybe_note_form_dice(items, bind(&Form::get_special_damage, form, false, placeholders::_1), form->special_dice_name, skill,
+                          form_type == transformation::dragon && !species::is_draconian(you.species) ? " (x2)" : "");
+
+    if (form_type == transformation::maw)
+        _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
+    if (form_type == transformation::hive)
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, true);
+    if (form_type == transformation::sphinx)
+        _maybe_note_airstrike_damage(items, skill);
+    if (form_type == transformation::werewolf)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_werefury_kill_bonus, form, placeholders::_1), "+Slay/Kill", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_takedown_multiplier, form, placeholders::_1), "Takedown Dmg", skill, 0, true, true);
+        _maybe_populate_form_table(items, bind(&Form::get_howl_power, form, placeholders::_1), "Howl Power", skill, 0, false, false);
+    }
+    if (form_type == transformation::walking_scroll)
+        _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, true);
+    if (form_type == transformation::fortress_crab)
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Rust Breath Size", skill, 0, false, false);
+    if (form_type == transformation::medusa)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Tendril targets", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Petrify chance", skill, 0, true, false);
+    }
+
+    vector<int> column_width;
+
+    // Determine size of each column (by being slightly wider than the largest entry in it).
+    for (size_t i = 0; i < items.size(); ++i)
+    {
+        int max_size = -1;
+        for (int j = 0; j < 4; ++j)
+        {
+            const int len = formatted_string::parse_string(items[i][j]).width();
+            if (len > max_size)
+                max_size = len;
+        }
+
+        // Enforce a minimum column size, but otherwise space just a little apart
+        max_size = max(6, max_size + 3);
+
+        if (i > 0)
+            max_size += column_width[i - 1];
+        column_width.push_back(max_size);
+    }
+
+    column_composer cols(items.size(), column_width);
+    for (size_t i = 0; i < items.size(); ++i)
+        for (int j = 0; j < 4; ++j)
+            cols.add_formatted(i, items[i][j], false, -1, true, j == 3 ? WHITE : LIGHTGREY);
+
+    // Actually output the table
+    ostringstream description;
+
+    description << string(60, '_') << "\n\n";
+
+    vector<formatted_string> lines = cols.formatted_lines();
+    description << lines[0].to_colour_string() << "\n";
+    description << string(column_width.back(), '-') << "\n";
+    description << lines[1].to_colour_string() << "\n";
+    description << lines[2].to_colour_string() << "\n";
+    description << "<white>" << lines[3].to_colour_string() << "<lightgrey>\n";
+
+    if (form->holiness)
+        description << "\nClass: " << uppercase_first(holiness_description(form->holiness));
+
+    // Now add various one-off bits of (generally non-scaling) data after that
+    TablePrinter pr(4, 80);
+    pr.AddRow();
+
+    if (form->size != SIZE_CHARACTER)
+        pr.AddCell("Size", uppercase_first(get_size_adj(form->size)));
+
+    _desc_form_val(pr, "Str", form->str_mod);
+    _desc_form_val(pr, "Dex", form->dex_mod);
+
+    _desc_form_resist(pr, MR_RES_FIRE, form->res_fire());
+    _desc_form_resist(pr, MR_RES_COLD, form->res_cold());
+
+    // The player being nonliving implies poison immunity, but *not* negative
+    // energy immunity.
+    if (bool(form->holiness & (MH_NONLIVING | MH_UNDEAD)))
+        _desc_form_resist(pr, MR_RES_POISON, 3);
+    else
+        _desc_form_resist(pr, MR_RES_POISON, form->res_pois());
+
+    _desc_form_resist(pr, MR_RES_NEG, form->res_neg());
+    _desc_form_resist(pr, MR_RES_ELEC, form->res_elec());
+    _desc_form_resist(pr, MR_RES_CORR, form->res_corr());
+
+    // Various ad hoc properties of individual forms
+    if (form_type == transformation::statue)
+    {
+        pr.AddCell("Melee dmg", "+50%");
+        pr.AddCell("EV", "-20%", RED);
+    }
+    else if (form_type == transformation::maw)
+        pr.AddCell("Bite chance", "75%");
+    else if (form_type == transformation::death)
+        pr.AddCell("Will", "+");
+    else if (form_type == transformation::vampire)
+        pr.AddCell("Stealth", "++");
+    else if (form_type == transformation::spider)
+        pr.AddCell("Stealth", "+");
+    else if (form_type == transformation::aqua)
+        pr.AddCell("Reach", "+2");
+    else if (form_type == transformation::sphinx)
+    {
+        if (!you.has_mutation(MUT_NO_ARMOUR))
+            pr.AddCell("Barding", "Yes");
+        pr.AddCell("Will", "+");
+    }
+    else if (form_type == transformation::werewolf)
+    {
+        pr.AddCell("Will", "-", RED);
+        pr.AddCell("Claws", "3");
+    }
+    else if (form_type == transformation::walking_scroll
+             || form_type == transformation::flux)
+    {
+        pr.AddCell("Melee damage", "-50%", RED);
+    }
+
+    // Don't output extra blank lines if there's no content.
+    if (pr.NumCells() > 0)
+    {
+        description << "\n";
+        pr.Print(description);
+    }
+
+    // Melding info
+    string meld_desc = form->melding_description(true);
+    if (!meld_desc.empty())
+        description << "\nMelds: " << meld_desc << "\n";
+
+    // Mutation suppression info
+    vector<string> changes;
+    if (form->changes_anatomy)
+        changes.emplace_back("Anatomy");
+    if (form->changes_substance)
+        changes.emplace_back("Substance");
+    if (form->has_blood == FC_FORBID)
+        changes.emplace_back("Blood");
+    if (form->has_bones == FC_FORBID)
+        changes.emplace_back("Bones");
+    if (form_type == transformation::blade_hands)
+        changes.emplace_back("Hands");
+
+    if (!changes.empty())
+    {
+        description << "\nMutations Suppressed: "
+                    << comma_separated_line(changes.begin(), changes.end(), ", ")
+                    << "\n";
+    }
+
+    description << string(60, '_') << "\n";
+
+    // Include info about setting skill targets, if this is a real item.
+    if (item)
+    {
+        const int target_skill = _item_training_target(*item);
+        const bool can_set_target = _is_below_training_target(*item, true) && in_inventory(*item)
+                                    && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+        if (can_set_target)
+        {
+            description << "\n" << _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
+                target_skill, "   ");
+            string desc;
+            _append_skill_target_desc(desc, SK_SHAPESHIFTING, target_skill);
+            description << desc << "\n";
+        }
+    }
+
+    return description.str();
+}
+
+static string _describe_talisman(const item_def &item, bool verbose)
+{
+    ostringstream description;
+
+    if (verbose && !is_useless_item(item, false) && item.sub_type != TALISMAN_PROTEAN)
+        description << "\n" << _describe_talisman_form(form_for_talisman(item), &item);
+
+    // Artefact properties.
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description << "\n" << art_desc;
+
+    if (verbose)
+    {
+        if (is_useless_item(item, false))
+            _uselessness_desc(description, item);
+        else if (item.sub_type != TALISMAN_PROTEAN)
+        {
+            description << "\n\nA period of sustained concentration is needed to "
+                        "enter or leave forms. To leave this form, evoke the "
+                        "talisman again.";
+        }
+    }
+
+    return description.str();
+}
 
 /**
  * Provide auto-generated information about the given cloud type. Describe

@@ -779,6 +779,9 @@ static vector<player_save_info> _find_saved_characters()
             }
             catch (ext_fail_exception &E)
             {
+#ifndef DEBUG_DIAGNOSTICS
+                UNUSED(E);
+#endif
                 dprf("%s: %s", filename.c_str(), E.what());
             }
             catch (game_ended_condition &E) // another process is using the save
@@ -1633,7 +1636,8 @@ void update_portal_entrances()
             level_id whither = stair_destination(feat, "", false);
             if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated
                 || whither.branch == BRANCH_TROVE // not pregenerated
-                || whither.branch == BRANCH_BAZAAR) // multiple bazaars possible
+                || whither.branch == BRANCH_BAZAAR // multiple bazaars possible
+                || whither.branch == BRANCH_NECROPOLIS) // multiple possible
             {
                 continue; // handle these differently
             }
@@ -2034,8 +2038,8 @@ static void _rescue_player_from_wall()
 static void _fixup_transmuters()
 {
     vector<pair<spell_type, talisman_type>> forms = {
-        { SPELL_BEASTLY_APPENDAGE, TALISMAN_BEAST },
-        { SPELL_SPIDER_FORM,       TALISMAN_FLUX },
+        { SPELL_BEASTLY_APPENDAGE, TALISMAN_QUILL },
+        { SPELL_SPIDER_FORM,       TALISMAN_SPIDER },
         { SPELL_ICE_FORM,          TALISMAN_SERPENT },
         { SPELL_BLADE_HANDS,       TALISMAN_BLADE },
         { SPELL_STATUE_FORM,       TALISMAN_STATUE },
@@ -2657,28 +2661,32 @@ void save_game_state()
         save_game(true);
 }
 
-static bool _bones_save_individual_levels(bool store)
+static bool _bones_save_individual_levels(branch_type branch, bool store)
 {
     // Only use level-numbered bones files for places where players die a lot.
     // For the permastore, go even coarser (just D and Lair use level numbers).
     // n.b. some branches here may not currently generate ghosts.
     // TODO: further adjustments? Make Zot coarser?
-    return store ? player_in_branch(BRANCH_DUNGEON) ||
-                   player_in_branch(BRANCH_LAIR)
-                 : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                     player_in_branch(BRANCH_CRYPT) ||
-                     player_in_branch(BRANCH_TOMB) ||
-                     player_in_branch(BRANCH_ABYSS) ||
-                     player_in_branch(BRANCH_SLIME));
+    return store ? branch == BRANCH_DUNGEON ||
+                   branch == BRANCH_LAIR
+                 : !(branch == BRANCH_ZIGGURAT ||
+                     branch ==BRANCH_CRYPT ||
+                     branch == BRANCH_TOMB ||
+                     branch == BRANCH_ABYSS ||
+                     branch == BRANCH_SLIME);
 }
 
 static string _make_ghost_filename(bool store=false)
 {
-    const bool with_number = _bones_save_individual_levels(store);
+    const level_id lvl = player_in_branch(BRANCH_NECROPOLIS)
+                            ? !you.level_stack.empty() ? you.level_stack.back().id
+                                                       : level_id(BRANCH_DUNGEON, 15)
+                            : level_id::current();
+    const bool with_number = _bones_save_individual_levels(lvl.branch, store);
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell(true) ? "Hells" :
-        replace_all(level_id::current().describe(false, with_number), ":", "-");
+    const string level_desc = is_hell_branch(lvl.branch) ? "Hells" :
+        replace_all(lvl.describe(false, with_number), ":", "-");
     return string("bones.") + (store ? "store." : "") + level_desc;
 }
 
@@ -2890,7 +2898,7 @@ save_version read_ghost_header(reader &inf)
         // Discard three more 32-bit words of padding.
         inf.read(nullptr, 3*4);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         mprf(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
@@ -2932,7 +2940,7 @@ vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
         result = tag_read_ghosts(inf);
         inf.fail_if_not_eof(ghost_filename);
     }
-    catch (short_read_exception &short_read)
+    catch (const short_read_exception&)
     {
         string error = "Broken bones file: " + ghost_filename;
         throw corrupted_save(error, version);
@@ -3471,7 +3479,7 @@ save_version get_save_version(reader &file)
         if (minor == UINT8_MAX)
             minor = unmarshallInt(file);
     }
-    catch (short_read_exception& E)
+    catch (const short_read_exception&)
     {
         // Empty file?
         return save_version(-1, -1);
@@ -3518,6 +3526,23 @@ static bool _convert_obsolete_species()
         // addition, even if the player isn't over lava, they might still get
         // trapped.
         fly_player(100);
+        return true;
+    }
+    else if (you.species == SP_VAMPIRE)
+    {
+        if (!yesno(
+            "This Vampire save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Human. Continue?",
+                       false, 'N'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to remain a Vampire.");
+        }
+        change_species_to(SP_HUMAN);
         return true;
     }
 #endif
@@ -3575,7 +3600,7 @@ static player_save_info _read_character_info(package *save)
         result.save_loadable = _loadable_save_ver(major, minor);
         return result;
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception &)
     {
         fail("Save file `%s` corrupted (short read)", save->get_filename().c_str());
     };
@@ -3651,7 +3676,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
     {
         tag_read(inf, tag);
     }
-    catch (short_read_exception &E)
+    catch (const short_read_exception&)
     {
         fail("truncated save chunk (%s)", name.c_str());
     };
@@ -3712,7 +3737,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 
 static size_t _ghost_permastore_size()
 {
-    if (_bones_save_individual_levels(true))
+    if (_bones_save_individual_levels(you.where_are_you, true))
         return GHOST_PERMASTORE_SIZE;
     else
         return GHOST_PERMASTORE_SIZE * 2;

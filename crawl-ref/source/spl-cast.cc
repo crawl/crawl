@@ -76,6 +76,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -120,6 +121,11 @@ static string _spell_base_description(spell_type spell, bool viewing)
     ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    if (you.duration[DUR_ENKINDLED] && highlight == COL_UNKNOWN
+        && spell_can_be_enkindled(spell))
+    {
+        highlight = LIGHTCYAN;
+    }
 
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
@@ -132,17 +138,21 @@ static string _spell_base_description(spell_type spell, bool viewing)
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 58)
         desc << string(58 - so_far, ' ');
-    desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
-    const string failure_rate = spell_failure_rate_string(spell);
+    const string failure_rate = spell_failure_rate_string(spell, false);
     const int width = strwidth(formatted_string::parse_string(failure_rate).tostring());
-    desc << failure_rate << string(9-width, ' ');
+    const bool show_enkindle = you.has_mutation(MUT_MNEMOPHAGE);
+
+    // Revenants have spell level right-justified instead of left-justified to make
+    // room to show enkindled spell success rates.
+    desc << failure_rate << string((show_enkindle ? 13 : 9)-width, ' ');
     desc << spell_difficulty(spell);
     // XXX: This exact padding is needed to make the webtiles spell menu not re-align
     //      itself whenever we toggle display modes. For some reason, this doesn't
     //      seem to matter for local tiles. Who know why?
-    desc << "      ";
+    desc << string(show_enkindle ? 2 : 6, ' ');
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
 }
@@ -152,6 +162,8 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
+    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell) && highlight == COL_UNKNOWN)
+        highlight = LIGHTCYAN;
 
     desc << "<" << colour_to_str(highlight) << ">" << left;
 
@@ -350,6 +362,14 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 2 / 3;
     }
 
+    if (you.form == transformation::rime_yak && spell_typematch(spell, spschool::ice))
+        fail_reduce = fail_reduce * 2 / 3;
+    if (you.form == transformation::sphinx && spell_typematch(spell, spschool::hexes))
+        fail_reduce = fail_reduce * 2 / 3;
+
+    if (you.form == transformation::sun_scarab && spell_typematch(spell, spschool::fire))
+        fail_reduce = fail_reduce * 2 / 3;
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)
@@ -398,13 +418,19 @@ static int _skill_power(spell_type spell)
  * modifiers. (Armour, mutations, statuses effects, etc.)
  *
  * @param spell     The spell in question.
+ * @param enkindled Whether to calculate the failure rate as if the player were
+ *                  currently enkindled (even if they aren't). Defaults to
+ *                  false.
  * @return          A failure rate. This is *not* a percentage - for a human-
  *                  readable version, call _get_true_fail_rate().
  */
-int raw_spell_fail(spell_type spell)
+int raw_spell_fail(spell_type spell, bool enkindled)
 {
     if (spell == SPELL_NO_SPELL)
         return 10000;
+
+    enkindled = (enkindled || (you.duration[DUR_ENKINDLED])
+                    && spell_can_be_enkindled(spell));
 
     int chance = 60;
 
@@ -415,10 +441,14 @@ int raw_spell_fail(spell_type spell)
     chance -= (you.intel() * 2); // realistic range: -2 to -70
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
-    chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
-                                     // A midlevel melee character in plate
-                                     // might have 40 or 50, and a caster in a
-                                     // robe would usually have 0.
+
+    if (!enkindled)
+    {
+        chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
+                                         // A midlevel melee character in plate
+                                         // might have 40 or 50, and a caster in a
+                                         // robe would usually have 0.
+    }
 
     static const int difficulty_by_level[] =
     {
@@ -475,6 +505,9 @@ int raw_spell_fail(spell_type spell)
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
+    if (enkindled)
+        chance2 = chance2 * 3 / 4 - 5;
+
     return min(max(chance2, 0), 100);
 }
 
@@ -513,6 +546,9 @@ int calc_spell_power(spell_type spell)
         power *= 10;
         power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
     }
+
+    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell))
+        power = (power + (you.experience_level * 300)) * 3 / 2;
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.
@@ -1130,7 +1166,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     }
 
     const int severity = fail_severity(spell);
-    const string failure_rate = spell_failure_rate_string(spell);
+    const string failure_rate = spell_failure_rate_string(spell, true);
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
@@ -1198,6 +1234,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
                                           pow >= 100 ? 1 : 0, 1);
+    case SPELL_RUST_BREATH:
+        return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, pow,
+                                          pow >= 25 ? 2 : 1, 2);
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
@@ -1287,14 +1326,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             0, 0,
                                             silence_min_range(pow));
     case SPELL_POISONOUS_VAPOURS:
-        return make_unique<targeter_smite>(&you, range, 0, 0, false, false,
-                                           true, [](const coord_def& p) -> bool {
-                                              if (monster* mon = monster_at(p))
-                                              {
-                                                if (you.can_see(*mon) && mon->res_poison())
-                                                    return false;
-                                              }
-                                              return true; });
+        return make_unique<targeter_poisonous_vapours>(&you, range);
     case SPELL_MERCURY_ARROW:
         return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW, pow,
                                                     range, true, false);
@@ -1370,7 +1402,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     {
         const monster* paragon = find_player_paragon();
         if (!paragon)
-            return make_unique<targeter_smite>(&you, range, 1, 1, true, false, false);
+            return make_unique<targeter_paragon_deploy>(range);
         else if (paragon_charge_level(*paragon) == 2)
             return make_unique<targeter_smite>(paragon, 3, 3, 3, true, false, false);
         else
@@ -1385,9 +1417,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     }
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
-    // TODO: these two actually have pretty wtf positioning that uses compass
-    // directions, so this targeter is not entirely accurate.
+
     case SPELL_MALIGN_GATEWAY:
+        return make_unique<targeter_malign_gateway>(you);
+
+    // TODO: this actually has pretty wtf positioning that uses compass
+    // directions, so this targeter is not entirely accurate.
     case SPELL_SUMMON_FOREST:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS,
                                             0, 2);
@@ -1822,10 +1857,9 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     int wl = mi.willpower();
     if (wl == WILL_INVULN)
         return vector<string>{"infinite will"};
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        wl = guile_adjust_willpower(wl);
     if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
+    wl = apply_willpower_bypass(you, wl);
     vector<string> descs;
     if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH)
     {
@@ -2017,6 +2051,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     ASSERT(!force_failure || !actual_spell && !evoked_wand);
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !actual_spell);
+    const bool can_enkindle = actual_spell && spell_can_be_enkindled(spell);
+    const bool enkindled = can_enkindle && you.duration[DUR_ENKINDLED];
 
     dist target_local;
     if (!target)
@@ -2060,6 +2096,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
+              spell == SPELL_PLATINUM_PARAGON           ? TARG_HOSTILE_OR_EMPTY :
               testbits(flags, spflag::aim_at_space)     ? TARG_NON_ACTOR :
               testbits(flags, spflag::helpful)          ? TARG_FRIEND :
               testbits(flags, spflag::obj)              ? TARG_MOVABLE_OBJECT :
@@ -2266,6 +2303,13 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR) && actual_spell)
             coglin_spellmotor_attack();
+
+        // Handle revenant passives
+        if (can_enkindle && you.has_mutation(MUT_SPELLCLAWS))
+            spellclaws_attack(spell_difficulty(spell));
+
+        if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
+            end_enkindled_status();
 
         return spret::success;
     }
@@ -2585,6 +2629,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DIMENSIONAL_BULLSEYE:
         return cast_dimensional_bullseye(powc, monster_at(target), fail);
 
+    case SPELL_DETONATION_CATALYST:
+        return cast_detonation_catalyst(fail);
+
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
         return cast_revivification(powc, fail);
@@ -2700,6 +2747,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     }
     break;
 
+    case SPELL_GOLDEN_BREATH:
+        return cast_golden_breath(beam, powc, fail);
+
     case SPELL_GELLS_GAVOTTE:
         return cast_gavotte(powc, beam.target - you.pos(), fail);
 
@@ -2727,10 +2777,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Finally, try zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
-    {
-        return zapping(zap, spell_zap_power(spell, powc),
-                       beam, true, nullptr, fail);
-    }
+        return zapping(zap, powc,  beam, true, nullptr, fail);
 
     return spret::none;
 }
@@ -2880,12 +2927,31 @@ string failure_rate_to_string(int fail)
     return make_stringf("%d%%", failure_rate_to_int(fail));
 }
 
-string spell_failure_rate_string(spell_type spell)
+string spell_failure_rate_string(spell_type spell, bool terse)
 {
-    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    const bool enkindled = you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell);
     const string colour = colour_to_str(failure_rate_colour(spell));
-    return make_stringf("<%s>%s</%s>",
-            colour.c_str(), failure.c_str(), colour.c_str());
+
+    if (terse || !you.has_mutation(MUT_MNEMOPHAGE) || !spell_can_be_enkindled(spell))
+    {
+        const string failure = failure_rate_to_string(raw_spell_fail(spell));
+        return make_stringf("<%s>%s</%s>",
+                colour.c_str(), failure.c_str(), colour.c_str());
+    }
+
+    const int normal_fail = failure_rate_to_int(raw_spell_fail(spell));
+    const int enkindled_fail = failure_rate_to_int(raw_spell_fail(spell, true));
+
+    if (enkindled)
+    {
+        return make_stringf("<lightcyan>*</lightcyan><%s>%d%%</%s><lightcyan>*</lightcyan>",
+                                colour.c_str(), enkindled_fail, colour.c_str());
+    }
+    else
+    {
+        return make_stringf("<%s>%d%%</%s><darkgrey> (%d%%)</darkgrey>",
+            colour.c_str(), normal_fail, colour.c_str(), enkindled_fail);
+    }
 }
 
 static string _spell_failure_rate_description(spell_type spell)
@@ -2980,7 +3046,7 @@ static dice_def _spell_damage(spell_type spell, int power)
         case SPELL_SCORCH:
             return scorch_damage(power, false);
         case SPELL_BATTLESPHERE:
-            return battlesphere_damage(power);
+            return battlesphere_damage_from_power(power);
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
         case SPELL_LRD:
@@ -3005,6 +3071,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return fortress_blast_damage(you.armour_class_scaled(1), false);
         case SPELL_POISONOUS_VAPOURS:
             return poisonous_vapours_damage(power, false);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(power, false);
         default:
             break;
     }

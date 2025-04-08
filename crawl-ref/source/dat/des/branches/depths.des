@@ -78,7 +78,7 @@ NAME:    grunt_enter_depths_hoard
 MONS:    fire dragon, ice dragon
 ITEM:    $ no_pickup
 SHUFFLE: 12 / 12 / 11 / 22
-TILE:    'd12oG = floor_depthstone
+FTILE:   'd12oG = floor_depthstone
 : depths_entry(_G)
 MAP
   ccccccc
@@ -95,7 +95,7 @@ MONS:   occultist / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
         orc sorcerer / tengu conjurer
 MONS:   rakshasa, necromancer band
 NSUBST: 1 = 1:112 / *:1
-TILE:   '3og = floor_depthstone
+FTILE:  '3og = floor_depthstone
 : depths_entry(_G)
 MAP
   bbbbbbb

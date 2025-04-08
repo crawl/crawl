@@ -515,8 +515,11 @@ static map<tileidx_t, int> status_icon_sizes = {
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
+    { TILEI_VAMPIRE_THRALL, FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
     { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_1,    FIXED_LOC_ICON },
+    { TILEI_ENKINDLED_2,    FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
     // (E.g. for summoned dancing weapons.)
@@ -528,6 +531,11 @@ static map<tileidx_t, int> status_icon_sizes = {
 
     // Along the bottom of the monster.
     { TILEI_SHADOWLESS,      FIXED_LOC_ICON },
+
+    { TILEI_NOBODY_MEMORY_1, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_2, FIXED_LOC_ICON },
+    { TILEI_NOBODY_MEMORY_3, FIXED_LOC_ICON },
+    { TILEI_PYRRHIC, FIXED_LOC_ICON },
 };
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)

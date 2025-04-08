@@ -311,7 +311,8 @@ public:
     void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
-    bool      unequip(item_def &item, bool msg, bool force = false);
+    bool      do_unequip_effects(item_def &item, bool msg, bool force = false);
+    bool      unequip(mon_inv_type slot, bool msg, bool force = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
@@ -337,6 +338,7 @@ public:
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
+    string blood_name() const;
 
     bool fumbles_attack() override;
 
@@ -357,13 +359,13 @@ public:
     bool has_blood(bool temp = true) const override;
     bool has_bones(bool temp = true) const override;
     bool is_stationary() const override;
-    bool malmutate(const string &/*reason*/) override;
-    void corrupt();
-    bool polymorph(int pow, bool allow_immobile = true) override;
+    bool malmutate(const actor* source, const string& reason = "") override;
+    bool polymorph(int dur, bool allow_immobile = true) override;
     bool polymorph(poly_power_type power = PPT_SAME);
     void banish(const actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
+                           const actor* source = nullptr,
                            bool slow_cold_blood = true) override;
 
     monster_type mons_species(bool zombie_base = false) const override;
@@ -392,14 +394,13 @@ public:
     int res_foul_flame() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    int res_acid() const override;
+    int res_corr() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     bool res_constrict() const override;
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
-    bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;
@@ -413,7 +414,7 @@ public:
     bool can_see_invisible() const override;
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
-    reach_type reach_range() const override;
+    int reach_range() const override;
     bool nightvision() const override;
 
     bool is_icy() const override;
@@ -479,14 +480,14 @@ public:
     void paralyse(const actor *, int str, string source = "") override;
     void petrify(const actor *, bool force = false) override;
     bool fully_petrify(bool quiet = false) override;
-    bool vex(const actor *who, int duration, string source = "") override;
+    bool vex(const actor* who, int dur, string source = "", string special_msg = "") override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
-    void acid_corrode(int /*acid_strength*/) override;
-    bool corrode_equipment(const char* corrosion_source = "the acid",
-                           int degree = 1) override;
+    bool corrode(const actor* source = nullptr,
+                 const char* corrision_msg = "the acid",
+                 int amount = 4) override;
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -502,11 +503,10 @@ public:
     bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp_target = -1);
 
-    void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false)
+    void put_to_sleep(actor *attacker, int duration = 0, bool hibernate = false)
         override;
     void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
-    void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;
 

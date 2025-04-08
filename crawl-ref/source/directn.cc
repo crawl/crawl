@@ -306,14 +306,19 @@ bool direction_chooser::targets_objects() const
 /// Are we looking for enemies?
 bool direction_chooser::targets_enemies() const
 {
-    return mode == TARG_HOSTILE;
+    return mode == TARG_HOSTILE || mode == TARG_HOSTILE_OR_EMPTY;
 }
 
 void direction_chooser::describe_cell() const
 {
     print_top_prompt();
     print_key_hints();
-
+    if (Options.monster_item_view_coordinates)
+    {
+        const coord_def relpos = target() - you.pos();
+        string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
+        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
+    }
     if (!you.see_cell(target()))
     {
         // FIXME: make this better integrated.
@@ -1228,8 +1233,11 @@ void direction_chooser::calculate_target_info()
 
 coord_def direction_chooser::find_default_target()
 {
-    if (cycle_pos.empty() || mode == TARG_NON_ACTOR || just_looking)
+    if (mode == TARG_NON_ACTOR || just_looking
+        || (cycle_pos.empty() && mode != TARG_HOSTILE_OR_EMPTY))
+    {
         return you.pos();
+    }
 
     if (mode == TARG_MOVABLE_OBJECT)
         return find_default_object_target();
@@ -1272,7 +1280,9 @@ coord_def direction_chooser::find_default_monster_target()
     }
 
     // Otherwise, try aiming at the nearest target position found for this action.
-    coord_def pos = cycle_pos[0];
+    coord_def pos;
+    if (!cycle_pos.empty())
+        pos = cycle_pos[0];
 
     // If we shouldn't refine our target (or can't, because we don't have a
     // hitfunc), just return it as-is.
@@ -1283,6 +1293,16 @@ coord_def direction_chooser::find_default_monster_target()
     // aim to avoid hitting the player or nearby allies.
     if (monster* mon = monster_at(pos))
         pos = find_acceptable_aim(mon);
+
+    // If we've found no enemy target, but this can fall back on empty space,
+    // pick an acceptable one in sight.
+    if (pos.origin() && mode == TARG_HOSTILE_OR_EMPTY)
+    {
+        fprintf(stderr, "A");
+        for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
+            if (hitfunc->valid_aim(*ri))
+                return *ri;
+    }
 
     // If we can find literally nowhere else useful to aim, fall back to the player.
     if (!pos.origin())
@@ -1545,11 +1565,15 @@ void direction_chooser::update_previous_target() const
     if (mode == TARG_NON_ACTOR)
         return;
 
+    const monster* old_m = _get_current_target();
+
     // Reset memory.
     you.prev_targ = MID_NOBODY;
     you.prev_grd_targ.reset();
 
-    const monster* old_m = _get_current_target();
+    // You can't target outside the map
+    if (!map_bounds(target()))
+        return;
 
     // If directly targeting a monster, remember that monster.
     const monster* m = monster_at(target());
@@ -2675,6 +2699,12 @@ string get_terse_square_desc(const coord_def &gc)
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
+    if (Options.monster_item_view_coordinates)
+    {
+        const coord_def relpos = c - you.pos();
+        string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
+        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
+    }
     if (!you.see_cell(c))
         _describe_oos_square(c);
     else if (in_bounds(c))
@@ -2864,6 +2894,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_ANY:
         return true;
     case TARG_HOSTILE:
+    case TARG_HOSTILE_OR_EMPTY:
         return mons_attitude(*mon) == ATT_HOSTILE
             || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:
@@ -3118,7 +3149,7 @@ string feature_description_at(const coord_def& where, bool covering,
             covering_description = ", covered with ice";
 
         if (is_temp_terrain(where))
-            covering_description = ", summoned";
+            covering_description = ", temporary";
 
         if (is_bloodcovered(where))
             covering_description += ", spattered with blood";
@@ -3342,8 +3373,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
         const int pow = you.props[CONFUSING_TOUCH_KEY].get_int();
-        const int wl  = you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE) ?
-            guile_adjust_willpower(mi.willpower()) : mi.willpower();
+        const int wl  = apply_willpower_bypass(you, mi.willpower());
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         hex_success_chance(wl, pow, 100)));
     }
@@ -3357,8 +3387,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (you.duration[DUR_JINXBITE])
     {
         const int pow = calc_spell_power(SPELL_JINXBITE);
-        const int wl = you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE) ?
-            guile_adjust_willpower(mi.willpower()) : mi.willpower();
+        const int wl = apply_willpower_bypass(you, mi.willpower());
         descs.emplace_back(make_stringf("chance to call a sprite on attack: %d%%",
             hex_success_chance(wl, pow, 100)));
     }
@@ -3628,7 +3657,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(weap.substr(1)); // strip leading space
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
-    if (mon_arm && mi.type != MONS_ARMOUR_ECHO)
+    if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());

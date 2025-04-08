@@ -10,6 +10,9 @@
 
 #define BORIS_ORB_KEY "boris orb key"
 
+#define NOBODY_MEMORIES_KEY "nobody_memories"
+#define NOBODY_RECOVERY_KEY "nobody_recovery"
+
 class actor;
 class monster;
 struct bolt;
@@ -30,3 +33,8 @@ void treant_release_fauna(monster& mons);
 void check_grasping_roots(actor& act, bool quiet = false);
 
 bool egg_is_incubating(const monster& egg);
+
+void initialize_nobody_memories(monster& nobody);
+bool pyrrhic_recollection(monster& nobody);
+
+void solar_ember_blast();

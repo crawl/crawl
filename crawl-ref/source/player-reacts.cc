@@ -440,7 +440,7 @@ void player_reacts_to_monsters()
     check_monster_detect();
 
     if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)
-        || you.get_mutation_level(MUT_STRONG_NOSE) > 0)
+        || you.get_mutation_level(MUT_TREASURE_SENSE) > 0)
     {
         detect_items(-1);
     }
@@ -450,7 +450,7 @@ void player_reacts_to_monsters()
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awaken();
+        you.wake_up(true);
 
     if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
         && you.is_constricted())
@@ -470,6 +470,8 @@ void player_reacts_to_monsters()
     }
 
     _handle_jinxbite_interest();
+
+    sphinx_check_riddle();
 
     // If you have signalled your allies to stop attacking, cancel this order
     // once there are no longer any enemies in view for 50 consecutive aut
@@ -516,6 +518,8 @@ void player_reacts_to_monsters()
         uncontrolled_blink(false, 3);
         ouch(roll_dice(2, 2), KILLED_BY_BLINKING);
     }
+
+    _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
 }
 
 static bool _check_recite()
@@ -590,7 +594,7 @@ static void _try_to_respawn_ancestor()
 
 static void _decrement_transform_duration(int delay)
 {
-    if (you.form == you.default_form)
+    if (you.form == you.default_form || you.form == transformation::flux)
         return;
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
@@ -599,23 +603,17 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
+
+    if (form_can_fly()
+        || form_can_swim() && feat_is_water(env.grid(you.pos())))
     {
-        if (form_can_fly()
-            || form_can_swim() && feat_is_water(env.grid(you.pos())))
-        {
-            // Disable emergency flight if it was active
-            you.props.erase(EMERGENCY_FLIGHT_KEY);
-        }
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            return_to_default_form();
-        }
+        // Disable emergency flight if it was active
+        you.props.erase(EMERGENCY_FLIGHT_KEY);
+    }
+    if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
+                                "Your transformation is almost over."))
+    {
+        return_to_default_form();
     }
 }
 
@@ -809,6 +807,9 @@ static void _decrement_durations()
         you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
     }
 
+    _decrement_a_duration(DUR_DETONATION_CATALYST, delay,
+        "Your catalyst becomes inert.");
+
     if (you.duration[DUR_WATER_HOLD])
         handle_player_drowning(delay);
 
@@ -830,7 +831,7 @@ static void _decrement_durations()
                 heal_flayed_effect(&you);
         }
         else if (you.duration[DUR_FLAYED] < 80)
-            you.duration[DUR_FLAYED] += div_rand_round(50, delay);
+            you.duration[DUR_FLAYED] += div_rand_round(delay, 2);
     }
 
     if (you.duration[DUR_TOXIC_RADIANCE])
@@ -877,6 +878,13 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+    if (you.form == transformation::sun_scarab
+        && !get_solar_ember()
+        && you.elapsed_time >= you.props[SOLAR_EMBER_REVIVAL_KEY].get_int())
+    {
+        sun_scarab_spawn_ember(false);
+    }
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
@@ -895,6 +903,36 @@ static void _decrement_durations()
 
     if (you.duration[DUR_BLOOD_FOR_BLOOD])
         beogh_blood_for_blood_tick(delay);
+
+    if (you.duration[DUR_CACOPHONY])
+    {
+        // Check if every haunted armour is already dead. If so, end the
+        // effect early.
+        bool found = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->was_created_by(MON_SUMM_CACOPHONY))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            mprf(MSGCH_DURATION, "As the last of your armour is driven back to "
+                  "you, your cacophony ends.");
+            you.duration[DUR_CACOPHONY] = 0;
+        }
+        else if (_decrement_a_duration(DUR_CACOPHONY, delay,
+                "Your cacophony subsides and your armour settles down once more."))
+        {
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->was_created_by(MON_SUMM_CACOPHONY))
+                    monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+        }
+        else
+            noisy(20, you.pos());
+    }
 
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
@@ -925,7 +963,7 @@ static void _handle_emergency_flight()
 // Regeneration and Magic Regeneration items only work if the player has reached
 // max hp/mp while they are being worn. This scans and updates such items when
 // the player refills their hp/mp.
-static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
+void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 {
     if (!attune_regen && !attune_mana_regen)
         return;
@@ -1033,9 +1071,9 @@ static void _regenerate_hp_and_mp(int delay)
     }
 
     // Update attunement of regeneration items if our hp/mp has refilled.
-    _maybe_attune_items(you.hp != old_hp && you.hp == you.hp_max,
-                        you.magic_points != old_mp
-                        && you.magic_points == you.max_magic_points);
+    maybe_attune_regen_items(you.hp != old_hp && you.hp == you.hp_max,
+                             you.magic_points != old_mp
+                             && you.magic_points == you.max_magic_points);
 }
 
 static void _handle_fugue(int delay)
@@ -1050,6 +1088,29 @@ static void _handle_fugue(int delay)
             mpr("The wailing of tortured souls fills the air!");
         noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
+}
+
+static void _handle_trickster_decay(int delay)
+{
+    if (you.duration[DUR_TRICKSTER_GRACE] || delay == 0)
+        return;
+
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+        return;
+
+    int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
+
+    // Decay at a rate of ~1 AC per 30 aut.
+    const int reduction = div_rand_round(3, delay);
+    stacks -= reduction;
+    if (stacks <= 0)
+    {
+        you.props.erase(TRICKSTER_POW_KEY);
+        mprf(MSGCH_DURATION, "You feel your existence waver again.");
+    }
+
+    if (reduction > 0)
+        you.redraw_armour_class = true;
 }
 
 void player_reacts()
@@ -1108,6 +1169,9 @@ void player_reacts()
     if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
         handle_spike_launcher(you.time_taken);
 
+    if (you.duration[DUR_RIME_YAK_AURA])
+        frigid_walls_damage(you.time_taken);
+
     _decrement_durations();
 
     // Translocations and possibly other duration decrements can
@@ -1136,8 +1200,32 @@ void player_reacts()
         you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
     }
 
+    if (you.duration[DUR_HIVE_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
+        you.duration[DUR_HIVE_COOLDOWN] = 0;
+    }
+
+    if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        you.duration[DUR_MEDUSA_COOLDOWN] = 0;
+    }
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
+
+    if (you.has_mutation(MUT_TRICKSTER))
+        _handle_trickster_decay(you.time_taken);
+
+    if (you.form == transformation::bat_swarm)
+    {
+        if (x_chance_in_y(you.time_taken, 20))
+        {
+            const int num_clouds = 2 + (div_rand_round(get_form()->get_level(1) - 16, 4));
+            big_cloud(CLOUD_BATS, &you, you.pos(), 8, num_clouds);
+        }
+    }
 
     // safety first: make absolutely sure that there's no mimic underfoot.
     // (this can happen with e.g. apport.)

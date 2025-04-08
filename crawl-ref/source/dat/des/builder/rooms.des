@@ -119,7 +119,8 @@ function sroom_beehive(e)
     e.kitem('1 = black bear skeleton / \
                  potion of ambrosia pre_id / nothing w:20')
     e.kitem('2M = potion of ambrosia pre_id / nothing w:25')
-    decorative_floor(e, '2M', "flower patch")
+    -- FIXME: layout_roguey's special room placements ignore vault definitions
+    -- decorative_floor(e, '2M', "flower patch")
 end
 
 function sroom_morgue(e)
@@ -175,7 +176,7 @@ function sroom_morgue(e)
         bodies_chance = 40
     elseif you.in_branch("Tar") or you.in_branch("Crypt") then
         mons[5] = "eidolon w:6 / jiangshi w:6"
-        mons[6] = "mummy priest w:2 / revenant w:6"
+        mons[6] = "mummy priest w:2 / revenant soulmonger w:6"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse"
         bodies_chance = 33

@@ -831,11 +831,12 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_RODS,
 #endif
     OBJ_JEWELLERY,
-    OBJ_TALISMANS,
     OBJ_WANDS,
     OBJ_SCROLLS,
     OBJ_POTIONS,
     OBJ_MISCELLANY,
+    OBJ_BAUBLES,
+    OBJ_TALISMANS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
 #endif
@@ -1062,6 +1063,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_GEMS:       return "Ancient Gems";
         case OBJ_TALISMANS:  return "Talismans";
         case OBJ_GIZMOS:     return "Gizmo";
+        case OBJ_BAUBLES:    return "Baubles";
         }
     }
     return "";
@@ -1083,6 +1085,7 @@ const char* equip_slot_name(equipment_slot type, bool terse)
     case SLOT_RING:        return "Ring";
     case SLOT_AMULET:      return "Amulet";
     case SLOT_GIZMO:       return "Gizmo";
+    case SLOT_HAUNTED_AUX: return "Armour";
     default:               return "";
     }
 }

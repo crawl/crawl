@@ -35,6 +35,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "tilepick.h"
+#include "transform.h"
 #include "view.h"
 #include "xom.h"
 #include "ui.h"
@@ -88,6 +89,7 @@ static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
+    clear_form_info_on_exit();
     destroy_abyss();
 }
 

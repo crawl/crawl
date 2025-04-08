@@ -32,12 +32,13 @@ dex: 6
 levelup_stat_frequency: 4
 fake_mutations:
   - long: You can breathe torrents of mud.
-  - short: mud breath
+    short: mud breath
   - long: You are unimpeded by mud.
     short: mud-swimmer
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_ARMOURED_TAIL: 1
   14:
     MUT_IRON_FUSED_SCALES: 1
 

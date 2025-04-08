@@ -5,9 +5,7 @@
 enum class transformation
 {
     none,
-#if TAG_MAJOR_VERSION == 34
     spider,
-#endif
     blade_hands,
     statue,
     serpent,
@@ -32,10 +30,21 @@ enum class transformation
     hydra,
 #endif
     storm,
-    beast,
+    quill,
     maw,
     flux,
     slaughter,
+    vampire,
+    bat_swarm,
+    rime_yak,
+    hive,
+    aqua,
+    sphinx,
+    werewolf,
+    walking_scroll,
+    fortress_crab,
+    sun_scarab,
+    medusa,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

@@ -219,6 +219,45 @@ static int l_item_do_drop(lua_State *ls)
  */
 IDEFN(drop, do_drop)
 
+static int l_item_do_inscribe(lua_State *ls)
+{
+    UDATA_ITEM(item);
+
+    if (item)
+    {
+        string new_inscr = "";
+        bool append = true;
+        if (lua_isstring(ls, 1))
+            new_inscr = lua_tostring(ls, 1);
+
+        if (lua_isboolean(ls, 2))
+            append = lua_toboolean(ls, 2);
+
+        if (append)
+            new_inscr = item->inscription + new_inscr;
+
+        item->inscription = new_inscr;
+
+        // Redraw if item is wielded or quivered
+        if (item == you.weapon())
+          you.wield_change = true;
+        else if (you.quiver_action.item_is_quivered(*item))
+          you.redraw_quiver = true;
+
+        lua_pushboolean(ls, true);
+    }
+    else
+        lua_pushboolean(ls, false);
+    return 1;
+}
+/*** Edit this item's inscription.
+ * @tparam[opt=""] string inscription to add
+ * @tparam[opt=true] boolean append to existing inscription; if false, replace
+ * @treturn boolean successfully inscribed
+ * @function inscribe
+ */
+IDEFN(inscribe, do_inscribe)
+
 /*** Is this equipped?
  * @field equipped boolean
  */
@@ -530,7 +569,7 @@ IDEF(reach_range)
     if (!item || !item->defined())
         return 0;
 
-    reach_type rt = weapon_reach(*item);
+    int rt = weapon_reach(*item);
     lua_pushnumber(ls, rt);
     return 1;
 }
@@ -1339,6 +1378,46 @@ static int l_item_equipped_at(lua_State *ls)
     return 1;
 }
 
+/*** Checks whether a given player equipment slot (or an alternative) is
+ *   available to equip something in. Takes either a slot name or a slot number.
+ * @tparam string|int Slot type name or index
+ * @treturn returns true if there is room to equip another item of this slot
+ *          type (including equivalent slots), false otherwise.
+ * @function slot_is_available
+ */
+static int l_slot_is_available(lua_State *ls)
+{
+    int slot = -1;
+    if (lua_isnumber(ls, 1))
+        slot = luaL_safe_checkint(ls, 1);
+    else if (lua_isstring(ls, 1))
+    {
+        const char *slotname = lua_tostring(ls, 1);
+        if (!slotname)
+            return 0;
+        slot = equip_slot_by_name(slotname);
+    }
+
+    if (slot < SLOT_WEAPON || slot >= NUM_EQUIP_SLOTS)
+        return false;
+
+    const vector<equipment_slot>& alt_slots = get_alternate_slots(static_cast<equipment_slot>(slot));
+    for (const auto& alt_slot : alt_slots)
+    {
+        if (you.equipment.num_slots[alt_slot] <= 0)
+            continue;
+
+        if ((int)you.equipment.get_slot_entries(alt_slot).size() < you.equipment.num_slots[alt_slot])
+        {
+            lua_pushboolean(ls, true);
+            return 1;
+        }
+    }
+
+    lua_pushboolean(ls, false);
+    return 1;
+}
+
 /*** Get the ammo Item we should fire by default.
  * @treturn Item|nil returns nil if something other than ammo is quivered
  * @function fired_item
@@ -1649,6 +1728,7 @@ static ItemAccessor item_attrs[] =
     { "equip",             l_item_equip },
     { "remove",            l_item_remove },
     { "drop",              l_item_drop },
+    { "inscribe",          l_item_inscribe },
     { "equipped",          l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
@@ -1714,6 +1794,7 @@ static const struct luaL_reg item_lib[] =
     { "swap_slots",        l_item_swap_slots },
     { "pickup",            l_item_pickup },
     { "equipped_at",       l_item_equipped_at },
+    { "slot_is_available", l_slot_is_available },
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },

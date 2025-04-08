@@ -146,6 +146,12 @@ item_def* newgame_make_item(object_class_type base,
             item.sub_type = ARM_KITE_SHIELD;
         else if (is_shield(item))
             item.sub_type = ARM_BUCKLER;
+        else if (get_armour_slot(item) == SLOT_BODY_ARMOUR
+                 && you.has_mutation(MUT_FORMLESS))
+        {
+            item.sub_type = ARM_CLOAK;
+            item.plus = max(item.plus, (short)1);
+        }
         else
             item.sub_type = ARM_ROBE;
     }
@@ -594,24 +600,26 @@ static void _setup_generic(const newgame_def& ng,
         const item_def* talisman = nullptr;
         for (auto& item : you.inv)
         {
-            if (item.is_type(OBJ_TALISMANS, TALISMAN_BEAST))
+            if (item.is_type(OBJ_TALISMANS, TALISMAN_QUILL))
             {
                 talisman = &item;
                 break;
             }
         }
         ASSERT(talisman);
-        set_default_form(transformation::beast, talisman);
-        set_form(transformation::beast, 1); // hacky...
+        set_default_form(transformation::quill, talisman);
+        set_form(transformation::quill, 1); // hacky...
     }
 
-    reassess_starting_skills();
+    reassess_starting_skills(false);
     init_skill_order();
     init_can_currently_train();
     init_train();
     if (you.religion == GOD_TROG)
         join_trog_skills();
     init_training();
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        cleanup_innate_magic_skills();
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();

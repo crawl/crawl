@@ -23,6 +23,7 @@
 #include "mpr.h"
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
+#include "stringutil.h"
 #include "tag-version.h"
 #include "tilepick.h"
 #include "unwind.h"
@@ -129,6 +130,9 @@ static talisman_type _talisman_for(monster_type mtyp)
         if (coinflip())
             return TALISMAN_DEATH;
         break;
+    case MONS_JORY:
+        if (coinflip())
+            return TALISMAN_VAMPIRE;
     default:
         break;
     }
@@ -1333,6 +1337,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+    case MONS_CRAZY_YIUF:
+        if (today_is_serious())
+        {
+            int staff_num = random_range(1, 2);
+            floor_tile  = make_stringf("wpn_april_staff%d", staff_num);
+            equip_tile  = make_stringf("april_staff%d", staff_num);
+        }
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -1380,7 +1393,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     item_def &i = env.item[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
-        destroy_item(thing_created);
+        destroy_item(thing_created, true);
         return NON_ITEM;
     }
 
@@ -2145,6 +2158,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_JOSEPHINA:
+    case MONS_VAMPIRE_BLOODPRINCE:
         level = ISPEC_GOOD_ITEM;
     case MONS_ORC_SORCERER:
     case MONS_DEMONSPAWN_BLOOD_SAINT:

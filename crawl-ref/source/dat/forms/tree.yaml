@@ -1,0 +1,35 @@
+enum: tree
+equivalent_mons: animated_tree
+description: a tree.
+melds: [aux, body]
+resists: {poison: 1}
+hp_mod: 150
+ac: {base: 20, scaling: 14, xl_based: yes}
+unarmed: {base: 9}
+unarmed_colour: brown
+unarmed_name: Branches
+unarmed_verbs: [hit, smack, pummel, thrash]
+can_fly: no
+can_swim: no
+changes_anatomy: yes
+changes_substance: yes
+holiness: plant
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: creak
+hand_name: branch
+foot_name: root
+prayer_action: sway towards
+flesh_name: wood
+fakemuts:
+  - ["resilient", "Your bark is very hard, but your evasion is minimal."]
+  - ["branches", "Your unarmed attacks smack enemies forcefully with your branches."]
+  - ["torment immunity", "You are immune to unholy torment."]
+# Technically these can have marginal benefits in some situations, but they're
+# mostly bad so let's mark them as bad.
+badmuts:
+  - ["stationary", "Your roots penetrate the ground, keeping you stationary."]
+  - ["-Tele", "You cannot be teleported."]

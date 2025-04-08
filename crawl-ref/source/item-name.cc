@@ -277,6 +277,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case SLOT_GIZMO:
                     buff << " (installed)";
                     break;
+                case SLOT_HAUNTED_AUX:
+                    buff << " (haunted)";
+                    break;
                 default:
                     die("Item in an invalid slot (%d)", eq);
                 }
@@ -291,8 +294,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             buff << " (quivered)";
     }
 
-    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
+    if (descrip != DESC_BASENAME && descrip != DESC_DBNAME
+        && descrip != DESC_QUALNAME && with_inscription)
+    {
         buff << _item_inscription(*this);
+    }
 
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
@@ -1153,6 +1159,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_GEMS: return "gem";
     case OBJ_TALISMANS: return "talisman";
     case OBJ_GIZMOS: return "gizmo";
+    case OBJ_BAUBLES: return "bauble";
     default: return "";
     }
 }
@@ -1533,7 +1540,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "cursed ";
 
         // Don't list unenchantable armor as +0.
-        if (identified && !dbname && armour_is_enchantable(*this))
+        if (identified && !dbname && !qualname && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1887,6 +1894,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
     break;
 
+    case OBJ_BAUBLES:
+        buff << "flux bauble";
+    break;
+
     default:
         buff << "!";
     }
@@ -1943,6 +1954,7 @@ bool item_type_known(const item_def& item)
     case OBJ_GOLD:
     case OBJ_RUNES:
     case OBJ_GEMS:
+    case OBJ_BAUBLES:
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -2900,6 +2912,15 @@ bool is_bad_item(const item_def &item)
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
+
+    case OBJ_ARMOUR:
+        if (is_unrandom_artefact(item, UNRAND_CHARLATANS_ORB)
+            && you.has_mutation(MUT_NO_ARTIFICE))
+        {
+            return true;
+        }
+        return false;
+
     default:
         return false;
     }
@@ -2909,9 +2930,9 @@ bool is_bad_item(const item_def &item)
  * Is an item dangerous but potentially worthwhile?
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account?  Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account?  Religion (but not its absence) is considered to be
+ *             permanent here.
  * @return True if using the item is known to be risky but occasionally
  *         worthwhile.
  */
@@ -3192,9 +3213,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
  *     benefit.
  *
  * @param item The item being queried.
- * @param temp Should temporary conditions such as transformations and
- *             vampire state be taken into account? Religion (but
- *             not its absence) is considered to be permanent here.
+ * @param temp Should temporary conditions such as transformations be taken into
+ *             account? Religion (but not its absence) is considered to be
+ *             permanent here.
  * @param ident Should uselessness be checked as if the item were already
  *              identified?
  * @return True if the item is known to be useless.
@@ -3302,15 +3323,15 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     }
 
     case OBJ_MISCELLANY:
-        // Try to discourage players from wasting money on a useless evoker in a
-        // shop (which will vanish immediately when they buy it).
-        if (is_shop_item(item) && is_xp_evoker(item)
-            && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
+        if (is_xp_evoker(item) && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
         {
             for (const item_def &inv_item : you.inv)
             {
                 if (inv_item.base_type == OBJ_MISCELLANY
-                    && inv_item.sub_type == item.sub_type)
+                    && inv_item.sub_type == item.sub_type
+                    // Have to check this way because stash passes item with pos == you.pos()
+                    // instead of pos == ITEM_IN_INVENTORY so in_inventory check doesn't work
+                    && inv_item.pos != item.pos && inv_item.link != item.link)
                 {
                     return true;
                 }
@@ -3318,6 +3339,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
 
         // Deliberate fallthrough.
+    case OBJ_BAUBLES:
     case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
@@ -3356,7 +3378,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         switch (item.sub_type)
         {
         case RING_RESIST_CORROSION:
-            return you.res_corr(false, false);
+            return player_res_corrosion(false, false, false);
 
         case AMU_ACROBAT:
             return you.has_mutation(MUT_ACROBATIC);
@@ -3377,10 +3399,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 #if TAG_MAJOR_VERSION == 34
                    you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
 #endif
-                     (temp
-                       && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
-                           || you.has_mutation(MUT_VAMPIRISM))
-                       && regeneration_is_inhibited());
+                    (temp && regeneration_is_inhibited());
 
         case AMU_MANA_REGENERATION:
             return !you.max_magic_points;

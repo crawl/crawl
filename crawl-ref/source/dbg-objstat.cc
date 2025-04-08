@@ -66,6 +66,7 @@ enum item_base_type
     ITEM_SPELLBOOKS,
     ITEM_MANUALS,
     ITEM_GEMS,
+    ITEM_BAUBLES,
     NUM_ITEM_BASE_TYPES,
     ITEM_IGNORE = 100,
 };
@@ -151,6 +152,9 @@ static map<item_base_type, vector<string> > item_fields = {
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
     { ITEM_GEMS,
+        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+    },
+    { ITEM_BAUBLES,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
 };
@@ -247,6 +251,9 @@ static item_base_type _item_base_type(const item_def &item)
     case OBJ_GEMS:
         type = ITEM_GEMS;
         break;
+    case OBJ_BAUBLES:
+        type = ITEM_BAUBLES;
+        break;
     default:
         type = ITEM_IGNORE;
         break;
@@ -298,6 +305,9 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
         break;
     case ITEM_GEMS:
         type = OBJ_GEMS;
+        break;
+    case ITEM_BAUBLES:
+        type = OBJ_BAUBLES;
         break;
     default:
         type = OBJ_UNASSIGNED;

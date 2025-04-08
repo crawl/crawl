@@ -359,7 +359,7 @@ static void _populate_staff_intrinsic_artps(stave_type staff,
 {
     artefact_prop_type *prop = map_find(staff_resist_artps, staff);
     if (prop)
-        proprt[*prop] = 1;
+        proprt[*prop] += 1;
     prop = map_find(staff_enhancer_artps, staff);
     if (prop)
         proprt[*prop] = 1;
@@ -426,14 +426,21 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
 }
 
 // XXX: Building this directly from form data would be nice.
+// Note: Negative resistances are intentionally left off multiple forms so that
+//       it is possible to generate randarts that give that resistance, which
+//       I think is still an appropriate bonus.
 static map<talisman_type, vector<artp_value>> talisman_artps = {
-    { TALISMAN_SERPENT, { { ARTP_POISON, 1 } } },
-    { TALISMAN_STATUE, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 },
-                         { ARTP_NEGATIVE_ENERGY, 1 } } },
-    { TALISMAN_DRAGON, { { ARTP_POISON, 1 } } },
-    { TALISMAN_STORM, { { ARTP_POISON, 1 }, { ARTP_ELECTRICITY, 1 } } },
-    { TALISMAN_DEATH, { { ARTP_POISON, 1 }, { ARTP_NEGATIVE_ENERGY, 3 },
-                        { ARTP_COLD, 1 } } },
+    { TALISMAN_RIMEHORN,    {{ARTP_COLD, 2}}},
+    { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
+    { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
+    { TALISMAN_SERPENT,     {{ARTP_POISON, 1}}},
+    { TALISMAN_STATUE,  {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1},
+                         {ARTP_NEGATIVE_ENERGY, 1}}},
+    { TALISMAN_DRAGON,  {{ARTP_FIRE, 1}, {ARTP_COLD, 1}, {ARTP_POISON, 1}}},
+    { TALISMAN_STORM,   {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1}}},
+    { TALISMAN_DEATH,   {{ARTP_POISON, 1}, {ARTP_NEGATIVE_ENERGY, 3},
+                        {ARTP_COLD, 1}}},
+    { TALISMAN_VAMPIRE, {{ARTP_COLD, 1}, {ARTP_NEGATIVE_ENERGY, 1}}},
 };
 
 /**
@@ -654,7 +661,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
-        case ARTP_PREVENT_SPELLCASTING:
+        // could probably loosen artp conflict restrictions?
+        case ARTP_SILENCE:
             return non_swappable
                 && !item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION)
                 && !_any_artps_in_item_props({ ARTP_ENHANCE_CONJ,
@@ -813,7 +821,7 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "*Noise", ARTP_VAL_POS, 30,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
-    { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
+    { "-Cast", ARTP_VAL_BOOL, 0,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
@@ -912,6 +920,8 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "Forge", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FORGECRAFT,
         []() {return 1;}, nullptr, 0, 0},
+    { "*Silence", ARTP_VAL_BOOL, 25, // ARTP_SILENCE,
+        nullptr, []() { return 1; }, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1677,7 +1687,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
         // If an item does not generate randomly, we can only produce its index
         // here if it was lost in the abyss
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
-            && entry->flags & UNRAND_FLAG_NOGEN)
+            && entry->flags & (UNRAND_FLAG_NOGEN | UNRAND_FLAG_DELETED))
         {
             continue;
         }
@@ -1735,14 +1745,8 @@ int extant_unrandart_by_exact_name(string name)
         for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
         {
             const int id = UNRAND_START + i;
-            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
-                && id != UNRAND_DRAGONSKIN
-                && id != UNRAND_CEREBOV
-                && id != UNRAND_DISPATER
-                && id != UNRAND_ASMODEUS /* ew */)
-            {
+            if (unranddata[i].flags & UNRAND_FLAG_DELETED)
                 continue;
-            }
             cache[lowercase_string(unranddata[i].name)] = id;
         }
     }
@@ -2115,8 +2119,8 @@ static void _make_faerie_armour(item_def &item)
             continue;
         }
 
-        // -Cast makes no sense on someone called "the Enchantress".
-        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING))
+        // *Silence makes no sense on someone called "the Enchantress".
+        if (artefact_property(doodad, ARTP_SILENCE))
             continue;
 
         if (one_chance_in(20))

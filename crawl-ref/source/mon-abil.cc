@@ -21,11 +21,13 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "item-prop.h"
@@ -40,6 +42,7 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "random.h"
@@ -52,6 +55,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -111,7 +115,10 @@ bool ugly_thing_mutate(monster& ugly, bool force)
             continue;
 
         if (act->is_player() && get_contamination_level())
+        {
             msg = " basks in your mutagenic energy and changes!";
+            break;
+        }
         else if (mons_genus(act->type) == MONS_UGLY_THING)
         {
             msg = " basks in the mutagenic energy from its kin and changes!";
@@ -119,6 +126,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
                 make_low_colour(act->as_monster()->colour);
             if (make_low_colour(ugly.colour) != other_colour)
                 new_colour = other_colour;
+            break;
         }
     }
 
@@ -1076,8 +1084,9 @@ bool mon_special_ability(monster* mons)
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 
-                fire_tracer(mons, beem);
-                if (mons_should_fire(beem))
+                targeting_tracer tracer;
+                fire_tracer(mons, tracer, beem);
+                if (mons_should_fire(beem, tracer))
                 {
                     make_mons_stop_fleeing(mons);
                     _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
@@ -1183,6 +1192,26 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
+    case MONS_NAMELESS_REVENANT:
+        // If we are engaging the player and have full memories, burn one fairly
+        // immediately.
+        if (mons->foe == MHITYOU && mons->can_see(you)
+            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
+            && one_chance_in(3))
+        {
+            pyrrhic_recollection(*mons);
+            used = true;
+        }
+
+        // If Nobody is left alone long enough, allow their memories to return.
+        if (you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
+        {
+            mons->props.erase(NOBODY_RECOVERY_KEY);
+            initialize_nobody_memories(*mons);
+        }
+
+        break;
+
     default:
         break;
     }
@@ -1218,4 +1247,189 @@ bool egg_is_incubating(const monster& egg)
     }
 
     return false;
+}
+
+struct nobody_recollection
+{
+    int weight;
+    string key;
+    vector<pair<spell_type, uint8_t>> spells;
+};
+
+const static vector<nobody_recollection> _recollections =
+{
+    {50, "fire", {{SPELL_MARSHLIGHT, 40}, {SPELL_SCORCH, 50}}},
+    {50, "fire", {{SPELL_PYRE_ARROW, 80}}},
+    {50, "cold", {{SPELL_OZOCUBUS_REFRIGERATION, 80}}},
+    {50, "cold", {{SPELL_PERMAFROST_ERUPTION, 80}}},
+    {50, "poison", {{SPELL_CORROSIVE_BOLT, 80}}},
+    {50, "poison", {{SPELL_HURL_SLUDGE, 100}}},
+    {50, "poison", {{SPELL_IRRADIATE, 75}}},
+    {65, "undead", {{SPELL_BORGNJORS_VILE_CLUTCH, 120}}},
+    {80, "fear", {{SPELL_CAUSE_FEAR, 120}, {SPELL_GHOSTLY_FIREBALL, 50}}},
+    {80, "soldiers", {{SPELL_BATTLESPHERE, 120}, {SPELL_BOMBARD, 60}}},
+    {50, "rockslide", {{SPELL_LRD, 100}}},
+    {50, "electricity", {{SPELL_ARCJOLT, 80}}},
+
+    {75, "xxx", {{SPELL_SUMMON_HORRIBLE_THINGS, 70}}},
+    {85, "demons", {{SPELL_SUMMON_GREATER_DEMON, 70}}},
+    {85, "undead", {{SPELL_HAUNT, 70}}},
+    {110, "vermin", {{SPELL_SUMMON_VERMIN, 70}}},
+
+    {180, "soldiers", {{SPELL_HASTE, 75}, {SPELL_MIGHT, 75}}},
+};
+
+// Initialize a set of 3 random spellsets for Nobody, guaranteed to all be
+// different from each other. (Called upon Nobody spawning or so much time
+// passing that they regenerate their memories.)
+void initialize_nobody_memories(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    memories.clear();
+
+    vector<pair<int, int>> weights;
+    for (size_t i = 0; i < _recollections.size(); ++i)
+        weights.push_back({i, _recollections[i].weight});
+
+    for (int i = 0; i < 3; ++i)
+    {
+        const int index = *random_choose_weighted(weights);
+        memories.push_back(index);
+        weights[index].second = 0;
+    }
+}
+
+bool pyrrhic_recollection(monster& nobody)
+{
+    CrawlVector& memories = nobody.props[NOBODY_MEMORIES_KEY].get_vector();
+    if (memories.size() <= 0)
+        return false;
+
+    const bool can_see = you.see_cell(nobody.pos());
+    const bool was_injured = nobody.hit_points < nobody.max_hit_points;
+
+    if (can_see)
+        draw_ring_animation(nobody.pos(), 3, LIGHTCYAN, CYAN, true);
+
+    // Change spells
+    nobody.spells.clear();
+    const auto& recollection = _recollections[memories[memories.size() - 1].get_int()];
+
+    vector<string> spell_names;
+    for (pair<spell_type, uint8_t> spell : recollection.spells)
+    {
+        nobody.spells.push_back({spell.first, spell.second, MON_SPELL_WIZARD});
+        spell_names.push_back(spell_title(spell.first));
+    }
+    nobody.spells.push_back({SPELL_PYRRHIC_RECOLLECTION, 0, MON_SPELL_NATURAL});
+    nobody.props[CUSTOM_SPELLS_KEY] = true;
+    memories.pop_back();
+
+    if (can_see)
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s%s.",
+                nobody.name(DESC_THE).c_str(),
+                comma_separated_line(spell_names.begin(), spell_names.end()).c_str(),
+                was_injured ? " to re-knit themselves" : "");
+        string speech = make_stringf("\"We remember... %s...\"",
+                            getSpeakString("nobody_recollection " + recollection.key).c_str());
+        mons_speaks_msg(&nobody, speech, MSGCH_TALK);
+    }
+
+    // Heal and move.
+    if (was_injured)
+        monster_blink(&nobody, true, true);
+    nobody.heal(nobody.max_hit_points);
+
+    // If this was a phantom mirror copy, allow it to revive, but don't wipe out
+    // its summon timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer;
+    if (nobody.has_ench(ENCH_SUMMON_TIMER))
+    {
+        summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+        nobody.del_ench(ENCH_SUMMON_TIMER, true, false);
+    }
+    // Also, manually delete the previous enkindle without effect, in case
+    // Nobody's taken a big enough hit to go from healthy to dead in one action,
+    // or we'll immediately wipe out the spells we just gave them.
+    nobody.del_ench(ENCH_PYRRHIC_RECOLLECTION, true, false);
+    // XXX: Also save their Haste and Might, since the *point* of that spellset
+    // is that the effects can linger into other phases. It would really be
+    // nice if there was a general 'clear *negative* status effects on a monster,
+    // but we don't have that at the moment.
+    mon_enchant haste = nobody.get_ench(ENCH_HASTE);
+    mon_enchant might = nobody.get_ench(ENCH_MIGHT);
+    nobody.timeout_enchantments(1000);
+    nobody.add_ench(summon_timer);
+    nobody.add_ench(haste);
+    nobody.add_ench(might);
+
+    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
+
+    // Don't immediately expire summons (we want them to stick around into the next phase),
+    // but at least make them time out a bit faster.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(nobody))
+        {
+            mon_enchant timer = mi->get_ench(ENCH_SUMMON_TIMER);
+            timer.duration = timer.duration / 3;
+            mi->update_ench(timer);
+        }
+    }
+
+    nobody.props[NOBODY_RECOVERY_KEY] = you.elapsed_time + (random_range(300, 500));
+
+    // Allow Nobody to wake up if you kill them in their sleep
+    behaviour_event(&nobody, ME_ALERT);
+
+    avoided_death_fineff::schedule(&nobody);
+
+    return true;
+}
+
+// AoE attack when the player attacks in scarab form
+void solar_ember_blast()
+{
+    monster* ember = get_solar_ember();
+    if (!ember)
+        return;
+
+    if (!ember->has_ench(ENCH_SPELL_CHARGED))
+    {
+        simple_monster_message(*ember, " glows brighter.");
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(50, 70)));
+        return;
+    }
+
+    vector<monster*> targs;
+    for (adjacent_iterator ai(ember->pos()); ai; ++ai)
+        if (monster* mon = monster_at(*ai))
+            if (!mons_aligned(ember, mon) && !mon->is_firewood() && you.see_cell_no_trans(mon->pos()))
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    simple_monster_message(*ember, " blazes with a fierce heat.", false, MSGCH_FRIEND_SPELL);
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    dice_def dmg = get_form()->get_special_damage();
+    for (monster* mon : targs)
+    {
+        if (!mon->alive())
+            continue;
+
+        flash_tile(mon->pos(), RED, 0);
+        const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
+        mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
+                damage_done ? "" : " but does no damage");
+        mon->hurt(ember, damage_done, BEAM_FIRE);
+    }
+
+    animation_delay(10, true);
+
+    ember->hurt(ember, random_range(7, 10));
+    ember->del_ench(ENCH_SPELL_CHARGED);
 }

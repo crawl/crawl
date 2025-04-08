@@ -31,6 +31,7 @@ enum stab_type
 
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
+void do_player_post_attack(actor *defender, bool was_firewood, bool simu = false);
 
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int rawdamage);
@@ -56,14 +57,14 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
                         bool force_cleaving = false,
                         const item_def *weapon = nullptr);
 // too many params... need to pass in a mini-struct or something
-void attack_multiple_targets(actor &attacker, list<actor*> &targets,
-                             int attack_number = 0,
-                             int effective_attack_number = 0,
-                             wu_jian_attack_type wu_jian_attack
-                               = WU_JIAN_ATTACK_NONE,
-                             bool is_projected = false,
-                             bool is_cleave = true,
-                             item_def *weapon = nullptr);
+int attack_multiple_targets(actor &attacker, list<actor*> &targets,
+                            int attack_number = 0,
+                            int effective_attack_number = 0,
+                            wu_jian_attack_type wu_jian_attack
+                              = WU_JIAN_ATTACK_NONE,
+                            bool is_projected = false,
+                            bool is_cleave = true,
+                            item_def *weapon = nullptr);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,
@@ -83,6 +84,18 @@ int mons_weapon_damage_rating(const item_def &launcher);
 bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only);
+bool player_unrand_bad_attempt(const item_def *weapon,
+                               const item_def *offhand,
+                               const actor *defender,
+                               bool check_only);
+
+bool player_unrand_bad_target(const item_def &weapon,
+                              const actor &defender,
+                              bool check_only);
+bool player_unrand_bad_target(const item_def *weapon,
+                              const item_def *offhand,
+                              const actor &defender,
+                              bool check_only);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
@@ -105,12 +118,13 @@ bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            string verb = "summon");
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
-                            function<bool(const monster& mon)> should_ignore = nullptr);
+                            function<bool(const monster& mon)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore = nullptr);
+                            function<bool(const monster&)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 
-bool can_reach_attack_between(coord_def source, coord_def target,
-                              reach_type range);
+bool can_reach_attack_between(coord_def source, coord_def target, int range);
 dice_def spines_damage(monster_type mon);
 int archer_bonus_damage(int hd);
 

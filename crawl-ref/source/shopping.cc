@@ -49,9 +49,29 @@
 
 ShoppingList shopping_list;
 
+// Hack to make the cost of certain items (consumables) scale more severely with
+// depth. Currently applies to all potions, scrolls, and wands. I have set this
+// up for more complicated handling if we want to restrict to certain subtypes
+// later on. - hellmonk
+static bool _item_has_extra_greed(const item_def& item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_POTIONS:
+        case OBJ_SCROLLS:
+        case OBJ_WANDS:
+            return true;
+        default:
+            return false;
+    }
+}
+
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
+
+    if (_item_has_extra_greed(item) && id)
+        result = max(result, result * (15 + greed) / 30);
 
     return max(result, 1);
 }
@@ -164,6 +184,9 @@ int artefact_value(const item_def &item)
         ret -= 8;
 
     if (prop[ARTP_SLOW])
+        ret -= 8;
+
+    if (prop[ARTP_SILENCE])
         ret -= 8;
 
     if (prop[ARTP_FRAGILE])
@@ -451,13 +474,13 @@ unsigned int item_value(item_def item, bool ident)
             case POT_MAGIC:
             case POT_INVISIBILITY:
             case POT_CANCELLATION:
+            case POT_HEAL_WOUNDS:
             case POT_AMBROSIA:
             case POT_MUTATION:
                 valued += 80;
                 break;
 
             case POT_BERSERK_RAGE:
-            case POT_HEAL_WOUNDS:
             case POT_ENLIGHTENMENT:
                 valued += 50;
                 break;
@@ -497,10 +520,11 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_TORMENT:
             case SCR_SILENCE:
             case SCR_BRAND_WEAPON:
+            case SCR_BLINKING:
+            case SCR_BUTTERFLIES:
                 valued += 95;
                 break;
 
-            case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
             case SCR_REVELATION:
@@ -513,7 +537,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_POISON:
             case SCR_VULNERABILITY:
             case SCR_FOG:
-            case SCR_BUTTERFLIES:
                 valued += 40;
                 break;
 
@@ -671,20 +694,31 @@ unsigned int item_value(item_def item, bool ident)
 
         case TALISMAN_DRAGON:
         case TALISMAN_STATUE:
+        case TALISMAN_VAMPIRE:
+        case TALISMAN_HIVE:
+        case TALISMAN_SPHINX:
             valued += 600;
             break;
 
         case TALISMAN_MAW:
         case TALISMAN_SERPENT:
         case TALISMAN_BLADE:
+        case TALISMAN_WEREWOLF:
+        case TALISMAN_FORTRESS:
             valued += 300;
             break;
 
-        case TALISMAN_FLUX:
+        case TALISMAN_RIMEHORN:
+        case TALISMAN_SPIDER:
+        case TALISMAN_AQUA:
+        case TALISMAN_SCARAB:
+        case TALISMAN_MEDUSA:
             valued += 250;
             break;
 
-        case TALISMAN_BEAST:
+        case TALISMAN_QUILL:
+        case TALISMAN_INKWELL:
+        case TALISMAN_PROTEAN:
         default:
             valued += 200;
             break;
@@ -789,12 +823,14 @@ static int _count_identical(const vector<item_def>& stock, const item_def& item)
  *  @param shop  the shop to purchase from.
  *  @param pos   where the shop is located
  *  @param index the index of the item to buy in shop.stock
+ *  @param cost  the price to deduct for this item
+ *  @param voucher use a voucher instead of paying the item cost
  *  @returns true if it went in your inventory, false otherwise.
  */
-static bool _purchase(shop_struct& shop, const level_pos& pos, int index, bool voucher)
+static bool _purchase(shop_struct& shop, const level_pos& pos, int index,
+                      int cost, bool voucher)
 {
     item_def item = shop.stock[index]; // intentional copy
-    const int cost = item_price(item, shop);
     shop.stock.erase(shop.stock.begin() + index);
 
     // Remove from shopping list if it's unique
@@ -918,7 +954,6 @@ class ShopEntry : public InvEntry
 
     string get_text() const override
     {
-        const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
         const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
         // Colour stock as follows:
@@ -961,10 +996,11 @@ class ShopEntry : public InvEntry
 public:
     ShopEntry(const item_def& i, ShopMenu& m)
         : InvEntry(i),
-          menu(m)
+          menu(m), cost(item_price(i, m.shop))
     {
         show_background = false;
     }
+    const int cost;
 };
 
 // XX why is this MF_QUIET_SELECT?
@@ -1007,14 +1043,14 @@ int ShopMenu::selected_cost(bool use_shopping_list) const
 {
     int cost = 0;
     for (auto item : selected_entries())
-        cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+        cost += dynamic_cast<ShopEntry*>(item)->cost;
     if (use_shopping_list && cost == 0)
     {
         for (auto item : items)
         {
-            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
-            if (shopping_list.is_on_list(it, &pos))
-                cost += item_price(it, shop);
+            auto e = dynamic_cast<ShopEntry*>(item);
+            if (shopping_list.is_on_list(*e->item, &pos))
+                cost += e->cost;
         }
     }
     return cost;
@@ -1024,7 +1060,7 @@ int ShopMenu::max_cost() const
 {
     int cost = 0;
     for (auto item : selected_entries())
-        cost = max(cost, item_price(*dynamic_cast<ShopEntry*>(item)->item, shop));
+        cost = max(cost, dynamic_cast<ShopEntry*>(item)->cost);
 
     return cost;
 }
@@ -1158,11 +1194,11 @@ void ShopMenu::purchase_selected()
         buying_from_list = true;
         for (auto item : items)
         {
-            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
-            if (shopping_list.is_on_list(it, &pos))
+            auto e = dynamic_cast<ShopEntry*>(item);
+            if (shopping_list.is_on_list(*e->item, &pos))
             {
                 selected.push_back(item);
-                cost += item_price(it, shop);
+                cost += e->cost;
             }
         }
     }
@@ -1224,7 +1260,7 @@ void ShopMenu::purchase_selected()
     {
         const int i = static_cast<item_def*>(entry->data) - shop.stock.data();
         item_def& item(shop.stock[i]);
-        const int price = item_price(item, shop);
+        const int price = dynamic_cast<ShopEntry*>(entry)->cost;
         // Can happen if the price changes due to id status
         if (price > you.gold && price != voucher_value)
             continue;
@@ -1235,7 +1271,7 @@ void ShopMenu::purchase_selected()
 
         const int quant = item.quantity;
 
-        if (!_purchase(shop, pos, i, use_voucher))
+        if (!_purchase(shop, pos, i, price, use_voucher))
         {
             // The purchased item didn't fit into your
             // knapsack.
@@ -1287,10 +1323,10 @@ void ShopMenu::resort()
     }
     case ORDER_PRICE:
         sort(begin(items), end(items),
-             [this](MenuEntry* a, MenuEntry* b)
+             [](MenuEntry* a, MenuEntry* b)
              {
-                 return item_price(*dynamic_cast<ShopEntry*>(a)->item, shop)
-                        < item_price(*dynamic_cast<ShopEntry*>(b)->item, shop);
+                 return dynamic_cast<ShopEntry*>(a)->cost
+                        < dynamic_cast<ShopEntry*>(b)->cost;
              });
         break;
     case ORDER_ALPHABETICAL:
@@ -1384,9 +1420,10 @@ bool ShopMenu::process_key(int keyin)
             for (auto entry : selected)
             {
                 const item_def& item = *dynamic_cast<ShopEntry*>(entry)->item;
+                auto cost = dynamic_cast<ShopEntry*>(entry)->cost;
                 entry->selected_qty = 0;
                 if (!shopping_list.is_on_list(item, &pos))
-                    shopping_list.add_thing(item, item_price(item, shop), &pos);
+                    shopping_list.add_thing(item, cost, &pos);
             }
         }
         else if (can_purchase)
@@ -1420,7 +1457,7 @@ bool ShopMenu::process_key(int keyin)
         if (shopping_list.is_on_list(item, &pos))
             shopping_list.del_thing(item, &pos);
         else
-            shopping_list.add_thing(item, item_price(item, shop), &pos);
+            shopping_list.add_thing(item, entry->cost, &pos);
         update_help();
         update_menu(true);
         return true;

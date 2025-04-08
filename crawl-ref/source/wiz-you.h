@@ -37,6 +37,7 @@ void wizard_god_wrath();
 void wizard_god_mollify();
 void wizard_transform();
 void wizard_join_religion();
+void wizard_get_god_tension();
 job_type find_job_from_string(const string &job_str);
 void wizard_change_job_to(job_type job);
 void wizard_xom_acts();

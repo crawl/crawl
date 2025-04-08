@@ -374,7 +374,7 @@ ENDMAP
 NAME: grated_community_nicolae_legendary_smithy
 TAGS: grated_community_smithy_shop unrand
 : local badprops = {"EV:-5", "Str:-6", "Int:-6", "Dex:-6", "Slay:-4",
-:   "rF:-1", "rC:-1", "Will:-1", "-Cast", "-Tele", "*Corrode", "*Slow",
+:   "rF:-1", "rC:-1", "Will:-1", "*Silence", "-Tele", "*Corrode", "*Slow",
 :   "HP:-9", "MP:-9"}
 : local armours = {"plate armour", "chain mail", "kite shield", "tower shield",
 :                  "helmet"}

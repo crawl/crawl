@@ -478,8 +478,7 @@ function arena_sprint_get_monster_set(round, boss)
                     death knight w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / apis w:2",
                 -- Misc
-                "centaur warrior",
-                "yaktaur / yaktaur captain",
+                "kobold blastminer / yaktaur captain",
                 "very ugly thing",
                 "lich / w:5 ancient lich / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
@@ -492,7 +491,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "base draconian / w:5 nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
-                "vampire knight / vampire mage / w:1 jory",
+                "vampire knight / vampire mage / vampire bloodprince / w:1 jory",
                 "hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:20 / angel / daeva / cherub / seraph w:5",
@@ -562,6 +561,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
+                "vampire knight / vampire mage w:5 / vampire bloodprince / jory w:1",
                 "w:20 hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:25 / angel / daeva / fravashi w:5 /\
@@ -635,7 +635,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "frost giant / fire giant / w:15 titan / iron giant",
                 "storm dragon w:7 / golden dragon w:15 /\
                     quicksilver dragon w:15 / iron dragon w:7 / wyrmhole",
-                "protean progenitor",
+                "protean progenitor", "vampire bloodprince",
                 "draconian stormcaller / draconian knight / draconian shifter",
                 "golden eye / shining eye / glass eye w:15 / eye of devastation /\
                     great orb of eyes / w:5 ophan",
@@ -1084,9 +1084,10 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane plate armour | mundane barding |\
             mundane cloak | mundane buckler |\
             mundane pair of gloves | mundane helmet
-KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_all ; \
-            beast talisman | maw talisman | serpent talisman | blade talisman |\
-            dragon-blood talisman | granite talisman | storm talisman | talisman of death
+KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:9 greed:7 use_all ; \
+            quill talisman | maw talisman | serpent talisman |\
+            blade talisman | sanguine talisman | dragon-coil talisman |\
+            granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of alchemy | staff of death | staff of conjuration

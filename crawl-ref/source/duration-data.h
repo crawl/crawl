@@ -77,6 +77,11 @@ static void _end_growing_destruction()
     you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
 }
 
+static void _end_toxic_bog()
+{
+    end_terrain_change(TERRAIN_CHANGE_BOG);
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -652,6 +657,14 @@ static const duration_def duration_data[] =
       YELLOW, "-Bloodrite",
       "on bloodrite cooldown", "bloodrite cooldown",
       "You are unable to performed a blood rite.", D_NO_FLAGS},
+    { DUR_HIVE_COOLDOWN,
+        YELLOW, "-Swarm",
+        "on swarm cooldown", "swarm cooldown",
+        "Your swarm has recently come to your defense.", D_NO_FLAGS},
+    { DUR_MEDUSA_COOLDOWN,
+        YELLOW, "-Lithotox",
+        "on lithotoxin cooldown", "lithotoxin cooldown",
+        "Your lithotoxin has recently activated.", D_NO_FLAGS},
     { DUR_JINXBITE, LIGHTBLUE, "Jinx",
       "jinxed", "jinxbite",
       "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
@@ -693,6 +706,28 @@ static const duration_def duration_data[] =
     { DUR_BLINKITIS, RED, "Unstable",
       "blinking rapidly", "blinkitis",
       "You are untethered in space.", D_DISPELLABLE, {{"You feel more stable."}} },
+    { DUR_CACOPHONY,
+      WHITE, "Cacophony",
+      "making a cacophony", "cacophony",
+      "You are making an unholy racket with your haunted armour.", D_EXPIRES},
+    { DUR_ENKINDLED, LIGHTCYAN, "Enkindled",
+      "enkindled", "enkindled",
+      "Your flames burn bright with remembrance.", D_EXPIRES,
+      {{ "Your flames start to waver.", end_enkindled_status }}},
+    { DUR_DETONATION_CATALYST, BLUE, "Catalyst",
+      "catalyst", "catalyst",
+      "Your strikes ignite an explosive catalyst.", D_EXPIRES},
+    { DUR_SHROUD_TIMEOUT,
+      DARKGREY, "Shroud",
+      "shroud timeout", "shroud timeout",
+      "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
+      {{ "Your slime shroud regrows." }}},
+    { DUR_WEREFURY,
+      BLUE, "Slay",
+      "full of bloodlust", "bloodlust",
+      "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
+      {{ "Your bloodlust subsides." },
+       { "You feel your bloodlust ebbing." }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -737,7 +772,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes.", end_toxic_bog }}},
+      {{ "Your noxious spew wanes.", _end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
@@ -767,9 +802,13 @@ static const duration_def duration_data[] =
     { DUR_GRAVE_CLAW_RECHARGE, 0, "", "", "grave claw recharging", "", D_NO_FLAGS},
     { DUR_TIME_WARPED_BLOOD_COOLDOWN, 0, "", "", "time-warped blood cooldown", "", D_NO_FLAGS},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "spike launcher", "", D_NO_FLAGS, {{"", end_spike_launcher}}},
-    { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS, {{""}}},
+    { DUR_PARAGON_ACTIVE, 0, "", "", "paragon active", "", D_NO_FLAGS},
     { DUR_FORTRESS_BLAST_TIMER, 0, "", "", "fortress blast charging", "", D_DISPELLABLE},
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
+    { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
+    { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
+    { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
+    { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

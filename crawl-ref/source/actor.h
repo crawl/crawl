@@ -14,7 +14,6 @@
 #include "random-var.h"
 #include "ouch.h"
 #include "pronoun-type.h"
-#include "reach-type.h"
 #include "size-part-type.h"
 #include "size-type.h"
 #include "stat-type.h"
@@ -145,7 +144,7 @@ public:
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
-    virtual reach_type reach_range() const = 0;
+    virtual int reach_range() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -170,8 +169,8 @@ public:
     virtual bool has_blood(bool temp = true) const = 0;
     virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
-    virtual bool malmutate(const string &reason) = 0;
-    virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
+    virtual bool malmutate(const actor* source, const string &reason = "") = 0;
+    virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -193,26 +192,26 @@ public:
                           string source = "") = 0;
     virtual void petrify(const actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(bool quiet = false) = 0;
-    virtual bool vex(const actor *who, int duration, string source = "") = 0;
+    virtual bool vex(const actor* who, int dur, string source = "", string special_msg = "") = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
-    virtual void put_to_sleep(actor *attacker, int strength,
+    virtual void put_to_sleep(actor *attacker, int duration,
                               bool hibernate = false) = 0;
     virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
+                                   const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;
     virtual void splash_with_acid(actor *evildoer) = 0;
-    virtual void acid_corrode(int acid_strength) = 0;
-    virtual bool corrode_equipment(const char* corrosion_source = "the acid",
-                                   int degree = 1) = 0;
+    virtual bool corrode(const actor* source = nullptr,
+                         const char* corrosion_msg = "the acid",
+                         int amount = 4) = 0;
     virtual bool resists_dislodge(string /*event*/ = "") const { return false; };
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
     virtual bool can_sleep(bool holi_only = false) const;
-    virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
     virtual bool can_feel_fear(bool include_unknown) const = 0;
@@ -260,7 +259,7 @@ public:
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual bool is_amorphous() const = 0;
-    virtual int res_acid() const = 0;
+    virtual int res_corr() const = 0;
     virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
@@ -285,7 +284,6 @@ public:
     int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
     bool has_notele_item(vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool items = true) const;

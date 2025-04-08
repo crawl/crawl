@@ -1152,20 +1152,25 @@ conduct_type god_hates_item_handling(const item_def& item)
 }
 
 /**
- * Handle god conducts triggered by hurting a monster. Currently set up to only
- * account for Uskayaw's use pattern; if anyone else uses it, add a second case.
+ * Handle passive effects triggered by hurting a monster (eg: Uskayaw piety,
+ * Beogh healing)
  *
- * @param thing_done        The conduct in question.
  * @param victim            The victim being harmed.
  * @param damage_done       The amount of damage done.
+ * @param flavor            The flavour of damage done
+ * @param kill_type         The category of damage source (eg: clouds)
  */
-void did_hurt_conduct(conduct_type thing_done,
-                      const monster &victim,
-                      int damage_done)
+void did_hurt_monster(const monster &victim, int damage_done,
+                      beam_type flavour, kill_method_type kill_type)
 {
-    UNUSED(thing_done);
-    // Currently only used by Uskayaw; initially planned to use god conduct
-    // logic more heavily, but the god seems to need something different.
+    if (flavour == BEAM_SHARED_PAIN
+        || flavour == BEAM_STICKY_FLAME
+        || kill_type == KILLED_BY_POISON
+        || kill_type == KILLED_BY_CLOUD
+        || kill_type == KILLED_BY_BEOGH_SMITING)
+    {
+        return;
+    }
 
     if (you_worship(GOD_USKAYAW))
     {

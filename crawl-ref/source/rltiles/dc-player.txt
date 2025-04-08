@@ -101,6 +101,9 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
+poltergeist POLTERGEIST
+revenant REVENANT
+revenant2
 djinni_red_f DJINNI
 djinni_red_m
 djinni_blue_f
@@ -157,8 +160,6 @@ merfolk_f MERFOLK
 merfolk_m
 merfolk_water_f MERFOLK_WATER
 merfolk_water_m
-vampire_f VAMPIRE
-vampire_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -219,7 +220,13 @@ ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
 fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
+### Must be before scarves to render behind the player!
+%sdir player/transform
+medusa_form_armataur_back MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
+
 ###Scarf
+%sdir player/cloak
 scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
 scarf_red SCARF_RED
 scarf_white SCARF_WHITE
@@ -257,6 +264,8 @@ mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
 slippers SLIPPERS
+april_boots1 APRIL1
+april_boots2 APRIL2
 
 ## Mutations
 hooves HOOVES
@@ -485,6 +494,11 @@ justicar JUSTICAR
 %sdir player/transform
 maw_form0 MAW_FORM
 maw_form1
+quill_form_armataur QUILL_ARMATAUR
+quill_form_djinn QUILL_DJINN
+quill_form_humanoid QUILL_HUMANOID
+quill_form_naga QUILL_NAGA
+hive_form HIVE_FORM
 
 %end_ctg
 
@@ -731,6 +745,8 @@ lajatang1 LAJATANG
 lajatang2
 lajatang3
 xmas-scythe XMAS_SCYTHE
+april_staff1 APRIL_STAFF1
+april_staff2 APRIL_STAFF2
 
 ## staves
 
@@ -1077,6 +1093,8 @@ turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
 santa_hat SANTA
+april_hat1 APRIL1
+april_hat2 APRIL2
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
@@ -1181,6 +1199,11 @@ hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
+
+%sdir player/transform
+medusa_form_armataur_front MEDUSA_FORM_ARMATAUR
+medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
+
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

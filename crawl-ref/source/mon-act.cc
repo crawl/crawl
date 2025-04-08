@@ -144,7 +144,7 @@ static void _monster_regenerate(monster* mons)
     }
 
     // Non-land creatures out of their element cannot regenerate.
-    if (mons_primary_habitat(*mons) != HT_LAND
+    if (!(mons_habitat(*mons) & HT_DRY_LAND)
         && !monster_habitable_grid(mons, mons->pos()))
     {
         return;
@@ -368,7 +368,7 @@ static bool _allied_monster_at(monster* mon, coord_def delta)
     if (ally == nullptr)
         return false;
 
-    if (ally->is_stationary() || ally->reach_range() > REACH_NONE)
+    if (ally->is_stationary() || ally->reach_range() > 1)
         return false;
 
     // Hostile monsters of normal intelligence only move aside for
@@ -858,7 +858,7 @@ static bool _handle_swoop_or_flank(monster& mons)
     bolt tracer;
     tracer.source = mons.pos();
     tracer.target = target;
-    tracer.is_tracer = true;
+    tracer.set_is_tracer(true);
     tracer.pierce = true;
     tracer.range = LOS_RADIUS;
     tracer.fire();
@@ -914,7 +914,7 @@ static bool _handle_swoop_or_flank(monster& mons)
 static bool _handle_reaching(monster& mons)
 {
     bool       ret = false;
-    const reach_type range = mons.reach_range();
+    const int range = mons.reach_range();
     actor *foe = mons.get_foe();
 
     // Don't attempt to reach-attack a player we cannot see through Nightfall
@@ -924,7 +924,7 @@ static bool _handle_reaching(monster& mons)
     if (mons.caught()
         || mons_is_confused(mons)
         || !foe
-        || range <= REACH_NONE
+        || range <= 1
         || is_sanctuary(mons.pos())
         || is_sanctuary(foe->pos())
         || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_FRENZIED))
@@ -1104,12 +1104,13 @@ static void _handle_hellfire_mortar(monster& mortar)
     {
         if (!mons_aligned(&mortar, *ai) && monster_los_is_valid(&mortar, *ai))
         {
-            bolt tracer = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
-            tracer.source = mortar.pos();
-            tracer.target = ai->pos();
+            bolt beam = mons_spell_beam(&mortar, SPELL_MAGMA_BARRAGE, 100);
+            beam.source = mortar.pos();
+            beam.target = ai->pos();
 
-            fire_tracer(&mortar, tracer);
-            if (mons_should_fire(tracer))
+            targeting_tracer tracer;
+            fire_tracer(&mortar, tracer, beam);
+            if (mons_should_fire(beam, tracer))
                 targs.push_back(ai->pos());
         }
     }
@@ -1433,8 +1434,9 @@ static bool _handle_wand(monster& mons)
     beem.source     = mons.pos();
     beem.aux_source =
         wand->name(DESC_QUALNAME, false, true, false, false);
-    fire_tracer(&mons, beem);
-    if (!mons_should_fire(beem))
+    targeting_tracer tracer;
+    fire_tracer(&mons, tracer, beem);
+    if (!mons_should_fire(beem, tracer))
         return false;
 
     _mons_fire_wand(mons, mzap, beem);
@@ -1594,15 +1596,16 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         }
     }
 
+    targeting_tracer tracer;
     // Fire tracer.
     if (!teleport)
-        fire_tracer(mons, beem);
+        fire_tracer(mons, tracer, beem);
 
     // Clear fake damage (will be set correctly in mons_throw).
     beem.damage = dice_def();
 
     // Good idea?
-    if (teleport || mons_should_fire(beem) || interference != DO_NOTHING)
+    if (teleport || mons_should_fire(beem, tracer) || interference != DO_NOTHING)
     {
         if (check_only)
             return true;
@@ -1626,8 +1629,7 @@ static void _monster_add_energy(monster& mons)
     if (mons.speed > 0)
     {
         // Randomise to make counting off monster moves harder:
-        const int energy_gained =
-            max(1, div_rand_round(mons.speed * you.time_taken, 10));
+        const int energy_gained = div_rand_round(mons.speed * you.time_taken, 10);
         mons.speed_increment += energy_gained;
     }
 }
@@ -1876,14 +1878,15 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     return false;
 }
 
-static bool _beetle_must_return(const monster* mons)
+static bool _leash_range_exceeded(const monster* mons)
 {
-    if (mons->type != MONS_PHALANX_BEETLE)
+    const int max_dist = mons_leash_range(mons->type);
+    if (max_dist <= 0)
         return false;
 
     actor* creator = actor_by_mid(mons->summoner);
     return creator && creator->alive()
-           && !adjacent(mons->pos(), creator->pos());
+           && grid_distance(creator->pos(), mons->pos()) > max_dist;
 }
 
 void handle_monster_move(monster* mons)
@@ -2016,6 +2019,15 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    // Solar embers shouldn't attempt to reposition around the player on their
+    // own. (It makes their AoE harder to predict and control.)
+    if (mons->type == MONS_SOLAR_EMBER && adjacent(you.pos(), mons->pos()))
+    {
+        mons->lose_energy(EUT_MOVE);
+        return;
+    }
+
+
     // Melt barricades whose creator has moved too far away.
     if (mons->type == MONS_SPLINTERFROST_BARRICADE)
     {
@@ -2045,6 +2057,27 @@ void handle_monster_move(monster* mons)
         {
             mons->speed_increment = 60;
             return;
+        }
+    }
+
+    // Return to the player's side if they've gotten too separated
+    if (mons->type == MONS_HAUNTED_ARMOUR)
+    {
+        if (grid_distance(you.pos(), mons->pos()) > 5)
+        {
+            coord_def spot;
+            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
+                                         -1, &you))
+            {
+                mons->move_to_pos(spot, true, true);
+                simple_monster_message(*mons, " returns to your side.");
+            }
+            // If returning is impossible, kill it immediately.
+            else
+            {
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
+                return;
+            }
         }
     }
 
@@ -2278,7 +2311,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
-            && !_beetle_must_return(mons)
+            && !_leash_range_exceeded(mons)
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_los_is_valid(mons, targ))
@@ -2601,7 +2634,7 @@ void clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.allies_forbidden() && !mon->is_peripheral())
+    if (mons_can_hate(mon->type))
         mon->attitude = ATT_HOSTILE;
 }
 
@@ -3123,7 +3156,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
 
     const dungeon_feature_type target_grid = env.grid(targ);
-    const habitat_type habitat = mons_primary_habitat(*mons);
 
     // No monster may enter the open sea.
     if (feat_is_endless(target_grid))
@@ -3206,22 +3238,28 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Never voluntarily leave your creator's side if you're already next to
     // them (but can freely move to catch up with them, if not.)
-    if (mons->type == MONS_PHALANX_BEETLE)
+    const int leash_range = mons_leash_range(mons->type);
+    if (leash_range > 0)
     {
         actor* creator = actor_by_mid(mons->summoner);
         if (creator && creator->alive())
         {
-            if (adjacent(creator->pos(), mons->pos())
-                && !adjacent(creator->pos(), targ))
+            if (grid_distance(creator->pos(), mons->pos()) <= leash_range
+                && grid_distance(creator->pos(), targ) > leash_range)
             {
                 return false;
             }
             // Don't consider moving into enemies good enough if we're trying
-            // to return to our creator.
-            else if (!adjacent(creator->pos(), mons->pos())
-                     && actor_at(targ))
+            // to return to our creator (but swapping with friendlies is
+            // allowed).
+            else if (grid_distance(creator->pos(), mons->pos()) > leash_range)
             {
-                return false;
+                actor* act = actor_at(targ);
+                if (act && !(act->is_monster() && mons_aligned(act, mons)
+                             && _mons_can_displace(mons, act->as_monster())))
+                {
+                    return false;
+                }
             }
         }
     }
@@ -3246,7 +3284,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // [dshaligram] Monsters now prefer to head for deep water only if
     // they're low on hitpoints. No point in hiding if they want a
     // fight.
-    if (habitat == HT_WATER
+    if (!(mons_habitat(*mons) & HT_DRY_LAND)
         && targ != you.pos()
         && target_grid != DNGN_DEEP_WATER
         && env.grid(mons->pos()) == DNGN_DEEP_WATER
@@ -3531,6 +3569,10 @@ static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
     if (!mon.alive() || !crawl_state.potential_pursuers.count(&mon))
         return;
 
+    // Don't launch opportunity attacks on dead felids awaiting revival
+    if (you.hp <= 0)
+        return;
+
     const int new_dist = grid_distance(you.pos(), mon.pos());
     // Some of these duplicate checks when marking potential
     // pursuers. This is to avoid state changes after your turn
@@ -3720,10 +3762,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
     ASSERT(mons); // XXX: change to monster &mons
     move_array good_move;
 
-    const habitat_type habitat = mons_primary_habitat(*mons);
+    const habitat_type habitat = mons_habitat(*mons);
     bool deep_water_available = false;
 
-    // TODO: move the above logic out of move code.
+    // TODO: move the below logic out of move code.
     if (one_chance_in(10) && you.can_see(*mons) && mons->berserk())
         mprf(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
     // Look, this is silly.
@@ -3746,8 +3788,8 @@ static bool _monster_move(monster* mons, coord_def& delta)
             if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (habitat == HT_WATER && feat_is_water(env.grid(*ai))
-                    || habitat == HT_LAVA && feat_is_lava(env.grid(*ai)))
+                if ((habitat & HT_DEEP_WATER) && feat_is_water(env.grid(*ai))
+                    || (habitat & HT_LAVA) && feat_is_lava(env.grid(*ai)))
                 {
                     adj_water.push_back(*ai);
                 }

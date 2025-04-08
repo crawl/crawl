@@ -66,7 +66,9 @@ spret cast_inner_flame(coord_def target, int pow, bool fail);
 int get_mercury_weaken_chance(int victim_hd, int pow);
 dice_def poisonous_vapours_damage(int pow, bool random);
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail);
-bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only = false);
+bool safe_discharge(coord_def where, bool check_only = false,
+                    bool exclude_center = true, bool arc_blade = false);
+void discharge_at_location(int pow, const actor &agent, coord_def location);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);
@@ -182,3 +184,13 @@ void gain_grave_claw_soul(bool silent = false, bool wizard = false);
 spret cast_fortress_blast(actor& caster, int pow, bool fail);
 void unleash_fortress_blast(actor& caster);
 dice_def fortress_blast_damage(int AC, bool is_monster);
+
+dice_def detonation_catalyst_damage(int pow, bool real, const item_def* wpn = nullptr);
+void do_catalyst_explosion(coord_def center, const item_def* wpn);
+
+bool find_life_bolt_ray(coord_def& source, coord_def target, ray_def& ray);
+void fire_life_bolt(actor& attacker, coord_def target);
+
+spret cast_watery_grave();
+
+spret cast_golden_breath(bolt& beam, int power, bool fail);

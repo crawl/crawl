@@ -629,7 +629,7 @@ int detect_items(int pow)
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
 
-    else if (you.has_mutation(MUT_STRONG_NOSE))
+    else if (you.has_mutation(MUT_TREASURE_SENSE))
         map_radius = get_los_radius();
     else
     {
@@ -1117,16 +1117,17 @@ int torment_player(const actor *attacker, torment_source_type taux)
 
     if (kiku_shielding_player)
     {
+        int kiku_piety = min(piety_breakpoint(5), (int)you.piety);
         if (hploss > 0)
         {
-            if (random2(600) < you.piety) // 13.33% to 33.33% chance
+            if (random2(480) < kiku_piety) // 20.83% to 33.33% chance
             {
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
             // Always give at least partial protection for invoked torment.
-            // 24% to 80% chance for other sources.
-            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
+            // 50% to 80% chance for other sources.
+            else if (random2(200) < kiku_piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= (1 + random2(hploss - 1));
                 simple_god_message(" partially shields you from torment!");
@@ -1410,5 +1411,5 @@ void dreamshard_shatter()
     // when dreams spill out into reality it wakes you up
     // put it here after the dream message so that a sleeping player who
     // gets dreamsharded gets a nice message order
-    you.check_awaken(500);
+    you.wake_up();
 }

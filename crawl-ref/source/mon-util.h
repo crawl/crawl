@@ -188,7 +188,7 @@ static inline int get_resist(resists_t all, mon_resist_flags res)
     return v;
 }
 
-dungeon_feature_type habitat2grid(habitat_type ht);
+dungeon_feature_type preferred_feature_type(monster_type mt);
 
 monsterentry *get_monster_data(monster_type mc) IMMUTABLE;
 int get_mons_class_ac(monster_type mc) IMMUTABLE;
@@ -289,15 +289,12 @@ bool should_attract_mons(const monster &m);
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
 
-// Use mons_habitat() and mons_primary_habitat() wherever possible,
-// since the class variants do not handle zombies correctly.
+// Use mons_habitat() wherever possible, since the class variants do not
+// handle zombies correctly.
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
                                bool real_amphibious = false);
+habitat_type mons_class_habitat(monster_type t, bool real_amphibious = false);
 habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
-
-habitat_type mons_class_primary_habitat(monster_type mc);
-habitat_type mons_primary_habitat(const monster& mon);
-habitat_type mons_class_secondary_habitat(monster_type mc);
 
 bool mons_skeleton(monster_type mc);
 
@@ -315,6 +312,7 @@ bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
 int mons_class_regen_amount(monster_type mc);
+int mons_leash_range(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
@@ -357,9 +355,12 @@ void define_monster(monster& mons, bool friendly = false);
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
 
-bool mons_should_fire(bolt &beam, bool ignore_good_idea = false);
+bool mons_should_fire(const bolt &beam, const targeting_tracer& tracer,
+                      bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
+bool ms_ranged_spell(spell_type monspell, bool attack_only = false,
+                     bool ench_too = true);
 bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
@@ -392,6 +393,7 @@ bool mons_is_batty(const monster& m);
 bool mons_is_influenced_by_sanctuary(const monster& m);
 bool mons_is_fleeing_sanctuary(const monster& m);
 bool mons_just_slept(const monster& m);
+bool mons_is_deep_asleep(const monster& m);
 bool mons_class_is_slime(monster_type mc);
 bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
@@ -471,8 +473,6 @@ void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
 mon_spell_slot drac_breath(monster_type drac_type);
-
-monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 
 void         init_mon_name_cache();
 monster_type get_monster_by_name(string name, bool substring = false);

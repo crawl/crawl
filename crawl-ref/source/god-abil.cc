@@ -1642,7 +1642,8 @@ void yred_fathomless_shackles_effect(int delay)
 
     int total_drained = 0;
     const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
-    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    int pow = delay > 0 ? div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay)
+                        : 0;
     for (monster_near_iterator mi(p); mi; ++mi)
     {
         if (grid_distance(mi->pos(), p) > radius
@@ -2411,11 +2412,13 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    vector<item_def*> to_remove = {&item};
+    if (!handle_chain_removal(to_remove, true))
+        return false;
+
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
     item_skills(item, you.skills_to_hide);
 
-    vector<item_def*> to_remove = {&item};
-    handle_chain_removal(to_remove, false);
     for (item_def* _item : to_remove)
     {
         if (_item-> link != item_slot)
@@ -3002,6 +3005,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
+        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:
@@ -3609,6 +3613,7 @@ static string _gozag_shop_spec(int index)
     const shop_type type = _gozag_shop_type(index);
     const string name =
         you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+    const int greed = 12 + random2avg(17,2);
 
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
@@ -3617,10 +3622,11 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag",
+    return make_stringf("%s shop name:%s%s greed:%d gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str());
+                        suffix.c_str(),
+                        greed);
 
 }
 
@@ -3997,9 +4003,9 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
         tempbeam.thrower   = KILL_YOU;
-        tempbeam.is_tracer = true;
-        tempbeam.explode(false);
-        if (tempbeam.beam_cancelled)
+        player_beam_tracer tracer;
+        tempbeam.explode(tracer, false);
+        if (cancel_beam_prompt(tempbeam, tracer))
             return spret::abort;
     }
     else
@@ -4385,11 +4391,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     {
         return false;
     }
-
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
-        return false;
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -6458,7 +6459,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
 
     auto initial_position = you.pos();
     you.moveto(wall_jump_landing_spot);
-    wu_jian_wall_jump_effects();
+    bool attacked = wu_jian_wall_jump_effects();
     you.clear_far_engulf(false, true);
     you.apply_location_effects(initial_position);
 
@@ -6468,6 +6469,10 @@ bool wu_jian_do_wall_jump(coord_def targ)
     you.time_taken = player_speed() * wall_jump_modifier
                      * player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
+
+    // Must be done after setting the time taken by this attack set.
+    if (attacked)
+        do_player_post_attack(nullptr, false, false);
 
     // need to set this here in case serpent's lash isn't active
     you.turn_is_over = true;
@@ -6608,8 +6613,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     }
 
     if (mons->is_peripheral()
-        || mons_primary_habitat(*mons) == HT_LAVA
-        || mons_primary_habitat(*mons) == HT_WATER
+        || !(mons_habitat(*mons) & HT_DRY_LAND)
         || mons->wont_attack())
     {
         mpr("You cannot duel that!");
@@ -7240,7 +7244,7 @@ void makhleb_vessel_of_slaughter()
     mpr("You offer yourself as an instrument of Makhleb's will and feel "
         "overwhelming power flowing through you!");
 
-    transform(100, transformation::slaughter);
+    transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
     bolt damnation;

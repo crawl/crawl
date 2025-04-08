@@ -1,5 +1,5 @@
 name: "gnoll"
-glyph: {char: "g", colour: yellow}
+glyph: {char: "j", colour: yellow}
 flags: [speaks, warm_blood]
 xp_mult: 14
 will: 10

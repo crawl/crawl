@@ -453,21 +453,24 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
-                         const string &agent, const string &msg)
+                         const string &agent, const string &msg,
+                         bool act_immediately = false)
     {
-        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg));
+        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg, act_immediately));
     }
 protected:
     make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
-                               const string &_agent, const string &_msg)
+                               const string &_agent, const string &_msg,
+                               bool _act_immediately)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
-          agent(_agent), message(_msg)
+          agent(_agent), message(_msg), act_immediately(_act_immediately)
     {
     }
     mgen_data mg;
     int experience_level;
     string agent;
     string message;
+    bool act_immediately;
 };
 
 class mummy_death_curse_fineff : public final_effect
@@ -521,18 +524,18 @@ public:
     void fire() override;
 
     static void schedule(const actor &attack, const actor &defend,
-                         const item_def *weapon)
+                         item_def *weapon)
     {
         final_effect::schedule(new spectral_weapon_fineff(attack, defend, weapon));
     }
 protected:
     spectral_weapon_fineff(const actor &attack, const actor &defend,
-                           const item_def *wpn)
+                           item_def *wpn)
         : final_effect(&attack, &defend, coord_def()), weapon(wpn)
     {
     }
 
-    const item_def *weapon;
+    item_def *weapon;
 };
 
 class lugonu_meddle_fineff : public final_effect
@@ -627,5 +630,25 @@ protected:
     }
     const mgen_data mg;
 };
+
+class detonation_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return false; };
+    void fire() override;
+
+    static void schedule(const coord_def &pos, const item_def* wpn)
+    {
+        final_effect::schedule(new detonation_fineff(pos, wpn));
+    }
+protected:
+    detonation_fineff(const coord_def &pos, const item_def* wpn)
+        : final_effect(&you, nullptr, pos), weapon(wpn)
+    {
+    }
+
+    const item_def* weapon;
+};
+
 
 void fire_final_effects();

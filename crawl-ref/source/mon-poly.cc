@@ -7,6 +7,7 @@
 
 #include "mon-poly.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
@@ -33,6 +34,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "xom.h"
 
@@ -67,42 +69,52 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
+        mons->do_unequip_effects(env.item[item], false, true);
+
+        int old_halo = mons->halo_radius();
+        int old_umbra = mons->umbra_radius();
+
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
             destroy_item(item);
+        }
+        else
+        {
+            if (mark_item_origins && env.item[item].defined())
+                origin_set_monster(env.item[item], mons);
+
+            env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
+            if (env.item[item].props.exists("autoinscribe"))
+            {
+                add_inscription(env.item[item],
+                    env.item[item].props["autoinscribe"].get_string());
+                env.item[item].props.erase("autoinscribe");
+            }
+
+            // If a monster is swimming, the items are ALREADY underwater.
+            if (move_item_to_grid(&item, mons->pos(), mons->swimming())
+                && player_under_penance(GOD_GOZAG)
+                // Dropping items into water/lava may have destroyed them
+                && item != NON_ITEM
+                && env.item[item].base_type == OBJ_GOLD
+                && you.see_cell(mons->pos())
+                && x_chance_in_y(env.item[item].quantity, 100)
+                && you.can_be_dazzled())
+            {
+                string msg = make_stringf("%s dazzles you with the glint of coin.",
+                    god_name(GOD_GOZAG).c_str());
+                mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+                blind_player(10 + random2(8), ETC_GOLD);
+            }
             mons->inv[i] = NON_ITEM;
-            continue;
         }
 
-        if (mark_item_origins && env.item[item].defined())
-            origin_set_monster(env.item[item], mons);
-
-        env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
-
-        if (env.item[item].props.exists("autoinscribe"))
-        {
-            add_inscription(env.item[item],
-                env.item[item].props["autoinscribe"].get_string());
-            env.item[item].props.erase("autoinscribe");
-        }
-
-        // If a monster is swimming, the items are ALREADY underwater.
-        if (move_item_to_grid(&item, mons->pos(), mons->swimming())
-            && player_under_penance(GOD_GOZAG)
-            // Dropping items into water/lava may have destroyed them
-            && item != NON_ITEM
-            && env.item[item].base_type == OBJ_GOLD
-            && you.see_cell(mons->pos())
-            && x_chance_in_y(env.item[item].quantity, 100)
-            && you.can_be_dazzled())
-        {
-            string msg = make_stringf("%s dazzles you with the glint of coin.",
-                                       god_name(GOD_GOZAG).c_str());
-            mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            blind_player(10 + random2(8), ETC_GOLD);
-        }
-        mons->inv[i] = NON_ITEM;
+        int new_halo = mons->halo_radius();
+        int new_umbra = mons->umbra_radius();
+        if (old_halo != new_halo || old_umbra != new_umbra)
+            invalidate_agrid(true);
     }
 }
 
@@ -421,23 +433,8 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
         return false;
 
     const habitat_type new_hab = mons_habitat_type(new_type, new_type, false);
-    switch (orig_hab)
-    {
-        case HT_AMPHIBIOUS:
-        case HT_AMPHIBIOUS_LAVA:
-            return new_hab == orig_hab;
-        case HT_WATER:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS;
-        case HT_LAVA:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS_LAVA;
-        case HT_LAND:
-            return new_hab == orig_hab
-                || new_hab == HT_AMPHIBIOUS
-                || new_hab == HT_AMPHIBIOUS_LAVA;
-        case NUM_HABITATS:
-            break;
-    }
-    return false; // should never happen
+
+    return (new_hab & orig_hab) == orig_hab;
 }
 
 static int _goal_hd(int orig_hd, poly_power_type ppt)
@@ -794,4 +791,7 @@ void seen_monster(monster* mons)
 
     if (mons_offers_beogh_conversion(*mons))
         env.level_state |= LSTATE_BEOGH;
+
+    if (you.form == transformation::sphinx)
+        sphinx_notice_riddle_target(mons);
 }

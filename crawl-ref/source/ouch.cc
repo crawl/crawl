@@ -42,6 +42,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -65,10 +66,12 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
+#include "spl-monench.h"
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "terrain.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -159,7 +162,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a terrible chill!");
+            mpr("The cold chills you terribly!");
             xom_is_stimulated(200);
         }
         break;
@@ -244,7 +247,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a painful chill!");
+            mpr("The ice freezes you terribly!");
             xom_is_stimulated(200);
         }
         break;
@@ -372,6 +375,15 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     {
         mprf(MSGCH_WARN, "The flames go out!");
         end_sticky_flame_player();
+    }
+
+    if (you.form == transformation::aqua
+        && flavour == BEAM_COLD || flavour == BEAM_ICE
+        && coinflip())
+    {
+        if (!you.duration[DUR_FROZEN])
+            mpr("Your body starts to freeze solid!");
+        you.increase_duration(DUR_FROZEN, random_range(5, 10), 50);
     }
 }
 
@@ -792,6 +804,118 @@ static void _maybe_fog(int dam)
     }
 }
 
+static void _maybe_splash_water(int dam)
+{
+    if (you.form != transformation::aqua)
+        return;
+
+    const int percent = dam * 100 / you.hp_max;
+
+    if (percent < 10 && !one_chance_in(percent))
+        return;
+
+    // Assume the player can fill 25 tiles will all their hp (with some randomisation).
+    int water = div_rand_round(percent, 2);
+
+    if (water == 0)
+        return;
+
+    vector<coord_def> spots;
+    for (distance_iterator di(you.pos(), true, false, 3); di; ++di)
+    {
+        if (you.see_cell_no_trans(*di)
+            && feat_has_dry_floor(env.grid(*di))
+            && !feat_is_critical(env.grid(*di)))
+        {
+            spots.push_back(*di);
+        }
+    }
+
+    // spots is neatly ordered from player->outwards. random_spots is completely
+    // randomized. We mostly pick from spots, with a smaller chance to pick from
+    // random spots, so that the splash tends to build outward from the player,
+    // but slightly unevenly.
+    vector<coord_def> random_spots = spots;
+    shuffle_array(random_spots);
+
+    water = min(water, (int)spots.size());
+
+    if (water == 0)
+        return;
+
+    mpr("You splash onto the ground.");
+    for (int i = 0; i < water; ++i)
+    {
+        const coord_def pos = one_chance_in(3) ? random_spots[i] : spots[i];
+        temp_change_terrain(pos, DNGN_SHALLOW_WATER, random_range(80, 110),
+                            TERRAIN_CHANGE_AQUA_FORM, MID_PLAYER);
+    }
+}
+
+static void _maybe_hive_swarm()
+{
+    if (you.form != transformation::hive
+        || you.allies_forbidden()
+        || you.hp * 2 > you.hp_max
+        || you.duration[DUR_HIVE_COOLDOWN])
+    {
+        return;
+    }
+
+    mgen_data mg(MONS_KILLER_BEE, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE);
+    mg.set_summoned(&you, MON_SUMM_HIVE, random_range(12, 18) * BASELINE_DELAY, false).set_range(1, 3);
+    mg.hd = 5;
+
+    const int num = div_rand_round(get_form()->get_effect_size(), 10);
+    bool made_mon = false;
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster *swarmer = create_monster(mg))
+        {
+            made_mon = true;
+            swarmer->add_ench(ENCH_BERSERK);
+            swarmer->add_ench(ENCH_CONCENTRATE_VENOM);
+        }
+    }
+
+    if (made_mon)
+    {
+        mpr("Angry insects swarm out of your body to defend their hive!");
+        you.duration[DUR_HIVE_COOLDOWN] = 1;
+    }
+}
+
+static void _maybe_medusa_lithotoxin()
+{
+    if (you.form != transformation::medusa
+        || you.hp * 10 > you.hp_max * 6
+        || you.duration[DUR_MEDUSA_COOLDOWN])
+    {
+        return;
+    }
+
+    vector<monster*> targs;
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (monster* mon = monster_at(*ri))
+            if (!mon->wont_attack() && mon->has_ench(ENCH_POISON))
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    draw_ring_animation(you.pos(), 3, LIGHTGREY, 0U, true, 25);
+    mprf("Your pain echoes through the poison around you!");
+    for (monster* targ : targs)
+    {
+        if (x_chance_in_y(get_form()->get_effect_chance(), 100))
+            targ->petrify(&you);
+        else
+            simple_monster_message(*targ, " resists.");
+    }
+
+    you.duration[DUR_MEDUSA_COOLDOWN] = 1;
+}
+
 static void _handle_poor_constitution(int dam)
 {
     const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
@@ -820,7 +944,7 @@ static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
     if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
-        you.corrode_equipment("Your corrosive artefact");
+        you.corrode(nullptr, "Your corrosive artefact");
 }
 
 /**
@@ -833,6 +957,15 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
+/**
+ * Maybe silence the player after taking damage if they're wearing *Silence.
+ **/
+static void _maybe_silence()
+{
+    int silence_sources = you.scan_artefacts(ARTP_SILENCE);
+    if (x_chance_in_y(silence_sources, 100))
+        silence_player(4 + random2(7));
+}
 /**
  * Maybe disable scrolls after taking damage if the player has MUT_READ_SAFETY.
  **/
@@ -1058,9 +1191,11 @@ static void _print_endgame_messages(scorefile_entry &se)
  *  @param see_source whether the attacker was visible to you
  *  @param death_source_name the attacker's name if it is already dead.
  *  @param skip_multipliers Whether to ignore harm/vitrify/etc.
+ *  @param skip_awaken Whether this damage will skip waking a sleeping player.
  */
 void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
-          bool see_source, const char *death_source_name, bool skip_multipliers)
+          bool see_source, const char *death_source_name, bool skip_multipliers,
+          bool skip_awaken)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1111,8 +1246,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     interrupt_activity(activity_interrupt::hp_loss, &hpl);
 
     // Don't wake the player with fatal or poison damage.
-    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
-        you.check_awaken(500);
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON && !skip_awaken)
+        you.wake_up();
 
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
@@ -1161,7 +1296,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
-                you.check_awaken(500);
+                you.wake_up();
 
             if (dam <= 0 && you.hp > 0)
                 return;
@@ -1172,7 +1307,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             simple_god_message(" protects you from harm!");
             // Ensure divine intervention wakes sleeping players. Necessary
             // because we otherwise don't wake players who take fatal damage.
-            you.check_awaken(500);
+            you.wake_up();
             return;
         }
 
@@ -1224,6 +1359,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_blood_hastes_allies();
             _powered_by_pain(dam);
             makhleb_celebrant_bloodrite();
+            _maybe_splash_water(dam);
+            _maybe_hive_swarm();
+            _maybe_medusa_lithotoxin();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();
@@ -1231,6 +1369,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_silence();
                 _maybe_disable_scrolls();
                 _maybe_disable_potions();
             }

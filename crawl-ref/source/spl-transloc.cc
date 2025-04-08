@@ -58,6 +58,7 @@
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
@@ -154,6 +155,66 @@ void uncontrolled_blink(bool override_stasis, int max_distance)
     _place_tloc_cloud(origin);
 
     crawl_state.potential_pursuers.clear();
+}
+
+spret spider_jump()
+{
+    if (cancel_harmful_move(false))
+        return spret::abort;
+
+    you.duration[DUR_AUTODODGE] = 1;
+
+    coord_def target;
+    // First try to find a random square not adjacent to the player,
+    // then one adjacent if that fails.
+    if (!random_near_space(&you, you.pos(), target, false, you.current_vision)
+        && !random_near_space(&you, you.pos(), target, true, you.current_vision))
+    {
+        mpr("You jump in place.");
+        return spret::success;
+    }
+
+    // It may be a little counterintuitive, but the chance of a monster losing
+    // track of the player is proportional to how many monsters are looking at
+    // them in the first place. This is because the chance of them being spotted
+    // afterward is *also* effectively proportional to how many monsters are
+    // looking for them, due to how stealth works. So this is an attempt to give
+    // an 'okay' level of misdirection against groups without being a sure-fire
+    // escape against individual monsters.
+    int onlookers = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->foe == MHITYOU && !mi->is_firewood() && !mi->wont_attack())
+            ++onlookers;
+    }
+
+    // Make some monsters lose track of the player.
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->foe == MHITYOU && !mi->is_firewood() && !mi->wont_attack()
+            && x_chance_in_y(onlookers + 3, 9))
+        {
+            mi->foe = MHITNOT;
+            mi->foe_memory = 0;
+            mi->target = mi->pos();
+            mi->behaviour = BEH_WANDER;
+        }
+    }
+
+    you.stop_being_constricted(false, "jump");
+
+    mpr("You jump through the air!");
+    const coord_def origin = you.pos();
+    move_player_to_grid(target, false);
+    if (!cell_is_solid(origin))
+        place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
+
+    crawl_state.potential_pursuers.clear();
+
+    you.increase_duration(DUR_BLINK_COOLDOWN, random_range(2, 5));
+    place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
+
+    return spret::success;
 }
 
 /**
@@ -384,7 +445,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
 
 int frog_hop_range()
 {
-    return 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    return 2 + you.get_mutation_level(MUT_FROG_LEGS) * 2; // 4-6
 }
 
 /**
@@ -1370,33 +1431,16 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
     return spret::success;
 }
 
-string weapon_unprojectability_reason(const item_def* wpn)
-{
-    if (!wpn)
-        return "";
-
-    // These don't work properly when performing attacks against non-adjacent
-    // targets. Maybe support them in future?
-    static const vector<int> forbidden_unrands = {
-        UNRAND_POWER,
-        UNRAND_ARC_BLADE,
-    };
-    for (int urand : forbidden_unrands)
-    {
-        if (is_unrandom_artefact(*wpn, urand))
-        {
-            return make_stringf("%s would react catastrophically with paradoxical space!",
-                                you.weapon()->name(DESC_THE, false, false, false, false).c_str());
-        }
-    }
-    return "";
-}
-
 // Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
 //               target it first triggered on. If nullptr, this is a normal cast.
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
                             actor* katana_defender)
 {
+    const item_def *weapon = agent.weapon();
+    item_def *offhand = agent.offhand_weapon();
+    if (offhand && !is_melee_weapon(*offhand))
+        offhand = nullptr;
+
     bool found_unsafe_target = false;
     vector<actor*> targets;
     for (actor_near_iterator ai(&agent, LOS_NO_TRANS); ai; ++ai)
@@ -1417,18 +1461,19 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         if (*ai == katana_defender)
             continue;
 
-        // If the player is casting, make a melee attack to test if we'd
-        // ordinarily need a prompt to hit this target, and ignore all such
-        // targets entirely.
+        // If the player is casting, check if hitting this target would
+        // ordinarily need a prompt and ignore all such targets entirely.
         //
         // We only perform this test for real casts, because otherwise the game
         // prints a misleading message to the player first (about there being
         // no targets in range)
         if (agent.is_player() && real)
         {
-            melee_attack atk(&you, *ai);
-            if (!atk.would_prompt_player())
+            if (katana_defender
+                || !player_unrand_bad_target(weapon, offhand, **ai, true))
+            {
                 targets.emplace_back(*ai);
+            }
             else
                 found_unsafe_target = true;
         }
@@ -1448,24 +1493,17 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         return spret::abort;
     }
 
-    const item_def *weapon = agent.weapon();
-
-    if (real)
-    {
-        const string unproj_reason = weapon_unprojectability_reason(weapon);
-        if (unproj_reason != "")
-        {
-            if (agent.is_player())
-                mpr(unproj_reason);
-            return spret::abort;
-        }
-    }
-
     if (!real)
         return spret::success;
 
-    if (agent.is_player() && !katana_defender && !wielded_weapon_check(weapon))
-        return spret::abort;
+    if (agent.is_player() && !katana_defender)
+    {
+        if (!wielded_weapon_check(weapon))
+            return spret::abort;
+
+        if (player_unrand_bad_attempt(weapon, offhand, nullptr, false))
+            return spret::abort;
+    }
 
     fail_check();
 
@@ -1482,15 +1520,16 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
                                       : 2 + div_rand_round(pow, 50);
-    int animation_delay = 80 / (min(max_targets, targets.size()));
+    const size_t target_count = std::min(max_targets, targets.size());
+    int animation_delay = 80 / target_count;
 
     // Players cast it a lot, but only a few enemies do and should be noticed.
     if (!(mons_aligned(&agent, &you)))
-        animation_delay *= 1.5;
+        animation_delay = (animation_delay * 3) / 2;
 
     if ((Options.use_animations & UA_BEAM) != UA_NONE)
     {
-        for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+        for (size_t i = 0; i < target_count; i++)
         {
             flash_tile(targets[i]->pos(), LIGHTMAGENTA, animation_delay,
                        TILE_BOLT_MANIFOLD_ASSAULT);
@@ -1498,14 +1537,14 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         }
     }
 
-    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    for (size_t i = 0; i < target_count; i++)
     {
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
         if (katana_defender)
         {
-            if (you.offhand_weapon() && is_unrandom_artefact(*you.offhand_weapon(), UNRAND_AUTUMN_KATANA))
-                atk.set_weapon(you.offhand_weapon(), true);
+            if (offhand && is_unrandom_artefact(*offhand, UNRAND_AUTUMN_KATANA))
+                atk.set_weapon(offhand, true);
             // Only the katana can attack through space!
             atk.attack();
         }
@@ -1517,13 +1556,18 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             you.time_taken = you.attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.
-        // (Unclear how this is possible?)
+        // (e.g. from riposte, spiny or injury mirror)
         if (agent.is_player() && (you.hp <= 0 || you.pending_revival)
             || agent.is_monster() && !agent.alive())
         {
             break;
         }
     }
+
+    // Refund duration for catalyst, but only if we cast the spell.
+    // Autumn Katana already refunded duration in melee_attack.
+    if (!katana_defender && you.duration[DUR_DETONATION_CATALYST])
+        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
 
     return spret::success;
 }
@@ -1592,7 +1636,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
             mons->del_ench(ENCH_HELD, true);
     }
 
-    beam.is_tracer = true;
+    beam.set_is_tracer(true);
     beam.aimed_at_spot = true;
     beam.affects_nothing = true;
     beam.fire();
@@ -2546,4 +2590,56 @@ spret cast_teleport_other(const coord_def& target, int power, bool fail)
     beam.set_agent(&you);
 
     return zapping(ZAP_TELEPORT_OTHER, power, beam, false, nullptr, fail);
+}
+
+vector<coord_def> get_bestial_landing_spots(coord_def target)
+{
+    vector<coord_def> spots;
+    for (adjacent_iterator ai(target); ai; ++ai)
+    {
+        if (in_bounds(*ai) && you.see_cell_no_trans(*ai)
+            && !cell_is_solid(*ai) && !is_feat_dangerous(env.grid(*ai))
+            && (!actor_at(*ai) || !you.can_see(*actor_at(*ai))))
+        {
+            spots.push_back(*ai);
+        }
+    }
+
+    return spots;
+}
+
+spret do_bestial_takedown(coord_def target)
+{
+    monster* targ = monster_at(target);
+    ASSERT(targ);
+
+    vector<coord_def> spots = get_bestial_landing_spots(target);
+
+    coord_def landing = spots[random2(spots.size())];
+
+    // We've selected a spot with an invisible monster, so just fling them out
+    // of the way.
+    if (monster_at(landing))
+        _displace_charge_blocker(you, landing);
+
+    mprf("You pounce on %s with bestial fury!", targ->name(DESC_THE).c_str());
+
+    const coord_def old_pos = you.pos();
+    you.moveto(landing, true);
+    viewwindow();
+    update_screen();
+
+    melee_attack atk(&you, targ);
+    atk.dmg_mult = get_form()->get_takedown_multiplier();
+    atk.to_hit = AUTOMATIC_HIT;
+    atk.is_bestial_takedown = true;
+    atk.attack();
+
+    you.time_taken = you.attack_delay().roll();
+
+    you.did_deliberate_movement();
+    you.apply_location_effects(old_pos);
+    noisy(5, you.pos(), MID_PLAYER);
+
+    return spret::success;
 }
