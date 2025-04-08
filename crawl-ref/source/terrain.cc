@@ -500,7 +500,7 @@ bool feat_is_diggable(dungeon_feature_type feat)
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
            || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE
-           || feat == DNGN_PETRIFIED_TREE;
+           || feat == DNGN_PETRIFIED_TREE || feat == DNGN_FRIGID_WALL;
 }
 
 /** Is this feature a type of trap?
