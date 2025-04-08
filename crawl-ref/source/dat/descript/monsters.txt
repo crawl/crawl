@@ -738,9 +738,14 @@ A small snake that can augment its bite by constricting small creatures.
 %%%%
 ballistomycete
 
-A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
-dank underground dungeon. When it senses a threat, the ballistomycete may
-release a deadly floating spore that explodes on its victims.
+A lumpy reddish fungus covered in knobbly rhizome growths, growing well {{
+    if you.branch() == "Shoals" then
+        return "on the sunny beach of the Shoals."
+    else
+        return "in the dank underground dungeon."
+    end
+}} When it senses a threat, the ballistomycete may release a deadly floating
+spore that explodes on its victims.
 %%%%
 ballistomycete spore
 
@@ -1457,7 +1462,13 @@ result in a violent explosion.
 %%%%
 fungus
 
-A lumpy grey fungus, growing well in the dank underground dungeon.
+A lumpy grey fungus, growing well {{
+    if you.branch() == "Shoals" then
+        return "on the sunny beach of the Shoals."
+    else
+        return "in the dank underground dungeon."
+    end
+}}
 %%%%
 gargoyle
 
@@ -2320,8 +2331,16 @@ A pillar of salt shaped like a statue, but worked by no living hands.
 %%%%
 plant
 
-A plant that has adapted to grow in the unpleasant dungeon environment,
-somehow thriving even underground in the absence of the sun.
+A plant that {{
+    if you.branch() == "Shoals" then
+        return "has been lucky enough to sprout and flourish in the golden " ..
+               "sunlight and fresh air of the Shoals, looking much more " ..
+               "vibrant than its dungeon-dwelling counterparts."
+    else
+        return "has adapted to grow in the unpleasant dungeon environment, " ..
+               "somehow thriving even underground in the absence of the sun."
+    end
+}}
 %%%%
 platinum paragon
 
