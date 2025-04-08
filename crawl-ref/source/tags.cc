@@ -7205,7 +7205,6 @@ void unmarshallMonster(reader &th, monster& m)
     else
 #endif
     m.exp            = unmarshallInt(th);
-    m.summoner       = unmarshallInt(th);
     m.number         = unmarshallInt(th);
     m.base_monster   = unmarshallMonType(th);
     m.colour         = unmarshallShort(th);
