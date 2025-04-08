@@ -1167,7 +1167,7 @@ bool evoke_item(item_def& item, dist *preselect)
         ASSERT(in_inventory(item));
         dec_inv_item_quantity(item.link, 1);
         transform(0, transformation::flux);
-        you.props[FLUX_ENERGY_KEY] = 40;
+        you.props[FLUX_ENERGY_KEY] = 45;
         break;
 
     case OBJ_MISCELLANY:
