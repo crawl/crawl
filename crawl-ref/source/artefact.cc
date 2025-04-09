@@ -430,6 +430,7 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
 //       it is possible to generate randarts that give that resistance, which
 //       I think is still an appropriate bonus.
 static map<talisman_type, vector<artp_value>> talisman_artps = {
+    { TALISMAN_INKWELL,     {{ARTP_POISON, 1}}},
     { TALISMAN_RIMEHORN,    {{ARTP_COLD, 2}}},
     { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
     { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
