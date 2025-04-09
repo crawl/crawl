@@ -378,7 +378,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     }
 
     if (you.form == transformation::aqua
-        && flavour == BEAM_COLD || flavour == BEAM_ICE
+        && (flavour == BEAM_COLD || flavour == BEAM_ICE)
         && coinflip())
     {
         if (!you.duration[DUR_FROZEN])
