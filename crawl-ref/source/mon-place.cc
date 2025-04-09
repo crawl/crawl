@@ -165,11 +165,7 @@ bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
-    habitat_type ht = mons_class_habitat(mt);
-    if (mons_class_flag(mt, M_FLIES))
-        ht = (habitat_type)(ht | HT_FLYER);
-
-    return _habitable_feat(ht, feat);
+    return _habitable_feat(mons_class_habitat(mt), feat);
 }
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)

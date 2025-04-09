@@ -3321,35 +3321,38 @@ mon_intel_type mons_intel(const monster& m)
     return mons_class_intel(mon.type);
 }
 
-habitat_type mons_class_habitat(monster_type mc, bool real_amphibious)
+// What habitats can this monster effectively occupy?
+// If core_only is true (defaults to false), ignore flight and large size, and
+// consider only 'native' habitat.
+habitat_type mons_class_habitat(monster_type mc, bool core_only)
 {
     const monsterentry *me = get_monster_data(mc);
-    habitat_type ht = (me ? me->habitat
-                          : get_monster_data(MONS_PROGRAM_BUG)->habitat);
-    if (!real_amphibious)
+    habitat_type ht = (me ? me->habitat : HT_LAND);
+    if (!core_only)
     {
         // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
-        size_type st = (me ? me->size
-                           : get_monster_data(MONS_PROGRAM_BUG)->size);
+        size_type st = (me ? me->size : SIZE_GIANT);
         if (ht == HT_LAND && st >= SIZE_GIANT)
             ht = HT_AMPHIBIOUS;
+        if (me && monster_class_flies(mc))
+            ht = HT_FLYER;
     }
     return ht;
 }
 
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
-                               bool real_amphibious)
+                               bool core_only)
 {
     return mons_class_habitat(fixup_zombie_type(t, base_t),
-                              real_amphibious);
+                              core_only);
 }
 
-habitat_type mons_habitat(const monster& mon, bool real_amphibious)
+habitat_type mons_habitat(const monster& mon, bool core_only)
 {
     const monster_type type = mons_is_draconian_job(mon.type)
         ? draconian_subspecies(mon) : mon.type;
 
-    return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
+    return mons_habitat_type(type, mons_base_type(mon), core_only);
 }
 
 int mons_power(monster_type mc)

@@ -29,8 +29,6 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 {
     const mon_intel_type intel = mons_intel(*mon);
     habitat_type habitat = mons_habitat(*mon);
-    if (mon->airborne())
-        habitat = (habitat_type)(habitat | HT_FLYER);
 
     for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
@@ -52,8 +50,6 @@ static void _mark_neighbours_target_unreachable(monster* mon)
             continue;
 
         habitat_type other_habitat = mons_habitat(*m);
-        if (m->airborne())
-            other_habitat = (habitat_type)(other_habitat | HT_FLYER);
 
         // Monsters of less restrictive habitats might prefer different routes.
         if ((habitat & other_habitat) != other_habitat)

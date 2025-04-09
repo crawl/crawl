@@ -298,7 +298,7 @@ bool monster::floundering_at(const coord_def p) const
     const dungeon_feature_type grid = env.grid(p);
     return (liquefied(p)
             || (feat_is_water(grid)
-                // Use real_amphibious to detect giant non-water monsters in
+                // Use core_only to detect giant non-water monsters in
                 // deep water, who flounder despite being treated as amphibious.
                 && !(mons_habitat(*this, true) & HT_DEEP_WATER)
                 && !extra_balanced_at(p)))
