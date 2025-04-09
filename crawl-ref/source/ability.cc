@@ -403,7 +403,7 @@ static vector<ability_def> &_get_ability_list()
             4, 0, 0, -1, {}, abflag::none },
 
         { ABIL_BAT_SWARM, "Bat Swarm",
-            6, 0, 0, -1, {}, abflag::none },
+            6, 0, 0, -1, {}, abflag::instant },
 
         { ABIL_ENKINDLE, "Enkindle",
                 0, 0, 0, -1, {}, abflag::instant },
@@ -3386,7 +3386,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         you.transform_uncancellable = true;
         const int pow = get_form()->get_level(10);
         big_cloud(CLOUD_BATS, &you, you.pos(), 18 + pow / 20, 8 + pow / 15, 1);
-        you.props[BATFORM_XP_KEY] = 90;
+        you.props[BATFORM_XP_KEY] = 80;
         break;
     }
 
