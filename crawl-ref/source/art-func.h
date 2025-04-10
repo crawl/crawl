@@ -1875,7 +1875,7 @@ static void _FISTICLOAK_world_reacts(item_def */*item*/)
     vector<monster*> targs;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (monster* mon = monster_at(*ai))
-            if (you.can_see(*mon) && !mon->wont_attack() && !mon->is_firewood())
+            if (you.can_see(*mon) && mon->temp_attitude() == ATT_HOSTILE && !mon->is_firewood())
                 targs.push_back(mon);
 
     if (targs.empty())

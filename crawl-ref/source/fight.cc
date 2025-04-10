@@ -391,7 +391,7 @@ static void _do_medusa_stinger()
     vector<monster*> targs;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mi->is_firewood()
+        if (mi->temp_attitude() == ATT_HOSTILE && !mi->is_firewood()
             && grid_distance(you.pos(), mi->pos()) <= 2)
         {
             targs.push_back(*mi);
