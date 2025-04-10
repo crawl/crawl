@@ -1563,9 +1563,8 @@ slightly increases the damage the blade inflicts.
 %%%%
 Repel Missiles spell
 
-Reduces the chance of projectile attacks striking the caster, making them
-easier to dodge. Single-target attacks are much easier to repel than
-penetrating attacks.
+Envelops the caster in a repulsion field, increasing their evasion against all
+types of projectile - even while otherwise incapacitated.
 %%%%
 Resonance Strike spell
 
