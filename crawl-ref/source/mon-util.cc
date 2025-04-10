@@ -3346,7 +3346,7 @@ habitat_type mons_class_habitat(monster_type mc, bool core_only)
         if (ht == HT_LAND && st >= SIZE_GIANT)
             ht = HT_AMPHIBIOUS;
         if (me && monster_class_flies(mc))
-            ht = HT_FLYER;
+            ht = (habitat_type)(ht | HT_FLYER);
     }
     return ht;
 }
