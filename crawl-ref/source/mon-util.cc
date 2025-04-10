@@ -3363,7 +3363,12 @@ habitat_type mons_habitat(const monster& mon, bool core_only)
     const monster_type type = mons_is_draconian_job(mon.type)
         ? draconian_subspecies(mon) : mon.type;
 
-    return mons_habitat_type(type, mons_base_type(mon), core_only);
+    habitat_type ret = mons_habitat_type(type, mons_base_type(mon), core_only);
+    // This includes item-based and temporary flight, which mons_class_habitat cannot!
+    if (!core_only && mon.airborne())
+        ret = (habitat_type)(ret | HT_FLYER);
+
+    return ret;
 }
 
 int mons_power(monster_type mc)

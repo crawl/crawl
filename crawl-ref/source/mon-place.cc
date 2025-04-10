@@ -90,11 +90,6 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 
 static int _fill_apostle_band(monster& mons, monster_type* band);
 
-static bool _hab_requires_mon_flight(dungeon_feature_type g)
-{
-    return g == DNGN_LAVA || g == DNGN_DEEP_WATER;
-}
-
 static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
 {
     if ((ht & HT_MALIGN_GATEWAY) && feat == DNGN_MALIGN_GATEWAY)
@@ -149,10 +144,7 @@ habitat_type habitat_for_any(const vector<monster_type>& mon_types)
  */
 bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
 {
-    habitat_type ht = mons_habitat(*mon);
-
-    bool type_safe = _habitable_feat(ht, feat);
-    return type_safe || (_hab_requires_mon_flight(feat) && mon->airborne());
+    return _habitable_feat(mons_habitat(*mon), feat);
 }
 
 /**
