@@ -1107,7 +1107,7 @@ static void _confuse_monster(monster* mons, int sever)
 {
     if (mons->clarity())
         return;
-    if (mons->holiness() & (MH_NONLIVING | MH_PLANT))
+    if (!mons->is_peripheral())
         return;
 
     const bool was_confused = mons->confused();
