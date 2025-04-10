@@ -26,7 +26,7 @@ Artefacts
 * -Cast on the Sword of the Doom Knight, Maxwell's Patent Armour, and general
   randarts is replaced with *Silence, which inflicts a short-term silence on
   1% of hits on the wielder.
-* +Invis, Harm, and Rampage artifact properties can now be found on talisman
+* +Invis, Harm, and Rampage artefact properties can now be found on talisman
   randarts.
 * Removed unrands: the Sword of Zonguldrok.
 
