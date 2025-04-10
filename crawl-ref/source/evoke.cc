@@ -1063,13 +1063,15 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_TALISMANS)
     {
-        if (item->sub_type == TALISMAN_PROTEAN && temp)
+        if (item->sub_type == TALISMAN_PROTEAN)
         {
-            if (you.skill(SK_SHAPESHIFTING) < 6)
+            if (temp && you.skill(SK_SHAPESHIFTING) < 6)
             {
                 return "you lack the shapeshifting skill to coax this "
                        "talisman into a stable form.";
             }
+            else if (species_apt(SK_SHAPESHIFTING) == UNUSABLE_SKILL)
+                return "you can never gain the skill to use this talisman.";
             else
                 return "";
         }
