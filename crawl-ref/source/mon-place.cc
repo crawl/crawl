@@ -2992,6 +2992,16 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
 
+    // Resolve random monster types immediately, so that when we search for a
+    // tile to put them on, we know their actual habitat.
+    if (_is_random_monster(mg.cls))
+    {
+        mg.flags |= MG_PERMIT_BANDS;
+        mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
+                                      &mg.pos, mg.map_mask, &mg.place,
+                                      nullptr, false);
+    }
+
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
     monster *summd = 0;
