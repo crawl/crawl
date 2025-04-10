@@ -706,9 +706,15 @@ static int _acquirement_talisman_subtype(int & /*quantity*/,
     vector<pair<talisman_type, int>> tiers = _scale_talisman_weights(agent);
     talisman = *random_choose_weighted(tiers);
 
-    // Choose randomly.
+    // Choose randomly (but don't acquire a protean talisman from a scroll)
     if (talisman == NUM_TALISMANS)
-        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+    {
+        do
+        {
+            talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+        }
+        while (agent != GOD_XOM && talisman == TALISMAN_PROTEAN);
+    }
 
     return talisman;
 }
