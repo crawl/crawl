@@ -2201,6 +2201,7 @@ ENDMAP
 
 NAME:   nicolae_shoals_spectral_cove
 TAGS:   transparent patrolling
+WEIGHT: 0
 KMONS:  p = withered plant
 KMONS:  1 = spectral thing
 KMONS:  2 = ghost crab

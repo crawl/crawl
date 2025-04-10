@@ -468,6 +468,11 @@ monster_type resolve_monster_type(monster_type mon_type,
 monster_type fixup_zombie_type(const monster_type cls,
                                const monster_type base_type)
 {
+    // Don't let spectral kraken leave the water. (But flying ones are allowed
+    // to fly free.)
+    if (base_type == MONS_KRAKEN && cls == MONS_SIMULACRUM)
+        return base_type;
+
     // Yredelemnul's bound souls and spectrals can fly - they aren't bound by
     // their old flesh. Simulacra naturally float. Other zombies have the same
     // habitat they had in life.
