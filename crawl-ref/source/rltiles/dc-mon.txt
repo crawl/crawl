@@ -877,6 +877,7 @@ ophan MONS_OPHAN
 ## Hybrids ('H')
 %sdir mon/animals
 %rim 0
+hippogriff MONS_HIPPOGRIFF
 manticore MONS_MANTICORE
 %rim 1
 %sdir mon/demihumanoids

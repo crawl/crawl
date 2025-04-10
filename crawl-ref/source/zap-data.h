@@ -1647,6 +1647,22 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
+    ZAP_BECKONING_GALE,
+    "beckoning whirlwind",
+    100,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 4, 1, 20>,
+    nullptr,
+    BLACK,
+    false,
+    BEAM_MMISSILE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+},
+
+{
     ZAP_HARPOON_SHOT,
     "harpoon shot",
     50,

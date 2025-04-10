@@ -17,4 +17,5 @@ TEST_CASE( "pluralise_monsters", "[single-file]" ) {
     REQUIRE( pluralise_monster("bush") == "bushes" );
     REQUIRE( pluralise_monster("guardian sphinx") == "guardian sphinxes" );
     REQUIRE( pluralise_monster("elf") == "elves" );
+    REQUIRE( pluralise_monster("hippogriff") == "hippogriffs" );
 }

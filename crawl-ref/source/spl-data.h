@@ -2120,6 +2120,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BECKONING_GALE, "Beckoning Gale",
+    spschool::air,
+    spflag::target | spflag::not_self | spflag::monster,
+    3,
+    100,
+    2, LOS_RADIUS,
+    0,
+    TILEG_BECKONING_GALE,
+},
+
+{
     SPELL_FORCE_LANCE, "Force Lance",
     spschool::conjuration | spschool::translocation,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

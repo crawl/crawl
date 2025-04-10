@@ -1660,6 +1660,13 @@ perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
 %%%%
+hippogriff
+
+A large creature with the hindquarters of a horse and the wings, head and
+talons of a great eagle. As popular heraldric creatures, some fortresses may
+keep them as symbols and defenders alike, where they in turn launch intruders
+into the waiting blades of their masters.
+%%%%
 hoarfrost cannon
 
 An elegant siege weapon, magically sculpted from crystalline ice. As ephemeral

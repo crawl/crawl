@@ -137,7 +137,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC, "monstrous feature mimic")
     AXED_MON(MONS_SLAVE, "slave")
     AXED_MON(MONS_HUNGRY_GHOST, "hungry ghost")
-    AXED_MON(MONS_HIPPOGRIFF, "hippogriff")
     AXED_MON(MONS_PORCUPINE, "porcupine")
     AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
     AXED_MON(MONS_MACABRE_MASS, "macabre mass")

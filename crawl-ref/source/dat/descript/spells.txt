@@ -103,6 +103,11 @@ Battlecry spell
 Inspires nearby allies of the caster to fight more aggressively, increasing
 the strength of their blows.
 %%%%
+Beckoning Gale spell
+
+Twists the air around a creature to both deal damage and attempt to pull them
+closer to the caster.
+%%%%
 Berserker Rage spell
 
 <Berserk ability>

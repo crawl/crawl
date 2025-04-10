@@ -2,10 +2,11 @@
 #
 # Bailey! (Zaba and dpeg)
 #
-# A small portal vault fixated on nasty weapons. (Axes and polearms by now.)
-# Castle like layout, with inner bailey and moat. Medieval warfare themed.
+# A small portal vault fixated on nasty weapons. (Axes and polearms by now,
+# since those cleave and reach.) Castle like layout, with inner bailey and
+# moat. Medieval warfare and heraldry themed.
 #
-# Currently, the depth is fixed at D:7-10
+# Currently, the depth is fixed at D:7-10.
 #
 ##############################################################################
 
@@ -64,68 +65,59 @@ function bailey_setup(e)
 end
 
 -- In order to avoid repeating the lengthy monster definitions:
-
 -- Axes.
-function axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang pre_id q:2 | \
-                                  boomerang pre_id q:1 / \
-          generate_awake hobgoblin ; boomerang pre_id q:2 | \
-                                     boomerang pre_id q:1")
+function kobold_axe_returning(e, glyph)
+  e.kmons(glyph .. " = patrolling generate_awake kobold ; boomerang q:2 | \
+                                                          boomerang q:1")
 end
 
-function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang pre_id q:2 | \
-                                  boomerang pre_id q:1")
+function easy_axe_fighter(e, glyph)
+  local axe = "hand axe w:60 | war axe"
+  e.kmons(glyph .. " = orc warrior w:3 ; " .. axe .. " . ring mail / \
+                       gnoll w:7 ; " .. axe .. " . leather armour / \
+                       hobgoblin w:10 ; " .. axe .. " . leather armour / \
+                       orc w:10 ; " .. axe .. " . leather armour / \
+                       goblin w:12 ; " .. axe .. " . leather armour")
 end
 
-function easy_axe_fighter(e)
-  e.mons("w:3 orc warrior ; hand axe w:60 | war axe . ring mail / \
-          w:7 gnoll ; hand axe w:60 | war axe . leather armour / \
-          w:10 hobgoblin ; hand axe w:60 | war axe . leather armour / \
-          w:10 orc ; hand axe w:60 | war axe . leather armour / \
-          w:12 goblin ; hand axe w:60 | war axe . leather armour")
+function hard_axe_fighter(e, glyph)
+  local axe = "war axe | broad axe w:2 | battleaxe w:1"
+  local arm = "ring mail | scale mail | chain mail | plate armour"
+  e.kmons(glyph .. " = orc warrior w:90 ; " .. axe .. " . " .. arm .. " / " ..
+                      "orc knight ; " .. axe .. " . " .. arm)
 end
 
-function hard_axe_fighter(e)
-  e.mons("w:9 orc warrior ; war axe | broad axe w:2 | battleaxe w:1 . \
-                            ring mail | scale mail | chain mail | plate armour / \
-          w:1 orc knight ; war axe | broad axe w:2 | battleaxe w:1 . \
-                           ring mail | scale mail | chain mail | plate armour")
-end
-
-function orc_warlord_with_axe(e)
-  e.mons("orc warlord ; \
-          battleaxe good_item | broad axe good_item | \
-          executioner's axe good_item w:1 . \
-          chain mail w:20 | plate armour | crystal plate armour w:1")
+function orc_warlord_with_axe(e, glyph)
+  e.kmons(glyph .. " = orc warlord ; battleaxe good_item | broad axe good_item | \
+                                     executioner's axe good_item w:1 . chain mail w:20 | \
+                                     plate armour | crystal plate armour w:1")
 end
 
 -- Polearms.
-function orc_with_polearm(e)
-  e.mons("orc ; \
-          spear | trident | halberd . \
-          ring mail | scale mail | chain mail")
+function orc_with_polearm(e, glyph)
+  e.kmons(glyph .. " = orc ; spear | trident | halberd . \
+                             ring mail | scale mail | chain mail")
 end
 
-function orc_warrior_with_polearm(e)
-  e.mons("orc warrior ; \
-          spear w:5 | trident w:5 | partisan w:1 | \
-          halberd | glaive | bardiche w:1 . \
-          ring mail | scale mail | chain mail | plate armour |\
-          crystal plate armour w:1")
+function orc_warrior_with_polearm(e, glyph)
+  e.kmons(glyph .. " = orc warrior ; spear w:5 | trident w:5 | partisan w:1 | \
+                                     halberd | glaive | bardiche w:1 . \
+                                     ring mail | scale mail | chain mail | \
+                                     plate armour | crystal plate armour w:1")
 end
 
-function orc_knight_with_polearm(e)
-  e.mons("orc knight ; \
-          trident w:5 | partisan w:2 | halberd | glaive | bardiche w:1 . \
-          ring mail | scale mail | chain mail | plate armour | \
-          crystal plate armour w:1")
+function orc_knight_with_polearm(e, glyph)
+  e.kmons(glyph .. " = orc knight ; trident w:5 | partisan w:2 | halberd | \
+                                    glaive | bardiche w:1 . \
+                                    ring mail | scale mail | chain mail | \
+                                    plate armour | crystal plate armour w:1")
 end
 
-function orc_warlord_with_polearm(e)
-  e.mons("orc warlord ; \
-          partisan good_item | glaive good_item | bardiche good_item w:1 . \
-          chain mail w:20 | plate armour | crystal plate armour w:1")
+-- Unused for now.
+function orc_warlord_with_polearm(e, glyph)
+  e.kmons(glyph .. " = orc warlord ; partisan good_item | glaive good_item | \
+                                     bardiche good_item w:1 . chain mail w:20 | \
+                                     plate armour | crystal plate armour w:1")
 end
 
 }}
@@ -383,13 +375,13 @@ ENDMAP
 # potions useful in battle. This used to be an axes map; it's polearms now,
 # and has been renamed accordingly.
 NAME:   bailey_polearm_nasty_gnolls
-ORIENT: encompass
 TAGS:   bailey_polearm no_rotate
-: orc_with_polearm(_G)
-MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution pre_id
-MONS:   orc warrior ; halberd ego:electrocution pre_id . plate armour /\
-        orc knight ; halberd . leather armour
-MONS:   goblin rider
+ORIENT: encompass
+: orc_with_polearm(_G, "1")
+KMONS:   2 = gnoll ; halberd ego:draining | halberd ego:electrocution pre_id
+KMONS:   3 = orc warrior ; halberd ego:electrocution pre_id . plate armour / \
+             orc knight ; halberd . leather armour
+KMONS:   4 = goblin rider
 KFEAT:  ^ = tyrant's trap
 KFEAT:  - = closed_clear_door
 NSUBST: d = 1:ddde / *:d, 1 = 7:1 / * = 1., 2 = 6:2 / * = 2.
@@ -424,39 +416,41 @@ ENDMAP
 ############################################################################
 # Another actual bailey. Six good items plus two stacks of specialty darts.
 NAME:   bailey_axe_3
-ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
-SUBST:  v : ccv
+ORIENT: encompass
+: kobold_axe_returning(_G, "1")
+KMONS:  2 = kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
+: hard_axe_fighter(_G, "3")
+KMONS:  4 = hippogriff
 ITEM:   any good_item
 ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
+KFEAT:  4 = W
+KFEAT:  - = tyrant's trap
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
-: kobold_axe_returning(_G)
-MONS: kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
-: hard_axe_fighter(_G)
-SUBST:  2 = 2.
-NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
+SUBST:  v : ccv, 2 = 2., ? : -.
+NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / * = 3.., 4 = 1:4 / 1:4W / *:W
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.....xxxxxxxxxxx
 xxxxxxxxxx...A...xxxxxxxxxx
 xxxxxxxxxx.......xxxxxxxxxx
-xxxxxxxxxxx..<..xxxxxxxxxxx
+xxxxxxxxxxx-.<.-xxxxxxxxxxx
 xxxxxxxxxxxc+++cxxxxxxxxxxx
 xxxxxxxxxxxc...cxxxxxxxxxxx
 xxxxxxxxcccc...ccccxxxxxxxx
 xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxxxxxcccc...ccccxxxxxxxx
+xxxxxxxxcccc.-.ccccxxxxxxxx
 xxxxxxxccW.......Wccxxxxxxx
 xxxcccccWW.......WWcccccxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.cccWW.......WWccc.cxxx
+xxxc.ccc4W.......W4ccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
 xxxc.cccWW.......WWccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
 xxxc.cccWW.......WWccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.cccWW.......WWccc.cxxx
+xxxc.ccc4W.......W4ccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
 xxxcccccWW.......WWcccccxxx
 xxxxxxxccW.......Wccxxxxxxx
@@ -485,38 +479,26 @@ ENDMAP
 NAME:    bailey_axe_4
 ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
-#
+: kobold_axe_returning(_G, "1>")
+: easy_axe_fighter(_G, "2")
+: hard_axe_fighter(_G, "3")
+KMONS:   4 = patrolling hippogriff
 ITEM:    any good_item
 ITEM:    potion of enlightenment pre_id, ring of flight pre_id
 ITEM:    pair of boots ego:flying pre_id
-SUBST:   e : eeef, g:eg
-NSUBST:  f = 1:f / *:e
-SHUFFLE: EB / XY / XY / XY
-SUBST:   X = c, Y = +
-NSUBST:  E = 1:+ / *:c
-SUBST:   B = c
-SHUFFLE: CD / XY / XY / XY
-SUBST:   X = c, Y = +
-NSUBST:  C = 1:+ / *:c
-SUBST:   D = c
-#
+KFEAT:   > = exit_bailey
 KFEAT:   ^ = alarm trap
 KFEAT:   - = tyrant's trap
-SUBST:   W = w:2 .:1 W:1
-SUBST:   ? = c.
-SUBST:   N = nc
-SUBST:   H = W.
-SUBST:   ~ = W
-# the following KMONS duplicates monster 1 from kobold_axe_returning
-KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; boomerang pre_id q:2 | \
-                                     boomerang pre_id q:1
-#
-: kobold_axe_returning(_G)
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
+NSUBST:  2 = 1:3 / * = 223., 4 = 1:4 / 1:443 / *:.
+SUBST:   e : eeef, g:eg
+NSUBST:  f = 1:f / *:e
+SHUFFLE: EB / XY / XY, CD / zZ / zZ / zZ
+SUBST:   zX = c, YZ = +
+NSUBST:  E = 1:+ / *:c, C = 1:+ / *:c
+SUBST:   BD = c
+SUBST:   W = w:2 .:1 W:1, H = W., ~ = W
+SUBST:   ? = c., N = nc
 SUBST:   1 = 1., ^ = ^^.
-NSUBST:  2 = 1:3 / *=223.
 #
 : bailey_setup(_G)
 MAP
@@ -524,28 +506,27 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
 ccccccccccccccccccccccccc.??..???.e?ccccccccccccccc
 ccccccccccccccccccccccccc2ccccccccccccccccccccccccc
-ccccccccccccc1.....................1ccccccccccccccc
-cccccccccc1.........1ccccccccc1......cccccccccccccc
-ccccccccc....2....c+cc..e3e..ccccCc..cccccccccccccc
-cccccccc1...2T2...c..c.2.d.2.c21CdC...ccccccccccccc
+ccccccccccccc14..........1.........1ccccccccccccccc
+cccccccccc1.......111ccccccccc1......cccccccccccccc
+ccccccccc4...2....c+cc..e3e..ccccCc..cccccccccccccc
+cccccccc1...2T2...+..c.2.d.2.c21CdC..1ccccccccccccc
 ccccccccc1...2..cEc..c.2...2.c.2cDc...1cccccccccccc
-ccccccccccc.....EdB..cccc+cccc..+dc..Wwwwwwwxxxxxxx
-cccccccccc1.1...cEc...^.....^...ccc1Wwwwwwwxxxxxxxx
-xxxxxwwwwwwwW1.1..c1.cccc+cccc.1c1Hwwwwwwwxxxxxxxxx
-xxxxxxxwwwwwww~wW1cncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
-xxxxxxxxx....~wwwwww(c.2.g.2.c(wwwwwxxxxxxxxxxxxxxx
-xxxxxxxxxx....-.Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
+ccccccccccc.....EdB4.ccnc+cncc.4+dc..Wwwwwwwxxxxxxx
+cccccccccc......cEc...^.....^...ccc.Wwwwwwwxxxxxxxx
+xxxxxwwwwwwwW...wwc1.ccnc+cncc.1c1Hwwwwwwwxxxxxxxxx
+xxxxxxxwwwwwww~wwwcncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
+xxxxxxxxx....~w~wwww>c.2.g.2.c>wwwwwxxxxxxxxxxxxxxx
+xxxxxxxxxx......Wwwwwcccccccccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx......<..xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.......WwwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.....ww......xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx...w~..<.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.~w....xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.-.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx.-.xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx....A....xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
@@ -554,19 +535,19 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   bailey_axe_minmay_hex_keep
-ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen
+ORIENT: encompass
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
+: easy_axe_fighter(_G, "1")
+: hard_axe_fighter(_G, "2")
+: orc_warlord_with_axe(_G, "3")
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   potion of experience pre_id q:1 /\
         scroll of acquirement pre_id q:1
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
-: orc_warlord_with_axe(_G)
 : bailey_setup(_G)
 KFEAT:  C = c
 SUBST:  I = t., 1 = 11.
@@ -638,14 +619,14 @@ ENDMAP
 # orcs leave lying around.
 #
 NAME:   bailey_polearm_1
-ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
+ORIENT: encompass
 NSUBST: D = 1:+ / *:c
 NSUBST: E = 1:+ / *:c
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
-MONS:   goblin rider
+: orc_with_polearm(_G, "1")
+: orc_warrior_with_polearm(_G, "2")
+: orc_knight_with_polearm(_G, "3")
+KMONS:  4 = goblin rider
 NSUBST: 2 = 1:34 / 1:2 / 1:. / * = 22222..
 SUBST:  1 = 1 2:1 .
 NSUBST: 4 = 1:4 / 1:42 / *:1
@@ -693,14 +674,13 @@ ENDMAP
 # hand, including useful manuals.
 #
 NAME:   bailey_polearm_2
-ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
+ORIENT: encompass
 MONS:   orc warrior w:5 ; arbalest  . ring mail | scale mail / \
         orc ; arbalest . ring mail | scale mail
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
-MONS:   orc knight
+: orc_with_polearm(_G, "2")
+: orc_warrior_with_polearm(_G, "3")
+: orc_knight_with_polearm(_G, "4")
 SUBST:  1 = 111., 2 = 233.
 NSUBST: 4 = 1:4 / *=433322..
 SUBST:  W : W..
@@ -762,13 +742,13 @@ ENDMAP
 # armours.
 #
 NAME:   bailey_polearm_5
-ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
+ORIENT: encompass
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
         orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
+: orc_with_polearm(_G, "2")
+: orc_warrior_with_polearm(_G, "3")
+: orc_knight_with_polearm(_G, "4")
 KMONS:  R = goblin rider
 ITEM:   potion of experience pre_id q:1
 : item(dgn.loot_potions)
@@ -801,14 +781,14 @@ ENDMAP
 # same loot as polearms 2, other than the bonus javelins
 # the player starts right in the middle of a fight
 NAME:   bailey_polearm_flooded_kennysheep
-ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-MONS:   centaur ; javelin pre_id q:2 | javelin pre_id q:3 . \
-                  spear | trident | halberd . \
-                  ring mail | scale mail | chain mail
-MONS:   goblin rider ; mundane spear . javelin q:1
+ORIENT: encompass
+: orc_with_polearm(_G, "1")
+: orc_warrior_with_polearm(_G, "2")
+KMONS:  3 = centaur ; javelin pre_id q:2 | javelin pre_id q:3 . \
+                      spear | trident | halberd . \
+                      ring mail | scale mail | chain mail
+KMONS:  4 = goblin rider ; mundane spear . javelin q:1
 NSUBST: _ = 8 = 2. / 10 = 1. / *:.
 NSUBST: ; = 9 = 22. / 9 = 11. / *:.
 NSUBST: ! = 12=11. / *:.
@@ -854,15 +834,15 @@ ENDMAP
 
 # 6 items and two gold piles for murdering a bunch of gnolls
 NAME:   bailey_polearm_gnolls_kennysheep
-ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
 MONS:   gnoll ; spear | trident | halberd . \
-            ring mail | scale mail | chain mail . \
-            throwing net | nothing
+                ring mail | scale mail | chain mail . \
+                throwing net | nothing
 MONS:   gnoll sergeant ; halberd | glaive w:11 | partisan w:1 | bardiche w:1 . \
-            chain mail w:20 | plate armour | crystal plate armour w:1
+                         chain mail w:20 | plate armour | crystal plate armour w:1
 MONS:   gnoll bouda ; spear | trident | halberd . \
-            ring mail | scale mail
+                      ring mail | scale mail
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
@@ -917,8 +897,8 @@ ENDMAP
 NAME:    bailey_axe_of_yendor_kennysheep
 TAGS:    bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
+: easy_axe_fighter(_G, "1")
+: hard_axe_fighter(_G, "2")
 : local wm = "war axe | broad axe w:2 | battleaxe w:1 . scale mail | ring mail"
 : kmons("3 = orc sorcerer ; " .. wm .. " / orc high priest ; " .. wm .. " / " ..
 :           "kobold demonologist w:20 ; " .. wm)
@@ -939,8 +919,9 @@ KITEM:   $ = gold
 KFEAT:   ^ = zot trap
 KFEAT:   B = altar_okawaru
 KFEAT:   g = cache of meat
+KFEAT:   4 = w
 NSUBST:  | = 1:| / *:$
-NSUBST:  w = 10 = 4w / *:w
+NSUBST:  w = 1:4 / 2:w / 7 = 4w / *:w
 NSUBST:  2 = 2:2 / * = 2.., 1 = 6 = 2. / * = 11., 3 = 2:3 / * = 2
 SHUFFLE: defg
 NSUBST:  d = 1:D / *:d, e = 1:E / *:e, f = 1:F / *:f, g = 2:gh / *:h
@@ -996,19 +977,20 @@ ENDMAP
 # slightly more of the loot is outside of the warlord's room
 # the warlord fight is a little easier, and the outer fights are harder
 NAME:   bailey_axe_bossmonster_kennysheep
-ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+: easy_axe_fighter(_G, "1")
+: kobold_axe_returning(_G, "2")
+: hard_axe_fighter(_G, "3")
+KMONS:  4 = hippogriff
+: orc_warlord_with_axe(_G, "5")
 ITEM:   potion of experience pre_id q:1 / \
-            scroll of acquirement pre_id q:1
-: easy_axe_fighter(_G)
-: kobold_axe_returning(_G)
-: hard_axe_fighter(_G)
-: orc_warlord_with_axe(_G)
-: bailey_setup(_G)
+        scroll of acquirement pre_id q:1
 KFEAT:  C = c
+: bailey_setup(_G)
 SUBST:  1 = 1.., 2 = 22.
-NSUBST: 3 = 2:3 / * = 3.
+NSUBST: 3 = 2:3 / 1:344... / * = 3.
 NSUBST: e = 1:e / *:d
 TILE:   C = stone_smooth_wall_beogh
 MAP
@@ -1030,7 +1012,7 @@ t<.2.WWW.cW....<....Wc.WWW.2.<t
 tt...WWW.cc..1...1..cc.WWW...tt
 tt1..WWW.cW..G...G..Wc.WWW..1tt
 ttt..ccc+cW.........Wc+ccc..ttt
-ttt2cc1..cW|eG.4.Ge|Wc..1cc2ttt
+ttt2cc1..cW|eG.5.Ge|Wc..1cc2ttt
 tttcc....ccWWnnnnnWWcc....ccttt
 ttcc......cccn...nccc......cctt
 ttc21......1.......1......12ctt
@@ -1050,14 +1032,14 @@ ENDMAP
 # orcs are holding an elf hostage... but their prisoner isn't happy to see you.
 # 6 gold piles, 4 good potions/scrolls, 4 good armours / superb items
 NAME:   bailey_polearm_elven_captive_hellmonk
-ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+: orc_with_polearm(_G, "1")
+: orc_warrior_with_polearm(_G, "2")
+: orc_knight_with_polearm(_G, "3")
+KMONS:  4 = deep elf pyromancer / deep elf zephyrmancer w:5
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   any armour good_item no_pickup
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
-MONS: deep elf pyromancer / deep elf zephyrmancer w:5
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
 NSUBST: 2 = 2:2 / * = 2..., 3 = 1:3 / * = 2....
@@ -1106,7 +1088,7 @@ ENDMAP
 NAME:    bailey_axe_vampire_castle_hellmonk
 TAGS:    bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-:item(dgn.loot_potions)
+: item(dgn.loot_potions)
 ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
 MONS:    orc zombie, spectral orc warrior
@@ -1174,19 +1156,20 @@ ENDMAP
 # wrong frog by mistake. Whoops!
 # Nine items, mostly consumables. Guaranteed broad axes from the vault guards.
 NAME:   bailey_axe_froggy_fort_hellmonk
-ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-: easy_axe_fighter(_G)
-MONS:   human ; hand axe ego:heavy | war axe . scale mail | ring mail
-MONS:   vault guard ; broad axe . chain mail | plate armour
+: easy_axe_fighter(_G, "1")
+KMONS:  2 = human ; hand axe ego:heavy | war axe . scale mail | ring mail
+KMONS:  3 = vault guard ; broad axe . chain mail | plate armour
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1
-KFEAT:  4 = shallow_water
+KMONS:  6 = hippogriff
+KFEAT:  46 = shallow_water
 SHUFFLE: AB
 SUBST:  ; = W:3 ., B = <
 NSUBST: ! = 24 = 1... / 20 = 2... / *:.
-NSUBST: W = 36 = 4WWW / *:W
+NSUBST: W = 36 = 4WWW / *:W, ? = 1:66W / *:W
 NSUBST: d = 4:d / *=dd*$
 : bailey_setup(_G)
 MAP
@@ -1197,9 +1180,9 @@ MAP
           c.....c
           c..<..c
         ccc.....ccc
-       ccwcc...ccWcc
-      ccwWWcc+ccWWWcc
-      cwWW;;....!WWWc
+       ccwcc...cc?cc
+      ccw??cc+ccWW?cc
+      c?WW;;....!WW?c
      ccwWW;;.;;;!!!!cc
      cwWWW;;;;;;Wwww!c
      cwWWW;;;;;Wwccc+c

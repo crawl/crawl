@@ -206,6 +206,7 @@ avatar_song AVATAR_SONG
 awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
+beckoning_gale BECKONING_GALE
 berserk_other BERSERK_OTHER
 bestow_arms BESTOW_ARMS
 blink_allies_away BLINK_ALLIES_AWAY

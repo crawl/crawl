@@ -3861,6 +3861,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 // XXX: this is awful and should not exist
 static const spell_type smitey_spells[] = {
     SPELL_SMITING,
+    SPELL_BECKONING_GALE,
     SPELL_AIRSTRIKE,
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_CALL_DOWN_DAMNATION,

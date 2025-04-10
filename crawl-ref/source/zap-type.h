@@ -184,5 +184,6 @@ enum zap_type
     ZAP_WATERY_GRAVE,
     ZAP_RUST_BREATH,
     ZAP_GOLDEN_BREATH,
+    ZAP_BECKONING_GALE,
     NUM_ZAPS
 };
