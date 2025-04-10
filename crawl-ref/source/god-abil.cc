@@ -7201,6 +7201,9 @@ spret makhleb_infernal_legion(bool fail)
         return spret::abort;
     }
 
+    if (stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     mpr("You carve a gateway into yourself and beckon forth the legions of chaos!");
     bleed_for_makhleb(you);

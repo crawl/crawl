@@ -58,6 +58,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-monench.h" // FASTROOT_POWER_KEY
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -78,9 +79,8 @@
 
 static bool _evoke_horn_of_geryon()
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "toot the horn"))
+    if (!player_summon_check(MONS_SIN_BEAST))
         return false;
-    // Fool! Geryon toots as he pleases!
 
     bool created = false;
 
@@ -266,7 +266,9 @@ string manual_skill_names(bool short_text)
 
 static bool _box_of_beasts()
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "open the box"))
+    // While some mutant beasts can fly, the game still refuses to place them
+    // on top of water (since they can't fly until facets are fully generated).
+    if (!player_summon_check(MONS_MUTANT_BEAST))
         return false;
 
     mpr("You open the lid...");
@@ -290,7 +292,7 @@ static bool _box_of_beasts()
     {
         // Failed to create monster for some reason
         mpr("...but nothing happens.");
-        return false;
+        return true;
     }
 
     mprf("...and %s %s out!",
@@ -390,12 +392,12 @@ static bool _spill_out_spiders()
 
 static bool _sack_of_spiders()
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "reach into the sack"))
+    if (player_summon_check(MONS_REDBACK))
         return false;
 
     mpr("You reach into the sack...");
 
-    const bool made_mons = !you.allies_forbidden() && _spill_out_spiders();
+    const bool made_mons = _spill_out_spiders();
     if (made_mons)
         mpr("...and things crawl out!");
 
@@ -403,7 +405,7 @@ static bool _sack_of_spiders()
     if (!made_mons && !webbed)
     {
         mpr("...but nothing happens.");
-        return false;
+        return true;
     }
 
     if (!made_mons)
@@ -665,10 +667,20 @@ static spret _phantom_mirror(dist *target)
     }
 
     monster_info mi(victim);
+    habitat_type habitat = mons_habitat(*victim);
     monclass_flags_t mf = M_NO_FLAGS;
     if (mi.airborne())
         mf |= M_FLIES;
-    if (stop_summoning_prompt(mi.mresists, mf, "use the mirror"))
+
+    // XXX: Can't do this with player_summon_prompt since we're summoning a
+    //      monster who may have gear that lets them use different habitats
+    //      than their base type.
+    if (!you_can_see_habitable_spot_near(victim->pos(), habitat, 1))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+    if (stop_summoning_prompt(mi.mresists, mf))
         return spret::abort;
 
     monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);

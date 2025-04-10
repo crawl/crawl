@@ -739,6 +739,17 @@ bool mons_class_is_test(monster_type mc)
         || mc == MONS_TEST_BLOB;
 }
 
+// Is this type of monster generally angered by the player attacking them?
+// Note: Partially duplicates logic of monster::angered_by_attacks(), but
+// should match it outside of exceptions for instances of a monster.
+bool mons_class_angered_by_attacks(monster_type mc)
+{
+    return !mons_is_avatar(mc)
+           && !mons_class_is_zombified(mc)
+           && !((mons_class_holiness(mc) & MH_NONLIVING)
+                 && mons_class_intel(mc) == I_BRAINLESS);
+}
+
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {

@@ -3605,6 +3605,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         }
 
+        // XXX: Chosen as representative 'neither flies nor resists poison'
+        //      monster and one that does both, though at higher invo it stops
+        //      being possible to get one wthout rPois, so the warning is only
+        //      *almost* correct.
+        if (!player_summon_check({MONS_ORANGE_DEMON, MONS_BLIZZARD_DEMON}))
+            return spret::abort;
+
         fail_check();
         makhleb_infernal_servant();
         break;
@@ -3799,6 +3806,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        if (stop_summoning_prompt())
+            return spret::abort;
         fail_check();
         beogh_blood_for_blood();
         break;

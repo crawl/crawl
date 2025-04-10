@@ -106,8 +106,7 @@ bool you_can_see_habitable_spot_near(habitat_type habitat, int max_radius,
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
-habitat_type habitat_for_any(const monster_type* mon_types,
-                             std::size_t types_count);
+habitat_type habitat_for_any(const vector<monster_type>& mon_types);
 
 bool monster_habitable_feat(const monster* mon,
                             dungeon_feature_type feat);

@@ -124,16 +124,14 @@ static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
 /**
 * What dungoen features can have it least one of the monster types on them?
 *
-* @param mon_types the array of monster types to check.
-* @param types_count the number of monster types in the array to check.
+* @param mon_types the list of monster types to check.
 * @return the set of dungeon features that can hold at least one of the
 *         moster types.
 */
-habitat_type habitat_for_any(const monster_type* mon_types,
-                             std::size_t types_count)
+habitat_type habitat_for_any(const vector<monster_type>& mon_types)
 {
     habitat_type features = HT_NONE;
-    for (std::size_t i = 0; i < types_count; ++i)
+    for (std::size_t i = 0; i < mon_types.size(); ++i)
     {
         habitat_type feat = mons_class_habitat(mon_types[i]);
         features = (habitat_type)(features | feat);

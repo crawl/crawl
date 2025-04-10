@@ -1423,7 +1423,7 @@ static void _BATTLE_world_reacts(item_def */*item*/)
 {
     if (!find_battlesphere(&you)
         && there_are_monsters_nearby(true, true, false)
-        && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
+        && you_can_see_habitable_spot_near(HT_FLYER, 2))
     {
         const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
         cast_battlesphere(&you, pow, false);
