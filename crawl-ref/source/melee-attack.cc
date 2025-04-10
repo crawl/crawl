@@ -13,6 +13,7 @@
 #include <cstring>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -1123,6 +1124,12 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
     // (Bestial takedown kills always make you howl.)
     if (takedown || (power >= 5 && (old_power < 5 || one_chance_in(4))))
     {
+        if (silenced(you.pos()))
+        {
+            mpr("You raise your head to howl, but no sound comes out.");
+            return;
+        }
+
         const int howl_power = get_form()->get_howl_power();
         mpr("You let out a blood-chilling howl!");
         draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
@@ -1139,6 +1146,7 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
                 behaviour_event(*mi, ME_SCARE, &you);
             }
         }
+        noisy(you.shout_volume(), you.pos(), MID_PLAYER);
     }
 
     you.increase_duration(DUR_WEREFURY, random_range(7, 11), 20);
