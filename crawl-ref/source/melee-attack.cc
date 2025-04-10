@@ -4858,6 +4858,9 @@ bool coglin_spellmotor_attack()
     vector<actor*> targs;
     for (actor* victim : targets)
     {
+        if (victim->is_firewood())
+            continue;
+
         melee_attack attk(&you, victim);
         if (!attk.would_prompt_player())
             targs.push_back(victim);
