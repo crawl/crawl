@@ -127,7 +127,7 @@ bool monster_inherently_flies(const monster &mons)
 dungeon_feature_type preferred_feature_type(monster_type mt)
 {
     const habitat_type ht = mons_class_habitat(mt);
-    if (ht & HT_LAND)
+    if (ht & HT_DRY_LAND)
         return DNGN_FLOOR;
     if (ht & HT_LAVA)
         return DNGN_LAVA;
