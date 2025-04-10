@@ -122,7 +122,7 @@ bool melee_attack::bad_attempt()
 }
 
 // Whether this attack, if performed, would prompt the player about damaging
-// nearby allies with an unrand property.
+// nearby allies with an unrand property (or make your god unhappy).
 bool melee_attack::would_prompt_player()
 {
     if (!attacker->is_player())
@@ -130,9 +130,9 @@ bool melee_attack::would_prompt_player()
 
     item_def *offhand = offhand_weapon();
     bool penance;
-    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
+    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance, false)
            || offhand && !is_range_weapon(*offhand)
-              && needs_handle_warning(*offhand, OPER_ATTACK, penance)
+              && needs_handle_warning(*offhand, OPER_ATTACK, penance, false)
            || player_unrand_bad_attempt(offhand, true);
 }
 
