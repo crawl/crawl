@@ -392,7 +392,7 @@ static bool _spill_out_spiders()
 
 static bool _sack_of_spiders()
 {
-    if (player_summon_check(MONS_REDBACK))
+    if (!player_summon_check(MONS_REDBACK))
         return false;
 
     mpr("You reach into the sack...");
