@@ -162,7 +162,7 @@ Items
  - Tier 5 talismans (storm talisman): 23 skill minimum, 27 skill maximum
 * New talismans:
  - Tier 1:
-  - quill talismans, providing Quill Form. This melds all auxillery equipment,
+  - quill talismans, providing Quill Form. This melds all auxiliary equipment,
     but grants retaliatory quills damaging those who attack the player in melee.
   - inkwell talismans, providing Walking Scroll Form. This melds all equipment,
     increases all magic school skills scaling to one's Shapeshifting, grants
@@ -182,13 +182,13 @@ Items
   - spider talismans, providing Jumping Spider Form. This tiny form melds all
     armour and weapons, but gains Rampage, a small chance for melee to ensnare
     enemies, short-blade quality stabs, and a special un-aimed jump ability.
-  - lupine talismans, providing Werewolf Form. This melds all auxillery armour,
+  - lupine talismans, providing Werewolf Form. This melds all auxiliary armour,
     grants a stacking slaying bonus on kills, gives a chance to howl on kills to
     lock enemies in immobile fear, and grants jumping attacks on afraid foes.
   - wellspring talismans, providing Aqua Form. This melds body armour, provides
     two extra squares of melee range (stacking with polearms and working with
     auxes), and granting an ability to waterstrike + waterlog nearby enemies.
-  - fortress talismans, providing Fortress Crab Form. This melds all auxillery
+  - fortress talismans, providing Fortress Crab Form. This melds all auxiliary
     armour, multiplies AC from body armour, and can breathe clouds of
     minorly-damaging, corroding and weakening rust.
  - Tier 4:
