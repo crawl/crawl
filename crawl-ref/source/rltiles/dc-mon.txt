@@ -393,6 +393,7 @@ living_spell_ice MONS_LIVING_SPELL_ICE
 splinterfrost_barricade MONS_SPLINTERFROST_BARRICADE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+%rim 0
 creeping_inferno1 MONS_CREEPING_INFERNO
 creeping_inferno2
 %sdir mon/undead
@@ -408,10 +409,8 @@ lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
-%rim 0
 worldbinder MONS_WORLDBINDER
 wretched_star MONS_WRETCHED_STAR
-%rim 1
 
 ### Demonic monsters
 ## Arch demons ('&')
