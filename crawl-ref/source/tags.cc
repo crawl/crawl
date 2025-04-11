@@ -1569,7 +1569,7 @@ void tag_read(reader &inf, tag_type tag_id)
         // because they might cause you to lose flight. That will check
         // the terrain below you and crash if the map hasn't loaded yet.
         {
-            vector<item_def*> to_remove = you.equipment.get_forced_removal_list(true);
+            vector<item_def*> to_remove = you.equipment.get_forced_removal_list(true, true);
             for (item_def* item : to_remove)
                 unequip_item(*item);
         }

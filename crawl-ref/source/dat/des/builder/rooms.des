@@ -263,7 +263,7 @@ function sroom_mythical_zoo(e)
     mons[1] = "rime drake w:" .. math.max(38 - Z * 2, 1)
     mons[2] = "basilisk w:" .. math.max(38 - Z * 2, 1)
     mons[3] = "wyvern w:" .. math.max(44 - Z * 2, 1)
-    mons[4] = "hell rat w:" .. math.max(44 - Z * 2, 1)
+    mons[4] = "hippogriff w:" .. math.max(44 - Z * 2, 1)
     mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
     mons[6] = "hydra w:" .. math.max(Z * 2 - 26, 1)
 

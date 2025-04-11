@@ -2276,7 +2276,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
  *               documented/coded)
  * @param killer_index The mindex of the killer (TODO: always use an actor*)
  * @param silent whether to print any messages about the death
- * @param mount_death The death of the mount of a mounted monster (spriggan rider).
+ * @param mount_death The death of the mount of a mounted monster (riders).
  * @returns a pointer to the created corpse, possibly null
  */
 item_def* monster_die(monster& mons, killer_type killer,
@@ -3219,7 +3219,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         // Have to add case for disintegration effect here? {dlb}
         item_def* daddy_corpse = nullptr;
 
-        if (mons.type == MONS_SPRIGGAN_RIDER)
+        if (mons.type == MONS_GOBLIN_RIDER)
+        {
+            daddy_corpse = mounted_kill(&mons, MONS_WYVERN, killer, killer_index);
+            mons.type = MONS_GOBLIN;
+        }
+        else if (mons.type == MONS_SPRIGGAN_RIDER)
         {
             daddy_corpse = mounted_kill(&mons, MONS_HORNET, killer, killer_index);
             mons.type = MONS_SPRIGGAN;

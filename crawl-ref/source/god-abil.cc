@@ -6527,8 +6527,6 @@ spret wu_jian_wall_jump_ability()
         return spret::abort;
     }
 
-    you.stop_being_constricted(false, "jump");
-
     // query for location:
     dist beam;
 
@@ -6569,6 +6567,8 @@ spret wu_jian_wall_jump_ability()
 
     if (!wu_jian_do_wall_jump(beam.target))
         return spret::abort;
+
+    you.stop_being_constricted(false, "jump");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -7200,6 +7200,9 @@ spret makhleb_infernal_legion(bool fail)
         mpr("You are already unleashing the legions of chaos!");
         return spret::abort;
     }
+
+    if (stop_summoning_prompt())
+        return spret::abort;
 
     fail_check();
     mpr("You carve a gateway into yourself and beckon forth the legions of chaos!");

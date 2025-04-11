@@ -1088,7 +1088,7 @@ SUBST:   ? = 1dd
 : else
 :   inv = inv .. "large rock w:20 | sling randart w:4 | \
 :                 medusa talisman randart w:4 | granite talisman w:2 | \
-:                 compendium of siegecraft w:2 | book of annihilation w:2"
+:                 compendium of siegecraft w:2 | book of annihilations w:2"
 SUBST:   1 = 2
 : end
 SUBST:   B : D., C : D.

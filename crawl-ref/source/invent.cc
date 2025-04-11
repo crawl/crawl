@@ -1550,9 +1550,9 @@ bool needs_notele_warning(const item_def &item, operation_types oper)
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper,
-                          bool &penance)
+                          bool &penance, bool check_inscriptions)
 {
-    if (_has_warning_inscription(item, oper))
+    if (check_inscriptions && _has_warning_inscription(item, oper))
         return true;
 
     // Curses first. Warn if something would take off (i.e. destroy) the cursed item.

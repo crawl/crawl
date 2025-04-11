@@ -90,11 +90,6 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 
 static int _fill_apostle_band(monster& mons, monster_type* band);
 
-static bool _hab_requires_mon_flight(dungeon_feature_type g)
-{
-    return g == DNGN_LAVA || g == DNGN_DEEP_WATER;
-}
-
 static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
 {
     if ((ht & HT_MALIGN_GATEWAY) && feat == DNGN_MALIGN_GATEWAY)
@@ -122,6 +117,24 @@ static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
 }
 
 /**
+* What dungoen features can have it least one of the monster types on them?
+*
+* @param mon_types the list of monster types to check.
+* @return the set of dungeon features that can hold at least one of the
+*         moster types.
+*/
+habitat_type habitat_for_any(const vector<monster_type>& mon_types)
+{
+    habitat_type features = HT_NONE;
+    for (std::size_t i = 0; i < mon_types.size(); ++i)
+    {
+        habitat_type feat = mons_class_habitat(mon_types[i]);
+        features = (habitat_type)(features | feat);
+    }
+    return features;
+}
+
+/**
  * Can this monster survive on a given feature?
  *
  * @param mon         the monster to be checked.
@@ -131,10 +144,7 @@ static bool _habitable_feat(habitat_type ht, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
 {
-    habitat_type ht = mons_habitat(*mon);
-
-    bool type_safe = _habitable_feat(ht, feat);
-    return type_safe || (_hab_requires_mon_flight(feat) && mon->airborne());
+    return _habitable_feat(mons_habitat(*mon), feat);
 }
 
 /**
@@ -145,11 +155,7 @@ bool monster_habitable_feat(const monster* mon, dungeon_feature_type feat)
  */
 bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 {
-    habitat_type ht = mons_class_habitat(mt);
-    if (mons_class_flag(mt, M_FLIES))
-        ht = (habitat_type)(ht | HT_FLYER);
-
-    return _habitable_feat(ht, feat);
+    return _habitable_feat(mons_class_habitat(mt), feat);
 }
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
@@ -462,6 +468,11 @@ monster_type resolve_monster_type(monster_type mon_type,
 monster_type fixup_zombie_type(const monster_type cls,
                                const monster_type base_type)
 {
+    // Don't let spectral kraken leave the water. (But flying ones are allowed
+    // to fly free.)
+    if (base_type == MONS_KRAKEN && cls == MONS_SIMULACRUM)
+        return base_type;
+
     // Yredelemnul's bound souls and spectrals can fly - they aren't bound by
     // their old flesh. Simulacra naturally float. Other zombies have the same
     // habitat they had in life.
@@ -2981,6 +2992,16 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
 
+    // Resolve random monster types immediately, so that when we search for a
+    // tile to put them on, we know their actual habitat.
+    if (_is_random_monster(mg.cls))
+    {
+        mg.flags |= MG_PERMIT_BANDS;
+        mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
+                                      &mg.pos, mg.map_mask, &mg.place,
+                                      nullptr, false);
+    }
+
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
     monster *summd = 0;
@@ -3058,6 +3079,38 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
     }
 
     return good_count > 0;
+}
+
+bool you_can_see_habitable_spot_near(habitat_type habitat, int max_radius,
+                                     int exclude_radius)
+{
+    return you_can_see_habitable_spot_near(you.pos(), habitat, max_radius,
+                                           exclude_radius);
+}
+
+bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
+                                     int max_radius, int exclude_radius)
+{
+    for (radius_iterator ri(pos, max_radius, C_SQUARE, exclude_radius >= 0);
+        ri; ++ri)
+    {
+        if (exclude_radius > 0 && grid_distance(pos, *ri) <= exclude_radius)
+            continue;
+
+        actor* blocking_actor = actor_at(*ri);
+        if (blocking_actor && blocking_actor->visible_to(&you))
+            continue;
+
+        if (!cell_see_cell(pos, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!_habitable_feat(habitat, env.grid(*ri)))
+            continue;
+
+        return true;
+    }
+
+    return false;
 }
 
 static void _get_vault_mon_list(vector<mons_spec> &list);

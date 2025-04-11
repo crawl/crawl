@@ -1047,6 +1047,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_HIPPOGRIFF,
+      {
+        { SPELL_WARNING_CRY, 35, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+        { SPELL_BECKONING_GALE, 60, MON_SPELL_NATURAL },
+      }
+    },
+
     { MST_FENSTRIDER_WITCH,
       {
        { SPELL_PARALYSE, 15, MON_SPELL_WIZARD },

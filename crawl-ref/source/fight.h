@@ -115,7 +115,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            monclass_flags_t flags = M_NO_FLAGS,
-                           string verb = "summon");
+                           string verb = "do that");
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
                             function<bool(const monster& mon)> should_ignore = nullptr,

@@ -33,7 +33,7 @@ function base_monster_setup(e)
                jumping spider / redback / culicivora / wraith / vampire /\
                vampire mosquito band / marrowcuda / freezing wraith /\
                guardian mummy / orange demon / ynoxinul / ice devil /\
-               red devil / burial acolyte")
+               red devil / burial acolyte / goblin rider / hippogriff")
   e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
                rakshasa / necromancer / ugly thing / tengu warrior /\
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\

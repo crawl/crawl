@@ -1749,7 +1749,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
             buff << "+" << you.zigs_completed << " ";
-        else if (!dbname && is_xp_evoker(*this))
+        else if (!dbname && is_xp_evoker(*this) && in_inventory(*this))
             buff << "+" << evoker_plus(item_typ) << " ";
 
         buff << misc_type_name(item_typ);

@@ -5136,6 +5136,11 @@ bool land_player(bool quiet)
     if (you.airborne())
         return false;
 
+    // XXX: If a flight item is removed while the player is in level transition,
+    //      (ie: before they've been properly placed on the map), don't crash.
+    if (!in_bounds(you.pos()))
+        return true;
+
     // Handle landing on (formerly) instakill terrain
     if (is_feat_dangerous(env.grid(you.pos())))
     {
@@ -6720,6 +6725,7 @@ bool player::res_constrict() const
 {
     return is_insubstantial()
            || is_amorphous()
+           || you.form == transformation::quill
            || get_mutation_level(MUT_SPINY)
            || you.unrand_equipped(UNRAND_SLICK_SLIPPERS)
            || you.duration[DUR_CONSTRICTION_IMMUNITY];

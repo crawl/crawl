@@ -9095,6 +9095,9 @@ w:5
 
 w:5
 @The_monster@ fumbles a card and drops it. "Whoops!"
+
+w:1
+@The_monster@ says, "I wanted to be a wyvern-rider, but @my_God@ had other plans!"
 %%%%
 # Cards not from any Nemelex deck
 _misplaced_card_

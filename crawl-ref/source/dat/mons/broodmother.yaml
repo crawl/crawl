@@ -15,5 +15,5 @@ has_corpse: true
 shout: skitter
 intelligence: animal
 speed: 12
-size: giant
+size: large
 shape: arachnid

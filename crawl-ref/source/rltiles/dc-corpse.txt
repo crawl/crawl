@@ -273,6 +273,7 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 ## Hybrids ('H')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+hippogriff CORPSE_HIPPOGRIFF
 manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY

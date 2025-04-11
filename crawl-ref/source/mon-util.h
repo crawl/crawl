@@ -292,9 +292,9 @@ mon_intel_type mons_intel(const monster& mon);
 // Use mons_habitat() wherever possible, since the class variants do not
 // handle zombies correctly.
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
-                               bool real_amphibious = false);
-habitat_type mons_class_habitat(monster_type t, bool real_amphibious = false);
-habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
+                               bool core_only = false);
+habitat_type mons_class_habitat(monster_type t, bool core_only = false);
+habitat_type mons_habitat(const monster& mon, bool core_only = false);
 
 bool mons_skeleton(monster_type mc);
 
@@ -420,6 +420,7 @@ bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_class_is_peripheral(monster_type mc);
 bool mons_class_is_test(monster_type mc);
+bool mons_class_angered_by_attacks(monster_type mc);
 bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);

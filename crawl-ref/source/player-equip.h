@@ -103,7 +103,8 @@ struct player_equip_set
     int needs_chain_removal(const item_def& item, vector<item_def*>& to_replace,
                             bool cursed_okay = false);
 
-    vector<item_def*> get_forced_removal_list(bool force_full_check = false);
+    vector<item_def*> get_forced_removal_list(bool force_full_check = false,
+                                              bool is_save_cleanup = false);
 
 private:
     equipment_slot find_slot_to_equip_item(equipment_slot base_slot,
@@ -114,7 +115,8 @@ private:
     void handle_unmelding(vector<item_def*>& to_unmeld, bool skip_effects);
 };
 
-int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullptr);
+int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullptr,
+                                bool count_melded_unrands = false);
 FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots();
 const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 

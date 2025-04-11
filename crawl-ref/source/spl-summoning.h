@@ -37,6 +37,11 @@ constexpr int BOULDER_ABRASION_DAMAGE = 5;
 constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
 constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
 
+bool player_summon_check(const vector<monster_type>& types, int max_range = 2,
+                         int exclude_range = 0, coord_def pos = coord_def());
+bool player_summon_check(monster_type type, int max_range = 2,
+                         int exclude_range = 0, coord_def pos = coord_def());
+
 spret cast_summon_small_mammal(int pow, bool fail);
 
 bool canine_familiar_is_alive();
@@ -52,7 +57,9 @@ spret cast_summon_hydra(actor *caster, int pow, bool fail = false);
 spret cast_summon_mana_viper(int pow, bool fail);
 bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
+spret cast_summon_berserker(int pow, bool fail);
 bool summon_holy_warrior(int pow, bool punish);
+spret cast_summon_holy_warrior(int pow, bool fail);
 
 bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
@@ -126,14 +133,14 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
-void kiku_unearth_wretches();
+spret kiku_unearth_wretches(bool fail);
 
 spret cast_foxfire(actor &agent, int pow, bool fail,
                    bool marshlight = false);
 spret foxfire_swarm();
 bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
 bool summon_spider(const actor &agent, coord_def pos, spell_type spell, int pow);
-spret summon_spiders(actor &agent, int pow, bool fail = false);
+spret summon_spiders(monster &agent, int pow, bool fail = false);
 bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
@@ -183,7 +190,7 @@ spret cast_monarch_bomb(const actor& agent, int pow, bool fail);
 bool monarch_deploy_bomblet(monster& original, const coord_def& target,
                             bool quiet = false);
 vector<coord_def> get_monarch_detonation_spots(const actor& agent);
-spret monarch_detonation(const actor& agent, int pow);
+spret monarch_detonation(const actor& agent, int pow, bool fail);
 
 spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim, int pow,
                              bool fail);

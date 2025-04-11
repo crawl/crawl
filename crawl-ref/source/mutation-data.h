@@ -841,7 +841,7 @@ static const mutation_def mut_data[] =
 },
 
 // body-slot facets
-{ MUT_HORNS, 7, 3, mutflag::good | mutflag::anatomy | mutflag::need_bones,
+{ MUT_HORNS, 7, 3, mutflag::good | mutflag::anatomy,
   "horns",
 
   {"You have a pair of small horns on your head.",

@@ -13,6 +13,7 @@
 #include <cstring>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -122,7 +123,7 @@ bool melee_attack::bad_attempt()
 }
 
 // Whether this attack, if performed, would prompt the player about damaging
-// nearby allies with an unrand property.
+// nearby allies with an unrand property (or make your god unhappy).
 bool melee_attack::would_prompt_player()
 {
     if (!attacker->is_player())
@@ -130,9 +131,9 @@ bool melee_attack::would_prompt_player()
 
     item_def *offhand = offhand_weapon();
     bool penance;
-    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
+    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance, false)
            || offhand && !is_range_weapon(*offhand)
-              && needs_handle_warning(*offhand, OPER_ATTACK, penance)
+              && needs_handle_warning(*offhand, OPER_ATTACK, penance, false)
            || player_unrand_bad_attempt(offhand, true);
 }
 
@@ -1123,6 +1124,12 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
     // (Bestial takedown kills always make you howl.)
     if (takedown || (power >= 5 && (old_power < 5 || one_chance_in(4))))
     {
+        if (silenced(you.pos()))
+        {
+            mpr("You raise your head to howl, but no sound comes out.");
+            return;
+        }
+
         const int howl_power = get_form()->get_howl_power();
         mpr("You let out a blood-chilling howl!");
         draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
@@ -1139,6 +1146,7 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
                 behaviour_event(*mi, ME_SCARE, &you);
             }
         }
+        noisy(you.shout_volume(), you.pos(), MID_PLAYER);
     }
 
     you.increase_duration(DUR_WEREFURY, random_range(7, 11), 20);
@@ -4858,6 +4866,9 @@ bool coglin_spellmotor_attack()
     vector<actor*> targs;
     for (actor* victim : targets)
     {
+        if (victim->is_firewood())
+            continue;
+
         melee_attack attk(&you, victim);
         if (!attk.would_prompt_player())
             targs.push_back(victim);

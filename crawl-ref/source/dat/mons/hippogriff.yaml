@@ -1,0 +1,19 @@
+name: "hippogriff"
+glyph: {char: "H", colour: yellow}
+flags: [flies, warm_blood]
+xp_mult: 11
+will: 20
+attacks:
+ - {type: peck, damage: 12}
+ - {type: claw, damage: 9}
+ - {type: claw, damage: 9}
+hd: 7
+hp_10x: 425
+ac: 2
+ev: 7
+spells: hippogriff
+has_corpse: true
+shout: screech
+intelligence: animal
+size: large
+shape: quadruped_winged

@@ -706,9 +706,15 @@ static int _acquirement_talisman_subtype(int & /*quantity*/,
     vector<pair<talisman_type, int>> tiers = _scale_talisman_weights(agent);
     talisman = *random_choose_weighted(tiers);
 
-    // Choose randomly.
+    // Choose randomly (but don't acquire a protean talisman from a scroll)
     if (talisman == NUM_TALISMANS)
-        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+    {
+        do
+        {
+            talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+        }
+        while (agent != GOD_XOM && talisman == TALISMAN_PROTEAN);
+    }
 
     return talisman;
 }
@@ -1308,6 +1314,11 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             make_item_randart(acq_item);
         }
+        else if (acq_item.base_type == OBJ_STAVES
+                 && !is_artefact(acq_item) && !one_chance_in(5))
+        {
+            make_item_randart(acq_item);
+        }
 
         // Last check: don't acquire items your god hates.
         // Temporarily mark as ID'd for the purpose of checking if
@@ -1623,7 +1634,7 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
         // other (either they are exactly what your pure caster wants
         // or they are the wrong staff or you aren't interested in
         // staves). So make this option a bit rarer.
-        if (!one_chance_in(3))
+        if (one_chance_in(3))
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
@@ -1634,8 +1645,8 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 
     if (!you_worship(GOD_ZIN) && !you.has_mutation(MUT_NO_FORMS))
     {
-        // We want talisman acq to be fairly rare.
-        if (one_chance_in(3))
+        // We want talisman acq to be rarer than others.
+        if (x_chance_in_y(45, 100))
             rand_classes.emplace_back(OBJ_TALISMANS);
     }
 

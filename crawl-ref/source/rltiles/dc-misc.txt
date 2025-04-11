@@ -170,6 +170,8 @@ light_beam7
 warping_blast0 BOLT_WARP_SPACE
 
 # Monster bolts
+beckoning_gale BOLT_BECKONING_GALE
+
 force_lance0 BOLT_FORCE_LANCE
 force_lance1
 force_lance2

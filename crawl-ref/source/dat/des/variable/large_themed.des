@@ -61,35 +61,39 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; sling / hobgoblin w:2; sling / nothing
-MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
-MONS:    kobold; stone / nothing
-MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
+MONS:    goblin ; sling / hobgoblin w:2 ; sling
+MONS:    goblin ; club / hobgoblin ; club / gnoll w:3 ; club | spear
+MONS:    kobold ; stone
+MONS:    kobold ; club w:18 / kobold brigand w:1 / gnoll w:3 ; club | spear
+MONS:    goblin rider, kobold brigand
 ITEM:    stone q:1 no_pickup
-KFEAT:   M = cache of meat
-SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
-NSUBST:  ' = 3 = MMMdd / *:d
-SUBST:   5 = 2 1:2 .:22
-SHUFFLE: ABCD
 KITEM:   D = gold
 KMONS:   D = hobgoblin / kobold / gnoll
-SUBST:   ABC = 2
-SHUFFLE: 12 / 34
+KFEAT:   M = cache of meat
+SHUFFLE: ABCD
+SUBST:   ABC = 2, ? = 2 1:2 .:22
+: if you.depth() > 5 then
+NSUBST:  2 = 1:5 / *:2
+: end
+SHUFFLE: 125 / 346
+SUBST:   1 = 1:12 ., 2 = 2:23 ., 3 = 3., 4 = 4:22 .
+SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
+NSUBST:  ' = 3 = MMMdd / *:d
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
 xxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccwwwwxxxxxx
 xxxwwwwwcAAAccccccccccccccccccccccccccccccccccccccccccccccccccccccDDDcwwwwwxxxxx
-xxxwwwwwcAAAc1.....ccccc.....c555555'c1..1c'555555c.............1cDDDcwwwwwwxxxx
-xxxwwwwwcAAAc.......ccc.2....+555555'c....c'555555+...........2..cDDDcwwwwwwxxxx
+xxxwwwwwcAAAc1.....ccccc.....c??????'c1..1c'??????c.............1cDDDcwwwwwwxxxx
+xxxwwwwwcAAAc.......ccc.2....+??????'c....c'??????+...........2..cDDDcwwwwwwxxxx
 xxwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwxxx
 xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwxxx
 xxwwwwwwwc...........+..............+......+..........cccccccc.2....cwwwwwwwwwxx
 xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwwxx
 xwwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwwxx
-xwwwwwwwcBBBc.......ccc.2....+555555'c....c'555555+...........2..cCCCcwwwwwwwwwx
-xwwwwwwwcBBBc1.....ccccc.....c555555'c....c'555555c.............1cCCCcwwwwwwwwwx
+xwwwwwwwcBBBc.......ccc.2....+??????'c....c'??????+...........2..cCCCcwwwwwwwwwx
+xwwwwwwwcBBBc1.....ccccc.....c??????'c....c'??????c.............1cCCCcwwwwwwwwwx
 xwwwwwwwcBBBccccccccccccccccccccccccccc++cccccccccccccccccccccccccCCCcwwwwwwwwwx
 xwwwwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwyY1..1Yywwwwwwwwwwwwwwwwwwwwwcccccwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwyY....Yywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx

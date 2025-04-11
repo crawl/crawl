@@ -59,10 +59,13 @@ static void _mark_unseen_monsters();
  * @param slot              The equipment slot being checked.
  * @param zero_reason[out]  If there are no slots of the given type, and this is
  *                          non-null, it is set to the reason why there are 0.
+ * @param count_melded_unrands    Whether to count slots granted by unrands which
+ *                                are currently melded. (Defaults to false.)
  *
  * @return The number of slots of the given type the player has.
  */
-int get_player_equip_slot_count(equipment_slot slot, string* zero_reason)
+int get_player_equip_slot_count(equipment_slot slot, string* zero_reason,
+                                bool count_melded_unrands)
 {
 #define NO_SLOT(x) {if (count == 0) {if (zero_reason) { *zero_reason = x; }; return 0;}}
 
@@ -120,7 +123,7 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
-        if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+        if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK, count_melded_unrands))
             ++count;
 
         if (you.has_mutation(MUT_FORMLESS))
@@ -139,7 +142,7 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
-        if (you.unrand_equipped(UNRAND_FISTICLOAK))
+        if (you.unrand_equipped(UNRAND_FISTICLOAK, count_melded_unrands))
             ++count;
 
         if (you.has_mutation(MUT_QUADRUMANOUS))
@@ -216,10 +219,10 @@ int count = 0;
         if (you.has_mutation(MUT_MISSING_HAND))
             ring_count -= 1;
 
-        if (you.unrand_equipped(UNRAND_FINGER_AMULET))
+        if (you.unrand_equipped(UNRAND_FINGER_AMULET, count_melded_unrands))
             ring_count += 1;
 
-        if (you.unrand_equipped(UNRAND_VAINGLORY))
+        if (you.unrand_equipped(UNRAND_VAINGLORY, count_melded_unrands))
             ring_count += 2;
 
         return ring_count;
@@ -229,7 +232,7 @@ int count = 0;
         if (you.has_mutation(MUT_NO_JEWELLERY))
             NO_SLOT("You can't wear amulets.")
 
-        if (you.unrand_equipped(UNRAND_JUSTICARS_REGALIA))
+        if (you.unrand_equipped(UNRAND_JUSTICARS_REGALIA, count_melded_unrands))
             return 2;
 
         return 1;
@@ -829,11 +832,16 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *                           be able to fit, rather than only looking at slots
  *                           whose capacity has changed since the last call to
  *                           ::update()
+ * @param is_save_cleanup    Whether this is being done for save cleanup
+ *                           purposes (ie: to scan and remove 'impossible'
+ *                           items) and thus should allow for items to remain in
+ *                           slots granted by melded items.
  *
  * @return A vector of references to all items that must be removed for the
  *         player's current state to become valid again.
  */
-vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_check)
+vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_check,
+                                                            bool is_save_cleanup)
 {
     vector<item_def*> to_remove;
 
@@ -841,7 +849,10 @@ vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_chec
     // lose any items for that reason.
     FixedVector<int, NUM_EQUIP_SLOTS> new_num_slots;
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
-        new_num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i));
+    {
+        new_num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i),
+                                                       nullptr, is_save_cleanup);
+    }
 
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
     {

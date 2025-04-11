@@ -470,11 +470,11 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     chance += difficulty_by_level[spell_level]; // between 0 and 330
 
     // since chance is passed through a 3rd degree polynomial, cap the
-    // value to avoid any overflow issues. We choose 210 by solving for chance2
-    // = 200 in the polynomial -- it gets capped at 100 ultimately, but we
-    // need a bunch of headroom in case some later calculations lower the value
-    // below 100 after this.
-    chance = min(chance, 210);
+    // value to avoid any overflow issues. I choose 400 as a value that will
+    // remain above 100 no matter how much wizardry the player stacks (so that
+    // we don't get weird effects of the visible success chance being non-0 at
+    // low skill and not improving as skill is gained.)
+    chance = min(chance, 400);
 
     // This polynomial is a smoother approximation of a breakpoint-based
     // calculation that originates pre-DCSS, mapping `chance` at this point to

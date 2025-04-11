@@ -1,10 +1,12 @@
-Stone Soup 0.33 (through 0.33-a0-570-f9d81107089)
+Stone Soup 0.33 (through 0.33-a0-1353-41512545bd6)
 -------------------------------------------------
 
 Highlights
 ----------
-* New skill and background: Forgewrights, building many explosive constructs.
+* New magic school + background: Forgewrights, building explosive constructs.
 * Two new species: poltergeists and revenants.
+* Eleven new talismans have been added, and Shapeshifters have been reworked.
+* Ghost vaults are moved into a game-long repeating portal, the Necropolis.
 * Yet more new monsters, decorations, and traps spread throughout the Dungeon.
 
 Artefacts
@@ -21,10 +23,24 @@ Artefacts
     to one's attacks and another hat slot (on the skull).
 * The macabre finger necklace now also grants +7 HP.
 * Randart weapons can now be Reaping branded, which now creates spectres.
+* -Cast on the Sword of the Doom Knight, Maxwell's Patent Armour, and general
+  randarts is replaced with *Silence, which inflicts a short-term silence on
+  1% of hits on the wielder.
+* +Invis, Harm, and Rampage artefact properties can now be found on talisman
+  randarts.
 * Removed unrands: the Sword of Zonguldrok.
 
 Branches, Environment
 ---------------------
+* Ghost vaults have been moved into their own portal, the Necropolis.
+  - Portals to the Necropolis can be found up to three times each game: once in
+    D:5-15, Lair, or Orc; once in Swamp, Snake, Shoals, Spider, or Vaults; and
+    once in Elf, Crypt, or Depths.
+  - Each Necropolis contains three separate ghost vaults, which are still
+    flavoured and tailored towards the branch a portal entrance is found in.
+  - Another 10 ghost vaults have been added.
+  - Pre-Lair ghost vaults have been somewhat nerfed, while rewards for many
+    ghost vaults have been increased.
 * New traps, all of which activate when monsters or players step on them:
   * Archmage's traps, which drain player mp and grant monsters empowered spells.
   * Devourer's traps, which corrode players.
@@ -35,6 +51,7 @@ Branches, Environment
     garden patches, fountains of eyes, fur piles, infernal standards, mops and
     buckets (sometimes bloodied), mourning vases, and orcish standards.
   * Solid: enigmatic dynamos and nascence circuits.
+  * Destructible: petrified flowers.
 * Walking over fountains now has a chance to produce flavour messages, varying
   based on the fountain, one's god, and the absence of hostile enemies in sight.
 * Zot traps now can inflict blindness.
@@ -62,6 +79,13 @@ Character
     (all -2).
 * New background: Forgewright, which starts with a +0 hammer (a reskinned mace),
   a potion of magic, and a variety of Forgecraft spells.
+* Fighters now start with a second potion of might.
+* Shapeshifters now start with a quill talisman, three flux baubles, and a
+  protean talisman, which can be used with 6 or more Shapeshifting skill to
+  randomly transform it into a scarab, rimehorn, medusa or maw talisman.
+  They keep their potion of lignification and start with 1 more Fighting skill.
+* Wanderers can now start with quill talismans, inkwell talismans, flux baubles,
+  protean talismans, or any protean-tier talisman.
 * Reavers now start with knowledge of Rending Blade.
 * Summoners start with knowledge of Eringya's Surprising Crocodile and Summon
   Seismosaurus Egg instead of Summon Blazeheart Golem or Lightning Spire.
@@ -99,6 +123,10 @@ Interface and Options
 ---------------------
 * Examining equipment and talismans now can show the changes to the player's
   spell success chances for each spell if they switched to using that item.
+* Examining spellbooks in webtiles now colours spells according to their
+  usability and whether or not one has the spell in their library.
+* Examining talismans now displays their upsides, downsides, and skill scaling
+  in a more compressed format with additional details.
 * Spell range is now indicated with numbers instead of diagrams.
 * Default target-picking behaviour for spells, abilities, and items has been
   improved: it is now more consistent at avoiding the player or their allies
@@ -106,6 +134,8 @@ Interface and Options
   some utility effects.
 * Ranged autofight should no longer sometimes cast spells at invalid targets
   (such as Dispel Undead against living monsters in melee).
+* Casting ally-creating spells when there is no nearby room is now automatically
+  cancelled, rather than wasting a turn and one's MP.
 * Equipping an item that would require unequipping multiple other items (such
   as with going from a 1-handed weapon + shield to a 2-hander) no longer needs
   manual unequipping to work.
@@ -123,30 +153,104 @@ Items
 -----
 * New weapon: partisans, uncommon one-handed polearms with higher base damage
   than demon tridents and the longest swing delay of any one-handed weapon.
-* New talisman: sanguine talismans, turning the player into a living-undead
-  vampire. They don't regenerate with enemies visible, get vampiric attacks at
-  50% health, can raise a vampiric thrall when killing monsters with stabs, can
-  transform into a swarm of bats that leave sleep-inducing clouds of bats, and
-  have partial torment resistance.
+* Talisman skill thresholds have been reworked, with older talismans adjusted
+  upwards in baseline stats for higher thresholds. The new tier summary is now:
+ - Tier 1 talismans (old beast talisman): 0 skill minimum, 7 skill maximum
+ - Tier 2 talismans (old flux talisman): 8 skill minimum, 14 skill maximum
+ - Tier 3 talismans (blade talisman): 12 skill minimum, 20 skill maximum
+ - Tier 4 talismans (granite talisman): 17 skill minimum, 25 skill maximum
+ - Tier 5 talismans (storm talisman): 23 skill minimum, 27 skill maximum
+* New talismans:
+ - Tier 1:
+  - quill talismans, providing Quill Form. This melds all auxiliary equipment,
+    but grants retaliatory quills damaging those who attack the player in melee.
+  - inkwell talismans, providing Walking Scroll Form. This melds all equipment,
+    increases all magic school skills scaling to one's Shapeshifting, grants
+    extra max mp, disables casting spells above level 4, and cuts one's melee
+    damage in half in exchange for a 50% to gain 1 MP on every hit.
+ - Tier 2:
+  - scarab talismans, providing Sun Scarab Form. This small form melds weapons
+    and armour, carts around a solar ember that cleaves with fire attacks when
+    scarabs attack, and grants Fire-exclusive spellcasting success bonuses.
+  - rimehorn talismans, providing Rime Yak Form. This large form melds weapons
+    and armour, makes adjacent walls deal cold damage over a short while on
+    attacks, and grants Ice-exclusive spellcasting success bonuses.
+  - medusa talismans, providing Medusa Form. This melds one's head and cloak
+    slots into a jellyfish, which inflicts poison on random nearby enemies
+    on attacks and which petrifies poisoned enemies when falling to 60% health.
+ - Tier 3:
+  - spider talismans, providing Jumping Spider Form. This tiny form melds all
+    armour and weapons, but gains Rampage, a small chance for melee to ensnare
+    enemies, short-blade quality stabs, and a special un-aimed jump ability.
+  - lupine talismans, providing Werewolf Form. This melds all auxiliary armour,
+    grants a stacking slaying bonus on kills, gives a chance to howl on kills to
+    lock enemies in immobile fear, and grants jumping attacks on afraid foes.
+  - wellspring talismans, providing Aqua Form. This melds body armour, provides
+    two extra squares of melee range (stacking with polearms and working with
+    auxes), and granting an ability to waterstrike + waterlog nearby enemies.
+  - fortress talismans, providing Fortress Crab Form. This melds all auxiliary
+    armour, multiplies AC from body armour, and can breathe clouds of
+    minorly-damaging, corroding and weakening rust.
+ - Tier 4:
+  - riddle talismans, providing Sphinx Form. These sphinxes can still wear
+    cloaks and bardings (except for Felids), but meld all other armour and can't
+    wield weapons. Their unarmed strikes Airstrike their targets, they get
+    major Hexes-exclusive spellcasting success bonuses, and their Hexes apply
+    more easily to all susceptible foes.
+  - hive talismans, providing Living Hive Form. This melds body armour and helm
+    slots into a hive with high health + magic regeneration that also releases
+    berserk curare-branded killer bees when the user is sufficiently wounded.
+  - sanguine talismans, providing the living-undead Vampire Form. These vampires
+    don't regenerate with enemies visible, get vampiric attacks at 50% health,
+    can raise a vampiric thrall when killing monsters with stabs, can transform
+    into a swarm of bats that leave sleep-inducing clouds of bats, and have
+    partial torment resistance.
+* Many other talismans have been adjusted:
+  - Flux talismans have become stacks of flux baubles, which require less skill
+    and deal more damage but each transformation lasts for only a finite amount
+    of attacks instead of indefinitely.
+  - Maw talismans have been lowered down a tier, with the maw dealing less
+    damage and healing on kills for less HP, but can now break through body
+    armour to provide a tiny percent of AC instead of melding such entirely.
+  - Serpent talismans now transform the user into a two-headed snake that can
+    wear two hats (but no other equipment).
+  - Granite talismans now apply a percentage EV penalty and provide additional
+    strength in exchange for less unarmed base damage.
+  - Dragon-blood talismans (now dragon-coil talismans) now transform
+    non-draconians into golden dragons instead of fire dragons, changing the
+    corresponding resists; they also get Draconian-style breath charges for a
+    new tri-element breath, but deal less melee damage. Draconians also recharge
+    their breath much faster in dragon form.
+  - Talismans of death now uniquely require 26 Shapeshifting at minimum.
+* Talisman / randarts are notably more common throughout the game, with stones
+  made less common in exchange.
+* Talismans no longer meld Gargoyle AC and resists unless they change substances
+  entirely, and never meld away Spriggan move speed.
+* Beast talismans have been removed.
+* Acquirement now gives more out more talismans.
+* Acquirement gives less magical staves overall, but makes more randart staves.
 * Potions of degeneration are now of moonshine and solely inflict Vertigo.
 * Darts of dispersal are now darts of disjunction, which now repeatedly blink
   a target each turn for several turns and deal damage with each blink.
 * Experience-gated evokers now appear multiple times per game, stack up to a max
   of +5, and decrease the experience needed to gain charges with each stack.
 * Rings of slaying are no longer rarer than other rings.
-* +Invis, Harm, and Rampage artifact properties can now be found on talisman
-  randarts.
 
 Monsters
 --------
 * New monsters:
   * Alderkings, fae trees and necromantic masters of Depths.
+  * Goblin riders, wvyern-taming cavalry for Bailies.
   * Fravashi, mid-tier warrior-summoning angels.
   * Nekomata, self-cloning ranged cat demons for Pan.
   * Oni incarcerators, Manifold Assault users for Gehenna.
   * Sphinx marauders, masters of winds and minds for Shoals and Vaults.
   * Vampire bloodprinces, sleep-inducing lords of Crypt.
   * Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
+* New unique: Nobody, a revenant made from countless forgotten souls, who can
+  burn the memories of their deaths to both heal and change spellsets.
+* Returning monster: hippogriffs, now nearly exclusive to bailies, now with both
+  Warning Cry and a new damaging wind spell that slowly pulls enemies in.
 * Returning monster: ironbound beastmasters, now with a passive animal and slime
   hasting aura plus the ability to throw bolas to bind foes in place.
 * Apises now have a passive aura that doubles the health of other monsters.
@@ -168,8 +272,10 @@ Monsters
   no longer check rTorment.
 * Mutant beasts count as chaotic.
 * Occultists now have more health and EV.
+* Player ghosts now respect the movement speed of their original species.
 * Quicksilver oozes have been renamed, rethemed, and retiled to void oozes.
 * Searing wretches can now swim across lava.
+* Simulacra can now always swim, regardless of their base type.
 * Sin beasts now come in duos in Pan.
 * Plain sphinxes are now "guardian sphinxes", are stronger overall, and no
   longer appear in D or in Shoals.
@@ -201,6 +307,8 @@ Species
     Spell-activated automatic attacks during this also heal the player.
   - At XL 3, they also gain knowledge of a random level 1 destructive spell.
 * Formicids now may wield an additional pair of gloves.
+* Merfolk Long Blades apt is lowered from +2 to +1, and their Polearms apt is
+  increased from +3 to +4.
 * Mountain Dwarf Summoning apt is lowered from 0 to -2.
 * Enhancer staves are now one-handed instead of two-handed for spriggans and
   kobolds.
@@ -252,6 +360,9 @@ Spells
     and a lunging crocodile all at once to drag an enemy and the caster back.
   - Summon Seismosaurus Egg (L4 Summ / Earth): Creates an egg that will hatch
     into a mighty dinosaur if the caster stays next to it with visible enemies.
+  - Detonation Catalyst (L5 Fire / Alch): Gain a buff that makes non-cleaving
+    melee attacks explode for damage scaled to damage dealt, avoiding allies,
+    and which lasts for very little time if the user stops attacking.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
   * Battlespheres last longer at lower spell power, are better at pathing
@@ -262,14 +373,18 @@ Spells
   * Hellfire Mortar now scales heavily with spellpower, deals more damage,
     has longer mortar range, and pushes back singular flying foes.
   * Lightning Spires now target the furtherest-away foe, if possible.
+  * Maxwell's Capacitive Coupling can no longer be started without a visible
+    monster in sight of the caster.
   * Maxwell's Portable Piledriver can now be aimed and can push a connected
     line of lined-up enemies all at once.
   * Mephitic Cloud is now flavoured as throwing a non-damaging flask of fumes.
   * Mercury Vapours is now Poisonous Vapours, moved to level 1, no longer
     inflicts Weak, inflicts less poison status, and deals a small amount of flat
     AC-ignoring damage against targets without rPois.
+  * Permafrost Eruption's damage has been lowered.
   * Rimeblight now chains to two other targets on cast and now reliably spreads
     on death instead of also spreading through its explosions.
+  * Sculpt Simulacrum's simulacra now attack the turn they finish forming.
   * Sting is now Mercury Arrow, moved to level 2, no longer inflicts the poison
     status (but still partially checks rPois), and gains Mercury Vapours'
     previous HD-check area-of-effect Weak status.
@@ -289,7 +404,7 @@ Tiles and Other Art
     great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
     shapeshifters and glowing shapeshifters, sky beasts, all tengu types.
   * Mutation icons: big wings, demonspawn demonic touch, mp-powered wands,
-    screaming, subdued magic, tendrils, wild magic.
+    screaming, subdued magic, tendrils, pseudopods, wild magic.
   * Plants, both regular and withered.
   * Player dolls: Coglins.
   * The prune curse from the glaive of Prune.

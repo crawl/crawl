@@ -391,7 +391,7 @@ static void _do_medusa_stinger()
     vector<monster*> targs;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mi->wont_attack() && !mi->is_firewood()
+        if (mi->temp_attitude() == ATT_HOSTILE && !mi->is_firewood()
             && grid_distance(you.pos(), mi->pos()) <= 2)
         {
             targs.push_back(*mi);
@@ -1567,14 +1567,14 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
     if (get_resist(resists, MR_RES_POISON) <= 0
         && you.duration[DUR_TOXIC_RADIANCE])
     {
-        return "toxic aura";
+        return "emitting a toxic aura";
     }
     if (you.duration[DUR_NOXIOUS_BOG] && !(flags & M_FLIES))
-        return "noxious bog";
+        return "spewing a noxious bog";
     if (you.duration[DUR_VORTEX])
-        return "polar vortex";
+        return "in the middle of a polar vortex";
     if (you.duration[DUR_FUSILLADE])
-        return "fulsome fusillade";
+        return "raining down reagents";
     return "";
 }
 
@@ -1658,8 +1658,8 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     if (noun.empty())
         return false;
 
-    string prompt = make_stringf("Really %s while emitting %s?",
-                                 verb.c_str(), article_a(noun).c_str());
+    string prompt = make_stringf("Really %s while %s?",
+                                 verb.c_str(), noun.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;

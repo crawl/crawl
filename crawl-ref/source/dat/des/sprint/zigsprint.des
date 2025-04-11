@@ -159,7 +159,7 @@ function choose_mset_1(e)
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum")
 -- Air
   elseif rnd < 87 then
-    e.kmons("1 = air elemental")
+    e.kmons("1 = sky beast")
 -- Earth
   elseif rnd < 89 then
     e.kmons("1 = toenail golem")
@@ -253,7 +253,7 @@ function choose_mset_2(e)
                rime drake / freezing wraith / ice devil")
 -- Air
   elseif rnd < 88 then
-    e.kmons("1 = air elemental / wind drake w:5")
+    e.kmons("1 = sky beast / wind drake w:5 / hippogriff w:5")
 -- Earth
   elseif rnd < 90 then
     e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")

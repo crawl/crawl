@@ -143,6 +143,7 @@ static ai_action::goodness _mons_likes_blinking(const monster &caster);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
+static void _cast_beckoning_gale(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
@@ -458,6 +459,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
+    { SPELL_BECKONING_GALE, { _foe_not_nearby, _cast_beckoning_gale, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall,
@@ -1317,6 +1319,67 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
     {
         enchant_actor_with_flavour(foe, &caster, BEAM_DRAIN_MAGIC,
                                    mons_spellpower(caster, slot.spell));
+    }
+}
+
+static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    bool moved = false;
+    const int pow = mons_spellpower(caster, SPELL_BECKONING_GALE);
+
+    int damage_taken = zap_damage(ZAP_BECKONING_GALE, pow, true).roll();
+
+    if (you.see_cell(foe->pos()))
+        flash_tile(foe->pos(), WHITE, 60, TILE_BOLT_BECKONING_GALE);
+
+    foe->hurt(&caster, foe->apply_ac(damage_taken),
+              BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
+    _whack(caster, *foe);
+
+    if (!foe->is_stationary())
+    {
+        // Just two spaces- not as dramatic as Harpoon Shot since it's
+        // unavoidable, and not meant to compare to incarcerators.
+        const int max_move = 2;
+
+        for (int i = 0; i < max_move; i++)
+        {
+            // Calculate what is 'backwards' from the attacker's perspective,
+            // relative to the defender.
+            const coord_def shift = -(foe->pos() - caster.pos()).sgn();
+            const coord_def new_foe_pos = foe->pos() + shift;
+
+            // Abort if there isn't habitable empty space at the endpoint of
+            // the defender's move, or if something else is interfering with it.
+            if (!foe->is_habitable(new_foe_pos)
+                || (new_foe_pos != caster.pos() && actor_at(new_foe_pos))
+                || foe->is_player() && need_expiration_warning(new_foe_pos)
+                || foe->is_constricted()
+                || foe->resists_dislodge("being dragged"))
+            {
+                continue;
+            }
+
+            place_cloud(CLOUD_DUST, foe->pos(), random_range(2, 3), &caster);
+            foe->move_to_pos(new_foe_pos);
+            foe->apply_location_effects(new_foe_pos);
+            foe->did_deliberate_movement();
+            moved = true;
+        }
+    }
+
+    if (moved)
+    {
+        mprf("A beckoning whirlwind drags %s forward!",
+            foe->name(DESC_THE).c_str());
+    }
+    else
+    {
+        mprf("A beckoning whirlwind swirls around %s.",
+            foe->name(DESC_THE).c_str());
     }
 }
 

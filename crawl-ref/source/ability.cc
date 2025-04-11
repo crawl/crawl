@@ -403,7 +403,7 @@ static vector<ability_def> &_get_ability_list()
             4, 0, 0, -1, {}, abflag::none },
 
         { ABIL_BAT_SWARM, "Bat Swarm",
-            6, 0, 0, -1, {}, abflag::none },
+            6, 0, 0, -1, {}, abflag::instant },
 
         { ABIL_ENKINDLE, "Enkindle",
                 0, 0, 0, -1, {}, abflag::instant },
@@ -3386,7 +3386,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         you.transform_uncancellable = true;
         const int pow = get_form()->get_level(10);
         big_cloud(CLOUD_BATS, &you, you.pos(), 18 + pow / 20, 8 + pow / 15, 1);
-        you.props[BATFORM_XP_KEY] = 90;
+        you.props[BATFORM_XP_KEY] = 80;
         break;
     }
 
@@ -3460,11 +3460,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     }
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-        if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
-            return spret::abort;
-        fail_check();
-        summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), false);
-        break;
+        return cast_summon_holy_warrior(you.skill(SK_INVOCATIONS, 4), fail);
 
     case ABIL_TSO_BLESS_WEAPON:
         simple_god_message(" will bless one of your weapons.");
@@ -3474,9 +3470,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_KIKU_UNEARTH_WRETCHES:
-        fail_check();
-        kiku_unearth_wretches();
-        break;
+        return kiku_unearth_wretches(fail);
 
     case ABIL_KIKU_SIGN_OF_RUIN:
         fail_check();
@@ -3611,6 +3605,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         }
 
+        // XXX: Chosen as representative 'neither flies nor resists poison'
+        //      monster and one that does both, though at higher invo it stops
+        //      being possible to get one wthout rPois, so the warning is only
+        //      *almost* correct.
+        if (!player_summon_check({MONS_ORANGE_DEMON, MONS_BLIZZARD_DEMON}))
+            return spret::abort;
+
         fail_check();
         makhleb_infernal_servant();
         break;
@@ -3642,12 +3643,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
-        fail_check();
-        // Trog abilities don't use or train invocations.
-        summon_berserker(you.piety +
-                         random2(you.piety/4) - random2(you.piety/4),
-                         &you);
-        break;
+    {
+        int pow = you.piety + random2(you.piety / 4);
+        // force a sequence point between random calls
+        pow -= random2(you.piety / 4);
+        return cast_summon_berserker(pow, fail);
+    }
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (cast_selective_amnesia() <= 0)
@@ -3805,6 +3806,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        if (stop_summoning_prompt())
+            return spret::abort;
         fail_check();
         beogh_blood_for_blood();
         break;

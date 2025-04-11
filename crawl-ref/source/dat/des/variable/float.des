@@ -7595,6 +7595,10 @@ SUBST:  - = 2:20 d .:50
 ITEM:   any weapon / any missile / w:5 any armour / \
         w:5 any potion / w:5 any scroll, w:1 any misc
 MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
+MONS:   goblin rider
+: if you.depth() > 5 then
+NSUBST:  2 = 1:3 / *:2
+: end
 MAP
 .......................
 ..1..x++x..1..x+++++x..

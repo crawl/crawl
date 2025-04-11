@@ -796,6 +796,14 @@ Fireball hell hog cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Beckoning Gale hippogriff cast
+
+@The_monster@ flaps @possessive@ wings @at@ @target@.
+%%%%
+Warning Cry hippogriff cast
+
+@The_monster@ screeches a warning cry!
+%%%%
 unseen Warning Cry howler monkey cast
 
 You hear a tremendous hooting and howling!
