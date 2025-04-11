@@ -3456,15 +3456,19 @@ bool make_soul_wisp(const actor& agent, actor& victim)
     return false;
 }
 
-static monster* _get_clockwork_bee_target(const monster* bee = nullptr)
+static actor* _get_clockwork_bee_target(const actor* agent = nullptr,
+                                        const monster* bee = nullptr)
 {
     // Try to resume targeting the last thing we were targeting before going
     // dormant (if it's still around and valid).
     if (bee && bee->props.exists(CLOCKWORK_BEE_TARGET))
     {
-        monster* targ = monster_by_mid(bee->props[CLOCKWORK_BEE_TARGET].get_int());
-        if (targ && targ->alive() && !targ->wont_attack() && you.can_see(*targ))
+        actor* targ = actor_by_mid(bee->props[CLOCKWORK_BEE_TARGET].get_int());
+        if (targ && targ->alive() && !mons_aligned(bee, targ)
+            && (!agent || !agent->is_player() || you.can_see(*targ)))
+        {
             return targ;
+        }
     }
 
     monster* targ = nullptr;
@@ -3491,17 +3495,25 @@ void handle_clockwork_bee_spell(int turn)
 
     stop_channelling_spells(true);
 
-    // Try to find what we targeted when we started casting.
-    monster* targ = monster_by_mid(you.props[CLOCKWORK_BEE_TARGET].get_int());
+    launch_clockwork_bee(you);
+}
+
+void launch_clockwork_bee(const actor& agent)
+{
+    // Try to find what was targeted when this was first cast.
+    actor* targ = actor_by_mid(agent.props[CLOCKWORK_BEE_TARGET].get_int());
 
     // If the original target is not available, pick another suitable one at random.
-    if (!targ || !targ->alive() || !targ->visible_to(&you)
-        || !you.see_cell(targ->pos()))
+    // Players need to maintain line of sight on the target, but monsters are
+    // allowed to cheat (so the player can't just run away during the spellcast).
+    if (!targ || !targ->alive()
+        || agent.is_player() && (!targ->visible_to(&you) || !you.see_cell(targ->pos())))
     {
-        monster* new_targ = _get_clockwork_bee_target();
+        actor* new_targ = _get_clockwork_bee_target(&agent);
 
-        // Couldn't find anything, so just deposit an inert bee near us
-        if (!new_targ)
+        // Couldn't find anything, so just deposit an inert bee near the player.
+        // (Don't bother for monsters.)
+        if (!new_targ && agent.is_player())
         {
             mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE_INACTIVE,
                                         random_range(80, 120),
@@ -3540,23 +3552,26 @@ void handle_clockwork_bee_spell(int turn)
         targ = new_targ;
     }
 
-    mgen_data mg = _pal_data(MONS_CLOCKWORK_BEE, random_range(400, 500),
-                             SPELL_CLOCKWORK_BEE, false).set_range(1, 2);
+    mgen_data mg = _summon_data(agent, MONS_CLOCKWORK_BEE, random_range(400, 500),
+                                SPELL_CLOCKWORK_BEE, false).set_range(1, 2);
     mg.hd = 5 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 20);
 
     monster* bee = create_monster(mg);
     if (bee)
     {
-        bee->number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
+        const int pow = agent.is_player() ? calc_spell_power(SPELL_CLOCKWORK_BEE)
+                                          : mons_spellpower(*agent.as_monster(), SPELL_CLOCKWORK_BEE);
+        bee->number = 3 + div_rand_round(pow, 15);
         bee->add_ench(mon_enchant(ENCH_HAUNTING, 1, targ, INFINITE_DURATION));
 
-        mprf("With a metallic buzz, your clockwork bee launches itself at %s.",
+        mprf("With a metallic buzz, %s clockwork bee launches itself at %s.",
+             agent.pronoun(PRONOUN_POSSESSIVE).c_str(),
              targ->name(DESC_THE).c_str());
 
         bee->speed_increment = 80;
         bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
     }
-    else
+    else if (agent.is_player())
         mpr("Your bee fails to deploy!");
 }
 
@@ -3621,34 +3636,43 @@ void clockwork_bee_go_dormant(monster& bee)
 
 // Attempts to repair and rewind a clockwork bee.
 // Returns false if we lacked the MP to do so or there was no valid target for it.
-bool clockwork_bee_recharge(monster& bee)
+bool clockwork_bee_recharge(actor& agent, monster& bee)
 {
-    if (you.berserk())
+    if (agent.berserk())
     {
-        mpr("If you tried to rewind gears in your present state, you'd only break them.");
+        if (agent.is_player())
+            mpr("If you tried to rewind gears in your present state, you'd only break them.");
         return false;
     }
 
-    monster* targ = _get_clockwork_bee_target(&bee);
+    actor* targ = _get_clockwork_bee_target(&agent, &bee);
 
     // Nothing around for it to attack.
     if (!targ)
     {
-        mpr("You need a visible target to rewind your bee! "
-            "(Use ctrl+direction or * direction to deconstruct it instead.)");
+        if (agent.is_player())
+        {
+            mpr("You need a visible target to rewind your bee! "
+                "(Use ctrl+direction or * direction to deconstruct it instead.)");
+        }
         return false;
     }
 
-    if (!enough_mp(1, true))
+    if (agent.is_player())
     {
-        mpr("You lack sufficient magical power to recharge your bee.");
-        return false;
+        if (!enough_mp(1, true))
+        {
+            mpr("You lack sufficient magical power to recharge your bee.");
+            return false;
+        }
+        pay_mp(1);
+        finalize_mp_cost();
     }
 
-    pay_mp(1);
-    finalize_mp_cost();
-
-    mprf("You wind your clockwork bee back up and it locks its sights upon %s!",
+    mprf("%s wind%s %s clockwork bee back up and it locks its sights upon %s!",
+         agent.name(DESC_THE).c_str(),
+         agent.is_player() ? "" : "s",
+         agent.pronoun(PRONOUN_POSSESSIVE).c_str(),
          targ->name(DESC_THE).c_str());
     int old_max_hp = bee.max_hit_points;
     int old_hp = bee.hit_points;
@@ -3658,9 +3682,11 @@ bool clockwork_bee_recharge(monster& bee)
     bee.max_hit_points = old_max_hp;
     bee.hit_points = old_hp;
     bee.heal(roll_dice(3, 5));
-    bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, random_range(400, 500)));
+    bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &agent, random_range(400, 500)));
     bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
-    bee.number = 3 + div_rand_round(calc_spell_power(SPELL_CLOCKWORK_BEE), 15);
+    const int pow = agent.is_player() ? calc_spell_power(SPELL_CLOCKWORK_BEE)
+                                      : mons_spellpower(*agent.as_monster(), SPELL_CLOCKWORK_BEE);
+    bee.number = 3 + div_rand_round(pow, 15);
     bee.speed_increment = 80;
 
     return true;
@@ -3668,14 +3694,17 @@ bool clockwork_bee_recharge(monster& bee)
 
 void clockwork_bee_pick_new_target(monster& bee)
 {
-    monster* targ = _get_clockwork_bee_target();
+    const actor* agent = actor_by_mid(bee.summoner);
+    actor* targ = _get_clockwork_bee_target(agent, &bee);
 
     // Nothing around for it to attack
     if (!targ)
        clockwork_bee_go_dormant(bee);
     else
     {
-        mprf("Your clockwork bee locks its sights upon %s.", targ->name(DESC_THE).c_str());
+        mprf("%s clockwork bee locks its sights upon %s.",
+                agent ? agent->pronoun(PRONOUN_POSSESSIVE).c_str() : "Someone's",
+                targ->name(DESC_THE).c_str());
         bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
         bee.props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
     }

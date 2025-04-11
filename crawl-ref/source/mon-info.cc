@@ -148,6 +148,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CHAOS_LACE,      MB_CHAOS_LACE },
     { ENCH_VEXED,           MB_VEXED },
     { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
+    { ENCH_CLOCKWORK_BEE_CAST, MB_CLOCKWORK_BEE_CAST },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

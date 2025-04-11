@@ -1192,6 +1192,19 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
+    case MONS_CLOCKWORK_BEE_INACTIVE:
+    {
+        // Note: the player is not a monster, so this will never happen to them.
+        monster* summ = monster_by_mid(mons->summoner);
+        if (summ && adjacent(summ->pos(), mons->pos()) && !summ->incapacitated()
+            && summ->has_action_energy() && !one_chance_in(4))
+        {
+            if (clockwork_bee_recharge(*summ, *mons))
+                summ->lose_energy(EUT_MOVE);
+        }
+        break;
+    }
+
     case MONS_NAMELESS_REVENANT:
         // If we are engaging the player and have full memories, burn one fairly
         // immediately.

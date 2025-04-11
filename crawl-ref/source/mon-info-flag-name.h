@@ -158,4 +158,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CHAOS_LACE, "chaos-laced", "interlaced with chaos", "chaos-laced"},
     { MB_VEXED, "vexed", "lashing out in frustration", "vexed"},
     { MB_PYRRHIC_RECOLLECTION, "ablaze", "ablaze with memories", "ablaze"},
+    { MB_CLOCKWORK_BEE_CAST, "bee", "winding a clockwork bee", "bee"},
 };

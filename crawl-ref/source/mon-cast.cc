@@ -910,6 +910,26 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _cast_dominate_undead(caster, pow, false);
         },
         nullptr, MSPELL_LOGIC_NONE, 30
+    } },
+    { SPELL_CLOCKWORK_BEE, {
+        [](const monster &caster)
+        {
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->was_created_by(caster, SPELL_CLOCKWORK_BEE))
+                    return ai_action::impossible();
+
+            return ai_action::good();
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            actor* foe = caster.get_foe();
+            // Hostiles will always prioritize locking onto the player, instead
+            // of any other monster nearby, so long as they can see you.
+            if (!caster.wont_attack() && !foe->is_player() && caster.can_see(you))
+                foe = &you;
+            caster.props[CLOCKWORK_BEE_TARGET].get_int() = foe->mid;
+            caster.add_ench(mon_enchant(ENCH_CLOCKWORK_BEE_CAST, 0, &caster, 40));
+            simple_monster_message(caster, " begins winding a clockwork bee!");
+        },
     } }
 };
 

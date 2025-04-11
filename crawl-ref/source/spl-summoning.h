@@ -162,8 +162,9 @@ bool make_soul_wisp(const actor& agent, actor& victim);
 spret cast_clockwork_bee(coord_def target, bool fail);
 void handle_clockwork_bee_spell(int turn);
 void clockwork_bee_go_dormant(monster& bee);
-bool clockwork_bee_recharge(monster& bee);
+bool clockwork_bee_recharge(actor& agent, monster& bee);
 void clockwork_bee_pick_new_target(monster& bee);
+void launch_clockwork_bee(const actor& agent);
 
 dice_def diamond_sawblade_damage(int power);
 vector<coord_def> diamond_sawblade_spots(bool actual);

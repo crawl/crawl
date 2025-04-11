@@ -1727,6 +1727,23 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_CLOCKWORK_BEE_CAST:
+        if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
+            || confused() || asleep() || has_ench(ENCH_FEAR))
+        {
+            del_ench(en, true, false);
+            if (you.can_see(*this))
+            {
+                mprf("%s stops winding %s clockwork bee.", name(DESC_ITS).c_str(),
+                     pronoun(PRONOUN_POSSESSIVE).c_str());
+            }
+            break;
+        }
+
+        if (decay_enchantment(en))
+            launch_clockwork_bee(*this);
+        break;
+
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
@@ -2194,7 +2211,7 @@ static const char *enchant_names[] =
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
-    "vampire thrall", "pyrrhic recollection",
+    "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
     "buggy", // NUM_ENCHANTMENTS
 };
 

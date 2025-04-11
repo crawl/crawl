@@ -253,6 +253,7 @@ enum monster_info_flags
     MB_VEXED,
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
+    MB_CLOCKWORK_BEE_CAST,
     NUM_MB_FLAGS
 };
 
