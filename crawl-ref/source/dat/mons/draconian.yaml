@@ -1,6 +1,7 @@
 name: "draconian"
 glyph: {char: "d", colour: brown}
 flags: [speaks, cold_blood, no_poly_to, no_gen_derived]
+exp: 530
 will: 10
 attacks:
  - {type: hit, damage: 15}

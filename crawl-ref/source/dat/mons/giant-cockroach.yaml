@@ -2,6 +2,7 @@ name: "giant cockroach"
 glyph: {char: "B", colour: brown}
 flags: [no_skeleton]
 resists: {poison: -1}
+exp: 2
 will: 0
 attacks:
  - {type: bite, damage: 2}

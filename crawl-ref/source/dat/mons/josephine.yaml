@@ -2,7 +2,7 @@ name: "Josephine"
 glyph: {char: "@", colour: white}
 flags: [speaks, warm_blood, unique, female]
 resists: {neg: 3}
-xp_mult: 20
+exp: 912
 species: human
 will: 60
 attacks:

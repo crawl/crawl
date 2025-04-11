@@ -237,7 +237,7 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
 
 static int _calc_player_experience(const monster* mons)
 {
-    int experience = exper_value(*mons);
+    int experience = exp_value(*mons);
     if (!experience)
         return 0;
 
@@ -770,7 +770,7 @@ static bool _vampire_make_thrall(monster* mons)
     mons->mark_summoned(MON_SUMM_THRALL, 0, false);
     mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, dur));
     mons_att_changed(mons);
-    gain_exp(exper_value(*mons));
+    gain_exp(exp_value(*mons));
 
     // Cancel fleeing and such.
     mons->behaviour = BEH_SEEK;

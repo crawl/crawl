@@ -1,6 +1,7 @@
 name: "holy swine"
 glyph: {char: "h", colour: yellow}
 flags: [flies]
+exp: 792
 genus: hog
 holiness: [holy]
 will: 40

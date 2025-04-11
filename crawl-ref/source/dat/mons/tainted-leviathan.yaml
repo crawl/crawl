@@ -2,6 +2,7 @@ name: "tainted leviathan"
 glyph: {char: "C", colour: magenta}
 flags: [fighter, see_invis, speaks, warm_blood, no_zombie, miasma_ring]
 resists: {cold: 1}
+exp: 1771
 genus: giant
 holiness: [undead]
 will: 120

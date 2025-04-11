@@ -882,15 +882,15 @@ void objstat_record_monster(const monster *mons)
 
     _record_monster_stat(type, "Num", 1);
     _record_monster_stat(type, "NumForIter", 1);
-    _record_monster_stat(type, "MonsXP", exper_value(*mons));
-    _record_monster_stat(type, "TotalXP", exper_value(*mons));
+    _record_monster_stat(type, "MonsXP", exp_value(*mons));
+    _record_monster_stat(type, "TotalXP", exp_value(*mons));
     _record_monster_stat(type, "MonsHP", mons->max_hit_points);
     _record_monster_stat(type, "MonsHD", mons->get_experience_level());
 
     if (!mons->originating_map().empty())
     {
         _record_monster_stat(type, "NumVault", 1);
-        _record_monster_stat(type, "TotalXPVault", exper_value(*mons));
+        _record_monster_stat(type, "TotalXPVault", exp_value(*mons));
     }
 
     const level_id cur_lev = level_id::current();

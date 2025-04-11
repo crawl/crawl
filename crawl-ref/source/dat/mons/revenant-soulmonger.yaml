@@ -2,7 +2,7 @@ name: "revenant soulmonger"
 glyph: {char: "z", colour: magenta}
 flags: [see_invis, speaks]
 resists: {cold: 2}
-xp_mult: 18
+exp: 18
 holiness: [undead]
 will: invuln
 attacks:

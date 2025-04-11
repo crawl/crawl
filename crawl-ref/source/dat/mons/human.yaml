@@ -1,6 +1,7 @@
 name: "human"
 glyph: {char: "p", colour: lightgray}
 flags: [speaks, warm_blood]
+exp: 197
 will: 20
 attacks:
  - {type: hit, damage: 10}

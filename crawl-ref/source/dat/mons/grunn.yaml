@@ -1,6 +1,7 @@
 name: "Grunn"
 glyph: {char: "j", colour: lightgreen}
 flags: [speaks, unique, male]
+exp: 1718
 species: gnoll
 holiness: [undead]
 will: 100

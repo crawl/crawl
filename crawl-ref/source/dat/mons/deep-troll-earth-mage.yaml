@@ -1,6 +1,7 @@
 name: "deep troll earth mage"
 glyph: {char: "T", colour: magenta}
 flags: [see_invis, unblindable, speaks, warm_blood]
+exp: 805
 species: deep_troll
 genus: troll
 will: 40

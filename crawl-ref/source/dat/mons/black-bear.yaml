@@ -1,7 +1,7 @@
 name: "black bear"
 glyph: {char: "h", colour: blue}
 flags: [warm_blood]
-xp_mult: 9
+exp: 128
 genus: bear
 will: 20
 attacks:

@@ -1,6 +1,7 @@
 name: "anaconda"
 glyph: {char: "S", colour: lightgray}
 flags: [cold_blood]
+exp: 838
 genus: snake
 will: 40
 attacks:

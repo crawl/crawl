@@ -1,7 +1,7 @@
 name: "merfolk aquamancer"
 glyph: {char: "m", colour: green}
 flags: [see_invis, speaks, warm_blood]
-xp_mult: 8
+exp: 829
 species: merfolk
 will: 80
 attacks:

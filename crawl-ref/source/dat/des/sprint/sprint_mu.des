@@ -163,9 +163,9 @@ NAME: sprint_mu_entry_forest
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
-MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
+MONS: patrolling phantom hd:2 exp:6 / patrolling wolf hd:2 exp:20 / patrolling scorpion / \
       patrolling crazy yiuf
-MONS: patrolling human hd:2 hp:35
+MONS: patrolling human hd:2 hp:35 exp:26
 KITEM: * = potion of enlightenment pre_id q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation pre_id q:2 / potion of mutation q:1 / any potion, \
  scroll of identify pre_id q:2/ scroll of identify q:1 / any scroll, \
@@ -194,9 +194,9 @@ NAME: sprint_mu_entry_cave
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
-MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
+MONS: patrolling phantom hd:2 exp:6 / patrolling wolf hd:2 exp:20 / patrolling scorpion / \
       patrolling crazy yiuf
-MONS: patrolling human hd:2 hp:35
+MONS: patrolling human hd:2 hp:35 exp:26
 KITEM: * = potion of enlightenment pre_id q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation pre_id q:2 / potion of mutation q:1 / any potion, \
  scroll of identify pre_id q:2 / scroll of identify q:1 / any scroll, \
@@ -248,13 +248,13 @@ KITEM: y = any wand / gold
 NSUBST: f = 1:f / *:W
 KFEAT: f = fountain_blue
 KFEAT: W = fountain_blue
-KMONS: W = water elemental hd:4
+KMONS: W = water elemental hd:4 exp:83
 KFEAT: V = altar_vehumet
 KFEAT: S = altar_sif_muna
 KFEAT: K = altar_kikubaaqudgha
 KMONS: s = patrolling burial acolyte
 KITEM: s = any book
-KMONS: 5 = patrolling kobold demonologist hd:2
+KMONS: 5 = patrolling kobold demonologist hd:2 exp:25
 KITEM: 5 = any book / gold
 KFEAT: N = altar_nemelex_xobeh
 KITEM: N = any misc
@@ -339,8 +339,8 @@ ENDMAP
 # D1_2, spiderweb
 NAME: sprint_mu_d1_spiders
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
-MONS: two-headed ogre hd:3 hp:40
-MONS: two-headed ogre hd:5 hp:68
+MONS: two-headed ogre hd:3 hp:40 exp:106
+MONS: two-headed ogre hd:5 hp:68 exp:371
 MONS: Erolcha
 MONS: redback
 KFEAT: ~ = net trap
@@ -794,8 +794,8 @@ ENDMAP
 NAME: sprint_mu_d2_genie
 TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
 MONS: yaktaur / yaktaur captain, glass eye, orc priest / \
-      orc high priest hd:5 hp:70
-MONS: spriggan defender hd:5 hp:55 ; dagger
+      orc high priest hd:5 hp:70 exp:274
+MONS: spriggan defender hd:5 hp:55 exp:301 ; dagger
 MONS: obsidian statue / orange crystal statue
 MONS: thermic dynamo, skeletal warrior
 KMONS: 2 = glass eye
@@ -805,25 +805,25 @@ SUBST: P = PPPPPPPPP.
 
 : local d2rnd = crawl.random2(4)
 : if d2rnd == 0 then
-KMONS: a = patrolling Sigmund hd:15 hp:100 \
+KMONS: a = patrolling Sigmund hd:15 hp:100 exp:2961 \
  spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
         force_lance.16.wizard \
  ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:distortion
-KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
+KMONS: b = patrolling Edmund hp:150 exp:412 ; great mace ego:freezing \
  . dart ego:curare q:7
 : elseif d2rnd == 1 then
-KMONS: a = patrolling Dowan hd:15 hp:100 \
+KMONS: a = patrolling Dowan hd:15 hp:100 exp:1363 \
  spells:bolt_of_cold.11.wizard;corona.11.wizard;blink_range.11.wizard;\
         bolt_of_fire.11.wizard;;haste_other.11.wizard;minor_healing.11.wizard \
  ; morningstar ego:distortion
-KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
+KMONS: b = patrolling Duvessa hp:150 exp:412 ; great sword ego:freezing \
  . dart ego:curare q:7
 : elseif d2rnd == 2 then
-KMONS: a = patrolling Harold hd:15 hp:100 \
+KMONS: a = patrolling Harold hd:15 hp:100 exp:1477 \
  spells:poison_arrow.16.wizard;teleport_other.16.wizard;\
         minor_healing.16.wizard;slow.16.wizard \
  ; dire flail ego:distortion
-KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
+KMONS: b = patrolling Joseph hd:5 hp:150 exp:631 ; quarterstaff ego:freezing \
  . dart ego:curare q:7
 : else
 KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
@@ -1127,18 +1127,18 @@ ENDMAP
 NAME:  sprint_mu_d3_branching
 TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror
 KMONS: a = col:red generate_awake statue name:fire_elementalist name_adjective hp:50 \
- spells:summon_fire_elementals.29.magical;cantrip.29.magical \
+ exp:436 spells:summon_fire_elementals.29.magical;cantrip.29.magical \
  tile:mons_fire_elementalist_statue
 KMONS: H = col:blue generate_awake statue name:water_elementalist name_adjective hp:50 \
- spells:summon_water_elementals.29.magical;cantrip.29.magical \
+ exp:436 spells:summon_water_elementals.29.magical;cantrip.29.magical \
  tile:mons_water_elementalist_statue
 KMONS: O = col:brown generate_awake statue name:earth_elementalist name_adjective hp:70 \
- spells:summon_earth_elementals.29.magical;cantrip.29.magical \
+ exp:561 spells:summon_earth_elementals.29.magical;cantrip.29.magical \
  tile:mons_earth_elementalist_statue
 KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adjective hp:25 \
- spells:summon_air_elementals.29.magical;cantrip.29.magical \
+ exp:280 spells:summon_air_elementals.29.magical;cantrip.29.magical \
  tile:mons_air_elementalist_statue
-KMONS: e = ancient champion \
+KMONS: e = ancient champion exp:1516 \
        spells:venom_bolt.21.wizard;haste.21.wizard;haunt.21.wizard \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
        battleaxe ego:heavy | battleaxe ego:pain | \
@@ -1170,7 +1170,7 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
-           hp:100 tile:mons_statue_crossbow ; javelin ego:silver
+           hp:100 exp:748 tile:mons_statue_crossbow ; javelin ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
@@ -1180,7 +1180,7 @@ KMONS: C = patrolling ice devil
 KMONS: D = patrolling sin beast
 KMONS: E = patrolling sun demon
 KMONS: F = patrolling soul eater
-KMONS: G = iron troll simulacrum hd:20
+KMONS: G = iron troll simulacrum hd:20 exp:445
 KMONS: I = patrolling vault guard / patrolling orc knight / patrolling draconian knight /\
  patrolling deep elf knight
 KITEM: % = quad damage
@@ -1434,7 +1434,7 @@ ENDMAP
 # Zot
 NAME: sprint_mu_zot1
 TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror
-KMONS: T = col:magenta statue name:zot n_adj \
+KMONS: T = col:magenta statue name:zot n_adj exp:748 \
         spells:summon_eyeballs.27.magical;malmutate.13.magical;\
                haste.13.magical;shadow_creatures.27.magical \
         tile:mons_zot_statue

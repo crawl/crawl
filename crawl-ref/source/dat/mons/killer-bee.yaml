@@ -2,7 +2,7 @@ name: "killer bee"
 glyph: {char: "y", colour: brown}
 flags: [flies, no_skeleton]
 resists: {poison: -1}
-xp_mult: 11
+exp: 62
 will: 10
 attacks:
  - {type: sting, flavour: poison, damage: 10}

@@ -1,7 +1,7 @@
 name: "worldbinder"
 glyph: {char: "x", colour: cyan}
 flags: [flies]
-xp_mult: 13
+exp: 512
 holiness: [nonliving]
 will: 60
 attacks:

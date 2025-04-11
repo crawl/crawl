@@ -1,6 +1,7 @@
 name: "hell rat"
 glyph: {char: "r", colour: lightred}
 flags: [warm_blood]
+exp: 34
 genus: rat
 holiness: [demonic]
 will: 20

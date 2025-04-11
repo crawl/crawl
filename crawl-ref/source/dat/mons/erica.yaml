@@ -1,7 +1,7 @@
 name: "Erica"
 glyph: {char: "x", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female, no_skeleton]
-xp_mult: 20
+exp: 839
 species: octopode
 will: 40
 attacks:

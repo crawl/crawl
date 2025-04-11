@@ -1,7 +1,7 @@
 name: "ettin"
 glyph: {char: "C", colour: brown}
 flags: [speaks, warm_blood, two_weapons]
-xp_mult: 12
+exp: 929
 genus: giant
 will: 40
 attacks:

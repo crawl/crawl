@@ -329,7 +329,7 @@ MDEFN(random_teleport, do_random_teleport)
 MDEF(experience)
 {
     ASSERT_DLUA;
-    PLUARET(number, exper_value(*mons));
+    PLUARET(number, exp_value(*mons));
 }
 
 static int l_mons_do_set_prop(lua_State *ls)

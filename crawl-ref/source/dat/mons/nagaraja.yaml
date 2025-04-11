@@ -2,7 +2,7 @@ name: "nagaraja"
 glyph: {char: "N", colour: lightmagenta}
 flags: [fighter, see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 15
+exp: 1323
 species: naga
 will: 140
 attacks:

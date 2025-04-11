@@ -1,6 +1,7 @@
 name: "hog"
 glyph: {char: "h", colour: lightmagenta}
 flags: [warm_blood]
+exp: 196
 will: 20
 attacks:
  - {type: bite, damage: 14}

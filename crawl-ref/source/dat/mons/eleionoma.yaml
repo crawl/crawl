@@ -1,6 +1,7 @@
 name: "eleionoma"
 glyph: {char: "R", colour: green}
 flags: [speaks, warm_blood]
+exp: 1028
 will: 100
 attacks:
  - {type: hit, damage: 25}

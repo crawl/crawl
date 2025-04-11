@@ -1,7 +1,7 @@
 name: "ogre mage"
 glyph: {char: "O", colour: magenta}
 flags: [see_invis, speaks, warm_blood]
-xp_mult: 16
+exp: 848
 species: ogre
 will: 80
 attacks:

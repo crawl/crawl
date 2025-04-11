@@ -2,6 +2,7 @@ name: "skeletal warrior"
 glyph: {char: "z", colour: cyan}
 flags: [fighter]
 resists: {cold: 1}
+exp: 759
 holiness: [undead]
 will: 100
 attacks:

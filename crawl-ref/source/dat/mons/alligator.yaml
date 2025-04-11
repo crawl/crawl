@@ -1,7 +1,7 @@
 name: "alligator"
 glyph: {char: "l", colour: lightblue}
 flags: [cold_blood]
-xp_mult: 9
+exp: 842
 genus: giant_lizard
 will: 40
 attacks:

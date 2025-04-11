@@ -2,7 +2,7 @@ name: "drowned soul"
 glyph: {char: "W", colour: lightcyan}
 flags: [flies, see_invis, speaks, insubstantial]
 resists: {cold: 3}
-xp_mult: 8
+exp: 8
 genus: phantom
 holiness: [undead]
 will: 60

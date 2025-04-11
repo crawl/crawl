@@ -1,6 +1,7 @@
 name: "occultist"
 glyph: {char: "p", colour: magenta}
 flags: [speaks, warm_blood]
+exp: 794
 species: human
 will: 60
 attacks:

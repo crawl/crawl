@@ -1,7 +1,7 @@
 name: "ribbon worm"
 glyph: {char: "w", colour: lightred}
 flags: [fast_regen, no_skeleton]
-xp_mult: 1
+exp: 4
 will: 10
 attacks:
  - {type: bite, damage: 9}

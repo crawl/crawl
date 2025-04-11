@@ -2,7 +2,7 @@ name: "naga"
 glyph: {char: "N", colour: green}
 flags: [see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 13
+exp: 161
 will: 40
 attacks:
  - {type: hit, damage: 22}

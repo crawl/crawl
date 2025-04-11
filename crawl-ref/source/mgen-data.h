@@ -91,6 +91,7 @@ struct mgen_data
 
     int             hd;
     int             hp;
+    int             exp;
 
     // These flags will be appended to the monster's flags after placement.
     monster_flags_t extra_flags;

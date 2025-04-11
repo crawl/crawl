@@ -2,7 +2,7 @@ name: "naga sharpshooter"
 glyph: {char: "N", colour: lightgray}
 flags: [see_invis, speaks, warm_blood, archer, prefer_ranged]
 resists: {poison: 1}
-xp_mult: 14
+exp: 790
 species: naga
 will: 80
 attacks:

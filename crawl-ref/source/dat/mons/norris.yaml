@@ -1,6 +1,7 @@
 name: "Norris"
 glyph: {char: "@", colour: brown}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male]
+exp: 2329
 species: human
 will: 140
 attacks:

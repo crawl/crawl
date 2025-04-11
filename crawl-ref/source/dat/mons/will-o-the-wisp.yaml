@@ -3,6 +3,7 @@ enum: will_o_the_wisp
 glyph: {char: "v", colour: green}
 flags: [flies, see_invis, insubstantial]
 resists: {elec: 1, fire: 2}
+exp: 532
 holiness: [nonliving]
 will: invuln
 attacks:

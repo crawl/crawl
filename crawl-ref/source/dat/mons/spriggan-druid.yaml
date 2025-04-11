@@ -1,6 +1,7 @@
 name: "spriggan druid"
 glyph: {char: "i", colour: green}
 flags: [see_invis, speaks, warm_blood]
+exp: 726
 species: spriggan
 will: 100
 attacks:

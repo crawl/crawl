@@ -1,6 +1,7 @@
 name: "merfolk siren"
 glyph: {char: "m", colour: cyan}
 flags: [speaks, warm_blood]
+exp: 469
 species: merfolk
 will: 60
 attacks:

@@ -1,6 +1,7 @@
 name: "silent spectre"
 glyph: {char: "W", colour: cyan}
 flags: [flies, see_invis, speaks, insubstantial]
+exp: 312
 resists: {cold: 3}
 genus: wraith
 holiness: [undead]

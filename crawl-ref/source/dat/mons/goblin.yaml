@@ -1,6 +1,7 @@
 name: "goblin"
 glyph: {char: "g", colour: lightgray}
 flags: [speaks, warm_blood]
+exp: 1
 will: 0
 attacks:
  - {type: hit, damage: 1}

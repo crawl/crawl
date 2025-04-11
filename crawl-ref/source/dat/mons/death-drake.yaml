@@ -2,6 +2,7 @@ name: "death drake"
 glyph: {char: "k", colour: lightgray}
 flags: [flies, cold_blood]
 resists: {poison: 1, miasma: 1}
+exp: 737
 genus: drake
 will: 40
 attacks:

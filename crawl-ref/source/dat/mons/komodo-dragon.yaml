@@ -1,6 +1,7 @@
 name: "komodo dragon"
 glyph: {char: "l", colour: lightred}
 flags: [cold_blood]
+exp: 361
 genus: giant_lizard
 will: 40
 attacks:

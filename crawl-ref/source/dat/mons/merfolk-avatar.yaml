@@ -1,6 +1,7 @@
 name: "merfolk avatar"
 glyph: {char: "m", colour: lightcyan}
 flags: [speaks, warm_blood, no_gen_derived]
+exp: 842
 species: merfolk
 will: 120
 attacks:

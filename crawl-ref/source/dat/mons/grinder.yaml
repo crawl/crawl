@@ -2,7 +2,7 @@ name: "Grinder"
 glyph: {char: "5", colour: blue}
 flags: [no_ht_wand, speaks, unique, female]
 resists: {poison: 1, cold: 2}
-xp_mult: 11
+exp: 279
 species: shadow_imp
 holiness: [demonic]
 will: 20

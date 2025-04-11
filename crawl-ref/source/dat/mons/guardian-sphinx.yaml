@@ -1,7 +1,7 @@
 name: "guardian sphinx"
 glyph: {char: "H", colour: lightgray}
 flags: [flies, see_invis, speaks, warm_blood]
-xp_mult: 9
+exp: 1729
 genus: sphinx
 will: 80
 attacks:

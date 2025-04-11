@@ -2,7 +2,7 @@ name: "laughing skull"
 glyph: {char: "z", colour: lightred}
 flags: [flies]
 resists: {fire: 2}
-xp_mult: 9
+exp: 125
 holiness: [undead]
 will: 20
 attacks:

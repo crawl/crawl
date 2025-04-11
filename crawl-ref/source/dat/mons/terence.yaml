@@ -1,7 +1,7 @@
 name: "Terence"
 glyph: {char: "@", colour: lightcyan}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 20
+exp: 36
 species: human
 will: 10
 attacks:
