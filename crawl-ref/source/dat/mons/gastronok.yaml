@@ -1,7 +1,7 @@
 name: "Gastronok"
 glyph: {char: "w", colour: magenta}
 flags: [no_wand, see_invis, speaks, unique, male]
-xp_mult: 1506
+exp: 1506
 species: elephant_slug
 will: 80
 attacks:

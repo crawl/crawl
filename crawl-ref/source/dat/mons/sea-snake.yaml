@@ -1,7 +1,7 @@
 name: "sea snake"
 glyph: {char: "S", colour: lightred}
 flags: [cold_blood]
-xp_mult: 739
+exp: 739
 genus: snake
 will: 40
 attacks:

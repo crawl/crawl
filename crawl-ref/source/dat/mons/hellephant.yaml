@@ -1,7 +1,7 @@
 name: "hellephant"
 glyph: {char: "Y", colour: lightred}
 flags: [warm_blood]
-xp_mult: 1931
+exp: 1931
 genus: elephant
 holiness: [demonic]
 will: 140

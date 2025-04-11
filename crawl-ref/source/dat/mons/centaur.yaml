@@ -1,7 +1,7 @@
 name: "centaur"
 glyph: {char: "c", colour: brown}
 flags: [speaks, warm_blood, archer]
-xp_mult: 112
+exp: 112
 will: 20
 attacks:
  - {type: hit, damage: 7}

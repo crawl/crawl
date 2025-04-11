@@ -2,7 +2,7 @@ name: "swamp dragon"
 glyph: {char: "D", colour: brown}
 flags: [flies, warm_blood]
 resists: {poison: 1}
-xp_mult: 703
+exp: 703
 genus: dragon
 will: 40
 attacks:

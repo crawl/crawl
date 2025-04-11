@@ -2,7 +2,7 @@ name: "wolf spider"
 glyph: {char: "s", colour: white}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 564
+exp: 564
 genus: spider
 will: 20
 attacks:

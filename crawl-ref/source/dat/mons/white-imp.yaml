@@ -2,7 +2,7 @@ name: "white imp"
 glyph: {char: "5", colour: white}
 flags: [flies, speaks]
 resists: {poison: 1, fire: -1, cold: 2}
-xp_mult: 10
+exp: 10
 holiness: [demonic]
 will: 10
 attacks:

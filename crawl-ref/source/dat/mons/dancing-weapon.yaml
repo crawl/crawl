@@ -2,7 +2,8 @@ name: "dancing weapon"
 glyph: {char: "(", colour: colour_undef}
 flags: [flies, fighter, unblindable, ghost_demon, prefer_ranged]
 resists: {elec: 3, fire: 2, cold: 2}
-xp_mult: 30
+exp: 30
+exp_is_mult: true
 holiness: [nonliving]
 will: invuln
 attacks:

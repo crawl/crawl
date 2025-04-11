@@ -2,7 +2,7 @@ name: "Roxanne"
 glyph: {char: "I", colour: blue}
 flags: [no_wand, speaks, stationary, unique, female]
 resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
-xp_mult: 1368
+exp: 1368
 species: statue
 holiness: [nonliving]
 will: invuln

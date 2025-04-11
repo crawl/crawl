@@ -1,7 +1,7 @@
 name: "martyred shade"
 glyph: {char: "W", colour: yellow}
 flags: [flies, speaks, insubstantial, fast_regen, has_aura]
-xp_mult: 307
+exp: 307
 genus: phantom
 holiness: [undead]
 will: 60

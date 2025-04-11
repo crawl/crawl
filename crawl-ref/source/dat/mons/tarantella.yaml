@@ -2,7 +2,7 @@ name: "tarantella"
 glyph: {char: "s", colour: lightmagenta}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 277
+exp: 277
 genus: spider
 will: 20
 attacks:

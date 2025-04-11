@@ -3,7 +3,7 @@ enum: skeleton_small
 glyph: {char: "Z", colour: lightgray}
 flags: [no_regen]
 resists: {cold: 2}
-xp_mult: 9
+exp: 9
 species: skeleton
 holiness: [undead]
 will: 1

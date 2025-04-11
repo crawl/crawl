@@ -1,7 +1,7 @@
 name: "burial acolyte"
 glyph: {char: "p", colour: lightcyan}
 flags: [speaks, warm_blood]
-xp_mult: 72
+exp: 72
 species: human
 will: 20
 attacks:

@@ -1,7 +1,7 @@
 name: "deep elf sorcerer"
 glyph: {char: "e", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood]
-xp_mult: 1237
+exp: 1237
 species: elf
 will: 120
 attacks:

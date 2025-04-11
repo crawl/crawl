@@ -1,7 +1,7 @@
 name: "golden eye"
 glyph: {char: "G", colour: etc_gold}
 flags: [flies, see_invis, batty, no_skeleton]
-xp_mult: 190
+exp: 190
 genus: floating_eye
 will: 60
 attacks:

@@ -1,7 +1,7 @@
 name: "manticore"
 glyph: {char: "H", colour: red}
 flags: [flies, warm_blood]
-xp_mult: 529
+exp: 529
 will: 40
 attacks:
  - {type: bite, damage: 26}

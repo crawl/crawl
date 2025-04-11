@@ -2,7 +2,7 @@ name: "queen bee"
 glyph: {char: "y", colour: lightmagenta}
 flags: [flies, no_skeleton]
 resists: {poison: -1}
-xp_mult: 303
+exp: 303
 genus: killer_bee
 will: 20
 attacks:

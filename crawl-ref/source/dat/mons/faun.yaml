@@ -1,7 +1,7 @@
 name: "faun"
 glyph: {char: "c", colour: green}
 flags: [speaks, warm_blood]
-xp_mult: 538
+exp: 538
 will: 40
 attacks:
  - {type: hit, damage: 23}

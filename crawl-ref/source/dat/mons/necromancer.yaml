@@ -1,7 +1,7 @@
 name: "necromancer"
 glyph: {char: "p", colour: white}
 flags: [speaks, warm_blood]
-xp_mult: 612
+exp: 612
 species: human
 will: 60
 attacks:

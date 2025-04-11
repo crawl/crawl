@@ -1,7 +1,7 @@
 name: "wyvern"
 glyph: {char: "k", colour: lightgreen}
 flags: [flies, warm_blood]
-xp_mult: 207
+exp: 207
 will: 20
 attacks:
  - {type: bite, damage: 20}

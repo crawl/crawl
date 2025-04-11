@@ -2,7 +2,7 @@ name: "Vashnia"
 glyph: {char: "N", colour: lightcyan}
 flags: [see_invis, speaks, warm_blood, unique, archer, female, prefer_ranged]
 resists: {poison: 1}
-xp_mult: 3195
+exp: 3195
 species: naga
 will: 120
 attacks:

@@ -2,7 +2,7 @@ name: "fire bat"
 glyph: {char: "b", colour: lightred}
 flags: [flies, see_invis, unblindable, batty, warm_blood]
 resists: {fire: 3, cold: -1}
-xp_mult: 196
+exp: 196
 genus: bat
 will: 10
 attacks:

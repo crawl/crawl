@@ -2,7 +2,7 @@ name: "caustic shrike"
 glyph: {char: "b", colour: lightgreen}
 flags: [flies, warm_blood]
 resists: {fire: 1, cold: 1}
-xp_mult: 2676
+exp: 2676
 will: 80
 attacks:
  - {type: claw, flavour: acid, damage: 36}

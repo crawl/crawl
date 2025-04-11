@@ -1,7 +1,7 @@
 name: "Ijyb"
 glyph: {char: "g", colour: blue}
 flags: [speaks, warm_blood, unique, female, always_wand]
-xp_mult: 36
+exp: 36
 species: goblin
 will: 10
 attacks:

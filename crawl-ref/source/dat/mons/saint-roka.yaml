@@ -1,7 +1,7 @@
 name: "Saint Roka"
 glyph: {char: "o", colour: lightblue}
 flags: [fighter, speaks, warm_blood, unique, gender_neutral]
-xp_mult: 2900
+exp: 2900
 species: orc
 will: 80
 attacks:

@@ -2,7 +2,7 @@ name: "vampire bloodprince"
 glyph: {char: "V", colour: lightred}
 flags: [fighter, see_invis, speaks, warm_blood, gender_neutral]
 resists: {cold: 1}
-xp_mult: 19
+exp: 19
 species: vampire
 holiness: [undead]
 will: 120

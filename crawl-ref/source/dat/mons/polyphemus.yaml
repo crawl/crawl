@@ -1,7 +1,7 @@
 name: "Polyphemus"
 glyph: {char: "C", colour: blue}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 1540
+exp: 1540
 species: cyclops
 genus: giant
 will: 60

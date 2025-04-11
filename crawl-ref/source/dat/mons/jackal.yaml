@@ -1,7 +1,7 @@
 name: "jackal"
 glyph: {char: "h", colour: brown}
 flags: [warm_blood]
-xp_mult: 2
+exp: 2
 genus: hound
 will: 0
 attacks:

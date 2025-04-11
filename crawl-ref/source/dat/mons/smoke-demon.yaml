@@ -2,7 +2,7 @@ name: "smoke demon"
 glyph: {char: "3", colour: lightgray}
 flags: [flies, insubstantial]
 resists: {poison: 1, fire: 2}
-xp_mult: 428
+exp: 428
 holiness: [demonic]
 will: 60
 attacks:

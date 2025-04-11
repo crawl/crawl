@@ -1,7 +1,7 @@
 name: "Killer Klown"
 glyph: {char: "p", colour: etc_random}
 flags: [see_invis, speaks, warm_blood, no_poly_to, no_gen_derived]
-xp_mult: 3010
+exp: 3010
 genus: human
 will: 160
 attacks:

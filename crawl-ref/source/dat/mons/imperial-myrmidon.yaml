@@ -1,7 +1,7 @@
 name: "imperial myrmidon"
 glyph: {char: "a", colour: lightcyan}
 flags: [speaks, warm_blood]
-xp_mult: 1223
+exp: 1223
 species: human
 will: 60
 attacks:

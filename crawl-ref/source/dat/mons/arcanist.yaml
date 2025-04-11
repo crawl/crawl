@@ -1,7 +1,7 @@
 name: "arcanist"
 glyph: {char: "p", colour: lightred}
 flags: [speaks, warm_blood]
-xp_mult: 695
+exp: 695
 species: human
 will: 60
 attacks:

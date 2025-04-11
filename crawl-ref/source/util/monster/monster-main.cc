@@ -862,7 +862,7 @@ int main(int argc, char* argv[])
 
     const int ntrials = 100;
 
-    long exper = 0L;
+    long exp = 0L;
     int hp_min = 0;
     int hp_max = 0;
     int mac = 0;
@@ -875,7 +875,7 @@ int main(int argc, char* argv[])
     {
         monster* mp = &env.mons[index];
         const string mname = mp->name(DESC_PLAIN, true);
-        exper += exper_value(*mp);
+        exp += exp_value(*mp);
         mac += mp->armour_class();
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
@@ -902,7 +902,7 @@ int main(int argc, char* argv[])
             return 1;
         }
     }
-    exper /= ntrials;
+    exp /= ntrials;
     mac /= ntrials;
     mev /= ntrials;
 
@@ -1356,7 +1356,7 @@ int main(int argc, char* argv[])
         if (me->leaves_corpse)
             printf(" | Corpse");
 
-        printf(" | XP: %ld", exper);
+        printf(" | XP: %ld", exp);
 
         if (!spell_string.empty())
             printf(" | Sp: %s", spell_string.c_str());

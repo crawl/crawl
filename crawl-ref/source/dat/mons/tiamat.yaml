@@ -2,7 +2,7 @@ name: "Tiamat"
 glyph: {char: "d", colour: colour_undef}
 flags: [flies, see_invis, speaks, cold_blood, unique, female]
 resists: {poison: 1}
-xp_mult: 5133
+exp: 5133
 species: draconian
 will: 140
 attacks:

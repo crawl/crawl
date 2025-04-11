@@ -2,7 +2,7 @@ name: "steelbarb worm"
 glyph: {char: "w", colour: lightgray}
 flags: [web_immune, no_skeleton]
 resists: {fire: 1}
-xp_mult: 634
+exp: 634
 genus: ribbon_worm
 will: 10
 attacks:

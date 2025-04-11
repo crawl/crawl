@@ -1,7 +1,7 @@
 name: "draconian annihilator"
 glyph: {char: "q", colour: yellow}
 flags: [speaks, cold_blood]
-xp_mult: 1119
+exp: 1119
 species: draconian
 will: 40
 attacks:

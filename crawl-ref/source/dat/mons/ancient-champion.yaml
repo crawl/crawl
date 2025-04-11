@@ -2,7 +2,7 @@ name: "ancient champion"
 glyph: {char: "z", colour: lightcyan}
 flags: [fighter]
 resists: {cold: 1}
-xp_mult: 1518
+exp: 1518
 holiness: [undead]
 will: 120
 attacks:

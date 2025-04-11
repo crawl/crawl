@@ -2,7 +2,7 @@ name: "naga mage"
 glyph: {char: "N", colour: magenta}
 flags: [see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 443
+exp: 443
 species: naga
 will: 60
 attacks:

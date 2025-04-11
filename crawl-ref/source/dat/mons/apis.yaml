@@ -1,7 +1,7 @@
 name: "apis"
 glyph: {char: "Y", colour: white}
 flags: [warm_blood, has_aura]
-xp_mult: 1042
+exp: 1042
 holiness: [holy]
 will: 100
 attacks:

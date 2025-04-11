@@ -3,7 +3,7 @@ enum: orange_statue
 glyph: {char: "I", colour: lightred}
 flags: [see_invis, speaks, stationary]
 resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
-xp_mult: 679
+exp: 679
 genus: statue
 holiness: [nonliving]
 will: invuln

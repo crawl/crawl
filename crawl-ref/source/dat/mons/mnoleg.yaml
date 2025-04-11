@@ -2,7 +2,7 @@ name: "Mnoleg"
 glyph: {char: "&", colour: lightgreen}
 flags: [fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
 resists: {elec: 1, poison: 1, fire: 1}
-xp_mult: 6890
+exp: 6890
 genus: pandemonium_lord
 holiness: [demonic]
 will: invuln

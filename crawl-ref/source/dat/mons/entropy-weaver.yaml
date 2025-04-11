@@ -1,7 +1,7 @@
 name: "entropy weaver"
 glyph: {char: "B", colour: lightcyan}
 flags: [fighter, see_invis, speaks, web_immune, warm_blood, no_skeleton]
-xp_mult: 898
+exp: 898
 will: 60
 attacks:
  - {type: hit, damage: 17}

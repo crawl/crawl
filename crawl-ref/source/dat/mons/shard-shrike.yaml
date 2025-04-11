@@ -2,7 +2,7 @@ name: "shard shrike"
 glyph: {char: "b", colour: lightblue}
 flags: [flies, batty, warm_blood]
 resists: {cold: 2}
-xp_mult: 3031
+exp: 3031
 will: 80
 attacks:
  - {type: claw, flavour: cold, damage: 21}

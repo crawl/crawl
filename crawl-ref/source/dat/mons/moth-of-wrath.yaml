@@ -1,7 +1,7 @@
 name: "moth of wrath"
 glyph: {char: "y", colour: lightred}
 flags: [flies, web_immune, no_skeleton]
-xp_mult: 501
+exp: 501
 genus: moth
 will: 40
 attacks:
