@@ -656,10 +656,10 @@ int detect_items(int pow)
             continue;
 
         if (you.visible_igrd(*ri) != NON_ITEM
-            && !env.map_knowledge(*ri).item())
+            && !env.map_knowledge.item(*ri))
         {
             items_found++;
-            env.map_knowledge(*ri).set_detected_item();
+            env.map_knowledge.set_detected_item(*ri);
         }
     }
 
@@ -706,7 +706,7 @@ static void _mark_detected_creature(coord_def where, const monster& mon,
         }
     }
 
-    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon.type));
+    env.map_knowledge.set_detected_monster(where, mons_detected_base(mon.type));
 }
 
 int detect_creatures(int pow, bool telepathic)
@@ -876,7 +876,7 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
-                    env.map_knowledge(*ai).clear_item();
+                    env.map_knowledge.clear_item(*ai);
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
                     tile_env.bk_fg(*ai) = 0;
@@ -896,7 +896,7 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
-                    env.map_knowledge(*ai).clear_item();
+                    env.map_knowledge.clear_item(*ai);
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
                     tile_env.bk_fg(*ai) = 0;

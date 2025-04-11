@@ -273,7 +273,7 @@ void update_item_at(const coord_def &gp, bool wizard)
         if (stash.size() > 1)
             more_items = true;
     }
-    env.map_knowledge(gp).set_item(eitem, more_items);
+    env.map_knowledge.set_item(eitem, more_items);
 }
 
 static void _update_cloud(cloud_struct& cloud)
@@ -288,7 +288,7 @@ static void _update_cloud(cloud_struct& cloud)
 
     cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
                   cloud.killer);
-    env.map_knowledge(gp).set_cloud(ci);
+    env.map_knowledge.set_cloud(ci);
 }
 
 static void _check_monster_pos(const monster* mons)
@@ -369,7 +369,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 static void _mark_invisible_at(const coord_def &where,
                                bool do_tiles_draw = false)
 {
-    env.map_knowledge(where).set_invisible_monster();
+    env.map_knowledge.set_invisible_monster(where);
     env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
 
     if (do_tiles_draw)
@@ -443,7 +443,7 @@ static void _update_monster(monster* mons)
     {
         mons->ensure_has_client_id();
         monster_info mi(mons);
-        env.map_knowledge(gp).set_monster(mi);
+        env.map_knowledge.set_monster(mi);
         return;
     }
 
@@ -503,11 +503,11 @@ static void _update_monster(monster* mons)
 void show_update_at(const coord_def &gp, layers_type layers)
 {
     if (you.see_cell(gp))
-        env.map_knowledge(gp).clear_data();
+        env.map_knowledge.clear_data(gp);
     else if (!env.map_knowledge(gp).known())
         return;
     else
-        env.map_knowledge(gp).clear_monster();
+        env.map_knowledge.clear_monster(gp);
 
     force_show_update_at(gp, layers);
 }
