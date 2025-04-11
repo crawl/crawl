@@ -2347,6 +2347,16 @@ tileidx_t tileidx_monster(const monster_info& mons)
 }
 #endif
 
+
+// Since this method is only used in tilepick.cc, it's best placed here.
+void packed_icons::insert(tileidx_t icon) {
+    ASSERT_RANGE(icon, TILEG_GUI_MAX, TILEI_ICONS_MAX);
+    if (!icons)
+        icons = make_unique<set<tileidx_t>>();
+
+    icons->insert(icon);
+}
+
 static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_CONFUSED, TILEI_CONFUSED },
     { MB_BURNING, TILEI_STICKY_FLAME },
@@ -2421,9 +2431,9 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
 };
 
-set<tileidx_t> status_icons_for(const monster_info &mons)
+packed_icons status_icons_for(const monster_info &mons)
 {
-    set<tileidx_t> icons;
+    packed_icons icons;
     if (mons.type == MONS_DANCING_WEAPON)
         icons.insert(TILEI_ANIMATED_WEAPON);
     if (mons.type == MONS_NAMELESS_REVENANT
@@ -2468,9 +2478,9 @@ static bool _should_show_player_status_icon(const string& name)
 }
 #endif
 
-set<tileidx_t> status_icons_for_player()
+packed_icons status_icons_for_player()
 {
-    set<tileidx_t> icons;
+    packed_icons icons;
 #ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);

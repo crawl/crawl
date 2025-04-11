@@ -633,26 +633,28 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
-    // We might want to enforce some explicit ordering on these.
-    // Currently, they default to iteration order.
-    for (auto icon : cell.icons)
-    {
-        int size = status_icon_sizes[icon];
-        if (size == FIXED_LOC_ICON)
+    if (cell.icons.icons) {
+        // We might want to enforce some explicit ordering on these.
+        // Currently, they default to iteration order.
+        for (auto icon : *cell.icons.icons)
         {
-            m_buf_icons.add(icon, x, y);
-            continue;
-        }
+            int size = status_icon_sizes[icon];
+            if (size == FIXED_LOC_ICON)
+            {
+                m_buf_icons.add(icon, x, y);
+                continue;
+            }
 
-        m_buf_icons.add(icon, x, y, -status_shift, 0);
-        if (!size)
-        {
-            dprf("unknown icon %" PRIu64, icon);
-            size = 7; // could maybe crash here?
+            m_buf_icons.add(icon, x, y, -status_shift, 0);
+            if (!size)
+            {
+                dprf("unknown icon %" PRIu64, icon);
+                size = 7; // could maybe crash here?
+            }
+            status_shift += size;
+            // Very large numbers of these can go off the edge of
+            // the tile. Oh well! (Could skip those..?)
         }
-        status_shift += size;
-        // Very large numbers of these can go off the edge of
-        // the tile. Oh well! (Could skip those..?)
     }
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
