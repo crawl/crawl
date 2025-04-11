@@ -2711,7 +2711,7 @@ void beogh_blood_for_blood_tick(int delay)
     if (count * 3 <= max)
         rate *= 2;
 
-    int num_to_summon = div_rand_round(rate, delay * 5);
+    int num_to_summon = div_rand_round(rate * delay, 500);
 
     for (int i = 0; i < num_to_summon; ++i)
         _place_orcish_reinforcement();
