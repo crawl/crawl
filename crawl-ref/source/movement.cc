@@ -632,6 +632,21 @@ monster* get_rampage_target(coord_def move)
     return nullptr;
 }
 
+static bool _check_rampage(bool attacking, coord_def rampage_destination,
+                           coord_def rampage_target, const string& noun)
+{
+    if (attacking)
+    {
+        return check_moveto(rampage_destination, noun)
+               && wielded_weapon_check(you.weapon(), noun + " and attack");
+    }
+    // You won't always move over rampage_destination, sometimes an invisible
+    // monster will get in the way and stop you on it. But warning about this
+    // seems more annoying than useful --Wizard Ike
+    return check_move_over(rampage_destination, noun)
+           && check_moveto(rampage_target, noun);
+}
+
 /**
  * Rampages the player toward a hostile monster, if one exists in the direction
  * of the move input. Invalid things along the rampage path cancel the rampage.
@@ -698,9 +713,7 @@ static spret _rampage_forward(coord_def move)
     // * dangerous terrain/trap/cloud/exclusion prompt
     // * weapon check prompts;
     // messaging for this is handled by check_moveto().
-    if (attacking && !check_moveto(rampage_destination, noun)
-        || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
-        || !attacking && !check_moveto(rampage_target, noun))
+    if (!_check_rampage(attacking, rampage_destination, rampage_target, noun))
     {
         stop_running();
         you.turn_is_over = false;
