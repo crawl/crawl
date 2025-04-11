@@ -2827,7 +2827,7 @@ namespace quiver
                 return _choose_from_inv();
             else if (key == '&' && any_spells)
             {
-                const int skey = list_spells(false, false, false,
+                const int skey = list_spells(false, false, false, false,
                                                     "quiver");
                 if (skey == 0)
                     return true;
