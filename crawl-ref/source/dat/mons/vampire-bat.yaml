@@ -1,7 +1,7 @@
 name: "vampire bat"
 glyph: {char: "b", colour: magenta}
 flags: [flies, see_invis, batty, warm_blood, no_poly_to]
-xp_mult: 64
+exp: 64
 genus: bat
 holiness: [undead]
 will: 10

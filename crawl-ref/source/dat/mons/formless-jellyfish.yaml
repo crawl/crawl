@@ -2,7 +2,7 @@ name: "formless jellyfish"
 glyph: {char: "J", colour: white}
 flags: [unblindable, amorphous, no_skeleton]
 resists: {poison: 1}
-xp_mult: 1091
+exp: 1091
 genus: jelly
 will: 60
 attacks:

@@ -1,7 +1,7 @@
 name: "merged slime creature"
 glyph: {char: "J", colour: lightgreen}
 flags: [cant_spawn]
-xp_mult: 236
+exp: 236
 holiness: [nonliving]
 will: 10
 attacks:

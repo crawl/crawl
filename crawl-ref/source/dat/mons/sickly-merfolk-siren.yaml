@@ -1,7 +1,7 @@
 name: "sickly merfolk siren"
 glyph: {char: "m", colour: blue}
 flags: [speaks, warm_blood, no_poly_to]
-xp_mult: 34
+exp: 34
 species: merfolk
 will: 60
 attacks:

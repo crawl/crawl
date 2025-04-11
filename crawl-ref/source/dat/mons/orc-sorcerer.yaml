@@ -1,7 +1,7 @@
 name: "orc sorcerer"
 glyph: {char: "o", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood]
-xp_mult: 559
+exp: 559
 species: orc
 will: 40
 attacks:

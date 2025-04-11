@@ -1,7 +1,7 @@
 name: "Joseph"
 glyph: {char: "@", colour: cyan}
 flags: [fighter, speaks, warm_blood, unique, archer, male]
-xp_mult: 461
+exp: 461
 species: human
 will: 40
 attacks:

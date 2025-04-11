@@ -1,7 +1,7 @@
 name: "vault guard"
 glyph: {char: "p", colour: cyan}
 flags: [fighter, see_invis, speaks, warm_blood]
-xp_mult: 869
+exp: 869
 species: human
 will: 60
 attacks:

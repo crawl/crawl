@@ -2,7 +2,7 @@ name: "elemental wellspring"
 glyph: {char: "E", colour: lightcyan}
 flags: [amorphous]
 resists: {elec: 1}
-xp_mult: 1039
+exp: 1039
 genus: elemental
 holiness: [nonliving]
 will: invuln

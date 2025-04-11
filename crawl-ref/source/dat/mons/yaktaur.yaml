@@ -1,7 +1,7 @@
 name: "yaktaur"
 glyph: {char: "c", colour: red}
 flags: [speaks, warm_blood, archer]
-xp_mult: 360
+exp: 360
 will: 40
 attacks:
  - {type: hit, damage: 20}

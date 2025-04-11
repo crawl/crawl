@@ -2,7 +2,7 @@ name: "culicivora"
 glyph: {char: "s", colour: brown}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 223
+exp: 223
 genus: spider
 will: 20
 attacks:

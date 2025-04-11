@@ -2,7 +2,7 @@ name: "ironbound frostheart"
 glyph: {char: "p", colour: blue}
 flags: [see_invis, speaks, warm_blood]
 resists: {cold: 1}
-xp_mult: 808
+exp: 808
 species: human
 will: 40
 attacks:

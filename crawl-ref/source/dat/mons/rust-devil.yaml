@@ -1,7 +1,7 @@
 name: "rust devil"
 glyph: {char: "4", colour: brown}
 resists: {elec: 1, poison: 1, fire: 3, cold: 1}
-xp_mult: 455
+exp: 455
 holiness: [demonic]
 will: 60
 attacks:

@@ -2,7 +2,7 @@ name: "rakshasa"
 glyph: {char: "R", colour: yellow}
 flags: [see_invis]
 resists: {poison: 1}
-xp_mult: 870
+exp: 870
 holiness: [demonic]
 will: 140
 attacks:

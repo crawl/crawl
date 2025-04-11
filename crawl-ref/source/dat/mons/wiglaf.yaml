@@ -1,7 +1,7 @@
 name: "Wiglaf"
 glyph: {char: "g", colour: lightgreen}
 flags: [fighter, speaks, warm_blood, unique, male]
-xp_mult: 1913
+exp: 1913
 species: dwarf
 will: 100
 attacks:

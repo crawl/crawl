@@ -2,7 +2,7 @@ name: "the Enchantress"
 enum: enchantress
 glyph: {char: "i", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood, unique, female]
-xp_mult: 2328
+exp: 2328
 species: spriggan
 will: 160
 attacks:

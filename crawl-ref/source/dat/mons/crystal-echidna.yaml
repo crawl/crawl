@@ -1,7 +1,7 @@
 name: "crystal echidna"
 glyph: {char: "r", colour: green}
 resists: {elec: 3, fire: 3, cold: 3}
-xp_mult: 773
+exp: 773
 holiness: [nonliving]
 will: invuln
 attacks:

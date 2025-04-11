@@ -1,6 +1,6 @@
 name: "glowing shapeshifter"
 glyph: {char: "p", colour: lightred}
-xp_mult: 507
+exp: 507
 genus: shapeshifter
 will: 80
 attacks:

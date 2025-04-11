@@ -2,7 +2,7 @@ name: "deep elf zephyrmancer"
 enum: deep_elf_air_mage
 glyph: {char: "e", colour: cyan}
 flags: [speaks, warm_blood]
-xp_mult: 599
+exp: 599
 species: elf
 will: 40
 attacks:

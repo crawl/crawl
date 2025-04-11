@@ -1,7 +1,7 @@
 name: "Nellie"
 glyph: {char: "Y", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female]
-xp_mult: 2087
+exp: 2087
 species: hellephant
 genus: elephant
 holiness: [demonic]

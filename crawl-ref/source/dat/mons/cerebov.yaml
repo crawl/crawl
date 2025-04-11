@@ -2,7 +2,7 @@ name: "Cerebov"
 glyph: {char: "&", colour: red}
 flags: [fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
 resists: {poison: 1, fire: 3, damnation: 1}
-xp_mult: 9999
+exp: 9999
 genus: pandemonium_lord
 holiness: [demonic]
 will: invuln

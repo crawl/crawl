@@ -2,7 +2,7 @@ name: "jumping spider"
 glyph: {char: "s", colour: lightblue}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 272
+exp: 272
 genus: spider
 will: 20
 attacks:

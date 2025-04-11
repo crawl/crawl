@@ -2,7 +2,7 @@ name: "Boris"
 glyph: {char: "L", colour: red}
 flags: [see_invis, speaks, unique, male]
 resists: {elec: 1, cold: 2}
-xp_mult: 1696
+exp: 1696
 species: lich
 holiness: [undead]
 will: invuln

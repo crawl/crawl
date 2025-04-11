@@ -3,7 +3,7 @@ enum: serpent_of_hell
 glyph: {char: "D", colour: etc_fire}
 flags: [crash_doors, flies, see_invis, unique, tall_tile]
 resists: {poison: 1, fire: 3}
-xp_mult: 6666
+exp: 6666
 genus: dragon
 holiness: [demonic]
 will: 180

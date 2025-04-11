@@ -1,7 +1,7 @@
 name: "howler monkey"
 glyph: {char: "h", colour: lightgreen}
 flags: [warm_blood]
-xp_mult: 54
+exp: 54
 will: 10
 attacks:
  - {type: hit, damage: 8}

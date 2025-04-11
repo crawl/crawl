@@ -1,7 +1,7 @@
 name: "centaur warrior"
 glyph: {char: "c", colour: yellow}
 flags: [fighter, speaks, warm_blood, archer]
-xp_mult: 836
+exp: 836
 species: centaur
 will: 40
 attacks:

@@ -94,7 +94,7 @@ static mon_display monster_symbols[NUM_MONSTERS];
 #define MONDATASIZE ARRAYSZ(mondata)
 
 static bool _give_apostle_proper_name(monster& mon, apostle_type type);
-static int _mons_exp_mod(monster_type mclass);
+static int _mons_exp(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
@@ -2412,6 +2412,63 @@ int mons_max_hp(monster_type mc)
     return me->avg_hp_10x * 133 / 1000;
 }
 
+static int _mons_exp_is_multiplier(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->exp_is_mult;
+}
+
+// Calculate xp for complicated, highly variable monsters using the supplied
+// multiplier. Takes into account speed, HD, spells, and melee damage.
+static int _calc_exp_with_multiplier(const monster& mon, int exp_mult)
+{
+    const int speed = mons_base_speed(mon);
+    const int hd = mon.get_experience_level();
+    const bool spellcaster = mon.has_spells();
+
+    // scale with HD nonlinearly (gross)
+    int hd_factor = hd * (25 + hd) / 25;
+
+    int diff = 100;
+
+    // bonus difficulty for casting "strong" spells
+    if (spellcaster)
+    {
+        int spell_danger = 0;
+        for (const mon_spell_slot &slot : mon.spells)
+        {
+            if (spell_difficulty(slot.spell) > 4)
+                spell_danger += slot.freq;
+        }
+
+        diff += spell_danger / 2;
+    }
+
+    // speed and melee damage
+    if (speed > 0)
+    {
+        // Only normal+ speed monsters get a bonus for having high melee
+        // damage.
+        if (speed >= 10)
+        {
+            int max_melee = 0;
+            for (int i = 0; i < 4; ++i)
+                max_melee += _mons_damage(mon.type, i);
+
+            if (max_melee > 30)
+                diff += (max_melee / ((speed == 10) ? 4 : 2));
+        }
+
+        diff *= speed;
+        diff /= 10;
+    }
+
+    // Clamp difficulty mod to somewhat sane values (currently 50-250%).
+    diff = max(min(diff, 250), 50);
+
+    return exp_mult * hd_factor * diff / 100;
+}
+
 /**
  * How much XP will the given monster give out by dying?
  *
@@ -2422,7 +2479,7 @@ int mons_max_hp(monster_type mc)
  *               historical (pre-2eadbcd) behaviour.
  * @return How much XP this monster is worth.
  */
-int exper_value(const monster& mon, bool real, bool legacy)
+int exp_value(const monster& mon, bool real, bool legacy)
 {
     // Specially defined by vaults eg. for sprint
     if (mon.exp > 0)
@@ -2453,9 +2510,9 @@ int exper_value(const monster& mon, bool real, bool legacy)
         maxhp = mons_max_hp(mc);
     }
 
-    // Hacks to make merged slime creatures not worth so much exp. We
-    // will calculate the experience we would get for 1 blob, and then
-    // just multiply it so that exp is linear with blobs merged. -cao
+    // Hacks to make merged slime creatures not worth so much exp. We will
+    // calculate the experience we would get for 1 blob, and then just
+    // multiply it so that exp is linear with blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         maxhp /= mon.blob_size;
 
@@ -2466,32 +2523,33 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // Derived undead will reference the base monster, with a divisor
     const bool zombified = mons_is_zombified(mon);
 
-    // Start with the monster's base exp
+    // Start with the monster's base xp
     if (zombified)
-        x_val = _mons_exp_mod(mon.base_monster) / 4;
+        x_val = _mons_exp(mon.base_monster) / 4;
     else
-        x_val = _mons_exp_mod(mc);
+        x_val = _mons_exp(mc);
 
     int avg_hp = mons_avg_hp(mc);
 
     // More complex calculation for special (highly variable) monsters
-    if (mon_needs_special_xp_handling(mc))
-        x_val = special_xp_handle(mon, x_val);
+    if (_mons_exp_is_multiplier(mc))
+        x_val = _calc_exp_with_multiplier(mon, x_val);
+    // Scale weakly by the monster's actual max hp as a percentage of average
+    // max hp. This randomizes exp values slightly. Derived undead and
+    // special monsters skip this.
     else if (avg_hp > 0 && !zombified)
     {
-        // Scale weakly by the monster's actual max hp as a percentage of
-        // average max hp. This randomizes xp values slightly.
-        // Derived undead and special monsters skip this.
         x_val = x_val * 4 + x_val * maxhp / avg_hp;
         x_val /= 5;
     }
 
-    // Scale starcursed mass exp by what percentage of the whole it represents
+    // Scale starcursed mass exp by what percentage of the whole it
+    // represents.
     if (mon.type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon.blob_size) / 12;
 
-    // Slime creature exp hack part 2: Scale exp back up by the number
-    // of blobs merged. -cao
+    // Slime creature exp hack part 2: Scale exp back up by the number of
+    // blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
 
@@ -2505,72 +2563,6 @@ int exper_value(const monster& mon, bool real, bool legacy)
         x_val = 1;
 
     return x_val;
-}
-
-bool mon_needs_special_xp_handling(const monster_type mc)
-{
-    switch (mc)
-    {
-        case MONS_PLAYER_GHOST:
-        case MONS_PLAYER_ILLUSION:
-        case MONS_PANDEMONIUM_LORD:
-        case MONS_DANCING_WEAPON:
-        case MONS_ORC_APOSTLE:
-        case MONS_MUTANT_BEAST:
-            return true;
-        default:
-            return false;
-    }
-}
-
-// Calculate xp for complicated, highly variable monsters
-// Takes into account speed, HD, spells, and melee damage
-int special_xp_handle(const monster& mon, int base_xp)
-{
-    const int speed = mons_base_speed(mon);
-    const int hd = mon.get_experience_level();
-    const bool spellcaster = mon.has_spells();
-
-    // scale with HD nonlinearly (gross)
-    int hd_factor = hd * (25 + hd) / 25;
-
-    int diff = 100;
-
-    // Bonus difficulty for casting "strong" spells
-    if (spellcaster)
-    {
-        int spell_danger = 0;
-        for (const mon_spell_slot &slot : mon.spells)
-        {
-            if (spell_difficulty(slot.spell) > 4)
-                spell_danger += slot.freq;
-        }
-
-        diff += spell_danger / 2;
-    }
-
-    // speed and melee damage
-    if (speed > 0)
-    {
-        // only normal+ speed monsters get a bonus for having high melee damage
-        if (speed >= 10)
-        {
-            int max_melee = 0;
-            for (int i = 0; i < 4; ++i)
-                max_melee += _mons_damage(mon.type, i);
-
-            if (max_melee > 30)
-                diff += (max_melee / ((speed == 10) ? 4 : 2));
-        }
-
-        diff *= speed;
-        diff /= 10;
-    }
-
-    // clamp difficulty mod to somewhat sane values (currently 50-250%)
-    diff = max(min(diff, 250), 50);
-
-    return base_xp * hd_factor * diff / 100;
 }
 
 static monster_type _random_mons_between(monster_type min, monster_type max)
@@ -3198,10 +3190,10 @@ monsterentry *get_monster_data(monster_type mc)
         return nullptr;
 }
 
-static int _mons_exp_mod(monster_type mc)
+static int _mons_exp(monster_type mc)
 {
     ASSERT_smc();
-    return smc->exp_mod;
+    return smc->exp;
 }
 
 int mons_class_base_speed(monster_type mc)
@@ -3530,7 +3522,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         && !testbits(mon.flags, MF_NO_REWARD))
     {
         // Give the player full XP.
-        gain_exp(exper_value(mon));
+        gain_exp(exp_value(mon));
     }
     mon.flags |= MF_PACIFIED;
 
@@ -4990,7 +4982,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
         return MTHRT_TRIVIAL; // ignores 'real', sorry...
 
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real, true) / (1 + factor);
+    const int tension = exp_value(threat, real, true) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5069,8 +5061,8 @@ void debug_mondata()
             fails += make_stringf("%s has negative AC\n", name);
         if (md->ev < 0 && !mons_is_draconian_job(mc))
             fails += make_stringf("%s has negative EV\n", name);
-        if (md->exp_mod < 0)
-            fails += make_stringf("%s has negative xp mod\n", name);
+        if (md->exp < 0)
+            fails += make_stringf("%s has negative xp\n", name);
 
         if (md->speed < 0)
             fails += make_stringf("%s has 0 speed\n", name);

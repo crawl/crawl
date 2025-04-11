@@ -2,7 +2,7 @@ name: "guardian serpent"
 glyph: {char: "S", colour: white}
 flags: [see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 456
+exp: 456
 will: 60
 attacks:
  - {type: hit, damage: 26}

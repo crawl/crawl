@@ -22,7 +22,7 @@ static monsterentry mondata[] =
     id, 'X', LIGHTRED, "removed " name, \
     M_NO_EXP_GAIN | M_CANT_SPAWN | M_UNFINISHED, \
     MR_NO_FLAGS, \
-    10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
+    10, false, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
     { }, \
     0, 0, \
     0, 0, MST_NO_SPELLS, true, S_SILENT, \

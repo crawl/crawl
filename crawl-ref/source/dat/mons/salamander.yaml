@@ -2,7 +2,7 @@ name: "salamander"
 glyph: {char: "N", colour: lightred}
 flags: [fighter, warm_blood]
 resists: {fire: 3, cold: -1}
-xp_mult: 530
+exp: 530
 genus: naga
 will: 40
 attacks:

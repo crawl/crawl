@@ -2,7 +2,7 @@ name: "ancient lich"
 glyph: {char: "L", colour: white}
 flags: [see_invis, speaks]
 resists: {elec: 1, fire: 1, cold: 2}
-xp_mult: 4693
+exp: 4693
 species: lich
 holiness: [undead]
 will: invuln

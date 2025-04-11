@@ -2,7 +2,7 @@ name: "azure jelly"
 glyph: {char: "J", colour: lightblue}
 flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton]
 resists: {poison: 1, fire: -1, cold: 1, corr: 3}
-xp_mult: 1317
+exp: 1317
 genus: jelly
 will: 80
 attacks:

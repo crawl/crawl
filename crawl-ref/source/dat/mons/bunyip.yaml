@@ -2,7 +2,7 @@ name: "bunyip"
 glyph: {char: "x", colour: yellow}
 flags: [warm_blood]
 resists: {poison: 1}
-xp_mult: 992
+exp: 992
 will: 60
 attacks:
  - {type: claw, damage: 40}

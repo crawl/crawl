@@ -2,7 +2,7 @@ name: "freezing wraith"
 glyph: {char: "W", colour: lightblue}
 flags: [flies, see_invis, insubstantial]
 resists: {fire: -1, cold: 3}
-xp_mult: 354
+exp: 354
 genus: wraith
 holiness: [undead]
 will: 40

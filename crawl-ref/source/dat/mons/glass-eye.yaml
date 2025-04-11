@@ -1,7 +1,7 @@
 name: "glass eye"
 glyph: {char: "G", colour: white}
 flags: [flies, see_invis, no_skeleton]
-xp_mult: 261
+exp: 261
 genus: floating_eye
 will: 60
 attacks:

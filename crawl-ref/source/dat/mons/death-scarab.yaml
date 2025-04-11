@@ -1,7 +1,7 @@
 name: "death scarab"
 glyph: {char: "B", colour: blue}
 flags: [batty, web_immune, no_skeleton, no_zombie]
-xp_mult: 812
+exp: 812
 holiness: [undead]
 will: 60
 attacks:

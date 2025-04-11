@@ -1,7 +1,7 @@
 name: "stone giant"
 glyph: {char: "C", colour: lightgray}
 flags: [speaks, warm_blood]
-xp_mult: 1084
+exp: 1084
 genus: giant
 will: 80
 attacks:

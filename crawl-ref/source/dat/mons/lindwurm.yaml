@@ -1,7 +1,7 @@
 name: "lindwurm"
 glyph: {char: "k", colour: lightred}
 flags: [warm_blood]
-xp_mult: 644
+exp: 644
 genus: drake
 will: 40
 attacks:

@@ -2,7 +2,7 @@ name: "ice dragon"
 glyph: {char: "D", colour: white}
 flags: [flies, cold_blood]
 resists: {poison: 1, fire: -1, cold: 2}
-xp_mult: 867
+exp: 867
 genus: dragon
 will: 40
 attacks:

@@ -2,7 +2,7 @@ name: "obsidian bat"
 glyph: {char: "b", colour: lightmagenta}
 flags: [flies, see_invis, unblindable, batty, speaks]
 resists: {fire: 2}
-xp_mult: 747
+exp: 747
 genus: bat
 holiness: [nonliving]
 will: 20

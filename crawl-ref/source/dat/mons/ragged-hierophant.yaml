@@ -1,7 +1,7 @@
 name: "ragged hierophant"
 glyph: {char: "a", colour: lightmagenta}
 flags: [speaks, warm_blood]
-xp_mult: 897
+exp: 897
 species: human
 will: 40
 attacks:

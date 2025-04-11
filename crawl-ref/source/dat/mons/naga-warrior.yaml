@@ -2,7 +2,7 @@ name: "naga warrior"
 glyph: {char: "N", colour: blue}
 flags: [fighter, see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 791
+exp: 791
 species: naga
 will: 80
 attacks:

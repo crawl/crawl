@@ -1,7 +1,7 @@
 name: "oni"
 glyph: {char: "O", colour: lightblue}
 flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
-xp_mult: 119
+exp: 119
 will: 20
 attacks:
  - {type: hit, damage: 20}

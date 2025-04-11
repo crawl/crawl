@@ -2,7 +2,7 @@ name: "curse skull"
 glyph: {char: "z", colour: lightmagenta}
 flags: [flies, see_invis, speaks]
 resists: {elec: 1, fire: 2, cold: 2}
-xp_mult: 1166
+exp: 1166
 holiness: [undead]
 will: invuln
 attacks:
