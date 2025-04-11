@@ -1,6 +1,6 @@
 name: "splinterfrost barricade"
 glyph: {char: "I", colour: lightcyan}
-flags: [stationary, no_exp_gain, no_threat]
+flags: [stationary, no_exp_gain]
 resists: {fire: -1, cold: 3}
 holiness: [nonliving]
 will: invuln
