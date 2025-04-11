@@ -3308,6 +3308,11 @@ yaktaur captain
 An exceptionally strong and brutish yaktaur, able to order its weaker brethren
 around to do its bidding.
 %%%%
+yaktaur fusilier
+
+A grizzled yaktaur unit with singed patches of fur and an ammo belt strapped
+around its torso, specialised in the operation of all kinds of magical devices.
+%%%%
 yellow draconian
 
 A muscular yellow-scaled humanoid with a reptilian tail and small wings.

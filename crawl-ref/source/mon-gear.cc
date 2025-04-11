@@ -148,57 +148,61 @@ static void _give_talisman(monster* mon, int level)
         give_specific_item(mon, items(false, OBJ_TALISMANS, talisman, level));
 }
 
+static vector<pair<wand_type, int>> _monster_wand_weights()
+{
+    // Based on _random_wand_subtype in makeitem.cc but with a slightly different
+    // spread. It will be further controlled by monster::likes_wand so the spread
+    // doesn't matter so much.
+    auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
+    auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
+    auto blast_wand_type = (wand_type)item_for_set(ITEM_SET_BLAST_WANDS);
+    return vector<pair<wand_type, int>>{
+        {WAND_FLAME,      14},
+        {blast_wand_type, 14},
+        {hex_wand_type,    9},
+        {beam_wand_type,  11},
+        {WAND_POLYMORPH,  11},
+        {WAND_MINDBURST,   7}
+    };
+}
+
+static wand_type _choose_wand_for_monster(monster* mon)
+{
+    // Update weight to 0 if monster doesn't like the wand
+    vector<pair<wand_type, int>> weights = _monster_wand_weights();
+    for (auto &w : weights)
+    {
+        if (!mon->likes_wand(w.first))
+            w.second = 0;
+    }
+    auto chosen = random_choose_weighted(weights);
+    if (chosen == nullptr)
+        return NUM_WANDS;
+    return *chosen;
+}
+
 static void _give_wand(monster* mon, int level)
 {
-    const bool always_wand = mons_class_flag(mon->type, M_ALWAYS_WAND);
-    if (!always_wand)
-    {
-        if (!mons_is_unique(mon->type)
+    const bool always_wand = mons_class_flag(mon->type, M_ARTIFICER);
+    if (!always_wand && (!mons_is_unique(mon->type)
             || mons_class_flag(mon->type, M_NO_WAND)
             || !_should_give_unique_item(mon)
-            || !one_chance_in(5))
-        {
-            return;
-        }
+            || !one_chance_in(5)))
+    {
+        return;
     }
 
-    // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
-    const bool no_high_tier =
-            (mon->get_experience_level() < 5
-                || mons_class_flag(mon->type, M_NO_HT_WAND))
-            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
+    const int force_type = _choose_wand_for_monster(mon);
+    if (force_type == NUM_WANDS)
+        return;
 
-    const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
-
+    const int idx = items(false, OBJ_WANDS, force_type, level);
     if (idx == NON_ITEM)
         return;
 
     item_def& wand = env.item[idx];
-    // Ugly hack: monsters can't use digging wands, so swap em out.
-    while (wand.sub_type == WAND_DIGGING)
-    {
-        dprf("rerolling");
-        generate_wand_item(wand, OBJ_RANDOM, level);
-        item_colour(wand);
-    }
-
-    const char* rejection_reason =
-        (no_high_tier && is_high_tier_wand(wand.sub_type)) ? "high tier" :
-                                    !mon->likes_wand(wand) ?      "weak" :
-                                                                  nullptr;
-
-    if (rejection_reason && !always_wand)
-    {
-        dprf(DIAG_MONPLACE,
-             "Destroying %s because %s doesn't want a %s wand.",
-             wand.name(DESC_A).c_str(),
-             mon->name(DESC_THE).c_str(),
-             rejection_reason);
-        destroy_item(idx, true);
-        return;
-    }
-
     wand.flags = 0;
+
     give_specific_item(mon, idx);
 }
 
@@ -737,6 +741,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { WPN_ARBALEST,      19 },
             { WPN_HAND_CANNON, 1  },
         } } },
+        { MONS_YAKTAUR_FUSILIER, { { { WPN_HAND_CANNON, 1 } } } },
         { MONS_EFREET,                  EFREET_WSPEC },
         { MONS_ERICA,                   EFREET_WSPEC },
         { MONS_AZRAEL,                  EFREET_WSPEC },
@@ -1722,6 +1727,16 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level, 1);
         break;
 
+    case MONS_YAKTAUR_FUSILIER:
+        // Fusiliers carry a hand cannon so they have a shield arm free. So
+        // sometimes they can have an orb of guile to give any hex wand a boost.
+        if (one_chance_in(3) && (shield = make_item_for_monster(mon, OBJ_ARMOUR,
+                                                                ARM_ORB, level)))
+        {
+            set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_GUILE);
+            break;
+        }
+        // Otherwise fall through and definitely get a potentially very good shield
     case MONS_NAGA_WARRIOR:
         if (coinflip())
             level = ISPEC_GOOD_ITEM;
@@ -1729,7 +1744,7 @@ static void _give_shield(monster* mon, int level)
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_ORC_WARLORD:
-        if (one_chance_in(3))
+        if (mon->type == MONS_YAKTAUR_FUSILIER || one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
                                   one_chance_in(3) ? ARM_TOWER_SHIELD

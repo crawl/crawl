@@ -1146,6 +1146,8 @@ yaktaur MONS_YAKTAUR
 yaktaur-melee MONS_YAKTAUR_MELEE
 yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
+yaktaur_fusilier MONS_YAKTAUR_FUSILIER
+yaktaur_fusilier-melee MONS_YAKTAUR_FUSILIER_MELEE
 %sdir mon/demihumanoids
 faun MONS_FAUN
 satyr MONS_SATYR

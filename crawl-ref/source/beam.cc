@@ -3772,6 +3772,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_VEX:
+    case BEAM_CHARM:
         you.vex(agent(), random_range(3, 6));
         obvious_effect = true;
         break;
@@ -3810,12 +3811,6 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_BECKONING:
         obvious_effect = beckon(you, *this);
         break;
-
-    case BEAM_CHARM:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(5 + random2(3));
-        obvious_effect = true;
-        break;     // charming - confusion?
 
     case BEAM_BANISH:
         if (YOU_KILL(thrower))

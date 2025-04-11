@@ -566,6 +566,15 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     }, 5) },
     { SPELL_VITRIFY, _hex_logic(SPELL_VITRIFY, _foe_vitrify_goodness) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
+    { SPELL_CHARMING, _hex_logic(SPELL_CHARMING, [](const monster& caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            if (foe->is_player())
+                return ai_action::good_or_impossible(!you.duration[DUR_VEXED]);
+            // We assume if the foe is a monster they must be non-aligned,
+            // therefore it's a good action that could switch their alignment
+            return ai_action::good();
+    }, 5) },
     { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
@@ -1751,63 +1760,6 @@ static monster* _get_allied_target(const monster &caster, bolt &tracer)
     return selected_target;
 }
 
-// Find an ally of the target to cast a hex at.
-// Note that this deliberately does not target the player.
-static bool _set_hex_target(monster* caster, bolt& pbolt)
-{
-    monster* selected_target = nullptr;
-    int min_distance = INT_MAX;
-
-    const actor *foe = caster->get_foe();
-    if (!foe)
-        return false;
-
-    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
-    {
-        if (*targ == caster)
-            continue;
-
-        const int targ_distance = grid_distance(targ->pos(), foe->pos());
-
-        bool got_target = false;
-
-        if (mons_aligned(*targ, foe)
-            && !targ->has_ench(ENCH_CHARM)
-            && !targ->has_ench(ENCH_HEXED)
-            && !targ->is_firewood()
-            && !_flavour_benefits_monster(pbolt.flavour, **targ))
-        {
-            got_target = true;
-        }
-
-        if (got_target && targ_distance < min_distance
-            && targ_distance < pbolt.range)
-        {
-            // Make sure we won't hit an invalid target with this aim.
-            pbolt.target = targ->pos();
-            targeting_tracer tracer;
-            fire_tracer(caster, tracer, pbolt);
-            if (!mons_should_fire(pbolt, tracer)
-                || pbolt.path_taken.back() != pbolt.target)
-            {
-                continue;
-            }
-
-            min_distance = targ_distance;
-            selected_target = *targ;
-        }
-    }
-
-    if (selected_target)
-    {
-        pbolt.target = selected_target->pos();
-        return true;
-    }
-
-    // Didn't find a target.
-    return false;
-}
-
 static void _whack(const actor &caster, actor &target)
 {
     if (target.alive() && target.is_monster())
@@ -2099,7 +2051,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_HIBERNATION:
     case SPELL_SLEEP:
     case SPELL_DIG:
-    case SPELL_CHARMING:
     case SPELL_BOLT_OF_LIGHT:
     case SPELL_FASTROOT:
     case SPELL_WARP_SPACE:
@@ -2547,8 +2498,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    int power = evoke ? 30 + mons->get_hit_dice()
-                      : mons_spellpower(*mons, spell_cast);
+    int power = 0;
+    if (evoke)
+        power = mons_wand_power(mons->get_hit_dice());
+    else
+        power = mons_spellpower(*mons, spell_cast);
 
     // Laughing skulls get a power boost based on other nearby laughing skulls.
     // (Doing it here feels a little hacky, but I'm not sure where else it
@@ -4751,18 +4705,6 @@ static bool _target_and_justify_spell(monster &mons,
     // Setup the spell.
     setup_mons_cast(&mons, beem, spell);
 
-    switch (spell)
-    {
-        case SPELL_CHARMING:
-            // Try to find an ally of the player to hex if we are
-            // hexing the player.
-            if (mons.foe == MHITYOU && !_set_hex_target(&mons, beem))
-                return false;
-            break;
-        default:
-            break;
-    }
-
     // special beam targeting sets the beam's target to an out-of-bounds coord
     // if no valid target was found.
     const mons_spell_logic* logic = _get_spell_logic(mons, spell);
@@ -6948,6 +6890,12 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
     return true;
 }
 
+int mons_wand_power(int hd)
+{
+    // Ijyb power 33, Maurice power 47
+    return 12 + hd * 7;
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -7052,8 +7000,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     const god_type god = _find_god(*mons, slot_flags);
-    const int splpow = evoke ? 30 + mons->get_hit_dice()
-                             : mons_spellpower(*mons, spell_cast);
+    int splpow = 0;
+    if (evoke)
+        splpow = mons_wand_power(mons->get_hit_dice());
+    else
+        splpow = mons_spellpower(*mons, spell_cast);
 
     switch (spell_cast)
     {
