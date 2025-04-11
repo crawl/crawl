@@ -196,8 +196,10 @@ protected:
     int m_mouse_x = -1, m_mouse_y = -1;
     void update_hovered_entry(bool force=false);
 
+    void mark_buffers_dirty();
     void pack_buffers();
 
+    bool m_buffers_dirty = false;
     bool m_draw_tiles;
     FontWrapper *m_font_entry;
     ShapeBuffer m_shape_buf;
@@ -558,6 +560,12 @@ int UIMenu::get_max_viewport_height()
 void UIMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
+    if (m_buffers_dirty)
+    {
+        pack_buffers();
+        m_buffers_dirty = false;
+    }
+
     GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
 
@@ -897,7 +905,7 @@ void UIMenu::_allocate_region()
         update_hovered_entry();
     else
         m_hover_idx = m_menu->last_hovered;
-    pack_buffers();
+    mark_buffers_dirty();
 #endif
 }
 
@@ -906,8 +914,7 @@ void UIMenu::set_hovered_entry(int i)
     m_hover_idx = i;
 
 #ifdef USE_TILE_LOCAL
-    if (row_heights.size() > 0) // check for initial layout
-        pack_buffers();
+    mark_buffers_dirty();
 #endif
     _expose();
 }
@@ -977,7 +984,7 @@ bool UIMenu::on_event(const Event& ev)
         do_layout(m_region.width, m_num_columns);
         if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
             update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return false;
     }
@@ -992,7 +999,7 @@ bool UIMenu::on_event(const Event& ev)
             m_hover_idx = -1;
         m_real_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return false;
     }
@@ -1001,7 +1008,7 @@ bool UIMenu::on_event(const Event& ev)
     {
         do_layout(m_region.width, m_num_columns);
         update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return true;
     }
@@ -1014,7 +1021,7 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_pressed = true;
         do_layout(m_region.width, m_num_columns);
         update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
     }
     else if (event.type() == Event::Type::MouseUp
@@ -1041,6 +1048,11 @@ bool UIMenu::on_event(const Event& ev)
     }
 
     return true;
+}
+
+void UIMenu::mark_buffers_dirty()
+{
+    m_buffers_dirty = true;
 }
 
 void UIMenu::pack_buffers()
@@ -2858,14 +2870,6 @@ void Menu::set_hovered(int index, bool force)
     }
     // intentionally goes to -1 on size 0
     last_hovered = min(index, static_cast<int>(items.size()) - 1);
-#ifdef USE_TILE_LOCAL
-    // don't crash if this gets called on local tiles before the menu has been
-    // displayed. If your initial hover isn't showing up on local tiles, it
-    // may be because of this -- adjust the timing so it is set after
-    // update_menu is called.
-    if (m_ui.menu->shown_items() == 0)
-        return;
-#endif
 
     m_ui.menu->set_hovered_entry(last_hovered);
     if (last_hovered >= 0)
