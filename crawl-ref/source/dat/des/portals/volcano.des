@@ -1244,11 +1244,11 @@ ORIENT: encompass
 WEIGHT: 20
 MONS:   steam dragon / steam dragon / smoke demon / hell hound
 MONS:   sun demon, lindwurm
-KMONS:  4 = fire dragon
+KMONS:  4 = fire crab / fire dragon w:5
 KITEM:  4 = scroll of fog q:2 pre_id w:20 / condensation vane / \
             cloak of the thief w:1
 SUBST:  a = ..xxl, p = ..'xl, q = .x, ' = '.
-NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 1:., $ = 1:4 / *:$
+NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 2:., $ = 1:4 / *:$
 SUBST:  D = 2., 2 : 22333
 SUBST:  $ = $$deef, b : bbGGG
 MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \

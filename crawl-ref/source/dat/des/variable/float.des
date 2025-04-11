@@ -6171,16 +6171,16 @@ MONS:   guardian sphinx / vampire knight, dread lich
 ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
 NSUBST: 1 = 1:1 / *:1.
 : if you.in_branch("D") and you.absdepth() < 13 then
-NSUBST:  - = 20 = 1... / 1:2 / *:.
+NSUBST:  - = 16 = 1... / 1:2 / *:.
 : elseif you.in_branch("Orc") then
-NSUBST:  - = 12 = 1... / 16 = 2... / *:.
+NSUBST:  - = 8 = 1... / 12 = 2... / *:.
 : elseif you.in_branch("Depths") then
-NSUBST: -  = 12 = 3... / 16 = 4... / 1:5 / *:.
+NSUBST: -  = 8 = 3... / 12 = 4... / 1:5 / *:.
 : elseif you.in_branch("Zot") then
-NSUBST: - = 16 = 4... / 16 = 5... / 16 = 0... / *:.
+NSUBST: - = 8 = 4... / 12 = 5... / 8 = 0... / *:.
 SUBST: ' = |'
 : else
-NSUBST: - = 12 = 1... / 12 = 2... / 1:3 / *:.
+NSUBST: - = 8 = 1... / 12 = 2... / 1:3 / *:.
 : end
 NSUBST: ' = 1:* / * = *..
 SUBST:  G : GG.
