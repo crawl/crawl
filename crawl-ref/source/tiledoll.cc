@@ -291,20 +291,24 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
     case transformation::quill:
-
-        // These get full-body tiles elsewhere.
-        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
-            break;
-
-        switch (you.species)
+        if (you.species == SP_FELID)
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_QUILL_FELID;
+        else if (you.species == SP_OCTOPODE)
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_QUILL_OCTOPODE;
+        else
         {
-        case SP_ARMATAUR:   ch = TILEP_BODY_QUILL_ARMATAUR;  break;
-        case SP_NAGA:       ch = TILEP_BODY_QUILL_NAGA;      break;
-        case SP_DJINNI:     ch = TILEP_BODY_QUILL_DJINN;     break;
-        default:            ch = TILEP_BODY_QUILL_HUMANOID;  break;
+            switch (you.species)
+            {
+            case SP_OCTOPODE:   ch = TILEP_TRAN_QUILL_OCTOPODE;  break;
+            case SP_FELID:      ch = TILEP_TRAN_QUILL_FELID;     break;
+            case SP_ARMATAUR:   ch = TILEP_BODY_QUILL_ARMATAUR;  break;
+            case SP_NAGA:       ch = TILEP_BODY_QUILL_NAGA;      break;
+            case SP_DJINNI:     ch = TILEP_BODY_QUILL_DJINN;     break;
+            default:            ch = TILEP_BODY_QUILL_HUMANOID;  break;
+            }
+            result.parts[TILEP_PART_LEG] = 0;
+            result.parts[TILEP_PART_HELM] = ch;
         }
-        result.parts[TILEP_PART_LEG] = 0;
-        result.parts[TILEP_PART_HELM] = ch;
         break;
     case transformation::aqua:
         switch (you.species)
@@ -345,28 +349,36 @@ void fill_doll_equipment(dolls_data &result)
         }
         break;
     case transformation::hive:
-
-        // These get full-body tiles elsewhere.
-        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_HIVE_OCTOPODE;
             break;
-
-        result.parts[TILEP_PART_BODY] = TILEP_BODY_HIVE_FORM;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_HIVE_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_BODY] = TILEP_BODY_HIVE_FORM;
+            break;
+        }
         break;
     case transformation::medusa:
-
-        // These get full-body tiles elsewhere.
-        if (you.species == SP_FELID || you.species == SP_OCTOPODE)
-            break;
-
-        if (you.species == SP_ARMATAUR)
+        switch (you.species)
         {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MEDUSA_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MEDUSA_FELID;
+            break;
+        case SP_ARMATAUR:
             result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_ARMATAUR;
             result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_ARMATAUR;
-        }
-        else
-        {
+            break;
+        default:
             result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_HUMANOID;
             result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_HUMANOID;
+            break;
         }
         break;
     case transformation::statue:
