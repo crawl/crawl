@@ -823,6 +823,8 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+decorative_floor DNGN_DECORATIVE_FLOOR
+
 %weight 8
 cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
 cache_of_fruit_1

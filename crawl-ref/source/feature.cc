@@ -243,6 +243,8 @@ dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
         case DNGN_OPEN_SEA:
         case DNGN_LAVA_SEA:
             return DNGN_SHALLOW_WATER;
+        case DNGN_DECORATIVE_FLOOR:
+            return DNGN_DECORATIVE_FLOOR;
         default:
             break;
     }
