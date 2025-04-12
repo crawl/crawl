@@ -377,8 +377,6 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
 spret cast_percussive_tempering(const actor& caster, monster& target, int power,
                                 bool fail)
 {
-    ASSERT(is_valid_tempering_target(target, caster));
-
     fail_check();
 
     if (you.can_see(target))

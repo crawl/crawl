@@ -635,5 +635,6 @@ enum spell_type : int
     SPELL_RUST_BREATH,
     SPELL_GOLDEN_BREATH,
     SPELL_BECKONING_GALE,
+    SPELL_ALL_PURPOSE_TEMPERING,    // Monster version of Percussive Tempering
     NUM_SPELLS
 };

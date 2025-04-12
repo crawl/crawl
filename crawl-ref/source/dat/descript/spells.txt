@@ -1307,6 +1307,15 @@ Mud Breath spell
 
 <Mud Breath ability>
 %%%%
+Nazja's All-Purpose Tempering spell
+
+Manifests a magical hammer that repairs and temporarily augments the offensive
+capabilities of any nearby construct - be it golem or phalanx beetle or even
+dancing weapon. This process results in a flurry of sparks, slag, and concussive
+shockwaves that do considerable damage to any enemies adjacent to the targeted
+construct, but it cannot be recast upon the same object until the enhancement
+wears off.
+%%%%
 Nazja's Percussive Tempering spell
 
 Manifests a magical hammer that repairs and temporarily augments the offensive

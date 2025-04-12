@@ -1282,6 +1282,11 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
 };
 
+bool monster_type_is_fraggable(monster_type mc)
+{
+    return fraggable_monsters.find(mc) != fraggable_monsters.end();
+}
+
 // Initializes the provided frag_effect with the appropriate Lee's Rapid
 // Deconstruction explosion for blowing up the given monster. Return true iff
 // that monster can be deconstructed.

@@ -187,6 +187,7 @@ static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
 static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
+static bool _mon_cast_tempering(const monster& caster, bool check_only);
 
 enum spell_logic_flag
 {
@@ -930,6 +931,15 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             caster.add_ench(mon_enchant(ENCH_CLOCKWORK_BEE_CAST, 0, &caster, 40));
             simple_monster_message(caster, " begins winding a clockwork bee!");
         },
+    } },
+    { SPELL_ALL_PURPOSE_TEMPERING, {
+        [](const monster &caster)
+        {
+            return ai_action::good_or_impossible(_mon_cast_tempering(caster, true));
+        },
+       [](monster &caster, mon_spell_slot, bolt&) {
+            _mon_cast_tempering(caster, false);
+        }
     } }
 };
 
@@ -6964,6 +6974,74 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
             }
         }
     }
+
+    return true;
+}
+
+static bool _mons_can_be_tempered(const monster& targ)
+{
+    if (!(targ.holiness() & MH_NONLIVING))
+        return false;
+
+    // We considerable LRD-able non-living monsters to be 'constructs',
+    // excepting gargoyles (too 'alive') and including dancing weapons.
+    if (targ.type == MONS_DANCING_WEAPON
+        || mons_genus(targ.type) != MONS_GARGOYLE && monster_type_is_fraggable(targ.type))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+static bool _mon_cast_tempering(const monster& caster, bool check_only)
+{
+    // Find all possible targets (and return early, if we're just checking if
+    // one exists.)
+    // Monsters will only cast it on targets that are either injured or adjacent
+    // to an enemy (and get a little more flexibility about the kinds of things
+    // they're allowed to cast it on)
+    monster* targ = nullptr;
+    int valid = 0;
+    for (monster_near_iterator mi(caster.pos()); mi; ++mi)
+    {
+        if (!mons_aligned(&caster, *mi) || mi->has_ench(ENCH_TEMPERED)
+            || !_mons_can_be_tempered(**mi))
+        {
+            continue;
+        }
+
+        if (mi->hit_points < mi->max_hit_points)
+        {
+            if (check_only)
+                return true;
+            else if (one_chance_in(++valid))
+                targ = *mi;
+        }
+
+        for (adjacent_iterator ai(mi->pos()); ai; ++ai)
+        {
+            if (!caster.see_cell_no_trans(*ai))
+                continue;
+
+            if (actor* act = actor_at(*ai))
+            {
+                if (!mons_aligned(&caster, act))
+                {
+                    if (check_only)
+                        return true;
+                    else if (one_chance_in(++valid))
+                        targ = *mi;
+                }
+            }
+        }
+    }
+
+    if (!targ)
+        return false;
+
+    const int pow = mons_spellpower(caster, SPELL_ALL_PURPOSE_TEMPERING);
+    cast_percussive_tempering(caster, *targ, pow, false);
 
     return true;
 }

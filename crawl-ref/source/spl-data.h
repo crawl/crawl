@@ -4328,6 +4328,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ALL_PURPOSE_TEMPERING, "Nazja's All-Purpose Tempering",
+    spschool::forgecraft,
+    spflag::target | spflag::helpful | spflag::not_self | spflag::destructive
+    | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_PERCUSSIVE_TEMPERING,
+},
+
+{
     SPELL_FORTRESS_BLAST, "Fortress Blast",
     spschool::forgecraft,
     spflag::area | spflag::destructive,

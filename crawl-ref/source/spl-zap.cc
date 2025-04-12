@@ -172,6 +172,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SOJOURNING_BOLT, ZAP_SOJOURNING },
     { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
     { SPELL_GOLDEN_BREATH, ZAP_GOLDEN_BREATH },
+    { SPELL_ALL_PURPOSE_TEMPERING, ZAP_PERCUSSIVE_TEMPERING },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },

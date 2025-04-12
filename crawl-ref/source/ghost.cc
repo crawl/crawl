@@ -1125,6 +1125,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_SUMMON_DRAGON;
     case SPELL_ELECTRIC_CHARGE:
         return SPELL_ELECTROLUNGE;
+    case SPELL_PERCUSSIVE_TEMPERING:
+        return SPELL_ALL_PURPOSE_TEMPERING;
     default:
         break;
     }
