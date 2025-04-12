@@ -527,6 +527,76 @@ G.G
 G.G
 ENDMAP
 
+NAME:   ziggurat_pillar_centre_dissolved
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = devourer's trap
+MONS:   entropy weaver
+: if (you.zigs_completed() < 1) then
+SUBST:  G = G.
+: else
+SUBST:  G = GG.^
+SUBST:  . = ...1^
+: end
+FTILE:  .1^G = floor_iron
+: vault_metal_statue_setup(_G, "G", "iron statue")
+: megazig_zot_traps(_G)
+MAP
+^GG^
+G.1G
+G..G
+^GG^
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_exhaustion
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = archmage's trap
+: if (you.zigs_completed() < 1) then
+MONS:   occultist / deep elf sorcerer
+: else
+MONS:   ancient lich / dread lich w:5
+SUBST:  . = ..^
+: end
+FTILE:  .1^G = floor_hall
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
+: megazig_zot_traps(_G)
+MAP
+G1G
+.^.
+G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_mighty_misfortune
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = tyrant's trap / harlequin's trap
+KPROP:  ^ = bloody
+FTILE:  ^FG. = floor_orc
+: decorative_floor(_G, 'F', "orcish standard")
+: vault_metal_statue_setup(_G, "G", "misfortune conduit")
+: megazig_zot_traps(_G)
+MAP
+F.G
+.^.
+G..
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_nasty_nets
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:10-
+WEIGHT: 5
+KFEAT:  ^ = net trap
+KFEAT:  m = iron_grate
+SUBST:  m = mmmmm...^
+FTILE:  ^m. = floor_tomb
+: megazig_zot_traps(_G)
+MAP
+mmm
+m^m
+m.m
+ENDMAP
+
 #######################################################################
 
 NAME: ziggurat1
