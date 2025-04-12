@@ -340,6 +340,9 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::flux:
         switch (you.species)
         {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_FLUX_OCTOPODE;
+            break;
         case SP_FELID:
             result.parts[TILEP_PART_BASE] = TILEP_TRAN_FLUX_FELID;
             break;
