@@ -1,5 +1,5 @@
-Stone Soup 0.33 (through 0.33-a0-1353-41512545bd6)
--------------------------------------------------
+Stone Soup 0.33 (through 0.33-a0-1369-g9fcff2c720)
+--------------------------------------------------
 
 Highlights
 ----------
@@ -73,10 +73,10 @@ Character
     the player permanently slow until their stats are raised again.
   - Undead players being malmutated now have their HP drained instead.
 * New skill: Forgecraft, used for Forgecraft spells.
-  - Most species have Forgecraft apts similar to their Summoning apts,
-    with the exceptions of Mountain Dwarves, Coglins, Yellow Draconians (all
-    +2), Barachi (+1), Demonspawn, Felids (all -1), Ghouls, Minotaurs, and Tengu
-    (all -2).
+  - Most species have Forgecraft apts that are the same as their Summoning
+    apts, with the exceptions of Mountain Dwarves, Coglins, Yellow Draconians
+    (all +2), Barachi (+1), Demonspawn, Felids, Poltergeists (all -1),
+    Revenants, Minotaurs, and Tengu (all -2).
 * New background: Forgewright, which starts with a +0 hammer (a reskinned mace),
   a potion of magic, and a variety of Forgecraft spells.
 * Fighters now start with a second potion of might.
