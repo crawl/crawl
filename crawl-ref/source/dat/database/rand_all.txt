@@ -161,6 +161,8 @@ Capriciousness
 
 Entertainment
 
+Facetiousness
+
 Fair Game
 
 Flight of Fancy
@@ -177,12 +179,11 @@ Ringing Laughter
 
 Sleight of Hands
 
+Temerity
+
 Wantonness
 
 Whimsicality
-
-Temerity
-
 %%%%
 _time_name_
 Autumn
