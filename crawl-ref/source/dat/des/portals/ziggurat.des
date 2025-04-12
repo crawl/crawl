@@ -160,6 +160,9 @@ default-depth: Zig
 # - ziggurat pillars do not need allow_dup. The pillar map is never
 #   registered as used.
 # - ziggurat pillars cannot use map markers.
+#
+# TODO: figure out why ziggurat pillars screw up descriptions for vault
+#       redefinitions of statues and decorative floor.
 #######################################################################
 NAME: ziggurat_pillar_abc
 TAGS: ziggurat_pillar unrand no_exits
@@ -525,6 +528,76 @@ MAP
 G.G
 .^.
 G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_dissolved
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = devourer's trap
+MONS:   entropy weaver
+: if (you.zigs_completed() < 1) then
+SUBST:  G = G.
+: else
+SUBST:  G = GG.^
+SUBST:  . = ...1^
+: end
+# : vault_metal_statue_setup(_G, "G", "iron statue")
+: megazig_zot_traps(_G)
+MAP
+^GG^
+G.1G
+G..G
+^GG^
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_exhaustion
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = archmage's trap
+: if (you.zigs_completed() < 1) then
+MONS:   draconian annihilator / deep elf annihilator
+: else
+MONS:   ancient lich / dread lich w:5
+SUBST:  . = ..^
+: end
+# : vault_metal_statue_setup(_G, "G", "arcane conduit")
+: megazig_zot_traps(_G)
+MAP
+G1G
+.^.
+G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_mighty_misfortune
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ : tyrant's trap / harlequin's trap
+KPROP:  ^ = bloody
+# : decorative_floor(_G, 'F', "infernal standard")
+# : vault_metal_statue_setup(_G, "G", "misfortune conduit")
+: megazig_zot_traps(_G)
+MAP
+F.G
+.^.
+G..
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_nasty_nets
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:10-
+WEIGHT: 5
+KFEAT:  ^ = net trap
+KFEAT:  m = iron_grate
+: if you.zigs_completed() > 0 then
+NSUBST: m = 1:. / * = ...^mmmmm
+: else
+NSUBST: m = 1:. / * = ....mmmmm
+: end
+: megazig_zot_traps(_G)
+MAP
+mmm
+m^m
+mmm
 ENDMAP
 
 #######################################################################
