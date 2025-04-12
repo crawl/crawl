@@ -485,7 +485,7 @@ monster_type fixup_zombie_type(const monster_type cls,
     }
     // For generation purposes, don't treat simulacra of lava enemies as
     // being able to place on lava.
-    if (mons_class_habitat(base_type) & HT_LAVA)
+    if (mons_class_habitat(base_type, true) & HT_LAVA)
         return cls;
     return base_type;
 }
@@ -1475,22 +1475,19 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
-    base = fixup_zombie_type(cs, base);
-
-    // Actually pick a monster that is happy where we want to put it.
-    // Fish zombies on land are helpless and uncool.
-    if (in_bounds(pos) && !monster_habitable_grid(base, pos))
-        return false;
-
-    if (cs == MONS_NO_MONSTER)
-        return true;
-
     // If skeleton, monster must have a skeleton.
     if (cs == MONS_SKELETON && !mons_skeleton(base))
         return false;
 
     // If zombie, monster must have a corpse.
     if (cs == MONS_ZOMBIE && !mons_class_can_be_zombified(base))
+        return false;
+
+    base = fixup_zombie_type(cs, base);
+
+    // Actually pick a monster that is happy where we want to put it.
+    // Fish zombies on land are helpless and uncool.
+    if (in_bounds(pos) && !monster_habitable_grid(base, pos))
         return false;
 
     return true;
