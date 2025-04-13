@@ -8974,7 +8974,7 @@ void maybe_harvest_memory(const monster& victim)
     }
 
     int& progress = you.props[ENKINDLE_PROGRESS_KEY].get_int();
-    int xp = exp_value(victim);
+    int xp = exper_value(victim);
     if (crawl_state.game_is_sprint())
         xp = sprint_modify_exp(xp);
 

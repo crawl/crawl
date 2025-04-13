@@ -2,7 +2,7 @@ name: "twister"
 glyph: {char: "v", colour: etc_air}
 flags: [flies, confused, batty, insubstantial, no_exp_gain, no_poly_to]
 resists: {elec: 3, fire: 1, cold: 3}
-exp: 5
+xp_mult: 5
 genus: fire_vortex
 holiness: [nonliving]
 will: invuln

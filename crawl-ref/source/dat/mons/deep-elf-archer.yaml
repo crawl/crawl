@@ -1,7 +1,6 @@
 name: "deep elf archer"
 glyph: {char: "e", colour: brown}
 flags: [speaks, warm_blood, archer]
-exp: 746
 species: elf
 will: 80
 attacks:

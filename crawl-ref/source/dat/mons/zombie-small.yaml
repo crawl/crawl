@@ -3,7 +3,7 @@ enum: zombie_small
 glyph: {char: "Z", colour: brown}
 flags: [no_regen]
 resists: {cold: 2}
-exp: 9
+xp_mult: 9
 species: zombie
 holiness: [undead]
 will_per_hd: 1

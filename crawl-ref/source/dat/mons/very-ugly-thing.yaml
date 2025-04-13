@@ -1,7 +1,6 @@
 name: "very ugly thing"
 glyph: {char: "u", colour: colour_undef}
 flags: [warm_blood, ghost_demon, herd, no_gen_derived]
-exp: 1094
 genus: ugly_thing
 will: 40
 attacks:

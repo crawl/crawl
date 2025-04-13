@@ -1,7 +1,6 @@
 name: "draconian monk"
 glyph: {char: "q", colour: lightgreen}
 flags: [fighter, speaks, cold_blood]
-exp: 1304
 species: draconian
 will: 40
 attacks:

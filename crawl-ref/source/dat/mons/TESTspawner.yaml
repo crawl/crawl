@@ -2,7 +2,7 @@ name: "test spawner"
 glyph: {char: "X", colour: white}
 flags: [stationary, insubstantial, fast_regen, no_poly_to]
 resists: {elec: 4, fire: 4, cold: 4, miasma: 4, corr: 4}
-exp: 15
+xp_mult: 15
 holiness: [nonliving]
 will: invuln
 attacks:

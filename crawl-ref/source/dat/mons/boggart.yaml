@@ -1,7 +1,7 @@
 name: "boggart"
 glyph: {char: "g", colour: magenta}
 flags: [see_invis, warm_blood]
-exp: 117
+xp_mult: 14
 will: 40
 attacks:
  - {type: hit, damage: 5}

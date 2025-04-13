@@ -1,7 +1,6 @@
 name: "Parghit"
 glyph: {char: "T", colour: green}
 flags: [speaks, warm_blood, unique, fast_regen, male]
-exp: 3146
 species: troll
 will: 140
 attacks:

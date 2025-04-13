@@ -2,7 +2,7 @@ name: "spatial maelstrom"
 glyph: {char: "v", colour: yellow}
 flags: [flies, batty, insubstantial]
 resists: {elec: 1, fire: 2, cold: 2}
-exp: 756
+xp_mult: 5
 holiness: [nonliving]
 will: invuln
 attacks:

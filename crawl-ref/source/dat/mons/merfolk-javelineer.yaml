@@ -1,7 +1,7 @@
 name: "merfolk javelineer"
 glyph: {char: "m", colour: white}
 flags: [speaks, warm_blood, archer, prefer_ranged]
-exp: 920
+xp_mult: 12
 species: merfolk
 will: 60
 attacks:

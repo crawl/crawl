@@ -1,7 +1,7 @@
 name: "Frederick"
 glyph: {char: "@", colour: green}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male]
-exp: 5151
+xp_mult: 16
 species: demigod
 will: 140
 attacks:

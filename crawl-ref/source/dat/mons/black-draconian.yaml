@@ -2,7 +2,6 @@ name: "black draconian"
 glyph: {char: "d", colour: blue}
 flags: [flies, speaks, cold_blood]
 resists: {elec: 3}
-exp: 1019
 genus: draconian
 will: 40
 attacks:

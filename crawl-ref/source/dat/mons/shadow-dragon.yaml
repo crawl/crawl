@@ -2,7 +2,7 @@ name: "shadow dragon"
 glyph: {char: "D", colour: magenta}
 flags: [flies, see_invis, cold_blood]
 resists: {poison: 1, cold: 2, neg: 3}
-exp: 1406
+xp_mult: 12
 genus: dragon
 will: 120
 attacks:

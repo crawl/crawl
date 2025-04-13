@@ -2,7 +2,7 @@ name: "emperor scorpion"
 glyph: {char: "s", colour: lightgray}
 flags: [web_immune, no_skeleton]
 resists: {poison: 1}
-exp: 1235
+xp_mult: 11
 genus: scorpion
 will: 60
 attacks:

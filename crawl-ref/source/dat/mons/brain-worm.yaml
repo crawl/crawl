@@ -1,7 +1,7 @@
 name: "brain worm"
 glyph: {char: "w", colour: lightmagenta}
 flags: [fast_regen, no_skeleton]
-exp: 92
+xp_mult: 9
 genus: ribbon_worm
 will: 20
 attacks:

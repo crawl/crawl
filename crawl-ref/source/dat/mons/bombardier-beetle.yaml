@@ -2,7 +2,7 @@ name: "bombardier beetle"
 glyph: {char: "B", colour: lightblue}
 flags: [no_skeleton]
 resists: {poison: -1}
-exp: 46
+xp_mult: 60
 will: 20
 attacks:
  - {type: bite, damage: 5}

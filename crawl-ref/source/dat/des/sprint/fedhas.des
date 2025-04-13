@@ -15,9 +15,9 @@ ORDER:  4
 ORIENT: encompass
 SUBVAULT: o : fedhas_sprint_temple
 KMONS:  A = fungus
-KMONS:  B = spriggan hd:3 exp:29
-KMONS:  C = oklob sapling hp:7 exp:36
-KMONS:  D = oklob sapling hp:15 exp:49 name:wizard n_suf \
+KMONS:  B = spriggan hd:3
+KMONS:  C = oklob sapling hp:7
+KMONS:  D = oklob sapling hp:15 name:wizard n_suf \
             spells:spit_acid.50.natural;magic_dart.36.wizard;cantrip.18.wizard
 KMONS:  E = scorpion
 KMONS:  F = wandering mushroom
@@ -26,17 +26,17 @@ KMONS:  H = killer bee
 KMONS:  I = queen bee
 KMONS:  L = oklob plant
 KMONS:  J = spriggan druid
-KMONS:  M = oklob plant hp:30 exp:370 name:conjurer n_suf \
+KMONS:  M = oklob plant hp:30 name:conjurer n_suf \
             spells:spit_acid.67.natural;stone_arrow.30.wizard;\
                    force_lance.30.wizard
 KMONS:  N = ballistomycete spore
 # set the monster list for shadow creatures to draw on. This is based on the
 # old rod of swarms (these oklobs used to directly cast summon swarm).
 : dgn.set_random_mon_list("killer bee w:4 / scorpion w:4 / river rat w:2 / hornet / vampire mosquito / butterfly")
-KMONS:  O = oklob plant hp:30 exp:370 name:summoner n_suf \
+KMONS:  O = oklob plant hp:30 name:summoner n_suf \
             spells:spit_acid.67.natural;call_imp.30.wizard;\
                    shadow_creatures.30.wizard
-KMONS:  P = oklob plant hp:30 exp:370 name:shifter n_suf \
+KMONS:  P = oklob plant hp:30 name:shifter n_suf \
             spells:spit_acid.67.natural;blink_other.60.wizard
 KMONS:  Q = demonic crawler
 KMONS:  R = spriggan rider
@@ -49,13 +49,13 @@ KMONS:  Y = bush
 KMONS:  Z = alderking
 KMONS:  a = hornet
 KMONS:  b = ghost moth
-KMONS:  d = oklob plant exp:618 name:meteorologist n_suf \
+KMONS:  d = oklob plant name:meteorologist n_suf \
             spells:spit_acid.67.natural;lightning_bolt.30.wizard;\
                    airstrike.30.wizard
-KMONS:  e = oklob plant exp:601 name:demonologist n_suf \
+KMONS:  e = oklob plant name:demonologist n_suf \
             spells:spit_acid.67.natural;summon_demon.40.wizard;\
                    malign_gateway.20.wizard
-KMONS:  f = oklob plant exp:607 name:annihilator n_suf \
+KMONS:  f = oklob plant name:annihilator n_suf \
             spells:spit_acid.67.natural;poison_arrow.20.wizard;\
                    orb_of_destruction.20.wizard;bolt_of_cold.20.wizard
 KMONS:  g = the Enchantress
@@ -134,7 +134,7 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
-KMONS:  P = oklob sapling exp:75 name:priest n_suf \
+KMONS:  P = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 MAP
 .T.b.c.d.e.T.

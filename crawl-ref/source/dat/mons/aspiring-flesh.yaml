@@ -2,7 +2,7 @@ name: "aspiring flesh"
 glyph: {char: "*", colour: etc_random}
 flags: [stationary, fast_regen, no_skeleton, no_exp_gain, no_poly_to, no_zombie, no_gen_derived]
 resists: {poison: 1}
-exp: 0
+xp_mult: 0
 will: invuln
 attacks:
 hd: 12

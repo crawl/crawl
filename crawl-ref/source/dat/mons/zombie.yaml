@@ -2,7 +2,7 @@ name: "zombie"
 glyph: {char: "Z", colour: brown}
 flags: [no_regen]
 resists: {cold: 2}
-exp: 9
+xp_mult: 9
 holiness: [undead]
 will_per_hd: 1
 attacks:

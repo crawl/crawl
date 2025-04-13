@@ -1,7 +1,6 @@
 name: "Hellbinder"
 glyph: {char: "@", colour: etc_fire}
 flags: [see_invis, speaks, warm_blood, always_named]
-exp: 2274
 species: human
 will: 100
 attacks:

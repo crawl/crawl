@@ -1,7 +1,6 @@
 name: "deep elf annihilator"
 glyph: {char: "e", colour: lightblue}
 flags: [see_invis, speaks, warm_blood]
-exp: 1004
 species: elf
 will: 120
 attacks:

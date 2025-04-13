@@ -1,7 +1,6 @@
 name: "troll"
 glyph: {char: "T", colour: brown}
 flags: [speaks, warm_blood, fast_regen]
-exp: 307
 will: 20
 attacks:
  - {type: bite, damage: 20}

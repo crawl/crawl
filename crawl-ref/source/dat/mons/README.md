@@ -21,10 +21,6 @@ Relevant enums are noted with a (filename ➡ enum).
 - enum (string): The monster's enum. Defaults to `name`.
   (monster-type.h ➡ monster-type).
 - ✨ev✨ (int): The monster's EV (evasion).
-- exp (int): The monster's XP value. Defaults to 10.
-- exp_is_mult (bool): If `true`, the `exp` field is instead a multiplier for
-  the monster's XP that's used in addition to the base XP derived from the
-  monster's HP, speed, etc. Defaults to `false`.
 - flags (list of strings): An unordered list of special properties.
   (mon-flags.h ➡ monclass_flag_type)
 - genus (string): The genus to which this monster's species belongs. Mainly
@@ -82,6 +78,8 @@ Relevant enums are noted with a (filename ➡ enum).
   Exactly one of this and `will_per_hd` must be set.
 - will_per_hd (int): A multiplier for the monster's `hd` to get its Willpower.
   Exactly one of this and `will` must be set.
+- xp_mult (int): A multiplier for the monster's XP value, in addition to the
+  base XP derived from the monster's HP, speed, etc. Defaults to 10.
 
 `attack` entries are lists of associative arrays, each of which may have the
 following fields:

@@ -2,7 +2,6 @@ name: "wendigo"
 glyph: {char: "R", colour: blue}
 flags: [see_invis]
 resists: {poison: 1, fire: -1, cold: 3}
-exp: 994
 holiness: [demonic]
 will: 140
 attacks:

@@ -1,7 +1,7 @@
 name: "shambling mangrove"
 glyph: {char: "f", colour: lightred}
 resists: {poison: 1}
-exp: 899
+xp_mult: 15
 holiness: [plant]
 will: 100
 attacks:

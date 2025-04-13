@@ -1,7 +1,6 @@
 name: "bullfrog"
 glyph: {char: "F", colour: green}
 flags: [cold_blood]
-exp: 90
 genus: frog
 will: 20
 attacks:

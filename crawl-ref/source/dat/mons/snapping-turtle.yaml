@@ -1,7 +1,6 @@
 name: "snapping turtle"
 glyph: {char: "t", colour: green}
 flags: [cold_blood]
-exp: 251
 will: 40
 attacks:
  - {type: bite, flavour: reach, damage: 35}

@@ -1,7 +1,6 @@
 name: "draconian stormcaller"
 glyph: {char: "q", colour: white}
 flags: [speaks, cold_blood]
-exp: 1145
 species: draconian
 will: 40
 attacks:

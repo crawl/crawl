@@ -2,7 +2,7 @@ name: "sun moth"
 glyph: {char: "y", colour: etc_gold}
 flags: [flies, web_immune, no_skeleton]
 resists: {fire: 2}
-exp: 697
+xp_mult: 11
 genus: moth
 will: 60
 attacks:

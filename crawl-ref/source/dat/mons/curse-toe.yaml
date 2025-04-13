@@ -2,7 +2,7 @@ name: "curse toe"
 glyph: {char: "z", colour: lightgreen}
 flags: [flies, see_invis, speaks]
 resists: {elec: 1, fire: 3, cold: 1}
-exp: 2722
+xp_mult: 60
 holiness: [undead]
 will: invuln
 attacks:

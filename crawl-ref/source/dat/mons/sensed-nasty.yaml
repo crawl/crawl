@@ -2,7 +2,7 @@ name: "nasty sensed monster"
 enum: sensed_nasty
 glyph: {char: "{", colour: lightred}
 flags: [cant_spawn]
-exp: 0
+xp_mult: 0
 species: sensed
 holiness: [nonliving]
 will: 0

@@ -4453,14 +4453,14 @@ int get_monster_tension(const monster& mons, god_type god)
     if (mons.cannot_act())
         return 0;
 
-    int exp = exp_value(mons);
+    int exper = exper_value(mons);
 
-    // XXX: It's hard to entirely figure out how strong a projectile or bomb
-    // is offhand, but they should count for _some_ minimal tension.
-    if (exp <= 0)
+    // XXX: It's hard to entirely figure out how strong a projectile
+    // or bomb is offhand, but they should count for _some_ minimal tension.
+    if (exper <= 0)
     {
         if (mons.is_peripheral())
-            exp = 50;
+            exper = 50;
         else
             return 0;
     }
@@ -4468,9 +4468,9 @@ int get_monster_tension(const monster& mons, god_type god)
     // Almost dead monsters might die the next turn, but
     // they're also still entirely capable of killing you.
     if (att == ATT_HOSTILE || att == ATT_NEUTRAL)
-        exp = exp * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 30;
+        exper = exper * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 30;
     else
-        exp = exp * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 50;
+        exper = exper * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 50;
 
     bool gift = false;
 
@@ -4489,33 +4489,33 @@ int get_monster_tension(const monster& mons, god_type god)
     else if (att == ATT_FRIENDLY)
     {
         // Friendly monsters being around to help you reduce tension.
-        exp = -exp;
+        exper = -exper;
 
         // If it's a god gift, it reduces tension even more, since
         // the god is already helping you out.
         if (gift)
-            exp *= 2;
+            exper *= 2;
     }
     else if (att == ATT_NEUTRAL)
     {
         // Might hit you, might hit something else. Unreliable in threat.
-        exp = exp / 2;
+        exper = exper / 2;
     }
     else if (att == ATT_GOOD_NEUTRAL)
     {
         // Unreliable in its help versus wandering around or leaving entirely.
-        exp = -exp / 2;
+        exper = -exper / 2;
     }
 
     if (mons.asleep() || mons_is_fleeing(mons))
-        exp /= 20;
+        exper /= 20;
 
     if (att != ATT_FRIENDLY && att != ATT_GOOD_NEUTRAL)
     {
         if (!you.visible_to(&mons))
-            exp = exp * 2 / 3;
+            exper = exper * 2 / 3;
         if (!mons.visible_to(&you))
-            exp *= 2;
+            exper *= 2;
     }
 
     const vector<pair<bool, pair<int, int>>> tension_monster_status_checks {
@@ -4538,12 +4538,12 @@ int get_monster_tension(const monster& mons, god_type god)
     for (auto &checks : tension_monster_status_checks) {
         if (checks.first)
         {
-            exp *= checks.second.first;
-            exp /= checks.second.second;
+            exper *= checks.second.first;
+            exper /= checks.second.second;
         }
     }
 
-    return exp;
+    return exper;
 }
 
 int get_tension(god_type god)
@@ -4557,12 +4557,12 @@ int get_tension(god_type god)
 
         if (mon && mon->alive() && you.can_see(*mon))
         {
-            const int exp = get_monster_tension(*mon, god);
+            int exper = get_monster_tension(*mon, god);
 
             if (!mon->wont_attack())
                 nearby_monster = true;
 
-            total += exp;
+            total += exper;
         }
     }
 
@@ -4664,7 +4664,7 @@ int get_tension(god_type god)
 int get_fuzzied_monster_difficulty(const monster& mons)
 {
     double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int exp = exp_value(mons) * 100;
+    int exp = exper_value(mons) * 100;
     exp = random2(exp) + random2(exp);
     return exp / (1 + factor);
 }

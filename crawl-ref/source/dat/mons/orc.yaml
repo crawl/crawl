@@ -1,7 +1,7 @@
 name: "orc"
 glyph: {char: "o", colour: lightred}
 flags: [speaks, warm_blood]
-exp: 3
+xp_mult: 15
 will: 0
 attacks:
  - {type: hit, damage: 2}

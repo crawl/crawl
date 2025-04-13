@@ -2,7 +2,7 @@ name: "shadow imp"
 glyph: {char: "5", colour: magenta}
 flags: [speaks]
 resists: {poison: 1, cold: 2}
-exp: 11
+xp_mult: 11
 holiness: [demonic]
 will: 10
 attacks:

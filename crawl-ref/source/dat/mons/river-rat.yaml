@@ -1,7 +1,7 @@
 name: "river rat"
 glyph: {char: "r", colour: lightgreen}
 flags: [warm_blood]
-exp: 13
+xp_mult: 13
 genus: rat
 will: 10
 attacks:

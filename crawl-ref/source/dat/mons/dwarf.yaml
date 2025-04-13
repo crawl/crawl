@@ -1,7 +1,6 @@
 name: "dwarf"
 glyph: {char: "g", colour: lightgreen}
 flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
-exp: 131
 will: 20
 attacks:
  - {type: hit, damage: 10}

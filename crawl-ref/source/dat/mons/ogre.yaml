@@ -1,7 +1,7 @@
 name: "ogre"
 glyph: {char: "O", colour: brown}
 flags: [speaks, warm_blood]
-exp: 119
+xp_mult: 9
 will: 20
 attacks:
  - {type: hit, damage: 20}

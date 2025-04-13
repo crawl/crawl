@@ -2,7 +2,7 @@ name: "revenant"
 glyph: {char: "z", colour: magenta}
 flags: [see_invis, speaks]
 resists: {cold: 2}
-exp: 1335
+xp_mult: 18
 holiness: [undead]
 will: invuln
 attacks:

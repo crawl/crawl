@@ -1,7 +1,6 @@
 name: "spriggan air mage"
 glyph: {char: "i", colour: lightcyan}
 flags: [flies, see_invis, speaks, warm_blood]
-exp: 851
 species: spriggan
 will: 140
 attacks:

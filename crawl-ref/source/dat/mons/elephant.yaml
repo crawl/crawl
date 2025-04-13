@@ -1,7 +1,7 @@
 name: "elephant"
 glyph: {char: "Y", colour: green}
 flags: [warm_blood]
-exp: 480
+xp_mult: 9
 will: 60
 attacks:
  - {type: trample, flavour: trample, damage: 20}

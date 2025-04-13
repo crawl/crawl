@@ -2,7 +2,6 @@ name: "demonspawn blood saint"
 glyph: {char: "6", colour: lightblue}
 flags: [speaks, warm_blood]
 resists: {fire: 3}
-exp: 1104
 species: demonspawn
 holiness: [natural, demonic]
 will: 60

@@ -1,7 +1,6 @@
 name: "felid"
 glyph: {char: "h", colour: magenta}
 flags: [see_invis, speaks, warm_blood, no_poly_to, no_gen_derived]
-exp: 106
 will: 40
 attacks:
  - {type: claw, damage: 10}

@@ -1,7 +1,7 @@
 name: "kobold blastminer"
 glyph: {char: "K", colour: cyan}
 flags: [speaks, warm_blood]
-exp: 466
+xp_mult: 12
 species: kobold
 will: 20
 attacks:

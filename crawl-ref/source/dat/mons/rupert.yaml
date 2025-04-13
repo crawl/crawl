@@ -1,7 +1,7 @@
 name: "Rupert"
 glyph: {char: "@", colour: lightred}
 flags: [speaks, warm_blood, unique, male]
-exp: 1862
+xp_mult: 18
 species: human
 will: 100
 attacks:

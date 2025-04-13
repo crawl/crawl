@@ -1,7 +1,7 @@
 name: "Snorg"
 glyph: {char: "T", colour: lightgreen}
 flags: [speaks, warm_blood, unique, fast_regen, female]
-exp: 946
+xp_mult: 25
 species: troll
 will: 60
 attacks:

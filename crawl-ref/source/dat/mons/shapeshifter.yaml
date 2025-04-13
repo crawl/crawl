@@ -1,6 +1,5 @@
 name: "shapeshifter"
 glyph: {char: "p", colour: lightred}
-exp: 295
 will: 40
 attacks:
  - {type: hit, damage: 5}

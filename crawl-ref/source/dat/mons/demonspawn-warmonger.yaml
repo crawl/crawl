@@ -1,7 +1,6 @@
 name: "demonspawn warmonger"
 glyph: {char: "6", colour: lightcyan}
 flags: [fighter, speaks, warm_blood]
-exp: 1313
 species: demonspawn
 holiness: [natural, demonic]
 will: 60

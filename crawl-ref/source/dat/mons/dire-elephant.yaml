@@ -1,7 +1,7 @@
 name: "dire elephant"
 glyph: {char: "Y", colour: blue}
 flags: [warm_blood]
-exp: 996
+xp_mult: 8
 genus: elephant
 will: 100
 attacks:

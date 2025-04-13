@@ -1,7 +1,7 @@
 name: "ghost crab"
 glyph: {char: "t", colour: lightgray}
 flags: [no_skeleton, no_zombie]
-exp: 849
+xp_mult: 25
 genus: crab
 holiness: [undead]
 will: 40

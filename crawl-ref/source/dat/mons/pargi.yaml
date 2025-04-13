@@ -1,7 +1,6 @@
 name: "Pargi"
 glyph: {char: "T", colour: green}
 flags: [speaks, warm_blood, unique, fast_regen, male]
-exp: 135
 species: troll
 will: 10
 attacks:

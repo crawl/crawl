@@ -2,7 +2,7 @@ name: "polar bear"
 glyph: {char: "h", colour: lightblue}
 flags: [warm_blood]
 resists: {cold: 1}
-exp: 295
+xp_mult: 12
 genus: bear
 will: 20
 attacks:

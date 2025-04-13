@@ -2,7 +2,6 @@ name: "fravashi"
 glyph: {char: "A", colour: green}
 flags: [flies, fighter, speaks]
 resists: {poison: 1}
-exp: 912
 holiness: [holy]
 will: 120
 attacks:

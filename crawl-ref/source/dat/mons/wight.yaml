@@ -1,7 +1,7 @@
 name: "wight"
 glyph: {char: "z", colour: green}
 resists: {cold: 2}
-exp: 73
+xp_mult: 20
 holiness: [undead]
 will: 20
 attacks:

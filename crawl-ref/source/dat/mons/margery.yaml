@@ -1,7 +1,7 @@
 name: "Margery"
 glyph: {char: "@", colour: lightred}
 flags: [see_invis, speaks, warm_blood, unique, female]
-exp: 2809
+xp_mult: 14
 species: human
 will: 140
 attacks:

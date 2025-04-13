@@ -1,7 +1,6 @@
 name: "octopode"
 glyph: {char: "x", colour: lightcyan}
 flags: [speaks, no_skeleton, no_poly_to, no_gen_derived]
-exp: 479
 will: 10
 attacks:
  - {type: tentacle_slap, damage: 24}

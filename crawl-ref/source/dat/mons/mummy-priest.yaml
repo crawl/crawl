@@ -2,7 +2,7 @@ name: "mummy priest"
 glyph: {char: "M", colour: red}
 flags: [speaks]
 resists: {elec: 1, cold: 1}
-exp: 920
+xp_mult: 20
 species: mummy
 holiness: [undead]
 will: 120

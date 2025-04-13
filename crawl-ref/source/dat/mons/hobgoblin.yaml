@@ -1,7 +1,6 @@
 name: "hobgoblin"
 glyph: {char: "g", colour: brown}
 flags: [speaks, warm_blood]
-exp: 2
 genus: goblin
 will: 0
 attacks:

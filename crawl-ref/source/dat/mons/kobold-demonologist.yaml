@@ -1,7 +1,7 @@
 name: "kobold demonologist"
 glyph: {char: "K", colour: magenta}
 flags: [speaks, warm_blood]
-exp: 370
+xp_mult: 18
 species: kobold
 will: 40
 attacks:

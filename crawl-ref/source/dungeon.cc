@@ -5257,7 +5257,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.mname     = mspec.monname;
     mg.hd        = mspec.hd;
     mg.hp        = mspec.hp;
-    mg.exp       = mspec.exp;
     mg.props     = mspec.props;
 
     if (mg.props.exists(MAP_KEY))

@@ -1,7 +1,7 @@
 name: "ball python"
 glyph: {char: "S", colour: green}
 flags: [cold_blood]
-exp: 1
+xp_mult: 13
 genus: snake
 will: 0
 attacks:

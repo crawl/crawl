@@ -1,7 +1,6 @@
 name: "demigod"
 glyph: {char: "p", colour: yellow}
 flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
-exp: 154
 genus: human
 will: 20
 attacks:

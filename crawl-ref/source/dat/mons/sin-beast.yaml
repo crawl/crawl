@@ -1,7 +1,7 @@
 name: "sin beast"
 glyph: {char: "2", colour: cyan}
 flags: [fighter]
-exp: 1287
+xp_mult: 17
 holiness: [demonic]
 will: 20
 attacks:

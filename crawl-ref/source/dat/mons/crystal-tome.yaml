@@ -1,7 +1,7 @@
 name: "walking crystal tome"
 enum: crystal_tome
 glyph: {char: ";", colour: cyan}
-exp: 1809
+xp_mult: 25
 species: earthen_tome
 genus: walking_tome
 holiness: [nonliving]

@@ -1,7 +1,7 @@
 name: "iron elemental"
 glyph: {char: "E", colour: etc_iron}
 resists: {elec: 3, fire: 3, cold: 3}
-exp: 822
+xp_mult: 13
 genus: elemental
 holiness: [nonliving]
 will: invuln

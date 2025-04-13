@@ -1,7 +1,6 @@
 name: "alligator snapping turtle"
 glyph: {char: "t", colour: lightgreen}
 flags: [cold_blood]
-exp: 834
 genus: snapping_turtle
 will: 60
 attacks:

@@ -1,7 +1,7 @@
 name: "Lodul"
 glyph: {char: "O", colour: cyan}
 flags: [speaks, warm_blood, unique, male]
-exp: 754
+xp_mult: 25
 species: ogre
 will: 40
 attacks:

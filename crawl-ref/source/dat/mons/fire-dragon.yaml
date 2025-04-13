@@ -2,7 +2,7 @@ name: "fire dragon"
 glyph: {char: "D", colour: lightred}
 flags: [flies, warm_blood]
 resists: {poison: 1, fire: 2, cold: -1}
-exp: 910
+xp_mult: 12
 genus: dragon
 will: 60
 attacks:

@@ -2,7 +2,6 @@ name: "saltling"
 glyph: {char: "9", colour: white}
 genus: golem
 holiness: [nonliving]
-exp: 271
 will: invuln
 attacks:
  - {type: hit, damage: 20}

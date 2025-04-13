@@ -1,7 +1,7 @@
 name: "Jeremiah"
 glyph: {char: "F", colour: magenta}
 flags: [speaks, unique, gender_neutral]
-exp: 386
+xp_mult: 7
 species: barachi
 genus: frog
 will: 40

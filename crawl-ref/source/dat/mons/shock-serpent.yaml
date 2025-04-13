@@ -2,7 +2,7 @@ name: "shock serpent"
 glyph: {char: "S", colour: lightblue}
 flags: [cold_blood]
 resists: {elec: 3}
-exp: 788
+xp_mult: 12
 genus: snake
 will: 40
 attacks:

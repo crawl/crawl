@@ -130,11 +130,8 @@ struct monsterentry
     monclass_flags_t bitfields;
     resists_t resists;
 
-    // The monster's XP value.
-    int exp;
-    // If true, exp is a multiplier used to calculate their XP; see
-    // exp_value().
-    bool exp_is_mult;
+    // Multiplier for calculated monster XP value; see exper_value() for use.
+    int8_t exp_mod;
 
     monster_type genus,         // "team" the monster plays for
                  species;       // corpse type of the monster
@@ -238,7 +235,7 @@ int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc, int scale = 1);
 int mons_max_hp(monster_type mc);
-int exp_value(const monster& mon, bool real = true, bool legacy = false);
+int exper_value(const monster& mon, bool real = true, bool legacy = false);
 
 int hit_points(int avg_hp, int scale = 10);
 

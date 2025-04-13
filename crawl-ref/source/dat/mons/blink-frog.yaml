@@ -1,7 +1,7 @@
 name: "blink frog"
 glyph: {char: "F", colour: lightgreen}
 flags: [cold_blood]
-exp: 264
+xp_mult: 13
 genus: frog
 will: 40
 attacks:

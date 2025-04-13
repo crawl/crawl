@@ -2,7 +2,7 @@ name: "hydra"
 glyph: {char: "D", colour: lightgreen}
 flags: [cold_blood, fast_regen]
 resists: {poison: 1}
-exp: 862
+xp_mult: 11
 will: 60
 attacks:
  - {type: bite, damage: 18}

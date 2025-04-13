@@ -62,7 +62,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int exp;
     int speed;
     int speed_increment;
 

@@ -1,6 +1,6 @@
 name: "orange demon"
 glyph: {char: "4", colour: lightred}
-exp: 421
+xp_mult: 12
 holiness: [demonic]
 will: 60
 attacks:

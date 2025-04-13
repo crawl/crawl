@@ -1,7 +1,6 @@
 name: "basilisk"
 glyph: {char: "l", colour: magenta}
 flags: [cold_blood]
-exp: 192
 genus: giant_lizard
 will: 20
 attacks:

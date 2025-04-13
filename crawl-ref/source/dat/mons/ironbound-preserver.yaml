@@ -1,7 +1,7 @@
 name: "ironbound preserver"
 glyph: {char: "p", colour: lightgreen}
 flags: [speaks, warm_blood]
-exp: 1118
+xp_mult: 12
 species: human
 will: 40
 attacks:

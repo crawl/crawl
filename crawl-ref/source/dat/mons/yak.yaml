@@ -1,7 +1,7 @@
 name: "yak"
 glyph: {char: "Y", colour: brown}
 flags: [warm_blood, herd]
-exp: 204
+xp_mult: 9
 will: 20
 attacks:
  - {type: gore, damage: 18}

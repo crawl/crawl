@@ -2,7 +2,7 @@ name: "electric eel"
 glyph: {char: "S", colour: lightcyan}
 flags: [cold_blood, no_gen_derived]
 resists: {elec: 3}
-exp: 54
+xp_mult: 19
 will: 10
 attacks:
 hd: 3

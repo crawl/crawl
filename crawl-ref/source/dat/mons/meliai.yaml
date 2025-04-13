@@ -2,7 +2,6 @@ name: "meliai"
 glyph: {char: "y", colour: green}
 flags: [flies, web_immune, no_skeleton]
 resists: {poison: -1}
-exp: 484
 genus: killer_bee
 will: 20
 attacks:

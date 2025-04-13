@@ -1,6 +1,6 @@
 name: "tentacled starspawn"
 glyph: {char: "X", colour: lightcyan}
-exp: 1507
+xp_mult: 20
 holiness: [nonliving]
 will: 120
 attacks:

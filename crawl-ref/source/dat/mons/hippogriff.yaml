@@ -1,7 +1,7 @@
 name: "hippogriff"
 glyph: {char: "H", colour: yellow}
 flags: [flies, warm_blood]
-exp: 263
+xp_mult: 11
 will: 20
 attacks:
  - {type: peck, damage: 12}

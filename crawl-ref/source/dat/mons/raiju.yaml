@@ -2,7 +2,7 @@ name: "raiju"
 glyph: {char: "h", colour: lightcyan}
 flags: [see_invis, unblindable]
 resists: {elec: 3}
-exp: 264
+xp_mult: 12
 genus: hound
 will: 20
 attacks:

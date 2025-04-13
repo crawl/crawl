@@ -1,7 +1,7 @@
 name: "Eustachio"
 glyph: {char: "@", colour: blue}
 flags: [speaks, warm_blood, unique, male]
-exp: 200
+xp_mult: 20
 species: human
 will: 20
 attacks:

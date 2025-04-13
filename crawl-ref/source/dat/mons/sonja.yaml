@@ -1,7 +1,7 @@
 name: "Sonja"
 glyph: {char: "K", colour: red}
 flags: [speaks, warm_blood, unique, female]
-exp: 780
+xp_mult: 40
 species: kobold
 will: 10
 attacks:

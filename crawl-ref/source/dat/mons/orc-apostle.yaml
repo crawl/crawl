@@ -1,8 +1,7 @@
 name: "orc apostle"
 glyph: {char: "o", colour: white}
 flags: [fighter, speaks, warm_blood, ghost_demon, no_poly_to, no_zombie, no_gen_derived, fast_regen]
-exp: 35
-exp_is_mult: true
+xp_mult: 16
 species: orc
 attacks:
  - {type: hit, damage: 20}

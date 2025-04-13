@@ -1,7 +1,7 @@
 name: "orc knight"
 glyph: {char: "o", colour: cyan}
 flags: [fighter, speaks, warm_blood]
-exp: 617
+xp_mult: 9
 species: orc
 will: 40
 attacks:

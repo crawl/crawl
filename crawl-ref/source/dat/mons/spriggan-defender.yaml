@@ -1,7 +1,6 @@
 name: "spriggan defender"
 glyph: {char: "i", colour: yellow}
 flags: [fighter, see_invis, speaks, warm_blood]
-exp: 1116
 species: spriggan
 will: 140
 attacks:

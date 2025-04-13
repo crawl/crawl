@@ -2,7 +2,6 @@ name: "nargun"
 glyph: {char: "9", colour: blue}
 flags: [fighter, see_invis]
 resists: {elec: 1, cold: 3, petrify: 1}
-exp: 1284
 genus: golem
 holiness: [nonliving]
 will: 100

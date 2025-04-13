@@ -1,7 +1,7 @@
 name: "Pikel"
 glyph: {char: "K", colour: blue}
 flags: [speaks, warm_blood, unique, male]
-exp: 647
+xp_mult: 32
 species: kobold
 will: 20
 attacks:

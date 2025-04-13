@@ -2,7 +2,6 @@ name: "stoker"
 glyph: {char: "L", colour: etc_fire}
 flags: [no_skeleton]
 resists: {fire: 3}
-exp: 831
 genus: lich
 holiness: [undead]
 will: 120

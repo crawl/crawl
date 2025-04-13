@@ -1,7 +1,6 @@
 name: "draconian shifter"
 glyph: {char: "q", colour: lightmagenta}
 flags: [speaks, cold_blood]
-exp: 1237
 species: draconian
 will: 40
 attacks:

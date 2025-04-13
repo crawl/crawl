@@ -2,7 +2,7 @@ name: "molten gargoyle"
 glyph: {char: "9", colour: lightred}
 flags: [flies]
 resists: {elec: 1, fire: 3, petrify: 1}
-exp: 431
+xp_mult: 18
 genus: golem
 holiness: [nonliving]
 will: 60

@@ -2,7 +2,6 @@ name: "pale draconian"
 glyph: {char: "d", colour: cyan}
 flags: [speaks, cold_blood, no_poly_to]
 resists: {steam: 1}
-exp: 997
 genus: draconian
 will: 40
 attacks:

@@ -1,7 +1,7 @@
 name: "goblin rider"
 glyph: {char: "g", colour: green}
 flags: [flies, fighter, speaks, warm_blood]
-exp: 308
+xp_mult: 17
 species: goblin
 will: 10
 attacks:

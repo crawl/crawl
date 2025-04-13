@@ -1,7 +1,6 @@
 name: "deep elf knight"
 glyph: {char: "e", colour: blue}
 flags: [fighter, speaks, warm_blood]
-exp: 777
 species: elf
 will: 80
 attacks:

@@ -1,7 +1,7 @@
 name: "ironbound thunderhulk"
 glyph: {char: "O", colour: lightcyan}
 flags: [speaks, warm_blood]
-exp: 1070
+xp_mult: 7
 species: ogre
 will: 40
 attacks:

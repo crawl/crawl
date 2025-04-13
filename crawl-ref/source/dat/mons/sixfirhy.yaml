@@ -1,7 +1,7 @@
 name: "sixfirhy"
 glyph: {char: "3", colour: lightblue}
 resists: {elec: 3}
-exp: 760
+xp_mult: 6
 holiness: [demonic]
 will: 60
 attacks:

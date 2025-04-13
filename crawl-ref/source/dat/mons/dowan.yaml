@@ -1,7 +1,7 @@
 name: "Dowan"
 glyph: {char: "e", colour: red}
 flags: [speaks, warm_blood, unique, male]
-exp: 69
+xp_mult: 15
 species: elf
 will: 20
 attacks:

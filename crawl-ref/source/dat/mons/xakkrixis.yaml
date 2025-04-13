@@ -2,7 +2,6 @@ name: "Xak'krixis"
 enum: xakkrixis
 glyph: {char: "B", colour: lightgreen}
 flags: [see_invis, speaks, unique, warm_blood, no_skeleton, gender_neutral, burrows]
-exp: 1492
 genus: formicid
 will: 80
 attacks:

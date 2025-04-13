@@ -2,7 +2,7 @@ name: "deep elf pyromancer"
 enum: deep_elf_fire_mage
 glyph: {char: "e", colour: red}
 flags: [speaks, warm_blood]
-exp: 600
+xp_mult: 12
 species: elf
 will: 40
 attacks:

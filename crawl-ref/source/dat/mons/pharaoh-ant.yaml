@@ -1,7 +1,6 @@
 name: "pharaoh ant"
 glyph: {char: "B", colour: yellow}
 flags: [web_immune, no_skeleton]
-exp: 758
 holiness: [undead]
 will: 60
 attacks:

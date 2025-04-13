@@ -340,8 +340,7 @@ keyfns = {
 
     'resists': Field(parse_resists),
 
-    'exp': Field(lambda s: parse_num(s, 0, 9999)),
-    'exp_is_mult': Field(parse_bool),
+    'xp_mult': Field(lambda s: parse_num(s, 0, 999)),
     'species': Field(lambda s: "MONS_" + s.upper()),
     'genus': Field(lambda s: "MONS_" + s.upper()),
     'holiness': Field(parse_holiness),
@@ -377,8 +376,7 @@ keyfns = {
 defaults = {
     'flags': ['M_NO_FLAGS'],
     'resists': [ResVal('MR_NO_FLAGS', 0)],
-    'exp': 10,
-    'exp_is_mult': 'false',
+    'xp_mult': 10,
     'holiness': ['MH_NATURAL'],
     'spells': 'MST_NO_SPELLS',
     'shout': 'S_SILENT',

@@ -1,7 +1,7 @@
 name: "Nessos"
 glyph: {char: "c", colour: magenta}
 flags: [speaks, warm_blood, unique, archer, gender_neutral]
-exp: 1043
+xp_mult: 18
 species: centaur
 will: 20
 attacks:

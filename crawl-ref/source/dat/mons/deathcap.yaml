@@ -1,7 +1,7 @@
 name: "deathcap"
 glyph: {char: "f", colour: lightmagenta}
 resists: {cold: 1}
-exp: 6
+xp_mult: 6
 species: wandering_mushroom
 genus: fungus
 holiness: [undead]

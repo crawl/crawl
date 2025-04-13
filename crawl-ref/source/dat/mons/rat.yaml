@@ -1,7 +1,7 @@
 name: "rat"
 glyph: {char: "r", colour: brown}
 flags: [warm_blood]
-exp: 1
+xp_mult: 1
 will: 0
 attacks:
  - {type: bite, damage: 3}

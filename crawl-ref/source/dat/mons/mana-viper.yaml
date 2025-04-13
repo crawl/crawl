@@ -2,7 +2,6 @@ name: "mana viper"
 glyph: {char: "S", colour: magenta}
 flags: [see_invis, cold_blood]
 resists: {poison: 1}
-exp: 718
 genus: snake
 will: 100
 attacks:

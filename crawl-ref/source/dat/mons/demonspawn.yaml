@@ -1,7 +1,6 @@
 name: "demonspawn"
 glyph: {char: "6", colour: brown}
 flags: [speaks, warm_blood, no_poly_to]
-exp: 849
 holiness: [natural, demonic]
 will: 40
 attacks:

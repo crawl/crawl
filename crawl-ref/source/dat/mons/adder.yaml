@@ -1,7 +1,6 @@
 name: "adder"
 glyph: {char: "S", colour: lightgreen}
 flags: [cold_blood]
-exp: 13
 genus: snake
 will: 10
 attacks:

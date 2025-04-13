@@ -1,7 +1,7 @@
 name: "swamp worm"
 glyph: {char: "w", colour: brown}
 flags: [no_skeleton]
-exp: 162
+xp_mult: 3
 genus: ribbon_worm
 will: 10
 attacks:

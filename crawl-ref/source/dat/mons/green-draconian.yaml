@@ -2,7 +2,6 @@ name: "green draconian"
 glyph: {char: "d", colour: green}
 flags: [speaks, cold_blood]
 resists: {poison: 1}
-exp: 1045
 genus: draconian
 will: 40
 attacks:

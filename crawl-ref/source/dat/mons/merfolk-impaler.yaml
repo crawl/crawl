@@ -1,7 +1,7 @@
 name: "merfolk impaler"
 glyph: {char: "m", colour: yellow}
 flags: [speaks, warm_blood]
-exp: 915
+xp_mult: 13
 species: merfolk
 will: 40
 attacks:

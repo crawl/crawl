@@ -1,7 +1,6 @@
 name: "skyshark"
 glyph: {char: "F", colour: white}
 flags: [flies, cold_blood, no_skeleton]
-exp: 767
 will: 40
 attacks:
  - {type: bite, flavour: bloodzerk, damage: 20}

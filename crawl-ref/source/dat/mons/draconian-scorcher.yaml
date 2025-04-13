@@ -1,7 +1,6 @@
 name: "draconian scorcher"
 glyph: {char: "q", colour: lightred}
 flags: [speaks, cold_blood]
-exp: 1212
 species: draconian
 will: 40
 attacks:

@@ -1,7 +1,7 @@
 name: "Louise"
 glyph: {char: "@", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female]
-exp: 1207
+xp_mult: 15
 species: human
 will: 80
 attacks:

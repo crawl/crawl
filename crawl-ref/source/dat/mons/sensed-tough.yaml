@@ -2,7 +2,7 @@ name: "tough sensed monster"
 enum: sensed_tough
 glyph: {char: "{", colour: yellow}
 flags: [cant_spawn]
-exp: 0
+xp_mult: 0
 species: sensed
 holiness: [nonliving]
 will: 0

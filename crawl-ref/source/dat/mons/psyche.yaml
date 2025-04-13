@@ -1,7 +1,7 @@
 name: "Psyche"
 glyph: {char: "@", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female]
-exp: 343
+xp_mult: 20
 species: human
 will: 60
 attacks:

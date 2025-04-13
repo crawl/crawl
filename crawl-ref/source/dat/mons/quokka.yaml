@@ -1,7 +1,6 @@
 name: "quokka"
 glyph: {char: "r", colour: white}
 flags: [warm_blood]
-exp: 2
 will: 0
 attacks:
  - {type: bite, damage: 5}

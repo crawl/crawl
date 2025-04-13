@@ -3971,10 +3971,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (mspec.hd == TAG_UNFOUND)
             mspec.hd = 0;
 
-        mspec.exp = strip_number_tag(mon_str, "exp:");
-        if (mspec.exp == TAG_UNFOUND)
-            mspec.exp = 0;
-
         mspec.hp = strip_number_tag(mon_str, "hp:");
         if (mspec.hp == TAG_UNFOUND)
             mspec.hp = 0;

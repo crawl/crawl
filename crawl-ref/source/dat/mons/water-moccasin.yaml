@@ -2,7 +2,7 @@ name: "water moccasin"
 glyph: {char: "S", colour: brown}
 flags: [cold_blood]
 resists: {poison: 1}
-exp: 149
+xp_mult: 11
 genus: snake
 will: 20
 attacks:

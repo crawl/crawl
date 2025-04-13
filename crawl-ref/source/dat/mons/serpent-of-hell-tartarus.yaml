@@ -3,7 +3,7 @@ enum: serpent_of_hell_tartarus
 glyph: {char: "D", colour: etc_death}
 flags: [crash_doors, flies, see_invis, unique, tall_tile]
 resists: {poison: 1, cold: 2}
-exp: 6666
+xp_mult: 18
 species: serpent_of_hell
 genus: dragon
 holiness: [demonic]

@@ -2,7 +2,7 @@ name: "titan"
 glyph: {char: "C", colour: lightcyan}
 flags: [fighter, see_invis, speaks, warm_blood]
 resists: {elec: 3}
-exp: 1664
+xp_mult: 12
 genus: giant
 will: 180
 attacks:

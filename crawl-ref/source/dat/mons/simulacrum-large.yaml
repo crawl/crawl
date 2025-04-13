@@ -3,7 +3,7 @@ enum: simulacrum_large
 glyph: {char: "Z", colour: lightcyan}
 flags: [no_regen]
 resists: {fire: -1, cold: 3}
-exp: 9
+xp_mult: 9
 species: simulacrum
 holiness: [undead]
 will_per_hd: 1

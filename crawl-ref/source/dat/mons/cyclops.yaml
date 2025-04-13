@@ -1,7 +1,7 @@
 name: "cyclops"
 glyph: {char: "C", colour: yellow}
 flags: [speaks, warm_blood]
-exp: 547
+xp_mult: 14
 genus: giant
 will: 40
 attacks:
