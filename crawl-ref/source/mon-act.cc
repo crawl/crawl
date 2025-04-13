@@ -3151,6 +3151,10 @@ static bool _check_damaging_walls(const monster *mon,
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check)
 {
+    // Can always stay in place.
+    if (delta.origin())
+        return true;
+
     const coord_def targ = mons->pos() + delta;
 
     // Bounds check: don't consider moving out of grid!
