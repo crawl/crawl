@@ -131,7 +131,7 @@ struct mgen_data
           summon_type(0), pos(p), foe(mfoe), flags(genflags), god(which_god),
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
-          extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
+          exp(0), extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
           initial_shifter(RANDOM_MONSTER), xp_tracking(XP_NON_VAULT)
     { }
 
