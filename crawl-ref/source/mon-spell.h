@@ -228,6 +228,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_IRONBOUND_MECHANIST,
+      {
+       { SPELL_PHALANX_BEETLE, 35, MON_SPELL_WIZARD },
+       { SPELL_ALL_PURPOSE_TEMPERING, 45, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('h') Carnivorous quadrupeds.
     {  MST_BEAR,
       {

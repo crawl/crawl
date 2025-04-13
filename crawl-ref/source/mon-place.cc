@@ -1852,8 +1852,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ELEPHANT,        { {}, {{ BAND_ELEPHANT, {2, 6} }}}},
     { MONS_REDBACK,         { {}, {{ BAND_REDBACK, {1, 5} }}}},
     { MONS_CULICIVORA,      { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
-    { MONS_ENTROPY_WEAVER,  { {0, 0, [](){ return !player_in_branch(BRANCH_PANDEMONIUM); }},
-                                         {{ BAND_REDBACK, {1, 4} }}}},
     { MONS_PHARAOH_ANT,     { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
     { MONS_JOROGUMO,        { {0, 0, [](){ return !player_in_branch(BRANCH_PANDEMONIUM); }},
                                          {{ BAND_MIXED_SPIDERS, {1, 3}, true }}}},
@@ -2121,6 +2119,19 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
          }
          break;
 
+    case MONS_ENTROPY_WEAVER:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_IRONBOUND_MECHANISTS;
+            band_size = 1 + x_chance_in_y(you.depth, 8);
+        }
+        else if (!player_in_branch(BRANCH_PANDEMONIUM))
+        {
+            band = BAND_REDBACK;
+            band_size = random_range(1, 4);
+        }
+        break;
+
     case MONS_PROTEAN_PROGENITOR:
     case MONS_THERMIC_DYNAMO:
         if (x_chance_in_y(2, 3))
@@ -2379,6 +2390,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {MONS_VAULT_GUARD, 4}},
 
                                 {{MONS_VAULT_GUARD, 1}}}},
+
+    { BAND_IRONBOUND_MECHANISTS, {{{MONS_IRONBOUND_MECHANIST, 1}}}},
 
     { BAND_FAUN_PARTY,          {{{MONS_MERFOLK_SIREN, 1}},
 

@@ -475,11 +475,12 @@ static const vector<pop_entry> population[] =
   // Easy enemies:
   {  1,  4,  400, FALL, MONS_YAKTAUR },
   {  1,  4,  350, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
-  {  1,  4,  175, FALL, MONS_HARPY },
+  {  1,  4,  145, FALL, MONS_HARPY },
   {  1,  4,  100, FALL, MONS_BOGGART },
   {  1,  4,  600, FALL, MONS_LINDWURM },
 
+  {  1,  4,   50, FLAT, MONS_IRONBOUND_MECHANIST },
+  {  1,  4,  230, FALL, MONS_IRONBOUND_MECHANIST },
   {  1,  4,  200, FLAT, MONS_DIRE_ELEPHANT },
   {  1,  4,  200, FALL, MONS_DIRE_ELEPHANT },
   {  1,  4,  400, FLAT, MONS_SLIME_CREATURE },
@@ -501,8 +502,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,  150, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  4,  100, RISE, MONS_FORMLESS_JELLYFISH },
-  {  1,  4,  350, FLAT, MONS_ARCANIST },
-  {  1,  4,  350, RISE, MONS_ARCANIST },
+  {  1,  4,  325, FLAT, MONS_ARCANIST },
+  {  1,  4,  325, RISE, MONS_ARCANIST },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
   {  1,  4,   75, RISE, MONS_NECROMANCER },
   {  1,  4,  500, FLAT, MONS_YAKTAUR_CAPTAIN },
@@ -526,10 +527,9 @@ static const vector<pop_entry> population[] =
   {  5, 12,   90, FALL, MONS_HELL_KNIGHT },
   // V:5 undead friends:
   {  5, 12,  520, FALL, MONS_PHANTASMAL_WARRIOR },
-  {  5, 12,  190, FALL, MONS_FREEZING_WRAITH },
+  {  5, 12,  100, FALL, MONS_FREEZING_WRAITH },
   {  5, 12,  110, FALL, MONS_LICH },
   {  5, 12,   45, FALL, MONS_ENTROPY_WEAVER },
-  {  5, 12,   45, FALL, MONS_SHADOW_WRAITH },
   {  5, 12,   45, FALL, MONS_FLAYED_GHOST },
   // V:5 elves:
   {  5, 12,  300, FALL, MONS_DEEP_ELF_HIGH_PRIEST },
@@ -552,6 +552,7 @@ static const vector<pop_entry> population[] =
   {  5, 12,  260, FALL, MONS_GUARDIAN_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
   {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
+  {  5, 12,  135, FALL, MONS_IRONBOUND_MECHANIST },
   // V:5 chaff from earlier floors
   {  5,  5,  650, FLAT, MONS_ORC_KNIGHT },
   {  5,  5,  180, FLAT, MONS_FORMLESS_JELLYFISH },

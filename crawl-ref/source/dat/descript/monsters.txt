@@ -1801,6 +1801,12 @@ ironbound frostheart
 An emaciated warrior-mage, bound to guard long-coveted treasures. It calls
 forth deadly frost from its surrounds, freezing foes that are next to walls.
 %%%%
+ironbound mechanist
+
+A well-armoured coglin whose talents with machinery have been harnessed by the
+Ironbound order to repair and augment the many constructs that help guard the
+Vaults.
+%%%%
 ironbound thunderhulk
 
 A brutish figure, hastily armoured in scraps of leather and metal to combat

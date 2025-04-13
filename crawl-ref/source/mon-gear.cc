@@ -658,6 +658,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_IRONBOUND_CONVOKER,      { IRON_WEAPONS } },
         { MONS_IRONBOUND_PRESERVER,     { IRON_WEAPONS } },
+        { MONS_IRONBOUND_MECHANIST,
+            { { { WPN_WAR_AXE,          4 },
+                { WPN_BROAD_AXE,        1 },
+                { WPN_TRIDENT,          3 },
+                { WPN_PARTISAN,         1 },
+        } } },
         { MONS_SIGMUND, { { { WPN_HALBERD, 1 } } } },
         { MONS_REAPER, { { { WPN_HALBERD, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
@@ -1430,12 +1436,13 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 {
     ASSERT(mon); // TODO: change to monster &mon
 
-    if (mon->type == MONS_DEEP_ELF_BLADEMASTER && mon->weapon())
+    if ((mon->type == MONS_DEEP_ELF_BLADEMASTER || mon->type == MONS_IRONBOUND_MECHANIST)
+        && mon->weapon())
     {
-        const item_def &first_sword = *mon->weapon();
-        ASSERT(first_sword.base_type == OBJ_WEAPONS);
-        item_def twin_sword = first_sword; // copy
-        give_specific_item(mon, twin_sword);
+        const item_def &first_weapon = *mon->weapon();
+        ASSERT(first_weapon.base_type == OBJ_WEAPONS);
+        item_def twin_weapon = first_weapon; // copy
+        give_specific_item(mon, twin_weapon);
         return;
     }
 
@@ -1942,6 +1949,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_VAULT_SENTINEL:
     case MONS_IRONBOUND_CONVOKER:
     case MONS_IRONBOUND_FROSTHEART:
+    case MONS_IRONBOUND_MECHANIST:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL, ARM_SCALE_MAIL);
         break;
