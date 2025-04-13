@@ -1,6 +1,7 @@
 name: "Crazy Yiuf"
 glyph: {char: "j", colour: colour_undef}
 flags: [speaks, warm_blood, unique, male]
+exp: 41
 species: gnoll
 will: 10
 attacks:

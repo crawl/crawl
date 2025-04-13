@@ -1,6 +1,7 @@
 name: "vault sentinel"
 glyph: {char: "p", colour: lightblue}
 flags: [fighter, see_invis, speaks, warm_blood]
+exp: 448
 species: human
 will: 40
 attacks:

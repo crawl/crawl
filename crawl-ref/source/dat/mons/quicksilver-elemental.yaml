@@ -2,6 +2,7 @@ name: "quicksilver elemental"
 glyph: {char: "E", colour: lightcyan}
 flags: [see_invis, batty]
 resists: {elec: 3, fire: 3, cold: 3}
+exp: 1243
 genus: elemental
 holiness: [nonliving]
 will: invuln

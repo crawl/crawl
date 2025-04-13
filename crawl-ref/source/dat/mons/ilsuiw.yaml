@@ -1,6 +1,7 @@
 name: "Ilsuiw"
 glyph: {char: "m", colour: lightgreen}
 flags: [speaks, warm_blood, unique, female]
+exp: 1338
 species: merfolk
 will: 140
 attacks:

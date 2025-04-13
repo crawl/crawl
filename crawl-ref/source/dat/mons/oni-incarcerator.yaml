@@ -1,7 +1,7 @@
 name: "oni incarcerator"
 glyph: {char: "O", colour: lightmagenta}
 flags: [fighter, speaks, warm_blood]
-xp_mult: 16
+exp: 2712
 species: oni
 will: 100
 attacks:

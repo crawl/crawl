@@ -2,6 +2,7 @@ name: "djinni"
 glyph: {char: "R", colour: magenta}
 flags: [flies, speaks]
 resists: {fire: 2, cold: -1}
+exp: 363
 holiness: [nonliving]
 will: 30
 attacks:

@@ -2,7 +2,7 @@ name: "two-headed ogre"
 enum: two_headed_ogre
 glyph: {char: "O", colour: lightred}
 flags: [speaks, warm_blood, two_weapons]
-xp_mult: 15
+exp: 824
 genus: ogre
 will: 40
 attacks:

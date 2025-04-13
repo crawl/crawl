@@ -1,7 +1,7 @@
 name: "kraken"
 glyph: {char: "X", colour: lightmagenta}
 flags: [cold_blood, no_skeleton]
-xp_mult: 6
+exp: 1525
 will: 60
 attacks:
  - {type: bite, damage: 50}

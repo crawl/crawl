@@ -1,7 +1,7 @@
 name: "ugly thing"
 glyph: {char: "u", colour: colour_undef}
 flags: [warm_blood, ghost_demon, herd, no_gen_derived]
-xp_mult: 6
+exp: 555
 will: 40
 attacks:
  - {type: hit, damage: 17}

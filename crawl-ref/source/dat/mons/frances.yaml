@@ -1,7 +1,7 @@
 name: "Frances"
 glyph: {char: "@", colour: yellow}
 flags: [see_invis, speaks, warm_blood, unique, female]
-xp_mult: 15
+exp: 1518
 species: human
 will: 100
 attacks:

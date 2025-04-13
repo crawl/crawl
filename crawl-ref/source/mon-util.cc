@@ -94,7 +94,7 @@ static mon_display monster_symbols[NUM_MONSTERS];
 #define MONDATASIZE ARRAYSZ(mondata)
 
 static bool _give_apostle_proper_name(monster& mon, apostle_type type);
-static int _mons_exp_mod(monster_type mclass);
+static int _mons_exp(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
@@ -2412,6 +2412,63 @@ int mons_max_hp(monster_type mc)
     return me->avg_hp_10x * 133 / 1000;
 }
 
+static int _mons_exp_is_multiplier(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->exp_is_mult;
+}
+
+// Calculate xp for complicated, highly variable monsters using the supplied
+// multiplier. Takes into account speed, HD, spells, and melee damage.
+static int _calc_exp_with_multiplier(const monster& mon, int exp_mult)
+{
+    const int speed = mons_base_speed(mon);
+    const int hd = mon.get_experience_level();
+    const bool spellcaster = mon.has_spells();
+
+    // scale with HD nonlinearly (gross)
+    int hd_factor = hd * (25 + hd) / 25;
+
+    int diff = 100;
+
+    // bonus difficulty for casting "strong" spells
+    if (spellcaster)
+    {
+        int spell_danger = 0;
+        for (const mon_spell_slot &slot : mon.spells)
+        {
+            if (spell_difficulty(slot.spell) > 4)
+                spell_danger += slot.freq;
+        }
+
+        diff += spell_danger / 2;
+    }
+
+    // speed and melee damage
+    if (speed > 0)
+    {
+        // Only normal+ speed monsters get a bonus for having high melee
+        // damage.
+        if (speed >= 10)
+        {
+            int max_melee = 0;
+            for (int i = 0; i < 4; ++i)
+                max_melee += _mons_damage(mon.type, i);
+
+            if (max_melee > 30)
+                diff += (max_melee / ((speed == 10) ? 4 : 2));
+        }
+
+        diff *= speed;
+        diff /= 10;
+    }
+
+    // Clamp difficulty mod to somewhat sane values (currently 50-250%).
+    diff = max(min(diff, 250), 50);
+
+    return exp_mult * hd_factor * diff / 100;
+}
+
 /**
  * How much XP will the given monster give out by dying?
  *
@@ -2422,13 +2479,16 @@ int mons_max_hp(monster_type mc)
  *               historical (pre-2eadbcd) behaviour.
  * @return How much XP this monster is worth.
  */
-int exper_value(const monster& mon, bool real, bool legacy)
+int exp_value(const monster& mon, bool real, bool legacy)
 {
+    // Specially defined by vaults eg. for sprint
+    if (mon.exp > 0)
+        return mon.exp;
+
     int x_val = 0;
 
     // These four are the original arguments.
     const monster_type mc = mon.type;
-    int hd                = mon.get_experience_level();
     int maxhp             = mon.max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
@@ -2447,182 +2507,56 @@ int exper_value(const monster& mon, bool real, bool legacy)
     {
         const monsterentry *m = get_monster_data(mons_base_type(mon));
         ASSERT(m);
-
-        // Use real hd, zombies would use the basic species and lose
-        // information known to the player ("orc warrior zombie"). Monsters
-        // levelling up is visible (although it may happen off-screen), so
-        // this is hardly ever a leak. Only Pan lords are unknown in the
-        // general.
-        if (m->mc == MONS_PANDEMONIUM_LORD)
-            hd = m->HD;
         maxhp = mons_max_hp(mc);
     }
 
-    // Hacks to make merged slime creatures not worth so much exp. We
-    // will calculate the experience we would get for 1 blob, and then
-    // just multiply it so that exp is linear with blobs merged. -cao
+    // Hacks to make merged slime creatures not worth so much exp. We will
+    // calculate the experience we would get for 1 blob, and then just
+    // multiply it so that exp is linear with blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         maxhp /= mon.blob_size;
-
-    // These are some values we care about.
-    const int speed       = mons_base_speed(mon);
-    const int modifier    = _mons_exp_mod(mc);
-    const int item_usage  = mons_itemuse(mon);
-
-    // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mon.has_spells();
 
     // Early out for no XP monsters.
     if (!mons_class_gives_xp(mc))
         return 0;
 
-    x_val = (16 + maxhp) * hd * hd / 10;
+    // Derived undead will reference the base monster, with a divisor
+    const bool zombified = mons_is_zombified(mon);
 
-    // Let's calculate a simple difficulty modifier. - bwr
-    int diff = 0;
+    // Start with the monster's base xp
+    if (zombified)
+        x_val = _mons_exp(mon.base_monster) / 4;
+    else
+        x_val = _mons_exp(mc);
 
-    // Let's look for big spells.
-    if (spellcaster)
+    int avg_hp = mons_avg_hp(mc);
+
+    // More complex calculation for special (highly variable) monsters
+    if (_mons_exp_is_multiplier(mc))
+        x_val = _calc_exp_with_multiplier(mon, x_val);
+    // Scale weakly by the monster's actual max hp as a percentage of average
+    // max hp. This randomizes exp values slightly. Derived undead and
+    // special monsters skip this.
+    else if (avg_hp > 0 && !zombified)
     {
-        for (const mon_spell_slot &slot : mon.spells)
-        {
-            switch (slot.spell)
-            {
-            case SPELL_PARALYSE:
-            case SPELL_SMITING:
-            case SPELL_SUMMON_EYEBALLS:
-            case SPELL_CALL_DOWN_DAMNATION:
-            case SPELL_HURL_DAMNATION:
-            case SPELL_SYMBOL_OF_TORMENT:
-            case SPELL_FIRE_STORM:
-            case SPELL_GLACIATE:
-            case SPELL_POLAR_VORTEX:
-            case SPELL_SHATTER:
-            case SPELL_ORB_OF_ELECTRICITY:
-            case SPELL_CHAIN_LIGHTNING:
-            case SPELL_LEGENDARY_DESTRUCTION:
-            case SPELL_SUMMON_ILLUSION:
-            case SPELL_SPELLSPARK_SERVITOR:
-            case SPELL_CONJURE_LIVING_SPELLS:
-                diff += 25;
-                break;
-
-            case SPELL_SUMMON_GREATER_DEMON:
-            case SPELL_HASTE:
-            case SPELL_PHANTOM_BLITZ:
-            case SPELL_BLINK_RANGE:
-            case SPELL_PETRIFY:
-            case SPELL_VEX:
-                diff += 20;
-                break;
-
-            case SPELL_VITRIFY:
-            case SPELL_BANISHMENT:
-            case SPELL_FAKE_MARA_SUMMON:
-            case SPELL_PYRE_ARROW:
-            case SPELL_MINDBURST:
-            case SPELL_IOOD:
-            case SPELL_FIREBALL:
-            case SPELL_PLASMA_BEAM:
-            case SPELL_IRON_SHOT:
-            case SPELL_BOMBARD:
-            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-            case SPELL_LRD:
-            case SPELL_LIGHTNING_BOLT:
-            case SPELL_CONJURE_BALL_LIGHTNING:
-            case SPELL_MARCH_OF_SORROWS:
-            case SPELL_AGONY:
-            case SPELL_DIG:
-                diff += 10;
-                break;
-
-            case SPELL_SUMMON_DRAGON:
-            case SPELL_SUMMON_HORRIBLE_THINGS:
-            case SPELL_HAUNT:
-            case SPELL_PLANEREND:
-            case SPELL_MALIGN_GATEWAY:
-            case SPELL_SUMMON_EMPEROR_SCORPIONS:
-                diff += 7;
-                break;
-
-            default:
-                break;
-            }
-        }
+        x_val = x_val * 4 + x_val * maxhp / avg_hp;
+        x_val /= 5;
     }
 
-    // Let's look at regeneration.
-    if (mons_class_fast_regen(mc))
-        diff += 15;
-
-    // Monsters at normal or fast speed with big melee damage.
-    if (speed >= 10)
-    {
-        int max_melee = 0;
-        for (int i = 0; i < 4; ++i)
-            max_melee += _mons_damage(mc, i);
-
-        if (max_melee > 30)
-            diff += (max_melee / ((speed == 10) ? 2 : 1));
-    }
-
-    // Monsters who can use equipment (even if only the equipment
-    // they are given) can be considerably enhanced because of
-    // the way weapons work for monsters. - bwr
-    if (item_usage >= MONUSE_STARTING_EQUIPMENT)
-        diff += 30;
-
-    // Set a reasonable range on the difficulty modifier...
-    // Currently 70% - 200%. - bwr
-    if (diff > 100)
-        diff = 100;
-    else if (diff < -30)
-        diff = -30;
-
-    // Apply difficulty.
-    x_val *= (100 + diff);
-    x_val /= 100;
-
-    // Basic speed modification.
-    if (speed > 0)
-    {
-        x_val *= speed;
-        x_val /= 10;
-    }
-
-    // Slow monsters without spells and items often have big HD which
-    // cause the experience value to be overly large... this tries
-    // to reduce the inappropriate amount of XP that results. - bwr
-    if (speed < 10 && !spellcaster && item_usage < MONUSE_STARTING_EQUIPMENT)
-        x_val /= 2;
-
-    // Apply the modifier in the monster's definition.
-    if (modifier > 0)
-    {
-        x_val *= modifier;
-        x_val /= 10;
-    }
-
-    // Scale starcursed mass exp by what percentage of the whole it represents
+    // Scale starcursed mass exp by what percentage of the whole it
+    // represents.
     if (mon.type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon.blob_size) / 12;
 
-    // Further reduce xp from zombies
-    if (mons_is_zombified(mon))
-        x_val /= 2;
-
-    // Reductions for big values. - bwr
-    if (x_val > 100)
-        x_val = 100 + ((x_val - 100) * 3) / 4;
-    if (x_val > 750)
-        x_val = 750 + (x_val - 750) / (legacy ? 3 : 6);
-
-    // Slime creature exp hack part 2: Scale exp back up by the number
-    // of blobs merged. -cao
-    // Has to be after the stepdown to prevent issues with 4-5 merged slime
-    // creatures. -pf
+    // Slime creature exp hack part 2: Scale exp back up by the number of
+    // blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
+
+    // Legacy code used for Gozag bribe and tension calculations.
+    // XXX: remove this.
+    if (x_val > 750 && legacy)
+        x_val = 750 + (x_val - 750) * 2;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
@@ -3256,10 +3190,10 @@ monsterentry *get_monster_data(monster_type mc)
         return nullptr;
 }
 
-static int _mons_exp_mod(monster_type mc)
+static int _mons_exp(monster_type mc)
 {
     ASSERT_smc();
-    return smc->exp_mod;
+    return smc->exp;
 }
 
 int mons_class_base_speed(monster_type mc)
@@ -3588,7 +3522,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         && !testbits(mon.flags, MF_NO_REWARD))
     {
         // Give the player full XP.
-        gain_exp(exper_value(mon));
+        gain_exp(exp_value(mon));
     }
     mon.flags |= MF_PACIFIED;
 
@@ -5048,7 +4982,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
         return MTHRT_TRIVIAL; // ignores 'real', sorry...
 
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real, true) / (1 + factor);
+    const int tension = exp_value(threat, real, true) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5127,8 +5061,8 @@ void debug_mondata()
             fails += make_stringf("%s has negative AC\n", name);
         if (md->ev < 0 && !mons_is_draconian_job(mc))
             fails += make_stringf("%s has negative EV\n", name);
-        if (md->exp_mod < 0)
-            fails += make_stringf("%s has negative xp mod\n", name);
+        if (md->exp < 0)
+            fails += make_stringf("%s has negative xp\n", name);
 
         if (md->speed < 0)
             fails += make_stringf("%s has 0 speed\n", name);

@@ -1,7 +1,7 @@
 name: "walking earthen tome"
 enum: earthen_tome
 glyph: {char: ";", colour: magenta}
-xp_mult: 7
+exp: 1737
 genus: walking_tome
 holiness: [nonliving]
 will: invuln

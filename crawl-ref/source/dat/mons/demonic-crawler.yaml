@@ -1,6 +1,7 @@
 name: "demonic crawler"
 glyph: {char: "s", colour: lightgreen}
 flags: [see_invis, web_immune, fast_regen, no_skeleton]
+exp: 800
 resists: {poison: 1}
 holiness: [demonic]
 will: 60

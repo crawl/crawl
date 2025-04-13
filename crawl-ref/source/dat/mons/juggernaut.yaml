@@ -1,7 +1,7 @@
 name: "juggernaut"
 glyph: {char: "C", colour: lightgreen}
 flags: [fighter, see_invis, speaks, warm_blood]
-xp_mult: 12
+exp: 3979
 genus: giant
 will: 120
 attacks:

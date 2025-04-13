@@ -1,7 +1,7 @@
 name: "tyrant leech"
 glyph: {char: "w", colour: red}
 flags: [no_skeleton]
-xp_mult: 8
+exp: 287
 will: 40
 attacks:
  - {type: bite, flavour: vampiric, damage: 35}

@@ -1088,6 +1088,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props[KNOWN_MAX_HP_KEY] = mg.hp;
     }
 
+    if (mg.exp != 0)
+        mon->exp = mg.exp;
+
     if (!crawl_state.game_is_arena())
     {
         mon->max_hit_points = min(mon->max_hit_points, MAX_MONSTER_HP);

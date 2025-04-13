@@ -1,6 +1,7 @@
 name: "eldritch tentacle"
 glyph: {char: "w", colour: colour_undef}
 flags: [flies, see_invis, stationary, no_poly_to]
+exp: 1530
 resists: {elec: 3, fire: 3, cold: 3, corr: 3}
 holiness: [nonliving]
 will: invuln

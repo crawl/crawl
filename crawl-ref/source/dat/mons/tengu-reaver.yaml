@@ -1,7 +1,7 @@
 name: "tengu reaver"
 glyph: {char: "Q", colour: lightmagenta}
 flags: [flies, fighter, see_invis, speaks, warm_blood]
-xp_mult: 13
+exp: 1406
 species: tengu
 will: 60
 attacks:
