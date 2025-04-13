@@ -4171,7 +4171,8 @@ static void _builder_monsters()
         // of letting half the level spawn at the far reaches of deep water.
         if (in_shoals)
             mg.flags |= MG_PREFER_LAND;
-
+        // TODO: this probably needs to go get XP somehow? where should it come in?
+        mg.exp = 0;
         place_monster(mg);
     }
 

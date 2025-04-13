@@ -1088,8 +1088,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props[KNOWN_MAX_HP_KEY] = mg.hp;
     }
 
-    if (mg.exp != 0)
+    if (mg.exp != 0) {
+        ASSERT(mg.exp != UNINITIALIZED_EXP);
         mon->exp = mg.exp;
+    }
 
     if (!crawl_state.game_is_arena())
     {
