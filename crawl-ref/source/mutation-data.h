@@ -28,7 +28,7 @@ struct mutation_category_def
 static const mutation_def mut_data[] =
 {
 
-{ MUT_IRON_FUSED_SCALES, 0, 1, mutflag::good | mutflag::anatomy,
+{ MUT_IRON_FUSED_SCALES, 0, 1, mutflag::good | mutflag::anatomy | mutflag::substance,
   "iron-fused scales",
 
   {"Your scales are fused with iron. (AC + 5)", "", ""},
