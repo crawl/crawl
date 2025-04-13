@@ -2955,8 +2955,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             else if (mons.type == MONS_CLOCKWORK_BEE)
                 msg = " runs out of power.";
-            else if (mons.type == MONS_CLOCKWORK_BEE_INACTIVE)
+            else if (mons.type == MONS_CLOCKWORK_BEE_INACTIVE
+                     || mons.type == MONS_PHALANX_BEETLE
+                     || mons.type == MONS_WALKING_ALEMBIC
+                     || mons.type == MONS_DIAMOND_SAWBLADE)
+            {
                 msg = " falls apart.";
+            }
             else if (mons.type == MONS_PLATINUM_PARAGON)
                 msg = " expends the last of its power.";
             else if (mons.type == MONS_RENDING_BLADE)
