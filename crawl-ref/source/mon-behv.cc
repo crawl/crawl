@@ -317,12 +317,16 @@ void handle_behaviour(monster* mon)
     // Handle leashing monster behavior: return to creator if non-adjacent,
     // otherwise try to pick a monster in reach to attack.
     const int leash_range = mons_leash_range(mon->type);
+    bool should_return = false;
     if (owner && leash_range > 0)
     {
         if (grid_distance(owner->pos(), mon->pos()) > leash_range)
         {
             mon->foe = MHITYOU;
+            mon->foe = owner->mindex();
+            mon->target = owner->pos();
             mon->behaviour = BEH_SEEK;
+            should_return = true;
         }
         else
         {
@@ -412,8 +416,8 @@ void handle_behaviour(monster* mon)
     }
 
     // Unfriendly monsters fighting other monsters will usually
-    // target the player.
-    if (!isFriendly && !isNeutral
+    // target the player (unless it is a leashing monster returning to its owner).
+    if (!isFriendly && !isNeutral && !should_return
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_frenzied()
@@ -423,7 +427,8 @@ void handle_behaviour(monster* mon)
     }
 
     // Validate current target again.
-    _mon_check_foe_invalid(mon);
+    if (!should_return)
+        _mon_check_foe_invalid(mon);
 
     if (mon->has_ench(ENCH_HAUNTING))
     {

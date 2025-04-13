@@ -1435,6 +1435,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DROWSY:
     case ENCH_PYRRHIC_RECOLLECTION:
     case ENCH_SPELL_CHARGED:
+    case ENCH_PHALANX_BARRIER:
         decay_enchantment(en);
         break;
 
@@ -2212,6 +2213,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
+    "phalanx barrier",
     "buggy", // NUM_ENCHANTMENTS
 };
 

@@ -3048,7 +3048,11 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    if (!mpushee->has_action_energy()
+    // XXX: Allow summoners to displace their own phalanx beetles at all times
+    //      or they can sometimes get stuck behind them forever, depending on
+    //      internal action ordering.
+    if (!(mpushee->has_action_energy()
+          || (mpushee->type == MONS_PHALANX_BEETLE && mpusher->mid == mpushee->summoner))
         && !_same_tentacle_parts(mpusher, mpushee)
         && mpushee->type != MONS_FOXFIRE)
     {

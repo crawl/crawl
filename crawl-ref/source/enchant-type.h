@@ -241,6 +241,7 @@ enum enchant_type
     ENCH_VAMPIRE_THRALL,
     ENCH_PYRRHIC_RECOLLECTION,
     ENCH_CLOCKWORK_BEE_CAST,
+    ENCH_PHALANX_BARRIER,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

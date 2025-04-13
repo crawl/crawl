@@ -940,6 +940,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        [](monster &caster, mon_spell_slot, bolt&) {
             _mon_cast_tempering(caster, false);
         }
+    } },
+    { SPELL_PHALANX_BEETLE, {
+        _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt&) {
+            cast_phalanx_beetle(caster, mons_spellpower(caster, SPELL_PHALANX_BEETLE), false);
+        }
     } }
 };
 
@@ -1903,6 +1909,7 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_CHAIN_OF_CHAOS:
         case SPELL_STICKS_TO_SNAKES:
+        case SPELL_PHALANX_BEETLE:
             return 4;
 
         default:

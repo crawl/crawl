@@ -16,7 +16,7 @@ struct mon_aura_data
     bool is_hostile;
     duration_type dur_type;
     string player_key;
-    function<bool(const actor& targ)> valid_target;
+    function<bool(const actor& targ, const monster& source)> valid_target;
     function<void(const monster& source)> player_msg;
     bool adjacent_only;
 
@@ -24,7 +24,7 @@ struct mon_aura_data
                   int _base_duration, bool _is_hostile,
                   duration_type _dur_type = NUM_DURATIONS,
                   string _player_key = "",
-                  function<bool(const actor& targ)> _valid_target = nullptr,
+                  function<bool(const actor& targ, const monster& source)> _valid_target = nullptr,
                   function<void(const monster& source)> _player_msg = nullptr,
                   bool _adjacent_only = false):
                   mon_source(_mon_source), ench_type(_ench_type),
@@ -40,7 +40,7 @@ static const vector<mon_aura_data> aura_map =
 {
     {MONS_TORPOR_SNAIL,
         ENCH_SLOW, 1, true, DUR_SLOW, TORPOR_SLOWED_KEY,
-         [](const actor& targ) { return !targ.stasis();},
+         [](const actor& targ, const monster&) { return !targ.stasis();},
          [](const monster& source)
             {  mprf("Being near %s leaves you feeling lethargic.",
                         source.name(DESC_THE).c_str());
@@ -63,22 +63,23 @@ static const vector<mon_aura_data> aura_map =
     {MONS_GLOWING_ORANGE_BRAIN,
         ENCH_EMPOWERED_SPELLS, 1, false,
         NUM_DURATIONS, "",
-        [](const actor& targ) { return targ.antimagic_susceptible() ;}},
+        [](const actor& targ, const monster&) { return targ.antimagic_susceptible() ;}},
 
     {MONS_APIS,
         ENCH_DOUBLED_HEALTH, 1, false,
         NUM_DURATIONS, "",
-        [](const actor& targ) { return targ.type != MONS_APIS ;}},
+        [](const actor& targ, const monster&) { return targ.type != MONS_APIS ;}},
 
     {MONS_IRONBOUND_BEASTMASTER,
         ENCH_HASTE, 1, false,
         NUM_DURATIONS, "",
-        [](const actor& targ) { return (targ.holiness() & MH_NATURAL)
+        [](const actor& targ, const monster&) { return (targ.holiness() & MH_NATURAL)
         && targ.is_monster() && (mons_intel(*targ.as_monster()) != I_HUMAN) ;}},
 
     {MONS_PHALANX_BEETLE,
-        ENCH_NONE, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
-         nullptr, nullptr, true},
+        ENCH_PHALANX_BARRIER, 1, false, DUR_PHALANX_BARRIER, PHALANX_BARRIER_KEY,
+        [](const actor& targ, const monster& source)
+            { return targ.mid == source.summoner;}, nullptr, true},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)
@@ -178,7 +179,7 @@ static bool _aura_could_affect(const mon_aura_data& aura, const monster& source,
         return false;
 
     // Does the aura have more specific conditions that are invalid?
-    if (aura.valid_target && !aura.valid_target(victim))
+    if (aura.valid_target && !aura.valid_target(victim, source))
         return false;
 
     // Looks good!

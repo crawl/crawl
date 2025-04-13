@@ -3890,6 +3890,11 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     if (m1.type == MONS_SOLAR_EMBER)
         return true;
 
+    // Monsters can always swap with their own phalanx beetle (to keep from
+    // being stuck behind it in hallways forever.)
+    if (m2.type == MONS_PHALANX_BEETLE && m1.mid == m2.summoner)
+        return true;
+
     // non-fleeing smiters won't push past anything.
     if (_mons_has_smite_attack(&m1) && !fleeing)
         return false;

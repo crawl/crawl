@@ -4647,11 +4647,19 @@ spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
 
     if (monster* mons = create_monster(beetle))
     {
-        mpr("You forge a skittering defender to stand by your side.");
-        you.props[PHALANX_BARRIER_POWER_KEY] = 400 + pow * 3;
+        if (agent.is_player())
+        {
+            mpr("You forge a skittering defender to stand by your side.");
+            you.props[PHALANX_BARRIER_POWER_KEY] = 400 + pow * 3;
+        }
+        else if (you.can_see(agent))
+        {
+            mprf("%s forges a skittering defender to stand by %s side.",
+                 agent.name(DESC_THE).c_str(), agent.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         mons_update_aura(*mons);
     }
-    else
+    else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
