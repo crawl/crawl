@@ -2,7 +2,7 @@ name: "apocalypse crab"
 glyph: {char: "t", colour: white}
 flags: [see_invis, no_skeleton]
 resists: {poison: -1, fire: 2, cold: 2}
-xp_mult: 14
+exp: 454
 genus: crab
 holiness: [demonic]
 will: 60

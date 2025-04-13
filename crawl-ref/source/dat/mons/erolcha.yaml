@@ -1,7 +1,7 @@
 name: "Erolcha"
 glyph: {char: "O", colour: lightblue}
 flags: [see_invis, speaks, warm_blood, unique, female]
-xp_mult: 50
+exp: 867
 species: ogre
 will: 60
 attacks:

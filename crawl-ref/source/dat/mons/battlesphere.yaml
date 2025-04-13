@@ -2,7 +2,7 @@ name: "battlesphere"
 glyph: {char: "*", colour: etc_magic}
 flags: [flies, see_invis, unblindable, insubstantial, no_exp_gain, no_poly_to, maintain_range, avatar]
 resists: {elec: 3, fire: 2, cold: 2, corr: 1}
-xp_mult: 0
+exp: 0
 holiness: [nonliving]
 will: invuln
 attacks:

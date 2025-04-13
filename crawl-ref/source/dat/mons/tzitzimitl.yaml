@@ -2,7 +2,7 @@ name: "Tzitzimitl"
 glyph: {char: "1", colour: magenta}
 flags: [flies, see_invis]
 resists: {elec: 1, poison: 1, cold: 2}
-xp_mult: 13
+exp: 2056
 holiness: [demonic]
 will: invuln
 attacks:

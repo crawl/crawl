@@ -582,7 +582,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva / w:15 angel",
                 "royal mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan / air elemental w:20",
-                "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
+                "iron golem hd:20 exp:2074 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 air elemental",
                 "guardian sphinx / place:Tomb:$",
@@ -659,7 +659,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "antique champion ; shadow dragon scales . kite shield . double sword",
                 "royal mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan",
-                "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
+                "iron golem hd:20 exp:2074 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice / " ..
@@ -695,13 +695,13 @@ function arena_sprint_init_boss_table()
 
     local bs = {}
     if crawl.coinflip() then
-        bs[1] = {"place:Snake", "aizul hd:7 hp:120 / " ..
-                 "naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 / " ..
-                 "anaconda name:giant n_adj n_noc hp:130 col:lightred",
+        bs[1] = {"place:Snake", "aizul hd:7 hp:120 exp:791 / " ..
+                 "naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 exp:890 / " ..
+                 "anaconda name:giant n_adj n_noc hp:130 exp:1026 col:lightred",
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra / " ..
-                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 " ..
+                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 exp:982" ..
                    "spells:mephitic_cloud.15.wizard;" ..
                           "summon_hydra.15.wizard;" ..
                           "invisibility.15.wizard;" ..
@@ -710,15 +710,15 @@ function arena_sprint_init_boss_table()
     end
 
     if crawl.coinflip() then
-        bs[2] = {"place:Spider", "arachne hp:250 / " ..
-                 "wolf spider name:dire n_adj n_noc col:blue hp:300 / " ..
+        bs[2] = {"place:Spider", "arachne hp:250 exp:4586 / " ..
+                 "wolf spider name:dire n_adj n_noc col:blue hp:300 exp:1030 / " ..
                  "jumping spider name:phase_spider n_rpl n_des never_corpse " ..
-                    "col:lightgreen spells:blink_away.58.natural hp:300",
+                    "col:lightgreen spells:blink_away.58.natural hp:300 exp:856",
                  "gossamer rune of zot"}
     else
-        bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 / " ..
+        bs[2] = {"place:Shoals", "polyphemus hp:350 exp:2584 / ilsuiw hp:250 exp:1735 / " ..
                  "merfolk avatar name:dimme tile:mons_dimme n_rpl n_des n_spe " ..
-                    "col:lightmagenta hp:300 spells:avatar_song.160.natural;" ..
+                    "col:lightmagenta hp:300 exp:1343 spells:avatar_song.160.natural;" ..
                                                    "malign_gateway.40.natural",
                  "barnacled rune of zot"}
     end
@@ -727,8 +727,8 @@ function arena_sprint_init_boss_table()
         -- Elementalist boss is from mu_elemental_laboratory
         bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster / " ..
                  "deep elf master archer / deep elf annihilator / deep elf high priest",
-                 "fannar hp:400 hd:14 / " ..
-                 "deep elf elementalist hp:400 " ..
+                 "fannar hp:400 hd:14 exp:2748 / " ..
+                 "deep elf elementalist hp:400 exp:3574 " ..
                     "; robe ego:fire_resistance | " ..
                     "robe ego:cold_resistance | " ..
                     "robe ego:resistance . dagger ego:freezing | " ..
@@ -736,16 +736,16 @@ function arena_sprint_init_boss_table()
                  "elven rune of zot"}
     else
         bs[3] = {"place:Forest:$ w:50 / spriggan druid w:2 / spriggan air mage w:5 / " ..
-                 "spriggan berserker w:5", "agnes hp:335",
+                 "spriggan berserker w:5", "agnes hp:335 exp:3113",
                  "mossy rune of zot"}
     end
 
-    bs[4] = {"place:Slime", "dissolution hp:430 / " ..
-             "acid blob name:sulphuric n_adj col:white hp:450 / " ..
-             "great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
+    bs[4] = {"place:Slime", "dissolution hp:430 exp:16041/ " ..
+             "acid blob name:sulphuric n_adj col:white hp:450 exp:4488/ " ..
+             "great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600 exp:2502",
              "slimy rune of zot"}
-    bs[5] = {"vault guard / place:Vaults", "mennas hp:250 / mara hp:300 / " ..
-             "vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26",
+    bs[5] = {"vault guard / place:Vaults", "mennas hp:250 exp:6462/ mara hp:300 exp:8019 / " ..
+             "vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26 exp:9592",
              "silver rune of zot"}
     if crawl.coinflip() then
         bs[5], bs[4] = bs[4], bs[5]
@@ -768,7 +768,7 @@ function arena_sprint_init_boss_table()
     bs[13] = {"soul eater / reaper / executioner / curse skull",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
-               "khufu hp:500", "golden rune of zot"}
+               "khufu hp:500 exp:8988", "golden rune of zot"}
     -- Shuffle the above 9. We only wind up using 6 through 9
     for i = 14, 7, -1 do
         local r = crawl.random_range(6, i)
@@ -777,7 +777,7 @@ function arena_sprint_init_boss_table()
 
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
-              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta " ..
+              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 exp:62027 col:lightmagenta " ..
               "spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;blink_away.16.wizard.emergency", "demonic rune of zot"}
     return bs
 end

@@ -1,6 +1,7 @@
 name: "goliath frog"
 glyph: {char: "F", colour: lightgray}
 flags: [cold_blood]
+exp: 749
 genus: frog
 will: 60
 attacks:

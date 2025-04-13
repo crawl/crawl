@@ -1,7 +1,7 @@
 name: "Orb Guardian"
 glyph: {char: "X", colour: magenta}
 flags: [fighter, see_invis, no_poly_to]
-xp_mult: 20
+exp: 1752
 will: 120
 attacks:
  - {type: hit, damage: 45}

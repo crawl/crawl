@@ -2,7 +2,7 @@ name: "naga ritualist"
 glyph: {char: "N", colour: brown}
 flags: [see_invis, speaks, warm_blood]
 resists: {poison: 1}
-xp_mult: 14
+exp: 686
 species: naga
 will: 60
 attacks:

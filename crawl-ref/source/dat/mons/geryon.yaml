@@ -1,7 +1,7 @@
 name: "Geryon"
 glyph: {char: "&", colour: green}
 flags: [flies, fighter, see_invis, speaks, unique, male, tall_tile]
-xp_mult: 15
+exp: 2622
 genus: hell_lord
 holiness: [demonic]
 will: 120

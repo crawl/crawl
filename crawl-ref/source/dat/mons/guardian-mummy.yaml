@@ -2,7 +2,7 @@ name: "guardian mummy"
 glyph: {char: "M", colour: yellow}
 flags: [fighter]
 resists: {cold: 1}
-xp_mult: 13
+exp: 328
 species: mummy
 holiness: [undead]
 will: 40

@@ -2,7 +2,7 @@ name: "orb spider"
 glyph: {char: "s", colour: magenta}
 flags: [web_immune, no_skeleton, maintain_range]
 resists: {poison: -1}
-xp_mult: 12
+exp: 708
 genus: spider
 will: 40
 attacks:

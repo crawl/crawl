@@ -1,6 +1,7 @@
 name: "formicid"
 glyph: {char: "B", colour: green}
 flags: [see_invis, speaks, warm_blood, no_skeleton, no_poly_to, no_gen_derived]
+exp: 229
 will: 40
 attacks:
  - {type: hit, damage: 15}

@@ -1,7 +1,7 @@
 name: "Sigmund"
 glyph: {char: "@", colour: yellow}
 flags: [speaks, warm_blood, unique, male]
-xp_mult: 55
+exp: 229
 species: human
 will: 10
 attacks:

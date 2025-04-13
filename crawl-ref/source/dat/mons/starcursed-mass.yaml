@@ -1,7 +1,7 @@
 name: "starcursed mass"
 glyph: {char: "X", colour: blue}
 flags: [see_invis]
-xp_mult: 12
+exp: 993
 holiness: [nonliving]
 will: 100
 attacks:

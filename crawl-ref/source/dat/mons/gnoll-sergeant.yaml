@@ -1,6 +1,7 @@
 name: "gnoll sergeant"
 glyph: {char: "j", colour: cyan}
 flags: [fighter, speaks, warm_blood]
+exp: 86
 species: gnoll
 will: 20
 attacks:

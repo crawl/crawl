@@ -1,7 +1,7 @@
 name: "crocodile"
 glyph: {char: "l", colour: brown}
 flags: [cold_blood]
-xp_mult: 11
+exp: 120
 will: 20
 attacks:
  - {type: bite, flavour: drag, damage: 15}

@@ -1,6 +1,7 @@
 name: "servant of whispers"
 glyph: {char: "a", colour: brown}
 flags: [speaks, warm_blood]
+exp: 870
 species: human
 will: 60
 attacks:

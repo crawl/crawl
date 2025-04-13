@@ -1,7 +1,7 @@
 name: "Sojobo"
 glyph: {char: "Q", colour: lightgreen}
 flags: [flies, fighter, see_invis, speaks, warm_blood, unique, female]
-xp_mult: 20
+exp: 3464
 species: tengu
 will: 140
 attacks:
