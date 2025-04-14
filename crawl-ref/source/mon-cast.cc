@@ -6992,7 +6992,7 @@ static bool _mons_can_be_tempered(const monster& targ)
 
     // We considerable LRD-able non-living monsters to be 'constructs',
     // excepting gargoyles (too 'alive') and including dancing weapons.
-    if (targ.type == MONS_DANCING_WEAPON
+    if (targ.type == MONS_DANCING_WEAPON || targ.type == MONS_HOARFROST_CANNON
         || mons_genus(targ.type) != MONS_GARGOYLE && monster_type_is_fraggable(targ.type))
     {
         return true;
