@@ -7160,6 +7160,7 @@ _Sprozz_thief_
 @The_monster@ shouts, "Who\'s been selling my blueprints? Tell me!"
 %%%%
 _Sprozz_common_
+
 @The_monster@ says, "Allow me to demonstrate the bee of the future!"
 
 @The_monster@ says, "It makes honey *and* kills pests. Ingenious!"
@@ -7179,6 +7180,8 @@ _Sprozz_common_
 @The_monster@ mutters, "Next time I\'m using spur gears. Less buzzing."
 
 @The_monster@ mumbles, "Pollen collection still 41% less efficient. Must improve."
+
+@The_monster@ mumbles, "Nectar collection still 37% less efficient. Must improve."
 %%%%
 Sprozz triumphant
 {{
