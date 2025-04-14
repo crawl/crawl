@@ -1539,7 +1539,7 @@ bool monster::wants_armour(const item_def &item) const
 bool monster::wants_jewellery(const item_def &item) const
 {
     // No jewellery for coglins.
-    if (type == MONS_IRONBOUND_MECHANIST)
+    if (type == MONS_IRONBOUND_MECHANIST || type == MONS_SPROZZ)
         return false;
 
     // Arcane spellcasters don't want -Cast.
