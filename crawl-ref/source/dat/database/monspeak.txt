@@ -5129,8 +5129,6 @@ confused Ijyb
 
 @The_monster@ screams @at_foe@, "Wand still stronger! You very nasty!"
 
-@The_monster@ wonders, "Where me metal friend go?"
-
 w:5
 @The_monster@ screams, "Science deserve better than this!"
 

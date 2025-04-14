@@ -247,8 +247,7 @@ test its edge.
 %%%%
 Ijyb
 
-A small and shrewd goblin inventor, cast out from her Coglin kin after
-accidentally exploding her own exoskeleton and half of the surrounding mountain.
+A small and shrewd goblin inventor, wearing blue rags coated in soot.
 She claims dominion over this level of the dungeon; trespassers will find
 themselves on the business end of a homemade wand.
 %%%%
