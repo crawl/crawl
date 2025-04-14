@@ -243,7 +243,11 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 const command_type cmd =
                     click_travel(gc, event.mod & TILES_MOD_CTRL, false);
                 if (cmd != CMD_NO_CMD)
+                {
                     process_command(cmd);
+                    redraw_screen();
+                    update_screen();
+                }
             }
 
             return CK_MOUSE_CMD;
