@@ -525,6 +525,13 @@ A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
+Sprozz
+
+A former beekeeper's apprentice with an ambitious dream: to modernise the whole
+world's beekeeping industry with the smooth certainty of disease-proof metal.
+His methods may be questionable and his goals dubious, but his prototype's
+stinger still looks awfully sharp...
+%%%%
 Sojobo
 
 Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.

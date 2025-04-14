@@ -1204,6 +1204,7 @@ sleepcap MONS_SLEEPCAP
 ijyb MONS_IJYB
 %rim 0
 robin MONS_ROBIN
+sprozz MONS_SPROZZ
 %rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM

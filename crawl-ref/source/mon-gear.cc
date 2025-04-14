@@ -21,6 +21,7 @@
 #include "misc.h" // december_holidays
 #include "mon-place.h"
 #include "mpr.h"
+#include "randbook.h"
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
 #include "stringutil.h"
@@ -456,6 +457,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_GOBLIN,                  { GOBLIN_WEAPONS } },
         { MONS_JESSICA,                 { GOBLIN_WEAPONS } },
         { MONS_IJYB,                    { GOBLIN_WEAPONS } },
+        { MONS_SPROZZ,
+            { { { WPN_SPEAR,            8 },
+                { WPN_TRIDENT,          3 },
+                { WPN_DAGGER,           6 },
+                { WPN_SHORT_SWORD,      6 },
+                { WPN_FALCHION,         6 },
+                { WPN_MACE,             9 },
+                { WPN_HAND_AXE,         5 },
+            } } },
         { MONS_WIGHT,
             { { { WPN_MORNINGSTAR,      4 },
                 { WPN_DIRE_FLAIL,       4 },
@@ -1894,6 +1904,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DEEP_ELF_MASTER_ARCHER:
     case MONS_MERFOLK_JAVELINEER:
     case MONS_EUSTACHIO:
+    case MONS_SPROZZ:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
@@ -2352,6 +2363,26 @@ void give_shield(monster *mons)
     _give_shield(mons, -1);
 }
 
+static void _give_book(monster* mon)
+{
+    // 50% chance of a randbook containing Clockwork Bee and maybe other
+    // Forgecraft spells.
+    if (mon->type == MONS_SPROZZ && coinflip())
+    {
+        const int book = items(false, OBJ_BOOKS, BOOK_CONSTRUCTION, 1);
+        if (book == NON_ITEM)
+            return;
+
+        const int num_spells = random_range(2, 3);
+        vector<spell_type> forced_spell = {SPELL_CLOCKWORK_BEE};
+        build_themed_book(env.item[book],
+            forced_spell_filter(forced_spell, capped_spell_filter(11)),
+            forced_book_theme(spschool::forgecraft), num_spells, "Sprozz");
+
+        give_specific_item(mon, book);
+    }
+}
+
 void give_item(monster *mons, int level_number, bool mons_summoned)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
@@ -2363,6 +2394,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+    _give_book(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

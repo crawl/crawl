@@ -235,6 +235,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SPROZZ,
+      {
+       { SPELL_CLOCKWORK_BEE, 70, MON_SPELL_WIZARD },
+       { SPELL_ALL_PURPOSE_TEMPERING, 30, MON_SPELL_WIZARD },
+      }
+    },
+
+
     // ('h') Carnivorous quadrupeds.
     {  MST_BEAR,
       {

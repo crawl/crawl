@@ -307,6 +307,10 @@ Sonja title
 
 Sonja, the Graceful Assassin
 %%%%
+Sprozz title
+
+Sprozz, Inventive Apiarist
+%%%%
 Terence title
 
 Terence the Veteran

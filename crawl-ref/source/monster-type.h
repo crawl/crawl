@@ -985,6 +985,7 @@ enum monster_type                      // env.mons[].type
     MONS_JEREMIAH,
     MONS_XAKKRIXIS,
     MONS_NAMELESS_REVENANT,  // 'Nobody' (except with a less misleading enum name)
+    MONS_SPROZZ,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1342,6 +1343,7 @@ enum monster_type                      // env.mons[].type
     MONS_SOLAR_EMBER,
     MONS_GOBLIN_RIDER,
     MONS_IRONBOUND_MECHANIST,
+    MONS_SPROZZ,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

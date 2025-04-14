@@ -7141,6 +7141,56 @@ VISUAL:@The_monster@ applauds @reflexive@.
 @The_monster@ says, "Show's over."
 ## END Sonja ##
 %%%%
+############ SPROZZ ### A coglin tinkerer with big plans about bees
+Sprozz
+{{
+  if spells.memorised("launch clockwork bee") then
+    return '@_Sprozz_thief_@'
+  else
+    return '@_Sprozz_common_@'
+  end
+}} @player_only@
+%%%%
+_Sprozz_thief_
+
+@The_monster@ shouts, "Patent thief! You won\'t get away with this!"
+
+@The_monster@ yells, "I thought of it first! Give it back!"
+
+@The_monster@ grumbles, "I\'ll bet your bee is still using copper gearwork!"
+
+@The_monster@ shouts, "Who\'s been selling my blueprints? Tell me!"
+%%%%
+_Sprozz_common_
+@The_monster@ says, "Allow me to demonstrate the bee of the future!"
+
+@The_monster@ says, "It makes honey *and* kills pests. Ingenious!"
+
+@The_monster@ says, "Clockwork honey contains at least 35% more iron! Nutritious."
+
+@The_monster@ says, "Chitin is about to be a thing of the past!"
+
+@The_monster@ grins. "Soon, every apiary\'s gonna want a piece of Sprozz!"
+
+@The_monster@ says, "I need a test subject for my new stingers. I volunteer you."
+
+@The_monster@ says, "Tell me how much this hurts, okay? I need more data."
+
+@The_monster@ mumbles, "Perhaps it could use a bit more zinc in the wings...."
+
+@The_monster@ mutters, "Next time I\'m using spur gears. Less buzzing."
+
+@The_monster@ mumbles, "Pollen collection still 41% less efficient. Must improve."
+%%%%
+Sprozz triumphant
+{{
+  if spells.memorised("launch clockwork bee") then
+    return '@The_monster@ shouts, "I *knew* mine was better!"'
+  else
+    return '@The_monster@ says, "Progress like this can\'t be stopped by anyone!"'
+  end
+}}
+%%%%
 ############ TERENCE ### A retired veteran who hates being disturbed
 Terence
 
