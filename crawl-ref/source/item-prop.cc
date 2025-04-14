@@ -2037,7 +2037,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (is_shield(item))
         skills.insert(SK_SHIELDS);
 
-    if (item.base_type == OBJ_TALISMANS)
+    if (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES)
         skills.insert(SK_SHAPESHIFTING);
 
     // Artefacts with evokable abilities, wands and similar unwielded
