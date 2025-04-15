@@ -139,6 +139,7 @@ malign_gateway MALIGN_GATEWAY
 mass_abjuration MASS_ABJURATION
 monstrous_menagerie MONSTROUS_MENAGERIE
 recall RECALL
+sphinx_sisters SPHINX_SISTERS
 summon_cactus_giant SUMMON_CACTUS_GIANT
 summon_demon SUMMON_DEMON
 summon_dragon SUMMON_DRAGON

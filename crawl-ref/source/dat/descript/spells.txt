@@ -1283,9 +1283,8 @@ Heals a small amount of damage to the caster's body.
 %%%%
 Monstrous Menagerie spell
 
-Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
-or, at high power, even a guardian sphinx. Casting the spell at higher power
-also increases the strength of the beasts themselves.
+Summons a powerful exotic creature to the caster's aid: either a manticore, a
+lindwurm, or a sphinx marauder.
 %%%%
 Mercury Arrow spell
 
@@ -1851,6 +1850,13 @@ increases with spell power.
 
 (While you know this spell, you may choose which of your eligible spells it will
 cast with the Imbue Servitor ability.)
+%%%%
+Sphinx Sisters spell
+
+Summons a pair of riddling sphinxes - one guardian and one marauder - to
+debilitate the caster's enemies with hexes and batter them with violent winds.
+
+Spell power increases the sphinxes' durability and the power of their spells.
 %%%%
 Spit Acid spell
 

@@ -114,6 +114,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_JINXBITE,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
+    SPELL_SPHINX_SISTERS,
 },
 
 {   // Book of Spontaneous Combustion
@@ -284,7 +285,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_ICE_BEAST,
     SPELL_SUMMON_SEISMOSAURUS_EGG,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_SPHINX_SISTERS,
 },
 
 {   // Book of Annihilations

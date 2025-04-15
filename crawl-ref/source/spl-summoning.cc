@@ -362,19 +362,12 @@ spret cast_summon_ice_beast(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
+spret cast_monstrous_menagerie(monster* caster, int pow)
 {
-    if (caster->is_player()
-        && !player_summon_check({MONS_GUARDIAN_SPHINX, MONS_MANTICORE, MONS_LINDWURM}))
-    {
-        return spret::abort;
-    }
-
-    fail_check();
     monster_type type = MONS_PROGRAM_BUG;
 
     if (random2(pow) > 60 && coinflip())
-        type = MONS_GUARDIAN_SPHINX;
+        type = MONS_SPHINX_MARAUDER;
     else
         type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
@@ -396,6 +389,52 @@ spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
                           mons_type_name(type, DESC_A).c_str());
     }
     else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret cast_sphinx_sisters(const actor& caster, int pow, bool fail)
+{
+    if (caster.is_player()
+        && !player_summon_check({MONS_GUARDIAN_SPHINX, MONS_SPHINX_MARAUDER}))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    // Remove old sphinxes first, so that we can ensure getting one of each type.
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->was_created_by(caster, SPELL_SPHINX_SISTERS))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
+
+    int dur = summ_dur(3);
+
+    mgen_data mdata = _summon_data(caster, MONS_SPHINX_MARAUDER, dur,
+                                                            SPELL_SPHINX_SISTERS);
+    if (caster.is_player())
+        mdata.hd = 11 + div_rand_round(pow, 25);
+
+    monster* marauder = create_monster(mdata);
+
+    mdata.cls = MONS_GUARDIAN_SPHINX;
+    if (caster.is_player())
+        mdata.hd += 5;
+    monster* guardian = create_monster(mdata);
+
+    if (marauder && guardian && you.can_see(*marauder) && you.can_see(*guardian))
+    {
+        mprf("A pair of sphinxes answers %s call!",
+                    caster.name(DESC_ITS).c_str());
+    }
+    else if (marauder && you.can_see(*marauder) || guardian && you.can_see(*guardian))
+    {
+        const monster* sphinx = marauder ? marauder : guardian;
+        mprf("%s answers %s call!", sphinx->name(DESC_A).c_str(),
+                                    caster.name(DESC_ITS).c_str());
+    }
+    else if (you.can_see(caster))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2400,6 +2439,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_MANA_VIPER,        { 1, 3 } },
     { SPELL_CALL_IMP,                 { 1, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
+    { SPELL_SPHINX_SISTERS,           { 2, 2 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
     { SPELL_FORGE_BLAZEHEART_GOLEM,   { 1, 1 } },

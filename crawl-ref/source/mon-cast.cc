@@ -946,7 +946,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        [](monster &caster, mon_spell_slot, bolt&) {
             cast_phalanx_beetle(caster, mons_spellpower(caster, SPELL_PHALANX_BEETLE), false);
         }
-    } }
+    } },
+    { SPELL_SPHINX_SISTERS, {
+        _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt&) {
+            cast_sphinx_sisters(caster, mons_spellpower(caster, SPELL_SPHINX_SISTERS), false);
+        }
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -7416,7 +7422,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MONSTROUS_MENAGERIE:
-        cast_monstrous_menagerie(mons, splpow, mons->god);
+        cast_monstrous_menagerie(mons, splpow);
         return;
 
     case SPELL_SUMMON_SPIDERS:

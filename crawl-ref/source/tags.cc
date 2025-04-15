@@ -2629,6 +2629,9 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_STING:
             return SPELL_POISONOUS_VAPOURS;
 
+        case SPELL_MONSTROUS_MENAGERIE:
+            return SPELL_SPHINX_SISTERS;
+
         default:
             return s;
     }

@@ -1374,7 +1374,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_AWAKEN_ARMOUR:
     case SPELL_SUMMON_ICE_BEAST:
-    case SPELL_MONSTROUS_MENAGERIE:
+    case SPELL_SPHINX_SISTERS:
     case SPELL_SUMMON_CACTUS:
     case SPELL_SUMMON_HYDRA:
     case SPELL_SUMMON_MANA_VIPER:
@@ -2486,8 +2486,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_CACTUS:
         return cast_summon_cactus(powc, fail);
 
-    case SPELL_MONSTROUS_MENAGERIE:
-        return cast_monstrous_menagerie(&you, powc, fail);
+    case SPELL_SPHINX_SISTERS:
+        return cast_sphinx_sisters(you, powc, fail);;
 
     case SPELL_SUMMON_DRAGON:
         return cast_summon_dragon(&you, powc, fail);

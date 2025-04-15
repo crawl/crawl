@@ -1260,7 +1260,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MONSTROUS_MENAGERIE, "Monstrous Menagerie",
     spschool::summoning,
-    spflag::mons_abjure,
+    spflag::mons_abjure | spflag::monster,
     7,
     200,
     -1, -1,
@@ -4471,6 +4471,17 @@ static const struct spell_desc spelldata[] =
     5, 5,
     0,
     TILEG_FIRE_BREATH,
+},
+
+{
+    SPELL_SPHINX_SISTERS, "Sphinx Sisters",
+    spschool::summoning | spschool::hexes,
+    spflag::mons_abjure,
+    7,
+    200,
+    -1, -1,
+    0,
+    TILEG_SPHINX_SISTERS,
 },
 
 {
