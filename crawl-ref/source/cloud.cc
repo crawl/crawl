@@ -938,6 +938,13 @@ static int _cloud_base_damage(const actor *act,
  */
 bool actor_cloud_immune(const actor &act, cloud_type type)
 {
+    // Cloud immunity doesn't prevent Blastmote explosions.
+    if (type == CLOUD_BLASTMOTES
+        && (act.is_player() || act.res_fire() < 3))
+    {
+        return false;
+    }
+
     // Qazlalites and scarfwearers get immunity to clouds.
     // and the Cloud Mage too!
     if (is_harmless_cloud(type) || act.cloud_immune())
@@ -1450,9 +1457,14 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
  */
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours)
 {
-    // If you're immune to clouds, then no clouds are damaging. Bing bong so simple!
-    if (you.cloud_immune())
+    // If you're immune to clouds, then no clouds are damaging. Bing bong so
+    // simple!
+    // Except Blastmotes will still explode!
+    if (you.cloud_immune()
+        && (type != CLOUD_BLASTMOTES || you.props.exists(BLASTMOTE_IMMUNE_KEY)))
+    {
         return false;
+    }
 
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
     if (type == CLOUD_VORTEX)
