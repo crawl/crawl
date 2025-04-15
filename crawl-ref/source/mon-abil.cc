@@ -942,6 +942,10 @@ static void _seismosaurus_egg_hatch(monster* mons)
         mons->speed_increment = 80;
         try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
 
+        // Clean up range indicator
+        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
+            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
+
         return;
     }
 

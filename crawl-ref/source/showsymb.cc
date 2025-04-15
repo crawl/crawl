@@ -139,6 +139,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN; // Silence but no holy/unholy
+        else if (env.pgrid(loc) & FPROP_SEISMOROCK)
+            colour = BROWN;
         else if (cell.flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)

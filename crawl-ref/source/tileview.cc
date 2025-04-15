@@ -1595,5 +1595,14 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     {
         cell.flv.floor = TILE_FLOOR_ICY;
     }
+    else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
+             && feat_has_dry_floor(env.grid(gc)))
+    {
+        // Use the id of the underlying tile to randomize the rock appearance.
+        tileidx_t tile = TILE_FLOOR_SEISMOROCK
+                            + cell.bg % tile_dngn_count(TILE_FLOOR_SEISMOROCK);
+
+        cell.add_overlay(tile);
+    }
 }
 #endif

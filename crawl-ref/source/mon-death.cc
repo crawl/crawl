@@ -3427,6 +3427,9 @@ void monster_cleanup(monster* mons)
 
     if (mons->type == MONS_PLATINUM_PARAGON)
         you.duration[DUR_PARAGON_ACTIVE] = 0;
+    if (mons->type == MONS_SEISMOSAURUS_EGG)
+        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
+            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

@@ -4626,6 +4626,10 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     {
         mpr("A rock-encrusted egg appears nearby and begins to stir.");
         mons->add_ench(mon_enchant(ENCH_HATCHING, 0, &agent, random_range(6, 9)));
+
+        // Mark all terrain in range.
+        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
+            env.pgrid(*di) |= FPROP_SEISMOROCK;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

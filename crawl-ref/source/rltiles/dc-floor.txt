@@ -904,6 +904,11 @@ frozen10
 frozen11
 frozen12
 
+seismorock0 FLOOR_SEISMOROCK
+seismorock1
+seismorock2
+seismorock3
+
 %lum 0 -5
 %weight 50
 demonic_red1 FLOOR_DEMONIC FLOOR_DEMONIC_RED
