@@ -1442,6 +1442,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                    _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
+    case SPELL_GASTRONOMIC_EXPANSE:
+        return make_unique<targeter_gastronomic>(&you, pow);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
@@ -2590,6 +2592,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_RENDING_BLADE:
         return cast_rending_blade(powc, fail);
 
+    case SPELL_GASTRONOMIC_EXPANSE:
+        return cast_gastronomic_expanse(powc, spd.target, fail);
+
     // Enchantments.
     case SPELL_CONFUSING_TOUCH:
         return cast_confusing_touch(powc, fail);
@@ -3075,6 +3080,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return poisonous_vapours_damage(power, false);
         case SPELL_DETONATION_CATALYST:
             return detonation_catalyst_damage(power, false);
+        case SPELL_GASTRONOMIC_EXPANSE:
+            return gastronomic_damage(power, false);
         default:
             break;
     }
