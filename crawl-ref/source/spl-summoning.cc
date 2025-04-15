@@ -3586,6 +3586,10 @@ void launch_clockwork_bee(const actor& agent)
             }
             return;
         }
+        // Don't bother placing an inert bee for failed monster casts, but you
+        // can't launch a real one without a proper target either.
+        else if (!new_targ)
+            return;
 
         targ = new_targ;
     }
