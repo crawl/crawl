@@ -4791,16 +4791,16 @@ bool bolt::check_for_friendly_past_target(monster* mon)
 
     if (should_stop_at_target && special_explosion)
     {
-        targeting_tracer tracer;
+        targeting_tracer special_tracer;
         bolt special_explosion_copy = *special_explosion;
-        special_explosion_copy.tracer = &tracer;
+        special_explosion_copy.tracer = &special_tracer;
         special_explosion_copy.in_explosion_phase = false;
         special_explosion_copy.target = target;
         special_explosion_copy.refine_for_explosion();
         special_explosion_copy.explode();
 
         // Only stop at our target if it would stop us hitting allies.
-        should_stop_at_target = tracer.friend_info.count == 0;
+        should_stop_at_target = special_tracer.friend_info.count == 0;
     }
 
     if (should_stop_at_target)
