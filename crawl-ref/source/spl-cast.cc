@@ -1386,8 +1386,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SPELLSPARK_SERVITOR:
     case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
-    case SPELL_SUMMON_SEISMOSAURUS_EGG:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    case SPELL_SUMMON_SEISMOSAURUS_EGG:
+    case SPELL_HOARFROST_CANNONADE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 3, 0, 2);
     case SPELL_CALL_CANINE_FAMILIAR:
     {
         const monster* dog = find_canine_familiar();
