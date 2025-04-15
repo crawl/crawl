@@ -7426,7 +7426,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_SPIDERS:
-        summon_spiders(*mons, splpow, mons->god);
+        summon_spiders(*mons, splpow);
         return;
 
     case SPELL_CALL_IMP:

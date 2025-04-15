@@ -3087,10 +3087,8 @@ bool summon_spider(const actor &agent, coord_def pos,
     return false;
 }
 
-spret summon_spiders(monster &agent, int pow, bool fail)
+spret summon_spiders(monster &agent, int pow)
 {
-    fail_check();
-
     int created = 0;
 
     for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
