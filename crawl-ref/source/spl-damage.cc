@@ -2186,16 +2186,13 @@ spret cast_ungoldify(coord_def target, int powc, bool fail)
 
     // Set up the beams using the targetter
     targeter_widebeam hitfunc(&you, range, ungoldify_beam_width());
-    const coord_def move = hitfunc.unit_forward;
-    const coord_def normalised_target = you.pos() + move;
-    hitfunc.set_aim(normalised_target);
-
+    hitfunc.set_aim(target);
     _ungoldify_targets(hitfunc.beams, powc, range);
 
     mpr("You expel the base metals with the kinetic energy of your movement!");
 
     // Move the player in the direction of the target
-    move_player_action(move);
+    move_player_action(hitfunc.unit_forward);
     return spret::success;
 }
 
