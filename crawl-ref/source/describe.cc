@@ -1208,6 +1208,8 @@ static int _item_training_target(const item_def &item)
         return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
     if (item.base_type == OBJ_TALISMANS)
         return get_form(form_for_talisman(item))->min_skill * 10;
+    if (item.base_type == OBJ_BAUBLES)
+        return get_form(transformation::flux)->min_skill * 10;
     return 0;
 }
 
@@ -1226,7 +1228,7 @@ static skill_type _item_training_skill(const item_def &item)
         return SK_ARMOUR;
     if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return SK_THROWING;
-    if (item.base_type == OBJ_TALISMANS)
+    if (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES)
         return SK_SHAPESHIFTING;
     if (item_ever_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
@@ -3055,7 +3057,7 @@ string get_item_description(const item_def &item,
 
     case OBJ_BAUBLES:
         if (!is_useless_item(item, false))
-            description << "\n" << _describe_talisman_form(transformation::flux);
+            description << "\n" << _describe_talisman_form(transformation::flux, &item);
         if (verbose)
             _uselessness_desc(description, item);
         break;
