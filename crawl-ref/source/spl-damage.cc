@@ -2186,7 +2186,7 @@ spret cast_ungoldify(coord_def target, int powc, bool fail)
 
     // Set up the beams using the targetter
     targeter_widebeam hitfunc(&you, range, ungoldify_beam_width());
-    const coord_def move = (target - you.pos()).sgn();
+    const coord_def move = hitfunc.unit_forward;
     const coord_def normalised_target = you.pos() + move;
     hitfunc.set_aim(normalised_target);
 

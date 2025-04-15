@@ -345,6 +345,8 @@ public:
     aff_type is_affected(coord_def loc) override;
     map<coord_def, aff_type> zapped;
     vector<widebeam_beam> beams;
+    coord_def unit_forward;
+
 private:
     int range;
     int width;

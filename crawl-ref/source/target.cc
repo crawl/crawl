@@ -1555,6 +1555,21 @@ bool targeter_widebeam::valid_aim(coord_def a)
     return true;
 }
 
+static coord_def _normalise_widebeam_target(coord_def delta)
+{
+    // Determine closest compass direction to actual aim of the player
+    const int absx = abs(delta.x);
+    const int absy = abs(delta.y);
+    if (absx > absy)
+    {
+        return coord_def(delta.x / absx,
+                         (abs(delta.y) >= div_round_up(absx, 2)) ? delta.y/absy : 0);
+    }
+    else
+        return coord_def((abs(delta.x) >= div_round_up(absy, 2)) ? delta.x/absx : 0,
+                          delta.y / absy);
+}
+
 bool targeter_widebeam::set_aim(coord_def a)
 {
     aim = a;
@@ -1565,21 +1580,7 @@ bool targeter_widebeam::set_aim(coord_def a)
         return false;
 
     const coord_def delta = a - origin;
-
-    coord_def unit_forward;
-
-    // Determine closest compass direction to actual aim of the player
-    const int absx = abs(delta.x);
-    const int absy = abs(delta.y);
-    if (absx > absy)
-    {
-        unit_forward = coord_def(delta.x / absx,
-                                 (abs(delta.y) >= div_round_up(absx, 2)) ? delta.y/absy : 0);
-    }
-    else
-        unit_forward = coord_def((abs(delta.x) >= div_round_up(absy, 2)) ? delta.x/absx : 0,
-                                 delta.y / absy);
-
+    unit_forward = _normalise_widebeam_target(delta);
     const bool is_diag = unit_forward.x != 0 && unit_forward.y != 0;
 
     // "right-hand" direction perpendicular to forward (doesn't really
