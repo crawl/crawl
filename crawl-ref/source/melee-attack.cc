@@ -2158,9 +2158,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
 bool melee_attack::player_aux_test_hit()
 {
-    // XXX We're clobbering did_hit
-    did_hit = false;
-
     const int evasion = defender->evasion(false, attacker);
 
     if (player_under_penance(GOD_ELYVILON)
