@@ -2843,6 +2843,14 @@ void beogh_increase_orcification()
             msg += "A small pair of tusks begins to pierce through your wrappings.";
             break;
 
+        case SP_POLTERGEIST:
+            msg += "A small pair of spectral tusks begins to grow in your mouth.";
+            break;
+
+        case SP_REVENANT:
+            msg += "A small pair of tusks begins to sprout from your jawbone.";
+            break;
+
         case SP_BARACHI:
             msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
             break;
