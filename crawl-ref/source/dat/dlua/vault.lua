@@ -299,8 +299,8 @@ function index_vaults_room_themes (e, set, hard)
            'freezing wraith w:4 / crystal guardian w:' .. d)
     e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
            'boggart band w:5 / glowing orange brain w:' .. d + 1)
-    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:10 / ' ..
-           'ironbound convoker w:5 / deep elf annihilator w:1')
+    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:8 / ' ..
+           'ironbound convoker w:4 / ironbound mechanist w:4')
     e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
            'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')

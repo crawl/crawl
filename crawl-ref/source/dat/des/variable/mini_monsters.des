@@ -480,26 +480,30 @@ NSUBST:  % = 1:d / 2 = *% / *:%
 : elseif you.in_branch("Swamp") then
 MONS:    hornet / vampire mosquito, swamp worm / tyrant leech
 MONS:    shambling mangrove, spriggan druid / fenstrider witch w:2
-NSUBST:  10 = 2:., % = 2:d / 1:| / 1:* / *:%
+NSUBST:  10 = 2:., % = 1:d / 1:dde / 1:| / 1:* / *:%
 TILE:    x = wall_brick_vines
 : elseif you.in_branch("Vaults") then
 MONS:    redback / boulder beetle / wolf spider w:2 / tarantella w:2
 MONS:    swamp worm perm_ench:glowing_shapeshifter / \
          steelbarb worm perm_ench:glowing_shapeshifter
 MONS:    entropy weaver, ironbound preserver / necromancer
-NSUBST:  0 = 1:. / *:0, % = 4:% / *:.
+NSUBST:  0 = 1:. / *:0, % = 1:ddde / 3:% / *:.
 : else -- Depths
 MONS:    orb spider perm_ench:glowing_shapeshifter / \
          swamp worm perm_ench:glowing_shapeshifter
 MONS:    spriggan rider, spark wasp
 MONS:    spriggan berserker / lich / alderking w:2
-NSUBST:  10 = 2:3 / 1:2, % = 1:| / 1:* / 1:d / * = *%%
+NSUBST:  10 = 2:3 / 1:2, % = 1:| / 1:* / 1:e / * = *%%
 : end
 ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup w:12 / \
-         scimitar ego:venom no_pickup w:8 / any hex wand charges:8 no_pickup / \
+         scimitar ego:venom no_pickup w:8 / \ any hex wand charges:8 no_pickup / \
+         potion of ambrosia q:1 w:3 pre_id / potion of curing w:3 pre_id / \
          fen folio w:3 / my sojourn through swampland w:3 / \
-         potion of ambrosia w:3 pre_id / \
-         potion of curing w:3 pre_id / dart ego:curare no_pickup w:3
+         dart ego:curare no_pickup w:3 / scarab talisman
+ITEM:    throwing net q:2 no_pickup / quick blade ego:venom randart w:12 / \
+         swamp dragon scales randart / potion of ambrosia q:2 w:3 pre_id / \
+         potion of curing w:3 q:3 pre_id / honeycomb talisman / \
+         randbook numspells:6 spells:launch_clockwork_bee&&summon_forest w:6
 : if you.in_branch("Vaults") then
 SUBST:   "'@W = .
 CLEAR:   X
@@ -3961,12 +3965,13 @@ ENDMAP
 NAME:    minmay_crystal_box
 TAGS:    no_monster_gen patrolling transparent no_descent vaults_hard allow_dup
 DEPTH:   D:12-, Vaults, !Vaults:$
-MONS:    crystal guardian, thermic dynamo, orange crystal statue
+MONS:    crystal guardian, thermic dynamo
+MONS:    orange crystal statue, ironbound mechanist
 KFEAT:   + = closed_clear_door
 SUBST:   . = .:80 %$*|
-KPROP:   .012 = no_tele_into
 : if you.in_branch("D") then
-SUBST:   1 = 0, + = =
+SUBST:   14 = 0, + = =
+KPROP:   .$%*|023 = no_tele_into
 CLEAR:   `
 : end
 MAP
@@ -3977,7 +3982,7 @@ MAP
 `Wbb.........bW`
 `Wbb.........bW`
 `Wnn.........bW`
-`WW+....3.1..bW`
+`WW+....3.4..bW`
 `Wnn.........bW`
 `Wbb.........bW`
 `Wbb.........bW`
@@ -9230,13 +9235,12 @@ NAME:   hellmonk_guarded_unrand_vitality_bloodlust
 TAGS:   no_monster_gen
 DEPTH:  D:7-
 WEIGHT: 3
-ITEM:   amulet_of_vitality no_pickup / necklace_of_bloodlust no_pickup
 MONS:   deep troll, deep troll shaman
+ITEM:   amulet_of_vitality no_pickup / necklace_of_bloodlust no_pickup
 : if you.depth() < 13 then
-SUBST:  1 = 1..
+NSUBST: 1 = 1:1 / 2:. / * =  1..
 : else
-NSUBST: 1 = 2 / 1
-SUBST:  1 = 1.
+NSUBST: 1 = 1:2 / * = 1.
 : end
 COLOUR: x. = lightred
 TILE:   x = wall_pebble_red
@@ -9905,7 +9909,7 @@ xx-.....DD......x`
 ENDMAP
 
 NAME:   nicolae_rank_and_phial
-TAGS:   transparent
+TAGS:   transparent patrolling
 DEPTH:  D:7-11
 KITEM:  P = phial of floods
 KMONS:  E = water elemental
@@ -9913,7 +9917,7 @@ KMONS:  P = patrolling merfolk
 KFEAT:  E~ = w
 KMASK:  E~ = no_pool_fixup
 SUBST:  M = w.
-NSUBST: E = 2=E / 2=Ew / w
+NSUBST: E = 2=E / 2=Eww / *:w
 veto {{
   return not items.pickable("phial of floods")
 }}

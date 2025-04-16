@@ -3573,6 +3573,7 @@ KMONS:    Q = the enchantress band
 SHUFFLE:  NOP / kkQ
 : end
 KMONS:    h = plant / fungus
+KITEM:    PQ = wellspring talisman / wellspring talisman randart w:2
 KFEAT:    -"h3456HJK%$*| = W
 KFEAT:    L = w
 KFEAT:    t = mangrove
@@ -3895,6 +3896,7 @@ KITEM:  | = staff of cold randart artprops:fire&Stlth:-2 / \
             storm dragon scales plus:6 randart artprops:rF&rC&Stlth:-2 / \
             fire dragon scales plus:6 randart artprops:rElec&Stlth:-2 / \
             storm talisman randart artprops:rC&Stlth:-2 / \
+            dragon-coil talisman randart artprops:rElec&Stlth:-2 / \
             book of annihilations / manual of invocations w:2
 KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
@@ -4020,12 +4022,12 @@ ENDMAP
 NAME:   minmay_shoctagon
 DEPTH:  D:12-, Elf, Depths
 ORIENT: float
-ITEM:   book of air / book of lightning / book of storms \
-        / manual of air magic / staff of air pre_id / lightning rod w:20 \
-        / storm dragon scales w:5
+ITEM:   book of air / book of lightning / book of storms / \
+        manual of air magic / staff of air pre_id / lightning rod w:20 \
+        storm dragon scales w:5 / storm talisman w:5
 KITEM:  2 = arc blade / quick blade ego:electrocution randart pre_id \
-        / glaive of the guard \
-        / demon trident ego:electrocution randart pre_id / storm bow
+        glaive of the guard / \
+        demon trident ego:electrocution randart pre_id / storm bow
 : if you.in_branch("D") then
 :     if you.depth() < 14 then
 MONS:   raiju / sixfirhy w:5
@@ -4064,10 +4066,10 @@ ENDMAP
 NAME:   minmay_roctagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-ITEM:   book of geomancy / book of the earth / book of iron \
-        / manual of earth magic / staff of earth pre_id \
-        / ring of protection pre_id / tin of tremorstones \
-        / crystal plate armour w:5
+ITEM:   book of geomancy / book of the earth / book of iron / \
+        manual of earth magic / staff of earth pre_id / \
+        ring of protection pre_id / tin of tremorstones / \
+        crystal plate armour w:5 / granite talisman w:5
 KITEM:  2 = devastator / eveningstar ego:heavy randart pre_id \
         / dark maul
 : if you.in_branch("D") then
@@ -4111,10 +4113,11 @@ ENDMAP
 NAME:   minmay_coctagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-ITEM:   book of frost / book of ice / book of winter \
-        / book of the tundra / manual of ice magic \
-        / wand of iceblast pre_id / staff of cold pre_id \
-        / ring of ice pre_id / phial of floods / ice dragon scales w:5
+ITEM:   book of frost / book of ice / book of winter / \
+        book of the tundra / manual of ice magic / \
+        wand of iceblast pre_id / staff of cold pre_id / \
+        ring of ice pre_id / phial of floods / ice dragon scales w:5 / \
+        dragon-coil talisman w:5
 KITEM:  2 = frostbite / battleaxe ego:freezing randart pre_id \
         / broad axe ego:freezing randart pre_id
 : if you.in_branch("D") then
@@ -4155,9 +4158,9 @@ ENDMAP
 NAME:   minmay_firetagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-ITEM:   book of flames / book of fire / everburning encyclopedia \
-        / manual of fire magic / staff of fire pre_id \
-        / ring of fire pre_id / fire dragon scales w:5
+ITEM:   book of flames / book of fire / everburning encyclopedia / \
+        manual of fire magic / staff of fire pre_id / \
+        ring of fire pre_id / fire dragon scales w:5 / dragon-coil talisman w:5
 KITEM:  2 = firestarter / eveningstar ego:flaming pre_id \
         / demon whip ego:flaming randart pre_id
 : if you.in_branch("D") then
@@ -4296,6 +4299,7 @@ NAME:    cheibrodos_frozen_isle
 TAGS:    no_item_gen no_monster_gen no_pool_fixup vaults_hard
 DEPTH:   D:8-, Vaults, !Vaults:$, Zot
 ORIENT:  float
+ITEM:    rimehorn talisman / rimehorn talisman randart w:2
 : if you.branch() == "Zot" then
 # No blinking off, no scorching.
 MONS:    white draconian stormcaller / white draconian annihilator / \
@@ -4316,8 +4320,8 @@ NSUBST: - = 2:1 / 2:2 / 2 = 122 / *:-
 MONS:   arcanist / deep elf knight w:2, ice devil
 NSUBST: - = 3:1 / 3:2 / 2 = 122 / *:-
 :   else
-MONS:   ice devil, ufetubus
-NSUBST: - = 4:1 / 4:2 / 4 = 12 / *:-
+MONS:   arcanist, ice devil, ufetubus
+NSUBST: - = 1:1 / 3:2 / 4:3 / 4 = 12 / *:-
 :   end
 SUBST:  b = bmm
 TILE:   b = bedevilled_crystal_cocytus
@@ -4325,7 +4329,7 @@ TILE:   b = bedevilled_crystal_cocytus
 : end
 KMONS:  3 = ice statue
 KFEAT:  3 = >
-NSUBST: ' = 5=*$ / *:%
+NSUBST: ' = 5=*$ / *:%, $ = 1:dd$ / *:$
 KPROP:  -W123$%* = no_tele_into
 KMASK:  -W123$%* = opaque
 MAP
@@ -4361,15 +4365,16 @@ ITEM:    war axe / war axe good_item w:1
 ITEM:    morningstar / morningstar good_item w:1
 ITEM:    plate armour / plate armour good_item w:1
 ITEM:    chain mail / chain mail good_item w:1
+ITEM:    fortress talisman
 SHUFFLE: defg
-KPROP:   ')+12defghi = no_tele_into
+KPROP:   ')+12defghij = no_tele_into
 MAP
     .....
   ...vnv...
  ..nvvAvvn..
  .vvv1'1vvv.
 ..vd'''''ev..
-.vvv'''''vvv.
+.vvv''j''vvv.
 .vh+'2G2'+iv.
 .vvv'''''vvv.
 ..vf'''''gv..
@@ -4970,7 +4975,7 @@ MONS:    deep elf annihilator / deep troll earth mage / \
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("Vaults") then
 MONS:    glowing orange brain / great orb of eyes / phantasmal warrior
-MONS:    boggart / rakshasa / ogre mage / arcanist / necromancer
+MONS:    boggart / ironbound mechanist / ogre mage / arcanist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx marauder / tengu reaver / lich / fire giant / frost giant
@@ -5003,6 +5008,7 @@ MONS:    ancient lich / dread lich, orb of fire
 SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
 KFEAT:   _ = altar_sif_muna / altar_vehumet
+TILE:    c = wall_studio
 SHUFFLE: efg
 NSUBST:  R = R / tGT
 MARKER:  P = lua:transp_loc("sealed_library_entry")
@@ -6710,7 +6716,7 @@ KFEAT:   ^ = teleport trap
 KFEAT:   ~ = archmage's trap
 KFEAT:   _ = altar_sif_muna / altar_vehumet
 KITEM:   | = any book w:5 / any magical staff / any ring / any amulet / \
-             any misc / any wand w:5
+             any misc / any talisman w:5 / any wand w:5
 SUBST:   ! = 56
 SHUFFLE: wl
 MAP
@@ -6786,9 +6792,9 @@ MONS:    lindwurm / boulder beetle, dire elephant, orc warlord / orc knight
 MONS:    great orb of eyes / glowing orange brain, titanic slime creature
 MONS:    crystal guardian / deep elf death mage / deep elf high priest
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf demonologist
-KMONS:   D = harpy band
+KMONS:   D = sphinx marauder band / harpy band
 KMONS:   F = entropy weaver band
-KMONS:   0 = arcanist / necromancer / very ugly thing
+KMONS:   0 = arcanist / necromancer / ironbound mechanist
 KMONS:   9 = stone giant / tengu reaver / sphinx marauder
 KMONS:   P = bush
 NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
@@ -9773,6 +9779,7 @@ KMONS:  9 = 9 band
 KMONS:  0 = 0 band
 KITEM:  O = superb_item
 KITEM:  9 = any good_item
+NSUBST: 0 = 4:. / *:0, 98 = 1:.
 : end
 MAP
       x@x

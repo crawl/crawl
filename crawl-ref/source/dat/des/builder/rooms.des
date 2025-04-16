@@ -118,7 +118,7 @@ function sroom_beehive(e)
 
     e.kitem('1 = black bear skeleton / \
                  potion of ambrosia pre_id / nothing w:20')
-    e.kitem('2M = potion of ambrosia pre_id / nothing w:25')
+    e.kitem('2M = potion of ambrosia pre_id / honeycomb talisman / nothing w:15')
     -- FIXME: layout_roguey's special room placements ignore vault definitions
     -- decorative_floor(e, '2M', "flower patch")
 end
@@ -286,8 +286,14 @@ function sroom_mythical_zoo(e)
 
     fill_special_room(e, mons, lord_mon, true)
 
-    e.kitem('2 = gold good_item w:' .. Z - 7 .. ' / gold w:' .. Z + 7 .. ', ' ..
-            'box of beasts w:3 / nothing w:17')
+    it = 'gold good_item w:' .. Z - 7 .. ' / gold w:' .. Z + 7 .. ', ' ..
+         'lupine talisman w:6 / animal skin randart w:7'
+
+    if items.pickable("box of beasts") then
+        it = it .. " / box of beasts w:6"
+    end
+
+    e.kitem('2 = ' .. it)
 end
 
 function sroom_magic_class(e)
@@ -325,7 +331,7 @@ function sroom_magic_class(e)
 
     fill_special_room(e, mons, lord_mon, true)
 
-    e.kitem('2 = any randbook')
+    e.kitem('2 = any randbook, any randbook / any magical staff randart')
 
 end
 

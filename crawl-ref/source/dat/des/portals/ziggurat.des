@@ -134,7 +134,7 @@ KMONS:   O = ancient lich / dread lich / titan /\
 KFEAT:   O = enter_ziggurat no_mimic
 SHUFFLE: 1234
 SUBST:   ' : 'w, W : nw
-KPROP:   1234'O = no_tele_into
+KPROP:   w1234'O = no_tele_into
 KMASK:   w1234'O = opaque
 KMASK:   w1234'O = no_monster_gen
 FTILE:   1234'-O = floor_hall

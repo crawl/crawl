@@ -280,15 +280,19 @@ MAP
 .............
 ENDMAP
 
-NAME:   nicolae_ashenzari_panopticon
-TAGS:   uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari
-TAGS:   transparent decor vaults_empty
-DEPTH:  D:3-, Vaults, !Vaults:$, Depths
-WEIGHT: 3 (Vaults), 10
-KFEAT: _ = altar_ashenzari
+NAME:    nicolae_ashenzari_panopticon
+TAGS:    uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari
+TAGS:    transparent decor vaults_empty
+DEPTH:   D:3-, Vaults, !Vaults:$, Depths
+WEIGHT:  3 (Vaults), 10
+KFEAT:   _ = altar_ashenzari
 SHUFFLE: ABCDEF/abcdef
-SUBST: ACEbdf = x, Ba = m, Dc = ., Fe = @
-NSUBST: m = + / m
+SUBST:   ACEbdf = x, Ba = m, Dc = ., Fe = @
+: if you.in_branch("Vaults") then
+KFEAT:   m = closed_clear_door
+: else
+NSUBST:  m = + / m
+: end
 : interest_check(_G)
 MAP
 E....F..E..F...CE
@@ -334,12 +338,10 @@ NAME:   cheibriados_altar_2
 TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:   transparent decor
 WEIGHT: 1
-KPROP:  1 = no_tele_into
 KFEAT:  _ = altar_cheibriados
 MONS:   torpor snail
-SUBST:  1 : 1:50 2:30 3:10 4:10
-NSUBST: 4 = 1:1 / 1:2 / 1:3
-KMASK: 1234 = opaque
+KPROP:  1 = no_tele_into
+KMASK:  1 = opaque
 : interest_check(_G)
 MAP
 .......
@@ -356,7 +358,7 @@ ENDMAP
 NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-DEPTH: D:3-, Snake, Depths
+DEPTH: D:3-11, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 : elseif you.in_branch("Snake") then
@@ -385,7 +387,7 @@ ENDMAP
 NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-DEPTH: D:3-, Snake, Depths
+DEPTH:   D:3-11, Snake, Depths
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 : elseif you.in_branch("Snake") then
@@ -414,6 +416,7 @@ NAME:   chei_slow_surprise
 TAGS:   uniq_altar_cheibriados temple_overflow_1
 TAGS:   temple_overflow_cheibriados transparent no_monster_gen
 TAGS:   transparent
+DEPTH:  D:3-11, Depths
 WEIGHT: 5
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
@@ -463,7 +466,7 @@ ENDMAP
 NAME:   kennysheep_slug_shrine
 TAGS:   temple_overflow_1 temple_overflow_cheibriados
 TAGS:   no_pool_fixup no_monster_gen transparent uniq_altar_cheibriados
-DEPTH:  D:3-
+DEPTH:  D:3-11
 MONS:   patrolling dart slug
 KMASK:  1 = opaque
 KFEAT:  _ = altar_cheibriados
@@ -654,13 +657,13 @@ TAGS:   no_pool_fixup decor transparent
 KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
 : interest_check(_G)
-: decorative_floor(_G, '13', "flower patch")
+: decorative_floor(_G, 'f', "flower patch")
 MAP
        xxxxxxxxxxxxxxx
       xxtttttttttttttxx
       xtttttttttttttttx
       ttttttttptttttttt
-  .....ttttt.....ttttt.....
+  .....tttttf...fttttt.....
  .......ttt.......ttt.......
 ...wWw...t...wWw...t...wWw...
 ..wwWww.....wwWww.....wwWww..
@@ -668,7 +671,7 @@ MAP
 ..wwWww.....wwWww.....wwWww..
 ...wWw...t...wWw...t...wWw...
  .......ttt.......ttt.......
-  .....ttttt.....ttttt.....
+  .....tttttf...fttttt.....
       ttttttttptttttttt
       xtttttttttttttttx
       xxtttttttttttttxx
@@ -1107,7 +1110,6 @@ KFEAT:  _ = altar_gozag
 KPROP:  $ = no_tele_into
 KMASK:  $ = opaque
 KMASK:  $ = no_monster_gen
-TILE:   G = dngn_golden_statue
 TILE:   n = dngn_transparent_stone_yellow
 TILE:   m = dngn_transparent_wall_yellow
 FTILE:  ._Gmn$U = floor_limestone

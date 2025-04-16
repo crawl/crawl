@@ -120,6 +120,10 @@ function orc_warlord_with_polearm(e, glyph)
                                      plate armour | crystal plate armour w:1")
 end
 
+function fortress_talisman_chance(e, glyph)
+  e.kitem(glyph .. " = fortress talisman")
+  e.subst(glyph .. " = " .. glyph .. " .:90")
+end
 }}
 
 # Basic bailey entries ##########################################
@@ -388,6 +392,7 @@ NSUBST: d = 1:ddde / *:d, 1 = 7:1 / * = 1., 2 = 6:2 / * = 2.
 : item(dgn.loot_potions)
 ITEM:   potion of experience pre_id q:1 /\
         scroll of acquirement pre_id q:1
+: fortress_talisman_chance(_G, "f")
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -403,8 +408,8 @@ c1ccc1ccc2c2ccc1ccc2c
 ccc ccc ccncc ccc c-c
 c1ccc1ccc2c2ccc1ccc2c
 cc+cc+cc+ccc+cc+cc+cc
- ccd.d.dcc ccd....cc
-ccc.d2d.ccccc...4.ccc
+ ccd.d.fcc ccd....cc
+ccc.d2d.ccccc.d.4.ccc
 c1+d2U3d+1c1+..Y..+1c
 ccc.d2d.ccccc.4.^.ccc
  ccd.d.dcc cc.....cc
@@ -424,6 +429,7 @@ KMONS:  2 = kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
 KMONS:  4 = hippogriff
 ITEM:   any good_item
 ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
+: fortress_talisman_chance(_G, "f")
 KFEAT:  4 = W
 KFEAT:  - = tyrant's trap
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
@@ -455,7 +461,7 @@ xxxc1.1.WW.......WW.1.1cxxx
 xxxcccccWW.......WWcccccxxx
 xxxxxxxccW.......Wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
-xxxxxxxxxcc.....ccxxxxxxxxx
+xxxxxxxxxcc..f..ccxxxxxxxxx
 xxxxxxxxxc<d.3.d<cxxxxxxxxx
 xxxxxxxxxc...G...cxxxxxxxxx
 xxxxxxxxxcc3.e.3ccxxxxxxxxx
@@ -486,6 +492,7 @@ KMONS:   4 = patrolling hippogriff
 ITEM:    any good_item
 ITEM:    potion of enlightenment pre_id, ring of flight pre_id
 ITEM:    pair of boots ego:flying pre_id
+: fortress_talisman_chance(_G, "X")
 KFEAT:   > = exit_bailey
 KFEAT:   ^ = alarm trap
 KFEAT:   - = tyrant's trap
@@ -508,7 +515,7 @@ ccccccccccccccccccccccccc.??..???.e?ccccccccccccccc
 ccccccccccccccccccccccccc2ccccccccccccccccccccccccc
 ccccccccccccc14..........1.........1ccccccccccccccc
 cccccccccc1.......111ccccccccc1......cccccccccccccc
-ccccccccc4...2....c+cc..e3e..ccccCc..cccccccccccccc
+ccccccccc4...2....c+cc..e3eX.ccccCc..cccccccccccccc
 cccccccc1...2T2...+..c.2.d.2.c21CdC..1ccccccccccccc
 ccccccccc1...2..cEc..c.2...2.c.2cDc...1cccccccccccc
 ccccccccccc.....EdB4.ccnc+cncc.4+dc..Wwwwwwwxxxxxxx
@@ -548,6 +555,7 @@ ORIENT: encompass
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   potion of experience pre_id q:1 /\
         scroll of acquirement pre_id q:1
+: fortress_talisman_chance(_G, "f")
 : bailey_setup(_G)
 KFEAT:  C = c
 SUBST:  I = t., 1 = 11.
@@ -577,7 +585,7 @@ tttttcc1...1cc..1...1..cc1...1ccttttt
 ttttttcc+cccc.....3.....cccc+cctttttt
 tttttcc.....cc..1...1..cc.....ccttttt
 tttttc1.....1c2.......2c1.....1cttttt
-ttttcc.......cc.......cc.......cctttt
+ttttcc.......cc...f...cc.......cctttt
 ttttc1.......1c|$$$$$|c1.......1ctttt
 tttcc.........cc$$e$$cc.........ccttt
 tttc2....T....1cCcccCc1....T....2cttt
@@ -637,6 +645,7 @@ ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
 ITEM:   good_item cloak / good_item pair of gloves /\
         good_item helmet / good_item pair of boots /\
         good_item tower shield / good_item kite shield
+: fortress_talisman_chance(_G, "f")
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -644,7 +653,7 @@ xA<xxxxxxxxxx.........xxxxxxxxxxxxx
 xx..xxxxxxxx..WWWWWWW..xxxxxxxxxxxx
 x..xxxxxxxx..WW.141.WW..xxxxxxxxxxx
 xx..xxxxxx..WW..ccc..WW..xxxxxxxxxx
-x..........WW.1cc.cc1.WW..........x
+x..........WW.1ccfcc1.WW..........x
 x.WWWWWWWWWW..ccd|ecc..WWWWWWWWWW.x
 x.W1..1..1..1cc.....cc1..1..1..1W.x
 x.W.ccncccccccccc+ccccccccccncc.W.x
@@ -693,6 +702,7 @@ ITEM:   potion of experience pre_id q:1 / \
         scroll of acquirement pre_id q:1 /\
         scroll of enchant armour pre_id q:2 / \
         scroll of enchant weapon pre_id q:3
+: fortress_talisman_chance(_G, "f")
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -714,7 +724,7 @@ x.....WWWWWWWWcWWcc2c2ccWWcWWWWWWWW.....x
 x.....WWWWWWWccWccvvvvvccWccWWWWWWW.....x
 x.....WWWWWWWccW+2vd4dv2+WccWWWWWWW.....x
 x.....WWWWWWWccWccv4X4vccWccWWWWWWW.....x
-x.....WWWWWWWccW+2v.4.v2+WccWWWWWWW.....x
+x.....WWWWWWWccW+2vf4.v2+WccWWWWWWW.....x
 x.....WWWWWWWccWccvv+vvccWccWWWWWWW.....x
 x.....WWWWWWWccWWcc<d<ccWWcWWWWWWWW.....x
 x.....WWWWWWWWWWWcc+++cWWccWWWWWWWW.....x
@@ -758,6 +768,7 @@ ITEM:   scroll of brand weapon pre_id w:5 / \
 ITEM:   scroll of enchant weapon pre_id /\
         scroll of enchant armour pre_id /\
         scroll of summoning pre_id no_pickup
+: fortress_talisman_chance(_G, "h")
 KFEAT:  C = cache of meat
 SUBST:  1 = 11., 2 = 22., 3 = 32.
 SUBST:  4 = 43322.., 5 = 4333, 4 : 4R, C : CC.
@@ -770,7 +781,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
 c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
-cA.....G...13+.$$.+..G..13+.!!!.+......4+.......???.<c
+cA.....G...13+.$$.+..G..13+.!!!.+......4+......h???.<c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
 c.....Bc...12cccccc.....13c.....c.....14+....5......5c
 cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
@@ -800,6 +811,7 @@ KITEM:  e = potion of experience pre_id q:1 / \
             scroll of acquirement pre_id q:1 / \
             scroll of enchant armour pre_id q:3 w:20 / \
             scroll of enchant weapon pre_id q:3 w:20
+: fortress_talisman_chance(_G, "f")
 NSUBST: d = 1:e / * = d|
 : bailey_setup(_G)
 MAP
@@ -816,7 +828,7 @@ cwww3w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
 cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
-cww.4..WWwwwdddWWwww......+__c3w!!!!w..<A<.....w..3wc
+cwwf4..WWwwwdddWWwww......+__c3w!!!!w..<A<.....w..3wc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
 cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
@@ -846,6 +858,7 @@ MONS:   gnoll bouda ; spear | trident | halberd . \
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
+: fortress_talisman_chance(_G, "e")
 FTILE:  4't = floor_grass
 KFEAT:  ' = floor
 NSUBST: - = 2:1 / 30 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
@@ -866,7 +879,7 @@ xtttwcG----ccc+ccc3---Gcwtttx
 xtttwc2---cc--3--cc---2cwtttx
 xtttwc---cc2-----2cc---cwtttx
 xtttwc---cc-------cc---cwtttx
-xtttwc3--cc-------cc---cwtttx
+xtttwc3--cc---e---cc---cwtttx
 xtttwccc+cc--$G$--cc---cwtttx
 xtttwc---cc-------cc---cwtttx
 xtttwc---cc-------cc---cwtttx
@@ -916,6 +929,7 @@ KITEM:   F = scroll of enchant weapon pre_id q:2 / \
 KITEM:   h = stone q:1 no_pickup
 KITEM:   | = scroll of acquirement pre_id
 KITEM:   $ = gold
+: fortress_talisman_chance(_G, "i")
 KFEAT:   ^ = zot trap
 KFEAT:   B = altar_okawaru
 KFEAT:   g = cache of meat
@@ -947,7 +961,7 @@ xwwwwwwwwW.c11c+nncc+ccnn+c11c.Wwwwwwwwwx
 xwwwwwwwwW.cc+c...1.1.1...c+cc.Wwwwwwwwwx
 xwwwwwwwwW.c..c.....B.....c..c.Wwwwwwwwwx
 xwwwwwwwwW.c2Gc.....1.....cG2c.Wwwwwwwwwx
-xwwwwwwwwW.c1.c....3.3....c.1c.Wwwwwwwwwx
+xwwwwwwwwW.c1.c....3i3....c.1c.Wwwwwwwwwx
 xwwwwwwwwW.c1GcccccccccccccG1c.Wwwwwwwwwx
 xwwwwwwwwW.c.1...ccccccc...1.c.Wwwwwwwwwx
 xwwwwwwwwW.c.G...c..1..c...G.c.Wwwwwwwwwx
@@ -979,14 +993,14 @@ ENDMAP
 NAME:   bailey_axe_bossmonster_kennysheep
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 : easy_axe_fighter(_G, "1")
 : kobold_axe_returning(_G, "2")
 : hard_axe_fighter(_G, "3")
 KMONS:  4 = hippogriff
 : orc_warlord_with_axe(_G, "5")
-ITEM:   potion of experience pre_id q:1 / \
-        scroll of acquirement pre_id q:1
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+ITEM:   potion of experience pre_id q:1 / scroll of acquirement pre_id q:1
+: fortress_talisman_chance(_G, "f")
 KFEAT:  C = c
 : bailey_setup(_G)
 SUBST:  1 = 1.., 2 = 22.
@@ -1010,7 +1024,7 @@ tt1..WWW.cWW.G...G.WWc.WWW..1tt
 tt...WWW.cW.........Wc.WWW...tt
 t<.2.WWW.cW....<....Wc.WWW.2.<t
 tt...WWW.cc..1...1..cc.WWW...tt
-tt1..WWW.cW..G...G..Wc.WWW..1tt
+tt1..WWW.cW..G.f.G..Wc.WWW..1tt
 ttt..ccc+cW.........Wc+ccc..ttt
 ttt2cc1..cW|eG.5.Ge|Wc..1cc2ttt
 tttcc....ccWWnnnnnWWcc....ccttt
@@ -1040,6 +1054,7 @@ ORIENT: encompass
 KMONS:  4 = deep elf pyromancer / deep elf zephyrmancer w:5
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   any armour good_item no_pickup
+: fortress_talisman_chance(_G, "f")
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
 NSUBST: 2 = 2:2 / * = 2..., 3 = 1:3 / * = 2....
@@ -1054,7 +1069,7 @@ MAP
    c..cc....cc..c
    c11c..4...c11c
    c21n..cc..n12c
-   c21n..cc..n12c
+   c21n$.cc.fn12c
    c..cddddddc..c
    c..ccddddcc..c
 xxxc..cccccccc..c
@@ -1088,14 +1103,16 @@ ENDMAP
 NAME:    bailey_axe_vampire_castle_hellmonk
 TAGS:    bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-: item(dgn.loot_potions)
-ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
 MONS:    orc zombie, spectral orc warrior
-MONS:    wyvern zombie, gargoyle
-MONS:    vampire ; war axe ego:vampirism w:15 | glaive ego:vampirism w:2 | \
-                   bardiche ego:vampirism w:1 | partisan ego:vampirism w:1 . \
+MONS:    wyvern zombie, gargoyle ; war axe | broad axe w:2
+MONS:    vampire ; war axe ego:vampirism w:15 | broad axe ego:vampirism w:2 | \
+                   battleaxe ego:vampirism w:1 | executioner's axe ego:vampirism w:1 . \
                    scale mail | chain mail
+: item(dgn.loot_potions)
+ITEM:    any armour good_item
+KITEM:   f = orc skeleton
+: fortress_talisman_chance(_G, "g")
 NSUBST:  d = 2:d / 2:e / 1:| / * = dde|, f = 1:f / f..
 NSUBST:  ; = 20 = t. / *:., - = 4:G / 2:1 / 10 = 1. / *:.
 NSUBST:  2 = 5=2 / * = 2., 3 = 6:3 / * = 3..., 4 = 3:4 / 2:5 / * = 4.
@@ -1103,7 +1120,6 @@ NSUBST:  6 = 1:6 / *:G, ! = 1:7 / *:G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead
 COLOUR:  t = brown
-KITEM:   f = orc skeleton
 : set_feature_name("tree", "dead tree")
 : vault_granite_statue_setup(_G, "G", "gravestone")
 : bailey_setup(_G)
@@ -1112,7 +1128,7 @@ MAP
   cc!dd!cc
  ccdd..ddcc
  c!..cc..!c
- c..cccc..c
+ c$.cccc.gc
  c..cccc..ccccccccccccc
  c...cc...c6......5cddc
  cc......cc.......5c44c
@@ -1158,13 +1174,14 @@ ENDMAP
 NAME:   bailey_axe_froggy_fort_hellmonk
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 : easy_axe_fighter(_G, "1")
 KMONS:  2 = human ; hand axe ego:heavy | war axe . scale mail | ring mail
 KMONS:  3 = vault guard ; broad axe . chain mail | plate armour
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1
 KMONS:  6 = hippogriff
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+: fortress_talisman_chance(_G, "g")
 KFEAT:  46 = shallow_water
 SHUFFLE: AB
 SUBST:  ; = W:3 ., B = <
@@ -1226,6 +1243,7 @@ ITEM:   good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
         good_item quicksilver dragon scales w:3
+: fortress_talisman_chance(_G, "g")
 KFEAT:  C = cache of fruit / cache of baked goods w:4
 KFEAT:  D = deep_water
 SUBST:  C : CC., ! = t:20 x c:3, - = t c:30 x
@@ -1247,7 +1265,7 @@ cc''-""ttdddtt""-''cc
 cc''-""!ddwdd!""-''cc
 cc''-""!dwDwd!""-''cc
 cc''-""!C.w.C!""-''cc
-cc''-""tt...tt""-''cc
+cc''-""tt.g.tt""-''cc
 cc''--""t!W!t""--''cc
 ccc''--3"""""3--''cc
   cc''--""3""--''cc

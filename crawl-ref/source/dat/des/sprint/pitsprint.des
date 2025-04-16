@@ -70,13 +70,14 @@ function base_monster_setup(e)
                sixfirhy / sun demon / rust devil / shadow demon /\
                hell hog band w:5 / sin beast / death scarab / minotaur")
   e.kmons("E = orc warlord / yaktaur captain band w:5 / vault warden /\
-               ironbound thunderhulk / ironbound frostheart /\
-               crystal guardian / fire giant w:25 / frost giant w:25 /\
-               stone giant / deep troll shaman band w:7 / hell knight band /\
-               guardian sphinx / war gargoyle / thermic dynamo /\
-               dancing weapon / deep elf annihilator / deep elf death mage /\
-               deep elf high priest / deep elf demonologist /\
-               deep elf sorcerer / deep elf elementalist / shadow dragon /\
+               ironbound mechanist / ironbound thunderhulk /\
+               ironbound frostheart / crystal guardian / fire giant w:25 /\
+               frost giant w:25 / stone giant / deep troll shaman band w:7 /\
+               hell knight band / guardian sphinx / war gargoyle /\
+               thermic dynamo / dancing weapon / deep elf annihilator /\
+               deep elf death mage / deep elf high priest /\
+               deep elf demonologist / deep elf sorcerer /\
+               deep elf elementalist / shadow dragon /\
                deep elf blademaster w:5 / deep elf master archer w:5 /\
                spriggan air mage / spriggan berserker / spriggan defender /\
                glass eye / walking divine tome / walking earthen tome /\
@@ -130,13 +131,13 @@ function base_monster_setup(e)
                Prince Ribbit / Robin band / Sigmund / Terence")
   e.kmons("I = Amaemon / Blorkula the orcula / Erica / Erolcha / Eustachio /\
                Fannar / Gastronok / Grum band / Harold / Jeremiah / Joseph /\
-               Josephine / Maurice / Nergalle / Lodul / Sonja / Urug")
+               Josephine / Maurice / Nergalle / Lodul / Sonja / Sprozz / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Jorgrun /\
                Kirke band / Nessos / Ilsuiw band / Polyphemus / Psyche /\
                Rupert / Saint Roka band / Snorg / Xak'krixis")
   e.kmons("K = Arachne band / Boris / Dissolution / Frederick / Jory /\
                Josephina band / the Lernaean hydra /  Margery band / Mennas /\
-               Mara / Nikola / Grunn band / Parghit / Wiglaf / Xtahua")
+               Mara / Nikola / Nobody / Grunn band / Parghit / Wiglaf / Xtahua")
   e.kmons("L = Vv / Zenata / Khufu band / Tiamat band / Murray / Mnoleg /\
                Gloorx Vloq / Lom Lobon / Cerebov / Dispater / Asmodeus /\
                Antaeus / Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
@@ -1613,7 +1614,6 @@ v++v++v++v++v++v++v++v++v++vv
 >@.+..+5.+5.+))+44+!!+5.+ccvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
-
 
 ################################################################################
 # The Iron Vault

@@ -208,9 +208,10 @@ end
 function arena_sprint_get_monster_set(round, boss)
     if not boss then
         if round == 27 then
-            return {"place:Zot:$ / orb guardian w:70 / tiamat / " ..
-                       "orb of fire / electric golem / killer klown / " ..
-                       "ancient lich / moth of wrath"}
+            return {"place:Zot:$ / orb guardian w:60 / tiamat / " ..
+                    "orb of fire / electric golem / killer klown / " ..
+                    "ancient lich / dread lich / protean progenitor / " ..
+                    "ghost moth / moth of wrath"}
         end
 
         local mon_set = {}
@@ -228,7 +229,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll bouda / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "zombie w:15 / skeleton / wight w:5 / phantom",
-                "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
+                "scorpion / scorpion simulacrum w:2 / redback w:1 / bombardier beetle w:2",
                 "endoplasm / w:5 jelly",
                 "giant cockroach w:20 / scorpion / ribbon worm"
             }
@@ -320,7 +321,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "brain worm",
+                "brain worm", "marrowcuda",
                 "kobold name:flame-cult_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion"
             }
@@ -655,7 +656,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!
                 "daeva",
-                "nekomata",
+                "nekomata ; triple crossbow good_item . triple sword good_item . robe",
                 "antique champion ; shadow dragon scales . kite shield . double sword",
                 "royal mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan",
@@ -1085,10 +1086,13 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane plate armour | mundane barding |\
             mundane cloak | mundane buckler |\
             mundane pair of gloves | mundane helmet
-KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:9 greed:7 use_all ; \
-            quill talisman | maw talisman | serpent talisman |\
-            blade talisman | sanguine talisman | dragon-coil talisman |\
-            granite talisman | storm talisman | talisman of death
+KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:19 greed:7 use_all ; \
+            quill talisman | inkwell talisman | rimehorn talisman |\
+            scarab talisman | medusa talisman | maw talisman | blade talisman |\
+            serpent talisman | spider talisman | lupine talisman |\
+            wellspring talisman | fortress talisman | sanguine talisman |\
+            dragon-coil talisman | granite talisman | riddle talisman |\
+            honeycomb talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of alchemy | staff of death | staff of conjuration

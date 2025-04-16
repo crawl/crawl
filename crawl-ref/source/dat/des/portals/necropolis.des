@@ -216,28 +216,28 @@ function necropolis_generic_spawns(e, _0, _9, _8)
                       formless jellyfish")
   elseif dgn.persist.necropolis_difficulty == "spider" then
     e.kmons(_0 .. " = culicivora / tarantella / redback / wolf spider / \
-                      jumping spider / wolf spider zombie")
+                      jumping spider / wolf spider simulacrum")
     e.kmons(_9 .. " = radroach / entropy weaver / demonic crawler / \
                       steelbarb worm / torpor snail w:5 / \
                       pharaoh ant / jorogumo / death scarab w:15 / \
-                      emperor scorpion zombie / broodmother zombie")
+                      spectral emperor scorpion / broodmother zombie")
     e.kmons(_8 .. " = moth of wrath / sun moth / emperor scorpion / \
                       broodmother / orb spider / spark wasp / \
                       emperor scorpion zombie")
   elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
-    e.kmons(_0 .. " = vault sentinel / yaktaur w:5 / ironbound preserver /\
-                      orc knight w:5 / orc warlord / sphinx marauder w:5 /\
+    e.kmons(_0 .. " = vault sentinel / yaktaur w:5 / ironbound preserver / \
+                      orc knight w:5 / orc warlord / sphinx marauder w:5 / \
                       deep elf zephyrmancer / deep elf knight / \
                       deep elf archer / guardian sphinx skeleton")
-    e.kmons(_9 .. " = ironbound frostheart / ironbound thunderhulk / \
-                      yaktaur captain / ettin / guardian sphinx / \
-                      peacekeeper / crystal guardian / war gargoyle / \
-                      air elemental / thermic dynamo w:15 / \
+    e.kmons(_9 .. " = ironbound mechanist / ironbound frostheart / \
+                      ironbound thunderhulk / yaktaur captain / ettin w:5 / \
+                      guardian sphinx / peacekeeper / crystal guardian / \
+                      war gargoyle / air elemental / thermic dynamo w:15 / \
                       dancing weapon w:25 / deep elf annihilator w:15 / \
                       deep elf high priest")
-    e.kmons(_8 .. " = vault warden / war gargoyle / titan / iron dragon /\
-                      quicksilver dragon / undying armoury /\
-                      deep elf death mage / deep elf elementalist /\
+    e.kmons(_8 .. " = vault warden / war gargoyle / titan / iron dragon / \
+                      quicksilver dragon / undying armoury / \
+                      deep elf death mage / deep elf elementalist / \
                       deep elf blademaster / deep elf master archer")
   elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
     e.kmons(_0 .. " = frost giant / fire giant / rakshasa / hell knight / \
@@ -308,8 +308,10 @@ function necropolis_sea_ghosts(e)
     mons = mons .. " / spectral orc att:neutral"
   elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
     mons = mons .. " / spectral centaur att:neutral"
-  elseif dgn.persist.necropolis_difficulty == "lair_branch" then
-    mons = mons .. " / spectral naga att:neutral / spectral merfolk att:neutral"
+  elseif dgn.persist.necropolis_difficulty == "snake" then
+    mons = mons .. " / spectral naga att:neutral"
+  elseif dgn.persist.necropolis_difficulty == "shoals" then
+    mons = mons .. " / spectral merfolk att:neutral"
   elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
     mons = mons .. " / spectral elf att:neutral"
   elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
@@ -2475,17 +2477,17 @@ MONS:   spriggan ; spear | trident, spriggan ; spear randart | trident randart
 MONS:   spriggan rider, spriggan rider ; spear randart | trident randart
 MONS:   boggart, spriggan druid
 # Place the loot glyphs randomly in the loot area.
-NSUBST: ' = 1:d / 1:e / 1:f / 1:g / 2:? / '
+NSUBST: ' = 1:d / 1:e / 1:f / 1:g / 1:$ / 2:? / '
 : ghost_good_loot(_G)
 KITEM:  ? = potion of lignification q:1 pre_id
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
-SUBST:  d = *, e = *%, fg = '
+SUBST:  d = *, e = *%, fg = $
 NSUBST: ' = 1:1 / 1:1- / 1:2 / 1:2- / 1:3 / *:-
 : elseif dgn.persist.necropolis_difficulty == "lair" then
-SUBST:  e = *, f = %$'', g = '
+SUBST:  e = *, f = %$$$, g = $
 NSUBST: ' = 1:1 / 1:1- / 1:2 / 1:2- / 1:3 / 1:4- / *:-
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
-SUBST:  f = *%, g = %$''
+SUBST:  f = *%, g = %$$$
 NSUBST: ' = 1:1 / 1:1122 / 1:244. / 1:5 / 1:6 / *:.
 : elseif dgn.persist.necropolis_difficulty == "swamp" then
 KMONS:  0 = place:Swamp w:11 / tarantella w:1 / faun w:1
@@ -2663,7 +2665,7 @@ KITEM:  P = mundane fire dragon scales
 KITEM:  ? = rimehorn talisman
 KITEM:  ! = wellspring talisman
 SUBST:  d = *%, e = %, f = ~~~??, ghij = $
-NSUBST: - = 2=0 / 2=01'' / 12 / 12' / *:'
+NSUBST: - = 2=0 / 2=01'' / 1:12 / 1:12'' / *:'
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 KMONS:  0 = place:D:9 simulacrum
 KITEM:  o = ring of fire pre_id / ring of fire randart pre_id w:5
@@ -3369,7 +3371,7 @@ MONS:   guardian serpent
 :   end
 SUBST:  f = |*, g = *%, h = %$--, i = -
 NSUBST: ^ = 4:^ / 3:. / * = ^., ' = 3:' / 2:- / * = ''-
-NSUBST: - = 1:1 / 2=1- / 5=0 / 6=09-- / -
+NSUBST: - = 1:1 / 2=1- / 4=0 / 6=09-- / -
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 MONS:   boggart, deep elf archer
 NSUBST: ^ = 4:~ / 4:. / * = ~., ' = 3:' / 2:- / * = ''-
@@ -3508,7 +3510,7 @@ MONS:   water moccasin / wolf / yak / wyvern / blink frog
 MONS:   elephant / black mamba / komodo dragon / polar bear / death yak
 MONS:   anaconda / wolf spider / manticore / alligator
 SUBST:  D = DEFH, f = *, g = %$, hij= -
-NSUBST: - = 1:1 / 1:1- / 2:2 / 4 = 2- / 1:3 / 1:3- / 1:4--- / *:-
+NSUBST: - = 1:1 / 1:1- / 2:2 / 4 = 2- / 1:3 / 1:34--- / *:-
 :   j = "lupine talisman w:15"
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 # I hope you like wargs.
@@ -3524,7 +3526,7 @@ MONS:   harpy / sea snake / anaconda w:15 / wolf spider / \
 MONS:   alligator snapping turtle / shock serpent / \
         torpor snail w:5 / spark wasp w:3 / ghost moth w:2 / bunyip
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
-NSUBST: - = 1:1 / 1:1- / 3:2 / 5 = 2- / 1:3 / 3 = 3- / 1:4- / *:-
+NSUBST: - = 1:1 / 1:1- / 3:2 / 4 = 2- / 1:3 / 2 = 3- / 1:4- / *:-
 :   j = "lupine talisman w:7 / lupine talisman randart w:8"
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 MONS:   shapeshifter
@@ -4358,7 +4360,8 @@ ITEM:   ring of willpower randart pre_id / orb ego:guile pre_id / \
         randbook disc:hexes numspells:3 / quicksilver dragon scales / \
         rapier randart w:5
 ITEM:   ring of willpower randart artprops:Will:2 w:8 pre_id / \
-        orb randart ego:guile pre_id / randbook disc:hexes numspells:5 / \
+        orb randart ego:guile pre_id / \
+        randbook disc:hexes numspells:5 spells:sphinx_sisters / \
         quicksilver dragon scales randart w:8 / quick blade randart w:5 / \
         any magical staff randart artprops:Hexes pre_id w:4
 ITEM:   any weapon randart artprops:Will:-2 pre_id
@@ -4516,18 +4519,20 @@ NAME:    regret_index_necropolis_ghost_elfcraft_halls
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
 MONS:    sky beast, fire bat, ice beast, shapeshifter
-NSUBST:  % = 1:d / 1:% / *:$, * = 2 = *ee / * = *%
+SUBST:   + = =
+NSUBST:  3 = 1:1 / *:3, 7 = 1:4 / *:7
+NSUBST:  % = 1:d / 2:% / * = %%$, * = 2 = *ee / * = *%
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 MONS:    deep elf pyromancer / deep elf archer, deep elf knight
 MONS:    deep elf zephyrmancer, gargoyle, fire elemental, water elemental
 MONS:    glowing shapeshifter / thermic dynamo w:2
 SHUFFLE: 456
-NSUBST:  % = 2:d / 2:% / *:$, * = 2:e / 1:|* / * = *%
+NSUBST:  % = 2:d / 2:% / * = %%$, * = 2:e / 1:|* / * = *%
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 MONS:    deep elf annihilator / deep elf high priest
 MONS:    deep elf sorcerer / deep elf demonologist w:5
 MONS:    deep elf death mage / deep elf elementalist
-MONS:    glowing shapeshifter / thermic dynamo w:4
+MONS:    ironbound mechanist / thermic dynamo w:4
 MONS:    war gargoyle, crystal guardian, undying armoury
 NSUBST:  12 = 1:- / 1:1 / 1:2, 34 = 1:-, 56 = 1:-, 67 = 1:-
 NSUBST:  % = 3:d / *:%, * = 1:e / 1:f / 2:| / *:*

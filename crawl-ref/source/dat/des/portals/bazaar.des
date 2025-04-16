@@ -2056,7 +2056,7 @@ NSUBST:  R = 4:$ / 15:' / *:.
 NSUBST:  S = 2:t / 2:^ / 2:F / 4 = +W / 2 = xy / *:.
 SUBST:   b = bbbn, - = ccxy
 SUBST:   " = bbbnnnnxycct^+g ":300
-KPROP:   "` = no_tele_into
+KPROP:   "`^ = no_tele_into
 COLOUR:  W = lightgreen
 FTILE:   t = floor_nerves_magenta
 TILE:    v = wall_crypt_metal

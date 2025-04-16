@@ -57,7 +57,24 @@ end
 -- : ossuary_setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
 function ossuary_setup_features(e)
+  e.tags("no_monster_gen")
+  e.tags("no_item_gen")
   e.kfeat("< = exit_ossuary")
+end
+
+-- With its limited usefulness for the length of a game, and to help
+-- differentiate early portal rewards, provide inkwell talismans in 15%
+-- of all Ossuary visits.
+function inkwell_talisman_chance(e, iglyph, nsubst, nglyph)
+  if nsubst == nil then
+      nsubst = false
+  end
+  e.kitem(iglyph .. " = inkwell talisman")
+  if nsubst then
+    e.nsubst(nglyph .. " = 1:" .. iglyph .. ":3 " .. nglyph .. ":17 / *:" .. nglyph)
+  else
+    e.subst(iglyph .. " = " .. iglyph .. ":3 .:17")
+  end
 end
 
 function callback.badplayer_boxes_open_up(data, triggerable, triggerer, marker,
@@ -366,7 +383,7 @@ default-depth: Ossuary
 ###########################################################
 
 NAME:    ossuary_tomb_1
-TAGS:    no_item_gen no_monster_gen no_rotate
+TAGS:    no_rotate
 WEIGHT:  40
 ORIENT:  encompass
 MONS:    mummy
@@ -376,6 +393,7 @@ MONS:    jackal zombie / adder zombie / kobold zombie / \
 # loot: 12.5 items
 ITEM:    any scroll w:2 / any scroll q:2 w:3 / \
          any potion w:4 / any potion q:2 w:6
+: inkwell_talisman_chance(_G, "e")
 KFEAT:   T = alarm trap
 SHUFFLE: dwyz
 SUBST:   wy = 2, T = T.
@@ -386,7 +404,7 @@ xxxxxxxxxxxxxxxxxxxxxx
 x.........<A.........x
 x....................x
 x...cccccccccccccc...x
-x...c.22*c...cdddc...x
+x...c.22*c.e.cdddc...x
 x?..c1cccc...cdddc..?x
 x..?c........+cccc?..x
 x?..cccccc.<.....c..?x
@@ -406,7 +424,7 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_tomb_2
-TAGS:    no_item_gen no_monster_gen no_rotate
+TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  40
 MONS:    adder zombie / jackal zombie / orc zombie / gnoll zombie
@@ -427,6 +445,7 @@ NSUBST:  J = 1:+ / *:c, K = 1:+ / *:c, 1 = 1:3 / 1:5 / 1:31 / *:1
 SUBST:   ? = 35
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
+: inkwell_talisman_chance(_G, "e")
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
@@ -448,25 +467,23 @@ c'''c            c...c
 c'''cccccccccccccc...c
 c'''c.4.cddddc...c.z.c
 c'''+.<3+d**dn.A.+...c
-c'''c.4.cddddc...c.z<c
+c'''c.4ecddddc...c.z<c
 cccccccccccccccccccccc
 ENDMAP
 
 # Another ossuary (loosely) based on Tomb:2
 NAME:    ossuary_minmay_tomb_2a
+TAGS:    no_rotate
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
          adder zombie / gnoll zombie / orc zombie / kobold zombie / \
          hound zombie / human zombie / elf zombie
 MONS:    mummy
 ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
 SHUFFLE: $de*
-NSUBST:  B = 1:+ / *:n
-NSUBST:  C = 1:+ / *:n
-NSUBST:  D = 1:+ / *:n
-NSUBST:  E = 1:+ / *:n
+: inkwell_talisman_chance(_G, "f", true, "$")
+NSUBST:  B = 1:+ / *:n, C = 1:+ / *:n, D = 1:+ / *:n, E = 1:+ / *:n
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
 MAP
@@ -497,7 +514,7 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_tomb_3
-TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_rotate no_vmirror
 WEIGHT:  40
 ORIENT:  encompass
 # zombies should be awake, so they march downwards in a line
@@ -506,6 +523,7 @@ MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
 MONS:    mummy
 MONS:    orc zombie / kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
+: inkwell_talisman_chance(_G, "e", true, "$")
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
@@ -535,7 +553,6 @@ ENDMAP
 ###########################################################
 
 NAME:    minmay_ossuary_two_tombs
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  20
 ORIENT:  encompass
 MONS:    mummy
@@ -550,6 +567,7 @@ MONS:    weeping skull / burial acolyte
 # The tomb close to the player is a bit easier than the other one, and is
 # more likely to be the one with less loot, giving weak players a chance.
 ITEM:    any scroll, any potion
+: inkwell_talisman_chance(_G, "h", true, "$")
 SHUFFLE: def$
 NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e, $ = 1:1 / *:$
 SUBST:   ? = 2:11 3:2 .:1
@@ -581,7 +599,7 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_crypta
-TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_rotate no_vmirror
 WEIGHT:  20
 ORIENT:  encompass
 MONS:    mummy, weeping skull / burial acolyte
@@ -598,6 +616,7 @@ ITEM:    scroll of noise pre_id w:30 / scroll of poison pre_id / \
          potion of moonshine pre_id w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5
+: inkwell_talisman_chance(_G, "g", true, "$")
 KFEAT:   ^ = alarm trap
 SHUFFLE: hjkl
 SUBST:   h : d, j : e, k : de, l : de.
@@ -631,7 +650,6 @@ ENDMAP
 # Scorpions, and lots of them. Hope you weren't expecting to breeze through
 # the ossuary just because you found a mace of holy wrath!
 NAME:   ossuary_minmay_scorpions
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 20
 ORIENT: encompass
 MONS:   scorpion, mummy
@@ -639,6 +657,7 @@ MONS:   gnoll zombie / jackal zombie / orc zombie / \
         human zombie / ball python zombie / adder zombie / \
         centaur zombie / scorpion zombie w:30
 ITEM:   any scroll / any potion / any jewellery w:1
+: inkwell_talisman_chance(_G, "e")
 SUBST:  1 = 111.., 3 = 33., d = d:21 .
 : ossuary_setup_features(_G)
 MAP
@@ -664,13 +683,12 @@ cccG..3..Gccc...c...G...c
 c3.........3c3.3c1.3c3.1c
 c...........cc+ccccccc+cc
 c..3..G..3..c...ndddc3.3c
-c.....c.....+...nd2d+.3.c
+c.e...c.....+...nd2d+.3.c
 c3...3c3...1c...ndddc1.1c
 ccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_zaba_flooded
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  20
 ORIENT:  encompass
 {{
@@ -721,6 +739,7 @@ MONS:    w:15 withered plant /\
          w:5 nothing
 MONS:    crocodile zombie / killer bee zombie w:3
 ITEM:    any potion / any scroll / any jewellery w:1
+: inkwell_talisman_chance(_G, "e")
 SHUFFLE: ABI/CDJ/EFK/GHL
 SUBST:   A : ., B : A, I : <
 SUBST:   EFKGHL : d
@@ -743,7 +762,7 @@ xxxxc1+.vAAAv3vCCCv.+1cxxxx
 xxxxccc.vABAvvvCDCv.cccxxxx
 xxxxc1+.vAAIv3vJCCv.+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
-xxxxc1+.............+1cxxxx
+xxxxc1+......e......+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
 xxxxc1+.vEEKv3vLGGv.+1cxxxx
 xxxxccc.vEFEvvvGHGv.cccxxxx
@@ -766,7 +785,6 @@ ENDMAP
 # Heavily reworked, because zombies and mummies not shouting made it a tedious
 # stutterstep lure-fest and the end corridor wasn't obvious without mapping.
 NAME:   minmay_ossuary_gauntlet
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
 NSUBST: 1 = 1:1 / 1:3 / 2:. / *:4
@@ -776,6 +794,7 @@ MONS:   human zombie / elf zombie w:8 / centaur zombie w:2
 MONS:   kobold zombie / orc zombie / gnoll zombie / \
         adder zombie / hound zombie / howler monkey zombie
 ITEM:   any potion / any scroll
+: inkwell_talisman_chance(_G, "e", true, "$")
 SUBST:  z = c.
 : ossuary_setup_features(_G)
 MAP
@@ -795,14 +814,14 @@ cc.....ccc=====c===c=====cc cc$$$cc
 ENDMAP
 
 NAME:    ossuary_the_hunt_dpeg
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  10
 ORIENT:  encompass
+MONS:    mummy, crocodile zombie
+MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
 # Especially good loot for an ambush.
 # Most of the loot helps right here, if need be.
 : item( dgn.loot_scrolls .. " / " .. dgn.loot_potions )
-MONS:    mummy, crocodile zombie
-MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
+: inkwell_talisman_chance(_G, "e")
 KFEAT:   ~ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ^ = net trap w:20 / dispersal trap w:5
 SUBST:   M = 11., z = c...
@@ -815,7 +834,7 @@ MAP
  ccccccccccccc3c3c3c3c3c3c3cccddddcc
 cc3.........~c~~~~~~~~~~~~~c+^.....cc
 c...........~~~~~~~~~~~~~~~~+^.....Mcc
-c1.....A..<.....z...z...z...+^.....2<c
+c1.....A..<.....z...z...z...+^....e2<c
 c...........~~~~~~~~~~~~~~~~+^.....Mcc
 cc2.........~c~~~~~~~~~~~~~c+^.....cc
  ccccccccccccc3c3c3c3c3c3c3cccddddcc
@@ -823,7 +842,7 @@ cc2.........~c~~~~~~~~~~~~~c+^.....cc
 ENDMAP
 
 NAME:    ossuary_due_mausoleum
-TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_rotate no_vmirror
 WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold skeleton / orc skeleton / gnoll skeleton
@@ -831,6 +850,7 @@ MONS:    mummy
 KMONS:   3X = wight ; mace | flail | falchion | short sword . robe
 KMONS:   4C = burial acolyte
 KITEM:   34d = any scroll / any potion
+: inkwell_talisman_chance(_G, "e")
 KFEAT:   C = altar_kikubaaqudgha
 NSUBST:  - = 1:+ / *:c, = = 1:+ / *:c
 SUBST:   d = dd., 4 = 444C
@@ -844,7 +864,7 @@ cc.<.....................<.cc
 cc.......ccccc=ccccc.......cc
 cc......cc.........cc......cc
 cc.....cc...cc-cc...cc.....cc
-cc....cc...cm...mc...cc....cc
+cc....cc...cm.e.mc...cc....cc
 cc....c...cm.3dd.mc...c....cc
 cc....=...-.dd4dd.-...=....cc
 cc....c...cm.dd3.mc...c....cc
@@ -878,7 +898,6 @@ ENDMAP
 
 # INDY: Oh, rats! ... He hates rats. He's scared to death of 'em.
 NAME:    ossuary_due_small_catacomb
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold skeleton / gnoll skeleton / orc skeleton / \
@@ -886,11 +905,12 @@ MONS:    kobold skeleton / gnoll skeleton / orc skeleton / \
 MONS:    crocodile zombie / weeping skull w:2
 KMONS:   4x = mummy / wight w:2 / spectral scorpion w:2
 KMONS:   y = spectral rat
-KFEAT:   ! = alarm trap
-KFEAT:   ? = altar_yredelemnul
 ITEM:    any scroll / any potion
 KITEM:   x = any scroll / any potion
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
+: inkwell_talisman_chance(_G, "%")
+KFEAT:   ! = alarm trap
+KFEAT:   ? = altar_yredelemnul
 SHUFFLE: Bb / Zz, Dd / Ww, Ee / Vv
 SUBST:   ZzWwVv = c, BDE = X
 NSUBST:  X = 1:4 / 1:x / 1: xxxx? / * = x4
@@ -909,7 +929,7 @@ cAccc...cc  ccb...cccxccc   cecc~cc
 c..+..1.+c  cBcc+cc ccc   cceEec+cc
 c<ccc...cc  ccb..cc   cccccxccc...ccc
 ccc cc+cc   cc..+cccccc..+....+.x.+Xc
-     c.cccccc1.cc~cdDd.1ccccccc...ccc
+     c.cccccc1.cc~cdDd%1ccccccc...ccc
      c^cc.....cccc.cdd.cc     cc+cc
      c....cc+cc  cc.cc+cc      cXc
      cc..cc...cccccc+yyyccccc  ccc
@@ -922,7 +942,7 @@ ENDMAP
 
 # Menkaure's pyramid
 NAME:    ossuary_due_pyramid
-TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_rotate no_vmirror
 WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
@@ -931,8 +951,13 @@ MONS:    kobold skeleton / gnoll skeleton / orc skeleton / rat skeleton / \
          goblin skeleton / hobgoblin skeleton
 MONS:    mummy
 KMONS:   4 = Menkaure, weeping skull / burial acolyte
-# Loot: 1-16 items
-ITEM:    any scroll / any potion / w:5 nothing
+# Loot: 1-15 items
+ITEM:    any scroll / any potion
+NSUBST:  d = 1:d / 1:e / * = dddd.
+: inkwell_talisman_chance(_G, "e")
+: ossuary_setup_features(_G)
+KFEAT:   ! = alarm trap
+KFEAT:   ? = altar_kikubaaqudgha
 KFEAT:   ^ = floor w:20 / alarm trap
 NSUBST:  ' = 25:1 / 25:2 / 30:^ / .
 : ossuary_setup_features(_G)
@@ -967,11 +992,11 @@ MAP
 ENDMAP
 
 NAME:   ossuary_zaba_two_paths
+TAGS:   no_rotate
 # There is no way up in the end. This is to give the zombies in the beginning
 # more time to go for a walk and another chance to meet the player.
 ORIENT: encompass
 WEIGHT: 10
-TAGS:   no_item_gen no_monster_gen no_rotate
 MONS:   kobold zombie / orc zombie / gnoll zombie
 MONS:   human zombie / elf zombie w:8 / centaur zombie w:2, crocodile zombie
 KMONS:  4ip = mummy
@@ -982,6 +1007,7 @@ KMONS:  P = spectral adder / spectral jackal / \
             spectral gnoll / spectral hound
 KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
+: inkwell_talisman_chance(_G, "e")
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
 NSUBST: I = 1:5i / 5:I / 5 = I` / *:`, P = 1:6p / 5:P / 5 = P" / *:"
@@ -1004,7 +1030,7 @@ bPPPPc+'cc.......cc'+cIIIIv
 bPPPPP+''c..4.4..c''+IIIIIv
 bPPPPPcc'c...G...c'ccIIIIIv
 bPPPPP+''c.......c''+IIIIIv
-bPPPPc+'cc.......cc'+cIIIIv
+bPPPPc+'cc...e...cc'+cIIIIv
 bPPPcc''cc..ddd..cc''ccIIIv
 bPPcc''ccc..ddd..ccc''ccIIv
 bPcc''ccG+..ddd..+Gcc''ccIv
@@ -1020,7 +1046,6 @@ ENDMAP
 # Petrified trees in this strange cavern are the only appropriate walls thin
 # enough to help the skulls serve as intelligent alarm traps.
 NAME:    ossuary_due_cavern
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  10
 ORIENT:  encompass
 MONS:    centaur skeleton w:1 / orc skeleton w:15 / hobgoblin skeleton /\
@@ -1031,6 +1056,7 @@ KMONS:   3X = laughing skull
 KMONS:   4 = burial acolyte
 ITEM:    any scroll / any potion
 ITEM:    any scroll / any potion / any wand w:4
+: inkwell_talisman_chance(_G, "f")
 KFEAT:   ^ = teleport trap
 KFEAT:   t = petrified_tree
 NSUBST:  B : 1:+ / 1:+ccc / *:c, C : 1:+ / 1:+ccc / *:c
@@ -1061,7 +1087,7 @@ cc.......tc
  cc......ccccBcBcBcBcBcc+cccccccccccc..ctc..yyy..ctc..c
 cc........ccc0c0c0c0c0cc.....cccccVccc...............cc
 c..........ccc+cc+c+c+cc.tdG.cccccnctc.ctz..eee..YtY.c
-c..x.......+...........t..d....+.....+.c3z..eee..Y3Y.c
+c..x.......+...........t..d....+.....+.c3z..eeef.Y3Y.c
 cc.tt......cc+c+c+cc+ccc.Gdt.cccccnctc.ctz..eee..YtY.c
 cc.x..<...ccc0c0c0c0c0cc.....cccccXccc...............cc
 cc.tt....ccccCcCcCcCcCcc+cccccccccccc..ctc..ZZZ..ctc..c
@@ -1078,7 +1104,6 @@ ENDMAP
 # Stealthy players can close the doors without the mummy noticing. This is
 # probably okay, but may turn out to be too easy.... -- dpeg
 NAME:   ossuary_minmay_four_chambers
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   human zombie / elf zombie / centaur zombie
@@ -1086,6 +1111,7 @@ MONS:   bullfrog simulacrum / spectral scorpion / \
         killer bee zombie w:5 / crocodile zombie w:35
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
+: inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = alarm trap
 NSUBST: 2 = 1:2 / 2 = 12 / *:1, ^ = 1:^ / 1:. / *:^.
 : ossuary_setup_features(_G)
@@ -1095,7 +1121,7 @@ MAP
          ccdddddcc
          c..ddd..c
          c...d...c
-         c.......c
+         c...e...c
          cc..^..cc
           ccc.ccc
             c+c
@@ -1122,13 +1148,13 @@ ENDMAP
 # The intent was that the mummies chase the player through the whole ossuary.
 # Now it's just some netted-corner corridors with additional scorpion friends.
 NAME:   ossuary_minmay_chase
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   jackal zombie / adder zombie / kobold zombie / gnoll zombie
 MONS:   scorpion zombie, human zombie / elf zombie
 MONS:   generate_awake mummy, scorpion
 ITEM:   any scroll / any potion / gold w:4
+: inkwell_talisman_chance(_G, "e")
 KFEAT:  ~ = net trap
 SUBST:  ~ = ~.
 NSUBST: B = 1:2 / *:1, C = 1:2 / 1:111223 / *:1, D = 1:2 / 1:123 / *:1
@@ -1137,7 +1163,7 @@ MAP
 ccccc     ccc ccc ccc
 cdddcccccccDcccDcccDccccccc
 cddd~~~~c5............c~~~c
-cd<d~~<~+.4...........+~<~c
+cd<de~<~+.4...........+~<~c
 cddd~~~~c5............c~~~c
 cdddcccccccDcccDcccDcccc+cc
 ccccc     ccc ccc ccc c...c
@@ -1162,7 +1188,6 @@ cccc      ccc ccc ccc
 ENDMAP
 
 NAME:   ossuary_boxes_badplayer
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   rat zombie / quokka zombie / adder zombie /\
@@ -1170,18 +1195,19 @@ MONS:   rat zombie / quokka zombie / adder zombie /\
         human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   mummy
 MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
-KMONS:  N  = mummy
-KMONS:  O  = Menkaure w:5 / mummy, mummy
-KFEAT:  N  = $
-KFEAT:  O  = exit_ossuary
+KMONS:  N = mummy
+KMONS:  O = Menkaure w:5 / mummy, mummy
+KITEM:  N = $
+KITEM:  $ = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
+: inkwell_talisman_chance(_G, "?", true, "$")
+KFEAT:  O = exit_ossuary
 KFEAT:  ab = stone_wall
-KITEM:  $  = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
-NSUBST: `  = 2:2 / *:.
-NSUBST: 1  = 25:1 / *:. , 3 = 5:3 / *:.
-NSUBST: a  = 1:+ / *:a , B = 1:+ / *:c , C = 1:+ / *:c , D = 1:+ / *:c
-NSUBST: E  = 1:+ / *:c , F = 1:+ / *:c , G = 1:+ / *:c , H = 1:+ / *:c
-NSUBST: I  = 1:+ / *:c , J = 1:+ / *:c , K = 1:+ / *:c , L = 1:+ / *:c
-NSUBST: M  = 1:+ / *:c
+NSUBST: ` = 2:2 / *:.
+NSUBST: 1 = 25:1 / *:. , 3 = 5:3 / *:.
+NSUBST: a = 1:+ / *:a , B = 1:+ / *:c , C = 1:+ / *:c , D = 1:+ / *:c
+NSUBST: E = 1:+ / *:c , F = 1:+ / *:c , G = 1:+ / *:c , H = 1:+ / *:c
+NSUBST: I = 1:+ / *:c , J = 1:+ / *:c , K = 1:+ / *:c , L = 1:+ / *:c
+NSUBST: M = 1:+ / *:c
 {{
 lua_marker(":", Triggerable.synchronized_markers(
   function_at_spot( "callback.badplayer_boxes_open_up",
@@ -1226,7 +1252,6 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_kennysheep_city_of_the_dead
-TAGS:    no_item_gen no_monster_gen
 WEIGHT:  10
 ORIENT:  encompass
 KMONS:   1s = weeping skull
@@ -1236,6 +1261,7 @@ KMONS:   4 = hound zombie / gnoll zombie / orc zombie
 KMONS:   5 = human zombie / elf zombie / centaur zombie
 KMONS:   F = marrowcuda
 KITEM:   123d = any potion / any scroll / any jewellery w:1
+: inkwell_talisman_chance(_G, "e", true, "$")
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_kikubaaqudgha / altar_hepliaklqana w:2
 KFEAT:   DF = dry_fountain
@@ -1261,9 +1287,9 @@ c..xL+..4G4.xMMMx.4G4..+Nx..c
 c..xL+...4..x+++x.44...+Nx..c
 c..xxxx.....x...x.....xxxx..c
 c...........................c
-c......xxxxx..4..xxxxx......c
+c......xxxxx.$4..xxxxx......c
 c^....FxOO+..4C4..+PPxF....^c
-c......xxxxx..4..xxxxx......c
+c......xxxxx..4$.xxxxx......c
 c...........................c
 c..xxxx.....x...x.....xxxx..c
 c..xQ+...44.x+++x..4...+Sx..c
@@ -1291,7 +1317,6 @@ ccccccccccccc+++ccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_silent_tomb
-TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   silent spectre, wight / marrowcuda / weeping skull w:5
@@ -1300,6 +1325,7 @@ MONS:   centaur zombie w:20 / water moccasin zombie / scorpion zombie /\
 MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
         gnoll zombie / ogre zombie w:3 / human zombie w:1
 ITEM:   any potion w:15 / any scroll w:15 / gold w:6 / any armour w:1
+: inkwell_talisman_chance(_G, "e")
 NSUBST: ~ = 2:4 / 12 = 4... / *:.
 NSUBST: - = 2:4 / 12 = 4... / 4 = 3... / *:.
 NSUBST: ' = 1:3 / 1:4 / 4 = 3... / 12 = 4... / *:.
@@ -1327,7 +1353,7 @@ c~~~~~ccccddd<dddcccc!!!!!c
 c~~~~~~ccccdddddcccc!!!!!!c
 c~~~~~~cccccdddccccc!!!!!!c
 c~~~~~~~ccccc2ccccc!!!!!!!c
-c~~~~G~~~cccc.cccc!!!G!!!!c
+c~~~~G~~~ccccecccc!!!G!!!!c
 c~~~GcG~~~~cc.cc!!!!GcG!!!c
 c~~~~G~~~~~~c+c!!!!!!G!!!!c
 c~~~~~~~~~~~c.!!!!!!!!!!!!c
@@ -1342,7 +1368,6 @@ ENDMAP
 
 # an ossuary with no clear pathway and monsters and loot scattered about
 NAME:    ossuary_hellmonk_twisting_tombs
-TAGS:    no_monster_gen no_item_gen
 WEIGHT:  10
 ORIENT:  encompass
 MONS:    weeping skull / burial acolyte
@@ -1350,6 +1375,7 @@ MONS:    mummy / wight w:2
 MONS:    kobold zombie / gnoll zombie / orc zombie / hound zombie / \
          human zombie w:4 / centaur zombie w:6
 ITEM:    any potion w:15 / any scroll w:15 / gold w:6
+: inkwell_talisman_chance(_G, "e")
 SHUFFLE: -+
 SHUFFLE: <A
 SUBST:   -:c, V:VVVVG
@@ -1369,7 +1395,7 @@ cccd13...+.2c.....dc.....-.dccc
 ccc.33...c..+......+.....c31ccc
 ccc-cccccc..c......c....dc33ccc
 ccc......+..cc-ccccccc-cccc+ccc
-ccc......c..c....c.....+....ccc
+ccc......c..c...ec.....+....ccc
 ccccc+c+-cc-c....+..2..c...dccc
 cccd..c"""""c....c.....ccc-cccc
 ccc...c"""""+....cc-cccc...dccc
@@ -1388,7 +1414,6 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_split_paths
-TAGS:   no_monster_gen no_item_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   burial acolyte / weeping skull
@@ -1398,6 +1423,7 @@ MONS:   centaur zombie / water moccasin zombie / scorpion zombie /\
 MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
         gnoll zombie
 ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+: inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
 NSUBST: 3 = 2:3 / *=3...
 NSUBST: - = 3:4 / 1:3 / 8=4. / *:., ~ = 3:4 / 1:3 / 8=4. / *:.
@@ -1419,7 +1445,7 @@ c..!!!cccc2.....2cccc....c
 c..!!cc"3cc..3..ccddccc..cc
 c..ccc""""cc...ccd43dc....c
 c..""""""".c...c.3.4dcc...c
-c3.""""2"3^+.G^+...1ddcA.<c
+c3.""""2"3^+.G^+..e1ddcA.<c
 c..""""""".c...c.3.4dcc...c
 c..ccc""""cc...ccd43dc....c
 c..''cc"3cc..3..ccddccc..cc
@@ -1435,7 +1461,6 @@ cccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_orc_graveyard
-TAGS:   no_monster_gen no_item_gen
 WEIGHT: 10
 ORIENT: encompass
 MONS:   orc warrior zombie w:20 / weeping skull / troll zombie w:1
@@ -1444,6 +1469,7 @@ MONS:   orc zombie w:30 / gnoll zombie / ogre zombie w:2 /\
         hobgoblin zombie w:7 / elf zombie w:1
 KMONS:  B = burial acolyte
 ITEM:   any potion w:15 / any scroll w:15 / gold w:6
+: inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = alarm trap
 KFEAT:  B = altar_kikubaaqudgha / altar_beogh w:2
 KFEAT:  t = petrified_tree
@@ -1455,7 +1481,7 @@ NSUBST: 1 = 1:1 / *:2, d = 6:d / 1:* / *=ddd*
 MAP
          ccccc
         cc.B.cc
-        c.....c
+        c..e..c
 ccccccccccc+ccccccccccc
 c.....^..3.2.3..^.....c
 c.....^.........^.....c

@@ -38,7 +38,8 @@ function init_protected_by_tso(e)
   e.kmons('2 = vault warden ; great sword ' .. h .. ' | battleaxe .. ' .. h ..
                              'glaive ' .. h .. ' | great mace ' .. h .. ' . ' ..
                              ' . chain mail | plate armour')
-  e.kmons('3 = generate_awake vault guard')
+  e.kmons('3 = generate_awake vault guard / \
+               generate_awake ironbound mechanist w:2')
   e.kfeat('A = altar_the_shining_one')
   e.kitem('A = any weapon ego:holy_wrath w:2 no_pickup / $')
   e.lua_marker('!', message_at_spot("You almost think you hear a voice: " ..
@@ -927,23 +928,20 @@ xB.B...B..x
 xxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_vaults_meeting
-TAGS: vaults_hard vaults_orient_s patrolling no_monster_gen
-KMONS: S = vault sentinel
-KMONS: G = vault guard
-KMONS: W = vault warden
-KMONS: P = ironbound preserver
-KMONS: C = ironbound convoker
+NAME:  nicolae_vaults_meeting
+TAGS:  vaults_hard vaults_orient_s patrolling no_monster_gen
+MONS:  vault sentinel, vault guard, vault warden
+MONS:  ironbound preserver, ironbound convoker, ironbound mechanist
 SUBST: | = ||*
 MAP
    xxxxxxx
  xxx%*|*%xxx
-xxG+..S..+Gxx
+xx2+..1..+2xx
 x..xnnnnnx..x
-x.P...C...P.x
+x.4...5...4.x
 x...........x
-x..W.....W..x
-xx...GGG...xx
+x..3.....3..x
+xx...262...xx
  xxxx+++xxxx
    xx...xx
     x...x
@@ -1508,7 +1506,8 @@ KITEM:  M = any weapon randart / any armour randart / any jewellery randart / \
             any magical staff randart / any randbook
 KMONS:  R = vault warden band
 KMONS:  S = vault sentinel
-KMONS:  s = vault guard w:40 / ironbound preserver / ironbound convoker
+KMONS:  s = vault guard w:30 / ironbound mechanist / \
+            ironbound preserver / ironbound convoker
 KFEAT:  M = alarm trap
 KMASK:  M = no_monster_gen
 KMASK:  M = opaque
@@ -1987,7 +1986,7 @@ ORIENT: float
 # Extra-large vaults get higher weight in V to help with layout restrictions.
 WEIGHT: 30
 DEPTH:  Vaults, !Vaults:$
-MONS:   crystal guardian, orange crystal statue
+MONS:   crystal guardian, orange crystal statue, ironbound mechanist
 ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:30 / \
         potion of magic pre_id / potion of brilliance pre_id / \
         phial of floods w:3 / tin of tremorstones w:5 / gold w:40
@@ -2006,13 +2005,13 @@ MAP
    bdddb        bbwwWW...WWwwbb   bbbbbbbwW.Wwbbbb
    bb.bbbbbb   bbwwWW..W..WWwwbb  bwwwwwwwW.Wwwwwx
    b...WwwwbbbbbwwWW..WWW..WWwwbb bwWWWWWWW.WWWWWx
-   b...WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
+   b3..WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
 bbbbb...WWwwwwwwWW..WWwwwWW..WWwwwwwwW...........x.
 bdddb...1WWWWWWWW..WWwb~bwWW..WWWWWWWW...........+.
 bd1d.._...........WWww~2~wwWW....................+.
 bdddb...1WWWWWWWW..WWwb~bwWW..WWWWWWWW...........+.
 bbbbb...WWwwwwwwWW..WWwwwWW..WWwwwwwwW...........x.
-   b...WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
+   b3..WWWwwbbbwwWW..WWwWW..WWwwbbbwwWb...b.b....x.
    b...WwwwbbbbbwwWW..WWW..WWwwbb bwWWWWWWW.WWWWWx
    bb.bbbbbb   bbwwWW..W..WWwwbb  bwwwwwwwW.Wwwwwx
    bdddb        bbwwWW...WWwwbb   bbbbbbbwW.Wwbbbb
@@ -2183,8 +2182,9 @@ TAGS:    no_monster_gen no_item_gen no_wall_fixup
 WEIGHT:  5
 # the fans
 MONS:    arcanist ; ring mail . mace / necromancer ; ring mail . long sword
-MONS:    vault guard / vault sentinel w:5 / ironbound preserver w:5, orc knight
-MONS:    ironbound thunderhulk / ogre mage w:5 ; dire flail . robe
+MONS:    vault guard w:20 / vault sentinel / ironbound preserver / \
+         ironbound mechanist
+MONS:    orc knight, ironbound thunderhulk / ogre mage w:5 ; dire flail . robe
 MONS:    deep elf high priest / deep elf death mage / deep elf annihilator / \
          deep elf demonologist / deep elf sorcerer
 MONS:    entropy weaver w:5 / war gargoyle
@@ -2249,11 +2249,11 @@ ORIENT: east
 MONS:   gargoyle, peacekeeper, thermic dynamo
 MONS:   dancing weapon, crystal guardian, war gargoyle
 KMONS:  A = arcanist
-KMONS:  B = deep elf pyromancer
-KMONS:  C = deep elf zephyrmancer
-KMONS:  D = deep elf annihilator
-KMONS:  E = lich
-KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
+KMONS:  B = deep elf zephyrmancer
+KMONS:  C = deep elf annihilator
+KMONS:  D = lich
+KMONS:  E = ironbound mechanist
+KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich w:2
 ITEM:   randbook disc:forgecraft / manual of forgecraft w:5
 KFEAT:  S = metal_statue
 KFEAT:  yz = .

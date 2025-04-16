@@ -1352,7 +1352,7 @@ TAGS:    extra transparent
 DEPTH:   Elf
 KMONS:   1 = crystal guardian
 KMONS:   2 = thermic dynamo
-SHUFFLE: @ABC, QRST, n1' / n1' / xxx
+SHUFFLE: @ABC, QRST, n12' / n12' / xxxx
 SUBST:   A : b:8 .:1 @:1, BC = b, x : b:8 x:1
 SUBST:   Q : b:8 .:1, R : b.., S : b:1 .:8, T = .
 KMASK:   12' = no_trap_gen
