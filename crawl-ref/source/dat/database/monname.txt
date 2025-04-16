@@ -150,7 +150,7 @@ Pellinorc
 Urtork
 %%%%
 # Other
-# (52 at last count)
+# (54 at last count)
 _other_orcish_name_
 
 Agrik
@@ -185,6 +185,8 @@ Brandogh
 
 Brunolf
 
+Creb
+
 Dorog
 
 Garbold
@@ -202,6 +204,8 @@ Hawl
 Herok
 
 Hilgar
+
+Jathrek
 
 Jorge
 
