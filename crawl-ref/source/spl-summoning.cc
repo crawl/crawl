@@ -4715,7 +4715,7 @@ static int _rending_blade_power(int base_power)
 {
     const int mp_spent = max(0, you.magic_points - spell_difficulty(SPELL_RENDING_BLADE));
     const int mp_bonus = stepdown(mp_spent, 10);
-    return base_power * (100 + mp_bonus * 3) / 100;
+    return base_power * (100 + mp_bonus * 5) / 100;
 }
 
 dice_def rending_blade_damage(int power, bool include_mp)
@@ -4732,7 +4732,7 @@ spret cast_rending_blade(int pow, bool fail)
     fail_check();
 
     mgen_data blade = _pal_data(MONS_RENDING_BLADE, random_range(7, 10) * BASELINE_DELAY,
-                                SPELL_RENDING_BLADE, false);
+                                SPELL_RENDING_BLADE, false).set_range(1, 2);
 
     if (monster* mon = create_monster(blade))
     {
@@ -4755,9 +4755,7 @@ void trigger_rending_blade()
     {
         if (mi->type == MONS_RENDING_BLADE && mi->summoner == MID_PLAYER)
         {
-            // Only save up to 3 charges at once, so that axes aren't overly
-            // ridiclous and that you can't bank too many charges while the
-            // blade isn't positioned to act.
+            // Trigger at most 3 times per round, so that axes aren't overly ridiclous.
             mi->number = min((unsigned int)3, mi->number + 1);
             mi->speed_increment = 100;
             return;

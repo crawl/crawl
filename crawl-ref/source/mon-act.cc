@@ -1226,6 +1226,91 @@ static void _check_blazeheart_golem_link(monster& mons)
     }
 }
 
+static bool _scan_rending_blade_paths(coord_def start,
+                                      const vector<coord_def>& landing_spots,
+                                      int ideal_score,
+                                      coord_def& best_pos,
+                                      int& best_score,
+                                      int& best_dist)
+{
+    for (coord_def targ : landing_spots)
+    {
+        const int dist = grid_distance(start, targ);
+        if (dist <= 1 || dist > 4 || dist < best_dist)
+            continue;
+
+        ray_def ray;
+        if (!find_ray(start, targ, ray, opc_no_trans))
+            continue;
+
+        int steps_taken = 0;
+        int enemy_power = 0;
+        while (ray.advance() && steps_taken < dist)
+        {
+            ++steps_taken;
+            const coord_def p = ray.pos();
+
+            if (actor* act = actor_at(p))
+            {
+                // Ignore ourself when doing shift tests
+                if (act->type == MONS_RENDING_BLADE)
+                    continue;
+
+                // Don't hurt allies.
+                if (mons_atts_aligned(ATT_FRIENDLY, act->temp_attitude()))
+                {
+                    enemy_power = 0;
+                    break;
+                }
+
+                if (!act->is_firewood())
+                    enemy_power += act->get_experience_level();
+            }
+        }
+
+        if (enemy_power == 0)
+            continue;
+
+        if (enemy_power == ideal_score)
+        {
+            best_pos = targ;
+            return true;
+        }
+        else if (enemy_power > best_score
+                 || enemy_power == best_score && dist > best_dist)
+        {
+            best_pos = targ;
+            best_score = enemy_power;
+            best_dist = dist;
+        }
+    }
+
+    return !(best_pos.origin());
+}
+
+static void _fire_rending_blade(monster& blade, coord_def target, int pow)
+{
+    bolt slash;
+    zappy(ZAP_RENDING_SLASH, pow, true, slash);
+    slash.range = 4;
+    slash.source = blade.pos();
+    slash.source_id = blade.mid;
+    slash.thrower = KILL_MON_MISSILE;
+    slash.origin_spell = SPELL_RENDING_BLADE;
+    slash.target = target;
+    slash.aimed_at_spot = true;
+    slash.hit_verb = "slices through";
+
+    simple_monster_message(blade, " flashes!");
+
+    slash.fire();
+    blade.blink_to(target, true, true);
+    blade.number -= 1;
+
+    // Point blade at some living foe, so it won't wander off
+    set_nearest_monster_foe(&blade, true);
+}
+
 static bool _handle_rending_blade_trigger(monster* blade)
 {
     if (blade->number <= 0)
@@ -1233,108 +1318,80 @@ static bool _handle_rending_blade_trigger(monster* blade)
 
     const int pow = blade->props[RENDING_BLADE_POWER_KEY].get_int();
 
-    coord_def best_targ;
-    int best_weight = 0;
-    int best_range = 0;
-    int num_best_found = 0;
-
-    // Look at all hostile enemies both you and the blade can see, then
-    // trace a path towards each of them, going as far as possible without
-    // exceeding the blade's maximum range (4), hitting an ally, or leaving
-    // the player's LoS. If no path is productive and safe, do nothing and
-    // hope we'll be in a better position next turn.
-    for (monster_near_iterator mi(blade, LOS_NO_TRANS); mi; ++mi)
+    // First, ensure there is a valid enemy in range (so that we don't waste
+    // time with the fairly intensive targeting calculation afterward)
+    vector<monster*> targs;
+    int max_score = 0;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_aligned(*mi, blade) || !you.can_see(**mi)
-            || grid_distance(mi->pos(), blade->pos()) > 4)
+        if (mons_aligned(*mi, blade) || mi->is_firewood()
+            || grid_distance(mi->pos(), blade->pos()) > 5)
         {
             continue;
         }
 
-        ray_def ray;
-        if (!find_ray(blade->pos(), mi->pos(), ray, opc_solid_see))
-            continue;
+        max_score += mi->get_experience_level();
+        targs.push_back(*mi);
+    }
 
-        // Examine spaces one at a time, stopping if we hit a friendly
-        // monster, wall, or leave the player's LoS, and otherwise keep
-        // track of the furthest safe empty space we can occupy (to determine
-        // the maximal range of this shot).
-        int steps_taken = 0;
-        int furthest_safe = 0;
-        int enemy_power = 0;
-        int enemy_power_reachable = 0;
+    if (targs.empty())
+        return false;
 
-        while (ray.advance() && steps_taken < 4)
+    // The process to find the 'best' path works as follows:
+    // Gather every space in the player's line of sight where the blade could
+    // land at the end of its path, and which is within 4 tiles (ie: the range
+    // of the blade). Trace a ray from the blade's position to each one of
+    // these, and see which hits the most HD of enemies while being the furthest
+    // path.
+    //
+    // If no valid path is found, try shifting the blade to an adjacent tile and
+    // testing all valid end-points from *that* tile.
+    //
+    // As an easy optimisation, if any path hits all valid targets, immediately
+    // accept that one (since that will happen a lot against single or
+    // clustered enemies).
+
+    vector<coord_def> spots;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(*ri, blade->pos()) <= 5
+            && grid_distance(*ri, blade->pos()) > 1
+            && you.see_cell_no_trans(*ri)
+            && !actor_at(*ri) && monster_habitable_grid(MONS_RENDING_BLADE, *ri))
         {
-            ++steps_taken;
-            const coord_def p = ray.pos();
-
-            // Don't leave the player's LoS.
-            if (!you.see_cell_no_trans(p) || p == you.pos())
-                break;
-
-            if (monster* targ = monster_at(p))
-            {
-                // Don't hurt allies.
-                if (mons_aligned(blade, targ))
-                    break;
-
-                if (!targ->is_firewood())
-                    enemy_power += targ->get_experience_level();
-            }
-            // We need somewhere safe to end our path.
-            else if (monster_habitable_grid(MONS_RENDING_BLADE, p))
-            {
-                furthest_safe = steps_taken;
-                enemy_power_reachable = enemy_power;
-            }
+            spots.push_back(*ri);
         }
+    }
 
-        if (furthest_safe > 0)
+    shuffle_array(spots);
+
+    coord_def best_targ;
+    int best_score = 0;
+    int best_dist = 0;
+
+    if (_scan_rending_blade_paths(blade->pos(), spots, max_score, best_targ, best_score, best_dist))
+    {
+        _fire_rending_blade(*blade, best_targ, pow);
+        return true;
+    }
+    // Now try surrounding tiles
+    else
+    {
+        for (fair_adjacent_iterator ai(blade->pos()); ai; ++ai)
         {
-            if (enemy_power_reachable > best_weight)
+            if (actor_at(*ai) || !monster_habitable_grid(MONS_RENDING_BLADE, *ai))
+                continue;
+
+            if (_scan_rending_blade_paths(*ai, spots, max_score, best_targ, best_score, best_dist))
             {
-                best_weight = enemy_power_reachable;
-                best_range = furthest_safe;
-                best_targ = mi->pos();
-                num_best_found = 0;
-            }
-            // Choose randomly among ties for best shot
-            else if (enemy_power_reachable > 0
-                     && enemy_power_reachable == best_weight
-                     && one_chance_in(++num_best_found))
-            {
-                best_weight = enemy_power_reachable;
-                best_range = furthest_safe;
-                best_targ = mi->pos();
+                blade->move_to_pos(*ai, true, true);
+                _fire_rending_blade(*blade, best_targ, pow);
+                return true;
             }
         }
     }
 
-    // If we found no valid path, bail.
-    if (best_targ.origin())
-        return false;
-
-    // Point blade at foe, so it won't wander off
-    blade->foe = monster_at(best_targ)->mindex();
-
-    bolt slash;
-    zappy(ZAP_RENDING_SLASH, pow, true, slash);
-    slash.range = best_range;
-    slash.source = blade->pos();
-    slash.source_id = blade->mid;
-    slash.thrower = KILL_MON_MISSILE;
-    slash.origin_spell = SPELL_RENDING_BLADE;
-    slash.target = best_targ;
-    slash.hit_verb = "slices through";
-
-    simple_monster_message(*blade, " flashes!");
-
-    slash.fire();
-    blade->blink_to(slash.path_taken[slash.path_taken.size() - 1], true, true);
-    blade->number -= 1;
-
-    return true;
+    return false;
 }
 
 static void _handle_lightning_spire(monster& spire)
@@ -2051,6 +2108,8 @@ void handle_monster_move(monster* mons)
         bool did_slash = false;
         while (_handle_rending_blade_trigger(mons))
             did_slash = true;
+
+        mons->number = 0;
 
         // Pause in place after attacking (for slightly better visuals).
         if (did_slash)

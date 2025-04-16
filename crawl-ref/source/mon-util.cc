@@ -5866,6 +5866,7 @@ int mons_leash_range(monster_type mc)
 {
     switch (mc)
     {
+        case MONS_RENDING_BLADE:
         case MONS_SOLAR_EMBER:
         case MONS_PHALANX_BEETLE:   return 1;
         case MONS_HAUNTED_ARMOUR:   return 2;
