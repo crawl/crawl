@@ -6430,28 +6430,31 @@ void player::preview_stats_with_specific_item(int scale, const item_def& new_ite
     // the change that would happen if they used this item *on top* of their
     // current equipment.
 
-    vector<vector<item_def*>> removal_candidates;  // Items eligible to be removed
     vector<item_def*> to_remove;                   // List of items chosen to swap out
-    equipment_slot slot = you.equipment.find_slot_to_equip_item(item, removal_candidates, true);
+    bool requires_replace = false;
+    equipment_slot slot = you.equipment.find_slot_to_equip_item(item, requires_replace, true);
 
     // Check if the required removals involve any decisions. If they do not,
     // gather list of items to swap out.
-    bool needs_choice = false;
-    if (!removal_candidates.empty())
+    if (requires_replace)
     {
-        for (vector<item_def*> slot_candidates : removal_candidates)
+        vector<equipment_slot> slots = get_all_item_slots(item);
+        vector<item_def*> slot_candidates;
+        for (equipment_slot wanted_slot : slots)
         {
+            equipment_slot free_slot = equipment.find_free_slot(wanted_slot);
+            if (free_slot != SLOT_UNUSED)
+                continue;
+            equipment.find_removable_items_for_slot(wanted_slot, slot_candidates);
             if (slot_candidates.size() > 1)
             {
-                needs_choice = true;
+                to_remove.clear();
                 break;
             }
+            to_remove.push_back(slot_candidates[0]);
+            slot_candidates.clear();
         }
     }
-
-    if (!needs_choice)
-        for (vector<item_def*> slot_candidates : removal_candidates)
-            to_remove.push_back(slot_candidates[0]);
 
     // Place this in its 'default' slot (should be good enough for preview purposes)
     if (slot == SLOT_UNUSED)

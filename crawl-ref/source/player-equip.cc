@@ -586,17 +586,9 @@ void player_equip_set::update()
  *
  * @param item             The item we're trying to equip.
  *
- * @param[out] to_replace  If there is no appropriate empty slot, but there are
- *                         slots with items that could be removed to make room
- *                         for this item, the items in those slots will be
- *                         added to this vector.
- *
- *                         For items which occupy more than one slot at a time,
- *                         each vector within this vector represents a distinct
- *                         item (or set of possible items) which must be removed.
- *                         ie: if equipping a two-handed weapon, to_replace may
- *                         contain {{Current Weapon}, {Current Shield}} while
- *                         {{Ring 1, Ring 2}} might result from equpping a ring.
+ * @param[out] requires_replace  True if there is no appropriate empty slot,
+ *                               but there are slots with items that could be
+ *                               removed to make room for this item.
  *
  * @param ignore_curses    If true, treats cursed items as they were removable.
  *                         (Used for equipment preview, so that it can display
@@ -607,26 +599,48 @@ void player_equip_set::update()
  *
  *          Important: in cases of items that occupy more than one slot, this
  *          may return a specific slot even though items must still be removed
- *          to be able to equip this! Only a slot *and* an empty to_replace
- *          vector can be interpreted as 'no further action needed to equip
- *          this'. In cases it returns SLOT_UNUSED and there are items in
- *          to_replace, the item should go in the slot of the first one of those
- *          removed.
+ *          to be able to equip this! Only a slot *and* requires_replace set
+ *          to false can be interpreted as 'no further action needed to equip
+ *          this'.
  */
 equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
-                                                         vector<vector<item_def*>>& to_replace,
-                                                         bool ignore_curses) const
+                                                      bool& requires_replace,
+                                                      bool ignore_curses) const
 {
+    requires_replace = false;
     vector<equipment_slot> slots = get_all_item_slots(item);
+    if (slots.size() == 1u)
+    {
+        equipment_slot free_slot = find_free_slot(slots[0]);
+        if (free_slot != SLOT_UNUSED)
+            return free_slot;
 
-    FixedVector<int, NUM_EQUIP_SLOTS> slot_count = num_slots;
+        vector<item_def*> to_replace;
+        find_removable_items_for_slot(slots[0], to_replace, ignore_curses,
+                                      false);
+        requires_replace = !to_replace.empty();
+        return SLOT_UNUSED;
+    }
+
+    vector<item_def*> to_replace;
+    player_equip_set equipment = *this;
     equipment_slot ret = SLOT_UNUSED;
     for (size_t i = 0; i < slots.size(); ++i)
     {
-        to_replace.emplace_back();
-        equipment_slot slot = find_slot_to_equip_item(slots[i], to_replace.back(),
-                                                      slot_count,
-                                                      ignore_curses);
+        equipment_slot slot = find_free_slot(slots[i]);
+        if (slot == SLOT_UNUSED)
+        {
+            find_removable_items_for_slot(slots[i], to_replace, ignore_curses,
+                                          false);
+        }
+
+        // If a slot is unavailable and there is nothing the player could
+        // remove to change that fact, we must abort completely.
+        if (slot == SLOT_UNUSED && to_replace.empty())
+        {
+            requires_replace = false;
+            return SLOT_UNUSED;
+        }
 
         // Save this result to return, if it is possible to fill other slots.
         if (i == 0)
@@ -635,38 +649,30 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
         // Track that this slot was used (to handle the case of multi-slot
         // items competing for the same flex slot, such as poltergeists wearing
         // the Fungal Fisticloak).
-        slot_count[slot] -= 1;
+        equipment.num_slots[slot] -= 1;
 
-        if (slot == SLOT_UNUSED)
+        // If we had to remove an item to free this slot, remove it from the
+        // equipment now so that we don't remove the same item again if we need
+        // another slot of the same type (e.g. the Fungal Fisticloak needs two
+        // aux slots on poltergeists).
+        if (!to_replace.empty())
         {
-            // If a slot is unavailable and there is nothing the player could
-            // remove to change that fact, we must abort completely.
-            if (to_replace.back().empty())
-            {
-                to_replace.clear();
-                return SLOT_UNUSED;
-            }
+            equipment.remove(*to_replace[0]);
+            to_replace.clear();
+            requires_replace = true;
         }
-
-        // If this slot has no replacement candidates (presumably because there
-        // is actually room), remove this vector so as to not confuse the caller.
-        if (to_replace.back().empty())
-            to_replace.pop_back();
     }
 
     return ret;
 }
 
-equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slot,
-                                                         vector<item_def*>& to_replace,
-                                                         FixedVector<int, NUM_EQUIP_SLOTS>& slot_count,
-                                                         bool ignore_curses) const
+equipment_slot player_equip_set::find_free_slot(equipment_slot base_slot) const
 {
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         // Skip slots the player doesn't have at all.
-        if (slot_count[slot] == 0)
+        if (num_slots[slot] == 0)
             continue;
 
         // Otherwise, iterate all slots of this type and see if one is free.
@@ -679,14 +685,20 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
 
         // The player has more slots than they're currently using, so this one
         // should be fine.
-        if (count < slot_count[slot])
+        if (count < num_slots[slot])
             return slot;
     }
+    return SLOT_UNUSED;
+}
 
-    // At this point, we've checked all slots without finding empty ones, so
-    // start gathering up items that are taking up those slots, if they exist.
+void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
+                                                 vector<item_def*>& to_replace,
+                                                 bool ignore_curses,
+                                                 bool quite) const
+{
     item_def* cursed_item = nullptr;
     bool found_item = false;
+    const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
         for (const player_equip_entry& entry : items)
@@ -726,12 +738,8 @@ equipment_slot player_equip_set::find_slot_to_equip_item(equipment_slot base_slo
         }
     }
 
-    if (!found_item && cursed_item)
+    if (!quite && !found_item && cursed_item)
         mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
-
-    // We didn't find a useable slot, but may have added removal possibilities
-    // to to_replace
-    return SLOT_UNUSED;
 }
 
 /**
@@ -1392,7 +1400,7 @@ void autoequip_item(item_def& item)
 {
     ASSERT(in_inventory(item));
 
-    vector<vector<item_def*>> dummy;
+    bool dummy;
     equipment_slot slot = you.equipment.find_slot_to_equip_item(item, dummy);
     if (slot != SLOT_UNUSED)
         equip_item(slot, item.link, false, true);

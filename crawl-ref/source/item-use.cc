@@ -1323,39 +1323,33 @@ bool try_equip_item(item_def& item)
             return false;
     }
 
-    vector<vector<item_def*>> removal_candidates;  // Items eligible to be removed
     vector<item_def*> to_remove;                   // Queue of items chosen to remove
-    equipment_slot slot = you.equipment.find_slot_to_equip_item(item, removal_candidates);
+    bool requires_replace;
+    equipment_slot slot = you.equipment.find_slot_to_equip_item(item, requires_replace);
 
     // If there is nowhere to put it and nothing the player can do to change
     // this, abort immediately. (If a cursed item was the cause, a message was
     // already printed by find_slot_to_equip_item()
-    if (slot == SLOT_UNUSED && removal_candidates.empty())
+    if (slot == SLOT_UNUSED && !requires_replace)
         return false;
 
     // Otherwise, maybe look into removing items to make room.
-    if (!removal_candidates.empty())
+    if (requires_replace)
     {
-        for (size_t i = 0; i < removal_candidates.size(); ++i)
+        player_equip_set equipment = you.equipment;
+        vector<equipment_slot> slots = get_all_item_slots(item);
+        vector<item_def*> candidates;
+        for (equipment_slot wanted_slot : slots)
         {
-            vector<item_def*>& candidates = removal_candidates[i];
-
-            // If one of the candidates has already been removed to free
-            // another slot, we don't need to remove anything to free this slot
-            bool slot_freed_when_freeing_other_slot = false;
-            for (const item_def* removed_item : to_remove)
+            // Has freeing an earlier slot also freed this slot?
+            equipment_slot free_slot = equipment.find_free_slot(wanted_slot);
+            if (free_slot != SLOT_UNUSED)
             {
-                for (const item_def* candidate : candidates)
-                {
-                    if (candidate == removed_item)
-                    {
-                        slot_freed_when_freeing_other_slot = true;
-                        break;
-                    }
-                }
-            }
-            if (slot_freed_when_freeing_other_slot)
+                equipment.num_slots[free_slot] -= 1;
                 continue;
+            }
+
+            equipment.find_removable_items_for_slot(wanted_slot, candidates);
 
             // Check if some number of items are inscribed with {=R} (but less
             // than all of them), and remove them from the candidates.
@@ -1401,11 +1395,19 @@ bool try_equip_item(item_def& item)
                     return false;
             }
 
+            equipment_slot used_slot = equipment.find_compatible_occupied_slot(
+                                                             *to_remove.back(),
+                                                             item);
+            equipment.remove(*to_remove.back());
+
+            equipment.num_slots[used_slot] -= 1;
+            candidates.clear();
+
             // If find_slot_to_equip_item didn't give us a more specific slot,
             // the first chosen slot to remove must be the 'primary' slot to put
             // this item in, so save it.
             if (slot == SLOT_UNUSED)
-                slot = you.equipment.find_compatible_occupied_slot(*to_remove.back(), item);
+                slot = used_slot;
 
             // Handle trying to remove items that may themselves require other
             // items to be removed, due to losing slots (ie: Macabre Finger)

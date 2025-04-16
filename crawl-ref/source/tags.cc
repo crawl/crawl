@@ -4599,7 +4599,7 @@ static void _cleanup_book_ids(reader &th, int n_subtypes)
 // hopefully 'just work' in basically all normal cases.
 static void _convert_old_player_equipment()
 {
-    vector<vector<item_def*>> dummy;
+    bool dummy;
     // Calculate current player slots first.
     you.equipment.update();
     for (int i = 0; i < (int)old_eq.size(); ++i)
