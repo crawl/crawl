@@ -432,6 +432,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
         // player *something*...
         case SPELL_PYRE_ARROW:
             return dice_def(2, 2 + hd * 12 / 14);
+        case SPELL_STICKY_FLAME:
+            return dice_def(2, 2 + hd * 8 / 14);
         default:
             break;
     }
@@ -588,7 +590,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     else if (spell == SPELL_ELECTROLUNGE)
         mult = "+";
     const char* suffix = spell == SPELL_LRD ? "*"
-                       : spell == SPELL_PYRE_ARROW ? "/turn"
+                       : spell == SPELL_PYRE_ARROW || spell == SPELL_STICKY_FLAME ? "/turn"
                        : "";
     return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, suffix);
 }

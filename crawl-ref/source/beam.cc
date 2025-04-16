@@ -4427,7 +4427,9 @@ void bolt::affect_player()
     if (origin_spell == SPELL_STICKY_FLAME
         || flavour == BEAM_STICKY_FLAME)
     {
-        // ench_power here is equal to 12 * caster HD for monsters, btw
+        // ench_power here is equal to 12 * caster HD for pyre arrow and
+        // 8 * caster HD for sticky flame (mostly since player ghosts tend to
+        // have higher HD)
         const int intensity = 2 + ench_power / 14;
 
         if (!player_res_sticky_flame())
