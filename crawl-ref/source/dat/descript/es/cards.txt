@@ -1,9 +1,15 @@
 %%%%
+Velocity card
+
+Esta tarjeta representa una par de botas vacías y raídas. Arena, ceniza y césped cubren sus suelas.
+
+Sacar esta carta puede aumentar la velocidad de los aliados del usuario o reducir la velocidad de sus enmigos.
+%%%%
 The Wraith card
 
 Esta carta no representa nada
 
-Sacando esta carta va a drenar el usario.
+Sacar esta carta drenará el usuario.
 %%%%
 the Stairs card
 
