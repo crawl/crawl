@@ -1572,9 +1572,9 @@ string shop_type_name(shop_type type)
             return "Jewellery";
         case SHOP_BOOK:
             return "Book";
-#if TAG_MAJOR_VERSION == 34
-        case SHOP_EVOKABLES:
+        case SHOP_GADGET:
             return "Gadget";
+#if TAG_MAJOR_VERSION == 34
         case SHOP_FOOD:
             return "Removed Food";
 #endif
@@ -1676,9 +1676,7 @@ static const char *shop_types[] =
     "antique armour",
     "antiques",
     "jewellery",
-#if TAG_MAJOR_VERSION == 34
-    "removed gadget",
-#endif
+    "gadget",
     "book",
 #if TAG_MAJOR_VERSION == 34
     "removed food",

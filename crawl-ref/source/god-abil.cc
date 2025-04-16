@@ -3670,9 +3670,10 @@ static bool _shop_type_valid(shop_type type)
     {
 #if TAG_MAJOR_VERSION == 34
     case SHOP_FOOD:
-    case SHOP_EVOKABLES:
         return false;
 #endif
+    case SHOP_GADGET:
+        return !you.has_mutation(MUT_NO_ARTIFICE);
     case SHOP_DISTILLERY:
         return !you.has_mutation(MUT_NO_DRINK);
     case SHOP_WEAPON:
