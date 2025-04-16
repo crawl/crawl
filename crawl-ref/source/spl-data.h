@@ -4485,6 +4485,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RING_OF_BINDING, "Ring of Binding",
+    spschool::hexes,
+    spflag::monster,
+    3,
+    100,
+    -1, -1,
+    0,
+    TILEG_SIGIL_OF_BINDING,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

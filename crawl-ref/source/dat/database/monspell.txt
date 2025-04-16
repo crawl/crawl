@@ -1104,6 +1104,14 @@ unseen floating eye cast targeted
 
 You feel something staring at you. @player_only@
 %%%%
+yaktaur scribe cast
+
+@The_monster@ takes out a quill and parchment and scribbles furiously.
+%%%%
+unseen yaktaur scribe cast
+
+You hear the frantic scratching of a quill on parchment.
+%%%%
 living spell cast
 
 @The_monster@ casts @reflexive@ @at@ @target@.

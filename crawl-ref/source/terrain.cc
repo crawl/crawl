@@ -34,7 +34,6 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "map-knowledge.h" // set_terrain_visible
-#include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-place.h"
@@ -2250,6 +2249,15 @@ bool is_temp_terrain(coord_def pos)
             return true;
 
     return false;
+}
+
+const map_terrain_change_marker *get_temp_terrain(coord_def pos)
+{
+    for (map_marker *marker : env.markers.get_markers_at(pos))
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
+            return dynamic_cast<const map_terrain_change_marker*>(marker);
+
+    return nullptr;
 }
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only)

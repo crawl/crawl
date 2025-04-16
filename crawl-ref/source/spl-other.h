@@ -19,8 +19,10 @@ spret cast_sublimation_of_blood(int pow, bool fail);
 spret cast_death_channel(int pow, god_type god, bool fail);
 spret cast_animate_dead(int pow, bool fail);
 
-vector<coord_def> find_sigil_locations(bool tracer);
+vector<coord_def> find_sigil_locations(const actor &caster, bool tracer);
+const coord_def sigil_target_location(const actor &caster);
 spret cast_sigil_of_binding(int pow, bool fail, bool tracer);
+void cast_ring_of_binding(const monster &caster, int pow);
 void trigger_binding_sigil(actor& actor);
 
 enum class recall_t
