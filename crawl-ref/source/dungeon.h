@@ -194,6 +194,7 @@ private:
 extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
+extern FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
 
 set<string> &get_uniq_map_tags();
 set<string> &get_uniq_map_names();
