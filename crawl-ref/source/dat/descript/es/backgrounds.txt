@@ -1,35 +1,24 @@
 %%%%
-Abyssal Knight
-
-Los Caballeros del Abismo adoran a Lugonu, y son enviados desde el Abismo al
-Calabozo para extender la corrupción y el caos.
-%%%%
 Air Elementalist
 
 Los Elementalistas del Aire han aprendido el hechizo de la Descarga. Más
 adelante, su Libro del Aire les provee de flexibilidad para sobrevivir.
-%%%%
-Arcane Marksman
-
-Los Tiradores Arcanos llevan armas de alcance y usan la magia para que sus
-enemigos se vuelvan más vulnerables a sus ataques a distancia.
 %%%%
 Artificer
 
 Los Artificieros comienzan con unos pocos instrumentos mágicos y son
 competentes usando dichas herramientas.
 %%%%
-Assassin
-
-Los Asesinos se centran en el sigilo, listos para apuñalar a los enemigos
-desprevenidos. No llevan sólo una capa y dagas, también llevan horribles agujas
-para su cerbatana.
-%%%%
 Berserker
 
 Los Berserkers creen en Trog, el dios del delirio y enemigo de la magia. No hay
 mucho que pueda detener a un berserk furioso al principio, salvo el
 sobreestimar sus capacidades.
+%%%%
+Brigand
+
+Los Bandoleros llevan dardos venenosos y unos pocos de la tipo curare consigo.
+También tienen una daga encantada.
 %%%%
 Chaos Knight
 
@@ -40,11 +29,6 @@ Conjurer
 
 Los Conjuradores afrontan los problemas con hechizos destructivos de su Libro
 de los Conjuros
-%%%%
-Death Knight
-
-Los Caballeros de la Muerte son combatientes cuerpo a cuerpo que mandan a los
-no-muertos en el nombre de Yredelemnul el Oscuro.
 %%%%
 Earth Elementalist
 
@@ -68,12 +52,6 @@ Gladiator
 Los Gladiadores salen listos para la arena con una armadura ligera, escudo,
 redes y un arma de su elección.
 %%%%
-Healer
-
-Los Sanadores son seguidores de Elyvilon, preparados para sanarse a sí mismos y
-a los demás. Tal sanación probablemente pacificará a bestias y a brutos,
-aportando experiencia.
-%%%%
 Hunter
 
 Los Cazadores son capaces de atacar a distancia, sin usar la dichosa magia. El
@@ -96,18 +74,13 @@ muerte. Empiezan con el hechizo del Dolor.
 %%%%
 Summoner
 
-Los Convocadores comienzan con el Libro de las Llamadas y son capaces de
-Convocar a Pequeño Mamífero desde el inicio.
+Los Convocadores son capaces de Convocar a Pequeño Mamífero desde el inicio 
+y comienzan con hechizos para llamar aliados más fuerzas y exóticos en su biblioteca.
 %%%%
-Transmuter
+Alchemist
 
-Los Transmutadores cambian su forma para luchar con una forma de bestia. Pueden
-convertir palos en serpientes además.
-%%%%
-Venom Mage
-
-Los Magos del Veneno comienzan con el Manual del Joven Envenenador y el hechizo
-Aguijón. Al comienzo no tienen demasiados problemas.
+Los Alquimistas comienzan con el hechizo Vapors Envenenadores. Sus hechizos son 
+muy eficaces contra los monstruos sin progencia contra los effectos de veneno.
 %%%%
 Wanderer
 
@@ -123,4 +96,37 @@ Hedge Wizard
 
 Los magos comienzan con un Libro de Magia Menor, conteniendo una amplia gama de
 hechizos. Tienen más reservas mágicas que cualquier otro rol.
+%%%%
+#Unused
+Abyssal Knight
+
+Los Caballeros del Abismo adoran a Lugonu, y son enviados desde el Abismo al
+Calabozo para extender la corrupción y el caos.
+%%%%
+Arcane Marksman
+
+Los Tiradores Arcanos llevan armas de alcance y usan la magia para que sus
+enemigos se vuelvan más vulnerables a sus ataques a distancia.
+%%%%
+Assassin
+
+Los Asesinos se centran en el sigilo, listos para apuñalar a los enemigos
+desprevenidos. No llevan sólo una capa y dagas, también llevan horribles agujas
+para su cerbatana.
+%%%%
+Death Knight
+
+Los Caballeros de la Muerte son combatientes cuerpo a cuerpo que mandan a los
+no-muertos en el nombre de Yredelemnul el Oscuro.
+%%%%
+Healer
+
+Los Sanadores son seguidores de Elyvilon, preparados para sanarse a sí mismos y
+a los demás. Tal sanación probablemente pacificará a bestias y a brutos,
+aportando experiencia.
+%%%%
+Transmuter
+
+Los Transmutadores cambian su forma para luchar con una forma de bestia. Pueden
+convertir palos en serpientes además.
 %%%%
