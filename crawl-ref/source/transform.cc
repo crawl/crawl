@@ -2348,7 +2348,7 @@ bool maw_growl_check(const monster* mon)
     if (mons_class_can_leave_corpse(mons_species(mon->type))
         && !mon->is_summoned()
         && !(mon->flags & MF_HARD_RESET)
-        && one_chance_in(8))
+        && one_chance_in(7))
     {
         mprf("Your maw growls hungrily at %s.", mon->name(DESC_THE).c_str());
         noisy(you.shout_volume(), you.pos(), MID_PLAYER);
