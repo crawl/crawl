@@ -4,16 +4,16 @@
 CRAWL_BASE=$(CURDIR)/../..
 CRAWL_SRC=$(CRAWL_BASE)/source
 
-ZIP_QUALIFIER :=
-ZIP_ARCH :=
+CRAWL_QUALIFIER :=
+CRAWL_ARCH :=
 
 ifdef BUILD_OLD_UNIVERSAL
-ZIP_ARCH := -universal
+CRAWL_ARCH := -universal
 endif
 
 ifdef BUILD_UNIVERSAL
 CRAWL_BIN=crawl-universal
-ZIP_ARCH := -universal
+CRAWL_ARCH := -universal
 else
 CRAWL_BIN=crawl
 endif
@@ -23,25 +23,22 @@ APP_NAME := Dungeon Crawl Stone Soup
 ifneq (,$(findstring tiles,$(MAKECMDGOALS)))
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Tiles
 TILE_APP := y
-ZIP_QUALIFIER := -tiles
+CRAWL_QUALIFIER := -tiles
 else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
-ZIP_QUALIFIER := -console
+CRAWL_QUALIFIER := -console
 endif
 EXECUTABLE_PATH := $(CRAWL_SRC)/$(CRAWL_BIN)
 
-ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
-
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
-ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
 BUNDLE_DIRNAME := $(STAGING_DIR)/$(BUNDLE_NAME).app
 RESOURCES := $(BUNDLE_DIRNAME)/Contents/Resources
 
 .PHONY: all clean clean-stage stage-dir copy-executable copy-resources \
 	copy-tiledata assemble-app-bundle create-bundle-directory
 
-all: $(STAGING_DIR) $(ZIPPED_APP_DIR) \
-	clean-stage assemble-app-bundle zip-app-bundle
+all: $(STAGING_DIR) \
+	clean-stage assemble-app-bundle
 
 clean:
 	rm -rf $(CRAWL_SRC)/build
@@ -51,22 +48,11 @@ tiles: all
 $(STAGING_DIR):
 	mkdir -p $@
 
-$(ZIPPED_APP_DIR):
-	mkdir -p $@
-
 clean-stage:
 	rm -rf $(STAGING_DIR)/*
 
 assemble-app-bundle: create-bundle-directory copy-executable copy-resources \
 		     copy-info-plist
-
-zip-app-bundle:
-	rm -f $(ZIPPED_APP_DIR)/$(ZIP_NAME)
-	cd $(STAGING_DIR) && \
-		zip -9r $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(BUNDLE_NAME).app
-	cd $(STAGING_DIR) && \
-		if which advzip >/dev/null;then advzip -z3 $(ZIPPED_APP_DIR)/$(ZIP_NAME);fi
-	ln -sf $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(ZIPPED_APP_DIR)/latest.zip
 
 create-bundle-directory: $(BUNDLE_DIRNAME)
 
