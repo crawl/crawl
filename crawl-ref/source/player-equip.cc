@@ -249,6 +249,12 @@ int count = 0;
         else
             return 0;
 
+    case SLOT_TWOHANDER_ONLY:
+        if (you.form == transformation::fortress_crab)
+            return 1;
+        else
+            return 0;
+
     default:
         return 0;
 
@@ -273,6 +279,7 @@ const static vector<equipment_slot> _flex_slots[] =
 
     {SLOT_WEAPON_OR_OFFHAND, SLOT_WEAPON, SLOT_OFFHAND},
     {SLOT_HAUNTED_AUX, SLOT_HELMET, SLOT_GLOVES, SLOT_BOOTS, SLOT_CLOAK},
+    {SLOT_TWOHANDER_ONLY},
 
     // NUM_EQUIP_SLOTS
     {},
@@ -299,6 +306,9 @@ const static vector<equipment_slot> _flex_slots[] =
 
     // SLOT_WEAPON_STRICT
     {SLOT_WEAPON},
+
+    // SLOT_TWOHANDER_OFFHAND
+    {SLOT_OFFHAND, SLOT_WEAPON_OR_OFFHAND, SLOT_TWOHANDER_ONLY},
 };
 
 const vector<equipment_slot>& get_alternate_slots(equipment_slot slot)
@@ -471,9 +481,10 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
                         *veto_reason = "You can't equip that in your current form.";
                 }
                 else
+                {
                     found_slot = true;
-
-                break;
+                    break;
+                }
             }
         }
 
@@ -1362,6 +1373,36 @@ bool player_equip_set::slot_is_fully_covered(equipment_slot slot) const
         return false;
 
     return (int)get_slot_entries(slot).size() == num_slots[slot];
+}
+
+/**
+ * Changes the second slot of any equipped two-hander to a specified slot type.
+ * (Used to handle two-handers when entering/leaving Fortress Crab form.)
+ *
+ * Note: Does not verify that the player has a slot of the specified type. The
+ *       caller is responsible for only do so when appropriate.
+ */
+void player_equip_set::shift_twohander_to_slot(equipment_slot new_slot)
+{
+    item_def* wpn = get_first_slot_item(SLOT_WEAPON);
+    if (!wpn || you.hands_reqd(*wpn) != HANDS_TWO)
+        return;
+
+    // If being told to move to offhand, respect Coglin's special offhand slot.
+    if (new_slot == SLOT_OFFHAND
+        && num_slots[SLOT_OFFHAND] == 0 && num_slots[SLOT_WEAPON_OR_OFFHAND] > 0)
+    {
+        new_slot = SLOT_WEAPON_OR_OFFHAND;
+    }
+
+    for (player_equip_entry& entry : items)
+    {
+        if (entry.item != wpn->link)
+            continue;
+
+        if (entry.slot != SLOT_WEAPON)
+            entry.slot = new_slot;
+    }
 }
 
 /**

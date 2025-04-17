@@ -106,6 +106,8 @@ struct player_equip_set
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
                                               bool is_save_cleanup = false);
 
+    void shift_twohander_to_slot(equipment_slot new_slot);
+
 private:
     equipment_slot find_slot_to_equip_item(equipment_slot base_slot,
                                            vector<item_def*>& to_replace,

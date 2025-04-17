@@ -2973,7 +2973,7 @@ vector<equipment_slot> get_all_item_slots(const item_def& item)
     case OBJ_WEAPONS:
     case OBJ_STAVES:
         if (you.hands_reqd(item) == HANDS_TWO)
-            return {SLOT_WEAPON_STRICT, SLOT_OFFHAND};
+            return {SLOT_WEAPON_STRICT, SLOT_TWOHANDER_OFFHAND};
         else
             return {SLOT_WEAPON};
 

@@ -21,6 +21,9 @@ enum equipment_slot
     SLOT_WEAPON_OR_OFFHAND,     // Coglins
     SLOT_HAUNTED_AUX,           // Poltergeist
 
+    SLOT_TWOHANDER_ONLY,        // Fortress Crab's slot for a two-hander (but
+                                // not a shield)
+
     // End of the 'real' equip slots.
     NUM_EQUIP_SLOTS,
 
@@ -36,6 +39,10 @@ enum equipment_slot
     SLOT_WEAPON_STRICT,         // Strictly matches SLOT_WEAPON and not also
                                 // SLOT_WEAPON_OR_OFFHAND (to handle Coglin
                                 // 2-hander interactions properly)
+
+    SLOT_TWOHANDER_OFFHAND,     // A slot that can hold the second half of a
+                                // two-hander (ie: shield slot, Coglin second
+                                // weapon slot, or fortress crab.)
 
     END_OF_SLOTS,
 

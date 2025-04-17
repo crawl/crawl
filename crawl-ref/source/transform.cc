@@ -1815,6 +1815,11 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
         mpr(get_form(which_trans)->transform_message());
     }
 
+    // If we're wielding a two-hander, shift it into the crab two-hander slot
+    // *before* melding gear (or it will be caught be melding offhand)
+    if (which_trans == transformation::fortress_crab)
+        you.equipment.shift_twohander_to_slot(SLOT_TWOHANDER_ONLY);
+
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.
@@ -2002,6 +2007,9 @@ void untransform(bool skip_move, bool scale_hp)
 
     // This will keep merfolk boots melded, if mertail is currently active.
     you.equipment.unmeld_all_equipment();
+
+    if (old_form == transformation::fortress_crab)
+        you.equipment.shift_twohander_to_slot(SLOT_OFFHAND);
 
     // Update regarding talisman properties, just in case we didn't actually
     // meld or unmeld anything.
