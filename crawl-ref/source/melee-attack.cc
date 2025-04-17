@@ -1187,7 +1187,7 @@ bool melee_attack::handle_phase_killed()
                             && !you.duration[DUR_EXECUTION]
                             && !defender->is_firewood()
                             && defender->real_attitude() != ATT_FRIENDLY
-                            && one_chance_in(7)
+                            && one_chance_in(5)
     // It's unsatisfying to repeatedly trigger a transformation on the final
     // monster of a group, so let's not cause the player that disappointment.
                             && there_are_monsters_nearby(true, true, false);
@@ -2058,8 +2058,8 @@ public:
 
     int get_damage(bool random) const override
     {
-        return 7 + (random ? div_rand_round(you.experience_level, 3)
-                           : you.experience_level / 3);
+        return 6 + (random ? div_rand_round(you.experience_level, 2)
+                           : you.experience_level / 2);
     };
 
     bool xl_based_chance() const override { return false; }
