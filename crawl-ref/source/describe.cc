@@ -1487,15 +1487,32 @@ string damage_rating(const item_def *item, int *rating_value)
         brand_desc.c_str());
 }
 
+static void _append_skill_needed(string &description, const item_def &item,
+                                 bool indent = true, string skill_padding = "")
+{
+    const skill_type skill = _item_training_skill(item);
+    const int target_skill = _item_training_target(item);
+    const bool below_target = _is_below_training_target(item, true);
+    const bool can_set_target = below_target && in_inventory(item)
+                                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+    const bool useful = !is_useless_item(item) && crawl_state.need_save;
+    if (useful)
+    {
+        description += "\n";
+        if (indent)
+            description += "    ";
+        description += _your_skill_desc(skill, can_set_target, target_skill,
+                                        move(skill_padding));
+    }
+
+    if (below_target)
+        _append_skill_target_desc(description, skill, target_skill);
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
-    const skill_type skill = _item_training_skill(item);
     const int mindelay_skill = _item_training_target(item);
-
-    const bool below_target = _is_below_training_target(item, true);
-    const bool can_set_target = below_target
-        && in_inventory(item) && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
     if (item.base_type == OBJ_STAVES
         && item.is_identified()
@@ -1531,15 +1548,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
             (float) weapon_min_delay(item, item.is_identified()) / 10,
             mindelay_skill / 10);
 
-    const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
-    if (want_player_stats)
-    {
-        description += "\n    "
-            + _your_skill_desc(skill, can_set_target, mindelay_skill);
-    }
-
-    if (below_target)
-        _append_skill_target_desc(description, skill, mindelay_skill);
+    _append_skill_needed(description, item);
 
     if (is_slowed_by_armour(&item))
     {
@@ -1571,6 +1580,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         description += ".";
     }
 
+    const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
     if (want_player_stats)
     {
         description += _desc_attack_delay(item);
@@ -2215,10 +2225,6 @@ static string _describe_ammo(const item_def &item)
         const int throw_delay = (10 + dam / 2);
         const int target_skill = _item_training_target(item);
 
-        const bool below_target = _is_below_training_target(item, true);
-        const bool can_set_target = below_target && in_inventory(item)
-            && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-
         description += make_stringf(
             "\n\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
@@ -2229,13 +2235,7 @@ static string _describe_ammo(const item_def &item)
             target_skill / 10
         );
 
-        if (!is_useless_item(item))
-        {
-            description += "\n    " +
-                    _your_skill_desc(SK_THROWING, can_set_target, target_skill);
-        }
-        if (below_target)
-            _append_skill_target_desc(description, SK_THROWING, target_skill);
+        _append_skill_needed(description, item);
 
         if (!is_useless_item(item) && property(item, PWPN_DAMAGE))
             description += "\nDamage rating: " + damage_rating(&item);
@@ -7476,18 +7476,11 @@ static string _describe_talisman_form(transformation form_type, const item_def* 
 
     // Include info about setting skill targets, if this is a real item.
     if (item)
+
     {
-        const int target_skill = _item_training_target(*item);
-        const bool can_set_target = _is_below_training_target(*item, true) && in_inventory(*item)
-                                    && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-        if (can_set_target)
-        {
-            description << "\n" << _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
-                target_skill, "   ");
-            string desc;
-            _append_skill_target_desc(desc, SK_SHAPESHIFTING, target_skill);
-            description << desc << "\n";
-        }
+        string desc;
+        _append_skill_needed(desc, *item, false, "   ");
+        description << desc;
     }
 
     return description.str();
