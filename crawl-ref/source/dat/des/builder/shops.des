@@ -19,7 +19,7 @@ MAX_RANDOM_SHOPS = 5
 -- If a level gets shops, how many there are.
 -- Just one most of the time; expected average is 1.34.
 function num_shops()
-    if you.absdepth() < 4 or crawl.x_chance_in_y(4, 5) then
+    if you.absdepth() < 4 or crawl.x_chance_in_y(5, 6) then
         return 1
     else
         local roll = crawl.random_real()
@@ -62,9 +62,10 @@ end
 NAME: serial_shops
 TAGS: nolayout_encompass allow_dup extra luniq_shops
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
-CHANCE: 20% (D, Depths)
+CHANCE: 20% (D)
+CHANCE: 25% (Depths)
 CHANCE: 35% (Orc)
-CHANCE: 50% (Elf, Vaults, !Vaults:$)
+CHANCE: 45% (Elf, Vaults, !Vaults:$)
 CHANCE: 25% (Shoals, Snake)
 {{
 hook("post_place", function()
@@ -83,16 +84,17 @@ end)
 MAP
 ENDMAP
 
-# Guaranteed shop floor on Depths:1-3
+# Almost-guaranteed shop floor on Depths:1-4
 NAME: serial_shops_depths
-TAGS: nolayout_encompass extra luniq_shops buniq_depths_guaranteed_shops
+TAGS: nolayout_encompass extra luniq_shops buniq_depths_shops
 DEPTH: Depths
-CHANCE: 33% (Depths:1)
-CHANCE: 50% (Depths:2)
-CHANCE: 100% (Depths:3)
+CHANCE:  25% (Depths:1)
+CHANCE:  33% (Depths:2)
+CHANCE:  50% (Depths:3)
+CHANCE: 100% (Depths:4)
 {{
 hook("post_place", function()
-    local num = math.min(6, 2 + num_shops())
+    local num = math.max(3, num_shops())
     dgn.place_maps { tag = "shop", count = num }
 end)
 }}
