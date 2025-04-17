@@ -3842,9 +3842,9 @@ int get_mercury_weaken_chance(int victim_hd)
 dice_def poisonous_vapours_damage(int pow, bool random)
 {
     if (random)
-        return dice_def(1, 2 + div_rand_round(pow, 8));
+        return dice_def(1, 1 + div_rand_round(pow, 8));
     else
-        return dice_def(1, 2 + pow / 8);
+        return dice_def(1, 1 + pow / 8);
 }
 
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail)
