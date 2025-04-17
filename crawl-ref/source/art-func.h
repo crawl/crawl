@@ -1655,7 +1655,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
     // HACK: yes this is in a header but it's only included once
     static bool _slicing = false;
 
-    if (!one_chance_in(5) || _slicing || !defender)
+    if (!one_chance_in(8) || _slicing || !defender)
         return;
 
     unwind_bool nonrecursive_space(_slicing, true);
@@ -1669,7 +1669,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
          attacker->name(DESC_THE).c_str(),
          attacker->is_player() ? "" : "s");
 
-    // Casting with 100 power = up to 4 targets hit
+    // Casting with 100 power = up to 8 targets hit
     cast_manifold_assault(*attacker, 100, false, true, defender);
 }
 
