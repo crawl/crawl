@@ -2,6 +2,7 @@ enum: maw
 equivalent_mons: putrid_mouth
 description: a creature with a mouth for a stomach.
 skill: {min: 8, max: 14}
+body_ac_mult: {base: -75}
 talisman: maw
 unarmed_colour: green
 shout_verb: shout twice

@@ -6068,25 +6068,28 @@ int stone_body_armour_bonus()
  * @param armour    The armour in question.
  * @param scale     A value to multiply the result by. (Used to avoid integer
  *                  rounding.)
+ * @param include_penalties     Whether to include penalties to base AC from
+ *                              forms or mutations.
  * @return          The AC from that armour, including armour skill, mutations
  *                  & divine blessings, but not enchantments or egos.
  */
-int player::base_ac_from(const item_def &armour, int scale) const
+int player::base_ac_from(const item_def &armour, int scale, bool include_penalties) const
 {
     const int base = property(armour, PARM_AC) * scale;
 
     // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm = Armour Skill.
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
-    // The deformed don't fit into body armour very well.
-    // (This includes nagas and armataurs.)
-    if (get_armour_slot(armour) != SLOT_BODY_ARMOUR)
+    // Only body armour can have additional penalties from mutations or forms.
+    if (get_armour_slot(armour) != SLOT_BODY_ARMOUR || !include_penalties)
         return AC;
 
-    int penalty = get_form()->get_base_ac_penalty(base);
+    int mult = get_form()->get_body_ac_mult();
     if (get_mutation_level(MUT_DEFORMED) || get_mutation_level(MUT_PSEUDOPODS))
-        penalty += base / 2; // Should we double this if you have both?
-    return max(0, AC - penalty);
+        mult -= 40; // Should we double this if you have both?
+    const int mod = AC * mult / 100;
+
+    return max(0, AC + mod);
 }
 
 /**

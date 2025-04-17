@@ -89,6 +89,7 @@ class Form(MutableMapping):
         self["joined_resists"] = ' | '.join(r.format() for r in self["resists"])
         self["ac_scaling"] = self["ac"].format()
         self["ev_scaling"] = self["ev"].format()
+        self["body_ac_mult_scaling"] = self["body_ac_mult"].format()
         self["unarmed_scaling"] = self["unarmed"].format()
         self["special_dice"] = self["special_damage"].format()
 
@@ -260,7 +261,7 @@ class FormScaling:
             return '{}'
 
         ret = "FormScaling()"
-        if self.base > 0:
+        if self.base != 0:
             ret += ".Base(" + str(self.base) + ")"
         if self.scaling > 0:
             ret += ".Scaling(" + str(self.scaling) + ")"
@@ -334,6 +335,7 @@ keyfns = {
 
     'ac': Field(parse_scaling),
     'ev': Field(parse_scaling),
+    'body_ac_mult': Field(parse_scaling),
     'can_cast': Field(parse_bool),
     'unarmed': Field(parse_scaling),
 
@@ -393,6 +395,7 @@ defaults = {
 
     'ac': FormScaling(),
     'ev': FormScaling(),
+    'body_ac_mult': FormScaling(),
     'can_cast': 'true',
     'unarmed': FormScaling(),
 

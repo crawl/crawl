@@ -7156,26 +7156,28 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
                                         const Form& form,
                                         const int skill[3])
 {
-    int penalty[2][3];
+    int mult[3];
     for (int i = 0; i < 3; ++i)
-        penalty[0][i] = form.get_base_ac_penalty(100, skill[i]);
+        mult[i] = form.get_body_ac_mult(skill[i]);
 
-    if (penalty[0][0] == 0 && penalty[0][1] == 0 && penalty[0][2] == 0)
+    if (mult[0] == 0 && mult[1] == 0 && mult[2] == 0)
         return;
 
     const item_def *body_armour = you.body_armour();
-    const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
+    const int base_ac = body_armour ? you.base_ac_from(*body_armour, 100, false)
+                                    : 0;
 
+    float change[3];
     for (int i = 0; i < 3; ++i)
-        penalty[1][i] = form.get_base_ac_penalty(base_ac, skill[i]);
+        change[i] = (float)(base_ac * mult[i]) / 100 / 100.0;
 
     vector<string> labels;
     labels.push_back("Body Armour AC");
 
     for (int i = 0; i < 3; ++i)
     {
-        if (penalty[0][i] != 0)
-            labels.push_back(make_stringf("%+d (%+d%%)", -penalty[1][i], -penalty[0][i]));
+        if (mult[i] != 0)
+            labels.push_back(make_stringf("%+.1f (%+d%%)", change[i], mult[i]));
         else
             labels.push_back("0");
     }

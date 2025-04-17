@@ -664,13 +664,12 @@ static vector<pair<string,string>> _get_form_fakemuts()
     if (you.form == transformation::blade_hands
         && you_can_wear(SLOT_BODY_ARMOUR, false) != false)
     {
-        const int penalty_percent = form->get_base_ac_penalty(100);
+        const int penalty_percent = form->get_body_ac_mult();
         if (penalty_percent)
         {
             result.push_back({"blade armour",
                     _badmut(make_stringf("Your body armour is %s at protecting you.",
-                          penalty_percent == 100 ? "completely ineffective"
-                        : penalty_percent >=  70 ? "much less effective"
+                          penalty_percent >=  60 ? "much less effective"
                         : penalty_percent >=  30 ? "less effective"
                                                  : "slightly less effective"
             ))});

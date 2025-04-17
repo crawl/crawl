@@ -143,7 +143,7 @@ public:
     virtual int will_bonus() const { return 0; };
     virtual int get_ac_bonus(int skill = -1) const;
     virtual int ev_bonus(int /*skill*/ = -1) const;
-    virtual int get_base_ac_penalty(int /*base*/, int /*skill*/ = -1) const { return 0; }
+    virtual int get_body_ac_mult(int /*skill*/ = -1) const;
     virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
     virtual int get_web_chance(int /*skill*/ = -1) const {return 0; }
     virtual int regen_bonus(int /*skill*/ = -1) const {return 0; }
@@ -260,6 +260,9 @@ protected:
 
     /// bonuses to EV when in this form, potentially scaling with skill or XL
     const FormScaling ev;
+
+    /// mulplier to base body armour AC when in this form, potentially scaling with skill or XL
+    const FormScaling body_ac_mult;
 
     /// See Form::get_base_unarmed_damage().
     const FormScaling unarmed_bonus_dam;

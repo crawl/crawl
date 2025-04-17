@@ -158,7 +158,7 @@ Form::Form(const form_entry &fe)
       flesh_equivalent(fe.flesh_equivalent),
       special_dice_name(fe.special_dice_name),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), ac(fe.ac), ev(fe.ev),
+      resists(fe.resists), ac(fe.ac), ev(fe.ev), body_ac_mult(fe.body_ac_mult),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
       fakemuts(fe.fakemuts), badmuts(fe.badmuts),
       can_fly(fe.can_fly), can_swim(fe.can_swim), offhand_punch(fe.offhand_punch),
@@ -276,6 +276,22 @@ int Form::get_ac_bonus(int skill) const
 int Form::ev_bonus(int skill) const
 {
     return max(0, scaling_value(ev, false, skill, 1));
+}
+
+/**
+ * What percentile modifier to base body armour AC does the player get while
+ * in this form?
+ *
+ * @param level The shapeshifting skill level to calculate this bonus for.
+ *              (Default is -1, meaning 'Use the player's current skill')
+ *
+ * @return  A percentile bonus/penalty to base body armour AC. (ie: 0 is
+ *          equivalent to 'no change', while '20' is '+20% body armour AC' and
+ *          '-20' is '-20% body armour AC')
+ */
+int Form::get_body_ac_mult(int skill) const
+{
+    return max(-100, scaling_value(body_ac_mult, false, skill, 1));
 }
 
 int Form::get_base_unarmed_damage(bool random, int skill) const
@@ -621,20 +637,6 @@ public:
         return make_stringf("Your %s revert%s to %s normal proportions.",
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? "its" : "their");
-    }
-
-    /**
-     * How much AC do you lose from body armour from being in this form?
-     * 80% at `min_skill` or below, 0% at `max_skill` or above.
-     */
-    int get_base_ac_penalty(int base, int skill = -1) const override
-    {
-        const int scale = 100;
-        const int lvl = max(skill == -1 ? get_level(scale) : skill * scale, min_skill * scale);
-        const int shortfall = max(0, max_skill * scale - lvl);
-        const int div = (max_skill - min_skill + 2) * scale;
-        // Round up.
-        return (shortfall * base + div - 1) / div;
     }
 
     /**
@@ -995,11 +997,6 @@ public:
     {
         return divided_scaling(FormScaling().Base(10).Scaling(8), random, skill, 100);
     }
-
-    int get_base_ac_penalty(int base, int /*skill*/ = -1) const override
-    {
-        return base * 4 / 5;
-    }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1186,13 +1183,6 @@ FormFortressCrab() : Form(transformation::fortress_crab) { }
     DISALLOW_COPY_AND_ASSIGN(FormFortressCrab);
 public:
     static const FormFortressCrab &instance() { static FormFortressCrab inst; return inst; }
-
-    // XXX: Used here for how much AC you *gain* in this form (by giving a negative 'penalty'))
-    int get_base_ac_penalty(int base, int skill = -1) const override
-    {
-        const int mult = scaling_value(FormScaling().Base(75).Scaling(75), false, skill);
-        return -(base * mult / 100);
-    }
 
     // Number of clouds placed
     int get_effect_size(int skill = -1) const override

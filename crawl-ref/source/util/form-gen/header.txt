@@ -37,6 +37,7 @@ struct form_entry
     // Row 6:
     FormScaling ac;
     FormScaling ev;
+    FormScaling body_ac_mult;
     bool can_cast;
     FormScaling unarmed_bonus_dam;
 
