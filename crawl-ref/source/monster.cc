@@ -4488,7 +4488,7 @@ bool monster::vex(const actor *who, int duration, string /* source */,
     return true;
 }
 
-void monster::slow_down(actor *atk, int strength)
+void monster::slow_down(const actor *atk, int strength)
 {
     enchant_actor_with_flavour(this, atk, BEAM_SLOW, strength);
 }

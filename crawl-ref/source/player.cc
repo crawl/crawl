@@ -7255,7 +7255,7 @@ void player::give_stun_immunity(int dur)
     }
 }
 
-void player::slow_down(actor */*foe*/, int str)
+void player::slow_down(const actor */*foe*/, int str)
 {
     ::slow_player(str);
 }

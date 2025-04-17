@@ -935,7 +935,7 @@ monster* dithmenos_get_player_shadow()
     if (!you.props.exists(DITH_SHADOW_MID_KEY))
         return nullptr;
     const int mid = you.props[DITH_SHADOW_MID_KEY].get_int();
-    return monster_by_mid(mid);
+    return monster_by_mid(mid, false, true);
 }
 
 // Returns index of the new item
@@ -1847,6 +1847,7 @@ void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)
         you.redraw_status_lights = true;
         update_turn_count();
         fire_final_effects();
+        free_dead_monsters();
     }
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)

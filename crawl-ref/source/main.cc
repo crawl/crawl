@@ -97,6 +97,7 @@
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-transit.h"
 #include "mon-util.h"
@@ -2572,6 +2573,7 @@ void world_reacts()
     you.rampage_hints.clear(); // only draw on your turn
 
     fire_final_effects();
+    free_dead_monsters();
 
     if (crawl_state.viewport_monster_hp || crawl_state.viewport_weapons)
     {
@@ -2625,6 +2627,7 @@ void world_reacts()
     // Monsters can schedule final effects, too!
     // (mostly by exploding)
     fire_final_effects();
+    free_dead_monsters();
 
     _check_banished();
 
