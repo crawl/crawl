@@ -1414,7 +1414,7 @@ void solar_ember_blast()
     if (!ember->has_ench(ENCH_SPELL_CHARGED))
     {
         simple_monster_message(*ember, " glows brighter.");
-        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(50, 70)));
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(70, 90)));
         return;
     }
 

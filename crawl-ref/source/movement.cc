@@ -1146,7 +1146,7 @@ void move_player_action(coord_def move)
         if (swap && targ_monst->type == MONS_SOLAR_EMBER
             && targ_monst->hit_points < targ_monst->max_hit_points)
         {
-            targ_monst->heal(targ_monst->max_hit_points / 2);
+            targ_monst->heal(targ_monst->max_hit_points * 3 / 4);
             mprf("You weave more energy into your solar ember.");
         }
 
