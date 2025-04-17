@@ -5,7 +5,7 @@ Highlights
 ----------
 * New magic school + background: Forgewrights, building explosive constructs.
 * Two new species: poltergeists and revenants.
-* Eleven new talismans have been added, and Shapeshifters have been reworked.
+* Twelve new talismans have been added, and Shapeshifters have been reworked.
 * Ghost vaults are moved into a game-long repeating portal, the Necropolis.
 * Yet more new monsters, decorations, and traps spread throughout the Dungeon.
 
