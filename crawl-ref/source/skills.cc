@@ -1385,7 +1385,7 @@ bool check_training_targets()
     return change;
 }
 
-void check_skill_cost_change()
+void check_skill_cost_change(bool quiet)
 {
 #ifdef DEBUG_TRAINING_COST
     int initial_cost = you.skill_cost_level;
@@ -1394,8 +1394,10 @@ void check_skill_cost_change()
     you.skill_cost_level = _calc_skill_cost_level(you.total_experience, you.skill_cost_level);
 
 #ifdef DEBUG_TRAINING_COST
-    if (initial_cost != you.skill_cost_level)
+    if (!quiet && initial_cost != you.skill_cost_level)
         dprf("Adjusting skill cost level to %d", you.skill_cost_level);
+#else
+    UNUSED(quiet);
 #endif
 }
 
@@ -1696,7 +1698,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
                                 you_xp - you.total_experience);
 }
 
-void set_skill_level(skill_type skill, double amount)
+void set_skill_level(skill_type skill, double amount, bool quiet)
 {
     double level;
     modf(amount, &level);
@@ -1707,15 +1709,19 @@ void set_skill_level(skill_type skill, double amount)
     you.skill_points[skill] += diffs.skill_points;
     you.total_experience += diffs.experience;
 #ifdef DEBUG_TRAINING_COST
-    dprf("Change (total): %d skp (%d), %d xp (%d)",
-        diffs.skill_points, you.skill_points[skill],
-        diffs.experience, you.total_experience);
+    if (!quiet)
+    {
+        dprf("Change (total): %d skp (%d), %d xp (%d)",
+            diffs.skill_points, you.skill_points[skill],
+            diffs.experience, you.total_experience);
+    }
 #endif
 
-    check_skill_cost_change();
+    check_skill_cost_change(quiet);
 
     // need to check them all, to handle crosstraining.
-    check_training_targets();
+    if (!quiet)
+        check_training_targets();
 }
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)

@@ -4344,6 +4344,53 @@ static string _player_spell_stats(const spell_type spell)
     return description;
 }
 
+static string _get_skill_defense_change(skill_type skill)
+{
+    unwind_var<uint8_t> unwind_skill(you.skills[skill]);
+    unwind_var<unsigned int> unwind_sp(you.skill_points[skill]);
+    unwind_var<unsigned int> unwind_xp(you.total_experience);
+    unwind_var<int> unwind_costlevel(you.skill_cost_level);
+
+    const int cur_ac = you.armour_class_scaled(100);
+    const int cur_ev = you.evasion_scaled(100, true);
+    const int cur_sh = player_displayed_shield_class(100, true);
+
+    const double cur_skill = you.skill(skill, 10, true) * 0.1;
+    set_skill_level(skill, cur_skill + 1, true);
+
+    const int new_ac = you.armour_class_scaled(100);
+    const int new_ev = you.evasion_scaled(100, true);
+    const int new_sh = player_displayed_shield_class(100, true);
+
+    const float ac_diff = (float)(new_ac - cur_ac) / 100.0;
+    const float ev_diff = (float)(new_ev - cur_ev) / 100.0;
+    const float sh_diff = (float)(new_sh - cur_sh) / 100.0;
+
+    const char* msg = (cur_skill >= 26) ? "mastering" : "training 1 level of";
+
+    if (skill == SK_ARMOUR)
+    {
+        return make_stringf("\nWith your current stats and equipment, %s "
+                            "this skill would increase your AC by %.1f and "
+                            "your EV by %.1f.",
+                            msg, ac_diff, ev_diff).c_str();
+    }
+    else if (skill == SK_DODGING)
+    {
+        return make_stringf("\nWith your current stats and equipment, %s "
+                            "this skill would increase your EV by %.1f.",
+                            msg, ev_diff).c_str();
+    }
+    else if (skill == SK_SHIELDS)
+    {
+        return make_stringf("\nWith your current stats and equipment, %s "
+                            "this skill would increase your SH by %.1f.",
+                            msg, sh_diff).c_str();
+    }
+
+    return "";
+}
+
 string get_skill_description(skill_type skill, bool need_title)
 {
     string lookup = skill_name(skill);
@@ -4357,6 +4404,8 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
+    if (skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
+        result += _get_skill_defense_change(skill);
     if (skill == SK_INVOCATIONS)
     {
         if (you.has_mutation(MUT_FORLORN))

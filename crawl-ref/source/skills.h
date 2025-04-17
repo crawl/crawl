@@ -59,7 +59,7 @@ float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
-void check_skill_cost_change();
+void check_skill_cost_change(bool quiet = false);
 
 bool skill_default_shown(skill_type sk);
 void reassess_starting_skills(bool balance_djinn = true);
@@ -81,7 +81,7 @@ void train_skills(bool simu = false);
 bool skill_trained(int i);
 static inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
 void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE, bool recalculate_order = true);
-void set_skill_level(skill_type skill, double amount);
+void set_skill_level(skill_type skill, double amount, bool quiet = false);
 
 int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
