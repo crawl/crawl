@@ -1,16 +1,59 @@
 %%%%
+#Deck of Escape
 Velocity card
 
-Esta tarjeta representa una par de botas vacías y raídas. Arena, ceniza y césped cubren sus suelas.
+Esta tarjeta representa una par de botas vacías y raídas. Arena, ceniza y césped cubren 
+sus suelas.
 
-Sacar esta carta puede aumentar la velocidad de los aliados del usuario o reducir la velocidad de sus enmigos.
+Sacar esta tarjeta puede aumentar la velocidad de los aliados del usuario o reducir la 
+velocidad de sus enmigos.
 %%%%
-The Wraith card
+the Tomb card
+
+Esta carta representa una cripta real con su entrada sellada por una losa de piedra.
+
+Sacar esta carta rodeará al usuario de muros protectores y temporales.
+A niveles de fuerza bajos, o con crituras contiguos, la tumba puede ser incompleta.
+
+La tumba es sostenida por el presencia de su creador, y moviéndose lejos del centro 
+provocará sus paredes desplomarse.
+%%%%
+Exile card
+
+Esta tarjeta representa miles de manos alcanzando fuera de un portal enorme a una figura 
+aterrada
+
+Sacar esta carta desterrará a los enmigos cercanos, con más siendo desterrado a niveles 
+de fuerza más altos.
+%%%%
+the Shaft card
+
+La carta representa un viajero caiéndose a una sima que ha abierto debajo del viajero.
+
+Sacar esta carta abrirá una hoyo debajo del usuario, y posiblemente debajo de sus enmigos.
+%%%%
+the Elixir card
+
+Una carta que representa una sonrisa presumida formada de nueve cálices.
+
+Sacar esta carta recuperará rápidamente la salud y las reservas de magia del usuario.
+%%%%
+the Cloud card
+
+La carta representa una puerta hierra rodeado de neblina. 
+
+Sacar esta carta rodeará los enmigos del usuario por círculos de neblinas que obstruen 
+su visión.
+La duración de las neblinas es aumenta con la fuerza de la carta.
+%%%%
+#Deck of Punishment
+the Wraith card
 
 Esta carta no representa nada
 
 Sacar esta carta drenará el usuario.
 %%%%
+#Buggy cards
 the Stairs card
 
 Esta carta hace que las escaleras se desplazen hacia o lejos de ti. (Es un bug
