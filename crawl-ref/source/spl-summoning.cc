@@ -198,7 +198,12 @@ spret cast_summon_small_mammal(int pow, bool fail)
     else
         mon = MONS_QUOKKA;
 
-    if (!create_monster(_pal_data(mon, summ_dur(3), SPELL_SUMMON_SMALL_MAMMAL)))
+    if (monster* mons = create_monster(_pal_data(mon, summ_dur(3), SPELL_SUMMON_SMALL_MAMMAL)))
+    {
+        if (you.can_see(*mons))
+            mprf("%s appears in a puff of smoke.", mons->name(DESC_A).c_str());
+    }
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -293,7 +298,13 @@ spret cast_summon_cactus(int pow, bool fail)
 
     mgen_data mg = _pal_data(MONS_CACTUS_GIANT, summ_dur(3), SPELL_SUMMON_CACTUS);
     mg.hp = hit_points(pow + 27, 1);
-    if (!create_monster(mg))
+    if (monster* mons = create_monster(mg))
+    {
+        if (you.can_see(*mons))
+            mpr("A prickly colossus appears in a rush of desert wind.");
+    }
+
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -1429,6 +1440,8 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
+    else
+        mpr("You open a gateway and unleash terrible monstrosities upon the world.");
 
     return spret::success;
 }
