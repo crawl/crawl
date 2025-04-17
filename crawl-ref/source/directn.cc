@@ -1367,13 +1367,9 @@ static colour_t _colour_aff_type(aff_type aff, bool target)
         die("unhandled aff %d", aff);
 }
 
-static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
-                           aff_type aff)
+static void _draw_ray_cell_glyph(glyph_screen_cell& cell, coord_def p,
+                                 bool on_target, aff_type aff)
 {
-#ifdef USE_TILE
-    UNUSED(on_target, p);
-    cell.tile.add_overlay(_tileidx_aff_type(aff));
-#endif
     const auto bcol = _colour_aff_type(aff, on_target);
     const auto mbcol = on_target ? bcol : bcol | COLFLAG_REVERSE;
     const auto cglyph = _get_ray_glyph(p, bcol, '*', mbcol);
@@ -1381,18 +1377,30 @@ static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
     cell.colour = cglyph.col;
 }
 
-void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
+#ifdef USE_TILE
+static void _draw_ray_cell_tile(tile_screen_cell& cell, aff_type aff)
+{
+    cell.tile.add_overlay(_tileidx_aff_type(aff));
+}
+#endif
+
+void direction_chooser_renderer::render(crawl_view_buffer& vbuf,
+                                        bool draw_tiles)
 {
     if (crawl_state.invisible_targeting)
         return;
-    m_directn.draw_beam(vbuf);
-    m_directn.highlight_summoner(vbuf);
+    m_directn.draw_beam(vbuf, draw_tiles);
+    m_directn.highlight_summoner(vbuf, draw_tiles);
 }
 
-void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
+void direction_chooser::draw_beam(crawl_view_buffer &vbuf, bool draw_tiles)
 {
     if (!show_beam)
         return;
+
+#ifndef USE_TILE
+    UNUSED(draw_tiles);
+#endif
 
     // Use the new API if implemented.
     if (hitfunc)
@@ -1407,8 +1415,22 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
             if (aff
                 && (!feat_is_solid(env.grid(*ri)) || hitfunc->can_affect_walls()))
             {
-                auto& cell = vbuf(grid2view(*ri) - 1);
-                _draw_ray_cell(cell, *ri, *ri == target(), aff);
+#ifdef USE_TILE
+                if (draw_tiles)
+                {
+                    auto& buf = static_cast<crawl_tile_view_buffer&>(vbuf);
+                    auto& cell = buf(grid2view(*ri) - 1);
+                    _draw_ray_cell_tile(cell, aff);
+                }
+                else
+                {
+#endif
+                    auto& buf = static_cast<crawl_console_view_buffer&>(vbuf);
+                    auto& cell = buf(grid2view(*ri) - 1);
+                    _draw_ray_cell_glyph(cell, *ri, *ri == target(), aff);
+#ifdef USE_TILE
+                }
+#endif
             }
         }
 
@@ -1436,22 +1458,38 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
             continue;
 
         const bool inrange = in_range(p);
-        auto& cell = vbuf(grid2view(p) - 1);
 #ifdef USE_TILE
-        cell.tile.add_overlay(inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
+        if (draw_tiles)
+        {
+            auto& buf = static_cast<crawl_tile_view_buffer&>(vbuf);
+            auto& cell = buf(grid2view(p) - 1);
+            cell.tile.add_overlay(inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE);
+        }
+        else
+        {
 #endif
-        const auto bcol = inrange ? MAGENTA : DARKGREY;
-        const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol| COLFLAG_REVERSE);
-        cell.glyph = cglyph.ch;
-        cell.colour = cglyph.col;
+            auto& buf = static_cast<crawl_console_view_buffer&>(vbuf);
+            auto& cell = buf(grid2view(p) - 1);
+            const auto bcol = inrange ? MAGENTA : DARKGREY;
+            const auto cglyph = _get_ray_glyph(p, bcol, '*',
+                                               bcol | COLFLAG_REVERSE);
+            cell.glyph = cglyph.ch;
+            cell.colour = cglyph.col;
+#ifdef USE_TILE
+        }
+#endif
     }
     textcolour(LIGHTGREY);
 
     // Only draw the ray over the target on tiles.
 #ifdef USE_TILE
-    auto& cell = vbuf(grid2view(target()) - 1);
-    cell.tile.add_overlay(in_range(ray.pos()) ? TILE_RAY :
-                                                TILE_RAY_OUT_OF_RANGE);
+    if (draw_tiles)
+    {
+        auto& buf = static_cast<crawl_tile_view_buffer&>(vbuf);
+        auto& cell = buf(grid2view(target()) - 1);
+        cell.tile.add_overlay(in_range(ray.pos()) ? TILE_RAY :
+                                                    TILE_RAY_OUT_OF_RANGE);
+    }
 #endif
 }
 
@@ -2162,18 +2200,36 @@ coord_def direction_chooser::find_summoner()
     return INVALID_COORD;
 }
 
-void direction_chooser::highlight_summoner(crawl_view_buffer &vbuf)
+void direction_chooser::highlight_summoner(crawl_view_buffer &vbuf,
+                                           bool draw_tiles)
 {
     const coord_def summ_loc = find_summoner();
     if (summ_loc == INVALID_COORD)
         return;
 
-    auto& cell = vbuf(grid2view(summ_loc) - 1);
-#ifdef USE_TILE
-    cell.tile.is_highlighted_summoner = true;
+#ifndef USE_TILE
+    UNUSED(draw_tiles);
 #endif
+
+#ifdef USE_TILE
+    if (draw_tiles)
+    {
+        auto& buf = static_cast<crawl_tile_view_buffer&>(vbuf);
+        auto& cell = buf(grid2view(summ_loc) - 1);
+        cell.tile.is_highlighted_summoner = true;
+    }
+    else
+    {
+#endif
+        auto& buf = static_cast<crawl_console_view_buffer&>(vbuf);
+        auto& cell = buf(grid2view(summ_loc) - 1);
+        // Is there a reason glyphs mode display shouldn't have this on
+        // local tiles but should on web tiles? --Wizard Ike
 #if defined(USE_TILE_WEB) || !defined(USE_TILE)
-    cell.colour = CYAN | COLFLAG_REVERSE;
+        cell.colour = CYAN | COLFLAG_REVERSE;
+#endif
+#ifdef USE_TILE
+    }
 #endif
 }
 

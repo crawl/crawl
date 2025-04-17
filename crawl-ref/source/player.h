@@ -98,7 +98,6 @@ static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 /// At this percent rev, Coglins' attacks do full damage.
 static const int FULL_REV_PERCENT = 66;
 
-class targeter;
 class Delay;
 struct player_save_info;
 
@@ -447,9 +446,6 @@ public:
     bool redraw_armour_class;
     bool redraw_evasion;
     bool redraw_status_lights;
-
-    colour_t flash_colour;
-    targeter *flash_where;
 
     int time_taken;
 
