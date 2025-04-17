@@ -301,7 +301,7 @@ void handle_wizard_command()
             mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
-        if (!yes_or_no("Do you really want to enter wizard mode?"))
+        if (!confirm_prompt("wiz", "Do you really want to enter wizard mode?"))
         {
             canned_msg(MSG_OK);
             return;
@@ -389,7 +389,7 @@ void enter_explore_mode()
         mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
-        if (!yes_or_no("Do you really want to enter explore mode?"))
+        if (!confirm_prompt("explore", "Do you really want to enter explore mode?"))
         {
             canned_msg(MSG_OK);
             return;

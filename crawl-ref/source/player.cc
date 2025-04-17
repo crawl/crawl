@@ -204,7 +204,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        if (!yes_or_no("%s", prompt.c_str()))
+        if (!confirm_prompt("yes", "%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
             return false;
@@ -441,8 +441,8 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
     // prompt when swapping into known zot traps
     if (!quiet && trap_at(loc) && trap_at(loc)->type == TRAP_ZOT
-        && !yes_or_no("Do you really want to swap %s into the Zot trap?",
-                      mons->name(DESC_YOUR).c_str()))
+        && !confirm_prompt("yes", "Do you really want to swap %s into the Zot trap?",
+                           mons->name(DESC_YOUR).c_str()))
     {
         return false;
     }

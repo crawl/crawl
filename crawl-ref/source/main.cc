@@ -1441,9 +1441,9 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     item_def* rune = find_floor_item(OBJ_RUNES);
     if (rune && item_is_unique_rune(*rune))
     {
-        return yes_or_no("A rune of Zot still resides in this realm, "
-                         "and once you leave you can never return. "
-                         "Are you sure you want to leave?");
+        return confirm_prompt("yes", "A rune of Zot still resides in this realm, "
+                                     "and once you leave you can never return. "
+                                     "Are you sure you want to leave?");
     }
     return true;
 }
@@ -1570,9 +1570,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
 
     if (down && ygrd == DNGN_ENTER_VAULTS && !runes_in_pack())
     {
-        if (!yes_or_no("You cannot leave the Vaults without holding a Rune of "
-                       "Zot, and the runes within are jealously guarded."
-                       " Continue?"))
+        if (!confirm_prompt("yes", "You cannot leave the Vaults without holding a Rune of "
+                                   "Zot, and the runes within are jealously guarded."
+                                   " Continue?"))
         {
             canned_msg(MSG_OK);
             return false;
@@ -2417,7 +2417,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     {
         // TODO: msg whether this will start a new game? not very important
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character%s?",
+            || confirm_prompt("quit", "Are you sure you want to abandon this character%s?",
                 Options.newgame_after_quit ? "" : // hard to predict this case
                 (crawl_should_restart(game_exit::quit)
                                             ? " and return to the main menu"

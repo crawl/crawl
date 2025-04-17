@@ -106,7 +106,7 @@ namespace ui
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
 // Returns true if the user typed "yes", false if something else or cancel.
-bool yes_or_no(const char* fmt, ...)
+bool confirm_prompt(const char* require, const char* fmt, ...)
 {
     char buf[200];
     va_list args;
@@ -115,11 +115,11 @@ bool yes_or_no(const char* fmt, ...)
     va_end(args);
     buf[sizeof(buf)-1] = 0;
 
-    mprf(MSGCH_PROMPT, "%s (Confirm with \"yes\".) ", buf);
+    mprf(MSGCH_PROMPT, "%s (Confirm with \"%s\".) ", buf, require);
 
     if (cancellable_get_line(buf, sizeof buf))
         return false;
-    if (strcasecmp(buf, "yes") != 0)
+    if (strcasecmp(buf, require) != 0)
         return false;
 
     return true;
