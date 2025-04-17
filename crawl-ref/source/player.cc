@@ -8903,6 +8903,7 @@ static bool _ench_triggers_trickster(enchant_type ench)
         case ENCH_GRASPING_ROOTS:
         case ENCH_WRETCHED:
         case ENCH_DEEP_SLEEP:
+        case ENCH_VEXED:
             return true;
 
         default:
