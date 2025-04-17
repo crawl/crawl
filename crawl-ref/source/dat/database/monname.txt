@@ -945,6 +945,9 @@ RANDGEN
 w:1
 @_bland_male_name_@
 
+w:1
+@_bland_female_name_@
+
 @_cantonese_female_name_@
 
 @_cantonese_male_name_@
@@ -991,6 +994,18 @@ Jeff
 Jim
 
 Pete
+%%%%
+_bland_female_name_
+
+Babs
+
+Betsy
+
+Deb
+
+Carrie
+
+Vera
 %%%%
 _cantonese_female_name_
 
