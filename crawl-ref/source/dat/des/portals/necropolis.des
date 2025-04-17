@@ -77,9 +77,13 @@ function necropolis_portal_entry(e)
           floor = "expired_portal",
           feat_tile = "dngn_necropolis_gone",
           msg = messager })
-    -- Roughly corresponding to the average (if hardly the median)
-    -- number of ghost vaults one got per game previously.
+    -- Roughly corresponding to the average (if hardly the median) number of
+    -- ghost vaults one got per game previously. Early Necropolis spawns are
+    -- quite hard though (player ghosts are too above the curve), so lower
+    -- their odds on the earliest floors. Vaults:1-4 Neccropolis entries are
+    -- placed seperately via vaults_default_options() and pick_room().
     e.chance(350)
+    e.depth_chance("D:5-7", 275)
     e.depth_chance("Vaults", 0)
     e.tags("vaults_necropolis no_monster_gen no_item_gen no_trap_gen chance_necropolis")
     e.kfeat("O = enter_necropolis")
@@ -352,7 +356,7 @@ function necropolis_ghost_setup(e, default_tiles)
         necropolis_default_appearance(e)
     end
 
-    e.kitem("$ = $ no_pickup")
+    e.kitem("$ = $ level:" .. you.absdepth() + 2 .. " no_pickup")
 end
 
 -- Without this, using &~ on a fresh character will crash going here.
@@ -465,9 +469,8 @@ function ghost_good_loot(e, kglyphs)
 
     local first_item = true
     local second_item = false
-    if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-        first_item = false
-    elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
+    if dgn.persist.necropolis_difficulty == "pre_temple_d" or
+       dgn.persist.necropolis_difficulty == "pre_lair_d" then
         if crawl.coinflip() then
             first_item = false
         end
@@ -1526,7 +1529,7 @@ KMONS:   O = player ghost
 : ghost_good_loot(_G)
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 SUBST:   d = *%, e = %, f = %$, ghij = $
-NSUBST:  D = 1:0 / 2=0- / 9- / -
+NSUBST:  D = 1:0 / 1=009--- / *:-
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 SUBST:   e = *, f = *%,  g = %$$, ij = $
 NSUBST:  D = 2:0 / 3=0- / 1:9 / 1=998--- / *:-
@@ -1642,11 +1645,11 @@ BBBBBBBBBBBBBBBBBBBB
 ENDMAP
 
 NAME:    gammafunk_necropolis_ghost_cemetery
-: necropolis_depth_tagging(_G, {"all"})
+: necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "orc", "snake",
+:                               "shoals", "spider", "vaults_elf", "depths_crypt"})
 TAGS:    allow_dup luniq
-: if dgn.persist.necropolis_difficulty == "pre_temple_d" or
-:    dgn.persist.necropolis_difficulty == "pre_lair_d" then
-WEIGHT:  5
+: if dgn.persist.necropolis_difficulty == "pre_lair_d" then
+WEIGHT:  3
 : end
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
@@ -1656,14 +1659,12 @@ SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
 # 1.5 items per ghost, upgrading quality with depth. 'd' and 'e' get replaced
 # with good_items later on.
 : ghost_good_loot(_G)
-: if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-NSUBST:  de = 2 = *% / * = %$$-, f = 1:*% / %$$-, h = 2 = *% / %$--
-: elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
+: if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 NSUBST:  de = 2:* / *%$-, f = * / *%$-, h = 2=* / *%$-
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 NSUBST:  d = 1:d / * = *%$-, e = 1:e / |*--, f = 1:|* / * = |*--
 NSUBST:  h = 2 = |* / * = |*--
-: else   -- Lair, Orc, Lair branches, Vaults, Elf, Depths, Crypt.
+: else   -- Orc, Shoals, Snake, Spider Vaults, Elf, Depths, Crypt.
 NSUBST:  d = 1:d / * = |*%-, e = 1:e / * = |*%-, f = 1:|* / * = |*%-
 NSUBST:  h = 2 = |* / * = |*%-
 : end
@@ -1741,6 +1742,7 @@ SUBST:  1 = 1GG, D = DF, E = EH
 NSUBST: M = 1:0 / 2 = 09 / 1:98 / 2:D / *:J
 SUBST:  D = DF, ? = ?!
 : end
+: necropolis_ghost_setup(_G, false)
 : setup_gozag_gold(_G) -- uses the ' glyph
 KPROP:  -_DEFHJ$?!0189OG = no_tele_into
 FTILE:  -_DEFHJ$?!0189OG = floor_limestone
@@ -1748,7 +1750,6 @@ TILE:   c = wall_church
 TILE:   v = metal_wall_necropolis
 TILE:   G = dngn_golden_iron_statue
 : necropolis_generic_spawns(_G, "0", "9", "8DF")
-: necropolis_ghost_setup(_G, false)
 MAP
 ....................
 ....................
@@ -2868,12 +2869,12 @@ TAGS:   luniq_necropolis_ghost_minimal
 KMONS:  O = player_ghost
 KMONS:  1 = adder
 KMONS:  2 = bullfrog
-KITEM:  % = any potion
+KITEM:  % = gold, any potion
 KFEAT:  O = expired_portal
 KFEAT:  %$*12~ = W
 KFEAT:  - = open_clear_door
 : lone_ghost_guarded_loot(_G, "O")
-NSUBST: d = 1:%%%* / * = %, 1 = 1:1 / 1:2W / 1:122~~~ / *:~
+NSUBST: d = 1:%%%* / * = %, 1 = 1:1 / 1:2$ / 1:122$$$ / *:~
 COLOUR: 12*%$W = lightgreen / cyan w:5
 KPROP:  $%*O12~ = no_tele_into
 FTILE:  O = dngn_portal_sewer_rusted
@@ -3169,11 +3170,11 @@ SHUFFLE: xzXZ / zxZX
 SUBST:   xX : xcbv, z = -, Z = .
 : ghost_good_loot(_G)
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-SUBST:   d = *%, e = %$, fghij = $
-NSUBST:  - = 2 = 1- / 1:2 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
+SUBST:   d = **%, e = %, fghij = $
+NSUBST:  - = 1 = 1-- / 1:2 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 SUBST:   d = *, e = *%, f = %$$$, ghij = $
-NSUBST:  - = 1 / 2 = 1- / 24 / -, R = 1:R / 1:? / *:T, $ = 1:! / *:$
+NSUBST:  - = 1:1 / 1 = 1- / 1:24 / -, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 SUBST:   f = *, g = *%, h = %$$$, hij = $
 NSUBST:  - = 3:3 / 4 = 3- / 1:46 / 1:5EH--- / -, R = 1:R / 2:? / *:T
@@ -3254,7 +3255,7 @@ SUBST: r = -, Z = T, s = x, G : GGt, T : TTUV, x : xcbv
 : ghost_good_loot(_G)
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 SUBST:  d = *%, e = %, fg = %$$
-NSUBST: - = 2:1 / 3 = 1. / 1:DDE / 1:DE-- / 1:1H / 2 = K- / 1:M / *:-
+NSUBST: - = 2:1 / 2 = 1. / 1:DDE / 1:DE-- / 1:1H / 2 = K- / 1:M / *:-
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 SUBST:  e = *, f = %, dg = %$
 NSUBST: - = 2:2 / 2 = 2. / 1:F / 2 = F. / 1:J / 3 = L- / 1:M / 1:3 / 2 = 3- / *:-
@@ -3486,8 +3487,8 @@ MONS:   moth of wrath
 # Moths of wrath as individual monsters are reasonably scary very early, so
 # tune back the pre-Lair sets much more than we would otherwise.
 MONS:   quokka / hound / iguana
-MONS:   water moccasin / ice beast / bullfrog / black bear
-MONS:   yak / wyvern / killer bee
+MONS:   water moccasin w:5 / bullfrog / black bear
+MONS:   ice beast / yak / wyvern / killer bee
 SUBST:  D = DE, d = *, e = *%, f = %$, ghij= -
 NSUBST: - = 1:1 / 2:2 / 2 = 2- / 1:34--- / *:-
 :   j = "lupine talisman / animal skin randart w:5"
@@ -4682,11 +4683,11 @@ MARKER:  P = lua:transp_loc("necropolis_sands_entry")
 MARKER:  Q = lua:transp_dest_loc("necropolis_sands_entry")
 MARKER:  R = lua:transp_loc("necropolis_sands_exit")
 MARKER:  S = lua:transp_dest_loc("necropolis_sands_exit")
-FTILE:   'QR12% = floor_sand
+FTILE:   'QR12%fg = floor_sand
 FTILE:   =$de*|O34 = floor_tomb
 TILE:    x = wall_undead
 TILE:    c = wall_tomb
-KPROP:   'QR$%*|O1234 = no_tele_into
+KPROP:   'QR$%*|defgO1234 = no_tele_into
 : necropolis_ghost_setup(_G, false)
 MAP
 ....................
