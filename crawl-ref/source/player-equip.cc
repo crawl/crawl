@@ -815,7 +815,7 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
         return true;
     }
 
-    return true;
+    return false;
 }
 
 /**
