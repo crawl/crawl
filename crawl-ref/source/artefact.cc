@@ -658,7 +658,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_PREVENT_TELEPORTATION:
             return non_swappable
                    && !_any_artps_in_item_props({ ARTP_BLINK },
-                                                intrinsic_props, extant_props);
+                                                intrinsic_props, extant_props)
+                   && !item.is_type(OBJ_TALISMANS, TALISMAN_STORM);
         // only on melee weapons
         case ARTP_ANGRY:
         case ARTP_NOISE:
