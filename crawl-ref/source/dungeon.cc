@@ -747,12 +747,14 @@ player to a level or regenerates a level.
 */
 void dgn_reset_player_data()
 {
-
     // vaults and map stuff
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
     you.uniq_map_tags_abyss.clear();
     you.uniq_map_names_abyss.clear();
+    for (auto branch : branch_uniq_map_tags)
+        branch.clear();
+
     you.vault_list.clear();
     you.branches_left.reset();
     you.zigs_completed = 0;

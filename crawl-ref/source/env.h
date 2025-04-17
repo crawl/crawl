@@ -54,8 +54,8 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
-    // copied from Branches[n].uniq_map_tags, copied back again after level gen
-    // (if level vetoes we need to reset to the original)
+    // copied from branch_uniq_map_tags, copied back again after level gen
+    // (if level is vetoed we need to reset to the original)
     string_set                               branch_uniq_map_tags;
 
     string                                   level_build_method;
