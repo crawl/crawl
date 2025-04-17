@@ -23,6 +23,6 @@ show_more = false
 :   elseif you.turns() < 1000 then
 :     crawl.sendkeys("5")
 :   else
-:     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+:     crawl.sendkeys("*qquit" .. eol .. esc .. esc)
 :   end
 : end
