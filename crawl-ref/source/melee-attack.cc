@@ -1135,7 +1135,8 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
         draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
         for (monster_near_iterator mi(you.pos()); mi; ++mi)
         {
-            if (mi->can_feel_fear(true) && !mi->has_ench(ENCH_FEAR)
+            if (!mons_aligned(&you, *mi)
+                && mi->can_feel_fear(true) && !mi->has_ench(ENCH_FEAR)
                 && mi->check_willpower(&you, howl_power) <= 0)
             {
                 mprf("%s freezes in fear!", mi->name(DESC_THE).c_str());
