@@ -133,7 +133,7 @@ bool silence_monster(monster& mon, const actor* agent, int dur)
 {
     if (mon.add_ench(mon_enchant(ENCH_MUTE, 0, agent, dur)))
     {
-        simple_monster_message(mon, "loses the ability to speak.");
+        simple_monster_message(mon, " loses the ability to speak.");
         return true;
     }
 
