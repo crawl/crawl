@@ -562,7 +562,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -4;
         break;
     case TILEP_MONS_IRONBOUND_MECHANIST:
-        *ofs_x = -3;
+        *ofs_x = -4;
         *ofs_y = 1;
         break;
     case TILEP_MONS_SPROZZ:
@@ -969,8 +969,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_IRONBOUND_MECHANIST:
-        *ofs_x = 2;
-        *ofs_y = 2;
+        *ofs_x = 0;
+        *ofs_y = 1;
         break;
 
     case TILEP_MONS_SPROZZ:
