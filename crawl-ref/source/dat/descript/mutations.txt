@@ -973,7 +973,8 @@ to reach and perform melee attacks from several tiles away - including auxiliary
 attacks of all sorts.
 
 The precision required to preform stab attacks is still impossible unless you're
-adjacent to your target.
+adjacent to your target, and axes can only cleave to enemies adjacent to you,
+regardless of where you strike.
 %%%%
 water splatter mutation
 
