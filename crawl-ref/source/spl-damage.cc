@@ -3834,9 +3834,9 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
 }
 
-int get_mercury_weaken_chance(int victim_hd, int pow)
+int get_mercury_weaken_chance(int victim_hd)
 {
-    return max(0, 100 - max(0, (victim_hd * 12 - pow * 3 / 2 - 17) * 115 / 100));
+    return max(0, 100 - max(0, victim_hd - 4) * 12);
 }
 
 dice_def poisonous_vapours_damage(int pow, bool random)

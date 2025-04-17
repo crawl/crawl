@@ -1708,13 +1708,13 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
     return vector<string>{make_stringf("empty space bonus: %d/8", empty_spaces)};
 }
 
-static vector<string> _desc_mercury_weak_chance(const monster_info& mi, int pow)
+static vector<string> _desc_mercury_weak_chance(const monster_info& mi)
 {
     if (mi.is(MB_NO_ATTACKS))
         return vector<string>{};
 
     return vector<string>{make_stringf("chance to weaken: %d%%",
-                            get_mercury_weaken_chance(mi.hd, pow))};
+                            get_mercury_weaken_chance(mi.hd))};
 }
 
 static vector<string> _desc_warp_space_chance(int pow)
@@ -1984,7 +1984,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_PLASMA_BEAM:
             return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
         case SPELL_MERCURY_ARROW:
-            return bind(_desc_mercury_weak_chance, placeholders::_1, powc);
+            return _desc_mercury_weak_chance;
         case SPELL_WARP_SPACE:
             return bind(_desc_warp_space_chance, powc);
         default:

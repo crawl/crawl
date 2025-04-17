@@ -1594,7 +1594,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (doFlavouredEffects)
         {
-            int chance = get_mercury_weaken_chance(mons->get_hit_dice(), pbolt.ench_power);
+            int chance = get_mercury_weaken_chance(mons->get_hit_dice());
             if (x_chance_in_y(chance, 100))
                 mons->weaken(pbolt.agent(), 5);
 
@@ -1617,7 +1617,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                         did_splash_msg = true;
                     }
 
-                    chance = get_mercury_weaken_chance(act->get_hit_dice(), pbolt.ench_power);
+                    chance = get_mercury_weaken_chance(act->get_hit_dice());
                     if (x_chance_in_y(chance, 100))
                         act->weaken(pbolt.agent(), 5);
                 }
