@@ -1486,6 +1486,7 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
                               LOS_DEFAULT_RANGE); di; ++di)
     {
         if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
+             && !feat_is_endless(env.grid(*di))
              && x_chance_in_y(pow, 150))
             || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
                 && !actor_at(*di) && !plant_forbidden_at(*di, true)))
