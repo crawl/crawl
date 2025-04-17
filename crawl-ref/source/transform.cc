@@ -1229,7 +1229,7 @@ public:
         return "Your tendrils shrivel away.";
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s a mane of long, stinging tendrils on your head.",
                             past_tense ? "had" : "have");
