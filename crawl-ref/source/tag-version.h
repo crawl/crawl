@@ -320,6 +320,7 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_VAMPIRES,     // Remove the player vampire species
     TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
     TAG_MINOR_SPECIFY_EXP,         // Specify monster EXP in yaml rather than calculating from HD
+    TAG_MINOR_BRANCH_UNIQ_MAPS,    // buniq_* tags for "only once per branch" vault groups
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

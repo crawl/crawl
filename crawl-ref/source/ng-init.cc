@@ -62,6 +62,7 @@ void initialise_branch_depths()
     {
         const Branch *b = &branches[branch];
         ASSERT(b->id == branch);
+        branch_uniq_map_tags[branch].clear();
     }
 
     initialise_brentry();
