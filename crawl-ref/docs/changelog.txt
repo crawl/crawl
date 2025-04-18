@@ -1,4 +1,4 @@
-Stone Soup 0.33 (through 0.33-a0-1446-g9efba704ed)
+Stone Soup 0.33 (through 0.33-a0-1449-0d2a297ef60)
 --------------------------------------------------
 
 Highlights
@@ -63,8 +63,8 @@ Branches, Environment
 * Frail pillars of rime can be found in Cocytus.
 * Ziggurats have even more exponential scaling for those doing multiple
   ziggurats.
-* Sprint V ("Ziggurat Sprint") and Sprint VII ("The Pits") have had major
-  updates to balance and monster options.
+* Sprint VII ("The Pits") has gotten major updates to balance and monster
+  options, while Sprint V ("Ziggurat Sprint") has had minor updates to the same.
 
 Character
 ---------
@@ -246,8 +246,7 @@ Monsters
   - Alderkings, fae trees and necromantic masters of Depths.
   - Fravashi, mid-tier warrior-summoning angels.
   - Goblin riders, wvyern-taming cavalry for Bailies.
-  - Ironbound Mechanists, dual axe-wielding coglins that forge and temper
-    phalanx beetles for Vaults.
+  - Ironbound mechanists, dual-wielding forgewright coglins for Vaults.
   - Nekomata, self-cloning ranged cat demons for Pan.
   - Oni incarcerators, Manifold Assault users for Gehenna.
   - Sphinx marauders, masters of winds and minds for Shoals and Vaults.
@@ -414,6 +413,7 @@ Tiles and Other Art
   * Abilities: Accepting Makhleb's infernal marks.
   * Features: altars to Fedhas, altars to Xom, caches of meat, granite statues
     in Depths and Zot.
+  * Forms: Flux form tiles for humanoids, felids, and octopodes.
   * Items: all forms of leather armour.
   * Monsters: apises, boggarts, brain worms, creeping infernos, culicivora,
     great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
@@ -431,13 +431,14 @@ Tiles and Other Art
     Mortar, Hoarfrost Cannonade, Lightning Spire, Magnavolt, Permafrost
     Eruption, Spellspark Servitor, all remaining monster-only spells.
   * Starting screen icons: high scores.
+  * Status effects: withering away.
   * Unrands: the robe of Augmentation, Brilliance and its brand, Firestarter,
     Punk's acid brand, the robe of Folly, the sword of the Doom Knight, and
     the toga "Victory".
   * Visual effects: airstrike, draining gaze, doom howl, entropic weave,
-    fire storm, fulsome fusillade, ice blasts, magma, manifold assault,
-    mephitic cloud, mystic blast, potion petition, sap magic, sentinel's mark,
-    wand of warping.
+    fire storm, fulsome fusillade, ice blasts, ignite poison, magma,
+    manifold assault, mephitic cloud, mystic blast, potion petition, sap magic,
+    sentinel's mark, wand of warping.
   * Walls: Vaults and Trove rock.
 * Pandemonium now has unique stone wall tiles for regular floors and unique wall
   tiles for each of the unrand Pan lord vaults.
