@@ -1910,7 +1910,7 @@ STR:     4
 INT:     4
 COLOUR:  ETC_MAGIC
 TILE:    urand_crab_claws
-BOOL:    enh_necro, special
+BOOL:    evil, enh_necro, special
 DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
  or casts spells, and grants immunity from such clouds.
 

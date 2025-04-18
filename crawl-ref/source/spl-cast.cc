@@ -764,7 +764,7 @@ static bool _majin_charge_hp()
 
 static void _trigger_ghost_crab_claws(int chance)
 {
-    if (x_chance_in_y(chance, 15))
+    if (x_chance_in_y(chance, 18) && !you.allies_forbidden())
     {
         big_cloud(CLOUD_SPECTRAL, &you, you.pos(), random_range(12, 20),
             4 + random2(5));
@@ -997,6 +997,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             int chance = spell_difficulty(spell);
             if (spell_typematch(spell, spschool::necromancy))
                 chance *= 2;
+            chance += 3;
             _trigger_ghost_crab_claws(chance);
         }
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));

@@ -852,7 +852,8 @@ bool melee_attack::handle_phase_damaged()
         }
         if (you.unrand_equipped(UNRAND_CRAB_CLAWS) && defender->alive()
             && defender->is_monster()
-            && x_chance_in_y(damage_done, damage_done + 15))
+            && x_chance_in_y(damage_done, damage_done + 15)
+            && !you.allies_forbidden())
         {
             big_cloud(CLOUD_SPECTRAL, &you, defender->pos(),
                 random_range(12, 20), 4 + random2(5));
