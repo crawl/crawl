@@ -1948,32 +1948,11 @@ MAP
 ..........
 ENDMAP
 
-NAME:   nicolae_lair_bush_border
-TAGS:   decor extra transparent
-DEPTH:  Lair
-KMONS:  P = bush
-# It is technically possible for the bushes to make a teleport closet.
-# You can beat a bush to death, so this is more of a rare hassle than it is a
-# game ruiner, but nobody wants to have to stand there hacking at a bush for
-# five minutes. So make the potential bush zone no_tele_into.
-KPROP:  `pqrsu = no_tele_into
-NSUBST: p = P / -, q = P / -, r = P / -, s = P / -, u = P / -
-SUBST:  y = xx., - = .`, ` = P..
-MAP
-   .....@.....
-....`.`.`.`.`....
-yxy`p`q`r`s`u`yxy
-xxxPpPqPrPsPuPxxx
-yxy`p`q`r`s`u`yxy
-....`.`.`.`.`....
-   .....@.....
-ENDMAP
-
 NAME:    nicolae_lair_cache_of_fresh_prey
 TAGS:    decor extra transparent
 DEPTH:   Lair
 SHUFFLE: PQ/pq
-NSUBST:  Q` = 1=@ / x, S = S / S- / .-
+NSUBST:  Q' = 1=@ / x, S = S / S- / .-
 SUBST:   P = ., pq = x, ` = x_
 KPROP:   S- = bloody
  : dgn.delayed_decay(_G, "S", "yak corpse / dream sheep corpse / human corpse")
@@ -1981,7 +1960,7 @@ MAP
    `x`
   `xxxqq
 `xxx-xpq
-xxSSx.x`
+xxSSx.x'
 xxSSxxPQ
 `xxxxQQQ
  `xx`
