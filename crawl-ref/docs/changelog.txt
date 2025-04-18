@@ -1,4 +1,4 @@
-Stone Soup 0.33 (through 0.33-a0-1369-g9fcff2c720)
+Stone Soup 0.33 (through 0.33-a0-1446-g9efba704ed)
 --------------------------------------------------
 
 Highlights
@@ -63,8 +63,8 @@ Branches, Environment
 * Frail pillars of rime can be found in Cocytus.
 * Ziggurats have even more exponential scaling for those doing multiple
   ziggurats.
-* Sprint VII ("The Pits") has been rescaled and renewed heavily, with many more
-  monster options and mildly-less-aggressive earlier chamber difficulty scaling.
+* Sprint V ("Ziggurat Sprint") and Sprint VII ("The Pits") have had major
+  updates to balance and monster options.
 
 Character
 ---------
@@ -100,8 +100,12 @@ Character
   nonviolently deconstructed by pressing ctrl+[direction] while adjacent.
 * Fungus Form and Tree Form are both immune to sleep.
 * Paralysis, sleep, petrification, and vex status inflicted on the player all
-  now share the same temporary immunity cooldown.
+  now share the same temporary immunity cool-down.
 * Removed mutations: deterioration.
+* Penalties to body armour AC from talismans and the Deformed Body mutation
+  are now also applied to the AC bonus from training Armour skill. To
+  compensate, the AC penalties of Deformed Body and blade talismans have been
+  reduced, and Naga and Armataurs have their Armour aptitudes increase by 1.
 
 Gods
 ----
@@ -211,7 +215,7 @@ Items
     of attacks instead of indefinitely.
   - Maw talismans have been lowered down a tier, with the maw dealing less
     damage and healing on kills for less HP, but can now break through body
-    armour to provide a tiny percent of AC instead of melding such entirely.
+    armour to reduce base AC by 75% instead of melding such entirely.
   - Serpent talismans now transform the user into a two-headed snake that can
     wear two hats (but no other equipment).
   - Granite talismans now apply a percentage EV penalty and provide additional
@@ -239,20 +243,26 @@ Items
 Monsters
 --------
 * New monsters:
-  * Alderkings, fae trees and necromantic masters of Depths.
-  * Goblin riders, wvyern-taming cavalry for Bailies.
-  * Fravashi, mid-tier warrior-summoning angels.
-  * Nekomata, self-cloning ranged cat demons for Pan.
-  * Oni incarcerators, Manifold Assault users for Gehenna.
-  * Sphinx marauders, masters of winds and minds for Shoals and Vaults.
-  * Vampire bloodprinces, sleep-inducing lords of Crypt.
-  * Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
-* New unique: Nobody, a revenant made from countless forgotten souls, who can
-  burn the memories of their deaths to both heal and change spellsets.
-* Returning monster: hippogriffs, now nearly exclusive to bailies, now with both
-  Warning Cry and a new damaging wind spell that slowly pulls enemies in.
-* Returning monster: ironbound beastmasters, now with a passive animal and slime
-  hasting aura plus the ability to throw bolas to bind foes in place.
+  - Alderkings, fae trees and necromantic masters of Depths.
+  - Fravashi, mid-tier warrior-summoning angels.
+  - Goblin riders, wvyern-taming cavalry for Bailies.
+  - Ironbound Mechanists, dual axe-wielding coglins that forge and temper
+    phalanx beetles for Vaults.
+  - Nekomata, self-cloning ranged cat demons for Pan.
+  - Oni incarcerators, Manifold Assault users for Gehenna.
+  - Sphinx marauders, masters of winds and minds for Shoals and Vaults.
+  - Vampire bloodprinces, sleep-inducing lords of Crypt.
+  - Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
+* Returning monsters:
+  - hippogriffs, now nearly exclusive to bailies, now with both Warning Cry
+    and a new damaging wind spell that slowly pulls enemies in.
+  - ironbound beastmasters, now with a passive animal and slime hasting aura
+    plus the ability to throw bolas to bind foes in place.
+* New uniques:
+  - Nobody, a revenant made from countless forgotten souls, who can burn the
+    memories of their deaths to both heal and change spellsets.
+  - Sprozz, an early-game coglin forgewright who casts Clockwork Bee and
+    Nazja’s Percussive Tempering and sometimes drops a Forgecraft spellbook.
 * Apises now have a passive aura that doubles the health of other monsters.
 * Arcanists now have more health and EV.
 * Ball pythons deal less damage.
@@ -363,6 +373,9 @@ Spells
   - Detonation Catalyst (L5 Fire / Alch): Gain a buff that makes non-cleaving
     melee attacks explode for damage scaled to damage dealt, avoiding allies,
     and which lasts for very little time if the user stops attacking.
+  - Sphinx Sisters (L7 Summ / Hexes) that summons a pair of riddling sphinxes,
+    one guardian and one maurader, to debilitate the enemies with hexes and
+    batter them with violent winds.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
   * Battlespheres last longer at lower spell power, are better at pathing
@@ -392,6 +405,8 @@ Spells
     mutation with each cast.
   * Teleport Other is now smite targetted.
 * Spells that can't miss are no longer affected by player blindness debuffs.
+* Monstrous Menagerie is removed as a player spell, but is still used by
+  Kirke.
 
 Tiles and Other Art
 -------------------
