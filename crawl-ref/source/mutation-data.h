@@ -2055,7 +2055,7 @@ static const mutation_def mut_data[] =
    "Your stinger grows larger and begins to produce weakening toxins."},
 
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_WEAKNESS_STINGER,
 },
 
 { MUT_DEMONIC_TOUCH, 0, 3, mutflag::good | mutflag::anatomy | mutflag::need_hands,

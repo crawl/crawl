@@ -261,7 +261,7 @@ function trove.good_talisman (e)
               "serpent talisman randart / wellspring talisman randart / " ..
               "granite talisman w:4 / granite talisman randart w:6 / " ..
               "dragon-coil talisman w:4 / dragon-coil talisman randart w:6 / " ..
-              "honeycomb talisman w:4 / honeycomb talisman randart w:6 / " ..
+              "hive talisman w:4 / hive talisman randart w:6 / " ..
               "riddle talisman w:4 / riddle talisman randart w:6 / " ..
               "storm talisman w:8 / storm talisman randart w:2"
 

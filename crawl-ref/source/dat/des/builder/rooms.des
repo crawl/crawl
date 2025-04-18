@@ -118,7 +118,7 @@ function sroom_beehive(e)
 
     e.kitem('1 = black bear skeleton / \
                  potion of ambrosia pre_id / nothing w:20')
-    e.kitem('2M = potion of ambrosia pre_id / honeycomb talisman / nothing w:15')
+    e.kitem('2M = potion of ambrosia pre_id / hive talisman / nothing w:15')
     -- FIXME: layout_roguey's special room placements ignore vault definitions
     -- decorative_floor(e, '2M', "flower patch")
 end

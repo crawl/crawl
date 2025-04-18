@@ -165,6 +165,9 @@ teleport_2
 demonic_touch1 DEMONIC_TOUCH
 demonic_touch2
 demonic_touch3
+weakness_stinger_1 WEAKNESS_STINGER
+weakness_stinger_2
+weakness_stinger_3
 icemail_1 ICEMAIL
 icemail_2
 condensation_shield CONDENSATION_SHIELD

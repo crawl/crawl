@@ -3297,8 +3297,8 @@ WEIGHT: 5
 KMONS:  O = player ghost
 MONS:   killer bee, queen bee, hornet, meliai band, spark wasp
 KITEM:  ? = potion of ambrosia pre_id q:1
-KITEM:  ! = honeycomb talisman
-KITEM:  & = honeycomb talisman randart
+KITEM:  ! = hive talisman
+KITEM:  & = hive talisman randart
 # Chance to make a partial wall in each of the full cells. Add 0-4 ambrosias.
 NSUBST: p = x- / -, q = x- / -, r = x- / -, s = x- / -
 NSUBST: - = 1:! / 4='- / -

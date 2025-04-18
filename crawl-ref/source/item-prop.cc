@@ -3110,7 +3110,7 @@ string talisman_type_name(int type)
     case TALISMAN_WEREWOLF: return "lupine talisman";
     case TALISMAN_FORTRESS: return "fortress talisman";
     case TALISMAN_STATUE:   return "granite talisman";
-    case TALISMAN_HIVE:     return "honeycomb talisman";
+    case TALISMAN_HIVE:     return "hive talisman";
     case TALISMAN_DRAGON:   return "dragon-coil talisman";
     case TALISMAN_SPHINX:   return "riddle talisman";
     case TALISMAN_VAMPIRE:  return "sanguine talisman";

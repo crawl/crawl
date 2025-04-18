@@ -502,7 +502,7 @@ ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup w:12 / \
          dart ego:curare no_pickup w:3 / scarab talisman
 ITEM:    throwing net q:2 no_pickup / quick blade ego:venom randart w:12 / \
          swamp dragon scales randart / potion of ambrosia q:2 w:3 pre_id / \
-         potion of curing w:3 q:3 pre_id / honeycomb talisman / \
+         potion of curing w:3 q:3 pre_id / hive talisman / \
          randbook numspells:6 spells:launch_clockwork_bee&&summon_forest w:6
 : if you.in_branch("Vaults") then
 SUBST:   "'@W = .

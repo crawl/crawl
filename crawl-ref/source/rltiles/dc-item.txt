@@ -414,6 +414,7 @@ animal_skin2
 animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
+troll_leather_armour_art
 fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
 fire_dragon_armour_art
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
@@ -1249,7 +1250,6 @@ generic_unfound_broken
 #OBJ_TALISMANS
 %sdir item/talisman
 %rim 0
-flux TALISMAN_FLUX
 snake TALISMAN_SNAKE
 maw TALISMAN_MAW
 blade TALISMAN_BLADE

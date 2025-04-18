@@ -3505,7 +3505,7 @@ KMONS:   P = plant / fungus w:2 / bush w:1
 ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
          ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
          merfolk skeleton w:1
-ITEM:    honeycomb talisman
+ITEM:    hive talisman
 KITEM:   R = earthy gem
 SHUFFLE: 567
 SUBST:   C = cx.., P = P .:9 t:1
