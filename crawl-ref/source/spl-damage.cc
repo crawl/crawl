@@ -2150,6 +2150,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
     if (!one_chance_in(4))
         return false;
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TERRAIN);
     place_cloud(CLOUD_FIRE, where, 2 + random2(1 + div_rand_round(pow, 30)), agent);
 
     return true;
@@ -2187,6 +2188,7 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
         return agent && agent->is_player() ? sgn(value) : value;
     }
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TERRAIN);
     cloud->type = CLOUD_FIRE;
     cloud->decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
     cloud->whose = agent->kill_alignment();
@@ -2252,6 +2254,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TARGET);
     if (you.see_cell(mon->pos()))
     {
         mprf("%s seems to burn from within%s",
@@ -2311,6 +2314,7 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     if (tracer)
         return mons_aligned(&you, agent) ? -1 * damage : damage;
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TARGET);
     const int resist = player_res_fire();
     if (resist > 0)
         mpr("You feel like your blood is boiling!");
@@ -2442,11 +2446,6 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     }
 
     targeter_radius hitfunc(agent, LOS_NO_TRANS);
-    flash_view_delay(
-        agent->is_player()
-            ? UA_PLAYER
-            : UA_MONSTER,
-        RED, 100, &hitfunc);
 
     mprf("%s %s the poison in %s surroundings!", agent->name(DESC_THE).c_str(),
          agent->conj_verb("ignite").c_str(),
@@ -2463,6 +2462,8 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         _ignite_poison_player(where, pow, agent);
         return 0; // ignored
     }, agent->pos());
+
+    animation_delay(200, true);
 
     return spret::success;
 }

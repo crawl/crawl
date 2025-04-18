@@ -19,6 +19,11 @@ flame2
 magma0 BOLT_MAGMA
 magma1
 
+ignite_poison_target0 BOLT_IGNITE_POISON_TARGET
+ignite_poison_target1
+ignite_poison_terrain0 BOLT_IGNITE_POISON_TERRAIN
+ignite_poison_terrain1
+
 fire_storm0 BOLT_FIRE_STORM
 
 # Ice bolts
