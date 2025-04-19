@@ -230,7 +230,7 @@ pushing any others helplessly backwards (along with anyone else unfortunate
 enough to be standing behind them).
 
 Its size and reckless locomotion make it difficult to use in confined areas; if
-lauched down narrow passages, it will rapidly abrade against the walls and fall
+launched down narrow passages, it will rapidly abrade against the walls and fall
 apart. It will also crumble if it leaves the caster's sight or strikes a wall
 or otherwise unmoveable creature.
 %%%%
