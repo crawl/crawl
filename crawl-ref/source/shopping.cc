@@ -734,6 +734,11 @@ unsigned int item_value(item_def item, bool ident)
 
         break;
 
+    // There's only one bauble type, for now...
+    case OBJ_BAUBLES:
+        valued += 25;
+        break;
+
     case OBJ_BOOKS:
     {
         valued = 0;
