@@ -523,7 +523,6 @@ public:
 
 private:
     struct column;
-    int prev_col;   // For performing auto-wrapping
     void compose_formatted_column(
             const vector<formatted_string> &lines,
             int start_col,
