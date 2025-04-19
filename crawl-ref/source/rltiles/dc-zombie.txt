@@ -110,6 +110,7 @@ skeleton_hydra4
 skeleton_hydra5
 skeleton_ugly_thing MONS_SKELETON_UGLY_THING
 skeleton_draconian MONS_SKELETON_DRACONIAN
+skeleton_x MONS_SKELETON_X
 
 ## Simulacra
 %sdir mon/undead/simulacra
