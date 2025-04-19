@@ -857,6 +857,14 @@ ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
 	STDFLAG = -std=c++14
 endif
 
+# Unit tests, but without running them should get the same treatment
+#TODO: combine with above, somehow
+ifneq (,$(filter catch2-tests-executable,$(MAKECMDGOALS)))
+	COVERAGE=YesPlease
+	# current catch2 doesn't support c++11
+	STDFLAG = -std=c++14
+endif
+
 ifdef HURRY
 	NO_OPTIMIZE=YesPlease
 endif
