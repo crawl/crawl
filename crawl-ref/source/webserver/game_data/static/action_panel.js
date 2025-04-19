@@ -18,7 +18,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var font; // cached font name for the canvas: size (in px) + family
     var draw_glyphs;
     var selected = -1;
-    const NUM_RESERVED_BUTTONS = 2;
+    const NUM_RESERVED_BUTTONS = 10;
 
     function send_options()
     {
@@ -157,26 +157,52 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         }
         $tooltip.css({top: y + 10 + "px",
                      left: x + 10 + "px"});
-        if (slot == -2)
-        {
-            $tooltip.html("<span>Left click: minimize</span><br />"
+
+        switch (slot + NUM_RESERVED_BUTTONS) {
+            case 0:
+                $tooltip.html("<span>Left click: minimize</span><br />"
                           + "<span>Right click: open settings</span>");
-        }
-        else if (slot == -1 && game.get_input_mode() == enums.mouse_mode.COMMAND)
-            $tooltip.html("<span>Left click: show main menu</span>");
-        else
-        {
-            var item = filtered_inv[slot];
-            $tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
-            $tooltip.append(player.inventory_item_desc(item.slot));
-            if (game.get_input_mode() == enums.mouse_mode.COMMAND)
-            {
-                if (item.action_verb)
+                break;
+            case 1:
+                $tooltip.html("<span>Left click: show main menu</span>");
+                break;
+            case 2:
+                $tooltip.html("<span>Left click: show worn armor</span>");
+                break;
+            case 3:
+                $tooltip.html("<span>Left click: show spell library</span>");
+                break;
+            case 4:
+                $tooltip.html("<span>Left click: show player gold</span>");
+                break;
+            case 5:
+                $tooltip.html("<span>Left click: show inventory</span>");
+                break;
+            case 6:
+                $tooltip.html("<span>Left click: show player status</span>");
+                break;
+            case 7:
+                $tooltip.html("<span>Left click: show skills</span>");
+                break;
+            case 8:
+                $tooltip.html("<span>Left click: show wield menu</span>");
+                break;
+            case 9:
+                $tooltip.html("<span>Left click: rest 100 turns</span>");
+                break;
+            default:
+                var item = filtered_inv[slot];
+                $tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
+                $tooltip.append(player.inventory_item_desc(item.slot));
+                if (game.get_input_mode() == enums.mouse_mode.COMMAND)
+                {
+                    if (item.action_verb)
                     $tooltip.append("<br /><span>Left click: "
                                     + item.action_verb.toLowerCase()
                                     + "</span>");
-                $tooltip.append("<br /><span>Right click: describe</span>");
-            }
+                    $tooltip.append("<br /><span>Right click: describe</span>");
+
+                }
         }
         $tooltip.show();
     }
@@ -312,10 +338,40 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 if (selected == 0) // It should be available even in targeting mode
                     hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                         && selected == 1)
+                         && selected < NUM_RESERVED_BUTTONS)
                 {
-                    comm.send_message("main_menu_action");
+                    switch(selected) {
+                        case 1:
+                            comm.send_message("main_menu_action");
+                            break;
+                        case 2:
+                            comm.send_message("list_worn_armor");
+                            break;
+                        case 3:
+                            comm.send_message("show_spell_library");
+                            break;
+                        case 4:
+                            comm.send_message("list_gold");
+                            break;
+                        case 5:
+                            comm.send_message("show_inventory");
+                            break;
+                        case 6:
+                            comm.send_message("list_player_status");
+                            break;
+                        case 7:
+                            comm.send_message("show_skills");
+                            break;
+                        case 8:
+                            comm.send_message("show_wield");
+                            break;
+                        case 9:
+                            comm.send_message("rest_100");
+                            break;
+                    }
+                    
                 }
+                
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                          && selected >= NUM_RESERVED_BUTTONS
                          && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
@@ -461,7 +517,24 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         // TODO: select tile via something like c++ `tileidx_command`
         draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
         draw_action(gui, gui.CMD_GAME_MENU, null, inc, adjusted_scale,
-                    selected == 1);
+            selected == 1);
+        draw_action(gui, gui.STARTUP_ARENA, null, inc*2, adjusted_scale,
+            selected == 2);
+        draw_action(main, main.BOOK_OFFSET_25, null, inc*3, adjusted_scale,
+            selected == 3);
+        draw_action(main, main.GOLD25, null, inc*4, adjusted_scale,
+            selected == 4);
+        draw_action(main, main.UNRAND_FENCERS, null, inc*5, adjusted_scale,
+            selected == 5);
+        draw_action(main, main.UNSEEN_MONSTER, null, inc*6, adjusted_scale,
+            selected == 6);
+        draw_action(gui, gui.AIRSTRIKE, null, inc*7, adjusted_scale,
+            selected == 7);
+        draw_action(gui, gui.LONG_BLADES_ON, null, inc*8, adjusted_scale,
+            selected == 8);
+        draw_action(gui, gui.SLEEP, null, inc*9, adjusted_scale,
+            selected == 9);
+        
 
         draw_glyphs = options.get("action_panel_glyphs");
 
@@ -472,6 +545,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             renderer.glyph_mode_font = options.get("glyph_mode_font");
             renderer.glyph_mode_update_font_metrics();
         }
+
+        filtered_inv.push()
 
         // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
