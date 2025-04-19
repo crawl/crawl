@@ -1188,7 +1188,7 @@ static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
 
 static void _clear_env_map()
 {
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     env.map_forgotten.reset();
 }
 

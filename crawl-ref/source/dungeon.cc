@@ -1558,7 +1558,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.grid.init(DNGN_ROCK_WALL);
     env.pgrid.init(terrain_property_t{});
     env.grid_colours.init(BLACK);
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     env.map_forgotten.reset();
     env.map_seen.reset();
 

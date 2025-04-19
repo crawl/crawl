@@ -303,20 +303,22 @@ static cglyph_t _get_item_override(const item_def &item)
     return g;
 }
 
-show_class get_cell_show_class(const map_cell& cell,
-                               bool only_stationary_monsters)
+show_class get_cell_show_class(coord_def gc, bool only_stationary_monsters)
 {
+    const map_cell& cell = env.map_knowledge(gc);
+
     if (cell.invisible_monster())
         return SH_INVIS_EXPOSED;
 
-    if (cell.monster() != MONS_NO_MONSTER
+    const monster_type mons = env.map_knowledge.monster(cell);
+    if (mons != MONS_NO_MONSTER
         && (!only_stationary_monsters
-            || mons_class_is_stationary(cell.monster())))
+            || mons_class_is_stationary(mons)))
     {
         return SH_MONSTER;
     }
 
-    if (cell.cloud() != CLOUD_NONE)
+    if (env.map_knowledge.cloud(cell) != CLOUD_NONE)
         return SH_CLOUD;
 
     const dungeon_feature_type feat = cell.feat();
@@ -333,7 +335,7 @@ show_class get_cell_show_class(const map_cell& cell,
         return SH_FEATURE;
     }
 
-    if (cell.item())
+    if (env.map_knowledge.item(cell))
         return SH_ITEM;
 
     if (cell.feat())
@@ -372,7 +374,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     show_type show;
 
     g.ch = 0;
-    const cloud_type cell_cloud = cell.cloud();
+    const cloud_type cell_cloud = env.map_knowledge.cloud(cell);
 
     switch (cls)
     {
@@ -381,15 +383,15 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         show.cls = SH_INVIS_EXPOSED;
         if (cell_cloud != CLOUD_NONE)
-            g.col = cell.cloud_colour();
+            g.col = env.map_knowledge.cloud_colour(cell);
         else
             g.col = ripple_table[cell.feat_colour() & 0xf];
         break;
 
     case SH_MONSTER:
     {
-        show = cell.monster();
-        const monster_info* mi = cell.monsterinfo();
+        show = env.map_knowledge.monster(cell);
+        const monster_info* mi = env.map_knowledge.monsterinfo(cell);
         ASSERT(mi);
 
         if (cell.detected_monster())
@@ -480,15 +482,15 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         ASSERT(cell_cloud);
         show.cls = SH_CLOUD;
         if (coloured)
-            g.col = cell.cloud_colour();
+            g.col = env.map_knowledge.cloud_colour(cell);
         else
             g.col = DARKGRAY;
 
-        if (cloud_type_tile_info(cell.cloudinfo()->type).variation
+        if (cloud_type_tile_info(env.map_knowledge.cloudinfo(cell)->type).variation
             == CTVARY_DUR)
         {
             // duration is already clamped to 0-3
-            int dur = cell.cloudinfo()->duration;
+            int dur = env.map_knowledge.cloudinfo(cell)->duration;
             switch (dur)
             {
             case 0:
@@ -515,7 +517,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         g.col = _cell_feat_show_colour(cell, loc, coloured);
 
-        if (cell.item())
+        if (env.map_knowledge.item(cell))
         {
             if (Options.feature_item_highlight
                 && (feat_is_critical(cell.feat())
@@ -530,7 +532,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
     case SH_ITEM:
     {
-        const item_def* eitem = cell.item();
+        const item_def* eitem = env.map_knowledge.item(cell);
         ASSERT(eitem);
         show = *eitem;
 
@@ -584,9 +586,9 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
 {
     // note: this does NOT determine output of the player glyph;
     // that's handled by itself in _draw_player() in view.cc
-    const map_cell& cell = env.map_knowledge(loc);
     const show_class cell_show_class =
-        get_cell_show_class(cell, only_stationary_monsters);
+        get_cell_show_class(loc, only_stationary_monsters);
+    const map_cell& cell = env.map_knowledge(loc);
     return _get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
 }
 

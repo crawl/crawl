@@ -18,6 +18,341 @@
 #include "travel.h"
 #include "view.h"
 
+MapKnowledge::MapKnowledge(const MapKnowledge& other)
+{
+    copy_from(other);
+}
+
+MapKnowledge& MapKnowledge::operator=(
+                                               const MapKnowledge& other)
+{
+    if (this == &other)
+        return *this;
+    reset_for_overwrite();
+    copy_from(other);
+    return *this;
+}
+
+const item_def* MapKnowledge::item(const map_cell& cell) const
+{
+    uint16_t index = cell._item_index;
+    if (index < m_items.size())
+        return &m_items[index];
+    return nullptr;
+}
+
+item_def* MapKnowledge::item(const map_cell& cell)
+{
+    uint16_t index = cell._item_index;
+    if (index < m_items.size())
+        return &m_items[index];
+    return nullptr;
+}
+
+void MapKnowledge::set_item(map_cell& cell, const item_def& ii,
+                                  bool more_items)
+{
+    clear_item(cell);
+
+    if (free_item_index < m_items.size())
+    {
+        uint16_t result_item = free_item_index;
+        free_item_index = m_items[result_item].next_free;
+        m_items[result_item] = ii;
+        cell._item_index = result_item;
+    }
+    else
+    {
+        cell._item_index = (uint16_t)m_items.size();
+        m_items.push_back(ii);
+    }
+
+    if (more_items)
+        cell.flags |= MAP_MORE_ITEMS;
+}
+
+void MapKnowledge::set_detected_item(coord_def pos)
+{
+    map_cell& cell = m_cells(pos);
+    clear_item(cell);
+    cell.flags |= MAP_DETECTED_ITEM;
+
+    uint16_t result_item;
+    if (free_item_index < m_items.size())
+    {
+        result_item = free_item_index;
+        free_item_index = m_items[result_item].next_free;
+    }
+    else
+    {
+        result_item = (uint16_t)m_items.size();
+        m_items.emplace_back();
+    }
+    cell._item_index = result_item;
+
+    item_def& item = m_items[result_item];
+    item.base_type = OBJ_DETECTED;
+    item.rnd = 1;
+    item.pos = pos;
+}
+
+void MapKnowledge::clear_item(map_cell& cell)
+{
+    uint16_t index = cell._item_index;
+    if (index < m_items.size())
+    {
+        m_items[index].next_free = free_item_index;
+        free_item_index = index;
+
+        cell._item_index = UINT16_MAX;
+        cell.flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS);
+    }
+}
+
+monster_type MapKnowledge::monster(const map_cell& cell) const
+{
+    uint16_t index = cell._mons_index;
+    if (index < m_monsters.size())
+        return m_monsters[index].type;
+    return MONS_NO_MONSTER;
+}
+
+const monster_info* MapKnowledge::monsterinfo(const map_cell& cell) const
+{
+    uint16_t index = cell._mons_index;
+    if (index < m_monsters.size())
+        return &m_monsters[index];
+    return nullptr;
+}
+
+monster_info* MapKnowledge::monsterinfo(const map_cell& cell)
+{
+    uint16_t index = cell._mons_index;
+    if (index < m_monsters.size())
+        return &m_monsters[index];
+    return nullptr;
+}
+
+void MapKnowledge::set_monster(map_cell& cell, const monster_info& mi)
+{
+    clear_monster(cell);
+    if (free_mons_index < m_monsters.size())
+    {
+        uint16_t result_mons = free_mons_index;
+        free_mons_index = m_monsters[result_mons].next_free;
+        m_monsters[result_mons] = mi;
+        cell._mons_index = result_mons;
+        return;
+    }
+    cell._mons_index = m_monsters.size();
+    m_monsters.push_back(mi);
+}
+
+void MapKnowledge::set_detected_monster(coord_def pos, monster_type mons)
+{
+    map_cell& cell = m_cells(pos);
+    clear_monster(cell);
+
+    uint16_t result_mons;
+    if (free_mons_index < m_monsters.size())
+    {
+        result_mons = free_mons_index;
+        free_mons_index = m_monsters[result_mons].next_free;
+        m_monsters[result_mons].~monster_info();
+        new (&m_monsters[result_mons]) monster_info(MONS_SENSED);
+    }
+    else
+    {
+        result_mons = m_monsters.size();
+        m_monsters.emplace_back(MONS_SENSED);
+    }
+    cell._mons_index = result_mons;
+
+    monster_info& new_mons = m_monsters[result_mons];
+    new_mons.base_type = mons;
+    new_mons.pos = pos;
+    cell.flags |= MAP_DETECTED_MONSTER;
+}
+
+void MapKnowledge::set_invisible_monster(map_cell& cell)
+{
+    clear_monster(cell);
+    cell.flags |= MAP_INVISIBLE_MONSTER;
+}
+
+void MapKnowledge::clear_monster(map_cell& cell)
+{
+    uint16_t index = cell._mons_index;
+    if (index < m_monsters.size())
+    {
+        m_monsters[index].next_free = free_mons_index;
+        free_mons_index = index;
+
+        cell._mons_index = UINT16_MAX;
+        cell.flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
+    }
+}
+
+cloud_type MapKnowledge::cloud(const map_cell& cell) const
+{
+    uint16_t index = cell._cloud_index;
+    if (index < m_clouds.size())
+        return m_clouds[index].type;
+    return CLOUD_NONE;
+}
+
+// TODO: should this be colour_t?
+unsigned MapKnowledge::cloud_colour(const map_cell& cell) const
+{
+    uint16_t index = cell._cloud_index;
+    if (index < m_clouds.size())
+        return m_clouds[index].colour;
+    return static_cast<colour_t>(0);
+}
+
+const cloud_info* MapKnowledge::cloudinfo(const map_cell& cell) const
+{
+    uint16_t index = cell._cloud_index;
+    if (index < m_clouds.size())
+        return &m_clouds[index];
+    return nullptr;
+}
+
+cloud_info* MapKnowledge::cloudinfo(const map_cell& cell)
+{
+    uint16_t index = cell._cloud_index;
+    if (index < m_clouds.size())
+        return &m_clouds[index];
+    return nullptr;
+}
+
+void MapKnowledge::set_cloud(map_cell& cell, const cloud_info& ci)
+{
+    clear_cloud(cell);
+    if (free_cloud_index < m_clouds.size())
+    {
+        uint16_t result_cloud = free_cloud_index;
+        free_cloud_index = m_clouds[result_cloud].next_free;
+        m_clouds[result_cloud] = ci;
+        cell._cloud_index = result_cloud;
+        return;
+    }
+    cell._cloud_index = m_clouds.size();
+    m_clouds.push_back(ci);
+}
+
+void MapKnowledge::clear_cloud(map_cell& cell)
+{
+    uint16_t index = cell._cloud_index;
+    if (index < m_clouds.size())
+    {
+        m_clouds[index].next_free = free_cloud_index;
+        free_cloud_index = index;
+
+        cell._cloud_index = UINT16_MAX;
+    }
+}
+
+void MapKnowledge::clear(map_cell& cell)
+{
+    clear_cloud(cell);
+    clear_item(cell);
+    clear_monster(cell);
+    cell = map_cell();
+}
+
+// Clear prior to show update. Need to retain at least "seen" flag.
+void MapKnowledge::clear_data(map_cell& cell)
+{
+    constexpr uint32_t kept_flags = MAP_SEEN_FLAG | MAP_CHANGED_FLAG
+                                    | MAP_INVISIBLE_UPDATE;
+    const uint32_t f = cell.flags & kept_flags;
+    clear(cell);
+    cell.flags = f;
+}
+
+void MapKnowledge::copy_at(coord_def pos,
+                                 const MapKnowledge& other,
+                                 coord_def other_pos)
+{
+    map_cell& cell = m_cells(pos);
+    const map_cell& other_cell = other(other_pos);
+
+    clear_item(cell);
+    clear_monster(cell);
+
+    const cloud_info* cloud = other.cloudinfo(other_cell);
+    if (cloud)
+        set_cloud(cell, *cloud);
+    else
+        clear_cloud(cell);
+
+    const item_def* item = other.item(other_cell);
+    if (item)
+        set_item(cell, *item, false);
+    else
+        clear_item(cell);
+
+    const monster_info* mons = other.monsterinfo(other_cell);
+    if (mons)
+        set_monster(cell, *mons);
+    else
+        clear_monster(cell);
+
+    cell.flags = other_cell.flags;
+    cell._feat = other_cell._feat;
+    cell._feat_colour = other_cell._feat_colour;
+    cell._trap = other_cell._trap;
+}
+
+void MapKnowledge::reset()
+{
+    reset_for_overwrite();
+    m_cells.init(map_cell());
+}
+
+void MapKnowledge::reset_for_overwrite()
+{
+    m_clouds.clear();
+    m_items.clear();
+    m_monsters.clear();
+    free_cloud_index = UINT16_MAX;
+    free_item_index = UINT16_MAX;
+    free_mons_index = UINT16_MAX;
+}
+
+void MapKnowledge::copy_from(const MapKnowledge& other)
+{
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            coord_def gc{ x, y };
+            map_cell& cell = m_cells(gc);
+            const map_cell& other_cell = other.m_cells(gc);
+            cell = other_cell;
+            const cloud_info* cloud = other.cloudinfo(other_cell);
+            if (cloud)
+            {
+                cell._cloud_index = m_clouds.size();
+                m_clouds.push_back(*cloud);
+            }
+            const item_def* item = other.item(other_cell);
+            if (item)
+            {
+                cell._item_index = m_items.size();
+                m_items.push_back(*item);
+            }
+            const monster_info* mons = other.monsterinfo(other_cell);
+            if (mons)
+            {
+                cell._mons_index = m_monsters.size();
+                m_monsters.push_back(*mons);
+            }
+        }
+    }
+}
+
 void set_terrain_mapped(const coord_def gc)
 {
     map_cell* cell = &env.map_knowledge(gc);
@@ -59,13 +394,16 @@ void clear_map(bool clear_items, bool clear_mons)
         if (!cell.known() || cell.visible())
             continue;
 
-        cell.clear_cloud();
+        env.map_knowledge.clear_cloud(cell);
 
         if (clear_items)
-            cell.clear_item();
+            env.map_knowledge.clear_item(cell);
 
-        if (clear_mons && !mons_class_is_stationary(cell.monster()))
-            cell.clear_monster();
+        if (clear_mons
+            && !mons_class_is_stationary(env.map_knowledge.monster(cell)))
+        {
+            env.map_knowledge.clear_monster(cell);
+        }
 
 #ifdef USE_TILE
         tile_reset_fg(p);
@@ -112,7 +450,7 @@ void reautomap_level()
 
     for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-            if (env.map_knowledge[x][y].flags & MAP_SEEN_FLAG)
+            if (env.map_knowledge(coord_def(x, y)).flags & MAP_SEEN_FLAG)
                 _automap_from(x, y, passive);
 }
 
@@ -165,15 +503,6 @@ void clear_terrain_visibility()
     env.visible.clear();
 }
 
-void map_cell::set_detected_item()
-{
-    clear_item();
-    flags |= MAP_DETECTED_ITEM;
-    _item = make_unique<item_def>();
-    _item->base_type = OBJ_DETECTED;
-    _item->rnd       = 1;
-}
-
 static bool _floor_mf(map_feature mf)
 {
     return mf == MF_FLOOR || mf == MF_WATER || mf == MF_DEEP_WATER
@@ -217,10 +546,11 @@ map_feature get_cell_map_feature(const coord_def& gc)
     if (is_explore_horizon(gc))
         return MF_EXPLORE_HORIZON;
 
-    return get_cell_map_feature(env.map_knowledge(gc));
+    const map_cell& cell = env.map_knowledge(gc);
+    return env.map_knowledge.get_map_feature(cell);
 }
 
-map_feature get_cell_map_feature(const map_cell& cell)
+map_feature MapKnowledge::get_map_feature(const map_cell& cell) const
 {
     // known but not seen monster
     if (cell.detected_monster())
@@ -248,7 +578,7 @@ map_feature get_cell_map_feature(const map_cell& cell)
     // first clouds...
     // XXX: should items have higher priority? (pro: easier to spot un-grabbed
     // items, con: harder to spot what's blocking auto-travel)
-    if (cell.cloud())
+    if (cloud(cell))
     {
         show_type show;
         show.cls = SH_CLOUD;
@@ -258,16 +588,16 @@ map_feature get_cell_map_feature(const map_cell& cell)
     }
 
     // then items...
-    if (cell.item())
+    if (item(cell))
     {
-        const map_feature item_feature = get_feature_def(*cell.item()).minimap;
+        const map_feature item_feature = get_feature_def(*item(cell)).minimap;
         if (item_feature != MF_SKIP) // can this happen?
             return item_feature;
     }
 
     // then firewood.
-    if (cell.monster() != MONS_NO_MONSTER
-        && mons_class_is_firewood(cell.monster()))
+    if (monster(cell) != MONS_NO_MONSTER
+        && mons_class_is_firewood(monster(cell)))
     {
         return MF_MONS_NO_EXP;
     }
@@ -285,13 +615,14 @@ void update_cloud_knowledge()
     {
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         {
-            if (env.map_knowledge[x][y].update_cloud_state())
+            coord_def gc(x, y);
+            if (env.map_knowledge.update_cloud_state(gc))
             {
 #ifdef USE_TILE
-                tile_draw_map_cell({x, y}, true);
+                tile_draw_map_cell(gc, true);
 #endif
 #ifdef USE_TILE_WEB
-                tiles.mark_for_redraw({x, y});
+                tiles.mark_for_redraw(gc);
 #endif
             }
         }
@@ -300,23 +631,27 @@ void update_cloud_knowledge()
 
 /// If there's a cloud in this cell that we know should be gone, remove it.
 /// Returns true if a cloud was removed.
-bool map_cell::update_cloud_state()
+bool MapKnowledge::update_cloud_state(map_cell& cell)
 {
-    if (visible())
+    if (cell.visible())
         return false; // we're already up-to-date
 
+    if (cell._cloud_index >= m_clouds.size())
+        return false;
+    cloud_info& cloud = m_clouds[cell._cloud_index];
+
     // player non-opaque clouds vanish instantly out of los
-    if (_cloud && _cloud->killer == KILL_YOU_MISSILE
-        && !is_opaque_cloud(_cloud->type))
+    if (cloud.killer == KILL_YOU_MISSILE
+        && !is_opaque_cloud(cloud.type))
     {
-        clear_cloud();
+        clear_cloud(cell);
         return true;
     }
 
     // still winds KOs all clouds, even those out of LOS
-    if (_cloud && env.level_state & LSTATE_STILL_WINDS)
+    if (env.level_state & LSTATE_STILL_WINDS)
     {
-        clear_cloud();
+        clear_cloud(cell);
         return true;
     }
 
@@ -339,7 +674,7 @@ std::pair<coord_def, coord_def> known_map_bounds() {
     for (int j = 0; j < GYM; j++)
         for (int i = 0; i < GXM; i++)
         {
-            if (env.map_knowledge[i][j].known())
+            if (env.map_knowledge(coord_def(i, j)).known())
             {
                 if (!found_y)
                 {

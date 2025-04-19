@@ -1018,7 +1018,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     const map_cell &cell = env.map_knowledge(gc);
 
     // Override terrain for magic mapping.
-    if (!cell.seen() && env.map_knowledge(gc).mapped())
+    if (!cell.seen() && cell.mapped())
         *bg = tileidx_feature_base(cell.feat());
     else
         *bg = mem_bg;
@@ -1029,13 +1029,14 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     *bg |= rays;
 
     // Override foreground for monsters/items
-    if (env.map_knowledge(gc).detected_monster())
+    if (cell.detected_monster())
     {
-        ASSERT(cell.monster() == MONS_SENSED);
-        *fg = tileidx_monster_base(cell.monsterinfo()->base_type, 0);
+        ASSERT(env.map_knowledge.monster(cell) == MONS_SENSED);
+        monster_type type = env.map_knowledge.monsterinfo(cell)->base_type;
+        *fg = tileidx_monster_base(type, 0);
     }
-    else if (env.map_knowledge(gc).detected_item())
-        *fg = tileidx_item(*cell.item());
+    else if (cell.detected_item())
+        *fg = tileidx_item(*env.map_knowledge.item(cell));
     else
         *fg = mem_fg;
 
@@ -2065,7 +2066,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         }
 
         case MONS_BUSH:
-            if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
+            if (env.map_knowledge.cloud(mon.pos) == CLOUD_FIRE)
                 return TILEP_MONS_BURNING_BUSH;
             return base;
 
