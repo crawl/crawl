@@ -1137,6 +1137,7 @@ You have an explosive catalyst readied. The catalyst will detonate, dealing fire
 damage to the primary target of each of your melee attacks and any enemy
 adjacent to them, with each hit. Attacking will extend the duration of the
 catalyst even if you miss.
+%%%%
 Shroud status
 
 You are covered by a thin shroud of slime that may deflect a melee attack. When
