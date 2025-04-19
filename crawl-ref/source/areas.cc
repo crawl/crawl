@@ -636,8 +636,11 @@ int monster::halo_radius() const
         size = max(size, 3);
 
     item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
-    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+    if (mons_wields_two_weapons(*this) && alt_wpn
+        && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+    {
         size = max(size, 3);
+    }
 
     if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
@@ -785,8 +788,11 @@ int monster::umbra_radius() const
         size = max(size, 3);
 
     item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
-    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+    if (mons_wields_two_weapons(*this) && alt_wpn
+        && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+    {
         size = max(size, 3);
+    }
 
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
