@@ -2521,7 +2521,6 @@ mad acolyte of Lugonu
 microbat
 
 <bat>
-
 %%%%
 phase bat
 
