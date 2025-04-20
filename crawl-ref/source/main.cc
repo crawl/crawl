@@ -216,6 +216,8 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
 
+void check_banished();
+
 static void _startup_asserts()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -1163,15 +1165,12 @@ static void _input()
 #endif
 
         // Some delays reset you.time_taken.
-        if (!time_is_frozen && (you.time_taken || you.turn_is_over)
-            && you.berserk())
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
-            _do_berserk_no_combat_penalty();
+            if (you.berserk())
+                _do_berserk_no_combat_penalty();
+            world_reacts();
         }
-
-        // Call this even if we took no time - we might have been banished
-        // by an unwield effect.
-        world_reacts();
 
         if (!you_are_delayed())
             update_can_currently_train();
@@ -2497,7 +2496,7 @@ static void _prep_input()
     }
 }
 
-static void _check_banished()
+void check_banished()
 {
     if (you.banished)
     {
@@ -2608,7 +2607,7 @@ void world_reacts()
     }
 #endif
 
-    _check_banished();
+    check_banished();
     _check_sanctuary();
     _check_trapped();
     check_spectral_weapon(you);
@@ -2626,7 +2625,7 @@ void world_reacts()
     // (mostly by exploding)
     fire_final_effects();
 
-    _check_banished();
+    check_banished();
 
     ASSERT(you.time_taken >= 0);
     you.elapsed_time += you.time_taken;

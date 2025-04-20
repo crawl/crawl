@@ -72,6 +72,8 @@
 #include "xom.h"
 #include "zot.h" // ZOT_CLOCK_PER_FLOOR
 
+extern void check_banished();
+
 int interrupt_block::interrupts_blocked = 0;
 
 static const char *_activity_interrupt_name(activity_interrupt ai);
@@ -743,6 +745,10 @@ void EquipOffDelay::finish()
 {
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
     unequip_item(equip);
+
+    // Banishment via coglin distortion unwield might not happen until the turn
+    // after unwielding, otherwise.
+    check_banished();
 }
 
 void MemoriseDelay::finish()
