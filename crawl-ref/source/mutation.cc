@@ -1083,9 +1083,9 @@ private:
         string extra = "";
         // TODO: also handle suppressed fakemuts
         if (_has_suppressed_muts())
-            extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
+            extra += "<darkgrey>()</darkgrey>: Suppressed.\n";
         if (_has_transient_muts())
-            extra += "<magenta>[]</magenta>   : Transient mutations.\n";
+            extra += "<magenta>[]</magenta>: Transient mutations.\n";
         if (has_future_muts)
             extra += "<darkgrey>[]</darkgrey>: Gained at a future XL.\n";
         set_more(extra);
@@ -2604,7 +2604,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         result = mdef.have[level - 1];
 
     if (!ignore_player && !active)
-        result = "((" + result + "))";
+        result = "(" + result + ")";
 
     if (temporary)
         result = "[" + result + "]";
