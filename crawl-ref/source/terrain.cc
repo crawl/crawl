@@ -37,6 +37,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
@@ -2664,6 +2665,10 @@ static void _descent_reveal_around(coord_def p)
     {
         if (cell_see_cell_nocache(p, *ri))
         {
+            monster* mons = monster_at(*ri);
+            if (mons)
+                view_monster_equipment(mons);
+
             force_show_update_at(*ri);
             update_item_at(*ri, true);
             set_terrain_visible(*ri);
