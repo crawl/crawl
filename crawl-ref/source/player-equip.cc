@@ -511,6 +511,11 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
 
         if (is_hard_helmet(item))
         {
+            // Allow serpent form to wear helmets even if the underlying player
+            // could not (since the current implement of hat/helmet limitations
+            // is buggy otherwise).
+            if (you.form == transformation::serpent)
+                return true;
             if (player_size >= SIZE_LARGE)
                 NO_EQUIP("This helmet is too small for your head.")
             else if (player_size <= SIZE_LITTLE)
