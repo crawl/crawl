@@ -276,7 +276,8 @@ ENDMAP
 NAME:  nicolae_hells_hurtin_island
 TAGS:  transparent no_pool_fixup
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
-KMONS: 1> = tormentor / hellion / nothing
+KMONS: 1 = tormentor / hellion / nothing
+KMONS: > = obsidian statue
 KFEAT: ! = iron_grate
 KFEAT: > = >
 KMASK: 1> = opaque
