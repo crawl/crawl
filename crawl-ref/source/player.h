@@ -873,6 +873,9 @@ public:
     void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
                                              int *ac, int *ev, int *sh,
                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    void preview_stats_in_specific_form(int scale, const item_def& talisman,
+                                        int *ac, int *ev, int *sh,
+                                        FixedVector<int, MAX_KNOWN_SPELLS> *fail);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

@@ -3629,6 +3629,17 @@ bool is_equippable_item(const item_def& item)
     }
 }
 
+bool is_usable_talisman(const item_def& item)
+{
+    if (item.base_type != OBJ_TALISMANS)
+        return false;
+
+    if (item.sub_type == TALISMAN_PROTEAN)
+        return false;
+
+    return cannot_evoke_item_reason(&item, false, false).empty();
+}
+
 bool ring_plusses_matter(int ring_subtype)
 {
     switch (ring_subtype)

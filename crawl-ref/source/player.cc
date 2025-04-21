@@ -6505,6 +6505,56 @@ void player::preview_stats_without_specific_item(int scale,
         (*fail)[i] = raw_spell_fail(spells[i]);
 }
 
+/**
+ * What would our natural AC/EV/SH and fail rate for all known spells be if we
+ * were in a specific form right now?
+ *
+ * @param talisman  The talisman used to enter the form.
+ * @param ac        The player's AC if this item were equipped.
+ * @param ev        The player's EV if this item were equipped.
+ * @param sh        The player's SH if this item were equipped.
+ * @param fail      The player's raw spell fail for all spells if this item
+ *                  were equipped.
+ */
+void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
+    int *ac, int *ev, int *sh,
+    FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+{
+    ASSERT(talisman.base_type == OBJ_TALISMANS);
+
+    // Save the current state of the player, so that we can rewind once
+    // we're done.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<transformation> unwind_default_form(you.default_form);
+    unwind_var<transformation> unwind_form(you.form);
+
+    // Quickly simulate being in the new form
+    transformation which_trans = form_for_talisman(talisman);
+    you.default_form = which_trans;
+    you.form = which_trans;
+    you.active_talisman = talisman;
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+
+    // Pretend incompatible items fell away.
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list();
+    for (item_def* item : forced_remove)
+        you.equipment.remove(*item);
+
+    you.equipment.update();
+
+    // Now, calculate AC/EV/SH without temporary boosts.
+    *ac = base_ac(scale);
+    *ev = evasion_scaled(scale, true);
+    *sh = player_displayed_shield_class(scale, true);
+
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        (*fail)[i] = raw_spell_fail(spells[i]);
+
+    // Player state should revert to its previous one automatically.
+}
+
 bool player::heal(int amount)
 {
     int oldhp = hp;

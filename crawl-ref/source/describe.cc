@@ -1873,6 +1873,8 @@ static string _equipment_property_change_description(const item_def &item,
 
     if (remove)
         you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+    else if (item.base_type == OBJ_TALISMANS)
+        you.preview_stats_in_specific_form(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
     else
         you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
 
@@ -1913,6 +1915,8 @@ static string _equipment_property_change_description(const item_def &item,
         description += "If you " + item_unequip_verb(item) + " this "
                         + _equip_type_name(item) + ":";
     }
+    else if (item.base_type == OBJ_TALISMANS)
+        description += "If you transformed using this talisman:";
     else if (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item))
         description += "If you were wearing this ring:";
     else if (item.base_type == OBJ_WEAPONS && you.has_mutation(MUT_WIELD_OFFHAND))
@@ -1973,6 +1977,8 @@ static string _spell_fail_change_description(const item_def &item,
 
     if (remove)
         you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+    else if (item.base_type == OBJ_TALISMANS)
+        you.preview_stats_in_specific_form(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
     else
         you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
 
@@ -4158,7 +4164,7 @@ command_type describe_item_popup(const item_def &item,
         else if (scroller->on_event(ev))
             return true;
         else if (key == '!'
-                 && is_equippable_item(item)
+                 && (is_equippable_item(item) || is_usable_talisman(item))
                  && item.is_identified())
         {
             string spell_success;
@@ -7562,6 +7568,9 @@ static string _describe_talisman(const item_def &item, bool verbose)
             _uselessness_desc(description, item);
         else if (item.sub_type != TALISMAN_PROTEAN)
         {
+            if (crawl_state.need_save && item.is_identified())
+                description << _equipment_property_change(item);
+
             description << "\n\nA period of sustained concentration is needed to "
                         "enter or leave forms. To leave this form, evoke the "
                         "talisman again.";
