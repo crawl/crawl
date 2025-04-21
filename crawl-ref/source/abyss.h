@@ -37,6 +37,7 @@ extern abyss_state abyssal_state;
 void abyss_morph();
 
 void banished(const string &who = "", const int power = 0);
+void check_banished();
 void push_features_to_abyss();
 
 void clear_abyssal_rune_knowledge();

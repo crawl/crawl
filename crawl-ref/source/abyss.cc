@@ -457,6 +457,23 @@ void banished(const string &who, const int power)
     }
 }
 
+void check_banished()
+{
+    if (you.banished)
+    {
+        you.banished = false;
+        ASSERT(brdepth[BRANCH_ABYSS] != -1);
+        if (!player_in_branch(BRANCH_ABYSS))
+            mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
+        else if (you.depth < brdepth[BRANCH_ABYSS])
+            mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
+        else
+            mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
+        // these are included in default force_more_message
+        banished(you.banished_by, you.banished_power);
+    }
+}
+
 void push_features_to_abyss()
 {
     abyssal_features.clear();

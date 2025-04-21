@@ -216,8 +216,6 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
 
-void check_banished();
-
 static void _startup_asserts()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -2493,23 +2491,6 @@ static void _prep_input()
             mprf(MSGCH_GOD, "You have a vision of multiple gates.");
 
         you.seen_portals = 0;
-    }
-}
-
-void check_banished()
-{
-    if (you.banished)
-    {
-        you.banished = false;
-        ASSERT(brdepth[BRANCH_ABYSS] != -1);
-        if (!player_in_branch(BRANCH_ABYSS))
-            mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
-        else if (you.depth < brdepth[BRANCH_ABYSS])
-            mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
-        else
-            mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
-        // these are included in default force_more_message
-        banished(you.banished_by, you.banished_power);
     }
 }
 

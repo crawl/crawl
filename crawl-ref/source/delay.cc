@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "abyss.h"
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
@@ -71,8 +72,6 @@
 #include "travel.h"
 #include "xom.h"
 #include "zot.h" // ZOT_CLOCK_PER_FLOOR
-
-extern void check_banished();
 
 int interrupt_block::interrupts_blocked = 0;
 
