@@ -524,11 +524,11 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
                 NO_EQUIP("You can't wear that with your reptilian head.")
             else if (you.species == SP_OCTOPODE)
                 NO_EQUIP("Your can't wear that!")
-            else if (you.has_mutation(MUT_HORNS))
+            else if (you.has_mutation(MUT_HORNS, include_form))
                 NO_EQUIP("You can't fit that over your horns.")
-            else if (you.has_mutation(MUT_ANTENNAE))
+            else if (you.has_mutation(MUT_ANTENNAE, include_form))
                 NO_EQUIP("You can't fit that over your antennae.")
-            else if (you.has_mutation(MUT_BEAK))
+            else if (you.has_mutation(MUT_BEAK, include_form))
                 NO_EQUIP("You can't fit that over your beak.")
         }
     }
