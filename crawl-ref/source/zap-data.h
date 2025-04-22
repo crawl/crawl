@@ -2766,6 +2766,23 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_GHOSTLY_SACRIFICE,
+    "ghostly fireball",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<5, 6, 1, 13>,
+    new tohit_calculator<40>,
+    DARKGREY,
+    false,
+    BEAM_NEG,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    TILE_BOLT_GHOSTLY_FIREBALL,
+},
+
 // Name and flavor filled in via cast_golden_breath
 {
     ZAP_GOLDEN_BREATH,
