@@ -1305,9 +1305,9 @@ static void _print_status_lights(int y)
         if (end_x <= crawl_view.hudsz.x)
         {
             textcolour(lights[i_light].colour);
-            CPRINTF("%s", lights[i_light].text.c_str());
+            NOWRAP_EOL_CPRINTF("%s", lights[i_light].text.c_str());
             if (end_x < crawl_view.hudsz.x)
-                CPRINTF(" ");
+                NOWRAP_EOL_CPRINTF(" ");
             ++i_light;
         }
         else
