@@ -791,7 +791,7 @@ int TilesFramework::getch_ck()
 
 static const int map_margin      = 2;
 static const int map_stat_margin = 4;
-static const int min_stat_height = 12;
+static const int min_stat_height = 13;
 static const int min_inv_height  = 4;
 static const int max_inv_height  = 6;
 static const int max_mon_height  = 3;
