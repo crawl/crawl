@@ -3620,9 +3620,12 @@ void launch_clockwork_bee(const actor& agent)
         bee->number = 3 + div_rand_round(pow, 15);
         bee->add_ench(mon_enchant(ENCH_HAUNTING, 1, targ, INFINITE_DURATION));
 
-        mprf("With a metallic buzz, %s clockwork bee launches itself at %s.",
-             agent.pronoun(PRONOUN_POSSESSIVE).c_str(),
-             targ->name(DESC_THE).c_str());
+        if (you.can_see(*bee))
+        {
+            mprf("With a metallic buzz, %s clockwork bee launches itself at %s.",
+                 agent.name(DESC_ITS).c_str(),
+                 targ->name(DESC_THE).c_str());
+        }
 
         bee->speed_increment = 80;
         bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
@@ -3669,7 +3672,11 @@ spret cast_clockwork_bee(coord_def target, bool fail)
 
 void clockwork_bee_go_dormant(monster& bee)
 {
-    mpr("Your clockwork bee winds down and falls to the ground.");
+    if (you.can_see(bee))
+    {
+        mprf("%s clockwork bee winds down and falls to the ground.",
+             bee.summoner == MID_PLAYER ? "Your" : "The");
+    }
 
     int old_hd = bee.get_experience_level();
     int old_max_hp = bee.max_hit_points;
