@@ -2044,6 +2044,7 @@ static void _tag_construct_you_dungeon(writer &th)
     {
         marshallInt(th, brdepth[j]);
         marshall_level_id(th, brentry[j]);
+        marshallSet(th, branch_uniq_map_tags[j], marshallString);
         marshallInt(th, branch_bribe[j]);
     }
 
@@ -2231,6 +2232,8 @@ static void marshall_level_map_unique_ids(writer &th)
 {
     marshallSet(th, env.level_uniq_maps, marshallString);
     marshallSet(th, env.level_uniq_map_tags, marshallString);
+    // Note: env.current_branch_uniq_map_tags is not persisted, it only needs
+    // to be correct during level generation
 }
 
 static void unmarshall_level_map_unique_ids(reader &th)
@@ -5101,6 +5104,10 @@ static void _tag_read_you_dungeon(reader &th)
 #endif
         brentry[j]    = unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_BRANCH_UNIQ_MAPS)
+#endif
+            unmarshallSet(th, branch_uniq_map_tags[j], unmarshallString);
+#if TAG_MAJOR_VERSION == 34
         // Have to check this in case of old saves with 6-floor Depths.
         if (th.getMinorVersion() < TAG_MINOR_ZOT_ENTRY_FIXUP
             && j == BRANCH_ZOT
@@ -5120,6 +5127,7 @@ static void _tag_read_you_dungeon(reader &th)
         brdepth[j] = branches[j].numlevels;
         brentry[j] = level_id(branches[j].parent_branch, branches[j].mindepth);
         branch_bribe[j] = 0;
+        branch_uniq_map_tags[j].clear();
     }
 
 #if TAG_MAJOR_VERSION == 34

@@ -17,12 +17,13 @@ crawl_require('dlua/vault.lua')
 MAX_RANDOM_SHOPS = 5
 
 -- If a level gets shops, how many there are.
--- Just one most of the time; expected value is 1.42.
+-- Just one most of the time; expected average is 1.34.
 function num_shops()
-    if crawl.x_chance_in_y(5, 6) then
+    if you.absdepth() < 4 or crawl.x_chance_in_y(5, 6) then
         return 1
     else
-        return crawl.random_range(2, MAX_RANDOM_SHOPS)
+        local roll = crawl.random_real()
+        return 1 + math.max(1, math.floor(roll * roll * MAX_RANDOM_SHOPS))
     end
 end
 
@@ -59,24 +60,41 @@ end
 }}
 
 NAME: serial_shops
-TAGS: nolayout_encompass allow_dup extra luniq
+TAGS: nolayout_encompass allow_dup extra luniq_shops
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
-CHANCE: 15% (D)
-CHANCE: 20% (Depths)
-CHANCE: 30% (Orc)
-CHANCE: 40% (Elf, Vaults)
-CHANCE: 20% (Shoals, Snake)
+CHANCE: 20% (D)
+CHANCE: 25% (Depths)
+CHANCE: 35% (Orc)
+CHANCE: 45% (Elf, Vaults, !Vaults:$)
+CHANCE: 25% (Shoals, Snake)
 {{
 hook("post_place", function()
     local num = num_shops()
 
     if you.absdepth() > 10 and you.absdepth() <= 27
       and crawl.one_chance_in(30 - (you.absdepth() - 1))
+      and dgn.place_maps { tag = "bzr_entry", count = 1 }
     then
-        dgn.place_maps { tag = "bzr_entry", count = 1 }
         num = num - 1
     end
 
+    dgn.place_maps { tag = "shop", count = num }
+end)
+}}
+MAP
+ENDMAP
+
+# Almost-guaranteed shop floor on Depths:1-4
+NAME: serial_shops_depths
+TAGS: nolayout_encompass extra luniq_shops buniq_depths_shops
+DEPTH: Depths
+CHANCE:  25% (Depths:1)
+CHANCE:  33% (Depths:2)
+CHANCE:  50% (Depths:3)
+CHANCE: 100% (Depths:4)
+{{
+hook("post_place", function()
+    local num = math.max(3, num_shops())
     dgn.place_maps { tag = "shop", count = num }
 end)
 }}
@@ -2301,11 +2319,14 @@ ENDMAP
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
 #       a somewhat generic theme. Kept here for a certain ease of reference.
+#       Also use luniq_shops so they can't spawn on same floor as serial_shops,
+#       which would potentially confuse the theme (and create floors with way
+#       too many shops sometimes). Use buniq_ so only one at most per branch.
 #
 
 # 3 shops
 NAME:    minmay_shop_grove
-TAGS:    extra luniq_floating_shops transparent
+TAGS:    extra luniq_shops buniq_multi_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
@@ -2330,7 +2351,7 @@ ENDMAP
 
 # 1 (33%) or 4 (66%) shops
 NAME:    minmay_shop_grid_forest
-TAGS:    extra luniq_floating_shops transparent
+TAGS:    extra luniq_shops buniq_multi_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 KFEAT:   A = any shop
 SHUFFLE: ABC
@@ -2351,7 +2372,7 @@ ENDMAP
 
 # 1 (25%), 2 (25%), or 3 (50%) shops
 NAME:    minmay_shop_star
-TAGS:    extra luniq_floating_shops transparent
+TAGS:    extra luniq_shops buniq_multi_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -2381,7 +2402,7 @@ ENDMAP
 
 # 2 (50%) or 4 (50%) shops
 NAME:    minmay_shoptagon
-TAGS:    extra luniq_floating_shops transparent
+TAGS:    extra luniq_shops buniq_multi_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -2426,7 +2447,7 @@ ENDMAP
 
 # Chance of X shops: 1: 15%, 2: 30%, 3: 30%, 4: 15%, 5: 5%, 6 : 5%
 NAME:    nicolae_wooded_promenade
-TAGS:    extra luniq_floating_shops transparent no_pool_fixup
+TAGS:    extra luniq_shops buniq_multi_shops transparent no_pool_fixup
 DEPTH:   D:4-, Depths, Elf, Snake
 KFEAT:   s = any shop
 # s = shop, y and z = two different kinds of features
@@ -2452,7 +2473,7 @@ ENDMAP
 
 # 3 shops, on different "floors"
 NAME:  nicolae_shop_distant_corner_stores
-TAGS:  transparent luniq_floating_shops extra no_descent
+TAGS:  transparent luniq_shops buniq_multi_shops extra no_descent
 DEPTH: D:4-, !D:$, Depths:2-, !Depths:$
 KFEAT: Ss = any shop
 KMASK: {[()]}T`s = opaque
@@ -2473,7 +2494,7 @@ ENDMAP
 
 # 25% chance of 4 shops, 50% chance of 5, 25% of 6
 NAME:    nicolae_shop_national_dungeon_mall
-TAGS:    transparent no_pool_fixup luniq_floating_shops extra
+TAGS:    transparent no_pool_fixup luniq_shops buniq_multi_shops extra
 DEPTH:   D:5-, Depths
 WEIGHT:  2
 KFEAT:   S = any shop
@@ -2496,7 +2517,7 @@ ENDMAP
 # It's so old that the shop owners don't even know what they're selling anymore.
 # 2-4 shops
 NAME:   nicolae_shops_antique_district
-TAGS:   transparent extra
+TAGS:   transparent luniq_shops buniq_multi_shops extra
 DEPTH:  D:5-, Depths
 KMONS:  1 = withered plant
 KFEAT:  _ = altar_ecumenical
@@ -2522,7 +2543,7 @@ ENDMAP
 
 # Just 2 shops
 NAME:  nicolae_shops_duplex
-TAGS:  extra luniq_floating_shops transparent
+TAGS:  extra luniq_shops buniq_multi_shops transparent
 DEPTH: D:4-, Depths, Elf
 KFEAT: S = any shop
 MAP
@@ -2539,7 +2560,7 @@ ENDMAP
 
 # 2-4 shops
 NAME:    nicolae_shops_little_town_plaza
-TAGS:    extra luniq_floating_shops transparent
+TAGS:    extra luniq_shops buniq_multi_shops transparent
 DEPTH:   D:4-, Depths, Elf
 KFEAT:   p = general shop / antiques shop
 KFEAT:   q = book shop
