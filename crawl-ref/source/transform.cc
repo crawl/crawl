@@ -86,31 +86,47 @@ static constexpr int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
 
 string Form::melding_description(bool itemized) const
 {
+    vector<string> tags;
+
     if (!itemized)
     {
         // this is a bit rough and ready...
         if (blocked_slots == EQF_ALL)
             return "Your equipment is entirely melded.";
-        else if (blocked_slots == EQF_PHYSICAL)
-            return "Your armour is entirely melded.";
-        // XXX: huh? The next condition is effecetively
-        // blocked_slots != EQF_PHYSICAL && testbits(blocked_slots, EQF_PHYSICAL)
-        // Is that not more restrictive, not less?
-        else if (testbits(blocked_slots, EQF_PHYSICAL))
-            return "Your equipment is almost entirely melded.";
-        else if (testbits(blocked_slots,EQF_STATUE)
-                && (you_can_wear(SLOT_GLOVES, false) != false
-                    || you_can_wear(SLOT_BOOTS, false) != false
-                    || you_can_wear(SLOT_BARDING, false) != false
-                    || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
+        else if (blocked_slots == EQF_PHYSICAL
+                 && !(you.has_mutation(MUT_NO_ARMOUR) && you.has_mutation(MUT_NO_GRASPING)))
         {
-            return "Your equipment is partially melded.";
+            return "Your weapons and armour are melded.";
         }
-        // otherwise, rely on the form description to convey what is melded.
+        else
+        {
+            for (int i = SLOT_WEAPON; i < SLOT_GIZMO; ++i)
+            {
+                equipment_slot slot = static_cast<equipment_slot>(i);
+                if (testbits(blocked_slots, SLOTF(slot))
+                    && you.equipment.num_slots[slot] > 0)
+                {
+                    tags.emplace_back(lowercase_string(equip_slot_name(slot)));
+                }
+            }
+            if (!tags.empty())
+            {
+                if (testbits(blocked_slots, EQF_AUXES))
+                    return "Your auxiliary armour is melded.";
+                else if (tags.size() > 5)
+                    return "Your equipment is almost entirely melded";
+                else
+                {
+                    return make_stringf("Your %s %s melded.",
+                                        comma_separated_line(tags.begin(), tags.end()).c_str(),
+                                        tags.size() > 1 ? "are" : "is");
+                }
+            }
+        }
+        // Nothing melded (for this player, anyway).
         return "";
     }
 
-    vector<string> tags;
     if (blocked_slots == EQF_ALL)
         tags.emplace_back("All Equipment");
     else if (blocked_slots == EQF_PHYSICAL)
