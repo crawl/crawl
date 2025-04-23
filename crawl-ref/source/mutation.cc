@@ -910,7 +910,11 @@ string terse_mutation_list()
 string describe_mutations(bool drop_title)
 {
 #ifdef DEBUG
+#ifndef USE_TILE_LOCAL
+    validate_mutations(!crawl_state.smallterm);
+#else
     validate_mutations(true);
+#endif
 #endif
     string result;
 
