@@ -2261,10 +2261,7 @@ void clear_form_info_on_exit()
 void sphinx_notice_riddle_target(monster* mon)
 {
     if (!mon->is_peripheral() && !mons_aligned(&you, mon))
-    {
-        mprf("Noticed %s.", mon->name(DESC_THE).c_str());
         riddle_targs.push_back(mon);
-    }
 }
 
 static int _riddle_score(const monster& mon)
