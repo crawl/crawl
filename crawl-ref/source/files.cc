@@ -2419,6 +2419,19 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             magic_mapping(GDM, 100, true, false, false, true, false);
             _learn_transporters();
+            for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+            {
+                if (env.map_knowledge(*ri).seen())
+                {
+                    force_show_update_at(*ri);
+#ifdef USE_TILE
+                    tiles.update_minimap(*ri);
+                    tile_draw_map_cell(*ri, true);
+#elif USE_TILE_WEB
+                    tiles.mark_for_redraw(*ri);
+#endif
+                }
+            }
         }
     }
 
