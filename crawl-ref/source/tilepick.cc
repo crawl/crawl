@@ -2536,7 +2536,12 @@ tileidx_t tileidx_player_mons()
 
     // Handled here so that it can wield weapons at non-standard offsets
     if (you.form == transformation::fortress_crab)
-        return TILEP_TRAN_FORTRESS_CRAB;
+    {
+        if (you.species == SP_GARGOYLE)
+            return TILEP_TRAN_FORTRESS_CRAB_GARGOYLE;
+        else
+            return TILEP_TRAN_FORTRESS_CRAB;
+    }
 
     if (you.may_pruneify() && you.cannot_act())
         return TILEP_MONS_PRUNE;

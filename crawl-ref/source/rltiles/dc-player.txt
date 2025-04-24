@@ -496,6 +496,7 @@ maw_form0 MAW_FORM
 maw_form1
 quill_form_armataur QUILL_ARMATAUR
 quill_form_djinn QUILL_DJINN
+quill_form_gargoyle QUILL_GARGOYLE
 quill_form_humanoid QUILL_HUMANOID
 quill_form_naga QUILL_NAGA
 hive_form HIVE_FORM
