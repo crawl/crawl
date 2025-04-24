@@ -22,7 +22,8 @@ string describe_monsters_condensed(const vector<monster*>& monsters);
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
                    bool full_info = false, bool range_falloff = true,
-                   coord_def origin = coord_def(-1, -1));
+                   coord_def origin = coord_def(-1, -1),
+                   bool respect_no_automap = false);
 
 string screenshot();
 

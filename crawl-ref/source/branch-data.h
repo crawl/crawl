@@ -319,7 +319,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION > 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
@@ -401,7 +401,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",

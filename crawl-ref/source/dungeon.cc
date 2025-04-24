@@ -2521,7 +2521,7 @@ struct coord_feat
         mask = env.level_map_mask(c) & ~(MMT_MIMIC);
         // Only copy "static" properties.
         prop = env.pgrid(c) & (FPROP_NO_CLOUD_GEN | FPROP_NO_TELE_INTO
-                               | FPROP_NO_TIDE);
+                               | FPROP_NO_TIDE | FPROP_NO_AUTOMAP);
     }
 };
 

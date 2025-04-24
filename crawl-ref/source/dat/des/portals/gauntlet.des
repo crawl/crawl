@@ -880,7 +880,7 @@ ENDMAP
 
 # Adapted from the labyrinth_watery minotaur exit vault.
 NAME:    gauntlet_exit_watery
-TAGS:    gauntlet_exit no_pool_fixup
+TAGS:    gauntlet_exit no_pool_fixup no_automap
 MONS:    patrolling minotaur
 KFEAT:   < = exit_gauntlet
 SHUFFLE: def, ghi
@@ -904,7 +904,7 @@ ENDMAP
 
 # Adapted from labyrinth_green.
 NAME:   gauntlet_exit_green
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit no_automap
 MONS:   patrolling minotaur
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
@@ -926,7 +926,7 @@ ENDMAP
 
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit no_automap
 MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
@@ -950,7 +950,7 @@ ENDMAP
 
 # Adapted from labyrinth_mini_lab.
 NAME:    gauntlet_exit_mini_maze
-TAGS:    gauntlet_exit
+TAGS:    gauntlet_exit no_automap
 SHUFFLE: def, ghi, klm
 SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
@@ -981,7 +981,7 @@ ENDMAP
 # Chooses four corpses, each with their own set of loot, themed around some
 # particular archetypical species/background. Each set of loot has 2-4 items.
 NAME:    nicolae_gauntlet_exit_dead_adventurers
-TAGS:    gauntlet_exit
+TAGS:    gauntlet_exit no_automap
 KMONS:   1 = patrolling minotaur
 KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
@@ -1151,7 +1151,7 @@ vvvvvbG'Gbvvvvv
 ENDMAP
 
 NAME:   dreamdust_gauntlet_exit_labyrinth
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit no_automap
 KMONS:  < = patrolling minotaur
 KFEAT:  a = b
 KFEAT:  < = exit_gauntlet
