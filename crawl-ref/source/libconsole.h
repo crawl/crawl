@@ -31,7 +31,6 @@ void cprintf(const char *format, ...);
 int wherex();
 int wherey();
 void putwch(char32_t c);
-void set_getch_returns_resizes(bool rr);
 int getch_ck();
 bool kbhit();
 void delay(unsigned int ms);

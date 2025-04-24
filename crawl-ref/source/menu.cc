@@ -2030,7 +2030,6 @@ bool Menu::process_key(int keyin)
     {
     case CK_NO_KEY:
     case CK_REDRAW:
-    case CK_RESIZE:
         return true;
     case 0:
         return true;
