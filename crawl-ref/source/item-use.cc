@@ -1548,9 +1548,22 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                          vector<item_def*> to_remove)
 {
+    bool needs_delay = false;
+    if (to_equip && _is_slow_equip(*to_equip))
+        needs_delay = true;
+    for (const item_def* item : to_remove)
+        if (_is_slow_equip(*item))
+            needs_delay = true;
+
+    if (needs_delay && !i_feel_safe(true)
+        && !yesno("Spend multiple turns changing equipment anyway?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     const bool is_multi = (to_equip != nullptr && !to_remove.empty())
                             || to_remove.size() > 1;
-    bool all_fast = true;
 
     // Removals happen first
     if (!to_remove.empty())
@@ -1562,14 +1575,11 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
         {
             item_def* item = to_remove[i];
             if (_is_slow_equip(*item))
-            {
                 start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY, *item);
-                all_fast = false;
-            }
             // If this removal is queued after another removal, it needs to use
             // a delay. (This means it takes 10 aut instead of 5, but this should
             // matter so rarely that I'm not sure it's worth fixing?)
-            else if (!all_fast)
+            else if (needs_delay)
                 start_delay<EquipOffDelay>(1, *item);
             else
             {
@@ -1583,22 +1593,19 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
     if (to_equip)
     {
         if (_is_slow_equip(*to_equip))
-        {
             start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, *to_equip, equip_slot);
-            all_fast = false;
-        }
-        else if (!all_fast)
+        else if (needs_delay)
             start_delay<EquipOnDelay>(1, *to_equip, equip_slot);
         else
             equip_item(equip_slot, to_equip->link);
     }
 
     // If we did only a single fast equip action, it only takes half a turn.
-    if (all_fast && !is_multi)
+    if (!needs_delay && !is_multi)
         you.time_taken /= 2;
     // If we did slow actions, no time should pass immediately (since time
     // passing will be handled by the delays).
-    else if (!all_fast)
+    else if (needs_delay)
         you.time_taken = 0;
 
     you.turn_is_over = true;
