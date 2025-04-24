@@ -320,6 +320,7 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_VAMPIRES,     // Remove the player vampire species
     TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
     TAG_MINOR_SPECIFY_EXP,         // Specify monster EXP in yaml rather than calculating from HD
+    TAG_MINOR_GHOST_MOVE_SPEED_FIX,// Fixup move speed of old spriggan/naga/barachi ghosts
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -337,6 +338,7 @@ const set<int> bones_minor_tags =
          TAG_MINOR_POSITIONAL_MAGIC,
          TAG_MINOR_GHOST_MAGIC,
          TAG_MINOR_GHOST_UMBRAS,
+         TAG_MINOR_GHOST_MOVE_SPEED_FIX,
 #endif
         };
 
