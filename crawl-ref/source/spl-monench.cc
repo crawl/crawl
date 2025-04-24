@@ -445,6 +445,9 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
 // fault. The allies themselves may not be so generous!
 void do_vexed_attack(actor& attacker, bool always_hit_ally)
 {
+    const bool has_attacks = attacker.is_player() ? true
+                                : mons_has_attacks(*attacker.as_monster(), true);
+
     vector<coord_def> empty_space;
     vector<actor*> targs;
 
@@ -468,12 +471,16 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
     if (x_chance_in_y(empty_space.size(), total_weight))
     {
         coord_def pos = empty_space[random2(empty_space.size())];
+        string targ_desc = (attacker.airborne() && feat_has_solid_floor(env.grid(pos))
+                            && coinflip()) ? "the ceiling"
+                            : feature_description_at(pos, false, DESC_THE);
         if (you.can_see(attacker))
         {
-            mprf("%s attack%s %s!",
+            mprf("%s %s %s!",
                     attacker.name(DESC_THE).c_str(),
-                    attacker.is_monster() ? "s" : "",
-                    feature_description_at(pos, false, DESC_THE).c_str());
+                    has_attacks ? attacker.is_monster() ? "attacks" : "attack"
+                                : "glares at",
+                    targ_desc.c_str());
         }
 
         if (attacker.is_monster())
@@ -483,9 +490,22 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
     {
         ASSERT(!targs.empty());
         actor* victim = targs[random2(targs.size())];
-        melee_attack atk(&attacker, victim);
-        // The player is deliberately allowed to attack their allies.
-        atk.never_prompt = true;
-        atk.launch_attack_set();
+        if (has_attacks)
+        {
+            melee_attack atk(&attacker, victim);
+            // The player is deliberately allowed to attack their allies.
+            atk.never_prompt = true;
+            atk.launch_attack_set();
+        }
+        else
+        {
+            if (you.can_see(attacker))
+            {
+                mprf("%s glares at %s!",
+                        attacker.name(DESC_THE).c_str(),
+                        victim->name(DESC_THE).c_str());
+            }
+            attacker.as_monster()->lose_energy(EUT_ATTACK);
+        }
     }
 }
