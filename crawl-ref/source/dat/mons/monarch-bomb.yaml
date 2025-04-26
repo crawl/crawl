@@ -2,7 +2,7 @@ name: "monarch bomb"
 glyph: {char: "E", colour: lightred}
 flags: [flies]
 resists: {fire: 3}
-exp: 3
+exp: 800
 will: invuln
 holiness: [nonliving]
 attacks:
