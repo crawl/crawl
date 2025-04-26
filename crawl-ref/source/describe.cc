@@ -1502,7 +1502,7 @@ static void _append_skill_needed(string &description, const item_def &item,
         if (indent)
             description += "    ";
         description += _your_skill_desc(skill, can_set_target, target_skill,
-                                        move(skill_padding));
+                                        std::move(skill_padding));
     }
 
     if (below_target)
