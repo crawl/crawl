@@ -1068,6 +1068,26 @@ static bool _xp_available_for_skill_points(int points)
     return true;
 }
 
+static int _innate_casting_magic_max_spend_for_target()
+{
+    int max_training = INT_MAX;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (!you.training[sk] || !you.training_targets[sk])
+            continue;
+
+        int training_target = you.training_targets[sk];
+        if (training_target > you.skill(sk, 10, false, false))
+        {
+            int target_skill_point_diff = _training_target_skill_point_diff(
+                                                          sk, training_target);
+            if (target_skill_point_diff > 0)
+                max_training = min(max_training, target_skill_point_diff);
+        }
+    }
+    return max_training;
+}
+
 /**
  * Train Djinn skills such that the same amount of experience is put into all
  * spellcasting skills. This means that we need to make sure we have enough
@@ -1085,12 +1105,17 @@ static void _train_with_innate_casting(bool simu)
         if (!_xp_available_for_skill_points(points))
             break;
 
+        const int max_magic_skill_spend =
+                                  _innate_casting_magic_max_spend_for_target();
+
         // OK, we should be able to train everything.
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             if (!you.training[i])
                 continue;
-            const int p = you.training[i] / min;
+            int p = you.training[i] / min;
+            if (is_magic_skill((skill_type)i) && p > max_magic_skill_spend)
+                p = max_magic_skill_spend;
             int xp = calc_skill_cost(you.skill_cost_level) * p;
             // We don't want to disable training for magic skills midway.
             // Finish training all skills and check targets afterward.
