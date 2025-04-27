@@ -3128,7 +3128,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
                                              : TILE_MISC_LIGHTNING_ROD_INERT;
 
     case MISC_SACK_OF_SPIDERS:
-        return TILE_MISC_SACK_OF_SPIDERS;
+        return evoker_charges(item.sub_type) ? TILE_MISC_SACK_OF_SPIDERS
+                                             : TILE_MISC_SACK_OF_SPIDERS_INERT;
 
     case MISC_GRAVITAMBOURINE:
         return evoker_charges(item.sub_type) ? TILE_MISC_TAMBOURINE
