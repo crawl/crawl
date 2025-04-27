@@ -1181,6 +1181,7 @@ misc_box_of_beasts MISC_BOX_OF_BEASTS
 misc_box_of_beasts_inert MISC_BOX_OF_BEASTS_INERT
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
+misc_sack_inert MISC_SACK_OF_SPIDERS_INERT
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
