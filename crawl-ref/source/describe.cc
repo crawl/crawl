@@ -4414,8 +4414,11 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
-    if (skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
+    if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
+        && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
+    {
         result += _get_skill_defense_change(skill);
+    }
     if (skill == SK_INVOCATIONS)
     {
         if (you.has_mutation(MUT_FORLORN))
