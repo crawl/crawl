@@ -102,8 +102,8 @@ Translocaciones Espaciales.
 %%%%
 Hedge Wizard
 
-Los magos comienzan con un Libro de Magia Menor, conteniendo una amplia gama de
-hechizos. Tienen más reservas mágicas que cualquier otro rol.
+Los magos comienzan con una amplia gama de hechizos menores que pueden usar para 
+frustuar sus enmigos y obtener una ventaja en batalla.
 %%%%
 #Unused
 Abyssal Knight
