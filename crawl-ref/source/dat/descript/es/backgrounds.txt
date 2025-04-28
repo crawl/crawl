@@ -4,6 +4,11 @@ Air Elementalist
 Los Elementalistas del Aire han aprendido el hechizo de la Descarga. Más
 adelante, su Libro del Aire les provee de flexibilidad para sobrevivir.
 %%%%
+Alchemist
+
+Los Alquimistas comienzan con el hechizo Vapors Envenenadores. Sus hechizos son 
+muy eficaces contra los monstruos sin progencia contra los effectos de veneno.
+%%%%
 Artificer
 
 Los Artificieros comienzan con unos pocos instrumentos mágicos y son
@@ -60,10 +65,16 @@ Gladiator
 Los Gladiadores salen listos para la arena con una armadura ligera, escudo,
 redes y un arma de su elección.
 %%%%
+Hedge Wizard
+
+Los magos comienzan con una amplia gama de hechizos menores que pueden usar para 
+frustuar sus enmigos y obtener una ventaja en batalla.
+%%%%
 Hunter
 
-Los Cazadores son capaces de atacar a distancia, sin usar la dichosa magia. El
-arma del cazador depende de su especie.
+Los Cazadores son capaces de atacar a distancia, sin usar la dichosa magia.
+Ellos empiezan con un arco corto, armadura liviano y un pergamino de 
+mariposas.
 %%%%
 Ice Elementalist
 
@@ -85,11 +96,7 @@ Summoner
 Los Convocadores son capaces de Convocar a Pequeño Mamífero desde el inicio 
 y comienzan con hechizos para llamar aliados más fuerzas y exóticos en su biblioteca.
 %%%%
-Alchemist
 
-Los Alquimistas comienzan con el hechizo Vapors Envenenadores. Sus hechizos son 
-muy eficaces contra los monstruos sin progencia contra los effectos de veneno.
-%%%%
 Wanderer
 
 Los Viajeros comienzan con capacidades y una equipación al azar.
@@ -100,16 +107,7 @@ Los urdidores comienzan con un arma de que hayan elegido y un pergamino de
 «Blinking». Pueden aprender los hechizos contenidos en el libro de
 Translocaciones Espaciales.
 %%%%
-Hedge Wizard
 
-Los magos comienzan con una amplia gama de hechizos menores que pueden usar para 
-frustuar sus enmigos y obtener una ventaja en batalla.
-%%%%
-Hunter
-
-Los Cazadores empiezan con un arco corto, armadura liviano y un pergamino de 
-mariposas.
-%%%%
 #Unused
 Abyssal Knight
 
