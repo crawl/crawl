@@ -46,7 +46,7 @@ su Libro de Geomancia.
 Enchanter
 
 Los Encantadores usan hechizos para potenciarse en batalla o bien para
-incapacitar a otros. También comienzan con buenos dardos.
+incapacitar a otros. También comienzan con una daga encantada y unas pociones de invisibilidad.
 %%%%
 Fire Elementalist
 
