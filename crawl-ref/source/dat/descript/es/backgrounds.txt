@@ -25,10 +25,17 @@ Chaos Knight
 Los Caballeros Caóticos son juguetes del impredecible Xom, y están sujetos a
 los constantes cambios de humor del dios.
 %%%%
+Cinder Acolyte
+
+Los Discípulos Cenizas adoran a Ignis. Ellos recurren a la flama de un dios 
+agonizante hasta no hay nada que permanecer. Tienen capacidades dos las de cuerpo 
+a cuerpo y de magia fuego.
+%%%%
 Conjurer
 
-Los Conjuradores afrontan los problemas con hechizos destructivos de su Libro
-de los Conjuros
+Los Conjuradores afrontan los problemas con hechizos destructivos. Ellos empiezan con 
+el hechizo Darda Magia y pueden aprender otros hechizos sin elementos para matar 
+sus enmigos
 %%%%
 Earth Elementalist
 
