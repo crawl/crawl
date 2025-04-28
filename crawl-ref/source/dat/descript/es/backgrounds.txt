@@ -105,6 +105,11 @@ Hedge Wizard
 Los magos comienzan con una amplia gama de hechizos menores que pueden usar para 
 frustuar sus enmigos y obtener una ventaja en batalla.
 %%%%
+Hunter
+
+Los Cazadores empiezan con un arco corto, armadura liviano y un pergamino de 
+mariposas.
+%%%%
 #Unused
 Abyssal Knight
 
