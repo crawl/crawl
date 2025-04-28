@@ -34,7 +34,7 @@ a cuerpo y de magia fuego.
 Conjurer
 
 Los Conjuradores afrontan los problemas con hechizos destructivos. Ellos empiezan con 
-el hechizo Darda Magia y pueden aprender otros hechizos sin elementos para matar 
+el hechizo Dardo Magicó y pueden aprender otros hechizos sin elementos para matar 
 sus enmigos
 %%%%
 Earth Elementalist
