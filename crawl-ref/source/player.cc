@@ -4866,10 +4866,10 @@ bool haste_player(int turns, bool rageext)
         return false;
     }
 
-    // Cutting the nominal turns in half since hasted actions take half the
-    // usual delay.
-    turns = haste_div(turns);
-    const int threshold = 40;
+    // This used to be applying haste_div to turns versus a cap of 40, which
+    // was unncessarily opaque for actually hasting the player and capped
+    // lower than the intended quantity for haste sources.
+    const int threshold = 80;
 
     if (!you.duration[DUR_HASTE])
         mpr("You feel yourself speed up.");

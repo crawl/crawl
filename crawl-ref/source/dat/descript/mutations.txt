@@ -146,6 +146,11 @@ through your surroundings, hasting two of your strongest allies in sight for
 each level of this mutation. After doing so, your blood will be unable to
 further dilate time until your HP has fully recovered.
 %%%%
+efficient metabolism mutation
+
+Your altered digestive system extracts additional value out of select potion
+types, doubling the duration of all status effects gained via potions.
+%%%%
 # ------ Auxes -----
 horns mutation
 

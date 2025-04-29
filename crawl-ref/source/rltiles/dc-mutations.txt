@@ -145,6 +145,7 @@ passive_mapping_3
 acute_vision ACUTE_VISION
 clarity CLARITY
 ephemeral_shield EPHEMERAL_SHIELD
+efficient_metabolism EFFICIENT_METABOLISM
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
 regeneration_1 REGENERATION

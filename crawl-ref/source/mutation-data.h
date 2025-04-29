@@ -1575,6 +1575,15 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ANTIMAGIC_BITE,
 },
 
+{ MUT_EFFICIENT_METABOLISM, 3, 1, mutflag::good,
+   "efficient metabolism",
+
+   {"Your metabolism doubles the duration of potion status effects.", "", ""},
+   {"Your body churns, leaving you strangely parched.", "", ""},
+   {"Your body churns, leaving you strangely quenched.", "", ""},
+   TILEG_MUT_EFFICIENT_METABOLISM,
+ },
+
 { MUT_NO_POTION_HEAL, 3, 2, mutflag::bad,
   "no potion heal",
 
