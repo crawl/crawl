@@ -263,7 +263,6 @@ end
 function necropolis_portal_setup(e)
   e.tags("no_monster_gen no_pool_fixup")
   e.kfeat("<> = exit_necropolis")
-  e.kfeat("~ = runed_door")
 
   -- Not actually used outside of summoning;
   -- see the generic_spawns function above.
@@ -864,7 +863,7 @@ vwwwwwwwwwwNwwNwwNwwoocc........................cYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwocc.........................cYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwoB..........................+YYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwwwwooooooooooB..........................+YYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
-vwwwwwwwwwoocccJJJcccccc++ccc...ccc~~cccc~~ccc..cYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
+vwwwwwwwwwoocccJJJcccccc++ccc...ccc++cccc++ccc..cYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwwoocc...............ccVcc............ccVcYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwoocc.................ccc..............cccYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
 vwwwwwwwocc...................c''''''''''''''''ccYYYYYYYYYYYYYYYYYYYYcowwwwwwwwv
@@ -897,7 +896,7 @@ vwwwwwwwoc...vv...........vv..c'''''''''''''''''cZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwocc...................c''''''''''''''''ccZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwoocc.................ccc..............cccZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwwoocc...............ccVcc............ccVcZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
-vwwwwwwwwwoocccJJJcccccc++ccc...ccc~~cccc~~ccc..cZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
+vwwwwwwwwwoocccJJJcccccc++ccc...ccc++cccc++ccc..cZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwwwwooooooooooB..........................+ZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwoB..........................+ZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwocc.........................cZZZZZZZZZZZZZZZZZZZZcowwwwwwwwv
@@ -983,7 +982,7 @@ vwwwwwwocXXXXXXXXXXXXXXXXXXXXc.....''q"ss"q''.....cZZZZZZZZZZZZZZZZZZZZcowwwwwwv
 vwwwwwwocXXXXXXXXXXXXXXXXXXXXc......''''''''......cZZZZZZZZZZZZZZZZZZZZcowwwwwwv
 vwwwwwwocc..................cc....................cc..................ccowwwwwwv
 vwwwwwwoocc................ccccV................Vcccc................ccoowwwwwwv
-vwwwwwwwooccccccccccccccccccccccccc~~cccccc~~cccccccccccccccccccccccccoowwwwwwwv
+vwwwwwwwooccccccccccccccccccccccccc++cccccc++cccccccccccccccccccccccccoowwwwwwwv
 vwwwwwwwoccc........................................................cccowwwwwwwv
 vwwwMwwooB...''''''''''''''''''''''''''''''''''''''''''''''''''''''...BoowwMwwwv
 vwwwwwwoBB..'''""""""""""""""""""""""""""""""""""""""""""""""""""'''..BBowwwwwwv
@@ -1068,10 +1067,10 @@ vwwwwwoc..XXXXXXXXXXXXXXXXXXXX..c...c..YYYYYYYYYYYYYYYYYYYY..Fowwwwwwv
 vwwwwwoc..XXXXXXXXXXXXXXXXXXXX..c...c..YYYYYYYYYYYYYYYYYYYY..Fowwwwwwv
 vwwwwwocc......................cc...cc......................ccowwPwwwv
 vwwwwwoccc....................ccc...ccc....................cccowwwwwwv
-vwwwwwocccccccccccc...ccccccccccv~~~vccccccccccc++ccccccccccccowwwwwwv
-vwwwwwooooccc'''''ccVcc.............~.......................nnowwwwwwv
-vwwwwwwwwocc'''''''ccc''............~.......................Vcowwwwwwv
-vwwwwwwwwoc''"""""''c''''''''''''...~.......................nnowwwwwwv
+vwwwwwocccccccccccc...ccccccccccv+++vccccccccccc++ccccccccccccowwwwwwv
+vwwwwwooooccc'''''ccVcc.............+.......................nnowwwwwwv
+vwwwwwwwwocc'''''''ccc''............+.......................Vcowwwwwwv
+vwwwwwwwwoc''"""""''c''''''''''''...+.......................nnowwwwwwv
 vwwwwwwwwoc''"pAs"''c'''''''''''''..vccccccccccc++ccccccccccccowwwwwwv
 vwwwwwwwwoc''"""""''c''"""""""""''..ccc....................cccowwwwwwv
 vwwwwwwwwoc''"q"s"''c''"s"r"q"p"''..cc......................ccowwOwwwv
@@ -1163,8 +1162,8 @@ vwwwwwwNwwwwocXXXXXXXXXXXXXXXXXXXXc.'""tp""'.cYYYYYYYYYYYYYYYYYYYYcowwwwNwwwwwwv
 vwwwwwwwwMwwocXXXXXXXXXXXXXXXXXXXXc.'""""""'.cYYYYYYYYYYYYYYYYYYYYcowwMwwwwwwwwv
 vwwwwwwwwwwwocccccccccccccccccccccc.''''''''.ccccccccccccccccccccccowwwwwwwwwwwv
 vwwwwwwwwwwwooooooccc''''''''c....................c''''''''cccoooooowwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwocc'''''''''~....................+'''''''''ccowwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwoc''""""""''~....................+''""""""''cowwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwocc'''''''''+....................+'''''''''ccowwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwoc''""""""''+....................+''""""""''cowwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwoc''"ts"t"''c.......V....V.......c''"t"st"''cowwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwMwwoc''""""""''cccccccccc++cccccccccc''""""""''cowwMwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwoB'""Gf"r""'cZZZZZZZZZZZZZZZZZZZZc'""r"fG""'Bowwwwwwwwwwwwwwwwv
