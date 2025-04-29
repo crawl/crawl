@@ -1,5 +1,6 @@
 enum: bat
 equivalent_mons: bat
+description: a bat.
 melds: [physical, ring]
 dex: 5
 size: tiny
