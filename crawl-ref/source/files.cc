@@ -2427,7 +2427,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifdef USE_TILE
                     tiles.update_minimap(*ri);
                     tile_draw_map_cell(*ri, true);
-#elif USE_TILE_WEB
+#elif defined(USE_TILE_WEB)
                     tiles.mark_for_redraw(*ri);
 #endif
                 }
