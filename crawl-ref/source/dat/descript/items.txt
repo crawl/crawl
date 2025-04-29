@@ -64,6 +64,11 @@ azure gem
 As clear and blue as a cloudless sky or a depthless sea, this gem holds its
 secrets locked within impenetrable depths.
 %%%%
+# the_bakery
+baked corpse
+
+A baked corpse. Warm, useless, and dead.
+%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
