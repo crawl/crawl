@@ -537,8 +537,8 @@ ENDMAP
 #   of the trove, using unrand and spell namesake and god flavour, for
 #   somewhat lower costs fulfillable earlier. Consider weapon brands, jewellery
 #   types, armour artprops, and specific consumables / talismans / spells
-#   as can easily fit themes like "Ozocubu's Refridgerator" or "Nadja's Forge".
-#   (Might want the ability to combine acquirement and ego itemspecs?...)
+#   as can easily fit themes like "Ozocubu's Refridgerator" or "Nazja's Forge".
+#   (Wants for the ability to combine acquirement and ego itemspecs.)
 #
 ##############################################################################
 
@@ -698,8 +698,14 @@ WEIGHT: 20
 ORIENT: encompass
 # Loot: 18 items, with two guaranteed talismans.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
+KITEM:  $ = $ q:1
 : trove.good_talisman(_G)
+: if you.race() == "Revenant" or you.race() == "Poltergeist" or
+:   you.race() == "Mummy" then
+NSUBST: d = 2:$ / *:d
+: else
 NSUBST: d = 2:e / *:d
+: end
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
@@ -727,6 +733,10 @@ ORIENT: encompass
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.good_talisman(_G)
+: if you.race() == "Revenant" or you.race() == "Poltergeist" or
+:   you.race() == "Mummy" then
+SUBST:  e = x
+: end
 COLOUR: x = blue
 : trove.setup_features(_G)
 MAP
@@ -836,13 +846,17 @@ ENDMAP
 # A "themed" trove.
 NAME:    trove_hunter_1
 TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
-         no_species_dr
+         no_species_dr no_species_po
 WEIGHT:  5
 ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
+: if you.race() == "Revenant" or you.race() == "Mummy" then
+ITEM:    $ / any armour good_item
+: else
 ITEM:    dragon-coil talisman good_item / any armour good_item
+: end
 ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
          troll leather armour / any useful armour good_item
 ITEM:    javelin good_item / dart good_item
@@ -939,12 +953,17 @@ ENDMAP
 # Evocations and shapeshifting trove. 15 items.
 NAME:    trove_misc_dual_throne_room
 TAGS:    no_item_gen no_monster_gen allow_dup
+TAGS:    no_species_re no_species_po no_species_mu
 ORIENT:  encompass
 WEIGHT:  15
-ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
-ITEM:    any misc, maw talisman randart / blade talisman randart
+ITEM:    manual of evocations, manual of shapeshifting
+ITEM:    acquire magical staff, any misc
+ITEM:    blade talisman randart / serpent talisman randart / \
+         lupine talisman randart / spider talisman randart / \
+         wellspring talisman randart / fortress talisman randart
 {{
-  local t3 = "dragon-coil talisman randart / granite talisman randart"
+  local t3 = "dragon-coil talisman randart / granite talisman randart / " ..
+             "hive talisman randart / riddle talisman randart"
   local t4 = "storm talisman"
   if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
     t3 = t3 .. " / sanguine talisman randart"
@@ -1110,6 +1129,10 @@ TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.good_talisman(_G)
+: if you.race() == "Revenant" or you.race() == "Poltergeist" or
+:   you.race() == "Mummy" then
+SUBST:  e = .
+: end
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1388,6 +1411,10 @@ KITEM:  S = buckler good_item / kite shield good_item / \
             tower shield good_item / buckler randart / \
             kite shield randart / tower shield randart / buckler w:2 / \
             kite shield w:2 / tower shield w:2
+: if you.race() == "Revenant" or you.race() == "Poltergeist" or
+:   you.race() == "Mummy" then
+SUBST:  d = .
+: end
 KFEAT:  ~ = open_sea
 : trove.setup_features(_G)
 : set_border_fill_type('open_sea')
