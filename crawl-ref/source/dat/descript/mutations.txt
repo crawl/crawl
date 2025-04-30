@@ -764,6 +764,12 @@ Your skin is transparent, improving your stealth and reducing the accuracy of
 your foes' attacks against you. Each level of this mutation reduces your foes'
 accuracy further.
 %%%%
+slime shroud mutation
+
+When struck in melee, the slimy shroud covering your body may deflect the
+attack. Such deflection will break the shroud, however, and it will take time
+for it to reconstitute itself.
+%%%%
 tendrils mutation
 
 When struck in melee, the slimy tendrils covering your body may grab your
