@@ -34,8 +34,8 @@ desarrollan un color.
 %%%%
 Felid
 
-Estos gatos son sentientes, pero son incapaces de manipular objetos de una
-forma avanzada o de usar armaduras o armas.
+Estos gatos tienen muchas vidas y son sentientes, pero son incapaces de manipular 
+objetos de una forma avanzada o de usar armaduras o armas.
 %%%%
 Halfling
 
