@@ -421,6 +421,10 @@ Hell Sentinel
 Un imponente monolito construido y poseído por fuerzas demoníacas. Unos mil
 ojos miran lascivamente por las rendijas de su armadura dentada y espinosa.
 %%%%
+Ice Devil
+
+Un demonio tan grande como una humana. Es cubierto en hielo.
+%%%%
 Ice Fiend
 
 Un enorme y frío demonio cubierto en escarcha y revestido en aire helado. Es
