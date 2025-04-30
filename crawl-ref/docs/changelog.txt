@@ -95,6 +95,8 @@ Character
   * efficient magic, making spells cost 1 less (to a minimum of 1 MP).
   * ephemeral shield, granting +7 SH briefly after spells and invocations.
   * poor constitution, inflicting Weak and then Slow on taking damage.
+  * slime shroud, sometimes deflecting melee attacks and then cooling down until
+    it can do so again (Jiyva only).
   * time-warped blood, hasting some of your allies when you fall below 50%
     health, and can only activate again after returning to full health.
 * Berserk players are now immune to fear.
