@@ -22,6 +22,11 @@ Demonspawn
 Los semidemonios son medio humano, medio demonio. Adquieren poderosas
 mutaciones demoníacas a medida que se desarrollan.
 %%%%
+Djinni
+
+Los genios son espíritus siempre-quemándose. Aprenden hechizos sin libros y
+lanzarlos por usando sus propios fuegos.
+%%%%
 Draconian
 
 Los draconianos son híbridos versátiles. Alcanzan la madurez en el nivel 7 y
