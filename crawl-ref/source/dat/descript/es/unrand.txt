@@ -23,3 +23,8 @@ Sword of Power
 
 Una espada potente que da fuerza a los poderosos y debilidad a los tímidos.
 %%%%
+giant club "Skullcrusher"
+
+Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
+cualquiera que tiene la fuerza para empuñarlo.
+%%%%
