@@ -132,7 +132,7 @@ Interface and Options
 * Examining spellbooks in webtiles now colours spells according to their
   usability and whether or not one has the spell in their library.
 * Examining talismans now displays their upsides, downsides, changes to one's
-  defenses, and skill scaling in a more compressed format with additional
+  defences, and skill scaling in a more compressed format with additional
   details.
 * Spell range is now indicated with numbers instead of diagrams.
 * Default target-picking behaviour for spells, abilities, and items has been
