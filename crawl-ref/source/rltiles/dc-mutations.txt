@@ -275,6 +275,7 @@ jelly_growth JELLY_GROWTH
 pseudopods_1 PSEUDOPODS
 pseudopods_2
 pseudopods_3
+slime_shroud SLIME_SHROUD
 tendrils TENDRILS
 
 # Ru sacrifices
