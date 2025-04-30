@@ -426,6 +426,10 @@ Ice Fiend
 Un enorme y frío demonio cubierto en escarcha y revestido en aire helado. Es
 uno de los habitantes más terribles de los muchos y variados Infiernos.
 %%%%
+Iron Imp
+
+Un demonio feo y pequeño con piel metálica.
+%%%%
 Killer Klown
 
 Una figura cómica llena de vida y de risas. Parece muy contento de verte...
