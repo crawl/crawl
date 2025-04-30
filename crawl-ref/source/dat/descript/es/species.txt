@@ -70,7 +70,8 @@ cualquier forma de combate, tanto cuerpo a cuerpo como a distancia.
 Mummy
 
 Una figura no-muerta cubierta en vendas y fluidos de embalsamado, obligada a
-caminar por una antigua maldición.
+caminar por una antigua maldición. Tienen fe innata y son expertas en nigromancia,
+pero aprenden otras habilidades lentamente. No pueden beber pociones.
 %%%%
 Naga
 
