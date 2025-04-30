@@ -19,3 +19,7 @@ Maxwell's patent armour
 
 Una armadura de aspecto extraño.
 %%%%
+Sword of Power
+
+Una espada potente que da fuerza a los poderosos y debilidad a los tímidos.
+%%%%
