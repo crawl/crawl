@@ -55,6 +55,8 @@ Branches, Environment
 * Walking over fountains now has a chance to produce flavour messages, varying
   based on the fountain, one's god, and the absence of hostile enemies in sight.
 * Zot traps now can inflict blindness.
+* Entering Gauntlets now reveals their layout, items, and monsters to the
+  player, outside of the shape or contents of the minotaur's maze.
 * The last floor of Crypt now has a 30% chance to contain a sanguine talisman.
 * The clouds of degeneration in Alistair's Party Mansion are now alcoholic mist,
   inflicting Vertigo.
@@ -129,8 +131,9 @@ Interface and Options
   spell success chances for each spell if they switched to using that item.
 * Examining spellbooks in webtiles now colours spells according to their
   usability and whether or not one has the spell in their library.
-* Examining talismans now displays their upsides, downsides, and skill scaling
-  in a more compressed format with additional details.
+* Examining talismans now displays their upsides, downsides, changes to one's
+  defenses, and skill scaling in a more compressed format with additional
+  details.
 * Spell range is now indicated with numbers instead of diagrams.
 * Default target-picking behaviour for spells, abilities, and items has been
   improved: it is now more consistent at avoiding the player or their allies
@@ -414,12 +417,14 @@ Tiles and Other Art
   * Features: altars to Fedhas, altars to Xom, caches of meat, granite statues
     in Depths and Zot.
   * Forms: Flux form tiles for humanoids, felids, and octopodes.
-  * Items: all forms of leather armour.
+  * Items: all forms of leather armour, troll leather armour randarts,
+    sacks of spiders (active and inert).
   * Monsters: apises, boggarts, brain worms, creeping infernos, culicivora,
     great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
     shapeshifters and glowing shapeshifters, sky beasts, all tengu types.
   * Mutation icons: big wings, demonspawn demonic touch, mp-powered wands,
-    screaming, subdued magic, tendrils, pseudopods, wild magic.
+    screaming, stinger, subdued magic, tendrils, pseudopods, demonspawn
+    weakness stinger, wild magic.
   * Plants, both regular and withered.
   * Player dolls: Coglins.
   * The prune curse from the glaive of Prune.
