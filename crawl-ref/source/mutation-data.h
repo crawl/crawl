@@ -1008,7 +1008,7 @@ static const mutation_def mut_data[] =
   {"The barb on your tail disappears.",
    "The barb on your tail seems less sharp.",
    "The barb on your tail seems less sharp."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_STINGER,
 },
 
 // Draconian/gargoyle only
