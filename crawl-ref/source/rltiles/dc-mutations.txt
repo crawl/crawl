@@ -129,6 +129,9 @@ talons_3
 hooves_1 HOOVES
 hooves_2
 hooves_3
+stinger_1 STINGER
+stinger_2
+stinger_3
 
 # Good mutations also used by regular species
 camouflage_1 CAMOUFLAGE
