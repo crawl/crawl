@@ -1879,6 +1879,10 @@ static int _player_base_evasion_modifiers()
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
+    // XXX: rescale these modifiers to allow +0.5 EV bonuses past the soft cap?
+    if (you.get_mutation_level(MUT_PROTEAN_GRACE))
+        evbonus += protean_grace_amount();
+
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         evbonus += 4;
 
@@ -3523,6 +3527,9 @@ int slaying_bonus(bool throwing, bool random)
 
     ret += 3 * augmentation_amount();
     ret += you.get_mutation_level(MUT_SHARP_SCALES);
+
+    if (you.get_mutation_level(MUT_PROTEAN_GRACE))
+        ret += protean_grace_amount();
 
     if (you.duration[DUR_FUGUE])
         ret += you.props[FUGUE_KEY].get_int();

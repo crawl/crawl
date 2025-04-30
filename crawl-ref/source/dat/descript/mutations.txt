@@ -151,6 +151,27 @@ efficient metabolism mutation
 Your altered digestive system extracts additional value out of select potion
 types, doubling the duration of all status effects gained via potions.
 %%%%
+protean grace mutation
+
+Your limbs are overflowing with morphogenic power, guiding your every movement.
+Each non-innate mutation you have also provides +1 EV and Slay +1, improving
+your accuracy and damage with melee and ranged attacks. This still applies even
+when the mutations would be suppressed by a different form. Past seven or more
+non-innate mutations, this bonus only applies every other mutation.
+
+You currently gain
+{{
+    num = 1
+    muts = you.how_mutated(false, false, true)
+    if muts > 7 then
+        num = 7 + math.floor((muts - 7) / 2)
+    else
+        num = muts
+    end
+    return "+" .. num .. " EV and Slay +" .. num .. " from this mutation."
+}}
+
+%%%%
 # ------ Auxes -----
 horns mutation
 

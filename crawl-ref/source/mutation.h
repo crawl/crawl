@@ -83,6 +83,7 @@ void check_demonic_guardian();
 void check_monster_detect();
 int augmentation_amount();
 void reset_powered_by_death_duration();
+int protean_grace_amount();
 
 bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();

@@ -661,6 +661,15 @@ static const mutation_def mut_data[] =
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
 
+{ MUT_PROTEAN_GRACE, 2, 1, mutflag::good,
+   "protean grace",
+
+   {"You are empowered by your non-innate mutations. (+", "", ""},
+   {"Mutagenic power surges through your limbs.", "", ""},
+   {"The mutagenic power surging through your limbs dissipates.", "", ""},
+   TILEG_MUT_PROTEAN_GRACE,
+ },
+
 { MUT_FRAIL, 10, 3, mutflag::bad,
   "frail",
 

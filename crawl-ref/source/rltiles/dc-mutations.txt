@@ -148,6 +148,7 @@ ephemeral_shield EPHEMERAL_SHIELD
 efficient_metabolism EFFICIENT_METABOLISM
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
+protean_grace PROTEAN_GRACE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
