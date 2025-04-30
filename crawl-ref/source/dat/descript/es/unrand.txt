@@ -1,4 +1,16 @@
 %%%%
+Singing Sword
+
+Una espada encantada que le encanta cantar a su manipulador, le gusta o no.
+%%%%
+Sulking Sword
+
+<Singing Sword>
+%%%%
+Screaming Sword
+
+<Singing Sword>
+%%%%
 Mace of Variability
 
 Es bastante poco fiable.
