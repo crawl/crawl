@@ -69,6 +69,7 @@ function necropolis_portal_entry(e)
             { 0, 'full choir' }
         }
     }
+    dgn.persist.necropolis_difficulty = necropolis_difficulty()
 
     e.lua_marker('O',
         timed_marker {
