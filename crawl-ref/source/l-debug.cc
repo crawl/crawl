@@ -463,6 +463,8 @@ LUAFN(debug_check_moncasts)
         dprf("Forcing %s to cast %s", m1->name(DESC_THE, true).c_str(),
                                                 spell_title(spell));
         handle_mon_spell(m1);
+        if (m2)
+            m2->heal(10000);
     }
     return 1;
 }
