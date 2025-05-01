@@ -2700,7 +2700,8 @@ void lose_piety(int pgn)
         invalidate_agrid(true);
     }
 
-    you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
+    if (you_worship(GOD_IGNIS))
+        you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
 }
 
 /// Whether Fedhas would set `target` to a neutral attitude
