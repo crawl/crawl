@@ -880,7 +880,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
 
                 if (final)
                 {
-                    bleed_onto_floor(victim->pos(), victim->type, final, true);
+                    if (victim->has_blood())
+                        blood_spray(victim->pos(), victim->type, final / 5, 2);
                     victim->hurt(&caster, final);
                 }
             }
