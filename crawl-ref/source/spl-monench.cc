@@ -253,6 +253,7 @@ bool maybe_spread_rimeblight(monster& victim, int power)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
         && !victim.is_peripheral()
+        && !never_harm_monster(&you, victim)
         && you.see_cell_no_trans(victim.pos()))
     {
         apply_rimeblight(victim, power);
