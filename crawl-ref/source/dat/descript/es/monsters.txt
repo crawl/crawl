@@ -430,6 +430,11 @@ Ice Fiend
 Un enorme y frío demonio cubierto en escarcha y revestido en aire helado. Es
 uno de los habitantes más terribles de los muchos y variados Infiernos.
 %%%%
+Iron Golem
+
+Una estatua grande, pesada y muy robusta, dada el poder de movimiento por 
+esotéricos (y posiblemente a base de calabaza) medios.
+%%%%
 Iron Imp
 
 Un demonio feo y pequeño con piel metálica.
