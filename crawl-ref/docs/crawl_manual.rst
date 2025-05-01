@@ -1734,10 +1734,10 @@ Revenants (Re)
   recollections of their former life and an all-consuming hunger to claw back
   that existence which the world forgot.
 
-  So powerful is this drive which animates them that they can they can actually
-  rip the very existence from others, tearing fragments of souls and memories
-  and even the fundamental essence of inanimate objects and turning them into
-  fuel for the unholy fire that forever flickers upon their form.
+  So powerful is this drive which animates them that they can actually rip the
+  very existence from others, tearing fragments of souls and memories and even
+  the fundamental essence of inanimate objects and turning them into fuel for
+  the unholy fire that forever flickers upon their form.
 
   Their nature makes them uniquely skilled at wielding destructive magic;
   while their reserves of magical energy are poor and their aptitudes
