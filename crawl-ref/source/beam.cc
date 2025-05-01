@@ -1053,9 +1053,13 @@ void bolt::affect_wall()
         if (!in_bounds(pos()) || !can_affect_wall(pos(), true))
             finish_beam();
 
-        // The only thing that doesn't stop at walls.
-        if (flavour != BEAM_DIGGING)
+        // Digging is the only thing that doesn't stop at walls,
+        // (and even it needs to stop if an underlying feature isn't diggable).
+        if (flavour != BEAM_DIGGING
+            || is_temp_terrain(pos()) && !feat_is_diggable(orig_terrain(pos())))
+        {
             finish_beam();
+        }
         return;
     }
     if (in_bounds(pos()))
