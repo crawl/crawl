@@ -3340,7 +3340,9 @@ dice_def hellfire_mortar_damage(int pow)
 static bool _hellfire_stops_here(bolt& beam, coord_def pos)
 {
     return actor_at(pos) && !beam.ignores_monster(monster_at(pos))
-           || cell_is_solid(pos) && !beam.can_affect_wall(pos);
+           || cell_is_solid(pos)
+              && ((is_temp_terrain(pos) && !feat_is_diggable(orig_terrain(pos)))
+                  || !beam.can_affect_wall(pos));
 }
 
 spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
@@ -3388,7 +3390,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
     // Make the lava
     int dur = random_range(15, 19) * BASELINE_DELAY;
-    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    for (int i = 0; i < len; ++i)
     {
         const coord_def pos = beam.path_taken[i];
 
