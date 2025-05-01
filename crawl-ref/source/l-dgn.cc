@@ -155,6 +155,12 @@ static int dgn_has_tag(lua_State *ls)
     PLUARET(boolean, map->has_tag(luaL_checkstring(ls, 2)));
 }
 
+static int dgn_uniq_tag_used(lua_State *ls)
+{
+    const char *tag = luaL_checkstring(ls, 1);
+    PLUARET(boolean, get_uniq_map_tags().count(tag) > 0);
+}
+
 static int dgn_tags_remove(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1792,6 +1798,7 @@ const struct luaL_reg dgn_dlib[] =
 { "order", dgn_order },
 { "tags",  dgn_tags },
 { "has_tag", dgn_has_tag },
+{ "uniq_tag_used", dgn_uniq_tag_used },
 { "tags_remove", dgn_tags_remove },
 { "chance", dgn_chance },
 { "depth_chance", dgn_depth_chance },
