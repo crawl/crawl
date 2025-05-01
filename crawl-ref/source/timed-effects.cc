@@ -558,6 +558,9 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BOUND: case ENCH_CONCENTRATE_VENOM: case ENCH_TOXIC_RADIANCE:
         case ENCH_PAIN_BOND: case ENCH_PYRRHIC_RECOLLECTION:
         case ENCH_CLOCKWORK_BEE_CAST:
+        case ENCH_RIMEBLIGHT: case ENCH_MAGNETISED: case ENCH_TEMPERED:
+        case ENCH_CHAOS_LACE: case ENCH_VEXED: case ENCH_DEEP_SLEEP:
+        case ENCH_DROWSY:
             lose_ench_levels(entry.second, levels);
             break;
 
