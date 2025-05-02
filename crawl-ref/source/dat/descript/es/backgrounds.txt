@@ -101,7 +101,6 @@ Summoner
 Los Convocadores son capaces de Convocar a Pequeño Mamífero desde el inicio 
 y comienzan con hechizos para llamar aliados más fuerzas y exóticos en su biblioteca.
 %%%%
-
 Wanderer
 
 Los Viajeros comienzan con capacidades y una equipación al azar.
@@ -112,7 +111,6 @@ Los urdidores comienzan con un arma de que hayan elegido y un pergamino de
 «Blinking». Pueden aprender los hechizos contenidos en el libro de
 Translocaciones Espaciales.
 %%%%
-
 #Unused
 Abyssal Knight
 
