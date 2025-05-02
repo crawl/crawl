@@ -6598,7 +6598,7 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
     if (incl_form)
     {
         const transformation f = temp ? form : default_form;
-        // Special-cased to add undead holiness onto the player's basse type,
+        // Special-cased to add undead holiness onto the player's base type,
         // rather than replace it
         if (f == transformation::vampire
                  || f == transformation::bat_swarm)

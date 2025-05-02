@@ -1150,7 +1150,7 @@ You are a rime yak, fur encrusted with ice.
 %%%%
 Spider status
 
-You are an agile jumping spider who attacks can web enemies.
+You are an agile jumping spider whose attacks can web enemies.
 %%%%
 Quill status
 

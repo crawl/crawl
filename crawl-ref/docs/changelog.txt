@@ -4,7 +4,7 @@ Stone Soup 0.33 (through 0.33-a0-1449-0d2a297ef60)
 Highlights
 ----------
 * New magic school + background: Forgewrights, building explosive constructs.
-* Two new species: poltergeists and revenants.
+* Two new species: Poltergeists and Revenants.
 * Twelve new talismans have been added, and Shapeshifters have been reworked.
 * Ghost vaults are moved into a game-long repeating portal, the Necropolis.
 * Yet more new monsters, decorations, and traps spread throughout the Dungeon.
@@ -84,7 +84,7 @@ Character
 * Fighters now start with a second potion of might.
 * Shapeshifters now start with a quill talisman, three flux baubles, and a
   protean talisman, which can be used with 6 or more Shapeshifting skill to
-  randomly transform it into a scarab, rimehorn, medusa or maw talisman.
+  randomly transform it into a scarab, rimehorn, medusa, or maw talisman.
   They keep their potion of lignification and start with 1 more Fighting skill.
 * Wanderers can now start with quill talismans, inkwell talismans, flux baubles,
   protean talismans, or any protean-tier talisman.
@@ -176,7 +176,7 @@ Items
   - inkwell talismans, providing Walking Scroll Form. This melds all equipment,
     increases all magic school skills scaling to one's Shapeshifting, grants
     extra max mp, disables casting spells above level 4, and cuts one's melee
-    damage in half in exchange for a 50% to gain 1 MP on every hit.
+    damage in half in exchange for a 50% chance to gain 1 MP on every hit.
  - Tier 2:
   - scarab talismans, providing Sun Scarab Form. This small form melds weapons
     and armour, carts around a solar ember that cleaves with fire attacks when
@@ -250,7 +250,7 @@ Monsters
 * New monsters:
   - Alderkings, fae trees and necromantic masters of Depths.
   - Fravashi, mid-tier warrior-summoning angels.
-  - Goblin riders, wvyern-taming cavalry for Bailies.
+  - Goblin riders, wyvern-taming cavalry for Bailies.
   - Ironbound mechanists, dual-wielding forgewright coglins for Vaults.
   - Nekomata, self-cloning ranged cat demons for Pan.
   - Oni incarcerators, Manifold Assault users for Gehenna.
@@ -320,10 +320,10 @@ Species
     be easier to cast while ignoring encumbrance penalties, and get extra power.
     Spell-activated automatic attacks during this also heal the player.
   - At XL 3, they also gain knowledge of a random level 1 destructive spell.
-* Formicids now may wield an additional pair of gloves.
+* Formicids now may wear an additional pair of gloves.
 * Merfolk Long Blades apt is lowered from +2 to +1, and their Polearms apt is
   increased from +3 to +4.
-* Mountain Dwarf Summoning apt is lowered from 0 to -2.
+* Mountain Dwarf Summonings apt is lowered from 0 to -2.
 * Enhancer staves are now one-handed instead of two-handed for spriggans and
   kobolds.
 * Vampires and ghouls have been removed.
@@ -378,7 +378,7 @@ Spells
     melee attacks explode for damage scaled to damage dealt, avoiding allies,
     and which lasts for very little time if the user stops attacking.
   - Sphinx Sisters (L7 Summ / Hexes) that summons a pair of riddling sphinxes,
-    one guardian and one maurader, to debilitate the enemies with hexes and
+    one guardian and one marauder, to debilitate the enemies with hexes and
     batter them with violent winds.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
@@ -452,7 +452,7 @@ Tiles and Other Art
 * Gehenna now has unique stone wall tiles.
 * Depths and Zot now have unique metal wall tiles.
 * Webtiles now has the banishment animation offline tiles uses.
-* New oni splash screen by benadryl.
+* New Oni splash screen by benadryl.
 
 Stone Soup 0.32.1 (20240925)
 ----------------------------
