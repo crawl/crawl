@@ -39,8 +39,13 @@ a cuerpo y de magia fuego.
 Conjurer
 
 Los Conjuradores afrontan los problemas con hechizos destructivos. Ellos empiezan con 
-el hechizo Dardo Magicó y pueden aprender otros hechizos sin elementos para matar 
+el hechizo Dardo Magicó y pueden aprender otros hechizos sin elementos para matar a
 sus enmigos
+%%%%
+Delver
+
+Los espeleólogos empiezan su aventura cinco pisos debajo de la superficie. Tienen unas
+cosas mágicas para ayudarles sobrevivir la subida.
 %%%%
 Earth Elementalist
 
