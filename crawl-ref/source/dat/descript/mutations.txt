@@ -1005,7 +1005,7 @@ for additional damage which is increased for each empty space adjacent to them.
 hex mastery mutation
 
 Your Hexes spells are much easier to cast (reduced miscast chance and severity)
-and enemies have reduced willpower versus against all your effects.
+and enemies have reduced willpower against all your effects.
 %%%%
 riddle compulsion mutation
 
