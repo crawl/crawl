@@ -146,6 +146,8 @@ acute_vision ACUTE_VISION
 clarity CLARITY
 ephemeral_shield EPHEMERAL_SHIELD
 efficient_metabolism EFFICIENT_METABOLISM
+feed_off_suffering_1 FEED_OFF_SUFFERING
+feed_off_suffering_2
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
 protean_grace PROTEAN_GRACE

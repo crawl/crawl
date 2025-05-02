@@ -257,6 +257,19 @@ static const mutation_def mut_data[] =
 
   TILEG_MUT_INHIBITED_REGENERATION,
 },
+
+{ MUT_FEED_OFF_SUFFERING, 4, 2, mutflag::good,
+   "feed off suffering",
+
+   {"You can sometimes gain power from killing poisoned or drained foes.",
+    "You can regularly gain power from killing poisoned or drained foes.", ""},
+   {"Vile energies swirl pleasantly through your soul.",
+    "The vile energy whirl more vigourously through your soul.", ""},
+   {"The vile energy swirling through your soul dissipates.",
+    "The vile energy whirling through your soul weakens.", ""},
+    TILEG_MUT_FEED_OFF_SUFFERING,
+ },
+
 #if TAG_MAJOR_VERSION == 34
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::bad,

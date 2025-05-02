@@ -2110,54 +2110,79 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
                                     bool gives_player_xp, bool pet_kill)
 {
     // Various sources of heal-on-kill
-    if (YOU_KILL(killer) && gives_player_xp)
+    if ((YOU_KILL(killer) || pet_kill) && gives_player_xp)
     {
         int hp_heal = 0, mp_heal = 0;
-        // Chance scales from 30% at 1* to 80% at 6*
-        const bool can_divine_heal =
-            (gives_player_xp
-                || you_worship(GOD_MAKHLEB)
-                   && player_in_branch(BRANCH_CRUCIBLE))
-            && !player_under_penance()
-            && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
-                                / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
-                || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
-
-        if (can_divine_heal && have_passive(passive_t::restore_hp))
+        bool feed = false;
+        if (YOU_KILL(killer))
         {
-            hp_heal += (1 + mons.get_experience_level()) / 2
-                    + random2(mons.get_experience_level() / 2);
+            // Chance scales from 30% at 1* to 80% at 6*
+            const bool can_divine_heal =
+                (gives_player_xp
+                    || you_worship(GOD_MAKHLEB)
+                       && player_in_branch(BRANCH_CRUCIBLE))
+                && !player_under_penance()
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                                    / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
+                    || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
-            if (you.form == transformation::slaughter)
-                hp_heal *= 2;
-        }
-        if (can_divine_heal
-            && have_passive(passive_t::restore_hp_mp_vs_evil)
-            && mons.evil())
-        {
-            hp_heal += random2(1 + 2 * mons.get_experience_level());
-            mp_heal += random2(2 + mons.get_experience_level() / 3);
-        }
-        if (can_divine_heal && have_passive(passive_t::mp_on_kill))
-            mp_heal += 1 + random2(mons.get_experience_level() / 2);
+            if (can_divine_heal && have_passive(passive_t::restore_hp))
+            {
+                hp_heal += (1 + mons.get_experience_level()) / 2
+                        + random2(mons.get_experience_level() / 2);
+
+                if (you.form == transformation::slaughter)
+                    hp_heal *= 2;
+            }
+            if (can_divine_heal
+                && have_passive(passive_t::restore_hp_mp_vs_evil)
+                && mons.evil())
+            {
+                hp_heal += random2(1 + 2 * mons.get_experience_level());
+                mp_heal += random2(2 + mons.get_experience_level() / 3);
+            }
+            if (can_divine_heal && have_passive(passive_t::mp_on_kill))
+                mp_heal += 1 + random2(mons.get_experience_level() / 2);
 
 #if TAG_MAJOR_VERSION == 34
-        if (you.has_mutation(MUT_DEVOUR_ON_KILL)
-            && mons.holiness() & (MH_NATURAL | MH_PLANT)
-            && coinflip())
-        {
-            hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-        }
+            if (you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
+            {
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+            }
 #endif
+        }
 
-        if (hp_heal && you.hp < you.hp_max
-            && !you.duration[DUR_DEATHS_DOOR])
+        if (you.has_mutation(MUT_FEED_OFF_SUFFERING) > 0
+            && (mons.has_ench(ENCH_POISON) || mons.has_ench(ENCH_DRAINED))
+            && x_chance_in_y(1 + you.get_mutation_level(MUT_FEED_OFF_SUFFERING), 4))
+        {
+            feed = true;
+            int min = you.get_mutation_level(MUT_FEED_OFF_SUFFERING);
+            hp_heal += random_range(min, min + mons.get_experience_level() / 3);
+            mp_heal += random_range(min, min + mons.get_experience_level() / 3);
+        }
+
+        bool healing = hp_heal && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR];
+        bool powering = mp_heal && you.magic_points < you.max_magic_points;
+
+        if (feed && (healing || powering))
+        {
+            mprf("You siphon power from %s's fading %s.",
+                  mons.name(DESC_THE).c_str(),
+                  mons.has_ench(ENCH_POISON) && mons.has_ench(ENCH_DRAINED) ?
+                  "poison and negative energy" : (mons.has_ench(ENCH_POISON) ?
+                  "poison" : "negative energy"));
+        }
+
+        if (healing)
         {
             canned_msg(MSG_GAIN_HEALTH);
             inc_hp(hp_heal);
         }
 
-        if (mp_heal && you.magic_points < you.max_magic_points)
+        if (powering)
         {
             canned_msg(MSG_GAIN_MAGIC);
             inc_mp(mp_heal);

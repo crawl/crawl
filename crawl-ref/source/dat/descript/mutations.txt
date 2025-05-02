@@ -170,7 +170,14 @@ You currently gain
     end
     return "+" .. num .. " EV and Slay +" .. num .. " from this mutation."
 }}
+%%%%
+feed off suffering mutation
 
+A vile yet invigorating energy permeates your soul, which resonates with
+specific other energies released at the moment of death. Whenever poisoned or
+drained enemies die in sight of you, you have a chance to siphon away a small
+portion of their life force and magical power. Each level of this mutation
+increases the chance this happens and the amount one siphons.
 %%%%
 # ------ Auxes -----
 horns mutation
