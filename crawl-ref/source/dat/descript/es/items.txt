@@ -504,7 +504,9 @@ Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
 scroll of revelation
 
-Este pergamino revela los alrededores del lector. El piso actual está mapeado, y todo dentro de una distancia moderada, incluyendo visible e invisible monstruos, está revelado por un momento.
+Este pergamino revela los alrededores del lector. El piso actual está mapeado, y 
+todo dentro de una distancia moderada, incluyendo visible e invisible monstruos, 
+está revelado por un momento.
 %%%%
 scroll of remove curse
 
