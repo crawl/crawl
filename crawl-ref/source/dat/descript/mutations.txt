@@ -140,7 +140,7 @@ guaranteed to trigger if your foe does any damage.
 %%%%
 time-warped blood mutation
 
-Your blood has desynchronized itself from the flow of time. Whenever you fall
+Your blood has desynchronised itself from the flow of time. Whenever you fall
 below 50% of your maximum HP, the spilling of your blood surges strangely
 through your surroundings, hasting two of your strongest allies in sight for
 each level of this mutation. After doing so, your blood will be unable to
