@@ -539,7 +539,8 @@ teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
-binding_sigil DNGN_BINDING_SIGIL
+binding_sigil_0 DNGN_BINDING_SIGIL
+binding_sigil_1 DNGN_BINDING_SIGIL_MONSTER
 
 # order matters (tilepick.c tileidx_feature())
 cobweb_none_0 DNGN_TRAP_WEB

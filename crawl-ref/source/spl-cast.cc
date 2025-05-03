@@ -1448,7 +1448,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_passage>(range);
     case SPELL_SIGIL_OF_BINDING:
         return make_unique<targeter_multiposition>(&you,
-                                                   find_sigil_locations(true));
+                                    find_sigil_locations(you, true));
     case SPELL_BOULDER:
         return make_unique<targeter_boulder>(&you, barrelling_boulder_hp(pow));
     case SPELL_PERMAFROST_ERUPTION:
