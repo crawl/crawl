@@ -28,6 +28,7 @@
 game_state::game_state()
     : game_crashed(false), crash_debug_scans_safe(true),
       mouse_enabled(false), waiting_for_command(false),
+      waiting_for_ui(false),
       terminal_resized(false), last_winch(0),
       seed(0),
       io_inited(false),

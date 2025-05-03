@@ -550,18 +550,12 @@ static int _get_key_from_curses()
 static void unix_handle_resize_event()
 {
     crawl_state.last_winch = time(0);
-    if (crawl_state.waiting_for_command)
+    if (crawl_state.waiting_for_command || crawl_state.waiting_for_ui)
         handle_terminal_resize();
     else
         crawl_state.terminal_resized = true;
 }
 #endif
-
-static bool getch_returns_resizes;
-void set_getch_returns_resizes(bool rr)
-{
-    getch_returns_resizes = rr;
-}
 
 static int _headless_getchk()
 {
@@ -642,8 +636,7 @@ int getch_ck()
             // then scroll down one line. To fix this, we always sync termsz:
             crawl_view.init_geometry();
 
-            if (!getch_returns_resizes)
-                continue;
+            continue;
         }
 #endif
 
@@ -687,10 +680,6 @@ int getch_ck()
         case KEY_B2:        return CK_NUMPAD_5;
         case KEY_C1:        return CK_NUMPAD_1;
         case KEY_C3:        return CK_NUMPAD_3;
-
-#ifdef KEY_RESIZE
-        case KEY_RESIZE:    return CK_RESIZE;
-#endif
 
         // Undocumented ncurses control keycodes, here be dragons!!!
         case 515:           return CK_CTRL_DELETE; // Mac
