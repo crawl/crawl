@@ -5862,6 +5862,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && flavour != BEAM_TORMENT_DAMAGE)
         {
             bool fly_died = coinflip();
+            monster_type dead_mon     = MONS_PROGRAM_BUG;
             int old_hp                = hit_points;
             auto old_flags            = flags;
             mon_enchant_list old_ench = enchantments;
@@ -5873,9 +5874,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
             if (type == MONS_SPRIGGAN_RIDER)
+            {
                 type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
+                dead_mon = fly_died ? MONS_HORNET : MONS_SPRIGGAN;
+            }
             else if (type == MONS_GOBLIN_RIDER)
+            {
                 type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
+                dead_mon = fly_died ? MONS_WYVERN : MONS_GOBLIN;
+            }
 
             define_monster(*this);
             hit_points = min(old_hp, hit_points);
@@ -5887,7 +5894,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!old_name.empty())
                 mname = old_name;
 
-            mounted_kill(this, fly_died ? MONS_HORNET : MONS_SPRIGGAN,
+            mounted_kill(this, dead_mon,
                 !oppressor ? KILL_NON_ACTOR
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,
