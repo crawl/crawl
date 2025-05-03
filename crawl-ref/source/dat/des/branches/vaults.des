@@ -2391,7 +2391,7 @@ SHUFFLE: AB, CD, Ee / Ff / Gg / Hh / Ii
 SUBST:   A = +, B : xx+, C : xxx+, D : xxxx+
 SUBST:   E = O, e = k, fghi = ', FG = S, HI : RRU9
 KFEAT:   S = jewellery shop / antique armour shop / distillery shop
-KFEAT:   R = general shop / book shop / scroll shop / \
+KFEAT:   R = general shop / book shop / scroll shop / gadget shop / \
              antique weapon shop / distillery shop
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:., . = 2:9 / *:.
