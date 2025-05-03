@@ -249,8 +249,8 @@ static bool _sync_rune_knowledge(coord_def p)
         return false;
     // somewhat convoluted because to update map knowledge properly, we need
     // an actual rune item
-    const bool already = env.map_knowledge(p).item();
-    const bool rune_memory = already && env.map_knowledge(p).item()->is_type(
+    const bool already = env.map_knowledge.item(p);
+    const bool rune_memory = already && env.map_knowledge.item(p)->is_type(
                                                     OBJ_RUNES, RUNE_ABYSSAL);
     for (stack_iterator si(p); si; ++si)
     {
@@ -258,7 +258,7 @@ static bool _sync_rune_knowledge(coord_def p)
         {
             // found! make sure map memory is up-to-date
             if (!rune_memory)
-                env.map_knowledge(p).set_item(*si, already);
+                env.map_knowledge.set_item(*si, already);
 
             if (!you.see_cell(p))
                 env.map_knowledge(p).flags |= MAP_DETECTED_ITEM;
@@ -271,10 +271,10 @@ static bool _sync_rune_knowledge(coord_def p)
     {
         // something else seems to have been there, clear the rune but leave
         // a remnant
-        env.map_knowledge(p).set_detected_item();
+        env.map_knowledge.set_detected_item(p);
     }
     else
-        env.map_knowledge(p).clear();
+        env.map_knowledge.clear(p);
     return false;
 }
 
@@ -794,9 +794,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 
     remove_markers_and_listeners_at(p);
 
-    env.map_knowledge(p).clear();
+    env.map_knowledge.clear(p);
     if (env.map_forgotten)
-        (*env.map_forgotten)(p).clear();
+        (*env.map_forgotten).clear(p);
     env.map_seen.set(p, false);
 #ifdef USE_TILE
     tile_forget_map(p);

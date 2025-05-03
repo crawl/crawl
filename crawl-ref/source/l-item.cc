@@ -1472,7 +1472,7 @@ static int l_item_get_items_at(lua_State *ls)
     if (!map_bounds(p))
         return 0;
 
-    const auto item = env.map_knowledge(p).item();
+    const auto item = env.map_knowledge.item(p);
     // XXX: Sensed items like those from Gnoll's strong nose mutation aren't
     // fully defined. These currently shouldn't be returned to clua, since many
     // methods like :name() don't work properly. Ideally they would have a

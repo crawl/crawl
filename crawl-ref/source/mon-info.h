@@ -271,6 +271,7 @@ struct monster_info_base
         int num_heads;   ///< # of hydra heads
         int slime_size;  ///< # of slimes in this one
         int is_active;   ///< Whether this ballisto is active or not
+        uint16_t next_free;
     };
     int _colour;
     int ghost_colour;

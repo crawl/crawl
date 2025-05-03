@@ -460,8 +460,8 @@ void wizard_detect_creatures()
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
-        env.map_knowledge(mi->pos()).set_detected_monster(mi->type);
+        env.map_knowledge.set_monster(monster_info(*mi));
+        env.map_knowledge.set_detected_monster(mi->pos(), mi->type);
 #ifdef USE_TILE
         tiles.update_minimap(mi->pos());
 #endif

@@ -748,7 +748,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }
             else
-                knowledge.clear();
+                env.map_knowledge.clear(knowledge);
         }
 
         // Don't assume that DNGN_UNSEEN cells ever count as mapped.
@@ -814,7 +814,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             {
                 set_terrain_mapped(pos);
 
-                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
+                map_feature mf = env.map_knowledge.get_map_feature(knowledge);
+                if (mf == MF_STAIR_BRANCH)
                     seen_notable_thing(feat, pos);
 
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
@@ -975,7 +976,7 @@ void view_update_at(const coord_def &pos)
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
         : you.flash_colour;
-    monster_type mons = env.map_knowledge(pos).monster();
+    monster_type mons = env.map_knowledge.monster(pos);
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
@@ -1731,14 +1732,14 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
 #ifdef USE_TILE
-    cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
     cell->flash_alpha = 0;
 #endif
 
     // Don't hide important information by recolouring monsters.
     bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
-        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
+        const monster_type type = env.map_knowledge.monster(m);
+        return type == MONS_NO_MONSTER || mons_class_is_firewood(type);
     });
 
     // Is this cell excluded from movement by mesmerise-related statuses?
@@ -1828,7 +1829,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         && map_bounds(gc)
         && (_layers == Layer::None
             || gc != you.pos()
-               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+               && (env.map_knowledge.monster(gc) == MONS_NO_MONSTER
                    || !you.see_cell(gc)))
         && travel_colour_override(gc))
     {

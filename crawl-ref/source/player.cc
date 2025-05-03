@@ -149,7 +149,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
     if (you.confused())
         return true;
 
-    const cloud_type ctype = env.map_knowledge(p).cloud();
+    const cloud_type ctype = env.map_knowledge.cloud(p);
     // Don't prompt if already in a cloud of the same type.
     if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
         && ctype != cloud_type_at(you.pos())
@@ -2169,8 +2169,8 @@ void forget_map(bool rot)
             continue;
 
         if (player_in_branch(BRANCH_ABYSS)
-            && env.map_knowledge(p).item()
-            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+            && env.map_knowledge.item(p)
+            && env.map_knowledge.item(p)->is_type(OBJ_RUNES, RUNE_ABYSSAL))
         {
             continue;
         }
@@ -2187,9 +2187,9 @@ void forget_map(bool rot)
         if (you.see_cell(p))
             continue;
 
-        env.map_knowledge(p).clear();
+        env.map_knowledge.clear(p);
         if (env.map_forgotten)
-            (*env.map_forgotten)(p).clear();
+            (*env.map_forgotten).clear(p);
         StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);

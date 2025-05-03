@@ -4,7 +4,7 @@
 
 #include "AppHdr.h"
 
-#include "map-cell.h"
+#include "map-knowledge.h"
 #include "random.h"
 #include "tags.h"
 
@@ -189,9 +189,10 @@ TEST_CASE( "Monster spell unmarshalling can remove removed spells", "[single-fil
 }
 
 TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" ) {
-
-    void marshallMapCell (writer &, const map_cell &);
-    void unmarshallMapCell (reader &, map_cell& cell);
+    void marshallMapCell (writer &th, coord_def gc,
+                          const MapKnowledge &map_knowledge);
+    void unmarshallMapCell (reader &th, coord_def gc,
+                            MapKnowledge& map_knowledge);
 
     SECTION ("Short integers can be roundtripped.") {
         rng::subgenerator subgen(0, 0);
@@ -213,27 +214,33 @@ TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" )
     }
 
     SECTION ("Map cells can be roundtripped.") {
-        auto roundtrip_map_cell = [](const map_cell cell) {
+        auto roundtrip_map_cell = [](coord_def gc,
+                                     const MapKnowledge map_knowledge)
+        {
             vector<unsigned char> buf;
             auto w = writer(&buf);
-            marshallMapCell(w, cell);
+            marshallMapCell(w, gc, map_knowledge);
 
             auto r = reader(buf);
-            map_cell roundtrip_cell;
-            unmarshallMapCell(r, roundtrip_cell);
+            MapKnowledge roundtrip_map_knowledge;
+            unmarshallMapCell(r, gc, roundtrip_map_knowledge);
 
+            const map_cell& cell = map_knowledge(gc);
+            const map_cell& roundtrip_cell = roundtrip_map_knowledge(gc);
             // TODO: Compare other members.
             REQUIRE(cell.flags == roundtrip_cell.flags);
             REQUIRE(r.valid() == false);
         };
 
-        map_cell cell;
+        coord_def gc(0, 0);
+        MapKnowledge map_knowledge;
+        map_cell& cell = map_knowledge(gc);
 
         cell.flags = 129;
-        roundtrip_map_cell(cell);
+        roundtrip_map_cell(gc, map_knowledge);
 
         cell.flags = 32769;
-        roundtrip_map_cell(cell);
+        roundtrip_map_cell(gc, map_knowledge);
 
         random_device rd;
         mt19937 generator(rd());
@@ -241,7 +248,7 @@ TEST_CASE( "Basic marshalling/unmarshalling works correctly.", "[single-file]" )
         for (auto i = 0; i < 1000; i++)
         {
             cell.flags = distribution(generator);
-            roundtrip_map_cell(cell);
+            roundtrip_map_cell(gc, map_knowledge);
         }
     }
 }

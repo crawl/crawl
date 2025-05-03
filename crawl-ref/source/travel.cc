@@ -209,13 +209,13 @@ static inline bool is_trap(const coord_def& c)
 
 static inline bool _is_safe_cloud(const coord_def& c)
 {
-    const cloud_type ctype = env.map_knowledge(c).cloud();
+    const cloud_type ctype = env.map_knowledge.cloud(c);
     if (ctype == CLOUD_NONE)
         return true;
 
     // We can also safely run through smoke, or any of our own clouds if
     // following Qazlal.
-    return !is_damaging_cloud(ctype, true, YOU_KILL(env.map_knowledge(c).cloudinfo()->killer));
+    return !is_damaging_cloud(ctype, true, YOU_KILL(env.map_knowledge.cloudinfo(c)->killer));
 }
 
 // Returns an estimate for the time needed to cross this feature.
@@ -401,7 +401,8 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
            || grid == DNGN_BINDING_SIGIL
            || _feat_is_blocking_door(grid)
            || is_trap(c)
-           || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
+           || !ignore_danger
+                  && _monster_blocks_travel(env.map_knowledge.monsterinfo(cell))
            || g_Slime_Wall_Check && slime_wall_neighbour(c)
            || !_is_safe_cloud(c);
 }
@@ -487,13 +488,13 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const map_cell& levelmap_cell = env.map_knowledge(c);
+    const map_cell& cell = env.map_knowledge(c);
 
     // Travel will not voluntarily cross squares blocked by immobile
     // monsters.
     if (!ignore_danger && !ignore_hostile)
     {
-        const monster_info *minfo = levelmap_cell.monsterinfo();
+        const monster_info *minfo = env.map_knowledge.monsterinfo(cell);
         if (minfo && _monster_blocks_travel(minfo))
             return false;
     }
@@ -532,7 +533,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (grid == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
         return false;
 
-    if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
+    if (!try_fallback && _feat_is_blocking_door(cell.feat()))
         return false;
 
     return feat_is_traversable_now(grid, try_fallback);
@@ -4617,8 +4618,8 @@ bool runrest::run_should_stop() const
         return true;
     }
 
-    const monster_info* mon = tcell.monsterinfo();
-    if (mon && !fedhas_passthrough(tcell.monsterinfo()))
+    const monster_info* mon = env.map_knowledge.monsterinfo(tcell);
+    if (mon && !fedhas_passthrough(mon))
         return true;
 
     if (slime_wall_neighbour(targ) && !actor_slime_wall_immune(&you))
@@ -5157,10 +5158,10 @@ command_type click_travel(const coord_def &gc, bool force_attack,
 
     if (click_travel_safe(gc))
     {
-        map_cell &cell(env.map_knowledge(gc));
+        const monster_info* mons = env.map_knowledge.monsterinfo(gc);
         // If there's a monster that would block travel,
         // don't start traveling.
-        if (!_monster_blocks_travel(cell.monsterinfo()))
+        if (!_monster_blocks_travel(mons))
         {
             start_travel(gc);
             return CMD_NO_CMD;

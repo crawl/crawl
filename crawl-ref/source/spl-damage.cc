@@ -912,7 +912,7 @@ int airstrike_space_around(coord_def target, bool count_unseen)
             if (!actor_at(*ai))
                 ++empty_space;
         }
-        else if (you.pos() != *ai && !env.map_knowledge(*ai).monsterinfo())
+        else if (you.pos() != *ai && !env.map_knowledge.monsterinfo(*ai))
             ++empty_space;
     }
 

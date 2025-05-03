@@ -1670,7 +1670,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ZERO_EXP_MON:
     {
-        const monster_info* mi = env.map_knowledge(gc).monsterinfo();
+        const monster_info* mi = env.map_knowledge.monsterinfo(gc);
 
         if (!mi)
             DELAY_EVENT;

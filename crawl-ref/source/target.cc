@@ -78,7 +78,7 @@ bool targeter::anyone_there(coord_def loc)
     if (!map_bounds(loc))
         return false;
     if (agent && agent->is_player())
-        return env.map_knowledge(loc).monsterinfo();
+        return env.map_knowledge.monsterinfo(loc);
     return actor_at(loc);
 }
 
@@ -782,7 +782,7 @@ static bool _unravelling_explodes_at(const coord_def c)
     if (you.pos() == c && player_is_debuffable())
         return true;
 
-    const monster_info* mi = env.map_knowledge(c).monsterinfo();
+    const monster_info* mi = env.map_knowledge.monsterinfo(c);
     return mi && mi->unravellable();
 }
 
@@ -857,10 +857,10 @@ aff_type targeter_airstrike::is_affected(coord_def loc)
     // Show the surrounding empty spaces.
     if (!adjacent(loc, aim) || you.pos() == loc)
         return AFF_NO;
-    const auto knowledge = env.map_knowledge(loc);
+    const map_cell& knowledge = env.map_knowledge(loc);
     if (!knowledge.seen()
         || feat_is_solid(knowledge.feat())
-        || env.map_knowledge(loc).monsterinfo())
+        || env.map_knowledge.monsterinfo(loc))
     {
         return AFF_NO;
     }
@@ -1892,7 +1892,7 @@ aff_type targeter_multimonster::is_affected(coord_def loc)
     //    return AFF_NO;
 
     // Any special checks from our inheritors
-    const monster_info *mon = env.map_knowledge(loc).monsterinfo();
+    const monster_info *mon = env.map_knowledge.monsterinfo(loc);
     if (!mon || !affects_monster(*mon))
         return AFF_NO;
 
@@ -1982,7 +1982,7 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
     if (!targeter_smite::valid_aim(a))
         return false;
 
-    const monster_info *mon = env.map_knowledge(a).monsterinfo();
+    const monster_info *mon = env.map_knowledge.monsterinfo(a);
     if (mon && !affects_monster(*mon))
     {
         return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
@@ -2731,7 +2731,7 @@ bool targeter_teleport_other::valid_aim(coord_def a)
     if (!targeter_smite::valid_aim(a))
         return false;
 
-    const monster_info* mi = env.map_knowledge(a).monsterinfo();
+    const monster_info* mi = env.map_knowledge.monsterinfo(a);
 
     if (!mi)
         return false;
