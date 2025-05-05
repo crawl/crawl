@@ -549,7 +549,9 @@ sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
+%rim 0
 capt_cutlass CAPT_CUTLASS
+%rim 1
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE
