@@ -46,6 +46,13 @@ Sacar esta carta rodeará los enmigos del usuario por círculos de neblinas que 
 su visión.
 La duración de las neblinas es aumenta con la fuerza de la carta.
 %%%%
+#Deck of Summoning
+the Swarm card
+
+Esta carta representa un oso rodeada por una plaga de abejas. Resona siniestramente.
+
+Sacar esta carta convocará abejas.
+%%%%
 #Deck of Punishment
 the Wraith card
 
