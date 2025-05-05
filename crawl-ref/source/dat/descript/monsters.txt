@@ -2593,7 +2593,7 @@ thunderous footfalls herald violent tremors.
 seismosaurus egg
 
 A lizard egg the size of a small boulder and nearly as hard. Perhaps as a
-defense mechanism, they hatch rapidly in the presence of predators and even a
+defence mechanism, they hatch rapidly in the presence of predators and even a
 newborn can give all but the most ambitious of monsters a reason to consider an
 easier meal.
 %%%%
