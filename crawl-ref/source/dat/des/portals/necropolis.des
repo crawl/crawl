@@ -1574,13 +1574,13 @@ KFEAT:   V = V
 SHUFFLE: yzYZ / zyYZ / zyZY
 SUBST:   r : x-, s : x-, x : cx, yY : cx, zZ = .
 NSUBST:  R = 1:R / *:"-"
-KPROP:   -"VOQR089de$%*|? = no_tele_into
 FTILE:   G = floor_necropolis_grass
 FTILE:   R" = floor_necropolis_square_grass
 MARKER:  P = lua:transp_loc("necropolis_ghost_arena_entry")
 MARKER:  Q = lua:transp_dest_loc("necropolis_ghost_arena_entry")
 MARKER:  R = lua:transp_loc("necropolis_ghost_arena_exit")
 MARKER:  S = lua:transp_dest_loc("necropolis_ghost_arena_exit")
+KPROP:   -QR"VO089de$%*|? = no_tele_into
 : necropolis_generic_spawns(_G)
 : necropolis_ghost_setup(_G)
 MAP
@@ -1874,11 +1874,11 @@ NSUBST:  M = 1:O / 1:2 / 2:|, ' = 5:% / 3 = %' / *:'
 SUBST:   L = $:30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:70 1, W = '
 : end
-KPROP:   '~WQR$%*|defghijkO12098 = no_tele_into
 MARKER:  P = lua:transp_loc("necropolis_ghost_randoct_entry")
 MARKER:  Q = lua:transp_dest_loc("necropolis_ghost_randoct_entry")
 MARKER:  R = lua:transp_loc("necropolis_ghost_randoct_exit")
 MARKER:  S = lua:transp_dest_loc("necropolis_ghost_randoct_exit")
+KPROP:   'QR~W$%*|defghijkO12098 = no_tele_into
 : necropolis_generic_spawns(_G)
 : necropolis_ghost_setup(_G)
 MAP
@@ -3110,7 +3110,7 @@ MARKER:  P = lua:transp_loc("necropolis_davey_jones_entry")
 MARKER:  Q = lua:transp_dest_loc("necropolis_davey_jones_entry")
 MARKER:  R = lua:transp_loc("necropolis_davey_jones_exit")
 MARKER:  S = lua:transp_dest_loc("necropolis_davey_jones_exit")
-KPROP:   -~wd*|O123456EF = no_tele_into
+KPROP:   -QR~wd*|O123456EF = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP
 ....................
@@ -3207,7 +3207,7 @@ MARKER:  P = lua:transp_loc("necropolis_smash_entry")
 MARKER:  Q = lua:transp_dest_loc("necropolis_smash_entry")
 MARKER:  R = lua:transp_loc("necropolis_smash_exit")
 MARKER:  S = lua:transp_dest_loc("necropolis_smash_exit")
-KPROP:  -$%*|?!ZQRT123456EFHJKO = no_tele_into
+KPROP:  -QR$%*|?!ZT123456EFHJKO = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP
 ....................
@@ -3342,11 +3342,11 @@ NSUBST: - = 1:2 / 2:4 / 4:5 / 2 = 5- / 4:? / *:-
 SUBST:  A : aa., a : xx., B : bb., b : xx., Y : yy., y : xx., Z : zz., Z : xx.
 COLOUR: x = yellow
 TILE:   x = wall_wax
-KPROP:  -defghijk$%*|12345O = no_tele_into
 MARKER: P = lua:transp_loc("necropolis_ghost_hive_entry")
 MARKER: Q = lua:transp_dest_loc("necropolis_ghost_hive_entry")
 MARKER: R = lua:transp_loc("necropolis_ghost_hive_exit")
 MARKER: S = lua:transp_dest_loc("necropolis_ghost_hive_exit")
+KPROP:  -QRdefghijk$%*|12345O = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP
 .......Y....Z.......
@@ -3576,7 +3576,7 @@ MARKER: P = lua:transp_loc("necropolis_berserking_beasts_entry")
 MARKER: Q = lua:transp_dest_loc("necropolis_berserking_beasts_entry")
 MARKER: R = lua:transp_loc("necropolis_berserking_beasts_exit")
 MARKER: S = lua:transp_dest_loc("necropolis_berserking_beasts_exit")
-KPROP:  -1234%$*|DEFHIJ = no_tele_into
+KPROP:  -QR1234%$*|DEFHIJ = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP
 ....................
@@ -3702,12 +3702,12 @@ COLOUR: a = lightred
 TILE:   a = wall_pebble_red
 TILE:   c = dngn_stone_wall_red
 KPROP:  c = bloody
-KPROP:  -defghijk$%*|ZO12DEFHJKLqrsuy = no_tele_into
 : ghost_flavour_unrand_chance(_G, "?", "Z", "necklace_of_bloodlust")
 MARKER: P = lua:transp_loc("necropolis_wrathful_warriors_entry")
 MARKER: Q = lua:transp_dest_loc("necropolis_wrathful_warriors_entry")
 MARKER: R = lua:transp_loc("necropolis_wrathful_warriors_exit")
 MARKER: S = lua:transp_dest_loc("necropolis_wrathful_warriors_exit")
+KPROP:  -QRdefghijk$%*|ZO12DEFHJKLqrsuy = no_tele_into
 : necropolis_ghost_setup(_G, false)
 MAP
 ...................
