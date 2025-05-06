@@ -1,0 +1,17 @@
+%%%%
+no spellcasting passive
+
+No puedes lanzar hechizos.
+%%%%
+guardian spirit passive
+
+Tu reserva de magia absorbe un poco del daño que recibes. 
+%%%%
+harm passive
+
+Todo daño recibes y haces es aumentado.
+%%%%
+archmagi passive
+
+Tu poder de hechizos es aumentado.
+%%%%
