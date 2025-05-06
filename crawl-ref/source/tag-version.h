@@ -321,6 +321,7 @@ enum tag_minor_version
     TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
     TAG_MINOR_SPECIFY_EXP,         // Specify monster EXP in yaml rather than calculating from HD
     TAG_MINOR_GHOST_MOVE_SPEED_FIX,// Fixup move speed of old spriggan/naga/barachi ghosts
+    TAG_MINOR_COMPRESS_MAPPING,    // Reduce another mutation to 2 levels
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

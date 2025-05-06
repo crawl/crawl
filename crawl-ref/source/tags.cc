@@ -3850,6 +3850,12 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_AWKWARD_TONGUE);
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_COMPRESS_MAPPING)
+    {
+        if (you.mutation[MUT_PASSIVE_MAPPING] > 2)
+            you.mutation[MUT_PASSIVE_MAPPING] = 2;
+    }
+
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())
         _clear_mutation(m);

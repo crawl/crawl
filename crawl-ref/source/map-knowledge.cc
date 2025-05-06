@@ -103,7 +103,7 @@ static void _automap_from(int x, int y, int level)
 
 static int _map_quality()
 {
-    return you.get_mutation_level(MUT_PASSIVE_MAPPING);
+    return you.get_mutation_level(MUT_PASSIVE_MAPPING) * 2;
 }
 
 void reautomap_level()

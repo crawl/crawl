@@ -15,9 +15,6 @@ generic_jiyva_mutation_2
 generic_jiyva_mutation_3
 
 # Scales
-shaggy_fur_1 SHAGGY_FUR
-shaggy_fur_2
-shaggy_fur_3
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
@@ -134,15 +131,12 @@ stinger_2
 stinger_3
 
 # Good mutations also used by regular species
+acute_vision ACUTE_VISION
 camouflage_1 CAMOUFLAGE
 camouflage_2
 camouflage_3
-passive_mapping_1 PASSIVE_MAPPING
-passive_mapping_2
-passive_mapping_3
 
 # Miscellaneous good mutations
-acute_vision ACUTE_VISION
 clarity CLARITY
 ephemeral_shield EPHEMERAL_SHIELD
 efficient_metabolism EFFICIENT_METABOLISM
@@ -150,6 +144,8 @@ feed_off_suffering_1 FEED_OFF_SUFFERING
 feed_off_suffering_2
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
+passive_mapping_1 PASSIVE_MAPPING
+passive_mapping_2
 protean_grace PROTEAN_GRACE
 regeneration_1 REGENERATION
 regeneration_2
@@ -224,6 +220,9 @@ acidic_bite ACIDIC_BITE
 big_wings BIG_WINGS
 inviolate_magic INVIOLATE_MAGIC
 steam_res STEAM_RES
+shaggy_fur_1 SHAGGY_FUR
+shaggy_fur_2
+shaggy_fur_3
 multilived MULTILIVED
 no_armour NO_ARMOUR
 no_grasping NO_GRASPING
