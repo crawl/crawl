@@ -279,11 +279,13 @@ def admin_only(f):
     return wrapper
 
 
-# XX add defaults when we can be sure the python version supports it
-MessageBundle = collections.namedtuple('MessageBundle', ["binmsg", "compressed"])
-MessageBundle.__bool__ = lambda self: bool(self.binmsg)
-
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
+    # Maybe a premature optimization, but add explicit slots
+    # To hopefully speedup access and improve memory usage
+    __slots__ = ("username", "user_id", "user_email", "timeout", "lobby_timeout", "watched_game", "process", "game_id",
+                 "received_pong", "save_info", "id", "deflate", "_compressobj",
+                 "total_message_bytes", "compressed_bytes_sent", "uncompressed_bytes_sent",
+                 "message_queue", "failed_messages", "failed_on_messages", "subprotocol", "chat_hidden", "logger")
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
@@ -304,7 +306,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         current_id += 1
 
         self.deflate = True
-        self._compressobj = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION,
+        # Default zlib.Z_DEFAULT_COMPRESSION varies by version. But for modern-ish versions, it's 6
+        # 6 appears to be majorly overkill for us.
+        # The data is super compressible, and not all that large by modern standards
+        # And there's highly diminishing returns.
+        # 1 or 2 seems to be a better default
+        self._compressobj = zlib.compressobj(2,
                                              zlib.DEFLATED,
                                              -zlib.MAX_WBITS)
         self.total_message_bytes = 0
@@ -1354,26 +1361,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                     exc_info=True)
             self.failed_on_messages += 1
 
-    def _encode_for_send(self, msg, deflate):
+    def _encode_for_send(self, msg) -> Optional[bytes]: #t
         try:
             binmsg = utf8(msg)
-            if deflate:
+            self.total_message_bytes += len(binmsg)
+            if self.deflate:
                 # Compress like in deflate-frame extension:
                 # Apply deflate, flush, then remove the 00 00 FF FF
                 # at the end
                 # note: a compressed stream is stateful, you can't use this
                 # compressobj for other sockets
-                compressed = self._compressobj.compress(binmsg)
-                compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
-                compressed = compressed[:-4]
-                return MessageBundle(binmsg, compressed)
+                compressed = (self._compressobj.compress(binmsg) + self._compressobj.flush(zlib.Z_SYNC_FLUSH))[:-4]
+                self.compressed_bytes_sent += len(compressed)
+                return compressed
             else:
-                return MessageBundle(binmsg, None)
+                self.uncompressed_bytes_sent += len(binmsg)
+                return binmsg
         except:
             # might happen with weird utf-8 stuff...can this be handled more
             # precisely?
             self.logger.warning("Exception trying to encode message.", exc_info = True)
-            return MessageBundle(None, None)
+            return None
 
 
     # send a single message batch, encoding and compressing it if necessary
@@ -1381,22 +1389,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.client_closed or not msg:
             return False
 
-        bundle = self._encode_for_send(msg, self.deflate)
-        if not bundle:
+        payload = self._encode_for_send(msg)
+        if not payload:
             self.failed_messages += 1
             return False
 
         try:
-            self.total_message_bytes += len(bundle.binmsg)
             if self.deflate:
-                self.compressed_bytes_sent += len(bundle.compressed)
-                f = self.write_message(bundle.compressed, binary=True)
+                f = self.write_message(payload, binary=True)
             else:
-                self.uncompressed_bytes_sent += len(bundle.binmsg)
-                f = self.write_message(bundle.binmsg)
-
-            import traceback
-            cur_stack = traceback.format_stack()
+                # TODO: can't we set binary=True here too?
+                f = self.write_message(payload)
 
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
@@ -1409,28 +1412,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     if self.failed_messages == 0:
                         self.logger.warning("Connection closed during async write_message")
                     self.failed_messages += 1
-                    if self.ws_connection is not None:
+                    if self.ws_connection:
                         self.ws_connection._abort()
                 except tornado.websocket.WebSocketClosedError as e:
                     if self.failed_messages == 0:
                         self.logger.warning("Connection closed during async write_message")
                     self.failed_messages += 1
-                    if self.ws_connection is not None:
+                    if self.ws_connection:
                         self.ws_connection._abort()
                 except Exception as e:
-                    self.logger.warning("Exception during async write_message, stack at call:")
-                    self.logger.warning("".join(cur_stack))
+                    # There used to be a stack trace collected right after write_message
+                    # This is too expensive to make sense on an ongoing basis.
+                    self.logger.warning("Exception during async write_message")
                     self.logger.warning(e, exc_info=True)
                     self.failed_messages += 1
-                    if self.ws_connection is not None:
+                    if self.ws_connection:
                         self.ws_connection._abort()
 
-            # extreme back-compat try-except block, `f` should be None in
+            # extreme back-compat if statement, `f` should be None in
             # ancient tornado versions
-            try:
+            if f:
                 f.add_done_callback(after_write_callback)
-            except:
-                pass
             # true means that something was queued up to send, but it may be
             # async
             return True
@@ -1438,12 +1440,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.failed_messages == 0:
                 self.logger.warning("Connection closed during write_message")
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.failed_messages += 1
-            if self.ws_connection is not None:
+            if self.ws_connection:
                 self.ws_connection._abort()
             return False
 
