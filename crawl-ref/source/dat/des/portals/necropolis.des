@@ -3407,7 +3407,7 @@ KFEAT:  ~ = zot trap / dispersal trap w:5 / archmage's trap w:1
 KFEAT:  ' = tyrant's trap / dispersal trap w:5 / zot trap w:5 / web w:1
 KFEAT:  " = harlequin's trap / dispersal trap w:5 / zot trap w:1
 SUBST:  G : GGU
-KPROP:  -'"defghi$%*|O12U = no_tele_into
+KPROP:  -'"defghi$%*|O1209U = no_tele_into
 : necropolis_generic_spawns(_G)
 : necropolis_ghost_setup(_G)
 MAP
