@@ -713,14 +713,14 @@ whichever of them is most distant from it.
 %%%%
 Forge Monarch Bomb spell
 
-Constructs a flying incendiary factory, packed to the brim with cluster bomblets
-which it can deploy both in melee and launch at range. While the monarch's
-bomblets have no attack of their own, they will pursue the caster's enemies
-until given the signal to explode.
+Constructs a flying incendiary factory, packed to the brim with cluster
+bomblets which it can deploy both in melee and launch at range. While the
+monarch's bomblets have no attack of their own, they will pursue the caster's
+enemies until given the signal to explode.
 
-Recasting this spell while anything created by is still active will detonate the
-monarch bomb and all bomblets, dealing a combination of fire and physical damage
-to everything adjacent to them besides the caster themselves.
+Recasting this spell while anything it has created is still active will
+detonate the monarch bomb and all bomblets, dealing a combination of fire and
+physical damage to everything adjacent to them besides the caster themselves.
 %%%%
 Forge Phalanx Beetle spell
 
