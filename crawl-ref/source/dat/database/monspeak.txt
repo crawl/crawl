@@ -7418,7 +7418,7 @@ _Wiglaf_common_
 
 @The_monster@ says @to_foe@, "I'll gie ye a proper bath in magma."
 
-@The_monster@ shouts @at@ @foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
+@The_monster@ shouts @at_foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
 
 @The_monster@ says, "I got whit I came for, but wha passes up a proper rammy?"
 
