@@ -5,7 +5,7 @@ No puedes lanzar hechizos.
 %%%%
 corrode self passive
 
-Cada vez que recibes daño tienes posibilidad de carcomer
+Cada vez que recibes daño tienes posibilidad de carcomer.
 %%%%
 slow self passive
 
