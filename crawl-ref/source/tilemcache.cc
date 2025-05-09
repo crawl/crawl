@@ -574,6 +574,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = -4;
         break;
+    case TILEP_MONS_REAPER_SCYTHELESS:
+        *ofs_x = -2;
+        *ofs_y = -6;
+        break;
     // Shift upwards and to the right.
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:

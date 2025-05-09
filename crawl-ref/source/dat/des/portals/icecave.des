@@ -187,7 +187,7 @@ ratios 18:6:2:1.
 function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     simul = simulacrum_monsters()
 
-    local reaper_equip = " ; halberd plus:-4 itemname:scythe" ..
+    local reaper_equip = " ; halberd plus:-6 itemname:scythe" ..
                          " tile:wpn_scythe wtile:scythe ego:freezing"
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
