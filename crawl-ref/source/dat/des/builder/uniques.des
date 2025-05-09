@@ -308,7 +308,6 @@ DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 
 NAME:   uniq_bai_suzhen
 DEPTH:  Depths:1-2, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
-DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
 # Initial placement of Boris: he may regenerate on later levels after
@@ -337,8 +336,8 @@ DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Josephina band")
 
 NAME:   uniq_margery
-# Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling the WEIGHT
-# would lead to numbers closest to Margery's pre-Maggie spawn rates
+# Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling
+# the WEIGHT would lead to numbers closest to Margery's pre-Maggie spawn rates
 WEIGHT: 20
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Margery band")
@@ -373,11 +372,11 @@ DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
 
 NAME:   uniq_norris
-DEPTH:  Depths:1-3, Elf, Vaults:1-4
+DEPTH:  Depths, !Depths:$, Elf, Vaults, !Vaults:$
 : place_unique(_G, "Norris band")
 
 NAME:   uniq_saint_roka
-DEPTH:  Orc:$, Depths:1-2, Elf:2-, Snake:2-, Vaults, Crypt:1-2
+DEPTH:  Orc:$, Depths:1, Elf:2-, Snake:2-, Vaults
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sojobo
@@ -389,7 +388,7 @@ DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Vv")
 
 NAME:   uniq_xtahua
-DEPTH:  Depths:3-, Vaults:2-, Crypt
+DEPTH:  Depths:3-, Vaults:2-, Crypt, !Crypt:$
 : place_unique(_G, "Xtahua")
 
 NAME:   uniq_grunn

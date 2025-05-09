@@ -2027,8 +2027,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
 
     case MONS_SAINT_ROKA:
         if (player_in_branch(BRANCH_VAULTS) ||
-            player_in_branch(BRANCH_DEPTHS) ||
-            player_in_branch(BRANCH_CRYPT))
+            player_in_branch(BRANCH_DEPTHS))
         {
             band = BAND_LATE_ROKA;
             band_size = random_range(5, 7);
