@@ -287,7 +287,7 @@ static const duration_def duration_data[] =
       "You are vexed.", D_DISPELLABLE,
       {{ "", []() {
             mprf(MSGCH_DURATION, "You feel more in control of yourself again.");
-            you.give_stun_immunity(random_range(1, 3));
+            you.give_stun_immunity(random_range(3, 5));
       }}}},
     { DUR_PETRIFYING,
       LIGHTRED, "Petr",
