@@ -5841,7 +5841,8 @@ bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
 
     if (agent && agent->is_player()
         && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(mon))
+        && mons_is_slime(mon)
+        && mon.wont_attack())
     {
         if (do_message && you.can_see(mon))
             simple_god_message(" protects your slime from harm.", false, GOD_JIYVA);
