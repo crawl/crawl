@@ -93,7 +93,7 @@ void packed_cell::add_overlay(int tileidx)
     // Clang 19.1.0 happily auto-vectorizes this on -O2
     // auto end = dngn_overlay.begin() + num_dngn_overlay;
     // or something like that might be more efficient for gcc though?
-    auto end = dngn_overlay.end();
+    auto end = dngn_overlay.begin() + num_dngn_overlay;
     bool not_present = find(dngn_overlay.begin(), end, tileidx) == end;
     if (not_present)
     {
