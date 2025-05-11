@@ -10,9 +10,7 @@ enum shop_type
     SHOP_ARMOUR_ANTIQUE,
     SHOP_GENERAL_ANTIQUE,
     SHOP_JEWELLERY,
-#if TAG_MAJOR_VERSION == 34
-    SHOP_EVOKABLES, // wands, rods, and misc items
-#endif
+    SHOP_GADGET, // wands, evokers, and other miscellany
     SHOP_BOOK,
 #if TAG_MAJOR_VERSION == 34
     SHOP_FOOD,
