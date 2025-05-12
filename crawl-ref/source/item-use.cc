@@ -448,6 +448,7 @@ static void _note_tele_cancel(MenuEntry* entry)
     if (ie && ie->item
         && ie->item->base_type == OBJ_SCROLLS
         && ie->item->sub_type == SCR_TELEPORTATION
+        && ie->item->is_identified()
         && you.duration[DUR_TELEPORT])
     {
         ie->text += " (cancels current teleport)";
