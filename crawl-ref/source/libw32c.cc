@@ -488,9 +488,11 @@ void set_cursor_enabled(bool curstype)
         gotoxy_sys(cx+1, cy+1);
 }
 
-// This will force the cursor down to the next line.
 void clear_to_end_of_line()
 {
+    // We shouldn't move cursor pos
+    save_cursor_pos save;
+
     const int pos = wherex();
     const int cols = get_number_of_cols();
     if (pos <= cols)

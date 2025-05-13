@@ -62,10 +62,8 @@ struct save_cursor_pos
     save_cursor_pos()
         : region(get_cursor_region()), pos(cgetpos(region))
     {
-#ifndef TARGET_OS_WINDOWS
         ASSERTM(valid_cursor_pos(pos.x, pos.y, region),
             "invalid cursor position %d,%d in region %d", pos.x, pos.y, region);
-#endif
     };
     ~save_cursor_pos()
     {
