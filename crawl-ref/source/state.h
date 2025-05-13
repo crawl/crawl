@@ -45,6 +45,7 @@ struct game_state
     bool mouse_enabled;     // True if mouse input is currently relevant.
 
     bool waiting_for_command; // True when the game is waiting for a command.
+    bool waiting_for_ui;     // True when waiting for input from the ui overlay
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
     time_t last_winch;       // Time of last resize, for crash dumps.
