@@ -2594,9 +2594,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                         mons.get_ench(ENCH_MAGNETISED).agent());
     }
 
-    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
-        beogh_progress_vengeance();
-
     if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
         && !silent && !was_banished && !mons_reset
         && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
@@ -3253,6 +3250,9 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         return corpse;
     }
+
+    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        beogh_progress_vengeance();
 
     // If there are other duel targets alive (due to a slime splitting), don't
     // count this as winning the duel.
