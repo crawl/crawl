@@ -288,6 +288,39 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         $("#stats_" + stat).html(elem);
     }
 
+    function update_doom()
+    {
+        if (player.doom == 0)
+        {
+            $("#stats_doom_ui").hide();
+            return;
+        }
+        else
+            $("#stats_doom_ui").show();
+
+        var val = player["doom"];
+        var elem = $("<span>");
+        elem.text(" " + val + "%");
+
+        var colour = "fg7";
+        if (player.doom >= 75)
+            colour = "fg5";
+        else if (player.doom >= 50)
+            colour = "fg12";
+        else if (player.doom >= 25)
+            colour = "fg14";
+        elem.addClass(colour);
+        $("#stats_doom").html(elem);
+
+        var tooltip = $("#stats_status_lights_tooltip");
+        elem.on("mouseenter mousemove", ev => {
+                tooltip.css({top: ev.pageY + "px"});
+                tooltip.html(util.formatted_string_to_html(player["doom_desc"]));
+                tooltip.show();
+            });
+        elem.on("mouseleave", ev => tooltip.hide());
+    }
+
     function percentage_color(name)
     {
         var real = false;
@@ -404,6 +437,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             $("#stats_mpline").show();
 
         update_bar("mp");
+
+        update_doom();
 
         update_defense("ac");
         update_defense("ev");

@@ -66,6 +66,8 @@ struct player_info
     int8_t intel;
     int8_t dex;
 
+    int doom;
+
     int experience_level;
     int8_t exp_progress;
     int gold;

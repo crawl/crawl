@@ -13,6 +13,7 @@
 
 #include "actor.h"
 #include "attribute-type.h"
+#include "bane-type.h"
 #include "beam.h"
 #include "bitary.h"
 #include "book-type.h"
@@ -289,6 +290,8 @@ public:
 
     FixedVector<uint8_t, NUM_ABILITIES> sacrifice_piety;
 
+    FixedVector<int, NUM_BANES> banes;
+
     struct demon_trait
     {
         int           level_gained;
@@ -443,6 +446,7 @@ public:
     bool redraw_hit_points;
     bool redraw_magic_points;
     FixedVector<bool, NUM_STATS> redraw_stats;
+    bool redraw_doom;
     bool redraw_experience;
     bool redraw_armour_class;
     bool redraw_evasion;
@@ -664,6 +668,7 @@ public:
     bool      has_temporary_mutation(mutation_type mut) const;
     bool      has_innate_mutation(mutation_type mut) const;
     bool      has_mutation(mutation_type mut, bool active_only=true) const;
+    bool      has_bane(bane_type bane) const;
 
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
 
@@ -719,6 +724,7 @@ public:
     bool is_motile() const;
     bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int dur, bool allow_immobile = true) override;
+    bool doom(int amount) override;
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;

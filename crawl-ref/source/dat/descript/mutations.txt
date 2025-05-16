@@ -1349,3 +1349,8 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
+%%%%
+# ------ Banes ------
+placeholder bane
+
+Some text should probably go here.

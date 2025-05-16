@@ -735,7 +735,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     ASSERT(scaled_total == scale);
 }
 
-static int _calc_skill_cost_level(int xp, int start)
+int calc_skill_cost_level(int xp, int start)
 {
     while (start < MAX_SKILL_COST_LEVEL
            && xp >= (int) skill_cost_needed(start + 1))
@@ -1058,7 +1058,7 @@ static bool _xp_available_for_skill_points(int points)
             return false;
 
         const int total_xp = you.total_experience + xp_needed;
-        const int new_level = _calc_skill_cost_level(total_xp, cost_level);
+        const int new_level = calc_skill_cost_level(total_xp, cost_level);
         if (new_level != cost_level)
         {
             cost_level = new_level;
@@ -1416,7 +1416,7 @@ void check_skill_cost_change(bool quiet)
     int initial_cost = you.skill_cost_level;
 #endif
 
-    you.skill_cost_level = _calc_skill_cost_level(you.total_experience, you.skill_cost_level);
+    you.skill_cost_level = calc_skill_cost_level(you.total_experience, you.skill_cost_level);
 
 #ifdef DEBUG_TRAINING_COST
     if (!quiet && initial_cost != you.skill_cost_level)
@@ -1468,7 +1468,7 @@ int _gnoll_total_skill_cost()
     {
         if (!you.training[i])
             continue;
-        cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
+        cur_cost_level = calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
         this_cost = calc_skill_cost(cur_cost_level);
         if (num != denom)
             this_cost = (num * this_cost + denom - 1) / denom;
@@ -1716,7 +1716,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         you_skill += (delta.skill_points * scaled_training
                                         + (decrease_skill ? -99 : 99)) / 100;
         you_xp += delta.experience;
-        you_skill_cost_level = _calc_skill_cost_level(you_xp, you_skill_cost_level);
+        you_skill_cost_level = calc_skill_cost_level(you_xp, you_skill_cost_level);
     }
 
     return skill_diff(you_skill - you.skill_points[skill],

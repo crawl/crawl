@@ -2434,6 +2434,33 @@ static void _handle_watery_grave_recharge(int exp)
     }
 }
 
+static void _handle_banes(int exp)
+{
+    int loss = div_rand_round(exp * 10, calc_skill_cost(you.skill_cost_level));
+
+    if (you.attribute[ATTR_DOOM] > 0)
+    {
+        you.attribute[ATTR_DOOM] -= div_rand_round(loss, 15);
+        if (you.attribute[ATTR_DOOM] <= 0)
+        {
+            mprf(MSGCH_DURATION, "You feel the doom around you dissipate.");
+            you.attribute[ATTR_DOOM] = 0;
+        }
+
+        you.redraw_doom = true;
+    }
+
+    for (int i = 0; i < NUM_BANES; ++i)
+    {
+        if (you.banes[i] > 0)
+        {
+            you.banes[i] -= loss;
+            if (you.banes[i] <= 0)
+                remove_bane(static_cast<bane_type>(i));
+        }
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2493,6 +2520,7 @@ void apply_exp()
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
+    _handle_banes(skill_xp);
     _handle_breath_recharge(skill_xp);
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
@@ -5403,6 +5431,7 @@ player::player()
     demonic_traits.clear();
     sacrifices.init(0);
     sacrifice_piety.init(0);
+    banes.init(0);
 
     magic_contamination = 0;
 
@@ -5493,6 +5522,7 @@ player::player()
     redraw_hit_points    = false;
     redraw_magic_points  = false;
     redraw_stats.init(false);
+    redraw_doom          = false;
     redraw_experience    = false;
     redraw_armour_class  = false;
     redraw_evasion       = false;
@@ -7771,6 +7801,30 @@ bool player::polymorph(int dur, bool allow_immobile)
         stop_delay(true, true);
 
         transform_uncancellable = true;
+        return true;
+    }
+    return false;
+}
+
+// Inflict some amount of Doom on the player. Returns true if this was enough
+// to cause a Bane to be inflicted.
+bool player::doom(int amount)
+{
+    // Downscale amount of doom inflicted based on how many banes we currently have.
+    int bane_count = 0;
+    for (int i = 0; i < NUM_BANES; ++i)
+        if (you.banes[i])
+            ++bane_count;
+
+    amount = amount * 4 / (bane_count + 4);
+
+    you.redraw_doom = true;
+    you.attribute[ATTR_DOOM] += amount;
+    if (you.attribute[ATTR_DOOM] >= 100)
+    {
+        you.attribute[ATTR_DOOM] = 0;
+        mprf(MSGCH_WARN, "Doom befalls you....");
+        add_bane();
         return true;
     }
     return false;

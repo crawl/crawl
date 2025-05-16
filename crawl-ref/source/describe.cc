@@ -4945,6 +4945,49 @@ void describe_mutation(mutation_type mut)
         show_description(inf);
 }
 
+void describe_bane(bane_type bane)
+{
+    describe_info inf;
+    inf.title = uppercase_first(bane_name(bane));
+
+    const string key = make_stringf("%s bane", bane_name(bane, true).c_str());
+    string lookup = getLongDescription(key);
+
+    if (!lookup.empty())
+    {
+        hint_replace_cmds(lookup);
+        inf.body << lookup;
+    }
+    else
+        inf.body << bane_desc(bane) << "\n";
+
+    const int dur = bane_base_duration(bane);
+    string dur_str;
+    if (dur > BANE_DUR_LONG)
+        dur_str = "very long";
+    else if (dur > BANE_DUR_MEDIUM)
+        dur_str = "long";
+    else if (dur > BANE_DUR_SHORT)
+        dur_str = "moderate length of";
+    else
+        dur_str = "short length of";
+
+    inf.body << make_stringf("\nThis bane usually lasts a %s time.\n", dur_str.c_str());
+
+    if (you.banes[bane])
+    {
+        int needed_xl = xl_to_remove_bane(bane);
+        string desc = make_stringf("\n<lightmagenta>"
+                                   "This bane will be lifted from you when you "
+                                   "gain another %.1f XLs worth of experience."
+                                   "</lightmagenta>",
+                                    (float)needed_xl / 10.0f);
+        inf.body << desc;
+    }
+
+    show_description(inf);
+}
+
 static string _describe_draconian(const monster_info& mi)
 {
     string description;

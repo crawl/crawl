@@ -1,0 +1,15 @@
+#pragma once
+
+#include "tag-version.h"
+
+enum bane_type
+{
+    BANE_PLACEHOLDER_1,
+    BANE_PLACEHOLDER_2,
+
+    NUM_BANES,
+};
+
+constexpr int BANE_DUR_LONG   = 2200;
+constexpr int BANE_DUR_MEDIUM = 1500;
+constexpr int BANE_DUR_SHORT  = 800;

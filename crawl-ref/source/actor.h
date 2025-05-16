@@ -171,6 +171,7 @@ public:
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const actor* source, const string &reason = "") = 0;
     virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
+    virtual bool doom(int amount) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,

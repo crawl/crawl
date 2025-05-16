@@ -103,6 +103,7 @@ DEF_BITFIELD(mutflags, mutflag, 11);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
+#include "bane-data.h"
 
 // XXX: Any normal mutation which removes a slot should be in this list, whether
 //      or not it is actually part of a demonspawn facet, as this is used in
@@ -241,6 +242,8 @@ static int mut_index[NUM_MUTATIONS];
 static int category_mut_index[MUT_NON_MUTATION - CATEGORY_MUTATIONS];
 static map<mutflag, int> total_weight;
 
+static int bane_index[NUM_BANES];
+
 static const mutation_def& _get_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
@@ -288,6 +291,11 @@ void init_mut_index()
         ASSERT(category_mut_index[mut-CATEGORY_MUTATIONS] == -1);
         category_mut_index[mut-CATEGORY_MUTATIONS] = i;
     }
+
+    for (int i = 0; i < NUM_BANES; ++i)
+        bane_index[i] = -1;
+    for (unsigned int i = 0; i < ARRAYSZ(bane_data); ++i)
+        bane_index[bane_data[i].type] = i;
 }
 
 /*
@@ -456,6 +464,11 @@ int player::get_mutation_level(mutation_type mut, bool active_only) const
 bool player::has_mutation(mutation_type mut, bool active_only) const
 {
     return get_mutation_level(mut, active_only) > 0;
+}
+
+bool player::has_bane(bane_type bane) const
+{
+    return you.banes[bane] > 0;
 }
 
 /*
@@ -871,6 +884,15 @@ static vector<mutation_type> _get_ordered_mutations()
     return muts;
 }
 
+static vector<bane_type> _get_active_banes()
+{
+    vector<bane_type> banes;
+    for (int i = 0; i < NUM_BANES; ++i)
+        if (you.banes[i])
+            banes.push_back(static_cast<bane_type>(i));
+
+    return banes;
+}
 
 static vector<string> _get_mutations_descs(bool terse)
 {
@@ -959,18 +981,28 @@ static bool _fakemut_has_description(string fakemut_name)
     return !lookup.empty();
 }
 
+enum mutation_entry_type
+{
+    MUT_ENTRY_MUTATION,
+    MUT_ENTRY_FAKEMUT,
+    MUT_ENTRY_TALISMAN,
+    MUT_ENTRY_BANE,
+};
+
 class MutationMenu : public Menu
 {
 private:
     vector<pair<string, string>> fakemuts;
     vector<mutation_type> muts;
+    vector<bane_type> banes;
     bool has_future_muts;
 public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT),
           fakemuts(_get_fakemuts()),
-          muts( _get_ordered_mutations())
+          muts( _get_ordered_mutations()),
+          banes(_get_active_banes())
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
@@ -997,20 +1029,20 @@ private:
                 && ((you.form == you.default_form && you.active_talisman.defined())
                     || you.form == transformation::flux))
             {
-                me = new MenuEntry(fakemut.second, MEL_ITEM, 3, hotkey);
+                me = new MenuEntry(fakemut.second, MEL_ITEM, MUT_ENTRY_TALISMAN, hotkey);
                 ++hotkey;
             }
             // Add a full clickable entry if there's a long description for this
             // fakemut, and a non-clickable one otherwise.
             else if (_fakemut_has_description(fakemut.first))
             {
-                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, hotkey);
+                me = new MenuEntry(fakemut.second, MEL_ITEM, MUT_ENTRY_FAKEMUT, hotkey);
                 me->data = &fakemut.first;
                 ++hotkey;
             }
             else
             {
-                me = new MenuEntry(fakemut.second, MEL_ITEM, 2, 0);
+                me = new MenuEntry(fakemut.second, MEL_ITEM, MUT_ENTRY_FAKEMUT, 0);
                 me->indent_no_hotkeys = !muts.empty();
             }
 
@@ -1021,7 +1053,7 @@ private:
         {
             const string desc = mutation_desc(mut, -1, true,
                                               you.sacrifices[mut] != 0);
-            MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+            MenuEntry* me = new MenuEntry(desc, MEL_ITEM, MUT_ENTRY_MUTATION, hotkey);
             ++hotkey;
             me->data = &mut;
 #ifdef USE_TILE
@@ -1059,7 +1091,7 @@ private:
                     const string desc = make_stringf("<darkgrey>[%s]</darkgrey> XL %d",
                                                         mut_desc.c_str(),
                                                         mut.xp_level);
-                    MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+                    MenuEntry* me = new MenuEntry(desc, MEL_ITEM, MUT_ENTRY_MUTATION, hotkey);
                     ++hotkey;
                     // XXX: Ugh...
                     me->data = (void*)&mut.mut;
@@ -1068,6 +1100,17 @@ private:
                     has_future_muts = true;
                 }
             }
+        }
+
+        for (bane_type &bane : banes)
+        {
+            const string desc = make_stringf("<lightmagenta>%s [%.1f]</lightmagenta>",
+                bane_data[bane_index[bane]].description, (float)xl_to_remove_bane(bane) / 10.0f);
+
+            MenuEntry* me = new MenuEntry(desc, MEL_ITEM, MUT_ENTRY_BANE, hotkey);
+            ++hotkey;
+            me->data = &bane;
+            add_entry(me);
         }
 
         if (items.empty())
@@ -1095,15 +1138,20 @@ private:
         ASSERT(i >= 0 && i < static_cast<int>(items.size()));
         if (items[i]->data)
         {
-            // XXX: Sinful hack: fakemuts must have a quantity of 2 so that we
-            //      can know how to interpret their data member properly.
-            if (items[i]->quantity == 1)
+            // XXX: Sinful hack: mutation entry type is encoded in the quantity
+            //      field (which is otherwise unused)
+            if (items[i]->quantity == MUT_ENTRY_MUTATION)
             {
                 // XX don't use C casts
                 const mutation_type mut = *((mutation_type*)(items[i]->data));
                 describe_mutation(mut);
             }
-            else
+            else if (items[i]->quantity == MUT_ENTRY_BANE)
+            {
+                const bane_type bane = *((bane_type*)(items[i]->data));
+                describe_bane(bane);
+            }
+            else if (items[i]->quantity == MUT_ENTRY_FAKEMUT)
             {
                 const string* mut = (string*)(items[i]->data);
                 describe_info inf;
@@ -1116,8 +1164,7 @@ private:
                 show_description(inf);
             }
         }
-        // XXX: And the talisman is marked with quantity 3
-        else if (items[i]->quantity == 3)
+        else if (items[i]->quantity == MUT_ENTRY_TALISMAN)
         {
             if (you.form == you.default_form && you.active_talisman.defined())
                 describe_item_popup(you.active_talisman);
@@ -3246,4 +3293,118 @@ int protean_grace_amount()
         amount = 7 + floor((amount - 7) / 2);
 
     return amount;
+}
+
+const string bane_name(bane_type bane, bool dbkey)
+{
+    string short_name = bane_data[bane_index[bane]].name;
+
+    if (dbkey)
+    {
+        if (starts_with(short_name, "the"))
+            short_name = short_name.substr(4, short_name.length());
+
+        return lowercase(short_name);
+    }
+    else
+        return make_stringf("Bane of %s", short_name.c_str());
+}
+
+int bane_base_duration(bane_type bane)
+{
+    return bane_data[bane_index[bane]].duration;
+}
+
+const string bane_desc(bane_type bane)
+{
+    return bane_data[bane_index[bane]].description;
+}
+
+bane_type bane_from_name(string name)
+{
+    string spec = lowercase_string(name);
+    for (int i = 0; i < NUM_BANES; ++i)
+        if (name == bane_name(static_cast<bane_type>(i), true))
+            return static_cast<bane_type>(i);
+
+    return NUM_BANES;
+}
+
+/**
+ * Give the player a bane. If the player already suffers from the bane in
+ * question, extend its duration.
+ *
+ * @param bane      The type of bane to give. If NUM_BANES, give an entirely
+ *                  random bane that the player does not already have.
+ * @param duration  The duration (in XP-units) this bane will last. If 0, use
+ *                  the default duration for this type of bane.
+ *
+ * @return  Whether a bane was successfully added.
+ */
+bool add_bane(bane_type bane, int duration)
+{
+    if (bane == NUM_BANES)
+    {
+        vector<bane_type> candidates;
+        for (int i = 0; i < NUM_BANES; ++i)
+            if (you.banes[i] == 0)
+                candidates.push_back(static_cast<bane_type>(i));
+
+        if (candidates.empty())
+        {
+            mprf("You are already as afflicted as possible.");
+            return false;
+        }
+
+        bane = candidates[random2(candidates.size())];
+    }
+    if (duration == 0)
+        duration = bane_data[bane_index[bane]].duration;
+
+    if (you.banes[bane] == 0)
+        mprf(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
+    else
+        mprf(MSGCH_WARN, "Your %s grows stronger.", bane_name(bane).c_str());
+
+    you.banes[bane] += duration;
+
+    return true;
+}
+
+void remove_bane(bane_type bane)
+{
+    mprf(MSGCH_RECOVERY, "The %s upon you is lifted.", bane_name(bane).c_str());
+    you.banes[bane] = 0;
+}
+
+int xl_to_remove_bane(bane_type bane)
+{
+    int progress = 0;
+    int you_skill_cost_level = you.skill_cost_level;
+    int you_xp = you.total_experience;
+    while (progress < you.banes[bane])
+    {
+        const int next_level = skill_cost_needed(you_skill_cost_level + 1);
+
+        // max xp that can be added (or subtracted) in one pass of the loop
+        int max_xp = abs(next_level - you_xp);
+        const int cost = calc_skill_cost(you_skill_cost_level);
+        // Maximum number of points to transfer in one go.
+        // It's max_xp/cost rounded up.
+        const int max_skp = max((max_xp + cost - 1) / cost, 1);
+
+        skill_diff delta;
+        delta.skill_points = min<int>(abs((int)(you.banes[bane] - progress)),
+                                 max_skp);
+        delta.experience = delta.skill_points * cost;
+
+        progress += delta.skill_points;
+        you_xp += delta.experience;
+        you_skill_cost_level = calc_skill_cost_level(you_xp, you_skill_cost_level);
+    }
+
+    const int xp_diff = you_xp - you.total_experience;
+    const int level_diff = xp_to_level_diff(xp_diff / 10, 10);
+
+    return level_diff;
 }

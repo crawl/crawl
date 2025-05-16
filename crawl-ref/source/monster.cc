@@ -5238,6 +5238,25 @@ bool monster::polymorph(poly_power_type power)
     return monster_polymorph(this, targ, power);
 }
 
+bool monster::doom(int amount)
+{
+    int& stacks = props[MONSTER_DOOM_KEY].get_int();
+    stacks += amount;
+    if (stacks >= 50)
+    {
+        stacks = 0;
+        if (you.can_see(*this))
+            mprf("Doom befalls %s.", name(DESC_THE).c_str());
+
+        enchant_type ench = random_choose(ENCH_SLOW, ENCH_VITRIFIED, ENCH_WEAK, ENCH_BLIND, ENCH_DRAINED);
+
+        // High degree specifically for Draining
+        add_ench(mon_enchant(ench, 7, nullptr, random_range(1000, 2000)));
+    }
+
+    return false;
+}
+
 static bool _mons_is_icy(int mc)
 {
     return mc == MONS_ICE_BEAST

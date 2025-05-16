@@ -1203,3 +1203,13 @@ You have a mane of venomous tendrils for hair.
 
 Your lithotoxin has recently activated and will not do so again until you fully
 heal.
+%%%%
+Doom status
+
+A malevolent fate is gathering around you. If your Doom reaches 100%, you will
+be afflicted by a random bane and your Doom will reset to 0. Banes have diverse
+negative effects that can significant endanger your character for an extended
+period of time.
+
+Both Doom and Banes are only cured by gaining experience, though Banes typically
+last much longer.

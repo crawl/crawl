@@ -1031,7 +1031,36 @@ static void _print_stat(stat_type stat, int x, int y)
     textcolour(_get_stat_colour(stat));
     CPRINTF("%d", you.stat(stat, false));
     if (!_is_using_small_layout())
-        CPRINTF("       ");
+        CPRINTF("    ");
+}
+
+static void _print_stats_doom(int x, int y)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+
+    // Hide the bar entirely if there is no active doom (since that will be true
+    // most of the time).
+    if (you.attribute[ATTR_DOOM] == 0)
+    {
+        CPRINTF("            ");
+        return;
+    }
+
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Doom: ");
+
+    if (you.attribute[ATTR_DOOM] >= 75)
+        textcolour(LIGHTMAGENTA);
+    else if (you.attribute[ATTR_DOOM] >= 50)
+        textcolour(LIGHTRED);
+    else if (you.attribute[ATTR_DOOM] >= 25)
+        textcolour(YELLOW);
+    else
+        textcolour(LIGHTGRAY);
+
+    CPRINTF("%d%% ", you.attribute[ATTR_DOOM]);
+    you.redraw_doom = false;
 }
 
 static void _print_stats_ac(int x, int y)
@@ -1539,6 +1568,9 @@ void print_stats()
             _print_stat(static_cast<stat_type>(i), 19, 5 + i - rows_hidden);
     you.redraw_stats.init(false);
 
+    if (you.redraw_doom)
+        _print_stats_doom(32, 5 - rows_hidden);
+
     if (you.redraw_experience)
     {
         CGOTOXY(1, 8 - rows_hidden, GOTO_STAT);
@@ -1690,6 +1722,7 @@ void redraw_screen(bool show_updates)
     you.redraw_status_lights = true;
     you.redraw_noise         = true;
     you.gear_change          = true;
+    you.redraw_doom          = true;
 
     print_stats();
 

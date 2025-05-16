@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "bane-type.h"
 #include "mutation-type.h"
 #include "transformation.h"
 #include "externs.h"
@@ -94,3 +95,11 @@ bool delete_temp_mutation();
 tileidx_t get_mutation_tile(mutation_type mut);
 
 void set_evolution_mut_xp(bool malignant);
+
+const string bane_desc(bane_type bane);
+const string bane_name(bane_type mut, bool dbkey = false);
+int bane_base_duration(bane_type bane);
+bane_type bane_from_name(string name);
+bool add_bane(bane_type bane = NUM_BANES, int duration = 0);
+void remove_bane(bane_type bane);
+int xl_to_remove_bane(bane_type bane);
