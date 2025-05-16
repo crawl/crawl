@@ -474,8 +474,10 @@ public:
             // Maybe this should use textbackground too?
             textcolour(BLACK + m_empty * 16);
 
-            if (cx < disp)
+            if (cx < disp && cx < old_disp)
                 textcolour(BLACK + m_default * 16);
+            else if (cx < disp)
+                textcolour(BLACK + m_change_pos * 16);
             else if (cx < sub_disp)
                 textcolour(BLACK + YELLOW * 16);
             else if (old_disp >= sub_disp && cx < old_disp)
