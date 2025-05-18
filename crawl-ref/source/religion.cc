@@ -3877,7 +3877,7 @@ void god_pitch(god_type which_god)
         return;
     }
 
-    if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
+    if (!is_good_god(which_god) && you.penance[which_god])
     {
         you.turn_is_over = false;
         simple_god_message(" refuses to forgive you so easily!", false,
