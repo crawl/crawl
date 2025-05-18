@@ -2866,7 +2866,7 @@ TILE:   ~ = bedevilled_crystal_gehenna
 : end
 ####### Randomisation of doors and rewards
 NSUBST: - = 1:+ / *:v, ' = 1:+ / *:v, " = 1:+ / *:v
-NSUBST: *| = 1:d / 1:h
+NSUBST: *| = 1:d / 1:h, k = 1:k / *:.
 ####### Tomb entrance
 : if crawl.one_chance_in(4) then
 KFEAT:  T = enter_tomb
@@ -2886,7 +2886,7 @@ MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...svvvvvvvvvvvvvvvvvvvvvv
 vc..B..c.....c....sc..+..c.ffff.vvvsTvvvvvvvvvvvvvvvvvvvvvv
-vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+.....v
+vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+....kv
 vc.._..+...B.c....sc..c..m.ffFf.vO???||$$$.vvvvv..nLn|????v
 vc.c.c.c.....c....cc..c..c.ffff.v?$$$$$$$$.vvvv...nLn$$$$$v
 vc.....ccc+ccc....sc..cDDc.ffff.vnnnnnnnnn+vvv..H.nLn$$O$$v
@@ -2934,7 +2934,7 @@ v...ll...+.vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+zvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
 v...ll...+.vwwww.............wwww.......+........R......v.v
 v...ll...+zvwww...............ww........+....V.S.R.V....v.v
-v.llllll.+.vwww...................wwwwwwv......S........v.v
+v.llllll.+kvwww...................wwwwwwv......S........v.v
 v.llllll.+zvwww8.............8...wwwwwwwv....V.S.R.V....v.v
 v...ll...v.vwww.................wwwwwwwwv........R......v.v
 v.z.ll...vzvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v

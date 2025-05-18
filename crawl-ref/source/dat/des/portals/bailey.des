@@ -80,11 +80,20 @@ function easy_axe_fighter(e, glyph)
                        goblin w:12 ; " .. axe .. " . leather armour")
 end
 
-function hard_axe_fighter(e, glyph)
+function hard_axe_fighter(e, glyph, no_knight)
+  if no_knight == nil then
+    no_knight = false
+  end
   local axe = "war axe | broad axe w:2 | battleaxe w:1"
   local arm = "ring mail | scale mail | chain mail | plate armour"
-  e.kmons(glyph .. " = orc warrior w:90 ; " .. axe .. " . " .. arm .. " / " ..
-                      "orc knight ; " .. axe .. " . " .. arm)
+  local ow = "orc warrior w:90 ; " .. axe .. " . " .. arm
+  local ok = "orc knight ; " .. axe .. " . " .. arm
+
+  if no_knight then
+    e.kmons(glyph .. " = " .. ow)
+  else
+    e.kmons(glyph .. " = " .. ow .. " / " .. ok)
+  end
 end
 
 function orc_warlord_with_axe(e, glyph)
@@ -420,21 +429,22 @@ ENDMAP
 
 ############################################################################
 # Another actual bailey. Six good items plus two stacks of specialty darts.
-NAME:   bailey_axe_3
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
+NAME:    bailey_axe_3
+TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
 : kobold_axe_returning(_G, "1")
-KMONS:  2 = kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
+KMONS:   2 = kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
 : hard_axe_fighter(_G, "3")
-KMONS:  4 = hippogriff
-ITEM:   any good_item
-ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
+KMONS:   4 = hippogriff
+ITEM:    any good_item
+ITEM:    dart ego:atropa q:4 / dart ego:datura q:4
 : fortress_talisman_chance(_G, "f")
-KFEAT:  4 = W
-KFEAT:  - = tyrant's trap
-KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
-SUBST:  v : ccv, 2 = 2., ? : -.
-NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / * = 3.., 4 = 1:4 / 1:4W / *:W
+KFEAT:   4 = W
+KFEAT:   - = tyrant's trap
+KFEAT:   _ = altar_trog / altar_okawaru / altar_makhleb
+SHUFFLE: qrs
+SUBST:   v : ccv, 2 = 2., ? : -., q = x, r : x.., s = .
+NSUBST:  1 = 3:2 / 2:. / * = 1., 3 = 1:3 / 1:. / * = 3.., 4 = 1:4 / 1:4WW / *:W
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -448,17 +458,17 @@ xxxxxxxxcccc...ccccxxxxxxxx
 xxxxxxxxxxxc...cxxxxxxxxxxx
 xxxxxxxxcccc.-.ccccxxxxxxxx
 xxxxxxxccW.......Wccxxxxxxx
-xxxcccccWW.......WWcccccxxx
+xxxcccccWW...q...WWcccccxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.ccc4W.......W4ccc.cxxx
+xxxc.ccc4W...r...W4ccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.cccWW.......WWccc.cxxx
+xxxc.cccWW...s...WWccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.cccWW.......WWccc.cxxx
+xxxc.cccWW...s...WWccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxc.ccc4W.......W4ccc.cxxx
+xxxc.ccc4W...r...W4ccc.cxxx
 xxxc1.1.WW.......WW.1.1cxxx
-xxxcccccWW.......WWcccccxxx
+xxxcccccWW...q...WWcccccxxx
 xxxxxxxccW.......Wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
 xxxxxxxxxcc..f..ccxxxxxxxxx
@@ -487,7 +497,7 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 : kobold_axe_returning(_G, "1>")
 : easy_axe_fighter(_G, "2")
-: hard_axe_fighter(_G, "3")
+: hard_axe_fighter(_G, "3", false)
 KMONS:   4 = patrolling hippogriff
 ITEM:    any good_item
 ITEM:    potion of enlightenment pre_id, ring of flight pre_id
@@ -496,7 +506,7 @@ ITEM:    pair of boots ego:flying pre_id
 KFEAT:   > = exit_bailey
 KFEAT:   ^ = alarm trap
 KFEAT:   - = tyrant's trap
-NSUBST:  2 = 1:3 / * = 223., 4 = 1:4 / 1:443 / *:.
+NSUBST:  2 = 1:3 / * = 223., 4 = 1:4 / 1:443 / 1:223 / *:.
 SUBST:   e : eeef, g:eg
 NSUBST:  f = 1:f / *:e
 SHUFFLE: EB / XY / XY, CD / zZ / zZ / zZ
@@ -513,14 +523,14 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
 ccccccccccccccccccccccccc.??..???.e?ccccccccccccccc
 ccccccccccccccccccccccccc2ccccccccccccccccccccccccc
-ccccccccccccc14..........1.........1ccccccccccccccc
+ccccccccccccc14.........1.1........1ccccccccccccccc
 cccccccccc1.......111ccccccccc1......cccccccccccccc
 ccccccccc4...2....c+cc..e3eX.ccccCc..cccccccccccccc
 cccccccc1...2T2...+..c.2.d.2.c21CdC..1ccccccccccccc
-ccccccccc1...2..cEc..c.2...2.c.2cDc...1cccccccccccc
+ccccccccc1...2..cEc..c.2.2.2.c.2cDc...1cccccccccccc
 ccccccccccc.....EdB4.ccnc+cncc.4+dc..Wwwwwwwxxxxxxx
 cccccccccc......cEc...^.....^...ccc.Wwwwwwwxxxxxxxx
-xxxxxwwwwwwwW...wwc1.ccnc+cncc.1c1Hwwwwwwwxxxxxxxxx
+xxxxxwwwwwwwW...wwc1.ccnc+cncc.1c1.wwwwwwwxxxxxxxxx
 xxxxxxxwwwwwww~wwwcncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....~w~wwww>c.2.g.2.c>wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwcccccccccwwwwxxxxxxxxxxxxxxxxx
@@ -550,7 +560,7 @@ ORIENT: encompass
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
 : easy_axe_fighter(_G, "1")
-: hard_axe_fighter(_G, "2")
+: hard_axe_fighter(_G, "2", false)
 : orc_warlord_with_axe(_G, "3")
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   potion of experience pre_id q:1 /\
@@ -559,7 +569,7 @@ ITEM:   potion of experience pre_id q:1 /\
 : bailey_setup(_G)
 KFEAT:  C = c
 SUBST:  I = t., 1 = 11.
-NSUBST: 2 = 3:2 / *=2.
+NSUBST: 2 = 3:2 / * = 2.
 TILE:   C = stone_smooth_wall_beogh
 MAP
 ttttttttttttttttttttttttttttttttttttt
@@ -635,9 +645,9 @@ NSUBST: E = 1:+ / *:c
 : orc_warrior_with_polearm(_G, "2")
 : orc_knight_with_polearm(_G, "3")
 KMONS:  4 = goblin rider
-NSUBST: 2 = 1:34 / 1:2 / 1:. / * = 22222..
+NSUBST: 4 = 1:4 / 1:442 / *:1
+NSUBST: ? = 1:334 / 1:224 / 1:. / * = 22222..
 SUBST:  1 = 1 2:1 .
-NSUBST: 4 = 1:4 / 1:42 / *:1
 ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
         good_item golden dragon scales w:3 / good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item storm dragon scales w:3 /\
@@ -657,14 +667,14 @@ x..........WW.1ccfcc1.WW..........x
 x.WWWWWWWWWW..ccd|ecc..WWWWWWWWWW.x
 x.W1..1..1..1cc.....cc1..1..1..1W.x
 x.W.ccncccccccccc+ccccccccccncc.W.x
-x.W1cc.$$$.cc.........cE....2cc1W.x
+x.W1cc.$$$.cc.........cE....?cc1W.x
 x.W..nc.$.cc..lll.lll..EE...cn..W.x
-x.WW1.cc.cc..ll..2..ll..Ec.cc.1WW.x
-x<.WW..c+c..ll2..T..2ll..c+c..WW.xx
+x.WW1.cc.cc..ll..?..ll..Ec.cc.1WW.x
+x<.WW..c+c..ll?..T..?ll..c+c..WW.xx
 xx.WW.4c+c......T<T......c+c4.WW.<x
-x.WW1.cc.cD..ll2...2ll..cc.cc.1WW.x
-x.W..cc...DD..lllllll..cc.$.cc..W.x
-x.W1cc2....Dc.........cc.$$$.cc1W.x
+x.WW1.cc.cD..ll?...?ll..cc.cc.1WW.x
+x.W..cc...DD..lll.lll..cc.$.cc..W.x
+x.W1cc?....Dc.........cc.$$$.cc1W.x
 x.W.ccccccccccccc+ccc+ccccccccc.W.x
 x.W1..1..1..1cc.....cc1..1..1..1W.x
 x.WWWWWWWWWW..cc.<.cc..WWWWWWWWWW.x
@@ -800,8 +810,8 @@ KMONS:  3 = centaur ; javelin pre_id q:2 | javelin pre_id q:3 . \
                       spear | trident | halberd . \
                       ring mail | scale mail | chain mail
 KMONS:  4 = goblin rider ; mundane spear . javelin q:1
-NSUBST: _ = 8 = 2. / 10 = 1. / *:.
-NSUBST: ; = 9 = 22. / 9 = 11. / *:.
+NSUBST: _ = 7 = 2. / 10 = 1. / *:.
+NSUBST: ; = 8 = 22. / 9 = 11. / *:.
 NSUBST: ! = 12=11. / *:.
 NSUBST: 3 = 7:3 / * = 3.., 4 = 1:43 / *:.
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
@@ -826,11 +836,11 @@ cwwww.w.............w.wwwwc___c!T!www!!!....ww..wcc
 cwww.ww.T.........T.ww.wwwc___c!!ww!!wwwwwww....wwcc
 cwww3w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
-cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
+cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www.c.www.ww!$wwc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
-cwwf4..WWwwwdddWWwww......+__c3w!!!!w..<A<.....w..3wc
+cwwf4..WWwwwdddWWwww..c...+__c3w!!!!w..<A<.....w..3wc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
-cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
+cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www.c.www.ww!$wwc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
 cwww.w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
 cwww.ww.T.........T.ww.wwwc___c!!ww!!wwwwwww....wwcc
@@ -844,7 +854,7 @@ ccwwwwwwww;3;4;3.wwwwwwwwccc_____________.......$c
    ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
-# 6 items and two gold piles for murdering a bunch of gnolls
+# 6 items and two gold piles for murdering a ton of gnolls
 NAME:   bailey_polearm_gnolls_kennysheep
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
@@ -856,12 +866,12 @@ MONS:   gnoll sergeant ; halberd | glaive w:11 | partisan w:1 | bardiche w:1 . \
 MONS:   gnoll bouda ; spear | trident | halberd . \
                       ring mail | scale mail
 MONS:   hound, wolf
-KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
+KMONS:  R = Grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
 : fortress_talisman_chance(_G, "e")
 FTILE:  4't = floor_grass
 KFEAT:  ' = floor
-NSUBST: - = 2:1 / 30 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
+NSUBST: - = 2:1 / 27 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
 NSUBST: R = 1:R22 / *:2, 5 = 2:5 / * = 5..
 SUBST:  d = dd|
 : bailey_setup(_G)
@@ -873,10 +883,10 @@ xtttww'''''''''''''''''wwtttx
 xtttw'''''''''''''''''''wtttx
 xtttw''cccccc-3-cccccc''wtttx
 xtttw'cc---c-----c---cc'wtttx
-xtttwcc----+-----+----ccwtttx
+xtttwcc----+--<--+---3ccwtttx
 xtttwc-----c-----c-----cwtttx
-xtttwcG----ccc+ccc3---Gcwtttx
-xtttwc2---cc--3--cc---2cwtttx
+xtttwcG---cccc+cccc.--Gcwtttx
+xtttwc2--ccc--3--ccc--2cwtttx
 xtttwc---cc2-----2cc---cwtttx
 xtttwc---cc-------cc---cwtttx
 xtttwc3--cc---e---cc---cwtttx
@@ -898,7 +908,7 @@ xttttttt'''''...'''''tttttttx
 xtttttttt''''...''ttttttttttx
 xtttttttttttt.A.ttttttttttttx
 xttttttttttttt.tttttttttttttx
-xttttttttttttt.tttttttttttttx
+xtttttttttttt...ttttttttttttx
 xttttttttttttt<tttttttttttttx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -935,8 +945,8 @@ KFEAT:   B = altar_okawaru
 KFEAT:   g = cache of meat
 KFEAT:   4 = w
 NSUBST:  | = 1:| / *:$
-NSUBST:  w = 1:4 / 2:w / 7 = 4w / *:w
-NSUBST:  2 = 2:2 / * = 2.., 1 = 6 = 2. / * = 11., 3 = 2:3 / * = 2
+NSUBST:  w = 1:4 / 6 = 4w / *:w
+NSUBST:  2 = 2:2 / * = 2.., 1 = 5 = 2. / 2:. / * = 11., 3 = 2:3 / * = 2
 SHUFFLE: defg
 NSUBST:  d = 1:D / *:d, e = 1:E / *:e, f = 1:F / *:f, g = 2:gh / *:h
 : bailey_setup(_G)
@@ -958,10 +968,10 @@ xwwwwwwwwW.c11ccc+cG.Gc+ccc11c.Wwwwwwwwwx
 xwwwwwwwwW.c11cff.c...c.ggc11c.Wwwwwwwwwx
 xwwwwwwwwW.c11cff.c...c.ggc11c.Wwwwwwwwwx
 xwwwwwwwwW.c11c+nncc+ccnn+c11c.Wwwwwwwwwx
-xwwwwwwwwW.cc+c...1.1.1...c+cc.Wwwwwwwwwx
+xwwwwwwwwW.cc+c.....1.....c+cc.Wwwwwwwwwx
 xwwwwwwwwW.c..c.....B.....c..c.Wwwwwwwwwx
 xwwwwwwwwW.c2Gc.....1.....cG2c.Wwwwwwwwwx
-xwwwwwwwwW.c1.c....3i3....c.1c.Wwwwwwwwwx
+xwwwwwwwwW.c1.c1...3i3...1c.1c.Wwwwwwwwwx
 xwwwwwwwwW.c1GcccccccccccccG1c.Wwwwwwwwwx
 xwwwwwwwwW.c.1...ccccccc...1.c.Wwwwwwwwwx
 xwwwwwwwwW.c.G...c..1..c...G.c.Wwwwwwwwwx
@@ -1051,13 +1061,14 @@ ORIENT: encompass
 : orc_with_polearm(_G, "1")
 : orc_warrior_with_polearm(_G, "2")
 : orc_knight_with_polearm(_G, "3")
-KMONS:  4 = deep elf pyromancer / deep elf zephyrmancer w:5
+KMONS:  4 = deep elf pyromancer ; robe . falchion / \
+            deep elf zephyrmancer w:5 ; damaged robe . dagger
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   any armour good_item no_pickup
 : fortress_talisman_chance(_G, "f")
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
-NSUBST: 2 = 2:2 / * = 2..., 3 = 1:3 / * = 2....
+NSUBST: 2 = 2:2 / * = 2..., 3 = 1:332 / * = 2....
 FTILE:  -t = floor_grass
 : bailey_setup(_G)
 MAP
@@ -1066,12 +1077,12 @@ MAP
   c32..11...11.23c
   cc.11G2332G11.cc
    c.1ccn==ncc1.c
-   c..cc....cc..c
+   c.ccc....ccc.c
    c11c..4...c11c
    c21n..cc..n12c
    c21n$.cc.fn12c
    c..cddddddc..c
-   c..ccddddcc..c
+   c.cccddddccc.c
 xxxc..cccccccc..c
 xxcc...G1..1G...cc
 xxc11..........11c  tt
@@ -1108,14 +1119,14 @@ MONS:    orc zombie, spectral orc warrior
 MONS:    wyvern zombie, gargoyle ; war axe | broad axe w:2
 MONS:    vampire ; war axe ego:vampirism w:15 | broad axe ego:vampirism w:2 | \
                    battleaxe ego:vampirism w:1 | executioner's axe ego:vampirism w:1 . \
-                   scale mail | chain mail
+                   ring mail | scale mail | chain mail
 : item(dgn.loot_potions)
 ITEM:    any armour good_item
 KITEM:   f = orc skeleton
 : fortress_talisman_chance(_G, "g")
 NSUBST:  d = 2:d / 2:e / 1:| / * = dde|, f = 1:f / f..
-NSUBST:  ; = 20 = t. / *:., - = 4:G / 2:1 / 10 = 1. / *:.
-NSUBST:  2 = 5=2 / * = 2., 3 = 6:3 / * = 3..., 4 = 3:4 / 2:5 / * = 4.
+NSUBST:  ; = 20 = t. / *:., - = 4:G / 2:1 / 9 = 1. / *:.
+NSUBST:  2 = 5:2 / * = 2., 3 = 6:3 / 2:. / * = 3..., 4 = 2:4 / 2:5 / * = 4.
 NSUBST:  6 = 1:6 / *:G, ! = 1:7 / *:G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead
@@ -1186,7 +1197,7 @@ KFEAT:  46 = shallow_water
 SHUFFLE: AB
 SUBST:  ; = W:3 ., B = <
 NSUBST: ! = 24 = 1... / 20 = 2... / *:.
-NSUBST: W = 36 = 4WWW / *:W, ? = 1:66W / *:W
+NSUBST: W = 32 = 4WWW / *:W, ? = 1:6W / *:W
 NSUBST: d = 4:d / *=dd*$
 : bailey_setup(_G)
 MAP

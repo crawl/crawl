@@ -2431,11 +2431,12 @@ MAP
 .......
 ENDMAP
 
-# Sky beasts normally generate on D:6-8, so they're within the D:3 out-of-depth
-# range (which goes down to D:6). You'll be fine. Maybe.
+# (With the sky beast revisions, they've been taken out of D:3 despite
+# technically being in the D:3 out-of-depth pool as D:6 monsters; we'll
+# have to wait some versions before more people respect af_airstrike.)
 NAME:    nicolae_qazlal_beasts_of_the_sky
 TAGS:    temple_overflow_qazlal temple_overflow_1 transparent
-DEPTH:   D:3-8
+DEPTH:   D:4-8
 KMONS:   _ = sky beast
 KFEAT:   _ = altar_qazlal
 SHUFFLE: Pp, Qq

@@ -2157,6 +2157,7 @@ MONS:       ettin / ironbound preserver ; great mace /\
 MONS:       ironbound thunderhulk ; great mace ego:electrocution
 MONS:       patrolling electric golem
 KMONS:      P = lightning spire
+KMONS:      M = ironbound mechanist
 ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
             boots ego:rampaging randart / ring of fire randart /\
             any armour good_item ego:ponderous randart / ring of ice randart /\
@@ -2203,7 +2204,7 @@ MAP
       vv.3nln3.vvvvvvvvvvvvv+++vvvv
      vv..2nln2..vvvvvvvvvvvH6.6Hvvvvv
     vv...2nln2...vvvvvvvvvv.....vvvvvv
-    v2.2nnnlnnn2.2vvvvvH...4...4...Hvv
+    v2.2nnnlnnn2.2vvvvvH...4.M.4...Hvv
     v...nllllln...vvvvv....v111v....vv
     v...nllllln...vvvvv....veeev....vv
     v2..nllllln..2vvvvvH...vvvvv...Hvv
@@ -2222,7 +2223,7 @@ MAP
        vv.....vvvvvvvvvv..~..1.....v
         vvv+vvvvvvvvvvvv..v--v--v..v
        vv.....vvvvvvvvvv..v1.v..v..v
- vvvvvvvG1...1Gvvvvvvvvv..;..5..~.fv
+ vvvvvvvG1.M.1Gvvvvvvvvv..;..5..~.fv
 vv...vv.1..G..1.vvvvvvvv..;.....~5fv
 v..G..v.........v1....1v..vvvvvvv;;v
 v1.4..+.G1.G.1G.+...4..+..;.....~5fv

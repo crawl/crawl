@@ -3705,6 +3705,10 @@ vault guard captain
 
 <vault guard>
 %%%%
+grandmaster elementalist
+
+<master elementalist>
+%%%%
 ### Meatsprint
 bag of meat
 

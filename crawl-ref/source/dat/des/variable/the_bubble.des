@@ -35,19 +35,20 @@ function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
     -- Add some more specific monsters among the 8s for the very late branches
     -- a good out-of-depth monster set.
     if you.in_branch("Crypt") then
-       e.kmons("2 = ancient lich / dread lich")
-       e.nsubst("8 = 2 / 8")
+       e.kmons("2 = ancient lich / dread lich / vampire bloodprince w:5")
+       e.nsubst("8 = 1:2 / 8")
     elseif you.in_branch("Zot") then
-       e.kmons("2 = ancient lich w:5 / dread lich w:5 " ..
-               "    / orb of fire / curse toe")
+       e.kmons("2 = ancient lich w:5 / dread lich w:5 / orb of fire / \
+                    curse toe / protean progenitor band")
+       e.kfeat("t = petrified_tree")
        e.subst("8 = 28")
     elseif you.in_branch("Pandemonium") then
        -- 8 and 9 spawns both aren't a thing in Pan, so make these ourself.
-       e.kmons("2 = greater demon w:20 / demonspawn soul scholar w:5" ..
-               "    / demonspawn blood saint w:5 / demonspawn corrupter w:5" ..
-               "    / demonspawn warmonger w:5")
-       e.kmons("3 = executioner / brimstone fiend / ice fiend / tzitzimitl" ..
-               "    / hell sentinel")
+       e.kmons("2 = greater demon w:20 / demonspawn soul scholar w:5 / \
+                    demonspawn blood saint w:5 / demonspawn corrupter w:5 / \
+                    demonspawn warmonger w:5")
+       e.kmons("3 = executioner / brimstone fiend / ice fiend / \
+                    tzitzimitl / hell sentinel / nekomata w:2")
        e.subst("8 = 39")
        e.subst("9 = 02")
     end

@@ -562,7 +562,7 @@ MONS:    gnoll zombie / orc zombie / hound zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    bullfrog simulacrum / spectral scorpion / \
          killer bee zombie w:5 / crocodile zombie w:35
-MONS:    weeping skull / burial acolyte
+MONS:    weeping skull / burial acolyte w:12
 # Loot: between 5 scrolls / potions and 9 scrolls / potions, with some gold.
 # The tomb close to the player is a bit easier than the other one, and is
 # more likely to be the one with less loot, giving weak players a chance.
@@ -571,7 +571,7 @@ ITEM:    any scroll, any potion
 SHUFFLE: def$
 NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e, $ = 1:1 / *:$
 SUBST:   ? = 2:11 3:2 .:1
-NSUBST:  ! = 1:4 / 1:5 / 1:4. / * = 3 2:1 .:1
+NSUBST:  ! = 1:4 / 1:5 / 1:45 / * = 3 2:1 .:1
 : ossuary_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -825,7 +825,7 @@ MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
 KFEAT:   ~ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ^ = net trap w:20 / dispersal trap w:5
 SUBST:   M = 11., z = c...
-NSUBST:  3 = 1:2 / 4:. / * = 333..
+NSUBST:  3 = 1:2 / 4:. / * = 3.
 NSUBST:  ~ = 4:~ / 40:. / * = ~:25 .:200
 NSUBST:  ^ = 1:^ / 1:. / * = ^.
 : ossuary_setup_features(_G)
@@ -845,7 +845,7 @@ NAME:    ossuary_due_mausoleum
 TAGS:    no_rotate no_vmirror
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    kobold skeleton / orc skeleton / gnoll skeleton
+MONS:    kobold skeleton w:12 / orc skeleton / gnoll skeleton
 MONS:    mummy
 KMONS:   3X = wight ; mace | flail | falchion | short sword . robe
 KMONS:   4C = burial acolyte
@@ -900,10 +900,9 @@ ENDMAP
 NAME:    ossuary_due_small_catacomb
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    kobold skeleton / gnoll skeleton / orc skeleton / \
-         centaur skeleton / ogre skeleton w:2
+MONS:    kobold skeleton / gnoll skeleton / orc skeleton / centaur skeleton w:2
 MONS:    crocodile zombie / weeping skull w:2
-KMONS:   4x = mummy / wight w:2 / spectral scorpion w:2
+KMONS:   4x = mummy w:12 / wight w:2 / spectral scorpion w:2
 KMONS:   y = spectral rat
 ITEM:    any scroll / any potion
 KITEM:   x = any scroll / any potion
@@ -915,7 +914,7 @@ SHUFFLE: Bb / Zz, Dd / Ww, Ee / Vv
 SUBST:   ZzWwVv = c, BDE = X
 NSUBST:  X = 1:4 / 1:x / 1: xxxx? / * = x4
 NSUBST:  b = 1:+ / c, d = 1:+ / c, e = 1:+ / c
-NSUBST:  ^ = 1:! / *:., ~ = 1:! / *:.
+NSUBST:  ^ = 1:!!!. / *:., ~ = 1:!!!. / *:.
 : ossuary_setup_features(_G)
 MAP
            ccc
@@ -1113,7 +1112,7 @@ MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
 : inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = alarm trap
-NSUBST: 2 = 1:2 / 2 = 12 / *:1, ^ = 1:^ / 1:. / *:^.
+NSUBST: 2 = 1:2 / 1 = 12 / *:1, 1 = 1:. / *:1, ^ = 1:^ / 1:. / *:^.
 : ossuary_setup_features(_G)
 MAP
             ccc
@@ -1266,7 +1265,7 @@ KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_kikubaaqudgha / altar_hepliaklqana w:2
 KFEAT:   DF = dry_fountain
 SHUFFLE: HIJKLMNOPQRSTUVW
-NSUBST:  4 = 3:4 / 1:. / * = 4:3 5:1 .:6, F = 1:F / *:D
+NSUBST:  4 = 3:4 / 2:. / * = 4:3 5:1 .:6, F = 1:F / *:D
 NSUBST:  H = 1:1 / 1:2 / *:d, I = 1:3 / *:4
 NSUBST:  J = 1:3 / *:4, K = 1:2 / *:d
 SUBST:   L = 4, M = 5, NOPQ = ., RS = $, TUVW = d, C = CGG
@@ -1372,7 +1371,7 @@ WEIGHT:  10
 ORIENT:  encompass
 MONS:    weeping skull / burial acolyte
 MONS:    mummy / wight w:2
-MONS:    kobold zombie / gnoll zombie / orc zombie / hound zombie / \
+MONS:    kobold zombie w:8 / gnoll zombie / orc zombie / hound zombie / \
          human zombie w:4 / centaur zombie w:6
 ITEM:    any potion w:15 / any scroll w:15 / gold w:6
 : inkwell_talisman_chance(_G, "e")
@@ -1380,9 +1379,9 @@ SHUFFLE: -+
 SHUFFLE: <A
 SUBST:   -:c, V:VVVVG
 NSUBST:  + = 10:++~ / *:+
-NSUBST:  1 = 1:1 / 1:12 / * = 3., 2 = 1:2 / 1:23 / * = 3.
+NSUBST:  1 = 1:1 / 1:12 / 1:3 / * = 3., ? = 1:2 / 1:23 / * = 3.
 NSUBST:  " = 4:^ / 3=^" / *:"
-NSUBST:  . = 3:3 / 12=3. / *:.
+NSUBST:  . = 4:3 / 10 = 3. / *:.
 NSUBST:  d = 1:* / 1:*d / *:d
 KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ~ = broken_door
@@ -1391,22 +1390,22 @@ MAP
 ccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccc
-cccd13...+.2c.....dc.....-.dccc
-ccc.33...c..+......+.....c31ccc
+cccd13...+.?c.....dc.....-3dccc
+ccc333...c..+......+.....c31ccc
 ccc-cccccc..c......c....dc33ccc
 ccc......+..cc-ccccccc-cccc+ccc
 ccc......c..c...ec.....+....ccc
-ccccc+c+-cc-c....+..2..c...dccc
+ccccc+c+-cc-c....+..?3.c...dccc
 cccd..c"""""c....c.....ccc-cccc
 ccc...c"""""+....cc-cccc...dccc
-ccc2..-"<VA"cccc-c.....-....ccc
+ccc?..-"<VA"cccc-c.....-....ccc
 ccc...c"""""+....c.....cc-c+ccc
-ccc...c"""""c....+...2.c....ccc
+ccc...c"""""c....+..3?.c....ccc
 cccc-+ccc+ccc....-.....+..'.ccc
 ccc....c....-....c.....cd...ccc
 ccc....c....ccccccccc+ccccc-ccc
-ccc3...-....c......c....+.3.ccc
-ccc13..c..2.+......-....c.31ccc
+ccc33..-....c......c....+.33ccc
+ccc13..c..?.+......-....c.31ccc
 cccd3..+....c.....dcd...-.3dccc
 ccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccc

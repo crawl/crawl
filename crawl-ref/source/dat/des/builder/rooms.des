@@ -256,15 +256,15 @@ function sroom_mythical_zoo(e)
     if you.in_branch("Elf") then
         Z = Z + 5
     elseif you.in_branch("Lair") then
-        Z = Z - 2
+        Z = Z - 4
     end
 
     local mons = {}
-    mons[1] = "rime drake w:" .. math.max(38 - Z * 2, 1)
-    mons[2] = "basilisk w:" .. math.max(38 - Z * 2, 1)
-    mons[3] = "wyvern w:" .. math.max(44 - Z * 2, 1)
-    mons[4] = "hippogriff w:" .. math.max(44 - Z * 2, 1)
-    mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
+    mons[1] = "wyvern w:" .. math.max(40 - Z * 2, 1)
+    mons[3] = "basilisk w:" .. math.max(40 - Z * 2, 1)
+    mons[2] = "rime drake w:" .. math.max(44 - Z * 2, 1)
+    mons[5] = "hell hound w:" .. math.max(Z - 10, 1)
+    mons[4] = "hippogriff w:" .. math.max(Z - 12, 1)
     mons[6] = "hydra w:" .. math.max(Z * 2 - 26, 1)
 
     if Z >= 16 then
@@ -273,7 +273,7 @@ function sroom_mythical_zoo(e)
     end
     if Z >= 19 then
         mons[9] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[10] = "sphinx marauder w:" .. (Z - 16)
+        mons[10] = "sphinx marauder w:" .. (Z - 18)
     end
 
     if Z >= 21 then
@@ -294,6 +294,8 @@ function sroom_mythical_zoo(e)
     end
 
     e.kitem('2 = ' .. it)
+    e.kitem('? = mundane animal skin')
+    e.nsubst('. = 2:?')
 end
 
 function sroom_magic_class(e)

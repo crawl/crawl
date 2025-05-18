@@ -2030,9 +2030,9 @@ TAGS:  grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
 {{
   if dgn.persist.grunt_orc_gardens_giant_problem then
     if dgn.persist.grunt_orc_gardens_boss then
-      mons("stone giant")
+      mons("stone giant / ogre mage w:5 / kobold blastminer band w:5")
     else
-      mons("ettin")
+      mons("ettin ; dire flail . dire flail")
     end
     mons("cyclops")
     mons("kobold blastminer")
@@ -2046,8 +2046,8 @@ TAGS:  grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
     if not dgn.persist.grunt_orc_gardens_boss then
       mons("nothing")
     end
-    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 / "
-         .. "kobold blastminer w:1 / ogre w:1 / troll w:1 / warg w:1")
+    mons("orc warrior w:20 / orc sorcerer w:1 / orc high priest w:1 / "
+         .. "kobold blastminer w:1 / ogre w:2 / troll w:2 / warg w:2")
     nsubst("0 : 1:1 / *:2")
     nsubst("3 = 4:3 / 1:I / 4 = P / *:.")
   end
@@ -2059,6 +2059,7 @@ KFEAT: A = any shop
 : else
 : kfeat("A = " .. dgn.persist.grunt_orc_gardens_store)
 : end
+FTILE: .1234IA = floor_swamp
 MAP
    .....
  ...PPP...
@@ -2369,7 +2370,7 @@ KFEAT:  E = altar_kikubaaqudgha
 KFEAT:  F = altar_vehumet
 KFEAT:  mn = rock_wall
 NSUBST: . = 8:1 / 18:2 / 10:3 / 2 = 12 / 6 = 223.. / *:.
-NSUBST: 6 = 1:6 / 2 = 6. / *:.
+NSUBST: 6 = 2:6 / 2 = 6. / *:.
 NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
 COLOUR: n = black
 TILE:   n = wall_hall_darkgray

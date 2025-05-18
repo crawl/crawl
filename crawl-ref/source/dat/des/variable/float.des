@@ -34,7 +34,6 @@ function grunt_megastairs_setup(e)
   e.orient("float")
   e.tags("extra luniq_generic_threat_stair transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot")
-  e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
   if you.depth() == 1 then
     e.shuffle("{[(")
@@ -57,11 +56,15 @@ function grunt_megastairs_setup(e)
   if you.in_branch("Lair") then
     e.mons("pile of debris")
     e.subst("G : GG11VVtt")
-  elseif you.in_branch("Depths") or you.in_branch("Snake") or
-         you.in_branch("Elf") then
-    e.subst("G : GGGGTTVt")
+    e.nsubst("0 = 1:0 / 1:0. / 1:0... / *:.")
   else
-    e.subst("G : GGGGTTV")
+    if you.in_branch("Depths") or you.in_branch("Snake") or
+           you.in_branch("Elf") then
+      e.subst("G : GGGGTTVt")
+    else
+      e.subst("G : GGGGTTV")
+    end
+    e.nsubst("0 = 2:0 / 2:0. / *:.")
   end
   e.kmons("0 = 0 band")
 end
@@ -2429,7 +2432,7 @@ ITEM:   manual of fire magic / manual of ice magic / manual of earth magic \
 ITEM:   ring of evasion randart / ring of protection randart \
         / ring of fire randart / ring of ice randart
 ITEM:   staff of fire / staff of cold / staff of earth / staff of air
-: master_elementalist_setup(_G, "D")
+: kmons("D = " .. master_elementalist_setup(_G, false))
 KFEAT:  a = iron_grate
 # Place fire cloud machines over lava and freezing vapour and storm clouds over
 # deep water to prevent the relevant (not-fully-resistant or at least
@@ -4517,22 +4520,22 @@ MAP
 ...................
 ENDMAP
 
-NAME: cheibrodos_tormentor_scu
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:11-, Depths
+NAME:   cheibrodos_tormentor_scu
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:11-, Depths
 ORIENT: float
 : if you.in_branch("Depths") then
 MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
-MONS: death knight / w:5 wraith / w:1 freezing wraith / w:4 skeletal warrior
+MONS: death knight / wraith w:5 / freezing wraith w:1 / skeletal warrior w:4
 : end
-ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain \
-      / demon blade ego:draining / demon trident ego:pain \
-      / demon trident ego:draining
+ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain / \
+      demon blade ego:draining / demon trident ego:pain / \
+      demon trident ego:draining
 SUBST:  b = bccc
-NSUBST: " = 2 = w:2 d | / 5:* / 5 = %$"
-NSUBST: ' = 3:* / 6:% / *:., ` = 5:2 / 4 = 2.
+NSUBST: " = 2 = d| / 5:* / 5 = %$$
+NSUBST: ' = 3:* / 6:% / *:$, ` = 5:2 / 4 = 2.
 KPROP:  "1 = no_tele_into
 KFEAT:  - = iron_grate
 TILE:   b = bedevilled_crystal_tartarus

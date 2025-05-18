@@ -179,13 +179,16 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_8 .. " = place:D:9 w:15 / wraith w:5")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
     e.kmons(_0 .. " = place:D:8 w:60 / spectre place:D:9")
-    e.kmons(_9 .. " = place:D:11 w:40 / spectre place:D:12")
-    e.kmons(_8 .. " = place:D:14 w:30 / spectre place:D:15 / shadowghast")
+    e.kmons(_9 .. " = place:D:11 w:40 / spectre place:D:12 / wraith w:5")
+    e.kmons(_8 .. " = place:D:14 w:30 / \
+                      gargoyle / spectre place:D:15 w:5 / shadowghast w:5")
   elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
-    e.kmons(_0 .. " = place:D:12 w:65 / spectre place:D:12 / \
+    e.kmons(_0 .. " = place:D:12 w:40 / \
+                      simulacrum place:D:12 / spectre place:D:12 / \
                       zombie place:D:12 / laughing skull")
-    e.kmons(_9 .. " = place:D:15 w:35 / necromancer")
-    e.kmons(_8 .. " = place:D:15 9 w:65 / spectral fire dragon / \
+    e.kmons(_9 .. " = freezing wraith / gargoyle / boggart / necromancer")
+    e.kmons(_8 .. " = very ugly thing / deep troll / phantasmal warrior / \
+                      shadow dragon w:5 / spectral fire dragon / \
                       spectral ice dragon / flayed ghost")
   elseif dgn.persist.necropolis_difficulty == "lair" then
     e.kmons(_0 .. " = bullfrog / water moccasin / wyvern / basilisk / yak / \
@@ -1755,7 +1758,7 @@ SUBST:  1 = 1GG, D = DF, E = EH
 NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / *:J
 SUBST:  1 = 1GG, D = DF, E = EH
 : else -- Snake, Shoals, Vaults, Elf, Crypt, Depths.
-NSUBST: M = 1:0 / 2 = 09 / 1:98 / 2:D / *:J
+NSUBST: M = 1:0 / 2 = 009 / 1:98 / 2:D / *:J, ' = 2:E / *:'
 SUBST:  D = DF, ? = ?!
 : end
 : necropolis_ghost_setup(_G, false)
@@ -3499,21 +3502,27 @@ KMONS:  DEFH = player ghost
 MONS:   moth of wrath
 : ghost_good_loot(_G)
 : local j = ""
-: if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 # Moths of wrath as individual monsters are reasonably scary very early, so
-# tune back the pre-Lair sets much more than we would otherwise.
+# the pre-Lair sets set them behind grates instead of letting them free.
+: if dgn.persist.necropolis_difficulty == "pre_temple_d" or
+:    dgn.persist.necropolis_difficulty == "pre_lair_d" then
+SUBST:  M = m, ? = 1
+: else
+SUBST:  m? = -, M = x
+: end
+: if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 MONS:   quokka / hound / iguana
 MONS:   water moccasin w:5 / bullfrog / black bear
 MONS:   ice beast / yak / wyvern / killer bee
 SUBST:  D = DE, d = *, e = *%, f = %$, ghij= -
-NSUBST: - = 1:1 / 2:2 / 2 = 2- / 1:34--- / *:-
+NSUBST: - = 2:2 / 2 = 2- / 1:34--- / *:-
 :   j = "lupine talisman / animal skin randart w:5"
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:   water moccasin / ice beast / bullfrog / black bear
 MONS:   killer bee / yak / water moccasin / wyvern
 MONS:   komodo dragon / basilisk / hornet / manticore / acid dragon
 SUBST:  D = DE, e = *, f = *%, g = %$--, hij= -
-NSUBST: - = 1:1 / 2:2 / 4 = 2- / 1:3 / 1:4--- / *:-
+NSUBST: - = 2:2 / 4 = 2- / 1:3 / 1:4--- / *:-
 :   j = "lupine talisman w:15"
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 MONS:   komodo dragon / hydra / basilisk / manticore / acid dragon
@@ -3571,6 +3580,7 @@ KITEM:  I = potion of berserk rage pre_id q:1
 :    j = j .. " / box of beasts w:4"
 : end
 : kitem("J = " .. j)
+KFEAT:  m = iron_grate
 NSUBST: R = 1:R / *:-
 MARKER: P = lua:transp_loc("necropolis_berserking_beasts_entry")
 MARKER: Q = lua:transp_dest_loc("necropolis_berserking_beasts_entry")
@@ -3585,12 +3595,12 @@ MAP
 ....................
 .....cncScccc.......
 ....ccRccc--cccnc...
-...cc------x---Rc...
-...c----x---x---cc..
-...c--xx--x------c..
-...nR--x--Q--xx-Rn..
-..cc-x-----x-----c..
-..c----xxxDJ-xx-cc..
+...cc-----mMm--Rc...
+...c----x-m?M---cc..
+...c--xx--Mmm----c..
+...nR-mMm-Q--xx-Rn..
+..cc-xm?m--x-----c..
+..c---mMMxDJ-xx-cc..
 ..cc--xigedfhj--c...
 ...cccI-cnnnc-Icc...
 .....cccc.P.cccc....
@@ -4603,8 +4613,8 @@ MONS:    hound, vampire bat
 NSUBST:  ' = 1:1 / 1:1 / *:', " = 1:1 / 2:2 / *:"
 NSUBST:  * = 1:d / * = dd%
 : elseif dgn.persist.necropolis_difficulty == "lair" then
-MONS:    wolf, vampire
-NSUBST:  ' = 2:1 / 1:2 / *:', " = 1:1 / 1:2 / *:"
+MONS:    wolf, vampire / vampire bat
+NSUBST:  ' = 1:1 / 1:2 / *:', " = 2:1 / 1:2 / *:"
 NSUBST:  % = 1:d / *:%, * = 1:ee* / *:*
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 MONS:    warg, obsidian bat
@@ -4615,7 +4625,6 @@ MONS:    wolf spider, vampire
 NSUBST:  ' = 2:1 / 1:2 / *:', " = 1:1 / 1:2 / *:"
 NSUBST:  $ = 1:d / *:$, * = 1:e / *:*
 : elseif dgn.persist.necropolis_difficulty == "swamp" then
-MONS:    tyrant leech, vampire mage
 KMONS:   1 = tyrant leech
 KMONS:   2 = vampire mage
 KFEAT:   12O'"` = W

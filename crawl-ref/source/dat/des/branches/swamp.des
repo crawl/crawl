@@ -209,7 +209,7 @@ TAGS:    swamp_entry no_pool_fixup transparent
 KMONS:   1 = patrolling bog body
 KFEAT:   1 = W
 KFEAT:   O = enter_swamp
-NSUBST:  n = 1:1 / 1=W1 / *:W
+NSUBST:  n = 1:1 / 1=1WW / *:W
 NSUBST:  W = 4:t / *:W
 MARKER:  O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -226,7 +226,8 @@ ENDMAP
 
 NAME:   palyth_hydra_swamp_entry
 TAGS:   swamp_entry no_monster_gen no_pool_fixup
-MONS:   hydra, komodo dragon / tyrant leech, iguana / cane toad
+MONS:   four-headed hydra / five-headed hydra
+MONS:   komodo dragon / tyrant leech, iguana / bullfrog
 KMONS:  s = swamp worm
 KFEAT:  s = w / W
 NSUBST: 1 = 1:1 / 1:1123 / *:., - = 1:2 / 1:233. / *:.
@@ -259,7 +260,7 @@ ENDMAP
 NAME:   nicolae_swamp_entry_spooky
 TAGS:   swamp_entry patrolling transparent
 WEIGHT: 5
-KMONS:  s = spectral thing
+KMONS:  s = spectral spriggan
 KMONS:  OP = ghost crab
 KFEAT:  O = enter_swamp
 KFEAT:  t = mangrove
@@ -328,9 +329,10 @@ ENDMAP
 
 NAME:   mainiacjoe_swamp_entry_angry_trees
 TAGS:   swamp_entry transparent patrolling
-MONS:   spriggan druid, bullfrog w:5 / hornet / cane toad
+MONS:   spriggan druid ; mundane damaged quarterstaff . robe
+MONS:   spriggan, bullfrog w:8 / hornet / swamp drake
 KFEAT:  O = enter_swamp
-NSUBST: S = 1:1 / *:T, T = 1:1 / 2:2 / 1:2tt / 16:t / *:.
+NSUBST: S = 1:1 / *:T, T = 1:122 / 2:3 / 1:3tt / 16:t / *:.
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
@@ -3273,7 +3275,7 @@ MONS:    spectral swamp dragon / spectral hydra w:12
 MONS:    swamp dragon zombie / hydra zombie w:12
 MONS:    spectral alligator w:12 / alligator zombie
 MONS:    death drake / spectral bunyip w:4
-MONS:    bloated husk, phantom, bog body
+MONS:    bloated husk, spectral spriggan, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
 KMONS:   ? = swamp worm zombie / tyrant leech zombie w:15
@@ -3285,7 +3287,7 @@ KFEAT:   ?Y = deep_water
 KFEAT:   O* = shallow_water
 SHUFFLE: Oo / *s
 SUBST:   1 = 113, ? = ??w, " = tc, ' = .w, s = .
-NSUBST:  6 = 1:5 / 3 = 89 / 12 = 5666. / *:., y = 1:Y / *:W
+NSUBST:  6 = 1:5 / 3 = 89 / 14 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 1, walk_dist = 0, excl_rad = 0}
@@ -3353,7 +3355,7 @@ TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 @@ "' Xxccxcxcct
-@'"'XWXW""'..Wcct
+@'"WXWXW""'..Wcct
   'XWXWx''"zyW.xct
    WXWx"wwwyzwxWcct
   XXWx3x1wwzyw.x.xct
@@ -3501,7 +3503,7 @@ KFEAT:   T = tree
 KFEAT:   E = x
 SHUFFLE: Oo / Nn
 SUBST:   N = %, n = ., x = xxxxxxttT
-NSUBST:  1 = 5:1 / 6 = 1. / * = .W, 3 = 5:5 / 6:3 / 6 = 3. / *:.
+NSUBST:  1 = 4:1 / 6 = 1. / * = .W, 3 = 4:5 / 5:3 / 6 = 3. / *:.
 NSUBST:  6 = 2:6 / 3 = 6. / *:., P = 3=' / ppW
 SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody

@@ -161,29 +161,41 @@ function door_vault_setup(e)
 end
 
 --[[
-Set up a KMONS for a master elementalist vault-defined monster. This monster
+Set up a string for a master elementalist vault-defined monster. This monster
 will have either the elemental staff or a staff of air and a robe of
 resistance, so it has all of the elemental resistances.
 
 @tab e The map environment.
 @string glyph The glyph on which to define the KMONS.
 ]]
-function master_elementalist_setup(e, glyph, ele_staff)
+function master_elementalist_setup(e, sprintscale)
     local equip_def = " ; elemental staff . robe ego:willpower good_item"
     -- Don't want to use the fallback here, so we can know to give resistance
     -- ego robe if the elemental staff isn't available.
     if you.unrands("elemental staff") then
-        equip_def = " ; staff of air . robe ego:resistance good_item"
+        equip_def = " ; staff of air . robe randart artprops:rF&&rC&&Will"
     end
 
-    e.kmons(glyph .. " = occultist hd:18 name:master_elementalist n_rpl" ..
-        " n_des n_noc tile:mons_master_elementalist" ..
-        " spells:lehudib's_crystal_spear.11.wizard;" ..
-            "chain_lightning.11.wizard;" ..
-            "fire_storm.11.wizard;" ..
-            "ozocubu's_refrigeration.11.wizard;" ..
-            "haste.11.wizard;" ..
-            "repel_missiles.11.wizard" .. equip_def)
+    pow = "hd:18"
+    name = ""
+
+    -- For use in arenasprint.
+    if sprintscale then
+        pow = pow .. " hp:200 exp:3950"
+        name = "name:grandmaster_elementalist n_rpl n_des n_noc"
+    else
+        pow = pow .. " hp:100 exp:1425"
+        name = "name:master_elementalist n_rpl n_des n_noc"
+    end
+
+    return "occultist " .. pow .. " " .. name .. " " ..
+           "tile:mons_master_elementalist " ..
+           "spells:lehudib's_crystal_spear.11.wizard;" ..
+           "chain_lightning.11.wizard;" ..
+           "fire_storm.11.wizard;" ..
+           "ozocubu's_refrigeration.11.wizard;" ..
+           "haste.11.wizard;" ..
+           "repel_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
 -- Three sets of reusable vault feature redefines scattered across the game,

@@ -40,6 +40,8 @@
 --
 -- XXX: Zin is overpowered.
 
+crawl_require('dlua/vault.lua')
+
 function arena_sprint_is_boss_round(round_id)
     return (round_id < 27 and round_id % 5 == 0) or (round_id > 27 and round_id % 3 == 0)
 end
@@ -729,11 +731,7 @@ function arena_sprint_init_boss_table()
         bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster / " ..
                  "deep elf master archer / deep elf annihilator / deep elf high priest",
                  "fannar hp:400 hd:14 exp:2748 / " ..
-                 "deep elf elementalist hp:400 exp:3574 " ..
-                    "; robe ego:fire_resistance | " ..
-                    "robe ego:cold_resistance | " ..
-                    "robe ego:resistance . dagger ego:freezing | " ..
-                    "dagger ego:flaming | dagger ego:electrocution",
+                 master_elementalist_setup(_G, true),
                  "elven rune of zot"}
     else
         bs[3] = {"place:Forest:$ w:50 / spriggan druid w:2 / spriggan air mage w:5 / " ..

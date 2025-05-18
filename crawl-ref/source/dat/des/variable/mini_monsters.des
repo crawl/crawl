@@ -9309,7 +9309,7 @@ MONS:   earth elemental / deep troll earth mage w:5
 MONS:   air elemental / deep elf zephyrmancer
 MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
         / storm dragon
-: master_elementalist_setup(_G, "6")
+: mons(master_elementalist_setup(_G, false))
 SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4...
 CLEAR:  @>
 : else -- Depths
@@ -9318,7 +9318,7 @@ MONS:   ice dragon / frost giant
 MONS:   stone giant / iron troll / deep troll earth mage / iron dragon
 MONS:   spriggan air mage / storm dragon
 MONS:   hellephant / shard shrike / iron giant / titan
-: master_elementalist_setup(_G, "6")
+: mons(master_elementalist_setup(_G, false))
 SUBST:  1 = 1.., 2 = 2.., 3 = 3.., 4 = 4..
 CLEAR:  @>
 : end

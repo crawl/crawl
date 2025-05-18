@@ -35,7 +35,8 @@ NSUBST:  ' = 7:S / 2:# / 6 = S:3 .:2 / *:.
 SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
 MARKER:  ^ = lua:props_marker { portal=1 }
 :    if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-KMONS:   = = draconian annihilator / draconian knight / draconian monk
+KMONS:   = = draconian annihilator band / draconian knight band / \
+             draconian monk band
 KITEM:   - = midnight gem
 KFEAT:   = = enter_zot
 SUBST:   ) = =, >]} = .

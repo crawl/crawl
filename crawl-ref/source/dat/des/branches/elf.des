@@ -2780,8 +2780,8 @@ ENDMAP
 
 ##############################################################################
 ## Alternative elf halls: gauntlets (David)
-## A wide and narrow one, with total weight 20.
-##
+## A wide and a ( formerly) narrow one.
+
 NAME:    elf_hall_gauntlet_wide
 TAGS:    nolayout_halls
 PLACE:   Elf:$
@@ -2842,10 +2842,8 @@ TAGS:    no_pool_fixup
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 SHUFFLE: lww
-SHUFFLE: nN / yY / zZ
-SUBST:   N=@, n=., Y=c, y=c
-SHUFFLE: zZ / nN
-SUBST:   N=@, n=., Z=c, z=c
+SHUFFLE: nNyYzZ / nNnNzZ / nNyYnN / nNnNnN
+SUBST:   n =., N = @, yYzZ = c
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
@@ -2861,31 +2859,32 @@ KITEM:   7 = |
 KFEAT:   6 = 6
 KFEAT:   7 = 7
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xcccccccccccccccccccccccccx
-xc2ccccccc.......cccccccccx
-xc.cccc2...5...5...2ccccccx
-xc.cc.................cc6cx
-xc.c....3....45...3....c3cx
-xc.+.........U.........+.cx
-xc.c......2.2.2.2......c.cx
-xc.cc......3...4......cc.cx
-xc.ccc4cccccc.cccccc.cc..cx
-xc2ccc.c.3.ww.ww.4.ccc...cx
-xc.ccc..3..ww.ww..5......cx
-xc$$$ccc...ww.ww...ccccc.cx
-xc$$$ccc.1.ww.ww.5.ccccc.cx
-xc$$$cccccccc.ccccccc122.cx
-xccc+cccccccc2cccccccccc.cx
-xc6*|*|**|*cc.cc$|$*$|$|.cx
-xc**|*|||||cc.cc|$|$*$*$.cx
-xc||*||***|cc.cc$*$*$*$|.cx
-xc|**|*||7*cc.cc7$|$|$|$2cx
-xcccccccccccc.ccccccccccccx
-xccccccccccc...cccccccccccx
-xcccccccccc..c..ccccccccccx
-Yyyyyyyyyyy.ccc.zzzzzzzzzzZ
-xxxxxxxxxxxNncnNxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccccccccccx
+xc2ccccccc........cccccccccx
+xc.cccc2...5....5...2ccccccx
+xc.cc..................cc6cx
+xc.c....3....45....3....c3cx
+xc.+........U..U........+.cx
+xc.c......2.2..2.2......c.cx
+xc.cc......3....4......cc.cx
+xc.ccc4cccccc..cccccc.cc..cx
+xc2ccc.c.3.ww..ww.4.ccc...cx
+xc.ccc..3..ww..ww..5......cx
+xc$$$ccc...ww..ww...ccccc.cx
+xc$$$ccc.1.ww..ww.5.ccccc.cx
+xc$$$cccccccc..ccccccc122.cx
+xccc+cccccccc2.cccccccccc.cx
+xc6*|*|**|*cc..cc$|$*$|$|.cx
+xc**|*|||||cc..cc|$|$*$*$.cx
+xc||*||***|cc..cc$*$*$*$|.cx
+xc|**|*||7*cc..cc7$|$|$|$2cx
+xcccccccccccc..ccccccccccccx
+xccccccccccc....cccccccccccx
+xcccccccccc..cc..ccccccccccx
+Yyyyyyyyyyy.cccc.zzzzzzzzzzZ
+Yyyyyyyyyy..cccc..zzzzzzzzzZ
+ccccccccccNNnccnNNcccccccccc
 ENDMAP
 
 ##############################################################################
@@ -2901,14 +2900,14 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-xxxxxxxxxxxxxccccxx@xxccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxcccc@.c.@ccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxc..x.....x..cxxxxxxxxxxxxx
 xxxxxxxxxxxxxc....x.x....cxxxxxxxxxxxxx
 xxxxxxxxxxxxxcx.........xcxxxxxxxxxxxxx
 xxxxxxxxxxxxxc....x.x....cxxxxxxxxxxxxx
 xxxxxxxxxxxxxc..x.....x..cxxxxxxxxxxxxx
-xxxxcccccxxxxcccccc.ccccccxxxxcccccxxxx
-xxccc...cccxxxxxccc.cccxxxxxccc...cccxx
+xxxxcccccxxxxccccc.c.cccccxxxxcccccxxxx
+xxccc...cccxxxxxcc...ccxxxxxccc...cccxx
 xcc.......cccxccc.....cccxccc.......ccx
 xc3.........ccc.........ccc.........4cx
 xc....6......5...........5......6....cx
@@ -3038,7 +3037,7 @@ xc3..7.....5.cc...........cc...........cx
 xc...........cc...........cc...2....6..cx
 xccc...2...cccccc.......cccccc...5...cccx
 xxxcc.....ccxxxxcc.....ccxxxxcc.....ccxxx
-xxxxccc.cccxxxxxxccc.cccxxxxxxccc.cccxxxx
+xxxxccc.cccxxxxxxcc.c.ccxxxxxxccc.cccxxxx
 xxxxxxcccxxxxxxxxcc...ccxxxxxxxxcccxxxxxx
 xxxxxxxxxxxxxxxxxc@...@cxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -3153,8 +3152,8 @@ xc$|*c|**c..1bbbbbbb..........2cx
 xc|$cc*|cc..bbbbbbbbb..4.......cx
 xc*|c|**c..6bbbbbbbbb..........cc
 xc|*c$$|c..bbbbbbbbbbb..........@
-xc+ccc+cc6.bbbbbbbbbbb...1..3cccc
-xc..1......bbbbbbbbbbb......2cxxx
+xc+ccc+cc6.bbbbbbbbbbb...1..3cc..
+xc..1......bbbbbbbbbbb......2cccc
 xc..........bbbbbbbbb.......ccxxx
 xc.7..5....4bbbbbbbbb.......cxxxx
 xc...........bbbbbbb...5...1cxxxx
@@ -3167,9 +3166,9 @@ xxxxcc.................cccxxxxxxx
 xxxxxcc......1........ccxxxxxxxxx
 xxxxxxcc3........3cccccxxxxxxxxxx
 xxxxxxxccc......cccxxxxxxxxxxxxxx
-xxxxxxxxxccc3...cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxc@cxxxxxxxxxxxxxxxx
+xxxxxxxxxccc3...ccxxxxxxxxxxxxxxx
+xxxxxxxxxxxcccc..cxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc@.cxxxxxxxxxxxxxxx
 ENDMAP
 
 # The elves had created golems to guard their treasure.
@@ -3213,11 +3212,11 @@ xxxxcccc1..4..............5ccccxxxx
 xxxxxxxcccc.........1...ccccxxxxxxx
 xxxxxxxxxxccc5........cccxxxxxxxxxx
 xxxxxxxxxxxxccc....4cccxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc.cccxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...ccxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxc8...8cxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxc8...8cxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc@cccxxxxxxxxxxxxxx
+xxxxxxxxxxcccccc.c.ccccccxxxxxxxxxx
+xxxxxxxxxxc....c...c....cxxxxxxxxxx
+xxxxxxxxxxc.............cxxxxxxxxxx
+xxxxxxxxxxcc..c88.88c..ccxxxxxxxxxx
+xxxxxxxxxxc.@.ccccccc.@.cxxxxxxxxxx
 ENDMAP
 
 # Before transforms: 28x$, 27x*, 29x|, 4x1, 9x2, 8x3, 6x4, 8x5, 2x6, 2x7
@@ -3302,15 +3301,15 @@ xxxxxcc..4....1..bbb.......5..ccxxxxx
 xxxxcc..........bbbbb..........ccxxxx
 xxxcc3....c......bbb......c.....ccxxx
 xxcc.....ccc......b...2..ccc.1...ccxx
-xcc.....ccxcc.5.........ccxcc...5.ccx
-xc..5..ccxxxcc......4..ccxxxcc.....cx
-xcc...ccxxxxxcc.......ccxxxxxcc4..ccx
-xxcc1ccxxxxxxxcc.....ccxxxxxxxcc.ccxx
-xxxcccxxxxxxxxxcc3..ccxxxxxxxxxcccxxx
-xxxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxcc...ccxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc..c..ccxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxc@.ccc.@cxxxxxxxxxxxxxx
+xcc.....ccccc.5.........ccccc...5.ccx
+xc..5..ccccccc......4..ccccccc.....cx
+xcc...ccc...ccc.......ccc...ccc4..ccx
+xxcc1ccc.....ccc.....ccc.....ccc.ccxx
+xxxcccc...c...ccc3..ccc...c...ccccxxx
+xxxxcc...ccc...ccc.ccc...ccc...ccxxxx
+xxxcc...ccxcc...c...c...ccxcc...ccxxx
+xxcc...ccxxxcc....c....ccxxxcc...ccxx
+xxc.@.ccxxxxxcccccccccccxxxxxcc.@.cxx
 ENDMAP
 
 # Before transform: 31x$, 26x*, 31x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
@@ -3336,14 +3335,14 @@ MAP
  xcc....2.bb*|b57.......3...ccx
 xxc..2....b|$$bbbbbbbbb......cxx
 xcc.....4.b$|*bb|*$|$|bb..2..ccx
-xc..3.....b|*bbb+bb*|$*bb.....cx
-xc.....1..b$bb|*$|bb*$|$bb.3..cx
-xc...5..U.b*b*$|*$|bbbb+bb....cc
-cc.......6b|+$|*$|*bbb5.4b.....@
-@.....b4.5bbb|*$|*$+|b6.......cc
-cc....bb+bbbb*$|*|$b*b.U..5...cx
-xc..3.bb$|$*bb$*|$bb$b..1.....cx
-xc.....bb*$|*bb+bbb*|b.....3..cx
+xc..3.....b|*bbb+bb*|$*bb.....cc
+cc.....1..b$bb|*$|bb*$|$bb.3...c
+c....5..U.b*b*$|*$|bbbb+bb....c@
+@c.......6b|+$|*$|*bbb5.4b......
+......b4.5bbb|*$|*$+|b6.......c@
+@c....bb+bbbb*$|*|$b*b.U..5....c
+c...3.bb$|$*bb$*|$bb$b..1.....cc
+cc.....bb*$|*bb+bbb*|b.....3..cx
 xcc..2..bb|$|$*|bb*|$b.4.....ccx
 xxc......bbbbbbbbb$$|b....2..cxx
  xcc...3.......75b|*bb.2....ccx
@@ -3599,7 +3598,7 @@ xc..v..c............c..2.vv....c
 xc.vv..c....bbbb..3.c....vvv...c
 xc.v5.cc...bbbbbb...cc....vvv..c
 xc.v..c....bbbbbb....c..3..v...c
-xc....c..3.bbbbbb....cc......5.c
+xc....c..3.bbbbbb....cc......5.@
 xc.5.cc....bbbbbb.....ccc......c
 xc...c......bbbb..2.....cccc...@
 xc...c................6...7ccccc
@@ -3616,7 +3615,7 @@ xxxc..5....vvv..cc+cccc|*||**cxx
 xxxcc.......v....c**||**|*|*ccxx
 xxxxccc..1....3..c|**|*|||cccxxx
 xxxxxxcccc.......c|||*|ccccxxxxx
-xxxxxxxxxccccccc@cccccccxxxxxxxx
+xxxxxxxxxccccc@c@cccccccxxxxxxxx
 ENDMAP
 
 # Before transforms: 42x$, 27x*, 27x|, 10x1, 8x2, 4x3, 4x4, 6x5, 4x6, 2x7
@@ -3650,11 +3649,11 @@ xc+ccc..4.....1.....5..ccc+cx
 xc$$$ccc..1.....2..1.ccc$$$cx
 xc|$*$$ccc....4...5ccc|$$*$cx
 xccc|*$|$ccc.2...ccc$*$||cccx
-xxxccc|$$$|ccc.ccc$$|$*cccxxx
+xxxccc|$$$|cc.c.cc$$|$*cccxxx
 xxxxxccc$*$$c3.3c$$*$cccxxxxx
 xxxxxxxccc$$c...c$$cccxxxxxxx
 xxxxxxxxxcccc...ccccxxxxxxxxx
-xxxxxxxxxxxxcc@ccxxxxxxxxxxxx
+xxxxxxxxxxxxc@c@cxxxxxxxxxxxx
 ENDMAP
 
 # Before transforms: 1x$, 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
@@ -3740,5 +3739,5 @@ xccccc6.....................7cccccx
 xxxxxccc1......v.5.v......2cccxxxxx
 xxxxxxxcccc.............ccccxxxxxxx
 xxxxxxxxxxcccc4.....3ccccxxxxxxxxxx
-xxxxxxxxxxxxxcccc@ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc@ccc@ccxxxxxxxxxxxxx
 ENDMAP

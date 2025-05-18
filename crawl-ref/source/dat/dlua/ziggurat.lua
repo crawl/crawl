@@ -384,13 +384,13 @@ end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
-  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 5)
-  return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
-         "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant soulmonger w:" .. e .. " / " ..
+  local e = math.min(8, math.floor((you.depth()) / 5) + 4 + you.zigs_completed())
+  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
+  return "soul eater w:" .. d .. " / laughing skull w:" .. d .. " / " ..
+         "deep elf death mage w:2 / shadow dragon w:8 / ghost crab w:4 / " ..
+         "eidolon w:4 / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "player ghost w:" .. f
+         "halazid warlock w:" .. e .. " / player ghost w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -471,6 +471,19 @@ mset(with_props(spec_fn(function ()
          "ancient lich w:" .. d - 5 .. " / " ..
          "demonspawn blood saint w:" .. d .. " / " ..
          "draconian annihilator w:" .. e
+end), { weight = 2 }))
+
+mset(with_props(spec_fn(function ()
+  local d = math.max(2, 20 - you.zigs_completed() * 2)
+  local e = 10 + you.zigs_completed() * 3
+  local f = 5 + you.zigs_completed() * 5
+  return "kobold demonologist w:" .. d .. " / ynoxinul w:" .. d .. " / " ..
+         "boggart w:" .. d .. " / worldbinder w:" .. d .. " / " ..
+         "rakshasa / broodmother / shadow demon / deep elf demonologist w:5 / " ..
+         "dread lich w:5 / fravashi w:5 / doom hound w:5 / " ..
+         "glowing orange brain w:" .. e .. " / " ..
+         "demonspawn corrupter w:" .. e .. " / " ..
+         "halazid warlock w:" .. f .. " / nekomata w:" .. f
 end), { weight = 2 }))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
