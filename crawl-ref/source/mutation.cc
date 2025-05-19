@@ -1610,8 +1610,8 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
             return false;
         }
 
-        // Only Felids and Trolls have enough innate fur to mutate more.
-        if (mut == MUT_SHAGGY_FUR && you.species != SP_FELID && you.species != SP_TROLL)
+        // Only species that have innate fur can mutate more.
+        if (mut == MUT_SHAGGY_FUR && !you.has_innate_mutation(MUT_SHAGGY_FUR))
             return false;
 
         // Formicids have stasis and so prevent mutations that would do nothing.
