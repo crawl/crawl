@@ -354,11 +354,20 @@ bool TilesFramework::initialise()
 
     m_image = new ImageManager();
 
-    // If the window size is less than the view height, the textures will
-    // have to be shrunk. If this isn't the case, then don't create mipmaps,
-    // as this appears to make things blurry on some users machines.
-    bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
-    if (!m_image->load_textures(need_mips))
+    // If the window size is less than the view height,
+    // the textures will have to be shrunk.
+    //
+    // If this isn't the case, then don't create mipmaps unless
+    // explicitly requested as this appears to make things blurry
+    // on some users machines.
+    bool need_mips;
+    if (Options.tile_use_mipmaps == maybe_bool::maybe)
+        need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
+    else
+        need_mips = bool(Options.tile_use_mipmaps);
+
+    MipMapOptions mip_opts = need_mips ? MipMapOptions::CREATE : MipMapOptions::NONE;
+    if (!m_image->load_textures(mip_opts))
         return false;
 
     calculate_default_options();
