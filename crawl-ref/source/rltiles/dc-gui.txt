@@ -258,7 +258,6 @@ base/poltergeist SP_RECOMMENDED_POLTERGEIST
 %finish SP_RECOMMENDED_DEMONSPAWN
 %start
 %compose base/draconian
-%compose body/animal_skin
 %finish SP_RECOMMENDED_BASE_DRACONIAN
 %start
 %compose base/formicid
@@ -348,7 +347,6 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %finish SP_RECOMMENDED_METEORAN
 %start
 %compose base/coglin
-%compose body/animal_skin
 %compose hair/short_brown
 %finish SP_RECOMMENDED_COGLIN
 %syn LAST_RECOMMENDED_SPECIES
