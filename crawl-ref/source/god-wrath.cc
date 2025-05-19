@@ -1281,7 +1281,10 @@ static bool _fedhas_summon_plants()
 static bool _fedhas_retribution()
 {
     if (wrath_tension_check(true) && !you.transform_uncancellable)
+    {
         _fedhas_transform();
+        return true;
+    }
     else
         return _fedhas_summon_plants();
 }
