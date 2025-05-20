@@ -391,6 +391,25 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         }
     }
 
+    if ((flavour == BEAM_COLD || flavour == BEAM_ICE)
+        && you.has_bane(BANE_SNOW_BLINDNESS))
+    {
+        int chance = 25;
+        const int rC = you.res_cold();
+        if (rC < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / (rC + 1);
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The cold chills your senses.");
+            const int dur = random_range(5, 10);
+            blind_player(dur, LIGHTBLUE);
+            you.increase_duration(DUR_WEAK, dur, 50);
+        }
+    }
+
     if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
         mprf(MSGCH_WARN, "The flames go out!");

@@ -6,6 +6,7 @@ enum bane_type
 {
     BANE_LETHARGY,
     BANE_HEATSTROKE,
+    BANE_SNOW_BLINDNESS,
 
     NUM_BANES,
 };

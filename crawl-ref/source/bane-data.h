@@ -25,4 +25,11 @@ static const bane_def bane_data[] =
         "Heatstroke",
         "You sometimes become slowed when damaged by fire.",
     },
+
+    {
+        BANE_SNOW_BLINDNESS,
+        BANE_DUR_MEDIUM,
+        "Snow-blindness",
+        "You sometimes become weak and blind when damaged by cold.",
+    },
 };
