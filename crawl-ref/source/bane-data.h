@@ -20,9 +20,9 @@ static const bane_def bane_data[] =
     },
 
     {
-        BANE_PLACEHOLDER_2,
-        500,
-        "placeholder 2",
-        "You are afflicted by a very different placeholder.",
+        BANE_HEATSTROKE,
+        BANE_DUR_MEDIUM,
+        "Heatstroke",
+        "You sometimes become slowed when damaged by fire.",
     },
 };

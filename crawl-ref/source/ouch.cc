@@ -373,6 +373,24 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         you.slow_down(0, strength);
     }
 
+    if ((flavour == BEAM_FIRE || flavour == BEAM_LAVA
+         || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
+        && you.has_bane(BANE_HEATSTROKE))
+    {
+        int chance = 25;
+        const int rF = you.res_fire();
+        if (rF < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / (rF + 1);
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The heat overwhelms you.");
+            you.slow_down(0, random_range(5, 10));
+        }
+    }
+
     if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
         mprf(MSGCH_WARN, "The flames go out!");

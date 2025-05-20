@@ -5,7 +5,7 @@
 enum bane_type
 {
     BANE_LETHARGY,
-    BANE_PLACEHOLDER_2,
+    BANE_HEATSTROKE,
 
     NUM_BANES,
 };
