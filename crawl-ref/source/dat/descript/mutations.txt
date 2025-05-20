@@ -1351,6 +1351,8 @@ no forgecraft magic mutation
 Your Forgecraft skill is 0 and you cannot train the skill.
 %%%%
 # ------ Banes ------
-placeholder bane
+lethargy bane
 
-Some text should probably go here.
+You cover ground slowly - moving to new positions takes you 30% more time than
+normal. This has no effect on other types of actions, like attacking or casting
+spells.

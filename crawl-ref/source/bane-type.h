@@ -4,7 +4,7 @@
 
 enum bane_type
 {
-    BANE_PLACEHOLDER_1,
+    BANE_LETHARGY,
     BANE_PLACEHOLDER_2,
 
     NUM_BANES,

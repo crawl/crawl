@@ -1764,6 +1764,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv /= 10;
     }
 
+    if (you.has_bane(BANE_LETHARGY))
+        mv = mv * 13 / 10;
+
     if (you.form == transformation::fortress_crab)
         mv = mv * 13 / 10;
 

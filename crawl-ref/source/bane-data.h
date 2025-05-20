@@ -13,10 +13,10 @@ struct bane_def
 static const bane_def bane_data[] =
 {
     {
-        BANE_PLACEHOLDER_1,
-        1000,
-        "placeholder",
-        "You are afflicted by a placeholder.",
+        BANE_LETHARGY,
+        BANE_DUR_LONG,
+        "Lethargy",
+        "You cover ground slowly.",
     },
 
     {
