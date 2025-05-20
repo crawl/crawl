@@ -1367,3 +1367,9 @@ snow-blindness bane
 When you are damaged by cold, you have a chance to become weak and blind for a
 moderate length of time. This chance is decreased by your current level of cold
 resistance.
+%%%%
+electrospasm bane
+
+When you are damaged by electricity, you have a chance to become bound in place
+and unable to move for a short length of time. This chance is decrease by your
+current level of electrical resistance.

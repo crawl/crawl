@@ -410,6 +410,24 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         }
     }
 
+    if ((flavour == BEAM_ELECTRICITY || flavour == BEAM_THUNDER
+         || flavour == BEAM_STUN_BOLT)
+        && you.has_bane(BANE_ELECTROSPASM))
+    {
+        int chance = 20;
+        const int rElec = you.res_elec();
+        if (rElec < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / 2;
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The electricty makes your body seize.");
+            you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 7), 10);
+        }
+    }
+
     if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
         mprf(MSGCH_WARN, "The flames go out!");

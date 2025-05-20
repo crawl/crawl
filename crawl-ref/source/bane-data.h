@@ -32,4 +32,11 @@ static const bane_def bane_data[] =
         "Snow-blindness",
         "You sometimes become weak and blind when damaged by cold.",
     },
+
+    {
+        BANE_ELECTROSPASM,
+        BANE_DUR_MEDIUM,
+        "Electrospasm",
+        "You sometimes become unable to move when damaged by electricity.",
+    },
 };

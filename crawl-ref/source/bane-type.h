@@ -7,6 +7,7 @@ enum bane_type
     BANE_LETHARGY,
     BANE_HEATSTROKE,
     BANE_SNOW_BLINDNESS,
+    BANE_ELECTROSPASM,
 
     NUM_BANES,
 };
