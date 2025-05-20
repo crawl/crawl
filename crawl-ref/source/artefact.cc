@@ -2112,6 +2112,9 @@ void fill_gizmo_properties(CrawlVector& gizmos)
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;
+
+    // Try 100 times to make an artefact dragon scales without *Silence,
+    // since they're on someone called "the Enchantress".
     for (int i=0; i<100; i++)
     {
         doodad.clear();
@@ -2119,20 +2122,21 @@ static void _make_faerie_armour(item_def &item)
         doodad.sub_type = item.sub_type;
         if (!make_item_randart(doodad))
         {
-            i--; // Forbidden props are not absolute, artefactness is.
+            i--;
             continue;
         }
 
-        // *Silence makes no sense on someone called "the Enchantress".
         if (artefact_property(doodad, ARTP_SILENCE))
             continue;
 
-        if (one_chance_in(20))
+        if (one_chance_in(10))
             artefact_set_property(doodad, ARTP_CLARITY, 1);
-        if (one_chance_in(20))
-            artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
-        if (one_chance_in(20))
-            artefact_set_property(doodad, ARTP_HP, random2(16) - 5);
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_MAGICAL_POWER, _gen_good_hpmp_artp());
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_HP, _gen_good_hpmp_artp());
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_INVISIBLE, 1);
 
         break;
     }
@@ -2144,10 +2148,11 @@ static void _make_faerie_armour(item_def &item)
     doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
 
-    // On body armour, an enchantment of less than 0 is never viable.
-    int high_plus = random2(6) - 2;
-    high_plus += random2(6);
-    item.plus = max(high_plus, random2(2));
+    // Make the scales always stand out.
+    artefact_set_property(item, ARTP_ENHANCE_HEXES, 1);
+
+    // Try to give an enchantment a Depths visitor could ever care about.
+    item.plus = 2 + random2(4) + random2(4);
 }
 
 static jewellery_type octoring_types[8] =
