@@ -2463,12 +2463,22 @@ int get_crosstrain_points(skill_type sk)
  * Is the provided skill one of the elemental spellschools?
  *
  * @param sk    The skill in question.
- * @return      Whether it is fire, ice, earth, or air.
+ * @param ext   If we want to also include alchemy or conjurations.
+ *              (The kinda-poison and kinda-pure elements?)
+ * @return      Whether it is fire, ice, earth, air, or possibly the above two.
  */
-static bool _skill_is_elemental(skill_type sk)
+static bool _skill_is_elemental(skill_type sk, bool ext)
 {
-    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
-           || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
+    if (ext)
+    {
+        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC || sk == SK_AIR_MAGIC
+               || sk == SK_ICE_MAGIC || sk == SK_ALCHEMY || sk == SK_CONJURATIONS;
+    }
+    else
+    {
+        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
+               || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
+    }
 }
 
 /**
@@ -2478,13 +2488,13 @@ static bool _skill_is_elemental(skill_type sk)
  * @param scale     Scaling factor for skill.
  * @return          The player's skill at the elemental parts of a given spell.
  */
-int elemental_preference(spell_type spell, int scale)
+int destructive_elemental_preference(spell_type spell, int scale)
 {
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
     for (skill_type sk : skill_list)
-        if (_skill_is_elemental(sk))
+        if (_skill_is_elemental(sk, true))
             preference += you.skill(sk, scale);
     return preference;
 }
