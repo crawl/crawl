@@ -1373,3 +1373,8 @@ electrospasm bane
 When you are damaged by electricity, you have a chance to become bound in place
 and unable to move for a short length of time. This chance is decrease by your
 current level of electrical resistance.
+%%%%
+claustrophobia bane
+
+Your damage and accuracy with weapons is decreased for each wall you are
+currently adjacent to.

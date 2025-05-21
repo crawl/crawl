@@ -539,6 +539,18 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text = make_stringf("Slay +%d", you.props[WEREFURY_KEY].get_int());
     break;
 
+    case STATUS_CLAUSTROPHOBIA:
+        if (you.has_bane(BANE_CLAUSTROPHOBIA))
+        {
+            const int stacks = you.props[CLAUSTROPHOBIA_KEY].get_int();
+            if (stacks > 0)
+            {
+                inf.light_colour = LIGHTRED;
+                inf.light_text = make_stringf("Phobia (-%d)", stacks);
+            }
+        }
+    break;
+
     case DUR_STICKY_FLAME:
     {
         int intensity = you.props[STICKY_FLAME_POWER_KEY].get_int();

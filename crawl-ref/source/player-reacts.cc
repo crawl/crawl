@@ -360,6 +360,21 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+static void _update_claustrophobia()
+{
+    if (!you.has_bane(BANE_CLAUSTROPHOBIA))
+        return;
+
+    int count = 0;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+            ++count;
+    }
+
+    you.props[CLAUSTROPHOBIA_KEY] = count * 2;
+}
+
 // Uskayaw piety decays incredibly fast, but only to a baseline level of *.
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
@@ -505,6 +520,7 @@ void player_reacts_to_monsters()
 
     _maybe_melt_armour();
     _update_cowardice();
+    _update_claustrophobia();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
 

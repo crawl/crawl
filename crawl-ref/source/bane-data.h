@@ -39,4 +39,12 @@ static const bane_def bane_data[] =
         "Electrospasm",
         "You sometimes become unable to move when damaged by electricity.",
     },
+
+    {
+        BANE_CLAUSTROPHOBIA,
+        BANE_DUR_MEDIUM,
+        "Claustrophobia",
+        "Your damage and accuracy is decreased for each wall adjacent to you.",
+    },
+
 };
