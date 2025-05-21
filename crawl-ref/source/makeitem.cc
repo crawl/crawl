@@ -1326,7 +1326,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
     else
-        item.sub_type = choose_book_type(item_level);
+        item.sub_type = BOOK_PARCHMENT;
 
     if (item.sub_type == BOOK_MANUAL)
     {
@@ -1336,6 +1336,11 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         // Preidentify.
         item.flags |= ISFLAG_IDENTIFIED;
         return; // rare enough without being replaced with randarts
+    }
+    else if (item.sub_type == BOOK_PARCHMENT)
+    {
+        item.plus = SPELL_FIREBALL;
+        return;
     }
 
     // Only randomly generate randart books for OBJ_RANDOM, since randart
