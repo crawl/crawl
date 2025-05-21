@@ -10,6 +10,7 @@ enum bane_type
     BANE_ELECTROSPASM,
     BANE_CLAUSTROPHOBIA,
     BANE_STUMBLING,
+    BANE_RECKLESS,
 
     NUM_BANES,
 };

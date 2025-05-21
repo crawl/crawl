@@ -3330,6 +3330,14 @@ bane_type bane_from_name(string name)
     return NUM_BANES;
 }
 
+static bool _bane_is_compatible(bane_type bane)
+{
+    if (bane == BANE_RECKLESS)
+        return player_shield_class(1, false, true) > 0;
+
+    return true;
+}
+
 /**
  * Give the player a bane. If the player already suffers from the bane in
  * question, extend its duration.
@@ -3347,7 +3355,7 @@ bool add_bane(bane_type bane, int duration)
     {
         vector<bane_type> candidates;
         for (int i = 0; i < NUM_BANES; ++i)
-            if (you.banes[i] == 0)
+            if (you.banes[i] == 0 && _bane_is_compatible(static_cast<bane_type>(i)))
                 candidates.push_back(static_cast<bane_type>(i));
 
         if (candidates.empty())
@@ -3368,6 +3376,10 @@ bool add_bane(bane_type bane, int duration)
 
     you.banes[bane] += duration;
 
+    // Actually update SH immediately. (Yes, that is the right flag....)
+    if (bane == BANE_RECKLESS)
+        you.redraw_armour_class = true;
+
     return true;
 }
 
@@ -3375,6 +3387,9 @@ void remove_bane(bane_type bane)
 {
     mprf(MSGCH_RECOVERY, "The %s upon you is lifted.", bane_name(bane).c_str());
     you.banes[bane] = 0;
+
+    if (bane == BANE_RECKLESS)
+        you.redraw_armour_class = true;
 }
 
 int xl_to_remove_bane(bane_type bane)

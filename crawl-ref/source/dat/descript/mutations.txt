@@ -1383,3 +1383,7 @@ stumbling bane
 
 Your evasion is decreased by 25 on any turn where you either moved or waited in
 place without doing anything else.
+%%%%
+reckless bane
+
+Your SH is always equal to 0 and cannot be raised by any means.

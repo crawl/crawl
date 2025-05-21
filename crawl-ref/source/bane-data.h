@@ -54,4 +54,11 @@ static const bane_def bane_data[] =
         "Your evasion is greatly reduced on turns you move or wait in place.",
     },
 
+    {
+        BANE_RECKLESS,
+        BANE_DUR_LONG,
+        "the Reckless",
+        "Your SH is set to 0.",
+    },
+
 };
