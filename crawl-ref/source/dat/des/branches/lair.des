@@ -4236,15 +4236,15 @@ TILE:    G = dngn_statue_elephant
 : set_feature_name("tree", "dead tree")
 MAP
    xxxcccccccc
-  xxttrrrLrrrcc
- xxttqqqMMM.qrcc
-xxqtq....MM..qrcc                           ccccc
-xx...qrrqr..r..rcccccccccccccccccccccccccccccaaGttq.
-xq.qttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
+  xxttnGnGrrrcc
+ xxttqqqMLM.qrcc
+xxqtq..nMMM..qrcc                           ccccc
+xx...qnGnG..r..rcccccccccccccccccccccccccccccaaGttq.
+xq.qqtcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
 xt7ttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
-cnsncccccp-pcq.OON+..WwW+.55%&cGe2..+QQQqqc.cq.Kaaatq.
-cndnccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
-cnnnccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
+ccsccccccp-pcq.OON+..WwW+.55%&cGe2..+QQQqqc.cq.Kaaatq.
+ccdcccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
+ccccccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
 ccccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
 xxxc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
 xxxcGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
