@@ -962,10 +962,11 @@ static void _describe_gem(status_info& inf)
     if (time_taken >= limit)
         return; // already lost...
 
-    if (!gem_clock_active())
+    if (!gem_clock_active() && !you.gems_found[gem])
     {
         // player has picked up the orb, but the gem has not yet shattered
-        inf.light_text = "Gem not acquired";
+        inf.light_text = "No Gem";
+        inf.light_colour = CYAN;
         return;
     }
     const int d_aut_left = (limit - time_taken + 9) / 10;
