@@ -129,6 +129,13 @@ vector<spell_type> spells_in_book(const item_def &book)
     ASSERT(book.base_type == OBJ_BOOKS);
 
     vector<spell_type> ret;
+
+    if (book.sub_type == BOOK_PARCHMENT)
+    {
+        ret.emplace_back(static_cast<spell_type>(book.plus));
+        return ret;
+    }
+
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
         return spellbook_template(static_cast<book_type>(book.sub_type));

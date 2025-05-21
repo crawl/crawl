@@ -645,13 +645,13 @@ static void _generate_missile_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
+        // Total weight: 100
         item.sub_type =
-            random_choose_weighted(40, MI_STONE,
-                                   10, MI_DART,
-                                   3,  MI_BOOMERANG,
-                                   2,  MI_JAVELIN,
-                                   1,  MI_THROWING_NET,
-                                   1,  MI_LARGE_ROCK);
+            random_choose_weighted(60, MI_DART,
+                                   17, MI_BOOMERANG,
+                                   11,  MI_JAVELIN,
+                                   6,  MI_THROWING_NET,
+                                   6,  MI_LARGE_ROCK);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -1318,6 +1318,50 @@ static skill_type _choose_manual_skill()
     return skill;
 }
 
+/// Spells that appear in one book, historically. Used for parchment weight.
+static bool _is_rare_spell(spell_type spell)
+{
+    if (spell_difficulty(spell) == 9)
+        return true;
+
+    switch (spell)
+    {
+    case SPELL_BORGNJORS_REVIVIFICATION:
+    case SPELL_INFESTATION:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+static int _choose_parchment_spell(int item_level)
+{
+    vector<pair<spell_type, int>> weights;
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_player_book_spell(spell))
+            continue;
+
+        const int splevel = spell_difficulty(spell);
+        int sp_weight = 100;
+
+        if (splevel > 3 && splevel * 3 > item_level)
+            sp_weight = max(10, sp_weight * (item_level + 1) / (splevel * 3));
+
+        if (_is_rare_spell(spell))
+            sp_weight /= 2;
+
+        const pair <spell_type, int> weight_pair = { spell, sp_weight };
+        weights.push_back(weight_pair);
+    }
+
+    return *random_choose_weighted(weights);
+}
+
 static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
@@ -1325,6 +1369,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
+    else if (!one_chance_in(50))
+        item.sub_type = BOOK_PARCHMENT; // almost everything else is a parchment
     else
         item.sub_type = choose_book_type(item_level);
 
@@ -1336,6 +1382,11 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         // Preidentify.
         item.flags |= ISFLAG_IDENTIFIED;
         return; // rare enough without being replaced with randarts
+    }
+    else if (item.sub_type == BOOK_PARCHMENT)
+    {
+        item.plus = static_cast<int>(_choose_parchment_spell(item_level));
+        return;
     }
 
     // Only randomly generate randart books for OBJ_RANDOM, since randart
@@ -1888,12 +1939,12 @@ int items(bool allow_uniques,
                                     10, OBJ_STAVES,
                                     25, OBJ_TALISMANS,
                                     45, OBJ_JEWELLERY,
-                                    45, OBJ_BOOKS,
+                                    46, OBJ_MISSILES,
                                     70, OBJ_WANDS,
+                                   155, OBJ_BOOKS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
-                                   156, OBJ_MISSILES,
                                    270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 

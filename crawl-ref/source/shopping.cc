@@ -745,6 +745,12 @@ unsigned int item_value(item_def item, bool ident)
         const book_type book = static_cast<book_type>(item.sub_type);
         if (book == BOOK_MANUAL)
             return 800;
+        else if (book == BOOK_PARCHMENT)
+        {
+            int level = spell_difficulty(static_cast<spell_type>(item.plus));
+            // more expensive per spell than books
+            valued = level * 27 + 27;
+        }
 #if TAG_MAJOR_VERSION == 34
         if (book == BOOK_BUGGY_DESTRUCTION)
             break;
