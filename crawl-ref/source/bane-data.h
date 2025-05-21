@@ -47,4 +47,11 @@ static const bane_def bane_data[] =
         "Your damage and accuracy is decreased for each wall adjacent to you.",
     },
 
+    {
+        BANE_STUMBLING,
+        BANE_DUR_SHORT,
+        "Stumbling",
+        "Your evasion is greatly reduced on turns you move or wait in place.",
+    },
+
 };

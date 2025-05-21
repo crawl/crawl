@@ -1378,3 +1378,8 @@ claustrophobia bane
 
 Your damage and accuracy with weapons is decreased for each wall you are
 currently adjacent to.
+%%%%
+stumbling bane
+
+Your evasion is decreased by 25 on any turn where you either moved or waited in
+place without doing anything else.

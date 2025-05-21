@@ -1844,7 +1844,7 @@ bool player_acrobatic()
 
 void update_acrobat_status()
 {
-    if (!player_acrobatic())
+    if (!player_acrobatic() && !you.has_bane(BANE_STUMBLING))
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -1945,6 +1945,11 @@ static int _player_temporary_evasion_modifiers()
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
+
+    // Bane of stumbling triggers on the same conditions as acrobat (thus
+    // sharing its timer).
+    if (you.has_bane(BANE_STUMBLING) && you.duration[DUR_ACROBAT])
+        evbonus -= 25;
 
     if (you.duration[DUR_VERTIGO])
         evbonus -= 5;
