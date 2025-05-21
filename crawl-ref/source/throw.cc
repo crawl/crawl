@@ -957,6 +957,9 @@ static bool _thrown_object_destroyed(const item_def &item)
     if (brand == SPMSL_CURARE)
         chance /= 2;
 
+    if (you.is_player() && you.wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION))
+        chance *= 2;
+
     dprf("mulch chance: %d in %d", mult, chance);
 
     return x_chance_in_y(mult, chance);
