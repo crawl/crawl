@@ -947,7 +947,7 @@ static colour_t _gem_light_colour(int d_aut_left)
 
 static void _describe_gem(status_info& inf)
 {
-    if (!Options.always_show_gems || !gem_clock_active())
+    if (!Options.always_show_gems)
         return;
 
     const gem_type gem = gem_for_branch(you.where_are_you);
@@ -962,6 +962,12 @@ static void _describe_gem(status_info& inf)
     if (time_taken >= limit)
         return; // already lost...
 
+    if (!gem_clock_active())
+    {
+        // player has picked up the orb, but the gem has not yet shattered
+        inf.light_text = "Gem not acquired";
+        return;
+    }
     const int d_aut_left = (limit - time_taken + 9) / 10;
     inf.light_text = make_stringf("Gem (%d)", d_aut_left);
     inf.light_colour = _gem_light_colour(d_aut_left);
