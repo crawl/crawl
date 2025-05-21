@@ -2349,7 +2349,10 @@ int mons_class_willpower(monster_type type, monster_type base)
             ? draconian_subspecies(type, base)
             : type;
 
-    const int type_wl = (get_monster_data(base_type))->willpower;
+    int type_wl = (get_monster_data(base_type))->willpower;
+
+    if (mons_is_draconian_job(type))
+        type_wl += 20;
 
     // Negative values get multiplied with monster hit dice.
     if (type_wl >= 0)
