@@ -1318,6 +1318,23 @@ static skill_type _choose_manual_skill()
     return skill;
 }
 
+static int _choose_parchment_spell()
+{
+    vector<pair<spell_type, int>> weights;
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_player_book_spell(spell))
+            continue;
+
+        const pair <spell_type, int> weight_pair = { spell, 1 };
+        weights.push_back(weight_pair);
+    }
+
+    return *random_choose_weighted(weights);
+}
+
 static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
@@ -1339,7 +1356,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
     else if (item.sub_type == BOOK_PARCHMENT)
     {
-        item.plus = SPELL_FIREBALL;
+        item.plus = static_cast<int>(_choose_parchment_spell());
         return;
     }
 

@@ -3274,7 +3274,7 @@ tileidx_t tileidx_item(const item_def &item)
 
         if (item.sub_type == BOOK_MANUAL)
             return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
-        
+
         if (item.sub_type == BOOK_PARCHMENT)
             return TILE_BOOK_PARCHMENT;
 
