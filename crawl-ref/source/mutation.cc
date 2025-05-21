@@ -51,7 +51,6 @@
 
 using namespace ui;
 
-static bool _delete_single_mutation_level(mutation_type mutat, const string &reason, bool transient);
 static string _future_mutation_description(mutation_type mut, int levels);
 
 struct body_facet_def
@@ -2080,9 +2079,9 @@ mutation_type concretize_mut(mutation_type mut,
  *
  * @return whether a mutation was deleted.
  */
-static bool _delete_single_mutation_level(mutation_type mutat,
-                                          const string &reason,
-                                          bool transient)
+bool _delete_single_mutation_level(mutation_type mutat,
+                                   const string &reason,
+                                   bool transient)
 {
     // are there some non-innate mutations to delete?
     if (you.get_base_mutation_level(mutat, false, true, true) == 0)

@@ -2797,6 +2797,28 @@ static void _ash_uncurse()
     }
 }
 
+static void _jiyva_remove_slime_mutations()
+{
+    bool slimy = false;
+    string reason = "the all-consuming vengeance of Jiyva";
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (is_slime_mutation(static_cast<mutation_type>(i))
+            && you.has_mutation(static_cast<mutation_type>(i)))
+        {
+            if (!slimy)
+            {
+                slimy = true;
+                simple_god_message(" gift of slime is revoked.", true, GOD_JIYVA);
+            }
+            // XXX: replicates _god_wrath_name()
+            while (_delete_single_mutation_level(static_cast<mutation_type>(i), reason, true));
+            delete_mutation(static_cast<mutation_type>(i),
+                            reason, true, false, true);
+        }
+    }
+}
+
 int excom_xp_docked()
 {
     const int max_xl = you.get_max_xl();
@@ -3001,6 +3023,8 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
+
+        _jiyva_remove_slime_mutations();
         break;
 
     case GOD_FEDHAS:

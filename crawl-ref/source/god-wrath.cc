@@ -151,30 +151,35 @@ static bool wrath_tension_check(bool check_hp)
 
 static const vector<pop_entry> _okawaru_servants =
 { // warriors
-  {  1,  3,   3, FALL, MONS_ORC },
-  {  1,  3,   3, FALL, MONS_GNOLL },
-  {  2,  6,   3, PEAK, MONS_OGRE },
-  {  2,  6,   2, PEAK, MONS_GNOLL_SERGEANT },
-  {  3,  7,   1, FLAT, MONS_TWO_HEADED_OGRE },
-  {  3, 13,   3, PEAK, MONS_ORC_WARRIOR },
-  {  5, 15,   3, PEAK, MONS_ORC_KNIGHT },
-  {  5, 15,   2, PEAK, MONS_CYCLOPS },
-  {  7, 21,   2, PEAK, MONS_CENTAUR_WARRIOR },
-  {  7, 21,   2, PEAK, MONS_NAGA_WARRIOR },
-  {  7, 21,   2, PEAK, MONS_TENGU_WARRIOR },
-  {  7, 21,   1, FLAT, MONS_MERFOLK_IMPALER },
-  {  7, 21,   1, FLAT, MONS_MERFOLK_JAVELINEER },
-  {  7, 21,   1, FLAT, MONS_MINOTAUR },
-  {  9, 27,   2, FLAT, MONS_STONE_GIANT },
-  {  9, 27,   1, FLAT, MONS_DEEP_ELF_KNIGHT },
-  {  9, 27,   1, FLAT, MONS_DEEP_ELF_ARCHER },
-  { 11, 21,   1, FLAT, MONS_ORC_WARLORD },
-  { 11, 27,   2, FLAT, MONS_FIRE_GIANT },
-  { 11, 27,   2, FLAT, MONS_FROST_GIANT },
-  { 13, 27,   1, FLAT, MONS_DEEP_ELF_BLADEMASTER },
-  { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
-  { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
-  { 15, 27,   2, FLAT, MONS_TITAN },
+  {  1,  4,  30, FALL, MONS_ORC },
+  {  1,  4,  30, FALL, MONS_GNOLL },
+  {  2,  6,  30, PEAK, MONS_OGRE },
+  {  3,  6,  20, PEAK, MONS_GNOLL_SERGEANT },
+  {  3,  9,  30, PEAK, MONS_ORC_WARRIOR },
+  {  5, 10,  10, FLAT, MONS_TWO_HEADED_OGRE },
+  {  7, 13,  20, PEAK, MONS_CYCLOPS },
+  {  7, 16,  20, PEAK, MONS_TENGU_WARRIOR },
+  {  8, 16,  20, PEAK, MONS_NAGA_WARRIOR },
+  {  9, 16,  20, PEAK, MONS_CENTAUR_WARRIOR },
+  {  9, 18,  30, PEAK, MONS_ORC_KNIGHT },
+  { 10, 20,  10, FLAT, MONS_DEEP_ELF_KNIGHT },
+  { 10, 20,  10, FLAT, MONS_DEEP_ELF_ARCHER },
+  { 11, 21,  10, FLAT, MONS_MINOTAUR },
+  { 11, 22,  10, FLAT, MONS_MERFOLK_IMPALER },
+  { 12, 23,  10, FLAT, MONS_MERFOLK_JAVELINEER },
+  { 13, 24,  10, FLAT, MONS_ORC_WARLORD },
+  { 13, 24,  20, FLAT, MONS_YAKTAUR_CAPTAIN },
+  { 14, 25,  20, FLAT, MONS_STONE_GIANT },
+  { 14, 26,  15, FLAT, MONS_FIRE_GIANT },
+  { 14, 26,  15, FLAT, MONS_FROST_GIANT },
+  { 15, 26,  10, FLAT, RANDOM_BASE_DRACONIAN },
+  { 16, 27,  20, FLAT, MONS_SPRIGGAN_DEFENDER },
+  { 17, 27,  15, FLAT, MONS_TITAN },
+  { 18, 27,  20, FLAT, MONS_WAR_GARGOYLE },
+  { 19, 27,  15, FLAT, MONS_TENGU_REAVER },
+  { 19, 37,  15, SEMI, MONS_DRACONIAN_KNIGHT },
+  { 20, 37,  20, SEMI, MONS_DEEP_ELF_BLADEMASTER },
+  { 20, 37,  20, SEMI, MONS_DEEP_ELF_MASTER_ARCHER },
 };
 
 static bool _okawaru_random_servant()
@@ -1100,27 +1105,6 @@ static void _jiyva_mutate_player()
         mutate(RANDOM_BAD_MUTATION, _god_wrath_name(god), true, false, true);
 }
 
-static void _jiyva_remove_slime_mutation()
-{
-    bool slimy = false;
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        if (is_slime_mutation(static_cast<mutation_type>(i))
-            && you.has_mutation(static_cast<mutation_type>(i)))
-        {
-            slimy = true;
-        }
-    }
-
-    if (!slimy)
-        return;
-
-    const god_type god = GOD_JIYVA;
-    simple_god_message(" gift of slime is revoked.", true, god);
-    delete_mutation(RANDOM_SLIME_MUTATION, _god_wrath_name(god),
-                    true, false, true);
-}
-
 /**
  * Make Jiyva contaminate that player.
  */
@@ -1181,9 +1165,6 @@ static bool _jiyva_retribution()
         _jiyva_contaminate();
     else
         _jiyva_summon_slimes();
-
-    if (coinflip())
-        _jiyva_remove_slime_mutation();
 
     return true;
 }
