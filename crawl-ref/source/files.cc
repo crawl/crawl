@@ -3387,8 +3387,9 @@ void delete_level(const level_id &level)
     }
     // Since Pandemonium is internally all the same floor, we need to actually
     // clean up our torch status whenever we leave a Pan floor so that the player
-    // will be able to use it on the next one.
-    else if (level.branch == BRANCH_PANDEMONIUM && you.religion == GOD_YREDELEMNUL)
+    // will be able to use it on the next one. Do the same for portals as well
+    // (for the few cases of repeatable portals, like Necropolis).
+    else if (!is_connected_branch(level) && you.props.exists(YRED_TORCH_USED_KEY))
     {
         CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
         levels.erase(level.describe());
