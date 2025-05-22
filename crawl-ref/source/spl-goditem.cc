@@ -1101,8 +1101,13 @@ int torment_player(const actor *attacker, torment_source_type taux)
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == transformation::statue)
+        // Vampire form is only partially undead.
+        if (you.form == transformation::statue
+            || you.form == transformation::vampire
+            || you.form == transformation::bat_swarm)
+        {
             hploss /= 2;
+        }
         if (you.has_mutation(MUT_TORMENT_RESISTANCE))
             hploss /= 2;
 #if TAG_MAJOR_VERSION == 34
