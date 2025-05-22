@@ -221,7 +221,7 @@ static item_base_type _item_base_type(const item_def &item)
         break;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_PARCHMENT)
-            type == ITEM_PARCHMENTS
+            type = ITEM_PARCHMENTS;
         else if (item.sub_type == BOOK_MANUAL)
             type = ITEM_MANUALS;
         else
