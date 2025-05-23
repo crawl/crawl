@@ -90,7 +90,9 @@ bool melee_attack::can_reach(int dist)
 {
     const int wpn_reach = weapon ? weapon_reach(*weapon) : 1;
     const int range_bonus =
-            attacker->is_player() && you.form == transformation::aqua ? 2 : 0;
+            you.form == transformation::aqua
+                && (attacker->is_player() || attacker->type == MONS_PLAYER_SHADOW)
+                    ? 2 : 0;
 
     return dist <= 1
            || attk_type == AT_HIT && wpn_reach + range_bonus >= dist

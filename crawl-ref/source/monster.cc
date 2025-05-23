@@ -6011,6 +6011,9 @@ int monster::reach_range() const
     if (wpn)
         range = max(range, weapon_reach(*wpn));
 
+    if (type == MONS_PLAYER_SHADOW && you.form == transformation::aqua)
+        range += 2;
+
     return range;
 }
 
