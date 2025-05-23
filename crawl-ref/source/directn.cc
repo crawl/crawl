@@ -3148,7 +3148,7 @@ string feature_description_at(const coord_def& where, bool covering,
         if (is_icecovered(where))
             covering_description = ", covered with ice";
 
-        if (is_temp_terrain(where))
+        if (is_temp_terrain(where) && grid != DNGN_BINDING_SIGIL)
             covering_description = ", temporary";
 
         if (is_bloodcovered(where))
