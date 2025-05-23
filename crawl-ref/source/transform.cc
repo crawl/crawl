@@ -1726,6 +1726,20 @@ static void _print_death_brand_changes(item_def *weapon, bool entering_death)
     }
 }
 
+static void _rip_net()
+{
+    if (you.attribute[ATTR_HELD])
+    {
+        int net = get_trapping_net(you.pos());
+        if (net != NON_ITEM)
+        {
+            mpr("The net rips apart!");
+            destroy_item(net);
+            stop_being_held();
+        }
+    }
+}
+
 /// Form-specific special effects. Should be in a class?
 static void _on_enter_form(transformation which_trans)
 {
@@ -1753,20 +1767,10 @@ static void _on_enter_form(transformation which_trans)
                     mpr("Your branches shred the web that entangled you.");
             }
         }
-        // Fall through to dragon form to leave nets.
+        _rip_net();
+        break;
 
     case transformation::dragon:
-        if (you.attribute[ATTR_HELD])
-        {
-            int net = get_trapping_net(you.pos());
-            if (net != NON_ITEM)
-            {
-                mpr("The net rips apart!");
-                destroy_item(net);
-                stop_being_held();
-            }
-        }
-
         // The first time the player becomes a dragon, given them a charge of
         // their breath weapon so they can actually use them.
         if (!you.props.exists(HAS_USED_DRAGON_TALISMAN_KEY)
@@ -1775,6 +1779,7 @@ static void _on_enter_form(transformation which_trans)
             gain_draconian_breath_uses(1);
             you.props[HAS_USED_DRAGON_TALISMAN_KEY] = true;
         }
+        _rip_net();
         break;
 
     case transformation::death:
