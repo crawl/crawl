@@ -974,8 +974,9 @@ bloodcurse mutation
 
 When you kill a living monster with a stab attack, they may rise again to serve
 you as a vampiric thrall. Thralls possess all the abilities they had in life,
-but are undead, and gain a vampiric bite attack. Spellcaster thralls will also
-gain knowledge of the Vampiric Draining spell.
+but are undead, and gain a vampiric bite attack as well as increased melee
+damage against sleeping foes. Spellcaster thralls will also gain knowledge of
+the Vampiric Draining spell.
 
 You can only create a thrall if you do not have one already, and they will
 inevitably turn to dust after a short time.

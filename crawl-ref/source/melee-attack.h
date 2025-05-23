@@ -209,7 +209,7 @@ private:
 
     // Is a special stab against a sleeping monster by a Dithmenos player
     // shadow (affects messaging).
-    bool is_shadow_stab;
+    bool is_special_mon_stab;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);

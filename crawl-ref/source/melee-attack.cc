@@ -79,7 +79,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), never_prompt(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
-    is_shadow_stab(false)
+    is_special_mon_stab(false)
 {
     attack_occurred = false;
     attack_position = attacker->pos();
@@ -3198,7 +3198,7 @@ string melee_attack::mons_attack_verb()
     if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
 
-    if (is_shadow_stab)
+    if (is_special_mon_stab && attacker->type == MONS_PLAYER_SHADOW)
         return "eviscerate";
 
     if (attacker->type == MONS_HAUNTED_ARMOUR)
@@ -3271,8 +3271,11 @@ void melee_attack::announce_hit()
 
     if (attacker->is_monster())
     {
-        mprf("%s %s %s%s%s%s%s",
+        mprf("%s %s%s %s%s%s%s%s",
              atk_name(DESC_THE).c_str(),
+             is_special_mon_stab
+                && attacker->as_monster()->has_ench(ENCH_VAMPIRE_THRALL)
+                    ? "stealthily " : "",
              attacker->conj_verb(mons_attack_verb()).c_str(),
              defender_name(true).c_str(),
              charge_desc().c_str(),
@@ -4738,8 +4741,13 @@ int melee_attack::apply_damage_modifiers(int damage)
         if (mons_is_player_shadow(*attacker->as_monster())
             && player_good_stab())
         {
-            is_shadow_stab = true;
+            is_special_mon_stab = true;
             damage += you.experience_level * 2 / 3;
+        }
+        else if (as_mon->has_ench(ENCH_VAMPIRE_THRALL))
+        {
+            is_special_mon_stab = true;
+            damage += as_mon->get_hit_dice() * 3 / 2;
         }
 
         damage = damage * 5 / 2;
