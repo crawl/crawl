@@ -1575,10 +1575,6 @@ void print_stats()
 
     if (you.redraw_status_lights)
         _print_status_lights(12 - rows_hidden);
-
-#ifndef USE_TILE_LOCAL
-    assert_valid_cursor_pos();
-#endif
 }
 
 void print_stats_level()
