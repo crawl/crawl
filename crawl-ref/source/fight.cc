@@ -734,7 +734,7 @@ int stab_bonus_denom(stab_type stab)
     }
 }
 
-static bool is_boolean_resist(beam_type flavour)
+static bool _is_boolean_resist(beam_type flavour)
 {
     switch (flavour)
     {
@@ -744,7 +744,6 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
     case BEAM_POISON:
-    case BEAM_POISON_ARROW:
         return true;
     default:
         return false;
@@ -753,7 +752,7 @@ static bool is_boolean_resist(beam_type flavour)
 
 // Gets the percentage of the total damage of this damage flavour that can
 // be resisted.
-static inline int get_resistible_fraction(beam_type flavour)
+static inline int _get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
@@ -770,36 +769,74 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
+// Converts a beam flavour into the 'basic' flavour that checks that resist.
+beam_type get_beam_resist_type(beam_type flavour)
+{
+    switch (flavour)
+    {
+        // Note that Steam is *not* here, even if it also effectively checks
+        // rF, since rSteam on its own is a thing actors can have.
+        case BEAM_FIRE:
+        case BEAM_LAVA:
+            return BEAM_FIRE;
+
+        case BEAM_COLD:
+        case BEAM_ICE:
+            return BEAM_COLD;
+
+        case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
+        case BEAM_STUN_BOLT:
+            return BEAM_ELECTRICITY;
+
+        case BEAM_NEG:
+        case BEAM_PAIN:
+        case BEAM_MALIGN_OFFERING:
+        case BEAM_VAMPIRIC_DRAINING:
+            return BEAM_NEG;
+
+        case BEAM_POISON:
+        case BEAM_POISON_ARROW:
+        case BEAM_MERCURY:
+            return BEAM_POISON;
+
+        // Entirely for Qazlal's elemental adaptation passive, counting for
+        // 'physical damage'.
+        case BEAM_MISSILE:
+        case BEAM_MMISSILE:
+        case BEAM_FRAG:
+        case BEAM_CRYSTALLIZING:
+        case BEAM_SEISMIC:
+        case BEAM_BOLAS:
+        case BEAM_AIR:
+            return BEAM_MISSILE;
+
+        default:
+            return flavour;
+    }
+}
+
 static int _beam_to_resist(const actor* defender, beam_type flavour)
 {
     switch (flavour)
     {
         case BEAM_FIRE:
-        case BEAM_LAVA:
             return defender->res_fire();
         case BEAM_DAMNATION:
             return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:
-        case BEAM_ICE:
             return defender->res_cold();
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
-        case BEAM_THUNDER:
-        case BEAM_STUN_BOLT:
             return defender->res_elec();
         case BEAM_NEG:
-        case BEAM_PAIN:
-        case BEAM_MALIGN_OFFERING:
-        case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_corr();
         case BEAM_POISON:
-        case BEAM_POISON_ARROW:
-        case BEAM_MERCURY:
             return defender->res_poison();
         case BEAM_HOLY:
             return defender->res_holy_energy();
@@ -829,13 +866,14 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
  */
 int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage)
 {
-    const int res = _beam_to_resist(defender, flavour);
+    const beam_type base_flavour = get_beam_resist_type(flavour);
+    const int res = _beam_to_resist(defender, base_flavour);
     if (!res)
         return rawdamage;
 
     const bool is_mon = defender->is_monster();
 
-    const int resistible_fraction = get_resistible_fraction(flavour);
+    const int resistible_fraction = _get_resistible_fraction(flavour);
 
     int resistible = rawdamage * resistible_fraction / 100;
     const int irresistible = rawdamage - resistible;
@@ -843,34 +881,23 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
     if (res > 0)
     {
         const bool immune_at_3_res = is_mon
-                                     || flavour == BEAM_NEG
-                                     || flavour == BEAM_PAIN
-                                     || flavour == BEAM_MALIGN_OFFERING
-                                     || flavour == BEAM_VAMPIRIC_DRAINING
+                                     || base_flavour == BEAM_NEG
+                                     || base_flavour == BEAM_POISON
                                      || flavour == BEAM_HOLY
-                                     || flavour == BEAM_FOUL_FLAME
-                                     || flavour == BEAM_POISON
-                                     // just the resistible part
-                                     || flavour == BEAM_MERCURY
-                                     || flavour == BEAM_POISON_ARROW;
+                                     || flavour == BEAM_FOUL_FLAME;
 
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
         {
             // Is this a resist that claims to be boolean for damage purposes?
-            const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
+            const int bonus_res = (_is_boolean_resist(base_flavour) ? 1 : 0);
 
             // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
-            else if (flavour == BEAM_NEG
-                     || flavour == BEAM_PAIN
-                     || flavour == BEAM_MALIGN_OFFERING
-                     || flavour == BEAM_VAMPIRIC_DRAINING)
-            {
+            else if (base_flavour == BEAM_NEG)
                 resistible /= res * 2;
-            }
             else
                 resistible /= (3 * res + 1) / 2 + bonus_res;
         }

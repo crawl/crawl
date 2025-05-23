@@ -1079,6 +1079,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 
     zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
     beam.ex_size       = 1;
+    beam.ac_rule       = ac_type::none;
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     if (is_tracer)
@@ -3273,7 +3274,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
-    beam.ac_rule           = ac_type::half;
     beam.loudness          = spell_effect_noise(SPELL_THUNDERBOLT);
     beam.set_agent(caster);
     beam.draw_delay = 0;
