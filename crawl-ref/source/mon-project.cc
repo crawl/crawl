@@ -213,14 +213,14 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
     return foe;
 }
 
-void cast_iood_burst(int pow, coord_def target)
+void cast_iood_burst(int pow, int power_level, coord_def target)
 {
     const monster* mons = monster_at(target);
     const int preferred_foe = mons && you.can_see(*mons) ?
                               mons->mindex() :
                               MHITNOT;
 
-    const int n_orbs = random_range(3, 7);
+    const int n_orbs = power_level == 1 ? random_range(1, 2) : random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
     // 2097152 = 2^21. 21 is the greatest n s.t. `(2 ** n) * PI * 2` does not
     // exceed 2 ** 24; 24 bits is where `float` (`PI` is a float constant)
