@@ -324,6 +324,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         {
             if (you.is_insubstantial() || you.is_amorphous())
                 mpr("The bolas passes through you!");
+            else if (you.unrand_equipped(UNRAND_SLICK_SLIPPERS))
+                mpr("You slip free of the bolas.");
             else
             {
                 you.set_duration(DUR_NO_MOMENTUM, random_range(4, 8), 0,
