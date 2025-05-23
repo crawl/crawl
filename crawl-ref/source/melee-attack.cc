@@ -4607,6 +4607,9 @@ bool melee_attack::do_drag()
     defender->apply_location_effects(new_defender_pos);
     defender->did_deliberate_movement();
 
+    if (defender->is_player())
+        stop_delay(true);
+
     return true;
 }
 
