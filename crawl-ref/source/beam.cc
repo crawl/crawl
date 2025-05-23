@@ -2921,7 +2921,7 @@ void bolt::affect_ground()
 
 bool bolt::is_fiery() const
 {
-    return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
+    return get_beam_resist_type(flavour) == BEAM_FIRE;
 }
 
 /// Can this bolt burn trees it hits?
@@ -4549,8 +4549,7 @@ void bolt::affect_player()
     }
 
     if (you.form == transformation::aqua
-        && (flavour == BEAM_FIRE || flavour == BEAM_LAVA)
-        && x_chance_in_y(final_dam, you.hp_max * 2 / 3))
+        && is_fiery() && x_chance_in_y(final_dam, you.hp_max * 2 / 3))
     {
         const int pow = div_rand_round(final_dam * 100 / you.hp_max, 10);
         mpr("A part of your body evaporates into steam!");
@@ -4628,20 +4627,15 @@ bool bolt::ignores_player() const
 
 int bolt::apply_AC(const actor *victim, int hurted)
 {
-    switch (flavour)
+    // Apply automatic AC rules if ac_rule was not manually specified.
+    if (ac_rule == ac_type::normal)
     {
-    case BEAM_DAMNATION:
-        ac_rule = ac_type::none; break;
-    case BEAM_COLD:
-        if (origin_spell == SPELL_PERMAFROST_ERUPTION)
+        if (flavour == BEAM_DAMNATION)
             ac_rule = ac_type::none;
-        break;
-    case BEAM_ELECTRICITY:
-    case BEAM_THUNDER:
-        ac_rule = ac_type::half; break;
-    case BEAM_FRAG:
-        ac_rule = ac_type::triple; break;
-    default: ;
+        else if (get_beam_resist_type(flavour) == BEAM_ELECTRICITY)
+            ac_rule = ac_type::half;
+        else if (flavour == BEAM_FRAG)
+            ac_rule = ac_type::triple;
     }
 
     // beams don't obey GDR -> max_damage is 0
