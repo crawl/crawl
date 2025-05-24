@@ -2314,7 +2314,7 @@ MONS:    orc knight / kobold blastminer w:1
 MONS:    demonspawn / obsidian bat w:2 / nothing w:8
 MONS:    orc high priest / orc sorcerer
 KFEAT:   A = w:20 general shop / distillery shop / scroll shop
-KFEAT:   B = book shop / jewellery shop
+KFEAT:   B = book shop / jewellery shop / gadget shop
 KFEAT:   C = antique weapon shop / antique armour shop
 KFEAT:   P = enter_pandemonium
 SHUFFLE: BC

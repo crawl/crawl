@@ -2401,8 +2401,8 @@ static void unmarshall_shop(reader &th, shop_struct& shop)
     if (th.getMinorVersion() < TAG_MINOR_MISC_SHOP_CHANGE
         && shop.type == NUM_SHOPS)
     {
-        // This was SHOP_MISCELLANY, which is now part of SHOP_EVOKABLES.
-        shop.type = SHOP_EVOKABLES;
+        // This was SHOP_MISCELLANY, which is now part of SHOP_GADGET.
+        shop.type = SHOP_GADGET;
     }
 #else
     ASSERT(shop.type != SHOP_UNASSIGNED);

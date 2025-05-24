@@ -153,9 +153,9 @@ tileidx_t tileidx_shop(const shop_struct *shop)
             return TILE_SHOP_ARMOUR;
         case SHOP_JEWELLERY:
             return TILE_SHOP_JEWELLERY;
-#if TAG_MAJOR_VERSION == 34
-        case SHOP_EVOKABLES:
+        case SHOP_GADGET:
             return TILE_SHOP_GADGETS;
+#if TAG_MAJOR_VERSION == 34
         case SHOP_FOOD:
             return TILE_SHOP_FOOD;
 #endif

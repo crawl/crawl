@@ -243,6 +243,12 @@ struct shop_spec;
 void place_spec_shop(const coord_def& where, shop_type force_type);
 void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
 int greed_for_shop_type(shop_type shop, int level_number);
+struct shop_item_weight
+{
+    public:
+        object_class_type item_type;
+        int weight;
+};
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_destroy_feat(dungeon_feature_type old_feat);
 bool map_masked(const coord_def &c, unsigned mask);
