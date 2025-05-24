@@ -788,7 +788,7 @@ static void _find_connected_identical(const coord_def &d,
                                       set<coord_def>& out,
                                       bool known_only)
 {
-    if (env.grid(d) != ft || (known_only && !env.map_knowledge(d).known()))
+    if (env.grid(d) != ft || (known_only && !env.map_knowledge.known(d)))
         return;
 
     string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
@@ -1206,7 +1206,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     shopping_list.move_things(src, dst);
 
     // Move player's knowledge.
-    env.map_knowledge(dst) = env.map_knowledge(src);
+    env.map_knowledge.copy_at(dst, env.map_knowledge, src);
     env.map_seen.set(dst, env.map_seen(src));
     StashTrack.move_stash(src, dst);
 }
@@ -1467,13 +1467,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const dungeon_feature_type feat2 = env.grid(pos2);
 
     if (is_notable_terrain(feat1) && !you.see_cell(pos1)
-        && env.map_knowledge(pos1).known())
+        && env.map_knowledge.known(pos1))
     {
         return false;
     }
 
     if (is_notable_terrain(feat2) && !you.see_cell(pos2)
-        && env.map_knowledge(pos2).known())
+        && env.map_knowledge.known(pos2))
     {
         return false;
     }
@@ -2004,7 +2004,7 @@ void set_terrain_changed(const coord_def p)
         }
     }
 
-    env.map_knowledge(p).flags |= MAP_CHANGED_FLAG;
+    env.map_knowledge.flags(p) |= MAP_CHANGED_FLAG;
 
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
 
@@ -2233,7 +2233,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
     if (newfeat != DNGN_UNSEEN)
     {
         if (ctype == TERRAIN_CHANGE_BOG)
-            env.map_knowledge(pos).set_feature(newfeat, colour);
+            env.map_knowledge.set_feature(pos, newfeat, colour);
         dungeon_terrain_changed(pos, newfeat, false, true, false, false,
                                 newfeat_flv, newfeat_flv_idx);
         env.grid_colours(pos) = colour;
@@ -2642,9 +2642,9 @@ void descent_crumble_stairs()
             dungeon_terrain_changed(*ri, DNGN_FLOOR);
             if (you.see_cell(*ri))
                 mpr("The exit collapses.");
-            if (env.map_knowledge(*ri).feat())
+            if (env.map_knowledge.feat(*ri))
             {
-                env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
+                env.map_knowledge.set_feature(*ri, DNGN_FLOOR);
                 set_terrain_mapped(*ri);
             }
             force_show_update_at(*ri);

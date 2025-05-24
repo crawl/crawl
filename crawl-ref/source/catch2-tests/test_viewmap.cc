@@ -23,7 +23,7 @@ TEST_CASE( "Test basic key controls work", "[single-file]" ) {
     // carve out a small known area so that known_map_bounds gives valid results
     for (int i = 49; i <= 51; i++)
         for (int j = 49; j <= 51; j++)
-            env.map_knowledge[i][j].flags |= MAP_GRID_KNOWN;
+            env.map_knowledge.flags(coord_def(i, j)) |= MAP_GRID_KNOWN;
 
     state.lpos.pos = coord_def(50, 50);
 

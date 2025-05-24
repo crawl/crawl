@@ -1558,7 +1558,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.grid.init(DNGN_ROCK_WALL);
     env.pgrid.init(terrain_property_t{});
     env.grid_colours.init(BLACK);
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     env.map_forgotten.reset();
     env.map_seen.reset();
 
@@ -5681,10 +5681,10 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
         if (env.grid(*ri) == replace && !map_masked(*ri, mapmask))
         {
             env.grid(*ri) = feature;
-            if (needs_update && env.map_knowledge(*ri).seen())
+            if (needs_update && env.map_knowledge.seen(*ri))
             {
-                env.map_knowledge(*ri).set_feature(feature, 0,
-                                                   get_trap_type(*ri));
+                env.map_knowledge.set_feature(*ri, feature, 0,
+                                              get_trap_type(*ri));
 #ifdef USE_TILE
                 tile_env.bk_bg(*ri) = feature;
 #endif

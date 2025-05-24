@@ -1008,7 +1008,7 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
         {
             mprf("%s %s into %s%s",
                  name(DESC_THE).c_str(), conj_verb("slam").c_str(),
-                 env.map_knowledge(newpos).known()
+                 env.map_knowledge.known(newpos)
                  ? feature_description_at(newpos, false, DESC_THE)
                        .c_str()
                  : "something",

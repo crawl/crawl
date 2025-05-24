@@ -78,7 +78,7 @@ void trap_def::destroy(bool known)
     env.grid(pos) = DNGN_FLOOR;
     if (known)
     {
-        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        env.map_knowledge.set_feature(pos, DNGN_FLOOR);
         StashTrack.update_stash(pos);
     }
     env.trap.erase(pos);
@@ -600,7 +600,7 @@ void trap_def::trigger(actor& triggerer)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
             // or be banished by a Zot trap
-            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            env.map_knowledge.set_feature(pos, DNGN_FLOOR);
             mprf("%s disappears.", name(DESC_THE).c_str());
             destroy();
         }

@@ -204,18 +204,18 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 //
 static inline bool is_trap(const coord_def& c)
 {
-    return feat_is_trap(env.map_knowledge(c).feat());
+    return feat_is_trap(env.map_knowledge.feat(c));
 }
 
 static inline bool _is_safe_cloud(const coord_def& c)
 {
-    const cloud_type ctype = env.map_knowledge(c).cloud();
+    const cloud_type ctype = env.map_knowledge.cloud(c);
     if (ctype == CLOUD_NONE)
         return true;
 
     // We can also safely run through smoke, or any of our own clouds if
     // following Qazlal.
-    return !is_damaging_cloud(ctype, true, YOU_KILL(env.map_knowledge(c).cloudinfo()->killer));
+    return !is_damaging_cloud(ctype, true, YOU_KILL(env.map_knowledge.cloudinfo(c)->killer));
 }
 
 // Returns an estimate for the time needed to cross this feature.
@@ -236,7 +236,7 @@ static inline int _feature_traverse_cost(dungeon_feature_type feature)
 
 bool is_unknown_stair(const coord_def &p)
 {
-    dungeon_feature_type feat = env.map_knowledge(p).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(p);
 
     return feat_is_travelable_stair(feat) && !travel_cache.know_stair(p)
            && feat != DNGN_EXIT_DUNGEON;
@@ -251,7 +251,7 @@ bool is_unknown_stair(const coord_def &p)
  **/
 bool is_unknown_transporter(const coord_def &p)
 {
-    dungeon_feature_type feat = env.map_knowledge(p).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(p);
 
     return feat == DNGN_TRANSPORTER && !travel_cache.know_transporter(p);
 }
@@ -387,8 +387,8 @@ static pair<bool, string> _feat_is_blocking_door_strict(
  */
 static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
-    map_cell &cell(env.map_knowledge(c));
-    const dungeon_feature_type grid = cell.feat();
+    const MapKnowledge& map = env.map_knowledge;
+    const dungeon_feature_type grid = map.feat(c);
 
     if (feat_is_wall(grid) || feat_is_tree(grid))
         return false;
@@ -401,7 +401,8 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
            || grid == DNGN_BINDING_SIGIL
            || _feat_is_blocking_door(grid)
            || is_trap(c)
-           || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
+           || !ignore_danger
+                  && _monster_blocks_travel(map.monsterinfo(c))
            || g_Slime_Wall_Check && slime_wall_neighbour(c)
            || !_is_safe_cloud(c);
 }
@@ -452,7 +453,7 @@ public:
 
 bool is_stair_exclusion(const coord_def &p)
 {
-    const auto f = env.map_knowledge(p).feat();
+    const auto f = env.map_knowledge.feat(p);
     if (!feat_is_stair(f) || feat_stair_direction(f) == CMD_NO_CMD)
         return false;
 
@@ -475,10 +476,10 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
                : cell.safe;
     }
 
-    if (!env.map_knowledge(c).known())
+    if (!env.map_knowledge.known(c))
         return false;
 
-    const dungeon_feature_type grid = env.map_knowledge(c).feat();
+    const dungeon_feature_type grid = env.map_knowledge.feat(c);
 
     // Only try pathing through temporary obstructions we remember, not
     // those we can actually see (since the latter are clearly still blockers)
@@ -487,13 +488,12 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const map_cell& levelmap_cell = env.map_knowledge(c);
 
     // Travel will not voluntarily cross squares blocked by immobile
     // monsters.
     if (!ignore_danger && !ignore_hostile)
     {
-        const monster_info *minfo = levelmap_cell.monsterinfo();
+        const monster_info *minfo = env.map_knowledge.monsterinfo(c);
         if (minfo && _monster_blocks_travel(minfo))
             return false;
     }
@@ -523,7 +523,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     {
         trap_def trap;
         trap.pos = c;
-        trap.type = env.map_knowledge(c).trap();
+        trap.type = env.map_knowledge.trap(c);
         trap.ammo_qty = 1;
         if (trap.is_safe())
             return true;
@@ -532,7 +532,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (grid == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
         return false;
 
-    if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
+    if (!try_fallback && _feat_is_blocking_door(grid))
         return false;
 
     return feat_is_traversable_now(grid, try_fallback);
@@ -657,7 +657,7 @@ static bool _is_valid_explore_target(const coord_def& where)
 {
     // If a square in LOS is unmapped, it's valid.
     for (radius_iterator ri(where, LOS_DEFAULT, true); ri; ++ri)
-        if (!env.map_knowledge(*ri).seen())
+        if (!env.map_knowledge.seen(*ri))
             return true;
 
     if (you.running == RMODE_EXPLORE_GREEDY)
@@ -954,7 +954,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!you.see_cell(*ai) && !env.map_knowledge(*ai).seen())
+            if (!you.see_cell(*ai) && !env.map_knowledge.seen(*ai))
             {
                 unseen = *ai;
                 break;
@@ -974,7 +974,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
             // previously unseen monster but the same would happen by manual
             // movement, so I don't think we need to worry about this. (jpeg)
             if (!is_travelsafe_square(new_dest)
-                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
+                || !feat_is_traversable_now(env.map_knowledge.feat(new_dest)))
             {
                 new_dest = dest;
             }
@@ -1226,7 +1226,7 @@ static void _fill_exclude_radius(const travel_exclude &exc)
 
             if (is_exclude_root(p))
                 travel_point_distance[x][y] = PD_EXCLUDED;
-            else if (is_excluded(p) && env.map_knowledge(p).known())
+            else if (is_excluded(p) && env.map_knowledge.known(p))
                 travel_point_distance[x][y] = PD_EXCLUDED_RADIUS;
         }
 }
@@ -1512,7 +1512,7 @@ void travel_pathfind::get_features()
     for (dc.x = X_BOUND_1; dc.x <= X_BOUND_2; ++dc.x)
         for (dc.y = Y_BOUND_1; dc.y <= Y_BOUND_2; ++dc.y)
         {
-            const dungeon_feature_type feature = env.map_knowledge(dc).feat();
+            const dungeon_feature_type feature = env.map_knowledge.feat(dc);
 
             if ((feature != DNGN_FLOOR
                     && !feat_is_water(feature)
@@ -1542,7 +1542,7 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
     // c is a known (explored) location - we never put unknown points in the
     // circumference vector, so we don't need to examine the map array, just the
     // grid array.
-    const dungeon_feature_type feature = env.map_knowledge(c).feat();
+    const dungeon_feature_type feature = env.map_knowledge.feat(c);
 
     // If this is a feature that'll take time to travel past, we simulate that
     // extra turn by taking this feature next turn, thereby artificially
@@ -1592,7 +1592,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (floodout
         && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
     {
-        if (!env.map_knowledge(dc).seen())
+        if (!env.map_knowledge.seen(dc))
         {
             if (ignore_hostile && !player_in_branch(BRANCH_SHOALS))
             {
@@ -1649,12 +1649,12 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
-                        if (feat_is_wall(env.map_knowledge(ddc).feat()))
+                        if (feat_is_wall(env.map_knowledge.feat(ddc)))
                             dist -= Options.explore_wall_bias;
                     }
 
                     if (Options.explore_wall_bias < 0 &&
-                        feat_is_wall(env.map_knowledge(dc).feat()))
+                        feat_is_wall(env.map_knowledge.feat(dc)))
                     {
                         // further penalize cases where the unseen square dc
                         // is itself a wall
@@ -1708,7 +1708,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     // taking this transporter.
     if (!ignore_danger
         && is_excluded(c)
-        && env.map_knowledge(c).feat() == DNGN_TRANSPORTER
+        && env.map_knowledge.feat(c) == DNGN_TRANSPORTER
         // We have to actually take the transporter to go from c to dc.
         && !adjacent(c, dc))
     {
@@ -1771,7 +1771,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         if (features && !ignore_hostile)
         {
-            dungeon_feature_type feature = env.map_knowledge(dc).feat();
+            dungeon_feature_type feature = env.map_knowledge.feat(dc);
 
             if (dc != start
                 && (feature != DNGN_FLOOR
@@ -3232,7 +3232,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     // behaviour is that it will go to the level and then fail.
     const bool maybe_traversable = (target.id != current
                                     || (in_bounds(target.pos)
-                                        && feat_is_traversable_now(env.map_knowledge(target.pos).feat())));
+                                        && feat_is_traversable_now(env.map_knowledge.feat(target.pos))));
 
     if (maybe_traversable)
     {
@@ -3368,7 +3368,7 @@ void start_explore(bool grab_items)
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (env.map_knowledge(*ri).seen())
+        if (env.map_knowledge.seen(*ri))
             env.map_seen.set(*ri);
 
     you.running.pos.reset();
@@ -3861,7 +3861,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             {
                 si.destination = travel_hell_entry;
             }
-            if (!env.map_knowledge(pos).seen())
+            if (!env.map_knowledge.seen(pos))
                 si.type = stair_info::MAPPED;
 
             // We don't know where on the next level these stairs go to, but
@@ -3870,7 +3870,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             stairs.push_back(si);
         }
         else
-            stairs[found].type = env.map_knowledge(pos).seen() ? stair_info::PHYSICAL : stair_info::MAPPED;
+            stairs[found].type = env.map_knowledge.seen(pos) ? stair_info::PHYSICAL : stair_info::MAPPED;
     }
 
     resize_stair_distances();
@@ -3910,8 +3910,8 @@ void LevelInfo::correct_transporter_list(const vector<coord_def> &t)
         }
 
         transporter_info::transporter_type type =
-            env.map_knowledge(pos).seen() ? transporter_info::PHYSICAL
-                                          : transporter_info::MAPPED;
+            env.map_knowledge.seen(pos) ? transporter_info::PHYSICAL
+                                        : transporter_info::MAPPED;
         if (found == -1)
             transporters.push_back(transporter_info(pos, coord_def(), type));
         else
@@ -3949,8 +3949,8 @@ void LevelInfo::get_transporters(vector<coord_def> &tr)
         const dungeon_feature_type feat = env.grid(*ri);
 
         if (feat == DNGN_TRANSPORTER
-            && (*ri == you.pos() || env.map_knowledge(*ri).known())
-            && env.map_knowledge(*ri).seen())
+            && (*ri == you.pos() || env.map_knowledge.known(*ri))
+            && env.map_knowledge.seen(*ri))
         {
             tr.push_back(*ri);
         }
@@ -3963,9 +3963,9 @@ void LevelInfo::get_stairs(vector<coord_def> &st)
     {
         const dungeon_feature_type feat = env.grid(*ri);
 
-        if ((*ri == you.pos() || env.map_knowledge(*ri).known())
+        if ((*ri == you.pos() || env.map_knowledge.known(*ri))
             && feat_is_travelable_stair(feat)
-            && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri)))
+            && (env.map_knowledge.seen(*ri) || !_is_branch_stair(*ri)))
         {
             st.push_back(*ri);
         }
@@ -4089,7 +4089,7 @@ void LevelInfo::fixup()
 
 void TravelCache::update_stone_stair(const coord_def &c)
 {
-    if (!env.map_knowledge(c).seen())
+    if (!env.map_knowledge.seen(c))
         return;
     LevelInfo *li = find_level_info(level_id::current());
     if (!li)
@@ -4136,7 +4136,7 @@ void TravelCache::update_transporter(const coord_def &c)
     const dungeon_feature_type feat = env.grid(c);
     ASSERT(feat == DNGN_TRANSPORTER);
 
-    if (!env.map_knowledge(c).seen())
+    if (!env.map_knowledge.seen(c))
         return;
 
     LevelInfo *li = find_level_info(level_id::current());
@@ -4585,7 +4585,7 @@ void runrest::set_run_check(int index, int dir)
     run_check[index].delta = Compass[dir];
 
     const coord_def p = you.pos() + Compass[dir];
-    run_check[index].grid = _base_feat_type(env.map_knowledge(p).feat());
+    run_check[index].grid = _base_feat_type(env.map_knowledge.feat(p));
 }
 
 bool runrest::check_stop_running()
@@ -4603,7 +4603,6 @@ bool runrest::check_stop_running()
 bool runrest::run_should_stop() const
 {
     const coord_def targ = you.pos() + pos;
-    const map_cell& tcell = env.map_knowledge(targ);
 
     if (!_is_safe_cloud(targ))
         return true;
@@ -4617,8 +4616,8 @@ bool runrest::run_should_stop() const
         return true;
     }
 
-    const monster_info* mon = tcell.monsterinfo();
-    if (mon && !fedhas_passthrough(tcell.monsterinfo()))
+    const monster_info* mon = env.map_knowledge.monsterinfo(targ);
+    if (mon && !fedhas_passthrough(mon))
         return true;
 
     if (slime_wall_neighbour(targ) && !actor_slime_wall_immune(&you))
@@ -4628,7 +4627,7 @@ bool runrest::run_should_stop() const
     {
         const coord_def p = you.pos() + run_check[i].delta;
         const dungeon_feature_type feat =
-            _base_feat_type(env.map_knowledge(p).feat());
+            _base_feat_type(env.map_knowledge.feat(p));
 
         if (run_check[i].grid != feat)
             return true;
@@ -4653,7 +4652,7 @@ bool runrest::diag_run_passes_door() const
     for (int dir : diag_dirs)
     {
         const coord_def p = you.pos() + Compass[dir];
-        const auto feat = env.map_knowledge(p).feat();
+        const auto feat = env.map_knowledge.feat(p);
         if (feat_is_door(feat))
             return true;
     }
@@ -4825,7 +4824,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
                 // If any neighbours have been seen (and thus announced)
                 // before, skip. For parts seen for the first time this turn,
                 // announce only the upper leftmost cell.
-                if (feat_is_runed(env.map_knowledge(*ai).feat())
+                if (feat_is_runed(env.map_knowledge.feat(*ai))
                     && (env.map_seen(*ai) || *ai < pos))
                 {
                     return;
@@ -4850,7 +4849,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
                 // If any neighbours have been seen (and thus announced) before,
                 // skip. For parts seen for the first time this turn, announce
                 // only the upper leftmost cell.
-                if (env.map_knowledge(*ai).feat() == DNGN_TRANSPORTER
+                if (env.map_knowledge.feat(*ai) == DNGN_TRANSPORTER
                     && (env.map_seen(*ai) || *ai < pos))
                 {
                     return;
@@ -5157,10 +5156,10 @@ command_type click_travel(const coord_def &gc, bool force_attack,
 
     if (click_travel_safe(gc))
     {
-        map_cell &cell(env.map_knowledge(gc));
+        const monster_info* mons = env.map_knowledge.monsterinfo(gc);
         // If there's a monster that would block travel,
         // don't start traveling.
-        if (!_monster_blocks_travel(cell.monsterinfo()))
+        if (!_monster_blocks_travel(mons))
         {
             start_travel(gc);
             return CMD_NO_CMD;
@@ -5194,7 +5193,7 @@ bool check_for_interesting_features()
         const coord_def p(*ri);
 
         // Find just noticed squares.
-        if (env.map_knowledge(p).flags & MAP_SEEN_FLAG
+        if (env.map_knowledge.flags(p) & MAP_SEEN_FLAG
             && !env.map_seen(p))
         {
             // Update the shadow map
@@ -5202,7 +5201,7 @@ bool check_for_interesting_features()
 
             // But don't stop if we knew about it previously
             if (!env.map_forgotten
-                || !((*env.map_forgotten)(p).flags & MAP_SEEN_FLAG))
+                || !(env.map_forgotten->flags(p) & MAP_SEEN_FLAG))
             {
                 _check_interesting_square(p, discoveries);
             }

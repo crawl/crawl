@@ -707,7 +707,7 @@ LUAFN(moninf_get_can_traverse)
     PLAYERCOORDS(p, 2, 3)
     lua_pushboolean(ls,
         map_bounds(p)
-        && monster_habitable_feat(mi->type, env.map_knowledge(p).feat()));
+        && monster_habitable_feat(mi->type, env.map_knowledge.feat(p)));
     return 1;
 }
 
