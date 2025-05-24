@@ -109,7 +109,7 @@ bool melee_attack::bad_attempt()
     if (never_harm_monster(attacker, defender->as_monster(), true))
         return true;
 
-    if (!is_projected && player_unrand_bad_attempt(offhand_weapon()))
+    if (!is_projected && player_unrand_bad_attempt())
         return true;
 
     if (!cleave_targets.empty())
@@ -129,16 +129,15 @@ bool melee_attack::would_prompt_player()
     if (!attacker->is_player())
         return false;
 
-    item_def *offhand = offhand_weapon();
+    item_def* w1 = primary_weapon();
+    item_def* w2 = offhand_weapon();
     bool penance;
-    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance, false)
-           || offhand && !is_range_weapon(*offhand)
-              && needs_handle_warning(*offhand, OPER_ATTACK, penance, false)
-           || player_unrand_bad_attempt(offhand, true);
+    return w1 && needs_handle_warning(*w1, OPER_ATTACK, penance, false)
+           || w2 && needs_handle_warning(*w2, OPER_ATTACK, penance, false)
+           || player_unrand_bad_attempt(true);
 }
 
-bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
-                                             bool check_only)
+bool melee_attack::player_unrand_bad_attempt(bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
@@ -146,7 +145,10 @@ bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
     if (!you.can_see(*defender))
         return false;
 
-    return ::player_unrand_bad_attempt(weapon, offhand, defender, check_only);
+    item_def* primary = primary_weapon();
+    item_def* offhand = offhand_weapon();
+
+    return ::player_unrand_bad_attempt(primary, offhand, defender, check_only);
 }
 
 // Freeze a random wall adjacent to our target. If all those are frozen, freeze
@@ -1210,6 +1212,14 @@ void melee_attack::handle_spectral_brand()
         return;
     attacker->triggered_spectral = true;
     spectral_weapon_fineff::schedule(*attacker, *defender, mutable_wpn);
+}
+
+item_def *melee_attack::primary_weapon() const
+{
+    item_def *weap = attacker->weapon(0);
+    if (!weap || is_range_weapon(*weap))
+        return nullptr;
+    return weap;
 }
 
 item_def *melee_attack::offhand_weapon() const
