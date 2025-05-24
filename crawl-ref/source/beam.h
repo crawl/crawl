@@ -75,7 +75,7 @@ struct beam_tracer
     {
         UNUSED(bolt, mon);
     }
-    virtual void cancel() {}
+    virtual void blocked(string message) {}
 };
 
 // Used when casting a spell to check if the spell should be aborted
@@ -93,7 +93,8 @@ struct player_beam_tracer : beam_tracer
     const monster* god_hated_target = nullptr;
     int hit_self_count = 0;
     int foe_count = 0;
-    bool cancelled = false;
+    string blocked_message;
+    int blocked_count = 0;
 
     player_beam_tracer() {}
 
@@ -107,7 +108,7 @@ struct player_beam_tracer : beam_tracer
     void actor_affected(bool friendly_fire, int power) noexcept override;
     void player_hit() noexcept override;
     void monster_hit(const bolt& bolt, const monster& mon) override;
-    void cancel() noexcept override;
+    void blocked(string message) noexcept override;
 };
 
 // Used to check if casting a spell might be useful
@@ -473,8 +474,8 @@ void fill_chain_targets(const bolt& beam, coord_def centre,
 
 bolt setup_targeting_beam(const monster &mons);
 
-bool cancel_beam_prompt(const bolt& beam,
-                                const player_beam_tracer& tracer);
+bool cancel_beam_prompt(const bolt& beam, const player_beam_tracer& tracer,
+                        int beams_fired = 1);
 
 int apply_willpower_bypass(const actor& source, int willpower);
 int apply_willpower_bypass(const monster_info& source, int willpower);

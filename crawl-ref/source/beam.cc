@@ -1286,9 +1286,8 @@ void bolt::do_fire()
                         feature_description_at(pos(), false, DESC_A) :
                         monster_at(pos())->name(DESC_A);
 
-            mprf("Your line of fire to %s is blocked by %s.",
-                 blockee.c_str(), blocker.c_str());
-            tracer->cancel();
+            tracer->blocked("Your line of fire to " + blockee
+                            + " is blocked by " + blocker + ".");
             finish_beam();
             return;
         }
@@ -7913,9 +7912,10 @@ void player_beam_tracer::monster_hit(const bolt& beam, const monster& mon)
     }
 }
 
-void player_beam_tracer::cancel() noexcept
+void player_beam_tracer::blocked(string message) noexcept
 {
-    cancelled = true;
+    blocked_message = std::move(message);
+    blocked_count++;
 }
 
 bool targeting_tracer::has_hit_foe() noexcept
@@ -7938,11 +7938,15 @@ void targeting_tracer::actor_affected(bool friendly_fire, int power) noexcept
 }
 
 // returns true if the player wishes to cancel firing the bolt, false otherwise
-bool cancel_beam_prompt(const bolt& beam,
-                                const player_beam_tracer& tracer)
+bool cancel_beam_prompt(const bolt& beam, const player_beam_tracer& tracer,
+                        int beams_fired)
 {
-    if (tracer.cancelled)
+    ASSERT(beams_fired >= tracer.blocked_count);
+    if (tracer.blocked_count >= beams_fired)
+    {
+        mpr(tracer.blocked_message);
         return true;
+    }
 
     const spell_type spell = beam.origin_spell;
 
