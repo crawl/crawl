@@ -1624,6 +1624,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
             json_write_bool("sanctuary", next_pc.is_sanctuary);
         if (next_pc.is_blasphemy != current_pc.is_blasphemy)
             json_write_bool("blasphemy", next_pc.is_blasphemy);
+        if (next_pc.is_gastronomic != current_pc.is_gastronomic)
+            json_write_bool("gastronomic", next_pc.is_gastronomic);
 
         if (next_pc.has_bfb_corpse != current_pc.has_bfb_corpse)
             json_write_bool("has_bfb_corpse", next_pc.has_bfb_corpse);
