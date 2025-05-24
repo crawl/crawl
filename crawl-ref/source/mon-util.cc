@@ -3348,6 +3348,36 @@ bool mons_wields_two_weapons(const monster& mon)
     return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
+/**
+ * What weapon is the given monster using for the given attack, if any?
+ *
+ * @param at        The attack type of this round
+ * @param wields_two_weapons   Whether the monster is a dual-wielder
+ * @param which_attack   The attack number. 0, 1, 2, 3, or -1 for wielded.
+ * @param main_weapon   Current main weapon of the attacker
+ * @param alt_weapon    Current offhand weapon of the attacker
+ * @return          The weapon being used by the monster for the given
+ *                  attack, if any.
+ */
+item_def *mons_weapon_for_attack(attack_type at, bool wields_two_weapons,
+                                 int which_attack, item_def *main_weapon,
+                                 item_def *offhand_weapon)
+{
+    if (at != AT_HIT && at != AT_WEAP_ONLY)
+        return nullptr;
+
+    // Monster is single wielder, or no offhand carried
+    if (!wields_two_weapons || !offhand_weapon || !is_weapon(*offhand_weapon))
+        return main_weapon;
+    // Dual wielder but missing main weapon
+    if (!main_weapon || !is_weapon(*main_weapon))
+        return offhand_weapon;
+    // Choose based on odd/even
+    return which_attack > 0 && which_attack % 2
+           ? offhand_weapon
+           : main_weapon;
+}
+
 // When this monster reaches its target, does it do impact damage
 // and then cease to exist?
 bool mons_destroyed_on_impact(const monster& m)
