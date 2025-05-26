@@ -1568,7 +1568,7 @@ static bool _handle_veh_gift(bool forced)
     const int gifts = you.num_total_gifts[you.religion];
     if (forced || !you.duration[DUR_VEHUMET_GIFT]
                   && !you.has_mutation(MUT_INNATE_CASTER)
-                  && (you.piety >= piety_breakpoint(0) && gifts == 0
+                  && (gifts == 0
                       || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                       || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
                       || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
@@ -3856,6 +3856,10 @@ void join_religion(god_type which_god)
         for (const auto& power : get_god_powers(you.religion))
             if (power.rank <= 0)
                 power.display(true, "You can now %s.");
+
+    // Vehumet gifts a level one spell immediately.
+    if (you_worship(GOD_VEHUMET))
+        do_god_gift();
 
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
