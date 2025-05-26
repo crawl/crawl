@@ -1866,6 +1866,17 @@ targeter_bog::targeter_bog(const actor *a, int pow)
         affected_positions.insert(c);
 }
 
+targeter_gastronomic::targeter_gastronomic(const actor *a)
+    : targeter_smite(a, 1, 1, 1, {})
+{
+}
+
+bool targeter_gastronomic::valid_aim(coord_def loc)
+{
+    coord_def delta = loc - you.pos();
+    return abs(delta.x) + abs(delta.y) == 1;
+}
+
 targeter_ignite_poison::targeter_ignite_poison(actor *a)
     : targeter_multiposition(a, { })
 {

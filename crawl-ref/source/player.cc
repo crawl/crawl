@@ -1355,6 +1355,9 @@ int player_res_corrosion(bool allow_random, bool temp, bool items)
     if (have_passive(passive_t::resist_corrosion))
         return 1;
 
+    if (you.duration[DUR_GASTRONOMIC])
+        return 1;
+
     if (you.get_mutation_level(MUT_ACID_RESISTANCE)
         || you.get_mutation_level(MUT_YELLOW_SCALES) >= 3)
     {
