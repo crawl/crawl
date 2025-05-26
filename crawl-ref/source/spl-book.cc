@@ -166,6 +166,7 @@ bool book_exists(book_type bt)
     case BOOK_RANDART_LEVEL:
     case BOOK_RANDART_THEME:
     case BOOK_MANUAL:
+    case BOOK_PARCHMENT:
     case NUM_BOOKS:
         return false;
     default:
