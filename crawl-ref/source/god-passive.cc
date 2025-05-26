@@ -526,9 +526,9 @@ static bool is_ash_portal(dungeon_feature_type feat)
 static bool _check_portal(coord_def where)
 {
     const dungeon_feature_type feat = env.grid(where);
-    if (feat != env.map_knowledge(where).feat() && is_ash_portal(feat))
+    if (feat != env.map_knowledge.feat(where) && is_ash_portal(feat))
     {
-        env.map_knowledge(where).set_feature(feat);
+        env.map_knowledge.set_feature(where, feat);
         set_terrain_mapped(where);
 
         if (!testbits(env.pgrid(where), FPROP_SEEN_OR_NOEXP))

@@ -5339,7 +5339,7 @@ static void _tag_construct_level(writer &th)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, env.grid[count_x][count_y]);
-            marshallMapCell(th, env.map_knowledge[count_x][count_y]);
+            marshallMapCell(th, coord_def(count_x, count_y), env.map_knowledge);
             marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
 
@@ -5347,7 +5347,7 @@ static void _tag_construct_level(writer &th)
     if (env.map_forgotten)
         for (int x = 0; x < GXM; x++)
             for (int y = 0; y < GYM; y++)
-                marshallMapCell(th, (*env.map_forgotten)[x][y]);
+                marshallMapCell(th, coord_def(x, y), *env.map_forgotten);
 
     _run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
@@ -6109,30 +6109,30 @@ void unmarshallItem(reader &th, item_def &item)
 #define MAP_SERIALIZE_CLOUD 0x20
 #define MAP_SERIALIZE_MONSTER 0x40
 
-void marshallMapCell(writer &th, const map_cell &cell)
+void marshallMapCell(writer &th, coord_def gc, const MapKnowledge &map)
 {
     unsigned flags = 0;
 
-    if (cell.flags > 0xffff)
+    if (map.flags(gc) > 0xffff)
         flags |= MAP_SERIALIZE_FLAGS_32;
-    else if (cell.flags > 0xff)
+    else if (map.flags(gc) > 0xff)
         flags |= MAP_SERIALIZE_FLAGS_16;
-    else if (cell.flags)
+    else if (map.flags(gc))
         flags |= MAP_SERIALIZE_FLAGS_8;
 
-    if (cell.feat() != DNGN_UNSEEN)
+    if (map.feat(gc) != DNGN_UNSEEN)
         flags |= MAP_SERIALIZE_FEATURE;
 
-    if (cell.feat_colour())
+    if (map.feat_colour(gc))
         flags |= MAP_SERIALIZE_FEATURE_COLOUR;
 
-    if (cell.cloud() != CLOUD_NONE)
+    if (map.cloud(gc) != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
 
-    if (cell.item())
+    if (map.item(gc))
         flags |= MAP_SERIALIZE_ITEM;
 
-    if (cell.monster() != MONS_NO_MONSTER)
+    if (map.monster(gc) != MONS_NO_MONSTER)
         flags |= MAP_SERIALIZE_MONSTER;
 
     marshallUnsigned(th, flags);
@@ -6140,32 +6140,32 @@ void marshallMapCell(writer &th, const map_cell &cell)
     switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
     case MAP_SERIALIZE_FLAGS_8:
-        marshallByte(th, static_cast<int8_t>(cell.flags));
+        marshallByte(th, static_cast<int8_t>(map.flags(gc)));
         break;
     case MAP_SERIALIZE_FLAGS_16:
-        marshallShort(th, static_cast<int16_t>(cell.flags));
+        marshallShort(th, static_cast<int16_t>(map.flags(gc)));
         break;
     case MAP_SERIALIZE_FLAGS_32:
-        marshallInt(th, static_cast<int32_t>(cell.flags));
+        marshallInt(th, static_cast<int32_t>(map.flags(gc)));
         break;
     }
 
     if (flags & MAP_SERIALIZE_FEATURE)
 #if TAG_MAJOR_VERSION == 34
-        marshallUnsigned(th, cell.feat());
+        marshallUnsigned(th, map.feat(gc));
 #else
-        marshallUByte(th, cell.feat());
+        marshallUByte(th, map.feat(gc));
 #endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
-        marshallUnsigned(th, cell.feat_colour());
+        marshallUnsigned(th, map.feat_colour(gc));
 
-    if (feat_is_trap(cell.feat()))
-        marshallByte(th, cell.trap());
+    if (feat_is_trap(map.feat(gc)))
+        marshallByte(th, map.trap(gc));
 
     if (flags & MAP_SERIALIZE_CLOUD)
     {
-        cloud_info* ci = cell.cloudinfo();
+        const cloud_info* ci = map.cloudinfo(gc);
         marshallUnsigned(th, ci->type);
         marshallUnsigned(th, ci->colour);
         marshallUnsigned(th, ci->duration);
@@ -6174,19 +6174,19 @@ void marshallMapCell(writer &th, const map_cell &cell)
     }
 
     if (flags & MAP_SERIALIZE_ITEM)
-        marshallItem(th, *cell.item(), true);
+        marshallItem(th, *map.item(gc), true);
 
     if (flags & MAP_SERIALIZE_MONSTER)
-        _marshallMonsterInfo(th, *cell.monsterinfo());
+        _marshallMonsterInfo(th, *map.monsterinfo(gc));
 }
 
-void unmarshallMapCell(reader &th, map_cell& cell)
+void unmarshallMapCell(reader &th, coord_def gc, MapKnowledge& map)
 {
     unsigned flags = unmarshallUnsigned(th);
     unsigned cell_flags = 0;
     trap_type trap = TRAP_UNASSIGNED;
 
-    cell.clear();
+    map.clear(gc);
 
     switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
@@ -6229,7 +6229,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 #endif
     }
 
-    cell.set_feature(feature, feat_colour, trap);
+    map.set_feature(gc, feature, feat_colour, trap);
 
     if (flags & MAP_SERIALIZE_CLOUD)
     {
@@ -6242,25 +6242,25 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         if (th.getMinorVersion() >= TAG_MINOR_CLOUD_OWNER)
 #endif
         ci.killer = static_cast<killer_type>(unmarshallUByte(th));
-        cell.set_cloud(ci);
+        map.set_cloud(gc, ci);
     }
 
     if (flags & MAP_SERIALIZE_ITEM)
     {
         item_def item;
         unmarshallItem(th, item);
-        cell.set_item(item, false);
+        map.set_item(gc, item, false);
     }
 
     if (flags & MAP_SERIALIZE_MONSTER)
     {
         monster_info mi;
         _unmarshallMonsterInfo(th, mi);
-        cell.set_monster(mi);
+        map.set_monster(gc, mi);
     }
 
     // set this last so the other sets don't override this
-    cell.flags = cell_flags;
+    map.flags(gc) = cell_flags;
 }
 
 static void _tag_construct_level_items(writer &th)
@@ -6897,6 +6897,8 @@ static void _tag_read_level(reader &th)
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
+            coord_def gc(i, j);
+
             dungeon_feature_type feat = unmarshallFeatureType(th);
             env.grid[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
@@ -6904,17 +6906,17 @@ static void _tag_read_level(reader &th)
 #if TAG_MAJOR_VERSION == 34
             // Save these for potential destination clean up.
             if (env.grid[i][j] == DNGN_TRANSPORTER)
-                transporters.push_back(coord_def(i, j));
+                transporters.push_back(gc);
 #endif
-            unmarshallMapCell(th, env.map_knowledge[i][j]);
+            unmarshallMapCell(th, gc, env.map_knowledge);
             // Fixup positions
-            if (env.map_knowledge[i][j].monsterinfo())
-                env.map_knowledge[i][j].monsterinfo()->pos = coord_def(i, j);
-            if (env.map_knowledge[i][j].cloudinfo())
-                env.map_knowledge[i][j].cloudinfo()->pos = coord_def(i, j);
+            if (env.map_knowledge.monsterinfo(gc))
+                env.map_knowledge.monsterinfo(gc)->pos = gc;
+            if (env.map_knowledge.cloudinfo(gc))
+                env.map_knowledge.cloudinfo(gc)->pos = gc;
 
-            env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
-            if (env.map_knowledge[i][j].seen())
+            env.map_knowledge.flags(gc) &= ~MAP_VISIBLE_FLAG;
+            if (env.map_knowledge.seen(gc))
                 env.map_seen.set(i, j);
             env.pgrid[i][j].flags = unmarshallInt(th);
 
@@ -6931,7 +6933,7 @@ static void _tag_read_level(reader &th)
         MapKnowledge *f = new MapKnowledge();
         for (int x = 0; x < GXM; x++)
             for (int y = 0; y < GYM; y++)
-                unmarshallMapCell(th, (*f)[x][y]);
+                unmarshallMapCell(th, coord_def(x, y), (*f));
         env.map_forgotten.reset(f);
     }
     else

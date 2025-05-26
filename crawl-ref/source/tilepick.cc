@@ -587,7 +587,7 @@ bool is_door_tile(tileidx_t tile)
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
-    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    dungeon_feature_type feat = env.map_knowledge.feat(gc);
 
     tileidx_t override = tile_env.flv(gc).feat;
     bool can_override = !feat_is_door(feat)
@@ -607,11 +607,11 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_FLOOR:
         if (env.level_state & LSTATE_SLIMY_WALL)
             for (adjacent_iterator ai(gc); ai; ++ai)
-                if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
+                if (env.map_knowledge.feat(*ai) == DNGN_SLIMY_WALL)
                     return TILE_FLOOR_SLIME_ACIDIC;
 
         if (env.level_state & LSTATE_ICY_WALL
-            && env.map_knowledge(gc).flags & MAP_ICY)
+            && env.map_knowledge.flags(gc) & MAP_ICY)
         {
             return TILE_FLOOR_ICY;
         }
@@ -623,7 +623,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_PERMAROCK_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
     {
-        unsigned colour = env.map_knowledge(gc).feat_colour();
+        unsigned colour = env.map_knowledge.feat_colour(gc);
         if (colour == 0)
         {
             colour = feat == DNGN_FLOOR     ? env.floor_colour :
@@ -663,7 +663,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     // New trap-type-specific features are handled in default case.
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_TELEPORT:
-        return tileidx_trap(env.map_knowledge(gc).trap());
+        return tileidx_trap(env.map_knowledge.trap(gc));
 #endif
 
     case DNGN_TRAP_WEB:
@@ -683,8 +683,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         };
         int solid = 0;
         for (int i = 0; i < 4; i++)
-            if (feat_is_solid(env.map_knowledge(neigh[i]).feat())
-                || env.map_knowledge(neigh[i]).trap() == TRAP_WEB)
+            if (feat_is_solid(env.map_knowledge.feat(neigh[i]))
+                || env.map_knowledge.trap(neigh[i]) == TRAP_WEB)
             {
                 solid |= 1 << i;
             }
@@ -696,8 +696,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         return tileidx_shop(shop_at(gc));
 
     case DNGN_DEEP_WATER:
-        if (env.map_knowledge(gc).feat_colour() == GREEN
-            || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
+        if (env.map_knowledge.feat_colour(gc) == GREEN
+            || env.map_knowledge.feat_colour(gc) == LIGHTGREEN)
         {
             return TILE_DNGN_DEEP_WATER_MURKY;
         }
@@ -708,15 +708,15 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_SHALLOW_WATER:
         {
             tileidx_t t = TILE_DNGN_SHALLOW_WATER;
-            if (env.map_knowledge(gc).feat_colour() == GREEN
-                || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
+            if (env.map_knowledge.feat_colour(gc) == GREEN
+                || env.map_knowledge.feat_colour(gc) == LIGHTGREEN)
             {
                 t = TILE_DNGN_SHALLOW_WATER_MURKY;
             }
             else if (player_in_branch(BRANCH_SHOALS))
                 t = TILE_SHOALS_SHALLOW_WATER;
 
-            if (env.map_knowledge(gc).invisible_monster())
+            if (env.map_knowledge.invisible_monster(gc))
             {
                 // Add disturbance to tile.
                 t += tile_dngn_count(t);
@@ -1015,11 +1015,11 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     auto rays = *bg & (TILE_FLAG_RAY_MULTI | TILE_FLAG_RAY_OOR | TILE_FLAG_RAY
                         | TILE_FLAG_LANDING);
 
-    const map_cell &cell = env.map_knowledge(gc);
+    const MapKnowledge& map = env.map_knowledge;
 
     // Override terrain for magic mapping.
-    if (!cell.seen() && env.map_knowledge(gc).mapped())
-        *bg = tileidx_feature_base(cell.feat());
+    if (!map.seen(gc) && map.mapped(gc))
+        *bg = tileidx_feature_base(map.feat(gc));
     else
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
@@ -1029,13 +1029,14 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     *bg |= rays;
 
     // Override foreground for monsters/items
-    if (env.map_knowledge(gc).detected_monster())
+    if (map.detected_monster(gc))
     {
-        ASSERT(cell.monster() == MONS_SENSED);
-        *fg = tileidx_monster_base(cell.monsterinfo()->base_type, 0);
+        ASSERT(map.monster(gc) == MONS_SENSED);
+        monster_type type = map.monsterinfo(gc)->base_type;
+        *fg = tileidx_monster_base(type, 0);
     }
-    else if (env.map_knowledge(gc).detected_item())
-        *fg = tileidx_item(*cell.item());
+    else if (map.detected_item(gc))
+        *fg = tileidx_item(*map.item(gc));
     else
         *fg = mem_fg;
 
@@ -1915,7 +1916,7 @@ static bool _tentacle_tile_not_flying(tileidx_t tile)
 
 static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 {
-    const bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
+    const bool in_water = feat_is_water(env.map_knowledge.feat(mon.pos));
 
     if (mon.props.exists(MONSTER_TILE_KEY))
         return mon.props[MONSTER_TILE_KEY].get_int();
@@ -2076,7 +2077,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         }
 
         case MONS_BUSH:
-            if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
+            if (env.map_knowledge.cloud(mon.pos) == CLOUD_FIRE)
                 return TILEP_MONS_BURNING_BUSH;
             return base;
 
@@ -4652,10 +4653,10 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return TILE_FLAG_UNSEEN;
-    else if (env.map_knowledge(gc).known()
-                && !env.map_knowledge(gc).seen()
-             || env.map_knowledge(gc).detected_item()
-             || env.map_knowledge(gc).detected_monster()
+    else if (env.map_knowledge.known(gc)
+                && !env.map_knowledge.seen(gc)
+             || env.map_knowledge.detected_item(gc)
+             || env.map_knowledge.detected_monster(gc)
            )
     {
         return TILE_FLAG_MM_UNSEEN;

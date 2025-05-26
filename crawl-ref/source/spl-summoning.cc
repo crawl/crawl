@@ -1277,10 +1277,10 @@ static bool _is_malign_gateway_summoning_spot(const actor& caster,
 
     if (targeting)
     {
+        const MapKnowledge& map = env.map_knowledge;
         for (adjacent_iterator ai(location); ai; ++ai)
         {
-            const map_cell& map_info = env.map_knowledge(*ai);
-            if (map_info.seen() && feat_is_solid(map_info.feat()))
+            if (map.seen(*ai) && feat_is_solid(map.feat(*ai)))
                 return false;
         }
     }

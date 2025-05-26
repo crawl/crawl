@@ -3220,9 +3220,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
             {
                 for (const auto &dc : all_door)
                 {
-                    if (env.map_knowledge(dc).seen())
+                    if (env.map_knowledge.seen(dc))
                     {
-                        env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+                        env.map_knowledge.set_feature(dc, DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                         tile_env.bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif

@@ -710,6 +710,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
+    MapKnowledge& map = env.map_knowledge;
+
     for (radius_iterator ri(in_bounds(origin) ? origin : you.pos(),
                             map_radius, C_SQUARE);
          ri; ++ri)
@@ -734,31 +736,29 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 continue;
         }
 
-        map_cell& knowledge = env.map_knowledge(pos);
-
-        if (knowledge.changed())
+        if (map.changed(pos))
         {
             // If the player has already seen the square, update map
             // knowledge with the new terrain. Otherwise clear what we had
             // before.
-            if (knowledge.seen())
+            if (map.seen(pos))
             {
                 dungeon_feature_type newfeat = env.grid(pos);
                 trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
-                knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
+                map.set_feature(pos, newfeat, env.grid_colours(pos), tr);
             }
             else
-                knowledge.clear();
+                map.clear(pos);
         }
 
         // Don't assume that DNGN_UNSEEN cells ever count as mapped.
         // Because of a bug at one point in map forgetting, cells could
         // spuriously get marked as mapped even when they were completely
         // unseen.
-        const bool already_mapped = knowledge.mapped()
-                            && knowledge.feat() != DNGN_UNSEEN;
+        const bool already_mapped = map.mapped(pos)
+                                    && map.feat(pos) != DNGN_UNSEEN;
 
-        if (!full_info && (knowledge.seen() || already_mapped))
+        if (!full_info && (map.seen(pos) || already_mapped))
             continue;
 
         const dungeon_feature_type feat = env.grid(pos);
@@ -783,20 +783,20 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             if (full_info)
             {
-                knowledge.set_feature(feat, _feat_default_map_colour(feat),
+                map.set_feature(pos, feat, _feat_default_map_colour(feat),
                     feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
-            else if (!knowledge.feat())
+            else if (!map.feat(pos))
             {
                 auto base_feat = magic_map_base_feat(feat);
                 auto colour = _feat_default_map_colour(base_feat);
                 auto trap = feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                                    : TRAP_UNASSIGNED;
-                knowledge.set_feature(base_feat, colour, trap);
+                map.set_feature(pos, base_feat, colour, trap);
             }
             if (emphasise(pos))
-                knowledge.flags |= MAP_EMPHASIZE;
+                map.flags(pos) |= MAP_EMPHASIZE;
 
             if (full_info)
             {
@@ -814,7 +814,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             {
                 set_terrain_mapped(pos);
 
-                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
+                if (map.get_map_feature(pos) == MF_STAIR_BRANCH)
                     seen_notable_thing(feat, pos);
 
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
@@ -968,14 +968,14 @@ void view_update_at(const coord_def &pos)
 #endif
 
 #ifndef USE_TILE_LOCAL
-    if (!env.map_knowledge(pos).visible())
+    if (!env.map_knowledge.visible(pos))
         return;
     cglyph_t g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
         : you.flash_colour;
-    monster_type mons = env.map_knowledge(pos).monster();
+    monster_type mons = env.map_knowledge.monster(pos);
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
@@ -1100,7 +1100,7 @@ static update_flags player_view_update_at(const coord_def &gc)
     if (crawl_state.game_is_hints())
         hints_observe_cell(gc);
 
-    if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
+    if (env.map_knowledge.changed(gc) || !env.map_knowledge.seen(gc))
         ret |= update_flag::affect_excludes;
 
     set_terrain_visible(gc);
@@ -1731,22 +1731,22 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         _draw_outside_los(cell, gc, ep); // in los bounds but not visible
 
 #ifdef USE_TILE
-    cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
     cell->flash_alpha = 0;
 #endif
+    const MapKnowledge& map = env.map_knowledge;
 
     // Don't hide important information by recolouring monsters.
-    bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
-        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
-    });
+    bool allow_mon_recolour = !map_bounds(gc)
+                              || map.monster(gc) == MONS_NO_MONSTER
+                              || mons_class_is_firewood(map.monster(gc));
 
     // Is this cell excluded from movement by mesmerise-related statuses?
     // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
     bool mesmerise_excluded = (gc != you.pos() // for fungus form
                                && map_bounds(gc)
                                && you.on_current_level
-                               && (env.map_knowledge(gc).flags & MAP_WITHHELD)
+                               && (map.flags(gc) & MAP_WITHHELD)
                                && !feat_is_solid(env.grid(gc)));
 
 #ifdef USE_TILE
@@ -1828,7 +1828,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         && map_bounds(gc)
         && (_layers == Layer::None
             || gc != you.pos()
-               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+               && (env.map_knowledge.monster(gc) == MONS_NO_MONSTER
                    || !you.see_cell(gc)))
         && travel_colour_override(gc))
     {

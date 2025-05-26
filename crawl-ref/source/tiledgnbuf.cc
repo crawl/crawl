@@ -2,7 +2,10 @@
 #ifdef USE_TILE_LOCAL
 #include "tiledgnbuf.h"
 
+#include "mon-info.h"
+#include "mon-util.h"
 #include "mpr.h"
+#include "player.h"
 #include "tile-flags.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"

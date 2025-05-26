@@ -465,7 +465,7 @@ bool valid_blink_destination(const actor &moved, const coord_def& target,
     actor *targ_act = actor_at(target);
     if (targ_act
         && (incl_unseen || moved.can_see(*targ_act)
-            || env.map_knowledge(targ_act->pos()).invisible_monster()))
+            || env.map_knowledge.invisible_monster(targ_act->pos())))
     {
         return false;
     }

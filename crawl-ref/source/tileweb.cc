@@ -1527,20 +1527,22 @@ void TilesFramework::write_tileidx(tileidx_t t)
 
 void TilesFramework::_send_cell(const coord_def &gc,
                                 const screen_cell_t &current_sc, const screen_cell_t &next_sc,
-                                const map_cell &current_mc, const map_cell &next_mc,
                                 map<uint32_t, coord_def>& new_monster_locs,
                                 bool force_full)
 {
-    if (current_mc.feat() != next_mc.feat())
-        json_write_int("f", next_mc.feat());
+    const MapKnowledge& cmk = m_current_map_knowledge;
+    const MapKnowledge& nmk = env.map_knowledge;
 
-    if (next_mc.monsterinfo())
-        _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
-    else if (current_mc.monsterinfo())
+    if (cmk.feat(gc) != nmk.feat(gc) || force_full)
+        json_write_int("f", nmk.feat(gc));
+
+    if (nmk.monsterinfo(gc))
+        _send_monster(gc, nmk.monsterinfo(gc), new_monster_locs, force_full);
+    else if (cmk.monsterinfo(gc))
         json_write_null("mon");
 
-    map_feature mf = get_cell_map_feature(gc);
-    if (get_cell_map_feature(current_mc) != mf)
+    map_feature mf = nmk.get_map_feature(gc);
+    if (cmk.get_map_feature(gc) != mf || force_full)
         json_write_int("mf", mf);
 
     // Glyph and colour
@@ -1845,7 +1847,6 @@ void TilesFramework::_send_map(bool force_full)
     default_cell.tile.bg = TILE_FLAG_UNSEEN;
     default_cell.glyph = ' ';
     default_cell.colour = 7;
-    map_cell default_map_cell;
 
     coord_def last_gc(0, 0);
     bool send_gc = true;
@@ -1871,8 +1872,8 @@ void TilesFramework::_send_map(bool force_full)
                     draw_cell(cell, gc, false, 0);
                 else
                     draw_cell(cell, gc, false, flash_colour);
-
-                pack_cell_overlays(gc, m_next_view);
+                m_rendering_map_knowledge.copy_at(gc, env.map_knowledge, gc);
+                pack_cell_overlays(gc, cell->tile, m_rendering_map_knowledge);
             }
 
             mark_clean(gc);
@@ -1892,12 +1893,9 @@ void TilesFramework::_send_map(bool force_full)
 
             const screen_cell_t& sc = force_full ? default_cell
                 : m_current_view(gc);
-            const map_cell& mc = force_full ? default_map_cell
-                : m_current_map_knowledge(gc);
             _send_cell(gc,
                        sc,
                        m_next_view(gc),
-                       mc, env.map_knowledge(gc),
                        new_monster_locs, force_full);
 
             if (!json_is_empty())
@@ -1944,14 +1942,14 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     auto it = m_monster_locs.find(m->client_id);
     if (m->client_id == 0 || it == m_monster_locs.end())
     {
-        last = m_current_map_knowledge(gc).monsterinfo();
+        last = m_current_map_knowledge.monsterinfo(gc);
 
         if (last && last->client_id != m->client_id)
             json_treat_as_nonempty(); // Force sending at least the id
     }
     else
     {
-        last = m_current_map_knowledge(it->second).monsterinfo();
+        last = m_current_map_knowledge.monsterinfo(it->second);
 
         if (it->second != gc)
             json_treat_as_nonempty(); // As above
@@ -2018,13 +2016,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     // re-cache the map knowledge for the whole map, not just the updated portion
     // fixes render bugs for out-of-LOS when transitioning levels in shoals/slime
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-        {
-            const coord_def cache_gc(x, y);
-            screen_cell_t *cell = &m_next_view(cache_gc);
-            cell->tile.map_knowledge = map_bounds(cache_gc) ? env.map_knowledge(cache_gc) : map_cell();
-        }
+    m_rendering_map_knowledge = env.map_knowledge;
 
     m_next_view_tl = view2grid(coord_def(1, 1));
     m_next_view_br = view2grid(crawl_view.viewsz);
@@ -2042,7 +2034,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             screen_cell_t *cell = &m_next_view(grid);
 
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
-            pack_cell_overlays(grid, m_next_view);
+            pack_cell_overlays(grid, cell->tile, m_rendering_map_knowledge);
 
             mark_clean(grid); // Remove redraw flag
             mark_dirty(grid);

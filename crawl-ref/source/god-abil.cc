@@ -7463,7 +7463,7 @@ void makhleb_crucible_kill(monster& victim)
         simple_god_message(" acknowledges your contrition and permits you to"
                            " depart the Crucible.", false, GOD_MAKHLEB);
 
-        env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
+        env.map_knowledge.set_feature(pos, DNGN_EXIT_CRUCIBLE);
 #ifdef USE_TILE
         tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
         tiles.update_minimap(pos);

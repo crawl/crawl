@@ -1184,11 +1184,12 @@ void move_player_action(coord_def move)
         else if (you.current_vision == 0)
         {
             mpr("You feel something solid in that direction.");
-            map_cell& knowledge = env.map_knowledge(targ);
-            if (!knowledge.mapped() || knowledge.changed())
+            MapKnowledge& map = env.map_knowledge;
+            if (!map.mapped(targ) || map.changed(targ))
             {
                 dungeon_feature_type newfeat = env.grid(targ);
-                knowledge.set_feature(newfeat, env.grid_colours(targ), TRAP_UNASSIGNED);
+                map.set_feature(targ, newfeat, env.grid_colours(targ),
+                                TRAP_UNASSIGNED);
                 set_terrain_mapped(targ);
             }
         }
