@@ -704,7 +704,7 @@ function arena_sprint_init_boss_table()
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra / " ..
-                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 exp:982" ..
+                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 exp:982 " ..
                    "spells:mephitic_cloud.15.wizard;" ..
                           "summon_hydra.15.wizard;" ..
                           "invisibility.15.wizard;" ..
