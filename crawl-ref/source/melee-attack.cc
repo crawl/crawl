@@ -697,7 +697,7 @@ static void _apply_flux_contam(monster &m)
     {
         mprf(MSGCH_DURATION, "The last of your unstable energy dissipates and "
                              "you return to your previous form.");
-        untransform();
+        return_to_default_form();
     }
     else if (above_warning && energy < FLUX_ENERGY_WARNING)
         mprf(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");

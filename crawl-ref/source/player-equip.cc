@@ -775,7 +775,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
  *         that means that there are *no* valid candidates to remove, despite
  *         needing to do so (almost certainly because every slot of the needed
  *         type contains a cursed item.)
-  */
+ */
 int player_equip_set::needs_chain_removal(const item_def& item,
                                           vector<item_def*>& to_replace,
                                           bool cursed_okay)
@@ -1082,18 +1082,52 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
         }
     }
 
+    handle_melding(was_melded, skip_effects);
+}
+
+void player_equip_set::meld_equipment(vector<item_def*> to_meld, bool skip_effects)
+{
+    for (player_equip_entry& entry : items)
+    {
+        for (item_def* meld_item : to_meld)
+        {
+            if (meld_item->link != entry.item)
+                continue;
+
+            item_def* item = &entry.get_item();
+            entry.melded = true;
+
+            // If this is an item occupying multiple slots, find all the other
+            // entries and meld them as well.
+            if (get_all_item_slots(*item).size() > 1)
+            {
+                for (player_equip_entry& overflow : items)
+                {
+                    if (overflow.item == entry.item)
+                        overflow.melded = true;
+                }
+            }
+        }
+
+    }
+
+    handle_melding(to_meld, skip_effects);
+}
+
+void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effects)
+{
     // If melding these items will remove slots that contain other items, meld
     // those too (to keep from constantly popping them off during certain
     // transformations).
-    int num_melded = was_melded.size();
-    handle_chain_removal(was_melded, false);
-    if ((int)was_melded.size() > num_melded)
+    int num_melded = to_meld.size();
+    handle_chain_removal(to_meld, false);
+    if ((int)to_meld.size() > num_melded)
     {
-        for (size_t i = num_melded; i < was_melded.size(); ++i)
+        for (size_t i = num_melded; i < to_meld.size(); ++i)
         {
             for (player_equip_entry& entry : items)
             {
-                if (entry.item == was_melded[i]->link)
+                if (entry.item == to_meld[i]->link)
                 {
                     entry.melded = true;
                     if (entry.is_overflow)
@@ -1109,7 +1143,7 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
         }
     }
 
-    if (was_melded.empty())
+    if (to_meld.empty())
         return;
 
     if (skip_effects)
@@ -1117,7 +1151,7 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
 
     // Print a message.
     vector<string> meld_msg;
-    for (item_def* meld_item : was_melded)
+    for (item_def* meld_item : to_meld)
         meld_msg.emplace_back(meld_item->name(DESC_PLAIN));
 
     mprf("Your %s meld%s into your body.",
@@ -1127,7 +1161,7 @@ void player_equip_set::meld_equipment(int slots, bool skip_effects)
     update();
 
     // Now, simultaneously do unequip effects for all melded items.
-    for (item_def* meld_item : was_melded)
+    for (item_def* meld_item : to_meld)
         unequip_effect(meld_item->link, true, true);
 }
 

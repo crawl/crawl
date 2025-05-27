@@ -88,6 +88,7 @@ struct player_equip_set
 
     // Melding-related functions
     void meld_equipment(int slots, bool skip_effects = false);
+    void meld_equipment(vector<item_def*> to_meld, bool skip_effects = false);
     void unmeld_slot(equipment_slot slot, bool skip_effects = false);
     void unmeld_all_equipment(bool skip_effects = false);
     bool is_melded(const item_def& item);
@@ -114,6 +115,7 @@ struct player_equip_set
     void shift_twohander_to_slot(equipment_slot new_slot);
 
 private:
+    void handle_melding(vector<item_def*>& to_meld, bool skip_effects);
     void handle_unmelding(vector<item_def*>& to_unmeld, bool skip_effects);
 };
 

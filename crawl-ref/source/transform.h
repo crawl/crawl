@@ -338,13 +338,15 @@ bool transform(int dur, transformation which_trans, bool involuntary = false,
                bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_move = false, bool scale_hp = true);
+void untransform(bool skip_move = false, bool scale_hp = true,
+                 bool preserve_equipment = false,
+                 transformation new_form = transformation::none);
 
 void unset_default_form();
 void set_default_form(transformation t, const item_def *source);
 
 void set_form(transformation which_trans, int dur, bool scale_hp = true);
-void return_to_default_form();
+void return_to_default_form(bool new_form = false);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
