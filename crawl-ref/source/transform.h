@@ -329,6 +329,7 @@ bool form_has_ears(transformation form = you.form);
 bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat,
                              const item_def* talisman = nullptr);
+bool transforming_is_unsafe(transformation which_trans);
 
 string cant_transform_reason(transformation which_trans, bool involuntary = false,
                              bool temp = true);

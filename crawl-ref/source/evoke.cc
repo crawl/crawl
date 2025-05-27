@@ -1004,6 +1004,8 @@ static bool _evoke_talisman(item_def &talisman)
     const transformation trans = _form_for_talisman(talisman);
     if (!check_transform_into(trans, false, &talisman))
         return false;
+    if (transforming_is_unsafe(trans))
+        return false;
     if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
     {
         canned_msg(MSG_OK);
