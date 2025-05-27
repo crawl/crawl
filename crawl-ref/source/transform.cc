@@ -1824,7 +1824,7 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int dur, transformation which_trans, bool scale_hp = true)
+static void _enter_form(int dur, transformation which_trans, bool using_talisman = true)
 {
     const bool was_flying = you.airborne();
 
@@ -1844,9 +1844,8 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots);
-
-    set_form(which_trans, dur, scale_hp);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, false);
+    set_form(which_trans, dur, !using_talisman);
 
     if (you.digging && form_changes_anatomy(which_trans))
     {
@@ -1984,10 +1983,10 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
                && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
     {
-        untransform(true, !using_talisman);
+        untransform(true, !using_talisman, !using_talisman, which_trans);
     }
 
-    _enter_form(dur, which_trans, !using_talisman);
+    _enter_form(dur, which_trans, using_talisman);
 
     return true;
 }
@@ -2002,9 +2001,20 @@ bool transform(int dur, transformation which_trans, bool involuntary,
  *                       talisman-related shapeshifting, to prevent exploits
  *                       such as instantly healing via entering a -90% HP form
  *                       and then leaving it again immediately.)
+ * @param preserve_equipment    True if incompatible equipment should be melded
+ *                              instead of being unequipped (such as when
+ *                              entering a temporary form from a talisman that
+ *                              gave additional equipment slotsshifting).
+ * @param new_form       If this untransform is being done in the process of
+ *                       entering a new form, what form is that?
  */
-void untransform(bool skip_move, bool scale_hp)
+void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
+                 transformation new_form)
 {
+    // Skip if there's nothing that needs doing.
+    if (you.form == transformation::none)
+        return;
+
     const transformation old_form = you.form;
     const bool was_flying = you.airborne();
 
@@ -2059,14 +2069,22 @@ void untransform(bool skip_move, bool scale_hp)
 
     // If the player is no longer be eligible to equip some of the items that
     // they were wearing (possibly due to losing slots from their default form
-    // changing), calculate that now and make the fall off.
+    // changing), calculate that now. If they're outright exiting the form,
+    // make them fall off. If they're entering a temporary form, meld them.
+    // If they're returning back to the form that granted those slots in the
+    // first place, do nothing.
     vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
-    for (item_def* item : forced_remove)
+    if (preserve_equipment && new_form != you.default_form)
+        you.equipment.meld_equipment(forced_remove);
+    else if (!preserve_equipment)
     {
-        mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
-                item->cursed() ? ", shattering the curse!" : "");
+        for (item_def* item : forced_remove)
+        {
+            mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                    item->cursed() ? ", shattering the curse!" : "");
 
-        unequip_item(*item, false);
+            unequip_item(*item, false);
+        }
     }
 
     // Update skill boosts for the current state of equipment melds
@@ -2124,7 +2142,7 @@ void untransform(bool skip_move, bool scale_hp)
         riddle_targs.clear();
 }
 
-void return_to_default_form()
+void return_to_default_form(bool new_form)
 {
     if (you.default_form == transformation::none)
         untransform(false, false);
@@ -2134,8 +2152,8 @@ void return_to_default_form()
         // only be called in situations where those should end and transform()
         // will refuse to do that on its own)
         if (you.transform_uncancellable)
-            untransform(true, false);
-        transform(0, you.default_form, true, true);
+            untransform(true, false, !new_form, you.default_form);
+        transform(0, you.default_form, true, new_form);
     }
     ASSERT(you.form == you.default_form);
 }

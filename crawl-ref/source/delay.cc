@@ -898,7 +898,7 @@ void TransformDelay::finish()
     }
 
     set_default_form(form, talisman);
-    return_to_default_form();
+    return_to_default_form(true);
 }
 
 void run_macro(const char *macroname)
