@@ -78,8 +78,8 @@ static int current_colour = -1;
 static bool cursor_is_enabled = false;
 static CONSOLE_CURSOR_INFO initial_cci;
 static bool have_initial_cci = false;
-// dirty line (sx,ex,y)
-static int chsx = 0, chex = 0, chy = -1;
+static COORD dirty_area_start = {0, 0};
+static COORD dirty_area_end = {0, 0};
 // cursor position (start at 0,0 --> 1,1)
 static int cx = 0, cy = 0;
 
@@ -93,7 +93,6 @@ static const unsigned PREFERRED_CODEPAGE = 437;
 // we can do straight translation of DOS colour to win32 console colour.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char32_t c);
-static void bFlush();
 
 // [ds] Unused for portability reasons
 /*
@@ -128,6 +127,49 @@ static COLOURS BG_COL = BLACK;
 void enter_headless_mode() { }
 bool in_headless_mode() { return false; }
 
+static void _update_dirty_area(short x, short y)
+{
+    // If we don't have a dirty area create one
+    if (dirty_area_start.X == dirty_area_end.X)
+    {
+        dirty_area_start.X = x;
+        dirty_area_end.X = x + 1;
+
+        dirty_area_start.Y = y;
+        dirty_area_end.Y = y + 1;
+
+        return;
+    }
+
+    if (x < dirty_area_start.X)
+        dirty_area_start.X = x;
+    else if (x >= dirty_area_end.X)
+        dirty_area_end.X = x + 1;
+
+    if (y < dirty_area_start.Y)
+        dirty_area_start.Y = y;
+    else if (y >= dirty_area_end.Y)
+        dirty_area_end.Y = y + 1;
+}
+
+static void _clear_dirty_area()
+{
+    dirty_area_start = { 0, 0 };
+    dirty_area_end = { 0, 0 };
+}
+
+static void _sync_cursor()
+{
+    // if cursor is not NOCURSOR, update on screen
+    if (cursor_is_enabled)
+    {
+        COORD xy;
+        xy.X = cx;
+        xy.Y = cy;
+        SetConsoleCursorPosition(outbuf, xy);
+    }
+}
+
 void writeChar(char32_t c)
 {
     if (c == '\t')
@@ -147,9 +189,6 @@ void writeChar(char32_t c)
     // check for newline
     if (c == 0x0A)
     {
-        // must flush current buffer
-        bFlush();
-
         // reposition
         gotoxy_sys(1, cy+2);
 
@@ -175,48 +214,13 @@ void writeChar(char32_t c)
         pci->Char.UnicodeChar = c;
         pci->Attributes = tc;
 
-        if (chy < 0)
-            chsx = cx;
-        chy  = cy;
-        chex = cx;
+        _update_dirty_area(cx, cy);
     }
 
     // update x position
     cx += 1;
     if (cx >= screensize.X)
         cx = screensize.X - 1;
-}
-
-void bFlush()
-{
-    COORD source;
-    SMALL_RECT target;
-
-    // see if we have a dirty area
-    if (chy < 0)
-        return;
-
-    // set up call
-    source.X = chsx;
-    source.Y = chy;
-
-    target.Left = chsx;
-    target.Top = chy;
-    target.Right = chex;
-    target.Bottom = chy;
-
-    WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
-
-    chy = -1;
-
-    // if cursor is not NOCURSOR, update screen
-    if (cursor_is_enabled)
-    {
-        COORD xy;
-        xy.X = cx;
-        xy.Y = cy;
-        SetConsoleCursorPosition(outbuf, xy);
-    }
 }
 
 void set_mouse_enabled(bool enabled)
@@ -323,11 +327,7 @@ static void set_w32_screen_size()
     }
 
     screen = new CHAR_INFO[screensize.X * screensize.Y];
-
-    COORD topleft;
-    SMALL_RECT used;
-    topleft.X = topleft.Y = 0;
-    ::ReadConsoleOutputW(outbuf, screen, screensize, topleft, &used);
+    clrscr_sys();
 }
 
 static void w32_handle_resize_event()
@@ -484,8 +484,7 @@ void set_cursor_enabled(bool curstype)
 
     // now, if we just changed from NOCURSOR to CURSOR,
     // actually move screen cursor
-    if (cursor_is_enabled)
-        gotoxy_sys(cx+1, cy+1);
+    _sync_cursor();
 }
 
 // This will force the cursor down to the next line.
@@ -521,13 +520,11 @@ void clrscr_sys()
     target.Bottom = screensize.Y - 1;
 
     WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
+    _clear_dirty_area();
 }
 
 void gotoxy_sys(int x, int y)
 {
-    // always flush on goto
-    bFlush();
-
     // bounds check
     if (x < 1)
         x = 1;
@@ -541,16 +538,6 @@ void gotoxy_sys(int x, int y)
     // change current cursor
     cx = x - 1;
     cy = y - 1;
-
-    // if cursor is not NOCURSOR, update screen
-    if (cursor_is_enabled)
-    {
-        COORD xy;
-        xy.X = cx;
-        xy.Y = cy;
-        if (SetConsoleCursorPosition(outbuf, xy) == 0)
-            fputs("SetConsoleCursorPosition() failed!", stderr);
-    }
 }
 
 static unsigned short _dos_reverse_highlight(unsigned short colour)
@@ -699,9 +686,6 @@ static void cprintf_aux(const char *s)
         s += taken;
         writeChar(c);
     }
-
-    // flush string
-    bFlush();
 }
 
 void cprintf(const char *format, ...)
@@ -972,7 +956,20 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 
 void update_screen()
 {
-    bFlush();
+    // see if we have a dirty area
+    if (dirty_area_start.X == dirty_area_end.X)
+        return;
+
+    SMALL_RECT target;
+    target.Left = dirty_area_start.X;
+    target.Top = dirty_area_start.Y;
+    target.Right = dirty_area_end.X - 1;
+    target.Bottom = dirty_area_end.Y - 1;
+
+    WriteConsoleOutputW(outbuf, screen, screensize, dirty_area_start, &target);
+    _clear_dirty_area();
+
+    _sync_cursor();
 }
 
 int get_number_of_lines()
