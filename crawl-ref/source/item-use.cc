@@ -1234,6 +1234,19 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
         return nullptr;
 }
 
+static bool _is_slow_equip(const item_def& item)
+{
+    if (item.base_type == OBJ_JEWELLERY)
+        return jewellery_is_amulet(item.sub_type);
+    else if (item.base_type == OBJ_ARMOUR)
+        return true;
+    else if (is_weapon(item))
+        return you.has_mutation(MUT_SLOW_WIELD);
+
+    // Probably nothing reaches this?
+    return true;
+}
+
 /**
  * Potentially prompt the player about a multitude of things related to changing
  * their current gear. This includes inscriptions, god disapproval, Drain^ and
@@ -1269,6 +1282,7 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
         return false;
     }
 
+    bool needs_delay = to_equip && _is_slow_equip(*to_equip);
     for (const item_def* item : to_remove)
     {
         if (!maybe_warn_about_removing(*item))
@@ -1276,6 +1290,15 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
             canned_msg(MSG_OK);
             return false;
         }
+        if (_is_slow_equip(*item))
+            needs_delay = true;
+    }
+
+    if (needs_delay && !i_feel_safe(true)
+        && !yesno("Spend multiple turns changing equipment while enemies are nearby?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
     }
 
     // Check whether removing any of this sequence of items would cause us to
@@ -1436,19 +1459,6 @@ bool try_equip_item(item_def& item)
     return true;
 }
 
-static bool _is_slow_equip(const item_def& item)
-{
-    if (item.base_type == OBJ_JEWELLERY)
-        return jewellery_is_amulet(item.sub_type);
-    else if (item.base_type == OBJ_ARMOUR)
-        return true;
-    else if (is_weapon(item))
-        return you.has_mutation(MUT_SLOW_WIELD);
-
-    // Probably nothing reaches this?
-    return true;
-}
-
 /**
  * Handles the removal of items that are giving equipment slots which are
  * currently filled (and thus must also have something removed from them at
@@ -1555,13 +1565,6 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
     for (const item_def* item : to_remove)
         if (_is_slow_equip(*item))
             needs_delay = true;
-
-    if (needs_delay && !i_feel_safe(true)
-        && !yesno("Spend multiple turns changing equipment anyway?", true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
 
     const bool is_multi = (to_equip != nullptr && !to_remove.empty())
                             || to_remove.size() > 1;
