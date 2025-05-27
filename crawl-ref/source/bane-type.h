@@ -11,6 +11,7 @@ enum bane_type
     BANE_CLAUSTROPHOBIA,
     BANE_STUMBLING,
     BANE_RECKLESS,
+    BANE_SUCCOR,
 
     NUM_BANES,
 };

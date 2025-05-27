@@ -2291,6 +2291,25 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     {
         makhleb_crucible_kill(mons);
     }
+
+    if (you.has_bane(BANE_SUCCOR))
+    {
+        bool visible_effect = false;
+        const int healing = random_range(mons.max_hit_points / 3,
+                                         mons.max_hit_points / 2);
+        for (monster_near_iterator mi(mons.pos()); mi; ++mi)
+        {
+            if (mons_aligned(&mons, *mi) && mi->hit_points < mi->max_hit_points)
+            {
+                if (!visible_effect && you.can_see(**mi))
+                    visible_effect = true;
+                mi->heal(healing);
+            }
+        }
+
+        if (visible_effect)
+            mprf("%s allies are healed!", mons.name(DESC_ITS).c_str());
+    }
 }
 
 /**

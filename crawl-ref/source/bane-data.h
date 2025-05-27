@@ -61,4 +61,10 @@ static const bane_def bane_data[] =
         "Your SH is set to 0.",
     },
 
+    {
+        BANE_SUCCOR,
+        BANE_DUR_MEDIUM,
+        "Succor",
+        "You heal other nearby enemies whenever you kill a monster.",
+    },
 };
