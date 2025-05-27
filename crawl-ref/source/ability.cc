@@ -3347,22 +3347,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_END_TRANSFORMATION:
-        if (feat_dangerous_for_form(you.default_form, env.grid(you.pos())))
-        {
-            mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        if (transforming_is_unsafe(you.default_form))
             return spret::abort;
-        }
         return_to_default_form();
         break;
 
     case ABIL_BEGIN_UNTRANSFORM:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        if (transforming_is_unsafe(transformation::none))
             return spret::abort;
-        }
         if (!i_feel_safe(true) && !yesno("Still begin untransforming?", true, 'n'))
         {
             canned_msg(MSG_OK);

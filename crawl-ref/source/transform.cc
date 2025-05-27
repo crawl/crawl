@@ -1626,6 +1626,50 @@ bool feat_dangerous_for_form(transformation which_trans,
 }
 
 /**
+ * Checks if it would be unsafe for the player to transform into a specific form
+ * at the present time (and prints an appropriate message, if so)
+ */
+bool transforming_is_unsafe(transformation which_trans)
+{
+    if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+    {
+        mprf(MSGCH_PROMPT, "%s right now would cause you to %s!",
+                which_trans == transformation::none ? "Untransforming" : "Transforming",
+                env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        return true;
+    }
+
+    // Now check if there are any items that would break if we changed form in
+    // this way.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<transformation> unwind_default_form(you.default_form);
+    unwind_var<transformation> unwind_form(you.form);
+
+    you.default_form = which_trans;
+    you.form = which_trans;
+
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+
+    // Pretend incompatible items fell away.
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
+    for (item_def* item : forced_remove)
+    {
+        // Now see if any of them would break if they did so.
+        if (item->cursed()
+            || (is_artefact(*item) && artefact_property(*item, ARTP_FRAGILE)))
+        {
+            mprf(MSGCH_PROMPT, "%s right now would shatter %s!",
+                 which_trans == transformation::none ? "Untransforming" : "Transforming",
+                 item->name(DESC_YOUR).c_str());
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Is the player alive enough to become the given form?
  *
  * All undead can use Vessel of Slaughter; vampires also can also use their
