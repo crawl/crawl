@@ -7333,6 +7333,16 @@ void unmarshallMonster(reader &th, monster& m)
         m.enchantments[me.ench] = me;
         m.ench_cache.set(me.ench, true);
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FRENZY_FIXUP
+        && m.has_ench(ENCH_FRENZIED))
+    {
+        m.del_ench(ENCH_HASTE);
+        m.del_ench(ENCH_MIGHT);
+    }
+#endif
+
     m.ench_countdown = unmarshallByte(th);
 
     m.hit_points     = unmarshallShort(th);

@@ -2675,8 +2675,6 @@ bool monster::go_frenzy(actor *source)
     const int duration = 16 + random2avg(13, 2);
 
     add_ench(mon_enchant(ENCH_FRENZIED, 0, source, duration * BASELINE_DELAY));
-    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
 
     mons_att_changed(this);
 
@@ -4900,7 +4898,7 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(*this);
 
-    if (has_ench(ENCH_BERSERK))
+    if (this->berserk_or_frenzied())
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);

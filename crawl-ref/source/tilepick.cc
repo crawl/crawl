@@ -2366,6 +2366,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_BURNING, TILEI_STICKY_FLAME },
     { MB_INNER_FLAME, TILEI_INNER_FLAME },
     { MB_BERSERK, TILEI_BERSERK },
+    { MB_FRENZIED, TILEI_FRENZIED },
     { MB_SLOWED, TILEI_SLOWED },
     { MB_MIRROR_DAMAGE, TILEI_PAIN_MIRROR },
     { MB_HASTED, TILEI_HASTED },

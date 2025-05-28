@@ -988,7 +988,7 @@ int main(int argc, char* argv[])
                     monsterattacks += ", ";
 
                 short int dam = attk.damage;
-                if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
+                if (mon.berserk_or_frenzied() || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
 
                 if (mon.has_ench(ENCH_WEAK))

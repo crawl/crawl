@@ -4718,7 +4718,7 @@ int melee_attack::apply_damage_modifiers(int damage)
     monster *as_mon = attacker->as_monster();
 
     // Berserk/mighted monsters get bonus damage.
-    if (as_mon->has_ench(ENCH_MIGHT) || as_mon->has_ench(ENCH_BERSERK))
+    if (as_mon->has_ench(ENCH_MIGHT) || as_mon->berserk_or_frenzied())
         damage = damage * 3 / 2;
 
     if (as_mon->has_ench(ENCH_TEMPERED))

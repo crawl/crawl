@@ -39,6 +39,7 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+frenzied FRENZIED
 slowed SLOWED
 hasted HASTED
 might MIGHT
