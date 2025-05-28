@@ -9,7 +9,7 @@ Cada vez que recibes daño tienes posibilidad de carcomer.
 %%%%
 guardian spirit passive
 
-Tu reserva de magia absorbe un poco del daño que recibes. 
+Tu reserva de magia absorbe una parte del daño que recibes. 
 %%%%
 harm passive
 
