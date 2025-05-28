@@ -322,7 +322,7 @@ void handle_time()
             continue;
         }
 
-        if (you.elapsed_time >= you.next_timer_effect[i])
+        while (you.elapsed_time >= you.next_timer_effect[i])
         {
             int time_delta = you.elapsed_time - you.last_timer_effect[i];
             (timed_effects[i].trigger)(time_delta);
