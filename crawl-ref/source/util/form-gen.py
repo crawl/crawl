@@ -216,7 +216,7 @@ def parse_skill(s):
 # XXX: Based off equipment_slot. See also transform.cc
 ALL_SLOTS = {
     'weapon': 1 << 1,
-    'offhand': 1 << 2,
+    'offhand': 1 << 2 | 1 << 12,
     'body': 1 << 3,
     'helmet': 1 << 4,
     'gloves': 1 << 5,
@@ -225,7 +225,6 @@ ALL_SLOTS = {
     'cloak': 1 << 8,
     'ring': 1 << 9,
     'amulet': 1 << 10,
-    'weapon_or_offhand': 1 << 12,
     'held': 1 << 1 | 1 << 2 | 1 << 12,
     'aux': 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8,
     'physical': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 12,
