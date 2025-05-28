@@ -4224,7 +4224,7 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
         fire_partial_player_tracer(ZAP_BOLT_OF_FIRE, pow, tracer, beam);
     }
 
-    if (cancel_beam_prompt(beam, tracer))
+    if (cancel_beam_prompt(beam, tracer, 8))
         return spret::abort;
 
     fail_check();
