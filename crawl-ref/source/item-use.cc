@@ -1422,6 +1422,11 @@ bool try_equip_item(item_def& item)
             equipment_slot used_slot = equipment.find_compatible_occupied_slot(
                                                              *to_remove.back(),
                                                              item);
+
+            // See if any other reason is preventing us from removing this.
+            if (!can_unequip_item(*to_remove.back()))
+                return false;
+
             equipment.remove(*to_remove.back());
 
             equipment.num_slots[used_slot] -= 1;
@@ -1615,35 +1620,55 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
     you.turn_is_over = true;
 }
 
-bool try_unequip_item(item_def& item)
+bool can_unequip_item(item_def& item, bool silent)
 {
     if (item_is_melded(item))
     {
-        mprf(MSGCH_PROMPT, "%s is melded into your body!",
-                           item.name(DESC_YOUR).c_str());
+        if (!silent)
+        {
+            mprf(MSGCH_PROMPT, "%s is melded into your body!",
+                               item.name(DESC_YOUR).c_str());
+        }
         return false;
     }
 
     if (item.cursed())
     {
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!",
-                            item.name(DESC_YOUR).c_str());
+        if (!silent)
+        {
+            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
+                                item.name(DESC_YOUR).c_str());
+        }
         return false;
     }
 
-    if (is_unrandom_artefact(item, UNRAND_DEMON_AXE))
+    if (is_unrandom_artefact(item, UNRAND_DEMON_AXE) && you.beheld())
     {
-        mprf(MSGCH_PROMPT, "Your thirst for blood prevents you from unwielding "
-                           "your weapon!");
+        if (!silent)
+        {
+            mprf(MSGCH_PROMPT, "Your thirst for blood prevents you from unwielding "
+                               "your weapon!");
+        }
         return false;
     }
 
     if (you.duration[DUR_VAINGLORY] && is_unrandom_artefact(item, UNRAND_VAINGLORY))
     {
-        mprf(MSGCH_PROMPT, "It would be unfitting for someone so glorious to "
-                           "remove their crown in front of an audience.");
+        if (!silent)
+        {
+            mprf(MSGCH_PROMPT, "It would be unfitting for someone so glorious to "
+                               "remove their crown in front of an audience.");
+        }
         return false;
     }
+
+    return true;
+}
+
+bool try_unequip_item(item_def& item)
+{
+    if (!can_unequip_item(item))
+        return false;
 
     vector<item_def*> to_remove = {&item};
 
@@ -1673,14 +1698,8 @@ static bool _try_unwield_weapons()
     }
 
     for (item_def* item : weapons)
-    {
-        if (item->cursed())
-        {
-            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
-                                    item->name(DESC_YOUR).c_str());
+        if (!can_unequip_item(*item))
             return false;
-        }
-    }
 
     if (!warn_about_changing_gear(weapons))
         return false;

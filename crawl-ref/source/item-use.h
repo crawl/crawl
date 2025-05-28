@@ -52,6 +52,7 @@ string item_unequip_verb(const item_def& item);
 bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive);
 bool try_equip_item(item_def& item);
 bool try_unequip_item(item_def& item);
+bool can_unequip_item(item_def& item, bool silent = false);
 bool warn_about_changing_gear(const vector<item_def*>& to_remove,
                               item_def* to_equip = nullptr);
 
