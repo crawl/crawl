@@ -4100,7 +4100,7 @@ static void _tag_read_you(reader &th)
             }
             else
 #endif
-            die("Timer %d next trigger in the past [%d < %d]",
+            mprf(MSGCH_ERROR, "Timer %d next trigger in the past [%d < %d]",
                 j, you.next_timer_effect[j], you.elapsed_time);
         }
     }
