@@ -691,6 +691,16 @@ static bool _trog_retribution()
     const god_type god = GOD_TROG;
     if (wrath_tension_check(true))
     {
+        // If the player is healthy and in a reasonable tension range,
+        // make the player do a cruel mockery of berserk:
+        // weakly thrashing in place, regularly hitting walls and floors.
+        simple_god_message(" tears away your strength and self-control!", false, god);
+        int vex_max = max(4, you.experience_level / 4);
+        you.weaken(nullptr, 25);
+        you.vex(nullptr, random_range(3, vex_max), "Trog's wrath");
+    }
+    else
+    {
         // If the other effect could kill you, tension is low enough we can
         // safely interrupt you, or tension's so high they're not making things
         // much worse, summon berserkers from the Brothers In Arms monster set.
@@ -726,16 +736,6 @@ static bool _trog_retribution()
                                      : " has no time to punish you... now.",
                            false, god);
     }
-    else
-    {
-        // Otherwise, make the player do a cruel mockery of berserk:
-        // weakly thrashing in place, regularly hitting walls and floors.
-        simple_god_message(" tears away your strength and self-control!", false, god);
-        int vex_max = max(4, you.experience_level / 4);
-        you.weaken(nullptr, 25);
-        you.vex(nullptr, random_range(3, vex_max), "Trog's wrath");
-    }
-
     return true;
 }
 
