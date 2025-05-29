@@ -887,6 +887,10 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
         u_att_flav = AF_COLD;
         break;
 
+    case MAGENTA:
+        u_att_flav = AF_ANTIMAGIC;
+        break;
+
     default:
         break;
     }
@@ -943,11 +947,13 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
-    if (colour == MAGENTA)
-        damage = damage * 4 / 3; // +5 for uglies, +9 for v uglies
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
+
+    // Not really a normal resistance, so handle it seperately.
+    if (colour == MAGENTA)
+        willpower = willpower + ((very_ugly) ? 121 : 81);
 
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)
