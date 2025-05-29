@@ -3974,6 +3974,10 @@ int monster::willpower() const
     if (mons_is_hepliaklqana_ancestor(type))
         u = get_experience_level() * get_experience_level() / 2; // 0-160ish
 
+    // ghost demon struct overrides the monster values if it is non-negative
+    if (mons_is_ghost_demon(type) && ghost->willpower >= 0)
+        u = ghost->willpower;
+
     // Draining/malmutation reduce monster base WL proportionately.
     const int HD = get_hit_dice();
     if (HD < get_experience_level())

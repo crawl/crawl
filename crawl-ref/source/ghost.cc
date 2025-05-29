@@ -134,6 +134,7 @@ void ghost_demon::reset()
     max_hp           = 0;
     ev               = 0;
     ac               = 0;
+    willpower        = -1;
     damage           = 0;
     speed            = 10;
     move_energy      = 10;

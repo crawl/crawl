@@ -62,7 +62,7 @@ public:
     short best_skill_level;
     short xl;
 
-    short max_hp, ev, ac, damage, speed, move_energy;
+    short max_hp, ev, ac, willpower, damage, speed, move_energy;
     bool see_invis, flies;
     brand_type brand;
     attack_type att_type;
