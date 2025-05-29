@@ -2647,7 +2647,7 @@ ENDMAP
 #       gigantic sort of aquatic base
 #
 NAME:   cryptofortress_bobbens
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_descent
 PLACE:  Crypt:$
 ORIENT: encompass
 MONS:   zombie / skeleton / bog body w:5
@@ -2809,6 +2809,7 @@ ENDMAP
 #
 NAME:   quadcrypt_mu
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
+TAGS:   no_descent
 ORIENT: encompass
 PLACE:  Crypt:$
 ####### chapel garden
@@ -2956,7 +2957,7 @@ ENDMAP
 # A: ~use your Imagination~
 #
 NAME:   evilmike_haunted_forest
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_descent
 ORIENT: encompass
 PLACE:  Crypt:$
 MONS:   w:3 patrolling lich / w:1 patrolling revenant soulmonger
@@ -3212,7 +3213,7 @@ ENDMAP
 #        The death's head, by Grunt.
 #
 NAME:    grunt_crypt_end_deaths_head
-TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror
+TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror no_descent
 PLACE:   Crypt:$
 ORIENT:  encompass
 MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
