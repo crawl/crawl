@@ -1097,6 +1097,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.NOBODY_MEMORY_2:
                 case icons.NOBODY_MEMORY_3:
                 case icons.PYRRHIC:
+                case icons.FRENZIED:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
