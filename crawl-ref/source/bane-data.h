@@ -75,4 +75,10 @@ static const bane_def bane_data[] =
         "Enemies in your sight sometimes split into clones of themselves.",
     },
 
+    {
+        BANE_DILETTANTE,
+        BANE_DUR_LONG,
+        "the Dilettante",
+        "You are less proficient with several skills.", // Overriden
+    },
 };

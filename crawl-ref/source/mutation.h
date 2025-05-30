@@ -103,3 +103,5 @@ bane_type bane_from_name(string name);
 bool add_bane(bane_type bane = NUM_BANES, int duration = 0);
 void remove_bane(bane_type bane);
 int xl_to_remove_bane(bane_type bane);
+
+bool skill_has_dilettante_penalty(skill_type skill);

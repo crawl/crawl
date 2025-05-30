@@ -6103,6 +6103,14 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
         level += (10 + get_form()->get_level(10)) * scale / 20;
     }
 
+    if (temp && skill_has_dilettante_penalty(sk))
+    {
+        if (sk <= SK_LAST_WEAPON)
+            level = level / 2;
+        else
+            level = level * 3 / 4;
+    }
+
     if (level > MAX_SKILL_LEVEL * scale)
         level = MAX_SKILL_LEVEL * scale;
 

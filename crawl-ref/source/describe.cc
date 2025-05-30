@@ -4961,6 +4961,15 @@ void describe_bane(bane_type bane)
     else
         inf.body << bane_desc(bane) << "\n";
 
+    if (bane == BANE_DILETTANTE && you.banes[bane])
+    {
+        CrawlVector& vec = you.props[DILETTANTE_SKILL_KEY].get_vector();
+        inf.body << "\nYour " << skill_name(static_cast<skill_type>(vec[0].get_int()))
+                 << ", " << skill_name(static_cast<skill_type>(vec[1].get_int()))
+                 << ", and " << skill_name(static_cast<skill_type>(vec[2].get_int()))
+                 << " are currently affected.\n";
+    }
+
     const int dur = bane_base_duration(bane);
     string dur_str;
     if (dur > BANE_DUR_LONG)

@@ -1105,7 +1105,7 @@ private:
         for (bane_type &bane : banes)
         {
             const string desc = make_stringf("<lightmagenta>%s [%.1f]</lightmagenta>",
-                bane_data[bane_index[bane]].description, (float)xl_to_remove_bane(bane) / 10.0f);
+                bane_desc(bane).c_str(), (float)xl_to_remove_bane(bane) / 10.0f);
 
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, MUT_ENTRY_BANE, hotkey);
             ++hotkey;
@@ -3317,6 +3317,15 @@ int bane_base_duration(bane_type bane)
 
 const string bane_desc(bane_type bane)
 {
+    if (bane == BANE_DILETTANTE && you.banes[bane])
+    {
+        CrawlVector& vec = you.props[DILETTANTE_SKILL_KEY].get_vector();
+        return make_stringf("Your skill with %s, %s, and %s is reduced.",
+                    skill_name(static_cast<skill_type>(vec[0].get_int())),
+                    skill_name(static_cast<skill_type>(vec[1].get_int())),
+                    skill_name(static_cast<skill_type>(vec[2].get_int())));
+    }
+
     return bane_data[bane_index[bane]].description;
 }
 
@@ -3336,6 +3345,51 @@ static bool _bane_is_compatible(bane_type bane)
         return player_shield_class(1, false, true) > 0;
 
     return true;
+}
+
+static bool _skill_sorter(const pair<skill_type, int>& a,
+                          const pair<skill_type, int>& b)
+{
+    return a.second > b.second;
+}
+
+// Select skills to penalize by the Bane of the Dilettante.
+// We select the highest weapon skill and the 2 highest 'magic' skills
+// (including invocations and evocations, but not spellcasting).
+static void _init_bane_dilettante()
+{
+    CrawlVector& sk = you.props[DILETTANTE_SKILL_KEY].get_vector();
+    sk.clear();
+
+    vector<pair<skill_type, int>> wp_skills;
+    for (skill_type skill = SK_FIRST_WEAPON; skill <= SK_LAST_WEAPON; ++skill)
+    {
+        if (is_removed_skill(skill))
+            continue;
+
+        wp_skills.push_back({skill, you.skill(skill, 100, true, false)});
+    }
+
+    vector<pair<skill_type, int>> mag_skills;
+    for (skill_type skill = SK_FIRST_MAGIC_SCHOOL; skill <= SK_LAST_MAGIC; ++skill)
+    {
+        if (is_removed_skill(skill))
+            continue;
+
+        mag_skills.push_back({skill, you.skill(skill, 100, true, false)});
+    }
+    mag_skills.push_back({SK_EVOCATIONS, you.skill(SK_EVOCATIONS, 100, true, false)});
+    mag_skills.push_back({SK_INVOCATIONS, you.skill(SK_INVOCATIONS, 100, true, false)});
+
+    shuffle_array(wp_skills);
+    shuffle_array(mag_skills);
+
+    sort(wp_skills.begin(), wp_skills.end(), _skill_sorter);
+    sort(mag_skills.begin(), mag_skills.end(), _skill_sorter);
+
+    sk.push_back(wp_skills[0].first);
+    sk.push_back(mag_skills[0].first);
+    sk.push_back(mag_skills[1].first);
 }
 
 /**
@@ -3380,6 +3434,10 @@ bool add_bane(bane_type bane, int duration)
     if (bane == BANE_RECKLESS)
         you.redraw_armour_class = true;
 
+    // Choose which skills to penalty
+    if (bane == BANE_DILETTANTE)
+        _init_bane_dilettante();
+
     return true;
 }
 
@@ -3422,4 +3480,17 @@ int xl_to_remove_bane(bane_type bane)
     const int level_diff = xp_to_level_diff(xp_diff / 10, 10);
 
     return level_diff;
+}
+
+bool skill_has_dilettante_penalty(skill_type skill)
+{
+    if (!you.has_bane(BANE_DILETTANTE))
+        return false;
+
+    CrawlVector& sk = you.props[DILETTANTE_SKILL_KEY].get_vector();
+    for (int i = 0; i < sk.size(); ++i)
+        if (sk[i].get_int() == skill)
+            return true;
+
+    return false;
 }
