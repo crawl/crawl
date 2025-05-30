@@ -2436,6 +2436,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
     { MB_CLOCKWORK_BEE_CAST, TILEI_PARTIALLY_CHARGED },
     { MB_FIGMENT, TILEI_FIGMENT },
+    { MB_PARADOX, TILEI_PARADOX },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

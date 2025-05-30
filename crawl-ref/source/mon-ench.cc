@@ -377,6 +377,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         scale_hp(touch_of_beogh_hp_mult(*this), 100);
         break;
 
+    case ENCH_PARADOX_TOUCHED:
+        spells.push_back({SPELL_MANIFOLD_ASSAULT, 50, MON_SPELL_NATURAL});
+        props[CUSTOM_SPELLS_KEY] = true;
+        break;
+
     default:
         break;
     }
@@ -1024,6 +1029,19 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         spells.push_back({SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD});
         break;
 
+    case ENCH_PARADOX_TOUCHED:
+        if (!quiet)
+            simple_monster_message(*this, "is no longer touched by paradox.");
+        for (size_t i = 0; i < spells.size(); ++i)
+        {
+            if (spells[i].spell == SPELL_MANIFOLD_ASSAULT && spells[i].flags | MON_SPELL_NATURAL)
+            {
+                spells.erase(spells.begin() + i);
+                break;
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -1444,6 +1462,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PYRRHIC_RECOLLECTION:
     case ENCH_SPELL_CHARGED:
     case ENCH_PHALANX_BARRIER:
+    case ENCH_PARADOX_TOUCHED:
         decay_enchantment(en);
         break;
 
@@ -2221,7 +2240,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
-    "phalanx barrier", "figment",
+    "phalanx barrier", "figment", "paradox-touched",
     "buggy", // NUM_ENCHANTMENTS
 };
 

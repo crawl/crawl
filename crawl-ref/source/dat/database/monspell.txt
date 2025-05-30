@@ -1086,6 +1086,10 @@ Dominate Undead vampire bloodprince cast
 
 @The_monster@ whispers, "Kneel."
 %%%%
+Manifold Assault natural cast
+
+@The_monster@ seems to occupy many places at once.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

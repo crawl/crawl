@@ -8211,6 +8211,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_MANIFOLD_ASSAULT:
         cast_manifold_assault(*mons, mons_spellpower(*mons, SPELL_MANIFOLD_ASSAULT), false);
+        if (mons->has_ench(ENCH_PARADOX_TOUCHED) && one_chance_in(3))
+            mons->blink();
         return;
 
     case SPELL_REGENERATE_OTHER:

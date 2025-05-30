@@ -243,6 +243,7 @@ enum enchant_type
     ENCH_CLOCKWORK_BEE_CAST,
     ENCH_PHALANX_BARRIER,
     ENCH_FIGMENT,
+    ENCH_PARADOX_TOUCHED,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

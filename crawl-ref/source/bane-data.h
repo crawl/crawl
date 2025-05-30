@@ -81,4 +81,11 @@ static const bane_def bane_data[] =
         "the Dilettante",
         "You are less proficient with several skills.", // Overriden
     },
+
+    {
+        BANE_PARADOX,
+        BANE_DUR_MEDIUM,
+        "Paradox",
+        "Enemies you spot sometimes become touched by paradox.",
+    },
 };

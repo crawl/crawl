@@ -1512,7 +1512,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     {
         if (weapon && is_unrandom_artefact(*weapon, UNRAND_AUTUMN_KATANA))
             mprf("Space folds impossibly around %s blade!", agent.name(DESC_ITS).c_str());
-        else
+        else if (!(agent.is_monster() && agent.as_monster()->has_ench(ENCH_PARADOX_TOUCHED)))
             mpr("Space momentarily warps into an impossible shape!");
     }
 

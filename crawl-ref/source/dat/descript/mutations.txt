@@ -1404,3 +1404,9 @@ dilettante bane
 Your skill with your highest weapon skill (at the time of becoming afflicted by
 this bane) is reduced by 50% and your skill with your two highest skills among
 magical schools, Invocations, and Evocations are reduced by 25%.
+%%%%
+paradox bane
+
+Whenever you first spot a monster, it has a chance to become Touched by Paradox,
+giving it the ability to use Manifold Assault as a natural ability (and a small
+chance to blink randomly after doing so).

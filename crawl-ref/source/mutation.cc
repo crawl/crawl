@@ -3494,3 +3494,24 @@ bool skill_has_dilettante_penalty(skill_type skill)
 
     return false;
 }
+
+// Potentially apply one of several banes that have a chance to affect any new
+// monster the player encounters.
+void maybe_apply_bane_to_monster(monster& mons)
+{
+    if (mons.is_peripheral()
+        || mons.is_summoned()
+        || mons.attitude != ATT_HOSTILE
+        || mons.temp_attitude() != ATT_HOSTILE)
+    {
+        return;
+    }
+
+    if (you.has_bane(BANE_PARADOX) && !mons.has_spell(SPELL_MANIFOLD_ASSAULT)
+        && mons_has_attacks(mons)
+        && one_chance_in(12))
+    {
+        simple_monster_message(mons, " is touched by paradox!");
+        mons.add_ench(mon_enchant(ENCH_PARADOX_TOUCHED, 0, nullptr, INFINITE_DURATION));
+    }
+}

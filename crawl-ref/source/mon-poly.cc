@@ -29,6 +29,7 @@
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "religion.h"
 #include "state.h"
@@ -804,4 +805,6 @@ void seen_monster(monster* mons)
 
     if (you.form == transformation::sphinx)
         sphinx_notice_riddle_target(mons);
+
+    maybe_apply_bane_to_monster(*mons);
 }

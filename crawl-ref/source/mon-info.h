@@ -255,6 +255,7 @@ enum monster_info_flags
     MB_PYRRHIC_RECOLLECTION,
     MB_CLOCKWORK_BEE_CAST,
     MB_FIGMENT,
+    MB_PARADOX,
     NUM_MB_FLAGS
 };
 
