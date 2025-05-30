@@ -222,13 +222,16 @@ static inline bool _is_safe_cloud(const coord_def& c)
 // This is done, so traps etc. will usually be circumvented where possible.
 static inline int _feature_traverse_cost(dungeon_feature_type feature)
 {
+    const bool safe_trap = (feature == DNGN_TRAP_WEB || feature == DNGN_TRAP_NET)
+                           && you.is_web_immune()
+                           || feature == DNGN_TRAP_SHAFT;
     if (feat_is_closed_door(feature)
         // Higher cost for shallow water if species doesn't like water
         || feature == DNGN_SHALLOW_WATER && (!player_likes_water(true)))
     {
         return 2;
     }
-    else if (feat_is_trap(feature) && feature != DNGN_TRAP_SHAFT)
+    else if (feat_is_trap(feature) && !safe_trap)
         return 3;
 
     return 1;
@@ -277,6 +280,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
         // The player can safely walk over shafts.
         if (grid == DNGN_TRAP_SHAFT)
             return true;
+
+        if (you.is_web_immune()
+            && (grid == DNGN_TRAP_NET || grid == DNGN_TRAP_WEB))
+        {
+            return true;
+        }
 
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
