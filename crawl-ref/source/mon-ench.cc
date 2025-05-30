@@ -238,6 +238,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         scale_hp(2, 1);
         break;
 
+    case ENCH_FIGMENT:
+        scale_hp(1, 3);
+        break;
+
     case ENCH_FRENZIED:
         calc_speed();
         break;
@@ -418,6 +422,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BERSERK:
         scale_hp(2, 3);
         calc_speed();
+        break;
+
+    case ENCH_FIGMENT:
+        scale_hp(3, 1);
         break;
 
     case ENCH_DOUBLED_HEALTH:
@@ -2213,7 +2221,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
-    "phalanx barrier",
+    "phalanx barrier", "figment",
     "buggy", // NUM_ENCHANTMENTS
 };
 

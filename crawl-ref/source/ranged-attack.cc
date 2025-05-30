@@ -408,6 +408,9 @@ int ranged_attack::apply_damage_modifiers(int damage)
     if (attacker->as_monster()->has_ench(ENCH_TOUCH_OF_BEOGH))
         damage = damage * 4 / 3;
 
+    if (attacker->as_monster()->has_ench(ENCH_FIGMENT))
+        damage = damage * 2 / 3;
+
     if (attacker->as_monster()->is_archer())
     {
         const int bonus = archer_bonus_damage(attacker->get_hit_dice());

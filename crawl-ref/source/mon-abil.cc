@@ -444,6 +444,7 @@ static bool _slime_merge(monster* thing)
             && other_thing->has_ench(ENCH_HEXED) == thing->has_ench(ENCH_HEXED)
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
+            && other_thing->has_ench(ENCH_FIGMENT) == thing->has_ench(ENCH_FIGMENT)
             && !_disabled_merge(other_thing))
         {
             // We can potentially merge if doing so won't take us over

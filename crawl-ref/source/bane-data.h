@@ -67,4 +67,12 @@ static const bane_def bane_data[] =
         "Succor",
         "You heal other nearby enemies whenever you kill a monster.",
     },
+
+    {
+        BANE_MULTIPLICITY,
+        BANE_DUR_MEDIUM,
+        "Multiplicity",
+        "Enemies in your sight sometimes split into clones of themselves.",
+    },
+
 };

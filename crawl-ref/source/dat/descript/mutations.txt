@@ -1392,3 +1392,9 @@ succor bane
 
 Whenever you kill an enemy, all other nearby enemies are healed for a large
 fraction of that enemy's maximum health.
+%%%%
+multiplicity bane
+
+Enemies in sight of you have a small chance each turn to create multiple clones
+of themselves. These clones are very fragile and do reduced damage with attacks
+and spells, but will not expire on their own.

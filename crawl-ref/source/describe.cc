@@ -5445,6 +5445,8 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     }
     if (mi.is(MB_TOUCH_OF_BEOGH))
         real_dam = real_dam * 4 / 3;
+    if (mi.is(MB_FIGMENT))
+        real_dam = real_dam * 2 / 3;
 
     string dam_str;
     if (dam != real_dam)

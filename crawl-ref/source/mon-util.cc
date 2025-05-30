@@ -2548,6 +2548,9 @@ int exp_value(const monster& mon, bool real, bool legacy)
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
 
+    if (mon.has_ench(ENCH_FIGMENT))
+        x_val /= 3;
+
     // Legacy code used for Gozag bribe and tension calculations.
     // XXX: remove this.
     if (x_val > 750 && legacy)

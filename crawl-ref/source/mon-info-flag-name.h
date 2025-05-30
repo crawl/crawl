@@ -159,4 +159,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_VEXED, "vexed", "lashing out in frustration", "vexed"},
     { MB_PYRRHIC_RECOLLECTION, "ablaze", "ablaze with memories", "ablaze"},
     { MB_CLOCKWORK_BEE_CAST, "bee", "winding a clockwork bee", "bee"},
+    { MB_FIGMENT, "figment", "feeble figment", "figment"},
 };

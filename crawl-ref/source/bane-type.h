@@ -12,6 +12,7 @@ enum bane_type
     BANE_STUMBLING,
     BANE_RECKLESS,
     BANE_SUCCOR,
+    BANE_MULTIPLICITY,
 
     NUM_BANES,
 };
@@ -21,3 +22,4 @@ constexpr int BANE_DUR_MEDIUM = 1500;
 constexpr int BANE_DUR_SHORT  = 800;
 
 #define CLAUSTROPHOBIA_KEY "claustrophia_stacks"
+#define MULTIPLICITY_TIME_KEY "multiplicity_time"

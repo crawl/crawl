@@ -6474,6 +6474,8 @@ int monster::spell_hd(spell_type spell) const
         hd = max(1, hd * 2 / 3);
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
+    if (has_ench(ENCH_FIGMENT))
+        hd = max(1, hd / 2);
 
     if (type == MONS_PLAYER_SHADOW)
     {

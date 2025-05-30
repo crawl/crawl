@@ -3686,6 +3686,10 @@ string summoned_poof_msg(const monster& mons)
         msg = "degenerates into a cloud of primal chaos";
         break;
 
+    case MON_SUMM_MULTIPLICITY:
+        msg = "shimmers and vanishes";
+        break;
+
     case MON_SUMM_WRATH:
     case MON_SUMM_AID:
         if (is_good_god(mons.god))

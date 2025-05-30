@@ -30,6 +30,7 @@
 #include "mgen-data.h"
 #include "monster.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
@@ -52,6 +53,7 @@
 #include "tileview.h"
 #include "throw.h"
 #include "travel.h"
+#include "view.h"
 #include "viewchar.h"
 #include "unwind.h"
 
@@ -233,6 +235,74 @@ static void _evolve(int /*time_delta*/)
     more();
 }
 
+static bool _multiplicity_clone(monster* mon)
+{
+    coord_def spot = find_newmons_square(mon->type, mon->pos(), 1, 2);
+    if (!spot.origin())
+    {
+        bool obviousness; // dummy argument
+        monster *clone = clone_mons(mon, true, &obviousness,
+                                    mon->attitude, spot);
+        if (!clone)
+            return false;
+        clone->foe = mon->foe;
+        // No additional gear from these clones, but you can get XP.
+        clone->mark_summoned(MON_SUMM_MULTIPLICITY);
+        clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        clone->add_ench(mon_enchant(ENCH_FIGMENT, 0, nullptr, INFINITE_DURATION));
+    }
+
+    return true;
+}
+
+static void _bane_triggers(int /*time_delta*/)
+{
+    if (you.has_bane(BANE_MULTIPLICITY)
+        && you.elapsed_time > you.props[MULTIPLICITY_TIME_KEY].get_int()
+        && coinflip())
+    {
+        vector<monster*> to_clone;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mons_aligned(&you, *mi) && !mi->is_summoned()
+                && !mi->is_peripheral() && !mons_is_unique(mi->type)
+                && !mi->has_ench(ENCH_FIGMENT)
+                && !mons_is_immotile(**mi))
+            {
+                to_clone.push_back(*mi);
+            }
+        }
+
+        if (to_clone.empty())
+            return;
+
+        monster* mon = to_clone[random2(to_clone.size())];
+
+        bool did_clone = false;
+        bool seen = false;
+        const int num = 2 + one_chance_in(3);
+        for (int i = 0; i < num; ++i)
+        {
+            if (_multiplicity_clone(mon))
+            {
+                if (you.can_see(*mon))
+                    seen = true;
+                did_clone = true;
+            }
+        }
+
+        // Apply cooldown.
+        if (did_clone)
+            you.props[MULTIPLICITY_TIME_KEY] = you.elapsed_time + random_range(150, 400);
+
+        if (seen)
+        {
+            flash_tile(mon->pos(), LIGHTBLUE, 150);
+            mprf("%s shimmers and splits apart.", mon->name(DESC_THE).c_str());
+        }
+    }
+}
+
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
 {
@@ -276,6 +346,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
+    { _bane_triggers,                 50,   120, false },
 };
 
 // Do various time related actions...

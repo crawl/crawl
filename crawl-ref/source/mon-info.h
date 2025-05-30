@@ -254,6 +254,7 @@ enum monster_info_flags
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
     MB_CLOCKWORK_BEE_CAST,
+    MB_FIGMENT,
     NUM_MB_FLAGS
 };
 
