@@ -781,6 +781,15 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
+    // Randomizing here instead of in mons_attack_spec so that the reaching
+    // works properly.
+    if (attk_flavour == AF_REACH_CLEAVE_UGLY)
+    {
+        attack_flavour flavours[] =
+            {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_ACID, AF_ANTIMAGIC};
+        attk_flavour = RANDOM_ELEMENT(flavours);
+    }
+
     if (damage_done > 0 || flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
@@ -3235,10 +3244,7 @@ string melee_attack::mons_attack_desc()
     string ret;
     int dist = (attack_position - defender->pos()).rdist();
     if (dist > 1)
-    {
-        ASSERT(can_reach(dist));
         ret = " from afar";
-    }
 
     if (weapon && !mons_class_is_animated_weapon(attacker->type))
         ret += " with " + weapon->name(DESC_A, false, false, false);

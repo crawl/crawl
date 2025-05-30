@@ -409,7 +409,7 @@ mset(spec_fn(function ()
   local e = math.min(8, math.floor((you.depth()) / 5) + 4)
   local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
   return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
-         "apocalypse crab w:4 / killer klown w:8 / " ..
+         "apocalypse crab w:4 / killer klown w:8 / crawling flesh cage w:2 / " ..
          "shapeshifter hd:16 w:" .. e .. " / " ..
          "glowing shapeshifter w:" .. e / 3 .. " / " ..
          "protean progenitor w:" .. e .. " / " ..

@@ -549,6 +549,10 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
+crawling_flesh_cage0 MONS_CRAWLING_FLESH_CAGE
+crawling_flesh_cage1
+crawling_flesh_cage2
+crawling_flesh_cage3
 %sdir mon/aberrations
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1

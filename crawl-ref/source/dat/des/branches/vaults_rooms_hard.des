@@ -2188,7 +2188,8 @@ MONS:    orc knight, ironbound thunderhulk / ogre mage w:5 ; dire flail . robe
 MONS:    deep elf high priest / deep elf death mage / deep elf annihilator / \
          deep elf demonologist / deep elf sorcerer
 MONS:    entropy weaver w:5 / war gargoyle
-KMONS:   0 = vault guard skeleton / two-headed ogre zombie / ugly thing zombie
+KMONS:   0 = vault guard skeleton / two-headed ogre zombie / \
+             guardian sphinx zombie
 # the staff
 KMONS:   S = patrolling vault warden
 # the bouncers
@@ -2255,7 +2256,6 @@ KMONS:  D = lich
 KMONS:  E = ironbound mechanist
 KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich w:2
 ITEM:   randbook disc:forgecraft / manual of forgecraft w:5
-KFEAT:  S = metal_statue
 KFEAT:  yz = .
 COLOUR: y = yellow
 COLOUR: z = lightblue
@@ -2273,14 +2273,14 @@ MARKER: z = lua:fog_machine { \
 MAP
  c......+.....cc......+....$c
  cycccccc.....cczcccccc...6$c
- c.....cc*.E5.cc.....cc..F.$S
+ c.....cc*.E5.cc.....cc..F.$G
  cccccycc|.5..cccccczcc.6.>$c
  c.....cc*$$..+......cc||||dc
  c.cccccccccccccccccccccccccc
  c+cccccccccccccccccccccccccc
  c.....cllllllcc%$$..cwwwwwwc
  c...4.clcccclcc$>.3.cwccccwc
- S..D..+.cllllcc$3C..+.cwwwwc
+ G..D..+.cllllcc$3C..+.cwwwwc
  c%4...ccclccccc..3..cccwcccc
  c$$$%%ccclllll+.....cccwwwwc
  ccccccccccccccccccccccccccwc

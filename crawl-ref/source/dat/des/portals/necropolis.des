@@ -242,7 +242,8 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_0 .. " = vault sentinel / yaktaur w:5 / ironbound preserver / \
                       orc knight w:5 / orc warlord / sphinx marauder w:5 / \
                       deep elf zephyrmancer / deep elf knight / \
-                      deep elf archer / guardian sphinx skeleton")
+                      deep elf archer / crawling flesh cage / \
+                      guardian sphinx skeleton")
     e.kmons(_9 .. " = ironbound mechanist / ironbound frostheart / \
                       ironbound thunderhulk / yaktaur captain / ettin w:5 / \
                       guardian sphinx / peacekeeper / crystal guardian / \
@@ -3018,6 +3019,7 @@ NAME:   ploomutoo_gammafunk_necropolis_ghost_potion_laboratory
 :                               "vaults_elf", "depths_crypt"})
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
 MONS:   very ugly thing, glowing shapeshifter, cacodemon
+KMONS:  C = crawling flesh cage
 KMONS:  D = tentacled monstrosity
 KMONS:  O = player ghost
 ITEM:   potion of mutation pre_id q:1
@@ -3036,7 +3038,7 @@ NSUBST: " = 1:d / 1:d" / 1:f / *:", ` = 2:3 / 2 = 3` / 1:2 / 1:2` / *:`
 NSUBST: ; = 1:d; / 2:e / 1:e; / 3:1 / 4 = 1; / 1:4; / 1:6 / *:;
 NSUBST: " = 2:d / 1:ffg / * = ", ` = 2:3 / 3 = 3` / 1:2 / 1 = 2` / 1:7D`` / *:`
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
-NSUBST: ; = d / d~ / 4=e / 2:5 / 4 = 5; / 1:4 / 1:4; / 4:6 / 3 = 6; / *:;
+NSUBST: ; = d / d~ / 4=e / 2:C / 3 = C; / 1:4 / 1:4; / 4:6 / 3 = 6; / *:;
 NSUBST: " = 3:d / 1:d~ / 1:e / 1:h / *:"
 NSUBST: ` = 4=3 / 4=3` / 1:6 / 3=6` / 1:4 / 2=4` / *:`
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
@@ -3555,7 +3557,7 @@ SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1:1 / 1:1- / 3:2 / 4 = 2- / 1:3 / 2 = 3- / 1:4- / *:-
 :   j = "lupine talisman w:7 / lupine talisman randart w:8"
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
-MONS:   shapeshifter
+MONS:   shapeshifter / crawling flesh cage w:1
 MONS:   glowing shapeshifter / dire elephant w:5
 SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
 NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2:3 / 2=3- / -
@@ -3890,7 +3892,7 @@ NSUBST: - = 2=1 / 4 = 1- / 2:2 / 2 = 2- / 1:3 / 1:4 / 1:M / *:-
 :             " . " .. disto_weapon("blademaster", "randart") ..
 :             " . leather armour good_item")
 MONS:   large abomination / worldbinder / shapeshifter / thrashing horror / \
-        rakshasa / very ugly thing / great orb of eyes / glowing shapeshifter
+        rakshasa / crawling flesh cage / great orb of eyes / glowing shapeshifter
 MONS:   tentacled starspawn / cacodemon / deep elf demonologist / \
         deep elf sorcerer / glowing orange brain / crystal guardian
 MONS:   wretched star / lurking horror / hellion / apocalypse crab

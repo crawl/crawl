@@ -303,6 +303,9 @@ enum monster_type                      // env.mons[].type
     MONS_MOLTEN_GARGOYLE,
     MONS_UGLY_THING,
     MONS_VERY_UGLY_THING,
+#if TAG_MAJOR_VERSION > 34
+    MONS_CRAWLING_FLESH_CAGE,
+#endif
     MONS_ICE_BEAST,
     MONS_SKY_BEAST,
 #if TAG_MAJOR_VERSION == 34
@@ -1344,6 +1347,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOBLIN_RIDER,
     MONS_IRONBOUND_MECHANIST,
     MONS_SPROZZ,
+    MONS_CRAWLING_FLESH_CAGE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

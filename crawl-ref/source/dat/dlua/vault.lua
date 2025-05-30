@@ -307,8 +307,8 @@ function index_vaults_room_themes (e, set, hard)
     if crawl.x_chance_in_y(d, 10) then
       sl = sl + 1
     end
-    e.mons('ugly thing w:' .. 7 - d .. ' / lindwurm w:4 / ' ..
-           'freezing wraith w:4 / crystal guardian w:' .. d)
+    e.mons('lindwurm w:' .. 7 - d .. ' / crawling flesh cage w:5 / ' ..
+           'crystal guardian w:' .. d)
     e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
            'boggart band w:5 / glowing orange brain w:' .. d + 1)
     e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:8 / ' ..
@@ -324,9 +324,9 @@ function index_vaults_room_themes (e, set, hard)
     local f = 'ego:freezing pre_id'
     local c = 'ego:cold_resistance pre_id'
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
-           'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
+           'harpy simulacrum w:' .. 8 - d * 2 .. ' / ' ..
            'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
-    e.mons('necromancer w:2 / arcanist / white very ugly thing')
+    e.mons('necromancer w:2 / arcanist / crawling flesh cage')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
                                             ' . ring mail ' .. c)

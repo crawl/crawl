@@ -35,11 +35,11 @@ function base_monster_setup(e)
                guardian mummy / orange demon / ynoxinul / ice devil /\
                red devil / burial acolyte / goblin rider / hippogriff")
   e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
-               rakshasa / necromancer / ugly thing / tengu warrior /\
+               rakshasa / necromancer / ugly thing w:15 / tengu warrior /\
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\
                unseen horror / yaktaur / cyclops / deep troll / shapeshifter /\
                fire elemental / water elemental / earth elemental / raiju /\
-               ugly thing / kobold blastminer band / orc high priest band w:5 /\
+               kobold blastminer band / orc high priest band w:5 /\
                orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
                black mamba / mana viper / merfolk avatar / wind drake / \
                sea snake / tarantella / wolf spider / steelbarb worm /\
@@ -47,7 +47,8 @@ function base_monster_setup(e)
                laughing skull band / skeletal warrior / thrashing horror /\
                hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
                chaos spawn / soul eater")
-  e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
+  e.kmons("D = fire dragon w:25 / ice dragon w:25 /\
+               very ugly thing w:5 / crawling flesh cage w:5 /\
                dire elephant / torpor snail / skyshark / death yak band w:5 /\
                meliai band / yaktaur / ogre mage band w:5 / ettin /\
                enormous slime creature w:5 / centaur warrior band w:5 /\

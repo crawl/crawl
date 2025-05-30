@@ -6485,8 +6485,9 @@ ENDMAP
 
 # All those mummy chaos knights have to rest somewhere.
 NAME:    skrybe_chaotic_catacombs
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen depths_entry chance_depths_entry
 DEPTH:   D:12-, !D:$, Depths
+PLACE:   D:$
 WEIGHT:  2 (D:$), 10
 ORIENT:  float
 : if you.in_branch("D") then
@@ -6918,7 +6919,7 @@ ENDMAP
 
 NAME:    regret_index_condemned_cage
 TAGS:    no_monster_gen no_item_gen no_pool_fixup
-TAGS:    depths_entry uniq_depths_entry chance_depths_entry zot_entry
+TAGS:    depths_entry chance_depths_entry zot_entry
 DEPTH:   D:9-, !D:$, Depths, !Depths:$
 PLACE:   D:$, Depths:$
 ORIENT:  float
@@ -6947,6 +6948,7 @@ KMONS:   9 = skeletal warrior
 KMONS:   0 = flayed ghost / shadow dragon w:1
 KFEAT:   0 = stone_arch
 :   else
+TAGS:    uniq_depths_entry
 MONS:    spriggan berserker zombie / fire dragon skeleton / \
          guardian sphinx simulacrum
 MONS:    occultist, hell knight, white ugly thing, frost giant

@@ -1243,7 +1243,7 @@ ENDMAP
 # others are ugly things and abominations.
 #
 # The central, circular chamber houses Cigotuvi's flesh golem.
-# The Eastern half of his lab is dominated by a snaking passageway filled with
+# The eastern half of his lab is dominated by a snaking passageway filled with
 # shapeshifters and the occasional ugly thing.
 #
 # The western half of his lab is full of abominations, including the terrible
@@ -2536,7 +2536,7 @@ TAGS:   no_rotate
 MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
         deep elf pyromancer w:6 / worldbinder w:2
 MONS:   great orb of eyes / glowing orange brain / sphinx marauder / \
-        cacodemon w:2 / very ugly thing / glowing shapeshifter / \
+        cacodemon w:2 / crawling flesh cage / glowing shapeshifter / \
         entropy weaver / green death w:2 / tentacled starspawn / \
         golden eye band w:6 / worldbinder / glass eye w:4
 MONS:   nagaraja / deep elf high priest / guardian sphinx w:6 / \

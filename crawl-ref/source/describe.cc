@@ -5100,6 +5100,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BOMBLET,           "deploy bomblets" },
         { AF_AIRSTRIKE,         "open air damage" },
         { AF_TRICKSTER,         "drain, daze, or confuse" },
+        { AF_REACH_CLEAVE_UGLY, "random ugly thing damage" },
         { AF_PLAIN,             "" },
     };
 
@@ -5461,14 +5462,17 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
         if (di.flavour_without_dam
             && !bonus_desc.empty()
             && !flavour_triggers_damageless(attack.flavour)
-            && !flavour_has_mobility(attack.flavour))
+            && !flavour_has_mobility(attack.flavour)
+            && !(attack.flavour == AF_REACH_CLEAVE_UGLY))
         {
             bonus_desc += " (if damage dealt)";
         }
 
         if (flavour_has_reach(attack.flavour))
         {
-            bonus_desc += (bonus_desc.empty() ? "Reaches" : "; reaches");
+            bonus_desc += (bonus_desc.empty() ? "Reaches"
+                           : (attack.flavour == AF_REACH_CLEAVE_UGLY) ? "; cleaves"
+                           : "; reaches");
             bonus_desc += (attack.flavour == AF_RIFT ? " very far"
                                                      : " from afar");
         }

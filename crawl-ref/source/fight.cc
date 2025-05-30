@@ -1148,6 +1148,17 @@ bool dont_harm(const actor &attacker, const actor &defender)
     return false;
 }
 
+bool _monster_has_reachcleave(const actor &attacker)
+{
+    if (attacker.is_monster()
+        && attacker.as_monster()->has_attack_flavour(AF_REACH_CLEAVE_UGLY))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Force cleave attacks. Used for melee actions that don't have targets, e.g.
  * attacking empty space (otherwise, cleaving is handled in melee_attack).
@@ -1184,7 +1195,8 @@ bool attack_cleaves(const actor &attacker, const item_def *weap)
         return true;
     }
     else if (attacker.is_monster()
-             && attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE))
+             && (attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE)
+             || _monster_has_reachcleave(attacker)))
     {
         return true;
     }
@@ -1238,7 +1250,10 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         return;
 
     const coord_def atk = attacker.pos();
-    const int cleave_radius = weap ? weapon_reach(*weap) : 1;
+    // Players in aqua form specifically do not get enormous cleaving, but
+    // monsters with natural reach cleave for their while reach.
+    const int cleave_radius = attacker.is_monster() ? attacker.reach_range()
+                                : weap ? weapon_reach(*weap) : 1;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
     {
@@ -1280,7 +1295,9 @@ int attack_multiple_targets(actor &attacker, list<actor*> &targets,
 
     int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
-    const bool reaching = weap && weapon_reach(*weap) > 1;
+
+    const bool reaching = _monster_has_reachcleave(attacker)
+                          || (weap && weapon_reach(*weap) > 1);
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();

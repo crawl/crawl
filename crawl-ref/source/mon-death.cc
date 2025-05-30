@@ -2776,6 +2776,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
+    const bool destroyed = wounded_damaged(targ_holy) ||
+                           mons.type == MONS_CRAWLING_FLESH_CAGE;
+
     // Print standard death messages, handle god conducts and piety gain, and
     // perform other killer_type specific actions (like handling banishment).
     switch (killer)
@@ -2791,16 +2794,16 @@ item_def* monster_die(monster& mons, killer_type killer,
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons.name(DESC_THE).c_str(),
-                         exploded                        ? "blown up" :
-                         wounded_damaged(targ_holy)      ? "destroyed"
-                                                         : "killed");
+                         exploded   ? "blown up" :
+                         destroyed  ? "destroyed"
+                                    : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
-                         exploded                        ? "blow up" :
-                         wounded_damaged(targ_holy)      ? "destroy"
-                                                         : "kill",
+                         exploded  ? "blow up" :
+                         destroyed ? "destroy"
+                                   : "kill",
                          mons.name(DESC_THE).c_str());
                 }
             }
@@ -2845,9 +2848,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (death_message)
             {
                 const char* msg =
-                    exploded                   ? " is blown up!" :
-                    wounded_damaged(targ_holy) ? " is destroyed!"
-                                               : " dies!";
+                    exploded  ? " is blown up!" :
+                    destroyed ? " is destroyed!"
+                              : " dies!";
                 simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
@@ -2882,9 +2885,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (death_message)
             {
                 const char* msg =
-                    exploded                     ? " is blown up!" :
-                    wounded_damaged(targ_holy)   ? " is destroyed!"
-                                                    : " dies!";
+                    exploded   ? " is blown up!" :
+                    destroyed  ? " is destroyed!"
+                               : " dies!";
                 simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
                                         MDAM_DEAD);
             }

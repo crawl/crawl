@@ -48,6 +48,7 @@ stab_type find_player_stab_type(const monster &victim);
 int stab_bonus_denom(stab_type stab);
 
 bool dont_harm(const actor &attacker, const actor &defender);
+bool _monster_has_reachcleave(const actor &attacker);
 bool force_player_cleave(coord_def target);
 bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr);
 bool weapon_cleaves(const item_def &item);

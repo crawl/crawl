@@ -475,9 +475,10 @@ static const vector<pop_entry> population[] =
   // Easy enemies:
   {  1,  4,  400, FALL, MONS_YAKTAUR },
   {  1,  4,  350, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,  145, FALL, MONS_HARPY },
+  {  1,  4,  120, FALL, MONS_HARPY },
   {  1,  4,  100, FALL, MONS_BOGGART },
   {  1,  4,  600, FALL, MONS_LINDWURM },
+  {  1,  4,   25, FALL, MONS_CRAWLING_FLESH_CAGE },
 
   {  1,  4,   50, FLAT, MONS_IRONBOUND_MECHANIST },
   {  1,  4,  230, FALL, MONS_IRONBOUND_MECHANIST },
@@ -529,7 +530,6 @@ static const vector<pop_entry> population[] =
   {  5, 12,  520, FALL, MONS_PHANTASMAL_WARRIOR },
   {  5, 12,  100, FALL, MONS_FREEZING_WRAITH },
   {  5, 12,  110, FALL, MONS_LICH },
-  {  5, 12,   45, FALL, MONS_ENTROPY_WEAVER },
   {  5, 12,   45, FALL, MONS_FLAYED_GHOST },
   // V:5 elves:
   {  5, 12,  300, FALL, MONS_DEEP_ELF_HIGH_PRIEST },
@@ -545,15 +545,16 @@ static const vector<pop_entry> population[] =
   {  5, 12,  220, FALL, MONS_OGRE_MAGE },
   {  5, 12,  120, FALL, MONS_DEEP_TROLL_EARTH_MAGE },
   // V:5 misc:
+  {  5, 12,   45, FALL, MONS_ENTROPY_WEAVER },
   {  5, 12,  800, FALL, MONS_YAKTAUR_CAPTAIN },
   {  5, 12,  750, FALL, MONS_GLOWING_SHAPESHIFTER },
   {  5, 12,  600, FALL, MONS_TENGU_REAVER },
-  {  5, 12,  330, FALL, MONS_VERY_UGLY_THING },
   {  5, 12,  260, FALL, MONS_GUARDIAN_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
   {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
   {  5, 12,  135, FALL, MONS_IRONBOUND_MECHANIST },
   // V:5 chaff from earlier floors
+  {  5, 12,  330, FALL, MONS_CRAWLING_FLESH_CAGE },
   {  5,  5,  650, FLAT, MONS_ORC_KNIGHT },
   {  5,  5,  180, FLAT, MONS_FORMLESS_JELLYFISH },
   {  5,  5,   60, FLAT, MONS_DANCING_WEAPON },

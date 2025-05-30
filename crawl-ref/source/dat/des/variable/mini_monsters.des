@@ -10018,7 +10018,7 @@ KMONS:   0 = centaur warrior / fire crab / \
 SUBST:   | = e
 : else
 :    if you.in_branch("Vaults") then
-MONS:    lindwurm, cyan ugly thing / polterguardian / formless jellyfish
+MONS:    lindwurm, crawling flesh cage / polterguardian / formless jellyfish
 MONS:    ironbound thunderhulk / deep elf annihilator w:5
 MONS:    hell knight w:2 / fire giant / yaktaur captain ; arbalest ego:flaming
 KMONS:   0 = vault guard / ironbound preserver / centaur warrior

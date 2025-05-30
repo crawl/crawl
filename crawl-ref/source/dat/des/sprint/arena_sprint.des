@@ -415,7 +415,8 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",
-                "ugly thing w:14 / w:1 very ugly thing / w:1 wretched star",
+                "ugly thing / crawling flesh cage w:4 /\
+                 very ugly thing w:1 / wretched star w:1",
                 "ogre mage / w:2 deep elf pyromancer / w:2 deep elf zephyrmancer / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
                 "cyclops / stone giant / w:5 frost giant / w:5 fire giant /\
@@ -483,7 +484,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva / angel / cherub / pearl dragon / ophan / apis w:2",
                 -- Misc
                 "kobold blastminer / yaktaur captain",
-                "very ugly thing",
+                "very ugly thing / crawling flesh cage w:4 / wretched star w:1",
                 "lich / w:5 ancient lich / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "fire dragon / ice dragon / storm dragon / shadow dragon /\

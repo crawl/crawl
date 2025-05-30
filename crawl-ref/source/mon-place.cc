@@ -1923,7 +1923,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
     { MONS_ARCANIST,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
-    }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
+    }},                            {{ BAND_CAGES, {1, 3}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
     { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6}, true }}}},
     { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
@@ -2173,6 +2173,7 @@ typedef vector<pair<monster_type, int>> member_possibilities;
 static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
+    { BAND_CAGES,               {{{MONS_CRAWLING_FLESH_CAGE, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
     { BAND_OGRES,               {{{MONS_OGRE, 1}}}},
     { BAND_WOLVES,              {{{MONS_WOLF, 1}}}},

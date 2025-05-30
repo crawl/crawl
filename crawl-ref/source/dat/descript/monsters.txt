@@ -986,6 +986,12 @@ A mechanical insect powered by an intricate array of gears and springs. It is
 vicious and resilient to damage, but its clockwork naturally winds down as it
 attacks, eventually leaving it unable to move until its creator winds it again.
 %%%%
+crawling flesh cage
+
+A modern breakthrough in arcane experimentation, this mobile prison cell
+weaponises the living fragments of once-escaped ugly things, extending the reach
+of their tendrils to thrash multiple foes at once from a distance.
+%%%%
 creeping inferno
 
 A formless mass of ancient fire, bound by heat and malevolence. It longs to

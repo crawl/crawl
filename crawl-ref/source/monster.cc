@@ -3535,6 +3535,7 @@ int monster::known_chaos(bool check_spells_god) const
 
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
+        || type == MONS_CRAWLING_FLESH_CAGE
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_MUTANT_BEAST

@@ -2258,6 +2258,8 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
         // Just show max damage: this number's only used for display.
         case AF_AIRSTRIKE:
             return pow(HD + 1, 1.2) * 12 / 6;
+        case AF_REACH_CLEAVE_UGLY:
+            return HD * 3;
         default:
             return 0;
     }
@@ -2277,6 +2279,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
         case AF_RIFT:
+        case AF_REACH_CLEAVE_UGLY:
             return true;
         default:
             return false;

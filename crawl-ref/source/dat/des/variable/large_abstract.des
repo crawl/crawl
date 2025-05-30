@@ -89,12 +89,13 @@ ENDMAP
 
 #############################################################################
 NAME:    vault_1
-TAGS:    depths_entry uniq_depths_entry chance_depths_entry
+TAGS:    depths_entry chance_depths_entry
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
 PLACE:   D:$
 WEIGHT:  2 (D:$), 10
 : if (you.where() == dgn.level_name(dgn.br_entrance("Depths"))) then
+TAGS:    uniq_depths_entry
 MONS:    shapeshifter, ugly thing, glowing shapeshifter
 MONS:    obsidian statue, 0 band / 9 band
 KITEM:   R = smoky gem

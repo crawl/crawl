@@ -1002,8 +1002,11 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                if (flavour_has_reach(attk.flavour))
+                if (_monster_has_reachcleave)
+                    monsterattacks += "(reach)(cleave)";
+                else if (flavour_has_reach(attk.flavour))
                     monsterattacks += "(reach)";
+
                 switch (attk.flavour)
                 {
                 case AF_SWOOP:
@@ -1078,6 +1081,10 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(
                         LIGHTRED, damage_flavour("strong poison", hd * 11 / 3,
                                                  hd * 13 / 2));
+                    break;
+                case AF_REACH_CLEAVE_UGLY:
+                    monsterattacks += colour(
+                        LIGHTBLUE, damage_flavour("ugly", hd, 3 * hd - 1));
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
