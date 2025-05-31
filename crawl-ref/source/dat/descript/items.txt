@@ -1006,6 +1006,11 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
+parchment
+
+A brief text on magic, perhaps excerpted from some larger work. It contains
+knowledge of one spell.
+%%%%
 partisan
 
 A long polearm with sharp protrusions on either side of the spearhead.

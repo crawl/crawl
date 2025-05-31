@@ -1062,6 +1062,9 @@ thick
 buckle
 bookmark
 thin
+# parchments
+%sdir item/book
+book_parchment BOOK_PARCHMENT
 
 #####################OBJ_STAVES
 %sdir item/staff

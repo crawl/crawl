@@ -6072,6 +6072,10 @@ static int _shop_num_items(const shop_spec &spec)
         return (int) spec.items.size();
     }
 
+    // "normal" book shop containing parchments
+    if (spec.sh_type == SHOP_BOOK)
+        return 8 + random2avg(8, 3);
+
     return 5 + random2avg(8, 3);
 }
 
@@ -6146,6 +6150,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS],
+                             int supplied[NUM_SPELLS],
                              shop_spec &spec, shop_struct &shop,
                              int shop_level)
 {
@@ -6188,8 +6193,17 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         // Try for a better selection for bookshops.
         if (item_index != NON_ITEM && shop_type_ == SHOP_BOOK)
         {
+            // Try hard to discard duplicate parchments
+            if (env.item[item_index].sub_type == BOOK_PARCHMENT)
+            {
+                if (supplied[env.item[item_index].plus] > 0 && !one_chance_in(5))
+                {
+                    env.item[item_index].clear();
+                    item_index = NON_ITEM; // try again
+                }
+            }
             // if this book type is already in the shop, maybe discard it
-            if (!one_chance_in(stocked[env.item[item_index].sub_type] + 1))
+            else if (!one_chance_in(stocked[env.item[item_index].sub_type] + 1))
             {
                 env.item[item_index].clear();
                 item_index = NON_ITEM; // try again
@@ -6208,10 +6222,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     item_def item = env.item[item_index];
 
-    // If this is a book, note it down in the stocked books array
+    // If this is a book or parchment, note it down in the appropriate array
     // (unless it's a randbook)
     if (shop_type_ == SHOP_BOOK && !is_artefact(item))
-        stocked[item.sub_type]++;
+    {
+        if (item.sub_type == BOOK_PARCHMENT)
+            supplied[item.plus]++;
+        else
+            stocked[item.sub_type]++;
+    }
 
     // Identify the item, unless we don't do that.
     if (shoptype_identifies_stock(shop_type_))
@@ -6272,10 +6291,13 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS] = { 0 };
+    // We want to do the same thing for parchments. Book stocking is retained
+    // because it could be relevant for special shops.
+    int supplied[NUM_SPELLS] = { 0 };
 
     shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-        _stock_shop_item(j, shop.type, stocked, spec, shop, shop_level);
+        _stock_shop_item(j, shop.type, stocked, supplied, spec, shop, shop_level);
 }
 
 object_class_type item_in_shop(shop_type shop_type)
