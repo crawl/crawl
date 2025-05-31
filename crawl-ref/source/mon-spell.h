@@ -1048,7 +1048,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GLOWING_ORANGE_BRAIN,
       {
-       { SPELL_BRAIN_BITE, 14, MON_SPELL_MAGICAL },
        { SPELL_CAUSE_FEAR, 14, MON_SPELL_MAGICAL },
        { SPELL_SHADOW_CREATURES, 14, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 14, MON_SPELL_MAGICAL },
