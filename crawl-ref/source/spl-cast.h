@@ -57,8 +57,7 @@ enum class spflag
     WL_check           = 0x08000000,      // spell that checks monster WL
     mons_abjure        = 0x10000000,      // monsters can cast abjuration
                                           // instead of this spell
-    not_evil           = 0x20000000,      // not considered evil by the
-                                          // good gods
+                     //  0x20000000,      // was spflag::not_evil
     holy               = 0x40000000,      // considered holy (can't be
                                           // used by Yred bound souls)
 };

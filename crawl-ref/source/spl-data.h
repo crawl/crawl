@@ -1304,9 +1304,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MINOR_HEALING, "Minor Healing",
-    spschool::necromancy,
+    spschool::none,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::utility | spflag::not_evil,
+        | spflag::utility,
     2,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1316,9 +1316,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MAJOR_HEALING, "Major Healing",
-    spschool::necromancy,
+    spschool::none,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::utility | spflag::not_evil,
+        | spflag::utility,
     6,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1328,9 +1328,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_WOODWEAL, "Woodweal",
-    spschool::necromancy,
+    spschool::none,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::utility | spflag::not_evil,
+        | spflag::utility,
     4,
     0,
     1, 1,
@@ -1907,10 +1907,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
-    spschool::necromancy,
+    spschool::none,
     spflag::dir_or_target | spflag::not_self | spflag::helpful
-        | spflag::needs_tracer | spflag::utility | spflag::not_evil
-        | spflag::monster,
+        | spflag::needs_tracer | spflag::utility | spflag::monster,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3796,7 +3795,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_REGENERATE_OTHER, "Regenerate Other",
-    spschool::necromancy,
+    spschool::none,
     spflag::monster | spflag::not_self | spflag::helpful,
     4,
     0,
@@ -3807,7 +3806,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MASS_REGENERATION, "Mass Regeneration",
-    spschool::necromancy,
+    spschool::none,
     spflag::monster  | spflag::helpful,
     7,
     0,

@@ -2220,9 +2220,9 @@ static const mon_spellbook mspell_list[] =
     // ('5') Lesser demons.
     {  MST_GRINDER,
       {
-       { SPELL_PAIN, 19, MON_SPELL_MAGICAL },
-       { SPELL_PARALYSE, 19, MON_SPELL_MAGICAL },
-       { SPELL_BLINK, 19, MON_SPELL_MAGICAL },
+       { SPELL_PAIN, 17, MON_SPELL_MAGICAL },
+       { SPELL_PARALYSE, 17, MON_SPELL_MAGICAL },
+       { SPELL_BLINK, 21, MON_SPELL_MAGICAL },
       }
     },
 

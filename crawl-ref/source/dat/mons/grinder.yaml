@@ -7,7 +7,7 @@ species: shadow_imp
 holiness: [demonic]
 will: 20
 attacks:
- - {type: hit, flavour: pain, damage: 11}
+ - {type: hit, flavour: pain, damage: 5}
 hd: 6
 hp_10x: 390
 ac: 3

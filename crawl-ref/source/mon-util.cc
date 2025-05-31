@@ -2203,6 +2203,7 @@ bool flavour_triggers_damageless(attack_flavour flavour)
 {
     return flavour == AF_CRUSH
         || flavour == AF_ENGULF
+        || flavour == AF_PAIN
         || flavour == AF_PURE_FIRE
         || flavour == AF_AIRSTRIKE
         || flavour == AF_SHADOWSTAB

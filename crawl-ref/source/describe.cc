@@ -5185,7 +5185,7 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
             brand_dam = dam * 0.75;
             break;
         case SPWPN_PAIN:
-            brand_dam = mi.has_necromancy_spell() ? mi.hd : mi.hd / 2;
+            brand_dam = mi.has_necromancy_spell() ? mi.hd * 2 : mi.hd / 2;
             break;
         case SPWPN_VENOM:
         case SPWPN_ANTIMAGIC:
@@ -5367,7 +5367,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     // Display the max damage from the attack (including any weapon)
     // and additionally display max brand damage separately
 
-    const int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
+    int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
     int dam = attack.damage;
     int slaying = _monster_slaying(mi);
@@ -5376,6 +5376,8 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
         dam = flav_dam;
     else if (attack.flavour == AF_CRUSH)
         dam = 0;
+    else if (attack.flavour == AF_PAIN)
+        flav_dam = (mi.props.exists(NECROMANCER_KEY)) ? mi.hd * 2 : mi.hd/ 2;
     else if (wpn)
     {
         // From attack::calc_damage
