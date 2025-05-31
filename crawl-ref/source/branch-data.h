@@ -163,7 +163,7 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, branch_noise::normal, 10,
-      {BRANCH_VAULTS, BRANCH_SLIME } },
+      {BRANCH_DUNGEON, BRANCH_VAULTS, BRANCH_SLIME } },
 #endif
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,

@@ -15,6 +15,7 @@
 #include "branch.h"
 #include "command.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "env.h"
 #include "feature.h"
 #include "files.h"
@@ -363,6 +364,8 @@ static string _get_unseen_branches()
     char buffer[100];
     string disp;
 
+    const bool descent = crawl_state.game_is_descent();
+
     for (branch_iterator it; it; ++it)
     {
         if (it->id < BRANCH_FIRST_NON_DUNGEON)
@@ -384,27 +387,19 @@ static string _get_unseen_branches()
             // Root branches.
             if (parent == NUM_BRANCHES)
                 continue;
-            level_id lid(parent, 0);
-            lid = find_deepest_explored(lid);
-            if (lid.depth >= it->mindepth)
+
+            if (descent)
             {
-                if (it->mindepth != it->maxdepth)
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d-%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth,
-                            it->maxdepth);
-                }
-                else
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth);
-                }
+                if (!in_descent_parent(branch))
+                    continue;
+
+                bool in_dungeon = you.where_are_you == BRANCH_DUNGEON;
+
+                snprintf(buffer, sizeof buffer,
+                    "<darkgrey>%6s: %s:%d</darkgrey>",
+                    it->abbrevname,
+                    branches[you.where_are_you].abbrevname,
+                    in_dungeon ? 12 : branches[you.where_are_you].numlevels);
 
                 disp += buffer;
                 num_printed_branches++;
@@ -413,6 +408,40 @@ static string _get_unseen_branches()
                         ? "\n"
                         // Each branch entry takes up 20 spaces
                         : string(20 + 21 - strlen(buffer), ' ');
+            }
+            else
+            {
+                level_id lid(parent, 0);
+                lid = find_deepest_explored(lid);
+                if (lid.depth >= it->mindepth)
+                {
+                    if (it->mindepth != it->maxdepth)
+                    {
+                        snprintf(buffer, sizeof buffer,
+                            "<darkgrey>%6s: %s:%d-%d</darkgrey>",
+                                it->abbrevname,
+                                branches[parent].abbrevname,
+                                it->mindepth,
+                                it->maxdepth);
+                    }
+                    else
+                    {
+                        snprintf(buffer, sizeof buffer,
+                            "<darkgrey>%6s: %s:%d</darkgrey>",
+                                it->abbrevname,
+                                branches[parent].abbrevname,
+                                it->mindepth);
+                    }
+
+                    disp += buffer;
+                    num_printed_branches++;
+
+                    disp += (num_printed_branches % 4) == 0
+                            ? "\n"
+                            // Each branch entry takes up 20 spaces
+                            : string(20 + 21 - strlen(buffer), ' ');
+                }
+
             }
         }
     }
