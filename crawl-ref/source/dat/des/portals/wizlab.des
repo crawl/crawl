@@ -1737,10 +1737,10 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
                  "torpor snail perm_ench:glowing_shapeshifter w:25 / " ..
                  "soul eater / shadow demon / eidolon / " ..
                  "shadow wraith / emperor scorpion zombie / death drake / " ..
-                 "base draconian w:5 / spark wasp / glowing orange brain"
+                 "cognitogaunt w:15 / spark wasp / glowing orange brain"
  local hightier = "starcursed mass w:20 / apocalypse crab w:40 / " ..
                   "tentacled monstrosity w:20 / executioner w:15 /" ..
-                  "cacodemon / hellion w:5 / tormentor w:5 /  " ..
+                  "hellion w:5 / tormentor w:5 /  " ..
                   "lich / profane servitor / balrug w:20 / " ..
                   "blizzard demon w:20 / hellephant / " ..
                   "draconian shifter w:15 / demonspawn corrupter w:5"
@@ -1911,13 +1911,13 @@ ENDMAP
 NAME:       wizlab_lehudib
 KPROP:      ` = no_tele_into
 KMONS:      LM = demonic plant
-MONS:       w:15 tentacled starspawn / stone giant / eye of devastation
-MONS:       w:20 glowing orange brain / w:12 great orb of eyes / w:5 neqoxec \
-            / w:3 golden eye band
+MONS:       tentacled starspawn w:15 / stone giant / eye of devastation
+MONS:       glowing orange brain w:20 / great orb of eyes w:12 / neqoxec w:5 / \
+            golden eye band w:3
 MONS:       starcursed mass / brown very ugly thing band
-MONS:       cacodemon
-MONS:       quicksilver dragon / war gargoyle / crystal guardian \
-            / wretched star
+MONS:       cognitogaunt
+MONS:       quicksilver dragon / war gargoyle / crystal guardian / \
+            wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
                 spells:brain_bite.24.magical;draining_gaze.24.magical;\
                        lehudib's_crystal_spear.24.magical;\
@@ -1956,7 +1956,7 @@ set_random_mon_list("eye of devastation / stone giant " ..
                     "/ tentacled starspawn / glowing orange brain " ..
                     "/ great orb of eyes / neqoxec w:5 / golden eye w:5 " ..
                     "/ very ugly thing w:5 / starcursed mass w:5 " ..
-                    "/ cacodemon w:1 / quicksilver dragon w:1 " ..
+                    "/ cognitogaunt w:1 / quicksilver dragon w:1 " ..
                     "/ war gargoyle w:1 / crystal guardian w:1 " ..
                     "/ wretched star w:1")
 }}

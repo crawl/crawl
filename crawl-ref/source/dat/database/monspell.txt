@@ -685,6 +685,10 @@ Battlecry cherub cast
 
 @The_monster@ sings a powerful hymn!
 %%%%
+cognitogaunt cast
+
+@The_monster@ glimmers violently.
+%%%%
 crystal echidna cast targeted
 
 @The_monster@ flicks its quills @at@ @target@.

@@ -6057,7 +6057,7 @@ TAGS:   transparent no_monster_gen
 ORIENT: float
 DEPTH:  D:13-, Zot
 : if you.in_branch("D") then
-KMONS:  1 = salamander mystic
+KMONS:  1 = salamander mystic / cognitogaunt w:1
 KMONS:  2 = sun demon
 KMONS:  3 = salamander / large abomination w:5
 KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
@@ -6068,7 +6068,7 @@ KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
             any weapon ego:draining
 : else
 KMONS:  1 = orb of fire
-KMONS:  2 = sun moth / balrug w:5
+KMONS:  2 = sun moth / balrug w:4 / cognitogaunt w:1
 KMONS:  3 = draconian scorcher / draconian monk w:5
 KITEM:  1 = manual of fire magic / manual of necromancy, \
             randbook disc:fire disc2:necromancy spells:starburst \

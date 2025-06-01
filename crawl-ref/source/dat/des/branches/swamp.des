@@ -3333,8 +3333,7 @@ NAME:    swamp_vile
 TAGS:    no_pool_fixup no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southeast
-MONS:    bog body / ugly thing / small abomination w:2
-MONS:    shadowghast / orange demon w:2
+MONS:    bog body / ugly thing / small abomination w:2, cognitogaunt
 MONS:    large abomination / very ugly thing / thrashing horror w:6
 MONS:    green death, sin beast band, great orb of eyes
 MONS:    shadow demon / titanic slime creature
@@ -3347,7 +3346,7 @@ KFEAT:   T = demonic_tree
 SHUFFLE: yz, '"
 SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
-NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 7:1 / 3:. / *:2
+NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 2:2 / 2:211 / 6:1 / *:.
 NSUBST:  5 = 1:5 / 1:6 / * = 56, 9 = 1:9 / * = 3
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
@@ -3359,7 +3358,7 @@ MAP
   'XWXWx''"zyW.xct
    WXWx"wwwyzwxWcct
   XXWx3x1wwzyw.x.xct
- txWx"x2wwwyzwx00.cctt
+ txWx"xWwwwyzwx00.cctt
  xt"'w1w28wzywx30xWcctt
  ct"'www88wyxwcxx.xWxttt
   x'"wwwww.cXWwwwwWwWcttt

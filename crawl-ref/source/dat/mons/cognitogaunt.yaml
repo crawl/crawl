@@ -1,0 +1,20 @@
+name: "cognitogaunt"
+glyph: {char: "n", colour: magenta}
+flags: [see_invis, no_zombie, speaks]
+resists: {cold: 1}
+exp: 963
+holiness: [undead]
+will: 80
+attacks:
+ - {type: claw, flavour: confuse, damage: 28}
+ - {type: touch, flavour: pain, damage: 22}
+hd: 14
+hp_10x: 780
+ac: 6
+ev: 16
+has_corpse: true
+intelligence: human
+uses: open_doors
+size: small
+shape: humanoid
+spells: cognitogaunt

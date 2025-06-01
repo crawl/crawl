@@ -1038,11 +1038,10 @@ static void _inc_gift_timeout(int val)
 }
 
 // These are sorted in order of power.
-// monsters here come from genera: n, z, V and W
-// - Vampire mages are excluded because they worship scholarly Kiku
-// - M genus is all Kiku's domain
-// - Curse *, putrid mouths, and bloated husks left out as they might
-//   do too much collateral damage
+// monsters here mostly come from the glyphs: n, z, V and W
+// - Vampire mages / bloodprinces / mummies are Kiku's scholarly / curse domain
+// - Curse foo, putrid mouths, bloated husks all cause too much collateral damage
+// - Whatever dead stars made cognitogaunts are out of Yred's grasp
 static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
   { -2,  5,   80, PEAK, MONS_NECROPHAGE },

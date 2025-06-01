@@ -980,6 +980,12 @@ one of an ox, one of a lion, one of an eagle. It is one of the angelic beings
 who stand before the good gods, singing eternal hymns of praise to their glory
 and greatness.
 %%%%
+cognitogaunt
+
+A wizened, headless corpse, animated not by conventional necromancy but by the
+mournful malice of dead stars. Its psychic eyes, floating disjointedly from its
+body's movements, relentlessly burrow through its victims' minds.
+%%%%
 clockwork bee
 
 A mechanical insect powered by an intricate array of gears and springs. It is

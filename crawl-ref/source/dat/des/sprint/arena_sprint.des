@@ -366,7 +366,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "rime drake w:5 / swamp drake / swamp dragon /\
                     acid dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     fire dragon w:5 / ice dragon w:5 / storm dragon w:1",
-                "ghoul / bog body w:20",
+                "ghoul / bog body w:15 / cognitogaunt w:5",
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec", "obsidian bat",
@@ -510,7 +510,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "curse toe / w:20 wandering mushroom / w:4 murray",
                 "reaper / sin beast / geryon w:1",
                 "mana viper / spriggan berserker ; war axe ego:antimagic . animal skin /\
-                   w:20 void ooze / ghost moth",
+                 void ooze w:15 / cognitogaunt w:5 / ghost moth",
                 "glass eye w:5 / ettin",
                 "executioner / w:1 ignacio",
                 "ghost moth / moth of wrath / w:30 vampire mosquito"
@@ -578,7 +578,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "unseen horror / shadow wraith / ghost moth",
                 "reaper / sin beast / geryon w:1",
                 "spriggan berserker ; war axe ego:antimagic . animal skin /\
-                   w:20 void ooze / ghost moth / w:5 demonspawn warmonger",
+                 void ooze / cognitogaunt w:5 / ghost moth /\
+                 demonspawn warmonger w:5",
                 "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 "ghost moth / moth of wrath / sun moth",
@@ -654,7 +655,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "guardian sphinx / walking divine tome", "tormentor",
                 "unseen horror / shadow wraith / ghost moth w:15",
                 "reaper / sin beast / geryon w:1",
-                "ghost moth / void ooze / demonspawn warmonger",
+                "ghost moth / cognitogaunt / demonspawn warmonger",
                 "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!

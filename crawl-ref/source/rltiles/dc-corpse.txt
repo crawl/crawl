@@ -198,6 +198,8 @@ eleionoma CORPSE_ELEIONOMA
 bog_body CORPSE_BOG_BODY
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
+# maybe this should be customized, to avoid showing the psychic eyes?
+cognitogaunt CORPSE_COGNITOGAUNT
 
 ## Orcs ('o')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4

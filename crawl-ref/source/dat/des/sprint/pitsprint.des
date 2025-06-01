@@ -64,7 +64,7 @@ function base_monster_setup(e)
                merfolk aquamancer w:5 / boulder beetle / pharaoh ant /\
                radroach w:5 / jorogumo w:5 / broodmother w:5 / sun moth w:5 /\
                entropy weaver / eye of devastation / place:Crypt:1 zombie /\
-               place:Crypt:1 skeleton / large abomination /\
+               place:Crypt:1 skeleton / large abomination / cognitogaunt /\
                anaconda simulacrum / alligator simulacrum / death knight /\
                eidolon / flayed ghost / phantasmal warrior / vampire knight /\
                vampire mage / starcursed mass / demonic crawler / neqoxec /\
@@ -144,7 +144,7 @@ function base_monster_setup(e)
                Antaeus / Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
                the Serpent of Hell")
   -- These just get occasional placements regardless of tiering for some of
-  -- the later vaults, to... reduce Lair branch gimmickry or something.
+  -- the later vaults, to... reduce Lair branch gimmickry or something?
   e.kmons("M = stone giant / frost giant / fire giant / iron troll")
   e.kmons("N = titan / frost giant / fire giant / ettin /\
                juggernaut / iron giant w:5 / protean progenitor w:5")
@@ -158,7 +158,7 @@ function base_monster_setup(e)
                deep elf elementalist / deep elf master archer / deep elf blademaster")
   e.kmons("Q = place:Crypt:1 skeleton / place:Crypt:1 zombie / skeletal warrior band /\
                ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
-               guardian mummy / mummy priest w:5")
+               cognitogaunt / guardian mummy / mummy priest w:5")
   e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
                ghoul band / searing wretch w:3 / vampire knight band /\
                vampire mage band / revenant soulmonger / ancient champion")
@@ -2117,7 +2117,7 @@ TAGS:   the_golden_pit unrand
 KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = iron giant
 # Honestly, the non-giant ones are awful. Suffer.
-KMONS:  b = ushabti w:5 / place:Crypt:$ zombie w:20 /\
+KMONS:  b = ushabti w:5 / cognitogaunt w:5 / place:Crypt:$ zombie w:20 /\
             place:Crypt:$ skeleton w:20 / place:Crypt:$ simulacrum w:20 /\
             lich / ancient lich w:5 / revenant soulmonger w:5 / vampire knight /\
             vampire bloodprince w:5 / bone dragon / ghoul /\

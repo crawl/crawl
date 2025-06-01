@@ -468,7 +468,7 @@ ENDMAP
 ##############################################################################
 
 NAME:    nicolae_crypt_ancient_font
-TAGS:    transparent extra
+TAGS:    transparent extra decor
 DEPTH:   Crypt
 SHUFFLE: HIJ
 NSUBST:  A = @ / ., B = @ / ., C = @ / ., D = @ / .
@@ -1287,12 +1287,14 @@ ENDMAP
 
 ##############################################################################
 # tombs in the wall
-NAME:  tombwall_bobbens
-TAGS:  transparent
-DEPTH: Crypt
-MONS:  zombie w:150 / skeleton w:150 / skeletal warrior / ghoul / \
-       large abomination / small abomination / \
-       skeleton w:150 / patrolling burial acolyte w:40
+NAME:   tombwall_bobbens
+TAGS:   transparent
+DEPTH:  Crypt
+MONS:   zombie w:160 / skeleton w:100 / skeletal warrior w:20 / \
+        large abomination / patrolling burial acolyte w:40
+KMONS:  2 = cognitogaunt / ghoul
+KITEM:  2 = *, *
+NSUBST: 1 = 1:2 / *:1
 KFEAT: _ = altar_kikubaaqudgha
 MAP
 ccccccccccccccccccccccc
@@ -2485,7 +2487,7 @@ KMONS:   d! = shadow wraith / freezing wraith / flayed ghost / eidolon / \
               nothing w:40
 KMONS:   pq = vampire knight
 KMONS:   rs = vampire mage
-KMONS:   z = ghoul
+KMONS:   z = ghoul / cognitogaunt w:2
 KMONS:   R = vampire / jiangshi / ghoul
 KMONS:   L = lich / ancient lich w:5 / dread lich w:5
 KMONS:   Y = vampire bloodprince
@@ -2652,7 +2654,7 @@ PLACE:  Crypt:$
 ORIENT: encompass
 MONS:   zombie / skeleton / bog body w:5
 MONS:   storm dragon zombie / caustic shrike zombie / \
-        golden dragon zombie / jiangshi w:5 / ghoul
+        golden dragon zombie / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
 MONS:   skeletal warrior, necromancer, hell knight
 MONS:   lich, vampire knight / ancient champion w:2
 KMONS:  8 = bone dragon
@@ -2846,7 +2848,7 @@ NSUBST: JK = 1:I / 1:J / *:K, L = 1:IJ / 2:K / *:L
 KMONS:  P = patrolling curse skull
 : if crawl.coinflip() then
 KMONS:  Q = bone dragon
-KMONS:  R = skeletal warrior
+KMONS:  R = skeletal warrior / cognitogaunt w:3
 KMONS:  S = zombie / skeleton
 : else
 KMONS:  Q = eidolon
@@ -2856,11 +2858,11 @@ KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
 KMONS:  z = ghost crab / fire dragon skeleton / laughing skull w:20
-KMONS:  Z = w:1 curse skull / w:19 revenant soulmonger
+KMONS:  Z = curse skull w:1 / revenant soulmonger w:19
 SUBST:  ~ = m
 : else
-KMONS:  z = w:20 hell knight / smoke demon / laughing skull
-KMONS:  Z = w:1 curse skull / w:19 balrug
+KMONS:  z = hell knight w:20 / smoke demon / laughing skull
+KMONS:  Z = curse skull w:1 / balrug w:19
 KFEAT:  ~ = crystal_wall
 TILE:   ~ = bedevilled_crystal_gehenna
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
@@ -3219,7 +3221,7 @@ ORIENT:  encompass
 MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
 SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 
-KMONS:   3 = ghoul
+KMONS:   3 = cognitogaunt
 KMONS:   4 = bog body
 KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
@@ -3336,7 +3338,8 @@ NAME:    lightli_unholy_cathedral
 TAGS:    no_monster_gen layout_city
 PLACE:   Crypt:$
 ORIENT:  north
-MONS:    ancient champion, lich / revenant soulmonger, jiangshi / ghoul w:2
+MONS:    ancient champion, lich / revenant soulmonger / cognitogaunt w:5
+MONS:    jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / vampire bloodprince / \
          curse toe w:5 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5

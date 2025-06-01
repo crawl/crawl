@@ -7706,6 +7706,47 @@ VISUAL:@The_monster@ rams the @surface@ with @possessive@ head heavily.
 
 @The_monster@ snuffles in challenge.
 %%%%
+################## Cognitogaunt ############################
+# Any new lines shouldn't actually try to transcribe their speech.
+cognitogaunt
+
+VISUAL:@The_monster@ shines with the incandescence of long-dead nights.
+
+w:20
+@The_monster@ grumbles constantly over the stars not yet being right.
+
+@The_monster@ mumbles about the follies of mortal constellations.
+
+@The_monster@ mutters ill rumours of the current state of the heavens.
+
+@The_monster@ muses over how flesh is wasted on mortals.
+
+@The_monster@ marvels to itself over the thinness of mortal minds.
+
+@The_monster@ mocks the topics of the next astral concord.
+
+w:1
+@The_monster@ writhes with frustration over not yet finding solutions for supernovas.
+
+@The_monster@ growls that the stars belong to nobody but the stars.
+
+@The_monster@ gripes about being made of rot and starlight.
+
+# Douglas Adams
+@The_monster@ grouses that life is wasted on the living.
+%%%%
+silenced cognitogaunt
+
+VISUAL:@The_monster@ shines with the incandescence of long-dead nights.
+%%%%
+friendly cognitogaunt
+
+@cognitogaunt@
+%%%%
+confused cognitogaunt
+
+__NONE
+%%%%
 ################## Crystal guardian ###########################
 crystal guardian
 

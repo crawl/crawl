@@ -395,6 +395,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_COGNITOGAUNT,
+      {
+       { SPELL_BRAIN_BITE, 64, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('o') Orcs.
     {  MST_ORC_PRIEST,
       {

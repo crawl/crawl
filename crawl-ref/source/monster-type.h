@@ -791,6 +791,7 @@ enum monster_type                      // env.mons[].type
     MONS_FLAMING_CORPSE,
 #else
     MONS_BLOATED_HUSK,
+    MONS_COGNITOGAUNT,
     MONS_MARROWCUDA,
 #endif
     MONS_MUMMY,
@@ -1348,6 +1349,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_MECHANIST,
     MONS_SPROZZ,
     MONS_CRAWLING_FLESH_CAGE,
+    MONS_COGNITOGAUNT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

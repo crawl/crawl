@@ -460,8 +460,8 @@ local rnd = crawl.random2(142)
   elseif rnd < 34 then
     e.kmons("1 = place:Crypt:$ zombie / place:Crypt:$ skeleton /\
                  skeletal warrior / ancient champion w:7 /\
-                 laughing skull / vampire mage w:5 /\
-                 vampire knight / lich w:5 / ancient lich w:2 / shadowghast /\
+                 laughing skull w:13 / vampire mage w:5 / vampire knight /\
+                 lich w:5 / ancient lich w:2 / cognitogaunt w:5 /\
                  necromancer / vampire bloodprince")
 -- Abyss
   elseif rnd < 42 then
