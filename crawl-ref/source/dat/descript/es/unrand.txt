@@ -1,4 +1,21 @@
 %%%%
+# TAG_MAJOR_VERSION == 34
+dagger "Morg"
+
+Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
+pero se perdío cuando buscando el Orbe.
+%%%%
+gauntlets of War
+
+Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de 
+Okwaru a un caudillo militar poderoso. Su dueño morirá en batalla, ¡pero que una 
+muerte será!
+%%%%
+giant club "Skullcrusher"
+
+Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
+cualquiera que tiene la fuerza para empuñarlo.
+%%%%
 Singing Sword
 
 Una espada encantada que le encanta cantar a su manipulador, le gusta o no.
@@ -19,24 +36,14 @@ Maxwell's patent armour
 
 Una armadura de aspecto extraño.
 %%%%
+robe of Night
+
+Una toga negra y larga hecho de un material raro y lusturoso. Envuelve el que lo 
+lleva en oscuro, reduciendo la visión. Según leyenda fue un regalo de Ratri la 
+Diosa de la Noche a uno de sus discípulos.
+%%%%
 Sword of Power
 
 Una espada potente que da fuerza a los poderosos y debilidad a los tímidos.
 %%%%
-# TAG_MAJOR_VERSION == 34
-dagger "Morg"
 
-Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
-pero se perdío cuando buscando el Orbe.
-%%%%
-gauntlets of War
-
-Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de 
-Okwaru a un caudillo militar poderoso. Su dueño morirá en batalla, ¡pero que una 
-muerte será!
-%%%%
-giant club "Skullcrusher"
-
-Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
-cualquiera que tiene la fuerza para empuñarlo.
-%%%%
