@@ -16,6 +16,7 @@ enum bane_type
     BANE_DILETTANTE,
     BANE_PARADOX,
     BANE_WARDING,
+    BANE_HUNTED,
 
     NUM_BANES,
 };

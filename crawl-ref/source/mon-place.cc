@@ -1317,6 +1317,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                 static_cast<spell_type>(mg.summon_type));
             }
         }
+
+        if (mon->attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
+            mon->add_ench(mon_enchant(ENCH_HAUNTING, 0, &you, INFINITE_DURATION));
     }
 
     // Perm summons shouldn't leave gear either.

@@ -95,4 +95,11 @@ static const bane_def bane_data[] =
         "Warding",
         "Enemies you encounter may be immune to damage from range.",
     },
+
+    {
+        BANE_HUNTED,
+        BANE_DUR_LONG,
+        "the Hunted",
+        "When enemies are summoned, they will appear beside you instead.",
+    },
 };

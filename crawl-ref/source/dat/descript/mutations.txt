@@ -1416,3 +1416,9 @@ warding bane
 Groups of enemies you encounter may have Warding, preventing all damage they
 would take from any source which is not currently adjacent to them (including
 clouds, if their creator is currently non-adjacent).
+%%%%
+hunted bane
+
+Whenever an enemy summons monsters against you, they will usually appear
+adjacent to you instead of their summoner. Their duration is also increased and
+they will never lose track of your position, no matter where you flee.
