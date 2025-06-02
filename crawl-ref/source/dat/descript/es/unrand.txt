@@ -30,7 +30,7 @@ Una armadura de aspecto extraño.
 %%%%
 robe of Night
 
-Una toga negra y larga hecho de un material raro y lusturoso. Envuelve el que lo 
+Una toga negra y larga hecha de un material raro y lusturoso. Envuelve el que lo 
 lleva en oscuro, reduciendo la visión. Según leyenda fue un regalo de Ratri la 
 Diosa de la Noche a uno de sus discípulos.
 %%%%
