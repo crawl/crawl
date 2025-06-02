@@ -29,6 +29,12 @@ dagger "Morg"
 Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
 pero se perdío cuando buscando el Orbe.
 %%%%
+gauntlets of War
+
+Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de 
+Okwaru a un caudillo militar poderoso. Su dueño morirá en batalla, ¡pero que una 
+muerte será!
+%%%%
 giant club "Skullcrusher"
 
 Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
