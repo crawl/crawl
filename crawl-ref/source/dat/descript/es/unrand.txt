@@ -1,4 +1,9 @@
 %%%%
+amulet of the Four Winds
+
+Un dije del jade más fino. Da el que lo lleva fuerza de voluntad y fortaleza mental
+sin igual.
+%%%%
 # TAG_MAJOR_VERSION == 34
 dagger "Morg"
 
