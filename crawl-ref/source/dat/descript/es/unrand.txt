@@ -23,6 +23,12 @@ Sword of Power
 
 Una espada potente que da fuerza a los poderosos y debilidad a los tímidos.
 %%%%
+# TAG_MAJOR_VERSION == 34
+dagger "Morg"
+
+Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
+pero se perdío cuando buscando el Orbe.
+
 giant club "Skullcrusher"
 
 Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
