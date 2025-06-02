@@ -28,7 +28,7 @@ dagger "Morg"
 
 Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
 pero se perdío cuando buscando el Orbe.
-
+%%%%
 giant club "Skullcrusher"
 
 Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
