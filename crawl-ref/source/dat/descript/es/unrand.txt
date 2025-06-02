@@ -5,6 +5,10 @@ dagger "Morg"
 Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
 pero se perdío cuando buscando el Orbe.
 %%%%
+fencer's gloves
+
+Un par de guantes hechos de seda blanca.
+%%%%
 gauntlets of War
 
 Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de 
@@ -15,18 +19,6 @@ giant club "Skullcrusher"
 
 Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
 cualquiera que tiene la fuerza para empuñarlo.
-%%%%
-Singing Sword
-
-Una espada encantada que le encanta cantar a su manipulador, le gusta o no.
-%%%%
-Sulking Sword
-
-<Singing Sword>
-%%%%
-Screaming Sword
-
-<Singing Sword>
 %%%%
 Mace of Variability
 
@@ -41,6 +33,18 @@ robe of Night
 Una toga negra y larga hecho de un material raro y lusturoso. Envuelve el que lo 
 lleva en oscuro, reduciendo la visión. Según leyenda fue un regalo de Ratri la 
 Diosa de la Noche a uno de sus discípulos.
+%%%%
+Singing Sword
+
+Una espada encantada que le encanta cantar a su manipulador, le gusta o no.
+%%%%
+Sulking Sword
+
+<Singing Sword>
+%%%%
+Screaming Sword
+
+<Singing Sword>
 %%%%
 Sword of Power
 
