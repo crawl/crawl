@@ -256,6 +256,8 @@ enum monster_info_flags
     MB_CLOCKWORK_BEE_CAST,
     MB_FIGMENT,
     MB_PARADOX,
+    MB_WARDING,
+    MB_PLAYER_DAMAGE_IMMUNE,    // Currently immune to damage from the player for any reason
     NUM_MB_FLAGS
 };
 

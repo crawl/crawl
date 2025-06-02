@@ -151,6 +151,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CLOCKWORK_BEE_CAST, MB_CLOCKWORK_BEE_CAST },
     { ENCH_FIGMENT,         MB_FIGMENT },
     { ENCH_PARADOX_TOUCHED, MB_PARADOX },
+    { ENCH_WARDING,         MB_WARDING },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -868,6 +869,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
         mb.set(MB_HATCHING);
+
+    if (m->damage_immune(&you))
+        mb.set(MB_PLAYER_DAMAGE_IMMUNE);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)

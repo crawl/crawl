@@ -14,6 +14,7 @@
 #include <cstring>
 #include <sstream>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "ability.h"
 #include "areas.h"
@@ -3513,5 +3514,17 @@ void maybe_apply_bane_to_monster(monster& mons)
     {
         simple_monster_message(mons, " is touched by paradox!");
         mons.add_ench(mon_enchant(ENCH_PARADOX_TOUCHED, 0, nullptr, INFINITE_DURATION));
+    }
+
+    // Give this one out to entire groups at once, since it does surprisingly
+    // little to be given to just one monster in an entire group, on average.
+    if (you.has_bane(BANE_WARDING) && one_chance_in(5))
+    {
+        mons.add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+        for (monster_near_iterator mi(mons.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!testbits(mi->flags, MF_SEEN))
+                mi->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+        }
     }
 }

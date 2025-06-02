@@ -1410,3 +1410,9 @@ paradox bane
 Whenever you first spot a monster, it has a chance to become Touched by Paradox,
 giving it the ability to use Manifold Assault as a natural ability (and a small
 chance to blink randomly after doing so).
+%%%%
+warding bane
+
+Groups of enemies you encounter may have Warding, preventing all damage they
+would take from any source which is not currently adjacent to them (including
+clouds, if their creator is currently non-adjacent).

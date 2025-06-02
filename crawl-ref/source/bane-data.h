@@ -88,4 +88,11 @@ static const bane_def bane_data[] =
         "Paradox",
         "Enemies you spot sometimes become touched by paradox.",
     },
+
+    {
+        BANE_WARDING,
+        BANE_DUR_SHORT,
+        "Warding",
+        "Enemies you encounter may be immune to damage from range.",
+    },
 };

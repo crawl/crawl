@@ -1042,6 +1042,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_WARDING:
+        if (!quiet && you.can_see(*this))
+            mprf("The ward upon %s fades away.", name(DESC_THE).c_str());
+        break;
+
     default:
         break;
     }
@@ -1463,6 +1468,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SPELL_CHARGED:
     case ENCH_PHALANX_BARRIER:
     case ENCH_PARADOX_TOUCHED:
+    case ENCH_WARDING:
         decay_enchantment(en);
         break;
 
@@ -2240,7 +2246,7 @@ static const char *enchant_names[] =
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
-    "phalanx barrier", "figment", "paradox-touched",
+    "phalanx barrier", "figment", "paradox-touched", "warding",
     "buggy", // NUM_ENCHANTMENTS
 };
 

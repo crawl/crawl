@@ -15,6 +15,7 @@ enum bane_type
     BANE_MULTIPLICITY,
     BANE_DILETTANTE,
     BANE_PARADOX,
+    BANE_WARDING,
 
     NUM_BANES,
 };

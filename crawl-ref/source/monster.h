@@ -406,6 +406,7 @@ public:
 
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
+    bool damage_immune(const actor* source = nullptr) const;
 
     bool airborne() const override;
     bool is_banished() const override;

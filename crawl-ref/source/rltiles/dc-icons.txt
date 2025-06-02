@@ -113,6 +113,7 @@ pyrrhic PYRRHIC
 magnetised MAGNETISED
 figment FIGMENT
 paradox PARADOX
+warding WARDING
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

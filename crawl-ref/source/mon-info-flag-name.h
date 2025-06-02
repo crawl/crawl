@@ -161,4 +161,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOCKWORK_BEE_CAST, "bee", "winding a clockwork bee", "bee"},
     { MB_FIGMENT, "figment", "feeble figment", "figment"},
     { MB_PARADOX, "paradox", "touched by paradox", "paradox"},
+    { MB_WARDING, "warded", "damage-immune at range", "warded"},
 };

@@ -4275,6 +4275,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         return 0;
     }
 
+    if (damage_immune(agent))
+    {
+        simple_monster_message(*this, " is warded from harm.");
+        return 0;
+    }
+
     if (alive())
     {
         if (amount != INSTANT_DEATH)
@@ -6414,6 +6420,14 @@ bool monster::cloud_immune(bool items) const
     // Cloud Mage is also checked for in (so stay in sync with)
     // monster_info::monster_info(monster_type, monster_type).
     return type == MONS_CLOUD_MAGE || actor::cloud_immune(items);
+}
+
+bool monster::damage_immune(const actor* source) const
+{
+    if (has_ench(ENCH_WARDING) && source && !adjacent(source->pos(), pos()))
+        return true;
+
+    return false;
 }
 
 bool monster::is_illusion() const
