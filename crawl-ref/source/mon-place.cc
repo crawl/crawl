@@ -3143,6 +3143,7 @@ monster_type random_demon_by_tier(int tier)
                              MONS_WHITE_IMP,
                              MONS_UFETUBUS,
                              MONS_IRON_IMP,
+                             MONS_DRUDE,
                              MONS_SHADOW_IMP);
     case 4:
         return random_choose(MONS_ICE_DEVIL,
@@ -3467,11 +3468,12 @@ static const vector<pop_entry> band_weights[] =
 
 // APOSTLE_BAND_DEMONS,
 {
-    {0, 25, 100, FALL, MONS_CRIMSON_IMP},
-    {0, 25, 100, FALL, MONS_WHITE_IMP},
-    {0, 25, 100, FALL, MONS_UFETUBUS},
-    {0, 25, 100, FALL, MONS_IRON_IMP},
-    {0, 25, 100, FALL, MONS_SHADOW_IMP},
+    {0, 25, 80, FALL, MONS_CRIMSON_IMP},
+    {0, 25, 80, FALL, MONS_WHITE_IMP},
+    {0, 25, 80, FALL, MONS_UFETUBUS},
+    {0, 25, 80, FALL, MONS_IRON_IMP},
+    {0, 25, 80, FALL, MONS_SHADOW_IMP},
+    {0, 25, 80, FALL, MONS_DRUDE},
 
     {20, 55, 125, SEMI, MONS_ICE_DEVIL},
     {20, 55, 125, SEMI, MONS_RUST_DEVIL},

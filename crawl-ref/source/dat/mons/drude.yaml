@@ -1,0 +1,20 @@
+name: "drude"
+glyph: {char: "5", colour: lightmagenta}
+resists: {poison: 1, fire: 1}
+flags: [speaks]
+exp: 38
+holiness: [demonic]
+will: 40
+attacks:
+ - {type: hit, damage: 8, flavour: doom}
+ - {type: hit, damage: 8, flavour: doom}
+hd: 4
+hp_10x: 210
+speed: 13
+ac: 4
+ev: 17
+shout: shout
+intelligence: human
+uses: open_doors
+size: little
+shape: humanoid

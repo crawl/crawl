@@ -1291,6 +1291,11 @@ A cold and hollow apparition of the drowned dead, chained by some lingering
 attachment to the depths in which it perished. It rushes to embrace the living,
 sharing the last moments of its watery fate with whatever it touches.
 %%%%
+drude
+
+A conniving demon born from the nightmares of sleeping mages. It delights in
+coaxing the imagined fears of mortals into reality.
+%%%%
 dryad
 
 A spirit of nature, bound to the forest in which it resides. It is capable of

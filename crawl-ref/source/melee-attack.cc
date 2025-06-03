@@ -4138,6 +4138,16 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
 
+    case AF_DOOM:
+    {
+        const int amount = random_range(5 + attacker->get_hit_dice() / 3,
+                                        8 + attacker->get_hit_dice());
+        const bool caused_bane = defender->doom(amount);
+        if (!caused_bane && defender->is_player())
+            mpr("Your doom draws closer.");
+        break;
+    }
+
     }
 }
 

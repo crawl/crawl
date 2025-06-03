@@ -159,6 +159,7 @@ enum attack_flavour
     AF_AIRSTRIKE,
     AF_TRICKSTER,
     AF_REACH_CLEAVE_UGLY,
+    AF_DOOM,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

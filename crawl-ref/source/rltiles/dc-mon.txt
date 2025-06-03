@@ -471,7 +471,7 @@ crimson_imp MONS_CRIMSON_IMP
 cerulean_imp MONS_CERULEAN_IMP
 %rim 0
 lemure MONS_LEMURE
-quasit MONS_QUASIT
+drude MONS_DRUDE
 %rim 1
 iron_imp MONS_IRON_IMP
 %rim 0
