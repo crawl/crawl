@@ -102,4 +102,11 @@ static const bane_def bane_data[] =
         "the Hunted",
         "When enemies are summoned, they will appear beside you instead.",
     },
+
+    {
+        BANE_MORTALITY,
+        BANE_DUR_MEDIUM,
+        "Mortality",
+        "When alone and injured, reapers sometimes come to claim you.",
+    },
 };

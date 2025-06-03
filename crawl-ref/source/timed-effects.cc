@@ -255,6 +255,61 @@ static bool _multiplicity_clone(monster* mon)
     return true;
 }
 
+static void _maybe_mortality_summon()
+{
+    // Ensure no non-trivial monsters are around
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && mons_threat_level(**mi, true) > MTHRT_TRIVIAL)
+        {
+            return;
+        }
+    }
+
+    // Only activate a fraction of the times we're resting while injured.
+    if (!one_chance_in(3))
+    {
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(1000, 1500);
+        return;
+    }
+
+    // Summon permaslow reapers at low XL, and scale the number with XL also.
+    const bool slow = you.experience_level < 14;
+    int num = 1;
+    if (slow)
+        num += x_chance_in_y(max(0, you.experience_level - 10), 10);
+    else
+    {
+        num += div_rand_round(max(0, you.experience_level - 17), 10);
+        num += div_rand_round(max(0, you.experience_level - 24), 4);
+    }
+
+    bool created = false;
+    mgen_data mg(MONS_REAPER, BEH_HOSTILE, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(nullptr, MON_SUMM_MORTALITY);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.non_actor_summoner = "the Bane of Mortality";
+    mg.set_range(5, you.current_vision, 3);
+
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster* mon = create_monster(mg))
+        {
+            created = true;
+            mon->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+            if (slow)
+                mon->add_ench(mon_enchant(ENCH_SLOW, 0, nullptr, INFINITE_DURATION));
+        }
+    }
+
+    if (created)
+    {
+        mprf("Death has come for you....");
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(3000, 5500);
+    }
+}
+
 static void _bane_triggers(int /*time_delta*/)
 {
     if (you.has_bane(BANE_MULTIPLICITY)
@@ -300,6 +355,13 @@ static void _bane_triggers(int /*time_delta*/)
             flash_tile(mon->pos(), LIGHTBLUE, 150);
             mprf("%s shimmers and splits apart.", mon->name(DESC_THE).c_str());
         }
+    }
+
+    if (you.has_bane(BANE_MORTALITY)
+        && you.elapsed_time > you.props[MORTALITY_TIME_KEY].get_int()
+        && you.hp * 2 < you.hp_max)
+    {
+        _maybe_mortality_summon();
     }
 }
 

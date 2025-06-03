@@ -3449,6 +3449,9 @@ void remove_bane(bane_type bane)
 
     if (bane == BANE_RECKLESS)
         you.redraw_armour_class = true;
+
+    if (bane == BANE_MORTALITY)
+        add_daction(DACT_BANE_MORTALITY_CLEANUP);
 }
 
 int xl_to_remove_bane(bane_type bane)

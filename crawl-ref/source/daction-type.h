@@ -53,6 +53,7 @@ enum daction_type
     DACT_UPGRADE_ANCESTOR,
     DACT_REMOVE_IGNIS_ALTARS,
     DACT_BEOGH_VENGEANCE_CLEANUP,
+    DACT_BANE_MORTALITY_CLEANUP,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

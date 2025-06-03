@@ -187,6 +187,7 @@ enum mon_summon_type
     MON_SUMM_HIVE,      // Hive form insects
     MON_SUMM_SUN_SCARAB, // Sun Scarab's solar ember
     MON_SUMM_MULTIPLICITY, // Bane of Multiplicity
+    MON_SUMM_MORTALITY, // Bane of Mortality
 };
 
 #include "mon-flags.h"

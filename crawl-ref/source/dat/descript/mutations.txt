@@ -1422,3 +1422,12 @@ hunted bane
 Whenever an enemy summons monsters against you, they will usually appear
 adjacent to you instead of their summoner. Their duration is also increased and
 they will never lose track of your position, no matter where you flee.
+%%%%
+mortality bane
+
+When you are injured and alone, a reaper may come to claim you. These reapers
+will be immune to all damage from non-adjacent sources and, if your XL is less
+than 14, will additionally be slow. At higher XL, multiple reapers may appear at
+once.
+
+When this bane is lifted, all reapers summoned this way will immediately vanish.
