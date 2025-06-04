@@ -1582,6 +1582,20 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_tileidx(next_pc.fg);
             if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
+
+            // XXX: Encode spell school overlays for parchments.
+            if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
+            {
+                const item_def* item = next_mc.item();
+                spell_type spell = static_cast<spell_type>(item->plus);
+                const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+                const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+                if (school1 > 0)
+                    json_write_int("overlay1", school1);
+                if (school2 > 0)
+                    json_write_int("overlay2", school2);
+            }
         }
 
         if (next_pc.bg != current_pc.bg)

@@ -116,6 +116,9 @@ void InventoryRegion::pack_buffers()
             if (item.special)
                 m_buf.add_special_tile(item.special, x, y, 0, 0);
 
+            if (item.special2)
+                m_buf.add_special_tile(item.special2, x, y, 0, 0);
+
             if (item.flag & TILEI_FLAG_INVALID && !tiles.is_using_small_layout())
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
@@ -521,6 +524,12 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
        )
     {
         desc.special = tileidx_known_brand(item);
+    }
+    else if (type == OBJ_BOOKS && item.sub_type == BOOK_PARCHMENT)
+    {
+        const spell_type spell = static_cast<spell_type>(item.plus);
+        desc.special = tileidx_parchment_overlay(spell, 0);
+        desc.special2 = tileidx_parchment_overlay(spell, 1);
     }
 
     desc.flag = 0;

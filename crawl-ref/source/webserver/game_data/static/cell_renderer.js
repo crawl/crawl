@@ -927,6 +927,14 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
                     this.draw_main(fg_idx, x, y, img_scale);
                 }
+
+                if (fg_idx >= main.PARCHMENT_LOW && fg_idx <= main.PARCHMENT_HIGH)
+                {
+                    if (cell.overlay1)
+                        this.draw_main(cell.overlay1, x, y, img_scale);
+                    if (cell.overlay2)
+                        this.draw_main(cell.overlay2, x, y, img_scale);
+                }
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {

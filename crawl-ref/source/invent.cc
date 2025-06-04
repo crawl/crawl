@@ -612,6 +612,19 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
 
         tileset.emplace_back(idx);
 
+        // Add overlays for parchments, based on the schools of their spell.
+        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_PARCHMENT)
+        {
+            spell_type spell = static_cast<spell_type>(item.plus);
+            const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+            const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+            if (school1 > 0)
+                tileset.emplace_back(school1);
+            if (school2 > 0)
+                tileset.emplace_back(school2);
+        }
+
         if (ch != 0)
         {
             // Needs to be displayed so as to not give away mimics in shallow water.

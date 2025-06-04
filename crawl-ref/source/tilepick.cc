@@ -31,6 +31,7 @@
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
+#include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -3276,7 +3277,15 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
 
         if (item.sub_type == BOOK_PARCHMENT)
-            return TILE_BOOK_PARCHMENT;
+        {
+            const int lvl = spell_difficulty(static_cast<spell_type>(item.plus));
+            if (lvl >= 8)
+                return TILE_PARCHMENT_HIGH;
+            else if (lvl >= 5)
+                return TILE_PARCHMENT_MID;
+            else
+                return TILE_PARCHMENT_LOW;
+        }
 
         return TILE_BOOK_OFFSET
                + rnd % tile_main_count(TILE_BOOK_OFFSET);
@@ -4918,4 +4927,105 @@ void tile_init_props(monster* mon)
         return;
 
     mon->props[TILE_NUM_KEY] = short(random2(256));
+}
+
+static tileidx_t _parchment_overlays[NUM_SPELLS][2];
+static colour_t _parchment_colours[NUM_SPELLS];
+
+static colour_t _school_to_colour(spschool school)
+{
+    switch (school)
+    {
+        case spschool::fire:            return LIGHTRED;
+        case spschool::ice:             return LIGHTBLUE;
+        case spschool::air:             return LIGHTCYAN;
+        case spschool::earth:           return BROWN;
+        case spschool::conjuration:     return LIGHTMAGENTA;
+        case spschool::translocation:   return MAGENTA;
+        case spschool::alchemy:         return LIGHTGREEN;
+        case spschool::necromancy:      return GREEN;
+        case spschool::forgecraft:      return YELLOW;
+        case spschool::summoning:       return RED;
+        case spschool::hexes:           return BLUE;
+        default:                        return CYAN;
+    }
+}
+
+static int _school_to_index(spschool school)
+{
+    const int max = static_cast<int>(spschool::LAST_SCHOOL);
+    int val = static_cast<int>(school);
+    for (int i = 1; 1 << i <= max; ++i)
+        if (val >> i == 1)
+            return i;
+
+    return 0;
+}
+
+// Initialize which tile overlays and console colours are used for parchments of
+// each player spell. (ie: colouring them according to their spell schools.)
+void init_parchment_overlays()
+{
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        _parchment_overlays[i][0] = 0;
+        _parchment_overlays[i][1] = 0;
+
+        const spell_type spell = static_cast<spell_type>(i);
+
+        if (!is_player_book_spell(spell))
+            continue;
+
+        spschool school1 = spschool::none;
+        spschool school2 = spschool::none;
+
+        for (const auto school_flag : spschools_type::range())
+        {
+            if (!spell_typematch(spell, school_flag))
+                continue;
+
+            if (school1 == spschool::none)
+                school1 = school_flag;
+            else if (school2 == spschool::none)
+                school2 = school_flag;
+            // For 3+ school spells, 'randomize' which pair we use.
+            else if (i % 2 == 1)
+                school1 = school_flag;
+            else
+                school2 = school_flag;
+        }
+
+        if (school1 == school2 || school2 == spschool::none)
+            _parchment_overlays[i][0] = TILE_PARCHMENT_SINGLE_FIRST + _school_to_index(school1);
+        else
+        {
+            _parchment_overlays[i][0] = TILE_PARCHMENT_LEFT_FIRST + _school_to_index(school1);
+            _parchment_overlays[i][1] = TILE_PARCHMENT_RIGHT_FIRST + _school_to_index(school2);
+        }
+
+        // Use high level overlays for high level spells.
+        // XXX: (This depends specifically on tile enum offsets, and will need changing
+        //       if they ever do.)
+        if (spell_difficulty(spell) >= 8)
+        {
+            if (_parchment_overlays[i][0] > 0)
+                _parchment_overlays[i][0] += 11;
+            if (_parchment_overlays[i][1] > 0)
+                _parchment_overlays[i][1] += 11;
+        }
+
+
+        _parchment_colours[i] = _school_to_colour(school1);
+    }
+}
+
+tileidx_t tileidx_parchment_overlay(int spell, int index)
+{
+    ASSERT(spell < NUM_SPELLS && index < 2);
+    return _parchment_overlays[spell][index];
+}
+
+colour_t parchment_colour(spell_type spell)
+{
+    return _parchment_colours[spell];
 }
