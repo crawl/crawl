@@ -730,6 +730,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_CHONCHON,
+      {
+        { SPELL_BECKONING_GALE, 26, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('y') Flying insects.
     {  MST_MELIAI,
       {

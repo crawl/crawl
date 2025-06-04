@@ -685,6 +685,13 @@ Battlecry cherub cast
 
 @The_monster@ sings a powerful hymn!
 %%%%
+Beckoning Gale chonchon cast
+
+@The_monster@ chants while flapping @possessive@ wings @at@ @target@.
+
+w:5
+@The_monster@ screeches @at@ @target@ while spinning and swirling.
+%%%%
 cognitogaunt cast
 
 @The_monster@ glimmers violently.

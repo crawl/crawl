@@ -139,6 +139,7 @@ enum band_type
     BAND_SPHINXES,
     BAND_IRONBOUND_MECHANISTS,
     BAND_CAGES,
+    BAND_CHONCHON,
     NUM_BANDS                   // always last
 };
 

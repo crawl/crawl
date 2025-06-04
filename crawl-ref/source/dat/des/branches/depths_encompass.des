@@ -334,10 +334,10 @@ TAGS:    no_pool_fixup no_rotate uniq_d_encompass
 ORIENT:  encompass
 : kitem("g = " .. dgn.loot_potions)
 KITEM:   zZ = any potion / nothing w:90
-# Two themes: birds with elves, and spriggans with giants.
+# Two themes: birds with books, and spriggans with giants.
 : if crawl.coinflip() then
-MONS:   tengu conjurer / tengu warrior / caustic shrike zombie / \
-        guardian sphinx / nothing
+MONS:   tengu conjurer w:15 / tengu warrior w:20 / chonchon w:5 / \
+        caustic shrike zombie w:15 / guardian sphinx / walking earthen tome w:5
 MONS:   tengu reaver / walking crystal tome / walking divine tome / \
         caustic shrike
 : else
@@ -781,7 +781,7 @@ MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          walking earthen tome w:6 / walking divine tome w:6
 MONS:    very ugly thing w:10 / ugly thing w:30 / \
          great orb of eyes / fire dragon / ice dragon / glass eye w:4
-MONS:    glowing orange brain / very ugly thing / glowing shapeshifter / \
+MONS:    glowing orange brain / chonchon / glowing shapeshifter w:12 / \
          jiangshi w:4 / phantasmal warrior w:4 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
 MONS:    guardian sphinx / spark wasp / flayed ghost / \

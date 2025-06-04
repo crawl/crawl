@@ -503,7 +503,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "boulder beetle",
+                "chonchon",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
                 "unseen horror / shadow wraith w:15 / ghost moth",
@@ -537,8 +537,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Slime:$ / w:30 acid blob / azure jelly / glass eye /\
                     void ooze",
                 "dancing weapon ; bardiche",
-                "spriggan defender / spriggan air mage / spriggan druid /\
-                    spriggan berserker / alderking",
+                "chonchon w:2 / spriggan defender / spriggan air mage /\
+                    spriggan druid / spriggan berserker / alderking",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
                 "place:Tomb:$ w:30 / guardian sphinx w:20 / royal mummy",
@@ -572,7 +572,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "profane servitor w:25 / angel / daeva / fravashi w:5 /\
                     cherub / seraph",
                 -- Gimmicks
-                "neqoxec", "smoke demon", "catoblepas",
+                "neqoxec", "chonchon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "nekomata",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth",
@@ -613,7 +613,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "nagaraja w:20 / guardian serpent / salamander tyrant",
                 "acid blob w:30 / rockslime / glass eye / void ooze",
                 "dancing weapon ; bardiche ego:speed",
-                "spriggan air mage / alderking",
+                "chonchon w:2 / spriggan air mage / alderking",
                 "ancient lich / w:6 curse skull",
                 "demonspawn warmonger / demonspawn soul scholar /\
                     demonspawn corrupter / demonspawn blood saint /\

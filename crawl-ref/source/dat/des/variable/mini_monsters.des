@@ -1003,8 +1003,8 @@ ENDMAP
 NAME:    hangedman_aviary
 TAGS:    no_rotate no_hmirror no_pool_fixup transparent
 DEPTH:   D:12-, Depths
-MONS:    tengu warrior, harpy, tengu reaver, caustic shrike
-: if you.absdepth() < 18 then
+MONS:    tengu warrior, harpy, tengu reaver, caustic shrike / chonchon w:5
+: if you.in_branch("D") then
 SUBST:   3 = 2
 : else
 SUBST:   2 = 4, " = *|
@@ -3524,7 +3524,11 @@ NSUBST:  1 = 1:2 / 2:1 / *:.
 TILE:    x = wall_undead
 FTILE:   `?VY = floor_w_marble
 : elseif not you.in_branch("D") then
+:   if you.in_branch("Depths") then
+MONS:    vampire mage / chonchon w:3
+:   else
 MONS:    vampire mage
+:   end
 SUBST:   x = c, - = **%%d, ` = $
 : else
 MONS:    vampire, vampire mage
@@ -10032,7 +10036,7 @@ COLOUR:  u = red
 :   elseif you.in_branch("Depths") then
 MONS:    hell knight / fire giant w:2, spriggan air mage / spark wasp w:4
 MONS:    storm dragon, tengu reaver
-KMONS:   0 = fire dragon / occultist w:2 / spriggan rider w:2
+KMONS:   0 = fire dragon / chonchon w:2 / spriggan rider w:2
 :   else -- Zot
 MONS:    black draconian, red draconian scorcher
 MONS:    golden dragon, electric golem

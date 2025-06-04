@@ -557,6 +557,9 @@ crawling_flesh_cage3
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 abomination_small2
+chonchon0 MONS_CHONCHON
+chonchon1
+chonchon2
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE

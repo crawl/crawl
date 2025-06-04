@@ -364,7 +364,7 @@ mset(with_props(spec_fn(function ()
   local f = 10 + you.zigs_completed() * you.zigs_completed() * 4
   return "raiju w:5 / wind drake w:5 / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
-         "ironbound thunderhulk w:" .. d .. " / " ..
+         "ironbound thunderhulk w:" .. d .. " / chonchon w:" .. d - 5 .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
          "electric golem w:" .. e .. " / titan w:" .. f
 end), { weight = 2 }))
@@ -409,7 +409,8 @@ mset(spec_fn(function ()
   local e = math.min(8, math.floor((you.depth()) / 5) + 4)
   local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
   return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
-         "apocalypse crab w:4 / killer klown w:8 / crawling flesh cage w:2 / " ..
+         "apocalypse crab w:4 / killer klown w:8 / " ..
+         "crawling flesh cage w:2 / chonchon w:8 / " ..
          "shapeshifter hd:16 w:" .. e .. " / " ..
          "glowing shapeshifter w:" .. e / 3 .. " / " ..
          "protean progenitor w:" .. e .. " / " ..

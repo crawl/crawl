@@ -312,7 +312,9 @@ troll CORPSE_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
-## Cephalopods ('x')
+## Lesser miscelllaney ('x')
+%sdir mon/aberrations
+chonchon0 CORPSE_CHONCHON
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
 %sdir mon/animals

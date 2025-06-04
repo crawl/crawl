@@ -80,8 +80,9 @@ function base_monster_setup(e)
                deep elf demonologist / deep elf sorcerer /\
                deep elf elementalist / shadow dragon /\
                deep elf blademaster w:5 / deep elf master archer w:5 /\
-               spriggan air mage / spriggan berserker / spriggan defender /\
-               glass eye / walking divine tome / walking earthen tome /\
+               spriggan air mage / spriggan berserker /\
+               spriggan defender / chonchon band / glass eye /\
+               walking divine tome / walking earthen tome /\
                nagaraja / salamander tyrant / guardian serpent /\
                shock serpent w:5 / thorn hunter / fenstrider witch / bunyip /\
                will-o-the-wisp w:5 / death drake w:5 /\

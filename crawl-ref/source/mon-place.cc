@@ -1817,6 +1817,7 @@ static const map<monster_type, band_set> bands_by_leader = {
                                   {{ BAND_JELLYFISH, {1, 3} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
+    { MONS_CHONCHON,        { {2}, {{ BAND_CHONCHON, {2, 3} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
     { MONS_PEACEKEEPER,     { { 0, 0, []() {
         return player_in_branch(BRANCH_VAULTS); }},
@@ -2192,6 +2193,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
     { BAND_MERFOLK_IMPALER,     {{{MONS_MERFOLK, 1}}}},
     { BAND_MERFOLK_JAVELINEER,  {{{MONS_MERFOLK, 1}}}},
+    { BAND_CHONCHON,            {{{MONS_CHONCHON, 1}}}},
     { BAND_ELEPHANT,            {{{MONS_ELEPHANT, 1}}}},
     { BAND_SPHINXES,            {{{MONS_GUARDIAN_SPHINX, 1}}}},
     { BAND_FIRE_BATS,           {{{MONS_FIRE_BAT, 1}}}},

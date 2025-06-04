@@ -317,10 +317,11 @@ function sroom_magic_class(e)
     mons[11] = "deep elf demonologist w:2"
     mons[12] = "deep elf elementalist w:1"
     mons[13] = "vampire mage w:1"
+    mons[14] = "chonchon w:1"
 
     local absdepth = you.absdepth()
     if absdepth == 27 then
-        mons[14] = "draconian annihilator w:5"
+        mons[15] = "draconian annihilator w:5"
         lord_mon = "draconian shifter / ancient lich / Jory w:1 / " ..
                    "Frederick w:1 / Boris w:1, draconian shifter / " ..
                    "ancient lich / dread lich"

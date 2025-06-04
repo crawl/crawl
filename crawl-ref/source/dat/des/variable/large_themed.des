@@ -981,14 +981,15 @@ ITEM:   any magical staff w:20 / any wand w:5 / any jewellery
 ITEM:   any randbook / gold
 : if you.in_branch("D") then
 MONS:   kobold demonologist / deep elf pyromancer / tengu conjurer
-MONS:   occultist w:5 / arcanist w:5 / deep elf zephyrmancer / orc sorcerer / ogre mage
-MONS:   deep troll earth mage / deep elf sorcerer / deep elf annihilator \
-        / deep elf demonologist / deep elf death mage / tengu reaver
+MONS:   occultist w:5 / arcanist w:5 / deep elf zephyrmancer / \
+        orc sorcerer / ogre mage
+MONS:   deep troll earth mage / deep elf sorcerer / deep elf annihilator / \
+        deep elf demonologist / deep elf death mage / tengu reaver
 : else
-MONS:   tengu conjurer / occultist / spriggan air mage / vampire mage \
-        / deep troll earth mage
-MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer \
-        / deep elf demonologist / lich
+MONS:   tengu conjurer / occultist / spriggan air mage / chonchon w:5 / \
+        vampire mage / deep troll earth mage
+MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer / \
+        deep elf demonologist / lich
 MONS:   ancient lich / dread lich
 : end
 KFEAT:  g = cache of baked goods
@@ -3079,7 +3080,7 @@ SUBST:    })] = **|, ! = +, ? = c, ` = W:40 ., . = .:60 W
 : elseif you.branch() == "Depths" then
 MONS:    jiangshi / phantasmal warrior / spriggan defender zombie
 MONS:    spark wasp zombie, vampire knight, vampire mage
-MONS:    flayed ghost, alderking
+MONS:    flayed ghost / chonchon w:2, alderking
 MONS:    spriggan berserker
 KMONS:   8 = spriggan defender
 KMONS:   9 = guardian sphinx
@@ -3374,7 +3375,7 @@ NSUBST:  % = 1:d / 2:e / 1:f / 1:g / 1:zZef / * = def., . = 4:5 / *:.
 : elseif you.in_branch("Depths") then
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    tengu reaver / titan / lich / alderking w:5
-MONS:    frost giant / vampire mage / vampire knight w:5
+MONS:    frost giant / vampire mage / vampire knight w:5 / chonchon w:5
 MONS:    walking crystal tome / walking frostbound tome / \
          walking divine tome / walking earthen tome
 MONS:    guardian sphinx / spark wasp / caustic shrike / \

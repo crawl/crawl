@@ -209,6 +209,7 @@ enum monster_type                      // env.mons[].type
     MONS_RAVEN,
 #endif
 #if TAG_MAJOR_VERSION > 34
+    MONS_CHONCHON,
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
     MONS_SHARD_SHRIKE,
@@ -1350,6 +1351,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPROZZ,
     MONS_CRAWLING_FLESH_CAGE,
     MONS_COGNITOGAUNT,
+    MONS_CHONCHON,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
