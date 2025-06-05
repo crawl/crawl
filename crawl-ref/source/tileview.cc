@@ -1558,7 +1558,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_BFB_CORPSE)
         cell.has_bfb_corpse = true;
 
-    if (you.rampage_hints.count(gc) > 0)
+    if (you.on_current_level && you.rampage_hints.count(gc) > 0)
         cell.bg |= TILE_FLAG_RAMPAGE;
 
     if (Options.show_travel_trail)
