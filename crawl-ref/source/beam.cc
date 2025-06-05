@@ -3389,10 +3389,8 @@ bool bolt::harmless_to_player() const
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
 
-#if TAG_MAJOR_VERSION == 34
     case BEAM_COLD:
-        return is_big_cloud() && you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY);
-#endif
+        return is_big_cloud() && actor_cloud_immune(you, CLOUD_COLD);
 
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;

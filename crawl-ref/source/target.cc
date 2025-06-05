@@ -1149,6 +1149,11 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+bool targeter_cloud::harmful_to_player()
+{
+    return !actor_cloud_immune(you, ctype);
+}
+
 
 targeter_splash::targeter_splash(const actor *act, int r, int pow)
     : targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0)
