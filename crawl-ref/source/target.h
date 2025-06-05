@@ -230,6 +230,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override;
     aff_type is_affected(coord_def loc) override;
+    bool harmful_to_player() override;
     cloud_type ctype;
     int range;
     int cnt_min, cnt_max;
