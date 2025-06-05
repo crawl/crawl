@@ -261,6 +261,7 @@ holy_breath HOLY_BREATH
 holy_flames HOLY_FLAMES
 hurl_sludge HURL_SLUDGE
 hunting_call HUNTING_CALL
+ill_omen ILL_OMEN
 ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS

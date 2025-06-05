@@ -188,5 +188,6 @@ enum zap_type
     ZAP_GHOSTLY_SACRIFICE,
     ZAP_BOLT_OF_FLESH,
     ZAP_AWAKEN_FLESH,
+    ZAP_ILL_OMEN,
     NUM_ZAPS
 };

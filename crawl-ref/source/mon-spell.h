@@ -87,6 +87,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_RAVEN,
+      {
+        { SPELL_ILL_OMEN, 24, MON_SPELL_NATURAL | MON_SPELL_NOISY },
+      }
+    },
+
     // ('c') Centaurs and such.
     {  MST_FAUN,
       {

@@ -982,7 +982,11 @@ Ignition spell
 All foes in the caster's surroundings are engulfed in balls of fire. The caster
 and their allies are protected from the fire and will never be harmed by this
 spell.
+%%%%
+Ill Omen spell
 
+Bends the weave of fate against a target, inflicting significant Doom. Cannot
+be used if there are any obstructions between the caster and their target.
 %%%%
 Infestation spell
 

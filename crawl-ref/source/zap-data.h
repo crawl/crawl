@@ -2835,4 +2835,6 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     TILE_BOLT_FROSTFIRE
 },
 
+_mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
+
 };

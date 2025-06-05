@@ -105,7 +105,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BABY_ALLIGATOR, "baby alligator")
     AXED_MON(MONS_BORING_BEETLE, "boring beetle")
     AXED_MON(MONS_CHIMERA, "chimera")
-    AXED_MON(MONS_RAVEN, "raven")
     AXED_MON(MONS_SINGULARITY, "singularity")
     AXED_MON(MONS_GRAND_AVATAR, "grand avatar")
     AXED_MON(MONS_SALAMANDER_FIREBRAND, "salamander firebrand")

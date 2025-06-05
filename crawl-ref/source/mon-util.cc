@@ -4727,6 +4727,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "says",         // S_NORMAL
         "shouts",       // S_LOUD
         "screams",      // S_VERY_LOUD
+        "caws",
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 

@@ -107,6 +107,7 @@ butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
 obsidian_bat MONS_OBSIDIAN_BAT
+raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
 shard_shrike MONS_SHARD_SHRIKE

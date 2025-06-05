@@ -1133,6 +1133,9 @@ living spell cast
 
 @The_monster@ casts @reflexive@ @at@ @target@.
 %%%%
+raven cast
+
+@The_monster@ stares into @foe_possessive@ soul.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

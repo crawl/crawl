@@ -639,5 +639,6 @@ enum spell_type : int
     SPELL_SPHINX_SISTERS,
     SPELL_BOLT_OF_FLESH,
     SPELL_AWAKEN_FLESH,
+    SPELL_ILL_OMEN,
     NUM_SPELLS
 };

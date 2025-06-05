@@ -2511,6 +2511,12 @@ hornet
 
 A buzzing hornet with a vicious stinger dripping with paralytic poison.
 %%%%
+raven
+
+A jet-black corvid with a nasty beak and a reputation for heralding bad luck.
+Most ornithologists consider this a baseless stereotype; the rest are still
+recovering from a series of staggeringly unlikely accidents.
+%%%%
 redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its

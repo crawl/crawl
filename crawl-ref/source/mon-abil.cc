@@ -814,7 +814,7 @@ void treant_release_fauna(monster& mons)
     int count = mons.mangrove_pests;
     bool created = false;
 
-    monster_type fauna_t = MONS_HORNET;
+    monster_type fauna_t = one_chance_in(4) ? MONS_RAVEN : MONS_HORNET;
 
     for (int i = 0; i < count; ++i)
     {
@@ -840,8 +840,16 @@ void treant_release_fauna(monster& mons)
 
     if (created && you.can_see(mons))
     {
-        mprf("Angry insects surge out from beneath %s foliage!",
-             mons.name(DESC_ITS).c_str());
+        if (fauna_t == MONS_RAVEN)
+        {
+            mprf("Jet-black ravens fly out from beneath %s foliage!",
+                 mons.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Angry insects surge out from beneath %s foliage!",
+                mons.name(DESC_ITS).c_str());
+        }
     }
 }
 

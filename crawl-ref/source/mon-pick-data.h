@@ -287,6 +287,7 @@ static const vector<pop_entry> population[] =
   {  1,  6,   25, PEAK, MONS_OKLOB_PLANT },
   {  1,  8,  290, PEAK, MONS_ELEPHANT },
   {  1,  9,  210, RISE, MONS_DEATH_YAK },
+  {  0,  6,  120, SEMI, MONS_RAVEN },
   {  1, 10,   70, SEMI, MONS_CATOBLEPAS },
   {  1, 15,   70, SEMI, MONS_BOULDER_BEETLE },
   {  1, 15,   85, SEMI, MONS_TORPOR_SNAIL },

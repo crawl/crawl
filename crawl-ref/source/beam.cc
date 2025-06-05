@@ -4067,6 +4067,12 @@ void bolt::affect_player_enchantment(bool resistible)
             canned_msg(MSG_YOU_UNAFFECTED);
         break;
 
+    case BEAM_ILL_OMEN:
+        obvious_effect = true;
+        if (!you.doom(random_range(ench_power / 4, ench_power / 2)))
+            mpr("You feel an ill-omen....");
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5992,6 +5998,7 @@ bool bolt::has_saving_throw() const
     case BEAM_VITRIFYING_GAZE:
     case BEAM_RIMEBLIGHT:
     case BEAM_SHADOW_TORPOR:
+    case BEAM_ILL_OMEN:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -6832,6 +6839,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         obvious_effect = do_slow_monster(*mon, agent(), dur);
         return MON_AFFECTED;
     }
+
+    case BEAM_ILL_OMEN:
+        mon->doom(random_range(ench_power / 8, ench_power / 5));
+        return MON_AFFECTED;
 
     default:
         break;
@@ -7725,6 +7736,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOLAS:                 return "entwining bolas";
     case BEAM_MERCURY:               return "mercury";
     case BEAM_BAT_CLOUD:             return "cloud of bats";
+    case BEAM_ILL_OMEN:              return "omen";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

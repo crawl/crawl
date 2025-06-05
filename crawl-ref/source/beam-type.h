@@ -105,7 +105,8 @@ enum beam_type                  // bolt::flavour
     BEAM_SHADOW_TORPOR,
     BEAM_DOUBLE_HEALTH,
     BEAM_VEX,
-    BEAM_LAST_ENCHANTMENT = BEAM_VEX,
+    BEAM_ILL_OMEN,
+    BEAM_LAST_ENCHANTMENT = BEAM_ILL_OMEN,
 
     BEAM_MEPHITIC,
     BEAM_AIR,

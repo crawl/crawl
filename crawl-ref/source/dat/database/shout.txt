@@ -222,6 +222,14 @@ __SQUEAK seen
 
 SOUND:@The_monster@ squeaks loudly.
 %%%%
+__CAW seen
+
+SOUND:@The_monster@ caws.
+%%%%
+__CAW unseen
+
+SOUND:You hear a loud caw.
+%%%%
 ############################################
 # End of default shouts
 ############################################

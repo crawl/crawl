@@ -952,6 +952,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_sphinx_sisters(caster, mons_spellpower(caster, SPELL_SPHINX_SISTERS), false);
         }
     } },
+    { SPELL_ILL_OMEN, {
+        _always_worthwhile,
+        _fire_simple_beam,
+        _zap_setup(SPELL_ILL_OMEN)
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
