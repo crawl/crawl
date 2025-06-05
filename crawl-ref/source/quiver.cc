@@ -1121,7 +1121,9 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_valid();
+            const bool enkindled = you.duration[DUR_ENKINDLED]
+                                   && spell_can_be_enkindled(spell);
+            return is_valid() && !enkindled;
         }
 
         bool check_channelled_spells() const
