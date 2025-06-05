@@ -843,7 +843,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             dice_def dmg = zap_damage(ZAP_SHRED, pow, true);
             for (adjacent_iterator ai(caster.pos()); ai; ++ai)
             {
-                if (!monster_at(*ai) || monster_at(*ai)->wont_attack())
+                if (!monster_at(*ai) || mons_aligned(monster_at(*ai), &caster))
                     continue;
 
                 // Don't shred things out of the player's sight
