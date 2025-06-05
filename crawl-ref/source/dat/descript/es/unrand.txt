@@ -1,7 +1,9 @@
 %%%%
 amulet of Elemental Vulnerability
 
-Un dije de acero azúl con quemaduras borrosas. Su creadora, una mujer muy sensata, lo diseñó para proteger contra puñaladas, puñetazos y mordeduras. Es peor que inútil contra fuego y escaracha, ¿pero con cuánta frequencia es eso relevante?
+Un dije de acero azúl con quemaduras borrosas. Su creadora, una mujer muy sensata, 
+lo diseñó para proteger contra puñaladas, puñetazos y mordeduras. Es peor que 
+inútil contra fuego y escaracha, ¿pero con cuánta frequencia es eso relevante?
 %%%%
 amulet of the Four Winds
 
