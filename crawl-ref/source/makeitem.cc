@@ -646,12 +646,12 @@ static void _generate_missile_item(item_def& item, int force_type,
     else
     {
         item.sub_type =
-            random_choose_weighted(40, MI_STONE,
-                                   10, MI_DART,
-                                   3,  MI_BOOMERANG,
-                                   2,  MI_JAVELIN,
-                                   1,  MI_THROWING_NET,
-                                   1,  MI_LARGE_ROCK);
+            random_choose_weighted(29, MI_STONE,
+                                   42, MI_DART,
+                                   13, MI_BOOMERANG,
+                                   8,  MI_JAVELIN,
+                                   4,  MI_THROWING_NET,
+                                   4,  MI_LARGE_ROCK);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -1910,12 +1910,12 @@ int items(bool allow_uniques,
                                     10, OBJ_STAVES,
                                     25, OBJ_TALISMANS,
                                     45, OBJ_JEWELLERY,
+                                    66, OBJ_MISSILES,
                                     70, OBJ_WANDS,
                                    135, OBJ_BOOKS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
-                                   156, OBJ_MISSILES,
                                    270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
