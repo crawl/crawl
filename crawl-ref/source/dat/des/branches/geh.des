@@ -804,7 +804,7 @@ ENDMAP
 NAME:    tekkud_geh_sculpture_garden
 TAGS:    transparent
 DEPTH:   Geh
-MONS:    red draconian scorcher, salamander tyrant, salamander mystic
+MONS:    red draconian scorcher, salamander tyrant, oni incarcerator
 MONS:    hellion, balrug, hellephant, searing wretch
 SUBST:   G = GGx, g = GGx..
 SHUFFLE: 123, 4567
