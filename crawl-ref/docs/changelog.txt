@@ -1,5 +1,35 @@
-Stone Soup 0.33 (through 0.33-a0-1449-0d2a297ef60)
---------------------------------------------------
+Stone Soup 0.33.1 (20250606)
+----------------------------
+
+Bugfix release
+--------------
+* Fix vampire form not having torment resistance.
+* Fix bat swarm form having torment immunity instead of torment resistance.
+* Fix breaking cursed items without a prompt when leaving slot-granting forms.
+* Fix sphinx and serpent forms having slot items fall off when changing
+  temporarily to another form via lignification or polymorph.
+* Fix Dithmenos' player shadow not having the same reach as the player when in
+  aqua form.
+* Fix inconsistencies in handling of beam types:
+  - The spells Chain Lightning and Stunning Bolt are now properly 33%
+    resistable with rElec instead of only 25% resistable.
+  - Mercury Arrow is now properly 25% resistable with rPois.
+  - Stunning Bolt now checks half of AC like other elecriticy-themed spells.
+  - Qazlal's adaptive rElec is now properly triggered by Stunning Bolt.
+  - Qazlal's adaptive AC is now properly triggered by all 'physical' spell
+    projectiles.
+* The Slick Slippers now prevent being bound by an ironbound beastmaster's
+  bolas.
+* Fix not being able to use Yredelemnul's Light the Black Torch on a
+  portal level like Necropolis if it had been used in a previous instance of
+  that portal.
+* Don't allow orbrun spawns in Okawaru's Arena.
+* Remove erroneous extra placements of alderkings in Sprint IV.
+* 37 other bug fixes, interface improvements, and documentation updates.
+
+
+Stone Soup 0.33.0 (20250502)
+----------------------------
 
 Highlights
 ----------
