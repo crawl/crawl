@@ -812,6 +812,16 @@ Galvanic Breath spell
 
 <Galvanic Breath ability>
 %%%%
+Gastronomic Expanse spell
+
+Transposes part of the dungeon with the stomach of a great extraplanar
+beast, which will rapidly digest any other creatures within. The transposed
+region will expand as long as the caster remains in it, but they are only
+partially protected from its corrosive effects.
+
+It is unclear who, if any, commands this great beast, but it is worrying
+that they had to invent a spell to keep it fed.
+%%%%
 Gell's Gavotte spell
 
 Briefly reorients local gravity to be in a cardinal direction of the caster's
