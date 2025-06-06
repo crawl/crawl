@@ -328,7 +328,8 @@ show_class get_cell_show_class(const map_cell& cell,
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH
            && feat != DNGN_EXPIRED_PORTAL
-           && !feat_is_fountain(feat))
+           && !feat_is_fountain(feat)
+           && feat != DNGN_DECORATIVE_FLOOR)
     {
         return SH_FEATURE;
     }
