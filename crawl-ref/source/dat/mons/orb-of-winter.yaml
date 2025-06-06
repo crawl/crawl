@@ -1,0 +1,17 @@
+name: "orb of winter"
+glyph: {char: "*", colour: lightblue}
+flags: [flies, see_invis, insubstantial]
+resists: {elec: 3, fire: 1, cold: 3}
+exp: 4638
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 30
+hp_10x: 1500
+ac: 20
+ev: 20
+spells: orb_of_winter
+intelligence: human
+speed: 15
+size: little
+shape: orb

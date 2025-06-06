@@ -904,6 +904,15 @@ w:20
 
 Existence decays around @the_monster@.
 %%%%
+orb of winter cast
+
+@The_monster@ glitters with frost.
+
+@The_monster@ swirls like a blizzard.
+
+w:30
+@The_monster@ glows [icy blue|with a pale light|sapphire].
+%%%%
 obsidian statue cast
 
 @The_monster_possessive@ eyes glow briefly.

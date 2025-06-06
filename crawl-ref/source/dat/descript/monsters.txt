@@ -2262,6 +2262,12 @@ orb of fire
 A globe of raw primordial fire, capable of impressive pyrotechnics and of
 twisting the very flesh of creatures who come into its ken.
 %%%%
+orb of winter
+
+A globe of deepest cold, still lingering from a time before the stars lit the
+heavens. It can shroud the soul in a chill so intense that even the gods cannot
+reach it.
+%%%%
 orb spider
 
 An eerily glowing spider with strands of pure energy emerging from its

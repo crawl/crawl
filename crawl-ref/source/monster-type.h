@@ -339,6 +339,7 @@ enum monster_type                      // env.mons[].type
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
     MONS_ORB_OF_ENTROPY,
+    MONS_ORB_OF_WINTER,
     MONS_ELEMENTAL,             // genus
 #endif
     MONS_EARTH_ELEMENTAL,
@@ -1368,6 +1369,7 @@ enum monster_type                      // env.mons[].type
     MONS_ZYKZYL,
     MONS_BOUNDLESS_TESSERACT,
     MONS_ORB_OF_ENTROPY,
+    MONS_ORB_OF_WINTER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
