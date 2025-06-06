@@ -1368,6 +1368,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_METAL_STATUE, { "metal", "metal statue", frag_damage_type::metal } },
     { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
     { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
+    { DNGN_ZOT_STATUE, { "metal", "metal statue" } },
     // Crystal -- large & nasty explosion
     { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall",
                            frag_damage_type::crystal } },

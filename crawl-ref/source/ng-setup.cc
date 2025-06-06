@@ -496,6 +496,10 @@ void initial_dungeon_setup()
     initialise_temples();
     init_level_connectivity();
     initialise_item_descriptions();
+
+    you.zot_orb_monster = random_choose(MONS_ORB_OF_FIRE,
+                                        MONS_ORB_OF_WINTER,
+                                        MONS_ORB_OF_ENTROPY);
 }
 
 static void _setup_generic(const newgame_def& ng,

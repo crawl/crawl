@@ -361,6 +361,7 @@ bool needs_resolution(monster_type mon_type)
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
            || mon_type == RANDOM_NONBASE_DRACONIAN
            || mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON
+           || mon_type == MONS_ORB_OF_APPROPRIATENESS
            || _is_random_monster(mon_type);
 }
 
@@ -376,6 +377,8 @@ monster_type resolve_monster_type(monster_type mon_type,
     if (want_band)
         *want_band = false;
 
+    if (mon_type == MONS_ORB_OF_APPROPRIATENESS)
+        return you.zot_orb_monster;
     if (mon_type == RANDOM_DRACONIAN)
     {
         if (base_type != MONS_NO_MONSTER)
@@ -462,6 +465,13 @@ monster_type resolve_monster_type(monster_type mon_type,
 
         // Now pick a monster of the given branch and level.
         mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
+        if (needs_resolution(mon_type))
+        {
+            mon_type =
+                resolve_monster_type(mon_type, base_type,
+                                        proximity, pos, mmask,
+                                        place, want_band, allow_ood);
+        }
     }
     return mon_type;
 }

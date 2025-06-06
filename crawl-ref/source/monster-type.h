@@ -1396,6 +1396,8 @@ enum monster_type                      // env.mons[].type
     RANDOM_DEMON_GREATER,              //    2: Class I-II
     RANDOM_DEMON,                      //    any of the above
 
+    MONS_ORB_OF_APPROPRIATENESS,    // The orb type chosen to populate Zot on this seed.
+
     RANDOM_MODERATE_OOD, // +5 depth, AKA '9' glyph on maps
     RANDOM_SUPER_OOD, // *2 + 4 depth, AKA '8'
 

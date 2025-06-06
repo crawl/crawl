@@ -337,6 +337,11 @@ public:
     // All maps, by level.
     map<level_id, vector<string> > vault_list;
 
+    // The randomly chosen orb type to populate Zot with on this seed.
+    monster_type zot_orb_monster;
+    // And whether the player has gained knowledge of this by seeing a Zot statue.
+    bool zot_orb_monster_known;
+
     PlaceInfo global_info;
 
     LevelXPInfo global_xp_info;

@@ -3217,14 +3217,15 @@ PLACE:  Depths:$
      kfeat("1 = stone_stairs_down_i / stone_stairs_down_ii / "
            .. "stone_stairs_down_iii / escape_hatch_down")
      kfeat("t = petrified_tree")
-     subst("*$R = .")
+     subst("*$R = ., Z = .")
   elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-     colour(".+123*$R = magenta")
-     ftile(".+123*$R = floor_hall")
-     kitem("1 = midnight gem")
-     kfeat("1 = enter_zot")
      kmons("1 = nonbase draconian")
      kmons("2 = base draconian")
+     kitem("R = midnight gem")
+     kfeat("1 = enter_zot")
+     kfeat("Z = zot_statue")
+     colour(".+123*$R = magenta")
+     ftile(".+123*$RZ = floor_hall")
      nsubst("3 = 4:2 / 2 = 2. / *:.")
      kmons("* = golden dragon / shadow dragon / storm dragon / wyrmhole w:5"
            .. " / fire dragon / ice dragon")
@@ -3239,7 +3240,7 @@ PLACE:  Depths:$
      kmons("3 = nothing")
      kitem("1 = superb_item")
      kitem("2 = any")
-     subst("R = $")
+     subst("R = $, Z = .")
   end
 }}
 SUBST:  G = GTt
@@ -3251,7 +3252,7 @@ MAP
 .xx2xx.c.......xx2xx.
 x.3x..c.......x..x3..
 ...x..c..cccccc..x...
- ...xcc.cc....ccc.x.
+ ...xcc.cc.Z..ccc.x.
   ...c..c........c.
   ...c..c+ccccc....
 .....c..cR*$+.cc.....
@@ -3259,7 +3260,7 @@ x.3x..c.......x..x3..
 .....cc.+$*$c..c.....
   ....ccccc+c..c...
   .c........c..c...
- .x.ccc....cc.ccx...
+ .x.ccc..Z.cc.ccx...
 ...x..cccccc..c..x...
 ..3x..x.......c..x3.x
 .xx2xx.......c.xx2xx.
@@ -3326,6 +3327,7 @@ KMONS:   )]b = nonbase draconian w:30 / wyrmhole / \
                shadow dragon / golden dragon / storm dragon
 KITEM:   b = midnight gem
 KFEAT:   } = enter_zot
+KFEAT:   )] = zot_statue
 :   end
 : end
 ITEM:    arbalest w:190 / hand cannon, javelin q:2, potion of curing pre_id
@@ -3904,22 +3906,23 @@ KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
 KFEAT:  Y = enter_depths
 KFEAT:  Z = enter_zot
+KFEAT:  ? = zot_statue
 SUBST:  A = 1 3:14, B = 2 4:14, C = 5:14 6
 : if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
 TAGS:   uniq_depths_entry
 SUBST:  1 = q, 2 = r, 3 = s, 4 = t, 56 = u
 NSUBST: ! = 1:1 / 1:2 / *:?, | = 2:| / *:*
-SUBST:  } = Y, ] = $, ) = y
+SUBST:  } = Y, ] = $, ) = y, ? = l
 FTILE:  ?_$|*yY12 = floor_depthstone
 TILE:   c = wall_stone_scorched
 : elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  } = Z, ] = $, ) = z, 1 = 9
 NSUBST: ! = 1:8 / 1:9 / 2  = 80
 : elseif you.in_branch("Zot") then
-SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0
+SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0, ? = l
 NSUBST: ! = 1:6 / 1:0 / 1:! / 1:&
 : else
-SUBST:  )] = .
+SUBST:  )] = ., ? = l
 NSUBST: ! = 2:6 / 1:77& / 1:8, 45 = 1:78&
 : end
 SHUFFLE: '"-`
@@ -3950,12 +3953,12 @@ MAP
     bbb..bbn~l~wbb..bbw$l$wbb..bbb
    bbb....bbw~l~wbbbbw$l$wbb....bbb
   bbb...b..bbw~l~wbbw$l$wbb...'..bbb
- bbbB..''b.Bbbw~lnnn+l$wbbA.`..'.Abbb
+ bbbB..''b.Bbbw~?nnn+l$wbbA.`..'.Abbb
 bbb..b.b'....bbwnn|!n+wbb..`..b.'..bbb
 bb..b``..b"...bbn|]}!nbb..`.b.......++
 bb...`b..""b..bbn!_)|nbb.......b."..++
 bbb....-b.b..bbwnn!|nnwbb..-.b.."..bbb
- bbbB.b--..Bbbw~lnnnnl~wbbA.-..".Abbb
+ bbbB.b--..Bbbw~lnnnn?~wbbA.-..".Abbb
   bbb..b...bbw~l~wbbw~l~wbb..-...bbb
    bbb....bbw~l~wbbbbw~l~wbb....bbb
     bbb..bbn~l~wbb..bbw~l~nbb..bbb
@@ -6990,7 +6993,8 @@ KMONS:   9 = yellow draconian annihilator
 KMONS:   0 = golden dragon
 KITEM:   R = $, midnight gem
 KFEAT:   0 = enter_zot
-NSUBST:  $ = 1:R / *:$
+KFEAT:   ? = zot_statue
+NSUBST:  $ = 1:R / *:$, yYzZ = 2:?
 TILE:    v = dngn_metal_wall_magenta
 :   end
 KITEM:   & = demon blade good_item / demon whip good_item / \
@@ -7075,7 +7079,7 @@ KFEAT:   ) = enter_depths
 KITEM:   R = smoky gem
 SHUFFLE: )]
 SUBST:   ^V = ., ] = R
-FTILE:   R' = floor_depthstone
+FTILE:   R') = floor_depthstone
 :   end
 NSUBST:  | = 1:d / 1:f / *:%
 NSUBST:  DEF = 1:1, D = 1:. / *:D, E = 1:. / *:E, F = 1:. / *:F
@@ -7120,12 +7124,13 @@ MONS:    ice dragon, lich, golden dragon
 MONS:    white draconian stormcaller, black draconian knight
 KFEAT:   ) = enter_zot
 KFEAT:   ^ = alarm trap / zot trap
+KFEAT:   U = zot_statue
 KITEM:   R = midnight gem
 NSUBST:  ^ = 2:^. / *:., 1 = 2 = 26 / *:1
 NSUBST:  D = 1:12 / *:D, E = 1:12 / *:E, F = 1:12 / *:F
 SHUFFLE: )]
 SUBST:   ] = R
-FTILE:   R = floor_hall
+FTILE:   )R = floor_hall
 :   end
 NSUBST:  | = 1:d / 1:e / 1:g / * = de
 : else   -- Zot
@@ -9785,7 +9790,7 @@ DEPTH:  Depths
 PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-:     zot_entry_setup(_G)
+:   zot_entry_setup(_G, true)
 TAGS:   patrolling no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
 NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
@@ -9824,7 +9829,7 @@ DEPTH:  Depths
 PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-:     zot_entry_setup(_G)
+:   zot_entry_setup(_G, true)
 TAGS:   no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
 NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
@@ -9838,6 +9843,7 @@ KMONS:  9 = 9 band
 KMONS:  0 = 0 band
 KITEM:  O = superb_item
 KITEM:  9 = any good_item
+SUBST:  Z = c
 : end
 MAP
         xxxxx@xxxxx
@@ -9850,13 +9856,13 @@ MAP
  x.0.x...xxxxxxxxx...x.0.x
 xx..xxx...xxxxxxx...xxx..xx
 x...xxxx...xxxxx...xxxx...x
-x..xxxxxx...ccc...xxxxxx..x
+x..xxxxxx...cZc...xxxxxx..x
 x..xxxxxxx.++c++.xxxxxxx..x
 x..xxxxxxxc+|8|+cxxxxxxx..x
 @.0xxxxxxxcc8O8ccxxxxxxx0.@
 x..xxxxxxxc+|8|+cxxxxxxx..x
 x..xxxxxxx.++c++.xxxxxxx..x
-x..xxxxxx...ccc...xxxxxx..x
+x..xxxxxx...cZc...xxxxxx..x
 x...xxxx...xxxxx...xxxx...x
 xx..xxx...xxxxxxx...xxx..xx
  x.0.x...xxxxxxxxx...x.0.x

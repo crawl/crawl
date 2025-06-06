@@ -32,6 +32,7 @@ function temple_entry(e)
   e.tags("temple_entry")
   e.orient("float")
   e.kfeat("O = enter_temple")
+  e.kfeat("Z = zot_statue")
 end
 }}
 
@@ -46,7 +47,7 @@ MAP
 ccccccccc
 c...O...c
 c.......c
-c.?...?.c
+c.Z...Z.c
 c.......c
 c.......c
 c.?...?.c
@@ -62,7 +63,6 @@ ENDMAP
 
 NAME:   temple_hall_moat
 TAGS:   no_pool_fixup no_monster_gen
-ORIENT: float
 WEIGHT: 1
 SUBST:  ? : v b G:5
 : temple_entry(_G)
@@ -70,7 +70,7 @@ MAP
    ccc
    cOc
 cccc+cccc
-cwwG.Gwwc
+cwwZ.Zwwc
 cwww.wwwc
 cw?w.w?wc
 cwww.wwwc
@@ -92,9 +92,9 @@ SUBST:  ? : T:30 U
 : temple_entry(_G)
 MAP
 ...?...
-.......
+..Z....
 .?.O.?.
-.......
+....Z..
 ...?...
 ENDMAP
 
@@ -102,7 +102,7 @@ NAME:   temple_statues
 TAGS:   transparent
 : temple_entry(_G)
 MAP
-GOG
+ZOZ
 ENDMAP
 
 NAME:   temple_green
@@ -112,9 +112,9 @@ NSUBST: ? = 1:+ / * = +bb
 MAP
 bbbb+bbbb
 b.......b
-b.......b
+b..Z....b
 ?...O...?
-b.......b
+b....Z..b
 b.......b
 bbbb?bbbb
 ENDMAP
@@ -124,19 +124,19 @@ ENDMAP
 NAME:    temple_doors_ab
 TAGS:    transparent
 WEIGHT:  2
-SHUFFLE: Y'"E& / ZD~~~
+SHUFFLE: Y'"E& / yD~~~
 NSUBST:  XY = + / m+
-SUBST:   Z = m, cCD : cxxx
+SUBST:   y = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
 cccccccccCC
-cccmmmmmcCC
+cccmmZmmcCC
 cccm?.?mcCC
 @..X.O.Y'"&
 cccm?.?mcCC
-cccmmmmmcCC
+cccmmZmmcCC
 cccccccccCC
 ENDMAP
 
@@ -151,11 +151,11 @@ CLEAR:   ~
 : temple_entry(_G)
 MAP
 cccccccccCC
-cccmmmmmcCC
+cccZmmmmcCC
 cccm?.?mcCC
 @..X.O.Y'"&
 cccm?.?mcCC
-cccmmXmmcCC
+cccmmXmZcCC
 ccccc.cccCC
 ccccc.cccCC
 ccccc@cccCC
@@ -172,11 +172,11 @@ MAP
 cccccc@cccccc
 cccccc.cccccc
 cccccc.cccccc
-ccccmmXmmcccc
+ccccZmXmmcccc
 ccccm?.?mcccc
 @...X.O.X...@
 ccccm?.?mcccc
-ccccmmXmmcccc
+ccccmmXmZcccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc@cccccc
@@ -196,13 +196,13 @@ SUBST:   ACD = W, B = wW, EFGHIJKLMNPQXY = w
 MAP
 .................
 ......wwwww......
-....wABwwwwwG....
+....wABwZwwwG....
 ..wwwCwwwwFHwww..
 .wwwwwD...Ewwwww.
 .wwwwww.O.YYYYYY.
 .wwwwww...wwwwww.
 .wwwwJLwXwQwwwww.
-..wwKIwwXwMNwww..
+..wwKIwXZwMNwww..
 ....wwwwXwwPw....
 ......wwXww......
 .................
@@ -230,9 +230,9 @@ MAP
  ........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
  .......'''''!!!!!!!!!???!!!!!!!!!'''''........x
 .......'''''!!!!!!!!!?????!!!!!!!!!'''''........
-.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......''''!!!!!!!!!????Z??!!!!!!!!!''''........
 .......'''!!!!!!!!!????O????!!!!!!!!!'''........
-.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......''''!!!!!!!!!??Z????!!!!!!!!!''''........
 .......'''''!!!!!!!!!?????!!!!!!!!!'''''.......
 x.......'''''!!!!!!!!!???!!!!!!!!!'''''........
 x........'''''!!!!!!!!!?!!!!!!!!!'''''.........
@@ -285,7 +285,7 @@ x''''''---''''''x
 x''''''---''''''x
 x'D'E''---''F'D'x
 x''''''---''''''x
-x''''''-O-''''''x
+x''''Z'-O-'Z''''x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -325,7 +325,7 @@ x''D'''---''''F'x
 x''''''---''''''x
 x'D''''---'''F''x
 x''''''---''''''x
-x''E'''-O-''''D'x
+x''E'Z'-O-'Z''D'x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -344,11 +344,11 @@ xxl.'llxx
 xxx'.lxxx
 xxxx.xxxx
 xccc+cccx
-xcG...Gcx
+xcG...Zcx
 xc.....cx
 xc..O..cx
 xc.....cx
-xcG...Gcx
+xcZ...Gcx
 xcccccccx
 xxxxxxxxx
 ENDMAP
@@ -363,7 +363,7 @@ KPROP:  lw = no_tele_into
 MAP
 ccccccccccccc
 c???????????c
-c???????????c
+c?????Z?????c
 c???????????c
 c???nnnnn???c
 c???n...nnnnc
@@ -371,7 +371,7 @@ c???n.O.....@
 c???n...nnnnc
 c???nnnnn???c
 c???????????c
-c???????????c
+c?????Z?????c
 c???????????c
 ccccccccccccc
 ENDMAP
@@ -382,11 +382,11 @@ MONS:   plant, bush
 SUBST:  ? = .1, ! = ...1, 1 : 123, 2 = 2.., 3 = 12
 : temple_entry(_G)
 MAP
-!!!!!
+!!!!Z
 !???!
 !?O?!
 !???!
-!!!!!
+Z!!!!
 ENDMAP
 
 NAME:   minmay_temple_entry_junction
@@ -395,13 +395,13 @@ SUBST:  T = TV U:1, X : xc v:1 b:1
 : temple_entry(_G)
 MAP
 xxx...xxx
-xxX.T.Xxx
-xXX...XXx
+xXX.T.Xxx
+xXZ...XXx
 .........
 .T..O..T.
 .........
-xXX...XXx
-xxX.T.Xxx
+xXX...ZXx
+xxX.T.XXx
 xxx...xxx
 ENDMAP
 
@@ -414,9 +414,9 @@ MAP
 .m.m.m.m.m.
 ...........
 .m.......m.
-...........
+......Z....
 .m...O...m.
-...........
+....Z......
 .m.......m.
 ...........
 .m.m.m.m.m.
@@ -429,11 +429,11 @@ SUBST:  t : t1
 MONS:   bush
 : temple_entry(_G)
 MAP
-.....
+Z....
 .t.t.
 ..O..
 .t.t.
-.....
+....Z
 ENDMAP
 
 NAME:   minmay_temple_entry_butterflies
@@ -442,9 +442,9 @@ MONS:   butterfly
 NSUBST: . = 1:1 / 1:1.. / *:.
 : temple_entry(_G)
 MAP
-...
+Z..
 .O.
-...
+..Z
 ENDMAP
 
 NAME:   minmay_temple_entry_metal_lava
@@ -454,9 +454,9 @@ KMASK:  l = no_monster_gen
 : temple_entry(_G)
 MAP
 vvvvvvv
-vlvlvlv
+vlvlZlv
 @..O..@
-vlvlvlv
+vlZlvlv
 vvvvvvv
 ENDMAP
 
@@ -471,9 +471,9 @@ c...c...c...c
 B.A.D.A.E.A.B
 c...c...c...c
 ccDccc.cccEcc
-c...c...c...c
+c...cZ..c...c
 B.A...A...A.B
-c...c...c...c
+c...c..Zc...c
 ccCccc.cccFcc
 c...c...c...c
 B.A.C.A.F.A.B
@@ -492,9 +492,9 @@ KMASK:  W! = no_monster_gen
 MAP
 ..WWW..
 .WW!WW.
-WWWWWWW
+WWZWWWW
 W!WOW!W
-WWWWWWW
+WWWWZWW
 .WW!WW.
 ..WWW..
 ENDMAP
@@ -506,11 +506,11 @@ SUBST:  m : bm
 MAP
 .........
 ...m.m...
-..m.m.m..
+..Z.m.m..
 .m.m.m.m.
 ..m.O.m..
 .m.m.m.m.
-..m.m.m..
+..m.m.Z..
 ...m.m...
 .........
 ENDMAP
@@ -521,11 +521,11 @@ SUBST:  c : c:80 xv, T = T:80 UV
 : temple_entry(_G)
 MAP
 ccc+ccc
-c.....c
+cZ....c
 c.T.T.c
 +..O..+
 c.T.T.c
-c.....c
+c....Zc
 ccc+ccc
 ENDMAP
 
@@ -538,9 +538,9 @@ MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
 : temple_entry(_G)
 MAP
 .....
-.....
+...Z.
 ..O..
-.....
+.Z...
 .....
 ENDMAP
 
@@ -549,11 +549,11 @@ TAGS:   transparent
 : temple_entry(_G)
 MAP
 .......
-.G.G.G.
+.Z.G.G.
 ..T.T..
 .G.O.G.
 ..T.T..
-.G.G.G.
+.G.G.Z.
 .......
 ENDMAP
 
@@ -566,9 +566,9 @@ xx@xx@xx@xx
 x.........x
 @.........@
 x..T...T..x
-x.........x
+x...Z.....x
 @....O....@
-x.........x
+x.....Z...x
 x..T...T..x
 @.........@
 x.........x
@@ -580,11 +580,11 @@ TAGS:   transparent
 : temple_entry(_G)
 MAP
 xxx+xxx
-x.....x
+x....Zx
 x.m+m.x
 +.mOm.+
 x.mmm.x
-x.....x
+xZ....x
 xxx+xxx
 ENDMAP
 
@@ -598,9 +598,9 @@ MAP
 ..v..vvv..v..
 .v..v...v..v.
 .v.v.vvv.v.v.
-v.v.v...v.v.v
+v.v.v.Z.v.v.v
 v.v.v.O.v.v.v
-v.v.v...v.v.v
+v.v.v.Z.v.v.v
 .v.v.vvv.v.v.
 .v..v...v..v.
 ..v..vvv..v..
@@ -616,8 +616,8 @@ MONS:   plant, oklob sapling
 MAP
 ....1..
 1.111.1
-.11.11.
-.1.O211
+.11Z11.
+.1ZO211
 11.1111
 .111.1.
 1..11..
@@ -628,13 +628,13 @@ TAGS:   transparent
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-.......
+...Z...
 .b...b.
 ..b.b..
 ...O...
 ..b.b..
 .b...b.
-.......
+...Z...
 ENDMAP
 
 NAME:   minmay_temple_entry_junction_2
@@ -645,13 +645,13 @@ SUBST:  x : xccbbmv, T = T:39 V U:1
 MAP
 ...........
 ...x...x...
-...x.T.x...
+..Zx.T.x...
 .xxx...xxx.
 ...........
 ..T..O..T..
 ...........
 .xxx...xxx.
-...x.T.x...
+...x.T.xZ..
 ...x...x...
 ...........
 ENDMAP
@@ -667,11 +667,11 @@ MAP
 .xxx.....xxx.
 .xWWWWWWWWWx.
 .xWx.....xWx.
-..W.......W..
+..W.Z.....W..
 ..W.......W..
 ..W...O...W..
 ..W.......W..
-..W.......W..
+..W.....Z.W..
 .xWx.....xWx.
 .xWWWWWWWWWx.
 .xxx.....xxx.
@@ -682,11 +682,11 @@ NAME:   minmay_temple_entry_statues
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-xGGGx
+xGZGx
 G...G
 G.O.@
 G...G
-xGGGx
+xGZGx
 ENDMAP
 
 NAME:   minmay_temple_entry_statues_pillars
@@ -695,11 +695,11 @@ SUBST:  c : cccxxb
 KFEAT:  O = enter_temple
 : temple_entry(_G)
 MAP
-c.G.c
+c.Z.c
 .....
 G.O.G
 .....
-c.G.c
+c.Z.c
 ENDMAP
 
 NAME:   minmay_temple_entry_from_below_a
@@ -708,9 +708,9 @@ WEIGHT: 5
 MAP
       @.
 ccccccncc
-c.......c
+cZ......c
 c.O.c.}.c
-c.......c
+cZ......c
 ccncccccc
   @
 ENDMAP
@@ -721,11 +721,11 @@ WEIGHT: 2
 MAP
          @.
 cccccccccnccc
-cG.........Gc
+cZ.........Gc
 c....T.T....c
 c..O.....}..c
 c....T.T....c
-cG.........Gc
+cZ.........Gc
 cccnccccccccc
    @
 ENDMAP
@@ -738,7 +738,7 @@ MAP
  xxxxx
 xxtttxx
 xt...tx
-xt.O.tx
+xZ.O.Zx
 xt...tx
 xxt.txx
  xx+xx
@@ -756,7 +756,7 @@ MAP
  ccccc...ccccc
 ccccc-...-ccccc
 cc---..T..---cc
-c-...........-c
+c-...Z...Z...-c
 c-._..---..O.-c
 c-...-ccc-...-c
 cc---ccccc---cc
@@ -776,7 +776,7 @@ MAP
    ....ccc....
   ..c...c...c..
  ....c.....c....
-..ccccc.O.ccccc..
+..ccccZ.O.Zcccc..
  ....c.....c....
   ..c...c...c..
    ....ccc....
@@ -798,11 +798,11 @@ MAP
      .....
      .c.c.
     .......
-  ...c.?.c...
+  ...c.?.Z...
 ...c.......c...
 .c...?.O.?...c.
 ...c.......c...
-  ...c.?.c...
+  ...Z.?.c...
     .......
      .c.c.
      .....
@@ -820,11 +820,11 @@ MAP
       .....
     ...c.c.
   ...cnc.c..
-...ccc...cc.
+...cccZ..cc.
 .c........n..
 ...cc..O..cc...
   ..n........c.
-   .cc...ccc...
+   .cc..Zccc...
    ..c.cnc...
     .c.c...
     .....
@@ -840,11 +840,11 @@ SUBST:  ? : TG
 : temple_entry(_G)
 MAP
     ccccccc
-ccccc!...!ccccc
+cccccZ...!ccccc
 c...c.....c...c
 ..?....O....?..
 c...c.....c...c
-ccccc!...!ccccc
+ccccc!...Zccccc
     ccccccc
 ENDMAP
 
@@ -858,7 +858,7 @@ MAP
 ....c.c..c.
 .c..c....c.
 ..cc....c..
-.....O.....
+....ZOZ....
 ..c....cc..
 .c....c..c.
 .c..c.c....
@@ -876,11 +876,11 @@ MAP
  ..cc..c...cc..
   ..cc..cccccc.
   ..ccc..cccc..
-   .ccc.......
+   .cZc.......
    ..c..O...c.
     .......c..
      ..cc.cc.
-     .ccccc.
+     .cZccc.
      ..ccc.
       ....
 ENDMAP
@@ -891,11 +891,11 @@ SUBST:  T = T:99 V:1
 : temple_entry(_G)
 MAP
 ....
-.GT.
+.ZT.
 ......
 .GT.O.
 ......
-.GT.
+.ZT.
 ....
 ENDMAP
 
@@ -905,9 +905,9 @@ SHUFFLE: def$
 ITEM:    any weapon, any book, gold
 : temple_entry(_G)
 MAP
-d.e
+dZe
 .O.
-f.$
+fZ$
 ENDMAP
 
 NAME:   minmay_temple_entry_gardened_gates
@@ -918,9 +918,9 @@ SUBST:  c : ccccb
 MAP
   p@p
  cc.cc
-pc...cp
+pcZ..cp
 @..O..@
-pc...cp
+pc..Zcp
  cc.cc
   p@p
 ENDMAP
@@ -930,7 +930,7 @@ TAGS:   transparent
 KMONS:  O = orc priest
 : temple_entry(_G)
 MAP
-O
+ZOZ
 ENDMAP
 
 NAME:   minmay_temple_entry_stoned_glass
@@ -941,7 +941,7 @@ MAP
 .nc...cn.
 .cn...nc.
 .........
-....O....
+...ZOZ...
 .........
 .cn...nc.
 .nc...cn.
@@ -958,9 +958,9 @@ MAP
    ...c...
   ...ccc...
  ...........
-...c.....c...
+...c..Z..c...
 .ccc..O..ccc.
-...c.....c...
+...c..Z..c...
  ...........
   ...ccc...
    ...c...
@@ -979,7 +979,7 @@ MAP
 .c.cc.c.cc.c...
 .c....c........
 ....c...c.c.cc.
-.cc.c.O.c.c....
+.cc.Z.O.Z.c....
 ............c..
 ...c.c.c....c..
 .c.c.c.c.cc....
@@ -1000,9 +1000,9 @@ MAP
  ..cc.....cc..
 ..cc..c.c..cc..
 .cc..cc.cc..cc.
-....cc...cc....
+....cc.Z.cc....
 ..?....O....?..
-....cc...cc....
+....cc.Z.cc....
 .cc..cc.cc..cc.
 ..cc..c.c..cc..
  ..cc.....cc..

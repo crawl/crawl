@@ -327,6 +327,7 @@ enum tag_minor_version
     TAG_MINOR_BANES,               // Added Banes
     TAG_MINOR_TEMP_MUT_KILLS,      // Change how temp mutations are cured
     TAG_MINOR_CONTAM_PERCENT,      // Rescale internal values for magic contamination
+    TAG_MINOR_ZOT_ORB_ROTATION,    // Add multiple rotating orb monster types to Zot
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

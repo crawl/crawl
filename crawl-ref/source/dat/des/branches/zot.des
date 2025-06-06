@@ -61,24 +61,23 @@ end
 
 ###########################
 # Something to give the builder a chance if massive vaults keep failing.
-# NOTE: Not currently used: larger entries are placed as primary vaults instead.
+# NOTE: Not currently used. Larger entries are placed as primary vaults instead.
 #
 NAME:   zot_entry_small
 TAGS:   zot_entry
-KFEAT:  O = enter_zot
-KITEM:  R = midnight gem
 COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
 TILE:   c = wall_zot_magenta
-FTILE:  .RO+ = floor_hall
+FTILE:  .ROZ+ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
 xxxxxxxxx
 xxxcccxxx
-xxcc.ccxx
+xxcZ.ccxx
 xcc...ccx
 xc..OR.+@
 xcc...ccx
-xxcc.ccxx
+xxcZ.ccxx
 xxxcccxxx
 xxxxxxxxx
 ENDMAP
@@ -88,9 +87,9 @@ TAGS:   no_monster_gen zot_entry
 SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
-FTILE:  O.4G : floor_marble
+FTILE:  O.4GZ = floor_marble
 SUBST:  4 = 122223
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxcccccccxxxxxxx
@@ -99,7 +98,7 @@ xxcc......vvv......ccx
 xxc.v......1......v.cx
 xxc.2v...nn=nn...v..cx
 xxc...nnnn...nnnn...cx
-xxc...n....G....n..1cx
+xxc...n....Z....n..1cx
 xcc...n.G..4..G.n...cc
 xc.3.nn....v....nn...c
 xc.v.n....v.v....n.v.+
@@ -107,7 +106,7 @@ xc.v.+.G.vRO.v.G.=.v.+
 xc.v.n....v.v....n.v.+
 xc.3.nn....v....nn...c
 xcc...n.G..4..G.n...cc
-xxc...n....G....n..1cx
+xxc...n....Z....n..1cx
 xxc...nnnn...nnnn...cx
 xxc.2v...nn=nn...v..cx
 xxc.v......1......v.cx
@@ -123,13 +122,13 @@ TAGS:    no_monster_gen no_pool_fixup zot_entry layout_city
 KFEAT:   ^ = alarm trap
 KFEAT:   - = +
 SHUFFLE: Nn / Oo / Pp / Qq
-SUBST:   o = R, NPQ = A, npq = ., ^ = ^.., s = ccc+
+SUBST:   o = R, NP = Z, Q = A, npq = ., ^ = ^.., s = ccc+
 NSUBST:  3 = 1:9 / *:3
 COLOUR:  "x = magenta
-FTILE:   "OADx = floor_marble
+FTILE:   "OADxZ = floor_marble
 FTILE:   .+cm^012349$ = floor_hall
 TILE:    x = wall_zot_magenta
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MONS:   base draconian ; partisan | glaive
 MAP
 '''''''''''''''''''''''''''''''''''''''''
@@ -161,12 +160,9 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen
-PLACE:  Depths:$
-ORIENT: float
 WEIGHT: 8
-KITEM:  R = midnight gem
-KFEAT:  O = enter_zot
 KFEAT:  D = +
+KFEAT:  G = zot_statue
 SUBST:  b : a.., a : c., v : xv
 # entry: 1, 2
 MONS:   place:Depths:1, place:Depths:$
@@ -195,9 +191,10 @@ KMONS:  9 = nonbase draconian
 KMONS:  0 = golden dragon / wyrmhole w:2
 TILE:   x = wall_zot_magenta
 TILE:   v = dngn_metal_zot
-FTILE:  -ROD = floor_hall
+FTILE:  -RODG = floor_hall
 COLOUR: -R = magenta
 COLOUR: x = lightmagenta
+: zot_entry_setup(_G, false)
 MAP
 ccc+ccccccccccccccccccc
 cab.bacccab.baccccccccc
@@ -212,8 +209,8 @@ cab.bacccxx-xxcccab.bac
 cb...bccxx---xxccb.8.bc
 c.3.3.ccv--O--vcc.7.7.c
 cb444bccxx---xxccb...bc
-cab.bacccxxRxxcccab.bac
-ccc+ccccccxvxcccccc+ccc
+cab.bacccGxRxGxccab.bac
+ccc+ccccccxvxxxcccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
 ccccc..ccab.bacc..ccccc
@@ -233,7 +230,7 @@ KFEAT:  V = v
 KFEAT:  X = x
 SUBST:  V : Vx, x : Xccv
 NSUBST: 2 = 2:2 / 1:R / *:-
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MONS:   draconian stormcaller
 KMASK:  4 = opaque
 COLOUR: X = lightmagenta
@@ -248,7 +245,7 @@ xxmmm.....G.-.G.....mmmxx
 x.m4m.......-.......m4m.x
 x.mmm...G...-...G...mmm.x
 x..........---..........x
-x.....G....---....G.....x
+x.....Z....---....G.....x
 x..........---..........x
 x...G.....-----.....G...x
 x........XX---XX........x
@@ -260,7 +257,7 @@ x.G.....-X1---1X-.....G.x
 x........XX---XX........x
 x...G.....-----.....G...x
 x..........---..........x
-x.....G....---....G.....x
+x.....G....---....Z.....x
 x..........---..........x
 x.mmm...G...-...G...mmm.x
 x.m4m.......-.......m4m.x
@@ -276,19 +273,19 @@ COLOUR: X+- = magenta
 SUBST:  v : ....cnblw, z :..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
-FTILE:  -OR+ = floor_hall
+FTILE:  -OR+Z = floor_hall
 TILE:   X = wall_zot_magenta
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
                    cccccccccccc
                    cc..3....ccc
 cccccccccccccccccccc.........cc
 ccccccdccdccdccdccc..2XXXXX...c
-ccc..............dc..XX---XX..c
+ccc..............dc..XX-Z-XX..c
 D...vv.zz.vv.zz..cc..X-----X..c
 D...vv.zz.vv.zz..+...X-RO--+..c
 D...vv.zz.vv.zz..cc..X-----X..c
-ccc..............dc..XX---XX..c
+ccc..............dc..XX-Z-XX..c
 ccccccdccdccdccdccc..2XXXXX...c
 cccccccccccccccccccc.........cc
                   ccc..3....ccc
@@ -299,17 +296,17 @@ NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
-FTILE:  OR-+c = floor_hall
+FTILE:  OR-+cZ = floor_hall
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 ....d....
 .dcc+ccd.
 .cc---cc.
 .c-----c.
 dc--O--cd
-.c--R--c.
+.cZ-R-Zc.
 .cc---cc.
 .dcccccd.
 ....d....
@@ -321,15 +318,15 @@ KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
 NSUBST: 1 = 1:0 / *:1, 2 = 2:2 / *:., 3 = 2:3 / *:2
-FTILE:  -OR+Ac = floor_hall
-: zot_entry_setup(_G)
+FTILE:  -OR+AcZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
       ..3..
      .2c+c2.
     ..cc-cc..
    1.cc---cc.1
   ..cc--O--cc..
- ..cccc---cccc..
+ ..cccZ---Zccc..
 .2cc-cccRccc-cc2.
 .cc---ccccc---cc.
 3+--A--ccc--A--+3
@@ -346,10 +343,10 @@ ENDMAP
 NAME:   grunt_zot_entry_hairpin
 TAGS:   no_monster_gen patrolling
 COLOUR: ABC-_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 3, C = c, - = +
 NSUBST: 3 = 1:993 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
       cccccccccccccccccccc
     ccc..................cc
@@ -357,9 +354,9 @@ MAP
   cc.....cccccccccccccc....c
   c.....cc...........ccc...c
  cc..1.cc1.CCCCCCCCC..c.1..c
-@+....cc..CC_____A_CC.c...cc
+@+....cc..CC_____AZCC.c...cc
 @+..3.c.3.-____B__ORC0+2.cc
-@+....cc..CC_____A_CC.c...cc
+@+....cc..CC_____AZCC.c...cc
  cc..1.cc1.CCCCCCCCC..c.1..c
   c.....cc...........ccc...c
   cc.....cccccccccccccc....c
@@ -372,8 +369,8 @@ NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen patrolling transparent
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
 COLOUR: 1239c+.R = magenta
-FTILE:  1239c+.OR = floor_hall
-: zot_entry_setup(_G)
+FTILE:  1239c+.ORZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
       @       @
     cc+cc   cc+cc
@@ -382,13 +379,13 @@ MAP
  cccxcc.1.c.1.ccxccc
  c.ccxcc.....ccxcc.c
 @+..ccxcc.3.ccxcc..+@
- c...ccxcc+ccxcc...c
- cc.1.ccc...ccc.1.cc
+ c...ccxcc+ccccc...c
+ cc.1.ccc...Zcc.1.cc
   cc...c.R2..c...cc
   ccc.3+.2O2.+3.ccc
   cc...c..2..c...cc
- cc.1.ccc...ccc.1.cc
- c...ccxcc+ccxcc...c
+ cc.1.ccZ...ccc.1.cc
+ c...ccccc+ccxcc...c
 @+..ccxcc.3.ccxcc..+@
  c.ccxcc.....ccxcc.c
  cccxcc.1.c.1.ccxccc
@@ -403,16 +400,16 @@ TAGS:   no_monster_gen patrolling transparent
 KFEAT:  A = stone_arch
 NSUBST: 1 = 2:0 / *:1, 3 = 1:9 / *:3
 COLOUR: 123c+.R = magenta
-FTILE:  123c+.AOR = floor_hall
-: zot_entry_setup(_G)
+FTILE:  123c+.AORZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
        @
      cc+cc
     cc...c
    cc...cc ccccc
    c...cc cc.1.cc
-   c1.1c cc.3...cc
-   c.3.ccc.2.1...c
+   c1.1c cc.3Z..cc
+   c.3.ccc.2.1.Z.c
    cc.2.cc.Rccc..+@
     cc..AcOcc cc.c
  ccc ccccccccc ccc
@@ -430,15 +427,15 @@ ENDMAP
 NAME:   grunt_zot_entry_bicorn
 TAGS:   no_monster_gen transparent patrolling
 COLOUR: 0123c+_R = magenta
-FTILE:  0123+_ORT = floor_hall
+FTILE:  0123+_ORTZ = floor_hall
 SUBST:  _ = .
 NSUBST: 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
             .....
           ...ccc...
          ..cccRccc..
-        ..cc_____cc..
+        ..cc_Z_Z_cc..
        ..cc_2_O_2_cc..
       ..cc___2_2___cc..
      ..cc___________cc..
@@ -457,10 +454,10 @@ ENDMAP
 NAME:   grunt_zot_entry_tricorne
 TAGS:   no_monster_gen transparent patrolling
 COLOUR: ABC_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 110, C = c, - = +
 NSUBST: 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 @......               ......@
 .+cccc.................cccc+.
@@ -471,7 +468,7 @@ MAP
   .cc...3.C___A___C.3...cc.
   ..cc...C-_B_R_B_-C...cc..
    ..cc..C_________C..cc..
-    ..c..C____O____C.cc..
+    ..c..CZ___O___ZC.cc..
      .cc.C_________C.cc.
      ..ccCC_A___A_CCcc..
       ..ccC___B___Ccc..
@@ -493,10 +490,10 @@ ENDMAP
 NAME:   grunt_zot_entry_gee_three
 TAGS:   no_monster_gen zot_entry transparent patrolling
 COLOUR: ABC_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 1, C = c, - = +
 NSUBST: 1 = 3:0 / 7:1 / *:., 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
            .........
          ...ccccccc...
@@ -513,7 +510,7 @@ MAP
 @+..c......ccCA_ACcc......c..+@
 .ccc....1..ccC___Ccc..1....ccc.
 ...ccc..T..ccC_O_Ccc..T..ccc...
-.cccc.......cCCRCCc.......cccc.
+.cccc.......cZCRCZc.......cccc.
 @+......2...ccCCCcc...2......+@
 .ccc.......1..c.c..1.......ccc.
 ...ccccc..T..1.3.1..T..ccccc...
@@ -535,14 +532,14 @@ ENDMAP
 NAME:   grunt_zot_entry_alcove
 TAGS:   no_monster_gen zot_entry transparent patrolling
 COLOUR: 29C-_R = magenta
-FTILE:  29C-_OR = floor_hall
+FTILE:  29C-_ORZ = floor_hall
 SUBST:  _ = ., C = c
 NSUBST: @ = 1:@ / *:.
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
      ccccccc
     ccCCCCCcc
-    cCC_9_CCc
+    cCZ_9_ZCc
     cC__R__Cc
     cC2_O_2Cc
     cC__2__Cc

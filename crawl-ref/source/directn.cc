@@ -3073,6 +3073,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
     if (grid == DNGN_ROCK_WALL && player_in_branch(BRANCH_PANDEMONIUM))
         return "wall of the weird stuff which makes up Pandemonium";
+    else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
+        return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
     else if (!is_valid_feature_type(grid))
         return "";
     else

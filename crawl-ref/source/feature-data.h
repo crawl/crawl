@@ -224,6 +224,14 @@ static feature_def feat_defs[] =
 },
 
 {
+    // Names remapped based on orb in the game
+    DNGN_ZOT_STATUE, "zot statue", "zot_statue",
+    DCHAR_STATUE, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY),
+    FFT_SOLID | FFT_NOTABLE, MF_WALL,
+},
+
+{
     DNGN_MALIGN_GATEWAY, "portal to somewhere", "malign_gateway",
     DCHAR_ARCH, NUM_DCHAR_TYPES,
     COLOURS(ETC_SHIMMER_BLUE, LIGHTGREY),

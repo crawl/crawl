@@ -4678,6 +4678,9 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name == "large abomination")
         return MONS_ABOMINATION_LARGE;
 
+    if (name == "orb of appropriateness")
+        return MONS_ORB_OF_APPROPRIATENESS;
+
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
         return get_hydra_spec(name);
 

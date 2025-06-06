@@ -1951,6 +1951,7 @@ static const map<dungeon_feature_type, int> terrain_fake_shatter_chances = {
     { DNGN_CLEAR_STONE_WALL, 15 },
     { DNGN_STONE_WALL,       15 },
     { DNGN_METAL_STATUE,      5 },
+    { DNGN_ZOT_STATUE,        5 },
     { DNGN_METAL_WALL,        5 },
 };
 

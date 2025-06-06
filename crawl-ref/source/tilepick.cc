@@ -226,6 +226,19 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_METAL_STATUE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
+    case DNGN_ZOT_STATUE:
+        if (you.zot_orb_monster_known)
+        {
+            switch (you.zot_orb_monster)
+            {
+                case MONS_ORB_OF_FIRE:    return TILE_DNGN_ZOT_FIRE_STATUE;
+                case MONS_ORB_OF_WINTER:  return TILE_DNGN_ZOT_WINTER_STATUE;
+                case MONS_ORB_OF_ENTROPY: return TILE_DNGN_ZOT_ENTROPY_STATUE;
+                default: break;
+            }
+        }
+        else
+            return TILE_DNGN_PETRIFIED_TREE;
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_LAVA_SEA:

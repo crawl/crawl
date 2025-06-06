@@ -349,6 +349,11 @@ depths_crumbled_column DEPTHS_CRUMBLED_COLUMN
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON
 
+# The zot orb statues.
+zot_fire_orb_statue DNGN_ZOT_FIRE_STATUE
+zot_winter_orb_statue DNGN_ZOT_WINTER_STATUE
+zot_entropy_orb_statue DNGN_ZOT_ENTROPY_STATUE
+
 ## Features only used in certain minivaults
 %sdir dngn/vaults
 

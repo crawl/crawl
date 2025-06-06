@@ -84,21 +84,25 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
-function zot_entry_setup(e)
+function zot_entry_setup(e, use_default_mons)
   e.tags("zot_entry")
   e.place("Depths:$")
   e.orient("float")
   e.kitem("R = midnight gem")
   e.kfeat("O = enter_zot")
-  e.mons("patrolling base draconian")
-  e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
-          shadow dragon / golden dragon w:12 / wyrmhole w:4")
-  e.mons("patrolling nonbase draconian")
-  e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
-              stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
-  e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
-              spriggan air mage w:8 / deep troll earth mage w:8 / \
-              tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  e.kfeat("Z = zot_statue")
+  e.kmask("R = no_item_gen")
+  if use_default_mons then
+    e.mons("patrolling base draconian")
+    e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
+            shadow dragon / golden dragon w:12 / wyrmhole w:4")
+    e.mons("patrolling nonbase draconian")
+    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
+                stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
+    e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
+                 spriggan air mage w:8 / deep troll earth mage w:8 / \
+                  tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  end
 end
 
 function soh_hangout()

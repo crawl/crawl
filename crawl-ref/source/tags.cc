@@ -2099,6 +2099,8 @@ static void _tag_construct_you_dungeon(writer &th)
     marshallMap(th, you.vault_list, marshall_level_id, marshallStringVector);
 
     write_level_connectivity(th);
+
+    marshallMonType(th, you.zot_orb_monster);
 }
 
 static void marshall_follower(writer &th, const follower &f)
@@ -5299,6 +5301,13 @@ static void _tag_read_you_dungeon(reader &th)
                   unmarshallStringVector);
 
     read_level_connectivity(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ZOT_ORB_ROTATION)
+        you.zot_orb_monster = MONS_ORB_OF_FIRE;
+    else
+#endif
+    you.zot_orb_monster = unmarshallMonType(th);
 }
 
 static void _tag_read_lost_monsters(reader &th)
