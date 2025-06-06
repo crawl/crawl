@@ -1,3 +1,8 @@
+crawl (2:0.33.1-1) unstable; urgency=low
+
+  * New upstream release.
+ -- gammafunk <gammafunk@gmail.com>  Fri, 06 Jun 2025 14:10:15 -0500
+
 crawl (2:0.33.0-1) unstable; urgency=low
 
   * New upstream release.
