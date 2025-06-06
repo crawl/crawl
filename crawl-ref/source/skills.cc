@@ -1924,6 +1924,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_FIGHTING:
             if (species == SP_HUMAN && skill_rank == 5 && god == GOD_MAKHLEB)
                 result = "Hell Knight";
+            else if (species == SP_HUMAN && skill_rank == 5 && god == GOD_YREDELEMNUL)
+                result = "Death Knight";
             break;
 
         case SK_POLEARMS:
@@ -1937,7 +1939,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             else if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
             else if (species == SP_OCTOPODE && skill_rank == 5)
-                result = "Crusher";
+                result = "Kraken";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Yokozuna";
             else if (!dex_better && (species == SP_DJINNI || species == SP_POLTERGEIST)
@@ -1996,6 +1998,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Wishgranter";
             else if (species == SP_COGLIN && skill_rank == 5)
                 result = "Cogmind";
+            else if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Ascendant";
             break;
 
         case SK_CONJURATIONS:
@@ -2009,6 +2013,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_HEXES:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Faerie Dragon";
+            else if (species == SP_MERFOLK && skill_rank == 5)
+                result = "Siren";
             break;
 
         case SK_NECROMANCY:
@@ -2086,6 +2092,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Iron Dragon";
             break;
 
+        case SK_STEALTH:
+            if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Thief of Divinity";
+            break;
+
         case SK_INVOCATIONS:
             if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
                 result = "Royal Mummy";
@@ -2113,6 +2124,16 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Laughing Skull";
             else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_USKAYAW)
                 result = "Danse Macabre";
+            else if ((species == SP_MERFOLK || species == SP_OCTOPODE)
+                && skill_rank == 5 && god == GOD_LUGONU)
+                result = "Abyssopelagic";
+            else if (species == SP_OCTOPODE && skill_rank == 5 && is_evil_god(god))
+                result = "Leviathan";
+            else if (species == SP_MINOTAUR && skill_rank == 5 && god == GOD_ASHENZARI)
+            {
+                // navigating through mazes seems like the sort of thing Ash helps one with
+                result = "Lord of the Labyrinth";
+            }
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
