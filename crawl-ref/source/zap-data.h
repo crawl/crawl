@@ -2699,4 +2699,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_CONTAM,
 },
 
+{
+    ZAP_ACID_BALL,
+    "ball of acid",
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 5, 1, 12>,
+    new tohit_calculator<40>,
+    YELLOW,
+    false,
+    BEAM_ACID,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
 };

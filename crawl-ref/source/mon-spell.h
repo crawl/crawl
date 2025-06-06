@@ -1844,6 +1844,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ORB_OF_ENTROPY,
+      {
+       { SPELL_BOLT_OF_DRAINING, 32, MON_SPELL_MAGICAL },
+       { SPELL_ACID_BALL, 32, MON_SPELL_MAGICAL },
+       { SPELL_ILL_OMEN, 16, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_SAWBLADE,
       {
         { SPELL_SHRED, 200, MON_SPELL_NATURAL },

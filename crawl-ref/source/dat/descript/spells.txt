@@ -3,6 +3,10 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Ball spell
+
+Hurls an explosive ball of corrosive acid.
+%%%%
 Agonising Touch spell
 
 Cuts the health of an adjacent creature in half. This damage is never

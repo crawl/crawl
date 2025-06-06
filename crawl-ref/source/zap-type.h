@@ -192,5 +192,6 @@ enum zap_type
     ZAP_DOOM_BOLT,
     ZAP_WARP_BODY,
     ZAP_CONTAM_EXPLOSION,
+    ZAP_ACID_BALL,
     NUM_ZAPS
 };

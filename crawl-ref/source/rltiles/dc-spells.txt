@@ -202,6 +202,7 @@ warp_space WARP_SPACE
 %back gui/spells/bg
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
+acid_ball ACID_BALL
 air_elementals AIR_ELEMENTALS
 avatar_song AVATAR_SONG
 awaken_flesh AWAKEN_FLESH

@@ -893,6 +893,17 @@ orb of fire cast
 
 @The_monster@ emits a lurid red light.
 %%%%
+orb of entropy cast
+
+w:20
+@The_monster@ [pulses|vibrates].
+
+@The_monster@ gnaws at the world.
+
+@The_monster@ eats away at reality.
+
+Existence decays around @the_monster@.
+%%%%
 obsidian statue cast
 
 @The_monster_possessive@ eyes glow briefly.

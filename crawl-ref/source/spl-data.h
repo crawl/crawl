@@ -4551,6 +4551,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ACID_BALL, "Acid Ball",
+    spschool::conjuration | spschool::alchemy,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    5, 5,
+    0,
+    TILEG_ACID_BALL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

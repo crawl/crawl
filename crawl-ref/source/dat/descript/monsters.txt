@@ -2252,6 +2252,11 @@ massive inertia. A smart and agile person may move out of its path, causing it
 to miss its target. It cannot be avoided by Dodging skill, and is able to make
 sharp turns to hit adjacent targets.
 %%%%
+orb of entropy
+
+A globe of profound nothingness and the oblivion that awaits all things - flesh,
+souls, and even time itself. When the universe ends, only these will remain.
+%%%%
 orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics and of

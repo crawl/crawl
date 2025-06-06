@@ -2215,6 +2215,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_HURL_TORCHLIGHT:
     case SPELL_DOOM_BOLT:
     case SPELL_WARP_BODY:
+    case SPELL_ACID_BALL:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
