@@ -1284,8 +1284,11 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_amorphous(), monsterflags, "amorphous");
 
         string spell_string = construct_spells(spell_lists, damages);
-        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD)
+        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
+                         || mon.type == MONS_ORC_APOSTLE)
+        {
             spell_string = "(random)";
+        }
 
         mons_check_flag(vault_monster, monsterflags, colour(BROWN, "vault"));
 
