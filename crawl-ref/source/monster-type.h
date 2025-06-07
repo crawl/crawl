@@ -723,6 +723,9 @@ enum monster_type                      // env.mons[].type
     MONS_BLIZZARD_DEMON,
     MONS_BALRUG,
     MONS_CACODEMON,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ZYKZYL,
+#endif
     MONS_SUN_DEMON,
     MONS_SHADOW_DEMON,
     MONS_HELL_SENTINEL,
@@ -1360,6 +1363,7 @@ enum monster_type                      // env.mons[].type
     MONS_CHONCHON,
     MONS_KOBOLD_FLESHCRAFTER,
     MONS_PILE_OF_FLESH,
+    MONS_ZYKZYL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

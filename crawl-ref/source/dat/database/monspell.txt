@@ -1140,6 +1140,19 @@ living spell cast
 raven cast
 
 @The_monster@ stares into @foe_possessive@ soul.
+%%%%
+malmutate zykzyl cast
+
+@The_monster@ seethes with envy of @foe_possessive@ form.
+%%%%
+enfeeble zykzyl cast
+
+@The_monster@ overflows with resentment.
+%%%%
+bolt of flesh zykzyl cast
+
+@The_monster@ hurls a piece of @reflexive@ @at@ @target@.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

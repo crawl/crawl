@@ -418,6 +418,7 @@ cacodemon MONS_CACODEMON
 executioner MONS_EXECUTIONER
 brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
+zykzyl MONS_ZYKZYL
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
 tzitzimitl MONS_TZITZIMITL

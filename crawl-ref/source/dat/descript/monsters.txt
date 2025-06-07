@@ -3382,6 +3382,12 @@ zombie
 
 A corpse raised to undeath by necromancy.
 %%%%
+zykzyl
+
+A demon born of mortal envy, its flesh undulating with a sickening wetness
+whenever it moves. It is driven by a singular desire to reduce all beauty to a
+form as hideous as its own.
+%%%%
 # Specials
 test spawner
 

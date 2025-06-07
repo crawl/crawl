@@ -897,6 +897,7 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 17, 33,  35, SEMI, MONS_SHADOW_DEMON },
   { 17, 33,  65, SEMI, MONS_SIN_BEAST },
   { 17, 33,  15, SEMI, MONS_CACODEMON },
+  { 17, 33,  15, SEMI, MONS_ZYKZYL },
   { 18, 25,  50, SEMI, MONS_GUARDIAN_SPHINX },
   { 18, 33,  35, SEMI, MONS_REAPER },
   { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },

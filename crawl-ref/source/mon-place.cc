@@ -3180,6 +3180,7 @@ monster_type random_demon_by_tier(int tier)
                              MONS_BLIZZARD_DEMON,
                              MONS_BALRUG,
                              MONS_CACODEMON,
+                             MONS_ZYKZYL,
                              MONS_SIN_BEAST,
                              MONS_HELLION,
                              MONS_REAPER,

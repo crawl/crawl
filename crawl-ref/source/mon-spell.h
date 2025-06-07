@@ -1664,6 +1664,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ZYKZYL,
+      {
+       { SPELL_MALMUTATE, 15, MON_SPELL_MAGICAL },
+       { SPELL_ENFEEBLE, 20, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_FLESH, 13, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_HELLION,
       {
        { SPELL_CALL_DOWN_DAMNATION, 57, MON_SPELL_MAGICAL },
