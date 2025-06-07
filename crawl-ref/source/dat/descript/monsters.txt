@@ -2357,7 +2357,7 @@ A heavily ruptured stonework, surrounded by rubble.
 pile of flesh
 
 A leftover mess of broken bones, inert grasping organs, and scattered skin.
-While some highly-specialized sorcerers might be capable of bringing it to life,
+While some highly-specialised sorcerers might be capable of bringing it to life,
 it is otherwise harmless - the possible leftovers of some departed or
 absent-minded magus.
 %%%%
