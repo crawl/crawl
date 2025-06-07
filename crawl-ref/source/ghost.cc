@@ -951,7 +951,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
 
-    // Not really a normal resistance, so handle it seperately.
+    // Not really a normal resistance, so handle it separately.
     if (colour == MAGENTA)
         willpower = willpower + ((very_ugly) ? 121 : 81);
 
