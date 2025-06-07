@@ -4640,6 +4640,7 @@ static int _mutant_beast_xl(const string &tier)
 
 mons_spec mons_list::mons_by_name(string name) const
 {
+    name = lowercase(name);
     name = replace_all_of(name, "_", " ");
     name = replace_all(name, "random", "any");
 
