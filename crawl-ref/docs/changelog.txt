@@ -14,7 +14,7 @@ Bugfix release
   - The spells Chain Lightning and Stunning Bolt are now properly 33%
     resistable with rElec instead of only 25% resistable.
   - Mercury Arrow is now properly 25% resistable with rPois.
-  - Stunning Bolt now checks half of AC like other elecriticy-themed spells.
+  - Stunning Bolt now checks half of AC like other electricity-themed spells.
   - Qazlal's adaptive rElec is now properly triggered by Stunning Bolt.
   - Qazlal's adaptive AC is now properly triggered by all 'physical' spell
     projectiles.
