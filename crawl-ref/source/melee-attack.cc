@@ -4075,7 +4075,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_AIRSTRIKE:
     {
         const int spaces = airstrike_space_around(defender->pos(), true);
-        const int min = pow(attacker->get_hit_dice(), 1.2) * (spaces + 3) / 6;
+        const int min = pow(attacker->get_hit_dice(), 1.2) * (spaces + 2) / 9;
         const int max = pow(attacker->get_hit_dice() + 1, 1.2) * (spaces + 4) / 6;
         special_damage = defender->apply_ac(random_range(min, max), 0);
 
