@@ -1159,6 +1159,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_KOBOLD_FLESHCRAFTER,
+      {
+       { SPELL_BOLT_OF_FLESH, 32, MON_SPELL_WIZARD },
+       { SPELL_AWAKEN_FLESH, 60, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('L') Liches and the like.
     {  MST_REVENANT,
       {

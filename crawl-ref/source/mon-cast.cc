@@ -2176,6 +2176,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STUNNING_BURST:
     case SPELL_MALIGN_OFFERING:
     case SPELL_BOLT_OF_DEVASTATION:
+    case SPELL_BOLT_OF_FLESH:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
     case SPELL_HELLFIRE_MORTAR:
@@ -2544,6 +2545,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BRAIN_BITE:
     case SPELL_HOLY_FLAMES:
     case SPELL_CALL_OF_CHAOS:
+    case SPELL_AWAKEN_FLESH:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
     case SPELL_ENTROPIC_WEAVE:
@@ -2939,6 +2941,81 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
     if (affected == 0)
         return false;
+
+    return true;
+}
+
+/**
+ * Awakens piles of flesh into buffed large abominations, while also making
+ * explosions of chaos that'll only hit enemies.
+ */
+static bool _mons_awaken_flesh(const monster& caster, const int power,
+                               bool check_only = false)
+{
+    int affected = 0;
+    int seen_affected = 0;
+    for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        const monster *mons = *mi;
+
+        if ((mons->type != MONS_PILE_OF_FLESH))
+            continue;
+
+        if (check_only)
+            return true; // just need to check
+
+        if (mi->asleep())
+            behaviour_event(*mi, ME_DISTURB, 0, mi->pos());
+
+        if (you.can_see(**mi))
+        {
+            flash_tile(mi->pos(), random_choose(RED, BLUE, GREEN, YELLOW, MAGENTA),
+                    60, TILE_BOLT_CHAOS_BUFF);
+        }
+
+        bolt shockwave;
+        shockwave.set_agent(&caster);
+        shockwave.attitude = caster.temp_attitude();
+        shockwave.source = mi->pos();
+        shockwave.target = mi->pos();
+        shockwave.is_explosion = true;
+        shockwave.ex_size = 1;
+        shockwave.origin_spell = SPELL_AWAKEN_FLESH;
+        zappy(ZAP_AWAKEN_FLESH, power, true, shockwave);
+        shockwave.explode(true, true);
+
+        change_monster_type(*mi, MONS_ABOMINATION_LARGE, true);
+
+        // All three abomination buffs at once. Chaos is strong.
+        mi->add_ench(mon_enchant(ENCH_HASTE, 1, *mi, INFINITE_DURATION));
+        mi->add_ench(mon_enchant(ENCH_MIGHT, 1, *mi, INFINITE_DURATION));
+        mi->add_ench(mon_enchant(ENCH_REGENERATION, 1, *mi, INFINITE_DURATION));
+
+        // Since it inherits the pile of flesh's summon timer, give it more
+        // time to keep living if it's going to vanish soon. We just did a
+        // fancy chaos explosion to highlight it being made, and all.
+        if (mi->has_ench(ENCH_SUMMON_TIMER))
+        {
+            mon_enchant dur = mi->get_ench(ENCH_SUMMON_TIMER);
+            if (dur.duration < 100)
+            {
+                dur.duration += random_range(80, 100);
+                mi->update_ench(dur);
+            }
+        }
+
+        affected++;
+        if (you.can_see(**mi))
+            seen_affected++;
+    }
+
+    if (affected == 0)
+        return false;
+    else if (seen_affected > 0)
+    {
+        mprf("Chaos surges forth from %s of flesh, awakening new unlife!",
+             affected == 1 ? "the pile" : "piles");
+    }
 
     return true;
 }
@@ -8046,6 +8123,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_call_of_chaos(*mons);
         return;
 
+    case SPELL_AWAKEN_FLESH:
+        _mons_awaken_flesh(*mons, splpow);
+        return;
+
     case SPELL_PRAYER_OF_BRILLIANCE:
         _prayer_of_brilliance(mons);
         return;
@@ -9374,6 +9455,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_CALL_OF_CHAOS:
         return ai_action::good_or_bad(_mons_call_of_chaos(*mon, true));
+
+    case SPELL_AWAKEN_FLESH:
+        return ai_action::good_or_bad(_mons_awaken_flesh(*mon, 0, true));
 
     case SPELL_PRAYER_OF_BRILLIANCE:
         if (!foe || !mon->can_see(*foe))

@@ -2367,7 +2367,7 @@ PLACE:  D:$
 ORIENT: float
 WEIGHT: 2 (D:$), 10
 : if you.in_branch("Depths") then
-MONS:   chonchon band, rakshasa, sin beast band
+MONS:   chonchon band, rakshasa / kobold fleshcrafter w:5, sin beast band
 MONS:   vampire knight, orange crystal statue
 KMONS:  0 = glowing orange brain / very ugly thing band
 SUBST:  gU = .
@@ -2990,7 +2990,7 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    tengu warrior / deep troll / rakshasa / necromancer
-MONS:    tengu conjurer / stone giant / occultist / \
+MONS:    tengu conjurer / stone giant / occultist / kobold fleshcrafter / \
          phantasmal warrior / salamander mystic / hell knight
 MONS:    fire giant / frost giant / ettin / salamander tyrant / \
          chonchon / vampire knight / vampire mage / spriggan berserker / \
@@ -3554,10 +3554,10 @@ KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    6| = |
-KMONS:    1 = tengu warrior / tengu conjurer / ettin / stone giant \
-              / spriggan berserker
-KMONS:    2 = occultist / deep troll earth mage / spriggan air mage \
-              / deep elf annihilator / deep elf high priest
+KMONS:    1 = tengu warrior / tengu conjurer / ettin / stone giant / \
+              spriggan berserker
+KMONS:    2 = occultist / deep troll earth mage / spriggan air mage / \
+              kobold fleshcrafter / deep elf high priest
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
 KMONS:    4 = tengu reaver / spriggan air mage / guardian sphinx
 KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
@@ -4989,7 +4989,7 @@ MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
 MONS:    glass eye / great orb of eyes / glowing orange brain / \
          phantasmal warrior
-MONS:    chonchon / rakshasa / ogre mage / occultist / necromancer
+MONS:    chonchon / rakshasa / kobold fleshcrafter / occultist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist / \
          deep elf high priest / deep troll earth mage / \
          spriggan air mage / vampire mage / glowing shapeshifter
@@ -5188,7 +5188,8 @@ NSUBST: ' = d / f / 2=|* / *% / %$-- / -
 NSUBST: - = 3=1 / 4=1. / 2=2. / 2=3 / 4=3. / 2=4. / .
 :   end
 : elseif you.in_branch("Depths") then
-MONS:   very ugly thing / thrashing horror / large abomination
+MONS:   very ugly thing / thrashing horror / \
+        large abomination / kobold fleshcrafter
 MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab / \
         wyrmhole w:2
 MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
@@ -6149,10 +6150,10 @@ KMONS:   2 = shapeshifter / large abomination
 KMONS:   3 = ugly thing
 NSUBST:  - = 1 / 2=1- / 2=2 / 2=2- / -, d = 2=d / 4=d-
 : else
-KMONS:   1 = occultist
+KMONS:   1 = kobold fleshcrafter
 KMONS:   2 = large abomination / glowing shapeshifter w:20
 KMONS:   3 = very ugly thing
-NSUBST:  - = 2=1 / 4=1- / 3=2 / 6=2- / -
+NSUBST:  - = 2=1 / 3=1- / 3=2 / 5=2- / -
 : end
 # Human (shapeshifters and large abominations) or animal (ugly things)
 # experimentation.
@@ -6542,7 +6543,7 @@ MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
 MONS:    vampire knight ; great sword ego:chaos | war axe ego:chaos . \
                           chain mail | plate armour
 MONS:    ancient champion / vampire bloodprince w:2, lich
-MONS:    very ugly thing, cacodemon / chonchon band
+MONS:    very ugly thing / kobold fleshcrafter w:4, cacodemon / chonchon band
 MONS:    dancing weapon ; great mace ego:draining | \
                           battleaxe ego:draining | glaive ego:draining
 KMONS:   0 = glowing shapeshifter

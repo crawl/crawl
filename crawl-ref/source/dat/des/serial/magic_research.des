@@ -27,9 +27,14 @@ function init_research(e, disc)
   e.tags('patrolling')
   e.weight('1')
   if you.in_branch("Elf") then
-     e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
+     e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer /\
+                  deep elf knight w:5 / deep elf archer w:5')
+  elseif you.in_branch("Vaults") then
+     e.kmons('0 = arcanist / ogre mage / naga mage w:8 /\
+                  boggart w:5 / deep elf zephyrmancer w:5')
   else
-     e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
+     e.kmons('0 = occultist / rakshasa / naga mage w:8 / \
+                  kobold fleshcrafter / spriggan air mage w:2')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')

@@ -2658,6 +2658,29 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BOLT_OF_FLESH, "Bolt of Flesh",
+    spschool::conjuration | spschool::necromancy | spschool::summoning,
+    spflag::dir_or_target | spflag::needs_tracer| spflag::monster
+                          | spflag::chaotic,
+    6,
+    200,
+    5, 5,
+    0,
+    TILEG_BOLT_OF_FLESH,
+},
+
+{
+    SPELL_AWAKEN_FLESH, "Awaken Flesh",
+    spschool::conjuration | spschool::necromancy | spschool::hexes,
+    spflag::area | spflag::chaotic | spflag::monster,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_AWAKEN_FLESH,
+},
+
+{
     SPELL_SERPENT_OF_HELL_GEH_BREATH, "gehenna serpent of hell breath",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::noisy

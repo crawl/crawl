@@ -204,6 +204,7 @@ warp_space WARP_SPACE
 generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
 avatar_song AVATAR_SONG
+awaken_flesh AWAKEN_FLESH
 awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
@@ -213,6 +214,7 @@ bestow_arms BESTOW_ARMS
 blink_allies_away BLINK_ALLIES_AWAY
 blink_allies_encircling BLINK_ALLIES_ENCIRCLING
 blink_other BLINK_OTHER
+bolt_of_flesh BOLT_OF_FLESH
 brain_bite BRAIN_BITE
 call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION

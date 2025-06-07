@@ -339,7 +339,7 @@ NSUBST:   | = 1:R / 1:O
 : _G.set_random_mon_list("place:" .. you.where() .. " w:170 / " ..
 :   "arcanist / shapeshifter / ugly thing band")
 : else
-MONS:     tengu conjurer / deep elf elementalist / occultist w:2 / \
+MONS:     tengu conjurer / kobold fleshcrafter / occultist w:2 / \
           hell knight / rakshasa w:5 ; robe . wand of iceblast charges:1 | \
                         any beam wand . trident ego:freezing | trident ego:flaming
 MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \

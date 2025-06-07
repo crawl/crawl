@@ -377,7 +377,7 @@ KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / chaos spawn
 KMONS:  E = ugly thing
-KMONS:  F = very ugly thing / glowing shapeshifter w:7
+KMONS:  F = very ugly thing / kobold fleshcrafter w:7
 : local g = "good_item no_pickup"
 : item("storm dragon scales " .. g .. " / shadow dragon scales " .. g .. " / " ..
 :      "quicksilver dragon scales " .. g .. " / buckler " .. g .. " / " ..
@@ -561,7 +561,7 @@ ENDMAP
 
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
-MONS:    guardian serpent / cognitogaunt, great orb of eyes
+MONS:    kobold fleshcrafter / cognitogaunt, great orb of eyes
 MONS:    glowing orange brain, boggart, rakshasa, cacodemon, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer

@@ -304,7 +304,7 @@ function sroom_magic_class(e)
     if e.is_validating() then return end
 
     local mons = {}
-    mons[1] = "ogre mage w:7"
+    mons[1] = "kobold fleshcrafter w:6"
     mons[2] = "deep elf annihilator w:6"
     mons[3] = "deep troll earth mage w:5"
     mons[4] = "vampire knight w:5"

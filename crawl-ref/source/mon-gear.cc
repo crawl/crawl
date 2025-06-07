@@ -732,6 +732,16 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_ARBALEST,         31 },
                 { WPN_HAND_CANNON,      1 },
         } } },
+        { MONS_KOBOLD_FLESHCRAFTER, {
+            { { WPN_DAGGER,            3 },
+              { WPN_RAPIER,            1 },
+              { WPN_SCIMITAR,          2 },
+              { WPN_DEMON_BLADE,       1 }, },
+              { 1, 1, 3 }, { { SPWPN_VENOM, 12 },
+                             { SPWPN_DRAINING, 8 },
+                             { SPWPN_PAIN, 3 },
+                             { SPWPN_CHAOS, 1 },
+                             { NUM_SPECIAL_WEAPONS, 8 }  }, } },
         { MONS_CENTAUR,
             { { { WPN_SHORTBOW,         1 },
                 { WPN_ORCBOW,           1 },
@@ -2197,6 +2207,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DOWAN:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
+    case MONS_KOBOLD_FLESHCRAFTER:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
     case MONS_ARCANIST:

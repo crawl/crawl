@@ -2770,6 +2770,19 @@ void bolt::affect_endpoint()
     }
     break;
 
+    case SPELL_BOLT_OF_FLESH:
+    {
+        if (!agent(true) || !agent(true)->alive())
+            break;
+
+        create_monster(mgen_data(MONS_PILE_OF_FLESH,
+                       SAME_ATTITUDE(agent(true)->as_monster()),
+                       pos(), agent(true)->as_monster()->foe)
+                       .set_summoned(agent(true), SPELL_BOLT_OF_FLESH, summ_dur(3), false)
+                       .set_range(1));
+    }
+    break;
+
     case SPELL_PHANTOM_BLITZ:
     {
         if (!agent(true) || !agent(true)->alive())
@@ -5924,7 +5937,8 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
 
     if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
-         || origin_spell == SPELL_FORTRESS_BLAST)
+         || origin_spell == SPELL_FORTRESS_BLAST
+         || origin_spell == SPELL_AWAKEN_FLESH)
         && mons_atts_aligned(attitude, mon->temp_attitude()))
     {
         return true;

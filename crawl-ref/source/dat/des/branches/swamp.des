@@ -1778,8 +1778,7 @@ y..c...c...0..$c...c..y
 ENDMAP
 
 NAME:    grunt_hermit_hut
-MONS:    orc high priest / orc sorcerer / arcanist w:5 / \
-         occultist w:5 / necromancer band
+MONS:    orc high priest / orc sorcerer / kobold fleshcrafter / necromancer band
 SHUFFLE: +d / +d / d+
 SUBST:   w = w t:10, d = c, c = ccx
 KPROP:   w = no_tele_into
@@ -3333,10 +3332,10 @@ NAME:    swamp_vile
 TAGS:    no_pool_fixup no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southeast
-MONS:    bog body / ugly thing / small abomination w:2, cognitogaunt
-MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, sin beast band, great orb of eyes
-MONS:    shadow demon / titanic slime creature
+MONS:    bog body / thrashing horror w:4, cognitogaunt
+MONS:    large abomination / very ugly thing
+MONS:    green death, sin beast band, kobold fleshcrafter
+MONS:    shadow demon / titanic slime creature w:12
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KITEM:   R = mossy gem
@@ -3346,19 +3345,19 @@ KFEAT:   T = demonic_tree
 SHUFFLE: yz, '"
 SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
-NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 2:2 / 2:211 / 6:1 / *:.
-NSUBST:  5 = 1:5 / 1:6 / * = 56, 9 = 1:9 / * = 3
+NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 1:2 / 2 = 211 / 6:1 / *:.
+NSUBST:  5 = 1:5 / 1:6 / 1:445563 / * = 556, 9 = 1:9 / * = 3
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
              dngn_demonic_tree_12 / dngn_demonic_tree_13
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
-@@ "' Xxccxcxcct
+@@ "' Txccxcxcct
 @'"WXWXW""'..Wcct
   'XWXWx''"zyW.xct
    WXWx"wwwyzwxWcct
   XXWx3x1wwzyw.x.xct
- txWx"xWwwwyzwx00.cctt
+ TxWx"xWwwwyzwx00.cctt
  xt"'w1w28wzywx30xWcctt
  ct"'www88wyxwcxx.xWxttt
   x'"wwwww.cXWwwwwWwWcttt
@@ -3546,11 +3545,11 @@ NAME:   nzn_swamp_witches_coven
 PLACE:  Swamp:$
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-MONS:   fenstrider witch, green death / sin beast / blizzard demon
+MONS:   fenstrider witch, green death / sin beast / shadow demon
 MONS:   smoke demon / soul eater / sixfirhy
 MONS:   orange demon / hellwing / chaos spawn
-MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
-        deep elf zephyrmancer w:5 / arcanist w:5 / occultist w:5
+MONS:   spriggan druid / orc sorcerer / ogre mage / kobold fleshcrafter /\
+        arcanist w:5 / occultist w:5
 KITEM:  R = mossy gem
 KITEM:  O = decaying rune of Zot
 KFEAT:  B = stone_arch

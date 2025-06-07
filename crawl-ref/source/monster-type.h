@@ -1352,6 +1352,8 @@ enum monster_type                      // env.mons[].type
     MONS_CRAWLING_FLESH_CAGE,
     MONS_COGNITOGAUNT,
     MONS_CHONCHON,
+    MONS_KOBOLD_FLESHCRAFTER,
+    MONS_PILE_OF_FLESH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

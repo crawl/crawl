@@ -140,6 +140,7 @@ enum band_type
     BAND_IRONBOUND_MECHANISTS,
     BAND_CAGES,
     BAND_CHONCHON,
+    BAND_FLESHCRAFT,
     NUM_BANDS                   // always last
 };
 

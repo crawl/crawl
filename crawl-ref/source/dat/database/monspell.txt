@@ -831,6 +831,16 @@ kobold blastminer cast targeted
 
 @The_monster@ blasts @possessive@ cannon @at@ @target@.
 %%%%
+Awaken Flesh kobold fleshcrafter cast
+
+@The_monster@ cackles and gestures.
+
+@The_monster@ chants and writhes.
+%%%%
+Bolt of Flesh kobold fleshcrafter cast
+
+@The_monster@ weaves a wave of flesh @at@ @target@.
+%%%%
 laughing skull cast
 
 @The_monster@ cackles spitefully.

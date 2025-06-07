@@ -83,6 +83,12 @@ the defensive properties of the armour itself.
 
 Spellpower increases its durability.
 %%%%
+Awaken Flesh spell
+
+Channels a surge of chaotic energy through each pile of flesh in the caster's
+sight, animating them into empowered large abominations and dealing chaos damage
+to any foes unfortune enough to be standing next to them.
+%%%%
 Awaken Forest spell
 
 Gives some limited motility to nearby trees, allowing them to sway their
@@ -186,6 +192,11 @@ it strikes.
 Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
+%%%%
+Bolt of Flesh spell
+
+Fires a barrage of conjured flesh, which will briefly remain as a pile on the
+ground at the end of its path.
 %%%%
 Bolt of Light spell
 

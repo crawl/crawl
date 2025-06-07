@@ -1913,6 +1913,12 @@ kobold demonologist
 A kobold in league with demonic powers, able to call forth beings from the
 depths of Hell.
 %%%%
+kobold fleshcrafter
+
+A skull-masked kobold, its body mutated by forbidden magics. It conducts vile
+experiments in the service of demonic powers, formulating ever more terrible
+monstrosities as vessels for devilish minds.
+%%%%
 komodo dragon
 
 An enormous monitor lizard more than capable of preying on large animals.
@@ -2347,6 +2353,13 @@ as simulacra.
 pile of debris
 
 A heavily ruptured stonework, surrounded by rubble.
+%%%%
+pile of flesh
+
+A leftover mess of broken bones, inert grasping organs, and scattered skin.
+While some highly-specialized sorcerers might be capable of bringing it to life,
+it is otherwise harmless - the possible leftovers of some departed or
+absent-minded magus.
 %%%%
 pillar of rime
 

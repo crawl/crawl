@@ -853,9 +853,9 @@ KPROP:  -47 = no_tele_into
 ITEM:   any jewellery randart, scroll of acquirement pre_id
 : item(dgn.randart_aux_armour)
 MONS:   human att:neutral, silent spectre, patrolling soul eater
-MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / occultist / \
-        necromancer / merfolk aquamancer / \
-        spriggan air mage / orc sorcerer / kobold demonologist
+MONS:   deep elf pyromancer / deep elf zephyrmancer / occultist / \
+        necromancer / merfolk aquamancer /  spriggan air mage / \
+        orc sorcerer / kobold demonologist / kobold fleshcrafter
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
 MONS:   patrolling curse skull, ancient lich / dread lich
@@ -987,7 +987,7 @@ MONS:   deep troll earth mage / deep elf sorcerer / deep elf annihilator / \
         deep elf demonologist / deep elf death mage / tengu reaver
 : else
 MONS:   tengu conjurer / occultist / spriggan air mage / chonchon w:5 / \
-        vampire mage / deep troll earth mage
+        vampire mage / deep troll earth mage / kobold fleshcrafter w:5
 MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer / \
         deep elf demonologist / lich
 MONS:   ancient lich / dread lich
@@ -2532,7 +2532,7 @@ KMONS:   3 = frost giant / spriggan air mage
 KMONS:   4 = spark wasp / azure jelly w:4
 KMONS:   5 = nagaraja
 KMONS:   6 = emperor scorpion
-KMONS:   7 = deep elf demonologist / tengu reaver w:4
+KMONS:   7 = kobold fleshcrafter / tengu reaver
 KMONS:   8 = cacodemon
 KITEM:   DEFH = $, % / potion of mutation
 KITEM:   * = demon blade good_item / demon whip good_item / \
@@ -2657,9 +2657,10 @@ KFEAT:   ^ = dispersal trap
 SHUFFLE: {([ / {%% / %%% / %%% / %%%
 SUBST:   ( = ), [ = ]
 : elseif you.in_branch("Depths") then
-MONS:    very ugly thing / glowing orange brain w:5 / spriggan rider
+MONS:    very ugly thing / kobold fleshcrafter / spriggan rider
 MONS:    flayed ghost w:5 / spriggan berserker / glowing shapeshifter
-MONS:    spark wasp / glass eye w:5 / spriggan defender
+MONS:    glass eye w:5 / glowing orange brain w:5 / \
+         spriggan defender / spark wasp
 MONS:    shadow dragon w:4 / tentacled monstrosity w:6 / golden dragon
 MONS:    alderking / caustic shrike / wyrmhole w:2
 KFEAT:   ^ = alarm trap / dispersal trap w:2
@@ -2853,7 +2854,8 @@ NSUBST:  . = 2:12 / 3 = 678, ' = 2:5 / *:', " = 2 = 44" / *:"
 SUBST:   % = .
 :   else
 MONS:    jiangshi, phantasmal warrior, vampire mage, vampire knight
-MONS:    flayed ghost, glowing orange brain, white very ugly thing
+MONS:    flayed ghost, glowing orange brain
+MONS:    white very ugly thing / kobold fleshcrafter w:5
 KMONS:   8 = glass eye
 KMONS:   9 = tentacled monstrosity
 NSUBST:  127 = 1:., . = 4 = 126. / 2 = 7789 / *:.
@@ -3381,7 +3383,7 @@ MONS:    walking crystal tome / walking frostbound tome / \
 MONS:    guardian sphinx / spark wasp / caustic shrike / \
          glass eye / wyrmhole w:2
 MONS:    spriggan air mage / very ugly thing / glowing orange brain / \
-         glowing shapeshifter w:20 / rakshasa
+         glowing shapeshifter w:20 / rakshasa / kobold fleshcrafter w:5
 SHUFFLE: }])
 SUBST:   } = }:60 >, ] = ]:40 >
 NSUBST:  . = 2:3 / 2 = 5. / *:.

@@ -414,7 +414,8 @@ function choose_mset_3(e)
 -- Chaos
   elseif rnd < 111 then
     e.kmons("1 = shapeshifter / ugly thing w:5 / crawling flesh cage w:2 /\
-                 very ugly thing w:5 / neqoxec w:5 / chonchon w:2 /\
+                 very ugly thing w:5 / neqoxec w:5 /\
+                 kobold fleshcrafter / chonchon w:2 /\
                  shining eye w:2 / glowing shapeshifter w:20")
 -- Uniques
   elseif rnd < 114 then

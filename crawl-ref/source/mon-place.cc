@@ -1747,6 +1747,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
     { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
+    { MONS_KOBOLD_FLESHCRAFTER, { {}, {{ BAND_FLESHCRAFT, {3, 4} }}}},
     { MONS_HELL_HOUND,      { {}, {{ BAND_HELL_HOUNDS, {2, 5} }}}},
     { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
     { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
@@ -2272,6 +2273,14 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SIMULACRUM, 1}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+
+    { BAND_FLESHCRAFT,          {{{MONS_KOBOLD_FLESHCRAFTER, 1},
+                                  {MONS_VERY_UGLY_THING, 2}},
+
+                                 {{MONS_UGLY_THING, 1},
+                                  {MONS_VERY_UGLY_THING, 1}},
+
+                                 {{MONS_VERY_UGLY_THING, 1}}}},
 
     { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
                                   {MONS_SEARING_WRETCH, 3}},

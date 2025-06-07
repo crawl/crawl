@@ -47,8 +47,8 @@ function base_monster_setup(e)
                laughing skull band / skeletal warrior / thrashing horror /\
                hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
                chaos spawn / soul eater")
-  e.kmons("D = fire dragon w:25 / ice dragon w:25 /\
-               very ugly thing w:5 / crawling flesh cage w:5 /\
+  e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
+               crawling flesh cage w:5 / kobold fleshcrafter /\
                dire elephant / torpor snail / skyshark / death yak band w:5 /\
                meliai band / yaktaur / ogre mage band w:5 / ettin /\
                enormous slime creature w:5 / centaur warrior band w:5 /\
@@ -504,7 +504,8 @@ function coven_setup(e)
                deep elf elementalist / nonbase draconian w:20 /\
                sphinx marauder w:5 / guardian sphinx / lich / ancient lich w:3 /\
                dread lich w:3 / arcanist w:5 / occultist w:5 / rakshasa w:5 /\
-               tengu conjurer w:5 / ogre mage w:5 / naga mage / nagaraja /\
+               tengu conjurer w:5 / ogre mage w:5 /\
+               kobold fleshcrafter w:5 / naga mage / nagaraja /\
                merfolk aquamancer w:5 / jorogumo w:5 / vampire mage /\
                base draconian w:20 / demonspawn blood saint w:3")
   e.kmons("9 = Frederick / Boris / Margery band w:5 / Sojobo band w:5")

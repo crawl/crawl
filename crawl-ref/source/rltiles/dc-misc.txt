@@ -175,6 +175,10 @@ light_beam7
 warping_blast0 BOLT_WARP_SPACE
 
 # Monster bolts
+chaos0 BOLT_CHAOS
+chaos1
+chaos2
+
 beckoning_gale BOLT_BECKONING_GALE
 
 force_lance0 BOLT_FORCE_LANCE
@@ -229,6 +233,9 @@ splinters_metal4
 splinters_metal5
 splinters_metal6
 splinters_metal7
+
+flesh0 BOLT_FLESH
+flesh1
 
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1

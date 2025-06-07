@@ -257,7 +257,8 @@ function necropolis_generic_spawns(e, _0, _9, _8)
   elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
     e.kmons(_0 .. " = frost giant / fire giant / rakshasa / hell knight / \
                       deep troll earth mage / spriggan berserker / \
-                      very ugly thing / necromancer w:5 / cognitogaunt w:5 / \
+                      very ugly thing / kobold fleshcrafter w:5 / \
+                      necromancer w:5 / cognitogaunt w:5 / \
                       phantasmal warrior / laughing skull band / jiangshi")
     e.kmons(_9 .. " = spriggan air mage / spriggan defender / spark wasp / \
                       glass eye / shadow dragon / walking earthen tome / \
@@ -3021,6 +3022,7 @@ MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
 MONS:   very ugly thing, glowing shapeshifter, cacodemon
 KMONS:  C = crawling flesh cage
 KMONS:  D = tentacled monstrosity
+KMONS:  K = kobold fleshcrafter
 KMONS:  O = player ghost
 ITEM:   potion of mutation pre_id q:1
 : item(dgn.loot_potions)
@@ -3042,7 +3044,7 @@ NSUBST: ; = d / d~ / 4=e / 2:C / 3 = C; / 1:4 / 1:4; / 4:6 / 3 = 6; / *:;
 NSUBST: " = 3:d / 1:d~ / 1:e / 1:h / *:"
 NSUBST: ` = 4=3 / 4=3` / 1:6 / 3=6` / 1:4 / 2=4` / *:`
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-NSUBST: ; = 1:d / 1:d; / 5:e / 3:5 / 3 = 5; / 2:4 / 1:4; / 2:D / 1 = D; / *:;
+NSUBST: ; = 1:d / 1:d; / 5:e / 2:5 / 2:K / 2 = 5; / 2:4 / 1:4; / 2:D / 1 = D; / *:;
 NSUBST: " = 4:d / 1:d" / 1:e / 1:h / *:"
 NSUBST: ` = 4:3 / 4 = 3` / 2:6 / 3 = 6` / 2:7 / 2 = 7` / *:`
 : end
@@ -4311,7 +4313,8 @@ MONS:   tarantella, glowing shapeshifter, radroach
 NSUBST:  ' = 3:1 / 1:2 / *:', " = 2:2 / 1:12 / 1:3 / *:"
 NSUBST:  * = 1:f / *:*, % = 2:d / 2:e, $ = %
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-MONS:    glowing orange brain, tentacled monstrosity, guardian sphinx
+MONS:    kobold fleshcrafter, tentacled monstrosity, guardian sphinx
+NSUBST:  ' = 2:1 / 1:113''' / *:', " = 2:1 / 1:122""" / *:"
 NSUBST:  * = 1:f / * = *|, % = 3:d / *:*
 SUBST:   e = $
 : end

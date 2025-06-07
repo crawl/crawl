@@ -2371,7 +2371,7 @@ NAME:    grunt_absolute_annihilation
 DEPTH:   Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
-MONS:    deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / tengu conjurer w:20 / \
+MONS:    kobold fleshcrafter w:40 / tengu conjurer w:20 / \
          occultist w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
@@ -8326,11 +8326,13 @@ TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
 WEIGHT:  3
 MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / occultist / \
-         arcanist / kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
+         arcanist / kobold demonologist w:2 / kobold fleshcrafter w:2 / \
+         naga mage w:2
 ITEM:    glaive_of_prune no_pickup
 SUBST:   " : .:50 ccvbn, ' : .:50 ccvbn, ? : .:50 ccvbn, ! : .:60 ccvbnT
 NSUBST:  1 = 6:1 / 10=1.... / .
 KMASK:   l = no_monster_gen
+TILE:    b = dngn_crystal_magenta
 MAP
      ...........
    ...lvlv1vlvl...
@@ -10321,10 +10323,11 @@ ENDMAP
 # Wizard's laboratory
 NAME:  laboratory
 DEPTH: D:12-, Depths, Elf
-MONS:  arcanist, occultist, small abomination, large abomination
+MONS:  arcanist, occultist, kobold fleshcrafter
+MONS:  small abomination, large abomination
 KFEAT: T = permanent teleport trap
 : if you.branch() ~= "D" then
-SUBST: 1 = 2
+SUBST: 1 = 3
 : else
 SUBST: * = %, | = *
 :   if you.depth() > 12 then
@@ -10339,9 +10342,9 @@ c........c
 c......1.c
 cG.......c
 ccccccc+cc
-c***c4343c
-c|**+3334c
-c||*c434Gc
+c***c5454c
+c|**+4445c
+c||*c545Gc
 cccccccccc
 ENDMAP
 

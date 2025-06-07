@@ -417,6 +417,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "yaktaur w:15 / yaktaur captain w:5",
                 "ugly thing / crawling flesh cage w:4 /\
                  very ugly thing w:1 / wretched star w:1",
+                "kobold fleshcrafter / large abomination w:5",
                 "ogre mage / w:2 deep elf pyromancer / w:2 deep elf zephyrmancer / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
                 "cyclops / stone giant / w:5 frost giant / w:5 fire giant /\
