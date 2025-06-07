@@ -3444,6 +3444,7 @@ bool monster::evil() const
         return true;
     if (has_attack_flavour(AF_DRAIN)
         || has_attack_flavour(AF_VAMPIRIC)
+        || has_attack_flavour(AF_HELL_HUNT)
         || has_attack_flavour(AF_FOUL_FLAME))
     {
         return true;
