@@ -1318,7 +1318,25 @@ static skill_type _choose_manual_skill()
     return skill;
 }
 
-static int _choose_parchment_spell()
+/// Spells that appear in one book, historically. Used for parchment weight.
+static bool _is_rare_spell(spell_type spell)
+{
+    if (spell_difficulty(spell) == 9)
+        return true;
+
+    switch (spell)
+    {
+    case SPELL_BORGNJORS_REVIVIFICATION:
+    case SPELL_INFESTATION:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
+static int _choose_parchment_spell(int item_level)
 {
     vector<pair<spell_type, int>> weights;
     for (int i = 0; i < NUM_SPELLS; ++i)
@@ -1328,7 +1346,16 @@ static int _choose_parchment_spell()
         if (!is_player_book_spell(spell))
             continue;
 
-        const pair <spell_type, int> weight_pair = { spell, 1 };
+        const int splevel = spell_difficulty(spell);
+        int sp_weight = 100;
+
+        if (splevel > 3 && splevel * 3 > item_level)
+            sp_weight = max(10, sp_weight * (item_level + 1) / (splevel * 3));
+
+        if (_is_rare_spell(spell))
+            sp_weight /= 2;
+
+        const pair <spell_type, int> weight_pair = { spell, sp_weight };
         weights.push_back(weight_pair);
     }
 
@@ -1356,7 +1383,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
     else if (item.sub_type == BOOK_PARCHMENT)
     {
-        item.plus = static_cast<int>(_choose_parchment_spell());
+        item.plus = static_cast<int>(_choose_parchment_spell(item_level));
         return;
     }
 
