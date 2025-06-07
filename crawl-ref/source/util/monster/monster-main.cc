@@ -1002,7 +1002,7 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                if (_monster_has_reachcleave)
+                if (_monster_has_reachcleave(mon))
                     monsterattacks += "(reach)(cleave)";
                 else if (flavour_has_reach(attk.flavour))
                     monsterattacks += "(reach)";
