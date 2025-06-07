@@ -2297,7 +2297,7 @@ bool mons_invuln_will(const monster& mon)
     return get_monster_data(mon.type)->willpower == WILL_INVULN;
 }
 
-bool mons_skeleton(monster_type mc)
+bool mons_has_skeleton(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_SKELETON);
 }

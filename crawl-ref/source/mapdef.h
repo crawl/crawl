@@ -638,7 +638,7 @@ private:
     item_spec pick_item(item_spec_slot &slot);
     bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
-                                 bool skeleton);
+                                 bool need_skeleton);
 
 private:
     vector<item_spec_slot> items;

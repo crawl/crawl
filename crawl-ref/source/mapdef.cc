@@ -4405,7 +4405,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
             return;
         break;
     case MONS_SKELETON:
-        if (!mons_skeleton(spec.monbase))
+        if (!mons_has_skeleton(spec.monbase))
             break;
         // fallthrough to MONS_ZOMBIE
     case MONS_ZOMBIE:
@@ -5125,7 +5125,7 @@ int item_list::parse_acquirement_source(const string &source)
 
 bool item_list::monster_corpse_is_valid(monster_type *mons,
                                         const string &name,
-                                        bool skeleton)
+                                        bool need_skeleton)
 {
     if (*mons == RANDOM_NONBASE_DRACONIAN)
     {
@@ -5146,7 +5146,7 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
         return false;
     }
 
-    if (skeleton && !mons_skeleton(*mons))
+    if (need_skeleton && !mons_has_skeleton(*mons))
     {
         error = make_stringf("'%s' has no skeleton", name.c_str());
         return false;

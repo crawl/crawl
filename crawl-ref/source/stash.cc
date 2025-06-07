@@ -341,7 +341,7 @@ string Stash::stash_item_name(const item_def &item)
     if (!is_rottable(item) || item.stash_freshness > 0)
         return name;
 
-    if (mons_skeleton(item.mon_type))
+    if (mons_has_skeleton(item.mon_type))
         return name + " (skeletalised by now)";
     return name + " (gone by now)";
 }
@@ -428,7 +428,7 @@ void Stash::_update_corpses(int rot_time)
 
         int new_rot = static_cast<int>(item.stash_freshness) - rot_time;
 
-        if (new_rot <= 0 && !mons_skeleton(item.mon_type))
+        if (new_rot <= 0 && !mons_has_skeleton(item.mon_type))
         {
             items.erase(items.begin() + i);
             continue;

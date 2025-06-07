@@ -1480,7 +1480,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
     // If skeleton, monster must have a skeleton.
-    if (cs == MONS_SKELETON && !mons_skeleton(base))
+    if (cs == MONS_SKELETON && !mons_has_skeleton(base))
         return false;
 
     // If zombie, monster must have a corpse.

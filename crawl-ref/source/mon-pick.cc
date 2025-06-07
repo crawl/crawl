@@ -270,7 +270,7 @@ static bool _not_skeletonable(monster_type mt)
         return true;
     if (!(mons_class_holiness(mt) & MH_NATURAL))
         return true;
-    return !mons_skeleton(mt);
+    return !mons_has_skeleton(mt);
 }
 
 void debug_monpick()

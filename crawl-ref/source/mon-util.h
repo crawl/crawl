@@ -297,7 +297,7 @@ habitat_type mons_habitat_type(monster_type t, monster_type base_t,
 habitat_type mons_class_habitat(monster_type t, bool core_only = false);
 habitat_type mons_habitat(const monster& mon, bool core_only = false);
 
-bool mons_skeleton(monster_type mc);
+bool mons_has_skeleton(monster_type mc);
 
 int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
