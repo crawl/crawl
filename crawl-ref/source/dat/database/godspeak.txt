@@ -577,6 +577,12 @@ Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
+Xom drinkless confusion
+
+"Stumble well, my pet!"
+
+Xom's power touches upon your body and mind for a moment.
+%%%%
 # 50% stat loss, 25% draining,
 # 25% torment (only the player if Xom's feeling nasty)
 Xom draining or torment

@@ -3515,24 +3515,37 @@ static void _xom_chaos_upgrade(int /*sever*/)
 static void _xom_player_confusion_effect(int sever)
 {
     const bool conf = you.confused();
+    const int dur = random_range(5, 7);
 
-    if (!confuse_player(5 + random2(3), true))
+    if (!confuse_player(dur, true))
         return;
 
-    god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
-    mprf(MSGCH_WARN, "You are %sconfused.",
-         conf ? "more " : "");
+    if (you.can_drink())
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+        mprf(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
+    }
+    else
+    {
+        // Since this is very mean if one can't cure it, we might as well
+        // fit in another joke simultaneously.
+        const bool was_mighty = you.duration[DUR_MIGHT];
+        you.increase_duration(DUR_MIGHT, dur);
+        god_speaks(GOD_XOM, _get_xom_speech("drinkless confusion").c_str());
+        mprf(MSGCH_WARN, "You feel %s and %sconfused.",
+            was_mighty ? "mightier" : "very mighty", conf ? "more " : "");
+    }
 
     // At higher severities, Xom is less likely to confuse surrounding
-    // creatures.
+    // creatures. Raise the threshold if you're unable to cure it.
     bool mons_too = false;
-    if (random2(sever) < 30)
+    if ((!you.can_drink() && random2(sever) < 60) || random2(sever) < 30)
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (random2(sever) > 30)
+            if ((!you.can_drink() && random2(sever) > 60) || random2(sever) > 30)
                 continue;
-            _confuse_monster(*mi, sever);
+            _confuse_monster(*mi, dur);
             mons_too = true;
         }
     }
@@ -3541,6 +3554,8 @@ static void _xom_player_confusion_effect(int sever)
     string conf_msg = "confusion";
     if (mons_too)
         conf_msg += " (+ monsters)";
+    if (!you.can_drink())
+        conf_msg += " (+ might)";
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg), true);
 }
 
@@ -4721,7 +4736,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
            }
 
            // Check if you have enough gold, increqased by each trip.
-           if (you.gold < (777 + sv * (4 +
+           if (you.gold < (900 + sv * (4 +
                           (you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 2))))
            {
               return false;

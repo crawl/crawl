@@ -2226,12 +2226,12 @@ end
 cons = table.concat(cons, " | ")
 
 -- Finally, assemble the shops.
--- XXX: Talismans probably could use more randomization once they get another
---      additions pass-over- granite and storm are too common here.
+-- TODO: implement chaotic talismans that also grant a free chaos brand, then
+-- add back a third talisman drop to the spells + talisman shop.
 kfeat('A = book shop no_mimic ' .. magi_name .. ' greed:8 count:8 use_all ; ' ..
            use_books .. ' | ' .. manual .. ' | ' ..  ' any talisman | ' ..
            ' any talisman randart | ' .. wand)
-kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:13 ' ..
+kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:11 ' ..
            ' count:' .. equip_count .. ' use_all ; ' .. equips .. ' | ' ..
            jewel1 .. ' | ' .. jewel2 .. ' | ' .. aux)
 kfeat('C = general shop no_mimic type:Party suffix:Supplies greed:6 count:' ..
