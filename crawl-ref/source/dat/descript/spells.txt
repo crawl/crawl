@@ -87,7 +87,7 @@ Awaken Flesh spell
 
 Channels a surge of chaotic energy through each pile of flesh in the caster's
 sight, animating them into empowered large abominations and dealing chaos damage
-to any foes unfortune enough to be standing next to them.
+to any foes unfortunate enough to be standing next to them.
 %%%%
 Awaken Forest spell
 
