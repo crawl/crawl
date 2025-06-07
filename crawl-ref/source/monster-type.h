@@ -419,6 +419,7 @@ enum monster_type                      // env.mons[].type
     MONS_KOBOLD_DEMONOLOGIST,
 #if TAG_MAJOR_VERSION > 34
     MONS_KOBOLD_BLASTMINER,
+    MONS_KOBOLD_FLESHCRAFTER,
 #endif
     MONS_ORC,
     MONS_ORC_WARRIOR,
@@ -1017,6 +1018,7 @@ enum monster_type                      // env.mons[].type
     MONS_BOMBLET,
     MONS_GLOBE_OF_ANNIHILATION,
     MONS_PILE_OF_DEBRIS,
+    MONS_PILE_OF_FLESH,
 #endif
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
