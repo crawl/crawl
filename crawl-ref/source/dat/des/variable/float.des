@@ -7597,9 +7597,19 @@ ENDMAP
 #                   shanties or makeshift dwellings. By Core Xii
 #
 NAME:   corexii_shantytown
+TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:4-8
 ORIENT: float
-TAGS:   no_monster_gen no_item_gen
+MONS:   plant
+: if you.depth() < 6 then
+MONS:   goblin / hobgoblin / kobold / orc / gnoll w:5
+: else
+MONS:   orc / gnoll / human / ogre / kobold brigand w:2 / gnoll sergeant w:2
+MONS:   goblin rider
+NSUBST: - = 1:3 / *:-
+: end
+ITEM:   any weapon / any missile / w:5 any armour / \
+        w:5 any potion / w:5 any scroll, w:1 any misc
 NSUBST: + = 1:+ / *:=
 SUBST:  = = + x:100
 NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
@@ -7609,14 +7619,7 @@ NSUBST: M = 1:+ / *:x, N = 1:+ / *:x, O = 1:+ / *:x, P = 1:+ / *:x
 NSUBST: Q = 1:+ / *:x, R = 1:+ / *:x, S = 1:+ / *:x, T = 1:+ / *:x
 NSUBST: U = 1:+ / *:x, V = 1:+ / *:x
 # There are 111 - glyphs, which leads to about 27 monsters
-SUBST:  - = 2:20 d .:50
-ITEM:   any weapon / any missile / w:5 any armour / \
-        w:5 any potion / w:5 any scroll, w:1 any misc
-MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc / w:5 gnoll
-MONS:   goblin rider
-: if you.depth() > 5 then
-NSUBST:  2 = 1:3 / *:2
-: end
+SUBST:  - = 2:20 d .:50, 1 = 1....
 MAP
 .......................
 ..1..x++x..1..x+++++x..
@@ -7646,16 +7649,21 @@ ENDMAP
 ##############################################################################
 # Cluster of small buildings with basic monsters and loot, by Core Xii
 NAME:   corexii_shack_village
-DEPTH:  D:3-9
-ORIENT: float
 TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:3-8
+ORIENT: float
+MONS:   plant
+: if you.depth() < 6 then
+MONS:   goblin / hobgoblin / kobold / orc
+: else
+MONS:   orc / gnoll / human / ogre
+: end
+ITEM:   any weapon / any missile / w:5 any armour / w:5 any potion
 NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
 NSUBST: E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
 # 39 - glyphs, leading to about 10 monsters.
-SUBST:  - = 2:20 d .:50
+SUBST:  - = 2:20 d .:50, 1 = 1....
 SUBST:  T = T:50 V G 1 .:20
-ITEM:   any weapon / any missile / w:5 any armour / w:5 any potion
-MONS:   plant / w:40 nothing, goblin / hobgoblin / kobold / orc
 MAP
 ....................
 .1xAAx1.xxxxx111111.

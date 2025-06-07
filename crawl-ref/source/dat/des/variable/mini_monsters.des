@@ -10455,6 +10455,7 @@ ENDMAP
 NAME:  minivault_12
 TAGS:  no_descent
 DEPTH: D:8-, Depths, !Depths:$
+KPROP: .><$*|9 = no_tele_into
 KMASK: " = !opaque
 MAP
 """"""""""""

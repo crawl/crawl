@@ -944,15 +944,15 @@ KMONS:   0 = titan
 KMONS:   e = water elemental
 KMONS:   E = elemental wellspring
 KFEAT:   eE = w
+KFEAT:   # = permarock_wall
 SUBST:   3 = 3:5 4:4 5:4 6:2 7:2 9:1
 NSUBST:  0 = 5:0 / *:3
 : serpent_of_hell_setup(_G)
-SUBST:   ^ : ^^^W. , ^ = W.
-SUBST:   X : XXXc. , X = c.
-SUBST:   " = 8:1 .:10
-SUBST:   ' = .cc
+SUBST:   ^ : ^^^W. , ^ = W., X : XXXc' , X = c', ~ = 8:1 `:10
+SHUFFLE: ?' / !" / !"
+SUBST:   ?' = ., ! = c, " = `
 SUBST:   ; : ;;;;w , ; = wc
-KFEAT:   # = permarock_wall
+KPROP:   `$*|0268 = no_tele_into
 COLOUR:  # = lightcyan
 NSUBST:  - = 1:+ / *:c
 : coc_setup(_G)
@@ -962,34 +962,34 @@ MAP
 #ccccc............Ewwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccccc#
 #cccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......ccccccc#
 #ccccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...cccccc#
-#cccc...wwwwwwwwww..wwwwwwwwwwwewwwwwwxxxwwwwwwww....3.0D.cccc....'.ccc#
-#cccc..wwwwww8www.2.wwwwwwwwwew.wewwwwwwwwwwwwww...3..3...cccccc..c..cc#
-#cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.cc#
-#cccc..ww$O$....1..............8..ewwwwwwwwwwwwwwwW...ccccc"c"c.cccc.'c#
-#cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwWW.cccccc....c.cccc.'c#
-#cccc..wwwwww8www.2.wwwwwwwwweW.wewwwwwwwwwwwwwwWWwccccc...cc...."cc.cc#
-#cccc...wwwwwwwwww..wwwwwwwwwwWewwwwwwwwwwwwwwwWWccccccc...ccccccccc.cc#
-#ccccc..............wwwwwwwwwwWWwwwwwwwwwwwwwwWWcccccc......cccccc"...c#
-#cccccc............wwwwwwwwwwwWWwwwwwwwwwwwwWWWccccc..........ccccc"c.c#
-#ccccccccccccccccccEwwwwwwwwwwWWwwwwwwwwwWWWWccccc.....3330.....ccccc.c#
-#cccccccccccccccccccwwwwwwwwwwwWWWwwwwWWWWwwcccc........333.......cc..c#
-#ccccccccccccccccccc;wwwwwwwwwwwwWWWWWWwwwwcccc..................ccc.cc#
-#ccccccc"c$.....ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc.cc#
-#cccccc$$$$........cccccccwwwwwwwwwwwwwcccccc....cccccc..........ccc..c#
-#cccc"$$$$0..........ccccccccwwwwwwwcccccccc....cccccccc.......cccc...c#
-#ccccc$$$..............ccccccccccccccccccc.....cccccwwwcc....cccccc...c#
-#cccccc$$................ccccccccccccccc.....cccccccwwwwwwwcccccccc...c#
-#ccccccc$...........wwwwwwwccccccccccc......ccccc.cwwcwwwwccccccccc..cc#
-#cccccccc.........wwwwwwwwwwww.............cccc333333cccwccccX.-....ccc#
-#cccccccccc.....wwwwwwwwwwwwwwww........ccccccc.2....cccc-XXX..cc...ccc#
-#cccccccccccccwwwwwwwwwwwwwwwwwwww.......cccccc333333ccccX....ccccX..cc#
-#cccccccccccwwwwww..wwwwwwwwwwwwwww........ccccc$$$$$cccX.0..cccccX...c#
-#ccccccccccwwwwww..wwwwwwwwwwwwwwwwW........cccc*|*ccccc|.....ccc.....c#
-#cccccccccwwwwww..www...wwwwwwwwwwWWWww......ccccccccccc|......-......c#
-#cccccc..cwwww....ww....WWW..wwwwWWwwwwww.....ccccccccccX.2..Xcc......c#
-#cccccc..www..ccccww...wwW..wwwwWWwwwwwwwwww..cccccccccccXXXXcccc.....c#
-#ccccc...Ww..cc...WW...ww...WW..Wwwwwwwwwwwwwwwcccccccccccccccccww...cc#
-#ccccc..wwW.cc....www...www.ww.wwwwwwwwwwwwwwwwwwccccccccccccwwwwwwwccc#
+#cccc...wwwwwwwwww..wwwwwwwwwwwewwwwwwxxxwwwwwwww....3.0D.cccc....?'ccc#
+#cccc..wwwwww8www.2.wwwwwwwwwew.wewwwwwwwwwwwwww...3..3...cccccc..c''cc#
+#cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc'cc#
+#cccc..ww$O$....1..............8..ewwwwwwwwwwwwwwwW...ccccc~c~c.cccc'Xc#
+#cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwWW.cccccc....c.cccc'Xc#
+#cccc..wwwwww8www.2.wwwwwwwwweW.wewwwwwwwwwwwwwwWWwccccc...cc....~cc'cc#
+#cccc...wwwwwwwwww..wwwwwwwwwwWewwwwwwwwwwwwwwwWWccccccc...ccccccccc'cc#
+#ccccc..............wwwwwwwwwwWWwwwwwwwwwwwwwwWWcccccc......cccccc~'''c#
+#cccccc............wwwwwwwwwwwWWwwwwwwwwwwwwWWWccccc..........ccccc~c'c#
+#ccccccccccccccccccEwwwwwwwwwwWWwwwwwwwwwWWWWccccc.....3330.....ccccc'c#
+#cccccccccccccccccccwwwwwwwwwwwWWWwwwwWWWWwwcccc........333.......cc''c#
+#ccccccccccccccccccc;wwwwwwwwwwwwWWWWWWwwwwcccc..................ccc'cc#
+#ccccccc~c$`````ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc'cc#
+#cccccc$$$$````````cccccccwwwwwwwwwwwwwcccccc....cccccc..........ccc''c#
+#cccc~$$$$0``````````ccccccccwwwwwwwcccccccc....cccccccc.......cccc'''c#
+#ccccc$$$``````````````ccccccccccccccccccc.....cccccwwwcc....cccccc'''c#
+#cccccc$$````````````````ccccccccccccccc.....cccccccwwwwwwwcccccccc'''c#
+#ccccccc$```````````wwwwwwwccccccccccc......ccccc.cwwcwwwwccccccccc''cc#
+#cccccccc`````````wwwwwwwwwwww.............cccc333333cccwccccX'-''''ccc#
+#cccccccccc`````wwwwwwwwwwwwwwww........ccccccc.2....cccc-XXX''cc'''ccc#
+#cccccccccccccwwwwwwwwwwwwwwwwwwww.......cccccc333333ccccX''''ccccX''cc#
+#cccccccccccwwwwww..wwwwwwwwwwwwwww........ccccc$$$$$cccX'0''cccccX'''c#
+#ccccccccccwwwwww..wwwwwwwwwwwwwwwwW........cccc*|*ccccc|'''''ccc'''''c#
+#cccccccccwwwwww..www...wwwwwwwwwwWWWww......ccccccccccc|''''''-''''''c#
+#cccccc..cwwww....ww....WWW..wwwwWWwwwwww.....ccccccccccX'2''Xcc''''''c#
+#cccccc..www..ccccww...wwW..wwwwWWwwwwwwwwww..cccccccccccXXXXcccc'''''c#
+#ccccc...Ww..cc...WW...ww...WW..WwWwwwwwwwwwwwwcccccccccccccccccww'''cc#
+#ccccc..wwW.cc....www...www.ww.wwwwWwwwwwwwwwwwwwccccccccccccwwwwwwwccc#
 #cccc...ww..c*..3..Www..wwwwwwww^^^wwwwwwwwwwwwwwwccccccwwwccwwwwwwcccc#
 #cccc...ww..c|233..cWwwwwwwwwwwcc+ccccccccccccwwwwwccccwwwwwwwwwwwwcccc#
 #cccc..www..c*.33..c.wwwwwwwwwcc...2...$$$*||ccwwwwwwwwwwwwwwwwwwwccccc#

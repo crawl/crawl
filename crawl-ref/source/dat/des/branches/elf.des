@@ -15,6 +15,14 @@
 
 crawl_require('dlua/vault.lua')
 
+function elf_arrival_setup(e, glyph)
+  e.tags("patrolling")
+  e.tags("uniq_elf_entry")
+  e.place("Elf:1")
+  e.kmons(glyph .. " = deep elf zephyrmancer / " ..
+                      "deep elf knight w:6 / deep elf archer w:6")
+end
+
 function elven_blade_entry(e)
   e.tags("elf_blade_entry no_monster_gen unrand")
   e.mons("patrolling dancing weapon ; dagger good_item | mundane falchion w:6")
@@ -122,7 +130,7 @@ end
 # Dummy Elf arrival vault
 
 NAME:   elf_arrival_dummy
-TAGS:   dummy
+TAGS:   dummy uniq_elf_arrival
 PLACE:  Elf:1
 WEIGHT: 50
 ORIENT: float
@@ -133,13 +141,10 @@ ENDMAP
 ##############################################################################
 
 NAME:    elf_arrival_001
-PLACE:   Elf:1
 ORIENT:  west
-TAGS:    patrolling
-SHUFFLE: asd/x$+
-SHUFFLE: fgh/x$+
+SHUFFLE: asd / x$+, fgh / x$+
 SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+: elf_arrival_setup(_G, "1")
 MAP
 xxxxxxxxxxxxxxxaaa
 xxxxxxxxxxxxxxxasa
@@ -155,10 +160,8 @@ ENDMAP
 ##############################################################################
 
 NAME:    elf_arrival_002
-PLACE:   Elf:1
 ORIENT:  south
-TAGS:    patrolling
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+: elf_arrival_setup(_G, "1")
 MAP
 xxxxx@xxx@xxx@xxxxx
 xxxx...........xxxx
@@ -178,10 +181,8 @@ ENDMAP
 
 NAME:    eino_elf_arrival_customs
 ORIENT:  southwest
-PLACE:   Elf:1
-TAGS:    patrolling
-MONS:    deep elf pyromancer / deep elf zephyrmancer
-MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
+SUBST:   2 = 1.
+: elf_arrival_setup(_G, "1")
 MAP
 xxxxxxxxx
 x.+.....x
@@ -199,11 +200,9 @@ ENDMAP
 ##############################################################################
 
 NAME:    eino_elf_arrival_shootout
-PLACE:   Elf:1
-ORIENT:  float
-TAGS:    patrolling
-MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
-MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing
+NSUBST:  1 = 1:1 / * = 1.
+SUBST:   2 = 11.
+: elf_arrival_setup(_G, "1")
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxx...........xxxx
@@ -223,12 +222,11 @@ ENDMAP
 ##############################################################################
 
 NAME:   eino_elf_arrival_sip
-PLACE:  Elf:1
-ORIENT: south
-TAGS:   patrolling
 TAGS:   no_monster_gen
-KMONS:  Z = deep elf pyromancer / deep elf zephyrmancer / nothing
+ORIENT: south
 KFEAT:  Z = W
+NSUBST: Z = 1:Z / * = ZZW
+: elf_arrival_setup(_G, "Z")
 MAP
  .........
 x..WWWWW..x
@@ -246,10 +244,8 @@ ENDMAP
 ##############################################################################
 
 NAME:   eino_elf_arrival_the_gate
-PLACE:  Elf:1
 ORIENT: south
-TAGS:   patrolling
-MONS:   deep elf pyromancer / deep elf zephyrmancer
+: elf_arrival_setup(_G, "1")
 MAP
 x.........x
 @.........@
@@ -270,12 +266,9 @@ ENDMAP
 # A nice scenic altar
 
 NAME:    eino_elf_arrival_altar
-TAGS:    patrolling
 ORIENT:  west
-PLACE:   Elf:1
-SHUFFLE: 12
 KFEAT:   C = altar_vehumet
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+: elf_arrival_setup(_G, "1")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 xxxxxxxxxxxxx...xxxxxx.....xxx
@@ -293,11 +286,8 @@ xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 ENDMAP
 
 NAME:   minmay_elf_arrival_circle
-ORIENT: float
-PLACE:  Elf:1
-TAGS:   patrolling
-MONS:   deep elf pyromancer / deep elf zephyrmancer
 SUBST:  B : b.
+: elf_arrival_setup(_G, "1")
 MAP
        xx+xx
     xxxx...xxxx
@@ -321,10 +311,8 @@ xx...BbB...BbB...xx
 ENDMAP
 
 NAME:   minmay_elf_arrival_plus
-TAGS:   patrolling
-ORIENT: float
-PLACE:  Elf:1
-MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:14
+SUBST:  1 = 1 .:7
+: elf_arrival_setup(_G, "1")
 MAP
      x@...@x
      x.....x
@@ -346,33 +334,30 @@ xxxxxmmm+mmmxxxxx
 ENDMAP
 
 NAME:   minmay_elf_arrival_summoners
-TAGS:   patrolling
-ORIENT: float
-PLACE:  Elf:1
-MONS:   deep elf pyromancer / deep elf zephyrmancer
+KMONS:  0 = deep elf pyromancer
 KFEAT:  m = iron_grate
+: elf_arrival_setup(_G, "1")
 MAP
   xxxxxxx
   x.....x
   x.({[.x
 xxx.....xxx
-+1m.....m1+
++0m.....m0+
 xxx.....xxx
-+1m.....m1+
++0m.....m0+
 xxx.....xxx
-+1m.....m1+
++0m.....m0+
 xxx.....xxx
   x.....x
-  x@...@x
+  x@.1.@x
 ENDMAP
 
 NAME:    nicolae_elf_arrival_aired_out
-TAGS:    patrolling transparent
-PLACE:   Elf:1
-ORIENT:  float
-MONS:    deep elf zephyrmancer / air elemental w:6 / nothing w:16
+TAGS:    transparent
+MONS:    deep elf zephyrmancer / air elemental w:6
 SHUFFLE: DEFH / JKLM
-SUBST:   DM = m, E = {, F = T, H = +, JKL = .
+SUBST:   1 = 1., DM = m, E = {, F = T, H = +, JKL = .
+: elf_arrival_setup(_G, "X")
 MAP
           ..
 xxxxxxxxxxHHx
@@ -387,38 +372,36 @@ xxxxxxxxxxHHx
 ENDMAP
 
 NAME:   nicolae_elf_arrival_dilemma
-TAGS:   no_item_gen no_monster_gen patrolling transparent
-PLACE:  Elf:1
+TAGS:   no_item_gen no_monster_gen transparent
 WEIGHT: 5
-ORIENT: float
+: elf_arrival_setup(_G, "1")
 MONS:   deep elf annihilator / deep elf sorcerer
-MONS:   deep elf pyromancer / deep elf zephyrmancer
 SUBST:  T : TG
 MAP
 xxxxxxxxxxxxxxxxx
 x..*..xxTxx.....x
-x..1..=...=..2..x
-=.....=.{.=.2%2.=
-x..1..=...=..2..x
+x..2..=...=..1..x
+=.....=.{.=.1%1.=
+x..2..=...=..1..x
 x..|..xxTxx.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   nicolae_elf_arrival_fired_up
-TAGS:   patrolling transparent
-PLACE:  Elf:1
-ORIENT: float
-KMONS:  12 = deep elf pyromancer
-KFEAT:  2 = T
+TAGS:   transparent
+KMONS:  1 = deep elf pyromancer
+KMONS:  2 = thermic dynamo
+KFEAT:  1 = T
+: elf_arrival_setup(_G, "X")
 MAP
         .@.
 bbbbbbbbnnnbb
 b...........b
-b..T..b..2..b
+b..T..b..1..b
 b.....n.....n.
-b..{..n..1..+@
+b..{..n..2..+@
 b.....n.....n.
-b..T..b..2..b
+b..T..b..1..b
 b...........b
 bbbbbbbbnnnbb
         .@.
@@ -426,12 +409,9 @@ ENDMAP
 
 # A small group of powerful orcs has arrived at the border check ahead of you.
 NAME:   nicolae_elf_arrival_no_cutting_in_line
-TAGS:   patrolling
-PLACE:  Elf:1
-ORIENT: float
 MONS:   orc high priest / orc sorcerer
-MONS:   deep elf pyromancer / deep elf zephyrmancer
-NSUBST: 1 = 2=1 / 1..., 2 = 2=2 / 2...
+NSUBST: 1 = 2:1 / * = 1..., 2 = 2:2 / * = 2...
+: elf_arrival_setup(_G, "2")
 MAP
 x@@@xxxxxxxxxxx
 x.............x
@@ -2521,7 +2501,7 @@ xcc-.........................................................-ccx
 xccF-...-cc-.-cc-.-cc-.-cc'''''ccc'''''cc-.-cc-.-cc-.-cc-...-Fccx
 xcccc---cccc-cccc-cccc-cccc'F'++c++'F'cccc-cccc-cccc-cccc---ccccx
 xcccccccccccccccccccccccccccccc'''cccccccccccccccccccccccccccccxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=A=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc=A=cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                           AAAAAAAAAAAAA
                           AAAAAAAAAAAAA
                           AAAAAAAAAAAAA
@@ -2643,9 +2623,9 @@ MAP
  xbbb........HHHHH........'''''...bbb....-bbbx
  xbbbK.......HHHHH........'''''--bbbbb---bbbbx
  xbbb.......JHHHHHJ.......'''''bbbbbbbbbbbbbbx
- xbb......FFFJbbbJFFF.....'''==xxxxxxxxxxxxxxx
+ xbb......FFFJbbbJFFF.....'''==bxxxxxxxxxxxxxx
  xb-.....FFFFbbbbbFFFF....'''=~~'''''xxxxxx
- xb-..2..FFFFbbbbbFFFF.....-bx~~~''T''xxxxx
+ xb-..2..FFFFbbbbbFFFF.....-bb~~~''T''xxxxx
  xb-.....FFFFbbbbbFFFF.....-bx'~~~''8''xxxx
  xbb......FFFJbbbJFFF......bbx''~~~''8''xxx
  xbbb.......JHHHHHJ.......bbbx'''~~~''8''xx
@@ -2699,11 +2679,11 @@ xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
 xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
 xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
-xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
+xcQP---v...v----------v...v----------v...v-----ccDDDDDDDDDDDDD
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
 xcRQP-7-MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
-xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
+xcQP---v...v----------v...v----------v...v-----ccDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
 xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
 xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD

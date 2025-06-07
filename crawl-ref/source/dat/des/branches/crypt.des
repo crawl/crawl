@@ -1506,23 +1506,23 @@ ENDMAP
 NAME:   st_burial_chamber
 TAGS:   no_wall_fixup
 DEPTH:  Crypt
-MONS:   mummy, guardian mummy, ushabti
-KMONS:  4 = guardian mummy
-KMONS:  5 = mummy priest
-KMONS:  6 = royal mummy
-KITEM:  456 = |
+MONS:   mummy / guardian mummy w:20 / ushabti
+KMONS:  2 = guardian mummy
+KMONS:  3 = mummy priest
+KMONS:  4 = royal mummy
+KITEM:  234 = |
 SUBST:  1 = 2231
 MAP
  ccccccccccccc
 cc...........cc
 cc.cccc+cccc.cc
-ccmcc1...1ccmcc
+ccmcc1.*.1ccmcc
 ccxccc...cccxcc
-c4x4c1...1c4x4c
+c2x2c1...1c2x2c
 cxxxcc...ccxxxc
-c5x5c1...1c5x5c
+c3x3c1...1c3x3c
 cxxxcc...ccxxxc
-c5x6c1...1c6x5c
+c3x4c1...1c4x3c
 ccccccc+ccccccc
 .ccGcc...ccGcc.
 .......@.......

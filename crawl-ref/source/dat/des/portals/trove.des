@@ -616,6 +616,9 @@ KITEM:   B = acquire book / acquire:sif_muna book / any book
 KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
              potion of might / potion of brilliance / potion of resistance / \
              potion of magic / potion of haste
+: if (you.mutation("no jewellery") == 1) then
+SUBST:   eE = F
+: end
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
