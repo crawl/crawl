@@ -1192,6 +1192,14 @@ string sub_type_string(const item_def &item, bool known)
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
             }
+        case BOOK_PARCHMENT:
+            {
+            if (!known)
+                return "parchment";
+            string parchmentname = "parchment of ";
+            parchmentname += spell_title(static_cast<spell_type>(item.plus));
+            return parchmentname;
+            }
         case BOOK_NECRONOMICON:
             return "Necronomicon";
         case BOOK_GRAND_GRIMOIRE:

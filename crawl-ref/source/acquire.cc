@@ -830,6 +830,7 @@ static int _book_weight(book_type book)
 {
     ASSERT_RANGE(book, 0, NUM_BOOKS);
     ASSERT(book != BOOK_MANUAL);
+    ASSERT(book != BOOK_PARCHMENT);
     ASSERT(book != BOOK_RANDART_LEVEL);
     ASSERT(book != BOOK_RANDART_THEME);
 
