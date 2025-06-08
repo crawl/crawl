@@ -4810,8 +4810,7 @@ void monster::load_ghost_spells()
 
 bool monster::has_hydra_multi_attack() const
 {
-    return mons_genus(mons_base_type(*this)) == MONS_HYDRA
-        || mons_species(true) == MONS_SERPENT_OF_HELL;
+    return mons_genus(mons_base_type(*this)) == MONS_HYDRA;
 }
 
 int monster::heads() const

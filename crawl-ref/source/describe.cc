@@ -5288,12 +5288,8 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
 
         // Multi-headed monsters must always have their multi-attack in the
         // first slot.
-        if ((mons_genus(mi.base_type) == MONS_HYDRA
-             || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL)
-            && i == 0)
-        {
+        if ((mons_genus(mi.base_type) == MONS_HYDRA) && i == 0)
             di.attack_counts[attack_info] = mi.num_heads;
-        }
         else
             ++di.attack_counts[attack_info];
 

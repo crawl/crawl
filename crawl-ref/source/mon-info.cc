@@ -285,8 +285,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
 static bool _has_hydra_multi_attack(const monster_info &mi)
 {
     return mons_genus(mi.type) == MONS_HYDRA
-           || mons_genus(mi.base_type) == MONS_HYDRA
-           || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL;
+           || mons_genus(mi.base_type) == MONS_HYDRA;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -1167,8 +1166,7 @@ string monster_info::common_name(description_level_type desc) const
 
     if (_has_hydra_multi_attack(*this)
         && type != MONS_SENSED
-        && !mons_class_is_remnant(type)
-        && mons_species(type) != MONS_SERPENT_OF_HELL)
+        && !mons_class_is_remnant(type))
     {
         ASSERT(num_heads > 0);
         if (num_heads < 11)

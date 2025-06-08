@@ -2835,13 +2835,6 @@ void define_monster(monster& mons, bool friendly)
         mons.mangrove_pests = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
         break;
 
-    case MONS_SERPENT_OF_HELL:
-    case MONS_SERPENT_OF_HELL_COCYTUS:
-    case MONS_SERPENT_OF_HELL_DIS:
-    case MONS_SERPENT_OF_HELL_TARTARUS:
-        mons.num_heads = 3;
-        break;
-
     default:
         break;
     }

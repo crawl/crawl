@@ -2854,8 +2854,7 @@ static bool actor_can_lose_heads(const actor* defender)
 {
     if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
-        && defender->as_monster()->mons_species() != MONS_SPECTRAL_THING
-        && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
+        && defender->as_monster()->mons_species() != MONS_SPECTRAL_THING)
     {
         return true;
     }
