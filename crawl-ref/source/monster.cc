@@ -4826,11 +4826,6 @@ int monster::heads() const
         return 1;
 }
 
-bool monster::has_multitargeting() const
-{
-    return has_hydra_multi_attack() && !mons_is_zombified(*this);
-}
-
 bool monster::is_priest() const
 {
     return search_slots([] (const mon_spell_slot& slot)

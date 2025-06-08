@@ -545,7 +545,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
         {
             if (attacker == defender
-               || !attacker->as_monster()->has_multitargeting())
+               || !attacker->as_monster()->has_hydra_multi_attack())
             {
                 break;
             }
