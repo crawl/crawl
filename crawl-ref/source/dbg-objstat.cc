@@ -787,6 +787,34 @@ static void _record_book_spells(const objstat_item &item)
     }
 }
 
+static void _record_parchment_spells(const objstat_item &item)
+{
+    if (item.base_type == ITEM_PARCHMENTS)
+    {
+        spell_type spell = static_cast<spell_type>(item.plus);
+        _record_spell_stat(spell, "Num", 1);
+        _record_spell_stat(spell, "NumForIter", 1);
+
+        if (item.in_vault)
+        {
+            _record_spell_stat(spell, "NumVault", 1);
+            _record_spell_stat(spell, "NumForIterVault", 1);
+        }
+
+        if (item.is_arte)
+        {
+            _record_spell_stat(spell, "NumArte", 1);
+            _record_spell_stat(spell, "NumForIterArte", 1);
+        }
+
+        if (item.in_shop)
+        {
+            _record_spell_stat(spell, "NumShop", 1);
+            _record_spell_stat(spell, "NumForIterShop", 1);
+        }
+    }
+}
+
 void objstat_record_item(const item_def &item)
 {
     const objstat_item objs_item(item);
@@ -850,6 +878,7 @@ void objstat_record_item(const item_def &item)
     }
 
     _record_book_spells(objs_item);
+    _record_parchment_spells(objs_item);
 }
 
 static void _record_monster_stat(monster_type mc, string field, int value)
