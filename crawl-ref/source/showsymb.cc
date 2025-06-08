@@ -567,6 +567,9 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         g.col |= COLFLAG_REVERSE;
     }
 
+    if (cell.flags & MAP_BFB_CORPSE)
+        g.col |= COLFLAG_UNUSUAL_MASK;
+
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
