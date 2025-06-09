@@ -1,57 +1,70 @@
 %%%%
-Berserk
+berserk mutation
 
 Cuando haces ataques cuerpos a cuerpos a enemigos, a veces entras en un estado de rabia 
 berserk. Cada nivel de esta mutación aumenta la probabilidad de entrando un 
 estado de rabia berserk.
 %%%%
-Cold Resistance
+cold resistance mutation
 
 Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes 
 del frío.
 %%%%
-Fire Resistance
+fire resistance mutation
 
 Tienes resistencia al fuego. Cada nivel de esta mutación reduce el daño que recibes 
 del fuego.
 %%%%
-Inability to train armour
+steam resistance mutation
+
+No recibes daño de exhalaciones ni nubes de vapor hirviente.
+%%%%
+electricity resistance mutation
+
+Tienes resistencia al electricidad.
+%%%%
+poison resistance mutation
+
+Tienes resistencia al veneno. No tienes immunidad, pero reduce la probabilidad de 
+tú estando affectado por lo a un tercio de que sería sin esta mutación.
+%%%%
+inability to train armour mutation
 
 Tu capacidad en Armaduras es cero, y no puedes aumentarlo.
 %%%%
-Inability to train dodging
+inability to train dodging mutation
 
 Tu capacidad de Esquivar es cero, y no puedes aumentarlo.
 %%%%
-No air magic
+no air magic mutation
 
 Tu habilidad de Magia de Aire es cero, y no puedes aumentarlo.
 %%%%
-No alchemy magic
+no alchemy magic mutation
 
 Tu habilidad de Alquimia es cero, y no puedes aumentarlo.
 %%%%
-No armour
+no armour mutation
 
 No puedes llevar armaduras.
 %%%%
-No conjurations magic
+no conjurations magic mutation
 
 Tu habilidad de Conjuros es cero, y no puedes aumentarlo.
 %%%%
-No earth magic
+no earth magic mutation
 
 Tu habilidad de Magia de Tierra es cero, y no puedes aumentarlo.
 %%%%
-No fire magic
+no fire magic mutation
 
 Tu habilidad de Magia de Fuego es cero, y no puedes aumentarlo.
 %%%%
-No ice magic
+no ice magic mutation
 
 Tu habilidad de Magia de Hielo es cero, y no puedes aumentarlo.
 %%%%
-No potions
+no potions mutation
 
 No puedes beber pociones
 %%%%
