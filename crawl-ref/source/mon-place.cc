@@ -993,6 +993,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
+
+        if (!mg.mname.empty())
+            name_zombie(*mon, ztype, mg.mname);
+        else if (mons_is_unique(ztype))
+            name_zombie(*mon, ztype, mons_type_name(ztype, DESC_THE));
     }
     else
         define_monster(*mon, mg.behaviour == BEH_FRIENDLY
