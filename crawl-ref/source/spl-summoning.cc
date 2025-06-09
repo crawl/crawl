@@ -2882,7 +2882,7 @@ spret kiku_unearth_wretches(bool fail)
         const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        const monster_type mon_type = pick_local_wretch(lev);
         ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
         // place a monster
         mgen_data mg(mon_type,

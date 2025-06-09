@@ -1487,8 +1487,8 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
-    // If skeleton, monster must have a skeleton.
-    if (cs == MONS_SKELETON && !mons_has_skeleton(base))
+    // If draugr, monster must have a skeleton.
+    if (cs == MONS_DRAUGR && !mons_has_skeleton(base))
         return false;
 
     // If zombie, monster must have a corpse.
@@ -1532,10 +1532,18 @@ bool zombie_picker::veto(monster_type mt)
     return positioned_monster_picker::veto(mt);
 }
 
-static bool _mc_too_slow_for_zombies(monster_type mon)
+// Use this one for zombies and simulacra, who get a speed penalty.
+static bool _mc_too_slow_for_slow_zombies(monster_type mon)
 {
     // zombies slower than the player are boring!
-    return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
+    return mons_class_zombie_base_speed(mons_species(mon), true) < BASELINE_DELAY;
+}
+
+// Use this one for spectrals and draugr, who don't get a speed penalty.
+static bool _mc_too_slow_for_normal_undead(monster_type mon)
+{
+    // zombies slower than the player are boring!
+    return mons_class_zombie_base_speed(mons_species(mon), false) < BASELINE_DELAY;
 }
 
 static bool _mc_bad_wretch(monster_type mon)
@@ -1545,14 +1553,14 @@ static bool _mc_bad_wretch(monster_type mon)
 }
 
 /**
- * Pick a local monster type that's suitable for turning into a corpse.
+ * Pick a local monster type that's suitable for Unearth Wretches.
  *
  * @param place     The branch/level that the monster type should come from,
  *                  if possible. (Not guaranteed for e.g. branches with no
  *                  corpses.)
- * @return          A monster type that can be used to fill out a corpse.
+ * @return          A monster type that can be used to fill out the wretch.
  */
-monster_type pick_local_corpsey_monster(level_id place)
+monster_type pick_local_wretch(level_id place)
 {
     return pick_local_zombifiable_monster(place, MONS_NO_MONSTER, coord_def(),
                                           true);
@@ -1571,10 +1579,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
         // explicitly defined.
         place = level_id(BRANCH_DEPTHS, 14 - (27 - place.depth) / 3);
     }
-    else
+    else if (cs != MONS_DRAUGR)
     {
         // Zombies tend to be weaker than their normal counterparts;
         // thus, make them OOD proportional to the current dungeon depth.
+        // Draugr have a leg up compared to other derived undead with AC and
+        // weapons and doom, so don't give them the same advantage.
         place.depth += 1 + div_rand_round(place.absdepth(), 5);
     }
 
@@ -1583,8 +1593,10 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
+    const bool is_slow = (cs != MONS_SPECTRAL_THING && cs != MONS_DRAUGR);
     mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
-                           really_in_d ? _mc_too_slow_for_zombies
+                           really_in_d ? (is_slow ? _mc_too_slow_for_slow_zombies
+                                                  : _mc_too_slow_for_normal_undead)
                                         : nullptr;
 
     // try to grab a proper zombifiable monster
@@ -1642,9 +1654,10 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = ztype;
 
     mon->colour       = COLOUR_INHERIT;
-    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL)
+    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL
+                          || cs == MONS_DRAUGR)
                             ? mons_class_base_speed(mon->base_monster)
-                            : mons_class_zombie_base_speed(mon->base_monster));
+                            : mons_class_zombie_base_speed(mon->base_monster, true));
 
     // Turn off all melee ability flags except dual-wielding.
     mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
@@ -2227,7 +2240,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
     { BAND_CENTAUR_WARRIORS,    {{{MONS_CENTAUR_WARRIOR, 1}}}},
     { BAND_MOLTEN_GARGOYLES,    {{{MONS_MOLTEN_GARGOYLE, 1}}}},
-    { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
+    { BAND_SKELETAL_WARRIORS,   {{{MONS_DRAUGR, 1}},
+                                 {{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
     { BAND_IRON_GOLEMS,         {{{MONS_IRON_GOLEM, 1}}}},
@@ -2265,9 +2279,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SMOKE_DEMON, 1}}}},
     { BAND_CACODEMON,           {{{MONS_SIXFIRHY, 1},
                                   {MONS_ORANGE_DEMON, 1}}}},
-    { BAND_NECROMANCER,         {{{MONS_ZOMBIE, 2},
-                                  {MONS_SKELETON, 2},
-                                  {MONS_SIMULACRUM, 1}}}},
+    { BAND_NECROMANCER,         {{{MONS_ZOMBIE, 3},
+                                  {MONS_SIMULACRUM, 2}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
 

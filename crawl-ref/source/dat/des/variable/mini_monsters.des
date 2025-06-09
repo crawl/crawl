@@ -630,7 +630,7 @@ KMONS:  4 = bat name:giga n_adj n_des n_spe n_noc hd:4 col:brown tile:mons_gigab
 # Way harder than the rest here.
 KMONS:  5 = vampire bat
 # In RL, they sit put, not moving a finger.  Lazy bastards.
-KMONS:  6 = bat skeleton name:skeletal_bat n_rpl n_des n_spe n_zom
+KMONS:  6 = bat draugr name:skeletal_bat n_rpl n_des n_spe n_zom ; dagger plus:-4
 # The only here without a basis in reality.
 KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
 # There are actual "ghost bats" too, but near-extinct, while ghost-faceds
@@ -1272,10 +1272,10 @@ NAME:   wander_ebering_terrifying_dragon_lair
 TAGS:   no_monster_gen
 DEPTH:  D:1-3
 MONS:   frilled lizard
-NSUBST:  $ = $ / 4=$.. / *:.
-NSUBST:  D = 3:d / 3=d.. / *:.
-NSUBST:  E = e / 2=e. / .
-ITEM:    human skeleton
+ITEM:   human skeleton
+NSUBST: $ = $ / 4=$.. / *:.
+NSUBST: D = 3:d / 3=d.. / *:.
+NSUBST: E = e / 2=e. / .
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
    xxxxx
@@ -2587,6 +2587,7 @@ KMONS:  3 = spectral hellephant
 KMONS:  4 = spectral shadow dragon
 KMONS:  6 = deep elf death mage w:30 / vampire mage / \
             lich / ancient lich / dread lich
+KITEM:  P = rat
 SUBST:  5 = -
 : else
 # The elves have mastered the dungeon and allied with the darkness.
@@ -2618,7 +2619,6 @@ MARKER: P = lua:fog_machine { cloud_type = "flame", \
 MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
             pow_min = 3, pow_max = 3, delay = 100, \
             size = 1, walk_dist = 1, start_clouds = 1 }
-KITEM:  P = rat skeleton
 MAP
     xx.@.xxx
     xt----tx
@@ -3359,29 +3359,30 @@ xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   hangedman_tell_no_tales
-DEPTH:  D:9-, !D:$
 TAGS:   no_monster_gen no_item_gen patrolling
-MONS:   spriggan skeleton
-MONS:   troll skeleton
+DEPTH:  D:11-, !D:$
+MONS:   spriggan draugr, troll draugr
 KMONS:  A = unseen horror
+KFEAT:  def = cache of baked goods
 SUBST:  D : DDDDE
 NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 KPROP:  def = bloody
 MAP
  cccccccccc
-ccxx1x1+DDc
+ccxx+x1+DDc
 c.x.x..mDDc
 @.d.x2.mDDc
 c.x.x..cc+c
-ccxx1x.c1fc
+ccxx+x1c*fc
  cccccccccc
 ENDMAP
 
 NAME:   hangedman_weighted_door
 TAGS:   extra
 DEPTH:  D:9-, Crypt
-MONS:   zombie / skeleton
-KMONS:  A = spectral thing / simulacrum
+MONS:   zombie / simulacrum
+KMONS:  A = spectral thing
+KMONS:  P = pile of debris
 KITEM:  A = any good_item
 KMASK:  .%* = no_monster_gen
 KITEM:  * = star_item
@@ -3392,13 +3393,14 @@ cccc cccc
 c11ccc%*c
 c11cAc$%c
 cn+++++nc
-c@.....@c
+cPPPPPPPc
+c@..$..@c
 ENDMAP
 
 NAME:   hangedman_blasphemy
 TAGS:   no_monster_gen vaults_hard
 DEPTH:  Vaults, !Vaults:$, Crypt
-MONS:   phantasmal warrior, apis skeleton, pearl dragon zombie
+MONS:   phantasmal warrior, apis draugr, pearl dragon zombie
 MONS:   patrolling profane servitor, death knight
 COLOUR: t = brown, c = white
 FTILE:  t' = floor_pebble_brown
@@ -8803,10 +8805,10 @@ DEPTH:  D:9-
 WEIGHT: 3
 ITEM:   cigotuvi's_embrace no_pickup
 : if you.depth() < 13 then
-MONS:   zombie place:D:15 / skeleton place:D:15, hellwing
+MONS:   zombie place:D:15, hellwing
 SUBST:  1 = 1.
 : else
-MONS:   zombie place:Depths:1 / skeleton place:Depths:1, soul eater
+MONS:   zombie place:Depths:1 / draugr place:D:$, soul eater
 : end
 KPROP:  D = no_tele_into
 : dgn.delayed_decay(_G, 'D', 'human corpse')
@@ -9466,8 +9468,10 @@ NAME:   dilly_guarded_unrand_throatcut
 TAGS:   no_monster_gen
 DEPTH:  D:3-9
 WEIGHT: 3
-ITEM:   throatcutter no_pickup
 MONS:   kobold, kobold brigand, kobold demonologist
+ITEM:   throatcutter no_pickup
+KITEM:  "- = orc skeleton / goblin skeleton / hobgoblin skeleton /\
+             gnoll skeleton
 KFEAT:  a = x
 KFEAT:  p = c
 : if you.depth() < 5 then
@@ -9480,8 +9484,6 @@ NSUBST: 1 = 2--, 2 = 223
 SUBST:  " = "..., - = -., x = axx, c = pcc
 KPROP:  ap = bloody
 TILE:   cp = DNGN_STONE_DARK
-KITEM:  "- = orc skeleton / goblin skeleton / hobgoblin skeleton /\
-             gnoll skeleton
 MAP
    ccccc
   cc...cc
@@ -9507,13 +9509,13 @@ ENDMAP
 # Natasha misses her master
 NAME:   dilly_guarded_unrand_morg
 TAGS:   no_monster_gen
-DEPTH:  D:2-9
+DEPTH:  D:3-9
 WEIGHT: 3
-ITEM:   dagger randart ego:pain pre_id no_pickup, w:30 book of necromancy / w:5 book of decay \
-        / w:5 book of death
 KMONS:  p = withered plant
-MONS:   skeleton / zombie, spectral thing / simulacrum, weeping skull, phantom
-MONS:   wraith
+MONS:   kobold draugr / zombie, spectral thing / simulacrum
+MONS:   weeping skull, phantom, wraith
+ITEM:   dagger randart ego:pain pre_id no_pickup
+ITEM:   book of necromancy w:30 / book of decay w:5 / book of death w:5
 : if you.depth() < 5 then
 KMONS:  D = natasha, phantom
 SUBST:  3 = 2, 2 = 1112
@@ -9521,7 +9523,7 @@ SUBST:  3 = 2, 2 = 1112
 KMONS:  D = wight band w:30 / wraith
 SUBST:  3 = 34
 : else
-KMONS:  D = skeletal warrior w:30 / death knight
+KMONS:  D = skeletal warrior w:30 / draugr
 SUBST:  1 = 2, 3 = 5
 : end
 SUBST:  p = .ppp
@@ -9725,8 +9727,9 @@ WEIGHT: 3
 : if you.in_branch("Swamp") then
 MONS:   skeletal warrior ; captain's cutlass . swamp dragon scales
 MONS:   shard shrike zombie, kraken zombie / kraken simulacrum
-MONS:   bog body / freezing wraith / spriggan berserker skeleton
-KMONS:  56 = bloated husk / hydra skeleton
+MONS:   bog body / freezing wraith / spriggan berserker zombie / \
+        spriggan draugr w:2
+KMONS:  56 = bloated husk / hydra zombie
 KMONS:  7 = ghost crab / will-o-the-wisp
 NSUBST: w = 1:3 / 4:6 / 1:67 / 1:7 / *:w
 SUBST:  ~ = t, ? = 4
@@ -9736,8 +9739,8 @@ TAGS:   water_ok no_pool_fixup
 # Shoals doesn't have any default undead themes, so instead have
 # mostly wildlife that picked the crew's bones clean.
 MONS:   skeletal warrior ; captain's cutlass . scale mail . buckler
-MONS:   shard shrike skeleton, kraken
-MONS:   merfolk impaler skeleton / snapping turtle skeleton w:4
+MONS:   harpy draugr, kraken
+MONS:   merfolk draugr / spectral snapping turtle w:4
 KMONS:  56 = wind drake / manticore
 KMONS:  7 = alligator snapping turtle
 KMONS:  0 = harpy / sea snake / snapping turtle
@@ -9748,7 +9751,7 @@ KITEM: Z = human skeleton / merfolk skeleton
 MONS:   ancient champion ; captain's cutlass . scale mail . kite shield
 MONS:   shard shrike simulacrum / spectral shard shrike, spectral kraken
 MONS:   skeletal warrior / jiangshi / vampire knight w:4 / \
-        alligator snapping turtle skeleton w:2 / sea snake simulacrum w:2
+        alligator snapping turtle draugr w:2 / sea snake draugr w:2
 KMONS:  56 = flayed ghost / vampire mage
 KMONS:  7 = curse skull
 SUBST:  ~ = xw, ? = 2
@@ -9758,8 +9761,8 @@ KITEM: Z = spriggan skeleton / merfolk skeleton
 MONS:   ancient champion ; captain's cutlass . plate armour
 MONS:   caustic shrike simulacrum / spectral caustic shrike
 MONS:   kraken / kraken simulacrum / spectral kraken
-MONS:   jiangshi / spriggan defender skeleton / vampire knight w:4
-KMONS:  56 = phantasmal warrior / storm dragon skeleton
+MONS:   jiangshi / spriggan defender zombie / vampire knight w:4
+KMONS:  56 = phantasmal warrior / spectral storm dragon
 KMONS:  7 = flayed ghost / merfolk javelineer
 NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
 SUBST:  ~ = xw, ? = 2

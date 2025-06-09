@@ -384,14 +384,15 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   laughing skull / nothing w:15, skeleton w:20 / nothing
+WEIGHT: 5 (Depths), 10
+MONS:   laughing skull, draugr
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
-SUBST:  G : GGccV.
+SUBST:  1 = 11..., 2 = 222.., G : GGccV.
 : vault_metal_statue_setup(_G, "S", "soul conduit")
 MAP
 cccccccccccccccccccccccccccccccc
-c....2.....||c...+....111c|....c
-c+c.2.3...cccc...c.....21cc..3.c
+c....2....%||c...+....111c|%...c
+c+c.2.3...cccc...c.....21cc%.3.c
 c.cc...2.2.ccc...c......1ccc...c
 c..cc...2...cc...c...S...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
@@ -1167,13 +1168,12 @@ TAGS:   no_monster_gen
 DEPTH:  D:13-, Depths
 ORIENT: southeast
 : if you.in_branch("D") then
-MONS:   zombie place:D:15 / skeleton place:D:15 / simulacrum / spectral thing
+MONS:   zombie place:D:15 / draugr place:D:10 / simulacrum / spectral thing
 MONS:   necromancer w:20 / soul eater
 MONS:   freezing wraith / shadow wraith / flayed ghost
 MONS:   tormentor / reaper, deep elf death mage
 : else
-MONS:   zombie place:Depths:4 / skeleton place:Depths:4 / simulacrum \
-        / spectral thing
+MONS:   zombie place:Depths:4 / simulacrum / spectral thing
 MONS:   necromancer w:8 / deep elf death mage / vampire mage / alderking w:2
 MONS:   flayed ghost / tormentor
 MONS:   reaper / executioner, tzitzimitl
@@ -3221,7 +3221,7 @@ TILE:     z = wall_stone_dark
 : elseif you.in_branch("Crypt") then
 TAGS:     no_wall_fixup
 MONS:     laughing skull band / spectral fire dragon
-MONS:     eidolon / storm dragon skeleton
+MONS:     eidolon / fire dragon draugr w:4 / fire giant draugr w:4
 MONS:     revenant soulmonger / ancient champion ; plate armour . great sword ego:flaming
 MONS:     bone dragon / curse skull
 NSUBST:   . = 2:1 / 3:2 / 1:3 / 1:112.. / 1:223.
@@ -3355,7 +3355,7 @@ NSUBST:  % = 1:d / 2:e / 1:fg / 1:zzz. / * = def.
 MONS:    rakshasa / occultist, tengu conjurer / necromancer
 MONS:    ice dragon w:1 / glowing orange brain w:20 / \
          very ugly thing / storm dragon zombie
-MONS:    flayed ghost / glowing shapeshifter w:20 / guardian sphinx skeleton
+MONS:    flayed ghost / glowing shapeshifter w:20 / guardian sphinx simulacrum
 MONS:    ugly thing / shapeshifter w:15 / spriggan air mage simulacrum w:5
 KFEAT:   ) = enter_depths
 KITEM:   S = smoky gem

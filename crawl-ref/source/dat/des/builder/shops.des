@@ -852,16 +852,11 @@ KMASK:  DEFH = no_monster_gen
 KMASK:  DEFH = no_item_gen
 KMASK:  DEFH = no_trap_gen
 KMASK:  DEFH = opaque
-{{
--- The skellingtons are purely decorative.
-local skeletons = {"human", "elf", "orc", "ogre", "merfolk", "naga", "kobold",
-                   "gnoll", "minotaur", "spriggan", "troll", "felid",
-                   "draconian", "tengu", "demonspawn", "demigod"}
-kitem("D = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("E = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("F = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("H = " .. util.random_from(skeletons) .. " skeleton" )
-}}
+# The skellingtons are purely decorative.
+: kitem("D : " .. vault_species_skeletons(_G, "early"))
+: kitem("E : " .. vault_species_skeletons(_G, "late"))
+: kitem("F : " .. vault_species_skeletons(_G, "dungeon"))
+: kitem("H : " .. vault_species_skeletons(_G, "all"))
 MAP
    .---
    .-E-

@@ -2090,7 +2090,7 @@ NAME:   nicolae_lair_deadzone
 TAGS:   decor extra transparent
 DEPTH:  Lair
 KMONS:  p = withered plant
-KITEM:  S = 0 skeleton / human skeleton w:1 / elf skeleton w:1
+KITEM:  S = any skeleton / human skeleton w:1 / elf skeleton w:1
 SUBST:  t = ttt.., . = .:60 p
 NSUBST: . = 4=S / 4=S. / .
 COLOUR: t = lightgrey w:5 / brown
@@ -4180,11 +4180,11 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
 KMONS:   pq = withered plant
-MONS:    elephant skeleton / elephant zombie / spectral elephant w:5 \
+MONS:    yak draugr w:5 / elephant zombie w:15 / spectral elephant w:5 \
          / elephant simulacrum / spectral cane toad / cane toad simulacrum
 MONS:    elephant, cane toad / death yak
 MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
-         / dire elephant skeleton / dire elephant zombie \
+         / elephant draugr / dire elephant zombie \
          / spectral dire elephant w:5 / dire elephant simulacrum w:5
 MONS:    dire elephant, patrolling necromancer, obsidian statue
 # The anaconda's name is Kaa.
@@ -4493,9 +4493,7 @@ MONS:    deep troll shaman, dire elephant / hydra / lindwurm
 MONS:    catoblepas, death yak band
 MONS:    elephant, wolf, black bear / polar bear
 KMONS:   P = plant / fungus w:2 / bush w:1
-ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
-         ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
-         merfolk skeleton w:1
+: kitem("d = " .. vault_species_skeletons(_G, "dungeon"))
 ITEM:    hive talisman
 KITEM:   R = earthy gem
 SHUFFLE: 567

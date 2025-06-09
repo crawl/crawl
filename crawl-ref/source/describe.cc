@@ -5186,6 +5186,8 @@ struct mon_attack_info
 static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 {
     // XXX: duplicates monster::weapon()
+    if (mi.type == MONS_DRAUGR && atk > 0)
+        return nullptr;
     if ((atk % 2) && mi.wields_two_weapons())
     {
         item_def *alt_weap = mi.inv[MSLOT_ALT_WEAPON].get();
@@ -5340,9 +5342,16 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
             break; // assumes there are no gaps in attack arrays
 
         // Multi-headed monsters must always have their multi-attack in the
-        // first slot.
-        if ((mons_genus(mi.base_type) == MONS_HYDRA) && i == 0)
-            di.attack_counts[attack_info] = mi.num_heads;
+        // first slot (unless they're draugr, where the weapon hit is always
+        // first).
+        if ((mons_genus(mi.base_type) == MONS_HYDRA)
+             && i == (mi.type == MONS_DRAUGR ? 1 : 0))
+        {
+            // XXX: Subtract the copies of this attack that will be found in
+            //      remaining attack slots.
+            di.attack_counts[attack_info] =
+                mi.num_heads - (mi.type == MONS_DRAUGR ? 2 : 3);
+        }
         else
             ++di.attack_counts[attack_info];
 

@@ -761,8 +761,9 @@ monster_info::monster_info(const monster* m, int milev)
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         // hydras are a mess!
-        const int atk_index = m->has_hydra_multi_attack() ? i + m->heads() - 1
-                                                          : i;
+        const int atk_index = m->has_hydra_multi_attack()
+                                    ? m->type == MONS_DRAUGR && i > 0 ? 1 : 0
+                                    : i;
         attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
@@ -1203,9 +1204,9 @@ string monster_info::common_name(description_level_type desc) const
         if (!is(MB_NAME_ZOMBIE))
             ss << (nocore ? "" : " ") << "zombie";
         break;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
         if (!is(MB_NAME_ZOMBIE))
-            ss << (nocore ? "" : " ") << "skeleton";
+            ss << (nocore ? "" : " ") << "draugr";
         break;
     case MONS_SIMULACRUM:
         if (!is(MB_NAME_ZOMBIE))

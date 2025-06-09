@@ -457,7 +457,7 @@ ENDMAP
 NAME:    hangedman_abyss_shoalhut
 TAGS:    no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
-         unseen horror / ynoxinul / snapping turtle skeleton w:15 / \
+         unseen horror / ynoxinul / snapping turtle simulacrum w:15 / \
          apocalypse crab w:1 / tentacled starspawn w:1
 KITEM:   d = $, $, demon trident / throwing net q:1 / longbow w:4 / \
              large rock q:8 w:4
@@ -1216,7 +1216,7 @@ NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
 MONS:    catoblepas, earth elemental, basilisk, boulder beetle
-MONS:    catoblepas skeleton, air elemental, death drake
+MONS:    catoblepas zombie, air elemental, death drake
 ITEM:    potion of enlightenment q:1 pre_id
 KMONS:   O = patrolling war gargoyle
 KITEM:   O = abyssal rune of Zot

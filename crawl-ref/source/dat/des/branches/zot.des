@@ -2454,7 +2454,7 @@ NAME:   lemuel_lich_library
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
-MONS:   vampire mage, black draconian skeleton
+MONS:   vampire mage, black draconian draugr
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 KFEAT:  ^ = archmage's trap
 SUBST:  x : xvv, w : w?, G : Gg

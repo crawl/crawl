@@ -206,7 +206,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
 
-    local list_undead_types = { " zombie", " skeleton", " simulacrum" }
+    local list_undead_types = { " zombie", " draugr", " simulacrum" }
 
     local list_deriv_undead_base_mons = {
         "cyclops", "two-headed ogre", "swamp dragon",  -- tier 1
@@ -234,7 +234,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             crawl.one_chance_in(8) then
 
             -- tier 1 spawns
-            if data.count < 8 or data.count < 15 and crawl.one_chance_in(6) then
+            if data.count < 6 or data.count < 13 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
                                .. list_undead_types[pick_undead_type])
@@ -243,7 +243,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 2 spawns
-            elseif data.count < 16 or data.count < 23 and crawl.one_chance_in(4) then
+            elseif data.count < 14 or data.count < 19 and crawl.one_chance_in(4) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -254,7 +254,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 3 spawns
-            elseif data.count < 24 or crawl.x_chance_in_y(11, 14) then
+            elseif data.count < 20 or crawl.x_chance_in_y(11, 14) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -1121,7 +1121,7 @@ SUBST:      opqrstu = *
 #            - Earth and spirits
 #            - Unholy undead and demons
 :           if crawl.x_chance_in_y(3, 7) then
-KMONS:      0% = stone giant skeleton / spectral iron troll / \
+KMONS:      0% = stone giant draugr / spectral iron troll / \
                  crystal guardian / gargoyle w:20 / skeletal warrior w:5
 KMONS:      * = war gargoyle w:30 / walking earthen tome / ancient champion
 KMONS:      | = undying armoury / walking crystal tome w:5
@@ -1481,7 +1481,7 @@ ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
 KITEM:      g = skull of zonguldrok
 KFEAT:      GW = G
 KFEAT:      T = petrified_tree
-NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 22:G / 5 = G. / *:.
+NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 18:G / 4 = G. / *:.
 {{
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })
@@ -1539,9 +1539,9 @@ LROCKTILE:  wall_hall_darkgray
 {{
 set_random_mon_list(
     -- Selected to make derived and regular undead equal.
-       [[ two-headed ogre skeleton / cyclops zombie / swamp dragon simulacrum / ]]
-    .. [[ deep troll skeleton / stone giant zombie / storm dragon simulacrum / ]]
-    .. [[ ettin skeleton / juggernaut zombie / golden dragon simulacrum / ]]
+       [[ two-headed ogre draugr / cyclops zombie / swamp dragon simulacrum / ]]
+    .. [[ deep troll draugr / stone giant zombie / storm dragon simulacrum / ]]
+    .. [[ ettin draugr / juggernaut zombie / golden dragon simulacrum / ]]
     .. [[ vampire / skeletal warrior / jiangshi / phantasmal warrior / ]]
     .. [[ vampire knight / ghoul / ancient champion w:20 / lich / ]]
 )
@@ -1729,7 +1729,7 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
  local lowtier = "large abomination w:20 / unseen horror / " ..
                  "thrashing horror w:20 / raiju w:35 / worldbinder w:35 / " ..
                  "smoke demon / sixfirhy / hellwing / " ..
-                 "alligator skeleton / anaconda skeleton / " ..
+                 "alligator simulacrum / anaconda simulacrum / " ..
                  "efreet / air elemental / water elemental / " ..
                  "will-o-the-wisp w:5 / mana viper / demonic crawler w:5"
  local midtier = "tentacled starspawn w:50 / very ugly thing w:25 / " ..

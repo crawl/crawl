@@ -854,7 +854,7 @@ WEIGHT:  5
 ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
-MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
+MONS:    storm dragon zombie, golden dragon zombie, fire dragon draugr
 : if you.race() == "Revenant" or you.race() == "Mummy" then
 ITEM:    $ / any armour good_item
 : else

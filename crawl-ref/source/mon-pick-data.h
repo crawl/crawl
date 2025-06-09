@@ -613,7 +613,7 @@ static const vector<pop_entry> population[] =
 },
 
 { // Tomb (OOD cap: 5)
-  {  1,  5,  300, FLAT, MONS_SKELETON },
+  {  1,  5,  300, FLAT, MONS_DRAUGR },
   {  1,  5,  235, FLAT, MONS_ZOMBIE },
   {  1,  5,   80, SEMI, MONS_SIMULACRUM },
   {  1,  5, 1050, FLAT, MONS_MUMMY },
@@ -1077,7 +1077,7 @@ POP_DEPTHS,
 { // Ossuary
   {  1,  1,   40, FLAT, MONS_WEEPING_SKULL },
   {  1,  1,   90, FLAT, MONS_MUMMY },
-  {  1,  1,  515, FLAT, MONS_SKELETON },
+  {  1,  1,  515, FLAT, MONS_DRAUGR },
   {  1,  1,  515, FLAT, MONS_ZOMBIE },
 },
 

@@ -243,7 +243,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
                       orc knight w:5 / orc warlord / sphinx marauder w:5 / \
                       deep elf zephyrmancer / deep elf knight / \
                       deep elf archer / crawling flesh cage / \
-                      guardian sphinx skeleton")
+                      guardian sphinx draugr")
     e.kmons(_9 .. " = ironbound mechanist / ironbound frostheart / \
                       ironbound thunderhulk / yaktaur captain / ettin w:5 / \
                       guardian sphinx / peacekeeper / crystal guardian / \
@@ -301,7 +301,7 @@ function necropolis_portal_setup(e)
   elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
     e.set_random_mon_list("flayed ghost / eidolon / revenant soulmonger /\
                            phantasmal warrior / vampire knight / \
-                           vampire mage / place:Depths:$ skeleton w:30")
+                           vampire mage / place:Depths:$ draugr w:25")
   end
 
   e.set_feature_name("tree", "tree of woe")
@@ -1920,14 +1920,15 @@ TAGS:   luniq_necropolis_ghost_undead_centric
 # Daggers are the most thematic for necromancers.
 : local sl = 0
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-MONS:   skeleton place:D:7 / zombie place:D:7
+MONS:   jackal draugr w:2 / adder draugr w:2 / orc draugr w:2 / zombie place:D:7
 KITEM:  ? = dagger ego:pain / dagger ego:draining
 SUBST:  d = *%, e = %$, f = ?, ghij = $
 NSUBST: 1 = 2=1 / 1---
 :   sl = 5
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
-MONS:   skeleton place:D:11 / zombie place:D:11 / spectre place:D:11 / \
-        simulacrum place:D:11
+MONS:   centaur draugr w:2 / ogre draugr w:2 / steam dragon draugr w:2 / \
+        manticore draugr w:2 / water moccasin draugr w:2 / zombie place:D:11 / \
+        spectre place:D:11 /  simulacrum place:D:11
 KITEM:  ? = dagger ego:pain / dagger ego:draining
 SUBST:  d = *, e = *%, f = %$$$, ghij = $
 NSUBST: 1 = 2:1 / * = 1-
@@ -1972,7 +1973,7 @@ SUBST:  fg = |*, h = *%, i = !, jk = $
 NSUBST: 1 = 1:12 / *:1, - = 3=1 / 4=1- / .
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   spriggan defender zombie / spectral caustic shrike / \
-        spark wasp simulacrum / quicksilver dragon skeleton / rockslime zombie
+        spark wasp simulacrum / quicksilver dragon draugr / rockslime zombie
 MONS:   revenant soulmonger / curse skull / ancient lich w:8 / dread lich w:8
 KITEM:  ? = quick blade ego:pain randart pre_id / \
             quick blade ego:spectral randart pre_id
@@ -3098,9 +3099,7 @@ kmons("4 = merfolk impaler ; " ..
 }}
 KMONS:   5 = kraken
 KMONS:   6 = spectral kraken
-KITEM:   - = minotaur skeleton / elf skeleton / dwarf skeleton /\
-             human skeleton / kobold skeleton / felid skeleton /\
-             orc skeleton / oni skeleton
+: kitem("- = " .. vault_species_skeletons(_G, "late"))
 KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
 KITEM:   ? = wellspring talisman / wellspring talisman randart w:3
 KFEAT:   O = W
@@ -4126,7 +4125,7 @@ MONS:    war gargoyle, crystal guardian / iron dragon w:2
 MONS:    stone giant / deep elf elementalist w:2
 NSUBST:  % = 1:e / 1:f / 2 = |**% / *:%
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-MONS:    deep troll earth mage / iron dragon skeleton w:2, stone giant
+MONS:    deep troll earth mage / iron dragon zombie w:2, stone giant
 MONS:    walking earthen tome / walking crystal tome w:2 / ancient lich w:2
 NSUBST:  % = 1:e / 1:f / 1:| / 2 = |* / 2:*% / *:%
 : end

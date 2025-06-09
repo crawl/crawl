@@ -18,7 +18,7 @@ function base_monster_setup(e)
                water moccasin / bullfrog / goblin / hobgoblin / kobold /\
                kobold brigand band / gnoll band / gnoll bouda band w:6 /\
                gnoll sergeant band w:6 / orc band / orc priest band /\
-               orc wizard band / ogre / centaur / phantom / zombie / skeleton /\
+               orc wizard band / ogre / centaur / phantom / zombie /\
                crimson imp / iron imp / white imp / ufetubus band /\
                fire bat / crocodile / brain worm / weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
@@ -26,7 +26,7 @@ function base_monster_setup(e)
                komodo dragon / yak band / cane toad / hell rat / death yak /\
                rime drake / polar bear / lindwurm / wolf band / warg /\
                orc warrior band / wight band / troll / two-headed ogre /\
-               centaur band / gargoyle / deep elf pyromancer /\
+               centaur / gargoyle / place:D:4 draugr / deep elf pyromancer /\
                wandering mushroom / sleepcap / swamp drake / bog body /\
                tyrant leech / spriggan / naga w:5 / salamander w:5 /\
                merfolk band w:5 / merfolk siren w:3 / snapping turtle /\
@@ -64,7 +64,7 @@ function base_monster_setup(e)
                merfolk aquamancer w:5 / boulder beetle / pharaoh ant /\
                radroach w:5 / jorogumo w:5 / broodmother w:5 / sun moth w:5 /\
                entropy weaver / eye of devastation / place:Crypt:1 zombie /\
-               place:Crypt:1 skeleton / large abomination / cognitogaunt /\
+               place:Crypt:1 draugr / large abomination / cognitogaunt /\
                anaconda simulacrum / alligator simulacrum / death knight /\
                eidolon / flayed ghost / phantasmal warrior / vampire knight /\
                vampire mage / starcursed mass / demonic crawler / neqoxec /\
@@ -157,7 +157,7 @@ function base_monster_setup(e)
   e.kmons("P = deep elf annihilator / deep elf death mage /\
                deep elf sorcerer / deep elf high priest / deep elf demonologist /\
                deep elf elementalist / deep elf master archer / deep elf blademaster")
-  e.kmons("Q = place:Crypt:1 skeleton / place:Crypt:1 zombie / skeletal warrior band /\
+  e.kmons("Q = place:Crypt:1 draugr / place:Crypt:1 zombie / skeletal warrior band /\
                ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
                cognitogaunt / guardian mummy / mummy priest w:5")
   e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
@@ -197,8 +197,8 @@ end
 function storerooms_monster_setup(e)
   e.kmons("0 = goblin / frilled lizard / giant cockroach / endoplasm /\
                ball python / dart slug / bat / kobold / rat / gnoll /\
-               hobgoblin / jackal band / adder / quokka /\
-               orc / skeleton / zombie / ufetubus w:5 / crimson imp w:1")
+               hobgoblin / orc / jackal band / adder / quokka /\
+               rat draugr ; dagger / zombie / ufetubus w:5 / crimson imp w:1")
 end
 
 function general_item_setup(e)
@@ -2075,7 +2075,7 @@ KMONS:   c = human w:20 / arcanist / occultist / hell knight w:15 /\
              ironbound frostheart w:1
 KMONS:   C = Frederick, Louise, Rupert, vault warden
 KMONS:   d = burial acolyte w:5 / place:Crypt:$ zombie w:15 /\
-             place:Crypt:$ skeleton w:15 / simulacrum w:15 / vampire /\
+             place:Crypt:$ draugr w:15 / simulacrum w:15 / vampire /\
              vampire mage / jiangshi w:3 / ghoul w:5 /\
              skeletal warrior w:20 / lich w:3 / wraith w:3 /\
              freezing wraith w:3 / phantasmal warrior w:3 / flayed ghost
@@ -2120,7 +2120,7 @@ KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = iron giant
 # Honestly, the non-giant ones are awful. Suffer.
 KMONS:  b = ushabti w:5 / cognitogaunt w:5 / place:Crypt:$ zombie w:20 /\
-            place:Crypt:$ skeleton w:20 / place:Crypt:$ simulacrum w:20 /\
+            place:Crypt:$ draugr w:20 / place:Crypt:$ simulacrum w:20 /\
             lich / ancient lich w:5 / revenant soulmonger w:5 / vampire knight /\
             vampire bloodprince w:5 / bone dragon / ghoul /\
             ancient champion w:5 / guardian mummy / mummy priest / royal mummy

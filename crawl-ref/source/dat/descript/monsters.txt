@@ -1274,6 +1274,12 @@ draconian stormcaller
 A draconian deriving its thunderous powers and draconic allies from the worship
 of Qazlal.
 %%%%
+draugr
+
+A territorial gnarl of driftwood and shattered bones. Its resentment of the
+living has slowly twisted its remains into a monstrous form, capable of
+brandishing weapons and spreading terrible curses.
+%%%%
 dread lich
 
 A lich who has made terrible pacts with demonic forces to augment its dark

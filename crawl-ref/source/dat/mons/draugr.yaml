@@ -1,10 +1,10 @@
-name: "skeleton"
+name: "draugr"
 glyph: {char: "Z", colour: lightgray}
 flags: [no_regen]
 resists: {cold: 2}
 exp: 9
 holiness: [undead]
-will_per_hd: 1
+will_per_hd: 5
 attacks:
 hd: 0
 hp_10x: 0
@@ -14,4 +14,5 @@ intelligence: brainless
 speed: 5
 size: small
 shape: misc
-tile: skeleton_small
+tile: draugr_small
+uses: starting_equipment

@@ -211,7 +211,7 @@ KMONS:   0 = deep elf pyromancer / deep elf zephyrmancer w:5 / nothing
 KMONS:   A = boggart / kobold demonologist
 KMONS:   B = kobold brigand / kobold w:2
 KMONS:   C = skeletal warrior
-KMONS:   D = skeleton
+KMONS:   D = yaktaur draugr
 KMASK:   @` = !no_item_gen
 KFEAT:   O = enter_vaults
 SHUFFLE: 12 / 34 / 56 / 78 / 90 / AB / CD, O%*|

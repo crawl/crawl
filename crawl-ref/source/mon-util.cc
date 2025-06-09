@@ -1157,7 +1157,7 @@ bool mons_class_is_peripheral(monster_type mc)
 
 size_type mons_class_body_size(monster_type mc)
 {
-    // Should pass base_type to get the right size for zombies, skeletons &c.
+    // Should pass base_type to get the right size for derived undead.
     // For normal monsters, base_type is set to type in the constructor.
     const monsterentry *e = get_monster_data(mc);
     return e ? e->size : SIZE_MEDIUM;
@@ -1189,8 +1189,8 @@ int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
     static const map<monster_type, int> hp_per_hd_by_type = {
         { MONS_BOUND_SOUL,     100 },
         { MONS_ZOMBIE,          85 },
-        { MONS_SKELETON,        70 },
         { MONS_SPECTRAL_THING,  60 },
+        { MONS_DRAUGR,          55 },
         // Simulacra aren't tough, but you can create piles of them. - bwr
         { MONS_SIMULACRUM,      30 },
     };
@@ -1594,7 +1594,7 @@ monster_type mons_zombie_base(const monster& mon)
 bool mons_class_is_zombified(monster_type mc)
 {
     return mc == MONS_ZOMBIE
-        || mc == MONS_SKELETON
+        || mc == MONS_DRAUGR
         || mc == MONS_SIMULACRUM
         || mc == MONS_SPECTRAL_THING
         || mc == MONS_BOUND_SOUL;
@@ -1796,6 +1796,7 @@ static const set<attack_flavour> allowed_zombie_af = {
     AF_CRUSH,
     AF_TRAMPLE,
     AF_DRAG,
+    AF_DOOM,
 };
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
@@ -1924,11 +1925,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     const monster& mon = get_tentacle_head(m);
 
     const bool zombified = mons_is_zombified(mon);
+    const int max_attacks = m.has_hydra_multi_attack()
+                                ? m.heads() + (m.type == MONS_DRAUGR)
+                                : MAX_NUM_ATTACKS;
 
-    if (mon.has_hydra_multi_attack())
-        attk_number -= mon.heads() - 1;
-
-    if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS)
+    if (attk_number < 0 || attk_number >= max_attacks)
         attk_number = 0;
 
     if (mons_is_ghost_demon(mc))
@@ -1951,6 +1952,27 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
+
+    if (m.type == MONS_DRAUGR)
+    {
+        if (attk_number == 0)
+        {
+            attk.flavour = AF_DOOM;
+            attk.type    = AT_HIT;
+            attk.damage  = 5 + mon.get_hit_dice() * 4 / 3;
+        }
+        else
+            attk = smc->attack[attk_number - 1];
+    }
+
+    if (mon.has_hydra_multi_attack() && attk_number > 0)
+    {
+        if (attk_number > mon.heads() + (mon.type == MONS_DRAUGR))
+            return { AT_NONE, AF_PLAIN, 0 };
+
+        attk_number = 0;
+        attk = smc->attack[0];
+    }
 
     if (attk_number == 0)
     {
@@ -3209,9 +3231,11 @@ mon_energy_usage mons_energy(const monster& mon)
     return meu;
 }
 
-int mons_class_zombie_base_speed(monster_type zombie_base_mc)
+int mons_class_zombie_base_speed(monster_type zombie_base_mc, bool slow)
 {
-    return max(3, mons_class_base_speed(zombie_base_mc) - 2);
+    // Draugr and spectrals are both speed 10.
+    int penalty = slow ? 2 : 0;
+    return max(3, mons_class_base_speed(zombie_base_mc) - penalty);
 }
 
 /**
@@ -3234,10 +3258,13 @@ int mons_base_speed(const monster& mon, bool known)
         return mon.props[MON_SPEED_KEY];
     }
 
-    if (mon.mons_species() == MONS_SPECTRAL_THING)
+    if (mon.mons_species() == MONS_SPECTRAL_THING
+        || mon.mons_species() == MONS_DRAUGR)
+    {
         return mons_class_base_speed(mons_zombie_base(mon));
+    }
 
-    return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
+    return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon), true)
                                   : mons_class_base_speed(mon.type);
 }
 

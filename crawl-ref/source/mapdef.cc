@@ -4260,7 +4260,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
                      && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
-                     && (type != MONS_ZOMBIE && type != MONS_SKELETON
+                     && (type != MONS_ZOMBIE && type != MONS_DRAUGR
                          || invalid_monster_type(mspec.monbase)
                          || mons_class_itemuse(mspec.monbase)
                             < MONUSE_STARTING_EQUIPMENT))
@@ -4355,13 +4355,13 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " skeleton", " simulacrum", " spectre", nullptr
+        " zombie", " draugr", " simulacrum", " spectre", nullptr
     };
 
     // This order must match zombie_types, indexed from one.
     static const monster_type zombie_montypes[] =
     {
-        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_SKELETON, MONS_SIMULACRUM,
+        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_DRAUGR, MONS_SIMULACRUM,
         MONS_SPECTRAL_THING,
     };
 
@@ -4404,7 +4404,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         if (mons_class_can_be_spectralised(spec.monbase))
             return;
         break;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
         if (!mons_has_skeleton(spec.monbase))
             break;
         // fallthrough to MONS_ZOMBIE

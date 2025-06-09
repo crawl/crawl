@@ -779,7 +779,7 @@ enum monster_type                      // env.mons[].type
     // Undead:
 #if TAG_MAJOR_VERSION > 34
     MONS_ZOMBIE,
-    MONS_SKELETON,
+    MONS_DRAUGR,
     MONS_SIMULACRUM,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -1095,7 +1095,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_PRESERVER,
 
     MONS_ZOMBIE,
-    MONS_SKELETON,
+    MONS_DRAUGR,
     MONS_SIMULACRUM,
 
     MONS_ANCIENT_CHAMPION,

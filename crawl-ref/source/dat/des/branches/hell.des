@@ -29,7 +29,7 @@ end
 
 function hell_water_abbrev(e, type, baseweight)
     return "patrolling " .. type .. " zombie w:" .. math.floor(baseweight/2) ..
-        " / patrolling " .. type .. " skeleton w:" .. math.floor(baseweight/3) ..
+        " / patrolling " .. type .. " draugr w:" .. math.floor(baseweight/3) ..
         " / patrolling " .. type .. " simulacrum w:" .. math.floor(baseweight/6)
 end
 

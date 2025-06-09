@@ -716,10 +716,9 @@ ENDMAP
 NAME:   dpeg_vaults_monster_doublerow
 TAGS:   vaults_hard
 WEIGHT: 3
-MONS:   vault guard skeleton, necromancer, phantasmal warrior
 : local d = you.depth() + 1
-: mons("centaur warrior skeleton w:" .. 9 - d ..
-:      " / vault warden skeleton w:" .. d)
+: mons("centaur warrior draugr w:" .. 9 - d ..
+:      " / vault warden draugr w:" .. d)
 : mons("necromancer w:" .. 7 - d .. " / deep elf death mage w:" .. d)
 : mons("phantasmal warrior w:" .. 7 - d .. " / flayed ghost w:" .. d)
 SUBST:  0 : 0000z
@@ -2188,7 +2187,7 @@ MONS:    orc knight, ironbound thunderhulk / ogre mage w:5 ; dire flail . robe
 MONS:    deep elf high priest / deep elf death mage / deep elf annihilator / \
          deep elf demonologist / deep elf sorcerer
 MONS:    entropy weaver w:5 / war gargoyle
-KMONS:   0 = vault guard skeleton / two-headed ogre zombie / \
+KMONS:   0 = vault guard draugr / two-headed ogre zombie / \
              guardian sphinx zombie
 # the staff
 KMONS:   S = patrolling vault warden

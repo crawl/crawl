@@ -2497,7 +2497,7 @@ function check_monsters(r, mlist)
   local xl = you.xl()
   for _,e in ipairs(enemy_list) do
     if supdist(e.x,e.y) <= r then
-      if not contains_string_in(e.m:name(), {"skeleton", "zombie",
+      if not contains_string_in(e.m:name(), {"draugr", "zombie",
          "simulacrum", "spectral"}) then
         local name = e.m:name()
         local entry = mlist[name]
@@ -5548,7 +5548,7 @@ end
 
 -- adding some clua for this would be better
 function can_use_stairs(mname)
-  if mname:find("zombie") or mname:find("skeleton") or mname:find("spectral")
+  if mname:find("zombie") or mname:find("draugr") or mname:find("spectral")
      or mname:find("simulacrum") or mname:find("oklob")
      or mname:find("statue") or mname:find("ballistomycete")
      or mname == "scrub nettle" or mname == "lightning spire"

@@ -230,7 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll bouda / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
-                "zombie w:15 / skeleton / wight w:5 / phantom",
+                "zombie w:15 / rat draugr ; mundane dagger / wight w:5 / phantom",
                 "scorpion / scorpion simulacrum w:2 / redback w:1 / bombardier beetle w:2",
                 "endoplasm / w:5 jelly",
                 "giant cockroach w:20 / scorpion / ribbon worm"
@@ -257,7 +257,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 endoplasm / glass eye / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
-                "zombie / skeleton / wight / weeping skull w:5 /\
+                "place:D:7 zombie / place:D:4 draugr / wight / weeping skull w:5 /\
                     phantom w:5 / w:1 josephine",
                 "w:7 ice devil / rust devil w:5 / orange demon / red devil w:5 /\
                     sixfirhy w:2 / hellwing",
@@ -298,9 +298,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / glass eye / w:2 shining eye /\
                     w:2 golden eye / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
-                "w:3 skeletal warrior / wight / weeping skull / zombie w:5 /\
-                    skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
-                    shadowghast w:3 / silent spectre / w:4 josephine",
+                "w:3 skeletal warrior / wight / weeping skull /\
+                 place:D:7 zombie w:5 / place:D:7 draugr w:5 /\
+                 flayed ghost w:5 / phantom w:5 / shadowghast w:3 /\
+                 silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death

@@ -191,7 +191,7 @@ KITEM:   | = nothing
 KMONS:   12 = patrolling lich / ancient lich / dread lich
 KMONS:   34 = patrolling curse toe
 KMONS:   56 = patrolling bone dragon
-KMONS:   7 = death cob w:12 / zombie w:4 / skeleton w:4 / guardian mummy w:4
+KMONS:   7 = death cob w:12 / zombie w:4 / base draconian draugr w:4
 KMONS:   8 = patrolling death cob
 KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
@@ -267,17 +267,13 @@ NAME:    hangedman_tartarus_temple_path
 TAGS:    transparent
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
+ITEM:    base draconian skeleton / shadow dragon skeleton
 SHUFFLE: hH / hH / Hh, iI / iI / Ii
 SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
-SUBST:   d = d., + = +..., { = {}., c = c:49 .:1, C = c
+SUBST:   d = dde..., + = +..., { = {}., c = c:49 .:1, C = c
 MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
              pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
-{{
-dgn.delayed_decay(_G, 'd', 'base draconian corpse w:5 / ' ..
-                           'base draconian skeleton / ' ..
-                           'shadow dragon corpse w:5 / ' ..
-                           'shadow dragon skeleton')
-}}
+: dgn.delayed_decay(_G, 'e', 'base draconian corpse / shadow dragon corpse')
 MAP
  .@xxxxxxxxxxxxxxxxxxxxxxx@.
 .x..cccccccCCCCCCCccccccc..x.
@@ -598,7 +594,7 @@ TAGS:    no_monster_gen transparent patrolling
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
 WEIGHT:  5
-MONS:    zombie / skeleton / spectral thing w:20
+MONS:    zombie / draugr / spectral thing w:20
 MONS:    jiangshi / shadow wraith w:4, doom hound
 MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
@@ -1183,7 +1179,7 @@ MONS:    tzitzimitl
 KMONS:   8 = bone dragon
 KMONS:   9 = doom hound
 KMONS:   0 = eidolon
-KMONS:   Z = skeleton / zombie
+KMONS:   Z = zombie / draugr w:5 / spectral thing w:5
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)

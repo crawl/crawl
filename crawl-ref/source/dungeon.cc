@@ -4024,7 +4024,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const vector<pop_entry>
         {
             mg.base_type = mg.cls;
             const int skel_chance = mons_has_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+            mg.cls = random_choose_weighted(skel_chance, MONS_DRAUGR,
                                             8,           MONS_ZOMBIE,
                                             1,           MONS_SIMULACRUM);
         }
@@ -4101,7 +4101,7 @@ static void _place_assorted_zombies()
     int num_zombies = random_range(6, 12, 3);
     for (int i = 0; i < num_zombies; ++i)
     {
-        bool skel = coinflip();
+        bool skel = x_chance_in_y(2, 5);
         monster_type z_base;
         do
         {
@@ -4110,7 +4110,7 @@ static void _place_assorted_zombies()
         while (skel && !mons_has_skeleton(z_base));
 
         mgen_data mg;
-        mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
+        mg.cls = (skel ? MONS_DRAUGR : MONS_ZOMBIE);
         mg.base_type = z_base;
         mg.behaviour = BEH_SLEEP;
         mg.map_mask |= MMT_NO_MONS;

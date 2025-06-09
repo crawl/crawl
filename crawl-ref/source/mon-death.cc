@@ -1401,7 +1401,7 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
     case MONS_SIMULACRUM:
         // XXX: print immediately instead?
         return msg;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
     case MONS_ZOMBIE:
         break;
     default:
@@ -1444,7 +1444,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                  int spell, god_type god,
                                  string msg = "", string fail_msg = "")
 {
-    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
+    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_DRAUGR;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
     // - Bind Souls, Death Channel, Yred reaping of unzombifiable things, and
@@ -1511,7 +1511,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         // No undead 0-headed hydras, sorry.
         if (mons->heads() == 0)
         {
-            if (!quiet && which_z != MONS_SKELETON)
+            if (!quiet)
                 mpr(fail_msg);
             return;
         }
@@ -2969,7 +2969,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             // Animate Dead/Infestation
             else if (mons.type == MONS_ZOMBIE
-                        || mons.type == MONS_SKELETON
+                        || mons.type == MONS_DRAUGR
                         || mons.type == MONS_DEATH_SCARAB)
             {
                 msg = " crumbles into dust!";

@@ -38,17 +38,6 @@ zombie_lernaean_hydra07
 zombie_lernaean_hydra08
 zombie_lernaean_hydra09
 zombie_lernaean_hydra10
-%sdir mon/undead/skeletons
-skeleton_lernaean_hydra01 MONS_LERNAEAN_HYDRA_SKELETON
-skeleton_lernaean_hydra02
-skeleton_lernaean_hydra03
-skeleton_lernaean_hydra04
-skeleton_lernaean_hydra05
-skeleton_lernaean_hydra06
-skeleton_lernaean_hydra07
-skeleton_lernaean_hydra08
-skeleton_lernaean_hydra09
-skeleton_lernaean_hydra10
 %sdir mon/unique
 royal_jelly MONS_ROYAL_JELLY
 serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA

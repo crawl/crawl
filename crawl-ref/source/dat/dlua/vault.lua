@@ -198,6 +198,32 @@ function master_elementalist_setup(e, sprintscale)
            "repel_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
+-- A function to crunch down decorative skeletons.
+-- Vaults that only want to place regular branch skeletons or given vault
+-- theme skeletons don't need to call this whole function.
+function vault_species_skeletons(e, category)
+-- (Djinni, gargoyles, mummies, octopodes, poltergeists, revenants don't leave
+-- corpses. I don't want to think about how one recognizes vine stalkers
+-- post-rotting. Orcs are included to cover Beogh's popularity in the Dungeon.
+-- Coglins have their exoskeletons stolen. Species that only show up
+-- in extended are counted as the rarest type.
+  local s1 = {"goblin", "gnoll", "elf", "kobold", "troll", "orc"}
+  local s2 = {"draconian", "naga", "merfolk", "minotaur", "spriggan", "tengu"}
+  local s3 = {"armataur", "barachi", "demigod", "dwarf",
+              "demonspawn", "felid", "oni"}
+  local output = "human skeleton"
+  if category == "early" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s1, " skeleton / ")
+  end
+  if category == "late" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s2, " skeleton / ")
+  end
+  if category == "all" then
+    output = output .. " / " .. table.concat(s3, " skeleton / ")
+  end
+  return output  .. " skeleton"
+end
+
 -- Three sets of reusable vault feature redefines scattered across the game,
 -- kept in this one function for both consistency and ease of use.
 function vault_granite_statue_setup(e, glyph, type)

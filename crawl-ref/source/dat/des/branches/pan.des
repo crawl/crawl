@@ -62,10 +62,10 @@ function pan_lord_setup(_G, name)
         Cerebov = "sun moth / efreet / sun demon / ynoxinul / balrug / " ..
                   "undying armoury w:1 / brimstone fiend w:1 / " ..
                   "demonspawn warmonger w:1",
-        ['Gloorx Vloq'] = "juggernaut skeleton w:100 / " ..
-                 "caustic shrike skeleton w:100 / " ..
-                 "hellephant skeleton w:100 / soul eater w:200 / " ..
-                 "reaper w:200 / executioner w:300 / " ..
+        ['Gloorx Vloq'] = "juggernaut draugr w:75 / " ..
+                 "caustic shrike draugr w:75 / " ..
+                 "hellephant draugr w:75 / soul eater w:225 / " ..
+                 "reaper w:225 / executioner w:325 / " ..
                  "flayed ghost / laughing skull band / shadow wraith / " ..
                  "demonspawn soul scholar"
     }
@@ -1381,7 +1381,7 @@ NAME:     gloorx_vloq
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   southwest
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 SHUFFLE:  1O
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
@@ -1424,7 +1424,7 @@ TAGS:   gloorx_vloq uniq_gloorx_vloq
 ORIENT: southeast
 MONS:   patrolling Gloorx Vloq, Executioner, curse skull
 MONS:   soul eater, flayed ghost
-MONS:   caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:   caustic shrike draugr / juggernaut draugr / hellephant draugr
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1469,7 +1469,7 @@ ORIENT:   southeast
 MONS:     patrolling Gloorx Vloq
 MONS:     executioner, curse skull, reaper
 MONS:     shadow wraith, spectral emperor scorpion
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 KMONS:    O = flayed ghost
 SHUFFLE:  Cd / De
 SUBST:    Cd = c, D = ., e = +, X : xx., V : x.
@@ -1516,7 +1516,7 @@ NAME:     gloorx_vloq_grunt
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   west
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
@@ -1566,7 +1566,7 @@ NAME:     gloorx_vloq_grunt_torture_chamber
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   centre
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
