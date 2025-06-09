@@ -1,7 +1,7 @@
 %%%%
 Berserk
 
-Cuando atacas a enemigos melé, a veces entras en un estado de rabia 
+Cuando haces ataques melés a enemigos, a veces entras en un estado de rabia 
 berserk. Cada nivel de esta mutación aumenta la probabilidad de entrando un 
 estado de rabia berserk.
 %%%%
