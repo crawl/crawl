@@ -1771,7 +1771,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
+            || mons->god == GOD_YREDELEMNUL)
         {
             if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
                 simple_monster_message(*mons, " completely resists.");
@@ -3402,8 +3403,8 @@ bool bolt::harmless_to_player() const
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return agent(true)->is_player()
-               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return you_worship(GOD_YREDELEMNUL)
+                || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     case BEAM_QAZLAL:
         return true;
@@ -5353,13 +5354,13 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_PRIMAL_WAVE && agent() && agent()->is_player())
         _waterlog_mon(*mon, ench_power);
 
-    if (origin_spell == SPELL_HURL_TORCHLIGHT && agent() && agent()->is_player()
-        && mon->friendly() && mon->holiness() & MH_UNDEAD)
+    if (origin_spell == SPELL_HURL_TORCHLIGHT && mon->holiness() & MH_UNDEAD
+        && agent() && mons_aligned(mon, agent()))
     {
-        int dur = random_range(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
-                               4 + you.skill_rdiv(SK_INVOCATIONS, 1, 3))
+        int dur = random_range(2 + agent()->skill_rdiv(SK_INVOCATIONS, 1, 5),
+                               4 + agent()->skill_rdiv(SK_INVOCATIONS, 1, 3))
                                * BASELINE_DELAY;
-        mon->add_ench(mon_enchant(ENCH_MIGHT, 0, &you, dur));
+        mon->add_ench(mon_enchant(ENCH_MIGHT, 0, agent(), dur));
         mon->speed_increment += 10;
         simple_monster_message(*mon, " is empowered.");
     }

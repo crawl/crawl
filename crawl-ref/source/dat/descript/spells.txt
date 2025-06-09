@@ -966,6 +966,12 @@ Traps an enemy in a ring of blessed flame. These flames are especially
 dangerous to undead and demonic creatures, and have no effect on holy
 creatures.
 %%%%
+Hurl Torchlight spell
+
+Hurls a gout of umbral torchlight which deals irresistible damage to living,
+demonic, and holy beings. The torchlight will also briefly empower any friendly
+undead caught in its blast and is harmless to those who worship Yredelemnul.
+%%%%
 Iceblast spell
 
 Fires a large mass of ice, which explodes on impact. Half of its damage

@@ -446,6 +446,10 @@ Woodweal cast
 Seismic Stomp cast
 
 @The_monster@ stomps @possessive@ heavy feet.
+%%%%
+Hurl Torchlight cast
+
+@The_monster@ raises the black torch.
 ########################################################################
 # Unique monsters
 ########################################################################

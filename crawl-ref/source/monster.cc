@@ -4099,6 +4099,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     int ret;
     switch (sk)
     {
+    case SK_INVOCATIONS:
     case SK_EVOCATIONS:
         return hd;
 

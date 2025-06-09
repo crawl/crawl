@@ -3869,7 +3869,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_ERROR,
+    TILEG_ABILITY_YRED_HURL_TORCHLIGHT,
 },
 
 {
