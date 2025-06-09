@@ -466,11 +466,7 @@ jobs:
     # This explicitly includes "Build Devices and Visual Studio Build Tools."
     # under section 3.b.
     name: msvc ${{ matrix.build_type }} ${{ matrix.build_arch }}
-    # TODO: switch to windows-2025
-    # windows-2019 is the last version to have v141 toolset pre-installed
-    # We probably should update it, but some of the project files
-    # are in vendored repos
-    runs-on: windows-2019
+    runs-on: windows-2025
     strategy:
       matrix:
         build_type:
@@ -525,7 +521,7 @@ jobs:
         run: |
           Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
           Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
-      # Step 5/6 from INSTALL.md's Visual Studio Section
+      # Steps 5&6 from INSTALL.md's Visual Studio Section
       # See https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022
       - name: Build
         run: |
