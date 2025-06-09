@@ -28,6 +28,11 @@ poison resistance mutation
 Tienes resistencia al veneno. No tienes immunidad, pero reduce la probabilidad de 
 tú estando affectado por lo a un tercio de que sería sin esta mutación.
 %%%%
+sense surroundings mutation
+
+Tienes un sexto sentido para la mazmorra, permitiéndote sentir terreno que no has 
+visto. Cada nivel de esta mutación permites sentir más y más completamente.
+%%%%
 inability to train armour mutation
 
 Tu capacidad en Armaduras es cero, y no puedes aumentarlo.
