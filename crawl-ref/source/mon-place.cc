@@ -1605,17 +1605,6 @@ void roll_zombie_hp(monster* mon)
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
-#if TAG_MAJOR_VERSION == 34
-    // Upgrading monster enums is a losing battle, they sneak through too many
-    // channels, like env props, etc. So convert them on placement, too.
-    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
-        cs = MONS_ZOMBIE;
-    if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-        cs = MONS_SKELETON;
-    if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
-        cs = MONS_SIMULACRUM;
-#endif
-
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(!invalid_monster_type(ztype));
     ASSERT(mons_class_is_zombified(cs));

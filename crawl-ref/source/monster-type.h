@@ -848,13 +848,17 @@ enum monster_type                      // env.mons[].type
     MONS_STOKER,
     MONS_PUTRID_MOUTH,
 #endif
+#if TAG_MAJOR_VERSION == 34
     MONS_SKELETON_SMALL,   // recolouring only
     MONS_SKELETON_LARGE,   // recolouring only
     MONS_ZOMBIE_SMALL,     // recolouring only
     MONS_ZOMBIE_LARGE,     // recolouring only
+#endif
     MONS_SPECTRAL_THING,
+#if TAG_MAJOR_VERSION == 34
     MONS_SIMULACRUM_SMALL, // recolouring only
     MONS_SIMULACRUM_LARGE, // recolouring only
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_BOUND_SOUL,
 #endif
@@ -1027,7 +1031,9 @@ enum monster_type                      // env.mons[].type
     MONS_SEISMOSAURUS_EGG,
 #endif
     MONS_HELL_LORD,             // genus
+#if TAG_MAJOR_VERSION == 34
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
+#endif
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_SENSED_TRIVIAL,
     MONS_SENSED_EASY,

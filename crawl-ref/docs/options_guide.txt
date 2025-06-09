@@ -2953,17 +2953,17 @@ mon_glyph -= <monster name or symbol>
 
              mon_glyph += deep elf annihilator : E lightmagenta
              mon_glyph += Xtahua : lightmagenta D
-             mon_glyph += large zombie : darkgrey
-             mon_glyph += small simulacrum : x
+             mon_glyph += ghoul : darkgrey
+             mon_glyph += cognitogaunt : x
 
         (The left hand side of the : is case-sensitive.)
 
         You can also specify another monster, so that it copies the base
         symbol and colour of that monster (this is not transitive). For
-        example, if you think that slime creature colours are backwards:
+        example, if you think that holy warrior colours are backwards:
 
-            mon_glyph += slime creature : merged slime creature
-            mon_glyph += merged slime creature : slime creature
+            mon_glyph += daeva : angel
+            mon_glyph += angel : daeva
 
         You can specify symbols using their code points using the syntax
         as shown in the "feature" option. You can also use Unicode code
@@ -2981,7 +2981,6 @@ mon_glyph -= <monster name or symbol>
              player
              sensed monster
              {trivial,easy,tough,nasty,friendly} sensed monster
-             merged slime creature
 
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.

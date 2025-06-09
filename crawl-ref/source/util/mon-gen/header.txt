@@ -154,6 +154,13 @@ static monsterentry mondata[] =
     AXED_MON(MONS_ELECTROFERRIC_VORTEX, "electroferric vortex")
     AXED_MON(MONS_QUASIT, "quasit")
     AXED_MON(MONS_DEEP_DWARF, "deep dwarf")
+    AXED_MON(MONS_ZOMBIE_SMALL, "small zombie")
+    AXED_MON(MONS_ZOMBIE_LARGE, "large zombie")
+    AXED_MON(MONS_SKELETON_SMALL, "small skeleton")
+    AXED_MON(MONS_SKELETON_LARGE, "large skeleton")
+    AXED_MON(MONS_SIMULACRUM_SMALL, "small simulacrum")
+    AXED_MON(MONS_SIMULACRUM_LARGE, "large simulacrum")
+    AXED_MON(MONS_MERGED_SLIME_CREATURE, "merged slime creature")
 #endif
 
 // Real monsters begin here {dlb}:

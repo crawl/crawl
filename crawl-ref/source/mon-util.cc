@@ -1593,18 +1593,6 @@ monster_type mons_zombie_base(const monster& mon)
 
 bool mons_class_is_zombified(monster_type mc)
 {
-#if TAG_MAJOR_VERSION == 34
-    switch (mc)
-    {
-        case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-        case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-        case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-            return true;
-        default:
-            break;
-    }
-#endif
-
     return mc == MONS_ZOMBIE
         || mc == MONS_SKELETON
         || mc == MONS_SIMULACRUM

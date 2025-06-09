@@ -152,27 +152,10 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
 static monster_type _show_mons_type(const monster_info& mi)
 {
-    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
-        return MONS_MERGED_SLIME_CREATURE;
-    else if (mi.type == MONS_ZOMBIE)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL;
-    }
-    else if (mi.type == MONS_SKELETON)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SKELETON_LARGE : MONS_SKELETON_SMALL;
-    }
-    else if (mi.type == MONS_SIMULACRUM)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-    }
-    else if (mi.type == MONS_SENSED)
+    if (mi.type == MONS_SENSED)
         return mi.base_type;
-
-    return mi.type;
+    else
+        return mi.type;
 }
 
 static int _get_mons_colour(const monster_info& mi)
@@ -187,12 +170,21 @@ static int _get_mons_colour(const monster_info& mi)
 
     int col = mi.colour();
 
-    // We really shouldn't store unmodified colour. This hack compares
-    // effective type, but really, all redefinitions should work instantly,
-    // rather than for newly spawned monsters only.
-    monster_type stype = _show_mons_type(mi);
-    if (stype != mi.type && mi.type != MONS_SENSED)
-        col = mons_class_colour(stype);
+    // Automatically adjust the color of a few monsters based on their state,
+    // assuming the user has not remapped their colour.
+    if (col == mons_class_colour(mi.type))
+    {
+        if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
+            col = LIGHTGREEN;
+        else if (mi.type == MONS_ZOMBIE && mons_zombie_size(mi.base_type) == Z_BIG)
+            col = YELLOW;
+        else if (mi.type == MONS_SIMULACRUM && mons_zombie_size(mi.base_type) == Z_BIG)
+            col = LIGHTCYAN;
+        else if (mi.type == MONS_SKELETON && mons_zombie_size(mi.base_type) == Z_BIG)
+            col = WHITE;
+        else if (mi.type == MONS_SPECTRAL_THING && mons_zombie_size(mi.base_type) == Z_BIG)
+            col = LIGHTGREEN;
+    }
 
     if (mi.is(MB_ROLLING))
         col = ETC_BONE;

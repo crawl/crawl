@@ -634,21 +634,12 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
     switch (mon->type)
     {
         case MONS_ZOMBIE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
-#endif
             modifier = M_ZOMBIE;
             break;
         case MONS_SKELETON:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
-#endif
             modifier = M_SKELETON;
             break;
         case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
-#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_BOUND_SOUL:
@@ -672,21 +663,12 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
     switch (mon.type)
     {
         case MONS_ZOMBIE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
-#endif
             modifier = M_ZOMBIE;
             break;
         case MONS_SKELETON:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
-#endif
             modifier = M_SKELETON;
             break;
         case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
-#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_BOUND_SOUL:
@@ -855,13 +837,13 @@ static int kill_lualc_symbol(lua_State *ls)
         switch (ke->modifier)
         {
         case kill_monster_desc::M_ZOMBIE:
+            ch = mons_char(MONS_ZOMBIE);
+            break;
         case kill_monster_desc::M_SKELETON:
-            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
-                           MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE);
+            ch = mons_char(MONS_SKELETON);
             break;
         case kill_monster_desc::M_SIMULACRUM:
-            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
-                           MONS_SIMULACRUM_SMALL : MONS_SIMULACRUM_LARGE);
+            ch = mons_char(MONS_SIMULACRUM);
             break;
         case kill_monster_desc::M_SPECTRE:
             ch = mons_char(MONS_SPECTRAL_THING);
