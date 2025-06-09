@@ -73,43 +73,78 @@ function crypt_entry(e)
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
 end
 
-function crypt_loot_plus(e)
-  -- Since Crypt is an optional, late, difficult branch,
-  -- provide some unreliable but high quality incentives.
-  -- TODO: shove this into an extra-greedy shop so people actually notice the
-  -- existence of this and thus are more incentivized for optional branch #3.
-  local drain = "ego:draining good_item pre_id"
-  local pain = "ego:pain pre_id"
-  local vamp = "ego:vampirism pre_id"
-  local book = "randbook disc:necromancy numspells:6 spells:"
+-- A revision of old Crypt end reward items (c.f. )
+-- Since Crypt is an optional, late, difficult branch, provide some expensive
+-- high quality incentives.
+-- In total: a talisman with torment resistance, a book with high-level necro
+-- spells, two weapons with necromancy themes, a jewellery randart, either a
+-- jewellery randart or a necromantic unrand, and some niche evil-ish armour.
+function crypt_loot_plus(e, glyph)
+  local inv = {};
+
+  local top_lb = util.random_from({"triple sword", "double sword", })
+  local top_pa = util.random_from({"bardiche", "partisan"})
+  local top_ax = util.random_from({"executioner's axe", "executioner's axe",
+                                   "broad axe"})
+  local top_rg = util.random_from({"longbow", "triple crossbow", "hand cannon"})
+  local high_sb = util.random_from({"quick blade", "rapier"})
+  local top_weap = util.random_from({top_lb, "quick blade", top_pa, top_ax,
+                                    "eveningstar", "lajatang", top_rg, top_rg})
+  local high_weap = util.random_subset({"great sword", high_sb, "battleaxe",
+                                        "glaive", "great mace", "lajatang"}, 2)
+  local staff = util.random_from({"staff of death randart",
+                                  "any magical staff randart artprops:Necro"})
+  local drain_plus = crawl.random_range(1, 4)
+  local weaps = util.random_subset({top_weap .. " ego:draining plus:" .. drain_plus,
+                                    high_weap[1] .. " ego:pain good_item",
+                                    high_weap[2] .. " ego:vampirism good_item",
+                                    staff}, 2)
+  table.insert(inv, table.concat(weaps, ' | '))
+
   local ring = "any ring randart artprops:rN:2"
   local amulet = "any amulet randart artprops:Regen:1"
-  -- One drop-off of these,
-  e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
-          " / quick blade " .. drain .. " / executioner's axe " .. drain ..
-          " / eveningstar " .. drain .. " / partisan w:5 " .. drain ..
-          " / bardiche w:5 " .. drain .. " / lajatang " .. drain)
-  e.kitem("e = great sword " .. pain .." / battleaxe " .. pain ..
-          " / great mace " .. pain .. " / glaive " .. pain ..
-          " / quarterstaff " .. pain)
-  e.kitem("f = great sword " .. vamp .." / quick blade " .. vamp ..
-          " / battleaxe " .. vamp .. " / great mace " .. vamp ..
-          " / glaive " .. vamp .. ", sanguine talisman " ..
-          " / sanguine talisman randart w:2")
-  e.kitem("g = " .. ring .. ", " .. ring .. " / " .. amulet .. " w:2, " ..
-          ring .. " / " .. amulet .. " w:2 / sanguine talisman ")
-  -- and one drop-off of these.
-  e.kitem("h = vampires_tooth / sword_of_the_doom_knight / leech / " ..
-          "finisher / scythe_of_curses / majin-bo / " ..
-          "sceptre_of_torment / undeadhunter / brilliance")
-  e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
-          .. book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = talisman of death / talisman of death randart w:1, " ..
-          "staff of death randart / any magical staff randart artprops:Necro / " ..
-          "skull_of_zonguldrok w:1")
-  e.kitem("k = ivory gem")
-  e.subst("d = d:20 ef g:20")
-  e.subst("h = h:5 i:15 j")
+  local unrand = util.random_from({"sword_of_the_doom_knight", "leech",
+                                   "vampires_tooth", "finisher",
+                                   "scythe_of_curses", "sceptre_of_torment",
+                                   "undeadhunter", "brilliance", "majin-bo",
+                                   "cigotuvis_embrace", "skull of zonguldrok"})
+  table.insert(inv, util.random_from({ring, amulet}))
+
+  if crawl.one_chance_in(3) then
+    table.insert(inv, unrand)
+  else
+    table.insert(inv, util.random_from({ring, amulet}))
+  end
+
+  local book = "randbook disc:necromancy numspells:3 spells:"
+  table.insert(inv, util.random_from({"necronomicon", book .. "death's_door",
+                                      book .. "borgnjor's_revivification",
+                                      book .. "haunt", book .. "infestation"}))
+
+  local tali = util.random_from({"talisman of death", "sanguine talisman",
+                                 "granite talisman"})
+  if crawl.one_chance_in(11) then
+    table.insert(inv, tali .. " randart")
+  else
+    table.insert(inv, tali)
+  end
+
+  local orbs = util.random_from({"energy", "guile", "mayhem"})
+  local shield = util.random_from({"tower shield randart artprops:rN:1",
+                                   "tower shield ego:positive_energy"})
+  local etc = util.random_from({shield, "shadow dragon scales randart",
+                                "orb ego:" .. orbs .. " randart artprops:Necro"})
+  table.insert(inv, etc)
+  inv = table.concat(inv, " | ")
+
+  e.kfeat(glyph .. " = general shop no_mimic type:Gilded suffix:Reliquary " ..
+                      "use_all greed:20 ; " .. inv)
+  e.tile(glyph .. " = dngn_gilded_reliquary")
+
+  -- Replace a little bit of the loot with gold to compensate for the
+  -- shop items, and set up a standard gem glyph.
+  e.kitem("d = $ q:" .. crawl.random_range(100, 200))
+  e.kitem("g = ivory gem")
 end
 }}
 
@@ -2593,13 +2628,13 @@ MONS:   weeping skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
 NSUBST: / = 1:| / 2:* / 1:*% / *:%
-NSUBST: %*| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST: %*| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 cccccccccccccccvvvvvvvvvvvvvvvvvcccccccccccccc
 ccccccccccccccvv..WWWWWWWWWWW..vvccccccccccccc
-cccccccccccccvv..WWWWWWWWWWWWW..vvcccccccccccc
-cccccccccccccv...WWWb.bkb.bWWW...vcccccccccccc
+cccccccccccccvv..WWWWWWSWWWWWW..vvcccccccccccc
+cccccccccccccv...WWWb.bgb.bWWW...vcccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vcccccccccccc
 cccccccccccccv...WW.$/|%|/$.WW...vcccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vcccccccccccc
@@ -2685,8 +2720,8 @@ SUBST:  P = |**
 KFEAT:  > = enter_tomb
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
-NSUBST: *| = d / 1=h, k = k / $
-: crypt_loot_plus(_G)
+NSUBST: *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
@@ -2698,9 +2733,9 @@ vwwwwwwwwwwwwwwv.........rrrrrrrr.........vLwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vLLLLwwwwwwwwwwv
 vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....5..v.....rrrrOrkkkkrOrrrr.....v.......?wwwwwwv
-vwwwwwwv....5..+........rrrkkkkrrr........+.2..5..vwwwwwwv
-vwwwwww?....5..v......6...rkkkkr...6......v....5..?wwwwwwv
+vwwwwww?....5..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
+vwwwwwwv....5..+........rrr$Sg$rrr........+.2..5..vwwwwwwv
+vwwwwww?....5..v......6...r$$$$r...6......v....5..?wwwwwwv
 vwwwwwwv.2.vvvvv...rrr....rr++rr....rrr...v....5..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.A..vv....rrr........rrr....vv...vvvvvvwwwwwwv
@@ -2783,14 +2818,14 @@ lua_marker("|",
                               true, { only_at_replica = true,
                                       listen_to_replicas = true })))
 }}
-NSUBST:  %| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  %| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 .....................
 .....................
 ..vvvvnnnnnnnnnvvvv..
-..vlllllllllllllllv..
-..vlllllllklllllllv..
+..vlllllllSlllllllv..
+..vlllllllglllllllv..
 ..vllll.%|||%.llllv..
 .4vll..%|||||%..llv4.
 ..vl....%|||%....lv..
@@ -2869,7 +2904,7 @@ TILE:   ~ = bedevilled_crystal_gehenna
 : end
 ####### Randomisation of doors and rewards
 NSUBST: - = 1:+ / *:v, ' = 1:+ / *:v, " = 1:+ / *:v
-NSUBST: *| = 1:d / 1:h, k = 1:k / *:.
+NSUBST: *| = 2:d, g = 1:g / 1:h / *:.
 ####### Tomb entrance
 : if crawl.one_chance_in(4) then
 KFEAT:  T = enter_tomb
@@ -2884,18 +2919,18 @@ NSUBST: O = 1:> / *:$
 KFEAT:  > = enter_tomb
 : end
 SUBST:  ? = $ % * |:1
-: crypt_loot_plus(_G)
+: crypt_loot_plus(_G, "h")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...svvvvvvvvvvvvvvvvvvvvvv
 vc..B..c.....c....sc..+..c.ffff.vvvsTvvvvvvvvvvvvvvvvvvvvvv
-vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+....kv
+vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+....gv
 vc.._..+...B.c....sc..c..m.ffFf.vO???||$$$.vvvvv..nLn|????v
 vc.c.c.c.....c....cc..c..c.ffff.v?$$$$$$$$.vvvv...nLn$$$$$v
 vc.....ccc+ccc....sc..cDDc.ffff.vnnnnnnnnn+vvv..H.nLn$$O$$v
 vc.....c.....c....cc..c..c.ffff.v..........vv.....nLn$$$$$v
 vc.....c?....c..A.sc..c..m..fff.v..........vv.uvu.nLn$$$$$v
-vc.....c|?...c...kcc..c..c...ff.v..vvvvvvvvv..vvv.nLnnnnnnv
+vc.....c|?...c...gcc..c..c...ff.v..vvvvvvvvv..vvv.nLnnnnnnv
 vc.....c||?CCcscscc...c..c....f.v..........+..uvu.nLLLLLLLv
 vc++cccccccccccccc...cc..c......v..........+......nnnnnnn+v
 vc.....D............cc...m..D...vvvvvvvvvvvv.H............v
@@ -2937,7 +2972,7 @@ v...ll...+.vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+zvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
 v...ll...+.vwwww.............wwww.......+........R......v.v
 v...ll...+zvwww...............ww........+....V.S.R.V....v.v
-v.llllll.+kvwww...................wwwwwwv......S........v.v
+v.llllll.+gvwww...................wwwwwwv......S........v.v
 v.llllll.+zvwww8.............8...wwwwwwwv....V.S.R.V....v.v
 v...ll...v.vwww.................wwwwwwwwv........R......v.v
 v.z.ll...vzvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
@@ -3021,8 +3056,8 @@ SUBST:  n : ncc
 TILE:   t = DNGN_TREE_DEAD
 : vault_granite_statue_setup(_G, "G", "gravestone")
 : set_feature_name("tree", "dead tree")
-NSUBST: *| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST: *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -3033,11 +3068,11 @@ ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
 tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
 tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
 tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
-ttT""T.t.."""""""".....cccccc9--k--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
+ttT""T.t.."""""""".....cccccc9--S--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
 tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
 ttttt"""""".vvvvv.....ccc--ZZ**|V|**ZZ--ccc..555...t..tt..t...TTtttT....Tttttttt
 ttttttTtT"".v--4vvv...ccc--ZZ-*|||*-ZZ--ccc.......T.....t....t..TttttT.TTttttttt
-ttttttT..."...-%v--v...c-----------------c...........t...t..t.t..Tttttt.tttttttt
+ttttttT..."...-%v--v...c--------g--------c...........t...t..t.t..Tttttt.tttttttt
 ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttt.ttcnnnctt
 ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
 tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
@@ -3160,14 +3195,14 @@ MONS:   bog body / mummy w:5 / soul eater w:5 / guardian mummy
 MONS:   generate_awake guardian sphinx
 : end
 SUBST:  '" = .
-NSUBST:  %*| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  %*| = 2:d
+: crypt_loot_plus(_G, "Z")
 MAP
                 ccccccccccccccccccccccccccccccc
                 ccccccccccccccccccccccccccccccc
-                cc*$*c|%*...k...**|c.........cc
+                cc*$*c|%*...Z...**|c.........cc
                 cc$3$c|*...'2'...%|c..G.3.G..cc
-                cc...c|%|.......|%|c.........cc
+                cc...c|%|...g...|%|c.........cc
                 ccc+cccccc.....ccccccc+cccBBBcc
                 cc...c...ccc+ccc...c.....c$$$cc
                 cc.4.c.G.4.RRR.4.G.+..G..c$$$cc
@@ -3219,8 +3254,6 @@ TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror no_descent
 PLACE:   Crypt:$
 ORIENT:  encompass
 MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
-SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
-
 KMONS:   3 = cognitogaunt
 KMONS:   4 = bog body
 KMONS:   5 = necromancer
@@ -3230,7 +3263,6 @@ KMONS:   7 = death knight
 KMONS:   8 = vampire knight w:5 / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
-
 # Room guardian waves; these should be tougher, but not boss tier.
 KMONS:   A = lich
 KMONS:   C = revenant soulmonger
@@ -3246,7 +3278,6 @@ KMONS:   M = burial acolyte
 KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
 KMONS:   Q = flayed ghost / shadowghast w:20
-
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then
 KMONS:   R = Khufu, royal mummy
@@ -3265,22 +3296,21 @@ KMONS:   R = curse skull
 KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
 : end
-
 KFEAT:   R = enter_tomb
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
+SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 SHUFFLE: {[(<
-
-NSUBST:  *| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  *| = 2:d
+: crypt_loot_plus(_G, "Z")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccc|*$$...R...$$*|ccccccccccccccccccccccccc
-cccccccccccccccccccccc..cc*$$.T.k.T.$$*cc..cccccccccccccccccccccc
+cccccccccccccccccccccc..cc*$$.T.g.T.$$*cc..cccccccccccccccccccccc
 cccccccccccccccccccc....ccc$$...T...$$ccc....cccccccccccccccccccc
 ccccccccccccccccccc.G.G.c.ccccc+++ccccc.c.G.G.ccccccccccccccccccc
 cccccccccccccccccc......c...............c......cccccccccccccccccc
-ccccccccccccccccc.......c..G..T...T..G..c.......ccccccccccccccccc
+ccccccccccccccccc.......c..G..T.Z.T..G..c.......ccccccccccccccccc
 cccccccccccccccc..K.J.K.c......T.T......c.M.L.M..cccccccccccccccc
 cccccccccccccccc........c..G.........G..c........cccccccccccccccc
 ccccccccccccccc....K.K..cc.............cc..M.M....ccccccccccccccc
@@ -3349,17 +3379,17 @@ KMONS:   8 = vampire knight
 KMONS:   9 = vampire w:7 / vampire mage w:3
 KMONS:   0 = mummy priest
 KMONS:   A = guardian mummy w:7 / ushabti w:3
-SHUFFLE: 56, 89 / 0A
+SHUFFLE: 56, 89 / 0A, Sg
 SUBST:   5 = 55..., 6 = 66..., 9 = 9., A = AA.
 KFEAT:   Y = altar_yredelemnul
 KFEAT:   K = altar_kikubaaqudgha
-NSUBST:  *| = 1:d / 1:h, k = k / $
-: crypt_loot_plus(_G)
+NSUBST:  *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 cccccccccccccccccccccccccccc
-ccccccccccccckkccccccccccccc
-cccccccccccckkkkcccccccccccc
-cccccccccccckkkkcccccccccccc
+cccccccccccccSgccccccccccccc
+cccccccccccc$$$$cccccccccccc
+cccccccccccc$$$$cccccccccccc
 ccccccccccccc++ccccccccccccc
 ccccccc..............ccccccc
 ccc**c................c**ccc
