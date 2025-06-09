@@ -8,20 +8,20 @@ estado de rabia berserk.
 cold resistance mutation
 
 Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes 
-del frío.
+por el frío.
 %%%%
 fire resistance mutation
 
 Tienes resistencia al fuego. Cada nivel de esta mutación reduce el daño que recibes 
-del fuego.
+por el fuego.
 %%%%
 steam resistance mutation
 
-No recibes daño de exhalaciones ni nubes de vapor hirviente.
+No recibes daño por exhalaciones ni nubes de vapor hirviente.
 %%%%
 electricity resistance mutation
 
-Tienes resistencia al electricidad.
+Tienes resistencia a la electricidad y recibes menos daño por la.
 %%%%
 poison resistance mutation
 
