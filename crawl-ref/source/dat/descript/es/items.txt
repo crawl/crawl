@@ -73,6 +73,11 @@ book of fixed theme
 
 Un libro con hechizos mágicos.
 %%%%
+book of geomancy
+
+Un libro con hechizos sencillos que implican el elemento Tierra. Lectores deben 
+llevar guantes de jardinería cuando leyéndolo.
+%%%%
 book of hexes
 
 Un libro con hechizos mágicos.
