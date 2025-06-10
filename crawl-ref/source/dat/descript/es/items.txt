@@ -16,6 +16,11 @@ arrow
 
 Una flecha, hecha para ser disparada con un arco.
 %%%%
+#the_bakery
+baked corpse
+
+Un cadáver horneado. Tibia, muerte y inútil
+%%%%
 bardiche
 
 Una larga garrocha con una enorme cuchilla en uno de sus extremos.
