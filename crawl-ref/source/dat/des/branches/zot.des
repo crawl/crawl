@@ -4516,13 +4516,13 @@ SHUFFLE: DdOo / HhPp
 # As a replacement to the small chance of both wing entrances being covered in
 # traps, cover up one and use weaker traps along the full path of the other.
 : if crawl.one_chance_in(4) then
-NSUBST:  H = 1:^ / * = ^.
-SUBST:   D = .
+NSUBST:  H = 1:^ / * = ^'
+SUBST:   D = '
 :   kfeat("oO = " .. t_choice_a.t .. " / " .. t_choice_b.t)
 : else
-SUBST:   D = ^.., O = d, o = .
+SUBST:   D = ^'', O = d, o = '
 : end
-SUBST:   P = h, Hp = .
+SUBST:   P = h, Hp = '
 # Place a minimum number of traps and some extra liches in each lower wing.
 NSUBST:  d = 2=5. / 4=~ / ., h = 2=5. / 4=~ / .
 # In a each upper wing, place a few monsters along with locations for the main
@@ -4535,7 +4535,7 @@ NSUBST:  e = 4=~ / ., j = 4=~ / .
 SUBST:   ? : KLM
 SUBST:   K = 0 4:40 5 6 ., L = 0 4 5:40 6 ., M = 0 4 5 6:40 .
 # Make a final sprinkling of traps throughout the vault.
-SUBST:   . = ~ .:600
+SUBST:   . = ~ .:600, ' = .
 # For upper-wing entrances, sometimes put statue monsters, traps, or statues.
 SUBST:   E = 2 ^:20 G .:80, J = 2 ^:20 G .:80
 # For the orb chamber, some guaranteed and random traps. About 4 on-average.
