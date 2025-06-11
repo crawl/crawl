@@ -1854,8 +1854,7 @@ bool monster_info::has_spells() const
     }
 
     // Wand spells
-    const item_def* wand = inv[MSLOT_WAND].get();
-    if (itemuse() >= MONUSE_STARTING_EQUIPMENT && wand)
+    if (has_usable_wand())
         return true;
 
     const mon_spellbook_type book = get_spellbook(*this);
@@ -2196,4 +2195,18 @@ monster* monster_info::get_known_summoner() const
         return nullptr;
 
     return summoner;
+}
+
+bool monster_info::has_usable_wand() const
+{
+    if (itemuse() < MONUSE_STARTING_EQUIPMENT)
+        return false;
+
+    const item_def* wand = inv[MSLOT_WAND].get();
+    if (!wand)
+        return false;
+
+    // Don't count unidentified wands as usable
+    const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    return wandtyp < NUM_WANDS;
 }
