@@ -5552,6 +5552,7 @@ bool bolt::at_blocking_monster() const
         return true;
     if (have_passive(passive_t::neutral_slimes)
         && mons_is_slime(*mon)
+        && mon->wont_attack()
         && flavour != BEAM_VILE_CLUTCH)
     {
         return true;
@@ -5571,7 +5572,8 @@ void bolt::affect_monster(monster* mon)
     if (agent()
         && flavour != BEAM_VILE_CLUTCH
         && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(*mon))
+        && mons_is_slime(*mon)
+        && mon->wont_attack())  // allow attacking slime-shaped shifters
     {
         if (!is_tracer() && you.see_cell(mon->pos()))
         {
