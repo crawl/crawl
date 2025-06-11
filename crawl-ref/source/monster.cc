@@ -6505,6 +6505,9 @@ int monster::spell_hd(spell_type spell) const
 
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
+    if (has_ench(ENCH_DIMINISHED_SPELLS))
+        hd = max(1, hd - 7);
+
     return hd;
 }
 

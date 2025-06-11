@@ -558,6 +558,10 @@ int calc_spell_power(spell_type spell)
     if (cap > 0)
         power = min(power, cap);
 
+    // Post step-down and post-cap, so the result is more predictable to the player.
+    if (you.duration[DUR_DIMINISHED_SPELLS])
+        power = power / 2;
+
     return power;
 }
 

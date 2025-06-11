@@ -1047,6 +1047,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("The ward upon %s fades away.", name(DESC_THE).c_str());
         break;
 
+    case ENCH_DIMINISHED_SPELLS:
+        if (!quiet)
+            simple_monster_message(*this, " spells are no longer diminished.");
+        break;
+
     default:
         break;
     }
@@ -1469,6 +1474,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PHALANX_BARRIER:
     case ENCH_PARADOX_TOUCHED:
     case ENCH_WARDING:
+    case ENCH_DIMINISHED_SPELLS:
         decay_enchantment(en);
         break;
 
@@ -2247,6 +2253,7 @@ static const char *enchant_names[] =
     "deep sleep", "drowsy",
     "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
     "phalanx barrier", "figment", "paradox-touched", "warding",
+    "diminished_spells",
     "buggy", // NUM_ENCHANTMENTS
 };
 

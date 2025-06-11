@@ -258,6 +258,7 @@ enum monster_info_flags
     MB_PARADOX,
     MB_WARDING,
     MB_PLAYER_DAMAGE_IMMUNE,    // Currently immune to damage from the player for any reason
+    MB_DIMINISHED_SPELLS,
     NUM_MB_FLAGS
 };
 

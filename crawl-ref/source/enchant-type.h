@@ -245,6 +245,7 @@ enum enchant_type
     ENCH_FIGMENT,
     ENCH_PARADOX_TOUCHED,
     ENCH_WARDING,
+    ENCH_DIMINISHED_SPELLS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
