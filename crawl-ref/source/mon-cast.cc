@@ -7149,7 +7149,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const vector<spell_type> *breaths = soh_breath_spells(spell_cast);
         ASSERT(breaths);
-        ASSERT(mons->heads() == (int)breaths->size());
 
         for (spell_type head_spell : *breaths)
         {
