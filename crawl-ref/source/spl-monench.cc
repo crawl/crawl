@@ -148,7 +148,7 @@ bool enfeeble_monster(monster &mon, int pow)
     if (mons_has_attacks(mon))
         hexes.push_back(ENCH_WEAK);
     if (mon.antimagic_susceptible())
-        hexes.push_back(ENCH_ANTIMAGIC);
+        hexes.push_back(ENCH_DIMINISHED_SPELLS);
     if (res_margin <= 0)
     {
         if (mons_can_be_blinded(mon.type))

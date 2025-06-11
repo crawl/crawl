@@ -1812,12 +1812,12 @@ static vector<string> _desc_enfeeble_chance(const monster_info& mi, int pow)
     const int wl = mi.willpower();
 
     if (!mi.is(MB_NO_ATTACKS))
-        base_effects.push_back("weakness");
+        base_effects.push_back("inflict weakness");
     if (mi.antimagic_susceptible())
-        base_effects.push_back("antimagic");
+        base_effects.push_back("diminish spells");
     if (!base_effects.empty())
     {
-        all_effects.push_back("will inflict " +
+        all_effects.push_back("will " +
             comma_separated_line(base_effects.begin(), base_effects.end()));
     }
     if (wl != WILL_INVULN)
