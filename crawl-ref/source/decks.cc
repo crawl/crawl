@@ -1177,13 +1177,13 @@ static void _damaging_card(card_type card, int power,
 
     if (ztype == ZAP_IOOD)
     {
-        if (power_level == 1)
+        if (power_level == 0)
         {
-            cast_iood(&you, power/6, &beam, 0, 0,
+            cast_iood(&you, power/10, &beam, 0, 0,
                       env.mgrid(beam.target), false, false);
         }
         else
-            cast_iood_burst(power/6, beam.target);
+            cast_iood_burst(power/6, power_level, beam.target);
     }
     else
         zapping(ztype, power/6, beam);
