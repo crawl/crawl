@@ -953,7 +953,9 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     // Not really a normal resistance, so handle it separately.
     if (colour == MAGENTA)
-        willpower = willpower + ((very_ugly) ? 121 : 81);
+        willpower = ((very_ugly) ? 120 : 80);
+    else
+        willpower = -1;
 
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)
