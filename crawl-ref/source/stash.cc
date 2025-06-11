@@ -226,6 +226,7 @@ static bool _grid_is_interesting(const coord_def& pos)
     const auto feat = env.grid(pos);
     if (feat_is_staircase(feat)
        || feat_is_escape_hatch(feat)
+       || feat_is_runed(feat)
        || (is_notable_terrain(feat)
             // Count shops as boring features, because they are
             // handled separately.
