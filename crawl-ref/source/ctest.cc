@@ -134,6 +134,10 @@ static void run_test(const string &file)
          activity, ntests, file.c_str());
     flush_prev_message();
 
+    // XXX: We should probably reset more things between tests
+    you.position.reset();
+    you.on_current_level = true;
+
     const string path(catpath(crawl_state.script? script_dir : test_dir, file));
     dlua.execfile(path.c_str(), true, false);
     if (dlua.error.empty())
