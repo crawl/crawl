@@ -1060,12 +1060,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::daze:
-        if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
-        {
-            simple_monster_message(*mon, " is dazed by your recitation.");
-            affected = true;
-        }
+        mon->daze(degree + random2avg(spellpower / 10, 2));
+        simple_monster_message(*mon, " is dazed by your recitation.");
+        affected = true;
         break;
 
     case zin_eff::confuse:

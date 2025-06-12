@@ -2319,7 +2319,7 @@ void mon_enchant::merge_killer(kill_category k, mid_t m)
 void mon_enchant::cap_degree()
 {
     // Sickness & draining are not capped.
-    if (ench == ENCH_SICK || ench == ENCH_DRAINED)
+    if (ench == ENCH_SICK || ench == ENCH_DRAINED || ench == ENCH_DAZED)
         return;
 
     // Hard cap to simulate old enum behaviour, we should really throw this

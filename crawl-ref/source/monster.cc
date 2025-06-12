@@ -5662,6 +5662,24 @@ bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
     return add_ench(lowered_wl);
 }
 
+void monster::daze(int duration)
+{
+    // Enchantment degree is used as a timer to prevent immediately breaking on
+    // the turn it is applied.
+    if (has_ench(ENCH_DAZED))
+    {
+        mon_enchant ench = get_ench(ENCH_DAZED);
+        ench.duration += (duration * BASELINE_DELAY);
+        ench.degree = you.elapsed_time_at_last_input;
+        update_ench(ench);
+    }
+    else
+    {
+        add_ench(mon_enchant(ENCH_DAZED, you.elapsed_time_at_last_input, nullptr,
+                             duration * BASELINE_DELAY));
+    }
+}
+
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)
 {
     return mons_adjust_flavoured(this, beam, hurted, doEffects);

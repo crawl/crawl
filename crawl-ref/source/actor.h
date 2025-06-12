@@ -201,6 +201,7 @@ public:
     virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
+    virtual void daze(int duration) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;

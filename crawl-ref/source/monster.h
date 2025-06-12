@@ -509,6 +509,7 @@ public:
         override;
     void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
+    void daze(int duration) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;
 

@@ -2227,14 +2227,7 @@ void handle_monster_move(monster* mons)
         // Otherwise (if it was cancelled or interrupted), take turn as normal
     }
 
-    if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
-    {
-        simple_monster_message(*mons, " is lost in a daze.");
-        mons->speed_increment -= non_move_energy;
-        return;
-    }
-
-    if (mons->has_ench(ENCH_GOLD_LUST))
+    if (mons->has_ench(ENCH_DAZED))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2242,7 +2235,7 @@ void handle_monster_move(monster* mons)
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
         && have_passive(passive_t::gold_aura)
-        && you.see_cell(mons->pos())
+        && you.see_cell_no_trans(mons->pos())
         && !mons->asleep()
         && !mons->is_peripheral()
         && !mons->wont_attack())
@@ -2254,7 +2247,7 @@ void handle_monster_move(monster* mons)
                 " is distracted by your dazzling golden aura.");
 
             mons->add_ench(
-                mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
+                mon_enchant(ENCH_DAZED, 0, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));
             mons->foe = MHITNOT;
             mons->target = mons->pos();

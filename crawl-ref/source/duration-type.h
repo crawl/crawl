@@ -292,5 +292,6 @@ enum duration_type
     DUR_WEREFURY,
     DUR_MEDUSA_COOLDOWN,
     DUR_DIMINISHED_SPELLS,
+    DUR_DAZED,
     NUM_DURATIONS
 };

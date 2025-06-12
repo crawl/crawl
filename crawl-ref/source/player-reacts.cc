@@ -203,6 +203,21 @@ static void _decrement_petrification(int delay)
     }
 }
 
+static void _decrement_sleep_and_daze(int delay)
+{
+    const bool break_sleep = _decrement_a_duration(DUR_SLEEP, delay);
+    const bool break_daze = _decrement_a_duration(DUR_DAZED, delay);
+
+    // Add a tiny bit of duration back to the effects we're breaking, so that
+    // you.wake_up will see them and print appropriate messages.
+    if (break_sleep)
+        you.duration[DUR_SLEEP] = 1;
+    if (break_daze)
+        you.duration[DUR_DAZED] = 1;
+
+    you.wake_up(break_sleep, break_daze);
+}
+
 static void _decrement_attraction(int delay)
 {
     if (!you.duration[DUR_ATTRACTIVE])
@@ -464,8 +479,7 @@ void player_reacts_to_monsters()
     _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
-    if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.wake_up(true);
+    _decrement_sleep_and_daze(you.time_taken);
 
     if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
         && you.is_constricted())

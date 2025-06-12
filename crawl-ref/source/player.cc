@@ -7954,16 +7954,23 @@ void player::put_to_sleep(actor* source, int dur, bool hibernate)
     redraw_evasion = true;
 }
 
-void player::wake_up(bool force)
+void player::wake_up(bool break_sleep, bool break_daze)
 {
-    if (asleep() || force)
+    if (break_sleep && asleep())
     {
         duration[DUR_SLEEP] = 0;
         give_stun_immunity(random_range(3, 5));
-        mpr("You wake up.");
+        mprf(MSGCH_RECOVERY, "You wake up.");
         flash_view(UA_MONSTER, BLACK);
         redraw_armour_class = true;
         redraw_evasion = true;
+    }
+
+    if (break_daze && you.duration[DUR_DAZED])
+    {
+        duration[DUR_DAZED] = 0;
+        give_stun_immunity(1);
+        mprf(MSGCH_RECOVERY, "You snap out of your daze.");
     }
 }
 
@@ -8285,6 +8292,15 @@ bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
     you.increase_duration(DUR_LOWERED_WL, dur, 40);
 
     return true;
+}
+
+void player::daze(int dur)
+{
+    stop_delay(true, true);
+    stop_directly_constricting_all(false);
+    stop_channelling_spells();
+
+    you.duration[DUR_DAZED] += dur * BASELINE_DELAY;
 }
 
 /**

@@ -748,6 +748,8 @@ public:
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
+    void daze(int duration) override;
+    void end_daze();
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -834,7 +836,7 @@ public:
 
     bool asleep() const override;
     void put_to_sleep(actor* source, int duration = 0, bool hibernate = false) override;
-    void wake_up(bool force = false);
+    void wake_up(bool break_sleep = true, bool break_daze = true);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;

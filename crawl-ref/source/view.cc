@@ -948,6 +948,8 @@ colour_t viewmap_flash_colour()
         return LIGHTGRAY;
     else if (you.duration[DUR_VEXED])
         return MAGENTA;
+    else if (you.duration[DUR_DAZED])
+        return YELLOW;
 
     return BLACK;
 }

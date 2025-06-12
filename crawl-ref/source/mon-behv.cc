@@ -421,6 +421,7 @@ void handle_behaviour(monster* mon)
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_frenzied()
+        && !mon->has_ench(ENCH_DAZED)
         && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
@@ -504,7 +505,7 @@ void handle_behaviour(monster* mon)
                 {
                     new_beh = BEH_WANDER;
                 }
-                else
+                else if (!mon->has_ench(ENCH_DAZED))
                 {
                     new_foe = MHITYOU;
                     mon->target = you.pos();
@@ -930,7 +931,8 @@ void set_nearest_monster_foe(monster* mon, bool also_use_player_vision)
     if (mon->good_neutral()
         || mon->behaviour == BEH_WITHDRAW
         || mons_is_avatar(mon->type)
-        || mon->has_ench(ENCH_HAUNTING))
+        || mon->has_ench(ENCH_HAUNTING)
+        || mon->has_ench(ENCH_DAZED))
     {
         return;
     }
@@ -1017,6 +1019,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     switch (event)
     {
     case ME_DISTURB:
+        // Dazed monsters don't get alerted by noise.
+        if (mon->has_ench(ENCH_DAZED))
+            break;
+
 #ifdef DEBUG_NOISE_PROPAGATION
         dprf("Disturbing %s", mon->name(DESC_A, true).c_str());
 #endif
@@ -1137,6 +1143,22 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->behaviour != BEH_SLEEP && mon->has_ench(ENCH_DEEP_SLEEP))
             mon->del_ench(ENCH_DEEP_SLEEP, true, false);
 
+        if (mon->has_ench(ENCH_DAZED))
+        {
+            // Protection from being immediately snapped out of a
+            // freshly-applied daze effect.
+            if (you.elapsed_time > mon->get_ench(ENCH_DAZED).degree)
+            {
+                if (you.can_see(*mon))
+                {
+                    mprf("%s snaps out of %s daze.",
+                            mon->name(DESC_THE).c_str(),
+                            mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                }
+                mon->del_ench(ENCH_DAZED, true);
+            }
+        }
+
         // Now set target so that monster can whack back (once) at an
         // invisible foe.
         if (event == ME_WHACK)
@@ -1153,6 +1175,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_ALERT:
+        // Dazed monsters don't get alerted by noise.
+        if (mon->has_ench(ENCH_DAZED))
+            break;
 #ifdef DEBUG_NOISE_PROPAGATION
         dprf("Alerting %s", mon->name(DESC_A, true).c_str());
 #endif

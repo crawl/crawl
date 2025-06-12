@@ -4124,8 +4124,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             default:
             case ENCH_DAZED:
-                mdefender->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                                    random_range(70, 110)));
+                defender->daze(random_range(1, 2));
                 break;
             case ENCH_DRAINED:
                 defender->drain(attacker, false, 2);

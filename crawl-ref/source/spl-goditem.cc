@@ -1067,8 +1067,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (attacker != nullptr && attacker != mons)
         behaviour_event(mons, ME_ANNOY, attacker);
 
-    mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                               (10 + random2(10)) * BASELINE_DELAY));
+    mons->daze(random_range(4, 7));
 }
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
