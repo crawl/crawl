@@ -1409,7 +1409,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const bool identified = weap.is_identified();
 
     const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
-    const string plus_text = identified && !dbname ? _plus_prefix(weap) : "";
+    const string plus_text = identified && !dbname && !qualname ? _plus_prefix(weap) : "";
     const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
     const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
 
