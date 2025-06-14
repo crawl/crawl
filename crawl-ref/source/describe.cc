@@ -2308,7 +2308,8 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_ARCHMAGI:
         return "it increases the power of its wearer's magical spells.";
     case SPARM_PRESERVATION:
-        return "it protects its wearer from the effects of acid and corrosion.";
+        return "it protects its wearer from the effects of acid and corrosion, "
+               "and also halves the chance of thrown items being destroyed.";
     case SPARM_REFLECTION:
         return "it reflects blocked missile attacks back in the "
                "direction they came from.";
