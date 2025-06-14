@@ -388,9 +388,13 @@ These instructions have been successfully tested with Ubuntu only.
 This build process is currently unsupported, and unlikely to be straightforward
 in versions of MSVC besides those explicitly mentioned here.
 
-This build is tested on Visual Studio 2017 15.9.60 on Windows 10 and 11.
-Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
-Lua support for editing are untested, and a webtiles build is not available.
+This build is tested on Visual Studio 2022 17.14.4 on Windows 10. However, the
+build uses the Visual Studio 2019 build tools for maximum backward
+compatibility. You can either install them and use them with VS2022
+(https://aka.ms/vs/16/release/vs_buildtools.exe), or simply use VS2019 directly
+(https://aka.ms/vs/16/release/vs_community.exe). Tested configurations are
+`Debug/Release;Console/Tiles;Win32/x64`, Python and Lua support for editing are
+untested, and a webtiles build is not available.
 
 1. You will need to download Crawl's source code, as well as its submodules.
     You can do this by opening a terminal such as command prompt and navigating
@@ -428,7 +432,9 @@ Troubleshooting tips:
 
 - Make sure Windows Universal C Runtime is installed in MSVC.
 - Make sure the Windows 8.1 SDK is installed in Visual Studio. This
-     doesn't appear to be available in the latest version of Visual Studio.
+  doesn't appear to be available in the latest version of Visual Studio.
+  You can download it separately [from microsoft](
+  https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/index-legacy#earlier-releases).
 - Use "Rebuild Solution" to make sure all files are rewritten
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for

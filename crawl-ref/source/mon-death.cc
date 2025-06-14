@@ -2154,7 +2154,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
 #endif
         }
 
-        if (you.has_mutation(MUT_FEED_OFF_SUFFERING) > 0
+        if (you.has_mutation(MUT_FEED_OFF_SUFFERING)
             && (mons.has_ench(ENCH_POISON) || mons.has_ench(ENCH_DRAINED))
             && x_chance_in_y(1 + you.get_mutation_level(MUT_FEED_OFF_SUFFERING), 4))
         {
