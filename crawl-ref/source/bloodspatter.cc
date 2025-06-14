@@ -185,14 +185,15 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
     _maybe_bloodify_square(where, damage, spatter, from, old_blood);
 }
 
-void blood_spray(const coord_def& origin, monster_type montype, int level)
+void blood_spray(const coord_def& origin, monster_type montype, int level,
+                 int max_ranged)
 {
     int tries = 0;
     for (int i = 0; i < level; ++i)
     {
         // Blood drops are small and light and suffer a lot of wind
         // resistance.
-        int range = random2(8) + 1;
+        int range = random2(max_ranged) + 1;
 
         while (tries < 5000)
         {
