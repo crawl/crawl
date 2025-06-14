@@ -136,6 +136,10 @@ public:
                                                 static_cast<BaseType>(Scale))
     {
     }
+    constexpr fixedp(long long n) : content(static_cast<BaseType>(n) *
+                                                static_cast<BaseType>(Scale))
+    {
+    }
     constexpr fixedp(unsigned int n) : content(static_cast<BaseType>(n) *
                                                 static_cast<BaseType>(Scale))
     {
@@ -530,7 +534,7 @@ public:
         int int_test;
         int_test = 292;
         fixedp<> test_int(int_test);
-        fixedp<long> test_long((long) 2e10);
+        fixedp<long long> test_long((long long) 2e10);
         FPASSERT(test_long == 2e10);
 
         // test some cv qualified fixedps
