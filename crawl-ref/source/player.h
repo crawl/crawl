@@ -583,6 +583,7 @@ public:
     kill_category kill_alignment() const override;
 
     bool has_spell(spell_type spell) const override;
+    bool has_any_spells() const;
 
     string shout_verb(bool directed = false) const;
     int shout_volume() const;

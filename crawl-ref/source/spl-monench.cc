@@ -186,6 +186,48 @@ bool enfeeble_monster(monster &mon, int pow)
     return simple_monster_message(mon, " is enfeebled!");
 }
 
+bool enfeeble_player(actor *source, int pow)
+{
+    const int res_margin = you.check_willpower(source, pow);
+    vector<duration_type> hexes;
+
+    hexes.push_back(DUR_WEAK);
+    if (you.has_any_spells())
+        hexes.push_back(DUR_DIMINISHED_SPELLS);
+    if (res_margin <= 0)
+    {
+        hexes.push_back(DUR_BLIND);
+        hexes.push_back(DUR_DAZED);
+    }
+
+    // Resisted the upgraded effects, and immune to the irresistible effects.
+    if (hexes.empty())
+    {
+        canned_msg(MSG_YOU_UNAFFECTED);
+        return false;
+    }
+
+    const int dur = random_range(7, 12);
+    for (auto hex : hexes)
+    {
+        if (hex == DUR_DAZED)
+            you.daze(random_range(2, 4));
+        else if (hex == DUR_BLIND && you.duration[DUR_BLIND] < dur * BASELINE_DELAY)
+        {
+            you.duration[DUR_BLIND] = 0;
+            blind_player(dur);
+        }
+        else
+            you.duration[hex] = max(dur * BASELINE_DELAY, you.duration[hex]);
+    }
+
+    if (res_margin > 0)
+        canned_msg(MSG_YOU_PARTIALLY_RESIST);
+
+    mpr("You are enfeebled!");
+    return true;
+}
+
 spret cast_vile_clutch(int pow, bolt &beam, bool fail)
 {
     spret result = zapping(ZAP_VILE_CLUTCH, pow, beam, true, nullptr, fail);

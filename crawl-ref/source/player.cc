@@ -5770,6 +5770,15 @@ bool player::has_spell(spell_type spell) const
     return find(begin(spells), end(spells), spell) != end(spells);
 }
 
+bool player::has_any_spells() const
+{
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return true;
+
+    return false;
+}
+
 bool player::cannot_speak() const
 {
     if (silenced(pos()))

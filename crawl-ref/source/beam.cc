@@ -3703,11 +3703,8 @@ void bolt::affect_player_enchantment(bool resistible)
     }
 
     // Never affects the player.
-    if (flavour == BEAM_INFESTATION
-        || flavour == BEAM_ENFEEBLE)
-    {
+    if (flavour == BEAM_INFESTATION)
         return;
-    }
 
     // You didn't resist it.
     if (animate)
@@ -4072,6 +4069,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         if (!you.doom(random_range(ench_power / 4, ench_power / 2)))
             mpr("You feel an ill-omen....");
+        break;
+
+    case BEAM_ENFEEBLE:
+        obvious_effect = true;
+        enfeeble_player(agent(), ench_power);
         break;
 
     default:

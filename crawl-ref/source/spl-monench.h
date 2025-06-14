@@ -22,6 +22,7 @@ bool backlight_monster(monster* mons, const actor* source);
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);
 bool silence_monster(monster& mon, const actor* agent, int dur);
 bool enfeeble_monster(monster &mon, int pow);
+bool enfeeble_player(actor* source, int pow);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
 bool start_ranged_constriction(actor& caster, actor& target, int duration,
                                constrict_type type);
