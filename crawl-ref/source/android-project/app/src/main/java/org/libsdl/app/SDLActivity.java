@@ -853,14 +853,7 @@ public class SDLActivity extends AppCompatActivity {
         }
         // System keyboard
         if (keyboardOption == 2) {
-            if (mTextEdit == null) {
-                mSingleton.commandHandler.post(new ShowTextInputTask((int)mSurface.getX(), (int)mSurface.getY(), mSurface.getWidth(), mSurface.getHeight()));
-            }
-            else if (mTextEdit.requestFocus()) {
-                InputMethodManager imm = (InputMethodManager) SDL.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mTextEdit, InputMethodManager.SHOW_IMPLICIT);
-                return true;
-            }
+            mSingleton.commandHandler.post(new ShowTextInputTask((int)mSurface.getX(), (int)mSurface.getY(), mSurface.getWidth(), mSurface.getHeight()));
         }
         return false;
     }
