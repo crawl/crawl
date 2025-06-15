@@ -232,21 +232,3 @@ spell_type zap_to_spell(zap_type zap)
 
     return SPELL_NO_SPELL;
 }
-
-int spell_zap_power_cap(spell_type spell)
-{
-    const zap_type zap = spell_to_zap(spell);
-
-    if (zap == NUM_ZAPS)
-        return 0;
-
-    const int cap = zap_power_cap(zap);
-
-    switch (spell)
-    {
-    case SPELL_HIBERNATION:
-        return 50;
-    default:
-        return cap;
-    }
-}

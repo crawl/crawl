@@ -354,7 +354,6 @@ struct zap_info
 {
     zap_type ztype;
     const char* name;           // nullptr means handled specially
-    int player_power_cap;
     dam_deducer* player_damage;
     tohit_deducer* player_tohit;    // Enchantments have power modifier here
     dam_deducer* monster_damage;
@@ -437,21 +436,11 @@ colour_t zap_colour(zap_type z_type)
     return zinfo->colour;
 }
 
-int zap_power_cap(zap_type z_type)
-{
-    const zap_info* zinfo = _seek_zap(z_type);
-
-    return zinfo ? zinfo->player_power_cap : 0;
-}
-
 int zap_ench_power(zap_type z_type, int pow, bool is_monster)
 {
     const zap_info* zinfo = _seek_zap(z_type);
     if (!zinfo)
         return pow;
-
-    if (zinfo->player_power_cap > 0 && !is_monster)
-        pow = min(zinfo->player_power_cap, pow);
 
     tohit_deducer* ench_calc = is_monster ? zinfo->monster_tohit
                                           : zinfo->player_tohit;
@@ -524,9 +513,6 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     pbolt.glyph          = dchar_glyph(zinfo->glyph);
     pbolt.pierce         = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
-
-    if (zinfo->player_power_cap > 0 && !is_monster)
-        power = min(zinfo->player_power_cap, power);
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
