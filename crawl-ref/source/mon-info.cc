@@ -1893,6 +1893,21 @@ int monster_info::spell_hd(spell_type spell) const
     return props[SPELL_HD_KEY].get_int();
 }
 
+/// What spell does this monster know because of the wand it's holding (if any)?
+spell_type monster_info::get_wand_spell() const
+{
+    if (itemuse() < MONUSE_STARTING_EQUIPMENT)
+        return SPELL_NO_SPELL;
+
+    const item_def* wand = inv[MSLOT_WAND].get();
+    if (!wand)
+        return SPELL_NO_SPELL;
+
+    const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    ASSERT(wandtyp < NUM_WANDS);
+    return spell_in_wand(wandtyp);
+}
+
 unsigned monster_info::colour(bool base_colour) const
 {
     if (!base_colour && Options.mon_glyph_overrides.count(type)

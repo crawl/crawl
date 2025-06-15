@@ -4452,10 +4452,12 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
-/// How much power do we think the given monster casts this spell with?
-static int _mon_hex_pow(const spell_type spell, const int hd)
+/// How much ench_power do we think a monster casts this spell with, given a
+/// certain spellpower?
+static int _mon_hex_pow(const spell_type spell, const monster_info* mi, bool is_wand)
 {
-    int pow = mons_power_for_hd(spell, hd);
+    int pow = is_wand ? mons_wand_power(mi->hd, spell)
+                      : mons_power_for_hd(spell, mi->spell_hd());
 
     // Adjust by any power multipliers which may exist in zap definition.
     const zap_type ztype = spell_to_zap(spell);
@@ -4469,9 +4471,9 @@ static int _mon_hex_pow(const spell_type spell, const int hd)
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const monster_info* mi)
+int hex_chance(const spell_type spell, const monster_info* mi, bool is_wand)
 {
-    const int pow = _mon_hex_pow(spell, mi->spell_hd());
+    const int pow = _mon_hex_pow(spell, mi, is_wand);
     const int will = apply_willpower_bypass(*mi, you.willpower());
     const int chance = hex_success_chance(will, pow, 100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
@@ -4769,17 +4771,22 @@ static void _get_spell_description(const spell_type spell,
 #endif
             )
         {
+            // XXX: This is slightly wrong in the very unlikely case the monster
+            //      has a wand and *also* natively knows the spell inside that
+            //      wand. But it's quite a bit of refactoring for something that
+            //      will almost never happen.
+            const bool is_wand = mon_owner->get_wand_spell() == spell;
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _mon_hex_pow(spell, hd));
+                wiz_info += make_stringf(" (pow %d)", _mon_hex_pow(spell, mon_owner, is_wand));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
                 : make_stringf("Chance to defeat your Will: %d%%%s\n",
-                               hex_chance(spell, mon_owner),
+                               hex_chance(spell, mon_owner, is_wand),
                                wiz_info.c_str());
         }
 

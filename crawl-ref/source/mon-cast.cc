@@ -2008,6 +2008,16 @@ int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus)
     return spell_range(spell, power, use_veh_bonus);
 }
 
+// Returns the power with which a monster of a given HD casts a spell via a wand.
+int mons_wand_power(int hd, spell_type spell)
+{
+    const int base_power = 30 + hd;
+
+    // Apply power scaling factor that would be used for this spell normally,
+    // in monster hands.
+    return base_power * mons_power_for_hd(spell, 1) / 12;
+}
+
 /**
  * What god is responsible for a spell cast by the given monster with the
  * given flags?
@@ -2586,7 +2596,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    int power = evoke ? 30 + mons->get_hit_dice()
+    int power = evoke ? mons_wand_power(mons->get_hit_dice(), spell_cast)
                       : mons_spellpower(*mons, spell_cast);
 
     // Laughing skulls get a power boost based on other nearby laughing skulls.

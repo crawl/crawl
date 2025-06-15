@@ -483,6 +483,7 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    spell_type get_wand_spell() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 
