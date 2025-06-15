@@ -77,6 +77,7 @@
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
@@ -4452,11 +4453,16 @@ string get_skill_description(skill_type skill, bool need_title)
 }
 
 /// How much power do we think the given monster casts this spell with?
-static int _hex_pow(const spell_type spell, const int hd)
+static int _mon_hex_pow(const spell_type spell, const int hd)
 {
-    const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd) / ENCH_POW_FACTOR;
-    return min(cap, pow);
+    int pow = mons_power_for_hd(spell, hd);
+
+    // Adjust by any power multipliers which may exist in zap definition.
+    const zap_type ztype = spell_to_zap(spell);
+    if (ztype != NUM_ZAPS)
+        pow = zap_ench_power(ztype, pow, true);
+
+    return pow;
 }
 
 /**
@@ -4465,10 +4471,9 @@ static int _hex_pow(const spell_type spell, const int hd)
  */
 int hex_chance(const spell_type spell, const monster_info* mi)
 {
-    const int capped_pow = _hex_pow(spell, mi->spell_hd());
+    const int pow = _mon_hex_pow(spell, mi->spell_hd());
     const int will = apply_willpower_bypass(*mi, you.willpower());
-    const int chance = hex_success_chance(will, capped_pow,
-                                          100, true);
+    const int chance = hex_success_chance(will, pow, 100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
         return chance + (100 - chance) / 3; // ignores wl 1/3rd of the time
     return chance;
@@ -4767,7 +4772,7 @@ static void _get_spell_description(const spell_type spell,
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+                wiz_info += make_stringf(" (pow %d)", _mon_hex_pow(spell, hd));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "

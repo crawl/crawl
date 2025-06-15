@@ -220,7 +220,7 @@ static mons_spell_logic _conjuration_logic(spell_type spell);
 static mons_spell_logic _hex_logic(spell_type spell,
                                    function<ai_action::goodness(const monster&)> extra_logic
                                    = nullptr,
-                                   int power_hd_factor = 0);
+                                   int power_hd_factor = 4);
 
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
@@ -912,7 +912,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int pow = mons_spellpower(caster, SPELL_DOMINATE_UNDEAD);
             _cast_dominate_undead(caster, pow, false);
         },
-        nullptr, MSPELL_LOGIC_NONE, 30
+        nullptr, MSPELL_LOGIC_NONE, 10
     } },
     { SPELL_CLOCKWORK_BEE, {
         [](const monster &caster)
@@ -1077,7 +1077,7 @@ static mons_spell_logic _hex_logic(spell_type spell,
         };
     }
     return { calc_goodness, _fire_simple_beam, _zap_setup(spell),
-             MSPELL_LOGIC_NONE, power_hd_factor * ENCH_POW_FACTOR };
+             MSPELL_LOGIC_NONE, power_hd_factor };
 }
 
 /**
@@ -1882,19 +1882,19 @@ static int _mons_power_hd_factor(spell_type spell)
     switch (spell)
     {
         case SPELL_CAUSE_FEAR:
-            return 18 * ENCH_POW_FACTOR;
+            return 18;
 
         case SPELL_DOOM_HOWL:
         case SPELL_MESMERISE:
-            return 10 * ENCH_POW_FACTOR;
+            return 10;
 
         case SPELL_SIREN_SONG:
         case SPELL_AVATAR_SONG:
-            return 9 * ENCH_POW_FACTOR;
+            return 9;
 
         case SPELL_MASS_CONFUSION:
         case SPELL_CONFUSION_GAZE:
-            return 8 * ENCH_POW_FACTOR;
+            return 8;
 
         case SPELL_CALL_DOWN_LIGHTNING:
             return 16;
@@ -1969,7 +1969,7 @@ int mons_power_for_hd(spell_type spell, int hd)
 {
     const int power = hd * _mons_power_hd_factor(spell);
     if (spell == SPELL_PAIN)
-        return max(50 * ENCH_POW_FACTOR, power);
+        return max(50, power);
     return power;
 }
 
@@ -1984,21 +1984,6 @@ int mons_power_for_hd(spell_type spell, int hd)
 int mons_spellpower(const monster &mons, spell_type spell)
 {
     return mons_power_for_hd(spell, mons.spell_hd(spell));
-}
-
-/**
- * What power does the given monster cast the given enchantment with?
- *
- * @param spell     The spell in question.
- * @param mons      The monster in question.
- * @param cap       The maximum power of the spell.
- * @return          A spellpower value for the spell, with ENCH_POW_FACTOR
- *                  removed & capped at maximum spellpower.
- */
-static int _ench_power(spell_type spell, const monster &mons)
-{
-    const int cap = 200;
-    return min(cap, mons_spellpower(mons, spell) / ENCH_POW_FACTOR);
 }
 
 int mons_spell_range(const monster &mons, spell_type spell)
@@ -2080,7 +2065,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.colour       = 255;
     beam.hit          = -1;
     beam.damage       = dice_def(1, 0);
-    beam.ench_power   = max(1, power / ENCH_POW_FACTOR); // U G H
+    beam.ench_power   = max(1, power);
     beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
     beam.thrower      = KILL_NON_ACTOR;
@@ -5722,7 +5707,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         }
     }
 
-    const int pow = _ench_power(SPELL_MESMERISE, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_MESMERISE);
     const int will_check = you.check_willpower(mons, pow);
 
     // Don't mesmerise if you pass an WL check or have clarity.
@@ -5784,7 +5769,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = _ench_power(SPELL_CAUSE_FEAR, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_CAUSE_FEAR);
 
     if (mons->see_cell_no_trans(you.pos())
         && mons->can_see(you)
@@ -5867,7 +5852,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = _ench_power(SPELL_MASS_CONFUSION, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_MASS_CONFUSION);
 
     if (mons->see_cell_no_trans(you.pos())
         && mons->can_see(you)
@@ -7036,7 +7021,7 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
         if (targ->is_monster())
         {
             monster* mon = targ->as_monster();
-            const int res_margin = mon->check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            const int res_margin = mon->check_willpower(&caster, pow);
             if (res_margin > 0)
             {
                 simple_monster_message(*mon,
@@ -7050,7 +7035,7 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
         }
         else if (targ->is_player())
         {
-            const int res_margin = you.check_willpower(&caster, pow / ENCH_POW_FACTOR);
+            const int res_margin = you.check_willpower(&caster, pow);
             if (res_margin > 0)
                 canned_msg(MSG_YOU_RESIST);
             else
@@ -7343,7 +7328,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     {
         ASSERT(foe);
-        const int res_margin = foe->check_willpower(mons, splpow / ENCH_POW_FACTOR);
+        const int res_margin = foe->check_willpower(mons, splpow);
         if (res_margin > 0)
         {
             if (you.can_see(*foe))
@@ -8979,7 +8964,7 @@ static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
  */
 static void _doom_howl(monster &mon)
 {
-    const int pow = _ench_power(SPELL_DOOM_HOWL, mon);
+    const int pow = mons_spellpower(mon, SPELL_DOOM_HOWL);
     const int willpower = you.check_willpower(&mon, pow);
     const string effect = willpower > 0 ?
                             make_stringf("but you%s",
@@ -9036,7 +9021,7 @@ static void _siren_sing(monster* mons, bool avatar)
     }
 
     // power is the same for siren & avatar song, so just use siren
-    const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_SIREN_SONG);
     const int willpower = you.check_willpower(mons, pow);
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
