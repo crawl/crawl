@@ -3379,6 +3379,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (in_bounds(mwhere) && you.see_cell(mwhere))
     {
         view_update_at(mwhere);
+        StashTrack.update_stash(mwhere);
         update_screen();
     }
 

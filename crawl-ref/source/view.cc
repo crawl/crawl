@@ -1470,11 +1470,16 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
             if (!is_map_persistent())
                 ash_detect_portals(false);
 
-            // TODO: why on earth is this called from here? It seems like it
-            // should be called directly on changing location, or something
-            // like that...
             if (you.on_current_level)
+            {
+                // TODO: why on earth is this called from here? It seems like it
+                // should be called directly on changing location, or something
+                // like that...
                 show_init(_layers);
+
+                if (show_updates)
+                    maybe_update_stashes();
+            }
 
 #ifdef USE_TILE
             tile_draw_floor();
