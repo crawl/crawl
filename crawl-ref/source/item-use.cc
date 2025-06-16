@@ -2896,7 +2896,19 @@ bool read(item_def* scroll, dist *target)
         break;
 
     case SCR_TELEPORTATION:
+    {
+        // you_teleport already handles much of this, but this allows a more
+        // robust message for unidentified tele scrolls read with -tele
+        const string reason = you.no_tele_reason();
+        if (!reason.empty())
+        {
+            mpr(pre_succ_msg);
+            mpr(reason);
+            break;
+        }
+
         you_teleport();
+    }
         break;
 
     case SCR_ACQUIREMENT:
