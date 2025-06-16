@@ -423,7 +423,10 @@ void ash_check_bondage()
         if (j == SLOT_GIZMO)
             continue;
 
-        num_slots += you.equipment.num_slots[j];
+        // Count melded slot-giving unrands here, since any melded items held
+        // in those slots will be counted below, which can otherwise result in
+        // having more cursed items than the game thinks we have slots.
+        num_slots += get_player_equip_slot_count(static_cast<equipment_slot>(j), nullptr, true);
     }
 
     // Find what percentage of available slots have a cursed item in them.
