@@ -4235,13 +4235,16 @@ static const vector<pie_effect> pie_effects = {
     {
         "glitter",
         [](const actor &defender) {
-            return defender.can_be_dazzled();
+            return !defender.res_blind();
         },
         [](actor &defender, const bolt &beam) {
             if (defender.is_player())
                 blind_player(random_range(16, 36), ETC_GLITTER);
             else
-                dazzle_target(&defender, beam.agent(), 149);
+            {
+                defender.as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, beam.agent(),
+                                                random_range(12, 18) * BASELINE_DELAY));
+            }
         },
         5
     },
@@ -4413,7 +4416,7 @@ void bolt::affect_player()
 
     }
 
-    if (flavour == BEAM_LIGHT && you.can_be_dazzled())
+    if (flavour == BEAM_LIGHT && you.res_blind() <= 1)
         blind_player(random_range(7, 12), WHITE);
 
     if (flavour == BEAM_MIASMA && final_dam > 0)
@@ -5329,7 +5332,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     if (flavour == BEAM_LIGHT
-        && mon->can_be_dazzled()
+        && mon->res_blind() <= 1
         && !mon->has_ench(ENCH_BLIND))
     {
         const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;
@@ -7122,7 +7125,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
         // Not an "explosion", but still a bit noisy at the target location.
         if (origin_spell == SPELL_INFESTATION
-            || origin_spell == SPELL_DAZZLING_FLASH
             || origin_spell == SPELL_NULLIFYING_BREATH)
         {
             loudness = spell_effect_noise(origin_spell);

@@ -2108,8 +2108,8 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DAZZLING_FLASH, "Dazzling Flash",
-    spschool::hexes | spschool::fire,
+    SPELL_GLOOM, "Gloom",
+    spschool::hexes | spschool::necromancy,
     spflag::area,
     3,
     50,

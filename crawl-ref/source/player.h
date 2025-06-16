@@ -798,6 +798,7 @@ public:
     bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
     bool res_constrict() const override;
+    int res_blind() const override;
     int willpower() const override;
     bool no_tele(bool blink = false, bool temp = true) const override;
     string no_tele_reason(bool blink = false, bool temp = true) const;
@@ -846,9 +847,6 @@ public:
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
     bool can_sleep(bool holi_only = false) const override;
-
-    bool can_be_dazzled() const override;
-    bool can_be_blinded() const override;
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;

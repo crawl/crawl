@@ -101,8 +101,7 @@ void monster_drop_things(monster* mons,
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
                 && you.see_cell(mons->pos())
-                && x_chance_in_y(env.item[item].quantity, 100)
-                && you.can_be_dazzled())
+                && x_chance_in_y(env.item[item].quantity, 100))
             {
                 string msg = make_stringf("%s dazzles you with the glint of coin.",
                     god_name(GOD_GOZAG).c_str());

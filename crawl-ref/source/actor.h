@@ -231,9 +231,6 @@ public:
 
     virtual bool can_throw_large_rocks() const = 0;
 
-    virtual bool can_be_dazzled() const = 0;
-    virtual bool can_be_blinded() const = 0;
-
     virtual int armour_class() const = 0;
     virtual int gdr_perc(bool random = true) const = 0;
     int apply_ac(int damage, int max_damage = 0,
@@ -278,6 +275,7 @@ public:
     virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual bool res_constrict() const = 0;
+    virtual int res_blind() const = 0;
     int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;

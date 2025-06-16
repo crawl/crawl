@@ -1422,40 +1422,31 @@ bool mons_is_hepliaklqana_ancestor(monster_type mc)
 }
 
 /**
- * Can this type of monster be blinded?
- *
- * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
- * or no eyes, are completely immune to blinding.
- *
- * Note that 'dazzling' (from dazzling spray) has additional restrictions above
- * this.
+ * How well does this monster resist blinding?
  *
  * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get ENCH_BLIND.
+ * @return      1 if the monster resists dark/physical forms of blindness,
+ *              2 if the monster additionally resists light-based blinding,
+ *              0 otherwise.
  */
-bool mons_can_be_blinded(monster_type mc)
+int mons_res_blind(monster_type mc)
 {
-    return !mons_class_flag(mc, M_UNBLINDABLE);
-}
-
-/**
- * Can this kind of monster be dazzled?
- *
- * The undead, nonliving, vegetative, or unblindable cannot be dazzled.
- *
- * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get `ENCH_BLIND` from Dazzling
- *              Spray or wands of light.
- */
-bool mons_can_be_dazzled(monster_type mc)
-{
-    // This was implemented by checking type so that we could use it in
-    // monster descriptions (which only have mon_info structs); not sure if
-    // that's useful
+    // Unblindable / non-visual monsters are immune to sources of blindness
+    // outside of divine acts or Enfeeble.
+    if (mons_class_flag(mc, M_UNBLINDABLE))
+        return 2;
 
     const mon_holy_type holiness = mons_class_holiness(mc);
-    return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        && mons_can_be_blinded(mc);
+
+    // No visual systems to disrupt.
+    if (holiness & (MH_NONLIVING | MH_PLANT))
+        return 2;
+
+    // Undead can be blinded by light.
+    if (holiness & (MH_UNDEAD))
+        return 1;
+
+    return 0;
 }
 
 /**

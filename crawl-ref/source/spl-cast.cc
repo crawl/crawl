@@ -1309,7 +1309,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_walls>(&you, find_ramparts_walls());
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
-    case SPELL_DAZZLING_FLASH:
+    case SPELL_GLOOM:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
                                                   0, 1);
     case SPELL_INNER_FLAME:
@@ -1694,16 +1694,12 @@ static vector<string> _desc_englaciate_chance(const monster_info& mi,
     return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
 }
 
-static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
+static vector<string> _desc_gloom_chance(const monster_info& mi, int pow)
 {
-    if (!mons_can_be_dazzled(mi.type))
+    if (mons_res_blind(mi.type))
         return vector<string>{"not susceptible"};
 
-    const int numerator = dazzle_chance_numerator(mi.hd);
-    const int denom = dazzle_chance_denom(pow);
-    const int dazzle_pct = max(100 * numerator / denom, 0);
-
-    return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+    return vector<string>{make_stringf("chance to dazzle: %d%%", gloom_success_chance(pow, mi.hd))};
 }
 
 static vector<string> _desc_airstrike_bonus(const monster_info& mi)
@@ -1823,8 +1819,7 @@ static vector<string> _desc_enfeeble_chance(const monster_info& mi, int pow)
     if (wl != WILL_INVULN)
     {
         const int success = hex_success_chance(wl, pow, 100);
-        all_effects.push_back(make_stringf("chance to daze%s: %d%%",
-            mons_can_be_blinded(mi.type) ? " and blind" : "", success));
+        all_effects.push_back(make_stringf("chance to daze and blind: %d%%", success));
     }
 
     if (all_effects.empty())
@@ -1953,8 +1948,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_ENGLACIATION:
             return bind(_desc_englaciate_chance, placeholders::_1,
                         hitfunc, powc);
-        case SPELL_DAZZLING_FLASH:
-            return bind(_desc_dazzle_chance, placeholders::_1, powc);
+        case SPELL_GLOOM:
+            return bind(_desc_gloom_chance, placeholders::_1, powc);
         case SPELL_MEPHITIC_CLOUD:
         case SPELL_NOXIOUS_BREATH:
             return bind(_desc_meph_chance, placeholders::_1);
@@ -2464,8 +2459,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
 
-    case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(&you, powc, fail);
+    case SPELL_GLOOM:
+        return cast_gloom(&you, powc, fail);
 
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);

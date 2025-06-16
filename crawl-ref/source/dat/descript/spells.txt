@@ -444,11 +444,6 @@ Curse of Agony spell
 Curses a foe, halving their remaining health after each of the next two times
 that the caster strikes them in melee.
 %%%%
-Dazzling Flash spell
-
-The caster erupts in a scintillating display of light. Any living, demonic
-or angelic creature nearby may be dazzled and left stumbling blindly.
-%%%%
 Death Channel spell
 
 Binds the souls of slain living, demonic and holy creatures, forcing their
@@ -598,8 +593,9 @@ Throws a bolt of electricity at the target, with high accuracy.
 Enfeeble spell
 
 Overwhelms an enemy with malignant energies, irresistibly weakening their melee
-attacks and disrupting their magic. It will additionally daze and blind any foe
-that fails to resist the full force of the curse.
+attacks and reducing the power of their spells. It will additionally daze and
+blind any foe that fails to resist the full force of the curse - even those
+without visual senses!
 %%%%
 Ensnare spell
 
@@ -854,6 +850,15 @@ effect take damage, with higher damage being dealt to those close to the
 caster. Those hit by the blast are encased in ice, slowing their movement, and
 those killed by the blast may be frozen into solid blocks of ice. Half of its
 damage bypasses cold resistance.
+%%%%
+Gloom spell
+
+Emits a wave of pernicious gloom which attempts to smother the light around
+nearby creatures. Any living, demonic or holy creature caught in the effect may
+briefly lose their eyesight and be left stumbling blindly.
+
+Willpower is useless against this spell, but stronger creatures may still shrug
+off its effects.
 %%%%
 Grasping Roots spell
 

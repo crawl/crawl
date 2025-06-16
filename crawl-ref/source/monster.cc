@@ -575,16 +575,6 @@ bool monster::can_throw_large_rocks() const
            || type == MONS_PLAYER_SHADOW; // can throw them if you can!
 }
 
-bool monster::can_be_dazzled() const
-{
-    return mons_can_be_dazzled(type);
-}
-
-bool monster::can_be_blinded() const
-{
-    return mons_can_be_blinded(type);
-}
-
 bool monster::can_speak()
 {
     if (cannot_act())
@@ -3931,6 +3921,11 @@ bool monster::res_petrify(bool /*temp*/) const
 bool monster::res_constrict() const
 {
     return is_insubstantial() || is_spiny() || is_amorphous();
+}
+
+int monster::res_blind() const
+{
+    return mons_res_blind(type);
 }
 
 int monster::res_corr() const

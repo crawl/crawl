@@ -217,8 +217,7 @@ size_type mons_class_body_size(monster_type mc);
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster& mon);
 
-bool mons_can_be_blinded(monster_type mc);
-bool mons_can_be_dazzled(monster_type mc);
+int mons_res_blind(monster_type mc);
 
 bool mons_resists_drowning(monster_type type, monster_type base);
 

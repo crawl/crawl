@@ -762,7 +762,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_BLINDING:
         if (!dart_check(brand))
             break;
-        if (defender->can_be_blinded())
+        if (!defender->res_blind())
         {
             if (defender->is_player())
                 blind_player(damage_done, LIGHTGREEN);

@@ -354,10 +354,8 @@ bool melee_attack::handle_phase_blocked()
     maybe_trigger_jinxbite();
 
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
-        && coinflip())
+        && coinflip() && attacker->as_monster()->res_blind() <= 1)
     {
-        // If the monster is unblindable, making them blind will fail,
-        // so don't display a message.
         const bool need_msg = !attacker->as_monster()->has_ench(ENCH_BLIND);
         if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
                                         random_range(3, 5) * BASELINE_DELAY))
@@ -542,7 +540,7 @@ void melee_attack::apply_sign_of_ruin_effects()
         {
             effects.push_back(WEAKNESS);
         }
-        if (defender->can_be_dazzled())
+        if (!defender->res_blind())
             effects.push_back(BLIND);
         if (!defender->stasis())
             effects.push_back(SLOW);
@@ -4481,9 +4479,13 @@ void melee_attack::do_starlight()
         "@The_monster_possessive@ vision is obscured by starry radiance!",
     };
 
-    if (attacker->is_monster() && one_chance_in(5)
-        && dazzle_target(attacker, defender, 100))
+    if (attacker->is_monster()
+        && attacker->res_blind() <= 1
+        && x_chance_in_y(min(50, (95 - defender->get_hit_dice() * 4) / 5), 50))
     {
+        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                                         random_range(4, 8) * BASELINE_DELAY));
+
         string msg = *random_iterator(dazzle_msgs);
         msg = do_mon_str_replacements(msg, *attacker->as_monster(), S_SILENT);
         mpr(msg);

@@ -4848,23 +4848,6 @@ void crystallize_player()
 }
 
 /**
- * Players are rather more susceptible to dazzling: only those who can't
- * be blinded are immune.
- */
-bool player::can_be_dazzled() const
-{
-    return can_be_blinded();
-}
-
-/**
- * Players can be blinded only if they're not undead.
- */
-bool player::can_be_blinded() const
-{
-    return !is_lifeless_undead();
-}
-
-/**
  * Increase the player's blindness duration.
  *
  * @param amount   The number of turns to increase blindness duration by.
@@ -4872,12 +4855,6 @@ bool player::can_be_blinded() const
 void blind_player(int amount, colour_t flavour_colour)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    if (!you.can_be_dazzled())
-    {
-        mpr("Your vision flashes for a moment.");
-        return;
-    }
 
     if (amount <= 0)
         return;
@@ -6890,6 +6867,16 @@ bool player::res_constrict() const
            || get_mutation_level(MUT_SPINY)
            || you.unrand_equipped(UNRAND_SLICK_SLIPPERS)
            || you.duration[DUR_CONSTRICTION_IMMUNITY];
+}
+
+int player::res_blind() const
+{
+    if (bool(holiness() & MH_PLANT))
+        return 2;
+    else if (undead_state() != US_ALIVE)
+        return 1;
+    else
+        return 0;
 }
 
 int player::willpower() const

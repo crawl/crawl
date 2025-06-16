@@ -5403,7 +5403,7 @@ void ru_do_retribution(monster* mons, int damage)
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
-    else if (power > 10 && mons_can_be_blinded(mons->type))
+    else if (power > 10)
     {
         mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());

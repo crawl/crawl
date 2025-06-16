@@ -327,7 +327,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
-    if (!mons_can_be_blinded(type))
+    if (mons_res_blind(type) > 1)
         mb.set(MB_UNBLINDABLE);
 
     mitemuse = mons_class_itemuse(type);
@@ -618,7 +618,7 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_RES_DROWN);
     if (m->clarity())
         mb.set(MB_CLARITY);
-    if (!mons_can_be_blinded(m->type))
+    if (mons_res_blind(m->type) > 1)
         mb.set(MB_UNBLINDABLE);
 
     const int stab_bonus = stab_bonus_denom(find_player_stab_type(*m));

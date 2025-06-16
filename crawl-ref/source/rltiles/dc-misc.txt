@@ -237,6 +237,9 @@ splinters_metal7
 flesh0 BOLT_FLESH
 flesh1
 
+gloom0 BOLT_GLOOM
+gloom1
+
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1
 

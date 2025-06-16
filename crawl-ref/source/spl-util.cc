@@ -39,6 +39,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -1684,8 +1685,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;
 
-    case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(&you, pow, false, true) == spret::abort;
+    case SPELL_GLOOM:
+        return cast_gloom(&you, pow, false, true) == spret::abort;
 
      case SPELL_MAXWELLS_COUPLING:
          return cast_maxwells_coupling(pow, false, true) == spret::abort;

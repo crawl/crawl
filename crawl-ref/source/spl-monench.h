@@ -40,3 +40,6 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
 bool is_valid_tempering_target(const monster& mon, const actor& caster);
 
 void do_vexed_attack(actor& actor, bool always_hit_ally = false);
+
+int gloom_success_chance(int power, int target_hd);
+spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer = false);

@@ -172,9 +172,6 @@ bool monster::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_FEAR && !can_feel_fear(true))
         return false;
 
-    if (ench.ench == ENCH_BLIND && !mons_can_be_blinded(type))
-        return false;
-
     // If we have never changed shape, mark us as shapeshifter, so that
     // "goblin perm_ench:shapeshifter" reverts on death.
     if (ench.ench == ENCH_SHAPESHIFTER)

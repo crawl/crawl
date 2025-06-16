@@ -2645,7 +2645,7 @@ static spell_type _fixup_positional_monster_spell(spell_type s)
 {
     switch (s)
     {
-        case SPELL_DAZZLING_FLASH:
+        case SPELL_GLOOM:
         case SPELL_INNER_FLAME:
         case SPELL_CONJURE_FLAME:
             return SPELL_NO_SPELL;

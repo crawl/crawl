@@ -721,18 +721,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE,
         18, // 1.5x iceblast
     } },
-    { SPELL_DAZZLING_FLASH, {
+    { SPELL_GLOOM, {
         [](const monster &caster)
         {
             // Run tracer version of spell. Power matters for range.
-            const int pow = mons_spellpower(caster, SPELL_DAZZLING_FLASH);
+            const int pow = mons_spellpower(caster, SPELL_GLOOM);
             return ai_action::good_or_bad(
-                cast_dazzling_flash(&caster, pow, false, true) == spret::success
+                cast_gloom(&caster, pow, false, true) == spret::success
             );
         },
         [](monster &caster, mon_spell_slot /*slot*/, bolt& /*pbolt*/) {
-            const int pow = mons_spellpower(caster, SPELL_DAZZLING_FLASH);
-            cast_dazzling_flash(&caster, pow, false);
+            const int pow = mons_spellpower(caster, SPELL_GLOOM);
+            cast_gloom(&caster, pow, false);
         },
     } },
     { SPELL_SHADOW_BALL, _conjuration_logic(SPELL_SHADOW_BALL) },
@@ -2573,7 +2573,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BESTOW_ARMS:
     case SPELL_FULMINANT_PRISM:
     case SPELL_HELLFIRE_MORTAR:
-    case SPELL_DAZZLING_FLASH:
+    case SPELL_GLOOM:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
