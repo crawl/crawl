@@ -830,6 +830,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return slot == SLOT_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
+        return type == ARM_HAT;
     case SPARM_INTELLIGENCE:
         return slot == SLOT_HELMET;
 
@@ -877,6 +878,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return type == ARM_SCARF;
 
     case SPARM_LIGHT:
+        return type == ARM_ORB || type == ARM_HELMET;
     case SPARM_RAGE:
     case SPARM_MAYHEM:
     case SPARM_GUILE:
