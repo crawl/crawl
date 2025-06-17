@@ -4992,6 +4992,10 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "guile",
         "energy",
         "sniping",
+        "ice",
+        "fire",
+        "air",
+        "earth",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
