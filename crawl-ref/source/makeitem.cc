@@ -775,6 +775,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_JUMPING:
 #endif
     case SPARM_RAMPAGING:
+    case SPARM_EARTH:
         return slot == SLOT_BOOTS || slot == SLOT_BARDING;
     case SPARM_STEALTH:
         return slot == SLOT_BOOTS || slot == SLOT_BARDING || slot == SLOT_CLOAK
@@ -786,6 +787,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_PONDEROUSNESS:
         return true;
     case SPARM_PRESERVATION:
+    case SPARM_AIR:
 #if TAG_MAJOR_VERSION > 34
         return slot == SLOT_CLOAK;
 #endif
@@ -808,6 +810,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_HURLING:
+    case SPARM_FIRE:
         return slot == SLOT_GLOVES;
 
     case SPARM_SEE_INVISIBLE:

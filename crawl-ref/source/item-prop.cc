@@ -156,10 +156,11 @@ static const armour_def Armour_prop[] =
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
         SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
-            { SPARM_POISON_RESISTANCE, 1 },
-            { SPARM_WILLPOWER,         1 },
-            { SPARM_STEALTH,           1 },
-            { SPARM_PRESERVATION,      1 },
+            { SPARM_POISON_RESISTANCE, 2 },
+            { SPARM_WILLPOWER,         2 },
+            { SPARM_STEALTH,           2 },
+            { SPARM_PRESERVATION,      2 },
+            { SPARM_AIR,               1 },
     }},
     { ARM_SCARF,                "scarf",                  0,   0,   50,
         SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
@@ -168,6 +169,7 @@ static const armour_def Armour_prop[] =
             { SPARM_INVISIBILITY, 1 },
             { SPARM_HARM,         1 },
             { SPARM_SHADOWS,      1 },
+            { SPARM_AIR,          1 },
     }},
 
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
@@ -177,6 +179,7 @@ static const armour_def Armour_prop[] =
             { SPARM_HURLING,   1 },
             { SPARM_STEALTH,   1 },
             { SPARM_INFUSION,  1 },
+            { SPARM_FIRE,      1 },
     }},
 
     { ARM_HELMET,               "helmet",                 1,   0,   45,
@@ -208,9 +211,10 @@ static const armour_def Armour_prop[] =
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   45,
         SLOT_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
-            { SPARM_FLYING,    1 },
-            { SPARM_STEALTH,   1 },
-            { SPARM_RAMPAGING, 1 },
+            { SPARM_FLYING,    2 },
+            { SPARM_STEALTH,   2 },
+            { SPARM_RAMPAGING, 2 },
+            { SPARM_EARTH,     1 },
     }},
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
@@ -220,10 +224,11 @@ static const armour_def Armour_prop[] =
 #endif
     { ARM_BARDING,         "barding",           4,  -60,  230,
         SLOT_BARDING,     SIZE_MEDIUM, SIZE_LARGE, true, 0, {
-            { SPARM_FLYING,          1 },
-            { SPARM_COLD_RESISTANCE, 1 },
-            { SPARM_FIRE_RESISTANCE, 1 },
-            { SPARM_STEALTH,         1 },
+            { SPARM_FLYING,          2 },
+            { SPARM_COLD_RESISTANCE, 2 },
+            { SPARM_FIRE_RESISTANCE, 2 },
+            { SPARM_STEALTH,         2 },
+            { SPARM_EARTH,           1 },
     }},
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis

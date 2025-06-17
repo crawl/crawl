@@ -362,6 +362,9 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPARM_ICE:
+            case SPARM_FIRE:
+            case SPARM_AIR:
+            case SPARM_EARTH:
                 valued += 100;
 
             case SPARM_COLD_RESISTANCE:
