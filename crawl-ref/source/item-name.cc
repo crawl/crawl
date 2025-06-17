@@ -570,6 +570,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_MAYHEM:            return "mayhem";
         case SPARM_GUILE:             return "guile";
         case SPARM_ENERGY:            return "energy";
+        case SPARM_SNIPING:           return "sniping";
         default:                      return "bugginess";
         }
     }
@@ -617,6 +618,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_MAYHEM:            return "mayhem";
         case SPARM_GUILE:             return "guile";
         case SPARM_ENERGY:            return "*channel";
+        case SPARM_SNIPING:           return "snipe";
         default:                      return "buggy";
         }
     }

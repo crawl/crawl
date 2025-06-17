@@ -413,6 +413,11 @@ int ranged_attack::apply_damage_modifiers(int damage)
         const int bonus = archer_bonus_damage(attacker->get_hit_dice());
         damage += random2avg(bonus, 2);
     }
+    if (attacker->as_monster()->wearing_ego(OBJ_ARMOUR, SPARM_SNIPING)
+        && defender->incapacitated())
+    {
+        damage = damage * 3 / 2;
+    }
     return damage;
 }
 
@@ -420,6 +425,11 @@ int ranged_attack::player_apply_final_multipliers(int damage, bool /*aux*/)
 {
     if (!throwing())
         damage = apply_rev_penalty(damage);
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_SNIPING)
+        && defender->incapacitated())
+    {
+        damage = damage * 3 / 2;
+    }
     return damage;
 }
 
