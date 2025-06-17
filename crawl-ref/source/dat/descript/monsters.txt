@@ -3467,7 +3467,7 @@ powers of mental combat.
 moon troll
 
 A bizarre breed of intelligent troll, glowing with mysterious power from beyond
-this world.
+this world which shields it from damage except at close range.
 %%%%
 lunar statue
 

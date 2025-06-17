@@ -1122,6 +1122,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mg.cls, M_CONFUSED))
         mon->add_ench(ENCH_CONFUSION);
 
+    if (mons_class_flag(mg.cls, M_WARDED))
+        mon->add_ench(mon_enchant(ENCH_WARDING, 0, mon, INFINITE_DURATION));
+
     if (mg.cls == MONS_SHAPESHIFTER)
         mon->add_ench(ENCH_SHAPESHIFTER);
 
