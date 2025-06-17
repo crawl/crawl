@@ -3709,13 +3709,21 @@ static void _join_cheibriados()
 static void _join_makhleb()
 {
     // Re-active our Mark, if we gained one, then abandoned and rejoined.
+    if (!makhleb_mark_name().empty())
+        mprf("Your %s burns with power once more.", makhleb_mark_name().c_str());
+
+    makhleb_initialize_marks();
+}
+
+string makhleb_mark_name()
+{
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         if (you.innate_mutation[i] && is_makhleb_mark((mutation_type)i))
-            mprf("Your %s burns with power once more.", mutation_name((mutation_type)i));
+            return mutation_name((mutation_type)i);
     }
 
-    makhleb_initialize_marks();
+    return "";
 }
 
 // Initialize what Marks the player will eventually the offered.

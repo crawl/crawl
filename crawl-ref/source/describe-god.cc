@@ -948,6 +948,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             continue;
         }
 
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_1
+            && !makhleb_mark_name().empty())
+        {
+                desc.textcolour(god_colour(which_god));
+                desc.cprintf("You have been branded with the %s.\n", makhleb_mark_name().c_str());
+                continue;
+        }
+
         string buf = power.general;
 
         // Skip listing powers with no description (they are intended to be hidden)
