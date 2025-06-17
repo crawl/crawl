@@ -365,6 +365,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_DEXTERITY:
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
+            case SPARM_SNIPING:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
             case SPARM_STEALTH:

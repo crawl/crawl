@@ -832,6 +832,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_SEE_INVISIBLE:
         return type == ARM_HAT;
     case SPARM_INTELLIGENCE:
+    case SPARM_SNIPING:
         return slot == SLOT_HELMET;
 
     case SPARM_FIRE_RESISTANCE:
