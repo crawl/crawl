@@ -934,8 +934,8 @@ battle. Any foe that strikes it in melee will be lucky to live to regret it.
 %%%%
 cacodemon
 
-A hideously ugly demon of rage and legendary power, it disables its foes before
-blasting them to pieces.
+A maniacal demon, brimming with accursed power. Its gleeful laughter rarely
+ceases, even in the heat of battle.
 %%%%
 cane toad
 

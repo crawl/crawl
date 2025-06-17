@@ -230,6 +230,13 @@ __CAW unseen
 
 SOUND:You hear a loud caw.
 %%%%
+__LAUGH seen
+
+SOUND:@The_monster@ laughs maniacally.
+%%%%
+__LAUGH unseen
+
+SOUND:You hear maniacal laughter.
 ############################################
 # End of default shouts
 ############################################

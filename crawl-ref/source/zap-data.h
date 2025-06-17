@@ -94,6 +94,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_DOOM_BOLT,
+    "doom bolt",
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 10, 1, 15>,
+    new tohit_calculator<15, 1, 30>,
+    LIGHTRED,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_DOOM,
+},
+
+{
     ZAP_BOLT_OF_FLESH,
     "bolt of flesh",
     nullptr,

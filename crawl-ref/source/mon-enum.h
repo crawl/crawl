@@ -310,6 +310,7 @@ enum shout_type
     S_RUSTLE,               // books
     S_SQUEAK,               // rats and similar
     S_CAW,                  // ravens
+    S_LAUGH,                // cacodemons
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

@@ -4489,6 +4489,9 @@ void bolt::affect_player()
         }
     }
 
+    if (origin_spell == SPELL_DOOM_BOLT)
+        you.doom(random_range(15, 25));
+
     dprf(DIAG_BEAM, "Damage: %d", final_dam);
 
     if (final_dam > 0 || old_hp < you.hp || was_affected)
@@ -5368,6 +5371,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Watery Grave
     if (name == "grasping water" && !mon->is_unbreathing())
         _waterlog_mon(*mon, ench_power);
+
+    if (origin_spell == SPELL_DOOM_BOLT)
+        mon->doom(random_range(15, 25));
 }
 
 static int _knockback_dist(spell_type origin, int pow)

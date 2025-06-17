@@ -546,6 +546,10 @@ attacking nearby friend and foe alike before regaining their wits.
 
 This spell can be broken prematurely by the death of its caster.
 %%%%
+Doom Bolt spell
+
+Fires a bolt of accursed malice which inflicts Doom.
+%%%%
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While

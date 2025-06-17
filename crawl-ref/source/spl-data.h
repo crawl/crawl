@@ -4518,6 +4518,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DOOM_BOLT, "Doom Bolt",
+    spschool::conjuration | spschool::hexes,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DOOM_BOLT,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
