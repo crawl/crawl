@@ -181,9 +181,10 @@ static const armour_def Armour_prop[] =
 
     { ARM_HELMET,               "helmet",                 1,   0,   45,
         SLOT_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
-            { SPARM_LIGHT,         1 },
-            { SPARM_INTELLIGENCE,  1 },
-            { SPARM_SNIPING,       1 },
+            { SPARM_LIGHT,         2 },
+            { SPARM_INTELLIGENCE,  2 },
+            { SPARM_SNIPING,       2 },
+            { SPARM_ICE,           1 },
     }},
 
 #if TAG_MAJOR_VERSION == 34
@@ -199,6 +200,7 @@ static const armour_def Armour_prop[] =
             { SPARM_INTELLIGENCE,  2 },
             { SPARM_SEE_INVISIBLE, 2 },
             { SPARM_SNIPING,       1 },
+            { SPARM_ICE,           1 },
     }},
 
     // Note that barding size is compared against torso so it currently

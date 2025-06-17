@@ -520,6 +520,7 @@ enum special_armour_type
     SPARM_GUILE,
     SPARM_ENERGY,
     SPARM_SNIPING,
+    SPARM_ICE,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

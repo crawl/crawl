@@ -1545,6 +1545,8 @@ int player_spec_cold()
 
     sc += you.wearing_jewellery(RING_ICE);
 
+    sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
+
     sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))

@@ -2350,7 +2350,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "success rate. It always returns the magic spent on miscasts.";
     case SPARM_SNIPING:
         return "it increases the wearer's damage with ranged and thrown "
-               "weapons against incapacitated targets by 50% ";
+               "weapons against incapacitated targets by 50%.";
+    case SPARM_ICE:
+        return "it enhances the wearer's ice magic.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
