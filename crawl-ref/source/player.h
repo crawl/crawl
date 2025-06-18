@@ -751,6 +751,7 @@ public:
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void daze(int duration) override;
     void end_daze();
+    void vitrify(const actor *attacker, int duration, bool quiet = false) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -1195,7 +1196,6 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
-void crystallize_player();
 void blind_player(int turns, colour_t flavour_colour = WHITE);
 int player_blind_miss_chance(int distance);
 void dec_berserk_recovery_player(int delay);

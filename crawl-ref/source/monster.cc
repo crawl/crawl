@@ -5675,6 +5675,19 @@ void monster::daze(int duration)
     }
 }
 
+void monster::vitrify(const actor *attacker, int duration, bool quiet)
+{
+    if (!quiet && you.can_see(*this))
+    {
+        if (has_ench(ENCH_VITRIFIED))
+            mprf("%s looks even more glass-like.", name(DESC_THE).c_str());
+        else
+            mprf("%s becomes as fragile as glass!", name(DESC_THE).c_str());
+    }
+
+    add_ench(mon_enchant(ENCH_VITRIFIED, 0, attacker, duration * BASELINE_DELAY));
+}
+
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)
 {
     return mons_adjust_flavoured(this, beam, hurted, doEffects);

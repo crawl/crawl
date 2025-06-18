@@ -2078,36 +2078,6 @@ bool miasma_monster(monster* mons, const actor* who)
     return success;
 }
 
-// Actually vitrifies a monster with crystallizing beam (with message).
-static bool crystallize_monster(monster* mons, const actor* who)
-{
-    if (!mons->alive())
-        return false;
-
-    if (x_chance_in_y(1, 4))
-        return false;
-
-    const bool had_status = mons->has_ench(ENCH_VITRIFIED);
-    mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, who,
-                   random_range(8, 18) * BASELINE_DELAY));
-
-    if (you.can_see(*mons))
-    {
-        if (had_status)
-        {
-            mprf("%s looks even more glass-like.",
-                 mons->name(DESC_THE).c_str());
-        }
-        else
-        {
-            mprf("%s becomes as fragile as glass!",
-                 mons->name(DESC_THE).c_str());
-        }
-    }
-
-    return true;
-}
-
 // Actually applies sticky flame to a monster (with message).
 bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose)
 {
@@ -3922,20 +3892,12 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_VITRIFY:
-        if (!you.duration[DUR_VITRIFIED])
-            mpr("Your body becomes as fragile as glass!");
-        else
-            mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
+        you.vitrify(agent(), random_range(8, 18));
         obvious_effect = true;
         break;
 
     case BEAM_VITRIFYING_GAZE:
-        if (!you.duration[DUR_VITRIFIED])
-            mpr("Your body becomes as fragile as glass!");
-        else
-            mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, random_range(4, 8), 50);
+        you.vitrify(agent(), random_range(4, 8));
         obvious_effect = true;
         break;
 
@@ -4211,24 +4173,7 @@ static const vector<pie_effect> pie_effects = {
         "peanut brittle",
         nullptr,
         [](actor &defender, const bolt &beam) {
-            if (defender.is_monster())
-            {
-                monster *mons = defender.as_monster();
-                simple_monster_message(*mons,
-                    " becomes as fragile as glass!");
-
-                mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, beam.agent(),
-                                           random_range(16, 36) * BASELINE_DELAY));
-            }
-            else
-            {
-                if (you.duration[DUR_VITRIFIED])
-                    mpr("You feel your fragility will last longer.");
-                else
-                    mpr("Your body becomes as fragile as glass!");
-
-                you.increase_duration(DUR_VITRIFIED, random_range(16, 36), 50);
-            }
+            defender.vitrify(beam.agent(), random_range(16, 36));
         },
         4
     },
@@ -4521,8 +4466,8 @@ void bolt::affect_player()
     if (flavour == BEAM_ACID && coinflip())
         you.corrode(agent());
 
-    if (flavour == BEAM_CRYSTALLIZING)
-        crystallize_player();
+    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+        you.vitrify(agent(), random_range(8, 18));
 
     if (origin_spell == SPELL_SOJOURNING_BOLT
         && final_dam > 0 && x_chance_in_y(2, 3))
@@ -5269,8 +5214,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         monster_teleport(mon, false, false, false, agent());
     }
 
-    if (flavour == BEAM_CRYSTALLIZING)
-        crystallize_monster(mon, agent());
+    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+        mon->vitrify(agent(), random_range(8, 18));
 
     if (dmg)
         beogh_follower_convert(mon, true);
@@ -6636,43 +6581,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_VITRIFY:
-        if (!mon->has_ench(ENCH_VITRIFIED)
-            && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                         random_range(8, 18) * BASELINE_DELAY)))
-        {
-            if (you.can_see(*mon))
-            {
-                mprf("%s becomes as fragile as glass!",
-                     mon->name(DESC_THE).c_str());
-                obvious_effect = true;
-            }
-        }
+        if (!mon->has_ench(ENCH_VITRIFIED))
+            mon->vitrify(agent(), random_range(8, 12));
+        if (you.can_see(*mon))
+            obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_VITRIFYING_GAZE:
-    {
-        bool had_status = mon->has_ench(ENCH_VITRIFIED);
-
-        if (mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                  random_range(4, 8) * BASELINE_DELAY)))
-        {
-            if (you.can_see(*mon))
-            {
-                if (had_status)
-                {
-                    mprf("%s looks even more glass-like.",
-                         mon->name(DESC_THE).c_str());
-                }
-                else
-                {
-                    mprf("%s becomes as fragile as glass!",
-                         mon->name(DESC_THE).c_str());
-                }
-                obvious_effect = true;
-            }
-        }
+        mon->vitrify(agent(), random_range(4, 8));
+        if (you.can_see(*mon))
+            obvious_effect = true;
         return MON_AFFECTED;
-    }
 
     case BEAM_MALIGN_OFFERING:
     {

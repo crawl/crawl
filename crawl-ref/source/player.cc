@@ -4835,18 +4835,6 @@ void barb_player(int turns, int pow)
     }
 }
 
-void crystallize_player()
-{
-    if (x_chance_in_y(3, 4))
-    {
-        if (!you.duration[DUR_VITRIFIED])
-            mpr("Your body becomes as fragile as glass!");
-        else
-            mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
-    }
-}
-
 /**
  * Increase the player's blindness duration.
  *
@@ -8297,6 +8285,19 @@ void player::daze(int dur)
     stop_channelling_spells();
 
     you.duration[DUR_DAZED] += dur * BASELINE_DELAY;
+}
+
+void player::vitrify(const actor* /*attacker*/, int dur, bool quiet)
+{
+    if (!quiet)
+    {
+        if (!you.duration[DUR_VITRIFIED])
+            mprf(MSGCH_WARN, "Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+    }
+
+    you.increase_duration(DUR_VITRIFIED, dur, 50);
 }
 
 /**
