@@ -1623,11 +1623,6 @@ Taints a targeted creature's ability to cast spells. Casting a spell while
 afflicted with this condition causes the target to lose access to their magic,
 briefly preventing them from casting any further spells.
 %%%%
-Scattershot spell
-
-Blasts a cone-shaped area in front of the caster with metallic fragments. Its
-damage is strongly reduced by armour.
-%%%%
 Scorch spell
 
 Scorches a random foe. Those injured by this have their resistance to fire
@@ -2188,12 +2183,6 @@ Thunderbolt spell
 
 Creates an arc of electricity.
 %%%%
-Tomb of Doroklohe spell
-
-Entombs the caster within walls of rock. These walls will push away objects in
-their way, but their growth is obstructed by the presence of any creature. They
-are not permanent, and will expire after a period of time.
-%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>
@@ -2212,12 +2201,6 @@ the ground shortly thereafter.
 
 Certain powerful named artefacts cannot be animated, and any properties that
 require skill in evocations will not be active.
-%%%%
-Twisted Resurrection spell
-
-Causes nearby corpses to begin crawling together, merging into horrible
-agglomerations of flesh. More and larger corpses result in more powerful
-creations.
 %%%%
 Upheaval spell
 
