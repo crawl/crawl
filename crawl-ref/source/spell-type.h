@@ -641,5 +641,6 @@ enum spell_type : int
     SPELL_AWAKEN_FLESH,
     SPELL_ILL_OMEN,
     SPELL_DOOM_BOLT,
+    SPELL_WARP_BODY,
     NUM_SPELLS
 };

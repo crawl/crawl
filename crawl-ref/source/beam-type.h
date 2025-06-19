@@ -106,7 +106,8 @@ enum beam_type                  // bolt::flavour
     BEAM_DOUBLE_HEALTH,
     BEAM_VEX,
     BEAM_ILL_OMEN,
-    BEAM_LAST_ENCHANTMENT = BEAM_ILL_OMEN,
+    BEAM_WARP_BODY,
+    BEAM_LAST_ENCHANTMENT = BEAM_WARP_BODY,
 
     BEAM_MEPHITIC,
     BEAM_AIR,

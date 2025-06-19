@@ -2302,6 +2302,12 @@ Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
 %%%%
+Warp Body spell
+
+Twists a creature's body with mutagenic corruption, doing a small amount of
+damage and inflicting a transient mutation. If the target is already suffering
+from multiple transient mutations, it will inflict Vitrify instead.
+%%%%
 Warp Space spell
 
 Creates a brief but violent rift in space, damaging everything caught in its

@@ -1617,8 +1617,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NEQOXEC,
       {
-       { SPELL_MALMUTATE, 14, MON_SPELL_MAGICAL },
-       { SPELL_BRAIN_BITE, 24, MON_SPELL_MAGICAL },
+       { SPELL_WARP_BODY, 30, MON_SPELL_MAGICAL },
+       { SPELL_BRAIN_BITE, 28, MON_SPELL_MAGICAL },
       }
     },
 

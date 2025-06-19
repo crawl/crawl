@@ -4024,6 +4024,16 @@ void bolt::affect_player_enchantment(bool resistible)
         enfeeble_player(agent(), ench_power);
         break;
 
+    case BEAM_WARP_BODY:
+        obvious_effect = true;
+        mpr("Your body is warped painfully!");
+        if (temp_mutation_count() >= 3)
+            you.vitrify(agent(), random_range(12, 22));
+        else
+            temp_mutate(RANDOM_CORRUPT_MUTATION, "warp body");
+        you.hurt(agent(), damage.roll(), BEAM_WARP_BODY, KILLED_BY_BEAM);
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5942,6 +5952,7 @@ bool bolt::has_saving_throw() const
     case BEAM_RIMEBLIGHT:
     case BEAM_SHADOW_TORPOR:
     case BEAM_ILL_OMEN:
+    case BEAM_WARP_BODY:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -6759,6 +6770,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ILL_OMEN:
         mon->doom(random_range(ench_power / 8, ench_power / 5));
+        return MON_AFFECTED;
+
+    case BEAM_WARP_BODY:
+        obvious_effect = true;
+        simple_monster_message(*mon, " body is warped painfully!", true);
+        if (mon->has_ench(ENCH_WRETCHED))
+            mon->vitrify(agent(), random_range(8, 12), true);
+        else
+            mon->malmutate(agent());
+        mon->hurt(agent(), damage.roll(), BEAM_WARP_BODY, KILLED_BY_BEAM);
         return MON_AFFECTED;
 
     default:
@@ -7653,6 +7674,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_MERCURY:               return "mercury";
     case BEAM_BAT_CLOUD:             return "cloud of bats";
     case BEAM_ILL_OMEN:              return "omen";
+    case BEAM_WARP_BODY:             return "warp body";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

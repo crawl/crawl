@@ -190,5 +190,6 @@ enum zap_type
     ZAP_AWAKEN_FLESH,
     ZAP_ILL_OMEN,
     ZAP_DOOM_BOLT,
+    ZAP_WARP_BODY,
     NUM_ZAPS
 };

@@ -2668,4 +2668,19 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 
 _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
 
+{
+    ZAP_WARP_BODY,
+    "",
+    nullptr,
+    nullptr,
+    new dicedef_calculator<1, 3, 1, 18>,
+    new tohit_calculator<40>,
+    DARKGREY,
+    true,
+    BEAM_WARP_BODY,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

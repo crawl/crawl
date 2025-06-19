@@ -3082,6 +3082,17 @@ bool temp_mutation_wanes()
     return true;
 }
 
+// Returns the number of *distinct* types of temporary mutations the player currently has.
+int temp_mutation_count()
+{
+    int count = 0;
+    for (int i = 0; i < NUM_MUTATIONS && count < you.attribute[ATTR_TEMP_MUTATIONS]; ++i)
+        if (you.temp_mutation[i] > 0)
+            ++count;
+
+    return count;
+}
+
 /**
  * How mutated is the player?
  *

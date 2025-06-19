@@ -344,6 +344,7 @@ vitrify VITRIFY
 vitrifying_gaze VITRIFYING_GAZE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY
+warp_body WARP_BODY
 water_elementals WATER_ELEMENTALS
 waterstrike WATERSTRIKE
 weakening_gaze WEAKENING_GAZE
