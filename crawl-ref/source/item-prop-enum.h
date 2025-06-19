@@ -228,9 +228,9 @@ enum jewellery_type
     RING_FLIGHT,
     RING_POSITIVE_ENERGY,
     RING_WILLPOWER,
+#if TAG_MAJOR_VERSION == 34
     RING_FIRE,
     RING_ICE,
-#if TAG_MAJOR_VERSION == 34
     RING_TELEPORT_CONTROL,
 #endif
     NUM_RINGS,                         //   keep as last ring; should not overlap

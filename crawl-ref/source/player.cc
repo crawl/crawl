@@ -1236,10 +1236,6 @@ int player_res_fire(bool allow_random, bool temp, bool items)
     {
         // rings of fire resistance/fire
         rf += you.wearing_jewellery(RING_PROTECTION_FROM_FIRE);
-        rf += you.wearing_jewellery(RING_FIRE);
-
-        // rings of ice
-        rf -= you.wearing_jewellery(RING_ICE);
 
         // Staves
         rf += you.wearing(OBJ_STAVES, STAFF_FIRE);
@@ -1340,10 +1336,6 @@ int player_res_cold(bool allow_random, bool temp, bool items)
     {
         // rings of cold resistance/ice
         rc += you.wearing_jewellery(RING_PROTECTION_FROM_COLD);
-        rc += you.wearing_jewellery(RING_ICE);
-
-        // rings of fire
-        rc -= you.wearing_jewellery(RING_FIRE);
 
         // Staves
         rc += you.wearing(OBJ_STAVES, STAFF_COLD);
@@ -1560,8 +1552,6 @@ int player_spec_fire()
 
     sf += you.wearing(OBJ_STAVES, STAFF_FIRE);
 
-    sf += you.wearing_jewellery(RING_FIRE);
-
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
 
     sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
@@ -1577,8 +1567,6 @@ int player_spec_cold()
     int sc = 0;
 
     sc += you.wearing(OBJ_STAVES, STAFF_COLD);
-
-    sc += you.wearing_jewellery(RING_ICE);
 
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
 

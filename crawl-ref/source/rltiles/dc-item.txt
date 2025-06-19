@@ -850,14 +850,14 @@ i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
 i-positive-energy RING_POSITIVE_ENERGY
+# start TAG_MAJOR_VERSION == 34
 i-willpower RING_WILLPOWER
 i-fire RING_FIRE
-# start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
-# i-ice RING_ICE RING_ID_LAST
+# i-willpower RING_WILLPOWER RING_ID_LAST
 # end TAG_MAJOR_VERSION
 
 ############amulets

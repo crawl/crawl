@@ -779,10 +779,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
         case RING_POSITIVE_ENERGY:       return "positive energy";
-        case RING_WILLPOWER: return "willpower";
-        case RING_FIRE:                  return "fire";
-        case RING_ICE:                   return "ice";
+        case RING_WILLPOWER:             return "willpower";
 #if TAG_MAJOR_VERSION == 34
+        case RING_FIRE:                  return "obsoleteness";
+        case RING_ICE:                   return "obsoleteness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
@@ -831,8 +831,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
         case RING_WIZARDRY:              return "Wiz";
-        case RING_FIRE:                  return "Fire";
-        case RING_ICE:                   return "Ice";
+#if TAG_MAJOR_VERSION == 34
+        case RING_FIRE:                  return "obsoleteness";
+        case RING_ICE:                   return "obsoleteness";
+#endif
         case AMU_REGENERATION:           return "Regen";
         case AMU_MANA_REGENERATION:      return "RegenMP";
 #if TAG_MAJOR_VERSION == 34
