@@ -394,11 +394,6 @@ static map<jewellery_type, vector<artp_value>> jewellery_artps = {
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
 
-    { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 },
-                   { ARTP_ENHANCE_FIRE, 1} } },
-    { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 },
-                  { ARTP_ENHANCE_ICE, 1} } },
-
     { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
     { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },
     { RING_DEXTERITY, { { ARTP_DEXTERITY, 0 } } },

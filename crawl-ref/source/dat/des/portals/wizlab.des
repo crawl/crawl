@@ -905,8 +905,7 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 any scroll w:20 / potion of haste / \
                 potion of heal wounds / any potion w:20
-KITEM:      e = any beam wand / any blast wand / \
-                ring of fire / ring of ice / randbook disc:summoning
+KITEM:      e = any beam wand / any blast wand / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 / \
                 any randart jewellery w:5 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
@@ -2158,9 +2157,9 @@ MONS:       ironbound thunderhulk ; great mace ego:electrocution
 MONS:       patrolling electric golem
 KMONS:      P = lightning spire
 KMONS:      M = ironbound mechanist
-ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
-            boots ego:rampaging randart / ring of fire randart /\
-            any armour good_item ego:ponderous randart / ring of ice randart /\
+ITEM:       scarf ego:harm randart w:25 / boots ego:rampaging w:25 /\
+            boots ego:rampaging randart /\
+            any armour good_item ego:ponderous randart /\
             plate armour good_item ego:ponderousness / any weapon ego:chaos /\
             maxwell's patent armour w:2 / maxwell's thermic engine w:2
 ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\

@@ -1207,20 +1207,9 @@ ring of evasion
 
 A ring that makes its wearer more capable of avoiding attacks.
 %%%%
-ring of fire
-
-A ring that brings its wearer more in contact with the powers of fire. It
-grants resistance to heat and enhances fire magic, but causes vulnerability to
-cold.
-%%%%
 ring of flight
 
 A ring that grants its wearer flight.
-%%%%
-ring of ice
-
-A ring that brings its wearer more in contact with the powers of ice. It grants
-resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 

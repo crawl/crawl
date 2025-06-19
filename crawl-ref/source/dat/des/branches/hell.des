@@ -80,7 +80,7 @@ MONS:   sun demon / smoke demon / soul eater / hell hog
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
-ITEM:   ring of fire pre_id / Necronomicon / \
+ITEM:   Necronomicon / \
         grand grimoire / scroll of torment pre_id
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
@@ -116,7 +116,7 @@ MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
-ITEM:   ring of fire pre_id / Necronomicon / \
+ITEM:   Necronomicon / \
         grand grimoire / scroll of torment pre_id
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
@@ -682,7 +682,7 @@ WEIGHT: 2
   -- some potions of invisibility since a lot of monsters there can't sInv,
   -- and some tloc since you can't use blink/tele scrolls
   local gehinv = util.random_subset( { "any weapon randart ego:freezing",
-    "ring of protection from fire randart", "ring of fire randart",
+    "ring of protection from fire randart",
     "fire dragon scales randart", "wand of iceblast charges:25",
     "any weapon randart artprops:rF:1", "any armour randart artprops:rF:1",
     "potion of invisibility q:10", "randbook disc:ice slevels:13",
@@ -691,7 +691,7 @@ WEIGHT: 2
   -- the Cocytus inventory focuses on cold resistance and fire damage, and
   -- throws in some willpower for narguns
   local cocinv = util.random_subset( { "any weapon randart ego:flaming",
-    "ring of protection from cold randart", "ring of ice randart",
+    "ring of protection from cold randart",
     "ice dragon scales randart", "any weapon randart artprops:rC:1",
     "staff of air randart", "staff of cold randart", "wand of flame charges:55",
     "any armour randart artprops:rC:1", "ring of willpower randart",

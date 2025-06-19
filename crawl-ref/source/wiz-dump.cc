@@ -84,11 +84,11 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
 
     if (s == "rCorr")
         return RING_RESIST_CORROSION;
+#if TAG_MAJOR_VERSION == 34
     if (s == "Fire")
         return RING_FIRE;
     if (s == "Ice")
         return RING_ICE;
-#if TAG_MAJOR_VERSION == 34
     if (s == "+/*Tele")
         return RING_TELEPORTATION;
 #endif

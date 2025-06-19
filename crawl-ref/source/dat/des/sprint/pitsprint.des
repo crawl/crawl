@@ -376,8 +376,6 @@ function metal_vault_setup(e)
           ring of protection from cold pre_id /\
           ring of positive energy pre_id /\
           ring of willpower pre_id /\
-          ring of fire pre_id /\
-          ring of ice pre_id /\
           ring of see invisible pre_id /\
           ring of poison resistance pre_id /\
           any jewellery pre_id")
@@ -525,8 +523,6 @@ function coven_setup(e)
           ring of protection from cold randart pre_id /\
           ring of positive energy randart pre_id /\
           ring of willpower randart pre_id /\
-          ring of fire randart pre_id /\
-          ring of ice randart pre_id /\
           ring of see invisible randart pre_id /\
           ring of poison resistance randart pre_id /\
           ring of slaying plus:5 pre_id /\

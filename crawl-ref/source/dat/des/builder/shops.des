@@ -1783,10 +1783,10 @@ ENDMAP
 NAME:     nicolae_shop_fire_sale
 TAGS:     extra transparent no_item_gen
 DEPTH:    D:4-, Depths
-KITEM:    O = ring of ice w:5 / ring of protection from cold / \
+KITEM:    O = ring of protection from cold / \
           damaged dagger ego:freezing / wand of iceblast charges:1 w:5
 KFEAT:    O = abandoned_shop
-KFEAT:    P = general shop type:Fire suffix:Supplies ; ring of fire | \
+KFEAT:    P = general shop type:Fire suffix:Supplies ; \
           ring of protection from fire | staff of fire | wand of flame | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \

@@ -1488,7 +1488,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
 
     if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE, 0, 1);
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, 0, 1);
 
     if (mon->type == MONS_WIGLAF)
     {
@@ -1502,7 +1502,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     }
 
     if (mon->type == MONS_JOSEPHINA)
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE, ISPEC_RANDART, true);
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
