@@ -1892,7 +1892,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.attribute[ATTR_TEMP_MUT_XP] = 0;
             }
             you.mutation[mutat]--;
-            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            mprf(MSGCH_MUTATION, "Your %s mutation feels more permanent.",
+                                  mutation_name(mutat));
             take_note(Note(NOTE_PERM_MUTATION, mutat,
                     you.get_base_mutation_level(mutat), reason.c_str()));
             gain_msg = false;
