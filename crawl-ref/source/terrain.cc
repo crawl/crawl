@@ -2576,7 +2576,7 @@ void ice_wall_damage(monster &mons, int delay)
 
 void frigid_walls_damage(int delay)
 {
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack())
             continue;
