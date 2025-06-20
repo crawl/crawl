@@ -4406,6 +4406,10 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
         return false;
     }
 
+    // If we turn into a purple draconian, these will conflict.
+    if (mut == MUT_WEAK_WILLED && you.species == SP_BASE_DRACONIAN)
+        return false;
+
     // No potion heal doesn't affect mummies since they can't quaff potions
     if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
         return false;
