@@ -1013,8 +1013,8 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
         [](const monster&) {
             return ai_action::good_or_impossible(cast_toxic_radiance(&you, 100, false, true) == spret::success);
         },
-        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            cast_toxic_radiance(&you, 100, false, false);
+        [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            cast_toxic_radiance(&you, mons_spellpower(caster, SPELL_OLGREBS_TOXIC_RADIANCE), false, false);
         }
     } },
     { SPELL_POLAR_VORTEX, {
