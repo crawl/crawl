@@ -1219,7 +1219,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     return amusement;
 }
 
-static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
+static bool _accept_mutation(mutation_type mutat, bool temp)
 {
     if (!_is_valid_mutation(mutat))
         return false;
@@ -1242,17 +1242,7 @@ static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
     if (_mut_has_flag(mdef, mutflag::good) && mutation_causes_stat_zero(mutat))
         return false;
 
-    if (ignore_weight)
-        return true;
-
-    if (mdef.weight == 0)
-        return false;
-
-    // bias towards adding (non-innate) levels to existing innate mutations.
-    const int weight = mdef.weight + you.get_innate_mutation_level(mutat);
-
-    // Low weight means unlikely to choose it.
-    return x_chance_in_y(weight, 10);
+    return true;
 }
 
 static mutation_type _get_mut_with_flag(mutflag flag)
@@ -1326,7 +1316,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass,
     for (int attempt = 0; attempt < 100; ++attempt)
     {
         mutation_type mut = _get_mut_with_flag(mt);
-        if (_accept_mutation(mut, perm == MUTCLASS_TEMPORARY, true))
+        if (_accept_mutation(mut, perm == MUTCLASS_TEMPORARY))
             return mut;
     }
 
