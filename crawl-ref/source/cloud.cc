@@ -1334,6 +1334,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_STORM:
+    case CLOUD_BATS:
     case CLOUD_RUST:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type),
