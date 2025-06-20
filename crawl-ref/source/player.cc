@@ -5470,9 +5470,6 @@ player::player()
     redraw_evasion       = false;
     redraw_title         = false;
 
-    flash_colour        = BLACK;
-    flash_where         = nullptr;
-
     time_taken          = 0;
     shield_blocks       = 0;
 
@@ -7843,6 +7840,10 @@ void player::put_to_sleep(actor* source, int dur, bool hibernate)
     stop_channelling_spells();
     stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
+#ifdef USE_TILE
+    if (tiles.need_redraw())
+        tiles.redraw();
+#endif
 
     // As above, do this after redraw.
     you.duration[DUR_SLEEP] = dur;
