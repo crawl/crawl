@@ -37,15 +37,15 @@ local function test_basic_mutation_stuff()
     assert(you.get_base_mutation_level("frail") == you.get_base_mutation_level("frail", false, true, false))
     assert(you.get_base_mutation_level("frail", false, true) == you.get_base_mutation_level("frail", false, true))
 
-    -- test forced clearing for mutations that can't coexist (type -1)
-    assert(you.mutate("fire resistance", "basic mutation test", false))
-    assert(you.mutate("fire resistance", "basic mutation test", false))
-    assert(not you.mutate("heat vulnerability", "basic mutation test", false, false)) -- non-forced mutation should fail
-    assert(you.get_base_mutation_level("fire resistance") == 2)
-    assert(you.get_base_mutation_level("heat vulnerability") == 0)
-    assert(you.mutate("heat vulnerability", "basic mutation test", false, true)) -- forced mutation should fully clear fire resistance
-    assert(you.get_base_mutation_level("fire resistance") == 0)
-    assert(you.get_base_mutation_level("heat vulnerability") == 1)
+    -- test forced clearing for mutations that can't coexist
+    assert(you.mutate("hooves", "basic mutation test", false))
+    assert(you.mutate("hooves", "basic mutation test", false))
+    assert(not you.mutate("talons", "basic mutation test", false, false)) -- non-forced mutation should fail
+    assert(you.get_base_mutation_level("hooves") == 2)
+    assert(you.get_base_mutation_level("talons") == 0)
+    assert(you.mutate("talons", "basic mutation test", false, true)) -- forced mutation should fully clear fire resistance
+    assert(you.get_base_mutation_level("hooves") == 0)
+    assert(you.get_base_mutation_level("talons") == 1)
 
     -- test mutations that can simply coexist
     assert(you.mutate("fire resistance", "basic mutation test", false))

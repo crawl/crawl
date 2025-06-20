@@ -160,69 +160,82 @@ vector<mutation_type> get_removed_mutations()
     return removed_mutations;
 }
 
+struct mutation_conflict
+{
+    mutation_type   mut1;
+    mutation_type   mut2;
+    bool            is_inverse;
+
+    // Gets which of these two mutations conflicts with a given mutation (or
+    // MUT_NON_MUTATION if neither do).
+    mutation_type get_conflict(mutation_type mut) const
+    {
+        if (mut == mut1)
+            return mut2;
+        else if (mut == mut2)
+            return mut1;
+        else
+            return MUT_NON_MUTATION;
+    }
+};
+
 /**
  * Conflicting mutation pairs. Entries are symmetric (so if A conflicts
  * with B, B conflicts with A in the same way).
  *
- * The third value in each entry means:
- *   0: If the new mutation is forced, remove all levels of the old
- *      mutation. Either way, keep scanning for more conflicts and
- *      do what they say (accepting the mutation if there are no
- *      further conflicts).
+ * There are two types of conflict, indicated by the is_inverse member:
+ *   -If true, this pair of mutations are considered 'inverse' of each other.
+ *    (eg: Dex + 2 and Dex - 2, or rF+ and rF-). Attempting to gain one while
+ *    having levels of the other will subtract a level of the existing mutation
+ *    instead. (If one of the two mutations are transient, they are allowed to
+ *    coexist.)
  *
- *  -1: If the new mutation is forced, remove all levels of the old
- *      mutation and scan for more conflicts. If it is not forced,
- *      fail at giving the new mutation.
- *
- *   1: If the new mutation is temporary, just allow the conflict.
- *      Otherwise, trade off: delete one level of the old mutation,
- *      don't give the new mutation, and consider it a success.
- *
- * It makes sense to have two entries for the same pair, one with value 0
- * and one with 1: that would replace all levels of the old mutation if
- * forced, or a single level if not forced. However, the 0 entry must
- * precede the 1 entry; so if you re-order this list, keep all the 0s
- * before all the 1s.
+ *   -If false, this part of mutations is considered semantically incompatible
+ *    (eg: having hooves for feet and also talons for feet). Neither is more
+ *    or less than the other, but it makes no sense (either mechanically or
+ *    flavor-wise) for them to coexist. Attempting to gain one while having the
+ *    other will fail outright.
  */
-static const int conflict[][3] =
+static const mutation_conflict mut_conflicts[] =
 {
-    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  0},
-    { MUT_FAST,                MUT_SLOW,                    0},
-    { MUT_STRONG,              MUT_WEAK,                    1},
-    { MUT_CLEVER,              MUT_DOPEY,                   1},
-    { MUT_AGILE,               MUT_CLUMSY,                  1},
-    { MUT_ROBUST,              MUT_FRAIL,                   1},
-    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,               1},
-    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,           1},
-    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
-    { MUT_BERSERK,             MUT_CLARITY,                 1},
-    { MUT_FAST,                MUT_SLOW,                    1},
-    { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              1},
-    { MUT_EVOLUTION,           MUT_DEVOLUTION,              1},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
-    { MUT_FANGS,               MUT_BEAK,                   -1},
-    { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
-    { MUT_BEAK,                MUT_HORNS,                  -1},
-    { MUT_BEAK,                MUT_ANTENNAE,               -1},
-    { MUT_HOOVES,              MUT_TALONS,                 -1},
-    { MUT_HOOVES,              MUT_MERTAIL,                -1},
-    { MUT_TALONS,              MUT_MERTAIL,                -1},
-    { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
-    { MUT_STINGER,             MUT_WEAKNESS_STINGER,       -1},
-    { MUT_STINGER,             MUT_MERTAIL,                -1},
-    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
-    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
-    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
-    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
-    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
-    { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
+    { MUT_STRONG,              MUT_WEAK,                    true},
+    { MUT_CLEVER,              MUT_DOPEY,                   true},
+    { MUT_AGILE,               MUT_CLUMSY,                  true},
+    { MUT_ROBUST,              MUT_FRAIL,                   true},
+    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,               true},
+    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,           true},
+    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  true},
+    { MUT_BERSERK,             MUT_CLARITY,                 true},
+    { MUT_FAST,                MUT_SLOW,                    true},
+    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,      true},
+    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,      true},
+    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,     true},
+    { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,             true},
+    { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              true},
+    { MUT_EVOLUTION,           MUT_DEVOLUTION,              true},
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,               true},
+
+    { MUT_FANGS,               MUT_BEAK,                   false},
+    { MUT_ANTENNAE,            MUT_HORNS,                  false},
+    { MUT_BEAK,                MUT_HORNS,                  false},
+    { MUT_BEAK,                MUT_ANTENNAE,               false},
+    { MUT_HOOVES,              MUT_TALONS,                 false},
+    { MUT_HOOVES,              MUT_MERTAIL,                false},
+    { MUT_TALONS,              MUT_MERTAIL,                false},
+    { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          false},
+    { MUT_STINGER,             MUT_WEAKNESS_STINGER,       false},
+    { MUT_STINGER,             MUT_MERTAIL,                false},
+    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             false},
+    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            false},
+    { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             false},
+    { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
+    { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
+
 #if TAG_MAJOR_VERSION == 34
-    { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
-    { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+    { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},
+    { MUT_NO_REGENERATION,     MUT_REGENERATION,           false},
 #endif
-    { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
-    { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
-    { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        -1}
+
 };
 
 static int _mut_weight(const mutation_def &mut, mutflag flag)
@@ -1335,13 +1348,11 @@ static mutation_type _get_random_mutation(mutation_type mutclass,
  */
 int mut_check_conflict(mutation_type mut, bool innate_only)
 {
-    for (const int (&confl)[3] : conflict)
+    for (const mutation_conflict& conflict : mut_conflicts)
     {
-        if (confl[0] != mut && confl[1] != mut)
+        mutation_type confl_mut = conflict.get_conflict(mut);
+        if (confl_mut == MUT_NON_MUTATION)
             continue;
-
-        const mutation_type confl_mut
-           = static_cast<mutation_type>(confl[0] == mut ? confl[1] : confl[0]);
 
         const int level = you.get_base_mutation_level(confl_mut, true, !innate_only, !innate_only);
         if (level)
@@ -1403,64 +1414,54 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 {
     // If we have one of the pair, delete all levels of the other,
     // and continue processing.
-    for (const int (&confl)[3] : conflict)
+    for (const mutation_conflict& conflict : mut_conflicts)
     {
-        for (int j = 0; j <= 1; ++j)
+        const mutation_type confl_mut = conflict.get_conflict(mutation);
+        if (confl_mut == MUT_NON_MUTATION || you.get_base_mutation_level(confl_mut) == 0)
+            continue;
+
+        const bool innate_only = you.get_base_mutation_level(confl_mut, true, false, false)
+                                        == you.get_base_mutation_level(confl_mut);
+
+        // We can never delete innate mutations this way, so if there are no
+        // non-innate mutations (and we're not trying to apply to temporary
+        // invertable mutation, which is allowed), immediately fail.
+        if (innate_only && !conflict.is_inverse && !temp)
         {
-            const mutation_type a = (mutation_type)confl[j];
-            const mutation_type b = (mutation_type)confl[1-j];
+            dprf("Delete mutation failed: %s conflicting with innate mutation %s.",
+                    mutation_name(mutation), mutation_name(confl_mut));
+            return -1;
+        }
 
-            if (mutation == a && you.get_base_mutation_level(b) > 0)
+        // Check if at least one level of the conflicting mutation is temporary.
+        const bool temp_b = you.has_temporary_mutation(confl_mut);
+
+        // If these are fundamentally incompatible mutations, fail unless
+        // this is a forced mutation. But if it is, delete all levels of
+        // the conflicting mutation instead, and continue on.
+        if (!conflict.is_inverse)
+        {
+            if (!override)
+                return -1;
+            else
             {
-                // can never delete innate mutations. For case -1 and 0, fail if there are any, otherwise,
-                // make sure there is a non-innate instance to delete.
-                if (you.has_innate_mutation(b) &&
-                    (confl[2] != 1
-                     || you.get_base_mutation_level(b, true, false, false) == you.get_base_mutation_level(b)))
-                {
-                    dprf("Delete mutation failed: have innate mutation %d at level %d, you.mutation at level %d", b,
-                        you.get_innate_mutation_level(b), you.get_base_mutation_level(b));
-                    return -1;
-                }
-
-                // at least one level of this mutation is temporary
-                const bool temp_b = you.has_temporary_mutation(b);
-
-                // confl[2] indicates how the mutation resolution should proceed (see `conflict` a the beginning of this file):
-                switch (confl[2])
-                {
-                case -1:
-                    // Fail if not forced, otherwise override.
-                    if (!override)
-                        return -1;
-                case 0:
-                    // Ignore if not forced, otherwise override.
-                    // All cases but regen:slowmeta will currently trade off.
-                    if (override)
-                    {
-                        while (_delete_single_mutation_level(b, reason, true))
-                            ;
-                    }
-                    break;
-                case 1:
-                    // If we have one of the pair, delete a level of the
-                    // other, and that's it.
-                    //
-                    // Temporary mutations can co-exist with things they would
-                    // ordinarily conflict with. But if both a and b are temporary,
-                    // mark b for deletion.
-                    if ((temp || temp_b) && !(temp && temp_b))
-                        return 0;       // Allow conflicting transient mutations
-                    else
-                    {
-                        _delete_single_mutation_level(b, reason, true);
-                        return 1;     // Nothing more to do.
-                    }
-
-                default:
-                    die("bad mutation conflict resolution");
-                }
+                while (_delete_single_mutation_level(confl_mut, reason, true));
+                return 0;
             }
+        }
+
+        // For inverse mutations, delete one level of the conflicting
+        // mutation and stop there.
+        //
+        // Temporary mutations can co-exist with things they would
+        // ordinarily conflict with. But if both mutations are temporary,
+        // mark the older one for deletion.
+        if ((temp || temp_b) && !(temp && temp_b))
+            return 0;       // Allow conflicting transient mutations.
+        else
+        {
+            _delete_single_mutation_level(confl_mut, reason, true);
+            return 1;       // Nothing more to do.
         }
     }
 
