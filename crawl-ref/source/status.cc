@@ -965,7 +965,7 @@ static void _describe_gem(status_info& inf)
     if (!gem_clock_active() && !you.gems_found[gem])
     {
         // player has picked up the orb, but the gem has not yet shattered
-        inf.light_text = " Gem*";
+        inf.light_text = " Gem (*)";
         inf.light_colour = CYAN;
         return;
     }
