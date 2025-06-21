@@ -277,7 +277,13 @@ NAME:  nicolae_hells_hurtin_island
 TAGS:  transparent no_pool_fixup
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 KMONS: 1 = tormentor / hellion / nothing
+: if you.in_branch("Coc") then
+KMONS: > = ice statue
+: elseif you.in_branch("Coc") then
+KMONS: > = orange crystal statue
+: else
 KMONS: > = obsidian statue
+: end
 KFEAT: ! = iron_grate
 KFEAT: > = >
 KMASK: 1> = opaque
