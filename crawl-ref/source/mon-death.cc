@@ -2310,6 +2310,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (visible_effect)
             mprf("%s allies are healed!", mons.name(DESC_ITS).c_str());
     }
+
+    if (gives_player_xp && you.attribute[ATTR_TEMP_MUTATIONS]
+        && mons_threat_level(mons) > MTHRT_TRIVIAL)
+    {
+        if (--you.attribute[ATTR_TEMP_MUT_KILLS] <= 0)
+            temp_mutation_wanes();
+    }
 }
 
 /**

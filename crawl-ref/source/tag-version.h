@@ -325,6 +325,7 @@ enum tag_minor_version
     TAG_MINOR_FRENZY_FIXUP,        // Don't pair frenzy with haste and might
     TAG_MINOR_GHOST_WILLPOWER,     // Allow specifying willpower for ghost_demons (and player ghosts)
     TAG_MINOR_BANES,               // Added Banes
+    TAG_MINOR_TEMP_MUT_KILLS,      // Change how temp mutations are cured
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -4150,19 +4150,19 @@ static bool _wall_of_brambles(monster* mons)
 
 /**
  * Make the given monster cast the spell "Corrupting Pulse", corrupting
- * (temporarily malmutating) all creatures in LOS.
+ * (temporarily malmutating) all enemies in LOS.
  *
  * @param mons  The monster in question.
  */
 static void _corrupting_pulse(monster *mons)
 {
-    if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
+    if (you.see_cell(mons->pos()))
     {
-        targeter_radius hitfunc(mons, LOS_SOLID);
+        targeter_radius hitfunc(mons, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
-        if (!is_sanctuary(you.pos())
-            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
+        if (!mons_aligned(&you, mons) && !is_sanctuary(you.pos())
+            && cell_see_cell(you.pos(), mons->pos(), LOS_NO_TRANS))
         {
             int num_mutations = one_chance_in(4) ? 2 : 1;
             for (int i = 0; i < num_mutations; ++i)
@@ -4173,7 +4173,7 @@ static void _corrupting_pulse(monster *mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_NO_TRANS)
             && !mons_aligned(mons, m))
         {
             m->malmutate(mons);
@@ -4276,6 +4276,23 @@ static bool _mutation_vulnerable(const actor* victim)
     if (!victim)
         return false;
     return victim->can_mutate();
+}
+
+static ai_action::goodness _should_cast_corrupting_pulse(const monster& mons)
+{
+    if (!_trace_los(&mons, _mutation_vulnerable))
+        return ai_action::bad();
+
+    // Reduce casting chance against players based on how many tempmuts they
+    // already have, to try and prevent mutation lists from growing unwieldy.
+    if (mons.see_cell_no_trans(you.pos()) && !mons_aligned(&mons, &you))
+    {
+        const int count = temp_mutation_count();
+        if (x_chance_in_y(count, count + 3))
+            return ai_action::bad();
+    }
+
+    return ai_action::good();
 }
 
 static void _prayer_of_brilliance(monster* agent)
@@ -9387,10 +9404,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                                                           { return true; }));
 
     case SPELL_CORRUPTING_PULSE:
-        if (you.visible_to(mon) && friendly)
-            return ai_action::bad(); // don't zap player
-        else
-            return ai_action::good_or_bad(_trace_los(mon, _mutation_vulnerable));
+        return _should_cast_corrupting_pulse(*mon);
 
     case SPELL_POLAR_VORTEX:
         if (mon->has_ench(ENCH_POLAR_VORTEX) || mon->has_ench(ENCH_POLAR_VORTEX_COOLDOWN))

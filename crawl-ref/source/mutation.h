@@ -80,7 +80,6 @@ void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
-int temp_mutation_roll();
 bool temp_mutation_wanes();
 int temp_mutation_count();
 

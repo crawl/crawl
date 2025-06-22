@@ -3426,6 +3426,15 @@ static void _tag_read_you(reader &th)
             if (you.stat(static_cast<stat_type>(i), false) <= 0)
                 you.attribute[ATTR_STAT_ZERO] |= 1 << i;
     }
+
+    // Don't make pre-upgrade saves have to kill potentially thousands of
+    // monsters to fix their temp mutations.
+    if (th.getMinorVersion() < TAG_MINOR_TEMP_MUT_KILLS
+        && you.attribute[ATTR_TEMP_MUT_KILLS] > 0)
+    {
+        you.attribute[ATTR_TEMP_MUT_KILLS] = 1;
+    }
+
 #endif
 
 #if TAG_MAJOR_VERSION == 34

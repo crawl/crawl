@@ -1228,9 +1228,18 @@ static bool _accept_mutation(mutation_type mutat, bool temp)
         return false;
 
     // Devolution gives out permanent badmuts, so we don't want to give it as
-    // a temporary mut.
-    if (temp && mutat == MUT_DEVOLUTION)
+    // a temporary mut. Stat mutations are too boring to have a relevant effect
+    // on this timescale, and Berserkitis in particular is easy to miss being
+    // applied in a tempmut storm and disproportionately punishing if you don't.
+    if (temp
+        && (mutat == MUT_DEVOLUTION
+            || mutat == MUT_WEAK
+            || mutat == MUT_CLUMSY
+            || mutat == MUT_DOPEY
+            || mutat == MUT_BERSERK))
+    {
         return false;
+    }
 
     const mutation_def& mdef = _get_mutation_def(mutat);
 
@@ -1889,7 +1898,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 you.temp_mutation[mutat]--;
                 you.attribute[ATTR_TEMP_MUTATIONS]--;
                 if (you.attribute[ATTR_TEMP_MUTATIONS] == 0)
-                    you.attribute[ATTR_TEMP_MUT_XP] = 0;
+                    you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
             }
             you.mutation[mutat]--;
             mprf(MSGCH_MUTATION, "Your %s mutation feels more permanent.",
@@ -2056,7 +2065,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         else
         {
             // only do this once regardless of how many levels got added
-            you.attribute[ATTR_TEMP_MUT_XP] = temp_mutation_roll();
+            you.attribute[ATTR_TEMP_MUT_KILLS] =
+                max(you.attribute[ATTR_TEMP_MUT_KILLS], random_range(4, 7));
         }
 
         if (you.hp <= 0)
@@ -2350,7 +2360,7 @@ bool delete_all_mutations(const string &reason)
     }
     ASSERT(you.attribute[ATTR_TEMP_MUTATIONS] == 0);
     ASSERT(you.how_mutated(false, true, false) == 0);
-    you.attribute[ATTR_TEMP_MUT_XP] = 0;
+    you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
 
     return !you.how_mutated();
 }
@@ -2370,7 +2380,7 @@ bool delete_all_temp_mutations(const string &reason)
                 found = true;
     }
     // the rest of the bookkeeping is handled in _delete_single_mutation_level
-    you.attribute[ATTR_TEMP_MUT_XP] = 0;
+    you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
     return found;
 }
 
@@ -3045,20 +3055,13 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
     return mutate(which_mut, reason, false, false, false, false, MUTCLASS_TEMPORARY);
 }
 
-int temp_mutation_roll()
-{
-    return min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
-}
-
 bool temp_mutation_wanes()
 {
     const int starting_tmuts = you.attribute[ATTR_TEMP_MUTATIONS];
     if (starting_tmuts == 0)
         return false;
 
-    int num_remove = min(starting_tmuts,
-        max(starting_tmuts * 5 / 12 - random2(3),
-        1 + random2(3)));
+    const int num_remove = min(starting_tmuts, random_range(2, 3));
 
     mprf(MSGCH_DURATION, "You feel the corruption within you wane %s.",
         (num_remove >= starting_tmuts ? "completely" : "somewhat"));
@@ -3067,9 +3070,9 @@ bool temp_mutation_wanes()
         delete_temp_mutation(); // chooses randomly
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
-        you.attribute[ATTR_TEMP_MUT_XP] += temp_mutation_roll();
+        you.attribute[ATTR_TEMP_MUT_KILLS] = random_range(4, 7);
     else
-        you.attribute[ATTR_TEMP_MUT_XP] = 0;
+        you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
     ASSERT(you.attribute[ATTR_TEMP_MUTATIONS] < starting_tmuts);
     return true;
 }

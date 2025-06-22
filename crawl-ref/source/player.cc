@@ -2331,17 +2331,6 @@ static void _handle_xp_penance(int exp)
     }
 }
 
-/// update temporary mutations
-static void _handle_temp_mutation(int exp)
-{
-    if (!(you.attribute[ATTR_TEMP_MUTATIONS] > 0))
-        return;
-
-    you.attribute[ATTR_TEMP_MUT_XP] -= exp;
-    if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
-        temp_mutation_wanes();
-}
-
 /// update hp drain
 static void _handle_hp_drain(int exp)
 {
@@ -2527,7 +2516,6 @@ void apply_exp()
         skill_xp = sprint_modify_exp(skill_xp);
 
     // xp-gated effects that use sprint inflation
-    _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
