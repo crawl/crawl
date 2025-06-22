@@ -5001,7 +5001,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     const int tension = exp_value(threat, real, true) / (1 + factor);
 
-    if (tension <= 0)
+    if (tension <= 1)
     {
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MTHRT_TRIVIAL;
