@@ -46,6 +46,10 @@ An amulet that allows the user to tumble and roll to evade the blows of their
 enemies, but only while moving and waiting. While taking other actions
 (including climbing stairs) the amulet conveys no benefits.
 %%%%
+amulet of wildshape
+
+An amulet which improves its wearer's skill with Shapeshifting.
+%%%%
 animal skin
 
 A large piece of thick skin covered in fur, cut from the corpse of an animal

@@ -538,6 +538,16 @@ static bool _hermit_penalty()
     return false;
 }
 
+static bool _wildshape_bonus()
+{
+    if (you.skill(SK_SHAPESHIFTING, 10, true) > 0
+        && you.wearing_jewellery(AMU_WILDSHAPE))
+    {
+        return true;
+    }
+    return false;
+}
+
 string SkillMenuSwitch::get_help()
 {
     switch (m_state)
@@ -578,6 +588,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("cross-training");
             if (_hermit_bonus())
                 causes.push_back("the Hermit's pendant");
+            if (_wildshape_bonus())
+                causes.push_back("wildshape");
             if (_charlatan_bonus())
                 causes.push_back("the Charlatan's Orb");
             if (you.form == transformation::walking_scroll)

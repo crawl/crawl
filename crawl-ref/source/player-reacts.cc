@@ -48,6 +48,7 @@
 #include "files.h"
 #include "god-abil.h"
 #include "god-companions.h"
+#include "god-conduct.h"
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -933,6 +934,9 @@ static void _decrement_durations()
             make_stringf("You %s the barbed spikes from your body.",
                 you.berserk() ? "rip and tear" : "carefully extract").c_str());
     }
+
+    if (you.wearing_jewellery(AMU_WILDSHAPE))
+        did_god_conduct(DID_CHAOS, 1);
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
         && have_passive(passive_t::frail)
