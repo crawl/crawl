@@ -1616,6 +1616,8 @@ int player_spec_alchemy()
 
     sp += you.wearing(OBJ_STAVES, STAFF_ALCHEMY);
 
+    sp += you.wearing_jewellery(AMU_ALCHEMY);
+
     sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (you.unrand_equipped(UNRAND_OLGREB))
@@ -6025,6 +6027,12 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
         && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
     {
         level += (10 + get_form()->get_level(10)) * scale / 20;
+    }
+
+    if (sk == SK_SHAPESHIFTING)
+    {
+        level += min(level / 2,
+            you.wearing_jewellery(AMU_WILDSHAPE) * 6 * scale);
     }
 
     if (level > MAX_SKILL_LEVEL * scale)

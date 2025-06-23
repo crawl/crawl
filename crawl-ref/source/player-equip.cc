@@ -2387,6 +2387,14 @@ static void _remove_amulet_of_faith(item_def &item)
     lose_piety(piety_loss);
 }
 
+static void _change_wildshape_status()
+{
+    calc_hp();
+    calc_mp();
+    redraw_screen();
+    update_screen();
+}
+
 static void _handle_regen_item_equip(const item_def& item)
 {
     const bool regen_hp = is_regen_item(item);
@@ -2531,6 +2539,18 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         _equip_amulet_of_reflection();
         break;
 
+    case AMU_WILDSHAPE:
+        if (!you.skill(SK_SHAPESHIFTING))
+            mpr("You feel meek and tame.");
+        else
+            mpr("You feel a wild power.");
+        _change_wildshape_status();
+        break;
+
+    case AMU_ALCHEMY:
+        mpr("You feel more attuned to alchemy.");
+        break;
+
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;
@@ -2602,6 +2622,10 @@ static void _unequip_jewellery_effect(item_def &item, bool meld)
     case AMU_FAITH:
         if (!meld)
             _remove_amulet_of_faith(item);
+        break;
+
+    case AMU_WILDSHAPE:
+            _change_wildshape_status();
         break;
 
 #if TAG_MAJOR_VERSION == 34

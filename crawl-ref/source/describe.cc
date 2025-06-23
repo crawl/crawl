@@ -677,6 +677,11 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It allows you to gain divine favour quickly.";
     case AMU_REFLECTION:
         return "It reflects blocked missile attacks.";
+    case AMU_WILDSHAPE:
+        return "It improves your ability with shapeshifting, depending on "
+               "your skill.";
+    case AMU_ALCHEMY:
+        return "It enhances your alchemy spells.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
