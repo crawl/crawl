@@ -6074,7 +6074,7 @@ static int _shop_num_items(const shop_spec &spec)
 
     // "normal" book shop containing parchments
     if (spec.sh_type == SHOP_BOOK)
-        return 8 + random2avg(8, 3);
+        return 8 + random2avg(15, 3);
 
     return 5 + random2avg(8, 3);
 }
@@ -6128,6 +6128,13 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
                 || item.base_type == OBJ_BOOKS))
     {
         // ...unless they're specified by the item spec.
+        return !spec.items.empty();
+    }
+
+    // Book shops only place parchments and manuals unless specified.
+    if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_PARCHMENT
+        && item.sub_type != BOOK_MANUAL)
+    {
         return !spec.items.empty();
     }
 
@@ -6196,7 +6203,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // Try hard to discard duplicate parchments
             if (env.item[item_index].sub_type == BOOK_PARCHMENT)
             {
-                if (supplied[env.item[item_index].plus] > 0 && !one_chance_in(5))
+                if (supplied[env.item[item_index].plus] > 0)
                 {
                     env.item[item_index].clear();
                     item_index = NON_ITEM; // try again

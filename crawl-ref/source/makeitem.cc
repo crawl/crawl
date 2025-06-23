@@ -645,13 +645,13 @@ static void _generate_missile_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
+        // Total weight: 100
         item.sub_type =
-            random_choose_weighted(29, MI_STONE,
-                                   42, MI_DART,
-                                   13, MI_BOOMERANG,
-                                   8,  MI_JAVELIN,
-                                   4,  MI_THROWING_NET,
-                                   4,  MI_LARGE_ROCK);
+            random_choose_weighted(60, MI_DART,
+                                   17, MI_BOOMERANG,
+                                   11,  MI_JAVELIN,
+                                   6,  MI_THROWING_NET,
+                                   6,  MI_LARGE_ROCK);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -1369,8 +1369,10 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
+    else if (!one_chance_in(50))
+        item.sub_type = BOOK_PARCHMENT; // almost everything else is a parchment
     else
-        item.sub_type = BOOK_PARCHMENT;
+        item.sub_type = choose_book_type(item_level);
 
     if (item.sub_type == BOOK_MANUAL)
     {
@@ -1937,9 +1939,9 @@ int items(bool allow_uniques,
                                     10, OBJ_STAVES,
                                     25, OBJ_TALISMANS,
                                     45, OBJ_JEWELLERY,
-                                    66, OBJ_MISSILES,
+                                    46, OBJ_MISSILES,
                                     70, OBJ_WANDS,
-                                   135, OBJ_BOOKS,
+                                   155, OBJ_BOOKS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
