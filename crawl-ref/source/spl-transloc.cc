@@ -1079,7 +1079,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     // (like picking up/dropping an item).
     viewwindow();
     update_screen();
-    StashTrack.update_stash(you.pos());
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
