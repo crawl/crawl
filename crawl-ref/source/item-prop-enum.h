@@ -527,6 +527,7 @@ enum special_armour_type
     SPARM_FIRE,
     SPARM_AIR,
     SPARM_EARTH,
+    SPARM_ARCHERY,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

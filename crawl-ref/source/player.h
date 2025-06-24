@@ -861,8 +861,8 @@ public:
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const;
-    int adjusted_body_armour_penalty(int scale = 1) const;
+    int unadjusted_body_armour_penalty(bool archery = false) const;
+    int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
     // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a

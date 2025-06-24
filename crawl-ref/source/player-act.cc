@@ -359,7 +359,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
     // Don't slow tossing.
     if (ranged_weapon_attack && is_slowed_by_armour(weap))
     {
-        const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+        const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
     }
 

@@ -1558,7 +1558,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     if (is_slowed_by_armour(&item))
     {
         const int penalty_scale = 100;
-        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale);
+        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale, true);
         description += "\n";
         if (armour_penalty)
         {
@@ -2364,6 +2364,9 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it enhances the wearer's air magic.";
     case SPARM_EARTH:
         return "it enhances the wearer's earth magic.";
+    case SPARM_ARCHERY:
+        return "it has half the normal encumbrance for the purpose of ranged "
+               "combat.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2488,7 +2491,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     }
 
     const int DELAY_SCALE = 100;
-    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
     if (crawl_state.need_save
         && verbose
         && aevp
