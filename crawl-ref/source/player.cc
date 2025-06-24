@@ -1541,6 +1541,8 @@ int player_spec_death()
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
+    sd += you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH);
+
     sd += you.scan_artefacts(ARTP_ENHANCE_NECRO);
 
     return sd;
