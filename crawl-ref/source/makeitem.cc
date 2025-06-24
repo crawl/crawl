@@ -789,12 +789,12 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_PRESERVATION:
     case SPARM_AIR:
 #if TAG_MAJOR_VERSION > 34
-        return slot == SLOT_CLOAK;
+        return slot == SLOT_CLOAK || slot == SLOT_OFFHAND;
 #endif
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
-        return slot == SLOT_CLOAK;
+        return slot == SLOT_CLOAK || slot == SLOT_OFFHAND;
     case SPARM_INVISIBILITY:
         return (slot == SLOT_CLOAK && !strict) || type == ARM_SCARF;
 #endif

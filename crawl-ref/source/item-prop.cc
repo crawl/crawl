@@ -81,40 +81,43 @@ static const vector<ego_weight_tuple> BASIC_BODY_EGOS = {
     { SPARM_POSITIVE_ENERGY,   2 },
 };
 
+// Total Weight 100
 static const vector<ego_weight_tuple> SCALE_BODY_EGOS = {
-    { SPARM_FIRE_RESISTANCE,   7 },
-    { SPARM_COLD_RESISTANCE,   7 },
-    { SPARM_POISON_RESISTANCE, 5 },
-    { SPARM_WILLPOWER,         4 },
-    { SPARM_POSITIVE_ENERGY,   2 },
-    { SPARM_ARCHERY,           2 },
-    { SPARM_COMMAND,           2 },
-    { SPARM_DEATH,             2 },
-    { SPARM_RESONANCE,         2 },
+    { SPARM_FIRE_RESISTANCE,   20 },
+    { SPARM_COLD_RESISTANCE,   20 },
+    { SPARM_POISON_RESISTANCE, 10 },
+    { SPARM_WILLPOWER,         15 },
+    { SPARM_POSITIVE_ENERGY,    7 },
+    { SPARM_ARCHERY,            7 },
+    { SPARM_COMMAND,            7 },
+    { SPARM_DEATH,              7 },
+    { SPARM_RESONANCE,          7 },
 };
 
 // Total weight 100.
 static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
-    { SPARM_FIRE_RESISTANCE,    26 },
-    { SPARM_COLD_RESISTANCE,    26 },
-    { SPARM_POISON_RESISTANCE,  19 },
+    { SPARM_FIRE_RESISTANCE,    21 },
+    { SPARM_COLD_RESISTANCE,    21 },
+    { SPARM_POISON_RESISTANCE,  16 },
     { SPARM_WILLPOWER,          15 },
-    { SPARM_POSITIVE_ENERGY,    7 },
     { SPARM_PONDEROUSNESS,      7 },
-    { SPARM_ARCHERY,            2 },
-    { SPARM_COMMAND,            2 },
-    { SPARM_DEATH,              2 },
-    { SPARM_RESONANCE,          2 },
+    { SPARM_ARCHERY,            5 },
+    { SPARM_COMMAND,            5 },
+    { SPARM_DEATH,              5 },
+    { SPARM_RESONANCE,          5 },
 };
 
+// Total weight 50
 static const vector<ego_weight_tuple> SHIELD_EGOS = {
     { SPARM_RESISTANCE,        1 },
-    { SPARM_FIRE_RESISTANCE,   3 },
-    { SPARM_COLD_RESISTANCE,   3 },
-    { SPARM_POISON_RESISTANCE, 3 },
-    { SPARM_POSITIVE_ENERGY,   3 },
-    { SPARM_REFLECTION,        6 },
-    { SPARM_PROTECTION,       12 },
+    { SPARM_FIRE_RESISTANCE,   4 },
+    { SPARM_COLD_RESISTANCE,   4 },
+    { SPARM_POISON_RESISTANCE, 4 },
+    { SPARM_POSITIVE_ENERGY,   4 },
+    { SPARM_NORMAL,            4 },
+    { SPARM_PRESERVATION,      4 },
+    { SPARM_REFLECTION,        9 },
+    { SPARM_PROTECTION,       16 },
 };
 
 // would be nice to lookup the name from monster_for_armour, but that
@@ -145,7 +148,7 @@ static const armour_def Armour_prop[] =
             { SPARM_COLD_RESISTANCE, 2 },
             { SPARM_FIRE_RESISTANCE, 2 },
             { SPARM_POSITIVE_ENERGY, 2 },
-            { SPARM_NORMAL,          3 },
+            { SPARM_NORMAL,          4 },
             { SPARM_WILLPOWER,       4 },
     }},
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
