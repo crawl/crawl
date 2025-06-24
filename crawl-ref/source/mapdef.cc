@@ -5240,6 +5240,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
+        string ego_str  = strip_tag_prefix(s, "ego:");
+
         if (!acquirement_source.empty())
         {
             result.acquirement_source =
@@ -5252,6 +5254,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             result.base_type = OBJ_RANDOM;
         else
             parse_random_by_class(s, result);
+
+        if (!ego_str.empty()
+            && (result.base_type == OBJ_WEAPONS || result.base_type == OBJ_ARMOUR))
+        {
+            result.ego = str_to_ego(result.base_type, ego_str);
+        }
+
         return true;
     }
 

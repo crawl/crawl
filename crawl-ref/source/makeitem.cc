@@ -197,6 +197,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
+    const int old_ego = item.brand;
     if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
@@ -236,6 +237,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 
         // The rest are normal randarts.
         make_item_randart(item);
+
+        if (old_ego > 0)
+            set_artefact_brand(item, old_ego);
 
         return true;
     }
@@ -684,6 +688,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, int agent)
 {
     const bool force_randart = item_level == ISPEC_RANDART;
+    const int old_ego = item.brand;
     if (!force_randart && (item_level <= 0
                            || !x_chance_in_y(101 + item_level * 3, 4000)))
     {
@@ -731,6 +736,9 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     // Needs to be done after the barding chance else we get randart
     // bardings named Boots of xy.
     make_item_randart(item);
+
+    if (old_ego > 0)
+        set_artefact_brand(item, old_ego);
 
     return true;
 }
@@ -1918,8 +1926,6 @@ int items(bool allow_uniques,
 
     const bool force_good = item_level >= ISPEC_GIFT;
 
-    if (force_ego != 0)
-        allow_uniques = false;
 
     item.brand = force_ego;
 
@@ -2082,16 +2088,15 @@ int items(bool allow_uniques,
         break;
     }
 
-    if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
-        || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
-        || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.brand, false))
+    if (item_has_invalid_brand(item))
     {
-        mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
+        dprf(DIAG_DNGN, "Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false).c_str());
-        item.brand = 0;
+
+        if (is_artefact(item))
+            item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = 0;
+        else
+            item.brand = 0;
     }
 
     // Colour the item.
@@ -2131,6 +2136,18 @@ void reroll_brand(item_def &item, int item_level)
         die("can't reroll brands of this type");
     }
     item_set_appearance(item);
+}
+
+bool item_has_invalid_brand(const item_def& item)
+{
+    if (item.base_type == OBJ_WEAPONS)
+        return !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false);
+    else if (item.base_type == OBJ_ARMOUR)
+        return !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false);
+    else if (item.base_type == OBJ_MISSILES)
+        return !is_missile_brand_ok(item.sub_type, item.brand, false);
+
+    return false;
 }
 
 static bool _weapon_is_visibly_special(const item_def &item)

@@ -39,6 +39,7 @@ void set_artefact_brand(item_def &item, int brand);
 
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);
+bool item_has_invalid_brand(const item_def& item);
 
 void generate_wand_item(item_def& item, int force_type, int item_level);
 bool is_high_tier_wand(int type);

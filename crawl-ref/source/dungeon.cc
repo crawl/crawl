@@ -5003,7 +5003,7 @@ int dgn_place_item(const item_spec &spec,
         {
             item_made = acquirement_create_item(base_type,
                                                 spec.acquirement_source,
-                                                true, where);
+                                                true, where, spec.ego);
         }
 
         // Both normal item generation and the failed "acquire foo" fallback.
