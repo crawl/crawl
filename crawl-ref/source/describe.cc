@@ -2370,6 +2370,9 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_COMMAND:
         return "it improves the power and success of the wearer's summoning "
                "spells in proportion to their armour skill.";
+    case SPARM_DEATH:
+        return "it empowers the wearer's necromancy spells and improves their "
+               " success rate, but imposes a health cost for other magic.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

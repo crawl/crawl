@@ -529,6 +529,7 @@ enum special_armour_type
     SPARM_EARTH,
     SPARM_ARCHERY,
     SPARM_COMMAND,
+    SPARM_DEATH,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

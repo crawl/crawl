@@ -875,6 +875,9 @@ static void _decrement_durations()
     if (you.wearing_jewellery(AMU_WILDSHAPE))
         did_god_conduct(DID_CHAOS, 1);
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH))
+        did_god_conduct(DID_EVIL, 1);
+
     if (!you.duration[DUR_ANCESTOR_DELAY]
         && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
