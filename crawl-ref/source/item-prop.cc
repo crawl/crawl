@@ -91,6 +91,7 @@ static const vector<ego_weight_tuple> SCALE_BODY_EGOS = {
     { SPARM_ARCHERY,           2 },
     { SPARM_COMMAND,           2 },
     { SPARM_DEATH,             2 },
+    { SPARM_RESONANCE,         2 },
 };
 
 // Total weight 100.
@@ -104,6 +105,7 @@ static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
     { SPARM_ARCHERY,            2 },
     { SPARM_COMMAND,            2 },
     { SPARM_DEATH,              2 },
+    { SPARM_RESONANCE,          2 },
 };
 
 static const vector<ego_weight_tuple> SHIELD_EGOS = {
@@ -114,8 +116,6 @@ static const vector<ego_weight_tuple> SHIELD_EGOS = {
     { SPARM_POSITIVE_ENERGY,   3 },
     { SPARM_REFLECTION,        6 },
     { SPARM_PROTECTION,       12 },
-    { SPARM_COMMAND,           2 },
-    { SPARM_DEATH,             2 },
 };
 
 // would be nice to lookup the name from monster_for_armour, but that

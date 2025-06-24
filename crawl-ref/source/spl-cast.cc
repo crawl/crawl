@@ -394,6 +394,9 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
         fail_reduce = fail_reduce / 2;
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
+        fail_reduce = fail_reduce * 2 / 3;
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)

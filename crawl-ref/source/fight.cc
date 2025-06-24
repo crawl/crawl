@@ -1835,6 +1835,17 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     return base_dam * 9 / 5;
 }
 
+int resonance_damage_mod(int dam, bool random)
+{
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
+    {
+        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, 2)), 100)
+                     : dam * (100 + you.skill(SK_FORGECRAFT, 2)) / 100;
+    }
+
+    return dam;
+}
+
 int unarmed_base_damage(bool random)
 {
     int damage = get_form()->get_base_unarmed_damage(random);
