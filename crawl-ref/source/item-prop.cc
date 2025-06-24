@@ -82,6 +82,15 @@ static const vector<ego_weight_tuple> BASIC_BODY_EGOS = {
     { SPARM_POSITIVE_ENERGY,   2 },
 };
 
+static const vector<ego_weight_tuple> SCALE_BODY_EGOS = {
+    { SPARM_FIRE_RESISTANCE,   7 },
+    { SPARM_COLD_RESISTANCE,   7 },
+    { SPARM_POISON_RESISTANCE, 5 },
+    { SPARM_WILLPOWER,         4 },
+    { SPARM_POSITIVE_ENERGY,   2 },
+    { SPARM_ARCHERY,           2 },
+};
+
 // Total weight 100.
 static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
     { SPARM_FIRE_RESISTANCE,    26 },
@@ -90,6 +99,7 @@ static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
     { SPARM_WILLPOWER,          15 },
     { SPARM_POSITIVE_ENERGY,    7 },
     { SPARM_PONDEROUSNESS,      7 },
+    { SPARM_ARCHERY,            2 },
 };
 
 static const vector<ego_weight_tuple> SHIELD_EGOS = {
@@ -138,7 +148,7 @@ static const armour_def Armour_prop[] =
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
         SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, SCALE_BODY_EGOS },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   60,
         SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   180,

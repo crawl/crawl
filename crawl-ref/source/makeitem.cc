@@ -890,6 +890,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_ENERGY:
         return type == ARM_ORB;
 
+    case SPARM_ARCHERY:
+        return slot == SLOT_BODY_ARMOUR && type != ARM_ROBE;
+
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");

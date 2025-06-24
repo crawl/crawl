@@ -3356,7 +3356,7 @@ static void _display_attack_delay(const item_def *offhand)
     // the primary.
     const bool shield_penalty = you.adjusted_shield_penalty(2) > 0;
     const bool armour_penalty = is_slowed_by_armour(weapon)
-                                && you.adjusted_body_armour_penalty(2) > 0;
+                                && you.adjusted_body_armour_penalty(2, true) > 0;
     string penalty_msg = "";
     if (shield_penalty || armour_penalty)
     {
@@ -5952,14 +5952,16 @@ bool player::missile_repulsion() const
  * @return  The player's body armour's PARM_EVASION, if any, taking into account
  *          the sturdy frame mutation that reduces encumbrance.
  */
-int player::unadjusted_body_armour_penalty() const
+int player::unadjusted_body_armour_penalty(bool archery) const
 {
     const item_def *body_armour = you.body_armour();
     if (!body_armour)
         return 0;
 
+    int rfactor = archery && you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) ? 2 : 1;
+
     // PARM_EVASION is always less than or equal to 0
-    return max(0, -property(*body_armour, PARM_EVASION) / 10
+    return max(0, -property(*body_armour, PARM_EVASION) / 10 / rfactor
                   - get_mutation_level(MUT_STURDY_FRAME) * 2);
 }
 
@@ -5970,9 +5972,9 @@ int player::unadjusted_body_armour_penalty() const
  * @return          A penalty to EV based quadratically on body armour
  *                  encumbrance.
  */
-int player::adjusted_body_armour_penalty(int scale) const
+int player::adjusted_body_armour_penalty(int scale, bool archery) const
 {
-    const int base_ev_penalty = unadjusted_body_armour_penalty();
+    const int base_ev_penalty = unadjusted_body_armour_penalty(archery);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
