@@ -576,6 +576,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_AIR:               return "air";
         case SPARM_EARTH:             return "earth";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_COMMAND:           return "command";
         default:                      return "bugginess";
         }
     }
@@ -629,6 +630,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_AIR:               return "air";
         case SPARM_EARTH:             return "earth";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_COMMAND:           return "command";
         default:                      return "buggy";
         }
     }

@@ -370,6 +370,9 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.form == transformation::sun_scarab && spell_typematch(spell, spschool::fire))
         fail_reduce = fail_reduce * 2 / 3;
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
+        fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)
@@ -549,6 +552,9 @@ int calc_spell_power(spell_type spell)
 
     if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell))
         power = (power + (you.experience_level * 300)) * 3 / 2;
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
+        power = power * (270 + you.skill(SK_ARMOUR, 10)) / 270;
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.

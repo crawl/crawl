@@ -2367,6 +2367,9 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_ARCHERY:
         return "it has half the normal encumbrance for the purpose of ranged "
                "combat.";
+    case SPARM_COMMAND:
+        return "it improves the power and success of the wearer's summoning "
+               "spells in proportion to their armour skill.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

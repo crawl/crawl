@@ -372,6 +372,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
             case SPARM_SNIPING:
+            case SPARM_COMMAND:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
             case SPARM_STEALTH:
@@ -620,6 +621,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_ACROBAT:
                 case AMU_REFLECTION:
                 case AMU_WILDSHAPE:
+                case AMU_ALCHEMY:
                     valued += 300;
                     break;
 
