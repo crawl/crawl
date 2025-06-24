@@ -233,6 +233,7 @@ enum jewellery_type
     RING_ICE,
     RING_TELEPORT_CONTROL,
 #endif
+    RING_CONJURATION,
     NUM_RINGS,                         //   keep as last ring; should not overlap
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts

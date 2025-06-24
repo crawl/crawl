@@ -393,6 +393,7 @@ static map<jewellery_type, vector<artp_value>> jewellery_artps = {
     { RING_POSITIVE_ENERGY, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
+    { RING_CONJURATION, { { ARTP_ENHANCE_CONJ, 1 } } },
 
     { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
     { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },

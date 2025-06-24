@@ -788,6 +788,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_TELEPORTATION:         return "teleportation";
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
+        case RING_CONJURATION:           return "conjuration";
         case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_ACROBAT:           return "the acrobat";
 #if TAG_MAJOR_VERSION == 34
@@ -839,6 +840,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_FIRE:                  return "obsoleteness";
         case RING_ICE:                   return "obsoleteness";
 #endif
+        case RING_CONJURATION:           return "Conj";
         case AMU_REGENERATION:           return "Regen";
         case AMU_MANA_REGENERATION:      return "RegenMP";
 #if TAG_MAJOR_VERSION == 34
@@ -3430,6 +3432,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return player_res_poison(false, temp, false) > 0;
 
         case RING_WIZARDRY:
+        case RING_CONJURATION:
+        case AMU_ALCHEMY:
             return you_worship(GOD_TROG);
 
         case RING_FLIGHT:
