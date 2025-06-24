@@ -1107,6 +1107,7 @@ void TilesFramework::_send_player(bool force_full)
         prank = 2;
     }
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
+    _update_int(force_full, c.ostracism_pips, ostracism_pips(), "ostracism_pips");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
 

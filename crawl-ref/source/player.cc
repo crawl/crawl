@@ -772,8 +772,8 @@ monster_type player_mons(bool transform)
         // playing a Hill Orc from an old save...
         if (you_worship(GOD_BEOGH))
         {
-            mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
-                                                      : MONS_ORC_PRIEST;
+            mons = (you.piety() >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
+                                                        : MONS_ORC_PRIEST;
         }
     }
 
@@ -1148,7 +1148,7 @@ int player_regen()
     {
         // One regen pip at 1* piety, scaling to two pips at 6*.
         // We use piety rank to avoid leaking piety info to the player.
-        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety) - 1)) / 5;
+        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety()) - 1)) / 5;
     }
 
     return rr;
@@ -1181,7 +1181,7 @@ int player_mp_regen()
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
-        regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
+        regen_amount += 40 + (40 * (piety_rank(you.piety()) - 1)) / 5;
     }
 
     regen_amount += get_form()->mp_regen_bonus();
@@ -1216,6 +1216,14 @@ int player_spell_levels(bool floored)
         sl = 0;
 
     return sl;
+}
+
+int player::piety() const
+{
+    if (you.attribute[ATTR_OSTRACISM] == 0 || !god_cares_about_ostracism())
+        return raw_piety;
+
+    return max(0, min((int)raw_piety, MAX_PIETY - you.attribute[ATTR_OSTRACISM]));
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -1669,14 +1677,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 
     // piety-based rN doesn't count as temporary (XX why)
     if (you_worship(GOD_SHINING_ONE))
-    {
-        if (you.piety >= piety_breakpoint(1))
-            pl++;
-        if (you.piety >= piety_breakpoint(3))
-            pl++;
-        if (you.piety >= piety_breakpoint(5))
-            pl++;
-    }
+        pl += piety_rank(you.piety()) / 2;
 
     pl += cur_form(temp)->res_neg();
 
@@ -1748,7 +1749,7 @@ int player_movement_speed(bool check_terrain, bool temp)
 
     // Cheibriados
     if (have_passive(passive_t::slowed))
-        mv += 2 + min(div_rand_round(you.piety, 20), 8);
+        mv += 2 + min(div_rand_round(you.piety(), 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
@@ -2461,6 +2462,15 @@ static void _handle_banes(int exp)
     }
 }
 
+static void _handle_ostracism(int exp)
+{
+    if (you.attribute[ATTR_OSTRACISM] == 0)
+        return;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level) * 4 / 3);
+    player_change_ostracism(-loss);
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2520,6 +2530,7 @@ void apply_exp()
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
     _handle_banes(skill_xp);
+    _handle_ostracism(skill_xp);
     _handle_breath_recharge(skill_xp);
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
@@ -3220,7 +3231,7 @@ int player_stealth()
     if (have_passive(passive_t::storm_shield))
     {
         stealth = stealth
-                  * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
+                  * (MAX_PIETY - min((int)you.piety(), piety_breakpoint(5)))
                   / (MAX_PIETY - piety_breakpoint(0));
     }
     // The shifting glow from the Orb, while too unstable to negate invis
@@ -5378,7 +5389,7 @@ player::player()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
-    piety            = 0;
+    raw_piety        = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
     saved_good_god_piety = 0;
@@ -8395,7 +8406,7 @@ int player_monster_detect_radius()
     if (you.unrand_equipped(UNRAND_HOOD_ASSASSIN))
         radius = max(radius, 4);
     if (have_passive(passive_t::detect_montier))
-        radius = max(radius, you.piety / 20);
+        radius = max(radius, you.piety() / 20);
     return min(radius, LOS_MAX_RANGE);
 }
 

@@ -4540,6 +4540,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_OSTRACISE, "Ostracise",
+    spschool::hexes,
+    spflag::monster | spflag::target,
+    7,
+    200,
+    1, 1,
+    0,
+    TILEG_OSTRACISE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

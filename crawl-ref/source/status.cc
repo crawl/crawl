@@ -931,6 +931,21 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_OSTRACISM:
+        if (you.attribute[ATTR_OSTRACISM] > 0)
+        {
+            inf.light_text = "Ostracised";
+            if (!god_cares_about_ostracism())
+                inf.light_colour = DARKGREY;
+            else if (you.attribute[ATTR_OSTRACISM] > 120)
+                inf.light_colour = MAGENTA;
+            else if (you.attribute[ATTR_OSTRACISM] > 80)
+                inf.light_colour = RED;
+            else
+                inf.light_colour = YELLOW;
+        }
+        break;
+
     default:
         if (!found)
         {

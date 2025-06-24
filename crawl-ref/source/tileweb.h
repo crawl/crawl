@@ -49,6 +49,7 @@ struct player_info
     string god;
     bool under_penance;
     int piety_rank;
+    int ostracism_pips;
 
     uint8_t form;
 

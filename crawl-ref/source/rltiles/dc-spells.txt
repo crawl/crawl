@@ -278,6 +278,7 @@ mindburst MINDBURST
 mourning_wail MOURNING_WAIL
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
+ostracise OSTRACISE
 paralysis_gaze PARALYSIS_GAZE
 petrifying_cloud PETRIFYING_CLOUD
 phantom_blitz PHANTOM_BLITZ

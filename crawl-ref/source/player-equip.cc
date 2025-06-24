@@ -2376,7 +2376,7 @@ static void _remove_amulet_of_faith(item_def &item)
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        ASSERT(you.piety < piety_breakpoint(5));
+        ASSERT(you.raw_piety < piety_breakpoint(5));
 #ifdef DEBUG_DIAGNOSTICS
         const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
 #endif
@@ -2388,7 +2388,7 @@ static void _remove_amulet_of_faith(item_def &item)
 
     simple_god_message(" seems less interested in you.");
 
-    const int piety_loss = div_rand_round(you.piety, 3);
+    const int piety_loss = div_rand_round(you.raw_piety, 3);
     // Piety penalty for removing the Amulet of Faith.
     mprf(MSGCH_GOD, "You feel less pious.");
     dprf("%s: piety drain: %d", item.name(DESC_PLAIN).c_str(), piety_loss);

@@ -403,7 +403,7 @@ static void _handle_uskayaw_piety(int time_taken)
         gain_piety(piety_gain);
         you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = 0;
     }
-    else if (you.piety > piety_breakpoint(0))
+    else if (you.piety() > piety_breakpoint(0))
     {
         // If we didn't do a dance action and we can lose piety, we're going
         // to lose piety proportional to the time since the last time we took
@@ -415,7 +415,7 @@ static void _handle_uskayaw_piety(int time_taken)
         // piety, in order to give more tolerance for missing in combat.
         if (time_since_gain > 30)
         {
-            int piety_lost = min(you.piety - piety_breakpoint(0),
+            int piety_lost = min(you.piety() - piety_breakpoint(0),
                     div_rand_round(time_since_gain, 10));
 
             if (piety_lost > 0)
@@ -441,7 +441,7 @@ static void _handle_uskayaw_time(int time_taken)
     // need to trigger the abilities this turn. Otherwise we'll decrement the
     // timer down to a minimum of 0, at which point it becomes eligible to
     // trigger again.
-    if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
+    if (audience_timer == -1 || (you.piety() >= piety_breakpoint(2)
             && x_chance_in_y(time_taken, 100 + audience_timer)))
     {
         uskayaw_prepares_audience();
@@ -449,7 +449,7 @@ static void _handle_uskayaw_time(int time_taken)
     else
         you.props[USKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
-    if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
+    if (bond_timer == -1 || (you.piety() >= piety_breakpoint(3)
             && x_chance_in_y(time_taken, 100 + bond_timer)))
     {
         uskayaw_bonds_audience();
@@ -749,7 +749,7 @@ static void _decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
+    if (you.raw_piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;

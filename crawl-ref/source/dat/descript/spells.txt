@@ -1383,6 +1383,17 @@ Orb of Electricity spell
 Hurls a crackling orb of electrical energy, creating a huge explosion on
 impact. Its damage bypasses half of defenders' armour.
 %%%%
+Ostracise spell
+
+Isolates a target from the divine - temporarily reducing their piety in the eyes
+of whichever god they worship and denying them access to any divine abilities
+that piety would allow. Being repeatedly affected by this spell will reduce the
+one's effective piety further and further, but can never directly lead to
+excommunication.
+
+This effect will slowly wear off as the afflicted being gains experience,
+eventually restoring access to the full piety they once possessed.
+%%%%
 Ozocubu's Armour spell
 
 Envelops the caster's body in a protective layer of thick ice, granting a

@@ -389,8 +389,11 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         else if ((player.piety_rank > 0 || player.god != "")
                  && player.god != "Gozag")
         {
-            $("#stats_piety").text(repeat_string("*", player.piety_rank)
-                                   + repeat_string(".", 6-player.piety_rank));
+            $("#stats_piety").html(repeat_string("*", player.piety_rank)
+                                   + repeat_string(".", 6-player.piety_rank-player.ostracism_pips)
+                                   + "<span class=fg5>"
+                                   + repeat_string("X", player.ostracism_pips)
+                                   + "</span>");
         }
         else
             $("#stats_piety").text("");

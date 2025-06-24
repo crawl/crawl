@@ -808,7 +808,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
          mons.get_hit_dice(),
          you.experience_level);
 #endif
-    if (random2(you.piety) >= piety_breakpoint(0)
+    if (random2(you.piety()) >= piety_breakpoint(0)
         && random2(you.experience_level) >= random2(mons.get_hit_dice())
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
@@ -1893,7 +1893,7 @@ static bool _god_will_bless_follower(monster* victim)
 {
     return have_passive(passive_t::bless_followers_vs_evil)
            && victim->evil()
-           && random2(you.piety) >= piety_breakpoint(0);
+           && random2(you.piety()) >= piety_breakpoint(0);
 }
 
 static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
@@ -2122,7 +2122,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
                     || you_worship(GOD_MAKHLEB)
                        && player_in_branch(BRANCH_CRUCIBLE))
                 && !player_under_penance()
-                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety()) - 30)
                                     / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
                     || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
@@ -2203,7 +2203,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     if (killer == KILL_YOU && you.berserk())
     {
         if (have_passive(passive_t::extend_berserk)
-            && min((int)you.piety, piety_breakpoint(5)) > random2(800))
+            && min((int)you.piety(), piety_breakpoint(5)) > random2(800))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
@@ -2856,7 +2856,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+            if (gives_player_xp && you_worship(GOD_RU) && you.raw_piety < piety_breakpoint(5)
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));

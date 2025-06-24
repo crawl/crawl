@@ -165,7 +165,7 @@ int xom_favour_rank()
 {
     static const int breakpoints[] = { 20, 50, 80, 120, 150, 180};
     for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
-        if (you.piety <= breakpoints[i])
+        if (you.raw_piety <= breakpoints[i])
             return i;
     return ARRAYSZ(breakpoints);
 }
@@ -245,16 +245,16 @@ bool xom_is_nice(int tension)
 // Xom needs to be less negative
 //              : tension ==  0 ? -min(abs(HALF_MAX_PIETY - you.piety) / 2,
 //                                     you.piety / 10)
-                             : min((MAX_PIETY - you.piety) / 2,
+                             : min((MAX_PIETY - you.raw_piety) / 2,
                                    random2(tension)));
 
-        const int effective_piety = you.piety + tension_bonus;
+        const int effective_piety = you.raw_piety + tension_bonus;
         ASSERT_RANGE(effective_piety, 0, MAX_PIETY + 1);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
              "Xom: tension: %d, piety: %d -> tension bonus = %d, eff. piety: %d",
-             tension, you.piety, tension_bonus, effective_piety);
+             tension, you.raw_piety, tension_bonus, effective_piety);
 #endif
 
         // Whether Xom is nice depends largely on his mood (== piety).
@@ -334,9 +334,9 @@ void xom_tick()
     {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
-        const bool good = (you.piety == HALF_MAX_PIETY ? coinflip()
-                                                       : you.piety > HALF_MAX_PIETY);
-        int size = abs(you.piety - HALF_MAX_PIETY);
+        const bool good = (you.raw_piety == HALF_MAX_PIETY ? coinflip()
+                                                       : you.raw_piety > HALF_MAX_PIETY);
+        int size = abs(you.raw_piety - HALF_MAX_PIETY);
 
         // Piety slowly drifts towards the extremes.
         const int delta = piety_scale(x_chance_in_y(511, 1000) ? 1 : -1);
@@ -344,7 +344,7 @@ void xom_tick()
         if (size > HALF_MAX_PIETY)
             size = HALF_MAX_PIETY;
 
-        you.piety = HALF_MAX_PIETY + (good ? size : -size);
+        you.raw_piety = HALF_MAX_PIETY + (good ? size : -size);
         string new_xom_favour = describe_xom_favour();
         you.redraw_title = true; // redraw piety/boredom display
         if (old_xom_favour != new_xom_favour)
@@ -358,11 +358,11 @@ void xom_tick()
 
             // If size was 0 to begin with, it may become negative, but that
             // doesn't really matter.
-            you.piety = HALF_MAX_PIETY + (good ? size : -size);
+            you.raw_piety = HALF_MAX_PIETY + (good ? size : -size);
         }
 #ifdef DEBUG_XOM
         const string note = make_stringf("xom_tick(), delta: %d, piety: %d",
-                                         delta, you.piety);
+                                         delta, you.raw_piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
 #endif
 
@@ -393,7 +393,7 @@ void xom_tick()
         // If Xom is bored, the chances for Xom acting are sort of reversed.
         if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
+            xom_acts(abs(you.raw_piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -420,7 +420,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance*chance, 100))
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
+            xom_acts(abs(you.raw_piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
     }
 }
 
@@ -531,7 +531,7 @@ static void _xom_random_spell(int sever)
 
     your_spells(spell, power, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 // Map out the level, detect items across the level, and detect creatures.
@@ -564,7 +564,7 @@ static void _xom_divination(int sever)
             mpr("You detect creatures, but no further items.");
     }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divination: all"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "divination: all"), true);
 }
 
 static void _try_brand_switch(const int item_index)
@@ -615,7 +615,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     static char gift_buf[100];
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
              env.item[thing_created].name(DESC_PLAIN).c_str());
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, gift_buf), true);
 
     canned_msg(MSG_SOMETHING_APPEARS);
     move_item_to_grid(&thing_created, you.pos());
@@ -651,7 +651,7 @@ static void _xom_acquirement(int /*sever*/)
 
     const string note = make_stringf("god gift: %s",
                                      env.item[item_index].name(DESC_PLAIN).c_str());
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 
     stop_running();
     more();
@@ -838,7 +838,7 @@ static void _xom_bazaar_trip(int /*sever*/)
         dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
         down_stairs(DNGN_ENTER_BAZAAR);
         you.props[XOM_BAZAAR_TRIP_COUNT].get_int()++;
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "banished to a bazaar"),
                   true);
     }
 }
@@ -1068,7 +1068,7 @@ static void _note_potion_effect(potion_type pot)
 
     potion_msg += ("(" + potion_name + ")");
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, potion_msg), true);
 }
 
 
@@ -1141,7 +1141,7 @@ static void _xom_confuse_monsters(int sever)
 
     if (spoke)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "confuse monster(s)"),
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "confuse monster(s)"),
                   true);
     }
 }
@@ -1205,7 +1205,7 @@ static void _xom_send_allies(int sever)
         const string note = make_stringf("summons %d friend%s",
                                          num_actually_summoned,
                                          num_actually_summoned > 1 ? "s" : "");
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
 }
 
@@ -1234,7 +1234,7 @@ static void _xom_send_one_ally(int sever)
 
         const string note = make_stringf("summons friendly %s",
                                          summons->name(DESC_PLAIN).c_str());
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
 }
 
@@ -1298,7 +1298,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
         note += (powerup ? "upgrade" : "downgrade");
         note += ")";
 #endif
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
 }
 
@@ -1436,7 +1436,7 @@ static void _xom_rearrange_pieces(int sever)
             }
         }
     }
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "swap monsters"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "swap monsters"), true);
 }
 
 static int _xom_random_stickable(const int HD)
@@ -1485,7 +1485,7 @@ static void _xom_snakes_to_sticks(int /*sever*/)
 
         if (!action)
         {
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+            take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                            "snakes to sticks"), true);
             god_speaks(GOD_XOM, _get_xom_speech("snakes to sticks").c_str());
             action = true;
@@ -1583,7 +1583,7 @@ static void _xom_lights_up_webs(int /*sever*/)
         mprf("%s %s into flame!", number_in_words(webs_count).c_str(),
               webs_count == 1 ? "web bursts" : "webs burst");
         string note = make_stringf("lit up %d webs", webs_count);
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
 }
 
@@ -1704,7 +1704,7 @@ static void _xom_harmless_flora(int /*sever*/)
             mpr("Toadstools sprout up around you!");
 
         const string note = make_stringf("made a garden");
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS); // shouldn't be reached, and yet
@@ -1922,7 +1922,7 @@ static void _xom_door_ring(bool good)
                                                               : "other");
         }
 
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2047,7 +2047,7 @@ static void _xom_fake_shatter(int /*sever*/)
         mpr("Some rocks are dislodged from the ceiling.");
 
     if (dest)
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "fake shatter"), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "fake shatter"), true);
 
 }
 
@@ -2069,7 +2069,7 @@ static void _xom_give_mutations(bool good)
 #endif
              num_tries > 1 ? "s" : "");
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     mpr("Your body is suffused with distortional energy.");
 
     bool failMsg = true;
@@ -2179,7 +2179,7 @@ static void _xom_throw_divine_lightning(int /*sever*/)
     }
 
     string note = make_stringf("divine lightning + %d bolts", spray_count);
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 // What scenery nearby would Xom like to mess with, if any?
@@ -2293,7 +2293,7 @@ static void _xom_place_decor()
 
     if (success)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                        "scenery: changed the scenery"), true);
         const string key = make_stringf("scenery %s", dungeon_feature_name(decor));
         god_speaks(GOD_XOM, _get_xom_speech(key).c_str());
@@ -2316,7 +2316,7 @@ static void _xom_summon_butterflies()
 
     if (success)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                        "scenery: summon butterflies"), true);
         god_speaks(GOD_XOM, _get_xom_speech("scenery").c_str());
     }
@@ -2442,7 +2442,7 @@ static void _xom_change_scenery(int /*sever*/)
 
     if (!effects.empty())
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ("scenery: "
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, ("scenery: "
             + comma_separated_line(terse.begin(), terse.end(), ", ", ", ")).c_str()),
             true);
         mprf("%s!",
@@ -2518,7 +2518,7 @@ static void _xom_open_and_close_doors(int /* sever */)
     }
     if (!effects.empty())
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ("scenery: "
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, ("scenery: "
             + comma_separated_line(terse.begin(), terse.end(), ", ", ", ")).c_str()),
             true);
         mprf("%s!",
@@ -2589,7 +2589,7 @@ static void _xom_destruction(int sever, bool real)
 
     if (rc)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                        real ? "destruction" : "fake destruction"), true);
     }
 }
@@ -2649,7 +2649,7 @@ static void _xom_force_lances(int /* sever */)
                                          created > 1 ? "s" : "");
 
         god_speaks(GOD_XOM,  _get_xom_speech("force lance fleet").c_str());
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2726,7 +2726,7 @@ static void _xom_enchant_monster(int sever, bool helpful)
                                      affected >= 1 ? "s" : "",
                                      helpful ? "good" : "bad",
                                      ench_name.c_str());
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 static void _xom_good_enchant_monster(int sever)
@@ -2885,7 +2885,7 @@ static void _xom_hyper_enchant_monster(int sever)
     const string note = make_stringf("buffed friendly %s %d %s",
                                      targetable[0]->name(DESC_PLAIN, true).c_str(),
                                      buff_count, buff_count == 1 ? "time" : "times" );
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
     }
 }
 
@@ -2931,7 +2931,7 @@ static void _xom_mass_charm(int sever)
 
     const string note = make_stringf("charmed %d monster%s",
                                      affected,  affected != 1 ? "s" : "");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 // Xom makes some scary skeletons pop out.
@@ -3001,7 +3001,7 @@ static void _xom_wave_of_despair(int sever)
     mass_enchantment(ENCH_FEAR, pow * 5);
 
     const string note = make_stringf("spooky wave of despair");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 // Xom hastes, slows, or paralyzes the player and everything else in sight
@@ -3095,14 +3095,14 @@ static void _xom_time_control(int sever)
         mi->add_ench(mon_enchant(ench, 0, &you, time));
     }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 /// Toss some fog around the player. Helping...?
 static void _xom_fog(int /*sever*/)
 {
     big_cloud(CLOUD_RANDOM_SMOKE, &you, you.pos(), 50, 8 + random2(8));
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "fog"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "fog"), true);
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
@@ -3118,7 +3118,7 @@ static item_def* _xom_get_random_worn_ring()
 
 static void _xom_pseudo_miscast(int /*sever*/)
 {
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "silly message"), true);
     god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect").c_str());
 
     vector<string> messages;
@@ -3511,7 +3511,7 @@ static void _xom_chaos_upgrade(int /*sever*/)
     behaviour_event(mon, ME_ALERT, &you);
 
     if (rc)
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos upgrade"), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "chaos upgrade"), true);
 }
 
 static void _xom_player_confusion_effect(int sever)
@@ -3558,7 +3558,7 @@ static void _xom_player_confusion_effect(int sever)
         conf_msg += " (+ monsters)";
     if (!you.can_drink())
         conf_msg += " (+ might)";
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, conf_msg), true);
 }
 
 static bool _valid_floor_grid(coord_def pos)
@@ -3795,7 +3795,7 @@ static void _xom_repel_stairs(bool unclimbable)
             canned_msg(MSG_NOTHING_HAPPENS);
     }
     else
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "repel stairs"), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "repel stairs"), true);
 }
 
 static void _xom_moving_stairs(int) { _xom_repel_stairs(false); }
@@ -3829,7 +3829,7 @@ static void _xom_cloud_trail(int /*sever*/)
     if (you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int() == CLOUD_BLASTMOTES)
         you.props[BLASTMOTE_POWER_KEY] = 25;
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "cloud trail"), true);
 
     const string speech = _get_xom_speech("cloud trail");
     god_speaks(GOD_XOM, speech.c_str());
@@ -3852,7 +3852,7 @@ static void _xom_draining(int /*sever*/)
 
     drain_player(power, true);
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "draining"), true);
 }
 
 static void _xom_torment(int /*sever*/)
@@ -3871,7 +3871,7 @@ static void _xom_torment(int /*sever*/)
     const string note = make_stringf("torment%s(%d/%d hp)",
                                       _xom_feels_nasty() ? " all (player " : " (",
                                       you.hp, you.hp_max);
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 static monster* _xom_summon_hostile(monster_type hostile)
@@ -3979,7 +3979,7 @@ static void _xom_summon_hostiles(int sever)
                                          shadow_creatures ? "shadow creature"
                                                           : "chaos creature",
                                          num_summoned > 1 ? "s" : "");
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 
         const string speech = _get_xom_speech("hostile monster");
         god_speaks(GOD_XOM, speech.c_str());
@@ -4040,7 +4040,7 @@ static void _xom_send_in_clones(int /*sever*/)
                                      friendly_summon_count,
                                      friendly_summon_count == 1 ? "illusion"
                                                                 : "illusions");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 // Roll per-monster whether they're neutral or hostile.
@@ -4123,13 +4123,13 @@ static void _xom_brain_drain(int sever)
 
             const string note = make_stringf("drained mp, created monsters");
             mprf(MSGCH_WARN, "%s", react.c_str());
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+            take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
         }
         else
         {
             mprf(MSGCH_WARN, "You feel nearly all of your power leaking away!");
             const string note = make_stringf("drained mp");
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+            take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
         }
     }
 }
@@ -4224,7 +4224,7 @@ static void _xom_grants_word_of_recall(int /*sever*/)
     note = make_stringf("made %s speak a word of recall",
                         targetable[0]->name(DESC_A, true, false).c_str());
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 static bool _has_min_banishment_level()
@@ -4255,7 +4255,7 @@ static bool _allow_xom_banishment()
     if (!_has_min_banishment_level())
     {
         // Allow banishment; it will be retracted right away.
-        if (one_chance_in(5) && x_chance_in_y(you.piety, 1000))
+        if (one_chance_in(5) && x_chance_in_y(you.raw_piety, 1000))
             return true;
         else
             return false;
@@ -4273,7 +4273,7 @@ static void _revert_banishment(bool xom_banished = true)
                ? _get_xom_speech("revert own banishment").c_str()
                : _get_xom_speech("revert other banishment").c_str());
     down_stairs(DNGN_EXIT_ABYSS);
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                    "revert banishment"), true);
 }
 
@@ -4285,7 +4285,7 @@ xom_event_type xom_maybe_reverts_banishment(bool xom_banished, bool debug)
 
     // Sometimes Xom will immediately revert banishment.
     // Always if the banishment happened below the minimum exp level and Xom was responsible.
-    if (xom_banished && !_has_min_banishment_level() || x_chance_in_y(you.piety, 1000))
+    if (xom_banished && !_has_min_banishment_level() || x_chance_in_y(you.raw_piety, 1000))
     {
         if (!debug)
             _revert_banishment(xom_banished);
@@ -4318,7 +4318,7 @@ static void _xom_noise(int /*sever*/)
     // Xom isn't subject to silence.
     fake_noisy(noisiness, you.pos());
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "noise"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "noise"), true);
 }
 
 static bool _mon_valid_blink_victim(const monster& mon)
@@ -4356,7 +4356,7 @@ static void _xom_blink_monsters(int /*sever*/)
 
     if (blinks)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "blink monster(s)"),
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "blink monster(s)"),
                   true);
     }
 }
@@ -4381,7 +4381,7 @@ static void _xom_cleaving(int sever)
              you.hands_act("look", "sharp.").c_str());
     }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cleaving"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "cleaving"), true);
 }
 
 
@@ -5001,7 +5001,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
     // if Xom is in a bad mood. Choosing any type of bad action at non-zero
     // tension is less likely, especially if Xom is in a good mood.
     if (niceness && tension == 0 && you_worship(GOD_XOM)
-        && !x_chance_in_y(you.piety, MAX_PIETY))
+        && !x_chance_in_y(you.raw_piety, MAX_PIETY))
     {
 #ifdef NOTE_DEBUG_XOM
         take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
@@ -5010,7 +5010,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_DID_NOTHING;
     }
     else if (!niceness && !_xom_feels_nasty() && tension > random2(10)
-             && you_worship(GOD_XOM) && x_chance_in_y(you.piety, MAX_PIETY))
+             && you_worship(GOD_XOM) && x_chance_in_y(you.raw_piety, MAX_PIETY))
     {
 #ifdef NOTE_DEBUG_XOM
         const string note = string("suppress bad act because of ") +
@@ -5118,7 +5118,7 @@ void xom_take_action(xom_event_type action, int sever)
     if (you_worship(GOD_XOM) && one_chance_in(5))
     {
         const string old_xom_favour = describe_xom_favour();
-        you.piety = random2(MAX_PIETY + 1);
+        you.raw_piety = random2(MAX_PIETY + 1);
         you.redraw_title = true; // redraw piety/boredom display
         const string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
@@ -5127,7 +5127,7 @@ void xom_take_action(xom_event_type action, int sever)
             god_speaks(you.religion, msg.c_str());
         }
 #ifdef NOTE_DEBUG_XOM
-        const string note = string("reroll piety: ") + you.piety;
+        const string note = string("reroll piety: ") + you.raw_piety;
         take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
 #endif
     }
@@ -5165,11 +5165,11 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 
         // these numbers (sever, tension) may be modified later...
         mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
-             niceness, sever, tension, you.piety, you.gift_timeout);
+             niceness, sever, tension, you.raw_piety, you.gift_timeout);
 
         static char xom_buf[100];
         snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
-                 (niceness ? "true" : "false"), sever, tension, you.piety);
+                 (niceness ? "true" : "false"), sever, tension, you.raw_piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
     }
 #endif
@@ -5360,7 +5360,7 @@ void xom_new_level_noise_or_stealth()
             mpr(you.duration[DUR_STEALTH] ? "You feel more stealthy."
                                           : "You feel stealthy.");
             you.increase_duration(DUR_STEALTH, 10 + random2(80));
-            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+            take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1,
                            "stealth player"), true);
         }
         else
@@ -5396,7 +5396,7 @@ static void _xom_good_teleport(int /*sever*/)
              player_in_a_dangerous_place() ? " (dangerous)" :
 #endif
              "");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 /**
@@ -5428,7 +5428,7 @@ static void _xom_bad_teleport(int /*sever*/)
 #else
     "");
 #endif
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
 /// Place a one-tile chaos cloud on the player, with minor spreading.
@@ -5438,7 +5438,7 @@ static void _xom_chaos_cloud(int /*sever*/)
     const int spread_rate = random_range(5,15);
     check_place_cloud(CLOUD_CHAOS, you.pos(), lifetime,
                       nullptr, spread_rate);
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "chaos cloud"),
               true);
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
@@ -5649,7 +5649,7 @@ void debug_xom_effects()
         return;
     }
 
-    const int real_piety    = you.piety;
+    const int real_piety    = you.raw_piety;
     const god_type real_god = you.religion;
     you.religion            = GOD_XOM;
     const int tension       = get_tension(GOD_XOM);
@@ -5684,7 +5684,7 @@ void debug_xom_effects()
     int mood_good = 0;
     for (int p = 0; p <= MAX_PIETY; ++p)
     {
-        you.piety     = p;
+        you.raw_piety = p;
         int sever     = abs(p - HALF_MAX_PIETY);
         mood          = describe_xom_mood();
         if (old_mood != mood)
@@ -5772,7 +5772,7 @@ void debug_xom_effects()
     fclose(ostat);
     mpr("Results written into 'xom_debug.stat'.");
 
-    you.piety    = real_piety;
+    you.raw_piety= real_piety;
     you.religion = real_god;
 }
 #endif // WIZARD

@@ -1627,7 +1627,7 @@ static int _you_piety(lua_State *ls)
         const int new_piety = min(max(luaL_safe_checkint(ls, 1), 0), MAX_PIETY);
         set_piety(new_piety);
     }
-    PLUARET(number, you.piety);
+    PLUARET(number, you.raw_piety);
 }
 
 static int you_dock_piety(lua_State *ls)

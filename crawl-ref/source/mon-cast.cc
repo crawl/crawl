@@ -960,6 +960,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _zap_setup(SPELL_ILL_OMEN)
     } },
+    { SPELL_OSTRACISE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return ai_action::good_or_impossible(foe->is_player() && !mons_aligned(&caster, &you)
+                                                 && adjacent(caster.pos(), you.pos()));
+        },
+        [](monster, mon_spell_slot, bolt&) {
+            flash_tile(you.pos(), BLUE, 150, TILE_BOLT_OSTRACISE);
+            ostracise_player(random_range(10, 25));
+        }
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to

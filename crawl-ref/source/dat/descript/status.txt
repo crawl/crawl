@@ -1213,3 +1213,9 @@ period of time.
 
 Both Doom and Banes are only cured by gaining experience, though Banes typically
 last much longer.
+%%%%
+Ostracised status
+
+Your connection to the divine has been partially cut-off, temporarily reducing
+your effective piety. Gaining experience will eventually recover all piety that
+has been locked away this way.

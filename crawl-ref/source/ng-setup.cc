@@ -244,7 +244,7 @@ void give_items_skills(const newgame_def& ng)
     {
     case JOB_BERSERKER:
         you.religion = GOD_TROG;
-        you.piety = 35;
+        you.raw_piety = 35;
 
         if (you_can_wear(SLOT_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
@@ -267,7 +267,7 @@ void give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
     {
         you.religion = GOD_XOM;
-        you.piety = 100;
+        you.raw_piety = 100;
         int timeout_rnd = random2(40);
         timeout_rnd += random2(40); // force a sequence point between random2s
         you.gift_timeout = max(5, timeout_rnd);
@@ -281,7 +281,7 @@ void give_items_skills(const newgame_def& ng)
 
     case JOB_CINDER_ACOLYTE:
         you.religion = GOD_IGNIS;
-        you.piety = 150;
+        you.raw_piety = 150;
         break;
 
     default:
@@ -326,7 +326,7 @@ void give_items_skills(const newgame_def& ng)
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
         if (!you_worship(GOD_XOM))
-            you.piety_max[you.religion] = you.piety;
+            you.piety_max[you.religion] = you.raw_piety;
     }
 
     if (crawl_state.game_is_descent())

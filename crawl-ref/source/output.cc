@@ -403,7 +403,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 #endif
 
 static string _god_powers();
-static string _god_asterisks();
+static formatted_string _god_asterisks(bool leading_space = false);
 static int _god_status_colour(int default_colour);
 
 // Colour for captions like 'Health:', 'Str:', etc.
@@ -1478,29 +1478,19 @@ static void _redraw_title()
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                       : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
-
-        string piety = _god_asterisks();
+        formatted_string piety = _god_asterisks(true);
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
         if (small_layout)
         {
             CGOTOXY(3, 2, GOTO_STAT);
-            NOWRAP_EOL_CPRINTF("%s", piety.c_str());
+            piety.display();
         }
         else if (textwidth <= WIDTH)
-            NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
-        else if (textwidth == (WIDTH + 1))
-        {
-            //mottled draconian of TSO doesn't fit by one symbol,
-            //so we remove leading space.
-            NOWRAP_EOL_CPRINTF("%s", piety.c_str());
-        }
+            piety.display();
         clear_to_end_of_line();
         if (you_worship(GOD_GOZAG))
-        {
-            // "Mottled Draconian of Gozag  Gold: 99999" just fits
             _print_stats_gold(textwidth + 2, 2);
-        }
     }
 
     textcolour(LIGHTGREY);
@@ -2192,7 +2182,7 @@ static string _wiz_god_powers()
 {
     string godpowers = god_name(you.religion);
     return make_stringf("%s %d (%d)", god_name(you.religion).c_str(),
-                                      you.piety,
+                                      you.raw_piety,
                                       you.duration[DUR_PIETY_POOL]);
 }
 #endif
@@ -2207,34 +2197,47 @@ static string _god_powers()
         return colour_string(name, _god_status_colour(god_colour(you.religion)));
 
     return colour_string(chop_string(name, 20, false)
-              + " [" + _god_asterisks() + "]",
+              + " [" + _god_asterisks().to_colour_string() + "]",
               _god_status_colour(god_colour(you.religion)));
 }
 
-static string _god_asterisks()
+static formatted_string _god_asterisks(bool leading_space)
 {
     if (you_worship(GOD_NO_GOD))
-        return "";
+        return formatted_string("");
 
     if (you_worship(GOD_GOZAG))
-        return "";
+        return formatted_string("");
 
+    string str;
     if (you_worship(GOD_XOM))
     {
         const int p_rank = xom_favour_rank() - 1;
         if (p_rank >= 0)
         {
-            return string(p_rank, '.') + "*"
-                   + string(NUM_PIETY_STARS - 1 - p_rank, '.');
+            str = string(p_rank, '.') + "*"
+                  + string(NUM_PIETY_STARS - 1 - p_rank, '.');
         }
         else
-            return string(NUM_PIETY_STARS, '.'); // very special plaything
+            str = string(NUM_PIETY_STARS, '.'); // very special plaything
     }
     else
     {
         const int prank = piety_rank();
-        return string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
+        const int pips = ostracism_pips();
+        if (pips > 0)
+        {
+            str = string(prank, '*')
+                    + string(NUM_PIETY_STARS - prank - pips, '.')
+                    + "<lightmagenta>"
+                    + string(pips, 'X')
+                    + "</lightmagenta>";
+        }
+        else
+            str = string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
     }
+
+    return formatted_string::parse_string((leading_space ? " " : "") + str);
 }
 
 /**

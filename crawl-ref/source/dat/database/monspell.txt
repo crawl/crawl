@@ -1153,6 +1153,10 @@ bolt of flesh zykzyl cast
 
 @The_monster@ hurls a piece of @reflexive@ @at@ @target@.
 %%%%
+ostracise cast
+
+@The_monster@ freezes your soul cold.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

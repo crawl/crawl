@@ -1480,7 +1480,7 @@ void tag_read(reader &inf, tag_type tag_id)
             && you_worship(GOD_MAKHLEB))
         {
             makhleb_initialize_marks();
-            if (you.piety >= piety_breakpoint(3))
+            if (you.raw_piety >= piety_breakpoint(3))
             {
                 mutation_type mut = random_choose(MUT_MAKHLEB_DESTRUCTION_GEH,
                                                 MUT_MAKHLEB_DESTRUCTION_COC,
@@ -1632,7 +1632,7 @@ static bool _calc_score_exists()
 static void _tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
-    marshallByte(th, you.piety);
+    marshallByte(th, you.raw_piety);
     marshallShort(th, you.pet_target);
 
     marshallByte(th, you.max_level);
@@ -2856,8 +2856,8 @@ static void _tag_read_you(reader &th)
     ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
     // now start reading the chunk proper
     you.last_mid          = unmarshallInt(th);
-    you.piety             = unmarshallUByte(th);
-    ASSERT(you.piety <= MAX_PIETY);
+    you.raw_piety             = unmarshallUByte(th);
+    ASSERT(you.raw_piety <= MAX_PIETY);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_ROTTING)
         unmarshallUByte(th);

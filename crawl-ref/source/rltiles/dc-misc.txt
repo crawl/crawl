@@ -316,6 +316,8 @@ blood_arrow5
 blood_arrow6
 blood_arrow7
 
+ostracise BOLT_OSTRACISE
+
 umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
 
 ###### Priority indicators (for Fedhas' growth)

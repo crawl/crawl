@@ -347,7 +347,7 @@ static bool _zin_retribution()
 
 static bool _xom_retribution()
 {
-    const int severity = abs(you.piety - HALF_MAX_PIETY);
+    const int severity = abs(you.raw_piety - HALF_MAX_PIETY);
     const bool good = one_chance_in(10);
     return xom_acts(severity, good) != XOM_DID_NOTHING;
 }

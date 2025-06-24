@@ -271,7 +271,7 @@ public:
 
     god_type religion;
     string jiyva_second_name;       // Random second name of Jiyva
-    uint8_t piety;
+    uint8_t raw_piety;
     uint8_t piety_hysteresis;       // amount of stored-up docking
     uint8_t gift_timeout;
     uint8_t saved_good_god_piety;   // for if you "switch" between E/Z/1 by abandoning one first
@@ -520,6 +520,8 @@ public:
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
+
+    int piety() const;
 
     bool in_water() const;
     bool in_liquid() const;
