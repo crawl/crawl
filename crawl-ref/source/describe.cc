@@ -2373,6 +2373,10 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_DEATH:
         return "it empowers the wearer's necromancy spells and improves their "
                " success rate, but imposes a health cost for other magic.";
+    case SPARM_RESONANCE:
+        return "it improves the success rate of the wearer's forgecraft spells "
+               " and enhances their melee attacks proportionally to forgecraft "
+               " skill";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

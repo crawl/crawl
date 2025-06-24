@@ -2436,6 +2436,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
+    // resonance armour damage modifier
+    damage = resonance_damage_mod(damage, true);
+
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
