@@ -187,8 +187,7 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();
-    bool player_unrand_bad_attempt(const item_def *offhand,
-                                   bool check_only = false);
+    bool player_unrand_bad_attempt(bool check_only = false);
     void _defender_die();
     void handle_spectral_brand();
 
@@ -200,6 +199,7 @@ private:
 
     bool can_reach(int dist);
 
+    item_def *primary_weapon() const;
     item_def *offhand_weapon() const;
 
     // XXX: set up a copy constructor instead?
