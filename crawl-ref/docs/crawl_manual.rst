@@ -2028,7 +2028,7 @@ Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
   Fighters usually start with a good weapon of their choice, a suit of medium
-  armour, a shield, and a potion of might.
+  armour, a shield, and two potions of might.
 
 Gladiators
   The Gladiator has been trained to fight in the ring. They start with a good
@@ -2087,7 +2087,8 @@ Artificers
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with two talismans and a potion of lignification.
+  They enter the dungeon with two talismans, some flux baubles, and a 
+  potion of lignification.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
@@ -2110,7 +2111,7 @@ Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, a selection
-  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  of translocation spells, some disjunction darts, a simple weapon of their choice,
   and leather armour.
 
 Hexslinger
