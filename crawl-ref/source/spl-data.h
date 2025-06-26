@@ -4551,6 +4551,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MUTAGENIC_GAZE, "Mutagenic Gaze",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_MUTAGENIC_GAZE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

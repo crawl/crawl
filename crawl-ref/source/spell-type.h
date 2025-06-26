@@ -643,5 +643,6 @@ enum spell_type : int
     SPELL_DOOM_BOLT,
     SPELL_WARP_BODY,
     SPELL_OSTRACISE,
+    SPELL_MUTAGENIC_GAZE,
     NUM_SPELLS
 };

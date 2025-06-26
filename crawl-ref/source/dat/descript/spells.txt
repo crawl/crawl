@@ -1331,6 +1331,13 @@ Mud Breath spell
 
 <Mud Breath ability>
 %%%%
+Mutagenic Gaze spell
+
+Causes mutagenic energy to accumulate in a target, eventually reaching levels
+high enough to cause harmful mutations or explosions of unstable magical energy.
+
+This spell requires line of sight but not line of fire.
+%%%%
 Nazja's All-Purpose Tempering spell
 
 Manifests a magical hammer that repairs and temporarily augments the offensive
