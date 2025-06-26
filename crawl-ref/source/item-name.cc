@@ -35,6 +35,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb-type.h"
@@ -3026,7 +3027,6 @@ static string _general_cannot_read_reason()
     if (you.confused())
         return "You are too confused!";
 
-    // no reading while threatened (Ru/random mutation)
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
@@ -3036,6 +3036,9 @@ static string _general_cannot_read_reason()
     // water elementals
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
         return "You cannot read scrolls while unable to breathe!";
+
+    if (you.has_mutation(MUT_HOARD_SCROLLS) && you.props.exists(HOARD_SCROLLS_TIMER_KEY))
+        return "You cannot bring yourself to waste a scroll at the moment!";
 
     return "";
 }
@@ -3189,6 +3192,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
 
         if (you.berserk())
             return "You are too berserk!";
+
+        if (you.has_mutation(MUT_HOARD_POTIONS) && you.props.exists(HOARD_POTIONS_TIMER_KEY))
+            return "You cannot bring yourself to waste a potion at the moment!";
 
         if (player_in_branch(BRANCH_COCYTUS))
             return "It's too cold; everything's frozen solid!";

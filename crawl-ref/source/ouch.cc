@@ -1022,31 +1022,6 @@ static void _maybe_silence()
     if (x_chance_in_y(silence_sources, 100))
         silence_player(4 + random2(7));
 }
-/**
- * Maybe disable scrolls after taking damage if the player has MUT_READ_SAFETY.
- **/
-static void _maybe_disable_scrolls()
-{
-    int mut_level = you.get_mutation_level(MUT_READ_SAFETY);
-    if (mut_level && !you.duration[DUR_NO_SCROLLS] && x_chance_in_y(mut_level, 100))
-    {
-        mpr("You feel threatened and lose the ability to read scrolls!");
-        you.increase_duration(DUR_NO_SCROLLS, 10 + random2(5));
-    }
-}
-
-/**
- * Maybe disable potions after taking damage if the player has MUT_DRINK_SAFETY.
- **/
-static void _maybe_disable_potions()
-{
-    int mut_level = you.get_mutation_level(MUT_DRINK_SAFETY);
-    if (mut_level && !you.duration[DUR_NO_POTIONS] && x_chance_in_y(mut_level, 100))
-    {
-        mpr("You feel threatened and lose the ability to drink potions!");
-        you.increase_duration(DUR_NO_POTIONS, 10 + random2(5));
-    }
-}
 
 static void _place_player_corpse(bool explode)
 {
@@ -1426,8 +1401,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_corrode();
                 _maybe_slow();
                 _maybe_silence();
-                _maybe_disable_scrolls();
-                _maybe_disable_potions();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

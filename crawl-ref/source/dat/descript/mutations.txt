@@ -1210,15 +1210,19 @@ period of time, in exchange for being dragged down into the Crucible of Flesh
 afterward and made to fight for your freedom.
 %%%%
 # ------ Ru sacrifices ------
-inability to drink after injury mutation
+potion hoarding mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. Each level of this mutation increases this chance by 1%.
+You refuse to drink potions in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+drink anything unless your HP is below 65% or 40% of its maximum, depending on
+the level of the mutation.
 %%%%
-inability to read after injury mutation
+scroll hoarding mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to read scrolls. Each level of this mutation increases this chance by 1%.
+You refuse to read scrolls in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+read anything unless your HP is below 65% or 40% of its maximum, depending on
+the level of the mutation.
 %%%%
 missing a hand mutation
 

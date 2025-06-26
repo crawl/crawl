@@ -282,7 +282,9 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_POTIONS:
-        if (you.duration[DUR_NO_POTIONS] || player_in_branch(BRANCH_COCYTUS))
+        if (you.duration[DUR_NO_POTIONS] || player_in_branch(BRANCH_COCYTUS)
+            || (you.has_mutation(MUT_HOARD_POTIONS)
+                && you.props.exists(HOARD_POTIONS_TIMER_KEY)))
         {
             inf.light_colour = !you.can_drink(false) ? DARKGREY : RED;
             inf.light_text   = "-Potion";
@@ -781,7 +783,9 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_SCROLL:
-        if (you.duration[DUR_NO_SCROLLS] || player_in_branch(BRANCH_GEHENNA))
+        if (you.duration[DUR_NO_SCROLLS] || player_in_branch(BRANCH_GEHENNA)
+            || (you.has_mutation(MUT_HOARD_SCROLLS)
+                && you.props.exists(HOARD_SCROLLS_TIMER_KEY)))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";

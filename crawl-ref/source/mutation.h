@@ -19,6 +19,9 @@ class formatted_string;
 
 #define EVOLUTION_MUTS_KEY "evolution_muts"
 
+#define HOARD_POTIONS_TIMER_KEY "hoard_potions_timer"
+#define HOARD_SCROLLS_TIMER_KEY "hoard_scrolls_timer"
+
 enum mutation_permanence_class
 {
     // Temporary mutations wear off after awhile

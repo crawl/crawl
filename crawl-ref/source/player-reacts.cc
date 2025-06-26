@@ -458,6 +458,37 @@ static void _handle_uskayaw_time(int time_taken)
         you.props[USKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
 }
 
+static void _handle_hoarding()
+{
+    const int potion_lv = you.get_mutation_level(MUT_HOARD_POTIONS);
+    if (potion_lv)
+    {
+        const int trigger_hp = potion_lv == 1 ? you.hp_max * 65 / 100
+                                              : you.hp_max * 4 / 10;
+
+        if (you.hp <= trigger_hp)
+            you.props.erase(HOARD_POTIONS_TIMER_KEY);
+        else if (!i_feel_safe(false, false, true))
+            you.props[HOARD_POTIONS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[HOARD_POTIONS_TIMER_KEY].get_int())
+            you.props.erase(HOARD_POTIONS_TIMER_KEY);
+    }
+
+    const int scroll_lv = you.get_mutation_level(MUT_HOARD_SCROLLS);
+    if (scroll_lv)
+    {
+        const int trigger_hp = scroll_lv == 1 ? you.hp_max * 65 / 100
+                                              : you.hp_max * 4 / 10;
+
+        if (you.hp <= trigger_hp)
+            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
+        else if (!i_feel_safe(false, false, true))
+            you.props[HOARD_SCROLLS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[HOARD_SCROLLS_TIMER_KEY].get_int())
+            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
+    }
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -550,6 +581,8 @@ void player_reacts_to_monsters()
     }
 
     _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
+
+    _handle_hoarding();
 }
 
 static bool _check_recite()

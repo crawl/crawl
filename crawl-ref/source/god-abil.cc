@@ -4743,15 +4743,15 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
             // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_DRINK_SAFETY);
+            piety_gain -= 10 * you.get_mutation_level(MUT_HOARD_POTIONS);
             // check innate mutation level to see if reading was sacrificed
-            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 2)
+            if (you.get_innate_mutation_level(MUT_HOARD_SCROLLS) == 2)
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
             // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_READ_SAFETY);
-            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 2)
+            piety_gain -= 10 * you.get_mutation_level(MUT_HOARD_SCROLLS);
+            if (you.get_innate_mutation_level(MUT_HOARD_POTIONS) == 2)
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
@@ -5014,9 +5014,9 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
+    if (sacrifice == MUT_HOARD_SCROLLS || sacrifice == MUT_HOARD_POTIONS)
     {
-        // get the safety mutation to the cap instead of 1 level higher
+        // set these mutations to their cap
         perma_mutate(sacrifice,
                     3 - you.get_mutation_level(sacrifice),
                     "Ru sacrifice");
