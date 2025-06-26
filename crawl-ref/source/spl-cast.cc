@@ -3453,3 +3453,18 @@ void stop_channelling_spells(bool quiet)
             break;
     }
 }
+
+// Prompts the player when casting a spell like Irradiate, while having enough
+// contam that it could push them into yellow.
+//
+// Returns true if we should abort.
+bool warn_about_contam_cost(int max_contam)
+{
+    if (!Options.warn_contam_cost || you.magic_contamination >= 1000)
+        return false;
+
+    if (you.magic_contamination + max_contam >= 1000)
+        return !yesno("Casting this now could dangerously contaminate you. Continue?", true, 'n');
+
+    return false;
+}

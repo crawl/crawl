@@ -2064,6 +2064,9 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     if (caster.is_player() && stop_attack_prompt(hitfunc, "irradiate", vulnerable))
         return spret::abort;
 
+    if (warn_about_contam_cost(400))
+        return spret::abort;
+
     fail_check();
 
     if (caster.is_player())

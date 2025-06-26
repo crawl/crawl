@@ -1478,6 +1478,11 @@ easy_door = true
 warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
 
+warn_contam_cost = false
+	Ask for confirmation before casting a spell with a contam cost, if it
+	is possible that casting it at your current level of magic contamination
+	could cause you to reach harmful levels of contamination.
+
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
         Enter or '.' at the spellcasting prompt.
