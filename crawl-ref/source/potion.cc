@@ -413,10 +413,12 @@ public:
     {
         debuff_player(true);
         mpr("You feel magically purged.");
-        const int old_contam_level = get_contamination_level();
-        contaminate_player(-1 * (1000 + random2(4000)));
-        if (old_contam_level && old_contam_level == get_contamination_level())
-            mpr("You feel slightly less contaminated with magical energies.");
+        if (you.magic_contamination > 0)
+        {
+            contaminate_player(-1 * random_range(250, 1000));
+            if (you.magic_contamination > 0)
+                mpr("You feel slightly less contaminated with magical energies.");
+        }
         return true;
     }
 };
@@ -469,7 +471,7 @@ public:
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed())
                 afflictions.push_back("halo");
-            if (player_severe_contamination())
+            if (player_harmful_contamination())
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
                 afflictions.push_back("corona");

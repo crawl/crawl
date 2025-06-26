@@ -1160,11 +1160,10 @@ as a single mutation.
 
 Miscasting spells will cause magical contamination, which in turn can cause
 mutations if too much contamination is accrued at once. Certain powerful
-magical effects or spells (such as 'Invisibility' and 'Irradiate') also cause
-contamination as a side-effect even when successful. A single use of these
-effects is safe on its own, but multiple uses in short succession, or usage with
-existing contamination from other sources can cause dangerous levels of
-contamination.
+magical spells (such as 'Irradiate') also cause contamination as a side-effect
+even when successful. A single use of these effects is safe on its own, but
+multiple uses in short succession, or usage with existing contamination from
+other sources can cause dangerous levels of contamination.
 
 Mutations from magical contamination are almost always harmful. Mutations can
 also be caused by specific potions or by spells cast by powerful enemies found

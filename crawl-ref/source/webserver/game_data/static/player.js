@@ -321,6 +321,29 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         elem.on("mouseleave", ev => tooltip.hide());
     }
 
+    function update_contam()
+    {
+        if (player.contam == 0)
+        {
+            $("#stats_contam_ui").hide();
+            return;
+        }
+        else
+            $("#stats_contam_ui").show();
+
+        var val = player.contam;
+        var elem = $("<span>");
+        elem.text(" " + val + "%");
+
+        var colour = "fg8";
+        if (val >= 200)
+            colour = "fg4";
+        else if (val >= 100)
+            colour = "fg14";
+        elem.addClass(colour);
+        $("#stats_contam").html(elem);
+    }
+
     function percentage_color(name)
     {
         var real = false;
@@ -442,6 +465,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         update_bar("mp");
 
         update_doom();
+        update_contam();
 
         update_defense("ac");
         update_defense("ev");

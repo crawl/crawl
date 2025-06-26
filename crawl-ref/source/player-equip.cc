@@ -1752,7 +1752,7 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld)
     if (proprt[ARTP_CONTAM] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
-        contaminate_player(7000, true);
+        contaminate_player(1200, true);
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !meld
@@ -2678,6 +2678,6 @@ void unwield_distortion(bool brand)
     else
     {
         mpr("Space warps into you!");
-        contaminate_player(random2avg(18000, 3), true);
+        contaminate_player(random2avg(3000, 3), true);
     }
 }

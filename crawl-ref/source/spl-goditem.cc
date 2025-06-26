@@ -432,7 +432,7 @@ bool player_is_debuffable()
  */
 bool player_is_cancellable()
 {
-    return get_contamination_level() || player_is_debuffable();
+    return you.magic_contamination > 0 || player_is_debuffable();
 }
 
 /**
@@ -445,7 +445,7 @@ string describe_player_cancellation(bool debuffs_only)
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
-    if (!debuffs_only && get_contamination_level())
+    if (!debuffs_only && you.magic_contamination > 0)
         effects.push_back("as magically contaminated");
 
     vector<duration_type> buffs = _dispellable_player_buffs();

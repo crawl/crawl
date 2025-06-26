@@ -76,8 +76,6 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
-#define SEVERE_CONTAM_LEVEL 3
-
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
@@ -447,6 +445,7 @@ public:
     bool redraw_magic_points;
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_doom;
+    bool redraw_contam;
     bool redraw_experience;
     bool redraw_armour_class;
     bool redraw_evasion;
@@ -1155,9 +1154,8 @@ void set_hp(int new_amount);
 int get_real_hp(bool trans, bool drained = true);
 int get_real_mp(bool include_items);
 
-int get_contamination_level();
-bool player_severe_contamination();
-string describe_contamination(int level);
+bool player_harmful_contamination();
+string describe_contamination(bool verbose = true);
 
 bool sanguine_armour_valid();
 void activate_sanguine_armour();

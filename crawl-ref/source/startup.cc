@@ -324,6 +324,7 @@ static void _post_init(bool newc)
     init_properties();
 
     you.redraw_stats.init(true);
+    you.redraw_contam       = true;
     you.redraw_doom         = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;

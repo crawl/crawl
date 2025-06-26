@@ -1037,39 +1037,18 @@ static void _describe_zot(status_info& inf)
 
 static void _describe_glow(status_info& inf)
 {
-    const int signed_cont = get_contamination_level();
-    if (signed_cont <= 0)
+    // Don't show a status light until we have contam that does something.
+    if (!player_harmful_contamination())
         return;
 
-    const unsigned int cont = signed_cont; // so we don't get compiler warnings
-    if (player_severe_contamination())
-    {
-        inf.light_colour = _bad_ench_colour(cont, SEVERE_CONTAM_LEVEL + 1,
-                                                  SEVERE_CONTAM_LEVEL + 2);
-    }
-    else if (cont > 1)
-        inf.light_colour = LIGHTGREY;
+    if (you.magic_contamination >= 2000)
+        inf.light_colour = RED;
     else
-        inf.light_colour = DARKGREY;
+        inf.light_colour = YELLOW;
     inf.light_text = "Contam";
 
-    /// Mappings from contamination levels to descriptions.
-    static const string contam_adjectives[] =
-    {
-        "",
-        "very slightly ",
-        "slightly ",
-        "",
-        "heavily ",
-        "very heavily ",
-        "very very heavily ", // this is silly but no one will ever see it
-        "impossibly ",        // (likewise)
-    };
-    ASSERT(signed_cont >= 0);
-
-    const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
-    inf.short_text = contam_adjectives[adj_i] + "contaminated";
-    inf.long_text = describe_contamination(cont);
+    inf.short_text = describe_contamination(false);
+    inf.long_text = describe_contamination();
 }
 
 static void _describe_rev(status_info& inf)

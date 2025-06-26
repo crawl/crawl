@@ -4602,6 +4602,9 @@ static string _player_spell_desc(spell_type spell)
         }
     }
 
+    if (spell == SPELL_IRRADIATE)
+        description << "This inflicts up to 40% magical contamination when cast by you.\n";
+
     // Report summon cap
     const int limit = summons_limit(spell, true);
     if (limit)

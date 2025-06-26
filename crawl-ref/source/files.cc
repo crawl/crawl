@@ -158,6 +158,7 @@ static void _redraw_all()
     you.redraw_experience    = true;
     you.redraw_status_lights = true;
     you.redraw_doom          = true;
+    you.redraw_contam        = true;
 }
 
 static bool is_save_file_name(const string &name)

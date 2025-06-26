@@ -105,9 +105,10 @@ Confusion can be cured immediately by potions of curing.
 %%%%
 Contam status
 
-You glow with mutagenic radiation. This can mutate you over time, usually with
-a negative outcome. The colour indicates the severity: the first level (grey)
-is only a warning, and no mutation or loss of stealth will occur from it.
+You are glowing with mutagenic radiation. This can inflict mutations over time
+(usually negative) or even cause you to suffer damage as the unstable magic
+explodes violently. In addition, your glow prevents invisibility and reduces
+your stealth.
 %%%%
 Drain status
 

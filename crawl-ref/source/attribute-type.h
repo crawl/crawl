@@ -108,5 +108,6 @@ enum attribute_type
     ATTR_TRAITOR,              // God who has been abandoned with an invocations title
     ATTR_DOOM,                 // How much Doom the player has accrued
     ATTR_OSTRACISM,            // How much your piety is temporarily capped by
+    ATTR_LAST_CONTAM,          // Timestamp of when contam was last inflicted
     NUM_ATTRIBUTES
 };

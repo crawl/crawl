@@ -2033,7 +2033,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     {
         // be nice and "only" contaminate the player a lot
         if (hitting_player)
-            contaminate_player(2000 + random2(1000));
+            contaminate_player(random_range(400, 600));
         else if (coinflip())
             act->malmutate(&agent);
     }
@@ -2095,7 +2095,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     }, caster.pos(), true, 8);
 
     if (caster.is_player())
-        contaminate_player(1250 + random2(750));
+        contaminate_player(random_range(185, 400));
     return spret::success;
 }
 

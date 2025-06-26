@@ -1112,7 +1112,7 @@ static void _jiyva_contaminate()
 {
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
-    contaminate_player(random2(you.penance[god] * 500));
+    contaminate_player(random2(you.penance[god] * 100));
 }
 
 static void _jiyva_summon_slimes()

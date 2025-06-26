@@ -114,7 +114,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
         if (!act)
             continue;
 
-        if (act->is_player() && get_contamination_level())
+        if (act->is_player() && player_harmful_contamination())
         {
             msg = " basks in your mutagenic energy and changes!";
             break;

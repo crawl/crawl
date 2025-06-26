@@ -1142,6 +1142,8 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.doom, you.attribute[ATTR_DOOM], "doom");
     json_write_string("doom_desc", getLongDescription("doom status"));
 
+    _update_int(force_full, c.contam, you.magic_contamination / 10, "contam");
+
     if (you.has_mutation(MUT_MULTILIVED))
     {
         _update_int(force_full, c.lives, you.lives, "lives");

@@ -1169,8 +1169,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             // It's possible that you got trampled into the mutagenic cloud
             // and it's not your fault... so we'll say it's not intentional.
             // (it's quite bad in any case, so players won't scum, probably.)
-            contaminate_player(1300 + random2(1250), false);
-            // min 2 turns to yellow, max 4
+            contaminate_player(random_range(250, 500), false);
             return true;
         }
         else if (coinflip() && mons->malmutate(cloud.agent(), "mutagenic cloud"))

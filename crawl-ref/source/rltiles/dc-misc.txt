@@ -150,6 +150,11 @@ irradiate1
 irradiate2
 irradiate3
 
+contam0 BOLT_CONTAM
+contam1
+contam2
+contam3
+
 fulsome_fire BOLT_FULSOME_FIRE
 fulsome_ice BOLT_FULSOME_ICE
 fulsome_electric BOLT_FULSOME_ELECTRIC

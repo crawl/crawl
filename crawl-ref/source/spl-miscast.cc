@@ -315,7 +315,7 @@ void miscast_effect(spell_type spell, int fail)
     // contamination!
     const int nastiness = spell_difficulty(spell) * spell_difficulty(spell)
                           * fail + 250;
-    const int cont_points = 2 * nastiness;
+    const int cont_points = 2 * nastiness / 5;
 
     contaminate_player(cont_points, true);
 

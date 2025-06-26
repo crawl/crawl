@@ -1063,6 +1063,33 @@ static void _print_stats_doom(int x, int y)
     you.redraw_doom = false;
 }
 
+static void _print_stats_contam(int x, int y)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+
+    // Hide the bar entirely if the player has no contam
+    if (you.magic_contamination == 0)
+    {
+        CPRINTF("            ");
+        return;
+    }
+
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Contam: ");
+
+    const int contam = max(1, you.magic_contamination / 10);
+    if (contam >= 200)
+        textcolour(RED);
+    else if (contam >= 100)
+        textcolour(YELLOW);
+    else
+        textcolour(DARKGRAY);
+
+    CPRINTF("%d%% ", contam);
+    you.redraw_contam = false;
+}
+
 static void _print_stats_ac(int x, int y)
 {
     // AC:
@@ -1561,6 +1588,9 @@ void print_stats()
     if (you.redraw_doom)
         _print_stats_doom(32, 5 - rows_hidden);
 
+    if (you.redraw_contam)
+        _print_stats_contam(30, 6 - rows_hidden);
+
     if (you.redraw_experience)
     {
         CGOTOXY(1, 8 - rows_hidden, GOTO_STAT);
@@ -1713,6 +1743,7 @@ void redraw_screen(bool show_updates)
     you.redraw_noise         = true;
     you.gear_change          = true;
     you.redraw_doom          = true;
+    you.redraw_contam        = true;
 
     print_stats();
 

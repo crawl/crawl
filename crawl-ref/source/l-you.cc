@@ -558,7 +558,7 @@ LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
  * @treturn number
  * @function contaminated
  */
-LUARET1(you_contaminated, number, get_contamination_level())
+LUARET1(you_contaminated, number, you.magic_contamination > 0)
 
 /*** Do you feel safe?
  * @treturn boolean

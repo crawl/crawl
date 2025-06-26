@@ -4146,6 +4146,11 @@ static void _tag_read_you(reader &th)
         you.magic_contamination = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CONTAM_PERCENT)
+        you.magic_contamination = min(3000, you.magic_contamination / 5);
+#endif
+
+#if TAG_MAJOR_VERSION == 34
     unmarshallUByte(th);
 #endif
     you.transit_stair  = unmarshallFeatureType(th);

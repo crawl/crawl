@@ -61,9 +61,11 @@ static void _apply_contam_over_time()
 {
     int added_contamination = 0;
 
-    //If not invisible, normal dissipation
-    if (!you.duration[DUR_INVIS])
-        added_contamination -= 75;
+    // No contam decay within 7 turns of last being contaminated
+    if (you.elapsed_time - you.attribute[ATTR_LAST_CONTAM] <= 70)
+        return;
+
+    added_contamination -= 20;
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -78,48 +80,53 @@ static void _magic_contamination_effects()
     mprf(MSGCH_WARN, "Your body shudders with the violent release "
                      "of wild energies!");
 
-    const int contam = you.magic_contamination;
+    const bool severe = you.magic_contamination >= 2000;
 
-    // For particularly violent releases, make a little boom.
-    if (contam > 10000 && coinflip())
+    // The chance of exploding scales with contamination severity.
+    // Damage scales with player XL. Explosions at 200%+ contam have increased
+    // radius and damage.
+    if (x_chance_in_y(min(2000, you.magic_contamination), 3200))
     {
         bolt beam;
 
-        beam.flavour      = BEAM_RANDOM;
-        beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, div_rand_round(contam, 2000));
-        beam.target       = you.pos();
-        beam.name         = "magical storm";
-        //XXX: Should this be MID_PLAYER?
-        beam.source_id    = MID_NOBODY;
-        beam.aux_source   = "a magical explosion";
-        beam.ex_size      = max(1, min(LOS_RADIUS,
-                                       div_rand_round(contam, 15000)));
-        beam.ench_power   = div_rand_round(contam, 200);
-        beam.is_explosion = true;
+        const int pow = severe ? you.experience_level * 3 / 2
+                               : you.experience_level;
+        zappy(ZAP_CONTAM_EXPLOSION, pow, false, beam);
 
-        beam.explode();
+        beam.source       = you.pos();
+        beam.target       = you.pos();
+        beam.source_id    = MID_YOU_FAULTLESS;
+        beam.aux_source   = "a magical explosion";
+        beam.ex_size      = severe ? 2 : 1;
+
+        // Ignores the player's own AC (it's your body exploding!), but not
+        // enemies.
+        beam.ac_rule = ac_type::none;
+        beam.is_explosion = false;
+        beam.fire();
+
+        beam.damage.num = 4;
+        beam.ac_rule = ac_type::normal;
+        beam.is_explosion = true;
+        beam.explode(true, true);
     }
 
-    const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
-
+    flash_tile(you.pos(), LIGHTBLUE);
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true, coinflip(), false, false, mutclass);
+           "mutagenic glow");
 
-    // we're meaner now, what with explosions and whatnot, but
-    // we dial down the contamination a little faster if its actually
-    // mutating you.  -- GDL
-    contaminate_player(-(random2(contam / 4) + 1000));
+    contaminate_player(-random_range(200, 400) * (severe ? 2 : 1));
 }
-// Checks if the player should be hit with magic contaimination effects,
-// then actually does it if they should be.
+
+// Checks if the player should be hit with backlash from magic contamination,
+// then actually does so if they should be.
 static void _check_contamination_effects(int /*time_delta*/)
 {
-    const bool glow_effect = player_severe_contamination()
-                             && x_chance_in_y(you.magic_contamination, 12000);
-
-    if (glow_effect)
+    // 75% chance of a mishap each time this is checked at yellow contam and
+    // a 100% chance above that.
+    if (you.magic_contamination >= 2000
+        || you.magic_contamination >= 1000 && !one_chance_in(4))
     {
         if (is_sanctuary(you.pos()))
         {
@@ -389,7 +396,7 @@ static struct timed_effect timed_effects[] =
     { nullptr,                         0,     0, false },
     { nullptr,                         0,     0, false },
 #endif
-    { _check_contamination_effects,   70,   200, false },
+    { _check_contamination_effects,  110,   250, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif

@@ -2683,4 +2683,20 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_CONTAM_EXPLOSION,
+    "magical storm",
+    new dicedef_calculator<3, 3, 2, 9>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    ETC_MUTAGENIC,
+    false,
+    BEAM_MMISSILE,
+    NUM_DCHAR_TYPES,
+    false,
+    true,
+    TILE_BOLT_CONTAM,
+},
+
 };
