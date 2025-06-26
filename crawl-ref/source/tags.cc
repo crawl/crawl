@@ -6506,8 +6506,8 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
     marshallShort(th, m.damage_total);
-    marshallByte(th, m.went_unseen_this_turn);
-    marshallCoord(th, m.unseen_pos);
+    marshallByte(th, m.revealed_this_turn);
+    marshallCoord(th, m.revealed_at_pos);
 
     if (parts & MP_GHOST_DEMON)
     {
@@ -7597,14 +7597,14 @@ void unmarshallMonster(reader &th, monster& m)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_UNSEEN_MONSTER)
     {
-        m.went_unseen_this_turn = false;
-        m.unseen_pos = coord_def(0, 0);
+        m.revealed_this_turn = false;
+        m.revealed_at_pos = coord_def(0, 0);
     }
     else
     {
 #endif
-    m.went_unseen_this_turn = unmarshallByte(th);
-    m.unseen_pos = unmarshallCoord(th);
+        m.revealed_this_turn = unmarshallByte(th);
+        m.revealed_at_pos = unmarshallCoord(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
