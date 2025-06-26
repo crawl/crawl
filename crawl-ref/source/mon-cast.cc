@@ -5166,6 +5166,11 @@ bool handle_mon_spell(monster* mons)
         return false;
     }
 
+    // Casting an instant spell shouldn't make a cautious monster *more* likely
+    // to advance towards their target.
+    if ((flags & MON_SPELL_INSTANT) && mons->flags & MF_CAUTIOUS)
+        mons->props[MON_SPELL_USABLE_KEY] = true;
+
     // Check for antimagic if casting a spell spell.
     if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_ANTIMAGIC_MASK
         && !x_chance_in_y(4 * BASELINE_DELAY,
