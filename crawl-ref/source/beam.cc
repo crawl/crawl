@@ -4308,7 +4308,11 @@ void bolt::affect_player()
     // Visible beams reveal invisible monsters; otherwise animations confer
     // an information advantage for sighted players
     if (visible() && agent() && agent()->is_monster())
-        agent()->as_monster()->unseen_pos = agent()->pos();
+    {
+        monster* mons = agent()->as_monster();
+        mons->revealed_this_turn = true;
+        mons->revealed_at_pos = mons->pos();
+    }
 
     if (misses_player())
         return;

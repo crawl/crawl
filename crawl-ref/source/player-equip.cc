@@ -2684,8 +2684,8 @@ static void _mark_unseen_monsters()
     {
         if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
         {
-            (*mi)->went_unseen_this_turn = true;
-            (*mi)->unseen_pos = (*mi)->pos();
+            (*mi)->revealed_this_turn = true;
+            (*mi)->revealed_at_pos = (*mi)->pos();
         }
 
     }
