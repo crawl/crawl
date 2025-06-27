@@ -1787,7 +1787,7 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
+static void _DREAD_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
                                         actor* defender, bool mondied, int /*dam*/)
 {
     if (!mondied)

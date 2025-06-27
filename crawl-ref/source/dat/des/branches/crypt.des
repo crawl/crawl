@@ -105,7 +105,7 @@ function crypt_loot_plus(e, glyph)
 
   local ring = "any ring randart artprops:rN:2"
   local amulet = "any amulet randart artprops:Regen:1"
-  local unrand = util.random_from({"sword_of_the_doom_knight", "leech",
+  local unrand = util.random_from({"sword_of_the_dread_knight", "leech",
                                    "vampires_tooth", "finisher",
                                    "scythe_of_curses", "sceptre_of_torment",
                                    "undeadhunter", "brilliance", "majin-bo",

@@ -8225,14 +8225,14 @@ MAP
  ...............
 ENDMAP
 
-# sword of the Doom Knight
+# sword of the Dread Knight
 # A temple to Yredelemnul, with a champion wielding the blade designate.
-NAME:   grunt_guarded_unrand_doom_knight
+NAME:   grunt_guarded_unrand_dread_knight
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, Crypt
 WEIGHT: 3
 MONS:   death knight ; \
-        sword_of_the_doom_knight . \
+        sword_of_the_dread_knight . \
         chain mail w:7 | \
         plate armour w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior

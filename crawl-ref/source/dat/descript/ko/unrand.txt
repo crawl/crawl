@@ -101,7 +101,7 @@ crossbow "Hellfire"
 
 지옥불에서 단조된 타오르는 석궁. 이름처럼 불타는 화살로 가득 차있다.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 아다만틴 합금으로 만든 대검이다.
 %%%%
