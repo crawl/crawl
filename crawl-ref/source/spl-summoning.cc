@@ -625,7 +625,7 @@ void oblivion_howl(int time)
 
         monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
                                                  target->pos(), target->mindex(),
-                                                 MG_FORCE_BEH).set_range(1));
+                                                 MG_FORCE_BEH).set_range(1, you.current_vision));
         if (mons)
         {
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
