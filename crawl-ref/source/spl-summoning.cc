@@ -1405,14 +1405,16 @@ spret cast_summon_horrible_things(int pow, bool fail)
         return spret::abort;
 
     fail_check();
+
+    int doom_cost = random_range(3, 7);
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("summon_horrible_things"));
-
-        // XXX: Temporary effect until something else is implemented.
-        temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");
+        doom_cost *= 3;
     }
+
+    you.doom(doom_cost);
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
     int num_tmons = random2(pow) > 120 ? 2 : random2(pow) > 50 ? 1 : 0;
