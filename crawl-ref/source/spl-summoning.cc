@@ -589,25 +589,25 @@ void do_dragon_call(int time)
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
- *                  since the last doom_howl call.
+ *                  since the last oblivion_howl call.
  */
-void doom_howl(int time)
+void oblivion_howl(int time)
 {
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
-    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    if (!you.props.exists(NEXT_OBLIVION_SPAWN_KEY))
+        you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
     // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
-        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        const int time_to_call = you.props[NEXT_OBLIVION_SPAWN_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+            you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
-            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
+            you.props[NEXT_OBLIVION_SPAWN_KEY].get_int() -= time;
         time -= time_to_call;
     }
 
@@ -631,7 +631,7 @@ void doom_howl(int time)
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
-            mons_add_blame(mons, "called by a doom hound"); // assumption!
+            mons_add_blame(mons, "called by an oblivion hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }

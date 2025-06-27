@@ -110,7 +110,7 @@ function base_monster_setup(e)
                demonspawn blood saint band w:5 /\
                demonspawn corrupter band w:5 /\
                demonspawn soul scholar band w:5 /\
-               quicksilver elemental w:5 / putrid mouth / doom hound w:5 /\
+               quicksilver elemental w:5 / putrid mouth / oblivion hound w:5 /\
                bennu w:5 / fravashi w:5 / pearl dragon / apis w:2 /\
                primal mutant beast w:2 / iron elemental w:3")
   e.kmons("G = caustic shrike w:5 / caustic shrike band w:5 /\

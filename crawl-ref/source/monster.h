@@ -35,7 +35,7 @@ using std::vector;
 #define TENTACLE_LORD_HITS "tentacle_lord_hits_key"
 
 /// has a given hound already used up its howl?
-#define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
+#define OBLIVION_HOUND_HOWLED_KEY "doom_hound_howled"
 #define KIKU_WRETCH_KEY "kiku_wretch"
 #define MONSTER_DOOM_KEY "doom_amount"
 

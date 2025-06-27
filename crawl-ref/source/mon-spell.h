@@ -280,9 +280,9 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DOOM_HOUND,
+    {  MST_OBLIVION_HOUND,
       {
-       { SPELL_DOOM_HOWL, 30, MON_SPELL_NATURAL },
+       { SPELL_OBLIVION_HOWL, 30, MON_SPELL_NATURAL },
       }
     },
 

@@ -25,7 +25,7 @@
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "spl-damage.h" // COUPLING_TIME_KEY
-#include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
+#include "spl-summoning.h" // NEXT_OBLIVION_SPAWN_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "stairs.h" // rise_through_ceiling
 #include "state.h" // crawl_state

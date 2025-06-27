@@ -2075,7 +2075,7 @@ ORIENT:  south
 MONS:    shadow wraith / nothing, vampire mage / nothing, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon
 KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
-KMONS:   8 = bone dragon / reaper / doom hound
+KMONS:   8 = bone dragon / reaper / oblivion hound
 KMONS:   _ = tzitzimitl
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, hood_of_the_assassin

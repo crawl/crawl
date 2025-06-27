@@ -67,7 +67,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_INUGAMI,
     MONS_RAIJU,
-    MONS_DOOM_HOUND,
+    MONS_OBLIVION_HOUND,
 #endif
     MONS_HOG,
     MONS_HELL_HOG,
@@ -1205,7 +1205,7 @@ enum monster_type                      // env.mons[].type
     MONS_MUTANT_BEAST,
     MONS_JUGGERNAUT,
     MONS_SPARK_WASP,
-    MONS_DOOM_HOUND,
+    MONS_OBLIVION_HOUND,
     MONS_DEEP_ELF_ELEMENTALIST,
     MONS_DEEP_ELF_ARCHER,
     MONS_DEMONIC_PLANT,

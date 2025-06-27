@@ -1226,7 +1226,7 @@ djinni
 
 An elemental spirit formed from smokeless fire.
 %%%%
-doom hound
+oblivion hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
 time a foe hears its howl, it will echo in their mind, calling nightmarish

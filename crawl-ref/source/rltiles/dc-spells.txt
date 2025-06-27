@@ -236,7 +236,7 @@ death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
 dominate_undead DOMINATE_UNDEAD
 doom_bolt DOOM_BOLT
-doom_howl DOOM_HOWL
+oblivion_howl OBLIVION_HOWL
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
 dream_dust DREAM_DUST

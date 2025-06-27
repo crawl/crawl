@@ -335,7 +335,7 @@ mset(with_props(spec_fn(function ()
   local f = 10 + you.zigs_completed() * you.zigs_completed() * 10
   local g = 0 + you.zigs_completed() * you.zigs_completed() * 2
   return "place:Tar:$ w:" .. d .. " / curse toe w:" .. e .. " / " ..
-         "doom hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
+         "oblivion hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
          "silent spectre w:" .. g
 end), { weight = 5 }))
 
@@ -481,7 +481,7 @@ mset(with_props(spec_fn(function ()
   return "kobold demonologist w:" .. d .. " / ynoxinul w:" .. d .. " / " ..
          "boggart w:" .. d .. " / worldbinder w:" .. d .. " / " ..
          "rakshasa / broodmother / shadow demon / deep elf demonologist w:5 / " ..
-         "dread lich w:5 / fravashi w:5 / doom hound w:5 / " ..
+         "dread lich w:5 / fravashi w:5 / oblivion hound w:5 / " ..
          "glowing orange brain w:" .. e .. " / " ..
          "demonspawn corrupter w:" .. e .. " / " ..
          "halazid warlock w:" .. f .. " / nekomata w:" .. f

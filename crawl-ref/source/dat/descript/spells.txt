@@ -550,7 +550,7 @@ Doom Bolt spell
 
 Fires a bolt of accursed malice which inflicts Doom.
 %%%%
-Doom Howl spell
+Oblivion Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
 those echoes linger, nightmarish creatures will hear and track them to their

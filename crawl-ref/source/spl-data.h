@@ -3064,14 +3064,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DOOM_HOWL, "Doom Howl",
+    SPELL_OBLIVION_HOWL, "Oblivion Howl",
     spschool::translocation | spschool::hexes,
     spflag::dir_or_target | spflag::monster | spflag::WL_check,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
     15,
-    TILEG_DOOM_HOWL,
+    TILEG_OBLIVION_HOWL,
 },
 
 {

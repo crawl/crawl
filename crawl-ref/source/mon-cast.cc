@@ -103,7 +103,7 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
-static void _doom_howl(monster &mon);
+static void _oblivion_howl(monster &mon);
 static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
@@ -1911,7 +1911,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_CAUSE_FEAR:
             return 18;
 
-        case SPELL_DOOM_HOWL:
+        case SPELL_OBLIVION_HOWL:
         case SPELL_MESMERISE:
             return 10;
 
@@ -2583,7 +2583,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WATERSTRIKE:
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
-    case SPELL_DOOM_HOWL:
+    case SPELL_OBLIVION_HOWL:
     case SPELL_PRAYER_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
@@ -8169,8 +8169,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_DOOM_HOWL:
-        _doom_howl(*mons);
+    case SPELL_OBLIVION_HOWL:
+        _oblivion_howl(*mons);
         return;
 
     case SPELL_CALL_OF_CHAOS:
@@ -9023,9 +9023,9 @@ static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
  *
  * @param mon   The howling monster.
  */
-static void _doom_howl(monster &mon)
+static void _oblivion_howl(monster &mon)
 {
-    const int pow = mons_spellpower(mon, SPELL_DOOM_HOWL);
+    const int pow = mons_spellpower(mon, SPELL_OBLIVION_HOWL);
     const int willpower = you.check_willpower(&mon, pow);
     const string effect = willpower > 0 ?
                             make_stringf("but you%s",
@@ -9035,12 +9035,12 @@ static void _doom_howl(monster &mon)
          mon.name(DESC_THE).c_str(),
          silenced(mon.pos()) ? "silent" : "terrible",
          effect.c_str());
-    noisy(spell_effect_noise(SPELL_DOOM_HOWL), mon.pos(), mon.mid);
+    noisy(spell_effect_noise(SPELL_OBLIVION_HOWL), mon.pos(), mon.mid);
     if (willpower <= 0)
     {
-        flash_tile(you.pos(), BLACK, 120, TILE_BOLT_DOOM_HOWL);
-        you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
-        mon.props[DOOM_HOUND_HOWLED_KEY] = true;
+        flash_tile(you.pos(), BLACK, 120, TILE_BOLT_OBLIVION_HOWL);
+        you.duration[DUR_OBLIVION_HOWL] = random_range(120, 180);
+        mon.props[OBLIVION_HOUND_HOWLED_KEY] = true;
     }
 }
 
@@ -9496,10 +9496,10 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(mons_should_fire(tracer, target_tracer));
     }
 
-    case SPELL_DOOM_HOWL:
+    case SPELL_OBLIVION_HOWL:
         ASSERT(foe);
-        if (!foe->is_player() || you.duration[DUR_DOOM_HOWL]
-                || mon->props[DOOM_HOUND_HOWLED_KEY]
+        if (!foe->is_player() || you.duration[DUR_OBLIVION_HOWL]
+                || mon->props[OBLIVION_HOUND_HOWLED_KEY]
                 || mon->is_summoned())
         {
             return ai_action::impossible();

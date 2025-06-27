@@ -265,7 +265,7 @@ chaos_buff1
 
 sap_magic BOLT_SAP_MAGIC
 
-doom_howl BOLT_DOOM_HOWL
+oblivion_howl BOLT_OBLIVION_HOWL
 
 phantom_blitz BOLT_PHANTOM_BLITZ
 

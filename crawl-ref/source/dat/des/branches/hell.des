@@ -1004,7 +1004,7 @@ ENDMAP
 
 NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
-KMONS:  1D = doom hound / nothing
+KMONS:  1D = oblivion hound / nothing
 KFEAT:  D = enter_tartarus
 TILE:   c = dngn_stone_dark
 : vault_metal_statue_setup(_G, "G", "mystic cage")

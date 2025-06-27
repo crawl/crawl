@@ -120,7 +120,7 @@ raiju MONS_RAIJU
 inugami MONS_INUGAMI
 hell_hound MONS_HELL_HOUND
 %rim 0
-doom_hound MONS_DOOM_HOUND
+oblivion_hound MONS_OBLIVION_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
 holy_swine MONS_HOLY_SWINE
