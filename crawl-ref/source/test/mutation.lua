@@ -83,7 +83,6 @@ local function try_all_mutation_categories()
     you.mutate("xom", "mutation test", false)
     you.mutate("slime", "mutation test", false)
     you.mutate("corrupt", "mutation test", true)
-    you.mutate("qazlal", "mutation test", false)
 end
 
 -- TODO: better way to do this in lua so that it doesn't duplicate code

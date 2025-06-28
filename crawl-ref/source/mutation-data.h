@@ -157,7 +157,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_RESISTANCE,
 },
 
-{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::substance,
   "heat vulnerability",
 
   {"You are vulnerable to heat. (rF-)",
@@ -174,7 +174,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HEAT_VULNERABILITY,
 },
 
-{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::substance,
 
   "cold vulnerability",
 
@@ -219,7 +219,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SHOCK_RESISTANCE,
 },
 
-{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::substance,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
@@ -2937,5 +2937,4 @@ static const mutation_category_def category_mut_data[] =
   { RANDOM_BAD_MUTATION, "bad"},
   { RANDOM_SLIME_MUTATION, "slime"},
   { RANDOM_CORRUPT_MUTATION, "corrupt"},
-  { RANDOM_QAZLAL_MUTATION, "qazlal"},
 };

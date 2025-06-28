@@ -82,25 +82,24 @@ enum class mutflag
     good    = 1 << 0, // used by benemut etc
     bad     = 1 << 1, // used by malmut etc
     jiyva   = 1 << 2, // jiyva-only muts
-    qazlal  = 1 << 3, // qazlal wrath
-    makhleb = 1 << 4, // makhleb capstone marks
+    makhleb = 1 << 3, // makhleb capstone marks
 
     // Flags controlling how mutations are suppressed by various forms, as well
     // as which a given species is allowed to mutate naturally.
-    need_blood = 1 << 5,   // requires the player to have blood
-    need_bones = 1 << 6,   // requires the player to have bones
-    need_hands = 1 << 7,   // requires the player to have hands (or similar limbs)
-    need_feet  = 1 << 8,   // requires the player to have feet
-    substance  = 1 << 9,   // supressed if the player's substance changes
+    need_blood = 1 << 4,   // requires the player to have blood
+    need_bones = 1 << 5,   // requires the player to have bones
+    need_hands = 1 << 6,   // requires the player to have hands (or similar limbs)
+    need_feet  = 1 << 7,   // requires the player to have feet
+    substance  = 1 << 8,   // supressed if the player's substance changes
                            // (ie: a gargoyle becoming a wisp, but NOT death form)
-    anatomy    = 1 << 10,  // suppressed if the player's shape/body-plan changes
+    anatomy    = 1 << 9,   // suppressed if the player's shape/body-plan changes
                            // (ie: most full body transformations)
-    scales     = 1 << 11,  // conflicts with other scales mutations
+    scales     = 1 << 10,  // conflicts with other scales mutations
                            // (implies substance and anatomy)
 
     last = scales
 };
-DEF_BITFIELD(mutflags, mutflag, 11);
+DEF_BITFIELD(mutflags, mutflag, 10);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
@@ -243,7 +242,6 @@ static int _mut_weight(const mutation_def &mut, mutflag flag)
     switch (flag)
     {
         case mutflag::jiyva:
-        case mutflag::qazlal:
             return 1;
         case mutflag::good:
         case mutflag::bad:
@@ -1290,11 +1288,6 @@ bool is_makhleb_mark(mutation_type mut)
     return _mut_has_flag(mut_data[mut_index[mut]], mutflag::makhleb);
 }
 
-static mutation_type _get_random_qazlal_mutation()
-{
-    return _get_mut_with_flag(mutflag::qazlal);
-}
-
 static mutation_type _get_random_mutation(mutation_type mutclass,
                                           mutation_permanence_class perm)
 {
@@ -1775,7 +1768,7 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
 /*
  * Try to mutate the player, along with associated bookkeeping. This accepts mutation categories as well as particular mutations.
  *
- * In many cases this will produce only 1 level of mutation at a time, but it may mutate more than one level if the mutation category is corrupt or qazlal.
+ * In many cases this will produce only 1 level of mutation at a time, but it may mutate more than one level if the mutation category is corrupt.
  *
  * If the player is at the mutation cap, this may fail.
  *   1. If mutclass is innate, this will attempt to replace temporary and normal mutations (in that order) and will fail if this isn't possible (e.g. there are only innate levels).
@@ -1927,9 +1920,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #endif
 
     const int levels = (which_mutation == RANDOM_CORRUPT_MUTATION
-                         || which_mutation == RANDOM_QAZLAL_MUTATION)
                        ? min(2, mdef.levels - you.get_base_mutation_level(mutat))
-                       : 1;
+                       : 1);
     ASSERT(levels > 0); //TODO: is > too strong?
 
     int count = levels;
@@ -2110,8 +2102,6 @@ mutation_type concretize_mut(mutation_type mut,
         return _get_random_mutation(mut, mutclass);
     case RANDOM_SLIME_MUTATION:
         return _get_random_slime_mutation();
-    case RANDOM_QAZLAL_MUTATION:
-        return _get_random_qazlal_mutation();
     default:
         return mut;
     }
@@ -2254,8 +2244,6 @@ static mutflag _mutflag_for_random_type(mutation_type mut_type)
         return mutflag::bad;
     case RANDOM_SLIME_MUTATION:
         return mutflag::jiyva;
-    case RANDOM_QAZLAL_MUTATION:
-        return mutflag::qazlal;
     case RANDOM_MUTATION:
     case RANDOM_XOM_MUTATION:
     default:
@@ -2277,7 +2265,6 @@ static mutation_type _concretize_mut_deletion(mutation_type mut_type)
         case RANDOM_CORRUPT_MUTATION:
         case RANDOM_XOM_MUTATION:
         case RANDOM_SLIME_MUTATION:
-        case RANDOM_QAZLAL_MUTATION:
             break;
         default:
             return mut_type;
