@@ -694,6 +694,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_DRAIN:
         case ARTP_CONTAM:
             return item_class != OBJ_TALISMANS; // TODO: support..?
+        // Currently only weapons/armour get actual compensation for this prop.
+        case ARTP_BANE:
+            return item_class == OBJ_ARMOUR || item_class == OBJ_WEAPONS;
         case ARTP_ARCHMAGI:
             return item.is_type(OBJ_ARMOUR, ARM_ROBE);
         case ARTP_ENHANCE_CONJ:
@@ -927,6 +930,8 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "*Silence", ARTP_VAL_BOOL, 25, // ARTP_SILENCE,
         nullptr, []() { return 1; }, 0, 0 },
+    { "Bane", ARTP_VAL_BOOL, 20,     // ARTP_BANE,
+        nullptr, []() {return 1;}, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

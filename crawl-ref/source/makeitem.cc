@@ -239,6 +239,11 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (!make_item_randart(item))
             return false;
 
+        // Bane is a worse property than most negative values, so let's boost
+        // the resulting item a bit to temp people into using it.
+        if (artefact_property(item, ARTP_BANE))
+            item.plus = min(12, item.plus + random_range(2, 5));
+
         if (old_ego > 0)
             set_artefact_brand(item, old_ego);
 
@@ -737,6 +742,11 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     // bardings named Boots of xy.
     if (!make_item_randart(item))
         return false;
+
+    // Bane is a worse property than most negative values, so let's make them a
+    // bit more tempting on average.
+    if (is_artefact(item) && artefact_property(item, ARTP_BANE))
+        item.plus = max((int)item.plus, armour_max_enchant(item) / 2 + random_range(1, 2));
 
     if (old_ego > 0)
         set_artefact_brand(item, old_ego);

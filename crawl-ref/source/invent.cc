@@ -1606,11 +1606,10 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
-            return true;
-
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+        if (is_artefact(item) && (artefact_property(item, ARTP_CONTAM)
+                                  || artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)
+                                  || artefact_property(item, ARTP_BANE)))
         {
             return true;
         }

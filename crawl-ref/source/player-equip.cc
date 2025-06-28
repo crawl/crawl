@@ -1693,6 +1693,13 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
+    if (proprt[ARTP_BANE] && !unmeld)
+    {
+        if (msg)
+            mpr("You feel a malign power afflict you.");
+        add_bane();
+    }
+
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld
         && !you.has_mutation(MUT_ROLLPAGE))
     {

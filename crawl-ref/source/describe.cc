@@ -450,6 +450,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_SILENCE,
             "It may silence you when you take damage.",
             prop_note::plain },
+        { ARTP_BANE,
+            "It inflicts you with a random bane when first equipped.",
+            prop_note::plain },
     };
     return data;
 }
@@ -481,6 +484,7 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     // These come first, so they don't get chopped off!
     ARTP_PREVENT_SPELLCASTING,
     ARTP_PREVENT_TELEPORTATION,
+    ARTP_BANE,
     ARTP_CONTAM,
     ARTP_ANGRY,
     ARTP_NOISE,
