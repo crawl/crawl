@@ -3188,8 +3188,8 @@ lua_max_memory = 16
 Lua files are scripts which can provide existing commands with a new
 meaning or create new commands (to be used in macros). To use Lua
 files, Crawl needs to be compiled with support for user Lua scripts.
-You can if your Crawl has Lua support by hitting ?V in-game. The list
-of features Crawl displays should include "Lua user scripts".
+You can check to see if your Crawl has Lua support by hitting ?V in-game.
+The list of features Crawl displays should include "Lua user scripts".
 
 Lua files are included using the lua_file option (one file per line):
 
