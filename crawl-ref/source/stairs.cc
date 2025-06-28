@@ -512,7 +512,7 @@ static void _hell_effects()
     switch (random2(3))
     {
         case 0:
-            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
+            you.doom(20);
             break;
         case 1:
             drain_player(85, true, true);
