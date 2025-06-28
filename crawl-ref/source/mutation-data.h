@@ -219,7 +219,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SHOCK_RESISTANCE,
 },
 
-{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::substance,
+{ MUT_SHOCK_VULNERABILITY, 2, 1, mutflag::bad | mutflag::substance,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
