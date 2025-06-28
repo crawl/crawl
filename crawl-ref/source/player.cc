@@ -1484,7 +1484,7 @@ int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
         return 3;
     }
 
-    int rp = 0;
+    int rp = form_rp;
 
     if (items)
     {
@@ -1520,15 +1520,9 @@ int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
     if (temp && you.duration[DUR_RESISTANCE])
         rp++;
 
-    if (form_rp > 0)
-        rp += form_rp;
-
-    // Cap rPois at + before vulnerability effects are applied
-    // (so carrying multiple rPois effects is never useful)
+    // Cap rPois at + before Virulence is applied
+    // (so carrying multiple rPois effects never directly counters it)
     rp = min(1, rp);
-
-    if (form_rp < 0)
-        rp += form_rp; // actually a subtraction
 
     if (temp && you.duration[DUR_POISON_VULN])
         rp--;
