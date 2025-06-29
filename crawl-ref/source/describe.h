@@ -92,6 +92,7 @@ void describe_ability(ability_type ability);
 void describe_deck(deck_type deck);
 void describe_mutation(mutation_type mut);
 void describe_bane(bane_type bane);
+string bane_long_description(bane_type bane, bool ignore_player = false);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);

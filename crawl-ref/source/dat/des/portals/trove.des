@@ -52,63 +52,18 @@ function trove.get_trove_item(e, value, base_item)
     return item
   end
 
-  -- 1/3 chance of trying to get a shop item
-  if crawl.one_chance_in(3) then
-  local floorlist, shoplist
-  floorlist, shoplist = dgn.stash_items(value, true)
-  if #shoplist ~= 0 then
-    shop_item = shoplist[crawl.random2(#shoplist)+1]
-    if not shop_item.is_identified then
-      shop_item = shoplist[crawl.random2(#shoplist)+1]
-    end
-    local jwith_pluses = {"ring of protection", "ring of evasion",
-                          "ring of strength", "ring of intelligence",
-                          "ring of dexterity", "ring of slaying",
-                          "amulet of reflection"}
-    local bt = shop_item.base_type
-    if bt == "armour" or bt == "weapon" or bt == "jewellery" then
-      if shop_item.is_identified then
-        item.quantity = shop_item.quantity
-        item.base_type = shop_item.base_type
-        item.sub_type = shop_item.sub_type
-        item.ego_type = shop_item.ego_type
-        if shop_item.artefact then
-          item.artefact_name = shop_item.artefact_name
-        end
-        local shop_plus1 = shop_item.pluses()
-        if item.base_type == "armour" then
-          item.plus1 = shop_plus1
-        elseif item.base_type == "weapon" then
-          item.plus1 = shop_plus1
-        elseif item.base_type == "jewellery" then
-          if util.contains(jwith_pluses, item.sub_type) then
-            item.plus1 = shop_plus1
-          end
-        else
-          item.plus1 = false
-        end
-        return item
-      end
-    end
-  end
-  end
-
   local d = crawl.roll_dice
 
   -- base is item.base_type, type is item.sub_type, quant is an additional parameter (quantity, charges, etc)
-  -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous
   local prices = {
-       {base="scroll", type="acquirement", quant=2},
-       {base="scroll", type="fear", quant=2+d(3)+d(3)},
-       {base="scroll", type="fog", quant=2+d(3)+d(3)},
-       {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
-       {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
-       {base="miscellaneous", type="horn of Geryon"} }
+       {weight=7, base="scroll", type="acquirement", quant=2},
+       {weight=10, base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
+       {weight=10, base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
+       {weight=10, base="miscellaneous", type="horn of Geryon"} }
 
-  local wpn = {
-       {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
-       {base="weapon", type="demon trident", quant=2+d(3)+d(3)},
-       {base="weapon", type="demon blade", quant=2+d(3)+d(3)} }
+  -- demon weapon types are interchangeable in trove fees (it will just ask for
+  -- 'any demon weapon')
+  local wpn = {weight=7, {base="weapon", type="demon whip", quant=2+d(3)+d(2)} }
 
   if you.race() ~= "Felid" then
     for _, toll in ipairs(wpn) do
@@ -117,11 +72,11 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local arm = {
-       {base="armour", type="golden dragon scales", quant=1+d(2)},
-       {base="armour", type="storm dragon scales", quant=d(2)+d(2)},
-       {base="armour", type="shadow dragon scales", quant=d(2)+d(2)},
-       {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
-       {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
+       {weight=1, base="armour", type="golden dragon scales", quant=1+d(2)},
+       {weight=2, base="armour", type="storm dragon scales", quant=d(2)+d(2)},
+       {weight=2, base="armour", type="shadow dragon scales", quant=d(2)+d(2)},
+       {weight=3, base="armour", type="fire dragon scales", quant=d(3)+d(3)},
+       {weight=3, base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
   local is_armour_user = you.race() ~= "Felid"
       and you.race() ~= "Octopode"
@@ -134,39 +89,7 @@ function trove.get_trove_item(e, value, base_item)
     end
   end
 
-  local pots = {
-       {base="potion", type="resistance", quant=2+d(3)} }
-
-  local heal_pots = {
-       {base="potion", type="curing", quant=12+d(4)+d(4)},
-       {base="potion", type="heal wounds", quant=8+d(3)+d(3)} }
-
-  if you.race() ~= "Mummy" then
-    if you.race() ~= "Vine Stalker" then
-      for _, toll in ipairs(heal_pots) do
-        table.insert(pots, toll)
-      end
-    end
-    if you.race() ~= "Formicid" then
-      table.insert(pots, {base="potion", type="haste", quant=4+d(3)+d(2)})
-    end
-
-    for _, toll in ipairs(pots) do
-      table.insert(prices, toll)
-    end
-  end
-
-  local stasis_tolls = {
-       {base="scroll", type="blinking", quant=1+d(2)+d(2)},
-       {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
-
-  if you.race() ~= "Formicid" then
-    for _, toll in ipairs(stasis_tolls) do
-      table.insert(prices, toll)
-    end
-  end
-
-  local chosen = util.random_from(prices)
+  local chosen = util.random_weighted_from("weight", prices)
   item.base_type = chosen.base
   item.sub_type = chosen.type
   if chosen.base == "armour" then
@@ -184,10 +107,13 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.get_trove_toll(e)
-  if crawl.one_chance_in(20) and you.race() ~= "Demigod"
-     and you.god() ~= "Gozag" and you.god() ~= "Ashenzari"
-     and you.god() ~= "Uskayaw" and you.god() ~= "Yredelemnul" then
+  if crawl.one_chance_in(2) then
+    return trove.get_toll_bane()
+  elseif crawl.one_chance_in(4) and you.race() ~= "Demigod"
+    and you.god() ~= "Gozag" and you.god() ~= "Xom" then
     return trove.get_toll_nopiety()
+  elseif crawl.one_chance_in(6) then
+    return trove.get_toll_drain()
   else
     return trove.get_trove_toll_with_item(
         trove.get_trove_item(e, 1000))
@@ -195,11 +121,22 @@ function trove.get_trove_toll(e)
 end
 
 function trove.get_trove_toll_with_item(item)
-  return { item = item }
+  return { type = "item", item = item }
 end
 
 function trove.get_toll_nopiety()
-  return { nopiety = true }
+  return { type = "nopiety"}
+end
+
+function trove.get_toll_bane()
+  local bane_type = {"paradox", "mortality", "multiplicity", "claustrophobia",
+                     "stumbling", "dilettante", "lethargy"}
+  local type = util.random_from(bane_type)
+  return { type = "bane", bane = type }
+end
+
+function trove.get_toll_drain()
+  return { type = "drain"}
 end
 
 function trove.portal(e)

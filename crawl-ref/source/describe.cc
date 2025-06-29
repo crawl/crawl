@@ -4964,10 +4964,10 @@ void describe_mutation(mutation_type mut)
         show_description(inf);
 }
 
-void describe_bane(bane_type bane)
+string bane_long_description(bane_type bane, bool ignore_player)
 {
-    describe_info inf;
-    inf.title = uppercase_first(bane_name(bane));
+    const bool player_has = !ignore_player && you.banes[bane];
+    ostringstream output;
 
     const string key = make_stringf("%s bane", bane_name(bane, true).c_str());
     string lookup = getLongDescription(key);
@@ -4975,15 +4975,15 @@ void describe_bane(bane_type bane)
     if (!lookup.empty())
     {
         hint_replace_cmds(lookup);
-        inf.body << lookup;
+        output << lookup;
     }
     else
-        inf.body << bane_desc(bane) << "\n";
+        output << bane_desc(bane) << "\n";
 
-    if (bane == BANE_DILETTANTE && you.banes[bane])
+    if (bane == BANE_DILETTANTE && player_has)
     {
         CrawlVector& vec = you.props[DILETTANTE_SKILL_KEY].get_vector();
-        inf.body << "\nYour " << skill_name(static_cast<skill_type>(vec[0].get_int()))
+        output   << "\nYour " << skill_name(static_cast<skill_type>(vec[0].get_int()))
                  << ", " << skill_name(static_cast<skill_type>(vec[1].get_int()))
                  << ", and " << skill_name(static_cast<skill_type>(vec[2].get_int()))
                  << " are currently affected.\n";
@@ -5000,9 +5000,9 @@ void describe_bane(bane_type bane)
     else
         dur_str = "short length of";
 
-    inf.body << make_stringf("\nThis bane usually lasts a %s time.\n", dur_str.c_str());
+    output << make_stringf("\nThis bane usually lasts a %s time.\n", dur_str.c_str());
 
-    if (you.banes[bane])
+    if (player_has)
     {
         int needed_xl = xl_to_remove_bane(bane);
         string desc = make_stringf("\n<lightmagenta>"
@@ -5010,8 +5010,17 @@ void describe_bane(bane_type bane)
                                    "gain another %.1f XLs worth of experience."
                                    "</lightmagenta>",
                                     (float)needed_xl / 10.0f);
-        inf.body << desc;
+        output << desc;
     }
+
+    return output.str();
+}
+
+void describe_bane(bane_type bane)
+{
+    describe_info inf;
+    inf.title = uppercase_first(bane_name(bane));
+    inf.body << bane_long_description(bane);
 
     show_description(inf);
 }
