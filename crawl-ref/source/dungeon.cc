@@ -62,6 +62,7 @@
 #include "random.h"
 #include "religion.h"
 #include "show.h"
+#include "spl-book.h"
 #include "spl-transloc.h"
 #include "stairs.h"
 #include "state.h"
@@ -4732,7 +4733,8 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 }
 
 static bool _apply_item_props(item_def &item, const item_spec &spec,
-                              bool allow_useless, bool monster)
+                              bool allow_useless, bool monster,
+                              int item_level)
 {
     const CrawlHashTable props = spec.props;
 
@@ -4827,6 +4829,24 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     {
         item.plus = spec.plus;
         item_colour(item);
+    }
+
+    if (item.is_type(OBJ_BOOKS, BOOK_PARCHMENT))
+    {
+        if (spec.plus > 0)
+            item.plus = spec.plus;
+        else
+        {
+            spschool school = spschool::none;
+            int force_level = 0;
+            if (spec.props.exists(RANDBK_DISC1_KEY))
+                school = static_cast<spschool>(spec.props[RANDBK_DISC1_KEY].get_short());
+
+            if (spec.props.exists(RANDBK_SLVLS_KEY))
+                force_level = spec.props[RANDBK_SLVLS_KEY].get_short();
+
+            item.plus = choose_parchment_spell(item_level, school, force_level);
+        }
     }
 
     if (item.base_type == OBJ_RUNES)
@@ -5012,7 +5032,7 @@ int dgn_place_item(const item_spec &spec,
         item_def &item(env.item[item_made]);
         item.pos = where;
 
-        if (_apply_item_props(item, spec, useless_tries >= 10, false))
+        if (_apply_item_props(item, spec, useless_tries >= 10, false, level))
         {
             dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
                 env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
@@ -5114,7 +5134,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
             {
                 item_def &item(env.item[item_made]);
 
-                if (_apply_item_props(item, spec, (useless_tries >= 10), true))
+                if (_apply_item_props(item, spec, (useless_tries >= 10), true, item_level))
                 {
                     // Mark items on summoned monsters as such.
                     if (mspec.summon_duration != 0)

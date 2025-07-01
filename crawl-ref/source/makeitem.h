@@ -6,6 +6,7 @@
 #pragma once
 
 #include "item-prop-enum.h"
+#include "spl-util.h"
 
 static const int NO_AGENT = -1;
 
@@ -41,6 +42,9 @@ void reroll_brand(item_def &item, int item_level);
 
 void generate_wand_item(item_def& item, int force_type, int item_level);
 bool is_high_tier_wand(int type);
+
+spell_type choose_parchment_spell(int item_level, spschool school = spschool::none,
+                                  int fixed_spell_level = 0);
 
 void squash_plusses(int item_slot);
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)

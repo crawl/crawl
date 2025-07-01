@@ -5498,6 +5498,38 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         return false;
     }
 
+    if (strip_tag(s, "parchment"))
+    {
+        result.base_type = OBJ_BOOKS;
+        result.sub_type = BOOK_PARCHMENT;
+
+        strip_tag(s, "of");
+
+        // Allow specifing the school of spell, rather than the spell itself.
+        string school_str = strip_tag_prefix(s, "disc:");
+        short slevel = strip_number_tag(s, "slevel:");
+        if (!school_str.empty())
+        {
+            spschool school = school_by_name(school_str);
+            if (school == spschool::none)
+            {
+                error = make_stringf("Bad spell school: %s", school_str.c_str());
+                return false;
+            }
+            result.props[RANDBK_DISC1_KEY].get_short() = static_cast<short>(school);
+        }
+        if (slevel != TAG_UNFOUND)
+            result.props[RANDBK_SLVLS_KEY]=  slevel;
+
+        string spell_name = replace_all_of(s, "_", " ");
+        spell_type spell = spell_by_name(spell_name);
+        // If we fail to find a spell, a normal one will be generated randomly later.
+        if (spell != SPELL_NO_SPELL)
+            result.plus = (int)spell;
+
+        return true;
+    }
+
     string tile = strip_tag_prefix(s, "tile:");
     if (!tile.empty())
     {
