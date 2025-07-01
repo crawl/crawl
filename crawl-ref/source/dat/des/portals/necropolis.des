@@ -4018,7 +4018,7 @@ TAGS:    necropolis_subvault_depths_crypt
 KMONS:   O = player ghost
 MONS:    walking crystal tome / walking earthen tome / \
          walking frostbound tome / walking divine tome
-ITEM:    any book good_item / any manual w:1, randbook slevels:1 numspells:1
+ITEM:    any book good_item / any manual w:1, parchment slevel:1
 KFEAT:   O = altar_sif_muna / . w:15
 NSUBST:  - = 3:d / 5 = de / 2:1 / * = 1e
 SHUFFLE: ABCD

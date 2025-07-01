@@ -1465,7 +1465,7 @@ NAME:       wizlab_zonguldrok
 TAGS:       no_rotate patrolling
 MONS:       skeletal warrior, ancient champion, lich
 ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
-            randbook disc:necromancy numspells:1 w:2
+            parchment disc:necromancy w:2
 # Shortlist of one-handed skeletal warrior weapons.
 : local d = "ego:draining plus:6 "
 : local p = "ego:pain plus:6 "
@@ -2061,7 +2061,7 @@ ITEM:       any book, any magical staff
 :      "lajatang " .. s .. "w:4 / quarterstaff randart plus:12 " .. s .. " w:1")
 KITEM:      h = potion of lignification pre_id q:4 / \
                 scroll of poison q:4 pre_id, \
-                randbook owner:Eringya numspells:1 spells:eringya's_noxious_bog
+                parchment of eringya's noxious bog
 KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
 KFEAT:      F = cache of fruit

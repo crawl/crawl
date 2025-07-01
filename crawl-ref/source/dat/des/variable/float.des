@@ -6997,10 +6997,10 @@ KITEM:   & = demon blade good_item / demon whip good_item / \
              demon trident good_item
 : end
 KITEM:   d = mundane trident, mundane long sword, mundane mace
-KITEM:   e = randbook disc:fire numspells:1
-KITEM:   f = randbook disc:ice numspells:1
-KITEM:   g = randbook disc:necromancy numspells:1
-KITEM:   h = randbook disc:forgecraft numspells:1
+KITEM:   e = parchment disc:fire
+KITEM:   f = parchment disc:ice
+KITEM:   g = parchment disc:necromancy
+KITEM:   h = parchment disc:forgecraft
 KFEAT:   yYzZ = b
 KFEAT:   m = iron_grate
 KPROP:   Cn" = bloody

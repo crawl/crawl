@@ -2659,7 +2659,7 @@ TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KPROP:  1d = no_tele_into
 KFEAT:  _ = altar_sif_muna
 KFEAT:  d = escape_hatch_down
-KITEM:  d = randbook owner:Sif_Muna numspells:1 slevels:1
+KITEM:  d = parchment slevel:1
 MONS:   orc wizard
 COLOUR: .@+1 = blue
 FTILE:  .@+1G_ = floor_marble
@@ -4525,13 +4525,12 @@ TAGS:    no_item_gen transparent
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
-ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:soul_splinter \
-         numspells:1
+ITEM:    parchment of soul splinter
 # You already get a direct damage spell from other god altars.
-ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
-         randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
-         randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
-ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
+ITEM:    parchment disc:hexes slevel:1 / \
+         parchment disc:summoning slevel:1 / \
+         parchment disc:translocation slevels:1
+ITEM:    parchment of magic dart
 SHUFFLE: AdB"C` / A'BeC` / A'B"Cf
 MAP
      xxxxx
@@ -4707,9 +4706,9 @@ KFEAT:   xX = altar_sif_muna
 KFEAT:   yY = altar_kikubaaqudgha
 KFEAT:   zZ = altar_vehumet
 : local coinflip = util.random_from({"summoning", "forgecraft"})
-: kitem("X = randbook owner:Sif_Muna disc:" .. coinflip .. " numspells:1 slevels:1")
-KITEM:   Y = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
-KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
+: kitem("X = parchment disc:" .. coinflip .. " slevel:1")
+KITEM:   Y = parchment disc:necromancy slevel:1
+KITEM:   Z = parchment disc:conjuration slevel:1
 SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~
 SUBST:   '"` = .
 NSUBST:  ~ = 1:~ / 2:. / * = 1.
@@ -4888,7 +4887,7 @@ kitem("1 = " .. dgn.random_item_def(weapons, nil, "ego:none plus:" .. enchant))
 }}
 KMONS:   1 = gnoll ; animal skin / w:2 Terence
 KMONS:   2 = white imp / w:2 Jessica
-KITEM:   2 = randbook owner:Sif_Muna numspells:1 slevels:1
+KITEM:   2 = parchment slevel:1
 : elseif you.absdepth() <= 7 then
 :     if crawl.one_chance_in(5) then
 KMONS:   1 = duvessa

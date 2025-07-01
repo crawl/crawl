@@ -316,7 +316,7 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
            'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')
-    e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
+    e.item('parchment slevel:' .. sl  .. ' / ' ..
            'mundane ring of magical power w:2')
     e.tile('c = wall_studio')
   elseif set == 'icebox' then

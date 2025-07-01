@@ -105,7 +105,7 @@ KFEAT:   ABCDE = .
 COLOUR:  dABCDEe = lightblue
 FTILE:   dABCDEe = tutorial_pad
 ITEM:    scroll of amnesia pre_id q:3
-ITEM:    randbook numspells:1 spells:call_imp title:Demonology_for_Dummies owner:player
+ITEM:    parchment of call imp
 ITEM:    kite shield
 ITEM:    ring mail
 MONS:    hobgoblin

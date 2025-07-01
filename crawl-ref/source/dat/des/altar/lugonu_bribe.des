@@ -32,7 +32,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                         orb ego:mayhem pre_id",
          Dithmenos = "scroll of noise pre_id q:3",
          Elyvilon = "book of Necromancy / book of Death / book of Unlife",
-         Gozag = "randbook owner:Lugonu spells:animate_dead numspells:1",
+         Gozag = "parchment of Animate Dead",
          Kikubaaqudgha = "rat corpse / kobold corpse",
          Okawaru = "any ally scroll pre_id q:3 / any ally misc /\
                     phantom mirror",

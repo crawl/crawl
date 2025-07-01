@@ -4768,7 +4768,7 @@ TAGS:    ruin_abyss transparent no_descent
 DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$, Abyss
 ITEM:    wand of digging pre_id
 ITEM:    scroll of teleportation pre_id q:2
-ITEM:    randbook disc:earth numspells:1 / any ring / any talisman w:2
+ITEM:    parchment disc:earth / any ring / any talisman w:2
 SHUFFLE: vcb, AB? / CD!, d<>, de
 SUBST:   AD = 9, B = 8, C = 0
 SUBST:   ? = %:10 *:50 |:60, ! = %:90 *:30 |:10

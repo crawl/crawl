@@ -569,7 +569,7 @@ KMONS:   9 = guardian sphinx
 KMONS:   & = lich
 KMONS:   @ = deep elf sorcerer
 KMONS:   Z = nonbase draconian
-ITEM:    randbook numspells:1 w:19 / randbook numspells:2 w:1
+ITEM:    parchment w:19 / randbook numspells:2 w:1
 ITEM:    scroll of amnesia pre_id / scroll of identify pre_id / \
          scroll of silence pre_id / scroll of noise pre_id
 KFEAT:   _ = altar_sif_muna
@@ -669,7 +669,7 @@ KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
 KFEAT:   T = fountain_eyes
-ITEM:    randbook disc:summoning numspells:1 / \
+ITEM:    parchment disc:summoning / \
          scarf ego:shadows / scarf ego:invisibility / \
          wand of polymorph charges:20 / protean talisman randart / \
          shadow dragon scales good_item / any ally scroll q:1 pre_id
@@ -734,7 +734,7 @@ KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
 KMONS:   4 = apocalypse crab / death drake w:5
 KITEM:   2 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
 KITEM:   34 = wand of digging charges:1, staff of earth / staff of air / \
-              randbook disc:earth disc2:air numspells:1 / \
+              parchment disc:earth w:5 / parchment disc:air w:5 / \
               mundane granite talisman w:20
 KFEAT:   ABCD = .
 SUBST:   c = cccbbv
@@ -890,7 +890,7 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D, Depths, Abyss
 ITEM:    ring mail randart / scale mail randart / \
          kite shield good_item / any blast wand charges:1 / \
-         randbook numspells:1 spells:hailstorm
+         parchment of hailstorm
 : if you.in_branch("Abyss") then
 SHUFFLE: ABCDEF, "'
 SUBST:   A : cbx.., B : cbx., C : cbx.., D : cbx., E : cbx.., F : cbx.
@@ -982,7 +982,7 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
          dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
-         randbook numspells:1 spells:alistair's_intoxication
+         parchment of alistair's intoxication
 KFEAT:   ^ = harlequin's trap w:7 / devourer's trap w:13
 : if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = ddd.., X = xxcccb, x = xxxxxcccb
@@ -1115,8 +1115,8 @@ ENDMAP
 NAME:    hangedman_abyss_river_spirits
 TAGS:    no_monster_gen
 MONS:    smoke demon, efreet, fire elemental, water elemental
-ITEM:    randbook disc:fire numspells:1 / wand of flame charges:32 / \
-         randbook disc:ice numspells:1 / scimitar ego:freezing randart
+ITEM:    parchment disc:fire / wand of flame charges:32 / \
+         parchment disc:ice / scimitar ego:freezing randart
 SHUFFLE: ABCDEF / ABCDEF / ABCDEF / ACEBDF / ACEBDF / GGGGGG
 SHUFFLE: 1234 / 1234 / 1234 / 1212 / 1212 / 1212 / 3434 / 3434 / 3434
 SUBST:   ACE = w, BDF = l, G : wl, x = x:50 cb
