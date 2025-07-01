@@ -63,7 +63,7 @@ Un libro con hechizos mágicos.
 %%%%
 book of conjurations
 
-Un libro con hechizos mágicos.
+Un libro que contiene una introdución a las artes destructivos de las Conjuraciones.
 %%%%
 book of debilitation
 
