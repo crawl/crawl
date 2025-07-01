@@ -4,6 +4,10 @@ amulet of inaccuracy
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
 cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
 %%%%
+amulet of nothing
+
+Un amuleto sin características especiales.
+%%%%
 animal skin
 
 La piel de un animal.
