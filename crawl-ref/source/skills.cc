@@ -1938,6 +1938,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Pharaoh";
             else if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
+            else if (species == SP_OCTOPODE && skill_rank == 4)
+                result = "Crusher";
             else if (species == SP_OCTOPODE && skill_rank == 5)
                 result = "Kraken";
             else if (species == SP_ONI && skill_rank == 5)
@@ -2129,11 +2131,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Abyssopelagic";
             else if (species == SP_OCTOPODE && skill_rank == 5 && is_evil_god(god))
                 result = "Leviathan";
-            else if (species == SP_MINOTAUR && skill_rank == 5 && god == GOD_ASHENZARI)
-            {
-                // navigating through mazes seems like the sort of thing Ash helps one with
-                result = "Lord of the Labyrinth";
-            }
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
