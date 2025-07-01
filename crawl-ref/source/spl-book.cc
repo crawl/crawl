@@ -130,7 +130,7 @@ vector<spell_type> spells_in_book(const item_def &book)
 
     vector<spell_type> ret;
 
-    if (book.sub_type == BOOK_PARCHMENT)
+    if (book.sub_type == BOOK_PARCHMENT && book.plus > 0)
     {
         ret.emplace_back(static_cast<spell_type>(book.plus));
         return ret;

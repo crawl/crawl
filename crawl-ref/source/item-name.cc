@@ -1194,7 +1194,7 @@ string sub_type_string(const item_def &item, bool known)
             }
         case BOOK_PARCHMENT:
             {
-            if (!known)
+            if (item.plus == 0)
                 return "parchment";
             string parchmentname = "parchment of ";
             parchmentname += spell_title(static_cast<spell_type>(item.plus));
