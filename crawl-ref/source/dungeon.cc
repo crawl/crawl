@@ -6074,7 +6074,7 @@ static int _shop_num_items(const shop_spec &spec)
 
     // "normal" book shop containing parchments
     if (spec.sh_type == SHOP_BOOK)
-        return 8 + random2avg(15, 3);
+        return 7 + random2avg(13, 3);
 
     return 5 + random2avg(8, 3);
 }
@@ -6131,8 +6131,10 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
         return !spec.items.empty();
     }
 
-    // Book shops only place parchments and manuals unless specified.
-    if (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_PARCHMENT
+    // Book/scroll shops only place parchments and manuals unless specified.
+    // (General stores are rarely allowed to roll an actual book.)
+    if ((shop_type_ == SHOP_BOOK || shop_type_ == SHOP_SCROLL)
+        && item.base_type == OBJ_BOOKS && item.sub_type != BOOK_PARCHMENT
         && item.sub_type != BOOK_MANUAL)
     {
         return !spec.items.empty();
@@ -6323,6 +6325,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_ARMOUR;
 
     case SHOP_GENERAL:
+        if (one_chance_in(10))
+            return OBJ_BOOKS;
     case SHOP_GENERAL_ANTIQUE:
         if (one_chance_in(10))
             return OBJ_MISCELLANY;
@@ -6340,6 +6344,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_POTIONS;
 
     case SHOP_SCROLL:
+        if (one_chance_in(10))
+            return OBJ_BOOKS;
         return OBJ_SCROLLS;
 
     default:

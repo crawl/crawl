@@ -1318,26 +1318,46 @@ static skill_type _choose_manual_skill()
     return skill;
 }
 
-/// Spells that appear in one book, historically. Used for parchment weight.
-static bool _is_rare_spell(spell_type spell)
+// Largely used to boost the drop rate of low-level 'utility' spells that are
+// of interest all game long (when low-level spells in general get much less
+// common as one gets deeper in the game).
+static int _spell_base_weight(spell_type spell)
 {
-    if (spell_difficulty(spell) == 9)
-        return true;
-
     switch (spell)
     {
-    case SPELL_BORGNJORS_REVIVIFICATION:
-    case SPELL_INFESTATION:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-        return true;
+    case SPELL_APPORTATION:
+    case SPELL_BECKONING:
+        return 120;
+
+    // Due to spellbook weights, which is actually less common than most level
+    // 2 spells by base, so weight it a little higher.
+    case SPELL_BLINK:
+        return 170;
+
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        return 150;
+
+    // Less boost is needed because of their higher level
+    case SPELL_OZOCUBUS_ARMOUR:
+    case SPELL_PASSWALL:
+    case SPELL_SWIFTNESS:
+        return 120;
 
     default:
-        return false;
+        return 100;
     }
 }
 
 static int _choose_parchment_spell(int item_level)
 {
+    // Keep ISPEC_GOOD_ITEM from being absurdly overweighted to the top end.
+    item_level = min(30, item_level);
+
+    // Calculate spell level weights based on item level.
+    int lv_weight[9];
+    for (int i = 0; i < 9; ++i)
+        lv_weight[i] = 100 - min(90, (int)(floor(pow(abs(i - item_level / 5) * 2, 2)) + (i * 5)));
+
     vector<pair<spell_type, int>> weights;
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
@@ -1347,15 +1367,8 @@ static int _choose_parchment_spell(int item_level)
             continue;
 
         const int splevel = spell_difficulty(spell);
-        int sp_weight = 100;
-
-        if (splevel > 3 && splevel * 3 > item_level)
-            sp_weight = max(10, sp_weight * (item_level + 1) / (splevel * 3));
-
-        if (_is_rare_spell(spell))
-            sp_weight /= 2;
-
-        const pair <spell_type, int> weight_pair = { spell, sp_weight };
+        const int weight = _spell_base_weight(spell) * lv_weight[splevel-1];
+        const pair <spell_type, int> weight_pair = { spell, weight };
         weights.push_back(weight_pair);
     }
 
@@ -1369,7 +1382,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
-    else if (!one_chance_in(50))
+    else if (!one_chance_in(20))
         item.sub_type = BOOK_PARCHMENT; // almost everything else is a parchment
     else
         item.sub_type = choose_book_type(item_level);

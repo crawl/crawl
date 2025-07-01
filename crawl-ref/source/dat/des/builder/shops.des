@@ -78,6 +78,12 @@ hook("post_place", function()
     end
 
     dgn.place_maps { tag = "shop", count = num }
+
+    if (you.branch() ~= "D") then
+      if ((you.branch() ~= "Shoals" and you.branch() ~= "Snake") or crawl.coinflip()) then
+        dgn.place_maps { tag = "parchment_shop", count = 1 }
+      end
+    end
 end)
 }}
 MAP
@@ -92,6 +98,13 @@ NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 270
 KFEAT:  O = any shop
+MAP
+O
+ENDMAP
+
+NAME:   parchment_shop
+TAGS:   allow_dup extra parchment_shop transparent unrand
+KFEAT:  O = book shop
 MAP
 O
 ENDMAP
