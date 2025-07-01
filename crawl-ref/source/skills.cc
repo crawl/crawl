@@ -1923,14 +1923,17 @@ unsigned get_skill_rank(unsigned skill_lev)
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
  * @param species       The player's species.
- * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param dex           The player's base dexterity
+ * @param str           The player's base strength
+ * @param intel         The player's base intelligence
  * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
+ * @param trans         The player's current transformation
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           species_type species, bool dex_better,
-                           god_type god, int piety)
+                           species_type species, int dex, int str, int intel,
+                           god_type god, int piety, transformation trans)
 {
 
     // paranoia
@@ -1965,14 +1968,19 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Crusher";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Yokozuna";
-            else if (!dex_better && (species == SP_DJINNI || species == SP_POLTERGEIST)
+            else if (str >= dex && (species == SP_DJINNI || species == SP_POLTERGEIST)
                         && skill_rank == 5)
             {
                 result = "Weightless Champion";
             }
+            else if (str > intel + dex && species == SP_DEMIGOD
+                        && skill_rank == 5)
+            {
+                result = "Herculean";
+            }
             else
             {
-                result = dex_better ? martial_arts_titles[skill_rank]
+                result = dex > str ? martial_arts_titles[skill_rank]
                                     : skill_titles[best_skill][skill_rank];
             }
             break;
@@ -2015,6 +2023,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_THROWING:
             if (species == SP_POLTERGEIST && skill_rank == 5)
                 result = "Undying Armoury";
+
+        case SK_SHAPESHIFTING:
+            if (trans == transformation::fortress_crab && skill_rank == 5)
+                result = "Pinnacle of Evolution";
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)

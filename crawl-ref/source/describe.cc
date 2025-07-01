@@ -7137,7 +7137,12 @@ string get_ghost_description(const monster_info &mi, bool concise)
          << skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         gspecies,
-                        species::has_low_str(gspecies), mi.i_ghost.religion)
+                        get_species_def(gspecies).d,
+                        get_species_def(gspecies).s,
+                        get_species_def(gspecies).i,
+                        mi.i_ghost.religion,
+                        10 + mi.i_ghost.xl_rank * 27,
+                        transformation::none)
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)
