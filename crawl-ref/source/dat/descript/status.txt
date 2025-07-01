@@ -655,12 +655,14 @@ maximum health is further drained when taking damage.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer.
+translocation magic. Teleportation will take longer and scrolls of blinking may
+transport you a short distance away from your intended destination.
 %%%%
 Orb? status
 
 You are holding the Charlatan's Orb, whose energies disrupt translocation
-magic. Teleportation will take longer.
+magic. Teleportation will take longer and scrolls of blinking may transport you
+a short distance away from your intended destination.
 %%%%
 -Hop status
 

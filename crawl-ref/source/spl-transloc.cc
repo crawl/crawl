@@ -425,17 +425,17 @@ public:
 };
 
 /**
- * Randomly choose one of the spaces near the given target for the player's hop
- * to land on.
+ * Randomly choose one of the spaces near the given target for the player's
+ * blink to land on.
  *
  * @param target    The tile the player wants to land on.
  * @return          A nearby, unoccupied, inhabitable tile.
  */
-static coord_def _fuzz_hop_destination(coord_def target)
+static coord_def _fuzz_blink_destination(coord_def target)
 {
     coord_def chosen;
     int seen = 0;
-    targeter_hop tgt(frog_hop_range(), true);
+    targeter_hop tgt(LOS_RADIUS, true);
     tgt.set_aim(target); // XX could reuse tgt from the calling function?
     for (auto ti = tgt.affected_iterator(AFF_MAYBE); ti; ++ti)
         if (one_chance_in(++seen))
@@ -476,7 +476,7 @@ spret frog_hop(bool fail, dist *target)
         }
         break;
     }
-    target->target = _fuzz_hop_destination(target->target);
+    target->target = _fuzz_blink_destination(target->target);
 
     fail_check();
 
@@ -895,10 +895,22 @@ spret controlled_blink(bool safe_cancel, dist *target)
     if (!target)
         target = &empty;
 
-    targeter_smite tgt(&you, LOS_RADIUS);
-    tgt.obeys_mesmerise = true;
-    if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
-        return spret::abort;
+    // Fuzz blinking by 2 tiles while in Zot or on the orb run.
+    if (orb_limits_translocation())
+    {
+        targeter_hop tgt(you.current_vision - 2, false);
+        if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
+            return spret::abort;
+        target->target = _fuzz_blink_destination(target->target);
+        mprf(MSGCH_ORB, "You feel the Orb interfering with your translocation!");
+    }
+    else
+    {
+        targeter_smite tgt(&you, LOS_RADIUS);
+        tgt.obeys_mesmerise = true;
+        if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
+            return spret::abort;
+    }
 
     // invisible monster that the targeter didn't know to avoid
     if (monster_at(target->target))
