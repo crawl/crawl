@@ -7142,7 +7142,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
                         get_species_def(gspecies).i,
                         mi.i_ghost.religion,
                         10 + mi.i_ghost.xl_rank * 27,
-                        transformation::none)
+                        false)
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)

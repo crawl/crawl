@@ -91,6 +91,7 @@ const char *skill_abbr(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
 
+string special_conduct_title(skill_type best_skill, uint8_t skill_rank);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
@@ -98,7 +99,7 @@ string skill_title_by_rank(
     int dex = you.base_stats[STAT_DEX], int str = you.base_stats[STAT_STR],
     int intel = you.base_stats[STAT_INT],
     god_type god = you.religion,
-    int piety = you.piety, transformation trans = you.form);
+    int piety = you.piety, bool conducts = true);
 unsigned get_skill_rank(unsigned skill_lev);
 
 string player_title(bool the = true);
