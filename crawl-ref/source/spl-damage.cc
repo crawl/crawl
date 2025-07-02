@@ -4241,6 +4241,12 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
     return spret::success;
 }
 
+
+dice_def jinxbite_damage(int pow, bool random)
+{
+    return dice_def(2, random ? 2 + div_rand_round(pow, 25) : 2 + pow / 25);
+}
+
 static string _get_jinxsprite_message(const monster& victim)
 {
     string msg;
@@ -4313,8 +4319,7 @@ void attempt_jinxbite_hit(actor& victim)
     // player that this is a Will check, also.)
     flash_tile(victim.pos(), LIGHTBLUE);
 
-    // XXX TODO: move this out and display it
-    const int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
+    const int dmg = jinxbite_damage(pow, true).roll();
 
     monster* mons = victim.as_monster();
     const int drain_dur = random_range(3 * BASELINE_DELAY, 5 * BASELINE_DELAY);

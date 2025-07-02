@@ -3075,6 +3075,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return poisonous_vapours_damage(power, false);
         case SPELL_DETONATION_CATALYST:
             return detonation_catalyst_damage(power, false);
+	case SPELL_JINXBITE:
+	    return jinxbite_damage(power,false);
         default:
             break;
     }
