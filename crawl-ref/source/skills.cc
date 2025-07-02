@@ -2027,10 +2027,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_THROWING:
             if (species == SP_POLTERGEIST && skill_rank == 5)
                 result = "Undying Armoury";
+            break;
 
         case SK_SHAPESHIFTING:
             if (trans == transformation::fortress_crab && skill_rank == 5)
                 result = "Pinnacle of Evolution";
+            break;
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
