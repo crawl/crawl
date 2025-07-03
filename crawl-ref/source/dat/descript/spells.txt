@@ -1413,7 +1413,8 @@ Ozocubu's Refrigeration spell
 
 Turns the air bitterly cold, freezing all other creatures in line of sight.
 This is less effective against creatures packed tightly together - those
-adjacent to others will be partly insulated from the cold, taking less damage.
+adjacent to their allies will be partly insulated from the cold, taking less
+damage.
 %%%%
 Pain spell
 

@@ -579,7 +579,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     {
         // Tracers use the average for damage calculations.
         hurted = (1 + beam.damage.num * beam.damage.size) / 2;
-        if (!ignore_ac)
+        if (!ignore_ac && target.is_monster())
             hurted = max(0, hurted - target.armour_class() / 2);
     }
 
@@ -694,6 +694,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
                        // Players don't get immunity with rC+++.
+                       && !(caster->is_monster() && mons_aligned(caster, act))
                        && (act->is_player() || act->res_cold() < 3)
                        && !never_harm_monster(caster, act->as_monster());
             };
