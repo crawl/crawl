@@ -408,7 +408,7 @@ affected creature appreciably easier to hit.
 %%%%
 Corrosive Bolt spell
 
-Fires a penetrating bolt of acid.
+Fires a penetrating bolt of highly-corrosive acid.
 %%%%
 Corrupt spell
 

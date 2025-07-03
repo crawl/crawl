@@ -4473,7 +4473,9 @@ void bolt::affect_player()
     internal_ouch(final_dam);
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
-    if (flavour == BEAM_ACID && coinflip())
+    if (origin_spell == SPELL_CORROSIVE_BOLT && !one_chance_in(4))
+        you.corrode(agent(), "the acid", 6);
+    else if (flavour == BEAM_ACID && coinflip())
         you.corrode(agent());
 
     if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
