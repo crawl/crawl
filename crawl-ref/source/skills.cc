@@ -1952,7 +1952,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
 
     // Shopless, with Gozag
     if (you_worship(GOD_GOZAG) && you.experience_level > 17
-        && you.attribute[ATTR_PURCHASES] = 0)
+        && you.attribute[ATTR_PURCHASES] == 0)
         return "Miser";
 
     // Award for being very good at crab
