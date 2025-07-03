@@ -1934,19 +1934,32 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
 {
     string title;
 
+    // All gem runs, as per the graceful banner (graceful seems a weird title)
+    if (gems_held_intact() >= 11)
+        return "Flawless";
+
+    // A very hard version of the ascetic banner
+    if (you.experience_level > 17
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_SCROLLS))))
+    {
+        return "True Ascetic";
+    }
+
+    // A harder version of the ruthless efficiency banner
+    if (you.experience_level < 19 && player_has_orb())
+        return "Ruthless";
+
+    // Shopless, with Gozag
+    if (you_worship(GOD_GOZAG) && you.experience_level > 17
+        && you.attribute[ATTR_PURCHASES] = 0)
+        return "Miser";
+
     // Award for being very good at crab
     if (you.form == transformation::fortress_crab
         && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
     {
         return "Pinnacle of Evolution";
-    }
-
-    // A very hard version of the tournament ascetic conduct
-    if (you_worship(GOD_RU) && you.experience_level > 20
-        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
-        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_SCROLLS))))
-    {
-        return "True Ascetic";
     }
 
     return title;
