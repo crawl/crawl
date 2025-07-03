@@ -4452,17 +4452,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
-    spschool::none,
-    spflag::monster,
-    6,
-    200,
-    -1, -1,
-    0,
-    TILEG_ABILITY_ENKINDLE,
-},
-
-{
     SPELL_DETONATION_CATALYST, "Detonation Catalyst",
     spschool::fire | spschool::alchemy,
     spflag::selfench,
@@ -4570,6 +4559,29 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_ERROR,
+},
+
+// Dummy spells for description purposes
+{
+    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
+    spschool::none,
+    spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ABILITY_ENKINDLE,
+},
+
+{
+    SPELL_PLANAR_OVERLAY, "Planar Overlay",
+    spschool::none,
+    spflag::monster,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_PASSAGE_OF_GOLUBRIA,
 },
 
 #if TAG_MAJOR_VERSION == 34

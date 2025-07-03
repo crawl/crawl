@@ -1475,6 +1475,17 @@ Phantom Mirror spell
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
 %%%%
+Planar Overlay spell
+
+Overlays part of an adjacent reality onto this one, causing random local
+monsters to appear elsewhere on the floor. This occurs very slowly at first, but
+the longer the tesseract remains active, the higher the rate will become.
+
+After many monsters have been generated, they will stop rewarding any experience
+points - though destroying the tesseract early will immediately grant the player
+the sum total of all experience points that could be obtained by allowing it to
+continue.
+%%%%
 Plane Rend spell
 
 Summons some of the greater threats from one of the Pits of Slime, the Elven

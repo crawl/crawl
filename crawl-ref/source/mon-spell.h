@@ -1150,6 +1150,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BOUNDLESS_TESSERACT,
+      {
+       { SPELL_PLANAR_OVERLAY, 0, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('K') Kobolds.
     {  MST_KOBOLD_DEMONOLOGIST,
       {

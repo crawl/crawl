@@ -2140,6 +2140,13 @@ void handle_monster_move(monster* mons)
         }
     }
 
+    if (mons->type == MONS_BOUNDLESS_TESSERACT)
+    {
+        tesseract_action(*mons);
+        mons->lose_energy(EUT_MOVE);
+        return;
+    }
+
     // Friendly player shadows don't act independently (though hostile ones from
     // wrath effects may do so)
     if (mons_is_player_shadow(*mons))

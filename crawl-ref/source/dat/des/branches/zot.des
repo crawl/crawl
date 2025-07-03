@@ -4487,7 +4487,7 @@ NAME:    hall_of_Zot
 TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
-MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
+MONS:    patrolling orb guardian, boundless tesseract
 MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
@@ -4525,8 +4525,10 @@ SUBST:   D = ^'', O = d, o = '
 SUBST:   P = h, Hp = '
 # Place a minimum number of traps and some extra liches in each lower wing.
 NSUBST:  d = 2=5. / 4=~ / ., h = 2=5. / 4=~ / .
-# In a each upper wing, place a few monsters along with locations for the main
+# In each upper wing, place a few monsters along with locations for the main
 # monster set on '?'. Use more central areas in the upper wings to do this.
+# Both boundless tesseracts are placed in fixed positions right by the upper
+# wing entrances, replacing old chances to place monster statues or traps there.
 NSUBST:  f = 3 / 4 / 6 / 9 = ? .:8 / e, k = 3 / 4 / 6 / 9 = ? .:8 / j
 # Minimum number of traps in each upper wing.
 NSUBST:  e = 4=~ / ., j = 4=~ / .
@@ -4570,7 +4572,7 @@ XXXXXXXXXXeeeeeeefffffffffffffeeeecXXXXXXXXXXXcjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
 XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
 XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
-XXXXXXXXXXXXXXE111EccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXccJ111JXXXXXXXXXXXXX
+XXXXXXXXXXXXXXG1112ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc2111GXXXXXXXXXXXXX
 XXXXXXXXXXXccddddddddddddddODDo1ccccccccccccccccc1pHHPhhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX

@@ -255,6 +255,13 @@ static int _calc_player_experience(const monster* mons)
     experience = experience * mons->damage_friendly / mons->damage_total;
     ASSERT(mons->damage_friendly <= mons->damage_total);
 
+    // Award the player any XP remaining in the tesseract's XP pool.
+    if (mons->type == MONS_BOUNDLESS_TESSERACT && mons->props.exists(TESSERACT_XP_KEY))
+    {
+        experience += mons->props[TESSERACT_XP_KEY].get_int();
+        mprf("Awarding %d bonus XP.", mons->props[TESSERACT_XP_KEY].get_int());
+    }
+
     return experience;
 }
 
@@ -3156,6 +3163,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Must be done after health is set to zero and monster is properly marked dead.
+    if (mons.type == MONS_BOUNDLESS_TESSERACT)
+    {
+        mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid)
+                monster_die(**mi, killer, killer_index);
+    }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (destroy_tentacles(&mons)

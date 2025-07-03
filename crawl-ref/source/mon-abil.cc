@@ -33,6 +33,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-act.h"
@@ -58,6 +59,7 @@
 #include "transform.h"
 #include "view.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 static bool _slime_split_merge(monster* thing);
 
@@ -1457,4 +1459,76 @@ void solar_ember_blast()
 
     ember->hurt(ember, random_range(7, 10));
     ember->del_ench(ENCH_SPELL_CHARGED);
+}
+
+void tesseract_action(monster& mon)
+{
+    // Only operate logic on a single tesseract on the floor
+    if (mon.props.exists(TESSERACT_DUMMY_KEY) || mon.behaviour == BEH_SLEEP)
+        return;
+
+    // When we become alerted, start the spawn timer and announce ourselves to the player.
+    if (mon.behaviour != BEH_SLEEP && !mon.props.exists(TESSERACT_START_TIME_KEY))
+    {
+        mprf(MSGCH_WARN, "You feel the power of Zot begin to focus. "
+             "Strike quickly, lest you be overrun by monsters beyond count!");
+
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type != MONS_BOUNDLESS_TESSERACT)
+                continue;
+
+            env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+            set_terrain_seen(mi->pos());
+            view_update_at(mi->pos());
+
+#ifdef USE_TILE
+            tiles.update_minimap(mi->pos());
+#endif
+
+            // Mark any other tesseracts on the floor as dummies, so they don't operate independently.
+            if (mi->mid != mon.mid)
+            {
+                mi->props[TESSERACT_DUMMY_KEY] = true;
+                behaviour_event(*mi, ME_ALERT);
+            }
+        }
+
+        mon.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
+        mon.props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
+        mon.props[TESSERACT_XP_KEY] = 12000;
+    }
+
+    // Handle regular spawning
+    int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
+    while (you.elapsed_time >= timer)
+    {
+        const int time_passed = you.elapsed_time - mon.props[TESSERACT_START_TIME_KEY].get_int();
+        const int interval = max(200, 750 - (time_passed / 6));
+
+        timer = you.elapsed_time + random_range(interval, interval * 4 / 3);
+
+        mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
+        mg.place = level_id::current();
+        mg.place.depth = 7;
+        mg.flags |= MG_FORBID_BANDS;
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+        mg.foe = MHITYOU;
+
+        monster* spawn = mons_place(mg);
+
+        if (!spawn)
+            return;
+
+        // Allow the monster to be a normal monster if there is XP left in our
+        // pool; otherwise, make them unrewarding (to make early spawns feel
+        // less unfun while still removing any incentive to farm them).
+        int& xp_pool = mon.props[TESSERACT_XP_KEY];
+        int xp = exp_value(*spawn);
+
+        if (xp_pool >= xp)
+            xp_pool -= xp;
+        else
+            spawn->flags |= (MF_HARD_RESET | MF_NO_REWARD);
+    }
 }

@@ -6623,7 +6623,8 @@ spret okawaru_duel(const coord_def& target, bool fail)
 
     if (mons->is_peripheral()
         || !(mons_habitat(*mons) & HT_DRY_LAND)
-        || mons->wont_attack())
+        || mons->wont_attack()
+        || mons->type == MONS_BOUNDLESS_TESSERACT)
     {
         mpr("You cannot duel that!");
         return spret::abort;

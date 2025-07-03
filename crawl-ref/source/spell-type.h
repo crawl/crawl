@@ -644,5 +644,6 @@ enum spell_type : int
     SPELL_WARP_BODY,
     SPELL_OSTRACISE,
     SPELL_MUTAGENIC_GAZE,
+    SPELL_PLANAR_OVERLAY,   // Dummy spell for description purposes
     NUM_SPELLS
 };

@@ -604,6 +604,13 @@ orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
 diamond_sawblade MONS_DIAMOND_SAWBLADE
+%rim 0
+planar_tesseract0 MONS_BOUNDLESS_TESSERACT
+planar_tesseract1
+planar_tesseract2
+planar_tesseract3
+planar_tesseract4
+planar_tesseract5
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE

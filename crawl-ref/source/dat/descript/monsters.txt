@@ -877,6 +877,16 @@ The soul of a living, holy, or demonic creature, captured by a dark sacrifice
 to Yredelemnul. The bound soul will follow its captor through stairs and come
 when recalled from a different level.
 %%%%
+boundless tesseract
+
+An impossible shape that scintillates with unearthly colour. The power of Zot
+flows heavily through it, overlaying this reality with countless others where
+its domain remains pristine.
+
+Each tesseract is inextricably linked to the other, and destroying one will
+destroy both. But so long as they are allowed to exist, there will be no end to
+the forces which seek to keep you from the Orb.
+%%%%
 brain worm
 
 A slimy fluorescent worm with a greatly distended head. This creature feeds on
