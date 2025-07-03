@@ -7136,6 +7136,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
     string title = mi.i_ghost.title;
 #if TAG_MAJOR_VERSION == 34
     if (title.empty())
+    {
         title = skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         gspecies,
@@ -7145,6 +7146,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
                         mi.i_ghost.religion,
                         10 + mi.i_ghost.xl_rank * 27,
                         false);
+    }
 #endif
 
     gstr << mi.mname << " the "
