@@ -3225,9 +3225,6 @@ static bool _transformed_player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.form == transformation::death)
         return false;
 
-    if (which_god == GOD_OKAWARU && you.form == transformation::hive)
-        return false;
-
     return true;
 }
 

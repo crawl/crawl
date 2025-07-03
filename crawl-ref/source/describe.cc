@@ -7568,7 +7568,11 @@ static string _describe_talisman(const item_def &item, bool verbose)
 
         if (is_useless_item(item, false))
             _uselessness_desc(description, item);
-        else if (item.sub_type != TALISMAN_PROTEAN)
+
+        if (item.sub_type == TALISMAN_HIVE && you.allies_forbidden())
+          description << "\n\n" << "The swarm will not protect you as you can not gain allies.";
+
+        if (item.sub_type != TALISMAN_PROTEAN)
         {
             if (crawl_state.need_save && item.is_identified())
                 description << _equipment_property_change(item);

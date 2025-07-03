@@ -1086,9 +1086,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         if (you.form != you.default_form && temp)
             return "you need to leave your temporary form first.";
 
-        if (trans == transformation::hive && you_worship(GOD_OKAWARU))
-            return "you have forsworn all allies in Okawaru's name.";
-
         return "";
     }
 
