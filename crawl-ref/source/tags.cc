@@ -6740,9 +6740,11 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.xl_rank = unmarshallShort(th);
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_GHOST_TITLE)
             mi.i_ghost.title = "";
         else
+#endif
             unmarshallString(th);
     }
 #if TAG_MAJOR_VERSION == 34
