@@ -25,6 +25,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
@@ -1953,7 +1954,9 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     // Shopless, with Gozag
     if (you_worship(GOD_GOZAG) && you.experience_level > 17
         && you.attribute[ATTR_PURCHASES] == 0)
+    {
         return "Miser";
+    }
 
     // Award for being very good at crab
     if (you.form == transformation::fortress_crab
