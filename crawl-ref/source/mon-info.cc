@@ -1222,10 +1222,12 @@ string monster_info::common_name(description_level_type desc) const
             ss << "bound soul";
         break;
     case MONS_PILLAR_OF_SALT:
-        ss << (nocore ? "" : " ") << "shaped pillar of salt";
+        if (base_type != type)
+            ss << (nocore ? "" : " ") << "shaped pillar of salt";
         break;
     case MONS_BLOCK_OF_ICE:
-        ss << (nocore ? "" : " ") << "shaped block of ice";
+        if (base_type != type)
+            ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
     default:
         break;
