@@ -1038,7 +1038,7 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst) && !you.is_motile())
+            if (!rampaged && !you.can_see(*targ_monst) && !you.is_motile())
             {
                 canned_msg(MSG_CANNOT_MOVE);
                 you.turn_is_over = false;
@@ -1068,6 +1068,13 @@ void move_player_action(coord_def move)
             you.berserk_penalty = 0;
             attacking = true;
         }
+    }
+    else if (rampaged && !you.is_motile())
+    {
+        // We rampaged onto something that has stopped us moving and we
+        // don't have a target to hit.
+        _finalize_cancelled_rampage_move();
+        return;
     }
     else if (you.form == transformation::fungus && moving && !you.confused())
     {
