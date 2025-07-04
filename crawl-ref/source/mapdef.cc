@@ -4482,25 +4482,27 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 }
 
 /**
- * Build a monster specification for a specified pillar of salt. The pillar of
- * salt won't crumble over time, since that seems useful for any version of
- * this function.
+ * Build a monster specification for a specified pillar of salt or block of ice.
+ * It won't crumble over time, since that seems useful for any version of this
+ * function.
  *
- * @param name      The description of the pillar of salt; e.g.
+ * @param name      The description of the monster; e.g.
  *                  "human-shaped pillar of salt",
- *                  "titanic slime creature-shaped pillar of salt."
+ *                  "titanic slime creature-shaped block of ice."
  *                  XXX: doesn't currently work with zombie specifiers
  *                  e.g. "zombie-shaped..." (does this matter?)
- * @return          A specifier for a pillar of salt.
+ * @param type      The base type of monster to create (eg: MONS_PILLAR_OF_SALT)
+ * @return          A specifier for this monster.
  */
-mons_spec mons_list::get_salt_spec(const string &name) const
+mons_spec mons_list::get_shaped_spec(const string &name, monster_type type) const
 {
-    const string prefix = name.substr(0, name.find("-shaped pillar of salt"));
+    const string key = "-shaped " + mons_type_name(type, DESC_DBNAME);
+    const string prefix = name.substr(0, name.find(key));
     mons_spec base_mon = mons_by_name(prefix);
     if (base_mon.type == MONS_PROGRAM_BUG)
         return base_mon; // invalid specifier
 
-    mons_spec spec(MONS_PILLAR_OF_SALT);
+    mons_spec spec(type);
     spec.monbase = _fixup_mon_type(base_mon.type);
     return spec;
 }
@@ -4688,7 +4690,10 @@ mons_spec mons_list::mons_by_name(string name) const
         return get_slime_spec(name);
 
     if (ends_with(name, "-shaped pillar of salt"))
-        return get_salt_spec(name);
+        return get_shaped_spec(name, MONS_PILLAR_OF_SALT);
+
+    if (ends_with(name, "-shaped block of ice"))
+        return get_shaped_spec(name, MONS_BLOCK_OF_ICE);
 
     if (ends_with(name, " apostle"))
     {
