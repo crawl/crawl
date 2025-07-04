@@ -1860,9 +1860,9 @@ static void _artefact_setup_prop_vectors(item_def &item)
         rap[i].get_short() = 0;
 }
 
-// If force_mundane is true, normally mundane items are forced to
+// If ignore_mundane is true, normally mundane items are forced to
 // nevertheless become artefacts.
-bool make_item_randart(item_def &item, bool force_mundane)
+bool make_item_randart(item_def &item, bool ignore_mundane)
 {
     switch (item.base_type)
     {
@@ -1885,7 +1885,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         return false;
 
     // Mundane items are much less likely to be artefacts.
-    if (!force_mundane && item.is_mundane() && !one_chance_in(5))
+    if (!ignore_mundane && item.is_mundane() && !one_chance_in(5))
         return false;
 
     _artefact_setup_prop_vectors(item);

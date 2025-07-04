@@ -236,7 +236,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
-        make_item_randart(item);
+        if (!make_item_randart(item))
+            return false;
 
         if (old_ego > 0)
             set_artefact_brand(item, old_ego);
@@ -426,8 +427,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_weapon_artefact(item, force_type, 0, true, agent)
-                && is_artefact(item))
+            if (_try_make_weapon_artefact(item, force_type, 0, true, agent))
             {
                 if (ego > SPWPN_NORMAL)
                     set_artefact_brand(item, ego);
@@ -735,7 +735,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
     // Needs to be done after the barding chance else we get randart
     // bardings named Boots of xy.
-    make_item_randart(item);
+    if (!make_item_randart(item))
+        return false;
 
     if (old_ego > 0)
         set_artefact_brand(item, old_ego);
@@ -1015,8 +1016,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, item_level, agent)
-                && is_artefact(item))
+            if (_try_make_armour_artefact(item, force_type, item_level, agent))
             {
                 // borrowed from similar code for weapons -- is this really the
                 // best way to force an ego??
