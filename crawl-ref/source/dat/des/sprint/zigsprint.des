@@ -509,7 +509,7 @@ local rnd = crawl.random2(142)
   elseif rnd < 81 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\
                freezing wraith / ice devil / ice dragon / frost giant /\
-               ice fiend w:5 / blizzard demon")
+               orb of winter w:5 / blizzard demon")
 -- Air
   elseif rnd < 84 then
     e.kmons("1 = air elemental / wind drake / spriggan air mage /\

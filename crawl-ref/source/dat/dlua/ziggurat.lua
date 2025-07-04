@@ -355,7 +355,7 @@ mset(with_props(spec_fn(function ()
          "juggernaut simulacrum w:5 / ironbound frostheart w:5 / " ..
          "walking frostbound tome w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
-         "shard shrike w:" .. e .. " / ice fiend w:" .. e
+         "shard shrike w:" .. e .. " / orb of winter w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -390,7 +390,8 @@ mset(with_props(spec_fn(function ()
          "deep elf death mage w:2 / shadow dragon w:8 / ghost crab w:4 / " ..
          "eidolon w:4 / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "halazid warlock w:" .. e .. " / player ghost w:" .. f
+         "halazid warlock w:" .. e .. " / player ghost w:" .. f .. " / " ..
+         "orb of entropy w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()

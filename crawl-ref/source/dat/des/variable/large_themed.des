@@ -2780,7 +2780,11 @@ MONS:    red draconian / red draconian monk w:5
 MONS:    red draconian knight, red draconian annihilator
 MONS:    red draconian scorcher, red draconian shifter
 KMONS:   6 : iron dragon / golden dragon
-KMONS:   7 : dread lich / orb of fire
+KMONS:   7 = dread lich
+KMONS:   8 = orb of fire
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   7 : 78
+: end
 KMONS:   L = moth of wrath
 NSUBST:  V> = 1:} / 1 = ):6 >:1 / 1 = ]:6 >:1
 SUBST:   " = 1
@@ -3250,7 +3254,9 @@ NSUBST:   l = 1:L / 1 = Ll / *:l, * = 1:Y / 1:Z / 1:d / 2:! / *:$
 :   end
 : else -- Zot
 MONS:     red draconian, red draconian monk / golden dragon
-MONS:     red draconian annihilator w:5 / red draconian scorcher, orb of fire
+MONS:     red draconian annihilator w:5 / red draconian scorcher
+# Winter doesn't stop for lava. Winter doesn't stop for anything.
+MONS:     orb of appropriateness
 KMONS:    L = moth of wrath / ghost moth w:2
 NSUBST:   . = 3:1 / 2:2 / 2:3 / 2 = 233.
 NSUBST:   l = 2:L / 3 = Lll / *:l, 4 = 1:4 / *:23

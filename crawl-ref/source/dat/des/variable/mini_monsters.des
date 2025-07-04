@@ -10408,7 +10408,7 @@ KMONS:  1 = oblivion hound w:15 / death drake / bone dragon / tormentor / \
 KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
             ice fiend w:15 / ancient lich / dread lich / place:Coc:$ w:24
 : elseif you.in_branch("Zot") then
-KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
+KMONS:  1 = nonbase draconian / orb of appropriateness / electric golem / \
             killer klown / ancient lich / dread lich / curse toe / \
             protean progenitor / place:Zot:$ w:20
 # Dungeon, Vaults, and Depths get 8 spawns.

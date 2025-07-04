@@ -4019,7 +4019,7 @@ KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
 KMONS:  9 = red draconian / white draconian / black draconian
 KMONS:  0 = red draconian stormcaller / white draconian stormcaller / \
             black draconian stormcaller
-KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
+KMONS:  ! = orb of appropriateness / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
 KITEM:  y = $ no_pickup, smoky gem
@@ -4446,10 +4446,15 @@ MONS:    white draconian stormcaller / white draconian annihilator / \
          white draconian monk / white draconian knight ; glaive ego:freezing . \
                                                          cloak
 MONS:    white draconian ; halberd ego:freezing . cloak
+KMONS:   8 = orb of winter
 NSUBST:  . = 1:{} / 1 = ):50 / 1 = ]:40 >
 NSUBST:  - = 4:1 / 4:2 / 2 = 122 / *:-
 SHUFFLE: {([, })]
 SUBST:   b : bm
+# Something terrible can still follow you away from the island regardless.
+:   if dgn.zot_orb_type() == "orb of winter" then
+NSUBST:  1 = 1:8 / 1:2 / *:1
+:   end
 :   vault_metal_statue_setup(_G, "b", "icy conduit")
 : elseif you.branch() == "Vaults" then
 MONS:   ironbound frostheart, arcanist / white very ugly thing w:2
@@ -4470,8 +4475,8 @@ TILE:   b = bedevilled_crystal_cocytus
 KMONS:  3 = ice statue
 KFEAT:  3 = >
 NSUBST: ' = 5=*$ / *:%, $ = 1:dd$ / *:$
-KPROP:  -W123$%* = no_tele_into
-KMASK:  -W123$%* = opaque
+KPROP:  -W1238$%* = no_tele_into
+KMASK:  -W1238$%* = opaque
 MAP
         ...
        ..x..
@@ -5144,7 +5149,7 @@ SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS:    ghost moth / death cob / curse toe
 MONS:    nonbase draconian / protean progenitor w:2
-MONS:    ancient lich / dread lich, orb of fire
+MONS:    ancient lich / dread lich, orb of appropriateness
 SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
 KFEAT:   _ = altar_sif_muna / altar_vehumet
@@ -6193,7 +6198,8 @@ ENDMAP
 NAME:   dreamdust_black_sun_cult
 TAGS:   transparent no_monster_gen
 ORIENT: float
-DEPTH:  D:13-, Zot
+DEPTH:  D:13-, Zot, !Zot:$
+WEIGHT: 25 (Zot), 10
 : if you.in_branch("D") then
 KMONS:  1 = salamander mystic / cognitogaunt w:1
 KMONS:  2 = sun demon
@@ -6219,6 +6225,9 @@ FTILE:  -mA1 = floor_volcanic
 MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
 NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
+veto {{
+  return you.in_branch("Zot") and dgn.zot_orb_type() ~= "orb of fire"
+}}
 MAP
  .........
 ..!bbbbb!..
@@ -7267,7 +7276,7 @@ NSUBST:  | = 1:d / 1:e / 1:g / * = de
 : else   -- Zot
 MONS:    white draconian, white draconian stormcaller
 MONS:    white draconian monk, white draconian knight / white draconian shifter
-MONS:    lich, golden dragon
+MONS:    lich, golden dragon, orb of winter
 KFEAT:   ^ = zot trap
 NSUBST:  ^ = 2:^. / *:., 1 = 1:2 / 1:345 / 1:6 / *:1
 NSUBST:  $ = 1:} / *:$, | = 2:e / 1:g / *:d
@@ -7275,6 +7284,9 @@ SHUFFLE: })]
 SUBST:   ) = ):70 >, ] = 40:] >, G = P
 MARKER:  U = lua:fog_machine { cloud_type = "freezing vapour", size = 1, \
              pow_max = 10, delay_min = 30, delay_max = 40, excl_rad = 0 }
+:   if dgn.zot_orb_type() == "orb of winter" then
+SUBST:   6 = 677
+:   end
 : end
 ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
          ring of ice randart w:4 / staff of cold w:3 / rimehorn talisman w:2
@@ -7363,7 +7375,7 @@ ORIENT:  float
 WEIGHT:  10 (D), 5
 SUBST:   m:mn
 : if you.in_branch("Zot") then
-KMONS:   ]}) = orb of fire / electric golem / draconian knight w:20
+KMONS:   ]}) = orb of appropriateness / electric golem / draconian knight w:20
 : elseif not you.in_branch("D") then
 KMONS:   ]}) = 9
 : end
@@ -8621,7 +8633,7 @@ KMONS:  8 = bone dragon / lich / ancient lich / dread lich / \
             vampire bloodprince w:5 / curse toe w:5 / zombie w:5 / \
             draugr w:5 / eidolon / reaper w:20 / soul eater / place:Crypt w:30
 : elseif you.in_branch("Zot") then
-KMONS:  8 = nonbase draconian w:35 / orb of fire / electric golem / \
+KMONS:  8 = nonbase draconian w:35 / orb of appropriateness / electric golem / \
             killer klown / death cob / curse toe w:5 / ancient lich w:5 / \
             dread lich w:5 / protean progenitor w:15
 SUBST:  *% = .
@@ -11534,7 +11546,7 @@ KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
 SUBST:   8 = 29, 9 = 01
 : elseif you.in_branch("Zot") then
 KMONS:   1 = ancient lich w:5 / dread lich w:5 / protean progenitor / \
-             orb of fire / curse toe
+             orb of appropriateness / curse toe
 SUBST:   8 = 18
 : end
 # In Vaults we let the layout dictate wall type and need a border of floor.
@@ -11613,7 +11625,7 @@ KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:  8 = 39, 9 = 02, H = K
 :   elseif you.in_branch("Zot") then
-KMONS:  2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
+KMONS:  2 = ancient lich w:5 / dread lich w:5 / orb of appropriateness / curse toe
 SUBST:  8 = 28
 :   end
 COLOUR: p = yellow
@@ -11789,7 +11801,8 @@ SHUFFLE: Ww / ll
 SUBST:   2 = G:50 2, r = $*, s = |
 KFEAT:   ^ = shaft trap / alarm trap / zot trap
 : elseif you.in_branch("Zot") then
-MONS:    ancient lich w:5 / dread lich w:5 / orb of fire, orange crystal statue
+MONS:    ancient lich w:5 / dread lich w:5 / orb of appropriateness
+MONS:    orange crystal statue
 SUBST:   2 = G:50 2, r = *:30 |, wW = l, K = ), s = ]
 KFEAT:   ^ = zot trap
 : end

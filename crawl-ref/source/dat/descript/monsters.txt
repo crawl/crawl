@@ -3675,21 +3675,6 @@ A metal golem crackling with magical energies. It must have been created by
 a truly devious wizard, or possibly someone who misheard what monsters could
 be found in the Realm of Zot.
 %%%%
-orb of electricity
-
-A massive floating ball. It resembles ball lightning, but looks far more
-stable.
-%%%%
-# I'm not sure how widely cosmogonical Norse myths are known to an average
-# reader; Crawl's audience tends to be far more educated though, so let's
-# hope the concepts of Ginnungagap, Niflheim and Muspelheim are not too
-# obscure.
-orb of ice
-
-A globe of primordial ice, floating in the air. It is said to be a relic of
-ancient times, when the world was a void bracketed by realms of endless fire
-and cold.
-%%%%
 phase bat
 
 A strange, glowing bat that flutters through more dimensions than the average

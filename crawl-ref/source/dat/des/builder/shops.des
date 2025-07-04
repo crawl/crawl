@@ -2137,7 +2137,7 @@ MONS:  orb spider zombie / weeping skull / laughing skull
 MONS:  glass eye / tengu reaver, lich / fire giant w:5
 MONS:  occultist w:5 / tengu conjurer / rakshasa w:5
 : else -- Zot
-MONS:  orb of fire, draconian scorcher, lich
+MONS:  orb of appropriateness, draconian scorcher, lich
 : end
 MAP
    ccccc

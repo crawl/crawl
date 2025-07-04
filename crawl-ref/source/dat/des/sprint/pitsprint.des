@@ -115,7 +115,8 @@ function base_monster_setup(e)
                primal mutant beast w:2 / iron elemental w:3")
   e.kmons("G = caustic shrike w:5 / caustic shrike band w:5 /\
                shard shrike w:3 / shard shrike band w:3 /\
-               orb of fire w:12 / electric golem / protean progenitor band w:6 /\
+               orb of fire w:8 / orb of winter w:8 / orb of entropy w:8 /\
+               electric golem / protean progenitor band w:6 /\
                ancient lich w:6 / dread lich w:6 / royal mummy /\
                vampire bloodprince w:2 / curse skull w:2 /\
                antique champion w:6 ; shadow dragon scales . kite shield . double sword /\
