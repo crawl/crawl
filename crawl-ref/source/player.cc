@@ -7052,6 +7052,7 @@ undead_state_type player::undead_state(bool temp) const
 bool player::nightvision() const
 {
     return have_passive(passive_t::nightvision)
+           || (holiness() & MH_UNDEAD)
            || has_mutation(MUT_FOUL_SHADOW)
            || you.unrand_equipped(UNRAND_BRILLIANCE)
            || you.unrand_equipped(UNRAND_SHADOWS);

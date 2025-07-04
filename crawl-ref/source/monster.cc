@@ -6363,12 +6363,12 @@ bool monster::is_binding_sigil_immune() const
     return has_ench(ENCH_SWIFT);
 }
 
-// Monsters with an innate umbra don't have their accuracy reduced by it, and
-// nor do followers of Yredelemnul and Dithmenos.
+// Monsters with an innate umbra don't have their accuracy reduced by it,
+// nor do undead or followers of Yredelemnul.
 bool monster::nightvision() const
 {
     return god == GOD_YREDELEMNUL
-           || god == GOD_DITHMENOS
+           || (holiness() & MH_UNDEAD)
            || umbra_radius() >= 0;
 }
 
