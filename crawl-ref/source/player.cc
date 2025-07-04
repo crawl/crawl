@@ -251,15 +251,9 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     return false;
 }
 
-bool check_moveto_terrain(const coord_def& p, const string &move_verb,
-                          const string &msg, bool *prompted)
+static bool _check_moveto_binding_sigil(coord_def p, const string &move_verb,
+                                        const string &msg, bool *prompted)
 {
-    // Boldly go into the unknown (for ranged move prompts)
-    if (!env.map_knowledge(p).known())
-        return true;
-
-    if (!_check_moveto_dangerous(p, msg))
-        return false;
     if (env.grid(p) == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
     {
         string prompt;
@@ -278,6 +272,22 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
             return false;
         }
     }
+    return true;
+}
+
+bool check_moveto_terrain(const coord_def& p, const string &move_verb,
+                          const string &msg, bool *prompted)
+{
+    // Boldly go into the unknown (for ranged move prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
+    if (!_check_moveto_dangerous(p, msg))
+        return false;
+
+    if (!_check_moveto_binding_sigil(p, move_verb, msg, prompted))
+        return false;
+
     if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
         && env.grid(you.pos()) != DNGN_TOXIC_BOG
         && env.grid(p) == DNGN_TOXIC_BOG)
@@ -387,6 +397,24 @@ bool check_moveto(const coord_def& p, const string &move_verb, bool physically)
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)
            && check_moveto_exclusion(p, move_verb);
+}
+
+static bool _check_move_over_terrain(coord_def p, const string& move_verb)
+{
+    // Boldly go into the unknown (for ranged move prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return true;
+
+    return _check_moveto_binding_sigil(p, move_verb, "", nullptr);
+}
+
+bool check_move_over(coord_def p, const string& move_verb)
+{
+    return _check_move_over_terrain(p, move_verb)
+        && check_moveto_trap(p, move_verb);
 }
 
 // Returns true if this is a valid swap for this monster. If true, then
