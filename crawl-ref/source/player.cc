@@ -2433,6 +2433,9 @@ static void _handle_banes(int exp)
 {
     int loss = div_rand_round(exp * 10, calc_skill_cost(you.skill_cost_level));
 
+    if (you.has_mutation(MUT_ACCURSED) || you.undead_state() != US_ALIVE)
+        loss /= 2;
+
     if (you.attribute[ATTR_DOOM] > 0)
     {
         you.attribute[ATTR_DOOM] -= div_rand_round(loss, 15);

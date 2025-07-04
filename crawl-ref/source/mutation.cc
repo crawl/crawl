@@ -3453,7 +3453,13 @@ int xl_to_remove_bane(bane_type bane)
     int progress = 0;
     int you_skill_cost_level = you.skill_cost_level;
     int you_xp = you.total_experience;
-    while (progress < you.banes[bane])
+
+    const int cost_factor =
+        (you.has_mutation(MUT_ACCURSED) || you.undead_state() != US_ALIVE) ? 2
+                                                                           : 1;
+    const int bane_xp = you.banes[bane] * cost_factor;
+
+    while (progress < bane_xp)
     {
         const int next_level = skill_cost_needed(you_skill_cost_level + 1);
 
@@ -3465,7 +3471,7 @@ int xl_to_remove_bane(bane_type bane)
         const int max_skp = max((max_xp + cost - 1) / cost, 1);
 
         skill_diff delta;
-        delta.skill_points = min<int>(abs((int)(you.banes[bane] - progress)),
+        delta.skill_points = min<int>(abs((bane_xp - progress)),
                                  max_skp);
         delta.experience = delta.skill_points * cost;
 

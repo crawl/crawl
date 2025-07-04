@@ -961,6 +961,11 @@ enemy in your attack range.
 
 This attack does reduced damage if your attack speed is slower than your casting
 speed.
+%%%%
+accursed mutation
+
+Your accursed nature makes it harder to dispel malignant energies from your
+being, reducing the rate at which you can recover from Doom and Banes.
 # ------ Fakemut descriptions ------
 %%%%
 vampire fangs mutation

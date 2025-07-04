@@ -3737,6 +3737,12 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_SLOW);
     }
 
+    if (you.species == SP_MUMMY || you.species == SP_POLTERGEIST
+        || you.species == SP_REVENANT)
+    {
+        _fixup_species_mutations(MUT_ACCURSED);
+    }
+
     #undef SP_MUT_FIX
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON

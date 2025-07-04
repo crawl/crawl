@@ -2795,6 +2795,14 @@ static const mutation_def mut_data[] =
    TILEG_MUT_SPELLCLAWS,
 },
 
+{ MUT_ACCURSED, 0, 1, mutflag::bad,
+  "accursed",
+
+  {"You recover more slowly from Doom and Banes.", "", ""},
+  {"You feel accursed.", "", ""},
+  {"You feel less accursed.", "", ""},
+},
+
 // Makhleb-specific mutations
 
 { MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good,

@@ -59,6 +59,7 @@ mutations:
     MUT_TORMENT_RESISTANCE: 2
     MUT_FORMLESS: 1
     MUT_TRICKSTER: 1
+    MUT_ACCURSED: 1
   13:
     MUT_FORMLESS: 1
 fake_mutations:

@@ -57,6 +57,7 @@ mutations:
     MUT_CLAWS: 1
     MUT_LOW_MAGIC: 2
     MUT_SPELLCLAWS: 1
+    MUT_ACCURSED: 1
   3:
     MUT_MNEMOPHAGE: 1
 recommended_jobs:
