@@ -5355,7 +5355,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     if (alive()
-        && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
+        && !(mons_habitat(*this) & HT_DRY_LAND)
         && !monster_habitable_grid(this, pos())
         && type != MONS_HELLFIRE_MORTAR
         && !has_ench(ENCH_AQUATIC_LAND))
