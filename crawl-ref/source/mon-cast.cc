@@ -299,7 +299,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _cast_injury_mirror,
         nullptr,
-        MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_DRAIN_LIFE, {
         [](const monster &caster) {
@@ -1319,10 +1318,7 @@ static function<void(bolt&, const monster&, int)>
 
 static void _cast_injury_mirror(monster &mons, mon_spell_slot /*slot*/, bolt&)
 {
-    const string msg
-        = make_stringf(" offers %s to %s, and fills with unholy energy.",
-                       mons.pronoun(PRONOUN_REFLEXIVE).c_str(),
-                       god_name(mons.god).c_str());
+    const string msg = make_stringf(" is filled with unearthly specular energy.");
     simple_monster_message(mons, msg.c_str(), false, MSGCH_MONSTER_SPELL);
     mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, &mons,
                               random_range(7, 9) * BASELINE_DELAY));

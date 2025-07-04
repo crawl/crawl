@@ -506,7 +506,6 @@ ancestor MONS_ANCESTOR
 ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
 ancestor_hexer MONS_ANCESTOR_HEXER
-%rim 1
 
 ## Abominations ('X')
 %sdir mon/aberrations
@@ -550,6 +549,7 @@ crawling_flesh_cage3
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 abomination_small2
+screaming_refraction MONS_SCREAMING_REFRACTION
 chonchon0 MONS_CHONCHON
 chonchon1
 chonchon2

@@ -768,6 +768,7 @@ enum monster_type                      // env.mons[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
     MONS_SPATIAL_MAELSTROM,
     MONS_WORLDBINDER,
+    MONS_SCREAMING_REFRACTION,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
     MONS_BUNYIP,
     MONS_CREEPING_INFERNO,
@@ -1370,6 +1371,7 @@ enum monster_type                      // env.mons[].type
     MONS_BOUNDLESS_TESSERACT,
     MONS_ORB_OF_ENTROPY,
     MONS_ORB_OF_WINTER,
+    MONS_SCREAMING_REFRACTION,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

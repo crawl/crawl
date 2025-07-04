@@ -421,7 +421,7 @@ ENDMAP
 
 NAME:   hangedman_abyss_overflow_altar
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-MONS:   earth elemental
+MONS:   screaming refraction
 KFEAT:  A = altar_lugonu
 KFEAT:  B = dry_fountain
 KFEAT:  C = abyssal_stair
@@ -440,7 +440,7 @@ ENDMAP
 NAME:   hangedman_abyss_mock_shop
 TAGS:   no_monster_gen patrolling
 KMONS:  1 = water elemental / nothing w:5
-KMONS:  2 = earth elemental
+KMONS:  2 = screaming refraction
 KFEAT:  0 = abandoned_shop
 KFEAT:  1 = dry_fountain
 SUBST:  x = xcv, . = ...W
@@ -659,7 +659,8 @@ ENDMAP
 
 NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
-MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
+MONS:    shadow wraith / unseen horror / thrashing horror
+MONS:    lurking horror / screaming refraction w:4
 MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / cognitogaunt, ancient zyme
 MONS:    large slime creature w:12 / rakshasa w:2
@@ -726,14 +727,14 @@ ENDMAP
 
 NAME:    hangedman_steaming_rock
 TAGS:    transparent
-MONS:    eye of devastation w:9 / nothing w:1
-KMONS:   2 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
-             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
-KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
+KMONS:   1 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
+             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5 / \
+             screaming refraction
+KMONS:   2 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
-KMONS:   4 = apocalypse crab / death drake w:5
-KITEM:   2 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
-KITEM:   34 = wand of digging charges:1, staff of earth / staff of air / \
+KMONS:   3 = apocalypse crab / death drake w:5
+KITEM:   3 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
+KITEM:   23 = wand of digging charges:1, staff of earth / staff of air / \
               parchment disc:earth w:5 / parchment disc:air w:5 / \
               mundane granite talisman w:20
 KFEAT:   ABCD = .
@@ -758,7 +759,7 @@ MAP
 .cmmAcmccc.
 .cmAcmmmmcc.
 .cccmm   mcc.
- .1cm 322 mc.
+ ..cm 322 mc.
  ..cm 422 mc.
 .cccmm   mcc.
 .cmDcmmmmcc.
@@ -1041,7 +1042,7 @@ WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
          vampire w:3 / necromancer w:3 / death knight w:3
 MONS:    thrashing horror / blink frog / weeping skull band / \
-         large abomination / unseen horror / shapeshifter / \
+         large abomination / unseen horror / screaming refraction / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / cognitogaunt / \
          profane servitor w:5 / deep elf demonologist / deep elf sorcerer
@@ -1215,7 +1216,7 @@ ENDMAP
 NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
-MONS:    catoblepas, earth elemental, basilisk, boulder beetle
+MONS:    catoblepas, earth elemental, basilisk, screaming refraction
 MONS:    catoblepas zombie, air elemental, death drake
 ITEM:    potion of enlightenment q:1 pre_id
 KMONS:   O = patrolling war gargoyle
@@ -1483,7 +1484,8 @@ TAGS:   abyss_rune unrand
 # who don't mind their target being moved around.
 MONS:   starflower, wretched star
 MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:30
-MONS:   cognitogaunt w:5 / occultist / thrashing horror, demonic plant
+MONS:   cognitogaunt w:5 / occultist / thrashing horror / screaming refraction w:2
+MONS:   demonic plant
 KITEM:  O = abyssal rune of Zot
 KFEAT:  - = runelight
 KFEAT:  A = stone_arch
@@ -1694,7 +1696,7 @@ ENDMAP
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
 MONS:   brain worm w:4 / weeping skull w:2 / raiju / worldbinder / \
-        thrashing horror / shapeshifter
+        thrashing horror / shapeshifter / screaming refraction w:2
 MONS:   cognitogaunt w:4 / tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4
 KMONS:  3O = spatial maelstrom
@@ -1861,10 +1863,11 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_glass
 TAGS:  abyss_exit
+MONS:  screaming refraction
 : init_abyss_exit(_G, "O")
 MAP
  mmm@
-mm.mm
+mm1mm
 m.O.m
 mm.mm
  mmm

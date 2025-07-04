@@ -730,6 +730,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SCREAMING_REFRACTION,
+      {
+       { SPELL_INJURY_MIRROR, 30, MON_SPELL_MAGICAL },
+       { SPELL_LRD, 30, MON_SPELL_MAGICAL },
+      }
+    },
+
     { MST_BUNYIP,
       {
         { SPELL_WARNING_CRY, 20, MON_SPELL_VOCAL | MON_SPELL_BREATH },

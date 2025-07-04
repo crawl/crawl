@@ -1020,8 +1020,9 @@ to the caster.
 %%%%
 Injury Mirror spell
 
-Reflects damage taken for a short duration, hurting attackers whenever any
-damage is taken.
+Reflects damage taken for a short duration, hurting attackers whenever the
+caster takes any damage. After the duration wears off, the caster cannot cast
+this spell again for a short while.
 %%%%
 Ink Cloud spell
 

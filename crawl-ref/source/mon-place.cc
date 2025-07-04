@@ -2328,7 +2328,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                    {MONS_DRAUGR, 2}},
 
                                  {{MONS_DRAUGR, 1}}}},
-                                 
+
     { BAND_FLESHCRAFT,          {{{MONS_KOBOLD_FLESHCRAFTER, 1},
                                   {MONS_VERY_UGLY_THING, 2}},
 

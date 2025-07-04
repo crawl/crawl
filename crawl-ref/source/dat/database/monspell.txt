@@ -957,6 +957,16 @@ Sleep satyr cast
 
 @The_monster@ plays a lulling melody on @possessive@ pipes!
 %%%%
+Injury Mirror screaming refraction cast
+
+@The_monster@ shines with woeful anguish.
+
+@The_monster@ rattles its vertebrae in radiant agony.
+%%%%
+Lee's Rapid Deconstruction screaming refraction cast
+
+An echo of @the_monster@ flickers and hopelessly wails @at@ @target@.
+%%%%
 scrub nettle cast targeted
 
 @The_monster@ launches toxic spines @at@ @target@.

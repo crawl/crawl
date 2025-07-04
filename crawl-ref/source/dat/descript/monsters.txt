@@ -2640,6 +2640,12 @@ A loathsome arachnid, armed to the teeth. Its body is covered in a thick
 carapace, its tail is tipped by a venomous sting, and its forelimbs are
 equipped with a pair of sharp grasping claws.
 %%%%
+screaming refraction
+
+A deeply unfortunate soul mostly processed into crystal by some malevolent tear
+in reality. Ethereal reflections of its past and future suffering are cast upon
+nearby surfaces and foes.
+%%%%
 scrub nettle
 
 An irritable, bristling shrub. It fends off anything that might graze upon it by
