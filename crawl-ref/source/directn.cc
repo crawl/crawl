@@ -1465,7 +1465,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 // (When just looking around, this is typically any monster. For specific
 // spells, it will be restricted to those in range which can be affected by the
 // spell in question.)
-void direction_chooser::cycle_target(int dir, vector<coord_def> &cycle_throgh_pos)
+void direction_chooser::cycle_target(int dir, const vector<coord_def> &cycle_throgh_pos)
 {
     if (cycle_throgh_pos.empty())
         return;

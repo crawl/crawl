@@ -160,7 +160,7 @@ private:
     // range. (This is usually a monster, but may be a cell near a monster if
     // that is the only way to hit them, ie: a fireball hitting something just
     // out of range.)
-    void cycle_target(int dir, vector<coord_def> &cycle_throgh_pos);
+    void cycle_target(int dir, const vector<coord_def> &cycle_throgh_pos);
 
     void cycle_feature(char feature_class);
 
