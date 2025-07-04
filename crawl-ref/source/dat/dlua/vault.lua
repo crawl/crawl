@@ -356,7 +356,7 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
            'harpy simulacrum w:' .. 8 - d * 2 .. ' / ' ..
            'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
-    e.mons('necromancer w:2 / arcanist / crawling flesh cage')
+    e.mons('arcanist / crawling flesh cage')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
                                             ' . ring mail ' .. c)
@@ -372,7 +372,6 @@ function index_vaults_room_themes (e, set, hard)
   elseif set == 'garden' then
     e.tags('no_pool_fixup')
     e.mons('harpy w:' .. 80 - d * 20 .. ' / ' ..
-           'redback w:' .. 100 - d * 16 .. ' / ' ..
            'wolf spider w:' .. 20 - d * 3 .. ' / ' ..
            'lindwurm w:' .. 140 - d * 20 .. ' / ' ..
            'dire elephant w:' .. d * 3 )
@@ -408,9 +407,9 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('vault guard w:' .. 14 - d .. ' / ' ..
            'vault sentinel w:' .. 10 - d .. ' / ' ..
            'orc knight')
-    e.mons('necromancer w:' .. 10 - d .. ' / ' ..
+    e.mons('phantasmal warrior w:' .. 10 - d .. ' / ' ..
            'flayed ghost w:' .. 10 - d .. ' / ' ..
-           'phantasmal warrior w:' .. d + 2)
+           'death knight w:' .. d + 2)
     e.mons('war gargoyle w:' .. 16 - d * 2 .. ' / ' ..
            'deep elf death mage w:4 / ' ..
            'undying armoury w:' .. -2 + d)

@@ -1056,6 +1056,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if ((mon->holiness() & MH_HOLY)
          || mg.cls == MONS_SILENT_SPECTRE
          || mg.cls == MONS_PROFANE_SERVITOR
+         || mg.cls == MONS_DEATH_KNIGHT
          || mons_is_ghost_demon(mg.cls))
     {
         invalidate_agrid(true);
@@ -1592,12 +1593,17 @@ monster_type pick_local_zombifiable_monster(level_id place,
         // explicitly defined.
         place = level_id(BRANCH_DEPTHS, 14 - (27 - place.depth) / 3);
     }
-    else if (cs != MONS_DRAUGR)
+    else if (cs == MONS_DRAUGR && place.branch == BRANCH_VAULTS)
+    {
+        // Vaults draugr are later enough they can get a little push-up.
+        place.depth += random_range(1, 3);
+    }
+    else
     {
         // Zombies tend to be weaker than their normal counterparts;
         // thus, make them OOD proportional to the current dungeon depth.
         // Draugr have a leg up compared to other derived undead with AC and
-        // weapons and doom, so don't give them the same advantage.
+        // weapons and doom, so don't give them the same advantage in most spots.
         place.depth += 1 + div_rand_round(place.absdepth(), 5);
     }
 
@@ -1783,8 +1789,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GNOLL,           { {0, 1}, {{ BAND_GNOLLS, {2, 4} }}}},
     { MONS_GNOLL_BOUDA,     { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
     { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
-    { MONS_DEATH_KNIGHT,    { {0, 0, []() { return x_chance_in_y(2, 3); }},
-                                  {{ BAND_DEATH_KNIGHT, {3, 5}, true }}}},
+    { MONS_FREEZING_WRAITH, { {0, 0, []() { return player_in_branch(BRANCH_DUNGEON) &&
+                                                   x_chance_in_y(2, 3); }},
+                                  {{ BAND_MIXED_WRAITHS, {1, 2}, true }}}},
+    { MONS_DEATH_KNIGHT,    { {0, 0, []() { return !player_in_branch(BRANCH_VAULTS) &&
+                                                    x_chance_in_y(2, 3); }},
+                                  {{ BAND_DEATH_KNIGHT_STANDARD, {3, 5}, true }}}},
     { MONS_GRUM,            { {}, {{ BAND_WOLVES, {2, 5}, true }}}},
     { MONS_WOLF,            { {}, {{ BAND_WOLVES, {2, 6} }}}},
     { MONS_CENTAUR_WARRIOR, { centaur_band_condition,
@@ -2109,6 +2119,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         }
         break;
 
+    case MONS_DEATH_KNIGHT:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_DEATH_KNIGHT_DRAUGR;
+            band_size = 3;
+        }
+        break;
+
     case MONS_LAUGHING_SKULL:
         if (player_in_branch(BRANCH_DUNGEON))
             band_size = 1;
@@ -2296,7 +2314,21 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SIMULACRUM, 2}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+    { BAND_MIXED_WRAITHS,       {{{MONS_FREEZING_WRAITH, 7},
+                                  {MONS_PHANTASMAL_WARRIOR, 3}}}},
+    { BAND_DEATH_KNIGHT_STANDARD, {{{MONS_GHOUL, 1},
+                                    {MONS_FLAYED_GHOST, 2}},
 
+                                 {{MONS_FREEZING_WRAITH, 5},
+                                  {MONS_PHANTASMAL_WARRIOR, 3},
+                                  {MONS_SKELETAL_WARRIOR, 5},
+                                  {MONS_JIANGSHI, 2}}}},
+
+    { BAND_DEATH_KNIGHT_DRAUGR, {{{MONS_DEATH_KNIGHT, 1},
+                                   {MONS_DRAUGR, 2}},
+
+                                 {{MONS_DRAUGR, 1}}}},
+                                 
     { BAND_FLESHCRAFT,          {{{MONS_KOBOLD_FLESHCRAFTER, 1},
                                   {MONS_VERY_UGLY_THING, 2}},
 
@@ -2657,17 +2689,6 @@ static monster_type _band_member(band_type band, int which,
 
         return random_draconian_monster_species();
 
-    case BAND_DEATH_KNIGHT:
-        if (!player_in_branch(BRANCH_DUNGEON)
-            && which == 1 && x_chance_in_y(2, 3))
-        {
-            return one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST;
-        }
-        else
-            return random_choose_weighted(5, MONS_WRAITH,
-                                          6, MONS_FREEZING_WRAITH,
-                                          3, MONS_PHANTASMAL_WARRIOR,
-                                          3, MONS_SKELETAL_WARRIOR);
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;

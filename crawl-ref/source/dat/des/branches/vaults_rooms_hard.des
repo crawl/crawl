@@ -719,7 +719,7 @@ WEIGHT: 3
 : local d = you.depth() + 1
 : mons("centaur warrior draugr w:" .. 9 - d ..
 :      " / vault warden draugr w:" .. d)
-: mons("necromancer w:" .. 7 - d .. " / deep elf death mage w:" .. d)
+: mons("death knight w:" .. 7 - d .. " / deep elf death mage w:" .. d)
 : mons("phantasmal warrior w:" .. 7 - d .. " / flayed ghost w:" .. d)
 SUBST:  0 : 0000z
 NSUBST: 0 = 1:0 / 3:% / * = 0009..
@@ -2180,7 +2180,7 @@ TAGS:    vaults_hard vaults_orient_e
 TAGS:    no_monster_gen no_item_gen no_wall_fixup
 WEIGHT:  5
 # the fans
-MONS:    arcanist ; ring mail . mace / necromancer ; ring mail . long sword
+MONS:    arcanist ; ring mail . mace / death knight w:4
 MONS:    vault guard w:20 / vault sentinel / ironbound preserver / \
          ironbound mechanist
 MONS:    orc knight, ironbound thunderhulk / ogre mage w:5 ; dire flail . robe
@@ -2353,7 +2353,7 @@ KITEM: L = any manual, any book good_item / any scroll good_item / nothing, \
 KITEM: RN = any book good_item / any scroll good_item
 KMONS: LN = deep elf annihilator / deep elf sorcerer / deep elf high priest / \
            deep elf death mage / deep elf demonologist
-KMONS: R = arcanist / necromancer / lich / ogre mage / deep troll earth mage
+KMONS: R = arcanist / lich / ogre mage / deep troll earth mage
 KMONS: S = vault sentinel / vault warden / ironbound preserver / \
            ironbound convoker
 SUBST: R = R:80 N, S = SSS.
@@ -2436,7 +2436,7 @@ ENDMAP
 NAME:  nicolae_vaults_you_can_take_it_with_you
 TAGS:  vaults_hard vaults_orient_w
 KMONS: L = patrolling dread lich / patrolling ancient lich
-KMONS: P = necromancer / hell knight / phantasmal warrior / lich / \
+KMONS: P = death knight / hell knight / phantasmal warrior / lich / \
            shadow wraith / freezing wraith / flayed ghost / eidolon
 SUBST: p = P.., * = **|
 MAP

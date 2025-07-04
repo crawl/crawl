@@ -73,7 +73,7 @@ enum band_type
     BAND_TARANTELLA,
     BAND_POLYPHEMUS,
     BAND_VAULT_WARDEN,
-    BAND_DEATH_KNIGHT,
+    BAND_DEATH_KNIGHT_STANDARD,
     BAND_JIANGSHI,
     BAND_FAUNS,
     BAND_TENGU,
@@ -141,6 +141,8 @@ enum band_type
     BAND_CAGES,
     BAND_CHONCHON,
     BAND_FLESHCRAFT,
+    BAND_DEATH_KNIGHT_DRAUGR,
+    BAND_MIXED_WRAITHS,
     NUM_BANDS                   // always last
 };
 

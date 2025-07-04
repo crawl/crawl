@@ -798,6 +798,10 @@ int monster::umbra_radius() const
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         size = max(size, 3);
 
+    // Death knights get a small umbra.
+    if (type == MONS_DEATH_KNIGHT)
+        size += 3;
+
     if (!(holiness() & MH_UNDEAD))
         return size;
 

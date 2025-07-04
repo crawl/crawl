@@ -4984,7 +4984,7 @@ MONS:    deep elf annihilator / deep troll earth mage / \
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("Vaults") then
 MONS:    glowing orange brain / great orb of eyes / phantasmal warrior
-MONS:    boggart / ironbound mechanist / ogre mage / arcanist / necromancer
+MONS:    boggart / ironbound mechanist / ogre mage / arcanist
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx marauder / tengu reaver / lich / fire giant / frost giant
@@ -6808,7 +6808,7 @@ MONS:    crystal guardian / deep elf death mage / deep elf high priest
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf demonologist
 KMONS:   D = sphinx marauder band / harpy band
 KMONS:   F = entropy weaver band
-KMONS:   0 = arcanist / necromancer / ironbound mechanist
+KMONS:   0 = arcanist / death knight / ironbound mechanist
 KMONS:   9 = stone giant / tengu reaver / sphinx marauder
 KMONS:   P = bush
 NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
