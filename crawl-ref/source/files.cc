@@ -3442,6 +3442,10 @@ void level_excursion::go_to(const level_id& next)
     // TODO: reimplement with no_excursions?
     ASSERT(!crawl_state.generating_level || original.branch == BRANCH_ABYSS);
 
+    // This must be set before loading a level as it redraws the map knowledge
+    // which checks what is currently in view
+    you.on_current_level = (next == original);
+
     if (level_id::current() != next)
     {
         ASSERT(level_excursions_allowed());
@@ -3464,6 +3468,9 @@ void level_excursion::go_to(const level_id& next)
         // abyss procgen.
     }
 
+    // I don't trust that excursions to levels you haven't visited during
+    // abyss generation won't mess with this when the pregen_dungeon option is
+    // set to false, so reset it to the correct value --Wizard Ike
     you.on_current_level = (level_id::current() == original);
 }
 
