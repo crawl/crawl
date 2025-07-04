@@ -929,6 +929,7 @@ static dist _look_around_target(const coord_def &whence)
     args.needs_path = false;
     args.target_prefix = "Here";
     args.default_place = whence - you.pos();
+    args.range = LOS_MAX_RANGE;
     direction(lmove, args);
     return lmove;
 }
@@ -1148,10 +1149,10 @@ void direction_chooser::fill_object_cycle_points()
 
         const item_def * const item = top_item_at(*ri);
         if (item && !item_is_stationary(*item))
-            cycle_pos.push_back(*ri);
+            items_cycle_pos.push_back(*ri);
     }
 
-    sort(cycle_pos.begin(), cycle_pos.end(), [](const coord_def& a, const coord_def& b)
+    sort(items_cycle_pos.begin(), items_cycle_pos.end(), [](const coord_def& a, const coord_def& b)
     {
         return grid_distance(a, you.pos())
                < grid_distance(b, you.pos());
@@ -1169,11 +1170,7 @@ void direction_chooser::calculate_target_info()
         return;
 
     // Apportation uses a different model.
-    if (mode == TARG_MOVABLE_OBJECT)
-    {
-        fill_object_cycle_points();
-        return;
-    }
+    fill_object_cycle_points();
 
     harmful_to_player = hitfunc ? hitfunc->harmful_to_player() : true;
 
@@ -1468,9 +1465,9 @@ bool direction_chooser::in_range(const coord_def& p) const
 // (When just looking around, this is typically any monster. For specific
 // spells, it will be restricted to those in range which can be affected by the
 // spell in question.)
-void direction_chooser::cycle_target(int dir)
+void direction_chooser::cycle_target(int dir, vector<coord_def> &cycle_throgh_pos)
 {
-    if (cycle_pos.empty())
+    if (cycle_throgh_pos.empty())
         return;
 
     // Check to see if our current position matches a location on the cycle
@@ -1478,9 +1475,9 @@ void direction_chooser::cycle_target(int dir)
     // no apparent movement after pressing a cycle button, if the player has
     // manually moved the cursor over the next point on the cycle list before
     // pressing it.)
-    for (size_t i = 0; i < cycle_pos.size(); ++i)
+    for (size_t i = 0; i < cycle_throgh_pos.size(); ++i)
     {
-        if (target() == cycle_pos[i])
+        if (target() == cycle_throgh_pos[i])
         {
             cycle_index = i;
             break;
@@ -1488,12 +1485,12 @@ void direction_chooser::cycle_target(int dir)
     }
 
     cycle_index += dir;
-    if (cycle_index >= (int)cycle_pos.size())
+    if (cycle_index >= (int)cycle_throgh_pos.size())
         cycle_index = 0;
     else if (cycle_index < 0)
-        cycle_index = cycle_pos.size() - 1;
+        cycle_index = cycle_throgh_pos.size() - 1;
 
-    set_target(cycle_pos[cycle_index]);
+    set_target(cycle_throgh_pos[cycle_index]);
 }
 
 
@@ -2313,11 +2310,19 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_GET:             loop_done = pickup_item(); break;
 
     case CMD_TARGET_CYCLE_BACK:
-        cycle_target(-1);
+        cycle_target(-1, cycle_pos);
         break;
 
     case CMD_TARGET_CYCLE_FORWARD:
-        cycle_target(1);
+        cycle_target(1, cycle_pos);
+        break;
+
+    case CMD_TARGET_OBJ_CYCLE_BACK:
+        cycle_target(-1, items_cycle_pos);
+        break;
+
+    case CMD_TARGET_OBJ_CYCLE_FORWARD:
+        cycle_target(1, items_cycle_pos);
         break;
 
     case CMD_TARGET_CANCEL:

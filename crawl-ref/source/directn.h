@@ -160,7 +160,7 @@ private:
     // range. (This is usually a monster, but may be a cell near a monster if
     // that is the only way to hit them, ie: a fireball hitting something just
     // out of range.)
-    void cycle_target(int dir);
+    void cycle_target(int dir, vector<coord_def> &cycle_throgh_pos);
 
     void cycle_feature(char feature_class);
 
@@ -301,6 +301,9 @@ private:
     int cycle_index;                // Current index into cycle_pos
     vector<coord_def> cycle_pos;    // All calculated coordinates that we should
                                     // cycle through via +/-
+
+    vector<coord_def> items_cycle_pos;      // Calculated coordinates of items
+                                            // to cycle through
 
     char feature_cache_type;        // Type of feature positions cached in
                                     // feature_cycle_pos
