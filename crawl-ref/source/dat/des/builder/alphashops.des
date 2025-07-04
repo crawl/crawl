@@ -200,7 +200,7 @@
 
       end
 
-      return i
+      return util.filter(items.pickable, i)
    end
 
    -- Automatically determine which letters have sufficient variety for a shop,
