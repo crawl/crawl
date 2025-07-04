@@ -213,13 +213,30 @@ public:
             | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT | MF_INIT_HOVER) {}
 protected:
-    bool process_command(command_type c) override
+    command_type get_command(int keyin) override
     {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return ToggleableMenu::get_command(keyin);
+    }
+
+    bool process_command(command_type cmd) override
+    {
+        if (cmd == CMD_MENU_HELP)
+        {
+            int idx = last_hovered;
+            if (idx >= 0 && idx < static_cast<int>(items.size()))
+            {
+                examine_index(idx);
+                return true;
+            }
+        }
+
         get_selected(&sel);
         // if there's a preselected item, and no current selection, select it.
         // for arrow selection, the hover starts on the preselected item so no
         // special handling is needed.
-        if (menu_action == ACT_EXECUTE && c == CMD_MENU_SELECT
+        if (menu_action == ACT_EXECUTE && cmd == CMD_MENU_SELECT
             && !(flags & MF_ARROWS_SELECT) && sel.empty())
         {
             for (size_t i = 0; i < items.size(); ++i)
@@ -231,7 +248,7 @@ protected:
                 }
             }
         }
-        return ToggleableMenu::process_command(c);
+        return ToggleableMenu::process_command(cmd);
     }
 
     bool examine_index(int i) override
@@ -274,6 +291,7 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
 
     string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
         real_action.c_str());
+    more_str = pad_more_with_esc(more_str + "   [<w>?</w>] help");
     string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
