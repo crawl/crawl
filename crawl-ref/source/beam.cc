@@ -4015,7 +4015,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ILL_OMEN:
         obvious_effect = true;
-        if (!you.doom(random_range(ench_power / 4, ench_power / 2)))
+        if (!you.doom(random_range(20, 35)))
             mpr("You feel an ill-omen....");
         break;
 
