@@ -1042,7 +1042,7 @@ static void _print_stats_doom(int x, int y)
     // most of the time).
     if (you.attribute[ATTR_DOOM] == 0)
     {
-        CPRINTF("            ");
+        CPRINTF("          ");
         return;
     }
 
