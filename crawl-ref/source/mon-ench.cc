@@ -2205,7 +2205,11 @@ static const char *enchant_names[] =
     "shroud",
 #endif
     "phantom_mirror", "bribed", "permabribed",
-    "corrosion", "gold_lust", "drained", "repel_missiles",
+    "corrosion",
+#if TAG_MAJOR_VERSION == 34
+    "gold_lust",
+#endif
+    "drained", "repel_missiles",
 #if TAG_MAJOR_VERSION == 34
     "deflect missiles",
     "negative_vuln", "condensation_shield",
