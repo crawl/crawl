@@ -1033,7 +1033,7 @@ A crocodilian with powerful jaws.
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is
-immune to most forms of magic and hurls both crystallizing shots and painful
+immune to most forms of magic and hurls both crystallising shots and painful
 barbs.
 %%%%
 crystal guardian

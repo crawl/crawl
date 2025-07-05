@@ -704,7 +704,7 @@ crystal echidna cast targeted
 
 @The_monster@ flicks its quills @at@ @target@.
 %%%%
-Crystallizing Shot crystal guardian cast
+Crystallising Shot crystal guardian cast
 
 @The_monster@ fires a shard of @reflexive@ @at@ @target@.
 %%%%

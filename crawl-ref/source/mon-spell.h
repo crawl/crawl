@@ -620,7 +620,7 @@ static const mon_spellbook mspell_list[] =
     // ('r') rodents
     {  MST_CRYSTAL_ECHIDNA,
       {
-       { SPELL_CRYSTALLIZING_SHOT, 30, MON_SPELL_NATURAL },
+       { SPELL_CRYSTALLISING_SHOT, 30, MON_SPELL_NATURAL },
        { SPELL_THROW_BARBS, 30, MON_SPELL_NATURAL },
       }
     },
@@ -1800,7 +1800,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CRYSTAL_GUARDIAN,
       {
-       { SPELL_CRYSTALLIZING_SHOT, 50, MON_SPELL_MAGICAL },
+       { SPELL_CRYSTALLISING_SHOT, 50, MON_SPELL_MAGICAL },
       }
     },
 

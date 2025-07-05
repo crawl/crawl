@@ -158,15 +158,15 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_CRYSTALLIZING_SHOT,
-    "crystallizing shot",
+    ZAP_CRYSTALLISING_SHOT,
+    "crystallising shot",
     nullptr,
     nullptr,
     new dicedef_calculator<3, 6, 1, 10>,
     new tohit_calculator<18, 1, 30>,
     LIGHTCYAN,
     false,
-    BEAM_CRYSTALLIZING,
+    BEAM_CRYSTALLISING,
     DCHAR_FIRED_MISSILE,
     false,
     false,

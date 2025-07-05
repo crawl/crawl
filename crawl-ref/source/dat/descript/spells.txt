@@ -437,7 +437,7 @@ Creeping Shadow spell
 Calls forth shadows from the corners of nearby walls to strike at all of the
 caster's enemies standing adjacent to them.
 %%%%
-Crystallizing Shot spell
+Crystallising Shot spell
 
 Hurls a large and heavy shard of crystal. It may render a creature's body
 structure as brittle and fragile as shattered and unrefined crystal, increasing

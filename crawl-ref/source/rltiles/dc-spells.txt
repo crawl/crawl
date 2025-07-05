@@ -232,7 +232,7 @@ conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 creeping_frost CREEPING_FROST
-crystallizing_shot CRYSTALLIZING_SHOT
+crystallising_shot CRYSTALLISING_SHOT
 death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
 dominate_undead DOMINATE_UNDEAD

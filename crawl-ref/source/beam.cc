@@ -4478,7 +4478,7 @@ void bolt::affect_player()
     else if (flavour == BEAM_ACID && coinflip())
         you.corrode(agent());
 
-    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+    if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         you.vitrify(agent(), random_range(8, 18));
 
     if (origin_spell == SPELL_SOJOURNING_BOLT
@@ -5226,7 +5226,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         monster_teleport(mon, false, false, false, agent());
     }
 
-    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+    if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         mon->vitrify(agent(), random_range(8, 18));
 
     if (dmg)
@@ -7666,7 +7666,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_WEAKNESS:              return "weakness";
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
-    case BEAM_CRYSTALLIZING:         return "crystallizing";
+    case BEAM_CRYSTALLISING:         return "crystallising";
     case BEAM_WARPING:               return "spatial disruption";
     case BEAM_QAZLAL:                return "upheaval targetter";
     case BEAM_RIMEBLIGHT:            return "rimeblight";

@@ -2204,7 +2204,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BOLT_OF_FLESH:
     case SPELL_BORGNJORS_VILE_CLUTCH:
-    case SPELL_CRYSTALLIZING_SHOT:
+    case SPELL_CRYSTALLISING_SHOT:
     case SPELL_HELLFIRE_MORTAR:
     case SPELL_MAGMA_BARRAGE:
     case SPELL_SHADOW_TORPOR:

@@ -805,7 +805,7 @@ beam_type get_beam_resist_type(beam_type flavour)
         case BEAM_MISSILE:
         case BEAM_MMISSILE:
         case BEAM_FRAG:
-        case BEAM_CRYSTALLIZING:
+        case BEAM_CRYSTALLISING:
         case BEAM_SEISMIC:
         case BEAM_BOLAS:
         case BEAM_AIR:

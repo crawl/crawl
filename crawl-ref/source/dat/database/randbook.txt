@@ -2578,7 +2578,7 @@ Cold
 
 Congealing
 
-Crystallized
+Crystallised
 
 Freezing
 
