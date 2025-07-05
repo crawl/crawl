@@ -1484,7 +1484,8 @@ static void _create_acquirement_item(item_def &item, string items_key,
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),
               origin_desc(item)));
-    item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    // Mark as seen so that Lucky cannot proc off it.
+    item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | ISFLAG_SEEN);
     identify_item(item);
 
     if (is_gizmo)

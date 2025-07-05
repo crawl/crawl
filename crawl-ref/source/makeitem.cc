@@ -236,7 +236,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
-        if (!make_item_randart(item))
+        if (!make_item_randart(item, force_randart))
             return false;
 
         // Bane is a worse property than most negative values, so let's boost
@@ -740,7 +740,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
     // Needs to be done after the barding chance else we get randart
     // bardings named Boots of xy.
-    if (!make_item_randart(item))
+    if (!make_item_randart(item, force_randart))
         return false;
 
     // Bane is a worse property than most negative values, so let's make them a
@@ -2215,6 +2215,38 @@ void item_set_appearance(item_def &item)
 
     default:
         break;
+    }
+}
+
+void lucky_upgrade_item(item_def& item)
+{
+    // Only have a chance to discover a better item on first spotting it.
+    if (item.flags & ISFLAG_SEEN)
+        return;
+
+    // 2-4% chance of upgrading an item.
+    if (!x_chance_in_y(you.get_mutation_level(MUT_LUCKY), 50))
+        return;
+
+    string old_name = uppercase_first(item.name(DESC_THE, false, true));
+    bool did_upgrade = false;
+
+    // Need to use the bespoke methods for weapons/armour so that it hands out
+    // plusses appropriately (or one ends up with tons of +0 randart armour,
+    // which isn't very useable).
+    if (item.base_type == OBJ_ARMOUR)
+        did_upgrade = _try_make_armour_artefact(item, 0, ISPEC_RANDART, 0);
+    else if (item.base_type == OBJ_WEAPONS)
+        did_upgrade = _try_make_weapon_artefact(item, 0, ISPEC_RANDART, true, 0);
+    else
+        did_upgrade = make_item_randart(item);
+
+    if (did_upgrade)
+    {
+        // Messaging is really weird if we don't do this, and it seems a
+        // relatively unimportant freebie.
+        identify_item(item);
+        mprf("<cyan>Lucky! %s was actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
     }
 }
 

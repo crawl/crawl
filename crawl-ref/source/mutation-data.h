@@ -268,7 +268,15 @@ static const mutation_def mut_data[] =
    {"The vile energy swirling through your soul dissipates.",
     "The vile energy whirling through your soul weakens.", ""},
     TILEG_MUT_FEED_OFF_SUFFERING,
- },
+},
+
+{ MUT_LUCKY, 4, 2, mutflag::good,
+   "lucky",
+
+   {"You discover slightly more artefacts.", "You discover more artefacts.", ""},
+   {"You feel fortune smile upon you.", "You feel fortune smile more brightly upon you.", ""},
+   {"You feel like your luck has run outf.", "You feel a little less lucky.", ""},
+},
 
 #if TAG_MAJOR_VERSION == 34
 

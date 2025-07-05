@@ -31,6 +31,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "makeitem.h"
 #include "menu.h"
 #include "message.h"
 #include "notes.h"
@@ -297,7 +298,10 @@ void Stash::update()
         ash_id_item(*si);
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
+        {
+            lucky_upgrade_item(*si);
             add_item(*si);
+        }
 
         if ((si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
             && !is_useless_item(*si))

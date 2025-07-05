@@ -179,6 +179,13 @@ drained enemies die in sight of you, you have a chance to siphon away a small
 portion of their life force and magical power. Each level of this mutation
 increases the chance this happens and the amount one siphons.
 %%%%
+lucky mutation
+
+You have an uncanny knack for uncovering hidden properties of items other people
+might ignore as mundane. Whenever you encounter a new item on the ground for the
+first time, there is a very tiny chance to discover that is actually an
+artefact. Each level of this mutation increases that chance.
+%%%%
 # ------ Auxes -----
 horns mutation
 

@@ -47,6 +47,8 @@ bool is_high_tier_wand(int type);
 spell_type choose_parchment_spell(int item_level, spschool school = spschool::none,
                                   int fixed_spell_level = 0);
 
+void lucky_upgrade_item(item_def& item);
+
 void squash_plusses(int item_slot);
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
