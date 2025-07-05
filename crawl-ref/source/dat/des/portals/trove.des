@@ -1172,7 +1172,7 @@ trove_defense(_G, "pearl dragon scales good_item w:5 / \
 local s_or_m = you.race() == "Spriggan" or you.race() == "Kobold" or
                you.race() == "Felid" or
                trove_spell_skills(_G) > trove_weapon_skills(_G) * 4
-trove_unrand_chances(_G, "df", {"sword of the doom knight"}, {s_or_m}, {"?"})
+trove_unrand_chances(_G, "df", {"sword of the dread knight"}, {s_or_m}, {"?"})
 }}
 KFEAT:   m = iron_grate
 KFEAT:   yz = x
