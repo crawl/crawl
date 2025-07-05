@@ -1047,9 +1047,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_WHACK:
     case ME_ANNOY:
-        if (mon->has_ench(ENCH_GOLD_LUST))
-            mon->del_ench(ENCH_GOLD_LUST);
-
         // Will turn monster against <src>.
 
         // Allies who are retreating or who have been ordered not to attack
