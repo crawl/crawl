@@ -865,6 +865,9 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index,
     if (item.is_identified())
         item.flags |= ISFLAG_NOTED_ID;
 
+    // Don't upgrade item with Lucky mutation if it can't fit in our pack.
+    item.flags |= ISFLAG_SEEN;
+
     // Record milestones for purchasing especially notable items (runes,
     // gems, the Orb).
     milestone_check(item);
