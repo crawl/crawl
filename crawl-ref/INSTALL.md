@@ -24,6 +24,7 @@
   * [PCRE](#pcre)
   * [Unicode](#unicode)
 * [Troubleshooting](#troubleshooting)
+  * [Apple Silicon Troubleshooting](#apple-silicon-troubleshooting)
 * [Getting Help](#getting-help)
 
 ## Getting DCSS To Run
@@ -599,6 +600,70 @@ To solve this, run:
 
 If this doesn't resolve the problem, you can try creating `util/release_ver`
 manually, with contents along the lines of `0.31-a0`.
+
+### Apple Silicon Troubleshooting
+Apple Silicon users may face different errors while building crawl from sources:
+
+#### unknown type name 'Byte':
+
+This issue occurs due to the 'Byte' type redefinition within 'freetype' submodule.  
+In order to resolve this issue replace:  
+
+  ```c++
+  #if !defined(MACOS) && !defined(TARGET_OS_MAC)
+  typedef unsigned char  Byte;  /* 8 bits */
+  #endif
+  ```
+
+with:  
+
+  ```c++
+  #if !defined(__MACTYPES__)
+  typedef unsigned char  Byte;  /* 8 bits */
+  #endif
+  ```
+
+in **crawl-ref/source/contrib/freetype/src/gzip/zconf.h**.  
+
+For additional information, see the [issue#4520](https://github.com/crawl/crawl/issues/4520). 
+
+#### _stdio.h:318:7: error: expected ')':
+This issue occurs while building **zlib** submodule.
+Xcode 16.3 has introduced an additional macros to define the target operating systems which are not available in prior version of Xcode.  
+To resolve this issue replace:
+
+  ```c++
+  #if defined(MACOS) || defined(TARGET_OS_MAC)
+  ```
+
+with. 
+
+  ```c++
+  #if defined(MACOS)
+  ````
+
+in **crawl-ref/source/contrib/zlib/zutil.h**.
+
+#### 'fp.h' file not found:
+This issue originates from **libpng** library.
+It affects only builds of **tile** version of crawl, since SDL depends on this library.  
+To resolve this issue replace:  
+
+  ```c++
+  #    if !defined(__MATH_H__) && !defined(__MATH_H) && !defined(__cmath__)
+  #      include <fp.h>
+  #    endif
+  ```
+
+with
+
+  ```c++
+  #    if !defined(__MATH_H__) && !defined(__MATH_H) && !defined(__cmath__)
+  #      include <math.>
+  #    endif
+  ```
+
+in **crawl-ref/source/contrib/libpng/pngpriv.h**.
 
 ## Getting Help
 
