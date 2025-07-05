@@ -3842,7 +3842,7 @@ static void _xom_cloud_trail(int /*sever*/)
 static void _xom_draining(int /*sever*/)
 {
     int power = 100;
-    const string speech = _get_xom_speech("draining or torment");
+    const string speech = _get_xom_speech("suffering");
     god_speaks(GOD_XOM, speech.c_str());
 
     if (you.experience_level < 4
@@ -3854,6 +3854,26 @@ static void _xom_draining(int /*sever*/)
     drain_player(power, true);
 
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "draining"), true);
+}
+
+static void _xom_doom(int /*sever*/)
+{
+    int power = random_range(15, 25);
+    const string speech = _get_xom_speech("suffering");
+    god_speaks(GOD_XOM, speech.c_str());
+
+    if (you.experience_level < 9
+        || (you.attribute[ATTR_DOOM] > 50 && !_xom_feels_nasty()))
+    {
+        power /= 2;
+    }
+
+    if (!(you.attribute[ATTR_DOOM] + power >= 100))
+        mpr("Your doom draws closer.");
+
+    you.doom(power);
+
+    take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "inflicting Doom"), true);
 }
 
 static void _xom_torment(int /*sever*/)
@@ -4802,7 +4822,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return tn > 0 && _rearrangeable_pieces().size();}
     },
     {
-        XOM_BAD_TELEPORT, 475, 1625, [](int /*sv*/, int tn)
+        XOM_BAD_TELEPORT, 475, 1460, [](int /*sv*/, int tn)
         {
             const int explored = _exploration_estimate(true);
 
@@ -4943,8 +4963,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return tn <= 8 && you.can_safely_mutate();}
     },
     {
-        XOM_BAD_DRAINING, 6, 160, [](int /*sv*/, int /*tn*/)
+        XOM_BAD_DRAINING, 5, 160, [](int /*sv*/, int /*tn*/)
         {return player_prot_life() < 3;}
+    },
+    {
+        XOM_BAD_DOOM, 5, 160, [](int /*sv*/, int tn)
+        {return tn <= 8 && (you.attribute[ATTR_DOOM] < 80 ||
+                            _xom_feels_nasty());}
     },
     {
         xom_maybe_reverts_banishment(true, true), 2, 1, [](int /*sv*/, int /*tn*/)
@@ -5529,6 +5554,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                     _xom_grants_word_of_recall, 40}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
+    { XOM_BAD_DOOM, { "doom", _xom_doom, 23}},
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
     { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},
     { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment, 50}},
