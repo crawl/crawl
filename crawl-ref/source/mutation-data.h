@@ -47,7 +47,7 @@ static const mutation_def mut_data[] =
   {"Your magical power will grow resistant to disruption."}
 },
 
-{ MUT_TOUGH_SKIN, 0, 3, mutflag::good | mutflag::anatomy | mutflag::substance,
+{ MUT_TOUGH_SKIN, 2, 3, mutflag::good | mutflag::anatomy | mutflag::substance,
   "tough skin",
 
   {"You have tough skin. (AC +1)",

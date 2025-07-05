@@ -1650,6 +1650,10 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
             return false;
         }
 
+        // Only species that have innate tough skin can mutate more.
+        if (mut == MUT_TOUGH_SKIN && !you.has_innate_mutation(MUT_TOUGH_SKIN))
+            return false;
+
         // Only species that have innate fur can mutate more.
         if (mut == MUT_SHAGGY_FUR && !you.has_innate_mutation(MUT_SHAGGY_FUR))
             return false;
