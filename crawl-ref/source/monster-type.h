@@ -205,9 +205,7 @@ enum monster_type                      // env.mons[].type
     MONS_RADROACH,
 #endif
     MONS_HARPY,
-#if TAG_MAJOR_VERSION == 34
     MONS_RAVEN,
-#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_CHONCHON,
     MONS_BENNU,
