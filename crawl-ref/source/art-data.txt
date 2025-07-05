@@ -788,6 +788,7 @@ INSCRIP:  penet
 DBRAND:   Penet:     Any ammunition fired by it passes through the targets it
  hits, potentially hitting all targets in its path until it reaches maximum
  range.
+BOOL:    tilerim
 
 NAME:    tower shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD

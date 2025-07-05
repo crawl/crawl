@@ -163,13 +163,6 @@ function trove.portal(e)
     e.tile("c = wall_stone_dark")
 end
 
--- Use the following line in destination maps after all SUBSTs
--- : trove.setup_features(_G)
--- Note that the function also defines < to be the exit portal.
-function trove.setup_features(e)
-    e.kfeat("< = exit_trove")
-end
-
 -- "any scroll good_item" still gets you 'scroll of noise' etc so let's limit
 -- it better scrolls: more varied than dgn.loot_scrolls with such handed
 -- out in higher numbers, but still weighted towards more value than before.
@@ -190,43 +183,7 @@ function trove.good_scroll (e)
     e.item(item_def)
 end
 
-function trove.good_talisman (e)
-    -- XXX: should we just have talisman tier itemspec clauses?
-    --      doesn't help here very much, though, due to good gods.
-    --      acquirement's still not the best off due to neglecting blade tier.
-    local t = "blade talisman randart / lupine talisman randart" ..
-              "serpent talisman randart / wellspring talisman randart / " ..
-              "granite talisman w:4 / granite talisman randart w:6 / " ..
-              "dragon-coil talisman w:4 / dragon-coil talisman randart w:6 / " ..
-              "hive talisman w:4 / hive talisman randart w:6 / " ..
-              "riddle talisman w:4 / riddle talisman randart w:6 / " ..
-              "storm talisman w:8 / storm talisman randart w:2"
-
-    if you.genus() ~= "draconian" and you.race() ~= "Felid" and
-      you.race() ~= "octopode" then
-        t = t .. " / fortress talisman randart"
-    end
-
-    if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
-        t = t .. " / sanguine talisman w:4 / sanguine talisman randart w:6 / " ..
-                 " talisman of death w:8 / talisman of death randart w:2"
-    end
-
-    -- If you're with Zin, there's only one form of shapeshifting allowed:
-    if you.god() == "Zin" then
-       e.item([[potion of mutation pre_id q:1]])
-    else
-       e.item(t)
-    end
-end
-
-function trove.place_fog(e, type, strength)
-   e.lua_marker("m", fog_machine { pow_max = strength, cloud_type = type,
-                     delay_min = 50, delay_max = 300, size = 12,
-                     start_clouds = 1 } )
-end
-
-function trove.weapon_skills (e)
+function trove_weapon_skills (e)
     local weapon_skills = { "Short Blades", "Long Blades", "Axes",
         "Maces & Flails", "Polearms", "Staves", "Ranged Weapons" }
     local max = 0
@@ -236,7 +193,7 @@ function trove.weapon_skills (e)
     return max
 end
 
-function trove.spell_skills (e)
+function trove_spell_skills (e)
     local spell_skills = { "Spellcasting", "Conjurations", "Hexes", "Summonings",
         "Necromancy", "Translocations", "Alchemy", "Fire Magic", "Ice Magic",
         "Air Magic", "Earth Magic", "Forgecraft" }
@@ -246,9 +203,292 @@ function trove.spell_skills (e)
     end
     return sum
 end
+
+function trove_milestone (e, trove_desc)
+    crawl.mark_milestone("br.enter", "entered " .. trove_desc .. ".", "parent")
+    crawl.take_note("Entered " .. trove_desc)
+    crawl.mpr("You've discovered " .. trove_desc .. "!")
+end
+
+function trove_setup(e)
+    e.tags("no_monster_gen")
+    e.tags("no_item_gen")
+    e.orient("encompass")
+    e.kfeat("< = exit_trove")
+end
+
+-- A variety of quick logic checks to make sure troves with otherwise highly
+-- specified and themed contents don't place completely unusable items for
+-- given characters.
+function species_is_undead(e)
+  return (you.race() == "Revenant" or you.race() == "Poltergeist" or
+          you.race() == "Mummy")
+end
+
+function species_has_size_limits(e)
+  return you.race() == "Troll" or you.race() == "Oni" or
+         you.race() == "Spriggan"
+end
+
+function no_body_armour_species(e)
+  return you.genus() == "Draconian" or you.race() == "Octopode" or
+         you.race() == "Felid" or you.race() == "Poltergeist"
+end
+
+function no_friendlies(e)
+  return (you.get_base_mutation_level("hated by all") == 1 or
+          you.god() == "Okawaru")
+end
+
+function no_evil(e)
+  return you.god() == "Elyvilon" or you.god() == "the Shining One" or
+         you.god() == "Zin"
+end
+
+function aux_check(e, mutations, minlevel, octohat)
+  local valid = true
+  if you.race() == "Felid" or (you.race() == "Octopode" and not octohat) then
+    valid = false
+  end
+  return valid
+end
+
+function trove_weap_brand(e, brand)
+  local w = "acquire weapon ego:" .. brand .. " / " ..
+            "any useful weapon good_item ego:" .. brand
+  return w
+end
+
+-- Since there are no full-magic troves any more and troves reward less
+-- items overall, book quality has to be pushed up in compensation.
+function trove_book(_G, school)
+  return  "randbook disc:" .. school .. " splevels:27 numspells:4"
+end
+
+-- A repeated function for spellbooks, staves, manuals, and orbs for a school.
+function trove_standard_magic(e, school, use_staff)
+  local staff = "staff of " .. school
+  local orb = "orb ego:energy randart artprops:" .. school
+  local manual = "manual of " .. school
+  -- If Conjurations or Necromancy troves are added, fix them here.
+  if school == "ice" then
+    staff = "staff of cold"
+  elseif school == "alchemy" then
+    orb = "orb ego:energy randart artprops:Alch"
+  elseif school == "summoning" then
+    orb = "orb ego:energy randart artprops:Summ"
+    manual = "manual of summonings"
+  end
+  if school == "fire" or school == "ice" or school == "air" or school == "earth" then
+    manual = "manual of " .. school .. " magic"
+  end
+  local m = trove_book(_G, school) .. " w:31 / " .. manual .. " w:5"
+  if you.mutation("no armour") ~= 1 and you.race ~= "Coglin" and
+   you.mutation("missing a hand") ~= 1 then
+    m = m .. " / " .. orb .. " w:1"
+  end
+  if use_staff then
+    m = m .. " / " .. staff .. " w:4 / " .. staff .. " randart"
+  end
+  return m
+end
+
+-- Generates the lighter and heavier ends of armour to give properties to.
+-- TODO: move this to vault.lua and add an argument for not weighing it
+-- base on one's armour skills, then use it in a few other vaults.
+function trove_ego_gen_armour(e, ego, artprop)
+  local a = {}
+  local light = {"leather armour", "troll leather armour", "ring mail"}
+  local heavy = {"chain mail", "plate armour", "crystal plate armour"}
+  local hw = " w:10"
+  local g = " good_item"
+  local r = " randart"
+  if ego ~= nil then
+    g = g .. " ego:" .. ego
+  end
+  if artprop ~= nil then
+    r = r .. " artprops:" .. artprop
+  end
+  if you.base_skill("Armour") > you.base_skill("Dodging") * 2 then
+    hw = " w:24"
+  elseif you.base_skill("Dodging") > you.base_skill("Armour") * 2 then
+    hw = " w:4"
+  end
+  arm = table.concat(light, r .. " / ") .. r .. " / " ..
+        table.concat(heavy, g .. hw .. " / ") .. g ..  hw .. " / " ..
+        table.concat(heavy, r .. hw .. " / ") .. r .. hw
+  return arm
+end
+
+-- Generates shields to give specified properties to.
+-- TODO: also move this to vault.lua. Possibly could be "acquire shield ego:X",
+-- but acquirement only knows it's handling armour and not shields as items.
+function trove_ego_shield(e, ego, artprop)
+  local sh = ""
+  local g = "good_item"
+  local r = "randart"
+  if ego ~= nil then
+    g = g .. " ego:" .. ego
+  end
+  if artprop ~= nil then
+    r = r .. " artprops:" .. artprop
+  end
+  if you.race() ~= "Troll" and you.race() ~= "Oni" and you.base_skill("Shields") < 18 then
+    sh = "buckler ".. g .. " / buckler " .. r
+  end
+  if you.race() ~= "Spriggan" then
+    sh = sh .. " / kite shield " .. g .. " / kite shield " .. r
+    if you.race() ~= "Kobold" and you.base_skill("Shields") > 0 then
+      sh = sh .. " / tower shield " .. g .. " w:5 / tower shield " .. r .. " w:5"
+    end
+  end
+  if you.race == "Coglin" or you.mutation("missing a hand") == 1 then
+    return ""
+  else
+    return sh
+  end
+end
+
+-- Sets up talismans with a given randart property plus extra weight on a
+-- specified type. Unlike acquirement, this still preserves the blade talisman
+-- tier of talismans.
+function trove_good_talisman(e, artprop, extra_weighted_type)
+  local r = "randart"
+  if artprop ~= nil then
+    r = r .. " artprops:" .. artprop
+  end
+  local t = "blade talisman " .. r .. " / lupine talisman " .. r .. " / " ..
+            "serpent talisman " .. r .. " / wellspring talisman " .. r .. " / " ..
+            "granite talisman w:4 / granite talisman " .. r .. " w:6 / " ..
+            "dragon-coil talisman w:4 / dragon-coil talisman " .. r .. " w:6 / " ..
+            "riddle talisman w:4 / riddle talisman " .. r .. " w:6 / " ..
+            "storm talisman w:8 / storm talisman " .. r .. " w:2"
+
+  if extra_weighted_type ~= nil then
+    t = t .. " / " .. extra_weighted_type .. " w:30"
+  end
+  if no_body_armour_species(_G) == false then
+      t = t .. " / fortress talisman " .. r
+  end
+  if no_friendlies(_G) == false then
+      t = t .. " / hive talisman w:4 / hive talisman " .. r .. " w:6"
+  end
+  if no_evil(e) == false then
+      t = t .. " / sanguine talisman w:4 / sanguine talisman " .. r .. " w:6 / " ..
+               "talisman of death w:8 / talisman of death " .. r .. " w:2"
+  end
+  -- If you're with Zin, there's only one form of shapeshifting allowed:
+  if you.god() == "Zin" then
+     return "potion of mutation pre_id q:1"
+  else
+     return t
+  end
+end
+
+-- Set ups randart jewellery with a given artprop.
+function trove_jewel_type(e, artprop)
+  local r = "randart"
+  if artprop ~= nil then
+    r = r .. " artprops:" .. artprop
+  end
+  return "any ring " .. r .. " / any amulet " .. r
+end
+
+-- Set up trove consumables, checking mummies, Ru characters
+-- having sacrificed artifice, and item sets.
+function trove_cons(e, scrolls, potions, wands, set_wand, set_misc)
+  local cons = "scroll of " .. table.concat(scrolls, " pre_id / scroll of ") ..
+               " pre_id"
+  if potions ~= nil and you.mutation("no potions") ~= 1 then
+    cons = cons .. " / potion of " .. table.concat(potions, " pre_id / potion of ") ..
+           " pre_id"
+  end
+  if you.mutation("inability to use devices") ~= 1 then
+    if wands ~= nil then
+      cons = cons .. " / " .. wands
+    end
+    if set_wand ~= nil and items.pickable(set_wand) then
+      cons = cons .. " / " .. set_wand
+    end
+    if set_misc ~= nil and items.pickable(set_misc) then
+      cons = cons .. " / " .. set_misc
+    end
+  end
+  return cons
+end
+
+-- This always uses up "d", "e", and "f" glyphs.
+function trove_offense(e, weapons, magic, talismans, magic_school)
+  e.kitem("d = " .. weapons)
+  e.kitem("e = " .. magic)
+  e.kitem("f = " .. talismans)
+
+  -- This is a big mess of presuming not every item is useless with enough
+  -- pivoting, unless Ru sacrifices or species restrictions are involved, so
+  -- given obscure combinations aren't handed that much better troves.
+  local no_magic = you.god() == "Trog" or you.mutation("no " .. magic_school) == 1
+  if you.mutation("no weapons or thrown items") == 1 then
+    if you.mutation("no forms") == 1 or species_is_undead(_G) then
+      if no_magic then
+        e.subst("d = i")
+      else
+        e.nsubst("d = 2:i / 2:e / * = eeei")
+      end
+    else
+      e.nsubst("d = 2:e / 2:f / * = ef")
+    end
+  elseif you.mutation("no forms") or species_is_undead(_G) then
+    if no_magic then
+      e.nsubst("d = 2:i / *:d")
+    else
+      e.nsubst("d = 2:d / 2:e / * = de")
+    end
+  elseif no_magic then
+    e.nsubst("d = 2:d / 2:f / * = ddf")
+  else
+    local f_chance = crawl.x_chance_in_y(5, 6)
+    if no_magic or (trove_weapon_skills(_G) > trove_spell_skills(_G) and f_chance) then
+      e.nsubst("d = 2:d / 1:f / * = ddfi")
+    elseif trove_weapon_skills(_G) * 2 < trove_spell_skills(_G) and f_chance then
+      e.nsubst("d = 1:d / 2:e / 1:f / * = ddeef")
+    else
+      e.nsubst("d = 2:d / 2:e / 1:f / * = ddeef")
+    end
+  end
+end
+
+-- This always uses up "g", "h", and "i" glyphs.
+function trove_defense(e, all_armour, other_armour, jewellery, consumables)
+  local arm = all_armour
+  if species_has_size_limits(_G) == false then
+    arm = arm .. " / " .. other_armour
+  end
+  e.kitem("g = " .. arm)
+  e.kitem("h = " .. jewellery)
+  e.kitem("i = " .. consumables)
+
+  if no_body_armour_species(_G) == true then
+    e.nsubst("g = 3:h / 2:i / * = hi")
+  elseif you.get_base_mutation_level("no jewellery") == 1 then
+    e.nsubst("g = 3:g / 2:i / * = gi")
+  else
+    e.nsubst("g = 2:g / 2:h / 2:gghhi")
+  end
+end
+
+-- A preformatted way to give 1% chances to place unrands.
+function trove_unrand_chances(e, n_glyphs, unrand, criteria, i_glyphs)
+  for i in ipairs(unrand) do
+    if not criteria[i] and not you.unrands(unrand[i]) and crawl.one_chance_in(100) then
+
+      e.kitem(i_glyphs[i] .. " = " .. unrand[i])
+      e.nsubst(n_glyphs .. " = 1:" .. i_glyphs[i])
+    end
+  end
+end
 }}
 
-default-depth: D:10-, Depths, Elf, Vaults
+default-depth: D:12-, Swamp, Snake, Shoals, Spider
 
 ##############################################################################
 #
@@ -256,42 +496,16 @@ default-depth: D:10-, Depths, Elf, Vaults
 #
 ##############################################################################
 
-NAME:   enter_trove_0
-TAGS:   transparent no_descent
-: trove.portal(_G)
-MAP
-O
-ENDMAP
-
-NAME:   enter_trove_1
-TAGS:   transparent no_descent
-: trove.portal(_G)
-MAP
-...
-.O.
-...
-ENDMAP
-
-NAME:   enter_trove_2
-TAGS:   transparent no_descent
-: trove.portal(_G)
-MAP
- @G@
-@G.G@
-G.O.G
-@G.G@
- @G@
-ENDMAP
-
-NAME:   enter_trove_3
+NAME:   due_enter_trove_mix
 TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent no_descent
+SUBST:  c : cc., H : G.., G : GGG.
 : trove.portal(_G)
 COLOUR: c = blue
 MAP
 ccccc
-c...c
+cG.Hc
 c.O.c
-c...c
+cH.Gc
 cc+cc
 ENDMAP
 
@@ -352,43 +566,29 @@ c.........cc
 cccccccccccc
 ENDMAP
 
-
 NAME: nicolae_trove_entry_crossroad
-TAGS: transparent no_descent
-: trove.portal(_G)
-COLOUR: @ = blue
-FTILE: @ = floor_marble
-MAP
-cc@cc
-c...c
-@.O.@
-c...c
-cc@cc
-ENDMAP
-
-NAME: nicolae_trove_entry_crystal
 TAGS: transparent no_descent
 : trove.portal(_G)
 FTILE: b = floor_marble
 MAP
-ccccccccccc
+cccc+cccccc
 cc.c.c.cccc
 c.......bbc
 +.......Obc
 c.......bbc
 cc.c.c.cccc
-ccccccccccc
+cccc+cccccc
 ENDMAP
 
-NAME: nicolae_trove_entry_diagonal
+NAME: nicolae_trove_entry_diagonal_crystal
 TAGS: transparent no_descent
 : trove.portal(_G)
 MAP
    c
   ccc
- ccccc
-cccO.cc
- cc...cc
+ cbbbc
+ccbO.cc
+ cb...cc
   cc...cc
    cc...cc
     cc...cc
@@ -444,8 +644,9 @@ cc.....cc
   cc+cc
 ENDMAP
 
-NAME: trove_entry_hex_spiral
-TAGS: transparent no_descent
+NAME:   trove_entry_hex_spiral
+TAGS:   transparent no_descent
+WEIGHT: 5
 : trove.portal(_G)
 MAP
              @cc
@@ -462,999 +663,995 @@ ENDMAP
 
 ##############################################################################
 #
-# The portal vaults:
-#
-# Most of the vaults have 16 items of loot. Usually weighted 'd', 'e', 'f', from
-# good to "worse". Some vaults have more than 16 items for specific reasons.
-#
-# TODO:
-# * Instead of relying on giant piles of mostly just item categories for
-#   high costs usually fulfilled pretty late, we should pivot more into
-#   smaller piles of specifically themed loot named after the owners
-#   of the trove, using unrand and spell namesake and god flavour, for
-#   somewhat lower costs fulfillable earlier. Consider weapon brands, jewellery
-#   types, armour artprops, and specific consumables / talismans / spells
-#   as can easily fit themes like "Ozocubu's Refridgerator" or "Nazja's Forge".
-#   (Wants for the ability to combine acquirement and ego itemspecs.)
+# The portal vaults. As of 0.34:
+#  * Troves should have a unique name linked to a spell or unrand.
+#  * Troves should use a variety of wall tile, floor tile, and decorative
+#    feature arrangements to convey a distinct place.
+#  * Most troves should strive to both place unique and flavourful items
+#    as well as items given various checks and clauses to minimize the
+#    potential absolute uselessness of a given item.
 #
 ##############################################################################
 
 default-depth: Trove
 
-NAME:    trove_simple
-WEIGHT:  60
-ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup
-# Loot: 16 items.
-ITEM:   any useful good_item
-ITEM:   acquire jewellery / any useful good_item
-ITEM:   acquire weapon / acquire armour / any useful good_item
-: trove.setup_features(_G)
+# set up the ozo's drinks,
+# update the ice blocks when that commit pushes forward
+# put in art-data.txt bool: tilerim for storm bow
+
+# The Name-Rending Infernalists' Reservoir: the fiery equipment / magic trove.
+# Fire Magic is the only spell school without any mages's names in the spells.
+# This is a sort of interesting accidental flavour, so here we're experimentally
+# leaning into it instead.
+NAME:   regret_index_trove_nameless_infernalists
+: trove_setup(_G)
+KMONS:    F = fire vortex
+KMONS:    L = generate_awake creeping inferno
+{{
+local aux = ""
+if you.mutation("weakness stinger") ~= 3 then
+  aux = " / scarf ego:resistance w:4 / scarf ego:resistance randart w:2 / \
+          / scarf ego:harm w:4 / scarf ego:harm randart w:2"
+end
+trove_offense(_G, trove_weap_brand(_G, "flaming"),
+                  trove_standard_magic(_G, "fire", true),
+                  trove_good_talisman(_G, "rF", nil), "fire magic")
+trove_defense(_G, "robe ego:resistance good_item w:8 / \
+                   fire dragon scales good_item / \
+                   fire dragon scales randart" .. aux,
+                   trove_ego_gen_armour(_G, "fire_resistance", "rF"),
+                   trove_jewel_type(_G, "rF"),
+                   trove_cons(_G, {"immolation q:2", "fog q:2 w:5"},
+                              {"resistance q:2 w:5", "magic q:2 w:5"},
+                              nil, nil, nil))
+local small = you.race() == "Spriggan" or you.race() == "Kobold" or
+              you.race() == "Felid"
+trove_unrand_chances(_G, "def", {"firestarter"}, {small}, {"?"})
+}}
+KFEAT:    FL = l
+KFEAT:    y = x
+: vault_metal_statue_setup(_G, "G", "fiery conduit")
+NSUBST:   l = 4:LLF / 4:LLFll / *:l
+TILE:     c = wall_stone_scorched
+TILE:     m = dngn_transparent_wall_red
+TILE:     o = wall_permarock_clear_darkgray
+TILE:     x = wall_pebble_darkgray
+FTILE:    defghi?$'G = floor_pebble_darkgray
+KPROP:    FLl = no_tele_into
+epilogue{{
+            trove_milestone(_G, "The Name-Rending Infernalists' Reservoir")
+}}
 MAP
-xxxxxx
-xddddx
-xfeedx
-xefedx
-xdefdx
-xx++xx
-xx..xx
-xx..xx
-xx..xx
-x....x
-x.<A.x
-x....x
-xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxlxllllllllllllllllllllllllx
+xlxlxlllllllllllllllllllllllx
+xllxlxllllllllllllllllllllllx
+xlllxlxlllllllllllllllllllllx
+xllllxlxlllllllllllllllllllxx
+xlllllxlxllllllllllllllllllxx
+xllllllxloooooooooolllllllxlx
+xlllllllooccxmyxxxolllllllxlxxxxxxxxxx
+xllllllloccgmmm.Axollllllxlllllllllxlx
+xlllllllocgg'm...xollllllxlllllllllxlx
+xllllllloxm'....myolllllxlllllllllxllx
+xlllllllommm.<.mmmolllllxllllllllxlllx
+xllllllloym.....mxoooooolllllllllxlllx
+xlllllllox...m...xxxxxxollllllllxllllx
+xllllllloxA.mmm..dxyllxolllllllxlllllx
+xllllllloxxxymxxd'W'Glxolllllllxlllllx
+xllllllloooooooxxWdW'yxollllllxllllllx
+xllllllxlllllloxy'WdWxxooooooolllllllx
+xlllllxllllllloxlG'W'dxxmyxxxolllllllx
+xlllllxllllllloxllyxd'.mmm.Axolllllllx
+xllllxlllllllloxxxxxx...m...xolllllllx
+xlllxlllllllllooooooxm.....myolllllllx
+xlllxllllllllxlllllommm.<.mmmolllllllx
+xllxlllllllllxllllloym....'mxolllllllx
+xlxlllllllllxllllllox...m'ggcolllllllx
+xlxlllllllllxlllllloxA.mmmgccolllllllx
+xxxxxxxxxxlxllllllloxxxymxccoolllllllx
+         xlxllllllloooooooooolxllllllx
+         xxllllllllllllllllllxlxlllllx
+         xxlllllllllllllllllllxlxllllx
+         xlllllllllllllllllllllxlxlllx
+         xllllllllllllllllllllllxlxllx
+         xlllllllllllllllllllllllxlxlx
+         xllllllllllllllllllllllllxlxx
+         xlllllllllllllllllllllllllxlx
+         xllllllllllllllllllllllllllxx
+         xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    trove_garden
-TAGS:    no_item_gen no_monster_gen allow_dup
-WEIGHT:  40
-ORIENT:  encompass
-# Loot: 16 items, spread out a bit.
-KFEAT:   x = X
-COLOUR:  o = blue
-#
-# Plants come in two pattern: regular or random. Vegetation can be thin or thick.
-# There are more plants near the river.
-SUBST:   W = w .
-: if crawl.coinflip() then
-SUBST:   " = . 1:20
-SUBST:   1 = . 1:1
-SUBST:   ' = .
-:else
-SUBST:   1 = .
-SUBST:   " = '
-SUBST:   w = w 1:2
-NSUBST:  . = 12:M / 12:1 / *:.
-SHUFFLE: Mm
-SUBST:   M = .
-SUBST:   . = . 1:1
-SUBST:   ' = . 1:3
-:end
-#
-SUBST:   V=w. , v=w, _=.
-SUBST:   1 : 1 2
-SUBST:   2 = 1 .
-SUBST:   1 : 1 2:2 3:1
-#
-MONS:    plant col:white
-MONS:    plant col:white / plant col:blue w:6
-MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
-#
-# Items: d = scrolls from header function, e/E = jewellery/amulets,
-#        f/F/B = armour/weapon/book, g = potions
-SHUFFLE: eE, fFB
-: trove.good_scroll(_G)
-KITEM:   e = acquire jewellery w:5 / any useful jewellery good_item / any jewellery w:2
-KITEM:   E = any amulet useful good_item / any amulet randart w:2
-KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
-KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
-KITEM:   B = acquire book / acquire:sif_muna book / any book
-KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
-             potion of might / potion of brilliance / potion of resistance / \
-             potion of magic / potion of haste
-: if (you.mutation("no jewellery") == 1) then
-SUBST:   eE = F
-: end
-KFEAT:   w = W
-: trove.setup_features(_G)
-: trove.place_fog(_G, "blue smoke", 30)
-KFEAT:  m = .
+# Ozocubu's Refrigerator: the cold equipment and ice magic trove.
+# Layout directly adjusting due's trove_library.
+NAME:   regret_index_trove_ozocubu
+: trove_setup(_G)
+MONS:   block of ice
+# dream sheep / hell hog / alligator / anaconda / hydra / caustic shrike
+NSUBST:  d = 6:d / *:?, g = 6:g / *:?
+{{
+trove_offense(_G, trove_weap_brand(_G, "freezing"),
+                  trove_standard_magic(_G, "ice", true),
+                  trove_good_talisman(_G, "rC"), "ice magic")
+trove_defense(_G, "robe ego:resistance good_item / scarf ego:resistance w:5 / \
+                   ice dragon scales good_item / ice dragon scales randart" ..
+                   " / " .. trove_ego_shield(_G, "cold_resistance w:1", "rC w:1"),
+                   trove_ego_gen_armour(_G, "cold_resistance", "rC"),
+                   trove_jewel_type(_G, "rC"),
+                   trove_cons(_G, {"identify w:1 q:3"},
+                              {"resistance q:2 w:5", "ambrosia q:2 w:5",
+                               "magic q:2 w:5"}, nil,
+                               "wand of iceblast charges:8", "phial of floods"))
+-- maybe this should also have Prune?
+local small = you.race() == "Spriggan" or you.race() == "Kobold" or
+              you.race() == "Felid"
+trove_unrand_chances(_G, "defghi", {"frostbite", "skin of zhor"},
+                         {small, no_body_armour_species(_G)}, {"y", "z"})
+}}
+KFEAT:   ? = cache of meat / cache of fruit / cache of baked goods
+KFEAT:   + = closed_clear_door
+KFEAT:   X = x
+: vault_metal_statue_setup(_G, "G", "icy conduit")
+: decorative_floor(_G, '!', "set of bottled spirits")
+TILE:    x = wall_ice_block
+TILE:    v = dngn_metal_wall_blue
+FTILE:   .<defghiyz?!1+G = floor_frozen
+epilogue{{
+            trove_milestone(_G, "Ozocubu's Refrigerator")
+}}
 MAP
-'"WwwW'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.<
-"'"wwW"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
-."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
-1'"'ww"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
-.1'"WwW"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
-1."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
-.1'"'www'"'m.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
-1."'"Www"'".1.1.1.1.m.1.1.1.1.m.1.1.1.1.1.
-.1."'"ww'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
-1.1'"'wwW'".1ooooooooooooooo1.1.1.1.1.1.1.
-.1."'"wwW''1.o_____________o.1.1.1.1.1.1.1
-1.1'"'Www'm'1o_____________o1.1.1.1.1.1.1.
-.1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
-1.1."'"Www'''o__xddx_xeex__o1.1.1.1.1.1.1.
-.1.1."'"Www''o__xddx_xeex__o.1.1.1.1.1.1.1
-1.1.1."'"Ww''o__xxx+_+xxx__o1.1.1.1.1.1.1.
-.1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
-1.1.1.1'"'mwWo__xxx+_+xxx__o1.1.1.1.1.1.1.
-.1.1.1.1'"'wwo__xffx_xggx__o.1.1.1.1.1.1.1
-1.1.1.1."'"WwoV_xffx_xggx__o1.1.1.1.1.1.1.
-.1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
-1.1.1.1.1.1'"oVvV__________o1.1.1.1.1.1.1.
-.1.1.1.1.m.1'o_vvvV________o.1.m.1.1.1.1.1
-1.1.1.1.1.1.1o_vvvvvv______o1.1.1.1.1.1.1.
-.1.1.1.1.1.1.o__vvvvvvv____o.1.1.1.1.1.1.1
-1.1.1.1.1.1.1o__Vvv<_Avv___o1.1.1.1.1.1.1.
-.1.1.1.1.1.1.o____vvvvvvv__o.1.1.1.1.1.1.1
-1.1.1.1.1.1.1o________VvvvVo"'1.1.1.1.1.1.
-.1.1.1.1.1.1.ooooooooooooooo'"'1.1.1.1.1.1
-1.1.1.1.1.1.1.1.1.1.1."'"Www"'".1.1.1.1.1.
-.1.1.1.1.1.m.1.1.1.m.1.1'"'WwwW"'".1.1.1.1
-1.1.1.1.1.1.1.1.1.1.1.1.1'"'WwmW"'".1.1.1.
-.1.1.1.1.1.1.1.1.1.1.1.1.1'"'wwwW"'".1.1.1
-1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwWw'"'1.1.
-.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1'"'wWwW"'".1
-1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwwwW"'
-<1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1."'"WwW"
+xxxxxxxxxxxxxxx
+x..v!v!v!v!v..x
+x.............x
+xd...........gx
+xv..xvx.xvx..vx
+xd..dvg.dvg..gx
+xv..xvx.xvx..vx
+xd..dvg.dvg..gx
+xv..xvx.xvx..vx
+xd...........gx
+x.............x
+xxxxxx+++xxxxxx
+x1G1xx...xx1G1x
+x.1.xx...xx.1.x
+x1.1xx.<.xx1.1x
+x.1.x.....x.1.x
+xx+xx.'''.xx+xx
+ x..+''A''+..x
+ xxxXXXXXXXxxx
 ENDMAP
 
-# A "library", geared towards scrolls and books (either spell or manual).
-NAME:   trove_library
-WEIGHT: 30
-veto {{ return crawl.game_started()
-          and trove.spell_skills() < 20
-          and not crawl.one_chance_in(6) }}
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
-: trove.setup_features(_G)
-: trove.good_scroll(_G)
-ITEM:   acquire book
-ITEM:   acquire:sif_muna book
+# The Storm Queen's Palace Crash-Site: electricity, shields, and Air Magic.
+# Map re-use of nicolae_trove_salty.
+NAME:   regret_index_trove_storm_queen
+: trove_setup(_G)
+NSUBST: d = 6:d / 6:g / *:.
+{{
+local aux1 = ""
+if you.mutation("weakness stinger") ~= 3 then
+  aux1 = " / cloak ego:repulsion w:2 / scarf ego:repulsion randart w:2"
+end
+trove_offense(_G, trove_weap_brand(_G, "electrocution"),
+                  trove_standard_magic(_G, "air", true),
+                  trove_good_talisman(_G, "rElec", "storm talisman"), "air magic")
+trove_defense(_G, "steam dragon scales randart artprops:rElec / \
+                   storm dragon scales good_item / \
+                   storm dragon scales randart" ..
+                   aux1 .. " / " .. trove_ego_shield(_G, nil, "rElec"),
+                   "pair of gloves randart artprops:rElec w:2",
+                   trove_jewel_type(_G, "rElec"),
+                   trove_cons(_G, {"enchant armour q:2"},
+                              {"resistance q:2 w:5", "attraction q:3 w:5"},
+                              nil, nil, "lightning rod w:5"))
+local sh = you.race() == "Spriggan" or you.race() == "Kobold" or
+           you.race() == "Felid" or you.mutation("missing a hand") == 1
+trove_unrand_chances(_G, "dgh", {"storm_queen's_shield", "storm_bow"},
+                         {sh, sh and you.race("Formicid") == false}, {"?", "!"})
+}}
+MARKER:  V = lua:fog_machine { cloud_type = "thunder",  walk_dist=2, \
+             pow_min=18, pow_max=26, delay=180, size=4, spread_rate=1 }
+KFEAT:   z = x
+: vault_metal_statue_setup(_G, "I", "iron statue")
+SUBST:   ` = x`, v = v:90 x
+FTILE:   .defghi?!VGIm = floor_salt
+FTILE:   `" = floor_w_marble
+TILE:    x = wall_zot_cyan
+TILE:    z = wall_pebble_cyan
+TILE:    G = dngn_crumbled_column
+TILE:    v = dngn_metal_wall_cyan
+TILE:    I = dngn_oka_iron_statue
+epilogue{{
+            trove_milestone(_G, "The Storm Queen's Palace Crash-Site")
+}}
 MAP
-xxxxxxxxxxxxx
-xd.........dx
-xx.xxx.xxx.xx
-xf.dxe.dxe.dx
-xx.xxx.xxx.xx
-xe.fxd.fxd.ex
-xx.xxx.xxx.xx
-xe.........dx
-xxxxx+++xxxxx
-    x...x
-    x...x
-    x...x
-   xx...xx
-   x.....x
-   x.<.A.x
-   xxxxxxx
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzz...................................zzzzz
+zzz................................m......zzz
+zz..................................V......zz
+zz...................................m.....zz
+z...........................................z
+z...........................................z
+z...............``.............`x`x`........z
+z...............`.....vvvv...v.vvvvv........z
+z....m............``.`v.........x...........z
+z...V.............`xx`..d.d.d..dxd.d.`......z
+z..m...............x.....x......xx...x......z
+z....................xv.d.d.x..d.d.d.v......z
+z.....................vx...`x.......xv......z
+z.....................vv.xvx....`v.vvv......z
+z............G..G..G..x...v......v.`xx`.....z
+z.....'''''."..".."...................x.....z
+z.....'<'A'....mVm...........I......`x`.....z
+z.....'''''...".."..".......................z
+z............G..G..G.....`v......v`.........z
+z....................`vvv.v....`xxvxx.......z
+z....................`v......x.x`...`.......z
+z.................`..```d.d.x..d.d.d.x......z
+z..m.............`x`..x`.............v......z
+z...V............xx`..v.d.dxd..d.d.d........z
+z....m...........``..xv..x.x................z
+z...................x..v..vvvv.....vvv......z
+z...................xx......................z
+z...............`...........................z
+z...............`.`.........................z
+zz..............................m..........zz
+zz.............................V...........zz
+zzz...........................m...........zzz
+zzzzzz..................................zzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 ENDMAP
 
-# A 'jewellery shoppe' or display cabinet.
-NAME:   trove_jewel_1
-TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
-WEIGHT: 20
-ORIENT: encompass
-# Loot: 18 items, with two guaranteed talismans.
-ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
-KITEM:  $ = $ q:1
-: trove.good_talisman(_G)
-: if you.race() == "Revenant" or you.race() == "Poltergeist" or
-:   you.race() == "Mummy" then
-NSUBST: d = 2:$ / *:d
-: else
-NSUBST: d = 2:e / *:d
-: end
-: trove.setup_features(_G)
+# Leda's Sunken Stockpile: a trove of Earth Magic and strong slowing equipment.
+# The layout is somewhat based off of nicolae_trove_exclusive_bardings.
+NAME:   regret_index_trove_leda
+{{
+trove_setup(_G)
+local pon = "ego:ponderous plus:" crawl.random_range(6, 10)
+local gen_armour = ""
+if species_has_size_limits(_G) == false then
+  gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
+end
+if you.race() == "armataur" or you.race() == "naga" then
+  gen_armour = gen_armour .. " / barding good_item / barding randart w:2"
+elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
+  gen_armour = gen_armour .. " / pair of boots good_item / pair of boots randart w:2"
+end
+trove_offense(_G, trove_weap_brand(_G, "heavy"),
+                  trove_standard_magic(_G, "earth", true),
+                  trove_good_talisman(_G, nil, "granite talisman"), "earth magic")
+trove_defense(_G, "any useful armour randart w:5",
+                   gen_armour, trove_jewel_type(_G, "Str:4 w:5") .. " / " ..
+                   trove_jewel_type(_G, "*Slow&AC:4"),
+                   trove_cons(_G, {"enchant armour"}, nil,
+                              "wand of digging w:20 / any blast wand w:20 charges:8",
+                              nil, "tin of tremorstones"))
+local small = you.race() == "Spriggan" or you.race() == "Kobold" or
+              you.race() == "Felid"
+trove_unrand_chances(_G, "def", {"dark maul"}, {small}, {"!"})
+}}
+KITEM:   D = seismosaurus skeleton
+KITEM:   s = stone q:1
+KFEAT:   defghi!Ds' = mud
+KFEAT:   y = x
+SUBST:   ? = ?G
+: decorative_floor(_G, '?', "mop and bucket")
+TILE:    x = wall_pebble_brown
+TILE:    G = dngn_statue_mermaid / dngn_statue_hydra / dngn_statue_princess / \
+             dngn_statue_snail / dngn_statue_orb / dngn_statue_ancient_hero w:2
+epilogue{{
+            trove_milestone(_G, "Leda's Sunken Stockpile")
+}}
 MAP
-xxxxxxxx
-x......x
-x.<..A.x
-x......x
-xxx++xxx
-x......x
-x+o..o+x
-xdo..odx
-xdo..odx
-xdo..odx
-xdo..odx
-xdo..odx
-xdoooodx
-xddddddx
-xxxxxxxx
-ENDMAP
-
-# A simple treasure chamber.
-NAME:   trove_jewel_2
-TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
-WEIGHT: 20
-ORIENT: encompass
-# Loot: 15 items this time.
-ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
-: trove.good_talisman(_G)
-: if you.race() == "Revenant" or you.race() == "Poltergeist" or
-:   you.race() == "Mummy" then
-SUBST:  e = x
-: end
-COLOUR: x = blue
-: trove.setup_features(_G)
-MAP
-xxxxxxxx
-xddd+<Ax
-xdddxxxx
-xdddex
-xdddxx
-xdddex
-xxxxxx
-ENDMAP
-
-# A 'weapon shoppe', same template as the jewellery shop.
-NAME:   trove_weapon_1
-veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < 10
-               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
-          and not crawl.one_chance_in(3) }}
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: once again, 16 items.
-ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
-: trove.setup_features(_G)
-MAP
-xxxxxxxx
-x......x
-x.<..A.x
-x......x
-xxx++xxx
-x......x
-x+o..o+x
-xdo..odx
-xdo..odx
-xdo..odx
-xdo..odx
-xdoooodx
-xddddddx
-xxxxxxxx
-ENDMAP
-
-# A simple treasure chamber.
-NAME:   trove_weapon_2
-veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < 10
-               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
-          and not crawl.one_chance_in(3) }}
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
-# Loot: 15 items.
-COLOUR: x = blue
-ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
-: trove.setup_features(_G)
-MAP
-xxxxxxxx
-xddd+<Ax
-xdddxxxx
-xdddx
-xdddx
-xdddx
-xxxxx
-ENDMAP
-
-# An 'armour shoppe', same template as the jewellery shop.
-NAME:   trove_armour_1
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
-WEIGHT: 15
-ORIENT: encompass
-# Loot: once again, 16 items.
-ITEM:   acquire armour / any useful armour good_item / any armour w:2
-: trove.setup_features(_G)
-MAP
-xxxxxxxx
-x......x
-x.<..A.x
-x......x
-xxx++xxx
-x......x
-x+o..o+x
-xdo..odx
-xdo..odx
-xdo..odx
-xdo..odx
-xdoooodx
-xddddddx
-xxxxxxxx
-ENDMAP
-
-# A simple treasure chamber.
-NAME:   trove_armour_2
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
-WEIGHT: 15
-ORIENT: encompass
-# Loot: 15 items.
-COLOUR: x = blue
-ITEM:   acquire armour / any useful armour good_item / any armour w:2
-: trove.setup_features(_G)
-MAP
-xxxxxxxx
-xddd+<Ax
-xdddxxxx
-xdddx
-xdddx
-xdddx
-xxxxx
-ENDMAP
-
-# A "themed" trove.
-NAME:    trove_hunter_1
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
-         no_species_dr no_species_po
-WEIGHT:  5
-ORIENT:  encompass
-# Loot:  15 items, this time.
-COLOUR:  x = blue
-MONS:    storm dragon zombie, golden dragon zombie, fire dragon draugr
-: if you.race() == "Revenant" or you.race() == "Mummy" then
-ITEM:    $ / any armour good_item
-: else
-ITEM:    dragon-coil talisman good_item / any armour good_item
-: end
-ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
-         troll leather armour / any useful armour good_item
-ITEM:    javelin good_item / dart good_item
-ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
-SHUFFLE: 123, defg
-: trove.setup_features(_G)
-MAP
-xxxxxxx
-x1x2x3x
-xooooox
-xdededx
-xfgfgfx
-xgfffgx
-xxx+xxx
-x.....x
-x.<.A.x
-x.....x
-xxxxxxx
-ENDMAP
-
-# Did you ever wonder who the treasure was taken from?
-NAME:   trove_nasty
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
-WEIGHT: 2
-COLOUR: x = blue
-NSUBST: " = 1:+ / *:x
-NSUBST: ' = 1:+ / *:x
-# 24 items, just because we're feeling generous.
-ITEM:   any useful good_item w:10 / any
-ITEM:   any useful jewellery good_item / any useful good_item
-ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   human skeleton
-KFEAT:  m = iron_grate
-: trove.setup_features(_G)
-MAP
-        mmmmmmmmmm
-        m..gmmg..m
-xxxxxxxxmmmmmmmmmmxxxxxxxx
-x........................x
-x.x'x'xxxxxxxxxxxxxxxxxx.x
-x.'edd+...............<x.x
-x.xdedx.mmmmmmmmmm.xx"xx"x
-x.'ddex.m..gmmg..m."dedddx
-x'xxxxx.mmmmmmmmmm.xededfx
-xA................."fffedx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxyyyxxxxxxxxyyyxxxxxxx
+xxxxysdsyxxxxxxysgsyxxxxxx
+xxxyd'''dyxxxxyg'''gyxxxxx
+xxxys'''syxxxxys'''syxxxxx
+xxy'''''''yxxy'''''''yxxxx
+xy'''''D'''yy..''''D''yyyx
+y...'''''..'....''''''...y
+y.<.''''.T..'.G..'''''.?.y
+y.G.'''''..G.'..T.''''.A.y
+y...''''''....'..'''''...y
+xyyy''D''''..yy'''D'''''yx
+xxxxy'''''''yxxy'''''''yxx
+xxxxxys'''syxxxxys'''syxxx
+xxxxxyg'''gyxxxxyd'''dyxxx
+xxxxxxysgsyxxxxxxysdsyxxxx
+xxxxxxxyyyxxxxxxxxyyyxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# It's better down where it's wetter.
-NAME:   trove_treasure_island
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
-WEIGHT: 2
-COLOUR: x = blue
-# 17 items.
-ITEM:   any useful good_item / any
-ITEM:   any useful jewellery good_item / any useful good_item
-ITEM:   acquire weapon / acquire armour / any useful good_item
-: trove.setup_features(_G)
-: set_border_fill_type("open_sea")
-MAP
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwww.wwwwwwwwwwwwww
-wwwwwwwwwwww....wwwwwwwwwwwww
-wwwwwwwwww....e...wwwwwwwwwww
-wwwwwwwwww..<dded.wwwwwwwwwww
-wwwwwwwww...d...d..wwwwwwwwww
-wwwwwwww.e.fd.A.d..dwwwwwwwww
-wwwwwwwww...d...df..wwwwwwwww
-wwwwwwwwww...ddd<d.wwwwwwwwww
-wwwwwwwwwww....dd..wwwwwwwwww
-wwwwwwwwwwwww.f..wwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-ENDMAP
-
-# Evocations and shapeshifting trove. 15 items.
-NAME:    trove_misc_dual_throne_room
-TAGS:    no_item_gen no_monster_gen allow_dup
-TAGS:    no_species_re no_species_po no_species_mu
-ORIENT:  encompass
-WEIGHT:  15
-ITEM:    manual of evocations, manual of shapeshifting
-ITEM:    acquire magical staff, any misc
-ITEM:    blade talisman randart / serpent talisman randart / \
-         lupine talisman randart / spider talisman randart / \
-         wellspring talisman randart / fortress talisman randart
+# Eringya's Secret Bog: an Alchemy, summoning, and swampy trove.
+# The layout is directly based off of due's trove_garden.
+NAME:    index_due_trove_eringya
+TAGS:    no_pool_fixup
+: trove_setup(_G)
+KMONS:   12 = plant / bush w:1
+KMONS:   CZ = crocodile att:good_neutral
 {{
-  local t3 = "dragon-coil talisman randart / granite talisman randart / " ..
-             "hive talisman randart / riddle talisman randart"
-  local t4 = "storm talisman"
-  if you.god() ~= "Elyvilon" and you.god() ~= "the Shining One" then
-    t3 = t3 .. " / sanguine talisman randart"
-    t4 = t4 .. " / talisman of death"
+local scroll = {"poison q:2"}
+local box = nil
+local talis = nil
+local magic = trove_standard_magic(_G, "alchemy", true)
+if no_friendlies(_G) == false then
+  table.insert(scroll, "any ally scroll q:2")
+  box = "box of beasts w:5"
+  talis = "hive talisman"
+  if you.mutation("no summoning magic") ~= 1 then
+    magic = magic .. " / " .. trove_standard_magic(_G, "summoning", false)
   end
-  item(t3)
-  item(t4)
-}}
-ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
-         any beam wand charges:8 / any blast wand charges:8
-SHUFFLE: hij
-COLOUR:  x = blue
-COLOUR:  ' = yellow
-FTILE:   ' = floor_limestone
-: trove.setup_features(_G)
-veto {{ return crawl.game_started()
-        and (you.mutation("inability to use devices") == 1
-             or (you.god == "Zin")
-             or ((you.mutation("no forms") == 1
-             and crawl.x_chance_in_y(2, 3)))) }}
-MAP
-  xxxxx
-  xdxex
- xxx+xxx
- xf'''gx
- xg'''fx
- xk'''kx
- xi'''hx
- xk'''kx
- xh'''jx
- xk'''kx
-xxxx+xxxx
-x.......x
-x<..A..<x
-xxxxxxxxx
-ENDMAP
-
-# This can generate weapons that are out of character for Trog, e.g. pain.
-# Just say they were looted from unwilling arena participants.
-NAME:   trove_trog_arena
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
-veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < 10
-               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
-          and not crawl.one_chance_in(3) }}
-ORIENT: encompass
-ITEM:   acquire weapon w:5 / acquire:trog weapon w:5 / \
-        any useful weapon good_item / any weapon w:2
-ITEM:   acquire:trog weapon
-KFEAT:  _ = altar_trog
-KFEAT:  m = iron_grate
-NSUBST: ; = 2:d / 4:X / *:'
-NSUBST: $ = 13:d / *:'
-KPROP:  X = bloody
-SUBST:  X : '
-FTILE:  +<dem_' = floor_dirt
-COLOUR: +<dem_' = brown
-: trove.setup_features(_G)
-MAP
-      xxxxxxxxxxx
-     xx''''<''''xx
-     x'''''''''''x
-     x'''mmmmm'''x
-xxxxxx''mm;;;mm''xxxxxx
-x$$$$x''m;;;;;m''x$$$$x
-x$$$$+''+;;;;;+''+$$$$x
-x$$$$x''m;;;;;m''x$$$$x
-xxxxxx''mm;;;mm''xxxxxx
-     x'''mmmmm'''x
-     x'''''''''''x
-     xx'''''''''xx
-      xxx'''''xxx
-        x''_''x
-        x''e''x
-        xx'''xx
-         xx+xx
-         x...x
-         x.A.x
-         x...x
-         xxxxx
-ENDMAP
-
-###################################
-#
-# minmay's troves
-#
-# Alchemist's storehouse, has 14-26 desirable potions
-NAME:    trove_alchemists_storehouse
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_mu
-WEIGHT:  5
-ORIENT:  encompass
-ITEM:    potion of curing / potion of heal wounds / \
-         potion of curing q:2 / potion of heal wounds q:2
-ITEM:    potion of experience q:1
-ITEM:    potion of might / potion of resistance / \
-         potion of magic / potion of haste / \
-         potion of might q:2 / potion of resistance q:2 / \
-         potion of magic q:2 / potion of haste q:2
-ITEM:    potion of mutation
-SHUFFLE: df
-SHUFFLE: eg
-: trove.setup_features(_G)
-MAP
-      xxx xxx xxx
-      xdx xfx xfx
-xxxxx xdx xfx xfx
-x.A.xxx+xxx+xxx+xxxxxx
-x...+.............+egx
-x.<.xxx+xxx+xxx+xxxxxx
-xxxxx xdx xfx xfx
-      xdx xfx xfx
-      xxx xxx xxx
-ENDMAP
-
-# 16 pieces of armour
-NAME:   trove_armour_six_rooms
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
-ORIENT: encompass
-ITEM:   acquire armour / any useful armour good_item / any armour w:2
-: trove.setup_features(_G)
-MAP
-xxxxxxxxxx
-xdd+ddx.Ax
-xddxdd+..x
-x+xxxxxxxx
-xddxdd+..x
-xdd+ddx.<x
-xxxxxxxxxx
-ENDMAP
-
-# 16 weapons
-NAME:   trove_weapons_four_rooms
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
-veto {{ return crawl.game_started()
-          and (trove.weapon_skills() < 10
-               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
-          and not crawl.one_chance_in(3) }}
-ORIENT: encompass
-ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
-NSUBST: " = 16:d / *:.
-: trove.setup_features(_G)
-MAP
-xxxxxxxxxxxxxxx
-xA............x
-x.ccccc.ccccc.x
-x.c"""c.c"""c.x
-x.c"T"c.c"T"c.x
-x.c"""c.c"""c.x
-x.cc+cc.cc+cc.x
-x.............x
-x.cc+cc.cc+cc.x
-x.c"""c.c"""c.x
-x.c"T"c.c"T"c.x
-x.c"""c.c"""c.x
-x.ccccc.ccccc.x
-x............<x
-xxxxxxxxxxxxxxx
-ENDMAP
-
-# 16 pieces of jewellery, 2 talismans
-NAME:   trove_jewellery_lava
-TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
-ORIENT: encompass
-ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
-: trove.good_talisman(_G)
-: if you.race() == "Revenant" or you.race() == "Poltergeist" or
-:   you.race() == "Mummy" then
-SUBST:  e = .
-: end
-: trove.setup_features(_G)
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xllllllllxxxmmmxxxllllllllx
-xllllllllxA.ddd.Axllllllllx
-xllllllllx.e.d...xllllllllx
-xllllllllmd.....dmllllllllx
-xllllllllmdd.<.ddmllllllllx
-xllllllllmd.....dmllllllllx
-xllllllllx...d.e.xllllllllx
-xllllllllxA.ddd.Axllllllllx
-xllllllllxxxmmmxxxllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xlllllllllllllllllllllllllx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# 16 scrolls and books
-NAME:   trove_books_scrolls
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_dj
-ORIENT: encompass
-veto {{ return crawl.game_started()
-          and trove.spell_skills() < 20
-          and not crawl.one_chance_in(6) }}
-ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
-SUBST:  d = de
-: trove.good_scroll(_G)
-: trove.setup_features(_G)
-MAP
-     xxxxx
-     xd.dx
-     xx.xx
-     xd.dx
-    xxx+xxx
-xxxxx.....xxxxx
-xdxdx.....xdxdx
-x...+.<.A.+...x
-xdxdx.....xdxdx
-xxxxx.....xxxxx
-    xxx+xxx
-     xd.dx
-     xx.xx
-     xd.dx
-     xxxxx
-ENDMAP
-
-# 16 scrolls and wands
-NAME:   trove_wands_scrolls
-TAGS:   no_item_gen no_monster_gen allow_dup
-ORIENT: encompass
-ITEM:   acquire wand
-SUBST:  e = eeed
-: trove.good_scroll(_G)
-: trove.setup_features(_G)
-MAP
-xxxxx
-x...xxxx
-x.A.eeexxxx
-x...exe...xxxx
-xxxxeee.x.eeexxxx
-   xxxx...exe...x
-      xxxxeee.<.x
-         xxxx...x
-            xxxxx
-ENDMAP
-
-# The loot distribution here is based on the loot from the Desolation, although
-# slightly changed to use acquirement. Places 16 loots.
-NAME:       nicolae_trove_salty
-TAGS:       no_item_gen no_monster_gen allow_dup
-ORIENT:     encompass
-WEIGHT:     5
-KITEM:      d = acquire weapon good_item / acquire armour good_item / \
-                any jewellery randart w:5 / randbook w:5
-KFEAT:      E = endless_salt
-MARKER:     S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
-NSUBST:     d = 16=d / `..
-SUBST:      ` = x., c = c:90 x, d = d:4 |:3
-LFLOORCOL:  lightgrey
-LROCKCOL:   brown
-LFLOORTILE: floor_salt
-LROCKTILE:  wall_desolation
-TILE:       G = DNGN_CRUMBLED_COLUMN
-: set_border_fill_type('endless_salt')
-: set_feature_name("granite_statue", "ruined idol")
-MAP
-EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-E......................................E
-E.............................`x`x`.S..E
-E.....................cccc...cccccc....E
-E.................``.`c........x.......E
-E...S.............`xx`..d.d.d.dxd.d.`..E
-E..................x.....x.....xx...x..E
-E....................xc.d.d.x.d.d.d.c..E
-E.....................cx...`x......xc..E
-E...............G.G.G.cc.xcx...`c.ccc`.E
-E.....................x...c.....c.`xxx.E
-E......<.A........S................`x`.E
-E........................`c.....c`.....E
-E...............G.G.G`ccc.c...`xxcxx...E
-E....................`c......xx`...`...E
-E.................`..```d.d.x.d.d.d.x..E
-E................`x`..x`............c..E
-E...S............xx`..c.d.dxd.d.d.d....E
-E................``..xc..x.x...........E
-E...................x..c..cccc....ccc..E
-E...................xx.................E
-E..............................S.......E
-EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-ENDMAP
-
-# Generates 16 branded weapons. Half are "generic" brands,
-# the other half are more god-related brands.
-NAME:    nicolae_trove_branded_display_cases
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
-veto  {{ return crawl.game_started()
-           and (trove.weapon_skills() < 10
-             or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
-           and not crawl.one_chance_in(3) }}
-ORIENT:  encompass
-{{
--- Acquirement code doesn't work with specifying brands. Pulling out the
--- higher quality of weapons doesn't guarantee one gets their current weapon
--- school, but it's much better than otherwise getting whips and short swords.
-local weaps = { "double sword", "great sword w:30", "triple sword w:5",
-                "partisan", "glaive w:30", "bardiche w:5", "morningstar w:30",
-                "eveningstar w:5", "great mace", "war axe w:30", "broad axe",
-                "battleaxe", "executioner's axe w:5", "quarterstaff w:40",
-                "lajatang w:15", "rapier w:45" }
-local demon = { "demon blade", "demon trident", "demon whip" }
-local range = { "orcbow w:30", "hand cannon", "longbow", "triple crossbow w:5"}
-
--- The second half of these brands are either gifted or forbidden by a god.
-local regego = { "ego:electrocution", "ego:flaming", "ego:freezing",
-                 "ego:heavy", "ego:protection", "ego:spectral", "ego:venom" }
-local godego = { "ego:antimagic", "ego:chaos", "ego:distortion",
-                 "ego:draining", "ego:holy_wrath", "ego:speed", "ego:pain",
-                 "ego:vampirism" }
-
-local egos1 = util.random_subset(regego, 2)
-local egos2 = util.random_subset(godego, 2)
-
-local function genweap(ego)
-  local usable = weaps
-  local r = " randart "
-  local g = " good_item "
-
-  if ego ~= "ego:speed" then
-    table.insert(usable, "quick blade")
-  end
-
-  if ego ~= "ego:holy_wrath" then
-    for x, _ in pairs(demon) do
-      table.insert(usable, demon[x])
-    end
-  end
-
-  -- Refer to 2721c5b on brands not allowed to spawn on ranged weapons.
-  if ego ~= "ego:distortion" and ego ~= "ego:pain" and ego ~= "ego:protection"
-     and ego ~= "ego:spectral" and ego ~= "ego:venom" then
-    for x, _ in pairs(range) do
-      table.insert(usable, range[x])
-    end
-  end
-
-  return table.concat(usable, r .. ego .. " / ") ..  r .. ego .. " / " ..
-         table.concat(usable, g .. ego .. " / ") .. g .. ego .. " / " ..
-         "any useful weapon w:55" .. g .. ego
+else
+  subst("C = ;")
+  subst("? = Z")
 end
-
-item(genweap(egos1[1]))
-item(genweap(egos1[2]))
-item(genweap(egos2[1]))
-item(genweap(egos2[2]))
+trove_offense(_G, trove_weap_brand(_G, "spectral"),
+                  magic, trove_good_talisman(_G, "rPois", talis),
+                  "alchemy magic")
+trove_defense(_G, "swamp dragon scales good_item / swamp dragon scales randart",
+                   trove_ego_gen_armour(_G, "poison_resistance", "rPois"),
+                   trove_jewel_type(_G, "rPois"),
+                   trove_cons(_G, scroll, {"lignification q:3 w:5"},
+                              "any beam wand charges:8",
+                              "wand of roots charges:8 w:5", box))
+local n_wield = you.mutation("no weapons or thrown items") == 1
+trove_unrand_chances(_G, "defg", {"robe of vines", "punk"},
+                         {no_body_armour_species(_G), n_wield}, {"y", "z"})
 }}
-KFEAT:   + = closed_clear_door
-SHUFFLE: defg
-: vault_granite_statue_setup(_G, "G", "scintillating statue")
-: vault_metal_statue_setup(_G, "S", "golden statue")
-: trove.setup_features(_G)
+KFEAT:   t = mangrove
+KFEAT:   CZ? = W
+KFEAT:   1 = W / . w:30
+KFEAT:   ~ = toxic_bog
+SUBST:   1 = 1 t:2
+NSUBST:  1. = 24:1 / * = . 1:1
+SUBST:   ' = ' 2:3, " = '22, V = ~', ; = wwW```
+SUBST:   1 = 1 o:1, 2 = 2 p:2
+COLOUR:  n = green
+TILE:    n = dngn_transparent_stone_green
+FTILE:   .-1ot<QR = floor_grass
+FTILE:   '2p = floor_swamp
+: decorative_floor(_G, 'op', "flower patch")
+KPROP:   Z? = no_tele_into
+MARKER:  P = lua:transp_loc("trove_eringya_entry")
+MARKER:  Q = lua:transp_dest_loc("trove_eringya_entry")
+MARKER:  R = lua:transp_loc("trove_eringya_exit")
+MARKER:  S = lua:transp_dest_loc("trove_eringya_exit")
+: set_border_fill_type('mangrove')
+epilogue{{
+            trove_milestone(_G, "Eringya's Secret Bog")
+}}
 MAP
-xxxxxxxxxxxxxxxxxx
-x................x
-x.....mmmmmm.....x
-x..v..mddddm..v..x
-x.....m++++m.....x
-x................x
-x.mmm........mmm.x
-x.me+..G..<..+fm.x
-x.me+........+fm.x
-x.me+........+fm.x
-x.me+..A..S..+fm.x
-x.mmm........mmm.x
-x................x
-x.....m++++m.....x
-x..v..mggggm..v..x
-x.....mmmmmm.....x
-x................x
-xxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# Generates 10 bardings. Rather than use a ton of "no_species_XX" tags, which
-# would need to be maintained for every future new species, this just vetos on
-# player species, so only barding-wearing species will see it.
-NAME:    nicolae_trove_exclusive_bardings
-veto     {{ return crawl.game_started()
-           and you.race() ~= "Naga"
-           and you.race() ~= "Armataur"
-           and you.race() ~= "Palentonga" }}
-TAGS:    no_item_gen no_monster_gen allow_dup
-ORIENT:  encompass
-KITEM:   D = barding randart good_item / barding good_item / barding w:2
-SHUFFLE: TG
-: trove.setup_features(_G)
-MAP
-xxxxxxxxxxxxxxxxx
-xxxxxx.....xxxxxx
-xxxxxx..A..xxxxxx
-xxxxxx.....xxxxxx
-xxxxx...T...xxxxx
-xxxx.........xxxx
-xxD.....G.....Dxx
-xD.............Dx
-xD..T.G.T.G.T..Dx
-xD.............Dx
-xxD.....G.....Dxx
-xxxx.........xxxx
-xxxxx...T...xxxxx
-xxxxxx.....xxxxxx
-xxxxxx..<..xxxxxx
-xxxxxx.....xxxxxx
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
-# 20 items of no particular item class.
-NAME:   nicolae_trove_general_collection
-TAGS:   no_item_gen no_monster_gen allow_dup
-ORIENT: encompass
-KITEM:  d = acquire any / any useful good_item / any w:2
-MAP
-xxxxxxxxxxxxxxxxxxxxxxx
-x.G.G.xdxdxdxdxdx.G.G.x
-x.....................x
-x.....xdxdxdxdxdx.....x
-x..A..xxxxxxxxxxx..<..x
-x.....xdxdxdxdxdx.....x
-x.....................x
-x.G.G.xdxdxdxdxdx.G.G.x
-xxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-# Generates 19 items useful for an Octopode: hats, amulets, and of course rings.
-NAME:   nicolae_trove_octotrove
-TAGS:   no_item_gen no_monster_gen no_species_co allow_dup no_pool_fixup
-ORIENT: encompass
-: trove.good_talisman(_G)
-KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
-KITEM:  E = useful hat good_item / hat randart / hat w:2
-KITEM:  F = any useful ring good_item / any randart ring / any ring w:2
-KITEM:  S = buckler good_item / kite shield good_item / \
-            tower shield good_item / buckler randart / \
-            kite shield randart / tower shield randart / buckler w:2 / \
-            kite shield w:2 / tower shield w:2
-: if you.race() == "Revenant" or you.race() == "Poltergeist" or
-:   you.race() == "Mummy" then
-SUBST:  d = .
-: end
-KFEAT:  ~ = open_sea
-: trove.setup_features(_G)
-: set_border_fill_type('open_sea')
-MAP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwww...ww.EEE.wwF..wwwwwwwww~
-~wwwwwwwww.w.w...d...www.wwwwwwwww~
-~wwwwwwwwwFw...SDDDS.....wwwwwwwww~
-~wwwwwwwwwwwww.......wwwwwwwwwwwww~
-~wwwwwwwwww....A...<......wwwwwwww~
-~wwwwwwww...ww.......wwww.wwwwwwww~
-~wwwwwwww.wwww.w...w...wF.wwwwwwww~
-~wwwwwwwwFwwww.w.w.www.wwwwwwwwwww~
-~wwwwwwwwwwF.w.w.w.www..wwwwwwwwww~
-~wwwwwwwwwww...w.w...ww.Fwwwwwwwww~
-~wwwwwwwwwwwwwww.www.wwwwwwwwwwwww~
-~wwwwwwwwwwwwF...wwF.wwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ENDMAP
-
-# Generates 20 auxiliary armours, and a diagram of where they go.
-NAME:   nicolae_trove_personal_accessories
-TAGS:   no_rotate no_vmirror no_item_gen no_monster_gen allow_dup \
-        no_species_fe no_species_op
-ORIENT: encompass
-KITEM:  P = helmet good_item w:40 / hat good_item w:40 / helmet / hat
-KITEM:  Q = pair of gloves good_item w:40 / pair of gloves
-KITEM:  R = pair of boots good_item w:40 / pair of boots
-KITEM:  S = buckler good_item w:40 / kite shield good_item w:40 / \
-            tower shield good_item w:40 / orb good_item w:40 / buckler / \
-            kite shield / tower shield / orb
-KITEM:  Z = cloak good_item w:160 / cloak w:40 / scarf w:50
-: trove.setup_features(_G)
-MAP
-xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxPPxxxxxxxxx
-xxxxxxxxP..Pxxxxxxxx
-xxxxxxxx....xxxxxxxx
-xxxxxxxxx..xxxxxxxxx
-xxxxxxxxx++xxxxxxxxx
-xxxxxxxxZZZZxxxxxxxx
-xQQ....+....+....SSx
-xQQ....+....+....SSx
-xxxxxxxx++++xxxxxxxx
-xxxxxxxx....xxxxxxxx
-xxxxxxxx.A<.xxxxxxxx
-xxxxxxxx....xxxxxxxx
-xxxxxxxxx++xxxxxxxxx
-xxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxx
-xxxxxxxx....xxxxxxxx
-xxxxxxxxRRRRxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx
+'"V~~V'"'  1  .1  .1      .1.1.1.1.
+"'"~~V"'".1.1.1.1.1.1.  1.1.1.1.1.1.1.1
+ "'"~~'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+ '"'~~"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+  '"V~V"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
+ ."'"~~'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1
+.1'"'~~~'"'m.1.1.1.1m1.1.1.1.1.1.1.1.1.1.
+1."'"V~~"'".1.1.1.1.1.1.1.1.<.m.1.1.1.1.1.
+.1."'"~~'"'1.nnnnnnnnnnnnnnn.1.1.1.1.1.1.1
+1.1'"'~~V'".1n`````````````n1.1.1.1.1.1.1.
+.1."'"~~V''1.n`t`````````t`n.1.1.1.1.1.1.1
+ .1'"'V~~'m'1n``xxxx+nnnn``n1.1.1.1.1.1.1
+  .1'"'~~V'''n``xddx`n??n``n.1.m.1.1.1.1.
+  1."'"V~~'''n``xddx`nZ?n``n1.1.1.1.1.1.
+  .1."'"V~~'`n``x``x-n?Zn``n.1.1.1.1.1.1
+ .1.1."'"V~`Sn``xxx+-nnnn``n1.1.1.1.1.1.1
+.1.1.1."'"~~`n``+`--o--`+``n.1.m.1.1.1.1.1
+ .1.1.1'"'m~Vn-`xxx+-+xxx``n1.1.1.1.1.1.1.
+  .1.1.1'"'~~nR-x``x-x``x``n.1.1.1.1.1.1.1
+  1.1.1."'"V~n-`xgdx`xggx``n1.1.1.1.1.1.1
+ 1.1.1.1.1'"'nwWxdgx`xggx``n.1.1.1.1.1.1.1
+1.1.1.1.1.1'"nWwxxxx+xxxx``n1.1.1.1.1.1.1.
+.1.1.1.1.m.1'n`www;``````t`n.1.m.1.1.1.1.1
+ .1.1.1.1.1.1n`wwwwww``````n1.1.1.1.1.1.1
+  .1.1.1.1.1.n``wwwwwwC```-n.1.1.1.1.1.1
+  1.1.1.1.1.1n``;wwwwwww`-Qn1.1.1.1.1.1.
+  .1.1.1.1.1.n````Cwwwwww`-n.1.1.1.1.1.1
+ .1.1.1.1.1.1n````````;wwwWn"'1.1.1.1.1.1
+.1.1.1.1.1.1.nnnnnnnnnnnnnnn'"'1.1.1.1.1.1
+1.1.1.1.1.1.1.1.1.1.1`P`"V~~"'".1.1.1.1.1.
+.1.1.1.1.1.m.1.1.1.m.1`1'"'V~~V"'".1.1.1.1
+ .1.1.1.1.1.1.1.1.1.1.1.1'"'V~mV"'".1.1.1.
+ 1.1<1.1.1.1.1.1.1.1.1.1.1'"'~~~V"'".1.1.1
+ .`.1.1.1.1.1.1.1.1.1.1.1.1."'"V~V~'"'1.1
+ `A`.1.1.1.1.1.1.1.1.1.1.1.1.1'"'~V~V"'"
+  `.1.1.1.1 1.1.1  .1.1.1.1.1.1."'"V~~~V
+      .1.1  .1.1    .1.   .1.   .1."'"V~V
 ENDMAP
 
 # Who said hidden doors were removed, anyway?
-NAME:    pf_trove_less_simple
-WEIGHT:  5
-ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup
-# Loot: 16 items.
-ITEM:   any useful good_item
-ITEM:   acquire jewellery / any useful good_item
-ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   gold q:1
+# Rutra's Hidden Sanctum: a stealth and Hexes trove.
+NAME:   pf_index_trove_rutra
+: trove_setup(_G)
+KITEM:  ? = gold q:1
 KITEM:  D = stone mimic
 KITEM:  E = wand of flame mimic / potion of moonshine mimic / scroll of noise mimic
 KITEM:  F = any weapon damaged pre_id mimic / any armour damaged pre_id mimic
 KFEAT:  X = rock_wall mimic
-: trove.setup_features(_G)
+{{
+local aux1 = ""
+local aux2 = ""
+local talis = "spider talisman"
+if you.mutation("weakness stinger") ~= 3 then
+  aux1 = " / cloak ego:stealth good_item / scarf ego:shadows w:2 / \
+          scarf ego:shadows randart artprops:Stlth:2 w:2 / \
+          scarf ego:invisibility w:2 / scarf ego:invisibility randart w:2"
+end
+if you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
+  aux2 = " / pair of boots ego:stealth good_item w:4 / \
+             pair of boots randart artprops:Stlth w:2 / \
+             pair of boots ego:rampaging good_item w:2"
+end
+if you.god() == "Elyvilon" and you.god() == "the Shining One" or you.god() == "Zin" then
+  talis = " w:30 / sanguine talisman"
+end
+
+trove_offense(_G, trove_weap_brand(_G, "venom") .. " / quick blade randart / " ..
+                  "rapier randart / manual of Stealth",
+                  trove_standard_magic(_G, "Hexes", false) .. " / " ..
+                  "orb ego:guile randart artprops:Hexes w:1",
+                  trove_good_talisman(_G, "Stlth:2", talis),
+                  "hexes magic")
+trove_defense(_G, "shadow dragon scales good_item w:20 / \
+                   shadow dragon scales randart w:20" .. aux1,
+                  "robe randart artprops:Stlth:2 plus:2" .. aux2,
+                   trove_jewel_type(_G, "Stlth"),
+                   trove_cons(_G, {"fog q:2"},
+                              {"invisibility q:2 w:5", "attraction q:3 w:1"},
+                              "any hex wand w:5",
+                              "wand of light charges:8", nil))
+local no_jewel = you.mutation("no jewellery") == 1
+trove_unrand_chances(_G, "df", {"robe of night", "ring of shadows"},
+                         {no_body_armour_species(_G), no_jewel}, {"z", "Z"})
+}}
+: decorative_floor(_G, 'V', "mourning vase")
+TILE:    m = dngn_transparent_wall_blue
+TILE:    c = dngn_stone_dark
+MARKER:  ~ = lua:fog_machine { cloud_type = "black smoke", \
+                pow_min = 10, pow_max = 30, delay = 50, \
+                size = 12, walk_dist = 2, start_clouds = 1 }
+epilogue{{
+            trove_milestone(_G, "Rutra's Hidden Sanctum")
+}}
 MAP
-xxxxxxxxx
-xDDDgX+.x
-xFEEDxx.x
-xEFEDxx.x
-xDEFDxx.x
-xx++xxxgx
-xx..xxxXxxxx
-xx..xxx+xx<x
-xx..xxxdefdx
-x....xxefedx
-x.<A.xxfeedx
-x....xxddddx
-xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxmxxccccccx
+xxDDD?X+.x.~.xcg..gcx
+xxFEEDxx.x.m.xmgT<gmx
+xxEFEDxx.x.x.xcg..gcx
+xxDEFDxx.x.x.xcc..ccx
+xxx++xxx.x.x.xcc..cxx
+xxx..xxx.xXx.xcc..cxx
+xxx..xxx.x?x.xcc++ccx
+xxx..xxx.x.x.xc...Vcx
+xx....xx.x.x.xc..ddcx
+xm.<A.mx.m.x.xc..ddcx
+xx....xx.~.x.+...ddcx
+xxxxxxxxxmxxxxccccccx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Layout mostly taken from trove_trog_arena, though Trog might approve.
+NAME:   regret_index_trove_dread_knight
+TAGS:   no_species_fe
+veto {{ return crawl.game_started() and you.god() == "Elyvilon"
+          or you.god() == "the Shining One" or you.god() == "Zin" }}
+: trove_setup(_G)
+WEIGHT: 5
+{{
+local scroll = {"silence q:3 w:3"}
+local weap = trove_weap_brand(_G, "draining")
+local manual = "manual of fighting w:2"
+if no_friendlies(_G) == false then
+  weap = weap .. trove_weap_brand(_G, "reaping w:5")
+  subst("? = f")
+else
+  subst("? = i")
+end
+if no_body_armour_species(_G) == false then
+  manual = manual .. " / manual of armour"
+end
+if you.species() ~= "Demigod" then
+  manual = manual .. " / manual of invocations w:2"
+end
+kitem('d = ' .. weap)
+kitem('e = ' .. manual)
+kitem('f = any ally scroll q:2')
+trove_defense(_G, "pearl dragon scales good_item w:5 / \
+                   pearl dragon scales randart artprops:*Silence&Will w:5",
+                   trove_ego_gen_armour(_G, "willpower", "Will"),
+                   trove_jewel_type(_G, "Will") .. " / " ..
+                   trove_jewel_type(_G, "Slay:4") ..
+                   "amulet of faith artprops:*Silence&Will w:3 / " ..
+                   "amulet of regeneration artprops:*Silence&Will w:3 / ",
+                   trove_cons(_G, scroll,
+                              {"might q:2 w:5", "berserk rage q:3 w:5"},
+                              nil, "wand of quicksilver charges:8",
+                              "phial of floods w:2"))
+local s_or_m = you.race() == "Spriggan" or you.race() == "Kobold" or
+               you.race() == "Felid" or
+               trove_spell_skills(_G) > trove_weapon_skills(_G) * 4
+trove_unrand_chances(_G, "df", {"sword of the doom knight"}, {s_or_m}, {"?"})
+}}
+KFEAT:   m = iron_grate
+KFEAT:   yz = x
+KFEAT:   _ = altar_yredelemnul
+KITEM:   " = elf skeleton / tengu skeleton w:6 / \
+             spriggan skeleton w:2 / gnoll skeleton w:2
+TILE:    y = wall_undead_darkgray
+TILE:    z = wall_hall_magenta
+TILE:    c = wall_stone_dark
+FTILE:   ' = floor_marble
+FTILE:   defghi?$"m = floor_pebble_red
+KPROP:   m = bloody
+epilogue{{
+            trove_milestone(_G, "The Dread Knight's Derelict Chapel")
+}}
+MAP
+         zzzzz
+        zz'''zz
+        z'''''z
+        z''<''z
+      zzz'''''zzz
+     zz'''''''''zz
+     y'''''''''''y
+     z'''mmmmm'''z
+cccccc''mmd"dmm''cccccc
+cgg$.c''m""e""m''c.$ggc
+cg$..+''+"""""+''+..$gc
+c$...c''m""d""m''c...$c
+cccccc''mm?"imm''cccccc
+     z'''mmmmm'''z
+     y'''''''''''y
+     zz'''''''''zz
+      zzz'''''zzz
+        z''_''z
+        z'''''z
+        zz'''zz
+     xxxxxx+xxxxxx
+     x...x...x...x
+     x.A.+.A.+.A.x
+     x...x...x...x
+     xxxxxxxxxxxxx
+ENDMAP
+
+# The First Justicar's Armoury: a soft "holy" equipment trove.
+# Layout very loosely based off of minmay_trove_alchemists_storehouse.
+NAME:   regret_index_trove_justicar
+: trove_setup(_G)
+{{
+kitem("d = " .. trove_weap_brand(_G, "holy_wrath"))
+local arm = "pearl dragon scales good_item w:20 / \
+             pearl dragon scales randart w:5 "
+if species_has_size_limits(_G) == false then
+  arm = arm .. " / scale mail randart plus:5"
+end
+kitem("e = " .. arm)
+kitem("f = " .. trove_ego_shield(_G, "positive_energy", "rN"))
+kitem("g = " .. trove_jewel_type(_G, "rN") .. " / amulet of regeneration randart")
+local cons = "scroll of enchant weapon w:2"
+if you.mutation("no potions") ~= 1 then
+  cons = cons .. " / potion of curing q:3 pre_id w:12 / \
+                     potion of heal wounds pre_id q:2"
+end
+if no_friendlies(_G) == false then
+  cons = cons .. " / any ally scroll q:2 w:2"
+end
+kitem("h = " .. cons)
+kitem("i = scroll of brand weapon q:2 pre_id")
+
+if you.mutation("no armour") == 1 then
+  subst("de = g")
+else
+  if you.mutation("missing a hand") == 1 then
+    if no_body_armour_species(_G) then
+      subst("e = ddgh")
+    elseif you.mutation("no jewellery") ~= 1 then
+      subst("e = e:45 f:g")
+    end
+  else
+    if no_body_armour_species(_G) then
+      subst("e = f")
+    else
+      subst("e = e:25 f:20")
+    end
+  end
+end
+if you.god() == "Yredelemnul" then
+  subst("h = i")
+end
+
+trove_unrand_chances(_G, "defij", {"justicar's regalia", "zealot's_sword"},
+                     {no_body_armour_species(_G) or species_has_size_limits(_G),
+                     you.mutation("no weapons or thrown items") == 1 or
+                     species_is_undead(_G)}, {"Y", "Z"})
+}}
+KITEM: ~ = large rock q:1
+KFEAT: C = c
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: decorative_floor(_G, 'V', "floral vase")
+SUBST: ` = ``~x, " = `
+KPROP: `~ = no_tele_into
+TILE:  c = wall_church
+TILE:  C = wall_studio
+FTILE: 'TG = floor_limestone
+FTILE: `~ = floor_pebble_darkgray
+epilogue {{
+            trove_milestone(_G, "The First Justicar's Armoury")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x```````ccccccccccccc```````x
+x```````cdddc.V.cgh.c```````x
+x```````c.hCc...cC..c```"```x
+x```"```c..Cc.'.cC..c`ccncc`x
+x`ccncccc+ccc.T.ccc+ccc.C.c`x
+x`c.A.ccc...c.'.c...ccc...c`x
+x`c...+...'...G...'...+..Cc`x
+x`c.<.ccc...c.'.c...ccc...c`x
+x`ccncccc+ccc.T.ccc+ccc.C.c`x
+x```"```c..Cc.'.cC..c`ccncc`x
+x```````c..Cc...cCe.c```"```x
+x```````c.ggc.V.ceeec```````x
+x```````ccccccccccccc```````x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# The Octopus King's Forgotten Garden: the main remaining jewellery trove,
+# though alongside eight rings it gives a hat, amulet, shield, and talisman.
+# Layout directly using nicolae_trove_octotrove.
+NAME:   nicolae_trove_octopus_king
+TAGS:   no_species_co no_pool_fixup
+: trove_setup(_G)
+KMONS:  p = plant
+KMONS:  B = bush
+KMONS:  S = sacred lotus
+KITEM:  d = useful hat good_item / hat randart / hat w:2
+KITEM:  e = any useful amulet good_item / any randart amulet / any amulet w:2
+: kitem("f = " .. trove_ego_shield(_G, nil, nil))
+: kitem("g = " .. trove_good_talisman(_G))
+KITEM:  h = any useful ring good_item / any randart ring w:12
+KFEAT:  defgh?p = shallow_water
+KFEAT:  BS = deep_water
+KFEAT:  ~ = open_sea
+: if species_is_undead(_G) or you.mutation("no forms") == 1 then
+SUBST:  g = df
+: elseif you.mutation("no armour") == 1 and
+:  you.mutation("weapons or thrown items") == 1 then
+SUBST:  df = egg
+: elseif you.mutation("antennae") == 3 or you.mutation("horns") == 3 then
+SUBST:  d = eff
+: end
+: if you.mutation("missing a hand") == 1 then
+SUBST:  f = e
+: end
+: trove_unrand_chances(_G, "h", {"ring of the octopus king"},
+:                      {you.mutation("no jewellery") == 1}, {"?"})
+TILE:   defghp?W = shoals_shallow_water
+TILE:   wBS = shoals_deep_water
+FTILE:  .A< = floor_vines
+: set_border_fill_type('open_sea')
+epilogue{{
+            trove_milestone(_G, "The Octopus King's Forgotten Garden")
+}}
+MAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwxwwSwwxwwwwwwwwwwwww~
+~wwwwwwwwwwwBwwwwwwwwwBwwwwwwwwwww~
+~wwwwwwwSwwwwwwwwwwwwwwwwwSwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwww...ww.WdW.wwh..wwwwwwwww~
+~wwwwwBwww.w.w.pepfp.www.wwwBwwwww~
+~wwwwwwwwwhw....WgW......wwwwwwwww~
+~wwwwwwwwwwwww.......wwwwwwwwwwwww~
+~wwwSwwwwww....A.p.<......wwwwSwww~
+~wwwwwwww...ww.......wwww.wwwwwwww~
+~wwwwwwww.wwww.w...w...wh.wwwwwwww~
+~wwwwBwwwhwwww.w.w.www.wwwwwwBwwww~
+~wwwwwwwwwwh.w.w.w.www..wwwwwwwwww~
+~wwwwwwwwwww...w.w...ww.hwwwwwwwww~
+~wwwwwSwwwwwwwww.www.wwwwwwwSwwwww~
+~wwwwwwwwwwwwh...wwh.wwwwwwwwwwwww~
+~wwwwwwwwBwwwwwwwwwwwwwwwBwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwSwwwwwwwwwSwwwwwwwwwww~
+~wwwwwwwwwwwwwxwwBwwxwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ENDMAP
+
+# The Lost Hoard of Erebora: a dragon-themed trove.
+# Based off of due's trove_jewel_1 and the like, sort of.
+# (The namesake for this trove is in the Mask of the Dragon's description.)
+NAME:    regret_index_trove_erebora
+TAGS:    no_species_dr no_species_fe
+: trove_setup(_G)
+MONS:    spectral golden dragon, spectral quicksilver dragon
+{{
+-- All dragon scales, some elemental books, some elemental / slay jewellery,
+-- hats to match the Mask, some consumables, and some decoration.
+local dg = "dragon_scales good_item"
+local dr = "dragon scales randart"
+kitem("d = steam " .. dr .. " / acid " .. dr .. " / swamp " .. dg .. " w:7 / \
+           swamp" .. dr .. " / quicksilver dragon scales w:2 / \
+           quicksilver " .. dr .. " w:1")
+kitem("e = fire " .. dg .. " w:6 / fire " .. dr .. " w:4 / \
+           ice " .. dg .. " w:6 / ice " .. dr .. " w:4 / \
+           pearl " .. dg .. " w:8 / pearl " .. dr .. " w:2")
+kitem("f = storm " .. dg .. " w:6 / storm " .. dr .. " w:4 / \
+           shadow " .. dg .. " w:6 / shadow " .. dr .. " w:4 / \
+           golden " .. dg .. " w:4 / golden " .. dr .. " w:2")
+kitem("g = serpent tailsman randart w:2 / dragon-coil talisman w:6 / \
+           dragon-coil talisman randart w:12")
+local book = trove_book(_G, "fire disc2:ice") .. " / " ..
+             trove_book(_G, "air disc2:earth")
+if no_friendlies == false then
+  book = book .. trove_book(_G, "summoning spells:dragon's_call") .. " w:25"
+end
+kitem("h = " .. book)
+kitem("i = ring of slaying randart w:15 / any amulet randart artprops:rF / \
+           any amulet randart artprops:rC / any amulet randart artprops:rPois")
+kitem("j = useful hat ego:see_invisible good_item w:5 / \
+           useful hat ego_willpower good_item w:5 / \
+           hat randart artprops:Will / hat randart artprops:Slay")
+kitem("k = " .. trove_cons(_G, {"fear q:2", "enchant armour w:15 q:2"},
+                          {"berserk rage q:2", "enlightenment q:2"},
+                           "any beam wand charges:8", nil, nil))
+kitem("$ = gold q:1")
+kitem("? = mundane spear")
+nsubst("d = 1:d / 1:e / 1:f / 1:def / 1:g / 1:h / 2:i / 1:j / 1:k / \
+            1:defgij / 1:hiijj / *:.")
+-- Various checks to filter through useless item drops.
+if no_body_armour_species(_G) then
+  nsubst("def = 2:g / * = iik")
+end
+if species_is_undead(_G) or you.mutation("no forms") == 1 then
+ subst("g = defk")
+end
+if you.god() == "Trog" then
+  subst("h = defk")
+end
+if you.mutation("no jewellery") == 1 then
+  subst("i = defk")
+end
+local n_hat = you.mutation("antennae") == 3 or you.mutation("horns") == 1
+              or you.mutation("no armour") == 1
+if n_hat then
+  subst("j = defk")
+end
+trove_unrand_chances(_G, "defij", {"scales of the dragon king", "mask of the dragon"},
+                     {no_body_armour_species(_G), n_hat}, {"Y", "Z"})
+
+-- Decorative draagon skeletons under matching element clouds.
+local dr = {"steam", "acid", "swamp", "fire", "ice", "storm", "shadow", "pearl"}
+local cl = {"steam", "acidic fog", "poison gas", "flame", "freezing vapour",
+            "thunder", "excruciating misery", "blessed fire" }
+local gl = {"H", "I", "J", "K", "L", "M", "N", "O"}
+for i = 1, 8, 1 do
+  kitem(gl[i] .. " = " .. dr[i] .. " dragon skeleton")
+  lua_marker( gl[i], fog_machine{ cloud_type = cl[i], pow_min = 5, pow_max = 40,
+    delay = 15, size = 1, walk_dist = 0, spread_rate = 0, excl_rad = 0 } )
+end
+}}
+KPROP:   12' = no_tele_into
+TILE:    G = dngn_statue_dragon
+TILE:    v = dngn_metal_zot
+TILE:    o = wall_permarock_clear_blue
+FTILE:   '"12GHIJKLMNOo = floor_rough_blue
+epilogue{{
+            trove_milestone(_G, "The Lost Hoard of Erebora")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxcccxcccxxxxxxxxxxxx
+xxxxxxxxxxcccIcvcJcccxxxxxxxxxx
+xxxxxxxxxxcH"""""""Kcxxxxxxxxxx
+xxxxxxxxxxcc"""G"""ccxxxxxxxxxx
+xxxxccccccxccc"x"cccxccccccxxxx
+xxxxcdccdcxxxx.x.xxxxcdccdcxxxx
+xcc$$?$$?$+.x.....x.+$?$$?$$ccx
+xcd?ooooooo.x..A..x.ooooooo?dcx
+xcc$o'''''o.+.....+.o2''''o$ccx
+xcc$o''''1o.+.....+.o'''''o$ccx
+xcd?ooooooo.x..<..x.ooooooo?dcx
+xcc$$?$$?$+.x.....x.+$?$$?$$ccx
+xxxxcdccdcxxxx.x.xxxxcdccdcxxxx
+xxxxcccccccccc"x"cccxccccccxxxx
+xxxxxxxxxxcc"""G"""ccxxxxxxxxxx
+xxxxxxxxxxcO"""""""Lcxxxxxxxxxx
+xxxxxxxxxxcccNcvcMcccxxxxxxxxxx
+xxxxxxxxxxxxcccxcccxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# A Devouring Rift: the main chaos and translocations trove.
+# XXX: maybe this should be named after Lugonu, instead? I do like the more
+# subtle concerning tone this gifts to the current namesake, though.
+NAME:   regret_index_trove_rift
+: trove_setup(_G)
+KMONS:  p = demonic plant
+KMONS:  V = spatial vortex
+NSUBST: ? = 6:d / 6:g / *:'
+{{
+local weap = ""
+local aux1 = ""
+local book = "randbook disc:translocation numspells:4 splevels:27 w:60 / \
+              manual of translocations"
+local extra = "any manual w:1"
+if no_evil(_G) then
+  weap = "acquire weapon / any useful weapon good_item"
+else
+  weap = trove_weap_brand(_G, "chaos") .. " / " ..
+         trove_weap_brand(_G, "distortion")
+  if no_friendlies(_G) == false then
+    book = book .. " / grand grimoire"
+  end
+end
+if you.mutation("weakness stinger") ~= 3 then
+  aux1 = " / cloak randart / scarf ego:shadows w:2 / \
+          scarf ego:shadows randart w:2"
+end
+if you.species() ~= "Formicid" then
+  extra = extra .. " / scroll of teleportation q:2 pre_id w:30 / \
+                       scroll of blinking q:1 w:15 pre_id"
+end
+if species_is_undead(_G) == false then
+  extra = extra .. " / potion of mutation w:12 q:3 pre_id"
+end
+if you.mutation("inability to use devices") ~= 1 then
+  extra = extra .. " / any misc w:12"
+end
+trove_offense(_G, weap, book,
+                  trove_good_talisman(_G, nil, nil), "translocations magic")
+trove_defense(_G, "acquire armour / any useful armour randart" .. aux1,
+                  "robe randart artprops:Stlth:2 plus:2",
+                   trove_jewel_type(_G, "+Blink&^Contam"),
+                   trove_cons(_G, {"fog q:2"},
+                              {"enlightenment q:2 w:5", "attraction q:3 w:5"},
+                              "", "wand of warping charges:8", nil))
+kitem("! = " .. extra)
+local small = you.race() == "Spriggan" or you.race() == "Kobold" or
+              you.race() == "Felid"
+local n_rift = you.race() == "Felid" or (small and you.mutation("missing a hand") == 1)
+trove_unrand_chances(_G, "def", {"mace of variability", "rift"},
+                     {small or no_evil(_G), n_rift or no_evil(_G)}, {"y", "Y"})
+}}
+KFEAT:   t = demonic_tree
+KFEAT:   ^ = permanent teleport trap
+KFEAT:   FV = w
+KFEAT:   X = x
+KFEAT:   Z = v
+NSUBST:  defghi = 2:!
+SUBST:   x = ctp x:15 ^:5 .:35 ':15, z = ccv
+MARKER:  P = lua:transp_loc("trove_rift_entry")
+MARKER:  Q = lua:transp_dest_loc("trove_rift_entry")
+MARKER:  R = lua:transp_loc("trove_rift_exit")
+MARKER:  S = lua:transp_dest_loc("trove_rift_exit")
+TILE:    x = wall_abyss_magenta / wall_abyss_yellow / wall_vault w:5
+TILE:    c : stone_wall_abyss_a / stone_wall_abyss_c
+TILE:    v = dngn_metal_wall_magenta / dngn_metal_wall_yellow
+TILE:    n = dngn_transparent_stone_magenta
+TILE:    wFV = dngn_starwater
+TILE:    t = dngn_demonic_tree_2 / dngn_demonic_tree_3 / \
+             dngn_demonic_tree_8 / dngn_demonic_tree_9 / \
+             dngn_demonic_tree_15 / dngn_demonic_tree_1
+FTILE:   'defghi!tp = floor_nerves_magenta / floor_nerves_darkgray
+MARKER:  F = lua:fog_machine { cloud_type = "seething chaos", \
+                pow_min = 10, pow_max = 10, delay = 100, \
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+epilogue{{
+  trove_milestone(_G, "a devouring Rift")
+}}
+MAP
+                    zzzzzzz
+                   zzxxxxxzz
+                  zzxx'''xxzz
+                 zzxx?????xxzz
+                zzxx''nnn''xxzz
+               zzxx'<'nFn'R'xxzz
+               zxx?''nnwnn''?xxz
+               zx'?nnnwwVnnn?'xz
+               zx'?nFwwwwwFn?'xz
+               zx'?nnnVwwnnn?'xz
+               zxx?''nnwnn''?xxz
+               zzxx'Q'nFn'<'xxzz
+                zzxx''nnn''xxzz
+                 zzxx?????xxzz
+                  zzxx'''xxzz
+  zzzzzzz zzzz     zzxxxxxzz
+ zzxxxxxzzzxxzzz    zzzzzzz
+zzxx`x'zzzxx'z<z
+zxx`x'x'zxx'''zzz
+zx`x'xzz'x'x'''xz
+zzxSxzzxx'xxx'xxz
+ zzxzzxx'xxx'xxzz
+  zzzxx'xxx'xxzz
+  zzxx'xxx'xxzz
+ zzxx'xxx'xxzzz
+zzXX.xxx'xxzzxzz
+zXX...x.xxzzxPxzz
+zX.....x'zzx'x`xz
+ZZZ...Xxz'x'x`xxz
+ ZAZ.XXzzz'x`xxzz
+ ZZZXXzzzxxxxxzz
+   ZZZz zzzzzzz
+ENDMAP
+
+# An Orange Crystal Hatchery: an antimagic versus magic trove.
+# Layout loosely based off of nicolae_trove_general_collection.
+# This one stretches the new conceit of trove items being somewhat good for all
+# characters, so it gets more consumables than other troves. The name is also
+# waiting on a second orange crystal monster....
+NAME:   nicolae_index_trove_orange_crystal
+: trove_setup(_G)
+{{
+local magic = trove_standard_magic(_G, "earth", true)
+local aux = ""
+local extra = ""
+if no_friendlies(_G) == false then
+  extra = extra .. " / any ally scroll q:2"
+  if you.mutation("no summoning magic") ~= 1 then
+    magic = magic .. " / " .. trove_standard_magic(_G, "summoning", true) ..
+            " / any magical staff randart artprops:Summ&Will w:5"
+  end
+end
+if you.mutation("inability to train armour") ~= 1 and
+ no_body_armour_species(_G) == false then
+  extra = extra .. " / manual of armour w:5"
+end
+if you.race ~= "Coglin" and you.mutation("missing a hand") ~= 1
+ and you.mutation("no armour") ~= 1 then
+  extra = extra .. " / orb ego:energy randart artprops:Earth / " ..
+                "orb ego:guile randart artprops:Summ w:5"
+end
+if you.mutation("antennae") ~= 3 and you.mutation("horns") ~= 3 then
+  aux = " / helmet randart artprops:Int w:15 / helmet randart artprops:Will w:15"
+end
+trove_offense(_G, trove_weap_brand(_G, "antimagic"), magic,
+                  trove_good_talisman(_G, "Int:3", "granite talisman"),
+                  "earth magic")
+trove_defense(_G, "robe ego:archmagi w:1", "crystal plate armour good_item w:30 / \
+                   crystal plate armour randart w:29" .. aux,
+                   trove_jewel_type(_G, "Int:3") .. " / " ..
+                   trove_jewel_type(_G, "MP:6") ..
+                   " / amulet of magic regeneration randart w:5",
+                   trove_cons(_G, {"amnesia q:3 w:5", "vulnerability q:2 w:5"},
+                              {"magic q:2 w:5", "ambrosia q:3 w:5"},
+                              "any hex wand w:5 charges:8", nil, nil))
+if extra ~= "" then
+  kitem("k = " .. extra)
+end
+trove_unrand_chances(_G, "def", {"orange crystal plate armour"},
+                     {no_body_armour_species(_G) or species_has_size_limits(_G)}, {"!"})
+}}
+SUBST:  ? = iik
+TILE:   G = dngn_statue_demonic_bust / dngn_statue_maw / dngn_statue_wraith
+TILE:   b = dngn_crystal_lightred
+TILE:   m = dngn_transparent_stone_red
+FTILE:  'G = floor_pebble_lightred
+epilogue{{
+  trove_milestone(_G, "an orange crystal hatchery")
+}}
+MAP
+     bbb     bbb     bbb
+    bb.bb   bbgbb   bb.bb
+   bb.''xbbbb...bbbbx''.bb
+  bx'''G'..bdb.bdb..'G'''xb
+ bb'G''''...........''''G'bb
+bb.'''...bgb?bdb.bgb...'''.bb
+b.....A..mmmmmmmmmmm..<.....b
+bb.'''...bgb.bdb?bgb...'''.bb
+ bb'G''''...........''''G'bb
+  bx'''G'..bdb.bdb..'G'''xb
+   bb.''xbbbb...bbbbx''.bb
+    bb.bb   bbgbb   bb.bb
+     bbb     bbb     bbb
 ENDMAP

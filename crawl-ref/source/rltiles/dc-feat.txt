@@ -489,6 +489,7 @@ djembe_set DNGN_DJEMBE
 ensign_beogh DNGN_ENSIGN_BEOGH
 ensign_dark DNGN_ENSIGN_DARK
 ensign_gehenna DNGN_ENSIGN_GEHENNA
+bottled_spirits DNGN_BOTTLED_SPIRITS
 ## preferably have more of these
 %weight 10
 skull_pike_1 DNGN_SKULL_PIKE

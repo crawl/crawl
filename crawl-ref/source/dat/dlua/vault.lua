@@ -295,6 +295,7 @@ function decorative_floor (e, glyph, type)
     ["orcish standard"] = {"lightcyan", "dngn_ensign_beogh"},
     ["infernal standard"] = {"red", "dngn_ensign_gehenna"},
     ["fur brush"] = {"brown", "dngn_yak_fur"},
+    ["set of bottled spirits"] = {"lightgreen", "dngn_bottled_spirits"},
     ["mop and bucket"] = {"lightblue", "dngn_mop"},
     ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"}
   }

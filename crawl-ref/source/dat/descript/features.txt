@@ -1311,6 +1311,12 @@ A fur brush
 
 A grooming brush laid to rest beside a pile of tangled, matted yak fur.
 %%%%
+A set of bottled spirits
+
+A mix of various alcoholic drinks with worn-down labels. Unfortunately, the
+preservative magic sealing each bottle makes it impossible to sample from them
+without smashing their bottles open.
+%%%%
 # Graveyards, Crypt, Necropolis.
 A mourning vase
 
