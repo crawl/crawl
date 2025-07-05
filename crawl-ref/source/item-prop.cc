@@ -2921,8 +2921,11 @@ bool item_is_jelly_edible(const item_def &item)
         return false;
 
     // Don't eat spellbooks. (They're the 'artefacts' of parchments now.)
-    if (item.is_type(OBJ_BOOKS, BOOK_PARCHMENT))
+    if (item.base_type == OBJ_BOOKS
+        && item.sub_type != BOOK_PARCHMENT && item.sub_type != BOOK_MANUAL)
+    {
         return false;
+    }
 
     // Don't eat mimics.
     if (item.flags & ISFLAG_MIMIC)
