@@ -571,7 +571,7 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE"
+#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE",
 #     "}",
 # end TAG_MAJOR_VERSION
 
