@@ -1960,13 +1960,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
 
     // all runes with a zealot without ever abandoning
     if (runes_in_pack() >= 15 && you.char_class == JOB_CHAOS_KNIGHT
-        && you.worshipped[GOD_XOM] == 1)
+        && you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1)
     {
         return "Chaos Fanatic";
     }
 
     if (runes_in_pack() >= 15 && you.char_class == JOB_CINDER_ACOLYTE
-        && you.worshipped[GOD_IGNIS] == 1)
+        && you_worship(GOD_IGNIS) && you.worshipped[GOD_IGNIS] == 1)
     {
         return "Keeper of the Flame";
     }
