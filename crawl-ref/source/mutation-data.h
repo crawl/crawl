@@ -275,7 +275,7 @@ static const mutation_def mut_data[] =
 
    {"You discover slightly more artefacts.", "You discover more artefacts.", ""},
    {"You feel fortune smile upon you.", "You feel fortune smile more brightly upon you.", ""},
-   {"You feel like your luck has run outf.", "You feel a little less lucky.", ""},
+   {"You feel like your luck has run out.", "You feel a little less lucky.", ""},
 },
 
 #if TAG_MAJOR_VERSION == 34
