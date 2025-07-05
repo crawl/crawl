@@ -62,9 +62,9 @@ static const bane_def bane_data[] =
     },
 
     {
-        BANE_SUCCOR,
+        BANE_SUCCOUR,
         BANE_DUR_MEDIUM,
-        "Succor",
+        "Succour",
         "You heal other nearby enemies whenever you kill a monster.",
     },
 

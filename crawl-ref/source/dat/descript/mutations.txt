@@ -1404,7 +1404,7 @@ reckless bane
 
 Your SH is always equal to 0 and cannot be raised by any means.
 %%%%
-succor bane
+succour bane
 
 Whenever you kill an enemy, all other nearby enemies are healed for a large
 fraction of that enemy's maximum health.

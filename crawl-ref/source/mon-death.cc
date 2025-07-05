@@ -2299,7 +2299,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         makhleb_crucible_kill(mons);
     }
 
-    if (you.has_bane(BANE_SUCCOR))
+    if (you.has_bane(BANE_SUCCOUR))
     {
         bool visible_effect = false;
         const int healing = random_range(mons.max_hit_points / 3,
