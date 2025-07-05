@@ -1592,9 +1592,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             // XXX: Encode spell school overlays for parchments.
             if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
             {
-                const item_def* item = next_mc.item();
-                // XXX: Not yet sure how it's possible to get here without an
-                //      item we're trying to render, and yet it appears to be.
+                const item_def* item = next_pc.map_knowledge.item();
                 if (item)
                 {
                     spell_type spell = static_cast<spell_type>(item->plus);
