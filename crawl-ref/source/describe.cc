@@ -6255,7 +6255,7 @@ string desc_resist(int level, int max, bool immune, bool allow_spacing)
         return "";
 
     if (immune)
-        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
+        return Options.char_set == CSET_ASCII ? "inf" : "\u221e "; //"∞"
 
     string sym;
     const bool spacing = allow_spacing && max < 5;

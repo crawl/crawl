@@ -514,6 +514,7 @@ public:
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        warn_contam_cost; // Prompt when casting a spell like Irradiate, with dangerous contam.
+    bool        show_resist_percent; // Show resist percentages on the % screen
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     skill_focus_mode skill_focus; // is the focus skills available
     bool        auto_hide_spells; // hide new spells

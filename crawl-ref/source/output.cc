@@ -2502,17 +2502,65 @@ static vector<formatted_string> _get_overview_stats()
 //      value : actual value of the resistance (can be negative)
 //      max : maximum value of the resistance (for colour AND representation),
 //          default is the most common case (1)
-//      pos_resist : false for "bad" resistances (no tele, random tele),
-//          inverts the value for the colour choice
 //      immune : overwrites normal pip display for full immunity
 static string _resist_composer(const char * name, int spacing, int value,
-                               int max = 1, bool pos_resist = true,
-                               bool immune = false)
+                               int max = 1, mon_resist_flags type = MR_NO_FLAGS)
 {
     string out;
-    out += _determine_colour_string(pos_resist ? value : -value, max, immune);
+
+    const bool immune = ((type == MR_RES_POISON && value == 3)
+                         || type == MR_NO_FLAGS && value == WILL_INVULN);
+
+    string colour = _determine_colour_string(value, max, immune);
     out += chop_string(name, spacing);
     out += desc_resist(value, max, immune);
+
+    if ((!Options.show_resist_percent) || type == MR_NO_FLAGS)
+        return make_stringf("%s%s", colour.c_str(), out.c_str());
+
+    int res_percent = -1;
+
+    const static int _basic_res[] = {150, 100, 50, 33, 20};
+    const static int _neg_res[]   = {-1, 100, 50, 20, 0};
+    const static int _pois_res[]  = {150, 100, 33, 33, 0};
+    const static int _corr_res[]  = {-1, 100, 50, -1, -1};
+
+    ASSERT(value >= -1 && value <= 3);
+    switch (type)
+    {
+        case MR_RES_FIRE:
+        case MR_RES_COLD:
+            res_percent = _basic_res[value + 1];
+            break;
+
+        case MR_RES_NEG:
+            res_percent = _neg_res[value + 1];
+
+        case MR_RES_POISON:
+        case MR_RES_ELEC:
+            res_percent = _pois_res[value + 1];
+            break;
+
+        case MR_RES_CORR:
+            res_percent = _corr_res[value + 1];
+            break;
+
+        default:
+            return out;
+    }
+
+    string num_colour = colour.substr(1, colour.length() - 2);
+    if (num_colour == "lightgrey")
+        num_colour = "darkgrey";
+
+    string num_str = make_stringf("(%d%%)", res_percent);
+    int padding = std::max(0, (int)(15 - strwidth(out)));
+
+    out = make_stringf("%s%s%s<%s>%s</%s>", colour.c_str(), out.c_str(),
+                        string(padding, ' ').c_str(),
+                        num_colour.c_str(),
+                        num_str.c_str(),
+                        num_colour.c_str());
 
     return out;
 }
@@ -2520,37 +2568,36 @@ static string _resist_composer(const char * name, int spacing, int value,
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, int sw)
 {
-    // Two columns, split at column 22.
-    column_composer cols(2, 22);
+    // Two columns.
+    column_composer cols(2, Options.show_resist_percent ? 25 : 22);
 
     // First column, resist name is up to 8 chars
     int cwidth = 8;
     string out;
 
     const int rfire = player_res_fire(false);
-    out += _resist_composer("rFire", cwidth, rfire, 3) + "\n";
+    out += _resist_composer("rFire", cwidth, rfire, 3, MR_RES_FIRE) + "\n";
 
     const int rcold = player_res_cold(false);
-    out += _resist_composer("rCold", cwidth, rcold, 3) + "\n";
+    out += _resist_composer("rCold", cwidth, rcold, 3, MR_RES_COLD) + "\n";
 
     const int rlife = player_prot_life(false);
-    out += _resist_composer("rNeg", cwidth, rlife, 3) + "\n";
+    out += _resist_composer("rNeg", cwidth, rlife, 3, MR_RES_NEG) + "\n";
 
     const int rpois = player_res_poison(false);
-    out += _resist_composer("rPois", cwidth, rpois, 1, true, rpois == 3) + "\n";
+    out += _resist_composer("rPois", cwidth, rpois, 1, MR_RES_POISON) + "\n";
 
     const int relec = player_res_electricity(false);
-    out += _resist_composer("rElec", cwidth, relec) + "\n";
+    out += _resist_composer("rElec", cwidth, relec, 1, MR_RES_ELEC) + "\n";
 
     const int rcorr = player_res_corrosion(false);
-    out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
+    out += _resist_composer("rCorr", cwidth, rcorr, 1, MR_RES_CORR) + "\n";
 
     const int sinv = you.can_see_invisible();
     out += _resist_composer("SInv", cwidth, sinv) + "\n";
 
     const int rmagi = player_willpower() / WL_PIP;
-    out += _resist_composer("Will", cwidth, rmagi, MAX_WILL_PIPS, true,
-                            player_willpower() == WILL_INVULN) + "\n";
+    out += _resist_composer("Will", cwidth, rmagi, MAX_WILL_PIPS) + "\n";
 
     out += _stealth_bar(cwidth, 20) + "\n";
 
