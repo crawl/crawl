@@ -2468,6 +2468,7 @@ static void _prep_input()
     you.shield_blocks = 0;              // no blocks this round
 
     you.redraw_status_lights = true;
+    you.redraw_title = true;
     if (you.running == 0)
     {
         you.quiver_action.set_needs_redraw();
