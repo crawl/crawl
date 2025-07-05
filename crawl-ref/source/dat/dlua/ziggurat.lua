@@ -463,7 +463,7 @@ mset(with_props(spec_fn(function ()
          "yaktaur captain w:" .. d .. " / satyr w:" .. d .. " / " ..
          "cherub w:" .. d .. " / naga sharpshooter w:" .. e .. " / " ..
          "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e .. " / " ..
-         "stone giant w:" .. e .. " / "nekomata w:" .. e
+         "stone giant w:" .. e .. " / nekomata w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
