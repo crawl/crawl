@@ -4541,6 +4541,7 @@ SUBST:   E = 2 ^:20 G .:80, J = 2 ^:20 G .:80
 NSUBST:  - = 2=^ / * = ^ .:240
 # Colours
 COLOUR:     cX = lightmagenta
+TILE:       c = stone_wall_zot_last
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
