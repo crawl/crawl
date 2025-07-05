@@ -819,11 +819,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
            simple_monster_message(*this, " is no longer corroded.");
         break;
 
-    case ENCH_GOLD_LUST:
-        if (!quiet)
-           simple_monster_message(*this, " is no longer distracted by gold.");
-        break;
-
     case ENCH_DRAINED:
         if (!quiet)
             simple_monster_message(*this, " seems less drained.");
@@ -1440,7 +1435,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FROZEN:
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
-    case ENCH_GOLD_LUST:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_EMPOWERED_SPELLS:
