@@ -2042,27 +2042,35 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair:3-, !Lair:$, Snake, !Snake:$
+DEPTH:   Lair:3-, !Lair:$, Depths, !Depths:$
 ORIENT:  float
+: if you.in_branch("Lair") then
 KMONS:   1 = tyrant leech / swamp worm w:50 / \
              vampire mosquito band / goliath frog / swamp drake w:15
 KMONS:   23 = alligator / swamp dragon / hydra
-KMONS:   45 = bunyip / thorn hunter
+NSUBST:  W = 3=1 / 3=1W / W
+NSUBST:  8 = 3=3 / 2=31 / 1W
+: else
+KMONS:   1 = chonchon / tengu warrior w:5 / very ugly thing w:5 / \
+             spriggan rider w:5 / spriggan air mage / \
+             spriggan berserker w:5 ; boomerang q:1 . war axe ego:antimagic . \
+                                      animal skin
+KMONS:   23 = spark wasp / tengu reaver w:5 / shambling mangrove w:5 / \
+              thorn hunter w:5 / tentacled monstrosity / \
+              spriggan defender ; boomerang q:1 . lajatang . robe
+KMONS:   45 = golden dragon / caustic shrike / alderking
+NSUBST:  W = 6=1 / 3=2 / 1:24 / 3=12 / *:W
+NSUBST:  8 = 2=5 / 2=3 / * = 1W
+: end
 KITEM:   3 = any good_item / any potion / gold
 KITEM:   5 = superb_item / gold good_item / any potion q:4 w:20
+KFEAT:   t = mangrove
 KMONS:   P = plant
 KFEAT:   1324P = W
 NSUBST:  @ = 1:@ / *:X
 SUBST:   x = w:30 x:4, X = x
-SUBST:   ` = wx, ~ = w:9 x:2
+SUBST:   ` = wwwxxt, ~ = w:9 x:1 t:1
 SUBST:   " = .:2 x:1 W:4 P:1 w:3, - = .:9 W:2
-: if you.in_branch("Lair") then
-NSUBST:  W = 3=1 / 3=1W / W
-NSUBST:  8 = 3=3 / 2=31 / 1W
-: else
-NSUBST:  W = 4=1 / 4=2 / 24 / 4=12 / W
-NSUBST:  8 = 2=5 / 3=3 / 1W
-: end
 KPROP:   wP = no_tele_into
 MAP
 XXXXXXXXXXXXXXxxx@xxxxxxxxxxxxxxx
@@ -5173,11 +5181,11 @@ SUBST:  p = b.
 NSUBST: ' = R / '
 : if you.in_branch("D") then
 :   if you.depth() < 11 then
-MONS:   small abomination, unseen horror / ancient zyme, ugly thing
+MONS:   small abomination, unseen horror / ancient zyme / neqoxec w:2, ugly thing
 MONS:   raiju / large abomination / shapeshifter
 NSUBST: ' = de / 2=|* / *% / -, - = 2=1 / 3=1. / 2. / 2=3 / 2=3. / 4... / .
 :   elseif you.depth() < 13 then
-MONS:   small abomination / ugly thing
+MONS:   small abomination / ugly thing / neqoxec w:2
 MONS:   unseen horror / ancient zyme / worldbinder
 MONS:   large abomination / raiju / shapeshifter
 MONS:   very ugly thing / thrashing horror
@@ -6546,7 +6554,7 @@ MONS:    guardian mummy ; orcbow ego:chaos | longbow ego:chaos . \
 MONS:    vampire knight ; great sword ego:chaos | war axe ego:chaos . \
                           chain mail | plate armour
 MONS:    ancient champion / vampire bloodprince w:2, lich
-MONS:    very ugly thing / kobold fleshcrafter w:4, cacodemon / chonchon band
+MONS:    very ugly thing / kobold fleshcrafter w:4, zykzyl w:4 / chonchon band
 MONS:    dancing weapon ; great mace ego:draining | \
                           battleaxe ego:draining | glaive ego:draining
 KMONS:   0 = glowing shapeshifter

@@ -31,7 +31,7 @@ function grandhive_vaults(e, hivewallglyph)
         e.kmons('0 = yak / wolf w:8 / water moccasin w:8 / wyvern w:8 / \
                      basilisk w:8 / steam dragon w:2')
         e.kmons('9 = elephant / cane toad / rime drake / komodo dragon w:6 / \
-                     blink frog w:8 / manticore w:4 / hell rat w:4')
+                     blink frog w:8 / manticore w:4 / hell rat w:4 / raven w:2')
         e.kmons('8 = death yak w:14 / hydra / skyshark w:4 / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
                      boulder beetle w:2 / catoblepas w:2')
@@ -1382,7 +1382,7 @@ ORIENT: north
 TAGS:   no_monster_gen
 DEPTH:  Depths:2-
 MONS:   common demon, hell knight
-MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon w:8 / \
+MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         sin beast / hellion w:8 / reaper / tormentor w:8
 SUBST:  b : bv
 NSUBST: . = 7:1 / 7:2 / *:.
@@ -2651,7 +2651,7 @@ SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF, C : C..
 }}
 FTILE:   @.fgP`12345F$%*{([})]^wtxTC : floor_pebble_darkbrown / floor_moss
 : elseif you.in_branch("Lair") then
-MONS:    blink frog / wyvern, basilisk, rime drake / cane toad
+MONS:    blink frog / wyvern, basilisk, rime drake / cane toad / raven w:1
 MONS:    catoblepas / komodo dragon, lindwurm / torpor snail
 KFEAT:   ^ = dispersal trap
 SHUFFLE: {([ / {%% / %%% / %%% / %%%

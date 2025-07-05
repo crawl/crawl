@@ -376,7 +376,7 @@ KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / chaos spawn
-KMONS:  E = ugly thing
+KMONS:  E = ugly thing / neqoxec w:3
 KMONS:  F = very ugly thing / kobold fleshcrafter w:7
 : local g = "good_item no_pickup"
 : item("storm dragon scales " .. g .. " / shadow dragon scales " .. g .. " / " ..
@@ -562,7 +562,8 @@ ENDMAP
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
 MONS:    kobold fleshcrafter / cognitogaunt, great orb of eyes
-MONS:    glowing orange brain, boggart, rakshasa, cacodemon, shadow demon
+MONS:    glowing orange brain, boggart, rakshasa
+MONS:    cacodemon / zykzyl, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
 KMONS:   9 = guardian sphinx
@@ -728,7 +729,7 @@ ENDMAP
 NAME:    hangedman_steaming_rock
 TAGS:    transparent
 KMONS:   1 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
-             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5 / \
+             ugly thing w:5 / rakshasa w:5 / chaos spawn w:5 / \
              screaming refraction
 KMONS:   2 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
@@ -1256,7 +1257,7 @@ KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = laughing skull
 KMONS:  4 = small abomination / weeping skull w:2
-KMONS:  5 = cacodemon
+KMONS:  5 = zykzyl
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
 KMONS:  8 = titanic slime creature
@@ -1273,14 +1274,14 @@ MAP
  "cccccc4@4cccccc"
  cc .. ccAcc .. cc
 "c .."" x"x "".. c"
-cc44nnn.c+c.nnn44cc
-c 4nn7n.....n7nn4 c
+cc4.nnn.c+c.nnn.4cc
+c 4nn2n.....n2nn4 c
 c44+13n5.c.5n31+44c
 c 4nn2n.....n2nn4 c
 cc".nnn..T..nnn."cc
 "c ............. c"
  ccc ".nnnnn." ccc
-  "cc84n2O2n48cc"
+  "cc8.n7O7n.8cc"
    "c 4nn1nn4 c"
     cc44n+n44cc
     "c 44444 c"
@@ -1438,8 +1439,8 @@ TAGS:    abyss_rune unrand
 MONS:    draconian, nonbase draconian
 MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
          very ugly thing / storm dragon / shadow dragon
-MONS:    balrug w:12 / hellion / tormentor / cacodemon w:12 / reaper w:12 / \
-         blizzard demon w:12 / cognitogaunt / angel / daeva
+MONS:    balrug w:12 / hellion / tormentor / zykzyl / cacodemon w:12 / \
+         reaper w:12 / blizzard demon w:12 / cognitogaunt / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / \
              hell sentinel / profane servitor / executioner / wyrmhole w:2
 KITEM:   O = abyssal rune of Zot
@@ -1529,7 +1530,7 @@ MONS:   angel god:Xom ; whip ego:chaos w:5 | demon whip ego:chaos w:1 | \
 MONS:   holy swine
 MONS:   dancing weapon ; eudemon blade ego:holy_wrath w:2 | \
                          scimitar ego:holy_wrath
-MONS:   large abomination, cacodemon / cacodemon band, apocalypse crab
+MONS:   large abomination, zykzyl / cacodemon band, apocalypse crab
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_xom
 KFEAT:  " = runelight

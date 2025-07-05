@@ -357,7 +357,8 @@ function sroom_demon_pit(e)
         {"blizzard_demon", weight_c},
         {"hellion", weight_d},
         {"tormentor", weight_d},
-        {"cacodemon", 5},
+        {"cacodemon", weight_d},
+        {"zykzyl", 5},
     }
 
     -- Choose three demons as weighted above,

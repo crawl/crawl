@@ -1915,7 +1915,7 @@ MONS:       tentacled starspawn w:15 / stone giant / eye of devastation
 MONS:       glowing orange brain w:20 / great orb of eyes w:12 / neqoxec w:5 / \
             golden eye band w:3
 MONS:       starcursed mass / brown very ugly thing band
-MONS:       cognitogaunt
+MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian / \
             wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
@@ -1924,9 +1924,9 @@ MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
                        shadow_creatures.48.magical \
                 col:lightmagenta tile:mons_zot_statue
 MONS:       moon troll ; moon troll leather armour
-
+KMONS:      8 = cognitogaunt
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:       potion of mutation
+ITEM:       potion of mutation pre_id
 # Equal chance between randart jewellery and good aux armour.
 : item("any randart jewellery w:60" .. " / " .. dgn.good_aux_armour)
 ITEM:       randbook owner:Lehudib disc:earth disc2:alchemy \
@@ -1947,9 +1947,9 @@ SUBST:      DE = ., F = c, K = n, OPQS! = G, RZ = N, ? = .
 ## Remaining level randomization
 SHUFFLE:    Hyp / Mgo
 SUBST:      o = 1234, ' = llc, ; = .JJJJJ, yp = .
-NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / .
-NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1234, " = 3:J / .
-NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 4 / 233 / .
+NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / *:.
+NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1238, " = 3:J / *:.
+NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 1:4 / 1:8 / *:.
 
 {{
 set_random_mon_list("eye of devastation / stone giant " ..
@@ -2536,7 +2536,7 @@ TAGS:   no_rotate
 MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
         deep elf pyromancer w:6 / worldbinder w:2
 MONS:   great orb of eyes / glowing orange brain / sphinx marauder / \
-        cacodemon w:2 / crawling flesh cage / glowing shapeshifter / \
+        zykzyl w:2 / crawling flesh cage / glowing shapeshifter / \
         entropy weaver / green death w:2 / tentacled starspawn / \
         golden eye band w:6 / worldbinder / glass eye w:4
 MONS:   nagaraja / deep elf high priest / guardian sphinx w:6 / \

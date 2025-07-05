@@ -4154,7 +4154,7 @@ DEPTH:  Zot, !Zot:$
 MONS:   toenail golem w:1 / glowing orange brain / golden eye band
 MONS:   shining eye / glass eye w:5, bone dragon, curse toe / curse skull
 SUBST:  ' = c., V:VYY
-NSUBST: - = 6 = 1.. / 16 = 2... / 8 = 3... / 8 = 4... / .
+NSUBST: - = 6 = 1.. / 12 = 2... / 8 = 3... / 8 = 4... / .
 NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
 MAP
   ccccccc

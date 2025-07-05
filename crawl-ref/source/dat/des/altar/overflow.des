@@ -1756,7 +1756,7 @@ TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 TAGS:   uniq_altar_makhleb transparent
 # white imp depth
 DEPTH:  D:5-8
-MONS:   shadow imp w:2 / crimson imp
+MONS:   shadow imp w:2 / drude w:4 / crimson imp w:6
 KFEAT:  _ = altar_makhleb
 TILE:   c = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
@@ -2303,13 +2303,12 @@ ENDMAP
 NAME:   grunt_qazlal_sundering
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_qazlal uniq_altar_qazlal
+DEPTH:  D:3-, !D:$, Depths, !Depths:$
 KFEAT:  _ = altar_qazlal
+KFEAT:  ^ = shaft trap
 KPROP:  -c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
-:  if you.depth() ~= dgn.br_depth(you.branch()) then
-KFEAT:  ^ = shaft trap
-:  end
 KITEM:  . = nothing w:189 / stone / large rock q:1 w:1
 : interest_check(_G)
 MAP
@@ -4237,7 +4236,7 @@ KMONS:  s = kobold draugr ; dagger / orc draugr ; hand axe
 KMONS:  _ = ufetubus / white imp w:5
 : else
 KMONS:  s = kobold draugr ; short sword / gnoll draugr ; trident
-KMONS:  _ = ufetubus / white imp / shadow imp
+KMONS:  _ = ufetubus / white imp / shadow imp / drude w:5
 : end
 KFEAT:  _ = altar_the_shining_one
 COLOUR: 'sz = yellow / none w:5

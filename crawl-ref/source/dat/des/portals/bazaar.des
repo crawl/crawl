@@ -101,7 +101,7 @@ function bazaar_setup(e, randomise_tileset, shop_halo, from_xom)
   local xomCust = "boggart " .. a .. " / common demon " .. b ..
                   " / laughing skull band w:5 " .. b .. " / ugly thing " .. b ..
                   " / worldbinder " .. b .. " / glowing shapeshifter " .. b ..
-                  " / demonspawn w:2 " .. b .. " / cacodemon " .. b ..
+                  " / demonspawn w:2 " .. b .. " / zykzyl " .. b ..
                   " / sin beast " .. b .. " / tentacled monstrosity " .. b
 
   if you.god() == "Xom" then

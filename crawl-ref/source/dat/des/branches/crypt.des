@@ -2991,7 +2991,7 @@ MONS:   w:3 patrolling lich / w:1 patrolling revenant soulmonger
 MONS:   patrolling zombie / nothing
 MONS:   alderking
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
-MONS:   wyvern draugr / w:30 nothing
+MONS:   wyvern draugr w:5 / raven draugr w:5 / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull

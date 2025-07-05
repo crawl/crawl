@@ -194,7 +194,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_0 .. " = bullfrog / water moccasin / wyvern / basilisk / yak / \
                       polar bear / spectral bullfrog w:20 / spectral yak w:20")
     e.kmons(_9 .. " = cane toad / black mamba / elephant / death yak / \
-                      rime drake / lindwurm / dream sheep")
+                      rime drake / lindwurm / dream sheep / raven w:2")
     e.kmons(_8 .. " = skyshark / anaconda / manticore / wolf spider / \
                       alligator / dire elephant / catoblepas / \
                       anaconda zombie w:5 / wolf spider zombie w:5 / \
@@ -1373,7 +1373,7 @@ SUBST:  A = T
 : end
 : necropolis_ghost_setup(_G, false)
 TILE:  c = wall_stone_scorched
-KPROP: 'TVAOde$%*|? = no_tele_into
+KPROP: -'TVAOde$%*|? = no_tele_into
 MAP
 ..........
 cccccccccc
@@ -3020,7 +3020,7 @@ NAME:   ploomutoo_gammafunk_necropolis_ghost_potion_laboratory
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d",
 :                               "vaults_elf", "depths_crypt"})
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
-MONS:   very ugly thing, glowing shapeshifter, cacodemon
+MONS:   very ugly thing, glowing shapeshifter, zykzyl
 KMONS:  C = crawling flesh cage
 KMONS:  D = tentacled monstrosity
 KMONS:  K = kobold fleshcrafter
@@ -3853,7 +3853,7 @@ MONS:   ugly thing / large abomination / worldbinder / raiju / \
 MONS:   great orb of eyes / cognitogaunt / glowing shapeshifter / \
         very ugly thing / tentacled starspawn
 MONS:   glowing orange brain / lurking horror / wretched star / hellion w:5 / \
-        cacodemon w:5 / apocalypse crab
+        cacodemon  / apocalypse crab
 MONS:   crystal guardian w:2 / tentacled monstrosity / starcursed mass / \
         daeva god:Xom / executioner / profane servitor / hellephant
 :   if dgn.persist.necropolis_difficulty == "shoals" then
@@ -3895,7 +3895,7 @@ NSUBST: - = 2=1 / 4 = 1- / 2:2 / 2 = 2- / 1:3 / 1:4 / 1:M / *:-
 MONS:   large abomination / worldbinder / shapeshifter / \
         thrashing horror / rakshasa / crawling flesh cage / \
         great orb of eyes / cognitogaunt / glowing shapeshifter
-MONS:   tentacled starspawn / cacodemon / deep elf demonologist / \
+MONS:   tentacled starspawn / cacodemon / zykzyl / deep elf demonologist / \
         deep elf sorcerer / glowing orange brain / crystal guardian
 MONS:   wretched star / lurking horror / hellion / apocalypse crab
 MONS:   tentacled monstrosity / starcursed mass / daeva god:Xom / \
@@ -3911,7 +3911,8 @@ FTILE:  'PSncbv = floor_nerves_cyan
 :             "ancient champion w:15 ; " .. disto_weapon("warrior-2h", "randart") ..
 :             " . chain mail good_item | plate armour good_item")
 MONS:   thrashing horror / rakshasa / very ugly thing / great orb of eyes / \
-        cognitogaunt / glowing shapeshifter / tentacled starspawn / cacodemon w:5
+        cognitogaunt / glowing shapeshifter / tentacled starspawn / \
+        cacodemon w:5 / zykzyl w:5
 MONS:   glowing orange brain / lich / tentacled monstrosity / \
         daeva god:Xom / executioner / profane servitor
 MONS:   lurking horror / wretched star / hellion / \
@@ -4438,7 +4439,7 @@ NSUBST:  1 = 2:' / *:1
 NSUBST:  % = 1:d / 1:% / *:$, |* = 1:e / 1:*% / * = %
 : elseif dgn.persist.necropolis_difficulty == "lair" then
 MONS:    wolf / black bear / yak, spriggan ; sling . dagger
-MONS:    dream sheep / boggart
+MONS:    dream sheep / boggart / raven w:2
 NSUBST:  1 = 1:3 / *:1, % = 2:d / 2:% / *:$, |* = 1:e / 1:* / * = *%
 : elseif necropolis_in_lair_branch() then
 MONS:    spriggan rider / faun w:2 / water nymph w:2
@@ -4448,7 +4449,7 @@ NSUBST:  1 = 1:12 / 1:3 / *:1
 NSUBST:  % = 3:d / *:%, |* = 1:e / 1:f / 1:| / *:*
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:    sun moth perm_ench:glowing_shapeshifter / \
-         swamp dragon perm_ench:glowing_shapeshifter / spark wasp
+         swamp dragon perm_ench:glowing_shapeshifter / spark wasp / chonchon
 MONS:    spriggan berserker / spectral caustic shrike, alderking
 MONS:    dream sheep band
 NSUBST:  1 = 2 = 24 / *:1

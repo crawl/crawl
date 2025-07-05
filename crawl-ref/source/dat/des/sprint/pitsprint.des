@@ -19,7 +19,7 @@ function base_monster_setup(e)
                kobold brigand band / gnoll band / gnoll bouda band w:6 /\
                gnoll sergeant band w:6 / orc band / orc priest band /\
                orc wizard band / ogre / centaur / phantom / zombie /\
-               crimson imp / iron imp / white imp / ufetubus band /\
+               crimson imp / iron imp / white imp / drude / ufetubus band /\
                fire bat / crocodile / brain worm / weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
@@ -37,16 +37,16 @@ function base_monster_setup(e)
   e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
                rakshasa / necromancer / ugly thing w:15 / tengu warrior /\
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\
-               unseen horror / yaktaur / cyclops / deep troll / shapeshifter /\
-               fire elemental / water elemental / earth elemental / raiju /\
-               kobold blastminer band / orc high priest band w:5 /\
-               orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
-               black mamba / mana viper / merfolk avatar / wind drake / \
-               sea snake / tarantella / wolf spider / steelbarb worm /\
-               shadowghast / shadow wraith / small abomination /\
-               laughing skull band / skeletal warrior / thrashing horror /\
-               hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
-               chaos spawn / soul eater")
+               raven / unseen horror / yaktaur / cyclops / deep troll /\
+               shapeshifter / fire elemental / water elemental /\
+               earth elemental / raiju / kobold blastminer band /\
+               orc high priest band w:5 / orc sorcerer w:5 / orc knight band /\
+               swamp dragon / hydra / black mamba / mana viper /\
+               merfolk avatar / wind drake / sea snake / tarantella /\
+               wolf spider / steelbarb worm / shadowghast / shadow wraith /\
+               small abomination / laughing skull band / skeletal warrior /\
+               thrashing horror / hell hound band w:5 / efreet w:5 /\
+               smoke demon / hellwing / chaos spawn / soul eater")
   e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
                crawling flesh cage w:5 / kobold fleshcrafter /\
                dire elephant / torpor snail / skyshark / death yak band w:5 /\
@@ -104,8 +104,8 @@ function base_monster_setup(e)
                draconian scorcher w:7 / draconian annihilator w:7 /\
                draconian knight w:7 / alderking / vampire bloodprince /\
                ancient champion / curse toe w:3 / royal mummy w:3 /\
-               hellephant / balrug band w:5 / cacodemon / hellion /\
-               tormentor / executioner / nekomata / nargun w:5 /\
+               hellephant / balrug band w:5 / cacodemon / zykzyl w:5 /\
+               hellion / tormentor / executioner / nekomata / nargun w:5 /\
                demonspawn warmonger band w:5 /\
                demonspawn blood saint band w:5 /\
                demonspawn corrupter band w:5 /\
@@ -165,11 +165,11 @@ function base_monster_setup(e)
                vampire mage band / revenant soulmonger / ancient champion")
   e.kmons("S = obsidian bat / orange demon / hellwing / smoke demon /\
                ynoxinul / red devil / sixfirhy / chaos spawn / ice devil /\
-               sun demon / rust devil / neqoxec band / green death w:5 /\
-               blizzard demon w:5 / balrug w:5 / cacodemon w:5 / sin beast /\
+               sun demon / rust devil / neqoxec / green death w:5 /\
+               blizzard demon w:5 / balrug w:5 / cacodemon / sin beast /\
                reaper w:5")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
-               brimstone fiend / ice fiend / tzitzimitl /\
+               zykzyl / brimstone fiend / ice fiend / tzitzimitl /\
                hell sentinel / executioner /\
                demonspawn warmonger band w:5 / demonspawn corrupter band w:5 /\
                demonspawn blood saint band w:5 / demonspawn soul scholar band w:5")

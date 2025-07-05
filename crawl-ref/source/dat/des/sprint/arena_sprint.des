@@ -759,7 +759,7 @@ function arena_sprint_init_boss_table()
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
     -- Pan sets are very roughly based on those in pan.des
-    bs[10] = {"shadow demon / cacodemon / protean progenitor / " ..
+    bs[10] = {"sin beast / zykzyl / protean progenitor / " ..
               "tentacled monstrosity / glass eye / golden eye / " ..
               "eye of devastation / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
@@ -768,7 +768,7 @@ function arena_sprint_init_boss_table()
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
     bs[12] = {"efreet / sun moth / undying armoury / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"soul eater / reaper / executioner / curse skull",
+    bs[13] = {"shadow demon / soul eater / reaper / executioner / curse skull",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500 exp:8988", "golden rune of zot"}

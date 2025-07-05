@@ -2486,7 +2486,7 @@ ENDMAP
 NAME:  lightli_wizard_tower
 TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS:  crimson imp, arcanist, occultist
+MONS:  crimson imp / drude w:2, arcanist, occultist
 ITEM:  any book, any scroll
 : if you.depth() > 11 then
 SUBST: 2 = 23
@@ -3445,7 +3445,7 @@ WEIGHT:  5
 MONS:    obsidian statue, lesser demon, common demon
 MONS:    efreet / large abomination / rakshasa
 MONS:    shadow demon / green death / blizzard demon / balrug / cacodemon / \
-         sin beast / hellion / reaper / tormentor
+         sin beast / hellion / reaper / tormentor / zykzyl w:2
 KITEM:   | = superb_item / any good_item / randbook disc:summoning w:5
 : if you.in_branch("Depths") then
 SUBST:   2 = 3, 4 = 5, v = c
@@ -4202,7 +4202,7 @@ NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, ophan, glass eye, eye of devastation
-MONS:   great orb of eyes / shining eye w:2
+MONS:   great orb of eyes / shining eye w:3
 ITEM:   scroll of vulnerability q:1 pre_id / orb ego:guile randart w:4 / \
         book of the spheres w:4 / potion of enlightenment q:2 pre_id
 KFEAT:  m = iron_grate
@@ -4213,8 +4213,8 @@ SUBST:  c = c:4 v:1 b:1, '| = d
 : end
 MAP
      c++cccc
-   ccc..c3.ccc
-  cc'c..c+m..cc
+   ccc..c3%ccc
+  cc'c..c+m.%.cc
  cc'mm..c.mmm.cc
  c.mm...c...mm.c
 cc.m....c.5..m.cc
@@ -4364,7 +4364,7 @@ DEPTH:   D:11-, Elf, Depths, Crypt
 : kmons("5 = dancing weapon ; demon blade ego:" .. evilegos[3] )
 : kmons("6 = dancing weapon ; demon trident ego:" .. evilegos[1] )
 KFEAT:   D = altar_uskayaw
-KFEAT:   E = altar_dithmenos / altar_kikubaaqudgha / altar_lugonu / \
+KFEAT:   E = altar_kikubaaqudgha / altar_lugonu / \
              altar_makhleb / altar_yredelemnul
 KFEAT:   + = closed_clear_door
 SHUFFLE: FH
@@ -4509,6 +4509,9 @@ NAME:   minmay_divided_ellipse
 TAGS:   transparent
 DEPTH:  D:2-6
 WEIGHT: 5
+: if you.depth() < 5 then
+SUBST:  9 = 0
+: end
 MAP
       .......
    ....xx+xx....
@@ -6354,6 +6357,7 @@ MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = -1 }
 KPROP:  wF = no_tele_into
+KMASK:  wF = no_monster_gen
 SUBST:  F = w
 KMASK:  w = opaque
 MAP
@@ -7820,7 +7824,7 @@ SUBST:   0 = 122, z = c
 : if you.in_branch("D") then
 :   if you.depth() < 8 then
 MONS:    dart slug / jackal zombie w:1
-MONS:    shadow imp / howler monkey w:2, bullfrog zombie / jelly w:5
+MONS:    shadow imp / howler monkey w:2 / drude w:2, bullfrog zombie / jelly w:5
 NSUBST:  g = 1:g$$ / *:$, * = 1:% / *:$
 :   elseif you.depth() < 11 then
 MONS:    ufetubus / wight w:5, sky beast / sleepcap, hornet zombie / marrowcuda
@@ -8174,6 +8178,7 @@ SUBST:   k = KLMNO
 SUBST:   k = OPQR
 : end
 KMASK:   Ss = opaque
+KPROP:   s = no_tele_into
 FTILE:   ABCDEFGHJIKLMNOPQRS. = floor_limestone
 FTILE:   m = floor_pebble_darkgray
 MAP

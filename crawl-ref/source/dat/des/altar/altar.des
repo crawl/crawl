@@ -254,14 +254,14 @@ ENDMAP
 
 ### Altars possibly to Lugonu ################################################
 
-# Hell themed, to Lugonu, Yredelemnul, Kikubaaqudgha or Makhleb
+# Hell themed, to Lugonu, Kikubaaqudgha or Makhleb
 # Note: This altar would not make a decent overflow altar, it is too hard to
 #       access the altar early.
 #
 NAME:  lemuel_hellish_altar
-DEPTH: Crypt, Geh
 TAGS:  no_monster_gen no_descent
-MONS:  rust devil / orange demon
+DEPTH: Crypt, Geh
+MONS:  rust devil / neqoxec
 MONS:  sin beast / red devil
 MONS:  iron imp
 MONS:  hellion
@@ -274,7 +274,7 @@ SUBST: 1 = 1:20 4
 : end
 SUBST: L = l.
 SUBST: _ = _ P:1
-KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
+KFEAT: _ = altar_lugonu / altar_kikubaaqudgha / altar_makhleb
 KFEAT: P = enter_abyss
 MAP
 ....LLLLL.....
