@@ -1363,11 +1363,17 @@ static void _append_skill_target_desc(string &description, skill_type skill,
 
 static int _get_delay(const item_def &item)
 {
-    if (!is_range_weapon(item))
-        return you.attack_delay_with(nullptr, false, &item).expected();
-    item_def fake_proj;
-    populate_fake_projectile(item, fake_proj);
-    return you.attack_delay_with(&fake_proj, false, &item).expected();
+    if (is_range_weapon(item))
+    {
+        item_def fake_proj;
+        populate_fake_projectile(item, fake_proj);
+        return you.attack_delay_with(&fake_proj, false, &item).expected();
+    }
+
+    if (is_throwable(&you, item))
+        return you.attack_delay(&item, false).expected();
+
+    return you.attack_delay_with(nullptr, false, &item).expected();
 }
 
 static string _desc_attack_delay(const item_def &item)
@@ -1378,7 +1384,7 @@ static string _desc_attack_delay(const item_def &item)
         dummy.brand = SPWPN_NORMAL;
 
     const int cur_delay = _get_delay(dummy);
-    
+
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
 }
 
@@ -2245,8 +2251,12 @@ static string _describe_ammo(const item_def &item)
 
         _append_skill_needed(description, item);
 
-        if (!is_useless_item(item) && property(item, PWPN_DAMAGE))
-            description += "\nDamage rating: " + damage_rating(&item);
+        if (!is_useless_item(item) && crawl_state.need_save){
+            description += _desc_attack_delay(item);
+
+            if (property(item, PWPN_DAMAGE))
+                description += "\nDamage rating: " + damage_rating(&item);
+        }
     }
 
     if (ammo_always_destroyed(item))
