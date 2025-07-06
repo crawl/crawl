@@ -1341,7 +1341,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-        // As a violent thug, Throatcutter suits Terence perfectly.
+    // As someone who's learned the hard way that many have no honour in war,
+    // Throatcutter suits Terence perfectly.
     case MONS_TERENCE:
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
         {
