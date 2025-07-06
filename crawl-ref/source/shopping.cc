@@ -1975,9 +1975,12 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         }
 
         // Don't prompt to remove known manuals when the new one is for a
-        // different skill.
-        if (item.is_type(OBJ_BOOKS, BOOK_MANUAL) && item.plus != list_item.plus)
+        // different skill, or parchment of different spells.
+        if ((item.is_type(OBJ_BOOKS, BOOK_MANUAL) || item.is_type(OBJ_BOOKS, BOOK_PARCHMENT))
+            && item.plus != list_item.plus)
+        {
             continue;
+        }
 
         list_pair listed(list_item, thing_pos(thing));
 
