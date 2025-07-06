@@ -2535,6 +2535,7 @@ static string _resist_composer(const char * name, int spacing, int value,
 
         case MR_RES_NEG:
             res_percent = _neg_res[value + 1];
+            break;
 
         case MR_RES_POISON:
         case MR_RES_ELEC:
