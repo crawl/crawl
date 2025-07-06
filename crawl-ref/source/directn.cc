@@ -1298,7 +1298,6 @@ coord_def direction_chooser::find_default_monster_target()
     // pick an acceptable one in sight.
     if (pos.origin() && mode == TARG_HOSTILE_OR_EMPTY)
     {
-        fprintf(stderr, "A");
         for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
             if (hitfunc->valid_aim(*ri))
                 return *ri;
