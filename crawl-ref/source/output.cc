@@ -2525,7 +2525,9 @@ static string _resist_composer(const char * name, int spacing, int value,
     const static int _pois_res[]  = {150, 100, 33, 33, 0};
     const static int _corr_res[]  = {-1, 100, 50, -1, -1};
 
-    ASSERT(value >= -1 && value <= 3);
+    if (value < -1)
+        value = -1;
+    ASSERT(value <= 3);
     switch (type)
     {
         case MR_RES_FIRE:
