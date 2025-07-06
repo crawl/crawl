@@ -752,15 +752,18 @@ unsigned int item_value(item_def item, bool ident)
             valued = level * 27 + 27;
         }
 #if TAG_MAJOR_VERSION == 34
-        if (book == BOOK_BUGGY_DESTRUCTION)
+        else if (book == BOOK_BUGGY_DESTRUCTION)
             break;
 #endif
-        int levels = 0;
-        const vector<spell_type> spells = spells_in_book(item);
-        for (spell_type spell : spells)
-            levels += spell_difficulty(spell);
-        // Level 9 spells are worth 4x level 1 spells.
-        valued += levels * 20 + spells.size() * 20;
+        else
+        {
+            int levels = 0;
+            const vector<spell_type> spells = spells_in_book(item);
+            for (spell_type spell : spells)
+                levels += spell_difficulty(spell);
+            // Level 9 spells are worth 4x level 1 spells.
+            valued += levels * 20 + spells.size() * 20;
+        }
         break;
     }
 
