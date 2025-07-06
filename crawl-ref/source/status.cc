@@ -899,7 +899,7 @@ bool fill_status_info(int status, status_info& inf)
             if (bonus > 0)
             {
                 inf.short_text = make_stringf("trickster (+%d AC)", bonus);
-                inf.long_text = make_stringf("You are bolsted by spread misfortune (+%d AC)", bonus);
+                inf.long_text = make_stringf("You are bolstered by spread misfortune (+%d AC)", bonus);
             }
         }
         break;
