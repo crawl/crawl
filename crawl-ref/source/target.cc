@@ -2832,6 +2832,9 @@ bool targeter_paragon_deploy::valid_aim(coord_def a)
     if (!targeter_smite::valid_aim(a))
         return false;
 
+    if (a == you.pos())
+        return false;
+
     if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))
         return notify_fail("Your paragon could not survive being deployed there.");
 
