@@ -183,7 +183,7 @@ lucky mutation
 
 You have an uncanny knack for uncovering hidden properties of items other people
 might ignore as mundane. Whenever you encounter a new item on the ground for the
-first time, there is a very tiny chance to discover that is actually an
+first time, there is a very tiny chance to discover that it is actually an
 artefact. Each level of this mutation increases that chance.
 %%%%
 # ------ Auxes -----
