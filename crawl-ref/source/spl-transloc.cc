@@ -898,7 +898,7 @@ spret controlled_blink(bool safe_cancel, dist *target)
     // Fuzz blinking by 2 tiles while in Zot or on the orb run.
     if (orb_limits_translocation())
     {
-        targeter_hop tgt(you.current_vision - 2, false);
+        targeter_hop tgt(max(1, you.current_vision - 2), false);
         if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
             return spret::abort;
         target->target = _fuzz_blink_destination(target->target);
