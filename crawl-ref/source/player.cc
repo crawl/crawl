@@ -3585,8 +3585,8 @@ int slaying_bonus(bool throwing, bool random)
 
     ret += you.wearing_jewellery(RING_SLAYING);
     ret += you.scan_artefacts(ARTP_SLAYING);
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_HURLING) && throwing)
-        ret += 4;
+    if (throwing)
+        ret += 4 * you.wearing_ego(OBJ_ARMOUR, SPARM_HURLING);
 
     ret += 3 * augmentation_amount();
     ret += you.get_mutation_level(MUT_SHARP_SCALES);
