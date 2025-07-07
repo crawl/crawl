@@ -1175,8 +1175,41 @@ static item_def* _item_swap_menu(const vector<item_def*>& candidates)
     return nullptr;
 }
 
+static bool _equipment_effectively_identical(const item_def& item1, const item_def& item2)
+{
+    return item1.base_type == item2.base_type
+           && item1.sub_type == item2.sub_type
+           && item1.plus == item2.plus
+           && item1.brand == item2.brand
+           && !item1.cursed() && !item2.cursed()
+           && !is_artefact(item1) && !is_artefact(item2);
+}
+
 static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
 {
+    // If our list contains only identical items, return the first without a
+    // prompt.
+    bool found_non_match = false;
+    for (size_t i = 0; i < candidates.size() - 1; ++i)
+    {
+        item_def* item = candidates[i];
+        if (item->base_type == OBJ_JEWELLERY && Options.jewellery_prompt)
+            continue;
+
+        for (size_t j = i + 1; j < candidates.size(); ++j)
+        {
+            // A single non-match among all candidates is enough to cancel this
+            if (!_equipment_effectively_identical(*item, *candidates[j]))
+            {
+                found_non_match = true;
+                break;
+            }
+        }
+    }
+
+    if (!found_non_match && !candidates.empty())
+        return candidates[0];
+
     // Default to a menu for larger choices
     if (candidates.size() > 3 || ui::has_layout())
         return _item_swap_menu(candidates);
