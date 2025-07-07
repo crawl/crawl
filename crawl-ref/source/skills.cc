@@ -2263,8 +2263,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         }
 
         if (conducts)
-            result = special_conduct_title(best_skill, skill_rank);
-
+        {
+            string conduct = special_conduct_title(best_skill, skill_rank);
+            if (!conduct.empty())
+                result = conduct;
+        }
 
         if (result.empty())
             result = skill_titles[best_skill][skill_rank];
