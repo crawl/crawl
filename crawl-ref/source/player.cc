@@ -1310,7 +1310,9 @@ int player_res_steam(bool allow_random, bool temp, bool items)
             res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
     }
 
-    res += rf * 2;
+    // Don't let rF- override steam immunity.
+    if (rf > 0 || res == 0)
+        res += rf * 2;
 
     if (res > 2)
         res = 2;
