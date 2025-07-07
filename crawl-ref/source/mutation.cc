@@ -3530,7 +3530,7 @@ void maybe_apply_bane_to_monster(monster& mons)
         mons.add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
         for (monster_near_iterator mi(mons.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (!testbits(mi->flags, MF_SEEN))
+            if (!testbits(mi->flags, MF_SEEN) && !mi->is_peripheral())
                 mi->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
         }
     }
