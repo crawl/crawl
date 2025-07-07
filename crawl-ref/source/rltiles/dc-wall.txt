@@ -998,6 +998,24 @@ zot_blue3
 %resetcol
 
 %sdir dngn/wall
+%weight 18
+zot_stone_last00 STONE_WALL_ZOT_LAST
+zot_stone_last01
+%weight 16
+zot_stone_last02
+zot_stone_last03
+%weight 12
+zot_stone_last04
+zot_stone_last05
+%weight 6
+zot_stone_last06
+zot_stone_last07
+zot_stone_last08
+zot_stone_last09
+%weight 2
+zot_stone_last10
+zot_stone_last11
+
 wall_metal_zot0 DNGN_METAL_ZOT
 wall_metal_zot1
 wall_metal_zot2

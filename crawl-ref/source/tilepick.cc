@@ -31,6 +31,7 @@
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
+#include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -225,6 +226,19 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_METAL_STATUE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
+    case DNGN_ZOT_STATUE:
+        if (you.zot_orb_monster_known)
+        {
+            switch (you.zot_orb_monster)
+            {
+                case MONS_ORB_OF_FIRE:    return TILE_DNGN_ZOT_FIRE_STATUE;
+                case MONS_ORB_OF_WINTER:  return TILE_DNGN_ZOT_WINTER_STATUE;
+                case MONS_ORB_OF_ENTROPY: return TILE_DNGN_ZOT_ENTROPY_STATUE;
+                default: break;
+            }
+        }
+        else
+            return TILE_DNGN_PETRIFIED_TREE;
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_LAVA_SEA:
@@ -1328,7 +1342,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_GOBLIN:
     case TILEP_MONS_ZOMBIE_KOBOLD:
     case TILEP_MONS_ZOMBIE_MONKEY:
-        return TILEP_MONS_SKELETON_SMALL;
+        return TILEP_MONS_DRAUGR_SMALL;
     case TILEP_MONS_ZOMBIE_HOBGOBLIN:
     case TILEP_MONS_ZOMBIE_GNOLL:
     case TILEP_MONS_ZOMBIE_ORC:
@@ -1337,14 +1351,14 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_MERFOLK:
     case TILEP_MONS_ZOMBIE_MINOTAUR:
     case TILEP_MONS_ZOMBIE_FAUN:
-        return TILEP_MONS_SKELETON_MEDIUM;
+        return TILEP_MONS_DRAUGR_MEDIUM;
     case TILEP_MONS_ZOMBIE_TROLL:
-        return TILEP_MONS_SKELETON_TROLL;
+        return TILEP_MONS_DRAUGR_TROLL;
     case TILEP_MONS_ZOMBIE_LARGE:
     case TILEP_MONS_ZOMBIE_OGRE:
-        return TILEP_MONS_SKELETON_LARGE;
+        return TILEP_MONS_DRAUGR_LARGE;
     case TILEP_MONS_ZOMBIE_JUGGERNAUT:
-        return TILEP_MONS_SKELETON_JUGGERNAUT;
+        return TILEP_MONS_DRAUGR_JUGGERNAUT;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
     case TILEP_MONS_ZOMBIE_RAT:
     case TILEP_MONS_ZOMBIE_QUOKKA:
@@ -1355,68 +1369,63 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BEAR:
     case TILEP_MONS_ZOMBIE_DREAM_SHEEP:
     case TILEP_MONS_ZOMBIE_BUG:
-        return TILEP_MONS_SKELETON_QUADRUPED_SMALL;
+        return TILEP_MONS_DRAUGR_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_LIZARD:
     case TILEP_MONS_ZOMBIE_CRAB:
-        return TILEP_MONS_SKELETON_LIZARD;
+        return TILEP_MONS_DRAUGR_LIZARD;
     case TILEP_MONS_ZOMBIE_TURTLE:
-        return TILEP_MONS_SKELETON_TURTLE;
+        return TILEP_MONS_DRAUGR_TURTLE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
     case TILEP_MONS_ZOMBIE_ELEPHANT:
     case TILEP_MONS_ZOMBIE_YAK:
-        return TILEP_MONS_SKELETON_QUADRUPED_LARGE;
+        return TILEP_MONS_DRAUGR_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_FROG:
-        return TILEP_MONS_SKELETON_FROG;
+        return TILEP_MONS_DRAUGR_FROG;
     case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
-        return TILEP_MONS_SKELETON_QUADRUPED_WINGED;
+        return TILEP_MONS_DRAUGR_QUADRUPED_WINGED;
     case TILEP_MONS_ZOMBIE_BAT:
-        return TILEP_MONS_SKELETON_BAT;
+        return TILEP_MONS_DRAUGR_BAT;
     case TILEP_MONS_ZOMBIE_HARPY:
     case TILEP_MONS_ZOMBIE_BIRD:
-        return TILEP_MONS_SKELETON_BIRD;
+        return TILEP_MONS_DRAUGR_BIRD;
     case TILEP_MONS_ZOMBIE_FISH:
     case TILEP_MONS_ZOMBIE_SKYSHARK:
-        return TILEP_MONS_SKELETON_FISH;
+        return TILEP_MONS_DRAUGR_FISH;
     case TILEP_MONS_ZOMBIE_CENTAUR:
     case TILEP_MONS_ZOMBIE_YAKTAUR:
-        return TILEP_MONS_SKELETON_CENTAUR;
+        return TILEP_MONS_DRAUGR_CENTAUR;
     case TILEP_MONS_ZOMBIE_NAGA:
     case TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT:
     case TILEP_MONS_ZOMBIE_SALAMANDER:
-        return TILEP_MONS_SKELETON_NAGA;
+        return TILEP_MONS_DRAUGR_NAGA;
     case TILEP_MONS_ZOMBIE_SNAKE:
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
     case TILEP_MONS_ZOMBIE_SNAIL: // but they have no skeletons...
-        return TILEP_MONS_SKELETON_SNAKE;
+        return TILEP_MONS_DRAUGR_SNAKE;
     case TILEP_MONS_ZOMBIE_DRAGON:
     case TILEP_MONS_ZOMBIE_IRON_DRAGON:
     case TILEP_MONS_ZOMBIE_GOLDEN_DRAGON:
     case TILEP_MONS_ZOMBIE_QUICKSILVER_DRAGON:
-        return TILEP_MONS_SKELETON_DRAGON;
+        return TILEP_MONS_DRAUGR_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
     case TILEP_MONS_ZOMBIE_WYVERN:
-        return TILEP_MONS_SKELETON_DRAKE;
+        return TILEP_MONS_DRAUGR_DRAKE;
     case TILEP_MONS_ZOMBIE_UGLY_THING:
-        return TILEP_MONS_SKELETON_UGLY_THING;
+        return TILEP_MONS_DRAUGR_UGLY_THING;
     case TILEP_MONS_ZOMBIE_X:
-        return TILEP_MONS_SKELETON_X;
+        return TILEP_MONS_DRAUGR_X;
     case TILEP_MONS_ZOMBIE_DRACONIAN:
-        return TILEP_MONS_SKELETON_DRACONIAN;
+        return TILEP_MONS_DRAUGR_DRACONIAN;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
-            return TILEP_MONS_SKELETON_HYDRA
+            return TILEP_MONS_DRAUGR_HYDRA
                    + (z_tile - TILEP_MONS_ZOMBIE_HYDRA);
         }
-        if (tile_player_basetile(z_tile) == TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE)
-        {
-            return TILEP_MONS_LERNAEAN_HYDRA_SKELETON
-                   + (z_tile - TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE);
-        }
     }
-    return TILEP_MONS_SKELETON_SMALL;
+    return TILEP_MONS_DRAUGR_SMALL;
 }
 
 /**
@@ -1436,7 +1445,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
     // hydras get special casing
 
     if (subtype == MONS_LERNAEAN_HYDRA && (mon.type == MONS_ZOMBIE
-                                           || mon.type == MONS_SKELETON))
+                                           || mon.type == MONS_DRAUGR))
     {
         // Step down the number of heads to get the appropriate tile:
         // for the last five heads, use tiles 1-5, for greater amounts
@@ -1574,7 +1583,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     const tileidx_t zombie_tile = _mon_to_zombie_tile(mon);
     switch (mon.type)
     {
-        case MONS_SKELETON:
+        case MONS_DRAUGR:
             return _zombie_tile_to_skeleton(zombie_tile);
         case MONS_BOUND_SOUL:
             return _zombie_tile_to_bound_soul(zombie_tile);
@@ -2434,6 +2443,10 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_VAMPIRE_THRALL, TILEI_VAMPIRE_THRALL },
     { MB_PYRRHIC_RECOLLECTION, TILEI_PYRRHIC },
     { MB_CLOCKWORK_BEE_CAST, TILEI_PARTIALLY_CHARGED },
+    { MB_FIGMENT, TILEI_FIGMENT },
+    { MB_PARADOX, TILEI_PARADOX },
+    { MB_WARDING, TILEI_WARDING },
+    { MB_DIMINISHED_SPELLS, TILEI_DIMMED },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3275,6 +3288,17 @@ tileidx_t tileidx_item(const item_def &item)
         if (item.sub_type == BOOK_MANUAL)
             return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
 
+        if (item.sub_type == BOOK_PARCHMENT)
+        {
+            const int lvl = spell_difficulty(static_cast<spell_type>(item.plus));
+            if (lvl >= 8)
+                return TILE_PARCHMENT_HIGH;
+            else if (lvl >= 5)
+                return TILE_PARCHMENT_MID;
+            else
+                return TILE_PARCHMENT_LOW;
+        }
+
         return TILE_BOOK_OFFSET
                + rnd % tile_main_count(TILE_BOOK_OFFSET);
 
@@ -3626,6 +3650,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_FLESH:
     case TILE_BOLT_CHAOS:
     case TILE_BOLT_CHAOS_BUFF:
+    case TILE_BOLT_GLOOM:
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:
@@ -4915,4 +4940,105 @@ void tile_init_props(monster* mon)
         return;
 
     mon->props[TILE_NUM_KEY] = short(random2(256));
+}
+
+static tileidx_t _parchment_overlays[NUM_SPELLS][2];
+static colour_t _parchment_colours[NUM_SPELLS];
+
+static colour_t _school_to_colour(spschool school)
+{
+    switch (school)
+    {
+        case spschool::fire:            return LIGHTRED;
+        case spschool::ice:             return LIGHTBLUE;
+        case spschool::air:             return LIGHTCYAN;
+        case spschool::earth:           return BROWN;
+        case spschool::conjuration:     return LIGHTMAGENTA;
+        case spschool::translocation:   return MAGENTA;
+        case spschool::alchemy:         return LIGHTGREEN;
+        case spschool::necromancy:      return GREEN;
+        case spschool::forgecraft:      return YELLOW;
+        case spschool::summoning:       return RED;
+        case spschool::hexes:           return BLUE;
+        default:                        return CYAN;
+    }
+}
+
+static int _school_to_index(spschool school)
+{
+    const int max = static_cast<int>(spschool::LAST_SCHOOL);
+    int val = static_cast<int>(school);
+    for (int i = 1; 1 << i <= max; ++i)
+        if (val >> i == 1)
+            return i;
+
+    return 0;
+}
+
+// Initialize which tile overlays and console colours are used for parchments of
+// each player spell. (ie: colouring them according to their spell schools.)
+void init_parchment_overlays()
+{
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        _parchment_overlays[i][0] = 0;
+        _parchment_overlays[i][1] = 0;
+
+        const spell_type spell = static_cast<spell_type>(i);
+
+        if (!is_player_book_spell(spell))
+            continue;
+
+        spschool school1 = spschool::none;
+        spschool school2 = spschool::none;
+
+        for (const auto school_flag : spschools_type::range())
+        {
+            if (!spell_typematch(spell, school_flag))
+                continue;
+
+            if (school1 == spschool::none)
+                school1 = school_flag;
+            else if (school2 == spschool::none)
+                school2 = school_flag;
+            // For 3+ school spells, 'randomize' which pair we use.
+            else if (i % 2 == 1)
+                school1 = school_flag;
+            else
+                school2 = school_flag;
+        }
+
+        if (school1 == school2 || school2 == spschool::none)
+            _parchment_overlays[i][0] = TILE_PARCHMENT_SINGLE_FIRST + _school_to_index(school1);
+        else
+        {
+            _parchment_overlays[i][0] = TILE_PARCHMENT_LEFT_FIRST + _school_to_index(school1);
+            _parchment_overlays[i][1] = TILE_PARCHMENT_RIGHT_FIRST + _school_to_index(school2);
+        }
+
+        // Use high level overlays for high level spells.
+        // XXX: (This depends specifically on tile enum offsets, and will need changing
+        //       if they ever do.)
+        if (spell_difficulty(spell) >= 8)
+        {
+            if (_parchment_overlays[i][0] > 0)
+                _parchment_overlays[i][0] += 11;
+            if (_parchment_overlays[i][1] > 0)
+                _parchment_overlays[i][1] += 11;
+        }
+
+
+        _parchment_colours[i] = _school_to_colour(school1);
+    }
+}
+
+tileidx_t tileidx_parchment_overlay(int spell, int index)
+{
+    ASSERT(spell < NUM_SPELLS && index < 2);
+    return _parchment_overlays[spell][index];
+}
+
+colour_t parchment_colour(spell_type spell)
+{
+    return _parchment_colours[spell];
 }

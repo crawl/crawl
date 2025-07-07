@@ -927,6 +927,14 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
                     this.draw_main(fg_idx, x, y, img_scale);
                 }
+
+                if (fg_idx >= main.PARCHMENT_LOW && fg_idx <= main.PARCHMENT_HIGH)
+                {
+                    if (cell.overlay1)
+                        this.draw_main(cell.overlay1, x, y, img_scale);
+                    if (cell.overlay2)
+                        this.draw_main(cell.overlay2, x, y, img_scale);
+                }
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {
@@ -1163,6 +1171,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.HEART:
                 case icons.UNSTABLE:
                 case icons.VEXED:
+                case icons.PARADOX:
+                case icons.WARDING:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

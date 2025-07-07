@@ -38,8 +38,8 @@ function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
        e.kmons("2 = ancient lich / dread lich / vampire bloodprince w:5")
        e.nsubst("8 = 1:2 / 8")
     elseif you.in_branch("Zot") then
-       e.kmons("2 = ancient lich w:5 / dread lich w:5 / orb of fire / \
-                    curse toe / protean progenitor band")
+       e.kmons("2 = ancient lich w:5 / dread lich w:5 / curse toe / \
+                    orb of appropriateness / protean progenitor band")
        e.kfeat("t = petrified_tree")
        e.subst("8 = 28")
     elseif you.in_branch("Pandemonium") then

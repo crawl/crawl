@@ -1119,7 +1119,7 @@ static void _input()
     if (you.duration[DUR_VEXED])
         do_vexed_attack(you);
 
-    if (you.cannot_act() || you.duration[DUR_VEXED])
+    if (you.cannot_act() || you.duration[DUR_VEXED] || you.duration[DUR_DAZED])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
         {
@@ -2646,7 +2646,8 @@ void world_reacts()
     viewwindow();
     update_screen();
 
-    if (you.cannot_act() && any_messages()
+    if ((you.cannot_act() || you.duration[DUR_DAZED] || you.duration[DUR_VEXED])
+        && any_messages()
         && crawl_state.repeat_cmd != CMD_WIZARD)
     {
         more();

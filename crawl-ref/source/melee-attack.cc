@@ -111,7 +111,7 @@ bool melee_attack::bad_attempt()
     if (never_harm_monster(attacker, defender->as_monster(), true))
         return true;
 
-    if (!is_projected && player_unrand_bad_attempt(offhand_weapon()))
+    if (!is_projected && player_unrand_bad_attempt())
         return true;
 
     if (!cleave_targets.empty())
@@ -131,16 +131,15 @@ bool melee_attack::would_prompt_player()
     if (!attacker->is_player())
         return false;
 
-    item_def *offhand = offhand_weapon();
+    item_def* w1 = primary_weapon();
+    item_def* w2 = offhand_weapon();
     bool penance;
-    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance, false)
-           || offhand && !is_range_weapon(*offhand)
-              && needs_handle_warning(*offhand, OPER_ATTACK, penance, false)
-           || player_unrand_bad_attempt(offhand, true);
+    return w1 && needs_handle_warning(*w1, OPER_ATTACK, penance, false)
+           || w2 && needs_handle_warning(*w2, OPER_ATTACK, penance, false)
+           || player_unrand_bad_attempt(true);
 }
 
-bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
-                                             bool check_only)
+bool melee_attack::player_unrand_bad_attempt(bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
@@ -148,7 +147,10 @@ bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
     if (!you.can_see(*defender))
         return false;
 
-    return ::player_unrand_bad_attempt(weapon, offhand, defender, check_only);
+    item_def* primary = primary_weapon();
+    item_def* offhand = offhand_weapon();
+
+    return ::player_unrand_bad_attempt(primary, offhand, defender, check_only);
 }
 
 // Freeze a random wall adjacent to our target. If all those are frozen, freeze
@@ -352,10 +354,8 @@ bool melee_attack::handle_phase_blocked()
     maybe_trigger_jinxbite();
 
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
-        && coinflip())
+        && coinflip() && attacker->as_monster()->res_blind() <= 1)
     {
-        // If the monster is unblindable, making them blind will fail,
-        // so don't display a message.
         const bool need_msg = !attacker->as_monster()->has_ench(ENCH_BLIND);
         if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
                                         random_range(3, 5) * BASELINE_DELAY))
@@ -540,7 +540,7 @@ void melee_attack::apply_sign_of_ruin_effects()
         {
             effects.push_back(WEAKNESS);
         }
-        if (defender->can_be_dazzled())
+        if (!defender->res_blind())
             effects.push_back(BLIND);
         if (!defender->stasis())
             effects.push_back(SLOW);
@@ -1221,6 +1221,14 @@ void melee_attack::handle_spectral_brand()
         return;
     attacker->triggered_spectral = true;
     spectral_weapon_fineff::schedule(*attacker, *defender, mutable_wpn);
+}
+
+item_def *melee_attack::primary_weapon() const
+{
+    item_def *weap = attacker->weapon(0);
+    if (!weap || is_range_weapon(*weap))
+        return nullptr;
+    return weap;
 }
 
 item_def *melee_attack::offhand_weapon() const
@@ -2552,7 +2560,7 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = "dice";
             verb_degree = "like an onion";
         }
-        else if (defender_genus == MONS_SKELETON)
+        else if (defender_genus == MONS_DRAUGR)
         {
             attack_verb = "fracture";
             verb_degree = "into splinters";
@@ -2595,7 +2603,7 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = one_chance_in(4) ? "thump" : "sock";
         else if (damage < HIT_STRONG)
             attack_verb = "bludgeon";
-        else if (defender_genus == MONS_SKELETON)
+        else if (defender_genus == MONS_DRAUGR)
         {
             attack_verb = "shatter";
             verb_degree = "into splinters";
@@ -4114,8 +4122,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             default:
             case ENCH_DAZED:
-                mdefender->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                                    random_range(70, 110)));
+                defender->daze(random_range(1, 2));
                 break;
             case ENCH_DRAINED:
                 defender->drain(attacker, false, 2);
@@ -4125,6 +4132,16 @@ void melee_attack::mons_apply_attack_flavour()
                 break;
         }
 
+        break;
+    }
+
+    case AF_DOOM:
+    {
+        const int amount = random_range(5 + attacker->get_hit_dice() / 3,
+                                        8 + attacker->get_hit_dice());
+        const bool caused_bane = defender->doom(amount);
+        if (!caused_bane && defender->is_player())
+            mpr("Your doom draws closer.");
         break;
     }
 
@@ -4462,9 +4479,13 @@ void melee_attack::do_starlight()
         "@The_monster_possessive@ vision is obscured by starry radiance!",
     };
 
-    if (attacker->is_monster() && one_chance_in(5)
-        && dazzle_target(attacker, defender, 100))
+    if (attacker->is_monster()
+        && attacker->res_blind() <= 1
+        && x_chance_in_y(min(50, (95 - defender->get_hit_dice() * 4) / 5), 50))
     {
+        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                                         random_range(4, 8) * BASELINE_DELAY));
+
         string msg = *random_iterator(dazzle_msgs);
         msg = do_mon_str_replacements(msg, *attacker->as_monster(), S_SILENT);
         mpr(msg);
@@ -4737,6 +4758,9 @@ int melee_attack::apply_damage_modifiers(int damage)
 
     if (as_mon->has_ench(ENCH_TOUCH_OF_BEOGH))
         damage = damage * 4 / 3;
+
+    if (as_mon->has_ench(ENCH_FIGMENT))
+        damage = damage * 2 / 3;
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()

@@ -948,6 +948,8 @@ colour_t viewmap_flash_colour()
         return LIGHTGRAY;
     else if (you.duration[DUR_VEXED])
         return MAGENTA;
+    else if (you.duration[DUR_DAZED])
+        return YELLOW;
 
     return BLACK;
 }
@@ -1725,7 +1727,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     {
         _draw_player(cell, gc, ep, anim_updates);
     }
-    else if (you.see_cell(gc) && you.on_current_level)
+    else if (you.see_cell(gc))
         _draw_los(cell, gc, ep, anim_updates);
     else
         _draw_outside_los(cell, gc, ep); // in los bounds but not visible

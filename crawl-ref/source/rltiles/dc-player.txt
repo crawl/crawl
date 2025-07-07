@@ -538,7 +538,7 @@ player/mutations/octopode1 OCTOPODE_SPIKE
 %sdir player/hand1/artefact
 # blades
 bloodbane BLOODBANE FIRST
-doom_knight DOOM_KNIGHT
+dread_knight DREAD_KNIGHT
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD

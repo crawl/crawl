@@ -58,6 +58,7 @@ int one_level_cost(skill_type sk);
 float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
+int calc_skill_cost_level(int xp, int start);
 int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change(bool quiet = false);
 
@@ -99,7 +100,8 @@ string skill_title_by_rank(
     int dex = you.base_stats[STAT_DEX], int str = you.base_stats[STAT_STR],
     int intel = you.base_stats[STAT_INT],
     god_type god = you.religion,
-    int piety = you.piety, bool conducts = true);
+    int piety = you.raw_piety, bool conducts = true);
+
 unsigned get_skill_rank(unsigned skill_lev);
 
 string player_title(bool the = true);

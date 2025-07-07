@@ -736,6 +736,7 @@ TAGS:   grunt_zot_portal
 KMONS:  1 = nonbase draconian / base draconian
 KITEM:  g = midnight gem
 KFEAT:  O = enter_zot
+KFEAT:  Z = zot_statue
 COLOUR: c = lightmagenta
 COLOUR: JO.1+ = magenta
 TILE:   c = wall_zot_magenta
@@ -749,9 +750,9 @@ MAP
   cc+cc
  cc...cc
 ccJ.1.Jcc
-c.......c
+c....Z..c
 +.1.O.1.+
-c...g...c
+c..Zg...c
 ccJ.1.Jcc
  cc...cc
   cc+cc
@@ -783,7 +784,7 @@ MONS:    very ugly thing w:10 / ugly thing w:30 / \
          great orb of eyes / fire dragon / ice dragon / glass eye w:4
 MONS:    glowing orange brain / chonchon / glowing shapeshifter w:12 / \
          jiangshi w:4 / phantasmal warrior w:4 / \
-         caustic shrike skeleton w:2 / spark wasp zombie w:2
+         caustic shrike zombie w:2 / spark wasp zombie w:2
 MONS:    guardian sphinx / spark wasp / flayed ghost / \
          storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
          iron dragon w:4 / golden dragon w:4 / caustic shrike / \
@@ -792,10 +793,11 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          walking crystal tome / walking frostbound tome / \
          juggernaut w:20 / alderking w:15 / wyrmhole / draconian monk / \
          draconian annihilator / draconian knight
-KMONS:   Z = draconian knight / draconian annihilator
-KITEM:   Z = midnight gem
+KMONS:   Zd = draconian knight / draconian annihilator
+KITEM:   d = midnight gem
 KFEAT:   z^ = harlequin's trap
 KFEAT:   Z = enter_zot
+KFEAT:   ~ = zot_statue
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
 NSUBST:  ] = 1:) / 1:] / *:>
@@ -810,25 +812,26 @@ NSUBST:  14 = 1:36
 :   subst("1 = 1:" .. 40 - Z .. " 2:" .. Z - 5)
 :   subst("4 = 4:" .. 40 - Z .. " 5:" .. Z - 5)
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBST:  )]}> = ., " = `
-NSUBST: ' = 1:Z / 2:^ / *:`
+SHUFFLE: Zde' / ?fg" / _hi`
+SUBST:   )]}> = ., e = ~, ?_ = ^, fghi"` = '
+: else
+SUBST:   defghi'"`Z?_ = .
 : end
-SUBST:  ' = .
 MARKER: Y = lua:props_marker { portal=1 }
-FTILE:  Z`^ = floor_marble
+FTILE:  Z~'^ = floor_marble
 LFLOORTILE: floor_depthstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxJ.............xxxxxx
 xxxxxxxxxxx......c.........xxx
-xxxxxxxxx"".....cbc..x......xxx
-xxxxxklxP".....cbcbc.x......Mxxxx
-xxxxxl'"4.....xF.b.cc...n....Lxxxx
-xxxxxx""1....x...x..cc.x.......xxx
+xxxxxxxxx''.....cbc..x......xxx
+xxxxxklxPe.....cbcbc.x......Mxxxx
+xxxxxlZ'4.....xF.b.cc...n....Lxxxx
+xxxxxx'd1....x...x..cc.x.......xxx
 xxxxxP41.........b..@cc.........xxx
-xxxx"".....x..xxb.bxb.cc..@.....xxx
-xxJx".....x..E...b...b.cc@..n...xxx
+xxxx'e.....x..xxb.bxb.cc..@.....xxx
+xxJx'.....x..E...b...b.cc@..n...xxx
 xx.......x.......xx..x.1cc.x.....xx
 xx.............F...x.b*..cc......xx
 xx.....x..E........xb.bxb.cc.xx..xx
@@ -868,19 +871,19 @@ xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
      xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x.cbcbcb.bx.....xx
      xc..k.....c......xx.......xxxxx.Y..x..b..*b@..x..5b*..b..x....xx
     xxc........c...j....xx......nnnx...x...c.0cc.@|x|*4cc3.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|..cc*b36.bc..xx
-    xc2.cc..cc."b".........b......nx.cbcbccccc7xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..1c%cc..|*%x.....%C...Bx..xx
-    xc........!"b".cc..cc.4b.......x...x..4c.5cc.*|x....C..x...x...xx
+    xc....cc....c"".....xx.c......nx..cb.41c%cc3.|x%*|..cc*b36.bc..xx
+    xc2.cc..cc."bf"........b......nx.cbcbccccc7xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb?bc......cb%bc....nx..cb..1c%cc..|*%x.....%C...Bx..xx
+    xc......g.!"b".cc..cc.4b.......x...x..4c.5cc.*|x....C..x...x...xx
    xxc.mm....ll!c....cc....c.xx....x....x..b..%c21.x.....%.x..x....xx
    xc..mm...%ll..c........c..xx....x.....xb.bccccc.x....D.x........xx
-   xc......xx%...c.....k..c....xx..........b..2c*ccc.C%D...........xx
+   xc......xx%.g.c.....k..c....xx..........b..2c*ccc.C%D...........xx
   xc%.....%xx.....c..%...c.....xx........x.x..5c.5cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
   xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
-   xc&.ll%...mm..c........c...j....xx..........b..3b........"""JRlxxx
-   xxc5ll....mm.c....cc....c.......xx.cxM....x.x..6c........"'"jxxxxx
-    xc25........c2.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+   xc&.ll%...mm..c........c...j....xx..........b..3b........h"iJRlxxx
+   xxc5ll....mm.c....cc....c.......xx.cxM....x.x..6c........"_"jxxxxx
+    xc25........c2.ccxxcc..c.........ccxxL......x..b..x.....i""kxxxxx
     xxcc&.....cc.ccxxxxxxcc@cc.....4ccxxxx.......xbcBx......Jjklxxxxx
      xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
        xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx

@@ -206,7 +206,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
 
-    local list_undead_types = { " zombie", " skeleton", " simulacrum" }
+    local list_undead_types = { " zombie", " draugr", " simulacrum" }
 
     local list_deriv_undead_base_mons = {
         "cyclops", "two-headed ogre", "swamp dragon",  -- tier 1
@@ -234,7 +234,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             crawl.one_chance_in(8) then
 
             -- tier 1 spawns
-            if data.count < 8 or data.count < 15 and crawl.one_chance_in(6) then
+            if data.count < 6 or data.count < 13 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
                                .. list_undead_types[pick_undead_type])
@@ -243,7 +243,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 2 spawns
-            elseif data.count < 16 or data.count < 23 and crawl.one_chance_in(4) then
+            elseif data.count < 14 or data.count < 19 and crawl.one_chance_in(4) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -254,7 +254,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 3 spawns
-            elseif data.count < 24 or crawl.x_chance_in_y(11, 14) then
+            elseif data.count < 20 or crawl.x_chance_in_y(11, 14) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -1121,7 +1121,7 @@ SUBST:      opqrstu = *
 #            - Earth and spirits
 #            - Unholy undead and demons
 :           if crawl.x_chance_in_y(3, 7) then
-KMONS:      0% = stone giant skeleton / spectral iron troll / \
+KMONS:      0% = stone giant draugr / spectral iron troll / \
                  crystal guardian / gargoyle w:20 / skeletal warrior w:5
 KMONS:      * = war gargoyle w:30 / walking earthen tome / ancient champion
 KMONS:      | = undying armoury / walking crystal tome w:5
@@ -1465,7 +1465,7 @@ NAME:       wizlab_zonguldrok
 TAGS:       no_rotate patrolling
 MONS:       skeletal warrior, ancient champion, lich
 ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
-            randbook disc:necromancy numspells:1 w:2
+            parchment disc:necromancy w:2
 # Shortlist of one-handed skeletal warrior weapons.
 : local d = "ego:draining plus:6 "
 : local p = "ego:pain plus:6 "
@@ -1481,7 +1481,7 @@ ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
 KITEM:      g = skull of zonguldrok
 KFEAT:      GW = G
 KFEAT:      T = petrified_tree
-NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 22:G / 5 = G. / *:.
+NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 18:G / 4 = G. / *:.
 {{
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })
@@ -1539,9 +1539,9 @@ LROCKTILE:  wall_hall_darkgray
 {{
 set_random_mon_list(
     -- Selected to make derived and regular undead equal.
-       [[ two-headed ogre skeleton / cyclops zombie / swamp dragon simulacrum / ]]
-    .. [[ deep troll skeleton / stone giant zombie / storm dragon simulacrum / ]]
-    .. [[ ettin skeleton / juggernaut zombie / golden dragon simulacrum / ]]
+       [[ two-headed ogre draugr / cyclops zombie / swamp dragon simulacrum / ]]
+    .. [[ deep troll draugr / stone giant zombie / storm dragon simulacrum / ]]
+    .. [[ ettin draugr / juggernaut zombie / golden dragon simulacrum / ]]
     .. [[ vampire / skeletal warrior / jiangshi / phantasmal warrior / ]]
     .. [[ vampire knight / ghoul / ancient champion w:20 / lich / ]]
 )
@@ -1729,7 +1729,7 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
  local lowtier = "large abomination w:20 / unseen horror / " ..
                  "thrashing horror w:20 / raiju w:35 / worldbinder w:35 / " ..
                  "smoke demon / sixfirhy / hellwing / " ..
-                 "alligator skeleton / anaconda skeleton / " ..
+                 "alligator simulacrum / anaconda simulacrum / " ..
                  "efreet / air elemental / water elemental / " ..
                  "will-o-the-wisp w:5 / mana viper / demonic crawler w:5"
  local midtier = "tentacled starspawn w:50 / very ugly thing w:25 / " ..
@@ -1915,7 +1915,7 @@ MONS:       tentacled starspawn w:15 / stone giant / eye of devastation
 MONS:       glowing orange brain w:20 / great orb of eyes w:12 / neqoxec w:5 / \
             golden eye band w:3
 MONS:       starcursed mass / brown very ugly thing band
-MONS:       cognitogaunt
+MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian / \
             wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
@@ -1924,9 +1924,9 @@ MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
                        shadow_creatures.48.magical \
                 col:lightmagenta tile:mons_zot_statue
 MONS:       moon troll ; moon troll leather armour
-
+KMONS:      8 = cognitogaunt
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:       potion of mutation
+ITEM:       potion of mutation pre_id
 # Equal chance between randart jewellery and good aux armour.
 : item("any randart jewellery w:60" .. " / " .. dgn.good_aux_armour)
 ITEM:       randbook owner:Lehudib disc:earth disc2:alchemy \
@@ -1947,9 +1947,9 @@ SUBST:      DE = ., F = c, K = n, OPQS! = G, RZ = N, ? = .
 ## Remaining level randomization
 SHUFFLE:    Hyp / Mgo
 SUBST:      o = 1234, ' = llc, ; = .JJJJJ, yp = .
-NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / .
-NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1234, " = 3:J / .
-NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 4 / 233 / .
+NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / *:.
+NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1238, " = 3:J / *:.
+NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 1:4 / 1:8 / *:.
 
 {{
 set_random_mon_list("eye of devastation / stone giant " ..
@@ -2008,8 +2008,8 @@ ccvi..v..ivccc.v...cHccc..bb...bb..cccMc...v.cL..ck.vv..cccc
 ccvv.....vvccc....ccu.bb...........bb.gcc....cc..cc.v*.ccccc
 cccv.....vccc..v..n...b.............b...n..v.2+.........bbcc
 cccv.viv.vccc..v..n...b......7......b...n..v..+.......5.Qbcc
-cccv.....vccc2.v..np..b....z...z....b..on..v..+.........bbcc
-ccvv.....vvccc....cc..bb...........bb..cc....cc..cc.v*.ccccc
+cccv.....vccc2.v..np..b.............b..on..v..+.........bbcc
+ccvv.....vvccc....cc..bb.....z.....bb..cc....cc..cc.v*.ccccc
 ccv..ivi..vccc.v..2c...b...........b...c2..v.cL..ck.vv..cccc
 ccv..vvv..vccc.....c...bb.........bb...c.....cc.kc......cccc
 ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Lccc
@@ -2061,7 +2061,7 @@ ITEM:       any book, any magical staff
 :      "lajatang " .. s .. "w:4 / quarterstaff randart plus:12 " .. s .. " w:1")
 KITEM:      h = potion of lignification pre_id q:4 / \
                 scroll of poison q:4 pre_id, \
-                randbook owner:Eringya numspells:1 spells:eringya's_noxious_bog
+                parchment of eringya's noxious bog
 KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
 KFEAT:      F = cache of fruit
@@ -2536,7 +2536,7 @@ TAGS:   no_rotate
 MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
         deep elf pyromancer w:6 / worldbinder w:2
 MONS:   great orb of eyes / glowing orange brain / sphinx marauder / \
-        cacodemon w:2 / crawling flesh cage / glowing shapeshifter / \
+        zykzyl w:2 / crawling flesh cage / glowing shapeshifter / \
         entropy weaver / green death w:2 / tentacled starspawn / \
         golden eye band w:6 / worldbinder / glass eye w:4
 MONS:   nagaraja / deep elf high priest / guardian sphinx w:6 / \

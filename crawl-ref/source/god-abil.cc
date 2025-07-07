@@ -297,7 +297,7 @@ bool zin_donate_gold()
         you.duration[DUR_PIETY_POOL] = 30000;
 
     const int estimated_piety =
-        min(MAX_PENANCE + MAX_PIETY, you.piety + you.duration[DUR_PIETY_POOL]);
+        min(MAX_PENANCE + MAX_PIETY, you.raw_piety + you.duration[DUR_PIETY_POOL]);
 
     if (player_under_penance())
     {
@@ -317,7 +317,7 @@ bool zin_donate_gold()
             (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
             (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
                                                      : "noncommittal";
-        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
+        result += (donation >= 30 && you.raw_piety < piety_breakpoint(5)) ? "!" : ".";
 
         mpr(result);
     }
@@ -752,7 +752,7 @@ int zin_recite_power()
     const int power_mult = 10;
     const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
                            + 3 * power_mult;
-    const int piety_power = you.piety * 3 / 2;
+    const int piety_power = you.piety() * 3 / 2;
     return (invo_power + piety_power) / 2 / power_mult;
 }
 
@@ -1060,12 +1060,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::daze:
-        if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
-        {
-            simple_monster_message(*mon, " is dazed by your recitation.");
-            affected = true;
-        }
+        mon->daze(degree + random2avg(spellpower / 10, 2));
+        simple_monster_message(*mon, " is dazed by your recitation.");
+        affected = true;
         break;
 
     case zin_eff::confuse:
@@ -1460,14 +1457,14 @@ bool yred_light_the_torch()
         [level_id::current().describe()] = true;
 
     // No instant allies at 0*
-    if (you.piety < piety_breakpoint(0))
+    if (you.piety() < piety_breakpoint(0))
         return true;
 
     bool aid = false;
 
     // The power of the allies you get is based on the player's xl, but capped
     // by their current piety. 5* allows fully uncapped servants.
-    int cap = div_rand_round(min((int)you.piety, piety_breakpoint(4)) * 27, piety_breakpoint(4));
+    int cap = div_rand_round(min((int)you.piety(), piety_breakpoint(4)) * 27, piety_breakpoint(4));
     int pow = min(you.experience_level, cap);
 
     // Summon one stronger servant and two lesser ones.
@@ -2738,7 +2735,7 @@ void beogh_ally_healing()
 {
     if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
         || x_chance_in_y(2, 5)
-        || you.piety < piety_breakpoint(2))
+        || you.piety() < piety_breakpoint(2))
     {
         you.props.erase(BEOGH_DAMAGE_DONE_KEY);
         return;
@@ -4409,6 +4406,10 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
         return false;
     }
 
+    // If we turn into a purple draconian, these will conflict.
+    if (mut == MUT_WEAK_WILLED && you.species == SP_BASE_DRACONIAN)
+        return false;
+
     // No potion heal doesn't affect mummies since they can't quaff potions
     if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
         return false;
@@ -4742,15 +4743,15 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
             // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_DRINK_SAFETY);
+            piety_gain -= 10 * you.get_mutation_level(MUT_HOARD_POTIONS);
             // check innate mutation level to see if reading was sacrificed
-            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 2)
+            if (you.get_innate_mutation_level(MUT_HOARD_SCROLLS) == 2)
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
             // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_READ_SAFETY);
-            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 2)
+            piety_gain -= 10 * you.get_mutation_level(MUT_HOARD_SCROLLS);
+            if (you.get_innate_mutation_level(MUT_HOARD_POTIONS) == 2)
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
@@ -4856,7 +4857,7 @@ static ability_type _random_cheap_sacrifice(
     int valid_sacrifices = 0;
     for (auto sacrifice : possible_sacrifices)
     {
-        if (get_sacrifice_piety(sacrifice) + you.piety > piety_cap)
+        if (get_sacrifice_piety(sacrifice) + you.raw_piety > piety_cap)
             continue;
 
         ++valid_sacrifices;
@@ -4943,7 +4944,7 @@ void ru_offer_new_sacrifices()
                                   < get_sacrifice_piety(b) ? a : b;
                          });
         const int min_piety = get_sacrifice_piety(min_piety_sacrifice);
-        const int piety_cap = max(179, you.piety + min_piety);
+        const int piety_cap = max(179, you.raw_piety + min_piety);
 
         dprf("cheapest sac %d (%d piety); cap %d",
              min_piety_sacrifice, min_piety, piety_cap);
@@ -5013,9 +5014,9 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
+    if (sacrifice == MUT_HOARD_SCROLLS || sacrifice == MUT_HOARD_POTIONS)
     {
-        // get the safety mutation to the cap instead of 1 level higher
+        // set these mutations to their cap
         perma_mutate(sacrifice,
                     3 - you.get_mutation_level(sacrifice),
                     "Ru sacrifice");
@@ -5154,7 +5155,7 @@ string ru_sacrifice_description(ability_type sac)
     const int piety_gain = _ru_get_sac_piety_gain(sac);
     return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
                         _describe_sacrifice_piety_gain(piety_gain),
-                        _piety_asterisks(you.piety + piety_gain).c_str());
+                        _piety_asterisks(you.raw_piety + piety_gain).c_str());
 }
 
 
@@ -5271,9 +5272,9 @@ bool ru_do_sacrifice(ability_type sac)
         you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
+    set_piety(min(piety_breakpoint(5), you.raw_piety + piety_gain));
 
-    if (you.piety == piety_breakpoint(5))
+    if (you.raw_piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
 
     // Clean up.
@@ -5341,7 +5342,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         // based on piety. This extra delay stacks with any added delay for
         // previous rejections.
         added_delay = you.props[RU_SACRIFICE_PENALTY_KEY].get_int();
-        const int new_penalty = (max(100, static_cast<int>(you.piety))) / 3;
+        const int new_penalty = (max(100, static_cast<int>(you.raw_piety))) / 3;
         added_delay += new_penalty;
 
         // longer delay for each real rejection
@@ -5378,13 +5379,13 @@ bool will_ru_retaliate()
     // Scales up to a 20% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(800, you.piety));
+           && one_chance_in(div_rand_round(800, you.piety()));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
 void ru_do_retribution(monster* mons, int damage)
 {
-    int power = max(0, random2(div_rand_round(you.piety*10, 32))
+    int power = max(0, random2(div_rand_round(you.piety()*10, 32))
         + damage - (2 * mons->get_hit_dice()));
     const actor* act = &you;
 
@@ -5406,7 +5407,7 @@ void ru_do_retribution(monster* mons, int damage)
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
-    else if (power > 10 && mons_can_be_blinded(mons->type))
+    else if (power > 10)
     {
         mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
@@ -5452,11 +5453,11 @@ void ru_draw_out_power()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
 
-    int hp_inc = div_rand_round(you.piety, 16);
-    hp_inc += roll_dice(div_rand_round(you.piety, 20), 6);
+    int hp_inc = div_rand_round(you.piety(), 16);
+    hp_inc += roll_dice(div_rand_round(you.piety(), 20), 6);
     inc_hp(hp_inc);
-    int mp_inc = div_rand_round(you.piety, 48);
-    mp_inc += roll_dice(div_rand_round(you.piety, 40), 4);
+    int mp_inc = div_rand_round(you.piety(), 48);
+    mp_inc += roll_dice(div_rand_round(you.piety(), 40), 4);
     inc_mp(mp_inc);
     drain_player(30, false, true);
 }
@@ -5466,11 +5467,11 @@ dice_def ru_power_leap_damage(bool allow_random)
 {
     if (allow_random)
     {
-        return dice_def(1 + div_rand_round(you.piety *
+        return dice_def(1 + div_rand_round(you.piety() *
             (54 + you.experience_level), 777), 3);
     }
     else
-        return dice_def(1 + you.piety * (54 + you.experience_level) / 777, 3);
+        return dice_def(1 + you.piety() * (54 + you.experience_level) / 777, 3);
 }
 
 bool ru_power_leap()
@@ -5637,9 +5638,9 @@ int cell_has_valid_target(coord_def where)
 int apocalypse_die_size(bool allow_random)
 {
     if (allow_random)
-        return 1 + div_rand_round(you.piety * (54 + you.experience_level), 584);
+        return 1 + div_rand_round(you.piety() * (54 + you.experience_level), 584);
     else
-        return 1 + you.piety * (54 + you.experience_level) / 584;
+        return 1 + you.piety() * (54 + you.experience_level) / 584;
 }
 
 static int _apply_apocalypse(coord_def where)
@@ -6622,7 +6623,8 @@ spret okawaru_duel(const coord_def& target, bool fail)
 
     if (mons->is_peripheral()
         || !(mons_habitat(*mons) & HT_DRY_LAND)
-        || mons->wont_attack())
+        || mons->wont_attack()
+        || mons->type == MONS_BOUNDLESS_TESSERACT)
     {
         mpr("You cannot duel that!");
         return spret::abort;
@@ -6775,7 +6777,7 @@ spret jiyva_oozemancy(bool fail)
 
     fail_check();
 
-    const int dur = 10 + random2avg(you.piety / 8, 2);
+    const int dur = 10 + random2avg(you.piety() / 8, 2);
 
     for (auto pos : walls)
     {

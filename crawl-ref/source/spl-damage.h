@@ -105,11 +105,6 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
-int dazzle_chance_numerator(int hd);
-int dazzle_chance_denom(int pow);
-bool dazzle_target(actor *victim, const actor *agent, int pow);
-spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer = false);
-
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
@@ -161,6 +156,7 @@ vector<coord_def> find_near_hostiles(int range, bool affect_invis,
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
 
+dice_def jinxbite_damage(int pow, bool random);
 void attempt_jinxbite_hit(actor& victim);
 dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim, bool quiet = false);

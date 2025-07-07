@@ -848,9 +848,7 @@ MONS:   orc
 MONS:   rat / giant cockroach / dart slug
 : end
 KMONS:  d = pile of debris / nothing w:30
-KITEM:  d = human skeleton / kobold skeleton / elf skeleton / gnoll skeleton / \
-            ogre skeleton / naga skeleton / minotaur skeleton / \
-            merfolk skeleton / tengu skeleton / draconian skeleton
+: kitem("d = " .. vault_species_skeletons(_G, "dungeon"))
 KITEM:  _ = stone q:1 / large rock q:1 w:3
 KFEAT:  B = altar_beogh
 KPROP:  B = no_tele_into
@@ -1001,7 +999,7 @@ ENDMAP
 NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
 TAGS:   transparent
 KMONS:  p = plant / fungus
-KITEM:  h = human skeleton, robe mundane
+KITEM:  h = human skeleton, mundane robe
 SUBST:  ? = pW
 : ecumenical_altar_setup(_G)
 MAP

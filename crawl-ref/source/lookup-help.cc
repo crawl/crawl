@@ -526,6 +526,13 @@ static bool _mutation_filter(string key, string /*body*/)
     return starts_with(key, "potion of"); // hack alert!
 }
 
+static bool _bane_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " bane");
+}
+
 static bool _passive_filter(string key, string /*body*/)
 {
     return !strip_suffix(lowercase(key), " passive");
@@ -1328,6 +1335,20 @@ static int _describe_mutation(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_bane(const string &key, const string &suffix,
+                              string /*footer*/)
+{
+    const string bane_name = key.substr(0, key.size() - suffix.size());
+    const bane_type bane = bane_from_name(bane_name.c_str());
+    if (bane == NUM_BANES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_bane(bane);
+    return 0;
+}
+
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -1369,6 +1390,9 @@ static const vector<LookupType> lookup_types = {
     LookupType('U', "mutation", nullptr, _mutation_filter,
                nullptr, nullptr, _mut_menu_gen,
                _describe_mutation, lookup_type::db_suffix),
+    LookupType('N', "bane", nullptr, _bane_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_bane, lookup_type::db_suffix),
 };
 
 /**

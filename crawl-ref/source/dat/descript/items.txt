@@ -1006,6 +1006,11 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
+parchment
+
+A brief text on magic, perhaps excerpted from some larger work. It contains
+knowledge of one spell.
+%%%%
 partisan
 
 A long polearm with sharp protrusions on either side of the spearhead.
@@ -1732,8 +1737,8 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded, and
-tougher monsters will recover their vision more quickly.
+those struck. Only living, undead, demonic and angelic monsters can be blinded,
+and tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
 

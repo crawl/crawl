@@ -3775,6 +3775,9 @@ colour_t item_def::book_colour() const
     if (sub_type == BOOK_MANUAL)
         return WHITE;
 
+    if (sub_type == BOOK_PARCHMENT)
+        return parchment_colour(static_cast<spell_type>(plus));
+
     switch (rnd % NDSC_BOOK_PRI)
     {
         case 0:

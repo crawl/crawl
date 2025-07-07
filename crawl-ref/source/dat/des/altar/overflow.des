@@ -125,7 +125,7 @@ function species_mock(e)
   elseif you.race() == "Barachi" then
     return "cane toad"
   elseif you.race() == "Coglin" then
-    return "hobgoblin skeleton"
+    return "hobgoblin draugr"
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
@@ -165,7 +165,7 @@ function species_mock(e)
   elseif you.race() == "Poltergeist" then
     return "dancing weapon ; mundane dagger plus:-9"
   elseif you.race() == "Revenant" then
-    return "ugly thing skeleton"
+    return "ugly thing draugr"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
   elseif you.race() == "Tengu" then
@@ -976,13 +976,13 @@ TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
 TAGS:   no_item_gen no_monster_gen no_trap_gen
 DEPTH:  D:4-8
 MONS:   bush, plant
-ITEM:   random skeleton
+ITEM:   any skeleton
 KFEAT:  _ = altar_fedhas
 FTILE:  '!12@ = floor_moss
 COLOUR: '!@ = green
 NSUBST:  d = 3:d / 3:e / 3 = e. / *:.
 KPROP:  .3 = no_tele_into
-: dgn.delayed_decay(_G, "e", "random corpse")
+: dgn.delayed_decay(_G, "e", "any corpse")
 MAP
  xxxxxxxxx
 xx.ddddd.xx
@@ -1451,15 +1451,16 @@ TAGS:   uniq_altar_kikubaaqudgha temple_overflow_1 transparent
 TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
 # zombies scale with depth so we'll let it place in Crypt, too,
 # but with an interest check
-DEPTH:  D:4-10, Crypt
+DEPTH:  D:5-10, Crypt
 : if you.in_branch("Crypt") then
 MONS:   zombie, guardian mummy, skeletal warrior, ghoul
 NSUBST: ? = 1:* / *:?
 : else
-:   if you.depth() < 6 then
-MONS:   zombie, skeleton, phantom, shadow imp
+:   if you.depth() > 6 then
+MONS:   zombie, wight, burial acolyte
+:     mons("place:D:" .. you.depth() - 2 .." draugr")
 :   else
-MONS:   zombie, skeleton, wight, burial acolyte
+MONS:   zombie, phantom, shadow imp, draugr ; dagger
 :   end
 : end
 NSUBST: ? = 1:_ / *:1
@@ -1541,8 +1542,10 @@ TAGS:   uniq_altar_kikubaaqudgha transparent
 MONS:   vampire knight / jiangshi, vampire mage
 : elseif you.depth() > 11 then
 MONS:   vampire, vampire bat
+: elseif you.depth() > 5 then
+MONS:   vampire bat / nothing w:7, bat draugr ; dagger / bat zombie w:20
 : else
-MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
+MONS:   vampire bat / nothing w:7, bat zombie
 : end
 : if you.in_branch("Depths")
 :  or (you.absdepth() > 11 and crawl.x_chance_in_y(2, 3)) then
@@ -1700,12 +1703,12 @@ ENDMAP
 NAME:   makhleb_blood_cavern_becter
 TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb transparent
 DEPTH:  D:4-8
-: if crawl.coinflip() then
-: dgn.delayed_decay(_G, '1', 'human corpse')
+: if you.depth() < 7 then
+:   dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound
 : else
-KMONS:  1 = human skeleton
-KMONS:  2 = hound skeleton
+KMONS:  1 = human draugr ; whip
+KMONS:  2 = spectral hound
 : end
 KFEAT:  _ = altar_makhleb
 KFEAT:  X = x
@@ -1753,7 +1756,7 @@ TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 TAGS:   uniq_altar_makhleb transparent
 # white imp depth
 DEPTH:  D:5-8
-MONS:   shadow imp w:2 / crimson imp
+MONS:   shadow imp w:2 / drude w:4 / crimson imp w:6
 KFEAT:  _ = altar_makhleb
 TILE:   c = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
@@ -2300,13 +2303,12 @@ ENDMAP
 NAME:   grunt_qazlal_sundering
 TAGS:   no_monster_gen no_item_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_qazlal uniq_altar_qazlal
+DEPTH:  D:3-, !D:$, Depths, !Depths:$
 KFEAT:  _ = altar_qazlal
+KFEAT:  ^ = shaft trap
 KPROP:  -c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
-:  if you.depth() ~= dgn.br_depth(you.branch()) then
-KFEAT:  ^ = shaft trap
-:  end
 KITEM:  . = nothing w:189 / stone / large rock q:1 w:1
 : interest_check(_G)
 MAP
@@ -2659,7 +2661,7 @@ TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KPROP:  1d = no_tele_into
 KFEAT:  _ = altar_sif_muna
 KFEAT:  d = escape_hatch_down
-KITEM:  d = randbook owner:Sif_Muna numspells:1 slevels:1
+KITEM:  d = parchment slevel:1
 MONS:   orc wizard
 COLOUR: .@+1 = blue
 FTILE:  .@+1G_ = floor_marble
@@ -4221,25 +4223,26 @@ xxxxxxxxxxxxxcccccxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_tso_besieged_by_evil
-TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
-TAGS: temple_overflow_1 patrolling transparent no_monster_gen
+NAME:   nicolae_tso_besieged_by_evil
+TAGS:   temple_overflow_the_shining_one uniq_altar_the_shining_one
+TAGS:   temple_overflow_1 patrolling transparent no_monster_gen
 # imp ranges
-DEPTH: D:3-8
-SUBST: c = ccc' s:2 z:2, + = ++'
-NSUBST: ' = 2:s / 2:z / 2:sz'' / *:'
+DEPTH:  D:3-8
+SUBST:  c = ccc' 4:2, + = ++'
+NSUBST: ' = 1:s / 1:sz / 2:z / 2 = zz'' / *:'
+KMONS:  z = orc zombie / kobold zombie / hobgoblin zombie
+: if you.absdepth() <= 4 then
+KMONS:  s = kobold draugr ; dagger / orc draugr ; hand axe
+KMONS:  _ = ufetubus / white imp w:5
+: else
+KMONS:  s = kobold draugr ; short sword / gnoll draugr ; trident
+KMONS:  _ = ufetubus / white imp / shadow imp / drude w:5
+: end
+KFEAT:  _ = altar_the_shining_one
 COLOUR: 'sz = yellow / none w:5
 COLOUR: c = white
 TILE: c = wall_church
 FTILE: +'_sz = floor_sandstone / none w:5
-KMONS: s = orc skeleton / kobold skeleton / goblin skeleton / hobgoblin zombie
-KMONS: z = orc zombie / kobold zombie / goblin zombie / hobgoblin zombie
-: if you.absdepth() <= 4 then
-KMONS: _ = crimson imp / white imp w:5
-: else
-KMONS: _ = crimson imp / white imp / shadow imp
-: end
-KFEAT: _ = altar_the_shining_one
 MAP
 .............
 .............
@@ -4525,13 +4528,12 @@ TAGS:    no_item_gen transparent
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
-ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:soul_splinter \
-         numspells:1
+ITEM:    parchment of soul splinter
 # You already get a direct damage spell from other god altars.
-ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
-         randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
-         randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
-ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
+ITEM:    parchment disc:hexes slevel:1 / \
+         parchment disc:summoning slevel:1 / \
+         parchment disc:translocation slevels:1
+ITEM:    parchment of magic dart
 SHUFFLE: AdB"C` / A'BeC` / A'B"Cf
 MAP
      xxxxx
@@ -4707,9 +4709,9 @@ KFEAT:   xX = altar_sif_muna
 KFEAT:   yY = altar_kikubaaqudgha
 KFEAT:   zZ = altar_vehumet
 : local coinflip = util.random_from({"summoning", "forgecraft"})
-: kitem("X = randbook owner:Sif_Muna disc:" .. coinflip .. " numspells:1 slevels:1")
-KITEM:   Y = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
-KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
+: kitem("X = parchment disc:" .. coinflip .. " slevel:1")
+KITEM:   Y = parchment disc:necromancy slevel:1
+KITEM:   Z = parchment disc:conjuration slevel:1
 SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~
 SUBST:   '"` = .
 NSUBST:  ~ = 1:~ / 2:. / * = 1.
@@ -4774,17 +4776,19 @@ WEIGHT: 2
 TAGS:   no_monster_gen no_trap_gen temple_overflow_2 no_descent
 TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
 : if you.depth() <= 4 then
-MONS: zombie / skeleton
+MONS: zombie / hobgoblin draugr w:2 / orc draugr w:2
 MONS: mummy / shadow imp / wight / mummy / phantom
 KMONS: 3 = menkaure, wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
-MONS: zombie / skeleton / mummy / shadow imp / wight / mummy / phantom
+MONS: zombie / gnoll draugr w:2 / adder draugr w:2 / mummy / \
+      shadow imp / wight / mummy / phantom
 MONS: burial acolyte / wraith / vampire
 KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
-MONS: mummy / wight / zombie / skeleton / phantom
+MONS: mummy / wight / zombie / steam dragon draugr w:2 / \
+      howler monkey draugr w:2 / centaur draugr w:2 / phantom
 MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
 MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-
@@ -4888,7 +4892,7 @@ kitem("1 = " .. dgn.random_item_def(weapons, nil, "ego:none plus:" .. enchant))
 }}
 KMONS:   1 = gnoll ; animal skin / w:2 Terence
 KMONS:   2 = white imp / w:2 Jessica
-KITEM:   2 = randbook owner:Sif_Muna numspells:1 slevels:1
+KITEM:   2 = parchment slevel:1
 : elseif you.absdepth() <= 7 then
 :     if crawl.one_chance_in(5) then
 KMONS:   1 = duvessa

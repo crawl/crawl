@@ -1326,11 +1326,10 @@ ENDMAP
 
 NAME:   dpeg_vaults_monster_row
 TAGS:   vaults_room allow_dup
-MONS:   vault guard skeleton, necromancer, phantasmal warrior
 : local d = you.depth()
-: mons("vault guard skeleton w:" .. 9 - d ..
-:      " / yaktaur captain skeleton w:" .. d)
-: mons("necromancer w:" .. 9 - d .. " / deep elf death mage w:" .. d)
+: mons("centaur warrior draugr w:" .. 9 - d .. " / " ..
+:      "yaktaur captain draugr w:" .. d)
+MONS:   necromancer
 : mons("phantasmal warrior w:" .. 9 - d .. " / flayed ghost w:" .. d)
 SUBST:  0 : 0000z
 NSUBST: 0 = 1:0 / 2:. / * = 0009..

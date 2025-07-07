@@ -29,7 +29,7 @@ local books = {
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:soul_splinter&slow&blink&"
   .. "swiftness",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
-"Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
+"Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&gloom&"
   .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
 "Crowd_Control numspells:3 spells:gell's_gavotte&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
@@ -82,7 +82,7 @@ local books = {
 "Modern_Magic,_Vol._19 numspells:2 spells:lesser_beckoning&infestation",
 "Modern_Magic,_Vol._20 numspells:2 spells:poisonous_vapours&ignition",
 "Modern_Magic,_Vol._21 numspells:1 spells:borgnjor's_vile_clutch",
-"Modern_Magic,_Vol._25 numspells:6 spells:foxfire&dazzling_flash&"
+"Modern_Magic,_Vol._25 numspells:6 spells:foxfire&gloom&"
   .. "frozen_ramparts&hailstorm&eringya's_noxious_bog&starburst",
 "Modern_Magic,_Vol._27 numspells:4 spells:awaken_armour&manifold_assault&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
@@ -114,13 +114,13 @@ local books = {
   .. "leda's_liquefaction&petrify&borgnjor's_vile_clutch&"
   .. "metabolic_englaciation",
 "Optical_Phenomena numspells:4 spells:searing_ray&fulminant_prism&"
-  .. "dazzling_flash&olgreb's_toxic_radiance",
+  .. "gloom&olgreb's_toxic_radiance",
 "Patience numspells:5 spells:searing_ray&launch_clockwork_bee&flame_wave&"
   .. "fortress_blast&maxwell's_capacitive_coupling",
 "Peace_and_Solitude numspells:4 spells:dispersal&disjunction&"
   .. "silence&teleport_other",
-"Perplexing_Participles numspells:4 spells:searing_ray&confusing_touch&"
-  .. "dazzling_flash&freezing_cloud",
+"Perplexing_Participles numspells:3 spells:searing_ray&confusing_touch&"
+  .. "freezing_cloud",
 "Pondering owner:Gastronok numspells:4 spells:slow&summon_small_mammal&"
   .. "swiftness&airstrike",
 "Prestidigitation numspells:7 spells:apportation&ensorcelled_hibernation&"

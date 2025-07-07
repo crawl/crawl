@@ -180,7 +180,7 @@ static int _get_mons_colour(const monster_info& mi)
             col = YELLOW;
         else if (mi.type == MONS_SIMULACRUM && mons_zombie_size(mi.base_type) == Z_BIG)
             col = LIGHTCYAN;
-        else if (mi.type == MONS_SKELETON && mons_zombie_size(mi.base_type) == Z_BIG)
+        else if (mi.type == MONS_DRAUGR && mons_zombie_size(mi.base_type) == Z_BIG)
             col = WHITE;
         else if (mi.type == MONS_SPECTRAL_THING && mons_zombie_size(mi.base_type) == Z_BIG)
             col = LIGHTGREEN;

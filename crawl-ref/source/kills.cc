@@ -477,8 +477,8 @@ string kill_def::base_name(const kill_monster_desc &md) const
     case kill_monster_desc::M_ZOMBIE:
         name += " zombie";
         break;
-    case kill_monster_desc::M_SKELETON:
-        name += " skeleton";
+    case kill_monster_desc::M_DRAUGR:
+        name += " draugr";
         break;
     case kill_monster_desc::M_SIMULACRUM:
         name += " simulacrum";
@@ -636,8 +636,8 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         case MONS_ZOMBIE:
             modifier = M_ZOMBIE;
             break;
-        case MONS_SKELETON:
-            modifier = M_SKELETON;
+        case MONS_DRAUGR:
+            modifier = M_DRAUGR;
             break;
         case MONS_SIMULACRUM:
             modifier = M_SIMULACRUM;
@@ -665,8 +665,8 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
         case MONS_ZOMBIE:
             modifier = M_ZOMBIE;
             break;
-        case MONS_SKELETON:
-            modifier = M_SKELETON;
+        case MONS_DRAUGR:
+            modifier = M_DRAUGR;
             break;
         case MONS_SIMULACRUM:
             modifier = M_SIMULACRUM;
@@ -743,8 +743,8 @@ static int kill_lualc_modifier(lua_State *ls)
         case kill_monster_desc::M_ZOMBIE:
             modifier = "zombie";
             break;
-        case kill_monster_desc::M_SKELETON:
-            modifier = "skeleton";
+        case kill_monster_desc::M_DRAUGR:
+            modifier = "draugr";
             break;
         case kill_monster_desc::M_SIMULACRUM:
             modifier = "simulacrum";
@@ -837,10 +837,8 @@ static int kill_lualc_symbol(lua_State *ls)
         switch (ke->modifier)
         {
         case kill_monster_desc::M_ZOMBIE:
-            ch = mons_char(MONS_ZOMBIE);
-            break;
-        case kill_monster_desc::M_SKELETON:
-            ch = mons_char(MONS_SKELETON);
+        case kill_monster_desc::M_DRAUGR:
+            ch = mons_char(MONS_DRAUGR);
             break;
         case kill_monster_desc::M_SIMULACRUM:
             ch = mons_char(MONS_SIMULACRUM);

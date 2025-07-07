@@ -2270,9 +2270,8 @@ ENDMAP
 
 NAME:   nicolae_snake_dead_anacondas
 TAGS:   no_pool_fixup transparent no_monster_gen patrolling
-KMONS:  1 = anaconda skeleton / anaconda zombie
-KMONS:  2 = anaconda skeleton w:5 / anaconda zombie w:5 / spectral anaconda \
-        / anaconda simulacrum
+KMONS:  1 = anaconda zombie
+KMONS:  2 = anaconda zombie w:5 / spectral anaconda / anaconda simulacrum
 KFEAT:  2 = W / . w:30
 NSUBST: D = 2=% / 2=* / *| / -'
 # About 18.5 snek on-average.
@@ -2745,14 +2744,12 @@ ENDMAP
 NAME:  nicolae_snake_the_dead_are_slithering
 TAGS:  transparent
 DEPTH: Snake
-# No zombies, because "zombie" doesn't begin with "s".
+# Only derived undead that start with "s".
 KMONS: S = naga simulacrum / naga warrior simulacrum / anaconda simulacrum / \
            guardian serpent simulacrum / sea snake simulacrum
 KMONS: s = naga spectre / naga warrior spectre / anaconda spectre / \
            guardian serpent spectre / sea snake spectre
-KMONS: ` = naga skeleton / naga warrior skeleton / anaconda skeleton / \
-           guardian serpent skeleton / sea snake skeleton
-SUBST: z = SSss`.....
+SUBST: z = SSss$$....
 MAP
       xxxxx
      xxx..x

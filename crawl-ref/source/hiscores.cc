@@ -1766,7 +1766,7 @@ void scorefile_entry::init(time_t dt)
     god = you.religion;
     if (!you_worship(GOD_NO_GOD))
     {
-        piety   = you.piety;
+        piety   = you.raw_piety;
         penance = you.penance[you.religion];
     }
 

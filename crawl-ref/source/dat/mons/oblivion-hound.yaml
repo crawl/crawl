@@ -1,4 +1,4 @@
-name: "doom hound"
+name: "oblivion hound"
 glyph: {char: "h", colour: green}
 flags: [see_invis, unblindable]
 exp: 2059
@@ -12,7 +12,7 @@ hd: 20
 hp_10x: 1100
 ac: 6
 ev: 13
-spells: doom_hound
+spells: oblivion_hound
 has_corpse: true
 shout: bark
 intelligence: animal

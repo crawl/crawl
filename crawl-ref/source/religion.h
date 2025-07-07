@@ -51,6 +51,11 @@ void dec_penance(god_type god, int val);
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 int excom_xp_docked();
 
+void player_change_ostracism(int amount);
+void ostracise_player(int amount);
+bool god_cares_about_ostracism(god_type god = you.religion);
+int ostracism_pips();
+
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance, bool no_lecture = false);
 void god_speaks(god_type god, const char *mesg);
@@ -90,11 +95,11 @@ static inline int player_under_penance(god_type god = you.religion)
 static inline bool in_good_standing(god_type god, int pbreak = -1)
 {
     return you_worship(god) && !player_under_penance(god)
-           && (pbreak < 0 || you.piety >= piety_breakpoint(pbreak));
+           && (pbreak < 0 || you.piety() >= piety_breakpoint(pbreak));
 }
 
 int had_gods();
-int piety_rank(int piety = you.piety);
+int piety_rank(int piety = you.piety());
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);

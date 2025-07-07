@@ -476,7 +476,8 @@ bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL
       || feat == DNGN_GRANITE_STATUE
-      || feat == DNGN_METAL_STATUE;
+      || feat == DNGN_METAL_STATUE
+      || feat == DNGN_ZOT_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?

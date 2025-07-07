@@ -12,7 +12,8 @@ note_items    += acquirement, of Zot
 note_messages += Your scales start
 note_messages += protects you from harm
 note_messages += You (fall|are sucked) into a shaft
-note_monsters += orb of fire, ancient lich, dread lich, Sigmund
+note_monsters += orb of fire, orb of winter, orb of entropy
+note_monsters += ancient lich, dread lich, Sigmund
 
 monster_item_view_features += stair, trap, runelight
 

@@ -203,6 +203,21 @@ static void _decrement_petrification(int delay)
     }
 }
 
+static void _decrement_sleep_and_daze(int delay)
+{
+    const bool break_sleep = _decrement_a_duration(DUR_SLEEP, delay);
+    const bool break_daze = _decrement_a_duration(DUR_DAZED, delay);
+
+    // Add a tiny bit of duration back to the effects we're breaking, so that
+    // you.wake_up will see them and print appropriate messages.
+    if (break_sleep)
+        you.duration[DUR_SLEEP] = 1;
+    if (break_daze)
+        you.duration[DUR_DAZED] = 1;
+
+    you.wake_up(break_sleep, break_daze);
+}
+
 static void _decrement_attraction(int delay)
 {
     if (!you.duration[DUR_ATTRACTIVE])
@@ -360,6 +375,21 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+static void _update_claustrophobia()
+{
+    if (!you.has_bane(BANE_CLAUSTROPHOBIA))
+        return;
+
+    int count = 0;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+            ++count;
+    }
+
+    you.props[CLAUSTROPHOBIA_KEY] = count * 2;
+}
+
 // Uskayaw piety decays incredibly fast, but only to a baseline level of *.
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
@@ -373,7 +403,7 @@ static void _handle_uskayaw_piety(int time_taken)
         gain_piety(piety_gain);
         you.props[USKAYAW_AUT_SINCE_PIETY_GAIN] = 0;
     }
-    else if (you.piety > piety_breakpoint(0))
+    else if (you.piety() > piety_breakpoint(0))
     {
         // If we didn't do a dance action and we can lose piety, we're going
         // to lose piety proportional to the time since the last time we took
@@ -385,7 +415,7 @@ static void _handle_uskayaw_piety(int time_taken)
         // piety, in order to give more tolerance for missing in combat.
         if (time_since_gain > 30)
         {
-            int piety_lost = min(you.piety - piety_breakpoint(0),
+            int piety_lost = min(you.piety() - piety_breakpoint(0),
                     div_rand_round(time_since_gain, 10));
 
             if (piety_lost > 0)
@@ -411,7 +441,7 @@ static void _handle_uskayaw_time(int time_taken)
     // need to trigger the abilities this turn. Otherwise we'll decrement the
     // timer down to a minimum of 0, at which point it becomes eligible to
     // trigger again.
-    if (audience_timer == -1 || (you.piety >= piety_breakpoint(2)
+    if (audience_timer == -1 || (you.piety() >= piety_breakpoint(2)
             && x_chance_in_y(time_taken, 100 + audience_timer)))
     {
         uskayaw_prepares_audience();
@@ -419,13 +449,44 @@ static void _handle_uskayaw_time(int time_taken)
     else
         you.props[USKAYAW_AUDIENCE_TIMER] = max(0, audience_timer - time_taken);
 
-    if (bond_timer == -1 || (you.piety >= piety_breakpoint(3)
+    if (bond_timer == -1 || (you.piety() >= piety_breakpoint(3)
             && x_chance_in_y(time_taken, 100 + bond_timer)))
     {
         uskayaw_bonds_audience();
     }
     else
         you.props[USKAYAW_BOND_TIMER] =  max(0, bond_timer - time_taken);
+}
+
+static void _handle_hoarding()
+{
+    const int potion_lv = you.get_mutation_level(MUT_HOARD_POTIONS);
+    if (potion_lv)
+    {
+        const int trigger_hp = potion_lv == 1 ? you.hp_max * 65 / 100
+                                              : you.hp_max * 4 / 10;
+
+        if (you.hp <= trigger_hp)
+            you.props.erase(HOARD_POTIONS_TIMER_KEY);
+        else if (!i_feel_safe(false, false, true))
+            you.props[HOARD_POTIONS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[HOARD_POTIONS_TIMER_KEY].get_int())
+            you.props.erase(HOARD_POTIONS_TIMER_KEY);
+    }
+
+    const int scroll_lv = you.get_mutation_level(MUT_HOARD_SCROLLS);
+    if (scroll_lv)
+    {
+        const int trigger_hp = scroll_lv == 1 ? you.hp_max * 65 / 100
+                                              : you.hp_max * 4 / 10;
+
+        if (you.hp <= trigger_hp)
+            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
+        else if (!i_feel_safe(false, false, true))
+            you.props[HOARD_SCROLLS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[HOARD_SCROLLS_TIMER_KEY].get_int())
+            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
+    }
 }
 
 /**
@@ -449,8 +510,7 @@ void player_reacts_to_monsters()
     _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
-    if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.wake_up(true);
+    _decrement_sleep_and_daze(you.time_taken);
 
     if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
         && you.is_constricted())
@@ -505,6 +565,7 @@ void player_reacts_to_monsters()
 
     _maybe_melt_armour();
     _update_cowardice();
+    _update_claustrophobia();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
 
@@ -520,6 +581,8 @@ void player_reacts_to_monsters()
     }
 
     _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
+
+    _handle_hoarding();
 }
 
 static bool _check_recite()
@@ -719,7 +782,7 @@ static void _decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
+    if (you.raw_piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
@@ -857,8 +920,8 @@ static void _decrement_durations()
     if (you.duration[DUR_INFERNAL_LEGION])
         makhleb_infernal_legion_tick(delay);
 
-    if (you.duration[DUR_DOOM_HOWL])
-        doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
+    if (you.duration[DUR_OBLIVION_HOWL])
+        oblivion_howl(min(delay, you.duration[DUR_OBLIVION_HOWL]));
 
     dec_elixir_player(delay);
     dec_frozen_ramparts(delay);

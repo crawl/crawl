@@ -815,7 +815,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
             mpr(random_choose("Your body deforms painfully.",
                               "Your limbs ache and wobble like jelly.",
                               "Your body is flooded with magical radiation."));
-            contaminate_player(random_range(3500, 6500));
+            contaminate_player(random_range(700, 1350));
         }
         defender->hurt(attacker, random_range(5, 25));
     }
@@ -1787,7 +1787,7 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
+static void _DREAD_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
                                         actor* defender, bool mondied, int /*dam*/)
 {
     if (!mondied)

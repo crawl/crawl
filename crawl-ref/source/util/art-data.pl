@@ -20,6 +20,7 @@ my %field_type = (
     ANGRY    => "num",
     APPEAR   => "str",
     ARCHMAGI => "bool",
+    BANE     => "bool",
     BASE_ACC => "num",
     BASE_DAM => "num",
     BASE_DELAY => "num",
@@ -555,7 +556,7 @@ my @art_order = (
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE",
+    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE", "BANE",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -570,7 +571,7 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE",
+#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE",
 #     "}",
 # end TAG_MAJOR_VERSION
 

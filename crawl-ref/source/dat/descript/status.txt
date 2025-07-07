@@ -105,9 +105,10 @@ Confusion can be cured immediately by potions of curing.
 %%%%
 Contam status
 
-You glow with mutagenic radiation. This can mutate you over time, usually with
-a negative outcome. The colour indicates the severity: the first level (grey)
-is only a warning, and no mutation or loss of stealth will occur from it.
+You are glowing with mutagenic radiation. This can inflict mutations over time
+(usually negative) or even cause you to suffer damage as the unstable magic
+explodes violently. In addition, your glow prevents invisibility and reduces
+your stealth.
 %%%%
 Drain status
 
@@ -654,12 +655,14 @@ maximum health is further drained when taking damage.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer.
+translocation magic. Teleportation will take longer and scrolls of blinking may
+transport you a short distance away from your intended destination.
 %%%%
 Orb? status
 
 You are holding the Charlatan's Orb, whose energies disrupt translocation
-magic. Teleportation will take longer.
+magic. Teleportation will take longer and scrolls of blinking may transport you
+a short distance away from your intended destination.
 %%%%
 -Hop status
 
@@ -1203,3 +1206,19 @@ You have a mane of venomous tendrils for hair.
 
 Your lithotoxin has recently activated and will not do so again until you fully
 heal.
+%%%%
+Doom status
+
+A malevolent fate is gathering around you. If your Doom reaches 100%, you will
+be afflicted by a random bane and your Doom will reset to 0. Banes have diverse
+negative effects that can significant endanger your character for an extended
+period of time.
+
+Both Doom and Banes are only cured by gaining experience, though Banes typically
+last much longer.
+%%%%
+Ostracised status
+
+Your connection to the divine has been partially cut-off, temporarily reducing
+your effective piety. Gaining experience will eventually recover all piety that
+has been locked away this way.

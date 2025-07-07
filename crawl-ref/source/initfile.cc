@@ -470,6 +470,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(jewellery_prompt), false),
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
+        new BoolGameOption(SIMPLE_NAME(warn_contam_cost), false),
+        new BoolGameOption(SIMPLE_NAME(show_resist_percent), true),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -1641,7 +1643,7 @@ void game_options::reset_options()
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
+          SPELL_ENGLACIATION, SPELL_GLOOM, SPELL_FLAME_WAVE,
           SPELL_PLASMA_BEAM, SPELL_PILEDRIVER, SPELL_DIAMOND_SAWBLADES,
           SPELL_FORTRESS_BLAST };
     always_use_static_spell_targeters = false;

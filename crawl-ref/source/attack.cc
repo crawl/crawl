@@ -434,11 +434,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
             else
                 attk_type = AT_HIT;
         }
-        else if (attk_type == AT_TRUNK_SLAP && attacker->type == MONS_SKELETON)
-        {
-            // Elephant trunks have no bones inside.
-            attk_type = AT_NONE;
-        }
     }
     else
     {

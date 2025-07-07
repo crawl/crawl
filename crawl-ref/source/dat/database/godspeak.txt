@@ -583,9 +583,8 @@ Xom drinkless confusion
 
 Xom's power touches upon your body and mind for a moment.
 %%%%
-# 50% stat loss, 25% draining,
-# 25% torment (only the player if Xom's feeling nasty)
-Xom draining or torment
+# Draining, player-only torment, or Doom.
+Xom suffering
 
 "You have displeased me, mortal."
 

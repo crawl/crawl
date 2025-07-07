@@ -31,8 +31,16 @@ function TroveMarker:new(props)
     error("Need a toll.")
   end
 
-  if props.toll.item == nil and props.toll.nopiety == nil then
-    error("Toll doesn't have any contents!")
+  if props.toll.type == nil then
+      error("Toll doesn't have a type!")
+  end
+
+  if props.toll.type == "item" and props.toll.item == nil then
+      error("Item toll doesn't have an item!")
+  end
+
+  if props.toll.type == "bane" and props.toll.bane == nil then
+      error("Bane toll doesn't have a type!")
   end
 
   init_item(props.toll.item)
@@ -83,20 +91,27 @@ function TroveMarker:fdesc_long (marker)
   if toll.item then
     if self:showing_item() then
       state = "This portal requires the presence of " ..
-              self:item_name() .. " to function."
+              self:item_name() .. " to function.\n"
     else
       state = "This portal needs " ..
-              self:item_name() .. " to function."
+              self:item_name() .. " to function.\n"
     end
-  elseif toll.nopiety then
-    state = "The portal is engraved with runes symbolizing the primacy of the "
+  elseif toll.type == "nopiety" then
+      state = "The portal is engraved with runes symbolizing the primacy of the "
             .. "material over the divine. Those who enter it may find riches, "
             .. "but when they return, they will find that whatever gods they "
-            .. "held dear have forgotten them in their absence."
+            .. "held dear have forgotten them in their absence.\n"
+  elseif toll.type == "bane" then
+      state = "The portal is guarded from tresspassers with a powerful curse. "
+            .. "All who enter will suffer the " .. crawl.bane_name(toll.bane) .. ":\n\n"
+            .. crawl.bane_description(toll.bane)
+  elseif toll.type == "drain" then
+      state = "The portal is warded with dark magic that will temporarily drain "
+            .. "a significant fraction of the maximum health of whoever enters it.\n"
   else
     error("\nThis portal is very buggy.")
   end
-  state = "\n" .. state .. "\n"
+  state = "\n" .. state .. "_________________\n"
   return state
 end
 
@@ -118,8 +133,10 @@ function TroveMarker:overview_note (marker)
     else
       return "give " .. self:item_name(false)
     end
-  elseif toll.nopiety then
+  elseif toll.type == "piety" then
     return "lose all piety"
+  elseif toll.type == "bane" then
+    return "suffer the " .. crawl.bane_name(toll.bane)
   else
     return "be buggy"
   end
@@ -244,8 +261,11 @@ function TroveMarker:describe(marker)
   local toll = get_toll(self)
   if toll.item then
     return "The portal requires " .. self:item_name() .. " for entry.\n"
-  elseif toll.nopiety then
-    return "Entrants to this portal lose all standing with their god.\n"
+  elseif toll.type == "nopiety" then
+    return "Entrants to this portal will become Ostracised and temporarily lose "
+           .. "all standing with their god.\n"
+  elseif toll.type == "bane" then
+    return "Entrants to this portal suffer the " .. crawl.bane_name(toll.bane) .. ".\n"
   else
     return "This portal is very buggy."
   end
@@ -306,14 +326,6 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  if item.artefact_name ~= false then
-    if string.find(item.artefact_name, "'s") or do_grammar == false then
-      return item.artefact_name
-    else
-      return "the " .. item.artefact_name
-    end
-  end
-
   if item.base_type == "weapon" or item.base_type == "armour" then
     if item.plus1 ~= false and item.plus1 ~= nil then
       s = s .. " "
@@ -324,15 +336,6 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  local jwith_pluses = {"ring of protection", "ring of evasion",
-                        "ring of strength", "ring of intelligence",
-                        "ring of dexterity", "ring of slaying",
-                        "amulet of reflection"}
-  if item.base_type == "jewellery" and
-     util.contains(jwith_pluses, item.sub_type) then
-    s = s .. " +" .. item.plus1
-  end
-
   if item.base_type == "potion" or item.base_type == "scroll" then
     if item.quantity > 1 then
       s = s .. " " .. item.base_type .. "s of"
@@ -341,12 +344,10 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  s = s .. " " .. item.sub_type
-
-  if item.base_type == "armour" or item.base_type == "weapon" then
-    if item.ego_type then
-      s = s .. " of " .. item.ego_type
-    end
+  if string.find(item.sub_type, "demon") then
+    s = s .. " " .. "demon weapon"
+  else
+    s = s .. " " .. item.sub_type
   end
 
   s = util.trim(s)
@@ -372,6 +373,15 @@ function TroveMarker:search_for_rune(marker, pname, dry_run)
     if dry_run ~= nil then crawl.mpr("No " .. item.ego_type .. ".") end
     return false
   end
+end
+
+function item_subtype_matches(item1, item2)
+  if (item1 == item2) then
+    return true
+  end
+
+  return (item1 == "demon whip" or item1 == "demon trident" or item1 == "demon blade")
+         and (item2 == "demon whip" or item2 == "demon trident" or item2 == "demon blade")
 end
 
 function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
@@ -456,8 +466,8 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
     end -- End of the else block from above.
     -- Now all we need to do is to make sure that the item
     -- is the one we're looking for
-    if this_item and item.sub_type == it.sub_type
-       and item.base_type == it.base_type then
+
+    if this_item and item_subtype_matches(it.sub_type, item.sub_type) and item.base_type == it.base_type then
       if dry_run ~= nil then crawl.mpr("Accepting " .. it.name() .. " and added to queue.") end
       table.insert(acceptable_items, it)
     elseif this_item then
@@ -604,21 +614,33 @@ function TroveMarker:check_veto(marker, pname)
   local toll = get_toll(self.props)
   if toll.item then
     return self:check_item_veto(marker, pname)
-  elseif toll.nopiety then
-    -- Piety troves don't generate under Ashenzari due to piety being fixed
-    -- based on the number of cursed items, but they can exist if the player
-    -- swaps gods after finding one. If this somehow happens, sorry, bad luck.
-    if you.god() == "Ashenzari" then
-      crawl.mpr("The portal is unable to unshackle you from Ashenzari's "
-                .. "curse; you must abandon your deity entirely to enter!")
-      return "veto"
-    end
+  elseif toll.type == "nopiety" then
     local yesno_message = (
       "This portal proclaims the superiority of the material over the divine; "
       .. "those who enter it will find they have lost all favour with their "
       .. "chosen deity. Enter anyway?")
     if crawl.yesno(yesno_message, true, "n") then
       self:accept_nopiety()
+    else
+      return "veto"
+    end
+  elseif toll.type == "bane" then
+    local yesno_message = (
+      "The portal is guarded from tresspassers with a powerful curse. "
+      .. "All who enter will suffer the " .. crawl.bane_name(toll.bane) .. ". "
+      .. "Enter anyway?")
+    if crawl.yesno(yesno_message, true, "n") then
+      self:accept_bane()
+    else
+      return "veto"
+    end
+  elseif toll.type == "drain" then
+    local yesno_message = (
+      "The portal is warded with dark magic that will temporarily drain "
+      .. "a significant fraction of the maximum health of whoever enters it. "
+      .. "Enter anyway?")
+    if crawl.yesno(yesno_message, true, "n") then
+      self:accept_drain()
     else
       return "veto"
     end
@@ -629,13 +651,15 @@ function TroveMarker:check_veto(marker, pname)
 end
 
 function TroveMarker:accept_nopiety ()
-  if you.god() ~= "No God" then
-    local piety_loss = you.piety() - 15
-    if piety_loss > 0 then
-      crawl.mpr("You feel utterly alone.")
-      you.lose_piety(piety_loss)
-    end
-  end
+  you.ostracise(300)
+end
+
+function TroveMarker:accept_bane ()
+  you.gain_bane(get_toll(self.props).bane)
+end
+
+function TroveMarker:accept_drain ()
+  you.apply_draining(375)
 end
 
 function TroveMarker:note_payed(toll_item, item_taken, rune_name)

@@ -202,6 +202,7 @@ warp_space WARP_SPACE
 %back gui/spells/bg
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
+acid_ball ACID_BALL
 air_elementals AIR_ELEMENTALS
 avatar_song AVATAR_SONG
 awaken_flesh AWAKEN_FLESH
@@ -231,11 +232,12 @@ conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 creeping_frost CREEPING_FROST
-crystallizing_shot CRYSTALLIZING_SHOT
+crystallising_shot CRYSTALLISING_SHOT
 death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
 dominate_undead DOMINATE_UNDEAD
-doom_howl DOOM_HOWL
+doom_bolt DOOM_BOLT
+oblivion_howl OBLIVION_HOWL
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
 dream_dust DREAM_DUST
@@ -261,6 +263,7 @@ holy_breath HOLY_BREATH
 holy_flames HOLY_FLAMES
 hurl_sludge HURL_SLUDGE
 hunting_call HUNTING_CALL
+ill_omen ILL_OMEN
 ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
@@ -274,8 +277,10 @@ miasma_breath MIASMA_BREATH
 might MIGHT
 mindburst MINDBURST
 mourning_wail MOURNING_WAIL
+mutagenic_gaze MUTAGENIC_GAZE
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
+ostracise OSTRACISE
 paralysis_gaze PARALYSIS_GAZE
 petrifying_cloud PETRIFYING_CLOUD
 phantom_blitz PHANTOM_BLITZ
@@ -342,6 +347,7 @@ vitrify VITRIFY
 vitrifying_gaze VITRIFYING_GAZE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY
+warp_body WARP_BODY
 water_elementals WATER_ELEMENTALS
 waterstrike WATERSTRIKE
 weakening_gaze WEAKENING_GAZE

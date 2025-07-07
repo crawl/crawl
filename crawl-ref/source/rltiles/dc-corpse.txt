@@ -20,6 +20,7 @@ radroach CORPSE_RADROACH
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
+raven CORPSE_RAVEN
 caustic_shrike CORPSE_CAUSTIC_SHRIKE
 shard_shrike CORPSE_SHARD_SHRIKE
 
@@ -31,7 +32,7 @@ warg CORPSE_WARG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
-doom_hound CORPSE_DOOM_HOUND
+oblivion_hound CORPSE_OBLIVION_HOUND
 raiju CORPSE_RAIJU
 hell_hog CORPSE_HELL_HOG
 black_bear CORPSE_BLACK_BEAR

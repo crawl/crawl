@@ -91,5 +91,6 @@ enum artefact_prop_type
     ARTP_WIZARDRY,
     ARTP_ENHANCE_FORGECRAFT,
     ARTP_SILENCE,
+    ARTP_BANE,
     ARTP_NUM_PROPERTIES
 };

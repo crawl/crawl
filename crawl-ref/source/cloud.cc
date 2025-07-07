@@ -35,7 +35,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-clouds.h" // explode_blastmotes_at
-#include "spl-damage.h" // dazzle_target
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1170,8 +1169,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             // It's possible that you got trampled into the mutagenic cloud
             // and it's not your fault... so we'll say it's not intentional.
             // (it's quite bad in any case, so players won't scum, probably.)
-            contaminate_player(1300 + random2(1250), false);
-            // min 2 turns to yellow, max 4
+            contaminate_player(random_range(250, 500), false);
             return true;
         }
         else if (coinflip() && mons->malmutate(cloud.agent(), "mutagenic cloud"))
@@ -2114,12 +2112,15 @@ static const vector<chaos_effect> chaos_effects = {
     },
     {
         "blinding", 5, [](const actor &victim) {
-            return victim.can_be_dazzled();
+            return !victim.res_blind();
         }, BEAM_NONE, [](actor* victim, actor* source) {
             if (victim->is_player())
                 blind_player(random_range(7, 12), ETC_RANDOM);
             else
-                dazzle_target(victim, source, 149);
+            {
+                victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, source,
+                                               random_range(7, 12) * BASELINE_DELAY));
+            }
             return you.can_see(*victim);
         },
     },

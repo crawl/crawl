@@ -1107,6 +1107,7 @@ void TilesFramework::_send_player(bool force_full)
         prank = 2;
     }
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
+    _update_int(force_full, c.ostracism_pips, ostracism_pips(), "ostracism_pips");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
 
@@ -1137,6 +1138,11 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
     _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
+
+    _update_int(force_full, c.doom, you.attribute[ATTR_DOOM], "doom");
+    json_write_string("doom_desc", getLongDescription("doom status"));
+
+    _update_int(force_full, c.contam, you.magic_contamination / 10, "contam");
 
     if (you.has_mutation(MUT_MULTILIVED))
     {
@@ -1582,6 +1588,23 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_tileidx(next_pc.fg);
             if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
+
+            // XXX: Encode spell school overlays for parchments.
+            if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
+            {
+                const item_def* item = next_pc.map_knowledge.item();
+                if (item)
+                {
+                    spell_type spell = static_cast<spell_type>(item->plus);
+                    const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+                    const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+                    if (school1 > 0)
+                        json_write_int("overlay1", school1);
+                    if (school2 > 0)
+                        json_write_int("overlay2", school2);
+                }
+            }
         }
 
         if (next_pc.bg != current_pc.bg)

@@ -111,6 +111,7 @@ force_more_message += Zot has nearly found you
 force_more_message += Zot already knows
 force_more_message += Zot's attention fixes on you
 force_more_message += Zot's power touches on you
+force_more_message += Zot begin to focus
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
@@ -149,6 +150,10 @@ force_more_message += You are slowing down
 
 # Sleep
 force_more_message += You fall asleep
+
+# Banes
+force_more_message += befalls you
+force_more_message += upon you is lifted
 
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss

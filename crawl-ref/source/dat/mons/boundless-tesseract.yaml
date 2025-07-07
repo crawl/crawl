@@ -1,0 +1,16 @@
+name: "boundless tesseract"
+glyph: {char: "I", colour: etc_orb_glow}
+flags: [see_invis, speaks, stationary, insubstantial, fast_regen]
+exp: 1000
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 30
+hp_10x: 1800
+ac: 10
+ev: 1
+spells: boundless_tesseract
+intelligence: human
+size: large
+shape: misc
+tile_variance: cycle

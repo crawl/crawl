@@ -25,7 +25,7 @@ NSUBST:  . = 2:1 / 1:0 / 2:9 / 4 = 0:3 1:1 / 1 = 9:6 / 2:1 / *:.
 NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
 KFEAT:   ^ = zot trap
 : if you.in_branch("Geh") then
-MONS:    zombie / skeleton
+MONS:    zombie / draugr
 MONS:    brimstone fiend / oni incarcerator
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
@@ -52,7 +52,7 @@ SUBST:   ~ = G
 FTILE:   F = floor_crystal_squares
 COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
-MONS:    zombie / skeleton
+MONS:    zombie / draugr
 MONS:    hell sentinel / iron giant
 SUBST:   xc = v, F~ = G
 : vault_metal_statue_setup(_G, "G", "iron statue")
@@ -94,10 +94,17 @@ SUBST:   l = w, W = .
 :  else -- Zot
 KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
-KMONS:   3 = orb of fire / hellephant w:5
+KMONS:   3 = hellephant
 KMONS:   4 = draconian scorcher
 KMONS:   5 = red draconian ; cloak . mace ego:freezing pre_id
 KMONS:   6 = white draconian ; cloak . mace ego:flaming pre_id
+KMONS:   ? = orb of fire
+KMONS:   ! = orb of winter
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   3 = 3??
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:   1 = 1!!
+: end
 KFEAT:   1 = w
 KFEAT:   3 = l
 NSUBST:  0 = 1:5 / 1:6
@@ -363,7 +370,7 @@ SUBST:  L = l
 : elseif you.in_branch("Geh") then
 # The oni are ready to catch them as they would for any other foolish mortals.
 KMONS:  2 = juggernaut / oni incarcerator w:5
-KMONS:  3 = fire giant / frost giant skeleton / stone giant skeleton
+KMONS:  3 = fire giant / frost giant draugr / stone giant draugr
 SUBST:  L = l
 : elseif you.in_branch("Coc") then
 KMONS:  2 = juggernaut

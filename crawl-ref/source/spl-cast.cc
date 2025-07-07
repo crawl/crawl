@@ -558,6 +558,10 @@ int calc_spell_power(spell_type spell)
     if (cap > 0)
         power = min(power, cap);
 
+    // Post step-down and post-cap, so the result is more predictable to the player.
+    if (you.duration[DUR_DIMINISHED_SPELLS])
+        power = power / 2;
+
     return power;
 }
 
@@ -1305,7 +1309,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_walls>(&you, find_ramparts_walls());
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
-    case SPELL_DAZZLING_FLASH:
+    case SPELL_GLOOM:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
                                                   0, 1);
     case SPELL_INNER_FLAME:
@@ -1690,16 +1694,12 @@ static vector<string> _desc_englaciate_chance(const monster_info& mi,
     return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
 }
 
-static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
+static vector<string> _desc_gloom_chance(const monster_info& mi, int pow)
 {
-    if (!mons_can_be_dazzled(mi.type))
+    if (mons_res_blind(mi.type))
         return vector<string>{"not susceptible"};
 
-    const int numerator = dazzle_chance_numerator(mi.hd);
-    const int denom = dazzle_chance_denom(pow);
-    const int dazzle_pct = max(100 * numerator / denom, 0);
-
-    return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+    return vector<string>{make_stringf("chance to dazzle: %d%%", gloom_success_chance(pow, mi.hd))};
 }
 
 static vector<string> _desc_airstrike_bonus(const monster_info& mi)
@@ -1808,19 +1808,18 @@ static vector<string> _desc_enfeeble_chance(const monster_info& mi, int pow)
     const int wl = mi.willpower();
 
     if (!mi.is(MB_NO_ATTACKS))
-        base_effects.push_back("weakness");
+        base_effects.push_back("inflict weakness");
     if (mi.antimagic_susceptible())
-        base_effects.push_back("antimagic");
+        base_effects.push_back("diminish spells");
     if (!base_effects.empty())
     {
-        all_effects.push_back("will inflict " +
+        all_effects.push_back("will " +
             comma_separated_line(base_effects.begin(), base_effects.end()));
     }
     if (wl != WILL_INVULN)
     {
         const int success = hex_success_chance(wl, pow, 100);
-        all_effects.push_back(make_stringf("chance to daze%s: %d%%",
-            mons_can_be_blinded(mi.type) ? " and blind" : "", success));
+        all_effects.push_back(make_stringf("chance to daze and blind: %d%%", success));
     }
 
     if (all_effects.empty())
@@ -1949,8 +1948,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_ENGLACIATION:
             return bind(_desc_englaciate_chance, placeholders::_1,
                         hitfunc, powc);
-        case SPELL_DAZZLING_FLASH:
-            return bind(_desc_dazzle_chance, placeholders::_1, powc);
+        case SPELL_GLOOM:
+            return bind(_desc_gloom_chance, placeholders::_1, powc);
         case SPELL_MEPHITIC_CLOUD:
         case SPELL_NOXIOUS_BREATH:
             return bind(_desc_meph_chance, placeholders::_1);
@@ -2460,8 +2459,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
 
-    case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(&you, powc, fail);
+    case SPELL_GLOOM:
+        return cast_gloom(&you, powc, fail);
 
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);
@@ -3075,6 +3074,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return poisonous_vapours_damage(power, false);
         case SPELL_DETONATION_CATALYST:
             return detonation_catalyst_damage(power, false);
+        case SPELL_JINXBITE:
+            return jinxbite_damage(power,false);
         default:
             break;
     }
@@ -3451,4 +3452,19 @@ void stop_channelling_spells(bool quiet)
         default:
             break;
     }
+}
+
+// Prompts the player when casting a spell like Irradiate, while having enough
+// contam that it could push them into yellow.
+//
+// Returns true if we should abort.
+bool warn_about_contam_cost(int max_contam)
+{
+    if (!Options.warn_contam_cost || you.magic_contamination >= 1000)
+        return false;
+
+    if (you.magic_contamination + max_contam >= 1000)
+        return !yesno("Casting this now could dangerously contaminate you. Continue?", true, 'n');
+
+    return false;
 }

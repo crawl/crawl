@@ -92,7 +92,9 @@ function castle_lemuel_setup(e)
                    .. " / shadow dragon")
            e.kitem("R = |, midnight gem")
            e.kfeat("3 = enter_zot")
+           e.kfeat("Z = zot_statue")
            e.subst("w : wl")
+           e.subst("X = Z")
            e.nsubst("| = 1:R / *:|")
        -- Depths uses a theme of mostly large/giant monsters.
        else
@@ -116,10 +118,11 @@ function castle_lemuel_setup(e)
    e.subst("D = c +:1")
    e.subst("8 = 89")
    e.subst("M : M..")
+   e.subst("X = .")
    e.colour("? = brown")
    e.ftile("? = floor_mud")
    e.tile("c = wall_stone_smooth")
-   e.ftile("DG+M$%|*.~ = floor_cobble_blood")
+   e.ftile("DGZ+M$%|*.~ = floor_cobble_blood")
    e.ftile("12348 = floor_cobble_blood")
 end
 }}
@@ -136,7 +139,7 @@ TAGS:   lemuel_castle_interior unrand
 MAP
 +c....+~......+..+......~+.***c+
 .c||..ccccccccc++ccccccccc.***c.
-1c||2Mc1......1321......1cM$$$c1
+1c||2Mc1....X.1321.X....1cM$$$c1
 .cccccc.......2112.......cccccc.
 .+....+..1.....22.....1..+....+.
 .+....+......1....1......+....+.
@@ -157,7 +160,7 @@ MAP
 .c|.2.D*m.1..........1.m|c....c.
 .ccm+mc|m.....1111.....m|cm+mcc.
 ......c|m..1...22......m*c..1...
-......cM+....1132.2....+MD..1...
+......cM+...X1132.2X...+MD..1...
 .cccccccccccccccccccccccccccccc.
 .c........1..m....m..1........c.
 .+.12........+....+..........2+.
@@ -174,7 +177,7 @@ ITEM:   nothing w:20 / potion of ambrosia pre_id
 MAP
 +c....+.......1.............*|c+
 ...1..cccccccccccccccccccccccDc.
-cc....cM.....cG..Gc.1......Mc|c1
+cc....cM.....cG..Gc.1X..X..Mc|c1
 *cc++cc..cG..+....+...12....m|c.
 |....~12.cG..+....+...23....+.c.
 $....~.2.....c....c...12....m*c.
@@ -193,7 +196,7 @@ SUBST:  $ = $:5 .
 MAP
 +c....+...*c*||cc||*cccccc$...c+
 .c.1..ccccccmc1321cmcccccc....c.
-.c..2........c.12.c...........c.
+.c..2.....X..c.12.c.X.........c.
 .cc++c.........ww.....2..1c++cc.
 .....c.2.......ww.........c.....
 .2...c...1..Mc..$.cM..1...c..1..

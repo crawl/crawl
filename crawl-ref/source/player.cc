@@ -251,15 +251,9 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     return false;
 }
 
-bool check_moveto_terrain(const coord_def& p, const string &move_verb,
-                          const string &msg, bool *prompted)
+static bool _check_moveto_binding_sigil(coord_def p, const string &move_verb,
+                                        const string &msg, bool *prompted)
 {
-    // Boldly go into the unknown (for ranged move prompts)
-    if (!env.map_knowledge(p).known())
-        return true;
-
-    if (!_check_moveto_dangerous(p, msg))
-        return false;
     if (env.grid(p) == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
     {
         string prompt;
@@ -278,6 +272,22 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
             return false;
         }
     }
+    return true;
+}
+
+bool check_moveto_terrain(const coord_def& p, const string &move_verb,
+                          const string &msg, bool *prompted)
+{
+    // Boldly go into the unknown (for ranged move prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
+    if (!_check_moveto_dangerous(p, msg))
+        return false;
+
+    if (!_check_moveto_binding_sigil(p, move_verb, msg, prompted))
+        return false;
+
     if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
         && env.grid(you.pos()) != DNGN_TOXIC_BOG
         && env.grid(p) == DNGN_TOXIC_BOG)
@@ -387,6 +397,24 @@ bool check_moveto(const coord_def& p, const string &move_verb, bool physically)
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)
            && check_moveto_exclusion(p, move_verb);
+}
+
+static bool _check_move_over_terrain(coord_def p, const string& move_verb)
+{
+    // Boldly go into the unknown (for ranged move prompts)
+    if (!env.map_knowledge(p).known())
+        return true;
+
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return true;
+
+    return _check_moveto_binding_sigil(p, move_verb, "", nullptr);
+}
+
+bool check_move_over(coord_def p, const string& move_verb)
+{
+    return _check_move_over_terrain(p, move_verb)
+        && check_moveto_trap(p, move_verb);
 }
 
 // Returns true if this is a valid swap for this monster. If true, then
@@ -744,8 +772,8 @@ monster_type player_mons(bool transform)
         // playing a Hill Orc from an old save...
         if (you_worship(GOD_BEOGH))
         {
-            mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
-                                                      : MONS_ORC_PRIEST;
+            mons = (you.piety() >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
+                                                        : MONS_ORC_PRIEST;
         }
     }
 
@@ -1120,7 +1148,7 @@ int player_regen()
     {
         // One regen pip at 1* piety, scaling to two pips at 6*.
         // We use piety rank to avoid leaking piety info to the player.
-        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety) - 1)) / 5;
+        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety()) - 1)) / 5;
     }
 
     return rr;
@@ -1153,7 +1181,7 @@ int player_mp_regen()
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
-        regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
+        regen_amount += 40 + (40 * (piety_rank(you.piety()) - 1)) / 5;
     }
 
     regen_amount += get_form()->mp_regen_bonus();
@@ -1188,6 +1216,14 @@ int player_spell_levels(bool floored)
         sl = 0;
 
     return sl;
+}
+
+int player::piety() const
+{
+    if (you.attribute[ATTR_OSTRACISM] == 0 || !god_cares_about_ostracism())
+        return raw_piety;
+
+    return max(0, min((int)raw_piety, MAX_PIETY - you.attribute[ATTR_OSTRACISM]));
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -1448,7 +1484,7 @@ int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
         return 3;
     }
 
-    int rp = 0;
+    int rp = form_rp;
 
     if (items)
     {
@@ -1484,15 +1520,9 @@ int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
     if (temp && you.duration[DUR_RESISTANCE])
         rp++;
 
-    if (form_rp > 0)
-        rp += form_rp;
-
-    // Cap rPois at + before vulnerability effects are applied
-    // (so carrying multiple rPois effects is never useful)
+    // Cap rPois at + before Virulence is applied
+    // (so carrying multiple rPois effects never directly counters it)
     rp = min(1, rp);
-
-    if (form_rp < 0)
-        rp += form_rp; // actually a subtraction
 
     if (temp && you.duration[DUR_POISON_VULN])
         rp--;
@@ -1641,14 +1671,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 
     // piety-based rN doesn't count as temporary (XX why)
     if (you_worship(GOD_SHINING_ONE))
-    {
-        if (you.piety >= piety_breakpoint(1))
-            pl++;
-        if (you.piety >= piety_breakpoint(3))
-            pl++;
-        if (you.piety >= piety_breakpoint(5))
-            pl++;
-    }
+        pl += piety_rank(you.piety()) / 2;
 
     pl += cur_form(temp)->res_neg();
 
@@ -1720,7 +1743,7 @@ int player_movement_speed(bool check_terrain, bool temp)
 
     // Cheibriados
     if (have_passive(passive_t::slowed))
-        mv += 2 + min(div_rand_round(you.piety, 20), 8);
+        mv += 2 + min(div_rand_round(you.piety(), 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
@@ -1735,6 +1758,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv *= 10 + slow * 2;
         mv /= 10;
     }
+
+    if (you.has_bane(BANE_LETHARGY))
+        mv = mv * 13 / 10;
 
     if (you.form == transformation::fortress_crab)
         mv = mv * 13 / 10;
@@ -1813,7 +1839,7 @@ bool player_acrobatic()
 
 void update_acrobat_status()
 {
-    if (!player_acrobatic())
+    if (!player_acrobatic() && !you.has_bane(BANE_STUMBLING))
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -1914,6 +1940,11 @@ static int _player_temporary_evasion_modifiers()
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
+
+    // Bane of stumbling triggers on the same conditions as acrobat (thus
+    // sharing its timer).
+    if (you.has_bane(BANE_STUMBLING) && you.duration[DUR_ACROBAT])
+        evbonus -= 25;
 
     if (you.duration[DUR_VERTIGO])
         evbonus -= 5;
@@ -2090,8 +2121,11 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
 {
     int shield = 0;
 
-    if (!ignore_temporary && you.incapacitated())
+    if (!ignore_temporary
+        && you.incapacitated() || you.has_bane(BANE_RECKLESS))
+    {
         return 0;
+    }
 
     const item_def *shield_item = you.shield();
     if (is_shield(shield_item))
@@ -2292,17 +2326,6 @@ static void _handle_xp_penance(int exp)
     }
 }
 
-/// update temporary mutations
-static void _handle_temp_mutation(int exp)
-{
-    if (!(you.attribute[ATTR_TEMP_MUTATIONS] > 0))
-        return;
-
-    you.attribute[ATTR_TEMP_MUT_XP] -= exp;
-    if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
-        temp_mutation_wanes();
-}
-
 /// update hp drain
 static void _handle_hp_drain(int exp)
 {
@@ -2406,6 +2429,45 @@ static void _handle_watery_grave_recharge(int exp)
     }
 }
 
+static void _handle_banes(int exp)
+{
+    int loss = div_rand_round(exp * 10, calc_skill_cost(you.skill_cost_level));
+
+    if (you.has_mutation(MUT_ACCURSED) || you.undead_state() != US_ALIVE)
+        loss /= 2;
+
+    if (you.attribute[ATTR_DOOM] > 0)
+    {
+        you.attribute[ATTR_DOOM] -= div_rand_round(loss, 15);
+        if (you.attribute[ATTR_DOOM] <= 0)
+        {
+            mprf(MSGCH_DURATION, "You feel the doom around you dissipate.");
+            you.attribute[ATTR_DOOM] = 0;
+        }
+
+        you.redraw_doom = true;
+    }
+
+    for (int i = 0; i < NUM_BANES; ++i)
+    {
+        if (you.banes[i] > 0)
+        {
+            you.banes[i] -= loss;
+            if (you.banes[i] <= 0)
+                remove_bane(static_cast<bane_type>(i));
+        }
+    }
+}
+
+static void _handle_ostracism(int exp)
+{
+    if (you.attribute[ATTR_OSTRACISM] == 0)
+        return;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level) * 4 / 3);
+    player_change_ostracism(-loss);
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2461,10 +2523,11 @@ void apply_exp()
         skill_xp = sprint_modify_exp(skill_xp);
 
     // xp-gated effects that use sprint inflation
-    _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
+    _handle_banes(skill_xp);
+    _handle_ostracism(skill_xp);
     _handle_breath_recharge(skill_xp);
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
@@ -3165,7 +3228,7 @@ int player_stealth()
     if (have_passive(passive_t::storm_shield))
     {
         stealth = stealth
-                  * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
+                  * (MAX_PIETY - min((int)you.piety(), piety_breakpoint(5)))
                   / (MAX_PIETY - piety_breakpoint(0));
     }
     // The shifting glow from the Orb, while too unstable to negate invis
@@ -3542,6 +3605,9 @@ int slaying_bonus(bool throwing, bool random)
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    if (you.has_bane(BANE_CLAUSTROPHOBIA))
+        ret += you.props[CLAUSTROPHOBIA_KEY].get_int();
 
     ret += get_form()->slay_bonus(random);
 
@@ -4052,60 +4118,43 @@ bool player_regenerates_mp()
     return true;
 }
 
-int get_contamination_level()
+bool player_harmful_contamination()
 {
-    const int glow = you.magic_contamination;
-
-    if (glow > 60000)
-        return glow / 20000 + 4;
-    if (glow > 40000)
-        return 6;
-    if (glow > 25000)
-        return 5;
-    if (glow > 15000)
-        return 4;
-    if (glow > 5000)
-        return 3;
-    if (glow > 3000) // An indicator that using another contamination-causing
-        return 2;    // ability might risk causing yellow glow.
-    if (glow > 0)
-        return 1;
-
-    return 0;
-}
-
-bool player_severe_contamination()
-{
-    return get_contamination_level() >= SEVERE_CONTAM_LEVEL;
+    return you.magic_contamination >= 1000;
 }
 
 /**
- * Provide a description of the given contamination 'level'.
+ * Provide a description of the player's magic contamination.
  *
- * @param cont  A contamination 'tier', corresponding to a nonlinear
- *              contamination value; generated by get_contamination_level().
- *
+ * @param verbose   Whether to give a long description.
  * @return      A string describing the player when in the given contamination
  *              level.
  */
-string describe_contamination(int cont)
+string describe_contamination(bool verbose)
 {
-    /// Mappings from contamination levels to descriptions.
-    static const string contam_descriptions[] =
+    if (you.magic_contamination <= 0)
+        return "";
+
+    const static string verbose_desc[] =
     {
-        "",
-        "You are very lightly contaminated with residual magic.",
         "You are lightly contaminated with residual magic.",
-        "You are contaminated with residual magic.",
-        "You are heavily infused with residual magic.",
-        "You are practically glowing with residual magic!",
-        "Your entire body has taken on an eerie glow!",
-        "You are engulfed in a nimbus of crackling magics!",
+        "You are dangerously contaminated with residual magic.",
+        "You are extremely contaminated with residual magic.",
+        "You are completely saturated with residual magic!"
     };
 
-    ASSERT(cont >= 0);
-    return contam_descriptions[min((size_t) cont,
-                                   ARRAYSZ(contam_descriptions) - 1)];
+    const static string terse_desc[] =
+    {
+        "lightly contaminated",
+        "dangerously contaminated",
+        "extremely contaminated",
+        "completely saturated"
+    };
+
+    const unsigned int lvl = you.magic_contamination / 1000;
+    ASSERT(lvl < ARRAYSZ(verbose_desc));
+
+    return verbose ? verbose_desc[lvl] : terse_desc[lvl];
 }
 
 // Controlled is true if the player actively did something to cause
@@ -4115,8 +4164,8 @@ void contaminate_player(int change, bool controlled, bool msg)
     ASSERT(!crawl_state.game_is_arena());
 
     int old_amount = you.magic_contamination;
-    int old_level  = get_contamination_level();
-    bool was_glowing = player_severe_contamination();
+    int old_level  = you.magic_contamination / 1000;
+    bool was_glowing = player_harmful_contamination();
     int new_level  = 0;
 
 #if TAG_MAJOR_VERSION == 34
@@ -4124,10 +4173,10 @@ void contaminate_player(int change, bool controlled, bool msg)
         change *= 2;
 #endif
 
-    you.magic_contamination = max(0, min(250000,
+    you.magic_contamination = max(0, min(3000,
                                          you.magic_contamination + change));
 
-    new_level = get_contamination_level();
+    new_level = you.magic_contamination / 1000;
 
     if (you.magic_contamination != old_amount)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
@@ -4136,23 +4185,23 @@ void contaminate_player(int change, bool controlled, bool msg)
     {
         if (msg)
         {
-            mprf(player_severe_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
-                 "%s", describe_contamination(new_level).c_str());
+            mprf(player_harmful_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
+                 "%s", describe_contamination().c_str());
         }
-        if (player_severe_contamination())
+        if (player_harmful_contamination())
             xom_is_stimulated(new_level * 25);
     }
     else if (msg && new_level < old_level)
     {
-        if (old_level == 1 && new_level == 0)
+        if (old_amount > 1 && you.magic_contamination == 0)
             mpr("Your magical contamination has completely faded away.");
-        else if (player_severe_contamination() || was_glowing)
+        else if (!player_harmful_contamination() && was_glowing)
         {
             mprf(MSGCH_RECOVERY,
-                 "You feel less contaminated with magical energies.");
+                 "Your magical contamination has faded to a safe level.");
         }
 
-        if (!player_severe_contamination() && was_glowing && you.invisible())
+        if (!player_harmful_contamination() && was_glowing && you.invisible())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
@@ -4166,13 +4215,18 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
-        if (!was_glowing && player_severe_contamination())
+        if (!was_glowing && player_harmful_contamination())
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
         else if (controlled && change > 0 && was_glowing)
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
+
+    if (change > 0)
+        you.attribute[ATTR_LAST_CONTAM] = you.elapsed_time;
+
+    you.redraw_contam = true;
 }
 
 /**
@@ -4765,35 +4819,6 @@ void barb_player(int turns, int pow)
     }
 }
 
-void crystallize_player()
-{
-    if (x_chance_in_y(3, 4))
-    {
-        if (!you.duration[DUR_VITRIFIED])
-            mpr("Your body becomes as fragile as glass!");
-        else
-            mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
-    }
-}
-
-/**
- * Players are rather more susceptible to dazzling: only those who can't
- * be blinded are immune.
- */
-bool player::can_be_dazzled() const
-{
-    return can_be_blinded();
-}
-
-/**
- * Players can be blinded only if they're not undead.
- */
-bool player::can_be_blinded() const
-{
-    return !is_lifeless_undead();
-}
-
 /**
  * Increase the player's blindness duration.
  *
@@ -4802,12 +4827,6 @@ bool player::can_be_blinded() const
 void blind_player(int amount, colour_t flavour_colour)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    if (!you.can_be_dazzled())
-    {
-        mpr("Your vision flashes for a moment.");
-        return;
-    }
 
     if (amount <= 0)
         return;
@@ -5355,7 +5374,7 @@ player::player()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
-    piety            = 0;
+    raw_piety        = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
     saved_good_god_piety = 0;
@@ -5375,6 +5394,7 @@ player::player()
     demonic_traits.clear();
     sacrifices.init(0);
     sacrifice_piety.init(0);
+    banes.init(0);
 
     magic_contamination = 0;
 
@@ -5465,6 +5485,8 @@ player::player()
     redraw_hit_points    = false;
     redraw_magic_points  = false;
     redraw_stats.init(false);
+    redraw_doom          = false;
+    redraw_contam        = false;
     redraw_experience    = false;
     redraw_armour_class  = false;
     redraw_evasion       = false;
@@ -5696,6 +5718,15 @@ int player::visible_igrd(const coord_def &where) const
 bool player::has_spell(spell_type spell) const
 {
     return find(begin(spells), end(spells), spell) != end(spells);
+}
+
+bool player::has_any_spells() const
+{
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return true;
+
+    return false;
 }
 
 bool player::cannot_speak() const
@@ -6029,6 +6060,14 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
         && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
     {
         level += (10 + get_form()->get_level(10)) * scale / 20;
+    }
+
+    if (temp && skill_has_dilettante_penalty(sk))
+    {
+        if (sk <= SK_LAST_WEAPON)
+            level = level / 2;
+        else
+            level = level * 3 / 4;
     }
 
     if (level > MAX_SKILL_LEVEL * scale)
@@ -6803,6 +6842,16 @@ bool player::res_constrict() const
            || you.duration[DUR_CONSTRICTION_IMMUNITY];
 }
 
+int player::res_blind() const
+{
+    if (bool(holiness() & MH_PLANT))
+        return 2;
+    else if (undead_state() != US_ALIVE)
+        return 1;
+    else
+        return 0;
+}
+
 int player::willpower() const
 {
     return player_willpower();
@@ -7006,6 +7055,7 @@ undead_state_type player::undead_state(bool temp) const
 bool player::nightvision() const
 {
     return have_passive(passive_t::nightvision)
+           || (holiness() & MH_UNDEAD)
            || has_mutation(MUT_FOUL_SHADOW)
            || you.unrand_equipped(UNRAND_BRILLIANCE)
            || you.unrand_equipped(UNRAND_SHADOWS);
@@ -7350,7 +7400,7 @@ int player::has_claws(bool allow_tran) const
 bool player::has_usable_claws(bool allow_tran) const
 {
     return has_claws(allow_tran)
-           && !you.equipment.slot_is_fully_covered(SLOT_GLOVES);
+           && !you.equipment.innate_slot_is_covered(SLOT_GLOVES);
 }
 
 int player::has_talons(bool allow_tran) const
@@ -7365,7 +7415,7 @@ int player::has_talons(bool allow_tran) const
 bool player::has_usable_talons(bool allow_tran) const
 {
     return has_talons(allow_tran)
-           && !you.equipment.slot_is_fully_covered(SLOT_BOOTS);
+           && !you.equipment.innate_slot_is_covered(SLOT_BOOTS);
 }
 
 int player::has_hooves(bool allow_tran) const
@@ -7380,7 +7430,7 @@ int player::has_hooves(bool allow_tran) const
 bool player::has_usable_hooves(bool allow_tran) const
 {
     return has_hooves(allow_tran)
-           && !you.equipment.slot_is_fully_covered(SLOT_BOOTS);
+           && !you.equipment.innate_slot_is_covered(SLOT_BOOTS);
 }
 
 int player::has_fangs(bool allow_tran) const
@@ -7431,8 +7481,8 @@ bool player::has_tail(bool allow_tran) const
 // purpose of punching.
 bool player::has_usable_offhand() const
 {
-    return !you.equipment.slot_is_fully_covered(SLOT_OFFHAND)
-            && !you.equipment.slot_is_fully_covered(SLOT_WEAPON_OR_OFFHAND);
+    return !you.equipment.innate_slot_is_covered(SLOT_OFFHAND)
+            && !you.equipment.innate_slot_is_covered(SLOT_WEAPON_OR_OFFHAND);
 }
 
 bool player::has_usable_tentacle() const
@@ -7579,7 +7629,7 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo, bool temp) const
 {
-    return temp && (player_severe_contamination()
+    return temp && (player_harmful_contamination()
                     || duration[DUR_CORONA]
                     || duration[DUR_STICKY_FLAME]
                     || duration[DUR_QUAD_DAMAGE]
@@ -7748,6 +7798,30 @@ bool player::polymorph(int dur, bool allow_immobile)
     return false;
 }
 
+// Inflict some amount of Doom on the player. Returns true if this was enough
+// to cause a Bane to be inflicted.
+bool player::doom(int amount)
+{
+    // Downscale amount of doom inflicted based on how many banes we currently have.
+    int bane_count = 0;
+    for (int i = 0; i < NUM_BANES; ++i)
+        if (you.banes[i])
+            ++bane_count;
+
+    amount = amount * 4 / (bane_count + 4);
+
+    you.redraw_doom = true;
+    you.attribute[ATTR_DOOM] += amount;
+    if (you.attribute[ATTR_DOOM] >= 100)
+    {
+        you.attribute[ATTR_DOOM] = 0;
+        mprf(MSGCH_WARN, "Doom befalls you....");
+        add_bane();
+        return true;
+    }
+    return false;
+}
+
 bool player::is_icy() const
 {
     return false;
@@ -7850,16 +7924,23 @@ void player::put_to_sleep(actor* source, int dur, bool hibernate)
     redraw_evasion = true;
 }
 
-void player::wake_up(bool force)
+void player::wake_up(bool break_sleep, bool break_daze)
 {
-    if (asleep() || force)
+    if (break_sleep && asleep())
     {
         duration[DUR_SLEEP] = 0;
         give_stun_immunity(random_range(3, 5));
-        mpr("You wake up.");
+        mprf(MSGCH_RECOVERY, "You wake up.");
         flash_view(UA_MONSTER, BLACK);
         redraw_armour_class = true;
         redraw_evasion = true;
+    }
+
+    if (break_daze && you.duration[DUR_DAZED])
+    {
+        duration[DUR_DAZED] = 0;
+        give_stun_immunity(1);
+        mprf(MSGCH_RECOVERY, "You snap out of your daze.");
     }
 }
 
@@ -8183,6 +8264,28 @@ bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
     return true;
 }
 
+void player::daze(int dur)
+{
+    stop_delay(true, true);
+    stop_directly_constricting_all(false);
+    stop_channelling_spells();
+
+    you.duration[DUR_DAZED] += dur * BASELINE_DELAY;
+}
+
+void player::vitrify(const actor* /*attacker*/, int dur, bool quiet)
+{
+    if (!quiet)
+    {
+        if (!you.duration[DUR_VITRIFIED])
+            mprf(MSGCH_WARN, "Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+    }
+
+    you.increase_duration(DUR_VITRIFIED, dur, 50);
+}
+
 /**
  * Check if the player is about to die from flight/form expiration.
  *
@@ -8290,7 +8393,7 @@ int player_monster_detect_radius()
     if (you.unrand_equipped(UNRAND_HOOD_ASSASSIN))
         radius = max(radius, 4);
     if (have_passive(passive_t::detect_montier))
-        radius = max(radius, you.piety / 20);
+        radius = max(radius, you.piety() / 20);
     return min(radius, LOS_MAX_RANGE);
 }
 

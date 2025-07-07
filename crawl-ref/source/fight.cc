@@ -519,7 +519,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
-        ? attacker->heads() + MAX_NUM_ATTACKS - 1
+        ? attacker->heads() + (attacker->type == MONS_DRAUGR)
         : MAX_NUM_ATTACKS;
     coord_def pos = defender->pos();
 
@@ -805,7 +805,7 @@ beam_type get_beam_resist_type(beam_type flavour)
         case BEAM_MISSILE:
         case BEAM_MMISSILE:
         case BEAM_FRAG:
-        case BEAM_CRYSTALLIZING:
+        case BEAM_CRYSTALLISING:
         case BEAM_SEISMIC:
         case BEAM_BOLAS:
         case BEAM_AIR:

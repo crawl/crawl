@@ -39,6 +39,7 @@
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -60,9 +61,7 @@ struct spell_desc
     spell_flags flags;       // bitfield
     unsigned int level;
 
-    // Usually in the range 0..200 (0 means uncapped).
-    // Note that some spells are also capped through zap_type.
-    // See spell_power_cap below.
+    // Spellpower cap for players. Usually in the range 0..200 (0 means uncapped).
     int power_cap;
 
     // At power 0, you get min_range. At power power_cap, you get max_range.
@@ -1013,32 +1012,9 @@ bool is_valid_spell(spell_type spell)
            && _get_spell_list()[spell] != -1;
 }
 
-static bool _spell_range_varies(spell_type spell)
-{
-    int minrange = _seekspell(spell)->min_range;
-    int maxrange = _seekspell(spell)->max_range;
-
-    return minrange < maxrange;
-}
-
 int spell_power_cap(spell_type spell)
 {
-    const int scap = _seekspell(spell)->power_cap;
-    const int zcap = spell_zap_power_cap(spell);
-
-    if (scap == 0)
-        return zcap;
-    else if (zcap == 0)
-        return scap;
-    else
-    {
-        // Two separate power caps; pre-zapping spell power
-        // goes into range.
-        if (scap <= zcap || _spell_range_varies(spell))
-            return scap;
-        else
-            return zcap;
-    }
+    return _seekspell(spell)->power_cap;
 }
 
 int spell_range(spell_type spell, int pow,
@@ -1709,8 +1685,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;
 
-    case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(&you, pow, false, true) == spret::abort;
+    case SPELL_GLOOM:
+        return cast_gloom(&you, pow, false, true) == spret::abort;
 
      case SPELL_MAXWELLS_COUPLING:
          return cast_maxwells_coupling(pow, false, true) == spret::abort;

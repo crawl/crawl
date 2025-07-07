@@ -205,6 +205,11 @@ static const duration_def duration_data[] =
       "brilliant", "brilliance",
       "You are brilliant.", D_DISPELLABLE,
       {{ "You feel a little less clever now." }}},
+    { DUR_DIMINISHED_SPELLS,
+      RED, "Dim",
+      "diminished spells", "diminished spells",
+      "Your spell have diminished power.", D_DISPELLABLE,
+      {{ "Your spells return to their normal power." }}},
     { DUR_CONF,
       RED, "Conf",
       "confused", "conf",
@@ -566,12 +571,12 @@ static const duration_def duration_data[] =
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
     { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "channelling", "channel",
       "You are rapidly regenerating magical energy.", D_NO_FLAGS },
-    { DUR_DOOM_HOWL,
+    { DUR_OBLIVION_HOWL,
       RED, "Howl",
-      "doom-hounded", "howl",
+      "oblivion-hounded", "howl",
       "A terrible howling echoes in your mind.", D_DISPELLABLE,
       {{ "The infernal howling subsides.", []() {
-          you.props.erase(NEXT_DOOM_HOUND_KEY);
+          you.props.erase(NEXT_OBLIVION_SPAWN_KEY);
       }}}},
     { DUR_VERTIGO, YELLOW, "Vertigo",
       "vertiginous", "vertigo",
@@ -809,6 +814,7 @@ static const duration_def duration_data[] =
     { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NO_FLAGS, {{"You feel less drowsy."}}},
     { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
     { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
+    { DUR_DAZED, 0, "", "", "dazed", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -833,7 +839,7 @@ static const duration_def duration_data[] =
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
     { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
     { DUR_CONTROL_TELEPORT, 0, "", "", "old control teleport", "", D_NO_FLAGS},
-    { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_OBLIVION_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
     { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
     { DUR_TELEPATHY, 0, "", "", "old telepathy", "", D_NO_FLAGS},

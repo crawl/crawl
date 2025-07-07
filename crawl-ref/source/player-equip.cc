@@ -47,6 +47,11 @@
 
 static void _mark_unseen_monsters();
 
+static bool _use_slots(unrand_type item, bool count_melded, bool count_items)
+{
+    return count_items && you.unrand_equipped(item, count_melded);
+}
+
 /**
  * Returns how many slots of a given type the player character currently has
  * (potentially accounting for additional slots granted by forms, mutations, and
@@ -61,11 +66,13 @@ static void _mark_unseen_monsters();
  *                          non-null, it is set to the reason why there are 0.
  * @param count_melded_unrands    Whether to count slots granted by unrands which
  *                                are currently melded. (Defaults to false.)
+ * @param count_items       Whether to count slots granted by items.
+ *                          (Defaults to true.)
  *
  * @return The number of slots of the given type the player has.
  */
 int get_player_equip_slot_count(equipment_slot slot, string* zero_reason,
-                                bool count_melded_unrands)
+                                bool count_melded_unrands, bool count_items)
 {
 #define NO_SLOT(x) {if (count == 0) {if (zero_reason) { *zero_reason = x; }; return 0;}}
 
@@ -123,7 +130,7 @@ int count = 0;
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
-        if (you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK, count_melded_unrands))
+        if (_use_slots(UNRAND_SKULL_OF_ZONGULDROK, count_melded_unrands, count_items))
             ++count;
 
         if (you.has_mutation(MUT_FORMLESS))
@@ -142,7 +149,7 @@ int count = 0;
         return count;
 
     case SLOT_GLOVES:
-        if (you.unrand_equipped(UNRAND_FISTICLOAK, count_melded_unrands))
+        if (_use_slots(UNRAND_FISTICLOAK, count_melded_unrands, count_items))
             ++count;
 
         if (you.has_mutation(MUT_QUADRUMANOUS))
@@ -219,10 +226,10 @@ int count = 0;
         if (you.has_mutation(MUT_MISSING_HAND))
             ring_count -= 1;
 
-        if (you.unrand_equipped(UNRAND_FINGER_AMULET, count_melded_unrands))
+        if (_use_slots(UNRAND_FINGER_AMULET, count_melded_unrands, count_items))
             ring_count += 1;
 
-        if (you.unrand_equipped(UNRAND_VAINGLORY, count_melded_unrands))
+        if (_use_slots(UNRAND_VAINGLORY, count_melded_unrands, count_items))
             ring_count += 2;
 
         return ring_count;
@@ -232,7 +239,7 @@ int count = 0;
         if (you.has_mutation(MUT_NO_JEWELLERY))
             NO_SLOT("You can't wear amulets.")
 
-        if (you.unrand_equipped(UNRAND_JUSTICARS_REGALIA, count_melded_unrands))
+        if (_use_slots(UNRAND_JUSTICARS_REGALIA, count_melded_unrands, count_items))
             return 2;
 
         return 1;
@@ -1410,13 +1417,14 @@ player_equip_entry& player_equip_set::get_entry_for(const item_def& item)
 }
 
 /**
- * Checks whether all of a given slot type is filled with unmelded items.
+ * Checks whether the slot that mutations apply to is covered.
  * (This is largely used to check if claws are covered by gloves, talons
  * covered by boots, etc.)
  */
-bool player_equip_set::slot_is_fully_covered(equipment_slot slot) const
+bool player_equip_set::innate_slot_is_covered(equipment_slot slot) const
 {
-    if (num_slots[slot] == 0 || slot_is_melded(slot))
+    int innate_slots = get_player_equip_slot_count(slot, nullptr, false, false);
+    if (innate_slots == 0 || slot_is_melded(slot))
         return false;
 
     return (int)get_slot_entries(slot).size() == num_slots[slot];
@@ -1685,6 +1693,13 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
+    if (proprt[ARTP_BANE] && !unmeld)
+    {
+        if (msg)
+            mpr("You feel a malign power afflict you.");
+        add_bane();
+    }
+
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld
         && !you.has_mutation(MUT_ROLLPAGE))
     {
@@ -1744,7 +1759,7 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld)
     if (proprt[ARTP_CONTAM] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
-        contaminate_player(7000, true);
+        contaminate_player(1200, true);
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !meld
@@ -2368,7 +2383,7 @@ static void _remove_amulet_of_faith(item_def &item)
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        ASSERT(you.piety < piety_breakpoint(5));
+        ASSERT(you.raw_piety < piety_breakpoint(5));
 #ifdef DEBUG_DIAGNOSTICS
         const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
 #endif
@@ -2380,7 +2395,7 @@ static void _remove_amulet_of_faith(item_def &item)
 
     simple_god_message(" seems less interested in you.");
 
-    const int piety_loss = div_rand_round(you.piety, 3);
+    const int piety_loss = div_rand_round(you.raw_piety, 3);
     // Piety penalty for removing the Amulet of Faith.
     mprf(MSGCH_GOD, "You feel less pious.");
     dprf("%s: piety drain: %d", item.name(DESC_PLAIN).c_str(), piety_loss);
@@ -2670,6 +2685,6 @@ void unwield_distortion(bool brand)
     else
     {
         mpr("Space warps into you!");
-        contaminate_player(random2avg(18000, 3), true);
+        contaminate_player(random2avg(3000, 3), true);
     }
 }

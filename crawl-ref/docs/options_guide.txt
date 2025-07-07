@@ -82,7 +82,8 @@ The contents of this text are:
                 always_show_zot, always_show_gems, more_gem_info, action_panel,
                 action_panel_filter, action_panel_show_unidentified,
                 action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                action_panel_font_family, action_panel_font_size,
+		 show_resist_percent
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -1478,6 +1479,11 @@ easy_door = true
 warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
 
+warn_contam_cost = false
+	Ask for confirmation before casting a spell with a contam cost, if it
+	is possible that casting it at your current level of magic contamination
+	could cause you to reach harmful levels of contamination.
+
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
         Enter or '.' at the spellcasting prompt.
@@ -1879,6 +1885,11 @@ action_panel_font_size = 16 (persistent)
 action_panel_glyphs = false
         If set to true, show glyphs instead of tiles in the action panel. This
         option is only available on webtiles.
+
+show_resist_percent = true
+	When set to true, the exact percentage of damage the player will take
+	from each element, based on their current pips of resistance, will be
+	shown on the % screen.
 
 3-i     Colours (messages and menus)
 -----------------

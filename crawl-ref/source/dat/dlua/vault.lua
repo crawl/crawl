@@ -84,21 +84,25 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
-function zot_entry_setup(e)
+function zot_entry_setup(e, use_default_mons)
   e.tags("zot_entry")
   e.place("Depths:$")
   e.orient("float")
   e.kitem("R = midnight gem")
   e.kfeat("O = enter_zot")
-  e.mons("patrolling base draconian")
-  e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
-          shadow dragon / golden dragon w:12 / wyrmhole w:4")
-  e.mons("patrolling nonbase draconian")
-  e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
-              stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
-  e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
-              spriggan air mage w:8 / deep troll earth mage w:8 / \
-              tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  e.kfeat("Z = zot_statue")
+  e.kmask("R = no_item_gen")
+  if use_default_mons then
+    e.mons("patrolling base draconian")
+    e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
+            shadow dragon / golden dragon w:12 / wyrmhole w:4")
+    e.mons("patrolling nonbase draconian")
+    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
+                stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
+    e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
+                 spriggan air mage w:8 / deep troll earth mage w:8 / \
+                  tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  end
 end
 
 function soh_hangout()
@@ -198,6 +202,32 @@ function master_elementalist_setup(e, sprintscale)
            "repel_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
+-- A function to crunch down decorative skeletons.
+-- Vaults that only want to place regular branch skeletons or given vault
+-- theme skeletons don't need to call this whole function.
+function vault_species_skeletons(e, category)
+-- (Djinni, gargoyles, mummies, octopodes, poltergeists, revenants don't leave
+-- corpses. I don't want to think about how one recognizes vine stalkers
+-- post-rotting. Orcs are included to cover Beogh's popularity in the Dungeon.
+-- Coglins have their exoskeletons stolen. Species that only show up
+-- in extended are counted as the rarest type.
+  local s1 = {"goblin", "gnoll", "elf", "kobold", "troll", "orc"}
+  local s2 = {"draconian", "naga", "merfolk", "minotaur", "spriggan", "tengu"}
+  local s3 = {"armataur", "barachi", "demigod", "dwarf",
+              "demonspawn", "felid", "oni"}
+  local output = "human skeleton"
+  if category == "early" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s1, " skeleton / ")
+  end
+  if category == "late" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s2, " skeleton / ")
+  end
+  if category == "all" then
+    output = output .. " / " .. table.concat(s3, " skeleton / ")
+  end
+  return output  .. " skeleton"
+end
+
 -- Three sets of reusable vault feature redefines scattered across the game,
 -- kept in this one function for both consistency and ease of use.
 function vault_granite_statue_setup(e, glyph, type)
@@ -265,6 +295,7 @@ function decorative_floor (e, glyph, type)
     ["orcish standard"] = {"lightcyan", "dngn_ensign_beogh"},
     ["infernal standard"] = {"red", "dngn_ensign_gehenna"},
     ["fur brush"] = {"brown", "dngn_yak_fur"},
+    ["set of bottled spirits"] = {"lightgreen", "dngn_bottled_spirits"},
     ["mop and bucket"] = {"lightblue", "dngn_mop"},
     ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"}
   }
@@ -316,7 +347,7 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
            'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')
-    e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
+    e.item('parchment slevel:' .. sl  .. ' / ' ..
            'mundane ring of magical power w:2')
     e.tile('c = wall_studio')
   elseif set == 'icebox' then
@@ -326,7 +357,7 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
            'harpy simulacrum w:' .. 8 - d * 2 .. ' / ' ..
            'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
-    e.mons('necromancer w:2 / arcanist / crawling flesh cage')
+    e.mons('arcanist / crawling flesh cage')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
                                             ' . ring mail ' .. c)
@@ -342,7 +373,6 @@ function index_vaults_room_themes (e, set, hard)
   elseif set == 'garden' then
     e.tags('no_pool_fixup')
     e.mons('harpy w:' .. 80 - d * 20 .. ' / ' ..
-           'redback w:' .. 100 - d * 16 .. ' / ' ..
            'wolf spider w:' .. 20 - d * 3 .. ' / ' ..
            'lindwurm w:' .. 140 - d * 20 .. ' / ' ..
            'dire elephant w:' .. d * 3 )
@@ -378,9 +408,9 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('vault guard w:' .. 14 - d .. ' / ' ..
            'vault sentinel w:' .. 10 - d .. ' / ' ..
            'orc knight')
-    e.mons('necromancer w:' .. 10 - d .. ' / ' ..
+    e.mons('phantasmal warrior w:' .. 10 - d .. ' / ' ..
            'flayed ghost w:' .. 10 - d .. ' / ' ..
-           'phantasmal warrior w:' .. d + 2)
+           'death knight w:' .. d + 2)
     e.mons('war gargoyle w:' .. 16 - d * 2 .. ' / ' ..
            'deep elf death mage w:4 / ' ..
            'undying armoury w:' .. -2 + d)

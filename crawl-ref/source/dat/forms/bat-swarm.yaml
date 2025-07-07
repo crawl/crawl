@@ -37,3 +37,4 @@ fakemuts:
 badmuts:
   - ["weak attacks", "Your unarmed attacks are very weak."]
   - ["inhibited regeneration", "You do not regenerate when monsters are visible."]
+  - ["accursed", "You recover more slowly from Doom and Banes."]

@@ -191,7 +191,7 @@ int zin_tithe(const item_def& item, int quant, bool converting)
         // You're never big enough to be paid, the top is not having to pay
         // (and even that at 200 piety, for a brief moment until it decays).
         tithe = min(tithe,
-                    (you.penance[GOD_ZIN] + MAX_PIETY - you.piety) * 2 / 3);
+                    (you.penance[GOD_ZIN] + MAX_PIETY - you.raw_piety) * 2 / 3);
         if (tithe <= 0)
         {
             // update the remainder anyway

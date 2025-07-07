@@ -31,7 +31,7 @@ KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / quicksilver dragon w:15 / \
              tengu reaver w:5 / juggernaut w:5
 KMONS:   aA = alderking
-KMONS:   J = caustic shrike skeleton
+KMONS:   J = caustic shrike zombie
 KMONS:   K = spriggan rider
 KMONS:   L = spriggan col:white name:baker n_suf ; robe . dagger
 KMONS:   M = death yak / thorn hunter w:3
@@ -136,7 +136,7 @@ KMONS:  O = the Enchantress patrolling
 MONS:   spriggan defender, spriggan berserker, spriggan rider, spriggan air mage
 MONS:   faun w:5 / satyr / manticore w:5 / stone giant w:5
 MONS:   tengu warrior / ettin ; dire flail . dire flail / \
-        deep troll w:5 / shapeshifter w:5 / caustic shrike skeleton w:5
+        deep troll w:5 / shapeshifter w:5 / caustic shrike zombie w:5
 MONS:   tengu conjurer w:20 / chonchon band / eleionoma w:20 / \
         rakshasa / glowing orange brain w:5
 KMONS:  8 = ettin ; giant club randart . giant club randart / \

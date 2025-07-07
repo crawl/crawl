@@ -486,7 +486,7 @@ SUBVAULT: A : tomb_1_centre
 SUBVAULT: B : tomb_1_hall_stairs
 : tomb_guardian_set(_G, true)
 MONS:     royal mummy / nothing
-MONS:     guardian sphinx, guardian sphinx skeleton
+MONS:     guardian sphinx, guardian sphinx draugr
 MONS:     obsidian statue / orange crystal statue
 NSUBST:   ( = 1:( / *:., 3 = 3:3 / 5 = 34 / *:.
 # Set up decorative statues.

@@ -489,14 +489,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_FLAIL,            2 },
         }, {}, {}, 1 } },
         { MONS_DEATH_KNIGHT,
-            { { { WPN_MORNINGSTAR,      5 },
-                { WPN_GREAT_MACE,       5 },
-                { WPN_HALBERD,          5 },
+            { { { WPN_GREAT_MACE,       5 },
+                { WPN_HALBERD,          6 },
                 { WPN_GREAT_SWORD,      5 },
-                { WPN_GLAIVE,           8 },
+                { WPN_GLAIVE,           10 },
                 { WPN_BROAD_AXE,        10 },
-                { WPN_BATTLEAXE,        15 },
-        }, {2, 1, 4} } },
+                { WPN_BATTLEAXE,        16 },
+        }, {2, 1, 4}, { { SPWPN_DRAINING, 1 }, { NUM_SPECIAL_WEAPONS, 1 }, } } },
         { MONS_GNOLL,                   { GNOLL_WEAPONS } },
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
@@ -615,6 +614,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_FRANCES,                 { NAGA_WEAPONS } },
         { MONS_HAROLD,                  { NAGA_WEAPONS } },
         { MONS_SKELETAL_WARRIOR,        { NAGA_WEAPONS } },
+        { MONS_DRAUGR,                  { NAGA_WEAPONS } },
         { MONS_PALE_DRACONIAN,          { NAGA_WEAPONS } },
         { MONS_RED_DRACONIAN,           { NAGA_WEAPONS } },
         { MONS_WHITE_DRACONIAN,         { NAGA_WEAPONS } },
@@ -1341,7 +1341,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-        // As a violent thug, Throatcutter suits Terence perfectly.
+    // As someone who's learned the hard way that many have no honour in war,
+    // Throatcutter suits Terence perfectly.
     case MONS_TERENCE:
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
         {

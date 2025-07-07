@@ -335,7 +335,7 @@ mset(with_props(spec_fn(function ()
   local f = 10 + you.zigs_completed() * you.zigs_completed() * 10
   local g = 0 + you.zigs_completed() * you.zigs_completed() * 2
   return "place:Tar:$ w:" .. d .. " / curse toe w:" .. e .. " / " ..
-         "doom hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
+         "oblivion hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
          "silent spectre w:" .. g
 end), { weight = 5 }))
 
@@ -355,7 +355,7 @@ mset(with_props(spec_fn(function ()
          "juggernaut simulacrum w:5 / ironbound frostheart w:5 / " ..
          "walking frostbound tome w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
-         "shard shrike w:" .. e .. " / ice fiend w:" .. e
+         "shard shrike w:" .. e .. " / orb of winter w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -390,7 +390,8 @@ mset(with_props(spec_fn(function ()
          "deep elf death mage w:2 / shadow dragon w:8 / ghost crab w:4 / " ..
          "eidolon w:4 / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "halazid warlock w:" .. e .. " / player ghost w:" .. f
+         "halazid warlock w:" .. e .. " / player ghost w:" .. f .. " / " ..
+         "orb of entropy w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -481,7 +482,7 @@ mset(with_props(spec_fn(function ()
   return "kobold demonologist w:" .. d .. " / ynoxinul w:" .. d .. " / " ..
          "boggart w:" .. d .. " / worldbinder w:" .. d .. " / " ..
          "rakshasa / broodmother / shadow demon / deep elf demonologist w:5 / " ..
-         "dread lich w:5 / fravashi w:5 / doom hound w:5 / " ..
+         "dread lich w:5 / fravashi w:5 / oblivion hound w:5 / " ..
          "glowing orange brain w:" .. e .. " / " ..
          "demonspawn corrupter w:" .. e .. " / " ..
          "halazid warlock w:" .. f .. " / nekomata w:" .. f

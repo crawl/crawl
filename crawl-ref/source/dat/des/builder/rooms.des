@@ -142,7 +142,7 @@ function sroom_morgue(e)
 
     local mons = {}
 
-    mons[1] = "zombie w:9 / skeleton w:5 / spectral thing w:1"
+    mons[1] = "zombie w:9 / draugr w:5 / spectral thing w:1"
     mons[2] = "shadow wraith w:3 / soul eater w:4 / vampire mage w:3 / "
               .. "flayed ghost w:4 / death knight w:1"
     mons[3] = "skeletal warrior w:15 ; great mace" .. weap
@@ -150,8 +150,8 @@ function sroom_morgue(e)
     mons[4] = "vampire knight ; chain mail . great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     if you.in_branch("Geh") then
-        mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
-                 .. "fire dragon zombie w:2 / fire dragon skeleton w:2"
+        mons[5] = "fire giant zombie w:3 / fire giant draugr w:3 / "
+                 .. "fire dragon zombie w:2 / fire dragon draugr w:2"
         mons[6] = "flayed ghost"
         bodies = "fire giant corpse / fire giant skeleton / "
                  .. "fire dragon corpse / fire dragon skeleton"
@@ -159,7 +159,7 @@ function sroom_morgue(e)
     elseif you.in_branch("Coc") then
         mons[5] = "hydra zombie w:3 / hydra simulacrum w:3 / "
                  .. "alligator snapping turtle zombie w:2 / "
-                 .. "alligator snapping turtle skeleton w:2"
+                 .. "alligator snapping turtle draugr w:2"
         mons[6] = "freezing wraith w:7 / bog body w:3"
         bodies = "frost giant corpse / frost giant skeleton / "
                  .. "ice dragon corpse / ice dragon skeleton / "
@@ -168,8 +168,8 @@ function sroom_morgue(e)
                  .. "hydra corpse / hydra skeleton"
         bodies_chance = 40
     elseif you.in_branch("Dis") then
-        mons[5] = "iron troll zombie w:2 / iron troll skeleton w:2 / "
-                 .. "iron dragon zombie w:3 / iron dragon skeleton w:3"
+        mons[5] = "iron troll zombie w:2 / iron troll draugr w:2 / "
+                 .. "iron dragon zombie w:3 / iron dragon draugr w:3"
         mons[6] = "ancient champion w:7 / phantasmal warrior w:3"
         bodies = "iron dragon corpse / iron dragon skeleton / "
                  .. "iron troll corpse / iron troll skeleton"
@@ -357,7 +357,8 @@ function sroom_demon_pit(e)
         {"blizzard_demon", weight_c},
         {"hellion", weight_d},
         {"tormentor", weight_d},
-        {"cacodemon", 5},
+        {"cacodemon", weight_d},
+        {"zykzyl", 5},
     }
 
     -- Choose three demons as weighted above,

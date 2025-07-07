@@ -254,6 +254,11 @@ enum monster_info_flags
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
     MB_CLOCKWORK_BEE_CAST,
+    MB_FIGMENT,
+    MB_PARADOX,
+    MB_WARDING,
+    MB_PLAYER_DAMAGE_IMMUNE,    // Currently immune to damage from the player for any reason
+    MB_DIMINISHED_SPELLS,
     NUM_MB_FLAGS
 };
 
@@ -479,6 +484,7 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    spell_type get_wand_spell() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 

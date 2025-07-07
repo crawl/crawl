@@ -130,6 +130,19 @@ canvas {
     background-color: var(--color-1); /* blue */
 }
 
+#stats_doom_bar {
+    background-color: var(--color-8); /* darkgray */
+}
+#stats_doom_bar_full {
+    background-color: var(--color-5); /* lightblue */
+}
+#stats_doom_bar_decrease {
+    background-color: var(--color-5); /* magenta */
+}
+#stats_doom_bar_increase {
+    background-color: var(--color-13); /* blue */
+}
+
 /* default color when showing "Silenced" */
 #stats_noise_status {
     color: #FF00FF; /* magenta */
