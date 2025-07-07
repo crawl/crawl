@@ -1181,9 +1181,15 @@ A slender, sharply pointed sword, with an uncommonly elegant design.
 riddle talisman
 
 An intricate puzzlebox containing an unknowable prize. Transforms the user into
-a riddle-loving sphinx. In this form, they are capable of wearing a cloak and
-barding, and their melee attacks cause powerful winds to strike their foe which
-do increased damage for every open space next to them. They are also masterful
+a riddle-loving sphinx. In this form, they are {{
+    if you.race() == "Felid" then
+        return "normally capable of wearing a cloak and barding (though your" ..
+               " own diminutive size would prevent this)"
+    else
+        return "capable of wearing a cloak and barding"
+    end
+}}, and their melee attacks cause powerful winds to strike their foe which do
+increased damage for every open space next to them. They are also masterful
 enchanters, casting Hex spells much more easily and ignoring a portion of their
 foe's Willpower.
 
