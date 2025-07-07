@@ -40,6 +40,14 @@ end
 # <<E>> Temple entries
 ##############################################################################
 
+# Dummy Temple entry
+NAME:   temple_entry_dummy
+TAGS:   transparent
+: temple_entry(_G)
+MAP
+ZOZ
+ENDMAP
+
 NAME:   temple_hall
 SUBST:  ? : c:20 x v b G:5
 : temple_entry(_G)
@@ -96,13 +104,6 @@ MAP
 .?.O.?.
 ....Z..
 ...?...
-ENDMAP
-
-NAME:   temple_statues
-TAGS:   transparent
-: temple_entry(_G)
-MAP
-ZOZ
 ENDMAP
 
 NAME:   temple_green
