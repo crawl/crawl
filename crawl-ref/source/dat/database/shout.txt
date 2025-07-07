@@ -453,7 +453,7 @@ You pose @_riddle_adj_@ riddle to @the_monster@
 
 You ask @the_monster@ @_riddle_adj_@ riddle
 
-You challege @the_monster@ with @_riddle_adj_@ riddle
+You challenge @the_monster@ with @_riddle_adj_@ riddle
 %%%%
 Sphinx riddle success
 
