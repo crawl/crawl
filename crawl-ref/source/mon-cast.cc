@@ -9106,6 +9106,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     actor *foe = mon->get_foe();
     const bool friendly = mon->friendly();
 
+    if (get_spell_flags(spell) & spflag::dummy)
+        return ai_action::impossible();
+
     if (!foe && (get_spell_flags(spell) & spflag::targeting_mask))
         return ai_action::impossible();
 

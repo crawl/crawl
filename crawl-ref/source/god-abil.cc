@@ -3010,7 +3010,6 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
-        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:

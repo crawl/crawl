@@ -4576,7 +4576,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
     spschool::none,
-    spflag::monster,
+    spflag::monster | spflag::dummy,
     6,
     200,
     -1, -1,
@@ -4587,7 +4587,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PLANAR_OVERLAY, "Planar Overlay",
     spschool::none,
-    spflag::monster,
+    spflag::monster | spflag::dummy,
     6,
     200,
     -1, -1,
