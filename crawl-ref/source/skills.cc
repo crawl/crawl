@@ -1947,6 +1947,10 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         return "True Ascetic";
     }
 
+    // All rune deathless felid
+    if (you.species == SP_FELID && runes_in_pack() >= 15 && you.deaths == 0)
+        return "Incurious";
+
     // A harder version of the ruthless efficiency banner
     if (you.experience_level < 19 && player_has_orb())
         return "Ruthless";
