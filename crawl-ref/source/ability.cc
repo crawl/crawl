@@ -2807,7 +2807,7 @@ bool activate_talent(const talent& tal, dist *target)
         direction_chooser_args args;
 
         args.hitfunc = hitfunc.get();
-        args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
+        args.restricts = testbits(abil.flags, abflag::target) ? DIR_ENFORCE_RANGE
                                                               : DIR_NONE;
         args.mode = TARG_HOSTILE;
         args.range = range;
