@@ -8036,6 +8036,15 @@ friendly protean progenitor
 w:30
 __NONE
 %%%%
+################## Raven ###########################
+raven
+
+w:100
+__NONE
+
+w:2
+@The_monster@ caws, "Nevermore!"
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper

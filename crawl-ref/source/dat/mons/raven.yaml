@@ -1,6 +1,6 @@
 name: "raven"
 glyph: {char: "b", colour: blue}
-flags: [flies]
+flags: [flies, speaks]
 exp: 210
 will: 20
 attacks:
