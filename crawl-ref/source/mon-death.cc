@@ -1821,7 +1821,7 @@ static bool _animate_dead_reap(monster &mons)
     return true;
 }
 
-static bool _reaping(monster &mons)
+static bool _reaping_brand(monster &mons)
 {
     if (!mons.props.exists(REAPING_DAMAGE_KEY))
         return false;
@@ -1890,7 +1890,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
     if (corpse_gone || have_passive(passive_t::goldify_corpses))
         return false;
 
-    if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
+    if (in_los && (_animate_dead_reap(mons)))
         return true;
 
     return false;
@@ -3264,6 +3264,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  SPELL_DEATH_CHANNEL,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
+        else if (!you_worship(GOD_YREDELEMNUL))
+            (_reaping_brand(mons));
 
         if (in_los && corpseworthy && yred_torch_is_raised())
             yred_feed_torch(&mons);
