@@ -371,6 +371,7 @@ struct monster_info : public monster_info_base
         short xl_rank;
         short damage;
         short ac;
+        string title;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const

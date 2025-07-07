@@ -328,6 +328,7 @@ enum tag_minor_version
     TAG_MINOR_TEMP_MUT_KILLS,      // Change how temp mutations are cured
     TAG_MINOR_CONTAM_PERCENT,      // Rescale internal values for magic contamination
     TAG_MINOR_ZOT_ORB_ROTATION,    // Add multiple rotating orb monster types to Zot
+    TAG_MINOR_GHOST_TITLE,         // Store ghost titles instead of generating them
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -347,6 +348,7 @@ const set<int> bones_minor_tags =
          TAG_MINOR_GHOST_UMBRAS,
          TAG_MINOR_GHOST_MOVE_SPEED_FIX,
          TAG_MINOR_GHOST_WILLPOWER,
+         TAG_MINOR_GHOST_TITLE,
 #endif
         };
 

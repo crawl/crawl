@@ -7225,8 +7225,11 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     const species_type gspecies = mi.i_ghost.species;
 
-    gstr << mi.mname << " the "
-         << skill_title_by_rank(mi.i_ghost.best_skill,
+    string title = mi.i_ghost.title;
+#if TAG_MAJOR_VERSION == 34
+    if (title.empty())
+    {
+        title = skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         gspecies,
                         get_species_def(gspecies).d,
@@ -7234,7 +7237,12 @@ string get_ghost_description(const monster_info &mi, bool concise)
                         get_species_def(gspecies).i,
                         mi.i_ghost.religion,
                         10 + mi.i_ghost.xl_rank * 27,
-                        transformation::none)
+                        false);
+    }
+#endif
+
+    gstr << mi.mname << " the "
+         << title
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)

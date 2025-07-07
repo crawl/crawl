@@ -6520,6 +6520,7 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.xl_rank);
         marshallShort(th, mi.i_ghost.damage);
         marshallShort(th, mi.i_ghost.ac);
+        marshallString(th, mi.i_ghost.title);
     }
 
     mi.props.write(th);
@@ -6784,6 +6785,12 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.xl_rank = unmarshallShort(th);
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_GHOST_TITLE)
+            mi.i_ghost.title = "";
+        else
+#endif
+            unmarshallString(th);
     }
 #if TAG_MAJOR_VERSION == 34
     if ((mons_is_ghost_demon(mi.type)
@@ -8256,6 +8263,7 @@ static void _marshallGhost(writer &th, const ghost_demon &ghost)
     marshallByte(th, ghost.colour);
     marshallBoolean(th, ghost.flies);
     marshallShort(th, ghost.umbra_rad);
+    marshallString(th, ghost.title);
 
     _marshallSpells(th, ghost.spells);
 }
@@ -8338,6 +8346,13 @@ static ghost_demon _unmarshallGhost(reader &th)
     else
 #endif
     ghost.umbra_rad    = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_GHOST_TITLE)
+        ghost.title = "";
+    else
+#endif
+    ghost.title        = unmarshallString(th);
+
 
     unmarshallSpells(th, ghost.spells
 #if TAG_MAJOR_VERSION == 34
