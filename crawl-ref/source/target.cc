@@ -2791,7 +2791,7 @@ bool targeter_bestial_takedown::valid_aim(coord_def a)
 
     if (monster* mon = monster_at(a))
     {
-        if (!mon->friendly() && mon->has_ench(ENCH_FEAR))
+        if (!mon->friendly() && mon->has_ench(ENCH_FEAR) && you.can_see(*mon))
         {
             if (get_bestial_landing_spots(a).empty())
                 return notify_fail("You can see nowhere safe to land near that.");
