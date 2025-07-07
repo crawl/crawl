@@ -10,7 +10,7 @@ hp_10x: 1800
 ac: 10
 ev: 1
 spells: boundless_tesseract
-intelligence: human
+intelligence: brainless
 size: large
 shape: misc
 tile_variance: cycle
