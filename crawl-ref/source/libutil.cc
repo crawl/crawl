@@ -380,7 +380,6 @@ bool valid_cursor_pos(int x, int y, GotoRegion region)
     return x >= 1 && y >= 1 && x <= sz.x && y <= sz.y;
 }
 
-#ifndef TARGET_OS_WINDOWS
 static GotoRegion _find_correct_region()
 {
     for (int r = GOTO_MSG; r < GOTO_MLIST; r++)
@@ -394,25 +393,22 @@ static GotoRegion _find_correct_region()
     // should probably fail for entirely invalid coords somehow
     return GOTO_CRT;
 }
-#endif
 
 void assert_valid_cursor_pos()
 {
-#ifndef TARGET_OS_WINDOWS
     GotoRegion region(get_cursor_region());
     coord_def pos(cgetpos(region));
     ASSERTM(valid_cursor_pos(pos.x, pos.y, region),
         "invalid cursor position %d,%d in region %d, should be %d,%d in region %d",
         pos.x, pos.y, region, cgetpos(_find_correct_region()).x,
         cgetpos(_find_correct_region()).y, _find_correct_region());
-#endif
 }
 
 static GotoRegion _current_region = GOTO_CRT;
 
 void cgotoxy(int x, int y, GotoRegion region)
 {
-#if defined(ASSERTS) && !defined(TARGET_OS_WINDOWS)
+#if defined(ASSERTS)
     if (!valid_cursor_pos(x, y, region))
     {
         const coord_def sz = cgetsize(region);
