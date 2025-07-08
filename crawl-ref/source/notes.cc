@@ -68,7 +68,7 @@ static bool _is_noteworthy_dlevel(level_id place)
         return lev == _dungeon_branch_depth(branch);
 
     // These get their note in the .des files.
-    if (branch == BRANCH_WIZLAB)
+    if (branch == BRANCH_WIZLAB || branch == BRANCH_TROVE)
         return false;
 
     // Other portal levels are always interesting.
