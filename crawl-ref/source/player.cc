@@ -5512,6 +5512,8 @@ player::player()
     transit_stair       = DNGN_UNSEEN;
     entering_level      = false;
 
+    zot_orb_monster_known = false;
+
     reset_escaped_death();
     on_current_level    = true;
     seen_portals        = 0;
