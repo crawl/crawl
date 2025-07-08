@@ -323,16 +323,12 @@ static void set_w32_screen_size()
     }
 
     screen = new CHAR_INFO[screensize.X * screensize.Y];
-
-    COORD topleft;
-    SMALL_RECT used;
-    topleft.X = topleft.Y = 0;
-    ::ReadConsoleOutputW(outbuf, screen, screensize, topleft, &used);
+    clrscr_sys();
 }
 
 static void w32_handle_resize_event()
 {
-    if (crawl_state.waiting_for_command)
+    if (crawl_state.waiting_for_command || crawl_state.waiting_for_ui)
         handle_terminal_resize();
     else
         crawl_state.terminal_resized = true;
@@ -852,13 +848,6 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     }
 
     return 0;
-}
-
-
-void set_getch_returns_resizes(bool rr)
-{
-    UNUSED(rr);
-    // no-op on windows console: see mantis issue #11532
 }
 
 int getch_ck()

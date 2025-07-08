@@ -77,6 +77,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -1966,6 +1967,15 @@ void handle_terminal_resize()
     else
         crawl_view.init_geometry();
 
-    redraw_screen();
-    update_screen();
+    if (crawl_state.waiting_for_ui)
+    {
+        ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
+        // We always need a redraw as the console was cleared when resizing
+        ui::force_render();
+    }
+    else
+    {
+        redraw_screen();
+        update_screen();
+    }
 }
