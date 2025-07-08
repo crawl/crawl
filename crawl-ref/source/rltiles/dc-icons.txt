@@ -115,6 +115,7 @@ figment FIGMENT
 paradox PARADOX
 warding WARDING
 dim DIMMED
+sentinel_mark SENTINEL_MARK
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

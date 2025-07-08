@@ -1126,6 +1126,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.VITRIFIED:
                 case icons.CONFUSED:
                 case icons.LACED_WITH_CHAOS:
+                case icons.SENTINEL_MARK:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:

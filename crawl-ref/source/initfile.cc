@@ -890,7 +890,7 @@ const vector<GameOption*> game_options::build_options_list()
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
         new ListGameOption<string>(SIMPLE_NAME(tile_player_status_icons),
-            split_string(",", "slow, fragile, constr, will/2")),
+            split_string(",", "slow, fragile, constr, will/2, mark")),
         new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
