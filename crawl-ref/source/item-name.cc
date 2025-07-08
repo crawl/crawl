@@ -579,6 +579,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_COMMAND:           return "command";
         case SPARM_DEATH:             return "death";
         case SPARM_RESONANCE:         return "resonance";
+        case SPARM_DEFLECTION:        return "deflection";
         default:                      return "bugginess";
         }
     }
@@ -635,6 +636,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_COMMAND:           return "command";
         case SPARM_DEATH:             return "death";
         case SPARM_RESONANCE:         return "resonance";
+        case SPARM_DEFLECTION:        return "deflection";
         default:                      return "buggy";
         }
     }

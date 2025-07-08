@@ -637,7 +637,8 @@ static bool _boosted_sh()
            || (you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
                 && you.duration[DUR_EPHEMERAL_SHIELD])
            || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
-                && !you.duration[DUR_ICEMAIL_DEPLETED]);
+                && !you.duration[DUR_ICEMAIL_DEPLETED])
+           || you.duration[DUR_DEFLECTION];
 }
 
 #ifdef DGL_SIMPLE_MESSAGING

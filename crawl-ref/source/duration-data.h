@@ -728,6 +728,12 @@ static const duration_def duration_data[] =
       "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
       {{ "Your bloodlust subsides." },
        { "You feel your bloodlust ebbing." }}, 6},
+    { DUR_DEFLECTION, 0, "",
+      "deflection", "deflecting",
+      "You are deflecting attacks and have increased SH.", D_NO_FLAGS,
+      {{ "", []() {
+          you.redraw_armour_class = true;
+      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

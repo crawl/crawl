@@ -2455,6 +2455,11 @@ bool acrobat_boost_active()
            && (!you.is_constricted());
 }
 
+bool deflection_boost_active()
+{
+    return player_deflection() && you.duration[DUR_DEFLECTION];
+}
+
 static void _equip_amulet_of_reflection()
 {
     you.redraw_armour_class = true;

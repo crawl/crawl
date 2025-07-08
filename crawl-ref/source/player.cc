@@ -1825,6 +1825,30 @@ void update_acrobat_status()
     you.redraw_evasion = true;
 }
 
+int player_deflection()
+{
+    int sh = 8 * you.wearing_ego(OBJ_ARMOUR, SPARM_DEFLECTION);
+    if (you.get_mutation_level(MUT_MISSING_HAND))
+        sh /= 2;
+    else
+    {
+        item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND);
+        if (item && item->base_type != OBJ_WEAPONS)
+            sh /= 2;
+    }
+
+    return sh;
+}
+
+void update_deflection_status()
+{
+    if (player_deflection() <= 0)
+        return;
+
+    you.duration[DUR_DEFLECTION] = you.time_taken+1;
+    you.redraw_armour_class = true;
+}
+
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
 static int _player_evasion_size_factor(bool base = false)
@@ -2123,6 +2147,9 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += qazlal_sh_boost() * 100;
     shield += you.wearing_jewellery(AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
+
+    if (you.duration[DUR_DEFLECTION])
+        shield += player_deflection() * 200;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
@@ -5875,6 +5902,7 @@ bool player::shielded() const
     return shield()
            || duration[DUR_DIVINE_SHIELD]
            || duration[DUR_EPHEMERAL_SHIELD]
+           || duration[DUR_DEFLECTION]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || you.wearing_jewellery(AMU_REFLECTION)

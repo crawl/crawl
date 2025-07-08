@@ -1006,6 +1006,13 @@ static bool _update_statuses(player_info& c)
                 continue;
             inf.short_text = "acrobatic";
         }
+        else if (status == DUR_DEFLECTION)
+        {
+            inf = status_info();
+            if (!deflection_boost_active())
+                continue;
+            inf.short_text = "deflecting";
+        }
         else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
 
