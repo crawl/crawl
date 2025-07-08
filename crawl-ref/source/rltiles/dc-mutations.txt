@@ -158,6 +158,7 @@ berserk_1 BERSERK
 berserk_2
 deterioration_1 POOR_CONSTITUTION
 deterioration_2
+persistent_contamination PERSISTENT_CONTAMINATION
 persistent_drain PERSISTENT_DRAIN
 scream_1 SCREAM
 scream_2

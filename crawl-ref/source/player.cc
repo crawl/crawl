@@ -4170,10 +4170,16 @@ void contaminate_player(int change, bool controlled, bool msg)
     bool was_glowing = player_harmful_contamination();
     int new_level  = 0;
 
+    if (change > 0)
+    {
+        const int mul = you.has_mutation(MUT_PERSISTENT_CONTAMINATION)
 #if TAG_MAJOR_VERSION == 34
-    if (change > 0 && you.unrand_equipped(UNRAND_ETHERIC_CAGE))
-        change *= 2;
+                            || you.unrand_equipped(UNRAND_ETHERIC_CAGE)
 #endif
+                            ? 2 : 1;
+
+        change *= mul;
+    }
 
     you.magic_contamination = max(0, min(3000,
                                          you.magic_contamination + change));
