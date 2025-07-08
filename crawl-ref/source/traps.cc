@@ -720,7 +720,7 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
             mpr("You enter a devourer's trap.");
 
-        if (x_chance_in_y(2, 3))
+        if (x_chance_in_y(3, 4))
         {
             if (!you_trigger)
             {
@@ -729,7 +729,7 @@ void trap_def::trigger(actor& triggerer)
                                             "sets off an devourer's trap");
             }
             flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
-            you.corrode(nullptr, "The trap's stomach acid");
+            you.corrode(nullptr, "The trap's stomach acid", 6);
         }
         else if (!you_trigger)
             mprf("%s enters a devourer's trap.", triggerer.name(DESC_THE).c_str());
