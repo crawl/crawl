@@ -311,3 +311,5 @@ bool dgn_make_transporters_from_markers();
 
 int starting_absdepth();
 bool in_descent_parent(branch_type branch);
+
+bool use_evolution_shrine(stat_type stat1, stat_type stat2);

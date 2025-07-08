@@ -57,7 +57,10 @@
 #include "mon-poly.h"
 #include "nearby-danger.h"
 #include "notes.h"
+#include "output.h"
 #include "place.h"
+#include "player-stats.h"
+#include "prompt.h"
 #include "randbook.h"
 #include "random.h"
 #include "religion.h"
@@ -7681,4 +7684,56 @@ int starting_absdepth()
         return 4;
     }
     return 0; // (absdepth is 0-indexed)
+}
+
+static string _stat_name(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return "strength";
+    case STAT_DEX:
+        return "dexterity";
+    case STAT_INT:
+        return "intelligence";
+    default:
+        return "buggy stat";
+    }
+}
+
+bool use_evolution_shrine(stat_type stat1, stat_type stat2)
+{
+    if (env.grid(you.pos()) != DNGN_SHRINE_EVOLUTION)
+        return false;
+
+    if (you_worship(GOD_ZIN))
+    {
+        mpr("Zin forbids the use of such a loathsome shrine!");
+        return false;
+    }
+
+    int stat_difference = you.base_stats[stat1] - you.base_stats[stat2];
+
+    ASSERT(stat_difference >= 0);
+
+    if (!yesno(make_stringf("Use the shrine? Your base %s will become %d and "
+         "your base %s will become %d.", _stat_name(stat1).c_str(),
+         you.base_stats[stat2], _stat_name(stat2).c_str(),
+         you.base_stats[stat1] + 2).c_str(), true, 0))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    mpr("The shrine's power fades as it alters your body.");
+
+    modify_stat(stat1, stat_difference * -1, false);
+    modify_stat(stat2, stat_difference + 2, false);
+
+    env.grid(you.pos()) = DNGN_STONE_ARCH;
+    unnotice_feature(level_pos(level_id::current(), you.pos()));
+
+    redraw_screen();
+    update_screen();
+    return true;
 }

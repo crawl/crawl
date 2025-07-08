@@ -434,6 +434,13 @@ A statue of an orb of entropy
 A statue of a terrifying globe of profound nothingness, said to dwell within the
 Realm of Zot.
 %%%%
+A shrine of evolution
+
+A shrine dedicated not to any god, but to the very genetic potential of life
+itself. Using the shrine will swap the user's highest and lowest base
+attributes, then permanently increase their new highest attribute by two. It
+may only be activated once.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################

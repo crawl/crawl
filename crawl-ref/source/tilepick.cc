@@ -562,6 +562,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EYES_FOUNTAIN;
     case DNGN_DRY_FOUNTAIN:
         return TILE_DNGN_DRY_FOUNTAIN;
+    case DNGN_SHRINE_EVOLUTION:
+        return TILE_DNGN_EVOLUTION_SHRINE;
     case DNGN_DECORATIVE_FLOOR:
         return TILE_DNGN_DECORATIVE_FLOOR;
     case DNGN_CACHE_OF_FRUIT:

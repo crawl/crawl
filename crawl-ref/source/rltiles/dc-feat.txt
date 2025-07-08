@@ -806,6 +806,8 @@ ignis DNGN_ALTAR_IGNIS
 ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
+evolution_shrine DNGN_EVOLUTION_SHRINE
+
 %sdir dngn/floor
 runelight0 DNGN_RUNELIGHT
 runelight1

@@ -3263,6 +3263,9 @@ static string _feat_action_desc(const vector<command_type>& actions,
     return comma_separated_fn(begin(actions), end(actions),
         [feat] (command_type cmd)
         {
+            if (cmd == CMD_GO_DOWNSTAIRS && feat == DNGN_SHRINE_EVOLUTION)
+                return string("(>)use");
+
             if (cmd == CMD_GO_DOWNSTAIRS && feat_is_altar(feat))
                 return string("(>)pray");
             else if (cmd == CMD_GO_DOWNSTAIRS &&

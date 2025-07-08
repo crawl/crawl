@@ -242,6 +242,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_WU_JIAN,
     DNGN_ALTAR_IGNIS,
     DNGN_ALTAR_ECUMENICAL,
+    DNGN_SHRINE_EVOLUTION,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -396,6 +397,7 @@ enum dungeon_feature_type
     DNGN_EXIT_NECROPOLIS,
     DNGN_FRIGID_WALL,
     DNGN_ZOT_STATUE,
+    DNGN_SHRINE_EVOLUTION,
 #endif
 
     NUM_FEATURES

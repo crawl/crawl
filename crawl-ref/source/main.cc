@@ -1319,11 +1319,34 @@ static void _input()
     crawl_state.clear_god_acting();
 }
 
+static stat_type _highest_stat()
+{
+    stat_type stat = STAT_STR;
+    if (you.base_stats[STAT_INT] > you.base_stats[stat])
+        stat = STAT_INT;
+    if (you.base_stats[STAT_DEX] > you.base_stats[stat])
+        stat = STAT_DEX;
+
+    return stat;
+}
+
+static stat_type _lowest_stat()
+{
+    stat_type stat = STAT_DEX;
+    if (you.base_stats[STAT_INT] < you.base_stats[stat])
+        stat = STAT_INT;
+    if (you.base_stats[STAT_STR] < you.base_stats[stat])
+        stat = STAT_STR;
+
+    return stat;
+}
+
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
     // Up and down both work for shops, portals, and altars.
-    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
+    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype)
+        || ftype == DNGN_SHRINE_EVOLUTION)
     {
         if (crawl_state.doing_prev_cmd_again)
         {
@@ -1335,6 +1358,8 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
             canned_msg(MSG_TOO_BERSERK);
         else if (ftype == DNGN_ENTER_SHOP) // don't convert to capitalism
             shop();
+        else if (ftype == DNGN_SHRINE_EVOLUTION)
+            use_evolution_shrine(_highest_stat(), _lowest_stat());
         else
             try_god_conversion(feat_altar_god(ftype));
         // Even though we may have "succeeded", return false so we don't keep
