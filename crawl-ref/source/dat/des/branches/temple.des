@@ -144,9 +144,9 @@ ENDMAP
 NAME:    temple_doors_cd
 TAGS:    transparent
 WEIGHT:  2
-SHUFFLE: Y'"C& / ZD~~~
+SHUFFLE: Y'"C& / yD~~~
 NSUBST:  XY = + / m+
-SUBST:   Z = m, cCD : cxxx
+SUBST:   y = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
