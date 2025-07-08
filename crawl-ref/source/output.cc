@@ -2142,14 +2142,16 @@ static void _print_overview_screen_equip(column_composer& cols,
 
             const int item_idx   = equipped[i].item;
             const char equip_char = index_to_letter(item_idx);
+            const int equip_width = (melded ? sw - 32 : sw - 25)
+                - (Options.show_resist_percent ? 3 : 0);
 
             str = make_stringf(
                      "<w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
                      colname.c_str(),
                      melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 32 : sw - 25, false).c_str(),
+                     chop_string(item.name(DESC_PLAIN, true), equip_width,
+                        false).c_str(),
                      colname.c_str());
             equip_chars.push_back(equip_char);
 
