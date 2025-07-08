@@ -2101,6 +2101,7 @@ static void _tag_construct_you_dungeon(writer &th)
     write_level_connectivity(th);
 
     marshallMonType(th, you.zot_orb_monster);
+    marshallBoolean(th, you.zot_orb_monster_known);
 }
 
 static void marshall_follower(writer &th, const follower &f)
@@ -5314,6 +5315,13 @@ static void _tag_read_you_dungeon(reader &th)
     else
 #endif
     you.zot_orb_monster = unmarshallMonType(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ZOT_ORB_MEMORY)
+        you.zot_orb_monster_known = false;
+    else
+#endif
+    you.zot_orb_monster_known = unmarshallBoolean(th);
 }
 
 static void _tag_read_lost_monsters(reader &th)
