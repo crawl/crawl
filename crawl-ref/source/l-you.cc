@@ -1745,7 +1745,10 @@ LUAFN(you_gain_bane)
     string banename = luaL_checkstring(ls, 1);
     bane_type bane = bane_from_name(banename);
     if (bane != NUM_BANES)
-        PLUARET(boolean, add_bane(bane));
+    {
+        string reason = luaL_checkstring(ls, 2);
+        PLUARET(boolean, add_bane(bane, reason));
+    }
 
     string err = make_stringf("No such bane: '%s'.", banename.c_str());
     return luaL_argerror(ls, 1, err.c_str());

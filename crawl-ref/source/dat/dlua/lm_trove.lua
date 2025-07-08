@@ -655,7 +655,7 @@ function TroveMarker:accept_nopiety ()
 end
 
 function TroveMarker:accept_bane ()
-  you.gain_bane(get_toll(self.props).bane)
+  you.gain_bane(get_toll(self.props).bane, "Entering a Trove")
 end
 
 function TroveMarker:accept_drain ()

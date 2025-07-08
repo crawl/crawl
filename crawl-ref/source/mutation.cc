@@ -3401,12 +3401,13 @@ static void _init_bane_dilettante()
  *
  * @param bane      The type of bane to give. If NUM_BANES, give an entirely
  *                  random bane that the player does not already have.
+ * @param reason    The source of this bane (for note-taking)
  * @param duration  The duration (in XP-units) this bane will last. If 0, use
  *                  the default duration for this type of bane.
  *
  * @return  Whether a bane was successfully added.
  */
-bool add_bane(bane_type bane, int duration)
+bool add_bane(bane_type bane, string reason, int duration)
 {
     if (bane == NUM_BANES)
     {
@@ -3441,6 +3442,8 @@ bool add_bane(bane_type bane, int duration)
     if (bane == BANE_DILETTANTE)
         _init_bane_dilettante();
 
+    take_note(Note(NOTE_GET_BANE, bane, 0, reason));
+
     return true;
 }
 
@@ -3454,6 +3457,8 @@ void remove_bane(bane_type bane)
 
     if (bane == BANE_MORTALITY)
         add_daction(DACT_BANE_MORTALITY_CLEANUP);
+
+    take_note(Note(NOTE_LOSE_BANE, bane));
 }
 
 int xl_to_remove_bane(bane_type bane)

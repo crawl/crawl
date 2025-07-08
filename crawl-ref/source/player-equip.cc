@@ -1697,7 +1697,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     {
         if (msg)
             mpr("You feel a malign power afflict you.");
-        add_bane();
+        add_bane(NUM_BANES, "Equipping an artefact");
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld

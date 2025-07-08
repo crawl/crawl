@@ -1438,7 +1438,7 @@ static void _qazlal_elemental_vulnerability()
         you.banes[bane] += 1000;
     }
     else
-        add_bane(banes[random2(banes.size())]);
+        add_bane(banes[random2(banes.size())], "The Wrath of Qazlal");
 }
 
 /**
