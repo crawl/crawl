@@ -485,6 +485,10 @@ persistent drain mutation
 Your health recovers twice as slowly from being drained. (The total experience
 needed is doubled.)
 %%%%
+persistent contamination mutation
+
+You absorb twice as much mutagenic energy from being contaminated.
+%%%%
 initially attractive mutation
 
 The first time you see a monster, it may be magically pulled toward you.
