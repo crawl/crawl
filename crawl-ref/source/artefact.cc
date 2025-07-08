@@ -1987,7 +1987,7 @@ enum gizmo_prop_type
     GIZMO_REPEL,
     GIZMO_RAMPAGE,
     GIZMO_GADGETEER,
-    GIZMO_PARRYREV,
+    GIZMO_REVGUARD,
     GIZMO_SPELLMOTOR,
     GIZMO_AUTODAZZLE,
     LAST_RARE_GIZMO = GIZMO_AUTODAZZLE,
@@ -2053,8 +2053,8 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
             gizmo.brand = SPGIZMO_GADGETEER;
             break;
 
-        case GIZMO_PARRYREV:
-            gizmo.brand = SPGIZMO_PARRYREV;
+        case GIZMO_REVGUARD:
+            gizmo.brand = SPGIZMO_REVGUARD;
             break;
 
         case GIZMO_SPELLMOTOR:

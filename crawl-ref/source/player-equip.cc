@@ -2472,6 +2472,11 @@ bool acrobat_boost_active()
            && (!you.is_constricted());
 }
 
+bool parrying_boost_active()
+{
+    return player_parrying() && you.duration[DUR_PARRYING];
+}
+
 static void _equip_amulet_of_reflection()
 {
     you.redraw_armour_class = true;

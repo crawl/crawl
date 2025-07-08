@@ -293,5 +293,6 @@ enum duration_type
     DUR_MEDUSA_COOLDOWN,
     DUR_DIMINISHED_SPELLS,
     DUR_DAZED,
+    DUR_PARRYING,
     NUM_DURATIONS
 };

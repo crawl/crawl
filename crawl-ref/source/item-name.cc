@@ -577,6 +577,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_COMMAND:           return "command";
         case SPARM_DEATH:             return "death";
         case SPARM_RESONANCE:         return "resonance";
+        case SPARM_PARRYING:          return "parrying";
         default:                      return "bugginess";
         }
     }
@@ -633,6 +634,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_COMMAND:           return "command";
         case SPARM_DEATH:             return "death";
         case SPARM_RESONANCE:         return "resonance";
+        case SPARM_PARRYING:          return "parrying";
         default:                      return "buggy";
         }
     }
@@ -1030,7 +1032,7 @@ const char* gizmo_effect_name(int type)
     {
         case SPGIZMO_SPELLMOTOR:    return "SpellMotor";
         case SPGIZMO_GADGETEER:     return "Gadgeteer";
-        case SPGIZMO_PARRYREV:      return "RevParry";
+        case SPGIZMO_REVGUARD:      return "RevGuard";
         case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";
 
         default:

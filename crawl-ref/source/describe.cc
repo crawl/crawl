@@ -2382,6 +2382,10 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it improves the success rate of the wearer's forgecraft spells "
                " and enhances their melee attacks proportionally to forgecraft "
                " skill";
+    case SPARM_PARRYING:
+        return "It shields the wearer if their last action was a melee attack. "
+               "The shielding is half as effective if the wielder's offhand is "
+               "occupied by an item other than their weapon.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2682,7 +2686,7 @@ static string _describe_gizmo(const item_def &item)
                        "a 30% chance to not spend a charge.\n";
                 break;
 
-            case SPGIZMO_PARRYREV:
+            case SPGIZMO_REVGUARD:
                 ret += "Your AC increases as you Rev (up to +5) and while "
                        "fully Revved, your attacks may disarm enemies.\n";
                 break;

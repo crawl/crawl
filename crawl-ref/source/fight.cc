@@ -649,6 +649,9 @@ void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
 
     if (you.form == transformation::medusa)
         _do_medusa_stinger();
+
+    if (!was_firewood)
+        update_parrying_status();
 }
 
 /**
