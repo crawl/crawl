@@ -1162,9 +1162,11 @@ simple_targeting = false
         zapping as well as autotarget selection for quivered spells.
 
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
-                       eringya's noxious bog, cause fear, alistair's
+                       eringya's noxious bog, anguish, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish, plasma beam
+                       gloom, flame wave, plasma beam,
+                       maxwell's portable piledriver, diamond sawblades,
+                       fortress blast
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1174,9 +1176,10 @@ force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
         be shown with every spell.
 
 force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
-                         elemental force, oozemancy, breathe lightning, torment,
-                         drain life, slouch, disaster area, apocalypse,
-                         corrupt, foxfire swarm
+                         elemental force, oozemancy, galvanic breath, 
+                         fathomless shackles, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm, siphon essence, shadowslip, 
+                         watery grave
         Force showing a targeter for the listed abilities when activating them
         normally, even if the ability isn't targeted. This for practical
         purposes only has an effect on statically targeted abilities, such as
