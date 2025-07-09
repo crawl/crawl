@@ -170,6 +170,7 @@ Form::Form(const form_entry &fe)
       changes_anatomy(fe.changes_anatomy),
       changes_substance(fe.changes_substance),
       holiness(fe.holiness),
+      is_badform(fe.is_badform),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
       has_ears(fe.has_ears),
@@ -1383,6 +1384,11 @@ bool form_can_fly(transformation form)
 bool form_can_swim(transformation form)
 {
     return get_form(form)->player_can_swim();
+}
+
+bool form_is_bad(transformation form)
+{
+    return get_form(form)->is_badform;
 }
 
 // Used to mark transformations which change the basic matter the player is
