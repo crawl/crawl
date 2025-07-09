@@ -3,31 +3,22 @@
 #include "status.h"
 
 #include "ability.h"
-#include "areas.h"
 #include "art-enum.h" // bearserk
 #include "artefact.h"
 #include "branch.h"
-#include "cloud.h"
 #include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
 #include "fight.h" // weapon_cleaves
-#include "god-abil.h"
-#include "god-passive.h"
 #include "item-prop.h"
 #include "level-state-type.h"
-#include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
-#include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "spl-damage.h" // COUPLING_TIME_KEY
-#include "spl-summoning.h" // NEXT_OBLIVION_SPAWN_KEY in duration-data
-#include "spl-transloc.h" // for you_teleport_now() in duration-data
-#include "stairs.h" // rise_through_ceiling
 #include "state.h" // crawl_state
 #include "stringutil.h"
 #include "throw.h"
@@ -67,6 +58,52 @@ static const duration_def* _lookup_duration(duration_type dur)
 const char *duration_name(duration_type dur)
 {
     return _lookup_duration(dur)->name();
+}
+
+duration_type duration_by_name(const string &name)
+{
+    string match_str = lowercase_string(name);
+    for (int i = 0; i < NUM_DURATIONS; i++)
+    {
+        const duration_def& def = duration_data[i];
+
+        string light_text = def.light_text;
+        string short_text = def.short_text;
+        string name_text  = def.name_text;
+
+        lowercase(light_text);
+        lowercase(short_text);
+        lowercase(name_text);
+
+        if (match_str == short_text
+            || match_str == name_text
+            || match_str == light_text
+            || light_text.find(match_str) != string::npos
+            || short_text.find(match_str) != string::npos
+            || name_text.find(match_str) != string::npos)
+        {
+            return def.dur;
+        }
+    }
+    return NUM_DURATIONS;
+}
+
+/**
+ * Vector of all durations with flag
+ *
+ */
+vector<duration_type> all_duration_with_flag(uint64_t flag)
+{
+    vector<duration_type> durations_with_flag = {};
+    for (int i = 0; i < NUM_DURATIONS; i++)
+    {
+        duration_type type = (duration_type) duration_index[i];
+        const duration_def* def = _lookup_duration(type);
+        if (def && def->duration_has_flag(flag)) {
+            durations_with_flag.push_back(type);
+        }
+    }
+    return durations_with_flag;
 }
 
 bool duration_dispellable(duration_type dur)

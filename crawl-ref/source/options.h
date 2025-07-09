@@ -9,6 +9,7 @@
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
+#include "duration-type.h"
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
 #include "explore-stop-options.h"
@@ -711,6 +712,12 @@ public:
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
 
+    // Which temporary statuses and cooldowns to wait for before exploring.
+    vector<string> explore_auto_rest_status_option;
+    // Processed into these automatically:
+    vector<duration_type> explore_auto_rest_status;
+    bool        explore_auto_rest_contam;
+
     bool        travel_key_stop;   // Travel stops on keypress.
 
     bool        travel_one_unsafe_move; // Allow one unsafe move of auto travel
@@ -973,6 +980,7 @@ private:
 
     void update_explore_stop_conditions();
     void update_explore_greedy_visit_conditions();
+    void update_explore_auto_rest_status();
     void update_use_animations();
     void update_travel_terrain();
 

@@ -35,6 +35,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dlua.h"
+#include "duration-data.h"
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
@@ -64,6 +65,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
@@ -554,6 +556,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
+        new ListGameOption<string>(ON_SET_NAME(explore_auto_rest_status),
+            {"all_negative", "all_cooldown", "contam"}, false,
+            [this]() { update_explore_auto_rest_status(); }),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -3178,6 +3183,54 @@ void game_options::update_explore_greedy_visit_conditions()
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
     explore_greedy_visit = conditions;
+}
+
+void game_options::update_explore_auto_rest_status()
+{
+    set<duration_type> durs;
+    explore_auto_rest_contam = false;
+
+    for (const auto& str : explore_auto_rest_status_option)
+    {
+        if (str == "all_negative")
+        {
+            const vector<duration_type> neg = all_duration_with_flag(D_NEGATIVE);
+            durs.insert(neg.begin(), neg.end());
+        }
+        else if (str == "all_cooldown")
+        {
+            const vector<duration_type> cooldown = all_duration_with_flag(D_COOLDOWN);
+            durs.insert(cooldown.begin(), cooldown.end());
+        }
+        else if (str == "contam")
+            explore_auto_rest_contam = true;
+        else
+        {
+            string str_nospace = lowercase_string(str);
+            remove_whitespace(str_nospace);
+
+            bool invert = false;
+            if (!str_nospace.empty() && str_nospace[0] == '*')
+            {
+                invert = true;
+                str_nospace = str_nospace.substr(1);
+            }
+
+            duration_type dur = duration_by_name(str_nospace);
+
+            if (invert)
+                durs.erase(dur);
+            else
+                durs.insert(dur);
+        }
+    }
+
+    // Erase effects that do not expire with time in general.
+    durs.erase(DUR_HORROR);
+    durs.erase(DUR_MESMERISED);
+    durs.erase(DUR_AFRAID);
+
+    explore_auto_rest_status.assign(durs.begin(), durs.end());
 }
 
 message_filter::message_filter(const string &filter)

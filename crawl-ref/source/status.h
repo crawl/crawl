@@ -79,6 +79,8 @@ struct status_info
 bool fill_status_info(int status, status_info& info);
 
 const char *duration_name(duration_type dur);
+duration_type duration_by_name(const string &name);
+vector<duration_type> all_duration_with_flag(uint64_t flag);
 bool duration_dispellable(duration_type dur);
 void init_duration_index();
 

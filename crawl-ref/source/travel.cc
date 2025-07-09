@@ -53,10 +53,12 @@
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "tiles-build-specific.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel-open-doors-type.h"
 #include "ui.h"
@@ -1082,6 +1084,31 @@ command_type travel()
         {
             return CMD_WAIT;
         }
+
+        for (unsigned int i = 0; i < Options.explore_auto_rest_status.size(); ++i)
+        {
+            duration_type type = Options.explore_auto_rest_status[i];
+
+            if (you.duration[type] == 0)
+                continue;
+
+            // Only rest off the bad part of Swiftness
+            if (type == DUR_SWIFTNESS && you.attribute[ATTR_SWIFTNESS] > 0)
+                continue;
+
+            // Only try to rest off transformations when this is both possible
+            // and the form is negative.
+            if (type == DUR_TRANSFORMATION
+                && (!you.transform_uncancellable || !form_is_bad()))
+            {
+                continue;
+            }
+
+            return CMD_WAIT;
+        }
+
+        if (Options.explore_auto_rest_contam && you.magic_contamination)
+            return CMD_WAIT;
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP

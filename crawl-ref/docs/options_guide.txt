@@ -51,7 +51,8 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors
+                explore_auto_rest, explore_auto_rest_status,
+                auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -1100,6 +1101,26 @@ rest_wait_percent = 100
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving.
+
+explore_auto_rest_status = <status name>, <cooldown name>, <duration name>...
+        (List option)
+        Auto-explore will wait until all statuses, durations, and cooldowns in
+        the list are finished before moving. The list will accept most
+        duration-based statuses by either the name of their status light or
+        the phrasing that appears on the % screen.
+
+	There are several special values:
+		"all_negative" = all time-based negative statuses (eg: Slow)
+               "all_cooldown" = all time-based cooldowns (eg: -Blink)
+               "contam"       = any amount of magic contamination
+		"transformation" = any time-based negative form (ie: pig/wisp).
+
+	To exclude a specific status from all_negative or all_cooldown, include
+        the status with an * at the start. For instance:
+		explore_auto_rest_status += *-blink
+	will remove -blink from the list of cooldowns it wants to wait on.
+
+	Defaults to "all_negative", "all_cooldown", "contam"
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
