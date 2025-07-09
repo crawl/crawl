@@ -1079,6 +1079,20 @@ command_type travel()
 
     if (you.running.is_explore())
     {
+        // XXX: It is possible for the player to manually add a non-duration-based
+        //      status effect to this option, resulting in situations where
+        //      autoexplore can never move. We wait an arbitrary 500 turns before
+        //      deciding something must be wrong and stopping (to prevent an assert).
+        if (you.elapsed_time > you.elapsed_time_at_last_input + 5000
+            && !Options.explore_auto_rest_status.empty())
+        {
+            mprf(MSGCH_ERROR,
+                    "You appear to be waiting for the end of something which may "
+                    "never occur. Examine your explore_auto_rest_status option.");
+            stop_running();
+            return CMD_NO_CMD;
+        }
+
         if (Options.explore_auto_rest && !you.is_sufficiently_rested()
             || you.duration[DUR_NO_MOMENTUM])
         {
