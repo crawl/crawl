@@ -50,7 +50,7 @@ Branches, Environment
   - Potential troves to discover include The Dread Knight's Derelict Chapel,
     Eringya's Secret Bog, The First Justicar's Armoury, Leda's Sunken Stockpile,
     The Lost Hoard of Erebora, The Name-Rending Infernalists' Reservoir, The
-    Octopus King's Forgotten Garden, Ozocubu's Refridgerator, Rutra's Hidden
+    Octopus King's Forgotten Garden, Ozocubu's Refrigerator, Rutra's Hidden
     Sanctum, The Storm Queen's Palace Crash Site, a devouring Rift, and an
     orange crystal hatchery.
 
