@@ -67,6 +67,8 @@
 #include "view.h"
 #include "zot.h"
 
+#define AUTO_REST_STATUS_POS "autorest_status_pos"
+
 enum IntertravelDestination
 {
     // warning: the waypoint prompt menu uses values -1 to -10 for waypoints.
@@ -1084,7 +1086,8 @@ command_type travel()
         //      autoexplore can never move. We wait an arbitrary 500 turns before
         //      deciding something must be wrong and stopping (to prevent an assert).
         if (you.elapsed_time > you.elapsed_time_at_last_input + 5000
-            && !Options.explore_auto_rest_status.empty())
+            && you.props.exists(AUTO_REST_STATUS_POS)
+            && you.props[AUTO_REST_STATUS_POS].get_coord() == you.pos())
         {
             mprf(MSGCH_ERROR,
                     "You appear to be waiting for the end of something which may "
@@ -1118,6 +1121,9 @@ command_type travel()
                 continue;
             }
 
+            // Save the player's position, so we can catch the degenerate case
+            // where this results in us waiting indefinitely.
+            you.props[AUTO_REST_STATUS_POS] = you.pos();
             return CMD_WAIT;
         }
 
