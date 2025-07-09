@@ -257,10 +257,7 @@ static int _calc_player_experience(const monster* mons)
 
     // Award the player any XP remaining in the tesseract's XP pool.
     if (mons->type == MONS_BOUNDLESS_TESSERACT && mons->props.exists(TESSERACT_XP_KEY))
-    {
         experience += mons->props[TESSERACT_XP_KEY].get_int();
-        mprf("Awarding %d bonus XP.", mons->props[TESSERACT_XP_KEY].get_int());
-    }
 
     return experience;
 }
