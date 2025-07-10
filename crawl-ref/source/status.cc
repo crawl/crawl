@@ -13,6 +13,7 @@
 #include "fight.h" // weapon_cleaves
 #include "item-prop.h"
 #include "level-state-type.h"
+#include "mon-abil.h"
 #include "mutation.h"
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
@@ -984,6 +985,23 @@ bool fill_status_info(int status, status_info& inf)
                 inf.light_colour = RED;
             else
                 inf.light_colour = YELLOW;
+        }
+        break;
+
+    case STATUS_TESSERACT:
+        if (level_id::current() == level_id(BRANCH_ZOT, 5)
+            && you.props.exists(TESSERACT_START_TIME_KEY))
+        {
+            const int time = you.elapsed_time - you.props[TESSERACT_START_TIME_KEY].get_int();
+
+            if (time >= 10000)
+                inf.light_colour = LIGHTMAGENTA;
+            else if (time > 4000)
+                inf.light_colour = RED;
+            else
+                inf.light_colour = YELLOW;
+
+            inf.light_text = "Tesseract";
         }
         break;
 

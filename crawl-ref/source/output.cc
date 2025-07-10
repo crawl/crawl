@@ -1289,6 +1289,7 @@ static void _get_status_lights(vector<status_light>& out)
     // statuses important enough to appear first. (Rightmost)
     const unsigned int important_statuses[] =
     {
+        STATUS_TESSERACT,
         STATUS_ORB,
         STATUS_ZOT,
         STATUS_STAT_ZERO,

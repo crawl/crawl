@@ -1470,8 +1470,7 @@ void tesseract_action(monster& mon)
     // When we become alerted, start the spawn timer and announce ourselves to the player.
     if (mon.behaviour != BEH_SLEEP && !mon.props.exists(TESSERACT_START_TIME_KEY))
     {
-        mprf(MSGCH_WARN, "You feel the power of Zot begin to focus. "
-             "Strike quickly, lest you be overrun by monsters beyond count!");
+        mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
 
         for (monster_iterator mi; mi; ++mi)
         {
@@ -1494,19 +1493,28 @@ void tesseract_action(monster& mon)
             }
         }
 
+        you.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
         mon.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
         mon.props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
-        mon.props[TESSERACT_XP_KEY] = 12000;
+        mon.props[TESSERACT_XP_KEY] = 15000;
     }
 
     // Handle regular spawning
     int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
+
+    // Don't act as if more than 3000 turns have passed off-level (in case the
+    // player goes to do Extended in the meantime).
+    if (you.elapsed_time - timer > 3000)
+        timer = you.elapsed_time - 3000;
+
+    // Catch up however many spawns should have happened since the last time
+    // we activated.
     while (you.elapsed_time >= timer)
     {
         const int time_passed = you.elapsed_time - mon.props[TESSERACT_START_TIME_KEY].get_int();
-        const int interval = max(200, 750 - (time_passed / 6));
+        const int interval = max(200, 600 - (time_passed / 25));
 
-        timer = you.elapsed_time + random_range(interval, interval * 4 / 3);
+        timer += random_range(interval, interval * 4 / 3);
 
         mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
         mg.place = level_id::current();
@@ -1514,11 +1522,12 @@ void tesseract_action(monster& mon)
         mg.flags |= MG_FORBID_BANDS;
         mg.proximity = PROX_AWAY_FROM_PLAYER;
         mg.foe = MHITYOU;
+        mg.non_actor_summoner = "a Boundless Tesseract";
 
         monster* spawn = mons_place(mg);
 
         if (!spawn)
-            return;
+            continue;
 
         // Allow the monster to be a normal monster if there is XP left in our
         // pool; otherwise, make them unrewarding (to make early spawns feel

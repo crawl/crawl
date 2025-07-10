@@ -6,7 +6,7 @@ holiness: [nonliving]
 will: invuln
 attacks:
 hd: 30
-hp_10x: 1800
+hp_10x: 2100
 ac: 10
 ev: 1
 spells: boundless_tesseract

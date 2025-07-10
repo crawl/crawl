@@ -1222,3 +1222,9 @@ Ostracised status
 Your connection to the divine has been partially cut-off, temporarily reducing
 your effective piety. Gaining experience will eventually recover all piety that
 has been locked away this way.
+%%%%
+Tesseract status
+
+A Boundless Tesseract is drawing in forces from a parallel reality. New monsters
+will steadily appear at random locations across the floor until either of the
+tesseracts is destroyed. This rate is slow at first, but accelerates with time.

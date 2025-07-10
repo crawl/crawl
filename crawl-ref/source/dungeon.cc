@@ -1679,6 +1679,9 @@ static int _num_mons_wanted()
     int mon_wanted = roll_dice(3, _mon_die_size());
     if (mon_wanted > 60)
         mon_wanted = 60;
+
+    if (level_id::current() == level_id(BRANCH_ZOT, 5))
+        mon_wanted = max(10, mon_wanted - 4);
     return mon_wanted;
 }
 

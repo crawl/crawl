@@ -3164,9 +3164,27 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (mons.type == MONS_BOUNDLESS_TESSERACT)
     {
         mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
+        // Remove all non-rewarding spawns, along with the other tesseract.
         for (monster_iterator mi; mi; ++mi)
+        {
             if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid)
                 monster_die(**mi, killer, killer_index);
+            else if ((mi->flags & (MF_HARD_RESET | MF_NO_REWARD)
+                     && mi->props.exists(BLAME_KEY)))
+            {
+                const CrawlVector& blame = mi->props[BLAME_KEY].get_vector();
+                if (blame[blame.size() - 1].get_string() == "created by a Boundless Tesseract")
+                {
+                    if (you.can_see(**mi))
+                    {
+                        mprf(MSGCH_MONSTER_TIMEOUT, "%s is pulled back into %s original reality.",
+                             mi->name(DESC_THE).c_str(), mi->pronoun(PRONOUN_POSSESSIVE).c_str());
+                        }
+                    monster_die(**mi, KILL_RESET, NON_MONSTER);
+                }
+            }
+        }
+        you.props.erase(TESSERACT_START_TIME_KEY);
     }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
