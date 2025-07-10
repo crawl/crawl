@@ -3218,6 +3218,9 @@ void game_options::update_explore_auto_rest_status()
 
             duration_type dur = duration_by_name(str_nospace);
 
+            if (dur == NUM_DURATIONS)
+                continue;
+
             if (invert)
                 durs.erase(dur);
             else
