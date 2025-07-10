@@ -4172,7 +4172,7 @@ void contaminate_player(int change, bool controlled, bool msg)
 
     if (change > 0)
     {
-        const int mul = you.has_mutation(MUT_PERSISTENT_CONTAMINATION)
+        const int mul = you.has_mutation(MUT_CONTAMINATION_SUSCEPTIBLE)
 #if TAG_MAJOR_VERSION == 34
                             || you.unrand_equipped(UNRAND_ETHERIC_CAGE)
 #endif

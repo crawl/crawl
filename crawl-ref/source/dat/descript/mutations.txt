@@ -485,7 +485,7 @@ persistent drain mutation
 Your health recovers twice as slowly from being drained. (The total experience
 needed is doubled.)
 %%%%
-persistent contamination mutation
+contamination susceptible mutation
 
 You absorb twice as much mutagenic energy from being contaminated.
 %%%%

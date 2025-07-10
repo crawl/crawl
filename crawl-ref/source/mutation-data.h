@@ -381,13 +381,13 @@ static const mutation_def mut_data[] =
   TILEG_MUT_PERSISTENT_DRAIN,
 },
 
-{ MUT_PERSISTENT_CONTAMINATION, 5, 1, mutflag::bad,
-  "persistent contamination",
+{ MUT_CONTAMINATION_SUSCEPTIBLE, 5, 1, mutflag::bad,
+  "contamination susceptible",
 
   {"You absorb twice as much mutagenic energy from being contaminated.", "", ""},
   {"You feel more susceptible to contamination.", "", ""},
   {"You feel less susceptible to contamination.", "", ""},
-  TILEG_MUT_PERSISTENT_CONTAMINATION,
+  TILEG_MUT_CONTAMINATION_SUSCEPTIBLE,
 },
 
 { MUT_STRONG_WILLED, 5, 3, mutflag::good,
