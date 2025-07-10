@@ -3187,7 +3187,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         if (you.props.exists(TESSERACT_START_TIME_KEY))
         {
-            mark_milestone("tesseract.kill", "");
+            mark_milestone("tesseract.kill", "destroyed the tesseracts.");
             you.props.erase(TESSERACT_START_TIME_KEY);
         }
     }

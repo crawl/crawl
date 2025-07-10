@@ -1471,7 +1471,7 @@ void tesseract_action(monster& mon)
     if (mon.behaviour != BEH_SLEEP && !mon.props.exists(TESSERACT_START_TIME_KEY))
     {
         mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
-        mark_milestone("tesseract.activate", "");
+        mark_milestone("tesseract.activate", "activated a tesseract");
 
         for (monster_iterator mi; mi; ++mi)
         {
