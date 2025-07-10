@@ -1503,10 +1503,10 @@ void tesseract_action(monster& mon)
     // Handle regular spawning
     int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
 
-    // Don't act as if more than 3000 turns have passed off-level (in case the
+    // Don't act as if more than 1000 turns have passed off-level (in case the
     // player goes to do Extended in the meantime).
-    if (you.elapsed_time - timer > 3000)
-        timer = you.elapsed_time - 3000;
+    if (you.elapsed_time - timer > 10000)
+        timer = you.elapsed_time - 10000;
 
     // Catch up however many spawns should have happened since the last time
     // we activated.
