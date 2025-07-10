@@ -68,6 +68,7 @@ struct player_info
     int8_t dex;
 
     int doom;
+    string doom_desc;
 
     int experience_level;
     int8_t exp_progress;

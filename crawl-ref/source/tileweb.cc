@@ -1140,7 +1140,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
 
     _update_int(force_full, c.doom, you.attribute[ATTR_DOOM], "doom");
-    json_write_string("doom_desc", getLongDescription("doom status"));
+    _update_string(force_full, c.doom_desc, getLongDescription("doom status"), "doom_desc");
 
     _update_int(force_full, c.contam, you.magic_contamination / 10, "contam");
 
