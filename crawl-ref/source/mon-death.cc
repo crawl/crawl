@@ -3184,7 +3184,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
             }
         }
-        you.props.erase(TESSERACT_START_TIME_KEY);
+
+        if (you.props.exists(TESSERACT_START_TIME_KEY))
+        {
+            mark_milestone("tesseract.kill", "");
+            you.props.erase(TESSERACT_START_TIME_KEY);
+        }
     }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
