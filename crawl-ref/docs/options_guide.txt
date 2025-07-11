@@ -1915,6 +1915,11 @@ show_resist_percent = true
 	from each element, based on their current pips of resistance, will be
 	shown on the % screen.
 
+always_show_doom_contam = false
+	If set to true, always display the doom and contam meters in the
+	upper-right of the side panel, even if the player doesn't currently
+	have any doom or contamination.
+
 3-i     Colours (messages and menus)
 -----------------
 

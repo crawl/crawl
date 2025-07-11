@@ -474,6 +474,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(warn_contam_cost), false),
         new BoolGameOption(SIMPLE_NAME(show_resist_percent), true),
+        new BoolGameOption(SIMPLE_NAME(always_show_doom_contam), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -5393,6 +5394,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("glyph_mode_font_size", glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", show_game_time);
+    tiles.json_write_bool("always_show_doom_contam", always_show_doom_contam);
 
     // TODO: convert action_panel_show into a yes/no/never option. It would be
     // better to have a more straightforward way of disabling the panel

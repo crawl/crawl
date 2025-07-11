@@ -290,7 +290,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     function update_doom()
     {
-        if (player.doom == 0)
+        if (player.doom == 0 && options.get("always_show_doom_contam") === false)
         {
             $("#stats_doom_ui").hide();
             return;
@@ -303,12 +303,15 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         elem.text(" " + val + "%");
 
         var colour = "fg7";
+        if (player.doom == 0)
+            colour = "fg8";
         if (player.doom >= 75)
             colour = "fg5";
         else if (player.doom >= 50)
             colour = "fg12";
         else if (player.doom >= 25)
             colour = "fg14";
+
         elem.addClass(colour);
         $("#stats_doom").html(elem);
 
@@ -323,7 +326,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     function update_contam()
     {
-        if (player.contam == 0)
+        if (player.contam == 0 && options.get("always_show_doom_contam") === false)
         {
             $("#stats_contam_ui").hide();
             return;

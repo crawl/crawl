@@ -1040,7 +1040,7 @@ static void _print_stats_doom(int x, int y)
 
     // Hide the bar entirely if there is no active doom (since that will be true
     // most of the time).
-    if (you.attribute[ATTR_DOOM] == 0)
+    if (you.attribute[ATTR_DOOM] == 0 && !Options.always_show_doom_contam)
     {
         CPRINTF("          ");
         return;
@@ -1056,8 +1056,10 @@ static void _print_stats_doom(int x, int y)
         textcolour(LIGHTRED);
     else if (you.attribute[ATTR_DOOM] >= 25)
         textcolour(YELLOW);
-    else
+    else if (you.attribute[ATTR_DOOM] > 0)
         textcolour(LIGHTGRAY);
+    else
+        textcolour(DARKGRAY);
 
     CPRINTF("%d%% ", you.attribute[ATTR_DOOM]);
     you.redraw_doom = false;
@@ -1068,9 +1070,9 @@ static void _print_stats_contam(int x, int y)
     CGOTOXY(x, y, GOTO_STAT);
 
     // Hide the bar entirely if the player has no contam
-    if (you.magic_contamination == 0)
+    if (you.magic_contamination == 0 && !Options.always_show_doom_contam)
     {
-        CPRINTF("            ");
+        CPRINTF("          ");
         return;
     }
 
@@ -1078,7 +1080,8 @@ static void _print_stats_contam(int x, int y)
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Contam: ");
 
-    const int contam = max(1, you.magic_contamination / 10);
+    const int contam = max(you.magic_contamination > 0 ? 1 : 0,
+                           you.magic_contamination / 10);
     if (contam >= 200)
         textcolour(RED);
     else if (contam >= 100)
