@@ -133,7 +133,7 @@ function TroveMarker:overview_note (marker)
     else
       return "give " .. self:item_name(false)
     end
-  elseif toll.type == "piety" then
+  elseif toll.type == "nopiety" then
     return "lose all piety"
   elseif toll.type == "bane" then
     return "suffer the " .. crawl.bane_name(toll.bane)
