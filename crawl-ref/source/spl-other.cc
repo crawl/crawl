@@ -259,7 +259,7 @@ passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_ran
                     actual_dest = pos;
                     dest_found = true;
                 }
-                if (env.map_knowledge(pos).feat() != DNGN_UNSEEN)
+                if (env.map_knowledge.feat(pos) != DNGN_UNSEEN)
                     break;
             }
         }
@@ -343,7 +343,7 @@ vector <coord_def> passwall_path::possible_dests() const
     vector<coord_def> dests;
     for (auto p : path)
         if (!in_bounds(p) ||
-            (env.map_knowledge(p).feat() == DNGN_UNSEEN || !cell_is_solid(p)))
+            (env.map_knowledge.feat(p) == DNGN_UNSEEN || !cell_is_solid(p)))
         {
             dests.push_back(p);
         }
@@ -415,7 +415,7 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     vector<coord_def> dests = p.possible_dests();
     if (dests.size() == 0 ||
         (dests.size() == 1 && (!in_bounds(dests[0]) ||
-        env.map_knowledge(dests[0]).feat() != DNGN_UNSEEN)))
+        env.map_knowledge.feat(dests[0]) != DNGN_UNSEEN)))
     {
         // if there are no possible destinations, or only 1 that has been seen,
         // the player already had full knowledge. The !in_bounds case is if they

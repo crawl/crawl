@@ -258,7 +258,7 @@ void direction_chooser::print_key_hints() const
         if (you.see_cell(target()))
             prompt += ", v - describe";
         prompt += ", . - travel";
-        if (in_bounds(target()) && env.map_knowledge(target()).item())
+        if (in_bounds(target()) && env.map_knowledge.item(target()))
             prompt += ", g - get item";
     }
     else
@@ -1537,7 +1537,7 @@ void direction_chooser::fill_feature_cycle_points(char feature_class)
             const coord_def p = view2grid(coord_def(ix, iy));
 
             if (map_bounds(p)
-                &&  (you.see_cell(p) || env.map_knowledge(p).seen())
+                &&  (you.see_cell(p) || env.map_knowledge.seen(p))
                 && is_feature(feature_class, p))
             {
                 feature_cycle_pos.push_back(p);
@@ -1646,7 +1646,7 @@ bool direction_chooser::pickup_item()
 {
     item_def *ii = nullptr;
     if (in_bounds(target()))
-        ii = env.map_knowledge(target()).item();
+        ii = env.map_knowledge.item(target());
     if (!ii || !ii->is_valid(true))
     {
         mprf(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
@@ -2234,7 +2234,7 @@ void direction_chooser::full_describe()
 
 void direction_chooser::describe_target()
 {
-    if (!map_bounds(target()) || !env.map_knowledge(target()).known())
+    if (!map_bounds(target()) || !env.map_knowledge.known(target()))
         return;
     if (full_describe_square(target(), false))
         moves.isCancel = force_cancel = true;
@@ -2674,7 +2674,7 @@ string get_terse_square_desc(const coord_def &gc)
         desc = unseen_desc;
     else if (!you.see_cell(gc))
     {
-        if (env.map_knowledge(gc).seen())
+        if (env.map_knowledge.seen(gc))
         {
             desc = "[" + feature_description_at(gc, false, DESC_PLAIN)
                        + "]";
@@ -2714,10 +2714,10 @@ void terse_describe_square(const coord_def &c, bool in_range)
 // Get description of the "top" thing in a square; for mouseover text.
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
-    const dungeon_feature_type feat = env.map_knowledge(c).feat();
-    const cloud_type cloud = env.map_knowledge(c).cloud();
+    const dungeon_feature_type feat = env.map_knowledge.feat(c);
+    const cloud_type cloud = env.map_knowledge.cloud(c);
 
-    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
+    if (const monster_info *mi = env.map_knowledge.monsterinfo(c))
     {
         // First priority: monsters.
         string desc = uppercase_first(get_monster_equipment_desc(*mi))
@@ -2735,7 +2735,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         bool temp = false;
         get_monster_db_desc(*mi, inf, temp);
     }
-    else if (const item_def *obj = env.map_knowledge(c).item())
+    else if (const item_def *obj = env.map_knowledge.item(c))
     {
         // Second priority: objects.
         get_item_desc(*obj, inf);
@@ -2764,8 +2764,8 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     int quantity = 0;
     bool action_taken = false;
 
-    const monster_info *mi = env.map_knowledge(c).monsterinfo();
-    const dungeon_feature_type feat = env.map_knowledge(c).feat();
+    const monster_info *mi = env.map_knowledge.monsterinfo(c);
+    const dungeon_feature_type feat = env.map_knowledge.feat(c);
 
     // warning: we use pointers to the elements of this vector past here for
     // the stash list case
@@ -2775,7 +2775,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     // actions can work.
     if (you.on_current_level && c == you.pos())
         list_items = item_list_on_square(you.visible_igrd(c));
-    else if (env.map_knowledge(c).item())
+    else if (env.map_knowledge.item(c))
     {
         // otherwise, use stash info. These are item copies, not the real
         // things.
@@ -2862,13 +2862,13 @@ static void _describe_oos_square(const coord_def& where)
 {
     mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
 
-    if (!in_bounds(where) || !env.map_knowledge(where).seen())
+    if (!in_bounds(where) || !env.map_knowledge.seen(where))
     {
 #ifdef DEBUG_DIAGNOSTICS
         if (!in_bounds(where))
             dprf("(out of bounds)");
         else
-            dprf("(map: %x)", env.map_knowledge(where).flags);
+            dprf("(map: %x)", env.map_knowledge.flags(where));
 #endif
         return;
     }
@@ -2919,10 +2919,10 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
 
 static void _describe_oos_feature(const coord_def& where)
 {
-    if (!env.map_knowledge(where).seen())
+    if (!env.map_knowledge.seen(where))
         return;
 
-    string desc = feature_description(env.map_knowledge(where).feat()) + ".";
+    string desc = feature_description(env.map_knowledge.feat(where)) + ".";
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
@@ -2949,7 +2949,7 @@ vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
 
 void describe_floor()
 {
-    dungeon_feature_type grid = env.map_knowledge(you.pos()).feat();
+    dungeon_feature_type grid = env.map_knowledge.feat(you.pos());
 
     const char* prefix = "There is ";
     string feat;
@@ -3129,8 +3129,8 @@ static bool _interesting_feature(dungeon_feature_type feat)
 string feature_description_at(const coord_def& where, bool covering,
                               description_level_type dtype)
 {
-    dungeon_feature_type grid = env.map_knowledge(where).feat();
-    trap_type trap = env.map_knowledge(where).trap();
+    dungeon_feature_type grid = env.map_knowledge.feat(where);
+    trap_type trap = env.map_knowledge.trap(where);
 
     string marker_desc = env.markers.property_at(where, MAT_ANY,
                                                  "feature_description");
@@ -3808,7 +3808,7 @@ static void _debug_describe_feature_at(const coord_def &where)
          traveldest.c_str(),
          height_desc.c_str(),
          vault.c_str(),
-         env.map_knowledge(where).flags,
+         env.map_knowledge.flags(where),
          (env.pgrid(where) & FPROP_NO_TELE_INTO) ? ", no_tele" : "");
 }
 #endif

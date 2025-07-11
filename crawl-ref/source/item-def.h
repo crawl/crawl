@@ -32,6 +32,7 @@ struct item_def
         short charges;              ///< # of charges held by a wand, etc
         short net_durability;       ///< damage dealt to a net
         short tithe_state;          ///< tithe state of a stack of gold
+        uint16_t next_free;
     };
     union
     {

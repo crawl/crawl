@@ -456,7 +456,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(env.grid(p)) && env.map_knowledge(p).known())
+        if (feat_is_door(env.grid(p)) && env.map_knowledge.known(p))
         {
             _exclude_gate(p, exc->radius == 0);
             return;
@@ -508,16 +508,17 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         {
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
-            const map_cell& cell = env.map_knowledge(p);
-            if (cell.monster() != MONS_NO_MONSTER)
+            const MapKnowledge& map = env.map_knowledge;
+            monster_type mt = map.monster(p);
+            if (mt != MONS_NO_MONSTER)
             {
-                desc = mons_type_name(cell.monster(), DESC_PLAIN);
-                if (cell.detected_monster())
+                desc = mons_type_name(mt, DESC_PLAIN);
+                if (map.detected_monster(p))
                     desc += " (detected)";
             }
             else
             {
-                const dungeon_feature_type feat = cell.feat();
+                const dungeon_feature_type feat = map.feat(p);
                 desc = feat_type_name(feat);
             }
         }

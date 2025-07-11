@@ -149,7 +149,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
     if (you.confused())
         return true;
 
-    const cloud_type ctype = env.map_knowledge(p).cloud();
+    const cloud_type ctype = env.map_knowledge.cloud(p);
     // Don't prompt if already in a cloud of the same type.
     if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
         && ctype != cloud_type_at(you.pos())
@@ -190,7 +190,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
     // Boldly go into the unknown (for ranged move prompts)
-    if (env.map_knowledge(p).trap() == TRAP_UNASSIGNED)
+    if (env.map_knowledge.trap(p) == TRAP_UNASSIGNED)
         return true;
 
     // If there's no trap, let's go.
@@ -279,7 +279,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
     // Boldly go into the unknown (for ranged move prompts)
-    if (!env.map_knowledge(p).known())
+    if (!env.map_knowledge.known(p))
         return true;
 
     if (!_check_moveto_dangerous(p, msg))
@@ -402,7 +402,7 @@ bool check_moveto(const coord_def& p, const string &move_verb, bool physically)
 static bool _check_move_over_terrain(coord_def p, const string& move_verb)
 {
     // Boldly go into the unknown (for ranged move prompts)
-    if (!env.map_knowledge(p).known())
+    if (!env.map_knowledge.known(p))
         return true;
 
     if (crawl_state.disables[DIS_CONFIRMATIONS])
@@ -2205,12 +2205,12 @@ void forget_map(bool rot)
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         const coord_def &p = *ri;
-        if (!env.map_knowledge(p).known() || you.see_cell(p))
+        if (!env.map_knowledge.known(p) || you.see_cell(p))
             continue;
 
         if (player_in_branch(BRANCH_ABYSS)
-            && env.map_knowledge(p).item()
-            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+            && env.map_knowledge.item(p)
+            && env.map_knowledge.item(p)->is_type(OBJ_RUNES, RUNE_ABYSSAL))
         {
             continue;
         }
@@ -2227,9 +2227,9 @@ void forget_map(bool rot)
         if (you.see_cell(p))
             continue;
 
-        env.map_knowledge(p).clear();
+        env.map_knowledge.clear(p);
         if (env.map_forgotten)
-            (*env.map_forgotten)(p).clear();
+            env.map_forgotten->clear(p);
         StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);
@@ -8702,9 +8702,9 @@ void player_open_door(coord_def doorpos)
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated. Hitting this case requires a really big
         // door!
-        if (env.map_knowledge(dc).seen())
+        if (env.map_knowledge.seen(dc))
         {
-            env.map_knowledge(dc).set_feature(env.grid(dc));
+            env.map_knowledge.set_feature(dc, env.grid(dc));
 #ifdef USE_TILE
             tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
 #endif
@@ -8873,9 +8873,9 @@ void player_close_door(coord_def doorpos)
         // Even if some of the door is out of LOS once it's closed
         // (or even if some of it is out of LOS when it's open), we
         // want the entire door to be updated.
-        if (env.map_knowledge(dc).seen())
+        if (env.map_knowledge.seen(dc))
         {
-            env.map_knowledge(dc).set_feature(env.grid(dc));
+            env.map_knowledge.set_feature(dc, env.grid(dc));
 #ifdef USE_TILE
             tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
 #endif

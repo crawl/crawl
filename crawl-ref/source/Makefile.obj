@@ -355,6 +355,7 @@ caction-type.h.o \
 canned-message-type.h.o \
 char-set-type.h.o \
 cleansing-flame-source-type.h.o \
+cloud-info.h.o \
 cloud-type.h.o \
 cluautil.h.o \
 command-type.h.o \
@@ -439,7 +440,6 @@ lookup-help.h.o \
 los-type.h.o \
 macro.h.o \
 macros.h.o \
-map-cell.h.o \
 map-feature.h.o \
 map-marker-type.h.o \
 maybe-bool.h.o \

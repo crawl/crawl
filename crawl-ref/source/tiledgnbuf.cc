@@ -2,7 +2,10 @@
 #ifdef USE_TILE_LOCAL
 #include "tiledgnbuf.h"
 
+#include "mon-info.h"
+#include "mon-util.h"
 #include "mpr.h"
+#include "player.h"
 #include "tile-flags.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"
@@ -569,8 +572,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
     {
-        const item_def* item = cell.map_knowledge.item();
-        spell_type spell = static_cast<spell_type>(item->plus);
+        spell_type spell = cell.parchment_spell;
         const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
         const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
 

@@ -41,7 +41,7 @@ LUAFN(view_feature_at)
         lua_pushstring(ls, "unseen");
         return 1;
     }
-    dungeon_feature_type f = env.map_knowledge(p).feat();
+    dungeon_feature_type f = env.map_knowledge.feat(p);
     lua_pushstring(ls, dungeon_feature_name(f));
     return 1;
 }
@@ -60,7 +60,7 @@ LUAFN(view_cloud_at)
         lua_pushnil(ls);
         return 1;
     }
-    cloud_type c = env.map_knowledge(p).cloud();
+    cloud_type c = env.map_knowledge.cloud(p);
     if (c == CLOUD_NONE)
     {
         lua_pushnil(ls);
@@ -116,15 +116,15 @@ LUAFN(view_is_safe_square)
         PLUARET(boolean, false);
         return 1;
     }
-    cloud_type c = env.map_knowledge(p).cloud();
+    cloud_type c = env.map_knowledge.cloud(p);
     if (c != CLOUD_NONE
         && is_damaging_cloud(c, true,
-            YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
+            YOU_KILL(env.map_knowledge.cloudinfo(p)->killer)))
     {
         PLUARET(boolean, false);
         return 1;
     }
-    trap_type t = env.map_knowledge(p).trap();
+    trap_type t = env.map_knowledge.trap(p);
     if (t != TRAP_UNASSIGNED)
     {
         trap_def trap;
@@ -133,7 +133,7 @@ LUAFN(view_is_safe_square)
         PLUARET(boolean, trap.is_safe());
         return 1;
     }
-    dungeon_feature_type f = env.map_knowledge(p).feat();
+    dungeon_feature_type f = env.map_knowledge.feat(p);
     const bool assume_flight = lua_isboolean(ls, 1) ? lua_toboolean(ls, 1)
                                                     : false;
     if (f != DNGN_UNSEEN && !feat_is_traversable_now(f, false, assume_flight)
@@ -199,7 +199,7 @@ LUAFN(view_withheld)
         PLUARET(boolean, false);
         return 1;
     }
-    PLUARET(boolean, env.map_knowledge(p).flags & MAP_WITHHELD);
+    PLUARET(boolean, env.map_knowledge.flags(p) & MAP_WITHHELD);
     return 1;
 }
 
@@ -217,7 +217,7 @@ LUAFN(view_invisible_monster)
         PLUARET(boolean, false);
         return 1;
     }
-    PLUARET(boolean, env.map_knowledge(p).flags & MAP_INVISIBLE_MONSTER);
+    PLUARET(boolean, env.map_knowledge.flags(p) & MAP_INVISIBLE_MONSTER);
     return 1;
 }
 
@@ -251,29 +251,29 @@ LUAFN(view_cell_see_cell)
  */
 LUAFN(view_get_map)
 {
-    lua_createtable(ls, env.map_knowledge.size(), 0);
+    MapKnowledge& map = env.map_knowledge;
+    lua_createtable(ls, map.size(), 0);
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         const coord_def p = *ri;
-        map_cell& cell = env.map_knowledge(p);
-        if (!cell.known())
+        if (!map.known(p))
             continue;
         auto pc = grid2player(p);
         lua_createtable(ls, 4, 0);
         LUA_PUSHINT("x", pc.x);
         LUA_PUSHINT("y", pc.y)
-        auto feat = cell.feat();
+        auto feat = map.feat(p);
         LUA_PUSHSTRING("feature", dungeon_feature_name(feat));
-        auto visible = cell.visible();
+        auto visible = map.visible(p);
         if (visible)
             LUA_PUSHBOOL("visible", true);
-        if (cell.mapped() && !cell.seen())
+        if (map.mapped(p) && !map.seen(p))
             LUA_PUSHBOOL("mapped", true);
         if (!feat_is_solid(feat) || feat_is_door(feat))
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if (!env.map_knowledge(*ai).known())
+                if (!map.known(*ai))
                 {
                     LUA_PUSHBOOL("frontier", true);
                     break;
@@ -301,27 +301,30 @@ LUAFN(view_get_map)
             if (lev && lev->shop_needs_visit(p))
                 LUA_PUSHBOOL("unvisited", true);
         }
-        if (cell.item() && cell.item()->defined())
+        const item_def* item = map.item(p);
+        if (item && item->defined())
             LUA_PUSHBOOL("item", true)
-        if (cell.monsterinfo())
+        monster_info* mons = map.monsterinfo(p);
+        if (mons)
         {
-            lua_push_moninf(ls, cell.monsterinfo());
+            lua_push_moninf(ls, mons);
             lua_setfield(ls, -2, "monster");
         }
-        else if (cell.invisible_monster())
+        else if (map.invisible_monster(p))
             LUA_PUSHBOOL("invisible_monster", true);
         bool unsafe = false;
-        if (cell.cloud() != CLOUD_NONE)
+        cloud_type cloud = map.cloud(p);
+        if (cloud != CLOUD_NONE)
         {
-            LUA_PUSHSTRING("cloud", cloud_type_name(cell.cloud()).c_str());
-            auto killer = cell.cloudinfo()->killer;
-            if (is_damaging_cloud(cell.cloud(), true, YOU_KILL(killer)))
+            LUA_PUSHSTRING("cloud", cloud_type_name(cloud).c_str());
+            auto killer = map.cloudinfo(p)->killer;
+            if (is_damaging_cloud(cloud, true, YOU_KILL(killer)))
                 unsafe = true;
         }
-        if (!unsafe && cell.trap() != TRAP_UNASSIGNED)
+        if (!unsafe && map.trap(p) != TRAP_UNASSIGNED)
         {
             trap_def trap;
-            trap.type = cell.trap();
+            trap.type = map.trap(p);
             trap.ammo_qty = 1;
             if (!trap.is_safe())
                 unsafe = true;
@@ -330,9 +333,9 @@ LUAFN(view_get_map)
             LUA_PUSHBOOL("unsafe", true);
         if (!visible)
         {
-            if (cell.detected_item())
+            if (map.detected_item(p))
                 LUA_PUSHBOOL("detected_item", true);
-            if (cell.detected_monster())
+            if (map.detected_monster(p))
                 LUA_PUSHBOOL("detected_monster", true);
         }
         lua_rawseti(ls, -2, 40000*(100+pc.x) + (100+pc.y));

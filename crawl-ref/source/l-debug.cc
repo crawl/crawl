@@ -102,7 +102,7 @@ LUAFN(debug_reset_player_data)
 LUAFN(debug_generate_level)
 {
     msg::suppress mx;
-    env.map_knowledge.init(map_cell());
+    env.map_knowledge.reset();
     los_changed();
     tile_init_default_flavour();
     tile_clear_flavour();
