@@ -316,31 +316,6 @@ static void _check_monster_pos(const monster* mons)
     }
 }
 
-/**
- * Determine if a location is valid to present a { glyph.
- *
- * @param where    The location being queried.
- * @param mons     The moster being mimicked.
- * @return         True if valid, otherwise False.
-*/
-static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
-{
-    if (!you.see_cell(where) || where == you.pos()
-        || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
-    {
-        return false;
-    }
-
-    monster *mons_at = monster_at(where);
-    if (mons_at && mons_at != mons)
-        return false;
-
-    if (monster_habitable_grid(mons, where))
-        return true;
-
-    return false;
-}
-
 static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 {
     if (die <= 1)
@@ -357,76 +332,6 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
 
     return hash32(&data, sizeof(data)) % die;
-}
-
-/**
- * Mark the estimated position of an invisible monster.
- *
- * Marks a spot on the map as possibly containing an unseen monster
- * (showing up as a disturbance in the air). Also flags the square as
- * updated for invisible monster, which is used by show_init().
- *
- * @param where          The disturbance's map position.
- * @param do_tiles_draw  Trigger a tiles draw of this cell.
-**/
-static void _mark_invisible_at(const coord_def &where,
-                               bool do_tiles_draw = false)
-{
-    env.map_knowledge(where).set_invisible_monster();
-    env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
-
-    if (do_tiles_draw)
-        show_update_at(where);
-}
-
-/**
- * Mark invisible monsters with a known position with an invisible monster
- * indicator.
- * @param mons      The monster to check.
- * @param hash_ind  The random hash index, combined with the mid to make a
- *                  unique hash for this roll. Needed for when we can't mark
- *                  the monster's true position and instead mark an adjacent
- *                  one.
-*/
-static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
-{
-    // Monster position is unknown.
-    if (mons->unseen_pos.origin())
-        return;
-
-    // We expire these unseen invis markers after one turn if the monster
-    // has moved away.
-    if (you.turn_is_over && !mons->went_unseen_this_turn
-        && mons->pos() != mons->unseen_pos)
-    {
-        mons->unseen_pos = coord_def(0, 0);
-        return;
-    }
-
-    bool do_tiles_draw;
-    // Try to use the unseen position.
-    if (_valid_invisible_spot(mons->unseen_pos, mons))
-    {
-        do_tiles_draw = mons->unseen_pos != mons->pos();
-        _mark_invisible_at(mons->unseen_pos, do_tiles_draw);
-        return;
-    }
-
-    // Fall back to a random position adjacent to the unseen position.
-    // This can only happen if the monster just became unseen.
-    vector <coord_def> adj_unseen;
-    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ++ai)
-    {
-        if (_valid_invisible_spot(*ai, mons))
-            adj_unseen.push_back(*ai);
-    }
-    if (adj_unseen.size())
-    {
-        coord_def new_pos = adj_unseen[_hashed_rand(mons, hash_ind,
-                                                    adj_unseen.size())];
-        do_tiles_draw = mons->unseen_pos != mons->pos();
-        _mark_invisible_at(new_pos, do_tiles_draw);
-    }
 }
 
 /**
@@ -461,10 +366,20 @@ static void _update_monster(monster* mons)
         you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
         you.attribute[ATTR_SEEN_INVIS_SEED] = rng::get_uint32();
     }
-    // After the player finishes this turn, the monster's unseen pos (and
-    // its invis indicator due to going unseen) will be erased.
+
+    // Show an invis indicator for a revealed monster until it moves from where
+    // at was revealed, but make sure to show it for at least one turn.
     if (!you.turn_is_over)
-        mons->went_unseen_this_turn = false;
+        mons->revealed_this_turn = false;
+    else if (!mons->revealed_this_turn && mons->revealed_at_pos != gp)
+        mons->revealed_at_pos.reset();
+
+    if (!mons->revealed_at_pos.origin())
+    {
+        env.map_knowledge(gp).set_invisible_monster();
+        mons->revealed_at_pos = gp;
+        return;
+    }
 
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
@@ -474,8 +389,8 @@ static void _update_monster(monster* mons)
         || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
             && !mons->is_insubstantial())
     {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
+        env.map_knowledge(gp).set_invisible_monster();
+        mons->revealed_at_pos = gp;
         return;
     }
 
@@ -483,19 +398,17 @@ static void _update_monster(monster* mons)
     if (mons->constricted_by == MID_PLAYER
         || (range > 0 && (you.pos() - mons->pos()).rdist() <= range))
     {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
+        env.map_knowledge(gp).set_invisible_monster();
+        mons->revealed_at_pos = gp;
         return;
     }
 
     // 1/7 chance to leave an invis indicator at the real position.
     if (!_hashed_rand(mons, 0, 7))
     {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
+        env.map_knowledge(gp).set_invisible_monster();
+        mons->revealed_at_pos = gp;
     }
-    else
-        _handle_unseen_mons(mons, 2);
 }
 
 /**
@@ -528,8 +441,6 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
         monster* mons = monster_at(gp);
         if (mons && mons->alive())
             _update_monster(mons);
-        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
-            _mark_invisible_at(gp);
     }
 
     if (layers & Layer::CLOUDS)
@@ -546,26 +457,14 @@ void show_init(layers_type layers)
     if (crawl_state.game_is_arena())
     {
         for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
-        {
             show_update_at(*ri, layers);
-            // Invis indicators and update flags not used in Arena.
-            env.map_knowledge(*ri).flags &= ~MAP_INVISIBLE_UPDATE;
-        }
         return;
     }
 
     ASSERT(you.on_current_level);
 
-    vector <coord_def> update_locs;
     for (vision_iterator ri(you); ri; ++ri)
-    {
         show_update_at(*ri, layers);
-        update_locs.push_back(*ri);
-    }
-
-    // Need to clear these update flags now so they don't persist.
-    for (coord_def loc : update_locs)
-        env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
 // Emphasis may change while off-level. This catches up.
