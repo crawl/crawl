@@ -3163,7 +3163,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Must be done after health is set to zero and monster is properly marked dead.
     if (mons.type == MONS_BOUNDLESS_TESSERACT)
     {
-        mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
         // Remove all non-rewarding spawns, along with the other tesseract.
         for (monster_iterator mi; mi; ++mi)
         {
@@ -3190,6 +3189,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         if (you.props.exists(TESSERACT_START_TIME_KEY))
         {
+            mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
             mark_milestone("tesseract.kill", "destroyed the tesseracts.");
             you.props.erase(TESSERACT_START_TIME_KEY);
         }
