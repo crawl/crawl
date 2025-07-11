@@ -152,7 +152,7 @@ force_more_message += You are slowing down
 force_more_message += You fall asleep
 
 # Banes
-force_more_message += befalls you
+force_more_message += befalls you....
 force_more_message += upon you is lifted
 
 # Abyss exits and rune
