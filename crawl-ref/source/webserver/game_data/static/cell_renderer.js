@@ -1174,6 +1174,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.VEXED:
                 case icons.PARADOX:
                 case icons.WARDING:
+                case icons.FIGMENT:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:
