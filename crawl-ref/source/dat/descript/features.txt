@@ -267,8 +267,14 @@ A staircase leading back up.
 A tree
 
 A large tree. While in most places the dim light of the dungeon is not bright
-enough to sustain large plants, there are spots where, with the grace of
-Fedhas, trees as big as those on the surface can grow underground.
+enough to sustain large plants, there are {{
+    if you.branch() == "Shoals" then
+        return "sunny terrains such as the Shoals where, with some help from"
+    else
+        return "spots where, with the grace of"
+    end
+}} Fedhas, trees as big as those on the surface can grow underground.
+
 %%%%
 A mangrove
 
