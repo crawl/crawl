@@ -1131,7 +1131,7 @@ bool yred_reap_chance()
     int ratio = min(piety_breakpoint(5), (int)you.piety()) * 100 / piety_breakpoint(5);
     int min_chance = 15 + (25 * ratio / 100);
 
-    ratio = min(100, (hd * 100 / you.piety() * 4));
+    ratio = min(100, (hd * 100 / max(you.piety() * 4, 1)));
     int chance = (ratio * min_chance / 100) + ((100 - ratio));
 
     return x_chance_in_y(chance, 100);
