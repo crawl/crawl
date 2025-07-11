@@ -3167,8 +3167,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         // Remove all non-rewarding spawns, along with the other tesseract.
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid)
+            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid
+                && !(mi->flags & MF_BANISHED))
+            {
                 monster_die(**mi, killer, killer_index);
+            }
             else if ((mi->flags & (MF_HARD_RESET | MF_NO_REWARD)
                      && mi->props.exists(BLAME_KEY)))
             {
