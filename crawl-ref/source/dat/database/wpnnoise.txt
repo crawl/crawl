@@ -1958,6 +1958,14 @@ Such primal killing power, scion....
 
 Be of strong will, and bring death to all who oppose us!
 %%%%
+zonguldrok hat hat of the Alchemist
+
+Ah, alchemy. So many new and exciting ways to cause harm....
+
+All our enemies can now be test subjects!
+
+Even if you find the elixir of immortality, remember: I was immortal first!
+%%%%
 zonguldrok hat hat of Pondering
 
 # Pinky and the Brain
@@ -1966,6 +1974,14 @@ Scion, are you pondering what I'm pondering?
 I can tolerate a stained cap for power such as this!
 
 I must contemplate what to do next....
+%%%%
+zonguldrok hat crown of vainglory
+
+All will be laid low in my presence!
+
+I can tolerate light if it grants the power to send my enemies to eternal darkness!
+
+Kill for my glory, not yours, scion!
 ###############################################################################
 ###############################################################################
 #
