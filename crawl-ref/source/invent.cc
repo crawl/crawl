@@ -738,8 +738,8 @@ bool sort_item_identified(const InvEntry *a)
 
 bool sort_item_charged(const InvEntry *a)
 {
-    return a->item->base_type != OBJ_WANDS
-           || !item_ever_evokable(*(a->item));
+    return !is_xp_evoker(*a->item)
+                || evoker_charges(a->item->sub_type) <= 0;
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,

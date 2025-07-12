@@ -1327,9 +1327,8 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           items on the floor.
 
         * charged:
-          Makes wands known or assumed to have some charges left appear
-          before wands known to be empty; irrelevant for all other item
-          types.
+          Makes evokers with available charges appear before those which
+          are empty; irrelevant for all other item types.
 
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
