@@ -107,6 +107,7 @@ public:
     string preface_format;
     void *data;
     function<bool(const MenuEntry&)> on_select;
+    function<void(MenuEntry&)> on_click;
 
 #ifdef USE_TILE
     vector<tile_def> tiles;
@@ -389,7 +390,9 @@ public:
     virtual bool skip_process_command(int keyin);
     virtual command_type get_command(int keyin);
     virtual bool process_command(command_type cmd);
+    virtual bool exit_on_click() const;
 
+    bool complete;
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
     void webtiles_scroll(int first, int hover);

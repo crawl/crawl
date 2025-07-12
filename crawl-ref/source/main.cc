@@ -77,6 +77,7 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
+#include "command-palette-menu.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -2242,6 +2243,9 @@ void process_command(command_type cmd, command_type prev_cmd)
         redraw_screen();
         update_screen();
         break;
+    case CMD_COMMAND_PALETTE:
+         process_command(display_command_palette(), CMD_COMMAND_PALETTE);
+         break;
     case CMD_DISPLAY_MUTATIONS:
         display_mutations();
         redraw_screen();
