@@ -1330,6 +1330,13 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           Makes evokers with available charges appear before those which
           are empty; irrelevant for all other item types.
 
+	* usefulness:
+	  Sorts consumables by their current 'usefulness' in the
+          following order: Emergency (eg: ?blinking, !heal wounds),
+	  Good (eg: ?acquirement), Normal, Dangerous (eg: !lignification),
+	  Bad (eg: ?torment while worshipping a good god), and finally
+	  permanently useless.
+
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
              sort_menus = true : basename, >qty
@@ -1340,10 +1347,6 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
              sort_menus = inv: true
         (Menu types must be specified as name:, with no space between
         name and colon.)
-
-        By default only pickup menus are sorted, and the sort criteria are:
-             "equipped, basename, qualname, curse, qty".
-        All other menus (drop, inv) will be sorted by inventory letter.
 
         The menu selectors available are:
 
@@ -1363,6 +1366,10 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         If you define sort_menus differently for two or more selectors,
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
+
+        By default pickup menus are sorted, and the sort criteria are:
+             "equipped, basename, qualname, curse, qty".
+        Inv menus are sorted by "equipped, charged, usefulness".
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)

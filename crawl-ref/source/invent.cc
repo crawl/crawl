@@ -721,6 +721,7 @@ int sort_item_qty(const InvEntry *a);
 int sort_item_slot(const InvEntry *a);
 bool sort_item_identified(const InvEntry *a);
 bool sort_item_charged(const InvEntry *a);
+int sort_item_consumable_usefulness(const InvEntry *a);
 
 int sort_item_qty(const InvEntry *a)
 {
@@ -740,6 +741,23 @@ bool sort_item_charged(const InvEntry *a)
 {
     return !is_xp_evoker(*a->item)
                 || evoker_charges(a->item->sub_type) <= 0;
+}
+
+int sort_item_consumable_usefulness(const InvEntry *a)
+{
+    if (inventory_category_for(*a->item) != INVENT_CONSUMABLE)
+        return 100;
+
+    if (is_useless_item(*a->item))
+        return 100;
+    if (is_emergency_item(*a->item))
+        return 0;
+    else if (is_good_item(*a->item))
+        return 1;
+    else if (is_dangerous_item(*a->item))
+        return 3;
+    else
+        return 2;
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -792,6 +810,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
           { "slot",      compare_item_fn<int, sort_item_slot> },
+          { "usefulness", compare_item_fn<int, sort_item_consumable_usefulness> },
       };
 
     list.clear();
