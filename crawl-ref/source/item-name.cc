@@ -2966,6 +2966,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_IMMOLATION:
         case SCR_VULNERABILITY:
         case SCR_NOISE:
+        case SCR_SILENCE:
             return true;
         case SCR_TORMENT:
             return !you.res_torment();
