@@ -5299,6 +5299,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         result.level = ISPEC_MUNDANE;
         result.ego   = -1;
+        result.allow_uniques = 0;
     }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
