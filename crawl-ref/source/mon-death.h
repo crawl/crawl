@@ -35,6 +35,7 @@ class monster;
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
+#define BLAME_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 #define RESET_KILL(x) ((x) == KILL_RESET || (x) == KILL_RESET_KEEP_ITEMS \
                        || (x) == KILL_TENTACLE_CLEANUP)

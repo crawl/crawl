@@ -766,7 +766,7 @@ void bolt::precalc_agent_properties()
 
 void bolt::apply_beam_conducts()
 {
-    if (is_tracer() && YOU_KILL(thrower))
+    if (is_tracer() && BLAME_KILL(thrower))
     {
         switch (flavour)
         {
@@ -1642,7 +1642,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             mons->drain(pbolt.agent());
 
-            if (YOU_KILL(pbolt.thrower))
+            if (BLAME_KILL(pbolt.thrower))
                 did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
         }
         break;
@@ -1663,7 +1663,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             miasma_monster(mons, pbolt.agent());
 
-            if (YOU_KILL(pbolt.thrower))
+            if (BLAME_KILL(pbolt.thrower))
                 did_god_conduct(DID_UNCLEAN, 2, pbolt.god_cares());
         }
         break;
@@ -4924,7 +4924,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     if (nasty_to(mon))
     {
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             set_attack_conducts(conducts, *mon, you.can_see(*mon));
 
@@ -4994,7 +4994,13 @@ void bolt::enchantment_affect_monster(monster* mon)
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
     if (mon && mon->alive() && nasty_to(mon))
-        behaviour_event(mon, ME_ANNOY, agent());
+    {
+        // Don't anger allies for the actions of confused enemies.
+        const actor* to_blame = agent();
+        if (thrower == KILL_YOU_CONF)
+            to_blame = actor_by_mid(source_id);
+        behaviour_event(mon, ME_ANNOY, to_blame);
+    }
     else
         behaviour_event(mon, ME_ALERT, agent());
 }
@@ -5175,7 +5181,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage. Hostiles will still take umbrage.
-    if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
+    if ((dmg > 0 || !mon->wont_attack()) && !BLAME_KILL(thrower))
     {
         behaviour_event(mon, ME_ANNOY, agent());
 
@@ -6210,7 +6216,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_POLYMORPH:
         if (mon->polymorph(0))
             obvious_effect = true;
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             const int level = 2 + random2(3);
             did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
@@ -6221,7 +6227,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_UNRAVELLED_MAGIC:
         if (mon->malmutate(agent())) // exact source doesn't matter
             obvious_effect = true;
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             const int level = 2 + random2(3);
             did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
@@ -6359,7 +6365,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_HASTE:
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
             did_god_conduct(DID_HASTY, 6, god_cares());
 
         if (mon->stasis())
