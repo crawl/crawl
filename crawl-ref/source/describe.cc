@@ -2385,6 +2385,9 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "It enhances and cheapens the wearer's conjurations, and "
                "provides a spellpower boost to all non-conjuration spells that "
                "depends on the wearer's conjurations skill.";
+    case SPARM_GLASS:
+        return "It may vitrify nearby enemies when they take damage. "
+               "Evocations skill increases the likelihood of vitrification.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

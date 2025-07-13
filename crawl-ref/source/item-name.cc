@@ -581,6 +581,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_RESONANCE:         return "resonance";
         case SPARM_DEFLECTION:        return "deflection";
         case SPARM_CONJURING:         return "conjuring";
+        case SPARM_GLASS:             return "glass";
         default:                      return "bugginess";
         }
     }
@@ -639,6 +640,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_RESONANCE:         return "resonance";
         case SPARM_DEFLECTION:        return "deflection";
         case SPARM_CONJURING:         return "conjuring";
+        case SPARM_GLASS:             return "glass";
         default:                      return "buggy";
         }
     }
