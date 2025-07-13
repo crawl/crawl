@@ -2381,6 +2381,10 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "It shields the wearer if their last action was a melee attack. "
                "The shielding is half as effective if the wielder's offhand is "
                "occupied by an item other than their weapon.";
+    case SPARM_CONJURING:
+        return "It enhances and cheapens the wearer's conjurations, and "
+               "provides a spellpower boost to all non-conjuration spells that "
+               "depends on the wearer's conjurations skill.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

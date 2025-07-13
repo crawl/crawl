@@ -562,6 +562,9 @@ int calc_spell_power(spell_type spell)
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
         power = power * (270 + you.skill(SK_ARMOUR, 10)) / 270;
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_CONJURING) && !spell_typematch(spell, spschool::conjuration))
+        power = power * (540 + you.skill(SK_CONJURATIONS, 10)) / 540;
+
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.
     power = _stepdown_spellpower(power);
