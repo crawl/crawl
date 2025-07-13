@@ -556,11 +556,9 @@ int spell_mana(spell_type which_spell, bool real_spell)
         if (you.has_mutation(MUT_EFFICIENT_MAGIC))
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
 
-        if (you.wearing_ego(OBJ_ARMOUR, SPARM_CONJURING)
-            && spell_typematch(which_spell, spschool::conjuration)
-            && real_spell)
+        if (spell_typematch(which_spell, spschool::alchemy) && real_spell)
         {
-            cost = max(1, cost - 1);
+            cost = max(1, cost - you.wearing_jewellery(AMU_ALCHEMY));
         }
 
         if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))

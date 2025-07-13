@@ -681,7 +681,7 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It improves your ability with shapeshifting, depending on "
                "your skill.";
     case AMU_ALCHEMY:
-        return "It enhances your alchemy spells.";
+        return "It enhances your alchemy spells and reduces their mp cost.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
@@ -2382,7 +2382,7 @@ static const char* _item_ego_desc(special_armour_type ego)
                "The shielding is half as effective if the wielder's offhand is "
                "occupied by an item other than their weapon.";
     case SPARM_CONJURING:
-        return "It enhances and cheapens the wearer's conjurations, and "
+        return "It enhances the wearer's conjurations, and "
                "provides a spellpower boost to all non-conjuration spells that "
                "depends on the wearer's conjurations skill.";
     case SPARM_GLASS:
