@@ -557,9 +557,7 @@ int spell_mana(spell_type which_spell, bool real_spell)
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
 
         if (spell_typematch(which_spell, spschool::alchemy) && real_spell)
-        {
             cost = max(1, cost - you.wearing_jewellery(AMU_ALCHEMY));
-        }
 
         if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
             cost = cost/2 + cost%2; // round up
