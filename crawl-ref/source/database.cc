@@ -85,6 +85,7 @@ static TextDB AllDBs[] =
             "commands.txt",
             "clouds.txt",
             "status.txt",
+            "monstatus.txt",
             "mutations.txt",
             "passives.txt", }),
 

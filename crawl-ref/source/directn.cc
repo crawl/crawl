@@ -1825,6 +1825,16 @@ static vector<string> _monster_description_suffixes(const monster_info& mi,
     return suffixes;
 }
 
+// Returns the list of all descriptors that would be appended to the monster's
+// name if viewed with x. (eg: "strong, inner flame")
+vector<string> get_monster_status_descriptors(const monster_info& mi)
+{
+    vector<string> suffixes;
+    _append_container(suffixes, _cell_description_suffixes(mi.pos));
+    _append_container(suffixes, _monster_description_suffixes(mi));
+    return suffixes;
+}
+
 string cell_monster_description(const coord_def& pos, bool include_areas, targeting_behaviour* behavior)
 {
     // Do we see anything?

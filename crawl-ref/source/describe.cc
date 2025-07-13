@@ -7103,6 +7103,32 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #endif
 }
 
+static formatted_string _get_monster_status_descriptions(const monster_info& mi)
+{
+    vector<string> descriptors = get_monster_status_descriptors(mi);
+    if (descriptors.empty())
+        return formatted_string();
+
+    ostringstream out;
+    for (string& tag : descriptors)
+    {
+        const string key = make_stringf("%s monstatus", tag.c_str());
+        string lookup = getLongDescription(key);
+        if (lookup.empty())
+            continue;
+
+        out << "<w>" << uppercase_first(tag) << ":</w>\n";
+
+        // Wordwrap and indent slightly.
+        linebreak_string(lookup, 77);
+        lookup = replace_all(lookup, "\n", "\n   ");
+
+        out << "   " << lookup << "\n\n";
+    }
+
+    return formatted_string::parse_string(out.str());
+}
+
 int describe_monster(const monster_info &mi, const string& /*footer*/)
 {
     bool has_stat_desc = false;
@@ -7156,28 +7182,48 @@ int describe_monster(const monster_info &mi, const string& /*footer*/)
 #endif
 
     const formatted_string quote = formatted_string(trimmed_string(inf.quote));
+    const formatted_string status_desc = _get_monster_status_descriptions(mi);
+
 
     auto desc_sw = make_shared<Switcher>();
     auto more_sw = make_shared<Switcher>();
     desc_sw->current() = 0;
     more_sw->current() = 0;
 
-    const char* mores[2] = {
-        "[<w>!</w>]: <w>Description</w>|Quote",
-        "[<w>!</w>]: Description|<w>Quote</w>",
+    const string mores[3] =
+    {
+        "[<w>!</w>]: <w>Description</w>",
+        "[<w>!</w>]: Description",
+        "[<w>!</w>]: Description",
     };
 
-    for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
+    const formatted_string *content[3] = { &desc, &status_desc, &quote };
+    const int num_modes = 1 + !status_desc.empty() + !inf.quote.empty();
+
+    for (int i = 0; i < 3; i++)
     {
-        const formatted_string *content[2] = { &desc, &quote };
-        auto scroller = make_shared<Scroller>();
+        // Skip absent information.
+        if (i == 1 && status_desc.empty())
+            continue;
+        if (i == 2 && inf.quote.empty())
+            break;
+
         auto text = make_shared<Text>(content[i]->trim());
+        auto scroller = make_shared<Scroller>();
         text->set_wrap_text(true);
         scroller->set_child(text);
         desc_sw->add_child(std::move(scroller));
 
+        string more = make_stringf("%s%s%s", mores[i].c_str(),
+            !status_desc.empty()
+                ? i == 1 ? "|<w>Statuses</w>" : "|Statuses"
+                : "",
+            !inf.quote.empty()
+                ? i == 2 ? "|<w>Quote</w>" : "|Quote"
+                : "");
+
         more_sw->add_child(make_shared<Text>(
-                formatted_string::parse_string(mores[i])));
+                formatted_string::parse_string(more)));
     }
 
     more_sw->set_margin_for_sdl(20, 0, 0, 0);
@@ -7185,7 +7231,7 @@ int describe_monster(const monster_info &mi, const string& /*footer*/)
     desc_sw->expand_h = false;
     desc_sw->align_x = Widget::STRETCH;
     vbox->add_child(desc_sw);
-    if (!inf.quote.empty())
+    if (!inf.quote.empty() || !status_desc.empty())
         vbox->add_child(more_sw);
 
 #ifdef USE_TILE_LOCAL
@@ -7200,9 +7246,13 @@ int describe_monster(const monster_info &mi, const string& /*footer*/)
         const auto key = ev.key();
         lastch = key;
         done = ui::key_exits_popup(key, true);
-        if (!inf.quote.empty() && key == '!')
+        if (key == '!')
         {
-            int n = (desc_sw->current() + 1) % 2;
+            // Cycle mode (skipping absent ones)
+            int n = (desc_sw->current() + 1);
+            if (n >= num_modes)
+                n = 0;
+
             desc_sw->current() = more_sw->current() = n;
 #ifdef USE_TILE_WEB
             tiles.json_open_object();
@@ -7243,6 +7293,7 @@ int describe_monster(const monster_info &mi, const string& /*footer*/)
     }
     tiles.json_write_string("body", desc_without_spells);
     tiles.json_write_string("quote", quote);
+    tiles.json_write_string("status", status_desc.to_colour_string());
     write_spellset(spells, nullptr, &mi);
 
     {

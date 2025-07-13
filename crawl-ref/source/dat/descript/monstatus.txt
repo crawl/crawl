@@ -1,0 +1,5 @@
+%%%%
+strong monstatus
+
+The monster's melee attacks inflict 50% increased damage.
+%%%%

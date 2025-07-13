@@ -447,17 +447,52 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         var $body = $popup.find(".body.paneset");
         var $footer = $popup.find(".footer > .paneset");
         var $panes = $body.find(".pane");
+        var $footer_panes = $footer.find(".pane");
         $panes.eq(0).html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($panes.eq(0), desc.spellset, false);
         var have_quote = desc.quote !== "";
+        var have_status = desc.status !== "";
+
+        var footer0 = "<b class=\"fg15\">Description</b>";
+        if (have_status)
+            footer0 += " | Status";
+        if (have_quote)
+            footer0 += " | Quote";
+
+        var footer1 = "Description";
+        if (have_status)
+            footer1 += " | <b class=\"fg15\">Status</b>";
+        if (have_quote)
+            footer1 += " | Quote";
+
+        var footer2 = "Description";
+        if (have_status)
+            footer2 += " | Status";
+        if (have_quote)
+            footer2 += " | <b class=\"fg15\">Quote</b>";
+
+        $footer_panes.eq(0).html(footer0);
+        $footer_panes.eq(1).html(footer1);
+        $footer_panes.eq(2).html(footer2);
 
         if (have_quote)
-            $panes.eq(1).html(_fmt_spellset_html(desc.quote));
+            $panes.eq(2).html(_fmt_spellset_html(desc.quote));
         else
         {
-            $footer.parent().remove();
-            $panes.eq(1).remove();
+            $panes.eq(2).remove();
+            $footer_panes.eq(2).remove();
         }
+
+        if (have_status)
+            $panes.eq(1).html(fmt_body_txt(desc.status));
+        else
+        {
+            $panes.eq(1).remove();
+            $footer_panes.eq(1).remove();
+        }
+
+        if (!have_status && !have_quote)
+            $footer.parent().remove();
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
@@ -523,12 +558,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
             if (event.key === "!")
             {
                 paneset_cycle($body);
-                if (have_quote)
+                if (have_quote || have_status)
                     paneset_cycle($footer);
             }
         });
         paneset_cycle($body);
-        if (have_quote)
+        if (have_quote || have_status)
             paneset_cycle($footer);
 
         return $popup;
