@@ -74,9 +74,7 @@ static void _wizard_make_friendly(monster* m);
 #endif
 static dist _look_around_target(const coord_def &whence);
 static void _describe_oos_feature(const coord_def& where);
-static void _describe_cell(const coord_def& where, bool in_range = true);
-static bool _print_cloud_desc(const coord_def where);
-static bool _print_item_desc(const coord_def where);
+static string _get_cloud_desc(const coord_def& where);
 
 static bool _blocked_ray(const coord_def &where);
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
@@ -88,7 +86,6 @@ static int  _targeting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static vector<string> _get_monster_desc_vector(const monster_info& mi);
-static string _get_monster_desc(const monster_info& mi);
 
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where);
@@ -334,7 +331,11 @@ void direction_chooser::describe_cell() const
         {
             print_floor_description(show_boring_feats);
             if (!did_cloud)
-                _print_cloud_desc(target());
+            {
+                string str = _get_cloud_desc(target());
+                if (!str.empty())
+                    mprf(MSGCH_EXAMINE, "%s", str.c_str());
+            }
         }
     }
 
@@ -713,7 +714,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             // Highlight selected monster on the screen.
             const coord_def gc(m->pos);
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            const string &desc = get_terse_square_desc(gc);
+            const string &desc = get_cell_mouseover_tag(gc);
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
@@ -765,7 +766,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             // Highlight selected monster on the screen.
             const coord_def gc(m->pos);
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            const string &desc = get_terse_square_desc(gc);
+            const string &desc = get_cell_mouseover_tag(gc);
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
@@ -1732,9 +1733,9 @@ void direction_chooser::print_target_description(bool &did_cloud) const
     }
 }
 
-string direction_chooser::target_interesting_terrain_description() const
+static string _cell_interesting_terrain_description(const coord_def& pos)
 {
-    const dungeon_feature_type feature = env.grid(target());
+    const dungeon_feature_type feature = env.grid(pos);
 
     // Only features which can make you lose the item are interesting.
     // FIXME: extract the naming logic from here and use
@@ -1747,9 +1748,9 @@ string direction_chooser::target_interesting_terrain_description() const
     }
 }
 
-string direction_chooser::target_cloud_description() const
+static string _cell_cloud_description(const coord_def& pos)
 {
-    if (cloud_struct* cloud = cloud_at(target()))
+    if (cloud_struct* cloud = cloud_at(pos))
         return cloud->cloud_name(true);
     else
         return "";
@@ -1762,14 +1763,14 @@ static void _append_container(C1& container_base, const C2& container_append)
                           container_append.begin(), container_append.end());
 }
 
-string direction_chooser::target_sanctuary_description() const
+static string _cell_sanctuary_description(const coord_def& pos)
 {
-    return is_sanctuary(target()) ? "sanctuary" : "";
+    return is_sanctuary(pos) ? "sanctuary" : "";
 }
 
-string direction_chooser::target_silence_description() const
+static string _cell_silence_description(const coord_def& pos)
 {
-    return silenced(target()) ? "silenced" : "";
+    return silenced(pos) ? "silenced" : "";
 }
 
 static void _push_back_if_nonempty(const string& str, vector<string>* vec)
@@ -1780,39 +1781,7 @@ static void _push_back_if_nonempty(const string& str, vector<string>* vec)
 
 string direction_chooser::target_description() const
 {
-    // Do we see anything?
-    const monster* mon = monster_at(target());
-    if (!mon)
-        return "";
-
-    const bool visible = you.can_see(*mon);
-    const bool exposed = _mon_exposed(mon);
-    if (!visible && !exposed)
-        return "";
-
-    // OK, now we know that we have something to describe.
-    vector<string> suffixes;
-    string text;
-    // Cell features go first.
-    _append_container(suffixes, target_cell_description_suffixes());
-    if (visible)
-    {
-        monster_info mi(mon);
-        // Only describe the monster if you can actually see it.
-        _append_container(suffixes, monster_description_suffixes(mi));
-        text = get_monster_equipment_desc(mi);
-    }
-    else
-        text = "Disturbance";
-
-    // Build the final description string.
-    if (!suffixes.empty())
-    {
-        text += " ("
-            + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
-            + ")";
-    }
-    return text;
+    return cell_monster_description(target(), true, behaviour);
 }
 
 void direction_chooser::print_target_monster_description(bool &did_cloud) const
@@ -1828,21 +1797,20 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     }
 }
 
-// FIXME: this should really take a cell as argument.
-vector<string> direction_chooser::target_cell_description_suffixes() const
+static vector<string> _cell_description_suffixes(const coord_def& pos)
 {
     vector<string> suffixes;
     // Things which describe the cell.
-    _push_back_if_nonempty(target_cloud_description(), &suffixes);
-    _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
-    _push_back_if_nonempty(target_silence_description(), &suffixes);
-    _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
+    _push_back_if_nonempty(_cell_cloud_description(pos), &suffixes);
+    _push_back_if_nonempty(_cell_sanctuary_description(pos), &suffixes);
+    _push_back_if_nonempty(_cell_silence_description(pos), &suffixes);
+    _push_back_if_nonempty(_cell_interesting_terrain_description(pos), &suffixes);
 
     return suffixes;
 }
 
-vector<string> direction_chooser::monster_description_suffixes(
-    const monster_info& mi) const
+static vector<string> _monster_description_suffixes(const monster_info& mi,
+                                                    targeting_behaviour* behavior = nullptr)
 {
     vector<string> suffixes;
 
@@ -1850,9 +1818,49 @@ vector<string> direction_chooser::monster_description_suffixes(
     _push_back_if_nonempty(mi.constriction_description(), &suffixes);
     _append_container(suffixes, mi.attributes());
     _append_container(suffixes, _get_monster_desc_vector(mi));
-    _append_container(suffixes, behaviour->get_monster_desc(mi));
+
+    if (behavior)
+        _append_container(suffixes, behavior->get_monster_desc(mi));
 
     return suffixes;
+}
+
+string cell_monster_description(const coord_def& pos, bool include_areas, targeting_behaviour* behavior)
+{
+    // Do we see anything?
+    const monster* mon = monster_at(pos);
+    if (!mon)
+        return "";
+
+    const bool visible = you.can_see(*mon);
+    const bool exposed = _mon_exposed(mon);
+    if (!visible && !exposed)
+        return "";
+
+    // OK, now we know that we have something to describe.
+    vector<string> suffixes;
+    string text;
+    // Cell features go first.
+    if (include_areas)
+        _append_container(suffixes, _cell_description_suffixes(pos));
+    if (visible)
+    {
+        monster_info mi(mon);
+        // Only describe the monster if you can actually see it.
+        _append_container(suffixes, _monster_description_suffixes(mi, behavior));
+        text = get_monster_equipment_desc(mi);
+    }
+    else
+        text = "Disturbance";
+
+    // Build the final description string.
+    if (!suffixes.empty())
+    {
+        text += " ("
+            + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
+            + ")";
+    }
+    return text;
 }
 
 void direction_chooser::print_target_object_description() const
@@ -1870,29 +1878,44 @@ void direction_chooser::print_target_object_description() const
          menu_colour_item_name(*item, DESC_A).c_str());
 }
 
+string cell_items_description(const coord_def& pos)
+{
+    if (!in_bounds(pos))
+        return "";
+
+    auto items = const_item_list_on_square(you.visible_igrd(pos));
+
+    if (items.empty())
+        return "";
+
+    return make_stringf("<cyan>Item%s here:</cyan> %s.",
+                        items.size() > 1 ? "s" : "",
+                        item_message(items).c_str());
+}
+
 void direction_chooser::print_items_description() const
 {
-    if (!in_bounds(target()))
-        return;
-
-    auto items = const_item_list_on_square(you.visible_igrd(target()));
+    string items = cell_items_description(target());
 
     if (items.empty())
         return;
 
-    if (items.size() == 1)
-    {
-        mprf(MSGCH_FLOOR_ITEMS, "<cyan>Item here:</cyan> %s.",
-             menu_colour_item_name(*items[0], DESC_A).c_str());
-    }
-    else
-        mprf(MSGCH_FLOOR_ITEMS, "<cyan>Items here: </cyan> %s.", item_message(items).c_str());
+    mprf(MSGCH_FLOOR_ITEMS, "%s", items.c_str());
+}
+
+string cell_floor_description(const coord_def& pos, bool boring_too)
+{
+    const dungeon_feature_type feat = env.grid(pos);
+    if (!boring_too && feat == DNGN_FLOOR)
+        return "";
+
+    return feature_description_at(pos, true);
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const
 {
-    const dungeon_feature_type feat = env.grid(target());
-    if (!boring_too && feat == DNGN_FLOOR)
+    string desc = cell_floor_description(target(), boring_too);
+    if (desc.empty())
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1901,8 +1924,39 @@ void direction_chooser::print_floor_description(bool boring_too) const
         _debug_describe_feature_at(target());
     else
 #endif
-    mprf(MSGCH_EXAMINE_FILTER, "%s.",
-         feature_description_at(target(), true).c_str());
+
+    mprf(MSGCH_EXAMINE_FILTER, "%s.", desc.c_str());
+}
+
+// Get a brief of monster, items, and features in a given cell.
+string get_square_desc(const coord_def &pos)
+{
+    ostringstream out;
+
+    string mon_desc = cell_monster_description(pos);
+    if (!mon_desc.empty())
+        out << "<cyan>Here:</cyan> " << mon_desc << "\n";
+
+    string desc = cell_items_description(pos);
+    if (!desc.empty())
+        out << desc << "\n";
+
+    desc = cell_floor_description(pos, false);
+    if (!desc.empty())
+    {
+        if (mon_desc.empty())
+            out << "<cyan>Here:</cyan> ";
+        out << desc << "\n";
+    }
+
+    desc = _get_cloud_desc(pos);
+    if (!desc.empty())
+        out << desc << "\n";
+
+    if (out.tellp() > 0)
+        out << "\n(Right-click to examine)";
+
+    return out.str();
 }
 
 void direction_chooser::reinitialize_move_flags()
@@ -2663,7 +2717,8 @@ bool direction_chooser::choose_direction()
 }
 
 #ifdef USE_TILE
-string get_terse_square_desc(const coord_def &gc)
+// Get a short string to display over a hilighted cell when moving the mouse around.
+string get_cell_mouseover_tag(const coord_def &gc)
 {
     string desc = "";
     const char *unseen_desc = "[unseen terrain]";
@@ -2693,61 +2748,6 @@ string get_terse_square_desc(const coord_def &gc)
         desc = feature_description_at(gc, false, DESC_PLAIN);
 
     return desc;
-}
-#endif
-
-void terse_describe_square(const coord_def &c, bool in_range)
-{
-    if (Options.monster_item_view_coordinates)
-    {
-        const coord_def relpos = c - you.pos();
-        string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
-        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
-    }
-    if (!you.see_cell(c))
-        _describe_oos_square(c);
-    else if (in_bounds(c))
-        _describe_cell(c, in_range);
-}
-
-#ifdef USE_TILE_LOCAL
-// Get description of the "top" thing in a square; for mouseover text.
-void get_square_desc(const coord_def &c, describe_info &inf)
-{
-    const dungeon_feature_type feat = env.map_knowledge(c).feat();
-    const cloud_type cloud = env.map_knowledge(c).cloud();
-
-    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
-    {
-        // First priority: monsters.
-        string desc = uppercase_first(get_monster_equipment_desc(*mi))
-                    + ".\n";
-        const string wounds = mi->wounds_description_sentence();
-        if (!wounds.empty())
-            desc += uppercase_first(wounds) + "\n";
-        const string constrictions = mi->constriction_description();
-        if (!constrictions.empty())
-            desc += "It is " + constrictions + ".\n";
-        desc += _get_monster_desc(*mi);
-
-        inf.title = desc;
-
-        bool temp = false;
-        get_monster_db_desc(*mi, inf, temp);
-    }
-    else if (const item_def *obj = env.map_knowledge(c).item())
-    {
-        // Second priority: objects.
-        get_item_desc(*obj, inf);
-    }
-    else if (feat != DNGN_UNSEEN && feat != DNGN_FLOOR
-             && !feat_is_wall(feat) && !feat_is_tree(feat))
-    {
-        // Third priority: features.
-        get_feature_desc(c, inf);
-    }
-    else // Fourth priority: clouds.
-        inf.body << get_cloud_desc(cloud);
 }
 #endif
 
@@ -3116,16 +3116,6 @@ string raw_feature_description(const coord_def &where)
     return _base_feature_desc(feat, get_trap_type(where));
 }
 
-#ifndef DEBUG_DIAGNOSTICS
-// Is a feature interesting enough to 'v'iew it, even if a player normally
-// doesn't care about descriptions, i.e. does the description hold important
-// information? (Yes, this is entirely subjective. --jpeg)
-static bool _interesting_feature(dungeon_feature_type feat)
-{
-    return get_feature_def(feat).flags & FFT_EXAMINE_HINT;
-}
-#endif
-
 string feature_description_at(const coord_def& where, bool covering,
                               description_level_type dtype)
 {
@@ -3329,24 +3319,6 @@ static string _stair_destination_description(const coord_def &pos)
 }
 #endif
 
-static string _mon_enchantments_string(const monster_info& mi)
-{
-    const vector<string> enchant_descriptors = mi.attributes();
-
-    if (!enchant_descriptors.empty())
-    {
-        return uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-            + " "
-            + conjugate_verb("are", mi.pronoun_plurality())
-            + " "
-            + comma_separated_line(enchant_descriptors.begin(),
-                                   enchant_descriptors.end())
-            + ".";
-    }
-    else
-        return "";
-}
-
 static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
 {
     vector<string> descs;
@@ -3425,142 +3397,6 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     }
 
     return descs;
-}
-
-// Returns the description string for a given monster, including attitude
-// and enchantments but not equipment or wounds.
-static string _get_monster_desc(const monster_info& mi)
-{
-    string text    = "";
-    string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (mi.is(MB_MESMERIZING))
-    {
-        text += string("You are mesmerised by ")
-                + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
-    }
-
-    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
-    {
-        text += pronoun + " "
-                + conjugate_verb("appear", mi.pronoun_plurality()) + " to be "
-                + (mi.sleepwalking ? "sleepwalking" : "resting") + ".\n";
-    }
-    // Applies to both friendlies and hostiles
-    else if (mi.is(MB_FLEEING))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " fleeing.\n";
-    }
-    // hostile with target != you
-    else if (mi.attitude == ATT_HOSTILE
-             && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
-    {
-        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
-                + " not noticed you.\n";
-    }
-
-    if (mi.attitude == ATT_FRIENDLY)
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " friendly.\n";
-    }
-    else if (mi.attitude == ATT_GOOD_NEUTRAL)
-    {
-        text += pronoun + " " + conjugate_verb("seem", mi.pronoun_plurality())
-                + " to be peaceful towards you.\n";
-    }
-    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_FRENZIED))
-    {
-        // don't differentiate between permanent or not
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " indifferent to you.\n";
-    }
-
-    if (mi.is(MB_ABJURABLE))
-    {
-        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
-                + " been summoned.\n";
-    }
-    else if (mi.is(MB_MINION))
-    {
-        text += pronoun + " " + conjugate_verb("have", mi.pronoun_plurality())
-                + " been created by magic.\n";
-    }
-
-    if (mi.is(MB_HALOED))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " illuminated by a divine halo.\n";
-    }
-
-    if (mi.is(MB_UMBRAED))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " wreathed by an umbra.\n";
-    }
-
-    if (mi.intel() <= I_BRAINLESS)
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " mindless.\n";
-    }
-
-    if (mi.is(MB_CHAOTIC))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " chaotic.\n";
-    }
-
-    if (mi.is(MB_POSSESSABLE))
-    {
-        text += string(mi.pronoun(PRONOUN_POSSESSIVE))
-                + " soul is ripe for the taking.\n";
-    }
-
-    if (mi.is(MB_MIRROR_DAMAGE))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " reflecting injuries back at attackers.\n";
-    }
-
-    if (mi.is(MB_INNER_FLAME))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " filled with an inner flame.\n";
-    }
-
-    if (mi.fire_blocker)
-    {
-        text += string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
-                + " is blocked by " // FIXME: renamed features
-                + feature_description(mi.fire_blocker, NUM_TRAPS, "",
-                                      DESC_A)
-                + ".\n";
-    }
-
-    text += _mon_enchantments_string(mi);
-    if (!text.empty() && text.back() == '\n')
-        text.pop_back();
-    return text;
-}
-
-static void _describe_monster(const monster_info& mi)
-{
-    // First print type and equipment.
-    string text = uppercase_first(get_monster_equipment_desc(mi)) + ".";
-    const string wounds_desc = mi.wounds_description_sentence();
-    if (!wounds_desc.empty())
-        text += " " + uppercase_first(wounds_desc);
-    const string constriction_desc = mi.constriction_description();
-    if (!constriction_desc.empty())
-        text += " It is" + constriction_desc + ".";
-    mprf(MSGCH_EXAMINE, "%s", text.c_str());
-
-    // Print the rest of the description.
-    text = _get_monster_desc(mi);
-    if (!text.empty())
-        mprf(MSGCH_EXAMINE, "%s", text.c_str());
 }
 
 // This method is called in two cases:
@@ -3713,8 +3549,9 @@ string get_monster_equipment_desc(const monster_info& mi,
     return desc + item_description;
 }
 
-static bool _print_cloud_desc(const coord_def where)
+static string _get_cloud_desc(const coord_def& where)
 {
+    ostringstream out;
     vector<string> areas;
     if (is_sanctuary(where))
         areas.emplace_back("lies inside a sanctuary");
@@ -3734,34 +3571,20 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("within Yredelemnul's grip");
     if (!areas.empty())
     {
-        mprf("This square %s.",
+        out << make_stringf("This square %s.",
              comma_separated_line(areas.begin(), areas.end()).c_str());
     }
 
     if (cloud_struct* cloud = cloud_at(where))
     {
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud->cloud_name(true).c_str());
-        return true;
+        if (out.tellp() > 0)
+            out << "\n";
+
+        out << make_stringf("There is a cloud of %s here.",
+                                cloud->cloud_name(true).c_str());
     }
 
-    return false;
-}
-
-static bool _print_item_desc(const coord_def where)
-{
-    int targ_item = you.visible_igrd(where);
-
-    if (targ_item == NON_ITEM)
-        return false;
-
-    string name = menu_colour_item_name(env.item[targ_item], DESC_A);
-    mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-
-    if (env.item[ targ_item ].link != NON_ITEM)
-        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
-
-    return true;
+    return out.str();
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3812,117 +3635,6 @@ static void _debug_describe_feature_at(const coord_def &where)
          (env.pgrid(where) & FPROP_NO_TELE_INTO) ? ", no_tele" : "");
 }
 #endif
-
-// Describe a cell, guaranteed to be in view.
-static void _describe_cell(const coord_def& where, bool in_range)
-{
-#ifndef DEBUG_DIAGNOSTICS
-    bool monster_described = false;
-#endif
-
-    if (where == you.pos() && !crawl_state.arena_suspended)
-        mprf(MSGCH_EXAMINE_FILTER, "You.");
-
-    if (const monster* mon = monster_at(where))
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        if (!mon->visible_to(&you))
-        {
-            mprf(MSGCH_DIAGNOSTICS, "There is a non-visible %smonster here.",
-                 _mon_exposed_in_water(mon) ? "exposed by water " :
-                 _mon_exposed_in_cloud(mon) ? "exposed by cloud " : "");
-        }
-#else
-        if (!mon->visible_to(&you))
-        {
-            if (_mon_exposed_in_water(mon))
-                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the water here.");
-            else if (_mon_exposed_in_cloud(mon))
-                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the cloud here.");
-
-            goto look_clouds;
-        }
-#endif
-
-        monster_info mi(mon);
-        _describe_monster(mi);
-
-        if (!in_range)
-        {
-            mprf(MSGCH_EXAMINE_FILTER, "%s %s out of range.",
-                 mon->pronoun(PRONOUN_SUBJECTIVE).c_str(),
-                 conjugate_verb("are", mi.pronoun_plurality()).c_str());
-        }
-#ifndef DEBUG_DIAGNOSTICS
-        monster_described = true;
-#endif
-
-#if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
-        debug_stethoscope(env.mgrid(where));
-#endif
-        if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
-        {
-            const char *msg;
-#ifdef USE_TILE_LOCAL
-            msg = "(<w>Right-click</w> for more information.)";
-#else
-            msg = "(Press <w>v</w> for more information.)";
-#endif
-            mpr(msg);
-        }
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    _print_cloud_desc(where);
-    _print_item_desc(where);
-    _debug_describe_feature_at(where);
-#else
-  // removing warning
-  look_clouds:
-
-    bool cloud_described = _print_cloud_desc(where);
-    bool item_described = _print_item_desc(where);
-
-    string feature_desc = feature_description_at(where, true);
-    const bool bloody = is_bloodcovered(where);
-    if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
-    {
-#ifdef USE_TILE_LOCAL
-        feature_desc += " (<w>Right-click</w> for more information.)";
-#else
-        feature_desc += " (Press <w>v</w> for more information.)";
-#endif
-        mpr(feature_desc);
-    }
-    else
-    {
-        dungeon_feature_type feat = env.grid(where);
-
-        if (_interesting_feature(feat))
-        {
-#ifdef USE_TILE_LOCAL
-            feature_desc += " (Right-click for more information.)";
-#else
-            feature_desc += " (Press 'v' for more information.)";
-#endif
-        }
-
-        // Suppress "Floor." if there's something on that square that we've
-        // already described.
-        if (feat == DNGN_FLOOR && !bloody
-            && (monster_described || item_described || cloud_described))
-        {
-            return;
-        }
-
-        msg_channel_type channel = MSGCH_EXAMINE;
-        if (feat == DNGN_FLOOR || feat_is_water(feat))
-            channel = MSGCH_EXAMINE_FILTER;
-
-        mprf(channel, "%s", feature_desc.c_str());
-    }
-#endif
-}
 
 ///////////////////////////////////////////////////////////////////////////
 // targeting_behaviour
