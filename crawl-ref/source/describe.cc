@@ -7103,7 +7103,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #endif
 }
 
-int describe_monsters(const monster_info &mi, const string& /*footer*/)
+int describe_monster(const monster_info &mi, const string& /*footer*/)
 {
     bool has_stat_desc = false;
     describe_info inf;

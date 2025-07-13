@@ -720,7 +720,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
 #endif
 
             // View database entry.
-            describe_monsters(*m);
+            describe_monster(*m);
             redraw_screen();
             update_screen();
             clear_messages();
@@ -2811,7 +2811,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     else if (quantity == 1)
     {
         if (mi)
-            describe_monsters(*mi);
+            describe_monster(*mi);
         else if (list_items.size())
             action_taken = !describe_item(*list_items.back()); // should be size 1
         else
