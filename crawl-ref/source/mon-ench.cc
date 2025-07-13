@@ -2203,7 +2203,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "ephemeral_infusion",
 #endif
-    "black_mark",
+    "sign_of_ruin",
 #if TAG_MAJOR_VERSION == 34
     "grand_avatar",
 #endif
