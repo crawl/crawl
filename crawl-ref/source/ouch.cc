@@ -1023,6 +1023,16 @@ static void _maybe_silence()
         silence_player(4 + random2(7));
 }
 
+static void _maybe_get_vitrified(mid_t source)
+{
+    monster* mon = monster_by_mid(source);
+    if (mon && mon->wearing_ego(OBJ_ARMOUR, SPARM_GLASS)
+        && x_chance_in_y(80 + mon->get_hit_dice() * 10, 500))
+    {
+        you.vitrify(mon, 4 + random2(5 + mon->get_hit_dice()));
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1404,6 +1414,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
+
+            _maybe_get_vitrified(source);
         }
         if (you.hp > 0)
             return;

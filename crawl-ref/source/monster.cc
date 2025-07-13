@@ -4414,16 +4414,32 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
-        // Trigger corrupting presence
-        if (agent && agent->is_player() && alive()
-            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        // Trigger corrupting presence and orbs of glass
+        if (agent && agent->is_player() && alive())
         {
-            if (one_chance_in(12))
-                this->corrode(&you, "Your corrupting presence");
-            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
-                        && one_chance_in(12))
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
             {
-                this->malmutate(&you, "Your corrupting presence");
+                if (one_chance_in(12))
+                    this->corrode(&you, "Your corrupting presence");
+                if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+                {
+                    this->malmutate(&you, "Your corrupting presence");
+                }
+            }
+        }
+
+        if (agent && alive() && agent->wearing_ego(OBJ_ARMOUR, SPARM_GLASS))
+        {
+            if (agent->is_player())
+            {
+                if (x_chance_in_y(40 + you.skill(SK_EVOCATIONS, 10), 500))
+                    this->vitrify(agent, 4 + random2(5 + you.skill(SK_EVOCATIONS)));
+            }
+            else if (const monster* mon = agent->as_monster())
+            {
+                if (x_chance_in_y(80 + mon->get_hit_dice() * 10, 500))
+                    this->vitrify(agent, 4 + random2(5 + mon->get_hit_dice()));
             }
         }
 

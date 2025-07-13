@@ -2386,6 +2386,9 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "It shields the wearer if their last action was a melee attack. "
                "The shielding is half as effective if the wielder's offhand is "
                "occupied by an item other than their weapon.";
+    case SPARM_GLASS:
+        return "It may vitrify nearby enemies when they take damage. "
+               "Evocations skill increases the likelihood and duration of vitrification.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

@@ -255,11 +255,11 @@ static const armour_def Armour_prop[] =
     // to calculate adjusted shield penalty.
     { ARM_ORB,                 "orb",                     0,   0,   50,
         SLOT_OFFHAND,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
-            { SPARM_LIGHT,  1 },
-            { SPARM_RAGE,   1 },
-            { SPARM_MAYHEM, 1 },
-            { SPARM_GUILE,  1 },
-            { SPARM_ENERGY, 1 },
+            { SPARM_GLASS,      1 },
+            { SPARM_RAGE,       1 },
+            { SPARM_MAYHEM,     1 },
+            { SPARM_GUILE,      1 },
+            { SPARM_ENERGY,     1 },
     }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
         SLOT_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
