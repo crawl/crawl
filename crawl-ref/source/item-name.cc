@@ -820,6 +820,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_REGENERATION:      return "regeneration";
         case AMU_WILDSHAPE:         return "wildshape";
         case AMU_ALCHEMY:           return "alchemy";
+        case AMU_DISSIPATION:       return "dissipation";
         default: return "buggy jewellery";
         }
     }
@@ -863,6 +864,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_ACROBAT:                return "Acrobat";
         case AMU_WILDSHAPE:              return "Wildshape";
         case AMU_ALCHEMY:                return "Alch";
+        case AMU_DISSIPATION:            return "Dissipate";
         case AMU_NOTHING:                return "";
         default: return "buggy";
         }

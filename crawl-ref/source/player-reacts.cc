@@ -143,6 +143,13 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
+    // Amulets of dissipation wear off negative statuses faster
+    if (duration_dispellable(dur) && duration_negative(dur)
+        && you.wearing_jewellery(AMU_DISSIPATION))
+    {
+        you.duration[dur] -= delay * you.wearing_jewellery(AMU_DISSIPATION);
+    }
+
     // If we start expiring, handle exploss and print the exppoint message.
     if (you.duration[dur] <= exppoint && old_dur > exppoint)
     {

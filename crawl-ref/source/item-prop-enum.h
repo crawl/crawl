@@ -266,6 +266,7 @@ enum jewellery_type
     AMU_REGENERATION,
     AMU_WILDSHAPE,
     AMU_ALCHEMY,
+    AMU_DISSIPATION,
 
     NUM_JEWELLERY
 };

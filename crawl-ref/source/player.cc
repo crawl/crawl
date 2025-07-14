@@ -4153,6 +4153,9 @@ void contaminate_player(int change, bool controlled, bool msg)
         change *= 2;
 #endif
 
+    if (change < 0)
+        change *= 1 + you.wearing_jewellery(AMU_DISSIPATION);
+
     you.magic_contamination = max(0, min(250000,
                                          you.magic_contamination + change));
 
@@ -6064,9 +6067,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     }
 
     if (sk == SK_SHAPESHIFTING)
-    {
         level += you.wearing_jewellery(AMU_WILDSHAPE) * 5 * scale;
-    }
 
     if (level > MAX_SKILL_LEVEL * scale)
         level = MAX_SKILL_LEVEL * scale;

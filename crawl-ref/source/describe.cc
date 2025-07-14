@@ -681,6 +681,9 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It improves your skill with shapeshifting (+5)";
     case AMU_ALCHEMY:
         return "It enhances your alchemy spells and reduces their mp cost.";
+    case AMU_DISSIPATION:
+        return "It reduces the duration of hostile enchantments and decays "
+               "magical contamination more quickly.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
