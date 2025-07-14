@@ -4415,23 +4415,23 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         // Trigger corrupting presence and orbs of glass
-        if (agent && agent->is_player() && alive()
-            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        if (agent && agent->is_player() && alive())
         {
-            if (one_chance_in(12))
-                this->corrode(&you, "Your corrupting presence");
-            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
-                        && one_chance_in(12))
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
             {
-                this->malmutate(&you, "Your corrupting presence");
+                if (one_chance_in(12))
+                    this->corrode(&you, "Your corrupting presence");
+                if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+                {
+                    this->malmutate(&you, "Your corrupting presence");
+                }
             }
-            // needs a future commit to work
-            /*
             if (you.wearing_ego(OBJ_ARMOUR, SPARM_GLASS)
                 && x_chance_in_y(40 + you.skill(SK_EVOCATIONS, 10), 500))
             {
                 this->vitrify(&you, 4 + random2(5 + you.skill(SK_EVOCATIONS)));
-            }*/
+            }
         }
 
         blame_damage(agent, amount);
