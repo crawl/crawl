@@ -1041,7 +1041,7 @@ const char* gizmo_effect_name(int type)
     {
         case SPGIZMO_SPELLMOTOR:    return "SpellMotor";
         case SPGIZMO_GADGETEER:     return "Gadgeteer";
-        case SPGIZMO_PARRYREV:      return "RevParry";
+        case SPGIZMO_PARRYREV:      return "RevArmour";
         case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";
 
         default:
