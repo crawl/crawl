@@ -110,8 +110,6 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_FLIGHT;
     if (s == "rPois")
         return RING_POISON_RESISTANCE;
-    if (s == "Conj")
-        return RING_CONJURATION;
 
     if (s.substr(0, 2) == "AC")
         return RING_PROTECTION;

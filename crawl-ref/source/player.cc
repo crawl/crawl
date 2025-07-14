@@ -1618,7 +1618,6 @@ int player_spec_conj()
     int sc = 0;
 
     sc += you.wearing(OBJ_STAVES, STAFF_CONJURATION);
-    sc += you.wearing_jewellery(RING_CONJURATION);
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_CONJURING);
     sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 

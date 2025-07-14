@@ -1219,10 +1219,6 @@ ring mail
 A light leather suit reinforced with a covering of metal rings. It is
 protective in combat, but slightly uncomfortable due to the added weight.
 %%%%
-ring of conjuration
-
-A ring that enhances its wearer's conjuration spells.
-%%%%
 ring of dexterity
 
 A ring that increases the dexterity of its wearer.
