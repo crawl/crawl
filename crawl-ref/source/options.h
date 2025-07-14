@@ -17,6 +17,7 @@
 #include "fixedp.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
+#include "item-prop-enum.h"
 #include "kill-dump-options-type.h"
 #include "lang-t.h"
 #include "level-gen-type.h"
@@ -25,6 +26,7 @@
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
+#include "potion-type.h"
 #include "rc-line-type.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
@@ -633,8 +635,13 @@ public:
     // Skill levels to note
     FixedBitVector<MAX_SKILL_LEVEL + 1> note_skill_levels;
     vector<pair<text_pattern, string>> auto_spell_letters;
-    vector<pair<text_pattern, string>> auto_item_letters;
+    vector<pair<text_pattern, string>> auto_gear_letters;
     vector<pair<text_pattern, string>> auto_ability_letters;
+
+    vector<pair<string, char>> auto_consumable_letters;
+    FixedVector<char, NUM_POTIONS> potion_shortcuts;
+    FixedVector<char, NUM_SCROLLS> scroll_shortcuts;
+    FixedVector<char, NUM_WANDS + NUM_MISCELLANY> evokable_shortcuts;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
@@ -998,6 +1005,8 @@ private:
     void remove_force_spell_targeter(const string &s);
     void add_force_ability_targeter(const string &s, bool prepend);
     void remove_force_ability_targeter(const string &s);
+
+    void update_consumable_shortcuts();
 
     static const string interrupt_prefix;
 

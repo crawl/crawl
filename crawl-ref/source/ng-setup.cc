@@ -107,8 +107,11 @@ item_def* newgame_make_item(object_class_type base,
     if (sub_type == WPN_UNARMED || sub_type == WPN_UNKNOWN)
         return nullptr;
 
+    inventory_category category = inventory_category_for(base);
     int slot;
-    for (slot = 0; slot < ENDOFPACK; ++slot)
+    int start = category == INVENT_CONSUMABLE ? MAX_GEAR : 0;
+    int end = category == INVENT_GEAR ? MAX_GEAR : 0;
+    for (slot = start; slot < end; ++slot)
     {
         item_def& item = you.inv[slot];
         if (!item.defined())
@@ -579,13 +582,16 @@ static void _setup_generic(const newgame_def& ng,
             continue;
         item.pos = ITEM_IN_INVENTORY;
         item.link = i;
-        item.slot = index_to_letter(item.link);
+        // If consumables end up on a non-letter, auto_assign_item_slot below will crash.
+        item.slot = index_to_letter(item.link >= MAX_GEAR
+                                        ? item.link - MAX_GEAR
+                                        : item.link);
         item_colour(item);  // set correct special and colour
     }
 
     // Put our weapon in our first item slot, if we have one.
     if (item_def* wpn = you.weapon())
-        swap_inv_slots(0, wpn->link, false);
+        swap_inv_slots(*wpn, 0, false);
 
     // A second pass to apply the item_slot option.
     for (auto &item : you.inv)

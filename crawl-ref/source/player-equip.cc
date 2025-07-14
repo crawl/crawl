@@ -1499,7 +1499,7 @@ void autoequip_item(item_def& item)
 void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
 {
     ASSERT_RANGE(slot, SLOT_WEAPON, NUM_EQUIP_SLOTS);
-    ASSERT_RANGE(item_slot, 0, ENDOFPACK);
+    ASSERT_RANGE(item_slot, 0, MAX_GEAR);
 
     item_def& item = you.inv[item_slot];
 

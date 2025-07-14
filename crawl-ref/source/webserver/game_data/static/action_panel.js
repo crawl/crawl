@@ -167,7 +167,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         else
         {
             var item = filtered_inv[slot];
-            $tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
+            $tooltip.empty().text(String.fromCharCode(item.letter) + " - ");
             $tooltip.append(player.inventory_item_desc(item.slot));
             if (game.get_input_mode() == enums.mouse_mode.COMMAND)
             {

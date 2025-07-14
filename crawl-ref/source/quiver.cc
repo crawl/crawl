@@ -211,7 +211,7 @@ namespace quiver
     int action::source_hotkey() const
     {
         if (get_item() >= 0 && is_valid())
-            return index_to_letter(get_item());
+            return you.inv[get_item()].slot;
         return 0;
     }
 
@@ -388,7 +388,7 @@ namespace quiver
                 string verb = you.confused() ? "confused " : "";
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                index_to_letter(weapon.link));
+                                weapon.slot);
             }
 
             const string prefix = item_prefix(weapon);
@@ -492,7 +492,7 @@ namespace quiver
 
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                                weapon ? weapon->slot : '-');
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";
@@ -3174,7 +3174,7 @@ static int _get_pack_slot(const item_def &item)
         return item.link;
 
     // First try to find the exact same item.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, false))
@@ -3182,7 +3182,7 @@ static int _get_pack_slot(const item_def &item)
     }
 
     // If that fails, try to find an item sufficiently similar.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, true))

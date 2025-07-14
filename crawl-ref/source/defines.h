@@ -37,8 +37,9 @@
     #endif
 #endif
 
-// max size of inventory array {dlb}:
-#define ENDOFPACK 52
+#define ENDOFPACK 127           // Max size of player inventory array
+constexpr int MAX_GEAR = 52;    // Max number of slots of gear inventory
+                                // (and start of consumable inventory).
 
 // Max ghosts in a bones file.
 const int MAX_GHOSTS = 127;

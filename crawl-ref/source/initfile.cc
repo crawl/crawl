@@ -130,6 +130,7 @@ static bool _force_allow_explore();
 static species_type _str_to_species(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
 static pair<text_pattern,string> _slot_mapping(const string &s);
+static pair<string, char> _consumable_mapping(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -709,8 +710,10 @@ const vector<GameOption*> game_options::build_options_list()
             {"message_colour", "message_color"}, {}, true),
         new ListGameOption<colour_mapping>(menu_colour_mappings,
             {"menu_colour", "menu_color"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_item_letters,
-            {"item_slot"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_gear_letters,
+            {"gear_slot"}, {}, true),
+        new ListGameOption<pair<string, char>, OPTFUN(_consumable_mapping)>(auto_consumable_letters,
+            {"consumable_shortcut"}, {}, true, {[this]() { update_consumable_shortcuts(); }}),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_spell_letters,
             {"spell_slot"}, {}, true),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_ability_letters,
@@ -2213,6 +2216,7 @@ static const char* config_defaults[] =
     "defaults/glyph_colours.txt",
     "defaults/messages.txt",
     "defaults/misc.txt",
+    "defaults/consumable_shortcuts.txt",
 };
 
 void base_game_options::reset_loaded_state()
@@ -3090,6 +3094,29 @@ void game_options::update_travel_terrain()
     }
 }
 
+void game_options::update_consumable_shortcuts()
+{
+    for (const auto& entry : auto_consumable_letters)
+    {
+        item_kind kind = item_kind_by_name(entry.first);
+        if (kind.base_type == OBJ_UNASSIGNED)
+        {
+            report_error("Unknown consumable type: %s\n", entry.first.c_str());
+            continue;
+        }
+        else
+            string str = string(1, entry.second);
+
+        if (kind.base_type == OBJ_POTIONS)
+            potion_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_SCROLLS)
+            scroll_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_WANDS)
+            evokable_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_MISCELLANY)
+            evokable_shortcuts[kind.sub_type] = entry.second + NUM_WANDS;
+    }
+}
 
 void game_options::update_use_animations()
 {
@@ -3367,6 +3394,18 @@ static pair<text_pattern,string> _slot_mapping(const string &s)
     return make_pair(text_pattern(thesplit[0], true), thesplit[1]);
 }
 
+static pair<string, char> _consumable_mapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, false, 1);
+    if (thesplit.size() != 2)
+    {
+        mprf(MSGCH_ERROR, "Error parsing consumable mapping: '%s'\n",
+                            s.c_str());
+        return make_pair("", '-'); // pattern is marked as invalid
+    }
+    return make_pair(thesplit[0], thesplit[1][0]);
+}
+
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
 void game_options::set_menu_sort(const string &field)
@@ -3378,7 +3417,7 @@ void game_options::set_menu_sort(const string &field)
     {
         sort_menus.clear();
         set_menu_sort("pickup: true");
-        set_menu_sort("inv: true : equipped, charged, usefulness");
+        set_menu_sort("inv: true : equipped, charged, identified, usefulness, slot");
         return;
     }
 

@@ -4708,7 +4708,6 @@ static void _tag_read_you_items(reader &th)
 
     // how many inventory slots?
     count = unmarshallByte(th);
-    ASSERT(count == ENDOFPACK); // not supposed to change
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif
@@ -4739,6 +4738,21 @@ static void _tag_read_you_items(reader &th)
     {
         mprf(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
                           bad_slots.c_str());
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_CONSUMABLE_INV)
+    {
+        int consumable_slot = MAX_GEAR;
+        for (int i = 0; i < MAX_GEAR; ++i)
+        {
+            if (inventory_category_for(you.inv[i]) == INVENT_CONSUMABLE)
+            {
+                you.inv[consumable_slot] = you.inv[i];
+                you.inv[consumable_slot].link = consumable_slot;
+                you.inv[i].clear();
+                ++consumable_slot;
+            }
+        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAVE_TALISMANS)

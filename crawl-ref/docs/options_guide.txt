@@ -1398,15 +1398,23 @@ spell_slot ^= <regex>:<list of spell letters>
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-item_slot ^= <regex>:<inventory letters>
+gear_slot ^= <regex>:<inventory letters>
         (Ordered list option, one value per line)
         Uses the same interface as spell_slot, except that overwrite mode
         is on by default; overwrite mode can be disabled with a - in the
         list of letters.
 
-        Additionally, the item_slot option is applied on an item when it is
-        identified, so it can be moved to the right place even if it was
-        picked up unidentified.
+consumable_shortcut ^= <item name>:<inventory letter>
+	(Ordered list option, one value per line)
+	Similar to gear_slot, but accepts only a single letter per consumable
+        name and does not handle regex.
+
+	The game will try very hard to automatically assign a consumable to
+	any letter given a mapping by this option, unless it is an identified
+	item of a different category. (eg: 'potion of curing:c' will result
+	in no other potion ever being auto-assigned to 'c' and unidentified
+	scrolls also avoiding it where possible, since they share the ?id menu
+	together.)
 
 ability_slot ^= <regex>:<ability letters>
         (Ordered list option, one value per line)

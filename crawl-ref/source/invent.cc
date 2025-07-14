@@ -97,7 +97,7 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(i.slot);
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -345,7 +345,7 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
 
 string slot_description()
 {
-    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+    return make_stringf("%d/%d gear slots", inv_count(INVENT_GEAR), MAX_GEAR);
 }
 
 void InvMenu::set_title(const string &s)
@@ -440,8 +440,7 @@ bool InvMenu::examine_index(int i)
     {
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
-        unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
+        const int invidx = ie->item->link;
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
@@ -729,7 +728,7 @@ int sort_item_qty(const InvEntry *a)
 }
 int sort_item_slot(const InvEntry *a)
 {
-    return a->item->link;
+    return letter_to_index(a->item->slot);
 }
 
 bool sort_item_identified(const InvEntry *a)
@@ -1012,7 +1011,7 @@ vector<SelItem> InvMenu::get_selitems() const
     for (MenuEntry *me : sel)
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(me);
-        selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
+        selected_items.emplace_back(inv->item->link, inv->selected_qty,
                                     inv->item, inv->has_star());
     }
     return selected_items;
@@ -1421,9 +1420,6 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       _drop_selitem_text,
                       &preselected_items);
 
-    for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
-
     return items;
 }
 
@@ -1776,6 +1772,8 @@ int prompt_invent_item(const char *prompt,
             break;
         }
 
+        // Item chosen by menu.
+        item_def* chosen = nullptr;
         // TODO: it seems like for some uses of this function, `*` shouldn't
         // be allowed at all, e.g. evoke.
         if (keyin == '?' || keyin == '*')
@@ -1838,6 +1836,10 @@ int prompt_invent_item(const char *prompt,
                 ret = PROMPT_GOT_SPECIAL;
                 break;
             }
+
+            // Mark the item chosen by the menu, one way or the other.
+            if (items.size() > 0)
+                chosen = &you.inv[items[0].item->link];
         }
 
         if (isadigit(keyin))
@@ -1864,7 +1866,10 @@ int prompt_invent_item(const char *prompt,
         }
         else if (isaalpha(keyin))
         {
-            ret = letter_to_index(keyin);
+            if (chosen)
+                ret = chosen->link;
+            else
+                ret = letter_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");

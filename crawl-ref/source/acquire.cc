@@ -1494,7 +1494,7 @@ static void _create_acquirement_item(item_def &item, string items_key,
         // XXX: This is ugly and only works because there can never be another
         //      gizmo in our inventory, but move_item_to_inv() doesn't actually
         //      return an index or anything else we can use.
-        for (int i = 0; i < ENDOFPACK; ++i)
+        for (int i = 0; i < MAX_GEAR; ++i)
         {
             if (you.inv[i].base_type == OBJ_GIZMOS)
             {
@@ -1957,7 +1957,7 @@ static void _make_coglin_gizmos()
 
 bool coglin_invent_gizmo()
 {
-    if (inv_count() >= ENDOFPACK)
+    if (inv_count(INVENT_GEAR) >= MAX_GEAR)
     {
         mpr("You don't have room to hold a gizmo! Drop something first.");
         return false;

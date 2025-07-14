@@ -36,6 +36,8 @@ bool read(item_def* scroll = nullptr, dist *target=nullptr);
 bool auto_wield();
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);
+operation_types item_to_oper(const item_def *target);
+int default_osel(operation_types oper);
 
 bool item_is_worn(int inv_slot);
 

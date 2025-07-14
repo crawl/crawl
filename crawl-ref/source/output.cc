@@ -1183,7 +1183,7 @@ static void _print_unarmed_name()
 static void _print_weapon_name(const item_def &weapon, int width)
 {
     textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = index_to_letter(weapon.link);
+    const char slot_letter = weapon.slot;
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour(weapon));

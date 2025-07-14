@@ -719,7 +719,7 @@ void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
     give_basic_mutations(you.species);
     give_items_skills(ng);
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (int i = 0; i < MAX_GEAR; ++i)
     {
         auto &item = you.inv[i];
         if (item.defined())

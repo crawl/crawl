@@ -163,12 +163,6 @@ int wand_power(spell_type wand_spell)
 
 void zap_wand(int slot, dist *_target)
 {
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED); // why is this handled here??
-        return;
-    }
-
     if (!item_currently_evokable(slot == -1 ? nullptr : &you.inv[slot]))
         return;
 

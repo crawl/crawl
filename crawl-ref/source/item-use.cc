@@ -200,7 +200,7 @@ static string _oper_name(operation_types oper)
     }
 }
 
-static int _default_osel(operation_types oper)
+int default_osel(operation_types oper)
 {
     switch (oper)
     {
@@ -262,7 +262,7 @@ bool UseItemMenu::init_modes()
 
         erase_if(available_modes, [cur_oper, this](operation_types o) {
             oper = o;
-            item_type_filter = _default_osel(oper);
+            item_type_filter = default_osel(oper);
             return !populate_list(true);
         });
     }
@@ -304,7 +304,7 @@ bool UseItemMenu::cycle_mode(bool forward)
     oper = *it;
 
     save_hover();
-    item_type_filter = _default_osel(oper);
+    item_type_filter = default_osel(oper);
 
     // always reset display all on mode change
     display_all = false;
@@ -343,7 +343,7 @@ void UseItemMenu::reset(operation_types _oper, const char* prompt_override)
         set_title(_default_use_title(oper));
     // see `item_is_selected` for more on what can be used for item_type.
     if (item_type_filter == OSEL_ANY)
-        item_type_filter = _default_osel(oper);
+        item_type_filter = default_osel(oper);
 
     populate_list();
     populate_menu();
@@ -871,7 +871,7 @@ static operation_types _item_type_to_remove_oper(object_class_type type)
     }
 }
 
-static operation_types _item_to_oper(item_def *target)
+operation_types item_to_oper(const item_def *target)
 {
     if (!target)
         return OPER_WIELD; // unwield
@@ -1040,7 +1040,7 @@ bool use_an_item(operation_types oper, item_def *target)
         return false; // abort menu
 
     if (oper == OPER_EQUIP)
-        oper = _item_to_oper(target);
+        oper = item_to_oper(target);
     else if (oper == OPER_UNEQUIP)
     {
         oper = _item_to_removal(target);
@@ -1072,31 +1072,6 @@ bool use_an_item(operation_types oper, item_def *target)
     default:
         return false; // or ASSERT?
     }
-}
-
-/**
- * Helper function for try_equip_item
- * @param  item    item on floor (where the player is standing)
- * @param  quiet   print message or not
- * @return boolean can the player move the item into their inventory, or are
- *                 they out of space?
- */
-static bool _can_move_item_from_floor_to_inv(const item_def &item)
-{
-    if (inv_count() < ENDOFPACK)
-        return true;
-    if (!is_stackable_item(item))
-    {
-        mpr("You can't carry that many items.");
-        return false;
-    }
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (items_stack(you.inv[i], item))
-            return true;
-    }
-    mpr("You can't carry that many items.");
-    return false;
 }
 
 /**
@@ -1216,7 +1191,7 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
 
     vector<char> slot_chars;
     for (auto item : candidates)
-        slot_chars.push_back(index_to_letter(item->link));
+        slot_chars.push_back(item->slot);
 
     clear_messages();
 
@@ -1370,8 +1345,11 @@ bool try_equip_item(item_def& item)
 
     // If we're attempting to equip an item on the floor, test if we have room
     // to even pick it up, first
-    if (item.pos != ITEM_IN_INVENTORY && !_can_move_item_from_floor_to_inv(item))
+    if (item.pos != ITEM_IN_INVENTORY && !room_in_inventory(item))
+    {
+        mpr("You can't carry that many items.");
         return false;
+    }
     else if (item_is_equipped(item))
     {
         if (Options.equip_unequip)
@@ -2061,7 +2039,8 @@ bool drink(item_def* potion)
     if (in_inventory(*potion))
     {
         dec_inv_item_quantity(potion->link, 1);
-        auto_assign_item_slot(*potion);
+        if (!alreadyknown)
+            auto_assign_item_slot(*potion);
     }
     else
         dec_mitm_item_quantity(potion->index(), 1);
@@ -2334,13 +2313,10 @@ bool enchant_weapon(item_def &wpn, bool quiet)
  * @param alreadyknown  Did we know that this was an ID scroll before we
  *                      started reading it?
  * @param pre_msg       'As you read the scroll of foo, it crumbles to dust.'
- * @param link[in,out]  The location of the ID scroll in the player's inventory
- *                      or, if it's on the floor, -1.
- *                      auto_assign_item_slot() may require us to update this.
  * @return  true if the scroll is used up. (That is, whether it was used or
  *          whether it was previously unknown (& thus uncancellable).)
  */
-static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
+static bool _identify(bool alreadyknown, const string &pre_msg)
 {
     item_def* itemp = nullptr;
     string letter = "";
@@ -2351,9 +2327,23 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
     }
     else if (isalpha(letter.c_str()[0]))
     {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
-        if (item.defined() && !item.is_identified())
-            itemp = &item;
+        // XXX: It is not guaranteed that each letter maps uniquely to a single
+        //      item (ie: the player could have both an unidentified potion and
+        //      an unidentified scroll on (a)). However, the automatic letter
+        //      assignment tries very hard to avoid this, so it is likely only
+        //      possible if someone has manually changed one of their letters
+        //      in this manner.
+        //
+        //      In either case, we take the first match we find.
+        for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+        {
+            if (you.inv[i].defined() && you.inv[i].slot == letter.c_str()[0]
+                && !you.inv[i].is_identified())
+            {
+                itemp = &you.inv[i];
+                break;
+            }
+        }
     }
 
     if (!itemp)
@@ -2371,25 +2361,25 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
 
     identify_item(item);
 
-    // Output identified item.
-    mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
+    // Output identified item (possible noting which slot it was moved from).
     if (in_inventory(item))
     {
         if (item.base_type == OBJ_WEAPONS && item_is_equipped(item))
             you.wield_change = true;
 
-        const int target_link = item.link;
-        item_def* moved_target = auto_assign_item_slot(item);
-        if (moved_target != nullptr && moved_target->link == link)
+        const char old_slot = item.slot;
+        auto_assign_item_slot(item, true);
+        if (item.slot != old_slot)
         {
-            // auto-swapped ID'd item with scrolls being used to ID it
-            // correct input 'link' to the new location of the ID scroll stack
-            // so that we decrement *it* instead of the ID'd item (10663)
-            ASSERT(you.inv[target_link].defined());
-            ASSERT(you.inv[target_link].is_type(OBJ_SCROLLS, SCR_IDENTIFY));
-            link = target_link;
+            mprf_nocap("%c -> %s", old_slot,
+                        menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
         }
+        else
+            mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
     }
+    else
+        mprf_nocap("%s", menu_colour_item_name(item, DESC_A).c_str());
+
     return true;
 }
 
@@ -3067,14 +3057,7 @@ bool read(item_def* scroll, dist *target)
             // Do this here so it doesn't turn up in the ID menu.
             identify_item(*scroll);
         }
-        {
-            const int old_link = link;
-            cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
-            // If we auto-swapped the ID'd item with the stack of ID scrolls,
-            // update the pointer to the new place in inventory for the ?ID.
-            if (link != old_link)
-                scroll = &you.inv[link];
-        }
+            cancel_scroll = !_identify(alreadyknown, pre_succ_msg);
         break;
 
     case SCR_ENCHANT_ARMOUR:
