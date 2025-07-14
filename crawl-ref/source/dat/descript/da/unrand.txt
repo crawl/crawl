@@ -106,7 +106,7 @@ crossbow "Hellfire"
 En flammende armbrøst, som er skabt i helvedernes ild. Den præger de bolte, den
 affyrer, med sit navns kraft.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 Et ubrydeligt slagsværd.
 %%%%

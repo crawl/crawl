@@ -52,8 +52,8 @@
 #include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
-#ifdef USE_TILE
  #include "tilepick.h"
+#ifdef USE_TILE
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
@@ -101,6 +101,7 @@ static void _initialize()
     init_duration_index();
     init_mon_name_cache();
     init_mons_spells();
+    init_parchment_overlays();
 
     // init_item_name_cache() needs to be redone after init_char_table()
     // and init_show_table() have been called, so that the glyphs will
@@ -323,6 +324,8 @@ static void _post_init(bool newc)
     init_properties();
 
     you.redraw_stats.init(true);
+    you.redraw_contam       = true;
+    you.redraw_doom         = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
     you.redraw_armour_class = true;

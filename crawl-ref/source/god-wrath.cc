@@ -347,7 +347,7 @@ static bool _zin_retribution()
 
 static bool _xom_retribution()
 {
-    const int severity = abs(you.piety - HALF_MAX_PIETY);
+    const int severity = abs(you.raw_piety - HALF_MAX_PIETY);
     const bool good = one_chance_in(10);
     return xom_acts(severity, good) != XOM_DID_NOTHING;
 }
@@ -1112,7 +1112,7 @@ static void _jiyva_contaminate()
 {
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
-    contaminate_player(random2(you.penance[god] * 500));
+    contaminate_player(random2(you.penance[god] * 100));
 }
 
 static void _jiyva_summon_slimes()
@@ -1418,19 +1418,27 @@ static void _qazlal_summon_elementals()
  */
 static void _qazlal_elemental_vulnerability()
 {
-    const god_type god = GOD_QAZLAL;
+    simple_god_message(" strips away your elemental protection.", false, GOD_QAZLAL);
 
-    if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
-               false, true, false, MUTCLASS_TEMPORARY))
+    // Pick a random elemental bane the player doesn't aready have.
+    vector<bane_type> banes;
+    if (!you.has_bane(BANE_HEATSTROKE))
+        banes.push_back(BANE_HEATSTROKE);
+    if (!you.has_bane(BANE_SNOW_BLINDNESS))
+        banes.push_back(BANE_SNOW_BLINDNESS);
+    if (!you.has_bane(BANE_ELECTROSPASM))
+        banes.push_back(BANE_ELECTROSPASM);
+
+    // If the player already has all 3, randomly increase the duration of one
+    // of them.
+    if (banes.empty())
     {
-        simple_god_message(" strips away your elemental protection.",
-                           false, god);
+        bane_type bane = random_choose(BANE_HEATSTROKE, BANE_SNOW_BLINDNESS, BANE_ELECTROSPASM);
+        mprf(MSGCH_WARN, "Your %s grows more durable.", bane_name(bane).c_str());
+        you.banes[bane] += 1000;
     }
     else
-    {
-        simple_god_message(" fails to strip away your elemental protection.",
-                           false, god);
-    }
+        add_bane(banes[random2(banes.size())], "The Wrath of Qazlal");
 }
 
 /**

@@ -29,6 +29,7 @@
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "religion.h"
 #include "state.h"
@@ -100,8 +101,7 @@ void monster_drop_things(monster* mons,
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
                 && you.see_cell(mons->pos())
-                && x_chance_in_y(env.item[item].quantity, 100)
-                && you.can_be_dazzled())
+                && x_chance_in_y(env.item[item].quantity, 100))
             {
                 string msg = make_stringf("%s dazzles you with the glint of coin.",
                     god_name(GOD_GOZAG).c_str());
@@ -804,4 +804,6 @@ void seen_monster(monster* mons)
 
     if (you.form == transformation::sphinx)
         sphinx_notice_riddle_target(mons);
+
+    maybe_apply_bane_to_monster(*mons);
 }

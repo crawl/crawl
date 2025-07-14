@@ -170,6 +170,7 @@ Form::Form(const form_entry &fe)
       changes_anatomy(fe.changes_anatomy),
       changes_substance(fe.changes_substance),
       holiness(fe.holiness),
+      is_badform(fe.is_badform),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
       has_ears(fe.has_ears),
@@ -1385,6 +1386,11 @@ bool form_can_swim(transformation form)
     return get_form(form)->player_can_swim();
 }
 
+bool form_is_bad(transformation form)
+{
+    return get_form(form)->is_badform;
+}
+
 // Used to mark transformations which change the basic matter the player is
 // made up of (ie: statue/storm form)
 bool form_changes_substance(transformation form)
@@ -2001,7 +2007,7 @@ bool transform(int dur, transformation which_trans, bool involuntary,
 {
     // Zin's protection.
     if (have_passive(passive_t::resist_polymorph)
-        && x_chance_in_y(you.piety, piety_breakpoint(5))
+        && x_chance_in_y(you.piety(), piety_breakpoint(5))
         && which_trans != transformation::none)
     {
         simple_god_message(" protects your body from unnatural transformation!");

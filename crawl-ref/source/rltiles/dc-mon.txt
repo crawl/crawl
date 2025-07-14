@@ -38,17 +38,6 @@ zombie_lernaean_hydra07
 zombie_lernaean_hydra08
 zombie_lernaean_hydra09
 zombie_lernaean_hydra10
-%sdir mon/undead/skeletons
-skeleton_lernaean_hydra01 MONS_LERNAEAN_HYDRA_SKELETON
-skeleton_lernaean_hydra02
-skeleton_lernaean_hydra03
-skeleton_lernaean_hydra04
-skeleton_lernaean_hydra05
-skeleton_lernaean_hydra06
-skeleton_lernaean_hydra07
-skeleton_lernaean_hydra08
-skeleton_lernaean_hydra09
-skeleton_lernaean_hydra10
 %sdir mon/unique
 royal_jelly MONS_ROYAL_JELLY
 serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
@@ -107,6 +96,7 @@ butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
 obsidian_bat MONS_OBSIDIAN_BAT
+raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
 shard_shrike MONS_SHARD_SHRIKE
@@ -130,7 +120,7 @@ raiju MONS_RAIJU
 inugami MONS_INUGAMI
 hell_hound MONS_HELL_HOUND
 %rim 0
-doom_hound MONS_DOOM_HOUND
+oblivion_hound MONS_OBLIVION_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
 holy_swine MONS_HOLY_SWINE
@@ -354,6 +344,8 @@ twister2
 twister3
 twister4
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+orb_of_winter MONS_ORB_OF_WINTER
+orb_of_entropy MONS_ORB_OF_ENTROPY
 solar_ember MONS_SOLAR_EMBER
 boulder1 MONS_BOULDER /*'*'*/
 boulder2
@@ -428,6 +420,7 @@ cacodemon MONS_CACODEMON
 executioner MONS_EXECUTIONER
 brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
+zykzyl MONS_ZYKZYL
 ice_fiend MONS_ICE_FIEND
 hell_sentinel MONS_HELL_SENTINEL
 tzitzimitl MONS_TZITZIMITL
@@ -471,7 +464,7 @@ crimson_imp MONS_CRIMSON_IMP
 cerulean_imp MONS_CERULEAN_IMP
 %rim 0
 lemure MONS_LEMURE
-quasit MONS_QUASIT
+drude MONS_DRUDE
 %rim 1
 iron_imp MONS_IRON_IMP
 %rim 0
@@ -513,7 +506,6 @@ ancestor MONS_ANCESTOR
 ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
 ancestor_hexer MONS_ANCESTOR_HEXER
-%rim 1
 
 ## Abominations ('X')
 %sdir mon/aberrations
@@ -557,6 +549,7 @@ crawling_flesh_cage3
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 abomination_small2
+screaming_refraction MONS_SCREAMING_REFRACTION
 chonchon0 MONS_CHONCHON
 chonchon1
 chonchon2
@@ -613,6 +606,13 @@ orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
 diamond_sawblade MONS_DIAMOND_SAWBLADE
+%rim 0
+planar_tesseract0 MONS_BOUNDLESS_TESSERACT
+planar_tesseract1
+planar_tesseract2
+planar_tesseract3
+planar_tesseract4
+planar_tesseract5
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE

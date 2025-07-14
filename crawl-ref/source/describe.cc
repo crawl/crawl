@@ -77,6 +77,7 @@
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
@@ -449,6 +450,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_SILENCE,
             "It may silence you when you take damage.",
             prop_note::plain },
+        { ARTP_BANE,
+            "It inflicts you with a random bane when first equipped.",
+            prop_note::plain },
     };
     return data;
 }
@@ -480,6 +484,7 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     // These come first, so they don't get chopped off!
     ARTP_PREVENT_SPELLCASTING,
     ARTP_PREVENT_TELEPORTATION,
+    ARTP_BANE,
     ARTP_CONTAM,
     ARTP_ANGRY,
     ARTP_NOISE,
@@ -4493,24 +4498,30 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
-/// How much power do we think the given monster casts this spell with?
-static int _hex_pow(const spell_type spell, const int hd)
+/// How much ench_power do we think a monster casts this spell with, given a
+/// certain spellpower?
+static int _mon_hex_pow(const spell_type spell, const monster_info* mi, bool is_wand)
 {
-    const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd) / ENCH_POW_FACTOR;
-    return min(cap, pow);
+    int pow = is_wand ? mons_wand_power(mi->hd, spell)
+                      : mons_power_for_hd(spell, mi->spell_hd());
+
+    // Adjust by any power multipliers which may exist in zap definition.
+    const zap_type ztype = spell_to_zap(spell);
+    if (ztype != NUM_ZAPS)
+        pow = zap_ench_power(ztype, pow, true);
+
+    return pow;
 }
 
 /**
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const monster_info* mi)
+int hex_chance(const spell_type spell, const monster_info* mi, bool is_wand)
 {
-    const int capped_pow = _hex_pow(spell, mi->spell_hd());
+    const int pow = _mon_hex_pow(spell, mi, is_wand);
     const int will = apply_willpower_bypass(*mi, you.willpower());
-    const int chance = hex_success_chance(will, capped_pow,
-                                          100, true);
+    const int chance = hex_success_chance(will, pow, 100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
         return chance + (100 - chance) / 3; // ignores wl 1/3rd of the time
     return chance;
@@ -4636,6 +4647,9 @@ static string _player_spell_desc(spell_type spell)
                            "your spell success rate were higher.\n";
         }
     }
+
+    if (spell == SPELL_IRRADIATE)
+        description << "This inflicts up to 40% magical contamination when cast by you.\n";
 
     // Report summon cap
     const int limit = summons_limit(spell, true);
@@ -4806,17 +4820,22 @@ static void _get_spell_description(const spell_type spell,
 #endif
             )
         {
+            // XXX: This is slightly wrong in the very unlikely case the monster
+            //      has a wand and *also* natively knows the spell inside that
+            //      wand. But it's quite a bit of refactoring for something that
+            //      will almost never happen.
+            const bool is_wand = mon_owner->get_wand_spell() == spell;
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+                wiz_info += make_stringf(" (pow %d)", _mon_hex_pow(spell, mon_owner, is_wand));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
                 : make_stringf("Chance to defeat your Will: %d%%%s\n",
-                               hex_chance(spell, mon_owner),
+                               hex_chance(spell, mon_owner, is_wand),
                                wiz_info.c_str());
         }
 
@@ -4987,6 +5006,67 @@ void describe_mutation(mutation_type mut)
         show_description(inf);
 }
 
+string bane_long_description(bane_type bane, bool ignore_player)
+{
+    const bool player_has = !ignore_player && you.banes[bane];
+    ostringstream output;
+
+    const string key = make_stringf("%s bane", bane_name(bane, true).c_str());
+    string lookup = getLongDescription(key);
+
+    if (!lookup.empty())
+    {
+        hint_replace_cmds(lookup);
+        output << lookup;
+    }
+    else
+        output << bane_desc(bane) << "\n";
+
+    if (bane == BANE_DILETTANTE && player_has)
+    {
+        CrawlVector& vec = you.props[DILETTANTE_SKILL_KEY].get_vector();
+        output   << "\nYour " << skill_name(static_cast<skill_type>(vec[0].get_int()))
+                 << ", " << skill_name(static_cast<skill_type>(vec[1].get_int()))
+                 << ", and " << skill_name(static_cast<skill_type>(vec[2].get_int()))
+                 << " are currently affected.\n";
+    }
+
+    const int dur = bane_base_duration(bane);
+    string dur_str;
+    if (dur > BANE_DUR_LONG)
+        dur_str = "very long";
+    else if (dur > BANE_DUR_MEDIUM)
+        dur_str = "long";
+    else if (dur > BANE_DUR_SHORT)
+        dur_str = "moderate length of";
+    else
+        dur_str = "short length of";
+
+    output << make_stringf("\nThis bane usually lasts a %s time.\n", dur_str.c_str());
+
+    if (player_has)
+    {
+        int needed_xl = xl_to_remove_bane(bane);
+        string desc = make_stringf("\n<lightmagenta>"
+                                   "This bane will be lifted from you when you "
+                                   "gain another %.1f XLs worth of experience."
+                                   "</lightmagenta>",
+                                    (float)needed_xl / 10.0f);
+        output << desc;
+    }
+
+    return output.str();
+}
+
+void describe_bane(bane_type bane)
+{
+    describe_info inf;
+    inf.title = uppercase_first(bane_name(bane));
+    inf.body << bane_long_description(bane);
+
+    show_description(inf);
+}
+
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
@@ -5143,6 +5223,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_AIRSTRIKE,         "open air damage" },
         { AF_TRICKSTER,         "drain, daze, or confuse" },
         { AF_REACH_CLEAVE_UGLY, "random ugly thing damage" },
+        { AF_DOOM,              "inflict doom" },
         { AF_PLAIN,             "" },
     };
 
@@ -5175,6 +5256,8 @@ struct mon_attack_info
 static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 {
     // XXX: duplicates monster::weapon()
+    if (mi.type == MONS_DRAUGR && atk > 0)
+        return nullptr;
     if ((atk % 2) && mi.wields_two_weapons())
     {
         item_def *alt_weap = mi.inv[MSLOT_ALT_WEAPON].get();
@@ -5329,9 +5412,16 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
             break; // assumes there are no gaps in attack arrays
 
         // Multi-headed monsters must always have their multi-attack in the
-        // first slot.
-        if ((mons_genus(mi.base_type) == MONS_HYDRA) && i == 0)
-            di.attack_counts[attack_info] = mi.num_heads;
+        // first slot (unless they're draugr, where the weapon hit is always
+        // first).
+        if ((mons_genus(mi.base_type) == MONS_HYDRA)
+             && i == (mi.type == MONS_DRAUGR ? 1 : 0))
+        {
+            // XXX: Subtract the copies of this attack that will be found in
+            //      remaining attack slots.
+            di.attack_counts[attack_info] =
+                mi.num_heads - (mi.type == MONS_DRAUGR ? 2 : 3);
+        }
         else
             ++di.attack_counts[attack_info];
 
@@ -5444,6 +5534,8 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     }
     if (mi.is(MB_TOUCH_OF_BEOGH))
         real_dam = real_dam * 4 / 3;
+    if (mi.is(MB_FIGMENT))
+        real_dam = real_dam * 2 / 3;
 
     string dam_str;
     if (dam != real_dam)
@@ -6205,7 +6297,7 @@ string desc_resist(int level, int max, bool immune, bool allow_spacing)
         return "";
 
     if (immune)
-        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
+        return Options.char_set == CSET_ASCII ? "inf" : "\u221e "; //"∞"
 
     string sym;
     const bool spacing = allow_spacing && max < 5;
@@ -7175,11 +7267,24 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     const species_type gspecies = mi.i_ghost.species;
 
-    gstr << mi.mname << " the "
-         << skill_title_by_rank(mi.i_ghost.best_skill,
+    string title = mi.i_ghost.title;
+#if TAG_MAJOR_VERSION == 34
+    if (title.empty())
+    {
+        title = skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         gspecies,
-                        species::has_low_str(gspecies), mi.i_ghost.religion)
+                        get_species_def(gspecies).d,
+                        get_species_def(gspecies).s,
+                        get_species_def(gspecies).i,
+                        mi.i_ghost.religion,
+                        10 + mi.i_ghost.xl_rank * 27,
+                        false);
+    }
+#endif
+
+    gstr << mi.mname << " the "
+         << title
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)

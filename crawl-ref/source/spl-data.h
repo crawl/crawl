@@ -2108,8 +2108,8 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DAZZLING_FLASH, "Dazzling Flash",
-    spschool::hexes | spschool::fire,
+    SPELL_GLOOM, "Gloom",
+    spschool::hexes | spschool::necromancy,
     spflag::area,
     3,
     50,
@@ -3064,14 +3064,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DOOM_HOWL, "Doom Howl",
+    SPELL_OBLIVION_HOWL, "Oblivion Howl",
     spschool::translocation | spschool::hexes,
     spflag::dir_or_target | spflag::monster | spflag::WL_check,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
     15,
-    TILEG_DOOM_HOWL,
+    TILEG_OBLIVION_HOWL,
 },
 
 {
@@ -3795,14 +3795,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CRYSTALLIZING_SHOT, "Crystallizing Shot",
+    SPELL_CRYSTALLISING_SHOT, "Crystallising Shot",
     spschool::conjuration | spschool::earth | spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     50,
     4, 4,
     0,
-    TILEG_CRYSTALLIZING_SHOT,
+    TILEG_CRYSTALLISING_SHOT,
 },
 
 {
@@ -3869,7 +3869,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_ERROR,
+    TILEG_ABILITY_YRED_HURL_TORCHLIGHT,
 },
 
 {
@@ -4452,17 +4452,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
-    spschool::none,
-    spflag::monster,
-    6,
-    200,
-    -1, -1,
-    0,
-    TILEG_ABILITY_ENKINDLE,
-},
-
-{
     SPELL_DETONATION_CATALYST, "Detonation Catalyst",
     spschool::fire | spschool::alchemy,
     spflag::selfench,
@@ -4507,6 +4496,72 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ILL_OMEN, "Ill Omen",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_ILL_OMEN,
+},
+
+{
+    SPELL_DOOM_BOLT, "Doom Bolt",
+    spschool::conjuration | spschool::hexes,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DOOM_BOLT,
+},
+
+{
+    SPELL_WARP_BODY, "Warp Body",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_WARP_BODY,
+},
+
+{
+    SPELL_OSTRACISE, "Ostracise",
+    spschool::hexes,
+    spflag::monster | spflag::target,
+    7,
+    200,
+    1, 1,
+    0,
+    TILEG_OSTRACISE,
+},
+
+{
+    SPELL_MUTAGENIC_GAZE, "Mutagenic Gaze",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_MUTAGENIC_GAZE,
+},
+
+{
+    SPELL_ACID_BALL, "Acid Ball",
+    spschool::conjuration | spschool::alchemy,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    5, 5,
+    0,
+    TILEG_ACID_BALL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -4515,6 +4570,29 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_ERROR,
+},
+
+// Dummy spells for description purposes
+{
+    SPELL_PYRRHIC_RECOLLECTION, "Pyrrhic Recollection",
+    spschool::none,
+    spflag::monster | spflag::dummy,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_ABILITY_ENKINDLE,
+},
+
+{
+    SPELL_PLANAR_OVERLAY, "Planar Overlay",
+    spschool::none,
+    spflag::monster | spflag::dummy,
+    6,
+    200,
+    -1, -1,
+    0,
+    TILEG_PASSAGE_OF_GOLUBRIA,
 },
 
 #if TAG_MAJOR_VERSION == 34

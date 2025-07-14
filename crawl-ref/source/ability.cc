@@ -222,7 +222,7 @@ struct failure_info
             const int sk_mod = invo_skill() == SK_NONE ? 0 :
                                  you.skill(invo_skill(), variable_fail_mult);
             const int piety_mod
-                = piety_fail_denom ? you.piety / piety_fail_denom : 0;
+                = piety_fail_denom ? you.piety() / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
         }
         default:
@@ -1286,7 +1286,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         return base_chance;
 
     case ABIL_NEMELEX_DEAL_FOUR:
-        return 70 - (you.piety * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
+        return 70 - (you.piety() * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
 
     default:
         return base_chance;
@@ -2807,7 +2807,7 @@ bool activate_talent(const talent& tal, dist *target)
         direction_chooser_args args;
 
         args.hitfunc = hitfunc.get();
-        args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
+        args.restricts = testbits(abil.flags, abflag::target) ? DIR_ENFORCE_RANGE
                                                               : DIR_NONE;
         args.mode = TARG_HOSTILE;
         args.range = range;
@@ -3343,7 +3343,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             drain_player(40, false, true); // yes, before the fail check!
         fail_check();
         potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
-        contaminate_player(1000 + random2(500), true);
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -3631,14 +3630,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_TROG_HAND:
         fail_check();
         // Trog abilities don't use or train invocations.
-        trog_do_trogs_hand(you.piety / 2);
+        trog_do_trogs_hand(you.piety() / 2);
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
     {
-        int pow = you.piety + random2(you.piety / 4);
+        int pow = you.piety() + random2(you.piety() / 4);
         // force a sequence point between random calls
-        pow -= random2(you.piety / 4);
+        pow -= random2(you.piety() / 4);
         return cast_summon_berserker(pow, fail);
     }
 
@@ -3826,7 +3825,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                                   : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
-                              random2avg(you.piety / 4, 2) + 3, 100);
+                              random2avg(you.piety() / 4, 2) + 3, 100);
         break;
     }
 
@@ -4696,7 +4695,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
     {
         if (you.props.exists(AVAILABLE_CURSE_KEY))
             abilities.push_back(ABIL_ASHENZARI_CURSE);
-        if (ignore_piety || you.piety > ASHENZARI_BASE_PIETY )
+        if (ignore_piety || you.raw_piety > ASHENZARI_BASE_PIETY )
             abilities.push_back(ABIL_ASHENZARI_UNCURSE);
     }
     // XXX: should we check ignore_piety?

@@ -476,7 +476,8 @@ bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL
       || feat == DNGN_GRANITE_STATUE
-      || feat == DNGN_METAL_STATUE;
+      || feat == DNGN_METAL_STATUE
+      || feat == DNGN_ZOT_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?
@@ -2576,7 +2577,7 @@ void ice_wall_damage(monster &mons, int delay)
 
 void frigid_walls_damage(int delay)
 {
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack())
             continue;

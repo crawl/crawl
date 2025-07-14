@@ -1,3 +1,234 @@
+Stone Soup 0.34 (through 0.34-a0-329-gc8829d1dcf)
+--------------------------------------------------
+
+Artefacts
+---------
+* The faerie dragon scales now has a higher average enchantment, can sometimes
+  come with evokable invisibility, and is a Hexes enhancer.
+* The Sword of the Doom Knight has been renamed to the Sword of the Dread
+  Knight.
+* Randarts can now come with a Bane property, which inflicts a Bane on the
+  player when equipped. Randarts with this property have higher enchantment.
+
+Branches, Environment
+---------------------
+* The Crypt end vault's old thematic item rewards have been moved into a unique,
+  guaranteed shop containing a larger quantity of the prior options at high
+  prices.
+* The Halls of Zot will now contain one of three types of orb monster each game,
+  each wielding a different element and form of strategic damage.
+  - The orb type one will encountered that game is indicated via statues placed
+    by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
+    can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
+* The last floor of Zot contains now contains two Boundless Tesseracts, immobile
+  enemy spawners with fast regeneration.
+  - Once a tesseract wakes up, new monsters will slowly appear across the entire
+    floor (always out of the player's line of sight). The rate at which they
+    appear will slowly increase and they will eventually stop giving experience
+    when killed.
+  - Destroying one will destroy the other and reward all the experience one
+    would have gotten from waiting to kill their spawns individually.
+* The Orb status from being in Zot or having picked up the Orb of Zot now also
+  fuzzes the destination of scrolls of blinking by up to two spaces.
+* Hell effects can now inflict a small amount of Doom instead of inflicting
+  transient mutations.
+* Troves prices and costs have been heavily revised:
+  - Troves will no longer ask for any consumables besides scrolls of acquirement
+    and will no longer ask for specific named items from shops.
+  - Equipment costs are less common. Demon weapons are all interchangeable and
+    and heavier dragon scales are rarer.
+  - The Slimy / Abyssal rune troves and Horn of Geryon troves are more common.
+  - Piety troves now use a new debuff that temporarily caps one's piety at 0
+    until XP is gained instead of permanently draining it, allowing them to
+    function with more gods than before.
+  - New trove costs include accepting pre-announced Banes and being extremely
+    drained.
+  - Trove contents are no longer grouped by item category, and contain a
+    slightly lower amount of higher-quality items themed after spell namesakes
+    or unrand items. These items are also far less likely to be useless
+    according to god restrictions or species limits.
+  - Potential troves to discover include The Dread Knight's Derelict Chapel,
+    Eringya's Secret Bog, The First Justicar's Armoury, Leda's Sunken Stockpile,
+    The Lost Hoard of Erebora, The Name-Rending Infernalists' Reservoir, The
+    Octopus King's Forgotten Garden, Ozocubu's Refrigerator, Rutra's Hidden
+    Sanctum, The Storm Queen's Palace Crash Site, a devouring Rift, and an
+    orange crystal hatchery.
+
+Character
+---------
+* Players can now accumulate Doom from enemies and other hostile effects, a
+  new form of medium-term damage displayed as a percentage. Doom has no effect
+  on its own and disappears with gaining experience, but at 100% causes one to
+  gain a random Bane, which itself only disappears with gaining significantly
+  more experience differing between Bane types. Banes include:
+  - Bane of Claustrophobia, which lowers melee damage and accuracy for each
+    wall the player is adjacent to.
+  - Bane of the Dilettante, which reduces the player's highest weapon skill
+    as well as their two highest magic / invocation / evocation skills.
+  - Bane of Electrospasm, which makes suffering electric damage sometimes
+    inflict the -Move status.
+  - Bane of Heatstroke, which makes suffering fire damage sometimes Slow you.
+  - Bane of the Hunted, which makes any creatures summoned by enemy appear
+    next to the player, last longer, and be better at tracking you.
+  - Bane of Lethargy, which slows the player's movement speed.
+  - Bane of Mortality, which gives a chance for reapers to appear near wounded
+    players when no other enemies are around.
+  - Bane of Multiplicity, which gives a chance for any monster you fight to
+    create fragile clones of itself.
+  - Bane of Paradox, which gives a small chance for each new monster you
+    encounter to learn Manifold Assault with a chance to blink after casting it.
+  - Bane of the Reckless, which sets one's SH to 0.
+  - Bane of Snow-blindness, which makes suffering cold damage something inflict
+    Blind and Weak.
+  - Bane of Stumbling, which inflicts -25 EV when moving or standing still.
+  - Bane of Succour, which makes killing enemies heal other nearby enemies
+    based on the slain foe's max HP.
+  - Bane of Warding, which gives a small chance to give groups of monster the
+    Warding buff when first seen, which grants damage immunity from non-adjacent
+    sources of damage.
+* Undead species and forms lose Doom/Banes half as quickly as other species.
+* Player contamination has been heavily adjusted.
+  - The exact amount one is contaminated is now indicated as a percentage in the
+    sidebar. Harmful effects begin at 100% and cap at 300%.
+  - Crossing the 100% threshold is more likely to result in a bad mutation than
+    before (but very high amounts are less dangerous).
+  - Explosions from contamination are now possible at a lower threshold, ignore
+    AC, and are more damaging.
+  - Many existing effects have been rescaled to be similarly dangerous as before
+    this change.
+* New mutations:
+  - Efficient Metabolism, which doubles the duration of potion status effects.
+  - Feed Off Suffering, which restores HP and MP after killing poisoned or
+    drained foes.
+  - Lucky, which gives a small chance for floor items the player encounters to
+    be randarts.
+  - Protean Grace, which gives +Slay and +EV based on how mutated you are.
+* Other individual mutation changes:
+  - Electricity Vulnerability is now in the normal mutation pool.
+  - Thick Fur can now only be mutated by Trolls and Felids.
+  - Sense Surroundings is now stronger and only has two levels.
+  - The unsafe potion and scroll mutations have now been revised: they now
+    prevent using potions or scrolls with monsters in sight while your HP is
+    high (and have no effect when badly injured).
+* Transient mutations are now only removed by slaying a sufficient number of
+  non-trivial monsters, and can no longer roll stat loss or Berserk mutations.
+* Players have a longer stun immunity after being Vexed.
+* Players can now negate intrinsic rPois- with two sources of rPois.
+* Players succeeding at certain optional challenges can now obtain unique titles
+  proclaiming their triumph (or madness).
+
+Gods
+----
+* Gozag's Gold Lust passive now properly displays when monsters are affected
+  by it (instead of regularly losing its visual indication before its effects
+  ended).
+* Jiyva's jellies can no longer eat spellbooks.
+* Vehumet's first level 1 spell gift is now given immediately upon worship.
+* Vehumet's spell gift choices now account for Conjurations and Alchemy skill.
+* Xom has a new action: slightly Dooming the player.
+* All gods besides the good gods no longer allow rejoining them if one is
+  undergoing their wrath.
+* Several wrath adjustments:
+  - Fedhas and Jiyva wraths have been simplified.
+  - Kiku wrath applies the Sign of Ruin instead of tormenting, and drains for
+    lower amounts that can no longer be resisted by rN+.
+  - Okawaru wrath summons are more varied and scale more smoothly to player xl.
+  - Qazlal wrath now applies the Banes of Heatstroke, Snow-blindness, and
+    Electrospasm instead of transient mutations of rF-, rC-, or rElec-.
+
+Interface and Options
+---------------------
+* The character overview screen (%) now displays how much damage is prevented
+  by each pip of resistance the player has.
+  - the show_resist_percent option can be used to hide these numbers.
+* The "Trivial" monster threat level threshold is now a little higher.
+* warn_contam_cost option: warns the player before casting Irradiate if it
+  could potentially result in going over 100% contamination.
+
+Items
+-----
+* Parchments now replace the majority of spellbooks found in game, each
+  granting knowledge of a single spell.
+  - Parchments are much more common than spellbooks used to be, making the
+    total number of spells found in the game roughly equal to previous
+    versions.
+  - Floors with shops past the Dungeon and Lair have increasing likelihood to
+    contain an additional parchment shop.
+  - Randbooks now only appear in select vaults or via acquirement and
+    Sif Muna gifts.
+  - Higher-spell-level are now somewhat rarer early in the game and more
+    common later.
+* Stones are now less common.
+
+Monsters
+--------
+* Two new orb types rotate with orbs of fire in Zot each game:
+  - Orbs of Winter, which cast Flash Freeze, Ozocubu's Refrigeration,
+    and inflict a new Ostracism debuff that temporarily reduces one's piety.
+  - Orbs of Entropy, which cast Bolt of Draining, Acid Ball, and
+    inflict Doom upon their foes.
+* New and returning monsters:
+  - Chonchon, chaotic flying heads for Depths.
+  - Cognitogaunts, antimagic starghouls for Crypt and Abyss.
+  - Crawling flesh cages, augmented ugly things for Vaults.
+  - Drudes, new weak Doom-inflicting tier-5 demons for D and the Abyss.
+  - Kobold fleshcrafters, abomination makers for Depths.
+  - Ravens, Doom-inflicting birds for Lair.
+  - Screaming refractions, crystal injury-mirroring undead for the Abyss.
+  - Zykzyls, the new malmutating tier-2 demon, now focused on hexes.
+* Cacodemons no longer know Malmutate or Bolt of Devastation, but can cut
+  willpower in half with their melee and cast Doom Bolt: a penetrating bolt
+  that inflicts Doom on hit.
+* Death knights trade Injury Mirror for higher stats, an umbra, and Hurl
+  Torchlight (like the Yred ability), and now place in the Vaults with draugr
+  instead of in late D.
+* Doom hounds have been renamed to oblivion hounds.
+* Draugr replace skeletons as derived undead monsters, losing health for more
+  AC, no speed penalty, an ability to wield weapons regardless of their original
+  form, and Doom-inflicting melee. They are rarer than the previous skeletons.
+* Glowing orange brains no longer have Brain Bite.
+* The moon troll now is warded from damage from non-adjacent foes, and loses
+  Dazzling Flash in exchange for Lee's Rapid Deconstruction.
+* Neqoxecs no longer can inflict permanent mutations, but have a new Warp Body
+  spell that deals minor damage and inflicts transient mutations (or Vitrify,
+  if the player has already been repeatedly Warped).
+* Purple very / ugly things now have extra Will and antimagic attacks.
+* Reapers have a new non-skeletal flavour and now fly.
+* Shining eyes trade Malmutate for Mutagenic Gaze, which inflicts contamination
+  over time (but is usable anywhere in line of sight).
+* Sphinx marauders do less damage on average with their airstrike attacks.
+* Monster purple draconians have slightly less Willpower, and classed draconians
+  have more Willpower.
+* Mummy death curses now inflict more Draining, less Torment and Slow, and
+  have a chance to inflict Doom.
+* Monsters with necromancy spells deal more damage with pain brand weapons.
+* Monster Corrosive Bolt now has a higher chance to corrode for higher amounts
+  and does slightly more damage.
+* Monster Bolts of Draining are more accurate.
+* Monsters blindness resistance has been refactored: all sources of Blind
+  outside of light effects, Enfeeble, and divine powers are limited to
+  natural / demonic / holy monsters, while light can also work on undead and
+  Enfeeble / most divine Blind effects ignore Blind resistance entirely.
+* Daze now makes monsters skip their actions until they take any damage,
+  instead of giving them a 1-in-4 chance to skip each action (but last less time).
+
+Spells
+------
+* Dazzling Flash has been renamed Gloom and moved from Hexes / Fire to
+  Hexes / Necromancy.
+* Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
+  spellpower rather than inflicting antimagic.
+* Summon Horrible Things now increases the caster's Doom rather than sometimes
+  inflicting temporary Will- mutations.
+
+Tiles
+-----
+* New tiles for existing game elements:
+  * Spells: Confusion Gaze, Vitrifying Gaze, Weakening Gaze.
+  * Icons: frenzied, magnetized, sentinel's mark.
+  * Traps: Archmage's trap, devourer's trap, tyrant's trap.
+  * Walls: Zot:5 stone walls.
+
 Stone Soup 0.33.1 (20250606)
 ----------------------------
 

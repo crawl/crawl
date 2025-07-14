@@ -1062,8 +1062,7 @@ ENDMAP
 NAME:    wander_arrival_abandoned_jail
 TAGS:    arrival no_monster_gen no_item_gen transparent
 ORIENT:  float
-ITEM:    human skeleton / orc skeleton, \
-         goblin skeleton / gnoll skeleton, \
+ITEM:    human skeleton / orc skeleton, goblin skeleton / gnoll skeleton, \
          kobold skeleton / ogre skeleton
 SHUFFLE: {def
 KFEAT:   x = iron_grate

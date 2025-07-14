@@ -7,8 +7,8 @@
 #include "item-prop-enum.h"
 #include "spl-cast.h"
 
-// How many aut until the next doom hound pops out of doom howl?
-#define NEXT_DOOM_HOUND_KEY "next_doom_hound"
+// How many aut until the next monster is spawned by Oblivion Howl?
+#define NEXT_OBLIVION_SPAWN_KEY "next_doom_hound"
 
 #define DRAGON_CALL_POWER_KEY "dragon_call_power"
 
@@ -87,7 +87,7 @@ spret cast_forge_blazeheart_golem(int pow, bool fail);
 spret cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);
 
-void doom_howl(int time);
+void oblivion_howl(int time);
 
 spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);

@@ -1015,6 +1015,11 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
+parchment
+
+A brief text on magic, perhaps excerpted from some larger work. It contains
+knowledge of one spell.
+%%%%
 partisan
 
 A long polearm with sharp protrusions on either side of the spearhead.
@@ -1185,9 +1190,15 @@ A slender, sharply pointed sword, with an uncommonly elegant design.
 riddle talisman
 
 An intricate puzzlebox containing an unknowable prize. Transforms the user into
-a riddle-loving sphinx. In this form, they are capable of wearing a cloak and
-barding, and their melee attacks cause powerful winds to strike their foe which
-do increased damage for every open space next to them. They are also masterful
+a riddle-loving sphinx. In this form, they are {{
+    if you.race() == "Felid" then
+        return "normally capable of wearing a cloak and barding (though your" ..
+               " own diminutive size would prevent this)"
+    else
+        return "capable of wearing a cloak and barding"
+    end
+}}, and their melee attacks cause powerful winds to strike their foe which do
+increased damage for every open space next to them. They are also masterful
 enchanters, casting Hex spells much more easily and ignoring a portion of their
 foe's Willpower.
 
@@ -1734,8 +1745,8 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Only living, demonic and angelic monsters can be blinded, and
-tougher monsters will recover their vision more quickly.
+those struck. Only living, undead, demonic and angelic monsters can be blinded,
+and tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
 

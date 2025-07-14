@@ -99,7 +99,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
     const int hd = mons->get_experience_level();
 
     if (have_passive(passive_t::convert_orcs)
-        && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
+        && random2(you.piety() / 15) + random2(4 + you.experience_level / 3)
              > random2(hd) + hd + random2(5))
     {
         conv_t ctype = conv_t::sight;

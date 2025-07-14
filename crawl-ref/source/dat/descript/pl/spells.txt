@@ -471,9 +471,3 @@ Teleport Other spell
 Ten czar przemieszcza inną istotę w przypadkowe, zwykle odległe, miejsce. Nie
 działa na siebie samego.
 %%%%
-Twisted Resurrection spell
-
-Ten czar pozwala pobliskim zwłokom pełzać o własnych siłach, łącząc się w
-potworne sterty ciała i kończyn. Więcej i większe zwłoki pozwalają utworzyć
-potężniejsze stwory.
-%%%%

@@ -53,10 +53,12 @@
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "tiles-build-specific.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel-open-doors-type.h"
 #include "ui.h"
@@ -64,6 +66,8 @@
 #include "unwind.h"
 #include "view.h"
 #include "zot.h"
+
+#define AUTO_REST_STATUS_POS "autorest_status_pos"
 
 enum IntertravelDestination
 {
@@ -1077,11 +1081,54 @@ command_type travel()
 
     if (you.running.is_explore())
     {
+        // XXX: It is possible for the player to manually add a non-duration-based
+        //      status effect to this option, resulting in situations where
+        //      autoexplore can never move. We wait an arbitrary 500 turns before
+        //      deciding something must be wrong and stopping (to prevent an assert).
+        if (you.elapsed_time > you.elapsed_time_at_last_input + 5000
+            && you.props.exists(AUTO_REST_STATUS_POS)
+            && you.props[AUTO_REST_STATUS_POS].get_coord() == you.pos())
+        {
+            mprf(MSGCH_ERROR,
+                    "You appear to be waiting for the end of something which may "
+                    "never occur. Examine your explore_auto_rest_status option.");
+            stop_running();
+            return CMD_NO_CMD;
+        }
+
         if (Options.explore_auto_rest && !you.is_sufficiently_rested()
             || you.duration[DUR_NO_MOMENTUM])
         {
             return CMD_WAIT;
         }
+
+        for (unsigned int i = 0; i < Options.explore_auto_rest_status.size(); ++i)
+        {
+            duration_type type = Options.explore_auto_rest_status[i];
+
+            if (you.duration[type] == 0)
+                continue;
+
+            // Only rest off the bad part of Swiftness
+            if (type == DUR_SWIFTNESS && you.attribute[ATTR_SWIFTNESS] > 0)
+                continue;
+
+            // Only try to rest off transformations when this is both possible
+            // and the form is negative.
+            if (type == DUR_TRANSFORMATION
+                && (!you.transform_uncancellable || !form_is_bad()))
+            {
+                continue;
+            }
+
+            // Save the player's position, so we can catch the degenerate case
+            // where this results in us waiting indefinitely.
+            you.props[AUTO_REST_STATUS_POS] = you.pos();
+            return CMD_WAIT;
+        }
+
+        if (Options.explore_auto_rest_contam && you.magic_contamination)
+            return CMD_WAIT;
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP

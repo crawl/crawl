@@ -194,7 +194,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_0 .. " = bullfrog / water moccasin / wyvern / basilisk / yak / \
                       polar bear / spectral bullfrog w:20 / spectral yak w:20")
     e.kmons(_9 .. " = cane toad / black mamba / elephant / death yak / \
-                      rime drake / lindwurm / dream sheep")
+                      rime drake / lindwurm / dream sheep / raven w:2")
     e.kmons(_8 .. " = skyshark / anaconda / manticore / wolf spider / \
                       alligator / dire elephant / catoblepas / \
                       anaconda zombie w:5 / wolf spider zombie w:5 / \
@@ -243,7 +243,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
                       orc knight w:5 / orc warlord / sphinx marauder w:5 / \
                       deep elf zephyrmancer / deep elf knight / \
                       deep elf archer / crawling flesh cage / \
-                      guardian sphinx skeleton")
+                      guardian sphinx draugr")
     e.kmons(_9 .. " = ironbound mechanist / ironbound frostheart / \
                       ironbound thunderhulk / yaktaur captain / ettin w:5 / \
                       guardian sphinx / peacekeeper / crystal guardian / \
@@ -301,7 +301,7 @@ function necropolis_portal_setup(e)
   elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
     e.set_random_mon_list("flayed ghost / eidolon / revenant soulmonger /\
                            phantasmal warrior / vampire knight / \
-                           vampire mage / place:Depths:$ skeleton w:30")
+                           vampire mage / place:Depths:$ draugr w:25")
   end
 
   e.set_feature_name("tree", "tree of woe")
@@ -1373,7 +1373,7 @@ SUBST:  A = T
 : end
 : necropolis_ghost_setup(_G, false)
 TILE:  c = wall_stone_scorched
-KPROP: 'TVAOde$%*|? = no_tele_into
+KPROP: -'TVAOde$%*|? = no_tele_into
 MAP
 ..........
 cccccccccc
@@ -1920,14 +1920,15 @@ TAGS:   luniq_necropolis_ghost_undead_centric
 # Daggers are the most thematic for necromancers.
 : local sl = 0
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-MONS:   skeleton place:D:7 / zombie place:D:7
+MONS:   jackal draugr w:2 / adder draugr w:2 / orc draugr w:2 / zombie place:D:7
 KITEM:  ? = dagger ego:pain / dagger ego:draining
 SUBST:  d = *%, e = %$, f = ?, ghij = $
 NSUBST: 1 = 2=1 / 1---
 :   sl = 5
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
-MONS:   skeleton place:D:11 / zombie place:D:11 / spectre place:D:11 / \
-        simulacrum place:D:11
+MONS:   centaur draugr w:2 / ogre draugr w:2 / steam dragon draugr w:2 / \
+        manticore draugr w:2 / water moccasin draugr w:2 / zombie place:D:11 / \
+        spectre place:D:11 /  simulacrum place:D:11
 KITEM:  ? = dagger ego:pain / dagger ego:draining
 SUBST:  d = *, e = *%, f = %$$$, ghij = $
 NSUBST: 1 = 2:1 / * = 1-
@@ -1972,7 +1973,7 @@ SUBST:  fg = |*, h = *%, i = !, jk = $
 NSUBST: 1 = 1:12 / *:1, - = 3=1 / 4=1- / .
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   spriggan defender zombie / spectral caustic shrike / \
-        spark wasp simulacrum / quicksilver dragon skeleton / rockslime zombie
+        spark wasp simulacrum / quicksilver dragon draugr / rockslime zombie
 MONS:   revenant soulmonger / curse skull / ancient lich w:8 / dread lich w:8
 KITEM:  ? = quick blade ego:pain randart pre_id / \
             quick blade ego:spectral randart pre_id
@@ -3019,7 +3020,7 @@ NAME:   ploomutoo_gammafunk_necropolis_ghost_potion_laboratory
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d",
 :                               "vaults_elf", "depths_crypt"})
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
-MONS:   very ugly thing, glowing shapeshifter, cacodemon
+MONS:   very ugly thing, glowing shapeshifter, zykzyl
 KMONS:  C = crawling flesh cage
 KMONS:  D = tentacled monstrosity
 KMONS:  K = kobold fleshcrafter
@@ -3098,9 +3099,7 @@ kmons("4 = merfolk impaler ; " ..
 }}
 KMONS:   5 = kraken
 KMONS:   6 = spectral kraken
-KITEM:   - = minotaur skeleton / elf skeleton / dwarf skeleton /\
-             human skeleton / kobold skeleton / felid skeleton /\
-             orc skeleton / oni skeleton
+: kitem("- = " .. vault_species_skeletons(_G, "late"))
 KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
 KITEM:   ? = wellspring talisman / wellspring talisman randart w:3
 KFEAT:   O = W
@@ -3854,7 +3853,7 @@ MONS:   ugly thing / large abomination / worldbinder / raiju / \
 MONS:   great orb of eyes / cognitogaunt / glowing shapeshifter / \
         very ugly thing / tentacled starspawn
 MONS:   glowing orange brain / lurking horror / wretched star / hellion w:5 / \
-        cacodemon w:5 / apocalypse crab
+        cacodemon  / apocalypse crab
 MONS:   crystal guardian w:2 / tentacled monstrosity / starcursed mass / \
         daeva god:Xom / executioner / profane servitor / hellephant
 :   if dgn.persist.necropolis_difficulty == "shoals" then
@@ -3896,7 +3895,7 @@ NSUBST: - = 2=1 / 4 = 1- / 2:2 / 2 = 2- / 1:3 / 1:4 / 1:M / *:-
 MONS:   large abomination / worldbinder / shapeshifter / \
         thrashing horror / rakshasa / crawling flesh cage / \
         great orb of eyes / cognitogaunt / glowing shapeshifter
-MONS:   tentacled starspawn / cacodemon / deep elf demonologist / \
+MONS:   tentacled starspawn / cacodemon / zykzyl / deep elf demonologist / \
         deep elf sorcerer / glowing orange brain / crystal guardian
 MONS:   wretched star / lurking horror / hellion / apocalypse crab
 MONS:   tentacled monstrosity / starcursed mass / daeva god:Xom / \
@@ -3912,7 +3911,8 @@ FTILE:  'PSncbv = floor_nerves_cyan
 :             "ancient champion w:15 ; " .. disto_weapon("warrior-2h", "randart") ..
 :             " . chain mail good_item | plate armour good_item")
 MONS:   thrashing horror / rakshasa / very ugly thing / great orb of eyes / \
-        cognitogaunt / glowing shapeshifter / tentacled starspawn / cacodemon w:5
+        cognitogaunt / glowing shapeshifter / tentacled starspawn / \
+        cacodemon w:5 / zykzyl w:5
 MONS:   glowing orange brain / lich / tentacled monstrosity / \
         daeva god:Xom / executioner / profane servitor
 MONS:   lurking horror / wretched star / hellion / \
@@ -4018,7 +4018,7 @@ TAGS:    necropolis_subvault_depths_crypt
 KMONS:   O = player ghost
 MONS:    walking crystal tome / walking earthen tome / \
          walking frostbound tome / walking divine tome
-ITEM:    any book good_item / any manual w:1, randbook slevels:1 numspells:1
+ITEM:    any book good_item / any manual w:1, parchment slevel:1
 KFEAT:   O = altar_sif_muna / . w:15
 NSUBST:  - = 3:d / 5 = de / 2:1 / * = 1e
 SHUFFLE: ABCD
@@ -4126,7 +4126,7 @@ MONS:    war gargoyle, crystal guardian / iron dragon w:2
 MONS:    stone giant / deep elf elementalist w:2
 NSUBST:  % = 1:e / 1:f / 2 = |**% / *:%
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-MONS:    deep troll earth mage / iron dragon skeleton w:2, stone giant
+MONS:    deep troll earth mage / iron dragon zombie w:2, stone giant
 MONS:    walking earthen tome / walking crystal tome w:2 / ancient lich w:2
 NSUBST:  % = 1:e / 1:f / 1:| / 2 = |* / 2:*% / *:%
 : end
@@ -4439,7 +4439,7 @@ NSUBST:  1 = 2:' / *:1
 NSUBST:  % = 1:d / 1:% / *:$, |* = 1:e / 1:*% / * = %
 : elseif dgn.persist.necropolis_difficulty == "lair" then
 MONS:    wolf / black bear / yak, spriggan ; sling . dagger
-MONS:    dream sheep / boggart
+MONS:    dream sheep / boggart / raven w:2
 NSUBST:  1 = 1:3 / *:1, % = 2:d / 2:% / *:$, |* = 1:e / 1:* / * = *%
 : elseif necropolis_in_lair_branch() then
 MONS:    spriggan rider / faun w:2 / water nymph w:2
@@ -4449,7 +4449,7 @@ NSUBST:  1 = 1:12 / 1:3 / *:1
 NSUBST:  % = 3:d / *:%, |* = 1:e / 1:f / 1:| / *:*
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:    sun moth perm_ench:glowing_shapeshifter / \
-         swamp dragon perm_ench:glowing_shapeshifter / spark wasp
+         swamp dragon perm_ench:glowing_shapeshifter / spark wasp / chonchon
 MONS:    spriggan berserker / spectral caustic shrike, alderking
 MONS:    dream sheep band
 NSUBST:  1 = 2 = 24 / *:1

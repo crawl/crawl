@@ -31,7 +31,6 @@ void cprintf(const char *format, ...);
 int wherex();
 int wherey();
 void putwch(char32_t c);
-void set_getch_returns_resizes(bool rr);
 int getch_ck();
 bool kbhit();
 void delay(unsigned int ms);
@@ -62,10 +61,8 @@ struct save_cursor_pos
     save_cursor_pos()
         : region(get_cursor_region()), pos(cgetpos(region))
     {
-#ifndef TARGET_OS_WINDOWS
         ASSERTM(valid_cursor_pos(pos.x, pos.y, region),
             "invalid cursor position %d,%d in region %d", pos.x, pos.y, region);
-#endif
     };
     ~save_cursor_pos()
     {

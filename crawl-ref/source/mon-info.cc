@@ -149,6 +149,10 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_VEXED,           MB_VEXED },
     { ENCH_PYRRHIC_RECOLLECTION, MB_PYRRHIC_RECOLLECTION },
     { ENCH_CLOCKWORK_BEE_CAST, MB_CLOCKWORK_BEE_CAST },
+    { ENCH_FIGMENT,         MB_FIGMENT },
+    { ENCH_PARADOX_TOUCHED, MB_PARADOX },
+    { ENCH_WARDING,         MB_WARDING },
+    { ENCH_DIMINISHED_SPELLS, MB_DIMINISHED_SPELLS },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -242,7 +246,7 @@ static bool _is_public_key(string key)
      || key == ELVEN_IS_ENERGIZED_KEY
      || key == MUTANT_BEAST_FACETS
      || key == MUTANT_BEAST_TIER
-     || key == DOOM_HOUND_HOWLED_KEY
+     || key == OBLIVION_HOUND_HOWLED_KEY
      || key == MON_GENDER_KEY
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
@@ -323,7 +327,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
-    if (!mons_can_be_blinded(type))
+    if (mons_res_blind(type) > 1)
         mb.set(MB_UNBLINDABLE);
 
     mitemuse = mons_class_itemuse(type);
@@ -363,6 +367,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         hd = ghost_rank_to_level(i_ghost.xl_rank);
         i_ghost.ac = 5;
         i_ghost.damage = 5;
+        i_ghost.title = "";
     }
 
     if (mons_is_draconian_job(type))
@@ -614,7 +619,7 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_RES_DROWN);
     if (m->clarity())
         mb.set(MB_CLARITY);
-    if (!mons_can_be_blinded(m->type))
+    if (mons_res_blind(m->type) > 1)
         mb.set(MB_UNBLINDABLE);
 
     const int stab_bonus = stab_bonus_denom(find_player_stab_type(*m));
@@ -681,8 +686,8 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->known_chaos())
         mb.set(MB_CHAOTIC);
 
-    if (m->type == MONS_DOOM_HOUND
-        && (!m->props.exists(DOOM_HOUND_HOWLED_KEY) || !m->props[DOOM_HOUND_HOWLED_KEY])
+    if (m->type == MONS_OBLIVION_HOUND
+        && (!m->props.exists(OBLIVION_HOUND_HOWLED_KEY) || !m->props[OBLIVION_HOUND_HOWLED_KEY])
         && !m->is_summoned())
     {
         mb.set(MB_READY_TO_HOWL);
@@ -708,6 +713,7 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
         i_ghost.damage = ghost.damage;
+        i_ghost.title = ghost.title;
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
@@ -758,8 +764,9 @@ monster_info::monster_info(const monster* m, int milev)
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         // hydras are a mess!
-        const int atk_index = m->has_hydra_multi_attack() ? i + m->heads() - 1
-                                                          : i;
+        const int atk_index = m->has_hydra_multi_attack()
+                                    ? m->type == MONS_DRAUGR && i > 0 ? 1 : 0
+                                    : i;
         attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
@@ -866,6 +873,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
         mb.set(MB_HATCHING);
+
+    if (m->damage_immune(&you))
+        mb.set(MB_PLAYER_DAMAGE_IMMUNE);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
@@ -1197,9 +1207,9 @@ string monster_info::common_name(description_level_type desc) const
         if (!is(MB_NAME_ZOMBIE))
             ss << (nocore ? "" : " ") << "zombie";
         break;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
         if (!is(MB_NAME_ZOMBIE))
-            ss << (nocore ? "" : " ") << "skeleton";
+            ss << (nocore ? "" : " ") << "draugr";
         break;
     case MONS_SIMULACRUM:
         if (!is(MB_NAME_ZOMBIE))
@@ -1214,10 +1224,12 @@ string monster_info::common_name(description_level_type desc) const
             ss << "bound soul";
         break;
     case MONS_PILLAR_OF_SALT:
-        ss << (nocore ? "" : " ") << "shaped pillar of salt";
+        if (base_type != type)
+            ss << (nocore ? "" : " ") << "shaped pillar of salt";
         break;
     case MONS_BLOCK_OF_ICE:
-        ss << (nocore ? "" : " ") << "shaped block of ice";
+        if (base_type != type)
+            ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
     default:
         break;
@@ -1883,6 +1895,21 @@ int monster_info::spell_hd(spell_type spell) const
     if (!props.exists(SPELL_HD_KEY))
         return hd;
     return props[SPELL_HD_KEY].get_int();
+}
+
+/// What spell does this monster know because of the wand it's holding (if any)?
+spell_type monster_info::get_wand_spell() const
+{
+    if (itemuse() < MONUSE_STARTING_EQUIPMENT)
+        return SPELL_NO_SPELL;
+
+    const item_def* wand = inv[MSLOT_WAND].get();
+    if (!wand)
+        return SPELL_NO_SPELL;
+
+    const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    ASSERT(wandtyp < NUM_WANDS);
+    return spell_in_wand(wandtyp);
 }
 
 unsigned monster_info::colour(bool base_colour) const

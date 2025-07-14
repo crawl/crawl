@@ -70,6 +70,8 @@ enum NOTE_TYPES
     NOTE_FLED_CHALLENGE,
     NOTE_INFERNAL_MARK,         /* needs: name of mark accepted (string) */
     NOTE_VEXED,
+    NOTE_GET_BANE,              /* needs: bane type, reason (string) */
+    NOTE_LOSE_BANE,             /* needs: bane_type */
     NOTE_NUM_TYPES
 };
 

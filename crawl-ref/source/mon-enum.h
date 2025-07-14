@@ -159,6 +159,7 @@ enum attack_flavour
     AF_AIRSTRIKE,
     AF_TRICKSTER,
     AF_REACH_CLEAVE_UGLY,
+    AF_DOOM,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -186,6 +187,8 @@ enum mon_summon_type
     MON_SUMM_THRALL,    // Vampiric thralls
     MON_SUMM_HIVE,      // Hive form insects
     MON_SUMM_SUN_SCARAB, // Sun Scarab's solar ember
+    MON_SUMM_MULTIPLICITY, // Bane of Multiplicity
+    MON_SUMM_MORTALITY, // Bane of Mortality
 };
 
 #include "mon-flags.h"
@@ -306,6 +309,8 @@ enum shout_type
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
     S_SQUEAK,               // rats and similar
+    S_CAW,                  // ravens
+    S_LAUGH,                // cacodemons
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

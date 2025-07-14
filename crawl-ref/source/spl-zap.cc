@@ -112,7 +112,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_DRAIN_MAGIC, ZAP_DRAIN_MAGIC },
     { SPELL_BECKONING_GALE, ZAP_BECKONING_GALE },
     { SPELL_HARPOON_SHOT, ZAP_HARPOON_SHOT},
-    { SPELL_CRYSTALLIZING_SHOT, ZAP_CRYSTALLIZING_SHOT },
+    { SPELL_CRYSTALLISING_SHOT, ZAP_CRYSTALLISING_SHOT },
     { SPELL_THROW_PIE, ZAP_THROW_PIE},
     { SPELL_AGONY, ZAP_AGONY },
     { SPELL_DISPEL_UNDEAD_RANGE, ZAP_DISPEL_UNDEAD_RANGE },
@@ -175,6 +175,10 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_GOLDEN_BREATH, ZAP_GOLDEN_BREATH },
     { SPELL_ALL_PURPOSE_TEMPERING, ZAP_PERCUSSIVE_TEMPERING },
     { SPELL_GHOSTLY_SACRIFICE, ZAP_GHOSTLY_SACRIFICE },
+    { SPELL_ILL_OMEN, ZAP_ILL_OMEN },
+    { SPELL_DOOM_BOLT, ZAP_DOOM_BOLT },
+    { SPELL_WARP_BODY, ZAP_WARP_BODY },
+    { SPELL_ACID_BALL, ZAP_ACID_BALL },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },
@@ -230,22 +234,4 @@ spell_type zap_to_spell(zap_type zap)
             return spzap.first;
 
     return SPELL_NO_SPELL;
-}
-
-int spell_zap_power_cap(spell_type spell)
-{
-    const zap_type zap = spell_to_zap(spell);
-
-    if (zap == NUM_ZAPS)
-        return 0;
-
-    const int cap = zap_power_cap(zap);
-
-    switch (spell)
-    {
-    case SPELL_HIBERNATION:
-        return 50;
-    default:
-        return cap;
-    }
 }

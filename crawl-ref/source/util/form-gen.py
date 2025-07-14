@@ -350,6 +350,7 @@ keyfns = {
     'changes_substance': Field(parse_bool),
     'holiness': Field(lambda s: "MH_" + s.upper()),
 
+    'is_badform': Field(parse_bool),
     'has_blood': Field(parse_capability),
     'has_hair': Field(parse_capability),
     'has_bones': Field(parse_capability),
@@ -410,6 +411,7 @@ defaults = {
     'changes_substance': "false",
     'holiness': "MH_NONE",
 
+    'is_badform': 'false',
     'has_blood': "FC_DEFAULT",
     'has_hair': "FC_DEFAULT",
     'has_bones': "FC_DEFAULT",

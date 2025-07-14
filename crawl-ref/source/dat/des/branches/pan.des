@@ -45,9 +45,9 @@ function pan_lord_setup(_G, name)
     _G.tags("unrand")
 
     local monsters = {
-        Mnoleg = "shadow demon w:200 / " ..
-                 "neqoxec w:200 / chaos spawn w:200 / " ..
-                 "cacodemon w:300 / tormentor / " ..
+        Mnoleg = "sin beast band w:100 / " ..
+                 "neqoxec w:250 / chaos spawn w:250 / " ..
+                 "zykzyl w:300 / tormentor / " ..
                  "tentacled monstrosity / protean progenitor band / " ..
                  "very ugly thing / glass eye band / " ..
                  "golden eye band / eye of devastation / "..
@@ -62,10 +62,10 @@ function pan_lord_setup(_G, name)
         Cerebov = "sun moth / efreet / sun demon / ynoxinul / balrug / " ..
                   "undying armoury w:1 / brimstone fiend w:1 / " ..
                   "demonspawn warmonger w:1",
-        ['Gloorx Vloq'] = "juggernaut skeleton w:100 / " ..
-                 "caustic shrike skeleton w:100 / " ..
-                 "hellephant skeleton w:100 / soul eater w:200 / " ..
-                 "reaper w:200 / executioner w:300 / " ..
+        ['Gloorx Vloq'] = "juggernaut draugr w:75 / " ..
+                 "caustic shrike draugr w:50 / " ..
+                 "hellephant draugr w:75 / shadow demon w:100 / " ..
+                 "soul eater w:200 / reaper w:200 / executioner w:300 / " ..
                  "flayed ghost / laughing skull band / shadow wraith / " ..
                  "demonspawn soul scholar"
     }
@@ -254,7 +254,7 @@ function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
     local tierthree = "rust devil w:5 / sixfirhy / smoke demon / " ..
                       "soul eater / sun demon / ynoxinul w:5"
-    local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
+    local tiertwo = "balrug / blizzard demon / cacodemon / " ..
                     "green death / sin beast / hellion / " ..
                     "reaper / shadow demon / tormentor"
 
@@ -595,7 +595,7 @@ TAGS:     mnoleg uniq_mnoleg
 ORIENT:   northeast
 TILE:     c = dngn_stone_wall_yellow
 MONS:     patrolling Mnoleg, neqoxec / chaos spawn w:2 / brain worm w:2
-MONS:     cacodemon, tentacled monstrosity w:30 / shadow demon / tormentor
+MONS:     zykzyl, tentacled monstrosity w:30 / sin beast band / tormentor
 MONS:     protean progenitor band
 ITEM:     potion of mutation q:1
 NSUBST:   2 = 4:3 / 1:4 / 3:5 / 3 = 234 / *:2
@@ -643,8 +643,8 @@ TAGS:     mnoleg uniq_mnoleg
 ORIENT:   southwest
 MONS:     patrolling Mnoleg
 MONS:     neqoxec / chaos spawn w:2, very ugly thing, brain worm
-MONS:     shadow demon, tentacled monstrosity, tormentor
-KMONS:    A = cacodemon
+MONS:     sin beast band, tentacled monstrosity, tormentor
+KMONS:    A = zykzyl
 KMONS:    B = protean progenitor
 ITEM:     potion of mutation q:1 pre_id
 SUBST:    D = 5:20 6 7 A B
@@ -697,7 +697,7 @@ ORIENT:   northwest
 MONS:     patrolling mnoleg
 MONS:     glass eye / eye of devastation / golden eye w:2
 MONS:     protean progenitor, shadow demon / tentacled monstrosity
-MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
+MONS:     zykzyl, neqoxec / chaos spawn w:2 / great orb of eyes w:2
 ITEM:     potion of mutation pre_id
 KFEAT:    T = fountain_eyes
 SHUFFLE:  '-
@@ -753,9 +753,9 @@ ENDMAP
 NAME:     mnoleg_grunt
 TAGS:     mnoleg uniq_mnoleg
 ORIENT:   west
-MONS:     patrolling Mnoleg, patrolling cacodemon
+MONS:     patrolling Mnoleg, patrolling zykzyl
 MONS:     neqoxec / chaos spawn w:2, protean progenitor
-MONS:     shadow demon, tentacled monstrosity, very ugly thing
+MONS:     sin beast band, tentacled monstrosity, very ugly thing
 ITEM:     potion of mutation pre_id q:1
 SHUFFLE:  Od, 1e
 SUBST:    e = 4
@@ -803,9 +803,9 @@ ENDMAP
 NAME:     mnoleg_grunt_wretched_star
 TAGS:     mnoleg uniq_mnoleg
 ORIENT:   centre
-MONS:     patrolling Mnoleg, patrolling cacodemon
+MONS:     patrolling Mnoleg, patrolling zykzyl
 MONS:     neqoxec / chaos spawn w:2, protean progenitor
-MONS:     shadow demon / tentacled monstrosity
+MONS:     sin beast band / tentacled monstrosity
 MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
           eye of devastation / great orb of eyes
 ITEM:     potion of mutation pre_id q:1
@@ -1381,7 +1381,7 @@ NAME:     gloorx_vloq
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   southwest
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 SHUFFLE:  1O
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
@@ -1423,8 +1423,8 @@ NAME:   gloorx_vloq_st
 TAGS:   gloorx_vloq uniq_gloorx_vloq
 ORIENT: southeast
 MONS:   patrolling Gloorx Vloq, Executioner, curse skull
-MONS:   soul eater, flayed ghost
-MONS:   caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:   soul eater, flayed ghost, shadow demon
+MONS:   caustic shrike draugr / juggernaut draugr / hellephant draugr
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1434,7 +1434,7 @@ xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
 xxxxx.............................xxxxx
 xxxx...xxx.x.xxx.x.x.x.xxx.x.xxx...xxxx
 xxx....xxx.x.xxx.x5x5x.xxx.x.xxx....xxx
-xx.................6.................xx
+xx.................7.................xx
 x..4..ccccccccccccccccccccccccccc..4..x
 xx.3.xcxxxxxxxxxxxxxxxxxxxxxxxxxcx.3.xx
 x.x.x.cx.x4x.x.x.x.x.x.x.x.x4x.xc.x.x.x
@@ -1446,9 +1446,9 @@ x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
 x.x.x.cx.x.x2x.x.x...x.x.x2x.x.xc.x.x.x
 xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
 x.x.x.cx.x.x.x.x.x.1.x.x.x.x.x.xc.x.x.x
-x5.x.6cxx.x.x.x.x.....x.x.x.x.xxc6.x.5x
+x5.x.7cxx.x.x.x.x.....x.x.x.x.xxc7.x.5x
 x.x.x.cx2x.x.x.x.x...x.x.x.x.x2xc.x.x.x
-xx.5.xcxx.x.x.x.x.....x.x.x.x.xxcx.5.xx
+xx.6.xcxx.x.x.x.x.....x.x.x.x.xxcx.6.xx
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
 x..x..cxx.x.x.x.x4...4x.x.x.x.xxc..x..x
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
@@ -1468,8 +1468,8 @@ TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   southeast
 MONS:     patrolling Gloorx Vloq
 MONS:     executioner, curse skull, reaper
-MONS:     shadow wraith, spectral emperor scorpion
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     shadow demon, spectral emperor scorpion
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
 KMONS:    O = flayed ghost
 SHUFFLE:  Cd / De
 SUBST:    Cd = c, D = ., e = +, X : xx., V : x.
@@ -1516,8 +1516,8 @@ NAME:     gloorx_vloq_grunt
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   west
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
-MONS:     laughing skull
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
+MONS:     laughing skull, shadow demon
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1530,13 +1530,13 @@ xxxxx.6.4.x...x...x...x...x.4...xxxx
 xxxx.6.6.........................xxx
 xxx.6.x..ccccccccccccccccc....x...xx
 xxx.4..6.c...x...x...x...cc....x..xx
-xx......6c....x.x.x.x.x.x.cc.......x
+xx......6c....x.x.x.x.x.x.cc....7..x
 xx.x.x.x.c.....x...x...x.2.cc....4.x
 xx.......+......x.x.x.x.x.x.cc.....x
 xx.......+.......x...x...x...cc..x.x
 xx....5..+......x.x.x.x.x.x.x.cc...x
 xx.x3x.x.c.....x...x...x...x...c...x
-xxx...5.xc....ccccccccc.x.x.x.xc...x
+xxx...7.xc....ccccccccc.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
 xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
 xx.x.x.x.cc........x...x...x62.c.5.x
@@ -1546,13 +1546,13 @@ xxx.x.x.xc.c......x.x.x.x.x6x.xc....
 xx.x.x.x.cc........x...x...x62.c.5.x
 xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
-xxx...5.xc....ccccccccc.x.x.x.xc...x
+xxx...7.xc....ccccccccc.x.x.x.xc...x
 xx.x3x.x.c.....x...x...x...x...c...x
 xx....5..+......x.x.x.x.x.x.x.cc...x
 xx.......+.......x...x...x...cc..x.x
 xx.......+......x.x.x.x.x.x.cc.....x
 xx.x.x.x.c.....x...x...x.2.cc....4.x
-xx......6c....x.x.x.x.x.x.cc.......x
+xx......6c....x.x.x.x.x.x.cc....7..x
 xxx.4..6.c...x...x...x...cc....x..xx
 xxx.6.x..ccccccccccccccccc....x...xx
 xxxx.6.6.........................xxx
@@ -1566,8 +1566,8 @@ NAME:     gloorx_vloq_grunt_torture_chamber
 TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   centre
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
-MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
-MONS:     laughing skull
+MONS:     caustic shrike draugr / juggernaut draugr / hellephant draugr
+MONS:     laughing skull, shadow demon
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1577,7 +1577,7 @@ xxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxx
 x.c.c.c.....................c.c.c.x
 xc.c.c.......................c.c.cx
 x.c.c.........................c.c.x
-xc.c.............5.............c.cx
+xc.c.............7.............c.cx
 x.c..5.......................5..c.x
 xc.........c.......c.......c.....cx
 x..4.x.x.x.c.x.x.x.c.x.x.x.c.x..4.x
@@ -1603,7 +1603,7 @@ x......c.......c.......c..........x
 x.4..x.c.x.x.x.c.x.x.x.c.x.x.x..4.x
 xc.....c.......c.......c.........cx
 x.c..5.......................5..c.x
-xc.c.............5.............c.cx
+xc.c.............7.............c.cx
 x.c.c.........................c.c.x
 xc.c.c.......................c.c.cx
 x.c.c.c.....................c.c.c.x

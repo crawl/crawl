@@ -694,9 +694,9 @@ void qazlal_storm_clouds()
         return;
 
     // You are a *storm*. You are pretty loud!
-    noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
+    noisy(min((int)you.piety(), piety_breakpoint(5)) / 10, you.pos());
 
-    const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
+    const int radius = you.piety() >= piety_breakpoint(3) ? 2 : 1;
 
     vector<coord_def> candidates;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_SOLID, true);
@@ -720,7 +720,7 @@ void qazlal_storm_clouds()
             candidates.push_back(*ri);
     }
     const int count =
-        div_rand_round(min((int)you.piety, piety_breakpoint(5))
+        div_rand_round(min((int)you.piety(), piety_breakpoint(5))
                        * candidates.size() * you.time_taken,
                        piety_breakpoint(5) * 7 * BASELINE_DELAY);
     if (count < 0)
@@ -856,7 +856,7 @@ bool does_ru_wanna_redirect(const monster &mon)
 ru_interference get_ru_attack_interference_level()
 {
     int r = random2(100);
-    int chance = div_rand_round(you.piety, 16);
+    int chance = div_rand_round(you.piety(), 16);
 
     // 10% chance of stopping any attack at max piety
     if (r < chance)
@@ -917,7 +917,7 @@ static bool _shadow_will_act(bool spell, bool melee)
     // For spells:  15% chance at min piety, 25% chance at 160 piety.
     const int range = piety_breakpoint(5) - minpiety;
     return x_chance_in_y(10 + (spell ? 5 : 0)
-                          + ((min(piety_breakpoint(5), (int)you.piety) - minpiety) * 10 / range), 100);
+                          + ((min(piety_breakpoint(5), (int)you.piety()) - minpiety) * 10 / range), 100);
 
     return true;
 }

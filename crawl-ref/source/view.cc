@@ -77,6 +77,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -948,6 +949,8 @@ colour_t viewmap_flash_colour()
         return LIGHTGRAY;
     else if (you.duration[DUR_VEXED])
         return MAGENTA;
+    else if (you.duration[DUR_DAZED])
+        return YELLOW;
 
     return BLACK;
 }
@@ -1725,7 +1728,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     {
         _draw_player(cell, gc, ep, anim_updates);
     }
-    else if (you.see_cell(gc) && you.on_current_level)
+    else if (you.see_cell(gc))
         _draw_los(cell, gc, ep, anim_updates);
     else
         _draw_outside_los(cell, gc, ep); // in los bounds but not visible
@@ -1964,6 +1967,15 @@ void handle_terminal_resize()
     else
         crawl_view.init_geometry();
 
-    redraw_screen();
-    update_screen();
+    if (crawl_state.waiting_for_ui)
+    {
+        ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
+        // We always need a redraw as the console was cleared when resizing
+        ui::force_render();
+    }
+    else
+    {
+        redraw_screen();
+        update_screen();
+    }
 }

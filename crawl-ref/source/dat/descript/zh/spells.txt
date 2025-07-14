@@ -1044,10 +1044,6 @@ Sap Magic spell
 腐化目标生物施放咒语的能力。
 施法时如果被它影响会被打断，并被短暂阻止再次施法。
 %%%%
-Scattershot spell
-
-用金属碎片轰击施法者身前的锥形区域。防具可以大大削弱其造成的伤害。
-%%%%
 Scorch spell
 
 灼烧一个随机敌人。受此伤害的会在短时间内失去火抗。
@@ -1448,11 +1444,6 @@ Thunderbolt spell
 
 产生一道电弧。
 %%%%
-Tomb of Doroklohe spell
-
-将施法者置于岩墙内。生成这些墙会把阻挡它们的东西推开，
-但任何生物的存在都会阻碍它们生成。它们不是永久的，会在一段时间后消失。
-%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>
@@ -1468,11 +1459,6 @@ Tukima's Dance spell
 一旦目标死亡，武器很快就会落地。
 
 某些强大的有名字的神器不会被影响，任何需要激活技能的属性都不会被激活。
-%%%%
-Twisted Resurrection spell
-
-这道法术让周围的尸体爬到一起，拼凑出一个恐怖的肉块怪物。
-尸体越多、越大，创造出的怪物就越强。
 %%%%
 Upheaval spell
 

@@ -61,24 +61,23 @@ end
 
 ###########################
 # Something to give the builder a chance if massive vaults keep failing.
-# NOTE: Not currently used: larger entries are placed as primary vaults instead.
+# NOTE: Not currently used. Larger entries are placed as primary vaults instead.
 #
 NAME:   zot_entry_small
 TAGS:   zot_entry
-KFEAT:  O = enter_zot
-KITEM:  R = midnight gem
 COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
 TILE:   c = wall_zot_magenta
-FTILE:  .RO+ = floor_hall
+FTILE:  .ROZ+ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
 xxxxxxxxx
 xxxcccxxx
-xxcc.ccxx
+xxcZ.ccxx
 xcc...ccx
 xc..OR.+@
 xcc...ccx
-xxcc.ccxx
+xxcZ.ccxx
 xxxcccxxx
 xxxxxxxxx
 ENDMAP
@@ -88,9 +87,9 @@ TAGS:   no_monster_gen zot_entry
 SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
-FTILE:  O.4G : floor_marble
+FTILE:  O.4GZ = floor_marble
 SUBST:  4 = 122223
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxcccccccxxxxxxx
@@ -99,7 +98,7 @@ xxcc......vvv......ccx
 xxc.v......1......v.cx
 xxc.2v...nn=nn...v..cx
 xxc...nnnn...nnnn...cx
-xxc...n....G....n..1cx
+xxc...n....Z....n..1cx
 xcc...n.G..4..G.n...cc
 xc.3.nn....v....nn...c
 xc.v.n....v.v....n.v.+
@@ -107,7 +106,7 @@ xc.v.+.G.vRO.v.G.=.v.+
 xc.v.n....v.v....n.v.+
 xc.3.nn....v....nn...c
 xcc...n.G..4..G.n...cc
-xxc...n....G....n..1cx
+xxc...n....Z....n..1cx
 xxc...nnnn...nnnn...cx
 xxc.2v...nn=nn...v..cx
 xxc.v......1......v.cx
@@ -123,13 +122,13 @@ TAGS:    no_monster_gen no_pool_fixup zot_entry layout_city
 KFEAT:   ^ = alarm trap
 KFEAT:   - = +
 SHUFFLE: Nn / Oo / Pp / Qq
-SUBST:   o = R, NPQ = A, npq = ., ^ = ^.., s = ccc+
+SUBST:   o = R, NP = Z, Q = A, npq = ., ^ = ^.., s = ccc+
 NSUBST:  3 = 1:9 / *:3
 COLOUR:  "x = magenta
-FTILE:   "OADx = floor_marble
+FTILE:   "OADxZ = floor_marble
 FTILE:   .+cm^012349$ = floor_hall
 TILE:    x = wall_zot_magenta
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MONS:   base draconian ; partisan | glaive
 MAP
 '''''''''''''''''''''''''''''''''''''''''
@@ -161,12 +160,9 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen
-PLACE:  Depths:$
-ORIENT: float
 WEIGHT: 8
-KITEM:  R = midnight gem
-KFEAT:  O = enter_zot
 KFEAT:  D = +
+KFEAT:  G = zot_statue
 SUBST:  b : a.., a : c., v : xv
 # entry: 1, 2
 MONS:   place:Depths:1, place:Depths:$
@@ -195,9 +191,10 @@ KMONS:  9 = nonbase draconian
 KMONS:  0 = golden dragon / wyrmhole w:2
 TILE:   x = wall_zot_magenta
 TILE:   v = dngn_metal_zot
-FTILE:  -ROD = floor_hall
+FTILE:  -RODG = floor_hall
 COLOUR: -R = magenta
 COLOUR: x = lightmagenta
+: zot_entry_setup(_G, false)
 MAP
 ccc+ccccccccccccccccccc
 cab.bacccab.baccccccccc
@@ -212,8 +209,8 @@ cab.bacccxx-xxcccab.bac
 cb...bccxx---xxccb.8.bc
 c.3.3.ccv--O--vcc.7.7.c
 cb444bccxx---xxccb...bc
-cab.bacccxxRxxcccab.bac
-ccc+ccccccxvxcccccc+ccc
+cab.bacccGxRxGxccab.bac
+ccc+ccccccxvxxxcccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
 ccccc..ccab.bacc..ccccc
@@ -233,7 +230,7 @@ KFEAT:  V = v
 KFEAT:  X = x
 SUBST:  V : Vx, x : Xccv
 NSUBST: 2 = 2:2 / 1:R / *:-
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MONS:   draconian stormcaller
 KMASK:  4 = opaque
 COLOUR: X = lightmagenta
@@ -248,7 +245,7 @@ xxmmm.....G.-.G.....mmmxx
 x.m4m.......-.......m4m.x
 x.mmm...G...-...G...mmm.x
 x..........---..........x
-x.....G....---....G.....x
+x.....Z....---....G.....x
 x..........---..........x
 x...G.....-----.....G...x
 x........XX---XX........x
@@ -260,7 +257,7 @@ x.G.....-X1---1X-.....G.x
 x........XX---XX........x
 x...G.....-----.....G...x
 x..........---..........x
-x.....G....---....G.....x
+x.....G....---....Z.....x
 x..........---..........x
 x.mmm...G...-...G...mmm.x
 x.m4m.......-.......m4m.x
@@ -276,19 +273,19 @@ COLOUR: X+- = magenta
 SUBST:  v : ....cnblw, z :..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
-FTILE:  -OR+ = floor_hall
+FTILE:  -OR+Z = floor_hall
 TILE:   X = wall_zot_magenta
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
                    cccccccccccc
                    cc..3....ccc
 cccccccccccccccccccc.........cc
 ccccccdccdccdccdccc..2XXXXX...c
-ccc..............dc..XX---XX..c
+ccc..............dc..XX-Z-XX..c
 D...vv.zz.vv.zz..cc..X-----X..c
 D...vv.zz.vv.zz..+...X-RO--+..c
 D...vv.zz.vv.zz..cc..X-----X..c
-ccc..............dc..XX---XX..c
+ccc..............dc..XX-Z-XX..c
 ccccccdccdccdccdccc..2XXXXX...c
 cccccccccccccccccccc.........cc
                   ccc..3....ccc
@@ -299,17 +296,17 @@ NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
-FTILE:  OR-+c = floor_hall
+FTILE:  OR-+cZ = floor_hall
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 ....d....
 .dcc+ccd.
 .cc---cc.
 .c-----c.
 dc--O--cd
-.c--R--c.
+.cZ-R-Zc.
 .cc---cc.
 .dcccccd.
 ....d....
@@ -321,15 +318,15 @@ KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
 NSUBST: 1 = 1:0 / *:1, 2 = 2:2 / *:., 3 = 2:3 / *:2
-FTILE:  -OR+Ac = floor_hall
-: zot_entry_setup(_G)
+FTILE:  -OR+AcZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
       ..3..
      .2c+c2.
     ..cc-cc..
    1.cc---cc.1
   ..cc--O--cc..
- ..cccc---cccc..
+ ..cccZ---Zccc..
 .2cc-cccRccc-cc2.
 .cc---ccccc---cc.
 3+--A--ccc--A--+3
@@ -346,10 +343,10 @@ ENDMAP
 NAME:   grunt_zot_entry_hairpin
 TAGS:   no_monster_gen patrolling
 COLOUR: ABC-_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 3, C = c, - = +
 NSUBST: 3 = 1:993 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
       cccccccccccccccccccc
     ccc..................cc
@@ -357,9 +354,9 @@ MAP
   cc.....cccccccccccccc....c
   c.....cc...........ccc...c
  cc..1.cc1.CCCCCCCCC..c.1..c
-@+....cc..CC_____A_CC.c...cc
+@+....cc..CC_____AZCC.c...cc
 @+..3.c.3.-____B__ORC0+2.cc
-@+....cc..CC_____A_CC.c...cc
+@+....cc..CC_____AZCC.c...cc
  cc..1.cc1.CCCCCCCCC..c.1..c
   c.....cc...........ccc...c
   cc.....cccccccccccccc....c
@@ -372,8 +369,8 @@ NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen patrolling transparent
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
 COLOUR: 1239c+.R = magenta
-FTILE:  1239c+.OR = floor_hall
-: zot_entry_setup(_G)
+FTILE:  1239c+.ORZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
       @       @
     cc+cc   cc+cc
@@ -382,13 +379,13 @@ MAP
  cccxcc.1.c.1.ccxccc
  c.ccxcc.....ccxcc.c
 @+..ccxcc.3.ccxcc..+@
- c...ccxcc+ccxcc...c
- cc.1.ccc...ccc.1.cc
+ c...ccxcc+ccccc...c
+ cc.1.ccc...Zcc.1.cc
   cc...c.R2..c...cc
   ccc.3+.2O2.+3.ccc
   cc...c..2..c...cc
- cc.1.ccc...ccc.1.cc
- c...ccxcc+ccxcc...c
+ cc.1.ccZ...ccc.1.cc
+ c...ccccc+ccxcc...c
 @+..ccxcc.3.ccxcc..+@
  c.ccxcc.....ccxcc.c
  cccxcc.1.c.1.ccxccc
@@ -403,16 +400,16 @@ TAGS:   no_monster_gen patrolling transparent
 KFEAT:  A = stone_arch
 NSUBST: 1 = 2:0 / *:1, 3 = 1:9 / *:3
 COLOUR: 123c+.R = magenta
-FTILE:  123c+.AOR = floor_hall
-: zot_entry_setup(_G)
+FTILE:  123c+.AORZ = floor_hall
+: zot_entry_setup(_G, true)
 MAP
        @
      cc+cc
     cc...c
    cc...cc ccccc
    c...cc cc.1.cc
-   c1.1c cc.3...cc
-   c.3.ccc.2.1...c
+   c1.1c cc.3Z..cc
+   c.3.ccc.2.1.Z.c
    cc.2.cc.Rccc..+@
     cc..AcOcc cc.c
  ccc ccccccccc ccc
@@ -430,15 +427,15 @@ ENDMAP
 NAME:   grunt_zot_entry_bicorn
 TAGS:   no_monster_gen transparent patrolling
 COLOUR: 0123c+_R = magenta
-FTILE:  0123+_ORT = floor_hall
+FTILE:  0123+_ORTZ = floor_hall
 SUBST:  _ = .
 NSUBST: 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
             .....
           ...ccc...
          ..cccRccc..
-        ..cc_____cc..
+        ..cc_Z_Z_cc..
        ..cc_2_O_2_cc..
       ..cc___2_2___cc..
      ..cc___________cc..
@@ -457,10 +454,10 @@ ENDMAP
 NAME:   grunt_zot_entry_tricorne
 TAGS:   no_monster_gen transparent patrolling
 COLOUR: ABC_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 110, C = c, - = +
 NSUBST: 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
 @......               ......@
 .+cccc.................cccc+.
@@ -471,7 +468,7 @@ MAP
   .cc...3.C___A___C.3...cc.
   ..cc...C-_B_R_B_-C...cc..
    ..cc..C_________C..cc..
-    ..c..C____O____C.cc..
+    ..c..CZ___O___ZC.cc..
      .cc.C_________C.cc.
      ..ccCC_A___A_CCcc..
       ..ccC___B___Ccc..
@@ -493,10 +490,10 @@ ENDMAP
 NAME:   grunt_zot_entry_gee_three
 TAGS:   no_monster_gen zot_entry transparent patrolling
 COLOUR: ABC_R = magenta
-FTILE:  ABC-_OR = floor_hall
+FTILE:  ABC-_ORZ = floor_hall
 SUBST:  _ = ., A = 2, B = 1, C = c, - = +
 NSUBST: 1 = 3:0 / 7:1 / *:., 3 = 1:9 / *:3
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
            .........
          ...ccccccc...
@@ -513,7 +510,7 @@ MAP
 @+..c......ccCA_ACcc......c..+@
 .ccc....1..ccC___Ccc..1....ccc.
 ...ccc..T..ccC_O_Ccc..T..ccc...
-.cccc.......cCCRCCc.......cccc.
+.cccc.......cZCRCZc.......cccc.
 @+......2...ccCCCcc...2......+@
 .ccc.......1..c.c..1.......ccc.
 ...ccccc..T..1.3.1..T..ccccc...
@@ -535,14 +532,14 @@ ENDMAP
 NAME:   grunt_zot_entry_alcove
 TAGS:   no_monster_gen zot_entry transparent patrolling
 COLOUR: 29C-_R = magenta
-FTILE:  29C-_OR = floor_hall
+FTILE:  29C-_ORZ = floor_hall
 SUBST:  _ = ., C = c
 NSUBST: @ = 1:@ / *:.
-: zot_entry_setup(_G)
+: zot_entry_setup(_G, true)
 MAP
      ccccccc
     ccCCCCCcc
-    cCC_9_CCc
+    cCZ_9_ZCc
     cC__R__Cc
     cC2_O_2Cc
     cC__2__Cc
@@ -2454,7 +2451,7 @@ NAME:   lemuel_lich_library
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
-MONS:   vampire mage, black draconian skeleton
+MONS:   vampire mage, black draconian draugr, orb of entropy
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 KFEAT:  ^ = archmage's trap
 SUBST:  x : xvv, w : w?, G : Gg
@@ -2462,6 +2459,9 @@ NSUBST: ? = 14 = 111. / *:.
 SUBST:  4 = 4 5:3 .:3, ^ : ^..
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
+: if dgn.zot_orb_type() == "orb of fire" then
+NSUBST: 3 = 1:37 / *:7
+: end
 : vault_metal_statue_setup(_G, "g", "soul conduit")
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2477,7 +2477,7 @@ wwxxcxxxxxx+xxxxxxx+xww
 wwxcxcxxxc..xxxxxx$$xww
 wwxdddxxxxx.x...xx$$xww
 wwx.3.xxxc..+.G.xxxxxww
-wwx...xxxxx.x...xxxxxww
+wwx.>.xxxxx.x...xxxxxww
 wwx...xxxc..xxxxxxxxxww
 wwxx+xxxxxx.xxcdddddxww
 wwxx.xcxxc..xxcd232dxww
@@ -2491,23 +2491,34 @@ wwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ###########################
-# Lake of fire
+# Lake of fire (...or ice!)
 #
-NAME:  lemuel_lake_of_fire
-DEPTH: Zot
-SUBST: * =*l
-KMONS: * = orb of fire
-KFEAT: * = l
-SUBST: .=.l
+NAME:   lemuel_lake_of_fire
+TAGS:   no_pool_fixup
+DEPTH:  Zot
+WEIGHT: 12
+KMONS:  1 = orb of fire
+KMONS:  2 = orb of winter
+KMONS:  P = block of ice
+KFEAT:  1 = l
+KFEAT:  2P = w
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:  * = 1l, ~ = l, . = .l
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:  * = 2P, ~ = w, . = .w
+: end
+veto {{
+  return dgn.zot_orb_type() == "orb of entropy"
+}}
 MAP
- ..ll..
-..llll..
-.llllll.
-.ll**ll.
-.ll**ll.
-.llllll.
-..llll..
- ..ll..
+ ..~~..
+..~~~~..
+.~~~~~~.
+.~~**~~.
+.~~**~~.
+.~~~~~~.
+..~~~~..
+ ..~~..
 ENDMAP
 
 ###########################
@@ -2571,11 +2582,16 @@ NAME:   lemuel_acid_trip
 DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
-MONS:   any nonbase yellow draconian
+MONS:   any nonbase yellow draconian, orb of entropy
 KFEAT:  ^ = devourer's trap
 SUBST:  1 = 1:2 .
 SUBST:  . = .:20 3:3 2:1
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
+# If orbs of entropy are available, have a chance to place one and also
+# reduce the total monster count to somewhat balance this out.
+: if dgn.zot_orb_type() == "orb of entropy" and crawl.coinflip() then
+NSUBST: 2 = 1:6 / 2:. / *:2, 4 = 2:. / *:4, 5 = 1:. / *:5
+: end
 MAP
        xx++xx
      xxx....xxx
@@ -2606,10 +2622,13 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire, fire elemental
 MONS:   red draconian, any nonbase red draconian
-MONS:   efreet
-SUBST:  1=122, 3=322
-SUBST:  4 = 2:20 4:5 3:15 .:20
-SUBST:  G : G.
+MONS:   efreet, sun moth
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:  1 = 122, 6 = .
+: else
+NSUBST: 16 = 2:6 / * = 662
+: end
+SUBST:  3=322, 4 = 2:20 4:5 3:15 .:20, G : G.
 TILE:   c = wall_stone_scorched
 : vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
@@ -2627,8 +2646,8 @@ llll...x.2cc+cc2.x...llll
 llll..Gx.cc444cc.xG..llll
 llll...x.c44444c.x...llll
  llll..x.c44F44c.x..llll
- llll..x.c44444c.x..llll
-  llll.x.cc444cc.x.llll
+ llll..x6c44444c6x..llll
+  llll.x6cc444cc6x.llll
   llll.x.1c...c1.x.llll
    llllxxxc+++cxxxllll
     llll333...333llll
@@ -2685,6 +2704,7 @@ ENDMAP
 NAME:   nrook_zot_tub
 TAGS:   no_monster_gen
 DEPTH:  Zot
+WEIGHT: 25
 KMONS:  M = patrolling red draconian att:neutral / \
             patrolling nonbase red draconian att:neutral
 KMONS:  F = orb of fire att:neutral
@@ -2693,6 +2713,9 @@ MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
 : vault_metal_statue_setup(_G, "g", "enigmatic dynamo")
+veto {{
+  return dgn.zot_orb_type() ~= "orb of fire"
+}}
 MAP
      @
 xxxxx+xxxxx
@@ -3491,7 +3514,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
-         electric golem / orb of fire w:5
+         electric golem / orb of appropriateness w:5
 KFEAT:   V = v
 SHUFFLE: EF
 SUBST:   E : .
@@ -3597,7 +3620,7 @@ MONS:   fire dragon w:35 / ice dragon w:35 / shadow dragon w:25 / \
         storm dragon w:50 / wyrmhole w:15 / golden dragon w:35
 MONS:   Killer Klown / electric golem w:5 / \
         curse toe w:5 / protean progenitor w:5
-MONS:   orb of fire
+MONS:   orb of appropriateness
 SUBST:  2 = 222., 5 = 55.
 SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
 MAP
@@ -4072,7 +4095,7 @@ KMONS:   67 = protean progenitor
 KMONS:   89 = killer klown
 KMONS:   AB = curse toe
 KMONS:   CD = electric golem
-KMONS:   E = orb of fire
+KMONS:   E = orb of appropriateness
 KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
@@ -4157,7 +4180,7 @@ DEPTH:  Zot, !Zot:$
 MONS:   toenail golem w:1 / glowing orange brain / golden eye band
 MONS:   shining eye / glass eye w:5, bone dragon, curse toe / curse skull
 SUBST:  ' = c., V:VYY
-NSUBST: - = 6 = 1.. / 16 = 2... / 8 = 3... / 8 = 4... / .
+NSUBST: - = 6 = 1.. / 12 = 2... / 8 = 3... / 8 = 4... / .
 NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
 MAP
   ccccccc
@@ -4279,11 +4302,15 @@ ENDMAP
 
 NAME:   hellmonk_greenhouse_of_terror
 TAGS:   no_monster_gen no_descent
+WEIGHT: 25
 DEPTH:  Zot:2-, !Zot:$
 MONS:   orb of fire, bush
 NSUBST: . = 1:1 / .
 SUBST:  > = )}], < = ({[
 : decorative_floor(_G, 'p', "garden patch")
+veto {{
+  return dgn.zot_orb_type() ~= "orb of fire"
+}}
 MAP
   ttttt
   t.>.t
@@ -4405,7 +4432,7 @@ ORIENT:  south
 DEPTH:   Zot, !Zot:$
 MONS:    0 band
 MONS:    red draconian / will-o-the-wisp w:2
-MONS:    red draconian scorcher, orb of fire / golden dragon
+MONS:    red draconian scorcher, golden dragon
 MONS:    white draconian / blizzard demon w:2
 MONS:    white draconian knight, golden dragon
 KMONS:   8 = black draconian / spark wasp w:2
@@ -4420,6 +4447,9 @@ KMONS:   f = quicksilver dragon
 KMONS:   g = death cob / storm dragon zombie w:4
 KMONS:   h = shadow dragon
 KMONS:   i = curse toe / ancient lich w:2
+KMONS:   ? = orb of fire
+KMONS:   ! = orb of winter
+KMONS:   & = orb of entropy
 KMONS:   z = 0 band
 KMONS:   W = withered plant
 KFEAT:   jk = m
@@ -4427,7 +4457,7 @@ KFEAT:   s = metal_statue
 NSUBST:  D = 1:< / 2:x. / *:x, . = 3:1 / *:.
 SHUFFLE: 234j / 567k / 890s / ABCW / defU / ghiG
 SUBST:   j : jjl, k : kkw
-SHUFFLE: 369Beh / 369Beh / heB963 / Beh369, HIJKLMNO, }])
+SHUFFLE: 369Beh / 369Beh / 369Beh / heB963 / Beh369, HIJKLMNO, }])
 SUBST:   HIJ = x, K : x., L : x., MNO = ., } = }:70, ] = ]:40 >
 MARKER:  U = lua:fog_machine { cloud_type = "purple smoke", \
                                pow_min = 4, pow_max = 5, \
@@ -4442,6 +4472,13 @@ TILE:    m = dngn_transparent_wall_magenta
 :   vault_metal_statue_setup(_G, "s", "storm conduit")
 : else
 :   vault_metal_statue_setup(_G, "s", "nascence circuit")
+: end
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   4 = 3?
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:   7 = 6!
+: elseif dgn.zot_orb_type() == "orb of entropy" then
+SUBST:   i = i&
 : end
 MAP
                          xccccccccccccccx
@@ -4487,8 +4524,9 @@ NAME:    hall_of_Zot
 TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
-MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
-MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
+MONS:    patrolling orb guardian, boundless tesseract
+MONS:    electric golem, killer klown, ancient lich / dread lich
+MONS:    orb of appropriateness
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
 KFEAT:   Z = orb dais
@@ -4525,13 +4563,15 @@ SUBST:   D = ^'', O = d, o = '
 SUBST:   P = h, Hp = '
 # Place a minimum number of traps and some extra liches in each lower wing.
 NSUBST:  d = 2=5. / 4=~ / ., h = 2=5. / 4=~ / .
-# In a each upper wing, place a few monsters along with locations for the main
+# In each upper wing, place a few monsters along with locations for the main
 # monster set on '?'. Use more central areas in the upper wings to do this.
+# Both boundless tesseracts are placed in fixed positions right by the upper
+# wing entrances, replacing old chances to place monster statues or traps there.
 NSUBST:  f = 3 / 4 / 6 / 9 = ? .:8 / e, k = 3 / 4 / 6 / 9 = ? .:8 / j
 # Minimum number of traps in each upper wing.
 NSUBST:  e = 4=~ / ., j = 4=~ / .
 # Each upper wing has equal chance to get one of three sets that most heavily
-# weight specific monsters: killer klown, ancient / dread lich, or orb of fire.
+# weight specific monsters: killer klown, ancient / dread lich, or orbs.
 SUBST:   ? : KLM
 SUBST:   K = 0 4:40 5 6 ., L = 0 4 5:40 6 ., M = 0 4 5 6:40 .
 # Make a final sprinkling of traps throughout the vault.
@@ -4542,6 +4582,7 @@ SUBST:   E = 2 ^:20 G .:80, J = 2 ^:20 G .:80
 NSUBST:  - = 2=^ / * = ^ .:240
 # Colours
 COLOUR:     cX = lightmagenta
+TILE:       c = stone_wall_zot_last
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
@@ -4570,7 +4611,7 @@ XXXXXXXXXXeeeeeeefffffffffffffeeeecXXXXXXXXXXXcjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
 XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
 XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
-XXXXXXXXXXXXXXE111EccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXccJ111JXXXXXXXXXXXXX
+XXXXXXXXXXXXXXG1112ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc2111GXXXXXXXXXXXXX
 XXXXXXXXXXXccddddddddddddddODDo1ccccccccccccccccc1pHHPhhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX

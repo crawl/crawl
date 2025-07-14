@@ -4260,7 +4260,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
                      && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
-                     && (type != MONS_ZOMBIE && type != MONS_SKELETON
+                     && (type != MONS_ZOMBIE && type != MONS_DRAUGR
                          || invalid_monster_type(mspec.monbase)
                          || mons_class_itemuse(mspec.monbase)
                             < MONUSE_STARTING_EQUIPMENT))
@@ -4355,13 +4355,13 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " skeleton", " simulacrum", " spectre", nullptr
+        " zombie", " draugr", " simulacrum", " spectre", nullptr
     };
 
     // This order must match zombie_types, indexed from one.
     static const monster_type zombie_montypes[] =
     {
-        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_SKELETON, MONS_SIMULACRUM,
+        MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_DRAUGR, MONS_SIMULACRUM,
         MONS_SPECTRAL_THING,
     };
 
@@ -4404,7 +4404,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         if (mons_class_can_be_spectralised(spec.monbase))
             return;
         break;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
         if (!mons_has_skeleton(spec.monbase))
             break;
         // fallthrough to MONS_ZOMBIE
@@ -4482,25 +4482,27 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 }
 
 /**
- * Build a monster specification for a specified pillar of salt. The pillar of
- * salt won't crumble over time, since that seems useful for any version of
- * this function.
+ * Build a monster specification for a specified pillar of salt or block of ice.
+ * It won't crumble over time, since that seems useful for any version of this
+ * function.
  *
- * @param name      The description of the pillar of salt; e.g.
+ * @param name      The description of the monster; e.g.
  *                  "human-shaped pillar of salt",
- *                  "titanic slime creature-shaped pillar of salt."
+ *                  "titanic slime creature-shaped block of ice."
  *                  XXX: doesn't currently work with zombie specifiers
  *                  e.g. "zombie-shaped..." (does this matter?)
- * @return          A specifier for a pillar of salt.
+ * @param type      The base type of monster to create (eg: MONS_PILLAR_OF_SALT)
+ * @return          A specifier for this monster.
  */
-mons_spec mons_list::get_salt_spec(const string &name) const
+mons_spec mons_list::get_shaped_spec(const string &name, monster_type type) const
 {
-    const string prefix = name.substr(0, name.find("-shaped pillar of salt"));
+    const string key = "-shaped " + mons_type_name(type, DESC_DBNAME);
+    const string prefix = name.substr(0, name.find(key));
     mons_spec base_mon = mons_by_name(prefix);
     if (base_mon.type == MONS_PROGRAM_BUG)
         return base_mon; // invalid specifier
 
-    mons_spec spec(MONS_PILLAR_OF_SALT);
+    mons_spec spec(type);
     spec.monbase = _fixup_mon_type(base_mon.type);
     return spec;
 }
@@ -4678,6 +4680,9 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name == "large abomination")
         return MONS_ABOMINATION_LARGE;
 
+    if (name == "orb of appropriateness")
+        return MONS_ORB_OF_APPROPRIATENESS;
+
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
         return get_hydra_spec(name);
 
@@ -4685,7 +4690,10 @@ mons_spec mons_list::mons_by_name(string name) const
         return get_slime_spec(name);
 
     if (ends_with(name, "-shaped pillar of salt"))
-        return get_salt_spec(name);
+        return get_shaped_spec(name, MONS_PILLAR_OF_SALT);
+
+    if (ends_with(name, "-shaped block of ice"))
+        return get_shaped_spec(name, MONS_BLOCK_OF_ICE);
 
     if (ends_with(name, " apostle"))
     {
@@ -5252,6 +5260,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
+        string ego_str  = strip_tag_prefix(s, "ego:");
+
         if (!acquirement_source.empty())
         {
             result.acquirement_source =
@@ -5264,6 +5274,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             result.base_type = OBJ_RANDOM;
         else
             parse_random_by_class(s, result);
+
+        if (!ego_str.empty()
+            && (result.base_type == OBJ_WEAPONS || result.base_type == OBJ_ARMOUR))
+        {
+            result.ego = str_to_ego(result.base_type, ego_str);
+        }
+
         return true;
     }
 
@@ -5294,6 +5311,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         result.level = ISPEC_MUNDANE;
         result.ego   = -1;
+        result.allow_uniques = 0;
     }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
@@ -5508,6 +5526,38 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         error = make_stringf("removed deck: \"%s\".", s.c_str());
         return false;
+    }
+
+    if (strip_tag(s, "parchment"))
+    {
+        result.base_type = OBJ_BOOKS;
+        result.sub_type = BOOK_PARCHMENT;
+
+        strip_tag(s, "of");
+
+        // Allow specifing the school of spell, rather than the spell itself.
+        string school_str = strip_tag_prefix(s, "disc:");
+        short slevel = strip_number_tag(s, "slevel:");
+        if (!school_str.empty())
+        {
+            spschool school = school_by_name(school_str);
+            if (school == spschool::none)
+            {
+                error = make_stringf("Bad spell school: %s", school_str.c_str());
+                return false;
+            }
+            result.props[RANDBK_DISC1_KEY].get_short() = static_cast<short>(school);
+        }
+        if (slevel != TAG_UNFOUND)
+            result.props[RANDBK_SLVLS_KEY]=  slevel;
+
+        string spell_name = replace_all_of(s, "_", " ");
+        spell_type spell = spell_by_name(spell_name);
+        // If we fail to find a spell, a normal one will be generated randomly later.
+        if (spell != SPELL_NO_SPELL)
+            result.plus = (int)spell;
+
+        return true;
     }
 
     string tile = strip_tag_prefix(s, "tile:");

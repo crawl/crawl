@@ -35,6 +35,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dlua.h"
+#include "duration-data.h"
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
@@ -64,6 +65,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
@@ -470,6 +472,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(jewellery_prompt), false),
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
+        new BoolGameOption(SIMPLE_NAME(warn_contam_cost), false),
+        new BoolGameOption(SIMPLE_NAME(show_resist_percent), true),
+        new BoolGameOption(SIMPLE_NAME(always_show_doom_contam), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -552,6 +557,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
+        new ListGameOption<string>(ON_SET_NAME(explore_auto_rest_status),
+            {"all_negative", "all_cooldown", "contam"}, false,
+            [this]() { update_explore_auto_rest_status(); }),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -888,7 +896,7 @@ const vector<GameOption*> game_options::build_options_list()
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
         new ListGameOption<string>(SIMPLE_NAME(tile_player_status_icons),
-            split_string(",", "slow, fragile, constr, will/2")),
+            split_string(",", "slow, fragile, constr, will/2, mark")),
         new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
@@ -1641,7 +1649,7 @@ void game_options::reset_options()
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
+          SPELL_ENGLACIATION, SPELL_GLOOM, SPELL_FLAME_WAVE,
           SPELL_PLASMA_BEAM, SPELL_PILEDRIVER, SPELL_DIAMOND_SAWBLADES,
           SPELL_FORTRESS_BLAST };
     always_use_static_spell_targeters = false;
@@ -3176,6 +3184,57 @@ void game_options::update_explore_greedy_visit_conditions()
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
     explore_greedy_visit = conditions;
+}
+
+void game_options::update_explore_auto_rest_status()
+{
+    set<duration_type> durs;
+    explore_auto_rest_contam = false;
+
+    for (const auto& str : explore_auto_rest_status_option)
+    {
+        if (str == "all_negative")
+        {
+            const vector<duration_type> neg = all_duration_with_flag(D_NEGATIVE);
+            durs.insert(neg.begin(), neg.end());
+        }
+        else if (str == "all_cooldown")
+        {
+            const vector<duration_type> cooldown = all_duration_with_flag(D_COOLDOWN);
+            durs.insert(cooldown.begin(), cooldown.end());
+        }
+        else if (str == "contam")
+            explore_auto_rest_contam = true;
+        else
+        {
+            string str_nospace = lowercase_string(str);
+            remove_whitespace(str_nospace);
+
+            bool invert = false;
+            if (!str_nospace.empty() && str_nospace[0] == '*')
+            {
+                invert = true;
+                str_nospace = str_nospace.substr(1);
+            }
+
+            duration_type dur = duration_by_name(str_nospace);
+
+            if (dur == NUM_DURATIONS)
+                continue;
+
+            if (invert)
+                durs.erase(dur);
+            else
+                durs.insert(dur);
+        }
+    }
+
+    // Erase effects that do not expire with time in general.
+    durs.erase(DUR_HORROR);
+    durs.erase(DUR_MESMERISED);
+    durs.erase(DUR_AFRAID);
+
+    explore_auto_rest_status.assign(durs.begin(), durs.end());
 }
 
 message_filter::message_filter(const string &filter)
@@ -5335,6 +5394,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("glyph_mode_font_size", glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", show_game_time);
+    tiles.json_write_bool("always_show_doom_contam", always_show_doom_contam);
 
     // TODO: convert action_panel_show into a yes/no/never option. It would be
     // better to have a more straightforward way of disabling the panel

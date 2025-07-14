@@ -182,13 +182,13 @@ MAP
 .............
 ENDMAP
 
-NAME: nicolae_ossuary_entry_catacombs
+NAME:   nicolae_ossuary_entry_catacombs
 TAGS:   transparent
-FTILE: O1s+ABC = floor_sandstone
+FTILE:  O1s+ABC = floor_sandstone
 COLOUR: 1s = yellow
 NSUBST: A = + / c, B = + / c, C = + / c, s = 1:O / 4:1 / *:1.....
-KMONS: O1 = orc skeleton / orc zombie w:5 / elf skeleton / elf zombie w:5 / \
-            human skeleton / human zombie w:5
+KMONS:  O1 = orc draugr / orc zombie w:15 / elf zombie w:15 / \
+             human zombie w:15
 : ossuary_portal(_G)
 MAP
 ccccccccc
@@ -347,15 +347,13 @@ ENDMAP
 
 NAME:  mainiacjoe_ossuary_entry_find_the_door
 TAGS:  no_monster_gen
-: local d = math.max(0, 6 - you.depth())
+: local d = math.max(0, 12 - (you.depth() * 2))
 : local e = math.max(0, you.depth() - 4)
 : local f = math.max(0, you.depth() - 6)
 : local z = "zombie w:"
-: local s = "skeleton w:"
-: mons("adder " .. z .. d .. " / adder " .. s .. d ..
-:      " / hound " .. z .. d .. " / hound " .. s .. d ..
-:      " / scorpion " .. z .. e .. " / howler monkey " .. s .. e ..
-:      " / bullfrog " .. s .. f .. " / killer bee " .. z .. f)
+: mons("adder " .. z .. d .. " / hound " .. z .. d ..
+:      " / scorpion " .. z .. e .. " / howler monkey " .. z .. e ..
+:      " / bullfrog " .. z .. f .. " / killer bee " .. z .. f)
 SUBST: 1 = 11', 3 = 1'
 : ossuary_portal(_G)
 MAP
@@ -845,7 +843,8 @@ NAME:    ossuary_due_mausoleum
 TAGS:    no_rotate no_vmirror
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    kobold skeleton w:12 / orc skeleton / gnoll skeleton
+MONS:    kobold zombie w:4 / orc zombie / gnoll zombie / \
+         rat draugr w:6 ; dagger / kobold draugr w:6 ; dagger plus:-4
 MONS:    mummy
 KMONS:   3X = wight ; mace | flail | falchion | short sword . robe
 KMONS:   4C = burial acolyte
@@ -877,7 +876,7 @@ cc1.......................1cc
 ccccccccccccc+++ccccccccccccc
 ccccccccccccc...ccccccccccccc
 cccccccccc$d+.2.+d$cccccccccc
-ccccccccccddc111cddcccccccccc
+ccccccccccddc1.1cddcccccccccc
 ccccccccccccc.1.ccccccccccccc
 ccccccccccccc1.1ccccccccccccc
 ccccccccccccc...ccccccccccccc
@@ -900,7 +899,8 @@ ENDMAP
 NAME:    ossuary_due_small_catacomb
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    kobold skeleton / gnoll skeleton / orc skeleton / centaur skeleton w:2
+MONS:    kobold draugr ; dagger plus:-4 / gnoll zombie / \
+         orc zombie w:12 / centaur zombie w:2
 MONS:    crocodile zombie / weeping skull w:2
 KMONS:   4x = mummy w:12 / wight w:2 / spectral scorpion w:2
 KMONS:   y = spectral rat
@@ -912,7 +912,7 @@ KFEAT:   ! = alarm trap
 KFEAT:   ? = altar_yredelemnul
 SHUFFLE: Bb / Zz, Dd / Ww, Ee / Vv
 SUBST:   ZzWwVv = c, BDE = X
-NSUBST:  X = 1:4 / 1:x / 1: xxxx? / * = x4
+NSUBST:  X = 1:4 / 1:x / 1: xxxx? / 2:$ / * = x4
 NSUBST:  b = 1:+ / c, d = 1:+ / c, e = 1:+ / c
 NSUBST:  ^ = 1:!!!. / *:., ~ = 1:!!!. / *:.
 : ossuary_setup_features(_G)
@@ -946,19 +946,19 @@ WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
          goblin zombie / hobgoblin zombie
-MONS:    kobold skeleton / gnoll skeleton / orc skeleton / rat skeleton / \
-         goblin skeleton / hobgoblin skeleton
+MONS:    bat draugr ; dagger / rat draugr ; short sword / \
+         goblin draugr ; club / gnoll draugr w:3 ; spear
 MONS:    mummy
 KMONS:   4 = Menkaure, weeping skull / burial acolyte
-# Loot: 1-15 items
+# Loot:  2-15 items
 ITEM:    any scroll / any potion
-NSUBST:  d = 1:d / 1:e / * = dddd.
+NSUBST:  d = 1:d / 1:e / * = dddd$
 : inkwell_talisman_chance(_G, "e")
 : ossuary_setup_features(_G)
 KFEAT:   ! = alarm trap
 KFEAT:   ? = altar_kikubaaqudgha
 KFEAT:   ^ = floor w:20 / alarm trap
-NSUBST:  ' = 25:1 / 25:2 / 30:^ / .
+NSUBST:  ' = 40:1 / 5:2 / 5 = 112 / 30:^ / .
 : ossuary_setup_features(_G)
 MAP
                             cc
@@ -1047,9 +1047,9 @@ ENDMAP
 NAME:    ossuary_due_cavern
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    centaur skeleton w:1 / orc skeleton w:15 / hobgoblin skeleton /\
-         kobold skeleton w:15 / adder skeleton / \
-         ball python skeleton w:15 / nothing w:5
+MONS:    centaur zombie w:1 / orc zombie w:15 / hobgoblin zombie /\
+         kobold zombie / kobold draugr w:5 ; dagger / adder zombie / \
+         ball python draugr w:15 ; dagger / nothing w:5
 KMONS:   2V = wight
 KMONS:   3X = laughing skull
 KMONS:   4 = burial acolyte

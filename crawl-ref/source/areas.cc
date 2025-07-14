@@ -583,7 +583,7 @@ int player::halo_radius() const
     if (have_passive(passive_t::halo))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
+        size = min(piety(), piety_breakpoint(5)) * you.normal_vision
                                                     / piety_breakpoint(5);
     }
 
@@ -756,9 +756,9 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        if (piety >= piety_breakpoint(4))
+        if (piety() >= piety_breakpoint(4))
             size = 4;
-        else if (piety >= piety_breakpoint(3))
+        else if (piety() >= piety_breakpoint(3))
             size = 3;
         else
             size = 2;
@@ -797,6 +797,10 @@ int monster::umbra_radius() const
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         size = max(size, 3);
+
+    // Death knights get a small umbra.
+    if (type == MONS_DEATH_KNIGHT)
+        size += 3;
 
     if (!(holiness() & MH_UNDEAD))
         return size;

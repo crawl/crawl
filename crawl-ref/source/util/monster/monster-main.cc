@@ -1174,6 +1174,9 @@ int main(int argc, char* argv[])
                 case AF_TRICKSTER:
                     monsterattacks += colour(LIGHTGREEN, "(trickster)");
                     break;
+                case AF_DOOM:
+                    monsterattacks += colour(RED, "(doom)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:

@@ -16,6 +16,7 @@
 #include "command.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "feature.h"
 #include "files.h"
@@ -117,6 +118,8 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
         _seen_portal(which_thing, pos);
+    else if (which_thing == DNGN_ZOT_STATUE)
+        you.zot_orb_monster_known = true;
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -238,6 +241,11 @@ string overview_description_string(bool display)
 
     disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
     disp += _get_branches(display);
+    if (you.zot_orb_monster_known)
+    {
+        string mon_name = pluralise(mons_type_name(you.zot_orb_monster, DESC_DBNAME));
+        disp += make_stringf("\nThe Realm of Zot is guarded by %s.\n", mon_name.c_str());
+    }
     disp += _get_altars(display);
     disp += _get_shops(display);
     disp += _get_portals();

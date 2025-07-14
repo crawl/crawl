@@ -29,7 +29,7 @@ end
 
 function hell_water_abbrev(e, type, baseweight)
     return "patrolling " .. type .. " zombie w:" .. math.floor(baseweight/2) ..
-        " / patrolling " .. type .. " skeleton w:" .. math.floor(baseweight/3) ..
+        " / patrolling " .. type .. " draugr w:" .. math.floor(baseweight/3) ..
         " / patrolling " .. type .. " simulacrum w:" .. math.floor(baseweight/6)
 end
 
@@ -188,10 +188,10 @@ NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_tele_into
-MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
-        / neqoxec w:5 / w:50 nothing
-MONS:   blizzard demon / sin beast / cacodemon / green death / reaper \
-        / balrug / hellion w:5 / tormentor w:5 / nothing w:30
+MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy / \
+        neqoxec / w:50 nothing
+MONS:   blizzard demon / sin beast / cacodemon / green death / reaper / \
+        balrug / hellion w:5 / tormentor w:5 / nothing w:30
 ITEM:   skeleton
 KFEAT:  b = .
 KMONS:  A = obsidian statue
@@ -770,8 +770,8 @@ TAGS:   transparent patrolling
 ORIENT: float
 WEIGHT: 5
 KMONS:  1 = sun demon
-KMONS:  2 = shining eye / eye of devastation / great orb of eyes
-KMONS:  3 = hell hound / hell hog / sin beast / hellion
+KMONS:  2 = eye of devastation / great orb of eyes
+KMONS:  3 = shining eye w:5 / hell hound / hell hog / sin beast / hellion
 NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
 SUBST:  b = bc
 KMASK:  O = opaque
@@ -1004,7 +1004,7 @@ ENDMAP
 
 NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
-KMONS:  1D = doom hound / nothing
+KMONS:  1D = oblivion hound / nothing
 KFEAT:  D = enter_tartarus
 TILE:   c = dngn_stone_dark
 : vault_metal_statue_setup(_G, "G", "mystic cage")

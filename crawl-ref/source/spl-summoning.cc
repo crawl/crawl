@@ -589,25 +589,25 @@ void do_dragon_call(int time)
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
- *                  since the last doom_howl call.
+ *                  since the last oblivion_howl call.
  */
-void doom_howl(int time)
+void oblivion_howl(int time)
 {
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
-    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    if (!you.props.exists(NEXT_OBLIVION_SPAWN_KEY))
+        you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
     // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
-        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        const int time_to_call = you.props[NEXT_OBLIVION_SPAWN_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+            you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
-            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
+            you.props[NEXT_OBLIVION_SPAWN_KEY].get_int() -= time;
         time -= time_to_call;
     }
 
@@ -625,13 +625,13 @@ void doom_howl(int time)
 
         monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
                                                  target->pos(), target->mindex(),
-                                                 MG_FORCE_BEH).set_range(1));
+                                                 MG_FORCE_BEH).set_range(1, you.current_vision));
         if (mons)
         {
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
-            mons_add_blame(mons, "called by a doom hound"); // assumption!
+            mons_add_blame(mons, "called by an oblivion hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
@@ -1405,14 +1405,16 @@ spret cast_summon_horrible_things(int pow, bool fail)
         return spret::abort;
 
     fail_check();
+
+    int doom_cost = random_range(3, 7);
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("summon_horrible_things"));
-
-        // XXX: Temporary effect until something else is implemented.
-        temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");
+        doom_cost *= 3;
     }
+
+    you.doom(doom_cost);
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
     int num_tmons = random2(pow) > 120 ? 2 : random2(pow) > 50 ? 1 : 0;
@@ -2882,7 +2884,7 @@ spret kiku_unearth_wretches(bool fail)
         const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        const monster_type mon_type = pick_local_wretch(lev);
         ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
         // place a monster
         mgen_data mg(mon_type,

@@ -3273,7 +3273,7 @@ _yredelemnul_Donald_
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "Zombies? Skeletons? Spectral things? Don't you get bored without any real company?"
+@The_monster@ says, "Zombies? Spectres? Don't you get bored without any real company?"
 
 @The_monster@ says, "Angels painted black are so last century."
 
@@ -8036,6 +8036,15 @@ friendly protean progenitor
 w:30
 __NONE
 %%%%
+################## Raven ###########################
+raven
+
+w:100
+__NONE
+
+w:2
+@The_monster@ caws, "Nevermore!"
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper
@@ -8979,7 +8988,7 @@ mutations, and how to avoid them.
 
 potions of mutation - the devil's brew!
 
-neqoxecs and cacodemons - may they all be destroyed!
+neqoxecs and zykzyls - may they all be destroyed!
 
 # respecting intelligent beings
 a proper diet respecting intelligent beings.

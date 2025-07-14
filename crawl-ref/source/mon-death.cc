@@ -255,6 +255,10 @@ static int _calc_player_experience(const monster* mons)
     experience = experience * mons->damage_friendly / mons->damage_total;
     ASSERT(mons->damage_friendly <= mons->damage_total);
 
+    // Award the player any XP remaining in the tesseract's XP pool.
+    if (mons->type == MONS_BOUNDLESS_TESSERACT && mons->props.exists(TESSERACT_XP_KEY))
+        experience += mons->props[TESSERACT_XP_KEY].get_int();
+
     return experience;
 }
 
@@ -808,7 +812,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
          mons.get_hit_dice(),
          you.experience_level);
 #endif
-    if (random2(you.piety) >= piety_breakpoint(0)
+    if (random2(you.piety()) >= piety_breakpoint(0)
         && random2(you.experience_level) >= random2(mons.get_hit_dice())
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
@@ -1401,7 +1405,7 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
     case MONS_SIMULACRUM:
         // XXX: print immediately instead?
         return msg;
-    case MONS_SKELETON:
+    case MONS_DRAUGR:
     case MONS_ZOMBIE:
         break;
     default:
@@ -1444,7 +1448,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                  int spell, god_type god,
                                  string msg = "", string fail_msg = "")
 {
-    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
+    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_DRAUGR;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
     // - Bind Souls, Death Channel, Yred reaping of unzombifiable things, and
@@ -1511,7 +1515,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         // No undead 0-headed hydras, sorry.
         if (mons->heads() == 0)
         {
-            if (!quiet && which_z != MONS_SKELETON)
+            if (!quiet)
                 mpr(fail_msg);
             return;
         }
@@ -1814,7 +1818,7 @@ static bool _animate_dead_reap(monster &mons)
     return true;
 }
 
-static bool _reaping(monster &mons)
+static bool _reaping_brand(monster &mons)
 {
     if (!mons.props.exists(REAPING_DAMAGE_KEY))
         return false;
@@ -1883,7 +1887,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
     if (corpse_gone || have_passive(passive_t::goldify_corpses))
         return false;
 
-    if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
+    if (in_los && (_animate_dead_reap(mons)))
         return true;
 
     return false;
@@ -1893,7 +1897,7 @@ static bool _god_will_bless_follower(monster* victim)
 {
     return have_passive(passive_t::bless_followers_vs_evil)
            && victim->evil()
-           && random2(you.piety) >= piety_breakpoint(0);
+           && random2(you.piety()) >= piety_breakpoint(0);
 }
 
 static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
@@ -2122,7 +2126,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
                     || you_worship(GOD_MAKHLEB)
                        && player_in_branch(BRANCH_CRUCIBLE))
                 && !player_under_penance()
-                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety()) - 30)
                                     / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
                     || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
@@ -2203,7 +2207,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
     if (killer == KILL_YOU && you.berserk())
     {
         if (have_passive(passive_t::extend_berserk)
-            && min((int)you.piety, piety_breakpoint(5)) > random2(800))
+            && min((int)you.piety(), piety_breakpoint(5)) > random2(800))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
@@ -2290,6 +2294,32 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         && (YOU_KILL(killer) || pet_kill))
     {
         makhleb_crucible_kill(mons);
+    }
+
+    if (you.has_bane(BANE_SUCCOUR))
+    {
+        bool visible_effect = false;
+        const int healing = random_range(mons.max_hit_points / 3,
+                                         mons.max_hit_points / 2);
+        for (monster_near_iterator mi(mons.pos()); mi; ++mi)
+        {
+            if (mons_aligned(&mons, *mi) && mi->hit_points < mi->max_hit_points)
+            {
+                if (!visible_effect && you.can_see(**mi))
+                    visible_effect = true;
+                mi->heal(healing);
+            }
+        }
+
+        if (visible_effect)
+            mprf("%s allies are healed!", mons.name(DESC_ITS).c_str());
+    }
+
+    if (gives_player_xp && you.attribute[ATTR_TEMP_MUTATIONS]
+        && mons_threat_level(mons) > MTHRT_TRIVIAL)
+    {
+        if (--you.attribute[ATTR_TEMP_MUT_KILLS] <= 0)
+            temp_mutation_wanes();
     }
 }
 
@@ -2830,7 +2860,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+            if (gives_player_xp && you_worship(GOD_RU) && you.raw_piety < piety_breakpoint(5)
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
@@ -2950,7 +2980,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             // Animate Dead/Infestation
             else if (mons.type == MONS_ZOMBIE
-                        || mons.type == MONS_SKELETON
+                        || mons.type == MONS_DRAUGR
                         || mons.type == MONS_DEATH_SCARAB)
             {
                 msg = " crumbles into dust!";
@@ -3130,6 +3160,40 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Must be done after health is set to zero and monster is properly marked dead.
+    if (mons.type == MONS_BOUNDLESS_TESSERACT)
+    {
+        // Remove all non-rewarding spawns, along with the other tesseract.
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid
+                && !(mi->flags & MF_BANISHED))
+            {
+                monster_die(**mi, killer, killer_index);
+            }
+            else if ((mi->flags & (MF_HARD_RESET | MF_NO_REWARD)
+                     && mi->props.exists(BLAME_KEY)))
+            {
+                const CrawlVector& blame = mi->props[BLAME_KEY].get_vector();
+                if (blame[blame.size() - 1].get_string() == "created by a Boundless Tesseract")
+                {
+                    if (you.can_see(**mi))
+                    {
+                        mprf(MSGCH_MONSTER_TIMEOUT, "%s is pulled back into %s original reality.",
+                             mi->name(DESC_THE).c_str(), mi->pronoun(PRONOUN_POSSESSIVE).c_str());
+                        }
+                    monster_die(**mi, KILL_RESET, NON_MONSTER);
+                }
+            }
+        }
+
+        if (you.props.exists(TESSERACT_START_TIME_KEY))
+        {
+            mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
+            mark_milestone("tesseract.kill", "destroyed the tesseracts.");
+            you.props.erase(TESSERACT_START_TIME_KEY);
+        }
+    }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (destroy_tentacles(&mons)
@@ -3223,6 +3287,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  SPELL_DEATH_CHANNEL,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
+        else if (!you_worship(GOD_YREDELEMNUL))
+            (_reaping_brand(mons));
 
         if (in_los && corpseworthy && yred_torch_is_raised())
             yred_feed_torch(&mons);
@@ -3665,6 +3731,10 @@ string summoned_poof_msg(const monster& mons)
 
     case MON_SUMM_CHAOS:
         msg = "degenerates into a cloud of primal chaos";
+        break;
+
+    case MON_SUMM_MULTIPLICITY:
+        msg = "shimmers and vanishes";
         break;
 
     case MON_SUMM_WRATH:

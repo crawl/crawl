@@ -373,6 +373,61 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         you.slow_down(0, strength);
     }
 
+    if ((flavour == BEAM_FIRE || flavour == BEAM_LAVA
+         || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
+        && you.has_bane(BANE_HEATSTROKE))
+    {
+        int chance = 25;
+        const int rF = you.res_fire();
+        if (rF < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / (rF + 1);
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The heat overwhelms you.");
+            you.slow_down(0, random_range(5, 10));
+        }
+    }
+
+    if ((flavour == BEAM_COLD || flavour == BEAM_ICE)
+        && you.has_bane(BANE_SNOW_BLINDNESS))
+    {
+        int chance = 25;
+        const int rC = you.res_cold();
+        if (rC < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / (rC + 1);
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The cold chills your senses.");
+            const int dur = random_range(5, 10);
+            blind_player(dur, LIGHTBLUE);
+            you.increase_duration(DUR_WEAK, dur, 50);
+        }
+    }
+
+    if ((flavour == BEAM_ELECTRICITY || flavour == BEAM_THUNDER
+         || flavour == BEAM_STUN_BOLT)
+        && you.has_bane(BANE_ELECTROSPASM))
+    {
+        int chance = 20;
+        const int rElec = you.res_elec();
+        if (rElec < 0)
+            chance = chance * 3 / 2;
+        else
+            chance = chance / 2;
+
+        if (x_chance_in_y(chance, 100))
+        {
+            mprf(MSGCH_WARN, "The electricty makes your body seize.");
+            you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 7), 10);
+        }
+    }
+
     if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
         mprf(MSGCH_WARN, "The flames go out!");
@@ -746,7 +801,7 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
             if (mon == MONS_BUTTERFLY)
             {
                 mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
-                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "butterfly on damage"), true);
+                take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "butterfly on damage"), true);
             }
             else
             {
@@ -801,7 +856,7 @@ static void _maybe_fog(int dam)
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "smoke on damage"), true);
+        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "smoke on damage"), true);
     }
 }
 
@@ -966,31 +1021,6 @@ static void _maybe_silence()
     int silence_sources = you.scan_artefacts(ARTP_SILENCE);
     if (x_chance_in_y(silence_sources, 100))
         silence_player(4 + random2(7));
-}
-/**
- * Maybe disable scrolls after taking damage if the player has MUT_READ_SAFETY.
- **/
-static void _maybe_disable_scrolls()
-{
-    int mut_level = you.get_mutation_level(MUT_READ_SAFETY);
-    if (mut_level && !you.duration[DUR_NO_SCROLLS] && x_chance_in_y(mut_level, 100))
-    {
-        mpr("You feel threatened and lose the ability to read scrolls!");
-        you.increase_duration(DUR_NO_SCROLLS, 10 + random2(5));
-    }
-}
-
-/**
- * Maybe disable potions after taking damage if the player has MUT_DRINK_SAFETY.
- **/
-static void _maybe_disable_potions()
-{
-    int mut_level = you.get_mutation_level(MUT_DRINK_SAFETY);
-    if (mut_level && !you.duration[DUR_NO_POTIONS] && x_chance_in_y(mut_level, 100))
-    {
-        mpr("You feel threatened and lose the ability to drink potions!");
-        you.increase_duration(DUR_NO_POTIONS, 10 + random2(5));
-    }
 }
 
 static void _place_player_corpse(bool explode)
@@ -1371,8 +1401,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_corrode();
                 _maybe_slow();
                 _maybe_silence();
-                _maybe_disable_scrolls();
-                _maybe_disable_potions();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

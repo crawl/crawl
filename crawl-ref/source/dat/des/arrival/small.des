@@ -139,8 +139,8 @@ ENDMAP
 
 ###############################################################################
 NAME:    evilmike_arrival_grusome_pit
-WEIGHT: 1
 TAGS:    arrival no_rotate
+WEIGHT:  1
 ORIENT:  northwest
 # the exit will be placed elsewhere 25% of the time
 SUBST:   { = {:30 .
@@ -3625,14 +3625,7 @@ ORIENT:  float
 WEIGHT:  5
 TILE:    G = dngn_statue_sigmund
 : set_feature_name("granite_statue", "a statue of a dreadful foe")
-# Bunch of player species
-KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
-             demonspawn skeleton / draconian skeleton / felid skeleton / \
-             formicid skeleton / gnoll skeleton / \
-             orc skeleton / human skeleton / kobold skeleton / \
-             merfolk skeleton / minotaur skeleton / naga skeleton / \
-             octopode skeleton / oni skeleton / spriggan skeleton / \
-             tengu skeleton / troll skeleton
+: kitem("? = " .. vault_species_skeletons(_G, "all"))
 MAP
    vvv
 vvvv>vvvv

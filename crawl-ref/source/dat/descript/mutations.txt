@@ -179,6 +179,13 @@ drained enemies die in sight of you, you have a chance to siphon away a small
 portion of their life force and magical power. Each level of this mutation
 increases the chance this happens and the amount one siphons.
 %%%%
+lucky mutation
+
+You have an uncanny knack for uncovering hidden properties of items other people
+might ignore as mundane. Whenever you encounter a new item on the ground for the
+first time, there is a very tiny chance to discover that it is actually an
+artefact. Each level of this mutation increases that chance.
+%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -477,6 +484,10 @@ persistent drain mutation
 
 Your health recovers twice as slowly from being drained. (The total experience
 needed is doubled.)
+%%%%
+contamination susceptible mutation
+
+You absorb twice as much mutagenic energy from being contaminated.
 %%%%
 initially attractive mutation
 
@@ -961,6 +972,11 @@ enemy in your attack range.
 
 This attack does reduced damage if your attack speed is slower than your casting
 speed.
+%%%%
+accursed mutation
+
+Your accursed nature makes it harder to dispel malignant energies from your
+being, reducing the rate at which you can recover from Doom and Banes.
 # ------ Fakemut descriptions ------
 %%%%
 vampire fangs mutation
@@ -1210,15 +1226,19 @@ period of time, in exchange for being dragged down into the Crucible of Flesh
 afterward and made to fight for your freedom.
 %%%%
 # ------ Ru sacrifices ------
-inability to drink after injury mutation
+potion hoarding mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. Each level of this mutation increases this chance by 1%.
+You refuse to drink potions in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+drink anything unless your HP is below 65% or 40% of its maximum, depending on
+the level of the mutation.
 %%%%
-inability to read after injury mutation
+scroll hoarding mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to read scrolls. Each level of this mutation increases this chance by 1%.
+You refuse to read scrolls in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+read anything unless your HP is below 65% or 40% of its maximum, depending on
+the level of the mutation.
 %%%%
 missing a hand mutation
 
@@ -1349,3 +1369,85 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
+%%%%
+# ------ Banes ------
+lethargy bane
+
+You cover ground slowly - moving to new positions takes you 30% more time than
+normal. This has no effect on other types of actions, like attacking or casting
+spells.
+%%%%
+heatstroke bane
+
+When you are damaged by fire, you have a chance to become slowed for a moderate
+length of time. This chance is decreased by your current level of fire resistance.
+%%%%
+snow-blindness bane
+
+When you are damaged by cold, you have a chance to become weak and blind for a
+moderate length of time. This chance is decreased by your current level of cold
+resistance.
+%%%%
+electrospasm bane
+
+When you are damaged by electricity, you have a chance to become bound in place
+and unable to move for a short length of time. This chance is decrease by your
+current level of electrical resistance.
+%%%%
+claustrophobia bane
+
+Your damage and accuracy with weapons is decreased for each wall you are
+currently adjacent to.
+%%%%
+stumbling bane
+
+Your evasion is decreased by 25 on any turn where you either moved or waited in
+place without doing anything else.
+%%%%
+reckless bane
+
+Your SH is always equal to 0 and cannot be raised by any means.
+%%%%
+succour bane
+
+Whenever you kill an enemy, all other nearby enemies are healed for a large
+fraction of that enemy's maximum health.
+%%%%
+multiplicity bane
+
+Enemies in sight of you have a small chance each turn to create multiple clones
+of themselves. These clones are very fragile and do reduced damage with attacks
+and spells, but will not expire on their own.
+%%%%
+dilettante bane
+
+Your skill with your highest weapon skill (at the time of becoming afflicted by
+this bane) is reduced by 50% and your skill with your two highest skills among
+magical schools, Invocations, and Evocations are reduced by 25%.
+%%%%
+paradox bane
+
+Whenever you first spot a monster, it has a chance to become Touched by Paradox,
+giving it the ability to use Manifold Assault as a natural ability (and a small
+chance to blink randomly after doing so).
+%%%%
+warding bane
+
+Groups of enemies you encounter may have Warding, preventing all damage they
+would take from any source which is not currently adjacent to them (including
+clouds, if their creator is currently non-adjacent).
+%%%%
+hunted bane
+
+Whenever an enemy summons monsters against you, they will usually appear
+adjacent to you instead of their summoner. Their duration is also increased and
+they will never lose track of your position, no matter where you flee.
+%%%%
+mortality bane
+
+When you are injured and alone, a reaper may come to claim you. These reapers
+will be immune to all damage from non-adjacent sources and, if your XL is less
+than 14, will additionally be slow. At higher XL, multiple reapers may appear at
+once.
+
+When this bane is lifted, all reapers summoned this way will immediately vanish.

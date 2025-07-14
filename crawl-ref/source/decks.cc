@@ -1566,8 +1566,7 @@ static void _degeneration_card(int power)
                }
                else
                {
-                   const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
-                   mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
+                   mons.daze(2 + 3 * power_level);
                    simple_monster_message(mons,
                                           " is dazed by the mutagenic energy.");
                }
@@ -1647,11 +1646,11 @@ static int _card_power(bool punishment)
     if (punishment)
         return you.experience_level * 18;
 
-    int result = you.piety;
+    int result = you.piety();
     result *= you.skill(SK_INVOCATIONS, 100) + 2500;
     result /= 2700;
     result += you.skill(SK_INVOCATIONS, 9);
-    result += (you.piety * 3) / 2;
+    result += (you.piety() * 3) / 2;
 
     return result;
 }

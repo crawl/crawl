@@ -171,6 +171,7 @@ public:
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const actor* source, const string &reason = "") = 0;
     virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
+    virtual bool doom(int amount) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -200,6 +201,8 @@ public:
     virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
+    virtual void daze(int duration) = 0;
+    virtual void vitrify(const actor *attacker, int duration, bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;
@@ -228,9 +231,6 @@ public:
     virtual int stealth () const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
-
-    virtual bool can_be_dazzled() const = 0;
-    virtual bool can_be_blinded() const = 0;
 
     virtual int armour_class() const = 0;
     virtual int gdr_perc(bool random = true) const = 0;
@@ -276,6 +276,7 @@ public:
     virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual bool res_constrict() const = 0;
+    virtual int res_blind() const = 0;
     int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;

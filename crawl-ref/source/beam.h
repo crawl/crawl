@@ -448,7 +448,6 @@ set<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur
 void init_zap_index();
 void clear_zap_info_on_exit();
 
-int zap_power_cap(zap_type ztype);
 bool zap_explodes(zap_type ztype);
 bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);

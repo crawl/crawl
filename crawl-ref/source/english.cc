@@ -181,7 +181,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 //      moth of wrath zombie    => moth of wrath zombies.
 static const char * const _monster_suffixes[] =
 {
-    "zombie", "skeleton", "simulacrum", nullptr
+    "zombie", "draugr", "simulacrum", nullptr
 };
 
 string pluralise_monster(const string &name)

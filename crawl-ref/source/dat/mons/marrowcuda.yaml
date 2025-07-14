@@ -3,7 +3,6 @@ glyph: {char: "F", colour: lightblue}
 resists: {cold: 1}
 flags: [flies]
 exp: 73
-species: skeleton
 holiness: [undead]
 will: 10
 attacks:

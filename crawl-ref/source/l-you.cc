@@ -558,7 +558,7 @@ LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
  * @treturn number
  * @function contaminated
  */
-LUARET1(you_contaminated, number, get_contamination_level())
+LUARET1(you_contaminated, number, you.magic_contamination > 0)
 
 /*** Do you feel safe?
  * @treturn boolean
@@ -1627,7 +1627,7 @@ static int _you_piety(lua_State *ls)
         const int new_piety = min(max(luaL_safe_checkint(ls, 1), 0), MAX_PIETY);
         set_piety(new_piety);
     }
-    PLUARET(number, you.piety);
+    PLUARET(number, you.raw_piety);
 }
 
 static int you_dock_piety(lua_State *ls)
@@ -1740,6 +1740,34 @@ LUAFN(you_delete_all_mutations)
     PLUARET(boolean, result);
 }
 
+LUAFN(you_gain_bane)
+{
+    string banename = luaL_checkstring(ls, 1);
+    bane_type bane = bane_from_name(banename);
+    if (bane != NUM_BANES)
+    {
+        string reason = luaL_checkstring(ls, 2);
+        PLUARET(boolean, add_bane(bane, reason));
+    }
+
+    string err = make_stringf("No such bane: '%s'.", banename.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+LUAFN(you_apply_draining)
+{
+    int amount = luaL_checkinteger(ls, 1);
+    drain_player(amount, true, true);
+    return 0;
+}
+
+LUAFN(you_ostracise)
+{
+    int amount = luaL_checkinteger(ls, 1);
+    ostracise_player(amount);
+    return 0;
+}
+
 LUAFN(you_change_species)
 {
     string species = luaL_checkstring(ls, 1);
@@ -1836,6 +1864,9 @@ static const struct luaL_reg you_dlib[] =
 { "delete_mutation",    you_delete_mutation },
 { "delete_temp_mutations", you_delete_temp_mutations },
 { "delete_all_mutations", you_delete_all_mutations },
+{ "gain_bane",          you_gain_bane },
+{ "apply_draining",     you_apply_draining },
+{ "ostracise",          you_ostracise },
 { "change_species",     you_change_species },
 #ifdef WIZARD
 { "enter_wizard_mode",  you_enter_wizard_mode },

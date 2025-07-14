@@ -101,7 +101,7 @@ crossbow "Hellfire"
 地獄の炎で鍛えられた燃え上がるクロスボウだ。これから放たれた矢は名前の通り、
 弱い地獄の業火に包まれる。
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 金剛のグレートソードだ。
 %%%%

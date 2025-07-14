@@ -56,6 +56,7 @@ struct form_entry
     mon_holy_type holiness;
 
     // Row 9:
+    bool is_badform;
     form_capability has_blood;
     form_capability has_hair;
     form_capability has_bones;

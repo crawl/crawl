@@ -95,6 +95,7 @@
     aMcNicky
     AndSDev
     Antern
+    antimachina
     Austin Appleby
     araganzar
     argonaut
@@ -111,6 +112,7 @@
     Beargit
     Bill Beher
     Alexander Beisig
+    Alex Beloi
     benadryl
     biasface
     Björn Bähre
@@ -138,6 +140,7 @@
     Ian Caltabiano
     David Candido
     Edgar Carballo
+    caryoscelus
     Cedor
     Cerol
     Marcelo Cerri
@@ -161,7 +164,9 @@
     Darby
     Paul Dejean
     Denzi
+    DevJac
     Sean Dewar
+    DewdropsOTG
     Ed Dewey
     dicedlemming
     Lothar Dierkes
@@ -190,7 +195,6 @@
     Brett Foster
     Kyle Fox
     Perry Fraser
-    freepotion
     Chris Galardi
     GenericPseudonym
     Ge0ff
@@ -289,6 +293,8 @@
     mgdelmonte
     Midn8
     mikee
+    MikeJHeg
+    Jared Miller
     Nathan Mills
     Andrew Minton
     Mintice
@@ -312,6 +318,7 @@
     Erkki Nurmi
     Mattias Nyberg
     nyra
+    Weston Odom
     Dylan O'Donnell
     Heinrich Ody
     Chris Oelmueller
@@ -420,6 +427,7 @@
     Jonathan Klabunde Tomer
     Tommy
     Sean VanMeter
+    Vaskritaya
     Mikko Vepsäläinen
     vla22
     WanderingBlade
@@ -432,6 +440,7 @@
     Evan Williams
     Mara Williamson
     Jeremey Wilson
+    Nicholas Wilson
     wjchen
     ximxim
     Yelve Yakut

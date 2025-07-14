@@ -903,10 +903,10 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_5
+ITEM:   elf skeleton
 NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 2:d / *:-
-ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ............
@@ -1798,8 +1798,8 @@ www.cc+c.www
 ENDMAP
 
 NAME:   grunt_witch_cave
-MONS:   fenstrider witch
-MONS:   hydra
+MONS:   fenstrider witch, hydra
+ITEM:   spriggan skeleton / elf skeleton
 KITEM:  K = potion of moonshine pre_id w:20 / \
             potion of mutation pre_id
 KITEM:  * = *
@@ -1814,7 +1814,6 @@ MARKER: K = lua:fog_machine { cloud_type="black smoke", \
 MARKER: L = lua:fog_machine { cloud_type="flame", \
                               pow_min = 100, pow_max = 100, delay = 100, \
                               size = 1, excl_rad = 0, walk_dist = 0 }
-ITEM:   human skeleton / elf skeleton / dwarf skeleton / orc skeleton
 MAP
      wwwwww
     wwxxxxww
@@ -2172,7 +2171,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_minitomb
 TAGS:  no_monster_gen
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
-KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
+KMONS: - = bog body w:20 / troll zombie / troll draugr / bloated husk w:5
 SUBST: ' = .W
 MAP
 WWxxxxxxxxx
@@ -2298,10 +2297,11 @@ MAP
 ENDMAP
 
 #### An ancient temple to kiku revived by a powerful spellcaster.
+#### XXX: derived undead giants in swamp?
 NAME:  beargit_kiku_chapel
 TAGS:  no_monster_gen
 DEPTH: Swamp:2-
-MONS:  bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
+MONS:  bog body w:20 / bunyip zombie / spectral bunyip / death scarab w:1
 MONS:  patrolling spriggan berserker simulacrum w:20 / \
        patrolling spriggan defender simulacrum / \
        patrolling spriggan air mage simulacrum / \
@@ -2309,7 +2309,7 @@ MONS:  patrolling spriggan berserker simulacrum w:20 / \
 MONS:  patrolling necromancer / \
        patrolling fenstrider_witch ; quick blade ego:pain
 MONS:  ghost crab / death drake w:1
-KMONS: 5 = bunyip zombie / bunyip skeleton / swamp dragon skeleton / \
+KMONS: 5 = bunyip zombie / spectral bunyip / swamp dragon draugr / \
            hornet zombie / death scarab w:1
 ITEM:  randbook disc:necromancy slevels:10 / \
        randbook disc:necromancy slevels:12 / randbook disc:necromancy slevels:16
@@ -2410,9 +2410,9 @@ ENDMAP
 NAME:   nzn_swamp_weyward_sisters
 TAGS:   no_pool_fixup
 DEPTH:  Swamp:2-
-MONS:   patrolling fenstrider witch, fungus, human att:good_neutral
-: dgn.delayed_decay(_G, 'd', 'human corpse')
-KITEM:  e = human skeleton
+MONS:   patrolling fenstrider witch, fungus, spriggan att:good_neutral
+: dgn.delayed_decay(_G, 'd', 'spriggan corpse')
+KITEM:  e = spriggan skeleton / elf skeleton
 KITEM:  f = any good_item no_pickup
 KFEAT:  n = iron_grate
 SUBST:  e = ddee. *:5
@@ -3000,12 +3000,12 @@ NAME:    nicolae_swamp_thats_no_hydra
 TAGS:    transparent no_pool_fixup
 DEPTH:   Swamp
 KMONS:   1 = kraken
+KITEM:   H = hydra skeleton
 KFEAT:   @ = . / W
 KFEAT:   1 = w
 SHUFFLE: LMN, OPQ, RSZ
 NSUBST:  `- = 2=H / 2=H. / .
 SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
-KITEM:   H = hydra skeleton
 MAP
      LLLLM
    ZZLLLLMMM
@@ -3483,7 +3483,7 @@ PLACE:   Swamp:$
 ORIENT:  float
 MONS:    swamp drake w:12 / swamp dragon / hydra
 MONS:    freezing wraith w:20 / flayed ghost / phantasmal warrior
-MONS:    hydra skeleton / swamp dragon skeleton / swamp drake skeleton w:13
+MONS:    hydra draugr / swamp dragon draugr / swamp drake draugr w:13
 MONS:    hydra zombie / swamp dragon zombie / swamp drake zombie w:13
 MONS:    spectral hydra / hydra simulacrum
 MONS:    patrolling thorn hunter / patrolling shambling mangrove
@@ -3491,8 +3491,7 @@ MONS:    patrolling spriggan druid god:fedhas
 KMONS:   p = plant
 KMONS:   ' = oklob plant
 KMONS:   q = ghoul
-KMONS:   L = patrolling the lernaean hydra zombie / \
-             patrolling the lernaean hydra skeleton
+KMONS:   L = patrolling the lernaean hydra zombie
 KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   _ = altar_fedhas
@@ -3501,7 +3500,7 @@ KFEAT:   T = tree
 KFEAT:   E = x
 SHUFFLE: Oo / Nn
 SUBST:   N = %, n = ., x = xxxxxxttT
-NSUBST:  1 = 4:1 / 6 = 1. / * = .W, 3 = 4:5 / 5:3 / 6 = 3. / *:.
+NSUBST:  1 = 4:1 / 6 = 1. / * = .W, 3 = 5:5 / 4:3 / 4 = 3. / *:.
 NSUBST:  6 = 2:6 / 3 = 6. / *:., P = 3=' / ppW
 SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody

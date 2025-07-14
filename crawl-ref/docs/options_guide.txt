@@ -51,7 +51,8 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors
+                explore_auto_rest, explore_auto_rest_status,
+                auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -82,7 +83,8 @@ The contents of this text are:
                 always_show_zot, always_show_gems, more_gem_info, action_panel,
                 action_panel_filter, action_panel_show_unidentified,
                 action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                action_panel_font_family, action_panel_font_size,
+		 show_resist_percent
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -1100,6 +1102,26 @@ explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving.
 
+explore_auto_rest_status = <status name>, <cooldown name>, <duration name>...
+        (List option)
+        Auto-explore will wait until all statuses, durations, and cooldowns in
+        the list are finished before moving. The list will accept most
+        duration-based statuses by either the name of their status light or
+        the phrasing that appears on the % screen.
+
+	There are several special values:
+		"all_negative" = all time-based negative statuses (eg: Slow)
+               "all_cooldown" = all time-based cooldowns (eg: -Blink)
+               "contam"       = any amount of magic contamination
+		"transformation" = any time-based negative form (ie: pig/wisp).
+
+	To exclude a specific status from all_negative or all_cooldown, include
+        the status with an * at the start. For instance:
+		explore_auto_rest_status += *-blink
+	will remove -blink from the list of cooldowns it wants to wait on.
+
+	Defaults to "all_negative", "all_cooldown", "contam"
+
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
@@ -1161,9 +1183,11 @@ simple_targeting = false
         zapping as well as autotarget selection for quivered spells.
 
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
-                       eringya's noxious bog, cause fear, alistair's
+                       eringya's noxious bog, anguish, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish, plasma beam
+                       gloom, flame wave, plasma beam,
+                       maxwell's portable piledriver, diamond sawblades,
+                       fortress blast
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1173,9 +1197,10 @@ force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
         be shown with every spell.
 
 force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
-                         elemental force, oozemancy, breathe lightning, torment,
-                         drain life, slouch, disaster area, apocalypse,
-                         corrupt, foxfire swarm
+                         elemental force, oozemancy, galvanic breath, 
+                         fathomless shackles, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm, siphon essence, shadowslip, 
+                         watery grave
         Force showing a targeter for the listed abilities when activating them
         normally, even if the ability isn't targeted. This for practical
         purposes only has an effect on statically targeted abilities, such as
@@ -1477,6 +1502,11 @@ easy_door = true
 
 warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
+
+warn_contam_cost = false
+	Ask for confirmation before casting a spell with a contam cost, if it
+	is possible that casting it at your current level of magic contamination
+	could cause you to reach harmful levels of contamination.
 
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
@@ -1879,6 +1909,16 @@ action_panel_font_size = 16 (persistent)
 action_panel_glyphs = false
         If set to true, show glyphs instead of tiles in the action panel. This
         option is only available on webtiles.
+
+show_resist_percent = true
+	When set to true, the exact percentage of damage the player will take
+	from each element, based on their current pips of resistance, will be
+	shown on the % screen.
+
+always_show_doom_contam = false
+	If set to true, always display the doom and contam meters in the
+	upper-right of the side panel, even if the player doesn't currently
+	have any doom or contamination.
 
 3-i     Colours (messages and menus)
 -----------------
@@ -3205,8 +3245,8 @@ lua_max_memory = 16
 Lua files are scripts which can provide existing commands with a new
 meaning or create new commands (to be used in macros). To use Lua
 files, Crawl needs to be compiled with support for user Lua scripts.
-You can if your Crawl has Lua support by hitting ?V in-game. The list
-of features Crawl displays should include "Lua user scripts".
+You can check to see if your Crawl has Lua support by hitting ?V in-game.
+The list of features Crawl displays should include "Lua user scripts".
 
 Lua files are included using the lua_file option (one file per line):
 

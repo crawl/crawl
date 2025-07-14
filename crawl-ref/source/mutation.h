@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "bane-type.h"
 #include "mutation-type.h"
 #include "transformation.h"
 #include "externs.h"
@@ -17,6 +18,9 @@ using std::vector;
 class formatted_string;
 
 #define EVOLUTION_MUTS_KEY "evolution_muts"
+
+#define HOARD_POTIONS_TIMER_KEY "hoard_potions_timer"
+#define HOARD_SCROLLS_TIMER_KEY "hoard_scrolls_timer"
 
 enum mutation_permanence_class
 {
@@ -79,8 +83,8 @@ void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
-int temp_mutation_roll();
 bool temp_mutation_wanes();
+int temp_mutation_count();
 
 void check_demonic_guardian();
 void check_monster_detect();
@@ -94,3 +98,15 @@ bool delete_temp_mutation();
 tileidx_t get_mutation_tile(mutation_type mut);
 
 void set_evolution_mut_xp(bool malignant);
+
+const string bane_desc(bane_type bane);
+const string bane_name(bane_type mut, bool dbkey = false);
+int bane_base_duration(bane_type bane);
+bane_type bane_from_name(string name);
+bool add_bane(bane_type bane = NUM_BANES, string reason = "Doom", int duration = 0);
+void remove_bane(bane_type bane);
+int xl_to_remove_bane(bane_type bane);
+
+bool skill_has_dilettante_penalty(skill_type skill);
+
+void maybe_apply_bane_to_monster(monster& mons);

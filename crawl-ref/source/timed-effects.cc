@@ -30,6 +30,7 @@
 #include "mgen-data.h"
 #include "monster.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
@@ -52,6 +53,7 @@
 #include "tileview.h"
 #include "throw.h"
 #include "travel.h"
+#include "view.h"
 #include "viewchar.h"
 #include "unwind.h"
 
@@ -59,9 +61,11 @@ static void _apply_contam_over_time()
 {
     int added_contamination = 0;
 
-    //If not invisible, normal dissipation
-    if (!you.duration[DUR_INVIS])
-        added_contamination -= 75;
+    // No contam decay within 7 turns of last being contaminated
+    if (you.elapsed_time - you.attribute[ATTR_LAST_CONTAM] <= 70)
+        return;
+
+    added_contamination -= 20;
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -76,48 +80,53 @@ static void _magic_contamination_effects()
     mprf(MSGCH_WARN, "Your body shudders with the violent release "
                      "of wild energies!");
 
-    const int contam = you.magic_contamination;
+    const bool severe = you.magic_contamination >= 2000;
 
-    // For particularly violent releases, make a little boom.
-    if (contam > 10000 && coinflip())
+    // The chance of exploding scales with contamination severity.
+    // Damage scales with player XL. Explosions at 200%+ contam have increased
+    // radius and damage.
+    if (x_chance_in_y(min(2000, you.magic_contamination), 3200))
     {
         bolt beam;
 
-        beam.flavour      = BEAM_RANDOM;
-        beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, div_rand_round(contam, 2000));
-        beam.target       = you.pos();
-        beam.name         = "magical storm";
-        //XXX: Should this be MID_PLAYER?
-        beam.source_id    = MID_NOBODY;
-        beam.aux_source   = "a magical explosion";
-        beam.ex_size      = max(1, min(LOS_RADIUS,
-                                       div_rand_round(contam, 15000)));
-        beam.ench_power   = div_rand_round(contam, 200);
-        beam.is_explosion = true;
+        const int pow = severe ? you.experience_level * 3 / 2
+                               : you.experience_level;
+        zappy(ZAP_CONTAM_EXPLOSION, pow, false, beam);
 
-        beam.explode();
+        beam.source       = you.pos();
+        beam.target       = you.pos();
+        beam.source_id    = MID_YOU_FAULTLESS;
+        beam.aux_source   = "a magical explosion";
+        beam.ex_size      = severe ? 2 : 1;
+
+        // Ignores the player's own AC (it's your body exploding!), but not
+        // enemies.
+        beam.ac_rule = ac_type::none;
+        beam.is_explosion = false;
+        beam.fire();
+
+        beam.damage.num = 4;
+        beam.ac_rule = ac_type::normal;
+        beam.is_explosion = true;
+        beam.explode(true, true);
     }
 
-    const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
-
+    flash_tile(you.pos(), LIGHTBLUE);
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true, coinflip(), false, false, mutclass);
+           "mutagenic glow");
 
-    // we're meaner now, what with explosions and whatnot, but
-    // we dial down the contamination a little faster if its actually
-    // mutating you.  -- GDL
-    contaminate_player(-(random2(contam / 4) + 1000));
+    contaminate_player(-random_range(200, 400) * (severe ? 2 : 1));
 }
-// Checks if the player should be hit with magic contaimination effects,
-// then actually does it if they should be.
+
+// Checks if the player should be hit with backlash from magic contamination,
+// then actually does so if they should be.
 static void _check_contamination_effects(int /*time_delta*/)
 {
-    const bool glow_effect = player_severe_contamination()
-                             && x_chance_in_y(you.magic_contamination, 12000);
-
-    if (glow_effect)
+    // 75% chance of a mishap each time this is checked at yellow contam and
+    // a 100% chance above that.
+    if (you.magic_contamination >= 2000
+        || you.magic_contamination >= 1000 && !one_chance_in(4))
     {
         if (is_sanctuary(you.pos()))
         {
@@ -233,6 +242,136 @@ static void _evolve(int /*time_delta*/)
     more();
 }
 
+static bool _multiplicity_clone(monster* mon)
+{
+    coord_def spot = find_newmons_square(mon->type, mon->pos(), 1, 2);
+    if (!spot.origin())
+    {
+        bool obviousness; // dummy argument
+        monster *clone = clone_mons(mon, true, &obviousness,
+                                    mon->attitude, spot);
+        if (!clone)
+            return false;
+        clone->foe = mon->foe;
+        // No additional gear from these clones, but you can get XP.
+        clone->mark_summoned(MON_SUMM_MULTIPLICITY);
+        clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        clone->add_ench(mon_enchant(ENCH_FIGMENT, 0, nullptr, INFINITE_DURATION));
+    }
+
+    return true;
+}
+
+static void _maybe_mortality_summon()
+{
+    // Ensure no non-trivial monsters are around
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mi->is_firewood()
+            && mons_threat_level(**mi, true) > MTHRT_TRIVIAL)
+        {
+            return;
+        }
+    }
+
+    // Only activate a fraction of the times we're resting while injured.
+    if (!one_chance_in(3))
+    {
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(1000, 1500);
+        return;
+    }
+
+    // Summon permaslow reapers at low XL, and scale the number with XL also.
+    const bool slow = you.experience_level < 14;
+    int num = 1;
+    if (slow)
+        num += x_chance_in_y(max(0, you.experience_level - 10), 10);
+    else
+    {
+        num += div_rand_round(max(0, you.experience_level - 17), 10);
+        num += div_rand_round(max(0, you.experience_level - 24), 4);
+    }
+
+    bool created = false;
+    mgen_data mg(MONS_REAPER, BEH_HOSTILE, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(nullptr, MON_SUMM_MORTALITY);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.non_actor_summoner = "the Bane of Mortality";
+    mg.set_range(5, you.current_vision, 3);
+
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster* mon = create_monster(mg))
+        {
+            created = true;
+            mon->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+            if (slow)
+                mon->add_ench(mon_enchant(ENCH_SLOW, 0, nullptr, INFINITE_DURATION));
+        }
+    }
+
+    if (created)
+    {
+        mprf("Death has come for you....");
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(3000, 5500);
+    }
+}
+
+static void _bane_triggers(int /*time_delta*/)
+{
+    if (you.has_bane(BANE_MULTIPLICITY)
+        && you.elapsed_time > you.props[MULTIPLICITY_TIME_KEY].get_int()
+        && coinflip())
+    {
+        vector<monster*> to_clone;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mons_aligned(&you, *mi) && !mi->is_summoned()
+                && !mi->is_peripheral() && !mons_is_unique(mi->type)
+                && !mi->has_ench(ENCH_FIGMENT)
+                && !mons_is_immotile(**mi))
+            {
+                to_clone.push_back(*mi);
+            }
+        }
+
+        if (to_clone.empty())
+            return;
+
+        monster* mon = to_clone[random2(to_clone.size())];
+
+        bool did_clone = false;
+        bool seen = false;
+        const int num = 2 + one_chance_in(3);
+        for (int i = 0; i < num; ++i)
+        {
+            if (_multiplicity_clone(mon))
+            {
+                if (you.can_see(*mon))
+                    seen = true;
+                did_clone = true;
+            }
+        }
+
+        // Apply cooldown.
+        if (did_clone)
+            you.props[MULTIPLICITY_TIME_KEY] = you.elapsed_time + random_range(150, 400);
+
+        if (seen)
+        {
+            flash_tile(mon->pos(), LIGHTBLUE, 150);
+            mprf("%s shimmers and splits apart.", mon->name(DESC_THE).c_str());
+        }
+    }
+
+    if (you.has_bane(BANE_MORTALITY)
+        && you.elapsed_time > you.props[MORTALITY_TIME_KEY].get_int()
+        && you.hp * 2 < you.hp_max)
+    {
+        _maybe_mortality_summon();
+    }
+}
+
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
 {
@@ -257,7 +396,7 @@ static struct timed_effect timed_effects[] =
     { nullptr,                         0,     0, false },
     { nullptr,                         0,     0, false },
 #endif
-    { _check_contamination_effects,   70,   200, false },
+    { _check_contamination_effects,  110,   250, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -276,6 +415,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
+    { _bane_triggers,                 50,   120, false },
 };
 
 // Do various time related actions...
@@ -550,7 +690,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_VITRIFIED:
         case ENCH_SIGN_OF_RUIN: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
-        case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
+        case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:

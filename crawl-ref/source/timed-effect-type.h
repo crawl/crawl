@@ -28,5 +28,6 @@ enum timed_effect_type
 #if TAG_MAJOR_VERSION == 34
     TIMER_BRIBE_TIMEOUT,
 #endif
+    TIMER_BANE_TRIGGER,
     NUM_TIMERS,
 };

@@ -217,8 +217,7 @@ size_type mons_class_body_size(monster_type mc);
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster& mon);
 
-bool mons_can_be_blinded(monster_type mc);
-bool mons_can_be_dazzled(monster_type mc);
+int mons_res_blind(monster_type mc);
 
 bool mons_resists_drowning(monster_type type, monster_type base);
 
@@ -303,7 +302,7 @@ int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster& mon);
-int mons_class_zombie_base_speed(monster_type zombie_base_mc);
+int mons_class_zombie_base_speed(monster_type zombie_base_mc, bool slow);
 int mons_base_speed(const monster& mon, bool known = false);
 
 bool monster_class_flies(monster_type mc);

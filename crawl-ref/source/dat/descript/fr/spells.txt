@@ -821,12 +821,6 @@ Thunderbolt spell
 
 Ce sort crée un arc électrique.
 %%%%
-Twisted Resurrection spell
-
-Ce sort amène les cadavres environnant à ramper et à fusionner en une
-agglomération horrible de chairs. Plus les corps sont grands et puissants, plus
-la création le sera aussi.
-%%%%
 Volley of Thorns spell
 
 Ce pouvoir permet de lancer une petite pluie d'épines acérées.

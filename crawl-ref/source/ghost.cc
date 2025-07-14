@@ -147,6 +147,7 @@ void ghost_demon::reset()
     flies            = false;
     cloud_ring_ench  = ENCH_NONE;
     umbra_rad        = -1;
+    title            = "";
 }
 
 // Set values to the bare minimum required to function, in cases where full
@@ -529,6 +530,7 @@ void ghost_demon::init_player_ghost()
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
+    title = player_title();
 
     flies = true;
 

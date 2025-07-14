@@ -167,15 +167,16 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
-MONS:    large abomination, place:Depths:$ skeleton
+MONS:    large abomination, place:Depths:1 draugr
 MONS:    ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
+KITEM:   % = ugly thing skeleton
+SHUFFLE: 1234
+NSUBST:  2 = 2:2 / *:.
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
 COLOUR:  .012345D% = w:20 lightgrey / w:5 darkgrey
 FTILE:   .+n012345D% = floor_tomb
-SHUFFLE: 1234
-KITEM:   % = ugly thing skeleton
 : init_research(_G, 'necromancy')
 MAP
 @'''@'''@

@@ -415,7 +415,7 @@ wiz-monster
 
 <w>place:Elf:3 zombie</w>
 
-可用的修饰语有<w>zombie</w>、<w>skeleton</w>、<w>simulacrum</w>和<w>spectre</w>。
+可用的修饰语有<w>zombie</w>、<w>draugr</w>、<w>simulacrum</w>和<w>spectre</w>。
 
 <h>覆盖怪物名称</h>
 

@@ -457,6 +457,11 @@ item_def *monster::weapon(int which_attack) const
     if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return nullptr;
 
+    // Draugr can only use their weapon for their doom attack and not any other
+    // hit attack the monster they're derived from may have.
+    if (type == MONS_DRAUGR && which_attack != 0)
+        return nullptr;
+
     // Even/odd attacks use main/offhand weapon.
     if (which_attack > 1)
         which_attack &= 1;
@@ -568,16 +573,6 @@ bool monster::can_throw_large_rocks() const
            || type == MONS_PARGHIT // he's stronger than your average troll
            || type == MONS_BOUND_SOUL
            || type == MONS_PLAYER_SHADOW; // can throw them if you can!
-}
-
-bool monster::can_be_dazzled() const
-{
-    return mons_can_be_dazzled(type);
-}
-
-bool monster::can_be_blinded() const
-{
-    return mons_can_be_blinded(type);
 }
 
 bool monster::can_speak()
@@ -3143,8 +3138,8 @@ static int _zombie_ac_modifier(monster_type type)
         case MONS_ZOMBIE:
         case MONS_SIMULACRUM:
             return -2;
-        case MONS_SKELETON:
-            return -6;
+        case MONS_DRAUGR:
+            return 10;
         case MONS_SPECTRAL_THING:
         case MONS_BOUND_SOUL:
             return 2;
@@ -3171,7 +3166,7 @@ int monster::base_armour_class() const
     if (mons_is_ghost_demon(type))
         return ghost->ac;
 
-    // zombie, skeleton, etc ac mods
+    // derived undead ac mods
     if (mons_class_is_zombified(type))
     {
         // handle weird zombies for which type isn't enough to reconstruct ac
@@ -3285,7 +3280,7 @@ static int _zombie_ev_modifier(monster_type type)
         case MONS_SIMULACRUM:
         case MONS_SPECTRAL_THING:
             return -5;
-        case MONS_SKELETON:
+        case MONS_DRAUGR:
             return -7;
         default:
             die("invalid zombie type %d (%s)", type,
@@ -3928,6 +3923,11 @@ bool monster::res_constrict() const
     return is_insubstantial() || is_spiny() || is_amorphous();
 }
 
+int monster::res_blind() const
+{
+    return mons_res_blind(type);
+}
+
 int monster::res_corr() const
 {
     int u = get_mons_resist(*this, MR_RES_CORR);
@@ -4094,6 +4094,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     int ret;
     switch (sk)
     {
+    case SK_INVOCATIONS:
     case SK_EVOCATIONS:
         return hd;
 
@@ -4272,6 +4273,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (mons_is_projectile(type)
         || mid == MID_ANON_FRIEND)
     {
+        return 0;
+    }
+
+    if (damage_immune(agent))
+    {
+        simple_monster_message(*this, " is warded from harm.");
         return 0;
     }
 
@@ -5107,10 +5114,15 @@ bool monster::can_mutate() const
     if (type == MONS_CHAOS_SPAWN)
         return false;
 
-    // Abominations re-randomize their tile when mutated. They do not gain the
-    // malmutate status or experience any other non-cosmetic effect.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated. They do not gain the malmutate status or experience any other
+    // non-cosmetic effect.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
+    {
         return true;
+    }
 
     const mon_holy_type holi = holiness();
 
@@ -5128,10 +5140,17 @@ bool monster::can_polymorph() const
     if (type == MONS_CHAOS_SPAWN)
         return true;
 
-    // Abominations re-randomize their tile when mutated, so can_mutate returns
-    // true for them. Like all undead, they can't be polymorphed.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated, so can_mutate returns true for them. Abominations can't be
+    // polymorphed because they're undead, and crawling flesh cages can't be
+    // polymorphed the usual way because they're mostly made of ugly thing
+    // fragments.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
+    {
         return false;
+    }
 
     // Polymorphing apostles breaks all sorts of things (like making challenges
     // unwinnable if it happens) and it would be complex to fix this, so let's
@@ -5185,9 +5204,12 @@ bool monster::malmutate(const actor* source, const string& /*reason*/)
     if (!can_mutate())
         return false;
 
-    // Abominations re-randomize their tile when mutated. They do not gain the
-    // malmutate status or experience any other non-cosmetic effect.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated. They do not gain the malmutate status or experience any other
+    // non-cosmetic effect.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
     {
 #ifdef USE_TILE
         props[TILE_NUM_KEY].get_short() = ui_random(256);
@@ -5245,6 +5267,25 @@ bool monster::polymorph(poly_power_type power)
     return monster_polymorph(this, targ, power);
 }
 
+bool monster::doom(int amount)
+{
+    int& stacks = props[MONSTER_DOOM_KEY].get_int();
+    stacks += amount;
+    if (stacks >= 50)
+    {
+        stacks = 0;
+        if (you.can_see(*this))
+            mprf("Doom befalls %s.", name(DESC_THE).c_str());
+
+        enchant_type ench = random_choose(ENCH_SLOW, ENCH_VITRIFIED, ENCH_WEAK, ENCH_BLIND, ENCH_DRAINED);
+
+        // High degree specifically for Draining
+        add_ench(mon_enchant(ench, 7, nullptr, random_range(1000, 2000)));
+    }
+
+    return false;
+}
+
 static bool _mons_is_icy(int mc)
 {
     return mc == MONS_ICE_BEAST
@@ -5282,7 +5323,7 @@ bool monster::is_fiery() const
 
 static bool _mons_is_skeletal(int mc)
 {
-    return mc == MONS_SKELETON
+    return mc == MONS_DRAUGR
            || mc == MONS_BONE_DRAGON
            || mc == MONS_SKELETAL_WARRIOR
            || mc == MONS_ANCIENT_CHAMPION
@@ -5362,7 +5403,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     if (alive()
-        && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
+        && !(mons_habitat(*this) & HT_DRY_LAND)
         && !monster_habitable_grid(this, pos())
         && type != MONS_HELLFIRE_MORTAR
         && !has_ench(ENCH_AQUATIC_LAND))
@@ -5636,6 +5677,37 @@ bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
 
     mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker, dur * BASELINE_DELAY);
     return add_ench(lowered_wl);
+}
+
+void monster::daze(int duration)
+{
+    // Enchantment degree is used as a timer to prevent immediately breaking on
+    // the turn it is applied.
+    if (has_ench(ENCH_DAZED))
+    {
+        mon_enchant ench = get_ench(ENCH_DAZED);
+        ench.duration += (duration * BASELINE_DELAY);
+        ench.degree = you.elapsed_time_at_last_input;
+        update_ench(ench);
+    }
+    else
+    {
+        add_ench(mon_enchant(ENCH_DAZED, you.elapsed_time_at_last_input, nullptr,
+                             duration * BASELINE_DELAY));
+    }
+}
+
+void monster::vitrify(const actor *attacker, int duration, bool quiet)
+{
+    if (!quiet && you.can_see(*this))
+    {
+        if (has_ench(ENCH_VITRIFIED))
+            mprf("%s looks even more glass-like.", name(DESC_THE).c_str());
+        else
+            mprf("%s becomes as fragile as glass!", name(DESC_THE).c_str());
+    }
+
+    add_ench(mon_enchant(ENCH_VITRIFIED, 0, attacker, duration * BASELINE_DELAY));
 }
 
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)
@@ -6313,12 +6385,12 @@ bool monster::is_binding_sigil_immune() const
     return has_ench(ENCH_SWIFT);
 }
 
-// Monsters with an innate umbra don't have their accuracy reduced by it, and
-// nor do followers of Yredelemnul and Dithmenos.
+// Monsters with an innate umbra don't have their accuracy reduced by it,
+// nor do undead or followers of Yredelemnul.
 bool monster::nightvision() const
 {
     return god == GOD_YREDELEMNUL
-           || god == GOD_DITHMENOS
+           || (holiness() & MH_UNDEAD)
            || umbra_radius() >= 0;
 }
 
@@ -6404,6 +6476,14 @@ bool monster::cloud_immune(bool items) const
     return type == MONS_CLOUD_MAGE || actor::cloud_immune(items);
 }
 
+bool monster::damage_immune(const actor* source) const
+{
+    if (has_ench(ENCH_WARDING) && source && !adjacent(source->pos(), pos()))
+        return true;
+
+    return false;
+}
+
 bool monster::is_illusion() const
 {
     return type == MONS_PLAYER_ILLUSION
@@ -6462,6 +6542,8 @@ int monster::spell_hd(spell_type spell) const
         hd = max(1, hd * 2 / 3);
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
+    if (has_ench(ENCH_FIGMENT))
+        hd = max(1, hd / 2);
 
     if (type == MONS_PLAYER_SHADOW)
     {
@@ -6471,6 +6553,9 @@ int monster::spell_hd(spell_type spell) const
 
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
+    if (has_ench(ENCH_DIMINISHED_SPELLS))
+        hd = max(1, hd - 7);
+
     return hd;
 }
 

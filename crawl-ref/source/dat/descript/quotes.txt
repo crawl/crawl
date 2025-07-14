@@ -2885,7 +2885,7 @@ diamond obelisk
     -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
       Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
 %%%%
-doom hound
+oblivion hound
 
 “Standing over Hugo, and plucking at his throat, there stood a foul thing, a
  great, black beast, shaped like a hound, yet larger than any hound that ever

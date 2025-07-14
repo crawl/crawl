@@ -57,7 +57,7 @@ enum class spflag
     WL_check           = 0x08000000,      // spell that checks monster WL
     mons_abjure        = 0x10000000,      // monsters can cast abjuration
                                           // instead of this spell
-                     //  0x20000000,      // was spflag::not_evil
+    dummy              = 0x20000000,      // not a real spell (and shouldn't be cast)
     holy               = 0x40000000,      // considered holy (can't be
                                           // used by Yred bound souls)
 };
@@ -152,3 +152,5 @@ bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);
 void stop_channelling_spells(bool quiet = false);
 void handle_channelled_spell();
+
+bool warn_about_contam_cost(int max_contam);
