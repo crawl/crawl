@@ -145,6 +145,6 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld);
 void unequip_artefact_effect(item_def &item, bool *show_msgs, bool meld);
 
 bool acrobat_boost_active();
-bool deflection_boost_active();
+bool parrying_boost_active();
 
 void unwield_distortion(bool brand = false);

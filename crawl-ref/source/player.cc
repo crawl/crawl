@@ -1853,9 +1853,9 @@ void update_acrobat_status()
     you.redraw_evasion = true;
 }
 
-int player_deflection()
+int player_parrying()
 {
-    int sh = 8 * you.wearing_ego(OBJ_ARMOUR, SPARM_DEFLECTION);
+    int sh = 8 * you.wearing_ego(OBJ_ARMOUR, SPARM_PARRYING);
     if (you.get_mutation_level(MUT_MISSING_HAND))
         sh /= 2;
     else
@@ -1868,12 +1868,12 @@ int player_deflection()
     return sh;
 }
 
-void update_deflection_status()
+void update_parrying_status()
 {
-    if (player_deflection() <= 0)
+    if (player_parrying() <= 0)
         return;
 
-    you.duration[DUR_DEFLECTION] = you.time_taken+1;
+    you.duration[DUR_PARRYING] = you.time_taken+1;
     you.redraw_armour_class = true;
 }
 
@@ -2184,8 +2184,8 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += you.wearing_jewellery(AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    if (you.duration[DUR_DEFLECTION])
-        shield += player_deflection() * 200;
+    if (you.duration[DUR_PARRYING])
+        shield += player_parrying() * 200;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
@@ -5946,7 +5946,7 @@ bool player::shielded() const
     return shield()
            || duration[DUR_DIVINE_SHIELD]
            || duration[DUR_EPHEMERAL_SHIELD]
-           || duration[DUR_DEFLECTION]
+           || duration[DUR_PARRYING]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || you.wearing_jewellery(AMU_REFLECTION)

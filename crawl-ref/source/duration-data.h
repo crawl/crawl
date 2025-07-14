@@ -748,9 +748,9 @@ static const duration_def duration_data[] =
       "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
       {{ "Your bloodlust subsides." },
        { "You feel your bloodlust ebbing." }}, 6},
-    { DUR_DEFLECTION, 0, "",
-      "deflection", "deflecting",
-      "You are deflecting attacks and have increased SH.", D_NO_FLAGS,
+    { DUR_PARRYING, 0, "",
+      "parry", "parrying",
+      "You are parrying attacks and have increased SH.", D_NO_FLAGS,
       {{ "", []() {
           you.redraw_armour_class = true;
       }}}},

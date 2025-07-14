@@ -638,7 +638,7 @@ void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
         _do_medusa_stinger();
 
     if (!was_firewood)
-        update_deflection_status();
+        update_parrying_status();
 }
 
 /**

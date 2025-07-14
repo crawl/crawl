@@ -5000,7 +5000,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "command",
         "death",
         "resonance",
-        "deflection",
+        "parrying",
         "conjuring",
         "glass",
         nullptr
