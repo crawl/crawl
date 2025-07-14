@@ -5181,9 +5181,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage. Hostiles will still take umbrage.
-    if ((dmg > 0 || !mon->wont_attack()) && !BLAME_KILL(thrower))
+    if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
-        behaviour_event(mon, ME_ANNOY, agent());
+        const actor* to_blame = agent();
+        if (thrower == KILL_YOU_CONF)
+            to_blame = actor_by_mid(source_id);
+        behaviour_event(mon, ME_ANNOY, to_blame);
 
         // behaviour_event can make a monster leave the level or vanish.
         if (!mon->alive())
