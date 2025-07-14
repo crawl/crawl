@@ -385,6 +385,59 @@ int InvMenu::pre_process(int key)
     return key;
 }
 
+bool InvMenu::process_key(int key)
+{
+    // Allow tab to move between item categories (since using item category
+    // hotkeys in the drop menu doesn't really work for this purpose as it will
+    // select many things at once instead).
+    if (key == CK_RIGHT || key == CK_LEFT)
+    {
+        // Find the first category below our current cursor position.
+        int start = last_hovered >= 0 ? last_hovered : 0;
+        int target = -1;
+        if (key == CK_RIGHT)
+        {
+            for (size_t i = start; i < items.size(); ++i)
+            {
+                if (items[i]->level == MEL_SUBTITLE)
+                {
+                    target = i+1;
+                    break;
+                }
+            }
+        }
+        // Find the first category above our current cursor position.
+        else if (key == CK_LEFT)
+        {
+            for (int i = start - 2; i >= 0; --i)
+            {
+                if (items[i]->level == MEL_SUBTITLE)
+                {
+                    target = i+1;
+                    break;
+                }
+            }
+        }
+
+        // Stop if we didn't find any.
+        if (target < 0)
+            return true;
+
+        // Otherwise, hover the first item of this category and try to display
+        // the entire category on screen (or as much as we can, anyway.)
+        auto snap_range = hotkey_range(items[target]->hotkeys.back());
+        snap_in_page(snap_range.second);
+        set_hovered(snap_range.first);
+#ifdef USE_TILE_WEB
+        webtiles_update_scroll_pos(true);
+#endif
+
+        return true;
+    }
+
+    return Menu::process_key(key);
+}
+
 static bool _item_is_permadrop_candidate(const item_def &item)
 {
     // Known, non-artefact items of the types you see on the '\' menu proper.
