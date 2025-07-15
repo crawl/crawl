@@ -2129,6 +2129,8 @@ static void _print_overview_screen_equip(column_composer& cols,
                                          int sw)
 {
     sw = min(max(sw, 79), 640);
+    if (Options.show_resist_percent)
+        sw -= 3;
 
     for (equipment_slot slot : slot_order)
     {
