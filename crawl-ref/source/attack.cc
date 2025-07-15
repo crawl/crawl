@@ -1388,6 +1388,11 @@ bool attack::apply_damage_brand(const char *what)
             did_god_conduct(DID_CHAOS, 2 + random2(3));
     }
 
+    // Since this adds the reaping brand to all attacks, check it after all
+    // other brands.
+    if (attacker->is_player() && you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+        did_god_conduct(DID_EVIL, 2 + random2(3));
+
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
 
