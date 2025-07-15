@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "artefact.h"
+#include "branch.h" // is_connected_branch
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
@@ -19,12 +20,14 @@
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-behv.h"
+#include "mon-death.h" //monster_die
 #include "mon-place.h"
 #include "mpr.h"
 #include "religion.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "travel.h" //level_distance
 
 #define MAX_LOST 100
 
@@ -119,8 +122,16 @@ static void _level_place_followers(m_transit_list &m)
 
             // Now that the monster is onlevel, we can safely apply traps to it.
             if (monster* new_mon = monster_by_mid(mon->mons.mid))
+            {
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
+                // Dismiss monsters that are bored of being lured around
+                if (!new_mon->friendly() && far_from_origin(new_mon->origin_level))
+                {
+                    new_mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
+                    monster_die(*new_mon, KILL_RESET, NON_MONSTER);
+                }
+            }
             m.erase(mon);
         }
     }
@@ -234,6 +245,13 @@ static void _level_place_lost_monsters(m_transit_list &m)
             // Now that the monster is on the level, we can safely apply traps
             // to it.
             new_mon->apply_location_effects(new_mon->pos());
+
+            // Dismiss monsters that are bored of being lured around
+            if (!new_mon->friendly() && far_from_origin(new_mon->origin_level))
+            {
+                new_mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
+                monster_die(*new_mon, KILL_RESET, NON_MONSTER);
+            }
             m.erase(mon);
         }
     }
@@ -531,4 +549,35 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from)
 void transport_followers_from(const coord_def &from)
 {
     handle_followers(from, _transport_follower_at);
+}
+
+// Is a monster too far away from its original level?
+bool far_from_origin(level_id origin, level_id current)
+{
+    mpr("checking origin distance");
+
+    // Monsters will chase forever if you have the orb
+    if (player_on_orb_run())
+    {
+        mprf("on orbrun");
+        return false;
+    }
+
+    // A portal is involved somehow
+    if (!is_connected_branch(current.branch) || !is_connected_branch(origin.branch))
+    {
+        mprf("disconnected");
+        return false;
+    }
+
+    // The floors are either 3+ apart or there's no obvious route between them
+    const int dist = level_distance(origin, current);
+    if (dist > 2 || dist == -1)
+    {
+        mprf("transit distance too far, is %d, origin %d", dist, origin.depth);
+        return true;
+    }
+
+    mprf("transit distance is %d, origin %d", dist, origin.depth);
+    return false;
 }

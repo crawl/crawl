@@ -5403,6 +5403,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     for (const mon_enchant &ench : mspec.ench)
         mons->add_ench(ench);
 
+    mons->origin_level = level_id::current();
+
     return mons;
 }
 

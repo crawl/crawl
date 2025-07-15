@@ -1482,6 +1482,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(mon_enchant(ENCH_REGENERATION, 0, &you, random_range(300, 500)));
     }
 
+    mon->origin_level = level_id::current();
+
     return mon;
 }
 

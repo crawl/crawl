@@ -101,6 +101,7 @@ monster::monster()
     clear_constricted();
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
+    origin_level = level_id::current();
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -209,6 +210,7 @@ void monster::init_with(const monster& mon)
     damage_friendly   = mon.damage_friendly;
     damage_total      = mon.damage_total;
     xp_tracking       = mon.xp_tracking;
+    origin_level      = mon.origin_level;
 
     if (mon.ghost)
         ghost.reset(new ghost_demon(*mon.ghost));
