@@ -40,7 +40,7 @@ std::vector<std::pair<std::string_view, command_type>> const CommandPalette::com
 };
 
 CommandPaletteEntry::CommandPaletteEntry(std::string_view txt, command_type cmd)
-    : MenuEntry(std::string(txt)), cmd(cmd) {}
+    : MenuEntry(std::string(txt)), cmd(cmd), command_description(text) {}
 
 CommandPalette::CommandPalette()
     : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
@@ -133,8 +133,14 @@ void CommandPalette::update_items(std::string const &pattern)
     std::for_each(source.begin(), source.end(),
         [this, &pattern, &tmp](MenuEntry* entry)
         {
-            if (entry->text.find(pattern) != std::string::npos)
+            auto * const as_command_entry = dynamic_cast<CommandPaletteEntry*>(entry);
+
+            auto pos = as_command_entry->command_description.find(pattern);
+
+            if (pos != std::string::npos)
             {
+                entry->text = format_matching_string(as_command_entry->command_description, pattern, pos);
+
                 tmp.push_back(entry);
                 add_entry(entry);
             }
@@ -144,6 +150,7 @@ void CommandPalette::update_items(std::string const &pattern)
     entries_stack.push(matching_entries);
 
     update_menu(true);
+    redraw_screen(true);
 }
 
 void CommandPalette::undo_update_items()
@@ -153,11 +160,25 @@ void CommandPalette::undo_update_items()
         items.clear();
         entries_stack.pop();
 
-        auto const& source = entries_stack.empty()
-            ? all_entries : matching_entries = entries_stack.top();
+        std::vector<MenuEntry*>* source = nullptr;
 
-        std::for_each(source.begin(), source.end(),
-            [this](MenuEntry *entry){add_entry(entry);});
+        if (entries_stack.empty())
+        {
+            source = &all_entries;
+            matching_entries.clear();
+        }
+        else
+        {
+            matching_entries = entries_stack.top();
+            source = &matching_entries;
+        }
+
+        std::for_each(source->begin(), source->end(),
+            [this](MenuEntry *entry)
+            {
+                entry->text =format_matching_string(dynamic_cast<CommandPaletteEntry *>(entry)->command_description, title2->text);
+                add_entry(entry);
+            });
 
         update_menu(true);
     }
@@ -187,6 +208,22 @@ void CommandPalette::add_char(char c)
         update_title();
         update_items(title2->text);
     }
+}
+
+std::string CommandPalette::format_matching_string(std::string const &str, std::string const &pattern,
+    size_t patternPos)
+{
+    return formatted_string::parse_string(
+                  str.substr(0, patternPos) + "<red>" + pattern + "</red>" +
+                  str.substr(patternPos + pattern.size()),
+                  MENU_ITEM_STOCK_COLOUR).to_colour_string();
+}
+
+std::string CommandPalette::format_matching_string(std::string const &str, std::string const &pattern)
+{
+    auto pos = str.find(pattern);
+
+    return pos == std::string::npos ? "" : format_matching_string(str, pattern, pos);
 }
 
 command_type display_command_palette()

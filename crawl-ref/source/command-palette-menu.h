@@ -14,6 +14,7 @@ class CommandPaletteEntry : public MenuEntry
 public:
     CommandPaletteEntry(std::string_view txt, command_type cmd = CMD_NO_CMD);
     command_type cmd;
+    std::string command_description;
 };
 
 class CommandPalette : public Menu
@@ -41,6 +42,9 @@ private:
     void add_char(char c);
 
     std::stack<std::vector<MenuEntry*>> entries_stack;
+
+    static std::string format_matching_string(std::string const& str, std::string const& pattern, size_t patternPos);
+    static std::string format_matching_string(std::string const& str, std::string const& pattern);
 
 public:
     static std::vector<std::pair<std::string_view, command_type>> const commands;
