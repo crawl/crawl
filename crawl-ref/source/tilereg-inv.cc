@@ -606,10 +606,8 @@ void InventoryRegion::update()
                 }
             }
 
-            // Mark our activate talisman as though it were equipped (at least
-            // as long as it's in our inventory).
             if (you.inv[i].base_type == OBJ_TALISMANS
-                && you.using_talisman(you.inv[i]))
+                && you.active_talisman() == &you.inv[i])
             {
                 desc.flag |= TILEI_FLAG_EQUIP;
                 if (you.form != you.default_form)

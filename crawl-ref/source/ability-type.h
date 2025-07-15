@@ -59,7 +59,9 @@ enum ability_type
     // Death Form
     ABIL_SIPHON_ESSENCE,
     // Talismans
+#if TAG_MAJOR_VERSION == 34
     ABIL_BEGIN_UNTRANSFORM,
+#endif
     ABIL_MUD_BREATH,
     // Coglins
     ABIL_INVENT_GIZMO,

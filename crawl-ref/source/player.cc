@@ -3638,29 +3638,13 @@ int player::scan_artefacts(artefact_prop_type which_property,
             matches->push_back(&item);
     }
 
-    if (active_talisman.defined() && is_artefact(active_talisman)
-        && artefact_property(active_talisman, which_property))
+    if (active_talisman() && is_artefact(*active_talisman())
+        && artefact_property(*active_talisman(), which_property))
     {
-        matches->push_back(&active_talisman);
+        matches->push_back(active_talisman());
     }
 
     return retval;
-}
-
-bool player::using_talisman(const item_def &talisman) const
-{
-    if (!active_talisman.defined())
-        return false;
-    if (talisman.sub_type != active_talisman.sub_type)
-        return false;
-    const bool using_artefact = is_artefact(active_talisman);
-    const bool other_artefact = is_artefact(talisman);
-    if (using_artefact != other_artefact)
-        return false;
-    if (!using_artefact)
-        return true;
-    // hack alert!
-    return get_artefact_name(talisman) == get_artefact_name(active_talisman);
 }
 
 /**
@@ -5324,7 +5308,7 @@ player::player()
     symbol          = MONS_PLAYER;
     form            = transformation::none;
     default_form    = transformation::none;
-    active_talisman.clear();
+    cur_talisman    = -1;
 
     for (auto &item : inv)
         item.clear();
@@ -6593,15 +6577,26 @@ void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
     // Save the current state of the player, so that we can rewind once
     // we're done.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
-    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<int8_t> unwind_talisman(you.cur_talisman);
     unwind_var<transformation> unwind_default_form(you.default_form);
     unwind_var<transformation> unwind_form(you.form);
+
+    // Players can only equip items that are currently in their inventory, so if
+    // we're trying to preview a talisman *not* in our inventory, we must copy it
+    // into the hidden 'preview' slot before calling any subsequent functions.
+    if (!in_inventory(talisman))
+    {
+        you.inv[ENDOFPACK] = talisman;
+        you.inv[ENDOFPACK].pos = ITEM_IN_INVENTORY;
+        you.inv[ENDOFPACK].link = ENDOFPACK;
+    }
+    item_def& _talisman = in_inventory(talisman) ? you.inv[talisman.link] : you.inv[ENDOFPACK];
 
     // Quickly simulate being in the new form
     transformation which_trans = form_for_talisman(talisman);
     you.default_form = which_trans;
     you.form = which_trans;
-    you.active_talisman = talisman;
+    you.cur_talisman = _talisman.link;
     you.equipment.unmeld_all_equipment(true);
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
 
@@ -6620,7 +6615,9 @@ void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         (*fail)[i] = raw_spell_fail(spells[i]);
 
-    // Player state should revert to its previous one automatically.
+    // Clear out our preview item. (Other equipment state will be unwound
+    // automatically.)
+    you.inv[ENDOFPACK].clear();
 }
 
 bool player::heal(int amount)
@@ -9243,4 +9240,12 @@ bool player::allies_forbidden()
 {
     return get_mutation_level(MUT_NO_LOVE)
            || have_passive(passive_t::no_allies);
+}
+
+item_def* player::active_talisman() const
+{
+    if (cur_talisman >= 0)
+        return &you.inv[cur_talisman];
+    else
+        return nullptr;
 }

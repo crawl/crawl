@@ -2094,6 +2094,35 @@ static string _stealth_bar(int label_length, int sw)
 }
 static string _status_mut_rune_list(int sw);
 
+static void _append_overview_screen_item(column_composer& cols,
+                                         vector<char>& equip_chars,
+                                         int sw,
+                                         const item_def& item,
+                                         bool melded)
+{
+    const string prefix = item_prefix(item);
+    const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
+    const int col = prefcol == -1 ? LIGHTGREY : prefcol;
+
+    // Colour melded equipment dark grey.
+    string colname = melded ? "darkgrey" : colour_to_str(col);
+
+    const int item_idx = item.link;
+    const char equip_char = index_to_letter(item_idx);
+
+    string str = make_stringf(
+                    "<w>%c</w> - <%s>%s%s</%s>",
+                    equip_char,
+                    colname.c_str(),
+                    melded ? "melded " : "",
+                    chop_string(item.name(DESC_PLAIN, true),
+                            melded ? sw - 32 : sw - 25, false).c_str(),
+                    colname.c_str());
+    equip_chars.push_back(equip_char);
+
+    cols.add_formatted(1, str.c_str(), false);
+}
+
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
@@ -2137,30 +2166,14 @@ static void _print_overview_screen_equip(column_composer& cols,
 
             const item_def& item = equipped[i].get_item();
             const bool melded    = equipped[i].melded;
-            const string prefix = item_prefix(item);
-            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
-            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
-
-            // Colour melded equipment dark grey.
-            string colname = melded ? "darkgrey" : colour_to_str(col);
-
-            const int item_idx   = equipped[i].item;
-            const char equip_char = index_to_letter(item_idx);
-            const int equip_width = (melded ? sw - 32 : sw - 25)
-                - (Options.show_resist_percent ? 3 : 0);
-
-            str = make_stringf(
-                     "<w>%c</w> - <%s>%s%s</%s>",
-                     equip_char,
-                     colname.c_str(),
-                     melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true), equip_width,
-                        false).c_str(),
-                     colname.c_str());
-            equip_chars.push_back(equip_char);
-
-            cols.add_formatted(1, str.c_str(), false);
+            _append_overview_screen_item(cols, equip_chars, sw, item, melded);
         }
+    }
+
+    if (item_def* item = you.active_talisman())
+    {
+        _append_overview_screen_item(cols, equip_chars, sw, *item,
+                                     you.form != you.default_form);
     }
 }
 

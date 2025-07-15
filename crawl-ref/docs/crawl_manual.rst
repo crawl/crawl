@@ -710,7 +710,7 @@ adventures, how they are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \|        staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
-%        talismans      (use 'V' to evoke)
+%        talismans      (use 'P'ut on and 'R'remove)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -949,10 +949,10 @@ Talismans allow their user to shift into a different form. Entering or leaving
 a form with a talisman requires a brief period of concentration, but otherwise,
 forms last until the user chooses to leave them.
 
-More powerful talismans require some amount of Shapeshifting skill, without
-which a user will find their maximum health reduced until they leave the form.
-Shapeshifting skill also increases other benefits provided by talismans' forms,
-though weaker talismans have a limit to how helpful skill can be.
+Most talismans require some amount of Shapeshifting skill, without which a user
+will find their maximum health reduced until they leave the form. Shapeshifting
+skill also increases other benefits provided by talismans' forms, though weaker
+talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -2086,7 +2086,7 @@ Artificers
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with two talismans, some flux baubles, and a 
+  They enter the dungeon with two talismans, some flux baubles, and a
   potion of lignification.
 
 Wanderers

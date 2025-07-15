@@ -563,6 +563,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any pieces of jewellery.";
     case OSEL_AMULET:
         return "You aren't carrying any amulets.";
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return "You aren't carrying any jewllery or talismans.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
@@ -573,8 +575,8 @@ string no_selectables_message(int item_selector)
         return "None of your equipped items are cursed.";
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
-    case OSEL_WORN_JEWELLERY:
-        return "You aren't wearing any rings or amulets.";
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return "You aren't wearing any rings, amulets, or talismans.";
     case OSEL_WORN_EQUIPABLE:
         return "You aren't wearing anything.";
     case OSEL_EQUIPABLE:
@@ -1289,8 +1291,8 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
-    case OSEL_WORN_JEWELLERY:
-        return item_is_equipped(i) && item_is_selected(i, OBJ_JEWELLERY);
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return item_is_equipped(i) && item_is_selected(i, OSEL_JEWELLERY_OR_TALISMAN);
 
     case OSEL_AMULET:
         return itype == OBJ_JEWELLERY && jewellery_is_amulet(i);
@@ -1302,10 +1304,14 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_EQUIPABLE:
         return item_is_selected(i, OBJ_ARMOUR)
             || item_is_selected(i, OSEL_WIELD)
-            || item_is_selected(i, OBJ_JEWELLERY);
+            || item_is_selected(i, OBJ_JEWELLERY)
+            || item_is_selected(i, OBJ_TALISMANS);
 
     case OSEL_MARKED_ITEMS:
         return i.flags & ISFLAG_MARKED_FOR_MENU;
+
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return i.base_type == OBJ_JEWELLERY || i.base_type == OBJ_TALISMANS;
 
     default:
         return false;

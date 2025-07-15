@@ -945,7 +945,7 @@ void wizard_transform()
     if (you.default_form == you.form && you.form != transformation::none)
     {
         you.default_form = form; // ehhh
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
     }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");

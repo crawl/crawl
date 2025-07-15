@@ -1945,7 +1945,7 @@ static void _tag_construct_you_items(writer &th)
     marshallByte(th, ENDOFPACK);
     for (int i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
-    marshallItem(th, you.active_talisman);
+    marshallByte(th, you.cur_talisman);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -4756,10 +4756,41 @@ static void _tag_read_you_items(reader &th)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAVE_TALISMANS)
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
+    else if (th.getMinorVersion() < TAG_MINOR_EQUIP_TALISMAN)
+    {
+        item_def talisman;
+        unmarshallItem(th, talisman);
+
+        if (talisman.defined())
+        {
+            if (inv_count(INVENT_GEAR) < MAX_GEAR)
+            {
+                int slot = find_free_slot(talisman);
+                you.inv[slot] = talisman;
+                you.inv[slot].link = slot;
+                you.inv[slot].pos = ITEM_IN_INVENTORY;
+                you.cur_talisman = slot;
+            }
+            // In the *incredibly* unlikely case that the player is transformed via
+            // a talisman they're not carrying *and* they have 52 pieces of gear in
+            // their inventory, just drop the talisman at their feet.
+            else
+            {
+                // We can't drop items on the ground at this point in loading, so
+                // cache the talisman to drop it later on.
+                you.props["consolation_talisman"].get_item() = talisman;
+                you.cur_talisman = -1;
+                you.default_form = transformation::none;
+                return_to_default_form();
+            }
+        }
+        else
+            you.cur_talisman = -1;
+    }
     else
 #endif
-         unmarshallItem(th, you.active_talisman);
+        you.cur_talisman = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)

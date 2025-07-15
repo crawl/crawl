@@ -526,8 +526,8 @@ static void _check_abil_skills()
 static void _check_active_talisman_skills()
 {
     skill_set skills;
-    if (you.active_talisman.defined()
-        && item_skills(you.active_talisman, skills))
+    if (you.active_talisman()
+        && item_skills(*you.active_talisman(), skills))
     {
         _erase_from_skills_to_hide(skills);
     }

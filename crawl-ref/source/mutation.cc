@@ -1042,7 +1042,7 @@ private:
             // Special-case the transformation fakemut to put an item popup
             // behind it, so the player can examine form details and artprops
             if (fakemut.first == "--transformation--"
-                && ((you.form == you.default_form && you.active_talisman.defined())
+                && ((you.form == you.default_form && you.active_talisman())
                     || you.form == transformation::flux))
             {
                 me = new MenuEntry(fakemut.second, MEL_ITEM, MUT_ENTRY_TALISMAN, hotkey);
@@ -1182,8 +1182,8 @@ private:
         }
         else if (items[i]->quantity == MUT_ENTRY_TALISMAN)
         {
-            if (you.form == you.default_form && you.active_talisman.defined())
-                describe_item_popup(you.active_talisman);
+            if (you.form == you.default_form && you.active_talisman())
+                describe_item_popup(*you.active_talisman());
             else if (you.form == transformation::flux)
             {
                 item_def bauble;

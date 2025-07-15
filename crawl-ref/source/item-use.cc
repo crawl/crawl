@@ -209,7 +209,7 @@ int default_osel(operation_types oper)
     case OPER_WEAR:
         return OBJ_ARMOUR;
     case OPER_PUTON:
-        return OBJ_JEWELLERY;
+        return OSEL_JEWELLERY_OR_TALISMAN;
     case OPER_QUAFF:
         return OBJ_POTIONS;
     case OPER_READ:
@@ -221,7 +221,7 @@ int default_osel(operation_types oper)
     case OPER_TAKEOFF:
         return OSEL_WORN_ARMOUR;
     case OPER_REMOVE:
-        return OSEL_WORN_JEWELLERY;
+        return OSEL_WORN_JEWELLERY_OR_TALISMAN;
     case OPER_UNEQUIP:
         return OSEL_WORN_EQUIPABLE;
     default:
@@ -399,7 +399,7 @@ bool UseItemMenu::populate_list(bool check_only)
             continue;
         }
         // No evoking wands, etc from the floor!
-        if (oper == OPER_EVOKE && it->base_type != OBJ_TALISMANS)
+        if (oper == OPER_EVOKE)
             continue;
 
         // even with display_all, only show matching floor items.
@@ -421,21 +421,6 @@ bool UseItemMenu::empty_check() const
         return false;
     if (any_items_of_type(item_type_filter, -1, oper != OPER_EVOKE))
         return false;
-    // Only talismans can be evoked from the floor.
-    if (oper == OPER_EVOKE)
-    {
-        auto floor_items = item_list_on_square(you.visible_igrd(you.pos()));
-        if (any_of(begin(floor_items), end(floor_items),
-              [=] (const item_def* item) -> bool
-              {
-                  return item->defined()
-                         && item->base_type == OBJ_TALISMANS
-                         && item_is_selected(*item, item_type_filter);
-              }))
-        {
-            return false;
-        }
-    }
 
     mprf(MSGCH_PROMPT, "%s",
         no_selectables_message(item_type_filter).c_str());
@@ -847,13 +832,13 @@ static operation_types _item_type_to_oper(object_class_type type)
     switch (type)
     {
         case OBJ_WANDS:
-        case OBJ_TALISMANS:
         case OBJ_MISCELLANY: return OPER_EVOKE;
         case OBJ_POTIONS:    return OPER_QUAFF;
         case OBJ_SCROLLS:    return OPER_READ;
         case OBJ_ARMOUR:     return OPER_WEAR;
         case OBJ_WEAPONS:
         case OBJ_STAVES:     return OPER_WIELD;
+        case OBJ_TALISMANS:
         case OBJ_JEWELLERY:  return OPER_PUTON;
         default:             return OPER_NONE;
     }
@@ -866,6 +851,7 @@ static operation_types _item_type_to_remove_oper(object_class_type type)
     case OBJ_ARMOUR:    return OPER_TAKEOFF;
     case OBJ_WEAPONS:
     case OBJ_STAVES:    return OPER_WIELD;
+    case OBJ_TALISMANS:
     case OBJ_JEWELLERY: return OPER_REMOVE;
     default:            return OPER_NONE;
     }
@@ -1007,18 +993,6 @@ static bool _can_generically_use(operation_types oper)
     return true;
 }
 
-static bool _evoke_item(item_def &i)
-{
-    ASSERT(i.defined());
-    if (i.base_type != OBJ_TALISMANS && !in_inventory(i))
-    {
-        mprf(MSGCH_PROMPT, "You aren't carrying that!");
-        return false;
-    }
-
-    return evoke_item(i);
-}
-
 bool use_an_item(operation_types oper, item_def *target)
 {
     if (!_can_generically_use(oper))
@@ -1057,7 +1031,7 @@ bool use_an_item(operation_types oper, item_def *target)
     case OPER_READ:
         return read(target);
     case OPER_EVOKE:
-        return _evoke_item(*target);
+        return evoke_item(*target);
     case OPER_WIELD:
         if (!target)
             return _try_unwield_weapons();
@@ -1336,6 +1310,9 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
 
 bool try_equip_item(item_def& item)
 {
+    if (item.base_type == OBJ_TALISMANS)
+        return use_talisman(item);
+
     string reason;
     if (!can_equip_item(item, true, &reason))
     {
@@ -1678,6 +1655,9 @@ bool can_unequip_item(item_def& item, bool silent)
 
 bool try_unequip_item(item_def& item)
 {
+    if (item.base_type == OBJ_TALISMANS && you.active_talisman() == &item)
+        return use_talisman(item);
+
     if (!can_unequip_item(item))
         return false;
 
@@ -3184,6 +3164,89 @@ bool read(item_def* scroll, dist *target)
     return true;
 }
 
+string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
+{
+    ASSERT(talisman.base_type == OBJ_TALISMANS);
+
+    if (talisman.sub_type == TALISMAN_PROTEAN)
+    {
+        if (temp && you.skill(SK_SHAPESHIFTING) < 6)
+        {
+            return "you lack the shapeshifting skill to coax this "
+                    "talisman into a stable form.";
+        }
+        else if (species_apt(SK_SHAPESHIFTING) == UNUSABLE_SKILL)
+            return "you can never gain the skill to use this talisman.";
+        else
+            return "";
+    }
+
+    const transformation trans = form_for_talisman(talisman);
+    const string form_unreason = cant_transform_reason(trans, false, temp);
+    if (!form_unreason.empty())
+        return lowercase_first(form_unreason);
+
+    if (you.form != you.default_form && temp)
+        return "you need to leave your temporary form first.";
+
+    if (trans == transformation::hive && you_worship(GOD_OKAWARU))
+        return "you have forsworn all allies in Okawaru's name.";
+
+    return "";
+}
+
+bool use_talisman(item_def& talisman)
+{
+    string reason = cannot_put_on_talisman_reason(talisman);
+    if (!reason.empty())
+    {
+        mpr(reason);
+        return false;
+    }
+
+    if (talisman.pos != ITEM_IN_INVENTORY && !room_in_inventory(talisman))
+    {
+        mpr("You can't carry that many items.");
+        return false;
+    }
+
+    item_def& real_item = you.inv[_get_item_slot_maybe_with_move(talisman)];
+
+    if (real_item.sub_type == TALISMAN_PROTEAN)
+    {
+        const talisman_type new_type = random_choose(TALISMAN_RIMEHORN,
+                                                     TALISMAN_SCARAB,
+                                                     TALISMAN_MEDUSA,
+                                                     TALISMAN_MAW);
+
+        mprf("%s responds to your shapeshifting skill and transforms into a %s!",
+             real_item.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());
+
+        real_item.sub_type = new_type;
+        return use_talisman(real_item);
+    }
+
+    const transformation trans = you.active_talisman() == &real_item
+                                    ? transformation::none
+                                    : form_for_talisman(real_item);
+    if (!check_transform_into(trans, false, &real_item))
+        return false;
+    if (transforming_is_unsafe(trans))
+        return false;
+    if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    count_action(CACT_FORM, (int)trans);
+    start_delay<TransformDelay>(trans, &real_item);
+    if (god_despises_item(real_item, you.religion))
+        excommunication();
+    you.turn_is_over = true;
+    return true;
+}
+
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 
@@ -3255,6 +3318,10 @@ void tile_item_use(int idx)
     case OBJ_MISSILES:
         if (check_warning_inscriptions(item, OPER_FIRE))
             quiver::slot_to_action(idx)->trigger(); // TODO: anything more interesting?
+        return;
+
+    case OBJ_TALISMANS:
+        try_equip_item(item);
         return;
 
     case OBJ_WEAPONS:

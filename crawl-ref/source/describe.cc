@@ -2506,10 +2506,8 @@ static string _describe_lignify_ac()
     // Turn into a tree, check our resulting AC, and then turn back without
     // anyone being the wiser.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
-    unwind_var<item_def> unwind_talisman(you.active_talisman);
-    unwind_var<transformation> unwind_form(you.form);
-    you.active_talisman.clear();
-    you.form = transformation::tree;
+    unwind_var<int8_t> unwind_talisman(you.cur_talisman, -1);
+    unwind_var<transformation> unwind_form(you.form, transformation::tree);
 
     you.equipment.unmeld_all_equipment(true);
     you.equipment.meld_equipment(tree_form->blocked_slots, true);

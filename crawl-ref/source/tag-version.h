@@ -331,6 +331,7 @@ enum tag_minor_version
     TAG_MINOR_GHOST_TITLE,         // Store ghost titles instead of generating them
     TAG_MINOR_ZOT_ORB_MEMORY,      // Fix whether the player has learned the Zot orb type not being saved
     TAG_MINOR_CONSUMABLE_INV,      // Split gear and consumable inventory, adding much inventory space.
+    TAG_MINOR_EQUIP_TALISMAN,      // Make talismans equipment you put on.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

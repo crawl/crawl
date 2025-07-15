@@ -3593,8 +3593,13 @@ equipment_slot item_equip_slot(const item_def& item)
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    return item_equip_slot(item) != SLOT_UNUSED
-           || quiver_too && you.quiver_action.item_is_quivered(item);
+    if (item.base_type == OBJ_TALISMANS)
+        return you.active_talisman() == &item;
+    else
+    {
+        return item_equip_slot(item) != SLOT_UNUSED
+                || quiver_too && you.quiver_action.item_is_quivered(item);
+    }
 }
 
 bool item_is_melded(const item_def& item)

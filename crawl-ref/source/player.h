@@ -185,7 +185,8 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
-    item_def active_talisman;
+    // Index into inv[] of the player's current talisman. (-1 if none.)
+    int8_t cur_talisman;
 
     // XXX: ENDOFPACK marks the total size of the player inventory, but we add
     //      a single extra slot after that for purposes of examining EV of
@@ -692,6 +693,7 @@ public:
     item_def *body_armour() const override;
     item_def *shield() const override;
     item_def *offhand_weapon() const override;
+    item_def *active_talisman() const;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -894,8 +896,6 @@ public:
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
-
-    bool using_talisman(const item_def &talisman) const;
 
     bool do_shaft() override;
     bool shaftable() const;

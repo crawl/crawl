@@ -587,10 +587,10 @@ void player_equip_set::update()
         }
     }
 
-    if (you.active_talisman.defined() && is_artefact(you.active_talisman)
+    if (you.active_talisman() && is_artefact(*you.active_talisman())
         && you.form == you.default_form)
     {
-        artefact_properties(you.active_talisman, artprops);
+        artefact_properties(*you.active_talisman(), artprops);
 
         for (int j = 0; j < (int)artprops.size(); ++j)
             artprop_cache[j] += artprops[j];

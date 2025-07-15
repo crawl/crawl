@@ -2059,6 +2059,11 @@ static void _fixup_transmuters()
         move_item_to_grid(&obj, you.pos(), true);
         del_spell_from_memory(p.first);
     }
+    if (you.props.exists("consolation_talisman"))
+    {
+        copy_item_to_grid(you.props["consolation_talisman"].get_item(), you.pos());
+        you.props.erase("consolation_talisman");
+    }
 }
 #endif
 

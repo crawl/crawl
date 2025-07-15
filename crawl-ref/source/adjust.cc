@@ -327,4 +327,7 @@ void swap_inv_slots(item_def& to_adjust, int to_slot, bool verbose)
     }
     if (you.last_unequip == from_slot)
         you.last_unequip = to_slot;
+
+    if (you.cur_talisman == from_slot)
+        you.cur_talisman = to_slot;
 }
