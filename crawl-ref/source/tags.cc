@@ -6516,6 +6516,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.damage_total);
     marshallByte(th, m.revealed_this_turn);
     marshallCoord(th, m.revealed_at_pos);
+    marshall_level_id(th, m.origin_level);
 
     if (parts & MP_GHOST_DEMON)
     {
@@ -7644,6 +7645,14 @@ void unmarshallMonster(reader &th, monster& m)
 #endif
         m.revealed_this_turn = unmarshallByte(th);
         m.revealed_at_pos = unmarshallCoord(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    if (th.getMinorVersion() < TAG_MINOR_TRACK_ORIGIN_LEVEL)
+        m.origin_level = level_id::current();
+    else
+    {
+#endif
+        unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

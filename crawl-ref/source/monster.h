@@ -125,6 +125,7 @@ public:
 
     bool revealed_this_turn;
     coord_def revealed_at_pos;
+    level_id origin_level;
 
 public:
     void set_new_monster_id();
