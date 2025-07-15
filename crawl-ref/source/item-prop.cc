@@ -81,19 +81,6 @@ static const vector<ego_weight_tuple> BASIC_BODY_EGOS = {
     { SPARM_POSITIVE_ENERGY,   2 },
 };
 
-// Total Weight 100
-static const vector<ego_weight_tuple> SCALE_BODY_EGOS = {
-    { SPARM_FIRE_RESISTANCE,   20 },
-    { SPARM_COLD_RESISTANCE,   20 },
-    { SPARM_POISON_RESISTANCE, 10 },
-    { SPARM_WILLPOWER,         15 },
-    { SPARM_POSITIVE_ENERGY,    7 },
-    { SPARM_ARCHERY,            7 },
-    { SPARM_COMMAND,            7 },
-    { SPARM_DEATH,              7 },
-    { SPARM_RESONANCE,          7 },
-};
-
 // Total weight 100.
 static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
     { SPARM_FIRE_RESISTANCE,    21 },
@@ -156,7 +143,17 @@ static const armour_def Armour_prop[] =
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
         SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, SCALE_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, {
+            { SPARM_FIRE_RESISTANCE,   20 },
+            { SPARM_COLD_RESISTANCE,   20 },
+            { SPARM_POISON_RESISTANCE, 10 },
+            { SPARM_WILLPOWER,         15 },
+            { SPARM_POSITIVE_ENERGY,    7 },
+            { SPARM_ARCHERY,            7 },
+            { SPARM_COMMAND,            7 },
+            { SPARM_DEATH,              7 },
+            { SPARM_RESONANCE,          7 },
+    }},
     { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   60,
         SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   180,
@@ -262,11 +259,38 @@ static const armour_def Armour_prop[] =
             { SPARM_ENERGY,     1 },
     }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
-        SLOT_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, {
+            { SPARM_RESISTANCE,        2 },
+            { SPARM_FIRE_RESISTANCE,   5 },
+            { SPARM_COLD_RESISTANCE,   5 },
+            { SPARM_POISON_RESISTANCE, 5 },
+            { SPARM_POSITIVE_ENERGY,   5 },
+            { SPARM_NORMAL,            5 },
+            { SPARM_REFLECTION,        9 },
+            { SPARM_PROTECTION,       14 },
+    }},
     { ARM_KITE_SHIELD,         "kite shield",             8, -100,  70,
-        SLOT_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0,{
+            { SPARM_FIRE_RESISTANCE,   4 },
+            { SPARM_COLD_RESISTANCE,   4 },
+            { SPARM_POISON_RESISTANCE, 4 },
+            { SPARM_POSITIVE_ENERGY,   4 },
+            { SPARM_NORMAL,            4 },
+            { SPARM_PRESERVATION,      4 },
+            { SPARM_REFLECTION,       13 },
+            { SPARM_PROTECTION,       13 },
+    }},
     { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  80,
-        SLOT_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
+        SLOT_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, {
+            { SPARM_FIRE_RESISTANCE,   3 },
+            { SPARM_COLD_RESISTANCE,   3 },
+            { SPARM_POISON_RESISTANCE, 3 },
+            { SPARM_POSITIVE_ENERGY,   3 },
+            { SPARM_PONDEROUSNESS,     3 },
+            { SPARM_PRESERVATION,      5 },
+            { SPARM_REFLECTION,        5 },
+            { SPARM_PROTECTION,       15 },
+    }},
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
