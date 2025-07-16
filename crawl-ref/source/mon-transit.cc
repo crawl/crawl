@@ -125,11 +125,12 @@ static void _level_place_followers(m_transit_list &m)
             {
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
-                // Dismiss monsters that are bored of being lured around
+                // Monsters that are bored of being lured around go home
                 if (!new_mon->friendly() && far_from_origin(new_mon->origin_level))
                 {
-                    new_mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
-                    monster_die(*new_mon, KILL_RESET, NON_MONSTER);
+                    new_mon->set_transit(new_mon->origin_level);
+                    new_mon->destroy_inventory();
+                    monster_cleanup(new_mon);
                 }
             }
             m.erase(mon);
