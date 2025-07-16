@@ -52,8 +52,7 @@ enemies, but only while moving and waiting. While taking other actions
 %%%%
 amulet of wildshape
 
-An amulet which improves its wearer's skill with shapeshifting. The benefit
-provided depends somewhat on the wearer's base shapeshifting skill.
+An amulet which improves its wearer's skill with Shapeshifting.
 %%%%
 animal skin
 

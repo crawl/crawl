@@ -2560,10 +2560,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_WILDSHAPE:
-        if (!you.skill(SK_SHAPESHIFTING))
-            mpr("You feel meek and tame.");
-        else
-            mpr("You feel a wild power.");
+        mpr("You feel a wild power.");
         _change_wildshape_status();
         break;
 
@@ -2649,7 +2646,7 @@ static void _unequip_jewellery_effect(item_def &item, bool meld)
         break;
 
     case AMU_WILDSHAPE:
-            _change_wildshape_status();
+        _change_wildshape_status();
         break;
 
 #if TAG_MAJOR_VERSION == 34
