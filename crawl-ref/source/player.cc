@@ -6410,7 +6410,7 @@ int player::armour_class_scaled(int scale) const
             AC += _meek_bonus() * 100;
     }
 
-    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV))
+    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD))
     {
         const static int rev_bonus[] = {0, 200, 400, 500};
         AC += rev_bonus[you.rev_tier()];
@@ -8577,7 +8577,7 @@ void player::rev_down(int dur)
     const int perc_lost = div_rand_round(dur * 5, 6);
     you.props[REV_PERCENT_KEY] = max(0, you.rev_percent() - perc_lost);
 
-    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV))
+    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD))
         you.redraw_armour_class = true;
 }
 
@@ -8590,7 +8590,7 @@ void player::rev_up(int dur)
     const int perc_gained = random_range(dur * 2, dur * 3);
     you.props[REV_PERCENT_KEY] = min(100, you.rev_percent() + perc_gained);
 
-    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV))
+    if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD))
         you.redraw_armour_class = true;
 }
 

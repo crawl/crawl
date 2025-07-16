@@ -2701,7 +2701,7 @@ static string _describe_gizmo(const item_def &item)
                        "a 30% chance to not spend a charge.\n";
                 break;
 
-            case SPGIZMO_PARRYREV:
+            case SPGIZMO_REVGUARD:
                 ret += "Your AC increases as you Rev (up to +5) and while "
                        "fully Revved, your attacks may disarm enemies.\n";
                 break;
