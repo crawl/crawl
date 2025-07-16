@@ -1398,3 +1398,8 @@ rune_elven UNCOLLECTED_RUNE_ELVEN
 19 GOLD19
 23 GOLD23
 25 GOLD25
+
+#Local tile GUI
+%sdir gui/commands
+page_next ITEM_PAGE_NEXT
+page_previous ITEM_PAGE_PREVIOUS
