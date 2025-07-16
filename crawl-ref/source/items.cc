@@ -2917,7 +2917,10 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
     const item_def *last_touched_item;
     for (SelItem &si : items)
     {
-        if (si.has_star && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
+        if ((si.has_star ||
+            (inventory_category_for(*si.item) == INVENT_CONSUMABLE
+             && si.item->is_identified()))
+            && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
         {
             last_touched_item = si.item;
             ++autopickup_remove_count;
