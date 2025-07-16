@@ -857,7 +857,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #endif
         case AMU_ACROBAT:                return "Acrobat";
         case AMU_WILDSHAPE:              return "Wildshape";
-        case AMU_ALCHEMY:                return "Alch";
+        case AMU_ALCHEMY:                return "Alch+";
         case AMU_DISSIPATION:            return "Dissipate";
         case AMU_NOTHING:                return "";
         default: return "buggy";

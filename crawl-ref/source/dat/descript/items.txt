@@ -8,7 +8,10 @@ corrosive slime flow off it like water.
 %%%%
 Amulet of alchemy
 
-An amulet that enhances and reduces the mp cost of alchemy spells.
+An amulet that enhances the power of the wearer's alchemy spells and also allows
+them to extract small amounts of magical energy from any potion they drink. The
+latter effect only functions once the amulet has attuned itself to the wearer's
+body with full reserves of magic.
 %%%%
 amulet of dissipation
 

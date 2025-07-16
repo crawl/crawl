@@ -3126,7 +3126,8 @@ bool is_regen_item(const item_def& item)
 bool is_mana_regen_item(const item_def& item)
 {
     return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
-            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
+            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_ALCHEMY);
 }
 
 string talisman_type_name(int type)
