@@ -2937,9 +2937,7 @@ string get_item_description(const item_def &item,
 
     case OBJ_JEWELLERY:
         desc = _describe_jewellery(item, verbose);
-        if (desc.empty())
-            need_extra_line = false;
-        else
+        if (!desc.empty())
             description << desc;
         break;
 
