@@ -1050,6 +1050,7 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 
     bool gained_regen = false;
     bool gained_mana_regen = false;
+    bool gained_alchemy = false;
 
     for (player_equip_entry& entry : you.equipment.items)
     {
@@ -1065,7 +1066,9 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
             // Track which properties we should notify the player they have gained.
             if (!gained_regen && is_regen_item(arm))
                 gained_regen = true;
-            if (!gained_mana_regen && is_mana_regen_item(arm))
+            if (arm.is_type(OBJ_JEWELLERY, AMU_ALCHEMY))
+                gained_alchemy = true;
+            else if (!gained_mana_regen && is_mana_regen_item(arm))
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
@@ -1081,14 +1084,23 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
     if (eq_list.empty())
         return;
 
-    const char* msg = (gained_regen && gained_mana_regen) ? " health and magic"
-                       : (gained_regen ? "" : " magic");
+    vector<string> msgs;
+
+    if (gained_regen || gained_mana_regen)
+    {
+        msgs.emplace_back(make_stringf("regenerate %s more quickly",
+                gained_regen && gained_mana_regen ? " health and magic"
+                : (gained_regen ? "" : " magic")));
+    }
+    if (gained_alchemy)
+        msgs.emplace_back("extract magic from the potions you drink");
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body, and you begin to regenerate%s "
-         "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself",
-         msg);
+    string msg_str = comma_separated_line(msgs.begin(), msgs.end());
+    mprf("Your %s attune%s to your body, and you begin to %s.",
+         eq_str.c_str(), plural ? " themselves" : "s itself",
+         msg_str.c_str());
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter

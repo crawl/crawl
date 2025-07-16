@@ -934,7 +934,19 @@ bool quaff_potion(item_def &potion)
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
-    return get_potion_effect(ptyp)->quaff(was_known);
+    if (get_potion_effect(ptyp)->quaff(was_known))
+    {
+        if (you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true)
+            && you.magic_points < you.max_magic_points)
+        {
+            mpr("You extract magical energy from the potion.");
+            inc_mp(random_range(3, 6));
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 /**
