@@ -1033,6 +1033,8 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, RING_TELEPORTATION },
     { OBJ_JEWELLERY, RING_ATTENTION },
     { OBJ_JEWELLERY, RING_STEALTH },
+    { OBJ_JEWELLERY, RING_FIRE },
+    { OBJ_JEWELLERY, RING_ICE },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELLING },
     { OBJ_STAVES,    STAFF_POWER },
