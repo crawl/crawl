@@ -330,6 +330,7 @@ enum tag_minor_version
     TAG_MINOR_ZOT_ORB_ROTATION,    // Add multiple rotating orb monster types to Zot
     TAG_MINOR_GHOST_TITLE,         // Store ghost titles instead of generating them
     TAG_MINOR_ZOT_ORB_MEMORY,      // Fix whether the player has learned the Zot orb type not being saved
+    TAG_MINOR_TRACK_ORIGIN_LEVEL,  // Track the original level on which a monster was generated
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

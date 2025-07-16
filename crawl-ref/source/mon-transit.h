@@ -67,3 +67,4 @@ void transport_followers_from(const coord_def &from);
 
 void apply_daction_to_transit(daction_type act);
 int count_daction_in_transit(daction_type act);
+bool far_from_origin(level_id origin, level_id current = level_id::current());
