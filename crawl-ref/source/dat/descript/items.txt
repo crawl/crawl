@@ -13,6 +13,11 @@ them to extract small amounts of magical energy from any potion they drink. The
 latter effect only functions once the amulet has attuned itself to the wearer's
 body with full reserves of magic.
 %%%%
+amulet of dissipation
+
+An amulet which causes negative status effects upon the wearer to expire twice
+as quickly with time.
+%%%%
 amulet of faith
 
 A charm crafted to call the attention of the gods to its wearer. This divine

@@ -264,6 +264,7 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_REFLECTION:          return "Reflect";
     case AMU_WILDSHAPE:           return "Wildshape";
     case AMU_ALCHEMY:             return "Alch+";
+    case AMU_DISSIPATION:         return "Dissipate";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:          return "Inacc";
 #endif
