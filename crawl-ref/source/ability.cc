@@ -1905,11 +1905,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
     // so don't fail in that case if there's no MP cost.
-    if (abil.get_mp_cost() > 0 && !enough_mp(abil.get_mp_cost(), quiet, true))
+    if (abil.get_mp_cost() > 0 && !enough_mp(abil.get_mp_cost(), quiet, !quiet))
         return false;
 
     const int hpcost = abil.get_hp_cost();
-    if (hpcost > 0 && !enough_hp(hpcost, quiet))
+    if (hpcost > 0 && !enough_hp(hpcost, quiet, !quiet))
         return false;
 
     switch (abil.ability)
