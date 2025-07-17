@@ -6207,7 +6207,7 @@ KMONS:  3 = salamander / large abomination w:5
 KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
             randbook disc:fire disc2:necromancy spells:scorch \
             slevels:8 numspells:4 title:Dead_Stars, \
-            staff of fire / staff of death / scroll of immolation q:3 / \
+            staff of fire / staff of necromancy / scroll of immolation q:3 / \
             scroll of torment q:3 / any weapon ego:flaming / \
             any weapon ego:draining
 : else

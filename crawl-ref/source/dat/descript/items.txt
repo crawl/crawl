@@ -1570,7 +1570,7 @@ A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
 strike with pure energy.
 %%%%
-staff of death
+staff of necromancy
 
 A staff that increases the power of necromantic spells cast by its wielder, and
 protects them from negative energy. If the wielder is skilled in Evocations and

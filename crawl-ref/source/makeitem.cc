@@ -805,7 +805,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_PONDEROUSNESS:
         return true;
-    case SPARM_PRESERVATION:
+    case SPARM_CORROSION_RESISTANCE:
     case SPARM_AIR:
 #if TAG_MAJOR_VERSION > 34
         return slot == SLOT_CLOAK || slot == SLOT_OFFHAND;

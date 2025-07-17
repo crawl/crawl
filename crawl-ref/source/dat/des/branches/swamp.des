@@ -2715,7 +2715,7 @@ NAME:   nicolae_swamp_necromancy_gone_wrong
 TAGS:   no_trap_gen patrolling
 MONS:   20-headed hydra zombie
 ITEM:   scimitar good_item ego:none / glaive good_item ego:none \
-        / broad axe good_item ego:none / staff of death / nothing w:40
+        / broad axe good_item ego:none / staff of necromancy / nothing w:40
 : item(dgn.good_aux_armour .. " / nothing w:60")
 ITEM:   scroll of brand weapon / scroll of fear / scroll of teleportation \
         / scroll of blinking / nothing w:40
@@ -3059,7 +3059,7 @@ ENDMAP
 NAME:   tekkud_bubbles_buried_in_this_jungle
 TAGS:   no_monster_gen
 DEPTH:  Swamp
-KMONS:  1 = fenstrider witch ; staff of alchemy | staff of death . \
+KMONS:  1 = fenstrider witch ; staff of alchemy | staff of necromancy . \
                                orb ego:wrath | orb ego:mayhem w:5 . robe
 KMONS:  2 = bog body
 KMONS:  3 = bloated husk

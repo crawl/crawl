@@ -424,8 +424,8 @@ function ice_cave_common_loot(e, glyphs)
 end
 
 --[[
-Define one kitem glyph containing necromancy themed items, including
-spellbooks, a manual, staff of death, and an artefact ring of positive energy.
+Define one kitem glyph containing necromancy themed items, including books,
+a manual, staff of necromancy, and an artefact ring of positive energy.
 
 @tab e The map environment.
 @string[opt="j"] glyphs Glyphs to use for the single KITEM statement.
@@ -437,7 +437,7 @@ function ice_cave_necro_loot(e, glyphs)
 
     e.kitem(glyphs .. " = book of unlife / randbook disc:ice" ..
             "    disc2:necromancy numspells:6" ..
-            "/ manual of necromancy w:5 / staff of death" ..
+            "/ manual of necromancy w:5 / staff of necromancy" ..
             "/ ring of positive energy randart")
 end
 

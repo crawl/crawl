@@ -2612,7 +2612,7 @@ ORIENT:  float
         "any weapon good_item ego:pain | any weapon good_item ego:chaos | " ..
         "any weapon good_item ego:vampirism | demon blade good_item | " ..
         "demon trident good_item | demon whip good_item | " ..
-        "staff of death w:3 | scroll of torment q:2 w:5 | " ..
+        "staff of necromancy w:3 | scroll of torment q:2 w:5 | " ..
         "scroll of torment q:3 w:5 | randbook disc:necromancy")
 }}
 # 2/3 chance of nothing, 4/15 chance of gold, 1/15 chance of a lot of gold

@@ -1397,7 +1397,7 @@ int player_res_corrosion(bool allow_random, bool temp, bool items)
         if (you.scan_artefacts(ARTP_RCORR)
             || you.wearing(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
             || you.wearing_jewellery(RING_RESIST_CORROSION)
-            || you.wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION))
+            || you.wearing_ego(OBJ_ARMOUR, SPARM_CORROSION_RESISTANCE))
         {
             return 1;
         }
@@ -1537,7 +1537,7 @@ int player_spec_death()
 {
     int sd = 0;
 
-    sd += you.wearing(OBJ_STAVES, STAFF_DEATH);
+    sd += you.wearing(OBJ_STAVES, STAFF_NECROMANCY);
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
@@ -1705,7 +1705,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
             pl++;
         }
 
-        pl += you.wearing(OBJ_STAVES, STAFF_DEATH);
+        pl += you.wearing(OBJ_STAVES, STAFF_NECROMANCY);
     }
 
     // undead/demonic power

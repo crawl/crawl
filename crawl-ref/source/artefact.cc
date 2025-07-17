@@ -336,11 +336,11 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
 }
 
 static map<stave_type, artefact_prop_type> staff_resist_artps = {
-    { STAFF_FIRE,    ARTP_FIRE },
-    { STAFF_COLD,    ARTP_COLD },
-    { STAFF_ALCHEMY, ARTP_POISON },
-    { STAFF_DEATH,   ARTP_NEGATIVE_ENERGY },
-    { STAFF_AIR,     ARTP_ELECTRICITY },
+    { STAFF_FIRE,         ARTP_FIRE },
+    { STAFF_COLD,         ARTP_COLD },
+    { STAFF_ALCHEMY,      ARTP_POISON },
+    { STAFF_NECROMANCY,   ARTP_NEGATIVE_ENERGY },
+    { STAFF_AIR,          ARTP_ELECTRICITY },
     // nothing for conj or earth
 };
 
@@ -348,7 +348,7 @@ static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
     { STAFF_FIRE,           ARTP_ENHANCE_FIRE },
     { STAFF_COLD,           ARTP_ENHANCE_ICE },
     { STAFF_ALCHEMY,        ARTP_ENHANCE_ALCHEMY },
-    { STAFF_DEATH,          ARTP_ENHANCE_NECRO },
+    { STAFF_NECROMANCY,     ARTP_ENHANCE_NECRO },
     { STAFF_AIR,            ARTP_ENHANCE_AIR },
     { STAFF_CONJURATION,    ARTP_ENHANCE_CONJ },
     { STAFF_EARTH,          ARTP_ENHANCE_EARTH },
