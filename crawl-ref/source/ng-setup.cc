@@ -601,7 +601,7 @@ static void _setup_generic(const newgame_def& ng,
         if (!item.props.exists("adjusted"))
         {
             item.props["adjusted"] = true;
-            auto_assign_item_slot(item);
+            auto_assign_item_slot(item, true);
         }
     }
 
