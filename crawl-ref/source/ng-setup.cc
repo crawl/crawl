@@ -110,7 +110,7 @@ item_def* newgame_make_item(object_class_type base,
     inventory_category category = inventory_category_for(base);
     int slot;
     int start = category == INVENT_CONSUMABLE ? MAX_GEAR : 0;
-    int end = category == INVENT_GEAR ? MAX_GEAR : 0;
+    int end = category == INVENT_GEAR ? MAX_GEAR : ENDOFPACK;
     for (slot = start; slot < end; ++slot)
     {
         item_def& item = you.inv[slot];
