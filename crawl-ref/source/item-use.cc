@@ -1003,7 +1003,7 @@ bool use_an_item(operation_types oper, item_def *target)
     if (!target && oper == OPER_REMOVE && !Options.jewellery_prompt)
     {
         vector<item_def*> jewellery = you.equipment.get_slot_items(SLOT_ALL_JEWELLERY);
-        if (jewellery.size() == 1)
+        if (jewellery.size() == 1 && !you.active_talisman())
             target = jewellery[0];
     }
 
