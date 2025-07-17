@@ -969,7 +969,9 @@ static bool _can_generically_use(operation_types oper)
             return false;
         }
         // can't differentiate between these two at this point
-        if (!you_can_wear(SLOT_RING, true) && !you_can_wear(SLOT_AMULET, true))
+        if (you_can_wear(SLOT_RING, true) == false
+            && you_can_wear(SLOT_AMULET, true) == false
+            && you.transform_uncancellable)
         {
             mprf(MSGCH_PROMPT, "You can't %s jewellery%s.",
                 oper == OPER_PUTON ? "wear" : "remove",
