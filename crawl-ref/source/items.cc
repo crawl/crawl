@@ -2148,7 +2148,7 @@ static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
 }
 
 // Returns the preferred letter for a given consumable item.
-static int _letter_for_consumable(item_def& item)
+static int _letter_for_consumable(item_def& item, bool first_pickup)
 {
     // If this is an identified item, first check the consumable_slot option to
     // see any default assignment and use this.
@@ -2176,6 +2176,9 @@ static int _letter_for_consumable(item_def& item)
         if (key > 0 && key != ' ')
             return key;
     }
+
+    if (!first_pickup)
+        return item.slot;
 
     // If there wasn't any, or this is unidentified, try to pick any available
     // letter that isn't 'reserved' by the consumable_slot option for this
@@ -2260,7 +2263,7 @@ static int _assign_inventory_letter(item_def& item)
     if (inventory_category_for(item) == INVENT_GEAR)
         return index_to_letter(item.link);
     else
-        return _letter_for_consumable(item);
+        return _letter_for_consumable(item, true);
 }
 
 /**
@@ -2283,7 +2286,7 @@ item_def *auto_assign_item_slot(item_def& item, bool quiet)
     if (inventory_category_for(item) == INVENT_CONSUMABLE)
     {
         const short old_slot = item.slot;
-        item.slot = _letter_for_consumable(item);
+        item.slot = _letter_for_consumable(item, false);
 
         if (item.slot != old_slot && !quiet)
             mprf_nocap("%c -> %s", old_slot, item.name(DESC_INVENTORY).c_str());
