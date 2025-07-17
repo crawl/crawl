@@ -564,7 +564,7 @@ string no_selectables_message(int item_selector)
     case OSEL_AMULET:
         return "You aren't carrying any amulets.";
     case OSEL_JEWELLERY_OR_TALISMAN:
-        return "You aren't carrying any jewllery or talismans.";
+        return "You aren't carrying any jewellery or talismans.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
