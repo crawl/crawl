@@ -440,6 +440,7 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     shockwave.is_explosion = true;
     shockwave.ex_size = 1;
     shockwave.origin_spell = SPELL_PERCUSSIVE_TEMPERING;
+    shockwave.aux_source = "blast of sparks and slag";
     zappy(ZAP_PERCUSSIVE_TEMPERING, power, true, shockwave);
     shockwave.explode(true, true);
 

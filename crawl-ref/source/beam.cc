@@ -3185,11 +3185,11 @@ void bolt::internal_ouch(int dam)
     else if (MON_KILL(thrower))
     {
         ouch(dam, KILLED_BY_BEAM, source_id,
-             aux_source.c_str(), true,
+             what, true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else // KILL_NON_ACTOR || (YOU_KILL && aux_source)
-        ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
+        ouch(dam, KILLED_BY_WILD_MAGIC, source_id, what);
 }
 
 // [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
