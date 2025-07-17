@@ -1887,7 +1887,7 @@ int prompt_invent_item(const char *prompt,
                 // hacky, but lets the inscription checks below trip
                 // TODO: this code should not rely on keyin, it breaks cmd
                 // bindings
-                keyin = items[0].slot;
+                keyin = items[0].item->slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
             {
