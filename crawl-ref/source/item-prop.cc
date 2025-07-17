@@ -96,15 +96,15 @@ static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
 
 // Total weight 50
 static const vector<ego_weight_tuple> SHIELD_EGOS = {
-    { SPARM_RESISTANCE,        1 },
-    { SPARM_FIRE_RESISTANCE,   4 },
-    { SPARM_COLD_RESISTANCE,   4 },
-    { SPARM_POISON_RESISTANCE, 4 },
-    { SPARM_POSITIVE_ENERGY,   4 },
-    { SPARM_NORMAL,            4 },
-    { SPARM_PRESERVATION,      4 },
-    { SPARM_REFLECTION,        9 },
-    { SPARM_PROTECTION,       16 },
+    { SPARM_RESISTANCE,           1 },
+    { SPARM_FIRE_RESISTANCE,      4 },
+    { SPARM_COLD_RESISTANCE,      4 },
+    { SPARM_POISON_RESISTANCE,    4 },
+    { SPARM_POSITIVE_ENERGY,      4 },
+    { SPARM_NORMAL,               4 },
+    { SPARM_CORROSION_RESISTANCE, 4 },
+    { SPARM_REFLECTION,           9 },
+    { SPARM_PROTECTION,           16 },
 };
 
 // would be nice to lookup the name from monster_for_armour, but that
@@ -172,11 +172,11 @@ static const armour_def Armour_prop[] =
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
         SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
-            { SPARM_POISON_RESISTANCE, 2 },
-            { SPARM_WILLPOWER,         2 },
-            { SPARM_STEALTH,           2 },
-            { SPARM_PRESERVATION,      2 },
-            { SPARM_AIR,               1 },
+            { SPARM_POISON_RESISTANCE,    2 },
+            { SPARM_WILLPOWER,            2 },
+            { SPARM_STEALTH,              2 },
+            { SPARM_CORROSION_RESISTANCE, 2 },
+            { SPARM_AIR,                  1 },
     }},
     { ARM_SCARF,                "scarf",                  0,   0,   50,
         SLOT_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
@@ -271,25 +271,25 @@ static const armour_def Armour_prop[] =
     }},
     { ARM_KITE_SHIELD,         "kite shield",             8, -100,  70,
         SLOT_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0,{
-            { SPARM_FIRE_RESISTANCE,   4 },
-            { SPARM_COLD_RESISTANCE,   4 },
-            { SPARM_POISON_RESISTANCE, 4 },
-            { SPARM_POSITIVE_ENERGY,   4 },
-            { SPARM_NORMAL,            4 },
-            { SPARM_PRESERVATION,      4 },
-            { SPARM_REFLECTION,       13 },
-            { SPARM_PROTECTION,       13 },
+            { SPARM_FIRE_RESISTANCE,      4 },
+            { SPARM_COLD_RESISTANCE,      4 },
+            { SPARM_POISON_RESISTANCE,    4 },
+            { SPARM_POSITIVE_ENERGY,      4 },
+            { SPARM_NORMAL,               4 },
+            { SPARM_CORROSION_RESISTANCE, 4 },
+            { SPARM_REFLECTION,           13 },
+            { SPARM_PROTECTION,           13 },
     }},
     { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  80,
         SLOT_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, {
-            { SPARM_FIRE_RESISTANCE,   3 },
-            { SPARM_COLD_RESISTANCE,   3 },
-            { SPARM_POISON_RESISTANCE, 3 },
-            { SPARM_POSITIVE_ENERGY,   3 },
-            { SPARM_PONDEROUSNESS,     3 },
-            { SPARM_PRESERVATION,      5 },
-            { SPARM_REFLECTION,        5 },
-            { SPARM_PROTECTION,       15 },
+            { SPARM_FIRE_RESISTANCE,      3 },
+            { SPARM_COLD_RESISTANCE,      3 },
+            { SPARM_POISON_RESISTANCE,    3 },
+            { SPARM_POSITIVE_ENERGY,      3 },
+            { SPARM_PONDEROUSNESS,        3 },
+            { SPARM_CORROSION_RESISTANCE, 5 },
+            { SPARM_REFLECTION,           5 },
+            { SPARM_PROTECTION,           15 },
     }},
 
     // Following all ARM_ entries for the benefit of util/gather_items
@@ -848,7 +848,7 @@ static const staff_def Staff_prop[] =
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENERGY,      "energy" },
 #endif
-    { STAFF_DEATH,       "death",       SK_NECROMANCY,
+    { STAFF_NECROMANCY,  "necromancy",       SK_NECROMANCY,
         63, ac_type::normal,   BEAM_NEG },
     { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS,
         50, ac_type::normal, BEAM_MMISSILE },
@@ -2619,7 +2619,7 @@ int get_armour_res_corr(const item_def &arm)
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     // intrinsic armour abilities
-    return get_armour_ego_type(arm) == SPARM_PRESERVATION
+    return get_armour_ego_type(arm) == SPARM_CORROSION_RESISTANCE
            || armour_type_prop(arm.sub_type, ARMF_RES_CORR);
 }
 
@@ -2905,7 +2905,7 @@ bool gives_resistance(const item_def &item)
             || ego == SPARM_POISON_RESISTANCE
             || ego == SPARM_WILLPOWER
             || ego == SPARM_RESISTANCE
-            || ego == SPARM_PRESERVATION
+            || ego == SPARM_CORROSION_RESISTANCE
             || ego == SPARM_POSITIVE_ENERGY)
         {
             return true;
@@ -2917,7 +2917,7 @@ bool gives_resistance(const item_def &item)
             || item.sub_type == STAFF_COLD
             || item.sub_type == STAFF_ALCHEMY
             || item.sub_type == STAFF_AIR
-            || item.sub_type == STAFF_DEATH)
+            || item.sub_type == STAFF_NECROMANCY)
         {
             return true;
         }

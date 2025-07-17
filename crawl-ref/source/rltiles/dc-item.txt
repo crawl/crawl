@@ -566,7 +566,7 @@ i-stealth BRAND_ARM_STEALTH
 i-resistance BRAND_ARM_RESISTANCE
 i-positive-energy BRAND_ARM_POSITIVE_ENERGY
 i-archmagi BRAND_ARM_ARCHMAGI
-i-preservation BRAND_ARM_PRESERVATION
+i-corrosion-res BRAND_ARM_CORROSION_RESISTANCE
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
 i-hurling BRAND_ARM_HURLING
@@ -1195,7 +1195,7 @@ i-staff_poison STAFF_POISON
 # start TAG_MAJOR_VERSION == 34
 i-staff_energy STAFF_ENERGY
 # end TAG_MAJOR_VERSION
-i-staff_death STAFF_DEATH
+i-staff_necromancy STAFF_NECROMANCY
 i-staff_conjuration STAFF_CONJURATION
 # start TAG_MAJOR_VERSION == 34
 i-staff_enchantment STAFF_ENCHANTMENT

@@ -88,7 +88,7 @@
        "book of dreams", "book of the dragon", "dagger", "dragon-coil talisman",
        "demon blade", "demon trident", "demon whip", "dire flail",
        "double sword", "ring of dexterity", "manual of dodging",
-       "staff of death", "wand of digging", "dart", "book of dangerous friends",
+       "wand of digging", "dart", "book of dangerous friends",
        "book of displacement", "book of decay", "book of duality" }
 
       elseif s == "E" then i = { "manual of evocations", "potion of enlightenment",
@@ -138,7 +138,7 @@
        "book of maladies", "book of metalworking",
        "maxwell's memoranda", "my sojourn through swampland" }
 
-      elseif s == "N" then i = { "book of necromancy",
+      elseif s == "N" then i = { "book of necromancy", "staff of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
 
       elseif s == "O" then i = { "orcbow" }

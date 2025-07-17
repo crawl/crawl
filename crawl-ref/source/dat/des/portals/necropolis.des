@@ -4703,7 +4703,7 @@ NSUBST:  $ = 2:e / *:$, % = 1:g* / *:%
 SUBST:   ?! = %
 : end
 KMONS:   O = player ghost
-ITEM:    staff of fire / staff of death / quarterstaff ego:spectral / \
+ITEM:    staff of fire / staff of necromancy / quarterstaff ego:spectral / \
          quarterstaff ego:pain / any ring randart artprops:rN pre_id w:15
 ITEM:    staff of fire randart / staff of pain randart / \
          lajatang ego:spectral / lajatang ego:pain / \

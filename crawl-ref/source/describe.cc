@@ -2323,7 +2323,7 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it protects its wearer from the effects of negative energy.";
     case SPARM_ARCHMAGI:
         return "it increases the power of its wearer's magical spells.";
-    case SPARM_PRESERVATION:
+    case SPARM_CORROSION_RESISTANCE:
         return "it protects its wearer from the effects of acid and corrosion.";
     case SPARM_REFLECTION:
         return "it reflects blocked missile attacks back in the "
@@ -5367,7 +5367,7 @@ static string _monster_staff_damage_string(const monster_info &mi,
     // From monster::skill
     const int evo_skill = mi.hd;
     int staff_skill;
-    if (staff == STAFF_DEATH)
+    if (staff == STAFF_NECROMANCY)
         staff_skill = mi.has_necromancy_spell() ? mi.hd : mi.hd / 2;
     else
         staff_skill = mi.is_actual_spellcaster() ? mi.hd : mi.hd / 3;
@@ -5379,7 +5379,7 @@ static string _monster_staff_damage_string(const monster_info &mi,
                            : staff == STAFF_COLD          ? "cold"
                            : staff == STAFF_AIR           ? "elec"
                            : staff == STAFF_EARTH         ? "earth"
-                           : staff == STAFF_DEATH         ? "drain"
+                           : staff == STAFF_NECROMANCY    ? "drain" // pain?
                            : staff == STAFF_ALCHEMY       ? "poison"
                            /*staff == STAFF_CONJURATION*/ : "conj";
 

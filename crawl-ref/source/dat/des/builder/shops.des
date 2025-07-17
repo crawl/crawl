@@ -1150,9 +1150,9 @@ SUBST:  G : YlG
 : kfeat("s = general shop " .. shopname .. " ; \
 :   any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
-:   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
-:   book of necromancy | book of death | book of unlife | \
-:   book of decay | book of the grave | \
+:   demon trident w:5 | demon whip w:5 | scroll of torment | \
+:   staff of necromancy | book of necromancy | book of death | \
+:   book of unlife | book of decay | book of the grave | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \

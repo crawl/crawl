@@ -705,7 +705,7 @@ WEIGHT: 2
     "any armour randart artprops:Will:1", "pearl dragon scales randart",
     "scroll of fog q:10", "quicksilver dragon scales randart",
     "any weapon randart artprops:Will:1", "any weapon randart artprops:rN:1",
-    "staff of death randart" }, 2 )
+    "staff of necromancy randart" }, 2 )
 
   -- Generically useful in all the Hells, a lot of scrolls and potions in bulk,
   -- but also rings of rN+ and willpower, which are useful in all the Hells, and

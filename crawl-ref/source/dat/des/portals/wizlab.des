@@ -1287,7 +1287,7 @@ ITEM:       protean talisman randart / maw talisman randart / \
             serpent talisman randart / statue talisman w:8 / \
             dragon-coil talisman / storm talisman w:8 / \
             talisman of death w:2
-ITEM:       staff of death pre_id, scroll of poison pre_id
+ITEM:       staff of necromancy pre_id, scroll of poison pre_id
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
@@ -2358,7 +2358,7 @@ MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
 MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-         necronomicon / randbook disc:necromancy / staff of death w:5 /\
+         necronomicon / randbook disc:necromancy / staff of necromancy w:5 /\
          sanguine talisman / macabre finger necklace w:1 /\
          sceptre of torment w:1
 : local p = "good_item ego:pain w:3"

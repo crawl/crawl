@@ -3071,7 +3071,7 @@ string melee_attack::staff_message(stave_type staff, int dam) const
                 defender->name(DESC_THE).c_str(),
                 attack_strength_punctuation(dam).c_str());
 
-    case STAFF_DEATH:
+    case STAFF_NECROMANCY:
         return make_stringf(
                 "%s %s as negative energy consumes %s%s",
                 defender->name(DESC_THE).c_str(),
@@ -3114,7 +3114,7 @@ bool melee_attack::apply_staff_damage()
         dam /= 3;
     if (dam > 0)
     {
-        if (staff == STAFF_DEATH)
+        if (staff == STAFF_NECROMANCY)
             attacker->god_conduct(DID_EVIL, 4);
         else if (staff == STAFF_FIRE && defender->is_player())
             maybe_melt_player_enchantments(flavour, dam);
