@@ -137,6 +137,8 @@ function TroveMarker:overview_note (marker)
     return "lose all piety"
   elseif toll.type == "bane" then
     return "suffer the " .. crawl.bane_name(toll.bane)
+  elseif toll.type == "drain" then
+    return "suffer draining"
   else
     return "be buggy"
   end
