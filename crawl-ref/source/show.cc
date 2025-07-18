@@ -150,6 +150,9 @@ static void _update_feat_at(const coord_def &gp)
     if (is_blasphemy(gp))
         env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
 
+    if (is_gastronomic(gp))
+        env.map_knowledge(gp).flags |= MAP_GASTRONOMIC;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
