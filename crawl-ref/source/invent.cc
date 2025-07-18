@@ -1499,9 +1499,8 @@ static int _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL
-                 | MF_PAGED_INVENTORY);
-    menu.load_inv_items(OSEL_GEAR, -1);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
+    menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
     menu.show(true);
