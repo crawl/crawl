@@ -854,7 +854,7 @@ int sort_item_qty(const InvEntry *a)
 }
 int sort_item_slot(const InvEntry *a)
 {
-    return a->item->slot > 0 ? letter_to_index(a->item->slot) : 0;
+    return isalpha(a->item->slot) ? letter_to_index(a->item->slot) : 0;
 }
 
 bool sort_item_identified(const InvEntry *a)
