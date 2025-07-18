@@ -495,13 +495,13 @@ Xom cloak slot
 
 @Your_item@ billows in an unfelt wind.
 
-@Your_item@ briefly wraps itself around your head!
+@Your_item@ briefly wraps itself around your @head@!
 
 @Your_item@ is briefly covered in lurid @any_colour_pattern@!
 %%%%
 Xom helmet slot
 
-@Your_item@ leaps into the air, briefly spins, then lands back on your head!
+@Your_item@ leaps into the air, briefly spins, then lands back on your @head@!
 %%%%
 Xom offhand slot
 
@@ -522,6 +522,8 @@ Xom amulet slot
 @Your_item@ pulsates!
 
 @Your_item@ flares @any_glowing_colour@, then returns to normal.
+
+@Your_item@ briefly flies off and hovers over your @head@!
 %%%%
 Xom gizmo slot
 
