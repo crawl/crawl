@@ -3107,14 +3107,14 @@ static void _xom_fog(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
-static item_def* _xom_get_random_worn_ring()
+static item_def* _xom_get_random_worn_slot_item(equipment_slot item_slot)
 {
-    vector<item_def*> worn_rings = you.equipment.get_slot_items(SLOT_RING);
+    vector<item_def*> worn_slot_item = you.equipment.get_slot_items(item_slot);
 
-    if (worn_rings.empty())
+    if (worn_slot_item.empty())
         return nullptr;
 
-    return worn_rings[random2(worn_rings.size())];
+    return worn_slot_item[random2(worn_slot_item.size())];
 }
 
 static void _xom_pseudo_miscast(int /*sever*/)
@@ -3460,7 +3460,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = _xom_get_random_worn_ring())
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_RING))
     {
         // Don't just say "your ring" here. We want to know which one.
         string name = "your " + item->name(DESC_QUALNAME, false, false, false);
