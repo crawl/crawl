@@ -435,6 +435,8 @@ static map<talisman_type, vector<artp_value>> talisman_artps = {
     { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
     { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
     { TALISMAN_SERPENT,     {{ARTP_POISON, 1}}},
+    { TALISMAN_SPIDER,      {{ARTP_RAMPAGING, 1}}},
+    { TALISMAN_FORTRESS,    {{ARTP_RCORR, 1}}},
     { TALISMAN_STATUE,  {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1},
                          {ARTP_NEGATIVE_ENERGY, 1}}},
     { TALISMAN_DRAGON,  {{ARTP_FIRE, 1}, {ARTP_COLD, 1}, {ARTP_POISON, 1}, {ARTP_FLY, 1}}},
@@ -658,7 +660,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_PREVENT_TELEPORTATION:
             return non_swappable
                    && !_any_artps_in_item_props({ ARTP_BLINK },
-                                                intrinsic_props, extant_props);
+                                                intrinsic_props, extant_props)
+                   && !item.is_type(OBJ_TALISMANS, TALISMAN_STORM);
         // only on melee weapons
         case ARTP_ANGRY:
         case ARTP_NOISE:
@@ -691,6 +694,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         case ARTP_DRAIN:
         case ARTP_CONTAM:
             return item_class != OBJ_TALISMANS; // TODO: support..?
+        // Currently only weapons/armour get actual compensation for this prop.
+        case ARTP_BANE:
+            return item_class == OBJ_ARMOUR || item_class == OBJ_WEAPONS;
         case ARTP_ARCHMAGI:
             return item.is_type(OBJ_ARMOUR, ARM_ROBE);
         case ARTP_ENHANCE_CONJ:
@@ -924,6 +930,8 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "*Silence", ARTP_VAL_BOOL, 25, // ARTP_SILENCE,
         nullptr, []() { return 1; }, 0, 0 },
+    { "Bane", ARTP_VAL_BOOL, 20,     // ARTP_BANE,
+        nullptr, []() {return 1;}, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1857,9 +1865,9 @@ static void _artefact_setup_prop_vectors(item_def &item)
         rap[i].get_short() = 0;
 }
 
-// If force_mundane is true, normally mundane items are forced to
+// If ignore_mundane is true, normally mundane items are forced to
 // nevertheless become artefacts.
-bool make_item_randart(item_def &item, bool force_mundane)
+bool make_item_randart(item_def &item, bool ignore_mundane)
 {
     switch (item.base_type)
     {
@@ -1882,7 +1890,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         return false;
 
     // Mundane items are much less likely to be artefacts.
-    if (!force_mundane && item.is_mundane() && !one_chance_in(5))
+    if (!ignore_mundane && item.is_mundane() && !one_chance_in(5))
         return false;
 
     _artefact_setup_prop_vectors(item);
@@ -2110,6 +2118,9 @@ void fill_gizmo_properties(CrawlVector& gizmos)
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;
+
+    // Try 100 times to make an artefact dragon scales without *Silence,
+    // since they're on someone called "the Enchantress".
     for (int i=0; i<100; i++)
     {
         doodad.clear();
@@ -2117,20 +2128,21 @@ static void _make_faerie_armour(item_def &item)
         doodad.sub_type = item.sub_type;
         if (!make_item_randart(doodad))
         {
-            i--; // Forbidden props are not absolute, artefactness is.
+            i--;
             continue;
         }
 
-        // *Silence makes no sense on someone called "the Enchantress".
         if (artefact_property(doodad, ARTP_SILENCE))
             continue;
 
-        if (one_chance_in(20))
+        if (one_chance_in(10))
             artefact_set_property(doodad, ARTP_CLARITY, 1);
-        if (one_chance_in(20))
-            artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
-        if (one_chance_in(20))
-            artefact_set_property(doodad, ARTP_HP, random2(16) - 5);
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_MAGICAL_POWER, _gen_good_hpmp_artp());
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_HP, _gen_good_hpmp_artp());
+        if (one_chance_in(10))
+            artefact_set_property(doodad, ARTP_INVISIBLE, 1);
 
         break;
     }
@@ -2142,10 +2154,11 @@ static void _make_faerie_armour(item_def &item)
     doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
 
-    // On body armour, an enchantment of less than 0 is never viable.
-    int high_plus = random2(6) - 2;
-    high_plus += random2(6);
-    item.plus = max(high_plus, random2(2));
+    // Make the scales always stand out.
+    artefact_set_property(item, ARTP_ENHANCE_HEXES, 1);
+
+    // Try to give an enchantment a Depths visitor could ever care about.
+    item.plus = 2 + random2(4) + random2(4);
 }
 
 static jewellery_type octoring_types[8] =

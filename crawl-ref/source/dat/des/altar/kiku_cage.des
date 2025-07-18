@@ -69,7 +69,7 @@ local tm = TriggerableFunction:new{
 tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dreplica"})
 lua_marker('_', tm)
 }}
-KMONS:   h = generate_awake human never_corpse hp:12 ; nothing
+KMONS:   h = generate_awake att:neutral human never_corpse hp:12 ; nothing
 KFEAT:   h = .
 : if you.depth() > 4 then
 MONS:    burial acolyte, zombie

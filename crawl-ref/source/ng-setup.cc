@@ -107,8 +107,11 @@ item_def* newgame_make_item(object_class_type base,
     if (sub_type == WPN_UNARMED || sub_type == WPN_UNKNOWN)
         return nullptr;
 
+    inventory_category category = inventory_category_for(base);
     int slot;
-    for (slot = 0; slot < ENDOFPACK; ++slot)
+    int start = category == INVENT_CONSUMABLE ? MAX_GEAR : 0;
+    int end = category == INVENT_GEAR ? MAX_GEAR : ENDOFPACK;
+    for (slot = start; slot < end; ++slot)
     {
         item_def& item = you.inv[slot];
         if (!item.defined())
@@ -244,7 +247,7 @@ void give_items_skills(const newgame_def& ng)
     {
     case JOB_BERSERKER:
         you.religion = GOD_TROG;
-        you.piety = 35;
+        you.raw_piety = 35;
 
         if (you_can_wear(SLOT_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
@@ -267,7 +270,7 @@ void give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
     {
         you.religion = GOD_XOM;
-        you.piety = 100;
+        you.raw_piety = 100;
         int timeout_rnd = random2(40);
         timeout_rnd += random2(40); // force a sequence point between random2s
         you.gift_timeout = max(5, timeout_rnd);
@@ -281,7 +284,7 @@ void give_items_skills(const newgame_def& ng)
 
     case JOB_CINDER_ACOLYTE:
         you.religion = GOD_IGNIS;
-        you.piety = 150;
+        you.raw_piety = 150;
         break;
 
     default:
@@ -326,7 +329,7 @@ void give_items_skills(const newgame_def& ng)
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
         if (!you_worship(GOD_XOM))
-            you.piety_max[you.religion] = you.piety;
+            you.piety_max[you.religion] = you.raw_piety;
     }
 
     if (crawl_state.game_is_descent())
@@ -496,6 +499,10 @@ void initial_dungeon_setup()
     initialise_temples();
     init_level_connectivity();
     initialise_item_descriptions();
+
+    you.zot_orb_monster = random_choose(MONS_ORB_OF_FIRE,
+                                        MONS_ORB_OF_WINTER,
+                                        MONS_ORB_OF_ENTROPY);
 }
 
 static void _setup_generic(const newgame_def& ng,
@@ -575,13 +582,16 @@ static void _setup_generic(const newgame_def& ng,
             continue;
         item.pos = ITEM_IN_INVENTORY;
         item.link = i;
-        item.slot = index_to_letter(item.link);
+        // If consumables end up on a non-letter, auto_assign_item_slot below will crash.
+        item.slot = index_to_letter(item.link >= MAX_GEAR
+                                        ? item.link - MAX_GEAR
+                                        : item.link);
         item_colour(item);  // set correct special and colour
     }
 
     // Put our weapon in our first item slot, if we have one.
     if (item_def* wpn = you.weapon())
-        swap_inv_slots(0, wpn->link, false);
+        swap_inv_slots(*wpn, 0, false);
 
     // A second pass to apply the item_slot option.
     for (auto &item : you.inv)
@@ -591,7 +601,7 @@ static void _setup_generic(const newgame_def& ng,
         if (!item.props.exists("adjusted"))
         {
             item.props["adjusted"] = true;
-            auto_assign_item_slot(item);
+            auto_assign_item_slot(item, true);
         }
     }
 

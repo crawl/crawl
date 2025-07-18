@@ -31,6 +31,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "makeitem.h"
 #include "menu.h"
 #include "message.h"
 #include "notes.h"
@@ -297,7 +298,10 @@ void Stash::update()
         ash_id_item(*si);
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
+        {
+            lucky_upgrade_item(*si);
             add_item(*si);
+        }
 
         if ((si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
             && !is_useless_item(*si))
@@ -341,7 +345,7 @@ string Stash::stash_item_name(const item_def &item)
     if (!is_rottable(item) || item.stash_freshness > 0)
         return name;
 
-    if (mons_skeleton(item.mon_type))
+    if (mons_has_skeleton(item.mon_type))
         return name + " (skeletalised by now)";
     return name + " (gone by now)";
 }
@@ -428,7 +432,7 @@ void Stash::_update_corpses(int rot_time)
 
         int new_rot = static_cast<int>(item.stash_freshness) - rot_time;
 
-        if (new_rot <= 0 && !mons_skeleton(item.mon_type))
+        if (new_rot <= 0 && !mons_has_skeleton(item.mon_type))
         {
             items.erase(items.begin() + i);
             continue;

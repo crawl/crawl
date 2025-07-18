@@ -477,8 +477,8 @@ string kill_def::base_name(const kill_monster_desc &md) const
     case kill_monster_desc::M_ZOMBIE:
         name += " zombie";
         break;
-    case kill_monster_desc::M_SKELETON:
-        name += " skeleton";
+    case kill_monster_desc::M_DRAUGR:
+        name += " draugr";
         break;
     case kill_monster_desc::M_SIMULACRUM:
         name += " simulacrum";
@@ -634,21 +634,12 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
     switch (mon->type)
     {
         case MONS_ZOMBIE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
-#endif
             modifier = M_ZOMBIE;
             break;
-        case MONS_SKELETON:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
-#endif
-            modifier = M_SKELETON;
+        case MONS_DRAUGR:
+            modifier = M_DRAUGR;
             break;
         case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
-#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_BOUND_SOUL:
@@ -672,21 +663,12 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
     switch (mon.type)
     {
         case MONS_ZOMBIE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
-#endif
             modifier = M_ZOMBIE;
             break;
-        case MONS_SKELETON:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
-#endif
-            modifier = M_SKELETON;
+        case MONS_DRAUGR:
+            modifier = M_DRAUGR;
             break;
         case MONS_SIMULACRUM:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
-#endif
             modifier = M_SIMULACRUM;
             break;
         case MONS_BOUND_SOUL:
@@ -761,8 +743,8 @@ static int kill_lualc_modifier(lua_State *ls)
         case kill_monster_desc::M_ZOMBIE:
             modifier = "zombie";
             break;
-        case kill_monster_desc::M_SKELETON:
-            modifier = "skeleton";
+        case kill_monster_desc::M_DRAUGR:
+            modifier = "draugr";
             break;
         case kill_monster_desc::M_SIMULACRUM:
             modifier = "simulacrum";
@@ -855,13 +837,11 @@ static int kill_lualc_symbol(lua_State *ls)
         switch (ke->modifier)
         {
         case kill_monster_desc::M_ZOMBIE:
-        case kill_monster_desc::M_SKELETON:
-            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
-                           MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE);
+        case kill_monster_desc::M_DRAUGR:
+            ch = mons_char(MONS_DRAUGR);
             break;
         case kill_monster_desc::M_SIMULACRUM:
-            ch = mons_char(mons_zombie_size(ke->monnum) == Z_SMALL ?
-                           MONS_SIMULACRUM_SMALL : MONS_SIMULACRUM_LARGE);
+            ch = mons_char(MONS_SIMULACRUM);
             break;
         case kill_monster_desc::M_SPECTRE:
             ch = mons_char(MONS_SPECTRAL_THING);

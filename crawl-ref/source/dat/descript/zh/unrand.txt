@@ -159,7 +159,7 @@ arbalest "Damnation"
 值得庆幸的是，这把武器产生的爆炸不会对开火的人造成伤害。
 %%%%
 # 标签_主要_版本 == 34
-sword of the Doom Knight
+sword of the Dread Knight
 
 一把刚劲的巨剑。第一个持有它的人是伊莱德莱姆努尔的信徒，
 她不屑于使用魔法，喜欢用蛮力毁灭敌人。

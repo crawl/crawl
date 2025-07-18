@@ -163,8 +163,8 @@ NAME: sprint_mu_entry_forest
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
-MONS: patrolling phantom hd:2 exp:6 / patrolling wolf hd:2 exp:20 / patrolling scorpion / \
-      patrolling crazy yiuf
+MONS: patrolling crimson imp ; wand of flame charges:1 / \
+      patrolling hound / patrolling scorpion / patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 exp:26
 KITEM: * = potion of enlightenment pre_id q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation pre_id q:2 / potion of mutation q:1 / any potion, \
@@ -194,8 +194,8 @@ NAME: sprint_mu_entry_cave
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
-MONS: patrolling phantom hd:2 exp:6 / patrolling wolf hd:2 exp:20 / patrolling scorpion / \
-      patrolling crazy yiuf
+MONS: patrolling crimson imp ; wand of flame charges:1 / \
+      patrolling hound / patrolling scorpion / patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 exp:26
 KITEM: * = potion of enlightenment pre_id q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation pre_id q:2 / potion of mutation q:1 / any potion, \
@@ -271,11 +271,10 @@ KFEAT: J = altar_jiyva
 KMONS: m = shadowghast
 KMONS: j = patrolling jelly
 COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Ecumenical Temple",
 :           })
-MARKER: # = lua:restrict_door()
 SUBST: x = c
 
 MAP
@@ -299,24 +298,16 @@ ENDMAP
 # D1_1, horror grid
 NAME: sprint_mu_d1_horrors
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
-MONS: Erica / Josephine / Snorg
-MONS: centaur
-MONS: centaur warrior
-MONS: unseen horror
-KMONS: 6 = patrolling earth elemental hp:60
-SUBST: 5 = 4...
-COLOUR: # = yellow
-KFEAT: # = closed_door
+MONS: Erica / Harold / Maurice
+MONS: centaur, centaur warrior, small abomination, unseen horror
+SUBST: ? = 5...
+KFEAT:  &# = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Orcish Mines",
 :           })
-MARKER: # = lua:restrict_door()
-COLOUR: & = yellow
-KFEAT: & = closed_door
 : lua_marker('&', props_marker {
 :           door_description_suffix=" to the Lair of Beasts",
 :           })
-MARKER: & = lua:restrict_door()
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -328,7 +319,7 @@ x#xxxxxxxxxxxxcccccccc
 x..WWW+.c.+...+.x.x.x.
 x.cWWWc.c.c...cx.x.x.x
 +.c.!.c.c.c2..c.x.x.x.
-x.c.1.c.6.c32.cx.x.x5x
+x.c.1.c.4.c32.cx.x.x?x
               c.x.x.x.
               cx.x.x.x
               &.x4x.x.
@@ -339,25 +330,18 @@ ENDMAP
 # D1_2, spiderweb
 NAME: sprint_mu_d1_spiders
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
-MONS: two-headed ogre hd:3 hp:40 exp:106
-MONS: two-headed ogre hd:5 hp:68 exp:371
+MONS: ogre, two-headed ogre
 MONS: Erolcha
 MONS: redback
 KFEAT: ~ = net trap
 NSUBST: ^ = 2:4 / 10:~ / *:.
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT: &# = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Orcish Mines",
 :           })
-MARKER: # = lua:restrict_door()
-COLOUR: & = yellow
-KFEAT: & = closed_door
 : lua_marker('&', props_marker {
 :           door_description_suffix=" to the Lair of Beasts",
 :           })
-MARKER: & = lua:restrict_door()
-
 MAP
 x#xxxxxxxxxxxxxxxxxxxx
 x....x1x1x2....x^^^^^^
@@ -392,7 +376,6 @@ SUBST: 2 = 2226
 SUBST: 3 = 3337
 SUBST: 4 = 4445
 SUBST: 5 = 5558
-
 MAP
 xRRRRRRRRRR
 xrrrrrrrr..
@@ -423,13 +406,10 @@ NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 's', {"magical staff","jewellery","jewellery"})
 KITEM: | = superb_item, superb_item, superb_item, gold, scroll of amnesia / w:5 scroll of silence
 KFEAT: b = floor
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT: # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Elven Halls",
 :           })
-MARKER: # = lua:restrict_door()
-
 MAP
 cccccccccccccccccccc
 #.m...cc22..+3...$$c
@@ -444,25 +424,21 @@ ENDMAP
 # Hives
 #
 # Hive 1, Nellie
-NAME: sprint_mu_hive_nellie
-TAGS: sprint_mu_hive no_rotate no_hmirror no_vmirror
-KMONS: 1 = killer bee
-KMONS: 2 = queen bee
-KMONS: 3 = generate_awake Nellie
-KITEM: 3 = demonic rune of zot
+NAME:   sprint_mu_hive_nellie
+TAGS:   sprint_mu_hive no_rotate no_hmirror no_vmirror
+KMONS:  1 = killer bee
+KMONS:  2 = queen bee
+KMONS:  3 = generate_awake Nellie
+KITEM:  3 = demonic rune of zot
 : acq_on_sight(_G, '3', {"misc","wand"})
 NSUBST: 1 = 1:2 / *:1
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Hive",
 :           })
-MARKER: # = lua:restrict_door()
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
-
-
 MAP
 aaaaaaaaa
 #111Wwa3a
@@ -512,9 +488,9 @@ KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
 KFEAT: q = shallow_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
- wolf simulacrum / black mamba simulacrum
+           wolf simulacrum / black mamba simulacrum
 KITEM: r = any, any, any, any, any, superb_item / w:1 any beam wand /\
- w:1 wand of mindburst
+           w:1 wand of mindburst
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
 KMONS: u = death drake
@@ -530,7 +506,6 @@ MARKER:  * = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.7.+!!!!!!!"!tt.....ttttWWW.1.1...1WWW...
@@ -561,14 +536,10 @@ KFEAT: _ = altar_jiyva
 KITEM: _ = wand of digging pre_id
 KITEM: ! = slimy rune of zot
 SUBST: $ = ||*
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT: # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Pits of Slime",
 :           })
-MARKER: # = lua:restrict_door()
-
-
 MAP
 x#xxxxxxxxxxxx
 xx.MMMMMMMMMMx
@@ -592,25 +563,23 @@ ENDMAP
 # Snakes
 #
 # Snake 1, twists
-NAME: sprint_mu_snake_twists
-TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror
-MONS: guardian serpent, naga warrior, nagaraja, naga
-MONS: adder, water moccasin, black mamba
-KMONS: 8 = anaconda
-SUBST: 5 = 5..
-SUBST: 5 = 5678
-KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = distillery shop / scroll shop
-NSUBST: * = 1:A / 1:B / 1:C
-KITEM: $ = serpentine rune of zot
-COLOUR: #c = yellow
-KFEAT: # = closed_door
+NAME:   sprint_mu_snake_twists
+TAGS:   sprint_mu_snake no_rotate no_hmirror no_vmirror
+MONS:   guardian serpent, naga warrior, nagaraja, naga
+MONS:   adder, water moccasin, black mamba
+KMONS:  8 = anaconda
+SUBST:  5 = 5..
+SUBST:  5 = 5678
+KFEAT:  A = antique armour shop / antique weapon shop
+KFEAT:  B = book shop / jewellery shop
+KFEAT:  C = distillery shop / scroll shop
+NSUBST:  * = 1:A / 1:B / 1:C
+KITEM:  $ = serpentine rune of zot
+COLOUR: c = yellow
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Snake Pit",
 :           })
-MARKER: # = lua:restrict_door()
-
 MAP
 x#xxxxxxxxxxxx
 c..55555555.cc
@@ -644,12 +613,11 @@ KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
-COLOUR: # = yellow
-KFEAT: # = closed_door
+TILE:   X = dngn_open_sea
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Shoals",
 :           })
-MARKER: # = lua:restrict_door()
 MAP
 x#xxxxxxxxxxxx
 XWWwwwwwwwwwwX
@@ -689,13 +657,11 @@ KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
-COLOUR: # = yellow
-KFEAT: # = closed_door
+TILE:   X = dngn_open_sea
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Shoals",
 :           })
-MARKER: # = lua:restrict_door()
-
 MAP
 x#xxxxxxxxxxxx
 X..........ppX
@@ -731,13 +697,12 @@ MARKER:  ! = lua:fog_machine { \
                  size_buildup_time = 5, cloud_type = "thin mist" \
              }
 : elseif swamprnd == 1 then
-MONS: death drake, swamp dragon skeleton, hydra, spectral hydra
+MONS: death drake, swamp dragon draugr, hydra, spectral hydra
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
                  size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "foul pestilence" \
              }
-COLOUR: t = darkgrey / w:8 lightgrey
 : elseif swamprnd == 2 then
 MONS: swamp drake simulacrum, ice dragon, hydra, hydra simulacrum
 MARKER:  ! = lua:fog_machine { \
@@ -753,6 +718,7 @@ MARKER:  ! = lua:fog_machine { \
                  size_buildup_time = 5, cloud_type = "flame" \
              }
 : end
+KFEAT: t = mangrove
 KMONS: p = plant
 SUBST: . = ...W
 SUBST: W = WWWW......p2
@@ -762,12 +728,10 @@ KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = decaying rune of zot
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Swamp",
 :           })
-MARKER: # = lua:restrict_door()
 MAP
 x#xxxxxxxxxxxx
 x.tttttttttttt
@@ -795,6 +759,7 @@ NAME: sprint_mu_d2_genie
 TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
 MONS: yaktaur / yaktaur captain, glass eye, orc priest / \
       orc high priest hd:5 hp:70 exp:274
+# ??????????
 MONS: spriggan defender hd:5 hp:55 exp:301 ; dagger
 MONS: obsidian statue / orange crystal statue
 MONS: thermic dynamo, skeletal warrior
@@ -802,35 +767,11 @@ KMONS: 2 = glass eye
 KITEM: 2 = q:10 scroll of identify pre_id
 KMONS: P = plant
 SUBST: P = PPPPPPPPP.
-
-: local d2rnd = crawl.random2(4)
-: if d2rnd == 0 then
-KMONS: a = patrolling Sigmund hd:15 hp:100 exp:2961 \
- spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
-        force_lance.16.wizard \
- ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:distortion
-KMONS: b = patrolling Edmund hp:150 exp:412 ; great mace ego:freezing \
- . dart ego:curare q:7
-: elseif d2rnd == 1 then
-KMONS: a = patrolling Dowan hd:15 hp:100 exp:1363 \
- spells:bolt_of_cold.11.wizard;corona.11.wizard;blink_range.11.wizard;\
-        bolt_of_fire.11.wizard;;haste_other.11.wizard;minor_healing.11.wizard \
- ; morningstar ego:distortion
-KMONS: b = patrolling Duvessa hp:150 exp:412 ; great sword ego:freezing \
- . dart ego:curare q:7
-: elseif d2rnd == 2 then
-KMONS: a = patrolling Harold hd:15 hp:100 exp:1477 \
- spells:poison_arrow.16.wizard;teleport_other.16.wizard;\
-        minor_healing.16.wizard;slow.16.wizard \
- ; dire flail ego:distortion
-KMONS: b = patrolling Joseph hd:5 hp:150 exp:631 ; quarterstaff ego:freezing \
- . dart ego:curare q:7
-: else
-KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
- . kite shield ego:reflection
-KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
- . dart ego:curare q:7
-: end
+: local uniq = util.random_subset({ "Donald", "Frances", "Louise",
+:                                   "Urug", "Wiglaf", }, 2)
+: local eq = "dart ego:curare q:4 . scale mail"
+: kmons("a = patrolling " .. uniq[1] .. " ; great mace ego:holy_wrath . " .. eq)
+: kmons("b = patrolling " .. uniq[2] .. " ; great sword ego:freezing . " .. eq)
 KITEM: & = scroll of acquirement q:1 pre_id, \
  scroll of acquirement q:1 pre_id / w:15 scroll of torment pre_id, \
  scroll of acquirement q:1 pre_id / w:25 scroll of torment pre_id
@@ -856,20 +797,15 @@ KFEAT: h = jewellery shop
 KFEAT: j = distillery shop
 KFEAT: k = scroll shop
 KFEAT: * = any shop
+KFEAT:  # = runed_door
+KFEAT:  Z = runed_clear_door
 NSUBST: * = 1:i / 1:d / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
 COLOUR: Z = shimmer_blue
-KFEAT:  Z = closed_door
 MARKER: Z = lua:props_marker({ \
             door_description_prefix="flickering ", \
             door_description_suffix=" to a bazaar", \
             door_description_noun="gateway", \
          })
-KFEAT: # = closed_door
-KFEAT: ~ = closed_door
-MARKER: # = lua:restrict_door()
-MARKER: ~ = lua:restrict_door()
-MARKER: Z = lua:restrict_door()
-
 MAP
 xx#xxxxxxxxxxxxxx
 x...+.llllccL.lll
@@ -878,7 +814,7 @@ xa.bx.clllccLccll
 xxxxx.c1lllccclll
 x3PPP.cccllllllll
 x.3PPPc2m1lllllll
-x..3PPc~cccllllll
+x..3PPc+cccllllll
 x...3Pc...c1lllll
 x+ccccc.!.cccllcc
 x.....+...+7c1cc.
@@ -942,11 +878,7 @@ KITEM: % = silver rune of zot
 KITEM: " = ring of flight pre_id, potion of enlightenment pre_id q:3, \
  scroll of acquirement q:1 pre_id, wand of digging / \
  any blast wand, acquire gold, ring of protection from fire pre_id
-
-COLOUR: #~^ = yellow
-KFEAT: # = closed_door
-KFEAT: ~ = closed_door
-KFEAT: ^ = closed_door
+KFEAT: #~^ = closed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Vaults",
 :           })
@@ -956,10 +888,6 @@ KFEAT: ^ = closed_door
 : lua_marker('^', props_marker {
 :           door_description_suffix=" to the Crypt",
 :           })
-MARKER: # = lua:restrict_door()
-MARKER: ~ = lua:restrict_door()
-MARKER: ^ = lua:restrict_door()
-
 MAP
 vvvvvvvvvvvvvvvvvvv
 v|*%..655fff+.WwWWv
@@ -1008,8 +936,6 @@ NAME: sprint_mu_blade_basic
 TAGS: sprint_mu_blade no_rotate no_hmirror no_vmirror
 MONS: dancing weapon
 : acq_on_sight(_G, '$', {"weapon","weapon"});
-KFEAT: $ = floor
-
 MAP
 c.....
 c..c..
@@ -1039,8 +965,7 @@ KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
 KFEAT: - = net trap
 NSUBST: ~ = 2:^ / 2:- / *:.
-SUBST: ! = +
-
+SUBST:  ! = +
 MAP
 ccccccccccccccccc.c
 c1c1c1c1c1c1c1c1c.c
@@ -1059,7 +984,6 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
-
 MAP
 vvvvvvvvvvvvvvvvv.v
 v.....+...2v41vww.v
@@ -1074,7 +998,7 @@ ENDMAP
 # Crypt 3, Revenge of the Return of the Lich Under Glass 2: Revenge Harder
 NAME:  sprint_mu_crypt_lich
 TAGS:  sprint_mu_crypt no_rotate no_hmirror no_vmirror
-MONS:  dread lich, skeletal warrior
+MONS:  dread lich, laughing skull
 KFEAT: m = iron_grate
 MAP
 ccccccccccccccccc.c
@@ -1099,12 +1023,10 @@ SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement pre_id q:5
 COLOUR: X = lightgrey
-COLOUR: # = yellow
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 : lua_marker('#', props_marker {
 :           door_description_suffix=" to the Tomb of the Ancients",
 :           })
-MARKER: # = lua:restrict_door()
 MAP
 X#XXXXXXXXXXXXXXXXX
 X..c..............c
@@ -1164,10 +1086,10 @@ KMONS: j = patrolling golden eye
 KMONS: k = patrolling shining eye
 KMONS: m = patrolling glowing orange brain
 KMONS: o = patrolling yellow draconian
-KMONS: q = generate_awake hornet
+KMONS: q = generate_awake spark wasp
 KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
- iron troll simulacrum / anaconda zombie / anaconda simulacrum / stone giant skeleton /\
- titan zombie
+           iron troll simulacrum / anaconda zombie / anaconda simulacrum / \
+           stone giant draugr / titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
            hp:100 exp:748 tile:mons_statue_crossbow ; javelin ego:silver
@@ -1200,13 +1122,11 @@ MARKER: L = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 2, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-COLOUR: # = red
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to Hell", \
             door_description_noun="gateway", \
          })
-MARKER: # = lua:restrict_door()
 MAP
 vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
 vtW....Wtvrrsvvv...vvevllllllvv
@@ -1267,14 +1187,12 @@ KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item
 KITEM: ? = star_item, star_item, scroll of enchant armour pre_id q:4
 : acq_on_sight(_G, '$', {"armour","armour"})
-KITEM: % = iron rune of zot
-COLOUR: # = cyan
-KFEAT: # = closed_door
+KITEM:  O = iron rune of zot
+KFEAT:  # = runed_door
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to the Iron City of Dis", \
             door_description_noun="gateway", \
          })
-MARKER: # = lua:restrict_door()
 TILE:   v = dngn_metal_iron
 MAP
 vvvvvvvvvvvvvv
@@ -1283,7 +1201,7 @@ v.v44+..vvvv+v
 v.vvvv..v....v
 v.v5?vv+v5...v
 v.v1$v7.v5..*v
-v.+..v..v&**%v
+v.+..v..v&**Ov
 vvvvvv++vvvvvv
 vv6v6v12v6v6vv
 v............v
@@ -1301,7 +1219,7 @@ KFEAT: 1 = lava
 KMONS: 2 = hellion
 KMONS: 3 = brimstone fiend
 NSUBST: l = 1:1 / *:l
-KITEM: % = obsidian rune of zot
+KITEM: O = obsidian rune of zot
 KITEM: $ = superb_item, any, any
 KITEM: ? = superb_item, superb_item, scroll of enchant weapon pre_id q:6
 : acq_on_sight(_G, '!', {"weapon","weapon"})
@@ -1310,16 +1228,15 @@ MARKER:  G = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 10, \
                 size_buildup_time = 1000, cloud_type = "flame" }
 COLOUR: #vG = red
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 TILE:   c = stone_wall_pyre
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to the ashen valley of Gehenna", \
             door_description_noun="gateway", \
          })
-MARKER: # = lua:restrict_door()
 MAP
 cccccccccccccc
-cl.$$2$$2$!?%c
+cl.$$2$$2$!?Oc
 cll..322.cccoc
 cllll.22.llllc
 c.llllllllll.c
@@ -1357,14 +1274,12 @@ KMONS: ! = patrolling ice fiend
 KITEM: ! = potion of resistance pre_id q:3, \
            potion of attraction pre_id q:3, potion of haste pre_id q:5
 COLOUR: #c = lightcyan
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 TILE:   c = wall_icy_stone
 MARKER: # = lua:props_marker({ \
             door_description_suffix=" to the freezing wastes of Cocytus", \
             door_description_noun="gateway", \
          })
-MARKER: # = lua:restrict_door()
-
 MAP
 ccccccc#cccccc
 ccccwwwwwwwwwc
@@ -1402,13 +1317,12 @@ KMONS: ? = patrolling royal mummy
 KITEM: ? = potion of curing pre_id q:2, potion of heal wounds pre_id q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
-KFEAT: # = closed_door
+KFEAT:  # = runed_door
 TILE:   c = wall_cobalt_stone
 MARKER: # = lua:props_marker({ \
         door_description_suffix=" to the decaying netherworld of Tartarus", \
         door_description_noun="gateway", \
         })
-MARKER: # = lua:restrict_door()
 SUBST: . = ..........2233445
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
@@ -1490,8 +1404,8 @@ KMONS: B = plant col:lightmagenta
 SUBST: p = AAB
 SUBST: q = AAB
 COLOUR: X = lightmagenta
-KITEM: $ = orb of zot
-KFEAT: # = closed_door
+KITEM:  O = orb of zot
+KFEAT: # = runed_door
 KFEAT: ~ = closed_door
 COLOUR: # = magenta
 MARKER: # = lua:props_marker({ \
@@ -1518,6 +1432,6 @@ XpX....X..X...X*X.X
 XXX.78.X..XXxXX.X.X
 X.+..y.XX.X...X.XeX
 X.XXXXXX..X212X.X~X
-X.....L+.XX...+.o$X
+X.....L+.XX...+.oOX
 XXXXXXXXXXXXXXXXXXX
 ENDMAP

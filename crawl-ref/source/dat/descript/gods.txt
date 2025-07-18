@@ -534,10 +534,10 @@ from death.
 %%%%
 Fedhas wrath
 
-Those who offend Fedhas will have forces of nature invoked against them in the
-form of pure elemental destruction. Waves of ballistomycete spores will rise
-from nearby corpses, and the worst offenders will be surrounded by animate
-mushrooms and acid-spitting oklob plants.
+Those who offend Fedhas will find the forces of nature invoked against them
+through a dramatic increase in greenery. They may find themselves transmuted
+into the plants they have forsaken, or surrounded by impenetrable walls of
+briars plus vicious acid-spitting oklob plants.
 %%%%
 Hepliaklqana wrath
 
@@ -570,17 +570,18 @@ Jiyva wrath
 
 Jiyva's vengeance is swift and gurgling. All slimes turn against those who
 offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
-too, will find their own bodies becoming unstable; regularly transmuting into
-strange forms and acquiring debilitating mutations, as well as having any gifts
-of slime mutations stripped away from them.
+too, will find their own bodies becoming unstable; acquiring debilitating
+mutations or contamination, as well as having any gifts of slime mutations
+stripped away from them.
 %%%%
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
-are wracked with screams of torment, and find their health and powers drained.
-Further, Kikubaaqudgha's gifts become tainted: the dead rise again as foes, and
-those that attempt to use necromantic magic to fend off wrath will find it
-backfiring on them when least expected.
+may witness the devastating Sign of Ruin form upon themselves, or be drained
+without any respect for their negative energy resistance. Furthermore,
+Kikubaaqudgha's gifts become tainted: the dead rise again as foes, and those
+that attempt to use necromantic magic to fend off wrath will find it backfiring
+on them when least expected.
 %%%%
 Lugonu wrath
 

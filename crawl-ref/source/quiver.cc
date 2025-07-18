@@ -211,7 +211,7 @@ namespace quiver
     int action::source_hotkey() const
     {
         if (get_item() >= 0 && is_valid())
-            return index_to_letter(get_item());
+            return you.inv[get_item()].slot;
         return 0;
     }
 
@@ -388,7 +388,7 @@ namespace quiver
                 string verb = you.confused() ? "confused " : "";
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                index_to_letter(weapon.link));
+                                weapon.slot);
             }
 
             const string prefix = item_prefix(weapon);
@@ -492,7 +492,7 @@ namespace quiver
 
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                                weapon ? weapon->slot : '-');
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";
@@ -1121,7 +1121,9 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_valid();
+            const bool enkindled = you.duration[DUR_ENKINDLED]
+                                   && spell_can_be_enkindled(spell);
+            return is_valid() && !enkindled;
         }
 
         bool check_channelled_spells() const
@@ -1283,7 +1285,6 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
-        case ABIL_BEGIN_UNTRANSFORM:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
@@ -2827,7 +2828,7 @@ namespace quiver
                 return _choose_from_inv();
             else if (key == '&' && any_spells)
             {
-                const int skey = list_spells(false, false, false,
+                const int skey = list_spells(false, false, false, false,
                                                     "quiver");
                 if (skey == 0)
                     return true;
@@ -3172,7 +3173,7 @@ static int _get_pack_slot(const item_def &item)
         return item.link;
 
     // First try to find the exact same item.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, false))
@@ -3180,7 +3181,7 @@ static int _get_pack_slot(const item_def &item)
     }
 
     // If that fails, try to find an item sufficiently similar.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, true))

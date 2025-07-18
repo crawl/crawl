@@ -222,6 +222,21 @@ __SQUEAK seen
 
 SOUND:@The_monster@ squeaks loudly.
 %%%%
+__CAW seen
+
+SOUND:@The_monster@ caws.
+%%%%
+__CAW unseen
+
+SOUND:You hear a loud caw.
+%%%%
+__LAUGH seen
+
+SOUND:@The_monster@ laughs maniacally.
+%%%%
+__LAUGH unseen
+
+SOUND:You hear maniacal laughter.
 ############################################
 # End of default shouts
 ############################################
@@ -438,7 +453,7 @@ You pose @_riddle_adj_@ riddle to @the_monster@
 
 You ask @the_monster@ @_riddle_adj_@ riddle
 
-You challege @the_monster@ with @_riddle_adj_@ riddle
+You challenge @the_monster@ with @_riddle_adj_@ riddle
 %%%%
 Sphinx riddle success
 

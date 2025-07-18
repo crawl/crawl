@@ -314,7 +314,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Spectacle
-    SPELL_DAZZLING_FLASH,
+    SPELL_GLOOM,
     SPELL_STARBURST,
     SPELL_FULSOME_FUSILLADE,
 },
@@ -385,7 +385,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of the Senses
-    SPELL_DAZZLING_FLASH,
+    SPELL_GLOOM,
     SPELL_MEPHITIC_CLOUD,
     SPELL_SILENCE,
     SPELL_CURSE_OF_AGONY,
@@ -592,7 +592,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_WALKING_ALEMBIC,
     SPELL_MONARCH_BOMB,
     SPELL_DIAMOND_SAWBLADES,
-}
+},
+
+{ } // BOOK_PARCHMENT
 
 };
 

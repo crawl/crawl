@@ -53,7 +53,5 @@ mutations:
     MUT_PASSIVE_MAPPING: 1
   9:
     MUT_PASSIVE_MAPPING: 1
-  18:
-    MUT_PASSIVE_MAPPING: 1
 
 orc_name: Meteorc

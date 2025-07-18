@@ -305,8 +305,8 @@ Hurl Torchlight ability
 
 Hurls a gout of umbral fire from the Black Torch, which deals irresistible
 damage to living, demonic, and holy beings. The torchlight will also briefly
-empower any of your undead servants caught in its blast, and is harmless to its
-user. The damage is increased by Invocations skill.
+empower any of your undead servants caught in its blast, and is harmless to
+those who worship Yredelemnul. The damage is increased by Invocations skill.
 
 This ability can be used only while the torch is lit, and only a limited number
 of times on each floor. The number of uses available per floor increases with
@@ -565,7 +565,7 @@ ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
-Permanently corrupts a weapon of your choice with a localised field of
+Permanently corrupts a melee weapon of your choice with a localised field of
 distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
@@ -753,8 +753,10 @@ Invocations skill increases the duration of the effect.
 # Gozag
 Potion Petition ability
 
-Petitions Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices.
+Petitions Gozag to sell you the effects of a set of potions. (These effects will
+be applied instantly and directly to the petitioner, rather than being provided
+or being drunk as a normal potion.) Gozag will offer three lists at a time, with
+varying prices.
 %%%%
 Call Merchant ability
 

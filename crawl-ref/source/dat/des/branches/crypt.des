@@ -54,14 +54,14 @@ function callback.grunt_crypt_arrival_guards_awaken(data,triggerable,trigger,mar
             dgn.terrain_changed(replica.x, replica.y, "floor", false)
             dgn.colour_at(replica.x, replica.y, "lightgray")
             dgn.create_monster(replica.x, replica.y,
-                               "human skeleton / human zombie / \
+                               "human draugr / human zombie / \
                                 mummy w:20 / guardian mummy")
         end
     end
 end
 
 function crypt_entry(e)
-    e.tags("crypt_entry vaults_entry_crypt")
+    e.tags("crypt_entry vaults_entry_crypt patrolling")
     e.kmons("0 = necromancer w:5 / death knight w:5 / \
                  skeletal warrior / ghoul / \
                  phantasmal warrior / flayed ghost / eidolon")
@@ -73,43 +73,80 @@ function crypt_entry(e)
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
 end
 
-function crypt_loot_plus(e)
-  -- Since Crypt is an optional, late, difficult branch,
-  -- provide some unreliable but high quality incentives.
-  -- TODO: shove this into an extra-greedy shop so people actually notice the
-  -- existence of this and thus are more incentivized for optional branch #3.
-  local drain = "ego:draining good_item pre_id"
-  local pain = "ego:pain pre_id"
-  local vamp = "ego:vampirism pre_id"
-  local book = "randbook disc:necromancy numspells:6 spells:"
+
+
+-- A revision of old Crypt end reward items (c.f. )
+-- Since Crypt is an optional, late, difficult branch, provide some expensive
+-- high quality incentives.
+-- In total: a talisman with torment resistance, a book with high-level necro
+-- spells, two weapons with necromancy themes, a jewellery randart, either a
+-- jewellery randart or a necromantic unrand, and some niche evil-ish armour.
+function crypt_loot_plus(e, glyph)
+  local inv = {};
+
+  local top_lb = util.random_from({"triple sword", "double sword", })
+  local top_pa = util.random_from({"bardiche", "partisan"})
+  local top_ax = util.random_from({"executioner's axe", "executioner's axe",
+                                   "broad axe"})
+  local top_rg = util.random_from({"longbow", "triple crossbow", "hand cannon"})
+  local high_sb = util.random_from({"quick blade", "rapier"})
+  local top_weap = util.random_from({top_lb, "quick blade", top_pa, top_ax,
+                                    "eveningstar", "lajatang", top_rg, top_rg})
+  local high_weap = util.random_subset({"great sword", high_sb, "battleaxe",
+                                        "glaive", "great mace", "lajatang"}, 2)
+  local staff = util.random_from({"staff of death randart",
+                                  "any magical staff randart artprops:Necro"})
+  local drain_plus = crawl.random_range(1, 4)
+  local weaps = util.random_subset({top_weap .. " ego:draining plus:" .. drain_plus,
+                                    high_weap[1] .. " ego:pain good_item",
+                                    high_weap[2] .. " ego:vampirism good_item",
+                                    staff}, 2)
+  table.insert(inv, table.concat(weaps, ' | '))
+
   local ring = "any ring randart artprops:rN:2"
   local amulet = "any amulet randart artprops:Regen:1"
-  -- One drop-off of these,
-  e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
-          " / quick blade " .. drain .. " / executioner's axe " .. drain ..
-          " / eveningstar " .. drain .. " / partisan w:5 " .. drain ..
-          " / bardiche w:5 " .. drain .. " / lajatang " .. drain)
-  e.kitem("e = great sword " .. pain .." / battleaxe " .. pain ..
-          " / great mace " .. pain .. " / glaive " .. pain ..
-          " / quarterstaff " .. pain)
-  e.kitem("f = great sword " .. vamp .." / quick blade " .. vamp ..
-          " / battleaxe " .. vamp .. " / great mace " .. vamp ..
-          " / glaive " .. vamp .. ", sanguine talisman " ..
-          " / sanguine talisman randart w:2")
-  e.kitem("g = " .. ring .. ", " .. ring .. " / " .. amulet .. " w:2, " ..
-          ring .. " / " .. amulet .. " w:2 / sanguine talisman ")
-  -- and one drop-off of these.
-  e.kitem("h = vampires_tooth / sword_of_the_doom_knight / leech / " ..
-          "finisher / scythe_of_curses / majin-bo / " ..
-          "sceptre_of_torment / undeadhunter / brilliance")
-  e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
-          .. book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = talisman of death / talisman of death randart w:1, " ..
-          "staff of death randart / any magical staff randart artprops:Necro / " ..
-          "skull_of_zonguldrok w:1")
-  e.kitem("k = ivory gem")
-  e.subst("d = d:20 ef g:20")
-  e.subst("h = h:5 i:15 j")
+  local unrand = util.random_from({"sword_of_the_dread_knight", "leech",
+                                   "vampires_tooth", "finisher",
+                                   "scythe_of_curses", "sceptre_of_torment",
+                                   "undeadhunter", "brilliance", "majin-bo",
+                                   "cigotuvis_embrace", "skull of zonguldrok"})
+  table.insert(inv, util.random_from({ring, amulet}))
+
+  if crawl.one_chance_in(3) then
+    table.insert(inv, unrand)
+  else
+    table.insert(inv, util.random_from({ring, amulet}))
+  end
+
+  local book = "randbook disc:necromancy numspells:3 spells:"
+  table.insert(inv, util.random_from({"necronomicon", book .. "death's_door",
+                                      book .. "borgnjor's_revivification",
+                                      book .. "haunt", book .. "infestation"}))
+
+  local tali = util.random_from({"talisman of death", "sanguine talisman",
+                                 "granite talisman"})
+  if crawl.one_chance_in(11) then
+    table.insert(inv, tali .. " randart")
+  else
+    table.insert(inv, tali)
+  end
+
+  local orbs = util.random_from({"energy", "guile", "mayhem"})
+  local shield = util.random_from({"tower shield randart artprops:rN:1",
+                                   "tower shield ego:positive_energy"})
+  local etc = util.random_from({shield, "shadow dragon scales randart",
+                                "orb ego:" .. orbs .. " randart artprops:Necro"})
+  table.insert(inv, etc)
+  inv = table.concat(inv, " | ")
+
+  e.kfeat(glyph .. " = general shop no_mimic type:Gilded suffix:Reliquary " ..
+                      "use_all greed:20 ; " .. inv)
+  e.tile(glyph .. " = dngn_gilded_reliquary")
+
+  -- Replace a little bit of the loot with gold to compensate for the
+  -- shop items, and set up a standard gem glyph.
+  e.kitem("d = $ q:" .. crawl.random_range(100, 200))
+  e.kitem("g = ivory gem")
 end
 }}
 
@@ -254,7 +291,8 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
 TAGS:   transparent
-MONS:   skeleton w:20 / skeletal warrior, ancient champion
+MONS:   yaktaur draugr w:20 / skeletal warrior
+MONS:   ancient champion
 : crypt_entry(_G)
 MAP
 ...........
@@ -468,7 +506,7 @@ ENDMAP
 ##############################################################################
 
 NAME:    nicolae_crypt_ancient_font
-TAGS:    transparent extra
+TAGS:    transparent extra decor
 DEPTH:   Crypt
 SHUFFLE: HIJ
 NSUBST:  A = @ / ., B = @ / ., C = @ / ., D = @ / .
@@ -623,24 +661,24 @@ xxxcccxxx@
 xxxxxxxxx
 ENDMAP
 
-NAME: nicolae_crypt_little_mausoleum
-DEPTH: Crypt
-TAGS: transparent allow_dup
+NAME:   nicolae_crypt_little_mausoleum
+TAGS:   transparent allow_dup
+DEPTH:  Crypt
+KMONS:  0 = zombie / draugr
+KMONS:  P = withered plant
+KITEM:  e = human skeleton / orc skeleton / elf skeleton
+KFEAT:  _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
+            altar_dithmenos w:5 / altar_the_shining_one w:1
 SHUFFLE: ab/ab/ab/ab/ba
-SUBST: b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
+SUBST:  b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
 : if you.depth() == 1 then
-SUBST: s = ]})>
+SUBST:  s = ]})>
 : elseif you.depth() == dgn.br_depth(you.branch()) then
-SUBST: s = [{(<
+SUBST:  s = [{(<
 : else
-SUBST: s = ]})>[{(<
+SUBST:  s = ]})>[{(<
 : end
-KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
-           altar_dithmenos w:5 / altar_the_shining_one w:1
-KMONS: 0 = zombie / skeleton
-KMONS: P = withered plant
-KITEM: e = human skeleton / orc skeleton / elf skeleton
-TILE: t = dngn_tree_dead
+TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
 xxxxx
@@ -899,10 +937,7 @@ ENDMAP
 NAME:    nicolae_crypt_fountain_of_water_so_delicious
 TAGS:    transparent extra decor
 DEPTH:   Crypt
-KITEM:   D = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
-             draconian skeleton / merfolk skeleton / minotaur skeleton / \
-             spriggan skeleton / troll skeleton / barachi skeleton / \
-             oni skeleton / dwarf skeleton / felid skeleton
+: kitem("a = " .. vault_species_skeletons(_G, "dungeon"))
 SHUFFLE: pq
 SUBST:   p = x, q = .
 NSUBST:  - = 3=D / 2=D. / D...., ` = 2=D / 2=D. / .
@@ -922,10 +957,8 @@ ENDMAP
 NAME:  nicolae_crypt_grate_for_corpse_storage
 TAGS:  transparent extra decor
 DEPTH: Crypt
-KITEM: a = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
-           draconian skeleton / merfolk skeleton / minotaur skeleton / \
-           spriggan skeleton / troll skeleton / barachi skeleton / \
-           oni skeleton / dwarf skeleton / felid skeleton / nothing w:65
+: kitem("a = " .. vault_species_skeletons(_G, "dungeon"))
+SUBST: a = aa.
 KFEAT: - = iron_grate
 KPROP: a = no_tele_into
 KMASK: a = no_monster_gen
@@ -1208,10 +1241,7 @@ ENDMAP
 NAME:   nicolae_crypt_they're_not_using_it
 TAGS:   transparent extra decor
 DEPTH:  Crypt
-KITEM:  a = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
-            draconian skeleton / merfolk skeleton / minotaur skeleton / \
-            spriggan skeleton / troll skeleton / barachi skeleton / \
-            oni skeleton / dwarf skeleton / felid skeleton
+: kitem("a = " .. vault_species_skeletons(_G, "dungeon"))
 KFEAT:  - = iron_grate
 NSUBST: ' = @ / ., ` = @ / .
 KPROP:  a = no_tele_into
@@ -1287,12 +1317,14 @@ ENDMAP
 
 ##############################################################################
 # tombs in the wall
-NAME:  tombwall_bobbens
-TAGS:  transparent
-DEPTH: Crypt
-MONS:  zombie w:150 / skeleton w:150 / skeletal warrior / ghoul / \
-       large abomination / small abomination / \
-       skeleton w:150 / patrolling burial acolyte w:40
+NAME:   tombwall_bobbens
+TAGS:   transparent
+DEPTH:  Crypt
+MONS:   zombie w:160 / draugr w:80 / skeletal warrior w:30 / \
+        large abomination / patrolling burial acolyte w:40
+KMONS:  2 = cognitogaunt / ghoul
+KITEM:  2 = *, *
+NSUBST: 1 = 1:2 / *:1
 KFEAT: _ = altar_kikubaaqudgha
 MAP
 ccccccccccccccccccccccc
@@ -1307,7 +1339,7 @@ ENDMAP
 #       small crypt building
 NAME:   minicrypt_bobbens
 DEPTH:  Crypt
-MONS:   necromancer, zombie / skeleton, laughing skull
+MONS:   necromancer, zombie / draugr w:5, laughing skull
 MAP
   ccccccc
  cc2c2c2cc
@@ -1327,29 +1359,25 @@ ENDMAP
 NAME:  weyrava_lich_vault
 TAGS:  no_monster_gen no_item_gen
 DEPTH: Crypt
-ITEM:  gold
-KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
+MONS:  lich / bone dragon w:3, zombie / draugr
 KMONS: Y = Boris / ancient lich, ancient lich / dread lich
-MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
-MONS:  skeleton / zombie
-KFEAT: v = .
-KITEM: v = $ / %
-SUBST: $ = $.*|
+KFEAT: ^ = w:5 alarm trap / w:8 zot trap / w:50 floor
+SUBST: $ = .$*|, ? = $%, 1 = 1:13 2:6
 MAP
     ccccc
- ccccv.vcccc
+ cccc?.?cccc
  c$.+.Y..+$c
- c.ccv.vcc.c
+ c.cc?.?cc.c
  c+ccc+ccc+c
  c..$c.c$..c
 @n.1.c.c.1.c
  c$.$c.c$.$c
  ccc+c.ccccc
- cccZcZc$c
- c.+.cZczc
- cZcccZc+c
- c.+2+Z+2c
- cccccZccc
+ cccZc^c$c
+ c.+.c^czc
+ cZccc^c+c
+ c.+2+^+2c
+ ccccc^ccc
      c.c
      c@c
 ENDMAP
@@ -1504,23 +1532,23 @@ ENDMAP
 NAME:   st_burial_chamber
 TAGS:   no_wall_fixup
 DEPTH:  Crypt
-MONS:   mummy, guardian mummy, ushabti
-KMONS:  4 = guardian mummy
-KMONS:  5 = mummy priest
-KMONS:  6 = royal mummy
-KITEM:  456 = |
+MONS:   mummy / guardian mummy w:20 / ushabti
+KMONS:  2 = guardian mummy
+KMONS:  3 = mummy priest
+KMONS:  4 = royal mummy
+KITEM:  234 = |
 SUBST:  1 = 2231
 MAP
  ccccccccccccc
 cc...........cc
 cc.cccc+cccc.cc
-ccmcc1...1ccmcc
+ccmcc1.*.1ccmcc
 ccxccc...cccxcc
-c4x4c1...1c4x4c
+c2x2c1...1c2x2c
 cxxxcc...ccxxxc
-c5x5c1...1c5x5c
+c3x3c1...1c3x3c
 cxxxcc...ccxxxc
-c5x6c1...1c6x5c
+c3x4c1...1c4x3c
 ccccccc+ccccccc
 .ccGcc...ccGcc.
 .......@.......
@@ -1736,7 +1764,7 @@ MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
 KMONS:   9 = revenant soulmonger
 KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
-             skeleton w:8 / laughing skull band w:6
+             draugr w:8 / laughing skull band w:6
 KMONS:   B = ancient champion
 KMONS:   C = mummy priest
 KMONS:   0 = zombie
@@ -1846,9 +1874,9 @@ KMONS:   S = deep troll shaman
 KFEAT:   S = ] / } / )
 # either all spectrals, or regular necromancer band
 MONS:    spectral deep troll w:30 / spectral iron troll
-MONS:    deep troll skeleton w:18 / deep troll zombie w:18 / \
-         deep troll simulacrum w:9 / iron troll skeleton w:6 / \
-         iron troll zombie w:6 / iron troll simulacrum w:3
+MONS:    deep troll draugr w:8 / deep troll zombie w:24 / \
+         deep troll simulacrum w:8 / iron troll draugr w:4 / \
+         iron troll zombie w:4 / iron troll simulacrum w:4
 NSUBST:  T = 3:1 / 2 = 1. / *:.
 SHUFFLE: 12
 : vault_granite_statue_setup(_G, "G", "gravestone")
@@ -1950,17 +1978,15 @@ TAGS: no_item_gen no_monster_gen
 DEPTH: Crypt, !Crypt:$
 ORIENT: float
 # Monster density might be off here
-MONS: fire dragon skeleton / quicksilver dragon skeleton w:5 \
-      / golden dragon skeleton w:2
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
-MONS: hell knight / necromancer w:2, bone dragon, \
-      reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:flaming
+MONS: hell knight / necromancer w:2, bone dragon
+MONS: reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:flaming
 MONS: lich
-KMONS: A = fire dragon skeleton / quicksilver dragon skeleton w:5 \
-           / golden dragon skeleton w:2
+KMONS: A0 = fire dragon draugr w:12 / quicksilver dragon draugr w:4 / \
+            laughing skull w:6
 KFEAT: A = l
-NSUBST: - = 1:1 / 2=1. / 2:2 / 1=2. / 1:3 / 1=3. / 6:4 / 2=4.
-NSUBST: " = 4:A / 2=Al / *:l, ' = 2:1 / 2=2. / 2:6, ; = 1:5 / 1=6. / 1:7
+NSUBST: - = 1:0 / 2=0. / 2:1 / 1=1. / 1:2 / 1=2. / 6:3 / 2=3.
+NSUBST: " = 4:A / 2=Al / *:l, ' = 2:0 / 2=1. / 2:5, ; = 1:4 / 1=5. / 1:6
 NSUBST: ` = 1:| / 2=|* / 5:* / 2=*% / *:$
 MAP
   xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1986,44 +2012,45 @@ ENDMAP
 NAME:    nicolae_crypt_knee_deep_in_the_dead
 TAGS:    transparent no_monster_gen
 DEPTH:   Crypt:2-
-KMONS:   0 = 0 zombie / 0 skeleton / 0 simulacrum / 0 spectral thing
-KMONS:   9 = 9 zombie / 9 skeleton / 9 simulacrum / 9 spectral thing
-KMONS:   8 = 8 zombie / 8 skeleton / 8 simulacrum / 8 spectral thing
+KMONS:   0 = 0 zombie / 0 draugr / 0 simulacrum / 0 spectral thing
+KMONS:   9 = 9 zombie / 9 draugr / 9 simulacrum / 9 spectral thing
+KMONS:   8 = 8 zombie / 8 draugr / 8 simulacrum / 8 spectral thing
 SHUFFLE: {[(<
 SUBST:   - = 8 9:30 0:120 .:20
 MAP
 xxxxxxxxxx
-x-----...x
+x-----..%x
 +-----.{.x
 +-----.G.x
 +-----.[.x
-x-----...x
+x-----..%x
 xxxxxxxxxx
 ENDMAP
 
 # https://www.youtube.com/watch?v=6j3StwEVchQ
 NAME:   nicolae_crypt_knochenhaus
-TAGS:   patrolling transparent
+TAGS:   patrolling transparent no_monster_gen
 DEPTH:  Crypt
 WEIGHT: 5
 ORIENT: float
-KITEM:  3 = * / |
 # The regular-weight skellingtons move at speed 10 or more. The lower-weighted
 # skellingtons hit hard and/or have something tactical like trample or reach.
-KMONS:  1 = anaconda skeleton / caustic shrike skeleton / harpy skeleton / \
-        storm dragon skeleton / juggernaut skeleton / pearl dragon skeleton / \
-        fenstrider witch skeleton / guardian serpent skeleton / \
-        quicksilver dragon skeleton / shard shrike skeleton / \
-        20-headed hydra skeleton w:5 / alligator snapping turtle skeleton w:5 /\
-        apis skeleton w:5 / dire elephant skeleton w:5 / titan skeleton w:5 / \
-        golden dragon skeleton w:5 / hellephant skeleton w:5
-KMONS:  2V = skeletal warrior w:20 / laughing skull / curse skull w:5 / \
-        ancient champion band / nothing w:20
-KMONS:  3 = bone dragon / revenant soulmonger
+KMONS:  1 = anaconda draugr / chonchon draugr / harpy draugr / \
+        storm dragon draugr / juggernaut draugr / pearl dragon draugr / \
+        fenstrider witch draugr / guardian serpent draugr / \
+        quicksilver dragon draugr / 8-headed hydra draugr w:5 / \
+        alligator snapping turtle draugr w:5 / \
+        apis draugr w:5 / dire elephant draugr w:5 / titan draugr w:5 / \
+        golden dragon draugr w:5 / hellephant draugr w:5
+KMONS:  2V = skeletal warrior w:20 / laughing skull / \
+             revenant soulmonger w:5 / ancient champion band / nothing w:20
+KMONS:  3 = bone dragon / curse skull
+: item(vault_species_skeletons(_G, "dungeon"))
+KITEM:  3 = * / |
 KFEAT:  V = V / .
 KFEAT:  3 = V
 SUBST:  G = GG., H = G, 1 = 11112 .:30, 2 = 2:23 3:2
-SUBST:  L = $%., M = %*, N = %***, % = %%*, * = **|
+SUBST:  L = $%., M = %*, N = %***, % = %%*, * = *||
 NSUBST: ap = 1=c, pq = 1=c, apq = *=+, rs = 1=c, sy = 1=c, rsy = *=+
 NSUBST: P = c / +, Q = c / +, R = + / +c / c, S = + / +c / c
 NSUBST: z = +c / c, Z = + / +c / c
@@ -2038,11 +2065,11 @@ c.1...1.cccaccccPcccccccPcc
 cG.M.M..p....Gc...c...c...c
 ccccqcccc.L.L.R.1.P.1.P.1.c
 cG.M.M.Gc1.V..c...c...c...cH
-c.1...1.q.L.L.ccZccczccc+cc.
-cM.2N2..cG.1..R...c...c...c.
-cG.N3N.Gccccccc.1.Z.1.+.1.+@
-cM.2N2..cG.1..S...c...c...c.
-c.1...1.y.L.L.ccZccczccc+cc.
+c.1...1.q.L.L.ccZccczccc+ccd
+cM.2N2..cG.1..R...c...cdddcd
+cG.N3N.Gccccccc.1.Z.1.+d1d+@
+cM.2N2..cG.1..S...c...cdddcd
+c.1...1.y.L.L.ccZccczccc+ccd
 cG.M.M.Gc1.V..c...c...c...cH
 ccccycccc.L.L.S.1.Q.1.Q.1.c
 cG.M.M..s....Gc...c...c...c
@@ -2394,7 +2421,7 @@ TAGS:    transparent
 DEPTH:   Crypt
 KITEM:   1 = % / nothing
 KITEM:   2 = *
-KMONS:   1 = mummy / 8 skeleton / guardian mummy
+KMONS:   1 = mummy / 8 draugr / guardian mummy
 KMONS:   2 = mummy priest / lich / ancient lich w:2 / dread lich w:2 / \
              royal mummy w:2
 SHUFFLE: DEFH, JKLM
@@ -2485,7 +2512,7 @@ KMONS:   d! = shadow wraith / freezing wraith / flayed ghost / eidolon / \
               nothing w:40
 KMONS:   pq = vampire knight
 KMONS:   rs = vampire mage
-KMONS:   z = ghoul
+KMONS:   z = ghoul / cognitogaunt w:2
 KMONS:   R = vampire / jiangshi / ghoul
 KMONS:   L = lich / ancient lich w:5 / dread lich w:5
 KMONS:   Y = vampire bloodprince
@@ -2558,7 +2585,7 @@ MONS:   lich
 MONS:   ancient champion
 MONS:   skeletal warrior
 MONS:   laughing skull
-MONS:   w:20 skeletal warrior / skeleton w:50  / nothing
+MONS:   skeletal warrior w:20 / draugr w:40 / weeping skull
 : elseif brnd > 4 then -- vampire layout
 KMONS:  1 = vampire bloodprince / Jory w:5, vampire bloodprince
 KMONS:  2 = undying armoury
@@ -2591,13 +2618,13 @@ MONS:   weeping skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
 NSUBST: / = 1:| / 2:* / 1:*% / *:%
-NSUBST: %*| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST: %*| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 cccccccccccccccvvvvvvvvvvvvvvvvvcccccccccccccc
 ccccccccccccccvv..WWWWWWWWWWW..vvccccccccccccc
-cccccccccccccvv..WWWWWWWWWWWWW..vvcccccccccccc
-cccccccccccccv...WWWb.bkb.bWWW...vcccccccccccc
+cccccccccccccvv..WWWWWWSWWWWWW..vvcccccccccccc
+cccccccccccccv...WWWb.bgb.bWWW...vcccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vcccccccccccc
 cccccccccccccv...WW.$/|%|/$.WW...vcccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vcccccccccccc
@@ -2647,12 +2674,12 @@ ENDMAP
 #       gigantic sort of aquatic base
 #
 NAME:   cryptofortress_bobbens
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_descent
 PLACE:  Crypt:$
 ORIENT: encompass
-MONS:   zombie / skeleton / bog body w:5
+MONS:   zombie w:12 / draugr w:6 / simulacrum w:2 / bog body w:4
 MONS:   storm dragon zombie / caustic shrike zombie / \
-        golden dragon zombie / jiangshi w:5 / ghoul
+        golden dragon zombie / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
 MONS:   skeletal warrior, necromancer, hell knight
 MONS:   lich, vampire knight / ancient champion w:2
 KMONS:  8 = bone dragon
@@ -2683,8 +2710,8 @@ SUBST:  P = |**
 KFEAT:  > = enter_tomb
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
-NSUBST: *| = d / 1=h, k = k / $
-: crypt_loot_plus(_G)
+NSUBST: *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
@@ -2696,9 +2723,9 @@ vwwwwwwwwwwwwwwv.........rrrrrrrr.........vLwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vLLLLwwwwwwwwwwv
 vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....5..v.....rrrrOrkkkkrOrrrr.....v.......?wwwwwwv
-vwwwwwwv....5..+........rrrkkkkrrr........+.2..5..vwwwwwwv
-vwwwwww?....5..v......6...rkkkkr...6......v....5..?wwwwwwv
+vwwwwww?....5..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
+vwwwwwwv....5..+........rrr$Sg$rrr........+.2..5..vwwwwwwv
+vwwwwww?....5..v......6...r$$$$r...6......v....5..?wwwwwwv
 vwwwwwwv.2.vvvvv...rrr....rr++rr....rrr...v....5..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.A..vv....rrr........rrr....vv...vvvvvvwwwwwwv
@@ -2763,7 +2790,7 @@ PLACE:  Crypt:$
 MONS:   patrolling lich w:20 / patrolling ancient lich
 MONS:   patrolling dread lich
 MONS:   bone dragon / curse skull / curse toe
-MONS:   laughing skull / skeletal warrior / skeleton
+MONS:   laughing skull w:12 / skeletal warrior / draugr w:8
 MONS:   ancient champion
 KMONS:  F = orange crystal statue / obsidian statue
 KITEM:  | = | no_pickup
@@ -2781,14 +2808,14 @@ lua_marker("|",
                               true, { only_at_replica = true,
                                       listen_to_replicas = true })))
 }}
-NSUBST:  %| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  %| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 .....................
 .....................
 ..vvvvnnnnnnnnnvvvv..
-..vlllllllllllllllv..
-..vlllllllklllllllv..
+..vlllllllSlllllllv..
+..vlllllllglllllllv..
 ..vllll.%|||%.llllv..
 .4vll..%|||||%..llv4.
 ..vl....%|||%....lv..
@@ -2809,6 +2836,7 @@ ENDMAP
 #
 NAME:   quadcrypt_mu
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_hmirror
+TAGS:   no_descent
 ORIENT: encompass
 PLACE:  Crypt:$
 ####### chapel garden
@@ -2838,15 +2866,15 @@ KMONS:  H = guardian sphinx
 KMONS:  I = ushabti
 KMONS:  J = death scarab
 KMONS:  K = guardian mummy
-KMONS:  L = guardian sphinx skeleton / mummy
+KMONS:  L = guardian sphinx zombie / sphinx marauder draugr w:5 / mummy w:5
 NSUBST: JK = 1:I / 1:J / *:K, L = 1:IJ / 2:K / *:L
 : end
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
 KMONS:  P = patrolling curse skull
 : if crawl.coinflip() then
 KMONS:  Q = bone dragon
-KMONS:  R = skeletal warrior
-KMONS:  S = zombie / skeleton
+KMONS:  R = skeletal warrior / cognitogaunt w:3
+KMONS:  S = zombie w:12 / draugr
 : else
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
@@ -2854,19 +2882,19 @@ KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
-KMONS:  z = ghost crab / fire dragon skeleton / laughing skull w:20
-KMONS:  Z = w:1 curse skull / w:19 revenant soulmonger
+KMONS:  z = ghost crab / fire dragon draugr w:8 / laughing skull w:22
+KMONS:  Z = curse skull w:1 / revenant soulmonger w:19
 SUBST:  ~ = m
 : else
-KMONS:  z = w:20 hell knight / smoke demon / laughing skull
-KMONS:  Z = w:1 curse skull / w:19 balrug
+KMONS:  z = hell knight w:20 / smoke demon / laughing skull
+KMONS:  Z = curse skull w:1 / balrug w:19
 KFEAT:  ~ = crystal_wall
 TILE:   ~ = bedevilled_crystal_gehenna
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 ####### Randomisation of doors and rewards
 NSUBST: - = 1:+ / *:v, ' = 1:+ / *:v, " = 1:+ / *:v
-NSUBST: *| = 1:d / 1:h
+NSUBST: *| = 2:d, g = 1:g / 1:h / *:.
 ####### Tomb entrance
 : if crawl.one_chance_in(4) then
 KFEAT:  T = enter_tomb
@@ -2881,18 +2909,18 @@ NSUBST: O = 1:> / *:$
 KFEAT:  > = enter_tomb
 : end
 SUBST:  ? = $ % * |:1
-: crypt_loot_plus(_G)
+: crypt_loot_plus(_G, "h")
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...svvvvvvvvvvvvvvvvvvvvvv
 vc..B..c.....c....sc..+..c.ffff.vvvsTvvvvvvvvvvvvvvvvvvvvvv
-vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+.....v
+vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnL+....gv
 vc.._..+...B.c....sc..c..m.ffFf.vO???||$$$.vvvvv..nLn|????v
 vc.c.c.c.....c....cc..c..c.ffff.v?$$$$$$$$.vvvv...nLn$$$$$v
 vc.....ccc+ccc....sc..cDDc.ffff.vnnnnnnnnn+vvv..H.nLn$$O$$v
 vc.....c.....c....cc..c..c.ffff.v..........vv.....nLn$$$$$v
 vc.....c?....c..A.sc..c..m..fff.v..........vv.uvu.nLn$$$$$v
-vc.....c|?...c...kcc..c..c...ff.v..vvvvvvvvv..vvv.nLnnnnnnv
+vc.....c|?...c...gcc..c..c...ff.v..vvvvvvvvv..vvv.nLnnnnnnv
 vc.....c||?CCcscscc...c..c....f.v..........+..uvu.nLLLLLLLv
 vc++cccccccccccccc...cc..c......v..........+......nnnnnnn+v
 vc.....D............cc...m..D...vvvvvvvvvvvv.H............v
@@ -2934,7 +2962,7 @@ v...ll...+.vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+zvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
 v...ll...+.vwwww.............wwww.......+........R......v.v
 v...ll...+zvwww...............ww........+....V.S.R.V....v.v
-v.llllll.+.vwww...................wwwwwwv......S........v.v
+v.llllll.+gvwww...................wwwwwwv......S........v.v
 v.llllll.+zvwww8.............8...wwwwwwwv....V.S.R.V....v.v
 v...ll...v.vwww.................wwwwwwwwv........R......v.v
 v.z.ll...vzvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
@@ -2956,14 +2984,14 @@ ENDMAP
 # A: ~use your Imagination~
 #
 NAME:   evilmike_haunted_forest
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_descent
 ORIENT: encompass
 PLACE:  Crypt:$
 MONS:   w:3 patrolling lich / w:1 patrolling revenant soulmonger
 MONS:   patrolling zombie / nothing
 MONS:   alderking
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
-MONS:   wyvern skeleton / w:30 nothing
+MONS:   wyvern draugr w:5 / raven draugr w:5 / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
@@ -2991,7 +3019,7 @@ KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
 KMONS:  B = necromancer
 KMONS:  C = hellwing
-KMONS:  E = skeleton w:13 / nothing
+KMONS:  E = zombie w:7 / draugr w:6 / nothing
 KMONS:  F = patrolling reaper
 KFEAT:  _ = altar_kikubaaqudgha
 : end
@@ -3018,8 +3046,8 @@ SUBST:  n : ncc
 TILE:   t = DNGN_TREE_DEAD
 : vault_granite_statue_setup(_G, "G", "gravestone")
 : set_feature_name("tree", "dead tree")
-NSUBST: *| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST: *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -3030,11 +3058,11 @@ ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
 tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
 tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
 tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
-ttT""T.t.."""""""".....cccccc9--k--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
+ttT""T.t.."""""""".....cccccc9--S--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
 tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
 ttttt"""""".vvvvv.....ccc--ZZ**|V|**ZZ--ccc..555...t..tt..t...TTtttT....Tttttttt
 ttttttTtT"".v--4vvv...ccc--ZZ-*|||*-ZZ--ccc.......T.....t....t..TttttT.TTttttttt
-ttttttT..."...-%v--v...c-----------------c...........t...t..t.t..Tttttt.tttttttt
+ttttttT..."...-%v--v...c--------g--------c...........t...t..t.t..Tttttt.tttttttt
 ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttt.ttcnnnctt
 ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
 tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
@@ -3126,24 +3154,25 @@ COLOUR: YsDdE = darkgrey
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
 MONS:   ancient lich / dread lich
 MONS:   bone dragon w:1 / ancient champion / lich w:1
-MONS:   caustic shrike skeleton / titan skeleton
-MONS:   w:50 skeleton / wight
+MONS:   guardian sphinx draugr / titan draugr
+MONS:   fire dragon draugr w:5 / ice dragon draugr w:5 / draugr w:25 / \
+        laughing skull / weeping skull w:5
 MONS:   generate_awake bone dragon / generate_awake curse toe
 : elseif brnd > 6 then
 MONS:   patrolling vampire knight / patrolling vampire mage / \
-        patrolling vampire w:25
-KMONS:  2 = vampire bloodprince / Jory w:15, vampire bloodprince
+        patrolling jiangshi w:15 / patrolling phantasmal warrior w:5 / \
+        patrolling chonchon zombie w:5
+KMONS:  2 = vampire bloodprince w:15 / Jory, vampire bloodprince
 KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight
 KMONS:  4 = phantasmal warrior / jiangshi
-KMONS:  5 = vampire / zombie / golden dragon zombie w:3 / storm dragon zombie w:3
+KMONS:  5 = vampire w:6 / zombie / chonchon zombie w:6 / storm dragon zombie w:3
 KMONS:  6 = generate_awake vampire mage
-SUBST:  2 = ., ' = 2, " = 4
 : elseif brnd > 2 then
-MONS:   patrolling freezing wraith / patrolling spectral thing w:8
+MONS:   patrolling freezing wraith / patrolling spectral thing w:12
 MONS:   revenant soulmonger
 MONS:   eidolon
-MONS:   flayed ghost / phantasmal warrior
-MONS:   spectral thing / simulacrum / shadowghast w:3 / wraith w:2 / shadow wraith / \
+MONS:   flayed ghost / phantasmal warrior w:8
+MONS:   spectral thing / simulacrum / reaper w:5 / shadow wraith / \
         spectral storm dragon w:5 / spectral quicksilver dragon w:5
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
@@ -3157,14 +3186,14 @@ MONS:   bog body / mummy w:5 / soul eater w:5 / guardian mummy
 MONS:   generate_awake guardian sphinx
 : end
 SUBST:  '" = .
-NSUBST:  %*| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  %*| = 2:d
+: crypt_loot_plus(_G, "Z")
 MAP
                 ccccccccccccccccccccccccccccccc
                 ccccccccccccccccccccccccccccccc
-                cc*$*c|%*...k...**|c.........cc
+                cc*$*c|%*...Z...**|c.........cc
                 cc$3$c|*...'2'...%|c..G.3.G..cc
-                cc...c|%|.......|%|c.........cc
+                cc...c|%|...g...|%|c.........cc
                 ccc+cccccc.....ccccccc+cccBBBcc
                 cc...c...ccc+ccc...c.....c$$$cc
                 cc.4.c.G.4.RRR.4.G.+..G..c$$$cc
@@ -3212,22 +3241,19 @@ ENDMAP
 #        The death's head, by Grunt.
 #
 NAME:    grunt_crypt_end_deaths_head
-TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror
+TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror no_descent
 PLACE:   Crypt:$
 ORIENT:  encompass
 MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
-SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
-
-KMONS:   3 = ghoul
+KMONS:   3 = cognitogaunt
 KMONS:   4 = bog body
 KMONS:   5 = necromancer
-KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
+KMONS:   6 = simulacrum / spectral thing / zombie w:7 / draugr w:3 / \
              hell knight w:5
 KMONS:   7 = death knight
 KMONS:   8 = vampire knight w:5 / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
-
 # Room guardian waves; these should be tougher, but not boss tier.
 KMONS:   A = lich
 KMONS:   C = revenant soulmonger
@@ -3243,7 +3269,6 @@ KMONS:   M = burial acolyte
 KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
 KMONS:   Q = flayed ghost / shadowghast w:20
-
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then
 KMONS:   R = Khufu, royal mummy
@@ -3262,22 +3287,21 @@ KMONS:   R = curse skull
 KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
 : end
-
 KFEAT:   R = enter_tomb
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
+SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 SHUFFLE: {[(<
-
-NSUBST:  *| = 1:d / 1:h
-: crypt_loot_plus(_G)
+NSUBST:  *| = 2:d
+: crypt_loot_plus(_G, "Z")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccc|*$$...R...$$*|ccccccccccccccccccccccccc
-cccccccccccccccccccccc..cc*$$.T.k.T.$$*cc..cccccccccccccccccccccc
+cccccccccccccccccccccc..cc*$$.T.g.T.$$*cc..cccccccccccccccccccccc
 cccccccccccccccccccc....ccc$$...T...$$ccc....cccccccccccccccccccc
 ccccccccccccccccccc.G.G.c.ccccc+++ccccc.c.G.G.ccccccccccccccccccc
 cccccccccccccccccc......c...............c......cccccccccccccccccc
-ccccccccccccccccc.......c..G..T...T..G..c.......ccccccccccccccccc
+ccccccccccccccccc.......c..G..T.Z.T..G..c.......ccccccccccccccccc
 cccccccccccccccc..K.J.K.c......T.T......c.M.L.M..cccccccccccccccc
 cccccccccccccccc........c..G.........G..c........cccccccccccccccc
 ccccccccccccccc....K.K..cc.............cc..M.M....ccccccccccccccc
@@ -3335,27 +3359,28 @@ NAME:    lightli_unholy_cathedral
 TAGS:    no_monster_gen layout_city
 PLACE:   Crypt:$
 ORIENT:  north
-MONS:    ancient champion, lich / revenant soulmonger, jiangshi / ghoul w:2
+MONS:    ancient champion, lich / revenant soulmonger / cognitogaunt w:5
+MONS:    jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / vampire bloodprince / \
          curse toe w:5 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
-MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25
+MONS:    zombie w:20 / draugr w:15 / simulacrum w:15
 KMONS:   8 = vampire knight
 KMONS:   9 = vampire w:7 / vampire mage w:3
 KMONS:   0 = mummy priest
 KMONS:   A = guardian mummy w:7 / ushabti w:3
-SHUFFLE: 56, 89 / 0A
-SUBST:   5 = 55..., 6 = 66..., 9 = 9., A = AA.
+SHUFFLE: 56, 89 / 0A, Sg
+SUBST:   5 = 55..., 6 = 66..., 7 = 77., 9 = 9., A = AA.
 KFEAT:   Y = altar_yredelemnul
 KFEAT:   K = altar_kikubaaqudgha
-NSUBST:  *| = 1:d / 1:h, k = k / $
-: crypt_loot_plus(_G)
+NSUBST:  *| = 2:d
+: crypt_loot_plus(_G, "S")
 MAP
 cccccccccccccccccccccccccccc
-ccccccccccccckkccccccccccccc
-cccccccccccckkkkcccccccccccc
-cccccccccccckkkkcccccccccccc
+cccccccccccccSgccccccccccccc
+cccccccccccc$$$$cccccccccccc
+cccccccccccc$$$$cccccccccccc
 ccccccccccccc++ccccccccccccc
 ccccccc..............ccccccc
 ccc**c................c**ccc

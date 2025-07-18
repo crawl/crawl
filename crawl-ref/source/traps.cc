@@ -457,7 +457,7 @@ static passage_type _find_other_passage_side(coord_def& to)
 // 2/3 are "evil magic", 1/3 are "summons"
 static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { blind_player(random_range(15, 20)); }, 4 },
-    { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
+    { [] { contaminate_player(1500 + random2avg(1800, 2), false); }, 4 },
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
     { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
     { [] { you.petrify(nullptr); }, 1 },
@@ -720,7 +720,7 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
             mpr("You enter a devourer's trap.");
 
-        if (x_chance_in_y(2, 3))
+        if (x_chance_in_y(3, 4))
         {
             if (!you_trigger)
             {
@@ -729,7 +729,7 @@ void trap_def::trigger(actor& triggerer)
                                             "sets off an devourer's trap");
             }
             flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
-            you.corrode(nullptr, "The trap's stomach acid");
+            you.corrode(nullptr, "The trap's stomach acid", 6);
         }
         else if (!you_trigger)
             mprf("%s enters a devourer's trap.", triggerer.name(DESC_THE).c_str());

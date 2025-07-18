@@ -270,7 +270,8 @@ void spawn_random_monsters()
 
     // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
     // players that get banished there on the orb run.
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
+        && !player_in_branch(BRANCH_ARENA))
     {
         mg.proximity = PROX_CLOSE_TO_PLAYER;
         mg.foe = MHITYOU;
@@ -360,6 +361,7 @@ bool needs_resolution(monster_type mon_type)
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
            || mon_type == RANDOM_NONBASE_DRACONIAN
            || mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON
+           || mon_type == MONS_ORB_OF_APPROPRIATENESS
            || _is_random_monster(mon_type);
 }
 
@@ -375,6 +377,8 @@ monster_type resolve_monster_type(monster_type mon_type,
     if (want_band)
         *want_band = false;
 
+    if (mon_type == MONS_ORB_OF_APPROPRIATENESS)
+        return you.zot_orb_monster;
     if (mon_type == RANDOM_DRACONIAN)
     {
         if (base_type != MONS_NO_MONSTER)
@@ -461,6 +465,13 @@ monster_type resolve_monster_type(monster_type mon_type,
 
         // Now pick a monster of the given branch and level.
         mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
+        if (needs_resolution(mon_type))
+        {
+            mon_type =
+                resolve_monster_type(mon_type, base_type,
+                                        proximity, pos, mmask,
+                                        place, want_band, allow_ood);
+        }
     }
     return mon_type;
 }
@@ -992,6 +1003,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
+
+        if (!mg.mname.empty())
+            name_zombie(*mon, ztype, mg.mname);
+        else if (mons_is_unique(ztype))
+            name_zombie(*mon, ztype, mons_type_name(ztype, DESC_THE));
     }
     else
         define_monster(*mon, mg.behaviour == BEH_FRIENDLY
@@ -1040,6 +1056,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if ((mon->holiness() & MH_HOLY)
          || mg.cls == MONS_SILENT_SPECTRE
          || mg.cls == MONS_PROFANE_SERVITOR
+         || mg.cls == MONS_DEATH_KNIGHT
          || mons_is_ghost_demon(mg.cls))
     {
         invalidate_agrid(true);
@@ -1115,6 +1132,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mons_class_flag(mg.cls, M_CONFUSED))
         mon->add_ench(ENCH_CONFUSION);
+
+    if (mons_class_flag(mg.cls, M_WARDED))
+        mon->add_ench(mon_enchant(ENCH_WARDING, 0, mon, INFINITE_DURATION));
 
     if (mg.cls == MONS_SHAPESHIFTER)
         mon->add_ench(ENCH_SHAPESHIFTER);
@@ -1311,6 +1331,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                 static_cast<spell_type>(mg.summon_type));
             }
         }
+
+        if (mon->attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
+            mon->add_ench(mon_enchant(ENCH_HAUNTING, 0, &you, INFINITE_DURATION));
     }
 
     // Perm summons shouldn't leave gear either.
@@ -1478,8 +1501,8 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
-    // If skeleton, monster must have a skeleton.
-    if (cs == MONS_SKELETON && !mons_skeleton(base))
+    // If draugr, monster must have a skeleton.
+    if (cs == MONS_DRAUGR && !mons_has_skeleton(base))
         return false;
 
     // If zombie, monster must have a corpse.
@@ -1523,10 +1546,18 @@ bool zombie_picker::veto(monster_type mt)
     return positioned_monster_picker::veto(mt);
 }
 
-static bool _mc_too_slow_for_zombies(monster_type mon)
+// Use this one for zombies and simulacra, who get a speed penalty.
+static bool _mc_too_slow_for_slow_zombies(monster_type mon)
 {
     // zombies slower than the player are boring!
-    return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
+    return mons_class_zombie_base_speed(mons_species(mon), true) < BASELINE_DELAY;
+}
+
+// Use this one for spectrals and draugr, who don't get a speed penalty.
+static bool _mc_too_slow_for_normal_undead(monster_type mon)
+{
+    // zombies slower than the player are boring!
+    return mons_class_zombie_base_speed(mons_species(mon), false) < BASELINE_DELAY;
 }
 
 static bool _mc_bad_wretch(monster_type mon)
@@ -1536,14 +1567,14 @@ static bool _mc_bad_wretch(monster_type mon)
 }
 
 /**
- * Pick a local monster type that's suitable for turning into a corpse.
+ * Pick a local monster type that's suitable for Unearth Wretches.
  *
  * @param place     The branch/level that the monster type should come from,
  *                  if possible. (Not guaranteed for e.g. branches with no
  *                  corpses.)
- * @return          A monster type that can be used to fill out a corpse.
+ * @return          A monster type that can be used to fill out the wretch.
  */
-monster_type pick_local_corpsey_monster(level_id place)
+monster_type pick_local_wretch(level_id place)
 {
     return pick_local_zombifiable_monster(place, MONS_NO_MONSTER, coord_def(),
                                           true);
@@ -1562,10 +1593,17 @@ monster_type pick_local_zombifiable_monster(level_id place,
         // explicitly defined.
         place = level_id(BRANCH_DEPTHS, 14 - (27 - place.depth) / 3);
     }
+    else if (cs == MONS_DRAUGR && place.branch == BRANCH_VAULTS)
+    {
+        // Vaults draugr are later enough they can get a little push-up.
+        place.depth += random_range(1, 3);
+    }
     else
     {
         // Zombies tend to be weaker than their normal counterparts;
         // thus, make them OOD proportional to the current dungeon depth.
+        // Draugr have a leg up compared to other derived undead with AC and
+        // weapons and doom, so don't give them the same advantage in most spots.
         place.depth += 1 + div_rand_round(place.absdepth(), 5);
     }
 
@@ -1574,8 +1612,10 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
+    const bool is_slow = (cs != MONS_SPECTRAL_THING && cs != MONS_DRAUGR);
     mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
-                           really_in_d ? _mc_too_slow_for_zombies
+                           really_in_d ? (is_slow ? _mc_too_slow_for_slow_zombies
+                                                  : _mc_too_slow_for_normal_undead)
                                         : nullptr;
 
     // try to grab a proper zombifiable monster
@@ -1604,17 +1644,6 @@ void roll_zombie_hp(monster* mon)
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
-#if TAG_MAJOR_VERSION == 34
-    // Upgrading monster enums is a losing battle, they sneak through too many
-    // channels, like env props, etc. So convert them on placement, too.
-    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
-        cs = MONS_ZOMBIE;
-    if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-        cs = MONS_SKELETON;
-    if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
-        cs = MONS_SIMULACRUM;
-#endif
-
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(!invalid_monster_type(ztype));
     ASSERT(mons_class_is_zombified(cs));
@@ -1644,9 +1673,10 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = ztype;
 
     mon->colour       = COLOUR_INHERIT;
-    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL)
+    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL
+                          || cs == MONS_DRAUGR)
                             ? mons_class_base_speed(mon->base_monster)
-                            : mons_class_zombie_base_speed(mon->base_monster));
+                            : mons_class_zombie_base_speed(mon->base_monster, true));
 
     // Turn off all melee ability flags except dual-wielding.
     mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
@@ -1746,6 +1776,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
     { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
+    { MONS_KOBOLD_FLESHCRAFTER, { {}, {{ BAND_FLESHCRAFT, {3, 4} }}}},
     { MONS_HELL_HOUND,      { {}, {{ BAND_HELL_HOUNDS, {2, 5} }}}},
     { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
     { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
@@ -1758,8 +1789,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GNOLL,           { {0, 1}, {{ BAND_GNOLLS, {2, 4} }}}},
     { MONS_GNOLL_BOUDA,     { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
     { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
-    { MONS_DEATH_KNIGHT,    { {0, 0, []() { return x_chance_in_y(2, 3); }},
-                                  {{ BAND_DEATH_KNIGHT, {3, 5}, true }}}},
+    { MONS_FREEZING_WRAITH, { {0, 0, []() { return player_in_branch(BRANCH_DUNGEON) &&
+                                                   x_chance_in_y(2, 3); }},
+                                  {{ BAND_MIXED_WRAITHS, {1, 2}, true }}}},
+    { MONS_DEATH_KNIGHT,    { {0, 0, []() { return !player_in_branch(BRANCH_VAULTS) &&
+                                                    x_chance_in_y(2, 3); }},
+                                  {{ BAND_DEATH_KNIGHT_STANDARD, {3, 5}, true }}}},
     { MONS_GRUM,            { {}, {{ BAND_WOLVES, {2, 5}, true }}}},
     { MONS_WOLF,            { {}, {{ BAND_WOLVES, {2, 6} }}}},
     { MONS_CENTAUR_WARRIOR, { centaur_band_condition,
@@ -1816,6 +1851,7 @@ static const map<monster_type, band_set> bands_by_leader = {
                                   {{ BAND_JELLYFISH, {1, 3} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
+    { MONS_CHONCHON,        { {2}, {{ BAND_CHONCHON, {2, 3} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
     { MONS_PEACEKEEPER,     { { 0, 0, []() {
         return player_in_branch(BRANCH_VAULTS); }},
@@ -1922,14 +1958,14 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
     { MONS_ARCANIST,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
-    }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
+    }},                            {{ BAND_CAGES, {1, 3}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
     { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6}, true }}}},
     { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
-    { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
+    { MONS_GRUNN,            { {}, {{ BAND_OBLIVION_HOUNDS, {2, 4}, true }}}},
     { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
     { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
     { MONS_SIN_BEAST,        { {}, {{ BAND_SIN_BEASTS, {1, 2} }}}},
@@ -2027,8 +2063,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
 
     case MONS_SAINT_ROKA:
         if (player_in_branch(BRANCH_VAULTS) ||
-            player_in_branch(BRANCH_DEPTHS) ||
-            player_in_branch(BRANCH_CRYPT))
+            player_in_branch(BRANCH_DEPTHS))
         {
             band = BAND_LATE_ROKA;
             band_size = random_range(5, 7);
@@ -2081,6 +2116,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             && x_chance_in_y(3 + min(you.depth, 7), 10))
         {
             band = BAND_ELEPHANTS_AND_MASTER;
+        }
+        break;
+
+    case MONS_DEATH_KNIGHT:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_DEATH_KNIGHT_DRAUGR;
+            band_size = 3;
         }
         break;
 
@@ -2173,6 +2216,7 @@ typedef vector<pair<monster_type, int>> member_possibilities;
 static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
+    { BAND_CAGES,               {{{MONS_CRAWLING_FLESH_CAGE, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
     { BAND_OGRES,               {{{MONS_OGRE, 1}}}},
     { BAND_WOLVES,              {{{MONS_WOLF, 1}}}},
@@ -2191,6 +2235,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
     { BAND_MERFOLK_IMPALER,     {{{MONS_MERFOLK, 1}}}},
     { BAND_MERFOLK_JAVELINEER,  {{{MONS_MERFOLK, 1}}}},
+    { BAND_CHONCHON,            {{{MONS_CHONCHON, 1}}}},
     { BAND_ELEPHANT,            {{{MONS_ELEPHANT, 1}}}},
     { BAND_SPHINXES,            {{{MONS_GUARDIAN_SPHINX, 1}}}},
     { BAND_FIRE_BATS,           {{{MONS_FIRE_BAT, 1}}}},
@@ -2226,7 +2271,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
     { BAND_CENTAUR_WARRIORS,    {{{MONS_CENTAUR_WARRIOR, 1}}}},
     { BAND_MOLTEN_GARGOYLES,    {{{MONS_MOLTEN_GARGOYLE, 1}}}},
-    { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
+    { BAND_SKELETAL_WARRIORS,   {{{MONS_DRAUGR, 1}},
+                                 {{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
     { BAND_IRON_GOLEMS,         {{{MONS_IRON_GOLEM, 1}}}},
@@ -2264,11 +2310,32 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SMOKE_DEMON, 1}}}},
     { BAND_CACODEMON,           {{{MONS_SIXFIRHY, 1},
                                   {MONS_ORANGE_DEMON, 1}}}},
-    { BAND_NECROMANCER,         {{{MONS_ZOMBIE, 2},
-                                  {MONS_SKELETON, 2},
-                                  {MONS_SIMULACRUM, 1}}}},
+    { BAND_NECROMANCER,         {{{MONS_ZOMBIE, 3},
+                                  {MONS_SIMULACRUM, 2}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+    { BAND_MIXED_WRAITHS,       {{{MONS_FREEZING_WRAITH, 7},
+                                  {MONS_PHANTASMAL_WARRIOR, 3}}}},
+    { BAND_DEATH_KNIGHT_STANDARD, {{{MONS_GHOUL, 1},
+                                    {MONS_FLAYED_GHOST, 2}},
+
+                                 {{MONS_FREEZING_WRAITH, 5},
+                                  {MONS_PHANTASMAL_WARRIOR, 3},
+                                  {MONS_SKELETAL_WARRIOR, 5},
+                                  {MONS_JIANGSHI, 2}}}},
+
+    { BAND_DEATH_KNIGHT_DRAUGR, {{{MONS_DEATH_KNIGHT, 1},
+                                   {MONS_DRAUGR, 2}},
+
+                                 {{MONS_DRAUGR, 1}}}},
+
+    { BAND_FLESHCRAFT,          {{{MONS_KOBOLD_FLESHCRAFTER, 1},
+                                  {MONS_VERY_UGLY_THING, 2}},
+
+                                 {{MONS_UGLY_THING, 1},
+                                  {MONS_VERY_UGLY_THING, 1}},
+
+                                 {{MONS_VERY_UGLY_THING, 1}}}},
 
     { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
                                   {MONS_SEARING_WRETCH, 3}},
@@ -2465,7 +2532,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_MNOLEG,              {{{MONS_PROTEAN_PROGENITOR, 1}},
 
                                  {{MONS_TENTACLED_MONSTROSITY, 1},
-                                  {MONS_CACODEMON, 2},
+                                  {MONS_ZYKZYL, 2},
                                   {MONS_SHADOW_DEMON, 3},
                                   {MONS_VERY_UGLY_THING, 3},
                                   {MONS_NEQOXEC, 3}}}},
@@ -2539,7 +2606,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
                                   {MONS_DEMONSPAWN_SOUL_SCHOLAR, 1}}}},
     // for Grunn
-    { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
+    { BAND_OBLIVION_HOUNDS,     {{{MONS_OBLIVION_HOUND, 1}}}},
     // for Norris
     { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
     // for Arachne
@@ -2622,17 +2689,6 @@ static monster_type _band_member(band_type band, int which,
 
         return random_draconian_monster_species();
 
-    case BAND_DEATH_KNIGHT:
-        if (!player_in_branch(BRANCH_DUNGEON)
-            && which == 1 && x_chance_in_y(2, 3))
-        {
-            return one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST;
-        }
-        else
-            return random_choose_weighted(5, MONS_WRAITH,
-                                          6, MONS_FREEZING_WRAITH,
-                                          3, MONS_PHANTASMAL_WARRIOR,
-                                          3, MONS_SKELETAL_WARRIOR);
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
@@ -3134,6 +3190,7 @@ monster_type random_demon_by_tier(int tier)
                              MONS_WHITE_IMP,
                              MONS_UFETUBUS,
                              MONS_IRON_IMP,
+                             MONS_DRUDE,
                              MONS_SHADOW_IMP);
     case 4:
         return random_choose(MONS_ICE_DEVIL,
@@ -3154,6 +3211,7 @@ monster_type random_demon_by_tier(int tier)
                              MONS_BLIZZARD_DEMON,
                              MONS_BALRUG,
                              MONS_CACODEMON,
+                             MONS_ZYKZYL,
                              MONS_SIN_BEAST,
                              MONS_HELLION,
                              MONS_REAPER,
@@ -3458,11 +3516,12 @@ static const vector<pop_entry> band_weights[] =
 
 // APOSTLE_BAND_DEMONS,
 {
-    {0, 25, 100, FALL, MONS_CRIMSON_IMP},
-    {0, 25, 100, FALL, MONS_WHITE_IMP},
-    {0, 25, 100, FALL, MONS_UFETUBUS},
-    {0, 25, 100, FALL, MONS_IRON_IMP},
-    {0, 25, 100, FALL, MONS_SHADOW_IMP},
+    {0, 25, 80, FALL, MONS_CRIMSON_IMP},
+    {0, 25, 80, FALL, MONS_WHITE_IMP},
+    {0, 25, 80, FALL, MONS_UFETUBUS},
+    {0, 25, 80, FALL, MONS_IRON_IMP},
+    {0, 25, 80, FALL, MONS_SHADOW_IMP},
+    {0, 25, 80, FALL, MONS_DRUDE},
 
     {20, 55, 125, SEMI, MONS_ICE_DEVIL},
     {20, 55, 125, SEMI, MONS_RUST_DEVIL},

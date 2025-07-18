@@ -35,6 +35,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mutation.h"
 #include "notes.h"
 #include "options.h"
 #include "orb-type.h"
@@ -149,7 +150,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     {
         if (in_inventory(*this)) // actually in inventory
         {
-            buff << index_to_letter(link);
+            buff << static_cast<char>(slot);
             if (terse)
                 buff << ") ";
             else
@@ -285,11 +286,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
-        else if (base_type == OBJ_TALISMANS
-                 && you.using_talisman(*this))
-        {
-                buff << " (active)";
-        }
+        else if (base_type == OBJ_TALISMANS && you.active_talisman() == this)
+                buff << " (worn)";
         else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
@@ -1192,6 +1190,14 @@ string sub_type_string(const item_def &item, bool known)
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
             }
+        case BOOK_PARCHMENT:
+            {
+            if (item.plus == 0 || !known)
+                return "parchment";
+            string parchmentname = "parchment of ";
+            parchmentname += spell_title(static_cast<spell_type>(item.plus));
+            return parchmentname;
+            }
         case BOOK_NECRONOMICON:
             return "Necronomicon";
         case BOOK_GRAND_GRIMOIRE:
@@ -1409,7 +1415,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const bool identified = weap.is_identified();
 
     const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
-    const string plus_text = identified && !dbname ? _plus_prefix(weap) : "";
+    const string plus_text = identified && !dbname && !qualname ? _plus_prefix(weap) : "";
     const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
     const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
 
@@ -2957,6 +2963,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_IMMOLATION:
         case SCR_VULNERABILITY:
         case SCR_NOISE:
+        case SCR_SILENCE:
             return true;
         case SCR_TORMENT:
             return !you.res_torment();
@@ -3018,7 +3025,6 @@ static string _general_cannot_read_reason()
     if (you.confused())
         return "You are too confused!";
 
-    // no reading while threatened (Ru/random mutation)
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
@@ -3028,6 +3034,9 @@ static string _general_cannot_read_reason()
     // water elementals
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
         return "You cannot read scrolls while unable to breathe!";
+
+    if (you.has_mutation(MUT_HOARD_SCROLLS) && you.props.exists(HOARD_SCROLLS_TIMER_KEY))
+        return "You cannot bring yourself to waste a scroll at the moment!";
 
     return "";
 }
@@ -3181,6 +3190,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
 
         if (you.berserk())
             return "You are too berserk!";
+
+        if (you.has_mutation(MUT_HOARD_POTIONS) && you.props.exists(HOARD_POTIONS_TIMER_KEY))
+            return "You cannot bring yourself to waste a potion at the moment!";
 
         if (player_in_branch(BRANCH_COCYTUS))
             return "It's too cold; everything's frozen solid!";
@@ -3340,7 +3352,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         // Deliberate fallthrough.
     case OBJ_BAUBLES:
-    case OBJ_TALISMANS:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
@@ -3453,6 +3464,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (you.skills[item.plus] >= 27)
             return true;
         return is_useless_skill((skill_type)item.plus);
+
+    case OBJ_TALISMANS:
+        return !cannot_put_on_talisman_reason(item, temp).empty();
 
     default:
         return false;

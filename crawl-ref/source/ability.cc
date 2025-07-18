@@ -222,7 +222,7 @@ struct failure_info
             const int sk_mod = invo_skill() == SK_NONE ? 0 :
                                  you.skill(invo_skill(), variable_fail_mult);
             const int piety_mod
-                = piety_fail_denom ? you.piety / piety_fail_denom : 0;
+                = piety_fail_denom ? you.piety() / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
         }
         default:
@@ -393,8 +393,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IMPRINT_WEAPON, "Imprint Weapon",
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_END_TRANSFORMATION, "End Transformation",
-            0, 0, 0, -1, {}, abflag::none },
-        { ABIL_BEGIN_UNTRANSFORM, "Begin Untransformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_INVENT_GIZMO, "Invent Gizmo",
             0, 0, 0, -1, {}, abflag::none },
@@ -1286,7 +1284,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         return base_chance;
 
     case ABIL_NEMELEX_DEAL_FOUR:
-        return 70 - (you.piety * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
+        return 70 - (you.piety() * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
 
     default:
         return base_chance;
@@ -1907,11 +1905,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
     // so don't fail in that case if there's no MP cost.
-    if (abil.get_mp_cost() > 0 && !enough_mp(abil.get_mp_cost(), quiet, true))
+    if (abil.get_mp_cost() > 0 && !enough_mp(abil.get_mp_cost(), quiet, !quiet))
         return false;
 
     const int hpcost = abil.get_hp_cost();
-    if (hpcost > 0 && !enough_hp(hpcost, quiet))
+    if (hpcost > 0 && !enough_hp(hpcost, quiet, !quiet))
         return false;
 
     switch (abil.ability)
@@ -2704,7 +2702,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 #endif
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_END_TRANSFORMATION:
-    case ABIL_BEGIN_UNTRANSFORM:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
@@ -2807,7 +2804,7 @@ bool activate_talent(const talent& tal, dist *target)
         direction_chooser_args args;
 
         args.hitfunc = hitfunc.get();
-        args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
+        args.restricts = testbits(abil.flags, abflag::target) ? DIR_ENFORCE_RANGE
                                                               : DIR_NONE;
         args.mode = TARG_HOSTILE;
         args.range = range;
@@ -3343,32 +3340,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             drain_player(40, false, true); // yes, before the fail check!
         fail_check();
         potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
-        contaminate_player(1000 + random2(500), true);
         break;
 
     case ABIL_END_TRANSFORMATION:
-        if (feat_dangerous_for_form(you.default_form, env.grid(you.pos())))
-        {
-            mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        if (transforming_is_unsafe(you.default_form))
             return spret::abort;
-        }
         return_to_default_form();
-        break;
-
-    case ABIL_BEGIN_UNTRANSFORM:
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
-        {
-            mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
-            return spret::abort;
-        }
-        if (!i_feel_safe(true) && !yesno("Still begin untransforming?", true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-        start_delay<TransformDelay>(transformation::none, nullptr);
         break;
 
     case ABIL_INVENT_GIZMO:
@@ -3639,14 +3616,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_TROG_HAND:
         fail_check();
         // Trog abilities don't use or train invocations.
-        trog_do_trogs_hand(you.piety / 2);
+        trog_do_trogs_hand(you.piety() / 2);
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
     {
-        int pow = you.piety + random2(you.piety / 4);
+        int pow = you.piety() + random2(you.piety() / 4);
         // force a sequence point between random calls
-        pow -= random2(you.piety / 4);
+        pow -= random2(you.piety() / 4);
         return cast_summon_berserker(pow, fail);
     }
 
@@ -3834,7 +3811,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                                   : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
-                              random2avg(you.piety / 4, 2) + 3, 100);
+                              random2avg(you.piety() / 4, 2) + 3, 100);
         break;
     }
 
@@ -4347,9 +4324,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.form != you.default_form && !you.transform_uncancellable;
-    case ABIL_BEGIN_UNTRANSFORM:
-        return you.form == you.default_form
-               && you.default_form != transformation::none;
     // TODO: other god abilities
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
@@ -4424,7 +4398,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_IMBUE_SERVITOR,
             ABIL_IMPRINT_WEAPON,
             ABIL_END_TRANSFORMATION,
-            ABIL_BEGIN_UNTRANSFORM,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
@@ -4704,7 +4677,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
     {
         if (you.props.exists(AVAILABLE_CURSE_KEY))
             abilities.push_back(ABIL_ASHENZARI_CURSE);
-        if (ignore_piety || you.piety > ASHENZARI_BASE_PIETY )
+        if (ignore_piety || you.raw_piety > ASHENZARI_BASE_PIETY )
             abilities.push_back(ABIL_ASHENZARI_UNCURSE);
     }
     // XXX: should we check ignore_piety?

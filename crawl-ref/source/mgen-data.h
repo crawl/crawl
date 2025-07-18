@@ -204,6 +204,15 @@ struct mgen_data
         summon_duration = duration;
         summon_type = _summon_type;
 
+        if (_summoner && _summoner->temp_attitude() == ATT_HOSTILE
+            && you.has_bane(BANE_HUNTED) && pos == _summoner->pos()
+            && you.see_cell_no_trans(_summoner->pos()))
+        {
+            pos = you.pos();
+            set_range(1, range_max);
+            summon_duration = summon_duration * 5 / 2;
+        }
+
         // It doesn't make sense to have an abjurable summon with no duration.
         if (duration == 0)
             abjurable = false;

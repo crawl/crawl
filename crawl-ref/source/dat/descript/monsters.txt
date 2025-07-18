@@ -877,6 +877,17 @@ The soul of a living, holy, or demonic creature, captured by a dark sacrifice
 to Yredelemnul. The bound soul will follow its captor through stairs and come
 when recalled from a different level.
 %%%%
+boundless tesseract
+
+An impossible shape that scintillates with unearthly colour. The power of Zot
+flows heavily through it, overlaying this reality with countless others where
+its domain remains pristine.
+
+Each tesseract is inextricably linked to the other, and destroying one will
+destroy both (and expel many of the creatures they have beckoned to this
+reality). But so long as they are allowed to exist, there will be no end to the
+forces which seek to keep you from the Orb.
+%%%%
 brain worm
 
 A slimy fluorescent worm with a greatly distended head. This creature feeds on
@@ -934,8 +945,8 @@ battle. Any foe that strikes it in melee will be lucky to live to regret it.
 %%%%
 cacodemon
 
-A hideously ugly demon of rage and legendary power, it disables its foes before
-blasting them to pieces.
+A maniacal demon, brimming with accursed power. Its gleeful laughter rarely
+ceases, even in the heat of battle.
 %%%%
 cane toad
 
@@ -980,11 +991,30 @@ one of an ox, one of a lion, one of an eagle. It is one of the angelic beings
 who stand before the good gods, singing eternal hymns of praise to their glory
 and greatness.
 %%%%
+chonchon
+
+Some sorcerers care little for unholy realms or undead forms, seeking power
+instead in the whims of cruel chaos. This ominous owl-winged head is all that
+remains of a former archmage: it delights in spreading misfortune and drinking
+blood in its new airborne form.
+%%%%
+cognitogaunt
+
+A wizened, headless corpse, animated not by conventional necromancy but by the
+mournful malice of dead stars. Its psychic eyes, floating disjointedly from its
+body's movements, relentlessly burrow through its victims' minds.
+%%%%
 clockwork bee
 
 A mechanical insect powered by an intricate array of gears and springs. It is
 vicious and resilient to damage, but its clockwork naturally winds down as it
 attacks, eventually leaving it unable to move until its creator winds it again.
+%%%%
+crawling flesh cage
+
+A modern breakthrough in arcane experimentation, this mobile prison cell
+weaponises the living fragments of once-escaped ugly things, extending the reach
+of their tendrils to thrash multiple foes at once from a distance.
 %%%%
 creeping inferno
 
@@ -1004,7 +1034,7 @@ A crocodilian with powerful jaws.
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is
-immune to most forms of magic and hurls both crystallizing shots and painful
+immune to most forms of magic and hurls both crystallising shots and painful
 barbs.
 %%%%
 crystal guardian
@@ -1207,7 +1237,7 @@ djinni
 
 An elemental spirit formed from smokeless fire.
 %%%%
-doom hound
+oblivion hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
 time a foe hears its howl, it will echo in their mind, calling nightmarish
@@ -1255,6 +1285,12 @@ draconian stormcaller
 A draconian deriving its thunderous powers and draconic allies from the worship
 of Qazlal.
 %%%%
+draugr
+
+A territorial gnarl of driftwood and shattered bones. Its resentment of the
+living has slowly twisted its remains into a monstrous form, capable of
+brandishing weapons and spreading terrible curses.
+%%%%
 dread lich
 
 A lich who has made terrible pacts with demonic forces to augment its dark
@@ -1271,6 +1307,11 @@ drowned soul
 A cold and hollow apparition of the drowned dead, chained by some lingering
 attachment to the depths in which it perished. It rushes to embrace the living,
 sharing the last moments of its watery fate with whatever it touches.
+%%%%
+drude
+
+A conniving demon born from the nightmares of sleeping mages. It delights in
+coaxing the imagined fears of mortals into reality.
 %%%%
 dryad
 
@@ -1894,6 +1935,12 @@ kobold demonologist
 A kobold in league with demonic powers, able to call forth beings from the
 depths of Hell.
 %%%%
+kobold fleshcrafter
+
+A skull-masked kobold, its body mutated by forbidden magics. It conducts vile
+experiments in the service of demonic powers, formulating ever more terrible
+monstrosities as vessels for devilish minds.
+%%%%
 komodo dragon
 
 An enormous monitor lizard more than capable of preying on large animals.
@@ -2206,10 +2253,21 @@ massive inertia. A smart and agile person may move out of its path, causing it
 to miss its target. It cannot be avoided by Dodging skill, and is able to make
 sharp turns to hit adjacent targets.
 %%%%
+orb of entropy
+
+A globe of profound nothingness and the oblivion that awaits all things - flesh,
+souls, and even time itself. When the universe ends, only these will remain.
+%%%%
 orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics and of
 twisting the very flesh of creatures who come into its ken.
+%%%%
+orb of winter
+
+A globe of deepest cold, still lingering from a time before the stars lit the
+heavens. It can shroud the soul in a chill so intense that even the gods cannot
+reach it.
 %%%%
 orb spider
 
@@ -2328,6 +2386,13 @@ as simulacra.
 pile of debris
 
 A heavily ruptured stonework, surrounded by rubble.
+%%%%
+pile of flesh
+
+A leftover mess of broken bones, inert grasping organs, and scattered skin.
+While some highly-specialised sorcerers might be capable of bringing it to life,
+it is otherwise harmless - the possible leftovers of some departed or
+absent-minded magus.
 %%%%
 pillar of rime
 
@@ -2457,7 +2522,7 @@ and covers great distances by bursting into living lightning.
 %%%%
 reaper
 
-A skeletal form wielding a giant scythe, ceaselessly harvesting the souls of
+A haunting form wielding a giant scythe, ceaselessly harvesting the souls of
 the living.
 %%%%
 red devil
@@ -2473,6 +2538,12 @@ A muscular red-scaled humanoid with a reptilian tail and small wings.
 hornet
 
 A buzzing hornet with a vicious stinger dripping with paralytic poison.
+%%%%
+raven
+
+A jet-black corvid with a nasty beak and a reputation for heralding bad luck.
+Most ornithologists consider this a baseless stereotype; the rest are still
+recovering from a series of staggeringly unlikely accidents.
 %%%%
 redback
 
@@ -2570,6 +2641,12 @@ A loathsome arachnid, armed to the teeth. Its body is covered in a thick
 carapace, its tail is tipped by a venomous sting, and its forelimbs are
 equipped with a pair of sharp grasping claws.
 %%%%
+screaming refraction
+
+A deeply unfortunate soul mostly processed into crystal by some malevolent tear
+in reality. Ethereal reflections of its past and future suffering are cast upon
+nearby surfaces and foes.
+%%%%
 scrub nettle
 
 An irritable, bristling shrub. It fends off anything that might graze upon it by
@@ -2593,7 +2670,7 @@ thunderous footfalls herald violent tremors.
 seismosaurus egg
 
 A lizard egg the size of a small boulder and nearly as hard. Perhaps as a
-defense mechanism, they hatch rapidly in the presence of predators and even a
+defence mechanism, they hatch rapidly in the presence of predators and even a
 newborn can give all but the most ambitious of monsters a reason to consider an
 easier meal.
 %%%%
@@ -3333,6 +3410,12 @@ zombie
 
 A corpse raised to undeath by necromancy.
 %%%%
+zykzyl
+
+A demon born of mortal envy, its flesh undulating with a sickening wetness
+whenever it moves. It is driven by a singular desire to reduce all beauty to a
+form as hideous as its own.
+%%%%
 # Specials
 test spawner
 
@@ -3418,7 +3501,7 @@ powers of mental combat.
 moon troll
 
 A bizarre breed of intelligent troll, glowing with mysterious power from beyond
-this world.
+this world which shields it from damage except at close range.
 %%%%
 lunar statue
 
@@ -3593,21 +3676,6 @@ A metal golem crackling with magical energies. It must have been created by
 a truly devious wizard, or possibly someone who misheard what monsters could
 be found in the Realm of Zot.
 %%%%
-orb of electricity
-
-A massive floating ball. It resembles ball lightning, but looks far more
-stable.
-%%%%
-# I'm not sure how widely cosmogonical Norse myths are known to an average
-# reader; Crawl's audience tends to be far more educated though, so let's
-# hope the concepts of Ginnungagap, Niflheim and Muspelheim are not too
-# obscure.
-orb of ice
-
-A globe of primordial ice, floating in the air. It is said to be a relic of
-ancient times, when the world was a void bracketed by realms of endless fire
-and cold.
-%%%%
 phase bat
 
 A strange, glowing bat that flutters through more dimensions than the average
@@ -3704,6 +3772,10 @@ sulphuric acid blob
 vault guard captain
 
 <vault guard>
+%%%%
+grandmaster elementalist
+
+<master elementalist>
 %%%%
 ### Meatsprint
 bag of meat

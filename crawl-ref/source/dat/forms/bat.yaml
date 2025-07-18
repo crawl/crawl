@@ -1,5 +1,6 @@
 enum: bat
 equivalent_mons: bat
+description: a bat.
 melds: [physical, ring]
 dex: 5
 size: tiny
@@ -13,6 +14,7 @@ unarmed_verbs: animal
 can_fly: yes
 can_swim: false
 changes_anatomy: yes
+is_badform: yes
 has_hair: yes
 has_bones: yes
 has_feet: yes

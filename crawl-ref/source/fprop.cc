@@ -61,6 +61,8 @@ feature_property_type str_to_fprop(const string &str)
         return FPROP_NO_TIDE;
     if (str == "no_jiyva")
         return FPROP_NO_JIYVA;
+    if (str == "no_automap")
+        return FPROP_NO_AUTOMAP;
 
     return FPROP_NONE;
 }

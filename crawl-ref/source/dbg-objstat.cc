@@ -67,6 +67,7 @@ enum item_base_type
     ITEM_MANUALS,
     ITEM_GEMS,
     ITEM_BAUBLES,
+    ITEM_PARCHMENTS,
     NUM_ITEM_BASE_TYPES,
     ITEM_IGNORE = 100,
 };
@@ -157,6 +158,9 @@ static map<item_base_type, vector<string> > item_fields = {
     { ITEM_BAUBLES,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
+    { ITEM_PARCHMENTS,
+        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+    },
 };
 
 enum stat_category_type
@@ -216,7 +220,9 @@ static item_base_type _item_base_type(const item_def &item)
         type = ITEM_MISCELLANY;
         break;
     case OBJ_BOOKS:
-        if (item.sub_type == BOOK_MANUAL)
+        if (item.sub_type == BOOK_PARCHMENT)
+            type = ITEM_PARCHMENTS;
+        else if (item.sub_type == BOOK_MANUAL)
             type = ITEM_MANUALS;
         else
             type = ITEM_SPELLBOOKS;
@@ -301,6 +307,7 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
         break;
     case ITEM_MANUALS:
     case ITEM_SPELLBOOKS:
+    case ITEM_PARCHMENTS:
         type = OBJ_BOOKS;
         break;
     case ITEM_GEMS:
@@ -326,6 +333,8 @@ static string _item_class_name(item_base_type base_type)
         return "Spellbooks";
     case ITEM_MANUALS:
         return "Manuals";
+    case ITEM_PARCHMENTS:
+        return "Parchments";
     default:
         return item_class_name(_item_orig_base_type(base_type));
     }
@@ -335,6 +344,8 @@ static int _item_orig_sub_type(item_base_type base_type, int sub_type)
 {
     if (base_type == ITEM_MANUALS)
         return BOOK_MANUAL;
+    else if (base_type == ITEM_PARCHMENTS)
+        return BOOK_PARCHMENT;
     return sub_type;
 }
 
@@ -342,6 +353,8 @@ static int _item_max_sub_type(item_base_type base_type)
 {
     if (base_type == ITEM_MANUALS)
         return NUM_SKILLS;
+    else if (base_type == ITEM_PARCHMENTS)
+        return NUM_SPELLS;
     return get_max_subtype(_item_orig_base_type(base_type));
 }
 
@@ -394,6 +407,7 @@ static bool _item_tracks_monster(item_base_type base_type)
     case ITEM_MISCELLANY:
     case ITEM_SPELLBOOKS:
     case ITEM_MANUALS:
+    case ITEM_PARCHMENTS:
         return false;
     default:
         return true;
@@ -773,6 +787,34 @@ static void _record_book_spells(const objstat_item &item)
     }
 }
 
+static void _record_parchment_spells(const objstat_item &item)
+{
+    if (item.base_type == ITEM_PARCHMENTS)
+    {
+        spell_type spell = static_cast<spell_type>(item.plus);
+        _record_spell_stat(spell, "Num", 1);
+        _record_spell_stat(spell, "NumForIter", 1);
+
+        if (item.in_vault)
+        {
+            _record_spell_stat(spell, "NumVault", 1);
+            _record_spell_stat(spell, "NumForIterVault", 1);
+        }
+
+        if (item.is_arte)
+        {
+            _record_spell_stat(spell, "NumArte", 1);
+            _record_spell_stat(spell, "NumForIterArte", 1);
+        }
+
+        if (item.in_shop)
+        {
+            _record_spell_stat(spell, "NumShop", 1);
+            _record_spell_stat(spell, "NumForIterShop", 1);
+        }
+    }
+}
+
 void objstat_record_item(const item_def &item)
 {
     const objstat_item objs_item(item);
@@ -836,6 +878,7 @@ void objstat_record_item(const item_def &item)
     }
 
     _record_book_spells(objs_item);
+    _record_parchment_spells(objs_item);
 }
 
 static void _record_monster_stat(monster_type mc, string field, int value)

@@ -78,6 +78,7 @@ static const char *daction_names[] =
     "upgrade ancestor",
     "remove Ignis altars",
     "cleanup Beogh vengeance markers",
+    "cleanup Bane of Mortality summons",
 };
 #endif
 
@@ -136,6 +137,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->has_ench(ENCH_VENGEANCE_TARGET)
                && mon->get_ench(ENCH_VENGEANCE_TARGET).degree
                   <= you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
+
+    case DACT_BANE_MORTALITY_CLEANUP:
+        return mon->was_created_by(MON_SUMM_MORTALITY);
 
     default:
         return false;
@@ -273,6 +277,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             mon->patrol_point.reset();
             break;
 
+        case DACT_BANE_MORTALITY_CLEANUP:
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
+            break;
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -337,6 +345,7 @@ static void _apply_daction(daction_type act)
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
     case DACT_BEOGH_VENGEANCE_CLEANUP:
+    case DACT_BANE_MORTALITY_CLEANUP:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))

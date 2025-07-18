@@ -163,12 +163,6 @@ int wand_power(spell_type wand_spell)
 
 void zap_wand(int slot, dist *_target)
 {
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED); // why is this handled here??
-        return;
-    }
-
     if (!item_currently_evokable(slot == -1 ? nullptr : &you.inv[slot]))
         return;
 
@@ -978,46 +972,6 @@ static bool _gravitambourine(dist *target)
     return true;
 }
 
-static transformation _form_for_talisman(const item_def &talisman)
-{
-    if (you.using_talisman(talisman))
-        return transformation::none;
-    return form_for_talisman(talisman);
-}
-
-static bool _evoke_talisman(item_def &talisman)
-{
-    if (talisman.sub_type == TALISMAN_PROTEAN)
-    {
-        const talisman_type new_type = random_choose(TALISMAN_RIMEHORN,
-                                                     TALISMAN_SCARAB,
-                                                     TALISMAN_MEDUSA,
-                                                     TALISMAN_MAW);
-
-        mprf("%s responds to your shapeshifting skill and transforms into a %s!",
-             talisman.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());
-
-        talisman.sub_type = new_type;
-        return true;
-    }
-
-    const transformation trans = _form_for_talisman(talisman);
-    if (!check_transform_into(trans, false, &talisman))
-        return false;
-    if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    count_action(CACT_FORM, (int)trans);
-    start_delay<TransformDelay>(trans, &talisman);
-    if (god_despises_item(talisman, you.religion))
-        excommunication();
-    you.turn_is_over = true;
-    return true;
-}
-
 /// Does the item only serve to produce summons or allies?
 static bool _evoke_ally_only(const item_def &item, bool ident)
 {
@@ -1058,35 +1012,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
         // here
-        return "";
-    }
-
-    if (item->base_type == OBJ_TALISMANS)
-    {
-        if (item->sub_type == TALISMAN_PROTEAN)
-        {
-            if (temp && you.skill(SK_SHAPESHIFTING) < 6)
-            {
-                return "you lack the shapeshifting skill to coax this "
-                       "talisman into a stable form.";
-            }
-            else if (species_apt(SK_SHAPESHIFTING) == UNUSABLE_SKILL)
-                return "you can never gain the skill to use this talisman.";
-            else
-                return "";
-        }
-
-        const transformation trans = _form_for_talisman(*item);
-        const string form_unreason = cant_transform_reason(trans, false, temp);
-        if (!form_unreason.empty())
-            return lowercase_first(form_unreason);
-
-        if (you.form != you.default_form && temp)
-            return "you need to leave your temporary form first.";
-
-        if (trans == transformation::hive && you_worship(GOD_OKAWARU))
-            return "you have forsworn all allies in Okawaru's name.";
-
         return "";
     }
 
@@ -1171,9 +1096,6 @@ bool evoke_item(item_def& item, dist *preselect)
         ASSERT(in_inventory(item));
         zap_wand(item.link, preselect);
         return true;
-
-    case OBJ_TALISMANS:
-        return _evoke_talisman(item);
 
     case OBJ_BAUBLES:
         mprf("You crush the flux bauble in your %s and feel its energy "

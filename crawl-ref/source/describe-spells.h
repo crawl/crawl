@@ -22,6 +22,10 @@ struct spellbook_contents
     string label;
     /// The spells contained in the book (or 'book').
     vector<spell_type> spells;
+    /// Whether this 'book' is for a wand
+    bool is_wand;
+
+    spellbook_contents(bool _is_wand = false) : label(), spells(), is_wand(_is_wand) {}
 };
 
 typedef vector<spellbook_contents> spellset;

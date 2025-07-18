@@ -302,8 +302,9 @@ void fill_doll_equipment(dolls_data &result)
             case SP_OCTOPODE:   ch = TILEP_TRAN_QUILL_OCTOPODE;  break;
             case SP_FELID:      ch = TILEP_TRAN_QUILL_FELID;     break;
             case SP_ARMATAUR:   ch = TILEP_BODY_QUILL_ARMATAUR;  break;
-            case SP_NAGA:       ch = TILEP_BODY_QUILL_NAGA;      break;
             case SP_DJINNI:     ch = TILEP_BODY_QUILL_DJINN;     break;
+            case SP_GARGOYLE:   ch = TILEP_BODY_QUILL_GARGOYLE;  break;
+            case SP_NAGA:       ch = TILEP_BODY_QUILL_NAGA;      break;
             default:            ch = TILEP_BODY_QUILL_HUMANOID;  break;
             }
             result.parts[TILEP_PART_LEG] = 0;
@@ -314,10 +315,11 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_ARMATAUR:   ch = TILEP_TRAN_AQUA_ARMATAUR;  break;
+        case SP_DJINNI:     ch = TILEP_TRAN_AQUA_DJINN;     break;
+        case SP_GARGOYLE:   ch = TILEP_TRAN_AQUA_GARGOYLE;  break;
         case SP_NAGA:       ch = TILEP_TRAN_AQUA_NAGA;      break;
         case SP_FELID:      ch = TILEP_TRAN_AQUA_FELID;     break;
         case SP_OCTOPODE:   ch = TILEP_TRAN_AQUA_OCTOPODE;  break;
-        case SP_DJINNI:     ch = TILEP_TRAN_AQUA_DJINN;     break;
         default:            ch = TILEP_TRAN_AQUA_HUMANOID;  break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -327,11 +329,12 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_ARMATAUR:   ch = TILEP_TRAN_WEREWOLF_ARMATAUR;  break;
-        case SP_NAGA:       ch = TILEP_TRAN_WEREWOLF_NAGA;     break;
-        case SP_FELID:      ch = TILEP_TRAN_WEREWOLF_FELID;    break;
-        case SP_OCTOPODE:   ch = TILEP_TRAN_WEREWOLF_OCTOPODE; break;
-        case SP_DJINNI:     ch = TILEP_TRAN_WEREWOLF_DJINN;    break;
-        default:            ch = TILEP_TRAN_WEREWOLF_HUMANOID; break;
+        case SP_DJINNI:     ch = TILEP_TRAN_WEREWOLF_DJINN;     break;
+        case SP_GARGOYLE:   ch = TILEP_TRAN_WEREWOLF_GARGOYLE;  break;
+        case SP_NAGA:       ch = TILEP_TRAN_WEREWOLF_NAGA;      break;
+        case SP_FELID:      ch = TILEP_TRAN_WEREWOLF_FELID;     break;
+        case SP_OCTOPODE:   ch = TILEP_TRAN_WEREWOLF_OCTOPODE;  break;
+        default:            ch = TILEP_TRAN_WEREWOLF_HUMANOID;  break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
@@ -426,12 +429,13 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_ARMATAUR: ch = TILEP_TRAN_LICH_ARMATAUR;  break;
-        case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
-        case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
-        case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
-        case SP_DJINNI:  ch = TILEP_TRAN_LICH_DJINN;    break;
-        default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
+        case SP_ARMATAUR:  ch = TILEP_TRAN_LICH_ARMATAUR;  break;
+        case SP_DJINNI:    ch = TILEP_TRAN_LICH_DJINN;     break;
+        case SP_GARGOYLE:  ch = TILEP_TRAN_LICH_GARGOYLE;  break;
+        case SP_NAGA:      ch = TILEP_TRAN_LICH_NAGA;      break;
+        case SP_FELID:     ch = TILEP_TRAN_LICH_FELID;     break;
+        case SP_OCTOPODE:  ch = TILEP_TRAN_LICH_OCTOPODE;  break;
+        default:           ch = TILEP_TRAN_LICH_HUMANOID;  break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
@@ -452,11 +456,12 @@ void fill_doll_equipment(dolls_data &result)
         case SP_CENTAUR:
 #endif
         case SP_ARMATAUR:   ch = TILEP_TRAN_VAMPIRE_ARMATAUR;   break;
+        case SP_DJINNI:     ch = TILEP_TRAN_VAMPIRE_DJINN;      break;
+        case SP_GARGOYLE:   ch = TILEP_TRAN_VAMPIRE_GARGOYLE;   break;
         case SP_NAGA:       ch = TILEP_TRAN_VAMPIRE_NAGA;       break;
+        case SP_TENGU:      ch = TILEP_TRAN_VAMPIRE_TENGU;      break;
         case SP_FELID:      ch = TILEP_TRAN_VAMPIRE_FELID;      break;
         case SP_OCTOPODE:   ch = TILEP_TRAN_VAMPIRE_OCTOPODE;   break;
-        case SP_DJINNI:     ch = TILEP_TRAN_VAMPIRE_DJINN;      break;
-        case SP_TENGU:      ch = TILEP_TRAN_VAMPIRE_TENGU;      break;
         default:            ch = TILEP_TRAN_VAMPIRE;            break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -714,7 +719,7 @@ void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
     give_basic_mutations(you.species);
     give_items_skills(ng);
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (int i = 0; i < MAX_GEAR; ++i)
     {
         auto &item = you.inv[i];
         if (item.defined())

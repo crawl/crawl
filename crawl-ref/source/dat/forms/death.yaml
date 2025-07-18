@@ -17,3 +17,4 @@ fakemuts:
   - ["torment immunity", "You are immune to unholy pain and torment."]
 badmuts:
   - ["no potions", "You cannot drink."]
+  - ["accursed", "You recover more slowly from Doom and Banes."]

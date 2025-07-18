@@ -31,12 +31,12 @@ KMONS:    9 = mana viper / anaconda / naga mage
 KMONS:    8 = naga ritualist / salamander mystic
 KMONS:    & = naga warrior / naga sharpshooter
 : elseif you.in_branch("Dis") then
-KMONS:    0 = war gargoyle / crystal echidna w:5 / iron dragon skeleton w:2
+KMONS:    0 = war gargoyle / crystal echidna w:5 / iron dragon draugr w:2
 KMONS:    9 = ancient champion / quicksilver elemental / iron dragon
 KMONS:    8 = iron giant / iron golem
 KMONS:    & = hellion / tormentor / ancient lich
 : elseif you.in_branch("Geh") then
-KMONS:    0 = hell hog / fire giant w:5 / fire dragon skeleton w:2
+KMONS:    0 = hell hog / fire giant w:5 / golden dragon draugr w:2
 KMONS:    9 = searing wretch / balrug
 KMONS:    8 = hellephant / salamander tyrant w:5
 KMONS:    & = hellion / tormentor / brimstone fiend w:5

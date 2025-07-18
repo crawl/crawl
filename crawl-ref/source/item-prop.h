@@ -295,6 +295,7 @@ bool item_gives_equip_slots(const item_def& item);
 bool item_grants_flight(const item_def& item);
 
 bool is_equippable_item(const item_def& item);
+bool is_usable_talisman(const item_def& item);
 
 bool ring_plusses_matter(int ring_subtype);
 

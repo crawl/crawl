@@ -62,6 +62,7 @@
 #include "random.h"
 #include "religion.h"
 #include "show.h"
+#include "spl-book.h"
 #include "spl-transloc.h"
 #include "stairs.h"
 #include "state.h"
@@ -1678,6 +1679,9 @@ static int _num_mons_wanted()
     int mon_wanted = roll_dice(3, _mon_die_size());
     if (mon_wanted > 60)
         mon_wanted = 60;
+
+    if (level_id::current() == level_id(BRANCH_ZOT, 5))
+        mon_wanted = max(10, mon_wanted - 4);
     return mon_wanted;
 }
 
@@ -2521,7 +2525,7 @@ struct coord_feat
         mask = env.level_map_mask(c) & ~(MMT_MIMIC);
         // Only copy "static" properties.
         prop = env.pgrid(c) & (FPROP_NO_CLOUD_GEN | FPROP_NO_TELE_INTO
-                               | FPROP_NO_TIDE);
+                               | FPROP_NO_TIDE | FPROP_NO_AUTOMAP);
     }
 };
 
@@ -3781,7 +3785,7 @@ static bool _place_vault_by_tag(const string &tag)
     return _build_secondary_vault(vault);
 }
 
-static bool _in_descent_parent(branch_type branch)
+bool in_descent_parent(branch_type branch)
 {
     vector<branch_type> parents = descent_parents(branch);
     for (branch_type parent : parents)
@@ -3850,7 +3854,7 @@ static void _place_branch_entrances(bool use_vaults)
         if (crawl_state.game_is_descent())
         {
             brentry_allowed = it->entry_stairs != NUM_FEATURES
-                && _in_descent_parent(it->id)
+                && in_descent_parent(it->id)
                 && it->id != you.props[DESCENT_WATER_BRANCH_KEY].get_int()
                 && it->id != you.props[DESCENT_POIS_BRANCH_KEY].get_int()
                 && at_branch_bottom();
@@ -3877,6 +3881,17 @@ static void _place_branch_entrances(bool use_vaults)
                 if (_place_vault_by_tag(entry_tag))
                     // Placed this entrance, carry on to subsequent branches
                     continue;
+                // If placing a normal Temple entrance failed, try again to
+                // place the smallest possible one, and if that also fails, veto
+                // the level (to ensure Zot orb statues are always placed.)
+                else if (it->id == BRANCH_TEMPLE)
+                {
+                    const map_def* dummy = find_map_by_name("temple_entry_dummy");
+                    if (dummy && _build_secondary_vault(dummy))
+                        continue;
+
+                    throw dgn_veto_exception("Failed to place Temple entry.");
+                }
             }
 
             // Otherwise place a single stair feature.
@@ -4022,8 +4037,8 @@ static void _place_aquatic_in(vector<coord_def> &places, const vector<pop_entry>
             && mons_class_can_be_zombified(mg.cls))
         {
             mg.base_type = mg.cls;
-            const int skel_chance = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+            const int skel_chance = mons_has_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = random_choose_weighted(skel_chance, MONS_DRAUGR,
                                             8,           MONS_ZOMBIE,
                                             1,           MONS_SIMULACRUM);
         }
@@ -4100,16 +4115,16 @@ static void _place_assorted_zombies()
     int num_zombies = random_range(6, 12, 3);
     for (int i = 0; i < num_zombies; ++i)
     {
-        bool skel = coinflip();
+        bool skel = x_chance_in_y(2, 5);
         monster_type z_base;
         do
         {
             z_base = zombifiable[random2(zombifiable.size())];
         }
-        while (skel && !mons_skeleton(z_base));
+        while (skel && !mons_has_skeleton(z_base));
 
         mgen_data mg;
-        mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
+        mg.cls = (skel ? MONS_DRAUGR : MONS_ZOMBIE);
         mg.base_type = z_base;
         mg.behaviour = BEH_SLEEP;
         mg.map_mask |= MMT_NO_MONS;
@@ -4732,7 +4747,8 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 }
 
 static bool _apply_item_props(item_def &item, const item_spec &spec,
-                              bool allow_useless, bool monster)
+                              bool allow_useless, bool monster,
+                              int item_level)
 {
     const CrawlHashTable props = spec.props;
 
@@ -4827,6 +4843,24 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     {
         item.plus = spec.plus;
         item_colour(item);
+    }
+
+    if (item.is_type(OBJ_BOOKS, BOOK_PARCHMENT))
+    {
+        if (spec.plus > 0)
+            item.plus = spec.plus;
+        else
+        {
+            spschool school = spschool::none;
+            int force_level = 0;
+            if (spec.props.exists(RANDBK_DISC1_KEY))
+                school = static_cast<spschool>(spec.props[RANDBK_DISC1_KEY].get_short());
+
+            if (spec.props.exists(RANDBK_SLVLS_KEY))
+                force_level = spec.props[RANDBK_SLVLS_KEY].get_short();
+
+            item.plus = choose_parchment_spell(item_level, school, force_level);
+        }
     }
 
     if (item.base_type == OBJ_RUNES)
@@ -4983,7 +5017,7 @@ int dgn_place_item(const item_spec &spec,
         {
             item_made = acquirement_create_item(base_type,
                                                 spec.acquirement_source,
-                                                true, where);
+                                                true, where, spec.ego);
         }
 
         // Both normal item generation and the failed "acquire foo" fallback.
@@ -5012,7 +5046,7 @@ int dgn_place_item(const item_spec &spec,
         item_def &item(env.item[item_made]);
         item.pos = where;
 
-        if (_apply_item_props(item, spec, useless_tries >= 10, false))
+        if (_apply_item_props(item, spec, useless_tries >= 10, false, level))
         {
             dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
                 env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
@@ -5114,7 +5148,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
             {
                 item_def &item(env.item[item_made]);
 
-                if (_apply_item_props(item, spec, (useless_tries >= 10), true))
+                if (_apply_item_props(item, spec, (useless_tries >= 10), true, item_level))
                 {
                     // Mark items on summoned monsters as such.
                     if (mspec.summon_duration != 0)
@@ -6072,6 +6106,10 @@ static int _shop_num_items(const shop_spec &spec)
         return (int) spec.items.size();
     }
 
+    // "normal" book shop containing parchments
+    if (spec.sh_type == SHOP_BOOK)
+        return 7 + random2avg(13, 3);
+
     return 5 + random2avg(8, 3);
 }
 
@@ -6127,6 +6165,15 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
         return !spec.items.empty();
     }
 
+    // Book/scroll shops only place parchments and manuals unless specified.
+    // (General stores are rarely allowed to roll an actual book.)
+    if ((shop_type_ == SHOP_BOOK || shop_type_ == SHOP_SCROLL)
+        && item.base_type == OBJ_BOOKS && item.sub_type != BOOK_PARCHMENT
+        && item.sub_type != BOOK_MANUAL)
+    {
+        return !spec.items.empty();
+    }
+
     return true;
 }
 
@@ -6146,6 +6193,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS],
+                             int supplied[NUM_SPELLS],
                              shop_spec &spec, shop_struct &shop,
                              int shop_level)
 {
@@ -6188,8 +6236,17 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         // Try for a better selection for bookshops.
         if (item_index != NON_ITEM && shop_type_ == SHOP_BOOK)
         {
+            // Try hard to discard duplicate parchments
+            if (env.item[item_index].sub_type == BOOK_PARCHMENT)
+            {
+                if (supplied[env.item[item_index].plus] > 0)
+                {
+                    env.item[item_index].clear();
+                    item_index = NON_ITEM; // try again
+                }
+            }
             // if this book type is already in the shop, maybe discard it
-            if (!one_chance_in(stocked[env.item[item_index].sub_type] + 1))
+            else if (!one_chance_in(stocked[env.item[item_index].sub_type] + 1))
             {
                 env.item[item_index].clear();
                 item_index = NON_ITEM; // try again
@@ -6208,10 +6265,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     item_def item = env.item[item_index];
 
-    // If this is a book, note it down in the stocked books array
+    // If this is a book or parchment, note it down in the appropriate array
     // (unless it's a randbook)
     if (shop_type_ == SHOP_BOOK && !is_artefact(item))
-        stocked[item.sub_type]++;
+    {
+        if (item.sub_type == BOOK_PARCHMENT)
+            supplied[item.plus]++;
+        else
+            stocked[item.sub_type]++;
+    }
 
     // Identify the item, unless we don't do that.
     if (shoptype_identifies_stock(shop_type_))
@@ -6272,10 +6334,13 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS] = { 0 };
+    // We want to do the same thing for parchments. Book stocking is retained
+    // because it could be relevant for special shops.
+    int supplied[NUM_SPELLS] = { 0 };
 
     shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-        _stock_shop_item(j, shop.type, stocked, spec, shop, shop_level);
+        _stock_shop_item(j, shop.type, stocked, supplied, spec, shop, shop_level);
 }
 
 object_class_type item_in_shop(shop_type shop_type)
@@ -6294,6 +6359,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_ARMOUR;
 
     case SHOP_GENERAL:
+        if (one_chance_in(10))
+            return OBJ_BOOKS;
     case SHOP_GENERAL_ANTIQUE:
         if (one_chance_in(10))
             return OBJ_MISCELLANY;
@@ -6311,6 +6378,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_POTIONS;
 
     case SHOP_SCROLL:
+        if (one_chance_in(10))
+            return OBJ_BOOKS;
         return OBJ_SCROLLS;
 
     default:

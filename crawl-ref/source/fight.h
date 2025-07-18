@@ -33,6 +33,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
 void do_player_post_attack(actor *defender, bool was_firewood, bool simu = false);
 
+beam_type get_beam_resist_type(beam_type flavour);
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int rawdamage);
 
@@ -47,6 +48,7 @@ stab_type find_player_stab_type(const monster &victim);
 int stab_bonus_denom(stab_type stab);
 
 bool dont_harm(const actor &attacker, const actor &defender);
+bool _monster_has_reachcleave(const actor &attacker);
 bool force_player_cleave(coord_def target);
 bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr);
 bool weapon_cleaves(const item_def &item);

@@ -205,12 +205,13 @@ void wizard_heal(bool super_heal)
         // Clear more stuff.
         undrain_hp(9999);
         you.magic_contamination = 0;
+        you.redraw_contam = true;
         you.duration[DUR_STICKY_FLAME] = 0;
         you.clear_beholders();
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
-        you.duration[DUR_DOOM_HOWL] = 0;
+        you.duration[DUR_OBLIVION_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
         you.duration[DUR_DIMENSION_ANCHOR] = 0;
@@ -287,7 +288,7 @@ void wizard_set_piety_to(int newpiety, bool force)
 
     if (you_worship(GOD_XOM))
     {
-        you.piety = newpiety;
+        you.raw_piety = newpiety;
         you.redraw_title = true; // redraw piety display
 
         int newinterest;
@@ -316,7 +317,7 @@ void wizard_set_piety_to(int newpiety, bool force)
         else
             mpr("Interest must be between 0 and 255.");
 
-        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
+        mprf("Set piety to %d, interest to %d.", you.raw_piety, newinterest);
 
         const string new_xom_favour = describe_xom_favour();
         const string msg = "You are now " + new_xom_favour;
@@ -328,7 +329,7 @@ void wizard_set_piety_to(int newpiety, bool force)
     {
         if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
         {
-            you.piety = 0;
+            you.raw_piety = 0;
             excommunication();
         }
         else
@@ -380,7 +381,7 @@ void wizard_set_piety()
     }
 
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
-         you.piety);
+         you.raw_piety);
     char buf[30];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {
@@ -944,7 +945,7 @@ void wizard_transform()
     if (you.default_form == you.form && you.form != transformation::none)
     {
         you.default_form = form; // ehhh
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
     }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
@@ -993,7 +994,7 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = you_worship(GOD_XOM) ? abs(you.piety - HALF_MAX_PIETY)
+    const int severity = you_worship(GOD_XOM) ? abs(you.raw_piety - HALF_MAX_PIETY)
                                               : random_range(0, HALF_MAX_PIETY);
 
     if (specs[0] == '\0')

@@ -189,7 +189,7 @@ static void _write_mon(FILE * o, monster &mon)
 
 static bool _equip_weapon(const string &weapon, bool &abort)
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (int i = 0; i < MAX_GEAR; ++i)
     {
         if (!you.inv[i].defined())
             continue;
@@ -252,7 +252,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
     if (!missile.empty())
     {
-        for (int i = 0; i < ENDOFPACK; ++i)
+        for (int i = 0; i < MAX_GEAR; ++i)
         {
             if (!you.inv[i].defined())
                 continue;

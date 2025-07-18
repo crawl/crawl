@@ -13,6 +13,14 @@ dgn.create_monster(place1.x, place1.y, "generate_awake test statue")
 debug.check_moncasts(place1.x, place1.y, place2.x, place2.y)
 
 -- then check with a foe
+dgn.dismiss_monsters()
+dgn.create_monster(place1.x, place1.y, "generate_awake test statue")
+dgn.create_monster(place2.x, place2.y, "generate_awake test statue att:friendly")
+debug.check_moncasts(place1.x, place1.y, place2.x, place2.y)
+
+-- and finally with an ally
+dgn.dismiss_monsters()
+dgn.create_monster(place1.x, place1.y, "generate_awake test statue")
 dgn.create_monster(place2.x, place2.y, "generate_awake test statue")
 debug.check_moncasts(place1.x, place1.y, place2.x, place2.y)
 

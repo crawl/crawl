@@ -189,6 +189,10 @@ class CrawlProcessHandlerBase(object):
         return (re.search(r'"msg" *: *"map"', tocheck)
                 and re.search(r'"clear" *: *true', tocheck))
 
+    def _is_spectator_only(self, msg):
+        tocheck = msg[0:50]
+        return re.search(r'"spect_only" *: *true', tocheck)
+
     def handle_process_message(self, msg, send): # type: (str, bool) -> None
         # special handling for map messages on a new spectator: these can be
         # massive, and the deflate time adds up, so only send it to new
@@ -197,8 +201,12 @@ class CrawlProcessHandlerBase(object):
         # TODO: if multiple spectators join at the same time, it's probably
         # possible for this heuristic to fail and send a full map to everyone
         if self._fresh_watchers and self._is_full_map_msg(msg):
-            for w in self._fresh_watchers:
-                w.append_message(msg, send)
+            if self._is_spectator_only(msg):
+                for w in self._fresh_watchers:
+                    w.append_message(msg, send)
+            else:
+                for receiver in self._receivers:
+                    receiver.append_message(msg, send)
             self._fresh_watchers = set()
             return
         for receiver in self._receivers:

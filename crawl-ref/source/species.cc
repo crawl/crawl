@@ -643,7 +643,9 @@ void give_level_mutations(species_type species, int xp_level)
         if (lum.xp_level == xp_level)
         {
             // XX: perma_mutate() doesn't handle prior conflicting innate muts,
-            // so we skip this mut if this occurs, e.g. through a Ru sacrifice.
+            // so we skip this mut if this occurs to avoid an assert. Ru
+            // sacrifices can be a source of this, so make sure any conflicts
+            // are handled by _sac_mut_maybe_valid!
             if (mut_check_conflict(lum.mut, true))
                 continue;
 

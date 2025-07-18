@@ -6,7 +6,7 @@ exp: 130
 will: 20
 attacks:
  - {type: hit, flavour: airstrike, damage: 6}
-hd: 5
+hd: 6
 hp_10x: 275
 ac: 3
 ev: 13

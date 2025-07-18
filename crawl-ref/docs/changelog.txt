@@ -1,11 +1,272 @@
-Stone Soup 0.33 (through 0.33-a0-1369-g9fcff2c720)
+Stone Soup 0.34 (through 0.34-a0-329-gc8829d1dcf)
 --------------------------------------------------
+
+Artefacts
+---------
+* The faerie dragon scales now has a higher average enchantment, can sometimes
+  come with evokable invisibility, and is a Hexes enhancer.
+* The Sword of the Doom Knight has been renamed to the Sword of the Dread
+  Knight.
+* Randarts can now come with a Bane property, which inflicts a Bane on the
+  player when equipped. Randarts with this property have higher enchantment.
+
+Branches, Environment
+---------------------
+* The Crypt end vault's old thematic item rewards have been moved into a unique,
+  guaranteed shop containing a larger quantity of the prior options at high
+  prices.
+* The Halls of Zot will now contain one of three types of orb monster each game,
+  each wielding a different element and form of strategic damage.
+  - The orb type one will encountered that game is indicated via statues placed
+    by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
+    can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
+* The last floor of Zot contains now contains two Boundless Tesseracts, immobile
+  enemy spawners with fast regeneration.
+  - Once a tesseract wakes up, new monsters will slowly appear across the entire
+    floor (always out of the player's line of sight). The rate at which they
+    appear will slowly increase and they will eventually stop giving experience
+    when killed.
+  - Destroying one will destroy the other and reward all the experience one
+    would have gotten from waiting to kill their spawns individually.
+* The Orb status from being in Zot or having picked up the Orb of Zot now also
+  fuzzes the destination of scrolls of blinking by up to two spaces.
+* Hell effects can now inflict a small amount of Doom instead of inflicting
+  transient mutations.
+* Troves prices and costs have been heavily revised:
+  - Troves will no longer ask for any consumables besides scrolls of acquirement
+    and will no longer ask for specific named items from shops.
+  - Equipment costs are less common. Demon weapons are all interchangeable and
+    and heavier dragon scales are rarer.
+  - The Slimy / Abyssal rune troves and Horn of Geryon troves are more common.
+  - Piety troves now use a new debuff that temporarily caps one's piety at 0
+    until XP is gained instead of permanently draining it, allowing them to
+    function with more gods than before.
+  - New trove costs include accepting pre-announced Banes and being extremely
+    drained.
+  - Trove contents are no longer grouped by item category, and contain a
+    slightly lower amount of higher-quality items themed after spell namesakes
+    or unrand items. These items are also far less likely to be useless
+    according to god restrictions or species limits.
+  - Potential troves to discover include The Dread Knight's Derelict Chapel,
+    Eringya's Secret Bog, The First Justicar's Armoury, Leda's Sunken Stockpile,
+    The Lost Hoard of Erebora, The Name-Rending Infernalists' Reservoir, The
+    Octopus King's Forgotten Garden, Ozocubu's Refrigerator, Rutra's Hidden
+    Sanctum, The Storm Queen's Palace Crash Site, a devouring Rift, and an
+    orange crystal hatchery.
+
+Character
+---------
+* Players can now accumulate Doom from enemies and other hostile effects, a
+  new form of medium-term damage displayed as a percentage. Doom has no effect
+  on its own and disappears with gaining experience, but at 100% causes one to
+  gain a random Bane, which itself only disappears with gaining significantly
+  more experience differing between Bane types. Banes include:
+  - Bane of Claustrophobia, which lowers melee damage and accuracy for each
+    wall the player is adjacent to.
+  - Bane of the Dilettante, which reduces the player's highest weapon skill
+    as well as their two highest magic / invocation / evocation skills.
+  - Bane of Electrospasm, which makes suffering electric damage sometimes
+    inflict the -Move status.
+  - Bane of Heatstroke, which makes suffering fire damage sometimes Slow you.
+  - Bane of the Hunted, which makes any creatures summoned by enemy appear
+    next to the player, last longer, and be better at tracking you.
+  - Bane of Lethargy, which slows the player's movement speed.
+  - Bane of Mortality, which gives a chance for reapers to appear near wounded
+    players when no other enemies are around.
+  - Bane of Multiplicity, which gives a chance for any monster you fight to
+    create fragile clones of itself.
+  - Bane of Paradox, which gives a small chance for each new monster you
+    encounter to learn Manifold Assault with a chance to blink after casting it.
+  - Bane of the Reckless, which sets one's SH to 0.
+  - Bane of Snow-blindness, which makes suffering cold damage something inflict
+    Blind and Weak.
+  - Bane of Stumbling, which inflicts -25 EV when moving or standing still.
+  - Bane of Succour, which makes killing enemies heal other nearby enemies
+    based on the slain foe's max HP.
+  - Bane of Warding, which gives a small chance to give groups of monster the
+    Warding buff when first seen, which grants damage immunity from non-adjacent
+    sources of damage.
+* Undead species and forms lose Doom/Banes half as quickly as other species.
+* Player contamination has been heavily adjusted.
+  - The exact amount one is contaminated is now indicated as a percentage in the
+    sidebar. Harmful effects begin at 100% and cap at 300%.
+  - Crossing the 100% threshold is more likely to result in a bad mutation than
+    before (but very high amounts are less dangerous).
+  - Explosions from contamination are now possible at a lower threshold, ignore
+    AC, and are more damaging.
+  - Many existing effects have been rescaled to be similarly dangerous as before
+    this change.
+* New mutations:
+  - Efficient Metabolism, which doubles the duration of potion status effects.
+  - Feed Off Suffering, which restores HP and MP after killing poisoned or
+    drained foes.
+  - Lucky, which gives a small chance for floor items the player encounters to
+    be randarts.
+  - Protean Grace, which gives +Slay and +EV based on how mutated you are.
+* Other individual mutation changes:
+  - Electricity Vulnerability is now in the normal mutation pool.
+  - Thick Fur can now only be mutated by Trolls and Felids.
+  - Sense Surroundings is now stronger and only has two levels.
+  - The unsafe potion and scroll mutations have now been revised: they now
+    prevent using potions or scrolls with monsters in sight while your HP is
+    high (and have no effect when badly injured).
+* Transient mutations are now only removed by slaying a sufficient number of
+  non-trivial monsters, and can no longer roll stat loss or Berserk mutations.
+* Players have a longer stun immunity after being Vexed.
+* Players can now negate intrinsic rPois- with two sources of rPois.
+* Players succeeding at certain optional challenges can now obtain unique titles
+  proclaiming their triumph (or madness).
+
+Gods
+----
+* Gozag's Gold Lust passive now properly displays when monsters are affected
+  by it (instead of regularly losing its visual indication before its effects
+  ended).
+* Jiyva's jellies can no longer eat spellbooks.
+* Vehumet's first level 1 spell gift is now given immediately upon worship.
+* Vehumet's spell gift choices now account for Conjurations and Alchemy skill.
+* Xom has a new action: slightly Dooming the player.
+* All gods besides the good gods no longer allow rejoining them if one is
+  undergoing their wrath.
+* Several wrath adjustments:
+  - Fedhas and Jiyva wraths have been simplified.
+  - Kiku wrath applies the Sign of Ruin instead of tormenting, and drains for
+    lower amounts that can no longer be resisted by rN+.
+  - Okawaru wrath summons are more varied and scale more smoothly to player xl.
+  - Qazlal wrath now applies the Banes of Heatstroke, Snow-blindness, and
+    Electrospasm instead of transient mutations of rF-, rC-, or rElec-.
+
+Interface and Options
+---------------------
+* The character overview screen (%) now displays how much damage is prevented
+  by each pip of resistance the player has.
+  - the show_resist_percent option can be used to hide these numbers.
+* The "Trivial" monster threat level threshold is now a little higher.
+* warn_contam_cost option: warns the player before casting Irradiate if it
+  could potentially result in going over 100% contamination.
+
+Items
+-----
+* Parchments now replace the majority of spellbooks found in game, each
+  granting knowledge of a single spell.
+  - Parchments are much more common than spellbooks used to be, making the
+    total number of spells found in the game roughly equal to previous
+    versions.
+  - Floors with shops past the Dungeon and Lair have increasing likelihood to
+    contain an additional parchment shop.
+  - Randbooks now only appear in select vaults or via acquirement and
+    Sif Muna gifts.
+  - Higher-spell-level are now somewhat rarer early in the game and more
+    common later.
+* Stones are now less common.
+
+Monsters
+--------
+* Two new orb types rotate with orbs of fire in Zot each game:
+  - Orbs of Winter, which cast Flash Freeze, Ozocubu's Refrigeration,
+    and inflict a new Ostracism debuff that temporarily reduces one's piety.
+  - Orbs of Entropy, which cast Bolt of Draining, Acid Ball, and
+    inflict Doom upon their foes.
+* New and returning monsters:
+  - Chonchon, chaotic flying heads for Depths.
+  - Cognitogaunts, antimagic starghouls for Crypt and Abyss.
+  - Crawling flesh cages, augmented ugly things for Vaults.
+  - Drudes, new weak Doom-inflicting tier-5 demons for D and the Abyss.
+  - Kobold fleshcrafters, abomination makers for Depths.
+  - Ravens, Doom-inflicting birds for Lair.
+  - Screaming refractions, crystal injury-mirroring undead for the Abyss.
+  - Zykzyls, the new malmutating tier-2 demon, now focused on hexes.
+* Cacodemons no longer know Malmutate or Bolt of Devastation, but can cut
+  willpower in half with their melee and cast Doom Bolt: a penetrating bolt
+  that inflicts Doom on hit.
+* Death knights trade Injury Mirror for higher stats, an umbra, and Hurl
+  Torchlight (like the Yred ability), and now place in the Vaults with draugr
+  instead of in late D.
+* Doom hounds have been renamed to oblivion hounds.
+* Draugr replace skeletons as derived undead monsters, losing health for more
+  AC, no speed penalty, an ability to wield weapons regardless of their original
+  form, and Doom-inflicting melee. They are rarer than the previous skeletons.
+* Glowing orange brains no longer have Brain Bite.
+* The moon troll now is warded from damage from non-adjacent foes, and loses
+  Dazzling Flash in exchange for Lee's Rapid Deconstruction.
+* Neqoxecs no longer can inflict permanent mutations, but have a new Warp Body
+  spell that deals minor damage and inflicts transient mutations (or Vitrify,
+  if the player has already been repeatedly Warped).
+* Purple very / ugly things now have extra Will and antimagic attacks.
+* Reapers have a new non-skeletal flavour and now fly.
+* Shining eyes trade Malmutate for Mutagenic Gaze, which inflicts contamination
+  over time (but is usable anywhere in line of sight).
+* Sphinx marauders do less damage on average with their airstrike attacks.
+* Monster purple draconians have slightly less Willpower, and classed draconians
+  have more Willpower.
+* Mummy death curses now inflict more Draining, less Torment and Slow, and
+  have a chance to inflict Doom.
+* Monsters with necromancy spells deal more damage with pain brand weapons.
+* Monster Corrosive Bolt now has a higher chance to corrode for higher amounts
+  and does slightly more damage.
+* Monster Bolts of Draining are more accurate.
+* Monsters blindness resistance has been refactored: all sources of Blind
+  outside of light effects, Enfeeble, and divine powers are limited to
+  natural / demonic / holy monsters, while light can also work on undead and
+  Enfeeble / most divine Blind effects ignore Blind resistance entirely.
+* Daze now makes monsters skip their actions until they take any damage,
+  instead of giving them a 1-in-4 chance to skip each action (but last less time).
+
+Spells
+------
+* Dazzling Flash has been renamed Gloom and moved from Hexes / Fire to
+  Hexes / Necromancy.
+* Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
+  spellpower rather than inflicting antimagic.
+* Summon Horrible Things now increases the caster's Doom rather than sometimes
+  inflicting temporary Will- mutations.
+
+Tiles
+-----
+* New tiles for existing game elements:
+  * Spells: Confusion Gaze, Vitrifying Gaze, Weakening Gaze.
+  * Icons: frenzied, magnetized, sentinel's mark.
+  * Traps: Archmage's trap, devourer's trap, tyrant's trap.
+  * Walls: Zot:5 stone walls.
+
+Stone Soup 0.33.1 (20250606)
+----------------------------
+
+Bugfix release
+--------------
+* Fix vampire form not having torment resistance.
+* Fix bat swarm form having torment immunity instead of torment resistance.
+* Fix breaking cursed items without a prompt when leaving slot-granting forms.
+* Fix sphinx and serpent forms having slot items fall off when changing
+  temporarily to another form via lignification or polymorph.
+* Fix Dithmenos' player shadow not having the same reach as the player when in
+  aqua form.
+* Fix inconsistencies in handling of beam types:
+  - The spells Chain Lightning and Stunning Bolt are now properly 33%
+    resistable with rElec instead of only 25% resistable.
+  - Mercury Arrow is now properly 25% resistable with rPois.
+  - Stunning Bolt now checks half of AC like other electricity-themed spells.
+  - Qazlal's adaptive rElec is now properly triggered by Stunning Bolt.
+  - Qazlal's adaptive AC is now properly triggered by all 'physical' spell
+    projectiles.
+* The Slick Slippers now prevent being bound by an ironbound beastmaster's
+  bolas.
+* Fix not being able to use Yredelemnul's Light the Black Torch on a
+  portal level like Necropolis if it had been used in a previous instance of
+  that portal.
+* Don't allow orbrun spawns in Okawaru's Arena.
+* Remove erroneous extra placements of alderkings in Sprint IV.
+* 37 other bug fixes, interface improvements, and documentation updates.
+
+
+Stone Soup 0.33.0 (20250502)
+----------------------------
 
 Highlights
 ----------
 * New magic school + background: Forgewrights, building explosive constructs.
-* Two new species: poltergeists and revenants.
-* Eleven new talismans have been added, and Shapeshifters have been reworked.
+* Two new species: Poltergeists and Revenants.
+* Twelve new talismans have been added, and Shapeshifters have been reworked.
 * Ghost vaults are moved into a game-long repeating portal, the Necropolis.
 * Yet more new monsters, decorations, and traps spread throughout the Dungeon.
 
@@ -55,6 +316,8 @@ Branches, Environment
 * Walking over fountains now has a chance to produce flavour messages, varying
   based on the fountain, one's god, and the absence of hostile enemies in sight.
 * Zot traps now can inflict blindness.
+* Entering Gauntlets now reveals their layout, items, and monsters to the
+  player, outside of the shape or contents of the minotaur's maze.
 * The last floor of Crypt now has a 30% chance to contain a sanguine talisman.
 * The clouds of degeneration in Alistair's Party Mansion are now alcoholic mist,
   inflicting Vertigo.
@@ -63,8 +326,8 @@ Branches, Environment
 * Frail pillars of rime can be found in Cocytus.
 * Ziggurats have even more exponential scaling for those doing multiple
   ziggurats.
-* Sprint VII ("The Pits") has been rescaled and renewed heavily, with many more
-  monster options and mildly-less-aggressive earlier chamber difficulty scaling.
+* Sprint VII ("The Pits") has gotten major updates to balance and monster
+  options, while Sprint V ("Ziggurat Sprint") has had minor updates to the same.
 
 Character
 ---------
@@ -82,7 +345,7 @@ Character
 * Fighters now start with a second potion of might.
 * Shapeshifters now start with a quill talisman, three flux baubles, and a
   protean talisman, which can be used with 6 or more Shapeshifting skill to
-  randomly transform it into a scarab, rimehorn, medusa or maw talisman.
+  randomly transform it into a scarab, rimehorn, medusa, or maw talisman.
   They keep their potion of lignification and start with 1 more Fighting skill.
 * Wanderers can now start with quill talismans, inkwell talismans, flux baubles,
   protean talismans, or any protean-tier talisman.
@@ -93,6 +356,8 @@ Character
   * efficient magic, making spells cost 1 less (to a minimum of 1 MP).
   * ephemeral shield, granting +7 SH briefly after spells and invocations.
   * poor constitution, inflicting Weak and then Slow on taking damage.
+  * slime shroud, sometimes deflecting melee attacks and then cooling down until
+    it can do so again (Jiyva only).
   * time-warped blood, hasting some of your allies when you fall below 50%
     health, and can only activate again after returning to full health.
 * Berserk players are now immune to fear.
@@ -100,8 +365,12 @@ Character
   nonviolently deconstructed by pressing ctrl+[direction] while adjacent.
 * Fungus Form and Tree Form are both immune to sleep.
 * Paralysis, sleep, petrification, and vex status inflicted on the player all
-  now share the same temporary immunity cooldown.
+  now share the same temporary immunity cool-down.
 * Removed mutations: deterioration.
+* Penalties to body armour AC from talismans and the Deformed Body mutation
+  are now also applied to the AC bonus from training Armour skill. To
+  compensate, the AC penalties of Deformed Body and blade talismans have been
+  reduced, and Naga and Armataurs have their Armour aptitudes increase by 1.
 
 Gods
 ----
@@ -125,8 +394,9 @@ Interface and Options
   spell success chances for each spell if they switched to using that item.
 * Examining spellbooks in webtiles now colours spells according to their
   usability and whether or not one has the spell in their library.
-* Examining talismans now displays their upsides, downsides, and skill scaling
-  in a more compressed format with additional details.
+* Examining talismans now displays their upsides, downsides, changes to one's
+  defences, and skill scaling in a more compressed format with additional
+  details.
 * Spell range is now indicated with numbers instead of diagrams.
 * Default target-picking behaviour for spells, abilities, and items has been
   improved: it is now more consistent at avoiding the player or their allies
@@ -167,7 +437,7 @@ Items
   - inkwell talismans, providing Walking Scroll Form. This melds all equipment,
     increases all magic school skills scaling to one's Shapeshifting, grants
     extra max mp, disables casting spells above level 4, and cuts one's melee
-    damage in half in exchange for a 50% to gain 1 MP on every hit.
+    damage in half in exchange for a 50% chance to gain 1 MP on every hit.
  - Tier 2:
   - scarab talismans, providing Sun Scarab Form. This small form melds weapons
     and armour, carts around a solar ember that cleaves with fire attacks when
@@ -211,7 +481,7 @@ Items
     of attacks instead of indefinitely.
   - Maw talismans have been lowered down a tier, with the maw dealing less
     damage and healing on kills for less HP, but can now break through body
-    armour to provide a tiny percent of AC instead of melding such entirely.
+    armour to reduce base AC by 75% instead of melding such entirely.
   - Serpent talismans now transform the user into a two-headed snake that can
     wear two hats (but no other equipment).
   - Granite talismans now apply a percentage EV penalty and provide additional
@@ -239,20 +509,25 @@ Items
 Monsters
 --------
 * New monsters:
-  * Alderkings, fae trees and necromantic masters of Depths.
-  * Goblin riders, wvyern-taming cavalry for Bailies.
-  * Fravashi, mid-tier warrior-summoning angels.
-  * Nekomata, self-cloning ranged cat demons for Pan.
-  * Oni incarcerators, Manifold Assault users for Gehenna.
-  * Sphinx marauders, masters of winds and minds for Shoals and Vaults.
-  * Vampire bloodprinces, sleep-inducing lords of Crypt.
-  * Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
-* New unique: Nobody, a revenant made from countless forgotten souls, who can
-  burn the memories of their deaths to both heal and change spellsets.
-* Returning monster: hippogriffs, now nearly exclusive to bailies, now with both
-  Warning Cry and a new damaging wind spell that slowly pulls enemies in.
-* Returning monster: ironbound beastmasters, now with a passive animal and slime
-  hasting aura plus the ability to throw bolas to bind foes in place.
+  - Alderkings, fae trees and necromantic masters of Depths.
+  - Fravashi, mid-tier warrior-summoning angels.
+  - Goblin riders, wyvern-taming cavalry for Bailies.
+  - Ironbound mechanists, dual-wielding forgewright coglins for Vaults.
+  - Nekomata, self-cloning ranged cat demons for Pan.
+  - Oni incarcerators, Manifold Assault users for Gehenna.
+  - Sphinx marauders, masters of winds and minds for Shoals and Vaults.
+  - Vampire bloodprinces, sleep-inducing lords of Crypt.
+  - Wyrmholes, terrifying relocations drakes for Depths and rarely Zot.
+* Returning monsters:
+  - hippogriffs, now nearly exclusive to bailies, now with both Warning Cry
+    and a new damaging wind spell that slowly pulls enemies in.
+  - ironbound beastmasters, now with a passive animal and slime hasting aura
+    plus the ability to throw bolas to bind foes in place.
+* New uniques:
+  - Nobody, a revenant made from countless forgotten souls, who can burn the
+    memories of their deaths to both heal and change spellsets.
+  - Sprozz, an early-game coglin forgewright who casts Clockwork Bee and
+    Nazja’s Percussive Tempering and sometimes drops a Forgecraft spellbook.
 * Apises now have a passive aura that doubles the health of other monsters.
 * Arcanists now have more health and EV.
 * Ball pythons deal less damage.
@@ -306,10 +581,10 @@ Species
     be easier to cast while ignoring encumbrance penalties, and get extra power.
     Spell-activated automatic attacks during this also heal the player.
   - At XL 3, they also gain knowledge of a random level 1 destructive spell.
-* Formicids now may wield an additional pair of gloves.
+* Formicids now may wear an additional pair of gloves.
 * Merfolk Long Blades apt is lowered from +2 to +1, and their Polearms apt is
   increased from +3 to +4.
-* Mountain Dwarf Summoning apt is lowered from 0 to -2.
+* Mountain Dwarf Summonings apt is lowered from 0 to -2.
 * Enhancer staves are now one-handed instead of two-handed for spriggans and
   kobolds.
 * Vampires and ghouls have been removed.
@@ -363,6 +638,9 @@ Spells
   - Detonation Catalyst (L5 Fire / Alch): Gain a buff that makes non-cleaving
     melee attacks explode for damage scaled to damage dealt, avoiding allies,
     and which lasts for very little time if the user stops attacking.
+  - Sphinx Sisters (L7 Summ / Hexes) that summons a pair of riddling sphinxes,
+    one guardian and one marauder, to debilitate the enemies with hexes and
+    batter them with violent winds.
 * Spell changes:
   * Awakened Armours now equip a replica of the body armour they're echoing.
   * Battlespheres last longer at lower spell power, are better at pathing
@@ -392,6 +670,8 @@ Spells
     mutation with each cast.
   * Teleport Other is now smite targetted.
 * Spells that can't miss are no longer affected by player blindness debuffs.
+* Monstrous Menagerie is removed as a player spell, but is still used by
+  Kirke.
 
 Tiles and Other Art
 -------------------
@@ -399,12 +679,15 @@ Tiles and Other Art
   * Abilities: Accepting Makhleb's infernal marks.
   * Features: altars to Fedhas, altars to Xom, caches of meat, granite statues
     in Depths and Zot.
-  * Items: all forms of leather armour.
+  * Forms: Flux form tiles for humanoids, felids, and octopodes.
+  * Items: all forms of leather armour, troll leather armour randarts,
+    sacks of spiders (active and inert).
   * Monsters: apises, boggarts, brain worms, creeping infernos, culicivora,
     great orbs of eyes, living spells, ophanim, rakshasa, scrub nettles,
     shapeshifters and glowing shapeshifters, sky beasts, all tengu types.
   * Mutation icons: big wings, demonspawn demonic touch, mp-powered wands,
-    screaming, subdued magic, tendrils, pseudopods, wild magic.
+    screaming, stinger, subdued magic, tendrils, pseudopods, demonspawn
+    weakness stinger, wild magic.
   * Plants, both regular and withered.
   * Player dolls: Coglins.
   * The prune curse from the glaive of Prune.
@@ -416,20 +699,21 @@ Tiles and Other Art
     Mortar, Hoarfrost Cannonade, Lightning Spire, Magnavolt, Permafrost
     Eruption, Spellspark Servitor, all remaining monster-only spells.
   * Starting screen icons: high scores.
+  * Status effects: withering away.
   * Unrands: the robe of Augmentation, Brilliance and its brand, Firestarter,
     Punk's acid brand, the robe of Folly, the sword of the Doom Knight, and
     the toga "Victory".
   * Visual effects: airstrike, draining gaze, doom howl, entropic weave,
-    fire storm, fulsome fusillade, ice blasts, magma, manifold assault,
-    mephitic cloud, mystic blast, potion petition, sap magic, sentinel's mark,
-    wand of warping.
+    fire storm, fulsome fusillade, ice blasts, ignite poison, magma,
+    manifold assault, mephitic cloud, mystic blast, potion petition, sap magic,
+    sentinel's mark, wand of warping.
   * Walls: Vaults and Trove rock.
 * Pandemonium now has unique stone wall tiles for regular floors and unique wall
   tiles for each of the unrand Pan lord vaults.
 * Gehenna now has unique stone wall tiles.
 * Depths and Zot now have unique metal wall tiles.
 * Webtiles now has the banishment animation offline tiles uses.
-* New oni splash screen by benadryl.
+* New Oni splash screen by benadryl.
 
 Stone Soup 0.32.1 (20240925)
 ----------------------------

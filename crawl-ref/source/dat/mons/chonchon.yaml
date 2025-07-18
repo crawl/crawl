@@ -1,0 +1,21 @@
+name: "chonchon"
+glyph: {char: "x", colour: lightgreen}
+flags: [flies, batty, warm_blood, no_poly_to]
+exp: 1250
+will: 60
+attacks:
+ - {type: headbutt, flavour: chaotic, damage: 32}
+ - {type: bite, flavour: vampiric, damage: 28}
+hd: 14
+hp_10x: 630
+ac: 6
+ev: 16
+spells: chonchon
+has_corpse: true
+shout: screech
+intelligence: human
+speed: 20
+energy: {spell: 20}
+size: tiny
+shape: misc
+tile_variance: random

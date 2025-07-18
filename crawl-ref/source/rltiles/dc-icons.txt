@@ -39,6 +39,7 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+frenzied FRENZIED
 slowed SLOWED
 hasted HASTED
 might MIGHT
@@ -109,6 +110,12 @@ nobody_memory_1 NOBODY_MEMORY_1
 nobody_memory_2 NOBODY_MEMORY_2
 nobody_memory_3 NOBODY_MEMORY_3
 pyrrhic PYRRHIC
+magnetised MAGNETISED
+figment FIGMENT
+paradox PARADOX
+warding WARDING
+dim DIMMED
+sentinel_mark SENTINEL_MARK
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

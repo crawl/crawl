@@ -134,6 +134,7 @@ void ghost_demon::reset()
     max_hp           = 0;
     ev               = 0;
     ac               = 0;
+    willpower        = -1;
     damage           = 0;
     speed            = 10;
     move_energy      = 10;
@@ -146,6 +147,7 @@ void ghost_demon::reset()
     flies            = false;
     cloud_ring_ench  = ENCH_NONE;
     umbra_rad        = -1;
+    title            = "";
 }
 
 // Set values to the bare minimum required to function, in cases where full
@@ -528,6 +530,7 @@ void ghost_demon::init_player_ghost()
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
+    title = player_title();
 
     flies = true;
 
@@ -886,6 +889,10 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
         u_att_flav = AF_COLD;
         break;
 
+    case MAGENTA:
+        u_att_flav = AF_ANTIMAGIC;
+        break;
+
     default:
         break;
     }
@@ -942,11 +949,15 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
-    if (colour == MAGENTA)
-        damage = damage * 4 / 3; // +5 for uglies, +9 for v uglies
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
+
+    // Not really a normal resistance, so handle it separately.
+    if (colour == MAGENTA)
+        willpower = ((very_ugly) ? 120 : 80);
+    else
+        willpower = -1;
 
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)

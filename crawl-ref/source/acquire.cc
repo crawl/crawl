@@ -830,6 +830,7 @@ static int _book_weight(book_type book)
 {
     ASSERT_RANGE(book, 0, NUM_BOOKS);
     ASSERT(book != BOOK_MANUAL);
+    ASSERT(book != BOOK_PARCHMENT);
     ASSERT(book != BOOK_RANDART_LEVEL);
     ASSERT(book != BOOK_RANDART_THEME);
 
@@ -1170,7 +1171,8 @@ static string _why_reject(const item_def &item, int agent)
 
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
-                            const coord_def &pos)
+                            const coord_def &pos,
+                            int force_ego)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -1200,7 +1202,7 @@ int acquirement_create_item(object_class_type class_wanted,
             want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted,
-                              item_level, 0, agent);
+                              item_level, force_ego, agent);
 
         if (thing_created == NON_ITEM)
         {
@@ -1210,6 +1212,21 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(env.item[thing_created]);
+
+        // If we asked for a specific brand and got something back without it
+        // (likely because we rolled an incompatible type), destroy the item and
+        // try again.
+        if (force_ego > 0)
+        {
+            if ((acq_item.base_type == OBJ_WEAPONS && get_weapon_brand(acq_item) != force_ego)
+                || (acq_item.base_type == OBJ_ARMOUR && get_armour_ego_type(acq_item) != force_ego))
+            {
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
+        }
+
         _adjust_brand(acq_item, agent);
 
         // Increase the chance of armour being an artefact by usually
@@ -1467,7 +1484,8 @@ static void _create_acquirement_item(item_def &item, string items_key,
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),
               origin_desc(item)));
-    item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    // Mark as seen so that Lucky cannot proc off it.
+    item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | ISFLAG_SEEN);
     identify_item(item);
 
     if (is_gizmo)
@@ -1476,7 +1494,7 @@ static void _create_acquirement_item(item_def &item, string items_key,
         // XXX: This is ugly and only works because there can never be another
         //      gizmo in our inventory, but move_item_to_inv() doesn't actually
         //      return an index or anything else we can use.
-        for (int i = 0; i < ENDOFPACK; ++i)
+        for (int i = 0; i < MAX_GEAR; ++i)
         {
             if (you.inv[i].base_type == OBJ_GIZMOS)
             {
@@ -1939,7 +1957,7 @@ static void _make_coglin_gizmos()
 
 bool coglin_invent_gizmo()
 {
-    if (inv_count() >= ENDOFPACK)
+    if (inv_count(INVENT_GEAR) >= MAX_GEAR)
     {
         mpr("You don't have room to hold a gizmo! Drop something first.");
         return false;

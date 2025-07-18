@@ -113,7 +113,7 @@
       elseif s == "H" then i = { "halberd", "hand axe",
        "hand cannon", "potion of heal wounds",
        "potion of haste", "manual of hexes", "hat",
-       "helmet", "book of hexes", "book of the hunter", "honeycomb talisman" }
+       "helmet", "book of hexes", "book of the hunter", "hive talisman" }
 
       elseif s == "I" then i = { "ring of ice",
        "scroll of immolation", "ice dragon scales", "book of ice",
@@ -200,7 +200,7 @@
 
       end
 
-      return i
+      return util.filter(items.pickable, i)
    end
 
    -- Automatically determine which letters have sufficient variety for a shop,

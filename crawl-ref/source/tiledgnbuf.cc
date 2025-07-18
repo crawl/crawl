@@ -517,6 +517,7 @@ static map<tileidx_t, int> status_icon_sizes = {
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
+    { TILEI_FRENZIED,       FIXED_LOC_ICON },
     { TILEI_VAMPIRE_THRALL, FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
     { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
@@ -566,6 +567,20 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
             m_buf_main.add(fg_idx, x, y);
         }
+    }
+
+    if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
+    {
+        const item_def* item = cell.map_knowledge.item();
+        spell_type spell = static_cast<spell_type>(item->plus);
+        const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+        const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+        if (school1 > 0)
+            m_buf_main.add(school1, x, y);
+
+        if (school2 > 0)
+            m_buf_main.add(school2, x, y);
     }
 
     if (fg & TILE_FLAG_NET)

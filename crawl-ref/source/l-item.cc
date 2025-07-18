@@ -506,7 +506,7 @@ IDEF(quantity)
 IDEF(slot)
 {
     if (item && in_inventory(*item))
-        lua_pushnumber(ls, item->link);
+        lua_pushnumber(ls, letter_to_index(item->slot));
     else
         lua_pushnil(ls);
     return 1;
@@ -1240,7 +1240,7 @@ static int l_item_swap_slots(lua_State *ls)
         return 0;
     }
 
-    swap_inv_slots(slot1, slot2, verbose);
+    swap_inv_slots(you.inv[slot1], slot2, verbose);
 
     return 0;
 }

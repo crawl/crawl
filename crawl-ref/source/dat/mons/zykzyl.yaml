@@ -1,0 +1,19 @@
+name: "zykzyl"
+glyph: {char: "2", colour: lightcyan}
+flags: [see_invis]
+resists: {elec: 1, poison: 1}
+exp: 1200
+holiness: [demonic]
+will: 160
+attacks:
+ - {type: hit, damage: 31}
+hd: 11
+hp_10x: 1145
+ac: 3
+ev: 7
+spells: zykzyl
+shout: gurgle
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

@@ -129,6 +129,7 @@ enum book_type
     BOOK_METALWORKING,
     BOOK_DUALITY,
     BOOK_CONTRAPTIONS,
+    BOOK_PARCHMENT,
     NUM_BOOKS
 };
 

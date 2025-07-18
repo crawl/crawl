@@ -70,6 +70,8 @@ static const map<shout_type, string> default_msg_keys = {
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
     { S_RUSTLE,         "__RUSTLE" },
     { S_SQUEAK,         "__SQUEAK" },
+    { S_CAW,            "__CAW" },
+    { S_LAUGH,          "__LAUGH" },
 };
 
 /**
@@ -411,7 +413,7 @@ void noisy_equipment(const item_def &weapon)
 
     if (is_unrandom_artefact(weapon))
     {
-        string name = weapon.name(DESC_PLAIN, false, true, false, false);
+        string name = weapon.name(DESC_QUALNAME, false, true, false, false);
         msg = getSpeakString(name);
         if (msg == "NONE")
             return;

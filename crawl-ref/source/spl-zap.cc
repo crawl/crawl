@@ -112,13 +112,14 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_DRAIN_MAGIC, ZAP_DRAIN_MAGIC },
     { SPELL_BECKONING_GALE, ZAP_BECKONING_GALE },
     { SPELL_HARPOON_SHOT, ZAP_HARPOON_SHOT},
-    { SPELL_CRYSTALLIZING_SHOT, ZAP_CRYSTALLIZING_SHOT },
+    { SPELL_CRYSTALLISING_SHOT, ZAP_CRYSTALLISING_SHOT },
     { SPELL_THROW_PIE, ZAP_THROW_PIE},
     { SPELL_AGONY, ZAP_AGONY },
     { SPELL_DISPEL_UNDEAD_RANGE, ZAP_DISPEL_UNDEAD_RANGE },
     { SPELL_NOXIOUS_CLOUD, ZAP_NOXIOUS_CLOUD },
     { SPELL_POISONOUS_CLOUD, ZAP_POISONOUS_CLOUD },
     { SPELL_BOLT_OF_DEVASTATION, ZAP_BOLT_OF_DEVASTATION },
+    { SPELL_BOLT_OF_FLESH, ZAP_BOLT_OF_FLESH },
     { SPELL_METAL_SPLINTERS, ZAP_METAL_SPLINTERS },
     { SPELL_SPLINTERSPRAY, ZAP_SPLINTERSPRAY },
     { SPELL_THORN_VOLLEY, ZAP_THORN_VOLLEY },
@@ -173,11 +174,17 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_RAVENOUS_SWARM, ZAP_RAVENOUS_SWARM },
     { SPELL_GOLDEN_BREATH, ZAP_GOLDEN_BREATH },
     { SPELL_ALL_PURPOSE_TEMPERING, ZAP_PERCUSSIVE_TEMPERING },
+    { SPELL_GHOSTLY_SACRIFICE, ZAP_GHOSTLY_SACRIFICE },
+    { SPELL_ILL_OMEN, ZAP_ILL_OMEN },
+    { SPELL_DOOM_BOLT, ZAP_DOOM_BOLT },
+    { SPELL_WARP_BODY, ZAP_WARP_BODY },
+    { SPELL_ACID_BALL, ZAP_ACID_BALL },
 
     // This is just to satisfy monster spell setup code
     { SPELL_HELLFIRE_MORTAR, ZAP_HELLFIRE_MORTAR_DIG },
 
     // These are all for zap -> spell lookup.
+    { SPELL_AWAKEN_FLESH, ZAP_AWAKEN_FLESH },
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
     { SPELL_STICKY_FLAME, ZAP_STICKY_FLAME },
     { SPELL_PYRE_ARROW, ZAP_PYRE_ARROW },
@@ -227,22 +234,4 @@ spell_type zap_to_spell(zap_type zap)
             return spzap.first;
 
     return SPELL_NO_SPELL;
-}
-
-int spell_zap_power_cap(spell_type spell)
-{
-    const zap_type zap = spell_to_zap(spell);
-
-    if (zap == NUM_ZAPS)
-        return 0;
-
-    const int cap = zap_power_cap(zap);
-
-    switch (spell)
-    {
-    case SPELL_HIBERNATION:
-        return 50;
-    default:
-        return cap;
-    }
 }

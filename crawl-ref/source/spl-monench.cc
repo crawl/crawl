@@ -25,6 +25,7 @@
 #include "transform.h"
 #include "rltiles/tiledef-main.h"
 #include "view.h"
+#include "viewchar.h"
 
 int englaciate(coord_def where, int pow, actor *agent)
 {
@@ -133,7 +134,7 @@ bool silence_monster(monster& mon, const actor* agent, int dur)
 {
     if (mon.add_ench(mon_enchant(ENCH_MUTE, 0, agent, dur)))
     {
-        simple_monster_message(mon, "loses the ability to speak.");
+        simple_monster_message(mon, " loses the ability to speak.");
         return true;
     }
 
@@ -148,11 +149,10 @@ bool enfeeble_monster(monster &mon, int pow)
     if (mons_has_attacks(mon))
         hexes.push_back(ENCH_WEAK);
     if (mon.antimagic_susceptible())
-        hexes.push_back(ENCH_ANTIMAGIC);
+        hexes.push_back(ENCH_DIMINISHED_SPELLS);
     if (res_margin <= 0)
     {
-        if (mons_can_be_blinded(mon.type))
-            hexes.push_back(ENCH_BLIND);
+        hexes.push_back(ENCH_BLIND);
         hexes.push_back(ENCH_DAZED);
     }
 
@@ -168,7 +168,9 @@ bool enfeeble_monster(monster &mon, int pow)
 
     for (auto hex : hexes)
     {
-        if (mon.has_ench(hex))
+        if (hex == ENCH_DAZED)
+            mon.daze(random_range(3, 5));
+        else if (mon.has_ench(hex))
         {
             mon_enchant ench = mon.get_ench(hex);
             ench.duration = max(dur * BASELINE_DELAY, ench.duration);
@@ -182,6 +184,48 @@ bool enfeeble_monster(monster &mon, int pow)
         simple_monster_message(mon, " partially resists.");
 
     return simple_monster_message(mon, " is enfeebled!");
+}
+
+bool enfeeble_player(actor *source, int pow)
+{
+    const int res_margin = you.check_willpower(source, pow);
+    vector<duration_type> hexes;
+
+    hexes.push_back(DUR_WEAK);
+    if (you.has_any_spells())
+        hexes.push_back(DUR_DIMINISHED_SPELLS);
+    if (res_margin <= 0)
+    {
+        hexes.push_back(DUR_BLIND);
+        hexes.push_back(DUR_DAZED);
+    }
+
+    // Resisted the upgraded effects, and immune to the irresistible effects.
+    if (hexes.empty())
+    {
+        canned_msg(MSG_YOU_UNAFFECTED);
+        return false;
+    }
+
+    const int dur = random_range(7, 12);
+    for (auto hex : hexes)
+    {
+        if (hex == DUR_DAZED)
+            you.daze(random_range(2, 4));
+        else if (hex == DUR_BLIND && you.duration[DUR_BLIND] < dur * BASELINE_DELAY)
+        {
+            you.duration[DUR_BLIND] = 0;
+            blind_player(dur);
+        }
+        else
+            you.duration[hex] = max(dur * BASELINE_DELAY, you.duration[hex]);
+    }
+
+    if (res_margin > 0)
+        canned_msg(MSG_YOU_PARTIALLY_RESIST);
+
+    mpr("You are enfeebled!");
+    return true;
 }
 
 spret cast_vile_clutch(int pow, bolt &beam, bool fail)
@@ -253,6 +297,7 @@ bool maybe_spread_rimeblight(monster& victim, int power)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
         && !victim.is_peripheral()
+        && !never_harm_monster(&you, victim)
         && you.see_cell_no_trans(victim.pos()))
     {
         apply_rimeblight(victim, power);
@@ -395,6 +440,7 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     shockwave.is_explosion = true;
     shockwave.ex_size = 1;
     shockwave.origin_spell = SPELL_PERCUSSIVE_TEMPERING;
+    shockwave.aux_source = "blast of sparks and slag";
     zappy(ZAP_PERCUSSIVE_TEMPERING, power, true, shockwave);
     shockwave.explode(true, true);
 
@@ -445,6 +491,9 @@ bool is_valid_tempering_target(const monster& mon, const actor& caster)
 // fault. The allies themselves may not be so generous!
 void do_vexed_attack(actor& attacker, bool always_hit_ally)
 {
+    const bool has_attacks = attacker.is_player() ? true
+                                : mons_has_attacks(*attacker.as_monster(), true);
+
     vector<coord_def> empty_space;
     vector<actor*> targs;
 
@@ -468,12 +517,16 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
     if (x_chance_in_y(empty_space.size(), total_weight))
     {
         coord_def pos = empty_space[random2(empty_space.size())];
+        string targ_desc = (attacker.airborne() && feat_has_solid_floor(env.grid(pos))
+                            && coinflip()) ? "the ceiling"
+                            : feature_description_at(pos, false, DESC_THE);
         if (you.can_see(attacker))
         {
-            mprf("%s attack%s %s!",
+            mprf("%s %s %s!",
                     attacker.name(DESC_THE).c_str(),
-                    attacker.is_monster() ? "s" : "",
-                    feature_description_at(pos, false, DESC_THE).c_str());
+                    has_attacks ? attacker.is_monster() ? "attacks" : "attack"
+                                : "glares at",
+                    targ_desc.c_str());
         }
 
         if (attacker.is_monster())
@@ -483,9 +536,159 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
     {
         ASSERT(!targs.empty());
         actor* victim = targs[random2(targs.size())];
-        melee_attack atk(&attacker, victim);
-        // The player is deliberately allowed to attack their allies.
-        atk.never_prompt = true;
-        atk.launch_attack_set();
+        if (has_attacks)
+        {
+            melee_attack atk(&attacker, victim);
+            // The player is deliberately allowed to attack their allies.
+            atk.never_prompt = true;
+            atk.launch_attack_set();
+        }
+        else
+        {
+            if (you.can_see(attacker))
+            {
+                mprf("%s glares at %s!",
+                        attacker.name(DESC_THE).c_str(),
+                        victim->name(DESC_THE).c_str());
+            }
+            attacker.as_monster()->lose_energy(EUT_ATTACK);
+        }
     }
+}
+
+static int _gloom_chance_numerator(int hd)
+{
+    return 95 - hd * 4;
+}
+
+static int _gloom_chance_denom(int pow)
+{
+    return 150 - pow;
+}
+
+int gloom_success_chance(int power, int target_hd)
+{
+    const int numerator = _gloom_chance_numerator(target_hd);
+    const int denom = _gloom_chance_denom(power);
+    return max(100 * numerator / denom, 0);
+}
+
+static bool _gloom_affect_target(actor *victim, const actor *agent, int pow)
+{
+    if (victim->res_blind())
+        return false;
+
+    if (victim->is_monster())
+    {
+        auto mons = victim->as_monster();
+        const int numerator = _gloom_chance_numerator(mons->get_hit_dice());
+        if (x_chance_in_y(numerator, _gloom_chance_denom(pow)))
+        {
+            mons->add_ench(mon_enchant(ENCH_BLIND, 1, agent,
+                        random_range(4, 8) * BASELINE_DELAY));
+            return true;
+        }
+    }
+    else
+    {
+        const int numerator = _gloom_chance_numerator(you.experience_level / 2);
+        if (x_chance_in_y(numerator, _gloom_chance_denom(pow)))
+        {
+            blind_player(random_range(6, 12));
+            return true;
+        }
+    }
+
+    return false;
+}
+
+spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer)
+{
+    int range = spell_range(SPELL_GLOOM, pow, caster->is_player());
+    auto vulnerable = [caster](const actor *act) -> bool
+    {
+        // No fedhas checks needed, plants can't be blinded by this.
+        if (act->res_blind())
+            return false;
+
+        // For monster casting, only affect enemies, to make it easier to use
+        // (Hopefully this is not somehow abusable)
+        return caster->is_player() || !mons_aligned(caster, act);
+    };
+
+    if (tracer)
+    {
+         // XX: LOS_NO_TRANS ?
+        for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+        {
+            if (!in_bounds(*ri))
+                continue;
+
+            const actor* victim = actor_at(*ri);
+
+            if (!victim || !caster->can_see(*victim) || !vulnerable(victim))
+                continue;
+
+            if (!mons_aligned(caster, victim))
+            {
+                // If this is a player tracer, consider blind monsters to be
+                // valid targets (since you *could* stand more duration on them.)
+                if (caster->is_player())
+                    return spret::success;
+                // But for monsters, it's generally a waste of time to reblind
+                // things which are already blind, so don't bother.
+                else
+                {
+                    if ((victim->is_monster() && !victim->as_monster()->has_ench(ENCH_BLIND))
+                        || (victim->is_player() && !you.duration[DUR_BLIND]))
+                    {
+                        return spret::success;
+                    }
+                }
+            }
+        }
+
+        return spret::abort;
+    }
+
+    if (caster->is_player())
+    {
+        auto hitfunc = find_spell_targeter(SPELL_GLOOM, pow, range);
+        if (stop_attack_prompt(*hitfunc, "blind", vulnerable))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    bolt beam;
+    beam.name = "gloom";
+    beam.flavour = BEAM_VISUAL;
+    beam.origin_spell = SPELL_GLOOM;
+    beam.set_agent(caster);
+    beam.colour = DARKGRAY;
+    beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    beam.range = range;
+    beam.ex_size = range;
+    beam.is_explosion = true;
+    beam.source = caster->pos();
+    beam.target = caster->pos();
+    beam.hit = AUTOMATIC_HIT;
+    beam.loudness = 0;
+    beam.tile_explode = TILE_BOLT_GLOOM;
+    beam.explode(true, true);
+
+    for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
+         ri; ++ri)
+    {
+        actor* victim = actor_at(*ri);
+        if (victim && vulnerable(victim) && _gloom_affect_target(victim, caster, pow))
+        {
+            if (victim->is_monster())
+                simple_monster_message(*victim->as_monster(), " is enveloped in gloom.");
+            // Player already got a message from blind_player
+            // XX: Should it be a slightly different message? Show something if resisted?
+        }
+    }
+
+    return spret::success;
 }

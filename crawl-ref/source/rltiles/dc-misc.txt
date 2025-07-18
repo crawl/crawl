@@ -19,6 +19,11 @@ flame2
 magma0 BOLT_MAGMA
 magma1
 
+ignite_poison_target0 BOLT_IGNITE_POISON_TARGET
+ignite_poison_target1
+ignite_poison_terrain0 BOLT_IGNITE_POISON_TERRAIN
+ignite_poison_terrain1
+
 fire_storm0 BOLT_FIRE_STORM
 
 # Ice bolts
@@ -145,6 +150,11 @@ irradiate1
 irradiate2
 irradiate3
 
+contam0 BOLT_CONTAM
+contam1
+contam2
+contam3
+
 fulsome_fire BOLT_FULSOME_FIRE
 fulsome_ice BOLT_FULSOME_ICE
 fulsome_electric BOLT_FULSOME_ELECTRIC
@@ -170,6 +180,10 @@ light_beam7
 warping_blast0 BOLT_WARP_SPACE
 
 # Monster bolts
+chaos0 BOLT_CHAOS
+chaos1
+chaos2
+
 beckoning_gale BOLT_BECKONING_GALE
 
 force_lance0 BOLT_FORCE_LANCE
@@ -225,6 +239,15 @@ splinters_metal5
 splinters_metal6
 splinters_metal7
 
+flesh0 BOLT_FLESH
+flesh1
+
+gloom0 BOLT_GLOOM
+gloom1
+
+doom_bolt0 BOLT_DOOM
+doom_bolt1
+
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1
 
@@ -242,7 +265,7 @@ chaos_buff1
 
 sap_magic BOLT_SAP_MAGIC
 
-doom_howl BOLT_DOOM_HOWL
+oblivion_howl BOLT_OBLIVION_HOWL
 
 phantom_blitz BOLT_PHANTOM_BLITZ
 
@@ -297,6 +320,8 @@ blood_arrow4
 blood_arrow5
 blood_arrow6
 blood_arrow7
+
+ostracise BOLT_OSTRACISE
 
 umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
 

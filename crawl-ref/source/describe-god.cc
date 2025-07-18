@@ -81,7 +81,7 @@ int god_favour_rank(god_type which_god)
     else if (which_god == GOD_USKAYAW)
         return _invocations_level();
     else
-        return _piety_level(you.piety);
+        return _piety_level(you.raw_piety);
 }
 
 static string _describe_favour(god_type which_god)
@@ -711,7 +711,7 @@ static formatted_string _describe_god_powers(god_type which_god)
 {
     formatted_string desc;
 
-    int piety = you_worship(which_god) ? you.piety : 0;
+    int piety = you_worship(which_god) ? you.piety() : 0;
 
     desc.textcolour(LIGHTGREY);
     const char *header = "Granted powers:";
@@ -948,6 +948,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             continue;
         }
 
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_1
+            && !makhleb_mark_name().empty())
+        {
+                desc.textcolour(god_colour(which_god));
+                desc.cprintf("You have been branded with the %s.\n", makhleb_mark_name().c_str());
+                continue;
+        }
+
         string buf = power.general;
 
         // Skip listing powers with no description (they are intended to be hidden)
@@ -1001,7 +1009,7 @@ static formatted_string _god_overview_description(god_type which_god)
         desc.cprintf("\nTitle  - ");
         desc.textcolour(god_colour(which_god));
 
-        string title = god_title(which_god, you.species, you.piety);
+        string title = god_title(which_god, you.species, you.raw_piety);
         desc.cprintf("%s", title.c_str());
     }
 
@@ -1141,7 +1149,7 @@ static void _send_god_ui(god_type god, bool is_altar)
 
     tiles.json_write_string("description", getLongDescription(god_name(god)));
     if (you_worship(god))
-        tiles.json_write_string("title", god_title(god, you.species, you.piety));
+        tiles.json_write_string("title", god_title(god, you.species, you.piety()));
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",

@@ -710,7 +710,7 @@ adventures, how they are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \|        staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
-%        talismans      (use 'V' to evoke)
+%        talismans      (use 'P'ut on and 'R'remove)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -949,10 +949,10 @@ Talismans allow their user to shift into a different form. Entering or leaving
 a form with a talisman requires a brief period of concentration, but otherwise,
 forms last until the user chooses to leave them.
 
-More powerful talismans require some amount of Shapeshifting skill, without
-which a user will find their maximum health reduced until they leave the form.
-Shapeshifting skill also increases other benefits provided by talismans' forms,
-though weaker talismans have a limit to how helpful skill can be.
+Most talismans require some amount of Shapeshifting skill, without which a user
+will find their maximum health reduced until they leave the form. Shapeshifting
+skill also increases other benefits provided by talismans' forms, though weaker
+talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -1160,11 +1160,10 @@ as a single mutation.
 
 Miscasting spells will cause magical contamination, which in turn can cause
 mutations if too much contamination is accrued at once. Certain powerful
-magical effects or spells (such as 'Invisibility' and 'Irradiate') also cause
-contamination as a side-effect even when successful. A single use of these
-effects is safe on its own, but multiple uses in short succession, or usage with
-existing contamination from other sources can cause dangerous levels of
-contamination.
+magical spells (such as 'Irradiate') also cause contamination as a side-effect
+even when successful. A single use of these effects is safe on its own, but
+multiple uses in short succession, or usage with existing contamination from
+other sources can cause dangerous levels of contamination.
 
 Mutations from magical contamination are almost always harmful. Mutations can
 also be caused by specific potions or by spells cast by powerful enemies found
@@ -1734,10 +1733,10 @@ Revenants (Re)
   recollections of their former life and an all-consuming hunger to claw back
   that existence which the world forgot.
 
-  So powerful is this drive which animates them that they can they can actually
-  rip the very existence from others, tearing fragments of souls and memories
-  and even the fundamental essence of inanimate objects and turning them into
-  fuel for the unholy fire that forever flickers upon their form.
+  So powerful is this drive which animates them that they can actually rip the
+  very existence from others, tearing fragments of souls and memories and even
+  the fundamental essence of inanimate objects and turning them into fuel for
+  the unholy fire that forever flickers upon their form.
 
   Their nature makes them uniquely skilled at wielding destructive magic;
   while their reserves of magical energy are poor and their aptitudes
@@ -2028,7 +2027,7 @@ Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
   Fighters usually start with a good weapon of their choice, a suit of medium
-  armour, a shield, and a potion of might.
+  armour, a shield, and two potions of might.
 
 Gladiators
   The Gladiator has been trained to fight in the ring. They start with a good
@@ -2087,7 +2086,8 @@ Artificers
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with two talismans and a potion of lignification.
+  They enter the dungeon with two talismans, some flux baubles, and a
+  potion of lignification.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
@@ -2110,7 +2110,7 @@ Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, a selection
-  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  of translocation spells, some disjunction darts, a simple weapon of their choice,
   and leather armour.
 
 Hexslinger

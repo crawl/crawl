@@ -68,7 +68,7 @@ static bool _is_noteworthy_dlevel(level_id place)
         return lev == _dungeon_branch_depth(branch);
 
     // These get their note in the .des files.
-    if (branch == BRANCH_WIZLAB)
+    if (branch == BRANCH_WIZLAB || branch == BRANCH_TROVE)
         return false;
 
     // Other portal levels are always interesting.
@@ -123,7 +123,9 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_GAIN_LIFE
         || note.type == NOTE_LOSE_LIFE
         || note.type == NOTE_FLED_CHALLENGE
-        || note.type == NOTE_INFERNAL_MARK)
+        || note.type == NOTE_INFERNAL_MARK
+        || note.type == NOTE_GET_BANE
+        || note.type == NOTE_LOSE_BANE)
     {
         return true;
     }
@@ -335,6 +337,16 @@ string Note::describe(bool when, bool where, bool what) const
                                     second == 0 ? 1 : second);
             if (!name.empty())
                 result << " [" << name << "]";
+            break;
+        case NOTE_GET_BANE:
+            result << "Gained bane: "
+                   << bane_name(static_cast<bane_type>(first));
+            if (!name.empty())
+                result << " [" << name << "]";
+            break;
+        case NOTE_LOSE_BANE:
+            result << "Lost bane: "
+                   << bane_name(static_cast<bane_type>(first));
             break;
         case NOTE_DEATH:
             result << name;

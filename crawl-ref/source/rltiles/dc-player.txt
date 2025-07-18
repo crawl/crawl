@@ -496,6 +496,7 @@ maw_form0 MAW_FORM
 maw_form1
 quill_form_armataur QUILL_ARMATAUR
 quill_form_djinn QUILL_DJINN
+quill_form_gargoyle QUILL_GARGOYLE
 quill_form_humanoid QUILL_HUMANOID
 quill_form_naga QUILL_NAGA
 hive_form HIVE_FORM
@@ -537,7 +538,7 @@ player/mutations/octopode1 OCTOPODE_SPIKE
 %sdir player/hand1/artefact
 # blades
 bloodbane BLOODBANE FIRST
-doom_knight DOOM_KNIGHT
+dread_knight DREAD_KNIGHT
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
@@ -548,7 +549,9 @@ sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
+%rim 0
 capt_cutlass CAPT_CUTLASS
+%rim 1
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE

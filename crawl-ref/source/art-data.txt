@@ -552,17 +552,17 @@ BOOL:    evil
 DBRAND:  Damnation: Any ammunition fired from it explodes in a burst of
  damnation on striking a foe, dealing damage which bypasses armour.
 
-NAME:    sword of the Doom Knight
+NAME:    sword of the Dread Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13
-INSCRIP: doom
+INSCRIP: decimate
 COLOUR:  BLUE
-TILE:    urand_doom_knight
-TILE_EQ: doom_knight
+TILE:    urand_dread_knight
+TILE_EQ: dread_knight
 FB_BRAND: SPWPN_PAIN
 WILL:    1
 BOOL:    silence, evil, drain
-DBRAND:  Doom: It inflicts additional damage proportional to its victim's
+DBRAND:  Decimate: It inflicts additional damage proportional to its victim's
  maximum health.
 
 NAME:    morningstar "Eos"
@@ -788,6 +788,7 @@ INSCRIP:  penet
 DBRAND:   Penet:     Any ammunition fired by it passes through the targets it
  hits, potentially hitting all targets in its path until it reaches maximum
  range.
+BOOL:    tilerim
 
 NAME:    tower shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD

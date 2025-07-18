@@ -2521,7 +2521,6 @@ mad acolyte of Lugonu
 microbat
 
 <bat>
-
 %%%%
 phase bat
 
@@ -2801,6 +2800,23 @@ cherub
  the voice of God Almighty when he speaks.”
     -WEB Bible, Ezekiel 10:4-5
 %%%%
+chonchon
+
+# would prefer a more prose-like passage translating Aguirre's Mitos De Chile or
+# Coluccio's Diccionario Folklórico Argentino, but until then:
+“In its simplest form it is a bird of the night, an owl (_Strix rufipes_) that
+ flies on silent wings during the night to announce illness, death, or some
+ other unwelcome event. When its croaking is heard it is advised to throw ash
+ into the air and utter a few prayers in the hopes of turning away its evil.
+
+ The chonchón is also said to be a _calcu_ or evil sorcerer in disguise. It
+ resemble a human head, with oversized wing-like ears that allow it to fly.
+ During the night, these sorcerers’ heads detach themselves from their bodies
+ and fly around to cause mischief, invisible to most, their ominous _tué, tué,
+ tué_ call announcing misfortune. They have the same powers as sorcerers do,
+ and have been known to suck the blood of sleepers.”
+    - _A Book of Creatures_, 2015.
+%%%%
 crimson imp
 
 “The Devil, too, sometimes steals human children; it is not infrequent for him
@@ -2869,7 +2885,7 @@ diamond obelisk
     -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
       Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
 %%%%
-doom hound
+oblivion hound
 
 “Standing over Hugo, and plucking at his throat, there stood a foul thing, a
  great, black beast, shaped like a hound, yet larger than any hound that ever

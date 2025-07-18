@@ -335,7 +335,7 @@ mset(with_props(spec_fn(function ()
   local f = 10 + you.zigs_completed() * you.zigs_completed() * 10
   local g = 0 + you.zigs_completed() * you.zigs_completed() * 2
   return "place:Tar:$ w:" .. d .. " / curse toe w:" .. e .. " / " ..
-         "doom hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
+         "oblivion hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
          "silent spectre w:" .. g
 end), { weight = 5 }))
 
@@ -355,7 +355,7 @@ mset(with_props(spec_fn(function ()
          "juggernaut simulacrum w:5 / ironbound frostheart w:5 / " ..
          "walking frostbound tome w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
-         "shard shrike w:" .. e .. " / ice fiend w:" .. e
+         "shard shrike w:" .. e .. " / orb of winter w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -364,7 +364,7 @@ mset(with_props(spec_fn(function ()
   local f = 10 + you.zigs_completed() * you.zigs_completed() * 4
   return "raiju w:5 / wind drake w:5 / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
-         "ironbound thunderhulk w:" .. d .. " / " ..
+         "ironbound thunderhulk w:" .. d .. " / chonchon w:" .. d - 5 .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
          "electric golem w:" .. e .. " / titan w:" .. f
 end), { weight = 2 }))
@@ -384,13 +384,14 @@ end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
-  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 5)
-  return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
-         "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant soulmonger w:" .. e .. " / " ..
+  local e = math.min(8, math.floor((you.depth()) / 5) + 4 + you.zigs_completed())
+  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
+  return "soul eater w:" .. d .. " / laughing skull w:" .. d .. " / " ..
+         "deep elf death mage w:2 / shadow dragon w:8 / ghost crab w:4 / " ..
+         "eidolon w:4 / revenant soulmonger w:" .. e .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "player ghost w:" .. f
+         "halazid warlock w:" .. e .. " / player ghost w:" .. f .. " / " ..
+         "orb of entropy w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -410,6 +411,7 @@ mset(spec_fn(function ()
   local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
   return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
          "apocalypse crab w:4 / killer klown w:8 / " ..
+         "crawling flesh cage w:2 / chonchon w:8 / " ..
          "shapeshifter hd:16 w:" .. e .. " / " ..
          "glowing shapeshifter w:" .. e / 3 .. " / " ..
          "protean progenitor w:" .. e .. " / " ..
@@ -471,6 +473,19 @@ mset(with_props(spec_fn(function ()
          "ancient lich w:" .. d - 5 .. " / " ..
          "demonspawn blood saint w:" .. d .. " / " ..
          "draconian annihilator w:" .. e
+end), { weight = 2 }))
+
+mset(with_props(spec_fn(function ()
+  local d = math.max(2, 20 - you.zigs_completed() * 2)
+  local e = 10 + you.zigs_completed() * 3
+  local f = 5 + you.zigs_completed() * 5
+  return "kobold demonologist w:" .. d .. " / ynoxinul w:" .. d .. " / " ..
+         "boggart w:" .. d .. " / worldbinder w:" .. d .. " / " ..
+         "rakshasa / broodmother / shadow demon / deep elf demonologist w:5 / " ..
+         "dread lich w:5 / fravashi w:5 / oblivion hound w:5 / " ..
+         "glowing orange brain w:" .. e .. " / " ..
+         "demonspawn corrupter w:" .. e .. " / " ..
+         "halazid warlock w:" .. f .. " / nekomata w:" .. f
 end), { weight = 2 }))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")

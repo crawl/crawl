@@ -1149,6 +1149,11 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+bool targeter_cloud::harmful_to_player()
+{
+    return !actor_cloud_immune(you, ctype);
+}
+
 
 targeter_splash::targeter_splash(const actor *act, int r, int pow)
     : targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0)
@@ -2797,7 +2802,7 @@ bool targeter_bestial_takedown::valid_aim(coord_def a)
 
     if (monster* mon = monster_at(a))
     {
-        if (!mon->friendly() && mon->has_ench(ENCH_FEAR))
+        if (!mon->friendly() && mon->has_ench(ENCH_FEAR) && you.can_see(*mon))
         {
             if (get_bestial_landing_spots(a).empty())
                 return notify_fail("You can see nowhere safe to land near that.");
@@ -2836,6 +2841,9 @@ targeter_paragon_deploy::targeter_paragon_deploy(int _range)
 bool targeter_paragon_deploy::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (a == you.pos())
         return false;
 
     if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))

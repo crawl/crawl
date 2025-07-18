@@ -423,7 +423,10 @@ void ash_check_bondage()
         if (j == SLOT_GIZMO)
             continue;
 
-        num_slots += you.equipment.num_slots[j];
+        // Count melded slot-giving unrands here, since any melded items held
+        // in those slots will be counted below, which can otherwise result in
+        // having more cursed items than the game thinks we have slots.
+        num_slots += get_player_equip_slot_count(static_cast<equipment_slot>(j), nullptr, true);
     }
 
     // Find what percentage of available slots have a cursed item in them.
@@ -691,9 +694,9 @@ void qazlal_storm_clouds()
         return;
 
     // You are a *storm*. You are pretty loud!
-    noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
+    noisy(min((int)you.piety(), piety_breakpoint(5)) / 10, you.pos());
 
-    const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
+    const int radius = you.piety() >= piety_breakpoint(3) ? 2 : 1;
 
     vector<coord_def> candidates;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_SOLID, true);
@@ -717,7 +720,7 @@ void qazlal_storm_clouds()
             candidates.push_back(*ri);
     }
     const int count =
-        div_rand_round(min((int)you.piety, piety_breakpoint(5))
+        div_rand_round(min((int)you.piety(), piety_breakpoint(5))
                        * candidates.size() * you.time_taken,
                        piety_breakpoint(5) * 7 * BASELINE_DELAY);
     if (count < 0)
@@ -766,10 +769,9 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     beam_type what = BEAM_NONE;
     duration_type dur = NUM_DURATIONS;
     string descript = "";
-    switch (flavour)
+    switch (get_beam_resist_type(flavour))
     {
         case BEAM_FIRE:
-        case BEAM_LAVA:
         case BEAM_STICKY_FLAME:
         case BEAM_STEAM:
             what = BEAM_FIRE;
@@ -777,20 +779,16 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             descript = "fire";
             break;
         case BEAM_COLD:
-        case BEAM_ICE:
             what = BEAM_COLD;
             dur = DUR_QAZLAL_COLD_RES;
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
-        case BEAM_THUNDER:
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
             break;
-        case BEAM_MMISSILE: // for LCS, iron shot
         case BEAM_MISSILE:
-        case BEAM_FRAG:
             what = BEAM_MISSILE;
             dur = DUR_QAZLAL_AC;
             descript = "physical attacks";
@@ -858,7 +856,7 @@ bool does_ru_wanna_redirect(const monster &mon)
 ru_interference get_ru_attack_interference_level()
 {
     int r = random2(100);
-    int chance = div_rand_round(you.piety, 16);
+    int chance = div_rand_round(you.piety(), 16);
 
     // 10% chance of stopping any attack at max piety
     if (r < chance)
@@ -919,7 +917,7 @@ static bool _shadow_will_act(bool spell, bool melee)
     // For spells:  15% chance at min piety, 25% chance at 160 piety.
     const int range = piety_breakpoint(5) - minpiety;
     return x_chance_in_y(10 + (spell ? 5 : 0)
-                          + ((min(piety_breakpoint(5), (int)you.piety) - minpiety) * 10 / range), 100);
+                          + ((min(piety_breakpoint(5), (int)you.piety()) - minpiety) * 10 / range), 100);
 
     return true;
 }

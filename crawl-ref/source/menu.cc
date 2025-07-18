@@ -2030,7 +2030,6 @@ bool Menu::process_key(int keyin)
     {
     case CK_NO_KEY:
     case CK_REDRAW:
-    case CK_RESIZE:
         return true;
     case 0:
         return true;
@@ -2188,33 +2187,34 @@ bool Menu::is_hotkey(int i, int key)
 /// find the first item (if any) that has hotkey `key`.
 int Menu::hotkey_to_index(int key, bool primary_only)
 {
-    // when called without a ui, just check from the beginning
-    const int first_entry = ui_is_initialized() ? get_first_visible() : 0;
     const int final = items.size();
 
     // Process all items, in case user hits hotkey for an
     // item not on the current page.
 
-    // We have to use some hackery to handle items that share
-    // the same hotkey (as for pickup when there's a stack of
-    // >52 items). If there are duplicate hotkeys, the items
-    // are usually separated by at least a page, so we should
-    // only select the item on the current page. We use only
-    // one loop, but we look through the menu starting with the first
-    // visible item, and check to see if we've matched an item
-    // by its primary hotkey (hotkeys[0] for multiple-selection
-    // menus), in which case we stop selecting further items. If
-    // not, we loop around back to the beginning.
+    // We first check for the first matching hotkey from the cursor's current
+    // position to the end of the menu. If no match is found, we next check from
+    // the start of the menu to the current position. (This means that in cases
+    // where a menu has multiple entries with the same letter, we will select
+    // the first one below the cursor, if one exists, and then wrap around if not.)
+
+    int nearest_dist = INT_MAX;
+    int nearest_sel = -1;
     for (int i = 0; i < final; ++i)
     {
-        const int index = (i + first_entry) % final;
-        if (is_hotkey(index, key)
-            && (!primary_only || items[index]->hotkeys[0] == key))
+        if (is_hotkey(i, key)
+            && (!primary_only || items[i]->hotkeys[0] == key))
         {
-            return index;
+            const int dist = abs(i - last_hovered);
+            if (dist < nearest_dist)
+            {
+                nearest_dist = dist;
+                nearest_sel = i;
+            }
         }
     }
-    return -1;
+
+    return nearest_sel;
 }
 
 pair<int,int> Menu::hotkey_range(int key)
@@ -3482,7 +3482,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    :  prev_col(0), columns()
+    :  columns()
 {
     ASSERT(cols > 0);
 
@@ -3504,7 +3504,7 @@ column_composer::column_composer(int cols, ...)
 }
 
 column_composer::column_composer(int cols, vector<int> widths)
-    :  prev_col(0), columns()
+    :  columns()
 {
     ASSERT(cols > 0 && (int)widths.size() >= cols);
 

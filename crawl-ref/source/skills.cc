@@ -16,6 +16,7 @@
 
 #include "ability.h"
 #include "clua.h"
+#include "chardump.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "files.h"
@@ -24,6 +25,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
@@ -524,8 +526,8 @@ static void _check_abil_skills()
 static void _check_active_talisman_skills()
 {
     skill_set skills;
-    if (you.active_talisman.defined()
-        && item_skills(you.active_talisman, skills))
+    if (you.active_talisman()
+        && item_skills(*you.active_talisman(), skills))
     {
         _erase_from_skills_to_hide(skills);
     }
@@ -735,7 +737,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     ASSERT(scaled_total == scale);
 }
 
-static int _calc_skill_cost_level(int xp, int start)
+int calc_skill_cost_level(int xp, int start)
 {
     while (start < MAX_SKILL_COST_LEVEL
            && xp >= (int) skill_cost_needed(start + 1))
@@ -1058,7 +1060,7 @@ static bool _xp_available_for_skill_points(int points)
             return false;
 
         const int total_xp = you.total_experience + xp_needed;
-        const int new_level = _calc_skill_cost_level(total_xp, cost_level);
+        const int new_level = calc_skill_cost_level(total_xp, cost_level);
         if (new_level != cost_level)
         {
             cost_level = new_level;
@@ -1066,6 +1068,26 @@ static bool _xp_available_for_skill_points(int points)
         }
     }
     return true;
+}
+
+static int _innate_casting_magic_max_spend_for_target()
+{
+    int max_training = INT_MAX;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (!you.training[sk] || !you.training_targets[sk])
+            continue;
+
+        int training_target = you.training_targets[sk];
+        if (training_target > you.skill(sk, 10, false, false))
+        {
+            int target_skill_point_diff = _training_target_skill_point_diff(
+                                                          sk, training_target);
+            if (target_skill_point_diff > 0)
+                max_training = min(max_training, target_skill_point_diff);
+        }
+    }
+    return max_training;
 }
 
 /**
@@ -1085,12 +1107,17 @@ static void _train_with_innate_casting(bool simu)
         if (!_xp_available_for_skill_points(points))
             break;
 
+        const int max_magic_skill_spend =
+                                  _innate_casting_magic_max_spend_for_target();
+
         // OK, we should be able to train everything.
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             if (!you.training[i])
                 continue;
-            const int p = you.training[i] / min;
+            int p = you.training[i] / min;
+            if (is_magic_skill((skill_type)i) && p > max_magic_skill_spend)
+                p = max_magic_skill_spend;
             int xp = calc_skill_cost(you.skill_cost_level) * p;
             // We don't want to disable training for magic skills midway.
             // Finish training all skills and check targets afterward.
@@ -1385,17 +1412,19 @@ bool check_training_targets()
     return change;
 }
 
-void check_skill_cost_change()
+void check_skill_cost_change(bool quiet)
 {
 #ifdef DEBUG_TRAINING_COST
     int initial_cost = you.skill_cost_level;
 #endif
 
-    you.skill_cost_level = _calc_skill_cost_level(you.total_experience, you.skill_cost_level);
+    you.skill_cost_level = calc_skill_cost_level(you.total_experience, you.skill_cost_level);
 
 #ifdef DEBUG_TRAINING_COST
-    if (initial_cost != you.skill_cost_level)
+    if (!quiet && initial_cost != you.skill_cost_level)
         dprf("Adjusting skill cost level to %d", you.skill_cost_level);
+#else
+    UNUSED(quiet);
 #endif
 }
 
@@ -1441,7 +1470,7 @@ int _gnoll_total_skill_cost()
     {
         if (!you.training[i])
             continue;
-        cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
+        cur_cost_level = calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
         this_cost = calc_skill_cost(cur_cost_level);
         if (num != denom)
             this_cost = (num * this_cost + denom - 1) / denom;
@@ -1689,14 +1718,14 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         you_skill += (delta.skill_points * scaled_training
                                         + (decrease_skill ? -99 : 99)) / 100;
         you_xp += delta.experience;
-        you_skill_cost_level = _calc_skill_cost_level(you_xp, you_skill_cost_level);
+        you_skill_cost_level = calc_skill_cost_level(you_xp, you_skill_cost_level);
     }
 
     return skill_diff(you_skill - you.skill_points[skill],
                                 you_xp - you.total_experience);
 }
 
-void set_skill_level(skill_type skill, double amount)
+void set_skill_level(skill_type skill, double amount, bool quiet)
 {
     double level;
     modf(amount, &level);
@@ -1707,15 +1736,19 @@ void set_skill_level(skill_type skill, double amount)
     you.skill_points[skill] += diffs.skill_points;
     you.total_experience += diffs.experience;
 #ifdef DEBUG_TRAINING_COST
-    dprf("Change (total): %d skp (%d), %d xp (%d)",
-        diffs.skill_points, you.skill_points[skill],
-        diffs.experience, you.total_experience);
+    if (!quiet)
+    {
+        dprf("Change (total): %d skp (%d), %d xp (%d)",
+            diffs.skill_points, you.skill_points[skill],
+            diffs.experience, you.total_experience);
+    }
 #endif
 
-    check_skill_cost_change();
+    check_skill_cost_change(quiet);
 
     // need to check them all, to handle crosstraining.
-    check_training_targets();
+    if (!quiet)
+        check_training_targets();
 }
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)
@@ -1884,6 +1917,74 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+/**
+ * Special conduct skill title tracking, extending the range of skill titles
+ * beyond what's covered in skill_title_by_rank. These titles are used only if
+ * "conducts" are enabled by that function, which excludes titles for player
+ * ghosts until someone wants to enable that, but allows going beyond the
+ * stat/skill/god paradigm of that function.
+ *
+ * When adding titles here, try to avoid "covering" the entirety of normal skill
+ * titles (ie don't add a lorekeeper title based on the tournament banner
+ * because it invalidates a large number of low skill level titles)
+ *
+ * Also, try to make the conducts interesting and challenging, not annoying,
+ * since some players like to chase titles.
+ */
+string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
+{
+    string title;
+
+    // All gem runs, as per the graceful banner (graceful seems a weird title)
+    if (gems_held_intact() >= 11)
+        return "Flawless";
+
+    // A very hard version of the ascetic banner
+    if (you.experience_level > 17
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_SCROLLS))))
+    {
+        return "True Ascetic";
+    }
+
+    // All rune deathless felid
+    if (you.species == SP_FELID && runes_in_pack() >= 15 && you.deaths == 0)
+        return "Incurious";
+
+    // A harder version of the ruthless efficiency banner
+    if (you.experience_level < 19 && player_has_orb())
+        return "Ruthless";
+
+    // Shopless, with Gozag
+    if (you_worship(GOD_GOZAG) && you.experience_level > 17
+        && you.attribute[ATTR_PURCHASES] == 0)
+    {
+        return "Miser";
+    }
+
+    // all runes with a zealot without ever abandoning
+    if (runes_in_pack() >= 15 && you.char_class == JOB_CHAOS_KNIGHT
+        && you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1)
+    {
+        return "Chaos Fanatic";
+    }
+
+    if (runes_in_pack() >= 15 && you.char_class == JOB_CINDER_ACOLYTE
+        && you_worship(GOD_IGNIS) && you.worshipped[GOD_IGNIS] == 1)
+    {
+        return "Keeper of the Flame";
+    }
+
+    // Award for being very good at crab
+    if (you.form == transformation::fortress_crab
+        && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
+    {
+        return "Pinnacle of Evolution";
+    }
+
+    return title;
+}
+
 // XX should at least some of this be in species.cc?
 
 /**
@@ -1892,14 +1993,17 @@ unsigned get_skill_rank(unsigned skill_lev)
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
  * @param species       The player's species.
- * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param dex           The player's base dexterity
+ * @param str           The player's base strength
+ * @param intel         The player's base intelligence
  * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
+ * @param conducts      Whether or not to check "special" conduct titles
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           species_type species, bool dex_better,
-                           god_type god, int piety)
+                           species_type species, int dex, int str, int intel,
+                           god_type god, int piety, bool conducts)
 {
 
     // paranoia
@@ -1918,6 +2022,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_FIGHTING:
             if (species == SP_HUMAN && skill_rank == 5 && god == GOD_MAKHLEB)
                 result = "Hell Knight";
+            else if (species == SP_HUMAN && skill_rank == 5 && god == GOD_YREDELEMNUL)
+                result = "Death Knight";
             break;
 
         case SK_POLEARMS:
@@ -1930,18 +2036,25 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Pharaoh";
             else if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
-            else if (species == SP_OCTOPODE && skill_rank == 5)
+            else if (species == SP_OCTOPODE && skill_rank == 4)
                 result = "Crusher";
+            else if (species == SP_OCTOPODE && skill_rank == 5)
+                result = "Kraken";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Yokozuna";
-            else if (!dex_better && (species == SP_DJINNI || species == SP_POLTERGEIST)
+            else if (str >= dex && (species == SP_DJINNI || species == SP_POLTERGEIST)
                         && skill_rank == 5)
             {
                 result = "Weightless Champion";
             }
+            else if (str > intel + dex && species == SP_DEMIGOD
+                        && skill_rank == 5)
+            {
+                result = "Herculean";
+            }
             else
             {
-                result = dex_better ? martial_arts_titles[skill_rank]
+                result = dex > str ? martial_arts_titles[skill_rank]
                                     : skill_titles[best_skill][skill_rank];
             }
             break;
@@ -1984,12 +2097,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_THROWING:
             if (species == SP_POLTERGEIST && skill_rank == 5)
                 result = "Undying Armoury";
+            break;
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
                 result = "Wishgranter";
             else if (species == SP_COGLIN && skill_rank == 5)
                 result = "Cogmind";
+            else if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Ascendant";
             break;
 
         case SK_CONJURATIONS:
@@ -2003,6 +2119,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_HEXES:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Faerie Dragon";
+            else if (species == SP_MERFOLK && skill_rank == 5)
+                result = "Siren";
             break;
 
         case SK_NECROMANCY:
@@ -2080,6 +2198,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Iron Dragon";
             break;
 
+        case SK_STEALTH:
+            if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Thief of Divinity";
+            break;
+
         case SK_INVOCATIONS:
             if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
                 result = "Royal Mummy";
@@ -2107,6 +2230,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Laughing Skull";
             else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_USKAYAW)
                 result = "Danse Macabre";
+            else if ((species == SP_MERFOLK || species == SP_OCTOPODE)
+                && skill_rank == 5 && god == GOD_LUGONU)
+                result = "Abyssopelagic";
+            else if (species == SP_OCTOPODE && skill_rank == 5 && is_evil_god(god))
+                result = "Leviathan";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -2132,6 +2260,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             god_type betrayed_god = static_cast<god_type>(
                 you.attribute[ATTR_TRAITOR]);
             result = god_title(betrayed_god, species, piety);
+        }
+
+        if (conducts)
+        {
+            string conduct = special_conduct_title(best_skill, skill_rank);
+            if (!conduct.empty())
+                result = conduct;
         }
 
         if (result.empty())
@@ -2457,12 +2592,22 @@ int get_crosstrain_points(skill_type sk)
  * Is the provided skill one of the elemental spellschools?
  *
  * @param sk    The skill in question.
- * @return      Whether it is fire, ice, earth, or air.
+ * @param ext   If we want to also include alchemy or conjurations.
+ *              (The kinda-poison and kinda-pure elements?)
+ * @return      Whether it is fire, ice, earth, air, or possibly the above two.
  */
-static bool _skill_is_elemental(skill_type sk)
+static bool _skill_is_elemental(skill_type sk, bool ext)
 {
-    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
-           || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
+    if (ext)
+    {
+        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC || sk == SK_AIR_MAGIC
+               || sk == SK_ICE_MAGIC || sk == SK_ALCHEMY || sk == SK_CONJURATIONS;
+    }
+    else
+    {
+        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
+               || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
+    }
 }
 
 /**
@@ -2472,13 +2617,13 @@ static bool _skill_is_elemental(skill_type sk)
  * @param scale     Scaling factor for skill.
  * @return          The player's skill at the elemental parts of a given spell.
  */
-int elemental_preference(spell_type spell, int scale)
+int destructive_elemental_preference(spell_type spell, int scale)
 {
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
     for (skill_type sk : skill_list)
-        if (_skill_is_elemental(sk))
+        if (_skill_is_elemental(sk, true))
             preference += you.skill(sk, scale);
     return preference;
 }

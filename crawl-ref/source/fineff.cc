@@ -738,10 +738,6 @@ void make_derived_undead_fineff::fire()
         roll_zombie_hp(undead);
     }
 
-    // Fix up custom names
-    if (!mg.mname.empty())
-        name_zombie(*undead, mg.base_type, mg.mname);
-
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
 

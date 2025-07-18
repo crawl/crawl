@@ -67,7 +67,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_INUGAMI,
     MONS_RAIJU,
-    MONS_DOOM_HOUND,
+    MONS_OBLIVION_HOUND,
 #endif
     MONS_HOG,
     MONS_HELL_HOG,
@@ -205,10 +205,9 @@ enum monster_type                      // env.mons[].type
     MONS_RADROACH,
 #endif
     MONS_HARPY,
-#if TAG_MAJOR_VERSION == 34
     MONS_RAVEN,
-#endif
 #if TAG_MAJOR_VERSION > 34
+    MONS_CHONCHON,
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
     MONS_SHARD_SHRIKE,
@@ -303,6 +302,9 @@ enum monster_type                      // env.mons[].type
     MONS_MOLTEN_GARGOYLE,
     MONS_UGLY_THING,
     MONS_VERY_UGLY_THING,
+#if TAG_MAJOR_VERSION > 34
+    MONS_CRAWLING_FLESH_CAGE,
+#endif
     MONS_ICE_BEAST,
     MONS_SKY_BEAST,
 #if TAG_MAJOR_VERSION == 34
@@ -334,6 +336,8 @@ enum monster_type                      // env.mons[].type
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
+    MONS_ORB_OF_ENTROPY,
+    MONS_ORB_OF_WINTER,
     MONS_ELEMENTAL,             // genus
 #endif
     MONS_EARTH_ELEMENTAL,
@@ -415,6 +419,7 @@ enum monster_type                      // env.mons[].type
     MONS_KOBOLD_DEMONOLOGIST,
 #if TAG_MAJOR_VERSION > 34
     MONS_KOBOLD_BLASTMINER,
+    MONS_KOBOLD_FLESHCRAFTER,
 #endif
     MONS_ORC,
     MONS_ORC_WARRIOR,
@@ -676,13 +681,12 @@ enum monster_type                      // env.mons[].type
     MONS_HELLFIRE_MORTAR,
     MONS_SPLINTERFROST_BARRICADE,
     MONS_SHADOW_TURRET,
+    MONS_BOUNDLESS_TESSERACT,
 #endif
 
     // Demons:
     MONS_CRIMSON_IMP,
-#if TAG_MAJOR_VERSION == 34
-    MONS_QUASIT,
-#endif
+    MONS_DRUDE,
     MONS_WHITE_IMP,
     MONS_LEMURE,
     MONS_UFETUBUS,
@@ -720,6 +724,9 @@ enum monster_type                      // env.mons[].type
     MONS_BLIZZARD_DEMON,
     MONS_BALRUG,
     MONS_CACODEMON,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ZYKZYL,
+#endif
     MONS_SUN_DEMON,
     MONS_SHADOW_DEMON,
     MONS_HELL_SENTINEL,
@@ -759,6 +766,7 @@ enum monster_type                      // env.mons[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
     MONS_SPATIAL_MAELSTROM,
     MONS_WORLDBINDER,
+    MONS_SCREAMING_REFRACTION,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
     MONS_BUNYIP,
     MONS_CREEPING_INFERNO,
@@ -776,7 +784,7 @@ enum monster_type                      // env.mons[].type
     // Undead:
 #if TAG_MAJOR_VERSION > 34
     MONS_ZOMBIE,
-    MONS_SKELETON,
+    MONS_DRAUGR,
     MONS_SIMULACRUM,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -788,6 +796,7 @@ enum monster_type                      // env.mons[].type
     MONS_FLAMING_CORPSE,
 #else
     MONS_BLOATED_HUSK,
+    MONS_COGNITOGAUNT,
     MONS_MARROWCUDA,
 #endif
     MONS_MUMMY,
@@ -842,13 +851,17 @@ enum monster_type                      // env.mons[].type
     MONS_STOKER,
     MONS_PUTRID_MOUTH,
 #endif
+#if TAG_MAJOR_VERSION == 34
     MONS_SKELETON_SMALL,   // recolouring only
     MONS_SKELETON_LARGE,   // recolouring only
     MONS_ZOMBIE_SMALL,     // recolouring only
     MONS_ZOMBIE_LARGE,     // recolouring only
+#endif
     MONS_SPECTRAL_THING,
+#if TAG_MAJOR_VERSION == 34
     MONS_SIMULACRUM_SMALL, // recolouring only
     MONS_SIMULACRUM_LARGE, // recolouring only
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_BOUND_SOUL,
 #endif
@@ -1012,6 +1025,7 @@ enum monster_type                      // env.mons[].type
     MONS_BOMBLET,
     MONS_GLOBE_OF_ANNIHILATION,
     MONS_PILE_OF_DEBRIS,
+    MONS_PILE_OF_FLESH,
 #endif
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
@@ -1020,7 +1034,9 @@ enum monster_type                      // env.mons[].type
     MONS_SEISMOSAURUS_EGG,
 #endif
     MONS_HELL_LORD,             // genus
+#if TAG_MAJOR_VERSION == 34
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
+#endif
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_SENSED_TRIVIAL,
     MONS_SENSED_EASY,
@@ -1084,7 +1100,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_PRESERVER,
 
     MONS_ZOMBIE,
-    MONS_SKELETON,
+    MONS_DRAUGR,
     MONS_SIMULACRUM,
 
     MONS_ANCIENT_CHAMPION,
@@ -1191,7 +1207,7 @@ enum monster_type                      // env.mons[].type
     MONS_MUTANT_BEAST,
     MONS_JUGGERNAUT,
     MONS_SPARK_WASP,
-    MONS_DOOM_HOUND,
+    MONS_OBLIVION_HOUND,
     MONS_DEEP_ELF_ELEMENTALIST,
     MONS_DEEP_ELF_ARCHER,
     MONS_DEMONIC_PLANT,
@@ -1344,6 +1360,16 @@ enum monster_type                      // env.mons[].type
     MONS_GOBLIN_RIDER,
     MONS_IRONBOUND_MECHANIST,
     MONS_SPROZZ,
+    MONS_CRAWLING_FLESH_CAGE,
+    MONS_COGNITOGAUNT,
+    MONS_CHONCHON,
+    MONS_KOBOLD_FLESHCRAFTER,
+    MONS_PILE_OF_FLESH,
+    MONS_ZYKZYL,
+    MONS_BOUNDLESS_TESSERACT,
+    MONS_ORB_OF_ENTROPY,
+    MONS_ORB_OF_WINTER,
+    MONS_SCREAMING_REFRACTION,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -1369,6 +1395,8 @@ enum monster_type                      // env.mons[].type
     RANDOM_DEMON_COMMON,               //    1: Class III-IV
     RANDOM_DEMON_GREATER,              //    2: Class I-II
     RANDOM_DEMON,                      //    any of the above
+
+    MONS_ORB_OF_APPROPRIATENESS,    // The orb type chosen to populate Zot on this seed.
 
     RANDOM_MODERATE_OOD, // +5 depth, AKA '9' glyph on maps
     RANDOM_SUPER_OOD, // *2 + 4 depth, AKA '8'

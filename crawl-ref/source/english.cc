@@ -124,9 +124,10 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name;
     }
     else if (ends_with(lowname, "ch") || ends_with(lowname, "sh")
-             || ends_with(lowname, "x"))
+             || ends_with(lowname, "x") || ends_with(lowname, "chon"))
     {
         // To handle cockroaches, sphinxes, and bushes.
+        // Also the correct Chilean pluralisation for chonchon.
         return name + "es";
     }
     else if (ends_with(lowname, "simulacrum") || ends_with(lowname, "eidolon"))
@@ -180,7 +181,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 //      moth of wrath zombie    => moth of wrath zombies.
 static const char * const _monster_suffixes[] =
 {
-    "zombie", "skeleton", "simulacrum", nullptr
+    "zombie", "draugr", "simulacrum", nullptr
 };
 
 string pluralise_monster(const string &name)

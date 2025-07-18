@@ -579,7 +579,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     {
         // Tracers use the average for damage calculations.
         hurted = (1 + beam.damage.num * beam.damage.size) / 2;
-        if (!ignore_ac)
+        if (!ignore_ac && target.is_monster())
             hurted = max(0, hurted - target.armour_class() / 2);
     }
 
@@ -603,7 +603,17 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
                 you.pet_target = target.mindex();
         }
         else if (hurted)
-            target.hurt(agent, hurted, beam.flavour);
+        {
+            kill_method_type ktype = KILLED_BY_BEAM;
+            if (beam.origin_spell == SPELL_DRAIN_LIFE)
+                ktype = KILLED_BY_DRAINING;
+            else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
+                ktype = KILLED_BY_FREEZING;
+
+            string aux = beam.origin_spell == SPELL_SONIC_WAVE ? "sonic wave" : "";
+
+            target.hurt(agent, hurted, beam.flavour, ktype, "", aux);
+        }
 
         // Cold-blooded creatures can be slowed.
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
@@ -694,6 +704,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
                        // Players don't get immunity with rC+++.
+                       && !(caster->is_monster() && mons_aligned(caster, act))
                        && (act->is_player() || act->res_cold() < 3)
                        && !never_harm_monster(caster, act->as_monster());
             };
@@ -1079,6 +1090,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 
     zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
     beam.ex_size       = 1;
+    beam.ac_rule       = ac_type::none;
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     if (is_tracer)
@@ -1251,6 +1263,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_GARGOYLE,          { "rock", BROWN } },
     { MONS_VV,                { "rock", BROWN } },
     { MONS_HELLFIRE_MORTAR,   { "rock", BROWN } },
+    { MONS_CRAWLING_FLESH_CAGE, { "metal", CYAN, frag_damage_type::metal } },
     { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
@@ -1266,6 +1279,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_SPELLSPARK_SERVITOR, { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PLATINUM_PARAGON,  { "platinum", CYAN, frag_damage_type::metal } },
     { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
+                                frag_damage_type::crystal } },
+    { MONS_SCREAMING_REFRACTION, { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", GREEN,
                                 frag_damage_type::crystal } },
@@ -1365,6 +1380,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_METAL_STATUE, { "metal", "metal statue", frag_damage_type::metal } },
     { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
     { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
+    { DNGN_ZOT_STATUE, { "metal", "metal statue" } },
     // Crystal -- large & nasty explosion
     { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall",
                            frag_damage_type::crystal } },
@@ -2031,7 +2047,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     {
         // be nice and "only" contaminate the player a lot
         if (hitting_player)
-            contaminate_player(2000 + random2(1000));
+            contaminate_player(random_range(400, 600));
         else if (coinflip())
             act->malmutate(&agent);
     }
@@ -2060,6 +2076,9 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     };
 
     if (caster.is_player() && stop_attack_prompt(hitfunc, "irradiate", vulnerable))
+        return spret::abort;
+
+    if (warn_about_contam_cost(400))
         return spret::abort;
 
     fail_check();
@@ -2093,7 +2112,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     }, caster.pos(), true, 8);
 
     if (caster.is_player())
-        contaminate_player(1250 + random2(750));
+        contaminate_player(random_range(185, 400));
     return spret::success;
 }
 
@@ -2150,6 +2169,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
     if (!one_chance_in(4))
         return false;
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TERRAIN);
     place_cloud(CLOUD_FIRE, where, 2 + random2(1 + div_rand_round(pow, 30)), agent);
 
     return true;
@@ -2187,6 +2207,7 @@ static int _ignite_poison_clouds(coord_def where, int pow, actor *agent)
         return agent && agent->is_player() ? sgn(value) : value;
     }
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TERRAIN);
     cloud->type = CLOUD_FIRE;
     cloud->decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
     cloud->whose = agent->kill_alignment();
@@ -2252,6 +2273,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TARGET);
     if (you.see_cell(mon->pos()))
     {
         mprf("%s seems to burn from within%s",
@@ -2311,6 +2333,7 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     if (tracer)
         return mons_aligned(&you, agent) ? -1 * damage : damage;
 
+    flash_tile(where, RED, 0, TILE_BOLT_IGNITE_POISON_TARGET);
     const int resist = player_res_fire();
     if (resist > 0)
         mpr("You feel like your blood is boiling!");
@@ -2442,11 +2465,6 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     }
 
     targeter_radius hitfunc(agent, LOS_NO_TRANS);
-    flash_view_delay(
-        agent->is_player()
-            ? UA_PLAYER
-            : UA_MONSTER,
-        RED, 100, &hitfunc);
 
     mprf("%s %s the poison in %s surroundings!", agent->name(DESC_THE).c_str(),
          agent->conj_verb("ignite").c_str(),
@@ -2463,6 +2481,8 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         _ignite_poison_player(where, pow, agent);
         return 0; // ignored
     }, agent->pos());
+
+    animation_delay(200, true);
 
     return spret::success;
 }
@@ -3272,7 +3292,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
-    beam.ac_rule           = ac_type::half;
     beam.loudness          = spell_effect_noise(SPELL_THUNDERBOLT);
     beam.set_agent(caster);
     beam.draw_delay = 0;
@@ -3429,148 +3448,6 @@ void forest_damage(const actor *mon)
                 break;
             }
     }
-}
-
-int dazzle_chance_numerator(int hd)
-{
-    return 95 - hd * 4;
-}
-
-int dazzle_chance_denom(int pow)
-{
-    return 150 - pow;
-}
-
-static bool _can_be_dazzled(const actor *victim)
-{
-    return victim->can_be_dazzled();
-}
-
-bool dazzle_target(actor *victim, const actor *agent, int pow)
-{
-    if (!_can_be_dazzled(victim))
-        return false;
-
-    if (victim->is_monster())
-    {
-        auto mons = victim->as_monster();
-        const int numerator = dazzle_chance_numerator(mons->get_hit_dice());
-        if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
-        {
-            mons->add_ench(mon_enchant(ENCH_BLIND, 1, agent,
-                        random_range(4, 8) * BASELINE_DELAY));
-            return true;
-        }
-    }
-    else
-    {
-        // Dazzling player: similar logic to monster dazzling but it's maybe
-        // not the best way to handle this. Dividing XL by 2 so there is still
-        // decent chance at XL27 that the player can be affected.
-        const int numerator = dazzle_chance_numerator(you.experience_level / 2);
-        if (you.can_be_dazzled()
-            && x_chance_in_y(numerator, dazzle_chance_denom(pow)))
-        {
-            blind_player(random_range(6, 12));
-            return true;
-        }
-    }
-
-    return false;
-}
-
-spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer)
-{
-    int range = spell_range(SPELL_DAZZLING_FLASH, pow, caster->is_player());
-    auto vulnerable = [caster](const actor *act) -> bool
-    {
-        // No fedhas checks needed, plants can't be dazzled.
-        if (!_can_be_dazzled(act))
-            return false;
-
-        // For monster casting, only affect enemies, to make it easier to use
-        // (Hopefully this is not somehow abusable)
-        return caster->is_player() || !mons_aligned(caster, act);
-    };
-
-    if (tracer)
-    {
-         // XX: LOS_NO_TRANS ?
-        for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
-        {
-            if (!in_bounds(*ri))
-                continue;
-
-            // XX: monster tracer will need to check for player at
-            const actor* victim = actor_at(*ri);
-
-            if (!victim || !caster->can_see(*victim) || !vulnerable(victim))
-                continue;
-
-            if (!mons_aligned(caster, victim))
-            {
-                // If this is a player tracer, consider blind monsters to be
-                // valid targets (since you *could* stand more duration on them.)
-                if (caster->is_player())
-                    return spret::success;
-                // But for monsters, it's generally a waste of time to reblind
-                // things which are already blind, so don't bother.
-                else
-                {
-                    if ((victim->is_monster() && !victim->as_monster()->has_ench(ENCH_BLIND))
-                        || (victim->is_player() && !you.duration[DUR_BLIND]))
-                    {
-                        return spret::success;
-                    }
-                }
-            }
-        }
-
-        return spret::abort;
-    }
-
-    if (caster->is_player())
-    {
-        auto hitfunc = find_spell_targeter(SPELL_DAZZLING_FLASH, pow, range);
-
-        // [eb] the simulationist in me wants to use LOS_DEFAULT
-        // and let this blind through glass
-        if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable))
-            return spret::abort;
-    }
-
-    fail_check();
-
-    bolt beam;
-    beam.name = "energy";
-    beam.flavour = BEAM_VISUAL;
-    beam.origin_spell = SPELL_DAZZLING_FLASH;
-    beam.set_agent(caster);
-    beam.colour = WHITE;
-    beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    beam.range = range;
-    beam.ex_size = range;
-    beam.is_explosion = true;
-    beam.source = caster->pos();
-    beam.target = caster->pos();
-    beam.hit = AUTOMATIC_HIT;
-    beam.loudness = 0;
-    beam.explode(true, true);
-
-    for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
-         ri; ++ri)
-    {
-        actor* victim = actor_at(*ri);
-        if (victim && vulnerable(victim) && dazzle_target(victim, caster, pow))
-        {
-            if (victim->is_monster())
-                simple_monster_message(*victim->as_monster(), " is dazzled.");
-            // Player already got a message from blind_player
-            // XX: Should it be a slightly different message? Show something if resisted?
-        }
-    }
-
-    return spret::success;
 }
 
 static bool _toxic_can_affect(const actor *act)
@@ -3834,17 +3711,17 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
 }
 
-int get_mercury_weaken_chance(int victim_hd, int pow)
+int get_mercury_weaken_chance(int victim_hd)
 {
-    return max(0, 100 - max(0, (victim_hd * 12 - pow * 3 / 2 - 17) * 115 / 100));
+    return max(0, 100 - max(0, victim_hd - 4) * 12);
 }
 
 dice_def poisonous_vapours_damage(int pow, bool random)
 {
     if (random)
-        return dice_def(1, 2 + div_rand_round(pow, 8));
+        return dice_def(1, 1 + div_rand_round(pow, 8));
     else
-        return dice_def(1, 2 + pow / 8);
+        return dice_def(1, 1 + pow / 8);
 }
 
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail)
@@ -4239,6 +4116,12 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
     return spret::success;
 }
 
+
+dice_def jinxbite_damage(int pow, bool random)
+{
+    return dice_def(2, random ? 2 + div_rand_round(pow, 25) : 2 + pow / 25);
+}
+
 static string _get_jinxsprite_message(const monster& victim)
 {
     string msg;
@@ -4311,8 +4194,7 @@ void attempt_jinxbite_hit(actor& victim)
     // player that this is a Will check, also.)
     flash_tile(victim.pos(), LIGHTBLUE);
 
-    // XXX TODO: move this out and display it
-    const int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
+    const int dmg = jinxbite_damage(pow, true).roll();
 
     monster* mons = victim.as_monster();
     const int drain_dur = random_range(3 * BASELINE_DELAY, 5 * BASELINE_DELAY);

@@ -54,6 +54,7 @@ static bool _monster_clone_exists(monster* mons)
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
     return !mons->is_peripheral()
+           && mons->type != MONS_BOUNDLESS_TESSERACT
            && !mons->is_illusion()
            && !_monster_clone_exists(mons);
 }

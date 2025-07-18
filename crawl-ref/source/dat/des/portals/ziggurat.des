@@ -134,7 +134,7 @@ KMONS:   O = ancient lich / dread lich / titan /\
 KFEAT:   O = enter_ziggurat no_mimic
 SHUFFLE: 1234
 SUBST:   ' : 'w, W : nw
-KPROP:   1234'O = no_tele_into
+KPROP:   w1234'O = no_tele_into
 KMASK:   w1234'O = opaque
 KMASK:   w1234'O = no_monster_gen
 FTILE:   1234'-O = floor_hall
@@ -160,6 +160,9 @@ default-depth: Zig
 # - ziggurat pillars do not need allow_dup. The pillar map is never
 #   registered as used.
 # - ziggurat pillars cannot use map markers.
+#
+# TODO: figure out why ziggurat pillars screw up descriptions for vault
+#       redefinitions of statues and decorative floor.
 #######################################################################
 NAME: ziggurat_pillar_abc
 TAGS: ziggurat_pillar unrand no_exits
@@ -299,9 +302,9 @@ TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 KFEAT:   g = metal_statue
 SHUFFLE: X' / X' / X' / 'X
 SUBST:   xX : bcmvxG, ' = .
-NSUBST:  G = 1:g / *:G
-: vault_granite_statue_setup(_G, "G", "scintillating statue")
-: vault_metal_statue_setup(_G, "g", "silver statue")
+# NSUBST:  G = 1:g / *:G
+# : vault_granite_statue_setup(_G, "G", "scintillating statue")
+# : vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
   x
@@ -317,9 +320,9 @@ DEPTH:   Zig:18-
 WEIGHT:  5
 SHUFFLE: X'" / X'" / 'X" / '"X
 SUBST:   x : bcmvx, X : bcmvxG, '" = .
-NSUBST:  G = 1:G / *:g
-: vault_granite_statue_setup(_G, "G", "scintillating statue")
-: vault_metal_statue_setup(_G, "g", "silver statue")
+# NSUBST:  G = 1:G / *:g
+# : vault_granite_statue_setup(_G, "G", "scintillating statue")
+# : vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
   x x
@@ -334,8 +337,8 @@ TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
 SUBST:   x : w:40 bcmvxG
 NSUBST:  G = 1:g / *:G
-: vault_granite_statue_setup(_G, "G", "scintillating statue")
-: vault_metal_statue_setup(_G, "g", "silver statue")
+# : vault_granite_statue_setup(_G, "G", "scintillating statue")
+# : vault_metal_statue_setup(_G, "g", "silver statue")
 : megazig_zot_traps(_G)
 MAP
  ...
@@ -464,7 +467,7 @@ NAME:   ziggurat_pillar_centre_dispersal
 TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
 KFEAT:  ^ = dispersal trap
 KFEAT:  a = iron_grate
-: vault_granite_statue_setup(_G, "G", "scintillating statue")
+# : vault_granite_statue_setup(_G, "G", "scintillating statue")
 : megazig_zot_traps(_G)
 MAP
 ^a.a^
@@ -478,7 +481,7 @@ NAME:   ziggurat_pillar_centre_mark
 TAGS:   ziggurat_pillar centered unrand no_exits
 WEIGHT: 5
 KFEAT:  ^ = alarm trap
-: vault_metal_statue_setup(_G, "G", "silver statue")
+# : vault_metal_statue_setup(_G, "G", "silver statue")
 : megazig_zot_traps(_G)
 MAP
  G.G
@@ -525,6 +528,76 @@ MAP
 G.G
 .^.
 G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_dissolved
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = devourer's trap
+MONS:   entropy weaver
+: if (you.zigs_completed() < 1) then
+SUBST:  G = G.
+: else
+SUBST:  G = GG.^
+SUBST:  . = ...1^
+: end
+# : vault_metal_statue_setup(_G, "G", "iron statue")
+: megazig_zot_traps(_G)
+MAP
+^GG^
+G.1G
+G..G
+^GG^
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_exhaustion
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = archmage's trap
+: if (you.zigs_completed() < 1) then
+MONS:   draconian annihilator / deep elf annihilator
+: else
+MONS:   ancient lich / dread lich w:5
+SUBST:  . = ..^
+: end
+# : vault_metal_statue_setup(_G, "G", "arcane conduit")
+: megazig_zot_traps(_G)
+MAP
+G1G
+.^.
+G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_mighty_misfortune
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ : tyrant's trap / harlequin's trap
+KPROP:  ^ = bloody
+# : decorative_floor(_G, 'F', "infernal standard")
+# : vault_metal_statue_setup(_G, "G", "misfortune conduit")
+: megazig_zot_traps(_G)
+MAP
+F.G
+.^.
+G..
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_nasty_nets
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:10-
+WEIGHT: 5
+KFEAT:  ^ = net trap
+KFEAT:  m = iron_grate
+: if you.zigs_completed() > 0 then
+NSUBST: m = 1:. / * = ...^mmmmm
+: else
+NSUBST: m = 1:. / * = ....mmmmm
+: end
+: megazig_zot_traps(_G)
+MAP
+mmm
+m^m
+mmm
 ENDMAP
 
 #######################################################################

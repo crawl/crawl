@@ -1603,10 +1603,23 @@ static int _userdef_find_free_slot(const item_def &i)
     return slot;
 }
 
+// Finds a free index in you.inv to put a given item.
+// For gear, this slot will match the letter assigned to the item.
+// For consumables, it will be the first free index (regardless of letter) and
+// the letter must be determined later.
 int find_free_slot(const item_def &i)
 {
+    if (inventory_category_for(i) == INVENT_CONSUMABLE)
+    {
+        for (int j = MAX_GEAR; j < ENDOFPACK; ++j)
+            if (!you.inv[j].defined())
+                return j;
+
+        return -1;
+    }
+
 #define slotisfree(s) \
-            ((s) >= 0 && (s) < ENDOFPACK && !you.inv[s].defined())
+            ((s) >= 0 && (s) < MAX_GEAR && !you.inv[s].defined())
 
     bool searchforward = false;
     // If we're doing Lua, see if there's a Lua function that can give
@@ -1626,7 +1639,7 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    FixedBitVector<ENDOFPACK> disliked;
+    FixedBitVector<MAX_GEAR> disliked;
     if (i.base_type == OBJ_POTIONS)
         disliked.set('y' - 'a');
 
@@ -1634,11 +1647,11 @@ int find_free_slot(const item_def &i)
     {
         // This is the new default free slot search. We look for the last
         // available slot that does not leave a gap in the inventory.
-        for (slot = ENDOFPACK - 1; slot >= 0; --slot)
+        for (slot = MAX_GEAR - 1; slot >= 0; --slot)
         {
             if (you.inv[slot].defined())
             {
-                if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].defined()
+                if (slot + 1 < MAX_GEAR && !you.inv[slot + 1].defined()
                     && !disliked[slot + 1])
                 {
                     return slot + 1;
@@ -1646,7 +1659,7 @@ int find_free_slot(const item_def &i)
             }
             else
             {
-                if (slot + 1 < ENDOFPACK && you.inv[slot + 1].defined()
+                if (slot + 1 < MAX_GEAR && you.inv[slot + 1].defined()
                     && !disliked[slot])
                 {
                     return slot;
@@ -1660,7 +1673,7 @@ int find_free_slot(const item_def &i)
 
     int badslot = -1;
     // Return first free slot
-    for (slot = 0; slot < ENDOFPACK; ++slot)
+    for (slot = 0; slot < MAX_GEAR; ++slot)
         if (!you.inv[slot].defined())
         {
             if (disliked[slot])
@@ -2020,18 +2033,31 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
         inc_inv_item_quantity(inv_slot, quant_got);
         you.last_pickup[inv_slot] = quant_got;
 
+        // If we are purchasing an identified item from a shop, maybe update our
+        // item slot. (Pre-identified items on the floor will already be handle
+        // by seen_item().)
+        const short old_slot = you.inv[inv_slot].slot;
+        if (inventory_category_for(it) == INVENT_CONSUMABLE
+            && it.flags & ISFLAG_IDENTIFIED
+            && !(you.inv[inv_slot].flags & ISFLAG_IDENTIFIED))
+        {
+            you.inv[inv_slot].flags |= ISFLAG_IDENTIFIED;
+            auto_assign_item_slot(you.inv[inv_slot], true);
+        }
+
         if (!quiet)
         {
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (gained %d)",
+            string prefix = you.inv[inv_slot].slot != old_slot
+                            ? make_stringf("%c -> ", old_slot) : "";
+            mprf_nocap("%s%s (gained %d)",
+                        prefix.c_str(),
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
-        auto_assign_item_slot(you.inv[inv_slot]);
-
         return true;
     }
 
@@ -2041,7 +2067,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 
 static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
 {
-    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    for (inv_slot = MAX_GEAR; inv_slot < ENDOFPACK; inv_slot++)
     {
         if (you.inv[inv_slot].base_type != OBJ_MISCELLANY
             || you.inv[inv_slot].sub_type != it.sub_type)
@@ -2093,7 +2119,7 @@ static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
  */
 static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
 {
-    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    for (inv_slot = MAX_GEAR; inv_slot < ENDOFPACK; inv_slot++)
     {
         if (you.inv[inv_slot].base_type != OBJ_WANDS
             || you.inv[inv_slot].sub_type != it.sub_type)
@@ -2121,24 +2147,157 @@ static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
     return false;
 }
 
+// Returns the preferred letter for a given consumable item.
+static int _letter_for_consumable(item_def& item, bool first_pickup)
+{
+    // If this is an identified item, first check the consumable_slot option to
+    // see any default assignment and use this.
+    if (item.is_identified())
+    {
+        char key = 0;
+        switch (item.base_type)
+        {
+            case OBJ_POTIONS:
+                key = Options.potion_shortcuts[item.sub_type];
+                break;
+            case OBJ_SCROLLS:
+                key = Options.scroll_shortcuts[item.sub_type];
+                break;
+            case OBJ_WANDS:
+                key = Options.evokable_shortcuts[item.sub_type];
+                break;
+            case OBJ_MISCELLANY:
+                key = Options.evokable_shortcuts[item.sub_type + NUM_WANDS];
+                break;
+            default:
+                key = 0;
+        }
+
+        if (key > 0 && key != ' ')
+            return key;
+    }
+
+    if (!first_pickup)
+        return item.slot;
+
+    // If there wasn't any, or this is unidentified, try to pick any available
+    // letter that isn't 'reserved' by the consumable_slot option for this
+    // sub-category of item.
+    bool reserved[52] = {false};
+    switch (item.base_type)
+    {
+        case OBJ_POTIONS:
+            for (const char& key : Options.potion_shortcuts)
+                if (isalpha(key) > 0)
+                    reserved[letter_to_index(key)] = true;
+            break;
+        case OBJ_SCROLLS:
+            for (const char& key : Options.scroll_shortcuts)
+                if (isalpha(key) > 0)
+                    reserved[letter_to_index(key)] = true;
+            break;
+        case OBJ_WANDS:
+        case OBJ_MISCELLANY:
+            for (const char& key : Options.evokable_shortcuts)
+                if (isalpha(key))
+                    reserved[letter_to_index(key)] = true;
+            break;
+        default:
+            break;
+    }
+
+    // For unidentified potions/scrolls, also exclude any letters used by
+    // unidentified items of the opposite type that the player is currently
+    // holding (to prevent the ?id scroll menu from ever having the same
+    // keybind twice).
+    if (!item.is_identified())
+    {
+        for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+        {
+            if (!you.inv[i].defined() || you.inv[i].is_identified()
+                || !isalpha(you.inv[i].slot))
+            {
+                continue;
+            }
+
+            if ((item.base_type == OBJ_POTIONS && you.inv[i].base_type == OBJ_SCROLLS)
+                || (item.base_type == OBJ_SCROLLS && you.inv[i].base_type == OBJ_POTIONS))
+            {
+                reserved[letter_to_index(you.inv[i].slot)] = true;
+            }
+        }
+    }
+
+    // Check which slots are strictly used already.
+    bool used_slots[52] = {false};
+    operation_types oper = item_to_oper(&item);
+    for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
+            && isalpha(you.inv[i].slot))
+        {
+            used_slots[letter_to_index(you.inv[i].slot)] = true;
+        }
+    }
+
+    // Now select the first available slot that isn't reserved or in use.
+    for (int i = 0; i < 52; ++i)
+        if (!reserved[i] && !used_slots[i])
+            return index_to_letter(i);
+
+    // If somehow there aren't any letters neither reserved nor in use, pick
+    // the first one not currently in use, reserved or not
+    for (int i = 0; i < 52; ++i)
+        if (!used_slots[i])
+            return index_to_letter(i);
+
+    // Somehow, nothing is free. (This really shouldn't happen.)
+    die("Unable to find any slot for %s", item.name(DESC_THE, false, true).c_str());
+}
+
+// Assigns a letter to an item in you.inv.
+// For gear, this will strictly correspond to its index.
+// For consumables, this is more complicated.
+static int _assign_inventory_letter(item_def& item)
+{
+    if (inventory_category_for(item) == INVENT_GEAR)
+        return index_to_letter(item.link);
+    else
+        return _letter_for_consumable(item, true);
+}
+
 /**
  * Maybe move an item to the slot given by the item_slot option.
  *
  * @param[in] item the item to be checked. Note that any references to this
- *                 item will be invalidated by the swap_inv_slots call!
+ *                 item may be invalidated by the swap_inv_slots call!
+ * @param quiet    If true, don't print a message about moving this item.
  * @returns the new location of the item if it was moved, null otherwise.
  */
-item_def *auto_assign_item_slot(item_def& item)
+item_def *auto_assign_item_slot(item_def& item, bool quiet)
 {
     if (!item.defined())
         return nullptr;
     if (!in_inventory(item))
         return nullptr;
 
+    // Consumables can remap their letter when identified, but do not move
+    // themselves.
+    if (inventory_category_for(item) == INVENT_CONSUMABLE)
+    {
+        const short old_slot = item.slot;
+        item.slot = _letter_for_consumable(item, false);
+
+        if (item.slot != old_slot && !quiet)
+            mprf_nocap("%c -> %s", old_slot, item.name(DESC_INVENTORY).c_str());
+        // We return null since the previous item reference wasn't invalidated.
+        return nullptr;
+    }
+
     int newslot = -1;
     bool overwrite = true;
     // check to see whether we've chosen an automatic label:
-    for (auto& mapping : Options.auto_item_letters)
+    for (auto& mapping : Options.auto_gear_letters)
     {
         // `matches` has a validity check
         if (!mapping.first.matches(item.name(DESC_QUALNAME))
@@ -2173,7 +2332,7 @@ item_def *auto_assign_item_slot(item_def& item)
         }
         if (newslot != -1 && newslot != item.link)
         {
-            swap_inv_slots(item.link, newslot, you.num_turns);
+            swap_inv_slots(item, newslot, you.num_turns);
             return &you.inv[newslot];
         }
     }
@@ -2202,7 +2361,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     item          = it;
     item.link     = freeslot;
     item.quantity = quant_got;
-    item.slot     = index_to_letter(item.link);
+    item.slot     = _assign_inventory_letter(item);
     item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
@@ -2312,7 +2471,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
 
     // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK)
+    if (inventory_category_for(it) == INVENT_GEAR && inv_count(INVENT_GEAR) >= MAX_GEAR)
         return false;
 
     inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
@@ -2510,7 +2669,7 @@ int copy_item_to_grid(const item_def &item, const coord_def& p,
                     // If the items on the floor already have a nonzero slot,
                     // leave it as such, otherwise set the slot.
                     if (!si->slot)
-                        si->slot = index_to_letter(item.link);
+                        si->slot = item.slot;
 
                     si->flags |= ISFLAG_DROPPED;
                     si->flags &= ~ISFLAG_THROWN;
@@ -2761,7 +2920,10 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
     const item_def *last_touched_item;
     for (SelItem &si : items)
     {
-        if (si.has_star && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
+        if ((si.has_star ||
+            (inventory_category_for(*si.item) == INVENT_CONSUMABLE
+             && si.item->is_identified()))
+            && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
         {
             last_touched_item = si.item;
             ++autopickup_remove_count;
@@ -3288,9 +3450,79 @@ void autopickup(bool forced)
         item_check();
 }
 
-int inv_count()
+// Count how many items (of a given inventory category) are in the player's inventory.
+int inv_count(inventory_category category)
 {
-    return count_if(begin(you.inv), end(you.inv), mem_fn(&item_def::defined));
+    int count = 0;
+    int start = 0;
+    int end = ENDOFPACK;
+
+    if (category == INVENT_GEAR)
+        end = MAX_GEAR;
+    else if (category == INVENT_CONSUMABLE)
+        start = MAX_GEAR;
+
+    for (int i = start; i < end; ++i)
+        if (you.inv[i].defined())
+            ++count;
+
+    return count;
+}
+
+// Returns whether there is room in the player's inventory for a given item.
+bool room_in_inventory(const item_def& new_item)
+{
+    // Assume we always have room for any consumable. That is true as of this
+    // function being written, and ENDOFPACK should be increased before that
+    // ever *stops* being true for any reason.
+    if (inventory_category_for(new_item) == INVENT_CONSUMABLE)
+        return true;
+
+    // For gear, we'll need to check a bit more.
+    if (inv_count(INVENT_GEAR) < MAX_GEAR)
+        return true;
+
+    // Now that we know that our gear inventory is full, can this stack with
+    // anything we already have?
+    if (!is_stackable_item(new_item))
+        return false;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (items_stack(you.inv[i], new_item))
+            return true;
+    }
+
+    return false;
+}
+
+inventory_category inventory_category_for(object_class_type type)
+{
+    switch (type)
+    {
+        case OBJ_WEAPONS:
+        case OBJ_MISSILES:
+        case OBJ_ARMOUR:
+        case OBJ_JEWELLERY:
+        case OBJ_STAVES:
+        case OBJ_TALISMANS:
+        case OBJ_GIZMOS:
+            return INVENT_GEAR;
+
+        // Don't toss 'non-items' into the consumable inventory.
+        case OBJ_UNASSIGNED:
+            return INVENT_ANY;
+
+        // A few of the remaining categories don't belong in the inventory at
+        // all, but it isn't necessary to check for that here.
+        default:
+            return INVENT_CONSUMABLE;
+    }
+}
+
+inventory_category inventory_category_for(const item_def& item)
+{
+    return inventory_category_for(item.base_type);
 }
 
 // sub_type == -1 means look for any item of the class
@@ -3367,8 +3599,13 @@ equipment_slot item_equip_slot(const item_def& item)
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    return item_equip_slot(item) != SLOT_UNUSED
-           || quiver_too && you.quiver_action.item_is_quivered(item);
+    if (item.base_type == OBJ_TALISMANS)
+        return you.active_talisman() == &item;
+    else
+    {
+        return item_equip_slot(item) != SLOT_UNUSED
+                || quiver_too && you.quiver_action.item_is_quivered(item);
+    }
 }
 
 bool item_is_melded(const item_def& item)
@@ -3774,6 +4011,9 @@ colour_t item_def::book_colour() const
 
     if (sub_type == BOOK_MANUAL)
         return WHITE;
+
+    if (sub_type == BOOK_PARCHMENT)
+        return parchment_colour(static_cast<spell_type>(plus));
 
     switch (rnd % NDSC_BOOK_PRI)
     {

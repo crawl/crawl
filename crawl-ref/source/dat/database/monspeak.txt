@@ -3273,7 +3273,7 @@ _yredelemnul_Donald_
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "Zombies? Skeletons? Spectral things? Don't you get bored without any real company?"
+@The_monster@ says, "Zombies? Spectres? Don't you get bored without any real company?"
 
 @The_monster@ says, "Angels painted black are so last century."
 
@@ -7418,7 +7418,7 @@ _Wiglaf_common_
 
 @The_monster@ says @to_foe@, "I'll gie ye a proper bath in magma."
 
-@The_monster@ shouts @at@ @foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
+@The_monster@ shouts @at_foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
 
 @The_monster@ says, "I got whit I came for, but wha passes up a proper rammy?"
 
@@ -7705,6 +7705,47 @@ VISUAL:@The_monster@ rams the @surface@ with @possessive@ head heavily.
 @The_monster@ breathes in.
 
 @The_monster@ snuffles in challenge.
+%%%%
+################## Cognitogaunt ############################
+# Any new lines shouldn't actually try to transcribe their speech.
+cognitogaunt
+
+VISUAL:@The_monster@ shines with the incandescence of long-dead nights.
+
+w:20
+@The_monster@ grumbles constantly over the stars not yet being right.
+
+@The_monster@ mumbles about the follies of mortal constellations.
+
+@The_monster@ mutters ill rumours of the current state of the heavens.
+
+@The_monster@ muses over how flesh is wasted on mortals.
+
+@The_monster@ marvels to itself over the thinness of mortal minds.
+
+@The_monster@ mocks the topics of the next astral concord.
+
+w:1
+@The_monster@ writhes with frustration over not yet finding solutions for supernovas.
+
+@The_monster@ growls that the stars belong to nobody but the stars.
+
+@The_monster@ gripes about being made of rot and starlight.
+
+# Douglas Adams
+@The_monster@ grouses that life is wasted on the living.
+%%%%
+silenced cognitogaunt
+
+VISUAL:@The_monster@ shines with the incandescence of long-dead nights.
+%%%%
+friendly cognitogaunt
+
+@cognitogaunt@
+%%%%
+confused cognitogaunt
+
+__NONE
 %%%%
 ################## Crystal guardian ###########################
 crystal guardian
@@ -7994,6 +8035,16 @@ friendly protean progenitor
 
 w:30
 __NONE
+%%%%
+################## Raven ###########################
+raven
+
+w:100
+__NONE
+
+w:2
+@The_monster@ caws, "Nevermore!"
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper
@@ -8937,7 +8988,7 @@ mutations, and how to avoid them.
 
 potions of mutation - the devil's brew!
 
-neqoxecs and cacodemons - may they all be destroyed!
+neqoxecs and zykzyls - may they all be destroyed!
 
 # respecting intelligent beings
 a proper diet respecting intelligent beings.

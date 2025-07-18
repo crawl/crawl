@@ -29,6 +29,7 @@
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
 #include "religion.h"
 #include "state.h"
@@ -100,8 +101,7 @@ void monster_drop_things(monster* mons,
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
                 && you.see_cell(mons->pos())
-                && x_chance_in_y(env.item[item].quantity, 100)
-                && you.can_be_dazzled())
+                && x_chance_in_y(env.item[item].quantity, 100))
             {
                 string msg = make_stringf("%s dazzles you with the glint of coin.",
                     god_name(GOD_GOZAG).c_str());
@@ -773,7 +773,15 @@ void seen_monster(monster* mons)
 
     if (you.unrand_equipped(UNRAND_WYRMBANE))
     {
-        const item_def *wyrmbane = you.weapon();
+        const item_def *wyrmbane = nullptr;
+        const item_def *wpn = you.weapon();
+        const item_def *offhand_wpn = you.offhand_weapon();
+
+        if (wpn && wpn->unrand_idx == UNRAND_WYRMBANE)
+            wyrmbane = wpn;
+        else if (offhand_wpn && offhand_wpn->unrand_idx == UNRAND_WYRMBANE)
+            wyrmbane = offhand_wpn;
+
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
             mpr("<green>Wyrmbane glows as a worthy foe approaches.</green>");
     }
@@ -796,4 +804,6 @@ void seen_monster(monster* mons)
 
     if (you.form == transformation::sphinx)
         sphinx_notice_riddle_target(mons);
+
+    maybe_apply_bane_to_monster(*mons);
 }

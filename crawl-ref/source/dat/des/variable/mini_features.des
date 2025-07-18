@@ -3630,7 +3630,7 @@ TAGS:   serial_glass_rare allow_dup no_wall_fixup transparent no_descent
 WEIGHT: 1
 DEPTH:  D:8-, Depths, Elf, Crypt
 KMONS:  1 = generate_awake unseen_horror
-KITEM:  1 = | / *
+KITEM:  1 = elf skeleton, | / *
 KMASK:  1 = opaque
 MAP
 .....
@@ -3642,29 +3642,24 @@ ENDMAP
 
 # Unseen surprise! by due (and dpeg).
 NAME:   due_unseen_surprise
-DEPTH:  D, Elf
 TAGS:   serial_glass_rare no_wall_fixup luniq transparent no_descent
-KPROP:  ab = no_tele_into
-KMASK:  ab%* = opaque
-: if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
-SUBST:  a = %
-SUBST:  b = %**
-: else
-KFEAT:  a = .
-KFEAT:  b = .
-# Two versions for loot.
-: if crawl.coinflip() == 0 then
-KITEM: a = * / %
-KITEM: b = *
-: else
-KITEM: a = % / | w:1
-KITEM: b = |
-: end
-# Expected value of unseen horrors depends on depth:
-: local wt = (you.absdepth()-10) * (you.absdepth()-10)
+DEPTH:  D, Elf
+: local wt = (you.absdepth() - 10) * (you.absdepth() - 10)
 : kmons("a = generate_awake unseen horror w:" .. wt .. " / nothing w:40")
-KMONS: b = generate_awake unseen horror
+KMONS:  b = generate_awake unseen horror
+: if you.absdepth() < 11 or you.absdepth() < crawl.random2(27) then
+SUBST:  a = %, b = %**
+: else
+:   if crawl.coinflip() == 0 then
+KITEM: a = elf skeleton / nothing w:5, * / %
+KITEM: b = elf skeleton, *
+:   else
+KITEM: a = elf skeleton / nothing w:5, % / | w:1
+KITEM: b = elf skeleton, |
+:   end
 : end
+KPROP:  ab%* = no_tele_into
+KMASK:  ab%* = opaque
 : serial_glass_setup(_G, false)
 MAP
 ........@
@@ -4494,7 +4489,7 @@ NAME:   lemuel_flamethrower_hall
 TAGS:   layout_rooms layout_city no_item_gen ruin_abyss
 DEPTH:  D:9-, Depths, Elf, Geh, Abyss
 ITEM:   any weapon good_item ego:flaming / scroll of immolation pre_id
-ITEM:   fire dragon scales good_item / randbook disc:fire numspells:1
+ITEM:   fire dragon scales good_item / parchment disc:fire
 SUBST:  $ : $$*|.c
 :  if you.in_branch("Geh") then
 TAGS:   extra

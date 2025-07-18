@@ -89,6 +89,7 @@ class Form(MutableMapping):
         self["joined_resists"] = ' | '.join(r.format() for r in self["resists"])
         self["ac_scaling"] = self["ac"].format()
         self["ev_scaling"] = self["ev"].format()
+        self["body_ac_mult_scaling"] = self["body_ac_mult"].format()
         self["unarmed_scaling"] = self["unarmed"].format()
         self["special_dice"] = self["special_damage"].format()
 
@@ -215,7 +216,7 @@ def parse_skill(s):
 # XXX: Based off equipment_slot. See also transform.cc
 ALL_SLOTS = {
     'weapon': 1 << 1,
-    'offhand': 1 << 2,
+    'offhand': 1 << 2 | 1 << 12,
     'body': 1 << 3,
     'helmet': 1 << 4,
     'gloves': 1 << 5,
@@ -224,7 +225,6 @@ ALL_SLOTS = {
     'cloak': 1 << 8,
     'ring': 1 << 9,
     'amulet': 1 << 10,
-    'weapon_or_offhand': 1 << 12,
     'held': 1 << 1 | 1 << 2 | 1 << 12,
     'aux': 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8,
     'physical': 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 12,
@@ -260,7 +260,7 @@ class FormScaling:
             return '{}'
 
         ret = "FormScaling()"
-        if self.base > 0:
+        if self.base != 0:
             ret += ".Base(" + str(self.base) + ")"
         if self.scaling > 0:
             ret += ".Scaling(" + str(self.scaling) + ")"
@@ -334,6 +334,7 @@ keyfns = {
 
     'ac': Field(parse_scaling),
     'ev': Field(parse_scaling),
+    'body_ac_mult': Field(parse_scaling),
     'can_cast': Field(parse_bool),
     'unarmed': Field(parse_scaling),
 
@@ -349,6 +350,7 @@ keyfns = {
     'changes_substance': Field(parse_bool),
     'holiness': Field(lambda s: "MH_" + s.upper()),
 
+    'is_badform': Field(parse_bool),
     'has_blood': Field(parse_capability),
     'has_hair': Field(parse_capability),
     'has_bones': Field(parse_capability),
@@ -393,6 +395,7 @@ defaults = {
 
     'ac': FormScaling(),
     'ev': FormScaling(),
+    'body_ac_mult': FormScaling(),
     'can_cast': 'true',
     'unarmed': FormScaling(),
 
@@ -408,6 +411,7 @@ defaults = {
     'changes_substance': "false",
     'holiness': "MH_NONE",
 
+    'is_badform': 'false',
     'has_blood': "FC_DEFAULT",
     'has_hair': "FC_DEFAULT",
     'has_bones': "FC_DEFAULT",

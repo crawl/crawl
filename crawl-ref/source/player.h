@@ -13,6 +13,7 @@
 
 #include "actor.h"
 #include "attribute-type.h"
+#include "bane-type.h"
 #include "beam.h"
 #include "bitary.h"
 #include "book-type.h"
@@ -74,8 +75,6 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
-
-#define SEVERE_CONTAM_LEVEL 3
 
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
@@ -186,7 +185,8 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
-    item_def active_talisman;
+    // Index into inv[] of the player's current talisman. (-1 if none.)
+    int8_t cur_talisman;
 
     // XXX: ENDOFPACK marks the total size of the player inventory, but we add
     //      a single extra slot after that for purposes of examining EV of
@@ -270,7 +270,7 @@ public:
 
     god_type religion;
     string jiyva_second_name;       // Random second name of Jiyva
-    uint8_t piety;
+    uint8_t raw_piety;
     uint8_t piety_hysteresis;       // amount of stored-up docking
     uint8_t gift_timeout;
     uint8_t saved_good_god_piety;   // for if you "switch" between E/Z/1 by abandoning one first
@@ -288,6 +288,8 @@ public:
     FixedVector<uint8_t, NUM_MUTATIONS> sacrifices;
 
     FixedVector<uint8_t, NUM_ABILITIES> sacrifice_piety;
+
+    FixedVector<int, NUM_BANES> banes;
 
     struct demon_trait
     {
@@ -335,6 +337,11 @@ public:
     set<string> uniq_map_names_abyss;
     // All maps, by level.
     map<level_id, vector<string> > vault_list;
+
+    // The randomly chosen orb type to populate Zot with on this seed.
+    monster_type zot_orb_monster;
+    // And whether the player has gained knowledge of this by seeing a Zot statue.
+    bool zot_orb_monster_known;
 
     PlaceInfo global_info;
 
@@ -443,6 +450,8 @@ public:
     bool redraw_hit_points;
     bool redraw_magic_points;
     FixedVector<bool, NUM_STATS> redraw_stats;
+    bool redraw_doom;
+    bool redraw_contam;
     bool redraw_experience;
     bool redraw_armour_class;
     bool redraw_evasion;
@@ -517,6 +526,8 @@ public:
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
 
+    int piety() const;
+
     bool in_water() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
@@ -579,11 +590,13 @@ public:
     kill_category kill_alignment() const override;
 
     bool has_spell(spell_type spell) const override;
+    bool has_any_spells() const;
 
     string shout_verb(bool directed = false) const;
     int shout_volume() const;
 
-    int base_ac_from(const item_def &armour, int scale = 1) const;
+    int base_ac_from(const item_def &armour, int scale = 1,
+                     bool include_penalties = true) const;
 
     int corrosion_amount() const;
 
@@ -663,6 +676,7 @@ public:
     bool      has_temporary_mutation(mutation_type mut) const;
     bool      has_innate_mutation(mutation_type mut) const;
     bool      has_mutation(mutation_type mut, bool active_only=true) const;
+    bool      has_bane(bane_type bane) const;
 
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
 
@@ -679,6 +693,7 @@ public:
     item_def *body_armour() const override;
     item_def *shield() const override;
     item_def *offhand_weapon() const override;
+    item_def *active_talisman() const;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -718,6 +733,7 @@ public:
     bool is_motile() const;
     bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int dur, bool allow_immobile = true) override;
+    bool doom(int amount) override;
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
@@ -741,6 +757,9 @@ public:
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
+    void daze(int duration) override;
+    void end_daze();
+    void vitrify(const actor *attacker, int duration, bool quiet = false) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -788,6 +807,7 @@ public:
     bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
     bool res_constrict() const override;
+    int res_blind() const override;
     int willpower() const override;
     bool no_tele(bool blink = false, bool temp = true) const override;
     string no_tele_reason(bool blink = false, bool temp = true) const;
@@ -827,7 +847,7 @@ public:
 
     bool asleep() const override;
     void put_to_sleep(actor* source, int duration = 0, bool hibernate = false) override;
-    void wake_up(bool force = false);
+    void wake_up(bool break_sleep = true, bool break_daze = true);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
@@ -836,9 +856,6 @@ public:
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
     bool can_sleep(bool holi_only = false) const override;
-
-    bool can_be_dazzled() const override;
-    bool can_be_blinded() const override;
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
@@ -872,12 +889,13 @@ public:
     void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
                                              int *ac, int *ev, int *sh,
                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    void preview_stats_in_specific_form(int scale, const item_def& talisman,
+                                        int *ac, int *ev, int *sh,
+                                        FixedVector<int, MAX_KNOWN_SPELLS> *fail);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
-
-    bool using_talisman(const item_def &talisman) const;
 
     bool do_shaft() override;
     bool shaftable() const;
@@ -989,6 +1007,8 @@ bool check_moveto_exclusion(const coord_def& p,
                             bool *prompted = nullptr);
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
+
+bool check_move_over(coord_def p, const string& move_verb);
 
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
@@ -1139,9 +1159,8 @@ void set_hp(int new_amount);
 int get_real_hp(bool trans, bool drained = true);
 int get_real_mp(bool include_items);
 
-int get_contamination_level();
-bool player_severe_contamination();
-string describe_contamination(int level);
+bool player_harmful_contamination();
+string describe_contamination(bool verbose = true);
 
 bool sanguine_armour_valid();
 void activate_sanguine_armour();
@@ -1182,7 +1201,6 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
-void crystallize_player();
 void blind_player(int turns, colour_t flavour_colour = WHITE);
 int player_blind_miss_chance(int distance);
 void dec_berserk_recovery_player(int delay);

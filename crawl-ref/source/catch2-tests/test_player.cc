@@ -55,22 +55,6 @@ TEST_CASE_METHOD(MockPlayerYouTestsFixture,
 }
 
 TEST_CASE_METHOD(MockPlayerYouTestsFixture,
-          "Check tough_skin", "[single-file]" ) {
-
-    mutate(MUT_TOUGH_SKIN, "testing");
-
-    REQUIRE(you.base_ac(100) == 100);
-}
-
-TEST_CASE_METHOD(MockPlayerYouTestsFixture,
-          "Check shaggy fur", "[single-file]" ) {
-
-    mutate(MUT_SHAGGY_FUR, "testing");
-
-    REQUIRE(you.base_ac(100) == 100);
-}
-
-TEST_CASE_METHOD(MockPlayerYouTestsFixture,
           "Check iridescent scales", "[single-file]" ) {
 
     mutate(MUT_IRIDESCENT_SCALES, "testing");

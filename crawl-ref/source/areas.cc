@@ -588,7 +588,7 @@ int player::halo_radius() const
     if (have_passive(passive_t::halo))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
+        size = min(piety(), piety_breakpoint(5)) * you.normal_vision
                                                     / piety_breakpoint(5);
     }
 
@@ -641,8 +641,11 @@ int monster::halo_radius() const
         size = max(size, 3);
 
     item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
-    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+    if (mons_wields_two_weapons(*this) && alt_wpn
+        && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+    {
         size = max(size, 3);
+    }
 
     if (wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
@@ -758,9 +761,9 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        if (piety >= piety_breakpoint(4))
+        if (piety() >= piety_breakpoint(4))
             size = 4;
-        else if (piety >= piety_breakpoint(3))
+        else if (piety() >= piety_breakpoint(3))
             size = 3;
         else
             size = 2;
@@ -790,12 +793,19 @@ int monster::umbra_radius() const
         size = max(size, 3);
 
     item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
-    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+    if (mons_wields_two_weapons(*this) && alt_wpn
+        && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+    {
         size = max(size, 3);
+    }
 
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         size = max(size, 3);
+
+    // Death knights get a small umbra.
+    if (type == MONS_DEATH_KNIGHT)
+        size += 3;
 
     if (!(holiness() & MH_UNDEAD))
         return size;

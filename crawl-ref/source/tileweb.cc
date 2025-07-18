@@ -1107,6 +1107,7 @@ void TilesFramework::_send_player(bool force_full)
         prank = 2;
     }
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
+    _update_int(force_full, c.ostracism_pips, ostracism_pips(), "ostracism_pips");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
 
@@ -1137,6 +1138,11 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
     _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
+
+    _update_int(force_full, c.doom, you.attribute[ATTR_DOOM], "doom");
+    _update_string(force_full, c.doom_desc, getLongDescription("doom status"), "doom_desc");
+
+    _update_int(force_full, c.contam, you.magic_contamination / 10, "contam");
 
     if (you.has_mutation(MUT_MULTILIVED))
     {
@@ -1286,7 +1292,18 @@ static int _useful_consumable_order(const item_def &item, const string &name)
         if (p.matches(name))
             return -1;
 
-    return order - base_types.begin();
+    // Within each category, sort by usefulness.
+    int subsort = 2;
+    if (is_useless_item(item, true))
+        subsort = 4;
+    if (is_emergency_item(item))
+        subsort = 0;
+    else if (is_good_item(item))
+        subsort = 1;
+    else if (is_dangerous_item(item))
+        subsort = 3;
+
+    return (order - base_types.begin()) * 5 + subsort;
 }
 
 // Returns the name of an item_def field to display on the action panel
@@ -1353,6 +1370,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
                            "flags", false);
     changed |= _update_string(force_full, current.inscription,
                               next.inscription, "inscription", false);
+    changed |= _update_int(force_full, current.slot, next.slot, "letter", false);
 
     // TODO: props?
 
@@ -1582,6 +1600,23 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_tileidx(next_pc.fg);
             if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
+
+            // XXX: Encode spell school overlays for parchments.
+            if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
+            {
+                const item_def* item = next_pc.map_knowledge.item();
+                if (item)
+                {
+                    spell_type spell = static_cast<spell_type>(item->plus);
+                    const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+                    const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+                    if (school1 > 0)
+                        json_write_int("overlay1", school1);
+                    if (school2 > 0)
+                        json_write_int("overlay2", school2);
+                }
+            }
         }
 
         if (next_pc.bg != current_pc.bg)
@@ -1804,7 +1839,7 @@ void TilesFramework::_mcache_ref(bool inc)
         }
 }
 
-void TilesFramework::_send_map(bool force_full)
+void TilesFramework::_send_map(bool spectator_only)
 {
     // TODO: prevent in some other / better way?
     if (_send_lock)
@@ -1814,13 +1849,17 @@ void TilesFramework::_send_map(bool force_full)
 
     map<uint32_t, coord_def> new_monster_locs;
 
-    force_full = force_full || m_need_full_map;
+    bool force_full = spectator_only || m_need_full_map;
     m_need_full_map = false;
 
     json_open_object();
     json_write_string("msg", "map");
     json_treat_as_empty();
 
+    // cautionary note: this is used in heuristic ways in process_handler.py,
+    // see `_is_spectator_only`
+    if (spectator_only)
+        json_write_bool("spect_only", true);
     // cautionary note: this is used in heuristic ways in process_handler.py,
     // see `_is_full_map_msg`
     if (force_full)
@@ -1917,6 +1956,10 @@ void TilesFramework::_send_map(bool force_full)
 
     if (force_full)
         _send_cursor(CURSOR_MAP);
+
+    // Everything should already be up to date when called with spectator_only
+    if (spectator_only)
+        return;
 
     if (m_mcache_ref_done)
         _mcache_ref(false);
@@ -2107,7 +2150,16 @@ void TilesFramework::_send_everything()
 
     // Map is sent after player, otherwise HP/MP bar can be left behind in the
     // old location if the player has moved
-    _send_map(true);
+
+    // The player might not have received the latest map data yet and
+    // _send_map(true) only sends the full map to the newly connected
+    // spectator but resets the dirty flags. So make sure the player's
+    // map data is up to date first.
+    const bool sent_full_map = m_need_full_map;
+    _send_map(false);
+    // If we didn't send the full map, send it to the new spectator
+    if (!sent_full_map)
+        _send_map(true);
 
     // Menus
     json_open_object();

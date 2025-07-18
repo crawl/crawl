@@ -585,8 +585,13 @@ void trigger_binding_sigil(actor& actor)
 {
     if (actor.is_binding_sigil_immune())
     {
-        mprf("%s cannot be bound by the sigil due to %s high momentum!",
-             actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        if (actor.is_player())
+            mpr("You slip past the binding sigil.");
+        else
+        {
+            mprf("%s cannot be bound by the sigil due to %s high momentum!",
+                actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         return;
     }
 

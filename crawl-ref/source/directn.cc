@@ -1298,7 +1298,6 @@ coord_def direction_chooser::find_default_monster_target()
     // pick an acceptable one in sight.
     if (pos.origin() && mode == TARG_HOSTILE_OR_EMPTY)
     {
-        fprintf(stderr, "A");
         for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
             if (hitfunc->valid_aim(*ri))
                 return *ri;
@@ -3073,6 +3072,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
     if (grid == DNGN_ROCK_WALL && player_in_branch(BRANCH_PANDEMONIUM))
         return "wall of the weird stuff which makes up Pandemonium";
+    else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
+        return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
     else if (!is_valid_feature_type(grid))
         return "";
     else
@@ -3148,7 +3149,7 @@ string feature_description_at(const coord_def& where, bool covering,
         if (is_icecovered(where))
             covering_description = ", covered with ice";
 
-        if (is_temp_terrain(where))
+        if (is_temp_terrain(where) && grid != DNGN_BINDING_SIGIL)
             covering_description = ", temporary";
 
         if (is_bloodcovered(where))

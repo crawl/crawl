@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "abyss.h"
 #include "ability.h"
 #include "areas.h"
 #include "artefact.h"
@@ -743,6 +744,10 @@ void EquipOffDelay::finish()
 {
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
     unequip_item(equip);
+
+    // Banishment via coglin distortion unwield might not happen until the turn
+    // after unwielding, otherwise.
+    check_banished();
 }
 
 void MemoriseDelay::finish()
@@ -893,7 +898,7 @@ void TransformDelay::finish()
     }
 
     set_default_form(form, talisman);
-    return_to_default_form();
+    return_to_default_form(true);
 }
 
 void run_macro(const char *macroname)

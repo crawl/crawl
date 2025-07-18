@@ -13,6 +13,11 @@
 #define NOBODY_MEMORIES_KEY "nobody_memories"
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
 
+#define TESSERACT_START_TIME_KEY "tesseract_start_time"
+#define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
+#define TESSERACT_XP_KEY "tesseract_xp_pool"
+#define TESSERACT_DUMMY_KEY "tesseract_dummy"
+
 class actor;
 class monster;
 struct bolt;
@@ -38,3 +43,5 @@ void initialize_nobody_memories(monster& nobody);
 bool pyrrhic_recollection(monster& nobody);
 
 void solar_ember_blast();
+
+void tesseract_action(monster& mon);

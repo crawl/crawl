@@ -419,6 +419,21 @@ The orb dais
 A raised pedestal upon which rests the fabled Orb of Zot. More ancient than even
 the dungeon itself, it cannot be destroyed or transformed by any means.
 %%%%
+A statue of an orb of fire
+
+A statue of a terrifying globe of raw primordial fire, said to dwell within the
+Realm of Zot.
+%%%%
+A statue of an orb of winter
+
+A statue of a terrifying globe of uttermost cold, said to dwell within the
+Realm of Zot.
+%%%%
+A statue of an orb of entropy
+
+A statue of a terrifying globe of profound nothingness, said to dwell within the
+Realm of Zot.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################
@@ -1295,6 +1310,12 @@ you're here now.
 A fur brush
 
 A grooming brush laid to rest beside a pile of tangled, matted yak fur.
+%%%%
+A set of bottled spirits
+
+A mix of various alcoholic drinks with worn-down labels. Unfortunately, the
+preservative magic sealing each bottle makes it impossible to sample from them
+without smashing their bottles open.
 %%%%
 # Graveyards, Crypt, Necropolis.
 A mourning vase

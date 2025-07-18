@@ -436,7 +436,7 @@ zombies from random monsters suitable for some other depth as (e.g.):
 
 <w>place:Elf:3 zombie</w>
 
-The available modifiers are <w>zombie</w>, <w>skeleton</w>, <w>simulacrum</w>, and <w>spectre</w>.
+The available modifiers are <w>zombie</w>, <w>draugr</w>, <w>simulacrum</w>, and <w>spectre</w>.
 
 <h>Overriding Monster Names</h>
 
@@ -503,7 +503,7 @@ is exactly the same as:
 <w>kobold name:goblin name_replace name_descriptor name_definite</w>
 
 <w>name_zombie</w> can be used to redefine already zombified monsters (including
-skeletons, simulacra and spectrals).
+draugr, simulacra and spectrals).
 
 Finally, <w>name_nocorpse</w> will cause the name to be completely ignored for
 corpses. For example:

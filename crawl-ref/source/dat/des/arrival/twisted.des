@@ -94,10 +94,10 @@ KMONS:   I = demigod ; nothing
 KMONS:   J = spriggan ; nothing
 KMONS:   K = minotaur ; nothing
 KMONS:   L = demonspawn ; nothing
-KMONS:   M = ghoul
+KMONS:   M = revenant
 KMONS:   N = tengu ; nothing
 KMONS:   O = merfolk ; nothing
-KMONS:   P = vampire ; nothing
+KMONS:   P = poltergeist
 KMONS:   Q = felid
 KMONS:   R = octopode ; nothing
 KMONS:   S = gargoyle ; nothing
@@ -152,22 +152,21 @@ KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
            tengu zombie / merfolk zombie / felid zombie / octopode zombie / \
            formicid zombie / barachi zombie / gnoll zombie / armataur zombie / \
            oni zombie / goblin zombie
-# Player monsters, skeleton versions (octopodes and formicids drop out because
-# they have no skeletons):
-KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
-           naga skeleton / troll skeleton / draconian skeleton / \
-           demigod skeleton / spriggan skeleton / minotaur skeleton / \
-           demonspawn skeleton / tengu skeleton / merfolk skeleton / \
-           felid skeleton /  barachi skeleton / gnoll skeleton / \
-           armataur skeleton / oni skeleton / goblin skeleton
+# Player monsters, skeletonish versions (octopodes and formicids drop out
+# because they have no bones):
+: local d = "draugr ; mundane long sword | mundane mace"
+: kmons("N = human " .. d .. " / elf " .. d .. " / dwarf " .. d .. " / " ..
+:           "kobold " .. d .. " / naga " .. d .. " / troll " .. d .. " / " ..
+:           "draconian " .. d .. " / demigod " .. d .. " / spriggan " .. d .. " / " ..
+:           "minotaur " .. d .. " / demonspawn " .. d .. " / tengu " .. d .. " / " ..
+:           "merfolk " .. d .. " / felid " .. d .. " / barachi " .. d .. " / " ..
+:           "gnoll " .. d .. " / armataur " .. d .. " / oni " .. d .. " / " ..
+:           "goblin " .. d .. " / revenant")
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
-KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
+KMONS: Q = storm dragon / shadow dragon / iron dragon / \
            golden dragon w:1 / quicksilver dragon w:1 / \
-           tentacled monstrosity / black draconian w:1 ; nothing / \
-           yellow draconian w:1 ; nothing / green draconian w:1 ; nothing / \
-           purple draconian w:1 ; nothing / red draconian w:1 ; nothing / \
-           white draconian w:1 ; nothing
+           tentacled monstrosity / base draconian w:6 ; nothing
 # Let's show off those many tiles for these weird things.
 KMONS: R = large abomination / small abomination w:1
 MAP
@@ -395,7 +394,7 @@ KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
 KFEAT:   D = enter_abyss
-KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / white imp w:5
+KMONS:   1 = shadow imp / crimson imp / white imp w:5 / drude w:5
 SUBST:   t : U'''', 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva

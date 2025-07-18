@@ -29,7 +29,7 @@ local books = {
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:soul_splinter&slow&blink&"
   .. "swiftness",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
-"Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
+"Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&gloom&"
   .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
 "Crowd_Control numspells:3 spells:gell's_gavotte&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
@@ -82,7 +82,7 @@ local books = {
 "Modern_Magic,_Vol._19 numspells:2 spells:lesser_beckoning&infestation",
 "Modern_Magic,_Vol._20 numspells:2 spells:poisonous_vapours&ignition",
 "Modern_Magic,_Vol._21 numspells:1 spells:borgnjor's_vile_clutch",
-"Modern_Magic,_Vol._25 numspells:6 spells:foxfire&dazzling_flash&"
+"Modern_Magic,_Vol._25 numspells:6 spells:foxfire&gloom&"
   .. "frozen_ramparts&hailstorm&eringya's_noxious_bog&starburst",
 "Modern_Magic,_Vol._27 numspells:4 spells:awaken_armour&manifold_assault&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
@@ -100,12 +100,13 @@ local books = {
   .. "hoarfrost_cannonade&gell's_gavotte",
 "Modern_Magic,_Vol._32b numspells:5 spells:permafrost_eruption&"
   .. "hellfire_mortar&magnavolt&rimeblight&fulsome_fusillade",
-"Modern_Magic,_Vol._33a numspells:6 spells:kinetic_grapnel&"
+"Modern_Magic,_Vol._33a numspells:8 spells:kinetic_grapnel&"
   .. "construct_spike_launcher&launch_clockwork_bee&"
-  .. "eringya's_surprising_crocodile&summon_seismosaurus_egg&rending_blade",
+  .. "eringya's_surprising_crocodile&summon_seismosaurus_egg&rending_blade&"
+  .. "alistair's_walking_alembic&detonation_catalyst",
 "Modern_Magic,_Vol._33b numspells:7 spells:nazja's_percussive_tempering&"
-  .. "alistair's_walking_alembic&fortress_blast&forge_phalanx_beetle&"
-  .. "forge_monarch_bomb&splinterfrost_shell&platinum_paragon",
+  .. "fortress_blast&forge_phalanx_beetle&forge_monarch_bomb&"
+  .. "splinterfrost_shell&sphinx_sisters&platinum_paragon",
 "Multidimensional_Combat numspells:6 spells:momentum_strike&"
   .. "volatile_blastmotes&dimensional_bullseye&vhi's_electric_charge&"
   .. "iskenderun's_mystic_blast&summon_forest",
@@ -113,13 +114,13 @@ local books = {
   .. "leda's_liquefaction&petrify&borgnjor's_vile_clutch&"
   .. "metabolic_englaciation",
 "Optical_Phenomena numspells:4 spells:searing_ray&fulminant_prism&"
-  .. "dazzling_flash&olgreb's_toxic_radiance",
+  .. "gloom&olgreb's_toxic_radiance",
 "Patience numspells:5 spells:searing_ray&launch_clockwork_bee&flame_wave&"
   .. "fortress_blast&maxwell's_capacitive_coupling",
 "Peace_and_Solitude numspells:4 spells:dispersal&disjunction&"
   .. "silence&teleport_other",
-"Perplexing_Participles numspells:4 spells:searing_ray&confusing_touch&"
-  .. "dazzling_flash&freezing_cloud",
+"Perplexing_Participles numspells:3 spells:searing_ray&confusing_touch&"
+  .. "freezing_cloud",
 "Pondering owner:Gastronok numspells:4 spells:slow&summon_small_mammal&"
   .. "swiftness&airstrike",
 "Prestidigitation numspells:7 spells:apportation&ensorcelled_hibernation&"
@@ -181,7 +182,7 @@ local books = {
   .. "silence&yara's_violent_unravelling&orb_of_destruction&"
   .. "ozocubu's_refrigeration",
 "the_Grander_Grimoire numspells:4 spells:haunt&malign_gateway&"
-  .. "monstrous_menagerie&summon_horrible_things",
+  .. "sphinx_sisters&summon_horrible_things",
 "the_Greater_Akashic_Record numspells:8 spells:apportation&blink&"
   .. "lesser_beckoning&manifold_assault&summon_forest&dispersal&malign_gateway&"
   .. "disjunction",
@@ -207,7 +208,7 @@ local books = {
   .. "silence&discord&shatter",
 "the_Stone_Book owner:Thyrsus numspells:6 spells:fugue_of_the_fallen&"
   .. "call_canine_familiar&awaken_armour&summon_mana_viper&"
-  .. "monstrous_menagerie&borgnjor's_revivification",
+  .. "sphinx_sisters&borgnjor's_revivification",
 "the_Sum_of_Summoning numspells:8 spells:summon_small_mammal&call_imp&"
   .. "call_canine_familiar&summon_ice_beast&summon_mana_viper&"
   .. "summon_cactus_giant&summon_hydra&dragon's_call",
@@ -216,8 +217,12 @@ local books = {
 "the_Unknown_Variable numspells:6 spells:foxfire&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
-"the_Vowels numspells:6 spells:summon_ice_beast&dimensional_bullseye&"
-  .. "monstrous_menagerie&summon_mana_viper&"
+"the_Vowels,_Vol._1 numspells:6 spells:construct_spike_launcher&summon_ice_beast&"
+  .. "eringya's_surprising_crocodile&summon_seismosaurus_egg&"
+  .. "brom's_barrelling_boulder&leda's_liquefaction",
+"the_Vowels,_Vol._2 numspells:7 spells:cigotuvi's_putrefaction&"
+  .. "dimensional_bullseye&summon_mana_viper&"
+  .. "lee's_rapid_deconstruction&permafrost_eruption&"
   .. "conjure_ball_lightning&fulsome_fusillade"
 }
 local bookcount = crawl.random2(7) + 6

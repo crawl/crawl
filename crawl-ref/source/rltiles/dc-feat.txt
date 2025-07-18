@@ -349,6 +349,11 @@ depths_crumbled_column DEPTHS_CRUMBLED_COLUMN
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON
 
+# The zot orb statues.
+zot_fire_orb_statue DNGN_ZOT_FIRE_STATUE
+zot_winter_orb_statue DNGN_ZOT_WINTER_STATUE
+zot_entropy_orb_statue DNGN_ZOT_ENTROPY_STATUE
+
 ## Features only used in certain minivaults
 %sdir dngn/vaults
 
@@ -484,6 +489,7 @@ djembe_set DNGN_DJEMBE
 ensign_beogh DNGN_ENSIGN_BEOGH
 ensign_dark DNGN_ENSIGN_DARK
 ensign_gehenna DNGN_ENSIGN_GEHENNA
+bottled_spirits DNGN_BOTTLED_SPIRITS
 ## preferably have more of these
 %weight 10
 skull_pike_1 DNGN_SKULL_PIKE
@@ -502,6 +508,7 @@ fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
 ##
 stone_smooth_beogh_0 STONE_SMOOTH_WALL_BEOGH
 stone_smooth_beogh_1
+gilded_reliquary DNGN_GILDED_RELIQUARY
 
 %sdir dngn/wall
 spike_launcher DNGN_SPIKE_LAUNCHER
@@ -681,6 +688,7 @@ volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
 volcano_exit DNGN_EXIT_VOLCANO
 sewer_portal DNGN_PORTAL_SEWER
+sewer_exit DNGN_EXIT_SEWER
 sewer_portal_rusted DNGN_PORTAL_SEWER_RUSTED
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
 ice_cave_gone DNGN_PORTAL_ICE_CAVE_GONE

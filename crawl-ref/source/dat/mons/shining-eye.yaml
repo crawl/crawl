@@ -1,16 +1,15 @@
 name: "shining eye"
 glyph: {char: "G", colour: lightmagenta}
-flags: [flies, see_invis, no_skeleton]
+flags: [flies, see_invis, no_skeleton, cautious]
 exp: 546
 genus: floating_eye
 will: 100
 attacks:
 hd: 10
-hp_10x: 550
+hp_10x: 700
 ac: 3
 ev: 1
 spells: shining_eye
 intelligence: brainless
-speed: 7
 size: medium
 shape: orb

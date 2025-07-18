@@ -519,7 +519,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
-        ? attacker->heads() + MAX_NUM_ATTACKS - 1
+        ? attacker->heads() + (attacker->type == MONS_DRAUGR)
         : MAX_NUM_ATTACKS;
     coord_def pos = defender->pos();
 
@@ -545,7 +545,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
         {
             if (attacker == defender
-               || !attacker->as_monster()->has_multitargeting())
+               || !attacker->as_monster()->has_hydra_multi_attack())
             {
                 break;
             }
@@ -734,7 +734,7 @@ int stab_bonus_denom(stab_type stab)
     }
 }
 
-static bool is_boolean_resist(beam_type flavour)
+static bool _is_boolean_resist(beam_type flavour)
 {
     switch (flavour)
     {
@@ -744,7 +744,6 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
     case BEAM_POISON:
-    case BEAM_POISON_ARROW:
         return true;
     default:
         return false;
@@ -753,7 +752,7 @@ static bool is_boolean_resist(beam_type flavour)
 
 // Gets the percentage of the total damage of this damage flavour that can
 // be resisted.
-static inline int get_resistible_fraction(beam_type flavour)
+static inline int _get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
@@ -770,36 +769,74 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
+// Converts a beam flavour into the 'basic' flavour that checks that resist.
+beam_type get_beam_resist_type(beam_type flavour)
+{
+    switch (flavour)
+    {
+        // Note that Steam is *not* here, even if it also effectively checks
+        // rF, since rSteam on its own is a thing actors can have.
+        case BEAM_FIRE:
+        case BEAM_LAVA:
+            return BEAM_FIRE;
+
+        case BEAM_COLD:
+        case BEAM_ICE:
+            return BEAM_COLD;
+
+        case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
+        case BEAM_STUN_BOLT:
+            return BEAM_ELECTRICITY;
+
+        case BEAM_NEG:
+        case BEAM_PAIN:
+        case BEAM_MALIGN_OFFERING:
+        case BEAM_VAMPIRIC_DRAINING:
+            return BEAM_NEG;
+
+        case BEAM_POISON:
+        case BEAM_POISON_ARROW:
+        case BEAM_MERCURY:
+            return BEAM_POISON;
+
+        // Entirely for Qazlal's elemental adaptation passive, counting for
+        // 'physical damage'.
+        case BEAM_MISSILE:
+        case BEAM_MMISSILE:
+        case BEAM_FRAG:
+        case BEAM_CRYSTALLISING:
+        case BEAM_SEISMIC:
+        case BEAM_BOLAS:
+        case BEAM_AIR:
+            return BEAM_MISSILE;
+
+        default:
+            return flavour;
+    }
+}
+
 static int _beam_to_resist(const actor* defender, beam_type flavour)
 {
     switch (flavour)
     {
         case BEAM_FIRE:
-        case BEAM_LAVA:
             return defender->res_fire();
         case BEAM_DAMNATION:
             return defender->res_damnation();
         case BEAM_STEAM:
             return defender->res_steam();
         case BEAM_COLD:
-        case BEAM_ICE:
             return defender->res_cold();
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
-        case BEAM_THUNDER:
-        case BEAM_STUN_BOLT:
             return defender->res_elec();
         case BEAM_NEG:
-        case BEAM_PAIN:
-        case BEAM_MALIGN_OFFERING:
-        case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_corr();
         case BEAM_POISON:
-        case BEAM_POISON_ARROW:
-        case BEAM_MERCURY:
             return defender->res_poison();
         case BEAM_HOLY:
             return defender->res_holy_energy();
@@ -829,13 +866,14 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
  */
 int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage)
 {
-    const int res = _beam_to_resist(defender, flavour);
+    const beam_type base_flavour = get_beam_resist_type(flavour);
+    const int res = _beam_to_resist(defender, base_flavour);
     if (!res)
         return rawdamage;
 
     const bool is_mon = defender->is_monster();
 
-    const int resistible_fraction = get_resistible_fraction(flavour);
+    const int resistible_fraction = _get_resistible_fraction(flavour);
 
     int resistible = rawdamage * resistible_fraction / 100;
     const int irresistible = rawdamage - resistible;
@@ -843,34 +881,23 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
     if (res > 0)
     {
         const bool immune_at_3_res = is_mon
-                                     || flavour == BEAM_NEG
-                                     || flavour == BEAM_PAIN
-                                     || flavour == BEAM_MALIGN_OFFERING
-                                     || flavour == BEAM_VAMPIRIC_DRAINING
+                                     || base_flavour == BEAM_NEG
+                                     || base_flavour == BEAM_POISON
                                      || flavour == BEAM_HOLY
-                                     || flavour == BEAM_FOUL_FLAME
-                                     || flavour == BEAM_POISON
-                                     // just the resistible part
-                                     || flavour == BEAM_MERCURY
-                                     || flavour == BEAM_POISON_ARROW;
+                                     || flavour == BEAM_FOUL_FLAME;
 
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
         {
             // Is this a resist that claims to be boolean for damage purposes?
-            const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
+            const int bonus_res = (_is_boolean_resist(base_flavour) ? 1 : 0);
 
             // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
-            else if (flavour == BEAM_NEG
-                     || flavour == BEAM_PAIN
-                     || flavour == BEAM_MALIGN_OFFERING
-                     || flavour == BEAM_VAMPIRIC_DRAINING)
-            {
+            else if (base_flavour == BEAM_NEG)
                 resistible /= res * 2;
-            }
             else
                 resistible /= (3 * res + 1) / 2 + bonus_res;
         }
@@ -1121,6 +1148,17 @@ bool dont_harm(const actor &attacker, const actor &defender)
     return false;
 }
 
+bool _monster_has_reachcleave(const actor &attacker)
+{
+    if (attacker.is_monster()
+        && attacker.as_monster()->has_attack_flavour(AF_REACH_CLEAVE_UGLY))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Force cleave attacks. Used for melee actions that don't have targets, e.g.
  * attacking empty space (otherwise, cleaving is handled in melee_attack).
@@ -1157,7 +1195,8 @@ bool attack_cleaves(const actor &attacker, const item_def *weap)
         return true;
     }
     else if (attacker.is_monster()
-             && attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE))
+             && (attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE)
+             || _monster_has_reachcleave(attacker)))
     {
         return true;
     }
@@ -1211,7 +1250,10 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         return;
 
     const coord_def atk = attacker.pos();
-    const int cleave_radius = weap ? weapon_reach(*weap) : 1;
+    // Players in aqua form specifically do not get enormous cleaving, but
+    // monsters with natural reach cleave for their while reach.
+    const int cleave_radius = attacker.is_monster() ? attacker.reach_range()
+                                : weap ? weapon_reach(*weap) : 1;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
     {
@@ -1253,7 +1295,9 @@ int attack_multiple_targets(actor &attacker, list<actor*> &targets,
 
     int total_damage = 0;
     const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
-    const bool reaching = weap && weapon_reach(*weap) > 1;
+
+    const bool reaching = _monster_has_reachcleave(attacker)
+                          || (weap && weapon_reach(*weap) > 1);
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();

@@ -21,17 +21,17 @@ function init_undead(e)
   e.subst('S = .')
 
   if you.absdepth() <= 3 then
-    e.kmons('.-_ = zombie / skeleton / w:300 nothing')
+    e.kmons('.-_ = zombie w:20 / nothing w:300')
   elseif you.absdepth() <= 6 then
-    e.kmons('.-_ = w:25 zombie / skeleton / w:5 phantom / w:300 nothing')
+    e.kmons('.-_ = zombie w:30 / phantom w:5 / nothing w:300')
   elseif you.absdepth() <= 9 then
-    e.kmons('.-_ = w:30 zombie / w:20 wight / w:300 nothing')
+    e.kmons('.-_ = zombie w:25 / draugr w:5 / w:20 wight / nothing w:300')
   elseif you.absdepth() <= 12 then
-    e.kmons('.-_ = w:30 zombie / w:10 wraith / w:10 vampire / \
-             w:10 shadowghast / w:300 nothing')
+    e.kmons('.-_ = zombie w:25 / draugr w:5 / wraith w:10 / vampire w:10 / \
+                   w:10 shadowghast / nothing w:300')
   else
-    e.kmons('.-_ = w:30 zombie / w:5 shadowghast / w:5 wraith / w:5 vampire / \
-            w:15 skeletal warrior / w:300 nothing')
+    e.kmons('.-_ = zombie w:30 / draugr / shadowghast w:5 / wraith w:5 / \
+                   vampire w:5 / skeletal warrior / nothing w:300')
   end
   e.kmons('t = withered plant')
 
@@ -44,7 +44,7 @@ DEPTH:  D:2-
 TAGS:   extra luniq_serial nolayout_encompass
 CHANCE: 1%
 {{
-  local c = 4 + crawl.random2(3) * crawl.random2(4)
+  local c = 3 + crawl.random2(3) * crawl.random2(3)
   hook("post_place", function()
     dgn.place_maps{tag="serial_undead", count=c}
   end)

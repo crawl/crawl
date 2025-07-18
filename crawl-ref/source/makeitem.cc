@@ -197,6 +197,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
+    const int old_ego = item.brand;
     if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
@@ -235,7 +236,16 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
-        make_item_randart(item);
+        if (!make_item_randart(item, force_randart))
+            return false;
+
+        // Bane is a worse property than most negative values, so let's boost
+        // the resulting item a bit to temp people into using it.
+        if (artefact_property(item, ARTP_BANE))
+            item.plus = min(12, item.plus + random_range(2, 5));
+
+        if (old_ego > 0)
+            set_artefact_brand(item, old_ego);
 
         return true;
     }
@@ -422,8 +432,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_weapon_artefact(item, force_type, 0, true, agent)
-                && is_artefact(item))
+            if (_try_make_weapon_artefact(item, force_type, 0, true, agent))
             {
                 if (ego > SPWPN_NORMAL)
                     set_artefact_brand(item, ego);
@@ -645,13 +654,13 @@ static void _generate_missile_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
+        // Total weight: 100
         item.sub_type =
-            random_choose_weighted(40, MI_STONE,
-                                   10, MI_DART,
-                                   3,  MI_BOOMERANG,
-                                   2,  MI_JAVELIN,
-                                   1,  MI_THROWING_NET,
-                                   1,  MI_LARGE_ROCK);
+            random_choose_weighted(60, MI_DART,
+                                   17, MI_BOOMERANG,
+                                   11,  MI_JAVELIN,
+                                   6,  MI_THROWING_NET,
+                                   6,  MI_LARGE_ROCK);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -684,6 +693,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, int agent)
 {
     const bool force_randart = item_level == ISPEC_RANDART;
+    const int old_ego = item.brand;
     if (!force_randart && (item_level <= 0
                            || !x_chance_in_y(101 + item_level * 3, 4000)))
     {
@@ -730,7 +740,16 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
     // Needs to be done after the barding chance else we get randart
     // bardings named Boots of xy.
-    make_item_randart(item);
+    if (!make_item_randart(item, force_randart))
+        return false;
+
+    // Bane is a worse property than most negative values, so let's make them a
+    // bit more tempting on average.
+    if (is_artefact(item) && artefact_property(item, ARTP_BANE))
+        item.plus = max((int)item.plus, armour_max_enchant(item) / 2 + random_range(1, 2));
+
+    if (old_ego > 0)
+        set_artefact_brand(item, old_ego);
 
     return true;
 }
@@ -1007,8 +1026,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, item_level, agent)
-                && is_artefact(item))
+            if (_try_make_armour_artefact(item, force_type, item_level, agent))
             {
                 // borrowed from similar code for weapons -- is this really the
                 // best way to force an ego??
@@ -1318,13 +1336,81 @@ static skill_type _choose_manual_skill()
     return skill;
 }
 
-static void _generate_book_item(item_def& item, bool allow_uniques,
-                                int force_type, int item_level)
+// Largely used to boost the drop rate of low-level 'utility' spells that are
+// of interest all game long (when low-level spells in general get much less
+// common as one gets deeper in the game).
+static int _spell_base_weight(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_APPORTATION:
+    case SPELL_BECKONING:
+        return 120;
+
+    // Due to spellbook weights, which is actually less common than most level
+    // 2 spells by base, so weight it a little higher.
+    case SPELL_BLINK:
+        return 170;
+
+    case SPELL_SUBLIMATION_OF_BLOOD:
+        return 150;
+
+    // Less boost is needed because of their higher level
+    case SPELL_OZOCUBUS_ARMOUR:
+    case SPELL_PASSWALL:
+    case SPELL_SWIFTNESS:
+        return 120;
+
+    default:
+        return 100;
+    }
+}
+
+spell_type choose_parchment_spell(int item_level, spschool school,
+                                  int fixed_spell_level)
+{
+    // Keep ISPEC_GOOD_ITEM from being absurdly overweighted to the top end.
+    item_level = min(30, item_level);
+
+    // Calculate spell level weights based on item level.
+    int lv_weight[9];
+    for (int i = 0; i < 9; ++i)
+        lv_weight[i] = 100 - min(90, (int)(floor(pow(abs(i - item_level / 5) * 2, 2)) + (i * 5)));
+
+    vector<pair<spell_type, int>> weights;
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_player_book_spell(spell)
+            || school != spschool::none && !spell_typematch(spell, school)
+            || fixed_spell_level > 0 && spell_difficulty(spell) != fixed_spell_level)
+        {
+            continue;
+        }
+
+        const int splevel = spell_difficulty(spell);
+        const int weight = _spell_base_weight(spell) * lv_weight[splevel-1];
+        const pair <spell_type, int> weight_pair = { spell, weight };
+        weights.push_back(weight_pair);
+    }
+
+    // If somehow we have been given criteria that match no spell at all, it's
+    // better to return some spell instead of SPELL_NO_SPELL.
+    if (weights.empty())
+        return SPELL_APPORTATION;
+
+    return *random_choose_weighted(weights);
+}
+
+static void _generate_book_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
+    else if (!one_chance_in(20))
+        item.sub_type = BOOK_PARCHMENT; // almost everything else is a parchment
     else
         item.sub_type = choose_book_type(item_level);
 
@@ -1333,25 +1419,10 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.skill = _choose_manual_skill();
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
-        // Preidentify.
-        item.flags |= ISFLAG_IDENTIFIED;
-        return; // rare enough without being replaced with randarts
     }
-
-    // Only randomly generate randart books for OBJ_RANDOM, since randart
-    // spellbooks aren't merely of-the-same-type-but-better, but
-    // have an entirely different set of spells.
-    if (allow_uniques && force_type == OBJ_RANDOM
-        && x_chance_in_y(101 + item_level * 3, 4000))
-    {
-        int choice = random_choose_weighted(
-            29, BOOK_RANDART_THEME,
-             1, BOOK_RANDART_LEVEL);
-
-        item.sub_type = choice;
-    }
-
-    if (item.sub_type == BOOK_RANDART_THEME)
+    else if (item.sub_type == BOOK_PARCHMENT)
+        item.plus = static_cast<int>(choose_parchment_spell(item_level));
+    else if (item.sub_type == BOOK_RANDART_THEME)
         build_themed_book(item, capped_spell_filter(20));
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
@@ -1865,8 +1936,6 @@ int items(bool allow_uniques,
 
     const bool force_good = item_level >= ISPEC_GIFT;
 
-    if (force_ego != 0)
-        allow_uniques = false;
 
     item.brand = force_ego;
 
@@ -1888,12 +1957,12 @@ int items(bool allow_uniques,
                                     10, OBJ_STAVES,
                                     25, OBJ_TALISMANS,
                                     45, OBJ_JEWELLERY,
-                                    45, OBJ_BOOKS,
+                                    46, OBJ_MISSILES,
                                     70, OBJ_WANDS,
+                                   155, OBJ_BOOKS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
-                                   156, OBJ_MISSILES,
                                    270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
@@ -1978,7 +2047,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_BOOKS:
-        _generate_book_item(item, allow_uniques, force_type, item_level);
+        _generate_book_item(item, force_type, item_level);
         break;
 
     case OBJ_STAVES:
@@ -2029,16 +2098,15 @@ int items(bool allow_uniques,
         break;
     }
 
-    if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
-        || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
-        || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.brand, false))
+    if (item_has_invalid_brand(item))
     {
-        mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
+        dprf(DIAG_DNGN, "Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false).c_str());
-        item.brand = 0;
+
+        if (is_artefact(item))
+            item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = 0;
+        else
+            item.brand = 0;
     }
 
     // Colour the item.
@@ -2078,6 +2146,18 @@ void reroll_brand(item_def &item, int item_level)
         die("can't reroll brands of this type");
     }
     item_set_appearance(item);
+}
+
+bool item_has_invalid_brand(const item_def& item)
+{
+    if (item.base_type == OBJ_WEAPONS)
+        return !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false);
+    else if (item.base_type == OBJ_ARMOUR)
+        return !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false);
+    else if (item.base_type == OBJ_MISSILES)
+        return !is_missile_brand_ok(item.sub_type, item.brand, false);
+
+    return false;
 }
 
 static bool _weapon_is_visibly_special(const item_def &item)
@@ -2135,6 +2215,38 @@ void item_set_appearance(item_def &item)
 
     default:
         break;
+    }
+}
+
+void lucky_upgrade_item(item_def& item)
+{
+    // Only have a chance to discover a better item on first spotting it.
+    if (item.flags & ISFLAG_SEEN)
+        return;
+
+    // 2-4% chance of upgrading an item.
+    if (!x_chance_in_y(you.get_mutation_level(MUT_LUCKY), 50))
+        return;
+
+    string old_name = uppercase_first(item.name(DESC_THE, false, true));
+    bool did_upgrade = false;
+
+    // Need to use the bespoke methods for weapons/armour so that it hands out
+    // plusses appropriately (or one ends up with tons of +0 randart armour,
+    // which isn't very useable).
+    if (item.base_type == OBJ_ARMOUR)
+        did_upgrade = _try_make_armour_artefact(item, 0, ISPEC_RANDART, 0);
+    else if (item.base_type == OBJ_WEAPONS)
+        did_upgrade = _try_make_weapon_artefact(item, 0, ISPEC_RANDART, true, 0);
+    else
+        did_upgrade = make_item_randart(item);
+
+    if (did_upgrade)
+    {
+        // Messaging is really weird if we don't do this, and it seems a
+        // relatively unimportant freebie.
+        identify_item(item);
+        mprf("<cyan>Lucky! %s was actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
     }
 }
 

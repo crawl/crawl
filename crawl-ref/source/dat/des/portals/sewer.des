@@ -259,8 +259,8 @@ ENDMAP
 
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
-SUBST: W = WWWWW1
-KMONS: 1 = river rat / adder / rat / ribbon worm
+NSUBST: W = 3:1 / 3 = 1W / 3 = 1WWW / *:W
+KMONS:  1 = river rat / adder / rat / ribbon worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
@@ -687,7 +687,7 @@ ITEM:    any scroll / any potion
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww, c = c x:1
 NSUBST:  d = 2:d / * = d..., e = 2:e / * = e...
-NSUBST:  - = 84 = 1... / *:.
+NSUBST:  - = 74 = 1... / *:.
 SUBST:   2 = 2.
 : sewer_setup(_G)
 MAP
@@ -728,15 +728,16 @@ NAME:   sewer_hellmonk_circle_the_drain
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   bullfrog
-MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach
-KMONS:  3 = brain worm / adder / river rat
+MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach / \
+        river rat w:5 / dart slug w:5
+KMONS:  3 = brain worm / adder
 KFEAT:  3 = shallow_water
 ITEM:   any scroll
 : item(dgn.loot_potions)
 NSUBST: d = 1:1 / * = de, f = 1:1 / * = de
 NSUBST: W = 4:2 / *:W, 2 = 2:2 / * = 2W
 SUBST:  - = WWWW.
-NSUBST: . = 6:2 / 12 = 2. / *:.
+NSUBST: . = 10:2 / 12 = 2. / *:.
 SUBST:  " = W., ~ = WW.
 COLOUR: 3 = lightgreen
 : sewer_setup(_G)
@@ -744,7 +745,7 @@ MAP
            ccccccccccc
        cccccdddWWWWWWccccc
      ccc---cdddWWWWWWWW-3ccc
-   ccc--...ccccccccccWW----ccc
+   ccc--...ccccccccccWW3---ccc
   cc--.....3--------cccww..--cc
  cc-...-----------..--cccw...wcc
  c-...-cccccccccccc...--ccw...wc
@@ -758,7 +759,7 @@ ccw..wcc-...ccc~""""~~~--cc-..-cc
  cw...wcc--...cccccccccccc-...-c
  ccw...wccc--..-----------...-cc
   cc--..wwccc--------3.....--cc
-   ccc----WWcccccccccc...--ccc
+   ccc---3WWcccccccccc...--ccc
      ccc3-WWWWWWWWfffc---ccc
        cccccWWWWWWfffccccc
            ccccccccccc
@@ -809,17 +810,18 @@ SUBST:  - = WW...
 MONS:   kobold, jackal
 KMONS:  3 = Pargi / crocodile w:20, crocodile
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:300")
-NSUBST: ! = 2:2 / 4 = 2.. / *:., 1 = 1:1 / * = 1... / *:.
+ITEM:   skeleton
+NSUBST: ! = 3:2 / 4 = 2.. / *:., 1 = 2:1 / * = 1... / *:.
 : sewer_setup(_G)
 MAP
    ccccccccc
    c%*c3c*%c
-   c*-c-c-*c
+   c*-cec-*c
    ccc---ccc
     cc---cc
     c-----c
-   cc.---.cc
-   c..-c-..c
+   cc2---2cc
+   ce.-c-.ec
   cc.-ccc-.cc
   c.--ccc--.c
   c--ccccc--c
@@ -899,7 +901,7 @@ xxYwwww2wwww<XxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwwww.XxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxwwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxYwwwwww.XXxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
-xxxYwwwwwwww..XXxxxxxxxxxxxxX.wwwwwwwwYxxxx
+xxxYwwwwwwww..XxxxxxxxxxxxxxX.wwwwwwwwYxxxx
 xxxYwwwwwwww..XXxxxxxxxxxxXXX.wwwwwwwwYxxxx
 xxxxwwwwwwwwww..XxxxxxxxxX...wwwww2wwwwYxxx
 xxxxYwwww2wwwwww.XxxxxxXX.wwwwwwwwwwwwwYxxx
@@ -1199,7 +1201,7 @@ ENDMAP
 ############################################################################
 # Tree sewer. by co
 # This sewer is structured as a tree, in the sense that there are no loops.
-# At each endpoint there is  monster or loot.
+# At each endpoint there's monsters and loot.
 # At least you won't go in circles...
 #
 NAME:   sewer_co_tree
@@ -1215,7 +1217,7 @@ KITEM:  3 = stone
 : kitem("f =  " .. dgn.loot_scrolls)
 # less water in the middle, more at the endpoints.
 SUBST:  ~ = WWWW., - = WW..., " = W...
-NSUBST: ? = 4 = ef / * = 112233
+NSUBST: ? = 4 = ef / 1:2 / 2:3 / * = 112233
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
@@ -1424,7 +1426,7 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                walk_dist = 0, excl_rad = 0 }
 : else
 KMONS:   34 = kobold brigand / kobold brigand zombie
-KMONS:   5 = phantom / crocodile skeleton
+KMONS:   5 = phantom / crocodile zombie
 KFEAT:   B = altar_kikubaaqudgha
 SUBST:   F : VY
 : end
@@ -1441,27 +1443,27 @@ MAP
                                           c<c
                                          ccdcc
                                         ccd4dcc
-                                        c-111-c
+                                        c-1.1-c
                xxxxxxxxxxxxxxxxxxxxxxxxxc-...-c
                xwwwwwwwwwwwwwwww-W.+1W-xc-...-c
                xwwwwwwwwwwwwwwww-W.x1W-xc-...-c
                x---wwwwwwwwwwwww-W.x1W-xc-...-c
                xWW--wwwwwwwwwww--W.x1W-xc-...-c
-               xWWW-wwwwwwwwww--W..x1W-xcc+++cc
+               xWWW-wwwwwwwwww--W..x.W-xcc+++cc
                xWWW----ww-ww---W...x.W-xc.....ccccccccc
-               xxWxxxxWxxWxxWxxx1xxxx.xcc..F...c------cc
+               xxWxxxxWxxWxxWxxx1xxxx.xcc.cFc..c------cc
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.............1www-...+.F.B3..+.....15d<c
+               x-W............11www-...+.F.B3..+......5d<c
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.xxxxWxWWxxx-x1xxxx.xcc..F...c------cc
+               x-W.xxxxWxWWxxx-x1xxxx.xcc.cFc..c------cc
                x-W.xww------w-WW...x.W-xc.....ccccccccc
-               x-W.xwwwwwwwwww--W..x1W-xcc+++cc
+               x-W.xwwwwwwwwww--W..x.W-xcc+++cc
                x-W.xwwwwwwwwwww--W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W1xwwwwwwwwwwww-W.+1W-xc-...-c
 xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-...-c
-x----------------w1xWW-wwwwwww-WWWWWWW-xc-111-c
+x----------------w1xWW-wwwwwww-WWWWWWW-xc-1.1-c
 xWWWWWWWWWWWWWWWww.WWW-wwwwwww--WWWWWW-xccd6dcc
 x...............1.1xW-wwwwwwwwww-------x ccdcc
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  c<c
@@ -1488,9 +1490,9 @@ MONS:   endoplasm w:25 / rat / ball python / giant cockroach / adder w:5 /\
 KMONS:  2 = jelly
 SUBST:  . = W..
 NSUBST: - = 32 = 1W.. / * = W..
-NSUBST: ! = 60 = 1WW. / * = W.
-NSUBST: 2 = 1:2 / *= 2W
-NSUBST: d = 4:d / *= d..
+NSUBST: ! = 54 = 1WW. / * = W.
+NSUBST: 2 = 1:2 / * = 2W
+NSUBST: d = 4:d / * = d..
 KFEAT:  B = altar_jiyva / altar_xom w:1
 : sewer_setup(_G)
 MAP

@@ -734,7 +734,7 @@ ORIENT:   encompass
 KMONS:    1 = vault guard
 KMONS:    2 = place:Vaults:$
 KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\
-              titan / tentacled monstrosity / stone giant / lich w:5 /\
+              titan / undying armoury / stone giant / lich w:5 /\
               ancient lich / place:Vaults:$ w:40
 KMONS:    4 = shadow dragon
 KMONS:    5 = shadow dragon

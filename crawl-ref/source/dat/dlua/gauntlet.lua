@@ -535,7 +535,13 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "cacodemon", min = 1, max = 1},
-    second = {mons = "neqoxec", min = 0, max = 3},
+    second = {mons = "drude", min = 1, max = 2},
+    plant  = "demonic",
+    weight = 5
+  },
+  {
+    first  = {mons = "zykzyl", min = 1, max = 1},
+    second = {mons = "neqoxec", min = 0, max = 1},
     loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5

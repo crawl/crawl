@@ -35,6 +35,7 @@
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "tiles-build-specific.h"
 #include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
@@ -143,7 +144,8 @@ void player::set_position(const coord_def &c)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const bool real_move = (c != pos());
+    const coord_def old_pos = pos();
+    const bool real_move = (c != old_pos);
     actor::set_position(c);
 
     if (real_move)
@@ -161,6 +163,12 @@ void player::set_position(const coord_def &c)
 
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }
+
+#ifdef USE_TILE
+    // Remove the old player marker from the minimap
+    if (in_bounds(old_pos))
+        tiles.update_minimap(old_pos);
+#endif
 }
 
 bool player::swimming() const
@@ -734,6 +742,9 @@ bool player::go_berserk(bool intentional, bool potion)
     mpr("You feel mighty!");
 
     int dur = (20 + random2avg(19,2)) / 2;
+    if (potion && you.has_mutation(MUT_EFFICIENT_METABOLISM))
+        dur *= 2;
+
     you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.

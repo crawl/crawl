@@ -14,7 +14,7 @@ aptitudes:
   wl: 5
   ranged weapons: -1
   throwing: -1
-  armour: -2
+  armour: -1
   dodging: -2
   stealth: 5
   shields: -1

@@ -159,8 +159,11 @@ static void _update_feat_at(const coord_def &gp)
     if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (you.is_nervous() && you.see_cell(gp) && !monster_at(gp))
+    if (you.is_nervous() && you.see_cell(gp)
+        && (!monster_at(gp) || !monster_at(gp)->visible_to(&you)))
+    {
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
+    }
 
     if ((feat_is_stone_stair(feat)
          || feat_is_escape_hatch(feat))

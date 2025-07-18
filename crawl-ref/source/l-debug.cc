@@ -463,6 +463,11 @@ LUAFN(debug_check_moncasts)
         dprf("Forcing %s to cast %s", m1->name(DESC_THE, true).c_str(),
                                                 spell_title(spell));
         handle_mon_spell(m1);
+
+        // Heal 'target' after each spell, to make sure we don't kill it in the
+        // process of testing.
+        if (m2)
+            m2->heal(10000);
     }
     return 1;
 }

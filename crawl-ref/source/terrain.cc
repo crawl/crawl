@@ -37,6 +37,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
@@ -475,7 +476,8 @@ bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL
       || feat == DNGN_GRANITE_STATUE
-      || feat == DNGN_METAL_STATUE;
+      || feat == DNGN_METAL_STATUE
+      || feat == DNGN_ZOT_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?
@@ -2575,7 +2577,7 @@ void ice_wall_damage(monster &mons, int delay)
 
 void frigid_walls_damage(int delay)
 {
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack())
             continue;
@@ -2664,6 +2666,10 @@ static void _descent_reveal_around(coord_def p)
     {
         if (cell_see_cell_nocache(p, *ri))
         {
+            monster* mons = monster_at(*ri);
+            if (mons)
+                view_monster_equipment(mons);
+
             force_show_update_at(*ri);
             update_item_at(*ri, true);
             set_terrain_visible(*ri);

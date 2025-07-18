@@ -52,7 +52,7 @@ static feature_def feat_defs[] =
     DNGN_RUNED_DOOR, "runed door", "runed_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(LIGHTBLUE),
-    FFT_OPAQUE | FFT_SOLID | FFT_NOTABLE, MF_DOOR,
+    FFT_OPAQUE | FFT_SOLID, MF_DOOR,
 },
 
 {
@@ -80,7 +80,7 @@ static feature_def feat_defs[] =
     DNGN_RUNED_CLEAR_DOOR, "runed translucent door", "runed_clear_door",
     DCHAR_DOOR_CLOSED, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(LIGHTCYAN),
-    FFT_SOLID | FFT_NOTABLE, MF_DOOR,
+    FFT_SOLID, MF_DOOR,
 },
 
 {
@@ -221,6 +221,14 @@ static feature_def feat_defs[] =
     DCHAR_STATUE, NUM_DCHAR_TYPES,
     COLOUR_IS(DARKGREY),
     FFT_SOLID, MF_WALL,
+},
+
+{
+    // Names remapped based on orb in the game
+    DNGN_ZOT_STATUE, "zot statue", "zot_statue",
+    DCHAR_STATUE, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY),
+    FFT_SOLID | FFT_NOTABLE, MF_WALL,
 },
 
 {

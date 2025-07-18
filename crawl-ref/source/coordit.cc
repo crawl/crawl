@@ -530,6 +530,7 @@ coord_def fair_adjacent_iterator::operator *() const noexcept
 
 void fair_adjacent_iterator::operator++()
 {
+    remaining_count--;
     if (!remaining_count)
         return;
     std::uint_fast8_t rand_index = random2(remaining_count) + 1;
@@ -538,7 +539,6 @@ void fair_adjacent_iterator::operator++()
     std::uint_fast8_t last_value = _get_number_at_index(remaining,
         remaining_count);
     _set_number_at_index(remaining, rand_index, last_value);
-    remaining_count--;
 }
 
 void fair_adjacent_iterator::operator++(int)

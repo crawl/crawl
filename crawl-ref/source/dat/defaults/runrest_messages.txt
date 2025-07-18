@@ -13,6 +13,7 @@ ignore += You walk carefully through the
 ignore += The winds around you calm down.
 ignore += wailing of tortured souls fills the air!
 ignore += your flames die down
+ignore += You feel your existence waver again
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.

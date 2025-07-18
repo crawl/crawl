@@ -498,16 +498,33 @@ tileidx_t tileidx_player()
     case transformation::storm:
         break;
     // animals
-    case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
+    case transformation::bat:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_BAT_GARGOYLE;
+        else
+            ch = TILEP_TRAN_BAT;
+        break;
+    case transformation::spider:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_SPIDER_GARGOYLE;
+        else
+            ch = TILEP_TRAN_SPIDER;
+        break;
 #if TAG_MAJOR_VERSION == 34
-    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
     case transformation::porcupine:
 #endif
-    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
+    case transformation::pig:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_PIG_GARGOYLE;
+        else
+            ch = TILEP_TRAN_PIG;
+        break;
     // non-animals
     case transformation::serpent:
         if (you.species == SP_FELID)
             ch = TILEP_TRAN_SERPENT_FELID;
+        else if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_SERPENT_GARGOYLE;
         else
             ch = TILEP_TRAN_SERPENT;
         break;
@@ -516,14 +533,34 @@ tileidx_t tileidx_player()
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
+    case transformation::bat_swarm:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_BAT_SWARM_GARGOYLE;
+        else
+            ch = TILEP_TRAN_BAT_SWARM;
+        break;
     case transformation::walking_scroll: ch = TILEP_TRAN_WALKING_SCROLL; break;
-    case transformation::rime_yak:  ch = TILEP_TRAN_RIME_YAK;  break;
-    case transformation::sun_scarab: ch = TILEP_TRAN_SUN_SCARAB; break;
+    case transformation::rime_yak:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_RIME_YAK_GARGOYLE;
+        else
+            ch = TILEP_TRAN_RIME_YAK;
+        break;
+    case transformation::sun_scarab:
+        if (you.species == SP_GARGOYLE)
+            ch = TILEP_TRAN_SUN_SCARAB_GARGOYLE;
+        else
+            ch = TILEP_TRAN_SUN_SCARAB;
+        break;
     case transformation::sphinx:
         if (you.species == SP_FELID)
             ch = TILEP_TRAN_SPHINX_FELID;
-        else if (you.equipment.get_first_slot_item(SLOT_BARDING))
+        else if (you.species == SP_GARGOYLE)
+            if (you.equipment.get_first_slot_item(SLOT_BARDING))
+                ch = TILEP_TRAN_SPHINX_BARDING_GARGOYLE;
+            else
+                ch = TILEP_TRAN_SPHINX_GARGOYLE;
+            else if (you.equipment.get_first_slot_item(SLOT_BARDING))
             ch = TILEP_TRAN_SPHINX_BARDING;
         else
             ch = TILEP_TRAN_SPHINX;
@@ -534,6 +571,7 @@ tileidx_t tileidx_player()
         {
         case SP_OCTOPODE:          ch = TILEP_TRAN_DRAGON_OCTOPODE; break;
         case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;    break;
+        case SP_GARGOYLE:          ch = TILEP_TRAN_DRAGON_GARGOYLE;    break;
         case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;    break;
         case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;   break;
         case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;     break;
@@ -551,6 +589,7 @@ tileidx_t tileidx_player()
         switch (you.species)
         {
         case SP_ARMATAUR: ch = TILEP_TRAN_SLAUGHTER_ARMATAUR;  break;
+        case SP_GARGOYLE: ch = TILEP_TRAN_SLAUGHTER_GARGOYLE;  break;
         case SP_NAGA:     ch = TILEP_TRAN_SLAUGHTER_NAGA;      break;
         case SP_FELID:    ch = TILEP_TRAN_SLAUGHTER_FELID;     break;
         case SP_OCTOPODE: ch = TILEP_TRAN_SLAUGHTER_OCTOPODE;  break;

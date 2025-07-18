@@ -220,10 +220,10 @@ struct bolt
     mon_attitude_type attitude = ATT_HOSTILE; // attitude of whoever fired the bolt
     int foe_ratio = 0;           // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected
-    int foes_hurt;               // number of foes actually hurt
-    int foes_helped;             // number of foes actually helped
-    int friends_hurt;            // number of friends actually hurt
-    int friends_helped;          // number of friends actually helped
+    int foes_hurt = 0;               // number of foes actually hurt
+    int foes_helped = 0;             // number of foes actually helped
+    int friends_hurt = 0;            // number of friends actually hurt
+    int friends_helped = 0;          // number of friends actually helped
 
     beam_tracer* tracer = nullptr;
 
@@ -448,7 +448,6 @@ set<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur
 void init_zap_index();
 void clear_zap_info_on_exit();
 
-int zap_power_cap(zap_type ztype);
 bool zap_explodes(zap_type ztype);
 bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);

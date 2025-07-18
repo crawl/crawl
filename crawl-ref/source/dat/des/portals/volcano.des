@@ -979,14 +979,18 @@ xxlllllllllllllXlllllXllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
             xxxxxx  xxx
 ENDMAP
 
-# XXX: This could use a map redesign in general
-# regarding where the loot chamber is hidden?...
+# XXX: Need more skeletons for earlier, need more fiery undead to make
+# any of this make sense, possibly also more randomization of chambers.
 NAME:    vts_original
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    troll skeleton / spriggan skeleton / naga skeleton
-MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
+MONS:    salamander draugr ; trident ego:flaming / \
+         centaur draugr ; long sword ego:flaming / \
+         ogre draugr ; mace ego:flaming
+MONS:    wyvern draugr ; hand axe ego:flaming / \
+         elephant draugr ; mace ego:flaming / \
+         black mamba draugr ; short sword ego:flaming
 MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
                             dire flail ego:flaming pre_id | \
                             great sword ego:flaming pre_id
@@ -1006,9 +1010,9 @@ xxxxxxxxxxxxxxxxxxD.y.$Lxx
 xxxxxxxxxcccccccx..y.1Lllx
 xxxxxxxxxc..Y..cD.xxx.lllx
 cccccccccc.....+.xxx.xllJx
-+...G....+..2..cccxxx.x.xx
-+...$....+.1<1.?4cxxxx.xxx
-+...G....+..2..cccxxxxxxxx
++...G....+..1..cccxxx.x.xx
++...$....+..<2.?4cxxxx.xxx
++...G....+..1..cccxxxxxxxx
 cccccccccc.....cxxxxxxxxxx
 xaaaaxxc4c..Y..cxxxxxxxxxx
 xa||accc?ccccc?cccbbbbbxxx
@@ -1024,8 +1028,12 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    troll skeleton / spriggan skeleton / naga skeleton
-MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
+MONS:    salamander draugr ; trident ego:flaming / \
+         centaur draugr ; long sword ego:flaming / \
+         ogre draugr ; mace ego:flaming
+MONS:    wyvern draugr ; hand axe ego:flaming / \
+         elephant draugr ; mace ego:flaming / \
+         black mamba draugr ; short sword ego:flaming
 MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
                             dire flail ego:flaming pre_id | \
                             great sword ego:flaming pre_id
@@ -1040,15 +1048,15 @@ xxxxcccccxxxxxxxxxxxxxxxxx
 xxxxc...cxxxxxxxxxxxxxxxxx
 xxxcc.<.cccxxxccccvvvvvxxx
 xccc......ccccc..$v$$$vxxx
-cc1.........3....$X$$$vxxx
-.ccc.c2.c.ccccc..$v...vxxx
-...+...5..cxxxccccvv+vvxxx
-.ccc.c2.c.ccccc..$X2.2vxxx
-cc1.........3....$v.5.vxxx
+cc2...........3..$X$$$vxxx
+.ccc.c..c.ccccc..$v...vxxx
+...+...1..cxxxccccvv+vvxxx
+.ccc.c..c.ccccc..$X2.2vxxx
+cc2...........3..$v.5.vxxx
 xccc......ccccc..$X...vxxx
 xxxcc.cc.ccddecccvvvv+vxxx
-xxxxc3cc3c1eeg+^.+4Y..vvvx
-xxccc.cc.cccccccYvvv..+1vx
+xxxxc.cc.c1eeg+^.+4Y..vvvx
+xxccc3cc3cccccccYvvv..+5vx
 xxc...cc...c...c..3v+vvvvx
 xxc...cc...c...+.5.vffvxxx
 xxc$$$cc$$$+$$$c3..+fgvxxx

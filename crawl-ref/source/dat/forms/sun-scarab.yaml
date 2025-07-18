@@ -18,7 +18,7 @@ has_hair: no
 has_bones: no
 has_feet: yes
 has_ears: no
-special_damage: 2d4+4/3
+special_damage: 2d2+8/5
 special_damage_name: Flare Dmg
 shout_verb: hiss
 shout_volume: -4

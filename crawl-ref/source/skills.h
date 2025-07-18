@@ -58,8 +58,9 @@ int one_level_cost(skill_type sk);
 float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
+int calc_skill_cost_level(int xp, int start);
 int calc_skill_cost(int skill_cost_level);
-void check_skill_cost_change();
+void check_skill_cost_change(bool quiet = false);
 
 bool skill_default_shown(skill_type sk);
 void reassess_starting_skills(bool balance_djinn = true);
@@ -81,7 +82,7 @@ void train_skills(bool simu = false);
 bool skill_trained(int i);
 static inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
 void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE, bool recalculate_order = true);
-void set_skill_level(skill_type skill, double amount);
+void set_skill_level(skill_type skill, double amount, bool quiet = false);
 
 int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
@@ -91,13 +92,16 @@ const char *skill_abbr(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
 
+string special_conduct_title(skill_type best_skill, uint8_t skill_rank);
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
     species_type species = you.species,
-    bool dex_better = you.base_stats[STAT_DEX] >= you.base_stats[STAT_STR],
+    int dex = you.base_stats[STAT_DEX], int str = you.base_stats[STAT_STR],
+    int intel = you.base_stats[STAT_INT],
     god_type god = you.religion,
-    int piety = you.piety);
+    int piety = you.raw_piety, bool conducts = true);
+
 unsigned get_skill_rank(unsigned skill_lev);
 
 string player_title(bool the = true);
@@ -125,7 +129,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 vector<skill_type> get_crosstrain_skills(skill_type sk);
 int get_crosstrain_points(skill_type sk);
 
-int elemental_preference(spell_type spell, int scale = 1);
+int destructive_elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);

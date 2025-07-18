@@ -69,7 +69,7 @@ spret cast_ignite_poison(actor *agent, int pow, bool fail,
 spret cast_unravelling(coord_def target, int pow, bool fail);
 string mons_inner_flame_immune_reason(const monster *mons);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
-int get_mercury_weaken_chance(int victim_hd, int pow);
+int get_mercury_weaken_chance(int victim_hd);
 dice_def poisonous_vapours_damage(int pow, bool random);
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail);
 bool safe_discharge(coord_def where, bool check_only = false,
@@ -110,11 +110,6 @@ actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
-
-int dazzle_chance_numerator(int hd);
-int dazzle_chance_denom(int pow);
-bool dazzle_target(actor *victim, const actor *agent, int pow);
-spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer = false);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool tracer = false);
@@ -174,6 +169,7 @@ dice_def gastronomic_damage(int pow, bool random);
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
 
+dice_def jinxbite_damage(int pow, bool random);
 void attempt_jinxbite_hit(actor& victim);
 dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim, bool quiet = false);

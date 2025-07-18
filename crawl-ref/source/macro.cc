@@ -2045,7 +2045,6 @@ bool is_synthetic_key(int key)
     case CK_MOUSE_CMD:
     case CK_MOUSE_MOVE:
     case CK_REDRAW:
-    case CK_RESIZE:
         return true;
     default:
         return false;

@@ -10,8 +10,9 @@ holiness: [demonic]
 will: 180
 attacks:
  - {type: bite, flavour: cold, damage: 35}
- - {type: claw, damage: 15}
- - {type: trample, flavour: trample, damage: 15}
+ - {type: bite, flavour: cold, damage: 35}
+ - {type: bite, flavour: cold, damage: 35}
+ - {type: trample, flavour: trample, damage: 25}
 hd: 17
 hp_10x: 3230
 ac: 20

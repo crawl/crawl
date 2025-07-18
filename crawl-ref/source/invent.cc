@@ -97,7 +97,7 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(i.slot);
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -345,7 +345,7 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
 
 string slot_description()
 {
-    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+    return make_stringf("%d/%d gear slots", inv_count(INVENT_GEAR), MAX_GEAR);
 }
 
 void InvMenu::set_title(const string &s)
@@ -383,6 +383,59 @@ int InvMenu::pre_process(int key)
     else if (key == '-')
         _mode_special_drop = false;
     return key;
+}
+
+bool InvMenu::process_key(int key)
+{
+    // Allow tab to move between item categories (since using item category
+    // hotkeys in the drop menu doesn't really work for this purpose as it will
+    // select many things at once instead).
+    if (key == CK_RIGHT || key == CK_LEFT)
+    {
+        // Find the first category below our current cursor position.
+        int start = last_hovered >= 0 ? last_hovered : 0;
+        int target = -1;
+        if (key == CK_RIGHT)
+        {
+            for (size_t i = start; i < items.size(); ++i)
+            {
+                if (items[i]->level == MEL_SUBTITLE)
+                {
+                    target = i+1;
+                    break;
+                }
+            }
+        }
+        // Find the first category above our current cursor position.
+        else if (key == CK_LEFT)
+        {
+            for (int i = start - 2; i >= 0; --i)
+            {
+                if (items[i]->level == MEL_SUBTITLE)
+                {
+                    target = i+1;
+                    break;
+                }
+            }
+        }
+
+        // Stop if we didn't find any.
+        if (target < 0)
+            return true;
+
+        // Otherwise, hover the first item of this category and try to display
+        // the entire category on screen (or as much as we can, anyway.)
+        auto snap_range = hotkey_range(items[target]->hotkeys.back());
+        snap_in_page(snap_range.second);
+        set_hovered(snap_range.first);
+#ifdef USE_TILE_WEB
+        webtiles_update_scroll_pos(true);
+#endif
+
+        return true;
+    }
+
+    return Menu::process_key(key);
 }
 
 static bool _item_is_permadrop_candidate(const item_def &item)
@@ -440,8 +493,7 @@ bool InvMenu::examine_index(int i)
     {
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
-        unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
+        const int invidx = ie->item->link;
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
@@ -511,6 +563,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any pieces of jewellery.";
     case OSEL_AMULET:
         return "You aren't carrying any amulets.";
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return "You aren't carrying any jewellery or talismans.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
@@ -521,8 +575,8 @@ string no_selectables_message(int item_selector)
         return "None of your equipped items are cursed.";
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
-    case OSEL_WORN_JEWELLERY:
-        return "You aren't wearing any rings or amulets.";
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return "You aren't wearing any rings, amulets, or talismans.";
     case OSEL_WORN_EQUIPABLE:
         return "You aren't wearing anything.";
     case OSEL_EQUIPABLE:
@@ -611,6 +665,19 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
             tileset.emplace_back(base_item);
 
         tileset.emplace_back(idx);
+
+        // Add overlays for parchments, based on the schools of their spell.
+        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_PARCHMENT)
+        {
+            spell_type spell = static_cast<spell_type>(item.plus);
+            const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+            const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+
+            if (school1 > 0)
+                tileset.emplace_back(school1);
+            if (school2 > 0)
+                tileset.emplace_back(school2);
+        }
 
         if (ch != 0)
         {
@@ -708,6 +775,7 @@ int sort_item_qty(const InvEntry *a);
 int sort_item_slot(const InvEntry *a);
 bool sort_item_identified(const InvEntry *a);
 bool sort_item_charged(const InvEntry *a);
+int sort_item_consumable_usefulness(const InvEntry *a);
 
 int sort_item_qty(const InvEntry *a)
 {
@@ -715,7 +783,7 @@ int sort_item_qty(const InvEntry *a)
 }
 int sort_item_slot(const InvEntry *a)
 {
-    return a->item->link;
+    return letter_to_index(a->item->slot);
 }
 
 bool sort_item_identified(const InvEntry *a)
@@ -725,8 +793,25 @@ bool sort_item_identified(const InvEntry *a)
 
 bool sort_item_charged(const InvEntry *a)
 {
-    return a->item->base_type != OBJ_WANDS
-           || !item_ever_evokable(*(a->item));
+    return !is_xp_evoker(*a->item)
+                || evoker_charges(a->item->sub_type) <= 0;
+}
+
+int sort_item_consumable_usefulness(const InvEntry *a)
+{
+    if (inventory_category_for(*a->item) != INVENT_CONSUMABLE)
+        return 100;
+
+    if (is_useless_item(*a->item))
+        return 100;
+    if (is_emergency_item(*a->item))
+        return 0;
+    else if (is_good_item(*a->item))
+        return 1;
+    else if (is_dangerous_item(*a->item))
+        return 3;
+    else
+        return 2;
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -779,6 +864,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
           { "slot",      compare_item_fn<int, sort_item_slot> },
+          { "usefulness", compare_item_fn<int, sort_item_consumable_usefulness> },
       };
 
     list.clear();
@@ -980,7 +1066,7 @@ vector<SelItem> InvMenu::get_selitems() const
     for (MenuEntry *me : sel)
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(me);
-        selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
+        selected_items.emplace_back(inv->item->link, inv->selected_qty,
                                     inv->item, inv->has_star());
     }
     return selected_items;
@@ -1205,8 +1291,8 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
-    case OSEL_WORN_JEWELLERY:
-        return item_is_equipped(i) && item_is_selected(i, OBJ_JEWELLERY);
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return item_is_equipped(i) && item_is_selected(i, OSEL_JEWELLERY_OR_TALISMAN);
 
     case OSEL_AMULET:
         return itype == OBJ_JEWELLERY && jewellery_is_amulet(i);
@@ -1218,10 +1304,14 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_EQUIPABLE:
         return item_is_selected(i, OBJ_ARMOUR)
             || item_is_selected(i, OSEL_WIELD)
-            || item_is_selected(i, OBJ_JEWELLERY);
+            || item_is_selected(i, OBJ_JEWELLERY)
+            || item_is_selected(i, OBJ_TALISMANS);
 
     case OSEL_MARKED_ITEMS:
         return i.flags & ISFLAG_MARKED_FOR_MENU;
+
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return i.base_type == OBJ_JEWELLERY || i.base_type == OBJ_TALISMANS;
 
     default:
         return false;
@@ -1388,9 +1478,6 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       &Options.drop_filter,
                       _drop_selitem_text,
                       &preselected_items);
-
-    for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
 
     return items;
 }
@@ -1593,11 +1680,10 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
-            return true;
-
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+        if (is_artefact(item) && (artefact_property(item, ARTP_CONTAM)
+                                  || artefact_property(item, ARTP_DRAIN)
+                                  || artefact_property(item, ARTP_FRAGILE)
+                                  || artefact_property(item, ARTP_BANE)))
         {
             return true;
         }
@@ -1745,6 +1831,8 @@ int prompt_invent_item(const char *prompt,
             break;
         }
 
+        // Item chosen by menu.
+        item_def* chosen = nullptr;
         // TODO: it seems like for some uses of this function, `*` shouldn't
         // be allowed at all, e.g. evoke.
         if (keyin == '?' || keyin == '*')
@@ -1799,7 +1887,7 @@ int prompt_invent_item(const char *prompt,
                 // hacky, but lets the inscription checks below trip
                 // TODO: this code should not rely on keyin, it breaks cmd
                 // bindings
-                keyin = items[0].slot;
+                keyin = items[0].item->slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
             {
@@ -1807,6 +1895,10 @@ int prompt_invent_item(const char *prompt,
                 ret = PROMPT_GOT_SPECIAL;
                 break;
             }
+
+            // Mark the item chosen by the menu, one way or the other.
+            if (items.size() > 0)
+                chosen = &you.inv[items[0].item->link];
         }
 
         if (isadigit(keyin))
@@ -1833,7 +1925,10 @@ int prompt_invent_item(const char *prompt,
         }
         else if (isaalpha(keyin))
         {
-            ret = letter_to_index(keyin);
+            if (chosen)
+                ret = chosen->link;
+            else
+                ret = letter_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");

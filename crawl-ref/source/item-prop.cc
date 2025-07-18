@@ -2920,6 +2920,13 @@ bool item_is_jelly_edible(const item_def &item)
     if (item.base_type == OBJ_MISCELLANY)
         return false;
 
+    // Don't eat spellbooks. (They're the 'artefacts' of parchments now.)
+    if (item.base_type == OBJ_BOOKS
+        && item.sub_type != BOOK_PARCHMENT && item.sub_type != BOOK_MANUAL)
+    {
+        return false;
+    }
+
     // Don't eat mimics.
     if (item.flags & ISFLAG_MIMIC)
         return false;
@@ -2973,7 +2980,7 @@ vector<equipment_slot> get_all_item_slots(const item_def& item)
     case OBJ_WEAPONS:
     case OBJ_STAVES:
         if (you.hands_reqd(item) == HANDS_TWO)
-            return {SLOT_WEAPON_STRICT, SLOT_OFFHAND};
+            return {SLOT_WEAPON_STRICT, SLOT_TWOHANDER_OFFHAND};
         else
             return {SLOT_WEAPON};
 
@@ -3110,7 +3117,7 @@ string talisman_type_name(int type)
     case TALISMAN_WEREWOLF: return "lupine talisman";
     case TALISMAN_FORTRESS: return "fortress talisman";
     case TALISMAN_STATUE:   return "granite talisman";
-    case TALISMAN_HIVE:     return "honeycomb talisman";
+    case TALISMAN_HIVE:     return "hive talisman";
     case TALISMAN_DRAGON:   return "dragon-coil talisman";
     case TALISMAN_SPHINX:   return "riddle talisman";
     case TALISMAN_VAMPIRE:  return "sanguine talisman";
@@ -3253,10 +3260,31 @@ void seen_item(item_def &item)
         && item.is_identified()
         && !you.type_ids[item.base_type][item.sub_type])
     {
+        // If items of this type were in our pack, announce that we gained
+        // knowledge of them.
+        item_def* held = nullptr;
+        for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+        {
+            if (you.inv[i].base_type == item.base_type
+                && you.inv[i].sub_type == item.sub_type)
+            {
+                held = &you.inv[i];
+                mprf("You learned that %s %s actually %s.",
+                        held->name(DESC_YOUR).c_str(),
+                        held->quantity > 1 ? "are" : "is",
+                        held->name(DESC_A, false, true).c_str());
+                break;
+            }
+        }
+
         // Can't cull shop items here -- when called from view, we shouldn't
         // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
         identify_item_type(item.base_type, item.sub_type);
+
+        // Possibly adjust the letter of a held item.
+        if (held)
+            auto_assign_item_slot(*held);
     }
 }
 
@@ -3627,6 +3655,17 @@ bool is_equippable_item(const item_def& item)
         default:
             return false;
     }
+}
+
+bool is_usable_talisman(const item_def& item)
+{
+    if (item.base_type != OBJ_TALISMANS)
+        return false;
+
+    if (item.sub_type == TALISMAN_PROTEAN)
+        return false;
+
+    return cannot_evoke_item_reason(&item, false, false).empty();
 }
 
 bool ring_plusses_matter(int ring_subtype)

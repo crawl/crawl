@@ -434,11 +434,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
             else
                 attk_type = AT_HIT;
         }
-        else if (attk_type == AT_TRUNK_SLAP && attacker->type == MONS_SKELETON)
-        {
-            // Elephant trunks have no bones inside.
-            attk_type = AT_NONE;
-        }
     }
     else
     {
@@ -1392,6 +1387,11 @@ bool attack::apply_damage_brand(const char *what)
         if (responsible->is_player())
             did_god_conduct(DID_CHAOS, 2 + random2(3));
     }
+
+    // Since this adds the reaping brand to all attacks, check it after all
+    // other brands.
+    if (attacker->is_player() && you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+        did_god_conduct(DID_EVIL, 2 + random2(3));
 
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();

@@ -6,6 +6,7 @@ skill: {min: 12, max: 20}
 talisman: fortress
 melds: [offhand, aux]
 ac: {base: 3}
+body_ac_mult: {base: 70, scaling: 65}
 resists: {poison: -1, corr: 1}
 unarmed: {base: 5, scaling: 5}
 unarmed_name: pincers

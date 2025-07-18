@@ -33,6 +33,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-act.h"
@@ -58,6 +59,7 @@
 #include "transform.h"
 #include "view.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 static bool _slime_split_merge(monster* thing);
 
@@ -114,7 +116,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
         if (!act)
             continue;
 
-        if (act->is_player() && get_contamination_level())
+        if (act->is_player() && player_harmful_contamination())
         {
             msg = " basks in your mutagenic energy and changes!";
             break;
@@ -444,6 +446,7 @@ static bool _slime_merge(monster* thing)
             && other_thing->has_ench(ENCH_HEXED) == thing->has_ench(ENCH_HEXED)
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
+            && other_thing->has_ench(ENCH_FIGMENT) == thing->has_ench(ENCH_FIGMENT)
             && !_disabled_merge(other_thing))
         {
             // We can potentially merge if doing so won't take us over
@@ -813,7 +816,7 @@ void treant_release_fauna(monster& mons)
     int count = mons.mangrove_pests;
     bool created = false;
 
-    monster_type fauna_t = MONS_HORNET;
+    monster_type fauna_t = one_chance_in(4) ? MONS_RAVEN : MONS_HORNET;
 
     for (int i = 0; i < count; ++i)
     {
@@ -839,8 +842,16 @@ void treant_release_fauna(monster& mons)
 
     if (created && you.can_see(mons))
     {
-        mprf("Angry insects surge out from beneath %s foliage!",
-             mons.name(DESC_ITS).c_str());
+        if (fauna_t == MONS_RAVEN)
+        {
+            mprf("Jet-black ravens fly out from beneath %s foliage!",
+                 mons.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Angry insects surge out from beneath %s foliage!",
+                mons.name(DESC_ITS).c_str());
+        }
     }
 }
 
@@ -1414,7 +1425,7 @@ void solar_ember_blast()
     if (!ember->has_ench(ENCH_SPELL_CHARGED))
     {
         simple_monster_message(*ember, " glows brighter.");
-        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(50, 70)));
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(70, 90)));
         return;
     }
 
@@ -1448,4 +1459,86 @@ void solar_ember_blast()
 
     ember->hurt(ember, random_range(7, 10));
     ember->del_ench(ENCH_SPELL_CHARGED);
+}
+
+void tesseract_action(monster& mon)
+{
+    // Only operate logic on a single tesseract on the floor
+    if (mon.props.exists(TESSERACT_DUMMY_KEY) || mon.behaviour == BEH_SLEEP)
+        return;
+
+    // When we become alerted, start the spawn timer and announce ourselves to the player.
+    if (mon.behaviour != BEH_SLEEP && !mon.props.exists(TESSERACT_START_TIME_KEY))
+    {
+        mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
+        mark_milestone("tesseract.activate", "activated a tesseract");
+
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type != MONS_BOUNDLESS_TESSERACT)
+                continue;
+
+            env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+            set_terrain_seen(mi->pos());
+            view_update_at(mi->pos());
+
+#ifdef USE_TILE
+            tiles.update_minimap(mi->pos());
+#endif
+
+            // Mark any other tesseracts on the floor as dummies, so they don't operate independently.
+            if (mi->mid != mon.mid)
+            {
+                mi->props[TESSERACT_DUMMY_KEY] = true;
+                behaviour_event(*mi, ME_ALERT);
+            }
+        }
+
+        you.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
+        mon.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
+        mon.props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
+        mon.props[TESSERACT_XP_KEY] = 15000;
+    }
+
+    // Handle regular spawning
+    int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
+
+    // Don't act as if more than 1000 turns have passed off-level (in case the
+    // player goes to do Extended in the meantime).
+    if (you.elapsed_time - timer > 10000)
+        timer = you.elapsed_time - 10000;
+
+    // Catch up however many spawns should have happened since the last time
+    // we activated.
+    while (you.elapsed_time >= timer)
+    {
+        const int time_passed = you.elapsed_time - mon.props[TESSERACT_START_TIME_KEY].get_int();
+        const int interval = max(200, 600 - (time_passed / 25));
+
+        timer += random_range(interval, interval * 4 / 3);
+
+        mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
+        mg.place = level_id::current();
+        mg.place.depth = 7;
+        mg.flags |= MG_FORBID_BANDS;
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+        mg.foe = MHITYOU;
+        mg.non_actor_summoner = "a Boundless Tesseract";
+
+        monster* spawn = mons_place(mg);
+
+        if (!spawn)
+            continue;
+
+        // Allow the monster to be a normal monster if there is XP left in our
+        // pool; otherwise, make them unrewarding (to make early spawns feel
+        // less unfun while still removing any incentive to farm them).
+        int& xp_pool = mon.props[TESSERACT_XP_KEY];
+        int xp = exp_value(*spawn);
+
+        if (xp_pool >= xp)
+            xp_pool -= xp;
+        else
+            spawn->flags |= (MF_HARD_RESET | MF_NO_REWARD);
+    }
 }

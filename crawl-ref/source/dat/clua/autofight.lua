@@ -302,6 +302,9 @@ local function is_candidate_for_attack(x,y)
     end
     return false
   end
+  if m:is_damage_immune() then
+    return false
+  end
   if m:attitude() == ATT_HOSTILE
       or m:attitude() == ATT_NEUTRAL and m:is("frenzied") then
     return true

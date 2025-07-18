@@ -38,6 +38,7 @@ int branch_ood_cap(branch_type branch)
     case BRANCH_ELF:
     case BRANCH_SWAMP:
     case BRANCH_SPIDER:
+    case BRANCH_ZOT:
         return 7;
     case BRANCH_CRYPT:
     case BRANCH_TOMB:
@@ -270,7 +271,7 @@ static bool _not_skeletonable(monster_type mt)
         return true;
     if (!(mons_class_holiness(mt) & MH_NATURAL))
         return true;
-    return !mons_skeleton(mt);
+    return !mons_has_skeleton(mt);
 }
 
 void debug_monpick()

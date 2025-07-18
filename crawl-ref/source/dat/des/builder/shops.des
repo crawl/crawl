@@ -78,6 +78,12 @@ hook("post_place", function()
     end
 
     dgn.place_maps { tag = "shop", count = num }
+
+    if (you.branch() ~= "D") then
+      if ((you.branch() ~= "Shoals" and you.branch() ~= "Snake") or crawl.coinflip()) then
+        dgn.place_maps { tag = "parchment_shop", count = 1 }
+      end
+    end
 end)
 }}
 MAP
@@ -92,6 +98,13 @@ NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 270
 KFEAT:  O = any shop
+MAP
+O
+ENDMAP
+
+NAME:   parchment_shop
+TAGS:   allow_dup extra parchment_shop transparent unrand
+KFEAT:  O = book shop
 MAP
 O
 ENDMAP
@@ -839,16 +852,11 @@ KMASK:  DEFH = no_monster_gen
 KMASK:  DEFH = no_item_gen
 KMASK:  DEFH = no_trap_gen
 KMASK:  DEFH = opaque
-{{
--- The skellingtons are purely decorative.
-local skeletons = {"human", "elf", "orc", "ogre", "merfolk", "naga", "kobold",
-                   "gnoll", "minotaur", "spriggan", "troll", "felid",
-                   "draconian", "tengu", "demonspawn", "demigod"}
-kitem("D = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("E = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("F = " .. util.random_from(skeletons) .. " skeleton" )
-kitem("H = " .. util.random_from(skeletons) .. " skeleton" )
-}}
+# The skellingtons are purely decorative.
+: kitem("D : " .. vault_species_skeletons(_G, "early"))
+: kitem("E : " .. vault_species_skeletons(_G, "late"))
+: kitem("F : " .. vault_species_skeletons(_G, "dungeon"))
+: kitem("H : " .. vault_species_skeletons(_G, "all"))
 MAP
    .---
    .-E-
@@ -2129,7 +2137,7 @@ MONS:  orb spider zombie / weeping skull / laughing skull
 MONS:  glass eye / tengu reaver, lich / fire giant w:5
 MONS:  occultist w:5 / tengu conjurer / rakshasa w:5
 : else -- Zot
-MONS:  orb of fire, draconian scorcher, lich
+MONS:  orb of appropriateness, draconian scorcher, lich
 : end
 MAP
    ccccc

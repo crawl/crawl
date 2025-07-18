@@ -3,7 +3,7 @@ glyph: {char: "d", colour: magenta}
 flags: [speaks, cold_blood]
 exp: 997
 genus: draconian
-will: 140
+will: 120
 attacks:
  - {type: hit, damage: 20}
 hd: 14

@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -55,57 +56,78 @@ vector<monster*> riddle_targs;
 #define HAS_USED_DRAGON_TALISMAN_KEY "used_dragon_talisman"
 
 // transform slot enums into flags
-#define SLOTF(s) (1 << s)
+constexpr int SLOTF(equipment_slot s) {
+    return 1 << s;
+}
 
-static const int EQF_NONE = 0;
+static constexpr int EQF_NONE = 0;
 
 // Weapons and offhand items
-static const int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
-                             | SLOTF(SLOT_WEAPON_OR_OFFHAND);
+static constexpr int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
+                                | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // auxen
-static const int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
-                              | SLOTF(SLOT_BARDING)
-                              | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
+static constexpr int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                                 | SLOTF(SLOT_BARDING)
+                                 | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
 // core body slots (statue form)
-static const int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
-                              | SLOTF(SLOT_BARDING)
-                              | SLOTF(SLOT_BODY_ARMOUR);
+static constexpr int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
+                                  | SLOTF(SLOT_BARDING)
+                                  | SLOTF(SLOT_BODY_ARMOUR);
 // everything you can (W)ear
-static const int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
+static constexpr int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
                             | SLOTF(SLOT_OFFHAND) | SLOTF(SLOT_WEAPON_OR_OFFHAND);
 // everything but jewellery
-static const int EQF_PHYSICAL = EQF_HELD | EQF_WEAR;
+static constexpr int EQF_PHYSICAL = EQF_HELD | EQF_WEAR;
 // just rings
-static const int EQF_RINGS = SLOTF(SLOT_RING);
+static constexpr int EQF_RINGS = SLOTF(SLOT_RING);
 // all jewellery
-static const int EQF_JEWELLERY = SLOTF(SLOT_RING) | SLOTF(SLOT_AMULET);
+static constexpr int EQF_JEWELLERY = EQF_RINGS | SLOTF(SLOT_AMULET);
 // everything
-static const int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
+static constexpr int EQF_ALL = EQF_PHYSICAL | EQF_JEWELLERY;
 
 string Form::melding_description(bool itemized) const
 {
+    vector<string> tags;
+
     if (!itemized)
     {
         // this is a bit rough and ready...
         if (blocked_slots == EQF_ALL)
             return "Your equipment is entirely melded.";
-        else if (blocked_slots == EQF_PHYSICAL)
-            return "Your armour is entirely melded.";
-        else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
-            return "Your equipment is almost entirely melded.";
-        else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
-                && (you_can_wear(SLOT_GLOVES, false) != false
-                    || you_can_wear(SLOT_BOOTS, false) != false
-                    || you_can_wear(SLOT_BARDING, false) != false
-                    || you_can_wear(SLOT_BODY_ARMOUR, false) != false))
+        else if (blocked_slots == EQF_PHYSICAL
+                 && !(you.has_mutation(MUT_NO_ARMOUR) && you.has_mutation(MUT_NO_GRASPING)))
         {
-            return "Your equipment is partially melded.";
+            return "Your weapons and armour are melded.";
         }
-        // otherwise, rely on the form description to convey what is melded.
+        else
+        {
+            for (int i = SLOT_WEAPON; i < SLOT_GIZMO; ++i)
+            {
+                equipment_slot slot = static_cast<equipment_slot>(i);
+                if (testbits(blocked_slots, SLOTF(slot))
+                    && you.equipment.num_slots[slot] > 0)
+                {
+                    tags.emplace_back(lowercase_string(equip_slot_name(slot)));
+                }
+            }
+            if (!tags.empty())
+            {
+                if (testbits(blocked_slots, EQF_AUXES))
+                    return "Your auxiliary armour is melded.";
+                else if (tags.size() > 5)
+                    return "Your equipment is almost entirely melded";
+                else
+                {
+                    return make_stringf("Your %s %s melded.",
+                                        comma_separated_line(tags.begin(), tags.end()).c_str(),
+                                        tags.size() > 1 ? "are" : "is");
+                }
+            }
+        }
+        // Nothing melded (for this player, anyway).
         return "";
     }
 
-    vector<string> tags;
     if (blocked_slots == EQF_ALL)
         tags.emplace_back("All Equipment");
     else if (blocked_slots == EQF_PHYSICAL)
@@ -115,7 +137,7 @@ string Form::melding_description(bool itemized) const
         for (int i = SLOT_WEAPON; i < SLOT_GIZMO; ++i)
         {
             equipment_slot slot = static_cast<equipment_slot>(i);
-            if (testbits(blocked_slots, SLOTF(i)))
+            if (testbits(blocked_slots, SLOTF(slot)))
                 tags.emplace_back(equip_slot_name(slot));
         }
     }
@@ -136,7 +158,7 @@ static const form_entry &_find_form_entry(transformation form)
     for (const form_entry &entry : formdata)
         if (entry.tran == form)
             return entry;
-    die("No formdata entry found for form %d", (int)form);
+    die("No formdata entry found for form %d", static_cast<int>(form));
 }
 
 Form::Form(const form_entry &fe)
@@ -149,6 +171,7 @@ Form::Form(const form_entry &fe)
       changes_anatomy(fe.changes_anatomy),
       changes_substance(fe.changes_substance),
       holiness(fe.holiness),
+      is_badform(fe.is_badform),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
       has_ears(fe.has_ears),
@@ -158,7 +181,7 @@ Form::Form(const form_entry &fe)
       flesh_equivalent(fe.flesh_equivalent),
       special_dice_name(fe.special_dice_name),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), ac(fe.ac), ev(fe.ev),
+      resists(fe.resists), ac(fe.ac), ev(fe.ev), body_ac_mult(fe.body_ac_mult),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
       fakemuts(fe.fakemuts), badmuts(fe.badmuts),
       can_fly(fe.can_fly), can_swim(fe.can_swim), offhand_punch(fe.offhand_punch),
@@ -276,6 +299,22 @@ int Form::get_ac_bonus(int skill) const
 int Form::ev_bonus(int skill) const
 {
     return max(0, scaling_value(ev, false, skill, 1));
+}
+
+/**
+ * What percentile modifier to base body armour AC does the player get while
+ * in this form?
+ *
+ * @param level The shapeshifting skill level to calculate this bonus for.
+ *              (Default is -1, meaning 'Use the player's current skill')
+ *
+ * @return  A percentile bonus/penalty to base body armour AC. (ie: 0 is
+ *          equivalent to 'no change', while '20' is '+20% body armour AC' and
+ *          '-20' is '-20% body armour AC')
+ */
+int Form::get_body_ac_mult(int skill) const
+{
+    return max(-100, scaling_value(body_ac_mult, false, skill, 1));
 }
 
 int Form::get_base_unarmed_damage(bool random, int skill) const
@@ -621,20 +660,6 @@ public:
         return make_stringf("Your %s revert%s to %s normal proportions.",
                             blade_parts().c_str(), singular ? "s" : "",
                             singular ? "its" : "their");
-    }
-
-    /**
-     * How much AC do you lose from body armour from being in this form?
-     * 80% at `min_skill` or below, 0% at `max_skill` or above.
-     */
-    int get_base_ac_penalty(int base, int skill = -1) const override
-    {
-        const int scale = 100;
-        const int lvl = max(skill == -1 ? get_level(scale) : skill * scale, min_skill * scale);
-        const int shortfall = max(0, max_skill * scale - lvl);
-        const int div = (max_skill - min_skill + 2) * scale;
-        // Round up.
-        return (shortfall * base + div - 1) / div;
     }
 
     /**
@@ -995,11 +1020,6 @@ public:
     {
         return divided_scaling(FormScaling().Base(10).Scaling(8), random, skill, 100);
     }
-
-    int get_base_ac_penalty(int base, int /*skill*/ = -1) const override
-    {
-        return base * 4 / 5;
-    }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1187,13 +1207,6 @@ FormFortressCrab() : Form(transformation::fortress_crab) { }
 public:
     static const FormFortressCrab &instance() { static FormFortressCrab inst; return inst; }
 
-    // XXX: Used here for how much AC you *gain* in this form (by giving a negative 'penalty'))
-    int get_base_ac_penalty(int base, int skill = -1) const override
-    {
-        const int mult = scaling_value(FormScaling().Base(75).Scaling(75), false, skill);
-        return -(base * mult / 100);
-    }
-
     // Number of clouds placed
     int get_effect_size(int skill = -1) const override
     {
@@ -1229,7 +1242,7 @@ public:
         return "Your tendrils shrivel away.";
     }
 
-    string get_description(bool past_tense) const
+    string get_description(bool past_tense) const override
     {
         return make_stringf("You %s a mane of long, stinging tendrils on your head.",
                             past_tense ? "had" : "have");
@@ -1372,6 +1385,11 @@ bool form_can_fly(transformation form)
 bool form_can_swim(transformation form)
 {
     return get_form(form)->player_can_swim();
+}
+
+bool form_is_bad(transformation form)
+{
+    return get_form(form)->is_badform;
 }
 
 // Used to mark transformations which change the basic matter the player is
@@ -1559,16 +1577,19 @@ static bool _flying_in_new_form(transformation which_trans, const item_def* tali
     // items which grant equipment slots can cause effects that are hard to
     // predict without actually simulating them.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
-    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<int8_t> unwind_talisman(you.cur_talisman);
     unwind_var<transformation> unwind_default_form(you.default_form);
     unwind_var<transformation> unwind_form(you.form);
 
     you.default_form = which_trans;
     you.form = which_trans;
     if (talisman)
-        you.active_talisman = *talisman;
+    {
+        ASSERT(in_inventory(*talisman));
+        you.cur_talisman = talisman->link;
+    }
     else
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
 
     you.equipment.unmeld_all_equipment(true);
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
@@ -1612,6 +1633,50 @@ bool feat_dangerous_for_form(transformation which_trans,
 
     // Beyond this, we require flight.
     return !form_can_fly(which_trans) && !_flying_in_new_form(which_trans, talisman);
+}
+
+/**
+ * Checks if it would be unsafe for the player to transform into a specific form
+ * at the present time (and prints an appropriate message, if so)
+ */
+bool transforming_is_unsafe(transformation which_trans)
+{
+    if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+    {
+        mprf(MSGCH_PROMPT, "%s right now would cause you to %s!",
+                which_trans == transformation::none ? "Untransforming" : "Transforming",
+                env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+        return true;
+    }
+
+    // Now check if there are any items that would break if we changed form in
+    // this way.
+    unwind_var<player_equip_set> unwind_eq(you.equipment);
+    unwind_var<transformation> unwind_default_form(you.default_form);
+    unwind_var<transformation> unwind_form(you.form);
+
+    you.default_form = which_trans;
+    you.form = which_trans;
+
+    you.equipment.unmeld_all_equipment(true);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+
+    // Pretend incompatible items fell away.
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
+    for (item_def* item : forced_remove)
+    {
+        // Now see if any of them would break if they did so.
+        if (item->cursed()
+            || (is_artefact(*item) && artefact_property(*item, ARTP_FRAGILE)))
+        {
+            mprf(MSGCH_PROMPT, "%s right now would shatter %s!",
+                 which_trans == transformation::none ? "Untransforming" : "Transforming",
+                 item->name(DESC_YOUR).c_str());
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -1715,6 +1780,20 @@ static void _print_death_brand_changes(item_def *weapon, bool entering_death)
     }
 }
 
+static void _rip_net()
+{
+    if (you.attribute[ATTR_HELD])
+    {
+        int net = get_trapping_net(you.pos());
+        if (net != NON_ITEM)
+        {
+            mpr("The net rips apart!");
+            destroy_item(net);
+            stop_being_held();
+        }
+    }
+}
+
 /// Form-specific special effects. Should be in a class?
 static void _on_enter_form(transformation which_trans)
 {
@@ -1742,20 +1821,10 @@ static void _on_enter_form(transformation which_trans)
                     mpr("Your branches shred the web that entangled you.");
             }
         }
-        // Fall through to dragon form to leave nets.
+        _rip_net();
+        break;
 
     case transformation::dragon:
-        if (you.attribute[ATTR_HELD])
-        {
-            int net = get_trapping_net(you.pos());
-            if (net != NON_ITEM)
-            {
-                mpr("The net rips apart!");
-                destroy_item(net);
-                stop_being_held();
-            }
-        }
-
         // The first time the player becomes a dragon, given them a charge of
         // their breath weapon so they can actually use them.
         if (!you.props.exists(HAS_USED_DRAGON_TALISMAN_KEY)
@@ -1764,6 +1833,7 @@ static void _on_enter_form(transformation which_trans)
             gain_draconian_breath_uses(1);
             you.props[HAS_USED_DRAGON_TALISMAN_KEY] = true;
         }
+        _rip_net();
         break;
 
     case transformation::death:
@@ -1813,7 +1883,7 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int dur, transformation which_trans, bool scale_hp = true)
+static void _enter_form(int dur, transformation which_trans, bool using_talisman = true)
 {
     const bool was_flying = you.airborne();
 
@@ -1825,12 +1895,16 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
         mpr(get_form(which_trans)->transform_message());
     }
 
+    // If we're wielding a two-hander, shift it into the crab two-hander slot
+    // *before* melding gear (or it will be caught be melding offhand)
+    if (which_trans == transformation::fortress_crab)
+        you.equipment.shift_twohander_to_slot(SLOT_TWOHANDER_ONLY);
+
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots);
-
-    set_form(which_trans, dur, scale_hp);
+    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, false);
+    set_form(which_trans, dur, !using_talisman);
 
     if (you.digging && form_changes_anatomy(which_trans))
     {
@@ -1896,8 +1970,8 @@ static void _enter_form(int dur, transformation which_trans, bool scale_hp = tru
     // refresh equipment properties.
     you.equipment.update();
 
-    if (is_artefact(you.active_talisman))
-        equip_artefact_effect(you.active_talisman, nullptr, false);
+    if (using_talisman && is_artefact(*you.active_talisman()))
+        equip_artefact_effect(*you.active_talisman(), nullptr, false);
 
     // Update flight status now (won't actually land the player if we're still flying).
     if (was_flying)
@@ -1937,7 +2011,7 @@ bool transform(int dur, transformation which_trans, bool involuntary,
 {
     // Zin's protection.
     if (have_passive(passive_t::resist_polymorph)
-        && x_chance_in_y(you.piety, piety_breakpoint(5))
+        && x_chance_in_y(you.piety(), piety_breakpoint(5))
         && which_trans != transformation::none)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -1948,17 +2022,18 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         involuntary = true;
 
     if (!check_transform_into(which_trans, involuntary,
-                                using_talisman ? &you.active_talisman : nullptr))
+                                using_talisman ? you.active_talisman() : nullptr))
     {
         return false;
     }
 
     // If swapping to a different talisman of the same type, make sure to
     // activate properties of the new one.
-    if (you.form == which_trans && is_artefact(you.active_talisman))
+    if (using_talisman && you.form == which_trans
+        && is_artefact(*you.active_talisman()))
     {
         you.equipment.update();
-        equip_artefact_effect(you.active_talisman, nullptr, false);
+        equip_artefact_effect(*you.active_talisman(), nullptr, false);
 
         return true;
     }
@@ -1968,10 +2043,10 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
                && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
     {
-        untransform(true, !using_talisman);
+        untransform(true, !using_talisman, !using_talisman, which_trans);
     }
 
-    _enter_form(dur, which_trans, !using_talisman);
+    _enter_form(dur, which_trans, using_talisman);
 
     return true;
 }
@@ -1986,9 +2061,20 @@ bool transform(int dur, transformation which_trans, bool involuntary,
  *                       talisman-related shapeshifting, to prevent exploits
  *                       such as instantly healing via entering a -90% HP form
  *                       and then leaving it again immediately.)
+ * @param preserve_equipment    True if incompatible equipment should be melded
+ *                              instead of being unequipped (such as when
+ *                              entering a temporary form from a talisman that
+ *                              gave additional equipment slotsshifting).
+ * @param new_form       If this untransform is being done in the process of
+ *                       entering a new form, what form is that?
  */
-void untransform(bool skip_move, bool scale_hp)
+void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
+                 transformation new_form)
 {
+    // Skip if there's nothing that needs doing.
+    if (you.form == transformation::none)
+        return;
+
     const transformation old_form = you.form;
     const bool was_flying = you.airborne();
 
@@ -2013,6 +2099,9 @@ void untransform(bool skip_move, bool scale_hp)
     // This will keep merfolk boots melded, if mertail is currently active.
     you.equipment.unmeld_all_equipment();
 
+    if (old_form == transformation::fortress_crab)
+        you.equipment.shift_twohander_to_slot(SLOT_OFFHAND);
+
     // Update regarding talisman properties, just in case we didn't actually
     // meld or unmeld anything.
     you.equipment.update();
@@ -2030,17 +2119,32 @@ void untransform(bool skip_move, bool scale_hp)
             mprf(MSGCH_DURATION, "Your tiny sun winks out.");
         }
     }
+    else if (old_form == transformation::rime_yak)
+    {
+        you.duration[DUR_RIME_YAK_AURA] = 0;
+        end_terrain_change(TERRAIN_CHANGE_RIME_YAK);
+    }
+    else if (old_form == transformation::werewolf)
+        you.duration[DUR_WEREFURY] = 0;
 
     // If the player is no longer be eligible to equip some of the items that
     // they were wearing (possibly due to losing slots from their default form
-    // changing), calculate that now and make the fall off.
+    // changing), calculate that now. If they're outright exiting the form,
+    // make them fall off. If they're entering a temporary form, meld them.
+    // If they're returning back to the form that granted those slots in the
+    // first place, do nothing.
     vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
-    for (item_def* item : forced_remove)
+    if (preserve_equipment && new_form != you.default_form)
+        you.equipment.meld_equipment(forced_remove);
+    else if (!preserve_equipment)
     {
-        mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
-                item->cursed() ? ", shattering the curse!" : "");
+        for (item_def* item : forced_remove)
+        {
+            mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                    item->cursed() ? ", shattering the curse!" : "");
 
-        unequip_item(*item, false);
+            unequip_item(*item, false);
+        }
     }
 
     // Update skill boosts for the current state of equipment melds
@@ -2098,7 +2202,7 @@ void untransform(bool skip_move, bool scale_hp)
         riddle_targs.clear();
 }
 
-void return_to_default_form()
+void return_to_default_form(bool new_form)
 {
     if (you.default_form == transformation::none)
         untransform(false, false);
@@ -2108,8 +2212,8 @@ void return_to_default_form()
         // only be called in situations where those should end and transform()
         // will refuse to do that on its own)
         if (you.transform_uncancellable)
-            untransform(true, false);
-        transform(0, you.default_form, true, true);
+            untransform(true, false, !new_form, you.default_form);
+        transform(0, you.default_form, true, new_form);
     }
     ASSERT(you.form == you.default_form);
 }
@@ -2194,29 +2298,27 @@ void unset_default_form()
     set_default_form(transformation::none, nullptr);
 }
 
-void set_default_form(transformation t, const item_def *source)
+void set_default_form(transformation t, const item_def *talisman)
 {
-    item_def talisman = you.active_talisman;
-    you.active_talisman.clear();
-
-    if (is_artefact(talisman))
+    if (item_def* old_talisman = you.active_talisman())
     {
-        // We need to remove any artifact properties before running the unequip
-        // effects so that max health and magic are updated properly
-        you.equipment.update();
+        you.cur_talisman = -1;
+        if (is_artefact(*old_talisman))
+        {
+            // We need to remove any artifact properties before running the unequip
+            // effects so that max health and magic are updated properly
+            you.equipment.update();
 
-        unequip_artefact_effect(talisman, nullptr, false);
+            unequip_artefact_effect(*old_talisman, nullptr, false);
+        }
+        item_skills(*old_talisman, you.skills_to_hide);
     }
-    item_skills(talisman, you.skills_to_hide);
 
-    if (source)
+    if (talisman)
     {
-        you.active_talisman = *source; // iffy
-        // XXX: Make the copied talisman not appear to be in the player's
-        // inventory, so that examining it via the mutation menu won't display
-        // unusable button prompts to set skill target.
-        you.active_talisman.pos = coord_def();
-        item_skills(you.active_talisman, you.skills_to_show);
+        ASSERT(in_inventory(*talisman));
+        you.cur_talisman = talisman->link;
+        item_skills(*talisman, you.skills_to_show);
     }
 
     // This has to be done after checking item skills, otherwise the new active
@@ -2242,10 +2344,7 @@ void clear_form_info_on_exit()
 void sphinx_notice_riddle_target(monster* mon)
 {
     if (!mon->is_peripheral() && !mons_aligned(&you, mon))
-    {
-        mprf("Noticed %s.", mon->name(DESC_THE).c_str());
         riddle_targs.push_back(mon);
-    }
 }
 
 static int _riddle_score(const monster& mon)
@@ -2350,7 +2449,7 @@ bool maw_growl_check(const monster* mon)
     if (mons_class_can_leave_corpse(mons_species(mon->type))
         && !mon->is_summoned()
         && !(mon->flags & MF_HARD_RESET)
-        && one_chance_in(8))
+        && one_chance_in(7))
     {
         mprf("Your maw growls hungrily at %s.", mon->name(DESC_THE).c_str());
         noisy(you.shout_volume(), you.pos(), MID_PLAYER);

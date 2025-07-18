@@ -198,7 +198,12 @@ spret cast_summon_small_mammal(int pow, bool fail)
     else
         mon = MONS_QUOKKA;
 
-    if (!create_monster(_pal_data(mon, summ_dur(3), SPELL_SUMMON_SMALL_MAMMAL)))
+    if (monster* mons = create_monster(_pal_data(mon, summ_dur(3), SPELL_SUMMON_SMALL_MAMMAL)))
+    {
+        if (you.can_see(*mons))
+            mprf("%s appears in a puff of smoke.", mons->name(DESC_A).c_str());
+    }
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -293,7 +298,13 @@ spret cast_summon_cactus(int pow, bool fail)
 
     mgen_data mg = _pal_data(MONS_CACTUS_GIANT, summ_dur(3), SPELL_SUMMON_CACTUS);
     mg.hp = hit_points(pow + 27, 1);
-    if (!create_monster(mg))
+    if (monster* mons = create_monster(mg))
+    {
+        if (you.can_see(*mons))
+            mpr("A prickly colossus appears in a rush of desert wind.");
+    }
+
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -578,25 +589,25 @@ void do_dragon_call(int time)
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
- *                  since the last doom_howl call.
+ *                  since the last oblivion_howl call.
  */
-void doom_howl(int time)
+void oblivion_howl(int time)
 {
     // TODO: pull hound-count generation into a helper function
     int howlcalled_count = 0;
-    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    if (!you.props.exists(NEXT_OBLIVION_SPAWN_KEY))
+        you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
     // 1 nasty beast every 2-4 turns
     while (time > 0)
     {
-        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        const int time_to_call = you.props[NEXT_OBLIVION_SPAWN_KEY].get_int();
         if (time_to_call <= time)
         {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+            you.props[NEXT_OBLIVION_SPAWN_KEY] = random_range(20, 40);
             ++howlcalled_count;
         }
         else
-            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
+            you.props[NEXT_OBLIVION_SPAWN_KEY].get_int() -= time;
         time -= time_to_call;
     }
 
@@ -614,13 +625,13 @@ void doom_howl(int time)
 
         monster *mons = create_monster(mgen_data(howlcalled, BEH_HOSTILE,
                                                  target->pos(), target->mindex(),
-                                                 MG_FORCE_BEH).set_range(1));
+                                                 MG_FORCE_BEH).set_range(1, you.current_vision));
         if (mons)
         {
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
-            mons_add_blame(mons, "called by a doom hound"); // assumption!
+            mons_add_blame(mons, "called by an oblivion hound"); // assumption!
             check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
                               random_range(1,2), mons);
         }
@@ -1394,14 +1405,16 @@ spret cast_summon_horrible_things(int pow, bool fail)
         return spret::abort;
 
     fail_check();
+
+    int doom_cost = random_range(3, 7);
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("summon_horrible_things"));
-
-        // XXX: Temporary effect until something else is implemented.
-        temp_mutate(MUT_WEAK_WILLED, "glimpsing the beyond");
+        doom_cost *= 3;
     }
+
+    you.doom(doom_cost);
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
     int num_tmons = random2(pow) > 120 ? 2 : random2(pow) > 50 ? 1 : 0;
@@ -1429,6 +1442,8 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     if (!count)
         canned_msg(MSG_NOTHING_HAPPENS);
+    else
+        mpr("You open a gateway and unleash terrible monstrosities upon the world.");
 
     return spret::success;
 }
@@ -1486,6 +1501,7 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
                               LOS_DEFAULT_RANGE); di; ++di)
     {
         if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
+             && !feat_is_endless(env.grid(*di))
              && x_chance_in_y(pow, 150))
             || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
                 && !actor_at(*di) && !plant_forbidden_at(*di, true)))
@@ -2495,6 +2511,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
     { SPELL_DIVINE_ARMAMENT,          { 0, 1 } },
     { SPELL_FLASHING_BALESTRA,        { 0, 2 } },
+    { SPELL_BOLT_OF_FLESH,            { 0, 4 } },
     { SPELL_PHANTOM_BLITZ,            { 0, 2 } },
     { SPELL_SHADOW_PUPPET,            { 3, 3 } },
     { SPELL_SHADOW_TURRET,            { 2, 2 } },
@@ -2867,7 +2884,7 @@ spret kiku_unearth_wretches(bool fail)
         const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        const monster_type mon_type = pick_local_wretch(lev);
         ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
         // place a monster
         mgen_data mg(mon_type,
@@ -3326,7 +3343,9 @@ dice_def hellfire_mortar_damage(int pow)
 static bool _hellfire_stops_here(bolt& beam, coord_def pos)
 {
     return actor_at(pos) && !beam.ignores_monster(monster_at(pos))
-           || cell_is_solid(pos) && !beam.can_affect_wall(pos);
+           || cell_is_solid(pos)
+              && ((is_temp_terrain(pos) && !feat_is_diggable(orig_terrain(pos)))
+                  || !beam.can_affect_wall(pos));
 }
 
 spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
@@ -3374,7 +3393,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
     // Make the lava
     int dur = random_range(15, 19) * BASELINE_DELAY;
-    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    for (int i = 0; i < len; ++i)
     {
         const coord_def pos = beam.path_taken[i];
 
@@ -3606,9 +3625,12 @@ void launch_clockwork_bee(const actor& agent)
         bee->number = 3 + div_rand_round(pow, 15);
         bee->add_ench(mon_enchant(ENCH_HAUNTING, 1, targ, INFINITE_DURATION));
 
-        mprf("With a metallic buzz, %s clockwork bee launches itself at %s.",
-             agent.pronoun(PRONOUN_POSSESSIVE).c_str(),
-             targ->name(DESC_THE).c_str());
+        if (you.can_see(*bee))
+        {
+            mprf("With a metallic buzz, %s clockwork bee launches itself at %s.",
+                 agent.name(DESC_ITS).c_str(),
+                 targ->name(DESC_THE).c_str());
+        }
 
         bee->speed_increment = 80;
         bee->props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
@@ -3655,7 +3677,11 @@ spret cast_clockwork_bee(coord_def target, bool fail)
 
 void clockwork_bee_go_dormant(monster& bee)
 {
-    mpr("Your clockwork bee winds down and falls to the ground.");
+    if (you.can_see(bee))
+    {
+        mprf("%s clockwork bee winds down and falls to the ground.",
+             bee.summoner == MID_PLAYER ? "Your" : "The");
+    }
 
     int old_hd = bee.get_experience_level();
     int old_max_hp = bee.max_hit_points;
@@ -4715,7 +4741,7 @@ static int _rending_blade_power(int base_power)
 {
     const int mp_spent = max(0, you.magic_points - spell_difficulty(SPELL_RENDING_BLADE));
     const int mp_bonus = stepdown(mp_spent, 10);
-    return base_power * (100 + mp_bonus * 3) / 100;
+    return base_power * (100 + mp_bonus * 5) / 100;
 }
 
 dice_def rending_blade_damage(int power, bool include_mp)
@@ -4732,7 +4758,7 @@ spret cast_rending_blade(int pow, bool fail)
     fail_check();
 
     mgen_data blade = _pal_data(MONS_RENDING_BLADE, random_range(7, 10) * BASELINE_DELAY,
-                                SPELL_RENDING_BLADE, false);
+                                SPELL_RENDING_BLADE, false).set_range(1, 2);
 
     if (monster* mon = create_monster(blade))
     {
@@ -4755,9 +4781,7 @@ void trigger_rending_blade()
     {
         if (mi->type == MONS_RENDING_BLADE && mi->summoner == MID_PLAYER)
         {
-            // Only save up to 3 charges at once, so that axes aren't overly
-            // ridiclous and that you can't bank too many charges while the
-            // blade isn't positioned to act.
+            // Trigger at most 3 times per round, so that axes aren't overly ridiclous.
             mi->number = min((unsigned int)3, mi->number + 1);
             mi->speed_increment = 100;
             return;

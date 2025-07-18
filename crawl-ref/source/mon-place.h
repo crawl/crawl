@@ -66,18 +66,17 @@ monster* place_monster(mgen_data mg, bool force_pos = false, bool dont_place = f
  * Returns a monster class type of a zombie for generation
  * on the player's current level.
  * cs:         Restrict to monster types that fit this zombie type
- *             (e.g. monsters with skeletons for MONS_SKELETON_SMALL)
+ *             (e.g. monsters with skeletons for MONS_DRAUGR)
  * pos:        Check habitat at position.
- * for_corpse: Whether this monster is intended only for use as a potentially
- *             zombifiable corpse. (I.e., whether we care about its speed when
- *             placing in D...)
+ * for_wretch: Whether this monster is intended only for use by Kiku's
+ *             Unearth Wretches (which has some unique restrictions).
  * *********************************************************************** */
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs = MONS_NO_MONSTER,
                                             const coord_def& pos = coord_def(),
-                                            bool for_corpse = false);
+                                            bool for_wretch = false);
 
-monster_type pick_local_corpsey_monster(level_id place);
+monster_type pick_local_wretch(level_id place);
 
 void roll_zombie_hp(monster* mon);
 

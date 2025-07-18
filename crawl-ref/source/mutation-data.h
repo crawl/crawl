@@ -47,7 +47,7 @@ static const mutation_def mut_data[] =
   {"Your magical power will grow resistant to disruption."}
 },
 
-{ MUT_TOUGH_SKIN, 0, 3, mutflag::good | mutflag::anatomy | mutflag::substance,
+{ MUT_TOUGH_SKIN, 2, 3, mutflag::good | mutflag::anatomy | mutflag::substance,
   "tough skin",
 
   {"You have tough skin. (AC +1)",
@@ -157,7 +157,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_RESISTANCE,
 },
 
-{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::substance,
   "heat vulnerability",
 
   {"You are vulnerable to heat. (rF-)",
@@ -174,7 +174,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HEAT_VULNERABILITY,
 },
 
-{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::substance,
 
   "cold vulnerability",
 
@@ -219,7 +219,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SHOCK_RESISTANCE,
 },
 
-{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal | mutflag::substance,
+{ MUT_SHOCK_VULNERABILITY, 2, 1, mutflag::bad | mutflag::substance,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
@@ -257,6 +257,27 @@ static const mutation_def mut_data[] =
 
   TILEG_MUT_INHIBITED_REGENERATION,
 },
+
+{ MUT_FEED_OFF_SUFFERING, 4, 2, mutflag::good,
+   "feed off suffering",
+
+   {"You can sometimes gain power from killing poisoned or drained foes.",
+    "You can regularly gain power from killing poisoned or drained foes.", ""},
+   {"Vile energies swirl pleasantly through your soul.",
+    "The vile energy whirl more vigorously through your soul.", ""},
+   {"The vile energy swirling through your soul dissipates.",
+    "The vile energy whirling through your soul weakens.", ""},
+    TILEG_MUT_FEED_OFF_SUFFERING,
+},
+
+{ MUT_LUCKY, 4, 2, mutflag::good,
+   "lucky",
+
+   {"You discover slightly more artefacts.", "You discover more artefacts.", ""},
+   {"You feel fortune smile upon you.", "You feel fortune smile more brightly upon you.", ""},
+   {"You feel like your luck has run out.", "You feel a little less lucky.", ""},
+},
+
 #if TAG_MAJOR_VERSION == 34
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::bad,
@@ -358,6 +379,15 @@ static const mutation_def mut_data[] =
 
   {"You recover from draining at a normal speed again.", "", ""},
   TILEG_MUT_PERSISTENT_DRAIN,
+},
+
+{ MUT_CONTAMINATION_SUSCEPTIBLE, 5, 1, mutflag::bad,
+  "contamination susceptible",
+
+  {"You absorb twice as much mutagenic energy from being contaminated.", "", ""},
+  {"You feel more susceptible to contamination.", "", ""},
+  {"You feel less susceptible to contamination.", "", ""},
+  TILEG_MUT_CONTAMINATION_SUSCEPTIBLE,
 },
 
 { MUT_STRONG_WILLED, 5, 3, mutflag::good,
@@ -660,6 +690,15 @@ static const mutation_def mut_data[] =
    ""},
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
+
+{ MUT_PROTEAN_GRACE, 2, 1, mutflag::good,
+   "protean grace",
+
+   {"You are empowered by your non-innate mutations. (+", "", ""},
+   {"Mutagenic power surges through your limbs.", "", ""},
+   {"The mutagenic power surging through your limbs dissipates.", "", ""},
+   TILEG_MUT_PROTEAN_GRACE,
+ },
 
 { MUT_FRAIL, 10, 3, mutflag::bad,
   "frail",
@@ -1008,7 +1047,7 @@ static const mutation_def mut_data[] =
   {"The barb on your tail disappears.",
    "The barb on your tail seems less sharp.",
    "The barb on your tail seems less sharp."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_STINGER,
 },
 
 // Draconian/gargoyle only
@@ -1287,20 +1326,17 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_PASSIVE_MAPPING, 3, 3, mutflag::good,
+{ MUT_PASSIVE_MAPPING, 3, 2, mutflag::good,
   "sense surroundings",
 
-  {"You passively map a small area around you.",
-   "You passively map the area around you.",
-   "You passively map a large area around you."},
+  {"You passively map the area around you.",
+   "You passively map a large area around you.", ""},
 
   {"You feel a strange attunement to the structure of the dungeons.",
-   "Your attunement to dungeon structure grows.",
-   "Your attunement to dungeon structure grows further."},
+   "Your attunement to dungeon structure grows further.", ""},
 
   {"You feel slightly disoriented.",
-   "You feel slightly disoriented.",
-   "You feel slightly disoriented."},
+   "You feel slightly disoriented.", ""},
 
   TILEG_MUT_PASSIVE_MAPPING,
 },
@@ -1563,7 +1599,7 @@ static const mutation_def mut_data[] =
   {"A fragile, slimy shroud covers you, deflecting attacks.", "", ""},
   {"A thin film of slime covers your body.", "", ""},
   {"Your film of slime dries up.", "", ""},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_SLIME_SHROUD,
 },
 
 { MUT_ANTIMAGIC_BITE, 0, 1, mutflag::good | mutflag::anatomy,
@@ -1574,6 +1610,15 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
   TILEG_MUT_ANTIMAGIC_BITE,
 },
+
+{ MUT_EFFICIENT_METABOLISM, 3, 1, mutflag::good,
+   "efficient metabolism",
+
+   {"Your metabolism doubles the duration of potion status effects.", "", ""},
+   {"Your body churns, leaving you strangely parched.", "", ""},
+   {"Your body churns, leaving you strangely quenched.", "", ""},
+   TILEG_MUT_EFFICIENT_METABOLISM,
+ },
 
 { MUT_NO_POTION_HEAL, 3, 2, mutflag::bad,
   "no potion heal",
@@ -2055,7 +2100,7 @@ static const mutation_def mut_data[] =
    "Your stinger grows larger and begins to produce weakening toxins."},
 
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_WEAKNESS_STINGER,
 },
 
 { MUT_DEMONIC_TOUCH, 0, 3, mutflag::good | mutflag::anatomy | mutflag::need_hands,
@@ -2108,32 +2153,32 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad,
-  "inability to drink after injury",
+{ MUT_HOARD_POTIONS, 7, 2, mutflag::bad,
+  "potion hoarding",
 
-  {"You occasionally lose the ability to drink potions when taking damage.",
-   "You sometimes lose the ability to drink potions when taking damage.",
+  {"You refuse to drink potions in combat unless injured.",
+   "You refuse to drink potions in combat unless seriously injured.",
    ""},
-  {"You occasionally lose the ability to drink potions when taking damage.",
-   "You lose the ability to drink potions when taking damage more often.",
+  {"You feel a compulsion to reserve your potions for emergencies.",
+   "Your compulsion to reserve your potions grows more intense.",
    ""},
-  {"You no longer become unable to drink potions after taking damage.",
-   "You lose the ability to drink potions when taking damage less often.",
+  {"You feel willing to use your potions freely once again.",
+   "You feel less compelled to reserve your potions for emergencies.",
    ""},
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
 
-{ MUT_READ_SAFETY, 7, 2, mutflag::bad,
-  "inability to read after injury",
+{ MUT_HOARD_SCROLLS, 7, 2, mutflag::bad,
+  "scroll hoarding",
 
-  {"You occasionally lose the ability to read scrolls when taking damage.",
-   "You sometimes lose the ability to read scrolls when taking damage.",
+  {"You refuse to read scrolls in combat unless injured.",
+   "You refuse to read scrolls in combat unless seriously injured.",
    ""},
-  {"You occasionally lose the ability to read scrolls when taking damage.",
-   "You lose the ability to read scrolls when taking damage more often.",
+  {"You feel a compulsion to reserve your scrolls for emergencies.",
+   "Your compulsion to reserve your scrolls grows more intense.",
    ""},
-  {"You no longer become unable to read scrolls after taking damage.",
-   "You lose the ability to read scrolls when taking damage less often.",
+  {"You feel willing to use your scrolls freely once again.",
+   "You feel less compelled to reserve your scrolls for emergencies.",
    ""},
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
@@ -2767,6 +2812,14 @@ static const mutation_def mut_data[] =
    TILEG_MUT_SPELLCLAWS,
 },
 
+{ MUT_ACCURSED, 0, 1, mutflag::bad,
+  "accursed",
+
+  {"You recover more slowly from Doom and Banes.", "", ""},
+  {"You feel accursed.", "", ""},
+  {"You feel less accursed.", "", ""},
+},
+
 // Makhleb-specific mutations
 
 { MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good,
@@ -2909,5 +2962,4 @@ static const mutation_category_def category_mut_data[] =
   { RANDOM_BAD_MUTATION, "bad"},
   { RANDOM_SLIME_MUTATION, "slime"},
   { RANDOM_CORRUPT_MUTATION, "corrupt"},
-  { RANDOM_QAZLAL_MUTATION, "qazlal"},
 };

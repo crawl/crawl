@@ -25,18 +25,18 @@ MONS:    spriggan air mage, spriggan defender
 KMONS:   7 = the Enchantress
 KMONS:   0 = spark wasp / caustic shrike w:1 / stone giant w:5 / \
              tengu warrior band / tengu conjurer band / \
-             rakshasa / occultist w:5 / deep troll w:5 / \
+             rakshasa / chonchon band w:5 / deep troll w:5 / \
              glowing orange brain / green very ugly thing band / guardian sphinx
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / quicksilver dragon w:15 / \
              tengu reaver w:5 / juggernaut w:5
 KMONS:   aA = alderking
-KMONS:   J = caustic shrike skeleton
+KMONS:   J = caustic shrike zombie
 KMONS:   K = spriggan rider
 KMONS:   L = spriggan col:white name:baker n_suf ; robe . dagger
 KMONS:   M = death yak / thorn hunter w:3
 KMONS:   N = spriggan ; quarterstaff . robe
-KMONS:   O = dire elephant / emperor scorpion / anaconda w:5
+KMONS:   O = chonchon / emperor scorpion / anaconda w:4
 KMONS:   Q = bush
 KMONS:   R = plant
 KFEAT:   ~ = +
@@ -136,8 +136,8 @@ KMONS:  O = the Enchantress patrolling
 MONS:   spriggan defender, spriggan berserker, spriggan rider, spriggan air mage
 MONS:   faun w:5 / satyr / manticore w:5 / stone giant w:5
 MONS:   tengu warrior / ettin ; dire flail . dire flail / \
-        deep troll w:5 / shapeshifter w:5 / caustic shrike skeleton w:5
-MONS:   tengu conjurer w:20 / occultist w:5 / eleionoma w:20 / \
+        deep troll w:5 / shapeshifter w:5 / caustic shrike zombie w:5
+MONS:   tengu conjurer w:20 / chonchon band / eleionoma w:20 / \
         rakshasa / glowing orange brain w:5
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
             glowing shapeshifter hd:13 w:5 / quicksilver dragon / \
@@ -207,7 +207,7 @@ MONS:   the Enchantress patrolling, thorn hunter / spriggan defender
 MONS:   tengu reaver / glowing shapeshifter hd:13 w:5 / alderking
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow | arbalest / \
-        glowing orange brain w:5 / rakshasa w:20 / eleionoma w:15
+        glowing orange brain w:5 / rakshasa / chonchon / eleionoma
 KMONS:  L = water nymph
 KMONS:  P = plant
 ITEM:   gold q:1 / stone q:1 no_pickup w:20
@@ -265,7 +265,7 @@ MONS:   spriggan defender w:14 / thorn hunter
 MONS:   guardian sphinx w:20 / tengu reaver w:15 / alderking w:15 / \
         ettin w:5 ; giant club randart . giant club randart / caustic shrike
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
-        dire elephant w:5 / shambling mangrove w:3 / anaconda w:2
+        shambling mangrove w:3 / chonchon w:5
 MONS:   glowing orange brain w:5 / rakshasa w:15 / occultist / \
         eleionoma w:5 / glowing shapeshifter w:5 / stone giant w:4
 KFEAT:  C = cache of fruit

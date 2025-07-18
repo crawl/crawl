@@ -376,8 +376,8 @@ KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / chaos spawn
-KMONS:  E = ugly thing
-KMONS:  F = very ugly thing / glowing shapeshifter w:7
+KMONS:  E = ugly thing / neqoxec w:3
+KMONS:  F = very ugly thing / kobold fleshcrafter w:7
 : local g = "good_item no_pickup"
 : item("storm dragon scales " .. g .. " / shadow dragon scales " .. g .. " / " ..
 :      "quicksilver dragon scales " .. g .. " / buckler " .. g .. " / " ..
@@ -421,7 +421,7 @@ ENDMAP
 
 NAME:   hangedman_abyss_overflow_altar
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-MONS:   earth elemental
+MONS:   screaming refraction
 KFEAT:  A = altar_lugonu
 KFEAT:  B = dry_fountain
 KFEAT:  C = abyssal_stair
@@ -440,7 +440,7 @@ ENDMAP
 NAME:   hangedman_abyss_mock_shop
 TAGS:   no_monster_gen patrolling
 KMONS:  1 = water elemental / nothing w:5
-KMONS:  2 = earth elemental
+KMONS:  2 = screaming refraction
 KFEAT:  0 = abandoned_shop
 KFEAT:  1 = dry_fountain
 SUBST:  x = xcv, . = ...W
@@ -457,7 +457,7 @@ ENDMAP
 NAME:    hangedman_abyss_shoalhut
 TAGS:    no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
-         unseen horror / ynoxinul / snapping turtle skeleton w:15 / \
+         unseen horror / ynoxinul / snapping turtle simulacrum w:15 / \
          apocalypse crab w:1 / tentacled starspawn w:1
 KITEM:   d = $, $, demon trident / throwing net q:1 / longbow w:4 / \
              large rock q:8 w:4
@@ -561,15 +561,16 @@ ENDMAP
 
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
-MONS:    guardian serpent, great orb of eyes, glowing orange brain
-MONS:    boggart, rakshasa, cacodemon, shadow demon
+MONS:    kobold fleshcrafter / cognitogaunt, great orb of eyes
+MONS:    glowing orange brain, boggart, rakshasa
+MONS:    cacodemon / zykzyl, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
 KMONS:   9 = guardian sphinx
 KMONS:   & = lich
 KMONS:   @ = deep elf sorcerer
 KMONS:   Z = nonbase draconian
-ITEM:    randbook numspells:1 w:19 / randbook numspells:2 w:1
+ITEM:    parchment w:19 / randbook numspells:2 w:1
 ITEM:    scroll of amnesia pre_id / scroll of identify pre_id / \
          scroll of silence pre_id / scroll of noise pre_id
 KFEAT:   _ = altar_sif_muna
@@ -659,9 +660,10 @@ ENDMAP
 
 NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
-MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
+MONS:    shadow wraith / unseen horror / thrashing horror
+MONS:    lurking horror / screaming refraction w:4
 MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
-MONS:    large abomination / ghoul, ancient zyme
+MONS:    large abomination / cognitogaunt, ancient zyme
 MONS:    large slime creature w:12 / rakshasa w:2
 KMONS:   8 = starcursed mass
 KMONS:   9 = glass eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
@@ -669,7 +671,7 @@ KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
 KFEAT:   T = fountain_eyes
-ITEM:    randbook disc:summoning numspells:1 / \
+ITEM:    parchment disc:summoning / \
          scarf ego:shadows / scarf ego:invisibility / \
          wand of polymorph charges:20 / protean talisman randart / \
          shadow dragon scales good_item / any ally scroll q:1 pre_id
@@ -701,7 +703,7 @@ NAME:    hangedman_relentless_pull
 TAGS:    no_monster_gen no_item_gen
 MONS:    ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
 MONS:    tentacled starspawn / starcursed mass
-MONS:    very ugly thing / reaper, wretched star, lurking horror, ancient zyme
+MONS:    cognitogaunt / reaper, wretched star, lurking horror, ancient zyme
 ITEM:    partisan good_item / demon trident ego:distortion / \
          bardiche ego:chaos good_item w:5 / demon trident ego:chaos w:5 / \
          protean talisman randart / gold q:100
@@ -726,15 +728,15 @@ ENDMAP
 
 NAME:    hangedman_steaming_rock
 TAGS:    transparent
-MONS:    eye of devastation w:9 / nothing w:1
-KMONS:   2 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
-             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
-KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
+KMONS:   1 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
+             ugly thing w:5 / rakshasa w:5 / chaos spawn w:5 / \
+             screaming refraction
+KMONS:   2 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
-KMONS:   4 = apocalypse crab / death drake w:5
-KITEM:   2 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
-KITEM:   34 = wand of digging charges:1, staff of earth / staff of air / \
-              randbook disc:earth disc2:air numspells:1 / \
+KMONS:   3 = apocalypse crab / death drake w:5
+KITEM:   3 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
+KITEM:   23 = wand of digging charges:1, staff of earth / staff of air / \
+              parchment disc:earth w:5 / parchment disc:air w:5 / \
               mundane granite talisman w:20
 KFEAT:   ABCD = .
 SUBST:   c = cccbbv
@@ -758,7 +760,7 @@ MAP
 .cmmAcmccc.
 .cmAcmmmmcc.
 .cccmm   mcc.
- .1cm 322 mc.
+ ..cm 322 mc.
  ..cm 422 mc.
 .cccmm   mcc.
 .cmDcmmmmcc.
@@ -771,7 +773,7 @@ ENDMAP
 NAME:    hangedman_classic_abyss_death
 TAGS:    transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
-         skeleton / sixfirhy / smoke demon / neqoxec / \
+         sixfirhy / smoke demon / neqoxec / \
          efreet / rakshasa / glowing orange brain / ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
@@ -890,7 +892,7 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D, Depths, Abyss
 ITEM:    ring mail randart / scale mail randart / \
          kite shield good_item / any blast wand charges:1 / \
-         randbook numspells:1 spells:hailstorm
+         parchment of hailstorm
 : if you.in_branch("Abyss") then
 SHUFFLE: ABCDEF, "'
 SUBST:   A : cbx.., B : cbx., C : cbx.., D : cbx., E : cbx.., F : cbx.
@@ -982,7 +984,7 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
          dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
-         randbook numspells:1 spells:alistair's_intoxication
+         parchment of alistair's intoxication
 KFEAT:   ^ = harlequin's trap w:7 / devourer's trap w:13
 : if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = ddd.., X = xxcccb, x = xxxxxcccb
@@ -1039,11 +1041,11 @@ NAME:    hangedman_abyss_town
 TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
-         guardian serpent w:1 / vampire w:3 / necromancer w:3 / death knight w:3
+         vampire w:3 / necromancer w:3 / death knight w:3
 MONS:    thrashing horror / blink frog / weeping skull band / \
-         large abomination / unseen horror / shapeshifter / \
+         large abomination / unseen horror / screaming refraction / \
          wretched star w:5 / air elemental / raiju / worldbinder
-MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
+MONS:    draconian shifter w:5 / shadow demon w:5 / lich / cognitogaunt / \
          profane servitor w:5 / deep elf demonologist / deep elf sorcerer
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
@@ -1115,8 +1117,8 @@ ENDMAP
 NAME:    hangedman_abyss_river_spirits
 TAGS:    no_monster_gen
 MONS:    smoke demon, efreet, fire elemental, water elemental
-ITEM:    randbook disc:fire numspells:1 / wand of flame charges:32 / \
-         randbook disc:ice numspells:1 / scimitar ego:freezing randart
+ITEM:    parchment disc:fire / wand of flame charges:32 / \
+         parchment disc:ice / scimitar ego:freezing randart
 SHUFFLE: ABCDEF / ABCDEF / ABCDEF / ACEBDF / ACEBDF / GGGGGG
 SHUFFLE: 1234 / 1234 / 1234 / 1212 / 1212 / 1212 / 3434 / 3434 / 3434
 SUBST:   ACE = w, BDF = l, G : wl, x = x:50 cb
@@ -1164,7 +1166,7 @@ NAME:   evilmike_abyss_rune_ettins
 TAGS:   abyss_rune unrand
 MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
                 giant spiked club ego:chaos | giant club ego:chaos
-MONS:   ettin skeleton w:6 / flayed ghost / shadow wraith w:4
+MONS:   ettin zombie w:6 / flayed ghost / shadow wraith w:4
 MONS:   place:Abyss:$, silent spectre
 KMONS:  O = glass eye
 KITEM:  O = abyssal rune of Zot
@@ -1215,8 +1217,8 @@ ENDMAP
 NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
-MONS:    catoblepas, earth elemental, basilisk, boulder beetle
-MONS:    catoblepas skeleton, air elemental, death drake
+MONS:    catoblepas, earth elemental, basilisk, screaming refraction
+MONS:    catoblepas zombie, air elemental, death drake
 ITEM:    potion of enlightenment q:1 pre_id
 KMONS:   O = patrolling war gargoyle
 KITEM:   O = abyssal rune of Zot
@@ -1255,7 +1257,7 @@ KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = laughing skull
 KMONS:  4 = small abomination / weeping skull w:2
-KMONS:  5 = cacodemon
+KMONS:  5 = zykzyl
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
 KMONS:  8 = titanic slime creature
@@ -1272,14 +1274,14 @@ MAP
  "cccccc4@4cccccc"
  cc .. ccAcc .. cc
 "c .."" x"x "".. c"
-cc44nnn.c+c.nnn44cc
-c 4nn7n.....n7nn4 c
+cc4.nnn.c+c.nnn.4cc
+c 4nn2n.....n2nn4 c
 c44+13n5.c.5n31+44c
 c 4nn2n.....n2nn4 c
 cc".nnn..T..nnn."cc
 "c ............. c"
  ccc ".nnnnn." ccc
-  "cc84n2O2n48cc"
+  "cc8.n7O7n.8cc"
    "c 4nn1nn4 c"
     cc44n+n44cc
     "c 44444 c"
@@ -1408,18 +1410,15 @@ ENDMAP
 
 NAME:   doesnt_abyss_rune_brain_food
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   neqoxec / brain worm w:1, glowing orange brain
-MONS:   orange crystal statue, very ugly thing
-MONS:   starcursed mass
+MONS:   neqoxec / brain worm w:1, very ugly thing, glowing orange brain
+MONS:   cognitogaunt, starcursed mass, orange crystal statue
 KITEM:  O = abyssal rune of Zot
 KFEAT:  " = runelight
 COLOUR: n = lightmagenta
-NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
+NSUBST: - = 4:d / 2 = d. / *:.
+NSUBST: . = 2:1 / 1:3 / 1:4 / 1:155 / 1:114 / 2 = 224... / *:.
 SUBST:  l : lw
-{{
-dgn.delayed_decay(_G, 'd', 'minotaur corpse / ' ..
-                           'troll corpse / ogre corpse')
-}}
+: dgn.delayed_decay(_G, 'd', 'minotaur corpse / troll corpse / ogre corpse')
 MAP
   cccnccc
  cc-nOn-cc
@@ -1427,7 +1426,7 @@ MAP
 cc"-n-n-.cc
 c---...---c
 nll-...-lln
-n3l-.."-l3n
+n6l-.."-l6n
 nll-"..-lln
 n---...---n
 nn"......nn
@@ -1440,8 +1439,8 @@ TAGS:    abyss_rune unrand
 MONS:    draconian, nonbase draconian
 MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
          very ugly thing / storm dragon / shadow dragon
-MONS:    balrug w:12 / hellion / tormentor / cacodemon w:12 / reaper w:12 / \
-         blizzard demon w:12 / hellephant / angel / daeva
+MONS:    balrug w:12 / hellion / tormentor / zykzyl / cacodemon w:12 / \
+         reaper w:12 / blizzard demon w:12 / cognitogaunt / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / \
              hell sentinel / profane servitor / executioner / wyrmhole w:2
 KITEM:   O = abyssal rune of Zot
@@ -1486,7 +1485,8 @@ TAGS:   abyss_rune unrand
 # who don't mind their target being moved around.
 MONS:   starflower, wretched star
 MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:30
-MONS:   lich w:5 / occultist / thrashing horror, demonic plant
+MONS:   cognitogaunt w:5 / occultist / thrashing horror / screaming refraction w:2
+MONS:   demonic plant
 KITEM:  O = abyssal rune of Zot
 KFEAT:  - = runelight
 KFEAT:  A = stone_arch
@@ -1530,7 +1530,7 @@ MONS:   angel god:Xom ; whip ego:chaos w:5 | demon whip ego:chaos w:1 | \
 MONS:   holy swine
 MONS:   dancing weapon ; eudemon blade ego:holy_wrath w:2 | \
                          scimitar ego:holy_wrath
-MONS:   large abomination, cacodemon / cacodemon band, apocalypse crab
+MONS:   large abomination, zykzyl / cacodemon band, apocalypse crab
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_xom
 KFEAT:  " = runelight
@@ -1584,7 +1584,7 @@ ENDMAP
 
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
-MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
+MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage
 KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
@@ -1697,8 +1697,8 @@ ENDMAP
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
 MONS:   brain worm w:4 / weeping skull w:2 / raiju / worldbinder / \
-        thrashing horror / shapeshifter
-MONS:   tormentor / hellion / shadow demon / \
+        thrashing horror / shapeshifter / screaming refraction w:2
+MONS:   cognitogaunt w:4 / tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4
 KMONS:  3O = spatial maelstrom
 KITEM:  O = abyssal rune of Zot
@@ -1864,10 +1864,11 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_glass
 TAGS:  abyss_exit
+MONS:  screaming refraction
 : init_abyss_exit(_G, "O")
 MAP
  mmm@
-mm.mm
+mm1mm
 m.O.m
 mm.mm
  mmm
@@ -2016,7 +2017,7 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_9
 TAGS:  abyss_exit unrand allow_dup
-KMONS: O = tentacled monstrosity / large abomination / nothing w:5
+KMONS: O = tentacled monstrosity / large abomination / cognitogaunt w:5
 SUBST: x = xxc
 : init_abyss_exit(_G, "O")
 MAP
@@ -2027,22 +2028,24 @@ x...x
 .xxx.
 ENDMAP
 
-NAME:  evilmike_abyss_exit_10
-TAGS:  abyss_exit
-SUBST: X = x.., x = xxxcv
-MONS:  neqoxec / brain worm w:5
+NAME:    evilmike_abyss_exit_10
+TAGS:    abyss_exit
+SUBST:   X = x.., z = x'', x = xxxcv
+MONS:    neqoxec, brain worm band, cognitogaunt
+SHUFFLE: 12 / '3
+CLEAR:   '
 : init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX
-XXXXXXXXXXX
-XXxxxxxxxXX
-XXx..1..xXX
-XXx.xxx.xXX
-XXx1.Ox....
-XXx.xxx.xXX
-XXx..1..xXX
-XXxxxxxxxXX
-XXXXXXXXXXX
+XzzzzzzzzzX
+XzxxxxxxxzX
+Xzx..2..xzX
+Xzx.xxx.xzX
+Xzx1.Ox....
+Xzx.xxx.xzX
+Xzx..2..xzX
+XzxxxxxxxzX
+XzzzzzzzzzX
 XXXXXXXXXXX
 ENDMAP
 

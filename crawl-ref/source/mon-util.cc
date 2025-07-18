@@ -1157,7 +1157,7 @@ bool mons_class_is_peripheral(monster_type mc)
 
 size_type mons_class_body_size(monster_type mc)
 {
-    // Should pass base_type to get the right size for zombies, skeletons &c.
+    // Should pass base_type to get the right size for derived undead.
     // For normal monsters, base_type is set to type in the constructor.
     const monsterentry *e = get_monster_data(mc);
     return e ? e->size : SIZE_MEDIUM;
@@ -1189,8 +1189,8 @@ int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
     static const map<monster_type, int> hp_per_hd_by_type = {
         { MONS_BOUND_SOUL,     100 },
         { MONS_ZOMBIE,          85 },
-        { MONS_SKELETON,        70 },
         { MONS_SPECTRAL_THING,  60 },
+        { MONS_DRAUGR,          55 },
         // Simulacra aren't tough, but you can create piles of them. - bwr
         { MONS_SIMULACRUM,      30 },
     };
@@ -1422,40 +1422,31 @@ bool mons_is_hepliaklqana_ancestor(monster_type mc)
 }
 
 /**
- * Can this type of monster be blinded?
- *
- * Certain monsters, e.g. those with a powerful sense of smell, echolocation,
- * or no eyes, are completely immune to blinding.
- *
- * Note that 'dazzling' (from dazzling spray) has additional restrictions above
- * this.
+ * How well does this monster resist blinding?
  *
  * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get ENCH_BLIND.
+ * @return      1 if the monster resists dark/physical forms of blindness,
+ *              2 if the monster additionally resists light-based blinding,
+ *              0 otherwise.
  */
-bool mons_can_be_blinded(monster_type mc)
+int mons_res_blind(monster_type mc)
 {
-    return !mons_class_flag(mc, M_UNBLINDABLE);
-}
-
-/**
- * Can this kind of monster be dazzled?
- *
- * The undead, nonliving, vegetative, or unblindable cannot be dazzled.
- *
- * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get `ENCH_BLIND` from Dazzling
- *              Spray or wands of light.
- */
-bool mons_can_be_dazzled(monster_type mc)
-{
-    // This was implemented by checking type so that we could use it in
-    // monster descriptions (which only have mon_info structs); not sure if
-    // that's useful
+    // Unblindable / non-visual monsters are immune to sources of blindness
+    // outside of divine acts or Enfeeble.
+    if (mons_class_flag(mc, M_UNBLINDABLE))
+        return 2;
 
     const mon_holy_type holiness = mons_class_holiness(mc);
-    return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        && mons_can_be_blinded(mc);
+
+    // No visual systems to disrupt.
+    if (holiness & (MH_NONLIVING | MH_PLANT))
+        return 2;
+
+    // Undead can be blinded by light.
+    if (holiness & (MH_UNDEAD))
+        return 1;
+
+    return 0;
 }
 
 /**
@@ -1550,6 +1541,7 @@ int mons_class_regen_amount(monster_type mc)
     case MONS_PROTEAN_PROGENITOR:
     case MONS_ASPIRING_FLESH:
     case MONS_MARTYRED_SHADE:     return 6;
+    case MONS_BOUNDLESS_TESSERACT: return 10;
     default:                      return 1;
     }
 }
@@ -1593,20 +1585,8 @@ monster_type mons_zombie_base(const monster& mon)
 
 bool mons_class_is_zombified(monster_type mc)
 {
-#if TAG_MAJOR_VERSION == 34
-    switch (mc)
-    {
-        case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
-        case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
-        case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-            return true;
-        default:
-            break;
-    }
-#endif
-
     return mc == MONS_ZOMBIE
-        || mc == MONS_SKELETON
+        || mc == MONS_DRAUGR
         || mc == MONS_SIMULACRUM
         || mc == MONS_SPECTRAL_THING
         || mc == MONS_BOUND_SOUL;
@@ -1808,6 +1788,7 @@ static const set<attack_flavour> allowed_zombie_af = {
     AF_CRUSH,
     AF_TRAMPLE,
     AF_DRAG,
+    AF_DOOM,
 };
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
@@ -1936,11 +1917,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     const monster& mon = get_tentacle_head(m);
 
     const bool zombified = mons_is_zombified(mon);
+    const int max_attacks = m.has_hydra_multi_attack()
+                                ? m.heads() + (m.type == MONS_DRAUGR)
+                                : MAX_NUM_ATTACKS;
 
-    if (mon.has_hydra_multi_attack())
-        attk_number -= mon.heads() - 1;
-
-    if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS)
+    if (attk_number < 0 || attk_number >= max_attacks)
         attk_number = 0;
 
     if (mons_is_ghost_demon(mc))
@@ -1963,6 +1944,27 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
+
+    if (m.type == MONS_DRAUGR)
+    {
+        if (attk_number == 0)
+        {
+            attk.flavour = AF_DOOM;
+            attk.type    = AT_HIT;
+            attk.damage  = 5 + mon.get_hit_dice() * 4 / 3;
+        }
+        else
+            attk = smc->attack[attk_number - 1];
+    }
+
+    if (mon.has_hydra_multi_attack() && attk_number > 0)
+    {
+        if (attk_number > mon.heads() + (mon.type == MONS_DRAUGR))
+            return { AT_NONE, AF_PLAIN, 0 };
+
+        attk_number = 0;
+        attk = smc->attack[0];
+    }
 
     if (attk_number == 0)
     {
@@ -2203,6 +2205,7 @@ bool flavour_triggers_damageless(attack_flavour flavour)
 {
     return flavour == AF_CRUSH
         || flavour == AF_ENGULF
+        || flavour == AF_PAIN
         || flavour == AF_PURE_FIRE
         || flavour == AF_AIRSTRIKE
         || flavour == AF_SHADOWSTAB
@@ -2258,6 +2261,8 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
         // Just show max damage: this number's only used for display.
         case AF_AIRSTRIKE:
             return pow(HD + 1, 1.2) * 12 / 6;
+        case AF_REACH_CLEAVE_UGLY:
+            return HD * 3;
         default:
             return 0;
     }
@@ -2277,6 +2282,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
         case AF_RIFT:
+        case AF_REACH_CLEAVE_UGLY:
             return true;
         default:
             return false;
@@ -2293,7 +2299,7 @@ bool mons_invuln_will(const monster& mon)
     return get_monster_data(mon.type)->willpower == WILL_INVULN;
 }
 
-bool mons_skeleton(monster_type mc)
+bool mons_has_skeleton(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
@@ -2349,7 +2355,10 @@ int mons_class_willpower(monster_type type, monster_type base)
             ? draconian_subspecies(type, base)
             : type;
 
-    const int type_wl = (get_monster_data(base_type))->willpower;
+    int type_wl = (get_monster_data(base_type))->willpower;
+
+    if (mons_is_draconian_job(type))
+        type_wl += 20;
 
     // Negative values get multiplied with monster hit dice.
     if (type_wl >= 0)
@@ -2552,6 +2561,9 @@ int exp_value(const monster& mon, bool real, bool legacy)
     // blobs merged. -cao
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
+
+    if (mon.has_ench(ENCH_FIGMENT))
+        x_val /= 3;
 
     // Legacy code used for Gozag bribe and tension calculations.
     // XXX: remove this.
@@ -2826,13 +2838,6 @@ void define_monster(monster& mons, bool friendly)
 
     case MONS_SHAMBLING_MANGROVE:
         mons.mangrove_pests = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
-        break;
-
-    case MONS_SERPENT_OF_HELL:
-    case MONS_SERPENT_OF_HELL_COCYTUS:
-    case MONS_SERPENT_OF_HELL_DIS:
-    case MONS_SERPENT_OF_HELL_TARTARUS:
-        mons.num_heads = 3;
         break;
 
     default:
@@ -3218,9 +3223,11 @@ mon_energy_usage mons_energy(const monster& mon)
     return meu;
 }
 
-int mons_class_zombie_base_speed(monster_type zombie_base_mc)
+int mons_class_zombie_base_speed(monster_type zombie_base_mc, bool slow)
 {
-    return max(3, mons_class_base_speed(zombie_base_mc) - 2);
+    // Draugr and spectrals are both speed 10.
+    int penalty = slow ? 2 : 0;
+    return max(3, mons_class_base_speed(zombie_base_mc) - penalty);
 }
 
 /**
@@ -3243,10 +3250,13 @@ int mons_base_speed(const monster& mon, bool known)
         return mon.props[MON_SPEED_KEY];
     }
 
-    if (mon.mons_species() == MONS_SPECTRAL_THING)
+    if (mon.mons_species() == MONS_SPECTRAL_THING
+        || mon.mons_species() == MONS_DRAUGR)
+    {
         return mons_class_base_speed(mons_zombie_base(mon));
+    }
 
-    return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
+    return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon), true)
                                   : mons_class_base_speed(mon.type);
 }
 
@@ -3808,6 +3818,7 @@ static const spell_type smitey_spells[] = {
     SPELL_MASS_CONFUSION,
     SPELL_ENTROPIC_WEAVE,
     SPELL_GRAVE_CLAW,
+    SPELL_AWAKEN_FLESH,
 };
 
 /**
@@ -4735,6 +4746,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "says",         // S_NORMAL
         "shouts",       // S_LOUD
         "screams",      // S_VERY_LOUD
+        "caws",
+        "laughs",
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
@@ -4989,7 +5002,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     const int tension = exp_value(threat, real, true) / (1 + factor);
 
-    if (tension <= 0)
+    if (tension <= 1)
     {
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MTHRT_TRIVIAL;
@@ -5841,7 +5854,8 @@ bool never_harm_monster(const actor* agent, const monster& mon, bool do_message)
 
     if (agent && agent->is_player()
         && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(mon))
+        && mons_is_slime(mon)
+        && mon.wont_attack())
     {
         if (do_message && you.can_see(mon))
             simple_god_message(" protects your slime from harm.", false, GOD_JIYVA);
@@ -5866,6 +5880,7 @@ int mons_leash_range(monster_type mc)
 {
     switch (mc)
     {
+        case MONS_RENDING_BLADE:
         case MONS_SOLAR_EMBER:
         case MONS_PHALANX_BEETLE:   return 1;
         case MONS_HAUNTED_ARMOUR:   return 2;

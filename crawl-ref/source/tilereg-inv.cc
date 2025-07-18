@@ -31,6 +31,7 @@
 #include "tag-version.h"
 #include "tilepick.h"
 #include "unicode.h"
+#include "view.h"
 
 InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -75,13 +76,13 @@ void InventoryRegion::pack_buffers()
             if (_is_next_button(i-1))
             {
                 // continuation to next page icon
-                m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
+                m_buf.add_main_tile(TILE_ITEM_PAGE_NEXT, x, y);
                 continue;
             }
             else if (y==0 && x==0 && m_grid_page>0)
             {
                 // previous page icon
-                m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
+                m_buf.add_main_tile(TILE_ITEM_PAGE_PREVIOUS, x, y);
                 continue;
             }
 
@@ -116,6 +117,9 @@ void InventoryRegion::pack_buffers()
             if (item.special)
                 m_buf.add_special_tile(item.special, x, y, 0, 0);
 
+            if (item.special2)
+                m_buf.add_special_tile(item.special2, x, y, 0, 0);
+
             if (item.flag & TILEI_FLAG_INVALID && !tiles.is_using_small_layout())
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
@@ -134,6 +138,7 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         // next page
         m_grid_page++;
         update();
+        viewwindow();
         return CK_NO_KEY;
     }
     else if (m_cursor.x==0 && m_cursor.y==0 && m_grid_page>0 && event.button==wm_mouse_event::LEFT)
@@ -141,6 +146,7 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         // prev page
         m_grid_page--;
         update();
+        viewwindow();
         return CK_NO_KEY;
     }
 
@@ -522,6 +528,12 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     {
         desc.special = tileidx_known_brand(item);
     }
+    else if (type == OBJ_BOOKS && item.sub_type == BOOK_PARCHMENT)
+    {
+        const spell_type spell = static_cast<spell_type>(item.plus);
+        desc.special = tileidx_parchment_overlay(spell, 0);
+        desc.special2 = tileidx_parchment_overlay(spell, 1);
+    }
 
     desc.flag = 0;
     if (item.cursed())
@@ -597,10 +609,8 @@ void InventoryRegion::update()
                 }
             }
 
-            // Mark our activate talisman as though it were equipped (at least
-            // as long as it's in our inventory).
             if (you.inv[i].base_type == OBJ_TALISMANS
-                && you.using_talisman(you.inv[i]))
+                && you.active_talisman() == &you.inv[i])
             {
                 desc.flag |= TILEI_FLAG_EQUIP;
                 if (you.form != you.default_form)

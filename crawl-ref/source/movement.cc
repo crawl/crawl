@@ -632,6 +632,21 @@ monster* get_rampage_target(coord_def move)
     return nullptr;
 }
 
+static bool _check_rampage(bool attacking, coord_def rampage_destination,
+                           coord_def rampage_target, const string& noun)
+{
+    if (attacking)
+    {
+        return check_moveto(rampage_destination, noun)
+               && wielded_weapon_check(you.weapon(), noun + " and attack");
+    }
+    // You won't always move over rampage_destination, sometimes an invisible
+    // monster will get in the way and stop you on it. But warning about this
+    // seems more annoying than useful --Wizard Ike
+    return check_move_over(rampage_destination, noun)
+           && check_moveto(rampage_target, noun);
+}
+
 /**
  * Rampages the player toward a hostile monster, if one exists in the direction
  * of the move input. Invalid things along the rampage path cancel the rampage.
@@ -674,6 +689,19 @@ static spret _rampage_forward(coord_def move)
     if (rampage_destination == you.pos())
         return spret::fail;
 
+    // Abort if the player answers no to
+    // * barbs damaging move prompt
+    // * breaking ice spells prompt
+    // * dangerous terrain/trap/cloud/exclusion prompt
+    // * weapon check prompts;
+    // messaging for this is handled by check_moveto().
+    if (!_check_rampage(attacking, rampage_destination, rampage_target, noun))
+    {
+        stop_running();
+        you.turn_is_over = false;
+        return spret::abort;
+    }
+
     // Do allow rampaging on top of Fedhas plants,
     const monster* mons = monster_at(rampage_destination);
     bool fedhas_move = false;
@@ -690,21 +718,6 @@ static spret _rampage_forward(coord_def move)
                  verb.c_str());
         }
         return spret::fail;
-    }
-
-    // Abort if the player answers no to
-    // * barbs damaging move prompt
-    // * breaking ice spells prompt
-    // * dangerous terrain/trap/cloud/exclusion prompt
-    // * weapon check prompts;
-    // messaging for this is handled by check_moveto().
-    if (attacking && !check_moveto(rampage_destination, noun)
-        || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
-        || !attacking && !check_moveto(rampage_target, noun))
-    {
-        stop_running();
-        you.turn_is_over = false;
-        return spret::abort;
     }
 
     // We've passed the validity checks, go ahead and rampage.
@@ -1025,7 +1038,7 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst) && !you.is_motile())
+            if (!rampaged && !you.can_see(*targ_monst) && !you.is_motile())
             {
                 canned_msg(MSG_CANNOT_MOVE);
                 you.turn_is_over = false;
@@ -1055,6 +1068,13 @@ void move_player_action(coord_def move)
             you.berserk_penalty = 0;
             attacking = true;
         }
+    }
+    else if (rampaged && !you.is_motile())
+    {
+        // We rampaged onto something that has stopped us moving and we
+        // don't have a target to hit.
+        _finalize_cancelled_rampage_move();
+        return;
     }
     else if (you.form == transformation::fungus && moving && !you.confused())
     {
@@ -1146,7 +1166,7 @@ void move_player_action(coord_def move)
         if (swap && targ_monst->type == MONS_SOLAR_EMBER
             && targ_monst->hit_points < targ_monst->max_hit_points)
         {
-            targ_monst->heal(targ_monst->max_hit_points / 2);
+            targ_monst->heal(targ_monst->max_hit_points * 3 / 4);
             mprf("You weave more energy into your solar ember.");
         }
 

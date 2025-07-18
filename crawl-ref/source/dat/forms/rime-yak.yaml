@@ -15,7 +15,7 @@ unarmed: {base: 4}
 unarmed_colour: lightblue
 unarmed_name: Horns
 unarmed_verbs: [hit, headbutt, gore, skewer]
-special_damage: 2d2+(3/5)
+special_damage: 2d1+(3/5)
 special_damage_name: Frigid Wall Dmg
 can_swim: yes
 changes_anatomy: yes

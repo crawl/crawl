@@ -169,6 +169,9 @@ get a good idea by bashing a few comparatively harmless monsters with each and
 comparing the results.
 
 The delay in swinging a weapon can be reduced by the corresponding weapon skill.
+You can view your delay and damage rating with a weapon by reading its
+description or pressing '@' while the weapon is equipped. '@' works while
+unarmed too.
 %%%%
 Q:religion
 
@@ -176,18 +179,17 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-A: The most straightforward gods to play are probably Trog or Okawaru (for
-melee and ranged combat), Vehumet or Sif Muna (for spellcasting), and
-Yredelemnul (for undead allies). Also, while unreliable, Xom can be a lot of
-fun.
+A: The most straightforward gods to play are probably Trog or Okawaru (for melee
+combat), Hepliaklqana or Okawaru (for ranged combat), Vehumet or Sif Muna (for
+spellcasting). Also, while unreliable, Xom can be a lot of fun.
 
 Whenever you encounter an altar, be sure to read the corresponding god's
 description (by praying on the altar with '>') and take your time in deciding
 whether to pick this deity or not. As a follower, you can reread your god's
 description, now more detailed via the '!' toggle, on the '^' screen.
 
-You're guaranteed to find altars to almost every god on the first nine levels
-of the main dungeon.
+You're guaranteed to find altars to almost every god on the first ten levels of
+the main dungeon.
 %%%%
 Q:ghosts
 
@@ -339,8 +341,8 @@ A:idea
 
 A: If you'd like your idea to get in, your surest bet is to put it in a place
 where a developer can see it. One good place is the official forum, at
-https://tavern.dcss.io/. If it catches the interest of at least one
-coder, chances are it'll' make it into the game.
+https://tavern.dcss.io/. If it catches the interest of at least one coder,
+chances are it'll make it into the game.
 
 Note that your idea has a better chance of being accepted if you present the
 ramifications on gameplay. ("How does [adding/removing X] make the game

@@ -163,7 +163,7 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, branch_noise::normal, 10,
-      {BRANCH_VAULTS, BRANCH_SLIME } },
+      {BRANCH_DUNGEON, BRANCH_VAULTS, BRANCH_SLIME } },
 #endif
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
@@ -319,7 +319,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION > 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
@@ -401,7 +401,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
@@ -435,7 +435,7 @@ const Branch branches[NUM_BRANCHES] =
     },
 
     { BRANCH_NECROPOLIS, NUM_BRANCHES, -1, -1, 1, 0,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_NECROPOLIS, DNGN_EXIT_NECROPOLIS, NUM_FEATURES,
       "Necropolis", "the Necropolis", "Necropolis",
       "You enter an ornate necropolis!",

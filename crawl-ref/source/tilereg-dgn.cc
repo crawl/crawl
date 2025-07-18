@@ -804,6 +804,9 @@ bool DungeonRegion::update_tip_text(string &tip)
             if (props & FPROP_SEEN_OR_NOEXP)
                 str.push_back("seen_or_noexp");
 
+            if (props & FPROP_NO_AUTOMAP)
+                str.push_back("no_automap");
+
             if (!str.empty())
             {
                 tip += "FProps: ";

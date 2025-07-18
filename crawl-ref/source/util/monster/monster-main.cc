@@ -988,7 +988,7 @@ int main(int argc, char* argv[])
                     monsterattacks += ", ";
 
                 short int dam = attk.damage;
-                if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
+                if (mon.berserk_or_frenzied() || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
 
                 if (mon.has_ench(ENCH_WEAK))
@@ -1002,8 +1002,11 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                if (flavour_has_reach(attk.flavour))
+                if (_monster_has_reachcleave(mon))
+                    monsterattacks += "(reach)(cleave)";
+                else if (flavour_has_reach(attk.flavour))
                     monsterattacks += "(reach)";
+
                 switch (attk.flavour)
                 {
                 case AF_SWOOP:
@@ -1016,7 +1019,7 @@ int main(int argc, char* argv[])
                     break;
                 case AF_AIRSTRIKE:
                 {
-                    short int min = pow(hd, 1.2) / 2;
+                    short int min = pow(hd, 1.2) * 2 / 9;
                     short int max = pow(hd + 1, 1.2) * 12 / 6;
                     monsterattacks +=
                         colour(LIGHTBLUE, damage_flavour("airstrike", min, max));
@@ -1078,6 +1081,10 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(
                         LIGHTRED, damage_flavour("strong poison", hd * 11 / 3,
                                                  hd * 13 / 2));
+                    break;
+                case AF_REACH_CLEAVE_UGLY:
+                    monsterattacks += colour(
+                        LIGHTBLUE, damage_flavour("ugly", hd, 3 * hd - 1));
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1166,6 +1173,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_TRICKSTER:
                     monsterattacks += colour(LIGHTGREEN, "(trickster)");
+                    break;
+                case AF_DOOM:
+                    monsterattacks += colour(RED, "(doom)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
@@ -1277,8 +1287,11 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_amorphous(), monsterflags, "amorphous");
 
         string spell_string = construct_spells(spell_lists, damages);
-        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD)
+        if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
+                         || mon.type == MONS_ORC_APOSTLE)
+        {
             spell_string = "(random)";
+        }
 
         mons_check_flag(vault_monster, monsterflags, colour(BROWN, "vault"));
 
