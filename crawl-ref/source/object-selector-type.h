@@ -25,4 +25,5 @@ enum object_selector
     OSEL_ARTEFACT_WEAPON         = -21,
     OSEL_MARKED_ITEMS            = -22,
     OSEL_JEWELLERY_OR_TALISMAN   = -23,
+    OSEL_GEAR                    = -24, // Equippable items + throwables
 };

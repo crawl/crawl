@@ -68,9 +68,10 @@ void adjust_item(operation_types oper, item_def* to_adjust)
 
     if (!to_adjust)
     {
+        int sel = oper == OPER_EQUIP ? OSEL_GEAR : default_osel(oper);
+
         const int from_slot = prompt_invent_item("Adjust which item?",
-                                       menu_type::invlist, default_osel(oper),
-                                       oper);
+                                       menu_type::invlist, sel, oper);
         if (prompt_failed(from_slot))
             return;
 

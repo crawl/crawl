@@ -1313,6 +1313,10 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_JEWELLERY_OR_TALISMAN:
         return i.base_type == OBJ_JEWELLERY || i.base_type == OBJ_TALISMANS;
 
+    case OSEL_GEAR:
+        return item_is_selected(i, OSEL_EQUIPABLE)
+                || i.base_type == OBJ_MISSILES;
+
     default:
         return false;
     }
