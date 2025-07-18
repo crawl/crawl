@@ -460,38 +460,35 @@ void InvMenu::cycle_page(int dir)
     update_title();
 }
 
-bool InvMenu::process_key(int key)
-{
-    if (key == CK_LEFT && (flags & MF_PAGED_INVENTORY))
-    {
-        cycle_page(-1);
-        return true;
-    }
-    else if (key == CK_RIGHT && (flags & MF_PAGED_INVENTORY))
-    {
-        cycle_page(1);
-        return true;
-    }
-
-    return Menu::process_key(key);
-}
-
 bool InvMenu::process_command(command_type cmd)
 {
-    if (cmd == CMD_MENU_ACCEPT_SELECTION && (flags & MF_PAGED_INVENTORY))
+    if (flags & MF_PAGED_INVENTORY)
     {
-        get_selected(&sel);
-        return false;
-    }
-    else if (cmd == CMD_MENU_EXIT && (flags & MF_PAGED_INVENTORY))
-    {
-        // Must clear offscreen selection or exiting the menu will still act
-        // upon those items.
-        for (size_t i = 0; i < ARRAYSZ(offscreen_sel); ++i)
-            offscreen_sel[i].clear();
-        sel.clear();
-        lastch = CK_ESCAPE; // XX is this correct?
-        return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+        if (cmd == CMD_MENU_ACCEPT_SELECTION)
+        {
+            get_selected(&sel);
+            return false;
+        }
+        else if (cmd == CMD_MENU_EXIT)
+        {
+            // Must clear offscreen selection or exiting the menu will still act
+            // upon those items.
+            for (size_t i = 0; i < ARRAYSZ(offscreen_sel); ++i)
+                offscreen_sel[i].clear();
+            sel.clear();
+            lastch = CK_ESCAPE; // XX is this correct?
+            return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+        }
+        else if (cmd == CMD_MENU_LEFT || cmd == CMD_MENU_PAGE_UP)
+        {
+            cycle_page(-1);
+            return true;
+        }
+        else if (cmd == CMD_MENU_RIGHT || cmd == CMD_MENU_PAGE_DOWN)
+        {
+            cycle_page(1);
+            return true;
+        }
     }
 
     return Menu::process_command(cmd);

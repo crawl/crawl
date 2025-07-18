@@ -181,7 +181,6 @@ protected:
     void select_item_index(int idx, int qty) override;
     bool examine_index(int i) override;
     int pre_process(int key) override;
-    bool process_key(int key) override;
     bool process_command(command_type cmd) override;
     string get_select_count_string(int count) const override;
     virtual bool skip_process_command(int keyin) override;
