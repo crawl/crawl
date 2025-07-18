@@ -517,6 +517,12 @@ Xom boots slot
 
 @Your_item@ grows to a huge size, then shrinks back down!
 %%%%
+Xom amulet slot
+
+@Your_item@ pulsates!
+
+@Your_item@ flares @any_glowing_colour@, then returns to normal.
+%%%%
 Xom gizmo slot
 
 @Your_item@ jiggles!
