@@ -3351,6 +3351,17 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
+    {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("offhand slot");
+
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        messages.push_back(str);
+    }
+
     if (item_def* item = you.equipment.get_first_slot_item(SLOT_CLOAK))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
@@ -3385,17 +3396,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = replace_all(str, "@head@",
                               you.has_mutation(MUT_FORMLESS) ? "form" : "head");
         }
-
-        messages.push_back(str);
-    }
-
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
-    {
-        string name = "your " + item->name(DESC_BASENAME, false, false, false);
-        string str = _get_xom_speech("offhand slot");
-
-        str = replace_all(str, "@your_item@", name);
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         messages.push_back(str);
     }
