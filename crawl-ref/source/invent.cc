@@ -402,6 +402,9 @@ int InvMenu::pre_process(int key)
 
 void InvMenu::cycle_page(int dir)
 {
+    if (!(flags & MF_PAGED_INVENTORY))
+        return;
+
     const static int modes[] =
     {
         OSEL_GEAR,
@@ -1482,8 +1485,9 @@ static int _invent_select(const char *title = nullptr,
         menu.set_title(title);
 
     // Cycle through all pages to properly apply pre-selections immediately.
-    for (int i = 0; i < 4; ++i)
-        menu.cycle_page(1);
+    if (flags & MF_PAGED_INVENTORY)
+        for (int i = 0; i < 4; ++i)
+            menu.cycle_page(1);
 
     menu.show(true);
 
