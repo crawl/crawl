@@ -2152,6 +2152,7 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
 {
     // If this is an identified item, first check the consumable_slot option to
     // see any default assignment and use this.
+    const operation_types oper = item_to_oper(&item);
     if (item.is_identified())
     {
         char key = 0;
@@ -2174,7 +2175,23 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
         }
 
         if (key > 0 && key != ' ')
-            return key;
+        {
+            // Verify that the player hasn't manually remapped something to this
+            // key already. (If they have, just jump to the next step.)
+            bool conflict = false;
+            for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+            {
+                if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
+                    && you.inv[i].slot == key)
+                {
+                    conflict = true;
+                    break;
+                }
+            }
+
+            if (!conflict)
+                return key;
+        }
     }
 
     if (!first_pickup)
@@ -2230,7 +2247,6 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
 
     // Check which slots are strictly used already.
     bool used_slots[52] = {false};
-    operation_types oper = item_to_oper(&item);
     for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
     {
         if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
