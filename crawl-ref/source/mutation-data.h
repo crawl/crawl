@@ -2529,7 +2529,7 @@ static const mutation_def mut_data[] =
 { MUT_NO_DRINK, 0, 1, mutflag::bad,
   "no potions",
 
-  {"You do not drink.", "", ""},
+  {"You cannot drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
   {"You gain the ability to drink.", "", ""},
   TILEG_MUT_NO_DRINK,
