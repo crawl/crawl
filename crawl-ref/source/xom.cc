@@ -3362,7 +3362,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_CLOAK))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_CLOAK))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
@@ -3381,7 +3381,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_HELMET))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_HELMET))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
@@ -3400,7 +3400,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GLOVES))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_GLOVES))
     {
         string gloves_name = item->name(DESC_BASENAME, false, false, false);
         // XXX: If the gloves' name doesn't start with "pair of", make it do so,
@@ -3419,7 +3419,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_LOWER_BODY))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_LOWER_BODY))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("boots slot");
