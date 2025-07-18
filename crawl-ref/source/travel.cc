@@ -1121,6 +1121,14 @@ command_type travel()
                 continue;
             }
 
+            // Poison doesn't wear off while in this state, so don't try waiting
+            // for it.
+            if (type == DUR_POISONING
+                && (you.is_nonliving() || you.is_lifeless_undead()))
+            {
+                continue;
+            }
+
             // Save the player's position, so we can catch the degenerate case
             // where this results in us waiting indefinitely.
             you.props[AUTO_REST_STATUS_POS] = you.pos();
