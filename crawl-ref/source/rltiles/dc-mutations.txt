@@ -209,6 +209,7 @@ word_of_chaos WORD_OF_CHAOS
 # Per-species effects mutations
 hop_1 HOP
 hop_2
+accursed ACCURSED
 divine_attributes DIVINE_ATTRIBUTES
 forlorn FORLORN
 flat_hp_1 FLAT_HP
