@@ -192,7 +192,7 @@ function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
         reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
-            " . ring of protection from cold | ring of ice"
+            " . ring of protection from cold"
     end
 
     if dgn.persist.ice_cave_hard then
@@ -398,7 +398,7 @@ function ice_cave_magic_loot(e, glyphs)
     end
     e.kitem(glyphs .. " = book of ice / book of the tundra" ..
         " / randbook disc:ice" ..
-        " / manual of ice magic / staff of cold / ring of ice" .. quality ..
+        " / manual of ice magic / staff of cold" .. quality ..
         " / ring of protection from cold" .. quality ..
         " / wand of iceblast / phial of floods / condenser vane")
 end
@@ -424,8 +424,8 @@ function ice_cave_common_loot(e, glyphs)
 end
 
 --[[
-Define one kitem glyph containing necromancy themed items, including
-spellbooks, a manual, staff of death, and an artefact ring of positive energy.
+Define one kitem glyph containing necromancy themed items, including books,
+a manual, staff of necromancy, and an artefact ring of positive energy.
 
 @tab e The map environment.
 @string[opt="j"] glyphs Glyphs to use for the single KITEM statement.
@@ -437,7 +437,7 @@ function ice_cave_necro_loot(e, glyphs)
 
     e.kitem(glyphs .. " = book of unlife / randbook disc:ice" ..
             "    disc2:necromancy numspells:6" ..
-            "/ manual of necromancy w:5 / staff of death" ..
+            "/ manual of necromancy w:5 / staff of necromancy" ..
             "/ ring of positive energy randart")
 end
 
@@ -1592,7 +1592,7 @@ ORIENT:  encompass
 : ice_cave_common_loot(_G)
 # Loot always includes at least one randart so Jiyva worshipers get something
 KITEM:   j = any weapon randart ego:freezing pre_id / any armour randart \
-             / ring of ice randart pre_id / ice dragon scales randart w:5 \
+             / ice dragon scales randart w:5 \
              / ring of protection from cold randart pre_id \
              / any ring randart / any amulet randart \
              / randbook disc:ice numspells:3

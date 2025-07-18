@@ -779,7 +779,7 @@ MONS:    large abomination / ynoxinul / unseen horror / \
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
          shadow demon w:4 / executioner w:4 / hellion w:4
-ITEM:    any book / mundane staff of death / robe randart / \
+ITEM:    any book / mundane staff of necromancy / robe randart / \
          orb ego:energy / gold q:100 w:2
 ITEM:    demon whip / demon blade / demon trident
 KFEAT:   > = abyssal_stair

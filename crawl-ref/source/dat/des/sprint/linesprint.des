@@ -405,8 +405,6 @@ TAGS:     items_4
 KITEM:    a = ring of protection from fire pre_id /\
           ring of protection from cold pre_id /\
           ring of willpower pre_id /\
-          ring of fire pre_id /\
-          ring of ice pre_id /\
           ring of see invisible pre_id /\
           ring of poison resistance pre_id /\
           any jewellery pre_id
@@ -787,8 +785,6 @@ KITEM:    a = amulet of faith randart pre_id /\
     ring of protection from fire randart pre_id /\
     ring of protection from cold randart pre_id /\
     ring of willpower randart pre_id /\
-    ring of fire randart pre_id /\
-    ring of ice randart pre_id /\
     ring of see invisible randart pre_id /\
     ring of poison resistance randart pre_id /\
     ring of slaying plus:3 pre_id /\

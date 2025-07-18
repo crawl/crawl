@@ -262,6 +262,9 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
     case AMU_REFLECTION:          return "Reflect";
+    case AMU_WILDSHAPE:           return "Wildshape";
+    case AMU_ALCHEMY:             return "Alch+";
+    case AMU_DISSIPATION:         return "Dissipate";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:          return "Inacc";
 #endif
@@ -682,6 +685,14 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It allows you to gain divine favour quickly.";
     case AMU_REFLECTION:
         return "It reflects blocked missile attacks.";
+    case AMU_WILDSHAPE:
+        return "It improves your skill with shapeshifting (+5)";
+    case AMU_ALCHEMY:
+        return "It enhances your alchemy spells and restores some MP when you "
+               "drink potions.";
+    case AMU_DISSIPATION:
+        return "It reduces the duration of hostile enchantments and decays "
+               "magical contamination more quickly.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
@@ -1558,7 +1569,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     if (is_slowed_by_armour(&item))
     {
         const int penalty_scale = 100;
-        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale);
+        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale, true);
         description += "\n";
         if (armour_penalty)
         {
@@ -2312,7 +2323,7 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it protects its wearer from the effects of negative energy.";
     case SPARM_ARCHMAGI:
         return "it increases the power of its wearer's magical spells.";
-    case SPARM_PRESERVATION:
+    case SPARM_CORROSION_RESISTANCE:
         return "it protects its wearer from the effects of acid and corrosion.";
     case SPARM_REFLECTION:
         return "it reflects blocked missile attacks back in the "
@@ -2353,6 +2364,41 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_ENERGY:
         return "it may return the magic spent to cast spells, but lowers their "
                "success rate. It always returns the magic spent on miscasts.";
+    case SPARM_SNIPING:
+        return "it increases the wearer's damage with ranged and thrown "
+               "weapons against incapacitated targets by 50%.";
+    case SPARM_ICE:
+        return "it enhances the wearer's ice magic.";
+    case SPARM_FIRE:
+        return "it enhances the wearer's fire magic.";
+    case SPARM_AIR:
+        return "it enhances the wearer's air magic.";
+    case SPARM_EARTH:
+        return "it enhances the wearer's earth magic.";
+    case SPARM_ARCHERY:
+        return "it has half the normal encumbrance for the purpose of ranged "
+               "combat.";
+    case SPARM_COMMAND:
+        return "it improves the power and success of the wearer's summoning "
+               "spells in proportion to their armour skill.";
+    case SPARM_DEATH:
+        return "it empowers the wearer's necromancy spells and improves their "
+               " success rate, but imposes a health cost for other magic.";
+    case SPARM_RESONANCE:
+        return "it improves the success rate of the wearer's forgecraft spells "
+               " and enhances their melee attacks proportionally to forgecraft "
+               " skill";
+    case SPARM_PARRYING:
+        return "It shields the wearer if their last action was a melee attack. "
+               "The shielding is half as effective if the wielder's offhand is "
+               "occupied by an item other than their weapon.";
+    case SPARM_CONJURING:
+        return "It enhances the wearer's conjurations, and "
+               "provides a spellpower boost to all non-conjuration spells that "
+               "depends on the wearer's conjurations skill.";
+    case SPARM_GLASS:
+        return "It may vitrify nearby enemies when they take damage. "
+               "Evocations skill increases the likelihood of vitrification.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2477,7 +2523,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     }
 
     const int DELAY_SCALE = 100;
-    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
     if (crawl_state.need_save
         && verbose
         && aevp
@@ -2653,7 +2699,7 @@ static string _describe_gizmo(const item_def &item)
                        "a 30% chance to not spend a charge.\n";
                 break;
 
-            case SPGIZMO_PARRYREV:
+            case SPGIZMO_REVGUARD:
                 ret += "Your AC increases as you Rev (up to +5) and while "
                        "fully Revved, your attacks may disarm enemies.\n";
                 break;
@@ -2889,9 +2935,7 @@ string get_item_description(const item_def &item,
 
     case OBJ_JEWELLERY:
         desc = _describe_jewellery(item, verbose);
-        if (desc.empty())
-            need_extra_line = false;
-        else
+        if (!desc.empty())
             description << desc;
         break;
 
@@ -5323,7 +5367,7 @@ static string _monster_staff_damage_string(const monster_info &mi,
     // From monster::skill
     const int evo_skill = mi.hd;
     int staff_skill;
-    if (staff == STAFF_DEATH)
+    if (staff == STAFF_NECROMANCY)
         staff_skill = mi.has_necromancy_spell() ? mi.hd : mi.hd / 2;
     else
         staff_skill = mi.is_actual_spellcaster() ? mi.hd : mi.hd / 3;
@@ -5335,7 +5379,7 @@ static string _monster_staff_damage_string(const monster_info &mi,
                            : staff == STAFF_COLD          ? "cold"
                            : staff == STAFF_AIR           ? "elec"
                            : staff == STAFF_EARTH         ? "earth"
-                           : staff == STAFF_DEATH         ? "drain"
+                           : staff == STAFF_NECROMANCY    ? "drain" // pain?
                            : staff == STAFF_ALCHEMY       ? "poison"
                            /*staff == STAFF_CONJURATION*/ : "conj";
 

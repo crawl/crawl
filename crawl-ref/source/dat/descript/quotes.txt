@@ -1883,7 +1883,7 @@ staff of conjuration
 
 <staff>
 %%%%
-staff of death
+staff of necromancy
 
 “'I am Aed Abaid of Ess Rúaid, that is, the good god of wizardry of the Tuatha
  Dé Danann, and the Rúad Rofhessa, and Eochaid Ollathair are my three names.’

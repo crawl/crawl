@@ -4971,7 +4971,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "resistance",
         "positive_energy",
         "archmagi",
-        "preservation",
+        "corrosion_resistance",
         "reflection",
         "spirit_shield",
         "hurling",
@@ -4991,6 +4991,18 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "mayhem",
         "guile",
         "energy",
+        "sniping",
+        "ice",
+        "fire",
+        "air",
+        "earth",
+        "archery",
+        "command",
+        "death",
+        "resonance",
+        "parrying",
+        "conjuring",
+        "glass",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);

@@ -794,6 +794,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_JUMPING:
 #endif
     case SPARM_RAMPAGING:
+    case SPARM_EARTH:
         return slot == SLOT_BOOTS || slot == SLOT_BARDING;
     case SPARM_STEALTH:
         return slot == SLOT_BOOTS || slot == SLOT_BARDING || slot == SLOT_CLOAK
@@ -804,14 +805,15 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_PONDEROUSNESS:
         return true;
-    case SPARM_PRESERVATION:
+    case SPARM_CORROSION_RESISTANCE:
+    case SPARM_AIR:
 #if TAG_MAJOR_VERSION > 34
-        return slot == SLOT_CLOAK;
+        return slot == SLOT_CLOAK || slot == SLOT_OFFHAND;
 #endif
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
-        return slot == SLOT_CLOAK;
+        return slot == SLOT_CLOAK || slot == SLOT_OFFHAND;
     case SPARM_INVISIBILITY:
         return (slot == SLOT_CLOAK && !strict) || type == ARM_SCARF;
 #endif
@@ -827,10 +829,15 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_HURLING:
+    case SPARM_FIRE:
+    case SPARM_PARRYING:
         return slot == SLOT_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
+        return type == ARM_HAT;
     case SPARM_INTELLIGENCE:
+    case SPARM_SNIPING:
+    case SPARM_ICE:
         return slot == SLOT_HELMET;
 
     case SPARM_FIRE_RESISTANCE:
@@ -877,11 +884,22 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return type == ARM_SCARF;
 
     case SPARM_LIGHT:
+        return type == ARM_ORB || type == ARM_HELMET;
     case SPARM_RAGE:
     case SPARM_MAYHEM:
     case SPARM_GUILE:
     case SPARM_ENERGY:
+    case SPARM_CONJURING:
+    case SPARM_GLASS:
         return type == ARM_ORB;
+
+    case SPARM_ARCHERY:
+        return slot == SLOT_BODY_ARMOUR && type != ARM_ROBE;
+
+    case SPARM_COMMAND:
+    case SPARM_DEATH:
+    case SPARM_RESONANCE:
+        return slot == SLOT_BODY_ARMOUR;
 
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:

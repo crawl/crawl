@@ -336,11 +336,11 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
 }
 
 static map<stave_type, artefact_prop_type> staff_resist_artps = {
-    { STAFF_FIRE,    ARTP_FIRE },
-    { STAFF_COLD,    ARTP_COLD },
-    { STAFF_ALCHEMY, ARTP_POISON },
-    { STAFF_DEATH,   ARTP_NEGATIVE_ENERGY },
-    { STAFF_AIR,     ARTP_ELECTRICITY },
+    { STAFF_FIRE,         ARTP_FIRE },
+    { STAFF_COLD,         ARTP_COLD },
+    { STAFF_ALCHEMY,      ARTP_POISON },
+    { STAFF_NECROMANCY,   ARTP_NEGATIVE_ENERGY },
+    { STAFF_AIR,          ARTP_ELECTRICITY },
     // nothing for conj or earth
 };
 
@@ -348,7 +348,7 @@ static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
     { STAFF_FIRE,           ARTP_ENHANCE_FIRE },
     { STAFF_COLD,           ARTP_ENHANCE_ICE },
     { STAFF_ALCHEMY,        ARTP_ENHANCE_ALCHEMY },
-    { STAFF_DEATH,          ARTP_ENHANCE_NECRO },
+    { STAFF_NECROMANCY,     ARTP_ENHANCE_NECRO },
     { STAFF_AIR,            ARTP_ENHANCE_AIR },
     { STAFF_CONJURATION,    ARTP_ENHANCE_CONJ },
     { STAFF_EARTH,          ARTP_ENHANCE_EARTH },
@@ -393,11 +393,6 @@ static map<jewellery_type, vector<artp_value>> jewellery_artps = {
     { RING_POSITIVE_ENERGY, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
-
-    { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 },
-                   { ARTP_ENHANCE_FIRE, 1} } },
-    { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 },
-                  { ARTP_ENHANCE_ICE, 1} } },
 
     { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
     { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },
@@ -1992,7 +1987,7 @@ enum gizmo_prop_type
     GIZMO_REPEL,
     GIZMO_RAMPAGE,
     GIZMO_GADGETEER,
-    GIZMO_PARRYREV,
+    GIZMO_REVGUARD,
     GIZMO_SPELLMOTOR,
     GIZMO_AUTODAZZLE,
     LAST_RARE_GIZMO = GIZMO_AUTODAZZLE,
@@ -2058,8 +2053,8 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
             gizmo.brand = SPGIZMO_GADGETEER;
             break;
 
-        case GIZMO_PARRYREV:
-            gizmo.brand = SPGIZMO_PARRYREV;
+        case GIZMO_REVGUARD:
+            gizmo.brand = SPGIZMO_REVGUARD;
             break;
 
         case GIZMO_SPELLMOTOR:
