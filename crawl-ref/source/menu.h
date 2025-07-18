@@ -280,6 +280,7 @@ enum MenuFlag
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
     MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
     MF_GRID_LAYOUT     = 0x100000,   ///< use a grid-style layout, filling by width first
+    MF_PAGED_INVENTORY = 0x200000,   ///< uses left/right to switch between different inventory categories
 };
 
 class UIMenu;

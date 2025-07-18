@@ -54,6 +54,14 @@ struct SelItem
         : slot(s), quantity(q), item(it), has_star(do_star)
     {
     }
+
+    bool operator== (const SelItem &o) const
+    {
+        return slot == o.slot
+               && quantity == o.quantity
+               && item == o.item
+               && has_star == o.has_star;
+    }
 };
 
 typedef string (*invtitle_annotator)(const Menu *m, const string &oldtitle);
@@ -158,7 +166,7 @@ public:
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
                         function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
-    vector<SelItem> get_selitems() const;
+    vector<SelItem> get_selitems(bool include_offscreen = false) const;
 
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
@@ -166,12 +174,16 @@ public:
     // Drop menu only: if true, dropped items are removed from autopickup.
     bool mode_special_drop() const;
 
+    void cycle_page(int dir);
+
 protected:
     void do_preselect(InvEntry *ie);
     void select_item_index(int idx, int qty) override;
     bool examine_index(int i) override;
     int pre_process(int key) override;
     bool process_key(int key) override;
+    bool process_command(command_type cmd) override;
+    string get_select_count_string(int count) const override;
     virtual bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
@@ -182,6 +194,11 @@ protected:
 
     invtitle_annotator title_annotate;
     string temp_title;
+
+    // Current tab in MF_PAGED_INVENTORY menus.
+    // Has no effect if that flag is not set.
+    int cur_osel;
+    vector<SelItem> offscreen_sel[4];
 
 private:
     bool _mode_special_drop;
