@@ -29,13 +29,13 @@ void adjust()
     const int keyin = toalower(get_ch());
 
     if (keyin == 'g')
-        adjust_item(OPER_EQUIP);
+        adjust_item(OSEL_GEAR);
     else if (keyin == 'p')
-        adjust_item(OPER_QUAFF);
+        adjust_item(OBJ_POTIONS);
     else if (keyin == 'r')
-        adjust_item(OPER_READ);
+        adjust_item(OBJ_SCROLLS);
     else if (keyin == 'v')
-        adjust_item(OPER_EVOKE);
+        adjust_item(OSEL_EVOKABLE);
     else if (keyin == 's')
         _adjust_spell();
     else if (keyin == 'a')
@@ -46,7 +46,7 @@ void adjust()
         canned_msg(MSG_HUH);
 }
 
-void adjust_item(operation_types oper, item_def* to_adjust)
+void adjust_item(int selector, item_def* to_adjust)
 {
 #ifdef USE_TILE_WEB
     ui::cutoff_point ui_cutoff_point;
@@ -61,17 +61,15 @@ void adjust_item(operation_types oper, item_def* to_adjust)
     if (to_adjust)
     {
         if (inventory_category_for(*to_adjust) == INVENT_CONSUMABLE)
-            oper = item_to_oper(to_adjust);
+            selector = default_osel(item_to_oper(to_adjust));
         else
-            oper = OPER_EQUIP;
+            selector = OSEL_GEAR;
     }
 
     if (!to_adjust)
     {
-        int sel = oper == OPER_EQUIP ? OSEL_GEAR : default_osel(oper);
-
         const int from_slot = prompt_invent_item("Adjust which item?",
-                                       menu_type::invlist, sel, oper);
+                                       menu_type::invlist, selector, OPER_ANY);
         if (prompt_failed(from_slot))
             return;
 
@@ -82,7 +80,7 @@ void adjust_item(operation_types oper, item_def* to_adjust)
 
     const int to_slot = prompt_invent_item("Adjust to which letter? ",
                                            menu_type::invlist,
-                                           default_osel(oper), oper,
+                                           selector, OPER_ANY,
                                            invprompt_flag::unthings_ok
                                             | invprompt_flag::manual_list);
     if (to_slot == PROMPT_ABORT

@@ -4009,7 +4009,7 @@ static bool _do_action(item_def &item, const command_type action)
             return true;
         drop_item(slot, item.quantity);
         break;
-    case CMD_ADJUST_INVENTORY: adjust_item(OPER_ANY, &you.inv[slot]);
+    case CMD_ADJUST_INVENTORY: adjust_item(0, &you.inv[slot]);
         break;
     case CMD_EVOKE:
         if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
