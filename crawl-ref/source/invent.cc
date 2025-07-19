@@ -489,12 +489,12 @@ bool InvMenu::process_command(command_type cmd)
             lastch = CK_ESCAPE; // XX is this correct?
             return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
         }
-        else if (cmd == CMD_MENU_LEFT || cmd == CMD_MENU_PAGE_UP)
+        else if (cmd == CMD_MENU_LEFT)
         {
             cycle_page(-1);
             return true;
         }
-        else if (cmd == CMD_MENU_RIGHT || cmd == CMD_MENU_PAGE_DOWN)
+        else if (cmd == CMD_MENU_RIGHT)
         {
             cycle_page(1);
             return true;
