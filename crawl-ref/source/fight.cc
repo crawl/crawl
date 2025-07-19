@@ -430,8 +430,21 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     ASSERT(defender); // XXX: change to actor &defender
 
     // A dead defender would result in us returning true without actually
-    // taking an action.
-    ASSERT(defender->alive());
+    // taking an action. But allow just passing our turn if we try to attack a
+    // monster mid-revival (since they're still actually supposed to be there).
+    if (!defender->alive())
+    {
+        if (defender->is_monster()
+            && (defender->as_monster()->flags & MF_PENDING_REVIVAL))
+        {
+            return true;
+        }
+        else
+        {
+            die("%s trying to attack a dead %s", attacker->name(DESC_THE).c_str(),
+                                                 defender->name(DESC_THE).c_str());
+        }
+    }
 
     if (defender->is_player())
     {
