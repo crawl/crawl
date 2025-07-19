@@ -175,6 +175,7 @@ public:
     bool mode_special_drop() const;
 
     void cycle_page(int dir);
+    void set_page(int page);
 
 protected:
     void do_preselect(InvEntry *ie);

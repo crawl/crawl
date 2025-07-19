@@ -400,26 +400,42 @@ int InvMenu::pre_process(int key)
     return key;
 }
 
+const static int modes[] =
+{
+    OSEL_GEAR,
+    OBJ_POTIONS,
+    OBJ_SCROLLS,
+    OSEL_EVOKABLE,
+};
+
 void InvMenu::cycle_page(int dir)
 {
+    do
+    {
+        int new_osel = cur_osel;
+        new_osel += dir;
+        if (new_osel < 0)
+            new_osel = ARRAYSZ(modes) - 1;
+        if (new_osel >= static_cast<int>(ARRAYSZ(modes)))
+            new_osel = 0;
+
+        set_page(new_osel);
+    }
+    // If this page is empty, go to the next one.
+    // XXX: (Theoretically, this could cause an infinite loop, but other code
+    //      should already prevent opening a menu when you have no items.)
+    while (items.empty());
+}
+
+void InvMenu::set_page(int page)
+{
+    ASSERT(page >= 0 && page < static_cast<int>(ARRAYSZ(modes)));
+
     if (!(flags & MF_PAGED_INVENTORY))
         return;
 
-    const static int modes[] =
-    {
-        OSEL_GEAR,
-        OBJ_POTIONS,
-        OBJ_SCROLLS,
-        OSEL_EVOKABLE,
-    };
-
-    // Determine new page
     const int old_osel = cur_osel;
-    cur_osel += dir;
-    if (cur_osel < 0)
-        cur_osel = ARRAYSZ(modes) - 1;
-    if (cur_osel >= static_cast<int>(ARRAYSZ(modes)))
-        cur_osel = 0;
+    cur_osel = page;
 
     // Save selected items from our current page
     get_selected(&sel);
@@ -432,12 +448,6 @@ void InvMenu::cycle_page(int dir)
     update_more();
     reset();
     update_menu(true);
-
-    // If this page is empty, go to the next one.
-    // XXX: (Theoretically, this could cause an infinite loop, but other code
-    //      should already prevent opening a menu when you have no items.)
-    if (items.empty())
-        cycle_page(dir);
 
     // If the player has selected items on this new page previously, restore
     // those selections.
@@ -1483,8 +1493,11 @@ static int _invent_select(const char *title = nullptr,
 
     // Cycle through all pages to properly apply pre-selections immediately.
     if (flags & MF_PAGED_INVENTORY)
+    {
         for (int i = 0; i < 4; ++i)
-            menu.cycle_page(1);
+            menu.set_page(i);
+        menu.set_page(0);
+    }
 
     menu.show(true);
 
