@@ -1369,7 +1369,8 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
         By default pickup menus are sorted, and the sort criteria are:
              "equipped, basename, qualname, curse, qty".
-        Inv menus are sorted by "equipped, charged, usefulness".
+        Inv and drop menus are sorted by "equipped, charged, identified,
+             usefulness, slot".
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)
