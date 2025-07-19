@@ -2450,7 +2450,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // The backslash in ?\? is there so it doesn't start a trigraph.
         if (crawl_state.game_is_hints())
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
-        else // well, not examine, but...
+        else if (prev_cmd != CMD_COMMAND_PALETTE) // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
         if (feat_is_altar(env.grid(you.pos())))
