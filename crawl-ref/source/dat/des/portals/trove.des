@@ -773,9 +773,9 @@ NSUBST:  d = 6:d / *:?, g = 6:g / *:?
 trove_offense(_G, trove_weap_brand(_G, "freezing"),
                   trove_standard_magic(_G, "ice", true),
                   trove_good_talisman(_G, "rC"), "ice magic")
-trove_defense(_G, "robe ego:resistance good_item / scarf ego:resistance w:5 / \
-                   ice dragon scales good_item / ice dragon scales randart" ..
-                   " / " .. trove_ego_shield(_G, "cold_resistance w:1", "rC w:1"),
+trove_defense(_G, "robe ego:resistance good_item w:15 / scarf ego:resistance / \
+                   ice dragon scales good_item w:15 / ice dragon scales randart" ..
+                   " / " .. trove_ego_shield(_G, "cold_resistance", "rC"),
                    trove_ego_gen_armour(_G, "cold_resistance", "rC"),
                    trove_jewel_type(_G, "rC"),
                    trove_cons(_G, {"identify w:1 q:3"},
