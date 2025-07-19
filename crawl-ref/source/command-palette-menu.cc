@@ -155,33 +155,35 @@ void CommandPalette::update_items(std::string const &pattern)
 
 void CommandPalette::undo_update_items()
 {
-    if (!entries_stack.empty())
+    if (entries_stack.empty())
     {
-        items.clear();
-        entries_stack.pop();
-
-        std::vector<MenuEntry*>* source = nullptr;
-
-        if (entries_stack.empty())
-        {
-            source = &all_entries;
-            matching_entries.clear();
-        }
-        else
-        {
-            matching_entries = entries_stack.top();
-            source = &matching_entries;
-        }
-
-        std::for_each(source->begin(), source->end(),
-            [this](MenuEntry *entry)
-            {
-                entry->text =format_matching_string(dynamic_cast<CommandPaletteEntry *>(entry)->command_description, title2->text);
-                add_entry(entry);
-            });
-
-        update_menu(true);
+        return;
     }
+
+    items.clear();
+    entries_stack.pop();
+
+    std::vector<MenuEntry*>* source = nullptr;
+
+    if (entries_stack.empty())
+    {
+        matching_entries.clear();
+        source = &all_entries;
+    }
+    else
+    {
+        matching_entries = entries_stack.top();
+        source = &matching_entries;
+    }
+
+    for (auto const& entry : *source)
+    {
+        entry->text =format_matching_string(dynamic_cast<CommandPaletteEntry *>(entry)->command_description,
+            title2->text);
+        add_entry(entry);
+    }
+
+    update_menu(true);
 }
 
 void CommandPalette::on_command_click(CommandPaletteEntry &entry)

@@ -2,6 +2,7 @@
  * @file
  * @brief Menus and associated malarkey.
 **/
+
 #include "AppHdr.h"
 
 #include "menu.h"
@@ -554,6 +555,7 @@ int UIMenu::get_max_viewport_height()
     return max_viewport_height;
 }
 #endif
+
 void UIMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
@@ -1931,7 +1933,6 @@ bool Menu::process_command(command_type cmd)
 
     return ret;
 }
-
 
 bool Menu::skip_process_command(int keyin)
 {

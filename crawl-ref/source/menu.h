@@ -392,6 +392,7 @@ public:
     virtual bool skip_process_command(int keyin);
     virtual command_type get_command(int keyin);
     virtual bool process_command(command_type cmd);
+
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
     void webtiles_scroll(int first, int hover);
