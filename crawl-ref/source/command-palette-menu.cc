@@ -42,6 +42,11 @@ std::vector<std::pair<std::string_view, command_type>> const CommandPalette::com
 CommandPaletteEntry::CommandPaletteEntry(std::string_view txt, command_type cmd)
     : MenuEntry(std::string(txt)), cmd(cmd), command_description(text) {}
 
+bool CommandPaletteEntry::is_entry_hoverable() const
+{
+    return true;
+}
+
 CommandPalette::CommandPalette()
     : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER | MF_USE_TWO_COLUMNS)
@@ -72,11 +77,6 @@ void CommandPalette::add_command(CommandPaletteEntry *entry)
 
     all_entries.push_back(entry);
     add_entry(entry);
-}
-
-bool CommandPalette::exit_on_click() const
-{
-    return true;
 }
 
 void CommandPalette::select_item_index(int idx, int qty)
@@ -187,7 +187,7 @@ void CommandPalette::undo_update_items()
 void CommandPalette::on_command_click(CommandPaletteEntry &entry)
 {
     selectedCommand = &entry;
-    complete = true;
+    close();
 }
 
 void CommandPalette::remove_char()

@@ -205,7 +205,6 @@ protected:
     LineBuffer m_line_buf, m_div_line_buf;
     FontBuffer m_text_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
-
 public:
     size_t shown_items() { return item_info.size(); }
 
@@ -1048,11 +1047,6 @@ bool UIMenu::on_event(const Event& ev)
         click_hovered_entry();
         mark_buffers_dirty();
         _expose();
-
-        if (this->m_menu->exit_on_click())
-        {
-            this->m_menu->complete = true;
-        }
     }
     else if (event.type() == Event::Type::MouseUp
             && (event.button() == MouseEvent::Button::Left
@@ -1171,7 +1165,7 @@ void UIMenu::pack_buffers()
         {
             bool hovered = i == m_hover_idx
                 && !entry.heading
-                && (this->m_menu->tag == "cmd_palette" ? true : me->hotkeys_count() > 0);
+                && me->is_entry_hoverable();
 
             if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
             {
@@ -1558,14 +1552,19 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
         cycle_hover();
     }
 
+    show_menu = false;
     do_menu();
 
     return sel;
 }
 
+void Menu::close()
+{
+    show_menu = true;
+}
+
 void Menu::do_menu()
 {
-    complete = false;
     m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
     m_ui.popup->on_keydown_event([this](const KeyEvent& ev) {
@@ -1597,7 +1596,7 @@ void Menu::do_menu()
         }
 
         auto rc = !process_key(key);
-        complete = (complete ? true : rc);
+        show_menu = (show_menu ? true : rc);
         return true;
     });
 
@@ -1612,8 +1611,8 @@ void Menu::do_menu()
 
     alive = true;
     if (on_show)
-        complete = !on_show();
-    while (alive && !complete && !crawl_state.seen_hups)
+        show_menu = !on_show();
+    while (alive && !show_menu && !crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
         if (_webtiles_title_changed)
@@ -1933,10 +1932,6 @@ bool Menu::process_command(command_type cmd)
     return ret;
 }
 
-bool Menu::exit_on_click() const
-{
-    return false;
-}
 
 bool Menu::skip_process_command(int keyin)
 {
@@ -2425,6 +2420,11 @@ void MenuEntry::add_tile(tile_def tile)
 #else
     UNUSED(tile);
 #endif
+}
+
+bool MenuEntry::is_entry_hoverable() const
+{
+    return hotkeys_count() > 0;
 }
 
 #ifdef USE_TILE

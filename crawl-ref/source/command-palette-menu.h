@@ -15,6 +15,8 @@ public:
     CommandPaletteEntry(std::string_view txt, command_type cmd = CMD_NO_CMD);
     command_type cmd;
     std::string command_description;
+
+    bool is_entry_hoverable() const override;
 };
 
 class CommandPalette : public Menu
@@ -24,7 +26,6 @@ public:
 
     void add_command(CommandPaletteEntry* entry);
 
-    bool exit_on_click() const override;
     void select_item_index(int idx, int qty = MENU_SELECT_INVERT) override;
     void update_title() override;
     bool process_key(int keyin) override;
@@ -45,7 +46,6 @@ private:
 
     static std::string format_matching_string(std::string const& str, std::string const& pattern, size_t patternPos);
     static std::string format_matching_string(std::string const& str, std::string const& pattern);
-
 public:
     static std::vector<std::pair<std::string_view, command_type>> const commands;
 };
