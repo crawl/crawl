@@ -126,27 +126,28 @@ bool CommandPalette::process_key(int keyin)
 void CommandPalette::update_items(std::string const &pattern)
 {
     items.clear();
-    std::vector<MenuEntry*> tmp;
+    std::vector<MenuEntry*> matched_entries;
 
-    auto const& source = !matching_entries.empty() ? matching_entries : all_entries;
+    auto const& source = matching_entries.empty() ? all_entries : matching_entries;
 
-    std::for_each(source.begin(), source.end(),
-        [this, &pattern, &tmp](MenuEntry* entry)
-        {
-            auto * const as_command_entry = dynamic_cast<CommandPaletteEntry*>(entry);
+    for (auto* entry : source)
+    {
+        auto * const as_command_entry = dynamic_cast<CommandPaletteEntry*>(entry);
 
-            auto pos = as_command_entry->command_description.find(pattern);
+        if (!as_command_entry)
+            continue;
 
-            if (pos != std::string::npos)
-            {
-                entry->text = format_matching_string(as_command_entry->command_description, pattern, pos);
+        size_t pos = as_command_entry->command_description.find(pattern);
 
-                tmp.push_back(entry);
-                add_entry(entry);
-            }
-        });
+        if (pos == std::string::npos)
+            continue;
 
-    matching_entries = std::move(tmp);
+        entry->text = format_matching_string(as_command_entry->command_description, pattern, pos);
+        matched_entries.push_back(entry);
+        add_entry(entry);
+    }
+
+    matching_entries = std::move(matched_entries);
     entries_stack.push(matching_entries);
 
     update_menu(true);
@@ -156,9 +157,7 @@ void CommandPalette::update_items(std::string const &pattern)
 void CommandPalette::undo_update_items()
 {
     if (entries_stack.empty())
-    {
         return;
-    }
 
     items.clear();
     entries_stack.pop();
@@ -178,7 +177,12 @@ void CommandPalette::undo_update_items()
 
     for (auto const& entry : *source)
     {
-        entry->text =format_matching_string(dynamic_cast<CommandPaletteEntry *>(entry)->command_description,
+        auto* as_command_entry = dynamic_cast<CommandPaletteEntry *>(entry);
+
+        if (!as_command_entry)
+            continue;
+
+        entry->text =format_matching_string(as_command_entry->command_description,
             title2->text);
         add_entry(entry);
     }
@@ -204,12 +208,12 @@ void CommandPalette::remove_char()
 
 void CommandPalette::add_char(char c)
 {
-    if (title2)
-    {
-        title2->text += c;
-        update_title();
-        update_items(title2->text);
-    }
+    if (!title2)
+        return;
+
+    title2->text += c;
+    update_title();
+    update_items(title2->text);
 }
 
 std::string CommandPalette::format_matching_string(std::string const &str, std::string const &pattern,
