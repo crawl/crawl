@@ -3114,7 +3114,7 @@ void game_options::update_consumable_shortcuts()
         else if (kind.base_type == OBJ_WANDS)
             evokable_shortcuts[kind.sub_type] = entry.second;
         else if (kind.base_type == OBJ_MISCELLANY)
-            evokable_shortcuts[kind.sub_type] = entry.second + NUM_WANDS;
+            evokable_shortcuts[kind.sub_type + NUM_WANDS] = entry.second;
     }
 }
 
