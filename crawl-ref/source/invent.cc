@@ -1409,7 +1409,7 @@ bool item_is_selected(const item_def &i, int selector)
         return i.base_type == OBJ_JEWELLERY || i.base_type == OBJ_TALISMANS;
 
     case OSEL_GEAR:
-        return item_is_selected(i, OSEL_EQUIPABLE)
+        return inventory_category_for(i) == INVENT_GEAR
                 || i.base_type == OBJ_MISSILES;
 
     default:
