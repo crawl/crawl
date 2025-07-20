@@ -403,7 +403,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 #endif
 
 static string _god_powers();
-static formatted_string _god_asterisks(bool leading_space = false);
+static string _god_asterisks(bool leading_space = false);
 static int _god_status_colour(int default_colour);
 
 // Colour for captions like 'Health:', 'Str:', etc.
@@ -1509,7 +1509,7 @@ static void _redraw_title()
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                       : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
-        formatted_string piety = _god_asterisks(true);
+        formatted_string piety = formatted_string::parse_string(_god_asterisks(true));
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
         if (small_layout)
@@ -2249,17 +2249,17 @@ static string _god_powers()
         return colour_string(name, _god_status_colour(god_colour(you.religion)));
 
     return colour_string(chop_string(name, 20, false)
-              + " [" + _god_asterisks().to_colour_string() + "]",
+              + " [" + _god_asterisks() + "]",
               _god_status_colour(god_colour(you.religion)));
 }
 
-static formatted_string _god_asterisks(bool leading_space)
+static string _god_asterisks(bool leading_space)
 {
     if (you_worship(GOD_NO_GOD))
-        return formatted_string("");
+        return "";
 
     if (you_worship(GOD_GOZAG))
-        return formatted_string("");
+        return "";
 
     string str;
     if (you_worship(GOD_XOM))
@@ -2289,7 +2289,7 @@ static formatted_string _god_asterisks(bool leading_space)
             str = string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
     }
 
-    return formatted_string::parse_string((leading_space ? " " : "") + str);
+    return make_stringf("%s%s", leading_space ? " " : "", str.c_str());
 }
 
 /**
