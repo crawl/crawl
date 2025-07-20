@@ -6,6 +6,18 @@ much protection as the armour made from the scales of some larger dragons, it is
 somewhat lighter and less encumbering. It is also remarkably smooth, letting
 corrosive slime flow off it like water.
 %%%%
+Amulet of alchemy
+
+An amulet that enhances the power of the wearer's alchemy spells and also allows
+them to extract small amounts of magical energy from any potion they drink. The
+latter effect only functions once the amulet has attuned itself to the wearer's
+body with full reserves of magic.
+%%%%
+amulet of dissipation
+
+An amulet which causes negative status effects upon the wearer to expire twice
+as quickly with time.
+%%%%
 amulet of faith
 
 A charm crafted to call the attention of the gods to its wearer. This divine
@@ -45,6 +57,10 @@ amulet of the acrobat
 An amulet that allows the user to tumble and roll to evade the blows of their
 enemies, but only while moving and waiting. While taking other actions
 (including climbing stairs) the amulet conveys no benefits.
+%%%%
+amulet of wildshape
+
+An amulet which improves its wearer's skill with Shapeshifting.
 %%%%
 animal skin
 
@@ -1218,20 +1234,9 @@ ring of evasion
 
 A ring that makes its wearer more capable of avoiding attacks.
 %%%%
-ring of fire
-
-A ring that brings its wearer more in contact with the powers of fire. It
-grants resistance to heat and enhances fire magic, but causes vulnerability to
-cold.
-%%%%
 ring of flight
 
 A ring that grants its wearer flight.
-%%%%
-ring of ice
-
-A ring that brings its wearer more in contact with the powers of ice. It grants
-resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
@@ -1565,7 +1570,7 @@ A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
 strike with pure energy.
 %%%%
-staff of death
+staff of necromancy
 
 A staff that increases the power of necromantic spells cast by its wielder, and
 protects them from negative energy. If the wielder is skilled in Evocations and

@@ -4307,6 +4307,13 @@ static void _do_player_potion()
     if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
         oni_drunken_swing();
 
+    if (you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true)
+        && you.magic_points < you.max_magic_points)
+    {
+        mpr("You extract magical energy from the potion.");
+        inc_mp(random_range(3, 6));
+    }
+
     // Mildly shorter duration than drinking the potion normally.
     get_potion_effect(potion)->effect(true, 15);
 }

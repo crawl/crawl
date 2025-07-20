@@ -164,7 +164,9 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     case OBJ_SCROLLS:
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
-        return item.sub_type == STAFF_DEATH;
+        return item.sub_type == STAFF_NECROMANCY;
+    case OBJ_ARMOUR:
+        return get_armour_ego_type(item) == SPARM_DEATH;
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_HORN_OF_GERYON;
     case OBJ_BOOKS:
@@ -233,6 +235,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
                || _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
+    case OBJ_JEWELLERY:
+        return item.sub_type == AMU_WILDSHAPE;
     case OBJ_TALISMANS:
     case OBJ_BAUBLES:
         return true;

@@ -138,6 +138,7 @@ int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
 int throwing_base_damage_bonus(const item_def &projectile, bool random);
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
+int resonance_damage_mod(int dam, bool random);
 
 int unarmed_base_damage(bool random);
 int unarmed_base_damage_bonus(bool random);

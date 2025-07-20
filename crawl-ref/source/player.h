@@ -877,8 +877,8 @@ public:
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const;
-    int adjusted_body_armour_penalty(int scale = 1) const;
+    int unadjusted_body_armour_penalty(bool archery = false) const;
+    int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
     // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
@@ -1028,6 +1028,9 @@ bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 void update_acrobat_status();
 bool player_acrobatic();
+
+int player_parrying();
+void update_parrying_status();
 
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();

@@ -41,9 +41,7 @@ ae += <good_item
 :   or itsubtype == "ring of protection from cold"
 :   or itsubtype == "ring of resist corrosion"
 :   or itsubtype == "ring of see invisible"
-:   or itsubtype == "ring of magical power"
-:   or itsubtype == "ring of ice"
-:   or itsubtype == "ring of fire") then
+:   or itsubtype == "ring of magical power") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if it.class(true) == inv.class(true)
 :      and itsubtype == inv.subtype() then

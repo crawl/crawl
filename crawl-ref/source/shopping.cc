@@ -361,10 +361,20 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 250;
                 break;
 
+            case SPARM_ICE:
+            case SPARM_FIRE:
+            case SPARM_AIR:
+            case SPARM_EARTH:
+                valued += 100;
+
             case SPARM_COLD_RESISTANCE:
             case SPARM_DEXTERITY:
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
+            case SPARM_SNIPING:
+            case SPARM_COMMAND:
+            case SPARM_DEATH:
+            case SPARM_RESONANCE:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
             case SPARM_STEALTH:
@@ -374,17 +384,21 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_PROTECTION:
             case SPARM_HURLING:
             case SPARM_REPULSION:
-            case SPARM_PRESERVATION:
+            case SPARM_CORROSION_RESISTANCE:
             case SPARM_SHADOWS:
             case SPARM_RAMPAGING:
             case SPARM_INFUSION:
             case SPARM_LIGHT:
             case SPARM_ENERGY:
+            case SPARM_PARRYING:
+            case SPARM_CONJURING:
+            case SPARM_GLASS:
                 valued += 50;
                 break;
 
             case SPARM_POSITIVE_ENERGY:
             case SPARM_POISON_RESISTANCE:
+            case SPARM_ARCHERY:
             case SPARM_REFLECTION:
             case SPARM_SPIRIT_SHIELD:
             case SPARM_HARM:
@@ -610,11 +624,12 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_MANA_REGENERATION:
                 case AMU_ACROBAT:
                 case AMU_REFLECTION:
+                case AMU_WILDSHAPE:
+                case AMU_ALCHEMY:
+                case AMU_DISSIPATION:
                     valued += 300;
                     break;
 
-                case RING_FIRE:
-                case RING_ICE:
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_WILLPOWER:

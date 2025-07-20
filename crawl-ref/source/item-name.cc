@@ -551,7 +551,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "jumping";
 #endif
-        case SPARM_PRESERVATION:      return "preservation";
+        case SPARM_CORROSION_RESISTANCE: return "corrosion resistance";
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_HURLING:           return "hurling";
@@ -568,6 +568,18 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_MAYHEM:            return "mayhem";
         case SPARM_GUILE:             return "guile";
         case SPARM_ENERGY:            return "energy";
+        case SPARM_SNIPING:           return "sniping";
+        case SPARM_ICE:               return "ice";
+        case SPARM_FIRE:              return "fire";
+        case SPARM_AIR:               return "air";
+        case SPARM_EARTH:             return "earth";
+        case SPARM_ARCHERY:           return "archery";
+        case SPARM_COMMAND:           return "command";
+        case SPARM_DEATH:             return "death";
+        case SPARM_RESONANCE:         return "resonance";
+        case SPARM_PARRYING:          return "parrying";
+        case SPARM_CONJURING:         return "conjuring";
+        case SPARM_GLASS:             return "glass";
         default:                      return "bugginess";
         }
     }
@@ -598,7 +610,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "obsolete";
 #endif
-        case SPARM_PRESERVATION:      return "rCorr";
+        case SPARM_CORROSION_RESISTANCE: return "rCorr";
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_HURLING:           return "hurl";
@@ -615,6 +627,18 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_MAYHEM:            return "mayhem";
         case SPARM_GUILE:             return "guile";
         case SPARM_ENERGY:            return "*channel";
+        case SPARM_SNIPING:           return "snipe";
+        case SPARM_ICE:               return "ice";
+        case SPARM_FIRE:              return "fire";
+        case SPARM_AIR:               return "air";
+        case SPARM_EARTH:             return "earth";
+        case SPARM_ARCHERY:           return "archery";
+        case SPARM_COMMAND:           return "command";
+        case SPARM_DEATH:             return "death";
+        case SPARM_RESONANCE:         return "resonance";
+        case SPARM_PARRYING:          return "parrying";
+        case SPARM_CONJURING:         return "conjuring";
+        case SPARM_GLASS:             return "glass";
         default:                      return "buggy";
         }
     }
@@ -769,10 +793,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
         case RING_POSITIVE_ENERGY:       return "positive energy";
-        case RING_WILLPOWER: return "willpower";
-        case RING_FIRE:                  return "fire";
-        case RING_ICE:                   return "ice";
+        case RING_WILLPOWER:             return "willpower";
 #if TAG_MAJOR_VERSION == 34
+        case RING_FIRE:                  return "obsoleteness";
+        case RING_ICE:                   return "obsoleteness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
@@ -791,6 +815,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_FAITH:             return "faith";
         case AMU_REFLECTION:        return "reflection";
         case AMU_REGENERATION:      return "regeneration";
+        case AMU_WILDSHAPE:         return "wildshape";
+        case AMU_ALCHEMY:           return "alchemy";
+        case AMU_DISSIPATION:       return "dissipation";
         default: return "buggy jewellery";
         }
     }
@@ -821,14 +848,19 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
         case RING_WIZARDRY:              return "Wiz";
-        case RING_FIRE:                  return "Fire";
-        case RING_ICE:                   return "Ice";
+#if TAG_MAJOR_VERSION == 34
+        case RING_FIRE:                  return "obsoleteness";
+        case RING_ICE:                   return "obsoleteness";
+#endif
         case AMU_REGENERATION:           return "Regen";
         case AMU_MANA_REGENERATION:      return "RegenMP";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
 #endif
         case AMU_ACROBAT:                return "Acrobat";
+        case AMU_WILDSHAPE:              return "Wildshape";
+        case AMU_ALCHEMY:                return "Alch+";
+        case AMU_DISSIPATION:            return "Dissipate";
         case AMU_NOTHING:                return "";
         default: return "buggy";
         }
@@ -1006,7 +1038,7 @@ const char* gizmo_effect_name(int type)
     {
         case SPGIZMO_SPELLMOTOR:    return "SpellMotor";
         case SPGIZMO_GADGETEER:     return "Gadgeteer";
-        case SPGIZMO_PARRYREV:      return "RevParry";
+        case SPGIZMO_REVGUARD:      return "RevGuard";
         case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";
 
         default:

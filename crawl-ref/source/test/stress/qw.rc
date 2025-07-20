@@ -394,9 +394,9 @@ function item_resist(str, it)
         return 2
       elseif ego == "fire resistance" or ego == "resistance"
              or subtype == "ring of protection from fire"
-             or name:find("gold dragon") or subtype == "ring of fire" then
+             or name:find("gold dragon") then
         return 1
-      elseif name:find("ice dragon") or subtype == "ring of ice" then
+      elseif name:find("ice dragon") then
         return -1
       else
         return 0
@@ -406,9 +406,9 @@ function item_resist(str, it)
         return 2
       elseif ego == "cold resistance" or ego == "resistance"
              or subtype == "ring of protection from cold"
-             or name:find("gold dragon") or subtype == "ring of ice" then
+             or name:find("gold dragon") then
         return 1
-      elseif name:find("fire dragon") or subtype == "ring of fire" then
+      elseif name:find("fire dragon") then
         return -1
       else
         return 0

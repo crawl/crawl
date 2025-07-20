@@ -2297,7 +2297,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
      " / book of ice / book of the tundra" ..
      " / randbook disc:ice / manual of ice magic / staff of cold pre_id" ..
-     " / ring of ice pre_id / ring of protection from cold pre_id" ..
+     " / ring of protection from cold pre_id" ..
      " / wand of iceblast pre_id / phial of floods / condenser vane")
 }}
 : if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") then

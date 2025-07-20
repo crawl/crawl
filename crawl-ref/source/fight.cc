@@ -649,6 +649,9 @@ void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
 
     if (you.form == transformation::medusa)
         _do_medusa_stinger();
+
+    if (!was_firewood)
+        update_parrying_status();
 }
 
 /**
@@ -1833,6 +1836,17 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     if (random)
         return div_rand_round(base_dam * 9, 5);
     return base_dam * 9 / 5;
+}
+
+int resonance_damage_mod(int dam, bool random)
+{
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
+    {
+        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, 2)), 100)
+                     : dam * (100 + you.skill(SK_FORGECRAFT, 2)) / 100;
+    }
+
+    return dam;
 }
 
 int unarmed_base_damage(bool random)

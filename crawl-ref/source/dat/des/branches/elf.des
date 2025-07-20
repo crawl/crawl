@@ -1303,7 +1303,7 @@ DEPTH: Elf:2-
 MONS:  deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
 MONS:  deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
-           ring of fire w:10 | scroll of immolation w:5 | \
+           scroll of immolation w:5 | \
            ring of protection from fire w:10 | \
            any weapon ego:flaming w:4 | hand cannon ego:flaming w:4 | \
            wand of flame w:4 | any armour ego:fire_resistance w:9 | \
@@ -1817,14 +1817,14 @@ NAME:    nicolae_elf_loose_elemental_storage
 TAGS:    transparent no_trap_gen no_monster_gen no_item_gen
 DEPTH:   Elf
 KITEM:   P = staff of fire / randbook disc:fire / wand of flame \
-         / ring of fire / ring of protection from fire \
+         / ring of protection from fire \
          / any weapon ego:flaming / any armour ego:fire_resistance \
          / scroll of immolation
 KITEM:   Q = staff of earth / randbook disc:earth / wand of digging \
          /  ring of protection / tin of tremorstones \
          / any weapon ego:protection / any weapon ego:heavy
 KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
-         / ring of ice / ring of protection from cold / phial of floods \
+         / ring of protection from cold / phial of floods \
          / any weapon ego:freezing / any armour ego:cold_resistance
 KITEM:   S = staff of air / randbook disc:air / ring of flight \
          / ring of evasion / condenser vane / lightning rod \
@@ -1986,7 +1986,7 @@ TAGS:    no_monster_gen no_pool_fixup misc_elf_vault
 DEPTH:   Elf
 MONS:    fire elemental, dancing weapon ; short sword ego:freezing
 MONS:    deep elf pyromancer, deep elf knight, thermic dynamo
-ITEM:    ring of fire, ring of ice
+ITEM:    ring of protection from fire, ring of protection from cold
 ITEM:    staff of fire no_pickup, staff of cold no_pickup
 KFEAT:   - = closed_clear_door
 SUBST:   0 = 12, 9 = 33344455

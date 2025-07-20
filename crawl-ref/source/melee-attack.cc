@@ -595,7 +595,7 @@ void melee_attack::try_parry_disarm()
         && defender->is_monster()
         && defender->alive()
         && you.rev_percent() > FULL_REV_PERCENT
-        && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV)
+        && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD)
         && one_chance_in(50 + defender->get_experience_level() * 2
                          - you.get_experience_level()))
     {
@@ -2444,6 +2444,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
+    // resonance armour damage modifier
+    damage = resonance_damage_mod(damage, true);
+
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
@@ -3068,7 +3071,7 @@ string melee_attack::staff_message(stave_type staff, int dam) const
                 defender->name(DESC_THE).c_str(),
                 attack_strength_punctuation(dam).c_str());
 
-    case STAFF_DEATH:
+    case STAFF_NECROMANCY:
         return make_stringf(
                 "%s %s as negative energy consumes %s%s",
                 defender->name(DESC_THE).c_str(),
@@ -3111,7 +3114,7 @@ bool melee_attack::apply_staff_damage()
         dam /= 3;
     if (dam > 0)
     {
-        if (staff == STAFF_DEATH)
+        if (staff == STAFF_NECROMANCY)
             attacker->god_conduct(DID_EVIL, 4);
         else if (staff == STAFF_FIRE && defender->is_player())
             maybe_melt_player_enchantments(flavour, dam);
