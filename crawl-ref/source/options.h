@@ -759,6 +759,8 @@ public:
     bool        spell_menu;         // 'z' starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1
     bool        bad_item_prompt;    // Confirm before using a bad consumable
+    bool        show_paged_inventory;   // If true, use pages for the 'i' menu
+                                        // (just like the 'd'rop menu does).
 
     slot_select_mode assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names

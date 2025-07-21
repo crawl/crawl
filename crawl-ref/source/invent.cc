@@ -348,6 +348,7 @@ void InvMenu::set_title(const string &s)
             case 2: str = "Scrolls: "; break;
             case 3: str = "Evocable Items: "; break;
         }
+        str += "    (Left/Right to switch category)";
         set_title(new InvTitle(this, str, title_annotate));
         return;
     }
@@ -1451,7 +1452,12 @@ static int _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
+
+    int flags = MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL;
+    if (Options.show_paged_inventory)
+        flags |= MF_PAGED_INVENTORY;
+
+    InvMenu menu(flags);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
