@@ -37,6 +37,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "transform.h"
 #include "xom.h"
 #include "xp-evoker-data.h"
 
@@ -3709,4 +3710,41 @@ bool item_grants_flight(const item_def& item)
     return item.base_type == OBJ_JEWELLERY && item.sub_type == RING_FLIGHT
            || item.base_type == OBJ_ARMOUR && item.brand == SPARM_FLYING
            || is_artefact(item) && artefact_property(item, ARTP_FLY);
+}
+
+// Returns the maximum number of copies of a particular type of jewellery that
+// could be useful to wear simultaneously, under typical circumstances.
+// (ie: rF over 3 pips can be useful to counteract rF- but is niche enough not
+// to calculate here)
+//
+// (Used for default autopickup exceptions)
+int jewellery_usefulness_limit(jewellery_type type)
+{
+    switch (type)
+    {
+        // Completely non-stacking
+        case RING_SEE_INVISIBLE:
+        case RING_RESIST_CORROSION:
+        case RING_FLIGHT:
+        case AMU_ACROBAT:
+        case AMU_GUARDIAN_SPIRIT:
+        case AMU_FAITH:
+            return 1;
+
+        // Typically caps at 3, under most circumstances
+        case RING_PROTECTION_FROM_FIRE:
+        case RING_PROTECTION_FROM_COLD:
+        case RING_POSITIVE_ENERGY:
+            return 3;
+
+        // Usually doesn't stack, but some forms care.
+        case RING_POISON_RESISTANCE:
+            if (get_form()->res_pois() < 0)
+                return 2;
+            else
+                return 1;
+
+        default:
+            return INT_MAX;
+    }
 }

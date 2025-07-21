@@ -1019,6 +1019,19 @@ IDEF(description)
     return 1;
 }
 
+/*** Whether the current item is a piece of jewellery that the player already
+ *   has as many copies as they can benefit from.
+ * @field description string
+ */
+IDEF(redundant)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, jewellery_is_redundant(*item));
+
+    return 1;
+}
 
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
@@ -1754,6 +1767,7 @@ static ItemAccessor item_attrs[] =
     { "is_in_shop",        l_item_is_in_shop },
     { "inscription",       l_item_inscription },
     { "description",       l_item_description },
+    { "is_redundant",      l_item_redundant },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

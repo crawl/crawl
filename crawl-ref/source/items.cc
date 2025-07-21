@@ -5098,3 +5098,30 @@ void maybe_split_nets(item_def &item, const coord_def& where)
 
     copy_item_to_grid(it, where);
 }
+
+// Returns whether an additional copy of a given item in the player's inventory
+// would be strictly redundant with ones they already have.
+bool jewellery_is_redundant(const item_def& item)
+{
+    if (item.base_type != OBJ_JEWELLERY || is_artefact(item))
+        return false;
+
+    const jewellery_type type = static_cast<jewellery_type>(item.sub_type);
+    const int slots = jewellery_is_amulet(type) ? you.equipment.num_slots[SLOT_AMULET]
+                                                : you.equipment.num_slots[SLOT_RING];
+    const int limit = min(slots, jewellery_usefulness_limit(type));
+
+    // A new item would be useless if we already have as many copies as we can use.
+    int count = 0;
+    for (int i = 0; i < MAX_GEAR; ++i)
+    {
+        if (you.inv[i].is_type(OBJ_JEWELLERY, type))
+        {
+            ++count;
+            if (count >= limit)
+                return true;
+        }
+    }
+
+    return false;
+}

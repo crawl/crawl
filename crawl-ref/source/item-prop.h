@@ -302,3 +302,5 @@ bool ring_plusses_matter(int ring_subtype);
 void remove_whitespace(string &str);
 
 void populate_fake_projectile(const item_def &wep, item_def &fake_proj);
+
+int jewellery_usefulness_limit(jewellery_type type);
