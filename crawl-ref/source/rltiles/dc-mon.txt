@@ -1367,9 +1367,6 @@ nobody2
 ## Sprint specials
 %sdir mon/sprint
 dimme MONS_DIMME
-%rim 0
-orb_of_ice MONS_ORB_OF_ICE
-orb_of_electricity MONS_ORB_OF_ELECTRICITY
 %rim 1
 
 %include dc-zombie.txt

@@ -44,10 +44,10 @@ cause_fear CAUSE_FEAR
 confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
-dazzling_flash DAZZLING_FLASH
 discord DISCORD
 enfeeble ENFEEBLE
 charming CHARMING
+gloom GLOOM
 haste HASTE
 invisibility INVISIBILITY
 jinxbite JINXBITE
