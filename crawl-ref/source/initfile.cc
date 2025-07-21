@@ -3104,8 +3104,6 @@ void game_options::update_consumable_shortcuts()
             report_error("Unknown consumable type: %s\n", entry.first.c_str());
             continue;
         }
-        else
-            string str = string(1, entry.second);
 
         if (kind.base_type == OBJ_POTIONS)
             potion_shortcuts[kind.sub_type] = entry.second;
