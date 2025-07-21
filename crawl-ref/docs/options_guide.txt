@@ -1405,7 +1405,7 @@ gear_slot ^= <regex>:<inventory letters>
         is on by default; overwrite mode can be disabled with a - in the
         list of letters.
 
-consumable_shortcut ^= <item name>:<inventory letter>
+consumable_shortcut += <item name>:<inventory letter>
 	(Ordered list option, one value per line)
 	Similar to gear_slot, but accepts only a single letter per consumable
         name and does not handle regex.
