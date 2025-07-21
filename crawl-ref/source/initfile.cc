@@ -3113,6 +3113,8 @@ void game_options::update_consumable_shortcuts()
             evokable_shortcuts[kind.sub_type] = entry.second;
         else if (kind.base_type == OBJ_MISCELLANY)
             evokable_shortcuts[kind.sub_type + NUM_WANDS] = entry.second;
+        else if (kind.base_type == OBJ_BAUBLES)
+            evokable_shortcuts[kind.sub_type + NUM_WANDS + NUM_MISCELLANY] = entry.second;
     }
 }
 

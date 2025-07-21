@@ -641,7 +641,7 @@ public:
     vector<pair<string, char>> auto_consumable_letters;
     FixedVector<char, NUM_POTIONS> potion_shortcuts;
     FixedVector<char, NUM_SCROLLS> scroll_shortcuts;
-    FixedVector<char, NUM_WANDS + NUM_MISCELLANY> evokable_shortcuts;
+    FixedVector<char, NUM_WANDS + NUM_MISCELLANY + NUM_BAUBLES> evokable_shortcuts;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves

@@ -2170,6 +2170,9 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
             case OBJ_MISCELLANY:
                 key = Options.evokable_shortcuts[item.sub_type + NUM_WANDS];
                 break;
+            case OBJ_BAUBLES:
+                key = Options.evokable_shortcuts[item.sub_type + NUM_WANDS + NUM_MISCELLANY];
+                break;
             default:
                 key = 0;
         }

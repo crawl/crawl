@@ -880,6 +880,7 @@ enum talisman_type
 enum bauble_type
 {
     BAUBLE_FLUX,
+    NUM_BAUBLES,
 };
 
 enum special_gizmo_type
