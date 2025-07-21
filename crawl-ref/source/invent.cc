@@ -1458,7 +1458,7 @@ void display_inventory()
         flags |= MF_PAGED_INVENTORY;
 
     InvMenu menu(flags);
-    menu.load_inv_items(OSEL_ANY, -1);
+    menu.load_inv_items(Options.show_paged_inventory ? OSEL_GEAR : OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
     menu.show(true);
