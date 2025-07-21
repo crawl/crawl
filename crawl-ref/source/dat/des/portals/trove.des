@@ -766,8 +766,9 @@ ENDMAP
 # Layout directly adjusting due's trove_library.
 NAME:   regret_index_trove_ozocubu
 : trove_setup(_G)
-MONS:   block of ice
-# dream sheep / hell hog / alligator / anaconda / hydra / caustic shrike
+MONS:   dream sheep-shaped block of ice / hell hog-shaped block of ice / \
+        anaconda-shaped block of ice / alligator-shaped block of ice / \
+        hydra-shaped block of ice / caustic shrike-shaped block of ice w:2
 NSUBST:  d = 6:d / *:?, g = 6:g / *:?
 {{
 trove_offense(_G, trove_weap_brand(_G, "freezing"),

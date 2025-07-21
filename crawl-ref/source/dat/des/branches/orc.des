@@ -217,22 +217,26 @@ ORIENT: float
 MONS:   orc warrior, orc priest / orc wizard, orc w:100 / orc warrior
 : if you.absdepth() >= 10 and crawl.one_chance_in(10) then
 MONS:   orc knight
-SUBST:  G = .
+SUBST:  ? = .
 : else
-MONS:  orc warrior
-SUBST:  G = 4
+MONS:   orc warrior
+SUBST:  ? = 4
 : end
-SUBST:  c = c:1000 x
 KFEAT:  O = enter_orcish_mines
+: if crawl.one_chance_in(100) then
+SUBST:  X = x
+: else
+SUBST:  X = c
+: end
 MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .ww2+cccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
-.wwxx........3.3.......cccww.
-.122........3.I.3.....G4Ocww.
-.wwxx........3.3.......cccww.
+.wwxx........3.3.......XXXww.
+.122........3.I.3.....?4Ocww.
+.wwxx........3.3.......XXXww.
 .ww.c.......3.3.3......w2cww.
 .ww2+cccccccccccccccccccccww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.

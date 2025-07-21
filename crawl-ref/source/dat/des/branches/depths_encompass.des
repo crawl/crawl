@@ -795,6 +795,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian annihilator / draconian knight
 KMONS:   Zd = draconian knight / draconian annihilator
 KITEM:   d = midnight gem
+KITEM:   * = *
 KFEAT:   z^ = harlequin's trap
 KFEAT:   Z = enter_zot
 KFEAT:   ~ = zot_statue
@@ -818,6 +819,7 @@ SUBST:   )]}> = ., e = ~, ?_ = ^, fghi"` = '
 SUBST:   defghi'"`Z?_ = .
 : end
 MARKER: Y = lua:props_marker { portal=1 }
+: decorative_floor(_G, '*', "flower patch")
 FTILE:  Z~'^ = floor_marble
 LFLOORTILE: floor_depthstone
 MAP

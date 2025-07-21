@@ -197,7 +197,7 @@ KFEAT:   B = zot_statue
 KFEAT:   Z = enter_zot
 KITEM:   r = midnight gem
 NSUBST:  (D = 1:Z
-SUBST:   f = B, 2 = t
+SUBST:   f = B, 2 = r
 :     end
 : else
 SUBST:   A&@ = a, _ = -, l = W

@@ -387,7 +387,7 @@ MAP
 '""w"tt
 twwww"t
 '""wwtt
- ttw"t'
+ ttw"tt
   'tt'
 ENDMAP
 
@@ -401,7 +401,7 @@ MAP
  ''www't
 'twwwwwtt
  wwwww"tt
-'twww"tt'
+'twww"ttt
  ttwww"tt
   ttw'tt
 ENDMAP
@@ -414,8 +414,8 @@ KFEAT:  1 = deep_water
 SUBST:  " = ttttw
 NSUBST: ' = 1:@ / * = ttW
 MAP
- 't't'
-tt"""t'
+ 't'tt
+ttw""tt
 t"w1w"tt
 ww1ww"tt
 t"w1t"t

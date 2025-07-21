@@ -3634,6 +3634,23 @@ PwwwwwwP;-+---;x".""""xx
                       xx
 ENDMAP
 
+NAME:    nzn_masters_of_martial_movement
+TAGS:    no_pool_fixup no_monster_gen
+DEPTH:   Lair
+KFEAT:   D = altar_wu_jian
+KFEAT:   E = altar_uskayaw
+MONS:    patrolling boulder beetle
+SUBST:   W : W:50 w:40 l
+MAP
+ x...@...x
+xxW.W.W.Wxx
+.W.W.W.W.W.
+@.W.D1E.W.@
+.W.W.W.W.W.
+xxW.W.W.Wxx
+ x...@...x
+ENDMAP
+
 NAME:     nicolae_lair_grazing_beasts
 TAGS:     no_pool_fixup patrolling transparent
 DEPTH:    Lair
@@ -4251,7 +4268,7 @@ xxxc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
 xxxcGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
  xxcccccccctq..qccc-----------------cccq..qtcccccccc..
  .axacccatq..  .qtcccccccc+++cccccccctq.  .qqtcccatq.
- ..........     .........8@@@....a.....     ........
+ ..........     .........8@@@....a...@@     ........
 ENDMAP
 
 ##############################################################################

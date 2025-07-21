@@ -351,23 +351,6 @@ MAP
   ....
 ENDMAP
 
-NAME:    nzn_masters_of_martial_movement
-TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair
-KFEAT:   D = altar_wu_jian
-KFEAT:   E = altar_uskayaw
-MONS:    patrolling boulder beetle
-SUBST:   W : W:50 w:40 l
-MAP
- x...@...x
-xxW.W.W.Wxx
-.W.W.W.W.W.
-@.W.D1E.W.@
-.W.W.W.W.W.
-xxW.W.W.Wxx
- x...@...x
-ENDMAP
-
 NAME:   nzn_sisyphean_effort
 DEPTH:  D:9-12, Lair
 MONS:   patrolling boulder beetle
@@ -2555,7 +2538,7 @@ ENDMAP
 # Very hungry Elvish explorers and their campfire, mounts and pet.
 # Sometimes they have starved to death.
 NAME:   beargit_elvish_explorers
-DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
+DEPTH:  D:12-, Depths, Crypt
 TAGS:   transparent patrolling no_monster_gen no_trap_gen
 : if you.in_branch("D") then
 :     if you.depth() < 14 then
@@ -2570,14 +2553,6 @@ MONS:   deep elf knight; lajatang good_item . scale mail good_item
 MONS:   elephant / dire elephant, warg / hell hound / raiju
 :     end
 MONS:   plant / fungus, nothing
-: elseif you.in_branch("Swamp") or you.in_branch("Spider")
-:        or you.in_branch("Snake") then
-MONS:   deep elf archer; longbow good_item . quarterstaff \
-            . robe good_item
-MONS:   deep elf knight; lajatang good_item . chain mail good_item
-MONS:   dire elephant
-MONS:   hell hound / raiju
-MONS:   fungus / nothing, nothing
 : elseif you.in_branch("Crypt") then
 KITEM:  1 = longbow good_item, quarterstaff, robe good_item
 KITEM:  2 = lajatang good_item, chain mail good_item
@@ -2587,7 +2562,7 @@ KMONS:  3 = spectral hellephant
 KMONS:  4 = spectral shadow dragon
 KMONS:  6 = deep elf death mage w:30 / vampire mage / \
             lich / ancient lich / dread lich
-KITEM:  P = rat
+KITEM:  P = rat skeleton
 SUBST:  5 = -
 : else
 # The elves have mastered the dungeon and allied with the darkness.
@@ -2604,11 +2579,6 @@ COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 FTILE:  - = floor_crypt
-: elseif you.in_branch("Swamp") then
-SUBST:  - = --....W, x = t
-FTILE:  -123456t = floor_grass
-: elseif you.in_branch("Spider") then
-SUBST:  t = x
 : else
 FTILE:  -123456t = floor_grass
 FTILE:  P = floor_sand

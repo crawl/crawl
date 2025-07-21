@@ -2654,31 +2654,33 @@ xxDxxxDxxxDxxxDxx
 ENDMAP
 
 ##############################################################################
-NAME:   sevenhm_arrival_forest_fort_small_1
-TAGS:   arrival no_monster_gen
-ORIENT: float
-WEIGHT: 1
-KPROP: 1 = no_tele_into
-NSUBST: { = { / T> , z = + / n+
-SUBST:  T = TTG
+NAME:    sevenhm_arrival_forest_fort_small_1
+TAGS:    arrival no_monster_gen
+ORIENT:  float
+WEIGHT:  1
+KMONS:   12 = bullfrog / cane toad / yak
+KPROP:   1 = no_tele_into
+NSUBST:  { = { / T> , z = + / n+
+SUBST:   T = TTG
 : if crawl.one_chance_in(4) then
 SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   bullfrog / cane toad / yak / death yak w:1 / elephant
+SHUFFLE: 2N / ``
+SUBST:   ` = t
 MAP
           ccccccccc
        cccctccccctcccc
-      cctt1tc...ct1ttcc
-    cccttttnc.{.cnttttccc
+      cctt1tc...ct2ttcc
+    cccttttnc.{.cNttttccc
     ccccccccn...ncccccccc
     WWcc..+.......+..ccWW
    @WWz..."'-----'"...zWW@
     WWcc..+.......+..ccWW
     ccccccccn...ncccccccc
-    ccctttttc.{.ctttttccc
-      cctt1tc...ct1ttcc
+    cccttttNc.{.cnttttccc
+      cctt2tc...ct1ttcc
        cccctccccctcccc
           ccccccccc
 ENDMAP
@@ -2835,8 +2837,9 @@ ORIENT: float
 COLOUR: W# = lightgreen
 NSUBST: W = 6:% / 7:#
 KITEM:  % = nothing / w:5 river rat skeleton
-MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_max = 10, \
-                              delay = 5, size = 5, excl_rad = 0 }
+MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5, \
+                              pow_max = 10, delay = 30, size = 5, \
+                              start_clouds = 5, walk_dist = 3, excl_rad = 0 }
 KFEAT:  %# = W
 KPROP:  W#% = no_tele_into
 MAP
