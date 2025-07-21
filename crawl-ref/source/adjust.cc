@@ -24,7 +24,7 @@ static void _adjust_ability();
 void adjust()
 {
     mprf(MSGCH_PROMPT, "Adjust (g)ear, (s)pells, (a)bilities, "
-                       "(p)otions, sc(r)olls or e(v)okables? ");
+                       "(p)otions, sc(r)olls or e(v)ocables? ");
 
     const int keyin = toalower(get_ch());
 
