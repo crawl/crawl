@@ -1039,7 +1039,7 @@ bool startup_step()
 #ifdef __ANDROID__
     // Request the Android virtual keyboard. Waiting for the SDLActivity to be
     // resized avoids some display bugs.
-    jni_keyboard_control(false);
+    jni_keyboard_control(1);
     sleep(1);
 #endif
 
