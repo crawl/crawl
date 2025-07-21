@@ -227,29 +227,29 @@ public class DCSSKeyboard extends DCSSKeyboardBase implements View.OnClickListen
     protected void updateLayout(View v) {
         if ((v.getId() == R.id.key_shift_lower) ||
                 (v.getId() == R.id.key_shift_ctrl)) {
-            keyboardLower.setVisibility(View.INVISIBLE);
-            keyboardCtrl.setVisibility(View.INVISIBLE);
-            keyboardNumeric.setVisibility(View.INVISIBLE);
+            keyboardLower.setVisibility(View.GONE);
+            keyboardCtrl.setVisibility(View.GONE);
+            keyboardNumeric.setVisibility(View.GONE);
             keyboardUpper.setVisibility(View.VISIBLE);
         } else if (v.getId() == R.id.key_ctrl_lower ||
                 v.getId() == R.id.key_ctrl_upper) {
-            keyboardLower.setVisibility(View.INVISIBLE);
-            keyboardUpper.setVisibility(View.INVISIBLE);
-            keyboardNumeric.setVisibility(View.INVISIBLE);
+            keyboardLower.setVisibility(View.GONE);
+            keyboardUpper.setVisibility(View.GONE);
+            keyboardNumeric.setVisibility(View.GONE);
             keyboardCtrl.setVisibility(View.VISIBLE);
         } else if ((v.getId() == R.id.key_123_lower) ||
                 (v.getId() == R.id.key_123_upper) ||
                 (v.getId() == R.id.key_123_ctrl)) {
-            keyboardLower.setVisibility(View.INVISIBLE);
-            keyboardUpper.setVisibility(View.INVISIBLE);
-            keyboardCtrl.setVisibility(View.INVISIBLE);
+            keyboardLower.setVisibility(View.GONE);
+            keyboardUpper.setVisibility(View.GONE);
+            keyboardCtrl.setVisibility(View.GONE);
             keyboardNumeric.setVisibility(View.VISIBLE);
         } else if ((v.getId() == R.id.key_abc) ||
                 (((LinearLayout)v.getParent().getParent()).getId() == R.id.keyboard_upper) ||
                 (((LinearLayout)v.getParent().getParent()).getId() == R.id.keyboard_ctrl)) {
-            keyboardUpper.setVisibility(View.INVISIBLE);
-            keyboardCtrl.setVisibility(View.INVISIBLE);
-            keyboardNumeric.setVisibility(View.INVISIBLE);
+            keyboardUpper.setVisibility(View.GONE);
+            keyboardCtrl.setVisibility(View.GONE);
+            keyboardNumeric.setVisibility(View.GONE);
             keyboardLower.setVisibility(View.VISIBLE);
         }
     }

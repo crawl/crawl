@@ -51,7 +51,7 @@ Java_org_libsdl_app_SDLActivity_nativeSaveGame(
         save_game(false);
 }
 
-bool jni_keyboard_control(bool toggle)
+bool jni_keyboard_control(int action)
 {
     JNIEnv *env = Android_JNI_GetEnv();
     jclass sdlClass = env->FindClass("org/libsdl/app/SDLActivity");
@@ -60,8 +60,8 @@ bool jni_keyboard_control(bool toggle)
         return false;
 
     jmethodID mid =
-        env->GetStaticMethodID(sdlClass, "jniKeyboardControl", "(Z)Z");
-    jboolean shown = env->CallStaticBooleanMethod(sdlClass, mid, toggle);
+        env->GetStaticMethodID(sdlClass, "jniKeyboardControl", "(I)Z");
+    jboolean shown = env->CallStaticBooleanMethod(sdlClass, mid, action);
 
     return shown;
 }
