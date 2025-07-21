@@ -2197,24 +2197,24 @@ int Menu::hotkey_to_index(int key, bool primary_only)
     // the start of the menu to the current position. (This means that in cases
     // where a menu has multiple entries with the same letter, we will select
     // the first one below the cursor, if one exists, and then wrap around if not.)
-
-    int nearest_dist = INT_MAX;
-    int nearest_sel = -1;
-    for (int i = 0; i < final; ++i)
+    for (int i = max(0, last_hovered); i < final; ++i)
     {
         if (is_hotkey(i, key)
             && (!primary_only || items[i]->hotkeys[0] == key))
         {
-            const int dist = abs(i - last_hovered);
-            if (dist < nearest_dist)
-            {
-                nearest_dist = dist;
-                nearest_sel = i;
-            }
+            return i;
+        }
+    }
+    for (int i = 0; i < last_hovered; ++i)
+    {
+        if (is_hotkey(i, key)
+            && (!primary_only || items[i]->hotkeys[0] == key))
+        {
+            return i;
         }
     }
 
-    return nearest_sel;
+    return -1;
 }
 
 pair<int,int> Menu::hotkey_range(int key)
