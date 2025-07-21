@@ -2930,16 +2930,19 @@ int item_autopickup_level(const item_def &item)
     return you.force_autopickup[item.base_type][_autopickup_subtype(item)];
 }
 
-static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
+static void _maybe_disable_autopickup_for_dropped_items(vector<SelItem> &items)
 {
     int autopickup_remove_count = 0;
     const item_def *last_touched_item;
     for (SelItem &si : items)
     {
-        if ((si.has_star ||
-            (inventory_category_for(*si.item) == INVENT_CONSUMABLE
-             && si.item->is_identified()))
-            && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
+        const item_def& item = *si.item;
+        if (!item.is_identified() || is_artefact(item))
+            continue;
+
+        if ((inventory_category_for(item) == INVENT_CONSUMABLE
+             || item.base_type == OBJ_JEWELLERY)
+             && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
         {
             last_touched_item = si.item;
             ++autopickup_remove_count;
@@ -2976,7 +2979,7 @@ void drop()
         return;
     }
 
-    _disable_autopickup_for_starred_items(tmp_items);
+    _maybe_disable_autopickup_for_dropped_items(tmp_items);
     _multidrop(tmp_items);
 }
 

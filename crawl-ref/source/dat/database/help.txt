@@ -25,11 +25,6 @@ Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>  
                  <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
 narrows the range of items to be (de)selected. The default is all useless items.
-
-<h>Disabling autopickup via the drop menu</h>
-On the drop menu, items you select after pressing <w>\</w> will be marked with a <w>*</w>
-instead of the usual <w>+</w>. Autopickup for these items will be disabled when you
-leave the menu. To return to the normal selection mode, press <w>\</w> a second time.
 %%%%
 known-menu
 
