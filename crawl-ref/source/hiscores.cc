@@ -1423,6 +1423,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons->mid == MID_YOU_FAULTLESS)
             death_source_name = "themself";
 
+        if (mons->mid == MID_ANON_FRIEND)
+            death_source_name = "an ally";
+
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
