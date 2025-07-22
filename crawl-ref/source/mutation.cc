@@ -3372,6 +3372,7 @@ static void _init_bane_dilettante()
 
         wp_skills.push_back({skill, you.skill(skill, 100, true, false)});
     }
+    wp_skills.push_back({SK_UNARMED_COMBAT, you.skill(SK_UNARMED_COMBAT, 100, true, false)});
 
     vector<pair<skill_type, int>> mag_skills;
     for (skill_type skill = SK_FIRST_MAGIC_SCHOOL; skill <= SK_LAST_MAGIC; ++skill)
