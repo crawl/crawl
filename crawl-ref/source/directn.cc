@@ -2883,7 +2883,7 @@ static void _describe_oos_square(const coord_def& where)
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targeter* hitfunc)
 {
-    if (!mons_is_threatening(*mon))
+    if (!mons_is_threatening(*mon) && mode != TARG_FRIEND)
         return false;
 
     if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
