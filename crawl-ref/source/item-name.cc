@@ -2408,7 +2408,8 @@ static string _unforbid(string name)
         "puvax", "snt", "avt", "avttre",
         "xvxr", "ovgpu", "juber", "tvzc",
         "ergneq", "phag", "pbba", "fdhnj",
-        "jbt", "qlxr", "ubzb", "genaal"
+        "jbt", "qlxr", "ubzb", "genaal",
+        "anmv"
     };
     auto parts = split_string(" ", name);
     for (size_t i = 0; i < parts.size(); i++)
