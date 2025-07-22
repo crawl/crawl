@@ -698,7 +698,7 @@ namespace quiver
                     if (mons->wont_attack())
                     {
                         // Let's assume friendlies cooperate.
-                        mpr("You could not reach far enough!");
+                        mprf("You fail to reach past %s.", mons->name(DESC_THE).c_str());
                         you.time_taken = attack_delay;
                         you.turn_is_over = true;
                         return;
