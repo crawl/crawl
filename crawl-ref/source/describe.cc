@@ -451,7 +451,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It may silence you when you take damage.",
             prop_note::plain },
         { ARTP_BANE,
-            "It inflicts you with a random bane when first equipped.",
+            "It inflicts you with a random bane when you equip it.",
             prop_note::plain },
     };
     return data;
