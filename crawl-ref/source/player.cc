@@ -646,7 +646,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     bool was_running = you.running;
 
     update_monsters_in_view();
-    maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
 
@@ -7995,10 +7994,6 @@ bool player::do_shaft()
             " the earth!");
         return false;
     }
-
-    // Ensure altars, items, and shops discovered at the moment
-    // the player gets shafted are correctly registered.
-    maybe_update_stashes();
 
     down_stairs(DNGN_TRAP_SHAFT);
 

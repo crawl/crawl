@@ -222,9 +222,6 @@ void wizard_create_spec_object()
         if (class_wanted != OBJ_CORPSES)
             origin_acquired(env.item[thing_created], AQ_WIZMODE);
         canned_msg(MSG_SOMETHING_APPEARS);
-
-        // Tell the stash tracker.
-        maybe_update_stashes();
     }
 }
 
