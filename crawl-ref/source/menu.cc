@@ -2192,12 +2192,25 @@ int Menu::hotkey_to_index(int key, bool primary_only)
     // Process all items, in case user hits hotkey for an
     // item not on the current page.
 
-    // We first check for the first matching hotkey from the cursor's current
-    // position to the end of the menu. If no match is found, we next check from
-    // the start of the menu to the current position. (This means that in cases
-    // where a menu has multiple entries with the same letter, we will select
-    // the first one below the cursor, if one exists, and then wrap around if not.)
-    for (int i = max(0, last_hovered); i < final; ++i)
+    // We first check for the first matching hotkey, starting from the top of
+    // the current menu subsection the cursor is in. If no match is found, we
+    // next check from the start of the menu to the current position. (This
+    // means that in cases where a menu has multiple entries with the same
+    // letter, we will select one within the current subsection, if one exists,
+    // and then check elsewhere if not.)
+
+    // First, determine the top of our current section.
+    int top = 0;
+    for (int i = last_hovered; i >= 0; --i)
+    {
+        if (items[i]->level != MEL_ITEM)
+        {
+            top = i;
+            break;
+        }
+    }
+
+    for (int i = top; i < final; ++i)
     {
         if (is_hotkey(i, key)
             && (!primary_only || items[i]->hotkeys[0] == key))
@@ -2205,7 +2218,7 @@ int Menu::hotkey_to_index(int key, bool primary_only)
             return i;
         }
     }
-    for (int i = 0; i < last_hovered; ++i)
+    for (int i = 0; i < top; ++i)
     {
         if (is_hotkey(i, key)
             && (!primary_only || items[i]->hotkeys[0] == key))
