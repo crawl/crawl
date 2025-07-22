@@ -26,6 +26,6 @@ unusual_monster_items  = wand
 unusual_monster_items += disto,chaos
 unusual_monster_items += curare,atropa,datura,dispersal,disjunction
 unusual_monster_items += throwing net
-unusual_monster_teism += vulnerable:holy_wrath
+unusual_monster_items += vulnerable:holy_wrath
 # For regular items and artefacts
 unusual_monster_items += reflect,Reflect
