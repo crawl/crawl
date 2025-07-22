@@ -89,8 +89,8 @@ bool is_stair_exclusion(const coord_def &p);
  * grabs items that are eligible for autopickup and visits (previously
  * unvisited) shops.
  */
-void start_explore(bool grab_items = false);
-void do_explore_cmd();
+void start_explore(bool grab_items = false, bool skip_autorest = false);
+void do_explore_cmd(bool skip_autorest = false);
 
 struct level_pos;
 class level_id;
