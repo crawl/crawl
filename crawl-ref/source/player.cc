@@ -505,9 +505,11 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
     if (!swap && !quiet)
     {
-        // Might not be ideal, but it's better than insta-killing
-        // the monster... maybe try for a short blink instead? - bwr
-        simple_monster_message(*mons, " cannot make way for you.");
+        // Might not be ideal, but it's better than insta-killing the monster.
+        mprf("There is no room for %s to move out of your way! "
+             "(Try telling them to retreat with <w>%sr</w> instead.)",
+              mons->name(DESC_THE).c_str(),
+              command_to_string(CMD_SHOUT).c_str());
         // FIXME: activity_interrupt::hit_monster isn't ideal.
         interrupt_activity(activity_interrupt::hit_monster, mons);
     }
