@@ -836,12 +836,14 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
     else if (is_artefact(item2) && artefact_property(item2, ARTP_FRAGILE))
         return true;
     else if (is_artefact(item1) && (artefact_property(item1, ARTP_CONTAM)
-                                    || artefact_property(item1, ARTP_DRAIN)))
+                                    || artefact_property(item1, ARTP_DRAIN)
+                                    || artefact_property(item1, ARTP_BANE)))
     {
         return false;
     }
     else if (is_artefact(item2) && (artefact_property(item2, ARTP_CONTAM)
-                                    || artefact_property(item2, ARTP_DRAIN)))
+                                    || artefact_property(item2, ARTP_DRAIN)
+                                    || artefact_property(item2, ARTP_BANE)))
     {
         return true;
     }
