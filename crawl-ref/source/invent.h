@@ -178,6 +178,7 @@ protected:
     virtual bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
+    void select_index(int index, int qty) override;
 
 protected:
     menu_type type;

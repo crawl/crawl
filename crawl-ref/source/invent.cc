@@ -485,6 +485,22 @@ bool InvMenu::process_command(command_type cmd)
     return Menu::process_command(cmd);
 }
 
+void InvMenu::select_index(int index, int qty)
+{
+    // XXX: Apply drop_filter to all pages at once.
+    if (flags & MF_PAGED_INVENTORY && qty == MENU_SELECT_ALL)
+    {
+        int start_osel = cur_osel;
+        do
+        {
+            Menu::select_index(index, qty);
+            cycle_page(1);
+        } while (cur_osel != start_osel);
+    }
+    else
+        Menu::select_index(index, qty);
+}
+
 string InvMenu::get_select_count_string(int) const
 {
     if (flags & MF_PAGED_INVENTORY)
