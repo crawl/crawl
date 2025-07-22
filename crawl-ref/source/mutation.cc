@@ -3357,8 +3357,9 @@ static bool _skill_sorter(const pair<skill_type, int>& a,
 }
 
 // Select skills to penalize by the Bane of the Dilettante.
-// We select the highest weapon skill and the 2 highest 'magic' skills
-// (including invocations and evocations, but not spellcasting).
+// We select the highest weapon skill (including unarmed combat) and the 2
+// highest 'magic' skills (including invocations and evocations, but not
+// spellcasting).
 static void _init_bane_dilettante()
 {
     CrawlVector& sk = you.props[DILETTANTE_SKILL_KEY].get_vector();
