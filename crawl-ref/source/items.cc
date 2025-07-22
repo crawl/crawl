@@ -750,8 +750,43 @@ bool item_is_branded(const item_def& item)
     }
 }
 
+static bool _immune_to_brand(brand_type brand)
+{
+    switch (brand)
+    {
+        case SPWPN_HOLY_WRATH:
+            return !you.holy_wrath_susceptible();
+
+        case SPWPN_VENOM:
+            return you.res_poison() == 3;
+
+        case SPWPN_DRAINING:
+        case SPWPN_PAIN:
+            return you.res_negative_energy() == 3;
+
+        case SPWPN_ELECTROCUTION:
+            return you.res_elec() >= 1;
+
+        default:
+            return false;
+    }
+}
+
 bool item_is_unusual(const item_def& item)
 {
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        for (auto& match : Options.vulnerable_brand_warning)
+        {
+            if (get_weapon_brand(item) == match.first
+                && you.experience_level <= match.second
+                && !_immune_to_brand(match.first))
+            {
+                return true;
+            }
+        }
+    }
+
     const auto &patterns = Options.unusual_monster_items;
     const string name = item.name(DESC_A, false, false, true, false);
 

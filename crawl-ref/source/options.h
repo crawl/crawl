@@ -554,6 +554,8 @@ public:
 
     vector<text_pattern> unusual_monster_items; // which monster items to
                                                 // highlight as unusual
+    vector<pair<brand_type, int>> vulnerable_brand_warning; // Monster brands to hilight the monster
+                                                // as having, below a given XL, while vulnerable
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -1009,6 +1011,7 @@ private:
     void remove_force_ability_targeter(const string &s);
 
     void update_consumable_shortcuts();
+    void process_unusual_items();
 
     static const string interrupt_prefix;
 
