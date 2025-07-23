@@ -6058,7 +6058,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
 
     if (temp && skill_has_dilettante_penalty(sk))
     {
-        if (sk <= SK_LAST_WEAPON)
+        if (sk <= SK_LAST_WEAPON || sk == SK_UNARMED_COMBAT)
             level = level / 2;
         else
             level = level * 3 / 4;
