@@ -650,7 +650,19 @@ static bool _kikubaaqudgha_retribution()
         _reset_avatar(*avatar);
     }
     else
-        drain_player(random_range(125, 225), false, true, false);
+    {
+        // Drain for ~16.6% to ~26.6% if you're not below 50% drained hp.
+        if (-you.hp_max_adj_temp < you.hp_max / 2)
+            drain_player(random_range(75, 150), false, true, false);
+
+        // Regardless of draining, apply some Doom.
+        int doom_pow = random_range(35, 50);
+
+        if (!(you.attribute[ATTR_DOOM] + doom_pow >= 100))
+            mprf(MSGCH_DANGER, "Your doom draws closer.");
+
+        you.doom(doom_pow);
+    }
 
     return true;
 }
