@@ -646,5 +646,6 @@ enum spell_type : int
     SPELL_MUTAGENIC_GAZE,
     SPELL_PLANAR_OVERLAY,   // Dummy spell for description purposes
     SPELL_ACID_BALL,
+    SPELL_GASTRONOMIC_EXPANSE,
     NUM_SPELLS
 };

@@ -38,6 +38,7 @@ void packed_cell::clear()
     halo             = HALO_NONE;
     is_sanctuary     = false;
     is_blasphemy     = false;
+    is_gastronomic   = false;
     is_liquefied     = false;
     mangrove_water = false;
     orb_glow         = 0;
@@ -60,6 +61,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (halo != other.halo) return false;
     if (is_sanctuary != other.is_sanctuary) return false;
     if (is_blasphemy != other.is_blasphemy) return false;
+    if (is_gastronomic != other.is_gastronomic) return false;
     if (is_liquefied != other.is_liquefied) return false;
     if (mangrove_water != other.mangrove_water) return false;
     if (awakened_forest != other.awakened_forest) return false;
