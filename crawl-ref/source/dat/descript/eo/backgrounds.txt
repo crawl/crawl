@@ -1,0 +1,124 @@
+%%%%
+Air Elementalist
+
+Aera Elementistoj la sorĉo Ŝoko. Poste, ties sortimento de Aermagia sorĉoj 
+provizas ilin kun la elasteco por pluvivi.
+%%%%
+Artificer
+
+Magiarmilistoj komencas kun klabo kaj pluraj magiaj sorĉbastonoj. Ili 
+baldaŭ bezonos trovi pli bonajn armaĵo kaj batalilojn antaŭ siaj sorĉbastonoj 
+elĉerpitaj.
+%%%%
+Berserker
+
+Berserkoj kredas je Trog, la magimalamanta dio de rabieco. Malmultaj aferoj 
+frue povas haltigi furiozanta Beserko, krom aroganteco.
+%%%%
+Brigand
+
+Banditoj kunportas venenajn sagetojn kaj malgrandan nombron da danĝeraj kuraraj 
+sagetoj.
+%%%%
+Chaos Knight
+
+Ĥaosaj Kavaliroj estas ludiloj de la neantaŭvidebla Xom. Ili ankaŭ estas 
+submetata al la konstante ŝanĝiĝas humerojn de la dio.
+%%%%
+Cinder Acolyte
+
+Cindraj Akolitoj kultas Ignis, elĉerpante la flamon de la mortanta dio ĝis nenio 
+restas.
+%%%%
+Conjurer
+
+Manaestroj traktas sian problemojn per difektantaj sorĉoj.
+%%%%
+Delver
+
+Plonĝantoj komencas sian serĉvojaĝon kvin nivelojn sub la surfaco. Aro de 
+fortaj magiaj objektoj helpas ili pluvivas la danĝeran vojon supren.
+%%%%
+Earth Elementalist
+
+Teraj Elementistoj scias la sorĉo Sablŝprucigo, kaj poste povas lerni pliajn 
+terajn sorĉojn, kiuj taŭgas por ponardi aŭ perforti.
+%%%%
+Enchanter
+
+Ensorĉistoj scias miksaĵon de malbonoj, kiuj povas kripligi sian celan. Ankaŭ, 
+ili estas ekipita per ensorĉita ponardo kaj pocioj de nevidebleco.
+%%%%
+Fighter
+
+Batalistoj estas ekipita per armaĵo, ŝildo, pocio de forteco, kaj batalilo 
+de siaj elekto.
+%%%%
+Fire Elementalist
+
+Fajraj Elementistoj jam lernis la sorĉo Fungfajro. Ties aliaj komencaj sorĉoj 
+estas temas ankaŭ pri fajra destruado.
+%%%%
+Gladiator
+
+Gladiatoroj pretas por la areno per malpeza armaĵo, batalilo de sia elekto, kaj 
+pluraj ĵetretoj.
+%%%%
+Hedge Wizard
+
+Heĝsorĉistoj lernas plurajn negravajn magiojn, tio ebligas ilin dorspiki aŭ 
+eskapi ties frenezigitaj kontraŭuloj.
+%%%%
+Hunter
+
+Ĉasistoj kunportas pafarkon, malpezan armaĵon, kaj skribrulaĵon de papilioj.
+%%%%
+Hexslinger
+
+Malbonĵetantoj kunportas ŝtonĵetilon, kaj uzas Malbonmagion por 
+fari siajn kontraŭulojn pli vundebla per malproksimaj atakoj
+%%%%
+Ice Elementalist
+
+Glaciaj Elementistoj komencas kun la sorĉo Frostigo. La sorĉoj en ilia komenca 
+sorĉaro estas tre multfaceta.
+%%%%
+Monk
+
+Monaĥoj komencas kun malluksa batalilo de sia elekto, sfero de lumo, kaj pocio 
+de dia ambrozio, ankaŭ ili gajnas kelkajn piecon de sia unue adorita dio.
+%%%%
+Necromancer
+
+Nekromanciisoj estas sorĉistoj kompetenta pri praktiko de Mortmagio. Ili 
+komencas kun la sorĉo Nekrozigo.
+%%%%
+Reaver
+
+Raziantoj komencas kun batalilon de sia elekto, kiu estas helpata per 
+morta magio kiam ili estas en bezono.
+%%%%
+Summoner
+
+Venigistoj kapablas sorĉi Venigi Mamuleto ekde la komenco, kaj komencas kun 
+aliaj Venigaj sorĉoj en sia sorĉaro.
+%%%%
+Transmuter
+
+Metamorfozanto lernas sorĉojn por metamorfozi la formon, tio faras ilin 
+fortegaj senarmaj batalantoj.
+%%%%
+Venom Mage
+
+Venenaj Sorĉistoj komencas kun la sorĉo Venenpiko, kaj sia Venenmagio estas 
+tre efika kontraŭ inklinaj kontraŭuloj
+%%%%
+Wanderer
+
+Vagulo komencas kun hazarda ekipo kaj kapabloj.
+%%%%
+Warper
+
+Kurbigantoj komencas kun batalilo de sia elekto, skribrulaĵo de teleporteto, 
+bumerangoj de disigo, kaj pluraj Translokiga sorĉoj en sia sorĉaro.
+%%%%
