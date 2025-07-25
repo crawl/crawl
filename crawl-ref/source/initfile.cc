@@ -3098,6 +3098,10 @@ void game_options::update_travel_terrain()
 
 void game_options::update_consumable_shortcuts()
 {
+    potion_shortcuts.init(0);
+    scroll_shortcuts.init(0);
+    evokable_shortcuts.init(0);
+
     for (const auto& entry : auto_consumable_letters)
     {
         item_kind kind = item_kind_by_name(entry.first);
