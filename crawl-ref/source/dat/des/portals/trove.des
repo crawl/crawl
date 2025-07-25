@@ -1319,7 +1319,7 @@ KFEAT:  ~ = open_sea
 : if species_is_undead(_G) or you.mutation("no forms") == 1 then
 SUBST:  g = df
 : elseif you.mutation("no armour") == 1 and
-:  you.mutation("weapons or thrown items") == 1 then
+:  you.mutation("no weapons or thrown items") == 1 then
 SUBST:  df = egg
 : elseif you.mutation("antennae") == 3 or you.mutation("horns") == 3 then
 SUBST:  d = eff
