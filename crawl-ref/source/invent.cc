@@ -1455,7 +1455,9 @@ static int _invent_select(const char *title = nullptr,
     {
         for (int i = 0; i < 4; ++i)
             menu.set_page(i);
-        menu.set_page(0);
+
+        // And then jump to the first non-empty page.
+        menu.cycle_page(1);
     }
 
     menu.show(true);
