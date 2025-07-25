@@ -2253,6 +2253,7 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
             break;
         case OBJ_WANDS:
         case OBJ_MISCELLANY:
+        case OBJ_BAUBLES:
             for (const char& key : Options.evokable_shortcuts)
                 if (isalpha(key))
                     reserved[letter_to_index(key)] = true;

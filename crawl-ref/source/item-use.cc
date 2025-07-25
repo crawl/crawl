@@ -831,6 +831,7 @@ static operation_types _item_type_to_oper(object_class_type type)
 {
     switch (type)
     {
+        case OBJ_BAUBLES:
         case OBJ_WANDS:
         case OBJ_MISCELLANY: return OPER_EVOKE;
         case OBJ_POTIONS:    return OPER_QUAFF;
