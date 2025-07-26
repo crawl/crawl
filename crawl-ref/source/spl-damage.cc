@@ -4528,11 +4528,11 @@ void end_frozen_ramparts()
     const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
     ASSERT(in_bounds(pos));
 
-    for (distance_iterator di(pos, false, false,
-                spell_range(SPELL_FROZEN_RAMPARTS, -1)); di; di++)
+    for (radius_iterator ri(pos, spell_range(SPELL_FROZEN_RAMPARTS, -1),
+                            C_SQUARE, false); ri; ri++)
     {
-        env.pgrid(*di) &= ~FPROP_ICY;
-        env.map_knowledge(*di).flags &= ~MAP_ICY;
+        env.pgrid(*ri) &= ~FPROP_ICY;
+        env.map_knowledge(*ri).flags &= ~MAP_ICY;
     }
 
     you.props.erase(FROZEN_RAMPARTS_KEY);
