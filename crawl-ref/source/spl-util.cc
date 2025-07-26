@@ -1171,7 +1171,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         }
 
         if (you.form == transformation::walking_scroll && spell_difficulty(spell) > 4)
-            return "your cannot cast such powerful magic in your current form.";
+            return "you cannot cast such powerful magic in your current form.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
