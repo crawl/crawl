@@ -3850,7 +3850,21 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return dithmenos_shadowslip(fail);
 
     case ABIL_DITHMENOS_APHOTIC_MARIONETTE:
+    {
+        monster* mons = monster_at(beam.target);
+
+        if (mons && you.can_see(*mons) && mons->is_illusion())
+        {
+            fail_check();
+            mprf("You attempt to grasp %s shadow with your own, but %s is merely a clone!",
+                 mons->name(DESC_ITS).c_str(),
+                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+            // Still costs a turn to gain the information.
+            mons->add_ench(ENCH_SHADOWLESS);
+            return spret::success;
+        }
         return dithmenos_marionette(*monster_at(beam.target), fail);
+    }
 
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return dithmenos_nightfall(fail);
