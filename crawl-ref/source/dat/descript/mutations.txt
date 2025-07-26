@@ -1421,9 +1421,10 @@ and spells, but will not expire on their own.
 %%%%
 dilettante bane
 
-Your skill with your highest weapon skill (at the time of becoming afflicted by
-this bane) is reduced by 50% and your skill with your two highest skills among
-magical schools, Invocations, and Evocations are reduced by 25%.
+Your skill with your highest skill among weapon skills and Unarmed Combat (at
+the time of becoming afflicted by this bane) is reduced by 50% and your skill
+with your two highest skills among magical schools, Invocations, and Evocations
+are reduced by 25%.
 %%%%
 paradox bane
 
