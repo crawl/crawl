@@ -7672,10 +7672,6 @@ static string _describe_talisman(const item_def &item, bool verbose)
         {
             if (crawl_state.need_save && item.is_identified())
                 description << _equipment_property_change(item);
-
-            description << "\n\nA period of sustained concentration is needed to "
-                        "enter or leave forms. To leave this form, evoke the "
-                        "talisman again.";
         }
     }
 
