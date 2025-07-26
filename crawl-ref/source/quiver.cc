@@ -202,7 +202,7 @@ namespace quiver
     bool action::do_inscription_check() const
     {
         const int slot = get_item();
-        if (slot <= 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
+        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return true;
 
         return check_warning_inscriptions(you.inv[slot], OPER_FIRE);
