@@ -112,6 +112,11 @@ bool duration_dispellable(duration_type dur)
     return _lookup_duration(dur)->duration_has_flag(D_DISPELLABLE);
 }
 
+bool duration_negative(duration_type dur)
+{
+    return _lookup_duration(dur)->duration_has_flag(D_NEGATIVE);
+}
+
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
     if (lvl >= red)

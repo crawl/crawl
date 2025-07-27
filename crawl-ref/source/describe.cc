@@ -263,6 +263,7 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_FAITH:               return "Faith";
     case AMU_REFLECTION:          return "Reflect";
     case AMU_WILDSHAPE:           return "Wildshape";
+    case AMU_DISSIPATION:         return "Dissipate";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:          return "Inacc";
 #endif
@@ -687,6 +688,9 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It improves your skill with shapeshifting (+5)";
     case AMU_ALCHEMY:
         return "It enhances your alchemy spells and reduces their mp cost.";
+    case AMU_DISSIPATION:
+        return "It reduces the duration of hostile enchantments and decays "
+               "magical contamination more quickly.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";

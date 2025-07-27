@@ -2570,6 +2570,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         mpr("You feel more attuned to alchemy.");
         break;
 
+    case AMU_DISSIPATION:
+        mpr("You feel as though your troubles will go away faster.");
+        break;
+
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;

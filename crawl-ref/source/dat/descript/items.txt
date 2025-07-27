@@ -10,6 +10,11 @@ Amulet of alchemy
 
 An amulet that enhances and reduces the mp cost of alchemy spells.
 %%%%
+amulet of dissipation
+
+An amulet which causes magic contamination and negative status effects upon the
+wearer to expire twice as quickly with time.
+%%%%
 amulet of faith
 
 A charm crafted to call the attention of the gods to its wearer. This divine

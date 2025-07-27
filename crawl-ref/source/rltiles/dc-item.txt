@@ -933,7 +933,8 @@ i-faith AMU_FAITH
 i-reflection AMU_REFLECTION
 i-regeneration AMU_REGENERATION
 i-wildshape AMU_WILDSHAPE
-i-alchemy AMU_ALCHEMY AMU_ID_LAST
+i-alchemy AMU_ALCHEMY
+i-dissipation AMU_DISSIPATION AMU_ID_LAST
 
 ####################OBJ_POTIONS
 %sdir item/potion
