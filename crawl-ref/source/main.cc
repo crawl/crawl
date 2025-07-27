@@ -1494,6 +1494,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    // Exiting Troves early.
+    if (ygrd == DNGN_EXIT_TROVE
+        && you.depth == brdepth[BRANCH_TROVE])
+    {
+        if (!yesno("Are you sure you want to leave this trove?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Leaving ziggurat figurines behind.
     if (ygrd == DNGN_EXIT_ZIGGURAT
         && you.depth == brdepth[BRANCH_ZIGGURAT]
