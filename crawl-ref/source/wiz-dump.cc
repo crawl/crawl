@@ -83,6 +83,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_ACROBAT;
     if (s == "Wildshape")
         return AMU_WILDSHAPE;
+    if (s == "Alchemy")
+        return AMU_ALCHEMY;
 
     if (s == "rCorr")
         return RING_RESIST_CORROSION;

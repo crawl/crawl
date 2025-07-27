@@ -2561,6 +2561,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         _change_wildshape_status();
         break;
 
+    case AMU_ALCHEMY:
+        mpr("You feel more attuned to alchemy.");
+        break;
+
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;

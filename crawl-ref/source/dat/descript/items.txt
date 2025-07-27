@@ -6,6 +6,10 @@ much protection as the armour made from the scales of some larger dragons, it is
 somewhat lighter and less encumbering. It is also remarkably smooth, letting
 corrosive slime flow off it like water.
 %%%%
+Amulet of alchemy
+
+An amulet that enhances and reduces the mp cost of alchemy spells.
+%%%%
 amulet of faith
 
 A charm crafted to call the attention of the gods to its wearer. This divine
