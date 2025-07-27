@@ -419,7 +419,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         if (rElec < 0)
             chance = chance * 3 / 2;
         else
-            chance = chance / 2;
+            chance = chance / (rElec + 1);
 
         if (x_chance_in_y(chance, 100))
         {
