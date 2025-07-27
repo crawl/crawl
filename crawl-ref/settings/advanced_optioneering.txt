@@ -5,7 +5,7 @@
 
 {
 function safe_upstairs()
-  if you.branch() == "Gauntlet" or you.branch() == "Trove" then
+  if you.branch() == "Gauntlet" then
      crawl.formatted_mpr("Really leave this portal?", "prompt")
      local res = crawl.getch()
      if string.lower(string.char(res)) == "y" then
