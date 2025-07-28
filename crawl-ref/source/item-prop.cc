@@ -251,7 +251,7 @@ static const armour_def Armour_prop[] =
         ARMF_RES_POISON),
     DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  500,
         ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD),
-    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,  500,
+    DRAGON_ARMOUR(ICE,         "ice",                     8, -110,  500,
         ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE),
     DRAGON_ARMOUR(PEARL,       "pearl",                  10, -110, 1000,
         ARMF_RES_NEG),
