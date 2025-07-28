@@ -87,6 +87,8 @@ description_level_type description_type_by_name(const char *desc)
         return DESC_BASENAME;
     else if (!strcmp("qual", desc))
         return DESC_QUALNAME;
+    else if (!strcmp("db", desc))
+        return DESC_DBNAME;
 
     return DESC_PLAIN;
 }
