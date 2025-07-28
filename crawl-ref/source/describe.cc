@@ -2395,8 +2395,27 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_GLASS:
         return "It may vitrify nearby enemies when they take damage. "
                "Evocations skill increases the likelihood and duration of vitrification.";
+    case SPARM_PYROMANIA:
+        return "It enhances the wearer's fire magic and may unleash a blast of "
+               "flames around the wearer at the end of any turn in which they "
+               "killed an enemy through any means besides attacks.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
+    }
+}
+
+static string _orb_ego_details(special_armour_type ego)
+{
+    switch (ego)
+    {
+        case SPARM_PYROMANIA:
+            return make_stringf("\n\nExplosion chance: %d%% (max %d%%)\nExplosion damage: %dd%d (max %dd%d)\n",
+                                pyromania_trigger_chance(), pyromania_trigger_chance(true),
+                                pyromania_damage(false, false).num, pyromania_damage(false, false).size,
+                                pyromania_damage(false, true).num, pyromania_damage(false, true).size);
+
+        default:
+            return "";
     }
 }
 
@@ -2507,6 +2526,9 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         }
 
     }
+
+    if (verbose && item.is_type(OBJ_ARMOUR, ARM_ORB))
+        description += _orb_ego_details(get_armour_ego_type(item));
 
     // Only displayed if the player exists (not for item lookup from the menu
     // or for morgues).

@@ -10,6 +10,7 @@
 #include "beh-type.h"
 #include "env.h"
 #include "mgen-data.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "monster.h"
 
@@ -418,6 +419,7 @@ public:
         const int realhp = mons->hit_points;
         mons->hit_points = -realhp;
         mons->flags |= MF_PENDING_REVIVAL;
+        mons->props.erase(ATTACK_KILL_KEY);
         final_effect::schedule(new avoided_death_fineff(mons, realhp));
     }
 protected:

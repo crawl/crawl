@@ -29,3 +29,6 @@ int tremorstone_count(int pow);
 string target_evoke_desc(const monster_info& mi, const item_def& item);
 string evoke_damage_string(const item_def& item);
 string evoke_noise_string(const item_def& item);
+
+dice_def pyromania_damage(bool random = true, bool max = false);
+int pyromania_trigger_chance(bool max = false);

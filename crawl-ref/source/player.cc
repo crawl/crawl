@@ -1555,6 +1555,7 @@ int player_spec_fire()
     sf += you.wearing(OBJ_STAVES, STAFF_FIRE);
 
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
+    sf += you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
 
     sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 

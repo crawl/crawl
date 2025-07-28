@@ -707,8 +707,13 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
         // gets the spectral.
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
-    return defender->hurt(responsible, dam, flavour, kill_type,
-                          "", aux_source.c_str(), clean);
+    const int final = defender->hurt(responsible, dam, flavour, kill_type,
+                                     "", aux_source.c_str(), clean);
+
+    if (!defender->alive())
+        defender->props[ATTACK_KILL_KEY] = true;
+
+    return final;
 }
 
 /* If debug, return formatted damage done

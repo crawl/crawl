@@ -1370,3 +1370,17 @@ string evoke_noise_string(const item_def& item)
     else
         return "";
 }
+
+dice_def pyromania_damage(bool random, bool max)
+{
+    const int power = max ? 2700 : you.skill(SK_EVOCATIONS, 100);
+    if (random)
+        return zap_damage(ZAP_FIREBALL, 30 + div_rand_round(power, 25), false, true);
+    else
+        return zap_damage(ZAP_FIREBALL, 30 + power / 25, false, false);
+}
+
+int pyromania_trigger_chance(bool max)
+{
+    return 23 + (max ? 27 : you.skill(SK_EVOCATIONS, 1));
+}

@@ -72,6 +72,8 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 #define SOLAR_EMBER_MID_KEY "solar_ember_mid"
 #define SOLAR_EMBER_REVIVAL_KEY "solar_ember_revival"
 
+#define PYROMANIA_TRIGGER_KEY "pyromania_triggers"
+
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5

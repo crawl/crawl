@@ -2321,6 +2321,12 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (--you.attribute[ATTR_TEMP_MUT_KILLS] <= 0)
             temp_mutation_wanes();
     }
+
+    if (YOU_KILL(killer) && !mons.props.exists(ATTACK_KILL_KEY)
+        && you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA))
+    {
+        you.props[PYROMANIA_TRIGGER_KEY].get_int() += 1;
+    }
 }
 
 /**
