@@ -4421,6 +4421,9 @@ void actor_apply_toxic_bog(actor * act)
         }
     }
 
+    if (never_harm_monster(oppressor, act->as_monster()))
+        return;
+
     const int base_damage = toxic_bog_damage().roll();
     const int damage = resist_adjust_damage(act, BEAM_POISON_ARROW, base_damage);
     const int resist = base_damage - damage;
