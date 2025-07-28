@@ -1990,6 +1990,7 @@ ENDMAP
 NAME:   nicolae_shop_i_like_big_books
 TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
+WEIGHT: 5
 KFEAT:  S = book shop type:Tremendous suffix:Tomes count:8 ; \
             any randbook numspells:8
 KFEAT:  p = c
@@ -2009,8 +2010,9 @@ ENDMAP
 NAME:   nicolae_shop_i_like_small_books_too
 TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
+WEIGHT: 5
 KFEAT:  S = book shop type:Tiny suffix:Tomes count:8 ; \
-            any randbook numspells:1
+            any randbook numspells:2
 KFEAT:  p = c
 COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
 MAP
