@@ -1384,3 +1384,9 @@ int pyromania_trigger_chance(bool max)
 {
     return 23 + (max ? 27 : you.skill(SK_EVOCATIONS, 1));
 }
+
+int mesmerism_orb_radius(bool max)
+{
+    const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
+    return min(2 + skill / 7, 4);
+}

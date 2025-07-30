@@ -22,6 +22,7 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "fineff.h"
 #include "god-conduct.h"
@@ -703,6 +704,42 @@ static void _apply_flux_contam(monster &m)
         mprf(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");
 }
 
+void melee_attack::maybe_do_mesmerism()
+{
+    // Check if the effect is valid.
+    if (!defender->wearing_ego(OBJ_ARMOUR, SPARM_MESMERISM))
+        return;
+
+    if (defender->is_player() && you.duration[DUR_MESMERISM_COOLDOWN])
+        return;
+    else if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_ORB_COOLDOWN))
+        return;
+
+    const int radius = defender->is_player() ? mesmerism_orb_radius() : 3;
+    const int max_dur = defender->is_player() ? 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 5)
+                                              : 3 + defender->get_hit_dice() / 4;
+
+    mprf("%s orb emites a pulse of dizzying energy.", defender->name(DESC_ITS).c_str());
+    draw_ring_animation(defender->pos(), radius, LIGHTMAGENTA, MAGENTA, true, 30);
+
+    for (radius_iterator ri(defender->pos(), radius, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (actor* act = actor_at(*ri))
+        {
+            if (!mons_aligned(defender, act) && !act->is_firewood()
+                && act->willpower() != WILL_INVULN && !act->clarity())
+            {
+                act->daze(random_range(3, max_dur));
+            }
+        }
+    }
+
+    if (defender->is_player())
+        you.duration[DUR_MESMERISM_COOLDOWN] = random_range(150, 200) - you.skill(SK_EVOCATIONS, 2);
+    else
+        defender->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, defender, random_range(120, 200)));
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -910,6 +947,7 @@ bool melee_attack::handle_phase_hit()
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();
+        maybe_do_mesmerism();
     }
 
     if (attacker->is_player())

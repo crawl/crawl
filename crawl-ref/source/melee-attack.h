@@ -135,6 +135,7 @@ private:
     /* Retaliation Effects */
     void do_minotaur_retaliation();
     void maybe_riposte();
+    void maybe_do_mesmerism();
 
     /* Item Effects */
     void do_starlight();

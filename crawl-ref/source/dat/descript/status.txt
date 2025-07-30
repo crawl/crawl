@@ -1233,3 +1233,8 @@ tesseracts is destroyed. This rate is slow at first, but accelerates with time.
 
 Your orb of stardust has recently expended its energy. It will recharge once
 several turns pass while your MP is full and there are no enemies in sight.
+%%%%
+-Mesm status
+
+Your orb of mesmerism has recently expended its energy. It will recharge after
+a short length of time (but cannot recharge on turns where you move).

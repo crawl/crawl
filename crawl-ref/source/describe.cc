@@ -2403,6 +2403,10 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "It conjures a barrage of shooting stars the first time its wearer "
                "spends MP each battle - one for each MP spent - recharging only "
                "when their MP is restored and no more enemies remain.";
+    case SPARM_MESMERISM:
+        return "When you are struck in melee, it briefly dazes all nearby enemies, "
+               "then must recharged by standing still for a while. Its duration, "
+               "radius, and recharge speed are improved by Evocations skill.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2426,6 +2430,9 @@ static string _orb_ego_details(special_armour_type ego)
                                     dam.num, dam.size,
                                     max_dam.num, max_dam.size);
         }
+
+        case SPARM_MESMERISM:
+            return make_stringf("\n\nMesmerism radius: %d (max %d)", mesmerism_orb_radius(), mesmerism_orb_radius(true));
 
         default:
             return "";
