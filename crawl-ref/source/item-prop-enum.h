@@ -913,4 +913,5 @@ enum special_gizmo_type
     SPGIZMO_GADGETEER,
     SPGIZMO_REVGUARD,
     SPGIZMO_AUTODAZZLE,
+    NUM_GIZMOS,
 };

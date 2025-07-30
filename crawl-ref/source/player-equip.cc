@@ -330,12 +330,19 @@ player_equip_set::player_equip_set()
     items.clear();
     unrand_active.init(false);
     artprop_cache.init(0);
+    armour_egos.init(0);
+    gizmo_egos.init(false);
     do_unrand_reacts = 0;
     do_unrand_death_effects = 0;
 }
 
 int player_equip_set::wearing_ego(object_class_type obj_type, int ego) const
 {
+    if (obj_type == OBJ_ARMOUR)
+        return armour_egos[ego];
+    else if (obj_type == OBJ_GIZMOS)
+        return gizmo_egos[ego];
+
     int total = 0;
     for (const player_equip_entry& entry : items)
     {
@@ -349,11 +356,6 @@ int player_equip_set::wearing_ego(object_class_type obj_type, int ego) const
             {
                 case OBJ_WEAPONS:
                     if (get_weapon_brand(item) == ego)
-                        ++total;
-                    break;
-
-                case OBJ_ARMOUR:
-                    if (get_armour_ego_type(item) == ego)
                         ++total;
                     break;
 
@@ -557,6 +559,8 @@ void player_equip_set::update()
 {
     unrand_active.reset();
     artprop_cache.init(0);
+    armour_egos.init(0);
+    gizmo_egos.init(false);
 
     artefact_properties_t artprops;
     for (const player_equip_entry& entry : items)
@@ -567,6 +571,14 @@ void player_equip_set::update()
             continue;
 
         const item_def& item = entry.get_item();
+
+        if (!entry.melded)
+        {
+            if (item.base_type == OBJ_ARMOUR)
+                armour_egos[get_armour_ego_type(item)] += 1;
+            else if (item.base_type == OBJ_GIZMOS)
+                gizmo_egos[item.brand] = true;
+        }
 
         if (is_artefact(item))
         {
