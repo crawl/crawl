@@ -2491,7 +2491,6 @@ void spare_beogh_convert()
 
     set<mid_t> witnesses;
 
-    you.religion = GOD_NO_GOD;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
@@ -2522,19 +2521,6 @@ void spare_beogh_convert()
         }
     }
 
-    int witc = 0;
-    for (auto wit : witnesses)
-    {
-        monster *orc = monster_by_mid(wit);
-        if (!orc || !orc->alive())
-            continue;
-
-        ++witc;
-        orc->del_ench(ENCH_CHARM);
-        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
-    }
-
-    you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
     // Grant the player succour for accepting the Shepherd as their god
@@ -2542,8 +2528,18 @@ void spare_beogh_convert()
     you.duration[DUR_CONF] = 0;
 
     mpr("The priest grants you succour and welcomes you into the fold.");
-    if (witc > 1)
+    if (witnesses.size() > 1)
         mpr("The other orcs roar their approval!");
+
+    for (auto wit : witnesses)
+    {
+        monster *orc = monster_by_mid(wit);
+        if (!orc || !orc->alive())
+            continue;
+
+        orc->del_ench(ENCH_CHARM);
+        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
+    }
 }
 
 static monster_type _get_orc_reinforcement_type(int pow)
