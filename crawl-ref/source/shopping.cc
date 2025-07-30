@@ -393,6 +393,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_PARRYING:
             case SPARM_GLASS:
             case SPARM_PYROMANIA:
+            case SPARM_STARDUST:
                 valued += 50;
                 break;
 

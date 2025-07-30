@@ -193,5 +193,6 @@ enum zap_type
     ZAP_WARP_BODY,
     ZAP_CONTAM_EXPLOSION,
     ZAP_ACID_BALL,
+    ZAP_SHOOTING_STAR,
     NUM_ZAPS
 };

@@ -245,6 +245,7 @@ static const armour_def Armour_prop[] =
             { SPARM_GUILE,      1 },
             { SPARM_ENERGY,     1 },
             { SPARM_PYROMANIA,  1 },
+            { SPARM_STARDUST,   1 },
     }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
         SLOT_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, {

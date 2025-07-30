@@ -2765,6 +2765,13 @@ A sinuous serpent whose body crackles with volatile electricity. Its electric
 shroud can discharge when struck, inflicting a painful shock on any nearby
 foes.
 %%%%
+shooting star
+
+A glimmering spark of magical energy. It seeks out nearby enemies to expend
+itself upon, dealing damage and pushing them backwards.
+
+It does not block its allies' line of fire.
+%%%%
 silent spectre
 
 A terrible spirit which brings an unearthly silence to the area around it,

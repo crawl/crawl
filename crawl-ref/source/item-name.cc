@@ -580,6 +580,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_PARRYING:          return "parrying";
         case SPARM_GLASS:             return "glass";
         case SPARM_PYROMANIA:         return "pyromania";
+        case SPARM_STARDUST:          return "stardust";
         default:                      return "bugginess";
         }
     }
@@ -639,6 +640,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_PARRYING:          return "Parrying";
         case SPARM_GLASS:             return "Glass";
         case SPARM_PYROMANIA:         return "Pyromania";
+        case SPARM_STARDUST:          return "Stardust";
         default:                      return "buggy";
         }
     }

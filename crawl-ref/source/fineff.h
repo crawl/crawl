@@ -652,5 +652,25 @@ protected:
     const item_def* weapon;
 };
 
+class stardust_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    void fire() override;
+
+    static void schedule(actor* agent, int count, int power)
+    {
+        final_effect::schedule(new stardust_fineff(agent, count, power));
+    }
+protected:
+    stardust_fineff(actor* agent, int _count, int _power)
+        : final_effect(agent, nullptr, you.pos()), count(_count), power(_power)
+    {
+    }
+
+    int count;
+    int power;
+};
+
 
 void fire_final_effects();

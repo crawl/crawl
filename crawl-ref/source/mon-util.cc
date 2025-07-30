@@ -806,6 +806,24 @@ bool mons_is_projectile(const monster& mon)
     return mons_is_projectile(mon.type);
 }
 
+bool mons_is_seeker(monster_type mc)
+{
+    return mc == MONS_FOXFIRE || mc == MONS_SHOOTING_STAR;
+}
+
+bool mons_is_seeker(const monster& mon)
+{
+    return mon.type == MONS_FOXFIRE || mon.type == MONS_SHOOTING_STAR;
+}
+
+cloud_type seeker_trail_type(const monster& mon)
+{
+    if (mon.type == MONS_FOXFIRE)
+        return CLOUD_FLAME;
+    else
+        return CLOUD_MAGIC_TRAIL;
+}
+
 bool mons_has_blood(monster_type mc)
 {
     return mons_class_flag(mc, M_COLD_BLOOD)
@@ -1680,11 +1698,11 @@ bool mons_class_can_use_stairs(monster_type mc)
 {
     return (!mons_class_is_zombified(mc) || mc == MONS_BOUND_SOUL)
            && !mons_is_tentacle_or_tentacle_segment(mc)
+           && !mons_is_seeker(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
-           && mc != MONS_BALL_LIGHTNING
-           && mc != MONS_FOXFIRE;
+           && mc != MONS_BALL_LIGHTNING;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)
@@ -3359,7 +3377,7 @@ bool mons_wields_two_weapons(const monster& mon)
 // and then cease to exist?
 bool mons_destroyed_on_impact(const monster& m)
 {
-    return mons_is_projectile(m) || m.type == MONS_FOXFIRE;
+    return mons_is_projectile(m) || mons_is_seeker(m);
 }
 
 // When this monster reaches its target, does it explode and then
@@ -5784,7 +5802,7 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
     if (!agent || !mons_aligned(agent, &mon))
         return false;
 
-    if (mons_is_avatar(mon.type))
+    if (mons_is_avatar(mon.type) || mon.type == MONS_SHOOTING_STAR)
         return true;
 
     if ((agent->is_player() && have_passive(passive_t::shoot_through_plants)

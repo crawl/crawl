@@ -31,6 +31,7 @@
 #include "evoke.h"
 #include "exclude.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "god-passive.h"
@@ -5208,6 +5209,13 @@ bool handle_mon_spell(monster* mons)
     {
         monster_die(*mons, KILL_RESET, NON_MONSTER);
         return true;
+    }
+
+    if (mons->wearing_ego(OBJ_ARMOUR, SPARM_STARDUST)
+        && !mons->has_ench(ENCH_ORB_COOLDOWN))
+    {
+        stardust_fineff::schedule(mons, 2 + mons->get_hit_dice() / 6,
+                                  6 + mons->get_hit_dice() * 5);
     }
 
     if (!(flags & MON_SPELL_INSTANT))

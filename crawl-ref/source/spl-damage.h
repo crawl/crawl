@@ -122,7 +122,7 @@ spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);
 
-void foxfire_attack(const monster *foxfire, const actor *target);
+void seeker_attack(monster& seeker, actor& target);
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
 

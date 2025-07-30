@@ -931,6 +931,52 @@ void detonation_fineff::fire()
     do_catalyst_explosion(posn, weapon);
 }
 
+void stardust_fineff::fire()
+{
+    actor* agent = actor_by_mid(att);
+
+    if (!agent || !agent->alive())
+        return;
+
+    bool found_targ = false;
+    for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->is_firewood() && !mons_aligned(agent, *ai))
+        {
+            found_targ = true;
+            break;
+        }
+    }
+
+    // Don't activate or go on cooldown if there's nothing to shoot at.
+    if (!found_targ)
+        return;
+
+    mprf("%s orb unleashes %s!",
+            agent->name(DESC_ITS).c_str(),
+            count == 0 ? "a shooting star"
+                       : "a flurry of shooting stars");
+
+    const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
+    for (int i = 0; i < count; ++i)
+    {
+        mgen_data mg(MONS_SHOOTING_STAR, BEH_COPY, agent->pos(),
+                     foe, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+
+        mg.set_summoned(agent, MON_SUMM_STARDUST, 200, false, false);
+        mg.set_range(1, 2);
+        mg.hd = power;
+        mg.hp = 100;
+        if (monster* mon = create_monster(mg))
+            mon->steps_remaining = 15;
+    }
+
+    if (agent->is_player())
+        you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
+    else
+        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, agent, random_range(300, 500)));
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.

@@ -2399,6 +2399,10 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "It enhances the wearer's fire magic and may unleash a blast of "
                "flames around the wearer at the end of any turn in which they "
                "killed an enemy through any means besides attacks.";
+    case SPARM_STARDUST:
+        return "It conjures a barrage of shooting stars the first time its wearer "
+               "spends MP each battle - one for each MP spent - recharging only "
+               "when their MP is restored and no more enemies remain.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2413,6 +2417,15 @@ static string _orb_ego_details(special_armour_type ego)
                                 pyromania_trigger_chance(), pyromania_trigger_chance(true),
                                 pyromania_damage(false, false).num, pyromania_damage(false, false).size,
                                 pyromania_damage(false, true).num, pyromania_damage(false, true).size);
+
+        case SPARM_STARDUST:
+        {
+            dice_def dam = zap_damage(ZAP_SHOOTING_STAR, 10 + you.skill(SK_EVOCATIONS, 10), false, false);
+            dice_def max_dam = zap_damage(ZAP_SHOOTING_STAR, 10 + 270, false, false);
+            return make_stringf("\n\nShooting star damage: %dd%d (max %dd%d)",
+                                    dam.num, dam.size,
+                                    max_dam.num, max_dam.size);
+        }
 
         default:
             return "";
@@ -6716,6 +6729,13 @@ static string _desc_foxfire_dam(const monster_info &mi)
     return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
 }
 
+static string _desc_shooting_star_dam(const monster_info &mi)
+{
+    bolt beam;
+    zappy(ZAP_SHOOTING_STAR, mi.hd, mi.attitude != ATT_FRIENDLY, beam);
+    return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
+}
+
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool mark_spells)
@@ -6836,6 +6856,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_FOXFIRE:
         inf.body << "\nIt deals " << _desc_foxfire_dam(mi) << " fire damage.\n";
+        break;
+
+    case MONS_SHOOTING_STAR:
+        inf.body << "\nIt deals " << _desc_shooting_star_dam(mi) << " damage.\n";
         break;
 
     case MONS_PROGRAM_BUG:

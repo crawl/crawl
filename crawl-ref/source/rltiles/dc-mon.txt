@@ -377,6 +377,7 @@ shadow_prism3
 shadow_prism4
 foxfire MONS_FOXFIRE
 marshlight MONS_MARSHLIGHT
+shooting_star MONS_SHOOTING_STAR
 living_spell MONS_LIVING_SPELL
 living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
 living_spell_earth MONS_LIVING_SPELL_EARTH

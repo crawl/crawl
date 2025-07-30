@@ -891,6 +891,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_ENERGY:
     case SPARM_GLASS:
     case SPARM_PYROMANIA:
+    case SPARM_STARDUST:
         return type == ARM_ORB;
 
     case SPARM_ARCHERY:

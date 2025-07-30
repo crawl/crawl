@@ -1228,3 +1228,8 @@ Tesseract status
 A Boundless Tesseract is drawing in forces from a parallel reality. New monsters
 will steadily appear at random locations across the floor until either of the
 tesseracts is destroyed. This rate is slow at first, but accelerates with time.
+%%%%
+-Star status
+
+Your orb of stardust has recently expended its energy. It will recharge once
+several turns pass while your MP is full and there are no enemies in sight.

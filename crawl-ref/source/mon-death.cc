@@ -3010,7 +3010,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             else if (mons.type == MONS_FIRE_VORTEX
                      || mons.type == MONS_SPATIAL_VORTEX
                      || mons.type == MONS_TWISTER
-                     || mons.type == MONS_FOXFIRE)
+                     || mons_is_seeker(mons))
             {
                 msg = " dissipates.";
             }

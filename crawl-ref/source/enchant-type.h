@@ -248,6 +248,7 @@ enum enchant_type
     ENCH_PARADOX_TOUCHED,
     ENCH_WARDING,
     ENCH_DIMINISHED_SPELLS,
+    ENCH_ORB_COOLDOWN,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

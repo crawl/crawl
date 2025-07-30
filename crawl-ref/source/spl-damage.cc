@@ -4214,34 +4214,43 @@ void attempt_jinxbite_hit(actor& victim)
         you.duration[DUR_JINXBITE] = 1;
 }
 
-void foxfire_attack(const monster *foxfire, const actor *target)
+void seeker_attack(monster& seeker, actor& target)
 {
-    actor * summoner = actor_by_mid(foxfire->summoner);
+    actor * summoner = actor_by_mid(seeker.summoner);
     if (!summoner || !summoner->alive())
     {
         // perish as your master once did
         return;
     }
 
-    // Don't allow foxfires that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(*foxfire)
-                      && summoner->see_cell(target->pos())))
+    // Don't allow seeker that have wandered off to attack before dissapating
+    if (summoner && !(summoner->can_see(seeker)
+                      && summoner->see_cell(target.pos())))
     {
         return;
     }
 
+    zap_type ztype = (seeker.type == MONS_FOXFIRE ? ZAP_FOXFIRE : ZAP_SHOOTING_STAR);
+
     bolt beam;
-    beam.thrower = (foxfire && foxfire->summoner == MID_PLAYER) ? KILL_YOU :
-                        (foxfire)   ? KILL_MON
-                                    : KILL_NON_ACTOR;
+    beam.thrower = seeker.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
     beam.range       = 1;
-    beam.source      = foxfire->pos();
-    beam.source_id   = foxfire->summoner;
+    beam.source      = seeker.pos();
+    beam.source_id   = seeker.summoner;
     beam.source_name = summoner->name(DESC_PLAIN, true);
-    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
+    zappy(ztype, seeker.get_hit_dice(), !seeker.friendly(), beam);
     beam.aux_source  = beam.name;
-    beam.target      = target->pos();
+    beam.target      = target.pos();
+    beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();
+
+    check_place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
+
+    if (target.alive() && seeker.type == MONS_SHOOTING_STAR)
+        target.knockback(seeker, 1, 0, "");
+
+    if (seeker.alive())
+        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
 }
 
 /**

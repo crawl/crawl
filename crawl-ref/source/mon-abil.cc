@@ -1033,16 +1033,14 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_FOXFIRE:
+    case MONS_SHOOTING_STAR:
         if (is_sanctuary(mons->pos()))
             break;
 
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) == 1)
         {
-            foxfire_attack(mons, &you);
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            if (mons->alive())
-                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            seeker_attack(*mons, you);
             used = true;
             break;
         }
@@ -1058,9 +1056,7 @@ bool mon_special_ability(monster* mons)
 
             if (!cell_is_solid(targ->pos()))
             {
-                foxfire_attack(mons, *targ);
-                if (mons->alive())
-                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+                seeker_attack(*mons, **targ);
                 used = true;
                 break;
             }
