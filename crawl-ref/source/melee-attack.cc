@@ -3173,6 +3173,13 @@ bool melee_attack::apply_staff_damage()
             defender->poison(attacker, 2);
     }
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT)
+        && you.magic_points < you.max_magic_points)
+    {
+        mpr("You draw in some of the released energy.");
+        inc_mp(1 + one_chance_in(3) + one_chance_in(3));
+    }
+
     return true;
 }
 

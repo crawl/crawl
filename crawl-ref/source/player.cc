@@ -1538,7 +1538,8 @@ int player_spec_death()
 {
     int sd = 0;
 
-    sd += you.wearing(OBJ_STAVES, STAFF_NECROMANCY);
+    if (you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
+        sd += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
@@ -1553,7 +1554,8 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    sf += you.wearing(OBJ_STAVES, STAFF_FIRE);
+    if (you.wearing(OBJ_STAVES, STAFF_FIRE))
+        sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
@@ -1570,7 +1572,8 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    sc += you.wearing(OBJ_STAVES, STAFF_COLD);
+    if (you.wearing(OBJ_STAVES, STAFF_COLD))
+        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
 
@@ -1587,7 +1590,8 @@ int player_spec_earth()
     int se = 0;
 
     // Staves
-    se += you.wearing(OBJ_STAVES, STAFF_EARTH);
+    if (you.wearing(OBJ_STAVES, STAFF_EARTH))
+        se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     se += you.wearing_ego(OBJ_ARMOUR, SPARM_EARTH);
 
@@ -1604,7 +1608,8 @@ int player_spec_air()
     int sa = 0;
 
     // Staves
-    sa += you.wearing(OBJ_STAVES, STAFF_AIR);
+    if (you.wearing(OBJ_STAVES, STAFF_AIR))
+        sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sa += you.wearing_ego(OBJ_ARMOUR, SPARM_AIR);
 
@@ -1620,7 +1625,9 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    sc += you.wearing(OBJ_STAVES, STAFF_CONJURATION);
+    if (you.wearing(OBJ_STAVES, STAFF_CONJURATION))
+        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+
     sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 
     return sc;
@@ -1651,7 +1658,8 @@ int player_spec_alchemy()
 {
     int sp = 0;
 
-    sp += you.wearing(OBJ_STAVES, STAFF_ALCHEMY);
+    if (you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
+        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sp += you.wearing_jewellery(AMU_ALCHEMY);
 

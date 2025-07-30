@@ -2407,6 +2407,10 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "When you are struck in melee, it briefly dazes all nearby enemies, "
                "then must recharged by standing still for a while. Its duration, "
                "radius, and recharge speed are improved by Evocations skill.";
+    case SPARM_ATTUNEMENT:
+        return "When worn alongside a magical staff, it doubles the effectiveness "
+               "of that staff's spell enhancer and causes melee attacks made with "
+               "it to restore a small amount of MP.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
