@@ -599,7 +599,7 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_STRENGTH:          return "Str+3";
         case SPARM_DEXTERITY:         return "Dex+3";
         case SPARM_INTELLIGENCE:      return "Int+3";
-        case SPARM_PONDEROUSNESS:     return "ponderous";
+        case SPARM_PONDEROUSNESS:     return "Ponderous";
         case SPARM_FLYING:            return "Fly";
         case SPARM_WILLPOWER:         return "Will+";
         case SPARM_PROTECTION:        return "AC+3";
@@ -611,33 +611,33 @@ const char* special_armour_type_name(special_armour_type ego, bool terse)
         case SPARM_JUMPING:           return "obsolete";
 #endif
         case SPARM_CORROSION_RESISTANCE: return "rCorr";
-        case SPARM_REFLECTION:        return "reflect";
+        case SPARM_REFLECTION:        return "Reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
-        case SPARM_HURLING:           return "hurl";
-        case SPARM_REPULSION:         return "repulsion";
+        case SPARM_HURLING:           return "Hurl";
+        case SPARM_REPULSION:         return "Repulsion";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "obsolete";
 #endif
-        case SPARM_HARM:              return "harm";
-        case SPARM_SHADOWS:           return "shadows";
-        case SPARM_RAMPAGING:         return "rampage";
-        case SPARM_INFUSION:          return "infuse";
-        case SPARM_LIGHT:             return "light";
+        case SPARM_HARM:              return "Harm";
+        case SPARM_SHADOWS:           return "Shadows";
+        case SPARM_RAMPAGING:         return "Rampage";
+        case SPARM_INFUSION:          return "Infuse";
+        case SPARM_LIGHT:             return "Light";
         case SPARM_RAGE:              return "*Rage";
-        case SPARM_MAYHEM:            return "mayhem";
-        case SPARM_GUILE:             return "guile";
-        case SPARM_ENERGY:            return "*channel";
-        case SPARM_SNIPING:           return "snipe";
-        case SPARM_ICE:               return "ice";
-        case SPARM_FIRE:              return "fire";
-        case SPARM_AIR:               return "air";
-        case SPARM_EARTH:             return "earth";
-        case SPARM_ARCHERY:           return "archery";
-        case SPARM_COMMAND:           return "command";
-        case SPARM_DEATH:             return "death";
-        case SPARM_RESONANCE:         return "resonance";
-        case SPARM_PARRYING:          return "parrying";
-        case SPARM_GLASS:             return "glass";
+        case SPARM_MAYHEM:            return "Mayhem";
+        case SPARM_GUILE:             return "Guile";
+        case SPARM_ENERGY:            return "*Channel";
+        case SPARM_SNIPING:           return "Snipe";
+        case SPARM_ICE:               return "Ice";
+        case SPARM_FIRE:              return "Fire";
+        case SPARM_AIR:               return "Air";
+        case SPARM_EARTH:             return "Earth";
+        case SPARM_ARCHERY:           return "Archery";
+        case SPARM_COMMAND:           return "Command";
+        case SPARM_DEATH:             return "Death";
+        case SPARM_RESONANCE:         return "Resonance";
+        case SPARM_PARRYING:          return "Parrying";
+        case SPARM_GLASS:             return "Glass";
         case SPARM_PYROMANIA:         return "Pyromania";
         default:                      return "buggy";
         }
