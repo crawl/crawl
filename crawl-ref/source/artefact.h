@@ -9,6 +9,7 @@
 
 #include "artefact-prop-type.h"
 #include "defines.h"
+#include "item-prop-enum.h"
 #include "unique-item-status-type.h"
 #include "object-class-type.h"
 #include "killer-type.h"
@@ -149,6 +150,7 @@ const char *artp_name(artefact_prop_type prop);
 artefact_prop_type artp_type_from_name(const string &name);
 bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
+artefact_prop_type ego_to_artprop(special_armour_type type);
 
 int get_unrandart_num(const char *name);
 int extant_unrandart_by_exact_name(string name);

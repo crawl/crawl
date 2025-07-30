@@ -748,8 +748,41 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     if (is_artefact(item) && artefact_property(item, ARTP_BANE))
         item.plus = max((int)item.plus, armour_max_enchant(item) / 2 + random_range(1, 2));
 
+    // Having an ego before this function means that it was specifically requested
+    // by itemspec, so we should try to honour that.
     if (old_ego > 0)
-        set_artefact_brand(item, old_ego);
+    {
+        artefact_prop_type prop = ego_to_artprop(static_cast<special_armour_type>(old_ego));
+
+        // Egos that have no corresponding artprop can stay intact
+        if (prop == ARTP_NUM_PROPERTIES)
+            set_artefact_brand(item, old_ego);
+        else
+        {
+            // Other egos are directly translated into the corresponding artprop,
+            // to make inscriptions a bit less confusing for players. (eg: no {rF+, rF+})
+            switch (prop)
+            {
+                case ARTP_STRENGTH:
+                case ARTP_INTELLIGENCE:
+                case ARTP_DEXTERITY:
+                case ARTP_AC:
+                    item.props[ARTEFACT_PROPS_KEY].get_vector()[prop].get_short() += 3;
+                    break;
+
+                default:
+                {
+                    short& val = item.props[ARTEFACT_PROPS_KEY].get_vector()[prop].get_short();
+
+                    // Make sure not to 'hide' a second level of a boolean artprop
+                    if (artp_value_type(prop) == ARTP_VAL_BOOL)
+                        val = 1;
+                    else
+                        val += 1;
+                }
+            }
+        }
+    }
 
     return true;
 }
@@ -1045,25 +1078,17 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // Forced randart.
     if (item_level == ISPEC_RANDART)
     {
-        int ego = item.brand;
         for (int i = 0; i < 100; ++i)
             if (_try_make_armour_artefact(item, force_type, item_level, agent))
             {
-                // borrowed from similar code for weapons -- is this really the
-                // best way to force an ego??
-                if (ego > SPARM_NORMAL)
+                if (randart_is_bad(item)) // recheck, the brand changed
                 {
-                    set_artefact_brand(item, ego);
-
-                    if (randart_is_bad(item)) // recheck, the brand changed
-                    {
-                        force_type = item.sub_type;
-                        item.clear();
-                        item.quantity = 1;
-                        item.base_type = OBJ_ARMOUR;
-                        item.sub_type = force_type;
-                        continue;
-                    }
+                    force_type = item.sub_type;
+                    item.clear();
+                    item.quantity = 1;
+                    item.base_type = OBJ_ARMOUR;
+                    item.sub_type = force_type;
+                    continue;
                 }
                 return;
             }

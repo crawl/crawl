@@ -1034,6 +1034,43 @@ artefact_prop_type artp_type_from_name(const string &name)
 }
 
 /**
+ * Returns the artefact property type that corresponds to a given armour ego
+ *
+ * @param ego       The ego in question.
+ * @return          The corresponding artefact property type
+ *                  (or ARTP_NUM_PROPERTIES, if no artprop has the same function.)
+ */
+artefact_prop_type ego_to_artprop(special_armour_type ego)
+{
+    switch (ego)
+    {
+        case SPARM_FIRE_RESISTANCE:         return ARTP_FIRE;
+        case SPARM_COLD_RESISTANCE:         return ARTP_COLD;
+        case SPARM_POISON_RESISTANCE:       return ARTP_POISON;
+        case SPARM_CORROSION_RESISTANCE:    return ARTP_RCORR;
+        case SPARM_SEE_INVISIBLE:           return ARTP_SEE_INVISIBLE;
+        case SPARM_INVISIBILITY:            return ARTP_INVISIBLE;
+        case SPARM_STRENGTH:                return ARTP_STRENGTH;
+        case SPARM_DEXTERITY:               return ARTP_DEXTERITY;
+        case SPARM_INTELLIGENCE:            return ARTP_INTELLIGENCE;
+        case SPARM_FLYING:                  return ARTP_FLY;
+        case SPARM_WILLPOWER:               return ARTP_WILLPOWER;
+        case SPARM_PROTECTION:              return ARTP_AC;
+        case SPARM_STEALTH:                 return ARTP_STEALTH;
+        case SPARM_POSITIVE_ENERGY:         return ARTP_NEGATIVE_ENERGY;
+        case SPARM_ARCHMAGI:                return ARTP_ARCHMAGI;
+        case SPARM_HARM:                    return ARTP_HARM;
+        case SPARM_RAMPAGING:               return ARTP_RAMPAGING;
+        case SPARM_ICE:                     return ARTP_ENHANCE_ICE;
+        case SPARM_FIRE:                    return ARTP_ENHANCE_FIRE;
+        case SPARM_AIR:                     return ARTP_ENHANCE_AIR;
+        case SPARM_EARTH:                   return ARTP_ENHANCE_EARTH;
+
+        default:                            return ARTP_NUM_PROPERTIES;
+    }
+}
+
+/**
  * Try to add a 'good' version of a given prop to the given set of item props.
  * The property may already exist in the set; if so, increase its value.
  *
@@ -1172,12 +1209,20 @@ static void _get_randart_properties(const item_def &item,
     // Make sure all weapons have a brand.
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
+    // Scarves and orbs always get an ego, while other items get a chance of one.
     else if (item_class == OBJ_ARMOUR
-             && item_always_has_ego(item)
+             && item.brand == SPARM_NORMAL
+             && (item_always_has_ego(item) || coinflip())
              && item_props[ARTP_BRAND] == SPARM_NORMAL)
     {
-        item_props[ARTP_BRAND] =
-            choose_armour_ego(static_cast<armour_type>(item.sub_type));
+        special_armour_type ego = choose_armour_ego(static_cast<armour_type>(item.sub_type));
+        artefact_prop_type prop = ego_to_artprop(ego);
+
+        // Egos that have no corresponding artprop can stay intact (to allow
+        // ego-only properties to still generate on randarts), while other
+        // properties are removed. (We will let normal artprop weighting handle those.)
+        if (prop == ARTP_NUM_PROPERTIES)
+            item_props[ARTP_BRAND] = ego;
     }
 
     // Randomly pick properties from the list, choose an appropriate value,
