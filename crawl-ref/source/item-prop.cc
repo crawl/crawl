@@ -201,7 +201,6 @@ static const armour_def Armour_prop[] =
 
     { ARM_HAT,                  "hat",                    0,   0,   40,
         SLOT_HELMET,      SIZE_TINY, SIZE_LARGE, true, 0, {
-            { SPARM_NORMAL,        10 },
             { SPARM_WILLPOWER,     3 },
             { SPARM_STEALTH,       2 },
             { SPARM_INTELLIGENCE,  2 },
