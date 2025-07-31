@@ -332,6 +332,7 @@ enum tag_minor_version
     TAG_MINOR_ZOT_ORB_MEMORY,      // Fix whether the player has learned the Zot orb type not being saved
     TAG_MINOR_CONSUMABLE_INV,      // Split gear and consumable inventory, adding much inventory space.
     TAG_MINOR_EQUIP_TALISMAN,      // Make talismans equipment you put on.
+    TAG_MINOR_EXCLUSIVE_ROLLPAGE,  // Don't give inhibited regen mutation to rollpage characters.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

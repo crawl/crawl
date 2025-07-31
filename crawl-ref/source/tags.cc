@@ -3878,6 +3878,13 @@ static void _tag_read_you(reader &th)
             you.mutation[MUT_PASSIVE_MAPPING] = 2;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_EXCLUSIVE_ROLLPAGE
+        && you.species == SP_ARMATAUR
+        && you.mutation[MUT_INHIBITED_REGENERATION] > 0)
+    {
+        _clear_mutation(MUT_INHIBITED_REGENERATION);
+    }
+
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())
         _clear_mutation(m);
