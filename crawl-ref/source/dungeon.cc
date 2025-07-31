@@ -4943,7 +4943,7 @@ static object_class_type _superb_object_class()
             1, OBJ_TALISMANS);
 }
 
-static int _concretize_level(int spec_level, int dgn_level)
+int concretize_item_level(int spec_level, int dgn_level)
 {
     if (spec_level >= 0)
         return spec_level;
@@ -5005,7 +5005,7 @@ int dgn_place_item(const item_spec &spec,
     if (spec.base_type == OBJ_UNASSIGNED)
         return NON_ITEM;
 
-    const int level = _concretize_level(spec.level, dgn_level);
+    const int level = concretize_item_level(spec.level, dgn_level);
     const object_class_type base_type = _concretize_type(spec);
 
     int useless_tries = 0;
@@ -5122,8 +5122,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 spec.ego = SP_FORBID_EGO;
         }
 
-        const int item_level = _concretize_level(spec.level,
-                                                 mspec.place.absdepth());
+        const int item_level = concretize_item_level(spec.level,
+                                                     mspec.place.absdepth());
         for (int useless_tries = 0; true; useless_tries++)
         {
             int item_made;

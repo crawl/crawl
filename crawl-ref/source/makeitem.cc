@@ -969,6 +969,78 @@ static int _armour_plus_threshold(equipment_slot armour_type)
     }
 }
 
+armour_type pick_random_aux_armour_type()
+{
+    return random_choose_weighted(12, ARM_BOOTS,
+                                  12, ARM_GLOVES,
+                                  // Cloak slot
+                                  9, ARM_CLOAK,
+                                  3, ARM_SCARF,
+                                  // Head slot
+                                  10, ARM_HELMET,
+                                  2, ARM_HAT);
+}
+
+armour_type pick_random_shield_type()
+{
+    return random_choose_weighted(4, ARM_BUCKLER,
+                                  2, ARM_KITE_SHIELD,
+                                  1, ARM_TOWER_SHIELD);
+}
+
+armour_type pick_random_body_armour_type(int item_level)
+{
+    if (x_chance_in_y(11 + item_level, 10000))
+    {
+        // High level dragon scales
+        return random_choose(ARM_STEAM_DRAGON_ARMOUR,
+                             ARM_ACID_DRAGON_ARMOUR,
+                             ARM_STORM_DRAGON_ARMOUR,
+                             ARM_GOLDEN_DRAGON_ARMOUR,
+                             ARM_SWAMP_DRAGON_ARMOUR,
+                             ARM_PEARL_DRAGON_ARMOUR,
+                             ARM_SHADOW_DRAGON_ARMOUR,
+                             ARM_QUICKSILVER_DRAGON_ARMOUR);
+    }
+    else if (x_chance_in_y(11 + item_level, 8000))
+    {
+        // Crystal plate, some armours which are normally gained by butchering
+        // monsters for hides.
+        return random_choose(ARM_CRYSTAL_PLATE_ARMOUR,
+                             ARM_TROLL_LEATHER_ARMOUR,
+                             ARM_FIRE_DRAGON_ARMOUR,
+                             ARM_ICE_DRAGON_ARMOUR);
+
+    }
+    else if (x_chance_in_y(11 + item_level, 60))
+    {
+        // All the "mundane" armours. Generally the player will find at least
+        // one copy of these by the Lair.
+        return random_choose(ARM_ROBE,
+                             ARM_LEATHER_ARMOUR,
+                             ARM_RING_MAIL,
+                             ARM_SCALE_MAIL,
+                             ARM_CHAIN_MAIL,
+                             ARM_PLATE_ARMOUR);
+    }
+    else if (x_chance_in_y(11 + item_level, 35))
+    {
+        // All the "mundane" amours except plate.
+        return random_choose(ARM_ROBE,
+                             ARM_LEATHER_ARMOUR,
+                             ARM_RING_MAIL,
+                             ARM_SCALE_MAIL,
+                             ARM_CHAIN_MAIL);
+    }
+    else
+    {
+        // Default (lowest-level) armours.
+        return random_choose(ARM_ROBE,
+                             ARM_LEATHER_ARMOUR,
+                             ARM_RING_MAIL);
+    }
+}
+
 /**
  * Pick an armour type (ex. plate armour), based on item_level
  *
@@ -978,7 +1050,6 @@ static int _armour_plus_threshold(equipment_slot armour_type)
  */
 static armour_type _get_random_armour_type(int item_level)
 {
-
     // Dummy value for initialization, always changed by the conditional
     // (and not changing it would trigger an ASSERT)
     armour_type armtype = NUM_ARMOURS;
@@ -986,70 +1057,15 @@ static armour_type _get_random_armour_type(int item_level)
     // Secondary armours.
     if (one_chance_in(5))
     {
-        // Total weight is 60, each slot has a weight of 12
-        armtype = random_choose_weighted(12, ARM_BOOTS,
-                                         12, ARM_GLOVES,
-                                         // Cloak slot
-                                         9, ARM_CLOAK,
-                                         3, ARM_SCARF,
-                                         // Head slot
-                                         10, ARM_HELMET,
-                                         2, ARM_HAT,
-                                         // Shield slot
-                                         2, ARM_KITE_SHIELD,
-                                         4, ARM_BUCKLER,
-                                         1, ARM_TOWER_SHIELD,
-                                         4, ARM_ORB);
-    }
-    else if (x_chance_in_y(11 + item_level, 10000))
-    {
-        // High level dragon scales
-        armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
-                                ARM_ACID_DRAGON_ARMOUR,
-                                ARM_STORM_DRAGON_ARMOUR,
-                                ARM_GOLDEN_DRAGON_ARMOUR,
-                                ARM_SWAMP_DRAGON_ARMOUR,
-                                ARM_PEARL_DRAGON_ARMOUR,
-                                ARM_SHADOW_DRAGON_ARMOUR,
-                                ARM_QUICKSILVER_DRAGON_ARMOUR);
-    }
-    else if (x_chance_in_y(11 + item_level, 8000))
-    {
-        // Crystal plate, some armours which are normally gained by butchering
-        // monsters for hides.
-        armtype = random_choose(ARM_CRYSTAL_PLATE_ARMOUR,
-                                ARM_TROLL_LEATHER_ARMOUR,
-                                ARM_FIRE_DRAGON_ARMOUR,
-                                ARM_ICE_DRAGON_ARMOUR);
-
-    }
-    else if (x_chance_in_y(11 + item_level, 60))
-    {
-        // All the "mundane" armours. Generally the player will find at least
-        // one copy of these by the Lair.
-        armtype = random_choose(ARM_ROBE,
-                                ARM_LEATHER_ARMOUR,
-                                ARM_RING_MAIL,
-                                ARM_SCALE_MAIL,
-                                ARM_CHAIN_MAIL,
-                                ARM_PLATE_ARMOUR);
-    }
-    else if (x_chance_in_y(11 + item_level, 35))
-    {
-        // All the "mundane" amours except plate.
-        armtype = random_choose(ARM_ROBE,
-                                ARM_LEATHER_ARMOUR,
-                                ARM_RING_MAIL,
-                                ARM_SCALE_MAIL,
-                                ARM_CHAIN_MAIL);
+        if (x_chance_in_y(48, 60))
+            armtype = pick_random_aux_armour_type();
+        else if (x_chance_in_y(7, 11))
+            armtype = pick_random_shield_type();
+        else
+            armtype = ARM_ORB;
     }
     else
-    {
-        // Default (lowest-level) armours.
-        armtype = random_choose(ARM_ROBE,
-                                ARM_LEATHER_ARMOUR,
-                                ARM_RING_MAIL);
-    }
+        armtype = pick_random_body_armour_type(item_level);
 
     ASSERT(armtype != NUM_ARMOURS);
 

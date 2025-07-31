@@ -5810,6 +5810,27 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         return;
     }
 
+    if (c == "body armour")
+    {
+        spec.base_type = OBJ_ARMOUR;
+        spec.sub_type = pick_random_body_armour_type(concretize_item_level(spec.level));
+        return;
+    }
+
+    if (c == "aux armour")
+    {
+        spec.base_type = OBJ_ARMOUR;
+        spec.sub_type = pick_random_aux_armour_type();
+        return;
+    }
+
+    if (c == "shield")
+    {
+        spec.base_type = OBJ_ARMOUR;
+        spec.sub_type = pick_random_shield_type();
+        return;
+    }
+
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }
 
