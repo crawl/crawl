@@ -1511,6 +1511,12 @@ equipment_slot get_armour_slot(armour_type arm)
     return Armour_prop[ Armour_index[arm] ].slot;
 }
 
+bool armour_is_aux(armour_type arm)
+{
+    const equipment_slot slot = Armour_prop[ Armour_index[arm] ].slot;
+    return slot >= SLOT_MIN_AUX_ARMOUR && slot <= SLOT_MAX_AUX_ARMOUR;
+}
+
 bool jewellery_is_amulet(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);

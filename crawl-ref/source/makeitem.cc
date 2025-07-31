@@ -1113,6 +1113,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if (no_ego)
         item.brand = SPARM_NORMAL;
+    // An additional chance for egos on aux armour (without giving more plusses)
+    else if (armour_is_aux(static_cast<armour_type>(item.sub_type))
+             && x_chance_in_y(item_level * 3 + 15, 200))
+    {
+        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
+    }
 
     if (item_level < 0)
     {
