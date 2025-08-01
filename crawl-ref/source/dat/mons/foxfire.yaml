@@ -6,7 +6,6 @@ exp: 0
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, damage: 1}
 hd: 1
 hp_10x: 10
 ac: 0

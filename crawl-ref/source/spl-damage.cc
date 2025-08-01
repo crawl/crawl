@@ -4217,15 +4217,14 @@ void attempt_jinxbite_hit(actor& victim)
 void seeker_attack(monster& seeker, actor& target)
 {
     actor * summoner = actor_by_mid(seeker.summoner);
-    if (!summoner || !summoner->alive())
-    {
-        // perish as your master once did
-        return;
-    }
 
-    // Don't allow seeker that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(seeker)
-                      && summoner->see_cell(target.pos())))
+    // If our summoner is dead, just attribute the seeker's damage to itself.
+    if (!summoner)
+        summoner = &seeker;
+
+    // Don't allow player seekers to attack out of the player's LoS
+    if (summoner && summoner->is_player() && !(you.can_see(seeker)
+                                          && you.see_cell(target.pos())))
     {
         return;
     }
@@ -4236,10 +4235,8 @@ void seeker_attack(monster& seeker, actor& target)
     beam.thrower = seeker.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
     beam.range       = 1;
     beam.source      = seeker.pos();
-    beam.source_id   = seeker.summoner;
-    beam.source_name = summoner->name(DESC_PLAIN, true);
+    beam.set_agent(summoner);
     zappy(ztype, seeker.get_hit_dice(), !seeker.friendly(), beam);
-    beam.aux_source  = beam.name;
     beam.target      = target.pos();
     beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();

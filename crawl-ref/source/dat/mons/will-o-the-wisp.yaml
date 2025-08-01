@@ -7,8 +7,7 @@ exp: 532
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: engulf, damage: 20}
-hd: 11
+hd: 10
 hp_10x: 400
 ac: 4
 ev: 10

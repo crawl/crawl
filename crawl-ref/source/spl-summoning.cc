@@ -2930,6 +2930,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
                   MG_FORCE_PLACE | MG_AUTOFOE);
     fox.set_summoned(&agent, SPELL_FOXFIRE, random_range(40, 70), false, false);
     fox.hd = pow;
+    fox.hp = min(20, pow);
     monster *foxfire;
 
     if (cell_is_solid(pos) || actor_at(pos))

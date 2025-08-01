@@ -1049,7 +1049,7 @@ bool mon_special_ability(monster* mons)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
-                || !you.see_cell(targ->pos()))
+                || (mons->friendly() && !you.see_cell(targ->pos())))
             {
                 continue;
             }
