@@ -708,9 +708,19 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
             // Maybe we should allow these for robes, too?  And hats? And
             // gloves and cloaks and scarves?
             return (item.base_type == OBJ_STAVES
-                       || item.is_type(OBJ_ARMOUR, ARM_ORB))
+                      || item.is_type(OBJ_ARMOUR, ARM_ORB)
+                      || prop == ARTP_ENHANCE_EARTH
+                         && (item.is_type(OBJ_ARMOUR, ARM_BOOTS)
+                             || item.is_type(OBJ_ARMOUR, ARM_BARDING))
+                      || prop == ARTP_ENHANCE_FIRE
+                         && item.is_type(OBJ_ARMOUR, ARM_GLOVES)
+                      || prop == ARTP_ENHANCE_AIR
+                         && item.is_type(OBJ_ARMOUR, ARM_CLOAK)
+                      || prop == ARTP_ENHANCE_ICE
+                         && (item.is_type(OBJ_ARMOUR, ARM_HELMET)
+                             || item.is_type(OBJ_ARMOUR, ARM_HAT)))
                    && !_any_artps_in_item_props({ ARTP_PREVENT_SPELLCASTING },
-                                             intrinsic_props, extant_props);
+                                                intrinsic_props, extant_props);
         default:
             return true;
     }
