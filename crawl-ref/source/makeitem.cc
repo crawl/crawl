@@ -1067,6 +1067,12 @@ static armour_type _get_random_armour_type(int item_level)
     else
         armtype = pick_random_body_armour_type(item_level);
 
+    // XXX: Taking the weight out of arguably the least valuable armour types.
+    // Makes orbs a bit more common earlier in the game (potentially before a
+    // player has invested in shields).
+    if ((armtype == ARM_ROBE || armtype == ARM_LEATHER_ARMOUR) && one_chance_in(25))
+        armtype = ARM_ORB;
+
     ASSERT(armtype != NUM_ARMOURS);
 
     return armtype;
