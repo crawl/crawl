@@ -1623,6 +1623,16 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
 static string _handedness_string(const item_def &item)
 {
+    if (you.has_mutation(MUT_NO_GRASPING))
+        return "\nYou are unable to wield it.";
+
+    if (crawl_state.need_save
+        && is_weapon_too_large(item, you.body_size(PSIZE_TORSO))
+        && !you.has_mutation(MUT_QUADRUMANOUS))
+    {
+        return "\nIt is too large for you to wield.";
+    }
+
     const bool quad = you.has_mutation(MUT_QUADRUMANOUS);
     string handname = species::hand_name(you.species);
     if (quad)
@@ -2126,18 +2136,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     if (verbose)
     {
         description += "\n\n" + _category_string(item, monster);
-
-
-
-        // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
-
-        if (crawl_state.need_save
-            && is_weapon_too_large(item, you.body_size(PSIZE_TORSO))
-            && !you.has_mutation(MUT_QUADRUMANOUS))
-        {
-            description += "\nIt is too large for you to wield.";
-        }
     }
 
     if (!is_artefact(item) && !monster)
