@@ -135,7 +135,7 @@ function ch_stash_search_annotate_item(it)
       ["ice"] = "rC++ rF-",
       ["pearl"] = "rN+",
       ["storm"] = "rElec",
-      ["shadow"] = "Stlth++++",
+      ["shadow"] = "Stlth+",
       ["golden"] = "rF+ rC+ rPois"
     }
     local t = it.name("base"):match("%a+")
