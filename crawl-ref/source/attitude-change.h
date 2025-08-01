@@ -7,6 +7,7 @@ void mons_att_changed(monster* mons);
 void fedhas_neutralise(monster* mons);
 void beogh_follower_convert(monster* mons, bool orc_hit = false);
 void slime_convert(monster* mons);
+void orbrun_convert_natasha(monster* mons);
 void dismiss_god_summons(god_type god);
 enum class conv_t
 {

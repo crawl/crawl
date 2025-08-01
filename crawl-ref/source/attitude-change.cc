@@ -141,6 +141,20 @@ void fedhas_neutralise(monster* mons)
     }
 }
 
+void orbrun_convert_natasha(monster* mons)
+{
+    if (player_on_orb_run() && !mons->neutral()
+        && !mons->friendly() && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        && !you.allies_forbidden())
+    {
+        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+        mons->attitude = ATT_FRIENDLY;
+        mons_att_changed(mons);
+        mprf("%s meows happily.", mons->name(DESC_THE).c_str());
+        stop_running();
+    }
+}
+
 // Make divine summons disappear on penance or excommunication from the god in question
 void dismiss_god_summons(god_type god)
 {
