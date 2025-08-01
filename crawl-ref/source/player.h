@@ -1039,6 +1039,7 @@ bool player_effectively_in_light_armour();
 
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
+int player_armour_stealth_penalty();
 
 int player_movement_speed(bool check_terrain = true, bool temp = true);
 
