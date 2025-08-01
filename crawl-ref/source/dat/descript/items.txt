@@ -1606,8 +1606,8 @@ thrown to cause minor damage.
 shadow dragon scales
 
 The scales of a great umbral dragon. It is heavier than most dragon scale
-armours, but despite this, blends in so well with the shadows as to provide a
-substantial benefit to the wearer's stealth.
+armours, but its encumbrance does not penalize the wearer's stealth. It also
+grants additional stealth to the wearer.
 %%%%
 storm dragon scales
 
