@@ -161,9 +161,10 @@ function xom_bazaar_special(e, glyph)
                                     "fulsome_fusillade" }, 2)
     local plus = crawl.random_range(4, 8)
 
-    e.kitem(glyph .. " = any talisman / any talisman randart / " ..
+    e.kitem(glyph .. " = any talisman / any talisman randart w:15 / " ..
                         "orb ego:mayhem randart artprops:Int:" .. plus .. " / " ..
-                        "orb ego:wrath randart artprops:Str:" .. plus .. " / " ..
                         "orb ego:guile randart artprops:Dex:" .. plus .. " / " ..
+                        "orb ego:glass randart artprops:Harm / " ..
+                        "orb ego:pyromania randart artprops:rF:1&&rC:-1 / " ..
                         "randbook owner:Xom spells:" ..table.concat(sp, "&&"))
 end

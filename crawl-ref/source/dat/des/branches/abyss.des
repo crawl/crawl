@@ -734,7 +734,7 @@ KMONS:   1 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
 KMONS:   2 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
 KMONS:   3 = apocalypse crab / death drake w:5
-KITEM:   3 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
+KITEM:   3 = $, orb, $
 KITEM:   23 = wand of digging charges:1, staff of earth / staff of air / \
               parchment disc:earth w:5 / parchment disc:air w:5 / \
               mundane granite talisman w:20
@@ -1050,7 +1050,7 @@ MONS:    draconian shifter w:5 / shadow demon w:5 / lich / cognitogaunt / \
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
-ITEM:    orb ego:light / orb ego:guile / orb ego:wrath
+ITEM:    orb
 ITEM:    boomerang good_item q:10 / javelin good_item q:5, any magical staff
 ITEM:    scroll of revelation q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20

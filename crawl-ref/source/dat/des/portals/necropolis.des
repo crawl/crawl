@@ -3576,7 +3576,7 @@ KITEM:  D = any jewellery good_item
 KITEM:  F = any jewellery randart
 : kitem("H = " .. dgn.randart_aux_armour)
 KITEM:  I = potion of berserk rage pre_id q:1
-: local j = j .. " / orb ego:wrath randart artprops:Rampage pre_id w:2"
+: local j = j .. " / orb ego:mayhem randart artprops:Rampage pre_id w:2"
 : if items.pickable("box of beasts") and not
 :  (dgn.persist.necropolis_difficulty == "pre_temple_d" or
 :   dgn.persist.necropolis_difficulty == "pre_lair_d") then

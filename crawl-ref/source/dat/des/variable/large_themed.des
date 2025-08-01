@@ -3452,13 +3452,14 @@ KMONS:   D = pile of debris
 ITEM:    potion of brilliance pre_id / potion of magic pre_id / \
          potion of enlightenment pre_id / potion of ambrosia pre_id
 ITEM:    scroll of identify q:1 pre_id / scroll of amnesia q:1 pre_id
-ITEM:    any scroll / orb ego:light pre_id w:1, parchment
+ITEM:    any scroll, parchment
 # Books with notable spells at level 6 or higher, across each school.
 ITEM:    book of spontaneous combustion / book of ice / book of spectacle / \
          book of power / book of chaos / book of the warp / book of death / \
          book of siegecraft / necronomicon / grand grimoire / book of annihilations
 ITEM:    robe randart / orb ego:guile randart / orb ego:channeling randart / \
-         orb ego:light randart / any magical staff randart w:15 / \
+         orb ego:stardust randart / orb ego:attunement randart / \
+         any magical staff randart w:15 / \
          ring of wizardry randart / manual of spellcasting w:5
 : if you.in_branch("D") and you.depth() < 9 then
 ITEM:    mundane pair of boots / mundane cloak, stone q:1

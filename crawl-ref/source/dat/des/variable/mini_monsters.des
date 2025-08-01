@@ -7850,6 +7850,8 @@ SUBST:   X = x
 KMONS:   D = pile of debris
 ITEM:    any weapon mundane damaged no_pickup
 ITEM:    robe mundane damaged no_pickup
+# XXX: Light ego would normally be on a helmet, but this is specifically
+#      referencing Monk starting items.
 ITEM:    robe good_item / quarterstaff good_item / orb ego:light pre_id / \
          amulet of faith pre_id / \
          potion of ambrosia q:1 pre_id / scroll of revelation q:1 pre_id

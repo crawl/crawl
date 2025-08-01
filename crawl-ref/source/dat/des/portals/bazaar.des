@@ -2185,13 +2185,15 @@ local jewel1 = util.random_from(jewellery) .. util.random_from(unequip) .. "&" .
 local jewel2 = util.random_from(jewellery) .. util.random_from(unequip) .. "&" ..
                util.random_from(resist)
 
--- Niche, double-sided aux properties given extra artprop juice.
--- XXX: Re-examine this if an orb overhaul ever goes through.
+-- Niche or double-edged aux armour given extra artprop juice or mixed benefits.
 local aux = table.concat(util.random_subset({
             "orb ego:mayhem randart artprops:Int:" .. crawl.random_range(4, 8),
-            "orb ego:wrath randart artprops:Str:" .. crawl.random_range(4, 8),
             "orb ego:guile randart artprops:Dex:" .. crawl.random_range(4, 8),
-            "orb ego:light randart artprops:Stlth:" .. crawl.random_range(3, 4),
+            "orb ego:glass randart artprops:Harm",
+            "orb ego:pyromania randart artprops:rF:1&&rC:-1",
+            "orb ego:stardust randart artprops:Conj&&MP:" .. crawl.random_range(-2, -5),
+            "orb ego:mesmerism randart artprops:Will:-1&&Rampage",
+            "orb ego:attunement randart artprops:Str:" .. crawl.random_range(4, 8),
             "scarf ego:harm randart artprops:Slay:" .. crawl.random_range(3, 5)}, 2), " | ")
 
 -- Double-sided consumables and niche darts. Since only Xom worshippers see

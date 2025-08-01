@@ -1723,16 +1723,16 @@ static void _give_shield(monster* mon, int level)
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
         if (shield)
         {
-            // Light is good-coded and Wrath is too vicious.
-            const auto ego = random_choose(SPARM_MAYHEM, SPARM_ENERGY, SPARM_GUILE);
+            const auto ego = random_choose(SPARM_STARDUST, SPARM_MESMERISM,
+                                           SPARM_ENERGY, SPARM_GUILE);
             set_item_ego_type(*shield, OBJ_ARMOUR, ego);
         }
         break;
 
     case MONS_FREDERICK:
     {
-        // Divinity or conjurer support.
-        const auto ego = random_choose(SPARM_LIGHT, SPARM_ENERGY);
+        // Conjurer support.
+        const auto ego = random_choose(SPARM_STARDUST, SPARM_ENERGY);
 
         give_specific_item(mon, items(false, OBJ_ARMOUR,
                            ARM_ORB, ISPEC_RANDART, ego));

@@ -3060,7 +3060,7 @@ NAME:   tekkud_bubbles_buried_in_this_jungle
 TAGS:   no_monster_gen
 DEPTH:  Swamp
 KMONS:  1 = fenstrider witch ; staff of alchemy | staff of necromancy . \
-                               orb ego:wrath | orb ego:mayhem w:5 . robe
+                               orb ego:glass | orb ego:mayhem w:5 . robe
 KMONS:  2 = bog body
 KMONS:  3 = bloated husk
 KFEAT:  123 = W
