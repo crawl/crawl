@@ -87,6 +87,7 @@ hints.o \
 hiscores.o \
 initfile.o \
 invent.o \
+command-palette-menu.o \
 item-use.o \
 item-name.o \
 item-prop.o \
