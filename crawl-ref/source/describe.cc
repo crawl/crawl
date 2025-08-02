@@ -2360,7 +2360,8 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it causes witnesses of the wearer's kills to go into a frenzy,"
                " attacking everything nearby with great strength and speed.";
     case SPARM_GUILE:
-        return "it weakens the willpower of the wielder and everyone they hex.";
+        return "it weakens the willpower of the wielder and everyone they hex, "
+               "the latter of which is increased by Evocations skill.";
     case SPARM_ENERGY:
         return "it may return the magic spent to cast spells, but lowers their "
                "success rate. It always returns the magic spent on miscasts.";
@@ -2420,6 +2421,10 @@ static string _orb_ego_details(special_armour_type ego)
 {
     switch (ego)
     {
+        case SPARM_GUILE:
+            return make_stringf("\n\nEnemy Willpower: -%d (max -%d)",
+                                guile_will_reduction(), guile_will_reduction(true));
+
         case SPARM_GLASS:
             return make_stringf("\n\nVitrify chance: %d%% (max %d%%)",
                         (40 + you.skill(SK_EVOCATIONS, 10)) * 100 / 500,

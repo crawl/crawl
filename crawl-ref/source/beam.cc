@@ -8015,7 +8015,12 @@ void bolt::set_is_tracer(bool value) noexcept
 int apply_willpower_bypass(const actor& source, int willpower)
 {
     if (source.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        willpower = max(0, willpower - 2 * WL_PIP);
+    {
+        if (source.is_monster())
+            willpower = max(0, willpower - 2 * WL_PIP);
+        else
+            willpower = max(0, willpower - guile_will_reduction());
+    }
 
     if (source.is_player() && you.form == transformation::sphinx)
         willpower = max(0, willpower - WL_PIP);
@@ -8032,4 +8037,10 @@ int apply_willpower_bypass(const monster_info& source, int willpower)
     }
 
     return willpower;
+}
+
+int guile_will_reduction(bool max)
+{
+    const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
+    return 20 + stepdown(skill * 7 / 2, 75);
 }
