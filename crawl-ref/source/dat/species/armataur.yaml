@@ -3,7 +3,7 @@ monster: MONS_ARMATAUR
 name: Armataur
 short_name: At
 difficulty: Simple
-difficulty_priority: 30
+difficulty_priority: 20
 species_flags:
   - small_torso
   - barding
