@@ -235,11 +235,7 @@ void player::_removed_beholder(bool quiet)
         duration[DUR_MESMERISED] = 0;
         you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
         if (!quiet)
-        {
-            mprf(MSGCH_DURATION,
-                 coinflip() ? "You break out of your daze!"
-                            : "You are no longer entranced.");
-        }
+            mprf(MSGCH_DURATION, "You are no longer entranced.");
     }
 }
 
