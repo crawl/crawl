@@ -4290,7 +4290,7 @@ static const struct spell_desc spelldata[] =
     9,
     200,
     3, 3,
-    10,
+    15, // XX: uses default explosion noise, this number is just used for UI
     TILEG_PLATINUM_PARAGON,
 },
 
