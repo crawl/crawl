@@ -3475,7 +3475,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.get_mutation_level(MUT_NO_STEALTH);
 
         case AMU_WILDSHAPE:
-            return you.has_mutation(MUT_NO_FORMS);
+            return you.has_mutation(MUT_NO_FORMS)
+                    || species_apt(SK_SHAPESHIFTING) == UNUSABLE_SKILL;
 
         case AMU_ALCHEMY:
             return you.has_mutation(MUT_NO_ALCHEMY_MAGIC)
