@@ -938,6 +938,9 @@ void stardust_fineff::fire()
     if (!agent || !agent->alive())
         return;
 
+    if (agent->is_player() && is_sanctuary(you.pos()))
+        return;
+
     bool found_targ = false;
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
