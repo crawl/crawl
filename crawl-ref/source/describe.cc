@@ -2421,6 +2421,10 @@ static string _orb_ego_details(special_armour_type ego)
 {
     switch (ego)
     {
+        case SPARM_ENERGY:
+            return make_stringf("\n\nSpell refund chance: %d%% (max %d%%)",
+                                player_channelling_chance(), player_channelling_chance(true));
+
         case SPARM_GUILE:
             return make_stringf("\n\nEnemy Willpower: -%d (max -%d)",
                                 guile_will_reduction(), guile_will_reduction(true));

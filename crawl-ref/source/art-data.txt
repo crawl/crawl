@@ -267,14 +267,16 @@ TILE_EQ: olgreb
 VALUE:   1000
 
 NAME:    crystal ball of Wucad Mu
-INSCRIP: *channel
+INSCRIP: Mindtap
 OBJ:     OBJ_ARMOUR/ARM_ORB
+BRAND:   SPARM_ENERGY
 COLOUR:  ETC_MAGIC
 TILE:    urand_wucad_mu
 TILE_EQ: orb_of_wucad_mu
 VALUE:   1000
-DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers
- their success rate. It always returns the magic spent on miscasts.
+DESCRIP: Mindtap:  Whenever magic is channelled from it, it may also drain
+         additional magic from other enemies in sight, with a chance increasing
+         with spell level.
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE

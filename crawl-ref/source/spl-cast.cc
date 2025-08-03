@@ -524,7 +524,7 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
-    if (player_channelling())
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         chance2 += 10;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
@@ -763,21 +763,46 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-static void _handle_channelling(int cost, spret cast_result)
+static void _handle_energy_orb(int cost, spret cast_result)
 {
-    if (you.has_mutation(MUT_HP_CASTING) || cast_result == spret::abort)
+    if (cast_result == spret::abort)
         return;
 
-    const int sources = player_channelling();
-    if (!sources)
+    const int chance = player_channelling_chance();
+    if (chance <= 0)
         return;
 
     // Miscasts always get refunded, successes only sometimes do.
-    if (cast_result != spret::fail && !x_chance_in_y(sources, 5))
+    if (cast_result != spret::fail && !x_chance_in_y(chance, 100))
         return;
 
-    mpr("Magical energy flows into your mind!");
-    inc_mp(cost, true);
+    if (you.unrand_equipped(UNRAND_WUCAD_MU))
+    {
+        vector<monster*> targs;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mi->antimagic_susceptible() && !mi->has_ench(ENCH_ANTIMAGIC)
+                && !mi->wont_attack() & x_chance_in_y(cost, 9))
+            {
+                targs.push_back(*mi);
+                mi->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, random_range(20, 50)));
+            }
+        }
+
+        int drain = !targs.empty() ? random_range(1, 3) + targs.size() / 2 : 0;
+
+        if (targs.empty())
+            mpr("Magical energy flows into your mind!");
+        else
+            mprf("Magical energy flows from %s into your mind!",
+                 describe_monsters_condensed(targs).c_str());
+        inc_mp(cost + drain);
+    }
+    else
+    {
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+    }
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 }
 
@@ -1032,7 +1057,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     practise_casting(spell, cast_result == spret::success);
-    _handle_channelling(cost, cast_result);
+    _handle_energy_orb(cost, cast_result);
     if (cast_result == spret::success)
     {
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))

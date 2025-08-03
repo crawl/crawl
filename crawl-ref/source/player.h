@@ -1048,7 +1048,7 @@ int sanguine_armour_bonus();
 int stone_body_armour_bonus();
 
 int player_wizardry();
-int player_channelling();
+int player_channelling_chance(bool max = false);
 
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);

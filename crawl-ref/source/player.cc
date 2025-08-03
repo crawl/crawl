@@ -2119,14 +2119,13 @@ int player_wizardry()
            + you.scan_artefacts(ARTP_WIZARDRY);
 }
 
-int player_channelling()
+int player_channelling_chance(bool max)
 {
-    // Here and elsewhere, let's consider making this work for Dj.
-    if (you.has_mutation(MUT_HP_CASTING))
+    if (you.has_mutation(MUT_HP_CASTING) || !you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         return 0;
 
-    return 2 * you.unrand_equipped(UNRAND_WUCAD_MU)
-           + you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY);
+    const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
+    return 15 + skill * 30 / 27;
 }
 
 static int _sh_from_shield(const item_def &item)
