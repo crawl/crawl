@@ -3474,6 +3474,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);
 
+        case AMU_WILDSHAPE:
+            return you.has_mutation(MUT_NO_FORMS);
+
+        case AMU_ALCHEMY:
+            return you.has_mutation(MUT_NO_ALCHEMY_MAGIC)
+                   && !you.can_drink(temp);
+
         default:
             return false;
         }
