@@ -9023,7 +9023,7 @@ static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
 }
 
 /**
- * Have a monster attempt to cast Doom Howl.
+ * Have a monster attempt to cast Oblivion Howl.
  *
  * @param mon   The howling monster.
  */
