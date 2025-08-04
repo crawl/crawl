@@ -1227,13 +1227,6 @@ bool mon_special_ability(monster* mons)
             used = true;
         }
 
-        // If Nobody is left alone long enough, allow their memories to return.
-        if (you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
-        {
-            mons->props.erase(NOBODY_RECOVERY_KEY);
-            initialize_nobody_memories(*mons);
-        }
-
         break;
 
     default:

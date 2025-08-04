@@ -2637,6 +2637,14 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_VAMPIRE_BAT)
         blorkula_bat_merge(*mons);
 
+    // If Nobody is left alone long enough, allow their memories to return.
+    if (mons->type == MONS_NAMELESS_REVENANT && mons->props.exists(NOBODY_RECOVERY_KEY)
+        && you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
+    {
+        mons->props.erase(NOBODY_RECOVERY_KEY);
+        initialize_nobody_memories(*mons);
+    }
+
     update_mons_cloud_ring(mons);
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
