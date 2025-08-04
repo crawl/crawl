@@ -2403,8 +2403,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "killed an enemy through any means besides attacks.";
     case SPARM_STARDUST:
         return "It conjures a barrage of shooting stars the first time its wearer "
-               "spends MP each battle - one for each MP spent - recharging only "
-               "when their MP is restored and no more enemies remain.";
+               "spends MP to use a spell or ability each battle - one for each "
+               "MP spent - recharging only when their MP is restored and no more "
+               "enemies remain.";
     case SPARM_MESMERISM:
         return "When you are struck in melee, it briefly dazes all nearby enemies, "
                "then must recharged by standing still for a while. Its duration, "

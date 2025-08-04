@@ -3802,15 +3802,7 @@ void pay_mp(int cost)
     if (you.has_mutation(MUT_HP_CASTING))
         pay_hp(cost);
     else
-    {
         _dec_mp(cost, true);
-
-        if (!you.duration[DUR_STARDUST_COOLDOWN]
-            && you.wearing_ego(OBJ_ARMOUR, SPARM_STARDUST))
-        {
-            stardust_fineff::schedule(&you, cost, 10 + you.skill(SK_EVOCATIONS, 10));
-        }
-    }
 }
 
 void refund_hp(int cost)

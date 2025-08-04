@@ -27,6 +27,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
@@ -218,7 +219,10 @@ void zap_wand(int slot, dist *_target)
 
     // Spend MP.
     if (mp_cost)
+    {
+        stardust_orb_trigger(mp_cost);
         finalize_mp_cost();
+    }
 
     // Take off a charge (unless gadgeteer procs)
     if ((you.wearing_ego(OBJ_GIZMOS, SPGIZMO_GADGETEER)
@@ -1389,4 +1393,13 @@ int mesmerism_orb_radius(bool max)
 {
     const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
     return min(2 + skill / 7, 4);
+}
+
+void stardust_orb_trigger(int mp_spent)
+{
+    if (!you.duration[DUR_STARDUST_COOLDOWN]
+        && you.wearing_ego(OBJ_ARMOUR, SPARM_STARDUST))
+    {
+        stardust_fineff::schedule(&you, mp_spent, 10 + you.skill(SK_EVOCATIONS, 10));
+    }
 }

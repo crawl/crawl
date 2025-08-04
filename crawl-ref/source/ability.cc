@@ -4080,6 +4080,9 @@ static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp
     // This should trigger off using invocations that cost HP
     if (hp_cost)
         makhleb_celebrant_bloodrite();
+
+    if (mp_cost)
+        stardust_orb_trigger(mp_cost);
 }
 
 int choose_ability_menu(const vector<talent>& talents)
