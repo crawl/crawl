@@ -94,8 +94,6 @@ Omnibus
 
 Papyrus
 
-Parchment
-
 Precepts
 
 Quarto
@@ -342,8 +340,6 @@ murmuring
 musty
 
 odd
-
-parchment
 
 peculiar
 
