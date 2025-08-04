@@ -414,6 +414,7 @@ static void _create_monster_hide(monster_type mtyp, monster_type montype,
     }
 
     item.flags |= ISFLAG_IDENTIFIED;
+    item.flags |= ISFLAG_SEEN;
 }
 
 static void _create_monster_wand(monster_type mtyp, coord_def pos, bool silent)
