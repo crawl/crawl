@@ -2121,7 +2121,7 @@ int player_wizardry()
 
 int player_channelling_chance(bool max)
 {
-    if (you.has_mutation(MUT_HP_CASTING) || !you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
+    if (you.has_mutation(MUT_HP_CASTING))
         return 0;
 
     const int skill = max ? 27 : you.skill(SK_EVOCATIONS);

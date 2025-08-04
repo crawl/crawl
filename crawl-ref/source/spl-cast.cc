@@ -765,7 +765,7 @@ void do_cast_spell_cmd(bool force)
 
 static void _handle_energy_orb(int cost, spret cast_result)
 {
-    if (cast_result == spret::abort)
+    if (cast_result == spret::abort || !you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         return;
 
     const int chance = player_channelling_chance();

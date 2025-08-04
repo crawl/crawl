@@ -2823,11 +2823,14 @@ static string _extra_passive_effects()
     if (you.archmagi())
         passives.emplace_back("archmagi");
 
-    const int channel = player_channelling_chance();
-    if (channel)
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
     {
-        passives.emplace_back(
-            make_stringf("channel magic (%d%%)", 20 * channel).c_str());
+        const int channel = player_channelling_chance();
+        if (channel)
+        {
+            passives.emplace_back(
+                make_stringf("channel magic (%d%%)", 20 * channel).c_str());
+        }
     }
 
     if (you.infusion_amount())
