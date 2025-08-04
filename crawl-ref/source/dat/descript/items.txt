@@ -918,11 +918,11 @@ A long, strong bow made of yew.
 lupine talisman
 
 A painted eyepatch made from a scrap of wolf pelt. Transforms the wearer into a
-vicious werewolf, muscles surging with predatory instinct. Killing enemies in
-this form will give a stacking bonus to your damage and accuracy, and slaying
-enough of them in a row will cause you to unleash a vicious howl that makes
-any still alive cower in fear - and leaves them susceptible to a devastating
-leaping takedown.
+vicious werewolf, muscles surging with predatory instinct. Killing enemies with
+melee attacks in this form will give a stacking bonus to your damage and
+accuracy, and slaying enough of them in a row will cause you to unleash a
+vicious howl that makes any still alive cower in fear - and leaves them
+susceptible to a devastating leaping takedown.
 %%%%
 mace
 
