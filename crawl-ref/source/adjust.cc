@@ -28,7 +28,7 @@ void adjust()
 
     const int keyin = toalower(get_ch());
 
-    if (keyin == 'g')
+    if (keyin == 'g' || keyin == 'i')
         adjust_item(OSEL_GEAR);
     else if (keyin == 'p')
         adjust_item(OBJ_POTIONS);
