@@ -776,7 +776,7 @@ static void _handle_energy_orb(int cost, spret cast_result)
     if (cast_result != spret::fail && !x_chance_in_y(chance, 100))
         return;
 
-    if (you.unrand_equipped(UNRAND_WUCAD_MU))
+    if (you.unrand_equipped(UNRAND_WUCAD_MU) && cast_result == spret::success)
     {
         vector<monster*> targs;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
