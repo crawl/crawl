@@ -4407,10 +4407,14 @@ void actor_apply_toxic_bog(actor * act)
     const bool player = act->is_player();
     monster *mons = !player ? act->as_monster() : nullptr;
 
-    if (mons && mons->type == MONS_FENSTRIDER_WITCH)
-        return; // stilting above the muck!
+    if (mons &&
+        (mons->type == MONS_FENSTRIDER_WITCH  // stilting above the muck!
+         || mons->type == MONS_ORC_APOSTLE))  // walking on top of it
+    {
+        return;
+    }
 
-    if (player && you.duration[DUR_NOXIOUS_BOG])
+    if (player && (you.duration[DUR_NOXIOUS_BOG] || you.can_water_walk()))
         return;
 
     actor *oppressor = nullptr;
