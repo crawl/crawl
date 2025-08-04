@@ -34,6 +34,7 @@
 #include "evoke.h"
 #include "exercise.h"
 #include "fight.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
@@ -4055,17 +4056,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 // been paid.
 static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp_cost)
 {
-    // wall jump handles its own timing, because it can be instant if
-    // serpent's lash is activated.
-    if (abil.flags & abflag::instant)
-    {
-        you.turn_is_over = false;
-        you.elapsed_time_at_last_input = you.elapsed_time;
-        update_turn_count();
-    }
-    else if (abil.ability != ABIL_WU_JIAN_WALLJUMP)
-        you.turn_is_over = true;
-
     const int piety_cost = abil.piety_cost.cost();
 
     dprf("Cost: mp=%d; hp=%d; piety=%d",
@@ -4083,6 +4073,18 @@ static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp
 
     if (mp_cost)
         stardust_orb_trigger(mp_cost);
+
+    // wall jump handles its own timing, because it can be instant if
+    // serpent's lash is activated.
+    if (abil.flags & abflag::instant)
+    {
+        you.turn_is_over = false;
+        you.elapsed_time_at_last_input = you.elapsed_time;
+        fire_final_effects();
+        update_turn_count();
+    }
+    else if (abil.ability != ABIL_WU_JIAN_WALLJUMP)
+        you.turn_is_over = true;
 }
 
 int choose_ability_menu(const vector<talent>& talents)
