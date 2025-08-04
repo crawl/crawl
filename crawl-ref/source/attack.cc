@@ -450,7 +450,10 @@ void attack::alert_defender()
         && defender->is_monster()
         && attacker->is_monster()
         && attacker->alive() && defender->alive()
-        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
+        && (defender->as_monster()->foe == MHITNOT
+    // Necessary to keep monsters from sometimes being able to injured dazed enemies.
+            || defender->as_monster()->has_ench(ENCH_DAZED)
+            || one_chance_in(3)))
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
     }
