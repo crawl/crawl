@@ -324,9 +324,14 @@ void swap_inv_slots(item_def& to_adjust, int to_slot, bool verbose)
         if (to_count > 0)
             last_pickup[from_slot] = to_count;
     }
+
     if (you.last_unequip == from_slot)
         you.last_unequip = to_slot;
+    else if (you.last_unequip == to_slot)
+        you.last_unequip = from_slot;
 
     if (you.cur_talisman == from_slot)
         you.cur_talisman = to_slot;
+    else if (you.cur_talisman == to_slot)
+        you.cur_talisman = from_slot;
 }
