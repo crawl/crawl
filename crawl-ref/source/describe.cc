@@ -2384,11 +2384,11 @@ static const char* _item_ego_desc(special_armour_type ego)
                "spells in proportion to their armour skill.";
     case SPARM_DEATH:
         return "it empowers the wearer's necromancy spells and improves their "
-               " success rate, but imposes a health cost for other magic.";
+               "success rate, but imposes a health cost for other magic.";
     case SPARM_RESONANCE:
         return "it improves the success rate of the wearer's forgecraft spells "
-               " and enhances their melee attacks proportionally to forgecraft "
-               " skill";
+               "and enhances their melee attacks proportionally to forgecraft "
+               "skill";
     case SPARM_PARRYING:
         return "It shields the wearer if their last action was a melee attack. "
                "The shielding is half as effective if the wielder's offhand is "
