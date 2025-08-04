@@ -858,7 +858,7 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
                 && !mons_is_confused(mon) && mons_is_seeking(mon)
                 && mon.foe == MHITYOU && !mons_is_immotile(mon)
-                && you.visible_to(&mon) && you.can_see(mon);
+                && you.can_see(mon);
 }
 
 // Returns true for monsters that obviously (to the player) feel
