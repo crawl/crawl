@@ -1231,7 +1231,7 @@ static void _get_randart_properties(const item_def &item,
         // Egos that have no corresponding artprop can stay intact (to allow
         // ego-only properties to still generate on randarts), while other
         // properties are removed. (We will let normal artprop weighting handle those.)
-        if (prop == ARTP_NUM_PROPERTIES)
+        if (prop == ARTP_NUM_PROPERTIES || item_always_has_ego(item))
             item_props[ARTP_BRAND] = ego;
     }
 
