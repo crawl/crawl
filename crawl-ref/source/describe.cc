@@ -2394,8 +2394,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "The shielding is half as effective if the wielder's offhand is "
                "occupied by an item other than their weapon.";
     case SPARM_GLASS:
-        return "It may vitrify nearby enemies when they take damage. "
-               "Evocations skill increases the likelihood and duration of vitrification.";
+        return "It may vitrify enemies when you injure them, making them more "
+               "vulnerable to further damage. Evocations skill increases the "
+               "likelihood and duration of vitrification.";
     case SPARM_PYROMANIA:
         return "It enhances the wearer's fire magic and may unleash a blast of "
                "flames around the wearer at the end of any turn in which they "
