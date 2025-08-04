@@ -261,8 +261,10 @@ enum MenuFlag
     MF_SELECT_QTY       = 0x00008,   ///< Allow partial selections by quantity
     MF_ANYPRINTABLE     = 0x00010,   ///< Any printable character is valid, and
                                      ///< closes the menu.
-    MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on
-                                     ///< currently-visible page.
+    MF_SELECT_BY_CATEGORY = 0x00020, ///< Hotkeys will select the first matching
+                                     ///< key within the currently-selected
+                                     ///< menu sub-category, rather than nearest
+                                     ///< entry with that hotkey.
     MF_INIT_HOVER       = 0x00040,   ///< Show the hover on initial display
     MF_WRAP             = 0x00080,   ///< Paging past the end will wrap back.
     MF_ALLOW_FILTER     = 0x00100,   ///< Control-F will ask for regex and

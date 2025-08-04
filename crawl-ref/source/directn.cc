@@ -496,7 +496,7 @@ namespace
     public:
         DescMenu()
             : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                            | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
+                            | MF_ALLOW_FORMATTING
                             | MF_INIT_HOVER)
         { }
 

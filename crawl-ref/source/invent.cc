@@ -1474,6 +1474,8 @@ void display_inventory()
     int flags = MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL;
     if (Options.show_paged_inventory)
         flags |= MF_PAGED_INVENTORY;
+    else
+        flags |= MF_SELECT_BY_CATEGORY;
 
     InvMenu menu(flags);
     menu.load_inv_items(Options.show_paged_inventory ? OSEL_GEAR : OSEL_ANY, -1);
