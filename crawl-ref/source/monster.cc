@@ -3761,7 +3761,7 @@ bool monster::res_water_drowning() const
     habitat_type hab = mons_habitat(*this, true);
 
     return is_unbreathing() || hab == HT_WATER
-        // XXX: Ugly hack to let apostles walk on water inside of through it
+        // XXX: Ugly hack to let apostles walk on water instead of through it
         || (hab == HT_AMPHIBIOUS && type != MONS_ORC_APOSTLE);
 }
 
