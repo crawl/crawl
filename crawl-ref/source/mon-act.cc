@@ -2645,6 +2645,9 @@ static void _post_monster_move(monster* mons)
         initialize_nobody_memories(*mons);
     }
 
+    if (mons->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*mons))
+        seismosaurus_egg_hatch(mons);
+
     update_mons_cloud_ring(mons);
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
