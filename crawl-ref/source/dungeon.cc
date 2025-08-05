@@ -2612,6 +2612,7 @@ static void _ruin_level(Iterator iter,
                 // isolated transparent or rtele_into square.
                 env.level_map_mask(p) |= cfeat.mask;
                 env.pgrid(p) |= cfeat.prop;
+                tile_clear_flavour(p);
                 _set_grd(p, replacement);
             }
 
