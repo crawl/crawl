@@ -3646,7 +3646,7 @@ int slaying_bonus(bool throwing, bool random)
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
 
     if (you.has_bane(BANE_CLAUSTROPHOBIA))
-        ret += you.props[CLAUSTROPHOBIA_KEY].get_int();
+        ret -= you.props[CLAUSTROPHOBIA_KEY].get_int();
 
     ret += get_form()->slay_bonus(random);
 
