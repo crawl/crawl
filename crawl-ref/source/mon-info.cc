@@ -669,7 +669,7 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     // Similarly, don't set invisibility stab UI for firewood.
-    if (!you.visible_to(m) && !m->is_firewood())
+    if (!you.visible_to(m) && !m->is_firewood() && !m->has_ench(ENCH_BLIND))
         mb.set(MB_CANT_SEE_YOU);
 
     if (type == MONS_SILENT_SPECTRE)
