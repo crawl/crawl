@@ -268,6 +268,7 @@ enum explosion_fineff_type : int {
     EXPLOSION_FINEFF_GENERIC,
     EXPLOSION_FINEFF_INNER_FLAME,
     EXPLOSION_FINEFF_CONCUSSION,
+    EXPLOSION_FINEFF_PYROMANIA,
 };
 
 class explosion_fineff : public final_effect

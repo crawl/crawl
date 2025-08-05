@@ -601,6 +601,8 @@ void player_reacts_to_monsters()
     _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
 
     _handle_hoarding();
+
+    you.props.erase(PYROMANIA_TRIGGERED_KEY);
 }
 
 static bool _check_recite()
@@ -1212,60 +1214,6 @@ static void _handle_trickster_decay(int delay)
         you.redraw_armour_class = true;
 }
 
-static void _handle_pyromania()
-{
-    if (!you.props.exists(PYROMANIA_TRIGGER_KEY))
-        return;
-
-    // Test if there's at least *something* worth hitting before exploding
-    // (primarily to avoid wasting the player's time). Note: we don't check the
-    // the player *wants* to hit what is there, just that there is something
-    // there to hit. Burning down random plants is thematic here.
-    bool found = false;
-    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        if (monster* mon = monster_at(*ri))
-        {
-            if (!never_harm_monster(&you, mon))
-            {
-                found = true;
-                break;
-            }
-        }
-    }
-
-    // Each valid kill has an independent chance to trigger the orb.
-    bool do_fire = false;
-    if (found)
-    {
-        for (int i = 0; i < you.props[PYROMANIA_TRIGGER_KEY].get_int(); ++i)
-        {
-            if (x_chance_in_y(pyromania_trigger_chance(), 100))
-            {
-                do_fire = true;
-                break;
-            }
-        }
-    }
-
-    if (do_fire)
-    {
-        mpr("Your orb flickers with a hungry flame.");
-
-        bolt exp;
-        zappy(ZAP_FIREBALL, 25 + you.skill(SK_EVOCATIONS, 3), false, exp);
-        exp.damage = pyromania_damage();
-        exp.set_agent(&you);
-        exp.target = you.pos();
-        exp.source = you.pos();
-        exp.ex_size = 2;
-        exp.explode(true, true);
-    }
-
-    // Erase after explosion, so explosion kills don't cause more explosions.
-    you.props.erase(PYROMANIA_TRIGGER_KEY);
-}
-
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1283,8 +1231,6 @@ void player_reacts()
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
-
-    _handle_pyromania();
 
     unrand_reacts();
 

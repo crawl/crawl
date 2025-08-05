@@ -577,7 +577,7 @@ void explosion_fineff::fire()
 
     if (you.see_cell(beam.target))
     {
-        if (typ == EXPLOSION_FINEFF_CONCUSSION)
+        if (typ == EXPLOSION_FINEFF_CONCUSSION || typ == EXPLOSION_FINEFF_PYROMANIA)
             mpr(boom_message);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
@@ -588,7 +588,7 @@ void explosion_fineff::fire()
             if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
 
-    beam.explode();
+    beam.explode(true, typ == EXPLOSION_FINEFF_PYROMANIA);
 
     if (typ == EXPLOSION_FINEFF_CONCUSSION)
     {

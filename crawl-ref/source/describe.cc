@@ -2400,9 +2400,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "likelihood and duration of vitrification.";
     case SPARM_PYROMANIA:
         return "It enhances the wearer's fire magic and may unleash a blast of "
-               "flames around the wearer at the end of any turn in which they "
-               "killed an enemy through any means besides attacks. The explosion "
-               "chance and damage both scale with Evocations.";
+               "flames around the wearer whenever they kill an enemy through any "
+               "means besides attacks. The explosion chance and damage both scale "
+               "with Evocations and it may trigger no more than once each turn.";
     case SPARM_STARDUST:
         return "It conjures a barrage of shooting stars the first time its wearer "
                "spends MP to use a spell or ability each battle - one for each "
