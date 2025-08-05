@@ -2015,6 +2015,25 @@ static bool _staff_uses_evocations(const item_def &item)
     return item.base_type == OBJ_STAVES;
 }
 
+static bool _orb_uses_evocations(const item_def &item)
+{
+    if (!item.is_type(OBJ_ARMOUR, ARM_ORB))
+        return false;
+
+    if (is_unrandom_artefact(item, UNRAND_WUCAD_MU)
+        || item.brand == SPARM_ENERGY
+        || item.brand == SPARM_GLASS
+        || item.brand == SPARM_GUILE
+        || item.brand == SPARM_MESMERISM
+        || item.brand == SPARM_PYROMANIA
+        || item.brand == SPARM_STARDUST)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 const char* staff_type_name(stave_type s)
 {
     if (s == NUM_STAVES)
@@ -2097,6 +2116,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
                                  && item.base_type != OBJ_TALISMANS
                                  && item.base_type != OBJ_BAUBLES
         || gives_ability(item)
+        || _orb_uses_evocations(item)
         || _staff_uses_evocations(item))
     {
         skills.insert(SK_EVOCATIONS);
