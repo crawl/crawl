@@ -1402,16 +1402,13 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
     ASSERT(foe);
 
     bool moved = false;
+    const coord_def old_pos = foe->pos();
     const int pow = mons_spellpower(caster, SPELL_BECKONING_GALE);
 
     int damage_taken = zap_damage(ZAP_BECKONING_GALE, pow, true).roll();
 
     if (you.see_cell(foe->pos()))
         flash_tile(foe->pos(), WHITE, 60, TILE_BOLT_BECKONING_GALE);
-
-    foe->hurt(&caster, foe->apply_ac(damage_taken),
-              BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
-    _whack(caster, *foe);
 
     if (!foe->is_stationary())
     {
@@ -1439,8 +1436,6 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
 
             place_cloud(CLOUD_DUST, foe->pos(), random_range(2, 3), &caster);
             foe->move_to_pos(new_foe_pos);
-            foe->apply_location_effects(new_foe_pos);
-            foe->did_deliberate_movement();
             moved = true;
         }
     }
@@ -1455,6 +1450,13 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
         mprf("A beckoning whirlwind swirls around %s.",
             foe->name(DESC_THE).c_str());
     }
+
+    foe->hurt(&caster, foe->apply_ac(damage_taken),
+              BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
+    _whack(caster, *foe);
+
+    if (foe->alive())
+        foe->apply_location_effects(old_pos);
 }
 
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
