@@ -2246,9 +2246,9 @@ static const char *enchant_names[] =
     "armed",
     "misdirected", "changed appearance", "shadowless", "doubled_health",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
-    "deep sleep", "drowsy",
-    "vampire thrall", "pyrrhic recollection", "clockwork bee cast",
-    "phalanx barrier", "figment", "paradox-touched", "warding",
+    "deep_sleep", "drowsy",
+    "vampire_thrall", "pyrrhic_recollection", "clockwork_bee_cast",
+    "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown",
     "buggy", // NUM_ENCHANTMENTS
 };
