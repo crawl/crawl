@@ -1774,6 +1774,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
             launch_clockwork_bee(*this);
+        else if (you.can_see(*this))
+        {
+            mprf("%s continues winding %s clockwork bee....",
+                    name(DESC_THE).c_str(),
+                    pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         break;
 
     case ENCH_INJURY_BOND:

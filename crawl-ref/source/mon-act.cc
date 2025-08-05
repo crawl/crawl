@@ -2211,12 +2211,6 @@ void handle_monster_move(monster* mons)
     }
     if (mons->has_ench(ENCH_CLOCKWORK_BEE_CAST))
     {
-        if (you.can_see(*mons))
-        {
-            mprf("%s continues winding %s clockwork bee....",
-                    mons->name(DESC_THE).c_str(),
-                    mons->pronoun(PRONOUN_POSSESSIVE).c_str());
-        }
         mons->speed_increment -= non_move_energy;
         return;
     }
