@@ -987,7 +987,7 @@ void timeout_malign_gateways(int duration)
                                          MHITNOT,
                                          MG_FORCE_PLACE,
                                          mmark->god);
-                mg.set_summoned(caster, 0);
+                mg.set_summoned(caster, SPELL_MALIGN_GATEWAY, 0, false, false);
                 if (!is_player)
                     mg.non_actor_summoner = mmark->summoner_string;
 

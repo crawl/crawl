@@ -1109,6 +1109,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (src == &you && mon->angered_by_attacks())
         {
             if (mon->attitude == ATT_FRIENDLY && mon->is_summoned()
+                && mon->type != MONS_ELDRITCH_TENTACLE
                 && !mon->is_child_monster() && !mons_is_tentacle_segment(mon->type))
             {
                 summon_dismissal_fineff::schedule(mon);
