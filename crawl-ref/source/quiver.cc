@@ -732,7 +732,7 @@ namespace quiver
             }
             else
             {
-                if (is_valid_tempering_target(*mons, you) && !you.confused())
+                if (is_valid_tempering_target(*mons, you, true) && !you.confused())
                 {
                     mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
                     monster_die(*mons, KILL_RESET, NON_MONSTER);
