@@ -598,7 +598,7 @@ public:
     int shout_volume() const;
 
     int base_ac_from(const item_def &armour, int scale = 1,
-                     bool include_penalties = true) const;
+                     bool include_form = true) const;
 
     int corrosion_amount() const;
 

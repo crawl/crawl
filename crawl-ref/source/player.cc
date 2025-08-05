@@ -6163,12 +6163,12 @@ int stone_body_armour_bonus()
  * @param armour    The armour in question.
  * @param scale     A value to multiply the result by. (Used to avoid integer
  *                  rounding.)
- * @param include_penalties     Whether to include penalties to base AC from
- *                              forms or mutations.
+ * @param include_form    Whether to include modifiers to base AC from the
+ *                        player's current form.
  * @return          The AC from that armour, including armour skill, mutations
  *                  & divine blessings, but not enchantments or egos.
  */
-int player::base_ac_from(const item_def &armour, int scale, bool include_penalties) const
+int player::base_ac_from(const item_def &armour, int scale, bool include_form) const
 {
     const int base = property(armour, PARM_AC) * scale;
 
@@ -6176,12 +6176,12 @@ int player::base_ac_from(const item_def &armour, int scale, bool include_penalti
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // Only body armour can have additional penalties from mutations or forms.
-    if (get_armour_slot(armour) != SLOT_BODY_ARMOUR || !include_penalties)
+    if (get_armour_slot(armour) != SLOT_BODY_ARMOUR)
         return AC;
 
-    int mult = get_form()->get_body_ac_mult();
+    int mult = include_form ? get_form()->get_body_ac_mult() : 0;
     if (get_mutation_level(MUT_DEFORMED) || get_mutation_level(MUT_PSEUDOPODS))
-        mult -= 40; // Should we double this if you have both?
+        mult = ((mult + 100) * 6 / 10) - 100; // Should we double this if you have both?
     const int mod = AC * mult / 100;
 
     return max(0, AC + mod);
