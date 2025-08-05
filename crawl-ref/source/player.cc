@@ -1995,9 +1995,6 @@ static int _player_temporary_evasion_modifiers()
 // Player EV multipliers for transient effects
 static int _player_apply_evasion_multipliers(int prescaled_ev, const int scale)
 {
-    if (you.form == transformation::statue)
-        prescaled_ev = prescaled_ev * 4 / 5;
-
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
 
@@ -2060,13 +2057,16 @@ static int _player_evasion(int final_scale, bool ignore_temporary)
     const int size_base_ev = (10 + size_factor) * scale;
 
     // Calculate 'base' evasion from all permanent modifiers
-    const int natural_evasion =
+    int natural_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
         - you.adjusted_body_armour_penalty(scale)
         - you.adjusted_shield_penalty(scale)
         - _player_aux_evasion_penalty(scale)
         + _player_base_evasion_modifiers() * scale;
+
+    if (you.form == transformation::statue)
+        natural_evasion = natural_evasion * 4 / 5;
 
     // Everything below this are transient modifiers
     if (ignore_temporary)
