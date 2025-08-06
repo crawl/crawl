@@ -4433,12 +4433,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             if (agent->is_player())
             {
-                if (x_chance_in_y(40 + you.skill(SK_EVOCATIONS, 10), 500))
+                if (x_chance_in_y(20 + you.skill(SK_EVOCATIONS, 5), 500))
                     this->vitrify(agent, 4 + random2(5 + you.skill(SK_EVOCATIONS)));
             }
             else if (const monster* mon = agent->as_monster())
             {
-                if (x_chance_in_y(80 + mon->get_hit_dice() * 10, 500))
+                if (x_chance_in_y(40 + mon->get_hit_dice() * 5, 500))
                     this->vitrify(agent, 4 + random2(5 + mon->get_hit_dice()));
             }
         }

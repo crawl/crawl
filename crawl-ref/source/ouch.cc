@@ -1027,7 +1027,7 @@ static void _maybe_get_vitrified(mid_t source)
 {
     monster* mon = monster_by_mid(source);
     if (mon && mon->wearing_ego(OBJ_ARMOUR, SPARM_GLASS)
-        && x_chance_in_y(80 + mon->get_hit_dice() * 10, 500))
+        && x_chance_in_y(40 + mon->get_hit_dice() * 5, 500))
     {
         you.vitrify(mon, 4 + random2(5 + mon->get_hit_dice()));
     }

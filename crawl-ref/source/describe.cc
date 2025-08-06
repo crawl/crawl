@@ -2435,8 +2435,8 @@ static string _orb_ego_details(special_armour_type ego)
 
         case SPARM_GLASS:
             return make_stringf("\n\nVitrify chance: %d%% (max %d%%)",
-                        (40 + you.skill(SK_EVOCATIONS, 10)) * 100 / 500,
-                        (40 + 270) * 100 / 500);
+                        (20 + you.skill(SK_EVOCATIONS, 5)) * 100 / 500,
+                        (20 + 135) * 100 / 500);
 
         case SPARM_PYROMANIA:
             return make_stringf("\n\nExplosion chance: %d%% (max %d%%)\nExplosion damage: %dd%d (max %dd%d)\n",
