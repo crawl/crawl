@@ -611,8 +611,8 @@ Okawaru wrath
 
 Okawaru's most vicious warriors are sent against rebellious servants,
 swarming those who would forsake glory in battle. As Okawaru values a
-fair fight above all, your foes are bound to be worthy opponents -
-novices will find themselves battling packs of ogres and gnolls, while
+fair fight above all, foes are bound to be worthy opponents - novices
+will find themselves battling packs of ogres and gnolls, while
 champions will face off against titans and elvish blademasters.
 %%%%
 Pakellas wrath
