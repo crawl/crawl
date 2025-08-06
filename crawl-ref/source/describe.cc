@@ -2569,8 +2569,12 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 
     }
 
-    if (verbose && item.is_type(OBJ_ARMOUR, ARM_ORB))
+    if (verbose
+        && item.is_type(OBJ_ARMOUR, ARM_ORB)
+        && item.is_identified())
+    {
         description += _orb_ego_details(get_armour_ego_type(item));
+    }
 
     // Only displayed if the player exists (not for item lookup from the menu
     // or for morgues).
