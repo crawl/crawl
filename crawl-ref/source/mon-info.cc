@@ -207,8 +207,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CONTAM:
         return mons.get_ench(ench).degree == 1 ? MB_CONTAM_LIGHT : MB_CONTAM_HEAVY;
     case ENCH_SLOWLY_DYING:
-        if (mons.type == MONS_WITHERED_PLANT)
+        if (mons.type == MONS_WITHERED_PLANT ||
+            mons.type == MONS_PILE_OF_DEBRIS)
+        {
             return MB_CRUMBLING;
+        }
         if (mons_class_is_fragile(mons.type))
             return MB_WITHERING;
         return MB_SLOWLY_DYING;
