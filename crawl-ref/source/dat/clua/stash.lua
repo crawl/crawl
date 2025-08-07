@@ -115,7 +115,7 @@ function ch_stash_search_annotate_item(it)
     local props = {
       ["air"] = "rElec",
       ["cold"] = "rC+",
-      ["death"] = "rN+",
+      ["necromancy"] = "rN+",
       ["fire"] = "rF+",
       ["alchemy"] = "rPois"
     }
