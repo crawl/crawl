@@ -2405,9 +2405,10 @@ static const char* _item_ego_desc(special_armour_type ego)
                "with Evocations and it may trigger no more than once each turn.";
     case SPARM_STARDUST:
         return "It conjures a barrage of shooting stars the first time its wearer "
-               "spends MP to use a spell or ability each battle - one for each "
-               "MP spent - recharging only when their MP is restored and no more "
-               "enemies remain. Evocations skill increases the damage of the stars.";
+               "spends MP to use a spell or ability each battle, recharging only "
+               "when their MP is restored and no more enemies remain. Evocations "
+               "skill increases the number and damage of the stars and MP spent "
+               "further increases damage.";
     case SPARM_MESMERISM:
         return "When you are struck in melee, it briefly dazes all nearby enemies, "
                "then must recharged by standing still for a while. Its duration, "
@@ -2446,11 +2447,13 @@ static string _orb_ego_details(special_armour_type ego)
 
         case SPARM_STARDUST:
         {
-            dice_def dam = zap_damage(ZAP_SHOOTING_STAR, 10 + you.skill(SK_EVOCATIONS, 10), false, false);
-            dice_def max_dam = zap_damage(ZAP_SHOOTING_STAR, 10 + 270, false, false);
-            return make_stringf("\n\nShooting star damage: %dd%d (max %dd%d)",
-                                    dam.num, dam.size,
-                                    max_dam.num, max_dam.size);
+            dice_def base_dam = zap_damage(ZAP_SHOOTING_STAR, stardust_orb_power(0), false, false);
+            dice_def max_dam = zap_damage(ZAP_SHOOTING_STAR, stardust_orb_power(0, true), false, false);
+            return make_stringf("\n\nBase shooting star damage: %dd%d (max %dd%d) + 25%% per MP spent"
+                                "\nShooting stars conjured: 1 + 1 per visible enemy, up to %d (%d at max skill)",
+                                    base_dam.num, base_dam.size,
+                                    max_dam.num, max_dam.size,
+                                    stardust_orb_max(), stardust_orb_max(true));
         }
 
         case SPARM_MESMERISM:

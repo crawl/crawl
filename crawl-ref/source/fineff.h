@@ -659,18 +659,18 @@ public:
     bool mergeable(const final_effect &/*a*/) const override { return true; };
     void fire() override;
 
-    static void schedule(actor* agent, int count, int power)
+    static void schedule(actor* agent, int power, int max_stars)
     {
-        final_effect::schedule(new stardust_fineff(agent, count, power));
+        final_effect::schedule(new stardust_fineff(agent, power, max_stars));
     }
 protected:
-    stardust_fineff(actor* agent, int _count, int _power)
-        : final_effect(agent, nullptr, you.pos()), count(_count), power(_power)
+    stardust_fineff(actor* agent, int _power, int _max)
+        : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max)
     {
     }
 
-    int count;
     int power;
+    int max_stars;
 };
 
 class pyromania_fineff : public final_effect

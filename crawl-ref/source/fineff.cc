@@ -942,25 +942,20 @@ void stardust_fineff::fire()
     if (agent->is_player() && is_sanctuary(you.pos()))
         return;
 
-    bool found_targ = false;
+    int count = 0;
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (!ai->is_firewood() && !mons_aligned(agent, *ai))
-        {
-            found_targ = true;
-            break;
-        }
+            ++count;
     }
 
     // Don't activate or go on cooldown if there's nothing to shoot at.
-    if (!found_targ)
+    if (count == 0)
         return;
 
-    mprf("%s orb unleashes %s!",
-            agent->name(DESC_ITS).c_str(),
-            count == 0 ? "a shooting star"
-                       : "a flurry of shooting stars");
+    mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
 
+    count = min(max_stars, count + 1);
     const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
@@ -968,7 +963,7 @@ void stardust_fineff::fire()
                      foe, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
 
         mg.set_summoned(agent, MON_SUMM_STARDUST, 200, false, false);
-        mg.set_range(1, 2);
+        mg.set_range(1, 3);
         mg.hd = power;
         mg.hp = 100;
         if (monster* mon = create_monster(mg))

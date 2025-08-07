@@ -1395,11 +1395,24 @@ int mesmerism_orb_radius(bool max)
     return min(2 + skill / 7, 4);
 }
 
+int stardust_orb_max(bool max)
+{
+    const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
+    return 3 + skill / 2;
+}
+
+int stardust_orb_power(int mp_spent, bool max_evo)
+{
+    const int skill = max_evo ? 108 : you.skill(SK_EVOCATIONS, 4);
+    int pow = (skill + 15) * (100 + (mp_spent * 25)) / 100;
+    return pow;
+}
+
 void stardust_orb_trigger(int mp_spent)
 {
     if (!you.duration[DUR_STARDUST_COOLDOWN]
         && you.wearing_ego(OBJ_ARMOUR, SPARM_STARDUST))
     {
-        stardust_fineff::schedule(&you, mp_spent, 10 + you.skill(SK_EVOCATIONS, 10));
+        stardust_fineff::schedule(&you, stardust_orb_power(mp_spent), stardust_orb_max());
     }
 }
