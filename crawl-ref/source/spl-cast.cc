@@ -782,7 +782,7 @@ static void _handle_energy_orb(int cost, spret cast_result)
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mi->antimagic_susceptible() && !mi->has_ench(ENCH_ANTIMAGIC)
-                && !mi->wont_attack() & x_chance_in_y(cost, 9))
+                && !mi->wont_attack() && x_chance_in_y(cost, 9))
             {
                 targs.push_back(*mi);
                 mi->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, random_range(20, 50)));
