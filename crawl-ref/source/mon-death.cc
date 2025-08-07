@@ -2103,43 +2103,6 @@ static void _maybe_set_monster_foe(monster& mons, int killer_index)
     }
 }
 
-static void _maybe_trigger_pyromania()
-{
-    // Test if there's at least *something* worth hitting before exploding
-    // (primarily to avoid wasting the player's time). Note: we don't check the
-    // the player *wants* to hit what is there, just that there is something
-    // there to hit. Burning down random plants is thematic here.
-    bool found = false;
-    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        if (monster* mon = monster_at(*ri))
-        {
-            if (!never_harm_monster(&you, mon))
-            {
-                found = true;
-                break;
-            }
-        }
-    }
-
-    if (!found)
-        return;
-
-    bolt exp;
-    zappy(ZAP_FIREBALL, 50, false, exp);
-    exp.damage = pyromania_damage();
-    exp.set_agent(&you);
-    exp.target = you.pos();
-    exp.source = you.pos();
-    exp.ex_size = 2;
-
-    explosion_fineff::schedule(exp, "Your orb flickers with a hungry flame!",
-                               "By Zin's power, the fiery explosion is contained.",
-                               EXPLOSION_FINEFF_PYROMANIA, &you, "");
-
-    you.props[PYROMANIA_TRIGGERED_KEY] = true;
-}
-
 /**
  * Handles giving various mutation/god/equipment-based benefits to the player
  * that trigger when they (or sometimes their pets) kill a monster.
@@ -2367,7 +2330,8 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         && !you.props.exists(PYROMANIA_TRIGGERED_KEY)
         && x_chance_in_y(pyromania_trigger_chance(), 100))
     {
-        _maybe_trigger_pyromania();
+        pyromania_fineff::schedule();
+        you.props[PYROMANIA_TRIGGERED_KEY] = true;
     }
 }
 

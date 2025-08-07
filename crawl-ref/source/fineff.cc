@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -978,6 +979,43 @@ void stardust_fineff::fire()
         you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
     else
         agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, agent, random_range(300, 500)));
+}
+
+void pyromania_fineff::fire()
+{
+    if (is_sanctuary(you.pos()))
+        return;
+
+    // Test if there's at least *something* worth hitting before exploding
+    // (primarily to avoid wasting the player's time). Note: we don't check the
+    // the player *wants* to hit what is there, just that there is something
+    // there to hit. Burning down random plants is thematic here.
+    bool found = false;
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!never_harm_monster(&you, mon))
+            {
+                found = true;
+                break;
+            }
+        }
+    }
+
+    if (!found)
+        return;
+
+    bolt exp;
+    zappy(ZAP_FIREBALL, 50, false, exp);
+    exp.damage = pyromania_damage();
+    exp.set_agent(&you);
+    exp.target = you.pos();
+    exp.source = you.pos();
+    exp.ex_size = 3;
+
+    mpr("Your orb flickers with a hungry flame!");
+    exp.explode(true, true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

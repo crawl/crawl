@@ -673,5 +673,26 @@ protected:
     int power;
 };
 
+class pyromania_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    void fire() override;
+
+    static void schedule()
+    {
+        final_effect::schedule(new pyromania_fineff());
+    }
+protected:
+    pyromania_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+
+    int count;
+    int power;
+};
+
+
 
 void fire_final_effects();
