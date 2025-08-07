@@ -3987,3 +3987,24 @@ xF...x{.x.x.(x...Hx
     FxF.....HxH
       xxxxxxx
 ENDMAP
+
+NAME:   ms813_arrival_eye
+TAGS:   arrival no_monster_gen
+ORIENT: float
+FTILE:  ' : floor_crypt / floor_depthstone
+FTILE:  " : floor_frozen / floor_demonic_green / \
+            floor_demonic_red / floor_demonic_blue
+FTILE:  . : floor_demonic_white / floor_salt
+MAP
+      xxxxxxx
+    xxx.....xxx
+  xxx.........xxx
+  x...."""""....x
+xxx...""'''""...xxx
+@+..."""'{'"""...+@
+xxx...""'''""...xxx
+  x...."""""....x
+  xxx.........xxx
+    xxx.....xxx
+      xxxxxxx
+ENDMAP

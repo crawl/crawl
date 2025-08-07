@@ -2707,3 +2707,66 @@ x...x...x...x
 x...x...x...x
 xxaxxxaxxxaxx
 ENDMAP
+
+# Only sometimes statues.
+NAME:   ms813_arrival_square_statues
+TAGS:   arrival no_monster_gen
+ORIENT: float
+SUBST:  ? : GIAtTUV Y:1
+MAP
+@xxxxx@
+x+x?x+x
+xx...xx
+x?.{.?x
+xx...xx
+x+x?x+x
+@xxxxx@
+ENDMAP
+
+NAME:   ms813_arrival_door_cone_small
+TAGS:   arrival no_monster_gen
+ORIENT: float
+WEIGHT: 3
+SUBST:  ? : xm
+MAP
+x@x@x@x
+x+x+x+x
+xx+x+xx
+ xx+xx
+ @?{?@
+  x?x
+   @
+ENDMAP
+
+NAME:   ms813_arrival_door_cone_med
+TAGS:   arrival no_monster_gen
+ORIENT: float
+WEIGHT: 4
+SUBST:  ? : xm
+MAP
+x@x@x@x@x
+x+x+x+x+x
+xx+x+x+xx
+ xx+x+xx
+  xx+xx
+  @?{?@
+   x?x
+    @
+ENDMAP
+
+NAME:   ms813_arrival_door_cone_large
+TAGS:   arrival no_monster_gen
+ORIENT: float
+WEIGHT: 3
+SUBST:  ? : xm
+MAP
+x@x@x@x@x@x
+x+x+x+x+x+x
+xx+x+x+x+xx
+ xx+x+x+xx
+  xx+x+xx
+   xx+xx
+   @?{?@
+    x?x
+     @
+ENDMAP
