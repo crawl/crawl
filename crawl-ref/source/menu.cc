@@ -2239,7 +2239,8 @@ int Menu::hotkey_to_index(int key, bool primary_only)
         int nearest_dist = INT_MAX;
         for (int i = 0; i < (int)items.size(); ++i)
         {
-            if (is_hotkey(i, key))
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
             {
                 int dist = abs(i - last_hovered);
                 if (dist < nearest_dist)
