@@ -1548,6 +1548,7 @@ FTILE:   'defghi!tp = floor_nerves_magenta / floor_nerves_darkgray
 MARKER:  F = lua:fog_machine { cloud_type = "seething chaos", \
                 pow_min = 10, pow_max = 10, delay = 100, \
                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+KPROP:   wFV = no_tele_into
 epilogue{{
   trove_milestone(_G, "a devouring Rift")
 }}
