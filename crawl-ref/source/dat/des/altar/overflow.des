@@ -1131,6 +1131,32 @@ MAP
     .....
 ENDMAP
 
+NAME: ms813_gozag_edmunds_armoury
+TAGS: temple_overflow_gozag uniq_altar_gozag temple_overflow_1
+TAGS: transparent no_trap_gen
+DEPTH:  D:4-6
+FTILE:  _.G$d1@+ = floor_limestone
+RTILE:  x = wall_sandstone
+COLOUR: x_.G$d1@+ = yellow
+KFEAT:  _ = altar_gozag
+ITEM:   w:1 kite shield / w:4 chain mail / w:5 flail / $
+KPROP:  $ = no_tele_into
+KMONS:  m = edmund ; flail good_item, sigmund, human ; flail
+KMASK:  $1. = no_monster_gen
+NSUBST: 1 = 1:m / *:$
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: interest_check(_G)
+MAP
+   xxx
+   xdx
+  xx+xx
+xxx111xxx
+xd+1_1+dx
+xxx...xxx
+  xx+xx
+   G@G
+ENDMAP
+
 ### Hepliaklqana overflow altars #############################################
 
 NAME:   worldfamousw_hep_ancestral_shrine
