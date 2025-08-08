@@ -1,0 +1,83 @@
+%%%%
+no teleportation passive
+
+Vi ne povas teleporti aŭ teleporteti.
+%%%%
+no spellcasting passive
+
+Vi ne povas sorĉi
+%%%%
+random rage passive
+
+Vi havas ŝancon berserkiĝi, kiam vi miksbatale atakas.
+%%%%
+corrode self passive
+
+Vi havas ŝancon korodiĝi, kiam vi vundiĝas.
+%%%%
+slow self passive
+
+Vi havas ŝancon malrapidiĝi, kiam vi vundiĝas.
+%%%%
+harm passive
+
+Tiom damaĝo, kiom vi kaŭzi aŭ ricevi estas pliigita.
+%%%%
+mayhem passive
+
+Vi havas ŝancon frenezigi videblajn monstrojn, kiam vi mortigas kontraŭulon.
+%%%%
+repel missiles passive
+
+Vi repelas pafaĵon, kio pliigas vian ŝanĉon eviti ilin.
+%%%%
+reflection passive
+
+Vi reflektas ĉiujn sukcese blokitajn distancajn atakojn al la fonton.
+%%%%
+acrobat passive
+
+Via eviteco pliiĝas, kiam vi movas aŭ atendas.
+%%%%
+clarity passive
+
+Vi estas protektata kontraŭ malvolontaj konfuzo, furiozeco, kaj ĉarmegeco.
+%%%%
+resist mutation passive
+
+Vi estas parte sekura kontraŭ mutaciiĝi.
+%%%%
+guardian spirit passive
+
+Tiom damaĝo, kiom vi ricevi estas dividata inter viajn rezervojn de sano kaj 
+manao
+%%%%
+rampage passive
+
+Vi ricevas aldonan liberan paŝon, kiam iras al kontraŭulojn.
+%%%%
+roll passive
+
+<rampage passive>
+%%%%
+faith passive
+
+Vi rapide gajnas piecon, kaj plia atento okazas pri viajn religiajn mispaŝojn.
+%%%%
+wizardry passive
+
+Via sorĉsukcesa elcento estas plibonita.
+%%%%
+archmagi passive
+
+Via sorĉpotenco estas pliigita.
+%%%%
+channel magic passive
+
+Vi havas ŝancon reakiri la uzitan manaon, kiam vi sukcese sorĉi. Vi ankaŭ ĉiam 
+reakiras la uzinta manaon, kiam vi missorĉi.
+%%%%
+infuse magic passive
+
+Elĉerpante manaon, vi potencigas viajn miksbatalajn batojn.
+%%%%
