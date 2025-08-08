@@ -1135,6 +1135,33 @@ MAP
     .....
 ENDMAP
 
+NAME:   ms813_gozag_edmund's_armoury
+TAGS:   temple_overflow_gozag uniq_altar_gozag temple_overflow_1
+TAGS:   transparent no_trap_gen
+DEPTH:  D:4-6
+WEIGHT: 5
+KMONS:  1 = Edmund ; flail good_item . ring mail, Sigmund, \
+            human ; flail . ring mail
+ITEM:   kite shield w:1 / chain mail w:4 / flail w:5 / $
+KFEAT:  _ = altar_gozag
+NSUBST: 1 = 1:1 / *:$
+COLOUR: @_.$d1+x = yellow
+KMASK:  $1. = no_monster_gen
+FTILE:  @_.$d1+xG = floor_limestone
+RTILE:  x = wall_sandstone
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: interest_check(_G)
+MAP
+   xxx
+   xdx
+  xx+xx
+xxx111xxx
+xd+1_1+dx
+xxx...xxx
+  xx+xx
+   G@G
+ENDMAP
+
 ### Hepliaklqana overflow altars #############################################
 
 NAME:   worldfamousw_hep_ancestral_shrine
