@@ -706,6 +706,7 @@ DESCRIP:  Stab:      It is more effective when stabbing unaware enemies,
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
+INSCRIP: mutate,
 FB_BRAND: SPWPN_CHAOS
 PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
