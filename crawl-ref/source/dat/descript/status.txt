@@ -1238,3 +1238,8 @@ several turns pass while your MP is full and there are no enemies in sight.
 
 Your orb of mesmerism has recently expended its energy. It will recharge after
 a short length of time (but cannot recharge on turns where you move).
+%%%%
+Phobia status
+
+Your claustrophobia has given you a slaying malus. This is dependent on the
+number of walls surrounding you.
