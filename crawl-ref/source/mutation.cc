@@ -3527,7 +3527,7 @@ void maybe_apply_bane_to_monster(monster& mons)
 
     if (you.has_bane(BANE_PARADOX) && !mons.has_spell(SPELL_MANIFOLD_ASSAULT)
         && mons_has_attacks(mons)
-        && one_chance_in(12))
+        && one_chance_in(7))
     {
         simple_monster_message(mons, " is touched by paradox!");
         mons.add_ench(mon_enchant(ENCH_PARADOX_TOUCHED, 0, nullptr, INFINITE_DURATION));
@@ -3535,7 +3535,7 @@ void maybe_apply_bane_to_monster(monster& mons)
 
     // Give this one out to entire groups at once, since it does surprisingly
     // little to be given to just one monster in an entire group, on average.
-    if (you.has_bane(BANE_WARDING) && one_chance_in(5))
+    if (you.has_bane(BANE_WARDING) && one_chance_in(7))
     {
         mons.add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
         for (monster_near_iterator mi(mons.pos(), LOS_NO_TRANS); mi; ++mi)

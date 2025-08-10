@@ -275,9 +275,9 @@ static void _maybe_mortality_summon()
     }
 
     // Only activate a fraction of the times we're resting while injured.
-    if (!one_chance_in(3))
+    if (coinflip())
     {
-        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(1000, 1500);
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(800, 1300);
         return;
     }
 
@@ -313,7 +313,7 @@ static void _maybe_mortality_summon()
     if (created)
     {
         mprf("Death has come for you....");
-        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(3000, 5500);
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(3500, 6500);
     }
 }
 

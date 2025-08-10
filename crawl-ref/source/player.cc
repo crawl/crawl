@@ -2477,7 +2477,7 @@ static void _handle_banes(int exp)
 
     if (you.attribute[ATTR_DOOM] > 0)
     {
-        you.attribute[ATTR_DOOM] -= div_rand_round(loss, 15);
+        you.attribute[ATTR_DOOM] -= div_rand_round(loss, 60);
         if (you.attribute[ATTR_DOOM] <= 0)
         {
             mprf(MSGCH_DURATION, "You feel the doom around you dissipate.");

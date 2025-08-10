@@ -1379,14 +1379,15 @@ spells.
 %%%%
 heatstroke bane
 
-When you are damaged by fire, you have a chance to become slowed for a moderate
-length of time. This chance is decreased by your current level of fire resistance.
+When you are damaged by fire, you have a high chance to become slowed for a
+moderate length of time. This chance is decreased by your current level of fire
+resistance.
 %%%%
 snow-blindness bane
 
-When you are damaged by cold, you have a chance to become weak and blind for a
-moderate length of time. This chance is decreased by your current level of cold
-resistance.
+When you are damaged by cold, you have a high chance to become weak and blind
+for a moderate length of time. This chance is decreased by your current level of
+cold resistance.
 %%%%
 electrospasm bane
 
