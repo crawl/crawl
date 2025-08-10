@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 #include "bane-type.h"
 
 struct bane_def
@@ -54,12 +56,14 @@ static const bane_def bane_data[] =
         "Your evasion is greatly reduced on turns you move or wait in place.",
     },
 
+#if TAG_MAJOR_VERSION == 34
     {
-        BANE_RECKLESS,
-        BANE_DUR_LONG,
-        "the Reckless",
-        "Your SH is set to 0.",
+        BANE_RECKLESS_REMOVED,
+        0,
+        "the Removed",
+        "You feel a strange sense of nostalgia.",
     },
+#endif
 
     {
         BANE_SUCCOUR,

@@ -2158,7 +2158,7 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     int shield = 0;
 
     if (!ignore_temporary
-        && you.incapacitated() || you.has_bane(BANE_RECKLESS))
+        && you.incapacitated() || you.has_mutation(MUT_RECKLESS))
     {
         return 0;
     }

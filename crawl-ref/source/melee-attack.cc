@@ -2497,6 +2497,12 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (dmg_mult)
         damage = damage * (100 + dmg_mult) / 100;
 
+    if (you.has_mutation(MUT_RECKLESS) && weapon
+        && hands_reqd(&you, weapon->base_type, weapon->sub_type) == HANDS_TWO)
+    {
+        damage = div_rand_round(damage * 115, 100);
+    }
+
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
 

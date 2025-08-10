@@ -186,6 +186,11 @@ might ignore as mundane. Whenever you encounter a new item on the ground for the
 first time, there is a very tiny chance to discover that it is actually an
 artefact. Each level of this mutation increases that chance.
 %%%%
+reckless mutation
+
+Your SH can never rise above 0, but the damage you deal with two-handed weapons
+is increased by 15%.
+%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -1404,10 +1409,6 @@ stumbling bane
 
 Your evasion is decreased by 25 on any turn where you either moved or waited in
 place without doing anything else.
-%%%%
-reckless bane
-
-Your SH is always equal to 0 and cannot be raised by any means.
 %%%%
 succour bane
 

@@ -3345,9 +3345,10 @@ bane_type bane_from_name(string name)
 
 static bool _bane_is_compatible(bane_type bane)
 {
-    if (bane == BANE_RECKLESS)
-        return player_shield_class(1, false, true) > 0;
-
+#if TAG_MAJOR_VERSION == 34
+    if (bane == BANE_RECKLESS_REMOVED)
+        return false;
+#endif
     return true;
 }
 
@@ -3439,10 +3440,6 @@ bool add_bane(bane_type bane, string reason, int duration, int mult)
 
     you.banes[bane] += duration;
 
-    // Actually update SH immediately. (Yes, that is the right flag....)
-    if (bane == BANE_RECKLESS)
-        you.redraw_armour_class = true;
-
     // Choose which skills to penalty
     if (bane == BANE_DILETTANTE)
         _init_bane_dilettante();
@@ -3456,9 +3453,6 @@ void remove_bane(bane_type bane)
 {
     mprf(MSGCH_RECOVERY, "The %s upon you is lifted.", bane_name(bane).c_str());
     you.banes[bane] = 0;
-
-    if (bane == BANE_RECKLESS)
-        you.redraw_armour_class = true;
 
     if (bane == BANE_MORTALITY)
         add_daction(DACT_BANE_MORTALITY_CLEANUP);

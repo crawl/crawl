@@ -1638,6 +1638,14 @@ static const mutation_def mut_data[] =
   TILEG_MUT_NO_POTION_HEAL,
 },
 
+{ MUT_RECKLESS, 2, 1, mutflag::bad,
+   "reckless",
+
+   {"You cannot block, but deal more damage with two-handed weapons.", "", ""},
+   {"You feel a sudden disregard for your own safety.", "", ""},
+   {"You feel a little less reckless.", "", ""},
+ },
+
 // Scale mutations
 { MUT_DISTORTION_FIELD, 0, 3, mutflag::good,
   "repulsion field",
