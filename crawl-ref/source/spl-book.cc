@@ -1039,7 +1039,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 
     if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
-        mpr("Your head is already too full of spells!");
+        mpr("Your mind is already too full of spells!");
         return false;
     }
 
