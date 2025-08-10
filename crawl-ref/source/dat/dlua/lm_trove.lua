@@ -628,9 +628,9 @@ function TroveMarker:check_veto(marker, pname)
     end
   elseif toll.type == "bane" then
     local yesno_message = (
-      "The portal is guarded from tresspassers with a powerful curse. "
-      .. "All who enter will suffer the " .. crawl.bane_name(toll.bane) .. ". "
-      .. "Enter anyway?")
+      "The portal is guarded from trespassers with a powerful curse. "
+      .. "All who enter will suffer the " .. crawl.bane_name(toll.bane)
+      .. " for " .. (you.xl_to_remove_bane(toll.bane, 200) / 10) .. " XL. Enter anyway?")
     if crawl.yesno(yesno_message, true, "n") then
       self:accept_bane()
     else
@@ -657,7 +657,7 @@ function TroveMarker:accept_nopiety ()
 end
 
 function TroveMarker:accept_bane ()
-  you.gain_bane(get_toll(self.props).bane, "Entering a Trove")
+  you.gain_bane(get_toll(self.props).bane, "Entering a Trove", 200)
 end
 
 function TroveMarker:accept_drain ()

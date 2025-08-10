@@ -3405,10 +3405,12 @@ static void _init_bane_dilettante()
  * @param reason    The source of this bane (for note-taking)
  * @param duration  The duration (in XP-units) this bane will last. If 0, use
  *                  the default duration for this type of bane.
+ * @param mult      A multiplier to the base duration this bane will last, as a
+ *                  percentage. Defaults to 100.
  *
  * @return  Whether a bane was successfully added.
  */
-bool add_bane(bane_type bane, string reason, int duration)
+bool add_bane(bane_type bane, string reason, int duration, int mult)
 {
     if (bane == NUM_BANES)
     {
@@ -3427,6 +3429,8 @@ bool add_bane(bane_type bane, string reason, int duration)
     }
     if (duration == 0)
         duration = bane_data[bane_index[bane]].duration;
+
+    duration = duration * mult / 100;
 
     if (you.banes[bane] == 0)
         mprf(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
@@ -3462,7 +3466,10 @@ void remove_bane(bane_type bane)
     take_note(Note(NOTE_LOSE_BANE, bane));
 }
 
-int xl_to_remove_bane(bane_type bane)
+// Calculate how many XLs worth of XP it would take for the player to remove a
+// specified bane. If they do not have the bane, this is calculated as if they
+// had it for its default duration (as affected by mult)
+int xl_to_remove_bane(bane_type bane, int mult)
 {
     int progress = 0;
     int you_skill_cost_level = you.skill_cost_level;
@@ -3471,7 +3478,10 @@ int xl_to_remove_bane(bane_type bane)
     const int cost_factor =
         (you.has_mutation(MUT_ACCURSED) || you.undead_state() != US_ALIVE) ? 2
                                                                            : 1;
-    const int bane_xp = you.banes[bane] * cost_factor;
+
+    const int amount = you.banes[bane] > 0 ? you.banes[bane]
+                                           : bane_data[bane_index[bane]].duration * mult / 100;
+    const int bane_xp = amount * cost_factor;
 
     while (progress < bane_xp)
     {
