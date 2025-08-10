@@ -1072,18 +1072,21 @@ TAGS:   no_pool_fixup no_item_gen no_monster_gen decor transparent
 TAGS:   vaults_empty vaults_orient_e
 DEPTH:  D:3-, Vaults, !Vaults:$, Depths
 WEIGHT: 1 (Vaults), 5
-FTILE:  '_TS = floor_limestone
+FTILE:  '_TSG = floor_limestone
 KFEAT:  _ = altar_gozag
-KFEAT:  S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
-        greed:100 ; any weapon randart | any armour randart | any jewellery randart
+KFEAT:  S = general shop name:Gozag type:Platinum suffix:Reserve count:20 \
+        greed:100 ; any weapon randart w:10 | any armour randart w:10 | \
+        any jewellery randart w:10 | any magical staff randart w:5 | \
+        any talisman randart w:5
+: vault_metal_statue_setup(_G, "G", "golden statue")
 : interest_check(_G)
 MAP
 wwwwwww....
-w'''''wwww.
+wG'''Gwwww.
 w'T'T''''w.
 w''S'''_''@
 w'T'T''''w.
-w'''''wwww.
+wG'''Gwwww.
 wwwwwww....
 ENDMAP
 
