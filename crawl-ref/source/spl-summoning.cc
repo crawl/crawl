@@ -1406,12 +1406,12 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     fail_check();
 
-    int doom_cost = random_range(3, 7);
+    int doom_cost = random_range(2, 5);
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("summon_horrible_things"));
-        doom_cost *= 3;
+        doom_cost += random_range(6, 10);
     }
 
     you.doom(doom_cost);
