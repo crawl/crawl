@@ -26,4 +26,5 @@ enum object_selector
     OSEL_MARKED_ITEMS            = -22,
     OSEL_JEWELLERY_OR_TALISMAN   = -23,
     OSEL_GEAR                    = -24, // Equippable items + throwables
+    OSEL_EVOKABLE_ALL            = -25, // All wands/baubles/misc, regardless of usability
 };

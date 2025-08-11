@@ -386,7 +386,7 @@ const static int modes[] =
     OSEL_GEAR,
     OBJ_POTIONS,
     OBJ_SCROLLS,
-    OSEL_EVOKABLE,
+    OSEL_EVOKABLE_ALL,
 };
 
 void InvMenu::cycle_page(int dir)
@@ -1370,6 +1370,11 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_GEAR:
         return inventory_category_for(i) == INVENT_GEAR
                 || i.base_type == OBJ_MISSILES;
+
+    case OSEL_EVOKABLE_ALL:
+        return i.base_type == OBJ_WANDS
+               || i.base_type == OBJ_MISCELLANY
+               || i.base_type == OBJ_BAUBLES;
 
     default:
         return false;
