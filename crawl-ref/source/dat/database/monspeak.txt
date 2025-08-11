@@ -2205,7 +2205,7 @@ Cassandra
 @The_monster@ cries, "You know not what is at stake here!"
 
 # The Mysterious Stranger
-@The_monster@ says, "You are always mistaking good fortune for ill. It is because you cannot see into the future."
+@The_monster@ says, "You never know good fortune from ill. It is because you cannot see into the future."
 
 @The_monster@ says, "Heed my words or we all shall suffer their consequence."
 
