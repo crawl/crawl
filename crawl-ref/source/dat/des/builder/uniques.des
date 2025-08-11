@@ -111,6 +111,10 @@ DEPTH:  D:5-8
 
 # Crazy Yuif's hut is bottom of this file.
 
+NAME:   uniq_cassandra
+DEPTH:  D:9-14, Lair:1
+: place_unique(_G, "Cassandra")
+
 NAME:   uniq_duvessa
 DEPTH:  D:4-7
 : place_unique(_G, "Duvessa band")
@@ -232,10 +236,6 @@ TAGS:   uniq_ribbit
 DEPTH:  Lair:1-3
 WEIGHT: 3
 : place_unique(_G, "Prince Ribbit band")
-
-NAME:   uniq_psyche
-DEPTH:  D:8-12
-: place_unique(_G, "Psyche")
 
 NAME:   uniq_pargi
 DEPTH:  D:3-4

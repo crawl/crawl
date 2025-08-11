@@ -2476,12 +2476,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_PSYCHE,
+    {  MST_CASSANDRA,
       {
-       { SPELL_CANTRIP, 12, MON_SPELL_WIZARD },
-       { SPELL_POLYMORPH, 12, MON_SPELL_WIZARD },
-       { SPELL_CHAIN_OF_CHAOS, 24, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+       { SPELL_DOOMSAYING, 200, MON_SPELL_NATURAL },
+       { SPELL_DOOM_BOLT, 34, MON_SPELL_WIZARD },
+       { SPELL_SWIFTNESS, 24, MON_SPELL_WIZARD },
       }
     },
     // ('&', mostly) Demon lords.

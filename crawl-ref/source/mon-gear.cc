@@ -899,12 +899,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_ARCANIST,         { { { WPN_DAGGER, 1 } } } },
         { MONS_OCCULTIST,        { { { WPN_DAGGER, 1 } } } },
         { MONS_JOSEPHINE,        { { { WPN_DAGGER, 1 } } } },
-        { MONS_PSYCHE, {
-            { { WPN_DAGGER,             1 }, },
-            { 1, 0, 4 },
-            { { SPWPN_CHAOS, 3 },
-              { SPWPN_DISTORTION, 1 } },
-        } },
+        { MONS_CASSANDRA,        { { { WPN_DAGGER, 1 } } } },
         { MONS_AGNES,       { { { WPN_LAJATANG, 1 } } } },
         { MONS_SONJA, {
             { { WPN_DAGGER,             1 },
@@ -1504,6 +1499,9 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 
     if (mon->type == MONS_JOSEPHINA)
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
+
+    if (mon->type == MONS_CASSANDRA && coinflip())
+        make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
@@ -2178,7 +2176,7 @@ int make_mons_armour(monster_type type, int level)
     }
 
     case MONS_JOSEPHINE:
-    case MONS_PSYCHE:
+    case MONS_CASSANDRA:
         if (one_chance_in(5))
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;

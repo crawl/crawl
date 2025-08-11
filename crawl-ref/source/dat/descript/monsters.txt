@@ -86,6 +86,16 @@ regenerate his desiccated skeletal remains even if completely disintegrated.
 The same cannot be said for his many victims over his many centuries, from
 which he collects and channels their dying woes and regrets.
 %%%%
+Cassandra
+
+As a young woman, Cassandra bound herself in service to Ashenzari and was
+blessed and cursed in equal measure - granted the ability to foresee disasters,
+but only those she was powerless to prevent.
+
+Eventually driven from her homeland as a harbinger of the very plagues she'd
+spent a lifetime warning against, she has come to the dungeon in her final days
+in hope of averting one last catastrophe.
+%%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
@@ -482,10 +492,6 @@ a good offence.
 Prince Ribbit
 
 A frog of unusual size, with a tiny crown perched incongruously atop his head.
-%%%%
-Psyche
-
-A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 %%%%
 Robin
 

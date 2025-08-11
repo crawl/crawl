@@ -1853,7 +1853,7 @@ WEIGHT: 5
 MONS:   jackal / hound, yak, human
 # XXX: Use some function to cover for used uniques,
 # like in kennysheep_goblin_castle.
-MONS:   Edmund / Jessica / Sigmund, Ijyb / Psyche
+MONS:   Edmund / Jessica / Sigmund, Ijyb / Joseph
 KITEM:  d = robe, leather armour, club, dagger
 KFEAT:  e = cache of fruit
 KFEAT:  f = cache of meat

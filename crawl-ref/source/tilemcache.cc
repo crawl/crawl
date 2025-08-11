@@ -399,7 +399,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MUMMY_PRIEST:
     case TILEP_MONS_GUARDIAN_MUMMY:
     case TILEP_MONS_DRAUGR_SMALL:
-    case TILEP_MONS_PSYCHE:
     case TILEP_MONS_DUVESSA:
     case TILEP_MONS_DUVESSA_1:
     case TILEP_MONS_JEREMIAH:

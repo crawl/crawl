@@ -680,6 +680,7 @@ edmund_weaponless MONS_EDMUND_WEAPONLESS
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
 %rim 0
+cassandra MONS_CASSANDRA
 frederick MONS_FREDERICK
 %rim 1
 harold MONS_HAROLD
@@ -696,7 +697,6 @@ margery MONS_MARGERY
 %rim 0
 nikola MONS_NIKOLA
 norris MONS_NORRIS
-psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 sigmund_scytheless MONS_SIGMUND_SCYTHELESS

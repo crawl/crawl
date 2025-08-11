@@ -98,7 +98,7 @@ static const zap_info zap_data[] =
     "doom bolt",
     nullptr,
     nullptr,
-    new dicedef_calculator<3, 10, 1, 15>,
+    new dicedef_calculator<3, 3, 1, 9>,
     new tohit_calculator<15, 1, 30>,
     LIGHTRED,
     false,

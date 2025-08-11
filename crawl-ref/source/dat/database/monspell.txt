@@ -471,6 +471,10 @@ March of Sorrows Boris cast
 w:5
 @The_monster@ rolls out @possessive@ victims' [laments|suffering].
 %%%%
+Doomsaying Cassandra cast
+
+@The_monster@ says, "I have seen your future, @player_name@! Turn back before you are forced to see it for yourself!"
+%%%%
 Cantrip Dissolution cast
 
 @The_monster@ gurgles to an absent god.

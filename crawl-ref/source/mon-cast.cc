@@ -988,6 +988,20 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ostracise_player(random_range(10, 25));
         }
     } },
+    { SPELL_DOOMSAYING, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(!caster.props.exists(DOOMSAYING_USED_KEY)
+                                                 && !caster.wont_attack()
+                                                 && caster.see_cell_no_trans(you.pos())
+                                                 && you.visible_to(&caster));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.props[DOOMSAYING_USED_KEY] = true;
+            mprf(MSGCH_WARN, "You feel a dangerous fate closing in on you...");
+            you.attribute[ATTR_DOOM] += (100 - you.attribute[ATTR_DOOM]) / 2;
+            you.redraw_doom = true;
+        },
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -3823,9 +3837,10 @@ bool _should_recall(monster* caller)
  *
  * @param mons[in] the monster doing the recall
  * @param recall_target the max number of monsters to recall.
+ * @param min_dist the minimal distance around the centre to place monsters
  * @returns whether anything was recalled.
  */
-bool mons_word_of_recall(monster* mons, int recall_target)
+bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
 {
     unsigned short num_recalled = 0;
     vector<monster* > mon_list;
@@ -3857,11 +3872,12 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     // Now actually recall things
     for (monster *mon : mon_list)
     {
-        coord_def empty;
         const bool could_see = you.can_see(*mon);
-        if (find_habitable_spot_near(target, mons_base_type(*mon),
-                                     3, empty)
-            && mon->move_to_pos(empty))
+
+        coord_def pos = find_newmons_square(mons_base_type(*mon), target,
+                            min_dist + 2, min_dist + 3, min_dist);
+
+        if (!pos.origin() && mon->move_to_pos(pos))
         {
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;

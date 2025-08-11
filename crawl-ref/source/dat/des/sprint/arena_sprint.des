@@ -240,7 +240,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
                 -- Hive, Crypt, Pan, Tomb
                 "place:D:6 w:15 / place:D:10 w:15 / w:2 edmund / w:2 maurice /\
-                    w:1 psyche / w:1 joseph",
+                    w:1 cassandra / w:1 joseph",
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blorkula the orcula w:3 / urug w:1",
                 "w:2 place:Elf / w:12 deep elf pyromancer / w:12 deep elf zephyrmancer",

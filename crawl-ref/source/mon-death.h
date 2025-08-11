@@ -25,6 +25,8 @@
 
 #define VAMPIRIC_THRALL_KEY "vampiric_thrall"
 
+#define DOOMSAYING_USED_KEY "doomsaying_used"
+
 // Was this monster killed by an attack (as opposed to some other damage source)?
 #define ATTACK_KILL_KEY "was_attack_kill"
 

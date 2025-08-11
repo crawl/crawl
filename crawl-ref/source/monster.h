@@ -405,6 +405,7 @@ public:
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
     bool antimagic_susceptible() const override;
 
+    bool clarity(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
     bool damage_immune(const actor* source = nullptr) const;

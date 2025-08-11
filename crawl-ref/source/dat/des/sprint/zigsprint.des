@@ -202,7 +202,7 @@ function choose_mset_1(e)
     e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, \
                Pargi, Sonja, Sprozz, Terence, Urug, human")
   end
 end
@@ -298,7 +298,7 @@ function choose_mset_2(e)
     e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, \
                Pargi, Sonja, Sprozz, Terence, Urug, human")
   end
 end
@@ -424,7 +424,7 @@ function choose_mset_3(e)
     e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund /\
                Erica / Erolcha / Eustachio / Gastronok / Grum / Grinder /\
                Harold / Ijyb / Jessica / Joseph / Josephine / Maurice /\
-               Menkaure / Pikel / Prince Ribbit / Psyche / Pargi / Sigmund /\
+               Menkaure / Pikel / Prince Ribbit / Pargi / Sigmund /\
                Sonja / Sprozz / Terence / Urug / Agnes / Aizul / Azrael /\
                Donald / Frances / Kirke / Louise / Nergalle / Nessos / Nikola /\
                Polyphemus / Roxanne / Rupert / Saint Roka / Snorg")
@@ -567,7 +567,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund /\
                Erica / Erolcha / Eustachio / Gastronok / Grum / Grinder /\
                Harold / Ijyb / Jessica / Joseph / Josephine / Maurice /\
-               Menkaure / Pikel / Prince Ribbit / Psyche / Pargi / Sigmund /\
+               Menkaure / Pikel / Prince Ribbit / Pargi / Sigmund /\
                Sonja / Sprozz / Terence / Urug / Agnes / Aizul / Azrael /\
                Donald / Frances / Kirke / Louise / Nergalle / Nessos / Nikola /\
                Polyphemus / Roxanne / Rupert / Saint Roka / Snorg /\

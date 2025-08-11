@@ -136,7 +136,7 @@ function base_monster_setup(e)
                Fannar / Gastronok / Grum band / Harold / Jeremiah / Joseph /\
                Josephine / Maurice / Nergalle / Lodul / Sonja / Sprozz / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Jorgrun /\
-               Kirke band / Nessos / Ilsuiw band / Polyphemus / Psyche /\
+               Kirke band / Nessos / Ilsuiw band / Polyphemus /\
                Rupert / Saint Roka band / Snorg / Xak'krixis")
   e.kmons("K = Arachne band / Boris / Dissolution / Frederick / Jory /\
                Josephina band / the Lernaean hydra /  Margery band / Mennas /\

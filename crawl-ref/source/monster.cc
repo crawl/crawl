@@ -1208,14 +1208,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
                    && get_weapon_brand(weapon) == SPWPN_CHAOS;
         }
 
-        // Distortion/chaos is immensely flavourful, and we shouldn't
-        // allow Psyche to switch away from it.
-        if (mons->type == MONS_PSYCHE)
-        {
-            return get_weapon_brand(weapon) == SPWPN_CHAOS
-                   || get_weapon_brand(weapon) == SPWPN_DISTORTION;
-        }
-
         // Don't switch Azrael away from the customary scimitar of
         // flaming.
         if (mons->type == MONS_AZRAEL)
@@ -3487,7 +3479,6 @@ int monster::how_unclean(bool check_god) const
 
     // Zin considers insanity unclean. And slugs that speak.
     if (type == MONS_CRAZY_YIUF
-        || type == MONS_PSYCHE
         || type == MONS_LOUISE
         || type == MONS_GASTRONOK)
     {
@@ -6470,6 +6461,11 @@ bool monster::shove(const char* feat_name)
         }
 
     return false;
+}
+
+bool monster::clarity(bool items) const
+{
+    return type == MONS_CASSANDRA || actor::clarity(items);
 }
 
 bool monster::stasis() const

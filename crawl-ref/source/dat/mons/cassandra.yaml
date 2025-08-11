@@ -1,20 +1,20 @@
-name: "Psyche"
+name: "Cassandra"
 glyph: {char: "@", colour: lightmagenta}
-flags: [speaks, warm_blood, unique, female]
-exp: 343
+flags: [speaks, see_invis, warm_blood, unique, female]
+exp: 500
 species: human
 will: 60
 attacks:
- - {type: hit, damage: 6}
-hd: 5
-hp_10x: 340
+ - {type: hit, damage: 8}
+hd: 7
+hp_10x: 430
 ac: 0
 ev: 11
-spells: psyche
+spells: cassandra
 has_corpse: true
 shout: shout
 intelligence: human
-speed: 13
 uses: weapons_armour
 size: medium
 shape: humanoid
+god: Ashenzari
