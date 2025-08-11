@@ -559,7 +559,7 @@ Doomsaying spell
 
 Foretells a terrible future, inflicting Doom equal to half of what it would take
 for you to reach 100%. Upon the caster's death, a sliver of this fate will come
-to pass and you will be amushed by enemies from elsewhere on the floor; if none
+to pass and you will be ambushed by enemies from elsewhere on the floor; if none
 remain, equivalent monsters will be summoned instead.
 
 Can only be cast a single time, but even slaying the messenger in their sleep
