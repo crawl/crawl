@@ -804,6 +804,7 @@ bool item_is_worth_listing(const item_def& item)
     {
     case OBJ_STAVES:
     case OBJ_WANDS:
+    case OBJ_JEWELLERY:
         return true;
     case OBJ_WEAPONS:
         return is_unrandom_artefact(item)
