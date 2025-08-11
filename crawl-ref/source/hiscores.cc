@@ -1449,6 +1449,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
             _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
+            // XXX: We want to keep a more appropriate death message, but still
+            //      link the deaths to Cassandra for tracking purposes.
+            if (indirectkiller == "an inevitable fate")
+                indirectkiller = "Cassandra";
+
             vector<string> path_parts;
             for (const auto &bl : blame)
                 path_parts.push_back(_xlog_escape(bl.get_string()));
