@@ -102,7 +102,7 @@ function TroveMarker:fdesc_long (marker)
             .. "but when they return, they will find that whatever gods they "
             .. "held dear have forgotten them in their absence.\n"
   elseif toll.type == "bane" then
-      state = "The portal is guarded from tresspassers with a powerful curse. "
+      state = "The portal is guarded from trespassers with a powerful curse. "
             .. "All who enter will suffer the " .. crawl.bane_name(toll.bane) .. ":\n\n"
             .. crawl.bane_description(toll.bane)
   elseif toll.type == "drain" then
