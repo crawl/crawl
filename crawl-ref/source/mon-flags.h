@@ -155,7 +155,8 @@ enum monclass_flag_type : uint64_t
     /// derived undead can't be randomly generated
     M_NO_GEN_DERIVED    = BIT(47),
 
-                        //BIT(48), // was M_REQUIRE_BAND
+    /// Is a priest regardless of whether they have priest spells
+    M_PRIEST            = BIT(48),
 
                         //BIT(49), // was M_HYBRID
 
@@ -312,6 +313,9 @@ enum monster_flag_type : uint64_t
     // Despite being temporarily created, will not expire upon its creator's
     // death (eg: ball lightning)
     MF_PERSISTS           = BIT(43),
+
+    /// Is a priest regardless of whether they have priest spells
+    MF_PRIEST             = BIT(44),
 
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);

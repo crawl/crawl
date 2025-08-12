@@ -1,6 +1,6 @@
 name: "Cassandra"
 glyph: {char: "@", colour: lightmagenta}
-flags: [speaks, see_invis, warm_blood, unique, female]
+flags: [speaks, see_invis, warm_blood, unique, female, priest]
 exp: 500
 species: human
 will: 60
