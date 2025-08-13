@@ -48,6 +48,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"
 
@@ -643,8 +644,8 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 tile_dngn_index(name.c_str(), &floor);
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
-                int offset = random2(tile_dngn_count(floor));
-                tile_env.flv(gc).floor = floor + offset;
+                tile_env.flv(gc).floor = floor;
+                tile_init_flavour(gc);
                 has_floor = true;
             }
 
