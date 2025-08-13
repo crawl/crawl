@@ -5324,15 +5324,12 @@ bool stairs_destination_is_excluded(const stair_info &si)
             return false;
         }
 
-        // Check for exclusions that cover the stair destination, but ignore
-        // those that have radius 1: those exclude travel in the _other_
-        // direction only (from the destination to here, not from here to the
-        // destination)
+        // Check for exclusions that cover the stair destination
         const exclude_set &excludes = dest_li->get_excludes();
         for (auto entry : excludes)
         {
             const travel_exclude &ex = entry.second;
-            if (ex.in_bounds(dest.pos) && ex.radius > 1)
+            if (ex.in_bounds(dest.pos))
                 return true;
         }
     }
