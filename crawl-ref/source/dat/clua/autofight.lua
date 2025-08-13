@@ -266,8 +266,8 @@ local function get_monster_info(dx,dy,no_move)
   info.can_attack = (info.attack_type > 0) and 1 or info.attack_type
   info.safe = m:is_safe() and -1 or 0
   info.constricting_you = m:is_constricting_you() and 1 or 0
-  -- Only prioritize top-tier stabs: sleep, petrification, and paralysis.
-  info.very_stabbable = (m:stabbability() >= 1) and 1 or 0
+  info.good_stab = you.has_good_stab() and m:stabbability() or 0
+  info.poor_stab = (m:stabbability() >= 1) and 1 or 0
   info.injury = m:damage_level()
   info.threat = m:threat()
   info.orc_priest_wizard = (name == "orc priest" or name == "orc wizard") and 1 or 0
@@ -278,7 +278,9 @@ end
 local function compare_monster_info(m1, m2)
   flag_order = autofight_flag_order
   if flag_order == nil then
-    flag_order = {"bullseye_target", "can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+    flag_order = {"bullseye_target", "can_attack", "safe", "good_stab",
+                  "distance", "constricting_you", "poor_stab", "injury",
+                  "threat", "orc_priest_wizard"}
   end
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then
