@@ -643,7 +643,7 @@ head covered in lethal spikes.
 %%%%
 everburning encyclopedia
 
-A book of magical spells, meticulously organized, dense, and almost entirely
+A book of magical spells, meticulously organised, dense, and almost entirely
 burnt black. Only a few pages are still legible, but the power within still
 blasts the reader with a furnace-like heat.
 %%%%
@@ -1611,7 +1611,7 @@ thrown to cause minor damage.
 shadow dragon scales
 
 The scales of a great umbral dragon. It is heavier than most dragon scale
-armours, but its encumbrance does not penalize the wearer's stealth. It also
+armours, but its encumbrance does not penalise the wearer's stealth. It also
 grants additional stealth to the wearer.
 %%%%
 storm dragon scales
@@ -1776,7 +1776,7 @@ enchantments on creatures struck.
 wand of roots
 
 A magical device which fires a magical seed, entangling its target and adjacent
-foes in quick-growing tree roots. Those entangled will be immobilized and take
+foes in quick-growing tree roots. Those entangled will be immobilised and take
 damage over time until they escape or the roots wither away. The roots will only
 sprout from solid ground.
 %%%%
