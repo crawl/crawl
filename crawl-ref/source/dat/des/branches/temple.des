@@ -3450,15 +3450,15 @@ cc.....BI...mmwwwwwTwWwTwwwwwmm...IB.....cc
                ccccccccccccc
 ENDMAP
 
-# 9, 18 gods
+# 9, 21 gods
 NAME:   dpeg_three_leaves_temple
-TAGS:   no_rotate temple_altars_9 temple_altars_18
+TAGS:   no_rotate temple_altars_9 temple_altars_21
 PLACE:  Temple
 ORIENT: encompass
-: local altar_count = get_altar_count(_G, 18)
+: local altar_count = get_altar_count(_G, 21)
 : if altar_count == "9" then
 SUBST:  C = .
-: elseif altar_count == "18" then
+: elseif altar_count == "21" then
 SUBST:  C = B, T = .
 : end
 MAP
