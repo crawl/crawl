@@ -50,7 +50,7 @@ function ossuary_portal(e)
   e.colour("123' = yellow")
   e.colour("c = white")
   e.ftile("123'O = floor_sandstone")
-  e.tile("c = wall_tomb")
+  e.tile("c = stone_wall_ossuary")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -59,6 +59,7 @@ end
 function ossuary_setup_features(e)
   e.tags("no_monster_gen")
   e.tags("no_item_gen")
+  e.tile("c = stone_wall_ossuary")
   e.kfeat("< = exit_ossuary")
 end
 
@@ -1015,6 +1016,8 @@ COLOUR: P" = green
 SUBST:  ' = ^ .:70
 KFEAT:  IiPp`" = floor
 : ossuary_setup_features(_G)
+TILE:   v = dngn_metal_wall_brown
+TILE:   b = DNGN_CRYSTAL_BROWN
 MAP
 ccccccccccccccccccccccccccc
 c2.2.2+c...........c+2.2.2c

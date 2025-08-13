@@ -297,7 +297,8 @@ function decorative_floor (e, glyph, type)
     ["fur brush"] = {"brown", "dngn_yak_fur"},
     ["set of bottled spirits"] = {"lightgreen", "dngn_bottled_spirits"},
     ["mop and bucket"] = {"lightblue", "dngn_mop"},
-    ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"}
+    ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"},
+    ["weapon-inlaid floor"] = {"lightgrey", "floor_blade"}
   }
 
   for name, contents in pairs(dec) do
@@ -318,6 +319,26 @@ function snake_statue_setup (e, glyph)
     vault_metal_statue_setup(e, glyph, "fiery conduit")
   end
   e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
+end
+
+-- A function for standardizing some tags and some floor tiles for vaults_hard
+-- subvaults.
+function vaults_hard_standard(e, ngen, ft)
+  e.tags('vaults_hard')
+  if ngen == nil then
+    ngen = false
+  end
+  if ngen then
+    e.tags('no_monster_gen')
+    e.tags('no_item_gen')
+  end
+  if you.in_branch("Vaults") then
+    if not ft then
+      e.ftile('0123456789._^~$%*|defghijkmnFGITUVY+mn{([<})]}> = floor_metal_gold')
+    else
+      e.ftile(ft .. ' = floor_metal_gold')
+    end
+  end
 end
 
 -- A function that uses what's in the mon-pick-data (and bands) for V in 0.32
@@ -384,7 +405,7 @@ function index_vaults_room_themes (e, set, hard)
            'ironbound beastmaster w:' .. -2 + d * 4)
     e.kmons('S = bush')
     e.kfeat('F = cache of fruit')
-    e.ftile('`SF = floor_lair')
+    e.ftile('`SF = floor_moss')
     e.tile('T = dngn_fountain_novelty_fancy')
     e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
     decorative_floor(e, 'p', "garden patch")

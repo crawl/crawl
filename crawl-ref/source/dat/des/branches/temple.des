@@ -1173,7 +1173,7 @@ ORIENT: encompass
 KMONS:  p = plant
 SUBST:  p = ttp
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xpppppppppppppppppppppppppppx
@@ -1223,7 +1223,7 @@ NSUBST: " = v / .
 TILE:   c = wall_lab_stone
 TILE:   v = wall_lab_metal
 FTILE:  -."apqvcbT{ = floor_gauntlet
-FTILE:  B` = floor_grass
+FTILE:  B` = floor_grass_dark
 : set_border_fill_type("open_sea")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1279,7 +1279,7 @@ NSUBST:  . = 12:1 / 7:2 / *:.
 COLOUR:  ' : darkgrey w:3 / white w:1 / lightgrey
 COLOUR:  . = green
 COLOUR:  " = brown
-FTILE:   .t12 = floor_grass
+FTILE:   .t12 = floor_grass_dark
 FTILE:   'BGT+ = floor_vault
 FTILE:   D" = floor_dirt
 MAP
@@ -1318,7 +1318,7 @@ SUBST:   W = W:30 w, ~ = ':20 W
 NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
 NSUBST:  A = 1:{ / *:'
 COLOUR:  ' = green / brown w:2
-FTILE:   'A12 = floor_grass
+FTILE:   'A12 = floor_grass_dark
 FTILE:   .BT = floor_vault
 : set_border_fill_type("open_sea")
 MAP
@@ -1373,7 +1373,7 @@ SUBST:   - = ., " : """.
 COLOUR:  .12 = green
 COLOUR:  " : brown
 COLOUR:  ' : white
-FTILE:   T.t12 = floor_grass
+FTILE:   T.t12 = floor_grass_dark
 FTILE:   " = floor_dirt
 FTILE:   '{+GB = floor_vault
 MAP
@@ -1682,7 +1682,7 @@ SUBST:  - = t.
 FTILE:  `cB = floor_sandstone
 COLOUR: ` = brown
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -2364,7 +2364,7 @@ COLOUR: c = white
 COLOUR: . = lightgrey
 COLOUR: ~ = green
 FTILE:  .BGd = floor_marble
-FTILE:  ~t{ = floor_grass
+FTILE:  ~t{ = floor_grass_dark
 TILE:   c = wall_marble
 MAP
 tttttttttttttttttttttttttttttttt
@@ -3234,7 +3234,7 @@ TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
 SUBST:   v : v b x:3 n:3
-FTILE:   '{t = floor_grass
+FTILE:   '{t = floor_grass_dark
 MAP
                                ttttttt
                              ttt'''''ttt
@@ -3314,7 +3314,7 @@ ORIENT:  encompass
 SUBST:   t : tGT
 SUBST:   c : cvbt
 SUBST:   x : xcvb
-FTILE:   '{tGT = floor_grass
+FTILE:   '{tGT = floor_grass_dark
 MAP
               ccccccc
             ccc'''''ccc
@@ -3703,9 +3703,9 @@ SUBST:   ( = {, < = w
 SHUFFLE: '"w / "'W
 SUBST:   "W = t, CT = B, z = ., Ux : GUUTTxt
 FTILE:   'w = floor_dirt
-FTILE:   " = floor_grass
+FTILE:   " = floor_grass_dark
 : end
-FTILE:   .{tBxGTU = floor_grass
+FTILE:   .{tBxGTU = floor_grass_dark
 COLOUR:  . = green / brown w:2
 MAP
                 ttttttttt
@@ -4441,7 +4441,7 @@ NSUBST:  l = 1:+ / *:c, m = 1:+ / *:c, n = 1:+ / *:c, o = 1:+ / *:c
 NSUBST:  p = 1:+ / *:c, q = 1:+ / *:c, r = 1:+ / *:c, s = 1:+ / *:c
 NSUBST:  t = 1:+ / *:c, u = 1:+ / *:c
 SHUFFLE: '"
-FTILE:   ' = floor_grass
+FTILE:   ' = floor_grass_dark
 FTILE:   " = floor_dirt
 COLOUR:  ' = green
 COLOUR:  " = brown
@@ -4555,7 +4555,7 @@ SUBST:  EH = B, D = ., F = AGT
 : else
 SUBST:  EFH = B, D = .
 : end
-FTILE:  .+{ABGTt = floor_grass
+FTILE:  .+{ABGTt = floor_grass_dark
 COLOUR: . = green
 MAP
    tttt         tttt
@@ -4942,7 +4942,7 @@ SUBST:   LO = !, M = ., N = B
 SUBST:   L = ., MN = !, O = B
 : end
 SUBST:   T = 't
-FTILE:   . = floor_hall, t' = floor_grass, !{B = floor_limestone
+FTILE:   . = floor_hall, t' = floor_grass_dark, !{B = floor_limestone
 COLOUR:  r = red, o = brown, y = yellow, g = green, b = blue, i = cyan, \
          v = magenta, ' = green, . = blue, ! = lightgrey
 TILE:    r = dngn_transparent_stone_red, o = dngn_transparent_stone_brown, \

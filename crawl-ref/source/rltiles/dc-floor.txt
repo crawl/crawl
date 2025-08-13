@@ -176,6 +176,11 @@ mesh1
 mesh2
 mesh3
 
+blade_floor0 FLOOR_BLADE
+blade_floor1
+blade_floor2
+blade_floor3
+
 mud0 FLOOR_MUD
 mud1
 mud2
@@ -186,28 +191,27 @@ ice1
 ice2
 ice3
 
-%weight 16
+%weight 24
 lair0 FLOOR_LAIR
 lair1
+%weight 12
 lair2
 lair3
 lair4
-%weight 8
-lair0b
-lair1b
-lair2b
-lair3b
-lair4b
-%weight 6
 lair5
+%weight 6
 lair6
-%weight 3
-lair5b
-lair6b
-%weight 2
 lair7
+lair8
+lair9
+%weight 2
+lair10
+lair11
+lair12
+lair13
 %weight 1
-lair7b
+lair14
+lair15
 
 %weight 10
 orc0 FLOOR_ORC
@@ -324,6 +328,22 @@ rect_gray0 FLOOR_VAULT
 rect_gray1
 rect_gray2
 rect_gray3
+
+%weight 1
+metal_silver0 FLOOR_METAL_SILVER
+metal_silver1
+metal_silver2
+metal_silver3
+
+metal_gold0 FLOOR_METAL_GOLD
+metal_gold1
+metal_gold2
+metal_gold3
+
+crystal0 FLOOR_CRYSTAL
+crystal1
+crystal2
+crystal3
 
 %weight 10
 depthstone_floor0 FLOOR_DEPTHSTONE
@@ -500,20 +520,39 @@ crystal_floor4
 crystal_floor5
 
 %sdir dngn/floor/grass
-%weight 15
+%weight 12
 grass0 FLOOR_GRASS
 grass1
+%weight 6
 grass2
+grass3
+grass4
+grass5
+%weight 2
+grass_flowers0
+grass_flowers1
+grass_flowers2
+grass_flowers3
 %weight 1
-grass_flowers_blue1
-grass_flowers_blue2
-grass_flowers_blue3
-grass_flowers_red1
-grass_flowers_red2
-grass_flowers_red3
-grass_flowers_yellow1
-grass_flowers_yellow2
-grass_flowers_yellow3
+grass_flowers4
+grass_flowers5
+
+%weight 12
+grass-dark0 FLOOR_GRASS_DARK
+grass-dark1
+%weight 6
+grass-dark2
+grass-dark3
+grass-dark4
+grass-dark5
+%weight 2
+grass-dark_flowers0
+grass-dark_flowers1
+grass-dark_flowers2
+grass-dark_flowers3
+%weight 1
+grass-dark_flowers4
+grass-dark_flowers5
 
 grass_n HALO_GRASS
 grass_ne

@@ -12,6 +12,13 @@
 {{
 crawl_require('dlua/vault.lua')
 
+function lair_entry_setup(e)
+    e.tags("lair_entry")
+    e.kfeat("O = enter_lair")
+    e.orient("float")
+    e.tile("c = stone_wall_lair")
+end
+
 function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     if uniq == "decor" then
         e.tags("uniq_wad_woods_decor decor extra")
@@ -46,7 +53,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         end
     end
 
-    e.ftile(".t+%*|q012345678COGTU = floor_grass")
+    e.ftile(".t+%*|q012345678COGTU = floor_grass_dark")
 
     e.kfeat("O = shallow_water")
     if mist then
@@ -151,6 +158,8 @@ end
 
 ################################################################################
 # Lair entries
+# These should all use lair_entry_setup(_G), which hands out the proper tags,
+# makes them floating vaults, and sets enter_lair on O.
 ################################################################################
 # Dummy Lair entry
 NAME:   lair_entry_dummy
@@ -166,14 +175,14 @@ ENDMAP
 # Generic Lair entry.
 #
 NAME:    david_lair_generic
-TAGS:    lair_entry transparent
+TAGS:    transparent
 ORIENT:  float
 MONS:    black bear / basilisk
 MONS:    wyvern, yak / death yak w:2, elephant
 KMONS:   P = plant / fungus
 SHUFFLE: 234, A1
 SUBST:   A = ., P = P.
-KFEAT:   O = enter_lair
+: lair_entry_setup(_G)
 MAP
 xxxx..@..xxxx
 xx.........xx
@@ -188,12 +197,12 @@ ENDMAP
 
 # Shrubbed Lair entry
 NAME:   david_lair_shrubbed
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   komodo dragon, wyvern / basilisk / iguana
 KMONS:  P = plant
 KFEAT:  O = enter_lair
 SUBST:  ' = P., 2 = 22.
+: lair_entry_setup(_G)
 MAP
 xxxxxxxxxxxxx
 xxPPPPPPPPPxx
@@ -209,7 +218,7 @@ ENDMAP
 # A fair number of these aren't Lair monsters anymore,
 # but the idea still works, so.
 NAME:    dpeg_lair_monsters
-TAGS:    ruin lair_entry transparent
+TAGS:    ruin transparent
 ORIENT:  float
 MONS:    yak, death yak
 MONS:    iguana w:30 / basilisk, komodo dragon
@@ -219,7 +228,7 @@ SHUFFLE: 1356
 NSUBST:  1 = 2 = 12 / 2:1 / 1:. / * = 1.., 3 = 2 = 334 / 2:3 / 1:. / * = 3..
 NSUBST:  5 = 2:5 / 1:. / * = 55., 6 = 2 = 6667 / * = 6:5 .:9
 SUBST:   y = xxx.
-KFEAT:   O = enter_lair
+: lair_entry_setup(_G)
 MAP
 xxxxx...@...y
 x111.........
@@ -234,10 +243,8 @@ ENDMAP
 
 # Obligatory Oklob Plant Lair Entry Vault
 NAME:   dpeg_oklobed_lair
-TAGS:   lair_entry no_monster_gen no_pool_fixup transparent
-ORIENT: float
+TAGS:   no_monster_gen no_pool_fixup transparent
 MONS:   fungus, plant, oklob plant
-KFEAT:  O = enter_lair
 : if you.absdepth() < 10 then
 SUBST:  A = 11., B = 2.
 : else
@@ -248,6 +255,7 @@ NSUBST: B = 2 = 3... / * = 2.
 NSUBST: B = 3 = 33... / * = 2.
 :    end
 : end
+: lair_entry_setup(_G)
 MAP
 ...xxxxxxx...
 ..x...w...x..
@@ -264,15 +272,14 @@ ENDMAP
 
 # Grove Lair entry
 NAME:   minmay_lair_entry_grove
-TAGS:   lair_entry no_monster_gen transparent
-ORIENT: float
+TAGS:   no_monster_gen transparent
 MONS:   wyvern / basilisk w:4, yak, black bear / wolf
 MONS:   water moccasin / iguana w:2 / scorpion w:2
 KMONS:  P = plant / bush w:2 / fungus w:2
-KFEAT:  O = enter_lair
 NSUBST: . = 1:1 / 2:2 / 1:4 / 1 = 12 / 1 = 4. / 12:P / * = .:450 t:20 P:40
 NSUBST: ' = 1:1 / 1:2 / 1:4 / 1 = 12 / 1 = 40 / 8:P / * = .:250 t:20 P:40
 SUBST:  2 : 223
+: lair_entry_setup(_G)
 validate {{ return has_exit_from_glyph('O') }}
 MAP
      .....
@@ -294,13 +301,12 @@ ENDMAP
 
 # Lava Lair entry
 NAME:   minmay_lair_entry_lava
-TAGS:   lair_entry no_monster_gen transparent
-ORIENT: float
+TAGS:   no_monster_gen transparent
 WEIGHT: 1
 MONS:   fire crab
-KFEAT:  O = enter_lair
 NSUBST: M = 1:1 / *:L
 SUBST:  L = l.
+: lair_entry_setup(_G)
 MAP
 xx.x.x.x.xx
 x.........x
@@ -317,11 +323,10 @@ ENDMAP
 
 # Welcome to Lair Island. We make great pancakes.
 NAME:   erik_lair_island
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   troll, hound w:15 / wolf
-KFEAT:  O = enter_lair
 SUBST:  - = w., 2 = 2:5 .:1
+: lair_entry_setup(_G)
 MAP
 .@........wwwwww-.....
 ..-.-.-..wwwwwww.-..-.
@@ -342,35 +347,33 @@ ENDMAP
 
 # Dragon's Lair, for generous values of Dragon
 NAME:    erik_lair_dragon
-TAGS:    lair_entry no_rotate
-ORIENT:  float
+TAGS:    no_rotate
 MONS:    steam dragon / acid dragon / swamp drake
 MONS:    basilisk / wyvern / komodo dragon
 NSUBST:  2 = 3=2 / 3=2. / .
 SHUFFLE: %!*O
 SUBST:   z = .xc, ! = %
-KFEAT:   O = enter_lair
+: lair_entry_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxzxxxzxzxxzx.2xxzxxxzx*zxxxz.2.xxxx
-xxxxxxxxxxxxxxx.2.......zxx.x.zxxxz.zzxxxxzx.zxxx
-xxxxxxxxxxxxxz....xxx...2....zzzzzz..zzzzx..%cccc
-xxzxxzzzxxxxx..xxzzxxzz..........z...zzz..zzc+.zc
-@......xxx.2.xxzxxxxxxzxzxzz.......1...2.x.ccc.zc
-xxxzxxx...xxxxxxxxxxxxzxxxx.zz.2...z......zccc$cc
-xxxxxxzxxxzxxxxxxxxxxxx....xxzz...z....zz..zzcczc
-xxxxxxxxxxxxxxxxxxxxxzz2xxxzxxzzzz..zzz2zz.2Ozccc
-xxxxxxxxxxxxxxxxxxxxxz!zxxxxxxxxxx.xxxzxxxzxxxxxx
+xxxxxxxxxxxxxxzxxxzxzxxzx.2xxzxxxzx*zxxxz.2.xxxxx
+xxxxxxxxxxxxxx.2.......zxx.x.zxxxz.zzxxxxzx.zxxxx
+xxxxxxxxxxxxz....xxx...2....zzzzzz..zzzzx..%ccccx
+xzxxzzzxxxxx..xxzzxxzz..........z...zzz..zzc+.zcx
+@.....xxx.2.xxzxxxxxxzxzxzz.......1...2.x.ccc.zcx
+xxzxxx...xxxxxxxxxxxxzxxxx.zz.2...z......zccc$ccx
+xxxxxzxxxzxxxxxxxxxxxx....xxzz...z....zz..zzcczcx
+xxxxxxxxxxxxxxxxxxxxzz2xxxzxxzzzz..zzz2zz.2Ozcccx
+xxxxxxxxxxxxxxxxxxxxz!zxxxxxxxxxx.xxxzxxxzxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Orcish Takeover!
 NAME:   erik_lair_orcish_takeover
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   orc, wolf, orc warrior / warg
 MONS:   orc priest / orc wizard / plant
-KFEAT:  O = enter_lair
+: lair_entry_setup(_G)
 MAP
 xxxx..@..xxxx
 xx.........xx
@@ -385,15 +388,14 @@ ENDMAP
 
 # Plant/fungus spiral (due)
 NAME:   due_lair_maze_entry_diamond
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   water moccasin w:30 / scorpion / bullfrog w:30 / \
         black bear w:25 / yak / komodo dragon w:5
 KMONS:  P = plant / fungus
-KFEAT:  O = enter_lair
 SUBST:  P = P:60 `
 NSUBST: 1 = 3:1 / * = 1:30 P .
 NSUBST: . = 10:P / 10 = P. / 4:1 / 2 = 3. / *:.
+: lair_entry_setup(_G)
 validate {{ return has_exit_from_glyph('O') }}
 MAP
        ..P.P..
@@ -417,15 +419,14 @@ ENDMAP
 # A guard hut placed over the entrance of the lair,
 # and a guard to watch over it.
 NAME:   grunt_lair_entry_orc_guard_hut
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   bullfrog w:15 / scorpion / black bear
 MONS:   yak / elephant / komodo dragon
 MONS:   patrolling orc warrior
 KMONS:  P = plant / fungus
-KFEAT:  O = enter_lair
 NSUBST: D = 2:1 / 2 = 1` / * = P``, 1 = 2:1 / 1:2 / 2 = 1. / 1 = 12 / * = `
 SUBST:  P = PP`, . = P:1 .:5, ` = .
+: lair_entry_setup(_G)
 validate {{ return has_exit_from_glyph('O') }}
 MAP
     ...@..
@@ -445,54 +446,55 @@ MAP
 ENDMAP
 
 NAME:    mainiacjoe_lair_zoo
-TAGS:    lair_entry transparent no_monster_gen no_item_gen
-ORIENT:  float
+TAGS:    transparent no_monster_gen no_item_gen
+WEIGHT:  3
 SHUFFLE: NALPS
 KMONS:   P = anaconda / shock serpent
 KMONS:   L = catoblepas / eight-headed hydra
 KMONS:   N = emperor scorpion / orb spider
 KMONS:   A = kraken / alligator snapping turtle
 KMONS:   S = bunyip / goliath frog
-KMONS:   z = orc knight ; whip
-NSUBST:  P = P / `, N = N / `, A = A / W, S = S / W, L = L / `
+KMONS:   z = orc warrior ; whip . leather armour / \
+             orc knight w:5 ; whip . leather armour
+KITEM:   $ = $ no_pickup
+NSUBST:  P = P / `, N = N / `, A = A / w, S = S / w, L = L / `
 SUBST:   T : TG
-KFEAT:   AS = shallow_water
+KFEAT:   AS = w
 KFEAT:   ` = floor
-KFEAT:   # = iron_grate
-KFEAT:   O = enter_lair
-FTILE:   `PNL = floor_dirt
-KPROP:   `WANPLS = no_tele_into
+FTILE:   `PNL = floor_grass_dark
+KPROP:   `wANPLS = no_tele_into
+KMASK:   `wANPLS = opaque
+: lair_entry_setup(_G)
 MAP
 .............
 .............
-..####c####..
-..#AAAcNNN#.....
-..#AAAcNNN#......
-..#AAAcNNN#.T.T...
+..nnncccnnn..
+..nAAAcNNNn.....
+..nAAAcNNNn......
+..cAAAcNNNc.T.T...
 ..ccccccccc........
-..#PPPc...+.....T..
-..#PPPc.z.+..O.....
-..#PPPc...+.....T..
+..nPPPc$$.+.....T..
+..nPPPc$z.+..O.....
+..nPPPc$$.+.....T..
 ..ccccccccc........
-..#LLLcSSS#.T.T...
-..#LLLcSSS#......
-..#LLLcSSS#.....
-..####c####..
+..cLLLcSSSc.T.T...
+..nLLLcSSSn......
+..nLLLcSSSn.....
+..nnncccnnn..
 .............
 .............
 ENDMAP
 
 NAME:   hellmonk_lair_entry_icy
-TAGS:   lair_entry transparent
-ORIENT: float
+TAGS:   transparent
 MONS:   ice beast, wolf / polar bear w:3, rime drake
 NSUBST: 3 = 3 / 2.., . = 2 / 4 = 2... / .
 SUBST:  x = xxx., - = W:5 ':25 x:20 .:15
 NSUBST: ' = 16 = 1''' / '
-KFEAT:  O = enter_lair
 TILE:   x = wall_ice_block
 FTILE:  '1 = floor_ice
 COLOUR: '1 = blue
+: lair_entry_setup(_G)
 MAP
        -------
      --'''''''--
@@ -1132,7 +1134,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:10-, Lair
 ORIENT: float
 : wad_woods_setup(_G, "large", 5, false, 0, 0, 0)
-FTILE:  "2T = floor_grass
+FTILE:  "2T = floor_grass_dark
 FTILE:  @'0+ = floor_dirt
 MAP
    ttxcxxxxxxxxxxxxxxxxxxxxxxxcxxxxxct
@@ -1635,7 +1637,7 @@ NSUBST: . = 2:1 / * = d:3 .:42 1:18 2:4
 : end
 CLEAR:  `'"-
 COLOUR: ^d = green
-FTILE:  ^.de12 = floor_grass
+FTILE:  ^.de12 = floor_grass_dark
 COLOUR: ~ = brown
 FTILE:  ~ = floor_pebble_red
 MAP
@@ -1907,7 +1909,7 @@ SUBST:   ab = D, cp = P
 : if crawl.one_chance_in(5) then
 MONS:    plant, bush
 SUBST:   V = T, D = 2, P = 1
-FTILE:   ' = floor_dirt, 12`" = floor_grass
+FTILE:   ' = floor_dirt, 12`" = floor_grass_dark
 :else
 MONS:    withered plant / plant w:1, fungus
 SUBST:   P = 1, D = 122
@@ -4292,6 +4294,7 @@ KITEM:   _ = earthy gem
 KITEM:   ? = serpent talisman
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
+KFEAT:   z = stone_wall
 KFEAT:   L = endless_lava
 NSUBST:  1 = 3 = 11122 / * = 1h, 4 = 5:4 / 1:4H / *:H
 SHUFFLE: gb
@@ -4301,6 +4304,7 @@ KMASK:   '"`456H = no_item_gen
 FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
 TILE:    b = bedevilled_crystal_gehenna
+TILE:    z = wall_stone_scorched
 : vault_metal_statue_setup(_G, "g", "dimensional conduit")
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
@@ -4317,16 +4321,16 @@ MAP
 .Tttttttttttttt..ttt...ttt....ttttttttttT.1Tttttttxx
 ...Ttttttttttt..ttttt.......tttttttttttT....Ttttttxx
 ...tttttttttt.1ttttttt0ttFtttttttttcccccc++cccccccxx
-..Tttttttttt..tttttttttttt+ccccccccc'''''''''''''clL
-..Ttttttttt.0t..ttttttttttc''''''''c'''G``?`G''''clL
-.Tttttttttt..tt..tttttttttc''G'g'''+'''''''''''''clL
-..Tttttttt..tttt.tttttttttc'''c'b''ccccccccccccccclL
-.Tttttttt..ttttt..ttttttttc''c'G'''c"""""""4lllllllL
-..Ttttt.0ttttttt...tttttttc'''G'c''c""""""""44lllllL
+..Tttttttttt..tttttttttttt+ccccccccc'''''''''''''zlL
+..Ttttttttt.0t..ttttttttttc''''''''z'''G``?`G''''zlL
+.Tttttttttt..tt..tttttttttc''G'g'''+'''''''''''''zlL
+..Tttttttt..tttt.tttttttttc'''c'b''zzzzzzzzzzzzzzzlL
+.Tttttttt..ttttt..ttttttttc''c'G'''z"""""""4lllllllL
+..Ttttt.0ttttttt...tttttttc'''G'c''z""""""""44lllllL
 ....T..tttttttt....tttttttc''b'c'''+""""_""654AllllL
-...T0tttttttttt*Q1ttttttttc'''g'G''c"""""4444llllllL
-..Ttttttttttttttttttttttttc'''''''3c""""4llllllllllL
-ttttttttttttttttttttttttttcccccccccccccllllllllllllL
+...T0tttttttttt*Q1ttttttttc'''g'G''z"""""4444llllllL
+..Ttttttttttttttttttttttttc'''''''3z""""4llllllllllL
+ttttttttttttttttttttttttttczzzzzzzzzzzzllllllllllllL
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllllL
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxLLLLLLLLLLLLLLLLLLL
 ENDMAP
@@ -4658,6 +4662,7 @@ NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:"
 NSUBST:  D = 1:R / 1 = ? $:90 / 1:|* / 2 = *% / 3 = $% / *:$
 NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
 KMASK:   "$%*|7 = no_trap_gen
+TILE:    c = wall_stone_scorched
 MAP
                 xxxxxxx
              xxxxxxxxxxxxx

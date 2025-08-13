@@ -109,7 +109,7 @@ function init_aquarium(e)
     e.kmons('_ = diamond obelisk')
   elseif you.absdepth() <= 3 then
     e.subst('w = _')
-    e.ftile('_ = floor_grass')
+    e.ftile('_ = floor_grass_dark')
     e.colour('_ = green')
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:50 bush /

@@ -130,7 +130,7 @@ function hypervaults.build_layout(e, name, paint, options)
   local default_options = hypervaults.default_options()
   if options ~= null then hypervaults.merge_options(default_options,options) end
 
-  local data = paint_vaults_layout(paint, default_options)
+  local data = paint_vaults_layout(e, paint, default_options)
   local rooms = place_vaults_rooms(e, data, default_options.max_rooms, default_options)
 end
 
@@ -154,7 +154,7 @@ function build_vaults_layout(e, name, paint, options)
   local defaults = vaults_default_options()
   if options ~= nil then hypervaults.merge_options(defaults,options) end
 
-  local data = paint_vaults_layout(paint, defaults)
+  local data = paint_vaults_layout(e, paint, defaults)
   local rooms = place_vaults_rooms(e, data, defaults.max_rooms, defaults)
 end
 

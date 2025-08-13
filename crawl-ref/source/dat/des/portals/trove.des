@@ -1010,7 +1010,7 @@ SUBST:   ' = ' 2:3, " = '22, V = ~', ; = wwW```
 SUBST:   1 = 1 o:1, 2 = 2 p:2
 COLOUR:  n = green
 TILE:    n = dngn_transparent_stone_green
-FTILE:   .-1ot<QR = floor_grass
+FTILE:   .-1ot<QR = floor_grass_dark
 FTILE:   '2p = floor_swamp
 : decorative_floor(_G, 'op', "flower patch")
 KPROP:   Z? = no_tele_into

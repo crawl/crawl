@@ -240,7 +240,7 @@ NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
 # Assign floor tiles and set up transporters.
 COLOUR:  "-_ = green
 COLOUR:  '`089s%*|!? = white
-FTILE:   "-_^;artuzAFHB@&UZ = floor_grass
+FTILE:   "-_^;artuzAFHB@&UZ = floor_grass_dark
 : if crawl.coinflip() then
 FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_vault
 : else
@@ -944,7 +944,7 @@ NSUBST: ' = 2:6 / 3 = 66... / *:., " = 2:6 / 3 = 66... / *:.
 NSUBST: ` = 3:6 / 4 = 66... / *:., - = 1:6 / 2 = 6.. / *:.
 NSUBST: } = 1:] / 1:) / 1:} / * = **23..
 TILE:   x = wall_pebble_brown
-FTILE:  !pPt = floor_grass / floor_swamp w:1
+FTILE:  !pPt = floor_grass_dark / floor_swamp w:1
 FTILE:  5oR = floor_dirt
 SUBST:  ! = .
 MAP

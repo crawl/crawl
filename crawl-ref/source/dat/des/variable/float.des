@@ -2270,6 +2270,7 @@ MONS:    war gargoyle, peacekeeper
 SUBST:   @y = ., l = %
 NSUBST:  1 = 2 = *% / *:1
 CLEAR:   X
+FTILE:   .12$%*dG{ = floor_metal_gold
 : end
 ITEM:    staff of earth / medusa talisman w:5 / granite talisman w:5
 TILE:    G = dngn_statue_angel / dngn_statue_imp / \
@@ -2297,7 +2298,7 @@ ENDMAP
 # Ogre Cave, by Lemuel
 #
 NAME:    lemuel_ogre_cave
-TAGS:    no_pool_fixup vaults_hard vaults_orient_w
+TAGS:    no_pool_fixup vaults_orient_w
 ORIENT:  float
 DEPTH:   D:9-, !D:$, Orc, Vaults, !Vaults:$
 WEIGHT:  20 (Vaults), 10
@@ -2308,6 +2309,7 @@ MONS:    ironbound preserver, ogre mage, ironbound thunderhulk
 ITEM:    large rock no_pickup q:1
 NSUBST:  23 = 1:2 / 1:3 / 1:4 / 1:24 / *:3
 SUBST:   @> = ., W : xd., ~ = d, ?Y = +., A = $
+:   vaults_hard_standard(_G)
 : else
 MONS:    ogre, two-headed ogre, ogre mage / Erolcha, fungus
 MONS:    ogre zombie, two-headed ogre zombie
@@ -2834,8 +2836,7 @@ ENDMAP
 # The Elephants' Graveyard (by Mu.)
 #
 NAME:   mu_elephants_graveyard
-TAGS:   no_monster_gen no_rotate no_pool_fixup
-TAGS:   vaults_hard vaults_orient_s
+TAGS:   no_monster_gen no_rotate no_pool_fixup vaults_orient_s
 DEPTH:  Lair:2-, !Lair:$, Vaults, !Vaults:$
 ORIENT: float
 WEIGHT: 20 (Vaults), 10
@@ -2848,10 +2849,11 @@ SUBST:  ' = .
 MONS:   dire elephant, ogre mage, ironbound thunderhulk
 SUBST:  W = w, c = n
 NSUBST: . = 2:1 / *:.
-FTILE:  45nt = floor_pebble_brown
 CLEAR:  '@
 :   dgn.delayed_decay(_G, '%', 'dire elephant corpse w:1 / ' ..
 :                              'dire elephant skeleton w:5')
+:   vaults_hard_standard(_G)
+FTILE:  45nt = floor_pebble_brown
 : end
 MONS:   fungus, plant
 SUBST:  . = .:69 1:1,  c = 5tt
@@ -2943,7 +2945,6 @@ ENDMAP
 
 NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
-TAGS:   vaults_hard allow_dup
 ORIENT: float
 DEPTH:  D:6-, Vaults, !Vaults:$
 WEIGHT: 5 (Vaults), 10
@@ -2956,6 +2957,7 @@ MONS:   yaktaur captain w:5 / orc warlord ; arbalest . war axe . ring mail / \
 KITEM:  | = | / * / %
 KFEAT:  | = cache of baked goods
 SUBST:  @W' = .
+:   vaults_hard_standard(_G)
 : else
 :   if you.depth() < 12 then
 MONS:   centaur, orc wizard
@@ -2993,8 +2995,8 @@ WEIGHT: 4
 MONS:   plant, bat, snapping turtle
 COLOUR: .12 = green
 COLOUR: ; = brown
-FTILE:  ; = floor_grass_dirt_mix
-FTILE:  >.F12t = floor_grass
+FTILE:  ; = floor_moss
+FTILE:  >.F12t = floor_grass_dark
 : decorative_floor(_G, 'p', "flower patch")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3034,6 +3036,7 @@ MONS:    vault sentinel, glowing shapeshifter
 MONS:    large slime creature, great orb of eyes
 MONS:    glowing orange brain, vault warden
 KFEAT:   T = fountain_eyes
+FTILE:   .$%*+nTB[{(<>123456 = floor_metal_gold
 : end
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
@@ -3189,7 +3192,7 @@ SUBST:   3 = 3 .:1, 6 = 66.
 SUBST:   X = xx., 1 = 1:29 .:1, t = t:99 1:1, u = t, d = d..
 SUBST:   . = .:2975 1:20 2:1 3:2 4:2, | = *||
 TILE:    c = wall_marble
-FTILE:   .dTt1234567Gcx+d%$*| = floor_lair
+FTILE:   .dTt1234567Gcx+d%$*| = floor_grass_dark
 COLOUR:  c = white
 COLOUR:  .1234567d%$*| = green
 MAP
@@ -4389,12 +4392,13 @@ ccccccccccc@ccccccccccc
 ENDMAP
 
 NAME:    minmay_guarded_unrand_sword_of_power
-TAGS:    vaults_hard vaults_orient_e
+TAGS:    vaults_orient_e
 DEPTH:   D:13-, Vaults, !Vaults:$
 ORIENT:  float
 WEIGHT:  3 (Vaults), 10
 MONS:    vault guard
 ITEM:    sword_of_power no_pickup
+: vaults_hard_standard(_G)
 MAP
  vvvvvvvv
 vv......vv
@@ -4417,6 +4421,10 @@ ORIENT:  float
 ITEM:    glaive_of_the_guard no_pickup
 SUBST:   b : bxcmG.T
 NSUBST:  3:9 / 4=9. / ., 8 = 2:8 / 6=8.. / .
+: if you.in_branch("Vaults") then
+SUBST:   @ = .
+:   vaults_hard_standard(_G)
+: end
 MAP
 vvvvvvv@vvvvvvv
 v...v*v.v*v...v
@@ -4460,6 +4468,8 @@ NSUBST:  1 = 1:8 / 1:2 / *:1
 MONS:   ironbound frostheart, arcanist / white very ugly thing w:2
 SUBST:  @ = ., b = m
 NSUBST: - = 2:1 / 2:2 / 2 = 122 / *:-
+:   vaults_hard_standard(_G)
+FTILE:  - = floor_metal_gold
 : else -- D
 :   if you.depth() > 11 then
 MONS:   arcanist / deep elf knight w:2, ice devil
@@ -4867,7 +4877,7 @@ KFEAT:  2 = cache of fruit / cache of meat / floor w:30
 SUBST:  p : pPP, P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
-FTILE:  2$|*%AB = floor_grass
+FTILE:  2$|*%AB = floor_grass_dark
 COLOUR: 2$|*%AB = green
 MAP
    ....._.c.'.....
@@ -4928,6 +4938,7 @@ KITEM:  12 = % / * w:4
 NSUBST: - = 3:1 / 2:2 / 2 = 1G / *:G
 SUBST:  @ = ., '" = .
 :   vault_metal_statue_setup(_G, "G", "silver statue")
+:   vaults_hard_standard(_G)
 : else
 :   if you.depth() > 12 then
 KMONS:  1 = molten gargoyle
@@ -5060,7 +5071,7 @@ NSUBST: ' = 1:1 / 1=1. / 1:2 / 1=2. / 1:4, ` = 1:1 / 1=1. / 1:2 / 1=2. / 1:4
 NSUBST: p = 2:1 / 2=1.
 FTILE: s = floor_mud
 COLOUR: s = brown
-FTILE: uETYU_ = floor_grass
+FTILE: uETYU_ = floor_grass_dark
 COLOUR: uETYU_ = green
 MAP
 ttttttttttttttttttttttttttttt
@@ -5125,6 +5136,8 @@ MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx marauder / tengu reaver / lich / fire giant / frost giant
 MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
+FTILE:   -UT_QR12345defg|*$+G = floor_metal_gold
+FTILE:   t = floor_pebble_brown
 : elseif you.in_branch("Depths") then
 MONS:    glass eye / great orb of eyes / glowing orange brain / \
          phantasmal warrior
@@ -6617,7 +6630,7 @@ KFEAT:   e = cache of fruit / cache of baked goods w:4
 SHUFFLE: mno, de / de / ~~
 SUBST:   n : xxm, o = x, '~ = t:2 p:3 `
 NSUBST:  2 = 2 = 112 / 2:_ / *:2
-FTILE:   _`%*|det-1234567p = floor_grass
+FTILE:   _`%*|det-1234567p = floor_grass_dark
 MAP
   .........     ..........
  ..xxmmmxx..   ..xxnnnxxx.
@@ -6838,7 +6851,7 @@ ENDMAP
 # for D / V elementals meeting with elves instead.
 NAME:    dpeg_index_elf_rogue_hall
 TAGS:    no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
-TAGS:    vaults_hard vaults_orient_s
+TAGS:    vaults_orient_s
 DEPTH:   D:9-, Vaults
 WEIGHT:  20 (Vaults), 10
 ORIENT:  float
@@ -6865,6 +6878,7 @@ NSUBST:  2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
 NSUBST:  7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
 NSUBST:  % = 2:| / 4:% / *:$
 CLEAR:   z
+:   vaults_hard_standard(_G)
 : end
 KFEAT:   ^ = teleport trap
 KFEAT:   ~ = archmage's trap
@@ -6955,10 +6969,14 @@ NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
 NSUBST:  d = 1:D. / *:., f = 1:F. / *:., P = 2:G / *:P
 SUBST:   @&A = ., Wl = ., c = b, P = PPx..
 SHUFFLE: DF
-: vault_metal_statue_setup(_G, "G", "mystic cage")
+:   vault_metal_statue_setup(_G, "G", "mystic cage")
 CLEAR:   z
 : end
 SUBST:   & : xx@, A : x@@, X = x.
+: if you.in_branch("Vaults") then
+FTILE:   .%*|+n0123456789DFGI = floor_metal_gold
+FTILE:   P = floor_pebble_brown
+: end
 MAP
   xxxxxxz@@@@zzzzzzzzzzzzzzzzzzzzzzzzzzc
  xx.X..XX...xxxxxxxxxxxxxxzzccccccccccccc
@@ -8127,7 +8145,7 @@ DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
-FTILE: 12"t> = floor_grass
+FTILE: 12"t> = floor_grass_dark
 COLOUR: 12" = green
 FTILE: ; = floor_dirt
 COLOUR: ; = brown
@@ -10221,7 +10239,7 @@ DEPTH:  D:14-, Depths:1-5
 ORIENT: float
 NSUBST: - = 4 = 8 / 8 = 9 / 90 = . / * = .:45 0
 SUBST:  " = $:5 * |:3
-FTILE:  '$tT$*| = floor_grass
+FTILE:  '$tT$*| = floor_grass_dark
 MAP
              ccc
             cc-cc
@@ -10561,7 +10579,7 @@ KITEM:  | = gold good_item
 KITEM:  13 = gold
 KFEAT:  B = altar_gozag
 COLOUR: c = yellow
-FTILE:  .0_Gt = floor_grass
+FTILE:  .0_Gt = floor_grass_dark
 FTILE:  $|B}+nc1-D = floor_limestone
 FTILE:  " = floor_dirt
 TILE:   c = wall_tomb
@@ -11499,6 +11517,7 @@ SUBST:  b : cx
 SUBST:  b : bcvx
 : end
 NSUBST: ' = d / e / $
+: vaults_hard_standard(_G, false, "-QR189de|*$")
 MARKER: P = lua:transp_loc("sealed_arena_entry")
 MARKER: Q = lua:transp_dest_loc("sealed_arena_entry")
 MARKER: R = lua:transp_loc("sealed_arena_exit")
@@ -11553,6 +11572,7 @@ SUBST:   8 = 18
 # In other branches, we remove the border squares.
 : if you.in_branch("Vaults") then
 SUBST:   c = x
+FTILE:   -+QR^01289de$*| = floor_metal_gold
 : else
 CLEAR:   `
 : end
@@ -11635,6 +11655,7 @@ TILE:   p = dngn_transparent_stone_yellow
 # In other branches, we remove the border squares.
 : if you.in_branch("Vaults") then
 SUBST:   c = x
+FTILE:   -QRHK012389def$*| = floor_metal_gold
 : else
 CLEAR:   `
 : end
@@ -11679,17 +11700,13 @@ KITEM:   _ = necklace of bloodlust no_pickup / wrath of trog no_pickup
 ITEM:    manual of armour w:30 / manual of fighting w:30 / \
          manual of long blades / manual of axes / manual of maces & flails / \
          manual of polearms / manual of dodging / manual of shields
-ITEM:    executioner's axe good_item no_pickup w:5 / \
-         battleaxe good_item randart no_pickup / \
-         broad axe good_item no_pickup / \
-         triple sword good_item no_pickup w:5 / \
-         great sword good_item randart no_pickup / \
-         double sword good_item no_pickup / \
-         great mace good_item no_pickup / \
-         eveningstar good_item no_pickup / \
-         bardiche good_item no_pickup w:5 / \
-         glaive good_item randart no_pickup / \
-         partisan good_item no_pickup
+: local g = "good_item no_pickup"
+: local r = "randart no_pickup"
+: item("executioner's axe " .. g .. " w:5 / battleaxe " .. r .. " / " ..
+:      "broad axe " .. g .. " / triple sword " .. g .. " w:5 / " ..
+:      "great sword " .. r .. " / double sword " .. g .. " / " ..
+:      "great mace " .. g .. " / eveningstar " .. g .. " / " ..
+:      "bardiche " .. g .. " w:5 / glaive " .. r .. " / partisan " .. g)
 ITEM:    plate armour good_item randart w:20 no_pickup / \
          crystal plate armour good_item no_pickup / \
          chain mail good_item randart no_pickup
@@ -11721,8 +11738,8 @@ KMONS:   1 = patrolling ettin / patrolling iron troll
 KMONS:   2 = two-headed ogre / cyclops / deep troll w:15 / stone giant
 KMONS:   3 = arcanist / boggart / deep elf annihilator / deep elf demonologist \
           / deep elf sorcerer / deep elf high priest / titan / lich
-# Depths
-: else
+FTILE:   ap+-_Y$*defgDEQ1234567 = floor_metal_gold
+: else -- Depths
 KMONS:   1 = patrolling juggernaut
 KMONS:   2 = deep troll w:15 / spriggan berserker w:15 / stone giant \
          / iron troll w:5 / ettin w:5
@@ -11738,6 +11755,8 @@ MARKER:  E = lua:fog_machine { \
 # other branches, we remove the border squares.
 : if you.in_branch("Vaults") then
 SUBST:   v = x
+:   vaults_hard_standard(_G)
+FTILE:   `PQR = floor_metal_gold
 : else
 CLEAR:   `
 TILE:    v = dngn_metal_wall_darkgray

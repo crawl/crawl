@@ -1327,6 +1327,13 @@ A broken floral vase
 
 A delicate arrangement, smashed to pieces and consigned to slow starvation.
 %%%%
+# The Hall of Blades
+A weapon-inlaid floor
+
+The decorative elvish inlayings of weapons mark here the Hall of Blades, where
+many of the Dungeon's keenest weapons originate, magically animated to
+demonstrate their own lethality on would-be thieves.
+%%%%
 # Bailies and other Orc-containing larger vaults
 An orcish standard
 

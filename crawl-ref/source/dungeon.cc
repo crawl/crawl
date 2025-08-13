@@ -1702,17 +1702,6 @@ static void _fixup_walls()
         wall_type = DNGN_METAL_WALL;
         break;
 
-    case BRANCH_VAULTS:
-    {
-        // Everything but the branch end is handled in Lua.
-        if (you.depth == branches[BRANCH_VAULTS].numlevels)
-        {
-            wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
-                                               9, DNGN_METAL_WALL);
-        }
-        break;
-    }
-
     case BRANCH_CRYPT:
         wall_type = DNGN_STONE_WALL;
         break;

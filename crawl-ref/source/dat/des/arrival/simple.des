@@ -1497,7 +1497,7 @@ ENDMAP
 NAME:   tarquinn_simple_flora_water_e
 TAGS:   arrival no_monster_gen
 ORIENT: float
-FTILE:  1 = floor_grass
+FTILE:  1 = floor_grass_dark
 MONS:   plant
 MAP
   x+x
@@ -1964,7 +1964,8 @@ ENDMAP
 NAME:   mushboom_english_gardens
 ORIENT: float
 TAGS:   arrival no_monster_gen
-FTILE:  -T = floor_grass
+FTILE:  -T = floor_grass_dark
+FTILE:  . = floor_moss
 COLOUR: -T = green
 MAP
 xxxxx+xxxxx

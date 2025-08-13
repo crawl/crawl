@@ -4549,6 +4549,7 @@ ENDMAP
 
 NAME:    regret_index_necropolis_ghost_elfcraft_halls
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "vaults_elf"})
+WEIGHT:  999999
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
 MONS:    sky beast, fire bat, ice beast, shapeshifter
@@ -4582,7 +4583,11 @@ ITEM:    longbow good_item no_pickup / any magical staff randart / \
          orb ego:energy randart pre_id / robe ego:archmagi pre_id/ \
          ring of magical power randart pre_id / \
          randbook disc:forgecraft numspells:6 / manual of forgecraft w:5
-TILE:    =-def%*|1234567O = floor_hall
+: if dgn.persist.necropolis_difficulty == "vaults_elf" then
+FTILE:   =-def%*|1234567O = floor_crystal
+: else
+FTILE:   =-def%*|1234567O = floor_hall
+: end
 KPROP:   +def%*|1234567O = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP

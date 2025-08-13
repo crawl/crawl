@@ -1400,7 +1400,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
     glaive ego:flaming | hand cannon ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
-FTILE:  -1wP = floor_lair
+FTILE:  -1wP = floor_grass_dark
 COLOUR: -1 = brown
 MAP
 .......
@@ -2131,6 +2131,7 @@ MONS:  deep elf zephyrmancer / deep elf pyromancer
 MONS:  lich / fire giant, crystal guardian
 MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
 SUBST: + = .
+FTILE: .123S = floor_crystal
 : elseif you.in_branch("Crypt") then
 MONS:  revenant soulmonger / curse skull w:5 / lich
 MONS:  vampire knight / deep elf death mage
@@ -2490,7 +2491,7 @@ KFEAT:   S = any shop
 SHUFFLE: DE, FH
 SUBST:   DF = S, EH = T, T = T:16 U:1 V:1
 COLOUR:  . = green
-FTILE:   ._GSTUV = floor_grass
+FTILE:   ._GSTUV = floor_grass_dark
 MAP
 .....................
 .G..D..E..D..E..D..G.

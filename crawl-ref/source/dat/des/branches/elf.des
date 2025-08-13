@@ -26,8 +26,14 @@ end
 function elven_blade_entry(e)
   e.tags("elf_blade_entry no_monster_gen unrand")
   e.mons("patrolling dancing weapon ; dagger good_item | mundane falchion w:6")
-  e.ftile("- = floor_vault")
-  e.colour("- = lightgrey")
+  decorative_floor(e, "-", "weapon-inlaid floor")
+end
+
+function hall_of_blades_setup(e, w_floor)
+  e.tags("no_monster_gen")
+  e.tags("no_item_gen")
+  e.place("Elf:2")
+  decorative_floor(e, w_floor, "weapon-inlaid floor")
 end
 
 --[[
@@ -2034,7 +2040,7 @@ KITEM:  ' = short sword / long sword / morningstar / mace / \
 : elven_blade_entry(_G)
 MAP
       =
-xx.1.x-xd1.xx
+xx-1-x-x-1-xx
 x.d...xdd...x
 ..dd..ded....
 ..deeeeee..dd
@@ -2185,22 +2191,21 @@ NAME:   nooodl_blade_entry_preview
 TAGS:   no_item_gen
 SUBST:  C : cc.
 NSUBST: 1 = 2:1 / *:.
-FTILE:  . = floor_vault
 : elven_blade_entry(_G)
 MAP
       =
  xcC-----Ccx
- xcC.c.c.Ccx
+ xcC.c-c.Ccx
  xcC.1.1.Ccx
  xcC.....Ccx
- xcC.c.c.Ccx
+ xcC.c-c.Ccx
  xcC.1.1.Ccx
 xxcC.....Ccxx
  xcC.1.1.Ccx
- xcC.c.c.Ccx
+ xcC.c-c.Ccx
  xcC.....Ccx
  xcC.1.1.Ccx
- xcC.c.c.Ccx
+ xcC.c-c.Ccx
  xcc.....ccx
 ENDMAP
 
@@ -2210,8 +2215,8 @@ SUBST: 1 = 1.., c : cv
 MAP
       =
 ...-------...
-...c-----c...
-..ccc---ccc..
+...c-...-c...
+..ccc-.-ccc..
 .ccccc-ccccc.
 ..ccc.1.ccc..
 ...c.....c...
@@ -2226,14 +2231,12 @@ ENDMAP
 
 NAME: nicolae_blade_entry_area_security
 : elven_blade_entry(_G)
-FTILE: 1 = floor_vault
-COLOUR: 1 = lightgrey
 SUBST: b : bmc
 KMONS: 2 = deep elf pyromancer / deep elf zephyrmancer
 MAP
       =
 ...c-----c...
-.b.m--1--m.b.
+.b.m-.1.-m.b.
 ...c-----c...
 .b.ccc+ccc.b.
 ...c.....c...
@@ -2360,21 +2363,22 @@ TAGS:  no_item_gen
 KMONS: 2 = patrolling dancing weapon ; sling | shortbow | orcbow | \
            longbow w:5 | hand cannon w:5 | arbalest | triple crossbow w:5
 : elven_blade_entry(_G)
+FTILE: ' = floor_vault
 MAP
       =
 xxxx-----xxxx
 xx---...---xx
-x--.......--x
+x-'.......'-x
 x-...---...-x
---..--2--..--
--..--...--..-
--..-2.-.2-..-
--..--...--..-
---..--2--..--
+--..-'2'-..--
+'..-'...'-..'
+'..-2.-.2-..'
+'..-'...'-..'
+--..-'2'-..--
 x-...---...-x
-x--.......--x
+x-'.......'-x
 xx---...---xx
-xxxx-----xxxx
+xxxx-'''-xxxx
 ENDMAP
 
 NAME:  nicolae_blade_lattice
@@ -2384,15 +2388,15 @@ MAP
       =
 ...b.....b...
 .1v-v...v-v1.
-.v---v1v---v.
-b-----b-----b
-.v---v.v---v.
+.v-.-v1v-.-v.
+b-...-b-...-b
+.v-.-v.v-.-v.
 ..v-v...v-v..
 ..1b..1..b1..
 ..v-v...v-v..
-.v---v.v---v.
-b-----b-----b
-.v---v1v---v.
+.v-.-v.v-.-v.
+b-...-b-...-b
+.v-.-v1v-.-v.
 .1v-v...v-v1.
 ...b.....b...
 ENDMAP
@@ -2402,8 +2406,7 @@ KMONS:   2 = patrolling dancing weapon ; dagger good_item \
          | mundane falchion w:6
 SHUFFLE: EFH
 SUBST:   1 = 1--, 2 = 2.., D : xxm, EF : x, H : xmm
-FTILE:   1m = floor_vault
-COLOUR:  1m = lightgrey
+FTILE:   1 = floor_vault
 : elven_blade_entry(_G)
 MAP
       =
@@ -2414,8 +2417,8 @@ x+x+x+x+x+x+x
 x.E---F---E.x
 x.E-1-F-1-E.x
 x2xHHHxHHHx2x
-x.E-1-F-1-E.x
-x.E---F---E.x
+x.E.2.F.2.E.x
+x.E...F...E.x
 x+x+x+x+x+x+x
 x---D...D---x
 x-1-D.2.D-1-x
@@ -2426,16 +2429,14 @@ NAME:   nicolae_blade_tridents
 TAGS:   transparent
 KMONS:  23 = patrolling dancing weapon ; trident
 SUBST:  2 = 22.
-FTILE:  3 = floor_vault
-COLOUR: 3 = lightgrey
 : elven_blade_entry(_G)
 MAP
       =
-xxxxx---xxxxx
-xxxxx---xxxxx
+xxxxx-.-xxxxx
+xxxxx-.-xxxxx
 xxxxx-3-xxxxx
-xxxxx---xxxxx
-xxxxx---xxxxx
+xxxxx-.-xxxxx
+xxxxx-.-xxxxx
 xxx...2...xxx
 xx..xx.xx..xx
 xx.xxx.xxx.xx
@@ -2453,8 +2454,6 @@ ENDMAP
 ##############################################################################
 
 NAME:     elven_hall_of_blades_hangedman_original
-TAGS:     no_item_gen no_monster_gen
-PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
@@ -2462,9 +2461,7 @@ ORIENT:   north
 SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
-FTILE:    - = floor_vault
-COLOUR:   - = lightgrey
-SUBST:    - = .
+: hall_of_blades_setup(_G, "-")
 # Previously for Blade: NSUBST:  . : 6:0 / 6 = 0. / 6 = 0... / *:.
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
 SUBVAULT: A : elf_blade_entry
@@ -2498,9 +2495,9 @@ xcE..ccccc..........ccccc...............ccccc..........ccccc..Ecx
 xcE...ccc...........-ccc-...............-ccc-...........ccc...Ecx
 xc-....c............--c--...............--c--............c....-cx
 xcc-.........................................................-ccx
-xccF-...-cc-.-cc-.-cc-.-cc'''''ccc'''''cc-.-cc-.-cc-.-cc-...-Fccx
-xcccc---cccc-cccc-cccc-cccc'F'++c++'F'cccc-cccc-cccc-cccc---ccccx
-xcccccccccccccccccccccccccccccc'''cccccccccccccccccccccccccccccxx
+xccF-...-cc-.-cc-.-cc-.-cc-''''ccc''''-cc-.-cc-.-cc-.-cc-...-Fccx
+xcccc---cccc-cccc-cccc-cccc-F'++c++'F-cccc-cccc-cccc-cccc---ccccx
+xcccccccccccccccccccccccccccccc---cccccccccccccccccccccccccccccxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc=A=cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                           AAAAAAAAAAAAA
                           AAAAAAAAAAAAA
@@ -2519,18 +2516,14 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc=A=cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:     elven_hall_of_blades_hangedman_alternative
-TAGS:     no_item_gen no_monster_gen
-PLACE:    Elf:2
 WEIGHT:   5
 ORIENT:   north
+: hall_of_blades_setup(_G, "-")
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
 SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
-FTILE:    - = floor_vault
-COLOUR:   - = lightgrey
-SUBST:    - = .
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
 SUBVAULT: A : elf_blade_entry
 SUBST:    A : x, ' = .
@@ -2572,8 +2565,6 @@ ENDMAP
 # Due to the orientation of this vault, I decided to just have a built-in
 # entry, rather than trying to make the existing entry subvaults fit.
 NAME:     nicolae_elf_blades_crystal_corner
-TAGS:     no_item_gen no_monster_gen
-PLACE:    Elf:2
 ORIENT:   northwest
 : hall_of_blades_monsters(_G)
 KMONS:    8 = patrolling dancing weapon ; dagger good_item | mundane falchion w:6
@@ -2587,11 +2578,9 @@ SUBST:    FJ = ., H : bb.
 : end
 SHUFFLE:  DE
 SUBST:    D : bbbb-, E : ----b, K : b.., 8 = 8'
-FTILE:    -~ = floor_vault
-COLOUR:   -~ = lightgrey
-SUBST:    - = .
+: hall_of_blades_setup(_G, "-~")
 NSUBST:   . = 6=1 / 3=2 / 1=34 / 4=4 / 2=42 / 6=14...
-SUBST:    '~ = ., b : bbbbcccv
+SUBST:    b : bbbbcccv
 CLEAR:    "
 MAP
 "
@@ -2622,20 +2611,20 @@ MAP
  xbb..........HHH..................K......-bbx
  xbbb........HHHHH........'''''...bbb....-bbbx
  xbbbK.......HHHHH........'''''--bbbbb---bbbbx
- xbbb.......JHHHHHJ.......'''''bbbbbbbbbbbbbbx
+ xbbb.......JHHHHHJ.......''''-bbbbbbbbbbbbbbx
  xbb......FFFJbbbJFFF.....'''==bxxxxxxxxxxxxxx
- xb-.....FFFFbbbbbFFFF....'''=~~'''''xxxxxx
- xb-..2..FFFFbbbbbFFFF.....-bb~~~''T''xxxxx
- xb-.....FFFFbbbbbFFFF.....-bx'~~~''8''xxxx
- xbb......FFFJbbbJFFF......bbx''~~~''8''xxx
- xbbb.......JHHHHHJ.......bbbx'''~~~''8''xx
- xbbbK.......HHHHH.......Kbbbx'T''~~~''8''x
- xbbb.....4..HHHHH........bbbx''8''~~~''8'x
- xbb..........HHH..........bbxx''8''~~~''Tx
- xb-.......................-bxxx''8''~~~''x
- xb-...d...................-bxxxx''8''~~~'x
- xb-..e........2...........-bxxxxx''8''~~~x
- xbb-5.....K.......K......-bbxxxxxx''T''~~~@
+ xb-.....FFFFbbbbbFFFF....''-=~~'''''xxxxxx
+ xb-..2..FFFFbbbbbFFFF.....-bb~'~''T''xxxxx
+ xb-.....FFFFbbbbbFFFF.....-bx'~'~''8''xxxx
+ xbb......FFFJbbbJFFF......bbx''~'~''8''xxx
+ xbbb.......JHHHHHJ.......bbbx'''~'~''8''xx
+ xbbbK.......HHHHH.......Kbbbx'T''~'~''8''x
+ xbbb.....4..HHHHH........bbbx''8''~'~''8'x
+ xbb..........HHH..........bbxx''8''~'~''Tx
+ xb-.......................-bxxx''8''~'~''x
+ xb-...d...................-bxxxx''8''~'~'x
+ xb-..e........2...........-bxxxxx''8''~'~x
+ xbb-5.....K.......K......-bbxxxxxx''T''~'~@
  xbbb-....bbb.....bbb....-bbbxxxxxxxxxxxx~~@
  xbbbb---bbbbb---bbbbb---bbbbx           @@@
  xbbbbbbbbbbbbbbbbbbbbbbbbbbbx
@@ -2646,18 +2635,14 @@ ENDMAP
 # main hall, so instead of having distinct "left" and "right" sides relative
 # to the entrance, the layout is mostly "forward" from the entrance.
 NAME:     nicolae_elf_blades_splatter_lattice
-TAGS:     no_item_gen no_monster_gen
-PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 KMONS:    E = dancing weapon
 : hall_of_blades_extra_rewards(_G)
 SUBST:    e = ed, f = f.
 # 1/4 chance each of the scalloped edges being 0/1/2/3 tiles around.
-SUBST:    P : Q-, Q : RR-, R : ccc-
-FTILE:    7E- = floor_vault
-COLOUR:   7E- = lightgrey
-SUBST:    - = .
+SUBST:    P : Q., Q : RR., R : ccc.
+: hall_of_blades_setup(_G, "7-")
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
 SHUFFLE:  MN
 SUBVAULT: D : elf_blade_entry
@@ -2667,35 +2652,35 @@ MAP
                              "
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccx
-xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
-xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
-xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
-xc---v.d.....v------v.......v------v.......v---cx
-xc--v.5.......v----v.........v----v.........v--cx
-xc-v.e.........v--v...........v--v...........v-cx
-xcN.....2....4..NN.............NN.............Ncx
-xcN.............NN.............NN.............Ncx
-xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
-xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
-xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
-xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
-xcQP---v...v----------v...v----------v...v-----ccDDDDDDDDDDDDD
-xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
-xcRQP-7-MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
-xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
-xcQP---v...v----------v...v----------v...v-----ccDDDDDDDDDDDDD
-xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
-xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
-xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
-xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
-xcN.............NN.............NN.............Ncx
-xcN.....2....4..NN.............NN.............Ncx
-xc-v.f.........v--v...........v--v...........v-cx
-xc--v.6.......v----v.........v----v.........v--cx
-xc---v.d.....v------v.......v------v.......v---cx
-xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
-xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
-xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
+xcRQP..-MMM-..PQRRQP..-MMM-..PQRRQP..-MMM-..PQRcx
+xcQP..-v...v-..PQQP..-v...v-..PQQP..-v...v-..PQcx
+xcP..-v.....v-..PP..-v.....v-..PP..-v.....v-..Pcx
+xc..-v.d.....v-....-v-.....-v-....-v.......v-..cx
+xc.-v.5.......v-..-v.--...--.v-..-v.........v-.cx
+xc-v.e.........v--v...--.--...v--v...........v-cx
+xcN.....2....4..NN.....---.....NN.............Ncx
+xcN.............NN.....---.....NN.............Ncx
+xc-v...........v--v...--.--...v--v...........v-cxDDDDDDDDDDDDD
+xc.-v.........v-..-v.--...--.v-..-v.........v--cxDDDDDDDDDDDDD
+xc-.-v...4...v-....-v-.....-v-....-v.......v-.-cxDDDDDDDDDDDDD
+xcP-.-v.....v-......-v.....v-......-v.....v-E.-cxDDDDDDDDDDDDD
+xcQP-.-v...v-........-v...v-........-v...v-...-ccDDDDDDDDDDDDD
+xcRQP-.-MMM-..........-MMM-..........-MMM--...--=DDDDDDDDDDDDD@
+xcRQP-7-MMM-..........-MMM-..........-MMM-..E.--DDDDDDDDDDDDDD@
+xcRQP-.-MMM-..........-MMM-..........-MMM--...--=DDDDDDDDDDDDD@
+xcQP-.-v...v-........-v...v-........-v...v--..-ccDDDDDDDDDDDDD
+xcP-.-v.....v-......-v.....v-......-v.....v-E.-cxDDDDDDDDDDDDD
+xc-.-v...4...v-....-v-.....-v-....-v.......v-.-cxDDDDDDDDDDDDD
+xc.-v.........v-..-v.--...--.v-..-v.........v--cxDDDDDDDDDDDDD
+xc-v...........v--v...--.--...v--v...........v-cxDDDDDDDDDDDDD
+xcN.............NN.....---.....NN.............Ncx
+xcN.....2....4..NN.....---.....NN.............Ncx
+xc-v.f.........v--v...--.--...v--v...........v-cx
+xc.-v.6.......v-..-v.--...--.v-..-v.........v--cx
+xc..-v.d.....v-....-v-.....-v-....-v.......v-.-cx
+xcP..-v.....v-..PP..-v.....v-..PP..-v.....v-.-Pcx
+xcQP..-v...v-..PQQP..-v...v-..PQQP..-v...v-.-PQcx
+xcRQP..-MMM-..PQRRQP.--MMM-..PQRRQP.--MMM---PQRcx
 xcccccccccccccccccccccccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

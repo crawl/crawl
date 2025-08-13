@@ -2637,14 +2637,14 @@ MAP
 .........
 ENDMAP
 
-NAME: chequers_mini_garden
-TAGS: decor extra transparent
-DEPTH: D
+NAME:   chequers_mini_garden
+TAGS:   decor extra transparent
+DEPTH:  D
 SUBST:  t = t-
 COLOUR: - = green
 COLOUR: . = brown / green / none
-FTILE:  . = floor_dirt / floor_grass / none
-FTILE:  t- = floor_grass
+FTILE:  . = floor_pebble_red
+FTILE:  t- = floor_grass_dark
 MAP
 ....
 .tt.
@@ -2652,23 +2652,24 @@ MAP
 ....
 ENDMAP
 
-NAME: chequers_garden
-TAGS: decor extra transparent
-DEPTH: D
+NAME:   chequers_garden
+TAGS:   decor extra transparent
+DEPTH:  D
 SUBST:  t = t-
 COLOUR: - = green
 COLOUR: . = brown / green / none
-FTILE:  . = floor_dirt / floor_grass / none
-FTILE:  t- = floor_grass
+FTILE:  . = floor_pebble_red
+FTILE:  t- = floor_grass_dark
+FTILE:  ' = floor_pebble_darkgray
 MAP
-........
-........
-..ttt...
-..tt.t..
-..t.tt..
-...ttt..
-........
-........
+''''''''
+'''....'
+''ttt..'
+'.tt.t.'
+'.t.tt.'
+'..ttt''
+'....'''
+''''''''
 ENDMAP
 
 NAME: chequers_avenue
@@ -2689,7 +2690,7 @@ TAGS:   decor extra
 DEPTH:  D
 SUBST:  - = tt.
 COLOUR: . = green
-FTILE:  t. = floor_grass
+FTILE:  t. = floor_grass_dark
 MAP
 xxx+xxx
 xt-.-tx
@@ -2927,7 +2928,7 @@ NAME:    dreamdust_princess_bridge
 TAGS:    extra decor transparent no_pool_fixup
 DEPTH:   D, Elf
 FTILE:   -G = floor_rough_white
-FTILE:   .bt = floor_grass
+FTILE:   .bt = floor_grass_dark
 COLOUR:  . = green
 TILE:    G = dngn_statue_princess
 : set_feature_name("granite_statue", "a statue of a princess")
@@ -2958,7 +2959,7 @@ TILE:    G = dngn_statue_princess
 : set_feature_name("granite_statue", "a statue of a princess")
 # Three variations
 : if crawl.one_chance_in(3) then
-FTILE:   .Gtp = floor_grass
+FTILE:   .Gtp = floor_grass_dark
 COLOUR:  .Gtp = green
 KMONS:   p = bush
 : elseif crawl.one_chance_in(2) then
@@ -3916,7 +3917,7 @@ WEIGHT: 4
 ITEM:   any potion
 KFEAT:  C = cache of fruit
 NSUBST: . = 6 = d. / *:.
-FTILE:  .dpC : floor_moss / floor_grass / floor_dirt
+FTILE:  .dpC : floor_moss / floor_grass_dark
 COLOUR: .d = green
 : decorative_floor(_G, 'p', "garden patch")
 MAP
@@ -3937,36 +3938,36 @@ TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 DEPTH:  D:2-12
 WEIGHT: 4
 ITEM:   any potion
-NSUBST: . = 4 = d. / *:.
-FTILE:  .d = floor_moss / floor_grass
-COLOUR: .d = green
+NSUBST: . = 4 = d' / *:'
+FTILE:  d' = floor_grass_dark
+FTILE:  " = floor_moss
+COLOUR: d' = green
 MAP
 xxxxxxxx
-x......x
-x.WWWW.+
-x......x
+x"...."x
+x"WWWW"+
+x"...."x
 xxxxxxxx
 ENDMAP
 
 NAME:   dk_vineyard_3
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
-NSUBST: . = 4:d
-NSUBST: : = 5:. / *:'
+NSUBST: . = 4:d / *:'
 KFEAT:  w = shallow_water
-FTILE:  .d = floor_moss / floor_grass
-COLOUR: .d = green
-FTILE:  ' = floor_normal
+FTILE:  'd = floor_grass_dark
+FTILE:  " = floor_moss
+COLOUR: d' = green
 MAP
-::..::
-:..ww.
-:.ww.:
-.ww..:
-:.ww..
-.ww...
-:...::
+""..""
+"..ww.
+".ww."
+.ww.."
+".ww..
+.ww.."
+"...""
 ENDMAP
 
 # Wand duel gone wrong.

@@ -548,6 +548,7 @@ MONS:   vault sentinel ; arbalest . halberd . ring mail
 MONS:   vault warden ; arbalest | hand cannon w:4 . glaive . scale mail
 SUBST:  @ = ., * = **%, | = ||*
 CLEAR:  x
+:   vaults_hard_standard(_G)
 : else
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
 SUBST:  d : d.
@@ -1655,7 +1656,7 @@ KFEAT:   F = cache of fruit
 KFEAT:   f = cache of meat
 NSUBST:  . = 4:2 / 20:1 / 5:3 / 8:% / 2:* / 10:$ / *:.
 SHUFFLE: Ff / fF / -- / -- / --
-FTILE:   'pt = floor_grass
+FTILE:   'pt = floor_grass_dark
 KMONS:   p = plant
 SUBST:   !'- = .
 MAP

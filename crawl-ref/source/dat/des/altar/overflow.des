@@ -690,11 +690,12 @@ KFEAT:  C = altar_elyvilon
 : kmons("3 = yak tile:mons_yak_bow " .. g)
 : if you.absdepth() > 10 then
 SUBST:  2 = 3
-FTILE:  'CFJt = floor_grass
+FTILE:  'CFJ = floor_grass_dark
 :   decorative_floor(_G, '13', "garden patch")
 : else
-FTILE:  '12CFJt = floor_grass
+FTILE:  '12CFJ = floor_grass_dark
 : end
+FTILE:  t = floor_moss
 COLOUR: '123 = green
 KMASK:  '123CFJ = opaque
 MARKER: E = lua:transp_loc("ely_altar_entry")
@@ -3318,7 +3319,8 @@ NSUBST:  ' = 3=e / ', " = 4=W / ', t = t / d / -
 SUBST:   ` = ', S = SSW
 KFEAT:   _ = altar_wu_jian
 FTILE:   e' = floor_sand
-FTILE:   td- = floor_grass
+FTILE:   td- = floor_grass_dark
+FTILE:   ._ = floor_pebble_red
 COLOUR:  e' = yellow
 COLOUR:  d- = green
 : interest_check(_G)
@@ -4674,14 +4676,15 @@ KFEAT:  B = altar_yredelemnul
 KFEAT:  D = tree
 KFEAT:  '"wW = floor
 TILE:   D = dngn_tree_dead
-FTILE:  .t1ATW = floor_grass
+FTILE:  .t1ATW = floor_grass_dark
+FTILE:  ` = floor_moss
 COLOUR: tW = white
 FTILE:  'D2BVw = floor_crypt
 COLOUR: Dw = black
 MAP
        """""""
-     """""ccc"""
-  """""""''Dccc"""
+     """"`ccc"""
+  """"""`''Dccc"""
   "ccccccD''DDccc"
  ""ctttttcD'''DDc""
  "cct....tcD'''Dcc"
@@ -4697,8 +4700,8 @@ MAP
  "cct...tcD''''Dcc"
  ""ctt...tcDDDDDc""
   "ccctt..tcccccc"
-  """ccct.."""""""
-    """ccc"""""
+  """ccct..`""""""
+    """ccc`""""
       """""""
 ENDMAP
 

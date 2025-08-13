@@ -993,7 +993,8 @@ NAME:       psy_arrival_wood_between_worlds
 TAGS:       arrival no_monster_gen no_trap_gen no_pool_fixup transparent
 ORIENT:     float
 WEIGHT:     3
-FTILE:      t.qG^P{ = floor_grass
+FTILE:      .qG^P{ = floor_grass_dark
+FTILE:      t@ = floor_moss
 COLOUR:     . = green
 KMONS:      P = plant / bush
 KFEAT:      ^ = teleport trap
@@ -1123,7 +1124,7 @@ NAME:   beargit_arrival_diablo_church
 TAGS:   arrival no_trap_gen no_item_gen no_monster_gen
 ORIENT: float
 MONS:   rat / nothing w:50
-FTILE:  `t = floor_grass, 1'G_> = floor_limestone
+FTILE:  `t = floor_grass_dark, 1'G_> = floor_limestone
 COLOUR: ` = green, 1'G = white
 KPROP:  ` = no_tele_into
 SUBST:  V = VVVT, H = ....H
@@ -1209,7 +1210,8 @@ NAME:   orjb1_clovarrival
 TAGS:   arrival transparent no_monster_gen no_trap_gen
 ORIENT: float
 MONS:   bush
-FTILE:  _1Wt = floor_grass
+FTILE:  _1W = floor_grass_dark
+FTILE:  t = floor_moss
 MAP
 .......tttt...tttt
 ......t____t.t____t

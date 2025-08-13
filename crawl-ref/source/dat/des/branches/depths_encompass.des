@@ -185,7 +185,7 @@
             e.subst("A = t")
             e.subst("B = tT")
             e.subst("x:xxxxxxt")
-            e.ftile("xtT123D.+ = floor_grass")
+            e.ftile("xtT123D.+ = floor_grass_dark")
             e.colour("xtT123D.+ = green")
         elseif set_weight == 11 then
             e.mons("simulacrum / freezing wraith")

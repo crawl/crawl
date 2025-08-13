@@ -1743,7 +1743,8 @@ KFEAT:   A = stone_arch
 KFEAT:   " = runelight
 SHUFFLE: 12
 SUBST:   X = xxxxc, c = cccvb
-FTILE:   Ade456O = floor_crystal_squares
+FTILE:   Ade456O = floor_crystal
+FTILE:   .@12 = floor_crystal_squares
 COLOUR:  de456O = lightmagenta
 MAP
     .....  . X ".@
@@ -1786,7 +1787,7 @@ NSUBST:  . = 1:2 / *:., w = 2:G / *:w, W = 2:H / *:W
 COLOUR:  1 = lightmagenta
 COLOUR:  x = elven_brick
 FTILE:   -+U4680BDFO = floor_hall
-FTILE:   .t23579ACE = floor_grass
+FTILE:   .t23579ACE = floor_grass_dark
 FTILE:   a1 = floor_crystal_squares
 TILE:    x = wall_hall
 TILE:    t = dngn_demonic_tree_1 / dngn_demonic_tree_8 / \

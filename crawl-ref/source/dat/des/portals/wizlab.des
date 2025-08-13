@@ -2079,7 +2079,7 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
 TILE:       G = dngn_statue_archer / dngn_statue_centaur w:5
 LROCKTILE:  wall_brick_vines
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 : decorative_floor(_G, 'L', "flower patch")
 : set_random_mon_list("deep elf archer / faun / centaur warrior / yaktaur / " ..
 :                     " satyr / naga sharpshooter / shambling mangrove / " ..
@@ -2179,6 +2179,7 @@ TILE:       v = dngn_metal_wall_cyan
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
+LFLOORTILE: floor_metal_silver
 epilogue {{
             wizlab_milestone(_G, "Maxwell's Workshop")
 }}
@@ -2282,10 +2283,12 @@ ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
 KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
 KFEAT:  ^ = archmage's trap
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
-NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
+NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3`, A = 1:< / *:A, C = 3 = C.. / *:.
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
 FTILE:  125.^C*de$GS+ = floor_limestone
-FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
+FTILE:  T`PA<34 = floor_dirt
+FTILE:  " = floor_grass
+FTILE:  t = floor_pebble_lightgreen
 TILE:   c = wall_church
 LROCKTILE: wall_brick
 :           vault_metal_statue_setup(_G, "S", "misfortune conduit")
@@ -2307,36 +2310,36 @@ MAP
           c...+5........5+...ctt
      ttt  ccccc...1..1...ccccc3tt
   tttt""""""""cc........cc""""""tt
- tt"""..1....11ccc....ccc"""""3""tt
+ tt"""..1....11ccc....ccc"""`"3""tt
 tt""..xxxx.......cc++cc111"""T"""3t
-t".11xx.....11....1..1....""""3""tt
+t".11xx.....11....1..1....""`"3""tt
 t".1xx.11.xx.............1xx"""ttt
-t".xx..1.xx...1.xxt""txx..1xxttt
-t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
-t"1x...xx.....xx"3""""3"xx.....11......11c
-t".x...x.....xx"""c""c"""xx...^..^.....^.c
-t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
-t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
-t".........."""c"PWWWWP"c"".x.^""""""""^.c
-t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
-cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
-c*Cc..cC*ctt"""c"PWWWWP"c""x..^""""""""^.c
-cE.+..+.Ec-t""""c"PWWP"c"""x...cD""D"Dc..c
-ccccE.cccc-t""""""""""""""txt..cc"cc"cc..c
-cE.+..+CEc-t""""""c33c""""---.^.....^..^.c
+t".xx..1.xx...1.xxt``txx..1xxttt
+t".xx..1xx...1.xx`3``3`xx...xxcccccccccccc
+t"1x...xx.....xx`3````3`xx.....11......11c
+t".x...x.....xx"``c``c``"xx...^..^.....^.c
+t".x11.x..t..x""c``33``c""xx...cc`cc`cc..c
+t".t...t..t..t""``PWWP``""txx..cD"D""Dc..c
+t".........."""c`PWWWWP`c"".x.^`""""""`^.c
+t"1....11.t."""c`WWWWWW`c""....c""cc"Dc.1c
+cccc++cccct.""""`WWWWWW`"""t...cD"cc""c.1c
+c*Cc..cC*ctt"""c`PWWWWP`c""x..^`""""""`^.c
+cE.+..+.Ec-t""""c`PWWP`c"""x...cD""D"Dc..c
+ccccE.cccc-t""""````````""txt..cc`cc`cc..c
+cE.+..+CEc-t"""""`c33c`"""---.^.....^..^.c
 c*Cc^.cE*c---"""""t""t""""---..11......11c
 ccccE^cccc  --"""tt""tt"""--cccccccccccccc
 c*Cc^.cE*c   --"""t""t"""--
 cEE+..+CEc    --""""""""--
 cccc.Ecccc     --""""""--
-cE.+..+CEc      --""""--
-c*Cc.EcE*c       -G""G-
-cccccccccc      --""""--
+cE.+..+CEc      --````--
+c*Cc.EcE*c       -G``G-
+cccccccccc      --````--
                --""""""--
-               t""A""A""t
                t""""""""t
-               --""""""--
-                --T""T--
+               t""""""""t
+               --A""""A--
+                --T``T--
                  ------
 ENDMAP
 

@@ -24,6 +24,9 @@ function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
         e.nsubst(". = 6=0 / 7=0. / 3=9 / 5=9. / 2=8. / .")
     elseif you.in_branch("Elf") or you.in_branch("Vaults") then
         e.nsubst(". = 6=0 / 8=0. / 3=9 / 5=9. / 8 / 8. / .")
+        if you.in_branch("Vaults") then
+            e.ftile(".-098DEFGHIJK = floor_metal_gold")
+        end
     elseif you.in_branch("Crypt") then
         e.nsubst(". = 6=0 / 8=0. / 4=9 / 4=9. / 8 / 2=8. / .")
     elseif you.in_branch("Depths") then
@@ -90,9 +93,12 @@ NSUBST: ' = 2=d / f / h / 4=|* / *% / %$ / 2=$ / .
 # Statue decorations.
 SUBST:  G : GGGTTUttt, H : GGGTTUttt
 SUBVAULT: A : the_bubble
+: if you.in_branch("Vaults") then
+FTILE:    .@defgh$%*|DEFGHJKRS = floor_metal_gold
+FTILE:    t = floor_pebble_green
+: end
 MARKER:   D = lua:transp_loc("the_bubble_entry")
 MARKER:   E = lua:transp_dest_loc("the_bubble_exit")
-
 MAP
    ......@.......
  ...cccc...ccccc..
