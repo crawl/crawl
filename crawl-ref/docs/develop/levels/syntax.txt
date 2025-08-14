@@ -1739,3 +1739,8 @@ will all lead to the same destination after placement. Note that it's not valid
 to have multiple glyphs with the same destination marker. Any randomization of
 destinations can be done through normal SUBST/NSUBST/SHUFFLE operations before
 the MARKER statements.
+
+(For the most part, due to transporters being a major tactical terrain
+disadvantage, vaults containing any notable amount of monsters shouldn't cut
+off regular level navigation. Exceptions exist mostly for various portals and
+lesser threats.)
