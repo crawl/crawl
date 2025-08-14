@@ -2389,7 +2389,7 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_RESONANCE:
         return "it improves the success rate of the wearer's forgecraft spells "
                "and enhances their melee attacks proportionally to forgecraft "
-               "skill";
+               "skill.";
     case SPARM_PARRYING:
         return "It shields the wearer if their last action was a melee attack. "
                "The shielding is half as effective if the wielder's offhand is "
