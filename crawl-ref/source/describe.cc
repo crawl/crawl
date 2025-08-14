@@ -2381,14 +2381,14 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it has half the normal encumbrance for the purpose of ranged "
                "combat.";
     case SPARM_COMMAND:
-        return "it improves the power and success of the wearer's summoning "
-               "spells in proportion to their armour skill.";
+        return "it improves the power and success of the wearer's Summoning "
+               "spells in proportion to their Armour skill.";
     case SPARM_DEATH:
-        return "it empowers the wearer's necromancy spells and improves their "
+        return "it empowers the wearer's Necromancy spells and improves their "
                "success rate, but imposes a health cost for other magic.";
     case SPARM_RESONANCE:
-        return "it improves the success rate of the wearer's forgecraft spells "
-               "and enhances their melee attacks proportionally to forgecraft "
+        return "it improves the success rate of the wearer's Forgecraft spells "
+               "and enhances their melee attacks proportionally to Forgecraft "
                "skill.";
     case SPARM_PARRYING:
         return "It shields the wearer if their last action was a melee attack. "
@@ -2399,7 +2399,7 @@ static const char* _item_ego_desc(special_armour_type ego)
                "vulnerable to further damage. Evocations skill increases the "
                "likelihood and duration of vitrification.";
     case SPARM_PYROMANIA:
-        return "It enhances the wearer's fire magic and may unleash a blast of "
+        return "It enhances the wearer's Fire magic and may unleash a blast of "
                "flames around the wearer whenever they kill an enemy through any "
                "means besides attacks. The explosion chance and damage both scale "
                "with Evocations and it may trigger no more than once each turn.";
