@@ -2774,6 +2774,9 @@ static void _build_dungeon_level()
 
         _place_traps();
 
+        if (!dgn_make_transporters_from_markers())
+            throw dgn_veto_exception("Transporter placement failed.");
+
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
@@ -2789,6 +2792,9 @@ static void _build_dungeon_level()
         // Do ruination and plant clumps even in funny game modes, if
         // they happen to have the relevant branch.
         _post_vault_build();
+
+        if (!dgn_make_transporters_from_markers())
+            throw dgn_veto_exception("Transporter placement failed.");
     }
 
     // Translate stairs for pandemonium levels.
@@ -2796,9 +2802,6 @@ static void _build_dungeon_level()
         _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
-
-    if (!dgn_make_transporters_from_markers())
-        throw dgn_veto_exception("Transporter placement failed.");
 
     fixup_misplaced_items();
     link_items();
