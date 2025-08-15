@@ -3143,6 +3143,8 @@ w:50
 @The_monster@ says, "I hate wrenching sensations."
 
 @The_monster@ says, "What's so abyssal about tentacles and stars?"
+
+@The_monster@ says, "Screaming refractions? What's next, yodelling boulders?"
 %%%%
 Zot Donald
 
