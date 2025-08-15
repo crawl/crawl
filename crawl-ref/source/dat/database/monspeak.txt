@@ -9211,7 +9211,7 @@ _deck_of_destruction_line_
 # Nemelex's deck of escape
 _deck_of_escape_line_
 
-@The_monster@ draws the Cloud. "Enemies better hold their breath!"
+@The_monster@ draws the Cloud. "No fresh air for enemies!"
 
 @The_monster@ draws the Elixir. "Healing and magic? Woohoo!"
 
