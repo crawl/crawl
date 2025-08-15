@@ -619,8 +619,8 @@ function TroveMarker:check_veto(marker, pname)
   elseif toll.type == "nopiety" then
     local yesno_message = (
       "This portal proclaims the superiority of the material over the divine; "
-      .. "those who enter it will find they have lost all favour with their "
-      .. "chosen deity. Enter anyway?")
+      .. "entrants will become Ostracised and temporarily lose all standing "
+      .. "with their god.\nEnter anyway?")
     if crawl.yesno(yesno_message, true, "n") then
       self:accept_nopiety()
     else
