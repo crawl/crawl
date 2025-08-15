@@ -3360,7 +3360,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_UMBRAL_TORCHLIGHT:
         return you_worship(GOD_YREDELEMNUL)
-                || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     case BEAM_QAZLAL:
         return true;
