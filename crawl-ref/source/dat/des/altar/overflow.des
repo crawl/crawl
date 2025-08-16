@@ -4867,7 +4867,7 @@ RTILE:  x = wall_sandstone
 COLOUR: x = yellow
 COLOUR: c = white
 TILE:   c = wall_church
-FTILE:  _.m+c$ = floor_limestone
+FTILE:  _O.m+c$ = floor_limestone
 : interest_check(_G)
 MAP
   ccccccxxxxx
