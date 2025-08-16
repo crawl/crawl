@@ -2641,3 +2641,67 @@ MAP
              .c.
              ...
 ENDMAP
+
+NAME:   dysonsfear_arrival_boulevard
+TAGS:   arrival no_monster_gen
+ORIENT: float
+MONS:   plant
+MAP
+xxxxxxx
+x1111.x
+x11{1xx
+x1...1x
+x.t.t1x
+x.1..1x
+x.t.t.x
+..1....
+..t.t..
+.......
+..t.t..
+.......
+..t.t..
+.......
+.......
+.......
+ENDMAP
+
+NAME:   dysonsfear_arrival_angles
+TAGS:   arrival no_monster_gen
+ORIENT: float
+MAP
+...xx...xx...
+...x.....x...
+.............
+xx....xx...xx
+x......x....x
+...xx........
+...x..{..x...
+........xx...
+x....x......x
+xx...xx....xx
+.............
+...x.....x...
+...xx...xx...
+ENDMAP
+
+NAME:   dysonsfear_arrival_nine_rooms
+TAGS:   arrival no_monster_gen
+ORIENT: float
+# doors/paths are variable, guaranteed access to all rooms
+SUBST:  + = .+, @ = @+, - = . + x:100, a = @ + x:100
+# Variable decor
+SUBST:  ? = .:1000 G:50 T:50 V t U:5 Y:1
+MAP
+xxaxxxaxxxaxx
+x...x...x...x
+a.?.+.?.-.?.a
+x...x...x...x
+xx+xxx+xxx+xx
+x...x...x...x
+@.?.-.{.+.?.a
+x...x...x...x
+xx-xxx-xxx+xx
+x...x...x...x
+@.?.+.?.-.?.a
+x...x...x...x
+xxaxxxaxxxaxx
