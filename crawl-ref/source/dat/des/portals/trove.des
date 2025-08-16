@@ -230,8 +230,9 @@ function species_has_size_limits(e)
          you.race() == "Spriggan"
 end
 
+-- you.race() returns capitalized strings, you.genus() returns all lowercase.
 function no_body_armour_species(e)
-  return you.genus() == "Draconian" or you.race() == "Octopode" or
+  return you.genus() == "draconian" or you.race() == "Octopode" or
          you.race() == "Felid" or you.race() == "Poltergeist"
 end
 
