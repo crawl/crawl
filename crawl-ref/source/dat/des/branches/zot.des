@@ -4524,7 +4524,7 @@ NAME:    hall_of_Zot
 TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
-MONS:    patrolling orb guardian, boundless tesseract
+MONS:    patrolling orb guardian, boundless tesseract generate_awake
 MONS:    electric golem, killer klown, ancient lich / dread lich
 MONS:    orb of appropriateness
 KITEM:   R = prismatic gem
@@ -4610,15 +4610,15 @@ XXXXXXXXXXeeeeeeefffffffffffffeeeeXXX---1---XXXjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXeeeeeeefffffffffffffeeeecXXXXXXXXXXXcjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
 XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
-XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
-XXXXXXXXXXXXXXG1112ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc2111GXXXXXXXXXXXXX
-XXXXXXXXXXXccddddddddddddddODDo1ccccccccccccccccc1pHHPhhhhhhhhhhhhhhccXXXXXXXXXX
+XXXXXXXXXXXXXeeeeee2eeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjj2jjjjjjXXXXXXXXXXXX
+XXXXXXXXXXXXXX.111.ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc.111.XXXXXXXXXXXXX
+XXXXXXXXXXXccddddddGdddddddODDo1ccccccccccccccccc1pHHPhhhhhhhGhhhhhhccXXXXXXXXXX
 XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX
-XXXXXXXXXcddddddddddddddddddddccc...............ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddccc.1.....1.....1.ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXcc......R......ccXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXc.............cXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
-XXXXXXXXXcddddddddddddddddddddcXXcc.1...1...1.ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXXc...........cXXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccXXc.............cXXcchhhhhhhhhhhhhhhhhhccXXXXXXXX

@@ -2752,6 +2752,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         end_flayed_effect(&mons);
     else if (mons.type == MONS_PLAYER_SHADOW)
         dithmenos_cleanup_player_shadow(&mons);
+    else if (mons.type == MONS_ORB_GUARDIAN
+             && !you.props.exists(TESSERACT_START_TIME_KEY))
+    {
+        simple_monster_message(mons, " broadcasts a psychic alarm as it dies.");
+        activate_tesseracts();
+    }
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {

@@ -2250,7 +2250,12 @@ An amber-coloured demon with a barbed tail not unlike that of a scorpion.
 Orb Guardian
 
 A huge, glowing, four-limbed purple creature with heightened senses, created by
-the Orb itself. It guards the Orb with enormous punctiliousness and violence.
+the Orb itself. It guards the Orb with enormous punctiliousness and violence,
+and its death will alert any Boundless Tesseracts on the level to begin creating
+reinforcements.
+
+Unless the Orb has already been disturbed, it will refuse to abandon its duty
+by leaving the floor.
 %%%%
 orb of destruction
 

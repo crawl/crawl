@@ -999,9 +999,9 @@ bool fill_status_info(int status, status_info& inf)
         {
             const int time = you.elapsed_time - you.props[TESSERACT_START_TIME_KEY].get_int();
 
-            if (time >= 10000)
+            if (time >= 12000)
                 inf.light_colour = LIGHTMAGENTA;
-            else if (time > 4000)
+            else if (time > 6000)
                 inf.light_colour = RED;
             else
                 inf.light_colour = YELLOW;

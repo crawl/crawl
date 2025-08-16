@@ -1732,6 +1732,9 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
     }
 
+    if (mon.type == MONS_ORB_GUARDIAN && !player_on_orb_run())
+        return false;
+
     // If this is the entrance to a portal vault (or another region of Pandemonium)
     // only friendly monsters can traverse this.
     if (!mon.friendly()

@@ -1442,44 +1442,43 @@ void solar_ember_blast()
     ember->del_ench(ENCH_SPELL_CHARGED);
 }
 
+void activate_tesseracts()
+{
+    if (you.props.exists(TESSERACT_START_TIME_KEY))
+        return;
+
+    bool did_activate = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type != MONS_BOUNDLESS_TESSERACT)
+            continue;
+
+        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        set_terrain_seen(mi->pos());
+        view_update_at(mi->pos());
+#ifdef USE_TILE
+        tiles.update_minimap(mi->pos());
+#endif
+
+        if (!did_activate)
+        {
+            mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
+            mark_milestone("tesseract.activate", "activated a tesseract");
+            you.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
+            mi->props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
+            mi->props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
+            mi->props[TESSERACT_XP_KEY] = 15000;
+            tesseract_action(**mi);
+            did_activate = true;
+        }
+    }
+}
+
 void tesseract_action(monster& mon)
 {
     // Only operate logic on a single tesseract on the floor
-    if (mon.props.exists(TESSERACT_DUMMY_KEY) || mon.behaviour == BEH_SLEEP)
+    if (!mon.props.exists(TESSERACT_START_TIME_KEY))
         return;
-
-    // When we become alerted, start the spawn timer and announce ourselves to the player.
-    if (mon.behaviour != BEH_SLEEP && !mon.props.exists(TESSERACT_START_TIME_KEY))
-    {
-        mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
-        mark_milestone("tesseract.activate", "activated a tesseract");
-
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->type != MONS_BOUNDLESS_TESSERACT)
-                continue;
-
-            env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
-            set_terrain_seen(mi->pos());
-            view_update_at(mi->pos());
-
-#ifdef USE_TILE
-            tiles.update_minimap(mi->pos());
-#endif
-
-            // Mark any other tesseracts on the floor as dummies, so they don't operate independently.
-            if (mi->mid != mon.mid)
-            {
-                mi->props[TESSERACT_DUMMY_KEY] = true;
-                behaviour_event(*mi, ME_ALERT);
-            }
-        }
-
-        you.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
-        mon.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
-        mon.props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
-        mon.props[TESSERACT_XP_KEY] = 15000;
-    }
 
     // Handle regular spawning
     int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
@@ -1489,14 +1488,30 @@ void tesseract_action(monster& mon)
     if (you.elapsed_time - timer > 10000)
         timer = you.elapsed_time - 10000;
 
+    // Count number of unrewarding tesseract spawns that already exist.
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (testbits(mi->flags, MF_HARD_RESET | MF_NO_REWARD)
+            && mi->props.exists(TESSERACT_CREATED_KEY))
+        {
+            ++count;
+        }
+    }
+
     // Catch up however many spawns should have happened since the last time
     // we activated.
     while (you.elapsed_time >= timer)
     {
         const int time_passed = you.elapsed_time - mon.props[TESSERACT_START_TIME_KEY].get_int();
-        const int interval = max(200, 600 - (time_passed / 25));
+        const int interval = max(225, 600 - (time_passed / 32));
 
         timer += random_range(interval, interval * 4 / 3);
+
+        // Never make more than 100 unrewarding spawns on the level in total.
+        // (This is already pretty out of control, but it could always be worse...)
+        if (count >= 100)
+            continue;
 
         mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
         mg.place = level_id::current();
@@ -1520,6 +1535,10 @@ void tesseract_action(monster& mon)
         if (xp_pool >= xp)
             xp_pool -= xp;
         else
+        {
             spawn->flags |= (MF_HARD_RESET | MF_NO_REWARD);
+            spawn->props[TESSERACT_CREATED_KEY] = true;
+            ++count;
+        }
     }
 }

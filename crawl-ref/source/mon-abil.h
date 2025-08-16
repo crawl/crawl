@@ -17,6 +17,7 @@
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
 #define TESSERACT_XP_KEY "tesseract_xp_pool"
 #define TESSERACT_DUMMY_KEY "tesseract_dummy"
+#define TESSERACT_CREATED_KEY "tesseract_created"
 
 class actor;
 class monster;
@@ -45,4 +46,5 @@ bool pyrrhic_recollection(monster& nobody);
 
 void solar_ember_blast();
 
+void activate_tesseracts();
 void tesseract_action(monster& mon);
