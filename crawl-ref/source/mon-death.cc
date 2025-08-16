@@ -50,6 +50,7 @@
 #include "mon-cast.h"
 #include "mon-explode.h"
 #include "mon-gear.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-speak.h"
@@ -1776,6 +1777,104 @@ static void _martyr_death_wail(monster &mons)
     return;
 }
 
+static void _cassandra_death_ambush()
+{
+    // First, find all valid spots to place an ambushing monster: something
+    // relatively close, but not in the player's LoS (or immediately around a
+    // corner).
+    vector<coord_def> spots;
+    for (rectangle_iterator ri(you.pos(), 10); ri; ++ri)
+    {
+        if (in_bounds(*ri) && !cell_is_solid(*ri) && !you.see_cell(*ri)
+            && !actor_at(*ri) && grid_distance(you.pos(), *ri) > 3)
+        {
+            spots.push_back(*ri);
+        }
+    }
+
+    // In the very unlikely event that there are no such spots, we'll let the
+    // player off lucky.
+    if (spots.empty())
+    {
+        mpr("You feel as though you may have cheated fate.");
+        return;
+    }
+
+    shuffle_array(spots);
+
+    level_id place = level_id::current();
+    place.depth += 2;
+    mgen_data mg(RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
+                 MG_FORBID_BANDS | MG_FORCE_PLACE);
+    mg.set_place(place);
+    mg.set_non_actor_summoner("an inevitable fate");
+
+    const int num = random_range(3, 5);
+
+    // For each monster, compute what tiles it could reach within 10 moves of
+    // the player's location, then test each valid placement spot against this,
+    // essentially placing them on a random reachable tile that is out of sight,
+    // and neither too close nor too far.
+    //
+    // Since traversability varies per monster type (ie: some can open doors,
+    // some can fly, etc.), we need a real monster to test this with. This means
+    // we create a random monster near the player, attempt to place it in a
+    // valid location, and then delete it if we fail (and try a different one).
+    int placed = 0;
+    for (int tries = 0; tries < 10 && placed <= num; ++tries)
+    {
+        if (monster* mon = create_monster(mg))
+        {
+            monster_pathfind mp;
+            mp.fill_traversability(mon, 12);
+
+            bool did_place = false;
+            for (coord_def& pos : spots)
+            {
+                if (mp.is_reachable(pos))
+                {
+                    mon->move_to_pos(pos, true, true);
+                    did_place = true;
+                    ++placed;
+
+                    // Effectively erase this position from the list, so we
+                    // don't try to reuse it.
+                    pos.x = 0;
+                    pos.y = 0;
+                    break;
+                }
+            }
+
+            if (!did_place)
+                monster_die(*mon, KILL_RESET, NON_MONSTER);
+            else
+                mon->add_ench(mon_enchant(ENCH_HAUNTING, 0, &you, INFINITE_DURATION));
+        }
+    }
+
+    if (placed > 0)
+        mpr("You feel an ambush drawing close....");
+    else
+        mpr("You feel as though you may have cheated fate.");
+
+    // Now seal all stairs on the floor for a moderate duration.
+    const int seal_duration = random_range(150, 300);
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (feat_is_travelable_stair(env.grid(*ri)))
+        {
+            dungeon_feature_type stype;
+            if (feat_stair_direction(env.grid(*ri)) == CMD_GO_UPSTAIRS)
+                stype = DNGN_SEALED_STAIRS_UP;
+            else
+                stype = DNGN_SEALED_STAIRS_DOWN;
+
+            temp_change_terrain(*ri, stype, seal_duration,
+                                TERRAIN_CHANGE_DOOR_SEAL);
+        }
+    }
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -3173,26 +3272,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
                                           duel, gozag_bribe);
         }
-        else if (mons.type == MONS_CASSANDRA && real_death)
-        {
-            mpr("Foes suddenly leap out to ambush you!");
-
-            // Recall several random monsters from the floor. If none are
-            // available, make some suitable ones instead.
-            if (!mons_word_of_recall(nullptr, random_range(3, 5), 2))
-            {
-                mgen_data mg(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(&mons),
-                             you.pos(), MHITYOU, MG_FORBID_BANDS);
-                mg.set_place(level_id::current());
-                mg.set_range(4, 5, 2);
-                mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-                mg.set_non_actor_summoner("an inevitable fate");
-
-                const int num = random_range(3, 4);
-                for (int i = 0; i < num; ++i)
-                    create_monster(mg);
-            }
-        }
+        else if (mons_is_mons_class(&mons, MONS_CASSANDRA) && real_death)
+            _cassandra_death_ambush();
     }
 
     // Must be done after health is set to zero and monster is properly marked dead.

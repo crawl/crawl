@@ -1501,7 +1501,14 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
 
     if (mon->type == MONS_CASSANDRA && coinflip())
-        make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
+    {
+        item_def* amu = make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
+        if (amu && one_chance_in(4))
+        {
+            amu->props[FIXED_PROPS_KEY].get_table()["Bane"] = 1;
+            make_item_randart(*amu);
+        }
+    }
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
