@@ -1563,7 +1563,7 @@ int player_spec_fire()
     sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
-        sf++;
+        sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     return sf;
 }
@@ -1580,7 +1580,7 @@ int player_spec_cold()
     sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
-        sc++;
+        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     return sc;
 }
@@ -1598,7 +1598,7 @@ int player_spec_earth()
     se += you.scan_artefacts(ARTP_ENHANCE_EARTH);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
-        se++;
+        se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
 
     return se;
 }
@@ -1616,7 +1616,7 @@ int player_spec_air()
     sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
-        sa++;
+        sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     return sa;
 }
@@ -1666,7 +1666,7 @@ int player_spec_alchemy()
     sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (you.unrand_equipped(UNRAND_OLGREB))
-        sp++;
+        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
 
     return sp;
 }
