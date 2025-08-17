@@ -275,7 +275,7 @@ static string mi_calc_airstrike_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
     dice_def dice = base_airstrike_damage(pow);
-    return describe_airstrike_dam(dice);
+    return make_stringf("%dd%d+(2/space)", dam.num, dam.size);
 }
 
 static string mi_calc_glaciate_damage(monster* mons)

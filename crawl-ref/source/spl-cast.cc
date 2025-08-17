@@ -3195,7 +3195,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
         }
         case SPELL_AIRSTRIKE:
-            return describe_airstrike_dam(base_airstrike_damage(pow));
+            return describe_player_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_PILEDRIVER:
             return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
         case SPELL_GELLS_GAVOTTE:

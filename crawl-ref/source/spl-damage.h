@@ -48,7 +48,7 @@ spret cast_freeze(int pow, monster* mons, bool fail);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
 dice_def base_airstrike_damage(int pow, bool random = false);
-string describe_airstrike_dam(dice_def dice);
+string describe_player_airstrike_dam(dice_def dice);
 string airstrike_intensity_display(int empty_space, tileidx_t& tile);
 string describe_resonance_strike_dam(dice_def dice);
 spret cast_momentum_strike(int pow, coord_def target, bool fail);
