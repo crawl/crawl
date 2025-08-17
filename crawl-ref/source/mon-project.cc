@@ -614,7 +614,7 @@ move_again:
                     mpr("The orbs collide in a blinding explosion!");
                 else
                     mpr("You hear a loud magical explosion!");
-                noisy(40, pos);
+                noisy(25, pos);
                 monster_die(*mons, KILL_RESET, NON_MONSTER);
                 _iood_hit(mon, pos, true);
                 return true;
