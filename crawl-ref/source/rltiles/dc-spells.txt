@@ -303,6 +303,7 @@ shezas_dance SHEZAS_DANCE
 siphon_essence SIPHON_ESSENCE
 siren_song SIREN_SONG
 sleep SLEEP
+sleetstrike SLEETSTRIKE
 slug_dart SLUG_DART
 sojourning_bolt SOJOURNING_BOLT
 spectral_cloud SPECTRAL_CLOUD

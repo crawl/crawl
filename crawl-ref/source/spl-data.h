@@ -4606,6 +4606,17 @@ static const struct spell_desc spelldata[] =
     TILEG_ILL_OMEN,
 },
 
+{
+    SPELL_SLEETSTRIKE, "Sleetstrike",
+    spschool::air | spschool::ice,
+    spflag::target | spflag::not_self | spflag::destructive | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4,
+    TILEG_SLEETSTRIKE,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

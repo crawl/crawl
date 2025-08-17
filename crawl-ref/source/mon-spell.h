@@ -1664,7 +1664,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 16, MON_SPELL_MAGICAL },
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_MAGICAL },
        { SPELL_FREEZING_CLOUD, 16, MON_SPELL_MAGICAL },
-       { SPELL_AIRSTRIKE, 16, MON_SPELL_MAGICAL },
+       { SPELL_SLEETSTRIKE, 16, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2501,7 +2501,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ANTAEUS,
       {
        { SPELL_LIGHTNING_BOLT, 24, MON_SPELL_MAGICAL },
-       { SPELL_FLASH_FREEZE, 48, MON_SPELL_MAGICAL },
+       { SPELL_SLEETSTRIKE, 36, MON_SPELL_MAGICAL },
       }
     },
 

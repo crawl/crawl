@@ -1876,6 +1876,13 @@ Sleep spell
 Puts a targeted creature to sleep. Taking damage will typically wake the
 target, and loud sounds can potentially do so as well.
 %%%%
+Sleetstrike spell
+
+Causes the air around a creature to twist itself into a whirling vortex of
+frigid meteorological fury, encasing the victim in ice and slowing their
+movement briefly. It does more damage to targets surrounded by empty space and
+half of its damage bypasses cold resistance.
+%%%%
 Slow spell
 
 Slows the actions of a creature.
