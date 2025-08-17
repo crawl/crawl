@@ -2064,6 +2064,14 @@ int make_mons_armour(monster_type type, int level)
                                                6, ARM_FIRE_DRAGON_ARMOUR);
         break;
 
+    case MONS_MARA:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
+                                               1, ARM_TROLL_LEATHER_ARMOUR,
+                                               1, ARM_ACID_DRAGON_ARMOUR);
+        level = ISPEC_GOOD_ITEM;
+        break;
+
     case MONS_PARGHIT:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_GOLDEN_DRAGON_ARMOUR;
@@ -2219,7 +2227,6 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ARCANIST:
     case MONS_OCCULTIST:
     case MONS_ILSUIW:
-    case MONS_MARA:
     case MONS_RAKSHASA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
