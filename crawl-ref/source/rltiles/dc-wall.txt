@@ -1668,6 +1668,12 @@ stone_black_marked7
 %weight 1
 stone_black_marked8
 
+# Zonguldrok's Shrine.
+shrine_stone_wall0 WALL_STONE_SHRINE
+shrine_stone_wall1
+shrine_stone_wall2
+shrine_stone_wall3
+
 # Lehudib's Moon Base.
 wall_moon0 WALL_MOON
 wall_moon1
@@ -1676,6 +1682,17 @@ wall_moon3
 wall_moon4
 wall_moon5
 wall_moon6
+
+# Maxwell's Workshop.
+%weight 10
+workshop0 METAL_WALL_WORKSHOP
+workshop1
+%weight 8
+workshop2
+workshop3
+%weight 2
+workshop2b
+workshop3b
 
 %weight 10
 bmaus_stone_wall0 WALL_BORG_STONE

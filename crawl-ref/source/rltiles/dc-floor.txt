@@ -340,6 +340,11 @@ metal_gold1
 metal_gold2
 metal_gold3
 
+metal_infernal0 FLOOR_METAL_INFERNAL
+metal_infernal1
+metal_infernal2
+metal_infernal3
+
 crystal0 FLOOR_CRYSTAL
 crystal1
 crystal2

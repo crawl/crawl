@@ -1525,7 +1525,7 @@ KPROP:      'def$123L+ = no_tele_into
 COLOUR:     "W = lightmagenta
 COLOUR:     t = brown
 TILE:       W = dngn_zonguldrok_shrine
-TILE:       c = wall_stone_gray
+TILE:       c = wall_stone_shrine
 TILE:       t = dngn_tree_dead
 FTILE:      " = floor_nerves_darkgray
 LFLOORCOL:  darkgrey
@@ -2172,7 +2172,7 @@ SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
 NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
 NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
-TILE:       v = dngn_metal_wall_cyan
+TILE:       v = metal_wall_workshop
 :           vault_metal_statue_setup(_G, "Z", "nascence circuit")
 :           set_random_mon_list(
 :               "earth elemental / molten gargoyle / thermic dynamo / " ..

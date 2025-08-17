@@ -2029,7 +2029,7 @@ ENDMAP
 NAME:   the_vestibule_1
 TAGS:   the_vestibule unrand
 COLOUR: v = magenta
-TILE:   v = dngn_metal_wall_blue
+TILE:   v = metal_wall_workshop
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
