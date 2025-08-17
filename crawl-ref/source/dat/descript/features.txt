@@ -264,6 +264,19 @@ A stone staircase leading up
 
 A staircase leading back up.
 %%%%
+# For the Vaults:5 staircases in and out.
+A metal staircase leading down
+
+A staircase leading down to the grand vaults containing the silver rune of Zot,
+whose wealth attracts the most powerful champions from across the Dungeon to its
+defense.
+%%%%
+A metal staircase leading up
+
+A staircase leading up from the grand vaults containing the silver rune of Zot,
+whose wealth attracts the most powerful champions from across the Dungeon to its
+defense.
+%%%%
 A tree
 
 A large tree. While in most places the dim light of the dungeon is not bright

@@ -505,6 +505,9 @@ FTILE:    .([{<109 = floor_vault
 {{
   set_feature_name("metal_wall", "heavily etched metal wall")
   set_feature_name("crystal_wall", "heavily etched crystal wall")
+  set_feature_name("stone_stairs_up_i", "metal staircase leading up")
+  set_feature_name("stone_stairs_up_ii", "metal staircase leading up")
+  set_feature_name("stone_stairs_up_iii", "metal staircase leading up")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

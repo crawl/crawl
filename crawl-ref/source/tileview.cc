@@ -547,11 +547,30 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     else
         tile_env.flv(gc).wall = pick_dngn_tile(tile_env.flv(gc).wall, rand2);
 
-    if (feat_is_stone_stair(env.grid(gc)) && player_in_branch(BRANCH_SHOALS))
+    if (feat_is_stone_stair(env.grid(gc)) && (player_in_branch(BRANCH_SHOALS) ||
+                                              player_in_branch(BRANCH_VAULTS) ||
+                                              player_in_branch(BRANCH_ZOT)))
     {
         const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
-        tile_env.flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
-                                   : TILE_DNGN_SHOALS_STAIRS_DOWN;
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            tile_env.flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
+                                       : TILE_DNGN_SHOALS_STAIRS_DOWN;
+        }
+        else if (player_in_branch(BRANCH_VAULTS))
+        {
+            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
+                tile_env.flv(gc).feat = TILE_DNGN_METAL_STAIRS_DOWN;
+            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
+                tile_env.flv(gc).feat = TILE_DNGN_METAL_STAIRS_UP;
+        }
+        else if (player_in_branch(BRANCH_ZOT))
+        {
+            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
+                tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_DOWN;
+            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
+                tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_UP;
+        }
     }
 
     if (feat_is_escape_hatch(env.grid(gc)) && player_in_branch(BRANCH_TOMB))
