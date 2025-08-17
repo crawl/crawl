@@ -35,8 +35,11 @@
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 
+#define IOOD_REACQUIRE_TARGET "iood_reacquire_target"
+
 spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
-                     int foe, bool fail, bool needs_tracer, monster_type orb_type)
+                     int foe, bool fail, bool needs_tracer, monster_type orb_type,
+                     bool reacquire_target)
 {
     const bool is_player = caster->is_player();
     if (beam && is_player && needs_tracer
@@ -117,6 +120,9 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         mon->props[IOOD_FLAWED].get_byte() = true;
     }
 
+    if (reacquire_target)
+        mon->props[IOOD_REACQUIRE_TARGET] = true;
+
     // Move away from the caster's square.
     iood_act(*mon, true);
 
@@ -140,52 +146,26 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
 /**
  * Find a target for a bursty (non-player-targeted) IOOD.
  *
- * Try to find an enemy that's at a reasonable angle from the angle the IOOD
- * is fired at, preferring the given foe (if a non-MHITNOT foe is given) if
- * they're valid, and otherwise preferring the closest valid foe.
+ * Try to find an enemy that's at the best angle from the angle the IOOD
+ * is fired at.
  *
+ * @param pos               The center point to consider aiming from.
  * @param angle             The angle that the IOOD will be fired at, relative
  *                          to the player's position.
- * @param preferred_foe     The mindex of a target to choose if possible; may
- *                          be MHITNOT (no preferred target)
  * @return                  The mindex of a valid target for the IOOD.
  */
-static int _burst_iood_target(double iood_angle, int preferred_foe)
+static int _burst_iood_target(const coord_def& pos, double iood_angle)
 {
     int closest_foe = MHITNOT;
-    int closest_dist = INT_MAX;
+    double closest_angle = 100;
 
     for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
         const monster* m = *mi;
         ASSERT(m);
 
-        if (!you.can_see(*m) || mons_is_projectile(*m))
-            continue;
-
-        // is this position at a valid angle?
-        const coord_def delta = mi->pos() - you.pos();
-        const double angle = atan2(delta.x, delta.y);
-        const double abs_angle_diff = abs(angle - fmod(iood_angle, PI * 2));
-        const double angle_diff = (abs_angle_diff > PI) ?
-                                        2 * PI - abs_angle_diff :
-                                        abs_angle_diff;
-        if (angle_diff >= PI / 3)
-        {
-            dprf("can't target %s; angle diff %f",
-                 m->name(DESC_PLAIN).c_str(), angle_diff);
-            continue;
-        }
-
-        // if preferred foe is valid, choose it.
-        if (m->mindex() == preferred_foe)
-        {
-            dprf("preferred target %s is valid burst target (delta %f)",
-                 m->name(DESC_PLAIN).c_str(), angle_diff);
-            return preferred_foe;
-        }
-
-        if (mons_aligned(m, &you) || m->is_firewood())
+        if (m->is_firewood() || !you.can_see(*m) || mons_is_projectile(*m)
+            || mons_aligned(m, &you))
         {
             dprf("skipping invalid burst target %s (%s)",
                  m->name(DESC_PLAIN).c_str(),
@@ -193,24 +173,30 @@ static int _burst_iood_target(double iood_angle, int preferred_foe)
             continue;
         }
 
-        const int dist = grid_distance(m->pos(), you.pos());
-        // on distance ties, bias by iterator order (mindex)
-        if (dist >= closest_dist)
+        // Calculate the angle to this target.
+        const coord_def delta = mi->pos() - pos;
+        const double angle = atan2(delta.x, delta.y);
+        const double abs_angle_diff = abs(angle - fmod(iood_angle, PI * 2));
+        const double angle_diff = (abs_angle_diff > PI) ?
+                                        2 * PI - abs_angle_diff :
+                                        abs_angle_diff;
+
+        // Prefer targets that have the smaller angle deviation from this iood's
+        // current facing.
+        if (angle_diff > closest_angle)
         {
-            dprf("%s not closer to target than closest (%d vs %d)",
-                 m->name(DESC_PLAIN).c_str(), dist, closest_dist);
+            dprf("%s has worse angle than closest (%f vs %f)",
+                 m->name(DESC_PLAIN).c_str(), angle_diff, closest_angle);
             continue;
         }
 
-        dprf("%s is valid burst target (delta %f, dist %d)",
-             m->name(DESC_PLAIN).c_str(), angle_diff, dist);
-        closest_dist = dist;
+        dprf("%s is valid burst target (delta %f)",
+             m->name(DESC_PLAIN).c_str(), angle_diff);
+        closest_angle = angle_diff;
         closest_foe = m->mindex();
     }
 
-    const int foe = closest_foe != MHITNOT ? closest_foe : preferred_foe;
-    dprf("targeting %d", foe);
-    return foe;
+    return closest_foe;
 }
 
 void cast_iood_burst(int pow, int power_level, coord_def target)
@@ -220,18 +206,24 @@ void cast_iood_burst(int pow, int power_level, coord_def target)
                               mons->mindex() :
                               MHITNOT;
 
-    const int n_orbs = power_level == 1 ? random_range(1, 2) : random_range(3, 7);
-    dprf("Bursting %d orbs.", n_orbs);
-    // 2097152 = 2^21. 21 is the greatest n s.t. `(2 ** n) * PI * 2` does not
-    // exceed 2 ** 24; 24 bits is where `float` (`PI` is a float constant)
-    // starts to lose precision.
-    const double angle0 = random2(2097152) * PI * 2 / 2097152;
+    const int n_orbs = power_level == 2 ? 6 : 3;
+    const double increment = power_level == 2 ? PI / 3 : PI * 4 / 10;
+
+    // Ensure one orb is fired along the exact path of the player's aim (so that
+    // the burst effect is never more poorly aimed than the basic card).
+    const double angle0 = atan2((target.x - you.pos().x), (target.y - you.pos().y)) - (increment * power_level);
 
     for (int i = 0; i < n_orbs; i++)
     {
-        const double angle = angle0 + i * PI * 2 / n_orbs;
-        const int foe = _burst_iood_target(angle, preferred_foe);
-        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
+        const double angle = angle0 + i * increment;
+
+        // The orb aimed directly along the player's chosen beam path should lock
+        // onto the target they picked. The rest should choose the 'best' targets
+        // for the angle they're fired at.
+        const int foe = i == power_level ? preferred_foe
+                                         : _burst_iood_target(you.pos(), angle);
+        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe, false, false,
+                  MONS_ORB_OF_DESTRUCTION, true);
     }
 }
 
@@ -466,8 +458,17 @@ bool iood_act(monster& mon, bool no_trail)
     _normalize(vx, vy);
 
     const actor *foe = mon.get_foe();
-    // If the target is gone, the orb continues on a ballistic course since
-    // picking a new one would require intelligence.
+
+    // If burst ioods have lost their target lock (possibly due to it dying from
+    // another orb), attempt to find a new one.
+    if (!foe && mon.props.exists(IOOD_REACQUIRE_TARGET))
+    {
+        const double angle = atan2(vx, vy);
+        const int new_foe = _burst_iood_target(mon.pos(), angle);
+        mon.foe = new_foe;
+        foe = mon.get_foe();
+    }
+
     if (foe)
     {
         const coord_def target = foe->pos();
