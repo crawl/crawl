@@ -915,7 +915,7 @@ static formatted_string _describe_god_powers(god_type which_god)
 
         if (you_worship(which_god)
             && (power.rank <= 0
-                || power.rank == 7 && can_do_capstone_ability(which_god)
+                || power.rank >= 7 && can_do_capstone_ability(which_god)
                 || piety_rank(piety) >= power.rank)
             && (!player_under_penance()
                 || power.rank == -1))

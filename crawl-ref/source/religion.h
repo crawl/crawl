@@ -188,7 +188,8 @@ struct god_power
     // 1-6 means it unlocks at that many stars of piety;
     // 0 means it is always available when worshipping the god;
     // -1 means it is available even under penance;
-    // 7 means it is a capstone.
+    // 7 means it is a capstone;
+    // 8 means it is a capstone and usable at any piety.
     int rank;
     ability_type abil;
 

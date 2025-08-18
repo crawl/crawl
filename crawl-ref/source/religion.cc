@@ -428,7 +428,7 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 0, "", "", "You are resistant to fire." },
             { 1, ABIL_IGNIS_FIERY_ARMOUR, "armour yourself in flame" },
             { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
-            { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away, once" },
+            { 8, ABIL_IGNIS_RISING_FLAME, "rocket upward and away, once" },
         },
     };
     static bool god_powers_init = false;
@@ -2379,7 +2379,7 @@ static void _handle_piety_gain(int old_piety)
             for (const auto& power : get_god_powers(you.religion))
             {
                 if (power.rank == rank
-                    || power.rank == 7 && can_do_capstone_ability(you.religion))
+                    || power.rank >= 7 && can_do_capstone_ability(you.religion))
                 {
                     power.display(true, "You can now %s.");
     #ifdef USE_TILE_LOCAL
@@ -4934,7 +4934,7 @@ bool god_power_usable(const god_power& power, bool ignore_piety, bool ignore_pen
     ASSERT(abil != ABIL_NON_ABILITY);
     return power.god == you.religion
             && (power.rank <= 0
-                || power.rank == 7 && can_do_capstone_ability(you.religion)
+                || power.rank >= 7 && can_do_capstone_ability(you.religion)
                 || piety_rank() >= power.rank
                 || ignore_piety)
             && (!player_under_penance()
