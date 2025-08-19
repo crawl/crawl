@@ -2813,49 +2813,7 @@ void beogh_increase_orcification()
     }
 
     // Adjust the message we give to the player's physiology.
-    string msg;
-    switch (you.species)
-    {
-        case SP_FORMICID:
-            msg += "Your mandibles take on a glossy white sheen, and your antennae grow pointier.";
-            break;
-
-        case SP_TENGU:
-            msg += "Your beak becomes more hooked, and the plumage around your ears grows tufted.";
-            break;
-
-        case SP_GARGOYLE:
-            msg += "You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.";
-            break;
-
-        case SP_VINE_STALKER:
-            msg += "A pair of ivory tusks grows out from your maw, and flowers begin to bloom upon you.";
-            break;
-
-        case SP_MUMMY:
-            msg += "A small pair of tusks begins to pierce through your wrappings.";
-            break;
-
-        case SP_POLTERGEIST:
-            msg += "A small pair of spectral tusks begins to grow in your mouth.";
-            break;
-
-        case SP_REVENANT:
-            msg += "A small pair of tusks begins to sprout from your jawbone.";
-            break;
-
-        case SP_BARACHI:
-            msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
-            break;
-
-        case SP_OCTOPODE:
-            msg += "Your beak grows more hooked, and small fins emerge from the sides of your head.";
-            break;
-
-        default:
-            msg += "Your teeth grow more tusk-like, and your ears lengthen.";
-            break;
-    }
+    string msg = species::orcification_msg(you.species);
 
     mprf(MSGCH_MUTATION, "%s", msg.c_str());
     you.props[ORCIFICATION_LEVEL_KEY] = 1;

@@ -38,7 +38,8 @@ class Species(MutableMapping):
             'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
             'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
             'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
-            'altar_action', 'mutations', 'child_name', 'orc_name'}
+            'altar_action', 'mutations', 'child_name', 'orc_name',
+            'orcification_msg'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -150,6 +151,7 @@ class Species(MutableMapping):
         self['altar_action'] = quote_or_nullptr('altar_action', s)
         self['child_name']   = quote_or_nullptr('child_name', s)
         self['orc_name']     = quote_or_nullptr('orc_name', s)
+        self['orcification_msg'] = quote_or_nullptr('orcification_msg', s)
 
         if 'TAG_MAJOR_VERSION' in s:
             self['tag_major_version_opener'] = (

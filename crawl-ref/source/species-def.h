@@ -64,4 +64,7 @@ struct species_def
                               ///"kneel at"
     const char* child_name;   ///<"Foo the %s.". If null, use "Child".
     const char* orc_name;     ///<"Foo the %s.". If null, use "Orc".
+    const char* orcification_msg; ///<a mutation message describing
+                              /// orcification. If null, use "Your teeth grow
+                              /// more tusk-like, and your ears lengthen.".
 };

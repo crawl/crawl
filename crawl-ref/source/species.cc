@@ -391,6 +391,19 @@ namespace species
     }
 
     /**
+     * What is an appropriate orcification message for orcs of this species?
+     *
+     *  @param sp what kind of species to look at
+     *  @returns a string describing 'orcification'.
+     */
+    string orcification_msg(species_type sp)
+    {
+        auto msg = get_species_def(sp).orcification_msg;
+        return msg ? msg
+                   : "Your teeth grow more tusk-like, and your ears lengthen.";
+    }
+
+    /**
      * What message should be printed when a character of the specified species
      * prays at an altar, if not in some form?
      * To be inserted into "You %s the altar of foo."
