@@ -2411,7 +2411,7 @@ static const char* _item_ego_desc(special_armour_type ego)
                "further increases damage.";
     case SPARM_MESMERISM:
         return "When you are struck in melee, it briefly dazes all nearby enemies, "
-               "then must recharged by standing still for a while. Its duration, "
+               "then must recharge by standing still for a while. Its duration, "
                "radius, and recharge speed are improved by Evocations skill.";
     case SPARM_ATTUNEMENT:
         return "When worn alongside a magical staff, it doubles the effectiveness "
