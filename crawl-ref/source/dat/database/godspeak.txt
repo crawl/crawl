@@ -535,7 +535,9 @@ Xom ring slot
 
 @Your_item@ twitches!
 
-@Your_item@ briefly expands and covers your entire @hand@!
+@Your_item@ briefly dulls, then brightens again!
+
+@Your_item@ briefly brightens, then dulls again!
 %%%%
 Xom dragon armour
 
