@@ -275,7 +275,7 @@ static string mi_calc_airstrike_damage(monster* mons, spell_type spell_cast)
 {
     const int pow = mons_power_for_hd(spell_cast, mons->get_hit_dice());
     dice_def dice = base_airstrike_damage(pow);
-    return make_stringf("%dd%d+(%d/space)", dam.num, dam.size,
+    return make_stringf("%dd%d+(%d/space)", dice.num, dice.size,
                         spell_cast == SPELL_SLEETSTRIKE ? 3 : 2);
 }
 
