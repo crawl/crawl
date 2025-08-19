@@ -368,7 +368,7 @@ static const mon_spellbook mspell_list[] =
     // ('m') Merfolk and friends.
     {  MST_MERFOLK_SIREN,
       {
-       { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD },
+       { SPELL_SIREN_SONG, 80, MON_SPELL_WIZARD },
       }
     },
 
@@ -380,7 +380,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MERFOLK_AVATAR,
       {
-       { SPELL_AVATAR_SONG, 160, MON_SPELL_WIZARD },
+       { SPELL_AVATAR_SONG, 80, MON_SPELL_WIZARD },
       }
     },
 
