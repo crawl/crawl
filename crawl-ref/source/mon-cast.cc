@@ -5864,7 +5864,15 @@ static void _mesmerise_los(monster& agent, int power, bool check_hearing)
                 else
                     mprf("%s is mesmerised by %s!", mons->name(DESC_THE).c_str(), agent.name(DESC_THE).c_str());
             }
-            ai->as_monster()->add_ench(mon_enchant(ENCH_DAZED, 0, &agent, random_range(50, 90)));
+
+            if (!mons->has_ench(ENCH_DAZED))
+                mons->add_ench(mon_enchant(ENCH_DAZED, 0, &agent, random_range(50, 90)));
+            else
+            {
+                mon_enchant dazed = mons->get_ench(ENCH_DAZED);
+                dazed.duration = min(120, random_range(50, 90));
+                mons->update_ench(dazed);
+            }
         }
     }
 }
