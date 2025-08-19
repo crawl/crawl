@@ -6,7 +6,7 @@ much protection as the armour made from the scales of some larger dragons, it is
 somewhat lighter and less encumbering. It is also remarkably smooth, letting
 corrosive slime flow off it like water.
 %%%%
-Amulet of alchemy
+amulet of alchemy
 
 An amulet that enhances the power of the wearer's alchemy spells and also allows
 them to extract small amounts of magical energy from any potion they drink. The
