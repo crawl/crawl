@@ -748,7 +748,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
         // could probably loosen artp conflict restrictions?
         case ARTP_SILENCE:
-                !_any_artps_in_item_props({ ARTP_ENHANCE_CONJ,
+            return !_any_artps_in_item_props({ ARTP_ENHANCE_CONJ,
                     ARTP_ENHANCE_HEXES, ARTP_ENHANCE_SUMM, ARTP_ENHANCE_NECRO,
                     ARTP_ENHANCE_TLOC, ARTP_ENHANCE_FIRE, ARTP_ENHANCE_ICE,
                     ARTP_ENHANCE_AIR, ARTP_ENHANCE_EARTH, ARTP_ENHANCE_ALCHEMY,
