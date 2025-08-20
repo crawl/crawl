@@ -113,8 +113,8 @@ Character
   - Many existing effects have been rescaled to be similarly dangerous as before
     this change.
 * New mutations:
-  - Contamination Suceptibility, which makes magical contamination take twice as
-    long to wear off.
+  - Contamination Susceptibility, which makes magical contamination take twice
+    as long to wear off.
   - Efficient Metabolism, which doubles the duration of potion status effects.
   - Feed Off Suffering, which restores HP and MP after killing poisoned or
     drained foes.
