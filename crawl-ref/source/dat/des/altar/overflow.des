@@ -3809,7 +3809,7 @@ DEPTH:  D:4-10, Crypt
 : if you.in_branch("Crypt") then
 MONS:   zombie, guardian mummy, skeletal warrior, ghoul
 : else
-MONS:   zombie, mummy, wight, weeping skull
+MONS:   zombie, mummy, wight, weeping skull / bes kemwar w:2
 : end
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
@@ -4788,13 +4788,14 @@ KMONS: 3 = menkaure, wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
 MONS: zombie / gnoll draugr w:2 / adder draugr w:2 / mummy / \
-      shadow imp / wight / mummy / phantom
+      shadow imp / wight / mummy / phantom / bes kemwar
 MONS: burial acolyte / wraith / vampire
 KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / steam dragon draugr w:2 / \
-      howler monkey draugr w:2 / centaur draugr w:2 / phantom
+      howler monkey draugr w:2 / centaur draugr w:2 / phantom w:5 / \
+      bes kemwar w:5
 MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
 MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-

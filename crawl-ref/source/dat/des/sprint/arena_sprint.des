@@ -258,7 +258,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 endoplasm / glass eye / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
                 "place:D:7 zombie / place:D:4 draugr / wight / weeping skull w:5 /\
-                    phantom w:5 / w:1 josephine",
+                    phantom w:5 / bes kemwar w:5 / w:1 josephine",
                 "w:7 ice devil / rust devil w:5 / orange demon / red devil w:5 /\
                     sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
@@ -321,6 +321,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "troll / deep troll w:12 / iron troll w:2",
                 "rime drake / swamp drake / steam dragon / swamp dragon /\
                  acid dragon / komodo dragon",
+                "bes kemwar / bog body",
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks

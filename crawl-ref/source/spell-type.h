@@ -648,5 +648,6 @@ enum spell_type : int
     SPELL_ACID_BALL,
     SPELL_DOOMSAYING,       // Cassandra's one-shot doom and death effect
     SPELL_SLEETSTRIKE,
+    SPELL_DIMINISH_SPELLS,
     NUM_SPELLS
 };

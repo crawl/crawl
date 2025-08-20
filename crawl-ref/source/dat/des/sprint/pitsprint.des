@@ -19,8 +19,9 @@ function base_monster_setup(e)
                kobold brigand band / gnoll band / gnoll bouda band w:6 /\
                gnoll sergeant band w:6 / orc band / orc priest band /\
                orc wizard band / ogre / centaur / phantom / zombie /\
-               crimson imp / iron imp / white imp / drude / ufetubus band /\
-               fire bat / crocodile / brain worm / weeping skull / mummy w:5")
+               bes kemwar / crimson imp / iron imp / white imp / drude /\
+               ufetubus band /  fire bat / crocodile / brain worm /\
+               weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
                komodo dragon / yak band / cane toad / hell rat / death yak /\

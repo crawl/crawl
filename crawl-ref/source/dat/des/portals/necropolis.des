@@ -176,7 +176,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
   if dgn.persist.necropolis_difficulty == "pre_temple_d" then
     e.kmons(_0 .. " = place:D:5 w:40 / spectral jackal")
     e.kmons(_9 .. " = place:D:7 w:30 / spectre place:D:8")
-    e.kmons(_8 .. " = place:D:9 w:15 / wraith w:5")
+    e.kmons(_8 .. " = place:D:9 w:15 / bes kemwar w:4 / wraith w:1")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
     e.kmons(_0 .. " = place:D:8 w:60 / spectre place:D:9")
     e.kmons(_9 .. " = place:D:11 w:40 / spectre place:D:12 / wraith w:5")
@@ -281,7 +281,7 @@ function necropolis_portal_setup(e)
   if dgn.persist.necropolis_difficulty == "pre_temple_d" then
     e.set_random_mon_list("phantom / spectre place:D:6")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
-    e.set_random_mon_list("wraith / shadowghast / spectre place:D:9")
+    e.set_random_mon_list("bes kemwar / wraith / spectre place:D:9")
   elseif dgn.persist.necropolis_difficulty == "lair" then
     e.set_random_mon_list("wraith / shadowghast / spectral cane toad")
   elseif dgn.persist.necropolis_difficulty == "orc" then
@@ -2022,7 +2022,7 @@ WEIGHT: 5
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-MONS:   wraith / shadowghast
+MONS:   wraith / bes kemwar
 SUBST:  d = *, e = *%, f = %$$$, ghi = $
 NSUBST: D = 1:1 / *:-
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then

@@ -507,6 +507,7 @@ public:
     void put_to_sleep(actor *attacker, int duration = 0, bool hibernate = false)
         override;
     void weaken(const actor *attacker, int pow) override;
+    void diminish(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void daze(int duration) override;
     void vitrify(const actor *attacker, int duration, bool quiet = false) override;

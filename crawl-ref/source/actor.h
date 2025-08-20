@@ -199,6 +199,7 @@ public:
     virtual void put_to_sleep(actor *attacker, int duration,
                               bool hibernate = false) = 0;
     virtual void weaken(const actor *attacker, int pow) = 0;
+    virtual void diminish(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void daze(int duration) = 0;

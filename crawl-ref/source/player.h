@@ -758,6 +758,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
+    void diminish(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void daze(int duration) override;
     void end_daze();

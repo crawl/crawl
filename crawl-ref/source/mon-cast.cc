@@ -623,6 +623,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE, 10,
     } },
     { SPELL_DRAIN_MAGIC, _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) },
+    { SPELL_DIMINISH_SPELLS, { [](const monster &caster) {
+        const actor* foe = caster.get_foe();
+        ASSERT(foe);
+        return ai_action::good_or_impossible(foe->antimagic_susceptible()); },
+        _fire_simple_beam, _zap_setup(SPELL_DIMINISH_SPELLS),
+        MSPELL_LOGIC_NONE, 10,
+    } },
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
@@ -5401,7 +5408,7 @@ static monster_type _pick_undead_summon()
 {
     static monster_type undead[] =
     {
-        MONS_NECROPHAGE, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
+        MONS_BES_KEMWAR, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
         MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_LAUGHING_SKULL,
         MONS_MUMMY, MONS_VAMPIRE, MONS_WIGHT, MONS_WRAITH, MONS_SHADOW_WRAITH,
         MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SHADOWGHAST

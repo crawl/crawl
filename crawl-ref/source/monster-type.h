@@ -812,6 +812,9 @@ enum monster_type                      // env.mons[].type
 #endif
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_PHANTOM,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BES_KEMWAR,
+#endif
     MONS_SHADOWGHAST,
 #if TAG_MAJOR_VERSION == 34
     MONS_HUNGRY_GHOST,
@@ -1376,6 +1379,7 @@ enum monster_type                      // env.mons[].type
     MONS_SCREAMING_REFRACTION,
     MONS_SHOOTING_STAR,
     MONS_CASSANDRA,
+    MONS_BES_KEMWAR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

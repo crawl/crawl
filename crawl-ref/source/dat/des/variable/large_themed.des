@@ -3043,7 +3043,7 @@ SHUFFLE: })], ABCDEFGHI
 : if you.branch() == "D" then
 :   if you.depth() < 9 then
 MONS:    shadow imp / scorpion zombie w:5, centaur zombie
-MONS:    wight, killer bee zombie, phantom, wraith
+MONS:    wight, killer bee zombie, phantom / bes kemwar w:4, wraith
 MONS:    black bear
 KMONS:   8 = scorpion
 KMONS:   9 = sleepcap

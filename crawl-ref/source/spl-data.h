@@ -2624,6 +2624,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DIMINISH_SPELLS, "Diminish Spells",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
+    3,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4,
+    TILEG_DIMINISH_SPELLS,
+},
+
+{
     SPELL_DRAIN_MAGIC, "Drain Magic",
     spschool::hexes,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer

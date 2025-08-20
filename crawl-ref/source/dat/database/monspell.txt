@@ -655,6 +655,10 @@ basilisk cast
 
 @floating eye cast@
 %%%%
+bes kemwar cast
+
+@The_monster@ writhes about, and something writhes within @target@.
+%%%%
 Airstrike blizzard demon cast
 
 @The_monster@ lashes out with icy intensity.

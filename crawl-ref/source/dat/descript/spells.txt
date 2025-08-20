@@ -508,6 +508,10 @@ Weaves a link between the caster's weaponry and a chosen target. Whenever the
 caster fires or throws something at a *different* enemy, a matching projectile
 will be teleported at the target. Spellpower increases their accuracy.
 %%%%
+Diminish Spells spell
+
+Irresistibly weakens the power of an enemy's spells for a period of time.
+%%%%
 Discord spell
 
 Drives nearby creatures into an wild frenzy, causing them to mercilessly

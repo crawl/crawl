@@ -8314,6 +8314,16 @@ void player::weaken(const actor */*attacker*/, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
+void player::diminish(const actor */*attacker*/, int pow)
+{
+    if (!duration[DUR_DIMINISHED_SPELLS])
+        mprf(MSGCH_WARN, "You feel your spells grow feeble.");
+    else
+        mprf(MSGCH_WARN, "You feel as though your spells will be weakened yet longer.");
+
+    increase_duration(DUR_DIMINISHED_SPELLS, pow + random2(pow + 3), 50);
+}
+
 bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
 {
     // Only prints a message when you gain this status for the first time,

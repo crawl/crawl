@@ -235,6 +235,7 @@ creeping_frost CREEPING_FROST
 crystallising_shot CRYSTALLISING_SHOT
 death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
+diminish_spells DIMINISH_SPELLS
 dominate_undead DOMINATE_UNDEAD
 doom_bolt DOOM_BOLT
 oblivion_howl OBLIVION_HOWL

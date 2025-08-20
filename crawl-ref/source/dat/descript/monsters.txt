@@ -796,6 +796,12 @@ A sacred, self-created sunbird, representative of rebirth. It has ascended
 past the cycles of life and death, and calls upon aspects of both, rising forth
 from death in a burst of unholy flame.
 %%%%
+bes kemwar
+
+A minor hairy maggot spirit, phasing in and out of this plane. Each regional
+variant inflicts different minor ailments: the ones found in the Dungeon
+cause one's magic to grow weak.
+%%%%
 black bear
 
 A small black bear. Like all ursines, it will become enraged if badly hurt.

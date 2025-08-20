@@ -143,6 +143,7 @@ enum band_type
     BAND_FLESHCRAFT,
     BAND_DEATH_KNIGHT_DRAUGR,
     BAND_MIXED_WRAITHS,
+    BAND_BES_KEMWAR,
     NUM_BANDS                   // always last
 };
 
