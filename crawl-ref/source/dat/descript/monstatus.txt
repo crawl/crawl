@@ -190,7 +190,7 @@ dormant monstatus
 
 [[asleep monstatus]]
 %%%%
-doubled in health monstatus
+doubled in vigour monstatus
 
 This monster's current and maximum health are temporarily doubled.
 %%%%

@@ -141,7 +141,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
     { ENCH_ARMED,           MB_ARMED },
     { ENCH_SHADOWLESS,      MB_SHADOWLESS },
-    { ENCH_DOUBLED_HEALTH,  MB_DOUBLED_HEALTH },
+    { ENCH_DOUBLED_VIGOUR,  MB_DOUBLED_VIGOUR },
     { ENCH_KINETIC_GRAPNEL, MB_KINETIC_GRAPNEL },
     { ENCH_TEMPERED,        MB_TEMPERED },
     { ENCH_BLINKITIS,       MB_BLINKITIS },

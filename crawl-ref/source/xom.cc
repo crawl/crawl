@@ -2773,7 +2773,7 @@ static void _xom_hyper_enchant_monster(int sever)
                                      ENCH_EMPOWERED_SPELLS, ENCH_REPEL_MISSILES,
                                      ENCH_RESISTANCE, ENCH_REGENERATION,
                                      ENCH_STRONG_WILLED, ENCH_TOXIC_RADIANCE,
-                                     ENCH_DOUBLED_HEALTH, ENCH_MIRROR_DAMAGE,
+                                     ENCH_DOUBLED_VIGOUR, ENCH_MIRROR_DAMAGE,
                                      ENCH_SWIFT };
     vector<monster*> targetable = _xom_find_weak_monsters(true);
     int time = random_range(200, 200 + sever * 2);

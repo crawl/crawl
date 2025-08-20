@@ -231,7 +231,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_DOUBLED_HEALTH:
+    case ENCH_DOUBLED_VIGOUR:
         scale_hp(2, 1);
         break;
 
@@ -430,7 +430,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         scale_hp(3, 1);
         break;
 
-    case ENCH_DOUBLED_HEALTH:
+    case ENCH_DOUBLED_VIGOUR:
         scale_hp(1, 2);
         if (!quiet)
             simple_monster_message(*this, " excess health fades away.", true);
@@ -1413,7 +1413,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_WL:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
-    case ENCH_DOUBLED_HEALTH:
+    case ENCH_DOUBLED_VIGOUR:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
     case ENCH_FLIGHT:
@@ -2250,7 +2250,7 @@ static const char *enchant_names[] =
     "rimeblight",
     "magnetised",
     "armed",
-    "misdirected", "changed appearance", "shadowless", "doubled_health",
+    "misdirected", "changed appearance", "shadowless", "doubled_vigour",
     "grapnel", "tempered", "hatching", "blinkitis", "chaos_laced", "vexed",
     "deep_sleep", "drowsy",
     "vampire_thrall", "pyrrhic_recollection", "clockwork_bee_cast",
@@ -2499,7 +2499,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_INNER_FLAME:
         return random_range(25, 35) * 10;
     case ENCH_BERSERK:
-    case ENCH_DOUBLED_HEALTH:
+    case ENCH_DOUBLED_VIGOUR:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:
         return random_range(10 * BASELINE_DELAY, 15 * BASELINE_DELAY);
