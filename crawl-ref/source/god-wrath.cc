@@ -189,10 +189,15 @@ static bool _okawaru_random_servant()
 
     mgen_data temp = _wrath_mon_data(mon_type, GOD_OKAWARU);
 
-    // Don't send dream sheep into battle, but otherwise let bands in.
+    // Don't send dream sheep into battle, and exclude most monsters who get
+    // bands with priests of other gods, but otherwise let bands in.
     // This makes sure you get multiple orcs/gnolls early on.
-    if (mon_type != MONS_CYCLOPS)
+    if (mon_type != MONS_CYCLOPS && mon_type != MONS_ORC_WARLORD
+        && mon_type != MONS_SPRIGGAN_DEFENDER
+        && mon_type != MONS_DRACONIAN_KNIGHT)
+    {
         temp.flags |= MG_PERMIT_BANDS;
+    }
 
     return create_monster(temp, false);
 }
