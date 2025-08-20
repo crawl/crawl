@@ -3373,6 +3373,35 @@ cc'''''''''''''''''''''ccccc
     ccccccc
 ENDMAP
 
+# 22 gods
+# Gluing together some trove layouts lost in the trove theming revamp:
+# minmay's trove_books_scrolls and trove_weapons_four_rooms
+# with DrKe's trove_misc_throne_room.
+NAME:    regret_index_temple_trove_trio
+TAGS:    temple_altars_22
+PLACE:   Temple
+ORIENT:  encompass
+KMONS:   P : plant / bush
+FTILE:   ' = floor_limestone
+SHUFFLE: cv / cv / cb / vb
+MAP
+xxxxxxxxxxxxxxx    xxxxx
+xT...........Ax    xB.Bx
+x.ccccc.ccccc.x    xx.xx
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x......B......+...+..{..+...+..+'''''''+Bv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.ccccc.ccccc.x    xx.xx
+xA...........Tx    xB.Bx
+xxxxxxxxxxxxxxx    xxxxx
+ENDMAP
+
 ##############################################################################
 # <<6>> Variable altars, generic layouts
 
