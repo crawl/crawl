@@ -2425,7 +2425,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
         {
             magic_mapping(GDM, 100, true, false, false, true, false, coord_def(), true);
-            _learn_transporters();
+
+            if (player_in_branch(BRANCH_TEMPLE))
+                _learn_transporters();
             for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
             {
                 if (env.map_knowledge(*ri).seen())
