@@ -1603,7 +1603,6 @@ static void _generic_level_reset()
     clear_travel_trail();
 }
 
-
 // used to resolve generation order for cases where a single level has multiple
 // portals. This currently should only include portals that can appear at most
 // once.
@@ -1611,6 +1610,7 @@ static const vector<branch_type> portal_generation_order =
 {
     BRANCH_SEWER,
     BRANCH_OSSUARY,
+    // do not pregenerate Necropolis: see bazaars
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_BAILEY,
