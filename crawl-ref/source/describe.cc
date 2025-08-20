@@ -2415,8 +2415,8 @@ static const char* _item_ego_desc(special_armour_type ego)
                "radius, and recharge speed are improved by Evocations skill.";
     case SPARM_ATTUNEMENT:
         return "When worn alongside a magical staff, it doubles the effectiveness "
-               "of that staff's spell enhancer and causes melee attacks made with "
-               "it to restore a small amount of MP.";
+               "of that staff's primary enhancer and causes melee attacks made "
+               "with it to restore a small amount of MP.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
