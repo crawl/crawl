@@ -77,7 +77,7 @@ Vaults
 
 The Vaults are said to be home to great treasures and sealed evils alike, its
 origin known only to its guardians: the Ironbound Order. Intruders face an
-organized defense of trained maneuvers, arms and arcana, animated constructs,
+organised defense of trained maneuvers, arms and arcana, animated constructs,
 coerced allies, and tamed beasts, all in common cause.
 %%%%
 Crypt
