@@ -14,7 +14,7 @@ Artefacts
 * The Scales of the Dragon King no longer has Will+, and instead has the new
   Command ego.
 * The Orb of Wucad Mu is no longer twice as likely to trigger as other orbs of
-  energy, but now has a chance to apply antimagic to monsters after channeling
+  energy, but now has a chance to apply antimagic to monsters after channelling
   mp for successful spells casts.
 * The Sword of the Doom Knight has been renamed to the Sword of the Dread
   Knight.
@@ -2183,7 +2183,7 @@ Items
     * Mayhem: chance to frenzy a monster in sight after a kill, causing them
       to wildly attack friends and foes alike ala the Discord spell.
     * Guile: reduces Will by ++ for both the wearer and those they try to hex.
-    * energy: gives a source of passive channeling, which gives a chance to
+    * energy: gives a source of passive channelling, which gives a chance to
       refund the MP of a cast spell and a chance to backfire. Backfires cause
       confusion or Int drain. Scales with Evocations.
 * New glove ego: infusion, spending 1 MP per melee hit to add extra damage.
@@ -2239,7 +2239,7 @@ Items
     petrified, or asleep, halving the damage received for the duration.
   - Lear's Hauberk is reduced to +18 (was +27).
   - The trident of the Octopus King loses +Will.
-  - Wucad Mu now counts as 1.5 sources of channeling. This means it is 1.5x as
+  - Wucad Mu now counts as 1.5 sources of channelling. This means it is 1.5x as
     likely to refund MP, and the probability of backfiring is reduced.
   - The robe of Misfortune loses Contam and Drain.
 
@@ -2756,7 +2756,7 @@ Items
     effect.
   - The ratskin cloak is changed from +Rats to *Rats, spawning rats when the
     player is hit.
-  - Wucad Mu no longer provides evocable channeling. Instead, with a chance
+  - Wucad Mu no longer provides evocable channelling. Instead, with a chance
     depending on evocations, it refunds the MP cost of the spell. There is a
     chance of confusion or intelligence drain (which scales on spell cost and
     evocations skill) when a spell is refunded.
@@ -4397,7 +4397,7 @@ Gods
 * New temple god: Pakellas the Inventive.
   - Grants MP on kills and passive wand charge identification. MP gained while
     full will eventually be turned into potions of magic.
-  - Blocks MP regeneration and hates channeling.
+  - Blocks MP regeneration and hates channelling.
   - Gifts wands, rods and miscellaneous evokables.
   - 1*: Quick Charge: uses a portion of current MP to recharge a wand or rod.
   - 3*: Device Surge: spends variable MP to apply power enhancers to your next
@@ -6382,7 +6382,7 @@ Items
 * Lear's chain mail is now Lear's hauberk - a +27 chain mail that covers
   all armour slots other than shields and cloaks.
 * The staves of energy eliminates 100% of spell hunger again, and includes
-  the now-gone staff of channeling as well.
+  the now-gone staff of channelling as well.
 * The staff of power scales with your maximum magic power.
 * Box of beasts has been reworked:
     - Has a fixed, random number of charges between 5 and 15 inclusive.
@@ -7937,7 +7937,7 @@ Items
 * ?EWII may uncurse blowguns.
 * Remove nutrition on hit for vampiric weapons.
 * Make Evocations skill help with ball of seeing radius.
-* Disallow use of staff of channeling when starving.
+* Disallow use of staff of channelling when starving.
 * Give missiles of flame/frost some bonus damage.
 * Add noise to missiles.
 * Make wield mass check apply to all items.
@@ -7951,7 +7951,7 @@ Items
 * Make ball of energy stat loss now drains between 1 and 2/3 max Int.
 * Improve some unrandart weapons: add brands, more damage.
 * Improve Maxwell's Patent Armour: AC+15, +preservation ego, +MR.
-* Improve Staff of Wucad Mu: remove miscast effects except for when channeling.
+* Improve Staff of Wucad Mu: remove miscast effects except for when channelling.
 * Make potions of experience give some xp for skills as well.
 * Fix acquirement hardly ever generating "plain" crystal plates and dragon
   armour.
@@ -8555,7 +8555,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Greatly tweak ice cave vaults.
 * Some other vault tweaks.
 * All worms except brain worm and all wasps are now mindless.
-* Demonspawn Troggies don't get Channeling anymore.
+* Demonspawn Troggies don't get Channelling anymore.
 * Z does not show spell list automatically anymore.
 * Added an option "darken_beyond_range" (defaults to true) for spell ranges.
 * Default "force_more_message = You fall through a shaft" to true.
@@ -8747,7 +8747,7 @@ Items
 * Book acquirements are much more random and may yield manuals.
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can slow cold-blooded monsters.
-* The staff of channeling trains Evocations.
+* The staff of channelling trains Evocations.
 * Potions of magic no longer increase maximal magic points and are more common.
 * Item descriptions mention enchantment/charging limits.
 * Randarts get their known properties autoinscribed.
