@@ -1249,12 +1249,18 @@ else
   if you.mutation("missing a hand") == 1 then
     if no_body_armour_species(_G) then
       subst("e = ddgh")
-    elseif you.mutation("no jewellery") ~= 1 then
-      subst("e = e:45 f:g")
+    elseif you.mutation("no jewellery") == 1 then
+      subst("f = d")
+      subst("g = e h:15")
+    else
+      subst("e = e:45 fg")
     end
   else
     if no_body_armour_species(_G) then
       subst("e = f")
+    elseif you.mutation("no jewellery") == 1 then
+      subst("f = d")
+      subst("g = e h:15")
     else
       subst("e = e:25 f:20")
     end
