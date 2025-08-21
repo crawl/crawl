@@ -771,7 +771,7 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        string effect_str = _effect_string(spell, mon_owner);
+        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
