@@ -1470,6 +1470,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             || you_worship(GOD_BEOGH) && mons_genus(mon->type) == MONS_ORC)
         && !mon->has_ench(ENCH_FRENZIED))
     {
+        // If we cannot hurt a neutral anyway, don't bother warning as if we
+        // could
+        if (never_harm_monster(&you, mon))
+            return false;
+
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON)
             || you_worship(GOD_BEOGH))
@@ -1479,6 +1484,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     }
     else if (mon->wont_attack())
     {
+        // If we cannot hurt a non-hostile anyway, don't bother warning as if we
+        // could
+        if (never_harm_monster(&you, mon))
+            return false;
+
         adj += "non-hostile ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
             would_cause_penance = true;
