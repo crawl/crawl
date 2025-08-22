@@ -1447,9 +1447,6 @@ void activate_tesseracts()
     if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
         return;
 
-    // Tracked on the player instead of the monster so status lookup is quicker.
-    you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
-
     bool did_activate = false;
     for (monster_iterator mi; mi; ++mi)
     {
@@ -1472,6 +1469,9 @@ void activate_tesseracts()
             mi->props[TESSERACT_XP_KEY] = 15000;
             tesseract_action(**mi);
             did_activate = true;
+
+            // Tracked on the player instead of the monster so status lookup is quicker.
+            you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
         }
     }
 }

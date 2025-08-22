@@ -2754,17 +2754,32 @@ item_def* monster_die(monster& mons, killer_type killer,
         dithmenos_cleanup_player_shadow(&mons);
     else if (mons.type == MONS_ORB_GUARDIAN
              && level_id::current() == level_id(BRANCH_ZOT, 5)
+             && !player_on_orb_run()
              && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
     {
-        if (you.can_see(mons))
+        // Verify any tesseracts still exist
+        bool found = false;
+        for (monster_iterator mi; mi; ++mi)
         {
-            mprf(MSGCH_WARN, "%s broadcasts a psychic alarm as it %s.",
-                 mons.name(DESC_THE).c_str(),
-                 (was_banished || !real_death) ? "disappears" : "dies");
+            if (mi->type == MONS_BOUNDLESS_TESSERACT)
+            {
+                found = true;
+                break;
+            }
         }
-        else
-            mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm as it dies.");
-        activate_tesseracts();
+
+        if (found)
+        {
+            if (you.can_see(mons))
+            {
+                mprf(MSGCH_WARN, "%s broadcasts a psychic alarm as it %s.",
+                    mons.name(DESC_THE).c_str(),
+                    (was_banished || !real_death) ? "disappears" : "dies");
+            }
+            else
+                mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm as it dies.");
+            activate_tesseracts();
+        }
     }
 
     if (mons.has_ench(ENCH_MAGNETISED))
