@@ -13,7 +13,7 @@
 #define NOBODY_MEMORIES_KEY "nobody_memories"
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
 
-#define TESSERACT_START_TIME_KEY "tesseract_start_time"
+#define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
 #define TESSERACT_XP_KEY "tesseract_xp_pool"
 #define TESSERACT_DUMMY_KEY "tesseract_dummy"

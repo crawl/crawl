@@ -995,14 +995,14 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_TESSERACT:
         if (level_id::current() == level_id(BRANCH_ZOT, 5)
-            && you.props.exists(TESSERACT_START_TIME_KEY))
+            && you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
         {
-            const int time = you.elapsed_time - you.props[TESSERACT_START_TIME_KEY].get_int();
+            const int count = you.props[TESSERACT_SPAWN_COUNTER_KEY].get_int();
 
-            if (time >= 12000)
-                inf.light_colour = LIGHTMAGENTA;
-            else if (time > 6000)
+            if (count <= 15)
                 inf.light_colour = RED;
+            else if (count >= 80)
+                inf.light_colour = LIGHTMAGENTA;
             else
                 inf.light_colour = YELLOW;
 

@@ -1507,13 +1507,16 @@ otherwise almost indistinguishable from the original.
 Planar Overlay spell
 
 Overlays part of an adjacent reality onto this one, causing random local
-monsters to appear elsewhere on the floor. This occurs very slowly at first, but
-the longer the tesseract remains active, the higher the rate will become.
+monsters to appear elsewhere on the floor. This occurs rapidly at first, but
+soon slows down to a steady rate.
 
 After many monsters have been generated, they will stop rewarding any experience
 points - though destroying the tesseract early will immediately grant the player
 the sum total of all experience points that could be obtained by allowing it to
 continue.
+
+After even more monsters have been generated, new monsters have a chance to
+appear within the player's sight instead.
 %%%%
 Plane Rend spell
 

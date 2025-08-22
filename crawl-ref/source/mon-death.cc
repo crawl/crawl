@@ -2753,10 +2753,33 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_PLAYER_SHADOW)
         dithmenos_cleanup_player_shadow(&mons);
     else if (mons.type == MONS_ORB_GUARDIAN
-             && !you.props.exists(TESSERACT_START_TIME_KEY))
+             && level_id::current() == level_id(BRANCH_ZOT, 5)
+             && !player_on_orb_run()
+             && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
     {
-        simple_monster_message(mons, " broadcasts a psychic alarm as it dies.");
-        activate_tesseracts();
+        // Verify any tesseracts still exist
+        bool found = false;
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_BOUNDLESS_TESSERACT)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            if (you.can_see(mons))
+            {
+                mprf(MSGCH_WARN, "%s broadcasts a psychic alarm as it %s.",
+                    mons.name(DESC_THE).c_str(),
+                    (was_banished || !real_death) ? "disappears" : "dies");
+            }
+            else
+                mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm as it dies.");
+            activate_tesseracts();
+        }
     }
 
     if (mons.has_ench(ENCH_MAGNETISED))
@@ -3309,11 +3332,11 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (you.props.exists(TESSERACT_START_TIME_KEY))
+        if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
         {
             mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
             mark_milestone("tesseract.kill", "destroyed the tesseracts.");
-            you.props.erase(TESSERACT_START_TIME_KEY);
+            you.props.erase(TESSERACT_SPAWN_COUNTER_KEY);
         }
     }
     if (mons_is_tentacle_head(mons_base_type(mons)))

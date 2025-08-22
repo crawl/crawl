@@ -4524,7 +4524,7 @@ NAME:    hall_of_Zot
 TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
-MONS:    patrolling orb guardian, boundless tesseract generate_awake
+MONS:    patrolling orb guardian, boundless tesseract
 MONS:    electric golem, killer klown, ancient lich / dread lich
 MONS:    orb of appropriateness
 KITEM:   R = prismatic gem

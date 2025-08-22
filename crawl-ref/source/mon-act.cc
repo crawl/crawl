@@ -2003,6 +2003,12 @@ void handle_monster_move(monster* mons)
     }
 #endif
 
+    // Since many passive damage sources and regeneration all happen later in
+    // this function, any monsters with custom behavior that wish to skip
+    // 'standard' monster movement (but also wish to do something before passive
+    // damage occurs) should set this to true, rather than return early.
+    int skip_turn = false;
+
     if (mons_is_projectile(*mons))
     {
         if (iood_act(*mons))
@@ -2033,7 +2039,7 @@ void handle_monster_move(monster* mons)
             // Done this way to keep the detonation timer predictable
             mons->speed_increment -= BASELINE_DELAY;
         }
-        return;
+        skip_turn = true;
     }
 
     if (mons_is_seeker(*mons))
@@ -2044,6 +2050,105 @@ void handle_monster_move(monster* mons)
             monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
             return;
         }
+    }
+
+    // Melt barricades whose creator has moved too far away.
+    if (mons->type == MONS_SPLINTERFROST_BARRICADE)
+    {
+        actor* agent = actor_by_mid(mons->summoner);
+        if (!agent || grid_distance(agent->pos(), mons->pos()) > 2)
+        {
+            monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
+            return;
+        }
+    }
+
+    if (mons->type == MONS_BLAZEHEART_CORE)
+    {
+        mons->suicide();
+        return;
+    }
+
+    if (mons->type == MONS_RENDING_BLADE)
+    {
+        // Perform as many slashes as we are able and have charge for.
+        bool did_slash = false;
+        while (_handle_rending_blade_trigger(mons))
+            did_slash = true;
+
+        mons->number = 0;
+
+        // Pause in place after attacking (for slightly better visuals).
+        if (did_slash)
+        {
+            mons->speed_increment = 60;
+            skip_turn = true;
+        }
+    }
+
+    // Return to the player's side if they've gotten too separated
+    if (mons->type == MONS_HAUNTED_ARMOUR)
+    {
+        if (grid_distance(you.pos(), mons->pos()) > 5)
+        {
+            coord_def spot;
+            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
+                                         -1, &you))
+            {
+                mons->move_to_pos(spot, true, true);
+                simple_monster_message(*mons, " returns to your side.");
+            }
+            // If returning is impossible, kill it immediately.
+            else
+            {
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
+                return;
+            }
+        }
+    }
+
+    mons->shield_blocks = 0;
+    check_spectral_weapon(*mons);
+
+    actor_apply_cloud(mons);
+    actor_apply_toxic_bog(mons);
+
+    if (!mons->alive())
+        return;
+
+    if (you.duration[DUR_OOZEMANCY] && (env.level_state & LSTATE_SLIMY_WALL))
+        slime_wall_damage(mons, speed_to_duration(mons->speed));
+
+    if (!mons->alive())
+        return;
+
+    if (env.level_state & LSTATE_ICY_WALL)
+        ice_wall_damage(*mons, speed_to_duration(mons->speed));
+
+    if (!mons->alive())
+        return;
+
+    _monster_regenerate(mons);
+
+    if (skip_turn)
+        return;
+
+    if (mons->type == MONS_TIAMAT && one_chance_in(3))
+        draconian_change_colour(mons);
+
+    if (mons->type == MONS_JEREMIAH && !mons->asleep())
+        for (int i = 0; i < 2; i++)
+            _passively_summon_butterfly(*mons);
+
+    // Please change _slouch_damage to match!
+    if (mons->cannot_act()
+        || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
+            && ++mons->move_spurt / 8 % 3 != 2  // but are not helpless
+        || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
+            && (++mons->move_spurt / 6 % 3 == 1 || mons->move_spurt / 3 % 5 == 1))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
     }
 
     if (mons->type == MONS_BOULDER)
@@ -2084,62 +2189,6 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-
-    // Melt barricades whose creator has moved too far away.
-    if (mons->type == MONS_SPLINTERFROST_BARRICADE)
-    {
-        actor* agent = actor_by_mid(mons->summoner);
-        if (!agent || grid_distance(agent->pos(), mons->pos()) > 2)
-        {
-            monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
-            return;
-        }
-    }
-
-    if (mons->type == MONS_BLAZEHEART_CORE)
-    {
-        mons->suicide();
-        return;
-    }
-
-    if (mons->type == MONS_RENDING_BLADE)
-    {
-        // Perform as many slashes as we are able and have charge for.
-        bool did_slash = false;
-        while (_handle_rending_blade_trigger(mons))
-            did_slash = true;
-
-        mons->number = 0;
-
-        // Pause in place after attacking (for slightly better visuals).
-        if (did_slash)
-        {
-            mons->speed_increment = 60;
-            return;
-        }
-    }
-
-    // Return to the player's side if they've gotten too separated
-    if (mons->type == MONS_HAUNTED_ARMOUR)
-    {
-        if (grid_distance(you.pos(), mons->pos()) > 5)
-        {
-            coord_def spot;
-            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
-                                         -1, &you))
-            {
-                mons->move_to_pos(spot, true, true);
-                simple_monster_message(*mons, " returns to your side.");
-            }
-            // If returning is impossible, kill it immediately.
-            else
-            {
-                monster_die(*mons, KILL_RESET, NON_MONSTER);
-                return;
-            }
-        }
-    }
-
     if (mons->type == MONS_BOUNDLESS_TESSERACT)
     {
         tesseract_action(*mons);
@@ -2155,36 +2204,6 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    mons->shield_blocks = 0;
-    check_spectral_weapon(*mons);
-
-    actor_apply_cloud(mons);
-    actor_apply_toxic_bog(mons);
-
-    if (!mons->alive())
-        return;
-
-    if (you.duration[DUR_OOZEMANCY] && (env.level_state & LSTATE_SLIMY_WALL))
-        slime_wall_damage(mons, speed_to_duration(mons->speed));
-
-    if (!mons->alive())
-        return;
-
-    if (env.level_state & LSTATE_ICY_WALL)
-        ice_wall_damage(*mons, speed_to_duration(mons->speed));
-
-    if (!mons->alive())
-        return;
-
-    if (mons->type == MONS_TIAMAT && one_chance_in(3))
-        draconian_change_colour(mons);
-
-    if (mons->type == MONS_JEREMIAH && !mons->asleep())
-        for (int i = 0; i < 2; i++)
-            _passively_summon_butterfly(*mons);
-
-    _monster_regenerate(mons);
-
     if (mons->has_ench(ENCH_VEXED))
     {
         do_vexed_attack(*mons);
@@ -2192,24 +2211,10 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    // Please change _slouch_damage to match!
-    if (mons->cannot_act()
-        || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
-            && ++mons->move_spurt / 8 % 3 != 2  // but are not helpless
-        || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
-            && (++mons->move_spurt / 6 % 3 == 1 || mons->move_spurt / 3 % 5 == 1))
-    {
-        mons->speed_increment -= non_move_energy;
-        return;
-    }
-
-    // Continue reciting.
-    if (mons->has_ench(ENCH_WORD_OF_RECALL))
-    {
-        mons->speed_increment -= non_move_energy;
-        return;
-    }
-    if (mons->has_ench(ENCH_CLOCKWORK_BEE_CAST))
+    // Continue reciting (or staring off into space...)
+    if (mons->has_ench(ENCH_DAZED)
+        || mons->has_ench(ENCH_WORD_OF_RECALL)
+        || mons->has_ench(ENCH_CLOCKWORK_BEE_CAST))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2226,12 +2231,6 @@ void handle_monster_move(monster* mons)
             return;
         }
         // Otherwise (if it was cancelled or interrupted), take turn as normal
-    }
-
-    if (mons->has_ench(ENCH_DAZED))
-    {
-        mons->speed_increment -= non_move_energy;
-        return;
     }
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
