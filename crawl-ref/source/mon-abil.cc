@@ -1444,8 +1444,11 @@ void solar_ember_blast()
 
 void activate_tesseracts()
 {
-    if (you.props.exists(TESSERACT_START_TIME_KEY))
+    if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
         return;
+
+    // Tracked on the player instead of the monster so status lookup is quicker.
+    you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
 
     bool did_activate = false;
     for (monster_iterator mi; mi; ++mi)
@@ -1453,6 +1456,7 @@ void activate_tesseracts()
         if (mi->type != MONS_BOUNDLESS_TESSERACT)
             continue;
 
+        behaviour_event(*mi, ME_ALERT);
         env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
         set_terrain_seen(mi->pos());
         view_update_at(mi->pos());
@@ -1464,8 +1468,6 @@ void activate_tesseracts()
         {
             mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
             mark_milestone("tesseract.activate", "activated a tesseract");
-            you.props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
-            mi->props[TESSERACT_START_TIME_KEY] = you.elapsed_time;
             mi->props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
             mi->props[TESSERACT_XP_KEY] = 15000;
             tesseract_action(**mi);
@@ -1477,49 +1479,59 @@ void activate_tesseracts()
 void tesseract_action(monster& mon)
 {
     // Only operate logic on a single tesseract on the floor
-    if (!mon.props.exists(TESSERACT_START_TIME_KEY))
+    if (!mon.props.exists(TESSERACT_SPAWN_TIMER_KEY))
         return;
 
     // Handle regular spawning
     int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
+    int& count = you.props[TESSERACT_SPAWN_COUNTER_KEY].get_int();
 
-    // Don't act as if more than 1000 turns have passed off-level (in case the
-    // player goes to do Extended in the meantime).
-    if (you.elapsed_time - timer > 10000)
-        timer = you.elapsed_time - 10000;
+    // Don't act as if more than 500 turns have passed off-level. (It only runs
+    // off-level at all to prevent it being correct to return to Zot:4 every
+    // time you want to rest, and this is hopefully long enough to cover those
+    // situations.)
+    if (you.elapsed_time - timer > 5000)
+        timer = you.elapsed_time - 5000;
 
-    // Count number of unrewarding tesseract spawns that already exist.
-    int count = 0;
+    // Exit early if it's not yet time to spawn things.
+    if (you.elapsed_time < timer)
+        return;
+
+    // Count number of both tesseract spawns and remaining non-tesseract
+    // monsters on the floor.
+    int spawn_count = 0;
+    int non_spawn_count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (testbits(mi->flags, MF_HARD_RESET | MF_NO_REWARD)
-            && mi->props.exists(TESSERACT_CREATED_KEY))
-        {
-            ++count;
-        }
+        if (mi->props.exists(TESSERACT_CREATED_KEY))
+            ++spawn_count;
+        else if (!mi->is_summoned() && !mi->is_peripheral() && !mi->wont_attack())
+            ++non_spawn_count;
     }
+
+    // Cap number of tesseract spawns at 60, and total number of monsters on the
+    // floor at 100 (which is above the average starting monster count, but not
+    // the *maximum* starting monster count).
+    int allowed = min(60 - spawn_count, 100 - spawn_count - non_spawn_count);
 
     // Catch up however many spawns should have happened since the last time
     // we activated.
-    while (you.elapsed_time >= timer)
+    while (you.elapsed_time >= timer && allowed > 0)
     {
-        const int time_passed = you.elapsed_time - mon.props[TESSERACT_START_TIME_KEY].get_int();
-        const int interval = max(225, 600 - (time_passed / 32));
-
-        timer += random_range(interval, interval * 4 / 3);
-
-        // Never make more than 100 unrewarding spawns on the level in total.
-        // (This is already pretty out of control, but it could always be worse...)
-        if (count >= 100)
-            continue;
+        // Spawn the earliest monsters from the tesseract more quickly, then
+        // slow down to a constant rate.
+        const int interval = 70 + (min(15, count) * 50 / 2);
+        timer += random_range(interval, interval * 5 / 4);
 
         mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
         mg.place = level_id::current();
         mg.place.depth = 7;
         mg.flags |= MG_FORBID_BANDS;
-        mg.proximity = PROX_AWAY_FROM_PLAYER;
         mg.foe = MHITYOU;
         mg.non_actor_summoner = "a Boundless Tesseract";
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+        if (count >= 80 && one_chance_in(4))
+            mg.proximity = PROX_CLOSE_TO_PLAYER;
 
         monster* spawn = mons_place(mg);
 
@@ -1535,10 +1547,10 @@ void tesseract_action(monster& mon)
         if (xp_pool >= xp)
             xp_pool -= xp;
         else
-        {
             spawn->flags |= (MF_HARD_RESET | MF_NO_REWARD);
-            spawn->props[TESSERACT_CREATED_KEY] = true;
-            ++count;
-        }
+
+        spawn->props[TESSERACT_CREATED_KEY] = true;
+        --allowed;
+        ++count;
     }
 }
