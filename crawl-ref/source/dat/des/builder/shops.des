@@ -1547,7 +1547,7 @@ TAGS:   transparent extra
 WEIGHT: 3
 # Only deals in items that are probably really heavy.
 KFEAT:  S = general shop type:Mass suffix:Market ; \
-        large rock ego:heavy w:30 | \
+        large rock w:30 | \
         giant club ego:heavy w:20 | \
         giant spiked club ego:heavy | \
         great mace ego:heavy | \
