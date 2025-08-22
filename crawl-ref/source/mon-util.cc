@@ -850,8 +850,10 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
 {
     // Do the expensive LOS check last.
     return mons_offers_beogh_conversion(mon)
-                // Only try to convert atheists
+                // Only try to convert atheists...
                 && you.religion == GOD_NO_GOD
+                //...who aren't facing Beogh's wrath
+                && !you.penance[GOD_BEOGH]
                 && !you.has_mutation(MUT_FORLORN)
                 && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
