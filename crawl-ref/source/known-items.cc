@@ -376,6 +376,7 @@ void check_item_knowledge(bool unknown_items)
 #endif
     vector<const item_def*> items_misc;
     vector<const item_def*> items_talismans;
+    vector<const item_def*> items_baubles;
     vector<const item_def*> items_other;   //List of other items should go after everything
     vector<SelItem> selected_items;
 
@@ -467,6 +468,9 @@ void check_item_knowledge(bool unknown_items)
         for (int i = 0; i < NUM_TALISMANS; i++)
             _add_fake_item(OBJ_TALISMANS, i, selected_items, items_talismans);
 
+        for (int i = 0; i < NUM_BAUBLES; i++)
+            _add_fake_item(OBJ_BAUBLES, i, selected_items, items_baubles);
+
         // N.b. NUM_BOOKS drastically exceeds MAX_SUBTYPES, but it doesn't
         // matter for force_autopickup purposes because we only use 0 and
         // BOOK_MANUAL
@@ -491,8 +495,8 @@ void check_item_knowledge(bool unknown_items)
     sort(items_food.begin(), items_food.end(), _identified_item_names);
 #endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
-    // Intentionally don't sort talismans so that they're ordered by tier instead.
-    // (This is dubious!)
+    // Intentionally don't sort talismans or baubles so that they're ordered by
+    // tier instead. (This is dubious!)
 
     KnownMenu menu(unknown_items, all_items_known);
     string stitle;
@@ -520,6 +524,7 @@ void check_item_knowledge(bool unknown_items)
 #endif
     ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     ml = menu.load_items(items_talismans, known_item_mangle, ml, false);
+    ml = menu.load_items(items_baubles, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
         menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
@@ -538,6 +543,7 @@ void check_item_knowledge(bool unknown_items)
 #endif
     deleteAll(items_misc);
     deleteAll(items_talismans);
+    deleteAll(items_baubles);
     deleteAll(items_other);
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
