@@ -68,24 +68,25 @@ O
 ENDMAP
 
 # Scenery, no threat.
-NAME:   swamp_mist_pool
-TAGS:   swamp_entry no_pool_fixup transparent
-KFEAT:  O = enter_swamp
+NAME:    swamp_mist_pool
+TAGS:    swamp_entry no_pool_fixup transparent
+KFEAT:   O = enter_swamp
 SHUFFLE: XYZ
-SUBST: Y : YX, Z : ZX, X = W, Y = w, Z = w
-MARKER: O = lua:fog_machine { \
+SUBST:   Y : YX, Z : ZX, X = W, Y = w, Z = w
+SUBST:   ' : ``', ' = t@@, " = tw, t = ttw, A = Ww
+MARKER:  O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-SUBST:  '= t.., "= tw, t=ttw, A=Ww
+CLEAR:   `
 MAP
-       @
-   't"Ywt@
-  't"wYwXt'
- 't"wAYXw"t'
- t"wwAOAZw"t
- 't"wAAZw"t'
-  't"wwZ"t'
-   't"wt@
+      @
+  't"Ywt@
+ 't"wYwXt'
+'t"wAYXw"t'
+t"wwAOAZw"t
+'t"wAAZw"t'
+ 't"wwZ"t'
+  't"wt@
 ENDMAP
 
 NAME:   minmay_swamp_entry_swarm
