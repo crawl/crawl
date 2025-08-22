@@ -1547,15 +1547,17 @@ TAGS:   transparent extra
 WEIGHT: 3
 # Only deals in items that are probably really heavy.
 KFEAT:  S = general shop type:Mass suffix:Market ; \
-        large rock w:30 | \
-        giant club w:20 | \
-        giant spiked club | \
-        great mace | \
-        executioner's axe w:2 | \
-        triple sword w:2 | \
-        bardiche w:5 | \
+        large rock ego:heavy w:30 | \
+        giant club ego:heavy w:20 | \
+        giant spiked club ego:heavy | \
+        great mace ego:heavy | \
+        executioner's axe ego:heavy w:2 | \
+        triple sword ego:heavy w:2 | \
+        bardiche ego:heavy w:5 | \
         plate armour w:20 | \
         tower shield | \
+        book of the fortress | \
+        granite talisman | \
         crystal plate armour w:1
 MAP
 S
