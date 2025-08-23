@@ -4,19 +4,19 @@ How to make levels for Dungeon Crawl Stone Soup
 Part IV:   TRIGGERABLES
            ============
 
-Contents:  A. Introduction
-           B. Sample syntax
-           C. Examples of usage
-           D. Convenience functions
-           E. List of triggerers
-           F. Master and slaves
+Contents:  S. Introduction
+           T. Sample syntax
+           U. Examples of usage
+           V. Convenience functions
+           W. List of triggerers
+           X. Primary and replica
 
 This document describes the usage of Triggerables, a modular, extensible and
 highly flexible Lua marker system used for making vaults. For more general
 syntax and other advanced Lua topics, see introduction.txt, syntax.txt and
 advanced.txt.
 
-A.   Introduction
+S.   Introduction
 =================
 
 Triggerables are an event-driven framework that can be used to further randomise
@@ -27,7 +27,7 @@ You've probably already used Triggerables in vaults, or seen them in action:
 FogMachines are a randomised Triggerable, while many altar and trap vaults use
 Triggerables to take some action when the player comes into view or steps on a
 specific square. These often-used Triggerables may be wrapped in convenience
-functions (see section D).
+functions (see section V).
 
 However, Triggerables can be combined with pre-defined Lua functions to achieve
 extremely complicated game mechanics: in the "Collapsing Caverns" Volcano vault,
@@ -35,14 +35,14 @@ they are used to randomly close cave entrances, while in the "Overflow" Volcano
 vault, they are used to increase and decrease the amount of lava present.
 
 Triggerables are usually only limited by the amount of triggers (see
-the list in section E), and Lua wrappers available. As these are constantly
+the list in section W), and Lua wrappers available. As these are constantly
 increasing, you are really only limited by imagination and vault design ethics.
 
-Sections B and C cover customised Triggerables (using examples from the Volcano
-portal vaults), while section D covers convenience functions (using examples
+Sections T and U cover customised Triggerables (using examples from the Volcano
+portal vaults), while section V covers convenience functions (using examples
 from Branch ends).
 
-B.   Sample syntax
+T.   Sample syntax
 ==================
 
 Customised Triggerers usually use the non-abstracted TriggerableFunction
@@ -73,7 +73,7 @@ local collapse_marker = TriggerableFunction:new (
     repeated=true,
     props = {
       -- Only collapse one doorway at a time, randomly.
-      single_random_slave="true"
+      single_random_replica="true"
     }
   }
 )
@@ -129,8 +129,8 @@ It also optionally takes the following parameters: "repeated" which defaults to
 will not be subsequently fired.
 
 "props". A table consisting of one or more properties. In this instance takes
-the "single_random_slave" parameter, which is linked into Master and Slave
-mechanics (see Section F).
+the "single_random_replica" parameter, which is linked into Primary and Replica
+mechanics (see Section X).
 
 "data". A table consisting of data used by the function. This defaults to a
 blank table, but can be specified with on creation of the marker. (See the
@@ -140,18 +140,18 @@ blank table, but can be specified with on creation of the marker. (See the
 
 The third and final part of the Triggerable is the actual trigger itself: this
 is an instance of DgnTriggerer, and is added to the marker with the
-"add_triggerer" function. See section E, "List of triggerers" for more
+"add_triggerer" function. See section W, "List of triggerers" for more
 information.
 
 -----------------------------
 
 In our example, all of this combined creates a Triggerable which does the
-following (ignoring the master/slave mechanics):
+following (ignoring the primary/replica mechanics):
 
 1. Randomly every "50" and "200" "turns"[1]
-2. Pick a random slave
-3. Trigger the function "collapse_doorways" at the slave
-4. Remove the triggerer from that slave.
+2. Pick a random replica
+3. Trigger the function "collapse_doorways" at the replica
+4. Remove the triggerer from that replica.
 
 This is repeated until all of the triggerers have been removed, or the player
 leaves the level.
@@ -164,7 +164,7 @@ leaves the level.
 The following section will provide some annotated examples of customised
 TriggerableFunctions.
 
-C. Examples of usage
+U. Examples of usage
 ====================
 
 These vaults were taken in whole from the crawl code repository, and several
@@ -188,14 +188,14 @@ function callback.convert_lava (data, triggerable, triggerer, marker, ev)
   ** Here, values stored in the persistent table are altered.
   data.lava_phase = data.lava_phase + 1
   local lp = data.lava_phase
-  local my_slaves = {}
+  local my_replicas = {}
 
   ** This code converts a square either from floor to lava, or from lava to
   ** floor.
   -- So we don't have to duplicate code too much.
-  local function convert_slaves_to_lava (mslaves, opposite)
+  local function convert_replicas_to_lava (mreplicas, opposite)
    local yp = dgn.point(you.pos())
-    for _, pos in ipairs(mslaves) do
+    for _, pos in ipairs(mreplicas) do
       if pos ~= yp then
         if opposite then
           dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
@@ -206,34 +206,34 @@ function callback.convert_lava (data, triggerable, triggerer, marker, ev)
     end
   end
 
-  ** The use of slaves in this function is slightly different to the normal
-  ** slaved Triggerables. Instead, we access the slave fetching functions
+  ** The use of replicas in this function is slightly different to the normal
+  ** replicad Triggerables. Instead, we access the replica fetching functions
   ** directly in the code.
   if lp == 1 then
     crawl.mpr("The ground shudders ominously.", "warning")
   elseif lp == 2 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 2)
     crawl.mpr("In the distance, the volano explodes with a roar! Lava spreads "
                .. "onto the path.", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 3 then
     crawl.mpr("The air is thick with the scent of sulphur.", "warning")
   elseif lp == 4 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 4)
     crawl.mpr("There is another distant roar. More lava overflows!", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 5 then
     crawl.mpr("The ground moves violently!", "warning")
   elseif lp == 6 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 6)
     crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
               "fill the cavern.", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 7 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 6)
     crawl.mpr("The ground shudders. Some of the lava has hardened enough to " ..
               "walk over!", "warning")
-    convert_slaves_to_lava(my_slaves, true)
+    convert_replicas_to_lava(my_replicas, true)
   end
 end
 }}
@@ -247,7 +247,7 @@ MONS:       nothing, nothing, nothing
 
 ** The function takes five parameters, as noted, though only acts on two.
 
-** This sets up the various slaves, using a portal descriptor with the
+** This sets up the various replicas, using a portal descriptor with the
 ** lava_phase being parameter used to locate them.
 
 -- So we know what to convert.
@@ -318,16 +318,16 @@ function callback.skele_death (data, triggerable, triggerer, marker, ev)
   end
 
   ** Like the overflow vault from volcano.des, this directly accesses the
-  ** network of slaves in order to find out which section of wall should be
+  ** network of replicas in order to find out which section of wall should be
   ** replaced.
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
+  local function get_replica (replicanum)
+    local myreplicas = dgn.find_marker_positions_by_prop("skele_replica", replicanum)
+    return myreplicas[1]
   end
 
-  local wall_pos = get_slave(data.skele_number)
+  local wall_pos = get_replica(data.skele_number)
   if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
+    crawl.mpr("Couldn't find a replica!")
   end
 
   dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
@@ -380,14 +380,14 @@ KFEAT:  " = .
 ** In this vault, killing one of the name skeletal warriors causes part of the
 ** wall to slide back. These sections of wall have to be individually marker as
 ** such.
--- First off, slave marker magic.
-lua_marker("A", portal_desc { skele_slave=1 })
-lua_marker("B", portal_desc { skele_slave=2 })
-lua_marker("C", portal_desc { skele_slave=3 })
-lua_marker("D", portal_desc { skele_slave=4 })
-lua_marker("E", portal_desc { skele_slave=5 })
-lua_marker("F", portal_desc { skele_slave=6 })
-lua_marker("G", portal_desc { skele_slave=7 })
+-- First off, replica marker magic.
+lua_marker("A", portal_desc { skele_replica=1 })
+lua_marker("B", portal_desc { skele_replica=2 })
+lua_marker("C", portal_desc { skele_replica=3 })
+lua_marker("D", portal_desc { skele_replica=4 })
+lua_marker("E", portal_desc { skele_replica=5 })
+lua_marker("F", portal_desc { skele_replica=6 })
+lua_marker("G", portal_desc { skele_replica=7 })
 
 ** Again, taking five parameters.
 
@@ -431,7 +431,7 @@ v.."..v4."..v.."..v
 vvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-D. Convenience functions
+V. Convenience functions
 ========================
 
 Previously, we have discussed completely customised Triggerables, using the
@@ -449,7 +449,7 @@ Currently, convenience functions for Triggerables include:
   * function_at_spot, as above, but accepts a function and data parameter
       instead of message and channel.
 
-E.    List of triggerers
+W.    List of triggerers
 ========================
 
 This list taken from dat/dlua/lm_trig.lua, listing the different "type"
@@ -488,40 +488,24 @@ parameters for each.
    * entered_level: Called when player enters the level, after all level
         setup code has completed.
 
-F.     Master and slaves
+X.     Primary and replicas
 ========================
 
-Multiple Triggerables can be combined together in a master/slave setup. There
+Multiple Triggerables can be combined together in a primary/replica setup. There
 are multiple methods of doing this. The simplest is to provide a
-"master_name" parameter to the main marker, and then provide "slave_to" at all
-of the individual slave markers, setting the same value for each.
+"primary_name" parameter to the main marker, and then provide "replica_to" at
+all of the individual replica markers, setting the same value for each.
 
-When a Triggerable is fired and it has a "master_name" property, it will execute
-at each of the slave locations as defined above, unless the master has the
-parameter "single_random_slave" (set to anything but empty), in which case it
-will randomly chose one slave and execute there. Further, the master marker may
-be slaved to itself in order to have execution occur there.
+When a Triggerable is fired and it has a "primary_name" property, it will
+execute at each of the replica locations as defined above, unless the primary
+has the parameter "single_random_replica" (set to anything but empty), in which
+case it will randomly chose one replica and execute there. Further, the primary
+marker may be replicad to itself in order to have execution occur there.
 
 Triggerables that depend on position (such as player_move) will only fire when
-the player moves over the master marker. For them to fire at either slave or
-master, provide the "listen_to_slaves" property. Finally, to have only the slave
-that fired be executed, provide the "only_at_slave" parameter.
-
------------------------------
-
-An example from dat/hells.des, using the MonsterOnTriggerer marker, a subset of
-Triggerables, and master/slave mechanics:
-
-MARKER:  1 = lua:monster_on_death { \
-            death_monster="Dispater", new_monster="generate_awake iron golem", \
-            message_seen="The iron statue comes to life!", \
-            message_unseen="You hear a grinding sound.", \
-            master_name="dispater" \
-         }
-MARKER:  o = lua:props_marker { \
-            veto_fragmentation="veto", veto_disintegrate="veto", \
-            slaved_to="dispater" \
-         }
+the player moves over the primary marker. For them to fire at either replica or
+primary, provide the "listen_to_replicas" property. Finally, to have only the
+replica that fired be executed, provide the "only_at_replica" parameter.
 
 -----------------------------
 

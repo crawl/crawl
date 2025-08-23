@@ -5,22 +5,22 @@ How to make levels for Dungeon Crawl Stone Soup
 Part III:  Advanced Methods
            ================
 
-Contents:  I. Conditionalising levels
-           J. Validating levels
-           K. Vetoing levels
-           L. Abyss vaults
-           M. Portal vaults
-           N. Lua reference
-           O. Lua hooks
-           P. Map statistics
-           Q. Map generation
+Contents:  J. Conditionalising levels
+           K. Validating levels
+           L. Vetoing levels
+           M. Abyss vaults
+           N. Portal vaults
+           O. Lua reference
+           P. Lua hooks
+           Q. Map statistics
+           R. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a
 separate document: triggerables.txt.
 
 
-I.    Conditionalising levels
+J.    Conditionalising levels
 =============================
 
 Crawl translates level (.des) files into Lua code chunks and runs these chunks
@@ -80,7 +80,7 @@ ORIENT: float
 : if you.xl() > 18 then
 MONS: greater mummy
 : else
-MONS: deep elf priest / deep elf sorcerer / deep elf demonologist
+MONS: deep elf high priest / deep elf sorcerer / deep elf demonologist
 : end
 MAP
 xxxxxx
@@ -96,9 +96,9 @@ NAME: condition_003
 DEPTH: Elf:*, Orc:*
 ORIENT: float
 : if you.branch() == "Orc" then
-MONS: orc priest, orc high priest
+MONS:   orc knight, orc high priest
 : else
-MONS: deep elf priest, deep elf high priest
+MONS:   deep elf knight, deep elf high priest
 : end
 MAP
 xxxxxx
@@ -125,11 +125,11 @@ checks the syntax of your Lua code. If you conditionalise your map,
 however, you may run into compile failures. Take this variant, which
 (incorrectly) attempts to conditionalise the map:
 
-NAME: condition_004
-DEPTH: Elf:*, Orc:*
+NAME:   condition_004
+DEPTH:  Orc, Elf
 ORIENT: float
 : if you.branch() == "Orc" then
-MONS: orc priest, orc high priest
+MONS:   orc knight, orc high priest
 MAP
 xxxxxx
 x1...x
@@ -138,7 +138,7 @@ x1...x
 xxxxxx
 ENDMAP
 : elseif you.branch() == "Elf" then
-MONS: deep elf priest, deep elf high priest
+MONS:   deep elf knight, deep elf high priest
 MAP
 xxxxxx
 x1...x
@@ -174,7 +174,7 @@ For more details on the available Lua API and syntax, see the Lua
 reference section.
 
 
-J.    Validating levels
+K.    Validating levels
 =======================
 
 If you have a map with lots of transforms (SUBST and SHUFFLE), and
@@ -231,12 +231,12 @@ validate {{
     return true
 }}
 
-K.   Vetoing Levels
+L.   Vetoing Levels
 ===================
 
 Similarly to validating a level post-placement, it is possible to veto
 placement of a map before it is even considered. This can be especially useful
-if, in the example of due_tower_of_silence, you don't want a unique-specific
+if, in the example of spriggan_forest, you don't want a unique-specific
 map to be placed if that unique has already been placed by another map.
 
 Veto blocks, however, use the inverse logic to validate blocks: if a veto block
@@ -244,7 +244,7 @@ returns true, the map will not be placed, otherwise placement will continue as
 normal. For example:
 
 veto {{
-    if you.uniques("Jory") then
+    if you.uniques("the Enchantress") then
       return true
     else
       return false
@@ -259,7 +259,7 @@ the game to close.
 Do not use veto chunks with vaults tagged with PLACE unless you are absolutely
 certain this will not happen.
 
-L.   Abyss Vaults
+M.   Abyss Vaults
 =================
 
 Abyssal vaults have more limitations than vaults in the regular
@@ -299,8 +299,14 @@ d. Timers and other listeners in an abyssal vault may be discarded at
    may be removed at any time as the abyss shifts away from your
    vault.
 
+One thing notable about Abyss vaults is that its shifting nature can be used
+alongside specified, stable terrain to uniquely change the cover a player has.
+(Do try to avoid making the player wait for multiple terrain changes to
+actually make any progress within a a vault, though.) Vaults deploying some of
+this can be seen force_connectivity_ok in scripts/placement.lua- if you submit
+something using such, it is likely it will need to be added to that list.
 
-M.   Portal Vaults
+N.   Portal Vaults
 ==================
 
 Portal vaults are branches accessed by portals in the dungeon. You can
@@ -421,7 +427,7 @@ list during play.
 You can also edit mon-pick-data.h, but that is more complicated, and not
 necessary if you have a random monster list set in the vault.
 
-N.    Lua reference
+O.    Lua reference
 ===================
 
 How maps are processed
@@ -894,7 +900,7 @@ The "colour" module provides functions for defining new colour patterns.
 add_colour
 
 
-O.    Lua hooks
+P.    Lua hooks
 ===============
 
 When the dungeon builder places a vault, it runs hooks at certain
@@ -969,7 +975,7 @@ errors will still be displayed to the end user. The only exception is
 the "post_place" hook -- errors in the post_place hook will cause the
 dungeon builder to veto its current level and retry level generation.
 
-P.   Map Statistics
+Q.   Map Statistics
 ===================
 
 Full-debug Crawl builds (i.e., ones built with "make debug") can produce
@@ -1000,7 +1006,7 @@ optimized debug builds by 'make debug CFOPTIMIZE="-Ofast"' if you're not
 after backtraces (mapstat is quite good for finding map generation crashes).
 CFOPTIMIZE is also a good place for inserting -pg into.
 
-Q.   Map Generation
+R.   Map Generation
 ===================
 
 Full-debug Crawl builds (see above for more information) include a script that
