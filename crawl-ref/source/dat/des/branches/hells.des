@@ -286,7 +286,7 @@ DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 KMONS: 1 = tormentor / hellion / nothing
 : if you.in_branch("Coc") then
 KMONS: > = ice statue
-: elseif you.in_branch("Coc") then
+: elseif you.in_branch("Dis") then
 KMONS: > = orange crystal statue
 : else
 KMONS: > = obsidian statue
