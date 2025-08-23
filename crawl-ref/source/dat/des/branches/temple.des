@@ -3402,6 +3402,37 @@ xA...........Tx    xB.Bx
 xxxxxxxxxxxxxxx    xxxxx
 ENDMAP
 
+# 22 gods
+NAME:    nicolae_temple_ziggedy_zaggedy
+TAGS:    temple_altars_22 no_pool_fixup
+PLACE:   Temple
+ORIENT:  encompass
+MAP
+    ccccccccccccccccccc
+   cc.ccc.ccc.ccc.ccc.cc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...{...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+   cc.ccc.ccc.ccc.ccc.cc
+    ccccccccccccccccccc
+ENDMAP
+
 ##############################################################################
 # <<6>> Variable altars, generic layouts
 
@@ -4862,12 +4893,13 @@ cc-------cc
   ccccccc
 ENDMAP
 
-# 6 through 21 gods
+# 6 through 25 gods
 NAME:   nicolae_temple_bog_church
 TAGS:   temple_altars_6  temple_altars_7  temple_altars_8  temple_altars_9  \
         temple_altars_10 temple_altars_11 temple_altars_12 temple_altars_13 \
         temple_altars_14 temple_altars_15 temple_altars_16 temple_altars_17 \
-        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21
+        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21 \
+        temple_altars_22 temple_altars_23 temple_altars_24 temple_altars_25
 PLACE:  Temple
 ORIENT: encompass
 KFEAT:  t = mangrove
@@ -4891,16 +4923,16 @@ ttttttttttttttttttttttttttttttttttttt
 ttttttttttMMMwwwwttttttttttttDwwwwttt
 ttttttMMMMwwwwwwwwwwwwwttttDDDwwwwwtt
 tttttMM....wwwwww!wwwwwwtt...DDDwwwtt
-tttttw'..B...wwwwwwwwww........DDDttt
+tttttw'..B...wwwwwwwwww....B...DDDttt
 tttwwwWW....''WWwwww........`...DDttt
-ttwwwWWWWWWWWWWWW.....-..B.......tttt
+ttwwwWWWWWWWWWWWW.....-.B........tttt
 ttwww'...WWWWW'...B..--....-..B..tttt
 ttw!w..B..''...--.........-t....ttttt
-tttwww.......B.-ttt-.....tt-...Ettttt
-ttttwww..`.....-ttt-..B..ttt..EEEtttt
+tttwww.......B.-ttt-..B..tt-...Ettttt
+ttttwww..`.....-ttt-.....ttt..EEEtttt
 tttttwww.......-----.....---..EEEEttt
-tttttLww...B...................Ettttt
-tttttLLww........B....`......B..ttttt
+tttttLww...B.........B.........Ettttt
+tttttLLww.......B.....`......B..ttttt
 ttttttLLw..t--.....--....B......FFttt
 tttttttLLL.-t-....tt.......WW..FFFFtt
 tttttttLLL.--...`.tt.B.'WWWWW'.FFFwtt
