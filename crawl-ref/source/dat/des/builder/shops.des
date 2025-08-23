@@ -1548,17 +1548,14 @@ WEIGHT: 3
 # Only deals in items that are probably really heavy.
 KFEAT:  S = general shop type:Mass suffix:Market ; \
         large rock w:30 | \
-        giant club ego:heavy w:20 | \
-        giant spiked club ego:heavy | \
-        great mace ego:heavy | \
-        executioner's axe ego:heavy w:2 | \
-        triple sword ego:heavy w:2 | \
-        bardiche ego:heavy w:5 | \
-        plate armour w:20 | \
-        tower shield | \
+        giant club ego:heavy w:20 | giant spiked club ego:heavy | great mace ego:heavy | executioner's axe ego:heavy w:2 | triple sword ego:heavy w:2 | bardiche ego:heavy w:5 | triple crossbow ego:heavy w:5 |\
+        dark maul w:1 | sniper w:1 | \
+        plate armour w:20 | crystal plate armour w:1 | tower shield | \
         book of the fortress | \
         granite talisman | \
-        crystal plate armour w:1
+        double sword ego:heavy | broad axe ego:heavy | eveningstar ego:heavy w:5 | morningstar ego:heavy w:5
+
+        
 MAP
 S
 ENDMAP
