@@ -2518,13 +2518,13 @@ ENDMAP
 NAME:     elven_hall_of_blades_hangedman_alternative
 WEIGHT:   5
 ORIENT:   north
-: hall_of_blades_setup(_G, "-")
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
 SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
+: hall_of_blades_setup(_G, "-")
 SUBVAULT: A : elf_blade_entry
 SUBST:    A : x, ' = .
 CLEAR:    "
