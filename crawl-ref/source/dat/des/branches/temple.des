@@ -3403,10 +3403,10 @@ xxxxxxxxxxxxxxx    xxxxx
 ENDMAP
 
 # 22 gods
-NAME:    nicolae_temple_ziggedy_zaggedy
-TAGS:    temple_altars_22 no_pool_fixup
-PLACE:   Temple
-ORIENT:  encompass
+NAME:   nicolae_temple_ziggedy_zaggedy
+TAGS:   temple_altars_22 no_pool_fixup
+PLACE:  Temple
+ORIENT: encompass
 MAP
     ccccccccccccccccccc
    cc.ccc.ccc.ccc.ccc.cc
@@ -3431,6 +3431,34 @@ ccwwwc...c...c...c...cwwwcc
   cc...c...c...c...c...cc
    cc.ccc.ccc.ccc.ccc.cc
     ccccccccccccccccccc
+ENDMAP
+
+# 22 gods
+NAME:   nicolae_temple_dense_god_circle
+TAGS:   temple_altars_22
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  `B{<U = floor_limestone
+COLOUR: ` = yellow
+MAP
+     cccccccc
+   cccB`B`B`ccc
+  ccB```````B`cc
+ cc```......``Bcc
+ cB``........```c
+cc``..........`Bcc
+cB`....````....``c
+c``...`U``U`...`Bc
+cB`...``{```...``c
+c``...```<``...`Bc
+cB`...`U``U`...``c
+c``....````....`Bc
+ccB`..........``cc
+ c```........``Bc
+ ccB``......```cc
+  cc`B```````Bcc
+   ccc`B`B`Bccc
+     cccccccc
 ENDMAP
 
 ##############################################################################
