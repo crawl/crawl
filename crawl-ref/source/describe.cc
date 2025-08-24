@@ -2368,7 +2368,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "The spell refund chance is increased by Evocations skill.";
     case SPARM_SNIPING:
         return "it increases the wearer's damage with ranged and thrown "
-               "weapons against incapacitated targets by 50%.";
+               "weapons against incapacitated targets by 50%. Incapacitated "
+               "targets are those that are asleep, paralyzed, petrified, "
+               "confused or caught in a net.";
     case SPARM_ICE:
         return "it enhances the wearer's ice magic.";
     case SPARM_FIRE:
