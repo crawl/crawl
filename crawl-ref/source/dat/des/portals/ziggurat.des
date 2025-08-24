@@ -152,6 +152,40 @@ n-xw2O3wx-n
  .  .n.  .
 ENDMAP
 
+NAME:    tekkud_enter_ziggurat_h
+TAGS:    zig_entry no_trap_gen transparent no_descent
+KMONS:   1 = fire dragon w:20 / ice dragon w:20 / \
+             storm dragon / shadow dragon / iron dragon
+KMONS:   2 = fire giant / frost giant / stone giant
+KMONS:   3 : torpor snail / glass eye w:5 / rakshasa w:5 / soul eater
+KMONS:   O = titan / juggernaut / quicksilver dragon w:20 / \
+             golden dragon w:30 / wyrmhole
+KFEAT:   O = enter_ziggurat no_mimic
+NSUBST:  _ = 1:1 / 1:2 / * = 12''''''
+NSUBST:  ; = 3:3 / * = 3'
+SHUFFLE: vm
+KPROP:   123'O = no_tele_into
+KMASK:   123'O = opaque
+KMASK:   123'O = no_monster_gen
+COLOUR:  v = yellow
+FTILE:   123'Ov = floor_limestone
+FTILE:   m = floor_nerves_yellow
+TILE:    v = dngn_metal_wall_yellow
+TILE:    m = dngn_transparent_wall_yellow
+MAP
+   .....
+ ...vmv...
+ .mvv'vvm.
+..v_;';_v..
+.vv;''';vv.
+.m'''O'''m.
+.vv;''';vv.
+..v_;';_v..
+ .mvv'vvm.
+ ...vmv...
+   .....
+ENDMAP
+
 default-depth: Zig
 
 #######################################################################

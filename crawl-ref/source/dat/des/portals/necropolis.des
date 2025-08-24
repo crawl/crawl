@@ -1729,6 +1729,7 @@ NAME:   ebering_necropolis_ghost_gozag
 : necropolis_depth_tagging(_G, {"pre_temple_d", "pre_lair_d",
 :                               "post_lair_d", "orc", "snake", "shoals",
 :                               "vaults_elf", "depths_crypt"})
+TAGS:   luniq_necropolis_ghost_gozag
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 WEIGHT: 5
 : end
@@ -4745,5 +4746,81 @@ MAP
 ..n%%%?!''R'!?%%%n..
 ..nnnnnnnnnnnnnnnn..
 .........S..........
+....................
+ENDMAP
+
+NAME:    tekkud_necropolis_ghost_all_or_nothing_shop
+: necropolis_depth_tagging(_G, {"vaults_elf", "depths_crypt"})
+TAGS:    luniq_necropolis_ghost_gozag
+WEIGHT:  5
+KMONS:   O = player ghost
+KMONS:   C = orange crystal statue
+: if dgn.persist.necropolis_difficulty == "vaults_elf" then
+MONS:    vault guard / vault warden / orc warlord / \
+         guardian serpent / dancing weapon / peacekeeper
+MONS:    golden dragon / crystal guardian / guardian sphinx
+: elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
+MONS:    ancient champion / crystal guardian / \
+         guardian sphinx / lich / golden dragon
+MONS:    ancient lich / royal mummy / vampire bloodprince / quicksilver dragon
+: end
+{{
+-- XXX: "any ___ randart" causes the item level to be set to -1, so...
+local ds = "dragon scales"
+local i = ""
+if crawl.x_chance_in_y(57, 71) then
+  local x = util.random_choose_weighted {
+    {"demon whip club", 5}, {"eveningstar", 10}, {"great mace", 10},
+    {"giant spiked club", 5}, {"broad axe", 10}, {"executioner's axe", 10},
+    {"partisan", 5}, {"demon trident", 5}, {"bardiche", 10}, {"lajatang", 10},
+    {"quick blade", 10}, {"demon blade", 5}, {"double sword", 5},
+    {"triple sword", 10}, {"hand cannon", 10}, {"longbow", 5},
+    {"triple crossbow", 5}, {"crystal plate armour", 10}, {"pearl " .. ds, 5},
+    {"storm " .. ds, 5}, {"shadow " .. ds, 5}, {"golden " .. ds, 5},
+    {"kite shield", 10}, {"tower shield", 10}, {"hat", 5}, {"helmet", 5},
+    {"cloak", 5}, {"scarf", 5}, {"pair of gloves", 10}, {"pair of boots", 10},
+    {"barding", 5}, {"orb", 5}, {"any magical staff", 30},
+    {"dragon-coil talisman", 10}, {"granite talisman", 10},
+    {"hive talisman", 10}, {"riddle talisman", 10}, {"sanguine talisman", 10},
+    {"storm talisman", 10}, {"talisman of death", 10}, {"any jewellery", 250}
+  }
+  i = "randart " .. x
+else
+  i = "robe randart artprops:archmagi | scroll of acquirement w:120 pre_id | \
+       potion of experience q:1 pre_id"
+end
+
+kfeat("S = general shop name:Gozag type:All_or_Nothing suffix:Deal no_mimic \
+           greed:35 count:1 ; " .. i)
+}}
+KFEAT:   Z = altar_gozag
+KFEAT:   gG = metal_statue
+TILE:    gG = dngn_golden_iron_statue
+TILE:    c = wall_church
+NSUBST:  ~ = 3:1 / 2:2 / 1:1' / 1:O / *:', G = 1:C / *:G, Z = 1:Z / *:'
+FTILE:   ='ZSG12OCn = floor_limestone
+KPROP:   ='ZSG12OCn = no_tele_into
+: setup_gozag_gold(_G)
+: necropolis_ghost_setup(_G, false)
+MAP
+....................
+....................
+.......g....g.......
+...c............c...
+....cc........cc....
+....cnnn....nnnc....
+.....nSnccccnZn.....
+..g..nn''GG''nn..g..
+......c''~~''c......
+......cG~~~~Gc......
+......cG~~~~Gc......
+......c''~~''c......
+..g..nn''GG''==..g..
+.....nZncccc='=.....
+....cnnn....===c....
+....cc........cc....
+...c............c...
+.......g....g.......
+....................
 ....................
 ENDMAP

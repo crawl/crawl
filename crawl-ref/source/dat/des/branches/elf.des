@@ -435,6 +435,31 @@ x.............x
 xxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   tekkud_elf_arrival_free_trade_zone
+TAGS:   no_monster_gen
+KMONS:  s = thermic dynamo / dancing weapon
+KFEAT:  s = abandoned_shop
+KFEAT:  + = closed_clear_door
+SUBST:  _ = 1.
+: elf_arrival_setup(_G, "1")
+MAP
+ ccccccccccccccc
+cccT.........Tccc
+cccc.........cccc
+cTccc...{...cccTc
+c..ccc.....ccc..c
+c...ccc...ccc...c
+c._..cm...mc.._.c
+c.....+m.m+.....c
+c..s...+m+...s..c
+c.....ccccc.....c
+c.1..ccc ccc..1.c
+c...ccc   ccc...c
+c..ccc     ccc..c
+c.ccc       ccc.c
+c@cc         cc@c
+ENDMAP
+
 ##############################################################################
 #
 # <<2>> Decorative vaults.

@@ -4416,6 +4416,49 @@ c.....c
 cc+++cc
 ENDMAP
 
+NAME:   tekkud_crystal_farm
+TAGS:   no_monster_gen patrolling
+DEPTH:  Crypt, Depths
+WEIGHT: 5 (Crypt), 10
+: if you.branch() == "Crypt" then
+MONS:   screaming refraction
+MONS:   death knight / ancient champion w:5 / vampire knight / eidolon
+MONS:   lich / bone dragon / curse skull w:5
+NSUBST: ' = 3:1 / *=1...
+NSUBST: ~ = 3:2 / 3=2.. / 1:3 / 1:3.. / 2:* / 4:$ / 2 = $$*.. / *:.
+FTILE:  123O-. = floor_crystal_squares
+: else -- Depths
+MONS:   crystal guardian / crystal echidna w:3 / walking crystal tome w:2
+MONS:   deep troll earth mage w:15 / tengu reaver / fire giant / frost giant /\
+        hell knight w:5 / glass eye w:5
+MONS:   ancient lich / golden dragon
+NSUBST: ' = 4:1 / *=1....
+NSUBST: ~ = 5:2 / 3=2.. / 1:3 / 1:3.. / 3:* / 6:$ / 3 = *$$.. / *:.
+FTILE:  123O-. = floor_marble
+: end
+NSUBST: - = b.
+KMONS:  O = orange crystal statue
+MAP
+    bbb-  -@@@b@
+   bbbbb-b@b--.-@
+   b'bbbb.-..-.-b
+  bb''b-.bbb-.b@
+  b-''bb-.--..b@
+ bb-'bb-....b-@
+bb-'bb...---.b-
+b-.-b-.--bbbbbb
+b-.-b..bbbbbbbbb
+bb-....b-bb----b
+ b-..-bb.bb-~~-bb
+ b-...--.-b-~~~-b
+ bb-......-~~~-bb
+  bb-..O..~~~~-b
+   b-.....~~~--b
+  bb-.---.---bbb
+   bb-bbb-bbbbb
+    bbb bbb
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters
@@ -10076,6 +10119,71 @@ X..u.......vvuvv.......vvuvv....X
 X20..$xzx$.......$xzx$........xxX
 Xx1.xxxxxxx..z..xxxxxxx...z...x
  xxxx     xxxxxxx     xx@x@x@xx
+ENDMAP
+
+# Justicar's Regalia
+# Bad guys in jail
+NAME:    tekkud_guarded_unrand_justicar
+TAGS:    no_monster_gen no_item_gen no_trap_gen vaults_hard vaults_orient_n
+DEPTH:   Elf:2-, Vaults, !Vaults:$, Depths
+WEIGHT:  3
+MONS:    angel / cherub, fravashi / daeva
+ITEM:    justicar's_regalia no_pickup, any amulet no_pickup
+KFEAT:   m = iron_grate
+: if you.in_branch("Elf") then
+MONS:    deep elf pyromancer / deep elf zephyrmancer / \
+         deep elf archer / deep elf knight
+MONS:    deep elf elementalist / deep elf blademaster / deep elf master archer
+MONS:    deep elf high priest / deep elf death mage / deep elf demonologist /\
+         deep elf annihilator / balrug w:5 / blizzard demon w:5
+SUBST:   2 = 2.
+: elseif you.in_branch("Vaults") then
+MONS:    vault guard w:30 / vault sentinel / peacekeeper w:5
+MONS:    crystal guardian / vault warden / titan
+MONS:    entropy weaver / death knight / polterguardian w:5 /\
+         glowing orange brain w:8 / boggart w:8 / dread lich w:2
+# if no_convoke ever gets added as a vault tag,
+# this won't need the reduced holies subst.
+SUBST:   1 = 1.., 2 = 2.., @ = .
+: else -- Depths
+MONS:    tengu warrior / spriggan defender w:8 / fire giant / \
+         frost giant / stone giant / guardian sphinx w:14
+MONS:    ophan / walking divine tome / pearl dragon w:5
+MONS:    hell knight / rakshasa / chonchon / vampire mage / vampire knight / \
+         alderking / dread lich / shadow demon / glowing orange brain
+: end
+NSUBST:  y = 3:3 / 2=33. / *:.
+NSUBST:  z = 1:5 / 2=5. / *:.
+TILE:    c = wall_stone_smooth
+TILE:    v = dngn_metal_wall_white
+COLOUR:  v = white
+FTILE:   =+Gdeu.mn12345 = floor_pebble_darkgray
+: vault_metal_statue_setup(_G, "G", "silver statue")
+MAP
+         @@@@@
+      cccc+++cccc
+      c.........c
+      c.vvnnnvv.c
+      c.vG...Gv.c
+      c.v.....v.c
+      c.v..d..v.c
+ccccccc.v.....v.ccccccc
+c....y..vG...Gv..y....c
+c.vvvvvvnvv+vvnvvvvvv.c
+c.vG...zm.2.2.=....Gv.c
+c.v.....m3...3m..z..v.c
+cyn5.e..m..4..m..e5.nyc
+c.v.....m1...1m..z..v.c
+c.vG...z=.3.3.m....Gv.c
+c.vvvvvvnmmmm+nvvvvvv.c
+c....y..v.....v..y....c
+ccccccc.v..3..v.ccccccc
+      c.n..G..n.c
+      cyv.....vyc
+      c.v.....v.c
+      c.vn===nv.c
+      c....y....c
+      ccccccccccc
 ENDMAP
 
 ###################################################################
