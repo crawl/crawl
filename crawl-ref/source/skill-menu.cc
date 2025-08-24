@@ -1397,7 +1397,7 @@ void SkillMenu::init_switches()
 
         sw->add(SKM_VIEW_COST);
 
-        if (!you.auto_training)
+        if (Options.default_skill_cost)
             sw->set_state(SKM_VIEW_COST);
 
         if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
