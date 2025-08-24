@@ -1726,6 +1726,29 @@ xx+xx+xx+x
 .1..1..1..
 ENDMAP
 
+# orc fortress
+NAME:   tekkud_orc_quarters
+TAGS:   transparent
+NSUBST: _ = 1:89 / *=009
+SUBST:  - = IC$ F:5 *:2
+KFEAT:  C = cache of meat
+: decorative_floor(_G, 'F', "orcish standard")
+MAP
+cccc+cccc
+c-.c.c.-c
+c_.+.+._c
+cccc.cccc
+c-.c.c.-c
+c_.+.+._c
+cccc.cccc
+c_.+.+._c
+c-.c.c.-c
+cccc.cccc
+c_.+.+._c
+c-.c.c.-c
+cccc+cccc
+ENDMAP
+
 ############################################################################
 # <<4>> Orc end vaults.
 #

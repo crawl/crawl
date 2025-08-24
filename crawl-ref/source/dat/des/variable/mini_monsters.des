@@ -3051,6 +3051,31 @@ MAP
    wwwwwwwwwwwwww
 ENDMAP
 
+NAME: tekkud_klown_kollege
+TAGS: no_monster_gen transparent
+DEPTH: Zot, !Zot:$
+WEIGHT: 4
+MONS: killer klown , juggernaut / executioner / protean progenitor
+KFEAT: ^ = harlequin's trap
+KFEAT: T = tyrant's trap
+KFEAT: + = closed_clear_door
+NSUBST: ~ = 4:^ / 4=^TT. / *:. , 1 = 2:1 / *=12
+SUBST: g = g. , G = GGg.
+: vault_metal_statue_setup(_G, "g", "misfortune conduit")
+: vault_metal_statue_setup(_G, "G", "enigmatic dynamo")
+MAP
+ g~g..g~g
+g~~~^~~~~g
+~~Gm++mG~~
+g~mm12mm~g
+.^+12.2+~.
+.~+2.21+^.
+g~mm21mm~g
+~~Gm++mG~~
+g~~~~^~~~g
+ g~g..g~g
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -4435,6 +4460,47 @@ cc---cc
 c-----c
 c.....c
 cc+++cc
+ENDMAP
+
+NAME:   tekkud_crystal_farm
+TAGS:   no_monster_gen
+DEPTH:  Crypt, Depths
+: if you.branch() == "Crypt" then
+MONS: screaming refraction
+MONS: death knight / ancient champion w:5 / vampire knight / eidolon
+MONS: lich / bone dragon / curse skull w:5
+NSUBST: ' = 3:1 / *=1...
+NSUBST: ~ = 4:2 / 3=2.. / 1:3 / 1:3.. / 2=*$ / *:.
+: else -- Depths
+MONS: crystal guardian / crystal echidna w:3 / walking crystal tome w:2
+MONS: deep troll earth mage w:15 / tengu reaver / fire giant / frost giant /\
+      hell knight w:5 / glass eye w:5
+MONS: ancient lich / golden dragon
+NSUBST: ' = 4:1 / *=1....
+NSUBST: ~ = 5:2 / 3=2.. / 1:3 / 1:3. / 3=*$ / *:.
+: end
+NSUBST: - = b.
+FTILE: 123Ob. = floor_crystal_squares
+KMONS: O = orange crystal statue
+MAP
+    bbb-  -@@@b@
+   bbbbb-b@b--.-@
+   b'bbbb.-..-.-b
+  bb''b-.bbb-.b@
+  b-''bb-.--..b@
+ bb-'bb-....b-@
+bb-'bb...---.b-
+b-.-b-.--bbbbbb
+b-.-b..bbbbbbbbb
+bb-....b-bb----b
+ b-..-bb.bb-~~-bb
+ b-...--.-b-~~~-b
+ bb-......-~~~-bb
+  bb-..O..~~~~-b
+   b-.....~~~--b
+  bb-.---.---bbb
+   bb-bbb-bbbbb
+    bbb bbb
 ENDMAP
 
 ###################################################################
@@ -10087,6 +10153,70 @@ X..u.......vvuvv.......vvuvv....X
 X20..$xzx$.......$xzx$........xxX
 Xx1.xxxxxxx..z..xxxxxxx...z...x
  xxxx     xxxxxxx     xx@x@x@xx
+ENDMAP
+
+# Justicar's Regalia
+# Bad guys in jail
+NAME:    tekkud_guarded_unrand_justicar
+TAGS:    no_monster_gen no_item_gen no_trap_gen vaults_hard vaults_orient_n
+DEPTH:   Elf:2-, Vaults, !Vaults:$, Depths
+WEIGHT:  3
+MONS:    angel / cherub , fravashi / daeva
+ITEM:    justicar's_regalia no_pickup , any amulet no_pickup
+KFEAT:   m = iron_grate
+: if you.in_branch("Elf") then
+MONS:    deep elf pyromancer / deep elf zephyrmancer / deep elf archer / deep elf knight
+MONS:    deep elf elementalist / deep elf blademaster / deep elf master archer
+MONS:    deep elf high priest / deep elf death mage / deep elf demonologist /\
+         deep elf annihilator / balrug w:5 / blizzard demon w:5
+SUBST:   2 = 2.
+: elseif you.in_branch("Vaults") then
+MONS:    vault guard w:30 / vault sentinel / peacekeeper w:5
+MONS:    crystal guardian / vault warden / titan
+MONS:    flayed ghost / death knight w:5 / cognitogaunt /\
+         deep elf high priest / boggart w:5 / dread lich w:2
+# if no_convoke gets added as a vault tag, the following line should be removed
+SUBST:   1 = 1.. , 2 = 2..
+: else -- Depths
+MONS:    tengu warrior / spriggan defender w:8 / fire giant / frost giant /\
+         stone giant / guardian sphinx w:14
+MONS:    ophan / walking divine tome / pearl dragon w:5
+MONS:    vampire mage / vampire knight / alderking / dread lich / shadow demon /\
+         rakshasa / hell knight w:5 / glass eye / glowing orange brain
+: end
+SHUFFLE: eu
+NSUBST:  y = 3:3 / 2=33. / *:.
+NSUBST:  5 = 3:5 / 2=5. / *:.
+TILE:    c = wall_stone_smooth
+TILE:    v = dngn_metal_wall_white
+COLOUR:  v = white
+FTILE:   =+Gdeu.mn12345 = floor_grey_dirt
+: vault_metal_statue_setup(_G, "G", "silver statue")
+MAP
+         @@@@@
+      cccc+++cccc
+      c.........c
+      c.vvnnnvv.c
+      c.vG...Gv.c
+      c.v.....v.c
+      c.v..d..v.c
+ccccccc.v.....v.ccccccc
+c....y..vG...Gv..y....c
+c.vvvnvvvvv+vvvvvnvvv.c
+c.vG...5m.2.2.=....Gv.c
+c.v.....m3...3m..5..v.c
+cyv5.e..m..4..m..u5.vyc
+c.v.....m1...1m..5..v.c
+c.vG...5=.3.3.m....Gv.c
+c.vvvnvvvmmmm.vvvnvvv.c
+c....y..v.....v..y....c
+ccccccc.v.....v.ccccccc
+      c.v..G..v.c
+      cyv.....vyc
+      c.v.....v.c
+      c.vv===vv.c
+      c....y....c
+      ccccccccccc
 ENDMAP
 
 ###################################################################

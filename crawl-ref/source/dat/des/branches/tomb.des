@@ -467,6 +467,46 @@ MAP
        ............
 ENDMAP
 
+NAME:   tekkud_tomb_entry_cross
+TAGS:   tomb_entry no_rotate no_item_gen no_monster_gen
+WEIGHT: 5
+ORIENT: float
+MONS:   guardian sphinx / guardian sphinx draugr
+MONS:   mummy w:5 / guardian mummy , mummy priest
+NSUBST: ~ = 3:1 / *:. , - = 4:2 / 1:3.. / *:.
+NSUBST: _ = 1:1 / 3:2 / *:. , Y = 3:2 / 1:113 / *:.
+KFEAT:  O = enter_tomb
+MAP
+        ccccc
+       @c.1.c@
+       c.....c
+       c.....c
+  cccccc.....cccccc
+ cc~~~~.......~~~~cc
+cc~~~~~.......~~~~~cc
+ccccccc.......ccccccc
+c_____c-------c___$$c
+c$____c-------c____$c
+c$___c+-------+c___$c
+c$___c---------c____c
+cccccc---------cccccc
+     c---------c
+     c---------c
+     c---------c
+    cc---------cc
+    c...........c
+    c...........c
+    c...........c
+    c...........c
+   cc...........cc
+   cccccc+++cccccc
+   cYYYY.....YYYYc
+   cYYYY.....YYYYc
+   cYYYY.....YYYYc
+   cYYYY..O..YYYYc
+   ccccccccccccccc
+ENDMAP
+
 ##############################################################################
 # The three Tomb levels: these should generally be of a confusing layout.
 ##############################################################################
