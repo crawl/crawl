@@ -1140,7 +1140,6 @@ TAGS:   no_species_fe
 veto {{ return crawl.game_started() and you.god() == "Elyvilon"
           or you.god() == "the Shining One" or you.god() == "Zin" }}
 : trove_setup(_G)
-WEIGHT: 5
 {{
 local scroll = {"silence q:3 w:3"}
 local weap = trove_weap_brand(_G, "draining")
