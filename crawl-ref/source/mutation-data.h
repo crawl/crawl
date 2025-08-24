@@ -264,7 +264,7 @@ static const mutation_def mut_data[] =
    {"You can sometimes gain power from killing poisoned or drained foes.",
     "You can regularly gain power from killing poisoned or drained foes.", ""},
    {"Vile energies swirl pleasantly through your soul.",
-    "The vile energy whirl more vigorously through your soul.", ""},
+    "The vile energy whirls more vigorously through your soul.", ""},
    {"The vile energy swirling through your soul dissipates.",
     "The vile energy whirling through your soul weakens.", ""},
     TILEG_MUT_FEED_OFF_SUFFERING,
