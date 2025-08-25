@@ -85,7 +85,7 @@ The contents of this text are:
                 action_panel_filter, action_panel_show_unidentified,
                 action_panel_scale, action_panel_orientation,
                 action_panel_font_family, action_panel_font_size,
-		 show_resist_percent
+                show_resist_percent
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -392,9 +392,9 @@ weapon += (short sword |...| unarmed | random | viable), <weapon>, ...
         game to randomly select a weapon from the given list. The combo option
         overrides (and is overridden by) this option.
 
-species += (Human |...| Vampire | random | viable), <species>, ...
+species += (Human |...| Revenant | random | viable), <species>, ...
         (List option)
-        The usual abbreviations (Hu, HO, etc.) work. "viable" will choose a
+        The usual abbreviations (Hu, MD, etc.) work. "viable" will choose a
         viable species for a given background if the background is chosen
         first. Specifying multiple species causes one to be selected at
         random from the given species. The combo option overrides (and is
@@ -402,7 +402,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, CA, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option
@@ -1110,18 +1110,18 @@ explore_auto_rest_status = <status name>, <cooldown name>, <duration name>...
         duration-based statuses by either the name of their status light or
         the phrasing that appears on the % screen.
 
-	There are several special values:
-		"all_negative" = all time-based negative statuses (eg: Slow)
-               "all_cooldown" = all time-based cooldowns (eg: -Blink)
-               "contam"       = any amount of magic contamination
-		"transformation" = any time-based negative form (ie: pig/wisp).
+        There are several special values:
+            "all_negative"   = all time-based negative statuses (eg: Slow)
+            "all_cooldown"   = all time-based cooldowns (eg: -Blink)
+            "contam"         = any amount of magic contamination
+            "transformation" = any time-based negative form (ie: pig/wisp).
 
-	To exclude a specific status from all_negative or all_cooldown, include
+        To exclude a specific status from all_negative or all_cooldown, include
         the status with an * at the start. For instance:
-		explore_auto_rest_status += *-blink
-	will remove -blink from the list of cooldowns it wants to wait on.
+            explore_auto_rest_status += *-blink
+        will remove -blink from the list of cooldowns it wants to wait on.
 
-	Defaults to "all_negative", "all_cooldown", "contam"
+        Defaults to "all_negative", "all_cooldown", "contam".
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1331,12 +1331,12 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           Makes evokers with available charges appear before those which
           are empty; irrelevant for all other item types.
 
-	* usefulness:
-	  Sorts consumables by their current 'usefulness' in the
+        * usefulness:
+          Sorts consumables by their current 'usefulness' in the
           following order: Emergency (eg: ?blinking, !heal wounds),
-	  Good (eg: ?acquirement), Normal, Dangerous (eg: !lignification),
-	  Bad (eg: ?torment while worshipping a good god), and finally
-	  permanently useless.
+          Good (eg: ?acquirement), Normal, Dangerous (eg: !lignification),
+          Bad (eg: ?torment while worshipping a good god), and finally
+          permanently useless.
 
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
@@ -1407,16 +1407,16 @@ gear_slot ^= <regex>:<inventory letters>
         list of letters.
 
 consumable_shortcut += <item name>:<inventory letter>
-	(Ordered list option, one value per line)
-	Similar to gear_slot, but accepts only a single letter per consumable
+        (Ordered list option, one value per line)
+        Similar to gear_slot, but accepts only a single letter per consumable
         name and does not handle regex.
 
-	The game will try very hard to automatically assign a consumable to
-	any letter given a mapping by this option, unless it is an identified
-	item of a different category. (eg: 'potion of curing:c' will result
-	in no other potion ever being auto-assigned to 'c' and unidentified
-	scrolls also avoiding it where possible, since they share the ?id menu
-	together.)
+        The game will try very hard to automatically assign a consumable to
+        any letter given a mapping by this option, unless it is an identified
+        item of a different category. (eg: 'potion of curing:c' will result
+        in no other potion ever being auto-assigned to 'c' and unidentified
+        scrolls also avoiding it where possible, since they share the ?id menu
+        together.)
 
 ability_slot ^= <regex>:<ability letters>
         (Ordered list option, one value per line)
@@ -1520,9 +1520,9 @@ warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
 
 warn_contam_cost = false
-	Ask for confirmation before casting a spell with a contam cost, if it
-	is possible that casting it at your current level of magic contamination
-	could cause you to reach harmful levels of contamination.
+        Ask for confirmation before casting a spell with a contam cost, if it
+        is possible that casting it at your current level of magic contamination
+        could cause you to reach harmful levels of contamination.
 
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
@@ -1568,9 +1568,9 @@ single_column_item_menus = true
         all menus are single-column regardless of the value of this option.
 
 show_paged_inventory = false
-	If set to true, the 'i' menu will divide the player's items into
-	pages (gear, potions, scrolls, and evocable items) in the same way
-	that the 'd'rop menu does.
+        If set to true, the 'i' menu will divide the player's items into
+        pages (gear, potions, scrolls, and evocable items) in the same way
+        that the 'd'rop menu does.
 
 3-h     Message and Display Enhancements.
 ------------------------------------------
@@ -1932,14 +1932,14 @@ action_panel_glyphs = false
         option is only available on webtiles.
 
 show_resist_percent = true
-	When set to true, the exact percentage of damage the player will take
-	from each element, based on their current pips of resistance, will be
-	shown on the % screen.
+        When set to true, the exact percentage of damage the player will take
+        from each element, based on their current pips of resistance, will be
+        shown on the % screen.
 
 always_show_doom_contam = false
-	If set to true, always display the doom and contam meters in the
-	upper-right of the side panel, even if the player doesn't currently
-	have any doom or contamination.
+        If set to true, always display the doom and contam meters in the
+        upper-right of the side panel, even if the player doesn't currently
+        have any doom or contamination.
 
 3-i     Colours (messages and menus)
 -----------------
