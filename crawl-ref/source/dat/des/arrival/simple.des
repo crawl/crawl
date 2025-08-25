@@ -2770,3 +2770,21 @@ xx+x+x+x+xx
     x?x
      @
 ENDMAP
+
+NAME:   dolorous_arrival_somebodys_watching_me
+TAGS:   arrival no_monster_gen no_trap_gen no_pool_fixup transparent
+ORIENT: float
+KFEAT:  T = fountain_eyes
+SUBST:  x : xbctv, W : Wwl
+MAP
+  xxxxx
+ xxWWWxx
+xxWWWWWxx
+xWW...WWx
+xW..T..Wx
+x..T{T..x
+x...T...x
+xx.....xx
+ xx...xx
+  x+++x
+ENDMAP
