@@ -189,7 +189,7 @@ on the edge of a map as explicit exits (the same as using @) and
 connect them to the rest of the level.
 
 Not using @ will cause the level builder to pick exits randomly from
-non-solid squaress on the edge of your vault. You should always either
+non-solid squares on the edge of your vault. You should always either
 have explicit exits or accessible squares; if the vault is completely
 inaccessible (by exits, non-solid squares that can act as exits, or by
 stair), it will fail to load - so don't do that.
@@ -260,7 +260,7 @@ particular no good_xxx or '*' items lest they might give incentive for
 start-scumming. For random minivaults, there needn't be loot at all and, in
 any case, there shouldn't be too much of it. (A small amount of gold, or a few
 random floor items, can manage to give off the appearance of some loot without
-handing out much power- contrast with the branch ends rich in treasure like
+handing out much power - contrast with the branch ends rich in treasure like
 Vaults:5 and Tomb:3 to get a feeling for this.)
 
 It is very easy to fall into the power spiral trap: making newer vaults
@@ -282,7 +282,7 @@ Crawl and countless other video games. "A forest's overgrown fortress",
 story and history that can sell vaults as more than boxes of monsters and loot.
 
 For later and larger maps, try to think of distinguishing features your map may
-have, or a combinations of uncommon terrain tiles and cogent monster sets. Being
+have, or a combination of uncommon terrain tiles and cogent monster sets. Being
 cool can be good enough, but possessing notable gameplay differences (like
 threatening multiple resists, directly helping out support monsters, or giving
 big terrain advantages to monsters instead of players) is also quite valuable.
@@ -294,7 +294,7 @@ should be done very sparingly depending on the branch.
   * Example branches and portals with many different monster themes:
     Dungeon, Depths, Abyss, Zot, Gauntlet, Necropolis, Wizlabs.
   * Example branches and portals with very narrow monster themes:
-    Snake Pit, Spider Nest, Pits of Slime, Elven Halls, Ossuary, Ice Cave
+    Snake Pit, Spider Nest, Pits of Slime, Elven Halls, Ossuary, Ice Cave.
 
 The former is less likely to get nearly as much suspicion than the latter; if
 every branch contains every monster, then no branch actually stands out on its
@@ -302,7 +302,7 @@ own original themes and merits. Some connective themes to the monsters
 already available in the branch may help (e.g. other magical constructs in Elf),
 but it is better to try and avoid these questions in the first place. If you
 want for more ideas on monster fronts, newer monsters for a branch tend to not
-be as thoroughly explored as much later monsters- check out the changelog to
+be as thoroughly explored as much later monsters - check out the changelog to
 see potential better candidates.
 
 Testing your maps.
@@ -317,7 +317,7 @@ In wizmode, you can use the following commands:
 For both &L and &P, you don't need to specify the full name of the vault,
 a substring which uniquely determines the vault is enough. Using &L is required
 for some levels, like Temple maps, but defaulting to &P is usually better
-for seeing how the vault mixes with the rest of the laout.
+for seeing how the vault mixes with the rest of the layout.
 
 In some contexts, or to rapidly regenerate levels and see how well the vault
 connects to the level, it is reasonable to temporarily introduce either
@@ -346,7 +346,7 @@ range and tune to around their threat levels.
 
 This also works in the opposite direction, as Crawl has regularly tried to
 reduce a fair bit of its previous high levels of weak monsters later in the
-game- if a monster is something one would expect to fight as an average threat
+game - if a monster is something one would expect to fight as an average threat
 ten or more floors ago, it is likely it is no longer much threatening afterwards
 for anything beyond flavour. See J. Conditionalising levels in advanced.txt to
 adjust a vault's contents versus branch and depth if you want the vault to play
@@ -367,7 +367,7 @@ within Crawl's pathfinding. Many vaults putting decorative monsters behind glass
 have been done before, and don't really stand out in-and-of-themselves anymore.
 Also, sticking something on an island or behind grates that can't attack back
 can allow a player to tediously take them out slowly for free experience and
-loot- starting book spells can eventually take down even endgame threats if
+loot - starting book spells can eventually take down even endgame threats if
 lucky enough.
 
 Console's limitations also strongly discourage changing the colours of most

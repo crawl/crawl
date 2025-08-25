@@ -302,7 +302,7 @@ d. Timers and other listeners in an abyssal vault may be discarded at
 One thing notable about Abyss vaults is that its shifting nature can be used
 alongside specified, stable terrain to uniquely change the cover a player has.
 (Do try to avoid making the player wait for multiple terrain changes to
-actually make any progress within a a vault, though.) Vaults deploying some of
+actually make any progress within a vault, though.) Vaults deploying some of
 this can be seen force_connectivity_ok in scripts/placement.lua - if you submit
 something using such, it is likely it will need to be added to that list.
 

@@ -507,7 +507,7 @@ ITEM:     (list of items, separated by comma)
           builder sees a "d" in the vault definition, the second will be used
           for "e"s, etc. Positions are comma-separated; several ITEM: lines
           are possible as well. The following defines letters "d" - "g":
-            ITEM: stone, ring mail, potion of haste, ring of ice
+            ITEM: stone, ring mail, potion of haste, ring of wizardry
 
           Positions can contain multiple possibilities, one of which the
           builder will choose randomly. Separate such multiple possibilities
@@ -1767,8 +1767,8 @@ Transporters
 
 Transporters are placed in vaults via two lua marker classes, which can be
 created with the functions transp_loc(name) and transp_dest_loc(name). Here
-`name' is a string shared between the transporter marker and the the
-transporter destination marker. For example,
+`name' is a string shared between the transporter marker and the transporter
+destination marker. For example,
 
     MARKER: E = lua:transp_loc("the_bubble_entry")
     MARKER: F = lua:transp_dest_loc("the_bubble_entry")
