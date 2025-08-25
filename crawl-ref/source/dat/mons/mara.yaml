@@ -1,13 +1,14 @@
 name: "Mara"
 glyph: {char: "R", colour: lightmagenta}
-flags: [see_invis, speaks, unique, male]
+flags: [see_invis, speaks, unique, male, two_weapons]
 resists: {poison: 1, fire: 2}
-exp: 4430
+exp: 4630
 species: rakshasa
 holiness: [demonic]
 will: 140
 attacks:
- - {type: hit, damage: 30}
+ - {type: hit, damage: 27}
+ - {type: hit, damage: 27}
 hd: 18
 hp_10x: 1440
 ac: 10

@@ -2491,7 +2491,6 @@ void spare_beogh_convert()
 
     set<mid_t> witnesses;
 
-    you.religion = GOD_NO_GOD;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
@@ -2522,19 +2521,6 @@ void spare_beogh_convert()
         }
     }
 
-    int witc = 0;
-    for (auto wit : witnesses)
-    {
-        monster *orc = monster_by_mid(wit);
-        if (!orc || !orc->alive())
-            continue;
-
-        ++witc;
-        orc->del_ench(ENCH_CHARM);
-        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
-    }
-
-    you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
     // Grant the player succour for accepting the Shepherd as their god
@@ -2542,8 +2528,18 @@ void spare_beogh_convert()
     you.duration[DUR_CONF] = 0;
 
     mpr("The priest grants you succour and welcomes you into the fold.");
-    if (witc > 1)
+    if (witnesses.size() > 1)
         mpr("The other orcs roar their approval!");
+
+    for (auto wit : witnesses)
+    {
+        monster *orc = monster_by_mid(wit);
+        if (!orc || !orc->alive())
+            continue;
+
+        orc->del_ench(ENCH_CHARM);
+        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
+    }
 }
 
 static monster_type _get_orc_reinforcement_type(int pow)
@@ -2817,49 +2813,7 @@ void beogh_increase_orcification()
     }
 
     // Adjust the message we give to the player's physiology.
-    string msg;
-    switch (you.species)
-    {
-        case SP_FORMICID:
-            msg += "Your mandibles take on a glossy white sheen, and your antennae grow pointier.";
-            break;
-
-        case SP_TENGU:
-            msg += "Your beak becomes more hooked, and the plumage around your ears grows tufted.";
-            break;
-
-        case SP_GARGOYLE:
-            msg += "You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.";
-            break;
-
-        case SP_VINE_STALKER:
-            msg += "A pair of ivory tusks grows out from your maw, and flowers begin to bloom upon you.";
-            break;
-
-        case SP_MUMMY:
-            msg += "A small pair of tusks begins to pierce through your wrappings.";
-            break;
-
-        case SP_POLTERGEIST:
-            msg += "A small pair of spectral tusks begins to grow in your mouth.";
-            break;
-
-        case SP_REVENANT:
-            msg += "A small pair of tusks begins to sprout from your jawbone.";
-            break;
-
-        case SP_BARACHI:
-            msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
-            break;
-
-        case SP_OCTOPODE:
-            msg += "Your beak grows more hooked, and small fins emerge from the sides of your head.";
-            break;
-
-        default:
-            msg += "Your teeth grow more tusk-like, and your ears lengthen.";
-            break;
-    }
+    string msg = species::orcification_msg(you.species);
 
     mprf(MSGCH_MUTATION, "%s", msg.c_str());
     you.props[ORCIFICATION_LEVEL_KEY] = 1;
@@ -3010,7 +2964,6 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
-        case SPELL_PYRRHIC_RECOLLECTION:
 
         // Doesn't do anything to monsters
         case SPELL_MESMERISE:

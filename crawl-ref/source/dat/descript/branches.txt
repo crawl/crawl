@@ -16,9 +16,10 @@ exploration grant no piety for exploring the Temple.
 %%%%
 Orcish Mines
 
-The Orcish Mines are filled with the cave orcs native to the Dungeon, their
-humanoid labourers, and piles of freshly mined gold. Enterprising merchants
-have set up trading posts to help relieve the orcs of the latter.
+The Orcish Mines are home to the orcs that have settled in the Dungeon, their
+humanoid allies, and piles of freshly mined gold. Enterprising merchants who
+sell to all comers have set up trading posts among the orcs and their brethren
+to make good use of that gold.
 %%%%
 Elven Halls
 
@@ -74,9 +75,10 @@ away in secret chambers without any entrance.
 %%%%
 Vaults
 
-Possibly constructed by some powerful tyrant, the Vaults are said to be home to
-great treasures. The blood spattered liberally around the entrance suggests
-that there is a certain amount of violence, too.
+The Vaults are said to be home to great treasures and sealed evils alike, its
+origin known only to its guardians: the Ironbound Order. Intruders face an
+organised defense of trained maneuvers, arms and arcana, animated constructs,
+coerced allies, and tamed beasts, all in common cause.
 %%%%
 Crypt
 
@@ -247,7 +249,7 @@ undead denizens are unlikely to take kindly to looting.
 %%%%
 Bailey
 
-The bailey is the still-occupied and well-guarded fortress of an orcish lord.
+The bailey is the occupied and well-guarded fortress of a ruthless warlord.
 The treasures within are protected by both physical barriers and large numbers
 of well-armed humanoid warriors.
 %%%%

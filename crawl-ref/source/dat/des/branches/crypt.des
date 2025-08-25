@@ -94,7 +94,7 @@ function crypt_loot_plus(e, glyph)
                                     "eveningstar", "lajatang", top_rg, top_rg})
   local high_weap = util.random_subset({"great sword", high_sb, "battleaxe",
                                         "glaive", "great mace", "lajatang"}, 2)
-  local staff = util.random_from({"staff of death randart",
+  local staff = util.random_from({"staff of necromancy randart",
                                   "any magical staff randart artprops:Necro"})
   local drain_plus = crawl.random_range(1, 4)
   local weaps = util.random_subset({top_weap .. " ego:draining plus:" .. drain_plus,
@@ -1770,7 +1770,7 @@ KMONS:   C = mummy priest
 KMONS:   0 = zombie
 ITEM:    any weapon good_item ego:draining, any weapon ego:pain
 ITEM:    scroll of torment pre_id, randbook disc:necromancy numspells:3
-ITEM:    staff of death pre_id
+ITEM:    staff of necromancy pre_id
 ITEM:    amulet of regeneration randart good_item
 KITEM:   $ = $ no_pickup
 KFEAT:   D = altar_yredelemnul

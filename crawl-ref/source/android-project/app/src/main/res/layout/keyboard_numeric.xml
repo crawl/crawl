@@ -6,7 +6,7 @@
     android:layout_centerInParent="true"
     android:orientation="vertical"
     android:baselineAligned="false"
-    android:visibility="invisible">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"

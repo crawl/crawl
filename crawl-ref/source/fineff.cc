@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -577,7 +578,7 @@ void explosion_fineff::fire()
 
     if (you.see_cell(beam.target))
     {
-        if (typ == EXPLOSION_FINEFF_CONCUSSION)
+        if (typ == EXPLOSION_FINEFF_CONCUSSION || typ == EXPLOSION_FINEFF_PYROMANIA)
             mpr(boom_message);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
@@ -588,7 +589,7 @@ void explosion_fineff::fire()
             if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
 
-    beam.explode();
+    beam.explode(true, typ == EXPLOSION_FINEFF_PYROMANIA);
 
     if (typ == EXPLOSION_FINEFF_CONCUSSION)
     {
@@ -929,6 +930,87 @@ void splinterfrost_fragment_fineff::fire()
 void detonation_fineff::fire()
 {
     do_catalyst_explosion(posn, weapon);
+}
+
+void stardust_fineff::fire()
+{
+    actor* agent = actor_by_mid(att);
+
+    if (!agent || !agent->alive())
+        return;
+
+    if (agent->is_player() && is_sanctuary(you.pos()))
+        return;
+
+    int count = 0;
+    for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->is_firewood() && !mons_aligned(agent, *ai))
+            ++count;
+    }
+
+    // Don't activate or go on cooldown if there's nothing to shoot at.
+    if (count == 0)
+        return;
+
+    mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
+
+    count = min(max_stars, count + 1);
+    const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
+    for (int i = 0; i < count; ++i)
+    {
+        mgen_data mg(MONS_SHOOTING_STAR, BEH_COPY, agent->pos(),
+                     foe, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+
+        mg.set_summoned(agent, MON_SUMM_STARDUST, 200, false, false);
+        mg.set_range(1, 3);
+        mg.hd = power;
+        mg.hp = 100;
+        if (monster* mon = create_monster(mg))
+            mon->steps_remaining = 15;
+    }
+
+    if (agent->is_player())
+        you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
+    else
+        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, agent, random_range(300, 500)));
+}
+
+void pyromania_fineff::fire()
+{
+    if (is_sanctuary(you.pos()))
+        return;
+
+    // Test if there's at least *something* worth hitting before exploding
+    // (primarily to avoid wasting the player's time). Note: we don't check the
+    // the player *wants* to hit what is there, just that there is something
+    // there to hit. Burning down random plants is thematic here.
+    bool found = false;
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!never_harm_monster(&you, mon))
+            {
+                found = true;
+                break;
+            }
+        }
+    }
+
+    if (!found)
+        return;
+
+    bolt exp;
+    zappy(ZAP_FIREBALL, 50, false, exp);
+    exp.damage = pyromania_damage();
+    exp.set_agent(&you);
+    exp.target = you.pos();
+    exp.source = you.pos();
+    exp.ex_size = 3;
+
+    mpr("Your orb flickers with a hungry flame!");
+    exp.explode(true, true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

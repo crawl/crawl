@@ -233,9 +233,9 @@ Good places to use `no_tele_into`:
 
 * Vaults which need the player to enter in a controlled manner to understand/enjoy. For example `gammafunk_steamed_eel`.
 * Teleport closets: areas the player cannot escape without a scroll of teleportation (or similar). For example `lemuel_altar_in_water`.
-* Egregiously dangerous/unfair situations. For example `chequers_guarded_unrand_ignorance` (four orange crystal statues).
+* Egregiously dangerous/unfair situations. For example `chequers_guarded_unrand_ignorance` (four orange crystal statues). Most (but not all) transporter vaults will also fall into this category due to their innate danger.
 
 Bad places to use `no_tele_into`:
 
-* Any old runed door / transporter vault. It's fine for players to teleport into tough or scary situations.
-* Islands: areas the player can also reach with flight or similar tools. `no_tele_into` would be an incomplete solution. It's better to place a hatch/shaft, which solves all cases.
+* Any simpler runed door vault. It's fine for players to teleport into tough or scary situations, as with lots of vaults not using runed doors.
+* Islands: areas the player can also reach with flight or similar tools. `no_tele_into` would be an incomplete solution. It's better to place a hatch/shaft, which solves all cases on normal levels.

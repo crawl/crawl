@@ -31,8 +31,8 @@ they grow.
 %%%%
 Djinni
 
-Djinn are ever-burning spirits. They learn spells innately, without books, and
-cast by drawing down their own fires.
+Djinn are ever-burning spirits. They learn spells automatically as they grow,
+and cast by drawing down their own fires.
 %%%%
 Draconian
 
@@ -50,7 +50,7 @@ Felids are many-lived sentient cats. They cannot use armour or weapons.
 %%%%
 Gargoyle
 
-Made of living stone, Gargoyles have a preternatural affinity for the earth.
+Made of living stone, Gargoyles have a preternatural affinity for earth magic.
 They have low health, but their stone bodies are incredibly tough.
 %%%%
 Gnoll

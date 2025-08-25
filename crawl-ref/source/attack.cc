@@ -450,7 +450,10 @@ void attack::alert_defender()
         && defender->is_monster()
         && attacker->is_monster()
         && attacker->alive() && defender->alive()
-        && (defender->as_monster()->foe == MHITNOT || one_chance_in(3)))
+        && (defender->as_monster()->foe == MHITNOT
+    // Necessary to keep monsters from sometimes being able to injured dazed enemies.
+            || defender->as_monster()->has_ench(ENCH_DAZED)
+            || one_chance_in(3)))
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
     }
@@ -707,8 +710,13 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
         // gets the spectral.
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
-    return defender->hurt(responsible, dam, flavour, kill_type,
-                          "", aux_source.c_str(), clean);
+    const int final = defender->hurt(responsible, dam, flavour, kill_type,
+                                     "", aux_source.c_str(), clean);
+
+    if (!defender->alive())
+        defender->props[ATTACK_KILL_KEY] = true;
+
+    return final;
 }
 
 /* If debug, return formatted damage done
@@ -1387,6 +1395,11 @@ bool attack::apply_damage_brand(const char *what)
         if (responsible->is_player())
             did_god_conduct(DID_CHAOS, 2 + random2(3));
     }
+
+    // Since this adds the reaping brand to all attacks, check it after all
+    // other brands.
+    if (attacker->is_player() && you.unrand_equipped(UNRAND_SKULL_OF_ZONGULDROK))
+        did_god_conduct(DID_EVIL, 2 + random2(3));
 
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();

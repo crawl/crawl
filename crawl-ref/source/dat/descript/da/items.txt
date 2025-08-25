@@ -766,7 +766,7 @@ staff of conjuration
 
 Denne stav øger brugerens fremmaningers kraft.
 %%%%
-staff of death
+staff of necromancy
 
 Denne stav øger brugerens nekromantiske besværgelsers kraft og beskytter mod
 negativ energi. Hvis brugeren er kyndig i både vækkelser og nekromantik vil

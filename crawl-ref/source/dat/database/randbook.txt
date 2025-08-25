@@ -94,8 +94,6 @@ Omnibus
 
 Papyrus
 
-Parchment
-
 Precepts
 
 Quarto
@@ -342,8 +340,6 @@ murmuring
 musty
 
 odd
-
-parchment
 
 peculiar
 
@@ -1620,7 +1616,7 @@ Evil
 
 Iniquitous
 
-Left-Handed
+Left-handed
 
 Maleficent
 
@@ -2054,43 +2050,179 @@ Forgecraft
 
 Artifice
 
+Assemblage
+
+Assembly
+
+Automation
+
 Blueprints
 
 Clockwork
 
 Cogs
 
-Crafting
+Composition
 
 Construction
+
+Crafting
+
+Design
 
 Diagrams
 
 Drafting
 
+Fabrication
+
+Forgecraft
+
+Frameworks
+
 Gears
 
-Mechanisms
+Industry
+
+Infrastructure
+
+Instantiation
+
+Invention
+
+Levers
+
+Linkages
+
+Machinery
+
+Machining
 
 Mechanics
 
-Metalworking
+Mechanisms
+
+Mechanomancy
 
 Metallurgy
 
+Metalwork
+
+Metalworking
+
+Overdrive
+
+Realisation
+
+Reification
+
 Schematics
+
+Spellforging
+
+Spellsmithing
+
+Springs
+
+Sprockets
+
+Steel
 
 Structure
 
+Technology
+
+Technomancy
+
+Tools
+
+Torque
+
+the Anvil
+
+the Architect
+
+the Artificer
+
+the Automaton
+
 the Blacksmith
+
+the Configuration
+
+the Construct
+
+the Contraption
 
 the Edifice
 
+the Engine
+
 the Engineer
+
+the Escapement
+
+the Factory
+
+the Flywheel
+
+the Forge
+
+the Forgewright
+
+the Foundry
+
+the Hammer
+
+the Inventor
+
+the Ironworks
+
+the Linchpin
+
+the Machine
+
+the Machinist
+
+the Mainspring
+
+the Maker
+
+the Mallet
 
 the Masterpiece
 
+the Masterwork
+
 the Mechanist
+
+the Pendulum
+
+the Pinion
+
+the Ratchet
+
+the Rivet
+
+the Servo
+
+the Sledgehammer
+
+the Smith
+
+the Smithy
+
+the Spellforge
+
+the Spellsmith
+
+the Tinker
+
+the Tinkerer
+
+the Watchmaker
+
+the Workbench
 %%%%
 ##############################################
 # adjectives for secondary spell school
@@ -2401,7 +2533,7 @@ Molten
 
 Red
 
-Red-Hot
+Red-hot
 
 Roasted
 
@@ -2437,7 +2569,7 @@ Tropical
 Volatile
 
 w:2
-Well-Done
+Well-done
 %%%%
 Hexes adj
 
@@ -2578,7 +2710,7 @@ Cold
 
 Congealing
 
-Crystallized
+Crystallised
 
 Freezing
 
@@ -3018,35 +3150,145 @@ Warped
 %%%%
 forgecraft adj
 
+Alloyed
+
 Artificial
 
+Artisanal
+
+Assembled
+
+Automatic
+
+Built
+
+Buzzing
+
+Calibrated
+
+Clacking
+
+Clanging
+
+Clanking
+
+Clattering
+
+Clicking
+
+Clinking
+
 Clockwork
+
+Completed
 
 Concrete
 
 Constructed
 
+Crafted
+
+Creaking
+
+Designed
+
 Engineered
+
+Fabricated
+
+Fashioned
+
+Fine-tuned
+
+Forgecrafted
+
+Forged
+
+Forgewrought
+
+Formed
+
+Hammered
+
+Hissing
 
 Industrial
 
 Ingenious
 
+Innovative
+
+Instantiated
+
+Invented
+
+Jangling
+
+Jingling
+
+Machined
+
+Manufactured
+
+Mechanical
+
+Mechanized
+
 Metallic
 
 Metallurgical
 
-Mechanical
+Modelled
+
+Physical
+
+Rattling
+
+Realized
 
 Reified
 
 Schematic
 
+Shaped
+
+Spellcrafted
+
 Spellforged
 
 Spellsmithed
 
+Steel
+
 Structural
+
+Synthetic
+
+Technological
+
+Tempered
+
+Thrumming
+
+Ticking
+
+Tooled
+
+Vibrating
+
+Well-oiled
+
+Well-tempered
+
+Whirring
+
+Whizzing
+
+Wind-up
+
+Worked
+
+Wrought
 %%%%
 # potential previous owners of books
 # __NONE is parsed to the empty string

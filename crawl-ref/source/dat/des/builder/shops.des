@@ -1150,9 +1150,9 @@ SUBST:  G : YlG
 : kfeat("s = general shop " .. shopname .. " ; \
 :   any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
-:   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
-:   book of necromancy | book of death | book of unlife | \
-:   book of decay | book of the grave | \
+:   demon trident w:5 | demon whip w:5 | scroll of torment | \
+:   staff of necromancy | book of necromancy | book of death | \
+:   book of unlife | book of decay | book of the grave | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
@@ -1400,7 +1400,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
     glaive ego:flaming | hand cannon ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
-FTILE:  -1wP = floor_lair
+FTILE:  -1wP = floor_grass_dark
 COLOUR: -1 = brown
 MAP
 .......
@@ -1791,10 +1791,10 @@ ENDMAP
 NAME:     nicolae_shop_fire_sale
 TAGS:     extra transparent no_item_gen
 DEPTH:    D:4-, Depths
-KITEM:    O = ring of ice w:5 / ring of protection from cold / \
+KITEM:    O = ring of protection from cold / \
           damaged dagger ego:freezing / wand of iceblast charges:1 w:5
 KFEAT:    O = abandoned_shop
-KFEAT:    P = general shop type:Fire suffix:Supplies ; ring of fire | \
+KFEAT:    P = general shop type:Fire suffix:Supplies ; \
           ring of protection from fire | staff of fire | wand of flame | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \
@@ -1990,6 +1990,7 @@ ENDMAP
 NAME:   nicolae_shop_i_like_big_books
 TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
+WEIGHT: 5
 KFEAT:  S = book shop type:Tremendous suffix:Tomes count:8 ; \
             any randbook numspells:8
 KFEAT:  p = c
@@ -2009,8 +2010,9 @@ ENDMAP
 NAME:   nicolae_shop_i_like_small_books_too
 TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
+WEIGHT: 5
 KFEAT:  S = book shop type:Tiny suffix:Tomes count:8 ; \
-            any randbook numspells:1
+            any randbook numspells:2
 KFEAT:  p = c
 COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
 MAP
@@ -2129,6 +2131,7 @@ MONS:  deep elf zephyrmancer / deep elf pyromancer
 MONS:  lich / fire giant, crystal guardian
 MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
 SUBST: + = .
+FTILE: .123S = floor_crystal
 : elseif you.in_branch("Crypt") then
 MONS:  revenant soulmonger / curse skull w:5 / lich
 MONS:  vampire knight / deep elf death mage
@@ -2137,7 +2140,7 @@ MONS:  orb spider zombie / weeping skull / laughing skull
 MONS:  glass eye / tengu reaver, lich / fire giant w:5
 MONS:  occultist w:5 / tengu conjurer / rakshasa w:5
 : else -- Zot
-MONS:  orb of fire, draconian scorcher, lich
+MONS:  orb of appropriateness, draconian scorcher, lich
 : end
 MAP
    ccccc
@@ -2488,7 +2491,7 @@ KFEAT:   S = any shop
 SHUFFLE: DE, FH
 SUBST:   DF = S, EH = T, T = T:16 U:1 V:1
 COLOUR:  . = green
-FTILE:   ._GSTUV = floor_grass
+FTILE:   ._GSTUV = floor_grass_dark
 MAP
 .....................
 .G..D..E..D..E..D..G.

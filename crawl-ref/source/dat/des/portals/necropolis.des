@@ -176,7 +176,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
   if dgn.persist.necropolis_difficulty == "pre_temple_d" then
     e.kmons(_0 .. " = place:D:5 w:40 / spectral jackal")
     e.kmons(_9 .. " = place:D:7 w:30 / spectre place:D:8")
-    e.kmons(_8 .. " = place:D:9 w:15 / wraith w:5")
+    e.kmons(_8 .. " = place:D:9 w:15 / bes kemwar w:4 / wraith w:1")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
     e.kmons(_0 .. " = place:D:8 w:60 / spectre place:D:9")
     e.kmons(_9 .. " = place:D:11 w:40 / spectre place:D:12 / wraith w:5")
@@ -281,7 +281,7 @@ function necropolis_portal_setup(e)
   if dgn.persist.necropolis_difficulty == "pre_temple_d" then
     e.set_random_mon_list("phantom / spectre place:D:6")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
-    e.set_random_mon_list("wraith / shadowghast / spectre place:D:9")
+    e.set_random_mon_list("bes kemwar / wraith / spectre place:D:9")
   elseif dgn.persist.necropolis_difficulty == "lair" then
     e.set_random_mon_list("wraith / shadowghast / spectral cane toad")
   elseif dgn.persist.necropolis_difficulty == "orc" then
@@ -2022,7 +2022,7 @@ WEIGHT: 5
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-MONS:   wraith / shadowghast
+MONS:   wraith / bes kemwar
 SUBST:  d = *, e = *%, f = %$$$, ghi = $
 NSUBST: D = 1:1 / *:-
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
@@ -2683,7 +2683,7 @@ KMONS:  E = ice fiend / walking frostbound tome w:5
 KITEM:  ~ = great sword randart ego:flaming artprops:rC:-1 pre_id
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 KMONS:  0 = place:D:5 simulacrum
-KITEM:  o = ring of fire pre_id
+KITEM:  o = ring of protection from fire pre_id
 KITEM:  P = mundane fire dragon scales
 KITEM:  ? = rimehorn talisman
 KITEM:  ! = wellspring talisman
@@ -2691,7 +2691,7 @@ SUBST:  d = *%, e = %, f = ~~~??, ghij = $
 NSUBST: - = 2=0 / 2=01'' / 1:12 / 1:12'' / *:'
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 KMONS:  0 = place:D:9 simulacrum
-KITEM:  o = ring of fire pre_id / ring of fire randart pre_id w:5
+KITEM:  o = ring of protection from fire pre_id / ring of protection from fire randart pre_id w:5
 KITEM:  P = fire dragon scales
 KITEM:  ? = rimehorn talisman
 KITEM:  ! = wellspring talisman
@@ -2699,7 +2699,7 @@ SUBST:  d = *, e = *%, f = %, g = ~?, ghij = $
 NSUBST: - = 3 = 001 / 4 = 01'' / 1:2 / 3 = 2' / 1:34'''''' / *:'
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 KMONS:  0 = place:D:13 simulacrum
-KITEM:  o = ring of fire pre_id / ring of fire randart pre_id
+KITEM:  o = ring of protection from fire pre_id / ring of protection from fire randart pre_id
 KITEM:  P = fire dragon scales good_item
 KITEM:  ? = rimehorn talisman / rimehorn talisman randart
 KITEM:  ! = wellspring talisman / wellspring talisman randart
@@ -2707,7 +2707,7 @@ SUBST:  f = |*, g = *%$, h = ~?, ij = $
 NSUBST: - = 4:0 / 6 = 0' / 2=34 / 3=34'' / 1:56 / 1:7''' / *:'
 : elseif dgn.persist.necropolis_difficulty == "lair" then
 KMONS:  0 = place:Lair:$ simulacrum
-KITEM:  o = ring of fire pre_id / ring of fire randart pre_id
+KITEM:  o = ring of protection from fire pre_id / ring of protection from fire randart pre_id
 KITEM:  P = fire dragon scales good_item
 KITEM:  ? = rimehorn talisman / rimehorn talisman randart
 KITEM:  ! = wellspring talisman / wellspring talisman randart
@@ -2715,7 +2715,7 @@ SUBST:  f = *%, g = ~?, hij = $
 NSUBST: - = 4:0 / 5 = 0' / 2=3 / 2=3' / 1:5''' / *:'
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 KMONS:  0 = place:Vaults:$ simulacrum
-KITEM:  o = ring of fire randart pre_id
+KITEM:  o = ring of protection from fire randart pre_id
 KITEM:  P = fire dragon scales randart
 KITEM:  ? = rimehorn talisman randart
 KITEM:  ! = wellspring talisman randart
@@ -2723,7 +2723,7 @@ SUBST:  fghi = |*, j = ?PP
 NSUBST: - = 4=0 / 6=0' / 2=57 / 2=57'' / 2:D / 1:D' / *:'
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 KMONS:  0 = place:Depths:$ simulacrum
-KITEM:  o = ring of fire randart pre_id
+KITEM:  o = ring of protection from fire randart pre_id
 KITEM:  P = fire dragon scales randart
 KITEM:  ? = rimehorn talisman randart
 KITEM:  ! = wellspring talisman randart
@@ -3576,7 +3576,7 @@ KITEM:  D = any jewellery good_item
 KITEM:  F = any jewellery randart
 : kitem("H = " .. dgn.randart_aux_armour)
 KITEM:  I = potion of berserk rage pre_id q:1
-: local j = j .. " / orb ego:wrath randart artprops:Rampage pre_id w:2"
+: local j = j .. " / orb ego:mayhem randart artprops:Rampage pre_id w:2"
 : if items.pickable("box of beasts") and not
 :  (dgn.persist.necropolis_difficulty == "pre_temple_d" or
 :   dgn.persist.necropolis_difficulty == "pre_lair_d") then
@@ -4549,6 +4549,7 @@ ENDMAP
 
 NAME:    regret_index_necropolis_ghost_elfcraft_halls
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "vaults_elf"})
+WEIGHT:  999999
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
 MONS:    sky beast, fire bat, ice beast, shapeshifter
@@ -4582,7 +4583,11 @@ ITEM:    longbow good_item no_pickup / any magical staff randart / \
          orb ego:energy randart pre_id / robe ego:archmagi pre_id/ \
          ring of magical power randart pre_id / \
          randbook disc:forgecraft numspells:6 / manual of forgecraft w:5
-TILE:    =-def%*|1234567O = floor_hall
+: if dgn.persist.necropolis_difficulty == "vaults_elf" then
+FTILE:   =-def%*|1234567O = floor_crystal
+: else
+FTILE:   =-def%*|1234567O = floor_hall
+: end
 KPROP:   +def%*|1234567O = no_tele_into
 : necropolis_ghost_setup(_G)
 MAP
@@ -4703,7 +4708,7 @@ NSUBST:  $ = 2:e / *:$, % = 1:g* / *:%
 SUBST:   ?! = %
 : end
 KMONS:   O = player ghost
-ITEM:    staff of fire / staff of death / quarterstaff ego:spectral / \
+ITEM:    staff of fire / staff of necromancy / quarterstaff ego:spectral / \
          quarterstaff ego:pain / any ring randart artprops:rN pre_id w:15
 ITEM:    staff of fire randart / staff of pain randart / \
          lajatang ego:spectral / lajatang ego:pain / \

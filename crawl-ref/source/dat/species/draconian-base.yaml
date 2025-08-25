@@ -2,7 +2,7 @@ enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
 name: Draconian
 difficulty: Simple
-difficulty_priority: 60
+difficulty_priority: 50
 species_flags:
   - draconian
   - no_hair

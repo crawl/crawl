@@ -51,20 +51,22 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors
+                explore_auto_rest, explore_auto_rest_status,
+                auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
                 force_ability_targeter, allow_self_target, ability_menu,
-                spell_menu, easy_floor_use, sort_menus, spell_slot, item_slot,
-                ability_slot, autofight_stop, autofight_warning,
-                autofight_fires, autofight_nomove_fires, autofight_fire_stop,
-                autofight_caught, autofight_wait, autofight_prompt_range,
-                automagic_enable, automagic_slot, automagic_fight,
-                automagic_stop, fail_severity_to_confirm, easy_door,
-                warn_hatches, enable_recast_spell, confirm_action,
+                spell_menu, easy_floor_use, sort_menus, spell_slot, gear_slot,
+                consumable_shortcut, ability_slot, autofight_stop,
+                autofight_warning, autofight_fires, autofight_nomove_fires,
+                autofight_fire_stop, autofight_caught, autofight_wait,
+                autofight_prompt_range, automagic_enable, automagic_slot,
+                automagic_fight, automagic_stop, fail_severity_to_confirm,
+                easy_door, warn_hatches, enable_recast_spell, confirm_action,
                 regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells, menu_arrow_control, single_column_item_menus
+                auto_hide_spells, menu_arrow_control, single_column_item_menus,
+                show_paged_inventory
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1101,6 +1103,26 @@ explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving.
 
+explore_auto_rest_status = <status name>, <cooldown name>, <duration name>...
+        (List option)
+        Auto-explore will wait until all statuses, durations, and cooldowns in
+        the list are finished before moving. The list will accept most
+        duration-based statuses by either the name of their status light or
+        the phrasing that appears on the % screen.
+
+	There are several special values:
+		"all_negative" = all time-based negative statuses (eg: Slow)
+               "all_cooldown" = all time-based cooldowns (eg: -Blink)
+               "contam"       = any amount of magic contamination
+		"transformation" = any time-based negative form (ie: pig/wisp).
+
+	To exclude a specific status from all_negative or all_cooldown, include
+        the status with an * at the start. For instance:
+		explore_auto_rest_status += *-blink
+	will remove -blink from the list of cooldowns it wants to wait on.
+
+	Defaults to "all_negative", "all_cooldown", "contam"
+
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
@@ -1162,9 +1184,11 @@ simple_targeting = false
         zapping as well as autotarget selection for quivered spells.
 
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
-                       eringya's noxious bog, cause fear, alistair's
+                       eringya's noxious bog, anguish, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish, plasma beam
+                       gloom, flame wave, plasma beam,
+                       maxwell's portable piledriver, diamond sawblades,
+                       fortress blast
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1174,9 +1198,10 @@ force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
         be shown with every spell.
 
 force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
-                         elemental force, oozemancy, breathe lightning, torment,
-                         drain life, slouch, disaster area, apocalypse,
-                         corrupt, foxfire swarm
+                         elemental force, oozemancy, galvanic breath,
+                         fathomless shackles, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm, siphon essence, shadowslip,
+                         watery grave
         Force showing a targeter for the listed abilities when activating them
         normally, even if the ability isn't targeted. This for practical
         purposes only has an effect on statically targeted abilities, such as
@@ -1303,9 +1328,15 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           items on the floor.
 
         * charged:
-          Makes wands known or assumed to have some charges left appear
-          before wands known to be empty; irrelevant for all other item
-          types.
+          Makes evokers with available charges appear before those which
+          are empty; irrelevant for all other item types.
+
+	* usefulness:
+	  Sorts consumables by their current 'usefulness' in the
+          following order: Emergency (eg: ?blinking, !heal wounds),
+	  Good (eg: ?acquirement), Normal, Dangerous (eg: !lignification),
+	  Bad (eg: ?torment while worshipping a good god), and finally
+	  permanently useless.
 
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
@@ -1317,10 +1348,6 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
              sort_menus = inv: true
         (Menu types must be specified as name:, with no space between
         name and colon.)
-
-        By default only pickup menus are sorted, and the sort criteria are:
-             "equipped, basename, qualname, curse, qty".
-        All other menus (drop, inv) will be sorted by inventory letter.
 
         The menu selectors available are:
 
@@ -1340,6 +1367,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         If you define sort_menus differently for two or more selectors,
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
+
+        By default pickup menus are sorted, and the sort criteria are:
+             "equipped, basename, qualname, curse, qty".
+        Inv and drop menus are sorted by "equipped, charged, identified,
+             usefulness, slot".
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)
@@ -1368,15 +1400,23 @@ spell_slot ^= <regex>:<list of spell letters>
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-item_slot ^= <regex>:<inventory letters>
+gear_slot ^= <regex>:<inventory letters>
         (Ordered list option, one value per line)
         Uses the same interface as spell_slot, except that overwrite mode
         is on by default; overwrite mode can be disabled with a - in the
         list of letters.
 
-        Additionally, the item_slot option is applied on an item when it is
-        identified, so it can be moved to the right place even if it was
-        picked up unidentified.
+consumable_shortcut += <item name>:<inventory letter>
+	(Ordered list option, one value per line)
+	Similar to gear_slot, but accepts only a single letter per consumable
+        name and does not handle regex.
+
+	The game will try very hard to automatically assign a consumable to
+	any letter given a mapping by this option, unless it is an identified
+	item of a different category. (eg: 'potion of curing:c' will result
+	in no other potion ever being auto-assigned to 'c' and unidentified
+	scrolls also avoiding it where possible, since they share the ?id menu
+	together.)
 
 ability_slot ^= <regex>:<ability letters>
         (Ordered list option, one value per line)
@@ -1526,6 +1566,11 @@ single_column_item_menus = true
         to true, all menus will use a single column under any circumstances.
         This option is only available on local tiles and console; on WebTiles
         all menus are single-column regardless of the value of this option.
+
+show_paged_inventory = false
+	If set to true, the 'i' menu will divide the player's items into
+	pages (gear, potions, scrolls, and evocable items) in the same way
+	that the 'd'rop menu does.
 
 3-h     Message and Display Enhancements.
 ------------------------------------------
@@ -1890,6 +1935,11 @@ show_resist_percent = true
 	When set to true, the exact percentage of damage the player will take
 	from each element, based on their current pips of resistance, will be
 	shown on the % screen.
+
+always_show_doom_contam = false
+	If set to true, always display the doom and contam meters in the
+	upper-right of the side panel, even if the player doesn't currently
+	have any doom or contamination.
 
 3-i     Colours (messages and menus)
 -----------------

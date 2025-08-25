@@ -42,6 +42,13 @@ enum autopickup_level_type
     AP_FORCE_ON = 1,
 };
 
+enum inventory_category
+{
+    INVENT_GEAR,
+    INVENT_CONSUMABLE,
+    INVENT_ANY
+};
+
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
 
@@ -60,7 +67,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
 bool move_item_to_inv(item_def& item, bool quiet = false);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
-item_def* auto_assign_item_slot(item_def& item);
+item_def* auto_assign_item_slot(item_def& item, bool quiet = false);
 void mark_items_non_pickup_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
@@ -115,11 +122,15 @@ const item_def* top_item_at(const coord_def& where);
 
 void drop();
 
-int inv_count();
+bool room_in_inventory(const item_def& new_item);
+int inv_count(inventory_category category = INVENT_ANY);
 int runes_in_pack();
 int gems_found();
 int gems_lost();
 int gems_held_intact();
+
+inventory_category inventory_category_for(object_class_type type);
+inventory_category inventory_category_for(const item_def& item);
 
 bool pickup_single_item(int link, int qty);
 
@@ -187,6 +198,8 @@ void say_farewell_to_weapon(const item_def &item);
 bool valid_item_index(int i);
 
 void maybe_split_nets(item_def &item, const coord_def& where);
+
+bool jewellery_is_redundant(const item_def& item);
 
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're

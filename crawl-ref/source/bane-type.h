@@ -10,7 +10,9 @@ enum bane_type
     BANE_ELECTROSPASM,
     BANE_CLAUSTROPHOBIA,
     BANE_STUMBLING,
-    BANE_RECKLESS,
+#if TAG_MAJOR_VERSION == 34
+    BANE_RECKLESS_REMOVED,
+#endif
     BANE_SUCCOUR,
     BANE_MULTIPLICITY,
     BANE_DILETTANTE,
@@ -22,9 +24,9 @@ enum bane_type
     NUM_BANES,
 };
 
-constexpr int BANE_DUR_LONG   = 2200;
-constexpr int BANE_DUR_MEDIUM = 1500;
-constexpr int BANE_DUR_SHORT  = 800;
+constexpr int BANE_DUR_LONG   = 4000;
+constexpr int BANE_DUR_MEDIUM = 2500;
+constexpr int BANE_DUR_SHORT  = 1600;
 
 #define CLAUSTROPHOBIA_KEY "claustrophia_stacks"
 #define MULTIPLICITY_TIME_KEY "multiplicity_time"

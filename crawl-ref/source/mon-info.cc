@@ -141,7 +141,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
     { ENCH_ARMED,           MB_ARMED },
     { ENCH_SHADOWLESS,      MB_SHADOWLESS },
-    { ENCH_DOUBLED_HEALTH,  MB_DOUBLED_HEALTH },
+    { ENCH_DOUBLED_VIGOUR,  MB_DOUBLED_VIGOUR },
     { ENCH_KINETIC_GRAPNEL, MB_KINETIC_GRAPNEL },
     { ENCH_TEMPERED,        MB_TEMPERED },
     { ENCH_BLINKITIS,       MB_BLINKITIS },
@@ -207,8 +207,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CONTAM:
         return mons.get_ench(ench).degree == 1 ? MB_CONTAM_LIGHT : MB_CONTAM_HEAVY;
     case ENCH_SLOWLY_DYING:
-        if (mons.type == MONS_WITHERED_PLANT)
+        if (mons.type == MONS_WITHERED_PLANT ||
+            mons.type == MONS_PILE_OF_DEBRIS)
+        {
             return MB_CRUMBLING;
+        }
         if (mons_class_is_fragile(mons.type))
             return MB_WITHERING;
         return MB_SLOWLY_DYING;
@@ -367,6 +370,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         hd = ghost_rank_to_level(i_ghost.xl_rank);
         i_ghost.ac = 5;
         i_ghost.damage = 5;
+        i_ghost.title = "";
     }
 
     if (mons_is_draconian_job(type))
@@ -667,7 +671,8 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(flag);
     }
 
-    if (!you.visible_to(m))
+    // Similarly, don't set invisibility stab UI for firewood.
+    if (!you.visible_to(m) && !m->is_firewood() && !m->has_ench(ENCH_BLIND))
         mb.set(MB_CANT_SEE_YOU);
 
     if (type == MONS_SILENT_SPECTRE)
@@ -712,6 +717,7 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
         i_ghost.damage = ghost.damage;
+        i_ghost.title = ghost.title;
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
@@ -1530,7 +1536,7 @@ vector<string> monster_info::attributes() const
     {
         const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
         v.push_back(make_stringf("%d %s left", num_memories,
-                                               num_memories > 1 ? "memories" : "memory"));
+                                               num_memories == 1 ? "memory" : "memories"));
     }
 
     return v;
@@ -1864,8 +1870,7 @@ bool monster_info::has_spells() const
     }
 
     // Wand spells
-    const item_def* wand = inv[MSLOT_WAND].get();
-    if (itemuse() >= MONUSE_STARTING_EQUIPMENT && wand)
+    if (get_wand_spell() != SPELL_NO_SPELL)
         return true;
 
     const mon_spellbook_type book = get_spellbook(*this);
@@ -1906,7 +1911,9 @@ spell_type monster_info::get_wand_spell() const
         return SPELL_NO_SPELL;
 
     const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
-    ASSERT(wandtyp < NUM_WANDS);
+    // Don't count unidentified wands
+    if (wandtyp >= NUM_WANDS)
+        return SPELL_NO_SPELL;
     return spell_in_wand(wandtyp);
 }
 

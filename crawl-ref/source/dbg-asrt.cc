@@ -359,7 +359,7 @@ static void _dump_player(FILE *file)
     for (player_equip_entry& entry : you.equipment.items)
     {
         fprintf(file, "    eq slot #%d, inv slot #%d", entry.slot, entry.item);
-        if (entry.item < 0 || entry.item >= ENDOFPACK)
+        if (entry.item < 0 || entry.item >= MAX_GEAR)
         {
             fprintf(file, " <invalid>\n");
             continue;

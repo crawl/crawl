@@ -43,6 +43,10 @@ Boris title
 
 Boris, Master of Life and Death
 %%%%
+Cassandra title
+
+Cassandra the Doomed Oracle
+%%%%
 Cerebov title
 
 Cerebov, Demon Lord of Fire and Steel
@@ -270,10 +274,6 @@ Pikel, Merchant of Souls
 Polyphemus title
 
 Polyphemus the Watchful Shepherd
-%%%%
-Psyche title
-
-Psyche the Insane Magess
 %%%%
 Robin title
 

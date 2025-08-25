@@ -3290,28 +3290,19 @@ void pump_events(int wait_event_timeout)
 #else
     if (wait_event_timeout <= 0) // resizing probably breaks this case
         return;
-    set_getch_returns_resizes(true);
-    int k = macro_key != -1 ? macro_key : getch_ck();
-    set_getch_returns_resizes(false);
 
-    if (k == CK_RESIZE)
+    int k;
     {
-        // This may be superfluous, since the resize handler may have already
-        // resized the screen
-        clrscr();
-        console_shutdown();
-        console_startup();
-        ui_root.resize(get_number_of_cols(), get_number_of_lines());
+        unwind_bool safe_resize(crawl_state.waiting_for_ui, true);
+        k = macro_key != -1 ? macro_key : getch_ck();
     }
-    else
-    {
-        wm_event ev = {0};
-        ev.type = WME_KEYDOWN;
-        ev.key.keysym.sym = k;
-        if (macro_key == -1)
-            remap_key(ev);
-        ui_root.on_event(ev);
-    }
+
+    wm_event ev = {0};
+    ev.type = WME_KEYDOWN;
+    ev.key.keysym.sym = k;
+    if (macro_key == -1)
+        remap_key(ev);
+    ui_root.on_event(ev);
 #endif
 }
 

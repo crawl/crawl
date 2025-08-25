@@ -213,13 +213,30 @@ public:
             | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT | MF_INIT_HOVER) {}
 protected:
-    bool process_command(command_type c) override
+    command_type get_command(int keyin) override
     {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return ToggleableMenu::get_command(keyin);
+    }
+
+    bool process_command(command_type cmd) override
+    {
+        if (cmd == CMD_MENU_HELP)
+        {
+            int idx = last_hovered;
+            if (idx >= 0 && idx < static_cast<int>(items.size()))
+            {
+                examine_index(idx);
+                return true;
+            }
+        }
+
         get_selected(&sel);
         // if there's a preselected item, and no current selection, select it.
         // for arrow selection, the hover starts on the preselected item so no
         // special handling is needed.
-        if (menu_action == ACT_EXECUTE && c == CMD_MENU_SELECT
+        if (menu_action == ACT_EXECUTE && cmd == CMD_MENU_SELECT
             && !(flags & MF_ARROWS_SELECT) && sel.empty())
         {
             for (size_t i = 0; i < items.size(); ++i)
@@ -231,7 +248,7 @@ protected:
                 }
             }
         }
-        return ToggleableMenu::process_command(c);
+        return ToggleableMenu::process_command(cmd);
     }
 
     bool examine_index(int i) override
@@ -274,6 +291,7 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
 
     string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
         real_action.c_str());
+    more_str = pad_more_with_esc(more_str + "   [<w>?</w>] help");
     string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
@@ -368,6 +386,15 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 2 / 3;
 
     if (you.form == transformation::sun_scarab && spell_typematch(spell, spschool::fire))
+        fail_reduce = fail_reduce * 2 / 3;
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
+        fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
+        fail_reduce = fail_reduce / 2;
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
         fail_reduce = fail_reduce * 2 / 3;
 
     const int wizardry = player_wizardry();
@@ -497,7 +524,7 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
-    if (player_channelling())
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         chance2 += 10;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
@@ -549,6 +576,9 @@ int calc_spell_power(spell_type spell)
 
     if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell))
         power = (power + (you.experience_level * 300)) * 3 / 2;
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
+        power = power * (270 + you.skill(SK_ARMOUR, 10)) / 270;
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.
@@ -733,21 +763,46 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-static void _handle_channelling(int cost, spret cast_result)
+static void _handle_energy_orb(int cost, spret cast_result)
 {
-    if (you.has_mutation(MUT_HP_CASTING) || cast_result == spret::abort)
+    if (cast_result == spret::abort || !you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         return;
 
-    const int sources = player_channelling();
-    if (!sources)
+    const int chance = player_channelling_chance();
+    if (chance <= 0)
         return;
 
     // Miscasts always get refunded, successes only sometimes do.
-    if (cast_result != spret::fail && !x_chance_in_y(sources, 5))
+    if (cast_result != spret::fail && !x_chance_in_y(chance, 100))
         return;
 
-    mpr("Magical energy flows into your mind!");
-    inc_mp(cost, true);
+    if (you.unrand_equipped(UNRAND_WUCAD_MU) && cast_result == spret::success)
+    {
+        vector<monster*> targs;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mi->antimagic_susceptible() && !mi->has_ench(ENCH_ANTIMAGIC)
+                && !mi->wont_attack() && x_chance_in_y(cost, 9))
+            {
+                targs.push_back(*mi);
+                mi->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, random_range(20, 50)));
+            }
+        }
+
+        int drain = !targs.empty() ? random_range(1, 3) + targs.size() / 2 : 0;
+
+        if (targs.empty())
+            mpr("Magical energy flows into your mind!");
+        else
+            mprf("Magical energy flows from %s into your mind!",
+                 describe_monsters_condensed(targs).c_str());
+        inc_mp(cost + drain);
+    }
+    else
+    {
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+    }
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 }
 
@@ -772,6 +827,13 @@ static void _majin_speak(spell_type spell)
 static bool _majin_charge_hp()
 {
     return you.unrand_equipped(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
+}
+
+static bool _death_ego_charge_hp(spell_type spell)
+{
+    return you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH)
+            && !spell_typematch(spell, spschool::necromancy)
+            && !you.duration[DUR_DEATHS_DOOR];
 }
 
 
@@ -972,6 +1034,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
     if (_majin_charge_hp())
         pay_hp(hp_cost);
+    if (_death_ego_charge_hp(spell))
+        pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target, force_failure);
@@ -984,6 +1048,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         refund_mp(cost);
         if (_majin_charge_hp())
             refund_hp(hp_cost);
+        if (_death_ego_charge_hp(spell))
+            refund_hp(hp_cost);
 
         redraw_screen();
         update_screen();
@@ -991,9 +1057,10 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     practise_casting(spell, cast_result == spret::success);
-    _handle_channelling(cost, cast_result);
+    _handle_energy_orb(cost, cast_result);
     if (cast_result == spret::success)
     {
+        stardust_orb_trigger(cost);
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
@@ -3128,7 +3195,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
         }
         case SPELL_AIRSTRIKE:
-            return describe_airstrike_dam(base_airstrike_damage(pow));
+            return describe_player_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_PILEDRIVER:
             return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
         case SPELL_GELLS_GAVOTTE:
@@ -3463,7 +3530,9 @@ bool warn_about_contam_cost(int max_contam)
     if (!Options.warn_contam_cost || you.magic_contamination >= 1000)
         return false;
 
-    if (you.magic_contamination + max_contam >= 1000)
+    const int mul = you.has_mutation(MUT_CONTAMINATION_SUSCEPTIBLE) ? 2 : 1;
+
+    if (you.magic_contamination + (max_contam * mul) >= 1000)
         return !yesno("Casting this now could dangerously contaminate you. Continue?", true, 'n');
 
     return false;

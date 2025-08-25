@@ -74,8 +74,8 @@ static void _swap_places(monster* mons, const coord_def &loc)
         return;
     }
 
-    // Friendly foxfire dissipates instead of damaging the player.
-    if (mons->type == MONS_FOXFIRE)
+    // Friendly seekers dissipate instead of damaging the player.
+    if (mons_is_seeker(*mons))
     {
         simple_monster_message(*mons, " dissipates!", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -775,6 +775,8 @@ static void _apply_move_time_taken()
     you.time_taken = div_rand_round(you.time_taken, 10);
     if (you.duration[DUR_NO_HOP])
         you.duration[DUR_NO_HOP] += you.time_taken;
+    if (you.duration[DUR_MESMERISM_COOLDOWN])
+        you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
 }
 
 // The "first square" of rampaging ordinarily has no time cost, and the "second

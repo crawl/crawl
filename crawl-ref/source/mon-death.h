@@ -25,6 +25,11 @@
 
 #define VAMPIRIC_THRALL_KEY "vampiric_thrall"
 
+#define DOOMSAYING_USED_KEY "doomsaying_used"
+
+// Was this monster killed by an attack (as opposed to some other damage source)?
+#define ATTACK_KILL_KEY "was_attack_kill"
+
 class actor;
 class monster;
 
@@ -35,6 +40,7 @@ class monster;
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
+#define BLAME_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 #define RESET_KILL(x) ((x) == KILL_RESET || (x) == KILL_RESET_KEEP_ITEMS \
                        || (x) == KILL_TENTACLE_CLEANUP)

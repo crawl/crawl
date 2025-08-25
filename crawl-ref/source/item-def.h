@@ -69,9 +69,11 @@ struct item_def
     /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
     /// equal to ITEM_IN_SHOP.
     short  link;
-    /// Inventory letter of the item. For items in player inventory, equal
-    /// to index_to_letter(link). For other items, equal to the slot letter
-    /// the item had when it was last in player inventory.
+    /// Inventory letter of the item. For equipment in the player's inventory,
+    /// this will always be the same as index_to_letter(link), but consumables
+    /// in the player's inventoy may use any letter. For items outside the
+    /// player's inventory, equal to the slot letter the item had when it was
+    /// last in the player's inventory.
     short  slot;
 
     level_id orig_place;

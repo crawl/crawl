@@ -38,6 +38,7 @@ You can view existing files to get a sense of the format, it's quite straightfor
 | altar_action | `string` | No | When praying at an altar, print `You $altar_action the altar of foo.` for the species. Defaults to "kneel at". |
 | child_name | `string` | No | Species child name, like 'Pup' or 'Kitten'. Defaults to 'Child'. |
 | orc_name | `string` | No | Species name if orcish from worshipping Beogh. Defaults to 'Orc'. |
+| orcification_msg | `string` | No | Mutation message when orcified from worshipping Beogh. Defaults to 'Your teeth grow more tusk-like, and your ears lengthen.'. |
 
 ### Advanced Keys
 

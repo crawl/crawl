@@ -70,6 +70,7 @@ public:
     resists_t resists;
     enchant_type cloud_ring_ench;
     int umbra_rad;
+    string title;
 
     colour_t colour;
 

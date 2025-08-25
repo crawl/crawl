@@ -189,10 +189,15 @@ static bool _okawaru_random_servant()
 
     mgen_data temp = _wrath_mon_data(mon_type, GOD_OKAWARU);
 
-    // Don't send dream sheep into battle, but otherwise let bands in.
+    // Don't send dream sheep into battle, and exclude most monsters who get
+    // bands with priests of other gods, but otherwise let bands in.
     // This makes sure you get multiple orcs/gnolls early on.
-    if (mon_type != MONS_CYCLOPS)
+    if (mon_type != MONS_CYCLOPS && mon_type != MONS_ORC_WARLORD
+        && mon_type != MONS_SPRIGGAN_DEFENDER
+        && mon_type != MONS_DRACONIAN_KNIGHT)
+    {
         temp.flags |= MG_PERMIT_BANDS;
+    }
 
     return create_monster(temp, false);
 }
@@ -650,7 +655,19 @@ static bool _kikubaaqudgha_retribution()
         _reset_avatar(*avatar);
     }
     else
-        drain_player(random_range(125, 225), false, true, false);
+    {
+        // Drain for ~16.6% to ~26.6% if you're not below 50% drained hp.
+        if (-you.hp_max_adj_temp < you.hp_max / 2)
+            drain_player(random_range(75, 150), false, true, false);
+
+        // Regardless of draining, apply some Doom.
+        int doom_pow = random_range(35, 50);
+
+        if (!(you.attribute[ATTR_DOOM] + doom_pow >= 100))
+            mprf(MSGCH_DANGER, "Your doom draws closer.");
+
+        you.doom(doom_pow);
+    }
 
     return true;
 }
@@ -1438,7 +1455,7 @@ static void _qazlal_elemental_vulnerability()
         you.banes[bane] += 1000;
     }
     else
-        add_bane(banes[random2(banes.size())]);
+        add_bane(banes[random2(banes.size())], "The Wrath of Qazlal");
 }
 
 /**

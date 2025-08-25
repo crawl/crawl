@@ -1171,7 +1171,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         }
 
         if (you.form == transformation::walking_scroll && spell_difficulty(spell) > 4)
-            return "your cannot cast such powerful magic in your current form.";
+            return "you cannot cast such powerful magic in your current form.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
@@ -1527,7 +1527,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SURPRISING_CROCODILE:
         if (temp)
         {
-            if (!monster_habitable_grid(MONS_CROCODILE, you.pos()))
+            if (you.is_stationary())
+                return "you cannot be moved right now.";
+            else if (!monster_habitable_grid(MONS_CROCODILE, you.pos()))
                 return "a crocodile could not survive beneath you.";
             else if (count_summons(&you, SPELL_SURPRISING_CROCODILE))
                 return "your pet crocodile is still here.";

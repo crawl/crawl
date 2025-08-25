@@ -1222,3 +1222,25 @@ Ostracised status
 Your connection to the divine has been partially cut-off, temporarily reducing
 your effective piety. Gaining experience will eventually recover all piety that
 has been locked away this way.
+%%%%
+Tesseract status
+
+A Boundless Tesseract is drawing in forces from a parallel reality. New monsters
+will steadily appear at random locations across the floor until either of the
+tesseracts is destroyed. If this is allowed to continue for a very long time,
+those monsters may sometimes appear near your location instead.
+%%%%
+-Star status
+
+Your orb of stardust has recently expended its energy. It will recharge once
+several turns pass while your MP is full and there are no enemies in sight.
+%%%%
+-Mesm status
+
+Your orb of mesmerism has recently expended its energy. It will recharge after
+a short length of time (but cannot recharge on turns where you move).
+%%%%
+Phobia status
+
+Your claustrophobia has given you a slaying malus. This is dependent on the
+number of walls surrounding you.

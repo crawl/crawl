@@ -264,7 +264,7 @@ function hyper.paint.determine_usage_from_layout(layout_grid,options)
   return usage_grid
 end
 
-function hyper.paint.paint_vaults_layout(paint, options, layout_grid)
+function hyper.paint.paint_vaults_layout(e, paint, options, layout_grid)
 
   -- Default options
   if options == nil then options = vaults_default_options() end
@@ -275,6 +275,9 @@ function hyper.paint.paint_vaults_layout(paint, options, layout_grid)
   if options.layout_wall_weights ~= nil then
     local chosen = util.random_weighted_from("weight", options.layout_wall_weights)
     wall_type = chosen.feature
+    if chosen.feature == "crystal_wall" then
+      e.lfloortile("floor_crystal")
+    end
   end
   -- Store it in options so it can be used for room surrounds also
   options.layout_wall_type = wall_type

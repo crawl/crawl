@@ -440,6 +440,7 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     shockwave.is_explosion = true;
     shockwave.ex_size = 1;
     shockwave.origin_spell = SPELL_PERCUSSIVE_TEMPERING;
+    shockwave.aux_source = "blast of sparks and slag";
     zappy(ZAP_PERCUSSIVE_TEMPERING, power, true, shockwave);
     shockwave.explode(true, true);
 
@@ -461,9 +462,9 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     return spret::success;
 }
 
-bool is_valid_tempering_target(const monster& mon, const actor& caster)
+bool is_valid_tempering_target(const monster& mon, const actor& caster, bool ignore_temp)
 {
-    if (!mon.was_created_by(caster) || mon.has_ench(ENCH_TEMPERED))
+    if (!mon.was_created_by(caster) || (!ignore_temp && mon.has_ench(ENCH_TEMPERED)))
         return false;
 
     mon_enchant summ = mon.get_ench(ENCH_SUMMON);

@@ -180,7 +180,7 @@ WEIGHT: 1
 KMONS:  12 = butterfly
 : door_vault_setup(_G)
 : if you.in_branch("D") or you.in_branch("Depths") or you.in_branch("Vaults") then
-FTILE:  12 = floor_lair
+FTILE:  12 = floor_grass_dark
 :   decorative_floor(_G, '12', "flower patch")
 : end
 MAP
@@ -349,23 +349,6 @@ MAP
  ..1xx.
   .xx..
   ....
-ENDMAP
-
-NAME:    nzn_masters_of_martial_movement
-TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair
-KFEAT:   D = altar_wu_jian
-KFEAT:   E = altar_uskayaw
-MONS:    patrolling boulder beetle
-SUBST:   W : W:50 w:40 l
-MAP
- x...@...x
-xxW.W.W.Wxx
-.W.W.W.W.W.
-@.W.D1E.W.@
-.W.W.W.W.W.
-xxW.W.W.Wxx
- x...@...x
 ENDMAP
 
 NAME:   nzn_sisyphean_effort
@@ -801,6 +784,7 @@ KMONS:   1 = hell knight
 KMONS:   2 = hellion / balrug
 KMONS:   3 = hellephant
 NSUBST:  2 = 2=1 / 23 / 3
+:  vaults_hard_standard(_G)
 : elseif you.in_branch("Crypt") then
 KMONS:   1 = hell knight
 KMONS:   2 = hellion / balrug
@@ -1746,6 +1730,7 @@ SUBST:  * = %, G : GG.
 : end
 NSUBST: A = 2 = 122 / *:2, B = 2 = 122 / *:2
 : decorative_floor(_G, 'F', "orcish standard")
+: vaults_hard_standard(_G)
 MAP
 ..................
 .wwwwwww..wwwwwww.
@@ -2291,6 +2276,7 @@ SUBST:  4 = 9, 5 = 990, 1 = 3
 NSUBST: 0 = 1:8 / 1:893 / 2:3 / 2:6 / 2 = 30. / *:.
 SUBST:  C- = ., c = x, * = *%
 :   decorative_floor(_G, 'D', "orcish standard")
+FTILE:  .+_%*34509I = floor_metal_gold
 : end
 MAP
 ccccccccccccccccccccC
@@ -2337,7 +2323,8 @@ TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
 DEPTH:    Depths, Vaults, !Vaults:$
 : if you.in_branch("Vaults") then
 MONS:     lich, arcanist / ogre mage / deep elf annihilator, tengu reaver
-SUBST:    c : vvb, @ = .
+SUBST:    c : vvb, @' = .
+:  vaults_hard_standard(_G)
 : else
 MONS:     lich, occultist / tengu conjurer / nagaraja, tengu reaver
 NSUBST:   ' = 1:2 / 1:2. / *:.
@@ -2555,7 +2542,7 @@ ENDMAP
 # Very hungry Elvish explorers and their campfire, mounts and pet.
 # Sometimes they have starved to death.
 NAME:   beargit_elvish_explorers
-DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
+DEPTH:  D:12-, Depths, Crypt
 TAGS:   transparent patrolling no_monster_gen no_trap_gen
 : if you.in_branch("D") then
 :     if you.depth() < 14 then
@@ -2570,14 +2557,6 @@ MONS:   deep elf knight; lajatang good_item . scale mail good_item
 MONS:   elephant / dire elephant, warg / hell hound / raiju
 :     end
 MONS:   plant / fungus, nothing
-: elseif you.in_branch("Swamp") or you.in_branch("Spider")
-:        or you.in_branch("Snake") then
-MONS:   deep elf archer; longbow good_item . quarterstaff \
-            . robe good_item
-MONS:   deep elf knight; lajatang good_item . chain mail good_item
-MONS:   dire elephant
-MONS:   hell hound / raiju
-MONS:   fungus / nothing, nothing
 : elseif you.in_branch("Crypt") then
 KITEM:  1 = longbow good_item, quarterstaff, robe good_item
 KITEM:  2 = lajatang good_item, chain mail good_item
@@ -2587,7 +2566,7 @@ KMONS:  3 = spectral hellephant
 KMONS:  4 = spectral shadow dragon
 KMONS:  6 = deep elf death mage w:30 / vampire mage / \
             lich / ancient lich / dread lich
-KITEM:  P = rat
+KITEM:  P = rat skeleton
 SUBST:  5 = -
 : else
 # The elves have mastered the dungeon and allied with the darkness.
@@ -2604,13 +2583,8 @@ COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 FTILE:  - = floor_crypt
-: elseif you.in_branch("Swamp") then
-SUBST:  - = --....W, x = t
-FTILE:  -123456t = floor_grass
-: elseif you.in_branch("Spider") then
-SUBST:  t = x
 : else
-FTILE:  -123456t = floor_grass
+FTILE:  -123456t = floor_grass_dark
 FTILE:  P = floor_sand
 : end
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
@@ -2782,7 +2756,7 @@ NSUBST: - = 2 / -
 : end
 NSUBST: - = 1 / p```
 SUBST:  P = pp`, . = ...`
-FTILE:  `p12 = floor_grass
+FTILE:  `p12 = floor_grass_dark
 MAP
  .......
 ..PPPPP..
@@ -3431,6 +3405,7 @@ COLOUR: t = brown, c = white
 FTILE:  t' = floor_pebble_brown
 : if you.in_branch("Vaults") then
 SUBST:  @ = .
+FTILE:  .1234V$%* = floor_metal_gold
 CLEAR:  X
 : else
 SUBST:  X = x
@@ -3550,6 +3525,7 @@ SUBST:   @ = ., - = |||*d
 NSUBST:  1 = 1:2 / 2:1 / *:.
 TILE:    x = wall_undead
 FTILE:   `?VY = floor_w_marble
+FTILE:   .12dDE*| = floor_metal_gold
 : elseif not you.in_branch("D") then
 :   if you.in_branch("Depths") then
 MONS:    vampire mage / chonchon w:3
@@ -3994,7 +3970,7 @@ ENDMAP
 
 # Rather shallow depth but you cannot randomly teleport in there.
 NAME:    minmay_crystal_box
-TAGS:    no_monster_gen patrolling transparent no_descent vaults_hard allow_dup
+TAGS:    no_monster_gen patrolling transparent no_descent vaults_hard
 DEPTH:   D:12-, Vaults, !Vaults:$
 MONS:    crystal guardian, thermic dynamo
 MONS:    orange crystal statue, ironbound mechanist
@@ -4004,6 +3980,8 @@ SUBST:   . = .:80 %$*|
 SUBST:   14 = 0, + = =
 KPROP:   .$%*|023 = no_tele_into
 CLEAR:   `
+: else
+FTILE:   .1234$%*|+ = floor_crystal
 : end
 MAP
 ````````````````
@@ -4363,7 +4341,8 @@ NSUBST:  1 = 2:1 / *:.
 NSUBST:  d = 1:d / 1:C. /  *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
-FTILE:   12p.dCt@ = floor_lair
+FTILE:   12p.dCt@ = floor_grass_dark
+FTILE:   @ = floor_moss
 MAP
        xxx
   xxx xxpxx
@@ -4706,6 +4685,10 @@ WEIGHT: 3 (Elf), 10
 DEPTH:  D:6-, Depths, Vaults, Elf
 SUBST:  x : xcvmnt
 SUBST:  X : GtTU
+: if you.in_branch("Vaults") then
+FTILE:  t = floor_pebble_brown
+:  vaults_hard_standard(_G)
+: end
 MAP
    ...   ...
   ..x.. ..x..
@@ -4808,7 +4791,7 @@ KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
 KMONS:   i = hell rat
 KMONS:   j = giant cockroach
-KMONS:   k = phantom
+KMONS:   k = bes kemwar
 KMONS:   l = large abomination
 KMONS:   m = scorpion
 KMONS:   n = small abomination
@@ -7946,6 +7929,8 @@ SUBST:   X = x
 KMONS:   D = pile of debris
 ITEM:    any weapon mundane damaged no_pickup
 ITEM:    robe mundane damaged no_pickup
+# XXX: Light ego would normally be on a helmet, but this is specifically
+#      referencing Monk starting items.
 ITEM:    robe good_item / quarterstaff good_item / orb ego:light pre_id / \
          amulet of faith pre_id / \
          potion of ambrosia q:1 pre_id / scroll of revelation q:1 pre_id
@@ -8009,6 +7994,7 @@ TAGS:   no_monster_gen no_item_gen transparent vaults_hard
 WEIGHT: 3
 : if you.in_branch("Vaults") then
 SUBST:  v = x
+:   vaults_hard_standard(_G)
 : end
 MONS:   patrolling iron troll
 KMONS:  d = patrolling iron dragon
@@ -8098,6 +8084,7 @@ MONS:   patrolling crystal guardian
 MONS:   orange crystal statue
 ITEM:   crown_of_dyrovepreva no_pickup
 KPROP:  12d' = no_tele_into
+FTILE:  'd12 = floor_crystal
 SUBST:  ' = .
 MAP
         .............
@@ -8991,6 +8978,7 @@ NSUBST: 9 = 9 / .
 # Only one entrance in Vaults, and any door is handled by the layout.
 SUBST:  va = x, @+ = .
 CLEAR:  p'
+FTILE:  ^-.19d = floor_metal_gold
 : end
 KFEAT:  ^ = alarm trap
 SUBST:  - = ^...., ' = ^, a = +, p = @
@@ -9247,7 +9235,7 @@ MONS:   phantasmal warrior
 : end
 SUBST:  D = FFW, H : JF, J : cx
 NSUBST: F = 1 / 1. / 9 / 9=0.. / .
-FTILE:  .019d = floor_grass
+FTILE:  .019d = floor_grass_dark
 FTILE:  E = floor_ice
 COLOUR: E = white
 MAP
@@ -10133,6 +10121,7 @@ ITEM:    staff of air randart / staff of fire randart / \
          fire dragon scales randart / storm dragon scales randart
 KFEAT:   u = x
 NSUBST:  z = 2:x. / * = x., . = 1:0 / *:.
+: vaults_hard_standard(_G)
 TILE:    u = wall_pebble_red
 TILE:    v = dngn_metal_wall_lightcyan
 MAP
@@ -10538,12 +10527,13 @@ KMONS:  1 = oblivion hound w:15 / death drake / bone dragon / tormentor / \
 KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
             ice fiend w:15 / ancient lich / dread lich / place:Coc:$ w:24
 : elseif you.in_branch("Zot") then
-KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
+KMONS:  1 = nonbase draconian / orb of appropriateness / electric golem / \
             killer klown / ancient lich / dread lich / curse toe / \
             protean progenitor / place:Zot:$ w:20
 # Dungeon, Vaults, and Depths get 8 spawns.
 : else
 KMONS:  1 = 8
+:   vaults_hard_standard(_G)
 : end
 KMONS:  2 = 9
 : door_vault_setup(_G)
@@ -10902,7 +10892,6 @@ ENDMAP
 
 NAME:   special_room_vaults
 TAGS:   allow_dup luniq unrand no_item_gen vaults_hard
-CHANCE: 1%
 DEPTH:  Vaults, !Vaults:$
 {{
     local width = 6 + crawl.random2avg(3, 2)

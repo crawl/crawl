@@ -571,7 +571,7 @@ enum spell_type : int
     SPELL_REGENERATE_OTHER,
     SPELL_DIVINE_ARMAMENT,
     SPELL_HURL_TORCHLIGHT,
-    SPELL_CRYSTALLIZING_SHOT,
+    SPELL_CRYSTALLISING_SHOT,
     SPELL_REBOUNDING_BLAZE,
     SPELL_WARP_SPACE,
     SPELL_COMBUSTION_BREATH,
@@ -646,5 +646,8 @@ enum spell_type : int
     SPELL_MUTAGENIC_GAZE,
     SPELL_PLANAR_OVERLAY,   // Dummy spell for description purposes
     SPELL_ACID_BALL,
+    SPELL_DOOMSAYING,       // Cassandra's one-shot doom and death effect
+    SPELL_SLEETSTRIKE,
+    SPELL_DIMINISH_SPELLS,
     NUM_SPELLS
 };

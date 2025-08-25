@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 #include "bane-type.h"
 
 struct bane_def
@@ -21,23 +23,23 @@ static const bane_def bane_data[] =
 
     {
         BANE_HEATSTROKE,
-        BANE_DUR_MEDIUM,
+        BANE_DUR_LONG,
         "Heatstroke",
-        "You sometimes become slowed when damaged by fire.",
+        "You often become slowed when damaged by fire.",
     },
 
     {
         BANE_SNOW_BLINDNESS,
-        BANE_DUR_MEDIUM,
+        BANE_DUR_LONG,
         "Snow-blindness",
-        "You sometimes become weak and blind when damaged by cold.",
+        "You often become weak and blind when damaged by cold.",
     },
 
     {
         BANE_ELECTROSPASM,
-        BANE_DUR_MEDIUM,
+        BANE_DUR_LONG,
         "Electrospasm",
-        "You sometimes become unable to move when damaged by electricity.",
+        "You often become unable to move when damaged by electricity.",
     },
 
     {
@@ -54,12 +56,14 @@ static const bane_def bane_data[] =
         "Your evasion is greatly reduced on turns you move or wait in place.",
     },
 
+#if TAG_MAJOR_VERSION == 34
     {
-        BANE_RECKLESS,
-        BANE_DUR_LONG,
-        "the Reckless",
-        "Your SH is set to 0.",
+        BANE_RECKLESS_REMOVED,
+        0,
+        "the Removed",
+        "You feel a strange sense of nostalgia.",
     },
+#endif
 
     {
         BANE_SUCCOUR,
@@ -77,9 +81,9 @@ static const bane_def bane_data[] =
 
     {
         BANE_DILETTANTE,
-        BANE_DUR_LONG,
+        BANE_DUR_MEDIUM,
         "the Dilettante",
-        "You are less proficient with several skills.", // Overriden
+        "You are less proficient with several skills.", // Overridden
     },
 
     {
@@ -91,7 +95,7 @@ static const bane_def bane_data[] =
 
     {
         BANE_WARDING,
-        BANE_DUR_SHORT,
+        BANE_DUR_MEDIUM,
         "Warding",
         "Enemies you encounter may be immune to damage from range.",
     },
@@ -105,7 +109,7 @@ static const bane_def bane_data[] =
 
     {
         BANE_MORTALITY,
-        BANE_DUR_MEDIUM,
+        BANE_DUR_SHORT,
         "Mortality",
         "When alone and injured, reapers sometimes come to claim you.",
     },

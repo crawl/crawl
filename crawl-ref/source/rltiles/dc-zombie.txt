@@ -13,6 +13,7 @@ zombie_bee MONS_ZOMBIE_BEE
 zombie_beetle MONS_ZOMBIE_BEETLE
 zombie_bug MONS_ZOMBIE_BUG
 zombie_fish MONS_ZOMBIE_FISH
+zombie_sky_beast MONS_ZOMBIE_SKY_BEAST
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_worm MONS_ZOMBIE_WORM
@@ -131,6 +132,7 @@ simulacrum_spider MONS_SIMULACRUM_SPIDER
 simulacrum_slime MONS_SIMULACRUM_SLIME
 simulacrum_eye MONS_SIMULACRUM_EYE
 simulacrum_x MONS_SIMULACRUM_X
+simulacrum_juggernaut MONS_SIMULACRUM_JUGGERNAUT
 simulacrum_dragon MONS_SIMULACRUM_DRAGON
 simulacrum_kraken MONS_SIMULACRUM_KRAKEN
 simulacrum_drake MONS_SIMULACRUM_DRAKE

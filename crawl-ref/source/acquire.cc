@@ -929,17 +929,10 @@ static bool _acquire_manual(item_def &book)
     {
         const int skl = _skill_rdiv(sk);
 
-        if (skl == 27 || is_useless_skill(sk))
+        if (skl == 27 || is_useless_skill(sk) || _skill_useless_with_god(sk))
             continue;
 
         int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
-
-        // Greatly reduce the chances of getting a manual for a skill
-        // you couldn't use unless you switched your religion.
-        // Note: manuals that gods actively hate, e.g. spellcasting under
-        // Trog, will be mulched and replaced later. This is silly!
-        if (_skill_useless_with_god(sk))
-            w /= 2;
 
         weights[sk] = w;
         total_weights += w;
@@ -1155,6 +1148,10 @@ static string _why_reject(const item_def &item, int agent)
     // Oka does not gift reaping weapons.
     if (agent == GOD_OKAWARU && get_weapon_brand(item) == SPWPN_REAPING)
         return "Destroying Oka-gifted reaping weapon.";
+
+    // Oka does not gift command armour.
+    if (agent == GOD_OKAWARU && get_armour_ego_type(item) == SPARM_COMMAND)
+        return "Destroying Oka-gifted command armour.";
 
     // Pain brand is useless if you've sacrificed Necromancy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
@@ -1494,7 +1491,7 @@ static void _create_acquirement_item(item_def &item, string items_key,
         // XXX: This is ugly and only works because there can never be another
         //      gizmo in our inventory, but move_item_to_inv() doesn't actually
         //      return an index or anything else we can use.
-        for (int i = 0; i < ENDOFPACK; ++i)
+        for (int i = 0; i < MAX_GEAR; ++i)
         {
             if (you.inv[i].base_type == OBJ_GIZMOS)
             {
@@ -1957,7 +1954,7 @@ static void _make_coglin_gizmos()
 
 bool coglin_invent_gizmo()
 {
-    if (inv_count() >= ENDOFPACK)
+    if (inv_count(INVENT_GEAR) >= MAX_GEAR)
     {
         mpr("You don't have room to hold a gizmo! Drop something first.");
         return false;

@@ -251,9 +251,11 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
         you.duration[DUR_FIRE_VULN] = 0;
         you.duration[DUR_POISON_VULN] = 0;
+        you.attribute[ATTR_DOOM] = 0;
         delete_all_temp_mutations("Super heal");
         decr_zot_clock();
         you.redraw_stats = true;
+        you.redraw_doom = true;
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
         you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
@@ -945,7 +947,7 @@ void wizard_transform()
     if (you.default_form == you.form && you.form != transformation::none)
     {
         you.default_form = form; // ehhh
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
     }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");

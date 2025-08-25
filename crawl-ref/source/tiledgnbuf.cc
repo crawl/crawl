@@ -570,15 +570,18 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg_idx >= TILE_PARCHMENT_LOW && fg_idx <= TILE_PARCHMENT_HIGH)
     {
         const item_def* item = cell.map_knowledge.item();
-        spell_type spell = static_cast<spell_type>(item->plus);
-        const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
-        const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
+        if (item)
+        {
+            spell_type spell = static_cast<spell_type>(item->plus);
+            const tileidx_t school1 = tileidx_parchment_overlay(spell, 0);
+            const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
 
-        if (school1 > 0)
-            m_buf_main.add(school1, x, y);
+            if (school1 > 0)
+                m_buf_main.add(school1, x, y);
 
-        if (school2 > 0)
-            m_buf_main.add(school2, x, y);
+            if (school2 > 0)
+                m_buf_main.add(school2, x, y);
+        }
     }
 
     if (fg & TILE_FLAG_NET)

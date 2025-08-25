@@ -86,6 +86,16 @@ regenerate his desiccated skeletal remains even if completely disintegrated.
 The same cannot be said for his many victims over his many centuries, from
 which he collects and channels their dying woes and regrets.
 %%%%
+Cassandra
+
+As a young woman, Cassandra bound herself in service to Ashenzari and was
+blessed and cursed in equal measure - granted the ability to foresee disasters,
+but only those she was powerless to prevent.
+
+Eventually driven from her homeland as a harbinger of the very plagues she'd
+spent a lifetime warning against, she has come to the dungeon in her final days
+in hope of averting one last catastrophe.
+%%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
@@ -483,10 +493,6 @@ Prince Ribbit
 
 A frog of unusual size, with a tiny crown perched incongruously atop his head.
 %%%%
-Psyche
-
-A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
-%%%%
 Robin
 
 A mountain hobgoblin, recently come in search of the legendary Orb. Not
@@ -790,6 +796,12 @@ A sacred, self-created sunbird, representative of rebirth. It has ascended
 past the cycles of life and death, and calls upon aspects of both, rising forth
 from death in a burst of unholy flame.
 %%%%
+bes kemwar
+
+A minor hairy maggot spirit, phasing in and out of this plane. Each regional
+variant inflicts different minor ailments: the ones found in the Dungeon
+cause one's magic to grow weak.
+%%%%
 black bear
 
 A small black bear. Like all ursines, it will become enraged if badly hurt.
@@ -884,8 +896,9 @@ flows heavily through it, overlaying this reality with countless others where
 its domain remains pristine.
 
 Each tesseract is inextricably linked to the other, and destroying one will
-destroy both. But so long as they are allowed to exist, there will be no end to
-the forces which seek to keep you from the Orb.
+destroy both (and expel many of the creatures they have beckoned to this
+reality). But so long as they are allowed to exist, there will be no end to the
+forces which seek to keep you from the Orb.
 %%%%
 brain worm
 
@@ -1033,7 +1046,7 @@ A crocodilian with powerful jaws.
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is
-immune to most forms of magic and hurls both crystallizing shots and painful
+immune to most forms of magic and hurls both crystallising shots and painful
 barbs.
 %%%%
 crystal guardian
@@ -2243,7 +2256,12 @@ An amber-coloured demon with a barbed tail not unlike that of a scorpion.
 Orb Guardian
 
 A huge, glowing, four-limbed purple creature with heightened senses, created by
-the Orb itself. It guards the Orb with enormous punctiliousness and violence.
+the Orb itself. It guards the Orb with enormous punctiliousness and violence,
+and its death will alert any Boundless Tesseracts on the level to begin creating
+reinforcements.
+
+Unless the Orb has already been disturbed, it will refuse to abandon its duty
+by leaving the floor.
 %%%%
 orb of destruction
 
@@ -2763,6 +2781,13 @@ shock serpent
 A sinuous serpent whose body crackles with volatile electricity. Its electric
 shroud can discharge when struck, inflicting a painful shock on any nearby
 foes.
+%%%%
+shooting star
+
+A glimmering spark of magical energy. It seeks out nearby enemies to expend
+itself upon, dealing damage and pushing them backwards.
+
+It does not block its allies' line of fire.
 %%%%
 silent spectre
 
@@ -3674,21 +3699,6 @@ orb golem
 A metal golem crackling with magical energies. It must have been created by
 a truly devious wizard, or possibly someone who misheard what monsters could
 be found in the Realm of Zot.
-%%%%
-orb of electricity
-
-A massive floating ball. It resembles ball lightning, but looks far more
-stable.
-%%%%
-# I'm not sure how widely cosmogonical Norse myths are known to an average
-# reader; Crawl's audience tends to be far more educated though, so let's
-# hope the concepts of Ginnungagap, Niflheim and Muspelheim are not too
-# obscure.
-orb of ice
-
-A globe of primordial ice, floating in the air. It is said to be a relic of
-ancient times, when the world was a void bracketed by realms of endless fire
-and cold.
 %%%%
 phase bat
 

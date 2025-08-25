@@ -68,7 +68,7 @@ string InvTitle::get_text() const
 }
 
 InvEntry::InvEntry(const item_def &i)
-    : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
+    : MenuEntry("", MEL_ITEM), item(&i)
 {
     indent_no_hotkeys = true;
     // This gets the inventory coloring rules to apply by default:
@@ -97,7 +97,7 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(i.slot);
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -182,11 +182,6 @@ void InvEntry::select(int qty)
     MenuEntry::select(qty);
 }
 
-bool InvEntry::has_star() const
-{
-    return _has_star;
-}
-
 string InvEntry::get_filter_text() const
 {
     return item_prefix(*item, false) + " " + get_text();
@@ -209,8 +204,6 @@ string InvEntry::_get_text_preface() const
         tstr << '-';
     else if (selected_qty < quantity)
         tstr << '#';
-    else if (_has_star)
-        tstr << '*';
     else
         tstr << '+';
 
@@ -310,16 +303,11 @@ InvMenu::InvMenu(int mflags)
     : Menu((mflags & MF_NOSELECT) ? mflags : (mflags | MF_ARROWS_SELECT),
                 "inventory"),
         type(menu_type::invlist), pre_select(nullptr),
-        title_annotate(nullptr), _mode_special_drop(false)
+        title_annotate(nullptr), cur_osel(0)
 {
     menu_action = ACT_EXAMINE; // default
     if (!Options.single_column_item_menus)
         set_flags(get_flags() | MF_USE_TWO_COLUMNS);
-}
-
-bool InvMenu::mode_special_drop() const
-{
-    return _mode_special_drop;
 }
 
 void InvMenu::set_type(menu_type t)
@@ -345,11 +333,26 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
 
 string slot_description()
 {
-    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+    return make_stringf("%d/%d gear slots", inv_count(INVENT_GEAR), MAX_GEAR);
 }
 
 void InvMenu::set_title(const string &s)
 {
+    if ((flags & MF_PAGED_INVENTORY))
+    {
+        string str;
+        switch (cur_osel)
+        {
+            case 0: str = "Gear: " + slot_description(); break;
+            case 1: str = "Potions: "; break;
+            case 2: str = "Scrolls: "; break;
+            case 3: str = "Evocable Items: "; break;
+        }
+        str += "    (Left/Right to switch category)";
+        set_title(new InvTitle(this, str, title_annotate));
+        return;
+    }
+
     set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
                                            : s,
                            title_annotate));
@@ -369,52 +372,148 @@ bool InvMenu::skip_process_command(int keyin)
 
 int InvMenu::pre_process(int key)
 {
-    if (type == menu_type::drop && key == '\\')
-    {
-        _mode_special_drop = !_mode_special_drop;
-        key = CK_NO_KEY;
-    }
-    else if (key == ';'
+    if (key == ';'
              && you.last_unequip != -1
              && (type == menu_type::drop || type == menu_type::invlist))
     {
         key = index_to_letter(you.last_unequip);
     }
-    else if (key == '-')
-        _mode_special_drop = false;
     return key;
 }
 
-static bool _item_is_permadrop_candidate(const item_def &item)
+const static int modes[] =
 {
-    // Known, non-artefact items of the types you see on the '\' menu proper.
-    // (No disabling autopickup for "green fizzy potion", "+3 whip", etc.)
-    if (!item.is_identified())
-        return false;
-    return item.base_type == OBJ_MISCELLANY
-        || item.base_type == OBJ_TALISMANS
-        || is_stackable_item(item)
-        || item_type_has_ids(item.base_type);
+    OSEL_GEAR,
+    OBJ_POTIONS,
+    OBJ_SCROLLS,
+    OSEL_EVOKABLE_ALL,
+};
+
+void InvMenu::cycle_page(int dir)
+{
+    do
+    {
+        int new_osel = cur_osel;
+        new_osel += dir;
+        if (new_osel < 0)
+            new_osel = ARRAYSZ(modes) - 1;
+        if (new_osel >= static_cast<int>(ARRAYSZ(modes)))
+            new_osel = 0;
+
+        set_page(new_osel);
+    }
+    // If this page is empty, go to the next one.
+    // XXX: (Theoretically, this could cause an infinite loop, but other code
+    //      should already prevent opening a menu when you have no items.)
+    while (items.empty());
 }
 
-void InvMenu::select_item_index(int idx, int qty)
+void InvMenu::set_page(int page)
 {
-    if (type != menu_type::drop)
-        return Menu::select_item_index(idx, qty);
+    ASSERT(page >= 0 && page < static_cast<int>(ARRAYSZ(modes)));
 
-    InvEntry *ie = static_cast<InvEntry*>(items[idx]);
+    if (!(flags & MF_PAGED_INVENTORY))
+        return;
 
-    bool should_toggle_star = _item_is_permadrop_candidate(ie->item[0])
-        && (ie->has_star() || _mode_special_drop);
+    const int old_osel = cur_osel;
+    cur_osel = page;
 
-    if (should_toggle_star)
+    // Save selected items from our current page
+    get_selected(&sel);
+    offscreen_sel[old_osel] = get_selitems();
+    deselect_all();
+
+    // Clear old entries and load new ones based on the new page
+    clear();
+    load_inv_items(modes[cur_osel]);
+    update_more();
+    reset();
+    update_menu(true);
+
+    // If the player has selected items on this new page previously, restore
+    // those selections.
+    for (SelItem& sel_item : offscreen_sel[cur_osel])
     {
-        // Toggle starred items back to selected-but-not-starred in this mode
-        // instead of turning them all the way off.
-        qty = _mode_special_drop ? -2 : 0;
-        ie->set_star(!ie->has_star());
+        for (size_t i = 0; i < items.size(); ++i)
+        {
+            InvEntry *inv = dynamic_cast<InvEntry*>(items[i]);
+            if (!inv)
+                continue;
+
+            if (inv->item->link == sel_item.item->link)
+            {
+                select_index(i, sel_item.quantity);
+                break;
+            }
+        }
     }
-    Menu::select_item_index(idx, qty);
+    get_selected(&sel);
+    update_title();
+}
+
+bool InvMenu::process_command(command_type cmd)
+{
+    if (flags & MF_PAGED_INVENTORY)
+    {
+        if (cmd == CMD_MENU_ACCEPT_SELECTION)
+        {
+            get_selected(&sel);
+            return false;
+        }
+        else if (cmd == CMD_MENU_EXIT)
+        {
+            // Must clear offscreen selection or exiting the menu will still act
+            // upon those items.
+            for (size_t i = 0; i < ARRAYSZ(offscreen_sel); ++i)
+                offscreen_sel[i].clear();
+            sel.clear();
+            lastch = CK_ESCAPE; // XX is this correct?
+            return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+        }
+        else if (cmd == CMD_MENU_LEFT)
+        {
+            cycle_page(-1);
+            return true;
+        }
+        else if (cmd == CMD_MENU_RIGHT)
+        {
+            cycle_page(1);
+            return true;
+        }
+    }
+
+    return Menu::process_command(cmd);
+}
+
+void InvMenu::select_index(int index, int qty)
+{
+    // XXX: Apply drop_filter to all pages at once.
+    if (flags & MF_PAGED_INVENTORY && qty == MENU_SELECT_ALL)
+    {
+        int start_osel = cur_osel;
+        do
+        {
+            Menu::select_index(index, qty);
+            cycle_page(1);
+        } while (cur_osel != start_osel);
+    }
+    else
+        Menu::select_index(index, qty);
+}
+
+string InvMenu::get_select_count_string(int) const
+{
+    if (flags & MF_PAGED_INVENTORY)
+    {
+        vector<SelItem> all_sel = get_selitems(true);
+        if (all_sel.empty())
+            return "";
+
+        return make_stringf(" %d item%s", (int)all_sel.size(),
+                                          all_sel.size() > 1 ? "s" : "");
+    }
+
+    return Menu::get_select_count_string(0);
 }
 
 bool InvMenu::examine_index(int i)
@@ -440,18 +539,12 @@ bool InvMenu::examine_index(int i)
     {
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
-        unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
+        const int invidx = ie->item->link;
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
     // nothing to describe, ignore
     return true;
-}
-
-void InvEntry::set_star(bool val)
-{
-    _has_star = val;
 }
 
 static bool _has_temp_unwearable_armour()
@@ -511,6 +604,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any pieces of jewellery.";
     case OSEL_AMULET:
         return "You aren't carrying any amulets.";
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return "You aren't carrying any jewellery or talismans.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
@@ -521,8 +616,8 @@ string no_selectables_message(int item_selector)
         return "None of your equipped items are cursed.";
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
-    case OSEL_WORN_JEWELLERY:
-        return "You aren't wearing any rings or amulets.";
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return "You aren't wearing any rings, amulets, or talismans.";
     case OSEL_WORN_EQUIPABLE:
         return "You aren't wearing anything.";
     case OSEL_EQUIPABLE:
@@ -721,6 +816,7 @@ int sort_item_qty(const InvEntry *a);
 int sort_item_slot(const InvEntry *a);
 bool sort_item_identified(const InvEntry *a);
 bool sort_item_charged(const InvEntry *a);
+int sort_item_consumable_usefulness(const InvEntry *a);
 
 int sort_item_qty(const InvEntry *a)
 {
@@ -728,7 +824,7 @@ int sort_item_qty(const InvEntry *a)
 }
 int sort_item_slot(const InvEntry *a)
 {
-    return a->item->link;
+    return isalpha(a->item->slot) ? letter_to_index(a->item->slot) : 0;
 }
 
 bool sort_item_identified(const InvEntry *a)
@@ -738,8 +834,25 @@ bool sort_item_identified(const InvEntry *a)
 
 bool sort_item_charged(const InvEntry *a)
 {
-    return a->item->base_type != OBJ_WANDS
-           || !item_ever_evokable(*(a->item));
+    return !is_xp_evoker(*a->item)
+                || evoker_charges(a->item->sub_type) <= 0;
+}
+
+int sort_item_consumable_usefulness(const InvEntry *a)
+{
+    if (inventory_category_for(*a->item) != INVENT_CONSUMABLE)
+        return 100;
+
+    if (is_useless_item(*a->item))
+        return 100;
+    if (is_emergency_item(*a->item))
+        return 0;
+    else if (is_good_item(*a->item))
+        return 1;
+    else if (is_dangerous_item(*a->item))
+        return 3;
+    else
+        return 2;
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -792,6 +905,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "charged",   compare_item_fn<bool, sort_item_charged>},
           { "qty",       compare_item_fn<int, sort_item_qty> },
           { "slot",      compare_item_fn<int, sort_item_slot> },
+          { "usefulness", compare_item_fn<int, sort_item_consumable_usefulness> },
       };
 
     list.clear();
@@ -844,12 +958,12 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_RODS,
 #endif
     OBJ_JEWELLERY,
+    OBJ_TALISMANS,
     OBJ_WANDS,
     OBJ_SCROLLS,
     OBJ_POTIONS,
     OBJ_MISCELLANY,
     OBJ_BAUBLES,
-    OBJ_TALISMANS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
 #endif
@@ -987,15 +1101,28 @@ void InvMenu::do_preselect(InvEntry *ie)
         }
 }
 
-vector<SelItem> InvMenu::get_selitems() const
+vector<SelItem> InvMenu::get_selitems(bool include_offscreen) const
 {
     vector<SelItem> selected_items;
     for (MenuEntry *me : sel)
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(me);
-        selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
-                                    inv->item, inv->has_star());
+        selected_items.emplace_back(inv->item->link, inv->selected_qty, inv->item);
     }
+
+    if (include_offscreen)
+    {
+        for (int i = 0; i < static_cast<int>(ARRAYSZ(offscreen_sel)); ++i)
+        {
+            if (cur_osel == i)
+                continue;
+
+            selected_items.insert(selected_items.end(),
+                                    offscreen_sel[i].begin(),
+                                    offscreen_sel[i].end());
+        }
+    }
+
     return selected_items;
 }
 
@@ -1134,7 +1261,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
-        selected = menu.get_selitems();
+        selected = menu.get_selitems(true);
     }
     return selected;
 }
@@ -1218,8 +1345,8 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
-    case OSEL_WORN_JEWELLERY:
-        return item_is_equipped(i) && item_is_selected(i, OBJ_JEWELLERY);
+    case OSEL_WORN_JEWELLERY_OR_TALISMAN:
+        return item_is_equipped(i) && item_is_selected(i, OSEL_JEWELLERY_OR_TALISMAN);
 
     case OSEL_AMULET:
         return itype == OBJ_JEWELLERY && jewellery_is_amulet(i);
@@ -1231,10 +1358,23 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_EQUIPABLE:
         return item_is_selected(i, OBJ_ARMOUR)
             || item_is_selected(i, OSEL_WIELD)
-            || item_is_selected(i, OBJ_JEWELLERY);
+            || item_is_selected(i, OBJ_JEWELLERY)
+            || item_is_selected(i, OBJ_TALISMANS);
 
     case OSEL_MARKED_ITEMS:
         return i.flags & ISFLAG_MARKED_FOR_MENU;
+
+    case OSEL_JEWELLERY_OR_TALISMAN:
+        return i.base_type == OBJ_JEWELLERY || i.base_type == OBJ_TALISMANS;
+
+    case OSEL_GEAR:
+        return inventory_category_for(i) == INVENT_GEAR
+                || i.base_type == OBJ_MISSILES;
+
+    case OSEL_EVOKABLE_ALL:
+        return i.base_type == OBJ_WANDS
+               || i.base_type == OBJ_MISCELLANY
+               || i.base_type == OBJ_BAUBLES;
 
     default:
         return false;
@@ -1315,18 +1455,35 @@ static int _invent_select(const char *title = nullptr,
     if (title && menu.item_count())
         menu.set_title(title);
 
+    // Cycle through all pages to properly apply pre-selections immediately.
+    if (flags & MF_PAGED_INVENTORY)
+    {
+        for (int i = 0; i < 4; ++i)
+            menu.set_page(i);
+
+        // And then jump to the first non-empty page.
+        menu.cycle_page(1);
+    }
+
     menu.show(true);
 
     if (items)
-        *items = menu.get_selitems();
+        *items = menu.get_selitems(true);
 
     return menu.getkey();
 }
 
 void display_inventory()
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
-    menu.load_inv_items(OSEL_ANY, -1);
+
+    int flags = MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL;
+    if (Options.show_paged_inventory)
+        flags |= MF_PAGED_INVENTORY;
+    else
+        flags |= MF_SELECT_BY_CATEGORY;
+
+    InvMenu menu(flags);
+    menu.load_inv_items(Options.show_paged_inventory ? OSEL_GEAR : OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
     menu.show(true);
@@ -1337,46 +1494,9 @@ void display_inventory()
     }
 }
 
-static string _drop_selitem_text(const vector<MenuEntry*> *s)
+static string _drop_menu_titlefn(const Menu*, const string &)
 {
-    bool extraturns = false;
-
-    if (s->empty())
-        return "";
-
-    for (MenuEntry *entry : *s)
-    {
-        const item_def *item = static_cast<item_def *>(entry->data);
-        if (item_is_equipped(*item))
-        {
-            extraturns = true;
-            break;
-        }
-    }
-
-    return make_stringf(" (%u%s turn%s)",
-                        (unsigned int)s->size(),
-                        extraturns? "+" : "",
-                        s->size() > 1? "s" : "");
-}
-
-static string _drop_prompt(bool as_menu_title, bool menu_autopickup_mode)
-{
-    string prompt_base;
-
-    if (as_menu_title && menu_autopickup_mode)
-        prompt_base = "Drop (and turn off autopickup for) what? ";
-    else if (as_menu_title)
-        prompt_base = "Drop what?                               ";
-    else
-        prompt_base = "Drop what? ";
-    return prompt_base + slot_description() + " (_ for help)";
-}
-
-static string _drop_menu_titlefn(const Menu *m, const string &)
-{
-    const InvMenu *invmenu = static_cast<const InvMenu *>(m);
-    return _drop_prompt(true, invmenu->mode_special_drop());
+    return "Drop what? (Left/Right to switch category) " + slot_description() + " (_ for help)";
 }
 
 /**
@@ -1393,17 +1513,14 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
     // multi-select some items to drop
     _invent_select("",
                       menu_type::drop,
-                      OSEL_ANY,
+                      OSEL_GEAR,
                       -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
+                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY | MF_PAGED_INVENTORY,
                       _drop_menu_titlefn,
                       &items,
                       &Options.drop_filter,
-                      _drop_selitem_text,
+                      nullptr,
                       &preselected_items);
-
-    for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
 
     return items;
 }
@@ -1757,6 +1874,8 @@ int prompt_invent_item(const char *prompt,
             break;
         }
 
+        // Item chosen by menu.
+        item_def* chosen = nullptr;
         // TODO: it seems like for some uses of this function, `*` shouldn't
         // be allowed at all, e.g. evoke.
         if (keyin == '?' || keyin == '*')
@@ -1811,7 +1930,7 @@ int prompt_invent_item(const char *prompt,
                 // hacky, but lets the inscription checks below trip
                 // TODO: this code should not rely on keyin, it breaks cmd
                 // bindings
-                keyin = items[0].slot;
+                keyin = items[0].item->slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
             {
@@ -1819,6 +1938,10 @@ int prompt_invent_item(const char *prompt,
                 ret = PROMPT_GOT_SPECIAL;
                 break;
             }
+
+            // Mark the item chosen by the menu, one way or the other.
+            if (items.size() > 0)
+                chosen = &you.inv[items[0].item->link];
         }
 
         if (isadigit(keyin))
@@ -1845,7 +1968,10 @@ int prompt_invent_item(const char *prompt,
         }
         else if (isaalpha(keyin))
         {
-            ret = letter_to_index(keyin);
+            if (chosen)
+                ret = chosen->link;
+            else
+                ret = letter_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");

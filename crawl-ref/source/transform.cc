@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -170,6 +171,7 @@ Form::Form(const form_entry &fe)
       changes_anatomy(fe.changes_anatomy),
       changes_substance(fe.changes_substance),
       holiness(fe.holiness),
+      is_badform(fe.is_badform),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
       has_ears(fe.has_ears),
@@ -1385,6 +1387,11 @@ bool form_can_swim(transformation form)
     return get_form(form)->player_can_swim();
 }
 
+bool form_is_bad(transformation form)
+{
+    return get_form(form)->is_badform;
+}
+
 // Used to mark transformations which change the basic matter the player is
 // made up of (ie: statue/storm form)
 bool form_changes_substance(transformation form)
@@ -1570,16 +1577,19 @@ static bool _flying_in_new_form(transformation which_trans, const item_def* tali
     // items which grant equipment slots can cause effects that are hard to
     // predict without actually simulating them.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
-    unwind_var<item_def> unwind_talisman(you.active_talisman);
+    unwind_var<int8_t> unwind_talisman(you.cur_talisman);
     unwind_var<transformation> unwind_default_form(you.default_form);
     unwind_var<transformation> unwind_form(you.form);
 
     you.default_form = which_trans;
     you.form = which_trans;
     if (talisman)
-        you.active_talisman = *talisman;
+    {
+        ASSERT(in_inventory(*talisman));
+        you.cur_talisman = talisman->link;
+    }
     else
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
 
     you.equipment.unmeld_all_equipment(true);
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
@@ -1960,8 +1970,8 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
     // refresh equipment properties.
     you.equipment.update();
 
-    if (is_artefact(you.active_talisman))
-        equip_artefact_effect(you.active_talisman, nullptr, false);
+    if (using_talisman && is_artefact(*you.active_talisman()))
+        equip_artefact_effect(*you.active_talisman(), nullptr, false);
 
     // Update flight status now (won't actually land the player if we're still flying).
     if (was_flying)
@@ -2012,17 +2022,18 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         involuntary = true;
 
     if (!check_transform_into(which_trans, involuntary,
-                                using_talisman ? &you.active_talisman : nullptr))
+                                using_talisman ? you.active_talisman() : nullptr))
     {
         return false;
     }
 
     // If swapping to a different talisman of the same type, make sure to
     // activate properties of the new one.
-    if (you.form == which_trans && is_artefact(you.active_talisman))
+    if (using_talisman && you.form == which_trans
+        && is_artefact(*you.active_talisman()))
     {
         you.equipment.update();
-        equip_artefact_effect(you.active_talisman, nullptr, false);
+        equip_artefact_effect(*you.active_talisman(), nullptr, false);
 
         return true;
     }
@@ -2287,29 +2298,27 @@ void unset_default_form()
     set_default_form(transformation::none, nullptr);
 }
 
-void set_default_form(transformation t, const item_def *source)
+void set_default_form(transformation t, const item_def *talisman)
 {
-    item_def talisman = you.active_talisman;
-    you.active_talisman.clear();
-
-    if (is_artefact(talisman))
+    if (item_def* old_talisman = you.active_talisman())
     {
-        // We need to remove any artifact properties before running the unequip
-        // effects so that max health and magic are updated properly
-        you.equipment.update();
+        you.cur_talisman = -1;
+        if (is_artefact(*old_talisman))
+        {
+            // We need to remove any artifact properties before running the unequip
+            // effects so that max health and magic are updated properly
+            you.equipment.update();
 
-        unequip_artefact_effect(talisman, nullptr, false);
+            unequip_artefact_effect(*old_talisman, nullptr, false);
+        }
+        item_skills(*old_talisman, you.skills_to_hide);
     }
-    item_skills(talisman, you.skills_to_hide);
 
-    if (source)
+    if (talisman)
     {
-        you.active_talisman = *source; // iffy
-        // XXX: Make the copied talisman not appear to be in the player's
-        // inventory, so that examining it via the mutation menu won't display
-        // unusable button prompts to set skill target.
-        you.active_talisman.pos = coord_def();
-        item_skills(you.active_talisman, you.skills_to_show);
+        ASSERT(in_inventory(*talisman));
+        you.cur_talisman = talisman->link;
+        item_skills(*talisman, you.skills_to_show);
     }
 
     // This has to be done after checking item skills, otherwise the new active

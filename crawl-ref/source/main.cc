@@ -1494,6 +1494,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    // Exiting Troves early.
+    if (ygrd == DNGN_EXIT_TROVE
+        && you.depth == brdepth[BRANCH_TROVE])
+    {
+        if (!yesno("Are you sure you want to leave this trove?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Leaving ziggurat figurines behind.
     if (ygrd == DNGN_EXIT_ZIGGURAT
         && you.depth == brdepth[BRANCH_ZIGGURAT]
@@ -2315,15 +2326,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_INTERLEVEL_TRAVEL: do_interlevel_travel();      break;
     case CMD_ANNOTATE_LEVEL:    do_annotate();               break;
     case CMD_EXPLORE:           do_explore_cmd();            break;
-
-        // Mouse commands.
-    case CMD_MOUSE_MOVE:
-    {
-        const coord_def dest = crawl_view.screen2grid(crawl_view.mousep);
-        if (in_bounds(dest))
-            terse_describe_square(dest);
-        break;
-    }
+    case CMD_EXPLORE_NO_REST:   do_explore_cmd(true);        break;
 
     case CMD_MOUSE_CLICK:
     {
@@ -2437,7 +2440,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         break;
 
     case CMD_TOGGLE_KEYBOARD:
-        jni_keyboard_control(true);
+        jni_keyboard_control(2);
         break;
 #endif
 
@@ -2468,6 +2471,7 @@ static void _prep_input()
     you.shield_blocks = 0;              // no blocks this round
 
     you.redraw_status_lights = true;
+    you.redraw_title = true;
     if (you.running == 0)
     {
         you.quiver_action.set_needs_redraw();
@@ -2478,7 +2482,6 @@ static void _prep_input()
 
     viewwindow();
     update_screen(); // ???
-    maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
 
@@ -2561,9 +2564,6 @@ void world_reacts()
         update_screen();
     }
 
-    // prevent monsters wandering into view and picking up an item before
-    // our next prep_input
-    maybe_update_stashes();
     update_monsters_in_view();
 
     reset_show_terrain();

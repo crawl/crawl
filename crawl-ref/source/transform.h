@@ -215,6 +215,8 @@ public:
     /// What does this form change the player's holiness to? (MH_NONE if it leaves it unchanged)
     /// Note that vampire is special-cased in player::holiness().
     const mon_holy_type holiness;
+    /// Is this form considered 'bad' (ie: hostile)
+    const bool is_badform;
 
     /// Does this form have blood (used for sublimation and bloodsplatters)?
     const form_capability has_blood;
@@ -314,6 +316,7 @@ const Form* cur_form(bool temp = true);
 
 bool lifeless_prevents_form(transformation form = you.form);
 
+bool form_is_bad(transformation form = you.form);
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
@@ -344,7 +347,7 @@ void untransform(bool skip_move = false, bool scale_hp = true,
                  transformation new_form = transformation::none);
 
 void unset_default_form();
-void set_default_form(transformation t, const item_def *source);
+void set_default_form(transformation t, const item_def *talisman);
 
 void set_form(transformation which_trans, int dur, bool scale_hp = true);
 void return_to_default_form(bool new_form = false);

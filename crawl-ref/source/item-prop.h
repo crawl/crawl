@@ -108,6 +108,7 @@ int armour_max_enchant(const item_def &item) PURE;
 bool armour_type_is_hide(armour_type type) PURE;
 bool armour_is_hide(const item_def &item) PURE;
 bool armour_is_special(const item_def &item) PURE;
+bool armour_is_aux(armour_type arm) PURE;
 int armour_acq_weight(const armour_type armour) PURE;
 
 equipment_slot get_armour_slot(const item_def &item) PURE;
@@ -302,3 +303,5 @@ bool ring_plusses_matter(int ring_subtype);
 void remove_whitespace(string &str);
 
 void populate_fake_projectile(const item_def &wep, item_def &fake_proj);
+
+int jewellery_usefulness_limit(jewellery_type type);

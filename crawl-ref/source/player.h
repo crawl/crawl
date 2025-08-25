@@ -72,6 +72,8 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 #define SOLAR_EMBER_MID_KEY "solar_ember_mid"
 #define SOLAR_EMBER_REVIVAL_KEY "solar_ember_revival"
 
+#define PYROMANIA_TRIGGERED_KEY "pyromania_triggered"
+
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
@@ -185,7 +187,8 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
-    item_def active_talisman;
+    // Index into inv[] of the player's current talisman. (-1 if none.)
+    int8_t cur_talisman;
 
     // XXX: ENDOFPACK marks the total size of the player inventory, but we add
     //      a single extra slot after that for purposes of examining EV of
@@ -595,7 +598,7 @@ public:
     int shout_volume() const;
 
     int base_ac_from(const item_def &armour, int scale = 1,
-                     bool include_penalties = true) const;
+                     bool include_form = true) const;
 
     int corrosion_amount() const;
 
@@ -692,6 +695,7 @@ public:
     item_def *body_armour() const override;
     item_def *shield() const override;
     item_def *offhand_weapon() const override;
+    item_def *active_talisman() const;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -754,6 +758,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(const actor *attacker, int pow) override;
+    void diminish(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void daze(int duration) override;
     void end_daze();
@@ -875,8 +880,8 @@ public:
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const;
-    int adjusted_body_armour_penalty(int scale = 1) const;
+    int unadjusted_body_armour_penalty(bool archery = false) const;
+    int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
     // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
@@ -894,8 +899,6 @@ public:
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
-
-    bool using_talisman(const item_def &talisman) const;
 
     bool do_shaft() override;
     bool shaftable() const;
@@ -1029,11 +1032,15 @@ bool player_can_hear(const coord_def& p, int hear_distance = 999);
 void update_acrobat_status();
 bool player_acrobatic();
 
+int player_parrying();
+void update_parrying_status();
+
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
+int player_armour_stealth_penalty();
 
 int player_movement_speed(bool check_terrain = true, bool temp = true);
 
@@ -1043,7 +1050,7 @@ int sanguine_armour_bonus();
 int stone_body_armour_bonus();
 
 int player_wizardry();
-int player_channelling();
+int player_channelling_chance(bool max = false);
 
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);

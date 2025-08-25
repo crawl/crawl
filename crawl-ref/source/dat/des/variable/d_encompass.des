@@ -137,8 +137,9 @@ KMONS:   mo = vault guard
 KMONS:   p = glass eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
-KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 {{
+-- A depth-scaled Lua call to assign different intelligent bands.
+-- Try to keep to monsters that mostly still spawn in D or Depths.
 local bands = {
     [65 - you.absdepth() * 3] =
         { "boggart", "tengu conjurer", "centaur warrior", "laughing skull" },
@@ -170,6 +171,7 @@ end
 util.sort(kmonsters)
 kmons("s = " .. table.concat(kmonsters, " / "))
 }}
+# Uniquely defined rings rewards to match the shape of the vault.
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
@@ -181,55 +183,71 @@ KFEAT:   A = enter_hell
 KFEAT:   & = enter_pandemonium
 KFEAT:   @ = enter_abyss
 KFEAT:   C : C / any shop
+# Rotate eight types of rooms each used thrice in the 24 total rooms.
+# Brackets turn into stairs and items, alphanumerics turn into monsters.
 SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
-FTILE:   (DZBf't = floor_w_marble
-: if you.absdepth() > 17 then
-SUBST:   ( = D, ) = C
+: if you.in_branch("Depths") then
+# We need at least four portals, currently, so dedicate six rooms to this.
+# Sometimes, place all the portals inside the garden instead.
+SUBST:   ( = C, ) = D
 MARKER:  C = lua:props_marker { portal=1 }
 MARKER:  D = lua:props_marker { portal=1 }
-:     if crawl.random2(you.depth() - 15) > (you.depth() - 18) then
-SUBST:   A&@ = a, _ = -, l = W
+:     if crawl.random2(you.absdepth() - 15) > (you.absdepth() - 18) then
+SUBST:   A&@ = a, _ : -_
 :     else
 SHUFFLE: aA&@
 :     end
-:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+: else -- Dungeon
+SUBST:   A&@ = a, _ = -, l = W
+: end
+# Some item, stair, and altar placement, juggling around the stair glyphs
+SUBST:   {} = **|||, ) = C, [ = !, ] = ?
+NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
+# To ensure one gem is visible by one branch entrance every time, the branch
+# entrance has now been placed reliably in the central garden.
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   })] = T
+:     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+KITEM:   r = smoky gem
+KFEAT:   Z = enter_depths
+NSUBST:  ; = 1:Z / 1:r
+SUBST:   f = ', ^ = W
+:     elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KMONS:   U = base draconian
+KMONS:   Z = draconian knight / draconian scorcher / draconian annihilator
+KITEM:   t = midnight gem
 KFEAT:   B = zot_statue
+KFEAT:   U = fountain_sparkling
 KFEAT:   Z = enter_zot
-KITEM:   r = midnight gem
-NSUBST:  (D = 1:Z
-SUBST:   f = B, 2 = t
+NSUBST:  ; = 1:Z / 1:t
+SUBST:   -_ = B, ^ = l
 :     end
 : else
-SUBST:   A&@ = a, _ = -, l = W
-:     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-KFEAT:   Z = enter_depths
-KITEM:   r = smoky gem
-NSUBST:  ( = Z / T
-SUBST:   f = ', 2 = r
-:     end
+SHUFFLE: })] / {([
+SUBST: ` = >
 : end
-SUBST:   {} = **|||, ) = C, [ = !, ] = ?
-NSUBST:  < = { / ( / [, > = } / ) / ]
-SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0, ; : ;"
-SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
-SHUFFLE: })]` / {([>, ?!, mo / pq, pq / pq / pq / qp / pp / qq
+# Define monsters for each room type.
+SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
+SUBST:   1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
+# Randomize pillars, side-gaps, and traps for the central ring.
 SHUFFLE: LM / LM / LM / LM / LM / LM / ML / ML / MM
 SHUFFLE: NO / NO / NO / NO / NO / NO / ON / ON / OO
 SHUFFLE: PQ / PQ / PQ / PQ / QP, RS / RS / RS / SR
-SHUFFLE: EF / GH / Iu / yz
+SHUFFLE: EF / GH / Iu / yz, mo / pq, pq / pq / pq / qp / pp / qq, ?!
 SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
-SUBST:   Iy = D, uz = a
-NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / .
+SUBST:   Iy = D, uz = a, ` = <,  ; : ;"
+NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
+# Assign floor tiles and set up transporters.
 COLOUR:  "-_ = green
-COLOUR:  '`089rs%*|!? = white
-FTILE:   ^";aAFHuz@&-_U = floor_grass
+COLOUR:  '`089s%*|!? = white
+FTILE:   "-_^;artuzAFHB@&UZ = floor_grass_dark
 : if crawl.coinflip() then
-FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_vault
+FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_vault
 : else
-FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_pebble_darkgray
+FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_pebble_darkgray
 : end
 : if you.in_branch("Depths") then
-FTILE:   . = floor_depthstone
+FTILE:   .~mopq = floor_depthstone
 : end
 MARKER:  E = lua:transp_loc("spin_cycle_entry")
 MARKER:  F = lua:transp_dest_loc("spin_cycle_entry")
@@ -262,12 +280,12 @@ MAP
    vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
  vvvc...~~~ON~~..cj'%)bblllllFllllbb%'''c..~~~~~~....cv
 vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
-v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
-v%''c.NO~~~~~..+'''%bnlll"_""""""lbbbbck'cc..~~MLM~..+'''v
-v['3c..~~~~~ML.c'5'}Gnl^H"""";"U"lllnb%'''+..MLM~~~..c''%v
-v%''c..~~~MLM..+'''%bnlll"U";""""u^lnI]'7'c.LM~~~~~..c1'{v
-v'''+..~MLM~~..cc'icbbbbl""""""_"lllnb%'''+..~~~~~ON.c''%v
-vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
+v'''+..ONO~~~..cc'icbbbbl""U"_"""lbbbbcccc..~~~~~ML..c'evv
+v%''c.NO~~~~~..+'''%bnlll"_""";""lbbbbck'cc..~~MLM~..+'''v
+v['3c..~~~~~ML.c'5'}Gnl^H""""""U"lllnb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bnlll"U""""""u^lnI]'7'c.LM~~~~~..c1'{v
+v'''+..~MLM~~..cc'icbbbbl"";"""_"lllnb%'''+..~~~~~ON.c''%v
+vvg'c..LM~~~~~..ccccbbbbl"""_"U""lbbbbck'cc..~~~ONO..+'''v
  vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
    vc....~~~~~~..c'''%bbllllzlllllbb>%'hc..~~NO~~~~..cvvv
    vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
@@ -926,7 +944,7 @@ NSUBST: ' = 2:6 / 3 = 66... / *:., " = 2:6 / 3 = 66... / *:.
 NSUBST: ` = 3:6 / 4 = 66... / *:., - = 1:6 / 2 = 6.. / *:.
 NSUBST: } = 1:] / 1:) / 1:} / * = **23..
 TILE:   x = wall_pebble_brown
-FTILE:  !pPt = floor_grass / floor_swamp w:1
+FTILE:  !pPt = floor_grass_dark / floor_swamp w:1
 FTILE:  5oR = floor_dirt
 SUBST:  ! = .
 MAP

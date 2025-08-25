@@ -139,7 +139,8 @@ function choose_mset_1(e)
     e.kmons("1 = scorpion w:15 / scorpion simulacrum w:5 / tarantella w:5")
 -- Crypt
   elseif rnd < 49 then
-    e.kmons("1 = zombie / orc draugr / wight w:5 / weeping skull / phantom")
+    e.kmons("1 = zombie / orc draugr / wight w:5 / \
+                 weeping skull / phantom / bes kemwar w:5")
 -- Abyss
   elseif rnd < 59 then
     e.kmons("1 = lesser demon w:20 / brain worm / weeping skull / neqoxec w:2")
@@ -202,7 +203,7 @@ function choose_mset_1(e)
     e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, \
                Pargi, Sonja, Sprozz, Terence, Urug, human")
   end
 end
@@ -298,7 +299,7 @@ function choose_mset_2(e)
     e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, \
                Pargi, Sonja, Sprozz, Terence, Urug, human")
   end
 end
@@ -424,7 +425,7 @@ function choose_mset_3(e)
     e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund /\
                Erica / Erolcha / Eustachio / Gastronok / Grum / Grinder /\
                Harold / Ijyb / Jessica / Joseph / Josephine / Maurice /\
-               Menkaure / Pikel / Prince Ribbit / Psyche / Pargi / Sigmund /\
+               Menkaure / Pikel / Prince Ribbit / Pargi / Sigmund /\
                Sonja / Sprozz / Terence / Urug / Agnes / Aizul / Azrael /\
                Donald / Frances / Kirke / Louise / Nergalle / Nessos / Nikola /\
                Polyphemus / Roxanne / Rupert / Saint Roka / Snorg")
@@ -509,7 +510,7 @@ local rnd = crawl.random2(142)
   elseif rnd < 81 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum / rime drake/\
                freezing wraith / ice devil / ice dragon / frost giant /\
-               ice fiend w:5 / blizzard demon")
+               orb of winter w:5 / blizzard demon")
 -- Air
   elseif rnd < 84 then
     e.kmons("1 = air elemental / wind drake / spriggan air mage /\
@@ -567,7 +568,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund /\
                Erica / Erolcha / Eustachio / Gastronok / Grum / Grinder /\
                Harold / Ijyb / Jessica / Joseph / Josephine / Maurice /\
-               Menkaure / Pikel / Prince Ribbit / Psyche / Pargi / Sigmund /\
+               Menkaure / Pikel / Prince Ribbit / Pargi / Sigmund /\
                Sonja / Sprozz / Terence / Urug / Agnes / Aizul / Azrael /\
                Donald / Frances / Kirke / Louise / Nergalle / Nessos / Nikola /\
                Polyphemus / Roxanne / Rupert / Saint Roka / Snorg /\

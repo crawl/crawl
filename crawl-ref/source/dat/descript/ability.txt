@@ -817,11 +817,11 @@ Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
-Sacrifices the ability to use magical scrolls after being injured.
+Sacrifices the ability to use magical scrolls unless badly injured.
 %%%%
 Sacrifice Drink ability
 
-Sacrifices the ability to drink potions after being injured.
+Sacrifices the ability to drink potions unless badly injured.
 %%%%
 Sacrifice Essence ability
 

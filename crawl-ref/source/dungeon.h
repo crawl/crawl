@@ -311,3 +311,5 @@ bool dgn_make_transporters_from_markers();
 
 int starting_absdepth();
 bool in_descent_parent(branch_type branch);
+
+int concretize_item_level(int spec_level, int dgn_level = INVALID_ABSDEPTH);

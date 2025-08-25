@@ -1044,9 +1044,10 @@ static void _inc_gift_timeout(int val)
 // - Whatever dead stars made cognitogaunts are out of Yred's grasp
 static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
-  { -2,  5,   80, PEAK, MONS_NECROPHAGE },
-  { -1,  7,   75, PEAK, MONS_PHANTOM },
-  {  2,  9,   70, SEMI, MONS_MARROWCUDA },
+  { -2,  5,   40, PEAK, MONS_NECROPHAGE },
+  { -1,  7,   70, PEAK, MONS_PHANTOM },
+  {  2,  8,   50, PEAK, MONS_BES_KEMWAR },
+  {  3,  9,   70, SEMI, MONS_MARROWCUDA },
   {  4,  11,  145, SEMI, MONS_WIGHT },
   {  6,  13,  90, SEMI, MONS_SHADOWGHAST },
   {  8,  15,  110, SEMI, MONS_WRAITH },
@@ -1131,7 +1132,7 @@ bool yred_reap_chance()
     int ratio = min(piety_breakpoint(5), (int)you.piety()) * 100 / piety_breakpoint(5);
     int min_chance = 15 + (25 * ratio / 100);
 
-    ratio = min(100, (hd * 100 / you.piety() * 4));
+    ratio = min(100, (hd * 100 / max(you.piety() * 4, 1)));
     int chance = (ratio * min_chance / 100) + ((100 - ratio));
 
     return x_chance_in_y(chance, 100);

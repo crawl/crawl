@@ -427,5 +427,11 @@ function hyper.place.restore_stairs(results, usage_grid, options)
     table.remove(stairs,i)
   end
 
+  if you.depth() == 4 then
+    e.set_feature_name("stone_stairs_down_i", "metal staircase leading down")
+    e.set_feature_name("stone_stairs_down_ii", "metal staircase leading down")
+    e.set_feature_name("stone_stairs_down_iii", "metal staircase leading down")
+  end
+
   return true
 end

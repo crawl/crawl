@@ -1745,7 +1745,25 @@ LUAFN(you_gain_bane)
     string banename = luaL_checkstring(ls, 1);
     bane_type bane = bane_from_name(banename);
     if (bane != NUM_BANES)
-        PLUARET(boolean, add_bane(bane));
+    {
+        string reason = luaL_checkstring(ls, 2);
+        int mult = luaL_checkint(ls, 3);
+        PLUARET(boolean, add_bane(bane, reason, 0, mult > 0 ? mult : 100));
+    }
+
+    string err = make_stringf("No such bane: '%s'.", banename.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+LUAFN(you_xl_to_remove_bane)
+{
+    string banename = luaL_checkstring(ls, 1);
+    bane_type bane = bane_from_name(banename);
+    if (bane != NUM_BANES)
+    {
+        int mult = luaL_checkint(ls, 2);
+        PLUARET(integer, xl_to_remove_bane(bane, mult > 0 ? mult : 100));
+    }
 
     string err = make_stringf("No such bane: '%s'.", banename.c_str());
     return luaL_argerror(ls, 1, err.c_str());
@@ -1862,6 +1880,7 @@ static const struct luaL_reg you_dlib[] =
 { "delete_temp_mutations", you_delete_temp_mutations },
 { "delete_all_mutations", you_delete_all_mutations },
 { "gain_bane",          you_gain_bane },
+{ "xl_to_remove_bane",  you_xl_to_remove_bane },
 { "apply_draining",     you_apply_draining },
 { "ostracise",          you_ostracise },
 { "change_species",     you_change_species },

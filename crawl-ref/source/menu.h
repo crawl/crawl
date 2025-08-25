@@ -261,8 +261,10 @@ enum MenuFlag
     MF_SELECT_QTY       = 0x00008,   ///< Allow partial selections by quantity
     MF_ANYPRINTABLE     = 0x00010,   ///< Any printable character is valid, and
                                      ///< closes the menu.
-    MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on
-                                     ///< currently-visible page.
+    MF_SELECT_BY_CATEGORY = 0x00020, ///< Hotkeys will select the first matching
+                                     ///< key within the currently-selected
+                                     ///< menu sub-category, rather than nearest
+                                     ///< entry with that hotkey.
     MF_INIT_HOVER       = 0x00040,   ///< Show the hover on initial display
     MF_WRAP             = 0x00080,   ///< Paging past the end will wrap back.
     MF_ALLOW_FILTER     = 0x00100,   ///< Control-F will ask for regex and
@@ -280,6 +282,7 @@ enum MenuFlag
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
     MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
     MF_GRID_LAYOUT     = 0x100000,   ///< use a grid-style layout, filling by width first
+    MF_PAGED_INVENTORY = 0x200000,   ///< uses left/right to switch between different inventory categories
 };
 
 class UIMenu;
@@ -472,7 +475,7 @@ protected:
     void deselect_all(bool update_view = true);
     virtual void select_items(int key, int qty = MENU_SELECT_INVERT); // XX why is the default invert?
     virtual void select_item_index(int idx, int qty = MENU_SELECT_INVERT);
-    void select_index(int index, int qty = -1);
+    virtual void select_index(int index, int qty = -1);
     virtual bool examine_index(int i);
     bool examine_by_key(int keyin);
     int hotkey_to_index(int key, bool primary_only);

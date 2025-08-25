@@ -806,6 +806,24 @@ bool mons_is_projectile(const monster& mon)
     return mons_is_projectile(mon.type);
 }
 
+bool mons_is_seeker(monster_type mc)
+{
+    return mc == MONS_FOXFIRE || mc == MONS_SHOOTING_STAR;
+}
+
+bool mons_is_seeker(const monster& mon)
+{
+    return mon.type == MONS_FOXFIRE || mon.type == MONS_SHOOTING_STAR;
+}
+
+cloud_type seeker_trail_type(const monster& mon)
+{
+    if (mon.type == MONS_FOXFIRE)
+        return CLOUD_FLAME;
+    else
+        return CLOUD_MAGIC_TRAIL;
+}
+
 bool mons_has_blood(monster_type mc)
 {
     return mons_class_flag(mc, M_COLD_BLOOD)
@@ -832,15 +850,17 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
 {
     // Do the expensive LOS check last.
     return mons_offers_beogh_conversion(mon)
-                // Only try to convert atheists
+                // Only try to convert atheists...
                 && you.religion == GOD_NO_GOD
+                //...who aren't facing Beogh's wrath
+                && !you.penance[GOD_BEOGH]
                 && !you.has_mutation(MUT_FORLORN)
                 && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
                 && !mons_is_confused(mon) && mons_is_seeking(mon)
                 && mon.foe == MHITYOU && !mons_is_immotile(mon)
-                && you.visible_to(&mon) && you.can_see(mon);
+                && you.can_see(mon);
 }
 
 // Returns true for monsters that obviously (to the player) feel
@@ -1680,11 +1700,11 @@ bool mons_class_can_use_stairs(monster_type mc)
 {
     return (!mons_class_is_zombified(mc) || mc == MONS_BOUND_SOUL)
            && !mons_is_tentacle_or_tentacle_segment(mc)
+           && !mons_is_seeker(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
-           && mc != MONS_BALL_LIGHTNING
-           && mc != MONS_FOXFIRE;
+           && mc != MONS_BALL_LIGHTNING;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)
@@ -1713,6 +1733,9 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     {
         return false;
     }
+
+    if (mon.type == MONS_ORB_GUARDIAN && !player_on_orb_run())
+        return false;
 
     // If this is the entrance to a portal vault (or another region of Pandemonium)
     // only friendly monsters can traverse this.
@@ -2509,7 +2532,7 @@ int exp_value(const monster& mon, bool real, bool legacy)
         if (mon.has_ench(ENCH_BERSERK))
             maxhp = (maxhp * 2 + 1) / 3;
 
-        if (mon.has_ench(ENCH_DOUBLED_HEALTH))
+        if (mon.has_ench(ENCH_DOUBLED_VIGOUR))
             maxhp = maxhp / 2;
     }
     else
@@ -3359,7 +3382,7 @@ bool mons_wields_two_weapons(const monster& mon)
 // and then cease to exist?
 bool mons_destroyed_on_impact(const monster& m)
 {
-    return mons_is_projectile(m) || m.type == MONS_FOXFIRE;
+    return mons_is_projectile(m) || mons_is_seeker(m);
 }
 
 // When this monster reaches its target, does it explode and then
@@ -3604,7 +3627,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     {
     case BEAM_HASTE:
     case BEAM_HEALING:
-    case BEAM_DOUBLE_HEALTH:
+    case BEAM_DOUBLE_VIGOUR:
     case BEAM_INVISIBILITY:
     case BEAM_MIGHT:
     case BEAM_AGILITY:
@@ -5784,7 +5807,7 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
     if (!agent || !mons_aligned(agent, &mon))
         return false;
 
-    if (mons_is_avatar(mon.type))
+    if (mons_is_avatar(mon.type) || mon.type == MONS_SHOOTING_STAR)
         return true;
 
     if ((agent->is_player() && have_passive(passive_t::shoot_through_plants)

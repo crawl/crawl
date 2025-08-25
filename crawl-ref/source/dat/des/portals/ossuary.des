@@ -50,7 +50,7 @@ function ossuary_portal(e)
   e.colour("123' = yellow")
   e.colour("c = white")
   e.ftile("123'O = floor_sandstone")
-  e.tile("c = wall_tomb")
+  e.tile("c = stone_wall_ossuary")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -59,6 +59,7 @@ end
 function ossuary_setup_features(e)
   e.tags("no_monster_gen")
   e.tags("no_item_gen")
+  e.tile("c = stone_wall_ossuary")
   e.kfeat("< = exit_ossuary")
 end
 
@@ -1015,6 +1016,8 @@ COLOUR: P" = green
 SUBST:  ' = ^ .:70
 KFEAT:  IiPp`" = floor
 : ossuary_setup_features(_G)
+TILE:   v = dngn_metal_wall_brown
+TILE:   b = DNGN_CRYSTAL_BROWN
 MAP
 ccccccccccccccccccccccccccc
 c2.2.2+c...........c+2.2.2c
@@ -1322,7 +1325,7 @@ MONS:   silent spectre, wight / marrowcuda / weeping skull w:5
 MONS:   centaur zombie w:20 / water moccasin zombie / scorpion zombie /\
         bullfrog zombie / scorpion w:2
 MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
-        gnoll zombie / ogre zombie w:3 / human zombie w:1
+        gnoll zombie / ogre zombie w:3 / human zombie w:1 / bes kemwar w:1
 ITEM:   any potion w:15 / any scroll w:15 / gold w:6 / any armour w:1
 : inkwell_talisman_chance(_G, "e")
 NSUBST: ~ = 2:4 / 12 = 4... / *:.
@@ -1373,15 +1376,16 @@ MONS:    weeping skull / burial acolyte
 MONS:    mummy / wight w:2
 MONS:    kobold zombie w:8 / gnoll zombie / orc zombie / hound zombie / \
          human zombie w:4 / centaur zombie w:6
+MONS:    bes kemwar
 ITEM:    any potion w:15 / any scroll w:15 / gold w:6
 : inkwell_talisman_chance(_G, "e")
 SHUFFLE: -+
 SHUFFLE: <A
 SUBST:   -:c, V:VVVVG
 NSUBST:  + = 10:++~ / *:+
-NSUBST:  1 = 1:1 / 1:12 / 1:3 / * = 3., ? = 1:2 / 1:23 / * = 3.
+NSUBST:  1 = 1:1 / 1:12 / 1:3 / * = 3., ? = 1:2 / 1:23 / 1:334 / * = 3.
 NSUBST:  " = 4:^ / 3=^" / *:"
-NSUBST:  . = 4:3 / 10 = 3. / *:.
+NSUBST:  . = 4:3 / 2:4 / 9 = 3. / *:.
 NSUBST:  d = 1:* / 1:*d / *:d
 KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ~ = broken_door

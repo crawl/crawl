@@ -230,8 +230,9 @@ function species_has_size_limits(e)
          you.race() == "Spriggan"
 end
 
+-- you.race() returns capitalized strings, you.genus() returns all lowercase.
 function no_body_armour_species(e)
-  return you.genus() == "Draconian" or you.race() == "Octopode" or
+  return you.genus() == "draconian" or you.race() == "Octopode" or
          you.race() == "Felid" or you.race() == "Poltergeist"
 end
 
@@ -766,16 +767,17 @@ ENDMAP
 # Layout directly adjusting due's trove_library.
 NAME:   regret_index_trove_ozocubu
 : trove_setup(_G)
-MONS:   block of ice
-# dream sheep / hell hog / alligator / anaconda / hydra / caustic shrike
+MONS:   dream sheep-shaped block of ice / hell hog-shaped block of ice / \
+        anaconda-shaped block of ice / alligator-shaped block of ice / \
+        hydra-shaped block of ice / caustic shrike-shaped block of ice w:2
 NSUBST:  d = 6:d / *:?, g = 6:g / *:?
 {{
 trove_offense(_G, trove_weap_brand(_G, "freezing"),
                   trove_standard_magic(_G, "ice", true),
                   trove_good_talisman(_G, "rC"), "ice magic")
-trove_defense(_G, "robe ego:resistance good_item / scarf ego:resistance w:5 / \
-                   ice dragon scales good_item / ice dragon scales randart" ..
-                   " / " .. trove_ego_shield(_G, "cold_resistance w:1", "rC w:1"),
+trove_defense(_G, "robe ego:resistance good_item w:15 / scarf ego:resistance / \
+                   ice dragon scales good_item w:15 / ice dragon scales randart" ..
+                   " / " .. trove_ego_shield(_G, "cold_resistance", "rC"),
                    trove_ego_gen_armour(_G, "cold_resistance", "rC"),
                    trove_jewel_type(_G, "rC"),
                    trove_cons(_G, {"identify w:1 q:3"},
@@ -1008,7 +1010,7 @@ SUBST:   ' = ' 2:3, " = '22, V = ~', ; = wwW```
 SUBST:   1 = 1 o:1, 2 = 2 p:2
 COLOUR:  n = green
 TILE:    n = dngn_transparent_stone_green
-FTILE:   .-1ot<QR = floor_grass
+FTILE:   .-1ot<QR = floor_grass_dark
 FTILE:   '2p = floor_swamp
 : decorative_floor(_G, 'op', "flower patch")
 KPROP:   Z? = no_tele_into
@@ -1247,12 +1249,18 @@ else
   if you.mutation("missing a hand") == 1 then
     if no_body_armour_species(_G) then
       subst("e = ddgh")
-    elseif you.mutation("no jewellery") ~= 1 then
-      subst("e = e:45 f:g")
+    elseif you.mutation("no jewellery") == 1 then
+      subst("f = d")
+      subst("g = e h:15")
+    else
+      subst("e = e:45 fg")
     end
   else
     if no_body_armour_species(_G) then
       subst("e = f")
+    elseif you.mutation("no jewellery") == 1 then
+      subst("f = d")
+      subst("g = e h:15")
     else
       subst("e = e:25 f:20")
     end
@@ -1318,7 +1326,7 @@ KFEAT:  ~ = open_sea
 : if species_is_undead(_G) or you.mutation("no forms") == 1 then
 SUBST:  g = df
 : elseif you.mutation("no armour") == 1 and
-:  you.mutation("weapons or thrown items") == 1 then
+:  you.mutation("no weapons or thrown items") == 1 then
 SUBST:  df = egg
 : elseif you.mutation("antennae") == 3 or you.mutation("horns") == 3 then
 SUBST:  d = eff
@@ -1547,6 +1555,7 @@ FTILE:   'defghi!tp = floor_nerves_magenta / floor_nerves_darkgray
 MARKER:  F = lua:fog_machine { cloud_type = "seething chaos", \
                 pow_min = 10, pow_max = 10, delay = 100, \
                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+KPROP:   wFV = no_tele_into
 epilogue{{
   trove_milestone(_G, "a devouring Rift")
 }}
@@ -1568,7 +1577,7 @@ MAP
                   zzxx'''xxzz
   zzzzzzz zzzz     zzxxxxxzz
  zzxxxxxzzzxxzzz    zzzzzzz
-zzxx`x'zzzxx'z<z
+zzxx`x'zzzxx'zPz
 zxx`x'x'zxx'''zzz
 zx`x'xzz'x'x'''xz
 zzxSxzzxx'xxx'xxz
@@ -1577,7 +1586,7 @@ zzxSxzzxx'xxx'xxz
   zzxx'xxx'xxzz
  zzxx'xxx'xxzzz
 zzXX.xxx'xxzzxzz
-zXX...x.xxzzxPxzz
+zXX...x.xxzzx`xzz
 zX.....x'zzx'x`xz
 ZZZ...Xxz'x'x`xxz
  ZAZ.XXzzz'x`xxzz

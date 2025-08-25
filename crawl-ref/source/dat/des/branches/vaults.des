@@ -7,8 +7,13 @@
 : crawl_require('dlua/vault.lua')
 
 {{
--- Vaults:$ common loot substitutions.
+-- Vaults:$ common loot substitutions and wall setting.
 function vaults_end_loot(e)
+    if (dgn.persist.vaults_end_crystal) then
+        e.subst("x = b")
+    else
+        e.subst("x = v")
+    end
     e.subst("? = | * .:43")
     e.subst("| = | *:2")
     e.subst("* = * |:2")
@@ -470,7 +475,20 @@ NAME:     vaults_vault
 PLACE:    Vaults:$
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
+MONS:     vault guard
 SHUFFLE:  ABCD
+: if not dgn.persist.vaults_end_crystal then
+:   dgn.persist.vaults_end_crystal = false
+: end
+: if crawl.one_chance_in(10) then
+:   dgn.persist.vaults_end_crystal = true
+SUBST:      x = b
+LFLOORTILE: floor_crystal
+: else
+:   dgn.persist.vaults_end_crystal = false
+SUBST:      x = v
+LFLOORTILE: floor_metal_silver
+: end
 : if crawl.one_chance_in(36) then
 SUBVAULT: A : vaults_end_quadrant_prize_mall
 SUBVAULT: B : vaults_end_quadrant_mall
@@ -483,10 +501,13 @@ SUBVAULT: C : vaults_end_quadrant
 SUBVAULT: D : vaults_end_quadrant
 :end
 SUBST:    ABCD = .
-MONS: vault guard
+FTILE:    .([{<109 = floor_vault
 {{
   set_feature_name("metal_wall", "heavily etched metal wall")
   set_feature_name("crystal_wall", "heavily etched crystal wall")
+  set_feature_name("stone_stairs_up_i", "metal staircase leading up")
+  set_feature_name("stone_stairs_up_ii", "metal staircase leading up")
+  set_feature_name("stone_stairs_up_iii", "metal staircase leading up")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2894,6 +2915,11 @@ SUBVAULT: X : vaults_end_room
 SUBVAULT: Y : vaults_end_room
 SUBVAULT: Z : vaults_end_room
 SUBST:    VXYZ = .
+: if (dgn.persist.vaults_end_crystal) then
+SUBST:    x = b
+: else
+SUBST:    x = v
+: end
 MAP
   axxxxxxxxxxxxxxxxxxxxxa
  ............99...........

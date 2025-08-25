@@ -240,7 +240,7 @@ enum monster_info_flags
     MB_FROZEN_IN_TERROR,
     MB_SOUL_SPLINTERED,
     MB_ENGULFING_PLAYER,
-    MB_DOUBLED_HEALTH,
+    MB_DOUBLED_VIGOUR,
     MB_ABJURABLE,
     MB_UNREWARDING,
     MB_MINION,
@@ -371,6 +371,7 @@ struct monster_info : public monster_info_base
         short xl_rank;
         short damage;
         short ac;
+        string title;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const

@@ -734,7 +734,7 @@ KMONS:   1 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
 KMONS:   2 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
 KMONS:   3 = apocalypse crab / death drake w:5
-KITEM:   3 = $, orb ego:light / orb ego:guile / orb ego:wrath, $
+KITEM:   3 = $, orb, $
 KITEM:   23 = wand of digging charges:1, staff of earth / staff of air / \
               parchment disc:earth w:5 / parchment disc:air w:5 / \
               mundane granite talisman w:20
@@ -779,7 +779,7 @@ MONS:    large abomination / ynoxinul / unseen horror / \
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
          shadow demon w:4 / executioner w:4 / hellion w:4
-ITEM:    any book / mundane staff of death / robe randart / \
+ITEM:    any book / mundane staff of necromancy / robe randart / \
          orb ego:energy / gold q:100 w:2
 ITEM:    demon whip / demon blade / demon trident
 KFEAT:   > = abyssal_stair
@@ -1050,7 +1050,7 @@ MONS:    draconian shifter w:5 / shadow demon w:5 / lich / cognitogaunt / \
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
-ITEM:    orb ego:light / orb ego:guile / orb ego:wrath
+ITEM:    orb
 ITEM:    boomerang good_item q:10 / javelin good_item q:5, any magical staff
 ITEM:    scroll of revelation q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
@@ -1743,7 +1743,8 @@ KFEAT:   A = stone_arch
 KFEAT:   " = runelight
 SHUFFLE: 12
 SUBST:   X = xxxxc, c = cccvb
-FTILE:   Ade456O = floor_crystal_squares
+FTILE:   Ade456O = floor_crystal
+FTILE:   .@12 = floor_crystal_squares
 COLOUR:  de456O = lightmagenta
 MAP
     .....  . X ".@
@@ -1786,7 +1787,7 @@ NSUBST:  . = 1:2 / *:., w = 2:G / *:w, W = 2:H / *:W
 COLOUR:  1 = lightmagenta
 COLOUR:  x = elven_brick
 FTILE:   -+U4680BDFO = floor_hall
-FTILE:   .t23579ACE = floor_grass
+FTILE:   .t23579ACE = floor_grass_dark
 FTILE:   a1 = floor_crystal_squares
 TILE:    x = wall_hall
 TILE:    t = dngn_demonic_tree_1 / dngn_demonic_tree_8 / \

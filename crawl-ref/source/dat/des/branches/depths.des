@@ -23,6 +23,7 @@ function depths_entry(e)
    e.kitem("g = smoky gem")
    e.kfeat("O = enter_depths")
    e.tile("G = depths_column")
+   e.tile("b = wall_depths_crystal")
 end
 }}
 

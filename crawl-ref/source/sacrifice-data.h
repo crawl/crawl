@@ -37,7 +37,7 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_WORDS, MUT_HOARD_POTIONS,
+{ ABIL_RU_SACRIFICE_WORDS, MUT_HOARD_SCROLLS,
   "sacrifice your ability to read when uninjured",
   "sacrificed words",
 

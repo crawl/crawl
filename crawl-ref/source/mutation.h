@@ -103,9 +103,10 @@ const string bane_desc(bane_type bane);
 const string bane_name(bane_type mut, bool dbkey = false);
 int bane_base_duration(bane_type bane);
 bane_type bane_from_name(string name);
-bool add_bane(bane_type bane = NUM_BANES, int duration = 0);
+bool add_bane(bane_type bane = NUM_BANES, string reason = "Doom",
+              int duration = 0, int mult = 100);
 void remove_bane(bane_type bane);
-int xl_to_remove_bane(bane_type bane);
+int xl_to_remove_bane(bane_type bane, int mult = 100);
 
 bool skill_has_dilettante_penalty(skill_type skill);
 

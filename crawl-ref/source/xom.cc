@@ -2773,7 +2773,7 @@ static void _xom_hyper_enchant_monster(int sever)
                                      ENCH_EMPOWERED_SPELLS, ENCH_REPEL_MISSILES,
                                      ENCH_RESISTANCE, ENCH_REGENERATION,
                                      ENCH_STRONG_WILLED, ENCH_TOXIC_RADIANCE,
-                                     ENCH_DOUBLED_HEALTH, ENCH_MIRROR_DAMAGE,
+                                     ENCH_DOUBLED_VIGOUR, ENCH_MIRROR_DAMAGE,
                                      ENCH_SWIFT };
     vector<monster*> targetable = _xom_find_weak_monsters(true);
     int time = random_range(200, 200 + sever * 2);
@@ -3107,14 +3107,14 @@ static void _xom_fog(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
-static item_def* _xom_get_random_worn_ring()
+static item_def* _xom_get_random_worn_slot_item(equipment_slot item_slot)
 {
-    vector<item_def*> worn_rings = you.equipment.get_slot_items(SLOT_RING);
+    vector<item_def*> worn_slot_item = you.equipment.get_slot_items(item_slot);
 
-    if (worn_rings.empty())
+    if (worn_slot_item.empty())
         return nullptr;
 
-    return worn_rings[random2(worn_rings.size())];
+    return worn_slot_item[random2(worn_slot_item.size())];
 }
 
 static void _xom_pseudo_miscast(int /*sever*/)
@@ -3351,28 +3351,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_CLOAK))
-    {
-        string name = "your " + item->name(DESC_BASENAME, false, false, false);
-        string str = _get_xom_speech("cloak slot");
-
-        str = replace_all(str, "@your_item@", name);
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
-
-        messages.push_back(str);
-    }
-
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_HELMET))
-    {
-        string name = "your " + item->name(DESC_BASENAME, false, false, false);
-        string str = _get_xom_speech("helmet slot");
-
-        str = replace_all(str, "@your_item@", name);
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
-
-        messages.push_back(str);
-    }
-
     if (item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
@@ -3384,17 +3362,41 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_GLOVES))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_CLOAK))
     {
-        string gloves_name = item->name(DESC_BASENAME, false, false, false);
-        // XXX: If the gloves' name doesn't start with "pair of", make it do so,
-        // so that it always comes out as singular for grammar purposes. This
-        // happens with the Mad Mage's Maulers and Delatra's gloves; see
-        // item_def::name_aux().
-        if (gloves_name.find("pair of ") != 0)
-            gloves_name = "pair of " + gloves_name;
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("cloak slot");
 
-        string name = "your " + gloves_name;
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        /* XXX: The formless mutation doesn't technically mean you don't have a
+         * form; it means you don't have a head. */
+        str = replace_all(str, "@head@",
+                          you.has_mutation(MUT_FORMLESS) ? "form" : "head");
+
+        messages.push_back(str);
+    }
+
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_HELMET))
+    {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("helmet slot");
+
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        /* XXX: The formless mutation doesn't technically mean you don't have a
+         * form; it means you don't have a head. */
+        str = replace_all(str, "@head@",
+                          you.has_mutation(MUT_FORMLESS) ? "form" : "head");
+
+        messages.push_back(str);
+    }
+
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_GLOVES))
+    {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("gloves slot");
 
         str = replace_all(str, "@your_item@", name);
@@ -3403,13 +3405,29 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = you.equipment.get_first_slot_item(SLOT_LOWER_BODY))
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_LOWER_BODY))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("boots slot");
 
         str = replace_all(str, "@your_item@", name);
         str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        messages.push_back(str);
+    }
+
+    if (item_def* item = you.equipment.get_first_slot_item(SLOT_AMULET))
+    {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("amulet slot");
+
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        /* XXX: The formless mutation doesn't technically mean you don't have a
+         * form; it means you don't have a head. */
+        str = replace_all(str, "@head@",
+                          you.has_mutation(MUT_FORMLESS) ? "form" : "head");
 
         messages.push_back(str);
     }
@@ -3425,7 +3443,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (item_def* item = _xom_get_random_worn_ring())
+    if (item_def* item = _xom_get_random_worn_slot_item(SLOT_RING))
     {
         // Don't just say "your ring" here. We want to know which one.
         string name = "your " + item->name(DESC_QUALNAME, false, false, false);
@@ -5408,13 +5426,11 @@ static void _xom_good_teleport(int /*sever*/)
     {
         count++;
         you_teleport_now();
-        maybe_update_stashes();
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
     }
     while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
-    maybe_update_stashes();
 
     // Take a note.
     const string note = make_stringf("%d-stop teleportation journey%s", count,
@@ -5439,13 +5455,11 @@ static void _xom_bad_teleport(int /*sever*/)
     do
     {
         you_teleport_now();
-        maybe_update_stashes();
         more();
         if (count++ >= 7 + random2(5))
             break;
     }
     while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
-    maybe_update_stashes();
 
     // Take a note.
     const string note = make_stringf("%d-stop teleportation journey%s", count,

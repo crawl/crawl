@@ -195,6 +195,10 @@ KMONS:   7 = death cob w:12 / zombie w:4 / base draconian draugr w:4
 KMONS:   8 = patrolling death cob
 KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
+KMONS:   & = orb of entropy
+:   if dgn.zot_orb_type() == "orb of entropy" then
+SUBST:   34 = &
+:   end
 : end
 KMONS:   0 = soul eater
 KMONS:   Z = obsidian statue

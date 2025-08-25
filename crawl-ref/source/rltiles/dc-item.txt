@@ -566,7 +566,7 @@ i-stealth BRAND_ARM_STEALTH
 i-resistance BRAND_ARM_RESISTANCE
 i-positive-energy BRAND_ARM_POSITIVE_ENERGY
 i-archmagi BRAND_ARM_ARCHMAGI
-i-preservation BRAND_ARM_PRESERVATION
+i-corrosion-res BRAND_ARM_CORROSION_RESISTANCE
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
 i-hurling BRAND_ARM_HURLING
@@ -586,7 +586,22 @@ i-light BRAND_ARM_LIGHT
 i-rage BRAND_ARM_RAGE
 i-mayhem BRAND_ARM_MAYHEM
 i-guile BRAND_ARM_GUILE
-i-energy BRAND_ARM_ENERGY BRAND_ARM_LAST
+i-energy BRAND_ARM_ENERGY
+i-sniping BRAND_ARM_SNIPING
+i-ice BRAND_ARM_ICE
+i-fire BRAND_ARM_FIRE
+i-air BRAND_ARM_AIR
+i-earth BRAND_ARM_EARTH
+i-archery BRAND_ARM_ARCHERY
+i-command BRAND_ARM_COMMAND
+i-death BRAND_ARM_DEATH
+i-resonance BRAND_ARM_RESONANCE
+i-parrying BRAND_ARM_PARRYING
+i-glass BRAND_ARM_GLASS
+i-fire BRAND_ARM_PYROMANIA
+i-stardust BRAND_ARM_STARDUST
+i-mesmerism BRAND_ARM_MESMERISM
+i-attunement BRAND_ARM_ATTUNEMENT BRAND_ARM_LAST
 %rim 1
 
 ###########OBJ_WANDS
@@ -845,14 +860,14 @@ i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
 i-positive-energy RING_POSITIVE_ENERGY
+# start TAG_MAJOR_VERSION == 34
 i-willpower RING_WILLPOWER
 i-fire RING_FIRE
-# start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
-# i-ice RING_ICE RING_ID_LAST
+# i-willpower RING_WILLPOWER RING_ID_LAST
 # end TAG_MAJOR_VERSION
 
 ############amulets
@@ -920,7 +935,10 @@ i-rage AMU_NOTHING
 i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
 i-reflection AMU_REFLECTION
-i-regeneration AMU_REGENERATION AMU_ID_LAST
+i-regeneration AMU_REGENERATION
+i-wildshape AMU_WILDSHAPE
+i-alchemy AMU_ALCHEMY
+i-dissipation AMU_DISSIPATION AMU_ID_LAST
 
 ####################OBJ_POTIONS
 %sdir item/potion
@@ -1180,7 +1198,7 @@ i-staff_poison STAFF_POISON
 # start TAG_MAJOR_VERSION == 34
 i-staff_energy STAFF_ENERGY
 # end TAG_MAJOR_VERSION
-i-staff_death STAFF_DEATH
+i-staff_necromancy STAFF_NECROMANCY
 i-staff_conjuration STAFF_CONJURATION
 # start TAG_MAJOR_VERSION == 34
 i-staff_enchantment STAFF_ENCHANTMENT
@@ -1398,3 +1416,8 @@ rune_elven UNCOLLECTED_RUNE_ELVEN
 19 GOLD19
 23 GOLD23
 25 GOLD25
+
+#Local tile GUI
+%sdir gui/commands
+page_next ITEM_PAGE_NEXT
+page_previous ITEM_PAGE_PREVIOUS

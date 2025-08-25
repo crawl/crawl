@@ -159,6 +159,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_SIMULACRUM_SMALL, "small simulacrum")
     AXED_MON(MONS_SIMULACRUM_LARGE, "large simulacrum")
     AXED_MON(MONS_MERGED_SLIME_CREATURE, "merged slime creature")
+    AXED_MON(MONS_PSYCHE, "psyche")
 #endif
 
 // Real monsters begin here {dlb}:

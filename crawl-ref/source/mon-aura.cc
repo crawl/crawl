@@ -66,7 +66,7 @@ static const vector<mon_aura_data> aura_map =
         [](const actor& targ, const monster&) { return targ.antimagic_susceptible() ;}},
 
     {MONS_APIS,
-        ENCH_DOUBLED_HEALTH, 1, false,
+        ENCH_DOUBLED_VIGOUR, 1, false,
         NUM_DURATIONS, "",
         [](const actor& targ, const monster&) { return targ.type != MONS_APIS ;}},
 

@@ -189,6 +189,7 @@ enum mon_summon_type
     MON_SUMM_SUN_SCARAB, // Sun Scarab's solar ember
     MON_SUMM_MULTIPLICITY, // Bane of Multiplicity
     MON_SUMM_MORTALITY, // Bane of Mortality
+    MON_SUMM_STARDUST,  // Orb of Stardust
 };
 
 #include "mon-flags.h"

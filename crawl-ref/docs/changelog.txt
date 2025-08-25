@@ -1,3 +1,359 @@
+Stone Soup 0.34 (through 0.34-a0-663-g818337ce7c)
+--------------------------------------------------
+
+Highlights
+----------
+* Players can now carry an unlimited number of consumables.
+* Big overhauls to strategic damage, adding new types and reducing mutation.
+* Even more new monsters and equipment egos spread throughout the Dungeon.
+
+Artefacts
+---------
+* The faerie dragon scales now has a higher average enchantment, can sometimes
+  come with evokable invisibility, and is a Hexes enhancer.
+* The Scales of the Dragon King no longer has Will+, and instead has the new
+  Command ego.
+* The Orb of Wucad Mu is no longer twice as likely to trigger as other orbs of
+  energy, but now has a chance to apply antimagic to monsters after channelling
+  mp for successful spells casts.
+* The Sword of the Doom Knight has been renamed to the Sword of the Dread
+  Knight.
+* Randarts can now come with a Bane property, which inflicts a Bane on the
+  player when equipped. Randarts with this property have higher enchantment.
+* Armour egos that are not otherwise in the regular randart property pool can
+  now occasionally appear once per randart as the randart's base ego.
+
+Branches, Environment
+---------------------
+* The staircases to and from Vaults:5 now have unique tiles and descriptions.
+* The Crypt end vault's old thematic item rewards have been moved into a unique,
+  guaranteed shop containing a larger quantity of the prior options at high
+  prices.
+* The Halls of Zot will now contain one of three types of orb monster each game,
+  each wielding a different element and form of strategic damage.
+  - The orb type one will encountered that game is indicated via statues placed
+    by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
+    can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
+* The last floor of Zot contains now contains two Boundless Tesseracts, immobile
+  enemy spawners with fast regeneration.
+  - Tesseracts wake up the first time one kills an Orb Guardian. Once a
+    tesseract wakes up, it is automatically detected, and new monsters will
+    slowly appear across the entire floor (always out of the player's line of
+    sight). The rate at which they appear will slowly increase, and they will
+    eventually stop giving experience when killed.
+  - Destroying one will destroy the other, reward all the experience one would
+    have gotten from waiting to kill their spawns individually, and remove
+    all unrewarding monsters from the floor.
+* The Orb status from being in Zot or having picked up the Orb of Zot now also
+  fuzzes the destination of scrolls of blinking by up to two spaces.
+* Hell effects can now inflict a small amount of Doom instead of inflicting
+  transient mutations.
+* Troves prices and costs have been heavily revised:
+  - Troves will no longer ask for any consumables besides scrolls of acquirement
+    and will no longer ask for specific named items from shops.
+  - Equipment costs are less common. Demon weapons are all interchangeable and
+    and heavier dragon scales are rarer.
+  - The Slimy / Abyssal rune troves and Horn of Geryon troves are more common.
+  - Piety troves now use a new debuff that temporarily caps one's piety at 0
+    until XP is gained instead of permanently draining it, allowing them to
+    function with more gods than before.
+  - New trove costs include accepting pre-announced Banes and being extremely
+    drained.
+  - Trove contents are no longer grouped by item category, and contain a
+    slightly lower amount of higher-quality items themed after spell namesakes
+    or unrand items. These items are also far less likely to be useless
+    according to god restrictions or species limits.
+  - Potential troves to discover include The Dread Knight's Derelict Chapel,
+    Eringya's Secret Bog, The First Justicar's Armoury, Leda's Sunken Stockpile,
+    The Lost Hoard of Erebora, The Name-Rending Infernalists' Reservoir, The
+    Octopus King's Forgotten Garden, Ozocubu's Refrigerator, Rutra's Hidden
+    Sanctum, The Storm Queen's Palace Crash Site, a devouring Rift, and an
+    orange crystal hatchery.
+
+Character
+---------
+* Players can now accumulate Doom from enemies and other hostile effects, a
+  new form of medium-term damage displayed as a percentage. Doom has no effect
+  on its own and disappears with gaining experience, but at 100% causes one to
+  gain a random Bane, which itself only disappears with gaining significantly
+  more experience differing between Bane types. Banes include:
+  - Bane of Claustrophobia, which lowers melee damage and accuracy for each
+    wall the player is adjacent to.
+  - Bane of the Dilettante, which reduces the player's highest weapon skill
+    as well as their two highest magic / invocation / evocation skills.
+  - Bane of Electrospasm, which makes suffering electric damage sometimes
+    inflict the -Move status.
+  - Bane of Heatstroke, which makes suffering fire damage sometimes Slow you.
+  - Bane of the Hunted, which makes any creatures summoned by enemy appear
+    next to the player, last longer, and be better at tracking you.
+  - Bane of Lethargy, which slows the player's movement speed.
+  - Bane of Mortality, which gives a chance for reapers to appear near wounded
+    players when no other enemies are around.
+  - Bane of Multiplicity, which gives a chance for any monster you fight to
+    create fragile clones of itself.
+  - Bane of Paradox, which gives a small chance for each new monster you
+    encounter to learn Manifold Assault with a chance to blink after casting it.
+  - Bane of Snow-blindness, which makes suffering cold damage something inflict
+    Blind and Weak.
+  - Bane of Stumbling, which inflicts -25 EV when moving or standing still.
+  - Bane of Succour, which makes killing enemies heal other nearby enemies
+    based on the slain foe's max HP.
+  - Bane of Warding, which gives a small chance to give groups of monster the
+    Warding buff when first seen, which grants damage immunity from non-adjacent
+    sources of damage.
+* Undead species and forms lose Doom/Banes half as quickly as other species.
+* Player contamination has been heavily adjusted.
+  - The exact amount one is contaminated is now indicated as a percentage in the
+    sidebar. Harmful effects begin at 100% and cap at 300%.
+  - Crossing the 100% threshold is more likely to result in a bad mutation than
+    before (but very high amounts are less dangerous). Mutations gained this
+    way no longer ignore rMut.
+  - Explosions from contamination are now possible at a lower threshold, ignore
+    AC, and are more damaging.
+  - Many existing effects have been rescaled to be similarly dangerous as before
+    this change.
+* New mutations:
+  - Contamination Susceptibility, which makes magical contamination take twice
+    as long to wear off.
+  - Efficient Metabolism, which doubles the duration of potion status effects.
+  - Feed Off Suffering, which restores HP and MP after killing poisoned or
+    drained foes.
+  - Lucky, which gives a small chance for floor items the player encounters to
+    be randarts.
+  - Protean Grace, which gives +Slay and +EV based on how mutated you are.
+  - Reckless, which sets your SH to 0 but gives +15% damage with two-handed
+    weapons.
+* Other individual mutation changes:
+  - Electricity Vulnerability is now in the normal mutation pool.
+  - Thick Fur can now only be mutated by Trolls and Felids.
+  - Sense Surroundings is now stronger and only has two levels.
+  - The unsafe potion and scroll mutations have now been revised: they now
+    prevent using potions or scrolls with monsters in sight while your HP is
+    high (and have no effect when badly injured).
+* Transient mutations are now only removed by slaying a sufficient number of
+  non-trivial monsters, and can no longer roll stat loss or Berserk mutations.
+* Players have a longer stun immunity after being Vexed.
+* Players can now negate intrinsic rPois- with two sources of rPois.
+* Players succeeding at certain optional challenges can now obtain unique titles
+  proclaiming their triumph (or madness).
+
+Gods
+----
+* Gozag's Gold Lust passive now properly displays when monsters are affected
+  by it (instead of regularly losing its visual indication before its effects
+  ended).
+* Jiyva's jellies can no longer eat spellbooks.
+* Nemelex's Orb card now consistently provides more orbs with spellpower,
+  always aims one orb to the aimed target, and home into targets with fairly
+  higher precision than previously.
+* Vehumet's first level 1 spell gift is now given immediately upon worship.
+* Vehumet's spell gift choices now account for Conjurations and Alchemy skill.
+* Xom has a new action: slightly Dooming the player.
+* All gods besides the good gods no longer allow rejoining them if one is
+  undergoing their wrath.
+* Several wrath adjustments:
+  - Fedhas and Jiyva wraths have been simplified.
+  - Kiku wrath applies the Sign of Ruin instead of tormenting, has a hard cap
+    on draining for lower amounts that can no longer be resisted by rN+, and
+    also now applies Doom.
+  - Okawaru wrath summons are more varied and scale more smoothly to player xl.
+  - Qazlal wrath now applies the Banes of Heatstroke, Snow-blindness, and
+    Electrospasm instead of transient mutations of rF-, rC-, or rElec-.
+
+Interface and Options
+---------------------
+* Inventory revamp related changes:
+  - The (d)rop menu is now split into 4 different pages for each inventory
+    category: gear, potions, scrolls, and evocable items. The current page can
+    be changed using either left and right arrow keys or Tab and Shift-Tab.
+    - New show_paged_inventory option: enables this same page behaviour for the
+      (i)nventory screen.
+  - Talismans are now considered gear and are (p)ut on instead of e(v)oked.
+  - Jewellery autopick-up no longer picks up extra copies of non-artifact
+    jewellery past the max amount one can wear at a time.
+  - Dropping consumables now disables them from autopickup by default.
+  - The item_slot option has been replaced with gear_slot and
+    consumable_shortcut options.
+* Resting now waits by default for all negative effects and transformations, all
+  time-based cooldowns, and all magical contamination to wear off.
+  - explore_auto_rest_status option: allows adding or changing this list. 
+* The character overview screen (%) now displays how much damage is prevented
+  by each pip of resistance the player has.
+  - show_resist_percent option: can be used to hide these numbers.
+* The "Trivial" monster threat level threshold is now a little higher.
+* Monsters with holy wrath weapons are highlighted by default as having unusual
+  items if one is vulnerable to them by being undead or demonic.
+* The unusual_monster_items option now has new "vulnerable" syntax that allows
+  marking a brand as unusual as long as one has no matching resistance to that
+  brand, and can also stop displaying this at a selected XL.
+* Vault randarts with specified armour egos rolling randarts will no longer show
+  redundant inscriptions (e.g. plate armour of {rF+, rF+}).
+* New warn_contam_cost option: warns the player before casting Irradiate if it
+  could potentially result in going over 100% contamination.
+
+Items
+-----
+* Players now have four seperate inventories: 52 pieces of gear (including
+  throwing weapons, and unlimited potions, scrolls, and evokable items.
+  - Each inventory uses a seperate 52 letters (ie: both a scroll and a potion
+    may be mapped to the same letter at the same time), and most consumables
+    now have default letter assignments when identified.
+* Parchments now replace the majority of spellbooks found in game, each
+  granting knowledge of a single spell.
+  - Parchments are much more common than spellbooks used to be, making the
+    total number of spells found in the game roughly equal to previous
+    versions.
+  - Floors with shops past the Dungeon and Lair have increasing likelihood to
+    contain an additional parchment shop.
+  - Randbooks now only appear in select vaults or via acquirement and
+    Sif Muna gifts.
+  - Higher-spell-level are now somewhat rarer early in the game and more
+    common later.
+* New amulets:
+  - Amulets of Alchemy, which give an Alchemy enhancer and also grant
+    players a small amount of mp whenever they drink non-useless potions.
+  - Amulets of Dissipation, which cause time-based negative status effects to
+    expire twice as quickly.
+  - Amulets of Wildshape, which gives +5 Shapeshifting skill.
+* New orbs:
+  - Orbs of attunement, which double the enhancers provided by wielded
+    magical staves and also makes melee attacks performed with them restore a
+    small amount of MP.
+  - Orbs of glass, which may inflict Fragility on nearby enemies whenever
+    they're injured, scaling with Evocations skill.
+  - Orbs of mesmerism, which inflict Daze on nearby enemies when one is injured
+    by melee attacks, are recharged by not moving, and scaled heavily with
+    Evocations skill.
+  - Orbs of pyromania, which give a Fire enhancer and also produces explosions
+    around the wielder whenever they directly kill a monster without using
+    attacks, scaling with Evocations skill.
+  - Orbs of stardust, which conjure fast-moving shooting star projectiles
+    whenever the player first spends MP each combat, scaling with Evocations,
+    MP spent, and the number of visible monsters.
+* New heavy armour egos:
+  - Armour of archery, which have halved armour encumbrance penalties for ranged
+    weapons.
+  - Armour of command, which gives Summoning spells a success chance and
+    spellpower bonuses based on one's Armour skill.
+  - Armour of death, which gives Necromancy spells a success chance and
+    spellpower bonus, but make all non-Necromancy spells cost as much HP as they
+    cost MP.
+  - Armour of resonance, which gives Forgecraft spells a success rate bonus and
+    also increase the damage of the wearer's melee attacks based on their
+    Forgecraft skill.
+* New other armour egos:
+  - Hats of sniping, which increase ranged weapon and thrown item damage
+    against incapacitated foes.
+  - Hats and helmets of ice, which give Ice Magic enhancers.
+  - Cloaks of air, which give an Air Magic enhancer.
+  - Gloves of fire, which give a Fire Magic enhancer.
+  - Gloves of parrying, which give SH when using melee attacks, doubled if
+    wielding a two-handed weapon.
+  - Boots of earth, which give an Earth Magic enhancer.
+* Hats are now more likely to get egos.
+* Helmets can now get the Light ego, which was previously exclusive to orbs.
+* Shields can now get the corrosion resistance ego, and Tower Shields may be
+  Ponderous.
+* Cloaks of preservation are now renamed to be of corrosion resistance.
+* Further general orb changes:
+  - Orbs of energy and orbs of guile now scale their effects with the wielder's
+    Evocations skill.
+  - Orbs of light no longer spawn naturally, but are still given to Monks on
+    starting the game.
+  - Orbs are now more common.
+* Stones are now much less common.
+* Removed items: rings of fire, rings of ice, orbs of wrath.
+
+Monsters
+--------
+* Two new orb types rotate with orbs of fire in Zot each game:
+  - Orbs of Winter, which cast Flash Freeze, Ozocubu's Refrigeration,
+    and inflict a new Ostracism debuff that temporarily reduces one's piety.
+  - Orbs of Entropy, which cast Bolt of Draining, Acid Ball, and
+    inflict Doom upon their foes.
+* New unique: Cassandra, an oracle of Ashenzari who foresees great Doom in
+  your future.
+* New and returning monsters:
+  - Bes kemwar, magic-weakening maggot spirits for D.
+  - Chonchon, chaotic flying heads for Depths.
+  - Cognitogaunts, antimagic starghouls for Crypt and Abyss.
+  - Crawling flesh cages, augmented ugly things for Vaults.
+  - Drudes, new weak Doom-inflicting tier-5 demons for D and the Abyss.
+  - Kobold fleshcrafters, abomination makers for Depths.
+  - Ravens, Doom-inflicting birds for Lair.
+  - Screaming refractions, crystal injury-mirroring undead for the Abyss.
+  - Zykzyls, the new malmutating tier-2 demon, now focused on hexes.
+* Antaeus trades Flash Freeze for Sleetstrike, a variant of Airstrike that
+  inflicts the Frozen status and deals more damage partially resistable with rC.
+* Blizzard demons trade Airstrike for Sleetstrike.
+* Cacodemons no longer know Malmutate or Bolt of Devastation, but can cut
+  willpower in half with their melee and cast Doom Bolt: a penetrating bolt
+  that inflicts Doom on hit.
+* Death knights trade Injury Mirror for higher stats, an umbra, and Hurl
+  Torchlight (like the Yred ability), and now place in the Vaults with draugr
+  instead of in late D.
+* Doom hounds have been renamed to oblivion hounds.
+* Draugr replace skeletons as derived undead monsters, losing health for more
+  AC, no speed penalty, an ability to wield weapons regardless of their original
+  form, and Doom-inflicting melee. They are rarer than the previous skeletons.
+* Glowing orange brains no longer have Brain Bite.
+* Mara now dual-wields demon weapons and has somewhat better body armour.
+* The moon troll now is warded from damage from non-adjacent foes, and loses
+  Dazzling Flash in exchange for Lee's Rapid Deconstruction.
+* Neqoxecs no longer can inflict permanent mutations, but have a new Warp Body
+  spell that deals minor damage and inflicts transient mutations (or Vitrify,
+  if the player has already been repeatedly Warped).
+* Orb Guardians no longer follow stair-using players off of Zot:5 until the Orb
+  of Zot is picked up.
+* Purple very / ugly things now have extra Will and antimagic attacks.
+* Reapers have a new non-skeletal flavour and now fly.
+* Shining eyes trade Malmutate for Mutagenic Gaze, which inflicts contamination
+  over time (but is usable anywhere in line of sight).
+* Sphinx marauders do less damage on average with their airstrike attacks.
+* Vampire bloodprinces now fly.
+* Monster purple draconians have slightly less Willpower, and classed draconians
+  have more Willpower.
+* Mummy death curses now inflict more Draining, less Torment and Slow, and
+  have a chance to inflict Doom.
+* Monsters with necromancy spells deal more damage with pain brand weapons.
+* Monster Corrosive Bolt now has a higher chance to corrode for higher amounts
+  and does slightly more damage.
+* Monster Bolts of Draining are more accurate.
+* Monster Flash Freeze accuracy is greatly reduced and damage somewhat reduced.
+* Monster mesmerisation effects (including merfolk siren and merfolk avatar
+  songs) now also daze all opposing monsters.
+* Monsters blindness resistance has been refactored: all sources of Blind
+  outside of light effects, Enfeeble, and divine powers are limited to
+  natural / demonic / holy monsters, while light can also work on undead and
+  Enfeeble / most divine Blind effects ignore Blind resistance entirely.
+* Daze now makes monsters skip their actions until they take any damage,
+  instead of giving them a 1-in-4 chance to skip each action (but last less time).
+* Removed monsters: Psyche.
+
+Spells
+------
+* Dazzling Flash has been renamed Gloom and moved from Hexes / Fire to
+  Hexes / Necromancy.
+* Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
+  spellpower rather than inflicting antimagic.
+* Summon Horrible Things now increases the caster's Doom rather than sometimes
+  inflicting temporary Will- mutations.
+
+Tiles
+-----
+* New tiles for existing game elements:
+  * Monsters: juggernaut simulacra, Maggie, Mara, Polyphemus, sky beast zombies.
+  * Spells: Confusion Gaze, Vitrifying Gaze, Weakening Gaze.
+  * Icons: light egos, frenzied, magnetized, sentinel's mark.
+  * Traps: Archmage's trap, devourer's trap, tyrant's trap.
+  * Features: exits out of Sewers / Bailies / the Desolation of Salt /
+              the Crucible of Flesh, stairs to and from Zot:5.
+  * Walls: Lair rock walls, Lair / Orc / Elf / Zot:5 / Ossuary /
+           Zonguldrok's Shrine stone walls, Vaults / Maxwell's Workshop metal
+           walls, Vaults / Depths crystal walls.
+  * Floors: Lair, Elf's Hall of Blades, Vaults hard vaults, Vaults:$, Cerebov's
+            fortress, grassy vaults, crystal vaults.
+
 Stone Soup 0.33.1 (20250606)
 ----------------------------
 
@@ -1827,7 +2183,7 @@ Items
     * Mayhem: chance to frenzy a monster in sight after a kill, causing them
       to wildly attack friends and foes alike ala the Discord spell.
     * Guile: reduces Will by ++ for both the wearer and those they try to hex.
-    * energy: gives a source of passive channeling, which gives a chance to
+    * energy: gives a source of passive channelling, which gives a chance to
       refund the MP of a cast spell and a chance to backfire. Backfires cause
       confusion or Int drain. Scales with Evocations.
 * New glove ego: infusion, spending 1 MP per melee hit to add extra damage.
@@ -1883,7 +2239,7 @@ Items
     petrified, or asleep, halving the damage received for the duration.
   - Lear's Hauberk is reduced to +18 (was +27).
   - The trident of the Octopus King loses +Will.
-  - Wucad Mu now counts as 1.5 sources of channeling. This means it is 1.5x as
+  - Wucad Mu now counts as 1.5 sources of channelling. This means it is 1.5x as
     likely to refund MP, and the probability of backfiring is reduced.
   - The robe of Misfortune loses Contam and Drain.
 
@@ -2400,7 +2756,7 @@ Items
     effect.
   - The ratskin cloak is changed from +Rats to *Rats, spawning rats when the
     player is hit.
-  - Wucad Mu no longer provides evocable channeling. Instead, with a chance
+  - Wucad Mu no longer provides evocable channelling. Instead, with a chance
     depending on evocations, it refunds the MP cost of the spell. There is a
     chance of confusion or intelligence drain (which scales on spell cost and
     evocations skill) when a spell is refunded.
@@ -4041,7 +4397,7 @@ Gods
 * New temple god: Pakellas the Inventive.
   - Grants MP on kills and passive wand charge identification. MP gained while
     full will eventually be turned into potions of magic.
-  - Blocks MP regeneration and hates channeling.
+  - Blocks MP regeneration and hates channelling.
   - Gifts wands, rods and miscellaneous evokables.
   - 1*: Quick Charge: uses a portion of current MP to recharge a wand or rod.
   - 3*: Device Surge: spends variable MP to apply power enhancers to your next
@@ -6026,7 +6382,7 @@ Items
 * Lear's chain mail is now Lear's hauberk - a +27 chain mail that covers
   all armour slots other than shields and cloaks.
 * The staves of energy eliminates 100% of spell hunger again, and includes
-  the now-gone staff of channeling as well.
+  the now-gone staff of channelling as well.
 * The staff of power scales with your maximum magic power.
 * Box of beasts has been reworked:
     - Has a fixed, random number of charges between 5 and 15 inclusive.
@@ -7581,7 +7937,7 @@ Items
 * ?EWII may uncurse blowguns.
 * Remove nutrition on hit for vampiric weapons.
 * Make Evocations skill help with ball of seeing radius.
-* Disallow use of staff of channeling when starving.
+* Disallow use of staff of channelling when starving.
 * Give missiles of flame/frost some bonus damage.
 * Add noise to missiles.
 * Make wield mass check apply to all items.
@@ -7595,7 +7951,7 @@ Items
 * Make ball of energy stat loss now drains between 1 and 2/3 max Int.
 * Improve some unrandart weapons: add brands, more damage.
 * Improve Maxwell's Patent Armour: AC+15, +preservation ego, +MR.
-* Improve Staff of Wucad Mu: remove miscast effects except for when channeling.
+* Improve Staff of Wucad Mu: remove miscast effects except for when channelling.
 * Make potions of experience give some xp for skills as well.
 * Fix acquirement hardly ever generating "plain" crystal plates and dragon
   armour.
@@ -8199,7 +8555,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Greatly tweak ice cave vaults.
 * Some other vault tweaks.
 * All worms except brain worm and all wasps are now mindless.
-* Demonspawn Troggies don't get Channeling anymore.
+* Demonspawn Troggies don't get Channelling anymore.
 * Z does not show spell list automatically anymore.
 * Added an option "darken_beyond_range" (defaults to true) for spell ranges.
 * Default "force_more_message = You fall through a shaft" to true.
@@ -8391,7 +8747,7 @@ Items
 * Book acquirements are much more random and may yield manuals.
 * Missile enchantment decreases chance of destruction on impact.
 * Freezing weapons can slow cold-blooded monsters.
-* The staff of channeling trains Evocations.
+* The staff of channelling trains Evocations.
 * Potions of magic no longer increase maximal magic points and are more common.
 * Item descriptions mention enchantment/charging limits.
 * Randarts get their known properties autoinscribed.

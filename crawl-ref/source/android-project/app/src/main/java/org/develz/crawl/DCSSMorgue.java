@@ -52,14 +52,14 @@ public class DCSSMorgue extends AppCompatActivity
         adapter = new DCSSMorgueAdapter(morgueDir, this);
         recyclerView.setAdapter(adapter);
         adapter.sortMorgueFiles(DEFAULT_ORDER);
-        progress.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.GONE);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         progress.setVisibility(View.VISIBLE);
         adapter.sortMorgueFiles(position);
-        progress.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.GONE);
     }
 
     @Override

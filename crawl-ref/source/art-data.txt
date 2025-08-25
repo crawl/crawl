@@ -267,14 +267,16 @@ TILE_EQ: olgreb
 VALUE:   1000
 
 NAME:    crystal ball of Wucad Mu
-INSCRIP: *channel
+INSCRIP: Mindtap
 OBJ:     OBJ_ARMOUR/ARM_ORB
+BRAND:   SPARM_ENERGY
 COLOUR:  ETC_MAGIC
 TILE:    urand_wucad_mu
 TILE_EQ: orb_of_wucad_mu
 VALUE:   1000
-DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers
- their success rate. It always returns the magic spent on miscasts.
+DESCRIP: Mindtap:  Whenever a successful spell causes magic to be channelled
+         from it, it may also drain additional magic from other enemies in
+         sight, with a chance increasing with spell level.
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
@@ -704,6 +706,7 @@ DESCRIP:  Stab:      It is more effective when stabbing unaware enemies,
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
+INSCRIP: mutate,
 FB_BRAND: SPWPN_CHAOS
 PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
@@ -1002,7 +1005,7 @@ PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
 TILE_EQ: dragonarm_golden
-WILL:    1
+BRAND:   SPARM_COMMAND
 
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT

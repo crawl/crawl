@@ -1679,6 +1679,9 @@ static int _num_mons_wanted()
     int mon_wanted = roll_dice(3, _mon_die_size());
     if (mon_wanted > 60)
         mon_wanted = 60;
+
+    if (level_id::current() == level_id(BRANCH_ZOT, 5))
+        mon_wanted = max(10, mon_wanted - 4);
     return mon_wanted;
 }
 
@@ -1698,17 +1701,6 @@ static void _fixup_walls()
     case BRANCH_DIS:
         wall_type = DNGN_METAL_WALL;
         break;
-
-    case BRANCH_VAULTS:
-    {
-        // Everything but the branch end is handled in Lua.
-        if (you.depth == branches[BRANCH_VAULTS].numlevels)
-        {
-            wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
-                                               9, DNGN_METAL_WALL);
-        }
-        break;
-    }
 
     case BRANCH_CRYPT:
         wall_type = DNGN_STONE_WALL;
@@ -2609,6 +2601,7 @@ static void _ruin_level(Iterator iter,
                 // isolated transparent or rtele_into square.
                 env.level_map_mask(p) |= cfeat.mask;
                 env.pgrid(p) |= cfeat.prop;
+                tile_clear_flavour(p);
                 _set_grd(p, replacement);
             }
 
@@ -2770,6 +2763,9 @@ static void _build_dungeon_level()
 
         _place_traps();
 
+        if (!dgn_make_transporters_from_markers())
+            throw dgn_veto_exception("Transporter placement failed.");
+
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
@@ -2785,6 +2781,9 @@ static void _build_dungeon_level()
         // Do ruination and plant clumps even in funny game modes, if
         // they happen to have the relevant branch.
         _post_vault_build();
+
+        if (!dgn_make_transporters_from_markers())
+            throw dgn_veto_exception("Transporter placement failed.");
     }
 
     // Translate stairs for pandemonium levels.
@@ -2792,9 +2791,6 @@ static void _build_dungeon_level()
         _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
-
-    if (!dgn_make_transporters_from_markers())
-        throw dgn_veto_exception("Transporter placement failed.");
 
     fixup_misplaced_items();
     link_items();
@@ -3878,6 +3874,17 @@ static void _place_branch_entrances(bool use_vaults)
                 if (_place_vault_by_tag(entry_tag))
                     // Placed this entrance, carry on to subsequent branches
                     continue;
+                // If placing a normal Temple entrance failed, try again to
+                // place the smallest possible one, and if that also fails, veto
+                // the level (to ensure Zot orb statues are always placed.)
+                else if (it->id == BRANCH_TEMPLE)
+                {
+                    const map_def* dummy = find_map_by_name("temple_entry_dummy");
+                    if (dummy && _build_secondary_vault(dummy))
+                        continue;
+
+                    throw dgn_veto_exception("Failed to place Temple entry.");
+                }
             }
 
             // Otherwise place a single stair feature.
@@ -4929,7 +4936,7 @@ static object_class_type _superb_object_class()
             1, OBJ_TALISMANS);
 }
 
-static int _concretize_level(int spec_level, int dgn_level)
+int concretize_item_level(int spec_level, int dgn_level)
 {
     if (spec_level >= 0)
         return spec_level;
@@ -4991,7 +4998,7 @@ int dgn_place_item(const item_spec &spec,
     if (spec.base_type == OBJ_UNASSIGNED)
         return NON_ITEM;
 
-    const int level = _concretize_level(spec.level, dgn_level);
+    const int level = concretize_item_level(spec.level, dgn_level);
     const object_class_type base_type = _concretize_type(spec);
 
     int useless_tries = 0;
@@ -5108,8 +5115,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 spec.ego = SP_FORBID_EGO;
         }
 
-        const int item_level = _concretize_level(spec.level,
-                                                 mspec.place.absdepth());
+        const int item_level = concretize_item_level(spec.level,
+                                                     mspec.place.absdepth());
         for (int useless_tries = 0; true; useless_tries++)
         {
             int item_made;

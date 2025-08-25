@@ -471,6 +471,10 @@ March of Sorrows Boris cast
 w:5
 @The_monster@ rolls out @possessive@ victims' [laments|suffering].
 %%%%
+Doomsaying Cassandra cast
+
+@The_monster@ says, "I have seen your future, @player_name@! Turn back before you are forced to see it for yourself!"
+%%%%
 Cantrip Dissolution cast
 
 @The_monster@ gurgles to an absent god.
@@ -651,6 +655,10 @@ basilisk cast
 
 @floating eye cast@
 %%%%
+bes kemwar cast
+
+@The_monster@ writhes about, and something writhes within @target@.
+%%%%
 Airstrike blizzard demon cast
 
 @The_monster@ lashes out with icy intensity.
@@ -704,7 +712,7 @@ crystal echidna cast targeted
 
 @The_monster@ flicks its quills @at@ @target@.
 %%%%
-Crystallizing Shot crystal guardian cast
+Crystallising Shot crystal guardian cast
 
 @The_monster@ fires a shard of @reflexive@ @at@ @target@.
 %%%%

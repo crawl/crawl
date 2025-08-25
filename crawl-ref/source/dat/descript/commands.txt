@@ -19,6 +19,18 @@ Automatically explores the current level, collecting items on the way.
 Exploration stops as soon as a hostile monster comes into view, or when you
 encounter new items or features.
 %%%%
+CMD_EXPLORE_NO_REST
+
+Autoexplore the current level without resting first
+%%%%
+CMD_EXPLORE_NO_REST
+
+Automatically explores the current level, collecting items on the way.
+Exploration stops as soon as a hostile monster comes into view, or when you
+encounter new items or features. Unlike CMD_EXPLORE, will treat
+explore_auto_rest as if it were false and explore_auto_rest_status as if it were
+empty.
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Travel to distant levels

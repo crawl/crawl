@@ -57,6 +57,7 @@ recommended_jobs:
   - reaver
   - forgewright
 
+walking_verb: Hop
 child_name: Tadpole
 orc_name: Orcphibian
-walking_verb: Hop
+orcification_msg: Your teeth grow more tusk-like, and your tympanum bulges.

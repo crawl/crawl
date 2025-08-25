@@ -68,24 +68,25 @@ O
 ENDMAP
 
 # Scenery, no threat.
-NAME:   swamp_mist_pool
-TAGS:   swamp_entry no_pool_fixup transparent
-KFEAT:  O = enter_swamp
+NAME:    swamp_mist_pool
+TAGS:    swamp_entry no_pool_fixup transparent
+KFEAT:   O = enter_swamp
 SHUFFLE: XYZ
-SUBST: Y : YX, Z : ZX, X = W, Y = w, Z = w
-MARKER: O = lua:fog_machine { \
+SUBST:   Y : YX, Z : ZX, X = W, Y = w, Z = w
+SUBST:   ' : ``', ' = t@@, " = tw, t = ttw, A = Ww
+MARKER:  O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-SUBST:  '= t.., "= tw, t=ttw, A=Ww
+CLEAR:   `
 MAP
-       @
-   't"Ywt@
-  't"wYwXt'
- 't"wAYXw"t'
- t"wwAOAZw"t
- 't"wAAZw"t'
-  't"wwZ"t'
-   't"wt@
+      @
+  't"Ywt@
+ 't"wYwXt'
+'t"wAYXw"t'
+t"wwAOAZw"t
+'t"wAAZw"t'
+ 't"wwZ"t'
+  't"wt@
 ENDMAP
 
 NAME:   minmay_swamp_entry_swarm
@@ -387,7 +388,7 @@ MAP
 '""w"tt
 twwww"t
 '""wwtt
- ttw"t'
+ ttw"tt
   'tt'
 ENDMAP
 
@@ -401,7 +402,7 @@ MAP
  ''www't
 'twwwwwtt
  wwwww"tt
-'twww"tt'
+'twww"ttt
  ttwww"tt
   ttw'tt
 ENDMAP
@@ -414,8 +415,8 @@ KFEAT:  1 = deep_water
 SUBST:  " = ttttw
 NSUBST: ' = 1:@ / * = ttW
 MAP
- 't't'
-tt"""t'
+ 't'tt
+ttw""tt
 t"w1w"tt
 ww1ww"tt
 t"w1t"t
@@ -2715,7 +2716,7 @@ NAME:   nicolae_swamp_necromancy_gone_wrong
 TAGS:   no_trap_gen patrolling
 MONS:   20-headed hydra zombie
 ITEM:   scimitar good_item ego:none / glaive good_item ego:none \
-        / broad axe good_item ego:none / staff of death / nothing w:40
+        / broad axe good_item ego:none / staff of necromancy / nothing w:40
 : item(dgn.good_aux_armour .. " / nothing w:60")
 ITEM:   scroll of brand weapon / scroll of fear / scroll of teleportation \
         / scroll of blinking / nothing w:40
@@ -3059,8 +3060,8 @@ ENDMAP
 NAME:   tekkud_bubbles_buried_in_this_jungle
 TAGS:   no_monster_gen
 DEPTH:  Swamp
-KMONS:  1 = fenstrider witch ; staff of alchemy | staff of death . \
-                               orb ego:wrath | orb ego:mayhem w:5 . robe
+KMONS:  1 = fenstrider witch ; staff of alchemy | staff of necromancy . \
+                               orb ego:glass | orb ego:mayhem w:5 . robe
 KMONS:  2 = bog body
 KMONS:  3 = bloated husk
 KFEAT:  123 = W

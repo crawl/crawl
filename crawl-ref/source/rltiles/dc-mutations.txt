@@ -158,6 +158,7 @@ berserk_1 BERSERK
 berserk_2
 deterioration_1 POOR_CONSTITUTION
 deterioration_2
+contamination_susceptible CONTAMINATION_SUSCEPTIBLE
 persistent_drain PERSISTENT_DRAIN
 scream_1 SCREAM
 scream_2
@@ -208,6 +209,7 @@ word_of_chaos WORD_OF_CHAOS
 # Per-species effects mutations
 hop_1 HOP
 hop_2
+accursed ACCURSED
 divine_attributes DIVINE_ATTRIBUTES
 forlorn FORLORN
 flat_hp_1 FLAT_HP

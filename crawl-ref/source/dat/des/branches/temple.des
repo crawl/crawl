@@ -40,6 +40,14 @@ end
 # <<E>> Temple entries
 ##############################################################################
 
+# Dummy Temple entry
+NAME:   temple_entry_dummy
+TAGS:   transparent
+: temple_entry(_G)
+MAP
+ZOZ
+ENDMAP
+
 NAME:   temple_hall
 SUBST:  ? : c:20 x v b G:5
 : temple_entry(_G)
@@ -98,13 +106,6 @@ MAP
 ...?...
 ENDMAP
 
-NAME:   temple_statues
-TAGS:   transparent
-: temple_entry(_G)
-MAP
-ZOZ
-ENDMAP
-
 NAME:   temple_green
 TAGS:   transparent
 NSUBST: ? = 1:+ / * = +bb
@@ -143,9 +144,9 @@ ENDMAP
 NAME:    temple_doors_cd
 TAGS:    transparent
 WEIGHT:  2
-SHUFFLE: Y'"C& / ZD~~~
+SHUFFLE: Y'"C& / yD~~~
 NSUBST:  XY = + / m+
-SUBST:   Z = m, cCD : cxxx
+SUBST:   y = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
@@ -1172,7 +1173,7 @@ ORIENT: encompass
 KMONS:  p = plant
 SUBST:  p = ttp
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xpppppppppppppppppppppppppppx
@@ -1222,7 +1223,7 @@ NSUBST: " = v / .
 TILE:   c = wall_lab_stone
 TILE:   v = wall_lab_metal
 FTILE:  -."apqvcbT{ = floor_gauntlet
-FTILE:  B` = floor_grass
+FTILE:  B` = floor_grass_dark
 : set_border_fill_type("open_sea")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1278,7 +1279,7 @@ NSUBST:  . = 12:1 / 7:2 / *:.
 COLOUR:  ' : darkgrey w:3 / white w:1 / lightgrey
 COLOUR:  . = green
 COLOUR:  " = brown
-FTILE:   .t12 = floor_grass
+FTILE:   .t12 = floor_grass_dark
 FTILE:   'BGT+ = floor_vault
 FTILE:   D" = floor_dirt
 MAP
@@ -1317,7 +1318,7 @@ SUBST:   W = W:30 w, ~ = ':20 W
 NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
 NSUBST:  A = 1:{ / *:'
 COLOUR:  ' = green / brown w:2
-FTILE:   'A12 = floor_grass
+FTILE:   'A12 = floor_grass_dark
 FTILE:   .BT = floor_vault
 : set_border_fill_type("open_sea")
 MAP
@@ -1372,7 +1373,7 @@ SUBST:   - = ., " : """.
 COLOUR:  .12 = green
 COLOUR:  " : brown
 COLOUR:  ' : white
-FTILE:   T.t12 = floor_grass
+FTILE:   T.t12 = floor_grass_dark
 FTILE:   " = floor_dirt
 FTILE:   '{+GB = floor_vault
 MAP
@@ -1681,7 +1682,7 @@ SUBST:  - = t.
 FTILE:  `cB = floor_sandstone
 COLOUR: ` = brown
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -2363,7 +2364,7 @@ COLOUR: c = white
 COLOUR: . = lightgrey
 COLOUR: ~ = green
 FTILE:  .BGd = floor_marble
-FTILE:  ~t{ = floor_grass
+FTILE:  ~t{ = floor_grass_dark
 TILE:   c = wall_marble
 MAP
 tttttttttttttttttttttttttttttttt
@@ -3036,7 +3037,7 @@ llllllClllllllllllllllllllEllllllllDlllllllllllllll
 ENDMAP
 
 NAME:    mainiacjoe_temple_archimedes_tessellation
-TAGS:    temple_altars_22
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
 TAGS:    no_pool_fixup
@@ -3233,7 +3234,7 @@ TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
 SUBST:   v : v b x:3 n:3
-FTILE:   '{t = floor_grass
+FTILE:   '{t = floor_grass_dark
 MAP
                                ttttttt
                              ttt'''''ttt
@@ -3313,7 +3314,7 @@ ORIENT:  encompass
 SUBST:   t : tGT
 SUBST:   c : cvbt
 SUBST:   x : xcvb
-FTILE:   '{tGT = floor_grass
+FTILE:   '{tGT = floor_grass_dark
 MAP
               ccccccc
             ccc'''''ccc
@@ -3370,6 +3371,94 @@ cc'''''''''''''''''''''ccccc
  cc''''''''''''ccccc
   ccc'''''cccccc
     ccccccc
+ENDMAP
+
+# 22 gods
+# Gluing together some trove layouts lost in the trove theming revamp:
+# minmay's trove_books_scrolls and trove_weapons_four_rooms
+# with DrKe's trove_misc_throne_room.
+NAME:    regret_index_temple_trove_trio
+TAGS:    temple_altars_22
+PLACE:   Temple
+ORIENT:  encompass
+KMONS:   P : plant / bush
+FTILE:   ' = floor_limestone
+SHUFFLE: cv / cv / cb / vb
+MAP
+xxxxxxxxxxxxxxx    xxxxx
+xT...........Ax    xB.Bx
+x.ccccc.ccccc.x    xx.xx
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x......B......+...+..{..+...+..+'''''''+Bv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.ccccc.ccccc.x    xx.xx
+xA...........Tx    xB.Bx
+xxxxxxxxxxxxxxx    xxxxx
+ENDMAP
+
+# 22 gods
+NAME:   nicolae_temple_ziggedy_zaggedy
+TAGS:   temple_altars_22 no_pool_fixup
+PLACE:  Temple
+ORIENT: encompass
+MAP
+    ccccccccccccccccccc
+   cc.ccc.ccc.ccc.ccc.cc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...{...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+   cc.ccc.ccc.ccc.ccc.cc
+    ccccccccccccccccccc
+ENDMAP
+
+# 22 gods
+NAME:   nicolae_temple_dense_god_circle
+TAGS:   temple_altars_22
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  `B{<U = floor_limestone
+COLOUR: ` = yellow
+MAP
+     cccccccc
+   cccB`B`B`ccc
+  ccB```````B`cc
+ cc```......``Bcc
+ cB``........```c
+cc``..........`Bcc
+cB`....````....``c
+c``...`U``U`...`Bc
+cB`...``{```...``c
+c``...```<``...`Bc
+cB`...`U``U`...``c
+c``....````....`Bc
+ccB`..........``cc
+ c```........``Bc
+ ccB``......```cc
+  cc`B```````Bcc
+   ccc`B`B`Bccc
+     cccccccc
 ENDMAP
 
 ##############################################################################
@@ -3449,15 +3538,15 @@ cc.....BI...mmwwwwwTwWwTwwwwwmm...IB.....cc
                ccccccccccccc
 ENDMAP
 
-# 9, 18 gods
+# 9, 21 gods
 NAME:   dpeg_three_leaves_temple
-TAGS:   no_rotate temple_altars_9 temple_altars_18
+TAGS:   no_rotate temple_altars_9 temple_altars_21
 PLACE:  Temple
 ORIENT: encompass
-: local altar_count = get_altar_count(_G, 18)
+: local altar_count = get_altar_count(_G, 21)
 : if altar_count == "9" then
 SUBST:  C = .
-: elseif altar_count == "18" then
+: elseif altar_count == "21" then
 SUBST:  C = B, T = .
 : end
 MAP
@@ -3673,9 +3762,9 @@ SUBST:   ( = {, < = w
 SHUFFLE: '"w / "'W
 SUBST:   "W = t, CT = B, z = ., Ux : GUUTTxt
 FTILE:   'w = floor_dirt
-FTILE:   " = floor_grass
+FTILE:   " = floor_grass_dark
 : end
-FTILE:   .{tBxGTU = floor_grass
+FTILE:   .{tBxGTU = floor_grass_dark
 COLOUR:  . = green / brown w:2
 MAP
                 ttttttttt
@@ -4411,7 +4500,7 @@ NSUBST:  l = 1:+ / *:c, m = 1:+ / *:c, n = 1:+ / *:c, o = 1:+ / *:c
 NSUBST:  p = 1:+ / *:c, q = 1:+ / *:c, r = 1:+ / *:c, s = 1:+ / *:c
 NSUBST:  t = 1:+ / *:c, u = 1:+ / *:c
 SHUFFLE: '"
-FTILE:   ' = floor_grass
+FTILE:   ' = floor_grass_dark
 FTILE:   " = floor_dirt
 COLOUR:  ' = green
 COLOUR:  " = brown
@@ -4525,7 +4614,7 @@ SUBST:  EH = B, D = ., F = AGT
 : else
 SUBST:  EFH = B, D = .
 : end
-FTILE:  .+{ABGTt = floor_grass
+FTILE:  .+{ABGTt = floor_grass_dark
 COLOUR: . = green
 MAP
    tttt         tttt
@@ -4832,12 +4921,13 @@ cc-------cc
   ccccccc
 ENDMAP
 
-# 6 through 21 gods
+# 6 through 25 gods
 NAME:   nicolae_temple_bog_church
 TAGS:   temple_altars_6  temple_altars_7  temple_altars_8  temple_altars_9  \
         temple_altars_10 temple_altars_11 temple_altars_12 temple_altars_13 \
         temple_altars_14 temple_altars_15 temple_altars_16 temple_altars_17 \
-        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21
+        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21 \
+        temple_altars_22 temple_altars_23 temple_altars_24 temple_altars_25
 PLACE:  Temple
 ORIENT: encompass
 KFEAT:  t = mangrove
@@ -4861,16 +4951,16 @@ ttttttttttttttttttttttttttttttttttttt
 ttttttttttMMMwwwwttttttttttttDwwwwttt
 ttttttMMMMwwwwwwwwwwwwwttttDDDwwwwwtt
 tttttMM....wwwwww!wwwwwwtt...DDDwwwtt
-tttttw'..B...wwwwwwwwww........DDDttt
+tttttw'..B...wwwwwwwwww....B...DDDttt
 tttwwwWW....''WWwwww........`...DDttt
-ttwwwWWWWWWWWWWWW.....-..B.......tttt
+ttwwwWWWWWWWWWWWW.....-.B........tttt
 ttwww'...WWWWW'...B..--....-..B..tttt
 ttw!w..B..''...--.........-t....ttttt
-tttwww.......B.-ttt-.....tt-...Ettttt
-ttttwww..`.....-ttt-..B..ttt..EEEtttt
+tttwww.......B.-ttt-..B..tt-...Ettttt
+ttttwww..`.....-ttt-.....ttt..EEEtttt
 tttttwww.......-----.....---..EEEEttt
-tttttLww...B...................Ettttt
-tttttLLww........B....`......B..ttttt
+tttttLww...B.........B.........Ettttt
+tttttLLww.......B.....`......B..ttttt
 ttttttLLw..t--.....--....B......FFttt
 tttttttLLL.-t-....tt.......WW..FFFFtt
 tttttttLLL.--...`.tt.B.'WWWWW'.FFFwtt
@@ -4912,7 +5002,7 @@ SUBST:   LO = !, M = ., N = B
 SUBST:   L = ., MN = !, O = B
 : end
 SUBST:   T = 't
-FTILE:   . = floor_hall, t' = floor_grass, !{B = floor_limestone
+FTILE:   . = floor_hall, t' = floor_grass_dark, !{B = floor_limestone
 COLOUR:  r = red, o = brown, y = yellow, g = green, b = blue, i = cyan, \
          v = magenta, ' = green, . = blue, ! = lightgrey
 TILE:    r = dngn_transparent_stone_red, o = dngn_transparent_stone_brown, \

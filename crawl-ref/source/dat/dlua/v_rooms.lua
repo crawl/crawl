@@ -433,6 +433,12 @@ function place_vaults_rooms(e, data, room_count, options)
   -- Useful to see what's going on when things are getting veto'd:
   if _VAULTS_DEBUG then dump_usage_grid(data) end
 
+  if you.depth() == 4 then
+    e.set_feature_name("stone_stairs_down_i", "metal staircase leading down")
+    e.set_feature_name("stone_stairs_down_ii", "metal staircase leading down")
+    e.set_feature_name("stone_stairs_down_iii", "metal staircase leading down")
+  end
+
   return true
 end
 

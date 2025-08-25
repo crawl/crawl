@@ -377,6 +377,7 @@ shadow_prism3
 shadow_prism4
 foxfire MONS_FOXFIRE
 marshlight MONS_MARSHLIGHT
+shooting_star MONS_SHOOTING_STAR
 living_spell MONS_LIVING_SPELL
 living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
 living_spell_earth MONS_LIVING_SPELL_EARTH
@@ -679,6 +680,7 @@ edmund_weaponless MONS_EDMUND_WEAPONLESS
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
 %rim 0
+cassandra MONS_CASSANDRA
 frederick MONS_FREDERICK
 %rim 1
 harold MONS_HAROLD
@@ -695,7 +697,6 @@ margery MONS_MARGERY
 %rim 0
 nikola MONS_NIKOLA
 norris MONS_NORRIS
-psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 sigmund_scytheless MONS_SIGMUND_SCYTHELESS
@@ -1127,6 +1128,7 @@ jory MONS_JORY
 
 ## Wraiths ('W')
 %sdir mon/undead
+bes_kemwar MONS_BES_KEMWAR
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
@@ -1367,9 +1369,6 @@ nobody2
 ## Sprint specials
 %sdir mon/sprint
 dimme MONS_DIMME
-%rim 0
-orb_of_ice MONS_ORB_OF_ICE
-orb_of_electricity MONS_ORB_OF_ELECTRICITY
 %rim 1
 
 %include dc-zombie.txt

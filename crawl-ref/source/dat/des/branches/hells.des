@@ -94,10 +94,17 @@ SUBST:   l = w, W = .
 :  else -- Zot
 KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
-KMONS:   3 = orb of fire / hellephant w:5
+KMONS:   3 = hellephant
 KMONS:   4 = draconian scorcher
 KMONS:   5 = red draconian ; cloak . mace ego:freezing pre_id
 KMONS:   6 = white draconian ; cloak . mace ego:flaming pre_id
+KMONS:   ? = orb of fire
+KMONS:   ! = orb of winter
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   3 = 3??
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:   1 = 1!!
+: end
 KFEAT:   1 = w
 KFEAT:   3 = l
 NSUBST:  0 = 1:5 / 1:6
@@ -276,7 +283,14 @@ ENDMAP
 NAME:  nicolae_hells_hurtin_island
 TAGS:  transparent no_pool_fixup
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
-KMONS: 1> = tormentor / hellion / nothing
+KMONS: 1 = tormentor / hellion / nothing
+: if you.in_branch("Coc") then
+KMONS: > = ice statue
+: elseif you.in_branch("Dis") then
+KMONS: > = orange crystal statue
+: else
+KMONS: > = obsidian statue
+: end
 KFEAT: ! = iron_grate
 KFEAT: > = >
 KMASK: 1> = opaque

@@ -6,7 +6,6 @@ dex: 5
 size: tiny
 move_speed: 5
 can_cast: false
-can_cast: no
 unarmed: {base: 0, xl_based: yes}
 unarmed_colour: lightgrey
 unarmed_name: Teeth
@@ -14,6 +13,7 @@ unarmed_verbs: animal
 can_fly: yes
 can_swim: false
 changes_anatomy: yes
+is_badform: yes
 has_hair: yes
 has_bones: yes
 has_feet: yes

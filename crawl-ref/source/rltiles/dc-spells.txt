@@ -44,10 +44,10 @@ cause_fear CAUSE_FEAR
 confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
-dazzling_flash DAZZLING_FLASH
 discord DISCORD
 enfeeble ENFEEBLE
 charming CHARMING
+gloom GLOOM
 haste HASTE
 invisibility INVISIBILITY
 jinxbite JINXBITE
@@ -232,9 +232,10 @@ conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 creeping_frost CREEPING_FROST
-crystallizing_shot CRYSTALLIZING_SHOT
+crystallising_shot CRYSTALLISING_SHOT
 death_rattle DEATH_RATTLE
 dimensional_anchor DIMENSIONAL_ANCHOR
+diminish_spells DIMINISH_SPELLS
 dominate_undead DOMINATE_UNDEAD
 doom_bolt DOOM_BOLT
 oblivion_howl OBLIVION_HOWL
@@ -303,6 +304,7 @@ shezas_dance SHEZAS_DANCE
 siphon_essence SIPHON_ESSENCE
 siren_song SIREN_SONG
 sleep SLEEP
+sleetstrike SLEETSTRIKE
 slug_dart SLUG_DART
 sojourning_bolt SOJOURNING_BOLT
 spectral_cloud SPECTRAL_CLOUD

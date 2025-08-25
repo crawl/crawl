@@ -548,6 +548,7 @@ MONS:   vault sentinel ; arbalest . halberd . ring mail
 MONS:   vault warden ; arbalest | hand cannon w:4 . glaive . scale mail
 SUBST:  @ = ., * = **%, | = ||*
 CLEAR:  x
+:   vaults_hard_standard(_G)
 : else
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
 SUBST:  d : d.
@@ -1655,7 +1656,7 @@ KFEAT:   F = cache of fruit
 KFEAT:   f = cache of meat
 NSUBST:  . = 4:2 / 20:1 / 5:3 / 8:% / 2:* / 10:$ / *:.
 SHUFFLE: Ff / fF / -- / -- / --
-FTILE:   'pt = floor_grass
+FTILE:   'pt = floor_grass_dark
 KMONS:   p = plant
 SUBST:   !'- = .
 MAP
@@ -2297,7 +2298,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
      " / book of ice / book of the tundra" ..
      " / randbook disc:ice / manual of ice magic / staff of cold pre_id" ..
-     " / ring of ice pre_id / ring of protection from cold pre_id" ..
+     " / ring of protection from cold pre_id" ..
      " / wand of iceblast pre_id / phial of floods / condenser vane")
 }}
 : if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") then
@@ -2780,7 +2781,11 @@ MONS:    red draconian / red draconian monk w:5
 MONS:    red draconian knight, red draconian annihilator
 MONS:    red draconian scorcher, red draconian shifter
 KMONS:   6 : iron dragon / golden dragon
-KMONS:   7 : dread lich / orb of fire
+KMONS:   7 = dread lich
+KMONS:   8 = orb of fire
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   7 : 78
+: end
 KMONS:   L = moth of wrath
 NSUBST:  V> = 1:} / 1 = ):6 >:1 / 1 = ]:6 >:1
 SUBST:   " = 1
@@ -3038,7 +3043,7 @@ SHUFFLE: })], ABCDEFGHI
 : if you.branch() == "D" then
 :   if you.depth() < 9 then
 MONS:    shadow imp / scorpion zombie w:5, centaur zombie
-MONS:    wight, killer bee zombie, phantom, wraith
+MONS:    wight, killer bee zombie, phantom / bes kemwar w:4, wraith
 MONS:    black bear
 KMONS:   8 = scorpion
 KMONS:   9 = sleepcap
@@ -3250,7 +3255,9 @@ NSUBST:   l = 1:L / 1 = Ll / *:l, * = 1:Y / 1:Z / 1:d / 2:! / *:$
 :   end
 : else -- Zot
 MONS:     red draconian, red draconian monk / golden dragon
-MONS:     red draconian annihilator w:5 / red draconian scorcher, orb of fire
+MONS:     red draconian annihilator w:5 / red draconian scorcher
+# Winter doesn't stop for lava. Winter doesn't stop for anything.
+MONS:     orb of appropriateness
 KMONS:    L = moth of wrath / ghost moth w:2
 NSUBST:   . = 3:1 / 2:2 / 2:3 / 2 = 233.
 NSUBST:   l = 2:L / 3 = Lll / *:l, 4 = 1:4 / *:23
@@ -3446,13 +3453,14 @@ KMONS:   D = pile of debris
 ITEM:    potion of brilliance pre_id / potion of magic pre_id / \
          potion of enlightenment pre_id / potion of ambrosia pre_id
 ITEM:    scroll of identify q:1 pre_id / scroll of amnesia q:1 pre_id
-ITEM:    any scroll / orb ego:light pre_id w:1, parchment
+ITEM:    any scroll, parchment
 # Books with notable spells at level 6 or higher, across each school.
 ITEM:    book of spontaneous combustion / book of ice / book of spectacle / \
          book of power / book of chaos / book of the warp / book of death / \
          book of siegecraft / necronomicon / grand grimoire / book of annihilations
 ITEM:    robe randart / orb ego:guile randart / orb ego:channeling randart / \
-         orb ego:light randart / any magical staff randart w:15 / \
+         orb ego:stardust randart / orb ego:attunement randart / \
+         any magical staff randart w:15 / \
          ring of wizardry randart / manual of spellcasting w:5
 : if you.in_branch("D") and you.depth() < 9 then
 ITEM:    mundane pair of boots / mundane cloak, stone q:1

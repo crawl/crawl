@@ -1945,7 +1945,7 @@ static void _tag_construct_you_items(writer &th)
     marshallByte(th, ENDOFPACK);
     for (int i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
-    marshallItem(th, you.active_talisman);
+    marshallByte(th, you.cur_talisman);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -2101,6 +2101,7 @@ static void _tag_construct_you_dungeon(writer &th)
     write_level_connectivity(th);
 
     marshallMonType(th, you.zot_orb_monster);
+    marshallBoolean(th, you.zot_orb_monster_known);
 }
 
 static void marshall_follower(writer &th, const follower &f)
@@ -3877,6 +3878,13 @@ static void _tag_read_you(reader &th)
             you.mutation[MUT_PASSIVE_MAPPING] = 2;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_EXCLUSIVE_ROLLPAGE
+        && you.species == SP_ARMATAUR
+        && you.mutation[MUT_INHIBITED_REGENERATION] > 0)
+    {
+        _clear_mutation(MUT_INHIBITED_REGENERATION);
+    }
+
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())
         _clear_mutation(m);
@@ -4707,7 +4715,6 @@ static void _tag_read_you_items(reader &th)
 
     // how many inventory slots?
     count = unmarshallByte(th);
-    ASSERT(count == ENDOFPACK); // not supposed to change
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif
@@ -4740,11 +4747,57 @@ static void _tag_read_you_items(reader &th)
                           bad_slots.c_str());
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_CONSUMABLE_INV)
+    {
+        int consumable_slot = MAX_GEAR;
+        for (int i = 0; i < MAX_GEAR; ++i)
+        {
+            if (inventory_category_for(you.inv[i]) == INVENT_CONSUMABLE)
+            {
+                you.inv[consumable_slot] = you.inv[i];
+                you.inv[consumable_slot].link = consumable_slot;
+                you.inv[i].clear();
+                ++consumable_slot;
+            }
+        }
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_SAVE_TALISMANS)
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
+    else if (th.getMinorVersion() < TAG_MINOR_EQUIP_TALISMAN)
+    {
+        item_def talisman;
+        unmarshallItem(th, talisman);
+
+        if (talisman.defined())
+        {
+            if (inv_count(INVENT_GEAR) < MAX_GEAR)
+            {
+                int slot = find_free_slot(talisman);
+                you.inv[slot] = talisman;
+                you.inv[slot].link = slot;
+                you.inv[slot].pos = ITEM_IN_INVENTORY;
+                you.cur_talisman = slot;
+            }
+            // In the *incredibly* unlikely case that the player is transformed via
+            // a talisman they're not carrying *and* they have 52 pieces of gear in
+            // their inventory, just drop the talisman at their feet.
+            else
+            {
+                // We can't drop items on the ground at this point in loading, so
+                // cache the talisman to drop it later on.
+                you.props["consolation_talisman"].get_item() = talisman;
+                you.cur_talisman = -1;
+                you.default_form = transformation::none;
+                return_to_default_form();
+            }
+        }
+        else
+            you.cur_talisman = -1;
+    }
     else
 #endif
-         unmarshallItem(th, you.active_talisman);
+        you.cur_talisman = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
@@ -5314,6 +5367,13 @@ static void _tag_read_you_dungeon(reader &th)
     else
 #endif
     you.zot_orb_monster = unmarshallMonType(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ZOT_ORB_MEMORY)
+        you.zot_orb_monster_known = false;
+    else
+#endif
+    you.zot_orb_monster_known = unmarshallBoolean(th);
 }
 
 static void _tag_read_lost_monsters(reader &th)
@@ -6520,6 +6580,7 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.xl_rank);
         marshallShort(th, mi.i_ghost.damage);
         marshallShort(th, mi.i_ghost.ac);
+        marshallString(th, mi.i_ghost.title);
     }
 
     mi.props.write(th);
@@ -6784,6 +6845,12 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.i_ghost.xl_rank = unmarshallShort(th);
         mi.i_ghost.damage = unmarshallShort(th);
         mi.i_ghost.ac = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_GHOST_TITLE)
+            mi.i_ghost.title = "";
+        else
+#endif
+            unmarshallString(th);
     }
 #if TAG_MAJOR_VERSION == 34
     if ((mons_is_ghost_demon(mi.type)
@@ -8256,6 +8323,7 @@ static void _marshallGhost(writer &th, const ghost_demon &ghost)
     marshallByte(th, ghost.colour);
     marshallBoolean(th, ghost.flies);
     marshallShort(th, ghost.umbra_rad);
+    marshallString(th, ghost.title);
 
     _marshallSpells(th, ghost.spells);
 }
@@ -8338,6 +8406,13 @@ static ghost_demon _unmarshallGhost(reader &th)
     else
 #endif
     ghost.umbra_rad    = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_GHOST_TITLE)
+        ghost.title = "";
+    else
+#endif
+    ghost.title        = unmarshallString(th);
+
 
     unmarshallSpells(th, ghost.spells
 #if TAG_MAJOR_VERSION == 34

@@ -167,7 +167,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         else
         {
             var item = filtered_inv[slot];
-            $tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
+            $tooltip.empty().text(String.fromCharCode(item.letter) + " - ");
             $tooltip.append(player.inventory_item_desc(item.slot));
             if (game.get_input_mode() == enums.mouse_mode.COMMAND)
             {
@@ -419,10 +419,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         });
 
         // primary sort: determined by the `action_panel` option
-        // secondary sort: determined by inventory lettering
+        // secondary sort: determined by subtype
         filtered_inv.sort(function (a, b) {
             if (a.action_panel_order === b.action_panel_order)
-                return a.slot - b.slot;
+                return a.sub_type - b.sub_type;
 
             return a.action_panel_order - b.action_panel_order;
         });

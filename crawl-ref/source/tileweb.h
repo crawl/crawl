@@ -68,6 +68,7 @@ struct player_info
     int8_t dex;
 
     int doom;
+    string doom_desc;
 
     int experience_level;
     int8_t exp_progress;
@@ -322,7 +323,7 @@ protected:
     void _mcache_ref(bool inc);
 
     void _send_cursor(cursor_type type);
-    void _send_map(bool force_full = false);
+    void _send_map(bool spectator_only = false);
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                     const map_cell &current_mc, const map_cell &next_mc,

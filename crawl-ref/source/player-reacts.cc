@@ -44,10 +44,12 @@
 #include "dlua.h"
 #include "dungeon.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "files.h"
 #include "god-abil.h"
 #include "god-companions.h"
+#include "god-conduct.h"
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -141,6 +143,13 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
+
+    // Amulets of dissipation wear off negative statuses faster
+    if (duration_dispellable(dur) && duration_negative(dur)
+        && you.wearing_jewellery(AMU_DISSIPATION))
+    {
+        you.duration[dur] -= delay * you.wearing_jewellery(AMU_DISSIPATION);
+    }
 
     // If we start expiring, handle exploss and print the exppoint message.
     if (you.duration[dur] <= exppoint && old_dur > exppoint)
@@ -560,6 +569,15 @@ void player_reacts_to_monsters()
             you.duration[DUR_BLOOD_FOR_BLOOD] = 1;
     }
 
+    if (you.duration[DUR_STARDUST_COOLDOWN]
+        && you.magic_points == you.max_magic_points
+        && !there_are_monsters_nearby(true, true, false))
+    {
+        if (_decrement_a_duration(DUR_STARDUST_COOLDOWN, you.time_taken))
+            mprf(MSGCH_DURATION, "Your orb has finished recharging its magic.");
+    }
+
+
     if (_decrement_a_duration(DUR_PHALANX_BARRIER, you.time_taken))
         you.redraw_armour_class = true;
 
@@ -583,6 +601,8 @@ void player_reacts_to_monsters()
     _decrement_a_duration(DUR_AUTODODGE, you.time_taken);
 
     _handle_hoarding();
+
+    you.props.erase(PYROMANIA_TRIGGERED_KEY);
 }
 
 static bool _check_recite()
@@ -934,6 +954,12 @@ static void _decrement_durations()
                 you.berserk() ? "rip and tear" : "carefully extract").c_str());
     }
 
+    if (you.wearing_jewellery(AMU_WILDSHAPE))
+        did_god_conduct(DID_CHAOS, 1);
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH))
+        did_god_conduct(DID_EVIL, 1);
+
     if (!you.duration[DUR_ANCESTOR_DELAY]
         && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
@@ -1036,6 +1062,7 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 
     bool gained_regen = false;
     bool gained_mana_regen = false;
+    bool gained_alchemy = false;
 
     for (player_equip_entry& entry : you.equipment.items)
     {
@@ -1051,7 +1078,9 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
             // Track which properties we should notify the player they have gained.
             if (!gained_regen && is_regen_item(arm))
                 gained_regen = true;
-            if (!gained_mana_regen && is_mana_regen_item(arm))
+            if (arm.is_type(OBJ_JEWELLERY, AMU_ALCHEMY))
+                gained_alchemy = true;
+            else if (!gained_mana_regen && is_mana_regen_item(arm))
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
@@ -1067,14 +1096,23 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
     if (eq_list.empty())
         return;
 
-    const char* msg = (gained_regen && gained_mana_regen) ? " health and magic"
-                       : (gained_regen ? "" : " magic");
+    vector<string> msgs;
+
+    if (gained_regen || gained_mana_regen)
+    {
+        msgs.emplace_back(make_stringf("regenerate %s more quickly",
+                gained_regen && gained_mana_regen ? " health and magic"
+                : (gained_regen ? "" : " magic")));
+    }
+    if (gained_alchemy)
+        msgs.emplace_back("extract magic from the potions you drink");
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body, and you begin to regenerate%s "
-         "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself",
-         msg);
+    string msg_str = comma_separated_line(msgs.begin(), msgs.end());
+    mprf("Your %s attune%s to your body, and you begin to %s.",
+         eq_str.c_str(), plural ? " themselves" : "s itself",
+         msg_str.c_str());
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter

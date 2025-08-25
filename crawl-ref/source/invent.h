@@ -48,11 +48,17 @@ struct SelItem
     int slot;
     int quantity;
     const item_def *item;
-    bool has_star;
-    SelItem() : slot(0), quantity(0), item(nullptr), has_star(false) { }
-    SelItem(int s, int q, const item_def *it = nullptr, bool do_star = false)
-        : slot(s), quantity(q), item(it), has_star(do_star)
+    SelItem() : slot(0), quantity(0), item(nullptr) { }
+    SelItem(int s, int q, const item_def *it = nullptr)
+        : slot(s), quantity(q), item(it)
     {
+    }
+
+    bool operator== (const SelItem &o) const
+    {
+        return slot == o.slot
+               && quantity == o.quantity
+               && item == o.item;
     }
 };
 
@@ -105,8 +111,6 @@ public:
     virtual int highlight_colour(bool temp=false) const override;
 
     virtual void select(int qty = -1) override;
-    void set_star(bool);
-    bool has_star() const;
 
     virtual string get_filter_text() const override;
 
@@ -115,7 +119,6 @@ public:
 
 private:
     void add_class_hotkeys(const item_def &i);
-    bool _has_star;
 };
 
 class InvMenu : public Menu
@@ -158,22 +161,24 @@ public:
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
                         function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
-    vector<SelItem> get_selitems() const;
+    vector<SelItem> get_selitems(bool include_offscreen = false) const;
 
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
-    // Drop menu only: if true, dropped items are removed from autopickup.
-    bool mode_special_drop() const;
+    void cycle_page(int dir);
+    void set_page(int page);
 
 protected:
     void do_preselect(InvEntry *ie);
-    void select_item_index(int idx, int qty) override;
     bool examine_index(int i) override;
     int pre_process(int key) override;
+    bool process_command(command_type cmd) override;
+    string get_select_count_string(int count) const override;
     virtual bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
+    void select_index(int index, int qty) override;
 
 protected:
     menu_type type;
@@ -182,8 +187,10 @@ protected:
     invtitle_annotator title_annotate;
     string temp_title;
 
-private:
-    bool _mode_special_drop;
+    // Current tab in MF_PAGED_INVENTORY menus.
+    // Has no effect if that flag is not set.
+    int cur_osel;
+    vector<SelItem> offscreen_sel[4];
 };
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);

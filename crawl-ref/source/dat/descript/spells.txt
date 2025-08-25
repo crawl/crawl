@@ -69,9 +69,14 @@ of defenders' armour.
 %%%%
 Avatar Song spell
 
-Sings a powerfully haunting song; in addition to making nearby victims
-unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water.
+Sings a powerfully haunting song. Adventurers who fail to resist will become
+unable to move away from the singer (and will sometimes be drawn closer
+involuntarily), while other creatures will become dazed outright.
+
+In addition, it may call forth drowned souls from any nearby bodies of deep
+water.
+
+Leaving the caster's line of sight will end the movement-controlling effect.
 %%%%
 Awaken Armour spell
 
@@ -287,7 +292,7 @@ creatures into ghostly versions of themselves.
 Call of Chaos spell
 
 Calls upon the powers of chaos to empower nearby allies, granting them haste,
-might, doubled health, or improved resistances. The chaotic magic may
+might, doubled vigour, or improved resistances. The chaotic magic may
 occasionally backfire and cause allies to instead lose their willpower or be
 berserked, polymorphed, or filled with inner flame.
 %%%%
@@ -437,7 +442,7 @@ Creeping Shadow spell
 Calls forth shadows from the corners of nearby walls to strike at all of the
 caster's enemies standing adjacent to them.
 %%%%
-Crystallizing Shot spell
+Crystallising Shot spell
 
 Hurls a large and heavy shard of crystal. It may render a creature's body
 structure as brittle and fragile as shattered and unrefined crystal, increasing
@@ -503,6 +508,10 @@ Weaves a link between the caster's weaponry and a chosen target. Whenever the
 caster fires or throws something at a *different* enemy, a matching projectile
 will be teleported at the target. Spellpower increases their accuracy.
 %%%%
+Diminish Spells spell
+
+Irresistibly weakens the power of an enemy's spells for a period of time.
+%%%%
 Discord spell
 
 Drives nearby creatures into an wild frenzy, causing them to mercilessly
@@ -549,6 +558,17 @@ spell. They will instead lash out randomly for the duration of its effect,
 attacking nearby friend and foe alike before regaining their wits.
 
 This spell can be broken prematurely by the death of its caster.
+%%%%
+Doomsaying spell
+
+Foretells a terrible future, inflicting Doom equal to half of what it would take
+for you to reach 100%. Upon the caster's death, a sliver of this fate will come
+to pass in the form of an ambush; several well-hidden enemies from the floor
+will seek out your position unerringly and all stairs will temporarily be
+sealed.
+
+Can only be cast a single time, but even slaying the messenger in their sleep
+will not avoid what fate has in store for you.
 %%%%
 Doom Bolt spell
 
@@ -1274,8 +1294,11 @@ Tougher, more experienced creatures are less likely to be affected.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster. Leaving the
-caster's line of sight will end the effect.
+Attempts to entrance all enemies in sight. Adventurers who fail to resist will
+become unable to move away from the caster, while other creatures will become
+dazed outright.
+
+Leaving the caster's line of sight will end the movement-controlling effect.
 %%%%
 Metabolic Englaciation spell
 
@@ -1484,13 +1507,16 @@ otherwise almost indistinguishable from the original.
 Planar Overlay spell
 
 Overlays part of an adjacent reality onto this one, causing random local
-monsters to appear elsewhere on the floor. This occurs very slowly at first, but
-the longer the tesseract remains active, the higher the rate will become.
+monsters to appear elsewhere on the floor. This occurs rapidly at first, but
+soon slows down to a steady rate.
 
 After many monsters have been generated, they will stop rewarding any experience
 points - though destroying the tesseract early will immediately grant the player
 the sum total of all experience points that could be obtained by allowing it to
 continue.
+
+After even more monsters have been generated, new monsters have a chance to
+appear within the player's sight instead.
 %%%%
 Plane Rend spell
 
@@ -1846,13 +1872,23 @@ directly lethal. The pain inflicted then heals the user.
 %%%%
 Siren Song spell
 
-Sings a haunting song, making nearby victims unwilling to move away from the
-singer. Leaving the caster's line of sight will end the effect.
+Sings a haunting song that mesmerises nearby listeners. Adventurers who fail to
+resist will become unable to move away from the singer, while other creatures
+will become dazed outright.
+
+Leaving the caster's line of sight will end the movement-controlling effect.
 %%%%
 Sleep spell
 
 Puts a targeted creature to sleep. Taking damage will typically wake the
 target, and loud sounds can potentially do so as well.
+%%%%
+Sleetstrike spell
+
+Causes the air around a creature to twist itself into a whirling vortex of
+frigid meteorological fury, encasing the victim in ice and slowing their
+movement briefly. It does more damage to targets surrounded by empty space and
+half of its damage bypasses cold resistance.
 %%%%
 Slow spell
 

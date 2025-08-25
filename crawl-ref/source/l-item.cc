@@ -506,7 +506,7 @@ IDEF(quantity)
 IDEF(slot)
 {
     if (item && in_inventory(*item))
-        lua_pushnumber(ls, item->link);
+        lua_pushnumber(ls, letter_to_index(item->slot));
     else
         lua_pushnil(ls);
     return 1;
@@ -1019,6 +1019,19 @@ IDEF(description)
     return 1;
 }
 
+/*** Whether the current item is a piece of jewellery that the player already
+ *   has as many copies as they can benefit from.
+ * @field description string
+ */
+IDEF(redundant)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, jewellery_is_redundant(*item));
+
+    return 1;
+}
 
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
@@ -1240,7 +1253,7 @@ static int l_item_swap_slots(lua_State *ls)
         return 0;
     }
 
-    swap_inv_slots(slot1, slot2, verbose);
+    swap_inv_slots(you.inv[slot1], slot2, verbose);
 
     return 0;
 }
@@ -1754,6 +1767,7 @@ static ItemAccessor item_attrs[] =
     { "is_in_shop",        l_item_is_in_shop },
     { "inscription",       l_item_inscription },
     { "description",       l_item_description },
+    { "is_redundant",      l_item_redundant },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

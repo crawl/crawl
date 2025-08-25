@@ -430,8 +430,21 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     ASSERT(defender); // XXX: change to actor &defender
 
     // A dead defender would result in us returning true without actually
-    // taking an action.
-    ASSERT(defender->alive());
+    // taking an action. But allow just passing our turn if we try to attack a
+    // monster mid-revival (since they're still actually supposed to be there).
+    if (!defender->alive())
+    {
+        if (defender->is_monster()
+            && (defender->as_monster()->flags & MF_PENDING_REVIVAL))
+        {
+            return true;
+        }
+        else
+        {
+            die("%s trying to attack a dead %s", attacker->name(DESC_THE).c_str(),
+                                                 defender->name(DESC_THE).c_str());
+        }
+    }
 
     if (defender->is_player())
     {
@@ -636,6 +649,9 @@ void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
 
     if (you.form == transformation::medusa)
         _do_medusa_stinger();
+
+    if (!was_firewood)
+        update_parrying_status();
 }
 
 /**
@@ -805,7 +821,7 @@ beam_type get_beam_resist_type(beam_type flavour)
         case BEAM_MISSILE:
         case BEAM_MMISSILE:
         case BEAM_FRAG:
-        case BEAM_CRYSTALLIZING:
+        case BEAM_CRYSTALLISING:
         case BEAM_SEISMIC:
         case BEAM_BOLAS:
         case BEAM_AIR:
@@ -1454,6 +1470,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             || you_worship(GOD_BEOGH) && mons_genus(mon->type) == MONS_ORC)
         && !mon->has_ench(ENCH_FRENZIED))
     {
+        // If we cannot hurt a neutral anyway, don't bother warning as if we
+        // could
+        if (never_harm_monster(&you, mon))
+            return false;
+
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON)
             || you_worship(GOD_BEOGH))
@@ -1463,6 +1484,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     }
     else if (mon->wont_attack())
     {
+        // If we cannot hurt a non-hostile anyway, don't bother warning as if we
+        // could
+        if (never_harm_monster(&you, mon))
+            return false;
+
         adj += "non-hostile ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
             would_cause_penance = true;
@@ -1820,6 +1846,17 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     if (random)
         return div_rand_round(base_dam * 9, 5);
     return base_dam * 9 / 5;
+}
+
+int resonance_damage_mod(int dam, bool random)
+{
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
+    {
+        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, 2)), 100)
+                     : dam * (100 + you.skill(SK_FORGECRAFT, 2)) / 100;
+    }
+
+    return dam;
 }
 
 int unarmed_base_damage(bool random)

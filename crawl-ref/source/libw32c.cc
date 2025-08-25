@@ -323,16 +323,12 @@ static void set_w32_screen_size()
     }
 
     screen = new CHAR_INFO[screensize.X * screensize.Y];
-
-    COORD topleft;
-    SMALL_RECT used;
-    topleft.X = topleft.Y = 0;
-    ::ReadConsoleOutputW(outbuf, screen, screensize, topleft, &used);
+    clrscr_sys();
 }
 
 static void w32_handle_resize_event()
 {
-    if (crawl_state.waiting_for_command)
+    if (crawl_state.waiting_for_command || crawl_state.waiting_for_ui)
         handle_terminal_resize();
     else
         crawl_state.terminal_resized = true;
@@ -488,9 +484,11 @@ void set_cursor_enabled(bool curstype)
         gotoxy_sys(cx+1, cy+1);
 }
 
-// This will force the cursor down to the next line.
 void clear_to_end_of_line()
 {
+    // We shouldn't move cursor pos
+    save_cursor_pos save;
+
     const int pos = wherex();
     const int cols = get_number_of_cols();
     if (pos <= cols)
@@ -850,13 +848,6 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     }
 
     return 0;
-}
-
-
-void set_getch_returns_resizes(bool rr)
-{
-    UNUSED(rr);
-    // no-op on windows console: see mantis issue #11532
 }
 
 int getch_ck()

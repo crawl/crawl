@@ -25,7 +25,8 @@ function init_undead(e)
   elseif you.absdepth() <= 6 then
     e.kmons('.-_ = zombie w:30 / phantom w:5 / nothing w:300')
   elseif you.absdepth() <= 9 then
-    e.kmons('.-_ = zombie w:25 / draugr w:5 / w:20 wight / nothing w:300')
+    e.kmons('.-_ = zombie w:28 / draugr w:5 / wight w:18 / bes kemwar w:4 / \
+                   nothing w:300')
   elseif you.absdepth() <= 12 then
     e.kmons('.-_ = zombie w:25 / draugr w:5 / wraith w:10 / vampire w:10 / \
                    w:10 shadowghast / nothing w:300')

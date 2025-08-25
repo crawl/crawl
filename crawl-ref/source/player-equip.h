@@ -7,6 +7,7 @@
 #include "bitary.h"
 #include "equipment-slot.h"
 #include "fixedvector.h"
+#include "item-prop-enum.h"
 #include "transformation.h"
 #include "object-class-type.h"
 
@@ -48,6 +49,10 @@ struct player_equip_set
     // Combined total of all artprops on all equipped and active artefacts
     // (including talisman)
     artefact_properties_t artprop_cache;
+
+    // Cache of tally of all egos on active armour
+    FixedVector<uint8_t, NUM_REAL_SPECIAL_ARMOURS> armour_egos;
+    FixedVector<bool, NUM_GIZMOS> gizmo_egos;
 
     // Cache of which unrandarts are currently equipped, stored as a set of
     // bitflags corresponding to that unrand's ID. The corresponding bit will
@@ -145,5 +150,6 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld);
 void unequip_artefact_effect(item_def &item, bool *show_msgs, bool meld);
 
 bool acrobat_boost_active();
+bool parrying_boost_active();
 
 void unwield_distortion(bool brand = false);

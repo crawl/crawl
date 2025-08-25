@@ -1,0 +1,750 @@
+%%%%
+ablaze with memories monstatus
+
+This creature has temporarily gained the ability to cast specific spells.
+It will lose access to them again once sufficiently injured.
+%%%%
+about to teleport monstatus
+
+After a short delay, this creature will be teleported to somewhere else on the
+current floor.
+%%%%
+afflicted by rimeblight monstatus
+
+This creature suffers AC-ignoring cold damage every turn, and may sometimes
+explode in a burst of ice that damages nearby allies. When it dies, it may
+spread rimeblight to other nearby allies.
+
+Natural, demonic, or holy creatures will be instantly killed once they reach
+low health, and be replaced with pillars of rime.
+%%%%
+ally target monstatus
+
+This creature is being targeted by one or more of your allies.
+%%%%
+anguished monstatus
+
+When this creature deals damage, it will suffer damage equal to the damage it
+dealt.
+%%%%
+asleep monstatus
+
+This creature is unable to move, act, block, or dodge. Any hostile action will
+awaken it, though melee attacks against it (even by other monsters) will deal
+increased damage.
+
+[[high-tier stab monstatus]]
+%%%%
+asphyxiating monstatus
+
+This creature has been engulfed by another creature and is unable to breathe.
+It will take minor damage each turn and cannot cast spells or invoke divine
+aid until either it escapes or the engulfing creature dies.
+%%%%
+berserk monstatus
+
+This creature has 50% more health, deals 50% more damage with melee attacks, and
+both moves and acts 50% faster. They cannot perform any action besides moving
+or attacking.
+
+When the berserk rage wears off, they will be slowed and unable to berserk for a
+short duration.
+%%%%
+blind monstatus
+
+This creature cannot see properly. Its accuracy is greatly decreased, it cannot
+make attacks of opportunity, and spells it casts may sometimes be aimed at the
+wrong locations.
+
+It may also stumble around and eventually lose track of its target, especially
+if it has low intelligence.
+
+[[low-tier stab monstatus]]
+%%%%
+bound in place monstatus
+
+This creature cannot move under its own power, but may still use translocations
+or be forcibly displaced by someone else.
+%%%%
+catching its breath monstatus
+
+This creature has used a breath ability recently and cannot use it again for a
+short while.
+%%%%
+catching his breath monstatus
+
+[[catching its breath monstatus]]
+%%%%
+catching her breath monstatus
+
+[[catching its breath monstatus]]
+%%%%
+catching their breath monstatus
+
+[[catching its breath monstatus]]
+%%%%
+chanting recall monstatus
+
+This creature is chanting a Word of Recall. This will recall intelligent allies
+from elsewhere on the floor to the caster's vicinity after a short delay, but can
+be interrupted by most effects which would normally prevent it from casting spells.
+%%%%
+charmed monstatus
+
+This creature has been charmed and will fight for your cause for a short while. This
+effect will wear off immediately if you attempt to harm it in any way.
+%%%%
+concentrated venom monstatus
+
+This creature's natural venom has been intensified, giving any poison it inflicts
+through attacks or breath weapons a chance to slow and asphyxiate susceptible targets.
+%%%%
+confused monstatus
+
+This creature is unable to block or use spells or abilities and will stumble around
+at random, attacking whatever it bumps into - be they friend or foe or sometimes even
+themselves.
+
+[[low-tier stab monstatus]]
+%%%%
+contaminated monstatus
+
+This creature has been contaminated by transmutational energy, and will suffer
+significant damage every third time such energy is inflicted upon them.
+%%%%
+constricted by roots monstatus
+
+This creature is being constricted by tree roots, which reduces their evasion and
+inflicts some damage each turn. It may also prevent them from moving, though each
+attempt to do so has a chance to break this effect entirely.
+%%%%
+constricted by zombie hands monstatus
+
+This creature is being constricted by clutching corpses from deep beneath the
+earth, which reduces their evasion and inflicts some damage each turn. It may also
+prevent them from moving, though each attempt to do so has a chance to break this
+effect entirely.
+%%%%
+control wrested from you monstatus
+
+This formerly-friendly creature has been charmed by another creature to join their
+side. If you slay the source of this charm, it will regain its senses.
+%%%%
+corroded monstatus
+
+This creature's AC is reduced by 8.
+%%%%
+covered in liquid flames monstatus
+
+This creature has been coated in sticky flame, and will take AC-ignoring fire damage
+each turn. Movement will shake off the flames, causing it to expire much more
+rapidly and stepping into water will extinguish it entirely.
+%%%%
+covered in magnetic dust monstatus
+
+This creature is unable to evade attacks or turn invisible. If it dies, it will leave
+behind a cloud of magnetised fragments.
+
+Each time Magnavolt is cast, a beam of electricity will automatically be fired at this
+creature.
+%%%%
+covered in terrible wounds monstatus
+
+This creature has been afflicted with illusory wounds by a flayed ghost. These wounds
+will disappear with time or when the flayed ghost is destroyed.
+%%%%
+covering ground quickly monstatus
+
+This creature moves slightly faster.
+%%%%
+covering ground slowly monstatus
+
+This creature is stuck in liquefied ground, causing it to move more slowly and also
+fumble 25% of the melee attacks it makes.
+%%%%
+crumbling away monstatus
+
+This creature will be automatically destroyed in a few turns.
+%%%%
+cursed with the promise of agony monstatus
+
+This creature is cursed, and will lose half its current health after the next time
+the source of the curse hits it with a melee attack.
+%%%%
+damage-immune at range monstatus
+
+This creature suffers no damage from any source which is not currently adjacent to
+them (including clouds, if their creator is non-adjacent).
+%%%%
+dazed monstatus
+
+This creature is temporarily unable to act, but any hostile action will cause it to
+immediately regain its senses.
+%%%%
+diminished spells monstatus
+
+This creature's spells are less powerful - dealing less damage, being less able to
+overcome their target's willpower, and occasionally being weaker in other ways.
+%%%%
+dormant monstatus
+
+[[asleep monstatus]]
+%%%%
+doubled in vigour monstatus
+
+This monster's current and maximum health are temporarily doubled.
+%%%%
+empowered by the touch of Beogh monstatus
+
+This creature has been granted great power by Beogh to challenge you. Their melee
+and ranged attacks deal 33% more damage, their health is increased, and they cast
+spells more frequently. They are also able to track you, no matter where on the
+current floor you flee.
+
+They will lose these bonuses once the challenge is concluded.
+%%%%
+encased in ice monstatus
+
+This creature has been flash-frozen and its movement speed is greatly reduced for
+a short time.
+%%%%
+engulfed monstatus
+
+This creature has been engulfed by another creature, but its aquatic or unbreathing
+nature prevents it from suffering any ill effects.
+%%%%
+engulfing you monstatus
+
+{{
+if you.res_drowning() then
+    return "This creature is engulfing you, but your immunity to drowning renders " ..
+           "it harmless."
+else
+    return "This creature is engulfing you, which prevents you from casting or " ..
+           "reading scrolls until either you move away from it or the creature dies."
+end
+}}
+%%%%
+entangled in a net monstatus
+
+This creature is caught in a net, greatly reducing its evasion and preventing it
+from blocking. Any attempt it makes to move or attack will instead struggle against
+the net, which may eventually destroy it. Spellcasting is unimpaired.
+
+[[low-tier stab monstatus]]
+%%%%
+entangled in a web monstatus
+
+This creature is caught in a spider's web, greatly reducing its evasion and
+preventing it from blocking. Any attempt it makes to move or attack will instead
+struggle against the web, which may eventually destroy it. Spellcasting is
+unimpaired.
+
+[[low-tier stab monstatus]]
+%%%%
+extremely poisoned monstatus
+
+This creature suffers poison damage every turn and cannot be poisoned any
+further.
+%%%%
+fast monstatus
+
+This creature moves and acts 50% faster.
+%%%%
+feeble figment monstatus
+
+This creature is but a fragile duplicate of another creature. Its health is
+reduced by 66%, it deals 33% less damage with attacks, and its spells are
+significantly weakened.
+%%%%
+flame-wreathed monstatus
+
+This creature has been empowered by the flames of Ignis. It deals additional
+fire damage with its melee attacks and moves 33% more quickly.
+%%%%
+fleeing monstatus
+
+This creature is fleeing in fear and will attempt each turn to move away from
+the source of this fear. Beside movement, it may only cast spells which it
+thinks could help it escape, such as Blink.
+
+If harmed directly or cornered against terrain, it will turn around to fight
+once more.
+%%%%
+fragile as glass monstatus
+
+This creature receives 50% more damage from all sources.
+%%%%
+frenzied and wild monstatus
+
+This creature deals 50% more damage with melee attacks and both moves and
+attacks 50% faster. It cannot cast spells and will prioritise attacking the
+closest other creature present each turn, whether they are friend or foe.
+%%%%
+fully charged monstatus
+
+This creature has gathered all the power it needs to cast its spells.
+%%%%
+grapneled monstatus
+
+This creature has been struck with a kinetic grapnel. The next melee attack
+from the grapnel's source will always hit and deal slightly increased damage.
+%%%%
+heavily contaminated monstatus
+
+[[contaminated monstatus]]
+%%%%
+heavily drained monstatus
+
+This creature has been heavily drained, lowering the accuracy of their melee
+attacks, the power of their spells and special attack properties, and making
+them more vulnerable to many status effects.
+%%%%
+idealised monstatus
+
+This creature has glows with the perfection of their best self. They deal 100%
+more damage with melee attacks, have additional AC, and cast spells with
+substantially more strength.
+%%%%
+incited by Gozag monstatus
+
+This creature has been roused into great speed by the wrath of Gozag Ym Sagoz.
+Their haste or berserk state is permanent and will not wear off with time
+or through deliberate magical intervention.
+%%%%
+indifferent monstatus
+
+This creature is neither hostile nor allied and may attack creatures of all
+dispositions, should it wander into them.
+%%%%
+infested monstatus
+
+This creature is infested with a death scarab, which will emerge from their
+body once they die.
+%%%%
+inner flame monstatus
+
+Whenever this creature suffers damage, a flame cloud will briefly appear
+beneath them. When they die, they will explode in a violent burst of fire,
+damaging anything nearby and leaving behind additional flame clouds.
+
+Giant creatures will trigger an even larger explosion when they die.
+%%%%
+inspiring fear monstatus
+
+You are currently terrified of this creature, preventing you from deliberately
+moving close to them and causing 33% of the melee attacks you make again
+against them fail.
+
+This effect will break if you ever lose sight of this creature.
+%%%%
+interlaced with chaos monstatus
+
+This creature's melee attacks may inflict additional damage of a random element
+or cause various irresistible status effects.
+%%%%
+lashing out in frustration monstatus
+
+This creature has been magically vexed and is forced to attack a random adjacent
+space each turn instead of performing any other actions. It is more likely to
+attack a space containing a creature than an empty one, but will attack its own
+allies as readily as its enemies.
+%%%%
+lightly drained monstatus
+
+This creature has been lightly drained, somewhat lowering the accuracy of their
+melee attacks, the power of their spells and special attack properties, and
+making them slightly more vulnerable to many status effects.
+%%%%
+lost in madness monstatus
+
+This creature has been driven to madness by the power of Zin. It will never again
+use spells or abilities and will stumble around at random, attacking whatever
+it bumps into - be they friend or foe or sometimes even themselves.
+%%%%
+magic disrupted monstatus
+
+This creature's spells and magical abilities have been disrupted and may fail when
+used. The chance of failure depends on the remaining duration of this effect.
+%%%%
+magic-sapped monstatus
+
+This creature has had its access to magic tainted. Whenever it casts a spell, its
+magic will be severely disrupted, making it likely any subsequent spells it casts
+will fail.
+%%%%
+marked with the sign of ruin monstatus
+
+This creature has been condemned to inexorable decay and ruin. Whenever it takes
+damage from melee attacks, it will be drained heavily and either slowed, weakened,
+or blinded.
+%%%%
+mesmerising monstatus
+
+This creature has mesmerised you, making you unable to voluntarily move away
+from them.
+
+This effect will break if you ever lose sight of this creature.
+%%%%
+minion monstatus
+
+This creature has been created by magic and will cease to be once its creator dies.
+%%%%
+missing a shadow monstatus
+
+This creature's shadow has been torn away from it and cannot be affected
+by Aphotic Marionette ever again.
+%%%%
+misshapen and mutated monstatus
+
+This creature's AC is reduced by 8 and its accuracy, spell power, brand damage, and
+willpower are moderately reduced.
+%%%%
+more vulnerable to fire monstatus
+
+This creature's fire resistance is reduced by one level.
+%%%%
+more vulnerable to poison monstatus
+
+This creature's poison resistance is reduced by one level.
+%%%%
+mute monstatus
+
+This creature has been stricken permanently mute by the power of Zin. This
+prevents all noise the creature could make, including the vocalisations
+required for most creatures to cast spells.
+# Are demons silenced?
+%%%%
+not watching you monstatus
+
+This creature has been briefly distracted by something else.
+
+[[low-tier stab monstatus]]
+%%%%
+paralysed monstatus
+
+This creature is unable to move, act, block, or dodge attacks.
+
+[[high-tier stab monstatus]]
+%%%%
+paralysed with fear monstatus
+
+[[paralysed monstatus]]
+%%%%
+partially charged monstatus
+
+This creature has built up part of the charge it needs to cast a spell or
+activate an ability.
+%%%%
+peaceful monstatus
+
+This creature will never attack you and may attack other creatures hostile to
+you, but will neither follow you nor obey any direct instructions.
+%%%%
+petrifying slowly monstatus
+
+This creature will soon become fully petrified. Its movement and actions are
+50% slower and it is nearly unable to dodge attacks, though it also takes 33%
+less damage.
+
+[[low-tier stab monstatus]]
+%%%%
+petrified monstatus
+
+This creature is unable to move, act, block, or dodge attacks. By being made
+of stone, it also takes 50% less damage, gains immunity to negative energy and
+poison, but become vulnerable to deconstruction.
+
+[[high-tier stab monstatus]]
+%%%%
+poisoned monstatus
+
+This creature suffers poison damage every turn.
+%%%%
+radiating silence monstatus
+
+This creature is surrounded by a field of unnatural silence which eliminates
+all noise made within it as well as preventing the vocalisations required for
+many creatures (including you) to read scrolls, cast spells, or invoke divine
+aid.
+
+If this effect was caused by a spell, the radius of the field will shrink over
+time.
+%%%%
+radiating toxic energy monstatus
+
+This creature shines with Olgreb's Toxic Radiance and will continuously inflict
+poison damage on all foes in sight for several turns.
+%%%%
+ready to become your apostle monstatus
+
+This creature has been defeated in honourable combat and may be recruited as
+one of your apostles via the ability menu.
+%%%%
+ready to howl monstatus
+
+This creature has not yet inflicted you with Oblivion Howl and may attempt to do so.
+%%%%
+reflecting blocked projectiles monstatus
+
+This creature reflects any projectile it blocks back to their original source.
+%%%%
+reflecting injuries monstatus
+
+Whenever this creature suffers damage, it inflicts 2/3rds as much damage back upon
+whatever damaged it.
+%%%%
+regenerating monstatus
+
+This creature regenerates health at a greatly increased rate, proportion to their
+maximum health.
+%%%%
+repelling missiles monstatus
+
+This creature has +15 EV when dodging projectiles, whether physical or magical.
+%%%%
+retreating monstatus
+
+This creature has been ordered to flee in a given direction, and will not attack
+or return to your side until they are given new instructions or have travelled a
+sufficient distance
+%%%%
+rolling monstatus
+
+This creature has curled into a ball, increasing its movement speed and melee
+damage by 100% until the next time it attacks something (or becomes unable to move).
+%%%%
+sharing its pain monstatus
+
+This creature will inflict a portion of all damage it suffers upon nearby allies,
+with those closer to it receiving a greater amount.
+%%%%
+sharing his pain monstatus
+
+[[sharing its pain monstatus]]
+%%%%
+sharing her pain monstatus
+
+[[sharing its pain monstatus]]
+%%%%
+sharing their pain monstatus
+
+[[sharing its pain monstatus]]
+%%%%
+sheltered from injuries monstatus
+
+Half of the damage suffered by this creature is redirected to the ally protecting it
+instead.
+%%%%
+sick monstatus
+
+This creature is sick and cannot naturally regenerate.
+%%%%
+silenced monstatus
+
+This creature is engulfed in a field of unnatural silence, preventing any noise
+it might make, including the vocalisations required for many creatures to cast
+spells.
+%%%%
+skewered by barbs monstatus
+
+This creature will take minor damage whenever it moves.
+%%%%
+slightly transparent monstatus
+
+This creature is normally invisible, but your magical sight allows you to see it
+nonetheless. This has no effect on you, though any allies you have may not be
+able to see it as you can.
+%%%%
+slow monstatus
+
+This creature moves and acts at 66% of normal speed.
+%%%%
+softly glowing monstatus
+
+This creature has been outlined with a halo of light and is easier to hit and
+revealed, if invisible.
+%%%%
+soul bound monstatus
+
+This creature's soul has been bound in ice. When it dies, a simulacrum of its
+original form will rise in its place.
+%%%%
+soul-gripped monstatus
+
+This creature's soul will be bound in service to you once they die, though
+allowing them to stray from your line of sight for more than a brief moment
+will cause you to lose your grasp on it.
+%%%%
+soul-splintered monstatus
+
+A fragment of this creature's soul has been extracted into a soul wisp,
+preventing further use of this spell until the wisp reunites with them again.
+%%%%
+spells empowered monstatus
+
+This creature's spells are strengthened and it will cast them more frequently.
+%%%%
+stilling the winds monstatus
+
+This creature is preventing any clouds from being created on the current floor.
+%%%%
+strong monstatus
+
+This creature's melee attacks deal 50% more damage.
+%%%%
+strong-willed monstatus
+
+This creature's willpower is increased by 2 pips.
+%%%%
+stupefied monstatus
+
+This creature has been struck dumb by the power of Zin and cannot act.
+
+[[high-tier stab monstatus]]
+# The summoned monstatus is left out due to being covered on the main monster
+# xv screen.
+%%%%
+surrounded by a freezing vortex monstatus
+
+This creature is the source of a devastating polar vortex.
+%%%%
+surrounded by acidic fog monstatus
+
+This creature trails a ring of acidic fog clouds around itself.
+%%%%
+surrounded by chaotic energy monstatus
+
+This creature trails a ring of seething chaos clouds around itself.
+%%%%
+surrounded by flames monstatus
+
+This creature trails a ring of flame clouds around itself.
+%%%%
+surrounded by fog monstatus
+
+This creature trails a ring of purple smoke around itself.
+%%%%
+surrounded by foul miasma monstatus
+
+This creature trails a ring of foul miasma around itself.
+%%%%
+surrounded by freezing clouds monstatus
+
+This creature trails a ring of freezing clouds around itself.
+%%%%
+surrounded by mutagenic energy monstatus
+
+This creature trails a ring of mutagenic fog around itself.
+%%%%
+surrounded by negative energy monstatus
+
+This creature trails a ring of clouds of excruciating misery around itself.
+%%%%
+surrounded by restless winds monstatus
+
+This creature has recently cast Polar Vortex and cannot cast it again for
+a short time.
+%%%%
+surrounded by thunder monstatus
+
+This creature trails a ring of thunder clouds around itself.
+%%%%
+target of orcish vengeance monstatus
+
+This creature has contributed to the death of one of your apostles. Defeating all
+targets of orcish vengeance will significantly speed up the time it takes for
+Beogh to resurrect your apostles.
+%%%%
+targeted by your dimensional bullseye monstatus
+
+Whenever you perform a ranged attack aimed at a different creature, a copy of
+the projectile will be teleported to this creature at the end of its flight.
+%%%%
+tempered monstatus
+
+This creature's melee attacks deal 25% more damage, its accuracy is slightly
+increased, and its spells and abilities have been mildly strengthened.
+%%%%
+touched by paradox monstatus
+
+This creature has become unmoored in space, allowing it to Manifold Assault as
+a natural ability. Whenever they do, there is 33% chance they will also blink
+to a random nearby location.
+%%%%
+unable to see you monstatus
+
+This creature is unable to see you because you are invisible. Its accuracy
+against you is greatly decreased, it cannot make attacks of opportunity, and
+spells it casts may sometimes be aimed at the wrong locations.
+
+It may also stumble around and eventually lose track of you, especially if it
+has low intelligence.
+
+[[low-tier stab monstatus]]
+%%%%
+unable to translocate monstatus
+
+This creature cannot blink or teleport.
+%%%%
+unaffected by silence monstatus
+
+Despite being engulfed in unnatural silence, this creature's magic does not
+require vocalisations and thus is unaffected.
+%%%%
+unrewarding monstatus
+
+This creature provides no experience or piety when slain.
+%%%%
+untethered in space monstatus
+
+Each turn, this creature blinks a short distance further away from you and
+suffers a small amount of damage.
+%%%%
+unusually agile monstatus
+
+This creature's evasion is slightly increased.
+%%%%
+unusually resistant monstatus
+
+This creature's resistance to fire, cold, poison, electricity, and corrosion
+are all increased by one level.
+%%%%
+very poisoned monstatus
+
+This creature is poisoned and will take damage every turn.
+%%%%
+waterlogged monstatus
+
+This creature is unable to breathe and cannot cast spells or invoke divine aid.
+%%%%
+weak monstatus
+
+This creature's melee attacks deal 33% less damage.
+%%%%
+weak-willed monstatus
+
+This creature's willpower is reduced by half.
+%%%%
+winding a clockwork bee monstatus
+
+This creature is preparing to launch a clockwork bee and must focus on this
+task for several turns. Most effects that would prevent this creature from
+casting spells will also interrupt this process.
+%%%%
+withering away monstatus
+
+This creature will die in a few turns.
+## Not real statuses, but common clauses to add to some others
+%%%%
+low-tier stab monstatus
+
+<blue>Melee attacks you make against this creature have a chance (proportional to
+your stealth and weapon skill) of catching it off-guard and dealing
+increased damage, especially if made with a short blade.</blue>
+%%%%
+high-tier stab monstatus
+
+<blue>Melee attacks you make against this creature will deal greatly increased damage,
+especially if made with a short blade.</blue>
+%%%%

@@ -78,5 +78,6 @@ recommended_weapons:
   - axes
   - long blades
 
-orc_name: Phantasmorc
 walking_verb: Float
+orc_name: Phantasmorc
+orcification_msg: A small pair of spectral tusks begins to grow in your mouth.

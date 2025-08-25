@@ -31,6 +31,7 @@
 #include "evoke.h"
 #include "exclude.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "god-passive.h"
@@ -97,7 +98,6 @@ static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
 static monster* _get_allied_target(const monster &caster, bolt &tracer);
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
 static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
-static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
@@ -140,6 +140,7 @@ static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
 static ai_action::goodness _mons_likes_blinking(const monster &caster);
+static ai_action::goodness _mesmerise_is_effective(monster* mons, bool check_hearing);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
@@ -513,7 +514,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 flash_tile(you.pos(), LIGHTBLUE, 25);
                 mpr("Mutagenic energy flows into you.");
                 contaminate_player(random_range(80, 120)
-                                    + you.magic_contamination < 1000 ? 40 : 0);
+                                    + (you.magic_contamination < 1000 ? 40 : 0));
             }
             else if (coinflip())
                 foe->malmutate(&caster, "mutagenic gaze");
@@ -622,6 +623,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE, 10,
     } },
     { SPELL_DRAIN_MAGIC, _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) },
+    { SPELL_DIMINISH_SPELLS, { [](const monster &caster) {
+        const actor* foe = caster.get_foe();
+        ASSERT(foe);
+        return ai_action::good_or_impossible(foe->antimagic_susceptible()); },
+        _fire_simple_beam, _zap_setup(SPELL_DIMINISH_SPELLS),
+        MSPELL_LOGIC_NONE, 10,
+    } },
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
@@ -880,7 +888,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
 
                 if (final)
                 {
-                    bleed_onto_floor(victim->pos(), victim->type, final, true);
+                    if (victim->has_blood())
+                        blood_spray(victim->pos(), victim->type, final / 5, 2);
                     victim->hurt(&caster, final);
                 }
             }
@@ -985,6 +994,20 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             flash_tile(you.pos(), BLUE, 150, TILE_BOLT_OSTRACISE);
             ostracise_player(random_range(10, 25));
         }
+    } },
+    { SPELL_DOOMSAYING, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(!caster.props.exists(DOOMSAYING_USED_KEY)
+                                                 && !caster.wont_attack()
+                                                 && caster.see_cell_no_trans(you.pos())
+                                                 && you.visible_to(&caster));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.props[DOOMSAYING_USED_KEY] = true;
+            mprf(MSGCH_WARN, "You feel a dangerous fate closing in on you...");
+            you.attribute[ATTR_DOOM] += (100 - you.attribute[ATTR_DOOM]) / 2;
+            you.redraw_doom = true;
+        },
     } },
 };
 
@@ -1400,16 +1423,13 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
     ASSERT(foe);
 
     bool moved = false;
+    const coord_def old_pos = foe->pos();
     const int pow = mons_spellpower(caster, SPELL_BECKONING_GALE);
 
     int damage_taken = zap_damage(ZAP_BECKONING_GALE, pow, true).roll();
 
     if (you.see_cell(foe->pos()))
         flash_tile(foe->pos(), WHITE, 60, TILE_BOLT_BECKONING_GALE);
-
-    foe->hurt(&caster, foe->apply_ac(damage_taken),
-              BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
-    _whack(caster, *foe);
 
     if (!foe->is_stationary())
     {
@@ -1437,8 +1457,6 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
 
             place_cloud(CLOUD_DUST, foe->pos(), random_range(2, 3), &caster);
             foe->move_to_pos(new_foe_pos);
-            foe->apply_location_effects(new_foe_pos);
-            foe->did_deliberate_movement();
             moved = true;
         }
     }
@@ -1453,6 +1471,13 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
         mprf("A beckoning whirlwind swirls around %s.",
             foe->name(DESC_THE).c_str());
     }
+
+    foe->hurt(&caster, foe->apply_ac(damage_taken),
+              BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
+    _whack(caster, *foe);
+
+    if (foe->alive())
+        foe->apply_location_effects(old_pos);
 }
 
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
@@ -1731,8 +1756,8 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_RESISTANCE:
         return !monster.has_ench(ENCH_RESISTANCE);
 
-    case BEAM_DOUBLE_HEALTH:
-        return !monster.has_ench(ENCH_DOUBLED_HEALTH);
+    case BEAM_DOUBLE_VIGOUR:
+        return !monster.has_ench(ENCH_DOUBLED_VIGOUR);
 
     case BEAM_CONCENTRATE_VENOM:
         return !monster.has_ench(ENCH_CONCENTRATE_VENOM)
@@ -1919,6 +1944,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_CONFUSION_GAZE:
             return 8;
 
+        case SPELL_SLEETSTRIKE:
         case SPELL_CALL_DOWN_LIGHTNING:
             return 16;
 
@@ -2204,7 +2230,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BOLT_OF_FLESH:
     case SPELL_BORGNJORS_VILE_CLUTCH:
-    case SPELL_CRYSTALLIZING_SHOT:
+    case SPELL_CRYSTALLISING_SHOT:
     case SPELL_HELLFIRE_MORTAR:
     case SPELL_MAGMA_BARRAGE:
     case SPELL_SHADOW_TORPOR:
@@ -2600,6 +2626,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FULMINANT_PRISM:
     case SPELL_HELLFIRE_MORTAR:
     case SPELL_GLOOM:
+    case SPELL_SLEETSTRIKE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -2653,8 +2680,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.target = theBeam.target;
     pbolt.source = mons->pos();
     pbolt.set_is_tracer(false);
-    if (pbolt.aux_source.empty() && !pbolt.is_enchantment())
-        pbolt.aux_source = pbolt.name;
 
     return true;
 }
@@ -2953,7 +2978,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
         beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
                                                    150, BEAM_MIGHT,
-                                                   150, BEAM_DOUBLE_HEALTH,
+                                                   150, BEAM_DOUBLE_VIGOUR,
                                                    150, BEAM_RESISTANCE,
                                                     15, BEAM_VULNERABILITY,
                                                     15, BEAM_BERSERK,
@@ -3821,9 +3846,10 @@ bool _should_recall(monster* caller)
  *
  * @param mons[in] the monster doing the recall
  * @param recall_target the max number of monsters to recall.
+ * @param min_dist the minimal distance around the centre to place monsters
  * @returns whether anything was recalled.
  */
-bool mons_word_of_recall(monster* mons, int recall_target)
+bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
 {
     unsigned short num_recalled = 0;
     vector<monster* > mon_list;
@@ -3855,11 +3881,12 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     // Now actually recall things
     for (monster *mon : mon_list)
     {
-        coord_def empty;
         const bool could_see = you.can_see(*mon);
-        if (find_habitable_spot_near(target, mons_base_type(*mon),
-                                     3, empty)
-            && mon->move_to_pos(empty))
+
+        coord_def pos = find_newmons_square(mons_base_type(*mon), target,
+                            min_dist + 2, min_dist + 3, min_dist);
+
+        if (!pos.origin() && mon->move_to_pos(pos))
         {
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;
@@ -5211,6 +5238,13 @@ bool handle_mon_spell(monster* mons)
         return true;
     }
 
+    if (mons->wearing_ego(OBJ_ARMOUR, SPARM_STARDUST)
+        && !mons->has_ench(ENCH_ORB_COOLDOWN))
+    {
+        stardust_fineff::schedule(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
+                                  4 + mons->get_hit_dice() / 2);
+    }
+
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
@@ -5374,7 +5408,7 @@ static monster_type _pick_undead_summon()
 {
     static monster_type undead[] =
     {
-        MONS_NECROPHAGE, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
+        MONS_BES_KEMWAR, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
         MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_LAUGHING_SKULL,
         MONS_MUMMY, MONS_VAMPIRE, MONS_WIGHT, MONS_WRAITH, MONS_SHADOW_WRAITH,
         MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SHADOWGHAST
@@ -5717,78 +5751,169 @@ void setup_breath_timeout(monster* mons)
     mons->add_ench(breath_timeout);
 }
 
+
 /**
- * Maybe mesmerise the player.
+ * Check if a given actor could be affected by a mesmerise effect. Does not
+ * check line of sight (the caller is assumed to have already checked this).
  *
- * This function decides whether or not it is possible for the player to become
- * mesmerised by mons. It will return a variety of values depending on whether
- * or not this can succeed or has succeeded; finally, it will add mons to the
- * player's list of beholders.
+ * @param targ            The actor to check.
+ * @param only_obvious    Whether to consider only properties that would be
+ *                        'obvious' to the caster (such as the target being
+ *                        confused), while ignoring ones they could not realize,
+ *                        such as the player having Clarity.
+ * @param check_hearing   Whether the target must be able to hear the source of
+ *                        the mesmerism (ie: for Siren Song).
  *
- * @param mons      The monster doing the mesmerisation.
- * @param actual    Whether or not we are actually casting the spell. If false,
- *                  no messages are emitted.
- * @return          0 if the player could be mesmerised but wasn't, 1 if the
- *                  player was mesmerised, -1 if the player couldn't be
- *                  mesmerised.
-**/
-static int _mons_mesmerise(monster* mons, bool actual)
+ * @return 0 if the target cannot be mesmerised. 1 if they could be (and already
+ *         are). 2 if they could be (and currently are not).
+ */
+static int _mesmerise_could_affect(const monster& source,
+                                   const actor& targ,
+                                   bool only_obvious,
+                                   bool check_hearing)
 {
-    ASSERT(mons); // XXX: change to monster &mons
-    bool already_mesmerised = you.beheld_by(*mons);
-
-    if (!you.visible_to(mons)             // Don't mesmerise while invisible.
-        || (!you.can_see(*mons)           // Or if we are, and you're aren't
-            && !already_mesmerised)       // already mesmerised by us.
-        || !player_can_hear(mons->pos())  // Or if you're silenced, or we are.
-        || you.berserk()                  // Or if you're berserk.
-        || mons->has_ench(ENCH_CONFUSION) // Or we're confused,
-        || mons_is_fleeing(*mons)          // fleeing,
-        || mons->pacified()               // pacified,
-        || mons->friendly())              // or friendly!
+    if (mons_aligned(&source, &targ)
+        || targ.is_peripheral()
+        || targ.willpower() == WILL_INVULN
+        || targ.berserk()
+        || (!only_obvious && targ.clarity())
+        || (check_hearing && silenced(targ.pos())))
     {
-        return -1;
-    }
-
-    if (actual)
-    {
-        if (!already_mesmerised)
-        {
-            simple_monster_message(*mons, " attempts to bespell you!");
-            flash_view(UA_MONSTER, LIGHTMAGENTA);
-        }
-        else
-        {
-            mprf("%s draws you further into %s thrall.",
-                    mons->name(DESC_THE).c_str(),
-                    mons->pronoun(PRONOUN_POSSESSIVE).c_str());
-        }
-    }
-
-    const int pow = mons_spellpower(*mons, SPELL_MESMERISE);
-    const int will_check = you.check_willpower(mons, pow);
-
-    // Don't mesmerise if you pass an WL check or have clarity.
-    // If you're already mesmerised, you cannot resist further.
-    if ((will_check > 0 || you.clarity()
-         || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
-    {
-        if (actual)
-        {
-            if (you.clarity())
-                canned_msg(MSG_YOU_UNAFFECTED);
-            else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
-                canned_msg(MSG_YOU_RESIST);
-            else
-                mprf("You%s", you.resist_margin_phrase(will_check).c_str());
-        }
-
         return 0;
     }
 
-    you.add_beholder(*mons);
+    if (const monster* mon = targ.as_monster())
+    {
+        if (mon->has_ench(ENCH_DAZED))
+            return 1;
+        else
+            return 2;
+    }
+    else
+    {
+        if (!only_obvious && you.duration[DUR_MESMERISE_IMMUNE])
+            return 0;
 
-    return 1;
+        if (check_hearing && !player_can_hear(source.pos()))
+            return 0;
+
+        // Note: even mesmerising a player in the middle of this doesn't stop
+        //       them leaving, but the messages look a little wierder.
+        if (player_stair_delay())
+            return 0;
+
+        if (you.beheld_by(source))
+            return 1;
+        else
+            return 2;
+    }
+}
+
+static ai_action::goodness _mesmerise_is_effective(monster* mons,
+                                                   bool check_hearing)
+{
+    int effectiveness = 0;
+    for (actor_near_iterator ai(mons->pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        int check = _mesmerise_could_affect(*mons, **ai, true, check_hearing);
+        effectiveness = max(effectiveness, check);
+    }
+
+    // Attempt to mesmerise half as often if all targets in our range are
+    // already mesmerised.
+    if (effectiveness == 2 || (effectiveness == 1 && coinflip()))
+        return ai_action::good();
+
+    return ai_action::bad();
+}
+
+// Actually attempt to mesmerise all valid enemies in LoS.
+static void _mesmerise_los(monster& agent, int power, bool check_hearing)
+{
+    for (actor_near_iterator ai(agent.pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        // This duplicates some of _mesmerise_could_affect, but we want to
+        // print immunity messages for other types of immunity.
+        if (mons_aligned(&agent, *ai) || ai->is_peripheral())
+            continue;
+
+        if (!_mesmerise_could_affect(agent, **ai, false, check_hearing))
+        {
+            if (ai->is_player())
+                canned_msg(MSG_YOU_UNAFFECTED);
+            else
+                simple_monster_message(*ai->as_monster(), " is unaffected.");
+
+            continue;
+        }
+
+        const int resist = ai->check_willpower(&agent, power);
+
+        // Once mesmerised by a particular monster, you cannot resist anymore.
+        bool already_mesmerised = ai->is_player() ? you.beheld_by(agent)
+                                    : ai->as_monster()->has_ench(ENCH_DAZED);
+
+        if (resist > 0 && !already_mesmerised)
+        {
+            mprf("%s%s", ai->name(DESC_THE).c_str(), ai->resist_margin_phrase(resist).c_str());
+            continue;
+        }
+
+        if (ai->is_player())
+            you.add_beholder(agent);
+        else
+        {
+            monster* mons = ai->as_monster();
+            if (you.can_see(*mons))
+            {
+                if (mons->has_ench(ENCH_DAZED))
+                    mprf("%s trance deepens.", mons->name(DESC_ITS).c_str());
+                else
+                    mprf("%s is mesmerised by %s!", mons->name(DESC_THE).c_str(), agent.name(DESC_THE).c_str());
+            }
+
+            if (!mons->has_ench(ENCH_DAZED))
+                mons->add_ench(mon_enchant(ENCH_DAZED, 0, &agent, random_range(50, 90)));
+            else
+            {
+                mon_enchant dazed = mons->get_ench(ENCH_DAZED);
+                dazed.duration = min(120, random_range(50, 90));
+                mons->update_ench(dazed);
+            }
+        }
+    }
+}
+
+/**
+ * Maybe mesmerise the player and hostile monsters in LoS
+ *
+ * @param mons      The monster doing the mesmerisation.
+**/
+static void _mons_mesmerise(monster& mons)
+{
+    const msg_channel_type ch = (mons.friendly() ? MSGCH_FRIEND_SPELL
+                                                 : MSGCH_MONSTER_SPELL);
+    const bool already_mesmerised = you.beheld_by(mons);
+
+    string targ_msg = !mons_aligned(&mons, &you) ? "you"
+                : make_stringf("%s enemies", mons.pronoun(PRONOUN_POSSESSIVE).c_str());
+
+    if (!already_mesmerised)
+    {
+        if (you.see_cell(mons.pos()))
+        {
+            mprf(ch, "%s attempts to bespell %s!", mons.name(DESC_THE).c_str(), targ_msg.c_str());
+            flash_view(UA_MONSTER, LIGHTMAGENTA);
+        }
+    }
+    else
+    {
+        mprf(ch, "%s draws you further into %s thrall.",
+                mons.name(DESC_THE).c_str(),
+                mons.pronoun(PRONOUN_POSSESSIVE).c_str());
+    }
+
+    _mesmerise_los(mons, mons_spellpower(mons, SPELL_MESMERISE), false);
 }
 
 static ai_action::goodness _should_irradiate(const monster &mons)
@@ -7264,6 +7389,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     ASSERT(map_bounds(pbolt.target) || !(flags & spflag::targeting_mask));
 
     if (spell_cast == SPELL_PORTAL_PROJECTILE
+        || spell_cast == SPELL_MESMERISE
         || logic && (logic->flags & MSPELL_NO_AUTO_NOISE))
     {
         do_noise = false;       // Spell itself does the messaging.
@@ -7311,17 +7437,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_AIRSTRIKE:
+    case SPELL_SLEETSTRIKE:
     {
-        pbolt.flavour = BEAM_AIR;
+        pbolt.flavour = spell_cast == SPELL_SLEETSTRIKE ? BEAM_AIR : BEAM_ICE;
 
         int empty_space = 0;
         ASSERT(foe);
         for (adjacent_iterator ai(foe->pos()); ai; ++ai)
-            if (!monster_at(*ai) && !cell_is_solid(*ai))
+            if (!actor_at(*ai) && !cell_is_solid(*ai))
                 empty_space++;
 
-        int damage_taken = empty_space * 2
-                         + random2avg(2 + div_rand_round(splpow, 7), 2);
+        const int space_factor = spell_cast == SPELL_SLEETSTRIKE ? 3 : 2;
+        int damage_taken = empty_space * space_factor
+                                + base_airstrike_damage(splpow, false).roll();
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
 
         damage_taken = foe->apply_ac(damage_taken);
@@ -7330,17 +7458,37 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             tileidx_t tile = TILE_BOLT_DEFAULT_WHITE;
 
-            mprf("%s and strikes %s%s",
+            mprf("%s and strikes %s%s%s",
                  airstrike_intensity_display(empty_space, tile).c_str(),
                  foe->name(DESC_THE).c_str(),
+                 spell_cast == SPELL_SLEETSTRIKE ? " with frigid sleet" : "",
                  attack_strength_punctuation(damage_taken).c_str());
 
             flash_tile(foe->pos(), WHITE, 60, tile);
         }
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
-                  "", "by the air");
+                  "", spell_cast == SPELL_SLEETSTRIKE ? "by frigid sleet"
+                                                      : "by the air");
         _whack(*mons, *foe);
+
+        if (spell_cast == SPELL_SLEETSTRIKE && foe->alive())
+        {
+            if (foe->is_player() && !you.duration[DUR_FROZEN])
+            {
+                mprf(MSGCH_WARN, "You are encased in ice.");
+                you.duration[DUR_FROZEN] = (random_range(5, 8)) * BASELINE_DELAY;
+            }
+            else if (monster* monfoe = foe->as_monster())
+            {
+                if (!monfoe->has_ench(ENCH_FROZEN))
+                {
+                    simple_monster_message(*monfoe, " is flash-frozen.");
+                    monfoe->add_ench(mon_enchant(ENCH_FROZEN, 0, mons));
+                }
+            }
+        }
+
         return;
     }
 
@@ -7708,7 +7856,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MESMERISE:
-        _mons_mesmerise(mons);
+        _mons_mesmerise(*mons);
         return;
 
     case SPELL_CAUSE_FEAR:
@@ -8969,54 +9117,7 @@ static void _maybe_throw_ally(const monster &mons)
 }
 
 /**
- * Check if a siren or merfolk avatar should sing its song.
- *
- * @param mons   The singing monster.
- * @param avatar Whether to use the more powerful "avatar song".
- * @return       Whether the song should be sung.
- */
-static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
-{
-    // Don't behold observer in the arena.
-    if (crawl_state.game_is_arena())
-        return ai_action::impossible();
-
-    // Don't behold player already half down or up the stairs.
-    if (player_stair_delay())
-    {
-        dprf("Taking stairs, don't mesmerise.");
-        return ai_action::impossible();
-    }
-
-    // Won't sing if either of you silenced, or it's friendly,
-    // confused, fleeing, or leaving the level.
-    if (mons->has_ench(ENCH_CONFUSION)
-        || mons_is_fleeing(*mons)
-        || mons->pacified()
-        || mons->friendly()
-        || !player_can_hear(mons->pos()))
-    {
-        return ai_action::bad();
-    }
-
-    // Don't even try on berserkers. Sirens know their limits.
-    // (merfolk avatars should still sing since their song has other effects)
-    if (!avatar && you.berserk())
-        return ai_action::bad();
-
-    // If the mer is trying to mesmerise you anew, only sing half as often.
-    if (!you.beheld_by(*mons) && mons->foe == MHITYOU && you.can_see(*mons)
-        && coinflip())
-    {
-        return ai_action::bad();
-    }
-
-    // We can do it!
-    return ai_action::good();
-}
-
-/**
- * Have a monster attempt to cast Doom Howl.
+ * Have a monster attempt to cast Oblivion Howl.
  *
  * @param mon   The howling monster.
  */
@@ -9042,7 +9143,9 @@ static void _oblivion_howl(monster &mon)
 }
 
 /**
- * Have a siren or merfolk avatar attempt to mesmerize the player.
+ * Have a siren or merfolk avatar attempt to sing, potentially mesmerising the
+ * player, dazing hostile monsters in LoS, and maybe even attracting some
+ * drowned souls.
  *
  * @param mons   The singing monster.
  * @param avatar Whether to use the more powerful "avatar song".
@@ -9050,7 +9153,7 @@ static void _oblivion_howl(monster &mon)
 static void _siren_sing(monster* mons, bool avatar)
 {
     const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
-                                                       : MSGCH_MONSTER_SPELL);
+                                                   : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(*mons);
 
     noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid);
@@ -9071,32 +9174,9 @@ static void _siren_sing(monster* mons, bool avatar)
                           already_mesmerised ? "a luring song" :
                           coinflip()         ? "a haunting song"
                                              : "an eerie melody");
-
-        // If you're already mesmerised by an invisible siren, it
-        // can still prolong the enchantment.
-        if (!already_mesmerised)
-            return;
     }
 
-    // power is the same for siren & avatar song, so just use siren
-    const int pow = mons_spellpower(*mons, SPELL_SIREN_SONG);
-    const int willpower = you.check_willpower(mons, pow);
-
-    // Once mesmerised by a particular monster, you cannot resist anymore.
-    if (you.duration[DUR_MESMERISE_IMMUNE]
-        || !already_mesmerised
-           && (willpower > 0 || you.clarity()))
-    {
-        if (you.clarity())
-            canned_msg(MSG_YOU_UNAFFECTED);
-        else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
-            canned_msg(MSG_YOU_RESIST);
-        else
-            mprf("You%s", you.resist_margin_phrase(willpower).c_str());
-        return;
-    }
-
-    you.add_beholder(*mons);
+    _mesmerise_los(*mons, mons_spellpower(*mons, SPELL_SIREN_SONG), true);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -9104,6 +9184,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 {
     actor *foe = mon->get_foe();
     const bool friendly = mon->friendly();
+
+    if (get_spell_flags(spell) & spflag::dummy)
+        return ai_action::impossible();
 
     if (!foe && (get_spell_flags(spell) & spflag::targeting_mask))
         return ai_action::impossible();
@@ -9306,12 +9389,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::impossible();
 
     case SPELL_MESMERISE:
-        // Don't spam mesmerisation if you're already mesmerised
-        // TODO: is this really the right place for randomization like this?
-        // or is there a better way to handle repeated mesmerise? Long-run:
-        // the goodness should be lower in this case which would prioritize
-        // better actions, if actions were calculated comparatively.
-        return ai_action::good_or_bad(!you.beheld_by(*mon) || coinflip());
+        return _mesmerise_is_effective(mon, false);
 
     case SPELL_DISCHARGE:
         // TODO: possibly check for friendlies nearby?
@@ -9469,10 +9547,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(can_cast_malign_gateway());
 
     case SPELL_SIREN_SONG:
-        return _siren_goodness(mon, false);
-
-    case SPELL_AVATAR_SONG:
-        return _siren_goodness(mon, true);
+        return _mesmerise_is_effective(mon, true);
 
     case SPELL_REPEL_MISSILES:
         return ai_action::good_or_impossible(!mon->has_ench(ENCH_REPEL_MISSILES));

@@ -72,8 +72,8 @@ public class SDLActivity extends AppCompatActivity {
     protected static boolean fullScreen;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
-    protected static boolean mScreenExtraKeyboardShown;
     protected static ViewGroup mLayout;
+    protected static LinearLayout keyboardsLayout;
     protected static SDLClipboardHandler mClipboardHandler;
 
     // This is what SDL runs in. It invokes SDL_main(), eventually
@@ -151,6 +151,7 @@ public class SDLActivity extends AppCompatActivity {
         fullScreen = true;
         mTextEdit = null;
         mLayout = null;
+        keyboardsLayout = null;
         mClipboardHandler = null;
         mSDLThread = null;
         mExitCalledFromJava = false;
@@ -162,7 +163,6 @@ public class SDLActivity extends AppCompatActivity {
         mCurrentNativeState = NativeState.INIT;
         // CRAWL HACK: Custom keyboard
         mScreenKeyboardShown = false;
-        mScreenExtraKeyboardShown = false;
     }
 
     // Setup
@@ -238,26 +238,29 @@ public class SDLActivity extends AppCompatActivity {
         Log.i(TAG, "Full screen: " + fullScreen);
 
         mLayout = new RelativeLayout(this);
+        mLayout.setFitsSystemWindows(true);
         mLayout.setBackgroundColor(getResources().getColor(R.color.black));
         mSurface = new SDLSurface(getApplication());
         mKeyboard = new DCSSKeyboard(this);
+        mKeyboard.setVisibility(View.INVISIBLE);
         mKeyboard.initKeyboard(keyboardOption, keyboardSize);
         mKeyboardExtra = new DCSSKeyboardExtra(this);
+        mKeyboardExtra.setVisibility(View.INVISIBLE);
         mKeyboardExtra.initKeyboard(extraKeyboardOption, keyboardSize);
 
         // Add the SDLSurface to the main layout aligned top
         RelativeLayout.LayoutParams sdlLParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         sdlLParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         mSurface.setLayoutParams(sdlLParams);
         mLayout.addView(mSurface);
 
         // Main keyboard at the bottom and extra keyboard at the top
-        LinearLayout keyboardsLayout = new LinearLayout(this);
+        keyboardsLayout = new LinearLayout(this);
         keyboardsLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams extraKeyLParams = new LinearLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        if (extraKeyboardOption == 3 || extraKeyboardOption == 4) {
+        if (extraKeyboardOption == 0 || extraKeyboardOption >= 3) {
             // Space between keyboards
             Space space = new Space(this);
             LinearLayout.LayoutParams spaceLParams = new LinearLayout.LayoutParams(
@@ -270,7 +273,7 @@ public class SDLActivity extends AppCompatActivity {
         }
         mKeyboardExtra.setLayoutParams(extraKeyLParams);
         keyboardsLayout.addView(mKeyboardExtra);
-        if (keyboardOption == 0 || keyboardOption == 1) {
+        if (keyboardOption <= 1) {
             LinearLayout.LayoutParams mainKeyLParams = new LinearLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             mKeyboard.setLayoutParams(mainKeyLParams);
@@ -284,45 +287,6 @@ public class SDLActivity extends AppCompatActivity {
         keyboardsLayout.setLayoutParams(keyLParams);
         mLayout.addView(keyboardsLayout);
         setContentView(mLayout);
-
-        // Calculate SDL Surface height
-        mLayout.addOnLayoutChangeListener(
-                (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-
-            if (mScreenKeyboardShown) {
-                if (mKeyboard.getVisibility() != View.VISIBLE || oldBottom != mLayout.getHeight()) {
-                    mKeyboard.setVisibility(View.VISIBLE);
-                    ViewGroup.LayoutParams lParams = mSurface.getLayoutParams();
-                    if (keyboardOption == 0) {
-                        lParams.height = mLayout.getHeight() - mKeyboard.getHeight();
-                    } else {
-                        lParams.height = mLayout.getHeight();
-                    }
-                    mSurface.setLayoutParams(lParams);
-                }
-            }
-            else {
-                if (mKeyboard.getVisibility() != View.INVISIBLE || oldBottom != mLayout.getHeight()) {
-                    mKeyboard.setVisibility(View.INVISIBLE);
-                    ViewGroup.LayoutParams lParams = mSurface.getLayoutParams();
-                    lParams.height = mLayout.getHeight();
-                    mSurface.setLayoutParams(lParams);
-                }
-            }
-
-            if (mScreenExtraKeyboardShown) {
-                mKeyboardExtra.setVisibility(View.VISIBLE);
-            } else {
-                mKeyboardExtra.setVisibility(View.INVISIBLE);
-            }
-
-            // Init the TextEdit
-            // Transfer the task to the main thread as a Runnable
-            // Delay the initialization if using the soft keyboard
-            if (keyboardOption != 2) {
-                mSingleton.commandHandler.post(new ShowTextInputTask(left, top, right, bottom));
-            }
-        });
         // CRAWL HACK: Custom keyboard (END)
 
         // Get filename from "Open with" of another application
@@ -366,9 +330,6 @@ public class SDLActivity extends AppCompatActivity {
         }
 
         SDLActivity.handleNativeState();
-
-        // CRAWL HACK: Force screen update
-        updateScreen();
     }
 
     @Override
@@ -575,6 +536,7 @@ public class SDLActivity extends AppCompatActivity {
     static final int COMMAND_UNUSED = 2;
     static final int COMMAND_TEXTEDIT_HIDE = 3;
     static final int COMMAND_SET_KEEP_SCREEN_ON = 5;
+    static final int COMMAND_UPDATE_KEYBOARD_VISIBILITY = 10;
 
     protected static final int COMMAND_USER = 0x8000;
 
@@ -634,6 +596,33 @@ public class SDLActivity extends AppCompatActivity {
                         } else {
                             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         }
+                    }
+                }
+                break;
+            }
+            case COMMAND_UPDATE_KEYBOARD_VISIBILITY:
+            {
+                Log.v(TAG, "command update keyboard visibility");
+                if (context instanceof Activity) {
+                    if (mScreenKeyboardShown && keyboardOption < 2) {
+                        mKeyboard.setVisibility(View.VISIBLE);
+                    } else {
+                        mKeyboard.setVisibility(View.GONE);
+                    }
+                    if (mScreenKeyboardShown && extraKeyboardOption > 0) {
+                        mKeyboardExtra.setVisibility(View.VISIBLE);
+                    } else {
+                        mKeyboardExtra.setVisibility(View.GONE);
+                    }
+                    // Update SDL Surface heigh
+                    if (keyboardOption == 0) {
+                        ViewGroup.LayoutParams lParams = mSurface.getLayoutParams();
+                        if (mScreenKeyboardShown) {
+                            lParams.height = keyboardsLayout.getHeight() - mKeyboard.getHeight();
+                        } else {
+                            lParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        }
+                        mSurface.setLayoutParams(lParams);
                     }
                 }
                 break;
@@ -829,41 +818,38 @@ public class SDLActivity extends AppCompatActivity {
      * This method is called by SDL using JNI.
      */
     public static boolean showTextInput(int x, int y, int w, int h) {
-        // CRAWL HACK: Task already created on layout update
-        return true;
         // Transfer the task to the main thread as a Runnable
-        //return mSingleton.commandHandler.post(new ShowTextInputTask(x, y, w, h));
+        return mSingleton.commandHandler.post(new ShowTextInputTask(x, y, w, h));
     }
 
     // CRAWL HACK: Function used to toggle the keyboard
     // This method is called using JNI
-    public static boolean jniKeyboardControl(boolean toggle) {
-        Log.i(TAG, "jniKeyboardControl. Toggle = " + toggle);
-        // Custom keyboards
-        if (extraKeyboardOption > 0 && !toggle) {
-            mScreenExtraKeyboardShown = true;
+    public static boolean jniKeyboardControl(int action) {
+        Log.i(TAG, "jniKeyboardControl. Action = " + action);
+        if (action == 0) { // Hide keyboard
+            mScreenKeyboardShown = false;
+        } else if (action == 1) { // Show keyboard
+            mScreenKeyboardShown = true;
+        } else if (action == 2) { // Toggle keyboard
+            mScreenKeyboardShown = !mScreenKeyboardShown;
         }
-        if (keyboardOption == 0 || keyboardOption == 1) {
-            if (toggle) {
-                mScreenKeyboardShown = !mScreenKeyboardShown;
-            } else {
-                mScreenKeyboardShown = true;
-            }
-            return mScreenKeyboardShown;
-        }
-        // System keyboard
-        if (keyboardOption == 2) {
+        mSingleton.sendCommand(COMMAND_UPDATE_KEYBOARD_VISIBILITY, null);
+        // This function always shows the system keyboard, it can be hidden with the back key
+        if (keyboardOption == 2 && action > 0) {
             mSingleton.commandHandler.post(new ShowTextInputTask((int)mSurface.getX(), (int)mSurface.getY(), mSurface.getWidth(), mSurface.getHeight()));
         }
-        return false;
+        return mScreenKeyboardShown;
     }
 
     // CRAWL HACK: Function to force a screen update
     public static void updateScreen() {
-        SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_CTRL_LEFT);
-        SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_R);
-        SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_R);
-        SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_CTRL_LEFT);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+            SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_CTRL_LEFT);
+            SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_R);
+            SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_R);
+            SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_CTRL_LEFT);
+        }, 1000);
     }
 
     public static boolean isTextInputEvent(KeyEvent event) {
@@ -1421,7 +1407,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 
         SDLActivity.handleNativeState();
 
-        // CRAWL HACK: Force screen update
+        // CRAWL HACK: Update SDL Surface heigh
+        SDLActivity.mSingleton.sendCommand(SDLActivity.COMMAND_UPDATE_KEYBOARD_VISIBILITY, null);
         SDLActivity.updateScreen();
     }
 

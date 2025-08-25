@@ -905,8 +905,7 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 any scroll w:20 / potion of haste / \
                 potion of heal wounds / any potion w:20
-KITEM:      e = any beam wand / any blast wand / \
-                ring of fire / ring of ice / randbook disc:summoning
+KITEM:      e = any beam wand / any blast wand / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 / \
                 any randart jewellery w:5 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
@@ -1288,7 +1287,7 @@ ITEM:       protean talisman randart / maw talisman randart / \
             serpent talisman randart / statue talisman w:8 / \
             dragon-coil talisman / storm talisman w:8 / \
             talisman of death w:2
-ITEM:       staff of death pre_id, scroll of poison pre_id
+ITEM:       staff of necromancy pre_id, scroll of poison pre_id
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
@@ -1526,7 +1525,7 @@ KPROP:      'def$123L+ = no_tele_into
 COLOUR:     "W = lightmagenta
 COLOUR:     t = brown
 TILE:       W = dngn_zonguldrok_shrine
-TILE:       c = wall_stone_gray
+TILE:       c = wall_stone_shrine
 TILE:       t = dngn_tree_dead
 FTILE:      " = floor_nerves_darkgray
 LFLOORCOL:  darkgrey
@@ -2080,7 +2079,7 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
 TILE:       G = dngn_statue_archer / dngn_statue_centaur w:5
 LROCKTILE:  wall_brick_vines
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 : decorative_floor(_G, 'L', "flower patch")
 : set_random_mon_list("deep elf archer / faun / centaur warrior / yaktaur / " ..
 :                     " satyr / naga sharpshooter / shambling mangrove / " ..
@@ -2158,9 +2157,9 @@ MONS:       ironbound thunderhulk ; great mace ego:electrocution
 MONS:       patrolling electric golem
 KMONS:      P = lightning spire
 KMONS:      M = ironbound mechanist
-ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
-            boots ego:rampaging randart / ring of fire randart /\
-            any armour good_item ego:ponderous randart / ring of ice randart /\
+ITEM:       scarf ego:harm randart w:25 / boots ego:rampaging w:25 /\
+            boots ego:rampaging randart /\
+            any armour good_item ego:ponderous randart /\
             plate armour good_item ego:ponderousness / any weapon ego:chaos /\
             maxwell's patent armour w:2 / maxwell's thermic engine w:2
 ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
@@ -2173,13 +2172,14 @@ SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
 NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
 NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
-TILE:       v = dngn_metal_wall_cyan
+TILE:       v = metal_wall_workshop
 :           vault_metal_statue_setup(_G, "Z", "nascence circuit")
 :           set_random_mon_list(
 :               "earth elemental / molten gargoyle / thermic dynamo / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
+LFLOORTILE: floor_metal_silver
 epilogue {{
             wizlab_milestone(_G, "Maxwell's Workshop")
 }}
@@ -2283,10 +2283,12 @@ ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
 KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
 KFEAT:  ^ = archmage's trap
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
-NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
+NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3`, A = 1:< / *:A, C = 3 = C.. / *:.
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
 FTILE:  125.^C*de$GS+ = floor_limestone
-FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
+FTILE:  T`PA<34 = floor_dirt
+FTILE:  " = floor_grass
+FTILE:  t = floor_pebble_lightgreen
 TILE:   c = wall_church
 LROCKTILE: wall_brick
 :           vault_metal_statue_setup(_G, "S", "misfortune conduit")
@@ -2308,36 +2310,36 @@ MAP
           c...+5........5+...ctt
      ttt  ccccc...1..1...ccccc3tt
   tttt""""""""cc........cc""""""tt
- tt"""..1....11ccc....ccc"""""3""tt
+ tt"""..1....11ccc....ccc"""`"3""tt
 tt""..xxxx.......cc++cc111"""T"""3t
-t".11xx.....11....1..1....""""3""tt
+t".11xx.....11....1..1....""`"3""tt
 t".1xx.11.xx.............1xx"""ttt
-t".xx..1.xx...1.xxt""txx..1xxttt
-t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
-t"1x...xx.....xx"3""""3"xx.....11......11c
-t".x...x.....xx"""c""c"""xx...^..^.....^.c
-t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
-t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
-t".........."""c"PWWWWP"c"".x.^""""""""^.c
-t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
-cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
-c*Cc..cC*ctt"""c"PWWWWP"c""x..^""""""""^.c
-cE.+..+.Ec-t""""c"PWWP"c"""x...cD""D"Dc..c
-ccccE.cccc-t""""""""""""""txt..cc"cc"cc..c
-cE.+..+CEc-t""""""c33c""""---.^.....^..^.c
+t".xx..1.xx...1.xxt``txx..1xxttt
+t".xx..1xx...1.xx`3``3`xx...xxcccccccccccc
+t"1x...xx.....xx`3````3`xx.....11......11c
+t".x...x.....xx"``c``c``"xx...^..^.....^.c
+t".x11.x..t..x""c``33``c""xx...cc`cc`cc..c
+t".t...t..t..t""``PWWP``""txx..cD"D""Dc..c
+t".........."""c`PWWWWP`c"".x.^`""""""`^.c
+t"1....11.t."""c`WWWWWW`c""....c""cc"Dc.1c
+cccc++cccct.""""`WWWWWW`"""t...cD"cc""c.1c
+c*Cc..cC*ctt"""c`PWWWWP`c""x..^`""""""`^.c
+cE.+..+.Ec-t""""c`PWWP`c"""x...cD""D"Dc..c
+ccccE.cccc-t""""````````""txt..cc`cc`cc..c
+cE.+..+CEc-t"""""`c33c`"""---.^.....^..^.c
 c*Cc^.cE*c---"""""t""t""""---..11......11c
 ccccE^cccc  --"""tt""tt"""--cccccccccccccc
 c*Cc^.cE*c   --"""t""t"""--
 cEE+..+CEc    --""""""""--
 cccc.Ecccc     --""""""--
-cE.+..+CEc      --""""--
-c*Cc.EcE*c       -G""G-
-cccccccccc      --""""--
+cE.+..+CEc      --````--
+c*Cc.EcE*c       -G``G-
+cccccccccc      --````--
                --""""""--
-               t""A""A""t
                t""""""""t
-               --""""""--
-                --T""T--
+               t""""""""t
+               --A""""A--
+                --T``T--
                  ------
 ENDMAP
 
@@ -2359,7 +2361,7 @@ MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
 MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-         necronomicon / randbook disc:necromancy / staff of death w:5 /\
+         necronomicon / randbook disc:necromancy / staff of necromancy w:5 /\
          sanguine talisman / macabre finger necklace w:1 /\
          sceptre of torment w:1
 : local p = "good_item ego:pain w:3"

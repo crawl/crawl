@@ -35,6 +35,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dlua.h"
+#include "duration-data.h"
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
@@ -64,6 +65,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
@@ -128,6 +130,7 @@ static bool _force_allow_explore();
 static species_type _str_to_species(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
 static pair<text_pattern,string> _slot_mapping(const string &s);
+static pair<string, char> _consumable_mapping(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -472,6 +475,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(warn_contam_cost), false),
         new BoolGameOption(SIMPLE_NAME(show_resist_percent), true),
+        new BoolGameOption(SIMPLE_NAME(always_show_doom_contam), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -546,6 +550,7 @@ const vector<GameOption*> game_options::build_options_list()
                         set_menu_sort(frag);
             }),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
+        new BoolGameOption(SIMPLE_NAME(show_paged_inventory), false),
         new MultipleChoiceGameOption<slot_select_mode>(
             SIMPLE_NAME(assign_item_slot),
             SS_FORWARD,
@@ -554,6 +559,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
+        new ListGameOption<string>(ON_SET_NAME(explore_auto_rest_status),
+            {"all_negative", "all_cooldown", "contam"}, false,
+            [this]() { update_explore_auto_rest_status(); }),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -592,7 +600,8 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
             ),
 
-        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true,
+                                         {[this]() { process_unusual_items(); }}),
 
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
@@ -703,8 +712,10 @@ const vector<GameOption*> game_options::build_options_list()
             {"message_colour", "message_color"}, {}, true),
         new ListGameOption<colour_mapping>(menu_colour_mappings,
             {"menu_colour", "menu_color"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_item_letters,
-            {"item_slot"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_gear_letters,
+            {"gear_slot"}, {}, true),
+        new ListGameOption<pair<string, char>, OPTFUN(_consumable_mapping)>(auto_consumable_letters,
+            {"consumable_shortcut"}, {}, true, {[this]() { update_consumable_shortcuts(); }}),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_spell_letters,
             {"spell_slot"}, {}, true),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_ability_letters,
@@ -890,7 +901,7 @@ const vector<GameOption*> game_options::build_options_list()
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
         new ListGameOption<string>(SIMPLE_NAME(tile_player_status_icons),
-            split_string(",", "slow, fragile, constr, will/2")),
+            split_string(",", "slow, fragile, constr, will/2, mark")),
         new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
@@ -2207,6 +2218,7 @@ static const char* config_defaults[] =
     "defaults/glyph_colours.txt",
     "defaults/messages.txt",
     "defaults/misc.txt",
+    "defaults/consumable_shortcuts.txt",
 };
 
 void base_game_options::reset_loaded_state()
@@ -3084,6 +3096,63 @@ void game_options::update_travel_terrain()
     }
 }
 
+void game_options::update_consumable_shortcuts()
+{
+    potion_shortcuts.init(0);
+    scroll_shortcuts.init(0);
+    evokable_shortcuts.init(0);
+
+    for (const auto& entry : auto_consumable_letters)
+    {
+        item_kind kind = item_kind_by_name(entry.first);
+        if (kind.base_type == OBJ_UNASSIGNED)
+        {
+            report_error("Unknown consumable type: %s\n", entry.first.c_str());
+            continue;
+        }
+
+        if (kind.base_type == OBJ_POTIONS)
+            potion_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_SCROLLS)
+            scroll_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_WANDS)
+            evokable_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_MISCELLANY)
+            evokable_shortcuts[kind.sub_type + NUM_WANDS] = entry.second;
+        else if (kind.base_type == OBJ_BAUBLES)
+            evokable_shortcuts[kind.sub_type + NUM_WANDS + NUM_MISCELLANY] = entry.second;
+    }
+}
+
+// Extract 'vulnerable brand' options from unusual_monster_items
+void game_options::process_unusual_items()
+{
+    for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
+    {
+        text_pattern& pattern = unusual_monster_items[i];
+        string str = pattern.tostring();
+
+        if (!starts_with(str, "vulnerable:"))
+            continue;
+
+        vector<string> splits = split_string(":", str, true, true, -1, true);
+
+        if (splits.size() >= 2)
+        {
+            int brand = str_to_ego(OBJ_WEAPONS, splits[1]);
+            if (brand <= 0)
+                continue;
+
+            int xl = 27;
+            if (splits.size() >= 3)
+                parse_int(splits[2].c_str(), xl);
+
+            vulnerable_brand_warning.push_back({static_cast<brand_type>(brand), xl});
+        }
+
+        unusual_monster_items.erase(unusual_monster_items.begin() + i);
+    }
+}
 
 void game_options::update_use_animations()
 {
@@ -3178,6 +3247,57 @@ void game_options::update_explore_greedy_visit_conditions()
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
     explore_greedy_visit = conditions;
+}
+
+void game_options::update_explore_auto_rest_status()
+{
+    set<duration_type> durs;
+    explore_auto_rest_contam = false;
+
+    for (const auto& str : explore_auto_rest_status_option)
+    {
+        if (str == "all_negative")
+        {
+            const vector<duration_type> neg = all_duration_with_flag(D_NEGATIVE);
+            durs.insert(neg.begin(), neg.end());
+        }
+        else if (str == "all_cooldown")
+        {
+            const vector<duration_type> cooldown = all_duration_with_flag(D_COOLDOWN);
+            durs.insert(cooldown.begin(), cooldown.end());
+        }
+        else if (str == "contam")
+            explore_auto_rest_contam = true;
+        else
+        {
+            string str_nospace = lowercase_string(str);
+            remove_whitespace(str_nospace);
+
+            bool invert = false;
+            if (!str_nospace.empty() && str_nospace[0] == '*')
+            {
+                invert = true;
+                str_nospace = str_nospace.substr(1);
+            }
+
+            duration_type dur = duration_by_name(str_nospace);
+
+            if (dur == NUM_DURATIONS)
+                continue;
+
+            if (invert)
+                durs.erase(dur);
+            else
+                durs.insert(dur);
+        }
+    }
+
+    // Erase effects that do not expire with time in general.
+    durs.erase(DUR_HORROR);
+    durs.erase(DUR_MESMERISED);
+    durs.erase(DUR_AFRAID);
+
+    explore_auto_rest_status.assign(durs.begin(), durs.end());
 }
 
 message_filter::message_filter(const string &filter)
@@ -3310,6 +3430,18 @@ static pair<text_pattern,string> _slot_mapping(const string &s)
     return make_pair(text_pattern(thesplit[0], true), thesplit[1]);
 }
 
+static pair<string, char> _consumable_mapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, false, 1);
+    if (thesplit.size() != 2)
+    {
+        mprf(MSGCH_ERROR, "Error parsing consumable mapping: '%s'\n",
+                            s.c_str());
+        return make_pair("", '-'); // pattern is marked as invalid
+    }
+    return make_pair(thesplit[0], thesplit[1][0]);
+}
+
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
 void game_options::set_menu_sort(const string &field)
@@ -3321,7 +3453,8 @@ void game_options::set_menu_sort(const string &field)
     {
         sort_menus.clear();
         set_menu_sort("pickup: true");
-        set_menu_sort("inv: true : equipped, charged");
+        set_menu_sort("inv: true : equipped, charged, identified, usefulness, slot");
+        set_menu_sort("drop: true : equipped, charged, identified, usefulness, slot");
         return;
     }
 
@@ -5337,6 +5470,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("glyph_mode_font_size", glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", show_game_time);
+    tiles.json_write_bool("always_show_doom_contam", always_show_doom_contam);
 
     // TODO: convert action_panel_show into a yes/no/never option. It would be
     // better to have a more straightforward way of disabling the panel

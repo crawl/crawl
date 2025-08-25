@@ -22,6 +22,7 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "fineff.h"
 #include "god-conduct.h"
@@ -595,7 +596,7 @@ void melee_attack::try_parry_disarm()
         && defender->is_monster()
         && defender->alive()
         && you.rev_percent() > FULL_REV_PERCENT
-        && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_PARRYREV)
+        && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD)
         && one_chance_in(50 + defender->get_experience_level() * 2
                          - you.get_experience_level()))
     {
@@ -701,6 +702,42 @@ static void _apply_flux_contam(monster &m)
     }
     else if (above_warning && energy < FLUX_ENERGY_WARNING)
         mprf(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");
+}
+
+void melee_attack::maybe_do_mesmerism()
+{
+    // Check if the effect is valid.
+    if (!defender->wearing_ego(OBJ_ARMOUR, SPARM_MESMERISM))
+        return;
+
+    if (defender->is_player() && you.duration[DUR_MESMERISM_COOLDOWN])
+        return;
+    else if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_ORB_COOLDOWN))
+        return;
+
+    const int radius = defender->is_player() ? mesmerism_orb_radius() : 3;
+    const int max_dur = defender->is_player() ? 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 5)
+                                              : 3 + defender->get_hit_dice() / 4;
+
+    mprf("%s orb emites a pulse of dizzying energy.", defender->name(DESC_ITS).c_str());
+    draw_ring_animation(defender->pos(), radius, LIGHTMAGENTA, MAGENTA, true, 30);
+
+    for (radius_iterator ri(defender->pos(), radius, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (actor* act = actor_at(*ri))
+        {
+            if (!mons_aligned(defender, act) && !act->is_firewood()
+                && act->willpower() != WILL_INVULN && !act->clarity())
+            {
+                act->daze(random_range(3, max_dur));
+            }
+        }
+    }
+
+    if (defender->is_player())
+        you.duration[DUR_MESMERISM_COOLDOWN] = random_range(150, 200) - you.skill(SK_EVOCATIONS, 2);
+    else
+        defender->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, defender, random_range(120, 200)));
 }
 
 /* An attack has been determined to have hit something
@@ -910,6 +947,7 @@ bool melee_attack::handle_phase_hit()
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();
+        maybe_do_mesmerism();
     }
 
     if (attacker->is_player())
@@ -2444,6 +2482,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
+    // resonance armour damage modifier
+    damage = resonance_damage_mod(damage, true);
+
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
@@ -2455,6 +2496,12 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     if (dmg_mult)
         damage = damage * (100 + dmg_mult) / 100;
+
+    if (you.has_mutation(MUT_RECKLESS) && weapon
+        && hands_reqd(&you, weapon->base_type, weapon->sub_type) == HANDS_TWO)
+    {
+        damage = div_rand_round(damage * 115, 100);
+    }
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
@@ -3068,7 +3115,7 @@ string melee_attack::staff_message(stave_type staff, int dam) const
                 defender->name(DESC_THE).c_str(),
                 attack_strength_punctuation(dam).c_str());
 
-    case STAFF_DEATH:
+    case STAFF_NECROMANCY:
         return make_stringf(
                 "%s %s as negative energy consumes %s%s",
                 defender->name(DESC_THE).c_str(),
@@ -3111,7 +3158,7 @@ bool melee_attack::apply_staff_damage()
         dam /= 3;
     if (dam > 0)
     {
-        if (staff == STAFF_DEATH)
+        if (staff == STAFF_NECROMANCY)
             attacker->god_conduct(DID_EVIL, 4);
         else if (staff == STAFF_FIRE && defender->is_player())
             maybe_melt_player_enchantments(flavour, dam);
@@ -3130,6 +3177,13 @@ bool melee_attack::apply_staff_damage()
         // Poisoning from the staff of alchemy should happen after damage.
         if (defender->alive() && flavour == BEAM_POISON)
             defender->poison(attacker, 2);
+    }
+
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT)
+        && you.magic_points < you.max_magic_points)
+    {
+        mpr("You draw in some of the released energy.");
+        inc_mp(1 + one_chance_in(3) + one_chance_in(3));
     }
 
     return true;

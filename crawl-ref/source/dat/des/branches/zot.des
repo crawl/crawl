@@ -2451,7 +2451,7 @@ NAME:   lemuel_lich_library
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
-MONS:   vampire mage, black draconian draugr
+MONS:   vampire mage, black draconian draugr, orb of entropy
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 KFEAT:  ^ = archmage's trap
 SUBST:  x : xvv, w : w?, G : Gg
@@ -2459,6 +2459,9 @@ NSUBST: ? = 14 = 111. / *:.
 SUBST:  4 = 4 5:3 .:3, ^ : ^..
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
+: if dgn.zot_orb_type() == "orb of fire" then
+NSUBST: 3 = 1:37 / *:7
+: end
 : vault_metal_statue_setup(_G, "g", "soul conduit")
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2474,7 +2477,7 @@ wwxxcxxxxxx+xxxxxxx+xww
 wwxcxcxxxc..xxxxxx$$xww
 wwxdddxxxxx.x...xx$$xww
 wwx.3.xxxc..+.G.xxxxxww
-wwx...xxxxx.x...xxxxxww
+wwx.>.xxxxx.x...xxxxxww
 wwx...xxxc..xxxxxxxxxww
 wwxx+xxxxxx.xxcdddddxww
 wwxx.xcxxc..xxcd232dxww
@@ -2488,23 +2491,34 @@ wwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ###########################
-# Lake of fire
+# Lake of fire (...or ice!)
 #
-NAME:  lemuel_lake_of_fire
-DEPTH: Zot
-SUBST: * =*l
-KMONS: * = orb of fire
-KFEAT: * = l
-SUBST: .=.l
+NAME:   lemuel_lake_of_fire
+TAGS:   no_pool_fixup
+DEPTH:  Zot
+WEIGHT: 12
+KMONS:  1 = orb of fire
+KMONS:  2 = orb of winter
+KMONS:  P = block of ice
+KFEAT:  1 = l
+KFEAT:  2P = w
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:  * = 1l, ~ = l, . = .l
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:  * = 2P, ~ = w, . = .w
+: end
+veto {{
+  return dgn.zot_orb_type() == "orb of entropy"
+}}
 MAP
- ..ll..
-..llll..
-.llllll.
-.ll**ll.
-.ll**ll.
-.llllll.
-..llll..
- ..ll..
+ ..~~..
+..~~~~..
+.~~~~~~.
+.~~**~~.
+.~~**~~.
+.~~~~~~.
+..~~~~..
+ ..~~..
 ENDMAP
 
 ###########################
@@ -2568,11 +2582,16 @@ NAME:   lemuel_acid_trip
 DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
-MONS:   any nonbase yellow draconian
+MONS:   any nonbase yellow draconian, orb of entropy
 KFEAT:  ^ = devourer's trap
 SUBST:  1 = 1:2 .
 SUBST:  . = .:20 3:3 2:1
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
+# If orbs of entropy are available, have a chance to place one and also
+# reduce the total monster count to somewhat balance this out.
+: if dgn.zot_orb_type() == "orb of entropy" and crawl.coinflip() then
+NSUBST: 2 = 1:6 / 2:. / *:2, 4 = 2:. / *:4, 5 = 1:. / *:5
+: end
 MAP
        xx++xx
      xxx....xxx
@@ -2603,10 +2622,13 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire, fire elemental
 MONS:   red draconian, any nonbase red draconian
-MONS:   efreet
-SUBST:  1=122, 3=322
-SUBST:  4 = 2:20 4:5 3:15 .:20
-SUBST:  G : G.
+MONS:   efreet, sun moth
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:  1 = 122, 6 = .
+: else
+NSUBST: 16 = 2:6 / * = 662
+: end
+SUBST:  3=322, 4 = 2:20 4:5 3:15 .:20, G : G.
 TILE:   c = wall_stone_scorched
 : vault_metal_statue_setup(_G, "G", "fiery conduit")
 MAP
@@ -2624,8 +2646,8 @@ llll...x.2cc+cc2.x...llll
 llll..Gx.cc444cc.xG..llll
 llll...x.c44444c.x...llll
  llll..x.c44F44c.x..llll
- llll..x.c44444c.x..llll
-  llll.x.cc444cc.x.llll
+ llll..x6c44444c6x..llll
+  llll.x6cc444cc6x.llll
   llll.x.1c...c1.x.llll
    llllxxxc+++cxxxllll
     llll333...333llll
@@ -2682,6 +2704,7 @@ ENDMAP
 NAME:   nrook_zot_tub
 TAGS:   no_monster_gen
 DEPTH:  Zot
+WEIGHT: 25
 KMONS:  M = patrolling red draconian att:neutral / \
             patrolling nonbase red draconian att:neutral
 KMONS:  F = orb of fire att:neutral
@@ -2690,6 +2713,9 @@ MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
 : vault_metal_statue_setup(_G, "g", "enigmatic dynamo")
+veto {{
+  return dgn.zot_orb_type() ~= "orb of fire"
+}}
 MAP
      @
 xxxxx+xxxxx
@@ -3488,7 +3514,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
-         electric golem / orb of fire w:5
+         electric golem / orb of appropriateness w:5
 KFEAT:   V = v
 SHUFFLE: EF
 SUBST:   E : .
@@ -3594,7 +3620,7 @@ MONS:   fire dragon w:35 / ice dragon w:35 / shadow dragon w:25 / \
         storm dragon w:50 / wyrmhole w:15 / golden dragon w:35
 MONS:   Killer Klown / electric golem w:5 / \
         curse toe w:5 / protean progenitor w:5
-MONS:   orb of fire
+MONS:   orb of appropriateness
 SUBST:  2 = 222., 5 = 55.
 SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
 MAP
@@ -4069,7 +4095,7 @@ KMONS:   67 = protean progenitor
 KMONS:   89 = killer klown
 KMONS:   AB = curse toe
 KMONS:   CD = electric golem
-KMONS:   E = orb of fire
+KMONS:   E = orb of appropriateness
 KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
@@ -4276,11 +4302,15 @@ ENDMAP
 
 NAME:   hellmonk_greenhouse_of_terror
 TAGS:   no_monster_gen no_descent
+WEIGHT: 25
 DEPTH:  Zot:2-, !Zot:$
 MONS:   orb of fire, bush
 NSUBST: . = 1:1 / .
 SUBST:  > = )}], < = ({[
 : decorative_floor(_G, 'p', "garden patch")
+veto {{
+  return dgn.zot_orb_type() ~= "orb of fire"
+}}
 MAP
   ttttt
   t.>.t
@@ -4402,7 +4432,7 @@ ORIENT:  south
 DEPTH:   Zot, !Zot:$
 MONS:    0 band
 MONS:    red draconian / will-o-the-wisp w:2
-MONS:    red draconian scorcher, orb of fire / golden dragon
+MONS:    red draconian scorcher, golden dragon
 MONS:    white draconian / blizzard demon w:2
 MONS:    white draconian knight, golden dragon
 KMONS:   8 = black draconian / spark wasp w:2
@@ -4417,6 +4447,9 @@ KMONS:   f = quicksilver dragon
 KMONS:   g = death cob / storm dragon zombie w:4
 KMONS:   h = shadow dragon
 KMONS:   i = curse toe / ancient lich w:2
+KMONS:   ? = orb of fire
+KMONS:   ! = orb of winter
+KMONS:   & = orb of entropy
 KMONS:   z = 0 band
 KMONS:   W = withered plant
 KFEAT:   jk = m
@@ -4424,7 +4457,7 @@ KFEAT:   s = metal_statue
 NSUBST:  D = 1:< / 2:x. / *:x, . = 3:1 / *:.
 SHUFFLE: 234j / 567k / 890s / ABCW / defU / ghiG
 SUBST:   j : jjl, k : kkw
-SHUFFLE: 369Beh / 369Beh / heB963 / Beh369, HIJKLMNO, }])
+SHUFFLE: 369Beh / 369Beh / 369Beh / heB963 / Beh369, HIJKLMNO, }])
 SUBST:   HIJ = x, K : x., L : x., MNO = ., } = }:70, ] = ]:40 >
 MARKER:  U = lua:fog_machine { cloud_type = "purple smoke", \
                                pow_min = 4, pow_max = 5, \
@@ -4439,6 +4472,13 @@ TILE:    m = dngn_transparent_wall_magenta
 :   vault_metal_statue_setup(_G, "s", "storm conduit")
 : else
 :   vault_metal_statue_setup(_G, "s", "nascence circuit")
+: end
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   4 = 3?
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:   7 = 6!
+: elseif dgn.zot_orb_type() == "orb of entropy" then
+SUBST:   i = i&
 : end
 MAP
                          xccccccccccccccx
@@ -4485,7 +4525,8 @@ TAGS:    no_dump no_trap_gen
 PLACE:   Zot:$
 ORIENT:  north
 MONS:    patrolling orb guardian, boundless tesseract
-MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
+MONS:    electric golem, killer klown, ancient lich / dread lich
+MONS:    orb of appropriateness
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
 KFEAT:   Z = orb dais
@@ -4530,7 +4571,7 @@ NSUBST:  f = 3 / 4 / 6 / 9 = ? .:8 / e, k = 3 / 4 / 6 / 9 = ? .:8 / j
 # Minimum number of traps in each upper wing.
 NSUBST:  e = 4=~ / ., j = 4=~ / .
 # Each upper wing has equal chance to get one of three sets that most heavily
-# weight specific monsters: killer klown, ancient / dread lich, or orb of fire.
+# weight specific monsters: killer klown, ancient / dread lich, or orbs.
 SUBST:   ? : KLM
 SUBST:   K = 0 4:40 5 6 ., L = 0 4 5:40 6 ., M = 0 4 5 6:40 .
 # Make a final sprinkling of traps throughout the vault.
@@ -4569,15 +4610,15 @@ XXXXXXXXXXeeeeeeefffffffffffffeeeeXXX---1---XXXjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXeeeeeeefffffffffffffeeeecXXXXXXXXXXXcjjjjkkkkkkkkkkkkkjjjjjjjXXXXXXXXX
 XXXXXXXXXXXeeeeeeeeeeeeeeeeeeeeeecccccccccccccccjjjjjjjjjjjjjjjjjjjjjjXXXXXXXXXX
 XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
-XXXXXXXXXXXXXeeeeeeeeeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjjjjjjjjjXXXXXXXXXXXX
-XXXXXXXXXXXXXXG1112ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc2111GXXXXXXXXXXXXX
-XXXXXXXXXXXccddddddddddddddODDo1ccccccccccccccccc1pHHPhhhhhhhhhhhhhhccXXXXXXXXXX
+XXXXXXXXXXXXXeeeeee2eeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjj2jjjjjjXXXXXXXXXXXX
+XXXXXXXXXXXXXX.111.ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc.111.XXXXXXXXXXXXX
+XXXXXXXXXXXccddddddGdddddddODDo1ccccccccccccccccc1pHHPhhhhhhhGhhhhhhccXXXXXXXXXX
 XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX
-XXXXXXXXXcddddddddddddddddddddccc...............ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddccc.1.....1.....1.ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXcc......R......ccXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXc.............cXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
-XXXXXXXXXcddddddddddddddddddddcXXcc.1...1...1.ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
+XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXXc...........cXXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXXcc...........ccXXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccXXc.............cXXcchhhhhhhhhhhhhhhhhhccXXXXXXXX

@@ -577,11 +577,11 @@ stripped away from them.
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
-may witness the devastating Sign of Ruin form upon themselves, or be drained
-without any respect for their negative energy resistance. Furthermore,
-Kikubaaqudgha's gifts become tainted: the dead rise again as foes, and those
-that attempt to use necromantic magic to fend off wrath will find it backfiring
-on them when least expected.
+may witness the devastating Sign of Ruin form upon themselves, or both doomed
+and drained without any respect for their negative energy resistance.
+Furthermore, Kikubaaqudgha's gifts become tainted: the dead rise again as foes,
+and those that attempt to use necromantic magic to fend off wrath will find it
+backfiring on them when least expected.
 %%%%
 Lugonu wrath
 

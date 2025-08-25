@@ -36,6 +36,8 @@ bool read(item_def* scroll = nullptr, dist *target=nullptr);
 bool auto_wield();
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);
+operation_types item_to_oper(const item_def *target);
+int default_osel(operation_types oper);
 
 bool item_is_worn(int inv_slot);
 
@@ -58,3 +60,6 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove,
 
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                          vector<item_def*> to_remove);
+
+string cannot_put_on_talisman_reason(const item_def& talisman, bool temp = true);
+bool use_talisman(item_def& talisman);

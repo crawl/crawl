@@ -2030,7 +2030,6 @@ bool Menu::process_key(int keyin)
     {
     case CK_NO_KEY:
     case CK_REDRAW:
-    case CK_RESIZE:
         return true;
     case 0:
         return true;
@@ -2181,39 +2180,80 @@ int Menu::get_first_visible(bool skip_init_headers, int col) const
 
 bool Menu::is_hotkey(int i, int key)
 {
-    bool ishotkey = items[i]->is_hotkey(key);
-    return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
+    return items[i]->is_hotkey(key);
 }
 
 /// find the first item (if any) that has hotkey `key`.
 int Menu::hotkey_to_index(int key, bool primary_only)
 {
-    // when called without a ui, just check from the beginning
-    const int first_entry = ui_is_initialized() ? get_first_visible() : 0;
     const int final = items.size();
 
     // Process all items, in case user hits hotkey for an
     // item not on the current page.
 
-    // We have to use some hackery to handle items that share
-    // the same hotkey (as for pickup when there's a stack of
-    // >52 items). If there are duplicate hotkeys, the items
-    // are usually separated by at least a page, so we should
-    // only select the item on the current page. We use only
-    // one loop, but we look through the menu starting with the first
-    // visible item, and check to see if we've matched an item
-    // by its primary hotkey (hotkeys[0] for multiple-selection
-    // menus), in which case we stop selecting further items. If
-    // not, we loop around back to the beginning.
-    for (int i = 0; i < final; ++i)
+    // Depending on flags, we have one of two behaviors:
+    //
+    // If MF_SELECT_BY_CATEGORY is set (used for single-page inventory screen),
+    // we first check for the first matching hotkey, starting from the top of
+    // the current menu subsection the cursor is in. If no match is found, we
+    // next check from the start of the menu to the current position. (This
+    // means that in cases where a menu has multiple entries with the same
+    // letter, we will select one within the current subsection, if one exists,
+    // and then check elsewhere if not.)
+    //
+    // If it is not, we simply select the nearest entry with a matching hotkey.
+
+    if (is_set(MF_SELECT_BY_CATEGORY))
     {
-        const int index = (i + first_entry) % final;
-        if (is_hotkey(index, key)
-            && (!primary_only || items[index]->hotkeys[0] == key))
+        // First, determine the top of our current section.
+        int top = 0;
+        for (int i = last_hovered; i >= 0; --i)
         {
-            return index;
+            if (items[i]->level != MEL_ITEM)
+            {
+                top = i;
+                break;
+            }
+        }
+
+        for (int i = top; i < final; ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                return i;
+            }
+        }
+        for (int i = 0; i < top; ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                return i;
+            }
         }
     }
+    else
+    {
+        int nearest_index = -1;
+        int nearest_dist = INT_MAX;
+        for (int i = 0; i < (int)items.size(); ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                int dist = abs(i - last_hovered);
+                if (dist < nearest_dist)
+                {
+                    nearest_dist = dist;
+                    nearest_index = i;
+                }
+            }
+        }
+
+        return nearest_index;
+    }
+
     return -1;
 }
 

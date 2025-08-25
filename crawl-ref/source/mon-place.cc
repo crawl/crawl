@@ -1835,6 +1835,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_BOGGART,         { {}, {{ BAND_BOGGARTS, {2, 5} }}}},
     { MONS_PRINCE_RIBBIT,   { {}, {{ BAND_BLINK_FROGS, {2, 5}, true }}}},
     { MONS_BLINK_FROG,      { {}, {{ BAND_BLINK_FROGS, {2, 5} }}}},
+    { MONS_BES_KEMWAR, { {0, 0, [](){ return player_in_branch(BRANCH_DUNGEON)&&
+                                             x_chance_in_y(4, 5); }},
+                                   {{ BAND_BES_KEMWAR, {1, 2} }}}},
     { MONS_WIGHT,           { {}, {{ BAND_WIGHTS, {2, 5} }}}},
     { MONS_ANCIENT_CHAMPION, { {2, 0, []() {
         return !player_in_hell(); }},
@@ -2314,6 +2317,10 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SIMULACRUM, 2}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+    { BAND_BES_KEMWAR,          {{{MONS_JELLY, 3},
+                                  {MONS_PHANTOM, 3},
+                                  {MONS_SLEEPCAP, 3},
+                                  {MONS_BES_KEMWAR, 1}}}},
     { BAND_MIXED_WRAITHS,       {{{MONS_FREEZING_WRAITH, 7},
                                   {MONS_PHANTASMAL_WARRIOR, 3}}}},
     { BAND_DEATH_KNIGHT_STANDARD, {{{MONS_GHOUL, 1},

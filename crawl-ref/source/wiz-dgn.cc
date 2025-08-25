@@ -344,7 +344,10 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             env.level_map_mask(pos) |= MMT_MIMIC;
 
         if (you.see_cell(pos))
+        {
             view_update_at(pos);
+            StashTrack.update_stash(pos);
+        }
     } while (targeting_mode && target.isEndpoint);
 
     return true;

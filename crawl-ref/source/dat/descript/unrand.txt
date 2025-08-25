@@ -44,7 +44,8 @@ A staff which was once wielded by the great alchemist Olgreb.
 %%%%
 crystal ball of Wucad Mu
 
-A perfect sphere of crystal, overflowing with magical energies.
+A sphere of flawless crystal, shaped by countless mantras. When one focuses upon
+it, the boundaries between 'self' and 'other' sometimes seem to blur.
 {{
     if you.race() == "Djinni" then
         return "It is utterly useless to Djinn."

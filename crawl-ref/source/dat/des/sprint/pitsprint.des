@@ -19,8 +19,9 @@ function base_monster_setup(e)
                kobold brigand band / gnoll band / gnoll bouda band w:6 /\
                gnoll sergeant band w:6 / orc band / orc priest band /\
                orc wizard band / ogre / centaur / phantom / zombie /\
-               crimson imp / iron imp / white imp / drude / ufetubus band /\
-               fire bat / crocodile / brain worm / weeping skull / mummy w:5")
+               bes kemwar / crimson imp / iron imp / white imp / drude /\
+               ufetubus band /  fire bat / crocodile / brain worm /\
+               weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
                komodo dragon / yak band / cane toad / hell rat / death yak /\
@@ -115,7 +116,8 @@ function base_monster_setup(e)
                primal mutant beast w:2 / iron elemental w:3")
   e.kmons("G = caustic shrike w:5 / caustic shrike band w:5 /\
                shard shrike w:3 / shard shrike band w:3 /\
-               orb of fire w:12 / electric golem / protean progenitor band w:6 /\
+               orb of fire w:8 / orb of winter w:8 / orb of entropy w:8 /\
+               electric golem / protean progenitor band w:6 /\
                ancient lich w:6 / dread lich w:6 / royal mummy /\
                vampire bloodprince w:2 / curse skull w:2 /\
                antique champion w:6 ; shadow dragon scales . kite shield . double sword /\
@@ -135,7 +137,7 @@ function base_monster_setup(e)
                Fannar / Gastronok / Grum band / Harold / Jeremiah / Joseph /\
                Josephine / Maurice / Nergalle / Lodul / Sonja / Sprozz / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Jorgrun /\
-               Kirke band / Nessos / Ilsuiw band / Polyphemus / Psyche /\
+               Kirke band / Nessos / Ilsuiw band / Polyphemus /\
                Rupert / Saint Roka band / Snorg / Xak'krixis")
   e.kmons("K = Arachne band / Boris / Dissolution / Frederick / Jory /\
                Josephina band / the Lernaean hydra /  Margery band / Mennas /\
@@ -376,8 +378,6 @@ function metal_vault_setup(e)
           ring of protection from cold pre_id /\
           ring of positive energy pre_id /\
           ring of willpower pre_id /\
-          ring of fire pre_id /\
-          ring of ice pre_id /\
           ring of see invisible pre_id /\
           ring of poison resistance pre_id /\
           any jewellery pre_id")
@@ -525,8 +525,6 @@ function coven_setup(e)
           ring of protection from cold randart pre_id /\
           ring of positive energy randart pre_id /\
           ring of willpower randart pre_id /\
-          ring of fire randart pre_id /\
-          ring of ice randart pre_id /\
           ring of see invisible randart pre_id /\
           ring of poison resistance randart pre_id /\
           ring of slaying plus:5 pre_id /\
@@ -2032,7 +2030,7 @@ ENDMAP
 NAME:   the_vestibule_1
 TAGS:   the_vestibule unrand
 COLOUR: v = magenta
-TILE:   v = dngn_metal_wall_blue
+TILE:   v = metal_wall_workshop
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)

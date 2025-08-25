@@ -368,7 +368,7 @@ static const mon_spellbook mspell_list[] =
     // ('m') Merfolk and friends.
     {  MST_MERFOLK_SIREN,
       {
-       { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD },
+       { SPELL_SIREN_SONG, 80, MON_SPELL_WIZARD },
       }
     },
 
@@ -380,7 +380,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MERFOLK_AVATAR,
       {
-       { SPELL_AVATAR_SONG, 160, MON_SPELL_WIZARD },
+       { SPELL_AVATAR_SONG, 80, MON_SPELL_WIZARD },
       }
     },
 
@@ -620,7 +620,7 @@ static const mon_spellbook mspell_list[] =
     // ('r') rodents
     {  MST_CRYSTAL_ECHIDNA,
       {
-       { SPELL_CRYSTALLIZING_SHOT, 30, MON_SPELL_NATURAL },
+       { SPELL_CRYSTALLISING_SHOT, 30, MON_SPELL_NATURAL },
        { SPELL_THROW_BARBS, 30, MON_SPELL_NATURAL },
       }
     },
@@ -1513,6 +1513,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('W') Incorporeal undead.
+    {  MST_BES_KEMWAR,
+      {
+       { SPELL_DIMINISH_SPELLS, 33, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_SHADOWGHAST,
       {
        { SPELL_INVISIBILITY, 33, MON_SPELL_NATURAL },
@@ -1664,7 +1670,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 16, MON_SPELL_MAGICAL },
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_MAGICAL },
        { SPELL_FREEZING_CLOUD, 16, MON_SPELL_MAGICAL },
-       { SPELL_AIRSTRIKE, 16, MON_SPELL_MAGICAL },
+       { SPELL_SLEETSTRIKE, 16, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1800,7 +1806,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CRYSTAL_GUARDIAN,
       {
-       { SPELL_CRYSTALLIZING_SHOT, 50, MON_SPELL_MAGICAL },
+       { SPELL_CRYSTALLISING_SHOT, 50, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2476,12 +2482,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_PSYCHE,
+    {  MST_CASSANDRA,
       {
-       { SPELL_CANTRIP, 12, MON_SPELL_WIZARD },
-       { SPELL_POLYMORPH, 12, MON_SPELL_WIZARD },
-       { SPELL_CHAIN_OF_CHAOS, 24, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+       { SPELL_DOOMSAYING, 200, MON_SPELL_NATURAL },
+       { SPELL_DOOM_BOLT, 34, MON_SPELL_WIZARD },
+       { SPELL_SWIFTNESS, 24, MON_SPELL_WIZARD },
       }
     },
     // ('&', mostly) Demon lords.
@@ -2502,7 +2507,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ANTAEUS,
       {
        { SPELL_LIGHTNING_BOLT, 24, MON_SPELL_MAGICAL },
-       { SPELL_FLASH_FREEZE, 48, MON_SPELL_MAGICAL },
+       { SPELL_SLEETSTRIKE, 36, MON_SPELL_MAGICAL },
       }
     },
 

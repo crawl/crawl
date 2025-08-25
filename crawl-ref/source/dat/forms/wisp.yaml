@@ -12,6 +12,7 @@ unarmed_name: Misty tendrils
 unarmed_verbs: [touch, touch, engulf, engulf]
 can_fly: yes
 can_swim: no
+is_badform: yes
 changes_anatomy: yes
 changes_substance: yes
 holiness: nonliving

@@ -97,6 +97,9 @@ function sroom_orc_lair(e)
     end
     e.kitem('1. = gold level:' .. level - 4 .. ' w:1 / nothing w:8')
     e.kitem('2 = gold')
+    if you.in_branch("Vaults") then
+      e.ftile('.12 = floor_metal_gold')
+    end
 end
 
 function sroom_beehive(e)

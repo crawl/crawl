@@ -403,7 +403,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 #endif
 
 static string _god_powers();
-static formatted_string _god_asterisks(bool leading_space = false);
+static string _god_asterisks(bool leading_space = false);
 static int _god_status_colour(int default_colour);
 
 // Colour for captions like 'Health:', 'Str:', etc.
@@ -637,7 +637,8 @@ static bool _boosted_sh()
            || (you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
                 && you.duration[DUR_EPHEMERAL_SHIELD])
            || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
-                && !you.duration[DUR_ICEMAIL_DEPLETED]);
+                && !you.duration[DUR_ICEMAIL_DEPLETED])
+           || you.duration[DUR_PARRYING];
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -1040,9 +1041,9 @@ static void _print_stats_doom(int x, int y)
 
     // Hide the bar entirely if there is no active doom (since that will be true
     // most of the time).
-    if (you.attribute[ATTR_DOOM] == 0)
+    if (you.attribute[ATTR_DOOM] == 0 && !Options.always_show_doom_contam)
     {
-        CPRINTF("            ");
+        CPRINTF("          ");
         return;
     }
 
@@ -1056,8 +1057,10 @@ static void _print_stats_doom(int x, int y)
         textcolour(LIGHTRED);
     else if (you.attribute[ATTR_DOOM] >= 25)
         textcolour(YELLOW);
-    else
+    else if (you.attribute[ATTR_DOOM] > 0)
         textcolour(LIGHTGRAY);
+    else
+        textcolour(DARKGRAY);
 
     CPRINTF("%d%% ", you.attribute[ATTR_DOOM]);
     you.redraw_doom = false;
@@ -1068,9 +1071,9 @@ static void _print_stats_contam(int x, int y)
     CGOTOXY(x, y, GOTO_STAT);
 
     // Hide the bar entirely if the player has no contam
-    if (you.magic_contamination == 0)
+    if (you.magic_contamination == 0 && !Options.always_show_doom_contam)
     {
-        CPRINTF("            ");
+        CPRINTF("          ");
         return;
     }
 
@@ -1078,7 +1081,8 @@ static void _print_stats_contam(int x, int y)
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Contam: ");
 
-    const int contam = max(1, you.magic_contamination / 10);
+    const int contam = max(you.magic_contamination > 0 ? 1 : 0,
+                           you.magic_contamination / 10);
     if (contam >= 200)
         textcolour(RED);
     else if (contam >= 100)
@@ -1180,7 +1184,7 @@ static void _print_unarmed_name()
 static void _print_weapon_name(const item_def &weapon, int width)
 {
     textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = index_to_letter(weapon.link);
+    const char slot_letter = weapon.slot;
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour(weapon));
@@ -1289,6 +1293,7 @@ static void _get_status_lights(vector<status_light>& out)
     // statuses important enough to appear first. (Rightmost)
     const unsigned int important_statuses[] =
     {
+        STATUS_TESSERACT,
         STATUS_ORB,
         STATUS_ZOT,
         STATUS_STAT_ZERO,
@@ -1505,7 +1510,7 @@ static void _redraw_title()
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                       : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
-        formatted_string piety = _god_asterisks(true);
+        formatted_string piety = formatted_string::parse_string(_god_asterisks(true));
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
         if (small_layout)
@@ -2090,12 +2095,43 @@ static string _stealth_bar(int label_length, int sw)
 }
 static string _status_mut_rune_list(int sw);
 
+static void _append_overview_screen_item(column_composer& cols,
+                                         vector<char>& equip_chars,
+                                         int sw,
+                                         const item_def& item,
+                                         bool melded)
+{
+    const string prefix = item_prefix(item);
+    const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
+    const int col = prefcol == -1 ? LIGHTGREY : prefcol;
+
+    // Colour melded equipment dark grey.
+    string colname = melded ? "darkgrey" : colour_to_str(col);
+
+    const int item_idx = item.link;
+    const char equip_char = index_to_letter(item_idx);
+
+    string str = make_stringf(
+                    "<w>%c</w> - <%s>%s%s</%s>",
+                    equip_char,
+                    colname.c_str(),
+                    melded ? "melded " : "",
+                    chop_string(item.name(DESC_PLAIN, true),
+                            melded ? sw - 32 : sw - 25, false).c_str(),
+                    colname.c_str());
+    equip_chars.push_back(equip_char);
+
+    cols.add_formatted(1, str.c_str(), false);
+}
+
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
                                          int sw)
 {
     sw = min(max(sw, 79), 640);
+    if (Options.show_resist_percent)
+        sw -= 3;
 
     for (equipment_slot slot : slot_order)
     {
@@ -2133,28 +2169,14 @@ static void _print_overview_screen_equip(column_composer& cols,
 
             const item_def& item = equipped[i].get_item();
             const bool melded    = equipped[i].melded;
-            const string prefix = item_prefix(item);
-            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
-            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
-
-            // Colour melded equipment dark grey.
-            string colname = melded ? "darkgrey" : colour_to_str(col);
-
-            const int item_idx   = equipped[i].item;
-            const char equip_char = index_to_letter(item_idx);
-
-            str = make_stringf(
-                     "<w>%c</w> - <%s>%s%s</%s>",
-                     equip_char,
-                     colname.c_str(),
-                     melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 32 : sw - 25, false).c_str(),
-                     colname.c_str());
-            equip_chars.push_back(equip_char);
-
-            cols.add_formatted(1, str.c_str(), false);
+            _append_overview_screen_item(cols, equip_chars, sw, item, melded);
         }
+    }
+
+    if (item_def* item = you.active_talisman())
+    {
+        _append_overview_screen_item(cols, equip_chars, sw, *item,
+                                     you.form != you.default_form);
     }
 }
 
@@ -2228,17 +2250,17 @@ static string _god_powers()
         return colour_string(name, _god_status_colour(god_colour(you.religion)));
 
     return colour_string(chop_string(name, 20, false)
-              + " [" + _god_asterisks().to_colour_string() + "]",
+              + " [" + _god_asterisks() + "]",
               _god_status_colour(god_colour(you.religion)));
 }
 
-static formatted_string _god_asterisks(bool leading_space)
+static string _god_asterisks(bool leading_space)
 {
     if (you_worship(GOD_NO_GOD))
-        return formatted_string("");
+        return "";
 
     if (you_worship(GOD_GOZAG))
-        return formatted_string("");
+        return "";
 
     string str;
     if (you_worship(GOD_XOM))
@@ -2268,7 +2290,7 @@ static formatted_string _god_asterisks(bool leading_space)
             str = string(prank, '*') + string(NUM_PIETY_STARS - prank, '.');
     }
 
-    return formatted_string::parse_string((leading_space ? " " : "") + str);
+    return make_stringf("%s%s", leading_space ? " " : "", str.c_str());
 }
 
 /**
@@ -2525,7 +2547,9 @@ static string _resist_composer(const char * name, int spacing, int value,
     const static int _pois_res[]  = {150, 100, 33, 33, 0};
     const static int _corr_res[]  = {-1, 100, 50, -1, -1};
 
-    ASSERT(value >= -1 && value <= 3);
+    if (value < -1)
+        value = -1;
+    ASSERT(value <= 3);
     switch (type)
     {
         case MR_RES_FIRE:
@@ -2535,6 +2559,7 @@ static string _resist_composer(const char * name, int spacing, int value,
 
         case MR_RES_NEG:
             res_percent = _neg_res[value + 1];
+            break;
 
         case MR_RES_POISON:
         case MR_RES_ELEC:
@@ -2798,11 +2823,14 @@ static string _extra_passive_effects()
     if (you.archmagi())
         passives.emplace_back("archmagi");
 
-    const int channel = player_channelling();
-    if (channel)
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
     {
-        passives.emplace_back(
-            make_stringf("channel magic (%d%%)", 20 * channel).c_str());
+        const int channel = player_channelling_chance();
+        if (channel)
+        {
+            passives.emplace_back(
+                make_stringf("channel magic (%d%%)", channel).c_str());
+        }
     }
 
     if (you.infusion_amount())

@@ -173,6 +173,7 @@ public:
     coord_def pos;
     int direction;
     int turns_passed;
+    bool skip_autorest;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 

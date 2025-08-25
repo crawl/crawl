@@ -1883,7 +1883,7 @@ staff of conjuration
 
 <staff>
 %%%%
-staff of death
+staff of necromancy
 
 “'I am Aed Abaid of Ess Rúaid, that is, the good god of wizardry of the Tuatha
  Dé Danann, and the Rúad Rofhessa, and Eochaid Ollathair are my three names.’
@@ -2400,21 +2400,6 @@ Prince Ribbit
  Open the door for me!”
     -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
 %%%%
-Psyche
-
-“Let Psyche's corpse be clad in mourning weed
- And set on rock of yonder hill aloft;
- Her husband is no wight of human seed,
- But serpent dire and fierce, as may be thought,
- Who flies with wings above in starry skies,
- And doth subdue each thing with fiery flight.
- The Gods themselves and powers that seem so wise
- With mighty love be subject to his might.
- The rivers black and deadly floods of pain
- And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
-    trans. William Adlington, 1566.
-%%%%
 Sigmund
 
 “But Sigmund turned him about, and he said: ‘What aileth thee, son?
@@ -2720,6 +2705,22 @@ battlesphere
  But really I'm not actually your friend
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
+%%%%
+bes kemwar
+
+# would prefer a more prose-like passage translating Teoh's Bes Hyang Dney or
+# Werner's Jah-hět of Malaysia, Art and Culture, but until then:
+“The Bès Kěmwar, “maggot spirit”, is one of the many _bès_ or disease spirits
+ known to the Jah Hut of Malaysia. A polyvalent spirit, it is depicted as a
+ maggot or caterpillar, with variants distinguished by hair, thorns, wings, and
+ other details. It eats rice, vegetables, and other crops. It is responsible for
+ aches in bones, joints, and muscles. If its caterpillar hair falls into water
+ and that water is drunk, it causes coughing and bleeding in the throat. Maggot
+ spirits are also known to live in rotten tree trunks and feed in them. Anyone
+ who approaches the fallen tree will be bitten in the leg by the spirit, causing
+ redness, swelling, and itching. All the toenails fall off but the swelling will
+ be gone by two or three months.”
+    - _A Book of Creatures_, 2020.
 %%%%
 boggart
 

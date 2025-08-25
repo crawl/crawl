@@ -77,6 +77,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -1472,11 +1473,16 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
             if (!is_map_persistent())
                 ash_detect_portals(false);
 
-            // TODO: why on earth is this called from here? It seems like it
-            // should be called directly on changing location, or something
-            // like that...
             if (you.on_current_level)
+            {
+                // TODO: why on earth is this called from here? It seems like it
+                // should be called directly on changing location, or something
+                // like that...
                 show_init(_layers);
+
+                if (show_updates)
+                    maybe_update_stashes();
+            }
 
 #ifdef USE_TILE
             tile_draw_floor();
@@ -1966,6 +1972,15 @@ void handle_terminal_resize()
     else
         crawl_view.init_geometry();
 
-    redraw_screen();
-    update_screen();
+    if (crawl_state.waiting_for_ui)
+    {
+        ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
+        // We always need a redraw as the console was cleared when resizing
+        ui::force_render();
+    }
+    else
+    {
+        redraw_screen();
+        update_screen();
+    }
 }

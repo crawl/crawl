@@ -579,6 +579,10 @@ escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 escape_hatch_up DNGN_ESCAPE_HATCH_UP
 shoals_stairs_down DNGN_SHOALS_STAIRS_DOWN
 shoals_stairs_up DNGN_SHOALS_STAIRS_UP
+metal_stairs_down DNGN_METAL_STAIRS_DOWN
+metal_stairs_up DNGN_METAL_STAIRS_UP
+zot_stairs_down DNGN_ZOT_STAIRS_DOWN
+zot_stairs_up DNGN_ZOT_STAIRS_UP
 enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
@@ -704,8 +708,10 @@ wizlab_portal6
 wizlab_portal7
 wizlab_gone DNGN_PORTAL_WIZLAB_GONE
 ossuary_portal DNGN_PORTAL_OSSUARY
+ossuary_exit DNGN_EXIT_OSSUARY
 ossuary_gone DNGN_PORTAL_OSSUARY_GONE
 bailey_portal DNGN_PORTAL_BAILEY
+bailey_exit DNGN_EXIT_BAILEY
 bailey_gone DNGN_PORTAL_BAILEY_GONE
 gauntlet_portal DNGN_PORTAL_GAUNTLET
 gauntlet_gone DNGN_PORTAL_GAUNTLET_GONE
@@ -716,7 +722,9 @@ bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 desolation_portal DNGN_PORTAL_DESOLATION
+desolation_exit DNGN_EXIT_DESOLATION
 desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
+crucible_exit DNGN_EXIT_CRUCIBLE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 

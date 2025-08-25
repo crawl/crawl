@@ -623,10 +623,24 @@ wall_vines4
 wall_vines5
 wall_vines6
 
+%weight 4
 lair0 WALL_LAIR
 lair1
 lair2
 lair3
+%weight 3
+lair4
+lair5
+%weight 1
+lair6
+lair7
+
+%weight 3
+wall_stone_lair0 STONE_WALL_LAIR
+wall_stone_lair1
+wall_stone_lair2
+%weight 1
+wall_stone_lair3
 
 # Swamp tiles.
 lab-rock0 WALL_LAB_ROCK WALL_SWAMP
@@ -634,6 +648,7 @@ lab-rock1
 lab-rock2
 lab-rock3
 
+%weight 10
 stone_mossy0 WALL_STONE_MOSSY
 stone_mossy1
 %weight 3
@@ -738,12 +753,34 @@ orc9
 orc10
 orc11
 
-# Elf walls and variations used elsewhere.
+%weight 10
+wall_stone_orc0 STONE_WALL_ORC
+%weight 5
+wall_stone_orc1
+%weight 2
+wall_stone_orc2
+%weight 1
+wall_stone_orc3
+
+# Elf rock and walls, plus variations used elsewhere.
 
 relief0 WALL_HALL
 relief1
 relief2
 relief3
+
+%weight 2
+elf-stone0 STONE_WALL_ELF
+elf-stone1
+%weight 1
+elf-stone2
+elf-stone3
+%weight 2
+elf-stone_runic0 STONE_WALL_ELF_RUNIC
+elf-stone_runic1
+%weight 1
+elf-stone_runic2
+elf-stone_runic3
 
 %variation WALL_HALL white
 %lum 0 20
@@ -854,6 +891,25 @@ vault_stone13
 vault_stone14
 vault_stone15
 
+%weight 10
+vaults-metal0 WALL_VAULTS_METAL
+vaults-metal1
+vaults-metal2
+%weight 2
+vaults-metal3
+vaults-metal4
+vaults-metal5
+%weight 1
+vaults-metal6
+vaults-metal7
+vaults-metal8
+
+%weight 10
+vaults-crystal0 WALL_VAULTS_CRYSTAL
+vaults-crystal1
+%weight 1
+vaults-crystal2
+vaults-crystal3
 
 rock_wall_crypt0 ROCK_WALL_CRYPT
 %weight 2
@@ -911,6 +967,12 @@ wall_metal_depths_leafy0 WALL_DEPTHS_METAL_LEAFY
 wall_metal_depths_leafy1
 wall_metal_depths_leafy2
 wall_metal_depths_leafy3
+
+%weight 10
+crystal_wall_depths_0 WALL_DEPTHS_CRYSTAL
+crystal_wall_depths_1
+crystal_wall_depths_2
+crystal_wall_depths_3
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -1507,6 +1569,11 @@ wall_oozing3
 %weight 10
 
 # Ossuaries.
+wall_stone_ossuary0 STONE_WALL_OSSUARY
+wall_stone_ossuary1
+wall_stone_ossuary2
+wall_stone_ossuary3
+
 %weight 5
 sandstone_wall0 WALL_SANDSTONE
 sandstone_wall1
@@ -1601,6 +1668,12 @@ stone_black_marked7
 %weight 1
 stone_black_marked8
 
+# Zonguldrok's Shrine.
+shrine_stone_wall0 WALL_STONE_SHRINE
+shrine_stone_wall1
+shrine_stone_wall2
+shrine_stone_wall3
+
 # Lehudib's Moon Base.
 wall_moon0 WALL_MOON
 wall_moon1
@@ -1609,6 +1682,17 @@ wall_moon3
 wall_moon4
 wall_moon5
 wall_moon6
+
+# Maxwell's Workshop.
+%weight 10
+workshop0 METAL_WALL_WORKSHOP
+workshop1
+%weight 8
+workshop2
+workshop3
+%weight 2
+workshop2b
+workshop3b
 
 %weight 10
 bmaus_stone_wall0 WALL_BORG_STONE

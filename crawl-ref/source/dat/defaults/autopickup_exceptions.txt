@@ -28,32 +28,6 @@ ae += >horn of Geryon, <evoker
 
 ae += <good_item
 
-# If you've sacrificed a hand, don't pick up pointless duplicate rings
-:add_autopickup_func(function (it, name)
-:  local itsubtype = it.subtype()
-:  if it.class(true) == "jewellery"
-:  and you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
-:  and (itsubtype == "ring of positive energy"
-:   or itsubtype == "ring of flight"
-:   or itsubtype == "ring of poison resistance"
-:   or itsubtype == "ring of wizardry"
-:   or itsubtype == "ring of protection from fire"
-:   or itsubtype == "ring of protection from cold"
-:   or itsubtype == "ring of resist corrosion"
-:   or itsubtype == "ring of see invisible"
-:   or itsubtype == "ring of magical power"
-:   or itsubtype == "ring of ice"
-:   or itsubtype == "ring of fire") then
-:    for inv in iter.invent_iterator:new(items.inventory()) do
-:      if it.class(true) == inv.class(true)
-:      and itsubtype == inv.subtype() then
-:        return false
-:      end
-:    end
-:  end
-:  return
-:end)
-
 : add_autopickup_func(function (it, name)
 :   return it.stacks() or nil
 : end)
@@ -61,26 +35,8 @@ ae += <good_item
 # Excluding most amulets as you only need one of each. Likewise for some
 # rings. Some items may already be excluded as bad_item, e.g. inaccuracy.
 :add_autopickup_func(function (it, name)
-:  if (not it.class(true) == "jewellery") or it.artefact then
-:    return
+:  if it.is_redundant then
+:     return false
 :  end
-:  local itsubtype = it.subtype()
-:  if itsubtype == "amulet of faith"
-:  or itsubtype == "amulet of guardian spirit"
-:  or itsubtype == "amulet of magic regeneration"
-:  or itsubtype == "amulet of nothing"
-:  or itsubtype == "amulet of reflection"
-:  or itsubtype == "amulet of regeneration"
-:  or itsubtype == "amulet of the acrobat"
-:  or itsubtype == "ring of flight"
-:  or itsubtype == "ring of poison resistance"
-:  or itsubtype == "ring of resist corrosion"
-:  or itsubtype == "ring of see invisible" then
-:    for inv in iter.invent_iterator:new(items.inventory()) do
-:      if inv.class(true) == "jewellery" and inv.subtype() == itsubtype then
-:        return false
-:      end
-:    end
-:  end
-:  return
+:  return nil
 :end)

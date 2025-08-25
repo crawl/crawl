@@ -1730,6 +1730,7 @@ static void _VICTORY_death_effects(item_def *item, monster* mons,
             item->plus = bonus_stats;
             artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
             artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+            you.equipment.update();
             mprf(MSGCH_GOD, GOD_OKAWARU, "%s glows%s.",
                  item->name(DESC_THE, false, true, false).c_str(),
                  bonus_stats == VICTORY_STAT_CAP ? " brightly" : "");

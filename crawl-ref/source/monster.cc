@@ -634,6 +634,8 @@ void monster::bind_melee_flags()
         flags |= MF_ARCHER;
     if (mons_class_flag(type, M_CAUTIOUS))
         flags |= MF_CAUTIOUS;
+    if (mons_class_flag(type, M_PRIEST))
+        flags |= MF_PRIEST;
 }
 
 static bool _needs_ranged_attack(const monster* mon)
@@ -1206,14 +1208,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         {
             return wtype == WPN_QUARTERSTAFF
                    && get_weapon_brand(weapon) == SPWPN_CHAOS;
-        }
-
-        // Distortion/chaos is immensely flavourful, and we shouldn't
-        // allow Psyche to switch away from it.
-        if (mons->type == MONS_PSYCHE)
-        {
-            return get_weapon_brand(weapon) == SPWPN_CHAOS
-                   || get_weapon_brand(weapon) == SPWPN_DISTORTION;
         }
 
         // Don't switch Azrael away from the customary scimitar of
@@ -3487,7 +3481,6 @@ int monster::how_unclean(bool check_god) const
 
     // Zin considers insanity unclean. And slugs that speak.
     if (type == MONS_CRAZY_YIUF
-        || type == MONS_PSYCHE
         || type == MONS_LOUISE
         || type == MONS_GASTRONOK)
     {
@@ -3761,7 +3754,7 @@ bool monster::res_water_drowning() const
     habitat_type hab = mons_habitat(*this, true);
 
     return is_unbreathing() || hab == HT_WATER
-        // XXX: Ugly hack to let apostles walk on water inside of through it
+        // XXX: Ugly hack to let apostles walk on water instead of through it
         || (hab == HT_AMPHIBIOUS && type != MONS_ORC_APOSTLE);
 }
 
@@ -3893,7 +3886,7 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u += get_jewellery_life_protection(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->is_type(OBJ_STAVES, STAFF_DEATH))
+        if (w && w->is_type(OBJ_STAVES, STAFF_NECROMANCY))
             u++;
     }
 
@@ -3936,7 +3929,7 @@ int monster::res_corr() const
     {
         u += wearing(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
         u += wearing_jewellery(RING_RESIST_CORROSION);
-        u += wearing_ego(OBJ_ARMOUR, SPARM_PRESERVATION);
+        u += wearing_ego(OBJ_ARMOUR, SPARM_CORROSION_RESISTANCE);
         u += scan_artefacts(ARTP_RCORR);
     }
 
@@ -4414,16 +4407,32 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
-        // Trigger corrupting presence
-        if (agent && agent->is_player() && alive()
-            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        // Trigger corrupting presence and orbs of glass
+        if (agent && agent->is_player() && alive())
         {
-            if (one_chance_in(12))
-                this->corrode(&you, "Your corrupting presence");
-            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
-                        && one_chance_in(12))
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
             {
-                this->malmutate(&you, "Your corrupting presence");
+                if (one_chance_in(12))
+                    this->corrode(&you, "Your corrupting presence");
+                if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+                {
+                    this->malmutate(&you, "Your corrupting presence");
+                }
+            }
+        }
+
+        if (agent && alive() && agent->wearing_ego(OBJ_ARMOUR, SPARM_GLASS))
+        {
+            if (agent->is_player())
+            {
+                if (x_chance_in_y(20 + you.skill(SK_EVOCATIONS, 5), 500))
+                    this->vitrify(agent, 4 + random2(5 + you.skill(SK_EVOCATIONS)));
+            }
+            else if (const monster* mon = agent->as_monster())
+            {
+                if (x_chance_in_y(40 + mon->get_hit_dice() * 5, 500))
+                    this->vitrify(agent, 4 + random2(5 + mon->get_hit_dice()));
             }
         }
 
@@ -4834,6 +4843,9 @@ int monster::heads() const
 
 bool monster::is_priest() const
 {
+    if (flags & MF_PRIEST)
+        return true;
+
     return search_slots([] (const mon_spell_slot& slot)
                         { return bool(slot.flags & MON_SPELL_PRIEST); });
 }
@@ -5107,10 +5119,15 @@ bool monster::can_mutate() const
     if (type == MONS_CHAOS_SPAWN)
         return false;
 
-    // Abominations re-randomize their tile when mutated. They do not gain the
-    // malmutate status or experience any other non-cosmetic effect.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated. They do not gain the malmutate status or experience any other
+    // non-cosmetic effect.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
+    {
         return true;
+    }
 
     const mon_holy_type holi = holiness();
 
@@ -5128,10 +5145,17 @@ bool monster::can_polymorph() const
     if (type == MONS_CHAOS_SPAWN)
         return true;
 
-    // Abominations re-randomize their tile when mutated, so can_mutate returns
-    // true for them. Like all undead, they can't be polymorphed.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated, so can_mutate returns true for them. Abominations can't be
+    // polymorphed because they're undead, and crawling flesh cages can't be
+    // polymorphed the usual way because they're mostly made of ugly thing
+    // fragments.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
+    {
         return false;
+    }
 
     // Polymorphing apostles breaks all sorts of things (like making challenges
     // unwinnable if it happens) and it would be complex to fix this, so let's
@@ -5185,9 +5209,12 @@ bool monster::malmutate(const actor* source, const string& /*reason*/)
     if (!can_mutate())
         return false;
 
-    // Abominations re-randomize their tile when mutated. They do not gain the
-    // malmutate status or experience any other non-cosmetic effect.
-    if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+    // Abominations and crawling flesh cages re-randomize their tile when
+    // mutated. They do not gain the malmutate status or experience any other
+    // non-cosmetic effect.
+    if (type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_CRAWLING_FLESH_CAGE)
     {
 #ifdef USE_TILE
         props[TILE_NUM_KEY].get_short() = ui_random(256);
@@ -5641,6 +5668,20 @@ void monster::weaken(const actor *attacker, int pow)
         simple_monster_message(*this, " looks even weaker.");
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
+                         (pow + random2(pow + 3)) * BASELINE_DELAY));
+}
+
+void monster::diminish(const actor *attacker, int pow)
+{
+    if (!this->antimagic_susceptible())
+        return;
+
+    if (!has_ench(ENCH_DIMINISHED_SPELLS))
+        mprf("%s spells grow weaker.", name(DESC_ITS).c_str());
+    else
+        mprf("%s spells grow weaker yet longer.", name(DESC_ITS).c_str());
+
+    add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
 }
 
@@ -6439,6 +6480,11 @@ bool monster::shove(const char* feat_name)
         }
 
     return false;
+}
+
+bool monster::clarity(bool items) const
+{
+    return type == MONS_CASSANDRA || actor::clarity(items);
 }
 
 bool monster::stasis() const

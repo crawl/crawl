@@ -2640,7 +2640,7 @@ bool targeter_tempering::valid_aim(coord_def a)
 
     monster* mons = monster_at(a);
     if (!mons || !you.can_see(*mons) || !mons->friendly())
-        return false;
+        return notify_fail("There's nothing to be tempered there.");
 
     if (mons->has_ench(ENCH_TEMPERED))
         return notify_fail("You cannot target a construct which is already augmented.");
@@ -2791,7 +2791,7 @@ bool targeter_bestial_takedown::valid_aim(coord_def a)
 
     if (monster* mon = monster_at(a))
     {
-        if (!mon->friendly() && mon->has_ench(ENCH_FEAR))
+        if (!mon->friendly() && mon->has_ench(ENCH_FEAR) && you.can_see(*mon))
         {
             if (get_bestial_landing_spots(a).empty())
                 return notify_fail("You can see nowhere safe to land near that.");
@@ -2830,6 +2830,9 @@ targeter_paragon_deploy::targeter_paragon_deploy(int _range)
 bool targeter_paragon_deploy::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (a == you.pos())
         return false;
 
     if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))

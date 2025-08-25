@@ -1423,6 +1423,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons->mid == MID_YOU_FAULTLESS)
             death_source_name = "themself";
 
+        if (mons->mid == MID_ANON_FRIEND)
+            death_source_name = "an ally";
+
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1445,6 +1448,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
             _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
+
+            // XXX: We want to keep a more appropriate death message, but still
+            //      link the deaths to Cassandra for tracking purposes.
+            if (indirectkiller == "an inevitable fate")
+                indirectkiller = "Cassandra";
 
             vector<string> path_parts;
             for (const auto &bl : blame)

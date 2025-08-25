@@ -466,22 +466,26 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_ZIGGURAT:
     case DNGN_EXIT_BAZAAR:
     case DNGN_EXIT_TROVE:
-    case DNGN_EXIT_OSSUARY:
-    case DNGN_EXIT_BAILEY:
-    case DNGN_EXIT_DESOLATION:
     case DNGN_EXIT_ARENA:
-    case DNGN_EXIT_CRUCIBLE:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_NECROPOLIS:
         return TILE_DNGN_EXIT_NECROPOLIS;
     case DNGN_EXIT_SEWER:
         return TILE_DNGN_EXIT_SEWER;
+    case DNGN_EXIT_OSSUARY:
+        return TILE_DNGN_EXIT_OSSUARY;
+    case DNGN_EXIT_BAILEY:
+        return TILE_DNGN_EXIT_BAILEY;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
     case DNGN_EXIT_VOLCANO:
         return TILE_DNGN_EXIT_VOLCANO;
+    case DNGN_EXIT_DESOLATION:
+        return TILE_DNGN_EXIT_DESOLATION;
     case DNGN_EXIT_WIZLAB:
         return TILE_DNGN_PORTAL_WIZARD_LAB;
+    case DNGN_EXIT_CRUCIBLE:
+        return TILE_DNGN_EXIT_CRUCIBLE;
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
@@ -1110,6 +1114,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BUG:
         return TILEP_MONS_SPECTRAL_BUG;
     case TILEP_MONS_ZOMBIE_FISH:
+    case TILEP_MONS_ZOMBIE_SKY_BEAST:
     case TILEP_MONS_ZOMBIE_SKYSHARK:
         return TILEP_MONS_SPECTRAL_FISH;
     case TILEP_MONS_ZOMBIE_CENTAUR:
@@ -1196,6 +1201,7 @@ static tileidx_t _zombie_tile_to_bound_soul(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BAT:
     case TILEP_MONS_ZOMBIE_BIRD:
     case TILEP_MONS_ZOMBIE_FISH:
+    case TILEP_MONS_ZOMBIE_SKY_BEAST:
     case TILEP_MONS_ZOMBIE_SKYSHARK:
     case TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT:
     case TILEP_MONS_ZOMBIE_SNAKE:
@@ -1253,9 +1259,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_LARGE:
     case TILEP_MONS_ZOMBIE_OGRE:
     case TILEP_MONS_ZOMBIE_TROLL:
-    case TILEP_MONS_ZOMBIE_JUGGERNAUT:
     case TILEP_MONS_ZOMBIE_UGLY_THING:
         return TILEP_MONS_SIMULACRUM_LARGE;
+    case TILEP_MONS_ZOMBIE_JUGGERNAUT:
+        return TILEP_MONS_SIMULACRUM_JUGGERNAUT;
     case TILEP_MONS_ZOMBIE_QUADRUPED_SMALL:
     case TILEP_MONS_ZOMBIE_BEAR:
     case TILEP_MONS_ZOMBIE_DREAM_SHEEP:
@@ -1286,6 +1293,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BUG:
         return TILEP_MONS_SIMULACRUM_BUG;
     case TILEP_MONS_ZOMBIE_FISH:
+    case TILEP_MONS_ZOMBIE_SKY_BEAST:
     case TILEP_MONS_ZOMBIE_SKYSHARK:
         return TILEP_MONS_SIMULACRUM_FISH;
     case TILEP_MONS_ZOMBIE_CENTAUR:
@@ -1381,6 +1389,8 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
         return TILEP_MONS_DRAUGR_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_FROG:
         return TILEP_MONS_DRAUGR_FROG;
+    case TILEP_MONS_ZOMBIE_SKY_BEAST:
+        return TILEP_MONS_DRAUGR_FISH;
     case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_DRAUGR_QUADRUPED_WINGED;
     case TILEP_MONS_ZOMBIE_BAT:
@@ -1474,6 +1484,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_LINDWURM,                TILEP_MONS_ZOMBIE_LINDWURM, },
         { MONS_MELIAI,                  TILEP_MONS_ZOMBIE_MELIAI, },
         { MONS_HORNET,                  TILEP_MONS_ZOMBIE_HORNET, },
+        { MONS_SKY_BEAST,               TILEP_MONS_ZOMBIE_SKY_BEAST },
         { MONS_SKYSHARK,                TILEP_MONS_ZOMBIE_SKYSHARK, },
         { MONS_DREAM_SHEEP,             TILEP_MONS_ZOMBIE_DREAM_SHEEP, },
     };
@@ -2433,7 +2444,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_SHADOWLESS, TILEI_SHADOWLESS },
     { MB_LOWERED_WL, TILEI_WEAK_WILLED },
     { MB_SIGN_OF_RUIN, TILEI_SIGN_OF_RUIN },
-    { MB_DOUBLED_HEALTH, TILEI_DOUBLED_HEALTH },
+    { MB_DOUBLED_VIGOUR, TILEI_DOUBLED_VIGOUR },
     { MB_KINETIC_GRAPNEL, TILEI_KINETIC_GRAPNEL },
     { MB_TEMPERED, TILEI_TEMPERED },
     { MB_HATCHING, TILEI_HEART },
@@ -2474,6 +2485,7 @@ static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
     { DUR_SLOW, {TILEI_SLOWED, "slow"} },
     { DUR_VITRIFIED, {TILEI_VITRIFIED, "fragile"} },
     { DUR_LOWERED_WL, {TILEI_WEAK_WILLED, "will/2"} },
+    { DUR_SENTINEL_MARK, {TILEI_SENTINEL_MARK, "mark"} },
 
     // Less critical or positive effects (or ones already covered by a default
     // force_more_message). Not enabled by default.
@@ -2484,7 +2496,6 @@ static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
     { DUR_BRILLIANCE, {TILEI_BRILLIANCE, "brill"} },
     { DUR_NO_MOMENTUM, {TILEI_BIND, "-move"} },
     { DUR_PETRIFYING, {TILEI_PETRIFYING, "petr"} },
-    { DUR_SENTINEL_MARK, {TILEI_BULLSEYE, "mark"} },
 };
 
 #ifdef USE_TILE
@@ -3997,7 +4008,6 @@ tileidx_t tileidx_ability(const ability_type ability)
 
     // Others
     case ABIL_END_TRANSFORMATION:
-    case ABIL_BEGIN_UNTRANSFORM:
         return TILEG_ABILITY_END_TRANSFORMATION;
 
     // Species-specific abilities.

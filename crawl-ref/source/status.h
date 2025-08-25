@@ -57,7 +57,8 @@ enum status_type
     STATUS_SHROUD,
     STATUS_CLAUSTROPHOBIA,
     STATUS_OSTRACISM,
-    STATUS_LAST_STATUS = STATUS_OSTRACISM
+    STATUS_TESSERACT,
+    STATUS_LAST_STATUS = STATUS_TESSERACT
 };
 
 struct status_info
@@ -79,7 +80,10 @@ struct status_info
 bool fill_status_info(int status, status_info& info);
 
 const char *duration_name(duration_type dur);
+duration_type duration_by_name(const string &name);
+vector<duration_type> all_duration_with_flag(uint64_t flag);
 bool duration_dispellable(duration_type dur);
+bool duration_negative(duration_type dur);
 void init_duration_index();
 
 bool duration_decrements_normally(duration_type dur);

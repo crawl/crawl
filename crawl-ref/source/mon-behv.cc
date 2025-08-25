@@ -24,6 +24,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-death.h"
 #include "mon-movetarget.h"
 #include "mon-speak.h"
@@ -990,6 +991,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!mon->alive())
         return;
 
+    // Tesseracts react to nothing at all unless activated.
+    if (mon->type == MONS_BOUNDLESS_TESSERACT
+        && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
+    {
+        return;
+    }
+
     ASSERT(!crawl_state.game_is_arena() || src != &you);
     ASSERT_IN_BOUNDS_OR_ORIGIN(src_pos);
     if (mons_is_projectile(mon->type))
@@ -1109,6 +1117,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (src == &you && mon->angered_by_attacks())
         {
             if (mon->attitude == ATT_FRIENDLY && mon->is_summoned()
+                && mon->type != MONS_ELDRITCH_TENTACLE
                 && !mon->is_child_monster() && !mons_is_tentacle_segment(mon->type))
             {
                 summon_dismissal_fineff::schedule(mon);

@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "output.h"
 #include "describe.h"
+#include "directn.h"
 #include "tile-inventory-flags.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"
@@ -135,7 +136,7 @@ bool MonsterRegion::update_alt_text(string &alt)
     if (!you.see_cell(gc))
         return false;
 
-    get_square_desc(gc, inf);
+    inf.body << get_square_desc(gc);
 
     alt = process_description(inf);
     return true;

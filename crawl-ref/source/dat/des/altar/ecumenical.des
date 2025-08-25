@@ -322,8 +322,10 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_totnotflames
 TAGS:   transparent
-COLOUR: . = green / brown
-FTILE:  A. = floor_grass:20 / floor_dirt
+COLOUR: . = green
+COLOUR: ' = brown
+FTILE:  A. = floor_grass_dark
+FTILE:  '_Gt@ = floor_moss
 SUBST:  A = ATUV
 : ecumenical_altar_setup(_G)
 MAP
@@ -339,8 +341,8 @@ MAP
 @tt t...t
 t.ttt.A.tttt@
 t...t...tt..t
-tt........ttt
- tt..G_G.tt
+tt...'''..ttt
+ tt.'G_G'tt
   tttttttt
 ENDMAP
 
@@ -444,7 +446,8 @@ MONS:   plant
 KITEM:  E = gnoll skeleton
 SUBST:  z = t111
 SUBST:  1 = 11'
-FTILE:  1Et'_  = floor_grass
+FTILE:  1E'_  = floor_grass_dark
+FTILE:  t = floor_moss
 COLOUR: 1E'_ = green
 : ecumenical_altar_setup(_G)
 MAP
@@ -736,27 +739,25 @@ ENDMAP
 NAME:    hellmonk_ecumenical_altar_arch_garden
 TAGS:    transparent
 NSUBST:  A = 1:_ / *:A
-SUBST:   A = tGAA.
-SUBST:   . = ..'
-FTILE:   ._t = floor_grass
+SUBST:   A = tGAA"
+FTILE:   ._ = floor_grass_dark
 COLOUR:  . = green
-FTILE:   'GA = floor_dirt
-COLOUR:  ' = brown
+FTILE:   "tGA = floor_moss
 : ecumenical_altar_setup(_G)
 MAP
+A""A""A""A""A
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
-A..A..A..A..A
-.............
-.............
-A..A..A..A..A
+"..........."
+"..........."
+A""A""A""A""A
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_watching_god
@@ -1069,9 +1070,9 @@ TAGS:   transparent
 KMONS:  p = plant / fungus
 SUBST:  # = g t p
 SUBST:  - = .:20 g p
-SUBST:  . = .g
 COLOUR: g = green / lightgreen
-FTILE:  _gtp = floor_grass
+FTILE:  _gtp = floor_grass_dark
+FTILE:  . = floor_moss
 : ecumenical_altar_setup(_G)
 MAP
  .......
@@ -1183,9 +1184,9 @@ WEIGHT:  0 (D:1), 10
 SHUFFLE: {[(<
 SUBST:   x : xxxm, c : cccb
 FTILE:   {[(<_cbxm; : floor_black_cobalt / floor_cobble_blood / floor_crypt / \
-         floor_crystal_squares / floor_etched / floor_grass / floor_limestone /\
-         floor_moss / floor_mud / floor_sand / floor_sandstone / floor_vines / \
-         floor_w_marble / none
+         floor_crystal_squares / floor_etched / floor_grass_dark / \
+         floor_limestone / floor_moss / floor_mud / floor_sand / \
+         floor_sandstone / floor_vines / floor_w_marble
 COLOUR:  ; : blue / green / cyan / red / magenta / brown / lightgrey / \
              lightblue / lightgreen / lightcyan / lightred / lightmagenta / \
              yellow / white

@@ -96,7 +96,7 @@ shadowless SHADOWLESS
 bind BIND
 weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
-doubled_health DOUBLED_HEALTH
+doubled_vigour DOUBLED_VIGOUR
 kinetic_grapnel KINETIC_GRAPNEL
 tempered TEMPERED
 heart HEART
@@ -115,6 +115,7 @@ figment FIGMENT
 paradox PARADOX
 warding WARDING
 dim DIMMED
+sentinel_mark SENTINEL_MARK
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

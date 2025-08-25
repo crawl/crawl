@@ -869,7 +869,7 @@ MONS:   hound, wolf
 KMONS:  R = Grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
 : fortress_talisman_chance(_G, "e")
-FTILE:  4't = floor_grass
+FTILE:  4't = floor_grass_dark
 KFEAT:  ' = floor
 NSUBST: - = 2:1 / 27 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
 NSUBST: R = 1:R22 / *:2, 5 = 2:5 / * = 5..
@@ -1069,7 +1069,7 @@ ITEM:   any armour good_item no_pickup
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
 NSUBST: 2 = 2:2 / * = 2..., 3 = 1:332 / * = 2....
-FTILE:  -t = floor_grass
+FTILE:  -t = floor_grass_dark
 : bailey_setup(_G)
 MAP
   cccc        cccc

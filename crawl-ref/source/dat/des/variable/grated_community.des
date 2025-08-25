@@ -40,7 +40,7 @@ KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
 KFEAT:  = = floor
 KPROP:  4 = no_tele_into
-FTILE:  =E79 = floor_grass
+FTILE:  =E79 = floor_grass_dark
 COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
@@ -321,7 +321,7 @@ ENDMAP
 ####  taur, entrace w/feature, shooting range, closets
 NAME: grated_community_mu_taur_home
 TAGS: grated_community_mu_home grated_community_mu_home6 unrand
-FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
+FTILE:  12.c'+%$W8n~ = floor_moss
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
 KITEM:  $ = any good_item
@@ -351,7 +351,7 @@ ENDMAP
 
 NAME: grated_community_mu_unbuilt_plot
 TAGS: grated_community_mu_home unrand
-FTILE:  . = floor_grass_dirt_mix
+FTILE:  . = floor_pebble_red
 COLOUR: . = green
 SHUFFLE: %$
 KFEAT:  = = floor

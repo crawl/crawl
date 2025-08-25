@@ -766,7 +766,7 @@ void bolt::precalc_agent_properties()
 
 void bolt::apply_beam_conducts()
 {
-    if (is_tracer() && YOU_KILL(thrower))
+    if (is_tracer() && BLAME_KILL(thrower))
     {
         switch (flavour)
         {
@@ -1642,7 +1642,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             mons->drain(pbolt.agent());
 
-            if (YOU_KILL(pbolt.thrower))
+            if (BLAME_KILL(pbolt.thrower))
                 did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
         }
         break;
@@ -1663,7 +1663,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             miasma_monster(mons, pbolt.agent());
 
-            if (YOU_KILL(pbolt.thrower))
+            if (BLAME_KILL(pbolt.thrower))
                 did_god_conduct(DID_UNCLEAN, 2, pbolt.god_cares());
         }
         break;
@@ -1757,8 +1757,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
-            || mons->god == GOD_YREDELEMNUL)
+        if (mons->god == GOD_YREDELEMNUL
+            || mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
         {
             if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
                 simple_monster_message(*mons, " completely resists.");
@@ -3185,11 +3185,11 @@ void bolt::internal_ouch(int dam)
     else if (MON_KILL(thrower))
     {
         ouch(dam, KILLED_BY_BEAM, source_id,
-             aux_source.c_str(), true,
+             what, true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else // KILL_NON_ACTOR || (YOU_KILL && aux_source)
-        ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
+        ouch(dam, KILLED_BY_WILD_MAGIC, source_id, what);
 }
 
 // [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
@@ -3279,7 +3279,8 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() > 0 || mon->clarity();
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return (bool)!(mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return mon->god == GOD_YREDELEMNUL
+               || (bool)!(mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     default:
         return false;
@@ -3321,7 +3322,7 @@ bool bolt::harmless_to_player() const
     case BEAM_AGILITY:
     case BEAM_INVISIBILITY:
     case BEAM_RESISTANCE:
-    case BEAM_DOUBLE_HEALTH:
+    case BEAM_DOUBLE_VIGOUR:
         return true;
 
     case BEAM_HOLY:
@@ -3360,7 +3361,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_UMBRAL_TORCHLIGHT:
         return you_worship(GOD_YREDELEMNUL)
-                || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     case BEAM_QAZLAL:
         return true;
@@ -3751,6 +3752,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_WEAKNESS:
+        // actor::weaken already is randomized- why are we randomizing input?
         you.weaken(agent(), 8 + random2(4));
         obvious_effect = true;
         break;
@@ -3963,6 +3965,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         nasty = false;
         nice  = true;
+        break;
+
+    case BEAM_DIMINISH_SPELLS:
+        you.diminish(agent(), 9);
+        obvious_effect = true;
         break;
 
     case BEAM_SAP_MAGIC:
@@ -4478,7 +4485,7 @@ void bolt::affect_player()
     else if (flavour == BEAM_ACID && coinflip())
         you.corrode(agent());
 
-    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+    if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         you.vitrify(agent(), random_range(8, 18));
 
     if (origin_spell == SPELL_SOJOURNING_BOLT
@@ -4924,7 +4931,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     if (nasty_to(mon))
     {
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             set_attack_conducts(conducts, *mon, you.can_see(*mon));
 
@@ -4994,7 +5001,13 @@ void bolt::enchantment_affect_monster(monster* mon)
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
     if (mon && mon->alive() && nasty_to(mon))
-        behaviour_event(mon, ME_ANNOY, agent());
+    {
+        // Don't anger allies for the actions of confused enemies.
+        const actor* to_blame = agent();
+        if (thrower == KILL_YOU_CONF)
+            to_blame = actor_by_mid(source_id);
+        behaviour_event(mon, ME_ANNOY, to_blame);
+    }
     else
         behaviour_event(mon, ME_ALERT, agent());
 }
@@ -5177,7 +5190,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // did no damage. Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
-        behaviour_event(mon, ME_ANNOY, agent());
+        const actor* to_blame = agent();
+        if (thrower == KILL_YOU_CONF)
+            to_blame = actor_by_mid(source_id);
+        behaviour_event(mon, ME_ANNOY, to_blame);
 
         // behaviour_event can make a monster leave the level or vanish.
         if (!mon->alive())
@@ -5226,7 +5242,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         monster_teleport(mon, false, false, false, agent());
     }
 
-    if (flavour == BEAM_CRYSTALLIZING && !one_chance_in(4))
+    if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         mon->vitrify(agent(), random_range(8, 18));
 
     if (dmg)
@@ -5955,6 +5971,7 @@ bool bolt::has_saving_throw() const
     case BEAM_SHADOW_TORPOR:
     case BEAM_ILL_OMEN:
     case BEAM_WARP_BODY:
+    case BEAM_DIMINISH_SPELLS:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -6035,6 +6052,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         rc = (mon->res_poison() < 3);
         break;
 
+    case BEAM_DIMINISH_SPELLS:
     case BEAM_DRAIN_MAGIC:
         rc = mon->antimagic_susceptible();
         break;
@@ -6210,7 +6228,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_POLYMORPH:
         if (mon->polymorph(0))
             obvious_effect = true;
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             const int level = 2 + random2(3);
             did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
@@ -6221,7 +6239,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_UNRAVELLED_MAGIC:
         if (mon->malmutate(agent())) // exact source doesn't matter
             obvious_effect = true;
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
         {
             const int level = 2 + random2(3);
             did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
@@ -6359,7 +6377,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_HASTE:
-        if (YOU_KILL(thrower))
+        if (BLAME_KILL(thrower))
             did_god_conduct(DID_HASTY, 6, god_cares());
 
         if (mon->stasis())
@@ -6386,11 +6404,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
-    case BEAM_DOUBLE_HEALTH:
-        if (!mon->has_ench(ENCH_DOUBLED_HEALTH)
-            && mon->add_ench(ENCH_DOUBLED_HEALTH))
+    case BEAM_DOUBLE_VIGOUR:
+        if (!mon->has_ench(ENCH_DOUBLED_VIGOUR)
+            && mon->add_ench(ENCH_DOUBLED_VIGOUR))
         {
-            if (simple_monster_message(*mon, " surges with doubled health!"))
+            if (simple_monster_message(*mon, " surges with doubled vitality!"))
                 obvious_effect = true;
         }
         return MON_AFFECTED;
@@ -6656,6 +6674,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                 obvious_effect = true;
             }
         }
+        return MON_AFFECTED;
+
+    case BEAM_DIMINISH_SPELLS:
+        mon->diminish(agent(), 9);
+        obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_DRAIN_MAGIC:
@@ -7404,7 +7427,7 @@ bool bolt::nice_to(const monster_info& mi) const
 
     if (flavour == BEAM_HASTE
         || flavour == BEAM_HEALING
-        || flavour == BEAM_DOUBLE_HEALTH
+        || flavour == BEAM_DOUBLE_VIGOUR
         || flavour == BEAM_MIGHT
         || flavour == BEAM_AGILITY
         || flavour == BEAM_INVISIBILITY
@@ -7647,6 +7670,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
+    case BEAM_DIMINISH_SPELLS:       return "diminish spells";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
@@ -7666,14 +7690,14 @@ static string _beam_type_name(beam_type type)
     case BEAM_WEAKNESS:              return "weakness";
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
-    case BEAM_CRYSTALLIZING:         return "crystallizing";
+    case BEAM_CRYSTALLISING:         return "crystallising";
     case BEAM_WARPING:               return "spatial disruption";
     case BEAM_QAZLAL:                return "upheaval targetter";
     case BEAM_RIMEBLIGHT:            return "rimeblight";
     case BEAM_SHADOW_TORPOR:         return "shadow torpor";
     case BEAM_HAEMOCLASM:            return "gore";
     case BEAM_BLOODRITE:             return "blood";
-    case BEAM_DOUBLE_HEALTH:         return "health-doubling";
+    case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
     case BEAM_VEX:                   return "vexing";
     case BEAM_SEISMIC:               return "seismic shockwave";
     case BEAM_BOLAS:                 return "entwining bolas";
@@ -8006,7 +8030,12 @@ void bolt::set_is_tracer(bool value) noexcept
 int apply_willpower_bypass(const actor& source, int willpower)
 {
     if (source.wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        willpower = max(0, willpower - 2 * WL_PIP);
+    {
+        if (source.is_monster())
+            willpower = max(0, willpower - 2 * WL_PIP);
+        else
+            willpower = max(0, willpower - guile_will_reduction());
+    }
 
     if (source.is_player() && you.form == transformation::sphinx)
         willpower = max(0, willpower - WL_PIP);
@@ -8023,4 +8052,10 @@ int apply_willpower_bypass(const monster_info& source, int willpower)
     }
 
     return willpower;
+}
+
+int guile_will_reduction(bool max)
+{
+    const int skill = max ? 27 : you.skill(SK_EVOCATIONS);
+    return 20 + stepdown(skill * 7 / 2, 75);
 }

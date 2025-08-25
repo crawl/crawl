@@ -1823,10 +1823,7 @@ bool StashTracker::display_search_results(
             me->add_tile(tile_def(tileidx_feature_base(res.feat)));
         }
         else
-        {
-            const dungeon_feature_type feat = feat_by_desc(res.match);
-            me->add_tile(tile_def(tileidx_feature_base(feat)));
-        }
+            me->add_tile(tile_def(tileidx_feature_base(res.feat)));
 
         stashmenu.add_entry(me);
         hotkey++;

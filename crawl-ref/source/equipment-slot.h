@@ -53,4 +53,8 @@ enum equipment_slot
     // Range check on normal 'armour' slots
     SLOT_MIN_ARMOUR = SLOT_OFFHAND,
     SLOT_MAX_ARMOUR = SLOT_CLOAK,
+
+    // Range check on 'aux' armour
+    SLOT_MIN_AUX_ARMOUR = SLOT_HELMET,
+    SLOT_MAX_AUX_ARMOUR = SLOT_CLOAK,
 };

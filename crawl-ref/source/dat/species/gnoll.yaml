@@ -2,7 +2,7 @@ enum: SP_GNOLL
 monster: MONS_GNOLL
 name: Gnoll
 difficulty: Simple
-difficulty_priority: 10
+difficulty_priority: 100
 aptitudes:
   xp: 0
   hp: 0

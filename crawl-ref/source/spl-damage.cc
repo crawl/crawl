@@ -603,7 +603,17 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
                 you.pet_target = target.mindex();
         }
         else if (hurted)
-            target.hurt(agent, hurted, beam.flavour);
+        {
+            kill_method_type ktype = KILLED_BY_BEAM;
+            if (beam.origin_spell == SPELL_DRAIN_LIFE)
+                ktype = KILLED_BY_DRAINING;
+            else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
+                ktype = KILLED_BY_FREEZING;
+
+            string aux = beam.origin_spell == SPELL_SONIC_WAVE ? "sonic wave" : "";
+
+            target.hurt(agent, hurted, beam.flavour, ktype, "", aux);
+        }
 
         // Cold-blooded creatures can be slowed.
         if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION
@@ -1003,7 +1013,7 @@ dice_def base_airstrike_damage(int pow, bool random)
     return dice_def(2, (pow + 13) / 14);
 }
 
-string describe_airstrike_dam(dice_def dice)
+string describe_player_airstrike_dam(dice_def dice)
 {
     return make_stringf("%dd(%d-%d)", dice.num, dice.size,
                         dice.size + MAX_AIRSTRIKE_BONUS);
@@ -1243,6 +1253,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     // there are so many of them, it seems wrong to have them be so harmful to
     // their own allies. This could be wrong!
     { MONS_SALTLING,          { "salt crystal", WHITE } },
+    { MONS_PILLAR_OF_SALT,    { "salt crystal", WHITE } },
     { MONS_PILE_OF_DEBRIS,    { "stone", LIGHTGRAY } },
     { MONS_PETRIFIED_FLOWER,  { "stone", LIGHTGRAY } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
@@ -4204,34 +4215,40 @@ void attempt_jinxbite_hit(actor& victim)
         you.duration[DUR_JINXBITE] = 1;
 }
 
-void foxfire_attack(const monster *foxfire, const actor *target)
+void seeker_attack(monster& seeker, actor& target)
 {
-    actor * summoner = actor_by_mid(foxfire->summoner);
-    if (!summoner || !summoner->alive())
+    actor * summoner = actor_by_mid(seeker.summoner);
+
+    // If our summoner is dead, just attribute the seeker's damage to itself.
+    if (!summoner)
+        summoner = &seeker;
+
+    // Don't allow player seekers to attack out of the player's LoS
+    if (summoner && summoner->is_player() && !(you.can_see(seeker)
+                                          && you.see_cell(target.pos())))
     {
-        // perish as your master once did
         return;
     }
 
-    // Don't allow foxfires that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(*foxfire)
-                      && summoner->see_cell(target->pos())))
-    {
-        return;
-    }
+    zap_type ztype = (seeker.type == MONS_FOXFIRE ? ZAP_FOXFIRE : ZAP_SHOOTING_STAR);
 
     bolt beam;
-    beam.thrower = (foxfire && foxfire->summoner == MID_PLAYER) ? KILL_YOU :
-                        (foxfire)   ? KILL_MON
-                                    : KILL_NON_ACTOR;
+    beam.thrower = seeker.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
     beam.range       = 1;
-    beam.source      = foxfire->pos();
-    beam.source_id   = foxfire->summoner;
-    beam.source_name = summoner->name(DESC_PLAIN, true);
-    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
-    beam.aux_source  = beam.name;
-    beam.target      = target->pos();
+    beam.source      = seeker.pos();
+    beam.set_agent(summoner);
+    zappy(ztype, seeker.get_hit_dice(), !seeker.friendly(), beam);
+    beam.target      = target.pos();
+    beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();
+
+    check_place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
+
+    if (target.alive() && seeker.type == MONS_SHOOTING_STAR)
+        target.knockback(seeker, 1, 0, "");
+
+    if (seeker.alive())
+        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
 }
 
 /**
@@ -4391,10 +4408,14 @@ void actor_apply_toxic_bog(actor * act)
     const bool player = act->is_player();
     monster *mons = !player ? act->as_monster() : nullptr;
 
-    if (mons && mons->type == MONS_FENSTRIDER_WITCH)
-        return; // stilting above the muck!
+    if (mons &&
+        (mons->type == MONS_FENSTRIDER_WITCH  // stilting above the muck!
+         || mons->type == MONS_ORC_APOSTLE))  // walking on top of it
+    {
+        return;
+    }
 
-    if (player && you.duration[DUR_NOXIOUS_BOG])
+    if (player && (you.duration[DUR_NOXIOUS_BOG] || you.can_water_walk()))
         return;
 
     actor *oppressor = nullptr;
@@ -4410,6 +4431,9 @@ void actor_apply_toxic_bog(actor * act)
                 oppressor = actor_by_mid(tmarker->mon_num);
         }
     }
+
+    if (never_harm_monster(oppressor, act->as_monster()))
+        return;
 
     const int base_damage = toxic_bog_damage().roll();
     const int damage = resist_adjust_damage(act, BEAM_POISON_ARROW, base_damage);
@@ -4518,11 +4542,11 @@ void end_frozen_ramparts()
     const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
     ASSERT(in_bounds(pos));
 
-    for (distance_iterator di(pos, false, false,
-                spell_range(SPELL_FROZEN_RAMPARTS, -1)); di; di++)
+    for (radius_iterator ri(pos, spell_range(SPELL_FROZEN_RAMPARTS, -1),
+                            C_SQUARE, false); ri; ri++)
     {
-        env.pgrid(*di) &= ~FPROP_ICY;
-        env.map_knowledge(*di).flags &= ~MAP_ICY;
+        env.pgrid(*ri) &= ~FPROP_ICY;
+        env.map_knowledge(*ri).flags &= ~MAP_ICY;
     }
 
     you.props.erase(FROZEN_RAMPARTS_KEY);

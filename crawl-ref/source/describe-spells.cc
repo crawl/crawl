@@ -410,6 +410,7 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
         case SPELL_LRD:
             return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
+        case SPELL_SLEETSTRIKE:
             return base_airstrike_damage(pow);
         case SPELL_ARCJOLT:
             return arcjolt_damage(pow, false);
@@ -463,6 +464,7 @@ static colour_t _spell_colour(spell_type spell)
     {
         case SPELL_FREEZE:
         case SPELL_GLACIATE:
+        case SPELL_SLEETSTRIKE:
             return WHITE;
         case SPELL_WATERSTRIKE:
             return LIGHTBLUE;
@@ -561,7 +563,9 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner,
         return "";
 
     if (spell == SPELL_AIRSTRIKE)
-        return describe_airstrike_dam(dam);
+        return make_stringf("%dd%d+(2/space)", dam.num, dam.size);
+    if (spell == SPELL_SLEETSTRIKE)
+        return make_stringf("%dd%d+(3/space)", dam.num, dam.size);
     if (spell == SPELL_RESONANCE_STRIKE)
         return describe_resonance_strike_dam(dam);
 
@@ -767,7 +771,7 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        string effect_str = _effect_string(spell, mon_owner);
+        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);

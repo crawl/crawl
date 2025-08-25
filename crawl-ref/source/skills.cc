@@ -16,6 +16,7 @@
 
 #include "ability.h"
 #include "clua.h"
+#include "chardump.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "files.h"
@@ -24,6 +25,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
@@ -524,8 +526,8 @@ static void _check_abil_skills()
 static void _check_active_talisman_skills()
 {
     skill_set skills;
-    if (you.active_talisman.defined()
-        && item_skills(you.active_talisman, skills))
+    if (you.active_talisman()
+        && item_skills(*you.active_talisman(), skills))
     {
         _erase_from_skills_to_hide(skills);
     }
@@ -1915,6 +1917,74 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+/**
+ * Special conduct skill title tracking, extending the range of skill titles
+ * beyond what's covered in skill_title_by_rank. These titles are used only if
+ * "conducts" are enabled by that function, which excludes titles for player
+ * ghosts until someone wants to enable that, but allows going beyond the
+ * stat/skill/god paradigm of that function.
+ *
+ * When adding titles here, try to avoid "covering" the entirety of normal skill
+ * titles (ie don't add a lorekeeper title based on the tournament banner
+ * because it invalidates a large number of low skill level titles)
+ *
+ * Also, try to make the conducts interesting and challenging, not annoying,
+ * since some players like to chase titles.
+ */
+string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
+{
+    string title;
+
+    // All gem runs, as per the graceful banner (graceful seems a weird title)
+    if (gems_held_intact() >= 11)
+        return "Flawless";
+
+    // A very hard version of the ascetic banner
+    if (you.experience_level > 17
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_SCROLLS))))
+    {
+        return "True Ascetic";
+    }
+
+    // All rune deathless felid
+    if (you.species == SP_FELID && runes_in_pack() >= 15 && you.deaths == 0)
+        return "Incurious";
+
+    // A harder version of the ruthless efficiency banner
+    if (you.experience_level < 19 && player_has_orb())
+        return "Ruthless";
+
+    // Shopless, with Gozag
+    if (you_worship(GOD_GOZAG) && you.experience_level > 17
+        && you.attribute[ATTR_PURCHASES] == 0)
+    {
+        return "Miser";
+    }
+
+    // all runes with a zealot without ever abandoning
+    if (runes_in_pack() >= 15 && you.char_class == JOB_CHAOS_KNIGHT
+        && you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1)
+    {
+        return "Chaos Fanatic";
+    }
+
+    if (runes_in_pack() >= 15 && you.char_class == JOB_CINDER_ACOLYTE
+        && you_worship(GOD_IGNIS) && you.worshipped[GOD_IGNIS] == 1)
+    {
+        return "Keeper of the Flame";
+    }
+
+    // Award for being very good at crab
+    if (you.form == transformation::fortress_crab
+        && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
+    {
+        return "Pinnacle of Evolution";
+    }
+
+    return title;
+}
+
 // XX should at least some of this be in species.cc?
 
 /**
@@ -1928,12 +1998,12 @@ unsigned get_skill_rank(unsigned skill_lev)
  * @param intel         The player's base intelligence
  * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
- * @param trans         The player's current transformation
+ * @param conducts      Whether or not to check "special" conduct titles
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                            species_type species, int dex, int str, int intel,
-                           god_type god, int piety, transformation trans)
+                           god_type god, int piety, bool conducts)
 {
 
     // paranoia
@@ -2027,11 +2097,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_THROWING:
             if (species == SP_POLTERGEIST && skill_rank == 5)
                 result = "Undying Armoury";
-            break;
-
-        case SK_SHAPESHIFTING:
-            if (trans == transformation::fortress_crab && skill_rank == 5)
-                result = "Pinnacle of Evolution";
             break;
 
         case SK_SPELLCASTING:
@@ -2195,6 +2260,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             god_type betrayed_god = static_cast<god_type>(
                 you.attribute[ATTR_TRAITOR]);
             result = god_title(betrayed_god, species, piety);
+        }
+
+        if (conducts)
+        {
+            string conduct = special_conduct_title(best_skill, skill_rank);
+            if (!conduct.empty())
+                result = conduct;
         }
 
         if (result.empty())

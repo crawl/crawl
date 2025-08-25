@@ -10,6 +10,7 @@
 #include "ability.h"
 #include "libutil.h"
 #include "invent.h"
+#include "item-use.h"
 #include "items.h"
 #include "macro.h"
 #include "message.h"
@@ -22,12 +23,19 @@ static void _adjust_ability();
 
 void adjust()
 {
-    mprf(MSGCH_PROMPT, "Adjust (i)tems, (s)pells, or (a)bilities? ");
+    mprf(MSGCH_PROMPT, "Adjust (g)ear, (s)pells, (a)bilities, "
+                       "(p)otions, sc(r)olls or e(v)ocables? ");
 
     const int keyin = toalower(get_ch());
 
-    if (keyin == 'i')
-        adjust_item();
+    if (keyin == 'g' || keyin == 'i')
+        adjust_item(OSEL_GEAR);
+    else if (keyin == 'p')
+        adjust_item(OBJ_POTIONS);
+    else if (keyin == 'r')
+        adjust_item(OBJ_SCROLLS);
+    else if (keyin == 'v')
+        adjust_item(OSEL_EVOKABLE);
     else if (keyin == 's')
         _adjust_spell();
     else if (keyin == 'a')
@@ -38,7 +46,7 @@ void adjust()
         canned_msg(MSG_HUH);
 }
 
-void adjust_item(int from_slot)
+void adjust_item(int selector, item_def* to_adjust)
 {
 #ifdef USE_TILE_WEB
     ui::cutoff_point ui_cutoff_point;
@@ -49,29 +57,41 @@ void adjust_item(int from_slot)
         return;
     }
 
-    if (from_slot == -1)
+    // If asked to adjust a specific item, make sure we have the right category.
+    if (to_adjust)
     {
-        from_slot = prompt_invent_item("Adjust which item?",
-                                       menu_type::invlist, OSEL_ANY);
+        if (inventory_category_for(*to_adjust) == INVENT_CONSUMABLE)
+            selector = default_osel(item_to_oper(to_adjust));
+        else
+            selector = OSEL_GEAR;
+    }
+
+    if (!to_adjust)
+    {
+        const int from_slot = prompt_invent_item("Adjust which item?",
+                                       menu_type::invlist, selector, OPER_ANY);
         if (prompt_failed(from_slot))
             return;
 
-        mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        to_adjust = &you.inv[from_slot];
+
+        mprf_nocap("%s", to_adjust->name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     const int to_slot = prompt_invent_item("Adjust to which letter? ",
                                            menu_type::invlist,
-                                           OSEL_ANY, OPER_ANY,
+                                           selector, OPER_ANY,
                                            invprompt_flag::unthings_ok
                                             | invprompt_flag::manual_list);
     if (to_slot == PROMPT_ABORT
-        || from_slot == to_slot)
+        || to_adjust->link == to_slot)
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    swap_inv_slots(from_slot, to_slot, true);
+    ASSERT(to_adjust);
+    swap_inv_slots(*to_adjust, to_slot, true);
     you.wield_change = true;
     quiver::set_needs_redraw();
 }
@@ -192,22 +212,63 @@ static void _adjust_ability()
     swap_ability_slots(index1, letter_to_index(keyin));
 }
 
-void swap_inv_slots(int from_slot, int to_slot, bool verbose)
+void swap_inv_slots(item_def& to_adjust, int to_slot, bool verbose)
 {
+    // Consumable adjustments are easiest. We only need to change letters and
+    // not move anything in the inventory array.
+    if (inventory_category_for(to_adjust) == INVENT_CONSUMABLE)
+    {
+        // Find if the new letter is used for any current item of the same
+        // operation type (ie: quaff), so that we can adjust the keybind on that
+        // item too.
+        const operation_types oper = item_to_oper(&to_adjust);
+        item_def* item2 = nullptr;
+        const int new_letter = index_to_letter(to_slot);
+        for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+        {
+            if (!you.inv[i].defined() || item_to_oper(&you.inv[i]) != oper)
+                continue;
+
+            if (you.inv[i].slot == new_letter)
+            {
+                item2 = &you.inv[i];
+                break;
+            }
+        }
+
+        if (item2)
+            item2->slot = to_adjust.slot;
+        to_adjust.slot = index_to_letter(to_slot);
+
+        if (verbose)
+        {
+            mprf_nocap("%s", to_adjust.name(DESC_INVENTORY_EQUIP).c_str());
+            if (item2)
+                mprf_nocap("%s", item2->name(DESC_INVENTORY_EQUIP).c_str());
+        }
+
+        return;
+    }
+
+    // Gear changes require moving items in the inventory array, which can
+    // invalidate many references that will need updating.
+
     int new_quiver = -1;
-    if (you.quiver_action.item_is_quivered(from_slot))
+    if (you.quiver_action.item_is_quivered(to_adjust))
         new_quiver = to_slot;
     else if (you.quiver_action.item_is_quivered(to_slot))
-        new_quiver = from_slot;
+        new_quiver = to_adjust.link;
 
     // Swap items.
+    const int from_slot = to_adjust.link;
+
     item_def tmp = you.inv[to_slot];
     you.inv[to_slot]   = you.inv[from_slot];
     you.inv[from_slot] = tmp;
 
     // Slot switching.
     tmp.slot = you.inv[to_slot].slot;
-    you.inv[to_slot].slot  = index_to_letter(to_slot);//you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
+    you.inv[to_slot].slot  = index_to_letter(to_slot); //you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
     you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
@@ -263,6 +324,14 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         if (to_count > 0)
             last_pickup[from_slot] = to_count;
     }
+
     if (you.last_unequip == from_slot)
         you.last_unequip = to_slot;
+    else if (you.last_unequip == to_slot)
+        you.last_unequip = from_slot;
+
+    if (you.cur_talisman == from_slot)
+        you.cur_talisman = to_slot;
+    else if (you.cur_talisman == to_slot)
+        you.cur_talisman = from_slot;
 }

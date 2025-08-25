@@ -147,6 +147,7 @@ void ghost_demon::reset()
     flies            = false;
     cloud_ring_ench  = ENCH_NONE;
     umbra_rad        = -1;
+    title            = "";
 }
 
 // Set values to the bare minimum required to function, in cases where full
@@ -496,7 +497,7 @@ void ghost_demon::init_player_ghost()
                 case STAFF_FIRE: brand = SPWPN_FLAMING; break;
                 case STAFF_COLD: brand = SPWPN_FREEZING; break;
                 case STAFF_ALCHEMY: brand = SPWPN_VENOM; break;
-                case STAFF_DEATH: brand = SPWPN_PAIN; break;
+                case STAFF_NECROMANCY: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
                 case STAFF_EARTH: brand = SPWPN_HEAVY; break;
                 default: ;
@@ -529,6 +530,7 @@ void ghost_demon::init_player_ghost()
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
+    title = player_title();
 
     flies = true;
 

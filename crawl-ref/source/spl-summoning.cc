@@ -585,7 +585,7 @@ void do_dragon_call(int time)
 }
 
 /**
- * Handle the Doom Howl status effect, possibly summoning hostile nasties
+ * Handle the Oblivion Howl status effect, possibly summoning hostile nasties
  * around the player.
  *
  * @param time      The number of aut that the howling has been going on for
@@ -1406,12 +1406,12 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     fail_check();
 
-    int doom_cost = random_range(3, 7);
+    int doom_cost = random_range(2, 5);
     if (one_chance_in(4))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("summon_horrible_things"));
-        doom_cost *= 3;
+        doom_cost += random_range(6, 10);
     }
 
     you.doom(doom_cost);
@@ -2930,6 +2930,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
                   MG_FORCE_PLACE | MG_AUTOFOE);
     fox.set_summoned(&agent, SPELL_FOXFIRE, random_range(40, 70), false, false);
     fox.hd = pow;
+    fox.hp = min(20, pow);
     monster *foxfire;
 
     if (cell_is_solid(pos) || actor_at(pos))
@@ -4306,6 +4307,17 @@ static void _do_player_potion()
 
     if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
         oni_drunken_swing();
+
+    if (you.magic_points < you.max_magic_points)
+    {
+        const int amu = you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true);
+        if (amu)
+        {
+            mprf("You extract %smagical energy from the potion.",
+                 amu > 1 ? "even more " : "");
+            inc_mp(random_range(3, 6) * amu);
+        }
+    }
 
     // Mildly shorter duration than drinking the potion normally.
     get_potion_effect(potion)->effect(true, 15);
