@@ -624,7 +624,7 @@ ITEM:     (list of items, separated by comma)
           isn't given to a weapon, a weapon ego to a missile, and so on, and
           also to make sure that egos are only given to armours, weapons and
           missiles, no other checking is done. Thus it is possible to create
-          a demonic weapon of holy wrath or a helmet of rampging.
+          a demonic weapon of holy wrath or a helmet of rampaging.
 
           Corpses
           -------
