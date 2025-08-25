@@ -1325,7 +1325,7 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
           KFEAT: 1 = shallow_water
 
           will result in 1 producing shallow water with no monster. As clarified
-          later on, it canstack with other character declarations:
+          later on, it can stack with other character declarations:
 
           KMONS: 1 = water moccasin
           KITEM: 1 = any
