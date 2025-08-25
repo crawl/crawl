@@ -370,7 +370,7 @@ can allow a player to tediously take them out slowly for free experience and
 loot- starting book spells can eventually take down even endgame threats if
 lucky enough.
 
-Console's limitataions also strongly discourage changing the colours of most
+Console's limitations also strongly discourage changing the colours of most
 walls or floors. Rock can change between branches and does so regularly, but
 this makes it important to not miss if a wall is something else like transparent
 stone or crystal. Floor colours, meanwhile, can overlap with monsters with
