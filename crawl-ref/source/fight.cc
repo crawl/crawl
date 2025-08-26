@@ -479,8 +479,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 return you.turn_is_over;
         }
 
-        const bool was_firewood = defender->is_firewood();
-
         melee_attack attk(&you, defender);
 
         if (simu)
@@ -511,7 +509,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        do_player_post_attack(defender, was_firewood, simu);
+        do_player_post_attack(defender, attk.did_attack_hostiles(), simu);
 
         return true;
     }
@@ -1186,6 +1184,8 @@ bool force_player_cleave(coord_def target)
 {
     list<actor*> cleave_targets;
     get_cleave_targets(you, target, cleave_targets);
+    if (item_def* offhand_weapon = you.offhand_weapon())
+        get_cleave_targets(you, target, cleave_targets, -1, false, offhand_weapon);
 
     if (!cleave_targets.empty())
     {
@@ -1195,8 +1195,9 @@ bool force_player_cleave(coord_def target)
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
 
-        if (!you.fumbles_attack())
-            attack_multiple_targets(you, cleave_targets);
+        melee_attack atk(&you, nullptr);
+        atk.launch_attack_set();
+        do_player_post_attack(nullptr, atk.did_attack_hostiles(), false);
         return true;
     }
 
@@ -1245,9 +1246,14 @@ bool weapon_multihits(const item_def *weap)
  * defender itself.
  *
  * @param attacker[in]   The attacking creature.
- * @param def[in]        The location of the targeted defender.
+ * @param def[in]        The location of the targeted defender, or (0,0) if
+ *                       there isn't one.
  * @param targets[out]   A list to be populated with targets.
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
+ * @param force_cleaving Force the current attack to count as if it cleaves,
+ *                       even if it otherwise would not (ie: for Inugami instant
+ *                       cleave).
+ * @param weapon         The weapon being used to make this attack.
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack,
@@ -1258,7 +1264,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (!attacker.alive())
         return;
 
-    if (actor_at(def))
+    if (!def.origin() && actor_at(def))
         targets.push_back(actor_at(def));
 
     const item_def* weap = weapon ? weapon : attacker.weapon(which_attack);
@@ -1281,65 +1287,6 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
             continue;
         targets.push_back(target);
     }
-}
-
-/**
- * Attack a provided list of cleave or quick-blade targets.
- *
- * @param attacker                  The attacking creature.
- * @param targets                   The targets to cleave.
- * @param attack_number             For monsters, which of their 4 possible attacks this
- *                                  corresponds to. For players, usually 0, but can be 1
- *                                  for the second of a Coglin's two weapons per round
- * @param effective_attack_number   Like attack_number, if invalid attacks were skipped
- *                                  (ie: fake attacks or ones outside of their max range.)
- * @param wu_jian_attack            The type of martial attack being performed (if any).
- * @param is_projected              Whether the attack is projected (ie: Manifold Assault)
- * @param is_cleaving               Whether this is a cleaving attack.
- * @param weapon                    The weapon this attack is being performed with (if any).
- *
- * @return  The total amount of damage inflicted directly by all attacks caused by this function.
- */
-int attack_multiple_targets(actor &attacker, list<actor*> &targets,
-                             int attack_number, int effective_attack_number,
-                             wu_jian_attack_type wu_jian_attack,
-                             bool is_projected, bool is_cleaving,
-                             item_def *weapon)
-{
-    if (!attacker.alive())
-        return 0;
-
-    int total_damage = 0;
-    const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
-
-    const bool reaching = _monster_has_reachcleave(attacker)
-                          || (weap && weapon_reach(*weap) > 1);
-    while (attacker.alive() && !targets.empty())
-    {
-        actor* def = targets.front();
-
-        if (def && def->alive() && !dont_harm(attacker, *def)
-            && (is_projected
-                || adjacent(attacker.pos(), def->pos())
-                || reaching))
-        {
-            melee_attack attck(&attacker, def, attack_number,
-                               ++effective_attack_number);
-            if (weapon && attacker.is_player())
-                attck.set_weapon(weapon, true);
-
-            attck.wu_jian_attack = wu_jian_attack;
-            attck.is_projected = is_projected;
-            attck.cleaving = is_cleaving;
-            attck.is_multihit = !is_cleaving; // heh heh heh
-            attck.attack();
-
-            total_damage += attck.total_damage_done;
-        }
-        targets.pop_front();
-    }
-
-    return total_damage;
 }
 
 /**

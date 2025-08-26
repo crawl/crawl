@@ -46,16 +46,23 @@ public:
     int       total_damage_done;
 
     list<actor*> cleave_targets;
+
+    // Important: any parameters that may be set from outside before attack()
+    //            is called *must* be included in melee_attack::copy_params_to()
+    //            or various incorrect behavior will result for multi-weapon or
+    //            multi-hit attacks.
     bool         cleaving;        // additional attack from cleaving
-    bool         is_multihit;     // quick blade follow-up attack
+    bool         is_followup;     // quick blade follow-up attack
     bool         is_riposte;      // fencers' retaliation attack
-    bool         is_projected;    // projected weapon spell attack
+    bool         is_projected;    // projected weapon spell attack (eg: from
+                                  // Manifold Assault)
     bool         is_bestial_takedown;   // bestial takedown attack
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
-                                  // followups, but still do 100% damage
+                                  // followups, even if it ordinariy would.
     int          dmg_mult;        // percentage multiplier to max damage roll
-    int          flat_dmg_bonus;  // flat slaying to add to this attack
+                                  // (0 = +0% damage, 50 = +50% damage, etc.)
+    int          flat_dmg_bonus;  // flat damage to add to this attack, pre-AC
     bool         never_prompt;    // whether to skip prompting the player about
                                   // harming allies
     wu_jian_attack_type wu_jian_attack;
@@ -80,6 +87,9 @@ public:
     bool player_do_aux_attack(unarmed_attack_type atk);
     bool do_drag();
 
+    // Whether the attack targeted at least one hostile non-firewood target.
+    bool did_attack_hostiles() const;
+
 private:
     /* Attack phases */
     bool handle_phase_attempted() override;
@@ -91,6 +101,10 @@ private:
     bool handle_phase_killed() override;
     bool handle_phase_end() override;
 
+    // Handle cleaving and quick blade additional attacks
+    bool handle_phase_cleaving();
+    void handle_phase_multihit();
+
     /* Combat Calculations */
     bool using_weapon() const override;
     int weapon_damage() const override;
@@ -100,7 +114,6 @@ private:
     bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Attack effects */
-    void check_autoberserk();
     bool check_unrand_effects() override;
 
     void sear_defender();
@@ -111,7 +124,6 @@ private:
 
     bool run_attack_set();
     bool swing_with(item_def &weapon, bool offhand);
-    void force_cleave(item_def &weapon, coord_def target);
 
     /* Axe cleaving */
     void cleave_setup();
@@ -204,7 +216,11 @@ private:
     item_def *offhand_weapon() const;
 
     // XXX: set up a copy constructor instead?
-    void copy_to(melee_attack &other);
+    void copy_params_to(melee_attack &other);
+
+    int do_followup_attacks(list<actor*>& targets, bool is_cleaving);
+
+    bool is_attacking_hostiles;
 
     vorpal_damage_type damage_type;
 

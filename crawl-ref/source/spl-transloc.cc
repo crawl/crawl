@@ -866,8 +866,9 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
     // so we only need to handle delay for players.
     if (agent.is_player())
     {
-        // Normally this is 10 aut (times haste, chei etc), but slow weapons
-        // take longer. Most relevant for low-skill players and Dark Maul.
+        // Normally this is 10 aut (multiplied by haste, slow, etc.), but slow
+        // weapons take longer. Most relevant for low-skill players or things
+        // like the Dark Maul.
         you.time_taken = max(you.attack_delay().roll(), player_speed());
     }
 
@@ -2645,7 +2646,7 @@ spret do_bestial_takedown(coord_def target)
     atk.dmg_mult = get_form()->get_takedown_multiplier();
     atk.to_hit = AUTOMATIC_HIT;
     atk.is_bestial_takedown = true;
-    atk.attack();
+    atk.launch_attack_set();
 
     you.time_taken = you.attack_delay().roll();
 

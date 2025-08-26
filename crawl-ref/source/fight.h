@@ -58,15 +58,6 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1,
                         bool force_cleaving = false,
                         const item_def *weapon = nullptr);
-// too many params... need to pass in a mini-struct or something
-int attack_multiple_targets(actor &attacker, list<actor*> &targets,
-                            int attack_number = 0,
-                            int effective_attack_number = 0,
-                            wu_jian_attack_type wu_jian_attack
-                              = WU_JIAN_ATTACK_NONE,
-                            bool is_projected = false,
-                            bool is_cleave = true,
-                            item_def *weapon = nullptr);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,
