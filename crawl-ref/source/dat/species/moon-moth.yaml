@@ -54,14 +54,12 @@ mutations:
     MUT_BIG_WINGS: 1
     MUT_FLAMMABILITY: 1
 recommended_jobs:
+  - gladiator
   - monk
   - cinder acolyte
   - artificer
   - shapeshifter
   - enchanter
-  - conjurer
-  - air elementalist
-  - earth elementalist
 recommended_weapons:
   - maces and flails
   - polearms
