@@ -3422,18 +3422,14 @@ bool gozag_setup_call_merchant(bool quiet)
     if (!is_connected_branch(level_id::current().branch))
     {
         if (!quiet)
-        {
             mpr("No merchants are willing to come to this location.");
-            return false;
-        }
+        return false;
     }
     if (env.grid(you.pos()) != DNGN_FLOOR)
     {
         if (!quiet)
-        {
             mpr("You need to be standing on open floor to call a merchant.");
-            return false;
-        }
+        return false;
     }
 
     return true;
