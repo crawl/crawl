@@ -59,7 +59,8 @@ spret kindle_blastmotes(int pow, bool fail)
 {
     if (cloud_at(you.pos()))
     {
-        mpr("There's already a cloud here!");
+        if (!is_tabcasting())
+            mpr("There's already a cloud here!");
         return spret::abort;
     }
 

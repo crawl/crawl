@@ -273,7 +273,8 @@ spret cast_jinxbite(int pow, bool fail)
 {
     if (!jinxbite_targets_available())
     {
-        mpr("There is nobody nearby that the sprites are interested in.");
+        if (!is_tabcasting())
+            mpr("There is nobody nearby that the sprites are interested in.");
         return spret::abort;
     }
 
