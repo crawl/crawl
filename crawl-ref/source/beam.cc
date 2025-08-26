@@ -3293,14 +3293,14 @@ bool bolt::is_harmless(const monster* mon) const
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
-    
+
     if (agent() && agent()->is_player()
         && you.has_mutation(MUT_SAFE_SPELLS)
         && is_player_book_spell(origin_spell))
     {
         return true;
     }
-    
+
     // Marionettes can't hurt the player with anything, so don't worry about it.
     if (agent() && agent()->real_attitude() == ATT_MARIONETTE)
         return true;

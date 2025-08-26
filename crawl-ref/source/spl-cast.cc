@@ -982,7 +982,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         else
             spell = get_spell_by_letter(keyin);
 
-        
+
         if (is_tabcasting())
         {
             set_tabcast_spell(spell);
