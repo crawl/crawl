@@ -230,6 +230,7 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
     { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
     { MUT_ROLLPAGE,            MUT_INHIBITED_REGENERATION, false},
+    { MUT_CONTACT_CASTING,     MUT_EFFICIENT_MAGIC,        false},
 
 #if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},

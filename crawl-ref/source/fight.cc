@@ -1637,6 +1637,10 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     if (bad_targets.empty())
         return false;
 
+    //if tabcasting, abort silently if you can hit a friendly target
+    if (is_tabcasting())
+        return true;
+
     const monster* ex_mon = bad_targets.back();
     string adj, suffix;
     bool penance;
@@ -1681,6 +1685,10 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     const string noun = stop_summoning_reason(resists, flags);
     if (noun.empty())
         return false;
+
+    //if tabcasting, abort silently
+    if (is_tabcasting())
+        return true;
 
     string prompt = make_stringf("Really %s while %s?",
                                  verb.c_str(), noun.c_str());

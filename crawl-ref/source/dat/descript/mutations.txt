@@ -794,6 +794,23 @@ You have an uncanny knack for knowing where items can be found. As you explore
 the dungeon, nearby item locations that you cannot directly see will gain a
 marker for as-yet-undiscovered items.
 %%%%
+contact casting mutation
+
+You have a chance to cast spells when attacking foes in melee combat. Higher
+level spells have a lower chance of being cast. Your spellcasting skill
+increases this chance, but no longer increases your MP reserves. Spells cast in
+this manner ignore silencing effects and consume no MP. This effect can only
+happen once per turn.
+%%%%
+safe spells mutation
+
+You are not damaged by your own spells.
+%%%%
+highly flammable mutation
+
+When you are damaged by fire or electricity, you have a chance to be set on
+fire. This chance is decreased by your respective elemental resistance level.
+%%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
 

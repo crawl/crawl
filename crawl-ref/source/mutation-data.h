@@ -2961,6 +2961,27 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MARK_OF_THE_FANATIC,
 },
 
+{ MUT_CONTACT_CASTING, 0, 1, mutflag::good,
+  "contact casting",
+  {"You cast spells by striking foes in melee combat.", "", ""},
+  {"You now cast spells by striking foes in melee combat.", "", ""},
+  {"You no longer cast spells by striking foes in melee combat.", "", ""},
+},
+
+{ MUT_SAFE_SPELLS, 0, 1, mutflag::good,
+  "safe spells",
+  {"You are safe from the effects of your own spells.", "", ""},
+  {"You become safe from the effects of your own spells.", "", ""},
+  {"You are no longer safe from the effects of your own spells.", "", ""},
+},
+
+{ MUT_FLAMMABILITY, 0, 1, mutflag::bad | mutflag::substance,
+  "highly flammable",
+  {"You are sometimes set ablaze by fire and electrical damage.", "", ""},
+  {"Your flammability increases.", "", ""},
+  {"Your flammability decreases.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

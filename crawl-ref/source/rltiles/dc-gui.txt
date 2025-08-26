@@ -349,6 +349,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/coglin
 %compose hair/short_brown
 %finish SP_RECOMMENDED_COGLIN
+%start
+%compose base/moon_moth
+%compose body/animal_skin
+%finish SP_RECOMMENDED_MOON_MOTH
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -381,4 +385,5 @@ enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_DJINNI SP_DJINNI
 enum:SP_RECOMMENDED_METEORAN SP_METEORAN
 enum:SP_RECOMMENDED_COGLIN SP_COGLIN
+enum:SP_RECOMMENDED_MOON_MOTH SP_MOON_MOTH
 %syn LAST_SPECIES
