@@ -2777,7 +2777,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     (was_banished || !real_death) ? "disappears" : "dies");
             }
             else
-                mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm as it dies.");
+                mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm.");
+
             activate_tesseracts();
         }
     }
