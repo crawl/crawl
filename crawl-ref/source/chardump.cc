@@ -1245,6 +1245,10 @@ static string _describe_action(caction_type type)
         return "Form";
     case CACT_ATTACK:
         return "Attack";
+    case CACT_DRINK:
+        return "Drink";
+    case CACT_READ:
+        return "Read";
     default:
         return "Error";
     }
@@ -1381,11 +1385,11 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
             return uppercase_first(dummy.name(DESC_DBNAME, true));
         }
 
+#if TAG_MAJOR_VERSION == 34
         switch ((evoc_type)subtype)
         {
         case EVOC_WAND:
             return "Wand";
-#if TAG_MAJOR_VERSION == 34
         case EVOC_ROD:
             return "Rod";
         case EVOC_DECK:
@@ -1394,10 +1398,13 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
             return "Miscellaneous";
         case EVOC_BUGGY_TOME:
             return "tome";
-#endif
         default:
             return "Error";
         }
+#else
+        return "Error";
+#endif
+
     case CACT_USE:
         return uppercase_first(base_type_string((object_class_type)subtype));
     case CACT_STAB:
@@ -1412,6 +1419,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     case CACT_ATTACK:
         ASSERT_RANGE(subtype, 0, NUM_ATTACK_COUNT_TYPES);
         return _attack_count_names[subtype];
+    case CACT_DRINK:
+        return uppercase_first(potion_type_name(subtype));
+    case CACT_READ:
+        return uppercase_first(scroll_type_name(subtype));
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "Removed food";
@@ -1431,7 +1442,8 @@ static caction_type _action_count_order[]
     CACT_INVOKE,
     CACT_ABIL,
     CACT_EVOKE,
-    CACT_USE,
+    CACT_DRINK,
+    CACT_READ,
     CACT_STAB,
     CACT_ARMOUR,
     CACT_DODGE,

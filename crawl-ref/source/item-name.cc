@@ -727,7 +727,7 @@ const char* potion_type_name(int potiontype)
     }
 }
 
-static const char* scroll_type_name(int scrolltype)
+const char* scroll_type_name(int scrolltype)
 {
     switch (static_cast<scroll_type>(scrolltype))
     {

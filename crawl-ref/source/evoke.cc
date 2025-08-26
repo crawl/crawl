@@ -243,7 +243,7 @@ void zap_wand(int slot, dist *_target)
     }
 
     practise_evoking(1);
-    count_action(CACT_EVOKE, EVOC_WAND);
+    count_action(CACT_EVOKE, wand.sub_type, OBJ_WANDS);
     alert_nearby_monsters();
 
     you.turn_is_over = true;

@@ -30,6 +30,8 @@ enum caction_type    // Primary categorization of counted actions.
 #endif
     CACT_FORM,       // transformation
     CACT_ATTACK,     // attack_count_type
+    CACT_DRINK,      // potion_type
+    CACT_READ,       // scroll_type
     NUM_CACTIONS,
 };
 
