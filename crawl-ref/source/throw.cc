@@ -606,9 +606,11 @@ void throw_it(quiver::action &a)
 {
     const item_def *primary = a.get_launcher();
     const item_def *offhand = you.offhand_weapon();
+    if (!primary || !is_range_weapon(*offhand))
+        offhand = nullptr;
     const item_def *launcher = primary;
     const item_def *alt_launcher = offhand;
-    if (primary && offhand && is_range_weapon(*offhand) && coinflip())
+    if (primary && offhand && coinflip())
     {
         launcher = offhand;
         alt_launcher = primary;
@@ -665,18 +667,27 @@ void throw_it(quiver::action &a)
 
     _setup_missile_beam(&you, pbolt, item, launcher);
 
+    bolt alt_pbolt;
+    item_def alt_fake_proj;
+    if (alt_launcher)
+    {
+        alt_pbolt.set_target(a.target);
+        populate_fake_projectile(*alt_launcher, alt_fake_proj);
+        _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
+    }
+
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
     // Portaled Projectile, but obviously don't trace a path.
     bool aimed_at_foe = false;
     if (!you.confused())
     {
+        player_beam_tracer tracer;
+
         // Set values absurdly high to make sure the tracer will
         // complain if we're attempting to fire through allies.
         pbolt.damage = dice_def(1, 100);
 
-        // Init tracer variables.
-        player_beam_tracer tracer;
         pbolt.overshoot_prompt = false;
 
         pbolt.fire(tracer);
@@ -685,17 +696,31 @@ void throw_it(quiver::action &a)
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
+
+        if (alt_launcher)
+        {
+            alt_pbolt.damage = dice_def(1, 100);
+            alt_pbolt.overshoot_prompt = false;
+            alt_pbolt.fire(tracer);
+            alt_pbolt.hit = 0;
+            alt_pbolt.damage = dice_def();
+            if (alt_pbolt.friendly_past_target)
+                alt_pbolt.aimed_at_spot = true;
+        }
+
         if (tracer.has_hit_foe())
             aimed_at_foe = true; // dubious
 
-        if (cancel_beam_prompt(pbolt, tracer))
+        if (cancel_beam_prompt(pbolt, tracer, alt_launcher ? 2 : 1))
         {
             you.turn_is_over = false;
             return;
         }
 
         // Warn about Mule potentially knocking the player back into a trap.
-        if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE))
+        if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE)
+            || alt_launcher
+                && is_unrandom_artefact(*alt_launcher, UNRAND_MULE))
         {
             const coord_def back = you.stumble_pos(a.target.target);
             if (!back.origin()
@@ -720,16 +745,9 @@ void throw_it(quiver::action &a)
     if (ammo_slot != -1 && (pbolt.item_mulches || !_returning(item)))
         dec_inv_item_quantity(ammo_slot, 1);
 
-    if (launcher && alt_launcher && is_range_weapon(*alt_launcher))
+    if (alt_launcher)
     {
-        item_def alt_fake_proj;
-        populate_fake_projectile(*alt_launcher, alt_fake_proj);
-
-        bolt alt_pbolt;
         alt_pbolt.set_target(a.target);
-        if (pbolt.friendly_past_target)
-            alt_pbolt.aimed_at_spot = true;
-        _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
         _player_shoot(alt_pbolt, alt_fake_proj, alt_launcher);
     }
 
