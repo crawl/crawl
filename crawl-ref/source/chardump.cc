@@ -1238,11 +1238,13 @@ static string _describe_action(caction_type type)
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "Eat";
-#endif
     case CACT_RIPOSTE:
         return "Riposte";
+#endif
     case CACT_FORM:
         return "Form";
+    case CACT_ATTACK:
+        return "Attack";
     default:
         return "Error";
     }
@@ -1284,6 +1286,18 @@ static const char* _aux_attack_names[] =
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
+static const char* _attack_count_names[]
+{
+    "Normal",
+    "Lunge",
+    "Whirlwind",
+    "Riposte",
+    "Spellmotor",
+    "Spellclaws",
+    "Drunken Brawl",
+};
+COMPILE_CHECK(ARRAYSZ(_attack_count_names) == NUM_ATTACK_COUNT_TYPES);
+
 static string _describe_action_subtype(caction_type type, int compound_subtype)
 {
     pair<int, int> types = caction_extract_types(compound_subtype);
@@ -1301,7 +1315,6 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     }
     case CACT_MELEE:
     case CACT_FIRE:
-    case CACT_RIPOSTE:
         if (subtype == -1)
         {
             if (auxtype == -1)
@@ -1393,6 +1406,9 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         return _stab_names[subtype];
     case CACT_FORM:
         return get_form((transformation)subtype)->short_name;
+    case CACT_ATTACK:
+        ASSERT_RANGE(subtype, 0, NUM_ATTACK_COUNT_TYPES);
+        return _attack_count_names[subtype];
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "Removed food";
@@ -1401,6 +1417,24 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         return "Error";
     }
 }
+
+static caction_type _action_count_order[]
+{
+    CACT_ATTACK,
+    CACT_MELEE,
+    CACT_FIRE,
+    CACT_THROW,
+    CACT_CAST,
+    CACT_INVOKE,
+    CACT_ABIL,
+    CACT_EVOKE,
+    CACT_USE,
+    CACT_STAB,
+    CACT_ARMOUR,
+    CACT_DODGE,
+    CACT_BLOCK,
+    CACT_FORM,
+};
 
 static void _sdump_action_counts(dump_params &par)
 {
@@ -1420,8 +1454,9 @@ static void _sdump_action_counts(dump_params &par)
         par.text += "+-------";
     par.text += "++-------\n";
 
-    for (int cact = 0; cact < NUM_CACTIONS; cact++)
+    for (unsigned int index = 0; index < ARRAYSZ(_action_count_order); ++index)
     {
+        caction_type cact = _action_count_order[index];
         vector<pair<int, FixedVector<int, 28> > > action_vec;
         for (const auto &entry : you.action_count)
         {

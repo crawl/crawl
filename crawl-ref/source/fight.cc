@@ -16,6 +16,7 @@
 #include "act-iter.h"
 #include "areas.h" // silenced
 #include "art-enum.h"
+#include "chardump.h"
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
@@ -510,6 +511,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             *did_hit = attk.did_hit;
 
         do_player_post_attack(defender, attk.did_attack_hostiles(), simu);
+
+        count_action(CACT_ATTACK, ATTACK_NORMAL);
 
         return true;
     }
@@ -1197,6 +1200,7 @@ bool force_player_cleave(coord_def target)
 
         melee_attack atk(&you, nullptr);
         atk.launch_attack_set();
+        count_action(CACT_ATTACK, ATTACK_NORMAL);
         do_player_post_attack(nullptr, atk.did_attack_hostiles(), false);
         return true;
     }

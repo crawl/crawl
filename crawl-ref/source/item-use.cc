@@ -1894,7 +1894,10 @@ bool oni_drunken_swing()
             attk.never_cleave = true;
 
             if (!attk.would_prompt_player())
+            {
                 attk.launch_attack_set();
+                count_action(CACT_ATTACK, ATTACK_DRUNKEN_BRAWLING);
+            }
         }
 
         return true;

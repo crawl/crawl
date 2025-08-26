@@ -335,8 +335,10 @@ enum ability_type
     // Wu Jian
     ABIL_WU_JIAN_SERPENTS_LASH = 1280,
     ABIL_WU_JIAN_HEAVENLY_STORM,
+#if TAG_MAJOR_VERSION == 34
     ABIL_WU_JIAN_LUNGE,
     ABIL_WU_JIAN_WHIRLWIND,
+#endif
     ABIL_WU_JIAN_WALLJUMP,
 
     // Ignis

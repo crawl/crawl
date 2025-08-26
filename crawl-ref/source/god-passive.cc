@@ -1965,7 +1965,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
              number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
 
-    count_action(CACT_ABIL, ABIL_WU_JIAN_LUNGE);
+    count_action(CACT_ATTACK, ATTACK_LUNGE);
 
     for (int i = 0; i < number_of_attacks; i++)
     {
@@ -2033,7 +2033,7 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
                      ", with incredible momentum" : "");
         }
 
-        count_action(CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
+        count_action(CACT_ATTACK, ATTACK_WHIRLWIND);
 
         for (int i = 0; i < number_of_attacks; i++)
         {

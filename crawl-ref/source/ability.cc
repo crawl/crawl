@@ -733,12 +733,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
             0, 0, 20, -1, {fail_basis::invo, piety_breakpoint(5), 0, 1},
             abflag::none },
-        // Lunge and Whirlwind abilities aren't menu abilities but currently
-        // need to exist for action counting, hence need enums/entries.
-        { ABIL_WU_JIAN_LUNGE, "Lunge",
-            0, 0, 0, -1, {}, abflag::berserk_ok },
-        { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind",
-            0, 0, 0, -1, {}, abflag::berserk_ok },
         { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
             0, 0, 0, -1, {}, abflag::berserk_ok },
 

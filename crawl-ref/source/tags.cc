@@ -2797,13 +2797,14 @@ static void _fixup_species_mutations(mutation_type mut)
 }
 
 #if TAG_MAJOR_VERSION == 34
-// Copy action counts from one action to another, keeping the sub-action the
-// same. Retain any counts which were already against the "new" action.
+// Copy action counts from one action to another, possibly modifying the
+// sub-action in the process. Retain any counts which were already against the
+// "new" action.
 static void _move_action_count(caction_type old_action, caction_type new_action,
-                               int subtype)
+                               int old_subtype, int new_subtype)
 {
-    pair<caction_type, int> oldkey(old_action, caction_compound(subtype)),
-        newkey(new_action, caction_compound(subtype));
+    pair<caction_type, int> oldkey(old_action, caction_compound(old_subtype)),
+        newkey(new_action, caction_compound(new_subtype));
     if (!you.action_count.count(oldkey))
         return;
     if (!you.action_count.count(newkey))
@@ -4291,8 +4292,17 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_WU_ABILITIES)
     {
-        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_LUNGE);
-        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_LUNGE,
+                                                   ABIL_WU_JIAN_LUNGE);
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND,
+                                                   ABIL_WU_JIAN_WHIRLWIND);
+    }
+    if (th.getMinorVersion() < TAG_MINOR_ATTACK_ACTION_COUNTS)
+    {
+        _move_action_count(CACT_ABIL, CACT_ATTACK, ABIL_WU_JIAN_LUNGE,
+                                                   ATTACK_LUNGE);
+        _move_action_count(CACT_ABIL, CACT_ATTACK, ABIL_WU_JIAN_WHIRLWIND,
+                                                   ATTACK_WHIRLWIND);
     }
     if (th.getMinorVersion() >= TAG_MINOR_BRANCHES_LEFT) // 33:17 has it
     {

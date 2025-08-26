@@ -220,26 +220,7 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attacker->is_player())
-    {
-        const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
-        if (weapon)
-        {
-            if (weapon->base_type == OBJ_WEAPONS)
-                if (is_unrandom_artefact(*weapon)
-                    && get_unrand_entry(weapon->unrand_idx)->type_name)
-                {
-                    count_action(cact_typ, weapon->unrand_idx);
-                }
-                else
-                    count_action(cact_typ, weapon->sub_type);
-            else if (weapon->base_type == OBJ_STAVES)
-                count_action(cact_typ, WPN_STAFF);
-        }
-        else
-            count_action(cact_typ, -1, -1); // unarmed subtype/auxtype
-    }
-    else
+    if (attacker->is_monster())
     {
         // Only the first attack costs any energy normally.
         // Projected attacks will have already had their energy costs paid
@@ -1626,6 +1607,26 @@ bool melee_attack::attack()
         handle_phase_killed();
         handle_phase_end();
         return attack_occurred;
+    }
+
+    // Now that we finally know that this swing is really happening, count it.
+    if (attacker->is_player())
+    {
+        if (weapon)
+        {
+            if (weapon->base_type == OBJ_WEAPONS)
+                if (is_unrandom_artefact(*weapon)
+                    && get_unrand_entry(weapon->unrand_idx)->type_name)
+                {
+                    count_action(CACT_MELEE, weapon->unrand_idx);
+                }
+                else
+                    count_action(CACT_MELEE, weapon->sub_type);
+            else if (weapon->base_type == OBJ_STAVES)
+                count_action(CACT_MELEE, WPN_STAFF);
+        }
+        else
+            count_action(CACT_MELEE, -1, -1); // unarmed subtype/auxtype
     }
 
     // Apparently I'm insane for believing that we can still stay general past
@@ -4591,6 +4592,7 @@ void melee_attack::riposte()
     melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
     attck.is_riposte = true;
     attck.launch_attack_set();
+    count_action(CACT_ATTACK, ATTACK_RIPOSTE);
 }
 
 bool melee_attack::do_knockback(bool slippery)
@@ -5019,6 +5021,8 @@ bool coglin_spellmotor_attack()
     mpr("Your spellmotor activates!");
     attk.launch_attack_set();
 
+    count_action(CACT_ATTACK, ATTACK_SPELLMOTOR);
+
     return true;
 }
 
@@ -5083,6 +5087,8 @@ bool spellclaws_attack(int spell_level)
     // Save name first, in case the monster dies from the attack.
     string targ_name = best_victim->name(DESC_THE);
     attk.launch_attack_set();
+
+    count_action(CACT_ATTACK, ATTACK_SPELLCLAWS);
 
     if (you.duration[DUR_ENKINDLED] && you.hp < you.hp_max)
     {

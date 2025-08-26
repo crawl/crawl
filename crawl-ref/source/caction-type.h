@@ -25,7 +25,25 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_BLOCK,      // armour subtype or subtype = -1 and
                      //   auxtype used for special cases
                      //   (reflection, god ability, spell, etc)
+#if TAG_MAJOR_VERSION == 34
     CACT_RIPOSTE,    // as CACT_MELEE
+#endif
     CACT_FORM,       // transformation
+    CACT_ATTACK,     // attack_count_type
     NUM_CACTIONS,
+};
+
+// A list of different manners of launching attacks that are not already counted
+// unambiguously by some other action count (ie: you can already see how many
+// times you cast Manifold Assault or Bestial Takedown via spell/ability counts).
+enum attack_count_type
+{
+    ATTACK_NORMAL,
+    ATTACK_LUNGE,
+    ATTACK_WHIRLWIND,
+    ATTACK_RIPOSTE,
+    ATTACK_SPELLMOTOR,
+    ATTACK_SPELLCLAWS,
+    ATTACK_DRUNKEN_BRAWLING,
+    NUM_ATTACK_COUNT_TYPES,
 };
