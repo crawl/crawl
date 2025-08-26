@@ -1335,7 +1335,7 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         }
         return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
     case CACT_ARMOUR:
-        return (subtype == -1) ? "Skin"
+        return (subtype == -1) ? "None"
                : uppercase_first(item_base_name(OBJ_ARMOUR, subtype));
     case CACT_BLOCK:
     {
@@ -1405,7 +1405,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
     case CACT_FORM:
-        return get_form((transformation)subtype)->short_name;
+        if ((transformation)subtype == transformation::none)
+            return "Default";
+        else
+            return get_form((transformation)subtype)->short_name;
     case CACT_ATTACK:
         ASSERT_RANGE(subtype, 0, NUM_ATTACK_COUNT_TYPES);
         return _attack_count_names[subtype];
