@@ -1363,6 +1363,7 @@ int melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
 
             copy_params_to(followup);
             followup.cleaving = is_cleaving;
+            followup.is_followup = !is_cleaving;
 
             followup.attack();
 
