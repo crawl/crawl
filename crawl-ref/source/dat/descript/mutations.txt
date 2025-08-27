@@ -800,7 +800,8 @@ You have a chance to cast spells when attacking foes in melee combat. Higher
 level spells have a lower chance of being cast. Your spellcasting skill
 increases this chance, but no longer increases your MP reserves. Spells cast in
 this manner ignore silencing effects and consume no MP. This effect can only
-happen once per turn.
+happen once per turn. Additionally, channeled spells continue channeling when
+attacking in melee.
 %%%%
 safe spells mutation
 
