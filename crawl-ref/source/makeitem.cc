@@ -2294,8 +2294,10 @@ void item_set_appearance(item_def &item)
 
 void lucky_upgrade_item(item_def& item)
 {
-    // Only have a chance to discover a better item on first spotting it.
-    if (item.flags & ISFLAG_SEEN)
+    // Only have a chance to discover a better item on first spotting it (and
+    // not for items that are already artefacts - which is harmless, but
+    // produces confusing messages).
+    if (item.flags & (ISFLAG_SEEN | ISFLAG_ARTEFACT_MASK))
         return;
 
     // 2-4% chance of upgrading an item.
