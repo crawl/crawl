@@ -423,7 +423,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
         if (x_chance_in_y(chance, 100))
         {
-            mprf(MSGCH_WARN, "The electricty makes your body seize.");
+            mprf(MSGCH_WARN, "The electricity makes your body seize.");
             you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 7), 10);
         }
     }
