@@ -1162,6 +1162,75 @@ xxx...xxx
    G@G
 ENDMAP
 
+NAME:    regret_index_gozag_office_hoard
+TAGS:    no_monster_gen temple_overflow_gozag temple_overflow_1 uniq_altar_gozag
+TAGS:    vaults_orient_n vaults_orient_w vaults_orient_s vaults_hard no_wall_fixup
+DEPTH:   D:5-, Snake, Vaults, !Vaults:$, Zot, !Zot:$
+KFEAT:   C = altar_gozag
+SHUFFLE: TPV, TU, PG
+: if you.in_branch("D") then
+:   if you.depth() < 8 then
+MONS:    gnoll, human ; mace good_item . ring mail, water moccasin
+KITEM:   $ = $ / $ q:2
+:   elseif you.depth() < 12 then
+MONS:    human ; mace good_item . ring mail / centaur
+MONS:    troll / vampire / two-headed ogre
+MONS:    wyvern / acid dragon
+KITEM:   $ = $ / $ q:2 w:5
+:   else
+MONS:    tengu warrior / gargoyle / centaur w:2
+MONS:    centaur warrior / deep elf knight / rakshasa
+MONS:    hydra / fire dragon / ice dragon
+SUBST:   % = %*, $ = $$%
+:   end
+KMONS:   P = plant
+SUBST:   X = xx., z = x
+FTILE:   P = floor_moss
+: elseif you.in_branch("Snake") then
+KMONS:   1 = naga warrior / naga sharpshooter
+KMONS:   2C = guardian serpent
+KMONS:   3 = anaconda / shock serpent w:12
+KMONS:   P = plant
+SUBST:   % = *, $ = $%, X = xx., z = x
+FTILE:   P = floor_moss
+: elseif you.in_branch("Vaults") then
+MONS:    ironbound mechanist / ironbound preserver
+MONS:    vault warden, great orb of eyes / dancing weapon w:2 / peacekeeper w:2
+KMONS:   C = golden dragon / quicksilver dragon / iron dragon w:4
+KMONS:   P = bush
+SUBST:   - = +, % = *||, $ = $%, c = b, Xz = v
+CLEAR:   x@
+:   vaults_hard_standard(_G, true, ".TVCG+$%*|123")
+FTILE:   P = floor_pebble_green
+: else -- Zot
+MONS:    draconian scorcher / draconian annihilator
+MONS:    draconian knight / draconian shifter, golden dragon
+KMONS:   P = withered plant
+SUBST:   % = }])>, X = bbb., z = x
+: end
+NSUBST:  - = 1:+ / 1:c+++ / 1:cc+
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: decorative_floor(_G, 'V', "floral vase")
+MAP
+      xx
+     x.@
+    x...
+    cc-cc   zzzz
+    c...c zzz$$zzz
+x..ccc+cccz$$..$$zx
+x..cP...TcXX.X..3$x
+@x.c.1...c..X....$xx
+  .-..2..+....C...%x
+@x.c...1.c..X....$xx
+x..cT...VcXX.X..3$x
+x..ccc+cccz$$..$$zx
+    c...c zzz$$zzz
+    cc-cc   zzzz
+    x...
+     x.@
+      xx
+ENDMAP
+
 ### Hepliaklqana overflow altars #############################################
 
 NAME:   worldfamousw_hep_ancestral_shrine
@@ -2486,6 +2555,133 @@ MAP
 .........
 ENDMAP
 
+NAME:    regret_index_qazlal_gathering_storm
+TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
+DEPTH:   D:5-, Elf, Depths, !Depths:$, Zot, !Zot:$
+KFEAT:   C = altar_qazlal
+: if you.in_branch("D") then
+:   if you.depth() < 8 then
+MONS:    fire bat, ice beast / white imp w:2
+SUBST:   $>}3 = ., % = $
+:   elseif you.depth() < 12 then
+MONS:    killer bee simulacrum, basilisk, fire elemental
+SUBST:   >} = .
+:   else
+MONS:    fire elemental / fire crab w:2, water elemental / freezing wraith w:2
+MONS:    tengu conjurer w:2 / gargoyle w:2 / deep elf zephyrmancer
+SUBST:   > = 12, } = %
+:   end
+: elseif you.in_branch("Elf") then
+MONS:    air elemental, thermic dynamo, deep elf elementalist
+SUBST:   > = $, }% = %*|
+: elseif you.in_branch("Depths") then
+:   if crawl.coinflip() then
+MONS:    fire giant / frost giant, spark wasp, golden dragon
+:   else
+MONS:    spriggan air mage, stone giant, tengu reaver
+:   end
+SUBST:   > = $, } = *, % = *|, x = b
+: else -- Zot
+MONS:    golden dragon, draconian stormcaller, electric golem
+KITEM:   $ = gold q:1 no_pickup
+SUBST:   . = $, % = *|
+SHUFFLE: }])>
+: end
+: if you.in_branch("D") and you.depth() < 12 then
+SUBST:   y : x., z : x., b = x, YZ = x
+: else
+SUBST:   y : xxb.., z : xxb.., Y : xxx., Z : xxxb.
+: end
+: if you.in_branch("Elf") then
+TILE:    x = wall_hall_darkgray
+: elseif you.in_branch("Zot") then
+TILE:    x = wall_zot_darkgray
+: else
+TILE:    x = wall_pebble_darkgray
+: end
+MAP
+          xxxxxx
+         xx.zz.xx
+ x@@x    x.1..2.x
+xx..xx   x......x
+@....x   x......x
+@....xx xx......xxxxxxx
+xx..Y.xxx.Z.yy.Y.xxxxxxx
+ xxx.Z.y.Y.xxxx.Z..y.$xxx
+   xx.....xx  xx.....y%xx
+    x.....x   xx..>....xx
+    x...1.x   xx...}...xx
+    xx.z.xx   xx....3.2xx
+     xxxxx    xx$z...C.xx
+              xxx%.z1.bxx
+               xxxxxxxxx
+                xxxxxxx
+ENDMAP
+
+NAME:    regret_index_qazlal_strikes
+TAGS:    transparent temple_overflow_qazlal temple_overflow_1
+TAGS:    uniq_altar_qazlal decor zot_decor
+DEPTH:   D:3-, Shoals, Depths, Zot
+WEIGHT:  3
+KFEAT:   _ = altar_qazlal
+SHUFFLE: ABCD, '"
+: if you.in_branch("D") then
+KFEAT:   ABCD = rock_wall
+TILE:    A = wall_pebble_red
+TILE:    B = wall_pebble_lightblue
+TILE:    C = wall_pebble_cyan
+TILE:    D = wall_pebble_yellow
+FTILE:   ' = floor_pebble_darkgray
+FTILE:   " = floor_pebble_blue
+: elseif you.in_branch("Shoals") then
+KMONS:   D = pile of debris
+KFEAT:   AB = rock_wall
+KFEAT:   C = stone_wall
+KFEAT:   D = deep_water
+TILE:    A = wall_brick_red
+TILE:    B = wall_ice
+TILE:    C = wall_crystal_squares
+FTILE:   ' : floor_vines
+SUBST:   ." = W, x = c
+: elseif you.in_branch("Depths") then
+KFEAT:   ABCD = metal_wall
+TILE:    A = dngn_metal_wall_red
+TILE:    B = dngn_metal_wall_white
+TILE:    C = dngn_metal_wall_cyan
+TILE:    D = dngn_metal_wall_brown
+FTILE:   ' : floor_nerves_cyan / floor_crystal_squares
+FTILE:   " = floor_pebble_darkgray
+: else -- Zot
+KFEAT:   ABCD = rock_wall
+TILE:    A = wall_zot_red
+TILE:    B = wall_zot_cyan
+TILE:    C = wall_zot_darkgray
+TILE:    D = wall_zot_brown
+FTILE:   ' : floor_rough_cyan / floor_nerves_cyan
+FTILE:   " : floor_crystal_squares / floor_marble
+: end
+COLOUR:  t = brown
+FTILE:   _t = floor_pebble_darkgray
+TILE:    t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+: interest_check(_G)
+MAP
+ ..xxxxxxxxx xxxxxx  xxxxxxx.
+ .....A''B"xxx"B''xxxx'''A...
+  ....A''B"""""B'''''''A'A.A.
+  ....A'''B"""""B''''''''A...
+ ....A'''''B"""""B''''''A....
+ ....A'''''B""""B'''''''A....
+ ....A''''B"""_""B''''''A....
+....A''''''B""t"""B''''A....
+....A'''''''B""""B'''''A....
+....A''''''B"""""B'''''A....
+...A''''''''B"""""B'''A....
+.A.A'A'''''''B"""""B''A....
+...A'''xxxx''B"xxx"B''A.....
+.xxxxxxx  xxxxxx xxxxxxxxx..
+ENDMAP
+
 # Ru overflow altar vaults ####################################################
 
 # A few unlucky monsters permanently afflicted with Ru's various status effects.
@@ -3021,6 +3217,74 @@ MAP
    ..yxxy..
    ...yy...
     ......
+ENDMAP
+
+NAME:    regret_index_trog_carnage_carrion
+TAGS:    transparent no_monster_gen temple_overflow_trog
+TAGS:    temple_overflow_1 uniq_altar_trog
+DEPTH:   D:5-8, Snake, Spider, Depths, Zot, !Zot:$
+KFEAT:   _ = altar_trog
+: if you.in_branch("D") then
+MONS:    bes kemwar / brain worm w:2, phantom
+ITEM:    hand axe / mace, animal skin / ring mail
+NSUBST:  1 = 2:1 / 1:1222. / 1:2. / *:., ") = 4:? / 2:d / 2:e / 7:' / *:.
+:   dgn.delayed_decay(_G, '?', 'elf corpse')
+: elseif you.in_branch("Snake") then
+MONS:    mana viper, anaconda
+ITEM:    war axe / battleaxe / great mace, chain mail / barding w:1
+NSUBST:  1 = 2:1 / 2:2 / 2 = 12. / *:., ") = 5:? / 2:d / 9:' / *:.
+:   dgn.delayed_decay(_G, '?', 'naga corpse')
+: elseif you.in_branch("Spider") then
+MONS:    ghost moth, culicivora / death scarab w:2
+ITEM:    war axe / battleaxe / great mace, chain mail / plate armour
+NSUBST:  1 = 1:1 / 4:2 / *:., ") = 5:? / 2:d / 9:' / *:.
+:   dgn.delayed_decay(_G, '+', 'ghost moth corpse')
+:   dgn.delayed_decay(_G, '?', 'orc corpse')
+: elseif you.in_branch("Depths") then
+# Not exactly animal-focused like the rest, but the native population of
+# the branch allows a lot of easy Trog-themed monster calls.
+MONS:    spriggan berserker, stone giant / quicksilver dragon w:2
+ITEM:    broad axe / battleaxe / executioner's axe / great mace w:20
+ITEM:    fire dragon scales / ice dragon scales / plate armour
+NSUBST:  1 = 3:1 / 1:12 / 1:112 / *:., ") = 7:? / 3:d / 2:e / 9:' / *:.
+SUBST:   B : BBt, C : CCt
+:   dgn.delayed_decay(_G, '?', 'elf corpse')
+: else -- Zot
+MONS:    ghost moth / quicksilver dragon w:2
+MONS:    moth of wrath / spectral draconian monk
+ITEM:    battleaxe good_item / executioner's axe / great mace good_item
+ITEM:    ring mail / cloak
+NSUBST:  1 = 3:1 / *:2, ) = 1:})]>> / *:", " = 9:? / 3:d / 5:e / *:'
+:   dgn.delayed_decay(_G, '`', 'ghost moth corpse')
+:   dgn.delayed_decay(_G, '?', 'base draconian corpse')
+: end
+KFEAT:   z = rock_wall
+SUBST:   A : zz., B : zz., C : zz., D : zz., E : zz.
+KPROP:   'de? = bloody
+KPROP:   z = bloody w:1 / nothing w:4
+KPROP:   . = bloody w:1 / nothing w:19
+MAP
+      c   c
+      x xxxxx
+    c xxx.+`x.x
+    xxx...+`..A@x
+  cxx"..".xx....xx
+   x"x."..+x..x..@
+cxxx.."...+`..Ax.Ax
+  x..".B.CxC.......
+ xx."...x.x.D.....xx
+ x.....C.)xx.C.xx..x
+cx"x1D"E"..xxxxxxxxxc
+ x.....C.).).C.....x
+ xx."d..x.".x.._".xx
+  x.1".B.CEC.B."1.x
+cxxx.."..."..."..xxxc
+   x"x."..D..".x"x
+  cxx".1".1."1."xxc
+    xxx...x...xxx
+    c xxx.".xxx c
+      x xxxxx x
+      c   c   c
 ENDMAP
 
 ### Uskayaw overflow altars ###################################################
@@ -3796,6 +4060,78 @@ c.p.c....2d.ccc
 c.@.ccccccccccc
 ENDMAP
 
+NAME:    regret_index_xom_doom_sign
+TAGS:    transparent temple_overflow_xom temple_overflow_1
+TAGS:    uniq_altar_xom no_wall_fixup
+DEPTH:   D:5-, Lair:2-, Crypt, Zot, !Zot:$
+WEIGHT:  20 (Zot), 5 (D:5-10, Lair:2-), 10
+KFEAT:   C = altar_xom
+SHUFFLE: yz / zy / -- / ""
+SUBST:   y : x., z = ., - = +, " = ., ? : x..
+: if you.in_branch("D") then
+:   if you.depth() < 8 then
+MONS:    drude, ufetubus band / phantom
+:   elseif  you.depth() < 12 then
+MONS:    draugr, boggart / vampire
+SUBST:   $ = $%
+:   else
+MONS:    draugr ; mace ego:chaos
+MONS:    kobold demonologist / ugly thing / laughing skull
+SUBST:   $ = $%*
+:   end
+TILE:    x = wall_brick_red
+TILE:    c = dngn_stone_wall_red
+: elseif you.in_branch("Lair") then
+MONS:    raven, tarantella / hell rat band / dream sheep band w:5
+SUBST:   $ = $%*
+TILE:    x = wall_pebble_red
+TILE:    c = dngn_stone_wall_red
+FTILE:   '12CGY = floor_pebble_darkgray
+: elseif you.in_branch("Crypt") then
+MONS:    draugr ; great mace ego:chaos | great sword ego:chaos
+MONS:    laughing skull band / \
+         reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:chaos
+SUBST:   $ = *, c = v
+TILE:    x = wall_undead_red
+TILE:    v = dngn_metal_wall_red
+: else -- Zot
+MONS:    orb of entropy, tentacled monstrosity / hellephant w:2
+SUBST:   c = b
+NSUBST:  $ = 1:{([})]<<>> / 1:*| / *:$
+FTILE:   '12CGYb = floor_nerves_darkgray
+TILE:    x = wall_zot_red
+TILE:    b = dngn_crystal_red
+: end
+NSUBST:  1 = 1:1 / 1:2 / * = 11122
+SUBST:   ` : `., G : GGY
+CLEAR:   `
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+veto {{
+  return you.in_branch("Zot") and dgn.zot_orb_type() ~= "orb of entropy"
+}}
+MAP
+           c
+          x'x
+         x'''x
+    ````x''x''x
+    c..c''xGx''c`
+   x'x..x''x''x.`
+  x'''x??x'''x..`
+ x''x''x..x1x?.c`
+c''xCx'1cyzc.?x'x
+ x''x''xz$$y.x'''x
+  x'''x.y$$zx''x''x
+   x'x?.czyc1'xCx''c
+   `c.?x1x..x''x''x
+   `..x'''x??x'''x
+   `.x''x''x..x'x
+   `c''xGx''c..c
+     x''x''x````
+      x'''x
+       x'x
+        c
+ENDMAP
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_generic
@@ -3943,6 +4279,160 @@ xc.n'O'n.cx
 +..ndddn..+
 xcccccccccx
 xxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_yredelemnul_bone_pool
+TAGS:    transparent no_pool_fixup temple_overflow_yredelemnul temple_overflow_1
+TAGS:    uniq_altar_yredelemnul vaults_hard vaults_orient_n vaults_orient_w
+DEPTH:   D:6-, Swamp, Vaults, Crypt
+WEIGHT:  5 (D:6-8, Crypt), 10
+KITEM:   d = any skeleton
+KFEAT:   C = altar_yredelemnul
+KFEAT:   d = W
+KFEAT:   1 = w
+: if you.in_branch("D") then
+TAGS:    no_monster_gen
+:   if you.depth() < 9 then
+KMONS:   1 = marrowcuda
+KMONS:   2 = goblin draugr ; spear
+NSUBST:  1 = 1:1 / *:w
+:   elseif you.depth() < 12 then
+KMONS:   1 = vampire mosquito
+KMONS:   2 = merfolk draugr
+:   else
+KMONS:   1 = laughing skull band
+KMONS:   2 = skeletal warrior
+NSUBST:  1 = 1:1 / *:w
+:   end
+: elseif you.in_branch("Swamp") then
+KMONS:   1 = raven draugr
+KMONS:   2 = bog body
+KITEM:   ! = any jewellery
+KFEAT:   t = t
+SUBST:   x = t, % = !, ' = $!, + : +W, - : -W, y : yw, z : zw
+NSUBST:  . = 2 = 2. / *:.
+: elseif you.in_branch("Vaults") then
+KMONS:   1 = dire elephant draugr
+KMONS:   2 = death knight band
+SUBST:   'z = m, + = ., % = |
+CLEAR:   x
+KPROP:   d1Ww = no_tele_into
+KMASK:   d1Ww = opaque
+:   vaults_hard_standard(_G, true, ".d*-+C?vV12yzm")
+: else -- Crypt
+KMONS:   1 = bone dragon
+KMONS:   2 = death knight band
+SUBST:   % = ***|, ' = $%%, c = v, x = c
+NSUBST:  1 = 1:1 / *:w, . = 1:0 / *:.
+: end
+SUBST:   - : +..., y : cct.., z : cct.., W : WWw, ? : vvvVVt
+: if not you.in_branch("Swamp") then
+COLOUR:  t = brown
+FTILE:   t = floor_pebble_brown
+TILE:    t = dngn_tree_dead
+:   set_feature_name("tree", "dead tree")
+: end
+: decorative_floor(_G, 'v', "mourning vase")
+MAP
+xxxxxxxx      x
+xccccccccc++ccx
+xcC.c%c?c....cx
+xc....c.c.y..cx
+xcc.2...c..y.cx
+xc%..2..c....cx
+xccc..z.--ccccx
+xc?......'''dcx
+ cccc--.z'ddWcx
+ c....c''dWWwcx
+ +.y..c'dWWWwcx
+ +..y.c'dWW1wcx
+ c....cdWwww1cx
+ cccccccccccccx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_yred_scorched_prison
+TAGS:    no_monster_gen uniq_altar_yredelemnul temple_overflow_1
+TAGS:    temple_overflow_yredelemnul vaults_hard
+DEPTH:   D:4-, Swamp, Vaults, !Vaults:$, Crypt, Tar
+: if you.in_branch("D") then
+:   if you.depth() < 7 then
+KMONS:   1 = phantom / bes kemwar w:5
+KMONS:   2 = wight
+KITEM:   1- = goblin skeleton / kobold skeleton / gnoll skeleton
+KITEM:   $ = $ q:4 no_pickup / any mundane weapon
+NSUBST:  1 = 2:1 / 1:1- / *:-, 2} = 1:122 / *:.
+:   elseif you.depth() < 10 then
+KMONS:   1 = wight w:30 / human draugr ; spear
+KMONS:   2 = steam dragon draugr ; hand axe
+KITEM:   1- = gnoll skeleton / kobold skeleton / human skeleton
+KITEM:   $ = $ q:4 no_pickup / any mundane weapon w:20
+NSUBST:  1 = 3:1 / 2 = 1- / *:-, 2} = 1:1222 / 1:1.. / *:.
+:   elseif you.depth() < 13 then
+KMONS:   1 = shadowghast / wraith
+KMONS:   2 = vampire / skeletal warrior w:2
+KITEM:   1- = human skeleton / ogre skeleton / troll skeleton
+KITEM:   $ = $ no_pickup / any weapon
+NSUBST:  1 = 2:1 / 2 = 1- / *:-, 2} = 1:2 / *:.
+:   else
+KMONS:   1 = draugr / wraith w:4 / spectral fire dragon / spectral fire crab
+KMONS:   2 = skeletal warrior / laughing skull band
+KITEM:   1- = orc skeleton / troll skeleton / elf skeleton
+KITEM:   $ = $ no_pickup / any weapon / any weapon good_item
+NSUBST:  1 = 3:1 / 2 = 1- / *:-, 2} = 2:2 / *:1
+:   end
+: elseif you.in_branch("Swamp") then
+KMONS:   1 = bog body / ghoul w:2
+KMONS:   2 = will-o-the-wisp / ghost crab w:12
+KITEM:   1- = human skeleton / elf skeleton / spriggan skeleton
+KFEAT:   + = broken_door
+SUBST:   x = t, c = ccccxxxtw, +} = W, $ = $%%%*, z : zww, Z : Zww
+NSUBST:  1 = 4:1 / 2 = 1- / *:-, 2} = 1:2 / 1:221 / *:., . = 4:W / 1:t / *:.
+FTILE:   -C12 = floor_sandstone
+KPROP:   w = no_tele_into
+: elseif you.in_branch("Vaults") then
+KMONS:   1 = draugr / spectral lindwurm w:8 / phantasmal warrior w:2
+KMONS:   2 = death knight
+KITEM:   1- = human skeleton w:20 / goblin skeleton / elf skeleton
+SUBST:   jkl = ., JKL = +, }$ = $%%*
+NSUBST:  1 = 6:1 / 1:- / * = 1-
+CLEAR:   x
+: elseif you.in_branch("Crypt") then
+KMONS:   1 = laughing skull / flayed ghost / shadow wraith w:2
+KMONS:   2 = revenant soulmonger
+KITEM:   1- = human skeleton / elf skeleton / ghoul skeleton
+SUBST:   $ = %*, } = 11., c = v, x = c
+: else -- Tar
+KMONS:   1 = putrid mouth / eidolon / spectral ettin w:5
+KMONS:   2 = profane servitor
+KMONS:   C = silent spectre
+KITEM:   1- = oni skeleton / demigod skeleton / titan skeleton
+SUBST:   $ = .
+: end
+KFEAT:   1- = open_door
+KFEAT:   g = iron_grate
+KFEAT:   C = altar_yredelemnul
+SHUFFLE: iI / jJ / kK / lL / mM
+SUBST:   ijk = @, IJK = +, lm = x, LM = c, z : c.., Z : c..
+TILE:    c = wall_stone_scorched
+MAP
+xxxjjjxxx
+xccJJJccx
+xcg....cxxxxxxx
+xc1z...cccccccx
+xcg....c$$c$2cx
+xccc..cc$1.2$cx
+xcg....cc.C.ccx
+xc1.ZZ.+.}.1$cx
+xcg....c..c$$cxxx
+xccc..ccc+ccccccx
+xcg....c...c...cx
+xc1z.....Z.....Ll
+xcg......Z.....Ll
+kKK..z.c...c.z.Ll
+kkcKg1gcg1gcg1gcx
+ kkKccccccccccccx
+  kkxxxxxxxxxxxxx
 ENDMAP
 
 ### Zin overflow altars #######################################################
