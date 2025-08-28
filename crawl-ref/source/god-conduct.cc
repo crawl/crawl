@@ -1098,6 +1098,9 @@ string get_god_likes(god_type which_god)
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
+    case GOD_OKAWARU:
+        really_likes.emplace_back("you kill challenging foes");
+        break;
     default:
         break;
     }
