@@ -1,6 +1,7 @@
 # Guidelines for Development Team Members
 
-This document gives new team members some general guidance for DCSS development as well as links to useful resources.
+This document gives new team members some general guidance for DCSS development
+as well as links to useful resources.
 
 ## Setup
 
@@ -12,28 +13,32 @@ the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
-Most development discussion happens on IRC in the \#crawl-dev on Libera, so
-it's good to join and participate in that channel. Use the !tell command
-through Sequell to leave IRC messages to other team or community members you’re
-working with. The channel is also
-[*logged*](http://crawl.akrasiac.org/logs/cheibriados/), if you’d like to read
-or search previous discussions. Older discussions were logged
+The official place for development discussion is the #crawl-dev channel of the
+dev Discord, so it's good to join and participate there. Many devteam members
+also discuss changes with the community in the #dcss channel of the
+[*roguelikes Discord*](https://discord.gg/S5F2H32), so you may wish to join
+there as well.
+
+The #crawl-dev channel is bridged to Libera IRC for public participation, and is
+[*logged*](http://crawl.akrasiac.org/logs/cheibriados/) if you’d like to read
+or search previous discussions. Older discussions (back to ~2010) were logged
 [*here*](http://s-z.org/crawl-dev/#).
 
-Although nearly all changes are just discussed on IRC, larger projects can be
-written up in an email sent to the [*CRD mailing
-list*](http://sourceforge.net/p/crawl-ref/mailman/crawl-ref-discuss/) or placed
-on page in the [*GitHub Wiki*](https://github.com/crawl/crawl/wiki). The
-Wiki is helpful if you’d like to brainstorm and organize a large list of
-changes. The CRD mailing list is a way to discuss high-impact changes if you
-feel extended, organized discussion is necessary.
+Although most changes are simply discussed on Discord, it can be helpful to
+have a place to coordinate and organize larger-scale release plans. We have
+sometimes done this on the [*GitHub Wiki*](https://github.com/crawl/crawl/wiki),
+which contains discussion of release plans, reworks, and design proposals, going
+back several years.
 
-We also coordinate *release plans* on the GitHub Wiki. These plans are most
-useful at the beginning of each version, when we’re brainstorming what major
-areas to work on, and closer to release, when we decide which features will
-make it in the next version. You don’t have to continuously update entries you
-make in a release plan during the alpha version, but it’s good to update items
-as you complete them.
+These plans are most useful at the beginning of each version, when we’re
+brainstorming what major areas to work on, and closer to release, when we decide
+which features will make it in the next version. You don’t have to continuously
+update entries you make in a release plan during the alpha version, but it’s
+good to update items as you complete them.
+
+For historical reference, the [*CRD mailing
+list*](http://sourceforge.net/p/crawl-ref/mailman/crawl-ref-discuss/) was also
+used heavily in past decades, but it is now defunct.
 
 ## Coding Standards
 
@@ -72,33 +77,30 @@ it, ask another team member before pushing your changes.
 
 ## Bug Reports and Community Contributions
 
-We handle these through our [*Mantis issue
-tracker*](https://crawl.develz.org/mantis/view_all_bug_page.php) and our
-[*GitHub page*](https://github.com/crawl/crawl).
+We handle these using [*github issues*](https://github.com/crawl/crawl/issues)
+and [*pull requests*](https://github.com/crawl/crawl/pulls).
 
-On Mantis, we can also assign issues to ourselves or to other developers.
-Self-assignment is used if the developer in question is working on the issue.
-Assigning to someone else is used if the issue in question is in their area of
-expertise, or if the assigner wants their opinion. Either way, the reason for
-assignment should be explained in the assigning message.
+Use your best judgment when reviewing PRs: Sometimes they're inappropriate or
+need lots of work. Feel free to comment and ask for improvement or clarification
+from the author, and to close or merge accordingly. It's best to try not to let
+PRs sit for so long they become stale; this just adds work to any eventual merge
+and is discouraging to everyone involved. If you judge that a community PR isn't
+going to work out for some reason, it's better to close it and explain why to
+the author instead of allowing it to sit.
 
-Contributions and patches are submitted through both systems. Depending on
-quality of submission, concordance to design guidelines, and general
-suitability, comment and ask for improvement/clarification on these, then
-close/merge accordingly.
+To coordinate developer requests for art assets, we have an [*art
+requests*](https://github.com/crawl/crawl/wiki/Art-Requests) page on the github
+wiki. If you need a tile or you want to fulfill a tile request you can also just
+ask our other devs when they're around, of course.
 
-Desired features and changes -- "Implementables" -- can be posted to either
-system, informally requesting that someone from the community takes up the
-project and completes them. Do not expect that this will be fulfilled within a
-short time frame. On GitHub, you can post these as an Issue asking for help,
-and on Mantis you will need to tag them explicitly as an implementable. If
-people are looking for things to work on, then we can point them towards these
-implementables.
+In previous years, we had extensively used our [*Mantis issue
+tracker*](https://crawl.develz.org/mantis/view_all_bug_page.php), but Mantis
+signups are shutdown and it is now kept online only for historical reference.
 
 ## Release Schedule
 
-Although there isn’t a fixed schedule, releases tend to happen every 6 months
-and are followed by a two week *online tournament* based on the released
+Although there isn’t a fixed schedule, releases tend to happen every 6 to 8
+months and are followed by a two week *online tournament* based on the released
 version. The steps for branching and tagging the release in git as well as
 building the release packages are described in the [*release
 guide*](../release/guide.txt). The work for release and
@@ -117,9 +119,9 @@ you may have. Below are some general principles about the development process.
 Team members have varying levels of free time, and their availability
 fluctuates. It's important to listen when others say they may not have time to
 critique your idea or double-check your code. Be prepared to ask someone else
-or the team as a whole in \#\#crawl-dev or on CRD. If your implementation seems
-well tested and reasonably agreed upon by the rest of the team in your best
-judgement, go ahead and push it to the repository!
+or the team as a whole in \#crawl-dev. If your implementation seems well tested
+and reasonably agreed upon by the rest of the team in your best judgement, go
+ahead and push it to the repository!
 
 #### Game Design
 
@@ -151,18 +153,17 @@ In addition to play-testing, it’s good to watch players through WebTiles, via
 console ttyrecs, videos and other online recordings. Likewise, it can be useful
 to see what players think about certain features by reading online discussion
 on [*Tavern*](https://tavern.dcss.io/), Reddit (see
-[*/r/dcss*](http://www.reddit.com/r/dcss/) and
-[*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online
+[*/r/dcss*](http://www.reddit.com/r/dcss/)) the
+[*roguelikes discord*](https://discord.gg/S5F2H32), and other online
 discussion sites. However it’s important that player praise or criticism is
 always taken with a grain of salt. If in doubt, get in touch with other
-developers for some grounding -- \#\#crawl-dev is always good for that.
+developers for some grounding -- \#crawl-dev is always good for that.
 
 #### Adding new members
 
-An development team member may suggest to others in a private e-mail that
-commit rights be given to a contributor. As other members agree (or there
-are no objections), commit rights are usually given, and this is then
-announced.
+Any development team member may privately suggest that commit rights be given
+to a contributor. As other members agree (or there are no objections), commit
+rights are usually given, and this is then announced.
 
 Generally, if a contributor supplies a substantial amount of patches of good
 quality (i.e. patches don't break things, don't need cleaning up before
