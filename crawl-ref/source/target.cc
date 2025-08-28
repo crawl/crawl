@@ -1444,7 +1444,7 @@ targeter_cone::targeter_cone(const actor *act, int r)
     agent = act;
     origin = act->pos();
     aim = origin;
-    ASSERT_RANGE(r, 1 + 1, you.current_vision + 1);
+    ASSERT_RANGE(r, 1, you.current_vision + 1);
     range = r;
 }
 
