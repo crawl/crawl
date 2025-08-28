@@ -510,7 +510,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        do_player_post_attack(defender, attk.did_attack_hostiles(), simu);
+        do_player_post_attack(defender, !attk.did_attack_hostiles(), simu);
 
         count_action(CACT_ATTACK, ATTACK_NORMAL);
 
@@ -624,15 +624,22 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
  * single 'attack action' (which might be either a normal attack, or a martial
  * attack caused by movement).
  *
- * @param defender      The target the player attacked. (Which might be dead,
- *                      or even null in the case of WJC martial attacks!)
- * @param was_firewood  Whether the defender was firewood while alive.
- * @param simu          Whether this is an fsim simulation.
+ * @param defender       The target the player attacked. (Which might be dead,
+ *                       or even null in the case of WJC martial attacks!)
+ * @param only_firewood  Whether the defender (and all potential cleave targets)
+ *                       were firewood while alive.
+ * @param simu           Whether this is an fsim simulation.
  */
-void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
+void do_player_post_attack(actor *defender, bool only_firewood, bool simu)
 {
     if (!simu && will_have_passive(passive_t::shadow_attacks))
         dithmenos_shadow_melee(defender);
+
+    if (you.form == transformation::medusa)
+        _do_medusa_stinger();
+
+    if (only_firewood)
+        return;
 
     // Various status will not expire so long as the player keeps attacking.
     if (you.duration[DUR_EXECUTION])
@@ -645,14 +652,10 @@ void do_player_post_attack(actor *defender, bool was_firewood, bool simu)
     if (you.duration[DUR_PARAGON_ACTIVE])
         paragon_attack_trigger();
 
-    if (you.form == transformation::sun_scarab && !was_firewood)
+    if (you.form == transformation::sun_scarab)
         solar_ember_blast();
 
-    if (you.form == transformation::medusa)
-        _do_medusa_stinger();
-
-    if (!was_firewood)
-        update_parrying_status();
+    update_parrying_status();
 }
 
 /**
@@ -1201,7 +1204,7 @@ bool force_player_cleave(coord_def target)
         melee_attack atk(&you, nullptr);
         atk.launch_attack_set();
         count_action(CACT_ATTACK, ATTACK_NORMAL);
-        do_player_post_attack(nullptr, atk.did_attack_hostiles(), false);
+        do_player_post_attack(nullptr, !atk.did_attack_hostiles(), false);
         return true;
     }
 
