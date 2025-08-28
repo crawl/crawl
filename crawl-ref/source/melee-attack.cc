@@ -1251,7 +1251,7 @@ bool melee_attack::handle_phase_cleaving()
 
 void melee_attack::handle_phase_multihit()
 {
-    if (!is_followup && weapon_multihits(weapon))
+    if (!is_followup && weapon_multihits(weapon) && defender && defender->alive())
     {
         const int hits_per_targ = weapon_hits_per_swing(*weapon);
         list<actor*> extra_hits;
