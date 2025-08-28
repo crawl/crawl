@@ -599,7 +599,7 @@ private:
         const string act = default_action == action::memorise ? "Memorise"
                            : default_action == action::imbue ? "Imbue" : "Cast";
         // line 2
-        desc << menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) << " ";
+        desc << menu_keyhelp_cmd(CMD_MENU_RIGHT) << " ";
         desc << ( current_action == action::cast
                             ? "<w>Cast</w>|Describe|Hide|Show"
                  : current_action == action::memorise
