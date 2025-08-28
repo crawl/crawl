@@ -1519,7 +1519,7 @@ bool melee_attack::attack()
         // Check that we're attacking at least one non-firewood target and
         // cache this result.
         if (defender && !defender->is_firewood() && !mons_aligned(attacker, defender))
-            is_attacking_hostiles = false;
+            is_attacking_hostiles = true;
 
         if (!is_attacking_hostiles && !cleave_targets.empty())
         {
