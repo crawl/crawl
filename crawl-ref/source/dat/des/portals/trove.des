@@ -325,7 +325,7 @@ end
 -- TODO: also move this to vault.lua. Possibly could be "acquire shield ego:X",
 -- but acquirement only knows it's handling armour and not shields as items.
 function trove_ego_shield(e, ego, artprop)
-  local sh = ""
+  local sh = {}
   local g = "good_item"
   local r = "randart"
   if ego ~= nil then
@@ -334,19 +334,24 @@ function trove_ego_shield(e, ego, artprop)
   if artprop ~= nil then
     r = r .. " artprops:" .. artprop
   end
-  if you.race() ~= "Troll" and you.race() ~= "Oni" and you.base_skill("Shields") < 18 then
-    sh = "buckler ".. g .. " / buckler " .. r
+
+  if you.race() ~= "Troll" and you.race() ~= "Oni" and
+     (you.race() == "Spriggan" or you.base_skill("Shields") < 18) then
+    table.insert(sh, "buckler ".. g)
+    table.insert(sh, "buckler ".. r)
   end
   if you.race() ~= "Spriggan" then
-    sh = sh .. " / kite shield " .. g .. " / kite shield " .. r
-    if you.race() ~= "Kobold" and you.base_skill("Shields") > 0 then
-      sh = sh .. " / tower shield " .. g .. " w:5 / tower shield " .. r .. " w:5"
-    end
+    table.insert(sh, "kite shield ".. g)
+    table.insert(sh, "kite shield ".. r)
+  end
+  if you.race() ~= "Kobold" and you.base_skill("Shields") > 0 then
+    table.insert(sh, "tower shield ".. g .. " w:5")
+    table.insert(sh, "tower shield ".. r .. " w:5")
   end
   if you.race == "Coglin" or you.mutation("missing a hand") == 1 then
     return ""
   else
-    return sh
+    return table.concat(sh, " / ")
   end
 end
 
@@ -1064,8 +1069,10 @@ ENDMAP
 
 # Who said hidden doors were removed, anyway?
 # Rutra's Hidden Sanctum: a stealth and Hexes trove.
+# Lowered weight due to the gimmick and narrow nature of rewards.
 NAME:   pf_index_trove_rutra
 : trove_setup(_G)
+WEIGHT: 5
 KITEM:  ? = gold q:1
 KITEM:  D = stone mimic
 KITEM:  E = wand of flame mimic / potion of moonshine mimic / scroll of noise mimic
@@ -1135,6 +1142,8 @@ xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Layout mostly taken from trove_trog_arena, though Trog might approve.
+# Lowered weight due to the lack of spellcaster support and the potentially
+# build-clashing offering of reaping weapons.
 NAME:   regret_index_trove_dread_knight
 TAGS:   no_species_fe
 veto {{ return crawl.game_started() and you.god() == "Elyvilon"
