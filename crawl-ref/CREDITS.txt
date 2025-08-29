@@ -161,7 +161,6 @@
     cut1less
     Matthew Daley
     David Damerell
-    Darby
     Paul Dejean
     Denzi
     DevJac
@@ -465,6 +464,7 @@ The Dungeon Crawl Stone Soup development team is:
     Robert Burnham
     Kate Campbell
     Matthew Cline
+    Darby
     Florian Diebold
     Rax E. Dillon
     Nicholas Feinberg
