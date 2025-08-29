@@ -8114,7 +8114,7 @@ KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
 : kmons("B = wight ; " .. ls .. " | nothing")
 : kmons("C = Eustachio / orc warrior ; " .. ss .. ", " ..
 :            "orc warrior ; " .. ss .. " / nothing")
-: kmons("D = Blorkula the Orcula / orc warrior ; " .. gs .. ", " ..
+: kmons("D = Blorkula the orcula / orc warrior ; " .. gs .. ", " ..
 :           "orc warrior ; " .. gs .. " / nothing")
 : kmons("E = Maurice / kobold brigand ; dart ego:poisoned . " .. ss .. ", " ..
 :           "kobold brigand ; dart ego:poisoned . " .. ss .. " / nothing")
