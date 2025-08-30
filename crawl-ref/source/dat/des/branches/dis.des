@@ -1188,6 +1188,64 @@ vv2832..3..2382vv
      vvv@vvv
 ENDMAP
 
+NAME:    tekkud_dis_ironworks
+TAGS:    no_monster_gen
+DEPTH:   Dis:2-
+ORIENT:  encompass
+MONS:    ironbound mechanist
+MONS:    war gargoyle, iron golem
+MONS:    dancing weapon ; executioner's axe good_item |\
+         battleaxe good_item | bardiche good_item |\
+         glaive good_item | triple sword good_item |\
+         great sword good_item | great mace good_item |\
+         lajatang good_item | triple crossbow good_item w:5
+MONS:    iron giant
+KMONS:   }>$ = iron dragon / iron giant / hell sentinel / ancient lich
+KFEAT:   } = }
+KFEAT:   > = >
+KFEAT:   $ = $
+NSUBST:  } = 1:} / 1:>$ / *:$
+NSUBST:  ' = 2:1 / 2:a / 3=a.. / *:. , a = 12:a / *=a.
+SUBST:   - = l.
+# either war gargs or dancing weapons will be
+# the main construct, with a few iron golems
+SHUFFLE: aq
+SUBST:   a = 222234 , q = 234444
+: vault_metal_statue_setup(_G, "G", "iron statue")
+MAP
+vvvvv    vvvvvvvvvvvvvvvvv
+v...v   vv.......v.......vv
+v.{.vvv v..G.....G....1G..vvv
+v...+.vvv...1.G..a..G.....+}v
+vvv++..vv..G.....G....aG..vvv
+vvv.....vv.......v.......vv
+  vv.....vv+vvvvvvvvvvv+vv
+   vv..G..........vvvv...v
+ vvvvv............+.vv...vv
+vv.5.vv...........v.vG'''Gv
+v.....v...1...a...v.v'''''v
+v..G..v.........a.v}v'''''v
+v.....v....G......vvv''v''vv
+v.a...v......a....vv'''v'''v
+v.....v...a.......vv''vvv''v
+v1....+........1..vv''vvv''vv
+v.....v.....a.....v'''v}v'''v
+v.a...v...........v''vv+vv''v
+v.....vvvvvvvvvv+vv''v.5.v''v
+v..G..vllllllll-.-v''va.av''v
+v.....vllllll-..a.v''v...v''v
+vv...vvl-lll-..a..v'vvv+vvv'v
+ vv+vvvl-.-lll-...v'vG...Gv'v
+vv...vv-1...--l.1.v'v1...1v'v
+v5....v....a.ll-..v'v..G..v'v
+v.....+.....-l-...v'va...av'v
+va....v.a.-llll-..v'vG...Gv'v
+vv.a.vv....-l--l..v'vvv+vvv'v
+ vv+vvv.....la.-..+..Ga.aG..v
+  v}v v...........v.........v
+  vvv vvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
