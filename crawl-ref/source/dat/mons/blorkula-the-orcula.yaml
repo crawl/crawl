@@ -1,4 +1,4 @@
-name: "Blorkula the Orcula"
+name: "Blorkula the orcula"
 glyph: {char: "o", colour: brown}
 flags: [speaks, see_invis, warm_blood, unique, male, no_zombie]
 resists: {cold: 1}
