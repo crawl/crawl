@@ -501,6 +501,7 @@ public:
     int         autopickup_on; // can be -1, 0, or 1. XX refactor as enum
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_skill_cost;
     bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
