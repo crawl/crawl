@@ -1192,8 +1192,11 @@ void direction_chooser::calculate_target_info()
                 preferred_targs.push_back(mi->pos());
             }
         }
-        if (mi->friendly() && (!hitfunc || hitfunc->affects_monster(monster_info(*mi))))
+        if (mi->friendly() && !never_harm_monster(&you, **mi)
+            && (!hitfunc || hitfunc->affects_monster(monster_info(*mi))))
+        {
             valid_friends.push_back(*mi);
+        }
     }
 
     const bool check_past_range = hitfunc && hitfunc->can_affect_outside_range();
