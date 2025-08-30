@@ -1013,6 +1013,11 @@ void pyromania_fineff::fire()
     exp.explode(true, true);
 }
 
+void tabcast_fineff::fire()
+{
+    tabcast_spell(posn);
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.

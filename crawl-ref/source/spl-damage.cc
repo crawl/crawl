@@ -64,11 +64,6 @@
 #include "view.h"
 #include "xp-evoker-data.h" // for thunderbolt
 
-#define SEARING_RAY_AIM_SPOT_KEY "searing_ray_aimed_at_spot"
-#define SEARING_RAY_TARGET_KEY "searing_ray_target"
-#define SEARING_RAY_MID_KEY "searing_ray_mid"
-#define SEARING_RAY_POWER_KEY "searing_ray_power"
-
 static bool _act_worth_targeting(const actor &caster, const actor &a)
 {
     if (!caster.see_cell_no_trans(a.pos()))
@@ -749,14 +744,18 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             // Singing Sword's spell shouldn't give a prompt at this time.
             if (spell != SPELL_SONIC_WAVE)
             {
-                if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc))
+                if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc,
+                        nullptr, nullptr, is_tabcasting()))
+                {
                     return spret::abort;
+                }
 
                 fail_check();
             }
 
             mpr(player_msg);
-            flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+            flash_view_delay(UA_PLAYER, beam.colour,
+                is_tabcasting() ? 150 : 300, &hitfunc);
         }
         else
         {
@@ -1725,8 +1724,11 @@ spret cast_shatter(int pow, bool fail)
                && !never_harm_monster(&you, act->as_monster())
                && _shatterable(act);
     };
-    if (stop_attack_prompt(hitfunc, "attack", vulnerable))
+    if (stop_attack_prompt(hitfunc, "attack", vulnerable,
+        nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
     const bool silence = silenced(you.pos());
@@ -2651,15 +2653,18 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     if (victim->is_player())
     {
-        dprf("You: static discharge damage: %d", damage);
-        damage = check_your_resists(damage, BEAM_ELECTRICITY,
-                                    "static discharge");
-        mprf("You are struck by an arc of lightning%s",
-             attack_strength_punctuation(damage).c_str());
-        ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
-             agent.is_player() ? "you" : agent.name(DESC_A).c_str());
-        if (damage > 0)
-            victim->expose_to_element(BEAM_ELECTRICITY, 2);
+        if (!(agent.is_player() && you.has_mutation(MUT_SAFE_SPELLS)))
+        {
+            dprf("You: static discharge damage: %d", damage);
+            damage = check_your_resists(damage, BEAM_ELECTRICITY,
+                                        "static discharge");
+            mprf("You are struck by an arc of lightning%s",
+                 attack_strength_punctuation(damage).c_str());
+            ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
+                 agent.is_player() ? "you" : agent.name(DESC_A).c_str());
+            if (damage > 0)
+                victim->expose_to_element(BEAM_ELECTRICITY, 2);
+        }
     }
     // Elec immune monsters don't allow arcs to continue.
     else if (victim->res_elec() >= 3)
@@ -3478,8 +3483,11 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
     if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+        if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect,
+                nullptr, nullptr, is_tabcasting()))
+        {
             return spret::abort;
+        }
 
         fail_check();
 
@@ -3493,7 +3501,8 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
         you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
-        flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
+        flash_view_delay(UA_PLAYER, GREEN,
+            is_tabcasting() ? 150 : 300, &hitfunc);
 
         return spret::success;
     }
@@ -3617,7 +3626,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     }
 
     const actor* victim = actor_at(target);
-    if ((!victim || !you.can_see(*victim))
+    if ((!victim || !you.can_see(*victim)) && !is_tabcasting()
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -3641,7 +3650,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return !never_harm_monster(&you, act->as_monster());
     };
 
-    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE && !is_tabcasting()
         && !yesno("The unravelling is likely to hit you. Continue anyway?",
                   false, 'n'))
     {
@@ -3649,8 +3658,11 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -3812,7 +3824,7 @@ void handle_flame_wave(int lvl)
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    if (lvl > 1)
+    if (lvl > 1 && !is_tabcasting())
     {
         pay_mp(1);
         finalize_mp_cost();
@@ -3918,7 +3930,7 @@ bool handle_searing_ray(actor& agent, int turn)
 
     if (agent.is_player())
     {
-        if (turn > 1)
+        if (turn > 1 && !is_tabcasting())
         {
             pay_mp(1);
             finalize_mp_cost();
@@ -4308,8 +4320,11 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -4363,8 +4378,11 @@ spret cast_imb(int pow, bool fail)
         return !never_harm_monster(&you, act->as_monster());
     };
 
-    if (stop_attack_prompt(*hitfunc, "blast", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "blast", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 

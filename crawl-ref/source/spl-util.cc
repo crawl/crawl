@@ -548,6 +548,9 @@ int spell_mana(spell_type which_spell, bool real_spell)
         if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
             return 0;
 
+        if (is_tabcasting())
+            return 0;
+
         int cost = level;
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
@@ -1151,7 +1154,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell_difficulty(spell) > you.experience_level)
             return "you aren't experienced enough to cast this spell.";
 
-        if (you.has_mutation(MUT_HP_CASTING))
+        if (is_tabcasting()){}
+        else if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])

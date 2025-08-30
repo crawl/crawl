@@ -83,6 +83,11 @@ Minotaur
 Minotaurs are large muscular humans with bovine heads. They excel at all forms
 of close and ranged combat.
 %%%%
+Moon Moth
+
+Moon Moths are a winged, insectoid species who exclusively cast spells by
+striking foes in melee combat. They catch fire very easily.
+%%%%
 Mountain Dwarf
 
 Mountain Dwarves are strong melee fighters and capable heavy-armoured casters.
