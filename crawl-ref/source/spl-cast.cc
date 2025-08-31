@@ -3596,13 +3596,7 @@ void handle_channelled_spell()
     // Skip processing at the end of the turn this is cast (since that already
     // happened *as* it was cast and shouldn't happen a second time.)
     if (++you.attribute[ATTR_CHANNEL_DURATION] == 1)
-    {
-        //don't skip a turn if tabcasting
-        if (is_tabcasting())
-            ++you.attribute[ATTR_CHANNEL_DURATION];
-        else
-            return;
-    }
+        return;
 
     const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
 

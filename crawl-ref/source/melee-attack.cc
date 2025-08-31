@@ -1355,7 +1355,17 @@ void melee_attack::maybe_trigger_tabcast()
     if (!x_chance_in_y(you.get_tabcast_chance(), 100))
         return;
 
-    tabcast_fineff::schedule(m->pos());
+    //handle_channelled_spells is called before fineffs so cast it here
+    //we usually use fineffs to avoid potential strange behavior
+    if (spell == SPELL_SEARING_RAY || spell == SPELL_FLAME_WAVE
+        || spell == SPELL_MAXWELLS_COUPLING || spell == SPELL_CLOCKWORK_BEE)
+    {
+        dist target;
+        target.target = m->pos();
+        cast_a_spell(false, spell, &target);
+    }
+    else
+        tabcast_fineff::schedule(m->pos());
 }
 
 item_def *melee_attack::primary_weapon() const
