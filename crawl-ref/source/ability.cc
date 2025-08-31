@@ -2527,7 +2527,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (player_in_branch(BRANCH_CRUCIBLE))
         {
             if (!quiet)
-                mpr("Mahkleb denies you. Endure the Crucible first!");
+                mpr("Makhleb denies you. Endure the Crucible first!");
             return false;
         }
         else if (you.form == transformation::slaughter)
