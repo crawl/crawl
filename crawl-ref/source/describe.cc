@@ -4747,18 +4747,18 @@ static string _player_spell_desc(spell_type spell)
 
     if (you.has_mutation(MUT_CONTACT_CASTING))
     {
-        const int chance = you.get_tabcast_chance(false, spell);
-        const int maxchance = you.get_tabcast_chance(true, spell);
+        const int chance = you.get_tabcast_chance(false, false, spell);
+        const int maxchance = you.get_tabcast_chance(true, false, spell);
         description << "Your chance to cast this spell with melee attacks is "
                     << chance
-                    << "%.";
+                    << "%";
         if (chance != maxchance)
         {
             description << " ("
                         << maxchance
                         << "% at max spellcasting skill)";
         }
-        description << "\n";
+        description << ".\n";
     }
 
     if (!you_can_memorise(spell))

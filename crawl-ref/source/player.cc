@@ -9332,10 +9332,15 @@ item_def* player::active_talisman() const
         return nullptr;
 }
 
-int player::get_tabcast_chance(bool get_max, spell_type spell)
+int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
 {
     spell = spell == SPELL_NO_SPELL ? (spell_type) you.attribute[ATTR_TABCAST_SPELL] : spell;
     int diff = spell_difficulty(spell);
+
+    //reduce cast chance of sandblast to compensate for the fact
+    //that its increased cast time is now instant
+    if (spell == SPELL_SANDBLAST)
+        diff += 2;
 
     //base chance of 100, scaling up to 400 at max skill
     //divided by 3 + spell level, capped at 100
@@ -9344,12 +9349,14 @@ int player::get_tabcast_chance(bool get_max, spell_type spell)
     constexpr int scaling = 300;
     const int div = 3 + diff;
     const int skl = skill(SK_SPELLCASTING, scale);
-    int chance = get_max ? base + scaling : base + scaling * skl / (MAX_SKILL_LEVEL * scale);
+    constexpr int maxskl = MAX_SKILL_LEVEL * scale;
 
-    //reduce cast chance of sandblast to compensate for the fact
-    //that its increased cast time is now instant
-    if (spell == SPELL_SANDBLAST)
-        chance = chance * 2 / 3;
+    if (get_max)
+        return (base + scaling) / div;
 
-    return chance / div;
+    //(base + scaling * skl / maxskl) / div
+    int chance = base * maxskl + scaling * skl;
+    chance = random ? div_rand_round(chance, div * maxskl) : chance / (div * maxskl);
+
+    return chance;
 }
