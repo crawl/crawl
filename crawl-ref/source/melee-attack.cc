@@ -1352,7 +1352,7 @@ void melee_attack::maybe_trigger_tabcast()
 
     you.attribute[ATTR_TABCAST_LIMIT]--;
 
-    if (!x_chance_in_y(you.get_tabcast_chance(), 100))
+    if (!x_chance_in_y(you.get_tabcast_chance(false, true), 100))
         return;
 
     //handle_channelled_spells is called before fineffs so cast it here
