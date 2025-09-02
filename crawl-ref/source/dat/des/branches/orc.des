@@ -1734,9 +1734,9 @@ ENDMAP
 # orc fortress
 NAME:   tekkud_orc_quarters
 TAGS:   transparent
-NSUBST: _ = 1:89 / *=009
-SUBST:  - = IC$ F:5 *:2
 KFEAT:  C = cache of meat
+NSUBST: _ = 1:89 / *=009
+SUBST:  - = IC F:4 $:4
 : decorative_floor(_G, 'F', "orcish standard")
 MAP
 cccc+cccc

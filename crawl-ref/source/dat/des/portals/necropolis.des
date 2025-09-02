@@ -1729,6 +1729,7 @@ NAME:   ebering_necropolis_ghost_gozag
 : necropolis_depth_tagging(_G, {"pre_temple_d", "pre_lair_d",
 :                               "post_lair_d", "orc", "snake", "shoals",
 :                               "vaults_elf", "depths_crypt"})
+TAGS:   luniq_necropolis_ghost_gozag
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 WEIGHT: 5
 : end
@@ -4748,17 +4749,18 @@ MAP
 ....................
 ENDMAP
 
-NAME: tekkud_necropolis_all_or_nothing_shop
+NAME:      tekkud_necropolis_all_or_nothing_shop
 : necropolis_depth_tagging(_G, {"vaults_elf", "depths_crypt"})
-WEIGHT: 5
-KMONS:    O = player ghost
-KMONS:    i = orange crystal statue
+TAGS:      luniq_necropolis_ghost_gozag
+WEIGHT:    5
+KMONS:     O = player ghost
+KMONS:     i = orange crystal statue
 : if dgn.persist.necropolis_difficulty == "vaults_elf" then
-MONS: vault guard / vault warden / orc warlord / guardian serpent / dancing weapon / peacekeeper
-MONS: golden dragon / crystal guardian / guardian sphinx
+MONS:      vault guard / vault warden / orc warlord / guardian serpent / dancing weapon / peacekeeper
+MONS:      golden dragon / crystal guardian / guardian sphinx
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-MONS: ancient champion / crystal guardian / guardian sphinx / lich / golden dragon
-MONS: royal mummy / ancient lich / vampire bloodprince / quicksilver dragon
+MONS:      ancient champion / crystal guardian / guardian sphinx / lich / golden dragon
+MONS:      royal mummy / ancient lich / vampire bloodprince / quicksilver dragon
 : end
 # XXX: "any ___ randart" causes the item level to be set to -1, so instead manually specify base types...
 KFEAT: S = general shop name:Gozag type:All_or_Nothing suffix:Deal no_mimic greed:35 count:1 ; \
@@ -4774,13 +4776,13 @@ KFEAT: S = general shop name:Gozag type:All_or_Nothing suffix:Deal no_mimic gree
            dragon-coil talisman randart | granite talisman randart | sanguine talisman randart | \
            hive talisman randart | riddle talisman randart | talisman of death randart | storm talisman randart | \
            any jewellery randart w:250 | scroll of acquirement w:120 pre_id | potion of experience q:1 pre_id
-KFEAT:  Y = altar_gozag
-KFEAT:  G = metal_statue
-TILE:   G = dngn_golden_iron_statue
-TILE:   c = wall_church
-FTILE:  =~'"_Gn = floor_limestone
-KPROP:  ~'"_ = no_tele_into
-NSUBST: ~ = 3:1 / 2:2 / 1:1. / 1:O / 1:S / *:' , G = 1:i / *:G , _ = 1:Y / *:'
+KFEAT:     Y = altar_gozag
+KFEAT:     G = metal_statue
+TILE:      G = dngn_golden_iron_statue
+TILE:      c = wall_church
+FTILE:     =~'"_Gn = floor_limestone
+KPROP:     ~'"_ = no_tele_into
+NSUBST:    ~ = 3:1 / 2:2 / 1:1. / 1:O / 1:S / *:' , G = 1:i / *:G , _ = 1:Y / *:'
 : setup_gozag_gold(_G)
 : necropolis_ghost_setup(_G, false)
 MAP
