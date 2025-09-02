@@ -3032,7 +3032,7 @@ WEIGHT: 3
 KITEM:  1 = | no_pickup / w:5 any weapon ego:chaos good_item no_pickup
 KMONS:  1 = killer klown
 KMONS:  2 = protean progenitor w:14 / juggernaut / draconian monk /\
-        draconian knight / executioner w:6 / spriggan defender w:6
+            draconian knight / executioner w:6 / spriggan defender w:6
 KFEAT:  ^ = harlequin's trap
 KFEAT:  T = tyrant's trap
 KPROP:  12*R = no_tele_into
@@ -10205,19 +10205,19 @@ MAP
       c.v..d..v.c
 ccccccc.v.....v.ccccccc
 c....y..vG...Gv..y....c
-c.vvvnvvnvv+vvnvvnvvv.c
+c.vvvvvvnvv+vvnvvvvvv.c
 c.vG...5m.2.2.=....Gv.c
 c.v.....m3...3m..5..v.c
-cyv5.e..m..4..m..u5.vyc
+cyn5.e..m..4..m..u5.nyc
 c.v.....m1...1m..5..v.c
 c.vG...5=.3.3.m....Gv.c
-c.vvvnvvnmmmm.nvvnvvv.c
+c.vvvvvvnmmmm.nvvvvvv.c
 c....y..v.....v..y....c
-ccccccc.v.....v.ccccccc
-      c.v..G..v.c
+ccccccc.v..3..v.ccccccc
+      c.n..G..n.c
       cyv.....vyc
       c.v.....v.c
-      c.vv===vv.c
+      c.vn===nv.c
       c....y....c
       ccccccccccc
 ENDMAP
