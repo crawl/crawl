@@ -2897,6 +2897,24 @@ bool activate_talent(const talent& tal, dist *target)
                 you.redraw_armour_class = true;
             }
 
+            if (is_religious_ability(abil.ability)
+                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
+                    || (abil.flags & abflag::max_hp_drain)
+                    || (abil.ability == ABIL_ZIN_RECITE)
+                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
+                    || (abil.flags & abflag::sacrifice)
+                    || (abil.flags & abflag::torment)
+                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
+                    || abil.get_mp_cost() > 0)
+                && you.unrand_equipped(UNRAND_DRAGONMASK)
+                && there_are_monsters_nearby(true, false, false))
+            {
+                if (one_chance_in(10))
+                {
+                    cast_summon_dragon(&you, 50, false);
+                }
+            }
+
             // XXX: Merge Dismiss Apostle #1/2/3 into a single count
             ability_type log_type = abil.ability;
             if (log_type == ABIL_BEOGH_DISMISS_APOSTLE_2
