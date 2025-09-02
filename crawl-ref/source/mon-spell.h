@@ -871,6 +871,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_CLOCKROACH,
+      {
+       { SPELL_SANDBLAST, 30, MON_SPELL_MAGICAL},
+      }
+    },
+
     {  MST_RADROACH,
       {
        { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},

@@ -844,9 +844,9 @@ NAME:   hellmonk_ecumenical_altar_defaced_shrine
 TAGS:   no_monster_gen transparent
 WEIGHT: 5
 : if you.absdepth() > 1 then
-MONS:   orc
+MONS:   orc / clockroach w:2
 : else
-MONS:   rat / giant cockroach / dart slug
+MONS:   rat / dart slug
 : end
 KMONS:  d = pile of debris / nothing w:30
 : kitem("d = " .. vault_species_skeletons(_G, "dungeon"))

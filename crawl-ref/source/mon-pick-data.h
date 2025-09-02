@@ -69,17 +69,16 @@ static const vector<pop_entry> population[] =
 
 // Pretty weak, but not quite bottom tier.
   {  1,  4, 1000, FLAT, MONS_BALL_PYTHON },
-  {  1,  4,  500, FLAT, MONS_GIANT_COCKROACH },
   {  1,  4, 1000, FLAT, MONS_GOBLIN },
   {  1,  4, 1000, FLAT, MONS_KOBOLD },
   {  1,  4, 1000, FLAT, MONS_HOBGOBLIN },
   {  1,  4, 1000, FLAT, MONS_ENDOPLASM },
-  {  1,  3,  350, FLAT, MONS_DART_SLUG },
+  {  1,  3,  375, FLAT, MONS_DART_SLUG },
   {  1,  3,  500, FLAT, MONS_QUOKKA },
-  {  1,  3,  200, FLAT, MONS_JACKAL },
-  {  4,  5,  200, FALL, MONS_JACKAL },
+  {  1,  3,  175, FLAT, MONS_JACKAL },
+  {  4,  5,  175, FALL, MONS_JACKAL },
   {  4,  5,  500, FALL, MONS_QUOKKA },
-  {  4,  5,  350, FALL, MONS_DART_SLUG },
+  {  4,  5,  375, FALL, MONS_DART_SLUG },
   {  1,  8,  200, PEAK, MONS_GNOLL },
 
 // Shouldn't show up on D:1.
@@ -87,6 +86,7 @@ static const vector<pop_entry> population[] =
   {  2,  6, 1000, FLAT, MONS_ADDER },
   {  3,  8, 1000, FLAT, MONS_ORC },
   {  3,  7,  400, PEAK, MONS_BOMBARDIER_BEETLE},
+  {  3,  6,  250, SEMI, MONS_CLOCKROACH },
 
 // These historically don't get kills after D:7ish.
   {  4,  7,  800, PEAK, MONS_SCORPION },

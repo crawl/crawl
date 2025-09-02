@@ -1010,6 +1010,14 @@ instead in the whims of cruel chaos. This ominous owl-winged head is all that
 remains of a former archmage: it delights in spreading misfortune and drinking
 blood in its new airborne form.
 %%%%
+clockroach
+
+A common dungeon pest that combines the worst features of a scavenging insect
+and a looming deadline.
+
+Time flows strangely around it, rewinding any injuries inflicted upon it unless
+the source of them is near enough to be caught up in its timestream.
+%%%%
 cognitogaunt
 
 A wizened, headless corpse, animated not by conventional necromancy but by the
@@ -1538,11 +1546,6 @@ ghoul
 A decayed cadaver, reanimated and accursed with a terrible hunger. It desires
 nothing but to feed on the flesh of the living, and will fell its victims with
 its vicious claws.
-%%%%
-giant cockroach
-
-A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
-it is in fact quite susceptible to mutagenic energies.
 %%%%
 glass eye
 

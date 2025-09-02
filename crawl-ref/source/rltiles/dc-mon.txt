@@ -69,7 +69,7 @@ unspeakable MONS_UNSPEAKABLE
 %sdir mon/animals
 
 ## Insects ('a')
-giant_cockroach MONS_GIANT_COCKROACH
+clockroach MONS_CLOCKROACH
 radroach MONS_RADROACH
 
 ## Batty monsters ('b')

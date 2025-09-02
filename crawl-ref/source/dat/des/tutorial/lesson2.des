@@ -37,7 +37,7 @@ SHUFFLE: 34
 MONS:    training dummy hp:10 ; whip mundane
 MONS:    rat
 MONS:    wyvern
-MONS:    giant cockroach
+MONS:    jackal
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
 MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")

@@ -334,8 +334,9 @@ ENDMAP
 
 NAME:   minmay_worlds_worst_comb
 TAGS:   transparent
-DEPTH:  D:1-2
-MONS:   giant cockroach / nothing
+DEPTH:  D:3-5
+MONS:   clockroach
+NSUBST: 1 = 1:1 / 1:. / * = 1.
 MAP
    ....
   ..xx.
@@ -1112,7 +1113,7 @@ TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
 MONS:    rat, bat, frilled lizard, dart slug, endoplasm
-MONS:    giant cockroach, jackal
+MONS:    clockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
@@ -1392,7 +1393,7 @@ ENDMAP
 NAME:   tekkud_yamata_no_oroachi
 TAGS:   no_monster_gen
 DEPTH:  D:12-, !D:$, Lair, !Lair:$
-MONS:   eight-headed hydra, patrolling giant cockroach, plant
+MONS:   eight-headed hydra, patrolling clockroach, plant
 ITEM:   long sword good_item / scimitar good_item w:6, human skeleton
 KFEAT:  C = cache of fruit
 SUBST:  ` = @'''', ' = x', " = x.
@@ -4769,7 +4770,7 @@ KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
 KMONS:   i = hell rat
-KMONS:   j = giant cockroach
+KMONS:   j = clockroach
 KMONS:   k = bes kemwar
 KMONS:   l = large abomination
 KMONS:   m = scorpion

@@ -1,13 +1,13 @@
-name: "giant cockroach"
+name: "clockroach"
 glyph: {char: "B", colour: brown}
-flags: [no_skeleton]
+flags: [warded, no_skeleton]
 resists: {poison: -1}
-exp: 2
-will: 0
+exp: 37
+will: 20
 attacks:
- - {type: bite, damage: 2}
+ - {type: bite, damage: 4}
 hd: 1
-hp_10x: 50
+hp_10x: 110
 ac: 3
 ev: 10
 has_corpse: true
@@ -15,3 +15,4 @@ intelligence: animal
 speed: 12
 size: little
 shape: insect
+spells: clockroach

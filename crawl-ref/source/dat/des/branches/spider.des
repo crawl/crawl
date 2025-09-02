@@ -179,7 +179,7 @@ ENDMAP
 
 NAME:   nicolae_spider_entry_non_spiders
 TAGS:   spider_entry ruin_lair transparent
-MONS:   scorpion w:20 / ribbon worm / giant cockroach
+MONS:   scorpion w:20 / ribbon worm / clockroach
 MONS:   demonic crawler / boulder beetle / torpor snail
 KFEAT:  O = enter_spider_nest
 NSUBST: 1 = 1:21 / *:1

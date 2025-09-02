@@ -12,7 +12,7 @@ function base_monster_setup(e)
   -- The vague order goes: D / Vaults / Elf / Depths, Lair, Lair branches,
   -- Zot, holies, undead, demons and Hells, portals and Sprint.
   e.kmons("A = rat w:5 / river rat w:15 / quokka / bat / frilled lizard /\
-               iguana / ball python / adder / giant cockroach / ribbon worm /\
+               iguana / ball python / adder / clockroach / ribbon worm /\
                dart slug / scorpion / bombardier beetle / endoplasm / jelly /\
                jackal band / hound / ice beast / sky beast / black bear /\
                water moccasin / bullfrog / goblin / hobgoblin / kobold /\
@@ -197,7 +197,7 @@ function base_monster_setup(e)
 end
 
 function storerooms_monster_setup(e)
-  e.kmons("0 = goblin / frilled lizard / giant cockroach / endoplasm /\
+  e.kmons("0 = goblin / frilled lizard / clockroach / endoplasm /\
                ball python / dart slug / bat / kobold / rat / gnoll /\
                hobgoblin / orc / jackal band / adder / quokka /\
                rat draugr ; dagger / zombie / ufetubus w:5 / crimson imp w:1")

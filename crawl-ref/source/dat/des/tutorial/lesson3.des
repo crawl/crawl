@@ -49,7 +49,7 @@ ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
 ITEM:    flail ego:venom
 MONS:    goblin ; nothing
-MONS:    rat, giant cockroach, hobgoblin ; nothing
+MONS:    rat, jackal, hobgoblin ; nothing
 MARKER:  d = lua:tutorial3.msg("armour")
 MARKER:  A = lua:tutorial3.msg("autopickup")
 MARKER:  e = lua:tutorial3.msg("scroll")

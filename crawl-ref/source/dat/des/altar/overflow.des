@@ -145,7 +145,7 @@ function species_mock(e)
   elseif you.race() == "Felid" then
     return "sphinx marauder zombie"
   elseif you.race() == "Formicid" then
-    return "giant cockroach"
+    return "clockroach"
   elseif you.race() == "Gargoyle" then
     return "rockslime"
   elseif you.race() == "Kobold" then
@@ -2695,7 +2695,7 @@ TAGS: no_monster_gen no_item_gen
 SHUFFLE: MCSBP
 KFEAT: _ = altar_ru
 KMONS: P = ball python perm_ench:paralysis / rat perm_ench:paralysis / \
-  frilled lizard perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
+  frilled lizard perm_ench:paralysis / \
   quokka perm_ench:paralysis / kobold w:5 perm_ench:paralysis / \
   goblin w:5 perm_ench:paralysis / hobgoblin w:5 perm_ench:paralysis
 KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
@@ -2703,7 +2703,7 @@ KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
 KMONS: B = ball python perm_ench:blind / frilled lizard perm_ench:blind / \
-  giant cockroach perm_ench:blind / bat perm_ench:blind
+  / bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
 @...   ...@

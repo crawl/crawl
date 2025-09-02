@@ -708,6 +708,10 @@ cognitogaunt cast
 
 @The_monster@ glimmers violently.
 %%%%
+clockroach cast
+
+@The_monster@ sprays sand from its hourglass @at@ @target@.
+%%%%
 crystal echidna cast targeted
 
 @The_monster@ flicks its quills @at@ @target@.
