@@ -30,7 +30,7 @@ bool is_worthless_consumable(const item_def &item);
 void shop();
 void shop(shop_struct& shop, const level_pos& pos);
 
-shop_struct *shop_at(const coord_def& where);
+shop_struct *shop_at(const coord_def& where, bool force_lookup = false);
 
 void destroy_shop_at(coord_def p);
 

@@ -3250,7 +3250,7 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, "UNAMED PORTAL VAULT ENTRY");
 #endif
     case DNGN_ENTER_SHOP:
-        return shop_name(*shop_at(where));
+        return shop_name(*shop_at(where, true));
 
     case DNGN_FLOOR:
         if (dtype == DESC_A)

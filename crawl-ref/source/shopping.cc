@@ -1588,9 +1588,9 @@ void destroy_shop_at(coord_def p)
     }
 }
 
-shop_struct *shop_at(const coord_def& where)
+shop_struct *shop_at(const coord_def& where, bool force_lookup)
 {
-    if (env.grid(where) != DNGN_ENTER_SHOP)
+    if (env.grid(where) != DNGN_ENTER_SHOP && !force_lookup)
         return nullptr;
 
     auto it = env.shop.find(where);
