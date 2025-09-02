@@ -978,12 +978,15 @@ BOOL:    silence, notelep, elec, rCorr
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
 OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +2
+INSCRIP: Dragonpray
 COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
-WILL:    1
-SLAY:    3
 BOOL:    seeinv
+DESCRIP: Dragonpray: It occasionally summons a dragon when using Invocations
+ with hostile monsters in sight. Chance is 10% + twice the piety cost of the
+ ability used.
 
 NAME:     robe of Night
 OBJ:      OBJ_ARMOUR/ARM_ROBE

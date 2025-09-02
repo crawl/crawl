@@ -1161,6 +1161,10 @@ static string _why_reject(const item_def &item, int agent)
     if (agent == GOD_OKAWARU && get_armour_ego_type(item) == SPARM_COMMAND)
         return "Destroying Oka-gifted command armour.";
 
+    // Oka does not gift the Mask of the Dragon.
+    if (agent == GOD_OKAWARU && is_unrandom_artefact(item, UNRAND_DRAGONMASK))
+        return "Destroying Oka-gifted Mask of the Dragon.";
+
     // Pain brand is useless if you've sacrificed Necromancy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
