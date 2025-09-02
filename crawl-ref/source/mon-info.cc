@@ -1532,7 +1532,8 @@ vector<string> monster_info::attributes() const
         }
     }
 
-    if (type == MONS_NAMELESS_REVENANT)
+    if (type == MONS_NAMELESS_REVENANT
+        && props.exists(NOBODY_MEMORIES_KEY))
     {
         const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
         v.push_back(make_stringf("%d %s left", num_memories,
