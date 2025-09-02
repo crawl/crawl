@@ -42,7 +42,7 @@
         e.kmons("9 = war gargoyle")
         e.kmons("0 = glowing shapeshifter hd:15")
         e.kmons("EW = water elemental")
-        e.kmons("e = earth elemental")
+        e.kmons("e = patrolling earth elemental")
         e.kmons("f = fire elemental")
         e.kmons("a = air elemental")
         e.kmons("r = war gargoyle / molten gargoyle / nothing w:20")

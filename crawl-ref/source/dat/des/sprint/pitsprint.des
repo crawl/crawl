@@ -40,14 +40,14 @@ function base_monster_setup(e)
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\
                raven / unseen horror / yaktaur / cyclops / deep troll /\
                shapeshifter / fire elemental / water elemental /\
-               earth elemental / raiju / kobold blastminer band /\
-               orc high priest band w:5 / orc sorcerer w:5 / orc knight band /\
-               swamp dragon / hydra / black mamba / mana viper /\
-               merfolk avatar / wind drake / sea snake / tarantella /\
-               wolf spider / steelbarb worm / shadowghast / shadow wraith /\
-               small abomination / laughing skull band / skeletal warrior /\
-               thrashing horror / hell hound band w:5 / efreet w:5 /\
-               smoke demon / hellwing / chaos spawn / soul eater")
+               raiju / kobold blastminer band / orc high priest band w:5 /\
+               orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
+               black mamba / mana viper / merfolk avatar / wind drake /\
+               sea snake / tarantella / wolf spider / steelbarb worm /\
+               shadowghast / shadow wraith / small abomination /\
+               laughing skull band / skeletal warrior / thrashing horror /\
+               hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
+               chaos spawn / soul eater")
   e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
                crawling flesh cage w:5 / kobold fleshcrafter /\
                dire elephant / torpor snail / skyshark / death yak band w:5 /\

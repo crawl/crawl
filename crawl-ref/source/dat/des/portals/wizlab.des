@@ -2152,7 +2152,7 @@ ENDMAP
 # "dangerous" properties, such as rampaging or harm.
 NAME:       wizlab_maxwell
 TAGS:       no_rotate no_pool_fixup
-MONS:       peacekeeper / gargoyle / earth elemental w:5
+MONS:       peacekeeper / gargoyle / patrolling earth elemental w:5
 MONS:       molten gargoyle / thermic dynamo / fire elemental w:5
 MONS:       salamander tyrant / fire giant ; great mace ego:flaming
 MONS:       war gargoyle / crystal guardian
@@ -2185,8 +2185,8 @@ NSUBST:     e = 3:e / *=dff
 TILE:       v = metal_wall_workshop
 :           vault_metal_statue_setup(_G, "Z", "nascence circuit")
 :           set_random_mon_list(
-:               "earth elemental / molten gargoyle / thermic dynamo / " ..
-:               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
+:               "molten gargoyle / thermic dynamo / peacekeeper / " ..
+:               "war gargoyle / crystal guardian w:2 / ironbound mechanist / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
 LFLOORTILE: floor_metal_silver

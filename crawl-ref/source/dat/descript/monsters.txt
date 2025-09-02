@@ -1336,8 +1336,9 @@ A member of a short, sturdy mountain-dwelling folk.
 %%%%
 earth elemental
 
-A spirit drawn from the elemental plane of earth, which exists in this world by
-inhabiting a lump of earth and rocks.
+A spirit drawn from the elemental plane of earth. It exists in this world as a
+sinuous stream of silt and stone, capable of smoothly flowing through solid
+rock.
 %%%%
 efreet
 

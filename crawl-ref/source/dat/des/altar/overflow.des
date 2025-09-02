@@ -147,7 +147,7 @@ function species_mock(e)
   elseif you.race() == "Formicid" then
     return "giant cockroach"
   elseif you.race() == "Gargoyle" then
-    return "earth elemental"
+    return "rockslime"
   elseif you.race() == "Kobold" then
     return "boggart"
   elseif you.race() == "Merfolk" then
@@ -2456,12 +2456,13 @@ KPROP:   faew = no_tele_into
 KMASK:   faew = opaque
 KMONS:   f = fire elemental
 KMONS:   a = air elemental
-KMONS:   e = earth elemental
+KMONS:   e = rock fish
 KMONS:   w = water elemental
 KFEAT:   _ = altar_qazlal
 KFEAT:   f = lava
 KFEAT:   w = deep_water
 KFEAT:   CDEF = c
+KPROP:   e = no_tele_into
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }

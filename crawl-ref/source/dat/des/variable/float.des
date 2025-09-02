@@ -1801,17 +1801,22 @@ WEIGHT: 5
 MONS:   pile of debris
 KMONS:  2 = earth elemental
 KITEM:  2 = any scroll / any potion
+KPROP:  l = no_tele_into
 MAP
-cccccccccc
-c{..11..>c
-c........c
-c........c
-c1..22..1c
-c1..22..1c
-c........c
-c........c
-c<..11..}c
-cccccccccc
+cccccccccccccc
+cllllllllllllc
+clcccccccccclc
+clc{..11..>clc
+clc........clc
+clc........clc
+clc1..22..1clc
+clc1..22..1clc
+clc........clc
+clc........clc
+clc<..11..}clc
+clcccccccccclc
+cllllllllllllc
+cccccccccccccc
 ENDMAP
 
 ##############################################################################
@@ -2576,7 +2581,7 @@ KFEAT:  rs = w
 # this room.
 KMONS:  1 = salamander / deep elf pyromancer
 KMONS:  2 = fire giant
-KMONS:  3 = earth elemental / stone giant
+KMONS:  3 = gargoyle / stone giant
 KMONS:  4 = war gargoyle
 KMONS:  5 = water elemental / elemental wellspring
 KMONS:  6 = frost giant
