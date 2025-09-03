@@ -1684,6 +1684,7 @@ static spell_type servitor_spells[] =
     SPELL_AIRSTRIKE,
     // less desirable
     SPELL_IRRADIATE,
+    SPELL_BOULDER,
     SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
     SPELL_FREEZING_CLOUD,
     SPELL_MEPHITIC_CLOUD,
@@ -3154,15 +3155,22 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
                              agent.is_player()
                                 ? BEH_FRIENDLY
                                 : SAME_ATTITUDE(agent.as_monster()),
-                             pos, MHITNOT, MG_FORCE_PLACE);
+                             pos, _auto_autofoe(&agent), MG_FORCE_PLACE);
     mg.set_summoned(&agent, SPELL_BOULDER);
     mg.hp = barrelling_boulder_hp(pow);
+
+    // Since monsters are less intelligent about using boulders (and their
+    // targets better at dodging them), let's give them a bit more durability.
+    if (agent.is_monster())
+        mg.hp = mg.hp * 3 / 2;
+
     monster *boulder = create_monster(mg);
 
     // If some other reason prevents this from working (I'm not sure what?)
     if (!boulder)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (agent.is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
@@ -3171,10 +3179,15 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     //     Currently that can't happen, but in future it might.
     boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
 
-    mpr("You send a boulder barrelling forward!");
+    if (you.can_see(*boulder))
+    {
+        mprf("%s send%s a boulder barrelling forward!",
+            agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
+    }
 
     // Let the boulder roll one space immediately.
     boulder->speed_increment = 80;
+    queue_monster_for_action(boulder);
 
     return spret::success;
 }

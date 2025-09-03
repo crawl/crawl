@@ -188,6 +188,7 @@ static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
 static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
 static bool _mon_cast_tempering(const monster& caster, bool check_only);
+static coord_def _mons_boulder_tracer(const monster* mons);
 
 enum spell_logic_flag
 {
@@ -1008,6 +1009,15 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             you.attribute[ATTR_DOOM] += (100 - you.attribute[ATTR_DOOM]) / 2;
             you.redraw_doom = true;
         },
+    } },
+    { SPELL_BOULDER, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(!_mons_boulder_tracer(&caster).origin());
+        },
+        [](monster& caster, mon_spell_slot, bolt&) {
+            cast_broms_barrelling_boulder(caster, _mons_boulder_tracer(&caster),
+                                          mons_spellpower(caster, SPELL_BOULDER), false);
+        }
     } },
 };
 
@@ -1934,6 +1944,7 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_OBLIVION_HOWL:
         case SPELL_MESMERISE:
+        case SPELL_BOULDER:
             return 10;
 
         case SPELL_SIREN_SONG:
@@ -5728,6 +5739,71 @@ static bool _mons_cast_freeze(monster* mons)
     }
 
     return true;
+}
+
+static bool _mons_boulder_trace_line(const monster* caster, const coord_def& delta)
+{
+    coord_def spot = caster->pos() + delta;
+    if (feat_is_solid(env.grid(spot)) || env.grid(spot) == DNGN_LAVA || actor_at(spot))
+        return false;
+
+    // Boulders can travel a longer distance than this, but are much easier to
+    // avoid, so let's make monsters pay attention to near targets only.
+    bool found_enemy = false;
+    for (int i = 1; i < 6; ++i)
+    {
+        spot += delta;
+        if (feat_is_solid(env.grid(spot)) || env.grid(spot) == DNGN_LAVA)
+            break;
+
+        if (actor* act = actor_at(spot))
+        {
+            if (mons_aligned(caster, act))
+                return false;
+            else if (!act->is_firewood())
+                found_enemy = true;
+        }
+    }
+
+    return found_enemy;
+}
+
+static coord_def _mons_boulder_tracer(const monster* mons)
+{
+    const actor* foe = mons->get_foe();
+
+    // First check if the monster's foe is in a compass line with the caster
+    int foe_aim = -1;
+    if (foe && mons->can_see(*foe))
+    {
+        coord_def delta = foe->pos() - mons->pos();
+        if (abs(delta.x) == abs(delta.y) || delta.x == 0 || delta.y == 0)
+        {
+            // Convert aim to a compass direction
+            coord_def aim = delta.sgn();
+            for (int i = 0; i < 8; ++i)
+            {
+                if (Compass[i] == aim)
+                {
+                    foe_aim = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    vector<int> order = {0, 1, 2, 3, 4, 5, 6, 7};
+    shuffle_array(order);
+
+    if (foe_aim >= 0)
+        if (_mons_boulder_trace_line(mons, Compass[foe_aim]))
+            return mons->pos() + Compass[foe_aim];
+
+    for (int aim : order)
+        if (_mons_boulder_trace_line(mons, Compass[aim]))
+            return mons->pos() + Compass[aim];
+
+    return coord_def();
 }
 
 void setup_breath_timeout(monster* mons)
