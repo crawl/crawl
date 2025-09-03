@@ -421,6 +421,7 @@ enum monster_type                      // env.mons[].type
     MONS_KOBOLD_BRIGAND,
     MONS_KOBOLD_DEMONOLOGIST,
 #if TAG_MAJOR_VERSION > 34
+    MONS_KOBOLD_GEOMANCER,
     MONS_KOBOLD_BLASTMINER,
     MONS_KOBOLD_FLESHCRAFTER,
 #endif
@@ -1389,6 +1390,7 @@ enum monster_type                      // env.mons[].type
     MONS_BES_KEMWAR,
     MONS_ROCK_FISH,
     MONS_CLOCKROACH,
+    MONS_KOBOLD_GEOMANCER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

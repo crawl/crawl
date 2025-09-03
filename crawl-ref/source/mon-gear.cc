@@ -895,6 +895,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_DOWAN,           { { { WPN_DAGGER, 1 } } } },
         { MONS_BURIAL_ACOLYTE,  { { { WPN_DAGGER, 1 } } } },
         { MONS_KOBOLD_DEMONOLOGIST, { { { WPN_DAGGER, 1 } } } },
+        { MONS_KOBOLD_GEOMANCER, { { { WPN_DAGGER, 1 } } } },
         { MONS_NECROMANCER,      { { { WPN_DAGGER, 1 } } } },
         { MONS_ARCANIST,         { { { WPN_DAGGER, 1 } } } },
         { MONS_OCCULTIST,        { { { WPN_DAGGER, 1 } } } },
@@ -2221,6 +2222,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DOWAN:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
+    case MONS_KOBOLD_GEOMANCER:
     case MONS_KOBOLD_FLESHCRAFTER:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:

@@ -994,6 +994,9 @@ kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 kobold_blastminer MONS_KOBOLD_BLASTMINER
 kobold_fleshcrafter MONS_KOBOLD_FLESHCRAFTER
+kobold_geomancer0 MONS_KOBOLD_GEOMANCER
+kobold_geomancer1
+kobold_geomancer2
 
 ## Liches ('L')
 %sdir mon/unique
