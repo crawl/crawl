@@ -1257,6 +1257,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_PILE_OF_DEBRIS,    { "stone", LIGHTGRAY } },
     { MONS_PETRIFIED_FLOWER,  { "stone", LIGHTGRAY } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
+    { MONS_MOUNTAINSHELL,     { "rock", BROWN } },
     { MONS_ROCKSLIME,         { "rock", BROWN } },
     { MONS_BOULDER,           { "rock", BROWN } },
     { MONS_USHABTI,           { "rock", BROWN } },

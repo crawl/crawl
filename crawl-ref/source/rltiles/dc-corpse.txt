@@ -76,6 +76,7 @@ crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+mountainshell CORPSE_MOUNTAINSHELL
 fire_crab CORPSE_FIRE_CRAB
 ghost_crab CORPSE_GHOST_CRAB
 %sdir mon/abyss

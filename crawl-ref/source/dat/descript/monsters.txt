@@ -2112,6 +2112,14 @@ A moth known for its ability to inspire rage by touching its foes, or merely
 gazing at its friends. For some inexplicable reason, it was eradicated from
 the surface centuries ago.
 %%%%
+mountainshell
+
+An enormous land tortoise whose shell is so thick and rock-encrusted that
+sleeping ones are frequently mistaken for geological formations. And like a
+mountain, its exterior is nearly impervious to any destructive force; only at
+close range can one properly aim for the narrow gaps between its plates to
+strike the tender flesh within.
+%%%%
 mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by

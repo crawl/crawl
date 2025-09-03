@@ -286,6 +286,9 @@ enum monster_type                      // env.mons[].type
     MONS_DEMONIC_CRAWLER,
     MONS_SNAPPING_TURTLE,
     MONS_ALLIGATOR_SNAPPING_TURTLE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_MOUNTAINSHELL,
+#endif
 #if TAG_MAJOR_VERSION == 34
     MONS_GNOME,
 #endif
@@ -1391,6 +1394,7 @@ enum monster_type                      // env.mons[].type
     MONS_ROCK_FISH,
     MONS_CLOCKROACH,
     MONS_KOBOLD_GEOMANCER,
+    MONS_MOUNTAINSHELL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -299,6 +299,7 @@ static const vector<pop_entry> population[] =
   {  2, 10,  400, SEMI, MONS_HYDRA },
   {  3, 11,  140, SEMI, MONS_DREAM_SHEEP },
   {  3, 15,   36, RISE, MONS_FIRE_CRAB },
+  {  3, 11,  100, SEMI, MONS_MOUNTAINSHELL },
   {  6,  9,  160, FLAT, MONS_CANE_TOAD },
   {  6,  9,  160, FLAT, MONS_KOMODO_DRAGON },
   { 10, 11,   32, FLAT, MONS_DIRE_ELEPHANT },
