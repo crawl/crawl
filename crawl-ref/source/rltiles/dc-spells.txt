@@ -272,6 +272,7 @@ launch_bomblet LAUNCH_BOMBLET
 magma_barrage MAGMA_BARRAGE
 malmutate MALMUTATE
 march_of_sorrows MARCH_OF_SORROWS
+mass_regeneration MASS_REGENERATION
 mesmerise MESMERISE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH

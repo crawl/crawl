@@ -3846,7 +3846,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_REGENERATION,
+    TILEG_MASS_REGENERATION,
 },
 
 {
