@@ -303,26 +303,30 @@ static int l_item_do_subtype(lua_State *ls)
         return 1;
     }
 
-    const char *s = nullptr;
-    string saved;
+    bool armour_slots = true;
+    if (lua_isboolean(ls, 1))
+        armour_slots = lua_toboolean(ls, 1);
 
-    // Special-case OBJ_ARMOUR behavior to maintain compatibility with
-    // existing scripts.
-    if (item->base_type == OBJ_ARMOUR)
+    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
+                                       || item->is_identified())
     {
-        equipment_slot slot = get_armour_slot(*item);
-        s = (slot == SLOT_BODY_ARMOUR ? "body"
-                                      : lowercase_string(equip_slot_name(slot)).c_str());
-    }
-    else if (item->is_identified() || item->base_type == OBJ_WEAPONS)
-    {
-        // must keep around the string until we call lua_pushstring
-        saved = sub_type_string(*item);
-        s = saved.c_str();
-    }
+        string s;
 
-    if (s)
-        lua_pushstring(ls, s);
+        // Special-case OBJ_ARMOUR behavior to maintain compatibility with
+        // existing scripts.
+        if (armour_slots && item->base_type == OBJ_ARMOUR)
+        {
+            equipment_slot slot = get_armour_slot(*item);
+            if (slot == SLOT_BODY_ARMOUR)
+                s = "body";
+            else
+                s = lowercase_string(equip_slot_name(slot));
+        }
+        else
+            s = sub_type_string(*item);
+
+        lua_pushstring(ls, s.c_str());
+    }
     else
         lua_pushnil(ls);
 
@@ -330,8 +334,9 @@ static int l_item_do_subtype(lua_State *ls)
 }
 
 /*** What is the subtype?
+ * @tparam[opt=true] boolean armour_slots return slot, not subtype, for armour
  * @treturn string|nil the item's subtype, if any
- * @function subtype
+  * @function subtype
  */
 IDEFN(subtype, do_subtype)
 
@@ -404,8 +409,6 @@ static string _item_name(lua_State *ls, item_def* item)
     description_level_type ndesc = DESC_PLAIN;
     if (lua_isstring(ls, 1))
         ndesc = description_type_by_name(lua_tostring(ls, 1));
-    else if (lua_isnumber(ls, 1))
-        ndesc = static_cast<description_level_type>(luaL_safe_checkint(ls, 1));
     const bool terse = lua_toboolean(ls, 2);
     return item->name(ndesc, terse);
 }
