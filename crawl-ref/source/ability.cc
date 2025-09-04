@@ -341,7 +341,7 @@ static vector<ability_def> &_get_ability_list()
         // Innate abilities:
         { ABIL_SPIT_POISON, "Spit Poison",
             0, 0, 0, 5, {fail_basis::xl, 20, 1},
-            abflag::breath | abflag::dir_or_target },
+            abflag::breath | abflag::dir_or_target | abflag::not_self },
         { ABIL_GOLDEN_BREATH, "Golden Breath",
             0, 0, 0, 5, {}, abflag::drac_charges },
         { ABIL_COMBUSTION_BREATH, "Combustion Breath",
