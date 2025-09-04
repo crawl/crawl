@@ -3185,6 +3185,7 @@ spret cast_golden_breath(bolt& beam, int power, bool fail)
 {
     bolt tracer = beam;
 
+    tracer.pierce = true;
     tracer.set_is_tracer(true);
     tracer.fire();
 
