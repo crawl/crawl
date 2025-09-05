@@ -479,12 +479,12 @@ bool debug_make_trap(const coord_def& pos, dungeon_feature_type feat)
     }
     else
         trap = trap_type_from_feature(feat);
-    place_specific_trap(you.pos(), trap);
+    place_specific_trap(pos, trap);
 
     mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
-            : trap_at(you.pos())->name(DESC_A).c_str());
+            : trap_at(pos)->name(DESC_A).c_str());
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
