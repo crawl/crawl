@@ -4770,7 +4770,7 @@ local ds = "dragon scales"
 local i = ""
 if crawl.x_chance_in_y(57, 71) then
   local x = util.random_choose_weighted {
-    {"demon whip club", 5}, {"eveningstar", 10}, {"great mace", 10},
+    {"demon whip", 5}, {"eveningstar", 10}, {"great mace", 10},
     {"giant spiked club", 5}, {"broad axe", 10}, {"executioner's axe", 10},
     {"partisan", 5}, {"demon trident", 5}, {"bardiche", 10}, {"lajatang", 10},
     {"quick blade", 10}, {"demon blade", 5}, {"double sword", 5},
