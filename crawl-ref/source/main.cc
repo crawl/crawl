@@ -652,7 +652,7 @@ static void _djinn_announce_spells()
     mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
 
     take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " +
-                                       equip_str + spell_str + "."));
+                                       equip_str + spacer + spell_str + "."));
 }
 
 // Announce to the message log and make a note of the player's starting items,
