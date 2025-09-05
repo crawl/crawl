@@ -1100,7 +1100,7 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
-LINKER_LDFLAG=
+LINKER_LDFLAG=--build-id=none
 ifndef NO_TRY_LLD
 ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=lld 2>&1))
  LINKER_LDFLAG = -fuse-ld=lld
