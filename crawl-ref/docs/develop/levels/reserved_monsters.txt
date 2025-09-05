@@ -1,0 +1,69 @@
+======================
+Reserved monsters list
+======================
+
+It is notably unlikely for future submissions for main game vaults to be
+accepted if they deploy the following monsters outside of their current natural
+branch appearances or Ziggurats. There are some wrinkles to this:
+ - Branch entrance vaults may make exceptions only within the Vestibule of Hell.
+ - Sprints, being outside the main game, may freely mix this up as they see fit.
+ - A handful of exceptions outside of these rules may persist, primarily in
+   Wizlabs, and have mostly been grandfathered in.
+
+Monster usage in vaults may also be rejected for any of many reasons outside of
+this list, such as being significantly out-of-depth in threat in practice, or
+using spell components outside of spells or decorative glass cages.
+
+This list is sorted by branch usage, rather than by individual monsters:
+
+-- Vaults --
+ * Ironbound preservers, ironbound convokers, ironbound mechanists,
+   ironbound beastmasters, ironbound frosthearts, ironbound thunderhulks,
+   vault wardens.
+  * Exceptions granted to Ice Caves for ironbound frosthearts.
+
+-- Abyss --
+ * Ancient zymes, lurking horrors, spatial maelstroms, starflowers, wretched
+   stars.
+
+-- Pandemonium --
+ * Nekomata.
+
+-- Gehenna --
+ * Creeping infernos, stokers, searing wretches.
+  * Exceptions granted to Margery's band for searing wretches.
+
+-- Cocytus --
+ * Wendigo.
+
+-- Tartarus --
+ * Tainted leviathans, putrid mouths, oblivion hounds.
+  * Exceptions granted to Grunn's band for oblivion hounds.
+
+-- The Iron City of Dis --
+ * Iron giants, iron golems, quicksilver elementals.
+
+-- Tomb --
+ * Bennu.
+
+-- Zot --
+ * Death cobs, killer klowns, orbs of fire, orbs of winter, orbs of entropy,
+   orb guardians.
+  * Orb guardians are even more exclusive to Zot:5 and the orb run.
+
+-- Other cases --
+ * Protean progenitors may only appear in Zot or the domain of Mnoleg.
+ * Seraphim should not be deployed outside of the current extended Holy
+   encompass vault.
+ * Hell sentinels should not be deployed earlier than Abyss, the Hells,
+   Pandemonium, or the orb run.
+ * The following monsters are essentially player species dummies that should
+   only be deployed as decoration behind glass or corpses rather than as enemies
+   to fight in-and-of themselves: armataurs, barachi, demigods, djinn,
+   colourless draconians, dwarves, felids, formicids, octopodes, oni,
+   poltergeists, revenants, and vine stalkers.
+
+This document may be expanded in the future with other notes about branch
+identity preservation, such as not emphasizing elves in Depths, not using
+walking tomes in the Vaults, not using spriggans in Zot, and minimizing crossing
+over monsters between each Lair branch roulette branch.
