@@ -312,6 +312,10 @@ monster* follower::place(bool near_player)
     // Shafts no longer retain the position, if anything else would
     // want to request a specific one, it should do so here if !near_player
 
+    // XXX: We must restore the monster's items *first*, since the habitability
+    //      check will look at them to determine if the monster is flying.
+    //      However, they must be destroyed again if the monster isn't placed!
+    restore_mons_items(*m);
     if (m->find_place_to_live(near_player))
     {
 #if TAG_MAJOR_VERSION == 34
@@ -328,11 +332,11 @@ monster* follower::place(bool near_player)
 
         m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
         m->flags |= MF_JUST_SUMMONED;
-        restore_mons_items(*m);
         env.mid_cache[m->mid] = m->mindex();
         return m;
     }
 
+    m->destroy_inventory();
     m->reset();
     return nullptr;
 }
