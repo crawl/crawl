@@ -4576,6 +4576,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_POLTERGEIST;
         case SP_REVENANT:
             return TILEG_SP_REVENANT;
+        case SP_MOON_MOTH:
+            return TILEG_SP_MOON_MOTH;
         default:
             return TILEP_ERROR;
     }

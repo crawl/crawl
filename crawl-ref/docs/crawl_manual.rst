@@ -1867,6 +1867,22 @@ Demigods (Dg)
   advance more slowly in experience than any other species, gain skills slightly
   less quickly than Humans and, due to their status, refuse to worship any god.
 
+Moon Moths (MM)
+  Moon Moths are a winged, insectoid species rumored to hail from the moon far
+  above. They bear a striking resemblance to their smaller cousins and share
+  their deadly obsession with glowing spherical objects.
+
+  They sail through the air with large, scintillating wings they gained upon
+  emerging from their cocoons. However, these same wings combust and fry
+  easily, their pursuit of glowing objects often leading to their demise.
+
+  Their probosces have great trouble vocalizing the magical incantations
+  required to cast spells, forcing them to devise a unique spellcasting
+  technique that channels magic drawn from the surrounding atmosphere with
+  their wings into foes struck in melee combat without the need for words.
+  Their finesse with this technique allows them to absorb the force of their
+  own magic, sparing themselves from the destruction wrought by their spells.
+
 Formicids (Fo)
   The Formicids are a species of humanoid ants. Just like their tiny insect
   ancestors, the Formicids are well adept at earth work, both on the physical
