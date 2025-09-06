@@ -73,9 +73,7 @@ function crypt_entry(e)
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
 end
 
-
-
--- A revision of old Crypt end reward items (c.f. )
+-- A revision of old Crypt end reward items (c.f. bad0f68).
 -- Since Crypt is an optional, late, difficult branch, provide some expensive
 -- high quality incentives.
 -- In total: a talisman with torment resistance, a book with high-level necro
@@ -131,10 +129,15 @@ function crypt_loot_plus(e, glyph)
     table.insert(inv, tali)
   end
 
-  local orbs = util.random_from({"energy", "guile", "mayhem"})
+  local orbs = util.random_choose_weighted {
+    {"attunement", 10}, {"energy", 10}, {"glass", 5},
+    {"guile", 5}, {"stardust", 10}, {"mayhem", 5},
+  }
+
   local shield = util.random_from({"tower shield randart artprops:rN:1",
                                    "tower shield ego:positive_energy"})
   local etc = util.random_from({shield, "shadow dragon scales randart",
+                                "plate armour randart ego:death",
                                 "orb ego:" .. orbs .. " randart artprops:Necro"})
   table.insert(inv, etc)
   inv = table.concat(inv, " | ")
@@ -2677,7 +2680,7 @@ NAME:   cryptofortress_bobbens
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_descent
 PLACE:  Crypt:$
 ORIENT: encompass
-MONS:   zombie w:12 / draugr w:6 / simulacrum w:2 / bog body w:4
+MONS:   zombie w:12 / draugr w:8 / simulacrum w:2 / bog body w:4
 MONS:   storm dragon zombie / caustic shrike zombie / \
         golden dragon zombie / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
 MONS:   skeletal warrior, necromancer, hell knight

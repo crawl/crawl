@@ -1927,7 +1927,7 @@ ENDMAP
 NAME:   mini_pit_1
 TAGS:   the_minivault unrand
 COLOUR: v = white
-TILE:   v = wall_cobalt_stone
+TILE:   v = wall_vaults_metal
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1953,7 +1953,7 @@ NAME:   grid_room_1
 TAGS:   the_grid_vault unrand
 NSUBST: + = 1:& / *:v
 COLOUR: v = white
-TILE:   v = wall_cobalt_stone
+TILE:   v = wall_vaults_metal
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)

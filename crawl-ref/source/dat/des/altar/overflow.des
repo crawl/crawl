@@ -3846,13 +3846,13 @@ KMASK:   .1 = no_trap_gen
 COLOUR:  .1 = random
 FTILE:   ._<>1 = floor_pebble
 MAP
- xxxxxxx
- x.....x
- m.....x
-@m.._..x
- m.....x
- x.....x
- xxxxxxx
+  xxxxxxx
+  x.....x
+  m.....x
+@_m.._..x
+  m.....x
+  x.....x
+  xxxxxxx
 ENDMAP
 
 NAME:    xom_confusion_cloud

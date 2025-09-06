@@ -11,6 +11,16 @@
 {{
 crawl_require('dlua/vault.lua')
 
+function tomb_entry(e)
+    e.tags("tomb_entry no_monster_gen no_item_gen transparent")
+    e.mons("burial acolyte ; quarterstaff ego:pain / weeping skull w:6")
+    e.mons("guardian mummy w:48 / soul eater w:2")
+    e.mons("guardian sphinx")
+    e.mons("guardian sphinx draugr")
+    e.mons("mummy priest")
+    e.kfeat("O = enter_tomb")
+end
+
 function tomb_1_mummy_set(e)
   e.mons("mummy / skeletal warrior w:1 / nothing")
 end
@@ -199,72 +209,58 @@ end
 
 # simple entrance
 NAME:   tomb_entry_simple_bobbens
-TAGS:   tomb_entry no_monster_gen no_item_gen transparent
-ORIENT: float
-MONS:   guardian mummy, guardian sphinx
-# crawl will rotate for the rest of possibilities
-SHUFFLE: AB
-SUBST:  A = +, B = c
-KFEAT:  O = enter_tomb
+NSUBST: + = 1:+ / *:c
+: tomb_entry(_G)
 MAP
 cccc.cccc
-c1.....1c
+c2.....2c
 c.ccccc.c
-c.c.2.c.c
+c.c.3.c.c
 ..c.O.c..
 c.c...c.c
-c.cABcc.c
-c1.....1c
+c.c++cc.c
+c2.....2c
 cccc.cccc
 ENDMAP
 
 ##############################################################################
 # small pyramid leading to the bigger one
 NAME:   tomb_entry_pyramid_bobbens
-TAGS:   tomb_entry no_monster_gen transparent
-ORIENT: float
-MONS:   guardian sphinx
-MONS:   w:1 skeletal warrior / w:9 guardian mummy
-MONS:   mummy priest
-KFEAT:  O = enter_tomb
+SUBST:  1 = 1:1 2:9 4:1
+: tomb_entry(_G)
 MAP
 ........................
 ........................
 ..cccccccccccccccccccc..
 ..cccccccccccccccccccc..
-..cc....2...........cc..
-..cc..............2.cc..
+..cc....1...........cc..
+..cc..............1.cc..
 ..cc....cccccccccc..cc..
 ..cc....c........c..cc..
 ..cc....c..ccccc.c..cc..
-..cc....c..cO.3..c..cc..
+..cc....c..cO.5..c..cc..
 ..cc....c..ccccccc..cc..
-..cc.2..c..2........cc..
+..cc.1..c..1........cc..
 ..cc....c...........cc..
 ..cc....cccccccccccccc..
 ..cc................cc..
-..cc....2......2....cc..
+..cc....1......1....cc..
 ..cc...ccc++++ccc...cc..
 ..cc...cc......cc...cc..
-..cc.2.cc.G..G.cc.2.cc..
+..cc.1.cc.G..G.cc.1.cc..
 ..cc.V.cc......cc.V.cc..
-..cc...cc......cc...cc..
+..cc.$.cc......cc.$.cc..
 ..ccccccc.G..G.ccccccc..
 ..ccccccc......ccccccc..
 ........................
-.......1........1.......
-........................
-........................
+.......3........3.......
 ENDMAP
 
 ##############################################################################
 # sphere entry
 NAME:   tomb_entry_sphere_bobbens
-TAGS:   tomb_entry no_monster_gen no_rotate transparent
-ORIENT: float
-MONS:   guardian mummy w:90 / skeletal warrior
-MONS:   guardian sphinx, mummy priest
-KFEAT:  O = enter_tomb
+SUBST:  1 = 1:1 2:9 4:1
+: tomb_entry(_G)
 MAP
           ccccc
        cccc.1.cccc
@@ -273,9 +269,9 @@ MAP
    cc....ccccccc....cc
    c....cc.1.1.ccc..1c
 ..cccc...........cc..cc
-.1c..cc...........c3O.c
-..+..2ccccc.F.ccccccccc
-.1c...c...............c
+.1c..cc..........$c5O.c
+..+..3ccccc.G.ccccccccc
+.1c...c$..............c
 ..cc..cc.............cc
    c...ccc.1..1.cc...c
    cc....cccccccc...cc
@@ -288,12 +284,9 @@ ENDMAP
 ##############################################################################
 # forgotten tomb entrance
 NAME:   tomb_entry_forgotten_bobbens
-ORIENT: float
-TAGS:   tomb_entry no_monster_gen transparent
-KFEAT:  f = .
 KMONS:  f = withered plant
 SUBST:  p = f.
-KFEAT:  O = enter_tomb
+: tomb_entry(_G)
 MAP
 cccccccccc
 cfffffppp.
@@ -309,42 +302,38 @@ ENDMAP
 ##############################################################################
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
-TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate transparent
-MONS:   guardian mummy, mummy priest
-KFEAT:  O = enter_tomb
+TAGS:   no_rotate
+SUBST:  2 = 2:9 4:1
+: tomb_entry(_G)
 MAP
           c
         ccc..
-      ccc.c1.
+      ccc.c2.
     ccc......
-   cc.....c1.
+   cc.....c2.
   cc......cccc
  cc.......c..ccc
  c........c....cc
-cc1.......c.O2..c
-c.....1...c.....c
+cc2.......c.O5..c
+c.....2...c.....c
 c.....ccUcc.....c
-cc.....ccc1.....c
+cc.....ccc2.....c
  cc............cc
-  ccc........1cc
+  ccc........2cc
     ccc.....ccc
       ccccccc
 ENDMAP
 
 ##############################################################################
 NAME: nicolae_tomb_entry_grand_gallery
-ORIENT: float
-TAGS: tomb_entry no_monster_gen
-SUBST: + = ++++., = = +
-KFEAT: O = enter_tomb
-KMONS: 1 = mummy
-KMONS: 2O = guardian mummy
+SUBST: + = ++++., - = +
+: tomb_entry(_G)
 MAP
-cccc=cccccccc
+cccc-cccccccc
 cccc.....cccc
 cccc..2..cccc
 cccccccc+cccc
-c..+.Oc1.+..c
+c..+2Oc1.+..c
 c..c1ccc1c..c
 c.2ccccccc2.c
 c..c1ccc1c..c
@@ -356,14 +345,13 @@ ccccccccccccc
 ENDMAP
 
 NAME:   nicolae_tomb_entry_rubble_hallway
-TAGS:   tomb_entry no_monster_gen no_item_gen no_wall_fixup
-ORIENT: float
+TAGS:   no_wall_fixup
 MONS:   pile of debris
 KITEM:  s = stone q:1 / large rock q:1 w:5
-KFEAT:  O = enter_tomb
 NSUBST: R = 7:r / *:.
 SUBST:  r = xx..., 1 = 1xx..., . = ....s
-RTILE:  x = wall_pebble_darkgray
+TILE:   x = wall_pebble_darkgray
+: tomb_entry(_G)
 MAP
 ccccccccccccccccc
 ccccccccccc1...1c
@@ -374,13 +362,9 @@ ccccccccccc1...1c
 ccccccccccccccccc
 ENDMAP
 
-NAME: nicolae_tomb_entry_unfolded_pyramid_diagonal
-ORIENT: float
-TAGS: tomb_entry no_monster_gen no_item_gen transparent
-NSUBST: C = 1:. / *:c
-KMONS: 1 = mummy
-KMONS: O = guardian mummy
-KFEAT: O = enter_tomb
+NAME:   nicolae_tomb_entry_unfolded_pyramid_diagonal
+NSUBST: C = 1:. / *:c, 1 = 1:4 / *:1
+: tomb_entry(_G)
 MAP
        .....
       ...c...
@@ -390,9 +374,9 @@ MAP
   ...cc..1..cc...
  ...cc+ccccc+cc...
 ...cc.cC...Cc.cc...
-..cc..c.1.1.c..cc..
+..cc..c.1.2.c..cc..
 .++..1c..O..c1..cc.
-..cc..c.1.1.c..cc..
+..cc..c.2.1.c..cc..
 ...cc.cC...Cc.cc...
  ...cc+ccccc+cc...
   ...cc..1..cc...
@@ -404,12 +388,11 @@ MAP
 ENDMAP
 
 NAME: nicolae_tomb_entry_unfolded_pyramid_orthogonal
-ORIENT: float
-TAGS: tomb_entry no_monster_gen no_item_gen transparent
 NSUBST: C = 1:. / *:c
 KMONS: 1 = mummy
 KMONS: O = guardian mummy
 KFEAT: O = enter_tomb
+: tomb_entry(_G)
 MAP
   .............
  .......1.......
@@ -431,11 +414,10 @@ MAP
 ENDMAP
 
 NAME:   tomb_entry_moat_badplayer
-TAGS:   tomb_entry no_monster_gen no_item_gen no_pool_fixup no_rotate \
-        transparent
-ORIENT: float
-MONS:   mummy, guardian mummy, mummy priest
-KFEAT:  O = enter_tomb
+TAGS:   no_pool_fixup no_rotate
+WEIGHT: 3
+NSUBST: 12 = 1:4
+: tomb_entry(_G)
 MAP
       ...............
    .....................
@@ -461,21 +443,19 @@ MAP
 ....c.....cc.2.cc.....c....
 ....cc....c.....c...cc....
  ....cc...c..O..c...cc....
-  ....ccccc..3..ccccc....
+  ....ccccc..5..ccccc....
    ......ccccccccc......
      ................
        ............
 ENDMAP
 
 NAME:   tekkud_tomb_entry_cross
-TAGS:   tomb_entry no_rotate no_item_gen no_monster_gen
+TAGS:   no_rotate
 WEIGHT: 5
-ORIENT: float
-MONS:   guardian sphinx / guardian sphinx draugr
-MONS:   mummy w:5 / guardian mummy, mummy priest
-NSUBST: ~ = 3:1 / *:. , - = 4:2 / 1:3.. / *:.
-NSUBST: _ = 1:1 / 3:2 / *:. , Y = 3:2 / 1:113 / *:.
-KFEAT:  O = enter_tomb
+NSUBST: ~ = 3:! / *:. , - = 4:? / 1:5.. / *:.
+NSUBST: _ = 1:! / 3:? / *:. , Y = 3:? / 1:!!5 / *:.
+SUBST:  ? = 122, ! = 34
+: tomb_entry(_G)
 MAP
         ccccc
        @c.1.c@

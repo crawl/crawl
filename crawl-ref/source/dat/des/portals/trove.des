@@ -913,7 +913,7 @@ ENDMAP
 NAME:   regret_index_trove_leda
 {{
 trove_setup(_G)
-local pon = "ego:ponderous plus:" crawl.random_range(6, 10)
+local pon = "ego:ponderousness plus:" crawl.random_range(6, 10)
 local gen_armour = ""
 if species_has_size_limits(_G) == false then
   gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
@@ -921,16 +921,20 @@ end
 if you.race() == "armataur" or you.race() == "naga" then
   gen_armour = gen_armour .. " / barding good_item / barding randart w:2"
 elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
-  gen_armour = gen_armour .. " / pair of boots good_item / pair of boots randart w:2"
+  gen_armour = gen_armour .. " / pair of boots good_item w:5 " ..
+                             " / pair of boots ego:earth w:5 " ..
+                             " / pair of boots randart w:2"
 end
 trove_offense(_G, trove_weap_brand(_G, "heavy"),
                   trove_standard_magic(_G, "earth", true),
-                  trove_good_talisman(_G, nil, "granite talisman"), "earth magic")
+                  trove_good_talisman(_G, nil, "granite talisman"),
+                  "earth magic")
 trove_defense(_G, "any useful armour randart w:5",
                    gen_armour, trove_jewel_type(_G, "Str:4 w:5") .. " / " ..
                    trove_jewel_type(_G, "*Slow&AC:4"),
                    trove_cons(_G, {"enchant armour"}, nil,
-                              "wand of digging w:20 / any blast wand w:20 charges:8",
+                              "wand of digging w:20 / " ..
+                              "any blast wand w:20 charges:8",
                               nil, "tin of tremorstones"))
 local small = you.race() == "Spriggan" or you.race() == "Kobold" or
               you.race() == "Felid"
@@ -997,7 +1001,7 @@ trove_offense(_G, trove_weap_brand(_G, "spectral"),
                   "alchemy magic")
 trove_defense(_G, "swamp dragon scales good_item / swamp dragon scales randart",
                    trove_ego_gen_armour(_G, "poison_resistance", "rPois"),
-                   trove_jewel_type(_G, "rPois"),
+                   trove_jewel_type(_G, "rPois") .. " / amulet of alchemy randart",
                    trove_cons(_G, scroll, {"lignification q:3 w:5"},
                               "any beam wand charges:8",
                               "wand of roots charges:8 w:5", box))
@@ -1174,8 +1178,8 @@ trove_defense(_G, "pearl dragon scales good_item w:5 / \
                    trove_ego_gen_armour(_G, "willpower", "Will"),
                    trove_jewel_type(_G, "Will") .. " / " ..
                    trove_jewel_type(_G, "Slay:4") ..
-                   "amulet of faith artprops:*Silence&Will w:3 / " ..
-                   "amulet of regeneration artprops:*Silence&Will w:3 / ",
+                   "amulet of faith randart artprops:*Silence&Will w:3 / " ..
+                   "amulet of regeneration randart artprops:*Silence&Will w:3 / ",
                    trove_cons(_G, scroll,
                               {"might q:2 w:5", "berserk rage q:3 w:5"},
                               nil, "wand of quicksilver charges:8",

@@ -1085,20 +1085,23 @@ KMONS:   2 = stone giant / walking earthen tome w:4 / \
              deep troll earth mage / iron dragon w:4
 KMONS:   D = pile of debris
 ITEM:    stone
-: local inv = "tin of tremorstones w:7 | wand of digging w:8 | \
-:              staff of earth w:4 randbook disc:earth w:5 | \
-:              book of the earth w:2 | book of iron w:2 | \
-:              book of the moon w:2 | crystal plate armour w:1 | "
 SUBST:   ? = 1dd
-: if you.absdepth() < 16 then
-:   inv = inv .. "stone w:14 | large rock w:14 | sling w:8 | \
-:                 medusa talisman w:6 |  book of geomancy w:2"
-: else
-:   inv = inv .. "large rock w:20 | sling randart w:4 | \
-:                 medusa talisman randart w:4 | granite talisman w:2 | \
-:                 compendium of siegecraft w:2 | book of annihilations w:2"
-SUBST:   1 = 2
-: end
+{{
+local inv = "tin of tremorstones w:7 | wand of digging w:8 | \
+             staff of earth w:4 randbook disc:earth w:5 | \
+             book of the earth w:2 | book of iron w:2 | \
+             book of the moon w:2 | crystal plate armour w:1 | "
+if you.absdepth() < 16 then
+  inv = inv .. "pair of boots ego:earth | stone w:14 | large rock w:14 | \
+                sling w:8 | medusa talisman w:6 | book of geomancy w:2"
+else
+  inv = inv .. "pair of boots randart artprops:Earth | large rock w:20 | \
+                sling randart w:4 | medusa talisman randart w:4 | \
+                granite talisman w:2 | compendium of siegecraft w:2 | \
+                book of annihilations w:2"
+  subst("1 = 2")
+end
+}}
 SUBST:   B : D., C : D.
 : kfeat("S = general shop type:Pet suffix:Rocks count:7 ; " .. inv)
 MAP
@@ -1119,7 +1122,10 @@ DEPTH:   D:11-, Depths
 KMONS:   1 = vampire / vampire bat
 KMONS:   2 = vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:8 ; \
-             dagger ego:vampirism w:20 | any weapon ego:vampirism w:15 | \
+             dagger ego:vampirism w:15 | any weapon ego:vampirism w:15 | \
+             scale mail ego:death good_item w:4 | \
+             chain mail ego:death good_item w:4 | \
+             plate armour ego:death good_item w:4 | \
              sanguine talisman w:8 | sanguine talisman randart w:2 | \
              randbook numspells:2 spells:sublimation_of_blood w:20 | \
              randbook disc:necromancy w:9 | w:1 book of annihilations
@@ -1150,7 +1156,9 @@ SUBST:  G : YlG
 : kfeat("s = general shop " .. shopname .. " ; \
 :   any weapon ego:draining w:15 | any weapon ego:pain | \
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
-:   demon trident w:5 | demon whip w:5 | scroll of torment | \
+:   demon trident w:5 | demon whip w:5 | scale mail ego:death good_item w:5 | \
+:   chain mail ego:death good_item w:4 | \
+:   plate armour ego:death good_item w:5 | scroll of torment | \
 :   staff of necromancy | book of necromancy | book of death | \
 :   book of unlife | book of decay | book of the grave | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
@@ -1227,13 +1235,13 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
-   book of conjurations | book of power | book of annihilations | \
-   book of blasting | book of duality | \
-   randbook disc:conjuration | book of storms | book of lightning | \
-   any blast wand | wand of flame | wand of mindburst | \
-   condenser vane | staff of conjuration | any beam wand | \
-   lightning rod | phial of floods | scroll of immolation | \
-   book of flames | book of fire | book of air | manual of conjurations | \
+   book of air | book of annihilations | book of blasting | \
+   book of conjurations | book of duality | book of fire | book of flames | \
+   book of lightning | book of power | book of storms | \
+   book of spectacle | randbook disc:conjuration | staff of conjuration | \
+   wand of flame | wand of mindburst | any beam wand | any blast wand | \
+   orb ego:stardust | orb ego:pyromania | lightning rod | phial of floods | \
+   condenser vane | scroll of immolation | manual of conjurations | \
    manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
@@ -1263,8 +1271,14 @@ MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 100, pow_max = 100, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1 }
 {{
-  local weapons   = {"any weapon ego:flaming", "any weapon ego:freezing",
-                     "any weapon ego:electrocution", "any weapon ego:heavy"}
+  local equip = {}
+  if crawl.coinflip() then
+    equip = {"any weapon ego:flaming", "any weapon ego:freezing",
+             "any weapon ego:electrocution", "any weapon ego:heavy"}
+  else
+    equip = {"pair of gloves ego:fire", "helmet ego:ice",
+             "cloak ego:air", "pair of boots ego:earth"}
+  end
   local rings     = {"ring of protection from fire",
                      "ring of protection from cold", "ring of flight",
                      "ring of protection"}
@@ -1278,7 +1292,7 @@ MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
      j = crawl.random_range(1, i)
      temp = choices[j] ; choices[j] = choices[i] ; choices[i] = temp
   end
-  local inventory = weapons[choices[1]] .. " | " .. rings[choices[2]] ..
+  local inventory = equip[choices[1]] .. " | " .. rings[choices[2]] ..
            " | " .. staffs[choices[3]] .. " | " .. randbooks[choices[4]]
   kfeat("s = general shop type:Elemental suffix:Accessories count:4 use_all ; "
          .. inventory )
@@ -1316,8 +1330,8 @@ SHUFFLE: -m
 SUBST: - = .
 KFEAT: m = iron_grate
 KFEAT: S = antiques shop type:Antique suffix:Artefacts count:8 ; \
-   any weapon randart | any armour randart | any jewellery randart w:4 | \
-   any magical staff randart w:4
+   any weapon randart | any armour randart | any jewellery randart w:5 | \
+   any magical staff randart w:5 | orb randart w:2 | any talisman randart w:2
 MAP
 .......
 .-vmv-.
@@ -1360,8 +1374,8 @@ TAGS:  transparent no_item_gen no_monster_gen extra
 DEPTH: D:8-, Depths, Zot
 KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
            potion of mutation w:15 | potion of lignification w:15 | \
-           wand of polymorph | any talisman | staff of alchemy | \
-           randbook disc:alchemy spells:irradiate w:6 | \
+           wand of polymorph | amulet of wildshape | any talisman | \
+           staff of alchemy | randbook disc:alchemy spells:irradiate w:6 | \
            randbook disc:alchemy spells:fulsome_fusillade w:6 | \
            plutonium_sword w:1 | manual of shapeshifting w:5 | \
            manual of alchemy w:5
@@ -1495,12 +1509,8 @@ DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 TAGS:   transparent extra
 WEIGHT: 5
 KFEAT:  S = jewellery shop ; \
-            ring of strength | \
-            ring of dexterity | \
-            ring of intelligence | \
-            amulet of reflection | \
-            ring of evasion | \
-            ring of protection | \
+            ring of strength | ring of dexterity | ring of intelligence | \
+            amulet of reflection | ring of evasion | ring of protection | \
             ring of slaying w:3
 MAP
 S
@@ -1514,15 +1524,11 @@ WEIGHT: 3
 # ALL of the spells damage multiple targets.
 {{
 local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
-             "hand axe w:5 | " ..
-             "war axe | " ..
-             "broad axe w:5 | " ..
-             "battleaxe | " ..
-             "executioner's axe w:2 | " ..
-             "book of fire w:5 | " ..
-             "book of ice w:5 | " ..
-             "the unrestrained analects w:5 | " ..
-             "any blast wand"
+             "hand axe w:5 | war axe | broad axe w:5 | " ..
+             "battleaxe | executioner's axe w:2 | " ..
+             "orb ego:pyromania w:5 | " ..
+             "book of fire w:5 | book of ice w:5 | " ..
+             "the unrestrained analects w:5 | any blast wand"
 
 -- Unfortunately this can still result in the unrandart being picked twice or
 -- more in the shop (resulting in the shop having regular clubs/great maces).
@@ -1615,9 +1621,11 @@ KITEM:  E = throwing net q:1
 # Launchers are weighted so they have the same total weight as the projectiles.
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
-        throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
-        | sling | shortbow | orcbow | longbow | hand cannon | arbalest | \
-        triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1
+        throwing net w:14 | boomerang w:14 | javelin w:14 | large rock w:14 | \
+        sling | shortbow | orcbow | longbow | hand cannon | arbalest | \
+        triple crossbow | scale mail ego:archery w:4 | \
+        chain mail ego:archery w:4 | plate armour ego:archery w:4 | \
+        manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25
 MAP
@@ -1634,8 +1642,8 @@ ENDMAP
 NAME:    nicolae_shop_gadgets
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Gadget suffix:Gallery count:5 use_all ; \
-         any wand | any wand | any wand | any wand | any misc
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:6 use_all ; \
+         any wand | any wand | any wand | any wand | any misc | orb
 SHUFFLE: cvmb
 MAP
 cc.vv
@@ -1728,12 +1736,9 @@ DEPTH:  D:6-, Vaults, Depths
 local count = crawl.roll_dice(2, 2) + 3
 local kstr = "S = general shop type:Mail-Order suffix:Catalogue " ..
              "count:" .. count .. " ; " ..
-             "w:5 ring mail | " ..
-             "ring mail good_item| " ..
-             "w:5 scale mail | " ..
-             "scale mail good_item| " ..
-             "w:5 chain mail | " ..
-             "chain mail good_item"
+             "ring mail w:5 | ring mail good_item | " ..
+             "scale mail w:5 | scale mail good_item | " ..
+             "chain mail w:5 | chain mail good_item"
 
 -- Stealing nicolae's methodology from Mayhem Merchandise
 -- Again, could but probably won't result in an inappropriate lajatang appearing
@@ -1796,7 +1801,8 @@ KFEAT:    P = general shop type:Fire suffix:Supplies ; \
           ring of protection from fire | staff of fire | wand of flame | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \
-          any armour ego:fire_resistance w:30 | fire dragon scales w:5
+          any armour ego:fire_resistance w:25 | fire dragon scales w:5 | \
+          pair of gloves ego:fire w:5
 KFEAT:    C = c
 SUBVAULT: ' : nico_deadtrees
 MARKER:   O = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
@@ -2171,14 +2177,11 @@ local kstr = "S = armour shop name:Granny_Wiglaf " .. shopname ..
     " count:" .. count .. " greed:15 use_all no_mimic ; " ..
     " | hat randart tile:thelm_cap_jester" ..
     " | hat randart tile:thelm_hat_art_last"
-possible_ego_hats = {
-    " | hat ego:intelligence tile:thelm_cap" ..
-        " | hat ego:see_invisible tile:thelm_hat_explorer2",
-    " | hat ego:see_invisible tile:thelm_cap" ..
-        " | hat ego:willpower tile:thelm_hat_explorer2",
-    " | hat ego:willpower tile:thelm_cap" ..
-        " | hat ego:intelligence tile:thelm_hat_explorer2"}
-kstr = kstr .. util.random_from(possible_ego_hats)
+
+local egos = util.random_subset({"intelligence", "see_invisible",
+                                 "willpower", "sniping", "ice"}, 2)
+kstr = kstr .. " | hat ego:" .. egos[1] .. " tile:thelm_cap | " ..
+       "hat ego:" .. egos[2] .. " tile:thelm_hat_explorer2"
 
 unrand_list = {"hat of the Bear Spirit", "crown of Dyrovepreva",
                "mask of the Dragon", "hat of the Alchemist",
@@ -2227,7 +2230,9 @@ KFEAT: G = metal_statue
 # The w:10 in the shop def is here for bug workaround purposes.
 KFEAT: S = general shop type:Magical suffix:Supplies w:10 ; \
   randbook w:48 | any potion w:16 | any scroll w:16 | any wand w:16 | \
-  orb w:6 | any magical staff w:6 | hat w:6 | robe w:6 | any ring w:6 | \
+  orb w:6 | any magical staff w:6 | hat w:6 | robe w:6 | helmet ego:ice w:2 | \
+  cloak ego:air w:2 | pair of gloves ego:fire w:2 | \
+  pair of boots ego:earth w:2 | any ring w:6 | \
   any amulet w:6 | manual of spellcasting w:2 | manual of conjurations w:1 | \
   manual of hexes w:1 | manual of summonings w:1 | manual of necromancy w:1 | \
   manual of alchemy w:1 | manual of translocations w:1 | \
@@ -2251,7 +2256,7 @@ DEPTH:  D:2-8
 KMONS:  P = pile of debris
 KFEAT:  S = antiques shop type:Antique suffix:Scrolls ; any scroll / \
             antiques shop type:Antique suffix:Potions ; any potion
-NSUBST: P = 1=. / 2=P / ...PP
+NSUBST: P = 1:. / 2:P / * = ...PP
 MAP
 cPcPc
 P...P

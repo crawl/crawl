@@ -7307,10 +7307,10 @@ SUBST:   6 = 677
 :   end
 : end
 ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
-         staff of cold w:3 / rimehorn talisman w:2
+         helmet ego:ice w:4 / staff of cold w:3 / rimehorn talisman w:2
 ITEM:    ice dragon scales randart w:15 / tower shield ego:cold_resistance / \
-         ring of protection from cold randart w:4 / staff of cold randart w:3 / \
-         rimehorn talisman randart w:2
+         ring of protection from cold randart w:4 / helmet ego:ice randart w:4 / \
+         staff of cold randart w:3 / rimehorn talisman randart w:2
 ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannonade
 ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup

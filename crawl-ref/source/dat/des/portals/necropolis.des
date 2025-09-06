@@ -4550,7 +4550,6 @@ ENDMAP
 
 NAME:    regret_index_necropolis_ghost_elfcraft_halls
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "vaults_elf"})
-WEIGHT:  999999
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
 MONS:    sky beast, fire bat, ice beast, shapeshifter

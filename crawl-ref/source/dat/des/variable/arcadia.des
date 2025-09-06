@@ -269,13 +269,12 @@ MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
 MONS:   glowing orange brain w:5 / rakshasa w:15 / occultist / \
         eleionoma w:5 / glowing shapeshifter w:5 / stone giant w:4
 KFEAT:  C = cache of fruit
-KFEAT:  _ = altar_vehumet
-KFEAT:  - = floor
-SUBST:  T = tx, C : C..
+KFEAT:  _ = altar_dithmenos / altar_uskayaw
+KFEAT:  z = t
+SUBST:  T = zx, C : C..
 NSUBST: 2 = 1:3 / 2 = 22233 / *:2, 4 = 3:4 / 4:5 / * = 4455.
-FTILE:  1|*$-+ = floor_dirt
-FTILE:  .C_2345Gtx = floor_grass_dark
-FTILE:  @ = floor_pebble_darkgray
+FTILE:  .-C_$*|12345G+tx = floor_grass_dark
+FTILE:  @z = floor_moss
 : old_forest_ends(_G)
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
@@ -285,15 +284,15 @@ MAP
  TTtttttttttttTT
 TTtt.......4.ttTT
 Ttt4..........ttT
-TtC.ccccccccc..tTTTTTTTT
-Tt..c||c$$$$c..ttttttttt
-Tt..c|-c****c.2t..4....t
+TtC.ccccccccc..tTTTTTTTz
+Tt..c||c$$$$c..ttttttttz
+Tt..c|-c****c.2t..4....z
 Tt..cc+c2-4-+....G.G.G.@
 Tt2.c-1-4-_-+..2.......@
 Tt..cc+c2-4-+....G.G.G.@
-Tt..c|-c****c.2t..4....t
-Tt..c||c$$$$c..ttttttttt
-TtC.ccccccccc..tTTTTTTTT
+Tt..c|-c****c.2t..4....z
+Tt..c||c$$$$c..ttttttttz
+TtC.ccccccccc..tTTTTTTTz
 Ttt4..........ttT
 TTtt.......4.ttTT
  TTtttttttttttTT

@@ -2793,6 +2793,7 @@ TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance pre_id / \
+             plate armour ego:command pre_id w:5 / \
              fire dragon scales good_item / fire dragon scales randart / \
              sanguine talisman w:2 / dragon-coil talisman w:3
 KITEM:   d = large rock q:1 / stone q:10
@@ -2986,12 +2987,14 @@ ORIENT:  northeast
 MONS:    centaur warrior, centaur warrior simulacrum
 MONS:    basilisk, shapeshifter, basilisk perm_ench:shapeshifter
 MONS:    death knight, tengu conjurer / rakshasa
+ITEM:    orb ego:glass pre_id / mundane crystal plate armour w:2
 : else
 KMONS:   0 = rakshasa
 MONS:    spriggan berserker, spriggan berserker simulacrum
 MONS:    glass eye, glowing shapeshifter
 MONS:    glass eye perm_ench:glowing_shapeshifter
 MONS:    flayed ghost, storm dragon
+ITEM:    orb ego:glass randart pre_id / crystal plate armour w:2
 : end
 NSUBST:  ? = 1:3 / 2:4 / 1:5 / *:0, ! = 1:3 / 1:4 / 1:5
 NSUBST:  6 = 1:. / *:6, 2 = 1:. / *:2, . = 2 = 09. / *:.
@@ -3002,7 +3005,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxx
 xbbbb..........nnnnn..........bbbbxx
-xbb||..n.n.......n.......n.n..**bbxx
+xbb||..n.n.......n.......n.n..*dbbxx
 xbb|....n.n.............n.n....*bbxx
 xb.......n.n...!.X.!...n.n.......bxx
 xb.6...9..n.n....6....n.n........bxx
@@ -3269,13 +3272,14 @@ TILE:     z = dngn_stone_wall_red
 : end
 ITEM:     chain mail ego:fire_resistance good_item / \
           fire dragon scales good_item / scarf ego:resistance w:5 / \
-          great sword randart ego:flaming / \
+          pair of gloves ego:fire / great sword randart ego:flaming / \
           staff of fire / staff of earth w:5 / book of fire / \
           book of scorching / orb randart artprops:Fire&&rF / \
           randbook disc1:forgecraft spells:forge_monarch_bomb w:5 / \
           dragon-coil talisman / granite talisman w:5
 ITEM:     plate armour ego:fire_resistance good_item / \
-          fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
+          fire dragon scales randart / pair of gloves randart artprops:Fire / \
+          kite shield ego:fire_resistance w:5 / \
           double sword ego:flaming good_item w:5 pre_id / \
           triple sword ego:flaming good_item pre_id / \
           staff of fire randart / staff of earth randart w:5 / \

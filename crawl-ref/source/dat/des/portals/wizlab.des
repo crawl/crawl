@@ -108,7 +108,7 @@ crawl_require("dlua/dungeon.lua")
 crawl_require('dlua/vault.lua')
 
 
-function wizlab_portal (e)
+function wizlab_portal (e, crystalise)
     local timeout_turns = crawl.random_range(600, 800)
 
     local messager =
@@ -136,10 +136,18 @@ function wizlab_portal (e)
 
     e.tags("uniq_wizlab vaults_wizlab no_item_gen no_monster_gen chance_wizlab")
 
-    -- Replace stone walls with whatever wall type the Vaults level is using.
+    -- Set up different tiles for Vaults.
     if you.in_branch("Vaults") then
-        e.subst("c = x")
+        e.subst("@ = .")
+        if crystalise == nil then
+            crystalise = false
+        end
+        if crystalise then
+            e.subst("x = b")
+            e.ftile("._O+Gmn = floor_crystal")
+        end
     end
+    e.tile("c = wall_stone_scorched")
 
     e.chance(math.floor(dgn.wizlab_chance_percent / 100 * 10000))
     -- Don't apply the chance in Vaults, since we use a Vaults room for that
@@ -476,7 +484,7 @@ NAME:   mu_enter_wizlab_1
 TAGS:   vaults_orient_s
 TILE:   m = dngn_transparent_wall_green
 COLOUR: m = lightgreen
-:       wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
     wwwww
    wwwwwww
@@ -494,8 +502,7 @@ TAGS:    vaults_orient_s
 SHUFFLE: tU
 TILE:    m = dngn_transparent_wall_green
 COLOUR:  m = lightgreen
-TILE:    c = wall_stone_gray
-:        wizlab_portal(_G)
+:  wizlab_portal(_G, true)
 MAP
 .................
 .bbbbbbbmbbbbbbb.
@@ -530,8 +537,7 @@ KPROP:  '?! = no_tele_into
 SUBST:  ' = .
 TILE:   n = dngn_transparent_stone_magenta
 COLOUR: n = lightmagenta
-TILE:   c = wall_stone_gray
-:       wizlab_portal(_G)
+: wizlab_portal(_G, false)
 MAP
  ccccccccc
 cc''!'?''cc
@@ -550,16 +556,15 @@ cc!n.n.n?cc
 ENDMAP
 
 NAME:   mu_enter_wizlab_4
-TAGS:   vaults_orient_s
-KFEAT:  ! = floor
-COLOUR: ! = magenta
-FTILE:  !O = floor_rough_magenta
-:       wizlab_portal(_G, false)
+TAGS:   vaults_orient_s no_pool_fixup
+COLOUR: ' = magenta
+FTILE:  'O = floor_rough_magenta
+: wizlab_portal(_G, true)
 MAP
     xxxxx
-    w!!!x
-   ww!O!x
-  www!!!x
+    w'''x
+   ww'O'x
+  www'''x
  www..www
 www..www
 ww..www
@@ -575,8 +580,7 @@ COLOUR: W = mutagenic
 KFEAT:  o = granite_statue
 FTILE:  WU.Oo = floor_rough_magenta
 TILE:   b = dngn_crystal_magenta
-:       wizlab_portal(_G)
-: set_feature_name("crystal_wall", "wall of crystal")
+: wizlab_portal(_G, true)
 MAP
 bbbbbbbbbbb
 bbbb...bbbb
@@ -592,12 +596,11 @@ bbbb...bbbb
      @
 ENDMAP
 
-NAME:       mu_enter_wizlab_6
-SUBST:      x = mc.
-TILE:       c = wall_stone_white
-TILE:       m = dngn_transparent_stone_magenta
-FTILE:      mcx.O = floor_rough_magenta
-:           wizlab_portal(_G)
+NAME:  mu_enter_wizlab_6
+SUBST: x = mc.
+TILE:  m = dngn_transparent_stone_magenta
+FTILE: m.O = floor_rough_magenta
+:  wizlab_portal(_G, false)
 MAP
 c.c.ccccccc
 x.x.x.x..Oc
@@ -634,7 +637,7 @@ FTILE:  - = floor_rough_lightgray
 FTILE:  ' = floor_rough_white
 FTILE:  " = floor_rough_blue
 FTILE:  ` = floor_rough_lightblue
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 xxxxxxxxxxxxx
 x...........@
@@ -659,7 +662,7 @@ TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
 COLOUR:   _ = magenta
 TILE:     G = dngn_statue_dragon
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 .......
 .bmmmb.
@@ -675,8 +678,7 @@ FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
 COLOUR:   _ = magenta
-TILE:     c = wall_stone_white
-: wizlab_portal(_G)
+: wizlab_portal(_G, false)
 MAP
 ww......ww
 ww.wwww.ww
@@ -691,6 +693,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
+TAGS:     no_pool_fixup
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -707,7 +710,7 @@ FTILE:    _! = floor_frozen
 COLOUR:   _! = lightcyan
 FTILE:    -? = floor_rough_magenta
 COLOUR:   -? = magenta
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 xx...........xx
 xG.bbbbbbbbb.Gx
@@ -730,7 +733,7 @@ NAME:   lightli_enter_wizlab_magi_temple
 TAGS:   vaults_orient_n
 COLOUR: . = magenta
 FTILE:  . = floor_rough_magenta
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 bmm.@.mmb
 m.......m
@@ -789,7 +792,8 @@ ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
 ITEM:       any w:20 / star_item / superb_item / any book w:5
 ITEM:       randart ring of flight / pair of boots ego:flying / \
             pair of boots ego:rampaging / good_item quick blade / \
-            ring of evasion good_item / storm talisman w:5
+            ring of evasion w:4 / cloak ego:air good_item w:6 / \
+            storm talisman w:5
 ITEM:       randbook disc:air
 KFEAT:      D = w
 KFEAT:      #6 = deep_water
@@ -907,7 +911,10 @@ KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 potion of heal wounds / any potion w:20
 KITEM:      e = any beam wand / any blast wand / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 / \
-                any randart jewellery w:5 / star_item w:25 / superb_item
+                scale mail ego:command good_item w:4 / \
+                chain mail ego:command good_item w:3 / \
+                plate armour ego:command good_item w:3 / \
+                any randart jewellery w:5 / star_item w:15 / superb_item
 KITEM:      g = randbook disc:summoning
 KITEM:      h = manual of summonings
 NSUBST:     d = e / d, ' = 2:1 / 4 = 112......, " = 2:1 / 4 = 12....
@@ -1288,7 +1295,8 @@ ITEM:       protean talisman randart / maw talisman randart / \
             dragon-coil talisman / storm talisman w:8 / \
             talisman of death w:2
 ITEM:       staff of necromancy pre_id, scroll of poison pre_id
-ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
+ITEM:       any jewellery randart w:4 / amulet of wildshape randart w:1 / \
+            amulet of alchemy randart w:1 / hat_of_the_alchemist w:4 / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
 SHUFFLE:    d^ / e~ / g|
@@ -1473,8 +1481,9 @@ ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
 :      " / scimitar " .. d .. " / scimitar " .. p)
 ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
             crystal plate armour good_item / crystal plate armour randart / \
-            plate armour good_item w:15 / plate armour randart w:15 / \
-            chain mail good_item / chain mail randart / \
+            plate armour good_item ego:death w:15 / \
+            chain mail good_item ego:death w:15 / \
+            plate armour randart w:15 / chain mail randart / \
             kite shield randart / tower shield randart / \
             talisman of death randart artprops:str:2&dex:2&slay:2 w:15
 KITEM:      g = skull of zonguldrok
@@ -1835,7 +1844,6 @@ for i = 1, #trans_glyph do
 end
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
-set_feature_name("crystal_wall", "wall of crystal")
 wizlab_setup(_G)
 }}
 
@@ -2043,8 +2051,7 @@ ENDMAP
 # Redesigned by Hellmonk, loosely based on the old layout but reshaped to work
 # better with the monster set. No lua gimmick, just a set of plant and archery
 # themed monsters, plus some fenstrider witches.
-# Loot: staves, books, spectral branded weapons
-# Could use a slightly different grass tile for better color contrast
+# Loot: staves, books, spectral branded weapons, consumables
 NAME:       wizlab_eringya
 TAGS:       no_rotate
 MONS:       deep elf archer w:5 / faun / centaur warrior
@@ -2052,7 +2059,7 @@ MONS:       yaktaur / satyr / naga sharpshooter
 MONS:       shambling mangrove, thorn hunter / eleionoma, deep elf master archer
 MONS:       fenstrider witch, bush
 KMONS:      P = oklob plant
-ITEM:       any book, any magical staff
+ITEM:       any book, any magical staff / amulet of alchemy randart w:1
 : local s = "ego:spectral no_pickup "
 : item(dgn.loot_potions)
 : item("demon blade " .. s .. "w:3 / demon whip " .. s .. "w:3 / " ..
@@ -2163,7 +2170,10 @@ ITEM:       scarf ego:harm randart w:25 / boots ego:rampaging w:25 /\
             plate armour good_item ego:ponderousness / any weapon ego:chaos /\
             maxwell's patent armour w:2 / maxwell's thermic engine w:2
 ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
-            any weapon randart / any armour randart / any jewellery randart w:5
+            any weapon randart / any armour randart w:8 / \
+            chain mail randart ego:resonance w:1 / \
+            plate armour randart ego:resonance w:1 / \
+            any jewellery randart w:5
 ITEM:       potion of attraction pre_id / any scroll w:20 /\
             scroll of vulnerability pre_id / any potion w:20
 SHUFFLE:    DE/JK, pqrs, ;~
@@ -2385,7 +2395,7 @@ NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
 SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
 TILE:    c = wall_borg_stone
-LFLOORTILE: floor_borg
+LFLOORTILE: borg_floor
 : vault_metal_statue_setup(_G, "G", "soul conduit")
 {{
 local summon_marker = TriggerableFunction:new ({
