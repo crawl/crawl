@@ -416,6 +416,14 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
 
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
 
+        // Smaller species missing a hand can acquire polearms with default weight
+        // zero, namely spears, since they have no other polearm option.
+        if (skill == SK_POLEARMS && you.has_mutation(MUT_MISSING_HAND)
+            && you.body_size() < SIZE_MEDIUM && !acqweight)
+        {
+            acqweight = 100;
+        }
+
         if (!acqweight)
             continue;
 
