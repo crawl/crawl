@@ -1572,6 +1572,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                                     : AFF_YES);
     }
 
+    case SPELL_BECKONING:
+        return make_unique<targeter_beckoning>(you, range, pow);
+
     default:
         break;
     }
@@ -1957,6 +1960,14 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     return descs;
 }
 
+static vector<string> _desc_beckoning_valid(const monster_info& mi)
+{
+    if (!can_beckon(mi))
+        return vector<string>{"not susceptible"};
+
+    return vector<string>{};
+}
+
 class spell_targeting_behaviour : public targeting_behaviour
 {
 public:
@@ -2053,6 +2064,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return _desc_mercury_weak_chance;
         case SPELL_WARP_SPACE:
             return bind(_desc_warp_space_chance, powc);
+        case SPELL_BECKONING:
+            return bind(_desc_beckoning_valid, placeholders::_1);
         default:
             break;
     }

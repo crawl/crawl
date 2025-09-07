@@ -365,11 +365,6 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
     }
 
-    // beckoning is useless against adjacent mons!
-    // XXX: this should probably be somewhere else
-    if (beam.flavour == BEAM_BECKONING)
-        return grid_distance(mon.pos, you.pos()) > 1;
-
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
            || beam.flavour == BEAM_INNER_FLAME;
@@ -2839,4 +2834,26 @@ bool targeter_paragon_deploy::valid_aim(coord_def a)
         return notify_fail("Your paragon could not survive being deployed there.");
 
     return true;
+}
+
+targeter_beckoning::targeter_beckoning(const actor& caster, int range, int pow)
+    : targeter_beam(&caster, range, ZAP_BECKONING, pow, 0, 0)
+{
+}
+
+bool targeter_beckoning::valid_aim(coord_def a)
+{
+    if (grid_distance(agent->pos(), a) <= 1)
+        return notify_fail("Too close to pull.");
+    return targeter_beam::valid_aim(a);
+}
+
+aff_type targeter_beckoning::is_affected(coord_def loc)
+{
+    if (grid_distance(agent->pos(), loc) <= 1)
+    {
+        bool in_path = !path_taken.empty() && path_taken[0] == loc;
+        return in_path ? AFF_TRACER : AFF_NO;
+    }
+    return targeter_beam::is_affected(loc);
 }

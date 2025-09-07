@@ -58,6 +58,8 @@ int gravitas_radius(int pow);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 void pull_monsters_inward(const coord_def& center, int radius);
 
+bool can_beckon(const actor& beckoned);
+bool can_beckon(const monster_info& beckoned);
 bool beckon(actor &beckoned, const bolt &path);
 void attract_monsters(int delay);
 void attract_monster(monster &m, int max_move);
