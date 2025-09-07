@@ -2,4 +2,5 @@
 
 #include "actor.h"
 
-void death_curse(actor& target, actor* source, string cause, int severity);
+void death_curse(actor& target, const actor* source, string cause,
+                 int severity);

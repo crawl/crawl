@@ -181,7 +181,9 @@ static int dgn_mons_from_mid(lua_State *ls)
 {
     const int mid = luaL_safe_checkint(ls, 1);
 
-    monster* mons = monster_by_mid(mid);
+    // dlua uses this function to get the monster that died when handling
+    // monster death events, so we must include dead monsters.
+    monster* mons = monster_by_mid(mid, false, true);
 
     if (mons && mons->type != MONS_NO_MONSTER)
         push_monster(ls, mons);
