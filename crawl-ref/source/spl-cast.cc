@@ -3571,6 +3571,7 @@ void tabcast_spell(coord_def &pos)
         if (!_find_tabcast_lrd_target(target))
             return;
         break;
+    case SPELL_SPLINTERFROST_SHELL:
     case SPELL_BOULDER:
         _find_tabcast_boulder_target(target);
         break;
