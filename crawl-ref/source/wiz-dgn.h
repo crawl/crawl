@@ -12,8 +12,8 @@
 // it immediately exits the builder so that you can see what happened.
 //#define DEBUG_VETO_RESUME
 
-#include "dungeon-feature-type.h"
 #include "player.h"
+#include "trap-type.h"
 
 #define WIZ_LAST_FEATURE_TYPE_PROP "last_created_feature"
 dungeon_feature_type wizard_select_feature(bool mimic, bool allow_fprop=false);
@@ -29,7 +29,8 @@ void wizard_interlevel_travel();
 void wizard_list_levels();
 void wizard_recreate_level();
 void wizard_clear_used_vaults();
-bool debug_make_trap(const coord_def& pos = you.pos(), dungeon_feature_type feat = DNGN_FLOOR);
+bool debug_make_trap(const coord_def& pos = you.pos(),
+                     trap_type trap = TRAP_UNASSIGNED);
 bool debug_make_shop(const coord_def& pos = you.pos());
 void debug_place_map(bool primary);
 void wizard_primary_vault();

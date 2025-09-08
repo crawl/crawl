@@ -6490,7 +6490,8 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
 
     if (spec_type == TRAP_SHAFT && !is_valid_shaft_level())
     {
-        mprf(MSGCH_ERROR, "Vault %s tried to place a shaft at a branch end",
+        mprf(MSGCH_ERROR, "%s%s tried to place a shaft at a branch end.",
+                env.placing_vault.empty() ? "Something" : "Vault ",
                 env.placing_vault.c_str());
     }
 

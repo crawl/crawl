@@ -17,7 +17,6 @@
 #include "directn.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "dungeon-feature-type.h"
 #include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
@@ -321,7 +320,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             return debug_make_shop(pos);
 
         if (feat_is_trap(feat))
-            return debug_make_trap(pos, feat);
+            return debug_make_trap(pos, trap_type_from_feature(feat));
 
         tile_env.flv(pos).feat = 0;
         tile_env.flv(pos).special = 0;
@@ -451,16 +450,16 @@ void wizard_map_level()
     }
 }
 
-bool debug_make_trap(const coord_def& pos, dungeon_feature_type feat)
+bool debug_make_trap(const coord_def& pos, trap_type trap)
 {
     if (env.grid(pos) != DNGN_FLOOR)
     {
-        mpr("You need to be on a floor square to make a trap.");
+        mprf("You can only make a %s on a floor square.",
+             trap == TRAP_UNASSIGNED ? "trap" : full_trap_name(trap).c_str());
         return false;
     }
 
-    trap_type trap = TRAP_UNASSIGNED;
-    if (!feat_is_trap(feat))
+    if (trap == TRAP_UNASSIGNED)
     {
         vector<WizardEntry> options;
         for (int i = TRAP_FIRST_TRAP; i < NUM_TRAPS; ++i)
@@ -477,8 +476,6 @@ bool debug_make_trap(const coord_def& pos, dungeon_feature_type feat)
 
         trap = static_cast<trap_type>(menu.result());
     }
-    else
-        trap = trap_type_from_feature(feat);
     place_specific_trap(pos, trap);
 
     mprf("Created %s.",
