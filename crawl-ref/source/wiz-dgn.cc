@@ -18,6 +18,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "dungeon-feature-type.h"
+#include "feature.h"
 #include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
@@ -455,7 +456,8 @@ bool debug_make_trap(const coord_def& pos, dungeon_feature_type feat)
 {
     if (env.grid(pos) != DNGN_FLOOR)
     {
-        mpr("You need to be on a floor square to make a trap.");
+        mprf("You can only make a %s on a floor square.",
+             feat_is_trap(feat) ? get_feature_def(feat).name : "trap");
         return false;
     }
 

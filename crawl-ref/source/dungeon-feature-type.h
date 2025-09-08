@@ -360,6 +360,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SPEAR,
     DNGN_TRAP_TYRANT,
     DNGN_TRAP_HARLEQUIN,
+    DNGN_TRAP_DEVOURER,
     DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
@@ -391,7 +392,6 @@ enum dungeon_feature_type
     DNGN_CACHE_OF_BAKED_GOODS,
     DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
     DNGN_SPIKE_LAUNCHER,
-    DNGN_TRAP_DEVOURER,
     DNGN_ENTER_NECROPOLIS,
     DNGN_EXIT_NECROPOLIS,
     DNGN_FRIGID_WALL,
