@@ -7991,6 +7991,10 @@ bool cancel_beam_prompt(const bolt& beam,
 
     if (!tracer.bad_attack_targets.empty())
     {
+        //automatically cancel instead of spamming the player with prompts if tabcasting
+        if (is_tabcasting() && spell != SPELL_NO_SPELL)
+            return true;
+
         attacked_monster_list victims;
         for (auto& target : tracer.bad_attack_targets)
             victims.add(*target.mon, target.adj, target.suffix, target.penance);
