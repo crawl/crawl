@@ -2478,6 +2478,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SEISMOSAURUS_EGG,  { 1, 1 } },
     { SPELL_PHALANX_BEETLE,           { 1, 1 } },
     { SPELL_RENDING_BLADE,            { 1, 1 } },
+    { SPELL_HOARFROST_CANNONADE,      { 2, 2 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
