@@ -3534,6 +3534,27 @@ static bool _find_tabcast_paragon_target(dist &target)
     return true;
 }
 
+static bool _find_tabcast_tempering_target(dist &target)
+{
+    vector<coord_def> dests;
+    for (radius_iterator ri(target.target, 1, C_SQUARE, LOS_SOLID, true); ri; ++ri)
+    {
+        monster* mons = monster_at(*ri);
+        if (!mons || !you.can_see(*mons) || !mons->friendly()
+        || mons->has_ench(ENCH_TEMPERED) || !is_valid_tempering_target(*mons, you))
+        {
+            continue;
+        }
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
 void tabcast_spell(coord_def &pos)
 {
     const spell_type spell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
@@ -3555,6 +3576,9 @@ void tabcast_spell(coord_def &pos)
         break;
     case SPELL_PLATINUM_PARAGON:
         _find_tabcast_paragon_target(target);
+        break;
+    case SPELL_PERCUSSIVE_TEMPERING:
+        _find_tabcast_tempering_target(target);
         break;
     default:
         break;
