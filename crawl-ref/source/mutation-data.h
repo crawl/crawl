@@ -2966,6 +2966,7 @@ static const mutation_def mut_data[] =
   {"You cast spells by striking foes in melee combat.", "", ""},
   {"You now cast spells by striking foes in melee combat.", "", ""},
   {"You no longer cast spells by striking foes in melee combat.", "", ""},
+  TILEG_MUT_CONTACT_CASTING,
 },
 
 { MUT_SAFE_SPELLS, 0, 1, mutflag::good,
@@ -2980,6 +2981,14 @@ static const mutation_def mut_data[] =
   {"You are sometimes set ablaze by fire and electrical damage.", "", ""},
   {"Your flammability increases.", "", ""},
   {"Your flammability decreases.", "", ""},
+},
+
+{ MUT_INEFFICIENT_MAGIC, 0, 1, mutflag::bad,
+  "inefficient magic",
+  {"Spells you cast cost 1 more MP.", "", ""},
+  {"You lose your grip on the flow of your magic.", "", ""},
+  {"You regain your grip on the flow of your magic.", "", ""},
+  TILEG_MUT_INEFFICIENT_MAGIC,
 },
 
 };

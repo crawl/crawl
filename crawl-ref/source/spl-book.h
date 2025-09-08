@@ -50,5 +50,6 @@ vector<spell_type> get_sorted_spell_list(bool silent = false,
 spret divine_exegesis(bool fail);
 
 spret imbue_servitor();
+spret choose_tabcast_spell();
 
 book_type choose_book_type(int item_level);

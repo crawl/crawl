@@ -2625,6 +2625,7 @@ tileidx_t tileidx_player_shadow()
         case SP_KOBOLD:         return TILEP_MONS_PLAYER_SHADOW_KOBOLD;
         case SP_MERFOLK:        return TILEP_MONS_PLAYER_SHADOW_MERFOLK;
         case SP_MINOTAUR:       return TILEP_MONS_PLAYER_SHADOW_MINOTAUR;
+        case SP_MOON_MOTH:      return TILEP_MONS_PLAYER_SHADOW_MOON_MOTH;
         case SP_MUMMY:          return TILEP_MONS_PLAYER_SHADOW_MUMMY;
         case SP_NAGA:           return TILEP_MONS_PLAYER_SHADOW_NAGA;
         case SP_OCTOPODE:       return TILEP_MONS_PLAYER_SHADOW_OCTOPODE;
@@ -3994,6 +3995,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMBUE_SERVITOR;
     case ABIL_IMPRINT_WEAPON:
         return TILEG_ABILITY_IMPRINT_WEAPON;
+    case ABIL_CHOOSE_TABCAST_SPELL:
+        return TILEG_ABILITY_CHOOSE_TABCAST_SPELL;
     case ABIL_CACOPHONY:
         return TILEG_ABILITY_CACOPHONY;
     case ABIL_BAT_SWARM:

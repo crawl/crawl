@@ -3347,10 +3347,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_RAGE:
                 return !you.can_go_berserk(false, false, true, nullptr, temp);
             case SPARM_ENERGY:
-                return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG)
-                    || you.has_mutation(MUT_CONTACT_CASTING);
+                return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
             case SPARM_STARDUST:
-                return you.has_mutation(MUT_HP_CASTING) || you.has_mutation(MUT_CONTACT_CASTING);
+                return you.has_mutation(MUT_HP_CASTING);
             default:
                 return false;
             }

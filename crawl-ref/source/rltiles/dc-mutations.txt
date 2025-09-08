@@ -250,6 +250,8 @@ formless_2
 trickster TRICKSTER
 spellclaws SPELLCLAWS
 mnemophage MNEMOPHAGE
+contact_casting CONTACT_CASTING
+inefficient_magic_1 INEFFICIENT_MAGIC
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

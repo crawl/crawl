@@ -28,18 +28,18 @@ aptitudes:
   shields: -3
   unarmed_combat: 0
   spellcasting: 0
-  conjurations: 0
-  hexes: 0
-  summoning: -2
-  forgecraft: -2
-  necromancy: -1
-  translocations: -1
+  conjurations: 1
+  hexes: 1
+  summoning: -1
+  forgecraft: -1
+  necromancy: 0
+  translocations: 0
   shapeshifting: 1
   fire_magic: 1
   ice_magic: 0
   air_magic: 1
   earth_magic: 0
-  alchemy: -1
+  alchemy: 0
   invocations: 0
   evocations: 1
 str: 8
@@ -53,6 +53,7 @@ mutations:
     MUT_ANTENNAE: 2
     MUT_BIG_WINGS: 1
     MUT_FLAMMABILITY: 1
+    MUT_INEFFICIENT_MAGIC: 1
 recommended_jobs:
   - gladiator
   - monk

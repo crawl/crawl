@@ -404,7 +404,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         if (x_chance_in_y(chance, 100))
         {
             mprf(MSGCH_WARN, "You catch fire from the flames!");
-            sticky_flame_player(2 + you.experience_level / 2, random_range(11, 21),
+            sticky_flame_player(1 + you.experience_level / 3, random_range(11, 21),
                                 "your high flammability", "");
         }
     }
@@ -423,7 +423,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         if (x_chance_in_y(chance, 100))
         {
             mprf(MSGCH_WARN, "The shock sets you ablaze!");
-            sticky_flame_player(2 + you.experience_level / 2, random_range(11, 21),
+            sticky_flame_player(1 + you.experience_level / 3, random_range(11, 21),
                                 "your high flammability", "");
         }
     }

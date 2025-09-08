@@ -1230,7 +1230,7 @@ void melee_attack::maybe_trigger_tabcast()
     if (!attacker->is_player() || !you.has_mutation(MUT_CONTACT_CASTING) || !defender->is_monster() || is_projected)
         return;
 
-    const spell_type spell = (spell_type) you.attribute[ATTR_TABCAST_SPELL];
+    const spell_type spell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
     const monster* m = defender->as_monster();
 
     if (spell == SPELL_NO_SPELL || invalid_monster(m)
@@ -1346,6 +1346,14 @@ void melee_attack::maybe_trigger_tabcast()
         if (count_summons(&you, spell) > 0)
             return;
         break;
+    case SPELL_PLATINUM_PARAGON: {
+        const monster* paragon = find_player_paragon();
+        if (!paragon)
+            break;
+        if (paragon_charge_level(*paragon) == 2)
+            break;
+        return;
+    }
     default:
         break;
     }
@@ -1362,7 +1370,9 @@ void melee_attack::maybe_trigger_tabcast()
     {
         dist target;
         target.target = m->pos();
+        you.attribute[ATTR_TABCASTING] = 1;
         cast_a_spell(false, spell, &target);
+        you.attribute[ATTR_TABCASTING] = 0;
     }
     else
         tabcast_fineff::schedule(m->pos());

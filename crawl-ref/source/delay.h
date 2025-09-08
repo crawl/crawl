@@ -713,6 +713,33 @@ private:
     item_def wpn;
 };
 
+class ChooseTabcastSpellDelay : public Delay
+{
+    bool was_prompted = false;
+
+    void start() override;
+
+    void tick() override
+    {
+        mprf(MSGCH_MULTITURN_ACTION, "You continue inscribing your contact spell.");
+    }
+
+    void finish() override;
+public:
+    ChooseTabcastSpellDelay(int dur, spell_type _spell) : Delay(dur), spell(_spell)
+    { }
+
+    bool try_interrupt(bool force = false) override;
+
+    const char* name() const override
+    {
+        return "choose_tabcast_spell";
+    }
+
+private:
+    spell_type spell;
+};
+
 
 void push_delay(shared_ptr<Delay> delay);
 

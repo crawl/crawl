@@ -393,6 +393,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_IMPRINT_WEAPON, "Imprint Weapon",
             0, 0, 0, -1, {}, abflag::delay },
+        { ABIL_CHOOSE_TABCAST_SPELL, "Inscribe Contact Spell",
+            0, 0, 0, -1, {}, abflag::delay },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_INVENT_GIZMO, "Invent Gizmo",
@@ -3269,6 +3271,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         break;
 
+    case ABIL_CHOOSE_TABCAST_SPELL:
+        return choose_tabcast_spell();
+
     case ABIL_GOLDEN_BREATH:
     case ABIL_COMBUSTION_BREATH:
     case ABIL_GLACIAL_BREATH:
@@ -4315,6 +4320,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
         return you.has_spell(SPELL_PLATINUM_PARAGON);
+    case ABIL_CHOOSE_TABCAST_SPELL:
+        return you.has_mutation(MUT_CONTACT_CASTING);
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -4396,6 +4403,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_SIPHON_ESSENCE,
             ABIL_IMBUE_SERVITOR,
             ABIL_IMPRINT_WEAPON,
+            ABIL_CHOOSE_TABCAST_SPELL,
             ABIL_END_TRANSFORMATION,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,

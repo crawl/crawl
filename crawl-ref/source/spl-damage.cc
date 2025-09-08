@@ -3825,7 +3825,7 @@ void handle_flame_wave(int lvl)
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    if (lvl > 1 && !is_tabcasting())
+    if (lvl > 1)
     {
         pay_mp(1);
         finalize_mp_cost();
@@ -3931,7 +3931,7 @@ bool handle_searing_ray(actor& agent, int turn)
 
     if (agent.is_player())
     {
-        if (turn > 1 && !is_tabcasting())
+        if (turn > 1)
         {
             pay_mp(1);
             finalize_mp_cost();

@@ -981,13 +981,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         }
         else
             spell = get_spell_by_letter(keyin);
-
-
-        if (is_tabcasting())
-        {
-            set_tabcast_spell(spell);
-            return spret::abort;
-        }
     }
 
     if (spell == SPELL_NO_SPELL)
@@ -3435,16 +3428,16 @@ void do_demonic_magic(int pow, int rank)
 
 bool is_tabcasting()
 {
-    return you.has_mutation(MUT_CONTACT_CASTING) && !you.divine_exegesis;
+    //return you.has_mutation(MUT_CONTACT_CASTING) && !you.divine_exegesis;
+    return you.attribute[ATTR_TABCASTING];
 }
 
 void set_tabcast_spell(spell_type spell)
 {
-    if (spell == (spell_type) you.attribute[ATTR_TABCAST_SPELL]) spell = SPELL_NO_SPELL;
+    if (you.attribute[ATTR_TABCAST_SPELL] == spell)
+        return;
     if (spell == SPELL_NO_SPELL)
         mpr("Your attacks no longer cast spells.");
-    else
-        mprf("Your attacks now cast %s.", spell_title(spell));
     you.attribute[ATTR_TABCAST_SPELL] = spell;
 }
 
@@ -3518,8 +3511,13 @@ static void _find_tabcast_boulder_target(dist &target)
 static bool _find_tabcast_paragon_target(dist &target)
 {
     vector<coord_def> dests;
+    int radius = 1;
 
-    for (radius_iterator ri(target.target, 1, C_SQUARE, LOS_SOLID, true); ri; ++ri)
+    const monster* paragon = find_player_paragon();
+    if (paragon && paragon_charge_level(*paragon) == 2)
+        radius = 3;
+
+    for (radius_iterator ri(target.target, radius, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
         if (actor_at(*ri) || !in_bounds(*ri)
             || cell_is_solid(*ri) || !you.see_cell(*ri))
@@ -3538,7 +3536,7 @@ static bool _find_tabcast_paragon_target(dist &target)
 
 void tabcast_spell(coord_def &pos)
 {
-    const spell_type spell = (spell_type) you.attribute[ATTR_TABCAST_SPELL];
+    const spell_type spell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
 
     dist target;
     target.target = pos;
@@ -3562,7 +3560,9 @@ void tabcast_spell(coord_def &pos)
         break;
     }
 
+    you.attribute[ATTR_TABCASTING] = 1;
     cast_a_spell(false, spell, &target);
+    you.attribute[ATTR_TABCASTING] = 0;
 }
 
 bool channelled_spell_active(spell_type spell)
@@ -3607,7 +3607,7 @@ void handle_channelled_spell()
 
     //interrupt channel if last action was not an allowed action (waiting)
     //if we are tabcasting, allowed actions include attacking
-    const bool interrupt = !((is_tabcasting()
+    const bool interrupt = !((you.has_mutation(MUT_CONTACT_CASTING)
         && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
         || crawl_state.prev_cmd == CMD_WAIT);
     // Don't stop on non-wait for the first turn of a channelled spell, since
@@ -3619,8 +3619,7 @@ void handle_channelled_spell()
     }
 
     if ((spell == SPELL_FLAME_WAVE || spell == SPELL_SEARING_RAY)
-        && turn > 1 && !enough_mp(1, true)
-        && !is_tabcasting())
+        && turn > 1 && !enough_mp(1, true))
     {
         mprf("Without enough magic to sustain it, your %s dissipates.",
              spell_title(spell));

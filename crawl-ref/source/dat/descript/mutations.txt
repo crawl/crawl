@@ -812,6 +812,11 @@ highly flammable mutation
 When you are damaged by fire or electricity, you have a chance to be set on
 fire. This chance is decreased by your respective elemental resistance level.
 %%%%
+inefficient magic mutation
+
+You cast spells with poor efficiency, increasing the cost of your spells by 1
+MP.
+%%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
 

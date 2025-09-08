@@ -530,7 +530,7 @@ vector<spell_type> get_sorted_spell_list(bool silent, bool memorise_only)
 class SpellLibraryMenu : public Menu
 {
 public:
-    enum class action { cast, memorise, imbue, describe, hide, unhide };
+    enum class action { cast, memorise, imbue, inscribe, describe, hide, unhide };
     action current_action, default_action;
 
 protected:
@@ -543,6 +543,7 @@ protected:
                         : current_action == action::describe ? "(Describe)"
                         : current_action == action::hide ? "(Hide)    "
                         : current_action == action::imbue ? "(Imbue)   "
+                        : current_action == action::inscribe ? "(Inscribe)"
                         : "(Show)    ",
                         you.divine_exegesis ? "         " : "Failure  "));
     }
@@ -597,7 +598,8 @@ private:
         desc << "\n";
 
         const string act = default_action == action::memorise ? "Memorise"
-                           : default_action == action::imbue ? "Imbue" : "Cast";
+                           : default_action == action::imbue ? "Imbue"
+                           : default_action == action::inscribe ? "Inscribe" : "Cast";
         // line 2
         desc << menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) << " ";
         desc << ( current_action == action::cast
@@ -606,6 +608,8 @@ private:
                             ? "<w>Memorise</w>|Describe|Hide|Show"
                  : current_action == action::imbue
                             ? "<w>Imbue</w>|Describe|Hide|Show"
+                 : current_action == action::inscribe
+                            ? "<w>Inscribe</w>|Describe|Hide|Show"
                  : current_action == action::describe
                             ? act + "|<w>Describe</w>|Hide|Show"
                  : current_action == action::hide
@@ -631,6 +635,7 @@ private:
                 case action::cast:
                 case action::memorise:
                 case action::imbue:
+                case action::inscribe:
                     current_action = action::describe;
                     entries_changed = true; // need to add hotkeys
                     break;
@@ -658,6 +663,7 @@ private:
                 case action::cast:
                 case action::memorise:
                 case action::imbue:
+                case action::inscribe:
                     current_action = action::unhide;
                     entries_changed = true;
                     if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
@@ -874,6 +880,8 @@ public:
         }
         else if (default_action == action::imbue)
             spell_levels_str = "<lightgreen>Select a spell to imbue your Spellspark Servitor with:</lightgreen>";
+        else if (default_action == action::inscribe)
+            spell_levels_str = "<lightgreen>Select a spell to inscribe your melee attacks with:</lightgreen>";
         else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
@@ -912,6 +920,7 @@ public:
             case action::memorise:
             case action::cast:
             case action::imbue:
+            case action::inscribe:
                 return false;
             case action::describe:
                 // n.b. skip superclass handling of ACT_EXAMINE, since we
@@ -1225,6 +1234,45 @@ spret imbue_servitor()
     // Remove any servitors that currently exist and start imbuing.
     remove_player_servitor();
     start_delay<ImbueDelay>(5, spell);
+
+    return spret::success;
+}
+
+spret choose_tabcast_spell()
+{
+    spell_list spells;
+    for (const spell_type spell : you.spells)
+        if (is_valid_spell(spell))
+            spells.push_back(spell);
+
+    if (spells.empty())
+    {
+        mpr("You don't know of any spells!");
+        return spret::abort;
+    }
+
+    SpellLibraryMenu spell_menu(spells, SpellLibraryMenu::action::inscribe);
+
+    const vector<MenuEntry*> sel = spell_menu.show();
+    if (!crawl_state.doing_prev_cmd_again)
+    {
+        redraw_screen();
+        update_screen();
+    }
+
+    if (sel.empty())
+        return spret::abort;
+
+    const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
+    if (spell == static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]))
+    {
+        set_tabcast_spell(SPELL_NO_SPELL);
+        return spret::abort;
+    }
+
+    ASSERT(is_valid_spell(spell));
+
+    start_delay<ChooseTabcastSpellDelay>(5, spell);
 
     return spret::success;
 }

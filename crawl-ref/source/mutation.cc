@@ -213,6 +213,7 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              true},
     { MUT_EVOLUTION,           MUT_DEVOLUTION,              true},
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,               true},
+    { MUT_INEFFICIENT_MAGIC,   MUT_EFFICIENT_MAGIC,         true},
 
     { MUT_FANGS,               MUT_BEAK,                   false},
     { MUT_ANTENNAE,            MUT_HORNS,                  false},
@@ -230,7 +231,6 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
     { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
     { MUT_ROLLPAGE,            MUT_INHIBITED_REGENERATION, false},
-    { MUT_CONTACT_CASTING,     MUT_EFFICIENT_MAGIC,        false},
 
 #if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},

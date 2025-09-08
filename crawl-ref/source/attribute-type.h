@@ -111,5 +111,6 @@ enum attribute_type
     ATTR_LAST_CONTAM,          // Timestamp of when contam was last inflicted
     ATTR_TABCAST_LIMIT,        // Number of times we can tabcast this turn
     ATTR_TABCAST_SPELL,        // Spell to cast when tabcasting
+    ATTR_TABCASTING,           // Are we currently tabcasting?
     NUM_ATTRIBUTES
 };
