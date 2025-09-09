@@ -1984,9 +1984,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-
-    if (you.has_mutation(MUT_CONTACT_CASTING))
-        set_tabcast_spell(SPELL_NO_SPELL);
 }
 
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
@@ -2078,9 +2075,6 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
             }
         }
     }
-
-    if (you.has_mutation(MUT_CONTACT_CASTING))
-        set_tabcast_spell(SPELL_NO_SPELL);
 }
 
 static void _spirit_shield_message(bool unmeld)
