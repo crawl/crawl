@@ -1074,6 +1074,10 @@ static void _input()
 
     reset_damage_counters();
 
+    //reset tabcasting limit
+    //this is here so it gets reset even when using serpent's lash
+    you.attribute[ATTR_TABCAST_LIMIT] = 1;
+
     if (you.pending_revival)
     {
         revive();
@@ -1293,10 +1297,6 @@ static void _input()
     if (you.props.exists(FREEZE_TIME_KEY))
         you.turn_is_over = false;
 #endif
-
-    //reset tabcasting limit
-    //this is here so it gets reset even when using serpent's lash
-    you.attribute[ATTR_TABCAST_LIMIT] = 1;
 
     if (you.turn_is_over)
     {
