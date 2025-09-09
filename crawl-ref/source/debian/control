@@ -50,7 +50,7 @@ Description: Dungeon Crawl, a text-based roguelike game (tile data files)
  .
  These are the tile graphics.
  .
- This is the Stone Soup version of Dungeon Crawl.Package: crawl-tiles
+ This is the Stone Soup version of Dungeon Crawl.
 
 Package: crawl-tiles
 Architecture: any
