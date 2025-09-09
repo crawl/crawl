@@ -3,7 +3,7 @@ Section: games
 Priority: optional
 Maintainer: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
 Uploaders: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
-Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
+Build-Depends: debhelper-compat (= 13), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
 	pkg-config, libsdl2-image-dev, libsdl2-dev, libsqlite3-dev,
 	libfreetype6-dev, advancecomp, libpng-dev, python3-yaml, fonts-dejavu-core
 Standards-Version: 4.7.2
