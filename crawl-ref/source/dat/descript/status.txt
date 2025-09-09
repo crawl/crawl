@@ -1244,3 +1244,7 @@ Phobia status
 
 Your claustrophobia has given you a slaying malus. This is dependent on the
 number of walls surrounding you.
+%%%%
+-MCast status
+
+You are unable to cast spells manually.

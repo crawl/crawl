@@ -391,43 +391,6 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
         }
     }
 
-    if ((flavour == BEAM_FIRE || flavour == BEAM_LAVA)
-        && !player_res_sticky_flame() && you.has_mutation(MUT_FLAMMABILITY))
-    {
-        int chance = 40;
-        const int rF = you.res_fire();
-        if (rF < 0)
-            chance = chance * 3 / 2;
-        else
-            chance = chance / (rF + 1);
-
-        if (x_chance_in_y(chance, 100))
-        {
-            mprf(MSGCH_WARN, "You catch fire from the flames!");
-            sticky_flame_player(1 + you.experience_level / 3, random_range(11, 21),
-                                "your high flammability", "");
-        }
-    }
-
-    if ((flavour == BEAM_ELECTRICITY || flavour == BEAM_THUNDER
-         || flavour == BEAM_STUN_BOLT)
-        && !player_res_sticky_flame() && you.has_mutation(MUT_FLAMMABILITY))
-    {
-        int chance = 40;
-        const int rElec = you.res_elec();
-        if (rElec < 0)
-            chance = chance * 3 / 2;
-        else
-            chance = chance / (rElec + 1);
-
-        if (x_chance_in_y(chance, 100))
-        {
-            mprf(MSGCH_WARN, "The shock sets you ablaze!");
-            sticky_flame_player(1 + you.experience_level / 3, random_range(11, 21),
-                                "your high flammability", "");
-        }
-    }
-
     if ((flavour == BEAM_COLD || flavour == BEAM_ICE)
         && you.has_bane(BANE_SNOW_BLINDNESS))
     {

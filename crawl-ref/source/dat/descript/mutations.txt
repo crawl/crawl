@@ -807,10 +807,10 @@ safe spells mutation
 
 You are not damaged by your own spells.
 %%%%
-highly flammable mutation
+disturbed magic mutation
 
-When you are damaged by fire or electricity, you have a chance to be set on
-fire. This chance is decreased by your respective elemental resistance level.
+When you cast a spell manually, you become unable to cast spells manually again
+for a few turns.
 %%%%
 inefficient magic mutation
 

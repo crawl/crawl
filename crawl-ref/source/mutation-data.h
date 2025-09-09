@@ -2976,11 +2976,11 @@ static const mutation_def mut_data[] =
   {"You are no longer safe from the effects of your own spells.", "", ""},
 },
 
-{ MUT_FLAMMABILITY, 0, 1, mutflag::bad | mutflag::substance,
-  "highly flammable",
-  {"You are sometimes set ablaze by fire and electrical damage.", "", ""},
-  {"Your flammability increases.", "", ""},
-  {"Your flammability decreases.", "", ""},
+{ MUT_DISTURBED_MAGIC, 0, 1, mutflag::bad,
+  "disturbed magic",
+  {"You cannot cast spells in rapid succession.", "", ""},
+  {"You feel your magic become disturbed.", "", ""},
+  {"You feel your magic become less disturbed.", "", ""},
 },
 
 { MUT_INEFFICIENT_MAGIC, 0, 1, mutflag::bad,

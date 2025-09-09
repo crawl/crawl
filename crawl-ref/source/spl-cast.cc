@@ -870,6 +870,14 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         return spret::abort;
     }
 
+    //this is here instead of can_cast_spells() to avoid interrupting channels
+    if (you.duration[DUR_NO_MANUAL_CAST] && !is_tabcasting() && !you.divine_exegesis)
+    {
+        mpr("You are recovering from casting magic manually!");
+        crawl_state.zero_turns_taken();
+        return spret::abort;
+    }
+
     if (crawl_state.game_is_hints())
         Hints.hints_spell_counter++;
 
@@ -1145,6 +1153,10 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             mprf(MSGCH_WARN, "You lose access to your magic!");
             you.increase_duration(DUR_NO_CAST, 3 + random2(3));
         }
+
+        if (you.has_mutation(MUT_DISTURBED_MAGIC) && !fake_spell
+            && !is_tabcasting() && !you.divine_exegesis)
+            you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(4));
 
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());

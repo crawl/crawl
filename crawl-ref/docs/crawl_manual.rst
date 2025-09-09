@@ -1872,10 +1872,6 @@ Moon Moths (MM)
   above. They bear a striking resemblance to their smaller cousins and share
   their deadly obsession with glowing spherical objects.
 
-  They sail through the air with large, scintillating wings they gained upon
-  emerging from their cocoons. However, these same wings combust and fry
-  easily, their pursuit of glowing objects often leading to their demise.
-
   Their probosces have great trouble vocalizing the magical incantations
   required to cast spells, forcing them to devise a unique spellcasting
   technique that channels magic drawn from the surrounding atmosphere with

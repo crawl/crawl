@@ -763,6 +763,10 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_armour_class = true;
       }}}},
+    { DUR_NO_MANUAL_CAST, RED, "-MCast",
+      "unable to cast spells manually", "no manual cast",
+      "You are unable to cast spells manually.", D_COOLDOWN,
+      {{ "You recover from casting spells manually." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

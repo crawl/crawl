@@ -86,7 +86,7 @@ of close and ranged combat.
 Moon Moth
 
 Moon Moths are a winged, insectoid species who can cast spells by striking foes
-in melee combat. They catch fire very easily.
+in melee combat.
 %%%%
 Mountain Dwarf
 

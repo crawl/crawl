@@ -52,7 +52,7 @@ mutations:
     MUT_SAFE_SPELLS: 1
     MUT_ANTENNAE: 2
     MUT_BIG_WINGS: 1
-    MUT_FLAMMABILITY: 1
+    MUT_DISTURBED_MAGIC: 1
     MUT_INEFFICIENT_MAGIC: 1
 recommended_jobs:
   - gladiator
