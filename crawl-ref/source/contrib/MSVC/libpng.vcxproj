@@ -42,6 +42,7 @@
   </PropertyGroup>
   <Import Project="zlib.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="Common.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -119,58 +120,50 @@
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|x64'">
     <LinkIncremental>false</LinkIncremental>
     <CustomBuildBeforeTargets />
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
+    <CustomBuildAfterTargets>PostBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -199,11 +192,23 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -232,11 +237,23 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|Win32'">
     <ClCompile>
@@ -265,8 +282,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|x64'">
     <ClCompile>
@@ -295,8 +325,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -325,11 +368,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -358,11 +413,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>16</Version>
-      <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">
     <ClCompile>
@@ -396,8 +463,21 @@
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|x64'">
     <ClCompile>
@@ -431,8 +511,21 @@
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)..\$(ProjectName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\$(ProjectName).dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(ProjectName).dll to the source directory</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>must_not_exist_8ded4825-b5e8-46c0-a185-dd993a750c74</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetDir)$(ProjectName).dll</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\libpng\png.c">

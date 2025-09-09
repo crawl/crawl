@@ -8,12 +8,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\freetype\include;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\contrib\sdl2\include;$(ProjectDir)..\contrib\sdl2-image;$(ProjectDir)..\contrib\libpng;$(ProjectDir)..\contrib\freetype\include;$(ProjectDir)..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>USE_TILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;libpng.lib;zlib.lib;freetype.lib;opengl32.lib;winmm.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\contrib\bin\8.0\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

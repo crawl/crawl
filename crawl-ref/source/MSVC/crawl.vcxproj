@@ -50,8 +50,8 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="Tiles.props" Condition="'$(Configuration)'=='Debug Tiles' Or '$(Configuration)'=='Release Tiles'"/>
-    <Import Project="Console.props" Condition="'$(Configuration)'=='Debug Console' Or '$(Configuration)'=='Release Console'"/>
+    <Import Project="Tiles.props" Condition="'$(Configuration)'=='Debug Tiles' Or '$(Configuration)'=='Release Tiles'" />
+    <Import Project="Console.props" Condition="'$(Configuration)'=='Debug Console' Or '$(Configuration)'=='Release Console'" />
     <Import Project="Release.props" />
     <Import Project="Common.props" />
   </ImportGroup>
@@ -99,6 +99,7 @@ python.exe util/gen-all.py</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">
@@ -123,6 +124,7 @@ python.exe util/gen-all.py</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">
@@ -149,6 +151,7 @@ python.exe util/gen-all.py</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">
@@ -175,6 +178,7 @@ python.exe util/gen-all.py</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">
@@ -199,6 +203,7 @@ python.exe util/gen-all.py</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Console|Win32'">
@@ -223,6 +228,7 @@ python.exe util/gen-all.py</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">
@@ -249,6 +255,7 @@ python.exe util/gen-all.py</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Console|x64'">
@@ -275,6 +282,7 @@ python.exe util/gen-all.py</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\contrib\bin\$(PlatformName)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -314,7 +322,8 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\ctest.cc" />
     <ClCompile Include="..\dactions.cc" />
     <ClCompile Include="..\database.cc">
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\dbg-asrt.cc" />
     <ClCompile Include="..\dbg-maps.cc" />
@@ -434,11 +443,13 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\player-stats.cc" />
     <ClCompile Include="..\potion.cc" />
     <ClCompile Include="..\prebuilt\levcomp.lex.cc">
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <PreprocessorDefinitions>YY_NO_UNISTD_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\prebuilt\levcomp.tab.cc">
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\precision-menu.cc" />
     <ClCompile Include="..\prompt.cc" />
@@ -553,7 +564,8 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\throw.cc" />
     <ClCompile Include="..\tilebuf.cc" />
     <ClCompile Include="..\rltiles\tiledef-unrand.cc">
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\tilecell.cc" />
     <ClCompile Include="..\tiledgnbuf.cc" />
