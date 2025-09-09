@@ -1097,7 +1097,10 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     makhleb_celebrant_bloodrite();
     _maybe_blood_hastes_allies();
     if (!is_tabcasting())
+    {
+        you.apply_berserk_penalty = true;
         you.turn_is_over = true;
+    }
     alert_nearby_monsters();
 
     return cast_result;

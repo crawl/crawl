@@ -3279,6 +3279,7 @@ void tile_item_pickup(int idx, bool part)
         if (quantity > env.item[idx].quantity)
             quantity = env.item[idx].quantity;
     }
+    you.apply_berserk_penalty = true;
     pickup_single_item(idx, quantity);
 }
 
@@ -3301,11 +3302,14 @@ void tile_item_drop(int idx, bool partdrop)
         if (quantity > you.inv[idx].quantity)
             quantity = you.inv[idx].quantity;
     }
+    you.apply_berserk_penalty = true;
     drop_item(idx, quantity);
 }
 
 void tile_item_use(int idx)
 {
+    you.apply_berserk_penalty = true;
+
     item_def &item = you.inv[idx];
 
     // Equipped?

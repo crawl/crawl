@@ -2913,6 +2913,7 @@ bool activate_talent(const talent& tal, dist *target)
         case spret::fail:
             if (!testbits(abil.flags, abflag::quiet_fail))
                 mpr("You fail to use your ability.");
+            you.apply_berserk_penalty = true;
             you.turn_is_over = true;
             if (mp_cost)
                 refund_mp(mp_cost);
@@ -4083,7 +4084,10 @@ static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp
         update_turn_count();
     }
     else if (abil.ability != ABIL_WU_JIAN_WALLJUMP)
+    {
         you.turn_is_over = true;
+        you.apply_berserk_penalty = true;
+    }
 }
 
 int choose_ability_menu(const vector<talent>& talents)
