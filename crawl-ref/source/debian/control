@@ -42,8 +42,6 @@ Description: Dungeon Crawl, a text-based roguelike game
 Package: crawl-tiles-data
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version})
-Conflicts: crawl-tiles (<< 2:0.11.1-1)
-Replaces: crawl-tiles (<< 2:0.11.1-1)
 Recommends: crawl-tiles
 Description: Dungeon Crawl, a text-based roguelike game (tile data files)
  Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
