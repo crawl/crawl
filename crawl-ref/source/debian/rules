@@ -5,14 +5,7 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
-
-ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
-  ifeq ($(DEB_HOST_ARCH),powerpc)
-	## g++-4.4 has an ICE there.
-	DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) noopt
-  endif
-endif
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 ifneq (,$(findstring amd64,$(DEB_HOST_ARCH)))
   LTO=y
