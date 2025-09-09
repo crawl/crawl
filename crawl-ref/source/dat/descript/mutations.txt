@@ -796,12 +796,15 @@ marker for as-yet-undiscovered items.
 %%%%
 contact casting mutation
 
-You have a chance to cast spells when attacking foes in melee combat. Higher
-level spells have a lower chance of being cast. Your spellcasting skill
-increases this chance, but no longer increases your MP reserves. Spells cast in
-this manner ignore silencing effects and consume no MP. This effect can only
-happen once per turn. Additionally, channeled spells continue channeling when
-attacking in melee.
+You have a chance to cast spells when attacking foes in melee combat. Spells
+cast in this manner ignore silencing effects, consume no MP and never miscast
+unless caused by godly wrath. This effect can only happen once per turn. 
+
+Higher level spells have a lower chance of being cast. Your spellcasting skill
+increases this chance, but no longer increases your MP reserves. Having a high
+failure chance also reduces this chance.
+
+Additionally, channelled spells continue channelling when attacking in melee.
 %%%%
 safe spells mutation
 

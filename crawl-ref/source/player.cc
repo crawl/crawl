@@ -9358,5 +9358,11 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
     int chance = base * maxskl + scaling * skl;
     chance = random ? div_rand_round(chance, div * maxskl) : chance / (div * maxskl);
 
+    //reduce chance for spells with high miscast chance
+    constexpr int failthreshold = 5;
+    int failchance = failure_rate_to_int(raw_spell_fail(spell));
+    if (failchance > failthreshold)
+        chance = max(0, chance - (failchance - failthreshold) * 2);
+
     return min(100, chance);
 }

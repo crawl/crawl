@@ -1271,7 +1271,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
-        && !fake_spell)
+        && !fake_spell
+        && !is_tabcasting())
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) == 100)
         {
@@ -2311,6 +2312,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (actual_spell)
     {
         int spfl = random2avg(100, 3);
+
+        //never miscast normally when tabcasting
+        //god wrath should still cause it to happen
+        if (is_tabcasting())
+            spfl = 100;
 
         if (!you_worship(GOD_SIF_MUNA)
             && you.penance[GOD_SIF_MUNA] && one_chance_in(20))

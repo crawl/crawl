@@ -545,7 +545,9 @@ protected:
                         : current_action == action::imbue ? "(Imbue)   "
                         : current_action == action::inscribe ? "(Inscribe)"
                         : "(Show)    ",
-                        you.divine_exegesis ? "         " : "Failure  "));
+                        you.divine_exegesis ? "         "
+                        : current_action == action::inscribe ? "Chance   "
+                        : "Failure  " ));
     }
 
 private:
@@ -826,6 +828,12 @@ private:
 
                 const int width = strwidth(formatted_string::parse_string(fail_string).tostring());
                 desc << fail_string << string(13 - width, ' ');
+            }
+            else if (current_action == action::inscribe)
+            {
+                desc << chop_string(make_stringf("%d%%",
+                    you.get_tabcast_chance(false, false, spell.spell)),
+                    show_enkindle ? 13 : 9);
             }
             else
             {

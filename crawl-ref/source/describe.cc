@@ -4754,9 +4754,9 @@ static string _player_spell_desc(spell_type spell)
                     << "%";
         if (chance != maxchance)
         {
-            description << " ("
+            description << " (max "
                         << maxchance
-                        << "% at max spellcasting skill)";
+                        << "%)";
         }
         description << ".\n";
     }
