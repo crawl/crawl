@@ -255,6 +255,11 @@ local function get_monster_info(dx,dy,no_move)
     info.attack_type = AF_FIRE
   end
 
+  -- We can possibly move towards warded enemies, but not attack them while immune
+  if m:is_damage_immune() and m:is("warding") then
+    info.attack_type = AF_MOVES
+  end
+
   if info.attack_type == AF_MOVES and not will_tab(0,0,dx,dy) then
     info.attack_type = AF_FAILS
   end
@@ -285,7 +290,7 @@ local function compare_monster_info(m1, m2)
   return false
 end
 
-local function is_candidate_for_attack(x,y)
+local function is_candidate_for_attack(x,y, no_move)
   m = monster.get_monster_at(x, y)
   --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:name()) end
   if not m then
@@ -302,7 +307,7 @@ local function is_candidate_for_attack(x,y)
     end
     return false
   end
-  if m:is_damage_immune() then
+  if m:is_damage_immune() and (no_move or not m:is("warding")) then
     return false
   end
   if m:attitude() == ATT_HOSTILE
@@ -320,7 +325,7 @@ local function get_target(no_move)
   best_info = nil
   for x = -los_radius,los_radius do
     for y = -los_radius,los_radius do
-      if is_candidate_for_attack(x, y) then
+      if is_candidate_for_attack(x, y, no_move) then
         new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then
           bestx = x
