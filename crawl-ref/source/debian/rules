@@ -23,6 +23,9 @@ endif
 ifneq (,$(findstring i386,$(DEB_HOST_ARCH)))
   LTO=y
 endif
+ifneq (,$(findstring arm64,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
 
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
