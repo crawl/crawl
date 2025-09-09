@@ -2977,8 +2977,8 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DISTURBED_MAGIC, 0, 1, mutflag::bad,
-  "disturbed magic",
-  {"You cannot cast spells in rapid succession.", "", ""},
+  "arduous magic",
+  {"You cannot cast spells manually in rapid succession.", "", ""},
   {"You feel your magic become disturbed.", "", ""},
   {"You feel your magic become less disturbed.", "", ""},
 },

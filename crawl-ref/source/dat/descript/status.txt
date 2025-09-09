@@ -1247,4 +1247,5 @@ number of walls surrounding you.
 %%%%
 -MCast status
 
-You are unable to cast spells manually.
+You are unable to cast spells manually until you spend a few turns without
+moving.

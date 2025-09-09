@@ -810,10 +810,10 @@ safe spells mutation
 
 You are not damaged by your own spells.
 %%%%
-disturbed magic mutation
+arduous magic mutation
 
-When you cast a spell manually, you become unable to cast spells manually again
-for a few turns.
+Casting spells manually is taxing on you, requiring you to spend a few turns
+without moving to manually cast again.
 %%%%
 inefficient magic mutation
 
