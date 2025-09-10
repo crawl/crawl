@@ -2935,7 +2935,8 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
     vector<coord_def> to_check;
     to_check.push_back(agent.pos());
 
-    for (radius_iterator ri(agent.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    const int range = spell_range(SPELL_ARCJOLT, &agent);
+    for (radius_iterator ri(agent.pos(), range, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
         to_check.push_back(*ri);
 
     return _get_chain_targets(agent, to_check, actual);
