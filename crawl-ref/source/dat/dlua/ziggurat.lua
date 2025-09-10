@@ -488,7 +488,7 @@ mset(with_props(spec_fn(function ()
          "boggart w:" .. d .. " / worldbinder w:" .. d .. " / " ..
          "rakshasa / broodmother / shadow demon / deep elf demonologist w:5 / " ..
          "dread lich w:5 / fravashi w:5 / oblivion hound w:5 / " ..
-         "elemental wellspring w:5 / glowing orange brain w:" .. e .. " / " ..
+         "glowing orange brain w:" .. e .. " / " ..
          "demonspawn corrupter w:" .. e .. " / " ..
          "halazid warlock w:" .. f .. " / nekomata w:" .. f
 end), { weight = 2 }))
