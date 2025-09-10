@@ -606,7 +606,7 @@ void throw_it(quiver::action &a)
 {
     const item_def *primary = a.get_launcher();
     const item_def *offhand = you.offhand_weapon();
-    if (!primary || !is_range_weapon(*offhand))
+    if (offhand && (!primary || !is_range_weapon(*offhand)))
         offhand = nullptr;
     const item_def *launcher = primary;
     const item_def *alt_launcher = offhand;
