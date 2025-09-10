@@ -1071,6 +1071,7 @@ static int _describe_monster(const string &key, const string &suffix,
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
+    mi.props[FAKE_MON_KEY] = true;
     return describe_monster(mi, footer);
 }
 
