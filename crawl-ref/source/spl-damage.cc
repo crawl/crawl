@@ -1103,7 +1103,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 
 bool mons_should_fire_permafrost(int pow, const actor &agent)
 {
-    set<coord_def> targets = permafrost_targets(agent, pow, false);
+    set<coord_def> targets = permafrost_targets(agent, false);
     bool ever_good = false;
     for (auto target : targets)
     {
@@ -1116,7 +1116,7 @@ bool mons_should_fire_permafrost(int pow, const actor &agent)
     return ever_good;
 }
 
-set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
+set<coord_def> permafrost_targets(const actor &caster, bool actual)
 {
     set<coord_def> targets;
 
@@ -1153,7 +1153,7 @@ set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
 
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
 {
-    set<coord_def> maybe_targets = permafrost_targets(caster, pow, true);
+    set<coord_def> maybe_targets = permafrost_targets(caster, true);
     if (caster.is_player())
     {
         set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
@@ -4697,7 +4697,7 @@ void handle_maxwells_coupling()
     mpr("You feel charge building up...");
 }
 
-vector<coord_def> find_bog_locations(const coord_def &center, int pow)
+vector<coord_def> find_bog_locations(const coord_def &center)
 {
     vector<coord_def> bog_locs;
     const int radius = spell_range(SPELL_NOXIOUS_BOG, &you);
@@ -4725,7 +4725,7 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
 }
 spret cast_noxious_bog(int pow, bool fail)
 {
-    vector <coord_def> bog_locs = find_bog_locations(you.pos(), pow);
+    vector <coord_def> bog_locs = find_bog_locations(you.pos());
     if (bog_locs.empty())
     {
         mpr("There are no places for you to create a bog.");

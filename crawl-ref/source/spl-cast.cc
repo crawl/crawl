@@ -1512,7 +1512,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multifireball>(&you,
                                                    _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
-        return make_unique<targeter_bog>(&you, pow);
+        return make_unique<targeter_bog>(&you);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
@@ -1523,7 +1523,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_BOULDER:
         return make_unique<targeter_boulder>(&you, barrelling_boulder_hp(pow));
     case SPELL_PERMAFROST_ERUPTION:
-        return make_unique<targeter_permafrost>(you, pow);
+        return make_unique<targeter_permafrost>(you);
     case SPELL_PETRIFY:
         return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY);
     case SPELL_RIMEBLIGHT:

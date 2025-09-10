@@ -1781,7 +1781,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true; // TODO
 
     case SPELL_PERMAFROST_ERUPTION:
-        return permafrost_targets(you, pow, false).empty();
+        return permafrost_targets(you, false).empty();
 
     default:
         break;

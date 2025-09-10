@@ -98,7 +98,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
 bool mons_should_fire_permafrost(int pow, const actor &agent);
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
-set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual = true);
+set<coord_def> permafrost_targets(const actor &caster, bool actual = true);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
@@ -148,7 +148,7 @@ void handle_maxwells_coupling();
 void end_maxwells_coupling(bool quiet = false);
 
 spret cast_noxious_bog(int pow, bool fail);
-vector<coord_def> find_bog_locations(const coord_def &center, int pow);
+vector<coord_def> find_bog_locations(const coord_def &center);
 
 vector<coord_def> find_near_hostiles(int range, bool affect_invis,
                                      const actor& agent);

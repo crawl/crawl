@@ -708,10 +708,10 @@ bool targeter_transference::affects_monster(const monster_info& mon)
             && !mons_is_tentacle_or_tentacle_segment(mon.type);
 }
 
-targeter_permafrost::targeter_permafrost(const actor &act, int power) :
+targeter_permafrost::targeter_permafrost(const actor &act) :
     targeter_smite(&act)
 {
-    possible_centres = permafrost_targets(act, power, false);
+    possible_centres = permafrost_targets(act, false);
     for (coord_def t : possible_centres)
     {
         targets.insert(t);
@@ -1863,10 +1863,10 @@ aff_type targeter_starburst::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_bog::targeter_bog(const actor *a, int pow)
+targeter_bog::targeter_bog(const actor *a)
     : targeter_multiposition(a, { })
 {
-    auto seeds = find_bog_locations(a->pos(), pow);
+    auto seeds = find_bog_locations(a->pos());
     for (auto &c : seeds)
         affected_positions.insert(c);
 }
