@@ -562,7 +562,7 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
         return false;
     }
     else if (grid_distance(agent.pos(), target)
-             > spell_range(SPELL_ELECTRIC_CHARGE, 50))
+             > spell_range(SPELL_ELECTRIC_CHARGE, &agent))
     {
         if (fail_reason)
             *fail_reason = "That's out of range!";
@@ -1722,7 +1722,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
     }
 
     if (grid_distance(where, you.pos())
-        > spell_range(SPELL_GOLUBRIAS_PASSAGE, pow))
+        > spell_range(SPELL_GOLUBRIAS_PASSAGE, &you, pow))
     {
         mpr("That's out of range!");
         return spret::abort;
@@ -1817,7 +1817,7 @@ static int _disperse_monster(monster& mon, int pow)
 spret cast_dispersal(int pow, bool fail)
 {
     fail_check();
-    const int radius = spell_range(SPELL_DISPERSAL, pow);
+    const int radius = spell_range(SPELL_DISPERSAL, &you, pow);
     if (!apply_monsters_around_square([pow] (monster& mon) {
             return _disperse_monster(mon, pow);
         }, you.pos(), radius))
@@ -2249,7 +2249,7 @@ int piledriver_path_distance(const coord_def& target, bool actual)
     {
         // Abort if we leave the player's LoS without finding something to hit.
         if (!you.see_cell_no_trans(pos)
-            || grid_distance(target, pos) > spell_range(SPELL_PILEDRIVER, 100))
+            || grid_distance(target, pos) > spell_range(SPELL_PILEDRIVER))
         {
             return 0;
         }

@@ -383,7 +383,7 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
         return spret::abort;
 
     coord_def delta = c - you.pos();
-    passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
+    passwall_path p(you, delta, spell_range(SPELL_PASSWALL, &you));
     string fail_msg;
     bool valid = p.is_valid(&fail_msg);
     if (!p.spell_succeeds())

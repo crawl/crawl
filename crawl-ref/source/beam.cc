@@ -872,7 +872,7 @@ void bolt::bounce()
     // shadows, Robe of Night)
     if (bounces == 1)
     {
-        extra_range_used -= spell_range(origin_spell, ench_power, true, true)
+        extra_range_used -= spell_range(origin_spell, agent(), ench_power, true)
                             - range;
     }
 

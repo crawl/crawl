@@ -27,6 +27,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
@@ -1017,14 +1018,53 @@ int spell_power_cap(spell_type spell)
     return _seekspell(spell)->power_cap;
 }
 
-int spell_range(spell_type spell, int pow,
-                bool allow_bonus, bool ignore_shadows)
+/**
+ * Return the range of a given spell, possibly as cast by a specific actor at a
+ * specific power.
+ *
+ * @param spell     The spell being queried.
+ * @param caster    The caster of the spell (is nullptr by default, which will
+ *                  ignore any potential Vehumet range bonuses)
+ * @param pow       The power the spell is being cast at. (is -1 by default,
+ *                  which will use the default spellpower of the caster, if one
+ *                  has been specified, and 0 otherwise.)
+ * @param ignore_los_reductions     Whether to calculate range as if the player had no
+ *                                  active temporary reductions to their LoS (ie: from
+ *                                  scarf of shadows or Primordial Nightfall).
+ */
+int spell_range(spell_type spell, const actor* caster, int pow,
+                bool ignore_los_reductions)
+{
+    // Only bother to calculate unspecified power if the spell has variable
+    // range. (Since almost no spells do, this will usually be irrelevant.)
+    if (spell_has_variable_range(spell) && pow == -1)
+    {
+        if (!caster)
+            pow = 0;
+        else if (caster->is_monster())
+            pow = mons_spellpower(*caster->as_monster(), spell);
+        else
+            pow = calc_spell_power(spell);
+    }
+
+    const bool check_veh_bonus = caster && (caster->is_player()
+                                            || (caster->type == MONS_SPELLSPARK_SERVITOR
+                                                && caster->as_monster()->summoner == MID_PLAYER));
+
+    return calc_spell_range(spell, pow, check_veh_bonus, ignore_los_reductions);
+}
+
+// 'Raw' internal spellpower calculation. In most cases, it should be more
+// convenient to use spell_range() so that the caller doesn't need to determine
+// Vehumet range bonus applicability themselves.
+int calc_spell_range(spell_type spell, int pow,
+                     bool allow_veh_bonus, bool ignore_los_reductions)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
 
-    const int range_cap = ignore_shadows ? you.normal_vision
-                                         : you.current_vision;
+    const int range_cap = ignore_los_reductions ? you.normal_vision
+                                                : you.current_vision;
 
     ASSERT(maxrange >= minrange);
 
@@ -1032,7 +1072,7 @@ int spell_range(spell_type spell, int pow,
     if (maxrange < 0)
         return maxrange;
 
-    if (allow_bonus
+    if (allow_veh_bonus
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
@@ -1600,9 +1640,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (!in_bounds(you.pos()) || !you.on_current_level)
         return true;
 
-    const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell);
+    const int range = calc_spell_range(spell, pow, true);
 
     switch (spell)
     {
@@ -1935,8 +1975,7 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
 
 bool spell_has_variable_range(spell_type spell)
 {
-    return spell_range(spell, 0, false)
-            != spell_range(spell, spell_power_cap(spell), false);
+    return _seekspell(spell)->min_range != _seekspell(spell)->max_range;
 }
 
 bool spell_can_be_enkindled(spell_type spell)

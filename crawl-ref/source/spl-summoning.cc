@@ -1790,7 +1790,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
         if (slot.spell == SPELL_NO_SPELL)
             continue;
 
-        int range = spell_range(slot.spell, 100, false);
+        int range = spell_range(slot.spell, servitor);
         if (range < shortest_range)
             shortest_range = range;
     }
@@ -2177,7 +2177,7 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                              bool fail, bool is_shadow)
 {
     if (grid_distance(where, caster->pos())
-        > spell_range(SPELL_FULMINANT_PRISM, pow))
+        > spell_range(SPELL_FULMINANT_PRISM, caster, pow))
     {
         if (caster->is_player())
             mpr("That's too far away.");

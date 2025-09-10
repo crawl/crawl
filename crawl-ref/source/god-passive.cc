@@ -1699,7 +1699,7 @@ static coord_def _find_shadow_prism_position(coord_def& aim)
         {
             coord_def p = you.pos() + targ_spots[i].first;
             if (p != valid_spots[j]
-                && grid_distance(p, valid_spots[j]) <= spell_range(SPELL_SHADOW_PRISM, 100)
+                && grid_distance(p, valid_spots[j]) <= spell_range(SPELL_SHADOW_PRISM)
                 && cell_see_cell(p, valid_spots[j], LOS_NO_TRANS)
                 && cell_see_cell(you.pos(), valid_spots[j], LOS_NO_TRANS)
                 && cell_see_cell(you.pos(), p, LOS_NO_TRANS))

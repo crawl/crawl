@@ -1735,7 +1735,7 @@ int monster_info::range() const
     const item_def *wand = inv[MSLOT_WAND].get();
     if (wand && is_offensive_wand(*wand)) {
         const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
-        range = max(range, calc_spell_range(spell, spell_power_cap(spell), true, true));
+        range = max(range, calc_spell_range(spell, spell_power_cap(spell), false, true));
     }
     return range;
 }

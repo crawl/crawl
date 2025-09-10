@@ -1120,7 +1120,7 @@ set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
 {
     set<coord_def> targets;
 
-    const int range = spell_range(SPELL_PERMAFROST_ERUPTION, pow);
+    const int range = spell_range(SPELL_PERMAFROST_ERUPTION, &caster);
     vector<coord_def> all_hostiles = find_near_hostiles(range, actual, caster);
     if (all_hostiles.empty())
         return targets;
@@ -1911,7 +1911,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
 {
     fail_check();
 
-    const int range = spell_range(SPELL_SCORCH, pow);
+    const int range = spell_range(SPELL_SCORCH, &agent);
     auto targeter = make_unique<targeter_scorch>(agent, range, true);
     actor *targ = nullptr;
     int seen = 0;
@@ -3014,7 +3014,7 @@ vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &t
 
 vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
 {
-    const int range = spell_range(SPELL_PLASMA_BEAM, pow);
+    const int range = spell_range(SPELL_PLASMA_BEAM, &agent, pow);
     int maxdist = 0;
     vector<actor*> target_actors;
     vector <coord_def> targets;
@@ -3273,7 +3273,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     if (!in_bounds(prev))
         charges = 0;
 
-    targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+    targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, caster),
                                  prev);
     hitfunc.set_aim(aim);
 
@@ -3819,7 +3819,7 @@ void handle_flame_wave(int lvl)
         finalize_mp_cost();
     }
 
-    if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
+    if (lvl >= spell_range(SPELL_FLAME_WAVE, &you))
     {
         mpr("Your wave of flame reaches its maximum intensity and dissipates.");
         stop_channelling_spells(true);
@@ -3887,7 +3887,7 @@ bool handle_searing_ray(actor& agent, int turn)
 
     bolt beam;
     beam.thrower = agent.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    beam.range   = calc_spell_range(SPELL_SEARING_RAY, pow);
+    beam.range   = spell_range(SPELL_SEARING_RAY, &agent);
     beam.source  = agent.pos();
     beam.target  = agent.props[SEARING_RAY_TARGET_KEY].get_coord();
 
@@ -3973,7 +3973,7 @@ dice_def glaciate_damage(int pow, int eff_range)
 
 spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
-    const int range = spell_range(SPELL_GLACIATE, pow);
+    const int range = spell_range(SPELL_GLACIATE, caster, pow);
     targeter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
@@ -4060,7 +4060,7 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
 spret cast_starburst(int pow, bool fail, bool is_tracer)
 {
-    int range = spell_range(SPELL_STARBURST, pow);
+    int range = spell_range(SPELL_STARBURST, &you);
 
     vector<coord_def> offsets = { coord_def(range, 0),
                                 coord_def(range, range),
@@ -4277,7 +4277,7 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
 
 spret cast_hailstorm(int pow, bool fail, bool tracer)
 {
-    const int range = calc_spell_range(SPELL_HAILSTORM, pow);
+    const int range = spell_range(SPELL_HAILSTORM, &you);
     // used only for vulnerability check, not for the actual targeting
     auto hitfunc = find_spell_targeter(SPELL_HAILSTORM, pow, range);
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
@@ -4356,7 +4356,7 @@ static void _imb_actor(actor * act, int pow, coord_def source)
 
 spret cast_imb(int pow, bool fail)
 {
-    int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
+    int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, &you);
     auto hitfunc = find_spell_targeter(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow, range);
 
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
@@ -4486,8 +4486,8 @@ vector<coord_def> find_ramparts_walls()
 {
     vector<coord_def> wall_locs;
     for (radius_iterator ri(you.pos(),
-            spell_range(SPELL_FROZEN_RAMPARTS, -1), C_SQUARE,
-                                                    LOS_NO_TRANS, true);
+            spell_range(SPELL_FROZEN_RAMPARTS, &you), C_SQUARE,
+                                                      LOS_NO_TRANS, true);
         ri; ++ri)
     {
         const auto feat = env.grid(*ri);
@@ -4543,7 +4543,7 @@ void end_frozen_ramparts()
     const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
     ASSERT(in_bounds(pos));
 
-    for (radius_iterator ri(pos, spell_range(SPELL_FROZEN_RAMPARTS, -1),
+    for (radius_iterator ri(pos, spell_range(SPELL_FROZEN_RAMPARTS, &you),
                             C_SQUARE, false); ri; ri++)
     {
         env.pgrid(*ri) &= ~FPROP_ICY;
@@ -4699,7 +4699,7 @@ void handle_maxwells_coupling()
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)
 {
     vector<coord_def> bog_locs;
-    const int radius = spell_range(SPELL_NOXIOUS_BOG, pow);
+    const int radius = spell_range(SPELL_NOXIOUS_BOG, &you);
 
     for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
@@ -5253,7 +5253,7 @@ void unleash_fortress_blast(actor& caster)
     blast.target = caster.pos();
     blast.origin_spell = SPELL_FORTRESS_BLAST;
     blast.is_explosion = true;
-    blast.ex_size = spell_range(SPELL_FORTRESS_BLAST, 0);
+    blast.ex_size = spell_range(SPELL_FORTRESS_BLAST, &caster);
 
     blast.explode(true, true);
 }
