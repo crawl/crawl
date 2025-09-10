@@ -75,7 +75,10 @@ struct beam_tracer
     {
         UNUSED(bolt, mon);
     }
-    virtual void blocked(string message) {}
+    virtual void blocked(string message)
+    {
+        UNUSED(message);
+    }
 };
 
 // Used when casting a spell to check if the spell should be aborted
