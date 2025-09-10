@@ -121,7 +121,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
-    4, 11, // capped at LOS, yet this 11 matters since range increases linearly
+    LOS_RADIUS, LOS_RADIUS,
     20,
     TILEG_LIGHTNING_BOLT,
 },
@@ -2124,7 +2124,7 @@ static const struct spell_desc spelldata[] =
     spflag::target | spflag::not_self | spflag::monster,
     3,
     100,
-    2, LOS_RADIUS,
+    LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_BECKONING_GALE,
 },
