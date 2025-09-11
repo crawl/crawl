@@ -30,8 +30,8 @@ aptitudes:
   spellcasting: 0
   conjurations: 1
   hexes: 1
-  summoning: -1
-  forgecraft: -1
+  summoning: 0
+  forgecraft: 0
   necromancy: 0
   translocations: 0
   shapeshifting: 1
@@ -70,4 +70,4 @@ recommended_weapons:
 walking_verb: Flutter
 child_name: Larva
 orc_name: Metamorc
-orcification_msg: Your probocis straightens, and your antennae grow pointier.
+orcification_msg: Your probocis sharpens, and your antennae grow pointier.
