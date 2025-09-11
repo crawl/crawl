@@ -259,6 +259,7 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
+    LemurRobot
     Lamil Lerran
     Jordan Lewis
     Lici
