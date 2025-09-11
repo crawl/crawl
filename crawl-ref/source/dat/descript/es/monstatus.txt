@@ -1,0 +1,33 @@
+%%%%
+fragile as glass monstatus
+
+Esta critura recibe 50% más daño de todo.
+%%%%
+sick monstatus
+
+Esta critura está enfermo y no puede regenerarse naturalmente.
+%%%%
+skewered by barbs monstatus
+
+Esta critura recibirá una cantidad de daño pequeña cada vez que se mueve.
+%%%%
+slow monstatus
+
+Esta critura se mueve y actúa al 66% de su velocidad normal.
+%%%%
+strong monstatus
+
+Los ataques de esta critura hacen 50% más daño.
+%%%%
+unrewarding monstatus
+
+Esta critura no te dará ninguna experiencia ni piedad cuando muere.
+%%%%
+weak monstatus
+
+Los ataques de esta critura hacen 33% menos daño.
+%%%%
+//high-tier stab monstatus
+
+//<blue>Los ataques haces contra esta critura hacerán daño muy aumentado, especialmente si realizados con una espada corta.</blue>
+//%%%%
