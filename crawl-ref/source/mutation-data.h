@@ -2974,13 +2974,15 @@ static const mutation_def mut_data[] =
   {"You are safe from the effects of your own spells.", "", ""},
   {"You become safe from the effects of your own spells.", "", ""},
   {"You are no longer safe from the effects of your own spells.", "", ""},
+  TILEG_MUT_SAFE_SPELLS,
 },
 
-{ MUT_DISTURBED_MAGIC, 0, 1, mutflag::bad,
-  "arduous magic",
+{ MUT_STRENUOUS_MAGIC, 0, 1, mutflag::bad,
+  "strenuous magic",
   {"You cannot cast spells manually in rapid succession.", "", ""},
   {"You feel your magic become disturbed.", "", ""},
   {"You feel your magic become less disturbed.", "", ""},
+  TILEG_MUT_STRENUOUS_MAGIC,
 },
 
 { MUT_INEFFICIENT_MAGIC, 0, 1, mutflag::bad,

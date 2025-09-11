@@ -252,6 +252,8 @@ spellclaws SPELLCLAWS
 mnemophage MNEMOPHAGE
 contact_casting CONTACT_CASTING
 inefficient_magic_1 INEFFICIENT_MAGIC
+strenuous_magic STRENUOUS_MAGIC
+safe_spells SAFE_SPELLS
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

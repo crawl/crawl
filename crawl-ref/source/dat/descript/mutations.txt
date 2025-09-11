@@ -810,7 +810,7 @@ safe spells mutation
 
 You are not damaged by your own spells.
 %%%%
-arduous magic mutation
+strenuous magic mutation
 
 Casting spells manually is taxing on you, requiring you to spend a few turns
 without moving to manually cast again.

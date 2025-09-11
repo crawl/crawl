@@ -1157,7 +1157,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             you.increase_duration(DUR_NO_CAST, 3 + random2(3));
         }
 
-        if (you.has_mutation(MUT_DISTURBED_MAGIC) && !fake_spell
+        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !fake_spell
             && !is_tabcasting() && !you.divine_exegesis)
         {
             you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(4));
