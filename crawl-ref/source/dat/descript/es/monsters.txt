@@ -416,6 +416,11 @@ Executioner
 Un horrible, poderoso y ágil demonio cuya forma está oculta en un remolino de
 hojas de guadaña
 %%%%
+gnoll
+
+Un pariente a los duendes y aliado a los orcos. Está más alto y de alguna 
+manera mejor equipado que los duendes y ve un poco como un perro.
+%%%%
 Hell Sentinel
 
 Un imponente monolito construido y poseído por fuerzas demoníacas. Unos mil
