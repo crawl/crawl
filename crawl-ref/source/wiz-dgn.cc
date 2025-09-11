@@ -17,6 +17,8 @@
 #include "directn.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "dungeon-feature-type.h"
+#include "feature.h"
 #include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
@@ -320,7 +322,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             return debug_make_shop(pos);
 
         if (feat_is_trap(feat))
-            return debug_make_trap(pos);
+            return debug_make_trap(pos, feat);
 
         tile_env.flv(pos).feat = 0;
         tile_env.flv(pos).special = 0;
@@ -450,34 +452,41 @@ void wizard_map_level()
     }
 }
 
-bool debug_make_trap(const coord_def& pos)
+bool debug_make_trap(const coord_def& pos, dungeon_feature_type feat)
 {
     if (env.grid(pos) != DNGN_FLOOR)
     {
-        mpr("You need to be on a floor square to make a trap.");
+        mprf("You can only make a %s on a floor square.",
+             feat_is_trap(feat) ? get_feature_def(feat).name : "trap");
         return false;
     }
 
-    vector<WizardEntry> options;
-    for (int i = TRAP_FIRST_TRAP; i < NUM_TRAPS; ++i)
+    trap_type trap = TRAP_UNASSIGNED;
+    if (!feat_is_trap(feat))
     {
-        auto name = trap_name(static_cast<trap_type>(i));
-        options.emplace_back(WizardEntry(name, i));
+        vector<WizardEntry> options;
+        for (int i = TRAP_FIRST_TRAP; i < NUM_TRAPS; ++i)
+        {
+            auto name = trap_name(static_cast<trap_type>(i));
+            options.emplace_back(WizardEntry(name, i));
+        }
+        sort(options.begin(), options.end());
+        options.emplace_back(WizardEntry('*', "any", TRAP_RANDOM));
+
+        auto menu = WizardMenu("Make which kind of trap?", options);
+        if (!menu.run(true))
+            return false;
+
+        trap = static_cast<trap_type>(menu.result());
     }
-    sort(options.begin(), options.end());
-    options.emplace_back(WizardEntry('*', "any", TRAP_RANDOM));
-
-    auto menu = WizardMenu("Make which kind of trap?", options);
-    if (!menu.run(true))
-        return false;
-
-    auto trap = static_cast<trap_type>(menu.result());
-    place_specific_trap(you.pos(), trap);
+    else
+        trap = trap_type_from_feature(feat);
+    place_specific_trap(pos, trap);
 
     mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
-            : trap_at(you.pos())->name(DESC_A).c_str());
+            : trap_at(pos)->name(DESC_A).c_str());
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
