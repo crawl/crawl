@@ -178,7 +178,7 @@ TAGS:    transparent no_monster_gen
 DEPTH:   Tar, !Tar:$, Zot:1-4
 ORIENT:  centre
 : if you.in_branch("Tar") then
-KMONS:   12 = patrolling bone dragon
+KMONS:   12 = patrolling undertaker
 KMONS:   34 = patrolling tormentor
 KMONS:   56 = patrolling profane servitor
 KMONS:   7 = eidolon
@@ -1046,8 +1046,8 @@ DEPTH:  Tar, !Tar:$
 ORIENT: encompass
 KMONS:  1 = silent spectre
 KMONS:  2 = tormentor / hellion
-KMONS:  3 = eidolon / profane servitor / bone dragon / shadow wraith / \
-            putrid mouth / spectral thing
+KMONS:  3 = eidolon / profane servitor / undertaker w:6 / shadow wraith / \
+            putrid mouth / spectral thing w:14
 KMONS:  } = tzitzimitl / tainted leviathan
 KFEAT:  } = }
 KMASK:  1 = no_trap_gen
@@ -1174,13 +1174,13 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
-# FIXME: southeast chambers are excessively aggressive for little reward.
+# XXX: Too much of this is skippable- there should be another gate.
 NAME:    tar_old
 ORIENT:  encompass
 MONS:    patrolling Ereshkigal, tainted leviathan, profane servitor
 MONS:    shadow wraith, ancient lich / dread lich, putrid mouth
 MONS:    tzitzimitl
-KMONS:   8 = bone dragon
+KMONS:   8 = spectral caustic shrike / spectral hellephant
 KMONS:   9 = oblivion hound
 KMONS:   0 = eidolon
 KMONS:   Z = zombie / draugr w:5 / spectral thing w:5
@@ -1258,7 +1258,7 @@ ENDMAP
 NAME:     tar_mu
 ORIENT:   encompass
 MONS:     patrolling Ereshkigal, tzitzimitl, tainted leviathan, putrid mouth
-MONS:     profane servitor, bone dragon, shadow wraith
+MONS:     profane servitor, undertaker, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
 SUBVAULT: = : tar_mu_maze
@@ -1592,7 +1592,7 @@ ENDMAP
 
 NAME: tar_grunt_big_loot
 TAGS: tar_grunt_big_loot unrand
-MONS: Tzitzimitl / bone dragon, profane servitor / tainted leviathan
+MONS: Tzitzimitl / patrolling undertaker, profane servitor / tainted leviathan
 MONS: ancient lich / dread lich
 MAP
 ..................
@@ -1791,7 +1791,7 @@ ENDMAP
 NAME:     tar_grunt_cathedral
 ORIENT:   encompass
 MONS:     patrolling Ereshkigal, patrolling tzitzimitl, tainted leviathan
-MONS:     oblivion hound, ancient lich / dread lich, bone dragon
+MONS:     oblivion hound, ancient lich / dread lich, undertaker
 MONS:     shadow wraith / eidolon
 NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)

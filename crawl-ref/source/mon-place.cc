@@ -1992,8 +1992,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                            {{ BAND_CAGES, {1, 3}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
     { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6}, true }}}},
-    { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
-                                   {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
     { MONS_GRUNN,            { {}, {{ BAND_OBLIVION_HOUNDS, {2, 4}, true }}}},
@@ -2013,6 +2011,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SPHINX_MARAUDER, { {}, {{ BAND_HARPIES, {0, 1} }}}},
     { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
     { MONS_THERMIC_DYNAMO, { {}, {{ BAND_THERMIC_DYNAMOS, {0, 1} }}}},
+    { MONS_UNDERTAKER, { {}, {{ BAND_UNDERTAKERS, {0, 1} }}}},
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2213,6 +2212,11 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = 1;
         break;
 
+    case MONS_UNDERTAKER:
+        if (x_chance_in_y(3, 4))
+            band_size = 1;
+        break;
+
     default: ;
     }
 
@@ -2289,6 +2293,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
     { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
+    { BAND_UNDERTAKERS,         {{{MONS_UNDERTAKER, 1}}}},
     { BAND_DREAM_SHEEP,         {{{MONS_DREAM_SHEEP, 1}}}},
     { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
     { BAND_ORANGE_DEMONS,       {{{MONS_ORANGE_DEMON, 1}}}},
@@ -2315,7 +2320,6 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_PRESERVER,           {{{MONS_DEEP_TROLL, 10},
                                   {MONS_POLTERGUARDIAN, 2}},
                                 {{MONS_DEEP_TROLL, 1}}}},
-    { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
     { BAND_SIN_BEASTS,          {{{MONS_SIN_BEAST, 1}}}},

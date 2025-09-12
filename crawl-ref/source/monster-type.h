@@ -336,6 +336,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPELLSPARK_SERVITOR,
     MONS_USHABTI,
     MONS_NARGUN,
+    MONS_UNDERTAKER,
     MONS_PLATINUM_PARAGON,
     MONS_WALKING_ALEMBIC,
     MONS_SOLAR_EMBER,
@@ -1395,6 +1396,7 @@ enum monster_type                      // env.mons[].type
     MONS_CLOCKROACH,
     MONS_KOBOLD_GEOMANCER,
     MONS_MOUNTAINSHELL,
+    MONS_UNDERTAKER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

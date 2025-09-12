@@ -191,7 +191,7 @@ function sroom_morgue(e)
     end
 
     if you.absdepth() > 27 then
-        mons[7] = "reaper w:16 / bone dragon w:4"
+        mons[7] = "reaper w:20"
     end
 
     if you.absdepth() > 24 or crawl.x_chance_in_y(you.absdepth() - 20, 5) then

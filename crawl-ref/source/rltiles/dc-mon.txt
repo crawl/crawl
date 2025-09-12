@@ -580,6 +580,7 @@ iron_golem MONS_IRON_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
+undertaker MONS_UNDERTAKER
 armour_echo MONS_ARMOUR_ECHO
 platinum_paragon MONS_PLATINUM_PARAGON
 %rim 1

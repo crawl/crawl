@@ -619,7 +619,7 @@ void oblivion_howl(int time)
     for (int i = 0; i < howlcalled_count; ++i)
     {
         const monster_type howlcalled = random_choose(
-                MONS_BONE_DRAGON, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
+                MONS_UNDERTAKER, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
                 MONS_PUTRID_MOUTH
         );
 

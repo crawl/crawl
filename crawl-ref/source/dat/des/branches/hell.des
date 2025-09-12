@@ -1057,7 +1057,8 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
+KMONS:   H = lich / halazid warlock / shadow dragon / \
+             undertaker / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth

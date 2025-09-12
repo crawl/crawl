@@ -3201,6 +3201,14 @@ ugly thing
 An ugly thing. According to legend, it is the otherworldly spawn of a wizard's
 breeding experiment. Yuck.
 %%%%
+undertaker
+
+The Dungeon's vast repositories of the dead and the unholy realms thereafter
+both require regular restocking and reorganization, far beyond the coordination
+of the restless dead. These corpse-collecting constructs burrow through the
+earth and command divisions of zombified hands to assist them in stealing away
+carrion, and may also violently create new corpses for such purposes.
+%%%%
 unseen horror
 
 A creature rarely seen by anyone; those few who have seen one would rather they

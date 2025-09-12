@@ -1050,6 +1050,10 @@ thrashing horror cast
 
 @The_monster@ churns violently!
 %%%%
+undertaker cast targeted
+
+@The_monster@ reaches out for @target@.
+%%%%
 Flashing Balestra undying armoury cast
 
 A weapon leaps out from @the_monster@ and lunges @at@ @target@!

@@ -1859,6 +1859,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_UNDERTAKER,
+      {
+       { SPELL_BORGNJORS_VILE_CLUTCH, 36, MON_SPELL_MAGICAL  | MON_SPELL_LONG_RANGE },
+      }
+    },
+
     // ('*') Concentrated orbs.
     {  MST_WRETCHED_STAR,
       {

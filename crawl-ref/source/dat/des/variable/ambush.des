@@ -43,7 +43,7 @@ KMONS:    & = hellion / tormentor / brimstone fiend w:5
 : elseif you.in_branch("Tar") then
 KMONS:    0 = shadow wraith / spectral thing / shadow dragon zombie w:2
 KMONS:    9 = eidolon / putrid mouth w:5
-KMONS:    8 = bone dragon / profane servitor / tainted leviathan w:5
+KMONS:    8 = undertaker / profane servitor / tainted leviathan w:5
 KMONS:    & = tormentor / ancient lich / dread lich
 : elseif you.in_branch("Coc") then
 KMONS:    0 = simulacrum / frost giant w:5 / ice dragon zombie w:2

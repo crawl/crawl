@@ -2943,7 +2943,7 @@ vvvvvvvvvvvvv....v??llv??llv??llvvvvvvG.GvvvWWWWWWW.......v
 vvvvvlllvvvvv....v?.zlv?.zlv?.zlvvvv.......vvWWWWWW%.mmmm.v
 vvv.......vvv....v....+....+....vvv.........vvWWWWWWWm*|m.v
 vv.........vv....v....+....+....vv...........vWWWWWmWW*|m.v
-v..ccc.ccc..vv++vvv++vvvvvvvv++vvv...R.Q.R...vvWWWWmWWZ|m.v
+v..ccc.ccc..vv++vvv++vvvvvvvv++vvv...R.Q.R...vvWWWWmWWP|m.v
 v...lc.cl...v...................vG...........GvWWWWmmmmmm.v
 v..z.c.c.z..+...................+......U......+...........v
 v...........v...................vG...........Gv...........v
@@ -3182,8 +3182,8 @@ SUBST:  2 = ., ' = 2, " = 4
 : else
 MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
 MONS:   royal mummy
-MONS:   mummy priest / ushabti w:6
-MONS:   guardian mummy ; long sword | great sword | \
+MONS:   mummy priest / patrolling undertaker w:3
+MONS:   reaper w:3 / guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
 MONS:   bog body / mummy w:5 / soul eater w:5 / guardian mummy
 MONS:   generate_awake guardian sphinx
@@ -3273,22 +3273,26 @@ KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
 KMONS:   Q = flayed ghost / shadowghast w:20
 # Boss tier monsters.
-: if crawl.one_chance_in(4) then
+: if crawl.one_chance_in(5) then
 KMONS:   R = Khufu, royal mummy
 KMONS:   S = mummy priest
 KMONS:   T = guardian mummy
-: elseif crawl.one_chance_in(3) then
+: elseif crawl.one_chance_in(4) then
 KMONS:   R = Jory w:5 / vampire bloodprince, vampire bloodprince
 KMONS:   S = undying armoury / vampire mage
 KMONS:   T = vampire knight / jiangshi
-: elseif crawl.coinflip() then
+: elseif crawl.one_chance_in(3) then
 KMONS:   R = ancient lich / dread lich
 KMONS:   S = flayed ghost
 KMONS:   T = phantasmal warrior
-: else
+: elseif crawl.coinflip()
 KMONS:   R = curse skull
 KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
+: else
+KMONS:   R = patrolling undertaker band
+KMONS:   S = reaper
+KMONS:   T = soul eater
 : end
 KFEAT:   R = enter_tomb
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha

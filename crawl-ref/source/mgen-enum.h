@@ -117,7 +117,6 @@ enum band_type
     BAND_DIRE_ELEPHANTS,
     BAND_SIMULACRA,
     BAND_SPECTRALS,
-    BAND_BONE_DRAGONS,
     BAND_MIXED_SPIDERS,
     BAND_ORANGE_DEMONS,
     BAND_OBLIVION_HOUNDS,
@@ -145,6 +144,7 @@ enum band_type
     BAND_MIXED_WRAITHS,
     BAND_BES_KEMWAR,
     BAND_ROCK_FISH,
+    BAND_UNDERTAKERS,
     NUM_BANDS                   // always last
 };
 

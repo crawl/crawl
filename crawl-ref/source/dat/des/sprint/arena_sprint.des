@@ -506,7 +506,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "profane servitor w:20 / angel / daeva / cherub / seraph w:5",
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
-                "moth of wrath / w:20 ettin", "orb spider", "fire crab",
+                "moth of wrath / w:20 ettin", "orb spider", "undertaker",
                 "chonchon",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
@@ -576,7 +576,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "profane servitor w:25 / angel / daeva / fravashi w:5 /\
                     cherub / seraph",
                 -- Gimmicks
-                "neqoxec", "chonchon", "catoblepas",
+                "undertaker", "chonchon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "nekomata",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth",
