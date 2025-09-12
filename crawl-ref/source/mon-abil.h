@@ -11,6 +11,7 @@
 #define BORIS_ORB_KEY "boris orb key"
 
 #define NOBODY_MEMORIES_KEY "nobody_memories"
+#define NOBODY_MAX_MEMORIES 3
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
 
 #define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
