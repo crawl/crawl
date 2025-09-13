@@ -109,5 +109,8 @@ enum attribute_type
     ATTR_DOOM,                 // How much Doom the player has accrued
     ATTR_OSTRACISM,            // How much your piety is temporarily capped by
     ATTR_LAST_CONTAM,          // Timestamp of when contam was last inflicted
+    ATTR_TABCAST_LIMIT,        // Number of times we can tabcast this turn
+    ATTR_TABCAST_SPELL,        // Spell to cast when tabcasting
+    ATTR_TABCASTING,           // Are we currently tabcasting?
     NUM_ATTRIBUTES
 };

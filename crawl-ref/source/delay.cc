@@ -333,6 +333,31 @@ bool ImprintDelay::try_interrupt(bool /*force*/)
     return true;
 }
 
+bool ChooseTabcastSpellDelay::try_interrupt(bool force)
+{
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
+    {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep inscribing your contact spell?", false, 0, false))
+        {
+            interrupt = true;
+        }
+    }
+
+    if (interrupt)
+    {
+        mpr("You stop inscribing your contact spell.");
+        return true;
+    }
+    return false;
+}
+
 void stop_delay(bool stop_relocations, bool force)
 {
     if (you.delay_queue.empty())
@@ -499,6 +524,12 @@ void ImprintDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
          wpn.name(DESC_THE).c_str());
+}
+
+void ChooseTabcastSpellDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to inscribe %s as your contact spell.",
+         spell_title(spell));
 }
 
 void TransformDelay::start()
@@ -880,6 +911,12 @@ void ImprintDelay::finish()
     mprf("You finish imprinting the physical structure of %s upon your paragon.",
             wpn.name(DESC_THE).c_str());
     you.props[PARAGON_WEAPON_KEY].get_item() = wpn;
+}
+
+void ChooseTabcastSpellDelay::finish()
+{
+    mpr("You finish inscribing your contact spell.");
+    set_tabcast_spell(spell);
 }
 
 bool TransformDelay::invalidated()

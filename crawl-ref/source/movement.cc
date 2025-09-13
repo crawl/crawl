@@ -777,6 +777,8 @@ static void _apply_move_time_taken()
         you.duration[DUR_NO_HOP] += you.time_taken;
     if (you.duration[DUR_MESMERISM_COOLDOWN])
         you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
+    if (you.duration[DUR_NO_MANUAL_CAST])
+        you.duration[DUR_NO_MANUAL_CAST] += you.time_taken;
 }
 
 // The "first square" of rampaging ordinarily has no time cost, and the "second

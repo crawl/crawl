@@ -121,6 +121,11 @@ vine_stalker_red_f
 vine_stalker_red_m
 vine_stalker_purple_f
 vine_stalker_purple_m
+moon_moth MOON_MOTH
+moon_moth2
+moon_moth3
+moon_moth4
+moon_moth5
 
 # draconians
 draconian DRACONIAN DRACONIAN_FIRST
