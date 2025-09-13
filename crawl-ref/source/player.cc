@@ -5640,6 +5640,7 @@ player::player()
 
     time_taken          = 0;
     shield_blocks       = 0;
+    reprisals.clear();
 
     abyss_speed         = 0;
     game_seed           = 0;
@@ -9478,4 +9479,18 @@ item_def* player::active_talisman() const
         return &you.inv[cur_talisman];
     else
         return nullptr;
+}
+
+void player::track_reprisal(reprisal_type rtype, mid_t target_mid)
+{
+    reprisals.push_back({target_mid, rtype});
+}
+
+bool player::did_reprisal(reprisal_type rtype, mid_t target_mid)
+{
+    for (const auto& entry : reprisals)
+        if (entry.first == target_mid && entry.second == rtype)
+            return true;
+
+    return false;
 }

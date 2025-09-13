@@ -117,6 +117,12 @@ enum training_status
     TRAINING_INACTIVE, ///< enabled but not used (in auto mode)
 };
 
+enum reprisal_type
+{
+    REPRISAL_HEADBUTT,  // Minotaur retaliatory headbutt
+    REPRISAL_FENCER,    // Fencer's Glove riposte
+};
+
 // needed for assert in is_player()
 #ifdef DEBUG_GLOBALS
 #define you (*real_you)
@@ -486,6 +492,10 @@ public:
     int turn_damage;   // cumulative damage per turn
     mid_t damage_source; // death source of last damage done to player
     int source_damage; // cumulative damage for you.damage_source
+
+    // List of monsters the player has performed specific types of once-per-turn
+    // effects against.
+    vector<pair<mid_t, reprisal_type>> reprisals;
 
     // When other levels are loaded (e.g. viewing), is the player on this level?
     bool on_current_level;
@@ -944,6 +954,9 @@ public:
     void rev_down(int time_taken);
 
     bool allies_forbidden();
+
+    void track_reprisal(reprisal_type type, mid_t target_mid);
+    bool did_reprisal(reprisal_type type, mid_t target_mid);
 
     // TODO: move this somewhere else
     void refresh_rampage_hints();

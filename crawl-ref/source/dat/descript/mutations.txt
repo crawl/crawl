@@ -757,7 +757,8 @@ both arm-pairs.
 retaliatory headbutt mutation
 
 When a foe misses you in melee, you may reflexively retaliate, attempting to
-gore your attacker with your horns.
+gore your attacker with your horns. You can perform this against a given enemy
+no more than once per player action.
 %%%%
 multi-lived mutation
 

@@ -1050,8 +1050,8 @@ TILE_EQ:  white
 EV:       4
 STEALTH:  -2
 INSCRIP:  *Dazzle
-DESCRIP:  *Dazzle:   It may blind those who miss an attack against the wearer in
- melee combat.
+DESCRIP:  *Dazzle:   It may blind adjacent enemies who miss an attack against the
+ wearer in melee combat.
 
 NAME:      ratskin cloak
 OBJ:       OBJ_ARMOUR/ARM_CLOAK

@@ -2463,6 +2463,7 @@ static void _prep_input()
     you.turn_is_over = false;
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
+    you.reprisals.clear();
 
     you.redraw_status_lights = true;
     you.redraw_title = true;

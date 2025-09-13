@@ -332,6 +332,11 @@ bool melee_attack::handle_phase_blocked()
     return attack::handle_phase_blocked();
 }
 
+static int _minotaur_headbutt_chance()
+{
+    return 23 + you.experience_level;
+}
+
 bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;
@@ -363,46 +368,53 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    // Player-centric retaliation effects.
     if (attacker != defender
-        && attacker->alive() && defender->can_see(*attacker)
-        && !defender->cannot_act() && !defender->confused()
-        && (!defender->is_player() || !attacker->as_monster()->neutral())
+        && defender->is_player()
+        && attacker->alive()
         && !mons_aligned(attacker, defender) // confused friendlies attacking
-        // Retaliation only works on the first attack in a round.
-        // FIXME: player's attack is -1, even for auxes
-        && effective_attack_number <= 0)
+        && !attacker->as_monster()->neutral()) // don't anger neutrals, even if they hit you
     {
-        if (adjacent(defender->pos(), attack_position))
+        // Active retaliations on the player's part require you to be able to act.
+        if (you.can_see(*attacker) && !you.cannot_act() && !you.confused())
         {
-            if (defender->is_player()
-                ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
-                : mons_species(mons_base_type(*defender->as_monster()))
-                == MONS_MINOTAUR)
+            const int aux_dist = you.form == transformation::aqua ? 3 : 1;
+            if (grid_distance(defender->pos(), attack_position) <= aux_dist)
             {
-                do_minotaur_retaliation();
-                if (!attacker->alive())
-                    return false;
+                if (you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
+                    && !you.did_reprisal(REPRISAL_HEADBUTT, attacker->mid)
+                    && x_chance_in_y(_minotaur_headbutt_chance(), 100))
+                {
+                    you.track_reprisal(REPRISAL_HEADBUTT, attacker->mid);
+
+                    mpr("You furiously retaliate!");
+                    melee_attack headbutt(&you, attacker);
+                    headbutt.player_aux_setup(UNAT_HEADBUTT);
+                    headbutt.player_aux_apply(UNAT_HEADBUTT);
+                    if (!attacker->alive())
+                        return false;
+                }
+
+                if (you.duration[DUR_EXECUTION])
+                {
+                    melee_attack retaliation(&you, attacker);
+                    retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
+                    retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
+                    if (!attacker->alive())
+                        return false;
+                }
             }
 
-            if (defender->is_player() && you.duration[DUR_EXECUTION])
-            {
-                melee_attack retaliation(&you, attacker);
-                retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
-                retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
-                if (!attacker->alive())
-                    return false;
-            }
-
-            if (defender->is_player() && you.unrand_equipped(UNRAND_STARLIGHT))
-                do_starlight();
+            maybe_riposte();
+            if (!attacker->alive())
+                return false;
         }
 
+        // ...but passive ones do not.
         maybe_trigger_autodazzler();
 
-        maybe_riposte();
-        // Retaliations can kill!
-        if (!attacker->alive())
-            return false;
+        if (you.unrand_equipped(UNRAND_STARLIGHT))
+            do_starlight();
     }
 
     return true;
@@ -418,7 +430,7 @@ void melee_attack::maybe_riposte()
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
     if (using_fencers
-        && !is_riposte // no ping-pong!
+        && !you.did_reprisal(REPRISAL_FENCER, attacker->mid)
         && one_chance_in(3)
         && you.reach_range() >= grid_distance(you.pos(), attack_position))
     {
@@ -4448,79 +4460,7 @@ void melee_attack::emit_foul_stench()
     }
 }
 
-static int _minotaur_headbutt_chance()
-{
-    return 23 + you.experience_level;
-}
-
-void melee_attack::do_minotaur_retaliation()
-{
-    if (!defender->is_player())
-    {
-        // monsters have no STR or DEX
-        if (x_chance_in_y(2, 5))
-        {
-            int hurt = attacker->apply_ac(random2(21));
-            if (you.see_cell(defender->pos()))
-            {
-                const string defname = defender->name(DESC_THE);
-                mprf("%s furiously retaliates!", defname.c_str());
-                if (hurt <= 0)
-                {
-                    mprf("%s headbutts %s, but does no damage.", defname.c_str(),
-                         attacker->name(DESC_THE).c_str());
-                }
-                else
-                {
-                    mprf("%s headbutts %s%s", defname.c_str(),
-                         attacker->name(DESC_THE).c_str(),
-                         attack_strength_punctuation(hurt).c_str());
-                }
-            }
-            if (hurt > 0)
-            {
-                attacker->hurt(defender, hurt, BEAM_MISSILE,
-                               KILLED_BY_HEADBUTT);
-            }
-        }
-        return;
-    }
-
-    if (form_changes_anatomy())
-    {
-        // You are in a non-minotaur form.
-        return;
-    }
-
-    if (!x_chance_in_y(_minotaur_headbutt_chance(), 100))
-        return;
-
-    // Use the same damage formula as a regular headbutt.
-    int dmg = AUX_HEADBUTT.get_damage(true);
-    dmg = stat_modify_damage(dmg, SK_UNARMED_COMBAT, false);
-    dmg = random2(dmg);
-    dmg = apply_fighting_skill(dmg, true, true);
-    dmg = player_apply_misc_modifiers(dmg);
-    dmg = player_apply_slaying_bonuses(dmg, true);
-    dmg = player_apply_final_multipliers(dmg, true);
-    int hurt = attacker->apply_ac(dmg);
-    hurt = player_apply_postac_multipliers(dmg);
-
-    mpr("You furiously retaliate!");
-    dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
-    if (hurt <= 0)
-    {
-        mprf("You headbutt %s, but do no damage.",
-             attacker->name(DESC_THE).c_str());
-        return;
-    }
-    mprf("You headbutt %s%s",
-         attacker->name(DESC_THE).c_str(),
-         attack_strength_punctuation(hurt).c_str());
-    attacker->hurt(&you, hurt);
-}
-
-/** For UNRAND_STARLIGHT's dazzle effect, only against monsters.
+/** For UNRAND_STARLIGHT's dazzle effect, currently only when worn by the player.
  */
 void melee_attack::do_starlight()
 {
@@ -4533,6 +4473,8 @@ void melee_attack::do_starlight()
 
     if (attacker->is_monster()
         && attacker->res_blind() <= 1
+        && !attacker->as_monster()->has_ench(ENCH_BLIND)
+        && adjacent(attacker->pos(), defender->pos())
         && x_chance_in_y(min(50, (95 - defender->get_hit_dice() * 4) / 5), 50))
     {
         attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, &you,
@@ -4560,6 +4502,7 @@ void melee_attack::riposte()
     attck.is_riposte = true;
     attck.launch_attack_set();
     count_action(CACT_ATTACK, ATTACK_RIPOSTE);
+    you.track_reprisal(REPRISAL_FENCER, attacker->mid);
 }
 
 bool melee_attack::do_knockback(bool slippery)
