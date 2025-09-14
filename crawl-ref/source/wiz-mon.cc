@@ -99,7 +99,7 @@ void wizard_create_spec_monster_name()
         fixup_zombie_type(static_cast<monster_type>(mspec.type),
                           mspec.monbase);
 
-    coord_def place = find_newmons_square(type, you.pos());
+    coord_def place = find_newmons_square(type, you.pos(), 2, you.current_vision);
     if (!in_bounds(place))
     {
         // Try again with habitat HT_LAND.
