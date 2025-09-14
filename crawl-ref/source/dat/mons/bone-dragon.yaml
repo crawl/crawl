@@ -11,9 +11,10 @@ attacks:
  - {type: claw, damage: 20}
  - {type: trample, flavour: trample, damage: 20}
 hd: 20
-hp_10x: 1800
-ac: 20
-ev: 4
+hp_10x: 1540
+ac: 18
+ev: 2
+spells: bone_dragon
 intelligence: animal
 size: giant
 shape: quadruped_winged

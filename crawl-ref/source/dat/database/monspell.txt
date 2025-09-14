@@ -683,6 +683,10 @@ bombardier beetle cast
 
 @The_monster@ sprays incendiary fluid @at@ @target@.
 %%%%
+March of Sorrows bone dragon cast
+
+@The_monster@ breathes [collective despair|endless sorrows] @at@ @target@.
+%%%%
 brain worm cast
 
 @The_monster_possessive@ bulging head throbs.

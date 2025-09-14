@@ -1013,6 +1013,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BONE_DRAGON,
+      {
+       { SPELL_MARCH_OF_SORROWS, 59, MON_SPELL_NATURAL | MON_SPELL_NOISY },
+      }
+    },
+
     {  MST_PEARL_DRAGON,
       {
        { SPELL_HOLY_BREATH, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH

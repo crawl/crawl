@@ -247,6 +247,9 @@ enum class passive_t
 
     // Immunity to spectral mist clouds
     r_spectral_mist,
+
+    // Immunity to misery clouds
+    r_misery,
 };
 
 enum ru_interference

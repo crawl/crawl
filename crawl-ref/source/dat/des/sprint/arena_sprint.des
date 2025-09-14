@@ -430,7 +430,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "glowing shapeshifter",
                 "hell knight / w:5 necromancer / w:1 margery",
                 "wraith / wight / phantasmal warrior / skeletal warrior /\
-                    vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
+                    vampire / ghoul / mummy / flayed ghost / death cob /\
                     profane servitor",
                 "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
                     killer klown",
@@ -469,7 +469,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Forest:$ w:20 / spriggan defender / spriggan rider /\
                     spriggan air mage / spriggan druid w:3 / spriggan berserker",
                 "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
-                    w:2 boris / w:2 curse skull",
+                    bone dragon w:2 / boris w:2 / curse skull w:2",
                 "any demon w:30 / pandemonium lord",
                 "place:Tomb:$ w:70 / guardian sphinx w:20 / royal mummy",
                 "place:Hell w:25 / geryon w:2 / nellie w:2",
@@ -543,7 +543,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "dancing weapon ; bardiche",
                 "chonchon w:2 / spriggan defender / spriggan air mage /\
                     spriggan druid / spriggan berserker / alderking",
-                "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
+                "bone dragon w:2 / lich / ancient lich w:5 /\
+                    curse skull w:1 / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
                 "place:Tomb:$ w:30 / guardian sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
@@ -634,7 +635,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "spriggan air mage / titan / electric golem w:20 /\
                     storm dragon",
                 "orb of entropy w:25 / tzitzimitl / reaper / shadow dragon /\
-                    death drake / deep elf death mage /\
+                    death drake / deep elf death mage / bone dragon w:5 /\
                     demonspawn soul scholar",
                 "daeva w:20 / angel / cherub w:5 / fravashi w:15 /\
                     pearl dragon w:15 / ophan / apis",

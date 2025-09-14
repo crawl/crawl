@@ -990,7 +990,9 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_STORM:
             return act.res_elec() >= 3;
         case CLOUD_MISERY:
-            return act.res_negative_energy() >= 3;
+            return act.res_negative_energy() >= 3
+                   || act.is_player()
+                      && have_passive(passive_t::r_misery);
         case CLOUD_VORTEX:
             return act.res_polar_vortex();
         case CLOUD_RAIN:

@@ -386,7 +386,8 @@ ORIENT: northwest
 DEPTH:  Depths, Crypt
 WEIGHT: 5 (Depths), 10
 MONS:   laughing skull, draugr
-MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
+MONS:   skeletal warrior band / bone dragon w:1 / \
+        lich w:1 / curse skull w:1 / ancient champion w:1
 SUBST:  1 = 11..., 2 = 222.., G : GGccV.
 : vault_metal_statue_setup(_G, "S", "soul conduit")
 MAP

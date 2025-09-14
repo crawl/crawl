@@ -336,7 +336,7 @@ ENDMAP
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
 TAGS:    transparent
-MONS:    bone dragon w:25 / lich / shadow dragon w:5
+MONS:    death knight band w:30 / lich w:30 / shadow dragon
 : crypt_entry(_G)
 MAP
 .........
@@ -1718,7 +1718,7 @@ MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 death knight / w:20 bone dragon / revenant soulmonger
+MONS:    death knight w:20 / bone dragon w:20 / revenant soulmonger
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 KFEAT:   O = granite_statue
@@ -1760,7 +1760,7 @@ DEPTH:   Crypt
 # Choose two of the following:
 # Yred nearly-all-melee set, Kiku necro-casters set, ghosts set, tomb set.
 MONS:    minotaur zombie / ettin zombie / skeletal warrior w:20
-MONS:    death knight, bone dragon w:14 / profane servitor
+MONS:    death knight, bone dragon / profane servitor
 MONS:    necromancer / vampire mage w:6 / burial acolyte w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
@@ -2589,6 +2589,7 @@ MONS:   ancient champion
 MONS:   skeletal warrior
 MONS:   laughing skull
 MONS:   skeletal warrior w:20 / draugr w:40 / weeping skull
+NSUBST: 2 = 1:34 / *:2
 : elseif brnd > 4 then -- vampire layout
 KMONS:  1 = vampire bloodprince / Jory w:5, vampire bloodprince
 KMONS:  2 = undying armoury
@@ -2792,7 +2793,7 @@ ORIENT: float
 PLACE:  Crypt:$
 MONS:   patrolling lich w:20 / patrolling ancient lich
 MONS:   patrolling dread lich
-MONS:   bone dragon / curse skull / curse toe
+MONS:   bone dragon w:15 / curse skull w:15 / curse toe
 MONS:   laughing skull w:12 / skeletal warrior / draugr w:8
 MONS:   ancient champion
 KMONS:  F = orange crystal statue / obsidian statue
@@ -2881,7 +2882,8 @@ KMONS:  S = zombie w:12 / draugr
 : else
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
-KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
+KMONS:  S = shadowghast / place:Vaults:$ spectre / \
+            freezing wraith / shadow wraith
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
@@ -3160,7 +3162,7 @@ MONS:   bone dragon w:1 / ancient champion / lich w:1
 MONS:   guardian sphinx draugr / titan draugr
 MONS:   fire dragon draugr w:5 / ice dragon draugr w:5 / draugr w:25 / \
         laughing skull / weeping skull w:5
-MONS:   generate_awake bone dragon / generate_awake curse toe
+MONS:   generate_awake bone dragon / generate_awake curse toe w:5
 : elseif brnd > 6 then
 MONS:   patrolling vampire knight / patrolling vampire mage / \
         patrolling jiangshi w:15 / patrolling phantasmal warrior w:5 / \
@@ -3285,7 +3287,7 @@ KMONS:   T = vampire knight / jiangshi
 KMONS:   R = ancient lich / dread lich
 KMONS:   S = flayed ghost
 KMONS:   T = phantasmal warrior
-: elseif crawl.coinflip()
+: elseif crawl.coinflip() then
 KMONS:   R = curse skull
 KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
@@ -3368,8 +3370,8 @@ PLACE:   Crypt:$
 ORIENT:  north
 MONS:    ancient champion, lich / revenant soulmonger / cognitogaunt w:5
 MONS:    jiangshi / ghoul w:2
-MONS:    profane servitor / bone dragon / vampire bloodprince / \
-         curse toe w:5 / ancient lich w:1 / dread lich w:1
+MONS:    profane servitor w:12 / bone dragon w:12 / vampire bloodprince / \
+         curse toe w:1 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / draugr w:15 / simulacrum w:15

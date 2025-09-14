@@ -114,6 +114,7 @@ static const vector<god_passive> god_passives[] =
         {  -1, passive_t::reaping },
         {  -1, passive_t::nightvision },
         {  -1, passive_t::r_spectral_mist },
+        {  -1, passive_t::r_misery },
     },
 
     // Xom

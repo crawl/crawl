@@ -2906,8 +2906,8 @@ ORIENT:  float
 MONS:    patrolling laughing skull
 MONS:    zombie / draugr w:4
 : if you.in_branch("Crypt") then
-MONS:    vampire knight / bone dragon w:5 / flayed ghost
-MONS:    lich / revenant soulmonger
+MONS:    vampire knight / cognitogaunt w:5 / flayed ghost
+MONS:    lich / revenant soulmonger /  bone dragon
 KMONS:   5 = Jory / vampire bloodprince / revenant, \
              vampire bloodprince / revenant soulmonger
 SUBST:   x = v

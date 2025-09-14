@@ -314,7 +314,7 @@ KMONS: O = sin beast
 MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
 MONS: iron dragon / war gargoyle / ancient champion
 MONS: salamander tyrant / hell hog / balrug
-MONS: eidolon / spectral spark wasp / bone dragon
+MONS: eidolon / spectral spark wasp / spectral guardian sphinx
 : hell_entry_tier(_G, "high")
 MAP
   .....@.....

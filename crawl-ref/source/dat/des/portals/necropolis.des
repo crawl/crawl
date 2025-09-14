@@ -1975,7 +1975,8 @@ NSUBST: 1 = 1:12 / *:1, - = 3=1 / 4=1- / .
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   spriggan defender zombie / spectral caustic shrike / \
         spark wasp simulacrum / quicksilver dragon draugr / rockslime zombie
-MONS:   revenant soulmonger / curse skull / ancient lich w:8 / dread lich w:8
+MONS:   revenant soulmonger / curse skull / \
+        bone dragon w:8 / ancient lich w:8 / dread lich w:8
 KITEM:  ? = quick blade ego:pain randart pre_id / \
             quick blade ego:spectral randart pre_id
 SUBST:  fgh = |*, i = *%, jk = $
@@ -2336,7 +2337,7 @@ MONS:   necromancer, lich
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   vampire knight / vampire mage
 MONS:   flayed ghost / juggernaut simulacrum
-MONS:   deep elf death mage, ancient lich / dread lich
+MONS:   deep elf death mage / bone dragon w:2, ancient lich / dread lich
 : end
 KMONS:  P = withered plant
 : necropolis_generic_spawns(_G)

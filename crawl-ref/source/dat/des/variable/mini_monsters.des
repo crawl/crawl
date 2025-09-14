@@ -8004,9 +8004,13 @@ DEPTH:  D:12-, Depths, Crypt
 TAGS:   no_monster_gen no_item_gen transparent
 WEIGHT: 3
 : if you.in_branch("Depths") then
-MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
+MONS:   place:Depths:$ spectre / place:Depths:$ draugr, bone dragon
+: elseif you.in_branch("Crypt") then
+MONS:   spectral storm dragon / spectral ettin / golden dragon draugr / \
+        juggernaut draugr w:5 / ancient champion w:5
+MONS:   bone dragon
 : else
-MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
+MONS:   place:D:$ spectre / place:D:$ draugr, ghoul
 : end
 ITEM:   skull_of_zonguldrok no_pickup
 MAP
