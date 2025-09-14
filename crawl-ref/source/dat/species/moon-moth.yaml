@@ -54,13 +54,15 @@ mutations:
     MUT_BIG_WINGS: 1
     MUT_STRENUOUS_MAGIC: 1
 recommended_jobs:
-  - gladiator
   - monk
   - cinder acolyte
   - artificer
   - shapeshifter
   - enchanter
   - reaver
+  - conjurer
+  - fire elementalist
+  - necromancer
 recommended_weapons:
   - maces and flails
   - polearms
