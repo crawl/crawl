@@ -3724,7 +3724,7 @@ bool is_usable_talisman(const item_def& item)
     if (item.sub_type == TALISMAN_PROTEAN)
         return false;
 
-    return cannot_evoke_item_reason(&item, false, false).empty();
+    return cannot_put_on_talisman_reason(item, false).empty();
 }
 
 bool ring_plusses_matter(int ring_subtype)
