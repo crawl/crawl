@@ -2,8 +2,8 @@ enum: JOB_REAVER
 name: "Reaver"
 category: Warrior-mage
 category_priority: 70
-str: 4
-int: 5
+str: 3
+int: 6
 dex: 3
 spells:
   - SPELL_KISS_OF_DEATH
@@ -11,7 +11,7 @@ spells:
   - SPELL_HAILSTORM
   - SPELL_RENDING_BLADE
 equipment:
-  - "leather armour"
+  - "robe"
 weapon_choice: plain
 recommended_species:
   - gnoll
@@ -21,9 +21,10 @@ recommended_species:
   - draconian
   - mountain dwarf
 skills:
-  fighting: 2
-  dodging: 2
+  fighting: 3
+  stealth: 2
   spellcasting: 2
   conjurations: 3
-  weapon: 3
+  necromancy: 1
+  weapon: 2
 create_enum: false
