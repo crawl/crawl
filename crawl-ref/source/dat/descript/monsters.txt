@@ -1960,7 +1960,7 @@ monstrosities as vessels for devilish minds.
 %%%%
 kobold geomancer
 
-A wiley kobold who has learned to weaponise every crack and crevice that lines
+A wily kobold who has learned to weaponise every crack and crevice that lines
 the walls of its domain.
 %%%%
 komodo dragon
