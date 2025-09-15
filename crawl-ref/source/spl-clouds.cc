@@ -235,17 +235,11 @@ void holy_flames(monster* caster, actor* defender)
 
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (!in_bounds(*ai)
-            || cell_is_solid(*ai)
-            || is_sanctuary(*ai)
-            || monster_at(*ai))
-        {
+        if (monster_at(*ai))
             continue;
-        }
 
-        place_cloud(CLOUD_HOLY, *ai, dur, caster);
-
-        cloud_count++;
+        if (place_cloud(CLOUD_HOLY, *ai, dur, caster))
+            cloud_count++;
     }
 
     if (cloud_count)
@@ -264,19 +258,14 @@ spret scroll_of_poison(bool scroll_unknown)
     bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (cell_is_solid(*ri))
-            continue;
-        if (cloud_type_at(*ri) != CLOUD_NONE)
-            continue;
-        const actor* act = actor_at(*ri);
-        if (act != nullptr)
+        if (const actor* act = actor_at(*ri))
         {
             unknown_unseen = unknown_unseen || !you.can_see(*act);
             continue;
         }
 
-        place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you);
-        ++created;
+        if (place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you))
+            ++created;
     }
 
     if (created > 0)

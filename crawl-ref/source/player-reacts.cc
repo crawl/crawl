@@ -671,8 +671,7 @@ static void _try_to_respawn_ancestor()
     mprf("%s emerges from the mists of memory!",
          ancestor->name(DESC_YOUR).c_str());
     add_companion(ancestor);
-    check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
-                      ancestor); // ;)
+    place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2), ancestor); // ;)
 }
 
 static void _decrement_transform_duration(int delay)

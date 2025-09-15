@@ -1854,8 +1854,7 @@ void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)
         mpr("Your supernatural speed expires.");
     }
 
-    if (!cell_is_solid(old_pos))
-        check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
+    place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
 }
 
 static void _wu_jian_increment_heavenly_storm()
@@ -2109,8 +2108,7 @@ bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
 bool wu_jian_wall_jump_effects()
 {
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
-        if (!cell_is_solid(*ai))
-            check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
+        place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
 
     vector<monster*> targets = _wu_jian_wall_jump_monsters(you.pos());
     for (auto target : targets)

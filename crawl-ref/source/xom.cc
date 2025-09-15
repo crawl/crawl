@@ -1553,7 +1553,7 @@ static void _xom_lights_up_webs(int /*sever*/)
             if (cloud_at(pos))
                 delete_cloud(pos);
 
-            check_place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
+            place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
 
             webs_count++;
             env.map_knowledge(pos).set_feature(DNGN_FLOOR);
@@ -5476,8 +5476,7 @@ static void _xom_chaos_cloud(int /*sever*/)
 {
     const int lifetime = 3 + random2(12) * 3;
     const int spread_rate = random_range(5,15);
-    check_place_cloud(CLOUD_CHAOS, you.pos(), lifetime,
-                      nullptr, spread_rate);
+    place_cloud(CLOUD_CHAOS, you.pos(), lifetime, nullptr, spread_rate);
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "chaos cloud"),
               true);
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());

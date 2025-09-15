@@ -528,16 +528,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
 
     // blast smoke
     for (fair_adjacent_iterator ai(act.pos()); ai; ++ai)
-    {
-        if (!in_bounds(*ai)
-            || cell_is_solid(*ai)
-            || cloud_at(*ai))
-        {
-            continue;
-        }
-        place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act);
-        break;
-    }
+        if (place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act))
+            break;
 
     if (!is_unrandom_artefact(weapon, UNRAND_MULE))
         return;

@@ -1949,7 +1949,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
 
     // XXX: interact with clouds of cold?
     // XXX: dedup with beam::affect_place_clouds()?
-    if (feat_is_water(env.grid(p)) && !cloud_at(p))
+    if (feat_is_water(env.grid(p)))
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), &agent, 11);
 
     if (!targ->alive())
@@ -4246,7 +4246,7 @@ void seeker_attack(monster& seeker, actor& target)
     beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();
 
-    check_place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
+    place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
 
     if (target.alive() && seeker.type == MONS_SHOOTING_STAR)
         target.knockback(seeker, 1, 0, "");

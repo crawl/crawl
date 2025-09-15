@@ -1324,7 +1324,7 @@ static void _update_abyss_terrain(const coord_def &p,
             int cloud_life = _in_wastes(abyssal_state.major_coord) ? 5 : 2;
             cloud_life += random2(2); // force a sequence point, just in case
             if (cloud != CLOUD_NONE)
-                check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
+                place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
         }
         else if (feat_is_solid(feat))
             delete_cloud(rp);

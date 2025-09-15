@@ -4067,7 +4067,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
                 }
                 break;
             case BEAM_AIR:
-                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
+                if (coinflip())
                 {
                     place_cloud(CLOUD_STORM, pos,
                                 random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4)),
@@ -6212,8 +6212,8 @@ spret hepliaklqana_transference(bool fail)
          victim->is_player() ? "" : "s",
          ancestor->name(DESC_YOUR).c_str());
 
-    check_place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
-    check_place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
+    place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
+    place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
 
     if (victim->is_monster())
         mons_relocated(victim->as_monster());
@@ -6542,8 +6542,7 @@ void wu_jian_heavenly_storm()
                          "keep fighting, disciple!");
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
-        if (!cell_is_solid(*ai))
-            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+        place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
 
     you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
     you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;

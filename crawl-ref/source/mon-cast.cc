@@ -6871,7 +6871,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
                 }
                 break;
             case BEAM_AIR:
-                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
+                if (coinflip())
                     place_cloud(CLOUD_STORM, pos, random2(7), &mons);
                 break;
             default:

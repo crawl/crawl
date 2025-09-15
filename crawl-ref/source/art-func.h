@@ -1312,12 +1312,8 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
                                      int /*dam*/)
 {
     coord_def spot = defender->pos();
-    if (!cell_is_solid(spot)
-        && !cloud_at(spot)
-        && one_chance_in(5))
-    {
-         place_cloud(CLOUD_COLD, spot, random_range(4, 8), attacker, 0);
-    }
+    if (one_chance_in(5))
+        place_cloud(CLOUD_COLD, spot, random_range(4, 8), attacker, 0);
 }
 
 ///////////////////////////////////////////////////
@@ -1605,7 +1601,6 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
     {
         monster* m = monster_at(*ri);
         if (m && !m->wont_attack() && mons_is_threatening(*m)
-            && !cell_is_solid(*ri) && !cloud_at(*ri)
             && x_chance_in_y(you.time_taken, 7 * BASELINE_DELAY))
         {
             mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());

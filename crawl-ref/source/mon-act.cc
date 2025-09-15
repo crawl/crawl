@@ -1817,7 +1817,7 @@ static void _pre_monster_move(monster& mons)
         && !cell_see_cell(you.pos(), mons.pos(), LOS_NO_TRANS))
     {
         if (mons_is_seeker(mons))
-            check_place_cloud(seeker_trail_type(mons), mons.pos(), 2, &mons);
+            place_cloud(seeker_trail_type(mons), mons.pos(), 2, &mons);
         monster_die(mons, KILL_RESET, NON_MONSTER);
         return;
     }
@@ -2102,7 +2102,7 @@ void handle_monster_move(monster* mons)
     {
         if (mons->steps_remaining == 0)
         {
-            check_place_cloud(seeker_trail_type(*mons), mons->pos(), 2, mons);
+            place_cloud(seeker_trail_type(*mons), mons->pos(), 2, mons);
             monster_die(*mons, KILL_TIMEOUT, NON_MONSTER);
             return;
         }
@@ -4172,7 +4172,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
             place_cloud(CLOUD_ELECTRICITY, mons->pos(), random_range(2, 3), mons);
 
         if (mons_is_seeker(*mons))
-            check_place_cloud(seeker_trail_type(*mons), mons->pos(), 2, mons);
+            place_cloud(seeker_trail_type(*mons), mons->pos(), 2, mons);
 
         if (mons->type == MONS_CURSE_TOE)
             place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);

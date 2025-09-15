@@ -4136,20 +4136,16 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (coinflip())
         {
-            vector<coord_def> cloud_pos;
-            for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+            const int num_clouds = random_range(3, 4);
+            int placed = 0;
+            for (fair_adjacent_iterator ai(defender->pos()); ai && (placed < num_clouds); ++ai)
             {
-                if (!cell_is_solid(*ai) && !cloud_at(*ai)
-                    && !(actor_at(*ai) && mons_aligned(attacker, actor_at(*ai))))
+                if ((!actor_at(*ai) || !mons_aligned(attacker, actor_at(*ai)))
+                    && place_cloud(CLOUD_POISON, *ai, dur, attacker))
                 {
-                    cloud_pos.push_back(*ai);
+                    ++placed;
                 }
             }
-            shuffle_array(cloud_pos);
-
-            const unsigned int num_clouds = random_range(3, 4);
-            for (size_t i = 0; i < cloud_pos.size() && i < num_clouds; ++i)
-                place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
         }
 
         // No brewing potions via punching plants.
@@ -4472,9 +4468,7 @@ void melee_attack::emit_foul_stench()
     {
         const int mut = you.get_mutation_level(MUT_FOUL_STENCH);
 
-        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20)
-            && !cell_is_solid(mon->pos())
-            && !cloud_at(mon->pos()))
+        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
         {
             mpr("You emit a cloud of foul miasma!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);

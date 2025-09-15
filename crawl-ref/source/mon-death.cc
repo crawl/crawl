@@ -1331,9 +1331,6 @@ static void _print_summon_poof_message(const monster& mons, bool corpse = false)
 
 static void _monster_die_cloud(const monster& mons, bool real_death)
 {
-    if (cell_is_solid(mons.pos()))
-        return;
-
     if (real_death)
     {
         switch (mons.type)

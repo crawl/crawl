@@ -1005,11 +1005,8 @@ void bolt::burn_wall_effect()
     {
         for (adjacent_iterator ai(pos()); ai; ++ai)
         {
-            if (!in_bounds(*ai) || cloud_at(*ai) || is_sanctuary(*ai)
-                || cell_is_solid(*ai) || !cell_see_cell(*ai, source, LOS_NO_TRANS))
-            {
+            if (!cell_see_cell(*ai, source, LOS_NO_TRANS))
                 continue;
-            }
 
             if (one_chance_in(3))
                 place_cloud(CLOUD_FIRE, *ai, random_range(11, 25), agent());
@@ -2624,7 +2621,7 @@ void bolt::affect_endpoint()
         int to_place = ench_power;
         for (distance_iterator di(pos(), true, false, 2); di && to_place > 0; ++di)
         {
-            if (!cell_is_solid(*di) && cell_see_cell(*di, agent()->pos(), LOS_NO_TRANS))
+            if (cell_see_cell(*di, agent()->pos(), LOS_NO_TRANS))
             {
                 place_cloud(CLOUD_RUST, *di, 5 + ench_power * 2 / 3 + random2(2), agent());
                 to_place--;
@@ -3063,9 +3060,6 @@ void bolt::affect_place_clouds()
 
         for (adjacent_iterator ai(pos()); ai; ++ai)
         {
-            if (feat_is_solid(env.grid(*ai)))
-                continue;
-
             if (x_chance_in_y(max(0, ench_power - 10), ench_power - 5))
             {
                 place_cloud(CLOUD_MEPHITIC, *ai,
@@ -3092,15 +3086,8 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_MISERY, p, random2(5) + 8, agent());
 
         if (actor_at(p) && !mons_aligned(actor_at(p), agent()))
-        {
             for (adjacent_iterator ai(pos()); ai; ++ai)
-            {
-                if (feat_is_solid(env.grid(*ai)))
-                    continue;
-
                 place_cloud(CLOUD_MISERY, *ai, random2(4) + 2, agent());
-            }
-        }
     }
 
 }

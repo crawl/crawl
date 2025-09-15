@@ -632,8 +632,7 @@ void oblivion_howl(int time)
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
             mons_add_blame(mons, "called by an oblivion hound"); // assumption!
-            check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
-                              random_range(1,2), mons);
+            place_cloud(CLOUD_BLACK_SMOKE, mons->pos(), random_range(1,2), mons);
         }
     }
 }
@@ -1974,8 +1973,7 @@ void end_battlesphere(monster* mons, bool killed)
         else if (you.can_see(*mons))
             simple_monster_message(*mons, " dissipates.");
 
-        if (!cell_is_solid(mons->pos()))
-            place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
+        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
         monster_die(*mons, KILL_RESET, NON_MONSTER);
     }

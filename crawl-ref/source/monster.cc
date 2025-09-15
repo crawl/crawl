@@ -2809,10 +2809,9 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     }
     monster_die(*this, KILL_BANISHED, agent->mindex());
 
-    if (!cell_is_solid(old_pos))
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
-        if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
+        if (coinflip())
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
     splash_corruption(old_pos);
 }
@@ -5964,7 +5963,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         mon_enchant i_f = get_ench(ENCH_INNER_FLAME);
         if (you.see_cell(pos()))
             mprf("Flame seeps out of %s.", name(DESC_THE).c_str());
-        check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
+        place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
     if (res_corr() < 3 && x_chance_in_y(corrosion_chance(scan_artefacts(ARTP_CORRODE)), 100))

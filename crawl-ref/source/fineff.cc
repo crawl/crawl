@@ -586,7 +586,7 @@ void explosion_fineff::fire()
 
     if (typ == EXPLOSION_FINEFF_INNER_FLAME)
         for (adjacent_iterator ai(beam.target, false); ai; ++ai)
-            if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
+            if (!one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
 
     beam.explode(true, typ == EXPLOSION_FINEFF_PYROMANIA);

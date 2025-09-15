@@ -761,8 +761,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         && !mg.summoner
         && !(mg.extra_flags & MF_WAS_IN_VIEW))
     {
-        if (in_bounds(mon->pos()) && !cell_is_solid(mon->pos()))
-            big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
+        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
         if (you.can_see(*mon)
              && !crawl_state.generating_level
