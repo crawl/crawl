@@ -295,8 +295,8 @@ Monsters
 * Antaeus trades Flash Freeze for Sleetstrike, a variant of Airstrike that
   inflicts the Frozen status and deals more damage partially resistable with rC.
 * Blizzard demons trade Airstrike for Sleetstrike.
-* Bone dragons now breathe clouds of excruiating misery, and now have less
-  health. They longer appear in Tartarus, and are now more common in Crypt.
+* Bone dragons now breathe clouds of excruciating misery, and now have less
+  health. They no longer appear in Tartarus, and are now more common in Crypt.
 * Cacodemons no longer know Malmutate or Bolt of Devastation, but can cut
   willpower in half with their melee and cast Doom Bolt: a penetrating bolt
   that inflicts Doom on hit.
