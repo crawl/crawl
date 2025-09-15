@@ -2954,6 +2954,8 @@ public:
             greedy_place = dc;
             best_distance = traveled_distance;
         }
+
+        good_square(dc);
         return false;
     }
 };
