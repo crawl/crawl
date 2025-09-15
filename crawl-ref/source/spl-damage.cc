@@ -857,7 +857,8 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     if (!mons)
     {
         fail_check();
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
+        if (!is_tabcasting())
+            canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
         // order to prevent locating invisible monsters.
         return spret::success;
