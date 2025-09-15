@@ -5533,7 +5533,9 @@ void monster::did_deliberate_movement()
         flame.duration -= 50;
         if (flame.duration <= 0)
         {
-            simple_monster_message(*this, " shakes off the sticky flame as it moves.");
+            simple_monster_message(*this,
+                make_stringf(" shakes off the sticky flame as %s moves.",
+                             pronoun(PRONOUN_SUBJECTIVE).c_str()).c_str());
             del_ench(ENCH_STICKY_FLAME, true);
         }
         else
