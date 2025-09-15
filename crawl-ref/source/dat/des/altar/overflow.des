@@ -2704,7 +2704,7 @@ KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
 KMONS: B = ball python perm_ench:blind / frilled lizard perm_ench:blind / \
-  / bat perm_ench:blind
+  bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
 @...   ...@
