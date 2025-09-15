@@ -31,7 +31,7 @@ Branches, Environment
   prices.
 * The Halls of Zot will now contain one of three types of orb monster each game,
   each wielding a different element and form of strategic damage.
-  - The orb type one will encountered that game is indicated via statues placed
+  - The orb type one will encounter that game is indicated via statues placed
     by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
     can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
 * The last floor of Zot contains now contains two Boundless Tesseracts, immobile
@@ -50,7 +50,7 @@ Branches, Environment
   fuzzes the destination of scrolls of blinking by up to two spaces.
 * Hell effects can now inflict a small amount of Doom instead of inflicting
   transient mutations.
-* Troves prices and costs have been heavily revised:
+* Troves' prices and costs have been heavily revised:
   - Troves will no longer ask for any consumables besides scrolls of acquirement
     and will no longer ask for specific named items from shops.
   - Equipment costs are less common. Demon weapons are all interchangeable and
@@ -336,7 +336,7 @@ Monsters
 * Monster Flash Freeze accuracy is greatly reduced and damage somewhat reduced.
 * Monster mesmerisation effects (including merfolk siren and merfolk avatar
   songs) now also daze all opposing monsters.
-* Monsters blindness resistance has been refactored: all sources of Blind
+* Monsters' blindness resistance has been refactored: all sources of Blind
   outside of light effects, Enfeeble, and divine powers are limited to
   natural / demonic / holy monsters, while light can also work on undead and
   Enfeeble / most divine Blind effects ignore Blind resistance entirely.
