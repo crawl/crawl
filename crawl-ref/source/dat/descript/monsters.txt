@@ -871,8 +871,8 @@ bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. The collective despair of such
-descecrated dragons gives this horror its own undying breath weapon, in
-billowing clouds of excruiating misery.
+desecrated dragons gives this horror its own undying breath weapon, in
+billowing clouds of excruciating misery.
 %%%%
 boulder
 
