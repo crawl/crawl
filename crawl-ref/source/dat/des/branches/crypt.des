@@ -1661,7 +1661,7 @@ NAME:    hangedman_hall_of_fallen_heroes
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Crypt
 ORIENT:  float
-MONS:    wight band, phantasmal warrior
+MONS:    death knight draugr / frost giant draugr, phantasmal warrior
 MONS:    skeletal warrior ; long sword | war axe | trident | flail . \
                             chain mail | ring mail | scale mail
 MONS:    patrolling vampire knight, patrolling ancient champion

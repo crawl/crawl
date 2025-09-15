@@ -167,7 +167,7 @@ function choose_mset_1(e)
     e.kmons("1 = sky beast")
 -- Earth
   elseif rnd < 89 then
-    e.kmons("1 = toenail golem")
+    e.kmons("1 = rock fish / toenail golem w:2")
 -- Dragon
   elseif rnd < 91 then
     e.kmons("1 = swamp drake / steam dragon / acid dragon")
@@ -227,8 +227,8 @@ function choose_mset_2(e)
                place:Lair:1 w:30")
 -- Spider
   elseif rnd < 34 then
-    e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5 /\
-               wolf spider w:5 / redback w:5")
+    e.kmons("1 = scorpion w:15 / jumping spider w:5 / \
+                 tarantella w:5 / culicivora")
 -- Crypt
   elseif rnd < 44 then
     e.kmons("1 = place:D:7 zombie w:20 / place:D:4 draugr w:20 /\
@@ -262,7 +262,9 @@ function choose_mset_2(e)
     e.kmons("1 = sky beast / wind drake w:5 / hippogriff w:5")
 -- Earth
   elseif rnd < 90 then
-    e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
+    e.kmons("1 = rock fish / kobold geomancer / basilisk /\
+                 catoblepas w:5 / boulder beetle w:5 /\
+                 toenail golem w:2 / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
     e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon / wyvern")
@@ -377,9 +379,9 @@ function choose_mset_3(e)
                storm dragon / titan w:2")
 -- Earth
   elseif rnd < 79 then
-    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem w:20 /\
-               crystal guardian / stone giant w:5 / iron dragon w:5 /\
-               quicksilver dragon w:5")
+    e.kmons("1 = earth elemental w:15 / boulder beetle w:5 / gargoyle w:5 /\
+                 catoblepas / mountainshell w:5 / crystal guardian /\
+                 stone giant w:5 / iron dragon w:5")
 -- Dragon
   elseif rnd < 81 then
     e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
@@ -517,9 +519,9 @@ local rnd = crawl.random2(142)
                storm dragon / titan / electric golem")
 -- Earth
   elseif rnd < 87 then
-    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem /\
-               crystal guardian / stone giant / iron dragon /\
-               quicksilver dragon")
+    e.kmons("1 = walking earthen tome / war gargoyle /\
+                 crystal guardian / stone giant / iron dragon /\
+                 quicksilver dragon / walking crystal tome")
 -- Dragon
   elseif rnd < 90 then
     e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\

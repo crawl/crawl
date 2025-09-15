@@ -772,8 +772,8 @@ NAME:     sewer_big_baddie
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 : sewer_setup(_G)
-MONS:     bat, brain worm
-KMONS:    3 = Pargi / crocodile, crocodile
+MONS:     bat, brain worm, patrolling rock fish band
+KMONS:    4 = Pargi / crocodile, crocodile
 ITEM:     potion of berserk rage pre_id / potion of haste pre_id w:5
 SUBST:    - = 1....
 MAP
@@ -781,7 +781,7 @@ MAP
 cc$***$cc
 c..$*$..c
 c.......c
-c...3...c
+c...4...c
 c.......c
 c.......c
 cc.....cc
@@ -789,7 +789,7 @@ cc.....cc
    cdc      cc---..cc
    c.c     cc---w...cc
 cccc.ccccccc---www...cc
-c21........---wwwww.A<c
+c24........---wwwww.A<c
 cccc.ccccccc---www...cc
    c.c     cc---w...cc
    c-c      cc---..cc
@@ -864,12 +864,14 @@ KMONS:   P = Pargi, crocodile
 #      lesser monsters.
 KMONS:   1 = brain worm
 KMONS:   2 = frilled lizard w:8 / ball python w:8 / adder w:2
+KMONS:   F = patrolling rock fish
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! = " .. dgn.loot_scrolls)
 KFEAT:   1 = W
 KFEAT:   2 = w
 SUBST:   QR = .
-NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1. / * = .WW
+NSUBST:  2 = 2:2 / 1:w / * = 2w, F = 2:F / 1:Fx / *:x
+NSUBST:  . = 1:1 / 1 = 1. / * = .WW
 SUBST:   e = !!!!????%, X = xx., Y = xw
 COLOUR:  1 = lightgreen
 COLOUR:  2 = green
@@ -887,11 +889,11 @@ xxxxxxxYwwwwwwwwwwwwwwwwwww2wwwYxxxxxxxxxxx
 xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
 xxxxxxwwwww2wwwww....wwwwwwwwwwwwYxxxxxxxxx
 xxxxxYwwwwwwwww..XXXX..wwwwwwwwwwwYxxxxxxxx
-xxxxxwww2wwwww.XXxxxxXXQ.wwwwwww2wwwYxxxxxx
+xxxxxwww2wwwww.XXFxxxXXQ.wwwwwww2wwwYxxxxxx
 xxxxYwwwwwww...XxxxxxxxxX..wwwwwwwwwwxxxxxx
 xxxxYwwwwww.XXXxxxxxxxxxxxX..wwwwwwwwYxxxxx
-xxxYwwwwww.XxxxxxxxxxxxxxxxxX.www2wwwwYxxxx
-xxxYwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxYwwwwww.XFxxxxxxxxxxxxxxxX.www2wwwwYxxxx
+xxxYwwwww.XxxxxxxxxxxxxxxxxxFX.wwwwwwwwYxxx
 xxxxYwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
 xxxxYwwwww.XxxxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwww.Xxxxxxxxceeeccccccc.wwwwwwwYxxxx
@@ -900,12 +902,12 @@ xxYwwwwwwwwwAXxxxxxceeeccccccc.wwww2wwYxxxx
 xxYwwww2wwww<XxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwwww.XxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxwwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
-xxxxYwwwwww.XXxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxxYwwwwww.XXFxxxxxxxxxxxxxFX.wwwwwwwwYxxx
 xxxYwwwwwwww..XxxxxxxxxxxxxxX.wwwwwwwwYxxxx
 xxxYwwwwwwww..XXxxxxxxxxxxXXX.wwwwwwwwYxxxx
 xxxxwwwwwwwwww..XxxxxxxxxX...wwwww2wwwwYxxx
 xxxxYwwww2wwwwww.XxxxxxXX.wwwwwwwwwwwwwYxxx
-xxxxxwwwwwwwwwww.XxxxxXR.wwwwwwwwwwwwwYxxxx
+xxxxxwwwwwwwwwww.XxxxFXR.wwwwwwwwwwwwwYxxxx
 xxxxYwwwwwwwwwwww.XXXX.wwwwwww2wwwwwYYxxxxx
 xxxxxYwwwwwwwwwwww....wwwwwwwwwwwwwYxxxxxxx
 xxxxxxYwwwww2wwwwwwwwwwwwwwwwwwwwwYxxxxxxxx
@@ -1281,7 +1283,7 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 MONS:    frilled lizard / ball python w:6 / adder w:4
-MONS:    rat / river rat w:6
+MONS:    rat w:20 / river rat w:12 / rock fish band w:2
 KMONS:   3 = adder
 KMONS:   4 = brain worm
 : item(dgn.loot_potions)
@@ -1425,7 +1427,8 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
 : else
-KMONS:   34 = kobold brigand / kobold brigand zombie
+KMONS:   3 = kobold brigand / kobold brigand zombie
+KMONS:   4 = patrolling rock fish zombie
 KMONS:   5 = phantom / crocodile zombie
 KFEAT:   B = altar_kikubaaqudgha
 SUBST:   F : VY

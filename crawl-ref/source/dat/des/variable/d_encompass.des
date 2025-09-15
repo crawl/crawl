@@ -930,8 +930,10 @@ WEIGHT: 5
 KMONS:  op = plant
 KMONS:  P = bush
 KMONS:  1 = merfolk
-KMONS:  2 = orc warrior / kobold brigand / two-headed ogre / troll / gnoll sergeant
-KMONS:  3 = orc priest / orc wizard / centaur / gnoll bouda
+KMONS:  2 = orc warrior / kobold brigand / \
+            two-headed ogre / troll / gnoll sergeant
+KMONS:  3 = orc priest / orc wizard / kobold geomancer w:5 / \
+            centaur / gnoll bouda
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:6 / manticore w:3 / black bear w:19

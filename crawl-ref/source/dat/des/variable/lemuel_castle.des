@@ -30,8 +30,8 @@ function castle_lemuel_setup(e)
            e.subst("| = *%%%")
         elseif you.depth() < 9 then
            e.mons("orc / gnoll / orc wizard / orc priest / ogre")
-           e.mons("gnoll bouda / gnoll sergeant / orc warrior"
-                  .. " / kobold brigand")
+           e.mons("gnoll bouda / gnoll sergeant / orc warrior w:5"
+                  .. " / kobold brigand / kobold geomancer w:5")
            e.mons("troll / two-headed ogre / cyclops / kobold demonologist")
            e.mons("hound / howler monkey / wolf w:5")
            e.mons("orc / gnoll / ogre")

@@ -251,7 +251,8 @@ ENDMAP
 NAME:   erik_orc_3
 TAGS:   orc_entry no_item_gen
 ORIENT: float
-MONS:   orc / kobold brigand w:2, orc wizard / orc priest / orc warrior
+MONS:   orc / kobold brigand w:2
+MONS:   orc wizard / orc priest / orc warrior / kobold geomancer w:2
 MONS:   ogre / troll, warg / cyclops
 KFEAT:  O = enter_orcish_mines
 SUBST:  1 = 11., 2 = 2222.

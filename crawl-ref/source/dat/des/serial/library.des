@@ -17,7 +17,8 @@ function init_serial_library_setup(e)
     if you.depth() < 7 then
        e.mons('orc wizard / white imp / shadow imp / drude w:3')
     elseif you.depth() < 12 then
-       e.mons('kobold demonologist / vampire / deep elf pyromancer')
+       e.mons('kobold geomancer / kobold demonologist w:5 / ' ..
+              'vampire / deep elf pyromancer')
     else
        e.mons('tengu conjurer / arcanist / occultist / boggart / ' ..
               'ogre mage / necromancer / deep elf zephyrmancer')

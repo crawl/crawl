@@ -504,6 +504,7 @@ KFEAT:  O = .
 MARKER: O = lua:fog_machine { cloud_type = "black smoke", \
                               pow_min = 25, pow_max = 25, \
                               delay = 30, size = 1, walk_dist = 0 }
+TILE:   b = dngn_crystal_darkgray
 : interest_check(_G)
 MAP
   b@b
@@ -3518,9 +3519,13 @@ TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
 DEPTH: D:3-
 KFEAT: _ = altar_vehumet
-MONS:  goblin; wand of flame /\
-       hobgoblin; wand of flame /\
-       kobold; wand of flame
+# Not quite just a D:1 monster with a wand later on...
+MONS:  goblin ; wand of flame / hobgoblin ; wand of flame / \
+       kobold ; wand of flame
+MONS:  kobold geomancer
+: if you.depth() > 6 then
+SUBST: 1 = 2
+: end
 : interest_check(_G)
 MAP
 .......
@@ -4151,9 +4156,16 @@ ENDMAP
 
 NAME:   lemuel_zombie_altar_yredelemnul
 TAGS:   no_pool_fixup uniq_altar_yredelemnul no_monster_gen temple_overflow_1
-TAGS:   temple_overflow_yredelemnul transparent  uniq_zombie_altar
+TAGS:   temple_overflow_yredelemnul transparent patrolling uniq_zombie_altar
 KFEAT:  _ = altar_yredelemnul
-MONS:   patrolling zombie
+MONS:   zombie
+: if you.in_branch("D") and you.depth() > 5 and you.depth() < 10 and
+:   crawl.one_chance_in(1) then
+KMONS:  F = rock fish zombie
+KFEAT:  Fm = clear_rock_wall
+NSUBST: A = 2:F / 1:Fm / *:m
+TILE:   Fm = dngn_transparent_wall_darkgray
+: end
 NSUBST: A = 2:1 / *:.
 MAP
 xxxxxxxxxxxxxxxx

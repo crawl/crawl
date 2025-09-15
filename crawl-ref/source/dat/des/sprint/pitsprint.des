@@ -16,11 +16,11 @@ function base_monster_setup(e)
                dart slug / scorpion / bombardier beetle / endoplasm / jelly /\
                jackal band / hound / ice beast / sky beast / black bear /\
                water moccasin / bullfrog / goblin / hobgoblin / kobold /\
-               kobold brigand band / gnoll band / gnoll bouda band w:6 /\
-               gnoll sergeant band w:6 / orc band / orc priest band /\
-               orc wizard band / ogre / centaur / phantom / zombie /\
-               bes kemwar / crimson imp / iron imp / white imp / drude /\
-               ufetubus band /  fire bat / crocodile / brain worm /\
+               kobold brigand band / kobold geomancer / gnoll band /\
+               gnoll bouda band w:6 / gnoll sergeant band w:6 / orc band /\
+               orc priest band / orc wizard band / ogre / centaur / phantom /\
+               zombie / bes kemwar / crimson imp / iron imp / white imp /\
+               drude / ufetubus band /  fire bat / crocodile / brain worm /\
                weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
@@ -38,8 +38,8 @@ function base_monster_setup(e)
   e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
                rakshasa / necromancer / ugly thing w:15 / tengu warrior /\
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\
-               raven / unseen horror / yaktaur / cyclops / deep troll /\
-               shapeshifter / fire elemental / water elemental /\
+               raven / mountainshell / unseen horror / yaktaur / cyclops /\
+               deep troll / shapeshifter / fire elemental / water elemental /\
                raiju / kobold blastminer band / orc high priest band w:5 /\
                orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
                black mamba / mana viper / merfolk avatar / wind drake /\
