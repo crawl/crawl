@@ -321,6 +321,8 @@ _valour_name_
 
 Action
 
+Conatus
+
 Conscience
 
 Courage
