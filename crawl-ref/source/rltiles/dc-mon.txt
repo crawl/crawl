@@ -1373,7 +1373,10 @@ nobody2
 
 ## Sprint specials
 %sdir mon/sprint
+flame-cult_kobold MONS_FLAME_CULT_KOBOLD
+witch MONS_WITCH
 dimme MONS_DIMME
+orb_golem MONS_ORB_GOLEM
 %rim 1
 
 %include dc-zombie.txt
