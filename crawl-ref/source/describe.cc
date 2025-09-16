@@ -2273,7 +2273,12 @@ static string _describe_ammo(const item_def &item)
     if (ammo_always_destroyed(item))
         description += "\n\nIt is always destroyed on impact.";
     else if (!ammo_never_destroyed(item))
-        description += "\n\nIt may be destroyed on impact.";
+    {
+        description += make_stringf(
+            "\n\nIt has a 1/%d chance to be destroyed on impact.",
+            ammo_destroy_chance(item)
+        );
+    }
 
     return description;
 }

@@ -957,17 +957,5 @@ static bool _thrown_object_destroyed(const item_def &item)
     if (ammo_never_destroyed(item))
         return false;
 
-    const int base_chance = ammo_type_destroy_chance(item.sub_type);
-    const int brand = get_ammo_brand(item);
-
-    // Inflate by 2 to avoid rounding errors.
-    const int mult = 2;
-    int chance = base_chance * mult;
-
-    if (brand == SPMSL_CURARE)
-        chance /= 2;
-
-    dprf("mulch chance: %d in %d", mult, chance);
-
-    return x_chance_in_y(mult, chance);
+    return one_chance_in(ammo_destroy_chance(item));
 }
