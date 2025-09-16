@@ -2266,7 +2266,7 @@ int ammo_destroy_chance(const item_def &missile)
     int chance = Missile_prop[ Missile_index[missile.sub_type] ].mulch_rate;
     const int brand = get_ammo_brand(missile);
 
-    if (brand == SPMSL_CURARE)
+    if (brand == SPMSL_CURARE || brand == SPMSL_DISJUNCTION)
         chance /= 2;
 
     dprf("mulch chance: one in %d", chance);
