@@ -1287,6 +1287,7 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_unbreathing(), monsterflags, "unbreathing");
         mons_check_flag(mon.is_insubstantial(), monsterflags, "insubstantial");
         mons_check_flag(mon.is_amorphous(), monsterflags, "amorphous");
+        mons_check_flag(bool(me->bitfields & M_WARDED), monsterflags, "warded");
 
         string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
