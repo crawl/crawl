@@ -362,7 +362,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 {
     auto flags = get_spell_flags(spell);
     int pow = mons_power_for_hd(spell, hd);
-    int range = spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
+    int range = calc_spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
     const bool has_range = mon_owner
                         && range > 0
                         && !testbits(flags, spflag::selfench);
@@ -427,6 +427,8 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
             return hellfire_mortar_damage(pow);
         case SPELL_DETONATION_CATALYST:
             return detonation_catalyst_damage(pow, false);
+        case SPELL_BOULDER:
+            return boulder_damage(pow, false);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers

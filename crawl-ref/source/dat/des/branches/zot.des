@@ -4512,6 +4512,46 @@ xxxcxxxx....xxxxxxc..Hcxxxx...........xxxxc.O.cxxxxxx....xxxxcxxx
            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   tekkud_klown_kollege
+TAGS:   no_monster_gen
+DEPTH:  Zot, !Zot:$
+WEIGHT: 3
+KMONS:  1 = killer klown
+KMONS:  2 = protean progenitor w:14 / juggernaut / draconian monk /\
+            draconian knight / executioner w:6
+# XXX: Very awkward to see the rewards without knowledge of ctrl-x.
+KITEM:  1 = | no_pickup / any weapon ego:chaos good_item no_pickup w:5
+KITEM:  2 = orb no_pickup / orb randart no_pickup w:5
+KFEAT:  ^ = harlequin's trap
+KFEAT:  ~ = tyrant's trap
+NSUBST: ~ = 4:^ / 4=^~~` / *:`, 1 = 2:1 / * = 12
+SUBST:  g = g-, G = GGg-
+KPROP:  '`-*12^~QRgG = no_tele_into
+KMASK:  '`*12^~QRgG = opaque
+FTILE:  -gGPQRS = floor_marble
+TILE:   n = dngn_transparent_stone_magenta
+MARKER: P = lua:transp_loc("kollege_entry")
+MARKER: Q = lua:transp_dest_loc("kollege_entry")
+MARKER: R = lua:transp_loc("kollege_exit")
+MARKER: S = lua:transp_dest_loc("kollege_exit")
+: vault_metal_statue_setup(_G, "g", "misfortune conduit")
+MAP
+..............
+.GnnnnnnnnnnS.
+.nn`~g~~g~`nn.
+.n`g~~^~~~g`n.
+.n~~Gm==mG~~n.
+.ng~mm12mm~gn.
+.n~^=12R2=~~n.
+.n~~=2*21=^~n.
+.ng~mm21mm~gn.
+.n~~Gm==mG~~n.
+.n`Q~~~^~~g`n.
+.nn`~g~~g~`nn.
+.PnnnnnnnnnnG.
+@.............
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

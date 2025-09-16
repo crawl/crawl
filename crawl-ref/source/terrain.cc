@@ -402,6 +402,13 @@ bool cell_is_solid(const coord_def &c)
     return feat_is_solid(env.grid(c));
 }
 
+/** Can spells and other abilities target this cell?
+ */
+bool cell_is_invalid_target(const coord_def &c)
+{
+    return cell_is_solid(c) && !actor_at(c);
+}
+
 /** Can a human stand on this feature without flying?
  */
 bool feat_has_solid_floor(dungeon_feature_type feat)
@@ -1079,11 +1086,19 @@ static bool _item_traversable_square(const coord_def &pos)
     return !cell_is_solid(pos);
 }
 
+static bool _item_visible_square(const coord_def &pos)
+{
+    return _item_safe_square(pos) && you.see_cell(pos) && you.pos() != pos;
+}
+
 // Moves an item on the floor to the nearest adjacent floor-space.
-static bool _dgn_shift_item(const coord_def &pos, item_def &item)
+static bool _dgn_shift_item(const coord_def &pos, item_def &item,
+                            bool keep_visible)
 {
     // First try to avoid pushing things through solid features...
-    coord_def np = _dgn_find_nearest_square(pos, _item_safe_square,
+    coord_def np = _dgn_find_nearest_square(pos,
+                                            keep_visible ? _item_visible_square
+                                                         : _item_safe_square,
                                             _item_traversable_square);
     // ... but if we have to, so be it.
     if (!in_bounds(np) || np == pos)
@@ -1226,7 +1241,8 @@ static bool _dgn_shift_feature(const coord_def &pos)
     return true;
 }
 
-static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
+void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
+                             bool keep_in_sight)
 {
     const dungeon_feature_type feat = env.grid(pos);
 
@@ -1241,7 +1257,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
         // Game-critical item.
         if (preserve_items || env.item[curr].is_critical())
-            _dgn_shift_item(pos, env.item[curr]);
+            _dgn_shift_item(pos, env.item[curr], keep_in_sight);
         else
         {
             feat_splash_noise(feat);
@@ -1360,7 +1376,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             destroy_trap(pos);
     }
 
-    _dgn_check_terrain_items(pos, preserve_items);
+    dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
     if (!wizmode)
         _dgn_check_terrain_player(pos);
@@ -1592,12 +1608,12 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     if (!swap_everything)
     {
-        _dgn_check_terrain_items(pos1, false);
+        dgn_check_terrain_items(pos1, false);
         _dgn_check_terrain_monsters(pos1);
         _dgn_check_terrain_player(pos1);
         set_terrain_changed(pos1);
 
-        _dgn_check_terrain_items(pos2, false);
+        dgn_check_terrain_items(pos2, false);
         _dgn_check_terrain_monsters(pos2);
         _dgn_check_terrain_player(pos2);
         set_terrain_changed(pos2);

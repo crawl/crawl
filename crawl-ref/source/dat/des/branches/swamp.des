@@ -2457,7 +2457,7 @@ MAP
 ENDMAP
 
 NAME:    nzn_swamp_blast_mining
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup patrolling
 WEIGHT:  5
 ITEM:    stone, tin of tremorstones
 MONS:    bloated husk, earth elemental

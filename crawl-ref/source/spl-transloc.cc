@@ -72,8 +72,7 @@
  */
 static void _place_tloc_cloud(const coord_def &origin)
 {
-    if (!cell_is_solid(origin))
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 }
 
 spret cast_disjunction(int pow, bool fail)
@@ -207,8 +206,7 @@ spret spider_jump()
     mpr("You jump through the air!");
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
-    if (!cell_is_solid(origin))
-        place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
+    place_cloud(CLOUD_DUST, origin, 2 + random2(3), &you);
 
     crawl_state.potential_pursuers.clear();
 
@@ -490,8 +488,7 @@ spret frog_hop(bool fail, dist *target)
         return spret::success; // of a sort
     }
 
-    if (!cell_is_solid(you.pos())) // should be safe.....
-        place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
+    place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
     move_player_to_grid(target->target, false);
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -562,7 +559,7 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
         return false;
     }
     else if (grid_distance(agent.pos(), target)
-             > spell_range(SPELL_ELECTRIC_CHARGE, 50))
+             > spell_range(SPELL_ELECTRIC_CHARGE, &agent))
     {
         if (fail_reason)
             *fail_reason = "That's out of range!";
@@ -821,16 +818,9 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
     // Draw a cloud trail behind the charging agent
     ray_def ray;
     if (find_ray(orig_pos, target, ray, opc_solid))
-    {
         while (ray.advance() && ray.pos() != target)
-        {
-            if (!cell_is_solid(ray.pos()) &&
-                (!agent.is_player() || !apply_cloud_trail(ray.pos())))
-            {
+            if (!agent.is_player() || !apply_cloud_trail(ray.pos()))
                 place_cloud(CLOUD_ELECTRICITY, ray.pos(), 2 + random2(3), &agent);
-            }
-        }
-    }
 
     if (agent.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
@@ -1722,7 +1712,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
     }
 
     if (grid_distance(where, you.pos())
-        > spell_range(SPELL_GOLUBRIAS_PASSAGE, pow))
+        > spell_range(SPELL_GOLUBRIAS_PASSAGE, &you, pow))
     {
         mpr("That's out of range!");
         return spret::abort;
@@ -1817,7 +1807,7 @@ static int _disperse_monster(monster& mon, int pow)
 spret cast_dispersal(int pow, bool fail)
 {
     fail_check();
-    const int radius = spell_range(SPELL_DISPERSAL, pow);
+    const int radius = spell_range(SPELL_DISPERSAL, &you, pow);
     if (!apply_monsters_around_square([pow] (monster& mon) {
             return _disperse_monster(mon, pow);
         }, you.pos(), radius))
@@ -2113,7 +2103,7 @@ spret word_of_chaos(int pow, bool fail)
 
 spret blinkbolt(int power, bolt &beam, bool fail)
 {
-    if (cell_is_solid(beam.target))
+    if (cell_is_invalid_target(beam.target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
@@ -2249,7 +2239,7 @@ int piledriver_path_distance(const coord_def& target, bool actual)
     {
         // Abort if we leave the player's LoS without finding something to hit.
         if (!you.see_cell_no_trans(pos)
-            || grid_distance(target, pos) > spell_range(SPELL_PILEDRIVER, 100))
+            || grid_distance(target, pos) > spell_range(SPELL_PILEDRIVER))
         {
             return 0;
         }

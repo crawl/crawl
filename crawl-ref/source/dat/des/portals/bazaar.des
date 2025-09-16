@@ -403,18 +403,29 @@ NAME:    bazaar_lake
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  20
-SUBST:   a = W.
-SHUFFLE: ABCDEF
-SUBST:   A = Y
-SHUFFLE: XY
-SUBST:   X = <, Y = >
+KMONS:   ? = patrolling rock fish att:good_neutral
 # high quality shops, pity they don't stay :p
 KFEAT:   B = general shop
 KFEAT:   C = book shop / jewellery shop
 KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
+KFEAT:   ? = m
+SHUFFLE: ABCDEF
+SUBST:   A = Y
+SHUFFLE: XY
+SUBST:   X = <, Y = >
 : bazaar_setup(_G)
+: if you.get_base_mutation_level("hated by all") ~= 1 and
+:   you.god() ~= "okawaru" and crawl.one_chance_in(10) then
+TAGS:    no_pool_fixup
+NSUBST:  ? = 2:? / 1:?m / *:m
+SUBST:   w = m, W = w, a = m.
+FTILE:   ?m = floor_pebble_lightblue
+KPROP:   w = no_tele_into
+: else
+SUBST:   a = W.
+: end
 : local colour = dgn.get_floor_colour()
 : if colour == "blue" then
 SUBST:   w = W
@@ -435,10 +446,10 @@ xxxxxxxxxx.............................xxxxxxxxxxx
 xxxxxxxxx...............................xxxxxxxxxx
 xxxxxxxx..............aaaaa..............xxxxxxxxx
 xxxxxxxx.....E.......awwwwwaa......A.....xxxxxxxxx
-xxxxxxx............aawwwwwwwww............xxxxxxxx
-xxxxxxx...........awwwwwWwwwwa............xxxxxxxx
-xxxxxxx..........awwwwwWWWwwwa............xxxxxxxx
-xxxxxxxY.T........awwwwwwWWwwwa........T.Yxxxxxxxx
+xxxxxxx............aawww?wwwww............xxxxxxxx
+xxxxxxx...........awwww?W?wwwa............xxxxxxxx
+xxxxxxx..........awwww?WWW?wwa............xxxxxxxx
+xxxxxxxY.T........awwww??WWwwwa........T.Yxxxxxxxx
 xxxxxxx............awwwwwwwwaX............xxxxxxxx
 xxxxxxx.............aawwwwwwwwa...........xxxxxxxx
 xxxxxxx...............aaaaaaaa............xxxxxxxx

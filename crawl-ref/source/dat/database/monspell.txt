@@ -683,6 +683,10 @@ bombardier beetle cast
 
 @The_monster@ sprays incendiary fluid @at@ @target@.
 %%%%
+March of Sorrows bone dragon cast
+
+@The_monster@ breathes [collective despair|endless sorrows] @at@ @target@.
+%%%%
 brain worm cast
 
 @The_monster_possessive@ bulging head throbs.
@@ -707,6 +711,10 @@ w:5
 cognitogaunt cast
 
 @The_monster@ glimmers violently.
+%%%%
+clockroach cast
+
+@The_monster@ sprays sand from its hourglass @at@ @target@.
 %%%%
 crystal echidna cast targeted
 
@@ -1045,6 +1053,10 @@ You hear a violent whirl.
 thrashing horror cast
 
 @The_monster@ churns violently!
+%%%%
+undertaker cast targeted
+
+@The_monster@ reaches out for @target@.
 %%%%
 Flashing Balestra undying armoury cast
 

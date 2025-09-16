@@ -430,7 +430,7 @@ KMONS:  n = patrolling death drake
 KITEM:  n = potion of enlightenment q:3
 KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
-KMONS:  p = earth elemental
+KMONS:  p = gargoyle
 SHUFFLE: fgiAC
 KMONS:  f = royal mummy
 KMONS:  g = golden eye

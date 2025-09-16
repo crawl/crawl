@@ -34,6 +34,7 @@ private:
 actor* actor_at(const coord_def& c);
 
 bool cell_is_solid(const coord_def &c);
+bool cell_is_invalid_target(const coord_def &c);
 bool cell_is_runed(const coord_def &p);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
@@ -157,6 +158,9 @@ void destroy_wall(const coord_def& p);
 void set_terrain_changed(const coord_def c);
 bool cell_triggers_conduct(const coord_def pos);
 bool is_boring_terrain(dungeon_feature_type feat);
+
+void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
+                             bool keep_in_sight = false);
 
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,

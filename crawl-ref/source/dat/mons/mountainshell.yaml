@@ -1,0 +1,18 @@
+name: "mountainshell"
+glyph: {char: "t", colour: yellow}
+flags: [cold_blood, warded]
+exp: 940
+will: 80
+attacks:
+ - {type: headbutt, damage: 24}
+hd: 12
+hp_10x: 610
+ac: 7
+ev: 2
+has_corpse: true
+shout: growl
+intelligence: animal
+speed: 7
+size: large
+shape: quadruped_tailless
+spells: mountainshell

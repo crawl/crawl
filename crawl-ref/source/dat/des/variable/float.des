@@ -1801,17 +1801,22 @@ WEIGHT: 5
 MONS:   pile of debris
 KMONS:  2 = earth elemental
 KITEM:  2 = any scroll / any potion
+KPROP:  l = no_tele_into
 MAP
-cccccccccc
-c{..11..>c
-c........c
-c........c
-c1..22..1c
-c1..22..1c
-c........c
-c........c
-c<..11..}c
-cccccccccc
+cccccccccccccc
+cllllllllllllc
+clcccccccccclc
+clc{..11..>clc
+clc........clc
+clc........clc
+clc1..22..1clc
+clc1..22..1clc
+clc........clc
+clc........clc
+clc<..11..}clc
+clcccccccccclc
+cllllllllllllc
+cccccccccccccc
 ENDMAP
 
 ##############################################################################
@@ -1986,7 +1991,7 @@ NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-11
-MONS:   giant cockroach w:30 / butterfly w:20
+MONS:   clockroach w:30 / butterfly w:20
 MONS:   scorpion
 MONS:   killer bee / scorpion / vampire mosquito w:5
 KITEM:  * = *
@@ -2576,7 +2581,7 @@ KFEAT:  rs = w
 # this room.
 KMONS:  1 = salamander / deep elf pyromancer
 KMONS:  2 = fire giant
-KMONS:  3 = earth elemental / stone giant
+KMONS:  3 = gargoyle / stone giant
 KMONS:  4 = war gargoyle
 KMONS:  5 = water elemental / elemental wellspring
 KMONS:  6 = frost giant
@@ -2901,8 +2906,8 @@ ORIENT:  float
 MONS:    patrolling laughing skull
 MONS:    zombie / draugr w:4
 : if you.in_branch("Crypt") then
-MONS:    vampire knight / bone dragon w:5 / flayed ghost
-MONS:    lich / revenant soulmonger
+MONS:    vampire knight / cognitogaunt w:5 / flayed ghost
+MONS:    lich / revenant soulmonger /  bone dragon
 KMONS:   5 = Jory / vampire bloodprince / revenant, \
              vampire bloodprince / revenant soulmonger
 SUBST:   x = v
@@ -5664,7 +5669,7 @@ DEPTH:  D:8-12
 ORIENT: float
 KMONS:  1 = kobold demonologist
 KMONS:  2 = shadow imp
-KMONS:  k = kobold / kobold brigand w:3
+KMONS:  k = kobold w:9 / kobold brigand w:3 / kobold geomancer w:1
 KMONS:  u = kobold draugr w:4 / kobold zombie w:12 / spectral kobold w:4
 KITEM:  ?1 = kobold skeleton
 KPROP:  ?A1 = bloody
@@ -7307,10 +7312,10 @@ SUBST:   6 = 677
 :   end
 : end
 ITEM:    ice dragon scales w:15 / kite shield ego:cold_resistance / \
-         staff of cold w:3 / rimehorn talisman w:2
+         helmet ego:ice w:4 / staff of cold w:3 / rimehorn talisman w:2
 ITEM:    ice dragon scales randart w:15 / tower shield ego:cold_resistance / \
-         ring of protection from cold randart w:4 / staff of cold randart w:3 / \
-         rimehorn talisman randart w:2
+         ring of protection from cold randart w:4 / helmet ego:ice randart w:4 / \
+         staff of cold randart w:3 / rimehorn talisman randart w:2
 ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannonade
 ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup
@@ -11200,9 +11205,9 @@ xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_roachtagon
-DEPTH:  D:2-3
+DEPTH:  D:4-5
 ORIENT: float
-MONS:   giant cockroach
+MONS:   clockroach
 NSUBST: 1 = 5:1 / 10 = 1. / 2:% / 2 = %. / *:.
 SUBST:  " = @x
 MAP
@@ -11721,7 +11726,7 @@ SHUFFLE: def
 KMONS:   1 = patrolling ettin / patrolling iron troll
 KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
 KMONS:   3 = ogre mage / arcanist / occultist / deep elf pyromancer / \
-         / deep elf zephyrmancer / boggart / necromancer
+             deep elf zephyrmancer / boggart / necromancer
 : elseif you.in_branch("Orc") then
 KMONS:   1 = patrolling stone giant / patrolling ettin
 KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
@@ -11754,7 +11759,7 @@ MARKER:  E = lua:fog_machine { \
 # In Vaults we let the layout set the wall type and need a border of floor.  In
 # other branches, we remove the border squares.
 : if you.in_branch("Vaults") then
-SUBST:   v = x
+SUBST:   v = x, @ = .
 :   vaults_hard_standard(_G)
 FTILE:   `PQR = floor_metal_gold
 : else

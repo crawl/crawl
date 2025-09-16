@@ -870,8 +870,9 @@ partially affected by fire resistance.
 bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many
-dragons by powerful necromantic magic. Fortunately, whatever organ produces a
-dragon's fearsome breath was lost in the process.
+dragons by powerful necromantic magic. The collective despair of such
+desecrated dragons gives this horror its own undying breath weapon, in
+billowing clouds of excruciating misery.
 %%%%
 boulder
 
@@ -1009,6 +1010,14 @@ Some sorcerers care little for unholy realms or undead forms, seeking power
 instead in the whims of cruel chaos. This ominous owl-winged head is all that
 remains of a former archmage: it delights in spreading misfortune and drinking
 blood in its new airborne form.
+%%%%
+clockroach
+
+A common dungeon pest that combines the worst features of a scavenging insect
+and a looming deadline.
+
+Time flows strangely around it, rewinding any injuries inflicted upon it unless
+the source of them is near enough to be caught up in its timestream.
 %%%%
 cognitogaunt
 
@@ -1336,8 +1345,9 @@ A member of a short, sturdy mountain-dwelling folk.
 %%%%
 earth elemental
 
-A spirit drawn from the elemental plane of earth, which exists in this world by
-inhabiting a lump of earth and rocks.
+A spirit drawn from the elemental plane of earth. It exists in this world as a
+sinuous stream of silt and stone, capable of smoothly flowing through solid
+rock.
 %%%%
 efreet
 
@@ -1537,11 +1547,6 @@ ghoul
 A decayed cadaver, reanimated and accursed with a terrible hunger. It desires
 nothing but to feed on the flesh of the living, and will fell its victims with
 its vicious claws.
-%%%%
-giant cockroach
-
-A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
-it is in fact quite susceptible to mutagenic energies.
 %%%%
 glass eye
 
@@ -1953,6 +1958,11 @@ A skull-masked kobold, its body mutated by forbidden magics. It conducts vile
 experiments in the service of demonic powers, formulating ever more terrible
 monstrosities as vessels for devilish minds.
 %%%%
+kobold geomancer
+
+A wily kobold who has learned to weaponise every crack and crevice that lines
+the walls of its domain.
+%%%%
 komodo dragon
 
 An enormous monitor lizard more than capable of preying on large animals.
@@ -2102,6 +2112,14 @@ moth of wrath
 A moth known for its ability to inspire rage by touching its foes, or merely
 gazing at its friends. For some inexplicable reason, it was eradicated from
 the surface centuries ago.
+%%%%
+mountainshell
+
+An enormous land tortoise whose shell is so thick and rock-encrusted that
+sleeping ones are frequently mistaken for geological formations. And like a
+mountain, its exterior is nearly impervious to any destructive force; only at
+close range can one properly aim for the narrow gaps between its plates to
+strike the tender flesh within.
 %%%%
 mummy
 
@@ -2597,6 +2615,11 @@ river rat
 
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
+%%%%
+rock fish
+
+A strange stone-scaled fish that swims through solid rock with the same ease
+that most fish do through water.
 %%%%
 rockslime
 
@@ -3178,6 +3201,14 @@ ugly thing
 
 An ugly thing. According to legend, it is the otherworldly spawn of a wizard's
 breeding experiment. Yuck.
+%%%%
+undertaker
+
+The Dungeon's vast repositories of the dead and the unholy realms thereafter
+both require regular restocking and reorganisation, far beyond the coordination
+of the restless dead. These corpse-collecting constructs burrow through the
+earth and command divisions of zombified hands to assist them in stealing away
+carrion, and may also violently create new corpses for such purposes.
 %%%%
 unseen horror
 

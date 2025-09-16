@@ -96,8 +96,6 @@ int list_spells(bool toggle_with_I = true, bool transient = false,
                 const string &title = "cast");
 int raw_spell_fail(spell_type spell, bool enkindled = false);
 int calc_spell_power(spell_type spell);
-int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
-                     bool ignore_shadows = false);
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);

@@ -1023,12 +1023,9 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                mons->suicide();
-                used = true;
-                break;
-            }
+            mons->suicide();
+            used = true;
+            break;
         }
         break;
 
@@ -1054,12 +1051,9 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                seeker_attack(*mons, **targ);
-                used = true;
-                break;
-            }
+            seeker_attack(*mons, **targ);
+            used = true;
+            break;
         }
         break;
 
@@ -1212,7 +1206,7 @@ bool mon_special_ability(monster* mons)
         // If we are engaging the player and have full memories, burn one fairly
         // immediately.
         if (mons->foe == MHITYOU && mons->can_see(you)
-            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
+            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == NOBODY_MAX_MEMORIES
             && one_chance_in(3))
         {
             pyrrhic_recollection(*mons);
@@ -1299,7 +1293,7 @@ void initialize_nobody_memories(monster& nobody)
     for (size_t i = 0; i < _recollections.size(); ++i)
         weights.push_back({i, _recollections[i].weight});
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < NOBODY_MAX_MEMORIES; ++i)
     {
         const int index = *random_choose_weighted(weights);
         memories.push_back(index);

@@ -5158,7 +5158,7 @@ bool jewellery_is_redundant(const item_def& item)
     int count = 0;
     for (int i = 0; i < MAX_GEAR; ++i)
     {
-        if (you.inv[i].is_type(OBJ_JEWELLERY, type))
+        if (you.inv[i].is_type(OBJ_JEWELLERY, type) && !is_artefact(you.inv[i]))
         {
             ++count;
             if (count >= limit)

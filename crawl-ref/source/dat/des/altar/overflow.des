@@ -145,9 +145,9 @@ function species_mock(e)
   elseif you.race() == "Felid" then
     return "sphinx marauder zombie"
   elseif you.race() == "Formicid" then
-    return "giant cockroach"
+    return "clockroach"
   elseif you.race() == "Gargoyle" then
-    return "earth elemental"
+    return "rockslime"
   elseif you.race() == "Kobold" then
     return "boggart"
   elseif you.race() == "Merfolk" then
@@ -504,6 +504,7 @@ KFEAT:  O = .
 MARKER: O = lua:fog_machine { cloud_type = "black smoke", \
                               pow_min = 25, pow_max = 25, \
                               delay = 30, size = 1, walk_dist = 0 }
+TILE:   b = dngn_crystal_darkgray
 : interest_check(_G)
 MAP
   b@b
@@ -2456,12 +2457,13 @@ KPROP:   faew = no_tele_into
 KMASK:   faew = opaque
 KMONS:   f = fire elemental
 KMONS:   a = air elemental
-KMONS:   e = earth elemental
+KMONS:   e = rock fish
 KMONS:   w = water elemental
 KFEAT:   _ = altar_qazlal
 KFEAT:   f = lava
 KFEAT:   w = deep_water
 KFEAT:   CDEF = c
+KPROP:   e = no_tele_into
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
                                pow_min = 100, pow_max = 100, delay = 1, \
                                size = 1, walk_dist = 0, start_clouds = 1 }
@@ -2694,7 +2696,7 @@ TAGS: no_monster_gen no_item_gen
 SHUFFLE: MCSBP
 KFEAT: _ = altar_ru
 KMONS: P = ball python perm_ench:paralysis / rat perm_ench:paralysis / \
-  frilled lizard perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
+  frilled lizard perm_ench:paralysis / \
   quokka perm_ench:paralysis / kobold w:5 perm_ench:paralysis / \
   goblin w:5 perm_ench:paralysis / hobgoblin w:5 perm_ench:paralysis
 KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
@@ -2702,7 +2704,7 @@ KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
 KMONS: B = ball python perm_ench:blind / frilled lizard perm_ench:blind / \
-  giant cockroach perm_ench:blind / bat perm_ench:blind
+  bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
 @...   ...@
@@ -3517,9 +3519,13 @@ TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
 DEPTH: D:3-
 KFEAT: _ = altar_vehumet
-MONS:  goblin; wand of flame /\
-       hobgoblin; wand of flame /\
-       kobold; wand of flame
+# Not quite just a D:1 monster with a wand later on...
+MONS:  goblin ; wand of flame / hobgoblin ; wand of flame / \
+       kobold ; wand of flame
+MONS:  kobold geomancer
+: if you.depth() > 6 then
+SUBST: 1 = 2
+: end
 : interest_check(_G)
 MAP
 .......
@@ -3846,13 +3852,13 @@ KMASK:   .1 = no_trap_gen
 COLOUR:  .1 = random
 FTILE:   ._<>1 = floor_pebble
 MAP
- xxxxxxx
- x.....x
- m.....x
-@m.._..x
- m.....x
- x.....x
- xxxxxxx
+  xxxxxxx
+  x.....x
+  m.....x
+@_m.._..x
+  m.....x
+  x.....x
+  xxxxxxx
 ENDMAP
 
 NAME:    xom_confusion_cloud
@@ -4150,9 +4156,16 @@ ENDMAP
 
 NAME:   lemuel_zombie_altar_yredelemnul
 TAGS:   no_pool_fixup uniq_altar_yredelemnul no_monster_gen temple_overflow_1
-TAGS:   temple_overflow_yredelemnul transparent  uniq_zombie_altar
+TAGS:   temple_overflow_yredelemnul transparent patrolling uniq_zombie_altar
 KFEAT:  _ = altar_yredelemnul
-MONS:   patrolling zombie
+MONS:   zombie
+: if you.in_branch("D") and you.depth() > 5 and you.depth() < 10 and
+:   crawl.one_chance_in(1) then
+KMONS:  F = rock fish zombie
+KFEAT:  Fm = clear_rock_wall
+NSUBST: A = 2:F / 1:Fm / *:m
+TILE:   Fm = dngn_transparent_wall_darkgray
+: end
 NSUBST: A = 2:1 / *:.
 MAP
 xxxxxxxxxxxxxxxx

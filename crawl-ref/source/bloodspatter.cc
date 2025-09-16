@@ -146,10 +146,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         env.pgrid(where) |= FPROP_BLOODY;
         _orient_wall_blood(where, from, old_blood);
 
-        if (x_chance_in_y(ignite_blood, 3)
-            && you.see_cell(where)
-            && !cell_is_solid(where)
-            && !cloud_at(where))
+        if (x_chance_in_y(ignite_blood, 3) && you.see_cell(where))
         {
             int dur = 2 + ignite_blood + random2(2 * ignite_blood);
             place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,

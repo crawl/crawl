@@ -34,7 +34,7 @@ function grandhive_vaults(e, hivewallglyph)
                      blink frog w:8 / manticore w:4 / hell rat w:4 / raven w:2')
         e.kmons('8 = death yak w:14 / hydra / skyshark w:4 / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
-                     boulder beetle w:2 / catoblepas w:2')
+                     boulder beetle w:2 / catoblepas w:2 / mountainshell w:2')
     end
 end
 
@@ -386,7 +386,8 @@ ORIENT: northwest
 DEPTH:  Depths, Crypt
 WEIGHT: 5 (Depths), 10
 MONS:   laughing skull, draugr
-MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
+MONS:   skeletal warrior band / bone dragon w:1 / \
+        lich w:1 / curse skull w:1 / ancient champion w:1
 SUBST:  1 = 11..., 2 = 222.., G : GGccV.
 : vault_metal_statue_setup(_G, "S", "soul conduit")
 MAP
@@ -1253,19 +1254,19 @@ SUBST:   BDFHJLNPR = .
 
   local function monslist(depth)
     local mons = nil
-    mons = add_mons(mons, "acid dragon", semi(depth, 11, 21, 334))
+    mons = add_mons(mons, "tengu conjurer", semi(depth, 11, 21, 334))
     mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
     mons = add_mons(mons, "arcanist", peak(depth, 14, 22, 89))
     mons = add_mons(mons, "fire dragon", peak(depth, 14, 24, 192))
     mons = add_mons(mons, "ice dragon", semi(depth, 17, 25, 136))
     mons = add_mons(mons, "necromancer band", peak(depth, 18, 24, 52))
-    mons = add_mons(mons, "orc sorcerer", peak(depth, 21, 27, 25))
     mons = add_mons(mons, "frost giant", peak(depth, 22, 30, 136))
     mons = add_mons(mons, "fire giant", peak(depth, 22, 30, 136))
     mons = add_mons(mons, "lich", peak(depth, 22, 30, 66))
+    mons = add_mons(mons, "spark wasp", peak(depth, 23, 31, 25))
     mons = add_mons(mons, "hell knight band", peak(depth, 23, 29, 25))
     mons = add_mons(mons, "storm dragon", peak(depth, 23, 31, 89))
-    mons = add_mons(mons, "deep elf pyromancer / deep elf zephyrmancer", flat(depth, 26, 28, 6))
+    mons = add_mons(mons, "tengu reaver", flat(depth, 26, 33, 12))
     mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
     mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
     mons = add_mons(mons, "thermic dynamo", peak(depth, 28, 31, 25))
@@ -1418,7 +1419,7 @@ PLACE:  D:$
 WEIGHT: 2 (D:$), 10
 KFEAT:  W = open_sea
 : if you.depth() < 12 then
-MONS:   ogre, orc warrior, gnoll bouda, centaur, kobold brigand
+MONS:   ogre, orc warrior, kobold geomancer, centaur, kobold brigand
 KMONS:  8 = orc warrior band
 KMONS:  9 = gnoll bouda band
 SUBST:  GU = H
@@ -1485,10 +1486,13 @@ NAME:   kennysheep_kobold_camp
 TAGS:   no_monster_gen no_trap_gen
 ORIENT: north
 DEPTH:  D:4-9
-MONS:   kobold brigand, kobold
+MONS:   kobold brigand, kobold geomancer, kobold
 KMONS:  p = plant
 KFEAT:  M = cache of meat
-NSUBST: . = 13:2 / 3 = 2. / *:., ' = 5:C / 2 = M.. / 5:2
+NSUBST: . = 13:3 / 3 = 3. / *:., ' = 5:C / 2 = M.. / 5:3 / *:.
+: if you.depth() > 6 then
+NSUBST: 3 = 2:2 / *:3
+: end
 SUBST:  P = tp`
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
@@ -1650,7 +1654,7 @@ TAGS:    no_monster_gen
 ORIENT:  north
 DEPTH:   D:6-9
 MONS:    kobold / gnoll / hobgoblin / hound w:5
-MONS:    kobold brigand / orc warrior w:5 / ogre / gnoll sergeant
+MONS:    kobold brigand / kobold geomancer w:5 / ogre / gnoll sergeant
 MONS:    orc priest / orc wizard / gnoll bouda / centaur
 KFEAT:   F = cache of fruit
 KFEAT:   f = cache of meat
@@ -1728,8 +1732,8 @@ TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D:12-, !D:$
 ORIENT:  northwest
 MONS:    kobold blastminer, kobold brigand, patrolling kobold demonologist
-MONS:    kobold, plant, crimson imp ; sling / white imp / iron imp ; sling
-MONS:    obsidian statue
+MONS:    kobold / kobold geomancer w:1, plant
+MONS:    crimson imp ; sling / white imp / iron imp ; sling, obsidian statue
 KMONS:   g = bush
 KFEAT:   M = cache of meat
 SHUFFLE: !'
@@ -2793,6 +2797,7 @@ TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance pre_id / \
+             plate armour ego:command pre_id w:5 / \
              fire dragon scales good_item / fire dragon scales randart / \
              sanguine talisman w:2 / dragon-coil talisman w:3
 KITEM:   d = large rock q:1 / stone q:10
@@ -2986,12 +2991,14 @@ ORIENT:  northeast
 MONS:    centaur warrior, centaur warrior simulacrum
 MONS:    basilisk, shapeshifter, basilisk perm_ench:shapeshifter
 MONS:    death knight, tengu conjurer / rakshasa
+ITEM:    orb ego:glass pre_id / mundane crystal plate armour w:2
 : else
 KMONS:   0 = rakshasa
 MONS:    spriggan berserker, spriggan berserker simulacrum
 MONS:    glass eye, glowing shapeshifter
 MONS:    glass eye perm_ench:glowing_shapeshifter
 MONS:    flayed ghost, storm dragon
+ITEM:    orb ego:glass randart pre_id / crystal plate armour w:2
 : end
 NSUBST:  ? = 1:3 / 2:4 / 1:5 / *:0, ! = 1:3 / 1:4 / 1:5
 NSUBST:  6 = 1:. / *:6, 2 = 1:. / *:2, . = 2 = 09. / *:.
@@ -3002,7 +3009,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbxx
 xbbbb..........nnnnn..........bbbbxx
-xbb||..n.n.......n.......n.n..**bbxx
+xbb||..n.n.......n.......n.n..*dbbxx
 xbb|....n.n.............n.n....*bbxx
 xb.......n.n...!.X.!...n.n.......bxx
 xb.6...9..n.n....6....n.n........bxx
@@ -3269,13 +3276,14 @@ TILE:     z = dngn_stone_wall_red
 : end
 ITEM:     chain mail ego:fire_resistance good_item / \
           fire dragon scales good_item / scarf ego:resistance w:5 / \
-          great sword randart ego:flaming / \
+          pair of gloves ego:fire / great sword randart ego:flaming / \
           staff of fire / staff of earth w:5 / book of fire / \
           book of scorching / orb randart artprops:Fire&&rF / \
           randbook disc1:forgecraft spells:forge_monarch_bomb w:5 / \
           dragon-coil talisman / granite talisman w:5
 ITEM:     plate armour ego:fire_resistance good_item / \
-          fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
+          fire dragon scales randart / pair of gloves randart artprops:Fire / \
+          kite shield ego:fire_resistance w:5 / \
           double sword ego:flaming good_item w:5 pre_id / \
           triple sword ego:flaming good_item pre_id / \
           staff of fire randart / staff of earth randart w:5 / \
@@ -3431,9 +3439,13 @@ MONS:    draconian stormcaller / draconian annihilator
 MONS:    quicksilver dragon / electric golem w:6
 MONS:    ghost moth / shadow dragon w:5 / curse toe w:5
 MONS:    purple draconian / yellow draconian / white draconian / death cob w:2
+KMONS:   Z = orb of entropy
 SHUFFLE: }])
 SUBST:   } = }:70 >, ] = ]:50 >, % = ddeeef, | = ggghhi
 NSUBST:  . = 2:1 / 2:2 / *:.
+:   if dgn.zot_orb_type() == "orb of entropy" then
+NSUBST:  1 = 1:Z / 1:1Z / 1:1. / 1:. / *:1
+:   end
 : end
 : if you.in_branch("Zot") then
 KMONS:   P = withered plant

@@ -14,7 +14,7 @@
 
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_cockroach CORPSE_GIANT_COCKROACH
+clockroach CORPSE_CLOCKROACH
 radroach CORPSE_RADROACH
 
 ## Batty monsters ('b')
@@ -76,6 +76,7 @@ crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+mountainshell CORPSE_MOUNTAINSHELL
 fire_crab CORPSE_FIRE_CRAB
 ghost_crab CORPSE_GHOST_CRAB
 %sdir mon/abyss

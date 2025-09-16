@@ -12,15 +12,15 @@ function base_monster_setup(e)
   -- The vague order goes: D / Vaults / Elf / Depths, Lair, Lair branches,
   -- Zot, holies, undead, demons and Hells, portals and Sprint.
   e.kmons("A = rat w:5 / river rat w:15 / quokka / bat / frilled lizard /\
-               iguana / ball python / adder / giant cockroach / ribbon worm /\
+               iguana / ball python / adder / clockroach / ribbon worm /\
                dart slug / scorpion / bombardier beetle / endoplasm / jelly /\
                jackal band / hound / ice beast / sky beast / black bear /\
                water moccasin / bullfrog / goblin / hobgoblin / kobold /\
-               kobold brigand band / gnoll band / gnoll bouda band w:6 /\
-               gnoll sergeant band w:6 / orc band / orc priest band /\
-               orc wizard band / ogre / centaur / phantom / zombie /\
-               bes kemwar / crimson imp / iron imp / white imp / drude /\
-               ufetubus band /  fire bat / crocodile / brain worm /\
+               kobold brigand band / kobold geomancer / gnoll band /\
+               gnoll bouda band w:6 / gnoll sergeant band w:6 / orc band /\
+               orc priest band / orc wizard band / ogre / centaur / phantom /\
+               zombie / bes kemwar / crimson imp / iron imp / white imp /\
+               drude / ufetubus band /  fire bat / crocodile / brain worm /\
                weeping skull / mummy w:5")
   e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
                hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
@@ -38,16 +38,16 @@ function base_monster_setup(e)
   e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
                rakshasa / necromancer / ugly thing w:15 / tengu warrior /\
                catoblepas / fire crab / elephant band w:5 / dream sheep band /\
-               raven / unseen horror / yaktaur / cyclops / deep troll /\
-               shapeshifter / fire elemental / water elemental /\
-               earth elemental / raiju / kobold blastminer band /\
-               orc high priest band w:5 / orc sorcerer w:5 / orc knight band /\
-               swamp dragon / hydra / black mamba / mana viper /\
-               merfolk avatar / wind drake / sea snake / tarantella /\
-               wolf spider / steelbarb worm / shadowghast / shadow wraith /\
-               small abomination / laughing skull band / skeletal warrior /\
-               thrashing horror / hell hound band w:5 / efreet w:5 /\
-               smoke demon / hellwing / chaos spawn / soul eater")
+               raven / mountainshell / unseen horror / yaktaur / cyclops /\
+               deep troll / shapeshifter / fire elemental / water elemental /\
+               raiju / kobold blastminer band / orc high priest band w:5 /\
+               orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
+               black mamba / mana viper / merfolk avatar / wind drake /\
+               sea snake / tarantella / wolf spider / steelbarb worm /\
+               shadowghast / shadow wraith / small abomination /\
+               laughing skull band / skeletal warrior / thrashing horror /\
+               hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
+               chaos spawn / soul eater")
   e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
                crawling flesh cage w:5 / kobold fleshcrafter /\
                dire elephant / torpor snail / skyshark / death yak band w:5 /\
@@ -197,7 +197,7 @@ function base_monster_setup(e)
 end
 
 function storerooms_monster_setup(e)
-  e.kmons("0 = goblin / frilled lizard / giant cockroach / endoplasm /\
+  e.kmons("0 = goblin / frilled lizard / clockroach / endoplasm /\
                ball python / dart slug / bat / kobold / rat / gnoll /\
                hobgoblin / orc / jackal band / adder / quokka /\
                rat draugr ; dagger / zombie / ufetubus w:5 / crimson imp w:1")
@@ -1927,7 +1927,7 @@ ENDMAP
 NAME:   mini_pit_1
 TAGS:   the_minivault unrand
 COLOUR: v = white
-TILE:   v = wall_cobalt_stone
+TILE:   v = wall_vaults_metal
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1953,7 +1953,7 @@ NAME:   grid_room_1
 TAGS:   the_grid_vault unrand
 NSUBST: + = 1:& / *:v
 COLOUR: v = white
-TILE:   v = wall_cobalt_stone
+TILE:   v = wall_vaults_metal
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)

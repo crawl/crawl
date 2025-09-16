@@ -251,7 +251,8 @@ ENDMAP
 NAME:   erik_orc_3
 TAGS:   orc_entry no_item_gen
 ORIENT: float
-MONS:   orc / kobold brigand w:2, orc wizard / orc priest / orc warrior
+MONS:   orc / kobold brigand w:2
+MONS:   orc wizard / orc priest / orc warrior / kobold geomancer w:2
 MONS:   ogre / troll, warg / cyclops
 KFEAT:  O = enter_orcish_mines
 SUBST:  1 = 11., 2 = 2222.
@@ -1729,6 +1730,29 @@ x^%x^%x^%x
 x..x..x..x
 xx+xx+xx+x
 .1..1..1..
+ENDMAP
+
+# orc fortress
+NAME:   tekkud_orc_quarters
+TAGS:   transparent
+KFEAT:  C = cache of meat
+NSUBST: _ = 1:89 / *=009
+SUBST:  - = IC F:4 $:4
+: decorative_floor(_G, 'F', "orcish standard")
+MAP
+cccc+cccc
+c-.c.c.-c
+c_.+.+._c
+cccc.cccc
+c-.c.c.-c
+c_.+.+._c
+cccc.cccc
+c_.+.+._c
+c-.c.c.-c
+cccc.cccc
+c_.+.+._c
+c-.c.c.-c
+cccc+cccc
 ENDMAP
 
 ############################################################################

@@ -2505,16 +2505,16 @@ KFEAT:   d = (
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
-.c+cccccccc.
-.c.ccB.B..+.
-.c.c.cccccc.
-.cBcCc.C.cc.
-.c.c.deccBc.
-.cBccfg.c.c.
-.cc.C.cCcBc.
-.cccccc.c.c.
-.+..B.Bcc.c.
-.cccccccc+c.
+..ccccccccc.
+.cc.cB.B..+.
+.c.c.ccccc+.
+.cBcCc.c.cc.
+.c.c.deCcBc.
+.cBcCfg.c.c.
+.cc.c.cCcBc.
+.+ccccc.c.c.
+.+..B.Bc.cc.
+.ccccccccc..
 ............
 ENDMAP
 

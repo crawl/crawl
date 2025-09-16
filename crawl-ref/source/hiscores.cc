@@ -660,7 +660,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "wizmode", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "rotting", "targeting", "spore",
+    "wild_magic", "xom", "rotting", "targeting", "death_explosion",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
@@ -2606,7 +2606,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
         {
             if (death_source_name.empty())
-                desc += "spore";
+                desc += "death explosion";
             else
                 desc += death_source_name;
         }
@@ -2614,7 +2614,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             desc += "Killed by an exploding ";
             if (death_source_name.empty())
-                desc += "spore";
+                desc += "monster";
             else
                 desc += death_source_name;
         }

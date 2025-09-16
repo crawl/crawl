@@ -2256,14 +2256,22 @@ bool ammo_never_destroyed(const item_def &missile)
 }
 
 /**
- * Returns the one_chance_in for a missile type for be destroyed on impact.
+ * Returns the one_chance_in for a missile for be destroyed on impact.
  *
- * @param missile_type      The missile type to get the mulch chance for.
+ * @param missile           The missile in question.
  * @return                  The inverse of the missile type's mulch chance.
  */
-int ammo_type_destroy_chance(int missile_type)
+int ammo_destroy_chance(const item_def &missile)
 {
-    return Missile_prop[ Missile_index[missile_type] ].mulch_rate;
+    int chance = Missile_prop[ Missile_index[missile.sub_type] ].mulch_rate;
+    const int brand = get_ammo_brand(missile);
+
+    if (brand == SPMSL_CURARE || brand == SPMSL_DISJUNCTION)
+        chance /= 2;
+
+    dprf("mulch chance: one in %d", chance);
+
+    return chance;
 }
 
 /**
@@ -3724,7 +3732,7 @@ bool is_usable_talisman(const item_def& item)
     if (item.sub_type == TALISMAN_PROTEAN)
         return false;
 
-    return cannot_evoke_item_reason(&item, false, false).empty();
+    return cannot_put_on_talisman_reason(item, false).empty();
 }
 
 bool ring_plusses_matter(int ring_subtype)

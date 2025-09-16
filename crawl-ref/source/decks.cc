@@ -1474,7 +1474,7 @@ static void _storm_card(int power)
     int valid_targets = 0;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
-        if (grid_distance(*ri, you.pos()) > 3 && !cell_is_solid(*ri))
+        if (grid_distance(*ri, you.pos()) > 3 && !cell_is_invalid_target(*ri))
         {
             ++valid_targets;
             for (int i = 0; i < max_explosions; ++i)

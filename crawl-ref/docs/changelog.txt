@@ -1,4 +1,4 @@
-Stone Soup 0.34 (through 0.34-a0-663-g818337ce7c)
+Stone Soup 0.34 (through 0.34-a0-786-ge5b59a6c5f)
 --------------------------------------------------
 
 Highlights
@@ -31,16 +31,18 @@ Branches, Environment
   prices.
 * The Halls of Zot will now contain one of three types of orb monster each game,
   each wielding a different element and form of strategic damage.
-  - The orb type one will encountered that game is indicated via statues placed
+  - The orb type one will encounter that game is indicated via statues placed
     by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
     can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
 * The last floor of Zot contains now contains two Boundless Tesseracts, immobile
   enemy spawners with fast regeneration.
   - Tesseracts wake up the first time one kills an Orb Guardian. Once a
-    tesseract wakes up, it is automatically detected, and new monsters will
-    slowly appear across the entire floor (always out of the player's line of
-    sight). The rate at which they appear will slowly increase, and they will
-    eventually stop giving experience when killed.
+    tesseract wakes up, both are automatically detected, and new monsters will
+    slowly appear across the entire floor (out of the player's line of sight by
+    default, occasionally spawning in sight only after spawning 80 total
+    monsters). These spawns are capped to 60 on the floor at a time, will
+    eventually stop giving experience when killed, and will continue to spawn
+    in a limited capacity when on other floors.
   - Destroying one will destroy the other, reward all the experience one would
     have gotten from waiting to kill their spawns individually, and remove
     all unrewarding monsters from the floor.
@@ -48,7 +50,7 @@ Branches, Environment
   fuzzes the destination of scrolls of blinking by up to two spaces.
 * Hell effects can now inflict a small amount of Doom instead of inflicting
   transient mutations.
-* Troves prices and costs have been heavily revised:
+* Troves' prices and costs have been heavily revised:
   - Troves will no longer ask for any consumables besides scrolls of acquirement
     and will no longer ask for specific named items from shops.
   - Equipment costs are less common. Demon weapons are all interchangeable and
@@ -180,6 +182,8 @@ Interface and Options
 * The character overview screen (%) now displays how much damage is prevented
   by each pip of resistance the player has.
   - show_resist_percent option: can be used to hide these numbers.
+* Monsters with any status effects now list the mechanics of those status
+  effects on a new tab when examined (xv).
 * The "Trivial" monster threat level threshold is now a little higher.
 * Monsters with holy wrath weapons are highlighted by default as having unusual
   items if one is vulnerable to them by being undead or demonic.
@@ -276,16 +280,23 @@ Monsters
 * New and returning monsters:
   - Bes kemwar, magic-weakening maggot spirits for D.
   - Chonchon, chaotic flying heads for Depths.
+  - Clockroaches, time-bending warded insects for D.
   - Cognitogaunts, antimagic starghouls for Crypt and Abyss.
   - Crawling flesh cages, augmented ugly things for Vaults.
   - Drudes, new weak Doom-inflicting tier-5 demons for D and the Abyss.
   - Kobold fleshcrafters, abomination makers for Depths.
+  - Kobold geomancers, deconstructing earth mages for D.
+  - Mountainshells, warded earthshaking tortoises for Lair.
   - Ravens, Doom-inflicting birds for Lair.
+  - Rock fish, wall-swimming fish for D.
   - Screaming refractions, crystal injury-mirroring undead for the Abyss.
+  - Undertakers, wall-swimming constructs for Tartarus.
   - Zykzyls, the new malmutating tier-2 demon, now focused on hexes.
 * Antaeus trades Flash Freeze for Sleetstrike, a variant of Airstrike that
   inflicts the Frozen status and deals more damage partially resistable with rC.
 * Blizzard demons trade Airstrike for Sleetstrike.
+* Bone dragons now breathe clouds of excruciating misery, and now have less
+  health. They no longer appear in Tartarus, and are now more common in Crypt.
 * Cacodemons no longer know Malmutate or Bolt of Devastation, but can cut
   willpower in half with their melee and cast Doom Bolt: a penetrating bolt
   that inflicts Doom on hit.
@@ -296,6 +307,9 @@ Monsters
 * Draugr replace skeletons as derived undead monsters, losing health for more
   AC, no speed penalty, an ability to wield weapons regardless of their original
   form, and Doom-inflicting melee. They are rarer than the previous skeletons.
+* Earth elementals can now move through walls and statues (which grants no
+  innate additional protection beyond cloud immunity), are somewhat faster, and
+  hit slightly less hard.
 * Glowing orange brains no longer have Brain Bite.
 * Mara now dual-wields demon weapons and has somewhat better body armour.
 * The moon troll now is warded from damage from non-adjacent foes, and loses
@@ -322,13 +336,13 @@ Monsters
 * Monster Flash Freeze accuracy is greatly reduced and damage somewhat reduced.
 * Monster mesmerisation effects (including merfolk siren and merfolk avatar
   songs) now also daze all opposing monsters.
-* Monsters blindness resistance has been refactored: all sources of Blind
+* Monsters' blindness resistance has been refactored: all sources of Blind
   outside of light effects, Enfeeble, and divine powers are limited to
   natural / demonic / holy monsters, while light can also work on undead and
   Enfeeble / most divine Blind effects ignore Blind resistance entirely.
 * Daze now makes monsters skip their actions until they take any damage,
   instead of giving them a 1-in-4 chance to skip each action (but last less time).
-* Removed monsters: Psyche.
+* Removed monsters: giant cockroaches, Psyche.
 
 Spells
 ------
@@ -343,7 +357,7 @@ Tiles
 -----
 * New tiles for existing game elements:
   * Monsters: juggernaut simulacra, Maggie, Mara, Polyphemus, sky beast zombies.
-  * Spells: Confusion Gaze, Vitrifying Gaze, Weakening Gaze.
+  * Spells: Confusion Gaze, Mass Regeneration, Vitrifying Gaze, Weakening Gaze.
   * Icons: light egos, frenzied, magnetized, sentinel's mark.
   * Traps: Archmage's trap, devourer's trap, tyrant's trap.
   * Features: exits out of Sewers / Bailies / the Desolation of Salt /
@@ -353,6 +367,8 @@ Tiles
            walls, Vaults / Depths crystal walls.
   * Floors: Lair, Elf's Hall of Blades, Vaults hard vaults, Vaults:$, Cerebov's
             fortress, grassy vaults, crystal vaults.
+* New Formicid and caustic shrikes splash screen by YLam.
+* New Gozag and Vaults splash screen by LemurRobot.
 
 Stone Soup 0.33.1 (20250606)
 ----------------------------

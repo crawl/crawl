@@ -99,7 +99,7 @@ void wizard_create_spec_monster_name()
         fixup_zombie_type(static_cast<monster_type>(mspec.type),
                           mspec.monbase);
 
-    coord_def place = find_newmons_square(type, you.pos());
+    coord_def place = find_newmons_square(type, you.pos(), 2, you.current_vision);
     if (!in_bounds(place))
     {
         // Try again with habitat HT_LAND.
@@ -249,7 +249,9 @@ static string _habitat_debug_name(habitat_type ht)
         result += "lava|";
     if (ht & HT_MALIGN_GATEWAY)
         result += "malign_gateway|";
-    if (ht >= (HT_MALIGN_GATEWAY << 1))
+    if (ht & HT_WALLS_ONLY)
+        result += "walls|";
+    if (ht >= (HT_WALLS_ONLY << 1))
         result += "INVALID|";
     if (result.empty())
         return "none";

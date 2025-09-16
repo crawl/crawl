@@ -604,7 +604,7 @@ static bool _gloom_affect_target(actor *victim, const actor *agent, int pow)
 
 spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer)
 {
-    int range = spell_range(SPELL_GLOOM, pow, caster->is_player());
+    int range = spell_range(SPELL_GLOOM, caster, pow);
     auto vulnerable = [caster](const actor *act) -> bool
     {
         // No fedhas checks needed, plants can't be blinded by this.

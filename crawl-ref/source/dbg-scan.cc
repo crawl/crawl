@@ -378,7 +378,7 @@ void debug_mons_scan()
             }
         } // if (env.mgrid(m->pos()) != i)
 
-        if (feat_is_wall(env.grid(pos)))
+        if (feat_is_wall(env.grid(pos)) && !m->is_habitable(pos))
         {
 #if defined(DEBUG_FATAL)
             // if we're going to dump, point out the culprit

@@ -1374,25 +1374,28 @@ static void _append_skill_target_desc(string &description, skill_type skill,
 
 static int _get_delay(const item_def &item)
 {
-    if (!is_range_weapon(item))
-        return you.attack_delay_with(nullptr, false, &item).expected();
-    item_def fake_proj;
-    populate_fake_projectile(item, fake_proj);
-    return you.attack_delay_with(&fake_proj, false, &item).expected();
+    if (is_range_weapon(item))
+    {
+        item_def fake_proj;
+        populate_fake_projectile(item, fake_proj);
+        return you.attack_delay_with(&fake_proj, false, &item).expected();
+    }
+
+    if (is_throwable(&you, item))
+        return you.attack_delay(&item, false).expected();
+
+    return you.attack_delay_with(nullptr, false, &item).expected();
 }
 
 static string _desc_attack_delay(const item_def &item)
 {
-    const int base_delay = property(item, PWPN_SPEED);
-
     // Hide speed/heavy brand from unidentified weapons.
     item_def dummy = item;
     if (!item.is_identified())
         dummy.brand = SPWPN_NORMAL;
 
     const int cur_delay = _get_delay(dummy);
-    if (weapon_adjust_delay(item, base_delay, false) == cur_delay)
-        return "";
+
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
 }
 
@@ -2259,14 +2262,23 @@ static string _describe_ammo(const item_def &item)
 
         _append_skill_needed(description, item);
 
-        if (!is_useless_item(item) && property(item, PWPN_DAMAGE))
-            description += "\nDamage rating: " + damage_rating(&item);
+        if (!is_useless_item(item) && crawl_state.need_save){
+            description += _desc_attack_delay(item);
+
+            if (property(item, PWPN_DAMAGE))
+                description += "\nDamage rating: " + damage_rating(&item);
+        }
     }
 
     if (ammo_always_destroyed(item))
         description += "\n\nIt is always destroyed on impact.";
     else if (!ammo_never_destroyed(item))
-        description += "\n\nIt may be destroyed on impact.";
+    {
+        description += make_stringf(
+            "\n\nIt has a 1/%d chance to be destroyed on impact.",
+            ammo_destroy_chance(item)
+        );
+    }
 
     return description;
 }
@@ -2335,7 +2347,7 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it improves its wearer's accuracy and damage with "
                "thrown weapons, such as rocks and javelins (Slay +4).";
     case SPARM_REPULSION:
-        return "it helps its wearer evade missiles.";
+        return "it helps its wearer evade both magical and non-magical projectiles (EV +15).";
 #if TAG_MAJOR_VERSION == 34
     case SPARM_CLOUD_IMMUNE:
         return "it does nothing special.";

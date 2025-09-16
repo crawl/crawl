@@ -670,6 +670,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MOUNTAINSHELL,
+      {
+       { SPELL_SEISMIC_STOMP, 60, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('v') Vortices.
     {  MST_THERMIC_DYNAMO,
       {
@@ -871,6 +877,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_CLOCKROACH,
+      {
+       { SPELL_SANDBLAST, 30, MON_SPELL_MAGICAL},
+      }
+    },
+
     {  MST_RADROACH,
       {
        { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
@@ -998,6 +1010,12 @@ static const mon_spellbook mspell_list[] =
                                   | MON_SPELL_NOISY },
        { SPELL_POISONOUS_CLOUD, 23, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                   | MON_SPELL_NOISY },
+      }
+    },
+
+    {  MST_BONE_DRAGON,
+      {
+       { SPELL_MARCH_OF_SORROWS, 59, MON_SPELL_NATURAL | MON_SPELL_NOISY },
       }
     },
 
@@ -1169,6 +1187,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CANTRIP, 19, MON_SPELL_WIZARD },
        { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_WIZARD },
        { SPELL_SUMMON_DEMON, 19, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_KOBOLD_GEOMANCER,
+      {
+       { SPELL_LRD, 32, MON_SPELL_WIZARD },
       }
     },
 
@@ -1838,6 +1862,12 @@ static const mon_spellbook mspell_list[] =
     {  MST_NARGUN,
       {
        { SPELL_PETRIFY, 66, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_UNDERTAKER,
+      {
+       { SPELL_BORGNJORS_VILE_CLUTCH, 36, MON_SPELL_MAGICAL  | MON_SPELL_LONG_RANGE },
       }
     },
 

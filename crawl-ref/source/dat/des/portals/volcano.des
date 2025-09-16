@@ -271,7 +271,8 @@ function fiery_guardians (e, intelligent, village)
                    "hell knight ; " .. goodgear .. " . chain mail " .. res)
         else
             -- "Elemental" monster pack.
-            e.mons("fire elemental w:12 / earth elemental / gargoyle w:8")
+            e.mons("fire elemental w:12 / gargoyle / " ..
+                   "patrolling earth elemental w:8")
             e.mons("efreet / obsidian bat w:4")
             e.mons("stone giant")
         end
@@ -1075,8 +1076,8 @@ TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 20
 MONS:   lindwurm, efreet
-MONS:   molten gargoyle w:40 / earth elemental w:38 / \
-        toenail golem w:2 / obsidian bat w:2
+MONS:   molten gargoyle w:40 / gargoyle w:28 /  \
+        patrolling earth elemental / toenail golem w:2 / obsidian bat w:2
 MONS:   fire elemental / nothing w:6
 KFEAT:  K = l
 NSUBST: R = 2:1 / * = ll'
@@ -1090,7 +1091,7 @@ MARKER: J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
 MARKER: K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 COLOUR: m = blue
-# Left side has lindwurms and constructs, right side has elementals.
+# Left side has lindwurms and earthy constructs, right side has fire elementals.
 MAP
       xxxxxxxxx
      xxKlllllKxx

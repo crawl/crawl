@@ -116,6 +116,10 @@ void monster_drop_things(monster* mons,
         if (old_halo != new_halo || old_umbra != new_umbra)
             invalidate_agrid(true);
     }
+
+    // If the monster died in a wall, try to push the items out of it.
+    if (cell_is_solid(mons->pos()))
+        dgn_check_terrain_items(mons->pos(), true, you.see_cell(mons->pos()));
 }
 
 static bool _valid_type_morph(const monster &mons, monster_type new_mclass)

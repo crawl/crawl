@@ -263,12 +263,34 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
+    return swimming(false);
+}
+
+/**
+ * Is this monster considered swimming right now?
+ *
+ * @param energy_cost   If this is an energy cost check, we still consider them
+ *                      swimming through liquids, even if they're not doing it
+ *                      well.
+ */
+bool monster::swimming(bool energy_cost) const
+{
+    if (!ground_level())
+        return false;
+
     const dungeon_feature_type grid = env.grid(pos());
     const habitat_type habitat = mons_habitat(*this);
-    // XXX: counting anything that can leave water as not swimming seems too
-    // restrictive to me as it excludes monstrs like merfolk, frogs, and
-    // polar bears --Wizard Ike
-    return feat_is_water(grid) && (habitat & HT_WATER) == habitat;
+
+    if ((energy_cost || (habitat & HT_DEEP_WATER)) && feat_is_water(grid))
+        return true;
+
+    if ((energy_cost || (habitat & HT_LAVA)) && feat_is_lava(grid))
+        return true;
+
+    if ((energy_cost || (habitat & HT_WALLS_ONLY)) && feat_is_wall(grid))
+        return true;
+
+    return false;
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
@@ -319,6 +341,11 @@ bool monster::can_pass_through_feat(dungeon_feature_type grid) const
 bool monster::is_habitable_feat(dungeon_feature_type feat) const
 {
     return monster_habitable_feat(this, feat);
+}
+
+bool monster::is_habitable(const coord_def &_pos) const
+{
+    return monster_habitable_grid(this, _pos);
 }
 
 bool monster::can_drown() const
@@ -2782,10 +2809,9 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     }
     monster_die(*this, KILL_BANISHED, agent->mindex());
 
-    if (!cell_is_solid(old_pos))
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
-        if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
+        if (coinflip())
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
     splash_corruption(old_pos);
 }
@@ -5080,7 +5106,13 @@ bool monster::can_see_invisible() const
 bool monster::invisible() const
 {
     return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION)
-            && !has_ench(ENCH_MAGNETISED);
+            // For now, monsters on walls can never be invisible... or to avoid
+            // an info leak we'd have to allow targetting walls at all times
+            // which seems not worth such a big rework of targetters. A
+            // compromise might be to show an unseen enemy so we know something
+            // is there but not what it is ... but given the uncertain future
+            // of invisibility in general let's leave this alone for now.
+            && !cell_is_solid(pos()) && !has_ench(ENCH_MAGNETISED);
 }
 
 bool monster::visible_to(const actor *looker) const
@@ -5500,7 +5532,10 @@ void monster::did_deliberate_movement()
         flame.duration -= 50;
         if (flame.duration <= 0)
         {
-            simple_monster_message(*this, " shakes off the sticky flame as it moves.");
+            const string message = " shakes off the sticky flame as "
+                + pronoun(PRONOUN_SUBJECTIVE) + " "
+                + conjugate_verb("move", pronoun_plurality()) + ".";
+            simple_monster_message(*this, message.c_str());
             del_ench(ENCH_STICKY_FLAME, true);
         }
         else
@@ -5928,7 +5963,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         mon_enchant i_f = get_ench(ENCH_INNER_FLAME);
         if (you.see_cell(pos()))
             mprf("Flame seeps out of %s.", name(DESC_THE).c_str());
-        check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
+        place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
     if (res_corr() < 3 && x_chance_in_y(corrosion_chance(scan_artefacts(ARTP_CORRODE)), 100))

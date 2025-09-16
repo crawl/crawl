@@ -96,6 +96,8 @@ SUBVAULT: A : the_bubble
 : if you.in_branch("Vaults") then
 FTILE:    .@defgh$%*|DEFGHJKRS = floor_metal_gold
 FTILE:    t = floor_pebble_green
+: elseif you.in_branch("Zot") then
+KFEAT:    t = petrified_tree
 : end
 MARKER:   D = lua:transp_loc("the_bubble_entry")
 MARKER:   E = lua:transp_dest_loc("the_bubble_exit")

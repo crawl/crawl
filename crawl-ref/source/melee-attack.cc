@@ -680,7 +680,7 @@ void melee_attack::maybe_do_mesmerism()
     const int max_dur = defender->is_player() ? 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 5)
                                               : 3 + defender->get_hit_dice() / 4;
 
-    mprf("%s orb emites a pulse of dizzying energy.", defender->name(DESC_ITS).c_str());
+    mprf("%s orb emits a pulse of dizzying energy.", defender->name(DESC_ITS).c_str());
     draw_ring_animation(defender->pos(), radius, LIGHTMAGENTA, MAGENTA, true, 30);
 
     for (radius_iterator ri(defender->pos(), radius, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
@@ -4136,20 +4136,16 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (coinflip())
         {
-            vector<coord_def> cloud_pos;
-            for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+            const int num_clouds = random_range(3, 4);
+            int placed = 0;
+            for (fair_adjacent_iterator ai(defender->pos()); ai && (placed < num_clouds); ++ai)
             {
-                if (!cell_is_solid(*ai) && !cloud_at(*ai)
-                    && !(actor_at(*ai) && mons_aligned(attacker, actor_at(*ai))))
+                if ((!actor_at(*ai) || !mons_aligned(attacker, actor_at(*ai)))
+                    && place_cloud(CLOUD_POISON, *ai, dur, attacker))
                 {
-                    cloud_pos.push_back(*ai);
+                    ++placed;
                 }
             }
-            shuffle_array(cloud_pos);
-
-            const unsigned int num_clouds = random_range(3, 4);
-            for (size_t i = 0; i < cloud_pos.size() && i < num_clouds; ++i)
-                place_cloud(CLOUD_POISON, cloud_pos[i], dur, attacker);
         }
 
         // No brewing potions via punching plants.
@@ -4472,9 +4468,7 @@ void melee_attack::emit_foul_stench()
     {
         const int mut = you.get_mutation_level(MUT_FOUL_STENCH);
 
-        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20)
-            && !cell_is_solid(mon->pos())
-            && !cloud_at(mon->pos()))
+        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
         {
             mpr("You emit a cloud of foul miasma!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
@@ -4611,9 +4605,9 @@ bool melee_attack::do_knockback(bool slippery)
 
     if (!slippery && !x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
-        || !defender->is_habitable_feat(env.grid(new_pos))
+        || !defender->is_habitable(new_pos)
         // don't trample anywhere the attacker can't follow
-        || !attacker->is_habitable_feat(env.grid(old_pos))
+        || !attacker->is_habitable(old_pos)
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
         || actor_at(new_pos)

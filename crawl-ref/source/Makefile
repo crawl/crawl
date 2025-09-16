@@ -1324,7 +1324,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
             micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
             benadryl_antaeus king7artist_eustachio benadryl_oni \
-            ylam_formicid_shrikes
+            ylam_formicid_shrikes lemurrobot_gozag_vaults
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \

@@ -314,7 +314,7 @@ KMONS: O = sin beast
 MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
 MONS: iron dragon / war gargoyle / ancient champion
 MONS: salamander tyrant / hell hog / balrug
-MONS: eidolon / spectral spark wasp / bone dragon
+MONS: eidolon / spectral spark wasp / spectral guardian sphinx
 : hell_entry_tier(_G, "high")
 MAP
   .....@.....
@@ -1057,7 +1057,8 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
+KMONS:   H = lich / halazid warlock / shadow dragon / \
+             undertaker / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth

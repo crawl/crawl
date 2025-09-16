@@ -230,7 +230,6 @@
     Iainuki
     ICC
     Icy Lich
-    Wizard Ike
     Ilyak
     Matthew Ince
     Mitsuhiro Itakura
@@ -260,6 +259,7 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
+    LemurRobot
     Lamil Lerran
     Jordan Lewis
     Lici
@@ -342,7 +342,6 @@
     Alejandro Ramirez
     Rytis Petronis
     Arlen Phillips
-    pianoman523
     pikaro
     Lemuel Pitkin
     valerie "ploomutoo"
@@ -503,3 +502,4 @@ The Dungeon Crawl Stone Soup development team is:
     Marc H. Thoben
     Chris West
     Samuel Wilson
+    Wizard Ike

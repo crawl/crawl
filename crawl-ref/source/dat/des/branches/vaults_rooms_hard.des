@@ -760,6 +760,7 @@ xx000....x000xx
 ENDMAP
 
 NAME:   dpeg_vaults_waves
+TAGS:   vaults_orient_e
 SUBST:  = = +x
 SUBST:  ^ : .x , - : .xx
 SUBST:  * = **% , | = ||*
@@ -770,7 +771,7 @@ xxxxxx
 x8..|x
 x-..^xxxxxxxxxxxxxx
 x8...+*.9...x%.....
-x-...=..9...+..000@
+x-...=..9...+..000.
 x8...+*.9...x%.....
 x-..^xxxxxxxxxxxxxx
 x8..|x
@@ -2050,6 +2051,45 @@ bbbbb...WWwwwwwwWW..WWwwwWW..WWwwwwwwW...........x.
                       bbb            bwWWWWWWWWWwb
                                      bwwwwwwwwwwwb
                                      bbbbbbbbbbbbb
+ENDMAP
+
+# Crown of Dyrovepreva's guarded_unrand vault, moved from Depths.
+NAME:   minmay_guarded_unrand_dyrovepreva
+TAGS:   no_monster_gen no_item_gen transparent vaults_hard
+DEPTH:  Vaults, !Vaults:$
+MONS:   patrolling crystal guardian, ironbound mechanist
+MONS:   orange crystal statue
+ITEM:   crown_of_dyrovepreva no_pickup
+KPROP:  'd123 = no_tele_into
+FTILE:  'd123 = floor_crystal
+MAP
+      ......   ......
+     ...bb... ...bb...
+    ...bbbb.....bbbb...
+    ..bbbbbb...bbbbbb..
+   ..bbbbbbbb3bbbbbbbb..
+ ...bb'''bbb'''bbb'''bb...
+...bb'''''b'''''b'''''bb...
+..bbb''''1'''''''1''''bbb..
+.bbbb'''''b'''''b'''''bbbb.
+.bbbbb'''bbb'''bbb'''bbbbb.
+..bbbbb'bbbbbbbbbbb'bbbbb..
+...bbb''.bbb'''bbb'''bbb...
+ ...b'''''b''2''b'''''b...
+  ..b'''''b'1d1'b'''''b..
+ ...b'''''b'''''b'''''b...
+...bbb'''bbb'''bbb'''bbb...
+..bbbbb'bbbbb'bbbbb'bbbbb..
+.bbbbb'''bbb'''bbb'''bbbbb.
+.bbbb'''''b'''''b'''''bbbb.
+..bbb''''1'''''''1''''bbb..
+...bb'''''b'''''b'''''bb...
+ ...bb'''bbb'''bbb'''bb...
+   ..bbbbbbbbbbbbbbbbb..
+    ..bbbbbb...bbbbbb..
+    ...bbbb.....bbbb...
+     ...bb... ...bb...
+      ......   ......
 ENDMAP
 
 NAME:    abrahamwl_protected_by_tso_1

@@ -73,9 +73,7 @@ function crypt_entry(e)
     e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
 end
 
-
-
--- A revision of old Crypt end reward items (c.f. )
+-- A revision of old Crypt end reward items (c.f. bad0f68).
 -- Since Crypt is an optional, late, difficult branch, provide some expensive
 -- high quality incentives.
 -- In total: a talisman with torment resistance, a book with high-level necro
@@ -131,10 +129,15 @@ function crypt_loot_plus(e, glyph)
     table.insert(inv, tali)
   end
 
-  local orbs = util.random_from({"energy", "guile", "mayhem"})
+  local orbs = util.random_choose_weighted {
+    {"attunement", 10}, {"energy", 10}, {"glass", 5},
+    {"guile", 5}, {"stardust", 10}, {"mayhem", 5},
+  }
+
   local shield = util.random_from({"tower shield randart artprops:rN:1",
                                    "tower shield ego:positive_energy"})
   local etc = util.random_from({shield, "shadow dragon scales randart",
+                                "plate armour randart ego:death",
                                 "orb ego:" .. orbs .. " randart artprops:Necro"})
   table.insert(inv, etc)
   inv = table.concat(inv, " | ")
@@ -333,7 +336,7 @@ ENDMAP
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
 TAGS:    transparent
-MONS:    bone dragon w:25 / lich / shadow dragon w:5
+MONS:    death knight band w:30 / lich w:30 / shadow dragon
 : crypt_entry(_G)
 MAP
 .........
@@ -1658,7 +1661,7 @@ NAME:    hangedman_hall_of_fallen_heroes
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Crypt
 ORIENT:  float
-MONS:    wight band, phantasmal warrior
+MONS:    death knight draugr / frost giant draugr, phantasmal warrior
 MONS:    skeletal warrior ; long sword | war axe | trident | flail . \
                             chain mail | ring mail | scale mail
 MONS:    patrolling vampire knight, patrolling ancient champion
@@ -1715,7 +1718,7 @@ MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 death knight / w:20 bone dragon / revenant soulmonger
+MONS:    death knight w:20 / bone dragon w:20 / revenant soulmonger
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 KFEAT:   O = granite_statue
@@ -1757,7 +1760,7 @@ DEPTH:   Crypt
 # Choose two of the following:
 # Yred nearly-all-melee set, Kiku necro-casters set, ghosts set, tomb set.
 MONS:    minotaur zombie / ettin zombie / skeletal warrior w:20
-MONS:    death knight, bone dragon w:14 / profane servitor
+MONS:    death knight, bone dragon / profane servitor
 MONS:    necromancer / vampire mage w:6 / burial acolyte w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
@@ -2586,6 +2589,7 @@ MONS:   ancient champion
 MONS:   skeletal warrior
 MONS:   laughing skull
 MONS:   skeletal warrior w:20 / draugr w:40 / weeping skull
+NSUBST: 2 = 1:34 / *:2
 : elseif brnd > 4 then -- vampire layout
 KMONS:  1 = vampire bloodprince / Jory w:5, vampire bloodprince
 KMONS:  2 = undying armoury
@@ -2677,7 +2681,7 @@ NAME:   cryptofortress_bobbens
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror no_descent
 PLACE:  Crypt:$
 ORIENT: encompass
-MONS:   zombie w:12 / draugr w:6 / simulacrum w:2 / bog body w:4
+MONS:   zombie w:12 / draugr w:8 / simulacrum w:2 / bog body w:4
 MONS:   storm dragon zombie / caustic shrike zombie / \
         golden dragon zombie / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
 MONS:   skeletal warrior, necromancer, hell knight
@@ -2789,7 +2793,7 @@ ORIENT: float
 PLACE:  Crypt:$
 MONS:   patrolling lich w:20 / patrolling ancient lich
 MONS:   patrolling dread lich
-MONS:   bone dragon / curse skull / curse toe
+MONS:   bone dragon w:15 / curse skull w:15 / curse toe
 MONS:   laughing skull w:12 / skeletal warrior / draugr w:8
 MONS:   ancient champion
 KMONS:  F = orange crystal statue / obsidian statue
@@ -2878,7 +2882,8 @@ KMONS:  S = zombie w:12 / draugr
 : else
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
-KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
+KMONS:  S = shadowghast / place:Vaults:$ spectre / \
+            freezing wraith / shadow wraith
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
@@ -2940,7 +2945,7 @@ vvvvvvvvvvvvv....v??llv??llv??llvvvvvvG.GvvvWWWWWWW.......v
 vvvvvlllvvvvv....v?.zlv?.zlv?.zlvvvv.......vvWWWWWW%.mmmm.v
 vvv.......vvv....v....+....+....vvv.........vvWWWWWWWm*|m.v
 vv.........vv....v....+....+....vv...........vWWWWWmWW*|m.v
-v..ccc.ccc..vv++vvv++vvvvvvvv++vvv...R.Q.R...vvWWWWmWWZ|m.v
+v..ccc.ccc..vv++vvv++vvvvvvvv++vvv...R.Q.R...vvWWWWmWWP|m.v
 v...lc.cl...v...................vG...........GvWWWWmmmmmm.v
 v..z.c.c.z..+...................+......U......+...........v
 v...........v...................vG...........Gv...........v
@@ -3157,7 +3162,7 @@ MONS:   bone dragon w:1 / ancient champion / lich w:1
 MONS:   guardian sphinx draugr / titan draugr
 MONS:   fire dragon draugr w:5 / ice dragon draugr w:5 / draugr w:25 / \
         laughing skull / weeping skull w:5
-MONS:   generate_awake bone dragon / generate_awake curse toe
+MONS:   generate_awake bone dragon / generate_awake curse toe w:5
 : elseif brnd > 6 then
 MONS:   patrolling vampire knight / patrolling vampire mage / \
         patrolling jiangshi w:15 / patrolling phantasmal warrior w:5 / \
@@ -3179,8 +3184,8 @@ SUBST:  2 = ., ' = 2, " = 4
 : else
 MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
 MONS:   royal mummy
-MONS:   mummy priest / ushabti w:6
-MONS:   guardian mummy ; long sword | great sword | \
+MONS:   mummy priest / patrolling undertaker w:3
+MONS:   reaper w:3 / guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
 MONS:   bog body / mummy w:5 / soul eater w:5 / guardian mummy
 MONS:   generate_awake guardian sphinx
@@ -3270,22 +3275,26 @@ KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
 KMONS:   Q = flayed ghost / shadowghast w:20
 # Boss tier monsters.
-: if crawl.one_chance_in(4) then
+: if crawl.one_chance_in(5) then
 KMONS:   R = Khufu, royal mummy
 KMONS:   S = mummy priest
 KMONS:   T = guardian mummy
-: elseif crawl.one_chance_in(3) then
+: elseif crawl.one_chance_in(4) then
 KMONS:   R = Jory w:5 / vampire bloodprince, vampire bloodprince
 KMONS:   S = undying armoury / vampire mage
 KMONS:   T = vampire knight / jiangshi
-: elseif crawl.coinflip() then
+: elseif crawl.one_chance_in(3) then
 KMONS:   R = ancient lich / dread lich
 KMONS:   S = flayed ghost
 KMONS:   T = phantasmal warrior
-: else
+: elseif crawl.coinflip() then
 KMONS:   R = curse skull
 KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
+: else
+KMONS:   R = patrolling undertaker band
+KMONS:   S = reaper
+KMONS:   T = soul eater
 : end
 KFEAT:   R = enter_tomb
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
@@ -3361,8 +3370,8 @@ PLACE:   Crypt:$
 ORIENT:  north
 MONS:    ancient champion, lich / revenant soulmonger / cognitogaunt w:5
 MONS:    jiangshi / ghoul w:2
-MONS:    profane servitor / bone dragon / vampire bloodprince / \
-         curse toe w:5 / ancient lich w:1 / dread lich w:1
+MONS:    profane servitor w:12 / bone dragon w:12 / vampire bloodprince / \
+         curse toe w:1 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / draugr w:15 / simulacrum w:15

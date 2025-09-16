@@ -1534,7 +1534,9 @@ vector<string> monster_info::attributes() const
 
     if (type == MONS_NAMELESS_REVENANT)
     {
-        const int num_memories = props[NOBODY_MEMORIES_KEY].get_vector().size();
+        const int num_memories = props.exists(NOBODY_MEMORIES_KEY)
+                                    ? props[NOBODY_MEMORIES_KEY].get_vector().size()
+                                    : NOBODY_MAX_MEMORIES;
         v.push_back(make_stringf("%d %s left", num_memories,
                                                num_memories == 1 ? "memory" : "memories"));
     }
@@ -1735,7 +1737,7 @@ int monster_info::range() const
     const item_def *wand = inv[MSLOT_WAND].get();
     if (wand && is_offensive_wand(*wand)) {
         const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
-        range = max(range, calc_spell_range(spell, spell_power_cap(spell), true, true));
+        range = max(range, calc_spell_range(spell, spell_power_cap(spell), false, true));
     }
     return range;
 }

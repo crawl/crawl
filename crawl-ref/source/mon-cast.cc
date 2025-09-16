@@ -188,6 +188,7 @@ static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
 static ai_action::goodness _sojourning_bolt_goodness(const monster &caster);
 static bool _cast_dominate_undead(const monster& caster, int pow, bool check_only);
 static bool _mon_cast_tempering(const monster& caster, bool check_only);
+static coord_def _mons_boulder_tracer(const monster* mons);
 
 enum spell_logic_flag
 {
@@ -1009,6 +1010,15 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             you.redraw_doom = true;
         },
     } },
+    { SPELL_BOULDER, {
+        [](const monster &caster) {
+            return ai_action::good_or_impossible(!_mons_boulder_tracer(&caster).origin());
+        },
+        [](monster& caster, mon_spell_slot, bolt&) {
+            cast_broms_barrelling_boulder(caster, _mons_boulder_tracer(&caster),
+                                          mons_spellpower(caster, SPELL_BOULDER), false);
+        }
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -1553,7 +1563,7 @@ static void _cast_mass_regeneration(monster* caster)
 
 static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only)
 {
-    const int range = spell_range(SPELL_SEISMIC_STOMP, 4);
+    const int range = spell_range(SPELL_SEISMIC_STOMP);
     vector<actor*> targs;
     for (actor_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
     {
@@ -1934,6 +1944,7 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_OBLIVION_HOWL:
         case SPELL_MESMERISE:
+        case SPELL_BOULDER:
             return 10;
 
         case SPELL_SIREN_SONG:
@@ -2035,13 +2046,6 @@ int mons_spellpower(const monster &mons, spell_type spell)
     return mons_power_for_hd(spell, mons.spell_hd(spell));
 }
 
-int mons_spell_range(const monster &mons, spell_type spell)
-{
-    return mons_spell_range_for_hd(spell, mons.spell_hd(),
-                                   mons.type == MONS_SPELLSPARK_SERVITOR
-                                   && mons.summoner == MID_PLAYER);
-}
-
 /**
  * How much range does a monster of the given spell HD have with the given
  * spell?
@@ -2054,7 +2058,7 @@ int mons_spell_range(const monster &mons, spell_type spell)
 int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus)
 {
     const int power = mons_power_for_hd(spell, hd);
-    return spell_range(spell, power, use_veh_bonus);
+    return calc_spell_range(spell, power, use_veh_bonus);
 }
 
 // Returns the power with which a monster of a given HD casts a spell via a wand.
@@ -2132,7 +2136,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.is_explosion = false;
     beam.attitude     = mons_attitude(*mons);
 
-    beam.range = mons_spell_range(*mons, spell_cast);
+    beam.range = spell_range(spell_cast, mons, power);
 
     spell_type real_spell = spell_cast;
 
@@ -4366,7 +4370,7 @@ static void _prayer_of_brilliance(monster* agent)
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 {
-    targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, caster, pow));
     hitfunc.set_aim(aim);
 
     mon_attitude_type castatt = caster->temp_attitude();
@@ -4490,7 +4494,7 @@ static coord_def _mons_bomblet_target(const monster& caster)
     actor* foe = caster.get_foe();
     if (foe && caster.can_see(*foe) && monster_los_is_valid(&caster, foe)
         && grid_distance(caster.pos(), foe->pos()) > 1
-        && grid_distance(caster.pos(), foe->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0))
+        && grid_distance(caster.pos(), foe->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET))
     {
         coord_def result;
         if (find_habitable_spot_near(foe->pos(), MONS_BOMBLET, 2, result))
@@ -4504,7 +4508,7 @@ static coord_def _mons_bomblet_target(const monster& caster)
         if (!ai->is_peripheral()
             && !mons_aligned(&caster, *ai)
             && grid_distance(caster.pos(), ai->pos()) > 1
-            && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET, 0)
+            && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET)
             && caster.can_see(**ai)
             && monster_los_is_valid(&caster, *ai))
         {
@@ -4593,7 +4597,7 @@ static ai_action::goodness _grave_claw_goodness(const monster &caster)
 {
     const actor* foe = caster.get_foe();
     if (!foe || !caster.can_see(*foe)
-        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW, 0))
+        || grid_distance(caster.pos(), foe->pos()) > spell_range(SPELL_GRAVE_CLAW))
     {
         return ai_action::impossible();
     }
@@ -5737,6 +5741,71 @@ static bool _mons_cast_freeze(monster* mons)
     return true;
 }
 
+static bool _mons_boulder_trace_line(const monster* caster, const coord_def& delta)
+{
+    coord_def spot = caster->pos() + delta;
+    if (feat_is_solid(env.grid(spot)) || env.grid(spot) == DNGN_LAVA || actor_at(spot))
+        return false;
+
+    // Boulders can travel a longer distance than this, but are much easier to
+    // avoid, so let's make monsters pay attention to near targets only.
+    bool found_enemy = false;
+    for (int i = 1; i < 6; ++i)
+    {
+        spot += delta;
+        if (feat_is_solid(env.grid(spot)) || env.grid(spot) == DNGN_LAVA)
+            break;
+
+        if (actor* act = actor_at(spot))
+        {
+            if (mons_aligned(caster, act))
+                return false;
+            else if (!act->is_firewood())
+                found_enemy = true;
+        }
+    }
+
+    return found_enemy;
+}
+
+static coord_def _mons_boulder_tracer(const monster* mons)
+{
+    const actor* foe = mons->get_foe();
+
+    // First check if the monster's foe is in a compass line with the caster
+    int foe_aim = -1;
+    if (foe && mons->can_see(*foe))
+    {
+        coord_def delta = foe->pos() - mons->pos();
+        if (abs(delta.x) == abs(delta.y) || delta.x == 0 || delta.y == 0)
+        {
+            // Convert aim to a compass direction
+            coord_def aim = delta.sgn();
+            for (int i = 0; i < 8; ++i)
+            {
+                if (Compass[i] == aim)
+                {
+                    foe_aim = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    vector<int> order = {0, 1, 2, 3, 4, 5, 6, 7};
+    shuffle_array(order);
+
+    if (foe_aim >= 0)
+        if (_mons_boulder_trace_line(mons, Compass[foe_aim]))
+            return mons->pos() + Compass[foe_aim];
+
+    for (int aim : order)
+        if (_mons_boulder_trace_line(mons, Compass[aim]))
+            return mons->pos() + Compass[aim];
+
+    return coord_def();
+}
+
 void setup_breath_timeout(monster* mons)
 {
     if (mons->has_ench(ENCH_BREATH_WEAPON))
@@ -6094,7 +6163,7 @@ static coord_def _mons_fragment_target(const monster &mon)
     const monster *mons = &mon; // TODO: rewriteme
     const int pow = mons_spellpower(*mons, SPELL_LRD);
 
-    const int range = mons_spell_range(*mons, SPELL_LRD);
+    const int range = spell_range(SPELL_LRD, mons);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
@@ -6802,7 +6871,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
                 }
                 break;
             case BEAM_AIR:
-                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
+                if (coinflip())
                     place_cloud(CLOUD_STORM, pos, random2(7), &mons);
                 break;
             default:
@@ -7040,7 +7109,7 @@ static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_o
     vector<coord_def> pos;
     for (radius_iterator ri(foe.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (grid_distance(caster.pos(), *ri) <= spell_range(SPELL_FULMINANT_PRISM, pow)
+        if (grid_distance(caster.pos(), *ri) <= spell_range(SPELL_FULMINANT_PRISM, &caster)
             && !actor_at(*ri) && !feat_is_solid(env.grid(*ri)))
         {
             // If we're just looking for a valid position, we found one.

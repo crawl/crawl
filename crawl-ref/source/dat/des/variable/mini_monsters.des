@@ -334,8 +334,9 @@ ENDMAP
 
 NAME:   minmay_worlds_worst_comb
 TAGS:   transparent
-DEPTH:  D:1-2
-MONS:   giant cockroach / nothing
+DEPTH:  D:3-5
+MONS:   clockroach
+NSUBST: 1 = 1:1 / 1:. / * = 1.
 MAP
    ....
   ..xx.
@@ -604,7 +605,7 @@ xxxx+xxxxx...xxxxx+xxxx
 ENDMAP
 
 NAME:   goddamned_bats
-DEPTH:  D:3-5
+DEPTH:  D:4-5
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
 KMONS:  1 = bat name:megabat n_rpl n_des n_spe n_noc hd:2 tile:mons_megabat
@@ -620,7 +621,7 @@ KMONS:  7 = bat simulacrum name:ice_bat n_rpl n_des n_spe n_zom
 # have a number of species and are widespread.
 KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_des n_spe n_zom
 # Just an US WW2 military project, but that's good enough.
-KMONS:  9 = fire bat hd:1
+KMONS:  9 = fire bat
 KMONS:  0 = bat zombie name:rotten_bat n_rpl n_des n_spe n_zom
 # Correction, this one, added because of a tile, is not real as well.
 KMONS:  3 = bat name:phase n_adj n_des n_spe col:lightgreen \
@@ -722,28 +723,28 @@ TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 KMONS: p = plant w:30 / fungus
 : if you.in_branch("D") then
-:     if you.depth() < 13 then
+:   if you.depth() < 13 then
 MONS:  bullfrog / water moccasin / river rat / cane toad w:2 \
        / blink frog w:2 / komodo dragon w:2
 MONS:  vampire mosquito / swamp drake w:3
 # For earlier Dungeon and Lair, 50% chance of a Lair set or a Swamp set.
 SUBST: 1 : 12
-:     else
+:   else
 # For post-Lair Dungeon, always use the Swamp set.
-MONS:  vampire mosquito / swamp drake w:2 / swamp dragon w:3 / hydra w:3 \
-       / will-o-the-wisp w:2
-:     end
+MONS:  vampire mosquito / swamp drake w:2 / swamp dragon w:3 / hydra w:3 / \
+       will-o-the-wisp w:2
+:   end
 # Lair
 : else
-:     if you.depth() < 4 then
-MONS:  bullfrog / water moccasin / river rat / blink frog / cane toad \
-       / komodo dragon
+:   if you.depth() < 4 then
+MONS:  bullfrog / water moccasin / river rat / blink frog / cane toad / \
+       komodo dragon
 MONS:  vampire mosquito / swamp drake w:3 / swamp dragon w:1 / hydra w:1
-:     else
+:   else
 MONS:  blink frog / cane toad / komodo dragon / torpor snail w:5
 MONS:  vampire mosquito / swamp drake w:3 / swamp dragon w:2 / hydra w:2 \
        / will-o-the-wisp w:1
-:     end
+:   end
 SUBST: 1 : 12
 : end
 SUBST: ! : w., 1 = 1., 2 = 2., . = . p:1
@@ -901,12 +902,12 @@ ENDMAP
 NAME:   minmay_serpent_palace
 TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  Depths
-MONS:   naga w:1 / salamander w:1 / naga warrior w:8 / naga mage w:4
-MONS:   nagaraja / guardian serpent, water moccasin w:5 / black mamba
+MONS:   salamander w:2 / naga ritualist w:8 / naga mage w:4
+MONS:   nagaraja / guardian serpent, salamander mystic / salamander tyrant
 MONS:   mana viper w:5 / anaconda / anaconda simulacrum w:5 / sea snake
 MONS:   lindwurm, quicksilver dragon
 SUBST:  c : cv
-NSUBST: 3 = 1:6 / 3:3 / 5:4 / 8 = 344... / *:.
+NSUBST: 3 = 1:6 / 2:3 / 5:4 / 8 = 444... / *:.
 NSUBST: 2 = 1:6 / *:2, 1 = 1:2 / 1:12 / 4:. / *:11.
 KMASK:  5 = opaque
 MAP
@@ -1112,7 +1113,7 @@ TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
 MONS:    rat, bat, frilled lizard, dart slug, endoplasm
-MONS:    giant cockroach, jackal
+MONS:    clockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
@@ -1392,7 +1393,7 @@ ENDMAP
 NAME:   tekkud_yamata_no_oroachi
 TAGS:   no_monster_gen
 DEPTH:  D:12-, !D:$, Lair, !Lair:$
-MONS:   eight-headed hydra, patrolling giant cockroach, plant
+MONS:   eight-headed hydra, patrolling clockroach, plant
 ITEM:   long sword good_item / scimitar good_item w:6, human skeleton
 KFEAT:  C = cache of fruit
 SUBST:  ` = @'''', ' = x', " = x.
@@ -2276,7 +2277,7 @@ SUBST:  4 = 9, 5 = 990, 1 = 3
 NSUBST: 0 = 1:8 / 1:893 / 2:3 / 2:6 / 2 = 30. / *:.
 SUBST:  C- = ., c = x, * = *%
 :   decorative_floor(_G, 'D', "orcish standard")
-FTILE:  .+_%*34509I = floor_metal_gold
+FTILE:  .+_%*D3456098I = floor_metal_gold
 : end
 MAP
 ccccccccccccccccccccC
@@ -4211,16 +4212,20 @@ ENDMAP
 
 NAME:    hangedman_cracks_in_the_wall
 TAGS:    no_monster_gen patrolling transparent
-DEPTH:   D:12-, Depths, !Depths:$
-MONS:    earth elemental
+DEPTH:   D:9-, Depths, !Depths:$
 : if you.in_branch("D") then
-MONS:    cyclops, basilisk, catoblepas
+:   if you.depth() < 12 then
+MONS:    rock fish, kobold geomancer, basilisk, cyclops
+SUBST:   * = $%%, | = *
+:   else
+MONS:    gargoyle, cyclops, basilisk, catoblepas
 SUBST:   * = %%***, | = *|, c = x
+:   end
 : else
-MONS:    stone giant, catoblepas, iron dragon
+MONS:    deep troll earth mage, stone giant, iron dragon, caustic shrike
 SUBST:   c : cxx
 : end
-SUBST:   5 = 111..
+SUBST:   5 = 1.
 MAP
 xxxxxxxxxxxxxx.@@
 xxxxcccccccxxx..@
@@ -4280,25 +4285,28 @@ f=wEndnE+.5nen5<bt
 ENDMAP
 
 NAME:   lightli_elemental_guards
-DEPTH:  D:10-14
-TAGS:   no_pool_fixup
-MONS:   earth elemental
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  D:10-, !D:$
 MONS:   air elemental
+MONS:   earth elemental
 KMONS:  F = fire elemental
-KFEAT:  F = lava
 KMONS:  W = water elemental
+KFEAT:  F = lava
 KFEAT:  W = deep_water
+KPROP:  %*12wWlF = no_tele_into
 MAP
-xxxxxxxxxx
-x%x.....2x
-xx1......x
-x........x
-x...x*...x
-x...wl...x
-x........x
-xww....llx
-xWw....lFx
-xxxx==xxxx
+xxxxxxxxxxxx
+x==========x
+x=*%=..=x%=x
+x=%1=..=2x=x
+x====..====x
+x=...$x...=x
+x=...wl...=x
+x====..====x
+x=ww=..=ll=x
+x=Ww=..=lF=x
+x====..====x
+xxxxx@@xxxxx
 ENDMAP
 
 # So he drove out the man; and he placed at the east of the garden of Eden
@@ -4414,6 +4422,49 @@ cc---cc
 c-----c
 c.....c
 cc+++cc
+ENDMAP
+
+NAME:   tekkud_crystal_farm
+TAGS:   no_monster_gen patrolling
+DEPTH:  Crypt, Depths
+WEIGHT: 5 (Crypt), 10
+: if you.branch() == "Crypt" then
+MONS:   screaming refraction
+MONS:   death knight / ancient champion w:5 / vampire knight / eidolon
+MONS:   lich / bone dragon / curse skull w:5
+NSUBST: ' = 3:1 / *=1...
+NSUBST: ~ = 3:2 / 3=2.. / 1:3 / 1:3.. / 2:* / 4:$ / 2 = $$*.. / *:.
+FTILE:  123O-. = floor_crystal_squares
+: else -- Depths
+MONS:   crystal guardian / crystal echidna w:3 / walking crystal tome w:2
+MONS:   deep troll earth mage w:15 / tengu reaver / fire giant / frost giant /\
+        hell knight w:5 / glass eye w:5
+MONS:   ancient lich / golden dragon
+NSUBST: ' = 4:1 / *=1....
+NSUBST: ~ = 5:2 / 3=2.. / 1:3 / 1:3.. / 3:* / 6:$ / 3 = *$$.. / *:.
+FTILE:  123O-. = floor_marble
+: end
+NSUBST: - = b.
+KMONS:  O = orange crystal statue
+MAP
+    bbb-  -@@@b@
+   bbbbb-b@b--.-@
+   b'bbbb.-..-.-b
+  bb''b-.bbb-.b@
+  b-''bb-.--..b@
+ bb-'bb-....b-@
+bb-'bb...---.b-
+b-.-b-.--bbbbbb
+b-.-b..bbbbbbbbb
+bb-....b-bb----b
+ b-..-bb.bb-~~-bb
+ b-...--.-b-~~~-b
+ bb-......-~~~-bb
+  bb-..O..~~~~-b
+   b-.....~~~--b
+  bb-.---.---bbb
+   bb-bbb-bbbbb
+    bbb bbb
 ENDMAP
 
 ###################################################################
@@ -4724,16 +4775,17 @@ KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
 KMONS:   i = hell rat
-KMONS:   j = giant cockroach
+KMONS:   j = clockroach
 KMONS:   k = bes kemwar
 KMONS:   l = large abomination
-KMONS:   m = scorpion
+KMONS:   m = emperor scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
-KMONS:   p = hornet
+KMONS:   p = spark wasp
 KMONS:   q = goliath frog
 KMONS:   r = wolf spider
-KITEM:   e = any armour good_item / any weapon good_item / \
+KITEM:   abcdfghjiklmnopqr = $
+KITEM:   e = $ q:66, any armour good_item / potion of experience q:1 pre_id / \
              scroll of acquirement pre_id
 SHUFFLE: bcdfghjklnopqr
 MAP
@@ -4798,7 +4850,7 @@ MONS:   arcanist w:25 / occultist w:25 / necromancer w:20 / \
 ITEM:   scroll of identify w:2 / any scroll w:8 / any book w:4
 : else
 MONS:   arcanist w:25 / deep elf pyromancer w:25 / orc sorcerer / \
-        naga mage w:5 / kobold demonologist w:15
+        kobold geomancer w:5 / kobold demonologist w:15
 ITEM:   scroll of identify w:3 / scroll of amnesia w:2 / \
         any scroll w:5 / randbook numspells:2 w:3
 : end
@@ -7958,9 +8010,13 @@ DEPTH:  D:12-, Depths, Crypt
 TAGS:   no_monster_gen no_item_gen transparent
 WEIGHT: 3
 : if you.in_branch("Depths") then
-MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
+MONS:   place:Depths:$ spectre / place:Depths:$ draugr, bone dragon
+: elseif you.in_branch("Crypt") then
+MONS:   spectral storm dragon / spectral ettin / golden dragon draugr / \
+        juggernaut draugr w:5 / ancient champion w:5
+MONS:   bone dragon
 : else
-MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
+MONS:   place:D:$ spectre / place:D:$ draugr, ghoul
 : end
 ITEM:   skull_of_zonguldrok no_pickup
 MAP
@@ -8006,50 +8062,6 @@ MAP
 .c3.........3c.
 .cccccc+cccccc.
 ...............
-ENDMAP
-
-# Crown of Dyrovepreva
-#
-NAME:   minmay_guarded_unrand_dyrovepreva
-TAGS:   no_monster_gen no_item_gen transparent
-DEPTH:  Depths
-WEIGHT: 3
-MONS:   patrolling crystal guardian
-MONS:   orange crystal statue
-ITEM:   crown_of_dyrovepreva no_pickup
-KPROP:  12d' = no_tele_into
-FTILE:  'd12 = floor_crystal
-SUBST:  ' = .
-MAP
-        .............
-       ...............
-      ...bb.......bb...
-     ...bbbb.....bbbb...
-    ...bbbbbb...bbbbbb...
-   ...bbbbbbbb2bbbbbbbb...
-  ...bb'''bbb'''bbb'''bb...
- ...bb'''''b'''''b'''''bb...
-...bbb''''1'''''''1''''bbb...
-..bbbb'''''b'''''b'''''bbbb..
-..bbbbb'''bbb'''bbb'''bbbbb..
-...bbbbb'bbbbbbbbbbb'bbbbb...
-....bbb''.bbb'''bbb'''bbb....
-.....b'''''b''1''b'''''b.....
-.....b'''''b''d''b'''''b.....
-.....b'''''b''1''b'''''b.....
-....bbb'''bbb'''bbb'''bbb....
-...bbbbb'bbbbb'bbbbb'bbbbb...
-..bbbbb'''bbb'''bbb'''bbbbb..
-..bbbb'''''b'''''b'''''bbbb..
-...bbb''''1'''''''1''''bbb...
- ...bb'''''b'''''b'''''bb...
-  ...bb'''bbb'''bbb'''bb...
-   ...bbbbbbbbbbbbbbbbb...
-    ...bbbbbb...bbbbbb...
-     ...bbbb.....bbbb...
-      ...bb.......bb...
-       ...............
-        .............
 ENDMAP
 
 # Ring of the Mage
@@ -10078,6 +10090,71 @@ Xx1.xxxxxxx..z..xxxxxxx...z...x
  xxxx     xxxxxxx     xx@x@x@xx
 ENDMAP
 
+# Justicar's Regalia
+# Bad guys in jail
+NAME:    tekkud_guarded_unrand_justicar
+TAGS:    no_monster_gen no_item_gen no_trap_gen vaults_hard vaults_orient_n
+DEPTH:   Elf:2-, Vaults, !Vaults:$, Depths
+WEIGHT:  3
+MONS:    angel / cherub, fravashi / daeva
+ITEM:    justicar's_regalia no_pickup, any amulet no_pickup
+KFEAT:   m = iron_grate
+: if you.in_branch("Elf") then
+MONS:    deep elf pyromancer / deep elf zephyrmancer / \
+         deep elf archer / deep elf knight
+MONS:    deep elf elementalist / deep elf blademaster / deep elf master archer
+MONS:    deep elf high priest / deep elf death mage / deep elf demonologist /\
+         deep elf annihilator / balrug w:5 / blizzard demon w:5
+SUBST:   2 = 2.
+: elseif you.in_branch("Vaults") then
+MONS:    vault guard w:30 / vault sentinel / peacekeeper w:5
+MONS:    crystal guardian / vault warden / titan
+MONS:    entropy weaver / death knight / polterguardian w:5 /\
+         glowing orange brain w:8 / boggart w:8 / dread lich w:2
+# if no_convoke ever gets added as a vault tag,
+# this won't need the reduced holies subst.
+SUBST:   1 = 1.., 2 = 2.., @ = .
+: else -- Depths
+MONS:    tengu warrior / spriggan defender w:8 / fire giant / \
+         frost giant / stone giant / guardian sphinx w:14
+MONS:    ophan / walking divine tome / pearl dragon w:5
+MONS:    hell knight / rakshasa / chonchon / vampire mage / vampire knight / \
+         alderking / dread lich / shadow demon / glowing orange brain
+: end
+NSUBST:  y = 3:3 / 2=33. / *:.
+NSUBST:  z = 1:5 / 2=5. / *:.
+TILE:    c = wall_stone_smooth
+TILE:    v = dngn_metal_wall_white
+COLOUR:  v = white
+FTILE:   =+Gdeu.mn12345 = floor_pebble_darkgray
+: vault_metal_statue_setup(_G, "G", "silver statue")
+MAP
+         @@@@@
+      cccc+++cccc
+      c.........c
+      c.vvnnnvv.c
+      c.vG...Gv.c
+      c.v.....v.c
+      c.v..d..v.c
+ccccccc.v.....v.ccccccc
+c....y..vG...Gv..y....c
+c.vvvvvvnvv+vvnvvvvvv.c
+c.vG...zm.2.2.=....Gv.c
+c.v.....m3...3m..z..v.c
+cyn5.e..m..4..m..e5.nyc
+c.v.....m1...1m..z..v.c
+c.vG...z=.3.3.m....Gv.c
+c.vvvvvvnmmmm+nvvvvvv.c
+c....y..v.....v..y....c
+ccccccc.v..3..v.ccccccc
+      c.n..G..n.c
+      cyv.....vyc
+      c.v.....v.c
+      c.vn===nv.c
+      c....y....c
+      ccccccccccc
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
@@ -10390,7 +10467,7 @@ KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \
 KMONS:  1 = tormentor / hellion / balrug / brimstone fiend w:15 / \
             oni incarcerator / ancient lich / dread lich / place:Geh:$ w:20
 : elseif you.in_branch("Tar") then
-KMONS:  1 = oblivion hound w:15 / death drake / bone dragon / tormentor / \
+KMONS:  1 = oblivion hound w:15 / death drake / undertaker / tormentor / \
             shadow demon / tzitzimitl w:15 / ancient lich / dread lich / \
             place:Tar:$ w:27
 : elseif you.in_branch("Coc") then

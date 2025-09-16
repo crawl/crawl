@@ -196,7 +196,7 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     e.kmons(_9 .. " = cane toad / black mamba / elephant / death yak / \
                       rime drake / lindwurm / dream sheep / raven w:2")
     e.kmons(_8 .. " = skyshark / anaconda / manticore / wolf spider / \
-                      alligator / dire elephant / catoblepas / \
+                      alligator / dire elephant / catoblepas / mountainshell / \
                       anaconda zombie w:5 / wolf spider zombie w:5 / \
                       skyshark zombie w:5 / alligator zombie w:5")
   elseif dgn.persist.necropolis_difficulty == "orc" then
@@ -1729,6 +1729,7 @@ NAME:   ebering_necropolis_ghost_gozag
 : necropolis_depth_tagging(_G, {"pre_temple_d", "pre_lair_d",
 :                               "post_lair_d", "orc", "snake", "shoals",
 :                               "vaults_elf", "depths_crypt"})
+TAGS:   luniq_necropolis_ghost_gozag
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 WEIGHT: 5
 : end
@@ -1974,7 +1975,8 @@ NSUBST: 1 = 1:12 / *:1, - = 3=1 / 4=1- / .
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   spriggan defender zombie / spectral caustic shrike / \
         spark wasp simulacrum / quicksilver dragon draugr / rockslime zombie
-MONS:   revenant soulmonger / curse skull / ancient lich w:8 / dread lich w:8
+MONS:   revenant soulmonger / curse skull / \
+        bone dragon w:8 / ancient lich w:8 / dread lich w:8
 KITEM:  ? = quick blade ego:pain randart pre_id / \
             quick blade ego:spectral randart pre_id
 SUBST:  fgh = |*, i = *%, jk = $
@@ -2335,7 +2337,7 @@ MONS:   necromancer, lich
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   vampire knight / vampire mage
 MONS:   flayed ghost / juggernaut simulacrum
-MONS:   deep elf death mage, ancient lich / dread lich
+MONS:   deep elf death mage / bone dragon w:2, ancient lich / dread lich
 : end
 KMONS:  P = withered plant
 : necropolis_generic_spawns(_G)
@@ -2929,7 +2931,7 @@ ENDMAP
 NAME:   ebering_necropolis_ghost_sewer_f
 TAGS:   necropolis_subvault_pre_temple_d uniq_necropolis_sewer
 KMONS:  O = player_ghost
-KMONS:  1 = dart slug / giant cockroach / rat / ball python
+KMONS:  1 = dart slug / clockroach / rat / ball python
 KMONS:  2 = adder / ribbon worm / river rat
 KMONS:  3 = bullfrog / brain worm w:5
 KITEM:  d = any potion
@@ -3242,8 +3244,8 @@ NAME:   gammafunk_necropolis_ghost_nasty_kobolds
 : necropolis_depth_tagging(_G, {"pre_temple_d", "pre_lair_d", "post_lair_d"})
 MONS:   kobold, kobold brigand, kobold demonologist
 KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
-KMONS:  E = kobold ; wand of flame | any beam wand | any blast wand \
-                | wand of mindburst | wand of polymorph | any hex wand \
+KMONS:  E = kobold geomancer ; wand of flame | wand of mindburst | \
+                wand of polymorph | any hex wand \
                 . dagger | short sword | whip
 KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
                 . wand of flame | any beam wand | any blast wand \
@@ -3561,14 +3563,14 @@ NSUBST: - = 1:1 / 1:1- / 3:2 / 4 = 2- / 1:3 / 2 = 3- / 1:4- / *:-
 MONS:   shapeshifter / crawling flesh cage w:1
 MONS:   glowing shapeshifter / dire elephant w:5
 SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
-NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2:3 / 2=3- / -
+NSUBST: - = 1:1 / 2=1. / 4=2 / 4=2. / 2:3 / 2=3- / *:-
 :   j = "lupine talisman w:5 / lupine talisman randart"
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   very ugly thing / fire dragon / ice dragon
 MONS:   spark wasp / shadow dragon / golden dragon
 MONS:   storm dragon / quicksilver dragon / caustic shrike
 SUBST:  D = FH, fgh = |*, i = *, j = %$
-NSUBST: - = 2:1 / 1:1- / 4:2 / 4 = 2- / 2:3 / 2 = 3- / 1:4 / 1:4- / -
+NSUBST: - = 2:1 / 1:1- / 3:2 / 3 = 2- / 2:3 / 2 = 3- / 1:4 / 1:4- / *:-
 :   j = "lupine talisman randart w:15"
 : end
 KITEM:  D = any jewellery good_item
@@ -3667,7 +3669,7 @@ kmons("y = two-headed ogre ; " .. wrathful_weapon("ogre",
 MONS:   gnoll sergeant / ogre / orc warrior
 MONS:   troll / two-headed ogre
 SUBST:  d = *, e = **%, f = %%$, ghij = ?
-NSUBST: - = 1 / qrsu / 2 / 3=2- / 3y-- / -
+NSUBST: - = 1:1 / 1:qqrs / 1:2 / 1=2- / 1:3u-- / -
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 : kmons("z = tengu warrior ; " .. wrathful_weapon("warrior-1h", "randart") ..
 :     "    . leather armour good_item | ring mail good_item" ..
@@ -3676,16 +3678,16 @@ MONS:   troll / two-headed ogre
 MONS:   tengu warrior / orc knight
 MONS:   deep troll / stone giant
 SUBST:  f = |*, g = **%, h = %$, ij = ?
-NSUBST: - = 1 / 1- / 3=2 / 3=2- / zD / zD-- / 4EF-- / -
+NSUBST: - = 1:1 / 1:1- / 2=2 / 2=2- / 1:zD / 1:zD-- / 1:4EF-- / *:-
 : elseif dgn.persist.necropolis_difficulty == "lair" then
 MONS:   spriggan
 SUBST:  f = *, g = %$, hij = ?
-NSUBST: - = 1 / 1- / 2=2 / 4=2- / H / H- / J--- / -
+NSUBST: - = 1:1 / 2:2 / 2 = 2- / 1:H / 1:H- / 1:J--- / *:-
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 MONS:   orc warrior / troll / two-headed ogre
 MONS:   deep troll, stone giant
 SUBST:  f = |*, g = *%, h = %$$$, ij= ?
-NSUBST: - = 1 / 1- / 2=2 / 4=2- / D / D3-- / 4EF--- / -
+NSUBST: - = 1:1 / 1:1- / 2=2 / 2=2- / 1:D / 1:D3-- / 1:4EF--- / *:-
 : elseif necropolis_in_lair_branch() then
 {{
 kmons("q = naga warrior ; " .. wrathful_weapon("warrior", "randart") ..
@@ -3697,17 +3699,17 @@ kmons("q = naga warrior ; " .. wrathful_weapon("warrior", "randart") ..
 MONS:   naga / salamander / spriggan rider
 MONS:   naga warrior / spriggan berserker w:15 / merfolk impaler
 SUBST:  fg = |*, h = *%, i = %$$$, j = ?
-NSUBST: - = 1 / 1- / 3=2 / 5=2- / q / 2=q- / 2=3- / -
+NSUBST: - = 1:1 / 1:1- / 3:2 / 3 = 2- / 1:q / 2=q- / 2=3- / *:-
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 MONS:   deep troll w:5 / vault guard w:5 / ironbound beastmaster w:5
 MONS:   ettin / stone giant / deep elf blademaster w:3
 SUBST:  fgh = |*, i = *, j = %$
-NSUBST: - = 2=1 / 1- / 4=2 / 4=2- / 3 / 2=3- / EF / EF-- / -
+NSUBST: - = 2:1 / 1:1- / 4:2 / 4 = 2- / 1:3 / 2 = 3- / 1:EF / 1:EF-- / *:-
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 MONS:   tengu warrior / deep troll / spriggan berserker / stone giant / ettin
 MONS:   spriggan defender, juggernaut
 SUBST:  fgh = |*, i = *, j= %$
-NSUBST: - = 2=1 / 1- / 4=2 / 4=2- / 2=KL / KL-- / 3- / 4 / 4- / -
+NSUBST: - = 2=1 / 1:1- / 4:2 / 3 = 2- / 2 = KL / 1:KL-- / 1:34 / *:-
 : end
 KFEAT:  _ = altar_trog
 KFEAT:  a = rock_wall
@@ -4116,7 +4118,7 @@ NAME:    regret_index_necropolis_ghost_earth_crest
 : necropolis_depth_tagging(_G, {"lair", "post_lair_d",
 :                               "vaults_elf", "depths_crypt"})
 : if dgn.persist.necropolis_difficulty == "lair" then
-MONS:    basilisk, boulder beetle, catoblepas
+MONS:    basilisk, boulder beetle, catoblepas / mountainshell
 NSUBST:  % = 2:d / 1:e / 2:*% / *:%, 3 = 1:3 / *:'
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 MONS:    basilisk w:2 / boulder beetle, cyclops w:2 / gargoyle, catoblepas
@@ -4178,7 +4180,11 @@ SHUFFLE: 1d' / 2e" / 3f` / 4g;
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 MONS:    fire bat, ice beast, sky beast, iron imp ; damaged sling . damaged mace
 : elseif dgn.persist.necropolis_difficulty == "lair" then
+:   if crawl.x_chance_in_y(3, 4) then
 MONS:    lindwurm, rime drake, wyvern, basilisk
+:   else
+MONS:    fire crab, rime drake, wyvern, catoblepas / mountainshell
+:   end
 SUBST:   d = d:6 h:1, e = e:6 i:1, f = f:6 j:1, g = g:6 k:1
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 :   if crawl.coinflip() then
@@ -4549,7 +4555,6 @@ ENDMAP
 
 NAME:    regret_index_necropolis_ghost_elfcraft_halls
 : necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "vaults_elf"})
-WEIGHT:  999999
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
 MONS:    sky beast, fire bat, ice beast, shapeshifter
@@ -4745,5 +4750,81 @@ MAP
 ..n%%%?!''R'!?%%%n..
 ..nnnnnnnnnnnnnnnn..
 .........S..........
+....................
+ENDMAP
+
+NAME:    tekkud_necropolis_ghost_all_or_nothing_shop
+: necropolis_depth_tagging(_G, {"vaults_elf", "depths_crypt"})
+TAGS:    luniq_necropolis_ghost_gozag
+WEIGHT:  5
+KMONS:   O = player ghost
+KMONS:   C = orange crystal statue
+: if dgn.persist.necropolis_difficulty == "vaults_elf" then
+MONS:    vault guard / vault warden / orc warlord / \
+         guardian serpent / dancing weapon / peacekeeper
+MONS:    golden dragon / crystal guardian / guardian sphinx
+: elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
+MONS:    ancient champion / crystal guardian / \
+         guardian sphinx / lich / golden dragon
+MONS:    ancient lich / royal mummy / vampire bloodprince / quicksilver dragon
+: end
+{{
+-- XXX: "any ___ randart" causes the item level to be set to -1, so...
+local ds = "dragon scales"
+local i = ""
+if crawl.x_chance_in_y(57, 71) then
+  local x = util.random_choose_weighted {
+    {"demon whip", 5}, {"eveningstar", 10}, {"great mace", 10},
+    {"giant spiked club", 5}, {"broad axe", 10}, {"executioner's axe", 10},
+    {"partisan", 5}, {"demon trident", 5}, {"bardiche", 10}, {"lajatang", 10},
+    {"quick blade", 10}, {"demon blade", 5}, {"double sword", 5},
+    {"triple sword", 10}, {"hand cannon", 10}, {"longbow", 5},
+    {"triple crossbow", 5}, {"crystal plate armour", 10}, {"pearl " .. ds, 5},
+    {"storm " .. ds, 5}, {"shadow " .. ds, 5}, {"golden " .. ds, 5},
+    {"kite shield", 10}, {"tower shield", 10}, {"hat", 5}, {"helmet", 5},
+    {"cloak", 5}, {"scarf", 5}, {"pair of gloves", 10}, {"pair of boots", 10},
+    {"barding", 5}, {"orb", 5}, {"any magical staff", 30},
+    {"dragon-coil talisman", 10}, {"granite talisman", 10},
+    {"hive talisman", 10}, {"riddle talisman", 10}, {"sanguine talisman", 10},
+    {"storm talisman", 10}, {"talisman of death", 10}, {"any jewellery", 250}
+  }
+  i = "randart " .. x
+else
+  i = "robe randart artprops:archmagi | scroll of acquirement w:120 pre_id | \
+       potion of experience q:1 pre_id"
+end
+
+kfeat("S = general shop name:Gozag type:All_or_Nothing suffix:Deal no_mimic \
+           greed:35 count:1 ; " .. i)
+}}
+KFEAT:   Z = altar_gozag
+KFEAT:   gG = metal_statue
+TILE:    gG = dngn_golden_iron_statue
+TILE:    c = wall_church
+NSUBST:  ~ = 3:1 / 2:2 / 1:1' / 1:O / *:', G = 1:C / *:G, Z = 1:Z / *:'
+FTILE:   ='ZSG12OCn = floor_limestone
+KPROP:   ='ZSG12OCn = no_tele_into
+: setup_gozag_gold(_G)
+: necropolis_ghost_setup(_G, false)
+MAP
+....................
+....................
+.......g....g.......
+...c............c...
+....cc........cc....
+....cnnn....nnnc....
+.....nSnccccnZn.....
+..g..nn''GG''nn..g..
+......c''~~''c......
+......cG~~~~Gc......
+......cG~~~~Gc......
+......c''~~''c......
+..g..nn''GG''==..g..
+.....nZncccc='=.....
+....cnnn....===c....
+....cc........cc....
+...c............c...
+.......g....g.......
+....................
 ....................
 ENDMAP

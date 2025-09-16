@@ -2924,9 +2924,9 @@ ENDMAP
 NAME:   beargit_carnivore_pack
 ORIENT: float
 DEPTH:  Lair:2-
-KMONS:  1 = komodo dragon band
-KMONS:  2 = skyshark band
-KMONS:  3 = Grum, komodo dragon
+KMONS:  1 = komodo dragon
+KMONS:  2 = skyshark
+KMONS:  3 = Grum band, komodo dragon
 KMONS:  4 = Snorg, skyshark
 SUBST:  1 : 111122222234, 1 = 11., 2 = 2.
 NSUBST: 3 = 3 / ., 4 = 4 / ., . = ..`
@@ -3027,9 +3027,8 @@ ENDMAP
 # Ice dragon lair with assorted imp pets
 NAME:   bobbens_ice_dragon_lair
 TAGS:   no_monster_gen
-DEPTH:  Lair:4-
-MONS:   ice dragon
-MONS:   white imp
+DEPTH:  Lair:3-
+MONS:   ice dragon, rime drake
 SUBST:  $ = $:3 *:2, _ = %:1 `:3
 SUBST:  3 = 2:9 .:1
 SUBST:  ' = w:15 x:12 `:1, ; = x:2 .:3, G = G:1 .:3
@@ -3042,13 +3041,13 @@ MAP
 ;.ww'x$xx''''''w...ww.
 ;..wwx$$xxxxxx'w..www.
 ;;..wx$1x..>xx'wGwww.;
-;;;.wx$$.3x2.x'wwww.;
+;;;.wx$$..x2.x'wwww.;
 ;;;wwxxw3.xW.''www.;;
 ;..www'xxxxxxw'wwww.;;
 ..wwww''xxxxwww''ww.;;
 .wwwwwww...www'_'ww.;
 ..wwwww....www'''w.;;
-.;www...V..wwwwww.;;
+.;www...V..wwwwww3;;
 ;............www.;;;
 ;;   ;;;....w..;
 ENDMAP
@@ -3093,7 +3092,7 @@ ENDMAP
 # Drake nest (minmay)
 NAME:   minmay_lair_drake_nest
 TAGS:   transparent
-DEPTH:  Lair:4-
+DEPTH:  Lair:3-
 MONS:   rime drake, plant w:20 / fungus w:1 / bush w:1
 NSUBST: 1 = 2:1 / * = 1.., ' = 4:2 / * = ., . = 1:2 / 1:% / * = ..%2
 MAP
@@ -3140,10 +3139,10 @@ ENDMAP
 
 # Hibernating monster in a tunnel, can be pretty dangerous
 NAME:   hibernation_bobbens
-DEPTH:  Lair
 TAGS:   no_monster_gen no_item_gen
+DEPTH:  Lair
 MONS:   ice dragon / fire dragon / swamp dragon / anaconda w:5
-MONS:   swamp dragon / hydra / catoblepas
+MONS:   swamp dragon / hydra / catoblepas / mountainshell
 MONS:   swamp drake / w:20 cane toad / w:20 komodo dragon /\
         w:20 basilisk / w:20 black mamba
 KMONS:  P = plant
@@ -3258,12 +3257,13 @@ MAP
 .....................
 ENDMAP
 
-# A sealed arena. The walls are usually thick enough
-# to make this only accessible from the floor below.
+# A sealed arena. The walls are usually thick enough to make this only
+# accessible from the floor below. Despite the name, it can also have
+# another heavy earth monster in it.
 NAME:   kennysheep_catoblepas_arena
 TAGS:   no_monster_gen ruin no_descent
 DEPTH:  Lair:3-, !Lair:$
-MONS:   catoblepas
+MONS:   catoblepas / mountainshell w:2
 NSUBST: d = 4=%* / 3:0 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -3287,7 +3287,7 @@ ENDMAP
 
 NAME:   kennysheep_basilisk_garden
 TAGS:   transparent
-DEPTH:  Lair:2-
+DEPTH:  Lair
 MONS:   basilisk, pile of debris
 NSUBST: . = 2:1 / 3 = 11G / *:., G = 2:G2 / *:G
 TILE:   G = dngn_statue_axe / dngn_statue_cat / dngn_statue_centaur / \
@@ -3361,7 +3361,7 @@ DEPTH:  Lair
 ORIENT: north
 KMONS:  pq = plant / fungus / toadstool
 KMONS:  1 = electric eel / rime drake / elephant / wyvern
-KMONS:  2 = lindwurm / dire elephant / catoblepas
+KMONS:  2 = lindwurm / dire elephant / catoblepas / mountainshell w:3
 KITEM:  2 = * / |
 KFEAT:  q = W
 KFEAT:  1 = w
@@ -3491,7 +3491,7 @@ ENDMAP
 NAME:    cheibrodos_lair_reptile_den
 TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Lair, !Lair:$
-MONS:    adder / water moccasin, komodo dragon / black mamba
+MONS:    adder / water moccasin, komodo dragon / black mamba / mountainshell w:2
 KMONS:   P = plant / fungus w:5
 SHUFFLE: "', ABC
 SUBST:   A = ., BC = x, D = x .:2
@@ -3566,15 +3566,16 @@ MAP
    ........
 ENDMAP
 
-NAME: cheibrodos_lair_overgrown_chateau
-TAGS: no_item_gen no_monster_gen
-DEPTH: Lair:2-, !Lair:$
+NAME:   cheibrodos_lair_overgrown_chateau
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Lair:2-, !Lair:$
 ORIENT: float
-MONS: water moccasin / black bear, hornet, yak, bullfrog / cane toad
-MONS: black mamba / komodo dragon / rime drake w:3 / raven w:3, hydra / lindwurm
-KMONS: PA = plant
-KFEAT: A = W
-SUBST: - = AAW, " = ccct, * = *%%.
+MONS:   water moccasin / black bear, hornet, yak, bullfrog / cane toad
+MONS:   black mamba / komodo dragon / rime drake w:3 / raven w:3
+MONS:   hydra / lindwurm / mountainshell w:3
+KMONS:  PA = plant
+KFEAT:  A = W
+SUBST:  - = AAW, " = ccct, * = *%%.
 NSUBST: ; = 1=1 / 1=1. / 1=5..
 NSUBST: ' = 3:P / 4=P. / 1:t / 4=t. / 2=1234 / 2=1234.... / 1:5
 NSUBST: p = 3=1234 / 1=5.., q = 2=1234, _ = 1=134.. / 1:3 / 1:4
@@ -3708,7 +3709,7 @@ NAME:   nicolae_lair_lakeside_cave
 TAGS:   no_pool_fixup transparent
 DEPTH:  Lair
 KMONS:  1D = alligator w:15 / manticore / fire crab w:5 / polar bear / \
-             torpor snail w:5 / komodo dragon / hydra
+             torpor snail w:5 / komodo dragon / hydra / mountainshell w:5
 KMONS:  2E = hornet / hell rat / wyvern / cane toad / death yak / elephant / \
              steam dragon / rime drake / raven w:5
 KMONS:  3F = basilisk / scorpion / wolf / black mamba / water moccasin / \
@@ -3904,15 +3905,15 @@ NAME:   pdpol_lair_cavern_descent
 TAGS:   no_pool_fixup
 DEPTH:  Lair
 KITEM:  * = *
-KMONS:  1 = water moccasin / black bear / wolf / wyvern
+KMONS:  1 = water moccasin / black bear / wolf / wyvern / hornet
 KMONS:  2 = electric eel
 KMONS:  3 = cane toad / black mamba / komodo dragon / polar bear
-KMONS:  4 = hydra / boulder beetle / hornet / rime drake
+KMONS:  4 = hydra / boulder beetle / rime drake /  mountainshell w:2
 KMONS:  5 = basilisk / torpor snail w:5 / manticore w:2
 KFEAT:  5* = W
 KFEAT:  2 = w
 SUBST:  u = wW
-NSUBST: ' = 2:1 / 2=1. / 3 / 2=3. / 4 / 4. / .
+NSUBST: ' = 2:1 / 2=1. / 1:3 / 2=3. / 1:4 / 1:4. / *:.
 NSUBST: W = 5 / 2=5W / W
 NSUBST: w = 2 / 2=2ww / w
 MAP
@@ -4100,7 +4101,7 @@ KMONS:   0 : black mamba w:90 / wolf spider
 KMONS:   A = elephant
 KMONS:   B = death yak
 KMONS:   C = dream sheep
-KMONS:   D = hydra / torpor snail w:6 / dire elephant w:6
+KMONS:   D = hydra / torpor snail w:6 / dire elephant w:6 / mountainshell w:6
 KMONS:   P = plant w:12 / fungus w:8
 KITEM:   ? = rimehorn talisman randart
 KITEM:   ~ = any good_item
@@ -4513,7 +4514,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 PLACE:   Lair:$
 ORIENT:  northeast
 MONS:    deep troll shaman, dire elephant / hydra / lindwurm
-MONS:    catoblepas, death yak band
+MONS:    catoblepas / mountainshell w:2, death yak band
 MONS:    elephant, wolf, black bear / polar bear
 KMONS:   P = plant / fungus w:2 / bush w:1
 : kitem("d = " .. vault_species_skeletons(_G, "dungeon"))
@@ -4642,7 +4643,7 @@ ORIENT:  float
 MONS:    black mamba, steam dragon
 MONS:    hell hound, molten gargoyle
 MONS:    komodo dragon / wyvern w:7 / basilisk w:7 / hydra w:2
-MONS:    lindwurm / fire crab w:3, fire dragon
+MONS:    lindwurm / fire crab w:3, fire dragon / mountainshell w:2
 KMONS:   8 = hell hog
 KMONS:   Y = lava snake
 KFEAT:   Y = lava

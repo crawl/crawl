@@ -4500,8 +4500,8 @@ NSUBST:  l = 1:+ / *:c, m = 1:+ / *:c, n = 1:+ / *:c, o = 1:+ / *:c
 NSUBST:  p = 1:+ / *:c, q = 1:+ / *:c, r = 1:+ / *:c, s = 1:+ / *:c
 NSUBST:  t = 1:+ / *:c, u = 1:+ / *:c
 SHUFFLE: '"
-FTILE:   ' = floor_grass_dark
-FTILE:   " = floor_dirt
+FTILE:   '{ = floor_grass_dark
+FTILE:   "T = floor_dirt
 COLOUR:  ' = green
 COLOUR:  " = brown
 MAP

@@ -619,7 +619,7 @@ void oblivion_howl(int time)
     for (int i = 0; i < howlcalled_count; ++i)
     {
         const monster_type howlcalled = random_choose(
-                MONS_BONE_DRAGON, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
+                MONS_UNDERTAKER, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
                 MONS_PUTRID_MOUTH
         );
 
@@ -632,8 +632,7 @@ void oblivion_howl(int time)
                                        INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
             mons_add_blame(mons, "called by an oblivion hound"); // assumption!
-            check_place_cloud(CLOUD_BLACK_SMOKE, mons->pos(),
-                              random_range(1,2), mons);
+            place_cloud(CLOUD_BLACK_SMOKE, mons->pos(), random_range(1,2), mons);
         }
     }
 }
@@ -1684,6 +1683,7 @@ static spell_type servitor_spells[] =
     SPELL_AIRSTRIKE,
     // less desirable
     SPELL_IRRADIATE,
+    SPELL_BOULDER,
     SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
     SPELL_FREEZING_CLOUD,
     SPELL_MEPHITIC_CLOUD,
@@ -1790,7 +1790,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
         if (slot.spell == SPELL_NO_SPELL)
             continue;
 
-        int range = spell_range(slot.spell, 100, false);
+        int range = spell_range(slot.spell, servitor);
         if (range < shortest_range)
             shortest_range = range;
     }
@@ -1973,8 +1973,7 @@ void end_battlesphere(monster* mons, bool killed)
         else if (you.can_see(*mons))
             simple_monster_message(*mons, " dissipates.");
 
-        if (!cell_is_solid(mons->pos()))
-            place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
+        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
         monster_die(*mons, KILL_RESET, NON_MONSTER);
     }
@@ -2177,7 +2176,7 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                              bool fail, bool is_shadow)
 {
     if (grid_distance(where, caster->pos())
-        > spell_range(SPELL_FULMINANT_PRISM, pow))
+        > spell_range(SPELL_FULMINANT_PRISM, caster, pow))
     {
         if (caster->is_player())
             mpr("That's too far away.");
@@ -2423,7 +2422,7 @@ static void _setup_infestation(bolt &beam, int pow)
 
 spret cast_infestation(int pow, bolt &beam, bool fail)
 {
-    if (cell_is_solid(beam.target))
+    if (cell_is_invalid_target(beam.target))
     {
         canned_msg(MSG_SOMETHING_IN_WAY);
         return spret::abort;
@@ -3154,15 +3153,22 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
                              agent.is_player()
                                 ? BEH_FRIENDLY
                                 : SAME_ATTITUDE(agent.as_monster()),
-                             pos, MHITNOT, MG_FORCE_PLACE);
+                             pos, _auto_autofoe(&agent), MG_FORCE_PLACE);
     mg.set_summoned(&agent, SPELL_BOULDER);
     mg.hp = barrelling_boulder_hp(pow);
+
+    // Since monsters are less intelligent about using boulders (and their
+    // targets better at dodging them), let's give them a bit more durability.
+    if (agent.is_monster())
+        mg.hp = mg.hp * 3 / 2;
+
     monster *boulder = create_monster(mg);
 
     // If some other reason prevents this from working (I'm not sure what?)
     if (!boulder)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (agent.is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
@@ -3171,10 +3177,15 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     //     Currently that can't happen, but in future it might.
     boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
 
-    mpr("You send a boulder barrelling forward!");
+    if (you.can_see(*boulder))
+    {
+        mprf("%s send%s a boulder barrelling forward!",
+            agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
+    }
 
     // Let the boulder roll one space immediately.
     boulder->speed_increment = 80;
+    queue_monster_for_action(boulder);
 
     return spret::success;
 }
@@ -3195,7 +3206,7 @@ string mons_simulacrum_immune_reason(const monster *mons)
 
 spret cast_simulacrum(coord_def target, int pow, bool fail)
 {
-    if (cell_is_solid(target))
+    if (cell_is_invalid_target(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;

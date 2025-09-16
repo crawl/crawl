@@ -732,6 +732,13 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -4;
         *ofs_y = 1;
         break;
+    case TILEP_MONS_KOBOLD_GEOMANCER:
+    case TILEP_MONS_KOBOLD_GEOMANCER_1:
+    case TILEP_MONS_KOBOLD_GEOMANCER_2:
+        *ofs_x = -3;
+        *ofs_y = 1;
+        break;
+    case TILEP_MONS_KOBOLD_DEMONOLOGIST:
     case TILEP_MONS_KOBOLD_FLESHCRAFTER:
         *ofs_x = -4;
         *ofs_y = 2;

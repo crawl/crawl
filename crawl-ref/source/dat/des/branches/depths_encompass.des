@@ -42,7 +42,7 @@
         e.kmons("9 = war gargoyle")
         e.kmons("0 = glowing shapeshifter hd:15")
         e.kmons("EW = water elemental")
-        e.kmons("e = earth elemental")
+        e.kmons("e = patrolling earth elemental")
         e.kmons("f = fire elemental")
         e.kmons("a = air elemental")
         e.kmons("r = war gargoyle / molten gargoyle / nothing w:20")
@@ -145,8 +145,8 @@
             e.ftile("c.+123AB = floor_limestone")
         elseif set_weight == 6 then
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
-            e.mons("storm dragon / shadow dragon / bone dragon")
-            e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
+            e.mons("storm dragon / shadow dragon / iron dragon")
+            e.mons("golden dragon w:15 / quicksilver dragon / bone dragon / " ..
                    "wyrmhole w:5 / pearl dragon w:1")
             e.subst("x = c")
             e.tile("c = wall_stone_scorched")
@@ -640,7 +640,7 @@ TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 KMONS:  4 = shadow wraith / nothing w:30
 KMONS:  5 : soul eater / flayed ghost
-KMONS:  6 : reaper w:18 / lich w:5 / bone dragon w:4
+KMONS:  6 : reaper w:18 / lich w:6 / bone dragon w:4
 KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }

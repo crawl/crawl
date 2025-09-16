@@ -854,6 +854,18 @@ string map_terrain_change_marker::debug_describe() const
                         old_feature, new_feature, duration);
 }
 
+bool map_terrain_change_marker::any_at(coord_def pos, function<bool(map_terrain_change_marker&)> predicate)
+{
+    for (map_marker *marker : env.markers.get_markers_at(pos))
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            auto terrain_marker = dynamic_cast<map_terrain_change_marker*>(marker);
+            if (predicate(*terrain_marker))
+                return true;
+        }
+    return false;
+};
+
 ////////////////////////////////////////////////////////////////////////////
 // map_cloud_spreader_marker
 

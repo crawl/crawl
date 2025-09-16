@@ -977,7 +977,6 @@ int main(int argc, char* argv[])
         mon.wield_melee_weapon();
         for (int x = 0; x < 4; x++)
         {
-            mon_attack_def orig_attk(me->attack[x]);
             int attack_num = x;
             if (mon.has_hydra_multi_attack())
                 attack_num = x == 0 ? x : x + mon.number - 1;
@@ -1287,6 +1286,7 @@ int main(int argc, char* argv[])
         mons_check_flag(mon.is_unbreathing(), monsterflags, "unbreathing");
         mons_check_flag(mon.is_insubstantial(), monsterflags, "insubstantial");
         mons_check_flag(mon.is_amorphous(), monsterflags, "amorphous");
+        mons_check_flag(bool(me->bitfields & M_WARDED), monsterflags, "warded");
 
         string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
