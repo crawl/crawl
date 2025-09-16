@@ -42,6 +42,7 @@ void did_hurt_monster(const monster &victim, int damage_done,
 
 void god_conduct_turn_start();
 
+bool god_punishes_memorising_spells(god_type god);
 bool god_punishes_spell(spell_type spell, god_type god);
 
 conduct_type god_hates_item_handling(const item_def& item);

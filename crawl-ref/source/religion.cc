@@ -4158,8 +4158,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 }
 
 /**
- * Checks to see if your god hates this spell (or spellcasting generally).
- * Returns a warning string if so.
+ * Checks to see if your god hates this spell, hates spellcasting in general,
+ * or punishes memorising spells. Returns a warning string if so.
  *
  * @param spell         The spell to check against
  * @param god           The god to check against
@@ -4168,6 +4168,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
  */
 string god_spell_warn_string(spell_type spell, god_type god)
 {
+    if (god_punishes_memorising_spells(god))
+        return "This will place you under penance!";
     if (god_hates_spellcasting(god))
         return "Your god hates spellcasting!";
     if (god_hates_spell(spell, god))

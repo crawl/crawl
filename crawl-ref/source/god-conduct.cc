@@ -1190,6 +1190,23 @@ void did_hurt_monster(const monster &victim, int damage_done,
 }
 
 /**
+ * Will this god definitely be upset if you memorise spells?
+ *
+ * This is as opposed to a likelihood.
+ *
+ * @param spell the spell to be cast
+ * @param god   the god to check against
+ * @returns true if you will definitely lose piety/get penance/be excommunicated
+ */
+bool god_punishes_memorising_spells(god_type god)
+{
+    if (map_find(divine_peeves[god], DID_SPELL_MEMORISE))
+        return true;
+
+    return false;
+}
+
+/**
  * Will this god definitely be upset if you cast this spell?
  *
  * This is as opposed to a likelihood.
