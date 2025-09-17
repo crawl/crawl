@@ -3198,8 +3198,13 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
     if (you.form != you.default_form && temp)
         return "you need to leave your temporary form first.";
 
-    if (trans == transformation::hive && you_worship(GOD_OKAWARU))
-        return "you have forsworn all allies in Okawaru's name.";
+    if (trans == transformation::hive)
+    {
+        if (you_worship(GOD_OKAWARU))
+            return "you have forsworn all allies in Okawaru's name.";
+        if (you.get_mutation_level(MUT_NO_LOVE))
+            return "you are loveless.";
+    }
 
     return "";
 }
