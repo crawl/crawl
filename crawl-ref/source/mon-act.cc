@@ -3062,6 +3062,11 @@ static bool _handle_pickup(monster* mons)
             return false;
         }
 
+        // Letting Maurice pickup thrown items would let players lock his
+        // behavior into a loop while they have throwables, so we disallow it.
+        if (mons->has_attack_flavour(AF_STEAL) && si->flags & ISFLAG_THROWN)
+            continue;
+
         if (si->flags & ISFLAG_NO_PICKUP)
             continue;
 
