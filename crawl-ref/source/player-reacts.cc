@@ -1099,7 +1099,7 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 
     if (gained_regen || gained_mana_regen)
     {
-        msgs.emplace_back(make_stringf("regenerate %s more quickly",
+        msgs.emplace_back(make_stringf("regenerate%s more quickly",
                 gained_regen && gained_mana_regen ? " health and magic"
                 : (gained_regen ? "" : " magic")));
     }
