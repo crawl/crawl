@@ -274,7 +274,8 @@ public:
     bool     extra_balanced() const override;
     bool     can_pass_through_feat(dungeon_feature_type grid) const override;
     bool     can_burrow() const override;
-    bool     can_burrow_through(dungeon_feature_type feat) const;
+    bool     can_burrow_through(const coord_def& pos) const;
+    bool     can_flatten_tree_at(const coord_def& pos) const;
     bool     is_habitable_feat(dungeon_feature_type feat) const override;
     bool     is_habitable(const coord_def &_pos) const override;
     bool     shove(const char* name = "") override;

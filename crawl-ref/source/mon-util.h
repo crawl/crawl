@@ -211,7 +211,6 @@ string mons_type_name(monster_type type, description_level_type desc);
 
 bool give_monster_proper_name(monster& mon);
 
-bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);

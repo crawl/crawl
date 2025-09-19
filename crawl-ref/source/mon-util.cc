@@ -2327,11 +2327,6 @@ bool mons_has_skeleton(monster_type mc)
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
-bool mons_flattens_trees(const monster& mon)
-{
-    return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
-}
-
 /**
  * Given an average max HP value for a given monster type, what should a given
  * monster have?

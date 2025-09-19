@@ -5222,10 +5222,39 @@ bool monster::can_burrow() const
            && (type == MONS_DISSOLUTION || behaviour != BEH_WANDER);
 }
 
-bool monster::can_burrow_through(dungeon_feature_type feat) const
+bool monster::can_burrow_through(const coord_def& pos) const
 {
-    return can_burrow() && feat_is_diggable(feat)
-           && (type == MONS_DISSOLUTION || feat != DNGN_SLIMY_WALL);
+    const dungeon_feature_type feat = env.grid(pos);
+    if (!can_burrow() || !feat_is_diggable(feat)
+        || (feat == DNGN_SLIMY_WALL && type != MONS_DISSOLUTION))
+    {
+        return false;
+    }
+
+    // Can only dig through temporary terrain if the underlying feature is also
+    // diggable (or open space)
+    const dungeon_feature_type orig_feat = orig_terrain(pos);
+    return ((orig_feat == feat)
+            || feat_is_diggable(orig_feat)
+               && (type == MONS_DISSOLUTION || orig_feat != DNGN_SLIMY_WALL)
+            || monster_habitable_feat(this, orig_feat));
+}
+
+bool monster::can_flatten_tree_at(const coord_def& pos) const
+{
+    if (mons_base_type(*this) != MONS_LERNAEAN_HYDRA)
+        return false;
+
+    const dungeon_feature_type feat = env.grid(pos);
+    if (!feat_is_tree(feat))
+        return false;
+
+    // Can only flatten temporary trees if you could either flatten or occupy
+    // the underlying terrain.
+    const dungeon_feature_type orig_feat = orig_terrain(pos);
+    return ((orig_feat == feat)
+            || feat_is_tree(orig_feat)
+            || monster_habitable_feat(this, orig_feat));
 }
 
 /**
