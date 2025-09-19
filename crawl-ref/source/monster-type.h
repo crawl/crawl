@@ -1336,9 +1336,7 @@ enum monster_type                      // env.mons[].type
     MONS_PILE_OF_DEBRIS,
     MONS_PILLAR_OF_RIME,
     MONS_HOARFROST_CANNON,
-#if TAG_MAJOR_VERSION == 34
-    MONS_ELECTROFERRIC_VORTEX,
-#endif
+    MONS_ELECTROFERRIC_VORTEX,  // removed
     MONS_POLTERGUARDIAN,
     MONS_MARROWCUDA,
     MONS_UNDYING_ARMOURY,
