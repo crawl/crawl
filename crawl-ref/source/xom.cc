@@ -5676,7 +5676,7 @@ void debug_xom_effects()
     const int N = prompt_for_int("How many iterations over the "
                                  "entire piety range? ", true);
 
-    if (N == 0)
+    if (N <= 0)
     {
         canned_msg(MSG_OK);
         return;
