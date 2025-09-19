@@ -117,7 +117,10 @@ static int dgn_grid(lua_State *ls)
             if (crawl_state.generating_level)
                 env.grid(c) = feat;
             else
+            {
+                revert_terrain_change(c);
                 dungeon_terrain_changed(c, feat);
+            }
         }
     }
     PLUARET(number, env.grid(c));
