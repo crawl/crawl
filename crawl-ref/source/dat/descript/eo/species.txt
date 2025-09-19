@@ -1,0 +1,138 @@
+%%%%
+Armataur
+
+Skvamaj ĉevalgrandaj mamuloj. Armataŭroj estas rapide ruliĝanta, bone ŝirmata, 
+kaj bonega trinkantoj de pocioj. Manlerteco kaj rapideco de skribrulaĵa legado 
+mankas al ili.
+%%%%
+Barachi
+
+Baraĉioj estas malrapide movantaj, amfibiaj duonhomoj, kiu povas salti 
+malporksime. Ĉar ilia plilongita viddistanco, ili estas videbla de pli longa 
+distanco.
+%%%%
+Deep Elf
+
+Profundelfoj posedas fortan inklinon al ĉiuj specoj de magio, sed estas tre 
+malfortika.
+%%%%
+Demigod
+
+Duondioj rifuzas adori iun ajn dion, sed ili kompensas tion per dia ecoj kaj 
+altaj rezervoj de sano kaj manao.
+%%%%
+Demonspawn
+
+Demonidoj estas duondemono-duonhomo. Ili akiras fortajn demonajn mutaciojn dum 
+ilia kreskado.
+%%%%
+Djinni
+
+Ĝinoj estas konstante bruligantaj spiritoj. Ili memlernas sorĉojn sen libroj, 
+kaj eltiras siajn proprajn flamojn por ŝorĉi.
+%%%%
+Draconian
+
+Homdrakoj estas multfacetaj hibridoj. Ili maturiĝas kaj koloriĝas ĉe 
+spertnivelo 7.
+%%%%
+Formicid
+
+Formikegoj estas duonhomaj formikoj, kiuj estas lertaj fosantoj. Iliaj membroj 
+havas eksterordinara forto, kaj ili konstante vivas en staza stato.
+%%%%
+Felid
+
+Saĝkatoj estas plurvivaj katoj, kiuj posedas homecan konscion. Ili ne povas 
+lerte manipuli objektojn aŭ uzi armaĵojn kaj armilojn.
+%%%%
+Ghoul
+
+Ĥuloj estas malmortuloj damnita al eterna putrado. Ili havas akraj ungegoj, kaj 
+resaniĝas per la morto de la vivantoj.
+%%%%
+Gargoyle
+
+El viva ŝtono, Gargojloj preternature inklinas al la tero. Ili havas iom da 
+sano, kvankam ties ŝtona korpo estas treege fortika.
+%%%%
+Gnoll
+
+Gnoloj estas hundaj duonhomoj. Ili Ne povas spertiĝas pri iu ajn aparta 
+kapabloj, sed anstataŭ ili malrapide gajnas sperton en ĉiuj kapabloj.
+%%%%
+Hill Orc
+
+Monetorkoj spertas pri miksbatalo, kaj ofte, estas provadantoj de ataka magio. 
+Nur ili povas kredas je la Orkan dion Beogh.
+%%%%
+Human
+
+Homoj atingas rapide nivelojn kaj havas egalajn kapablemecojn por plej multaj 
+kapabloj.
+%%%%
+Tengu
+
+Tenguoj esta hombirdoj, kiuj volegas batali ambaŭ kun armiloj kaj sorĉoj. Ili 
+estas tre malfortika, sed ili poste lernos flugi.
+%%%%
+Kobold
+
+Koboldoj estas agordita al la ombroj, kaj konsekvence nur povas vidi aŭ vidiĝi 
+proksime. Ili estas malgranda, iom malfortika, kaj ĝenerale talenta.
+%%%%
+Merfolk
+
+Duonfiŝa-duonhomaj Marhomoj estas civitanoj de ambaŭ akvo kaj tero. Ili estas 
+fortaj batalantoj, kaj lerte uzas magio por helpi sin batali.
+%%%%
+Minotaur
+
+Minotaŭroj estas grandaj muskolaj homoj kun bova kapo. Ili superas ĉiun specon 
+de pafado kaj miksbatalo.
+%%%%
+Mummy
+
+Antikva malbono pelas Mumiojn, kiuj enhavas piecon kaj estas kompetenta pri 
+Nekromancio, sed malrapide lernas alia kapablojn. Ili ne povas trinki pociojn.
+%%%%
+Naga
+
+Nagoj estas hibridoj, kiuj havas homkorpon super la talio kaj serpentan voston 
+anstataŭ kruroj. Ili movas malrapide, sed nature rezistas.
+%%%%
+Octopode
+
+Polpoj estas speco de amfibiaj kapopieduloj, kiuj povas porti ok ringoj, sed 
+preskaŭ neniuj armaĵoj taŭgas ilin.
+%%%%
+Ogre
+
+Grandega, forta, kaj tre fortika estas Orgoj, kiuj estas kompetenta pri ĉiuj 
+specoj de miksbatalo. Ili ne estas nur brutoj, tamen si estas lerta sorĉantoj.
+%%%%
+Spriggan
+
+Tre malgranda, tre malfortika, kaj tre rapida estas Sprigoj, kiuj estas tre 
+lertaj pikantoj kaj sorĉantoj.
+%%%%
+Meteoran
+
+Ĉiela estaĵo falinta sur la teron, kiu estas inteligentega kaj timinda... sed 
+iomete da tempo daŭras ĝis la mallumo konsumas ilin.
+%%%%
+Troll
+
+Troloj estas monstraj bestoj kun potenca ungegoj. Ili rapide resaniĝas.
+%%%%
+Vampire
+
+Laŭvole Vampiroj ŝanĝiĝas inter la statoj de vivo kaj malmorto. Ili estas 
+sukcesaj pikantoj kaj sorĉantoj.
+%%%%
+Vine Stalker
+
+Malfortika simbiozanto estas Grimpantoj, kiuj ne povas resaniĝas per pocioij. 
+Ilia manaaj rezervoj ensorbas damaĝo, kaj ili portas mordon, ke restarigas 
+manao.
+%%%%
