@@ -60,10 +60,13 @@ KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
 KFEAT:  A = general shop
 KFEAT:  B = scroll shop type:Wondrous suffix:Manuscripts count:10 \
-            greed:50 ; scroll of torment | scroll of vulnerability | \
-            scroll of noise
+            greed:35 ; scroll of torment | scroll of vulnerability | \
+            scroll of noise | scroll of poison | scroll of immolation | \
+            scroll of silence
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
-            greed:50 ; potion of mutation
+            greed:35 ; potion of mutation | potion of attraction | \
+            potion of berserk rage | potion of moonshine | \
+            potion of lignification | potion of cancellation
 # Shop on D moved into a subvault due to complicated lua scripts.
 SUBVAULT: D : grated_community_smithy_shop
 SHUFFLE:  QRSTUVX
