@@ -607,6 +607,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        new BoolGameOption(SIMPLE_NAME(default_skill_cost), false),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
