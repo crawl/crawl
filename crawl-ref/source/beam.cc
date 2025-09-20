@@ -2845,20 +2845,31 @@ void bolt::drop_object()
     ASSERT(item != nullptr);
     ASSERT(item->defined());
 
-    const int idx = copy_item_to_grid(*item, pos(), 1);
+    // If the player is throwing this item at a wall, attempt to place it at
+    // the tile on the path immediately before hitting the wall.
+    // XXX: If Dimensional Bullseye is active on a target in a wall, the
+    //      projectile will end up rewinding relative to the initial target,
+    //      not the bullseye one. This is technically incorrect, but probably
+    //      too minor to worry about.
+    const coord_def spot = cell_is_solid(pos())
+                                ? path_taken.size() >= 2
+                                    ? path_taken[path_taken.size() - 2]
+                                    : source
+                                : pos();
+    const int idx = copy_item_to_grid(*item, spot, 1);
 
     if (idx != NON_ITEM
         && idx != -1
         && item->sub_type == MI_THROWING_NET)
     {
-        monster* m = monster_at(pos());
+        monster* m = monster_at(spot);
         // Player or monster at position is caught in net.
         // Don't catch anything if the creature was already caught.
-        if (get_trapping_net(pos(), true) == NON_ITEM
-            && (you.pos() == pos() && you.attribute[ATTR_HELD]
+        if (get_trapping_net(spot, true) == NON_ITEM
+            && (you.pos() == spot && you.attribute[ATTR_HELD]
             || m && m->caught()))
         {
-            maybe_split_nets(env.item[idx], pos());
+            maybe_split_nets(env.item[idx], spot);
         }
     }
 }
