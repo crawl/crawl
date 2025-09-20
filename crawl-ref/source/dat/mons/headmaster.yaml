@@ -1,7 +1,7 @@
 name: "Head Instructor"
 enum: headmaster
 glyph: {char: "@", colour: etc_iron}
-flags: [fighter, see_invis, speaks, warm_blood, two_weapons, always_named]
+flags: [fighter, see_invis, speaks, warm_blood, two_weapons]
 exp: 3034
 species: human
 will: 100
