@@ -104,7 +104,8 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
 
 int actor::wearing_jewellery(int sub_type) const
 {
-    return wearing(OBJ_JEWELLERY, sub_type, ring_plusses_matter(sub_type),
+    return wearing(OBJ_JEWELLERY, sub_type,
+                   jewellery_type_has_pluses(sub_type),
                    sub_type == AMU_REGENERATION || sub_type == AMU_MANA_REGENERATION);
 }
 

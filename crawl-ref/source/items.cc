@@ -4794,21 +4794,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_JEWELLERY:
-        if (jewellery_is_amulet(*item))
-            break;
-
-        switch (item->sub_type)
-        {
-        case RING_SLAYING:
-        case RING_PROTECTION:
-        case RING_EVASION:
-        case RING_STRENGTH:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-            item->plus = 5;
-        default:
-            break;
-        }
+        item->plus = determine_jewellery_plus(item->sub_type);
 
     default:
         break;

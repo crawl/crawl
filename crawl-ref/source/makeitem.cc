@@ -1634,15 +1634,19 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
 }
 
 /**
- * A 'good' plus for stat rings is GOOD_STAT_RING_PLUS, for other rings it's
- * GOOD_RING_PLUS.
+ * Generate an appropriate 'plus' value for a given type of jewellery.
+ * Currently only rings use non-zero plus values, with stat rings usings
+ * GOOD_STAT_RING_PLUS, protection/slaying using GOOD_RING_PLUS, and evasion
+ * using its own value.
  *
- * @param subtype       The type of ring in question.
- * @return              4, 5 or 6.
- *                      (minor numerical variations are boring.)
+ * @param subtype       The type of jewellery in question.
+ * @return              A 'plus' for that jewellery.
  */
-static short _good_jewellery_plus(int subtype)
+short determine_jewellery_plus(int subtype)
 {
+    if (!jewellery_type_has_pluses(subtype))
+        return 0;
+
     switch (subtype)
     {
         case RING_STRENGTH:
@@ -1654,20 +1658,6 @@ static short _good_jewellery_plus(int subtype)
         default:
             return GOOD_RING_PLUS;
     }
-}
-
-/**
- * Generate a random 'plus' for a given type of ring.
- *
- * @param subtype       The type of ring in question.
- * @return              A 'plus' for that ring. 0 for most types.
- */
-static short _determine_ring_plus(int subtype)
-{
-    if (!jewellery_type_has_plusses(subtype))
-        return 0;
-
-    return _good_jewellery_plus(subtype);
 }
 
 // Choose a random ring type compatible with any fixed artprops. If no ring
@@ -1723,7 +1713,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     else
         _roll_amulet_type(item);
 
-    item.plus = _determine_ring_plus(item.sub_type);
+    item.plus = determine_jewellery_plus(item.sub_type);
 
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART

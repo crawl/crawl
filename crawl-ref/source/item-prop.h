@@ -214,7 +214,7 @@ int evoker_max_charges(int evoker_type);
 void print_xp_evoker_recharge(const item_def &evoker, int gained, bool silenced);
 
 // ring functions:
-bool jewellery_type_has_plusses(int jewel_type) PURE;
+bool jewellery_type_has_pluses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
@@ -297,8 +297,6 @@ bool item_grants_flight(const item_def& item);
 
 bool is_equippable_item(const item_def& item);
 bool is_usable_talisman(const item_def& item);
-
-bool ring_plusses_matter(int ring_subtype);
 
 void remove_whitespace(string &str);
 

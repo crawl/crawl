@@ -2391,10 +2391,10 @@ bool jewellery_has_pluses(const item_def &item)
     if (!item.is_identified())
         return false;
 
-    return jewellery_type_has_plusses(item.sub_type);
+    return jewellery_type_has_pluses(item.sub_type);
 }
 
-bool jewellery_type_has_plusses(int jewel_type)
+bool jewellery_type_has_pluses(int jewel_type)
 {
     switch (jewel_type)
     {
@@ -3733,23 +3733,6 @@ bool is_usable_talisman(const item_def& item)
         return false;
 
     return cannot_put_on_talisman_reason(item, false).empty();
-}
-
-bool ring_plusses_matter(int ring_subtype)
-{
-    switch (ring_subtype)
-    {
-        case RING_PROTECTION:
-        case RING_STRENGTH:
-        case RING_SLAYING:
-        case RING_EVASION:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-            return true;
-
-        default:
-            return false;
-    }
 }
 
 bool item_gives_equip_slots(const item_def& item)

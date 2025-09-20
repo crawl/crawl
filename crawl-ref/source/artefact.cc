@@ -365,20 +365,22 @@ static void _populate_staff_intrinsic_artps(stave_type staff,
         proprt[*prop] = 1;
 }
 
-/// The artefact properties corresponding to a given base item.
-struct artp_value
+// An artefact property with an intrinsic value for some base item type.
+struct intrinsic_artp
 {
-    /// The artp matching the item (e.g. ARTP_AC for RING_PROTECTION)
+    // The artp for the item's intrinsic value (e.g. ARTP_AC for
+    // RING_PROTECTION).
     artefact_prop_type  type;
-    /// The value of the artp. (E.g. '9' for RING_MAGICAL_POWER.) If set to 0,
-    /// uses item.plus instead.
+    // The intrinsic value of the artp (e.g. '9' for RING_MAGICAL_POWER).
     int                 value;
+    // Does this item use its plus value for this intrinsic property?
+    bool                uses_plus;
 };
 
-static map<jewellery_type, vector<artp_value>> jewellery_artps = {
+static map<jewellery_type, vector<intrinsic_artp>> jewellery_artps = {
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
-    { AMU_MANA_REGENERATION, { { ARTP_MANA_REGENERATION, 1} } },
-    { AMU_REFLECTION, { { ARTP_SHIELDING, AMU_REFLECT_SH / 2} } },
+    { AMU_MANA_REGENERATION, { { ARTP_MANA_REGENERATION, 1 } } },
+    { AMU_REFLECTION, { { ARTP_SHIELDING, AMU_REFLECT_SH / 2 } } },
     { AMU_ACROBAT, { { ARTP_ACROBAT, 1 } } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
@@ -394,12 +396,20 @@ static map<jewellery_type, vector<artp_value>> jewellery_artps = {
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
 
-    { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
-    { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },
-    { RING_DEXTERITY, { { ARTP_DEXTERITY, 0 } } },
-    { RING_PROTECTION, { { ARTP_AC, 0 } } },
-    { RING_EVASION, { { ARTP_EVASION, 0 } } },
-    { RING_SLAYING, { { ARTP_SLAYING, 0 } } },
+    { RING_STRENGTH, { { ARTP_STRENGTH,
+                         determine_jewellery_plus(RING_STRENGTH), true } } },
+    { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE,
+                             determine_jewellery_plus(RING_INTELLIGENCE),
+                             true } } },
+    { RING_DEXTERITY, { { ARTP_DEXTERITY,
+                          determine_jewellery_plus(RING_DEXTERITY), true } } },
+    { RING_PROTECTION, { { ARTP_AC,
+                           determine_jewellery_plus(RING_PROTECTION),
+                           true } } },
+    { RING_EVASION, { { ARTP_EVASION,
+                        determine_jewellery_plus(RING_EVASION), true } } },
+    { RING_SLAYING, { { ARTP_SLAYING,
+                        determine_jewellery_plus(RING_SLAYING), true } } },
 };
 
 /**
@@ -412,19 +422,27 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
                                             artefact_properties_t &props)
 {
     const jewellery_type jewel = (jewellery_type)item.sub_type;
-    vector<artp_value> *artps = map_find(jewellery_artps, jewel);
+    auto artps = map_find(jewellery_artps, jewel);
     if (!artps)
         return;
 
     for (const auto &artp : *artps)
-        props[artp.type] += artp.value ? artp.value : item.plus;
+    {
+        // The item's plus contains the value intrinsic to the item, but it may
+        // not be set to its standard value until later. So use that value when
+        // plus is zero.
+        if (artp.uses_plus)
+            props[artp.type] += item.plus ? item.plus : artp.value;
+        else
+            props[artp.type] += artp.value;
+    }
 }
 
 // XXX: Building this directly from form data would be nice.
 // Note: Negative resistances are intentionally left off multiple forms so that
 //       it is possible to generate randarts that give that resistance, which
 //       I think is still an appropriate bonus.
-static map<talisman_type, vector<artp_value>> talisman_artps = {
+static map<talisman_type, vector<intrinsic_artp>> talisman_artps = {
     { TALISMAN_INKWELL,     {{ARTP_POISON, 1}}},
     { TALISMAN_RIMEHORN,    {{ARTP_COLD, 2}}},
     { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
@@ -452,12 +470,17 @@ static void _populate_talisman_intrinsic_artps(const item_def &item,
                                                artefact_properties_t &props)
 {
     const talisman_type talisman = (talisman_type)item.sub_type;
-    vector<artp_value> *artps = map_find(talisman_artps, talisman);
+    auto *artps = map_find(talisman_artps, talisman);
     if (!artps)
         return;
 
     for (const auto &artp : *artps)
-        props[artp.type] += artp.value ? artp.value : item.plus;
+    {
+        if (artp.uses_plus)
+            props[artp.type] += item.plus ? item.plus : artp.value;
+        else
+            props[artp.type] += artp.value;
+    }
 }
 
 /**
@@ -711,7 +734,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
         return true;
 
     // Make sure the new prop value is consistent with the intrinsic one: don't
-    // reduce any positive intrinsic value nor decrease any negative one.
+    // reduce any positive intrinsic value nor increase any negative one.
     const int intrinsic_val = intrinsic_props[prop];
     if (intrinsic_val
             && (intrinsic_val > 0 && prop_val < 0
