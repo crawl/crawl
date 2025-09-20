@@ -1142,6 +1142,10 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.shield_class, player_displayed_shield_class(),
                 "sh");
 
+    _update_int(force_full, c.ac_boost, you.temp_ac_mod(), "ac_mod");
+    _update_int(force_full, c.ev_boost, you.temp_ev_mod(), "ev_mod");
+    _update_int(force_full, c.sh_boost, you.temp_sh_mod(), "sh_mod");
+
     _update_int(force_full, c.strength, (int8_t) you.strength(false), "str");
     _update_int(force_full, c.intel, (int8_t) you.intel(false), "int");
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");

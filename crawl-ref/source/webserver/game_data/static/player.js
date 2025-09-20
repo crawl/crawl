@@ -13,16 +13,6 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         "mp": "divinely vigorous"
     };
 
-    var defense_boosters = {
-        "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|fiery-armoured|phalanx barrier"
-              + "|trickster",
-        "ev": "^agile|acrobatic|in a heavenly storm",
-
-        // RIP "I am here because empty strings match everything and this does not"
-        "sh": "ephemerally shielded"
-    }
-
     /**
      * Update the stats area bar of the given type.
      * @param name     The name of the bar.
@@ -238,19 +228,28 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         var elem = $("#stats_"+type);
         elem.text(player[type]);
         elem.removeClass();
-        if (type == "sh" && player.incapacitated()
-            && player.offhand_index != -1)
-            // XXX This really doesn't work properly
-            // Orbs, and coglins with offhand weapons, also trigger this...
-            // Amulets of reflection on the other hand, do not...
-            elem.addClass("degenerated_defense");
-        else if (player.has_status(defense_boosters[type]))
-            elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded"))
-            elem.addClass("degenerated_defense");
-        else if (type == "sh" && player.god == "Qazlal"
-                 && player.piety_rank > 0)
-            elem.addClass("boosted_defense");
+
+        if (type == "ac")
+        {
+            if (player.ac_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.ac_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
+        else if (type == "ev")
+        {
+            if (player.ev_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.ev_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
+        else if (type == "sh")
+        {
+            if (player.sh_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.sh_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
     }
 
     function stat_class(stat)

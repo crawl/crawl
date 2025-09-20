@@ -2235,6 +2235,21 @@ bool player_omnireflects()
     return you.unrand_equipped(UNRAND_WARLOCK_MIRROR);
 }
 
+int player::temp_ac_mod() const
+{
+    return armour_class_scaled(100) - base_ac(100);
+}
+
+int player::temp_ev_mod() const
+{
+    return evasion_scaled(100) - evasion_scaled(100, true);
+}
+
+int player::temp_sh_mod() const
+{
+    return player_shield_class(1, false, false) - player_shield_class(1, false, true);
+}
+
 void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());

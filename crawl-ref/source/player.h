@@ -884,6 +884,12 @@ public:
     int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
+    // Calculate the bonus (or penalty) the player has to their defenses from
+    // temporary effects.
+    int temp_ac_mod() const;
+    int temp_ev_mod() const;
+    int temp_sh_mod() const;
+
     // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
     // given item, along with the fail rate on all their known spells.
     void preview_stats_with_specific_item(int scale, const item_def& new_item,

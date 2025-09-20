@@ -67,6 +67,11 @@ struct player_info
     int8_t intel;
     int8_t dex;
 
+    // Temporary modifiers to defenses.
+    int ac_boost;
+    int ev_boost;
+    int sh_boost;
+
     int doom;
     string doom_desc;
 
