@@ -1453,8 +1453,12 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
         return "The dead are crawling!"; // to say nothing of creeping
 
     const monster_type genus = mons_genus(mons.type);
-    if (genus == MONS_FROG || genus == MONS_QUOKKA)
+    // XXX: Prince Ribbit is in his human shape after he dies.
+    if ((genus == MONS_FROG && mons.type != MONS_PRINCE_RIBBIT)
+         || genus == MONS_QUOKKA)
+    {
         return "The dead are hopping!";
+    }
 
     return "The dead are walking!"; // a classic for sure
 }

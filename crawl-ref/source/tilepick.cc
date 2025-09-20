@@ -1470,6 +1470,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
 
     // specific per-species zombies - use to override genuses
     static const map<monster_type, tileidx_t> species_tiles = {
+        // XXX: Prince Ribbit is in his human shape after he dies.
+        { MONS_PRINCE_RIBBIT,           TILEP_MONS_HUMAN, },
         { MONS_JUGGERNAUT,              TILEP_MONS_ZOMBIE_JUGGERNAUT },
         { MONS_ACID_DRAGON,             TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_STEAM_DRAGON,            TILEP_MONS_ZOMBIE_DRAKE },
