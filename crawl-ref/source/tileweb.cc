@@ -992,28 +992,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_ICEMAIL_DEPLETED)
-        {
-            inf = status_info();
-            if (you.duration[status] <= ICEMAIL_TIME / ICEMAIL_MAX)
-                continue;
-            inf.short_text = "icemail depleted";
-        }
-        else if (status == DUR_ACROBAT)
-        {
-            inf = status_info();
-            if (!acrobat_boost_active())
-                continue;
-            inf.short_text = "acrobatic";
-        }
-        else if (status == DUR_PARRYING)
-        {
-            inf = status_info();
-            if (!parrying_boost_active())
-                continue;
-            inf.short_text = "parrying";
-        }
-        else if (!fill_status_info(status, inf)) // this will reset inf itself
+        if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
 
         if (!inf.light_text.empty() || !inf.short_text.empty())
