@@ -449,6 +449,7 @@
     Rob Young
     Zannick
     Zooko
+    Zhang Haocheng
 
 The Dungeon Crawl Stone Soup development team is:
     advil
