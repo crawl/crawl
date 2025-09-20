@@ -675,6 +675,7 @@ spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer)
     beam.hit = AUTOMATIC_HIT;
     beam.loudness = 0;
     beam.tile_explode = TILE_BOLT_GLOOM;
+    beam.explode_delay = is_tabcasting() ? 25 : 50;
     beam.explode(true, true);
 
     for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
