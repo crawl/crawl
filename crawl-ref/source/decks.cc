@@ -1164,7 +1164,7 @@ static void _damaging_card(card_type card, int power,
     // Confirm aborts as they waste the card.
     prompt = make_stringf("Aiming: %s", card_name(card));
     while (!(spell_direction(target, beam, &args)
-            && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam)))
+            && player_tracer(ZAP_SEARING_RAY, power/6, beam)))
     {
         if (crawl_state.seen_hups
             || yesno("Really abort (and waste the card)?", false, 0))
