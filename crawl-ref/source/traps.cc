@@ -1233,6 +1233,8 @@ trap_type trap_type_from_feature(dungeon_feature_type type)
         return TRAP_ARCHMAGE;
     case DNGN_TRAP_HARLEQUIN:
         return TRAP_HARLEQUIN;
+    case DNGN_TRAP_DEVOURER:
+        return TRAP_DEVOURER;
     case DNGN_TRAP_ALARM:
         return TRAP_ALARM;
     case DNGN_TRAP_ZOT:
