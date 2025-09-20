@@ -756,10 +756,10 @@ void _maybe_blood_hastes_allies()
 static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
                                   mid_t death_source)
 {
-    monster* damager = monster_by_mid(death_source);
+    monster* damager = monster_by_mid(death_source, true);
     // We need to exclude acid damage and similar things or this function
     // will crash later.
-    if (!damager || death_source == MID_YOU_FAULTLESS)
+    if (!damager)
         return;
 
     monster_type mon;
