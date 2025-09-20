@@ -2203,7 +2203,7 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += you.wearing_jewellery(AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    if (you.duration[DUR_PARRYING])
+    if (!ignore_temporary && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
