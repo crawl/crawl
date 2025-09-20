@@ -2590,7 +2590,6 @@ void world_reacts()
 
     check_banished();
     _check_sanctuary();
-    _check_trapped();
     check_spectral_weapon(you);
 
     run_environment_effects();
@@ -2641,6 +2640,8 @@ void world_reacts()
     clear_monster_flags();
 
     add_auto_excludes();
+
+    _check_trapped();
 
     viewwindow();
     update_screen();
