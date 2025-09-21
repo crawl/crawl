@@ -3589,7 +3589,8 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             else
                 ai->hurt(agent, dam, BEAM_POISON);
 
-            if (ai->alive())
+            if (ai->alive() && (!never_harm_monster(&you, *ai->as_monster(), false)
+                                || !agent->is_player()))
             {
                 behaviour_event(ai->as_monster(), ME_ANNOY, agent,
                                 agent->pos());
