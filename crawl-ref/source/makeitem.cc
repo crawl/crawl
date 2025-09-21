@@ -875,12 +875,14 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
+        if (type == ARM_SCARF)
+            return false;
+        // deliberate fall-through
     case SPARM_RESISTANCE:
-        if (type == ARM_FIRE_DRAGON_ARMOUR
-            || type == ARM_ICE_DRAGON_ARMOUR
-            || type == ARM_GOLDEN_DRAGON_ARMOUR)
+        if (type == ARM_FIRE_DRAGON_ARMOUR || type == ARM_ICE_DRAGON_ARMOUR
+            || type == ARM_GOLDEN_DRAGON_ARMOUR || type == ARM_ORB)
         {
-            return false; // contradictory or redundant
+            return false; // contradictory, redundant, or overriding other bits
         }
         return true; // in portal vaults, these can happen on every slot
 
@@ -893,8 +895,8 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND || slot == SLOT_CLOAK
-                       || !strict;
+        return slot == SLOT_BODY_ARMOUR|| slot == SLOT_OFFHAND && type != ARM_ORB
+                       || slot == SLOT_CLOAK && type != ARM_SCARF || !strict;
 
     case SPARM_SPIRIT_SHIELD:
         return
