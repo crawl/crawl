@@ -2259,7 +2259,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         {
             god_type betrayed_god = static_cast<god_type>(
                 you.attribute[ATTR_TRAITOR]);
-            result = god_title(betrayed_god, species, piety);
+            result = god_title(betrayed_god, species, 0);
         }
 
         if (conducts)
