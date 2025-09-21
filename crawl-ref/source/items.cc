@@ -1858,7 +1858,7 @@ static void _get_book(item_def& it)
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
-            mpr("Unfortunately, you learned nothing new.");
+            mpr("Unfortunately, you learned nothing new or useful.");
 
         taken_new_item(it.base_type);
 
