@@ -512,7 +512,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 {
     ASSERT(mon.alive() || !god_conducts);
 
-    if (never_harm_monster(&you, mon, true))
+    if (never_harm_monster(&you, mon, !quiet))
         return;
 
     god_conduct_trigger conducts[3];
