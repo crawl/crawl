@@ -36,6 +36,7 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-explode.h" // monster_explodes
 #include "mon-place.h"
 #include "mon-util.h"
 #include "options.h"
@@ -1397,15 +1398,23 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             return false;
 
         if (god_hates_attacking_friend(you.religion, *mon))
+            would_cause_penance = true;
+
+        // Mostly don't warn for peripheral summons, unless attacking them would
+        // cause problems: explosions, penance, etc.
+        if (mon->was_created_by(you) && mon->is_peripheral()
+            && !monster_explodes(*mon) && !would_cause_penance)
+        {
+            return false;
+        }
+
+        if (would_cause_penance)
         {
             adj = "your ally ";
 
             monster_info mi(mon, MILEV_NAME);
             if (!mi.is(MB_NAME_UNQUALIFIED))
                 adj += "the ";
-
-            would_cause_penance = true;
-
         }
         else
         {
