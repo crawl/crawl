@@ -142,6 +142,8 @@ ephemeral_shield EPHEMERAL_SHIELD
 efficient_metabolism EFFICIENT_METABOLISM
 feed_off_suffering_1 FEED_OFF_SUFFERING
 feed_off_suffering_2
+lucky_1 LUCKY
+lucky_2
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
 passive_mapping_1 PASSIVE_MAPPING
@@ -160,6 +162,7 @@ deterioration_1 POOR_CONSTITUTION
 deterioration_2
 contamination_susceptible CONTAMINATION_SUSCEPTIBLE
 persistent_drain PERSISTENT_DRAIN
+reckless RECKLESS
 scream_1 SCREAM
 scream_2
 teleport_1 TELEPORT
