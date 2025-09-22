@@ -1182,29 +1182,26 @@ ENDMAP
 #####################################################
 # Items related to the good gods thematically; healing, silver, holy wrath,
 # etc.
-NAME: nicolae_good_shop
-TAGS: no_monster_gen no_trap_gen transparent
-DEPTH: D:6-, Depths
+NAME:   nicolae_good_shop
+TAGS:   no_monster_gen no_trap_gen transparent
+DEPTH:  D:6-, Depths
 WEIGHT: 2
-SHUFFLE: _s
+NSUBST: s = 1:s / *:_
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
    javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | any armour ego:positive_energy w:5 |\
    amulet of faith w:2 | ring of positive energy w:5
-: if not you.in_branch("D") then
+: if not you.in_branch("D") or you.depth() > 11 then
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 : end
 KPROP: 1 = no_tele_into
 KMASK: 1 = opaque
 MONS: angel
 MAP
-nnn
-n1n
-nnn
-._.
-...
-.s.
+nnn...
+n1ns.s
+nnn...
 ENDMAP
 
 #####################################################

@@ -654,7 +654,7 @@ ORIENT: encompass
 MONS:   scorpion, mummy
 MONS:   gnoll zombie / jackal zombie / orc zombie / \
         human zombie / ball python zombie / adder zombie / \
-        centaur zombie / scorpion zombie w:30
+        centaur zombie / scorpion zombie w:45
 ITEM:   any scroll / any potion / any jewellery w:1
 : inkwell_talisman_chance(_G, "e")
 SUBST:  1 = 111.., 3 = 33., d = d:21 .
@@ -668,7 +668,7 @@ cc+cccG...Gccc+ccccccc+cc
 c...c......3c...c3.1c...c
 c.<.+...G...c...G...c...c
 c...c...c3..c......3c...c
-ccccccccccccccG...Gcc...c
+ccccccccccccccG.3.Gcc...c
 c1.1cdddn...c3.....3c...c
 c.3.+d2dn...+...G...c...c
 c3.3cdddn...c..3c3.1c...c
@@ -680,9 +680,9 @@ c...........cc+cccG.3.Gcc
 c3..........c3.3c3.....3c
 cccG..3..Gccc...c...G...c
 c3.........3c3.3c1.3c3.1c
-c...........cc+ccccccc+cc
+c.3.........cc+ccccccc+cc
 c..3..G..3..c...ndddc3.3c
-c.e...c.....+...nd2d+.3.c
+c.e.3.c.....+...nd2d+.3.c
 c3...3c3...1c...ndddc1.1c
 ccccccccccccccccccccccccc
 ENDMAP
@@ -832,9 +832,9 @@ MAP
              cccccccccccccccccccccc
  ccccccccccccc3c3c3c3c3c3c3cccddddcc
 cc3.........~c~~~~~~~~~~~~~c+^.....cc
-c...........~~~~~~~~~~~~~~~~+^.....Mcc
+c......c....~~~~~~~~~~~~~~~~+^.....Mcc
 c1.....A..<.....z...z...z...+^....e2<c
-c...........~~~~~~~~~~~~~~~~+^.....Mcc
+c......c....~~~~~~~~~~~~~~~~+^.....Mcc
 cc2.........~c~~~~~~~~~~~~~c+^.....cc
  ccccccccccccc3c3c3c3c3c3c3cccddddcc
              cccccccccccccccccccccc
@@ -1010,7 +1010,7 @@ ITEM:   any potion / any scroll / nothing w:1
 : inkwell_talisman_chance(_G, "e")
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
-NSUBST: I = 1:5i / 5:I / 5 = I` / *:`, P = 1:6p / 5:P / 5 = P" / *:"
+NSUBST: I = 1:5i / 4:I / 5 = I` / *:`, P = 1:6p / 4:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
 SUBST:  ' = ^ .:70
@@ -1065,7 +1065,7 @@ NSUBST:  B : 1:+ / 1:+ccc / *:c, C : 1:+ / 1:+ccc / *:c
 SHUFFLE: VX, yzYZ
 NSUBST:  y = 1:n / * = c:20 n:8, z = 2:n / * = c:20 n:4
 NSUBST:  Y = 1:n / * = c:20 n:4, Z = 1:n / * = c:20 n:1
-NSUBST:  3 = 1:113 / *:3, 4 = 1:4 / 1:1 / 1:42 / *:2
+NSUBST:  3 = 1:1 / *:3, 4 = 1:4 / 1:1 / 1:42 / *:2
 SUBST:   0 = 1:10 2:1
 KPROP:   VX = no_tele_into
 : ossuary_setup_features(_G)
@@ -1086,13 +1086,13 @@ cc.......tc
    cc..ccc                          c.................c
     cx...cc cccccccccccccc          c..ct+..cyc..+tc..c
   ccc...xcc c............c          c..t4t..t3t..t4t..c
- cc......ccccBcBcBcBcBcc+cccccccccccc..ctc..yyy..ctc..c
+ cc......ccccBcBcBcBcBcc+cccccccccccc^.ctc..yyy..ctc..c
 cc........ccc0c0c0c0c0cc.....cccccVccc...............cc
 c..........ccc+cc+c+c+cc.tdG.cccccnctc.ctz..eee..YtY.c
 c..x.......+...........t..d....+.....+.c3z..eeef.Y3Y.c
 cc.tt......cc+c+c+cc+ccc.Gdt.cccccnctc.ctz..eee..YtY.c
 cc.x..<...ccc0c0c0c0c0cc.....cccccXccc...............cc
-cc.tt....ccccCcCcCcCcCcc+cccccccccccc..ctc..ZZZ..ctc..c
+cc.tt....ccccCcCcCcCcCcc+cccccccccccc^.ctc..ZZZ..ctc..c
  cc.....cc  c............c          c..t4t..t3t..t4t..c
   cc...cc   cccccccccccccc          c..ct+..cZc..+tc..c
    ccccc                            c.................c
@@ -1108,14 +1108,14 @@ ENDMAP
 NAME:   ossuary_minmay_four_chambers
 WEIGHT: 10
 ORIENT: encompass
-MONS:   human zombie / elf zombie / centaur zombie
+MONS:   gnoll zombie w:5 / human zombie / elf zombie / centaur zombie w:5
 MONS:   bullfrog simulacrum / spectral scorpion / \
-        killer bee zombie w:5 / crocodile zombie w:35
+        killer bee zombie w:5 / crocodile zombie w:45
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
 : inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = alarm trap
-NSUBST: 2 = 1:2 / 1 = 12 / *:1, 1 = 1:. / *:1, ^ = 1:^ / 1:. / *:^.
+NSUBST: 2 = 1:2 / 1 = 12 / *:1, 1 = 1:. / 1:1. / *:1, ^ = 1:^ / 1:. / *:^.
 : ossuary_setup_features(_G)
 MAP
             ccc
@@ -1385,7 +1385,7 @@ SUBST:   -:c, V:VVVVG
 NSUBST:  + = 10:++~ / *:+
 NSUBST:  1 = 1:1 / 1:12 / 1:3 / * = 3., ? = 1:2 / 1:23 / 1:334 / * = 3.
 NSUBST:  " = 4:^ / 3=^" / *:"
-NSUBST:  . = 4:3 / 2:4 / 9 = 3. / *:.
+NSUBST:  . = 6:3 / 2:4 / 12 = 3. / *:.
 NSUBST:  d = 1:* / 1:*d / *:d
 KFEAT:   ^ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ~ = broken_door
@@ -1429,10 +1429,10 @@ ITEM:   any potion w:15 / any scroll w:15 / gold w:6
 : inkwell_talisman_chance(_G, "e")
 KFEAT:  ^ = net trap / alarm trap w:30 / dispersal trap
 NSUBST: 3 = 2:3 / *=3...
-NSUBST: - = 3:4 / 1:3 / 8=4. / *:., ~ = 3:4 / 1:3 / 8=4. / *:.
-NSUBST: ! = 2:4 / 1:3 / 1:3.. / 6=4. / *:., ' = 2:4 / 1:3 / 1:3.. / 6=4. / *:.
+NSUBST: - = 4:4 / 1:3 / 8 = 4. / *:., ~ = 4:4 / 1:3 / 8 = 4. / *:.
+NSUBST: ! = 3:4 / 1:3 / 1:3.. / 6 = 4. / *:., ' = 3:4 / 1:3 / 1:3.. / 6 = 4. / *:.
 NSUBST: " = 2:^ / 1:2 / *:.
-NSUBST: 2 = 1:2 / 4=2... / *:.
+NSUBST: 2 = 2:2 / 3 = 2... / *:.
 NSUBST: d = 1:* / 1:*d / *:d
 : ossuary_setup_features(_G)
 MAP

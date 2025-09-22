@@ -2453,12 +2453,22 @@ NAME:    nicolae_qazlal_style_of_elements
 TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:    no_trap_gen no_item_gen no_monster_gen transparent decor
 SHUFFLE: Cf / Da / Ee / Fw
+DEPTH:   D:5-, Elf
 KPROP:   faew = no_tele_into
 KMASK:   faew = opaque
+# Deliberately let the earthen wallwalking monster leave,
+# to play on all the other vaults where they can't.
+: if you.in_branch("D") then
+KMONS:   f = fire bat
+KMONS:   a = sky beast
+KMONS:   e = rock fish
+KMONS:   w = ice beast
+: else
 KMONS:   f = fire elemental
 KMONS:   a = air elemental
-KMONS:   e = rock fish
+KMONS:   e = earth elemental
 KMONS:   w = water elemental
+: end
 KFEAT:   _ = altar_qazlal
 KFEAT:   f = lava
 KFEAT:   w = deep_water

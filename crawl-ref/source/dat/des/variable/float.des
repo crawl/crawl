@@ -2457,7 +2457,7 @@ MONS:   glowing orange brain
 KFEAT:  T = fountain_eyes
 KFEAT:  m = iron_grate
 SUBST:  G = G..
-: vault_metal_statue_setup(_G, "G", "icy conduit")
+: vault_metal_statue_setup(_G, "G", "misfortune conduit")
 MAP
 ...................................
 .cccccccccccc.........cccccccccccc.
@@ -11743,7 +11743,6 @@ KMONS:   1 = patrolling ettin / patrolling iron troll
 KMONS:   2 = two-headed ogre / cyclops / deep troll w:15 / stone giant
 KMONS:   3 = arcanist / boggart / deep elf annihilator / deep elf demonologist \
           / deep elf sorcerer / deep elf high priest / titan / lich
-FTILE:   ap+-_Y$*defgDEQ1234567 = floor_metal_gold
 : else -- Depths
 KMONS:   1 = patrolling juggernaut
 KMONS:   2 = deep troll w:15 / spriggan berserker w:15 / stone giant \
@@ -11760,8 +11759,7 @@ MARKER:  E = lua:fog_machine { \
 # other branches, we remove the border squares.
 : if you.in_branch("Vaults") then
 SUBST:   v = x, @ = .
-:   vaults_hard_standard(_G)
-FTILE:   `PQR = floor_metal_gold
+:   vaults_hard_standard(_G, true, ".`ap+-_Y$*defgDEQPR1234567")
 : else
 CLEAR:   `
 TILE:    v = dngn_metal_wall_darkgray

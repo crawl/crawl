@@ -2683,33 +2683,39 @@ PLACE:  Crypt:$
 ORIENT: encompass
 MONS:   zombie w:12 / draugr w:8 / simulacrum w:2 / bog body w:4
 MONS:   storm dragon zombie / caustic shrike zombie / \
-        golden dragon zombie / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
+        golden dragon draugr / jiangshi w:5 / ghoul w:5 / cognitogaunt w:5
 MONS:   skeletal warrior, necromancer, hell knight
 MONS:   lich, vampire knight / ancient champion w:2
 KMONS:  8 = bone dragon
 KMONS:  9 = ancient lich / dread lich / vampire bloodprince
-KMONS:  A = dancing weapon
-KMONS:  B = crystal guardian
-KMONS:  C = war gargoyle
-KMONS:  D = undying armoury
-KMONS:  L = laughing skull
-KFEAT:  K = altar_kikubaaqudgha / altar_yredelemnul
-KFEAT:  L = w
+KMONS:  0 = death knight
+KMONS:  A = revenant soulmonger
+KMONS:  B = phantasmal warrior
+KMONS:  C = reaper
+KMONS:  D = patrolling undertaker
+KMONS:  E = dancing weapon
+KMONS:  F = crystal guardian / war gargoyle w:14
+KMONS:  G = undying armoury
+KMONS:  Z = laughing skull
+KFEAT:  _ = altar_kikubaaqudgha / altar_yredelemnul
+KFEAT:  Z = w
 # decorative red wall
 KFEAT:  r = v
 COLOUR: r = red
 TILE:   r = dngn_metal_wall_red
 NSUBST: ? = 3:+ / *:v
 # enemy randomization
-SHUFFLE: EFGH
-NSUBST:  E = 1:D / *:7, F = 1:8 / *:3, G = 1:A / 1:BC / *:., H = 1:A / 1:B / *:.
+NSUBST:  3 = 2:3B / *:3
+SHUFFLE: LMOP, LMN, OPQ
+NSUBST:  L = 1:G / *:077, M = 1:8 / *:3, N = 1:0A / *:B
+NSUBST:  O = 1:CDD / *:C, P = 1:E / 1:F / *:., Q = 1:E / 1:F / *:.
 # Tomb entrance
 : if crawl.x_chance_in_y(5, 7) then
-SUBST:  O = *
-NSUBST: P = > / |**
+SUBST:  ? = *
+NSUBST: ! = > / |**
 : else
-NSUBST: O = 1:>
-SUBST:  P = |**
+NSUBST: ? = 1:>
+SUBST:  ! = |**
 : end
 KFEAT:  > = enter_tomb
 # Loot randomisation
@@ -2723,44 +2729,44 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv.........rrrrrrrr.........vLwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv.........r//||//r.........vLLLLwwwwwwwwwwv
-vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
+vwwwwwwwwwwwwwwv.........rrrrrrrr.........vZwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........r//||//r.........vZZZZwwwwwwwwwwv
+vwwwwwwvvvv?vvvv......rrarr*/?*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....5..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
+vwwwwww?....5..v.....rrrr?r$$$$r?rrrr.....v.......?wwwwwwv
 vwwwwwwv....5..+........rrr$Sg$rrr........+.2..5..vwwwwwwv
 vwwwwww?....5..v......6...r$$$$r...6......v....5..?wwwwwwv
 vwwwwwwv.2.vvvvv...rrr....rr++rr....rrr...v....5..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
-vwwwwwwv...v.A..vv....rrr........rrr....vv...vvvvvvwwwwwwv
-vwwwwwwv...+.....vv....r.U..9K..U.r....vvvv.....+1vwwwwwwv
+vwwwwwwv...v.E..vv....rrr........rrr....vv...vvvvvvwwwwwwv
+vwwwwwwv...+.....vv....r.U..9_..U.r....vvvv.....+1vwwwwwwv
 vwwwwwwv...v..7.$vvv...rr........rr...vvv1+.....+vvwwwwwwv
-vwwwwwwv...v...$Ov.vv...rrrU..Urrr...vv.vvv.....+1vwwwwwwv
+vwwwwwwv...v...$?v.vv...rrrU..Urrr...vv.vvv.....+1vwwwwwwv
 vwwwwwwv...vvvvvvv..vv....rr..rr....vv..v1+.....vvvwwwwwwv
 vwwwwwwv...vvv...v...vv............vv...vvv.....+1vwwwwwwv
 vwwwwwwv...vv....+....vv..........vv....+....4..+vvwwwwwwv
 vwwwwwwv...v43...v.....vv........vv.....vvv.....+1vwwwwwwv
-vwwwwww?...v.1...v....B.vv......vvC.....v1+.....+vvwwwwwwv
+vwwwwww?...v.1...v.....Fvv......vvF.....v1+.....+vvwwwwwwv
 vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+1vwwwwwwv
 vwwwwww?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
-vwwwwwLv......vv....vv..............vv....vv1v..+1vwwwwwwv
-vwwwwwL?.....vv....vv................vv....vvv..+vvwwwwwwv
-vwwwLLLv.....v....vv.......4..4.......vv....vv..+1vwwwwwwv
+vwwwwwZv......vv....vv..............vv....vv1v..+1vwwwwwwv
+vwwwwwZ?.....vv....vv................vv....vvv..+vvwwwwwwv
+vwwwZZZv.....v....vv.......4..4.......vv....vv..+1vwwwwwwv
 vwvvvvvvvvvvvvv+vvvvv+vv.133..331.vv+vvvvv+vvvvvvvvvvvvvwv
-vwvv.........v..C.v....v..........v....v.........v..%Ovvwv
+vwvv.........v..F.v....v..........v....v.........v..%?vvwv
 vwvv.........v....v....v..........v....v.........v...$vvwv
-vwvv.....F...+....v....v..........v....v.....E..E+....vvwv
-vwvv....F....v....v..3.v..........v.3..v.........v....vvwv
-vwvvv....F...v....+...4vr........rv4...+......E..vvvvvvvwv
+vwvv.....L...+....v....v..........v....v.....M..M+....vvwv
+vwvv....L....v....v..3.v..........v.3..v.........v....vvwv
+vwvvv....L...v....+...4vr........rv4...+......M..vvvvvvvwv
 vwwvv........v....v..3.vrr......rrv.3..v.............vvwwv
 vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
 vwwwvv.......v....v....vrrU3..3Urrv....v............vvwwwv
-vwwwvvvvvvvvvvvvvvvv+vvvrC......Crvvv+vvvvvvvvvvvvvvvvwwwv
-vwwwwvvvP**$$v.........vrrrr++rrrrv.........v$$**Pvvvwwwwv
-vwwwwwvvv/*$$+.........vrrwL..Lwrrv.........+$$*/vvvwwwwwv
-vwwwwwwvvv*$$v...G.....vrwLw..wLwrv...H.....v$$*vvvLwwwwwv
-vwwwwwwwwvvv$v....G....vwwww..wwwwv..H......v$vvvLwwwwwwwv
-vwwwwwwwwwvvvv.....G...vwwww..wwwwv...H.....vvvvwwwwwwwwwv
+vwwwvvvvvvvvvvvvvvvv+vvvrE......Ervvv+vvvvvvvvvvvvvvvvwwwv
+vwwwwvvv!**$$v.........vrrrr++rrrrv.........v$$**!vvvwwwwv
+vwwwwwvvv/*$$+.........vrrwZ..Zwrrv.........+$$*/vvvwwwwwv
+vwwwwwwvvv*$$v...O.....vrwZw..wZwrv...P.....v$$*vvvZwwwwwv
+vwwwwwwwwvvv$v....O....vwwww..wwwwv..P......v$vvvZwwwwwwwv
+vwwwwwwwwwvvvv.....O...vwwww..wwwwv...P.....vvvvwwwwwwwwwv
 vwwwwwwwwwwwvvvv.......vwwww..wwwwv.......vvvvwwwwwwwwwwwv
 vwwwwwwwwwwwwwvvvv.....vwwww..wwwwv.....vvvvwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwvvvvv..vwwww..wwwwv..vvvvvwwwwwwwwwwwwwwwv
@@ -2772,13 +2778,13 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwwwwwwLww....wwLwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwZww....wwZwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwww....{.wwwwwwwwwwwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwwwwLwww.[....wwwLwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwZwww.[....wwwZwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwww..(.wwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwwwwwwwLwwwwwwLwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwZwwwwwwZwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

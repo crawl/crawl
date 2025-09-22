@@ -1,63 +1,70 @@
 ###############################################################################
-# Grated Community (by Mu.)
+# Grated Community (by Mu, cleaned up by regret-index.)
 #
 # A few creatures have built their own little community deep underground,
 # complete with quaint little homes and a handful of local shops.
-# How wonderful!
 #
-# Digging or teleportation is required to enter the vault.
-# A wand of digging and scroll of teleportation is guaranteed in the
-# home of a local kobold to ensure random teleporters can escape. If
-# all else fails there is an escape hatch in the mall's washroom.
+# Digging or teleportation is required to enter the vault.  A wand of digging
+# and scroll of teleportation is guaranteed to ensure random teleporters can
+# escape. If all else fails, there is an escape hatch in the mall's washroom.
 
-default-depth:  Depths, !Depths:$
+{{
+function single_cloud(e, g, cloud)
+  e.marker(g .. " = lua:fog_machine { cloud_type = '" .. cloud .. "', " ..
+                   "pow_min = 10, pow_max = 10, delay = 10, " ..
+                   "size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }")
+end
 
-NAME:   grated_community_mu
+function grated_community_house_setup(e)
+  e.tags("grated_community_mu_home")
+  e.tags("unrand")
+  e.tags("allow_dup")
+  e.tags("luniq")
+  e.kfeat("- = +")
+  e.marker("- = lua:restrict_door()")
+  single_cloud(e, "#", "flame")
+  if you.in_branch("D") then
+    e.ftile("' = floor_vault")
+  else
+    e.ftile("' = floor_metal_gold")
+  end
+end
+}}
+
+default-depth: D:12-, !D:$, Vaults, !Vaults:$
+
+NAME:   index_mu_grated_community
 TAGS:   no_rotate no_monster_gen no_item_gen no_descent
-ORIENT: north
-MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
-MONS:   generate_awake lemure, kobold
-  : if you.absdepth() < 23 then
-KMONS:  a = patrolling two-headed ogre
-  : else
-KMONS:  a = patrolling two-headed ogre / patrolling stone giant
-  : end
-KMONS:  b = patrolling ettin
-KMONS:  k = patrolling vampire mage / patrolling boggart
-KMONS:  d = orc warlord
-  : if you.absdepth() < 23 then
-KMONS:  e = vampire / yaktaur / kobold /\
-            ettin / orc / wolf / gargoyle / iron troll / warg /\
-            deep troll / cyclops / centaur / occultist / arcanist
-KMONS:  i = frost giant / fire giant
-  : else
-KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
-            ettin / orc / wolf / gargoyle / iron troll / deep troll /\
-            cyclops / kobold / centaur / warg / occultist / arcanist
-KMONS:  i = titan
-  : end
-KMONS:  P = plant
-KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
-KFEAT:  = = floor
-KPROP:  4 = no_tele_into
-FTILE:  =E79 = floor_grass_dark
-COLOUR: =E7 = green
-SUBST:  E = e
-SUBST:  e = e.
-: kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  * = animal skin, any good_item
-KITEM:  ' = pre_id wand of digging, pre_id scroll of teleportation
-MARKER: + = lua:restrict_door()
-MARKER: # = lua:fog_machine { cloud_type = "flame", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+TAGS:   vaults_hard vaults_orient_s no_wall_fixup
+ORIENT: float
+WEIGHT: 30 (Vaults), 10
+: if you.in_branch("D") then
+MONS:   patrolling human, patrolling acid dragon, patrolling centaur
+MONS:   patrolling tengu warrior, patrolling two-headed ogre
+MONS:   patrolling deep elf pyromancer / patrolling deep elf archer w:6
+MONS:   ettin / frost giant / stone giant / yaktaur captain w:2
+KMONS:  8 = orc knight
+KMONS:  90 = arcanist / occultist / necromancer / deep elf knight / \
+             orc priest / gargoyle / centaur / yaktaur / vampire /  \
+             troll / cyclops / manticore / basilisk / warg
+SUBST:  9 = 9.., 0 = 0"", z = c
+: else -- Vaults
+MONS:   patrolling vault guard, patrolling dire elephant
+MONS:   patrolling centaur warrior band
+MONS:   patrolling great orb of eyes, patrolling ettin
+MONS:   patrolling ironbound mechanist / patrolling ironbound frostheart
+MONS:   vault warden / ironbound thunderhulk / \
+        fire giant w:2 / frost giant w:2 / deep elf annihilator w:2
+KMONS:  8 = orc warlord / war gargoyle w:2
+KMONS:  90 = harpy / deep troll / yaktaur / entropy weaver / arcanist / \
+             ogre mage / polterguardian / crawling flesh cage
+SUBST:  9 = 9., 0 = 0", x = b
+CLEAR:  z
+: end
+KMONS:  ! = generate_awake lemure
+ITEM:   human skeleton / elf skeleton / kobold skeleton
+: kitem("$ = q:" .. crawl.random_range(75, 450) .. " gold")
 KFEAT:  g = iron_grate
-SUBST:  9 = 8
-KFEAT:  8 = granite_statue
-KFEAT:  f = fountain_blue
-KFEAT:  j = fountain_sparkling
-KFEAT:  ~ = closed_door
-KFEAT:  7 = tree
 KFEAT:  A = general shop
 KFEAT:  B = scroll shop type:Wondrous suffix:Manuscripts count:10 \
             greed:35 ; scroll of torment | scroll of vulnerability | \
@@ -67,297 +74,280 @@ KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:35 ; potion of mutation | potion of attraction | \
             potion of berserk rage | potion of moonshine | \
             potion of lignification | potion of cancellation
-# Shop on D moved into a subvault due to complicated lua scripts.
-SUBVAULT: D : grated_community_smithy_shop
-SHUFFLE:  QRSTUVX
-SUBVAULT: Q : grated_community_mu_home1
-SUBVAULT: R : grated_community_mu_home2
-SUBVAULT: S : grated_community_mu_home3
-SUBVAULT: T : grated_community_mu_home4
-SUBVAULT: U : grated_community_mu_home5
-SUBVAULT: V : grated_community_mu_home6
-SUBVAULT: X : grated_community_mu_home
-SUBST:    QRSTUVX : .
+# Moved back into the main vault. Nicolae's Legendary Smithy sells randarts, but
+# with a guaranteed downside. It's still possible to find something usable, if
+# you don't care about the downside or can make up for it with other things.
+{{
+local badprops = {"EV:-5", "Str:-6", "Int:-6", "Dex:-6", "Slay:-4", "rF:-1",
+  "rC:-1", "Will:-1", "*Silence", "-Tele", "*Corrode", "*Slow", "MP:-9"}
+local armours = {"plate armour", "chain mail", "kite shield", "tower shield",
+                 "helmet"}
+local inventory = {}
+for i = 1,7 do
+  local newthing = util.random_from(armours) .. " randart artprops:" ..
+                   util.random_from(badprops)
+  table.insert(inventory, newthing)
+end
+local inventorytext = table.concat(inventory, " | ")
+local smithy = string.gsub(crawl.make_name(), " ", "_")
+kfeat("D = armour shop name:The_Legendary_" .. smithy ..
+      " type:Legendary suffix:Smithy count:7 greed:35 use_all ; " ..
+      inventorytext)
+}}
+SHUFFLE:  KLMNOPQR
+SUBVAULT: K : grated_community_mu_home_escape
+SUBVAULT: L : grated_community_mu_home
+SUBVAULT: M : grated_community_mu_home
+SUBVAULT: N : grated_community_mu_home
+SUBVAULT: O : grated_community_mu_home
+SUBVAULT: P : grated_community_mu_home
+SUBVAULT: Q : grated_community_mu_home
+SUBVAULT: R : grated_community_mu_home
+SUBST:    KLMNOPQR = .
+KPROP:    ! = no_tele_into
 TILE:     c = wall_stone_smooth
-TILE:     Z = wall_vines
-TILE:     - = wall_brick_darkgray
-SUBST:    - = c
-SUBST:    Z = c
+TILE:     x = wall_brick_vines
+FTILE:    "?tG = floor_grass_dark
+COLOUR:   "?t = green
+: single_cloud(_G, "#", "flame")
+: if you.in_branch("D") then
+FTILE:    .d$ABCDTU123456780H+g = floor_vault
+: else
+FTILE:    .d$ABCDTU123456780H+g = floor_metal_gold
+: end
 MAP
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZc
-cZ==========EE========EE========EE========...===============================EEZc
-cZ==========EE========EE========EE========...==============================EEEZc
-cZ==-------===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccccccccccccccccccccccccccccccE=Zc
-cZ==-W+..'-===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccccccccccccc$ccccccccccccc$cc==Zc
-cZ==---..--===QQQQQQQ===TTTTTTT===UUUUUUU=...=cc4c4c4c4cca.acW.Wc....c.b.bcc==Zc
-cZ==-#-..P-===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccgcgcgcgcc.A.cc>cc.h..+..B.cc==Zc
-cZ==-5....-===QQQQQQQ===TTTTTTT===UUUUUUU=...=9c...eee..+.a.cW.Wch.h.c.b..cc==Zc
-cZ==-*....-===QQQQQQQ===TTTTTTT===UUUUUUU=...==n....e...cccccc+cc.h..ccc+ccc==Zc
-cZ==---n-+-===QQQQQQQ===TTTTTTT===UUUUUUU=.....~................ccnncc....cc==Zc
-cZ..........e.......Q.e.......T.e.......U......~.......eee.......e........cc==Zc
-cZ...=7=7=.efe.=7=7=.efe.=7=7=.ife.=7=7=.....==n.......eee.......ee.i...e.cc==Zc
-cZ........R.e.......S.e.......V.e.......X......~.................e........cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=.....~........ccccccccccccccccc+cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...==n........+.......c.k.......cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=9c....e...c.b..c.dc..k......cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc...eee..cc..cc.Dc.kj.C.j..cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=cc........cW..#c..c....k....cc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=ccccccccccccccccc$c$cccccccccc==Zc
-cZ==RRRRRRR===SSSSSSS===VVVVVVV===XXXXXXX=...=ccccccccccccccccccccccccccccccE=Zc
-cZ==========EE========EE==================...==============================EEEZc
-cZ==========EE========EE==================...===============================EEZc
-cZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZgggZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZc
-ccccccccccccccccccccccccccccccccccccccccccgggccccccccccccccccccccccccccccccccccc
-                                   ccc...........ccc
-                                   ccc.c~c...c~c.ccc
-                                   ccc.c1n.3.n1c.ccc
-                                   ccc.cnc...cnc.ccc
-                                   ccc...........ccc
-                                   ccc...2...2...ccc
-                                   ccc.2...1...2.ccc
-                                   c8c...........c8c
-                                   .................
-                                   .................
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+zxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccz
+zx00""""""""00""""""""00"""""""""."""cccccccccccccccz
+zx00""""""""00""""""""00""""""""...""Gc..........g!cz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"..."""n..........cccz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"......+..........g!cz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"......+.9.......9cccz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"...""cn.99.....99g!cz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"......+.9.......9cccz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"......+..........g!cz
+zx""KKKKKKK"""LLLLLLL"""MMMMMMM"..."""n..........cccz
+zx""......K.9.......L.9.......M....""Gcccc+c.9.c+cccz
+zx""."t"t".9T9."t"t".7T9."t"t".....""ccWc..c.99c..4cz
+zx""......N.9.......O.9.......P....""cc..5.c99.c4A.cz
+zx""NNNNNNN...OOOOOOO"""PPPPPPP"...""cc....c.9.c..4$z
+zx""NNNNNNN.".OOOOOOO"""PPPPPPP"...""cc#c..c...cccccz
+zx""NNNNNNN.t.OOOOOOO"""PPPPPPP"...""ccccc.c...cWcWcz
+zx""NNNNNNN.".OOOOOOO"""PPPPPPP"...""cc....c...+.>.cz
+zx""NNNNNNN.t.OOOOOOO"""PPPPPPP"...""c$.D7.c...cWcWcz
+zx""NNNNNNN.".OOOOOOO"""PPPPPPP"...""ccccccc.9.cccccz
+zx""NNNNNNN...OOOOOOO"""PPPPPPP"...""c$....c999c.d.cz
+zx""""""""".9.""""""""""""""""""...""cc.6.6c.9.nd.dcz
+zx00"""""""9T9"""""""""""""""""""."."cc.U6.c...n.d.cz
+zx00""""""".9."""""""""""""""""""".".cc....c...n...cz
+zx""QQQQQQQQ.RRRRRRRR""xxxxxxxxxxxx."cc6C..c.7.cc+ccz
+zx""QQQQQQQ.".RRRRRRR""xccccccccccx".cc....c...c...cz
+zx""QQQQQQQ.t.RRRRRRR""xc1......3cx."cc.U..c.9.c5.5cz
+zx""QQQQQQQ.".RRRRRRR""xc.c+cc+c.cx".cc....c...+.B.cz
+zx""QQQQQQQ.t.RRRRRRR""xc.c1..1c.gg."cc....+...c..5$z
+zx""QQQQQQQ.".RRRRRRR""xc.cnccnc.gg".cccccccccccccccz
+zx""QQQQQQQ...RRRRRRR""xc........gg."cccccccccccccccz
+zx00"""""""""""""""""00xc..2..2..cx"""""""""""""000xz
+zx00"""""""""""""""""00xc........cx"""""""""""""000xz
+zxxxxxxxxxxxxxxxxxxxxxxxc.2....2.cxxxxxxxxxxxxxxxxxxz
+zzzzzzzzzzzzzzzzzzzzzzzzz........zzzzzzzzzzzzzzzzzzzz
 ENDMAP
 
-####  Room subvaults for the homes in grated_community_mu
-####  vampire, some bound demons, bloody lounge, bricked up window, guard dogs
-NAME: grated_community_mu_vampire_home
-TAGS: grated_community_mu_home grated_community_mu_home1 unrand
-KMONS:   1 = generate_awake lemure
-KMONS:   2 = generate_awake spectral hound
-KMONS:   3 = generate_awake spectral wolf
-KMONS:   4 = generate_awake spectral warg
-KMONS:   V = vampire knight / vampire mage
-KITEM:   V = any good_item
-KFEAT:   g = iron_grate
-KFEAT:   _ = altar_kikubaaqudgha
-KFEAT:   ! = fountain_blood
-SHUFFLE: _!
-SHUFFLE: 234
-KPROP:   . = bloody / w:4 nothing
-KPROP:   1 = no_tele_into
-MARKER:  + = lua:restrict_door()
-KFEAT:   = = floor
-TILE:    c = wall_stone_dark
-TILE:    x = wall_brick_darkgray
-FTILE:   !1234cVg+._x+ = floor_crypt
+#### housing subvaults
+# death knight, bound demons, bloody lounge, bricked up window, draugr
+NAME:  grated_community_mu_yred_home
+TAGS:  patrolling
+KMONS: 1 : generate_awake warg draugr / generate_awake komodo dragon draugr
+KMONS: 2 : generate_awake lindwurm draugr / generate_awake ice dragon draugr
+KMONS: 3 = vampire / skeletal warrior w:2 / phantasmal warrior w:2
+KMONS: 4 = death knight
+KMONS: ? = generate_awake lemure
+KITEM: 34 = any good_item
+KFEAT: g = iron_grate
+KFEAT: _ = altar_yredelemnul / fountain_blood
+KPROP: . = bloody / w:4 nothing
+KPROP: 1 = no_tele_into
+TILE:  c = wall_stone_dark
+TILE:  x = wall_brick_darkgray
+FTILE: ._+1234?gcx = floor_crypt
+: if you.in_branch("Vaults") then
+SUBST: 1 = 2, 3 = 4
+: end
+: grated_community_house_setup(_G)
 MAP
 ccccccc
-c1cVc1c
+c?c3c?c
 cgc+cgc
 c.....c
-c.2.2.c
+c.1.1.c
 c_....c
-ccxc+cc
-      =
+cccxc+c
+      '
 ENDMAP
 
-####  giant, some hides, hearth, deep washroom, closet, lounge feature
-NAME: grated_community_mu_giant_home
-TAGS: grated_community_mu_home grated_community_mu_home2 unrand
-MONS: patrolling ettin / patrolling stone giant / patrolling fire giant /\
-      patrolling titan / patrolling cyclops
-MONS: patrolling frost giant
-FTILE:  123456cw#+%M*.8$n~ = floor_grey_dirt
-KITEM:  % = animal skin
-KFEAT:  M = cache of meat
-MARKER: + = lua:restrict_door()
-KFEAT:  ~ = closed_door
-SUBST: * = *:35 -:1
-KITEM: - = animal skin
-KITEM: * = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
-           elephant skeleton / dream sheep skeleton / manticore skeleton,\
-           animal skin
-KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
-            w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
-KITEM:  $ = giant spiked club / giant club / nothing
-: local frosty = crawl.random2(6)
-: if frosty == 5 then
-SUBST:  1 = 2
-SUBST:  # = ?
-: end
+# giant, hides, hearth, deep washroom, closet, lounge feature
+NAME:    grated_community_mu_giant_home
+TAGS:    no_pool_fixup patrolling
+MONS:    ettin / cyclops / stone giant, fire giant / titan, frost giant
+ITEM:    giant spiked club / giant club / nothing, animal skin
+KFEAT:   M = cache of meat
+KITEM:   f = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
+             elephant skeleton / dream sheep skeleton / manticore skeleton,\
+             animal skin
+KFEAT:   ? = granite_statue / orcish_idol / altar_beogh w:5 / altar_makhleb w:1
+SHUFFLE: 1# / 1# / 1# / 1# / 1# / 3!
 ####  The frost giant has an ice fireplace ok that's just how he cooks
-MARKER: # = lua:fog_machine { cloud_type = "flame", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
-MARKER: ? = lua:fog_machine { cloud_type = "freezing vapour", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
-KFEAT:  = = floor
-TILE:   c = wall_brick_dark_2
-
+: single_cloud(_G, "!", "freezing vapour")
+: if you.in_branch("Vaults") then
+SUBST:   1 = 2
+: end
+FTILE:   123456cw#+%M*.8$n~ = floor_pebble_darkgray
+TILE:    c = wall_stone_scorched
+: grated_community_house_setup(_G)
 MAP
 ccccccc
 cwcc#cc
-c+c%M*c
+c-cdMfc
 c...1.c
-ccc.8.c
-c$+...c
-cccnc~c
-      =
-ENDMAP
-
-####  spellcaster, living room, workshop, closet
-NAME: grated_community_mu_spellcaster_home
-TAGS: grated_community_mu_home grated_community_mu_home3 unrand
-FTILE:   c*1.8+&P!?n = floor_crystal_squares
-SHUFFLE: 8P
-MARKER:  + = lua:restrict_door()
-: if crawl.coinflip() then
-SUBST: * = "
-: else
-: end
-: local occupant = crawl.random2(3)
-  : if occupant == 0 then
-MONS:  lich / w:4 ancient lich / w:4 dread lich / w:5 royal mummy
-KFEAT: * = altar_kikubaaqudgha / w:4 altar_sif_muna / w:1 altar_yredelemnul
-KITEM: " = gold, any wand / w:15 nothing, any scroll / nothing
-KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor
-: kitem("? = q:" .. crawl.random_range(1, 3) .. " scroll of torment pre_id /\
-:        nothing, any scroll / nothing")
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic pre_id /\
-:        nothing, any potion / nothing")
-KITEM: & = book of necromancy / book of death / book of unlife / book of decay /\
-           w:12 nothing
-KMONS: P = withered plant
-  : elseif occupant == 1 then
-MONS:  occultist / ogre mage / deep elf sorcerer
-KFEAT: * = altar_sif_muna / w:5 altar_ashenzari
-KITEM: " = gold, any potion / nothing, any potion / nothing, any potion /\
-           nothing
-KFEAT: 8 = granite_statue / fountain_sparkling / fountain_blue / w:1 floor
-KITEM: ? = scroll of vulnerability pre_id / nothing, any scroll / nothing
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic pre_id /\
-:        nothing, any potion / nothing")
-KITEM: & = book of power / book of party tricks / book of transmutation /\
-           book of the senses / book of chaos / nothing
-KMONS: P = plant
-
-  : elseif occupant == 2 then
-MONS:  deep elf annihilator / draconian annihilator / draconian scorcher
-KFEAT: * = altar_vehumet / w:2 altar_makhleb
-KITEM: " = gold, any beam wand / any blast wand, \
-           potion of brilliance pre_id / nothing
-KFEAT: 8 = granite_statue / w:1 floor
-KITEM: ? = scroll of immolation pre_id / nothing, any scroll / nothing
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " scroll of immolation pre_id /\
-:        nothing, any potion / nothing")
-KITEM: & = book of fire / book of power / book of ice /\
-       book of storms / book of lightning / the unrestrained analects /\
-       w:12 nothing
-KFEAT: P = granite_statue / cache of fruit
-: end
-KFEAT:   = = floor
-TILE:    c = dngn_stone_wall_brown
-MAP
-ccccccc
-c*c1.8c
-c.+...c
-ccc+c.c
-c&..c.c
-cP!?c.c
+ccc.?.c
+cd-...c
 cccnc+c
-      =
+      '
 ENDMAP
 
-####  orc, possible family, messy living room w/features, hearth, closet
-NAME: grated_community_mu_orcish_home
-TAGS: grated_community_mu_home grated_community_mu_home4 unrand
-MONS: orc warlord, orc high priest, orc, warg
-FTILE:   12348c$+1#_FW+~n%&$. = floor_pebble_yellow
-SHUFFLE: $W
-SHUFFLE: F_
-SUBST:   2 = 2224, 3 = 3334, F = F.
-NSUBST:  . = 5:% / *:.
-KITEM:   % = w:12 animal skin / club / hand axe
-KFEAT:   F = cache of fruit / cache of meat
-KFEAT:   _ = altar_beogh / orcish_idol
-KITEM:   $ = battleaxe / nothing, plate armour / nothing, \
-             gold, any, any
-MARKER:  # = lua:fog_machine { cloud_type = "flame", \
-                 pow_min = 10, pow_max = 10, delay = 10, \
-                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
-MARKER: + = lua:restrict_door()
-KFEAT:  ~ = closed_door
-KFEAT:  = = floor
-TILE:   c = wall_brick
+# spellcaster, living room, workshop, closet
+NAME:   grated_community_mu_spellcaster_home
+MONS:   necromancer, arcanist / ogre mage, occultist / tengu conjurer w:5
+MONS:   lich / ancient lich w:4, deep elf sorcerer / guardian sphinx
+MONS:   deep elf annihilator / tengu reaver w:5
+ITEM:   book of necromancy / book of death / book of unlife / book of decay
+ITEM:   book of power / book of party tricks / book of transmutation / \
+        book of the senses / book of chaos
+ITEM:   book of fire / book of ice / book of lightning / book of the earth / \
+        book of storms / the unrestrained analects
+NSUBST: P = 1:P / *:G
+: local q = crawl.random_range(1, 3)
+: local s = "any scroll / nothing"
+: local p = "any potion / nothing"
+: local occupant = crawl.random2(3)
+: if occupant == 0 then
+KMONS:  P = withered plant
+:   kitem("% = $, any wand / w:15 nothing, " .. s)
+:   kitem("* = scroll of torment pre_id q:" .. q .. " / nothing, " .. s)
+:   kitem("| = potion of magic pre_id q: " .. q .. " / nothing, " .. p)
+KFEAT:  C = altar_kikubaaqudgha / altar_sif_muna w:4
+SUBST:  & = ddddd., G = GGGGGY
+: elseif occupant == 1 then
+KMONS:  P = plant
+:   kitem("% = $, " .. p .. ", " .. p .. ", " ..p)
+:   kitem("% = scroll of vulnerability / nothing, " .. s)
+:   kitem("* = potion of magic pre_id q: " .. q .. " / nothing, " .. p)
+KFEAT:  C = altar_sif_muna / altar_ashenzari w:5
+SUBST:  1 = 2, & = eeeee., G = GTU
+: else
+KITEM:  % = $, any beam wand / any blast wand, \
+            potion of brilliance pre_id / nothing
+:   kitem("* = scroll of immolation pre_id / nothing, " .. s)
+:   kitem("| = scroll of immolation pre_id q: " .. q .. " / nothing, " .. s)
+KFEAT:  C = altar_vehumet / altar_makhleb w:2
+KFEAT:  P = cache of fruit
+SUBST:  1 = 3, & = fffff.
+: end
+SUBST:  C = C%
+: if you.in_branch("Vaults") then
+SUBST:  1 = 4, 2 = 5, 3 = 6
+: end
+FTILE:  .def%*|PCG-+P123456nc = floor_crystal_squares
+TILE:   c = dngn_stone_wall_brown
+: grated_community_house_setup(_G)
 MAP
 ccccccc
-c$+.1.c
+cCc1.Pc
+c.-...c
+ccc-c.c
+c&..c.c
+cP*|c.c
+cccnc+c
+      '
+ENDMAP
+
+# orc, possible family, messy living room w/features, hearth, closet
+NAME:   grated_community_mu_orcish_home
+MONS:   orc knight, orc warrior, orc priest, warg
+MONS:   orc warlord, orc high priest, peacekeeper
+KITEM:  % = w:12 animal skin / club / hand axe
+KITEM:  | = battleaxe / nothing, plate armour / nothing, gold, any, any
+KFEAT:  F = cache of fruit / cache of meat
+KFEAT:  ? = altar_beogh / orcish_idol
+NSUBST: | = 1:| / *:W, F = 1:F. / *:?, . = 5:% / *:.
+SUBST:  2 = 2224, 3 = 3334
+FTILE:  .WF?%|#-+cn1234567 = floor_pebble_yellow
+TILE:   c = stone_wall_orc
+: if you.in_branch("Vaults") then
+SUBST:  1 = 5, 2 = 1, 3 = 6, 4 = 7
+: end
+: grated_community_house_setup(_G)
+MAP
+ccccccc
+c|-.1.c
 ccc.F2c
 c#.3..c
-ccc._.c
-cW+...c
-cccnc~c
-      =
+ccc.F.c
+c|-...c
+cccnc+c
+      '
 ENDMAP
 
-####  troll, cookfire, remains
-NAME: grated_community_mu_troll_home
-TAGS: grated_community_mu_home grated_community_mu_home5 unrand
-MONS: patrolling iron troll / patrolling deep troll
-FTILE:   1.c~+#$%& = floor_dirt
-KITEM:   $ = animal skin
-NSUBST:  . = 7:% / 2:$ / *:.
-KITEM:   % = any skeleton, any / nothing
-KFEAT:   ~ = floor
-MARKER:  # = lua:fog_machine { cloud_type = "flame", \
-                 pow_min = 10, pow_max = 10, delay = 10, \
-                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
-MARKER:  + = lua:restrict_door()
-KFEAT:   = = floor
-KPROP:   . = bloody
-TILE:    c = wall_lab_rock
+# troll, cookfire, remains
+NAME:   grated_community_mu_troll_home
+MONS:   patrolling deep troll
+ITEM:   animal skin
+KITEM:  % = any skeleton, any / nothing
+NSUBST: . = 2:d / 7:% / *:.
+KPROP:  .d% = bloody
+FTILE:  ."1+#d%x = floor_dirt
+TILE:   x = wall_pebble_darkgray
+: grated_community_house_setup(_G)
+MAP
+xxxxxxx
+xx...xx
+x.1...x
+x..#..x
+x.....x
+xx"""xx
+xxx+xxx
+      '
+ENDMAP
+
+# taur, entrace w/feature, shooting range, closets
+NAME:    grated_community_mu_taur_home
+MONS:    patrolling centaur warrior, patrolling yaktaur captain, training dummy
+KMONS:   P = plant
+ITEM:    any potion, any good_item, stone q:1 no_pickup
+KFEAT:   G = granite_statue / cache of fruit w:5
+SUBST:   G = GP
+NSUBST:  d = 1:dW / *:e
+: if you.in_branch("Vaults") then
+SUBST:   1 = 2
+: end
+FTILE:   .defWG+-12Pxn = floor_moss
+TILE:    c = stone_wall_shoals
+: grated_community_house_setup(_G)
 MAP
 ccccccc
-cc...cc
-c.1...c
-c..#..c
-c.....c
-cc~~~cc
-ccc+ccc
-      =
+c3fff.c
+ccccc-c
+cd-.1.c
+ccc.G.c
+cd-...c
+cccnc+c
+      '
 ENDMAP
 
-####  taur, entrace w/feature, shooting range, closets
-NAME: grated_community_mu_taur_home
-TAGS: grated_community_mu_home grated_community_mu_home6 unrand
-FTILE:  12.c'+%$W8n~ = floor_moss
-: if crawl.coinflip() then
-MONS:   patrolling centaur warrior, plant
-KITEM:  $ = any good_item
-: else
-MONS:   patrolling yaktaur captain, plant
-KITEM:  $ = any good_item
-:end
-SHUFFLE: %$
-SUBST:  % = %W
-KITEM:  % = any potion
-SUBST:  8 = 82
-KFEAT:  8 = granite_statue / cache of fruit w:5
-MARKER: + = lua:restrict_door()
-KFEAT:  ~ = closed_door
-KFEAT:  = = floor
-TILE:   c = wall_brick_vines
-MAP
-ccccccc
-c'''..c
-ccccc+c
-c%+.1.c
-ccc.8.c
-c$+...c
-cccnc~c
-      =
-ENDMAP
-
-NAME: grated_community_mu_unbuilt_plot
-TAGS: grated_community_mu_home unrand
+NAME:   grated_community_mu_unbuilt_plot
 FTILE:  . = floor_pebble_red
 COLOUR: . = green
-SHUFFLE: %$
-KFEAT:  = = floor
+: grated_community_house_setup(_G)
 MAP
 .......
 .......
@@ -366,32 +356,30 @@ MAP
 .......
 .......
 .......
-      =
+      '
 ENDMAP
 
-# Moving this into a subvault to keep the lua from making the main vault too
-# cluttered. The Legendary Smithy sells randarts, but with a guaranteed
-# downside, thanks to artprops technology. Nonetheless, it's still possible
-# to find something usable, if you don't care about the downside or can make up
-# for it with other things.
-NAME: grated_community_nicolae_legendary_smithy
-TAGS: grated_community_smithy_shop unrand
-: local badprops = {"EV:-5", "Str:-6", "Int:-6", "Dex:-6", "Slay:-4",
-:   "rF:-1", "rC:-1", "Will:-1", "*Silence", "-Tele", "*Corrode", "*Slow",
-:   "HP:-9", "MP:-9"}
-: local armours = {"plate armour", "chain mail", "kite shield", "tower shield",
-:                  "helmet"}
-: local inventory = {}
-: for i = 1,7 do
-:   local newthing = util.random_from(armours) .. " randart artprops:" ..
-:                    util.random_from(badprops)
-:   table.insert(inventory, newthing)
+# This was originally kept seperate of the other subvaults to push in and hide
+# the escape items from those who teleported in, but that's not really needed.
+NAME:  grated_community_mu_sprite_home
+TAGS:  grated_community_mu_home_escape
+MONS:  kobold brigand, boggart band
+KMONS: P = plant
+ITEM:  wand of digging pre_id, scroll of teleportation pre_id
+ITEM:  animal skin, any good_item
+: if you.in_branch("Vaults") then
+SUBST: 1 = 2
 : end
-: local inventorytext = table.concat(inventory, " | ")
-: local smithy = string.gsub(crawl.make_name(), " ", "_")
-: kfeat("D = armour shop name:The_Legendary_" .. smithy ..
-:       " type:Legendary suffix:Smithy count:7 greed:35 use_all ; " ..
-:       inventorytext)
+TILE:  x = wall_brick_darkgray
+FTILE: .defg1P+- = floor_sandstone
+: grated_community_house_setup(_G)
 MAP
-D
+xxxxxxx
+xW-.edx
+xxx..xx
+x#x..Px
+x1....x
+xfg...x
+xxxnx+x
+      '
 ENDMAP

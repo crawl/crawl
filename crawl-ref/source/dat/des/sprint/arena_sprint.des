@@ -562,7 +562,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / glass eye /\
                     void ooze",
-                "dancing weapon ; bardiche",
+                "dancing weapon ; bardiche good_item",
                 "chonchon w:2 / spriggan defender / spriggan air mage /\
                     spriggan druid / spriggan berserker / alderking",
                 "bone dragon w:2 / lich / ancient lich w:5 /\
