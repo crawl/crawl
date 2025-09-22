@@ -2380,7 +2380,8 @@ static void _handle_piety_gain(int old_piety)
             for (const auto& power : get_god_powers(you.religion))
             {
                 if (power.rank == rank
-                    || power.rank == 7 && can_do_capstone_ability(you.religion))
+                    || power.rank == 7 && rank == capstone_piety_rank(you.religion)
+                        && !you.one_time_ability_used[you.religion])
                 {
                     power.display(true, "You can now %s.");
     #ifdef USE_TILE_LOCAL
@@ -2626,8 +2627,8 @@ static void _handle_piety_loss(int old_piety)
             for (const auto& power : get_god_powers(you.religion))
             {
                 if (power.rank == rank
-                    || power.rank == 7 && rank == 6
-                    && !you.one_time_ability_used[you.religion])
+                    || power.rank == 7 && rank == capstone_piety_rank(you.religion)
+                        && !you.one_time_ability_used[you.religion])
                 {
                     power.display(false, "You can no longer %s.");
 #if TAG_MAJOR_VERSION == 34

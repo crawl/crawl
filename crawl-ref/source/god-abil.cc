@@ -117,13 +117,21 @@ static bool _player_sacrificed_arcana();
 // Load the sacrifice_def definition and the sac_data array.
 #include "sacrifice-data.h"
 
+/**
+* What piety rank do you need to unlock your capstone?
+*/
+int capstone_piety_rank(god_type god)
+{
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    return (god == GOD_IGNIS) ? -1 : 6;
+}
+
 /** Would a god currently allow using a one-time six-star ability?
  * Does not check whether the god actually grants such an ability.
  */
 bool can_do_capstone_ability(god_type god)
 {
-    // Worshippers of Ignis can use their capstone with any amount of piety
-    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    int pbreak = capstone_piety_rank(god) - 1;
     return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
