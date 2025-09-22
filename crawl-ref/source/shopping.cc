@@ -706,7 +706,7 @@ unsigned int item_value(item_def item, bool ident)
         {
         case TALISMAN_DEATH:
         case TALISMAN_STORM:
-            valued += 800;
+            valued += 400;
             break;
 
         case TALISMAN_DRAGON:
@@ -714,7 +714,7 @@ unsigned int item_value(item_def item, bool ident)
         case TALISMAN_VAMPIRE:
         case TALISMAN_HIVE:
         case TALISMAN_SPHINX:
-            valued += 600;
+            valued += 300;
             break;
 
         case TALISMAN_MAW:
@@ -722,7 +722,7 @@ unsigned int item_value(item_def item, bool ident)
         case TALISMAN_BLADE:
         case TALISMAN_WEREWOLF:
         case TALISMAN_FORTRESS:
-            valued += 300;
+            valued += 150;
             break;
 
         case TALISMAN_RIMEHORN:
@@ -730,14 +730,14 @@ unsigned int item_value(item_def item, bool ident)
         case TALISMAN_AQUA:
         case TALISMAN_SCARAB:
         case TALISMAN_MEDUSA:
-            valued += 250;
+            valued += 125;
             break;
 
         case TALISMAN_QUILL:
         case TALISMAN_INKWELL:
         case TALISMAN_PROTEAN:
         default:
-            valued += 200;
+            valued += 100;
             break;
         }
         if (is_artefact(item))
