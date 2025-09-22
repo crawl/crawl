@@ -330,10 +330,13 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_INVIS:
+        // Reveal a monster that goes invisible so that if it has just entered
+        // view but the screen hasn't redrawn with it in view, the player won't
+        // be confused by their auto explore stopping etc.
         if (testbits(flags, MF_WAS_IN_VIEW))
         {
-            went_unseen_this_turn = true;
-            unseen_pos = pos();
+            revealed_this_turn = true;
+            revealed_at_pos = pos();
         }
         break;
 

@@ -123,8 +123,8 @@ public:
     uint32_t client_id;                // for ID of monster_info between turns
     static uint32_t last_client_id;
 
-    bool went_unseen_this_turn;
-    coord_def unseen_pos;
+    bool revealed_this_turn;
+    coord_def revealed_at_pos;
 
 public:
     void set_new_monster_id();

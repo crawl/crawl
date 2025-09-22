@@ -334,6 +334,7 @@ enum tag_minor_version
     TAG_MINOR_EQUIP_TALISMAN,      // Make talismans equipment you put on.
     TAG_MINOR_EXCLUSIVE_ROLLPAGE,  // Don't give inhibited regen mutation to rollpage characters.
     TAG_MINOR_ATTACK_ACTION_COUNTS, // Add tracking for attack action count sources
+    TAG_MINOR_ACCURATE_INVIS_INDICATORS, // Invis indicators now always show at the monsters position
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

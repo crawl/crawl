@@ -99,8 +99,8 @@ monster::monster()
     constricting = 0;
 
     clear_constricted();
-    went_unseen_this_turn = false;
-    unseen_pos = coord_def(0, 0);
+    revealed_this_turn = false;
+    revealed_at_pos = coord_def(0, 0);
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -149,8 +149,8 @@ void monster::reset()
     shield_blocks   = 0;
     foe_memory      = 0;
     god             = GOD_NO_GOD;
-    went_unseen_this_turn = false;
-    unseen_pos = coord_def(0, 0);
+    revealed_this_turn = false;
+    revealed_at_pos = coord_def(0, 0);
 
     mons_remove_from_grid(*this);
     target.reset();
