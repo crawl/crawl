@@ -769,3 +769,11 @@ public:
     targeter_paragon_deploy(int range);
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_beckoning : public targeter_beam
+{
+public:
+    targeter_beckoning(const actor& caster, int range, int pow);
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+};
