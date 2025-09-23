@@ -291,6 +291,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
     case transformation::quill:
+        result.parts[TILEP_PART_HAIR] = 0;
         if (you.species == SP_FELID)
             result.parts[TILEP_PART_BASE] = TILEP_TRAN_QUILL_FELID;
         else if (you.species == SP_OCTOPODE)
@@ -345,9 +346,11 @@ void fill_doll_equipment(dolls_data &result)
         {
         case SP_OCTOPODE:
             result.parts[TILEP_PART_BASE] = TILEP_TRAN_FLUX_OCTOPODE;
+            result.parts[TILEP_PART_HAIR] = 0;
             break;
         case SP_FELID:
             result.parts[TILEP_PART_BASE] = TILEP_TRAN_FLUX_FELID;
+            result.parts[TILEP_PART_HAIR] = 0;
             break;
         default:
             result.parts[TILEP_PART_BODY] = TILEP_TRAN_FLUX_HUMANOID;
@@ -367,6 +370,7 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_BODY] = TILEP_BODY_HIVE_FORM;
             break;
         }
+        result.parts[TILEP_PART_HAIR] = 0;
         break;
     case transformation::medusa:
         switch (you.species)
@@ -386,6 +390,7 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_HUMANOID;
             break;
         }
+        result.parts[TILEP_PART_HAIR] = 0;
         break;
     case transformation::statue:
         switch (you.species)
