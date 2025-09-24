@@ -113,10 +113,8 @@ struct crawl_environment
 
     // Things to happen when the current attack/etc finishes.
     vector<final_effect *> final_effects;
-    // Copies of monsters cached so they can be looked up during a final_effect
-    // that will be processed after their death. Used mainly to assign proper
-    // blame for dead exploders. (Cleared every time final_effects is)
-    vector<monster> final_effect_monster_cache;
+    // Dead monsters that are still in use and can't be reused yet.
+    vector<monster*> dead_monsters;
 
     // A stack that accumulates subvaults being placed. A failure may pop a
     // part of the stack before retrying.

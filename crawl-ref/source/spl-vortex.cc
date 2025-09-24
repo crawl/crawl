@@ -20,6 +20,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-tentacle.h"
 #include "ouch.h"
 #include "prompt.h"
@@ -459,7 +460,14 @@ void polar_vortex_damage(actor *caster, int dur)
         }
 
     if (caster->is_player())
+    {
+        // XXX: There might have already been final effects queued up before
+        // we added some. So this could have a noticeable effect on other
+        // things the player has active. It might be better to always fire
+        // final effects in `player_reacts`.
         fire_final_effects();
+        free_dead_monsters();
+    }
     else
     {
         if (new_player_pos != old_player_pos
