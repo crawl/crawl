@@ -46,6 +46,7 @@
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
+#include "tilepick.h"
 
 ShoppingList shopping_list;
 
@@ -2715,4 +2716,114 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false);
+}
+
+/**
+ * A menu for Gozag's "Petition" ability.
+ *
+ * @tparam T The type of item being offered (e.g. potion_group, shop_offer).
+ */
+template <typename T>
+class GozagPetitionMenu : public InvMenu
+{
+    const vector<T> &_items;
+    string (*_line_func)(const T &);
+    tileidx_t (*_tile_func)(const T &);
+
+public:
+    GozagPetitionMenu(const vector<T> &offered_items,
+                      string (*line_func)(const T &),
+                      tileidx_t (*tile_func)(const T &),
+                      const string &title_tag,
+                      const string &menu_title)
+        : InvMenu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
+          _items(offered_items), _line_func(line_func), _tile_func(tile_func)
+    {
+        set_tag(title_tag);
+        menu_action = ACT_EXECUTE;
+        set_title(menu_title);
+        menu_letter key = 'a';
+
+        for (size_t idx = 0; idx < _items.size(); ++idx)
+        {
+            const T &it = _items[idx];
+            auto entry = make_unique<MenuEntry>(_line_func(it), MEL_ITEM, 1, key++);
+            entry->data = reinterpret_cast<void *>(idx);
+            if (_tile_func)
+                entry->add_tile(tile_def(_tile_func(it)));
+            add_entry(std::move(entry));
+        }
+
+        set_more(formatted_string::parse_string(
+            make_stringf("<yellow>You have %d gold piece%s.</yellow>",
+                         you.gold, you.gold == 1 ? "" : "s")));
+        set_flags(get_flags() | MF_USE_TWO_COLUMNS);
+    }
+
+    int selected_index() const
+    {
+        return selected_entries().empty()
+               ? -1
+               : static_cast<int>(reinterpret_cast<intptr_t>(
+                     selected_entries()[0]->data));
+    }
+};
+
+/// Generates the text for a potion petition menu entry.
+static string _potion_line(const potion_group &g)
+{
+    string names = comma_separated_fn(
+        g.potions.begin(), g.potions.end(),
+        [](potion_type p){ return potion_type_name(p); });
+    return make_stringf("%d gold - %s", g.price, names.c_str());
+}
+
+/// Generates the tile for a potion petition menu entry.
+static tileidx_t _potion_tile(const potion_group &)
+{
+    return TILE_POTION_OFFSET + random2(NDSC_POT_PRI);
+}
+
+/// Generates the text for a shop petition menu entry.
+static string _shop_line(const shop_offer &o)
+{
+    return make_stringf("%d gold - %s", o.price, o.shop_name.c_str());
+}
+
+/// Generates the tile for a shop petition menu entry.
+static tileidx_t _shop_tile(const shop_offer &o)
+{
+    shop_struct tmp;
+    tmp.type = o.type;
+    return tileidx_shop(&tmp);
+}
+
+/**
+ * Display a menu for Gozag's potion petition.
+ *
+ * @param groups A vector of potion groups on offer.
+ * @return The index of the selected group, or -1 on abort.
+ */
+int gozag_potion_petition_menu(const vector<potion_group> &groups)
+{
+    GozagPetitionMenu<potion_group> menu(
+        groups, &_potion_line, &_potion_tile, "gozag-potion",
+        "Purchase which effect?");
+    menu.show();
+    return menu.selected_index();
+}
+
+/**
+ * Display a menu for Gozag's shop petition.
+ *
+ * @param offers A vector of shop offers.
+ * @return The index of the selected offer, or -1 on abort.
+ */
+int gozag_shop_petition_menu(const vector<shop_offer> &offers)
+{
+    GozagPetitionMenu<shop_offer> menu(
+        offers, &_shop_line, &_shop_tile, "gozag-shop",
+        "Which merchant should call?");
+    menu.show();
+    return menu.selected_index();
 }
