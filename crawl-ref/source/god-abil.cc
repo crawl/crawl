@@ -111,8 +111,8 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
-#include "menu.h"          // InvMenu 等
-#include "shopping.h"      // 只是为了复用 InvEntry 风格，不需要改 shopping.cc
+#include "menu.h"
+#include "shopping.h"
 static bool _player_sacrificed_arcana();
 
 // Load the sacrifice_def definition and the sac_data array.
