@@ -2876,13 +2876,6 @@ public:
         return true;
     }
 
-    // bool examine_index(int /*i*/) override
-    // {
-    //     // In examine mode, selecting an item does nothing but show its info.
-    //     // We don't have detailed info, so just prevent the menu from closing.
-    //     return true;
-    // }
-
     /**
      * Returns the index of the selected item.
      *
