@@ -46,6 +46,7 @@
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
+#include "tilepick.h"
 
 ShoppingList shopping_list;
 
@@ -2715,4 +2716,252 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false);
+}
+
+/**
+ * A menu for Gozag's "Petition" ability.
+ *
+ * @tparam T The type of item being offered (e.g. potion_group, shop_offer).
+ */
+template <typename T>
+class GozagPetitionMenu : public InvMenu
+{
+    const vector<T> &_items;
+    string (*_line_func)(const T &);
+    tileidx_t (*_tile_func)(const T &);
+    int (*_price_func)(const T &);
+    bool _confirmed = false;
+
+    void _update_footer()
+    {
+        string top_line;
+        const int total_cost = selected_entries().empty() ? 0 :
+            _price_func(_items[selected_index(true)]);
+
+        if (total_cost > 0)
+        {
+            if (total_cost > you.gold)
+            {
+                top_line = make_stringf(
+                    "<yellow>You have %d gold.</yellow> "
+                    "<lightred>You are short %d gold for this.</lightred>",
+                    you.gold, total_cost - you.gold);
+            }
+            else
+            {
+                top_line = make_stringf(
+                    "<yellow>You have %d gold. After purchase, you will have %d.</yellow>",
+                    you.gold, you.gold - total_cost);
+            }
+        }
+        else
+        {
+            top_line = make_stringf("<yellow>You have %d gold piece%s.</yellow>",
+                                     you.gold, you.gold != 1 ? "s" : "");
+        }
+
+        string help;
+        help += "<lightgrey>";
+        if (item_count() > 0)
+        {
+            help += hyphenated_hotkey_letters(item_count(), 'a');
+            help += " select item";
+        }
+
+        if (!selected_entries().empty())
+        {
+            if (item_count() > 0)
+                help += "      ";
+            help += menu_keyhelp_cmd(CMD_MENU_ACCEPT_SELECTION);
+            help += " confirm purchase";
+        }
+        help += "</lightgrey>";
+
+        string full_help = top_line + "\n" + help;
+        set_more(formatted_string::parse_string(pad_more_with_esc(full_help)));
+    }
+
+    // Logic to handle purchase confirmation.
+    bool _confirm_purchase()
+    {
+        if (selected_entries().empty())
+        {
+            // No selection, do nothing, stay in menu.
+            return false;
+        }
+
+        const int selection_idx = selected_index(true);
+        const int cost = _price_func(_items[selection_idx]);
+
+        if (cost > you.gold)
+        {
+            mpr("You cannot afford that.");
+            return false;
+        }
+
+        _confirmed = true;
+        return true;
+    }
+
+public:
+    GozagPetitionMenu(const vector<T> &offered_items,
+                      string (*line_func)(const T &),
+                      tileidx_t (*tile_func)(const T &),
+                      int (*price_func)(const T &),
+                      const string &title_tag,
+                      const string &menu_title)
+        : InvMenu(MF_MULTISELECT | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
+          _items(offered_items), _line_func(line_func), _tile_func(tile_func),
+          _price_func(price_func)
+    {
+        set_tag(title_tag);
+        menu_action = ACT_EXECUTE;
+        action_cycle = CYCLE_TOGGLE;
+        set_title(menu_title);
+        menu_letter key = 'a';
+
+        for (size_t idx = 0; idx < _items.size(); ++idx)
+        {
+            const T &it = _items[idx];
+            auto entry = make_unique<MenuEntry>(_line_func(it), MEL_ITEM, 1, key++);
+            entry->data = reinterpret_cast<void *>(idx);
+            if (_tile_func)
+                entry->add_tile(tile_def(_tile_func(it)));
+
+            if (_price_func(it) > you.gold)
+                entry->colour = DARKGREY;
+
+            add_entry(std::move(entry));
+        }
+        _update_footer();
+    }
+
+    bool process_key(int keyin) override
+    {
+        auto old_selection = selected_entries();
+        bool ret = InvMenu::process_key(keyin);
+
+        if (old_selection != selected_entries())
+        {
+            if (selected_entries().size() > 1)
+            {
+                for (auto entry : old_selection)
+                    entry->selected_qty = 0;
+            }
+            _update_footer();
+            update_menu(true);
+        }
+        return ret;
+    }
+
+    bool process_command(command_type cmd) override
+    {
+        if (menu_action == ACT_EXECUTE && cmd == CMD_MENU_ACCEPT_SELECTION)
+        {
+            if (_confirm_purchase())
+                return false; // Close menu.
+            return true;
+        }
+        return InvMenu::process_command(cmd);
+    }
+
+    bool cycle_mode(bool) override
+    {
+        if (menu_action == ACT_EXECUTE)
+            menu_action = ACT_EXAMINE;
+        else
+            menu_action = ACT_EXECUTE;
+        _update_footer();
+        update_menu(true);
+        return true;
+    }
+
+    /**
+     * Returns the index of the selected item.
+     *
+     * @param force   If true, returns the index regardless of whether the
+     *                purchase was confirmed. Used internally for UI updates.
+     * @return The selected index if confirmed, otherwise -1.
+     */
+    int selected_index(bool force = false) const
+    {
+        if (!_confirmed && !force)
+            return -1;
+
+        return selected_entries().empty()
+               ? -1
+               : static_cast<int>(reinterpret_cast<intptr_t>(
+                     selected_entries()[0]->data));
+    }
+};
+
+/// Generates the text for a potion petition menu entry.
+static string _potion_line(const potion_group &g)
+{
+    string names = comma_separated_fn(
+        g.potions.begin(), g.potions.end(),
+        [](potion_type p){ return potion_type_name(p); });
+    return make_stringf("%d gold - %s", g.price, names.c_str());
+}
+
+/// Returns the price for a potion group.
+static int _potion_price(const potion_group &g)
+{
+    return g.price;
+}
+
+/// Generates the tile for a potion petition menu entry.
+static tileidx_t _potion_tile(const potion_group &)
+{
+    return TILE_POTION_OFFSET + random2(NDSC_POT_PRI);
+}
+
+/// Generates the text for a shop petition menu entry.
+static string _shop_line(const shop_offer &o)
+{
+    return make_stringf("%d gold - %s", o.price, o.shop_name.c_str());
+}
+
+/// Returns the price for a shop offer.
+static int _shop_price(const shop_offer &o)
+{
+    return o.price;
+}
+
+/// Generates the tile for a shop petition menu entry.
+static tileidx_t _shop_tile(const shop_offer &o)
+{
+    shop_struct tmp;
+    tmp.type = o.type;
+    return tileidx_shop(&tmp);
+}
+
+/**
+ * Display a menu for Gozag's potion petition.
+ *
+ * @param groups A vector of potion groups on offer.
+ * @return The index of the selected group, or -1 on abort.
+ */
+int gozag_potion_petition_menu(const vector<potion_group> &groups)
+{
+    GozagPetitionMenu<potion_group> menu(
+        groups, &_potion_line, &_potion_tile, &_potion_price, "gozag-potion",
+        "Purchase which effect?");
+    menu.show();
+    return menu.selected_index();
+}
+
+/**
+ * Display a menu for Gozag's shop petition.
+ *
+ * @param offers A vector of shop offers.
+ * @return The index of the selected offer, or -1 on abort.
+ */
+int gozag_shop_petition_menu(const vector<shop_offer> &offers)
+{
+    GozagPetitionMenu<shop_offer> menu(
+        offers, &_shop_line, &_shop_tile, &_shop_price, "gozag-shop",
+        "Fund which merchant?");
+    menu.show();
+    return menu.selected_index();
 }
