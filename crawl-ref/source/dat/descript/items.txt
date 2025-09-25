@@ -1064,7 +1064,12 @@ fundamentally linked – the regeneration ends the moment the confusion does.
 %%%%
 potion of berserk rage
 
-A potion which can send one into an incoherent rage.
+A potion which can send one into an incoherent rage, granting them a great but
+temporary increase to their health, damage, and speed. In exchange, their mind
+is clouded by anger, only allowing them to move and attack in melee. The rage
+will wear off quickly if they do not attack monsters, and upon expiry, the
+imbiber will be fatigued, causing them to slow dramatically and rendering them
+unable to berserk again for a short duration.
 %%%%
 # TAG_MAJOR_VERSION == 34
 potion of blood
