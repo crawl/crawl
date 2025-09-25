@@ -474,6 +474,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     crawl_state.disables.set(DIS_DELAY);
     crawl_state.disables.set(DIS_AFFLICTIONS);
 
+    // Disable animations (there's no screen redraw, so the player can't see
+    // them, but they will often still delay for significant lengths of time).
+    unwind_var<use_animations_type> unwind_anim(Options.use_animations, UA_NONE);
+
     {
         msg::suppress mx;
 
