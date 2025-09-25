@@ -785,9 +785,9 @@ static int crawl_regex(lua_State *ls)
  * passed.
  * @tparam string s
  * @treturn boolean|nil
- * @function Regex:find
+ * @function Regex:matches
  */
-static int crawl_regex_find(lua_State *ls)
+static int crawl_regex_matches(lua_State *ls)
 {
     text_pattern **pattern =
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
@@ -830,7 +830,7 @@ static int crawl_regex_equals(lua_State *ls)
 }
 static const luaL_reg crawl_regex_ops[] =
 {
-    { "matches",        crawl_regex_find },
+    { "matches",        crawl_regex_matches },
     { "equals",         crawl_regex_equals },
     { nullptr, nullptr }
 };
