@@ -316,6 +316,15 @@ bool melee_attack::handle_phase_blocked()
     //such as darts don't trigger it
     maybe_trigger_jinxbite();
 
+    if (needs_message)
+    {
+        mprf("%s %s %s attack.",
+                 defender_name(false).c_str(),
+                 defender->conj_verb("block").c_str(),
+                 attacker == defender ? "its own"
+                                      : atk_name(DESC_ITS).c_str());
+    }
+
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
         && coinflip() && attacker->as_monster()->res_blind() <= 1)
     {
@@ -1657,7 +1666,7 @@ bool melee_attack::attack()
     // correct handle_phase_ handler.
     const int ev = defender->evasion(false, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
-    bool shield_blocked = attack_shield_blocked(true);
+    bool shield_blocked = attack_shield_blocked();
 
     // Stuff for god conduct, this has to remain here for scope reasons.
     god_conduct_trigger conducts[3];
@@ -2356,7 +2365,7 @@ bool melee_attack::player_do_aux_attack(unarmed_attack_type atk)
         if (!defender->alive())
             return true;
 
-        if (attack_shield_blocked(true))
+        if (attack_shield_blocked())
             return false;
         if (player_aux_apply(atk))
             return true;

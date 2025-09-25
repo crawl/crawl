@@ -137,10 +137,9 @@ protected:
     int apply_defender_ac(int damage, int damage_max = 0,
                           ac_type ac_rule = ac_type::normal) const;
     // Determine if we're blocking (partially or entirely)
-    virtual bool attack_shield_blocked(bool verbose);
-    virtual bool ignores_shield(bool verbose)
+    virtual bool attack_shield_blocked();
+    virtual bool ignores_shield()
     {
-        UNUSED(verbose);
         return false;
     }
     virtual bool apply_damage_brand(const char *what = nullptr);

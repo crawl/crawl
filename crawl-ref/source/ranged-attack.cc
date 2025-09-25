@@ -107,7 +107,7 @@ bool ranged_attack::attack()
         ev += REPEL_MISSILES_EV_BONUS;
 
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
-    bool shield_blocked = attack_shield_blocked(false);
+    bool shield_blocked = attack_shield_blocked();
 
     god_conduct_trigger conducts[3];
     if (attacker->is_player() && attacker != defender)
@@ -163,7 +163,7 @@ bool ranged_attack::handle_phase_attempted()
 
 bool ranged_attack::handle_phase_blocked()
 {
-    ASSERT(!ignores_shield(false));
+    ASSERT(!ignores_shield());
     string punctuation = ".";
 
     if (defender->reflection())
@@ -453,24 +453,12 @@ int ranged_attack::player_apply_postac_multipliers(int damage)
     return damage;
 }
 
-bool ranged_attack::ignores_shield(bool verbose)
+bool ranged_attack::ignores_shield()
 {
     if (defender->is_player() && player_omnireflects())
         return false;
 
-    if (is_penetrating_attack(*attacker, weapon, *projectile))
-    {
-        if (verbose)
-        {
-            mprf("%s pierces through %s %s!",
-                 projectile->name(DESC_THE).c_str(),
-                 apostrophise(defender_name(false)).c_str(),
-                 is_shield(defender_shield) ? defender_shield->name(DESC_PLAIN).c_str()
-                                            : "shielding");
-        }
-        return true;
-    }
-    return false;
+    return is_penetrating_attack(*attacker, weapon, *projectile);
 }
 
 special_missile_type ranged_attack::random_chaos_missile_brand()

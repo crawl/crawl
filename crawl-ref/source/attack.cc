@@ -91,6 +91,8 @@ bool attack::handle_phase_blocked()
     if (defender->is_player())
         tso_expend_divine_shield_charge();
 
+    defender->shield_block_succeeded(attacker);
+
     return true;
 }
 
@@ -1063,7 +1065,7 @@ int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
  *
  * Returns (block_occurred)
  */
-bool attack::attack_shield_blocked(bool verbose)
+bool attack::attack_shield_blocked()
 {
     if (defender == attacker || to_hit >= AUTOMATIC_HIT)
         return false; // You can't block your own attacks!
@@ -1089,19 +1091,8 @@ bool attack::attack_shield_blocked(bool verbose)
     {
         perceived_attack = true;
 
-        if (ignores_shield(verbose))
+        if (ignores_shield())
             return false;
-
-        if (needs_message && verbose)
-        {
-            mprf("%s %s %s attack.",
-                 defender_name(false).c_str(),
-                 defender->conj_verb("block").c_str(),
-                 attacker == defender ? "its own"
-                                      : atk_name(DESC_ITS).c_str());
-        }
-
-        defender->shield_block_succeeded(attacker);
 
         return true;
     }

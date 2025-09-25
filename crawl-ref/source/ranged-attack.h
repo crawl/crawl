@@ -27,7 +27,7 @@ private:
     bool handle_phase_blocked() override;
     bool handle_phase_dodged() override;
     bool handle_phase_hit() override;
-    bool ignores_shield(bool verbose) override;
+    bool ignores_shield() override;
 
     /* Combat Calculations */
     bool using_weapon() const override;
