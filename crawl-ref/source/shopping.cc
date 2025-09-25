@@ -2823,7 +2823,7 @@ int gozag_shop_petition_menu(const vector<shop_offer> &offers)
 {
     GozagPetitionMenu<shop_offer> menu(
         offers, &_shop_line, &_shop_tile, "gozag-shop",
-        "Which merchant should call?");
+        "Fund which merchant?");
     menu.show();
     return menu.selected_index();
 }
