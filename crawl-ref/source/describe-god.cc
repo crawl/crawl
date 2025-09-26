@@ -102,7 +102,7 @@ static string _describe_favour(god_type which_god)
     const string godname = god_name(which_god);
     switch (god_favour_rank(which_god))
     {
-        case 7:  return "A prized avatar of " + godname;
+        case 7:  return "A prized avatar of " + godname + ".";
         case 6:  return "A favoured servant of " + godname + ".";
         case 5:
 
