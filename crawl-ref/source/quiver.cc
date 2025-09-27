@@ -645,7 +645,7 @@ namespace quiver
                     you.turn_is_over = true;
                     return;
                 }
-                else
+                else if (!monster_at(target.target))
                 {
                     canned_msg(MSG_SOMETHING_IN_WAY);
                     return;
