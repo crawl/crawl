@@ -3125,6 +3125,7 @@ int player::how_mutated(bool normal, bool silver, bool all_innate, bool temp, bo
         }
     }
 
+    ASSERT(result >= 0);
     return result;
 }
 
