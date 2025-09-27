@@ -1193,6 +1193,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]    = TILEP_FLAG_CUT_BOTTOM;
     }
+    // when merfolk in quill form, hide the quill legs to show the fishtail.
+    if (you.species == SP_MERFOLK && you.fishtail
+        && doll.parts[TILEP_PART_HELM] == TILEP_BODY_QUILL_HUMANOID
+        && flag[TILEP_PART_HELM] == TILEP_FLAG_NORMAL)   // No hide by other rules
+    {
+        flag[TILEP_PART_HELM] = TILEP_FLAG_CUT_BOTTOM;
+    }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
         && !is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
