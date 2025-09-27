@@ -2168,7 +2168,7 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
     {
         // For mutation damage, we want to count innate mutations for
         // demonspawn but not other species.
-        int multiplier = 5 * you.how_mutated(you.species == SP_DEMONSPAWN, true);
+        int multiplier = 5 * you.how_mutated(true, true);
         if (multiplier == 0)
             return 0;
 

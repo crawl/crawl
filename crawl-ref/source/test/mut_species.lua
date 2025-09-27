@@ -38,7 +38,7 @@ local function random_level_change(species, tries, iterations, chance_temporary,
         end
         if not silent then
             crawl.stderr(species .. " random level test try " .. i .. " final xl: " .. you.xl() ..
-                " " .. you.how_mutated(true, true, true) ..
+                " " .. you.how_mutated(true, true, true, true, true) ..
                 " final mutations: " .. you.mutation_overview() .. eol)
         end
     end
@@ -65,7 +65,7 @@ local function test_random_mutations_species(species, tries, iterations, chance_
         end
         if not silent then
             crawl.stderr(species .. " mutation test try " .. i .. " final xl: " .. you.xl() ..
-                " " .. you.how_mutated(true, true, true) ..
+                " " .. you.how_mutated(true, true, true, true, true) ..
                 " final mutations: " .. you.mutation_overview() .. eol)
         end
     end
@@ -100,7 +100,7 @@ local function test_random_mutations_slime(species, tries, iterations, chance_te
         end
         if not silent then
             crawl.stderr(species .. " slime test try " .. i .. " final xl: " .. you.xl() ..
-                " " .. you.how_mutated(true, true, true) ..
+                " " .. you.how_mutated(true, true, true, true, true) ..
                 " final mutations: " .. you.mutation_overview() .. eol)
         end
     end

@@ -162,7 +162,7 @@ non-innate mutations, this bonus only applies every other mutation.
 You currently gain
 {{
     num = 1
-    muts = you.how_mutated(false, false, true)
+    muts = you.how_mutated(true, true, false, true, false)
     if muts > 7 then
         num = 7 + math.floor((muts - 7) / 2)
     else

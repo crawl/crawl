@@ -1860,7 +1860,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (mutclass == MUTCLASS_NORMAL
         && (which_mutation == RANDOM_MUTATION
             || which_mutation == RANDOM_XOM_MUTATION)
-        && x_chance_in_y(you.how_mutated(false, true), 15))
+        && x_chance_in_y(you.how_mutated(), 15))
     {
         // God gifts override mutation loss due to being heavily
         // mutated.
@@ -2355,7 +2355,7 @@ bool delete_all_mutations(const string &reason)
             ;
     }
     ASSERT(you.attribute[ATTR_TEMP_MUTATIONS] == 0);
-    ASSERT(you.how_mutated(false, true, false) == 0);
+    ASSERT(you.how_mutated(true, false, false, true) == 0);
     you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
 
     return !you.how_mutated();
@@ -3087,13 +3087,15 @@ int temp_mutation_count()
 /**
  * How mutated is the player?
  *
- * @param innate Whether to count innate mutations (default false).
- * @param levels Whether to add up mutation levels, as opposed to just counting number of mutations (default false).
- * @param temp Whether to count temporary mutations (default true).
- * @return Either the number of matching mutations, or the sum of their
- *         levels, depending on \c levels
+ * @param normal Whether to count normal mutations (default true).
+ * @param silver Whether to count innate mutations that affect silver vulnerability (default false).
+ * @param all_innate Whether to count all innate mutations (default false). Includes and supercedes \c silver.
+ * @param temp Whether to count temporary mutations (default false).
+ * @param levels Whether to add up mutation levels, as opposed to just counting number of mutations (default true).
+ *
+ * @return Either the number of matching mutations, or the sum of their levels, depending on \c levels.
  */
-int player::how_mutated(bool innate, bool levels, bool temp) const
+int player::how_mutated(bool normal, bool silver, bool all_innate, bool temp, bool levels) const
 {
     int result = 0;
 
@@ -3103,23 +3105,31 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
         {
             // Infernal Marks should count for silver vulnerability despite
             // being permanent mutations.
-            const bool check_innate = innate || is_makhleb_mark(static_cast<mutation_type>(i));
-            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i),
-                                                          check_innate, temp);
+            const bool innate = all_innate
+                                 || silver
+                                     && (is_makhleb_mark(static_cast<mutation_type>(i))
+                                         || you.species == SP_DEMONSPAWN);
+            int mut_level = get_base_mutation_level(static_cast<mutation_type>(i),
+                                                    innate, temp, normal);
+
+            // Ru sacrifices count as innate mutations, but should not make
+            // demonspawn extra-vulnerable to silver.
+            if (silver && !all_innate && mut_level > 0)
+                mut_level -= you.sacrifices[i];
 
             if (levels)
                 result += mut_level;
             else if (mut_level > 0)
                 result++;
         }
-        if (you.species == SP_DEMONSPAWN
-            && you.props.exists(NUM_SACRIFICES_KEY))
-        {
-            result -= you.props[NUM_SACRIFICES_KEY].get_int();
-        }
     }
 
     return result;
+}
+
+bool player::has_any_mutations() const
+{
+    return how_mutated(true, true, true, true, true) > 0;
 }
 
 // Primary function to handle demonic guardians.
@@ -3289,7 +3299,7 @@ void set_evolution_mut_xp(bool malignant)
 
 int protean_grace_amount()
 {
-    int amount = you.how_mutated(false, false, true);
+    int amount = you.how_mutated(true, false, false, true, false);
 
     // A soft cap for Xom, Jiyva, and Demonspawn.
     // XXX: rewrite _player_base_evasion_modifiers() to allow +0.5 EV bonuses?

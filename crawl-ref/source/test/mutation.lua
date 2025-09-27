@@ -10,7 +10,7 @@ local eol = string.char(13)
 local function print_mutstate(prefix)
     if not silent then
         crawl.stderr(prefix ..
-                you.how_mutated(true, true, true) .. " mutations. result: " ..
+                you.how_mutated(true, true, true, true, true) .. " mutations. result: " ..
                 you.mutation_overview() .. eol)
     end
 end
@@ -107,7 +107,7 @@ local function test_potion(tries, iterations, premutate)
     sum = 0
     for i=1, tries do
         you.delete_all_mutations("mutation test")
-        assert(you.how_mutated(false, true, true) == 0,
+        assert(you.how_mutated(true, false, false, true, true) == 0,
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for i=1, premutate do
             -- note: won't guarantee `premutate` mutations, because some will
@@ -119,7 +119,7 @@ local function test_potion(tries, iterations, premutate)
             simulate_mutation_pot()
         end
         print_mutstate("Potion test try " .. i .. ", ")
-        sum = sum + you.how_mutated(true, true, true)
+        sum = sum + you.how_mutated(true, true, true, true, true)
     end
     mean = sum / tries
     if not silent then
@@ -131,7 +131,7 @@ end
 local function test_random_mutations(tries, iterations, chance_temporary, chance_clear)
     for i=1, tries do
         you.delete_all_mutations("mutation test")
-        assert(you.how_mutated(false, true, true) == 0,
+        assert(you.how_mutated(true, false, false, true, true) == 0,
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for j=1, iterations do
             if crawl.x_chance_in_y(chance_clear, 100) then

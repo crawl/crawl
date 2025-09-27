@@ -680,7 +680,9 @@ public:
     bool      has_mutation(mutation_type mut, bool active_only=true) const;
     bool      has_bane(bane_type bane) const;
 
-    int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
+    bool      has_any_mutations() const;
+    int       how_mutated(bool normal = true, bool silver = false, bool all_innate = false,
+                          bool temp = false, bool levels = true) const;
 
     int wearing(object_class_type obj_type, int sub_type,
                 bool count_plus = 0, bool check_attuned = false) const override;

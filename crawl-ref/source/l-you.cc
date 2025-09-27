@@ -1155,18 +1155,22 @@ LUAFN(you_get_base_mutation_level)
 
 /*** How mutated are you?
  * Adds up the total number (including levels if requested) of mutations.
- * @tparam boolean innate include innate mutations
- * @tparam boolean levels count levels
+ * @tparam boolean normal include normal mutations
+ * @tparam boolean silver include silver-affecting innate mutations
+ * @tparam boolean all_innate include all innate mutations
  * @tparam boolean temp include temporary mutations
+ * @tparam boolean levels count mutation levels instead of number of unique mutations
  * @treturn int
  * @function how_mutated
  */
 LUAFN(you_how_mutated)
 {
-    bool innate = lua_toboolean(ls, 1); // whether to include innate mutations
-    bool levels = lua_toboolean(ls, 2); // whether to count levels
-    bool temp = lua_toboolean(ls, 3); // whether to include temporary mutations
-    int result = you.how_mutated(innate, levels, temp);
+    bool normal = lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : true;
+    bool silver = lua_isboolean(ls, 2) ? lua_toboolean(ls, 2) : false;
+    bool all_innate = lua_isboolean(ls, 3) ? lua_toboolean(ls, 3) : false;
+    bool temp = lua_isboolean(ls, 4) ? lua_toboolean(ls, 4) : false;
+    bool levels = lua_isboolean(ls, 5) ? lua_toboolean(ls, 5) : true;
+    int result = you.how_mutated(normal, silver, all_innate, temp, levels);
     PLUARET(number, result);
 }
 
