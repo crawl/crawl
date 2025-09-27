@@ -42,7 +42,6 @@ public class DCSSMorgue extends AppCompatActivity
         sortSpinner.setSelection(DEFAULT_ORDER);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
         recyclerView.setLayoutManager(layoutManager);
 
