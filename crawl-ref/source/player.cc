@@ -5717,6 +5717,7 @@ bool player::rampaging() const
     return you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS)
             || you.has_mutation(MUT_ROLLPAGE)
             || you.form == transformation::spider
+            || you.duration[DUR_EXECUTION]
             || actor::rampaging();
 }
 
