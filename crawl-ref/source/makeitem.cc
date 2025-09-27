@@ -689,6 +689,34 @@ static void _generate_missile_item(item_def& item, int force_type,
     item.quantity = random_range(2, 6);
 }
 
+// Increment a given artprop on a given item while ensuring it doesn't overflow
+// sensible values.
+static void _increment_artprop(item_def& item, artefact_prop_type prop, int value)
+{
+    ASSERT(value > 0);
+
+    short& val = item.props[ARTEFACT_PROPS_KEY].get_vector()[prop].get_short();
+    val += value;
+
+    if (artp_value_type(prop) == ARTP_VAL_BOOL)
+        val = min((short)1, val);
+    else
+    {
+        switch (prop)
+        {
+            case ARTP_FIRE:
+            case ARTP_COLD:
+            case ARTP_WILLPOWER:
+            case ARTP_NEGATIVE_ENERGY:
+                val = min((short)3, val);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, int agent)
 {
@@ -754,8 +782,14 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     {
         artefact_prop_type prop = ego_to_artprop(static_cast<special_armour_type>(old_ego));
 
+        // This requires special handling since it maps to a *pair* of artprops at once.
+        if (old_ego == SPARM_RESISTANCE)
+        {
+            _increment_artprop(item, ARTP_FIRE, 1);
+            _increment_artprop(item, ARTP_COLD, 1);
+        }
         // Egos that have no corresponding artprop can stay intact
-        if (prop == ARTP_NUM_PROPERTIES)
+        else if (prop == ARTP_NUM_PROPERTIES)
             set_artefact_brand(item, old_ego);
         else
         {
@@ -767,19 +801,11 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                 case ARTP_INTELLIGENCE:
                 case ARTP_DEXTERITY:
                 case ARTP_AC:
-                    item.props[ARTEFACT_PROPS_KEY].get_vector()[prop].get_short() += 3;
+                    _increment_artprop(item, prop, 3);
                     break;
 
                 default:
-                {
-                    short& val = item.props[ARTEFACT_PROPS_KEY].get_vector()[prop].get_short();
-
-                    // Make sure not to 'hide' a second level of a boolean artprop
-                    if (artp_value_type(prop) == ARTP_VAL_BOOL)
-                        val = 1;
-                    else
-                        val += 1;
-                }
+                    _increment_artprop(item, prop, 1);
             }
         }
     }

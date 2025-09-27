@@ -619,14 +619,6 @@ static vector<string> _randart_propnames(const item_def& item,
         if (val == 0)
             continue;
 
-        // Don't show the rF+ rC+ twice.
-        if (get_armour_ego_type(item) == SPARM_RESISTANCE
-            && (prop == ARTP_COLD && val == 1
-                || prop == ARTP_FIRE && val == 1))
-        {
-            continue;
-        }
-
         propnames.push_back(_randart_prop_abbrev(prop, val));
     }
 
