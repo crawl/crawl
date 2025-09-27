@@ -549,12 +549,18 @@ int spell_mana(spell_type which_spell, bool real_spell)
         if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
             return 0;
 
+        if (is_tabcasting())
+            return 0;
+
         int cost = level;
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
 
         if (you.has_mutation(MUT_EFFICIENT_MAGIC))
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
+
+        if (you.has_mutation(MUT_INEFFICIENT_MAGIC))
+            cost += you.get_mutation_level(MUT_INEFFICIENT_MAGIC);
 
         if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
             cost = cost/2 + cost%2; // round up
@@ -1191,7 +1197,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell_difficulty(spell) > you.experience_level)
             return "you aren't experienced enough to cast this spell.";
 
-        if (you.has_mutation(MUT_HP_CASTING))
+        if (is_tabcasting()){}
+        else if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])

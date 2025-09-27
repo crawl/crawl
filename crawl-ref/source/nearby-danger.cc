@@ -130,7 +130,10 @@ static bool _mons_is_always_safe(const monster *mon)
           || mon->type == MONS_BUTTERFLY
           || (mon->type == MONS_BALLISTOMYCETE
               && !mons_is_active_ballisto(*mon))
-          || mon->type == MONS_TRAINING_DUMMY && !mon->weapon();;
+          || mon->type == MONS_TRAINING_DUMMY && !mon->weapon()
+          || (you.has_mutation(MUT_SAFE_SPELLS)
+              && (mon->type == MONS_BALL_LIGHTNING || mon->type == MONS_FULMINANT_PRISM)
+              && mon->summoner == MID_PLAYER);
 }
 
 // HACK ALERT: In the following several functions, want_move is true if the

@@ -3461,6 +3461,22 @@ static void _display_damage_rating(const item_def *weapon)
     return;
 }
 
+/**
+ * Print a message listing current chance to tabcast a spell
+ */
+static void _display_tabcast_chance()
+{
+    if (!you.has_mutation(MUT_CONTACT_CASTING))
+        return;
+
+    if (you.attribute[ATTR_TABCAST_SPELL] != SPELL_NO_SPELL)
+    {
+        mpr(make_stringf("Your chance to cast %s with melee attacks is %d%%.",
+            spell_title(static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL])),
+            you.get_tabcast_chance()));
+    }
+}
+
 // forward declaration
 static string _constriction_description();
 
@@ -3496,6 +3512,7 @@ void display_char_status()
     _display_damage_rating(you.weapon());
     if (offhand)
         _display_damage_rating(offhand);
+    _display_tabcast_chance();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()
@@ -4107,7 +4124,7 @@ int get_real_mp(bool include_items)
     // the last 4 give no mp
     int enp = min(23 * scale, scaled_xl);
 
-    int spell_extra = spellcasting; // 100%
+    int spell_extra = you.has_mutation(MUT_CONTACT_CASTING) ? 0 : spellcasting; // 100%
     int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, false, false) / 2; // 50%
     int highest_skill = max(spell_extra, invoc_extra);
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
@@ -9328,4 +9345,39 @@ item_def* player::active_talisman() const
         return &you.inv[cur_talisman];
     else
         return nullptr;
+}
+
+int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
+{
+    spell = spell == SPELL_NO_SPELL ? static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]) : spell;
+    int diff = spell_difficulty(spell);
+
+    //reduce cast chance of sandblast to compensate for the fact
+    //that its increased cast time is now instant
+    if (spell == SPELL_SANDBLAST)
+        diff += 2;
+
+    //base chance of 150, scaling up to 600 at max skill
+    //divided by 3 + spell level, capped at 100
+    constexpr int scale = 100;
+    constexpr int base = 150;
+    constexpr int scaling = 450;
+    const int div = 3 + diff;
+    const int skl = skill(SK_SPELLCASTING, scale);
+    constexpr int maxskl = MAX_SKILL_LEVEL * scale;
+
+    if (get_max)
+        return min(100, (base + scaling) / div);
+
+    //(base + scaling * skl / maxskl) / div
+    int chance = base * maxskl + scaling * skl;
+    chance = random ? div_rand_round(chance, div * maxskl) : chance / (div * maxskl);
+
+    //reduce chance for spells with high miscast chance
+    constexpr int failthreshold = 5;
+    int failchance = failure_rate_to_int(raw_spell_fail(spell));
+    if (failchance > failthreshold)
+        chance = max(0, chance - (failchance - failthreshold) * 2);
+
+    return min(100, chance);
 }

@@ -213,6 +213,7 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              true},
     { MUT_EVOLUTION,           MUT_DEVOLUTION,              true},
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,               true},
+    { MUT_INEFFICIENT_MAGIC,   MUT_EFFICIENT_MAGIC,         true},
 
     { MUT_FANGS,               MUT_BEAK,                   false},
     { MUT_ANTENNAE,            MUT_HORNS,                  false},
