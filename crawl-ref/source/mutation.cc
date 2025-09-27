@@ -2349,16 +2349,17 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
  */
 bool delete_all_mutations(const string &reason)
 {
+    bool found = false;
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         while (_delete_single_mutation_level(static_cast<mutation_type>(i), reason, true))
-            ;
+            found = true;
     }
     ASSERT(you.attribute[ATTR_TEMP_MUTATIONS] == 0);
     ASSERT(you.how_mutated(true, false, false, true) == 0);
     you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
 
-    return !you.how_mutated();
+    return found;
 }
 
 /*
