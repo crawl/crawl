@@ -33,7 +33,7 @@ Terrain
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
- = - runed door                                          (DNGN_RUNED_DOOR)
+ = - runed clear door                              (DNGN_RUNED_CLEAR_DOOR)
 
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the
@@ -78,6 +78,11 @@ Features
  U - Sparkling fountain
  V - Dry fountain
  Y - Blood fountain (use sparingly!)
+
+ ^ - Trap. By default, this places a random "regular" trap (which includes the
+     scarier traps like Zot traps). Typically, this glyph is used with a KFEAT
+     substitution to place a vault-specific set of traps, e.g.:
+        KFEAT: ^ = alarm trap / net trap
 
 Items
 -----
