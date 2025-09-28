@@ -3085,6 +3085,8 @@ w:50
 
 @The_monster@ says, "I hate skeletons."
 
+@The_monster@ says, "I hate draugr."
+
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "I hate vampires."
@@ -3122,6 +3124,8 @@ w:50
 @The_monster@ says, "All these vampires have me hopping mad!"
 
 @The_monster@ says, "I hate revenants, but I forget why! And I hate that, too!"
+
+@The_monster@ says, "I got a splinter from a draugr. I hate that."
 %%%%
 Abyss Donald
 
