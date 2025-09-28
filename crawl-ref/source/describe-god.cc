@@ -145,7 +145,7 @@ static const char *divine_title[][8] =
     {"Tormented",          "Purveyor of Pain",       "Pupil of Sorrows",        "Merchant of Misery",
      "Scholar of Souls",   "Artisan of Death",       "Demagogue of Despair",    "Lord of Darkness"},
 
-    // Yredelemnul -- ferverent death knight theme.
+    // Yredelemnul -- fervent death knight theme.
     {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
      "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
