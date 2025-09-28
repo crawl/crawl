@@ -746,8 +746,8 @@ t.15txxx.t.t.t..tt1.1G...t.t.1tt..ttt.
  ....t.t.t.ttt1.tt.1.G1t.t....t.t.5ttt..
 ..t.tt.t.t..t1t..t.t1tt.ttt.t...1..ttt
 .11O...t..5.t..11t..t....1..11tt.1.t..t.
-t..t1t..t...11t..ttt..ttt....tOt...t.11t
-  1..t..t.  t..tt. 1t..  tt..tt  ttt.tt
+t..t1t..t...11t..ttt..ttt....tOt.t.t.11t
+  1..t..t.  t..tt. 1t..  tt..tt  .tt.tt
    t.t.1.   .t1.  ..     .11    .t.1...
 ENDMAP
 
@@ -790,7 +790,7 @@ tO1.tt..tt.t.t.tttt4t1
 t.t.tt.t.tt.tG..ttt.tt
 tt.ttt.1..ttt..ttt.1.tt
 t.tt.ttttt.tt1ttt1.t.tt
-ttt.tt4ttt..%.4ttOttt
+tt..tt4ttt..%.4ttOttt
   ..1tt.t1t..G...t.t
    .tt..4t1t.t.tt1t
     .ttt  .t..ttt
@@ -840,42 +840,42 @@ ENDMAP
 NAME:   wad_woods_04
 DEPTH:  Lair
 ORIENT: float
-: wad_woods_setup(_G, "rock", 2, false, 0, 0, 0)
+: wad_woods_setup(_G, "rock", 2, true, 21, 2, 36)
 FTILE:  '+*0 = floor_dirt
 MAP
             .tttttt.ttxtx
-          t1t.tttxtt.tttx
-      tt1t11tt11ttxxx.xxx
+          t.t.tttxtt.tttx
+      tt1t1.tt.1ttxxx.xxx
      tt.tt..tttttttx.x.xx
     tt1t..tt11txxtt.ttx..
     tttt.tttttxxxx.xxxxxx
-   tt1t2tttx.xxxx....xxxx
-   ttt11tt1.t..t.txxx.x.x
+   tt1t0tttx.xxxx....xxxx
+   ttt.1tt1.t..t.txxx.x.x
   ..tttt1t.ttxx.xxxxxx.xx
- .t.1.tt....ttxttxt..xx.x
-.ttttt..tttttttt.xxx..1x.
+ .t1..tt....ttxttxt..xx.x
+.ttttt..tttt.ttt%xxx1..x.
 tt1t.t.txx..xx..xxxxxxxxx
-tt...tttttxx.t.xxtxxxxxxx
-x.tt.x.xxxxx..xxxxx''*xxx
-.xx1xxxxxxxxxxx101x'0'xxx
-xxxx1.........4xxx+'''xxx
+tt...tt.ttxx.t.xxtxxxxxxx
+x.tt.O.xxxxx..xxxxx''*xxx
+.xc1xxxxxxxxxxx101x'0'xxx
+xxcc1.........4xxx+'''xxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   wad_woods_06
 TAGS:   extra
 DEPTH:  Lair
-: wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
+: wad_woods_setup(_G, "small", 2, true, 21, 2, 36)
 MAP
-    tt2ttt  1
-   tt.ttttt1t
-  tttt.ttt1tt
+    tt.Ot1
+   tt1tttttt1
+  tttt.tttttt
 tt1tt.1.tttt
 tttt0...2tt1
  tt...G0.1ttt
  ttt02..1ttt
-tt1tt...ttttt
-t1tt1ttt21tt
+ttttt..1ttttt
+t1tt1ttt1Ott
    tttttt.t
      tt1t.t
 ENDMAP
@@ -888,22 +888,22 @@ ORIENT: float
 MAP
       tttt       ttttt
    t.tt1t.tt.   tt.t..tt
-  t..t1ttt.t.t.tt11t.tt.t
- .1tt.ttttttt.t.t..t.t.t...
- .t.tttttt.t.tt1....t.t.t...
-  t.t1tttt.1ttt.t.ttt.t.tt1t.
+ t...t.t.t.t.t.tt11t.tt.t
+ .1tt.t.t.ttt.t.t..t.t.t...
+ .t.tttttt.t.tt1....t.t.t1..
+ .t.t1tttt.1ttt.t.ttt.t.tt.t.
 .ttt.t.tt1t.1t.tt1t0t.tt.t.ttt
-t.1t5tt.tt.tt.t.ttt%t.t.t1tttt
+tO.t5tt.tt.tt.t.ttt%t.t.t1tttt
 ttt1t......0..1tWWWWWWWWWWWttt
  tt...tWWWWWWWWWWwwwwwwwwwWWWW
-WWWWWWWWwwwwwwwwwwWWWWWWwwwwww
-wwwwwwwwwwwWWWWWWWWW1.tWWWWWWW
+WWWWWWWWwwwwwwwwwwWWWWWWwWwwww
+wWwwwwwwwwwWWWWWWWWW1.tWWWWWWW
 WWWWWWWWWWWWWt....1.......ttt
-tttt..tt.t..%.t.t..ttt1..t.tt
-ttt5tt.t.tt1t1t.t%1tt.t5tttttt
+tttt..tt.t..%.t.t.1ttt1..t.tt
+ttt5tt.t.tt1t1t.t%.tt.t5tttttt
  tt1t.tttttt.t.tttt.t.t1t1.ttt
-  ttt.t.t1t.t.t.1tt.t.tt11tt
-  tt.1tt1t.ttttt.t.t.t1t.ttt
+  ttt.t1..t.t.t.1tt.1.tt1.tt
+  tt1.tt1t.ttttt.t.t.t.t.ttt
     .t1tttttttttttt.ttt.t.tt
     .tttt   tt ttttt.ttttt
    .ttt           ttt.tt
@@ -933,15 +933,15 @@ NAME:   wad_woods_river_03
 DEPTH:  Lair
 : wad_woods_setup(_G, "decor", 1, false, 32, 3, 24)
 MAP
-   1t.tWwW.t.t.t
-   t.ttWwWt.tt1t
-   t.ttWwW.t11tt
+   1t.tWwW.t.t1t
+   t.ttWwWt.tt.t
+   t.ttWwW.t1.tt
   t11.WWwWWt.t1t
 tt1t.WWwwWW.ttt
 t1ttWWwwWW.tttt
 t.WWwwwWWtOttt
-WWwwwWWtt.t.t
-wwwWWtt.tttt.
+WWWwwWWtt.t.t
+wwwWWtt.tt.t.
 WWWWt.t.t1t
 .tt.t.t1tt
 ENDMAP
@@ -976,21 +976,21 @@ DEPTH:  Lair
 FTILE:  @' = floor_dirt
 MAP
     t1t.t1  tt.1tt   .@
-  .1tt1.1   tOtt.1.tt.'
- tt..2ttt.1..tttt...%'.
- t2t.ttt.ttt1tt2t.t.'.
-1t.tt..1tt1.tt.t.tt'.1
-t.tt.%1..1tt.1ttt''t1tt
+  .1tt1..   tOtt.1.tt.'
+ tt..2ttt.11.tttt...%'.
+ t2t.ttt.ttt.tt2t.t.'.
+1t.tt0..tt1.tt.t.tt'.1
+t.tt.%12.1tt.1ttt''t1tt
 .........G.....1'...1..
 @'''''''''''''''''''''@
 .1...1...T3............
 t.t.tt.t.tt.tG..t.t.ttt
-tt.ttt.1..ttt..ttt.1.tt
- .tt.t2ttt.tt1t1t1.t.t
- tt.tt2ttt..%.2ttOttt
- t..1tt.t1t..G...t.t
-  t.tt..2 1t.t.tt1t
-  t21t      ..tttt
+tt.ttt1...ttt..ttt.1.tt
+ .tt.t.ttt.tt1t1t1.t.t
+ .t.tt.ttt..%.2ttOttt
+ t.11tt.t1t..G0..t.t
+  t.tt2.2 1t.t.tt1t
+  t2.t      ..tttt
 ENDMAP
 
 NAME:   wad_woods_road_02
@@ -1007,11 +1007,11 @@ t....t.'''''0t....t.
 @'''''''.G%''''''''@
 t....t0'''''.t....t.
 ttt..ttt1tt11tt.t.tt
-tt.tt.t1tt1tt1ttttt
-tt1tt1ttt303tttttt
- ttt1ttt3.U.3t1ttt
+tt.tt.t1tt1tt1ttt.t
+tt1tt1ttt303tttt.t
+ ttt1ttt3.U.3t1.tt
    tttt1t3.3ttt1tt
-     tt ttttt1 tt
+     tt ttttt1.tt
 ENDMAP
 
 NAME:   wad_woods_road_03
@@ -1027,7 +1027,7 @@ tt1tt...'.tttt
 ttt..'''.t1t
 ....'..11ttt
 .'''..ttt1t
-@....tt1t
+@....t.1t
 ...1tttt
 tttt1tt
 ENDMAP
@@ -1040,11 +1040,11 @@ FTILE:  @'+T = floor_dirt
 MAP
   ttt..@..ttttttttt
  t11...'.ttt1ttP11t
- tttt1..'.tttt1t*1tt
-ttt1tttt.'..ttttt1t
-  ttttttt.'..1tt1ttt
+ tttt1..'.t.tt1t*1tt
+tttttttt.'..ttttt1t
+  tt1tttt.'..1tt1ttt
    tt1t...'tttt..t..
-  t1tttt.''''''''...
+  t1.t.t.''''''''...
   ttttt..'.t1.tt.''@
    ttt1t.'tttttttttt
    tt1ttt.'.ttttttt
@@ -1105,6 +1105,7 @@ KFEAT:  a = x
 SUBST:  8 = 6
 : end
 KMASK:  W = no_monster_gen
+KPROP:  678|abm" = no_tele_into
 COLOUR: a = yellow
 TILE:   a = wall_wax
 MAP
@@ -1115,13 +1116,13 @@ MAP
 t..t..t.1..tWWW.t...1..t.tt..tt.
 ttt.t1...t...tWW.1t.t...tt...ttt
 tttt....aaamaaa1Wt.t...t..tt1ttt
-t.t1.t1aa6.a66aaWWt1.1t.ttttttt
- tt.ttaaa.aba.aaaWW.t..ttttt1ttt
-  tt.aa86a7a.a.6aaWtt1t...tt.tt
+t..1.t1aa6"a66aaWWt1.1t.ttttttt
+ tt.ttaaa"aba"aaaWW.t..ttttt1ttt
+  tt.aa86a7a"a"6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
- t1.1aa66a.a.a.8aa.t...t.t.ttttt
-tt.1..aaa.aba6aaa.1..t..tttt%ttt
-t.t....aa.8a6.aaWW.t.tt.tt..t
+ t1.1aa66a"a"a"8aa.t...t.t.ttttt
+tt.1..aaa"aba6aaa.1..t..tttt%ttt
+t.t....aa"8a6"aaWW.t.tt..t..t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
  tt.t1.1....t1WWwW.....1ttt
   1..t.tt..tt.tWWt1.1tt...
