@@ -1640,7 +1640,10 @@ bool Scroller::on_event(const Event& event)
 Layout::Layout(shared_ptr<Widget> child)
 {
 #ifdef USE_TILE_LOCAL
-    m_depth = ui_root.num_children();
+    if (tiles.is_using_small_layout())
+        m_depth = 0;
+    else
+        m_depth = ui_root.num_children();
 #endif
     child->_set_parent(this);
     m_child = std::move(child);
@@ -1748,6 +1751,8 @@ Size Popup::get_max_child_size()
 #ifdef USE_TILE_LOCAL
 int Popup::base_margin()
 {
+    if (tiles.is_using_small_layout())
+        return 0;
     const int screen_small = 800, screen_large = 1000;
     const int margin_small = 10, margin_large = 50;
     const int clipped = max(screen_small, min(screen_large, m_region.height));
