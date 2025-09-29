@@ -2378,7 +2378,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_RAVENOUS_SWARM:
         zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.hit_verb     = "envelopes";
+        beam.hit_verb     = "envelops";
         break;
 
     case SPELL_THROW_BARBS:
