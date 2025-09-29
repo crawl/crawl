@@ -2947,7 +2947,7 @@ bool activate_talent(const talent& tal, dist *target)
 
             if (_not_free_religious_ability(abil.ability)
                 && you.unrand_equipped(UNRAND_DRAGONMASK)
-                && there_are_monsters_nearby(true, false, false))
+                && there_are_monsters_nearby(true, true, false))
             {
                 if (x_chance_in_y(10 + 2 * abil.avg_piety_cost(), 100))
                     _invoke_dragons();
