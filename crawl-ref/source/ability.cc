@@ -54,6 +54,7 @@
 #include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-tentacle.h"
@@ -2763,6 +2764,47 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     return nullptr;
 }
 
+static const vector<pop_entry> pop_dragons =
+{
+  {  0,  13,  100, FALL, MONS_STEAM_DRAGON },
+  {  0,  15,  100, PEAK, MONS_ACID_DRAGON },
+  {  0,  15,  100, PEAK, MONS_SWAMP_DRAKE },
+  {  9,  18,  100, PEAK, MONS_WIND_DRAKE },
+  {  9,  18,  100, PEAK, MONS_DEATH_DRAKE },
+  {  9,  18,  100, FALL, MONS_RIME_DRAKE },
+  {  9,  20,  100, RISE, MONS_LINDWURM },
+  { 15,  22,  100, RISE, MONS_SWAMP_DRAGON },
+  { 17,  24,  100, PEAK, MONS_FIRE_DRAGON },
+  { 17,  24,  100, PEAK, MONS_ICE_DRAGON },
+  { 21,  27,  100, FALL, MONS_IRON_DRAGON },
+  { 21,  27,  100, PEAK, MONS_STORM_DRAGON },
+  { 21,  27,  100, PEAK, MONS_SHADOW_DRAGON },
+  { 24,  30,  100, RISE, MONS_QUICKSILVER_DRAGON },
+  { 24,  30,  100, RISE, MONS_GOLDEN_DRAGON },
+};
+
+static bool _dragon_mask_veto_mon(monster_type mon)
+{
+   // Don't summon any beast that would anger your god.
+    return god_hates_monster(mon);
+}
+
+static bool _invoke_dragons()
+{
+    bool made_mons = false;
+    // Invoke mon-pick with our custom list
+    monster_type mon = pick_monster_from(pop_dragons, you.get_experience_level(),
+                                         _dragon_mask_veto_mon);
+    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, 0, summ_dur(1 + random2(3)));
+    if (create_monster(mg))
+        {
+            made_mons = true;
+            mpr("A dragon answers your prayer!");
+        }
+    return made_mons;
+}
+
 bool ability_has_targeter(ability_type abil)
 {
     return bool(find_ability_targeter(abil));
@@ -2882,37 +2924,19 @@ bool activate_talent(const talent& tal, dist *target)
             // Ephemeral Shield activates on any invocation with a cost,
             // even if that's just a cooldown or small amounts of HP.
             // No rapidly wall-jumping or renaming your ancestor, alas.
-            if (is_religious_ability(abil.ability)
-                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
-                    || (abil.flags & abflag::max_hp_drain)
-                    || (abil.ability == ABIL_ZIN_RECITE)
-                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
-                    || (abil.flags & abflag::sacrifice)
-                    || (abil.flags & abflag::torment)
-                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
-                    || abil.get_mp_cost() > 0)
+            if (not_free_religious_ability(abil.ability)
                 && you.has_mutation(MUT_EPHEMERAL_SHIELD))
             {
                 you.set_duration(DUR_EPHEMERAL_SHIELD, random_range(3, 5));
                 you.redraw_armour_class = true;
             }
 
-            if (is_religious_ability(abil.ability)
-                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
-                    || (abil.flags & abflag::max_hp_drain)
-                    || (abil.ability == ABIL_ZIN_RECITE)
-                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
-                    || (abil.flags & abflag::sacrifice)
-                    || (abil.flags & abflag::torment)
-                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
-                    || abil.get_mp_cost() > 0)
+            if (not_free_religious_ability(abil.ability)
                 && you.unrand_equipped(UNRAND_DRAGONMASK)
                 && there_are_monsters_nearby(true, false, false))
             {
-                if (one_chance_in(10))
-                {
-                    cast_summon_dragon(&you, 50, false);
-                }
+                if (x_chance_in_y(10 + 2 * abil.avg_piety_cost(), 100))
+                    _invoke_dragons();
             }
 
             // XXX: Merge Dismiss Apostle #1/2/3 into a single count
@@ -4256,6 +4280,20 @@ bool is_religious_ability(ability_type abil)
     // ignores abandon religion / convert to beogh
     return abil >= ABIL_FIRST_RELIGIOUS_ABILITY
         && abil <= ABIL_LAST_RELIGIOUS_ABILITY;
+}
+
+bool not_free_religious_ability(ability_type ability)
+{
+    const ability_def& abil = get_ability_def(ability);
+    return (is_religious_ability(abil.ability)
+                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
+                    || (abil.flags & abflag::max_hp_drain)
+                    || (abil.ability == ABIL_ZIN_RECITE)
+                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
+                    || (abil.flags & abflag::sacrifice)
+                    || (abil.flags & abflag::torment)
+                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
+                    || abil.get_mp_cost() > 0));
 }
 
 bool is_card_ability(ability_type abil)

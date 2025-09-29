@@ -76,6 +76,7 @@ bool ability_has_targeter(ability_type abil);
 unique_ptr<targeter> find_ability_targeter(ability_type ability);
 bool activate_talent(const talent& tal, dist *target = nullptr);
 bool is_religious_ability(ability_type abil);
+bool not_free_religious_ability(ability_type abil);
 bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false,
