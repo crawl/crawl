@@ -2813,15 +2813,15 @@ bool ability_has_targeter(ability_type abil)
 static bool _not_free_religious_ability(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
-    return (is_religious_ability(abil.ability)
-                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
-                    || (abil.flags & abflag::max_hp_drain)
-                    || (abil.ability == ABIL_ZIN_RECITE)
-                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
-                    || (abil.flags & abflag::sacrifice)
-                    || (abil.flags & abflag::torment)
-                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
-                    || abil.get_mp_cost() > 0));
+    return is_religious_ability(abil.ability)
+               && (abil.piety_cost || (abil.flags & abflag::exhaustion)
+                   || (abil.flags & abflag::max_hp_drain)
+                   || (abil.ability == ABIL_ZIN_RECITE)
+                   || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
+                   || (abil.flags & abflag::sacrifice)
+                   || (abil.flags & abflag::torment)
+                   || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
+                   || abil.get_mp_cost() > 0);
 }
 
 bool activate_talent(const talent& tal, dist *target)
