@@ -2810,6 +2810,20 @@ bool ability_has_targeter(ability_type abil)
     return bool(find_ability_targeter(abil));
 }
 
+static bool _not_free_religious_ability(ability_type ability)
+{
+    const ability_def& abil = get_ability_def(ability);
+    return (is_religious_ability(abil.ability)
+                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
+                    || (abil.flags & abflag::max_hp_drain)
+                    || (abil.ability == ABIL_ZIN_RECITE)
+                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
+                    || (abil.flags & abflag::sacrifice)
+                    || (abil.flags & abflag::torment)
+                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
+                    || abil.get_mp_cost() > 0));
+}
+
 bool activate_talent(const talent& tal, dist *target)
 {
     const ability_def& abil = get_ability_def(tal.which);
@@ -2924,14 +2938,14 @@ bool activate_talent(const talent& tal, dist *target)
             // Ephemeral Shield activates on any invocation with a cost,
             // even if that's just a cooldown or small amounts of HP.
             // No rapidly wall-jumping or renaming your ancestor, alas.
-            if (not_free_religious_ability(abil.ability)
+            if (_not_free_religious_ability(abil.ability)
                 && you.has_mutation(MUT_EPHEMERAL_SHIELD))
             {
                 you.set_duration(DUR_EPHEMERAL_SHIELD, random_range(3, 5));
                 you.redraw_armour_class = true;
             }
 
-            if (not_free_religious_ability(abil.ability)
+            if (_not_free_religious_ability(abil.ability)
                 && you.unrand_equipped(UNRAND_DRAGONMASK)
                 && there_are_monsters_nearby(true, false, false))
             {
@@ -4280,20 +4294,6 @@ bool is_religious_ability(ability_type abil)
     // ignores abandon religion / convert to beogh
     return abil >= ABIL_FIRST_RELIGIOUS_ABILITY
         && abil <= ABIL_LAST_RELIGIOUS_ABILITY;
-}
-
-bool not_free_religious_ability(ability_type ability)
-{
-    const ability_def& abil = get_ability_def(ability);
-    return (is_religious_ability(abil.ability)
-                && (abil.piety_cost || (abil.flags & abflag::exhaustion)
-                    || (abil.flags & abflag::max_hp_drain)
-                    || (abil.ability == ABIL_ZIN_RECITE)
-                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
-                    || (abil.flags & abflag::sacrifice)
-                    || (abil.flags & abflag::torment)
-                    || (abil.flags & abflag::injury) || abil.get_hp_cost() > 0
-                    || abil.get_mp_cost() > 0));
 }
 
 bool is_card_ability(ability_type abil)
