@@ -984,8 +984,8 @@ COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
 BOOL:    seeInv
-DESCRIP: Dragonpray: It occasionally summons a dragon when using Invocations.
- Chance is 10% + twice the piety cost of the ability used.
+DESCRIP: Dragonpray: It occasionally summons a dragon when using Invocations with
+ hostile monsters in sight. Chance is 10% + twice the piety cost of the ability used.
 
 NAME:     robe of Night
 OBJ:      OBJ_ARMOUR/ARM_ROBE
