@@ -181,7 +181,7 @@ enum brand_type // item_def.special
 #endif
     SPWPN_WEAKNESS,  // Weakness Stinger
     SPWPN_VULNERABILITY, // Demonic Touch
-    SPWPN_FOUL_FLAME,
+    SPWPN_FOUL_FLAME, // Pan lords and Brilliance
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
