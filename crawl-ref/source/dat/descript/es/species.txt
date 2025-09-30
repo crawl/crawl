@@ -34,12 +34,12 @@ desarrollan un color.
 %%%%
 Felid
 
-Estos gatos tienen muchas vidas y son sentientes, pero son incapaces de manipular 
+Estos gatos tienen muchas vidas y son sentientes, pero son incapaces de manipular
 objetos de una forma avanzada o de usar armaduras o armas.
 %%%%
 Gargoyle
 
-Hechos de piedra viviendo, gárgolas son en sintonía con la tierra. Tienen salud 
+Hechos de piedra viviendo, gárgolas son en sintonía con la tierra. Tienen salud
 baja, pero sus cuerpos son incredíblemente duros.
 %%%%
 Halfling
