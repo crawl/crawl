@@ -6,7 +6,7 @@ adelante, su Libro del Aire les provee de flexibilidad para sobrevivir.
 %%%%
 Alchemist
 
-Los Alquimistas comienzan con el hechizo Vapors Envenenadores. Sus hechizos son 
+Los Alquimistas comienzan con el hechizo Vapors Envenenadores. Sus hechizos son
 muy eficaces contra los monstruos sin progencia contra los effectos de veneno.
 %%%%
 Artificer
@@ -32,13 +32,13 @@ los constantes cambios de humor del dios.
 %%%%
 Cinder Acolyte
 
-Los Discípulos Cenizas adoran a Ignis. Ellos recurren a la flama de un dios 
-agonizante hasta no hay nada que permanecer. Tienen capacidades dos las de cuerpo 
+Los Discípulos Cenizas adoran a Ignis. Ellos recurren a la flama de un dios
+agonizante hasta no hay nada que permanecer. Tienen capacidades dos las de cuerpo
 a cuerpo y de magia fuego.
 %%%%
 Conjurer
 
-Los Conjuradores afrontan los problemas con hechizos destructivos. Ellos empiezan con 
+Los Conjuradores afrontan los problemas con hechizos destructivos. Ellos empiezan con
 el hechizo Dardo Magicó y pueden aprender otros hechizos sin elementos para matar a
 sus enmigos
 %%%%
@@ -56,7 +56,7 @@ su Libro de Geomancia.
 Enchanter
 
 Los Encantadores usan hechizos para potenciarse en batalla o bien para
-incapacitar a otros. También comienzan con una daga encantada y unas pociones 
+incapacitar a otros. También comienzan con una daga encantada y unas pociones
 de invisibilidad.
 %%%%
 Fire Elementalist
@@ -72,7 +72,7 @@ redes y un arma de su elección.
 %%%%
 Hedge Wizard
 
-Los magos comienzan con una amplia gama de hechizos menores que pueden usar para 
+Los magos comienzan con una amplia gama de hechizos menores que pueden usar para
 frustuar sus enmigos y obtener una ventaja en batalla.
 %%%%
 Hunter
@@ -98,7 +98,7 @@ muerte. Empiezan con el hechizo del Dolor.
 %%%%
 Summoner
 
-Los Convocadores son capaces de Convocar a Pequeño Mamífero desde el inicio 
+Los Convocadores son capaces de Convocar a Pequeño Mamífero desde el inicio
 y comienzan con hechizos para llamar aliados más fuerzas y exóticos en su biblioteca.
 %%%%
 Wanderer
