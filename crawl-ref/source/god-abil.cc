@@ -3354,13 +3354,14 @@ bool gozag_potion_petition()
         groups.push_back(std::move(g));
     }
 
-    //Display the menu and get the player's choice.
+    // Display the menu and get the player's choice.
     int keyin = gozag_potion_petition_menu(groups);
-    if (keyin == -1)
+    if (keyin == -1) // Menu was escaped, or hup
     {
         canned_msg(MSG_OK);
         return false;
     }
+
     ASSERT(you.gold >= prices[keyin]);
     you.del_gold(prices[keyin]);
     you.attribute[ATTR_GOZAG_GOLD_USED] += prices[keyin];
@@ -3676,14 +3677,11 @@ bool gozag_call_merchant()
 
     // Display the menu and let the player choose a merchant.
     const int shop_index = gozag_shop_petition_menu(offers);
-    if (shop_index == -1) // Menu was escaped
+    if (shop_index == -1) // Menu was escaped, or hup
     {
         canned_msg(MSG_OK);
         return false;
     }
-
-    if (shop_index == -1) // hup!
-        return false;
 
     ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
 
