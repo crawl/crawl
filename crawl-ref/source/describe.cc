@@ -1498,6 +1498,15 @@ string damage_rating(const item_def *item, int *rating_value)
         brand_desc.c_str());
 }
 
+static string _weapon_ego_key(brand_type ego)
+{
+    string verbose_ego_name = lowercase_first(brand_type_name(ego, false));
+    string terse_ego_name = lowercase_first(brand_type_name(ego, true));
+    string ego_key = verbose_ego_name + " (" + terse_ego_name + ") weapon ego";
+
+    return ego_key;
+}
+
 static void _append_skill_needed(string &description, const item_def &item,
                                  bool indent = true, string skill_padding = "")
 {
@@ -1620,7 +1629,11 @@ static void _append_weapon_stats(string &description, const item_def &item)
         }
         // XXX: Would be nice if this wasn't duplicated
         if (testbits(item.flags, ISFLAG_CHAOTIC))
-            description += "\nChaotic:    Each hit has a different, random effect.";
+        {
+            string ego_key = _weapon_ego_key(SPWPN_CHAOS);
+            string ego_desc = getEgoString(ego_key);
+            description += "\nChaotic:    " + ego_desc;
+        }
 
         // XX spacing following brand and dbrand for randarts/unrands is a bit
         // inconsistent with other object types
@@ -1719,97 +1732,29 @@ static string _describe_weapon_brand(const item_def &item)
     if (!item.is_identified())
         return "";
 
-    const brand_type brand = get_weapon_brand(item);
     const bool ranged = is_range_weapon(item);
+    const int damtype = get_vorpal_type(item);
+    const bool blade = !ranged && damtype == DVORP_SLICING || damtype == DVORP_CHOPPING;
 
-    switch (brand)
+    const brand_type ego = get_weapon_brand(item);
+    string ego_key = _weapon_ego_key(ego);
+    string ego_desc = getEgoString(ego_key);
+
+    // Overrides for ranged weapons and blade weapons, if they exist.
+    if (ranged)
     {
-    case SPWPN_FLAMING:
+        string ranged_ego_desc = getEgoString(ego_key + " ranged");
+        if (!ranged_ego_desc.empty())
+            ego_desc = ranged_ego_desc;
+    }
+    if (blade)
     {
-        const int damtype = get_vorpal_type(item);
-        const string desc = "It burns victims, dealing an additional "
-                            "one-quarter of any damage that pierces defenders'"
-                            " armour.";
-        if (ranged || damtype != DVORP_SLICING && damtype != DVORP_CHOPPING)
-            return desc;
-        return desc +
-            " Big, fiery blades are also staple armaments of hydra-hunters.";
+        string blade_ego_desc = getEgoString(ego_key + " blade");
+        if (!blade_ego_desc.empty())
+            ego_desc = blade_ego_desc;
     }
-    case SPWPN_FREEZING:
-        return "It freezes victims, dealing an additional one-quarter of any "
-               "damage that pierces defenders' armour. It may also slow down "
-               "cold-blooded creatures.";
-    case SPWPN_HOLY_WRATH:
-        return "It has been blessed by the Shining One, dealing an additional "
-               "three-quarters of any damage that pierces undead and demons' "
-               "armour. Undead and demons cannot use this.";
-    case SPWPN_FOUL_FLAME:
-        return "It has been infused with foul flame, dealing an additional "
-               "three-quarters damage to holy beings, an additional "
-               "one-quarter damage to undead and demons, and an additional "
-               "half damage to all others, so long as it pierces armour. "
-               "Holy beings and good god worshippers cannot use this.";
-    case SPWPN_ELECTROCUTION:
-        return "It sometimes electrocutes victims (1/4 chance, 8-20 damage).";
-    case SPWPN_VENOM:
-        return "It poisons victims.";
-    case SPWPN_PROTECTION:
-        return "It grants its wielder temporary protection after it strikes "
-               "(+7 AC).";
-    case SPWPN_DRAINING:
-        return "It sometimes drains living victims (1/2 chance). This deals "
-               "an additional one-quarter of any damage that pierces "
-               "defenders' armour as well as a flat 2-4 damage, and also "
-               "weakens them slightly.";
-    case SPWPN_SPEED:
-        return "Attacks with this weapon are significantly faster.";
-    case SPWPN_HEAVY:
-    {
-        string desc = ranged ? "Any ammunition fired from it" : "It";
-        return desc + " deals dramatically more damage, but attacks with "
-                      "it are much slower.";
-    }
-    case SPWPN_CHAOS:
-        return "Each hit has a different, random effect.";
-    case SPWPN_VAMPIRISM:
-        return "It occasionally heals its wielder for a portion "
-               "of the damage dealt when it wounds a living foe.";
-    case SPWPN_PAIN:
-        {
-            string desc = "In the hands of one skilled in necromantic "
-                 "magic, it inflicts extra damage on living creatures.";
-            if (you_worship(GOD_TROG))
-                return desc + " Trog prevents you from unleashing this effect.";
-            if (!is_useless_skill(SK_NECROMANCY))
-                return desc;
-            return desc + " Your inability to study Necromancy prevents "
-                     "you from drawing on the full power of this weapon.";
-        }
-    case SPWPN_DISTORTION:
-        return "It warps and distorts space around it, and may blink, banish, "
-               "or inflict extra damage upon those it strikes. Unwielding it "
-               "can teleport you to foes or banish you to the Abyss.";
-    case SPWPN_PENETRATION:
-        return "Any ammunition fired by it continues flying after striking "
-               "targets, potentially hitting everything in its path until it "
-               "leaves sight.";
-    case SPWPN_REAPING:
-        return "Any living, holy, or demonic foe damaged by it may be "
-               "temporarily reanimated upon death as a friendly spectral, with "
-               "an increasing chance as more damage is dealt.";
-    case SPWPN_ANTIMAGIC:
-        return "It reduces the magical energy of the wielder, and disrupts "
-               "the spells and magical abilities of those it strikes. Natural "
-               "abilities and divine invocations are not affected.";
-    case SPWPN_SPECTRAL:
-        return "When its wielder attacks, the weapon's spirit leaps out and "
-               "launches a second, slightly weaker strike. The spirit shares "
-               "part of any damage it takes with its wielder.";
-    case SPWPN_ACID:
-        return "It splashes victims with acid (2d4 damage, Corrosion).";
-    default:
-        return "";
-    }
+
+    return ego_desc;
 }
 
 static string _describe_point_change(float points)
