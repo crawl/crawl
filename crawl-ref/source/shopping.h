@@ -8,26 +8,11 @@
 #include <unordered_set>
 #include <vector>
 
-#include "potion-type.h"
 #include "tag-version.h"
 
 using std::vector;
 
 struct shop_struct;
-
-struct potion_group
-{
-    int price;
-    vector<potion_type> potions;
-};
-
-/// A shop offered by Gozag's call merchant.
-struct shop_offer
-{
-    int               price;
-    shop_type         type;
-    string            shop_name;
-};
 
 int artefact_value(const item_def &item);
 
@@ -61,8 +46,7 @@ bool have_voucher();
 shop_type str_to_shoptype(const string &s);
 const char *shoptype_to_str(shop_type type);
 
-int gozag_potion_petition_menu(const vector<potion_group> &groups);
-int gozag_shop_petition_menu(const vector<shop_offer> &offers);
+/////////////////////////////////////////////////////////////////////
 
 struct level_pos;
 class  Menu;

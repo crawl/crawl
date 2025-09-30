@@ -56,7 +56,6 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "menu.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -85,7 +84,6 @@
 #include "random.h"
 #include "random-pick.h"
 #include "religion.h"
-#include "shopping.h"
 #include "shout.h"
 #include "skill-menu.h"
 #include "spl-book.h"
@@ -3345,23 +3343,37 @@ bool gozag_potion_petition()
         }
     }
 
-    std::vector<potion_group> groups;
-    for (int i = 0; i < GOZAG_MAX_POTIONS; ++i)
-    {
-        potion_group g;
-        g.price = prices[i];
-        for (const CrawlStoreValue &v : *pots[i])
-            g.potions.push_back(static_cast<potion_type>(v.get_int()));
-        groups.push_back(std::move(g));
-    }
+    int keyin = 0;
 
-    // Display the menu and get the player's choice.
-    int keyin = gozag_potion_petition_menu(groups);
-    if (keyin == -1) // Menu was escaped, or hup
+    while (true)
     {
-        canned_msg(MSG_OK);
-        gozag_clear_potion_petition();
-        return false;
+        if (crawl_state.seen_hups)
+            return false;
+
+        clear_messages();
+        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+        {
+            string line = make_stringf("  [%c] - %d gold - ", i + 'a',
+                                       prices[i]);
+            vector<string> pot_names;
+            for (const CrawlStoreValue& store : *pots[i])
+                pot_names.emplace_back(potion_type_name(store.get_int()));
+            line += comma_separated_line(pot_names.begin(), pot_names.end());
+            mpr_nojoin(MSGCH_PLAIN, line);
+        }
+        mprf(MSGCH_PROMPT, "Purchase which effect?");
+        keyin = toalower(get_ch()) - 'a';
+        if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
+            continue;
+
+        if (you.gold < prices[keyin])
+        {
+            mpr("You don't have enough gold for that!");
+            more();
+            continue;
+        }
+
+        break;
     }
 
     ASSERT(you.gold >= prices[keyin]);
@@ -3374,13 +3386,6 @@ bool gozag_potion_petition()
         flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_POTION_PETITION);
     }
 
-    gozag_clear_potion_petition();
-
-    return true;
-}
-
-void gozag_clear_potion_petition()
-{
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
         string key = make_stringf(GOZAG_POTIONS_KEY, i);
@@ -3388,6 +3393,8 @@ void gozag_clear_potion_petition()
         key = make_stringf(GOZAG_PRICE_KEY, i);
         you.props.erase(key);
     }
+
+    return true;
 }
 
 /**
@@ -3502,15 +3509,18 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
 }
 
 /**
- * Build a string describing the name and type of the shop being offered
+ * Build a string describing the name, price & type of the shop being offered
  * at the given index.
  *
  * @param index     The index of the shop to be described.
  * @return          The shop description.
  *                  E.g. "[a]   973 gold - Cranius' Magic Scroll Boutique"
  */
-static string _describe_gozag_shop_name(int index)
+static string _describe_gozag_shop(int index)
 {
+    const int cost = _gozag_shop_price(index);
+
+    const char offer_letter = 'a' + index;
     const string shop_name =
         apostrophise(you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
                                             index)].get_string());
@@ -3519,10 +3529,42 @@ static string _describe_gozag_shop_name(int index)
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
-    return make_stringf("%s %s %s",
+    return make_stringf("  [%c] %5d gold - %s %s %s",
+                        offer_letter,
+                        cost,
                         shop_name.c_str(),
                         type_name.c_str(),
                         suffix.c_str());
+}
+
+/**
+ * Let the player choose from the currently available merchants to call.
+ *
+ * @param   The index of the chosen shop; -1 if none was chosen (due to e.g.
+ *          a seen_hup).
+ */
+static int _gozag_choose_shop()
+{
+    if (crawl_state.seen_hups)
+        return -1;
+
+    clear_messages();
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
+        mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
+
+    mprf(MSGCH_PROMPT, "Fund which merchant?");
+    const int shop_index = toalower(get_ch()) - 'a';
+    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
+        return _gozag_choose_shop(); // tail recurse
+
+    if (you.gold < _gozag_shop_price(shop_index))
+    {
+        mpr("You don't have enough gold to fund that merchant!");
+        more();
+        return _gozag_choose_shop(); // tail recurse
+    }
+
+    return shop_index;
 }
 
 /**
@@ -3628,26 +3670,9 @@ bool gozag_call_merchant()
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
             _setup_gozag_shop(i, valid_shops);
 
-    // Convert shop data from props into a list of offers for the menu.
-    std::vector<shop_offer> offers;
-    offers.reserve(GOZAG_MAX_SHOPS);
-    for (int i = 0; i < GOZAG_MAX_SHOPS; ++i)
-    {
-        offers.emplace_back(shop_offer{
-            _gozag_shop_price(i),
-            _gozag_shop_type(i),
-            _describe_gozag_shop_name(i)
-        });
-    }
-
-    // Display the menu and let the player choose a merchant.
-    const int shop_index = gozag_shop_petition_menu(offers);
-    if (shop_index == -1) // Menu was escaped, or hup
-    {
-        canned_msg(MSG_OK);
-        gozag_clear_call_merchant();
+    const int shop_index = _gozag_choose_shop();
+    if (shop_index == -1) // hup!
         return false;
-    }
 
     ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
 
@@ -3662,13 +3687,6 @@ bool gozag_call_merchant()
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
-    gozag_clear_call_merchant();
-
-    return true;
-}
-
-void gozag_clear_call_merchant()
-{
     for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
@@ -3676,6 +3694,8 @@ void gozag_clear_call_merchant()
         you.props.erase(make_stringf(GOZAG_SHOP_SUFFIX_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_COST_KEY, j));
     }
+
+    return true;
 }
 
 branch_type gozag_fixup_branch(branch_type branch)
