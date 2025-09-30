@@ -84,7 +84,7 @@ Un libro con hechizos mágicos.
 %%%%
 book of geomancy
 
-Un libro con hechizos sencillos que implican el elemento Tierra. Lectores deben 
+Un libro con hechizos sencillos que implican el elemento Tierra. Lectores deben
 llevar guantes de jardinería cuando leyéndolo.
 %%%%
 book of hexes
@@ -518,8 +518,8 @@ Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
 scroll of revelation
 
-Este pergamino revela los alrededores del lector. El piso actual está mapeado, y 
-todo dentro de una distancia moderada, incluyendo visible e invisible monstruos, 
+Este pergamino revela los alrededores del lector. El piso actual está mapeado, y
+todo dentro de una distancia moderada, incluyendo visible e invisible monstruos,
 está revelado por un momento.
 %%%%
 scroll of remove curse
