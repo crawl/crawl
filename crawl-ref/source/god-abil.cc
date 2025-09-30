@@ -56,6 +56,7 @@
 #include "macro.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "menu.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -84,6 +85,7 @@
 #include "random.h"
 #include "random-pick.h"
 #include "religion.h"
+#include "shopping.h"
 #include "shout.h"
 #include "skill-menu.h"
 #include "spl-book.h"
@@ -111,8 +113,7 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
-#include "menu.h"
-#include "shopping.h"
+
 static bool _player_sacrificed_arcana();
 
 // Load the sacrifice_def definition and the sac_data array.

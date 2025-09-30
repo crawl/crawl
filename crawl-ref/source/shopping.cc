@@ -40,13 +40,13 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "tilepick.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
-#include "tilepick.h"
 
 ShoppingList shopping_list;
 
