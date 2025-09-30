@@ -3495,26 +3495,14 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
         = gozag_price_for_shop();
 }
 
-static string _describe_gozag_shop_name(int index);
 /**
- * Build a string describing the name, price & type of the shop being offered
+ * Build a string describing the name and type of the shop being offered
  * at the given index.
  *
  * @param index     The index of the shop to be described.
  * @return          The shop description.
  *                  E.g. "[a]   973 gold - Cranius' Magic Scroll Boutique"
  */
-static string _describe_gozag_shop(int index)
-{
-    const int cost = _gozag_shop_price(index);
-    const char offer_letter = 'a' + index;
-
-    return make_stringf("  [%c] %5d gold - %s",
-                        offer_letter,
-                        cost,
-                        _describe_gozag_shop_name(index).c_str());
-}
-
 static string _describe_gozag_shop_name(int index)
 {
     const string shop_name =
@@ -3529,36 +3517,6 @@ static string _describe_gozag_shop_name(int index)
                         shop_name.c_str(),
                         type_name.c_str(),
                         suffix.c_str());
-}
-
-/**
- * Let the player choose from the currently available merchants to call.
- *
- * @param   The index of the chosen shop; -1 if none was chosen (due to e.g.
- *          a seen_hup).
- */
-static int _gozag_choose_shop()
-{
-    if (crawl_state.seen_hups)
-        return -1;
-
-    clear_messages();
-    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
-        mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
-
-    mprf(MSGCH_PROMPT, "Fund which merchant?");
-    const int shop_index = toalower(get_ch()) - 'a';
-    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
-        return _gozag_choose_shop(); // tail recurse
-
-    if (you.gold < _gozag_shop_price(shop_index))
-    {
-        mpr("You don't have enough gold to fund that merchant!");
-        more();
-        return _gozag_choose_shop(); // tail recurse
-    }
-
-    return shop_index;
 }
 
 /**
