@@ -678,7 +678,7 @@ static const char* _jewellery_base_ability_description(int subtype)
     case AMU_REFLECTION:
         return "It reflects blocked missile attacks.";
     case AMU_WILDSHAPE:
-        return "It improves your skill with shapeshifting (+5)";
+        return "It improves your skill with shapeshifting (+5).";
     case AMU_ALCHEMY:
         return "It enhances your alchemy spells and restores some MP when you "
                "drink potions.";
