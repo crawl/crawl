@@ -1,8 +1,8 @@
 %%%%
 amulet of Elemental Vulnerability
 
-Un dije de acero azúl con quemaduras borrosas. Su creadora, una mujer muy sensata, 
-lo diseñó para proteger contra puñaladas, puñetazos y mordeduras. Es peor que 
+Un dije de acero azúl con quemaduras borrosas. Su creadora, una mujer muy sensata,
+lo diseñó para proteger contra puñaladas, puñetazos y mordeduras. Es peor que
 inútil contra fuego y escaracha, ¿pero con cuánta frequencia es eso relevante?
 %%%%
 amulet of the Four Winds
@@ -13,7 +13,7 @@ sin igual.
 # TAG_MAJOR_VERSION == 34
 dagger "Morg"
 
-Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris, 
+Una daga fea y oxidada. Hace muchas años fue de un mago poderoso llamado Boris,
 pero se perdío cuando buscando el Orbe.
 %%%%
 fencer's gloves
@@ -22,13 +22,13 @@ Un par de guantes hechos de seda blanca.
 %%%%
 gauntlets of War
 
-Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de 
-Okwaru a un caudillo militar poderoso. Su dueño morirá en batalla, ¡pero que una 
+Un par de guanteletes gruseos, hechos de acero de calidad. Fueron un regalo de
+Okwaru a un caudillo militar poderoso. Su dueño morirá en batalla, ¡pero que una
 muerte será!
 %%%%
 giant club "Skullcrusher"
 
-Un garrote gigante y encantado que augmenta la ya considerable fuerza de 
+Un garrote gigante y encantado que augmenta la ya considerable fuerza de
 cualquiera que tiene la fuerza para empuñarlo.
 %%%%
 Mace of Variability
@@ -41,8 +41,8 @@ Una armadura de aspecto extraño.
 %%%%
 robe of Night
 
-Una toga negra y larga hecha de un material raro y lusturoso. Envuelve el que lo 
-lleva en oscuro, reduciendo la visión. Según leyenda fue un regalo de Ratri la 
+Una toga negra y larga hecha de un material raro y lusturoso. Envuelve el que lo
+lleva en oscuro, reduciendo la visión. Según leyenda fue un regalo de Ratri la
 Diosa de la Noche a uno de sus discípulos.
 %%%%
 Singing Sword
