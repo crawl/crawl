@@ -1,0 +1,115 @@
+%%%%
+acid (acid) weapon ego
+
+It splashes victims with acid (2d4 damage, Corrosion).
+%%%%
+antimagic (antimagic) weapon ego
+
+It reduces the magical energy of the wielder, and disrupts the spells and
+magical abilities of those it strikes. Natural abilities and divine invocations
+are not affected.
+%%%%
+chaos (chaos) weapon ego
+
+Each hit from it has a different, random effect.
+%%%%
+distortion (distort) weapon ego
+
+It warps and distorts space around it, and may blink, banish, or inflict extra
+damage upon those it strikes. Unwielding it can teleport you to foes or banish
+you to the Abyss.
+%%%%
+draining (drain) weapon ego
+
+It sometimes drains living victims (1/2 chance). This deals an additional
+one-quarter of any damage that pierces defenders' armour as well as a flat 2-4
+damage, and also weakens them slightly.
+%%%%
+electrocution (elec) weapon ego
+
+It sometimes electrocutes victims (1/4 chance, 8-20 damage).
+%%%%
+flaming (flame) weapon ego
+
+It burns victims, dealing an additional one-quarter of any damage that pierces
+defenders' armour.
+%%%%
+flaming (flame) weapon ego blade
+
+It burns victims, dealing an additional one-quarter of any damage that pierces
+defenders' armour. Big, fiery blades are also staple armaments of hydra-hunters.
+%%%%
+freezing (freeze) weapon ego
+
+It freezes victims, dealing an additional one-quarter of any damage that pierces
+defenders' armour. It may also slow down cold-blooded creatures.
+%%%%
+foul flame (foul flame) weapon ego
+
+It has been infused with foul flame, dealing an additional three-quarters damage
+to holy beings, an additional one-quarter damage to undead and demons, and an
+additional half damage to all others, so long as it pierces armour. Holy beings
+and good god worshippers cannot use this.
+%%%%
+heavy (heavy) weapon ego
+
+It deals dramatically more damage, but attacks with it are much slower.
+%%%%
+heavy (heavy) weapon ego ranged
+
+Any ammunition fired from it deals dramatically more damage, but attacks with
+it are much slower.
+%%%%
+holy wrath (holy) weapon ego
+
+It has been blessed by the Shining One, dealing an additional three-quarters of
+any damage that pierces undead and demons' armour. Undead and demons cannot use
+this.
+%%%%
+pain (pain) weapon ego
+
+In the hands of one skilled in Necromancy magic, it inflicts extra damage on
+living creatures.{{
+    if you.god() == "Trog" then
+        return " Trog prevents you from unleashing this effect.";
+    end
+}}{{
+    if you.is_useless_skill("necromancy") then
+        return " Your inability to study Necromancy prevents you from drawing on the full power of this weapon.";
+    end
+}}
+%%%%
+penetration (penet) weapon ego
+
+Any ammunition fired by it continues flying after striking targets, potentially
+hitting everything in its path until it leaves sight.
+%%%%
+protection (protect) weapon ego
+
+It grants its wielder temporary protection after it strikes (+7 AC).
+%%%%
+reaping (reap) weapon ego
+
+Any living, holy, or demonic foe damaged by it may be temporarily reanimated
+upon death as a friendly spectral, with an increasing chance as more damage is
+dealt.
+%%%%
+spectral (spect) weapon ego
+
+When its wielder attacks, this weapon's spirit leaps out and launches a second,
+slightly weaker strike. The spirit shares part of any damage it takes with its
+wielder.
+%%%%
+speed (speed) weapon ego
+
+Attacks with it are significantly faster.
+%%%%
+vampiric (vamp) weapon ego
+
+It occasionally heals its wielder for a portion of the damage dealt when it
+wounds a living creature.
+%%%%
+venom (venom) weapon ego
+
+It poisons victims.
+%%%%
