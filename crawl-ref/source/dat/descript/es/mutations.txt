@@ -1,18 +1,18 @@
 %%%%
 berserk mutation
 
-Cuando haces ataques cuerpos a cuerpos a enemigos, a veces entras en un estado de rabia 
+Cuando haces ataques cuerpos a cuerpos a enemigos, a veces entras en un estado de rabia
 berserk. Cada nivel de esta mutación aumenta la probabilidad de entrando un 
 estado de rabia berserk.
 %%%%
 cold resistance mutation
 
-Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes 
+Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes
 por el frío.
 %%%%
 fire resistance mutation
 
-Tienes resistencia al fuego. Cada nivel de esta mutación reduce el daño que recibes 
+Tienes resistencia al fuego. Cada nivel de esta mutación reduce el daño que recibes
 por el fuego.
 %%%%
 steam resistance mutation
@@ -25,12 +25,12 @@ Tienes resistencia a la electricidad y recibes menos daño por la.
 %%%%
 poison resistance mutation
 
-Tienes resistencia al veneno. No tienes immunidad, pero reduce la probabilidad de 
+Tienes resistencia al veneno. No tienes immunidad, pero reduce la probabilidad de
 tú estando affectado por lo a un tercio de que sería sin esta mutación.
 %%%%
 sense surroundings mutation
 
-Tienes un sexto sentido para la mazmorra, permitiéndote sentir terreno que no has 
+Tienes un sexto sentido para la mazmorra, permitiéndote sentir terreno que no has
 visto. Cada nivel de esta mutación permites sentir más y más completamente.
 %%%%
 inability to train armour mutation
