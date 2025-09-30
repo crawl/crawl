@@ -3051,6 +3051,9 @@ int monster::shield_class() const
     if (amulet && amulet->sub_type == AMU_REFLECTION)
         sh += AMU_REFLECT_SH;
 
+    if (wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE))
+        sh += 20;
+
     return sh;
 }
 

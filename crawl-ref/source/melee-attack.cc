@@ -77,7 +77,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     total_damage_done(0),
     cleaving(false), is_followup(false), is_riposte(false),
     is_projected(false), is_bestial_takedown(false), charge_pow(0),
-    never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), never_prompt(false),
+    never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), to_hit_bonus(0),
+    is_involuntary(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
     is_attacking_hostiles(false),
@@ -316,7 +317,49 @@ bool melee_attack::handle_phase_blocked()
     //such as darts don't trigger it
     maybe_trigger_jinxbite();
 
-    if (needs_message)
+    bool needs_block_message = needs_message;
+    if (defender->wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE))
+    {
+        actor* best_targ = nullptr;
+        for (distance_iterator di(attacker->pos(), true, true, attacker->reach_range()); di; ++di)
+        {
+            if (!defender->see_cell_no_trans(*di))
+                continue;
+
+            if (actor* act = actor_at(*di))
+            {
+                if (act == attacker || !act->visible_to(defender) || !mons_aligned(attacker, act))
+                    continue;
+
+                if (!best_targ || best_targ->stat_hp() > act->stat_hp())
+                    best_targ = act;
+            }
+        }
+
+        if (best_targ)
+        {
+            if (you.see_cell(defender->pos()))
+            {
+                mprf("%s turn%s aside %s attack!",
+                        defender->name(DESC_THE).c_str(),
+                        defender->is_monster() ? "s" : "",
+                        attacker->name(DESC_ITS).c_str());
+                needs_block_message = false;
+            }
+
+            // Note: effective attack number must be non-zero or the monster
+            // will be charged energy a second time for this attack.
+            melee_attack rebuke(attacker, best_targ, attack_number, 1);
+            copy_params_to(rebuke);
+            rebuke.responsible = attacker;
+            rebuke.never_cleave = true;
+            rebuke.is_involuntary = true;
+            rebuke.to_hit_bonus = 15;
+            rebuke.attack();
+        }
+    }
+
+    if (needs_block_message)
     {
         mprf("%s %s %s attack.",
                  defender_name(false).c_str(),
@@ -1363,7 +1406,8 @@ void melee_attack::copy_params_to(melee_attack &other)
     other.never_cleave          = never_cleave;
     other.dmg_mult              = dmg_mult;
     other.flat_dmg_bonus        = flat_dmg_bonus;
-    other.never_cleave          = never_prompt;
+    other.to_hit_bonus          = to_hit_bonus;
+    other.is_involuntary        = is_involuntary;
     other.wu_jian_attack        = wu_jian_attack;
     other.wu_jian_number_of_targets = wu_jian_number_of_targets;
 }
@@ -1528,7 +1572,7 @@ bool melee_attack::attack()
 {
     cleave_setup();
 
-    if (!never_prompt && bad_attempt())
+    if (!is_involuntary && bad_attempt())
     {
         cancel_attack = true;
         return false;
@@ -3265,7 +3309,7 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
     if (charge_pow > 0)
         modifiers += 5;
 
-    return modifiers;
+    return modifiers + to_hit_bonus;
 }
 
 void melee_attack::player_stab_check()

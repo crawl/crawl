@@ -2001,6 +2001,8 @@ int player_parrying()
             sh /= 2;
     }
 
+    sh += 10 * you.wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE);
+
     return sh;
 }
 

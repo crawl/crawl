@@ -1974,6 +1974,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             mprf("You feel a bond with %s.", item_name.c_str());
             break;
 
+        case SPWPN_REBUKE:
+            mprf("%s quivers in your %s.", item_name.c_str(), you.hand_name(true).c_str());
+            break;
+
         default:
             break;
         }
@@ -2071,6 +2075,11 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             case SPWPN_ACID:
                 mprf("%s stops oozing corrosive slime.", msg.c_str());
+                break;
+
+            case SPWPN_REBUKE:
+                if (showMsgs)
+                    mprf("%s stops quivering.", msg.c_str());
                 break;
             }
         }

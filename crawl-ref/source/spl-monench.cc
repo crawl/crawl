@@ -527,7 +527,7 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
         {
             melee_attack atk(&attacker, victim);
             // The player is deliberately allowed to attack their allies.
-            atk.never_prompt = true;
+            atk.is_involuntary = true;
             atk.launch_attack_set();
         }
         else

@@ -93,6 +93,11 @@ Any living, holy, or demonic foe damaged by it may be temporarily reanimated
 upon death as a friendly spectral, with an increasing chance as more damage is
 dealt.
 %%%%
+rebuke (rebuke) weapon ego
+
+It shields the wearer if their last action was a melee attack (+10 SH) and
+redirects blocked melee attacks to other nearby enemies.
+%%%%
 spectralising (spect) weapon ego
 
 When you attack with it, this weapon's spirit leaps out and launches a second,

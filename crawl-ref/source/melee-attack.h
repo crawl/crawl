@@ -63,8 +63,10 @@ public:
     int          dmg_mult;        // percentage multiplier to max damage roll
                                   // (0 = +0% damage, 50 = +50% damage, etc.)
     int          flat_dmg_bonus;  // flat damage to add to this attack, pre-AC
-    bool         never_prompt;    // whether to skip prompting the player about
-                                  // harming allies
+    int          to_hit_bonus;    // flat to-hit bonus on this attack
+    bool         is_involuntary;  // whether this attack was forced (eg: by Vex)
+                                  // and should neither prompt the player nor
+                                  // upset their god.
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
