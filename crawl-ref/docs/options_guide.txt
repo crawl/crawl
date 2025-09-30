@@ -592,6 +592,7 @@ autopickup = $?!+"/♦
         }       Misc. items
         $       Gold
         ♦       Gems
+        ɞ       Baubles
         Note that _whether_ items are picked up automatically or not, is
         controlled by the in-game toggle Ctrl-A. Also note that picking
         up takes a turn, but only one turn (regardless of the number of

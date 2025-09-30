@@ -99,7 +99,8 @@ void wizard_create_spec_object()
         {')', "weapons"}, {'(', "missiles"}, {'[', "armour"}, {'/', "wands"},
         {'?', "scrolls"}, {'=', "jewellery"}, {'!', "potions"}, {':', "books"},
         {'|', "staves"}, {'}', "miscellany"}, {'%', "talismans"},
-        {'X', "corpses"}, {'$', "gold"}, {'0', "the Orb"}
+        {'X', "corpses"}, {'$', "gold"}, {'G', "gems"}, {'B', "baubles"},
+        {'0', "the Orb"}
     };
     auto menu = WizardMenu(title, options);
     object_class_type class_wanted = item_class_by_sym(menu.run());

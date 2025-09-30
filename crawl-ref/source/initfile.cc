@@ -1068,7 +1068,11 @@ object_class_type item_class_by_sym(char32_t c)
         return OBJ_RODS;
 #endif
     case U'\x2666': // ♦
+    case 'G':
         return OBJ_GEMS;
+    case U'\x025e': // ɞ
+    case 'B':
+        return OBJ_BAUBLES;
     default:
         return NUM_OBJECT_CLASSES;
     }
