@@ -1391,7 +1391,7 @@ static string _desc_attack_delay(const item_def &item)
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
 }
 
-static string _describe_missile_brand(const item_def &item)
+static string _describe_missile_dmg_brand(const item_def &item)
 {
     switch (item.brand)
     {
@@ -1484,7 +1484,7 @@ string damage_rating(const item_def *item, int *rating_value)
                                                     : "Slay");
     }
 
-    const string brand_desc = thrown ? _describe_missile_brand(*item) : "";
+    const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item) : "";
 
     return make_stringf(
         "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s.",
@@ -1495,7 +1495,7 @@ string damage_rating(const item_def *item, int *rating_value)
         skill_mult,
         use_weapon_skill ? "Skill" : "Fight",
         plusses_desc.c_str(),
-        brand_desc.c_str());
+        dmg_brand_desc.c_str());
 }
 
 static string _weapon_ego_key(brand_type ego)
@@ -2105,6 +2105,15 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     return description;
 }
 
+static string _missile_ego_key(const item_def &item)
+{
+    string verbose_ego_name = lowercase_first(missile_brand_name(item, MBN_NAME));
+    string terse_ego_name = lowercase_first(missile_brand_name(item, MBN_TERSE));
+    string ego_key = verbose_ego_name + " (" + terse_ego_name + ") missile ego";
+
+    return ego_key;
+}
+
 static string _describe_ammo(const item_def &item)
 {
     string description;
@@ -2114,70 +2123,11 @@ static string _describe_ammo(const item_def &item)
     if (item.brand && item.is_identified())
     {
         description += "\n\n";
-        switch (item.brand)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_FLAME:
-            description += "It burns those it strikes, causing extra injury "
-                    "to most foes and up to half again as much damage against "
-                    "particularly susceptible opponents. Compared to normal "
-                    "ammo, it is twice as likely to be destroyed on impact.";
-            break;
-        case SPMSL_FROST:
-            description += "It freezes those it strikes, causing extra injury "
-                    "to most foes and up to half again as much damage against "
-                    "particularly susceptible opponents. It can also slow down "
-                    "cold-blooded creatures. Compared to normal ammo, it is "
-                    "twice as likely to be destroyed on impact.";
-            break;
-#endif
-        case SPMSL_CHAOS:
-            description += "When thrown, it has a random effect.";
-            break;
-        case SPMSL_POISONED:
-            description += "It is coated with poison.";
-            break;
-        case SPMSL_CURARE:
-            description += "It is tipped with a substance that causes "
-                           "asphyxiation, dealing direct damage as well as "
-                           "poisoning and slowing those it strikes.\n\n"
-                           "It is twice as likely to be destroyed on impact as "
-                           "other darts.";
-            break;
-        case SPMSL_FRENZY:
-            description += "It is tipped with a substance that sends those it "
-                           "hits into a mindless frenzy, attacking friend and "
-                           "foe alike.\n\n"
-                           "The chance of successfully applying its effect "
-                           "increases with Throwing and Stealth skill.";
 
-            break;
-        case SPMSL_BLINDING:
-            description += "It is tipped with a substance that causes "
-                           "blindness and brief confusion.\n\n"
-                           "The chance of successfully applying its effect "
-                           "increases with Throwing and Stealth skill.";
-            break;
-        case SPMSL_DISPERSAL:
-            description += "It causes any target it hits to blink, with a "
-                           "tendency towards blinking further away from the "
-                           "one who threw it.";
-            break;
-        case SPMSL_DISJUNCTION:
-            description += "It causes any target it hits to become temporarily "
-                           "untethered in space, blinking uncontrollably for "
-                           "several turns and taking minor damage each time it "
-                           "does so.";
-            break;
+        string ego_key = _missile_ego_key(item);
+        string ego_desc = getEgoString(ego_key);
 
-        case SPMSL_SILVER:
-            description += "It deals increased damage compared to normal ammo "
-                           "and substantially increased damage to chaotic "
-                           "and magically transformed beings. It also inflicts "
-                           "extra damage against mutated beings, according to "
-                           "how mutated they are.";
-            break;
-        }
+        description += ego_desc;
     }
 
     const int dam = property(item, PWPN_DAMAGE);

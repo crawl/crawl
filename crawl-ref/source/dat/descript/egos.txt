@@ -321,3 +321,50 @@ wrath (*Rage) armour ego
 
 It berserks the wearer when making melee attacks (20% chance).
 %%%%
+atropa-tipped (atropa) missile ego
+
+It is tipped with a substance that causes blindness and brief confusion.
+
+The chance of successfully applying its effect increases with Throwing and
+Stealth skill.
+%%%%
+chaos (chaos) missile ego
+
+When thrown, it has a random effect.
+%%%%
+curare-tipped (curare) missile ego
+
+It is tipped with a substance that causes asphyxiation, dealing direct damage as
+well as poisoning and slowing those it strikes.
+
+It is twice as likely to be destroyed on impact as other darts.
+%%%%
+datura-tipped (datura) missile ego
+
+It is tipped with a substance that sends those it hits into a mindless frenzy,
+attacking friend and foe alike.
+
+The chance of successfully applying its effect increases with Throwing and
+Stealth skill.
+%%%%
+disjunction (disjunct) missile ego
+
+It causes any target it hits to become temporarily untethered in space, blinking
+away from the one who threw it for several turns and taking minor damage each
+time it does so.
+%%%%
+dispersal (disperse) missile ego
+
+It causes any target it hits to blink, with a tendency towards blinking further
+away from the one who threw it.
+%%%%
+poisoned (poison) missile ego
+
+It is coated with poison.
+%%%%
+silver (silver) missile ego
+
+It deals increased damage compared to normal missiles and substantially
+increased damage to chaotic and magically transformed beings. It also inflicts
+extra damage against mutated beings, depending on how mutated they are.
+%%%%
