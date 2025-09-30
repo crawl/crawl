@@ -55,7 +55,7 @@ caso de poderse hacer.
 %%%%
 Evocations
 
-La capacidad en Evocaciónes afecta la compentencia de usar cosas mágicas como las 
-varas y otras cosas raras, aumentando la fuerza y probabilidad de éxito cuando 
+La capacidad en Evocaciónes afecta la compentencia de usar cosas mágicas como las
+varas y otras cosas raras, aumentando la fuerza y probabilidad de éxito cuando
 usandolas.
 %%%%
