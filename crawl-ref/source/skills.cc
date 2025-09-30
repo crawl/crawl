@@ -2139,6 +2139,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Brimstone Smiter";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Titancaster";
+            else if (species == SP_BARACHI && skill_rank == 5)
+                result = "Frogwright";
             break;
 
         case SK_SUMMONINGS:
