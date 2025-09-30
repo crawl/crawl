@@ -87,7 +87,7 @@ Esta puerta va al Reino de Zot.
 %%%%
 A gate to the Vaults
 
-Esta puetra va a las bóvedas. Ten cuidado porque no puedes salir sin una runa 
+Esta puetra va a las bóvedas. Ten cuidado porque no puedes salir sin una runa
 de Zot, y la runa plata en el quinto piso está muy guardado. 
 %%%%
 A gateway leading out of the Abyss
