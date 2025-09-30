@@ -3360,6 +3360,7 @@ bool gozag_potion_petition()
     if (keyin == -1) // Menu was escaped, or hup
     {
         canned_msg(MSG_OK);
+        gozag_clear_potion_petition();
         return false;
     }
 
@@ -3373,6 +3374,13 @@ bool gozag_potion_petition()
         flash_tile(you.pos(), YELLOW, 120, TILE_BOLT_POTION_PETITION);
     }
 
+    gozag_clear_potion_petition();
+
+    return true;
+}
+
+void gozag_clear_potion_petition()
+{
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
         string key = make_stringf(GOZAG_POTIONS_KEY, i);
@@ -3380,8 +3388,6 @@ bool gozag_potion_petition()
         key = make_stringf(GOZAG_PRICE_KEY, i);
         you.props.erase(key);
     }
-
-    return true;
 }
 
 /**
@@ -3639,6 +3645,7 @@ bool gozag_call_merchant()
     if (shop_index == -1) // Menu was escaped, or hup
     {
         canned_msg(MSG_OK);
+        gozag_clear_call_merchant();
         return false;
     }
 
@@ -3655,6 +3662,13 @@ bool gozag_call_merchant()
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
+    gozag_clear_call_merchant();
+
+    return true;
+}
+
+void gozag_clear_call_merchant()
+{
     for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
@@ -3662,8 +3676,6 @@ bool gozag_call_merchant()
         you.props.erase(make_stringf(GOZAG_SHOP_SUFFIX_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_COST_KEY, j));
     }
-
-    return true;
 }
 
 branch_type gozag_fixup_branch(branch_type branch)
