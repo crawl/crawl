@@ -251,13 +251,13 @@ const char* jewellery_base_ability_string(int subtype)
     switch (subtype)
     {
 #if TAG_MAJOR_VERSION == 34
-    case RING_SUSTAIN_ATTRIBUTES: return "SustAt";
-    case RING_TELEPORTATION:      return "*Tele";
-    case RING_TELEPORT_CONTROL:   return "+cTele";
-    case AMU_HARM:                return "Harm";
-    case AMU_THE_GOURMAND:        return "Gourm";
-    case AMU_CONSERVATION:        return "Cons";
-    case AMU_CONTROLLED_FLIGHT:   return "cFly";
+    case RING_SUSTAIN_ATTRIBUTES: return "obsolete";
+    case RING_TELEPORTATION:      return "obsolete";
+    case RING_TELEPORT_CONTROL:   return "obsolete";
+    case AMU_HARM:                return "obsolete";
+    case AMU_THE_GOURMAND:        return "obsolete";
+    case AMU_CONSERVATION:        return "obsolete";
+    case AMU_CONTROLLED_FLIGHT:   return "obsolete";
 #endif
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
@@ -266,7 +266,7 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_DISSIPATION:         return "Dissipate";
     case AMU_ALCHEMY:             return "Alch+";
 #if TAG_MAJOR_VERSION == 34
-    case AMU_INACCURACY:          return "Inacc";
+    case AMU_INACCURACY:          return "obsolete";
 #endif
     }
     return "";
