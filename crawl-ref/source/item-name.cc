@@ -783,15 +783,15 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
         case RING_POISON_RESISTANCE:     return "poison resistance";
         case RING_PROTECTION_FROM_COLD:  return "protection from cold";
-        case RING_STRENGTH:              return "strength";
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
         case RING_RESIST_CORROSION:      return "resist corrosion";
         case RING_EVASION:               return "evasion";
+        case RING_STEALTH:               return "stealth";
 #if TAG_MAJOR_VERSION == 34
         case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
 #endif
-        case RING_STEALTH:               return "stealth";
+        case RING_STRENGTH:              return "strength";
         case RING_DEXTERITY:             return "dexterity";
         case RING_INTELLIGENCE:          return "intelligence";
         case RING_WIZARDRY:              return "wizardry";
@@ -805,24 +805,24 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_TELEPORTATION:         return "teleportation";
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
-        case AMU_MANA_REGENERATION: return "magic regeneration";
-        case AMU_ACROBAT:           return "the acrobat";
+        case AMU_MANA_REGENERATION:      return "magic regeneration";
+        case AMU_ACROBAT:                return "the acrobat";
 #if TAG_MAJOR_VERSION == 34
-        case AMU_RAGE:              return "rage";
-        case AMU_THE_GOURMAND:      return "gourmand";
-        case AMU_HARM:              return "harm";
-        case AMU_CONSERVATION:      return "conservation";
-        case AMU_CONTROLLED_FLIGHT: return "controlled flight";
-        case AMU_INACCURACY:        return "inaccuracy";
+        case AMU_RAGE:                   return "rage";
+        case AMU_THE_GOURMAND:           return "gourmand";
+        case AMU_HARM:                   return "harm";
+        case AMU_CONSERVATION:           return "conservation";
+        case AMU_CONTROLLED_FLIGHT:      return "controlled flight";
+        case AMU_INACCURACY:             return "inaccuracy";
 #endif
-        case AMU_NOTHING:           return "nothing";
-        case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
-        case AMU_FAITH:             return "faith";
-        case AMU_REFLECTION:        return "reflection";
-        case AMU_REGENERATION:      return "regeneration";
-        case AMU_WILDSHAPE:         return "wildshape";
-        case AMU_ALCHEMY:           return "alchemy";
-        case AMU_DISSIPATION:       return "dissipation";
+        case AMU_GUARDIAN_SPIRIT:        return "guardian spirit";
+        case AMU_FAITH:                  return "faith";
+        case AMU_REFLECTION:             return "reflection";
+        case AMU_REGENERATION:           return "regeneration";
+        case AMU_WILDSHAPE:              return "wildshape";
+        case AMU_ALCHEMY:                return "alchemy";
+        case AMU_DISSIPATION:            return "dissipation";
+        case AMU_NOTHING:                return "nothing";
         default: return "buggy jewellery";
         }
     }
@@ -840,29 +840,42 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_PROTECTION_FROM_FIRE:  return "rF+";
         case RING_POISON_RESISTANCE:     return "rPois";
         case RING_PROTECTION_FROM_COLD:  return "rC+";
-        case RING_STRENGTH:              return "Str";
         case RING_SLAYING:               return "Slay";
         case RING_SEE_INVISIBLE:         return "sInv";
         case RING_RESIST_CORROSION:      return "rCorr";
         case RING_EVASION:               return "EV";
         case RING_STEALTH:               return "Stlth+";
+#if TAG_MAJOR_VERSION == 34
+        case RING_SUSTAIN_ATTRIBUTES:    return "SustAt";
+#endif
+        case RING_STRENGTH:              return "Str";
         case RING_DEXTERITY:             return "Dex";
         case RING_INTELLIGENCE:          return "Int";
+        case RING_WIZARDRY:              return "Wiz";
         case RING_MAGICAL_POWER:         return "MP+9";
         case RING_FLIGHT:                return "Fly";
         case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
-        case RING_WIZARDRY:              return "Wiz";
 #if TAG_MAJOR_VERSION == 34
         case RING_FIRE:                  return "obsoleteness";
         case RING_ICE:                   return "obsoleteness";
+        case RING_TELEPORTATION:         return "*Tele";
+        case RING_TELEPORT_CONTROL:      return "+cTele";
 #endif
-        case AMU_REGENERATION:           return "Regen";
         case AMU_MANA_REGENERATION:      return "RegenMP";
+        case AMU_ACROBAT:                return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
+        case AMU_THE_GOURMAND:           return "Gourm";
+        case AMU_HARM:                   return "Harm";
+        case AMU_CONSERVATION:           return "Cons";
+        case AMU_CONTROLLED_FLIGHT:      return "cFly";
+        case AMU_INACCURACY:             return "Inacc";
 #endif
-        case AMU_ACROBAT:                return "Acrobat";
+        case AMU_GUARDIAN_SPIRIT:        return "Spirit";
+        case AMU_FAITH:                  return "Faith";
+        case AMU_REFLECTION:             return "Reflect";
+        case AMU_REGENERATION:           return "Regen";
         case AMU_WILDSHAPE:              return "Wildshape";
         case AMU_ALCHEMY:                return "Alch+";
         case AMU_DISSIPATION:            return "Dissipate";
