@@ -333,14 +333,14 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
     case SPWPN_REAPING:
-    case SPWPN_FOUL_FLAME: // only exists on Brilliance
+    case SPWPN_FOUL_FLAME: // only exists on Pan lords/Brilliance
         if (is_range_weapon(item))
             return false;
         break;
 
     // Ranged-only brands.
     case SPWPN_PENETRATION:
-    case SPWPN_ACID: // Only exists on Punk
+    case SPWPN_ACID: // only exists on acidic bite/Punk
         if (!is_range_weapon(item))
             return false;
         break;
