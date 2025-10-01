@@ -253,6 +253,19 @@ LUAFN(you_can_train_skill)
     PLUARET(boolean, you.can_currently_train[sk]);
 }
 
+/*** Is this skill useless (removed, sacrificed, or unusable) to the player?
+ * @tparam string name skill name
+ * @treturn boolean
+ * @function is_useless_skill
+ */
+LUAFN(you_is_useless_skill)
+{
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
+    PLUARET(boolean, is_useless_skill(sk));
+}
+
 /*** Best skill.
  * @treturn string
  * @function best_skill
@@ -1440,6 +1453,7 @@ static const struct luaL_reg you_clib[] =
     { "base_skill"  , you_base_skill },
     { "skill_progress", you_skill_progress },
     { "can_train_skill", you_can_train_skill },
+    { "is_useless_skill", you_is_useless_skill },
     { "best_skill",   you_best_skill },
     { "unarmed_damage_rating",   you_unarmed_damage_rating},
     { "unarmed_ego",  you_unarmed_ego},
