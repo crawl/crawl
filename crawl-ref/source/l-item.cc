@@ -1021,7 +1021,7 @@ IDEF(description)
 
 /*** Whether the current item is a piece of jewellery that the player already
  *   has as many copies as they can benefit from.
- * @field description string
+ * @field is_redundant string
  */
 IDEF(redundant)
 {
