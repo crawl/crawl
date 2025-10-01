@@ -402,9 +402,9 @@ IDEF(cursed)
 static string _item_name(lua_State *ls, item_def* item)
 {
     description_level_type ndesc = DESC_PLAIN;
-    if (lua_isstring(ls, 1))
+    if (lua_type(ls, 1) == LUA_TSTRING)
         ndesc = description_type_by_name(lua_tostring(ls, 1));
-    else if (lua_isnumber(ls, 1))
+    else if (lua_type(ls, 1) == LUA_TNUMBER)
         ndesc = static_cast<description_level_type>(luaL_safe_checkint(ls, 1));
     const bool terse = lua_toboolean(ls, 2);
     return item->name(ndesc, terse);
