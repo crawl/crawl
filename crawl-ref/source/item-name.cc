@@ -437,7 +437,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "spectralizing", "num_special", "acid",
+    "penetration", "reaping", "spectralising", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
