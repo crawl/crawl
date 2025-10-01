@@ -2710,6 +2710,10 @@ aubergine
 
 sanguine
 
+twenty-three
+
+twenty-seven
+
 forty-two
 
 unthinkable
@@ -2729,7 +2733,6 @@ alas
 rumpyflump
 
 sizzlefizz
-
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
