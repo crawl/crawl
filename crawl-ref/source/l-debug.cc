@@ -213,6 +213,7 @@ LUAFN(debug_cull_monsters)
 
         monster_die(**mi, KILL_RESET, NON_MONSTER);
     }
+    free_dead_monsters();
 
     return 0;
 }
@@ -228,6 +229,7 @@ LUAFN(debug_dismiss_adjacent)
         if (mon)
             monster_die(*mon, KILL_RESET, NON_MONSTER);
     }
+    free_dead_monsters();
 
     return 0;
 }
@@ -241,6 +243,7 @@ LUAFN(debug_dismiss_monsters)
         if (mi)
             monster_die(**mi, KILL_RESET, NON_MONSTER);
     }
+    free_dead_monsters();
 
     return 0;
 }
