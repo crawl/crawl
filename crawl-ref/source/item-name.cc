@@ -828,8 +828,6 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
     }
     else
     {
-        if (jewellery_base_ability_string(jeweltype)[0] != '\0')
-            return jewellery_base_ability_string(jeweltype);
         switch (static_cast<jewellery_type>(jeweltype))
         {
 #if TAG_MAJOR_VERSION == 34

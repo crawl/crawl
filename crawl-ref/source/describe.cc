@@ -668,7 +668,7 @@ static const char* _jewellery_base_ability_description(int subtype)
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
     case AMU_CONTROLLED_FLIGHT:
-        return "It allows you to control your flight when levitating."
+        return "It allows you to control your flight when levitating.";
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
 #endif
