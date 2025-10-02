@@ -1,0 +1,38 @@
+%%%%
+amulet
+
+Talismano por portas ĉirkaŭ la kolo, ŝargita kun arkanaj potenecoj de nekonata 
+deveno.
+%%%%
+book
+
+Arkana lernlibro, kiu enhavas sorĉoj de nekonata deveno.
+%%%%
+deck of cards
+
+Kartaro de potencaj magiaj kartoj pentrita per la iĥoro de demonoj. Ili povus 
+havi ĉiujn ajn el helpaj aŭ danĝeraj efikojn tiam, kiam si estas prenata.
+%%%%
+potion
+
+Neetikedita flakono, kiu enhavas dozon da nekonata likvaĵo.
+%%%%
+ring
+
+Talismanon ŝargis per arkanaj fortoj de nekonata deveno. Ĝi estas portebla sur 
+la fingro.
+%%%%
+scroll
+
+Nereuzebla arkana formulo, kiun profesiaj skribisto aŭ sorĉisto enskribis sur 
+pergameno. Voĉlegante, iu ajn povas elvoki la potencon de la arkana formulo, 
+sed la naturo de ĝia potenco estas ne antaŭsciebla.
+%%%%
+staff
+
+Bastono pliboniĝas per arkanaj potencoj de nekonata naturo.
+%%%%
+wand
+
+Neordinare magia speco de stangeto.
+%%%%
