@@ -19,7 +19,6 @@ enum ability_type
     // Others
     ABIL_IMBUE_SERVITOR,
     ABIL_IMPRINT_WEAPON,
-    ABIL_CHOOSE_TABCAST_SPELL,
     // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
 #if TAG_MAJOR_VERSION == 34
@@ -70,7 +69,8 @@ enum ability_type
     ABIL_CACOPHONY,
     // Revenants
     ABIL_ENKINDLE,
-
+    // Moths
+    ABIL_CHOOSE_TABCAST_SPELL,
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
     // Evoking items.
