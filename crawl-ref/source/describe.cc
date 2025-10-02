@@ -251,21 +251,22 @@ const char* jewellery_base_ability_string(int subtype)
     switch (subtype)
     {
 #if TAG_MAJOR_VERSION == 34
-    case RING_SUSTAIN_ATTRIBUTES: return "obsolete";
-    case RING_TELEPORTATION:      return "obsolete";
-    case RING_TELEPORT_CONTROL:   return "obsolete";
-    case AMU_THE_GOURMAND:        return "obsolete";
-    case AMU_HARM:                return "obsolete";
-    case AMU_CONSERVATION:        return "obsolete";
-    case AMU_CONTROLLED_FLIGHT:   return "obsolete";
-    case AMU_INACCURACY:          return "obsolete";
+    case RING_SUSTAIN_ATTRIBUTES:
+    case RING_TELEPORTATION:
+    case RING_TELEPORT_CONTROL:
+    case AMU_THE_GOURMAND:
+    case AMU_HARM:
+    case AMU_CONSERVATION:
+    case AMU_CONTROLLED_FLIGHT:
+    case AMU_INACCURACY:
 #endif
-    case AMU_GUARDIAN_SPIRIT:     return "Spirit";
-    case AMU_FAITH:               return "Faith";
-    case AMU_REFLECTION:          return "Reflect";
-    case AMU_WILDSHAPE:           return "Wildshape";
-    case AMU_ALCHEMY:             return "Alch+";
-    case AMU_DISSIPATION:         return "Dissipate";
+    case AMU_GUARDIAN_SPIRIT:
+    case AMU_FAITH:
+    case AMU_REFLECTION:
+    case AMU_WILDSHAPE:
+    case AMU_ALCHEMY:
+    case AMU_DISSIPATION:
+        return jewellery_effect_name(subtype, true);
     }
     return "";
 }
