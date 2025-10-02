@@ -442,9 +442,13 @@ name_bypasses_menu = true
 
 default_manual_training = false (persistent)
         When set to true, new characters will start with skill training
-        set to manual mode instead of automatic mode. This will also set the
-        [!] selection on the skill (m) menu to "cost" by default, instead of
-        "training".
+        set to manual mode instead of automatic mode.
+
+default_skill_cost = false (persistent)
+        When set to true, new characters will start with the [!] selection
+        in the skill (m) menu to "cost" by default. When set to false,
+        [!] will be set to "training". The former displays skilling
+        as a ratio, while the latter displays it as a percentage.
 
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \ menu)
