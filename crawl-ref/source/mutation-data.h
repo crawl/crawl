@@ -1273,7 +1273,7 @@ static const mutation_def mut_data[] =
 
   {"A shield forms around you when casting spells or using Invocations. (SH +7)",
     "", ""},
-  {"Ambient excess energy start collecting around you.", "", ""},
+  {"Ambient excess energy starts collecting around you.", "", ""},
   {"The ambient excess energy around you dissipates.", "", ""},
   TILEG_MUT_EPHEMERAL_SHIELD,
 },
