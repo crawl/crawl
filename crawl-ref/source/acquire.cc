@@ -1164,12 +1164,42 @@ static string _why_reject(const item_def &item, int agent)
     // Oka does not gift the Mask of the Dragon.
     if (agent == GOD_OKAWARU && is_unrandom_artefact(item, UNRAND_DRAGONMASK))
         return "Destroying Oka-gifted Mask of the Dragon.";
+    
+    // Mask of the Dragon is useless if Love is sacrificed .
+    if (you.get_mutation_level(MUT_NO_LOVE)
+        && is_unrandom_artefact(item, UNRAND_DRAGONMASK))
+    {
+        return "Destroying Mask of the Dragon after Love sac";
+    }
 
     // Pain brand is useless if you've sacrificed Necromancy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
         return "Destroying pain weapon after Necro sac!";
+    }
+
+    // Command brand is useless if you've sacrificed Love, Armour or Summoning.
+    if ((you.get_mutation_level(MUT_NO_LOVE)
+        || you.get_mutation_level(MUT_NO_ARMOUR_SKILL)
+        || you.get_mutation_level(MUT_NO_SUMMONING_MAGIC))
+        && get_armour_ego_type(item) == SPARM_COMMAND)
+    {
+        return "Destroying armour of command after Love,Armour or Summ sac!";
+    }
+
+    // Death brand is useless if you've sacrificed Necro.
+    if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        && get_armour_ego_type(item) == SPARM_DEATH)
+    {
+        return "Destroying armour of death after Necro sac!";
+    }
+
+    // Resonance brand is useless if you've sacrificed Forgecraft.
+    if (you.get_mutation_level(MUT_NO_FORGECRAFT_MAGIC)
+        && get_armour_ego_type(item) == SPARM_RESONANCE)
+    {
+        return "Destroying armour of resonance after Forgecraft sac!";
     }
 
     if (you.undead_or_demonic(false) && is_holy_item(item))
