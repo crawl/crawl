@@ -324,6 +324,18 @@ void give_items_skills(const newgame_def& ng)
         _give_offhand_weapon();
     }
 
+    if (you.has_mutation(MUT_CONTACT_CASTING))
+    {
+        for (const spell_type spell : you.spells)
+        {
+            if (is_valid_spell(spell) && spell != SPELL_KISS_OF_DEATH)
+            {
+                set_tabcast_spell(spell);
+                break;
+            }
+        }
+    }
+
     if (!you_worship(GOD_NO_GOD))
     {
         you.worshipped[you.religion] = 1;
