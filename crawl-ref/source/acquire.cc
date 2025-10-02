@@ -1164,7 +1164,7 @@ static string _why_reject(const item_def &item, int agent)
     // Oka does not gift the Mask of the Dragon.
     if (agent == GOD_OKAWARU && is_unrandom_artefact(item, UNRAND_DRAGONMASK))
         return "Destroying Oka-gifted Mask of the Dragon.";
-    
+
     // Mask of the Dragon is useless if Love is sacrificed .
     if (you.get_mutation_level(MUT_NO_LOVE)
         && is_unrandom_artefact(item, UNRAND_DRAGONMASK))
