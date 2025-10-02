@@ -520,8 +520,8 @@ IDEF(ininventory)
     PLUARET(boolean, item && in_inventory(*item));
 }
 
-/*** The default slot type this item goes in.
- * @field equip_type int
+/*** Which equipment slot does this item use?
+ * @field equip_type string|nil nil if this item doesn't use an equipment slot
  */
 IDEF(equip_type)
 {
@@ -531,7 +531,7 @@ IDEF(equip_type)
     equipment_slot eq = get_item_slot(*item);
 
     if (eq != SLOT_UNUSED)
-        lua_pushnumber(ls, eq);
+        lua_pushstring(ls, lowercase_string(equip_slot_name(eq)).c_str());
     else
         lua_pushnil(ls);
     return 1;
