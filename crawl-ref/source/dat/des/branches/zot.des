@@ -2459,7 +2459,7 @@ NSUBST: ? = 14 = 111. / *:.
 SUBST:  4 = 4 5:3 .:3, ^ : ^..
 TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
-: if dgn.zot_orb_type() == "orb of fire" then
+: if dgn.zot_orb_type() == "orb of entropy" then
 NSUBST: 3 = 1:37 / *:7
 : end
 : vault_metal_statue_setup(_G, "g", "soul conduit")
