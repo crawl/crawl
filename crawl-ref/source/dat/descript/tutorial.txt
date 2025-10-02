@@ -215,15 +215,18 @@ tutorial2 boomerangs
 
 Now, for ranged combat! Pick up these boomerangs with
 <input>$cmd[CMD_PICKUP]</input> or <input>g</input><localtiles>, or by
-<input>mouseclick</input>,</localtiles> and continue.
+<input>mouseclick</input></localtiles>.
+Then, quiver them with <input>$cmd[CMD_QUIVER_ITEM]</input>.
 %%%%
 tutorial2 throwing
 
-You can fire your boomerangs at a monster with <input>$cmd[CMD_FIRE]</input>
+You can fire your boomerangs at a monster with <input>$cmd[CMD_FIRE_ITEM_NO_QUIVER]</input>
 <localtiles> or by <input>clicking</input> on them in the inventory
-panel</localtiles>. To confirm the auto-targeted monster, press
-<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>. You can skip
-this and fire at the closest monster with <input>shift-tab</input> or <input>p</input>.
+panel</localtiles>.
+To confirm the auto-targeted monster, press <input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
+If quivered, you can skip item selection with <input>$cmd[CMD_FIRE]</input>
+and you can also skip target selection and fire at the closest monster with
+<input>shift-tab</input> or <input>p</input>.
 %%%%
 tutorial2 wield_bow
 
