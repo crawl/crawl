@@ -3466,7 +3466,6 @@ void do_demonic_magic(int pow, int rank)
 
 bool is_tabcasting()
 {
-    //return you.has_mutation(MUT_AUXILIARY_CASTING) && !you.divine_exegesis;
     return you.attribute[ATTR_TABCASTING];
 }
 
@@ -3644,17 +3643,16 @@ void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
         return;
     }
 
-    if (you.attribute[ATTR_CHANNELLED_SPELL] == SPELL_SEARING_RAY
-        && you.attribute[ATTR_CHANNELLED_SPELL] == you.attribute[ATTR_TABCAST_SPELL])
+    if (you.attribute[ATTR_CHANNELLED_SPELL] == you.attribute[ATTR_TABCAST_SPELL])
     {
-        //change target
-        you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
-        you.props[SEARING_RAY_TARGET_KEY] = m->pos();
+        if (you.attribute[ATTR_CHANNELLED_SPELL] == SPELL_SEARING_RAY)
+        {
+            //change target
+            you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
+            you.props[SEARING_RAY_TARGET_KEY] = m->pos();
+        }
         return;
     }
-
-    if (you.attribute[ATTR_CHANNELLED_SPELL] != SPELL_NO_SPELL)
-        return;
 
     //some spells do nothing if the target is killed
     //might even crash through an assert
@@ -3781,9 +3779,7 @@ void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
                     tabcast_fineff::schedule(m->pos());
             }
             else if (!_is_channeled_spell(spell))
-            {
                 _spell_tabcasts_spell(false);
-            }
         }
     }
     else

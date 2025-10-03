@@ -843,7 +843,9 @@ void ranged_attack::maybe_trigger_tabcast()
 {
     if (!attacker->is_player() || !you.has_mutation(MUT_AUXILIARY_CASTING) || !defender->is_monster()
         || projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    {
         return;
+    }
 
     monster* m = defender->as_monster();
     attempt_tabcast_spell(m, 2);
