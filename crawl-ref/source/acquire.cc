@@ -1205,6 +1205,9 @@ static string _why_reject(const item_def &item, int agent)
     if (you.undead_or_demonic(false) && is_holy_item(item))
         return "Destroying holy weapon for evil player!";
 
+    if (you.is_holy() && get_weapon_brand(item) == SPWPN_FOUL_FLAME)
+        return "Destroying foul flame weapon for holy player!";
+
     return ""; // all OK
 }
 
