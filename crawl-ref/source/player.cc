@@ -3451,12 +3451,12 @@ static void _display_damage_rating(const item_def *weapon)
  */
 static void _display_tabcast_chance()
 {
-    if (!you.has_mutation(MUT_CONTACT_CASTING))
+    if (!you.has_mutation(MUT_AUXILIARY_CASTING))
         return;
 
     if (you.attribute[ATTR_TABCAST_SPELL] != SPELL_NO_SPELL)
     {
-        mpr(make_stringf("Your chance to cast %s with melee attacks is %d%%.",
+        mpr(make_stringf("Your base chance to cast %s with attacks is %d%%.",
             spell_title(static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL])),
             you.get_tabcast_chance()));
     }
@@ -4109,7 +4109,7 @@ int get_real_mp(bool include_items)
     // the last 4 give no mp
     int enp = min(23 * scale, scaled_xl);
 
-    int spell_extra = you.has_mutation(MUT_CONTACT_CASTING) ? 0 : spellcasting; // 100%
+    int spell_extra = you.has_mutation(MUT_AUXILIARY_CASTING) ? 0 : spellcasting; // 100%
     int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, false, false) / 2; // 50%
     int highest_skill = max(spell_extra, invoc_extra);
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
@@ -9332,7 +9332,7 @@ item_def* player::active_talisman() const
         return nullptr;
 }
 
-int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
+int player::get_tabcast_chance(bool get_max, bool random, spell_type spell, int multiplier)
 {
     spell = spell == SPELL_NO_SPELL ? static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]) : spell;
     int diff = spell_difficulty(spell);
@@ -9345,14 +9345,14 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
     //base chance of 150, scaling up to 600 at max skill
     //divided by 3 + spell level, capped at 100
     constexpr int scale = 100;
-    constexpr int base = 150;
-    constexpr int scaling = 450;
+    const int base = 50 * multiplier;
+    const int scaling = 150 * multiplier;
     const int div = 3 + diff;
     const int skl = skill(SK_SPELLCASTING, scale);
     constexpr int maxskl = MAX_SKILL_LEVEL * scale;
 
     if (get_max)
-        return min(100, (base + scaling) / div);
+        return (base + scaling) / div;
 
     //(base + scaling * skl / maxskl) / div
     int chance = base * maxskl + scaling * skl;
@@ -9364,5 +9364,5 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell)
     if (failchance > failthreshold)
         chance = max(0, chance - (failchance - failthreshold) * 2);
 
-    return min(100, chance);
+    return chance;
 }

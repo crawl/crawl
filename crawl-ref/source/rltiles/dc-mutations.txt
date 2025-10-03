@@ -250,8 +250,7 @@ formless_2
 trickster TRICKSTER
 spellclaws SPELLCLAWS
 mnemophage MNEMOPHAGE
-contact_casting CONTACT_CASTING
-inefficient_magic_1 INEFFICIENT_MAGIC
+contact_casting AUXILIARY_CASTING
 strenuous_magic STRENUOUS_MAGIC
 safe_spells SAFE_SPELLS
 

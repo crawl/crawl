@@ -2961,12 +2961,12 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MARK_OF_THE_FANATIC,
 },
 
-{ MUT_CONTACT_CASTING, 0, 1, mutflag::good,
-  "contact casting",
-  {"You cast spells by striking foes in melee combat.", "", ""},
-  {"You now cast spells by striking foes in melee combat.", "", ""},
-  {"You no longer cast spells by striking foes in melee combat.", "", ""},
-  TILEG_MUT_CONTACT_CASTING,
+{ MUT_AUXILIARY_CASTING, 0, 1, mutflag::good,
+  "auxiliary casting",
+  {"Your attacks and spells have a chance to cast an inscribed spell.", "", ""},
+  {"You now cast spells by attacking.", "", ""},
+  {"You no longer cast spells by attacking.", "", ""},
+  TILEG_MUT_AUXILIARY_CASTING,
 },
 
 { MUT_SAFE_SPELLS, 0, 1, mutflag::good,
@@ -2983,14 +2983,6 @@ static const mutation_def mut_data[] =
   {"You feel your magic become disturbed.", "", ""},
   {"You feel your magic become less disturbed.", "", ""},
   TILEG_MUT_STRENUOUS_MAGIC,
-},
-
-{ MUT_INEFFICIENT_MAGIC, 0, 1, mutflag::bad,
-  "inefficient magic",
-  {"Spells you cast cost 1 more MP.", "", ""},
-  {"You lose your grip on the flow of your magic.", "", ""},
-  {"You regain your grip on the flow of your magic.", "", ""},
-  TILEG_MUT_INEFFICIENT_MAGIC,
 },
 
 };

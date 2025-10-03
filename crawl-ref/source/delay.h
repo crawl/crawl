@@ -721,7 +721,7 @@ class ChooseTabcastSpellDelay : public Delay
 
     void tick() override
     {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue inscribing your contact spell.");
+        mprf(MSGCH_MULTITURN_ACTION, "You continue inscribing your spell.");
     }
 
     void finish() override;

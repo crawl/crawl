@@ -203,6 +203,8 @@ bool ranged_attack::handle_phase_blocked()
         maybe_trigger_jinxbite();
     }
 
+    maybe_trigger_tabcast();
+
     return attack::handle_phase_blocked();
 }
 
@@ -239,6 +241,7 @@ bool ranged_attack::handle_phase_dodged()
     }
 
     maybe_trigger_autodazzler();
+    maybe_trigger_tabcast();
 
     return true;
 }
@@ -319,6 +322,7 @@ bool ranged_attack::handle_phase_hit()
         }
 
         maybe_trigger_jinxbite();
+        maybe_trigger_tabcast();
     }
 
     if ((using_weapon() || throwing())
@@ -833,6 +837,16 @@ void ranged_attack::player_stab_check()
 bool ranged_attack::player_good_stab()
 {
     return false;
+}
+
+void ranged_attack::maybe_trigger_tabcast()
+{
+    if (!attacker->is_player() || !you.has_mutation(MUT_AUXILIARY_CASTING) || !defender->is_monster()
+        || projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+        return;
+
+    monster* m = defender->as_monster();
+    attempt_tabcast_spell(m, 2);
 }
 
 void ranged_attack::set_attack_verb(int/* damage*/)

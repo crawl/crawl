@@ -1465,6 +1465,9 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         return false;
     }
 
+    if (type == CLOUD_BLASTMOTES && you.has_mutation(MUT_SAFE_SPELLS))
+        return false;
+
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
     if (type == CLOUD_VORTEX)
         return !you.duration[DUR_VORTEX] && !you.duration[DUR_VORTEX_COOLDOWN];

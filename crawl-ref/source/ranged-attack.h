@@ -49,6 +49,7 @@ private:
     bool mons_attack_effects() override;
     void player_stab_check() override;
     bool player_good_stab() override;
+    void maybe_trigger_tabcast();
 
     /* Output */
     void set_attack_verb(int damage) override;

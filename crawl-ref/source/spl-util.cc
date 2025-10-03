@@ -558,9 +558,6 @@ int spell_mana(spell_type which_spell, bool real_spell)
         if (you.has_mutation(MUT_EFFICIENT_MAGIC))
             cost = max(1, cost - you.get_mutation_level(MUT_EFFICIENT_MAGIC));
 
-        if (you.has_mutation(MUT_INEFFICIENT_MAGIC))
-            cost += you.get_mutation_level(MUT_INEFFICIENT_MAGIC);
-
         if (you.duration[DUR_BRILLIANCE] || you.unrand_equipped(UNRAND_FOLLY))
             cost = cost/2 + cost%2; // round up
 

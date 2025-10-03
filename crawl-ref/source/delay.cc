@@ -344,7 +344,7 @@ bool ChooseTabcastSpellDelay::try_interrupt(bool force)
         // yesno might call this function again, don't double prompt
         was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep inscribing your contact spell?", false, 0, false))
+            && !yesno("Keep inscribing your spell?", false, 0, false))
         {
             interrupt = true;
         }
@@ -352,7 +352,7 @@ bool ChooseTabcastSpellDelay::try_interrupt(bool force)
 
     if (interrupt)
     {
-        mpr("You stop inscribing your contact spell.");
+        mpr("You stop inscribing your spell.");
         return true;
     }
     return false;
@@ -528,7 +528,7 @@ void ImprintDelay::start()
 
 void ChooseTabcastSpellDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to inscribe %s as your contact spell.",
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to inscribe %s.",
          spell_title(spell));
 }
 
@@ -915,7 +915,7 @@ void ImprintDelay::finish()
 
 void ChooseTabcastSpellDelay::finish()
 {
-    mpr("You finish inscribing your contact spell.");
+    mpr("You finish inscribing your spell.");
     set_tabcast_spell(spell);
 }
 

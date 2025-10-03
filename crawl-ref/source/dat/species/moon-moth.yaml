@@ -20,8 +20,8 @@ aptitudes:
   maces_and_flails: 0
   polearms: 1
   staves: 1
-  ranged weapons: -3
-  throwing: -2
+  ranged weapons: -1
+  throwing: 0
   armour: 0
   dodging: 0
   stealth: -2
@@ -40,15 +40,15 @@ aptitudes:
   air_magic: 1
   earth_magic: 0
   alchemy: 0
-  invocations: 0
-  evocations: 1
+  invocations: 1
+  evocations: 2
 str: 8
 int: 9
 dex: 8
 levelup_stat_frequency: 4
 mutations:
   1:
-    MUT_CONTACT_CASTING: 1
+    MUT_AUXILIARY_CASTING: 1
     MUT_SAFE_SPELLS: 1
     MUT_ANTENNAE: 2
     MUT_BIG_WINGS: 1

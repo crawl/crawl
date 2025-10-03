@@ -324,7 +324,7 @@ void give_items_skills(const newgame_def& ng)
         _give_offhand_weapon();
     }
 
-    if (you.has_mutation(MUT_CONTACT_CASTING))
+    if (you.has_mutation(MUT_AUXILIARY_CASTING))
     {
         for (const spell_type spell : you.spells)
         {

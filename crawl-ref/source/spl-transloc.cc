@@ -1591,7 +1591,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 
     if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
-        canned_msg(MSG_SOMETHING_IN_WAY);
+        if (!is_tabcasting())
+            canned_msg(MSG_SOMETHING_IN_WAY);
         return spret::abort;
     }
 
@@ -1601,7 +1602,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     const int item_idx = you.visible_igrd(where);
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
-        mpr("You don't see anything to apport there.");
+        if (!is_tabcasting())
+            mpr("You don't see anything to apport there.");
         return spret::abort;
     }
 
@@ -1610,7 +1612,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))
     {
-        mpr("You cannot apport that!");
+        if (!is_tabcasting())
+            mpr("You cannot apport that!");
         return spret::abort;
     }
 

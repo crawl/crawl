@@ -4745,11 +4745,11 @@ static string _player_spell_desc(spell_type spell)
     if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
         description << "This spell is empowered while you are enkindled.";
 
-    if (you.has_mutation(MUT_CONTACT_CASTING))
+    if (you.has_mutation(MUT_AUXILIARY_CASTING))
     {
         const int chance = you.get_tabcast_chance(false, false, spell);
         const int maxchance = you.get_tabcast_chance(true, false, spell);
-        description << "Your chance to cast this spell with melee attacks is "
+        description << "Your base chance to cast this spell with attacks is "
                     << chance
                     << "%";
         if (chance != maxchance)

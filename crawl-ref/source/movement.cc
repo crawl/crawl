@@ -174,7 +174,7 @@ static bool _cancel_ice_move()
         return false;
 
     const spell_type tabcastspell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
-    if (you.has_mutation(MUT_CONTACT_CASTING)
+    if (you.has_mutation(MUT_AUXILIARY_CASTING)
         && (tabcastspell == SPELL_OZOCUBUS_ARMOUR || tabcastspell == SPELL_FROZEN_RAMPARTS))
     {
         return false;

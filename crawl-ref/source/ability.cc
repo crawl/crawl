@@ -393,7 +393,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_IMPRINT_WEAPON, "Imprint Weapon",
             0, 0, 0, -1, {}, abflag::delay },
-        { ABIL_CHOOSE_TABCAST_SPELL, "Inscribe Contact Spell",
+        { ABIL_CHOOSE_TABCAST_SPELL, "Inscribe Auxiliary Spell",
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
@@ -4325,7 +4325,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_IMPRINT_WEAPON:
         return you.has_spell(SPELL_PLATINUM_PARAGON);
     case ABIL_CHOOSE_TABCAST_SPELL:
-        return you.has_mutation(MUT_CONTACT_CASTING);
+        return you.has_mutation(MUT_AUXILIARY_CASTING);
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);

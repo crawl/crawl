@@ -1104,10 +1104,10 @@ always perform a Howl afterward.
 Can only target an enemy who is afraid, and who has at least one occupiable tile
 adjacent to them.
 %%%%
-Inscribe Contact Spell ability
+Inscribe Auxiliary Spell ability
 
-Inscribe the caster's weapon, fists or other means of attack with a one of the
-caster's spells to cast when performing melee attacks. Choosing a spell that is
-already inscribed will instead erase it at no time cost.
+Inscribe your wings with a one of your spells to cast when performing attacks
+or manually spellcasting. Choosing a spell that is already inscribed will
+instead erase it at no time cost.
 
 Note: inscribing a spell in this manner will take several turns.

@@ -794,17 +794,20 @@ You have an uncanny knack for knowing where items can be found. As you explore
 the dungeon, nearby item locations that you cannot directly see will gain a
 marker for as-yet-undiscovered items.
 %%%%
-contact casting mutation
+auxiliary casting mutation
 
-You have a chance to cast spells when attacking foes in melee combat. Spells
-cast in this manner ignore silencing effects, consume no MP and never miscast
-unless caused by godly wrath. This effect can only happen once per turn.
+You have a chance to cast an inscribed spell for free when attacking foes or
+casting spells. Spells cast in this manner ignore silencing effects and never
+miscast unless caused by godly wrath. This chance is only checked up to once
+per turn.
 
 Higher level spells have a lower chance of being cast. Your spellcasting skill
 increases this chance, but no longer increases your MP reserves. Having a high
-failure chance also reduces this chance.
+failure chance also reduces this chance. The chance to cast an inscribed spell
+is reduced by a third for ranged attacks and doubled when casting spells.
+Multiple spells may be cast at once if the chance rises above 100%.
 
-Additionally, channelled spells continue channelling when attacking in melee.
+Additionally, an inscribed channeled spell will only be interrupted by movement.
 %%%%
 safe spells mutation
 
