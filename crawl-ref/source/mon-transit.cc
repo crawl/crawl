@@ -112,7 +112,10 @@ static void _level_place_followers(m_transit_list &m)
     for (auto i = m.begin(); i != m.end();)
     {
         auto mon = i++;
-        if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
+
+        bool using_stairs = testbits(mon->mons.flags, MF_TAKING_STAIRS);
+
+        if (using_stairs && mon->place(true))
         {
             if (mon->mons.is_divine_companion())
             {
@@ -126,8 +129,15 @@ static void _level_place_followers(m_transit_list &m)
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
                 // Monsters that are bored of being lured around go home
-                if (!new_mon->friendly() && far_from_origin(new_mon->origin_level))
+                if (!new_mon->friendly()
+                    && far_from_origin(using_stairs, new_mon->origin_level))
                 {
+                    if (using_stairs)
+                    {
+                        mprf("%s abandons %s pursuit.",
+                        new_mon->name(DESC_THE).c_str(),
+                        new_mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                    }
                     new_mon->set_transit(new_mon->origin_level);
                     new_mon->destroy_inventory();
                     monster_cleanup(new_mon);
@@ -226,6 +236,8 @@ static void _level_place_lost_monsters(m_transit_list &m)
     {
         auto mon = i++;
 
+        bool using_stairs = testbits(mon->mons.flags, MF_TAKING_STAIRS);
+
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
         // Always place monsters that are chasing the player after abandoning
@@ -235,7 +247,7 @@ static void _level_place_lost_monsters(m_transit_list &m)
             // The Abyss can try to place monsters as 'lost' before it places
             // followers normally, and this can result in companion list desyncs.
             // Try to prevent that.
-            && ((mon->mons.flags & MF_TAKING_STAIRS)
+            && (using_stairs
                 || coinflip()))
         {
             continue;
@@ -247,12 +259,20 @@ static void _level_place_lost_monsters(m_transit_list &m)
             // to it.
             new_mon->apply_location_effects(new_mon->pos());
 
-            // Dismiss monsters that are bored of being lured around
-            if (!new_mon->friendly() && far_from_origin(new_mon->origin_level))
-            {
-                new_mon->flags |= MF_HARD_RESET | MF_NO_REWARD;
-                monster_die(*new_mon, KILL_RESET, NON_MONSTER);
-            }
+            // Monsters that are bored of being lured around go home
+            if (!new_mon->friendly()
+                    && far_from_origin(using_stairs, new_mon->origin_level))
+                {
+                    if (using_stairs)
+                    {
+                        mprf("%s abandons %s pursuit.",
+                        new_mon->name(DESC_THE).c_str(),
+                        new_mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                    }
+                    new_mon->set_transit(new_mon->origin_level);
+                    new_mon->destroy_inventory();
+                    monster_cleanup(new_mon);
+                }
             m.erase(mon);
         }
     }
@@ -553,32 +573,26 @@ void transport_followers_from(const coord_def &from)
 }
 
 // Is a monster too far away from its original level?
-bool far_from_origin(level_id origin, level_id current)
+bool far_from_origin(bool used_stairs, level_id origin, level_id current)
 {
-    mpr("checking origin distance");
-
     // Monsters will chase forever if you have the orb
     if (player_on_orb_run())
-    {
-        mprf("on orbrun");
         return false;
-    }
 
     // A portal is involved somehow
     if (!is_connected_branch(current.branch) || !is_connected_branch(origin.branch))
-    {
-        mprf("disconnected");
         return false;
-    }
 
-    // The floors are either 3+ apart or there's no obvious route between them
     const int dist = level_distance(origin, current);
-    if (dist > 2 || dist == -1)
-    {
-        mprf("transit distance too far, is %d, origin %d", dist, origin.depth);
-        return true;
-    }
 
-    mprf("transit distance is %d, origin %d", dist, origin.depth);
+    // The floors are either far apart. If not using stairs (maybe shafted?)
+    // then give a bit more wiggle room
+    if (dist > 2 && used_stairs || dist > 4)
+        return true;
+
+    // There is no obvious route between the floors at all
+    if (dist == -1)
+        return true;
+
     return false;
 }
