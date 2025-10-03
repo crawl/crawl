@@ -1114,7 +1114,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     {
         you.apply_berserk_penalty = true;
         you.turn_is_over = true;
-        _spell_tabcasts_spell(true);
+        if (cast_result == spret::success)
+            _spell_tabcasts_spell(true);
     }
     alert_nearby_monsters();
 
