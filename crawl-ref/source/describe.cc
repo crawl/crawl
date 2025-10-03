@@ -1444,8 +1444,8 @@ string damage_rating(const item_def *item, int *rating_value)
                                !item ? unarmed_base_damage_bonus(false) :
                                     heavy_dam; // 0 for non-heavy weapons
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
-    const int stat_mult = stat_modify_damage(100, skill, true);
-    const bool use_str = weapon_uses_strength(skill, true);
+    const int stat_mult = stat_modify_damage(100, skill);
+    const bool use_str = weapon_uses_strength(skill);
     // Throwing weapons and UC only get a damage mult from Fighting skill,
     // not from Throwing/UC skill.
     const bool use_weapon_skill = item && !thrown;
@@ -1458,7 +1458,7 @@ string damage_rating(const item_def *item, int *rating_value)
 
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
-    rating = stat_modify_damage(rating, skill, true);
+    rating = stat_modify_damage(rating, skill);
     if (use_weapon_skill)
         rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);

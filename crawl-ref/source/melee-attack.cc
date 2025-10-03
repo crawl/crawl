@@ -2426,7 +2426,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (atk != UNAT_TOUCH)
     {
-        aux_damage  = stat_modify_damage(aux_damage, SK_UNARMED_COMBAT, false);
+        aux_damage  = stat_modify_damage(aux_damage, SK_UNARMED_COMBAT);
 
         aux_damage  = random2(aux_damage);
 
