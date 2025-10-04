@@ -2426,9 +2426,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (atk != UNAT_TOUCH)
     {
-        aux_damage  = stat_modify_damage(aux_damage, SK_UNARMED_COMBAT);
+        // Multiply damage before modifying by stats to avoid large breakpoints.
+        aux_damage  = stat_modify_damage(aux_damage * 100, SK_UNARMED_COMBAT);
 
-        aux_damage  = random2(aux_damage);
+        aux_damage  = div_round_near(random2(aux_damage+1), 100);
 
         aux_damage  = apply_fighting_skill(aux_damage, true, true);
 

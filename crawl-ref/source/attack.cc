@@ -978,9 +978,9 @@ int attack::calc_damage()
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
             ? adjusted_weapon_damage() : calc_base_unarmed_damage();
 
-        potential_damage = stat_modify_damage(potential_damage, wpn_skill);
-
-        damage = random2(potential_damage+1);
+        // Multiply damage before modifying by stats to avoid large breakpoints.
+        potential_damage = stat_modify_damage(potential_damage * 100, wpn_skill);
+        damage = div_round_near(random2(potential_damage+1), 100);
 
         if (using_weapon())
             damage = apply_weapon_skill(damage, wpn_skill, true);
