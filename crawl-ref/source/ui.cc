@@ -1701,7 +1701,10 @@ void Popup::_allocate_region()
             m_region.x + m_region.width, m_region.y + m_region.height,
             VColour(0, 0, 0, 150));
     const int pad = base_margin() + m_padding;
-    region.width -= 2*pad;
+    if (tiles.is_using_small_layout())
+        region.width -= 2*m_padding;
+    else
+        region.width -= 2*pad;
     region.height -= 2*pad + m_depth*m_depth_indent*(!m_centred);
 
     SizeReq hsr = m_child->get_preferred_size(HORZ, -1);
