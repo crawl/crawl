@@ -173,6 +173,13 @@ static bool _cancel_ice_move()
     if (i_feel_safe(false, true, true))
         return false;
 
+    const spell_type tabcastspell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
+    if (you.has_mutation(MUT_AUXILIARY_CASTING)
+        && (tabcastspell == SPELL_OZOCUBUS_ARMOUR || tabcastspell == SPELL_FROZEN_RAMPARTS))
+    {
+        return false;
+    }
+
     if (you.duration[DUR_ICY_ARMOUR])
         effects.push_back("icy armour");
 
@@ -776,6 +783,8 @@ static void _apply_move_time_taken()
         you.duration[DUR_NO_HOP] += you.time_taken;
     if (you.duration[DUR_MESMERISM_COOLDOWN])
         you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
+    if (you.duration[DUR_NO_MANUAL_CAST])
+        you.duration[DUR_NO_MANUAL_CAST] += you.time_taken;
 }
 
 // The "first square" of rampaging ordinarily has no time cost, and the "second

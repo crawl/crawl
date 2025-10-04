@@ -2963,6 +2963,30 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MARK_OF_THE_FANATIC,
 },
 
+{ MUT_AUXILIARY_CASTING, 0, 1, mutflag::good,
+  "auxiliary casting",
+  {"Your attacks and spells have a chance to cast an inscribed spell.", "", ""},
+  {"You now cast spells by attacking.", "", ""},
+  {"You no longer cast spells by attacking.", "", ""},
+  TILEG_MUT_AUXILIARY_CASTING,
+},
+
+{ MUT_SAFE_SPELLS, 0, 1, mutflag::good,
+  "safe spells",
+  {"You are safe from the effects of your own spells.", "", ""},
+  {"You become safe from the effects of your own spells.", "", ""},
+  {"You are no longer safe from the effects of your own spells.", "", ""},
+  TILEG_MUT_SAFE_SPELLS,
+},
+
+{ MUT_STRENUOUS_MAGIC, 0, 1, mutflag::bad,
+  "strenuous magic",
+  {"You cannot cast spells manually in rapid succession.", "", ""},
+  {"You feel your magic become disturbed.", "", ""},
+  {"You feel your magic become less disturbed.", "", ""},
+  TILEG_MUT_STRENUOUS_MAGIC,
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

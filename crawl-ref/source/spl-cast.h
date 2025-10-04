@@ -145,6 +145,10 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+bool is_tabcasting();
+void set_tabcast_spell(spell_type spell);
+void tabcast_spell(coord_def &pos);
+void attempt_tabcast_spell(monster* m, int multiplier, bool initial = true);
 
 bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);

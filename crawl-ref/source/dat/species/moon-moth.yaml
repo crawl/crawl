@@ -1,0 +1,75 @@
+enum: SP_MOON_MOTH
+monster: MONS_MELIAI
+name: Moon Moth
+short_name: MM
+genus: Moth
+difficulty: Advanced
+difficulty_priority: 70
+species_flags:
+  - no_bones
+  - no_ears
+aptitudes:
+  xp: 1
+  hp: 0
+  mp_mod: 0
+  wl: 3
+  fighting: 0
+  short_blades: 0
+  long_blades: 0
+  axes: -1
+  maces_and_flails: 0
+  polearms: 1
+  staves: 1
+  ranged weapons: -1
+  throwing: 0
+  armour: 0
+  dodging: 0
+  stealth: -2
+  shields: -3
+  unarmed_combat: 0
+  spellcasting: 0
+  conjurations: 1
+  hexes: 1
+  summoning: 0
+  forgecraft: 0
+  necromancy: 0
+  translocations: 0
+  shapeshifting: 1
+  fire_magic: 1
+  ice_magic: 0
+  air_magic: 1
+  earth_magic: 0
+  alchemy: 0
+  invocations: 1
+  evocations: 2
+str: 8
+int: 9
+dex: 8
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_AUXILIARY_CASTING: 1
+    MUT_SAFE_SPELLS: 1
+    MUT_ANTENNAE: 2
+    MUT_BIG_WINGS: 1
+    MUT_STRENUOUS_MAGIC: 1
+recommended_jobs:
+  - monk
+  - cinder acolyte
+  - artificer
+  - shapeshifter
+  - enchanter
+  - reaver
+  - conjurer
+  - fire elementalist
+  - necromancer
+recommended_weapons:
+  - maces and flails
+  - polearms
+  - long blades
+  - staves
+
+walking_verb: Flutter
+child_name: Larva
+orc_name: Metamorc
+orcification_msg: Your probocis sharpens, and your antennae grow pointier.

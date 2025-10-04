@@ -80,5 +80,6 @@ enum species_type
     SP_COGLIN,
     SP_POLTERGEIST,
     SP_REVENANT,
+    SP_MOON_MOTH,
 
     // Auto-generated enums start here

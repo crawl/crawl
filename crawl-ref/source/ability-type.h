@@ -69,7 +69,8 @@ enum ability_type
     ABIL_CACOPHONY,
     // Revenants
     ABIL_ENKINDLE,
-
+    // Moths
+    ABIL_CHOOSE_TABCAST_SPELL,
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
     // Evoking items.

@@ -1103,3 +1103,9 @@ always perform a Howl afterward.
 
 Can only target an enemy who is afraid, and who has at least one occupiable tile
 adjacent to them.
+%%%%
+Inscribe Auxiliary Spell ability
+
+Inscribe your wings with a one of your spells to cast when performing attacks
+or manually spellcasting. Choosing a spell that is already inscribed will
+instead erase it.

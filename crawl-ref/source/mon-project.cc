@@ -588,6 +588,18 @@ move_again:
         if (mons && mons->type == MONS_ORB_OF_DESTRUCTION
                  && mon.type == MONS_ORB_OF_DESTRUCTION)
         {
+            //if tabcasting, kick it forward instead if they are heading
+            //in the same direction to prevent instant collisions
+            if (is_tabcasting()
+                && mons->props[IOOD_VX].get_float() * vx + mons->props[IOOD_VY].get_float() * vy > 0.5f)
+            {
+                iood_act(*mons, true);
+                vx = 0;
+                vy = 0;
+                mon.lose_energy(EUT_MOVE);
+                goto move_again;
+            }
+
             // Weak orbs just fizzle instead of exploding.
             if (mons->props[IOOD_DIST].get_int() < 2
                 || mon.props[IOOD_DIST].get_int() < 2)
