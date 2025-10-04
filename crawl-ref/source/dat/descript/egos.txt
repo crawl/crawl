@@ -94,7 +94,7 @@ Any living, holy, or demonic foe damaged by it may be temporarily reanimated
 upon death as a friendly spectral, with an increasing chance as more damage is
 dealt.
 %%%%
-spectral (spect) weapon ego
+spectralising (spect) weapon ego
 
 When its wielder attacks, this weapon's spirit leaps out and launches a second,
 slightly weaker strike. The spirit shares part of any damage it takes with its
@@ -104,7 +104,7 @@ speed (speed) weapon ego
 
 Attacks with it are significantly faster.
 %%%%
-vampiric (vamp) weapon ego
+vampirism (vamp) weapon ego
 
 It occasionally heals its wielder for a portion of the damage dealt when it
 wounds a living creature.
