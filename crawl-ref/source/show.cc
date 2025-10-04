@@ -236,6 +236,7 @@ static show_item_type _item_to_show_code(const item_def &item)
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_GEMS:       return SHOW_ITEM_GEM;
+    case OBJ_BAUBLES:    return SHOW_ITEM_BAUBLE;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character

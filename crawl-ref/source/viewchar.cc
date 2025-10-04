@@ -38,6 +38,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
          '%', '}', U'\x2020', //%, }, †
             U'\xf7', //÷
             '$', U'\x2666', // ♦
+         U'\x2022', // •
           '"',
          U'\xa7', U'\x263c', U'\x25CB', U'\xB0', // §, ☼, ○, °
             U'\x2663', //♣
@@ -81,7 +82,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
          '|', // rod
 #endif
         // talisman .. amulet
-         '|', '}',  '%',  '%',  '$',  '$',  '"',
+         '|', '}',  '%',  '%',  '$',  '$',  '|',  '"',
         // cloud .. tree
          '0', '0', '0', '0', '7',
 #if TAG_MAJOR_VERSION == 34
@@ -117,8 +118,8 @@ dungeon_char_type dchar_by_name(const string &name)
         "item_rod",
 #endif
         "item_talisman", "item_miscellany", "item_corpse", "item_skeleton",
-        "item_gold", "item_gem", "item_amulet", "cloud", "cloud_weak",
-        "cloud_fading", "cloud_terminal", "tree",
+        "item_gold", "item_gem", "item_bauble", "item_amulet",
+        "cloud", "cloud_weak", "cloud_fading", "cloud_terminal", "tree",
 #if TAG_MAJOR_VERSION == 34
         "teleporter",
 #endif

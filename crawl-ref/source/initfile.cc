@@ -1070,7 +1070,7 @@ object_class_type item_class_by_sym(char32_t c)
     case U'\x2666': // ♦
     case 'G':
         return OBJ_GEMS;
-    case U'\x025e': // ɞ
+    case U'\x2022': // •
     case 'B':
         return OBJ_BAUBLES;
     default:
