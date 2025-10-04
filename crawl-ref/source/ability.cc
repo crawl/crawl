@@ -394,7 +394,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IMPRINT_WEAPON, "Imprint Weapon",
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_CHOOSE_TABCAST_SPELL, "Inscribe Auxiliary Spell",
-            0, 0, 0, -1, {}, abflag::delay },
+            0, 0, 0, -1, {}, abflag::none },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_INVENT_GIZMO, "Invent Gizmo",
@@ -1046,6 +1046,9 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & abflag::torchlight)
         ret += ", Torchlight";
+
+    if (ability == ABIL_CHOOSE_TABCAST_SPELL)
+        ret += ", MCast";
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())

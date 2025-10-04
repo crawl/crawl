@@ -1271,16 +1271,24 @@ spret choose_tabcast_spell()
     if (sel.empty())
         return spret::abort;
 
+    if (you.duration[DUR_NO_MANUAL_CAST])
+    {
+        mpr("You aren't ready to do that yet!");
+        return spret::abort;
+    }
+
+    you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(3));
+
     const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
     if (spell == static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]))
     {
         set_tabcast_spell(SPELL_NO_SPELL);
-        return spret::abort;
+        return spret::success;
     }
 
     ASSERT(is_valid_spell(spell));
 
-    start_delay<ChooseTabcastSpellDelay>(5, spell);
+    set_tabcast_spell(spell);
 
     return spret::success;
 }

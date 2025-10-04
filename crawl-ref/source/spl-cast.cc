@@ -3476,6 +3476,8 @@ void set_tabcast_spell(spell_type spell)
         return;
     if (spell == SPELL_NO_SPELL)
         mpr("Your attacks no longer cast spells.");
+    else
+        mprf("Your attacks cast %s.", spell_title(spell));
     you.attribute[ATTR_TABCAST_SPELL] = spell;
 }
 
