@@ -3487,7 +3487,7 @@ static bool _find_tabcast_prism_target(dist &target)
     {
         if (actor_at(*ri) || !in_bounds(*ri)
             || cell_is_solid(*ri) || !you.see_cell(*ri)
-            || grid_distance(you.pos(), *ri) > calc_spell_range(SPELL_FULMINANT_PRISM))
+            || grid_distance(you.pos(), *ri) > calc_spell_range(SPELL_FULMINANT_PRISM, 0, true, false))
         {
             continue;
         }
@@ -3558,7 +3558,7 @@ static bool _find_tabcast_paragon_target(dist &target)
     {
         if (actor_at(*di) || !in_bounds(*di)
             || cell_is_solid(*di) || !you.see_cell(*di)
-            || grid_distance(you.pos(), *di) > calc_spell_range(SPELL_PLATINUM_PARAGON))
+            || grid_distance(you.pos(), *di) > calc_spell_range(SPELL_PLATINUM_PARAGON, 0, true, false))
         {
             continue;
         }
