@@ -908,9 +908,9 @@ string print_abilities()
     {
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
-            if (i)
-                text += ", ";
-            text += ability_name(talents[i].which);
+            text += make_stringf("%s%s (%s)", i ? ", " : "",
+                        ability_name(talents[i].which).c_str(),
+                        failure_rate_to_string(talents[i].fail).c_str());
         }
     }
 
