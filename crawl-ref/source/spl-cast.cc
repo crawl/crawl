@@ -1176,7 +1176,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !fake_spell
             && !is_tabcasting() && !you.divine_exegesis)
         {
-            you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(4));
+            you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(3));
         }
 
         // Make some noise if it's actually the player casting.
