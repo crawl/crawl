@@ -252,7 +252,7 @@ once each turn.
 %%%%
 rampaging (Rampage) armour ego
 
-You take one free step when moving towards enemies.
+It bestows one free step when moving towards enemies.
 %%%%
 reflection (Reflect) armour ego
 
