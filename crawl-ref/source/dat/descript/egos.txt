@@ -5,9 +5,8 @@ It splashes victims with acid (2d4 damage, Corrosion).
 %%%%
 antimagic (antimagic) weapon ego
 
-It reduces the magical energy of the wielder, and disrupts the spells and
-magical abilities of those it strikes. Natural abilities and divine invocations
-are not affected.
+It reduces your magical energy, and disrupts the spells and magical abilities of
+those it strikes. Natural abilities and divine invocations are not affected.
 %%%%
 chaos (chaos) weapon ego
 
@@ -68,8 +67,8 @@ this.
 %%%%
 pain (pain) weapon ego
 
-In the hands of one skilled in Necromancy magic, it inflicts extra damage on
-living creatures.{{
+It inflicts extra damage on living creatures proportional to your Necromancy
+skill.{{
     if you.god() == "Trog" then
         return " Trog prevents you from unleashing this effect.";
     end
@@ -86,7 +85,7 @@ hitting everything in its path until it leaves sight.
 %%%%
 protection (protect) weapon ego
 
-It grants its wielder temporary protection after it strikes (+7 AC).
+It grants you temporary protection after it strikes (+7 AC).
 %%%%
 reaping (reap) weapon ego
 
@@ -96,9 +95,8 @@ dealt.
 %%%%
 spectralising (spect) weapon ego
 
-When its wielder attacks, this weapon's spirit leaps out and launches a second,
-slightly weaker strike. The spirit shares part of any damage it takes with its
-wielder.
+When you attack with it, this weapon's spirit leaps out and launches a second,
+slightly weaker strike. The spirit shares part of any damage it takes with you.
 %%%%
 speed (speed) weapon ego
 
@@ -106,8 +104,8 @@ Attacks with it are significantly faster.
 %%%%
 vampirism (vamp) weapon ego
 
-It occasionally heals its wielder for a portion of the damage dealt when it
-wounds a living creature.
+It occasionally heals you for a portion of the damage dealt when it wounds a
+living creature.
 %%%%
 venom (venom) weapon ego
 
@@ -115,7 +113,7 @@ It poisons victims.
 %%%%
 air (Air) armour ego
 
-It enhances the wearer's Air magic.
+It enhances your Air magic.
 %%%%
 archery (Archery) armour ego
 
@@ -129,58 +127,58 @@ small amount of MP.
 %%%%
 cold resistance (rC+) armour ego
 
-It protects its wearer from cold.
+It protects you from cold.
 %%%%
 command (Command) armour ego
 
-It improves the power and success of the wearer's Summoning spells in proportion
-to the wearer's Armour skill.
+It improves the power and success of your Summoning spells in proportion to your
+Armour skill.
 %%%%
 corrosion resistance (rCorr) armour ego
 
-It protects its wearer from the effects of acid and corrosion.
+It protects you from the effects of acid and corrosion.
 %%%%
 death (Death) armour ego
 
-It empowers the wearer's Necromancy spells and improves their success rate, but
-imposes a health cost for other magic.
+It empowers your Necromancy spells and improves their success rate, but imposes
+a health cost for other magic.
 %%%%
 dexterity (Dex+3) armour ego
 
-It increases the dexterity of its wearer (Dex +3).
+It increases your dexterity (Dex +3).
 %%%%
 earth (Earth) armour ego
 
-It enhances the wearer's Earth magic.
+It enhances your Earth magic.
 %%%%
 energy (Energy) armour ego
 
 It may return the magic spent to cast spells, but lowers their success rate. It
 always returns the magic spent on miscasts. The spell refund chance is increased
-by Evocations skill.
+by your Evocations skill.
 %%%%
 fire (Fire) armour ego
 
-It enhances the wearer's Fire magic.
+It enhances your Fire magic.
 %%%%
 fire resistance (rF+) armour ego
 
-It protects its wearer from fire.
+It protects you from fire.
 %%%%
 flying (Fly) armour ego
 
-It grants its wearer flight.
+It grants you flight.
 %%%%
 glass (Glass) armour ego
 
-It may vitrify enemies when the wearer injures them, making them more vulnerable
-to further damage. Evocations skill increases the likelihood and duration of
+It may vitrify enemies when you injure them, making them more vulnerable to
+further damage. Your Evocations skill increases the likelihood and duration of
 vitrification.
 %%%%
 guile (Guile) armour ego
 
-It weakens the willpower of the wearer and everyone they hex, the latter of
-which is increased by Evocations skill.
+It weakens both your willpower and the willpower of everyone you hex, the latter
+of which is increased by your Evocations skill.
 %%%%
 harm (Harm) armour ego
 
@@ -188,76 +186,73 @@ It increases damage dealt and taken.
 %%%%
 hurling (Hurl) armour ego
 
-It improves its wearer's accuracy and damage with thrown weapons, such as rocks
-and javelins (Slay +4).
+It improves your accuracy and damage with thrown weapons, such as rocks and
+javelins (Slay +4).
 %%%%
 ice (Ice) armour ego
 
-It enhances the wearer's Ice magic.
+It enhances your Ice magic.
 %%%%
 infusion (Infuse) armour ego
 
-It empowers each of the wearer's melee hits with a small part of the wearer's
-magic.
+It empowers each of your melee hits with a small part of your magic.
 %%%%
 intelligence (Int+3) armour ego
 
-It increases the intelligence of its wearer (Int +3).
+It increases your intelligence (Int +3).
 %%%%
 invisibility (+Inv) armour ego
 
-When activated, it grants its wearer temporary invisibility, but also drains
-their maximum health.
+When activated, it grants you temporary invisibility, but also drains your
+maximum health.
 %%%%
 light (Light) armour ego
 
-It surrounds the wearer with a glowing halo, revealing invisible creatures,
-increasing accuracy against all within it other than the wearer, and reducing
-the wearer's stealth.
+It surrounds you with a glowing halo, revealing invisible creatures, increasing
+accuracy against all within it other than you, and reducing your stealth.
 %%%%
 mayhem (Mayhem) armour ego
 
-It causes witnesses of the wearer's kills to go into a frenzy, attacking
-everything nearby with great strength and speed.
+It causes witnesses of your kills to go into a frenzy, attacking everything
+nearby with great strength and speed.
 %%%%
 mesmerism (Mesmerism) armour ego
 
-When the wearer is struck in melee, it briefly dazes all nearby enemies, then
-must recharge by standing still for a while. Its duration, radius, and recharge
-speed are improved by Evocations skill.
+When you are struck in melee, it briefly dazes all nearby enemies, then must
+recharge by standing still for a while. Its duration, radius, and recharge
+speed are improved by your Evocations skill.
 %%%%
 parrying (Parrying) armour ego
 
-It shields the wearer if the wearer's last action was a melee attack. The
-shielding is half as effective if the wearer's offhand is occupied by an item
-other than a weapon.
+It shields you if your last action was a melee attack. The shielding is half as
+effective if your offhand is occupied by an item other than a weapon.
 %%%%
 poison resistance (rPois) armour ego
 
-It protects its wearer from poison.
+It protects you from poison.
 %%%%
 ponderousness (Ponderous) armour ego
 
-It is very cumbersome, slowing its wearer's movement.
+It is very cumbersome, slowing your movement.
 %%%%
 positive energy (rN+) armour ego
 
-It protects its wearer from the effects of negative energy.
+It protects you from the effects of negative energy.
 %%%%
 protection (AC+3) armour ego
 
-It protects its wearer from most sources of damage (AC +3).
+It protects you from most sources of damage (AC +3).
 %%%%
 pyromania (Pyromania) armour ego
 
-It enhances the wearer's Fire magic and may unleash a blast of flames around the
-wearer whenever they kill an enemy through any means besides attacks. The
-explosion chance and damage both scale with Evocations and it may trigger no
-more than once each turn.
+It enhances your Fire magic and may unleash a blast of flames around you
+whenever you kill an enemy by any means other than an attack. The explosion
+chance and damage both scale with Evocations and it may trigger no more than
+once each turn.
 %%%%
 rampaging (Rampage) armour ego
 
-Its wearer takes one free step when moving towards enemies.
+You take one free step when moving towards enemies.
 %%%%
 reflection (Reflect) armour ego
 
@@ -265,67 +260,67 @@ It reflects blocked missile attacks back in the direction they came from.
 %%%%
 repulsion (Repulsion) armour ego
 
-It helps its wearer evade both magical and non-magical projectiles (EV +15).
+It helps you evade both magical and non-magical projectiles (EV +15).
 %%%%
 resistance (rC+ rF+) armour ego
 
-It protects its wearer from the effects of both fire and cold.
+It protects you from the effects of both fire and cold.
 %%%%
 resonance (Resonance) armour ego
 
-It improves the success rate of the wearer's Forgecraft spells and enhances
-the wearer's melee attacks proportionally to Forgecraft skill.
+It improves the success rate of your Forgecraft spells and enhances your melee
+attacks proportionally to your Forgecraft skill.
 %%%%
 see invisible (SInv) armour ego
 
-It allows its wearer to see invisible things.
+It allows you to see invisible things.
 %%%%
 shadows (Shadows) armour ego
 
-It reduces the distance the wearer can be seen at and can see.
+It reduces the distance you can be seen at and can see.
 %%%%
 sniping (Snipe) armour ego
 
-It increases the wearer's damage by an additional 50% with ranged and thrown
-weapons against incapacitated targets.
+It increases your damage by an additional 50% with ranged and thrown weapons
+against incapacitated targets.
 %%%%
 spirit shield (Spirit) armour ego
 
-It causes incoming damage to be divided between the wearer's reserves of health
-and magic.
+It causes incoming damage to be divided between your reserves of health and
+magic.
 %%%%
 stardust (Stardust) armour ego
 
-It conjures a barrage of shooting stars the first time the wearer spends MP to
-use a spell or ability each battle, recharging only when the wearer's MP is
-restored and no more enemies remain. Evocations skill increases the number and
-damage of the stars and MP spent further increases damage.
+It conjures a barrage of shooting stars the first time you spend MP to use a
+spell or ability each battle, recharging only when your MP is restored and no
+more enemies remain. Your Evocations skill increases the number and damage of
+the stars and MP spent further increases damage.
 %%%%
 stealth (Stlth+) armour ego
 
-It enhances the stealth of its wearer.
+It enhances your stealth.
 %%%%
 strength (Str+3) armour ego
 
-It increases the strength of its wearer (Str +3).
+It increases your strength (Str +3).
 %%%%
 the Archmagi (Archmagi) armour ego
 
-It increases the power of its wearer's magical spells.
+It increases the power of your magical spells.
 %%%%
 willpower (Will+) armour ego
 
-It increases its wearer's willpower, protecting against certain magical effects.
+It increases your willpower, protecting against certain magical effects.
 %%%%
 wrath (*Rage) armour ego
 
-It berserks the wearer when making melee attacks (20% chance).
+It berserks you when you make melee attacks (20% chance).
 %%%%
 atropa-tipped (atropa) missile ego
 
 It is tipped with a substance that causes blindness and brief confusion.
 
-The chance of successfully applying its effect increases with Throwing and
+The chance of successfully applying its effect increases with your Throwing and
 Stealth skill.
 %%%%
 chaos (chaos) missile ego
@@ -344,19 +339,18 @@ datura-tipped (datura) missile ego
 It is tipped with a substance that sends those it hits into a mindless frenzy,
 attacking friend and foe alike.
 
-The chance of successfully applying its effect increases with Throwing and
+The chance of successfully applying its effect increases with your Throwing and
 Stealth skill.
 %%%%
 disjunction (disjunct) missile ego
 
 It causes any target it hits to become temporarily untethered in space, blinking
-away from the one who threw it for several turns and taking minor damage each
-time it does so.
+away from you for several turns and taking minor damage each time it does so.
 %%%%
 dispersal (disperse) missile ego
 
 It causes any target it hits to blink, with a tendency towards blinking further
-away from the one who threw it.
+away from you.
 %%%%
 poisoned (poison) missile ego
 
