@@ -330,7 +330,7 @@ void give_items_skills(const newgame_def& ng)
         {
             if (is_valid_spell(spell) && spell != SPELL_KISS_OF_DEATH)
             {
-                set_tabcast_spell(spell);
+                you.attribute[ATTR_TABCAST_SPELL] = spell;
                 break;
             }
         }
