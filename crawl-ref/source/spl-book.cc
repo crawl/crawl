@@ -889,7 +889,7 @@ public:
         else if (default_action == action::imbue)
             spell_levels_str = "<lightgreen>Select a spell to imbue your Spellspark Servitor with:</lightgreen>";
         else if (default_action == action::inscribe)
-            spell_levels_str = "<lightgreen>Select a spell to inscribe your melee attacks with:</lightgreen>";
+            spell_levels_str = "<lightgreen>Select a spell to inscribe your attacks with:</lightgreen>";
         else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
