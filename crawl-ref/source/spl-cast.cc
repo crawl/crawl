@@ -1112,7 +1112,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     _maybe_blood_hastes_allies();
     if (!is_tabcasting())
     {
-        you.apply_berserk_penalty = true;
         you.turn_is_over = true;
         if (cast_result == spret::success)
             _spell_tabcasts_spell(true);
