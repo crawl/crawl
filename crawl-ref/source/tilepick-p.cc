@@ -756,8 +756,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_POLTERGEIST;
     case SP_REVENANT:
         return TILEP_BASE_REVENANT;
-    case SP_MOON_MOTH:
-        return TILEP_BASE_MOON_MOTH;
+    case SP_MOTHKIN:
+        return TILEP_BASE_MOTHKIN;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -861,7 +861,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_GNOLL:
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
-        case SP_MOON_MOTH:
+        case SP_MOTHKIN:
             hair = 0;
             break;
         default:

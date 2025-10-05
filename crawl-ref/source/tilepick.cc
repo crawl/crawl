@@ -2625,7 +2625,7 @@ tileidx_t tileidx_player_shadow()
         case SP_KOBOLD:         return TILEP_MONS_PLAYER_SHADOW_KOBOLD;
         case SP_MERFOLK:        return TILEP_MONS_PLAYER_SHADOW_MERFOLK;
         case SP_MINOTAUR:       return TILEP_MONS_PLAYER_SHADOW_MINOTAUR;
-        case SP_MOON_MOTH:      return TILEP_MONS_PLAYER_SHADOW_MOON_MOTH;
+        case SP_MOTHKIN:        return TILEP_MONS_PLAYER_SHADOW_MOTHKIN;
         case SP_MUMMY:          return TILEP_MONS_PLAYER_SHADOW_MUMMY;
         case SP_NAGA:           return TILEP_MONS_PLAYER_SHADOW_NAGA;
         case SP_OCTOPODE:       return TILEP_MONS_PLAYER_SHADOW_OCTOPODE;
@@ -4579,8 +4579,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_POLTERGEIST;
         case SP_REVENANT:
             return TILEG_SP_REVENANT;
-        case SP_MOON_MOTH:
-            return TILEG_SP_MOON_MOTH;
+        case SP_MOTHKIN:
+            return TILEG_SP_MOTHKIN;
         default:
             return TILEP_ERROR;
     }

@@ -1,7 +1,7 @@
-enum: SP_MOON_MOTH
+enum: SP_MOTHKIN
 monster: MONS_MELIAI
-name: Moon Moth
-short_name: MM
+name: Mothkin
+short_name: Mo
 genus: Moth
 difficulty: Advanced
 difficulty_priority: 70
@@ -62,7 +62,7 @@ recommended_jobs:
   - reaver
   - conjurer
   - fire elementalist
-  - necromancer
+  - hexslinger
 recommended_weapons:
   - maces and flails
   - polearms

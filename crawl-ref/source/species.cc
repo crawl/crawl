@@ -449,7 +449,7 @@ namespace species
             return felid_shout_verbs[screaminess];
         case SP_POLTERGEIST:
             return ghost_shout_verbs[screaminess];
-        case SP_MOON_MOTH:
+        case SP_MOTHKIN:
             return "buzz";
         default:
             return shout_verbs[screaminess];

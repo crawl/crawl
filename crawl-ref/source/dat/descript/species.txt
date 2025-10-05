@@ -83,9 +83,9 @@ Minotaur
 Minotaurs are large muscular humans with bovine heads. They excel at all forms
 of close and ranged combat.
 %%%%
-Moon Moth
+Mothkin
 
-Moon Moths are a winged, insectoid species. They inscribe their wings with
+Mothkin are a winged, insectoid species. They inscribe their wings with
 spells that trigger when attacking or casting magic.
 %%%%
 Mountain Dwarf

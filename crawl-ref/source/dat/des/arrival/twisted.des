@@ -898,7 +898,7 @@ KMASK: uU = no_item_gen
 : local yourname = string.gsub(you.name(), " ", "_")
 : -- The corpseless. Before the game starts, you.monster() is "program bug".
 : if (not crawl.game_started())
-:     or race == "Mummy" or race == "Moon Moth"
+:     or race == "Mummy" or race == "Mothkin"
 :     or race == "Gargoyle" or race == "Vine Stalker"
 :     or race == "Poltergeist" or race == "Revenant"
 :     or race == "Djinni" or race == "Yak" then

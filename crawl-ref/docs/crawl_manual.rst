@@ -1867,8 +1867,8 @@ Demigods (Dg)
   advance more slowly in experience than any other species, gain skills slightly
   less quickly than Humans and, due to their status, refuse to worship any god.
 
-Moon Moths (MM)
-  Moon Moths are a winged, insectoid species rumored to hail from the moon far
+Mothkin (Mo)
+  Mothkin are a winged, insectoid species rumored to hail from the moon far
   above. They bear a striking resemblance to their smaller cousins and share
   their deadly obsession with glowing spherical objects.
 
