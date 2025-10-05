@@ -3640,7 +3640,7 @@ void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
 
     if (spell == SPELL_NO_SPELL || invalid_monster(m)
         || (initial && you.attribute[ATTR_TABCAST_LIMIT] < 1)
-        || m->is_firewood())
+        || m->is_firewood() || mons_aligned(&you, m))
     {
         return;
     }
