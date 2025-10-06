@@ -3619,7 +3619,6 @@ void tabcast_spell(coord_def &pos)
 
 static bool _is_channeled_spell(spell_type spell)
 {
-    
     const spell_flags flags = get_spell_flags(spell);
     return static_cast<bool>(flags & spflag::channelled);
 }
