@@ -2421,7 +2421,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
             end_enkindled_status();
 
-        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting())
+        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting() && !you.divine_exegesis)
             you.time_taken = you.time_taken * 3 / 2;
 
         return spret::success;
