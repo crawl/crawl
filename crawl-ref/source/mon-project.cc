@@ -588,10 +588,8 @@ move_again:
         if (mons && mons->type == MONS_ORB_OF_DESTRUCTION
                  && mon.type == MONS_ORB_OF_DESTRUCTION)
         {
-            //if tabcasting, kick it forward instead if they are heading
-            //in the same direction to prevent instant collisions
-            if (is_tabcasting()
-                && mons->props[IOOD_VX].get_float() * vx + mons->props[IOOD_VY].get_float() * vy > 0.5f)
+            //rear ending an orb should bump it forward instead of colliding
+            if (mons->props[IOOD_VX].get_float() * vx + mons->props[IOOD_VY].get_float() * vy > 0.5f)
             {
                 iood_act(*mons, true);
                 vx = 0;

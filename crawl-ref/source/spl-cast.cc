@@ -3529,56 +3529,12 @@ static bool _find_tabcast_lrd_target(dist &target)
     return true;
 }
 
-static void _find_tabcast_boulder_target(dist &target)
+static void _clamp_target_adjacent(dist &target)
 {
     coord_def offset = target.target - you.pos();
     offset.x = max(min(offset.x, 1), -1);
     offset.y = max(min(offset.y, 1), -1);
     target.target = you.pos() + offset;
-}
-
-static bool _find_tabcast_paragon_target(dist &target)
-{
-    int radius = 2;
-    const monster* paragon = find_player_paragon();
-    if (paragon && paragon_charge_level(*paragon) == 2)
-        radius = 3;
-
-    for (distance_iterator di(target.target, true, false, radius); di; ++di)
-    {
-        if (actor_at(*di) || !in_bounds(*di)
-            || cell_is_solid(*di) || !you.see_cell(*di)
-            || grid_distance(you.pos(), *di) > calc_spell_range(SPELL_PLATINUM_PARAGON, 0, true, false))
-        {
-            continue;
-        }
-
-        target.target = *di;
-        return true;
-    }
-
-    return false;
-}
-
-static bool _find_tabcast_tempering_target(dist &target)
-{
-    vector<coord_def> dests;
-    for (radius_iterator ri(target.target, 1, C_SQUARE, LOS_SOLID, true); ri; ++ri)
-    {
-        monster* mons = monster_at(*ri);
-        if (!mons || !you.can_see(*mons) || !mons->friendly()
-        || mons->has_ench(ENCH_TEMPERED) || !is_valid_tempering_target(*mons, you))
-        {
-            continue;
-        }
-
-        dests.emplace_back(*ri);
-    }
-
-    if (dests.empty())
-        return false;
-    target.target = dests[random2(dests.size())];
-    return true;
 }
 
 void tabcast_spell(coord_def &pos)
@@ -3600,20 +3556,19 @@ void tabcast_spell(coord_def &pos)
     case SPELL_GELLS_GAVOTTE:
     case SPELL_SPLINTERFROST_SHELL:
     case SPELL_BOULDER:
-        _find_tabcast_boulder_target(target);
-        break;
-    case SPELL_PLATINUM_PARAGON:
-        _find_tabcast_paragon_target(target);
-        break;
-    case SPELL_PERCUSSIVE_TEMPERING:
-        _find_tabcast_tempering_target(target);
+        _clamp_target_adjacent(target);
         break;
     default:
         break;
     }
 
     you.attribute[ATTR_TABCASTING] = 1;
-    cast_a_spell(false, spell, &target);
+    //if a spell fails to cast for any reason, instead switch target to default
+    if (cast_a_spell(false, spell, &target) != spret::success)
+    {
+        target.find_target = true;
+        cast_a_spell(false, spell, &target);
+    }
     you.attribute[ATTR_TABCASTING] = 0;
 }
 
@@ -3645,52 +3600,22 @@ void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
         return;
     }
 
-    //some spells do nothing if the target is killed
-    //might even crash through an assert
+    const int sumlim = summons_limit(spell, true);
+    if (spell != SPELL_CALL_CANINE_FAMILIAR
+        && spell != SPELL_SOUL_SPLINTER
+        && sumlim > 0 && count_summons(&you, spell) >= sumlim)
+    {
+        return;
+    }
+
     switch (spell)
     {
-    //this just doesn't work at all
-    case SPELL_PASSWALL:
-        return;
-    case SPELL_AIRSTRIKE:
-    case SPELL_FREEZE:
-    case SPELL_VAMPIRIC_DRAINING:
-    case SPELL_DISPEL_UNDEAD:
-    case SPELL_MOMENTUM_STRIKE:
-    case SPELL_STICKY_FLAME:
-    //single target hexes
-    case SPELL_DIMENSIONAL_BULLSEYE:
-    case SPELL_SLOW:
-    case SPELL_HIBERNATION:
-    case SPELL_INNER_FLAME:
-    case SPELL_TUKIMAS_DANCE:
-    case SPELL_VIOLENT_UNRAVELLING:
-    case SPELL_ENFEEBLE:
-    case SPELL_CURSE_OF_AGONY:
-    case SPELL_PETRIFY:
-    case SPELL_SOUL_SPLINTER:
-        if (!m->alive())
-            return;
-        break;
-    case SPELL_TELEPORT_OTHER:
-        //don't tabcast teleport other on teleporting monsters
-        if (!m->alive() || m->has_ench(ENCH_TP))
-            return;
-        break;
-    case SPELL_SILENCE:
-        if (you.duration[DUR_SILENCE])
-            return;
-        break;
     case SPELL_OZOCUBUS_ARMOUR:
         if (you.duration[DUR_ICY_ARMOUR])
             return;
         break;
     case SPELL_JINXBITE:
         if (you.duration[DUR_JINXBITE])
-            return;
-        break;
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
-        if (you.duration[DUR_TOXIC_RADIANCE])
             return;
         break;
     case SPELL_FUGUE_OF_THE_FALLEN:
@@ -3705,48 +3630,6 @@ void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
         if (you.duration[DUR_CONFUSING_TOUCH] || m->has_ench(ENCH_CONFUSION))
             return;
         break;
-    case SPELL_ELECTRIC_CHARGE:
-    case SPELL_BECKONING:
-        if (!m->alive() || adjacent(you.pos(), m->pos()))
-            return;
-        break;
-    case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_CALL_IMP:
-    case SPELL_SUMMON_ICE_BEAST:
-    case SPELL_AWAKEN_ARMOUR:
-    case SPELL_SPHINX_SISTERS:
-    case SPELL_SUMMON_CACTUS:
-    case SPELL_SUMMON_HYDRA:
-    case SPELL_SUMMON_MANA_VIPER:
-    case SPELL_FORGE_BLAZEHEART_GOLEM:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_SPELLSPARK_SERVITOR:
-    case SPELL_FORGE_LIGHTNING_SPIRE:
-    case SPELL_MARTYRS_KNELL:
-    case SPELL_SUMMON_SEISMOSAURUS_EGG:
-    case SPELL_RENDING_BLADE:
-    case SPELL_WALKING_ALEMBIC:
-    case SPELL_HOARFROST_CANNONADE:
-    case SPELL_PHALANX_BEETLE:
-        if (count_summons(&you, spell) >= summons_limit(spell, true))
-            return;
-        break;
-    case SPELL_HAUNT:
-        if (!m->alive() || count_summons(&you, spell) >= summons_limit(spell, true))
-            return;
-        break;
-    case SPELL_CLOCKWORK_BEE:
-        if (count_summons(&you, spell) > 0)
-            return;
-        break;
-    case SPELL_PLATINUM_PARAGON: {
-        const monster* paragon = find_player_paragon();
-        if (!paragon)
-            break;
-        if (paragon_charge_level(*paragon) == 2)
-            break;
-        return;
-    }
     default:
         break;
     }
