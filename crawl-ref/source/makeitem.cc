@@ -921,7 +921,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == SLOT_BODY_ARMOUR|| slot == SLOT_OFFHAND && type != ARM_ORB
+        return slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND && type != ARM_ORB
                        || slot == SLOT_CLOAK && type != ARM_SCARF || !strict;
 
     case SPARM_SPIRIT_SHIELD:
