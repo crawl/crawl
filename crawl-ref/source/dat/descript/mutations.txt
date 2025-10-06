@@ -801,10 +801,9 @@ casting spells. Spells cast in this manner ignore silencing effects and never
 miscast unless caused by godly wrath. This chance is only checked up to once
 per action.
 
-Higher level spells have a lower chance of being cast. Your spellcasting skill
-increases this chance and having a high failure chance reduces this chance. The
-chance to cast an inscribed spell is reduced by a third for ranged attacks.
-Multiple spells may be cast at once if the chance rises above 100%.
+Higher level spells have a lower chance of being cast. This chance increases
+with your experience level and decreases with failure chance. The chance to
+cast an inscribed spell is reduced by a quarter for ranged attacks.
 
 Additionally, an inscribed channelled spell will only be interrupted by
 movement.

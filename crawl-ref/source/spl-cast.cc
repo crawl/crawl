@@ -847,7 +847,7 @@ static void _spell_tabcasts_spell(bool initial)
         if (m && !m->wont_attack() && you.see_cell_no_trans(*di)
             && !m->is_peripheral() && !never_harm_monster(&you, *m))
         {
-            attempt_tabcast_spell(m, 3, initial);
+            attempt_tabcast_spell(m, 4, initial);
             break;
         }
     }

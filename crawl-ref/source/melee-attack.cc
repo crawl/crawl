@@ -1232,7 +1232,7 @@ void melee_attack::maybe_trigger_tabcast()
         return;
 
     monster* m = defender->as_monster();
-    attempt_tabcast_spell(m, 3);
+    attempt_tabcast_spell(m, 4);
 }
 
 item_def *melee_attack::primary_weapon() const

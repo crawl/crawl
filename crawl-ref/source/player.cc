@@ -9342,14 +9342,13 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell, int 
     if (spell == SPELL_SANDBLAST)
         diff += 2;
 
-    //base chance of 150, scaling up to 600 at max skill
+    //base chance of 200, scaling up to 400 at max xl
     //divided by 3 + spell level, capped at 100
-    constexpr int scale = 100;
     const int base = 50 * multiplier;
-    const int scaling = 150 * multiplier;
+    const int scaling = 50 * multiplier;
     const int div = 3 + diff;
-    const int skl = skill(SK_SPELLCASTING, scale);
-    constexpr int maxskl = MAX_SKILL_LEVEL * scale;
+    const int skl = (you.experience_level - 1) * 100;
+    constexpr int maxskl = 2600;
 
     if (get_max)
         return (base + scaling) / div;
@@ -9358,11 +9357,8 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell, int 
     int chance = base * maxskl + scaling * skl;
     chance = random ? div_rand_round(chance, div * maxskl) : chance / (div * maxskl);
 
-    //reduce chance for spells with high miscast chance
-    constexpr int failthreshold = 5;
-    int failchance = failure_rate_to_int(raw_spell_fail(spell));
-    if (failchance > failthreshold)
-        chance = max(0, chance - (failchance - failthreshold) * 2);
+    //penalize cast rate with failure rate
+    chance = max(0, chance - failure_rate_to_int(raw_spell_fail(spell)));
 
     return chance;
 }
