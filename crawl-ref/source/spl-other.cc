@@ -741,11 +741,17 @@ void handle_spike_launcher(int delay)
 
     int& timer = you.props[SPIKE_LAUNCHER_TIMER].get_int();
     timer -= delay;
-
+    bool no_targets = false;
     // Now, fire the launcher, if anything is in range.
     while (timer < 0)
     {
-        for (fair_adjacent_iterator ai(pos); ai; ++ai)
+        timer += BASELINE_DELAY;
+        // Keep incrementing the timer when no targets were found, as it updates
+        // the SPIKE_LAUNCHER_TIMER prop
+        if (no_targets)
+            continue;
+        vector<monster*> targets;
+        for (adjacent_iterator ai(pos, false); ai; ++ai)
         {
             if (monster* targ = monster_at(*ai))
             {
@@ -754,13 +760,16 @@ void handle_spike_launcher(int delay)
                 {
                     continue;
                 }
-
-                _fire_spike_launcher(targ, pos);
-                break;
+                targets.push_back(targ);
             }
         }
+        if (targets.size() == 0)
+        {
+            no_targets = true;
+            continue;
+        }
 
-        timer += BASELINE_DELAY;
+        _fire_spike_launcher(targets.at(random2(targets.size())), pos);
     }
 }
 
