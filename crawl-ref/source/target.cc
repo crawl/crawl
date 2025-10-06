@@ -2194,7 +2194,7 @@ bool targeter_explosive_beam::set_aim(coord_def a)
     tempbeam.target = origin;
     for (auto c : path_taken)
     {
-        if (cell_is_solid(c))
+        if (cell_is_invalid_target(c))
             break;
 
         tempbeam.target = c;
