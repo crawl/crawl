@@ -847,7 +847,7 @@ static void _spell_tabcasts_spell(bool initial)
         if (m && !m->wont_attack() && you.see_cell_no_trans(*di)
             && !m->is_peripheral() && !never_harm_monster(&you, *m))
         {
-            attempt_tabcast_spell(m, 6, initial);
+            attempt_tabcast_spell(m, 3, initial);
             break;
         }
     }
@@ -880,14 +880,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         if (is_tabcasting())
             return spret::abort;
 
-        crawl_state.zero_turns_taken();
-        return spret::abort;
-    }
-
-    //this is here instead of can_cast_spells() to avoid interrupting channels
-    if (you.duration[DUR_NO_MANUAL_CAST] && !is_tabcasting() && !you.divine_exegesis)
-    {
-        mpr("You are recovering from casting magic manually!");
         crawl_state.zero_turns_taken();
         return spret::abort;
     }
@@ -1170,12 +1162,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         {
             mprf(MSGCH_WARN, "You lose access to your magic!");
             you.increase_duration(DUR_NO_CAST, 3 + random2(3));
-        }
-
-        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !fake_spell
-            && !is_tabcasting() && !you.divine_exegesis)
-        {
-            you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(3));
         }
 
         // Make some noise if it's actually the player casting.
@@ -2435,6 +2421,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
             end_enkindled_status();
 
+        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting())
+            you.time_taken = you.time_taken * 3 / 2;
+
         return spret::success;
     }
     case spret::fail:
@@ -3630,8 +3619,9 @@ void tabcast_spell(coord_def &pos)
 
 static bool _is_channeled_spell(spell_type spell)
 {
-    return spell == SPELL_SEARING_RAY || spell == SPELL_FLAME_WAVE
-           || spell == SPELL_MAXWELLS_COUPLING || spell == SPELL_CLOCKWORK_BEE;
+    
+    const spell_flags flags = get_spell_flags(spell);
+    return static_cast<bool>(flags & spflag::channelled);
 }
 
 void attempt_tabcast_spell(monster* m, int multiplier, bool initial)

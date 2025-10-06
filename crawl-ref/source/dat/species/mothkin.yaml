@@ -9,12 +9,12 @@ species_flags:
   - no_bones
   - no_ears
 aptitudes:
-  xp: 1
+  xp: 0
   hp: 0
   mp_mod: 0
   wl: 3
   fighting: 0
-  short_blades: 0
+  short_blades: -2
   long_blades: 0
   axes: -1
   maces_and_flails: 0
@@ -34,7 +34,6 @@ aptitudes:
   forgecraft: 0
   necromancy: 0
   translocations: 0
-  shapeshifting: 1
   fire_magic: 1
   ice_magic: 0
   air_magic: 1
@@ -42,6 +41,7 @@ aptitudes:
   alchemy: 0
   invocations: 1
   evocations: 2
+  shapeshifting: 1
 str: 8
 int: 9
 dex: 8
@@ -53,6 +53,7 @@ mutations:
     MUT_ANTENNAE: 2
     MUT_BIG_WINGS: 1
     MUT_STRENUOUS_MAGIC: 1
+    MUT_LOW_MAGIC: 3
 recommended_jobs:
   - monk
   - cinder acolyte

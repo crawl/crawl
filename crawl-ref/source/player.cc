@@ -4109,7 +4109,7 @@ int get_real_mp(bool include_items)
     // the last 4 give no mp
     int enp = min(23 * scale, scaled_xl);
 
-    int spell_extra = you.has_mutation(MUT_AUXILIARY_CASTING) ? 0 : spellcasting; // 100%
+    int spell_extra = spellcasting; // 100%
     int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, false, false) / 2; // 50%
     int highest_skill = max(spell_extra, invoc_extra);
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;

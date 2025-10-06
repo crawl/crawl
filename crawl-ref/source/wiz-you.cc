@@ -251,7 +251,6 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
         you.duration[DUR_FIRE_VULN] = 0;
         you.duration[DUR_POISON_VULN] = 0;
-        you.duration[DUR_NO_MANUAL_CAST] = 0;
         you.attribute[ATTR_DOOM] = 0;
         delete_all_temp_mutations("Super heal");
         decr_zot_clock();

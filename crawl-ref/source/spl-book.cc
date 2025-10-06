@@ -1271,14 +1271,6 @@ spret choose_tabcast_spell()
     if (sel.empty())
         return spret::abort;
 
-    if (you.duration[DUR_NO_MANUAL_CAST])
-    {
-        mpr("You aren't ready to do that yet!");
-        return spret::abort;
-    }
-
-    you.increase_duration(DUR_NO_MANUAL_CAST, 4 + random2(3));
-
     const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
     if (spell == static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]))
     {
@@ -1287,6 +1279,13 @@ spret choose_tabcast_spell()
     }
 
     ASSERT(is_valid_spell(spell));
+
+    //this cost shouldn't be reduced by any modifiers
+    const int cost = spell_difficulty(spell);
+    if (!enough_mp(cost, false))
+        return spret::abort;
+    pay_mp(cost);
+    finalize_mp_cost();
 
     set_tabcast_spell(spell);
 

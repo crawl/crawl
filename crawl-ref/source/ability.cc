@@ -977,6 +977,9 @@ const string make_cost_description(ability_type ability)
         ret += _ashenzari_curse_text();
     }
 
+    if (ability == ABIL_CHOOSE_TABCAST_SPELL)
+        ret += ", MP";
+
     const int hp_cost = abil.get_hp_cost();
     if (hp_cost)
         ret += make_stringf(", %d HP", hp_cost);
@@ -1046,9 +1049,6 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & abflag::torchlight)
         ret += ", Torchlight";
-
-    if (ability == ABIL_CHOOSE_TABCAST_SPELL)
-        ret += ", MCast";
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
@@ -1154,6 +1154,9 @@ static const string _detailed_cost_description(ability_type ability)
                "capacity when used.";
     }
 #endif
+
+    if (abil.ability == ABIL_CHOOSE_TABCAST_SPELL)
+        return "This ability costs MP equal to the level of the spell being inscribed.";
 
     return ret.str();
 }
