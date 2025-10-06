@@ -851,7 +851,6 @@ INSCRIP:  Bear,
 COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
-# TODO: why isn't this brand working on the fallback?
 BRAND:    SPARM_SPIRIT_SHIELD
 ANGRY:    20
 WILL:     2

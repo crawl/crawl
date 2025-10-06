@@ -1966,9 +1966,9 @@ static void _setup_fallback_randart(const int unrand_id,
         && !_ego_unrand_only(item.base_type, unrand.prpty[ARTP_BRAND])
         && item.base_type == unrand.base_type // brand isn't well-defined for != case
         && ((item.base_type == OBJ_WEAPONS
-             && is_weapon_brand_ok(item.sub_type, unrand.prpty[ARTP_BRAND], true))
+             && is_weapon_brand_ok(force_type, unrand.prpty[ARTP_BRAND], true))
             || (item.base_type == OBJ_ARMOUR
-             && is_armour_brand_ok(item.sub_type, unrand.prpty[ARTP_BRAND], true))))
+             && is_armour_brand_ok(force_type, unrand.prpty[ARTP_BRAND], true))))
     {
         // maybe do jewellery too?
         item.brand = unrand.prpty[ARTP_BRAND];
