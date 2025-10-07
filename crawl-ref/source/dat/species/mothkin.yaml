@@ -9,7 +9,7 @@ species_flags:
   - no_bones
   - no_ears
 aptitudes:
-  xp: 0
+  xp: -1
   hp: 0
   mp_mod: 0
   wl: 3
