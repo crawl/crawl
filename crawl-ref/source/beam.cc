@@ -4549,7 +4549,8 @@ bool bolt::ignores_player() const
 
     if (agent() && agent()->is_player()
     && you.has_mutation(MUT_SAFE_SPELLS)
-    && is_player_book_spell(origin_spell))
+    && is_player_book_spell(origin_spell)
+    && flavour != BEAM_UNRAVELLING)
     {
         return true;
     }
