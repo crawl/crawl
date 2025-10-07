@@ -3652,7 +3652,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return !never_harm_monster(&you, act->as_monster());
     };
 
-    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE && !is_tabcasting()
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE && !you.has_mutation(MUT_SAFE_SPELLS)
         && !yesno("The unravelling is likely to hit you. Continue anyway?",
                   false, 'n'))
     {
