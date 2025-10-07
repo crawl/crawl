@@ -623,10 +623,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
     switch (feat)
     {
     case DNGN_FLOOR:
-        if (env.level_state & LSTATE_SLIMY_WALL)
-            for (adjacent_iterator ai(gc); ai; ++ai)
-                if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
-                    return TILE_FLOOR_SLIME_ACIDIC;
+        if (env.map_knowledge(gc).flags & MAP_CORRODING)
+            return TILE_FLOOR_SLIME_ACIDIC;
 
         if (env.level_state & LSTATE_ICY_WALL
             && env.map_knowledge(gc).flags & MAP_ICY)
