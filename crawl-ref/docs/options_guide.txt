@@ -1155,7 +1155,7 @@ auto_switch = false
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
 
-equip_unequip = false
+equip_unequip = true
         If this is true, selecting an already-equipped piece of equipment via
         the 'w', 'W' or 'P' menus (for weapons, armour or jewellery
         respectively) will unequip that item.
