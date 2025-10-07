@@ -3583,6 +3583,12 @@ static string _get_cloud_desc(const coord_def& where)
         areas.emplace_back("is bathed in translocational energy");
     if (is_blasphemy(where))
         areas.emplace_back("within Yredelemnul's grip");
+    if (env.map_knowledge(where).flags & MAP_CORRODING
+        && env.map_knowledge(where).feat() == DNGN_FLOOR)
+    {
+        areas.emplace_back("is covered in acidic slime");
+    }
+
     if (!areas.empty())
     {
         out << make_stringf("This square %s.",
