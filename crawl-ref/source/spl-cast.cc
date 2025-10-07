@@ -3566,8 +3566,9 @@ void tabcast_spell(coord_def &pos)
     }
 
     you.attribute[ATTR_TABCASTING] = 1;
-    //if a spell fails to cast for any reason, instead switch target to default
-    if (cast_a_spell(false, spell, &target) != spret::success)
+    //if a spell was aborted because of an invalid target or whatever
+    //reason, try casting again but with the spell's default targeting
+    if (cast_a_spell(false, spell, &target) == spret::abort)
     {
         target.find_target = true;
         cast_a_spell(false, spell, &target);
