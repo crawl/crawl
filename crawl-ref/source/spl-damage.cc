@@ -1540,10 +1540,13 @@ spret cast_fragmentation(int pow, const actor *caster,
         const int dam = beam.damage.roll();
         mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
 
-        ouch(dam, KILLED_BY_BEAM, caster->mid,
-             "by Lee's Rapid Deconstruction", true,
-             caster->is_player() ? "you"
-                                 : caster->name(DESC_A).c_str());
+        if (!(you.has_mutation(MUT_SAFE_SPELLS) && caster->is_player()))
+        {
+            ouch(dam, KILLED_BY_BEAM, caster->mid,
+                 "by Lee's Rapid Deconstruction", true,
+                 caster->is_player() ? "you"
+                                     : caster->name(DESC_A).c_str());
+        }
     }
     else // Monster explodes.
     {

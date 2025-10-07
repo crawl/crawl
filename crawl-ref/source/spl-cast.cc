@@ -3509,8 +3509,7 @@ static bool _find_tabcast_lrd_target(dist &target)
 
     for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
-        //never try to deconstruct yourself
-        if (*ri == you.pos() || !you.see_cell(*ri))
+        if (!you.see_cell(*ri))
             continue;
 
         if (!setup_fragmentation_beam(tempbeam, 0, &you,
