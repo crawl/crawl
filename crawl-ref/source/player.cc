@@ -9342,10 +9342,10 @@ int player::get_tabcast_chance(bool get_max, bool random, spell_type spell, int 
     if (spell == SPELL_SANDBLAST)
         diff += 2;
 
-    //base chance of 200, scaling up to 400 at max xl
+    //base chance of 150, scaling up to 300 at max xl
     //divided by 3 + spell level, capped at 100
-    const int base = 50 * multiplier;
-    const int scaling = 50 * multiplier;
+    const int base = 30 * multiplier;
+    const int scaling = 30 * multiplier;
     const int div = 3 + diff;
     const int skl = (you.experience_level - 1) * 100;
     constexpr int maxskl = 2600;

@@ -803,7 +803,7 @@ per action.
 
 Higher level spells have a lower chance of being cast. This chance increases
 with your experience level and decreases with failure chance. The chance to
-cast an inscribed spell is reduced by a quarter for ranged attacks.
+cast an inscribed spell is reduced by a fifth for ranged attacks.
 
 Additionally, an inscribed channelled spell will only be interrupted by
 movement.

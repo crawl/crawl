@@ -848,7 +848,7 @@ void ranged_attack::maybe_trigger_tabcast()
     }
 
     monster* m = defender->as_monster();
-    attempt_tabcast_spell(m, 3);
+    attempt_tabcast_spell(m, 4);
 }
 
 void ranged_attack::set_attack_verb(int/* damage*/)
