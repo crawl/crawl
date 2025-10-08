@@ -1108,6 +1108,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         if (cast_result == spret::success)
             _spell_tabcasts_spell(true);
     }
+
+    if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting() && !you.divine_exegesis)
+        you.time_taken = you.time_taken * 3 / 2;
     alert_nearby_monsters();
 
     return cast_result;
@@ -2378,16 +2381,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
     spret cast_result = _do_cast(spell, powc, *target, beam, god,
                                  force_failure || fail, actual_spell);
-
-    //strenuous magic should slow down casting even on miscasts
-    if (cast_result == spret::success || cast_result == spret::fail)
-    {
-        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting()
-            && !you.divine_exegesis && actual_spell)
-        {
-            you.time_taken = you.time_taken * 3 / 2;
-        }
-    }
 
     switch (cast_result)
     {
