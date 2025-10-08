@@ -2379,6 +2379,16 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     spret cast_result = _do_cast(spell, powc, *target, beam, god,
                                  force_failure || fail, actual_spell);
 
+    //strenuous magic should slow down casting even on miscasts
+    if (cast_result == spret::success || cast_result == spret::fail)
+    {
+        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting()
+            && !you.divine_exegesis && actual_spell)
+        {
+            you.time_taken = you.time_taken * 3 / 2;
+        }
+    }
+
     switch (cast_result)
     {
     case spret::success:
@@ -2420,12 +2430,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
             end_enkindled_status();
-
-        if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting()
-            && !you.divine_exegesis && actual_spell)
-        {
-            you.time_taken = you.time_taken * 3 / 2;
-        }
 
         return spret::success;
     }
