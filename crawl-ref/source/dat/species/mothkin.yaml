@@ -22,12 +22,12 @@ aptitudes:
   staves: 1
   ranged weapons: -1
   throwing: 0
-  armour: 0
-  dodging: 0
+  armour: -1
+  dodging: -1
   stealth: -2
   shields: -3
   unarmed_combat: 0
-  spellcasting: 0
+  spellcasting: -3
   conjurations: 1
   hexes: 1
   summoning: 0
@@ -53,7 +53,6 @@ mutations:
     MUT_ANTENNAE: 1
     MUT_BIG_WINGS: 1
     MUT_STRENUOUS_MAGIC: 1
-    MUT_LOW_MAGIC: 3
 recommended_jobs:
   - monk
   - cinder acolyte
