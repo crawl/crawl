@@ -6778,24 +6778,8 @@ int bolt::range_used_on_hit() const
     // Non-beams can only affect one thing (player/monster).
     if (!pierce)
         return BEAM_STOP;
-    // These beams fully penetrate regardless of anything else.
-    if (flavour == BEAM_DAMNATION
-        || flavour == BEAM_DIGGING
-        || flavour == BEAM_VILE_CLUTCH
-        || flavour == BEAM_ROOTS
-        || flavour == BEAM_SHADOW_TORPOR)
-    {
+    else
         return 0;
-    }
-    // explosions/clouds and enchants that aren't Line Pass stop.
-    if (is_enchantment() && name != "line pass"
-        || is_explosion
-        || is_big_cloud())
-    {
-        return BEAM_STOP;
-    }
-    // Lightning that isn't an explosion goes through things.
-    return 0;
 }
 
 // Information for how various explosions look & sound.
