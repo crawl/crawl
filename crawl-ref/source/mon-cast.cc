@@ -619,7 +619,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _always_worthwhile, _fire_simple_beam, _zap_setup(SPELL_SAP_MAGIC),
         MSPELL_LOGIC_NONE, 10,
     } },
-    { SPELL_DRAIN_MAGIC, _hex_logic(SPELL_DRAIN_MAGIC, nullptr, 6) },
     { SPELL_DIMINISH_SPELLS, { [](const monster &caster) {
         const actor* foe = caster.get_foe();
         ASSERT(foe);

@@ -2617,18 +2617,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DRAIN_MAGIC, "Drain Magic",
-    spschool::hexes,
-    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
-        | spflag::WL_check,
-    5,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_DRAIN_MAGIC,
-},
-
-{
     SPELL_CORROSIVE_BOLT, "Corrosive Bolt",
     spschool::conjuration | spschool::alchemy,
     spflag::dir_or_target | spflag::needs_tracer,
@@ -4707,6 +4695,7 @@ AXED_SPELL(SPELL_DRAGON_FORM, "Dragon Form")
 AXED_SPELL(SPELL_NECROMUTATION, "Necromutation")
 AXED_SPELL(SPELL_AWAKEN_EARTH, "Awaken Earth")
 AXED_SPELL(SPELL_ANIMATE_SKELETON, "Animate Skeleton")
+AXED_SPELL(SPELL_DRAIN_MAGIC, "Drain Magic")
 #endif
 
 };

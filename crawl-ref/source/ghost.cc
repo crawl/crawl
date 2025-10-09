@@ -96,7 +96,6 @@ static spell_type search_order_misc[] =
     SPELL_VITRIFY,
     SPELL_SLEEP,
     SPELL_MASS_CONFUSION,
-    SPELL_DRAIN_MAGIC,
     SPELL_PETRIFY,
     SPELL_POLYMORPH,
     SPELL_SLOW,

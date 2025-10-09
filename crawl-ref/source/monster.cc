@@ -5794,7 +5794,7 @@ bool monster::drain_magic(actor *attacker, int pow)
     if (!dur)
         return false;
 
-    add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, attacker, dur));
+    add_ench(mon_enchant(ENCH_ANTIMAGIC, attacker, dur));
     if (you.can_see(*this))
         mprf("%s magic leaks into the air.", name(DESC_ITS).c_str());
 
