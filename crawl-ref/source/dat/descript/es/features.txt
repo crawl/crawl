@@ -132,40 +132,39 @@ Una pared de roca sencilla.
 The floor
 
 {{
-    --This code was written in Lua, and I think this code should be read as such.
     --Some of these lines may need to be broken up
     local descript = "El piso."
-    --TODO: somehow add a line break to the descript before the branch-checking logic.
     if player_in_branch(BRANCH_DUNGEON) then
-        descript = descript .. " Está hecho de roca lisa."
+        descript = descript .. "\nEstá hecho de roca lisa."
     elseif player_in_branch(BRANCH_TEMPLE) then
-        descript = descript .. " Hay musgo entredadera creciendo en lo."
+        descript = descript .. "\nHay musgo entredadera creciendo en lo."
     elseif player_in_branch(BRANCH_ORC) then
-        descript = descript .. " Ves pepitas pequeñas en lo."
+        descript = descript .. "\nVes pepitas pequeñas en lo."
     elseif player_in_branch(BRANCH_ELF) then
-        descript = descript .. " Tiene estampados místicos."
+        descript = descript .. "\nTiene estampados místicos."
     elseif player_in_branch(BRANCH_LAIR) then
-        descript = descript .. " Te sientes los cantos regosos debajo de tus pies."
+        descript = descript .. "\nTe sientes los cantos regosos debajo de tus pies."
     elseif player_in_branch(BRANCH_SWAMP) then
         if you.airborne() then
-            descript = descript .. " Puedes ver el barro patanoso."
+            descript = descript .. "\nPuedes ver el barro patanoso."
         else
-            --TODO: Check if player is wearing boots or flying.
-            descript = descript .. " Puedes sentir el barro patanoso en tus pies."
+            --TODO: Check if player is wearing boots or even has feet.
+            descript = descript .. "\nPuedes sentir el barro patanoso en tus pies."
         end
     elseif player_in_branch(BRANCH_SHOALS) then
-        descript = descript .. " Puedes oír el movimento de la arena debajo de tus pies."
+        descript = descript .. "\nPuedes oír el movimento de la arena debajo de tus pies."
     elseif player_in_branch(BRANCH_SNAKE) then
-        descript = descript .. " Tiene estampados sinuosos."
+        descript = descript .. "\nTiene estampados sinuosos."
     elseif player_in_branch(BRANCH_SPIDER) then
-        descript = descript .. " En lo hay hilos finos -- y unos no-tan-finos -- de seda."
+        descript = descript .. "\nEn lo hay hilos finos -- y unos no-tan-finos -- de seda."
     elseif player_in_branch(BRANCH_SLIME) then
-        descript = descript .. " Está cubierto en baba."
+        descript = descript .. "\nEstá cubierto en baba."
     elseif player_in_branch(BRANCH_VAULTS) then
-        descript = descript .. " Hay salpicaduras de sangre en su superficie metálico."
+        descript = descript .. "\nHay salpicaduras de sangre en su superficie metálico."
     elseif player_in_branch(BRANCH_CRYPT) then
-        descript = descript .. " Como el aire, su superficie es frio."
-    --TODO: add descriptions for (the floors of) the rest of the branches.
+        descript = descript .. "\nComo el aire, su superficie es frio."
+    --TODO: add descriptions for (the floors of) the rest of the branches (and sub-branches).
+    --Branches: Depths, Zot, Bazaar, Volcano, Ice Cave, Necropolis, Tomb, Pan, Hells, probably more
     end
     return descript
 }}
