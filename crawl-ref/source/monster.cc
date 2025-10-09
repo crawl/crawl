@@ -5782,6 +5782,25 @@ bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
     return add_ench(lowered_wl);
 }
 
+bool monster::drain_magic(actor *attacker, int pow)
+{
+    if (!antimagic_susceptible())
+        return false;
+
+    const int dur =
+            random2(div_rand_round(pow, get_hit_dice()) + 1)
+                    * BASELINE_DELAY;
+
+    if (!dur)
+        return false;
+
+    add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, attacker, dur));
+    if (you.can_see(*this))
+        mprf("%s magic leaks into the air.", name(DESC_ITS).c_str());
+
+    return true;
+}
+
 void monster::daze(int duration)
 {
     // Enchantment degree is used as a timer to prevent immediately breaking on

@@ -3946,17 +3946,6 @@ void bolt::affect_player_enchantment(bool resistible)
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
-    case BEAM_DRAIN_MAGIC:
-    {
-        int amount = min(you.magic_points, random2avg(ench_power / 8, 3));
-        if (!amount)
-            break;
-        mprf(MSGCH_WARN, "You feel your power leaking away.");
-        drain_mp(amount);
-        obvious_effect = true;
-        break;
-    }
-
     case BEAM_TUKIMAS_DANCE:
         cast_tukimas_dance(ench_power, &you);
         obvious_effect = true;
@@ -4415,12 +4404,7 @@ void bolt::affect_player()
     if (origin_spell == SPELL_NULLIFYING_BREATH)
     {
         debuff_player();
-        int amount = min(you.magic_points, random2avg(ench_power, 3));
-        if (amount > 0)
-        {
-            mprf(MSGCH_WARN, "You feel your power leaking away.");
-            drain_mp(amount);
-        }
+        you.drain_magic(agent(), ench_power * 8);
     }
 
     if (origin_spell == SPELL_DOOM_BOLT)
@@ -4459,6 +4443,9 @@ void bolt::affect_player()
 
     if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         you.vitrify(agent(), random_range(8, 18));
+
+    if (flavour == BEAM_DRAIN_MAGIC)
+        you.drain_magic(agent(), ench_power);
 
     if (origin_spell == SPELL_SOJOURNING_BOLT
         && final_dam > 0 && x_chance_in_y(2, 3))
@@ -5202,6 +5189,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (flavour == BEAM_CRYSTALLISING && !one_chance_in(4))
         mon->vitrify(agent(), random_range(8, 18));
+
+    if (flavour == BEAM_DRAIN_MAGIC)
+        mon->drain_magic(agent(), ench_power);
 
     if (dmg)
         beogh_follower_convert(mon, true);
@@ -6637,29 +6627,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         mon->diminish(agent(), 9);
         obvious_effect = true;
         return MON_AFFECTED;
-
-    case BEAM_DRAIN_MAGIC:
-    {
-        if (!mon->antimagic_susceptible())
-            break;
-
-        const int dur =
-            random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1)
-                    * BASELINE_DELAY;
-
-        if (!dur)
-            break;
-
-        mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, agent(), dur));
-        if (you.can_see(*mon))
-        {
-            mprf("%s magic leaks into the air.",
-                 apostrophise(mon->name(DESC_THE)).c_str());
-        }
-
-        obvious_effect = true;
-        break;
-    }
 
     case BEAM_TUKIMAS_DANCE:
         cast_tukimas_dance(ench_power, mon);

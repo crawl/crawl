@@ -782,6 +782,7 @@ public:
     void weaken(const actor *attacker, int pow) override;
     void diminish(const actor *attacker, int pow) override;
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
+    bool drain_magic(actor *attacker, int pow) override;
     void daze(int duration) override;
     void end_daze();
     void vitrify(const actor *attacker, int duration, bool quiet = false) override;

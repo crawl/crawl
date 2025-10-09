@@ -194,6 +194,7 @@ public:
     virtual void diminish(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
+    virtual bool drain_magic(actor *attacker, int pow) = 0;
     virtual void daze(int duration) = 0;
     virtual void vitrify(const actor *attacker, int duration, bool quiet = false) = 0;
     virtual bool floodify(const actor *attacker, int duration, const char* substance = "water") = 0;

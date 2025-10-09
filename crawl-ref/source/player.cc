@@ -8485,6 +8485,17 @@ bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
     return true;
 }
 
+bool player::drain_magic(actor */*attacker*/, int pow)
+{
+    int amount = min(you.magic_points, random2avg(pow / 8, 3));
+    if (!amount)
+        return false;
+
+    mprf(MSGCH_WARN, "You feel your power leaking away.");
+    drain_mp(amount);
+    return true;
+}
+
 void player::daze(int dur)
 {
     stop_delay(true, true);

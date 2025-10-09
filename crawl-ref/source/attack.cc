@@ -535,8 +535,7 @@ bool attack::distortion_affects_defender()
 
 void attack::antimagic_affects_defender(int pow)
 {
-    obvious_effect =
-        enchant_actor_with_flavour(defender, attacker, BEAM_DRAIN_MAGIC, pow);
+    obvious_effect = defender->drain_magic(attacker, pow);
 }
 
 void attack::pain_affects_defender()

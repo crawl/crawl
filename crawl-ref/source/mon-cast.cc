@@ -485,9 +485,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _caster_sees_foe,
         [](monster &caster, mon_spell_slot slot, bolt&) {
             flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_DRAINING_GAZE);
-            enchant_actor_with_flavour(caster.get_foe(), &caster,
-                                       BEAM_DRAIN_MAGIC,
-                                       mons_spellpower(caster, slot.spell));
+            caster.get_foe()->drain_magic(&caster, mons_spellpower(caster, slot.spell));
         },
     } },
     { SPELL_WEAKENING_GAZE, {
@@ -1417,10 +1415,7 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
         }
     }
     else
-    {
-        enchant_actor_with_flavour(foe, &caster, BEAM_DRAIN_MAGIC,
-                                   mons_spellpower(caster, slot.spell));
-    }
+        foe->drain_magic(&caster, mons_spellpower(caster, slot.spell));
 }
 
 static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
