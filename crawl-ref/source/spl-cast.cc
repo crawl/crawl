@@ -1021,6 +1021,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     if (check_range && spell_no_hostile_in_range(spell))
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
         mpr("You can't see any susceptible monsters within range! "
@@ -3567,7 +3570,7 @@ void tabcast_spell(coord_def &pos)
     if (cast_a_spell(false, spell, &target) == spret::abort)
     {
         target.find_target = true;
-        cast_a_spell(false, spell, &target);
+        cast_a_spell(true, spell, &target);
     }
     you.attribute[ATTR_TABCASTING] = 0;
 }
