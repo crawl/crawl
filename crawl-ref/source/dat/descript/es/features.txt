@@ -132,10 +132,10 @@ Una pared de roca sencilla.
 The floor
 
 {{
-    //This code was written in Lua, and I think this code should be read as such.
-    //Some of these lines may need to be broken up
+    --This code was written in Lua, and I think this code should be read as such.
+    --Some of these lines may need to be broken up
     local descript = "El piso."
-    //TODO: somehow add a line break to the descript before the branch-checking logic.
+    --TODO: somehow add a line break to the descript before the branch-checking logic.
     if player_in_branch(BRANCH_DUNGEON) then
         descript = descript .. " Está hecho de roca lisa."
     elseif player_in_branch(BRANCH_TEMPLE) then
@@ -150,7 +150,7 @@ The floor
         if you.airborne() then
             descript = descript .. " Puedes ver el barro patanoso."
         else
-            //TODO: Check if player is wearing boots or flying.
+            --TODO: Check if player is wearing boots or flying.
             descript = descript .. " Puedes sentir el barro patanoso en tus pies."
         end
     elseif player_in_branch(BRANCH_SHOALS) then
@@ -165,7 +165,7 @@ The floor
         descript = descript .. " Hay salpicaduras de sangre en su superficie metálico."
     elseif player_in_branch(BRANCH_CRYPT) then
         descript = descript .. " Como el aire, su superficie es frio."
-    //TODO: add descriptions for (the floors of) the rest of the branches.
+    --TODO: add descriptions for (the floors of) the rest of the branches.
     end
     return descript
 }}
