@@ -1926,7 +1926,13 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
     return spret::success;
 }
 
-static bool _can_beckon(const actor &beckoned)
+bool can_beckon(const actor &beckoned)
+{
+    return !beckoned.is_stationary()  // don't move statues, etc
+        && !mons_is_tentacle_or_tentacle_segment(beckoned.type); // a mess...
+}
+
+bool can_beckon(const monster_info& beckoned)
 {
     return !beckoned.is_stationary()  // don't move statues, etc
         && !mons_is_tentacle_or_tentacle_segment(beckoned.type); // a mess...
@@ -1943,7 +1949,7 @@ static bool _can_beckon(const actor &beckoned)
  */
 static coord_def _beckon_destination(const actor &beckoned, const bolt &path)
 {
-    if (!_can_beckon(beckoned))
+    if (!can_beckon(beckoned))
         return beckoned.pos();
 
     for (coord_def pos : path.path_taken)
