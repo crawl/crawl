@@ -2753,12 +2753,13 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_DART:
         switch (brand)
         {
-        default:             return TILE_MI_DART + 1;
-        case 0:              return TILE_MI_DART;
-        case SPMSL_POISONED: return TILE_MI_DART_POISONED;
-        case SPMSL_CURARE:   return TILE_MI_DART_CURARE;
-        case SPMSL_BLINDING: return TILE_MI_DART_BLINDING;
-        case SPMSL_FRENZY:   return TILE_MI_DART_FRENZY;
+        default:                return TILE_MI_DART + 1;
+        case 0:                 return TILE_MI_DART;
+        case SPMSL_POISONED:    return TILE_MI_DART_POISONED;
+        case SPMSL_CURARE:      return TILE_MI_DART_CURARE;
+        case SPMSL_BLINDING:    return TILE_MI_DART_BLINDING;
+        case SPMSL_FRENZY:      return TILE_MI_DART_FRENZY;
+        case SPMSL_DISJUNCTION: return TILE_MI_DART_DISJUNCTION;
         }
 
     case MI_ARROW:
