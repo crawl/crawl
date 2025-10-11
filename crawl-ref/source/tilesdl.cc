@@ -50,6 +50,10 @@
 #include "view.h"
 #include "windowmanager.h"
 
+#ifdef __ANDROID__
+# include "syscalls.h"
+#endif
+
 #ifdef TARGET_OS_WINDOWS
 # include <windows.h>
 #endif
@@ -282,10 +286,10 @@ void TilesFramework::calculate_default_options()
         //     * game scale  => 2
         //     * screen size => 540x540 (usually it can be rotated)
         int adjust_scale = 1;
-        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
+        int ref_display_size = jni_ref_display_size();
+        if (Options.game_scale == ref_display_size/960+1)
             adjust_scale = Options.game_scale;
-        if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
-            && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
+        if (ref_display_size >= (_screen_sizes[auto_size][0]*adjust_scale))
 #endif
         {
             break;

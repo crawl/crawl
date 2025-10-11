@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import android.app.*;
 import android.content.*;
+import android.content.res.Resources;
 import android.text.InputType;
 import android.view.*;
 import android.view.inputmethod.BaseInputConnection;
@@ -820,6 +821,14 @@ public class SDLActivity extends AppCompatActivity {
     public static boolean showTextInput(int x, int y, int w, int h) {
         // Transfer the task to the main thread as a Runnable
         return mSingleton.commandHandler.post(new ShowTextInputTask(x, y, w, h));
+    }
+
+    // CRAWL HACK: Function used to get the reference display size
+    // This method is called using JNI
+    public static int jniRefDisplaySize() {
+        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+        return Math.min(width, height);
     }
 
     // CRAWL HACK: Function used to toggle the keyboard
