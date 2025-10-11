@@ -524,6 +524,18 @@ crystal_floor4
 %weight 1
 crystal_floor5
 
+%weight 8
+mystic_chasm0 FLOOR_MYSTIC_CHASM
+mystic_chasm1
+mystic_chasm2
+mystic_chasm3
+%weight 6
+mystic_chasm4
+mystic_chasm5
+%weight 4
+mystic_chasm6
+mystic_chasm7
+
 %sdir dngn/floor/grass
 %weight 12
 grass0 FLOOR_GRASS
@@ -569,11 +581,54 @@ grass_w
 grass_nw
 grass_full
 
-grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
-grass0-dirt-mix2
-grass0-dirt-mix3
-
 %sdir dngn/floor
+sprouting_stone00 FLOOR_SPROUTING_STONE
+sprouting_stone01
+sprouting_stone02
+sprouting_stone03
+sprouting_stone04
+sprouting_stone05
+sprouting_stone06
+sprouting_stone07
+sprouting_stone08
+sprouting_stone09
+sprouting_stone10
+sprouting_stone11
+
+%weight 12
+sprouting_squares00 FLOOR_SPROUTING_SQUARES
+sprouting_squares01
+%weight 8
+sprouting_squares02
+sprouting_squares03
+sprouting_squares04
+sprouting_squares05
+%weight 4
+sprouting_squares06
+sprouting_squares07
+sprouting_squares08
+sprouting_squares09
+%weight 2
+sprouting_squares10
+sprouting_squares11
+
+%weight 10
+sprouting_ruin00 FLOOR_SPROUTING_RUIN
+sprouting_ruin01
+%weight 8
+sprouting_ruin02
+sprouting_ruin03
+sprouting_ruin04
+sprouting_ruin05
+%weight 6
+sprouting_ruin06
+sprouting_ruin07
+sprouting_ruin08
+sprouting_ruin09
+%weight 4
+sprouting_ruin10
+sprouting_ruin11
+
 floor_nerves0 FLOOR_NERVES FLOOR_NERVES_RED
 floor_nerves1
 floor_nerves2
@@ -1076,16 +1131,6 @@ necropolis_grass_1 FLOOR_NECROPOLIS_GRASS
 necropolis_grass_2
 necropolis_grass_3
 necropolis_grass_4
-
-woodground01 FLOOR_WOODGROUND
-woodground02
-woodground03
-woodground04
-woodground05
-woodground06
-woodground07
-woodground08
-woodground09
 
 studio0 FLOOR_STUDIO
 studio1

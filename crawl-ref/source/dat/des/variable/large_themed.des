@@ -112,23 +112,25 @@ ORIENT:  northeast
 DEPTH:   D:7-, Lair, Crypt:1-4
 : if you.in_branch("Crypt") then
 MONS:    orange crystal statue
+SUBST:   c = v
 : else
 MONS:    ice statue / obsidian statue / orange crystal statue
+:   tile("c = " .. crackle_def(_G))
 : end
 SUBST:   *:*$, ?:x., '=w.
 ITEM:    ring of flight pre_id
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxwwwwwwwcxxxxxxxx
 xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxx
-xxxxxxxxxxxxxwwwwwwxxxwwwwwxxxxxx
+xxxxxxxxxxxxxwwwwwwxxcwwwwwcxxxxx
 xxxxxxxxxxxxwwwwwwxxxxxxwww.1xxxx
-xxxxxxxxxxxwwwwxxxxxxxxxxwwW??xxx
+xxxxxxxxxxxwwwwxxxxxxxxxcwwW??xxx
 xxxxxxxxxwwwwwxxxxxxxxxxxwwwW??xx
 xxxxxxxxwwwwxxxxxxxxxxxxxxww|||xx
 xxxxxxxxwwwxxxxxxxxxxxxxxxxw||dxx
-xxxxxxxwwwxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxwwwxxxxxxxxxxxxxxxxxxxxcxx
 xxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxx
 xxxwwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
 wwwwwwwwwww''..................xx
@@ -199,6 +201,7 @@ SUBST:   2=2:20 1
 SUBST:   ? : wl
 SUBST:   * : $*|
 MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx!!!xxxxxxxxx
 xxxxxxxxxxxxxxxxx..????....dxxxx
@@ -327,31 +330,33 @@ DEPTH:  D:12-
 MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:20
 MONS:   deep elf knight / deep elf archer
 MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
+TILE:   c = wall_stone_magic_shelf
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxx
-x..3..............|x1...
-x.b..b..b..b3.b...|x....
-x.....3.........3.|x..x.
-x+xxxxxxx+xxxxxxxxxx....
-x..................x....
-x......1...........x..x.
-x..xxxx....xxxxxx1.x1...
-x.1x*.....1..2.*x..x....
-x..x*.2.1......*x..x..x.
-x..xxxxxx...1xxxx..x....
-x..................x....
-x1................1x..x.
-xxxxxxx..xxxxxx..xxx....
-x1................1x1...
-x.......1....11....x..x.
-x..xxxxxx....xxxx..x....
-x..1.2.*x....x*....x....
-x.1....*x....x*.2..x..x.
-xxxxxxxxxx++xxxxxxxx....
-x1......11..11.....1....
-x.......................
-x..x..x..x..x..x..x.....
-x.......................
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xx..3..............|x1...
+xx.b..b..b..b3.b...|x....
+xx.....3.........3.|x..x.
+xx+xxxxxxx+xxxxxxxxxx....
+xx..................x....
+xx......1...........x..x.
+xx..xxxc....cxxxxx1.x1...
+xx.1x*.....1..2.*x..x....
+xx..x*.2.1......*x..x..x.
+xx..xxxxxc...1cxxx..x....
+xx..................x....
+xx1................1x..x.
+xxxxxxxx..xxxxxx..xxx....
+xx1................1x1...
+xx.......1....11....x..x.
+xx..cxxxxx....xxxc..x....
+xx..1.2.*x....x*....x....
+xx.1....*x....x*.2..x..x.
+xxxxxxxxxxx++xxxxxxxx....
+xx1......11..11.....1....
+xx.......................
+xx..x..x..x..x..x..x.....
+xx.......................
 ENDMAP
 
 NAME:   minmay_ice_pillars
@@ -413,43 +418,49 @@ NAME:   minmay_spriggan_fort
 TAGS:   no_rotate
 ORIENT: northwest
 DEPTH:  Depths
-MONS:   plant, bush
-MONS:   spriggan w:50 / spriggan druid / spriggan berserker / spriggan rider
-MONS:   spriggan defender, alderking
+KMONS:  01 = spriggan w:50 / spriggan druid / spriggan berserker / spriggan rider
+KMONS:  9 = spriggan defender
+KMONS:  8 = alderking
+KMONS:  P = plant
+KMONS:  B = bush
+KITEM:  % = %
 KFEAT:  % = cache of fruit
-SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444., 5 = 55., % : %$
+SUBST:  B : PBt p:1, p = PBt, c : xc, 9 = 999", 8 = 88', % : %$
+FTILE:  PBt+ = floor_moss
+FTILE:  '18$%* = floor_sprouting_stone
+FTILE:  "9$%* = floor_sprouting_squares
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccccccccccccccccccccccccccxx
-xc11111111111111111111111111c1.
-xc15......................51c13
-xc1........................1c1.
-xc1..111........3.....111..1c1.
-xc13.1c1..3...........1c1..1c1.
-xc1..111..........3...111..1c1.
-xc1...........3............1c1.
-xc1.........3...3..........1c1.
-xc1.......11t....t11.......1c1.
-xc1.......1ccc++ccc1.......1c1.
-xc1.......1c1....1c1..3....1c1.
-xc1.......1c1....1c1.......1c1.
-xc1....3..1c14**41c1.......1c13
-xc1.......1c1****1c1.......1c1.
-xc1.......1c1%**%1c1.......1c1.
-xc1.......1c111111c1....3..1c1.
-xc1..3....1cccccccc1.......1c1.
-xc1.......1111111111.......1c1.
-xc1........................1c1.
-xc1........................1c1.
-xc1..111........3.....111..1c1.
-xc1..1c1..3...........1c1..1c1.
-xc1..111..............111..1c1.
-xc1........................1c1.
-xc13......................31c1.
-xc1111111111t....t1111111111c1.
-xccccccccccccc++ccccccccccccc1.
-xx1111111111t....t1111111111113
-xx.3........3.3..3.............
+xcBBBBBBBBBBBBBBBBBBBBBBBBBBcB.
+xcB8''''''''''''''''''''''8BcB0
+xcB''''''''''''''''''''''''BcB.
+xcB''BBB''''''''1'''''BBB''BcB.
+xcB1'BcB''1'''''''''''BcB''BcB.
+xcB''BBB''''''''''1'''BBB''BcB.
+xcB'''''''''''1''''''''''''BcB.
+xcB'''''''''1'''1''''''''''BcB.
+xcB'''''''BBt''''tBB'''''''BcB.
+xcB'''''''Bccc++cccB'''''''BcB.
+xcB'''''''BcB""""BcB''1''''BcB.
+xcB'''''''BcB""""BcB'''''''BcB.
+xcB''''1''BcB9**9BcB'''''''BcB0
+xcB'''''''BcB****BcB'''''''BcB.
+xcB'''''''BcB%**%BcB'''''''BcB.
+xcB'''''''BcBBBBBBcB''''1''BcB.
+xcB''1''''BccccccccB'''''''BcB.
+xcB'''''''BBBBBBBBBB'''''''BcB.
+xcB''''''''''''''''''''''''BcB.
+xcB''''''''''''''''''''''''BcB.
+xcB''BBB''''''''1'''''BBB''BcB.
+xcB''BcB''1'''''''''''BcB''BcB.
+xcB''BBB''''''''''''''BBB''BcB.
+xcB''''''''''''''''''''''''BcB.
+xcB1''''''''''''''''''''''1BcB.
+xcBBBBBBBBBBt''''tBBBBBBBBBBcB.
+xccccccccccccc++cccccccccccccB.
+xxBBBBBBBBBBt....tBBBBBBBBBBBB0
+xx.0........0.0..0.............
 ENDMAP
 
 NAME:   minmay_haunted_quarter
@@ -998,40 +1009,43 @@ MONS:   ancient lich / dread lich
 KFEAT:  g = cache of baked goods
 KFEAT:  _ = altar_sif_muna
 KFEAT:  D = U
+KFEAT:  yz = c
 SUBST:  U = U:4 V:1 T:1
 COLOUR: c" = lightblue
 TILE:   c = dngn_stone_wall_blue
+TILE:   y = wall_stone_magic_shelf
+: tile("z = " .. crackle_def(_G))
 FTILE:  .+def123TUVbc|* = floor_crystal_squares
 FTILE:  "_ = floor_marble
 MAP
                 xxxxxxxxxxxxxxxxxxxxxxxxx
                 xcccccccccccccccccccccccc
-                xccccccccwwwwwwcccccccccc
-                xccccU............Ucccccc
+                xccczccccwwwwwwcccczccccc
+                xzcccU............Ucccccc
                 xcwwc..b..b..b..b..cccccc
                 xc|*+..b..b..b..b..cccccc
-                xc||c..2..1..1..1..cccccc
+                xy||c..2..1..1..1..yccccc
                 xc|*+..b..b..b..b..cccccc
   xxxxxxxxxxxxxxxcwwc..b..b..b..b..cccccc
-  xccccccccccccccccccU............Ucccccc
-  xcccccccccccccccccccccccc++cccccccccccc
-  xcccccccccccccccccccccccw..wccccccccccc
+  xcccccccccccccczcccU............Ucccccc
+  xccccccccccccccccczcccccc++cccccczccccc
+  xcccczcccccccccczcccccccw..wccccccccccc
   xcccccf...cc...fccccccccw..wccccccccccc
-  xccccc.bb.cc.bb.ccccccccc++cccccccccccc
+  xccccy.bb.cc.bb.yczcccccc++ccczczcccccz
   xccccc..1.cc.1..cccwwwwwwWWwwwcccwwwwwc
   xcccccccc+cc+ccccccwbb..1..bbwcccddgeec
 ''cccc..............cwb...U...bwccccc+ccc
-'Dc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+'Dc.1c..bbbb..bbbb1.cw..U"""U..wccy.....c
 @'+..c..............cw.."""""..wccc..b.3c
 @Dc..+..bbbb2.bbbb1.+W.U""_""U2W+.+.bUb2c
 @'+..c..............cw.."""""..wccc..b.3c
-'Dc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+'Dc.1c..bbbb..bbbb1.cw..U"""U..wccy.....c
 ''cccc..............cwb...U...bwccccc+ccc
   xcccccccc+cc+ccccccwbb..1..bbwccceegddc
   xccccc..c....c..cccwwwwwwwwwwwcccwwwwwc
-  xcccccU.+1bb1+.Uccccccccccccccccccccccc
+  xccccyU.+1bb1+.Uyczccccccccccczczcccccz
   xcccccf.c....c.fccccccccccccccccccccccc
-  xcccccccccccccccccccccccccccccccccccccc
+  xcccczcccccccccczcccccccccccccccccccccc
   xcccccccccccccccccccccccccccccccccccccc
   xcccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -1380,8 +1394,8 @@ ENDMAP
 ###############################################################################
 
 NAME:   kennysheep_demon_jail
-ORIENT: north
 TAGS:   no_monster_gen
+ORIENT: north
 DEPTH:  Depths:2-
 MONS:   common demon, hell knight
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
@@ -3384,7 +3398,7 @@ KITEM:   S = smoky gem
 NSUBST:  | = 1:f / 4:g / 1:i / 1:RRRfg / * = ffg
 NSUBST:  % = 2:d / 2:e / 1:fg / * = def.
 :   end
-FTILE:   .12345defghijkrRS) = floor_vines / floor_pebble_darkgray
+FTILE:   .12345defghijkrRS)- = floor_vines / floor_pebble_darkgray
 FTILE:   P = floor_pebble_brown
 TILE:    x = wall_pebble_lightblue
 TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
@@ -3396,6 +3410,9 @@ SHUFFLE: })]
 SUBST:   )] = %
 NSUBST:  | = 1:f / 2:g / 2:h / 1:i / * = ffg
 NSUBST:  % = 1:d / 2:e / 1:f / 1:g / 1:rRef / * = def., . = 4:5 / *:.
+FTILE:   t = floor_moss
+FTILE:   .12345defghijkrRS}- = floor_sprouting_ruin
+TILE:    x = wall_lair
 : elseif you.in_branch("Depths") then
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    tengu reaver / titan / lich / alderking w:5

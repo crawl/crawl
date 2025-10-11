@@ -2092,6 +2092,51 @@ MAP
       ......   ......
 ENDMAP
 
+# Ring of the Mage's guarded_unrand vault, moved from Depths.
+NAME:   minmay_guarded_unrand_mage
+TAGS:   no_monster_gen no_item_gen transparent no_pool_fixup vaults_hard
+DEPTH:  Vaults, !Vaults:$
+WEIGHT: 5
+MONS:   arcanist / ogre mage / boggart
+MONS:   orange crystal statue / obsidian statue
+KMONS:  3 = lich w:40 / ancient lich / dread lich
+KITEM:  3 = ring_of_the_mage no_pickup
+KITEM:  $ = $ no_pickup
+KFEAT:  z = c
+KPROP:  '23+> = no_tele_into
+TILE:   c = dngn_stone_wall_blue
+: tile("z = " .. crackle_def(_G))
+FTILE:  '23+> = floor_metal_gold
+MAP
+.......             .......
+.ccccc..           ..ccccc.
+.c$1.c...         ...c.1$c.
+.c1..+....       ....+..1c.
+.c...c.....     .....c...c.
+.cc+cc......   ......cc+cc.
+...........................
+ ......WWWWWWWWWWWWW......
+  .....WwwwwwwwwwwwW.....
+   ....WwzcnczcnczwW....
+    ...Wwc>''c'''cwW...
+     ..Wwn'3'+'2'nwW..
+      .Wwc'''c'''cwW.
+      .Wwzccczc+czwW.
+      .Wwc'''c'''cwW.
+     ..Wwn'2'+'2'nwW..
+    ...Wwc'''c''>cwW...
+   ....Wwzc=czcnczwW....
+  .....WwwwwwwwwwwwW.....
+ ......WWWWWWWWWWWWW......
+...........................
+.cc+cc......   ......cc+cc.
+.c...c.....     .....c...c.
+.c1..+....       ....+..1c.
+.c$1.c...         ...c.1$c.
+.ccccc..           ..ccccc.
+.......             .......
+ENDMAP
+
 NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup vaults_orient_e
 WEIGHT:  4
@@ -2399,6 +2444,7 @@ MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               walk_dist = 0, excl_rad = 0 }
 : vault_metal_statue_setup(_G, "g", "mystic cage")
 : vaults_hard_standard(_G, true)
+FTILE:  B = floor_sprouting_stone
 MAP
   xxxxxx
   xBxxBx  xxxxxx

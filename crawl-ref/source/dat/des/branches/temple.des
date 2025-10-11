@@ -2079,6 +2079,8 @@ SUBST:   d : ++., f : ++., eg = c
 SUBST:   h : ++., i : ++., j : ++., k : ++.
 SUBST:   D : Pbx.., E : Pbx..., F : Pxx...., G : Pxx.....
 SUBST:   H : Pxx......, I : Pxx......., ' : c.., " : c..
+TILE:    c = dngn_stone_wall_green
+LFLOORTILE: floor_sprouting_squares
 MAP
 ccccccccccccccccccccccccccccccccc
 c........c...'''.'''...c........c

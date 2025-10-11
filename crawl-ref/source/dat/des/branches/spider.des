@@ -700,23 +700,24 @@ DEPTH:  Spider:3-
 MONS:   patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
 ITEM:   potion of ambrosia pre_id
+FTILE:  .$%d1 = floor_mystic_chasm
 MAP
-     ........
-    ..xxxxxx..
-   ..xx$$$$xx..
-  ..xx......xx..
- ..xx........xx..
- .xx..........xx.
-..x*...........x.
-.xx|1..........=.
-.xx|1..........=.
-..x*...........x.
- .xx..........xx.
- ..xx........xx..
-  ..xx......xx..
-   ..xx$$$$xx..
-    ..xxxxxx..
-     ........
+     ''''''''
+    ''xxxxxx''
+   ''xx$$$$xx''
+  ''xx......xx''
+ ''xx........xx''
+ 'xx..........xx'
+''x*...........x'
+'xx|1..........='
+'xx|1..........='
+''x*...........x'
+ 'xx..........xx'
+ ''xx........xx''
+  ''xx......xx''
+   ''xx$$$$xx''
+    ''xxxxxx''
+     ''''''''
 ENDMAP
 
 NAME:   spiders_nest_ghost_moth_duel
@@ -726,23 +727,25 @@ MONS:   ghost moth, tarantella
 ITEM:   potion of ambrosia pre_id q:1 / \
         potion of ambrosia pre_id q:2 w:5
 KFEAT:  ^ = web
+FTILE:  ` = floor_pebble_magenta
+FTILE:  .12d^ = floor_mystic_chasm
 MAP
-    ........
-   ..xx..xx..
-  ..xx....xx..
- ..xx......xx..
-..xx........xx..
-.xx....^^....xx.
-.x....^xx^....x.
-.x...^xxxx^...x.
-.x.2.^xxxx^.2.x.
-.x.22.^xx^.22.x.
-.xx....^^....xx.
-..xx...1....xx..
- ..xx......xx..
-  ..xxddddxx..
-   ..xxxxxx..
-    ........
+    ''''''''
+   ''xx``xx''
+  ''xx....xx''
+ ''xx......xx''
+''xx........xx''
+'xx....^^....xx'
+'x....^xx^....x'
+'x...^xxxx^...x'
+'x.2.^xxxx^.2.x'
+'x.22.^xx^.22.x'
+'xx....^^....xx'
+''xx...1....xx''
+ ''xx......xx''
+  ''xxddddxx''
+   ''xxxxxx''
+    ''''''''
 ENDMAP
 
 # Spider Web by Mumra
@@ -1381,27 +1384,29 @@ xxxxx^....xxxxxxxxh...^..xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_spider_hall_of_the_moth_king
-ORIENT: west
-TAGS: transparent
-KMONS: M = moth of wrath / ghost moth / sun moth / butterfly w:1
+NAME:    nicolae_spider_hall_of_the_moth_king
+TAGS:    transparent
+ORIENT:  west
+KMONS:   M = moth of wrath / ghost moth / sun moth / butterfly w:1
 SHUFFLE: AB, CD
-SUBST: B : ....c, D : ....c, AC : ., G : GGGc, G = GGGG., c : ccccx, \
-       & = @...., 0 = 00., 0 = 0009
+SUBST:   B : ....c, D : ....c, AC : ., G : GGGc, G = GGGG., c : ccccx
+SUBST:   & = @'''', 0 = 0009..
+FTILE:   + = floor_pebble_magenta
+FTILE:   .$09MG = floor_mystic_chasm
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxx.&.xx
+xxxxxxxxxxxxxxxxxxxxxxxxx'&'xx
 xxxxcccccccccccccccccccccc+ccx
-xxxxcG.GccG.GccG.GccG.GccG.Gcx
+xxxxcG$GccG$GccG$GccG$GccG.Gcx
 xcccc.0.cc.0.cc.0.cc.0.cc.0.cx
-xc..9...AA...CC...AA...CC...cx
-xc.G..G....G....G....G....G.cx
-xc.M..0.BB.0.DD.0.BB.0.DD.0.cx
-xc.G..G....G....G....G....G.cx
-xc..9...AA...CC...AA...CC...cx
+xc$.9...AA...CC...AA...CC...cx
+xc$G..G....G....G....G....G.cx
+xc$M..0.BB.0.DD.0.BB.0.DD.0.cx
+xc$G..G....G....G....G....G.cx
+xc$.9...AA...CC...AA...CC...cx
 xcccc.0.cc.0.cc.0.cc.0.cc.0.cx
-xxxxcG.GccG.GccG.GccG.GccG.Gcx
+xxxxcG$GccG$GccG$GccG$GccG.Gcx
 xxxxcccccccccccccccccccccc+ccx
-xxxxxxxxxxxxxxxxxxxxxxxxx.@.xx
+xxxxxxxxxxxxxxxxxxxxxxxxx'@'xx
 ENDMAP
 
 
@@ -1736,21 +1741,22 @@ ENDMAP
 
 NAME:  nicolae_spider_moth_buddies
 TAGS:  transparent
-SUBST: D = x.
-MONS:  moth of wrath
-MONS:  ghost moth
+MONS:  moth of wrath, ghost moth
 MONS:  wolf spider / redback / tarantella / jumping spider / orb spider
+SUBST: C = c., D = x.
+FTILE: ' = floor_pebble_magenta
+FTILE: .%123 = floor_mystic_chasm
 MAP
-  xxxxx...xxxxx
- xx3.xx...xx.3xx
-xxD..D.....D..Dxx
+  xxxxx'''xxxxx
+ xx3%xx...xx.3xx
+xxD..C.....D..Dxx
 xD....3...3....Dx
-xD.1...DDD.....Dx
-xD.....DDD...2.Dx
+xD.1...CCC.....Dx
+xD.....CCC...2.Dx
 xD....3...3....Dx
-xxD..D.....D..Dxx
- xx3.xx...xx.3xx
-  xxxxx...xxxxx
+xxD..D.....C..Dxx
+ xx3.xx...xx%3xx
+  xxxxx'''xxxxx
 ENDMAP
 
 NAME:    nicolae_spider_not_touching_you

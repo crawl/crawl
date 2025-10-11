@@ -9,6 +9,8 @@
 # extremely long headers, so we put them here.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ##############################################################################
 # 37 x 22 -- this one is huge and twisted, but it's also old...
 NAME:   dpeg_arrival_water_fire
@@ -812,7 +814,7 @@ NAME:    nagdon_arrival_zigzag_paths
 TAGS:    arrival no_trap_gen no_monster_gen
 ORIENT:  float
 MONS:    plant, toadstool
-ITEM:    orc skeleton / kobold skeleton / goblin skeleton / place:D:1 skeleton
+: item(vault_species_skeletons(_G, "early"))
 : if crawl.one_chance_in(3) then
   SUBST:   GHIJ = x
   SUBST:   " = .

@@ -1186,6 +1186,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     // vault statues in the second statues.
     else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_DNGN_CACHE_OF_FRUIT)
              || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
+             || (bg_idx >= TILE_WALL_STONE_CRACKLE_1 && bg_idx <= TILE_WALL_STONE_CRACKLE_4)
              && Options.tile_misc_anim)
     {
         flv->special = random2(256);

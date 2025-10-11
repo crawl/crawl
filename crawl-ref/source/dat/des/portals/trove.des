@@ -502,9 +502,10 @@ default-depth: D:12-, Swamp, Snake, Shoals, Spider
 #
 ##############################################################################
 
-NAME:   due_enter_trove_mix
-TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent no_descent
-SUBST:  c : cc., H : G.., G : GGG.
+NAME:    due_enter_trove_mix
+TAGS:    transparent no_descent
+SHUFFLE: c+ / c+ / '"
+SUBST:   '" = ., H : G.., G : GGG.
 : trove.portal(_G)
 COLOUR: c = blue
 MAP
@@ -519,17 +520,15 @@ ENDMAP
 NAME:   enter_trove_5
 TAGS:   transparent no_descent
 : trove.portal(_G)
-COLOUR: e = blue
-FTILE:  e = floor_marble
 : if you.absdepth() <= 15 then
 # Got drafted in from Vaults, while the mages try and close the portal down.
 KMONS:  e = vault guard
 : else
 # And this time he brought some friends...
 KMONS:  el = vault guard
-COLOUR: l = blue
-FTILE:  l = floor_marble
 : end
+COLOUR: e1 = blue
+FTILE:  e1 = floor_marble
 MAP
 ccccc
 c...c
@@ -1464,6 +1463,7 @@ end
 }}
 KPROP:   12' = no_tele_into
 TILE:    G = dngn_statue_dragon
+: tile("c = " .. crackle_def(_G))
 TILE:    v = dngn_metal_zot
 TILE:    o = wall_permarock_clear_blue
 FTILE:   '"12GHIJKLMNOo = floor_rough_blue

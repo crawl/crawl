@@ -2951,8 +2951,8 @@ ENDMAP
 ##############################################################################
 
 NAME:   lightli_arrival_boilingwater
-ORIENT: float
 TAGS:   arrival no_monster_gen
+ORIENT: float
 MAP
   @@@@@@
 WWWllllWWW
@@ -2970,10 +2970,10 @@ ENDMAP
 ##############################################################################
 
 NAME: lightli_arrival_quake
+TAGS: no_rotate no_hmirror no_vmirror arrival no_monster_gen
 ## No, door choice does not affect difficulty. Game is stuck on Nightmare as
 ## it is.
 ORIENT: float
-TAGS: no_rotate no_hmirror no_vmirror arrival no_monster_gen
 MAP
 cc+ccc+ccc+cc
 c...c...c...c
@@ -3108,7 +3108,9 @@ SUBST:  de = ', f = t, gh = ., ij = -, kpqr = x, s = @, uy = A
 : else
 SUBST: dhjsy = x, gfru = -, ep = A, iq = ., k = @
 : end
-FTILE:  -G = floor_dirt, 'Tt = floor_grass_dark
+FTILE:  -G = floor_sprouting_ruin
+FTILE:  'ATt = floor_lair
+FTILE:  .@ = floor_moss
 COLOUR: ' = green, - = brown
 MAP
                xkx

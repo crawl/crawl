@@ -1083,13 +1083,14 @@ ITEM:    any book
 SHUFFLE: 12 / 34
 SUBST:   d = $d, I = IG
 NSUBST:  4 = 3:4 / 2:. / * = 4.
+TILE:    c = wall_stone_magic_shelf
 MAP
   xxxx@xxxx
  xx2.....2xx
 xx.2xxxxx2.xx
-x..xxd1dxx..x
+x..xcd1dcx..x
 x.Ix$$G$$xI.x
-x..xx222xx..x
+x..xc222cx..x
 xx.2xx+xx2.xx
  xx..2.2..xx
   xxxxxxxxx

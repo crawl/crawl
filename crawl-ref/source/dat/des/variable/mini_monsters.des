@@ -1963,6 +1963,7 @@ ITEM:   potion of enlightenment pre_id q:3
 KFEAT:  ' = floor
 KMASK:  .123*< = opaque
 KPROP:  .123*< = no_tele_into
+TILE:   c = wall_stone_scorched
 MAP
 '''''''''''''''
 'ccccccccccccc'
@@ -1994,7 +1995,8 @@ KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
 SUBST:  F = ccc+
 COLOUR: # = red
-FTILE:  *|_1+'c = floor_hall
+FTILE:  *|_1'c = floor_sprouting_squares
+FTILE:  +t = floor_moss
 FTILE:  # = floor_rough_lightred
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                 pow_min = 10, pow_max = 10, delay = 10, \
@@ -2067,7 +2069,7 @@ NAME:    hangedman_summoners_spam
 TAGS:    no_monster_gen patrolling
 DEPTH:   Depths, Elf, Crypt, Abyss
 MONS:    boggart, orc high priest, kobold demonologist
-MONS:    shadow demon, deep elf demonologist, vampire mage
+MONS:    shadow demon, deep elf demonologist, glowing orange brain, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of the wilderness w:20 / \
          grand grimoire w:5 / randbook disc:summoning numspells:6
@@ -2080,6 +2082,7 @@ KITEM:   _ = any ally scroll pre_id, any ally scroll pre_id / nothing
 KFEAT:   _ = altar_sif_muna
 KFEAT:   ? = altar_lugonu
 KFEAT:   < = exit_abyss
+KFEAT:   C = c
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
 NSUBST:  ' = 1:@ / * = .@
@@ -2091,11 +2094,12 @@ SUBST:   %efg = $, * = <, _ = ?
 SUBST:   5 = 7, 6 = 8
 : else
 SHUFFLE: 56 / 78
+TILE:    C = wall_stone_magic_shelf
 : end
 MAP
 ccccccccccccccc
-c24c5de6fd5c32c
-c%%c*g...g*c%2c
+c24C5de6fd5C32c
+c%%C*g...g*C%2c
 c..cccc+cccc..c
 c.............c
 c%cG..%_%..Gc%c
@@ -2126,6 +2130,7 @@ COLOUR:  F = red
 SUBST:   7 = &
 : end
 FTILE:   F = floor_pebble_lightred
+TILE:    c = wall_stone_magic_shelf
 {{
   local fog = chained_fog_machine {
                             cloud_type = 'flame', pow_min = 6, pow_max = 6,
@@ -2136,7 +2141,7 @@ FTILE:   F = floor_pebble_lightred
 MAP
 @@xxxxxxxxxxx
 ..xxxxxxxxxxx
-.5xx1xx2xxxxx
+.5xx1xx2xxcxx
 .5xx++++xx9xx
 ..x..60..xexx
 ..x.F..F.x+xx
@@ -2145,7 +2150,7 @@ MAP
 ..x.F..F.x+xx
 ..x..60..xdxx
 .5xx++++xx8xx
-.5xx3xx4xxxxx
+.5xx3xx4xxcxx
 ..xxxxxxxxxxx
 @@xxxxxxxxxxx
 ENDMAP
@@ -2239,6 +2244,7 @@ DEPTH:   Depths
 MONS:    fire giant, frost giant, titan
 SHUFFLE: 12
 KMASK:   l = no_monster_gen
+FTILE:   =.123*|+ = floor_mystic_chasm
 MAP
 bbbbbbbbbbb
 b.......bbb
@@ -2250,7 +2256,7 @@ b.l2b.....b
 b.bbbb.3..b
 b.b**+....b
 b=b|*bbbbbb
-.@nbbbbbbbb
+'@nbbbbbbbb
 ENDMAP
 
 NAME:   lightli_church_of_beogh
@@ -2364,20 +2370,22 @@ MONS:    kobold fleshcrafter w:40 / tengu conjurer w:20 / \
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
+KFEAT:   z = c
 SHUFFLE: efgh
+: tile("z = " .. crackle_def(_G))
 MAP
    xxxxxxxxxxx
-  xxcccccccccxxxxxxxxx
+  xxczccccczcxxxxxxxxx
   xcc2ccccc2cccccccccxx
   xc.c.ccc.c.ccbbbbbccx
  @xc.c.ccc.c.cbbe.fbbcx
-.3.c.c.ccc.c.cb.2...bcx
+.3.c.c.czc.c.cb.2...bcx
 @U..3.3...3.3.=.._1dbcx
-.3.cccc.c.ccccb.2...bcx
+.3.cczc.c.czccb.2...bcx
  @xcccc.c.ccccbbg.hbbcx
   xcccc.c.cccccbbbbbccx
   xccccc2ccccccccccccxx
-  xxcccccccccxxxxxxxxx
+  xxcccczccccxxxxxxxxx
    xxxxxxxxxxx
 ENDMAP
 
@@ -2433,12 +2441,13 @@ KFEAT: S = shaft trap
 : if you.depth() > 2 then
 SUBST: 1 = 2
 : end
+TILE:  c = wall_stone_magic_shelf
 MAP
 ...@...
 ..P.P..
 xxx+xxx
 x%+...x
-xxx1.1x
+xcx1.1x
 xS+.3.x
 xxxxxxx
 ENDMAP
@@ -2479,12 +2488,14 @@ ITEM:  any book, any scroll
 : if you.depth() > 11 then
 SUBST: 2 = 23
 : end
+SUBST: c : c.
+TILE:  c = wall_stone_magic_shelf
 MAP
    bbbb
   bbdebb
  bb....bb
 bb......bb
-b...12...b
+b.c.12.c.b
 b........b
 bb......bb
  bb....bb
@@ -2926,8 +2937,11 @@ ITEM:    manual of maces & flails / manual of axes / manual of polearms / \
 ITEM:    great mace randart / battleaxe randart / glaive randart / \
          lajatang randart / rapier randart / great sword randart
 KITEM:   C = wand of digging charges:1
+# Autoexplore will stop to look at a mediocre non-mundane weapon,
+# so players with instant autoexplore can see they've entered a vault.
+KITEM:   ? = mace good_item / falchion good_item
 SHUFFLE: 23 / 45 / 67 / 89, fi / gh
-FTILE:   `"C23456789defghixn+ = floor_sand
+FTILE:   `"C23456789defghi?xn+ = floor_sand
 KMASK:   13579defghi = opaque
 KPROP:   13579defghi = no_tele_into
 MAP
@@ -2938,7 +2952,7 @@ MAP
   .+```v```nddv
  ..+```+``2nddvv
  ..v```+```nddfv
-@..v```+``Cxxxxv
+@..v`?`+``Cxxxxv
  ..v```+```neeiv
  ..+```+``4neevv
   .+```v```neev
@@ -3551,6 +3565,7 @@ NSUBST:  D = 2=1 / ., E = 2=1 / .
 : if you.in_branch("D") then
 SUBST:   1 = 1..
 : end
+FTILE:   .{[(1G = floor_mystic_chasm
 MAP
 xxxxxxxxxxxxxxxxx
 xGD..D..1..E..EGx
@@ -3566,41 +3581,62 @@ ENDMAP
 # Another NetHack-inspired vault, based on the top floor of Vlad's Tower.
 NAME:  nicolae_nh_vlads_tower
 TAGS:  transparent patrolling
-DEPTH: D:11-, Crypt
-KITEM: | = |
-KITEM: _ = * / sanguine talisman
-KITEM: 1 = %
-: if you.absdepth() < 13 then
-KMONS: _ = vampire mage
-KMONS: 1 = vampire
+DEPTH: D:10-, Crypt
+: if you.in_branch("D") then
+:   if you.absdepth() < 12 then
+KMONS:  _ = vampire
+KMONS:  1 = vampire bat
+:   elseif you.absdepth() < 14 then
+KMONS:  _ = vampire mage
+KMONS:  1 = vampire
+:   else
+KMONS:  _ = vampire mage / vampire knight
+KMONS:  1 = vampire / jiangshi
+:   end
+TILE:   c = dngn_stone_wall_darkgray
+NSUBST: z = 2:yzz / *:y
 : else
-KMONS: _ = vampire mage / vampire knight
-KMONS: 1 = vampire / jiangshi
+KMONS:  _ = vampire bloodprince
+KMONS:  1 = vampire mage / vampire knight / jiangshi
+SUBST:  c = v
 : end
-KFEAT: _ = altar_dithmenos / altar_kikubaaqudgha / altar_makhleb / \
-           altar_yredelemnul
+KITEM:  | = |
+KITEM:  _ = * / sanguine talisman
+KITEM:  1 = %
+KFEAT:  yz = c
+KFEAT:  _ = altar_dithmenos / altar_kikubaaqudgha / altar_makhleb / \
+            altar_yredelemnul
+TILE:   y = dngn_stone_wall_red
+TILE:   z = wall_stone_magic_shelf
 MAP
 xxxxxxxxxxxxxxxxx
-xxxcccxcccxcccxxx
+xxxczcxczcxczcxxx
 xxxc1cxc1cxc1cxxx
 xccc+ccc+ccc+cccx
 xc.......+.+...cx
 xccc+ccccc.ccc+cx
-xxxc..._|c.+1c..@
+xxxc..._|y.+1c..@
 xccc+ccccc.cccccx
 xc.......+.+...cx
 xccc+ccc+ccc+cccx
 xxxc1cxc1cxc1cxxx
-xxxcccxcccxcccxxx
+xxxczcxczcxczcxxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   nicolae_demonic_statue_gallery
 TAGS:   transparent
-DEPTH:  D:9-12
+DEPTH:  D:9-13
 KMONS:  5 = lesser demon
-KMONS:  4 = common demon
-NSUBST: D = 2=4 / 2=45 / 2=5 / .5
+KMONS:  4 = orange demon / hellwing / ice devil / \
+            rust devil / red devil / chaos spawn
+KMONS:  3 = soul eater / sun demon / sixfirhy / \
+            smoke demon / neqoxec / ynoxinul
+: if you.depth() > 11 then
+NSUBST: D = 1:3 / 1:34 / 1:345 / 1:45 / 3=5 / * = 5.
+: else
+NSUBST: D = 2:4 / 2:45 / 2:5 / * = 5.
+: end
 MAP
  ccGl@lGcc
 ccGl...lGcc
@@ -3649,24 +3685,26 @@ DEPTH:   D:9-12
 KMONS:   3 = neqoxec
 KMONS:   4 = chaos spawn / hellwing / ice devil / orange demon / red devil / \
              rust devil
-NSUBST:  3 = 2=3 / 4
-SUBST:   4 = 44., % = %%%*
+KFEAT:   z = c
+NSUBST:  3 = 2:3 / 1:4 / * = 44.
+SUBST:   % = %%%*, z : zzc
+TILE:    z = wall_stone_magic_shelf
 MAP
            cccccc
          cccccccccc
        cccc......cccc
   cc@@ccc..........ccc@@cc
  cc...cc....cccc....cc...cc
- cc..cc...cccccccc...cc..cc
+ cc..cc...cccczccc...cc..cc
 cc...cc..ccc%..%ccc..cc...cc
 cc..cc.......3.3.cc.......cc
 cc..cc.....3......cc......cc
-cc..cccccc...GG.3.cccccc..cc
-cc..cccccc.3.GG...cccccc..cc
+cc..ccczcc...GG.3.cccccc..cc
+cc..cccccc.3.GG...cczccc..cc
 cc......cc......3.....cc..cc
 cc.......cc.3.3.......cc..cc
 cc...cc..ccc%..%ccc..cc...cc
- cc..cc...cccccccc...cc..cc
+ cc..cc...ccczcccc...cc..cc
  cc...cc....cccc....cc...cc
   cc@@ccc..........ccc@@cc
        cccc......cccc
@@ -3980,13 +4018,17 @@ ENDMAP
 NAME:  minmay_more_statues
 DEPTH: D:12-
 MONS:  ice statue w:5 / obsidian statue / orange crystal statue
+KFEAT: z = c
+TILE:  c = dngn_stone_wall_darkgray
+TILE:  b = dngn_crystal_lightred
+: tile("z = " .. crackle_def(_G))
 MAP
 cccbcccccbcccccbccc
-c.....c%*|*%c.....c
+c.....z%*|*%z.....c
 c.................c
 b..1.....G.....1..b
 c.................c
-c.....c.....c.....c
+c.....z.....z.....c
 cccbcccc.@.ccccbccc
 ENDMAP
 
@@ -4165,16 +4207,18 @@ NSUBST: 1 = 1:335 / *:1
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
 KPROP:  l = no_cloud_gen
+TILE:   c = wall_stone_scorched
 MAP
-xxxxxxxxx
-xl.1xx23x
-x1l''x|2x
-x.l''4xxx
-x.ll'''xx
-x.lll''1x
-x'.llll.x
-x.'...1lx
-+xxxxxxxx
+xxxxxxxxxx
+xxxxxccccx
+xl.1xc23cx
+x1l''c|2cx
+x.l''4cccx
+x.ll'''xxx
+x.lll''1xx
+x'.llll.xx
+x.'...1lxx
++xxxxxxxxx
 ENDMAP
 
 NAME:   hangedman_eye_storm
@@ -4193,7 +4237,7 @@ SUBST:  c = c:4 v:1 b:1, '| = d
 MAP
      c++cccc
    ccc..c3%ccc
-  cc'c..c+m.%.cc
+  cc'c..c+m.%cc
  cc'mm..c.mmm.cc
  c.mm...c...mm.c
 cc.m....c.5..m.cc
@@ -7722,6 +7766,7 @@ NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c
 SHUFFLE: {[(<<
 # Generates between 8 and 16 monsters
 NSUBST:  . = 8=1 / 8=1. / .
+FTILE:   .'{[(<1+G = floor_mystic_chasm
 MAP
 cccc   cccc   cccc
 cccccDccccccDccccc
@@ -7906,6 +7951,9 @@ NSUBST:  . = 1:2 / 1:3 / *:.
 SHUFFLE: })]<>
 TILE:    n = dngn_transparent_stone_magenta
 :   else
+:     if you.in_branch("Lair") then
+FTILE:   .defgh%*|CDG123 = floor_sprouting_stone
+:     end
 KMONS:   t = toadstool / fungus w:2
 SUBST:   }) = t
 FTILE:   'tV = floor_pebble_green
@@ -8063,47 +8111,6 @@ MAP
 .c3.........3c.
 .cccccc+cccccc.
 ...............
-ENDMAP
-
-# Ring of the Mage
-#
-NAME:   minmay_guarded_unrand_mage
-TAGS:   no_monster_gen no_item_gen transparent
-DEPTH:  Depths
-WEIGHT: 3
-MONS:   occultist, orange crystal statue / obsidian statue
-KMONS:  3 = lich w:40 / ancient lich / dread lich
-KITEM:  3 = ring_of_the_mage no_pickup
-KPROP:  32'+ = no_tele_into
-KFEAT:  ' = floor
-MAP
-.......             .......
-.ccccc..           ..ccccc.
-.c...c...         ...c...c.
-.c.1.+....       ....+.1.c.
-.c...c.....     .....c...c.
-.cc+cc......   ......cc+cc.
-...........................
- ......WWWWWWWWWWWWW......
-  .....WwwwwwwwwwwwW.....
-   ....WwccncccnccwW....
-    ...Wwc'''c'''cwW...
-     ..Wwn'3'+'2'nwW..
-      .Wwc'''c'''cwW.
-      .Wwcccccc+ccwW.
-      .Wwc'''c'''cwW.
-     ..Wwn'2'+'2'nwW..
-    ...Wwc'''c'''cwW...
-   ....Wwcc=cccnccwW....
-  .....WwwwWwwwwwwwW.....
- ......WWWWWWWWWWWWW......
-...........................
-.cc+cc......   ......cc+cc.
-.c...c.....     .....c...c.
-.c.1.+....       ....+.1.c.
-.c...c...         ...c...c.
-.ccccc..           ..ccccc.
-.......             .......
 ENDMAP
 
 # There's a sword stuck inside a stone. Some knights are milling around

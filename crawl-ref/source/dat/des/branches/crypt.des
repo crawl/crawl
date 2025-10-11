@@ -669,7 +669,7 @@ TAGS:   transparent allow_dup
 DEPTH:  Crypt
 KMONS:  0 = zombie / draugr
 KMONS:  P = withered plant
-KITEM:  e = human skeleton / orc skeleton / elf skeleton
+: kitem("e = " .. vault_species_skeletons(_G, "dungeon"))
 KFEAT:  _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
             altar_dithmenos w:5 / altar_the_shining_one w:1
 SHUFFLE: ab/ab/ab/ab/ba
@@ -1668,8 +1668,9 @@ MONS:    patrolling vampire knight, patrolling ancient champion
 ITEM:    any weapon no_pickup / any armour no_pickup w:8 / \
          gold no_pickup w:3 / any weapon good_item no_pickup w:3
 ITEM:    $ no_pickup, | no_pickup
+KFEAT:   ~ = broken_door
 SHUFFLE: -_
-SUBST:   z : cvvv, G : GGv, - = ++++., _ = +.
+SUBST:   z : cvvv, G : GGv, - = ++++~, _ = +~
 NSUBST:  C = 3 = ':19 c:1 / 2 = 'cc / *:c
 NSUBST:  Z = 1:. / *:v, G = 1:' / * = G:19 ':1
 MAP

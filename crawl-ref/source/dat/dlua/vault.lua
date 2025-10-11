@@ -311,6 +311,13 @@ function decorative_floor (e, glyph, type)
   e.set_feature_name('decorative_floor', type)
 end
 
+-- The animation implementation for these tiles needs to be each discrete
+-- tiles, alas, so to help shorten its use, just use this each time.
+function crackle_def(e)
+  return "wall_stone_crackle_1 / wall_stone_crackle_2 / " ..
+         "wall_stone_crackle_3 / wall_stone_crackle_4"
+end
+
 -- A reusable poison / fire / snake theming for statues that show up in Snake.
 function snake_statue_setup (e, glyph)
   if crawl.x_chance_in_y(2, 3) then
@@ -405,7 +412,7 @@ function index_vaults_room_themes (e, set, hard)
            'ironbound beastmaster w:' .. -2 + d * 4)
     e.kmons('S = bush')
     e.kfeat('F = cache of fruit')
-    e.ftile('`SF = floor_moss')
+    e.ftile('`SF = floor_sprouting_stone')
     e.tile('T = dngn_fountain_novelty_fancy')
     e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
     decorative_floor(e, 'p', "garden patch")

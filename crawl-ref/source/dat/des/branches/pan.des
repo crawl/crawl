@@ -106,7 +106,7 @@ function pan_lord_setup(_G, name)
         _G.lfloorcol("blue")
         _G.lrockcol("blue")
         _G.lfloortile("floor_nerves_darkgray")
-        _G.lrocktile("wall_hall_darkgray")
+        _G.lrocktile("wall_hall_of_shadows")
         _G.tile ("c = stone_wall_shadow_mesh")
         _G.kitem("O = dark rune of Zot")
         _G.kmons("& = patrolling demonspawn soul scholar")
@@ -496,16 +496,16 @@ TAGS:  transparent
 : pan_entry_vault_contents(_G, 'O')
 MAP
 ''''''''''''
-'x+xxxxxxxx'
-'x.xx2.2..+'
+''xxxxxxxxx'
+'xx.x2.2..+'
 'x.x.xxxxxx'
-'x2x1x.1.xx'
-'x.x.2Oxx2x'
-'x2xx$$.x.x'
-'xx.1.x1x2x'
+'x2x1x.x.xx'
+'x.x.2O1x2x'
+'x2x1$$.x.x'
+'xx.x.x1x2x'
 'xxxxxx.x.x'
-'+..2.2xx.x'
-'xxxxxxxx+x'
+'+..2.2x.xx'
+'xxxxxxxxx''
 ''''''''''''
 ENDMAP
 
@@ -3761,7 +3761,7 @@ TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SHUFFLE: Aa/Bb, de, DE
 SUBST: aD = x, be = ., A = +, B = c, d : .x, E : .x
 COLOUR: x = blue
-TILE: x = wall_hall_darkgray
+TILE: x = wall_hall_of_shadows
 TILE: c = stone_wall_shadow_mesh
 MAP
 xxxxxx.@.xxxxxx
@@ -3785,7 +3785,7 @@ NAME: nicolae_pan_gloorx_vloqian_2
 TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SUBST: A : .x, B : .x, C : .x, D : .x, E : .x, F : .x, G : Hc, H : ..c
 COLOUR: x = blue
-TILE: x = wall_hall_darkgray
+TILE: x = wall_hall_of_shadows
 TILE: c = stone_wall_shadow_mesh
 MAP
 ...............
@@ -3820,7 +3820,7 @@ SUBST: fg = .
 SHUFFLE: ab
 SUBST: a = x, b = .
 COLOUR: x = blue
-TILE: x = wall_hall_darkgray
+TILE: x = wall_hall_of_shadows
 TILE: c = stone_wall_shadow_mesh
 MAP
     ccccccc
@@ -3845,7 +3845,7 @@ TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SHUFFLE: ab, de, fg
 SUBST: a = x, b = ., df = c, e : .ccc, g : .ccc
 COLOUR: x = blue
-TILE: x = wall_hall_darkgray
+TILE: x = wall_hall_of_shadows
 TILE: c = stone_wall_shadow_mesh
 MAP
 ...............
