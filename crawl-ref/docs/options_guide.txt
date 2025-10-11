@@ -2482,8 +2482,9 @@ tile_full_screen = auto
         width 1200, or height 800.
 
 tile_use_small_layout = auto
-        Alternative layout designed for very small screens. It is enabled by
-        default on Android.
+        Alternative layout designed for narrow screens. If auto, it will be
+        enabled when the available horizontal space is not enough to display the
+        normal layout in a comfortable way.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
