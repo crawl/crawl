@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
@@ -31,7 +33,7 @@ public abstract class DCSSTextBase extends AppCompatActivity {
     }
 
     // Load the file
-    protected void openFile(File file, TextView text) {
+    protected boolean openFile(File file, TextView text) {
         try {
             Log.i(DCSSLauncher.TAG, "Opening file: " + file.getAbsolutePath());
             FileReader reader = new FileReader(file);
@@ -40,36 +42,40 @@ public abstract class DCSSTextBase extends AppCompatActivity {
             reader.close();
             buffer.rewind();
             text.setText(buffer);
+            return true;
         } catch (IOException e) {
             Log.e(DCSSLauncher.TAG, "Can't open file: " + e.getMessage());
+            return false;
         }
     }
 
     // Save the file and close the activity
-    protected void saveFile(File file, EditText text) {
+    protected boolean saveFile(File file, EditText text) {
         try {
             Log.i(DCSSLauncher.TAG, "Saving file: " + file.getAbsolutePath());
             FileWriter writer = new FileWriter(file);
             CharSequence buffer = text.getText();
             writer.append(buffer);
             writer.close();
+            return true;
         } catch (IOException e) {
             Log.e(DCSSLauncher.TAG, "Can't save file: " + e.getMessage());
-        } finally {
-            close();
+            return false;
         }
     }
 
     // Load the asset
-    protected void openAsset(String asset, TextView text) {
+    protected boolean openAsset(String asset, TextView text) {
         try {
             Log.i(DCSSLauncher.TAG, "Opening asset: " + asset);
             InputStream inputStream = getAssets().open(asset);
             byte[] buffer = new byte[inputStream.available()];
             inputStream.read(buffer);
             text.setText(new String(buffer));
+            return true;
         } catch (IOException e) {
             Log.e(DCSSLauncher.TAG, "Can't open asset: " + e.getMessage());
+            return false;
         }
     }
 
@@ -82,31 +88,33 @@ public abstract class DCSSTextBase extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, fileName);
-        startActivityForResult(intent, CREATE_FILE);
+        downloadActivityResultLauncher.launch(intent);
     }
 
     // Handling the download
     // Save the file in the destination chosen by the user
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        super.onActivityResult(requestCode, resultCode, resultData);
-        try {
-            if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
-                if (resultData != null) {
-                    Uri uri = resultData.getData();
-                    Log.i(DCSSLauncher.TAG, "Destination: " + uri.toString());
-                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
-                    OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-                    writer.append(textToDownload.getText());
-                    writer.close();
-                    onDownloadOk();
+    ActivityResultLauncher<Intent> downloadActivityResultLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                // There are no request codes
+                Intent resultData = result.getData();
+                if (resultData != null && resultData.getData() != null) {
+                    try {
+                        Uri uri = resultData.getData();
+                        Log.i(DCSSLauncher.TAG, "Destination: " + uri.toString());
+                        OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                        OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+                        writer.append(textToDownload.getText());
+                        writer.close();
+                        onDownloadOk();
+                    } catch (IOException e) {
+                        Log.e(DCSSLauncher.TAG, "Can't download file: " + e.getMessage());
+                        onDownloadError();
+                    }
                 }
             }
-        } catch (IOException e) {
-            Log.e(DCSSLauncher.TAG, "Can't download file: " + e.getMessage());
-            onDownloadError();
-        }
-    }
+        });
 
     // Overridden by children to show download results
     protected abstract void onDownloadOk();

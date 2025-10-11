@@ -1,5 +1,6 @@
 package org.develz.crawl;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,12 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
 
     // Constructor
     public DCSSMorgueAdapter(File morgueDir, OnMorgueListener morgueListener) {
-        if (morgueDir.isDirectory()) {
-            this.morgueFiles = morgueDir.listFiles();
-        } else {
-            this.morgueFiles = new File[0];
+        if (!morgueDir.exists()) {
+            if (!morgueDir.mkdir()) {
+                Log.e(DCSSLauncher.TAG, "Can't create folder "+morgueDir.getPath());
+            }
         }
+        this.morgueFiles = morgueDir.listFiles();
         this.morgueListener = morgueListener;
     }
 
@@ -52,7 +54,7 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            this.morgueListener.onMorgueClick(getAdapterPosition());
+            this.morgueListener.onMorgueClick(getBindingAdapterPosition());
         }
     }
 

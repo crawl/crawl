@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto">
 
+    <!-- OpenGL ES 1.0 -->
+    <uses-feature android:glEsVersion="0x00010000" />
+
+    <!-- Allow writing to external storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -12,40 +18,33 @@
         <activity
             android:name=".DCSSLauncher"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DungeonCrawlStoneSoup"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".DCSSTextViewer"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".DCSSTextEditor"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".DCSSMorgue"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DCSSMods"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize" />
     </application>
 
-    <!-- OpenGL ES 1.0 -->
-    <uses-feature android:glEsVersion="0x00010000" />
-
-    <!-- Allow writing to external storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
 </manifest>

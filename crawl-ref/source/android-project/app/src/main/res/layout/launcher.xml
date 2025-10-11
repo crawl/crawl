@@ -50,6 +50,13 @@
                 android:layout_marginTop="6dp"
                 android:text="@string/morgue"/>
 
+            <Button
+                android:id="@+id/modsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/mods"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,8 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:layout_marginRight="6dp"
+                    android:gravity="end"
+                    android:layout_marginEnd="6dp"
                     android:text="@string/keyboard"
                     android:textStyle="bold" />
 
@@ -87,8 +94,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:layout_marginRight="6dp"
+                    android:gravity="end"
+                    android:layout_marginEnd="6dp"
                     android:text="@string/extra_keyboard"
                     android:textStyle="bold" />
 
@@ -115,8 +122,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:gravity="right"
-                    android:layout_marginRight="6dp"
+                    android:gravity="end"
+                    android:layout_marginEnd="6dp"
                     android:text="@string/keyboard_size"
                     android:textStyle="bold" />
 
@@ -141,9 +148,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="6dp"
+                    android:layout_marginEnd="6dp"
                     android:text="@string/full_screen"
                     android:textStyle="bold" />
 

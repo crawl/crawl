@@ -27,6 +27,9 @@
     <style name="ButtonColor4" parent="CrawlTheme">
         <item name="colorButtonNormal">@color/dark_purple</item>
     </style>
+    <style name="ButtonColor5" parent="CrawlTheme">
+        <item name="colorButtonNormal">@color/error</item>
+    </style>
     <dimen name="key_height">40dp</dimen>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
