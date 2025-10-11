@@ -21,7 +21,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         else if ((base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.DNGN_CACHE_OF_FRUIT)
                  || (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < dngn.ARCANE_CONDUIT)
                  || (base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT)
-                 || (base_bg >= TILE_WALL_STONE_CRACKLE_1 && base_bg <= TILE_WALL_STONE_CRACKLE_4)
+                 || (base_bg >= dngn.WALL_STONE_CRACKLE_1 && base_bg <= dngn.WALL_STONE_CRACKLE_4)
                  || is_torch(base_bg) || base_bg == dngn.DNGN_TRAP_HARLEQUIN)
         {
             return options.get("tile_misc_anim");
