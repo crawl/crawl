@@ -83,6 +83,11 @@ Minotaur
 Minotaurs are large muscular humans with bovine heads. They excel at all forms
 of close and ranged combat.
 %%%%
+Mothkin
+
+Mothkin are a winged, insectoid species. They inscribe their wings with
+spells that trigger when attacking or casting magic.
+%%%%
 Mountain Dwarf
 
 Mountain Dwarves are strong melee fighters and capable heavy-armoured casters.

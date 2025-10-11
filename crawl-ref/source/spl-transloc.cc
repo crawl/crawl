@@ -854,7 +854,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
 
     // Monsters will already use up attack energy via the melee attack itself,
     // so we only need to handle delay for players.
-    if (agent.is_player())
+    if (agent.is_player() && !is_tabcasting())
     {
         // Normally this is 10 aut (multiplied by haste, slow, etc.), but slow
         // weapons take longer. Most relevant for low-skill players or things
@@ -1555,7 +1555,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         else
             atk.launch_attack_set(i == 0);
 
-        if (i == 0)
+        if (i == 0 && !is_tabcasting())
             you.time_taken = you.attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.
@@ -1581,7 +1581,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 
     if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
-        canned_msg(MSG_SOMETHING_IN_WAY);
+        if (!is_tabcasting())
+            canned_msg(MSG_SOMETHING_IN_WAY);
         return spret::abort;
     }
 
@@ -1591,7 +1592,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     const int item_idx = you.visible_igrd(where);
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
-        mpr("You don't see anything to apport there.");
+        if (!is_tabcasting())
+            mpr("You don't see anything to apport there.");
         return spret::abort;
     }
 
@@ -1600,7 +1602,8 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))
     {
-        mpr("You cannot apport that!");
+        if (!is_tabcasting())
+            mpr("You cannot apport that!");
         return spret::abort;
     }
 
@@ -1761,8 +1764,11 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         else
         {
             // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty "
-                "space.");
+            if (!is_tabcasting())
+            {
+                mpr("Creating a passage of Golubria requires sufficient empty "
+                    "space.");
+            }
         }
 
         return spret::abort;

@@ -49,7 +49,7 @@ enum class spflag
     needs_tracer       = 0x00080000,      // monster casting needs tracer
     noisy              = 0x00100000,      // makes noise, even if innate
     testing            = 0x00200000,      // a testing/debugging spell
-                     //  0x00400000,      // was spflag::corpse_violating
+    channelled         = 0x00400000,      // a channelled spell
                      //  0x00800000,      // was SPFLAG_ALLOW_SELF
     utility            = 0x01000000,      // usable no matter what foe is
     no_ghost           = 0x02000000,      // ghosts can't get this spell
@@ -145,6 +145,10 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+bool is_tabcasting();
+void set_tabcast_spell(spell_type spell);
+void tabcast_spell(coord_def &pos);
+void attempt_tabcast_spell(monster* m, int multiplier, bool initial = true);
 
 bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);

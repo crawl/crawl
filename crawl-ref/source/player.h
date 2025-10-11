@@ -932,6 +932,8 @@ public:
     void rev_down(int time_taken);
 
     bool allies_forbidden();
+    int get_tabcast_chance(bool get_max = false, bool random = false,
+        spell_type spell = SPELL_NO_SPELL, int multiplier = 5);
 
     // TODO: move this somewhere else
     void refresh_rampage_hints();

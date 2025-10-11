@@ -2336,7 +2336,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SEARING_RAY, "Searing Ray",
     spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::channelled,
     2,
     50,
     4, 4,
@@ -3454,7 +3454,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MAXWELLS_COUPLING, "Maxwell's Capacitive Coupling",
     spschool::air,
-    spflag::no_ghost | spflag::destructive,
+    spflag::no_ghost | spflag::destructive | spflag::channelled,
     8,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3653,7 +3653,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLAME_WAVE, "Flame Wave",
     spschool::conjuration | spschool::fire,
-    spflag::area,
+    spflag::area | spflag::channelled,
     4,
     100,
     3, 3, // sort of...
@@ -4228,7 +4228,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CLOCKWORK_BEE, "Launch Clockwork Bee",
     spschool::forgecraft,
-    spflag::target | spflag::not_self,
+    spflag::target | spflag::not_self | spflag::channelled,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,

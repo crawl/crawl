@@ -794,6 +794,33 @@ You have an uncanny knack for knowing where items can be found. As you explore
 the dungeon, nearby item locations that you cannot directly see will gain a
 marker for as-yet-undiscovered items.
 %%%%
+auxiliary casting mutation
+
+You have a chance to cast an inscribed spell for free when attacking foes or
+casting spells. Spells cast in this manner ignore silencing effects and never
+miscast unless caused by godly wrath. This chance is only checked up to once
+per action.
+
+Higher level spells have a lower chance of being cast. This chance increases
+with your experience level and decreases with failure chance. The chance to
+cast an inscribed spell is reduced by a fifth for ranged attacks.
+
+Additionally, an inscribed channelled spell will only be interrupted by
+movement.
+%%%%
+safe spells mutation
+
+You are not damaged by your own spells.
+%%%%
+strenuous magic mutation
+
+Casting spells manually is taxing on you, taking you 50% more time.
+%%%%
+inefficient magic mutation
+
+You cast spells with poor efficiency, increasing the cost of your spells by 1
+MP.
+%%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
 

@@ -314,6 +314,7 @@ bool melee_attack::handle_phase_blocked()
     //attack::handle_phase_blocked as some attacks
     //such as darts don't trigger it
     maybe_trigger_jinxbite();
+    maybe_trigger_tabcast();
 
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
         && coinflip() && attacker->as_monster()->res_blind() <= 1)
@@ -361,6 +362,7 @@ bool melee_attack::handle_phase_dodged()
         count_action(CACT_DODGE, DODGE_EVASION);
 
     maybe_trigger_jinxbite();
+    maybe_trigger_tabcast();
 
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
@@ -868,6 +870,8 @@ bool melee_attack::handle_phase_hit()
         inc_mp(1);
     }
 
+    maybe_trigger_tabcast();
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->has_blood()
@@ -1220,6 +1224,15 @@ void melee_attack::handle_spectral_brand()
         return;
     attacker->triggered_spectral = true;
     spectral_weapon_fineff::schedule(*attacker, *defender, mutable_wpn);
+}
+
+void melee_attack::maybe_trigger_tabcast()
+{
+    if (!attacker->is_player() || !you.has_mutation(MUT_AUXILIARY_CASTING) || !defender->is_monster() || is_projected)
+        return;
+
+    monster* m = defender->as_monster();
+    attempt_tabcast_spell(m, 5);
 }
 
 item_def *melee_attack::primary_weapon() const

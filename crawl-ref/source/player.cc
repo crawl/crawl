@@ -3461,6 +3461,22 @@ static void _display_damage_rating(const item_def *weapon)
     return;
 }
 
+/**
+ * Print a message listing current chance to tabcast a spell
+ */
+static void _display_tabcast_chance()
+{
+    if (!you.has_mutation(MUT_AUXILIARY_CASTING))
+        return;
+
+    if (you.attribute[ATTR_TABCAST_SPELL] != SPELL_NO_SPELL)
+    {
+        mpr(make_stringf("Your base chance to cast %s with attacks is %d%%.",
+            spell_title(static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL])),
+            you.get_tabcast_chance()));
+    }
+}
+
 // forward declaration
 static string _constriction_description();
 
@@ -3496,6 +3512,7 @@ void display_char_status()
     _display_damage_rating(you.weapon());
     if (offhand)
         _display_damage_rating(offhand);
+    _display_tabcast_chance();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()
@@ -9329,4 +9346,35 @@ item_def* player::active_talisman() const
         return &you.inv[cur_talisman];
     else
         return nullptr;
+}
+
+int player::get_tabcast_chance(bool get_max, bool random, spell_type spell, int multiplier)
+{
+    spell = spell == SPELL_NO_SPELL ? static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]) : spell;
+    int diff = spell_difficulty(spell);
+
+    //reduce cast chance of sandblast to compensate for the fact
+    //that its increased cast time is now instant
+    if (spell == SPELL_SANDBLAST)
+        diff += 2;
+
+    //base chance of 150, scaling up to 300 at max xl
+    //divided by 3 + spell level, capped at 100
+    const int base = 30 * multiplier;
+    const int scaling = 30 * multiplier;
+    const int div = 3 + diff;
+    const int skl = (you.experience_level - 1) * 100;
+    constexpr int maxskl = 2600;
+
+    if (get_max)
+        return (base + scaling) / div;
+
+    //(base + scaling * skl / maxskl) / div
+    int chance = base * maxskl + scaling * skl;
+    chance = random ? div_rand_round(chance, div * maxskl) : chance / (div * maxskl);
+
+    //penalize cast rate with failure rate
+    chance = max(0, chance - failure_rate_to_int(raw_spell_fail(spell)));
+
+    return chance;
 }

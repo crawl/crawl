@@ -26,6 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
+#include "fineff.h"
 #include "format.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -355,7 +356,8 @@ static void _apply_post_zap_effect(spell_type spell, coord_def target)
     switch (spell)
     {
     case SPELL_SANDBLAST:
-        you.time_taken = you.time_taken * 3 / 2;
+        if (!is_tabcasting())
+            you.time_taken = you.time_taken * 3 / 2;
         break;
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
@@ -710,7 +712,8 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()
+        && !is_tabcasting())
     {
         if (!quiet)
             mpr("You cannot cast spells while unable to breathe!");
@@ -746,7 +749,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (silenced(you.pos()))
+    if (silenced(you.pos()) && !is_tabcasting())
     {
         if (!quiet)
             mpr("You cannot cast spells when silenced!");
@@ -836,6 +839,19 @@ static bool _death_ego_charge_hp(spell_type spell)
             && !you.duration[DUR_DEATHS_DOOR];
 }
 
+static void _spell_tabcasts_spell(bool initial)
+{
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        monster *m = monster_at(*di);
+        if (m && !m->wont_attack() && you.see_cell_no_trans(*di)
+            && !m->is_peripheral() && !never_harm_monster(&you, *m))
+        {
+            attempt_tabcast_spell(m, 5, initial);
+            break;
+        }
+    }
+}
 
 /**
  * Cast a spell.
@@ -859,8 +875,11 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         return spret::abort;
     }
 
-    if (!can_cast_spells())
+    if (!can_cast_spells(is_tabcasting()))
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         crawl_state.zero_turns_taken();
         return spret::abort;
     }
@@ -980,6 +999,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     if (spell == SPELL_NO_SPELL)
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         mpr("You don't know that spell.");
         crawl_state.zero_turns_taken();
         return spret::abort;
@@ -989,6 +1011,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     const auto reason = casting_uselessness_reason(spell, true);
     if (!reason.empty())
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         mpr(reason);
         crawl_state.zero_turns_taken();
         return spret::abort;
@@ -996,6 +1021,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     if (check_range && spell_no_hostile_in_range(spell))
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
         mpr("You can't see any susceptible monsters within range! "
@@ -1014,6 +1042,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     if (god_punishes_spell(spell, you.religion)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         // None currently dock just piety, right?
         if (!yesno("Casting this spell will place you under penance. "
                    "Really cast?", true, 'n'))
@@ -1042,7 +1073,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     if (cast_result == spret::abort
         || you.divine_exegesis && cast_result == spret::fail)
     {
-        if (cast_result == spret::abort)
+        if (cast_result == spret::abort && !is_tabcasting())
             crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         refund_mp(cost);
@@ -1060,19 +1091,29 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     _handle_energy_orb(cost, cast_result);
     if (cast_result == spret::success)
     {
-        stardust_orb_trigger(cost);
+        if (cost > 0)
+            stardust_orb_trigger(cost);
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
 
-    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
+    if (_majin_charge_hp() || cost)
+        finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     // Check if an HP payment brought us low enough
     // to trigger Celebrant or time-warped blood.
     makhleb_celebrant_bloodrite();
     _maybe_blood_hastes_allies();
-    you.turn_is_over = true;
+    if (!is_tabcasting())
+    {
+        you.turn_is_over = true;
+        if (cast_result == spret::success)
+            _spell_tabcasts_spell(true);
+    }
+
+    if (you.has_mutation(MUT_STRENUOUS_MAGIC) && !is_tabcasting() && !you.divine_exegesis)
+        you.time_taken = you.time_taken * 3 / 2;
     alert_nearby_monsters();
 
     return cast_result;
@@ -1213,7 +1254,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
 
     if (!msg.empty())
     {
-        mpr(msg);
+        if (!is_tabcasting())
+            mpr(msg);
         return true;
     }
 
@@ -1241,7 +1283,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
-        && !fake_spell)
+        && !fake_spell
+        && !is_tabcasting())
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) == 100)
         {
@@ -2281,6 +2324,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (actual_spell)
     {
         int spfl = random2avg(100, 3);
+
+        //never miscast normally when tabcasting
+        //god wrath should still cause it to happen
+        if (is_tabcasting())
+            spfl = 100;
 
         if (!you_worship(GOD_SIF_MUNA)
             && you.penance[GOD_SIF_MUNA] && one_chance_in(20))
@@ -3398,6 +3446,213 @@ void do_demonic_magic(int pow, int rank)
     }
 }
 
+bool is_tabcasting()
+{
+    return you.attribute[ATTR_TABCASTING];
+}
+
+void set_tabcast_spell(spell_type spell)
+{
+    if (you.attribute[ATTR_TABCAST_SPELL] == spell)
+        return;
+    if (spell == SPELL_NO_SPELL)
+        mpr("Your attacks no longer cast spells.");
+    else
+        mprf("Your attacks cast %s.", spell_title(spell));
+    you.attribute[ATTR_TABCAST_SPELL] = spell;
+}
+
+static bool _find_tabcast_prism_target(dist &target)
+{
+    vector<coord_def> dests;
+
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, false); ri; ++ri)
+    {
+        if (actor_at(*ri) || !in_bounds(*ri)
+            || cell_is_solid(*ri) || !you.see_cell(*ri)
+            || grid_distance(you.pos(), *ri) > calc_spell_range(SPELL_FULMINANT_PRISM, 0, true, false))
+        {
+            continue;
+        }
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static bool _find_tabcast_lrd_target(dist &target)
+{
+    vector<coord_def> dests;
+
+    bolt tempbeam;
+    bool temp;
+
+    if (setup_fragmentation_beam(tempbeam, 0, &you,
+            target.target, true, nullptr, temp))
+    {
+        return true;
+    }
+
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
+    {
+        if (!you.see_cell(*ri))
+            continue;
+
+        if (!setup_fragmentation_beam(tempbeam, 0, &you,
+            *ri, true, nullptr, temp))
+        {
+            continue;
+        }
+
+        //check to see if you can hit
+        if (grid_distance(*ri, target.target) > tempbeam.ex_size)
+            continue;
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static void _clamp_target_adjacent(dist &target)
+{
+    coord_def offset = target.target - you.pos();
+    offset.x = max(min(offset.x, 1), -1);
+    offset.y = max(min(offset.y, 1), -1);
+    target.target = you.pos() + offset;
+}
+
+void tabcast_spell(coord_def &pos)
+{
+    const spell_type spell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
+
+    dist target;
+    target.target = pos;
+    switch (spell)
+    {
+    case SPELL_FULMINANT_PRISM:
+        if (!_find_tabcast_prism_target(target))
+            return;
+        break;
+    case SPELL_LRD:
+        if (!_find_tabcast_lrd_target(target))
+            return;
+        break;
+    case SPELL_GELLS_GAVOTTE:
+    case SPELL_SPLINTERFROST_SHELL:
+    case SPELL_BOULDER:
+        _clamp_target_adjacent(target);
+        break;
+    default:
+        break;
+    }
+
+    you.attribute[ATTR_TABCASTING] = 1;
+    //if a spell was aborted because of an invalid target or whatever
+    //reason, try casting again but with the spell's default targeting
+    if (cast_a_spell(false, spell, &target) == spret::abort)
+    {
+        target.find_target = true;
+        cast_a_spell(true, spell, &target);
+    }
+    you.attribute[ATTR_TABCASTING] = 0;
+}
+
+static bool _is_channeled_spell(spell_type spell)
+{
+    const spell_flags flags = get_spell_flags(spell);
+    return static_cast<bool>(flags & spflag::channelled);
+}
+
+void attempt_tabcast_spell(monster* m, int multiplier, bool initial)
+{
+    const spell_type spell = static_cast<spell_type>(you.attribute[ATTR_TABCAST_SPELL]);
+
+    if (spell == SPELL_NO_SPELL || invalid_monster(m)
+        || (initial && you.attribute[ATTR_TABCAST_LIMIT] < 1)
+        || m->is_firewood() || mons_aligned(&you, m))
+    {
+        return;
+    }
+
+    if (you.attribute[ATTR_CHANNELLED_SPELL] == you.attribute[ATTR_TABCAST_SPELL])
+    {
+        if (you.attribute[ATTR_CHANNELLED_SPELL] == SPELL_SEARING_RAY)
+        {
+            //change target
+            you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
+            you.props[SEARING_RAY_TARGET_KEY] = m->pos();
+        }
+        return;
+    }
+
+    const int sumlim = summons_limit(spell, true);
+    if (spell != SPELL_CALL_CANINE_FAMILIAR
+        && spell != SPELL_SOUL_SPLINTER
+        && sumlim > 0 && count_summons(&you, spell) >= sumlim)
+    {
+        return;
+    }
+
+    switch (spell)
+    {
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (you.duration[DUR_ICY_ARMOUR])
+            return;
+        break;
+    case SPELL_JINXBITE:
+        if (you.duration[DUR_JINXBITE])
+            return;
+        break;
+    case SPELL_FUGUE_OF_THE_FALLEN:
+        if (you.duration[DUR_FUGUE])
+            return;
+        break;
+    case SPELL_ANIMATE_DEAD:
+        if (you.duration[DUR_ANIMATE_DEAD])
+            return;
+        break;
+    case SPELL_CONFUSING_TOUCH:
+        if (you.duration[DUR_CONFUSING_TOUCH] || m->has_ench(ENCH_CONFUSION))
+            return;
+        break;
+    default:
+        break;
+    }
+
+    if (initial)
+    {
+        you.attribute[ATTR_TABCAST_LIMIT]--;
+        const int times = div_rand_round(you.get_tabcast_chance(false, true, spell, multiplier), 100);
+        for (int i = times; i > 0; i--)
+        {
+            if (i == 1)
+            {
+                //handle_channelled_spell is called before fineffs so cast it here
+                //we usually use fineffs to avoid potential strange behavior
+                if (_is_channeled_spell(spell))
+                {
+                    coord_def pos = m->pos();
+                    tabcast_spell(pos);
+                }
+                else
+                    tabcast_fineff::schedule(m->pos());
+            }
+            else if (!_is_channeled_spell(spell))
+                _spell_tabcasts_spell(false);
+        }
+    }
+    else
+        tabcast_fineff::schedule(m->pos());
+}
+
 bool channelled_spell_active(spell_type spell)
 {
     return you.attribute[ATTR_CHANNELLED_SPELL] == spell;
@@ -3413,7 +3668,7 @@ void start_channelling_spell(spell_type spell, string reminder_msg, bool do_effe
     else
         you.attribute[ATTR_CHANNEL_DURATION] = 0;
 
-    if (!reminder_msg.empty())
+    if (!reminder_msg.empty() && !is_tabcasting())
     {
         string msg = "(Press <w>%</w> to " + reminder_msg + ".)";
         insert_commands(msg, { CMD_WAIT });
@@ -3438,9 +3693,14 @@ void handle_channelled_spell()
     const int turn = (you.attribute[ATTR_CHANNEL_DURATION] == 0 ? 1
                         : you.attribute[ATTR_CHANNEL_DURATION]);
 
+    //interrupt channel if last action was not an allowed action (waiting)
+    //if we are tabcasting, allowed actions include attacking
+    const bool interrupt = !((you.has_mutation(MUT_AUXILIARY_CASTING)
+        && spell == you.attribute[ATTR_TABCAST_SPELL])
+        || crawl_state.prev_cmd == CMD_WAIT);
     // Don't stop on non-wait for the first turn of a channelled spell, since
     // that was the turn we cast it on.
-    if (turn > 1 && crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
+    if (turn > 1 && interrupt || !can_cast_spells(true))
     {
         stop_channelling_spells();
         return;
