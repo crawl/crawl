@@ -1712,7 +1712,6 @@ static void _roll_amulet_type(item_def& item)
         if (are_fixed_props_ok(item))
             return;
     }
-
 }
 
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
