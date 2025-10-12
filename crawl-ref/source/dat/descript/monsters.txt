@@ -1062,7 +1062,7 @@ crystal guardian
 
 An intricate animated statue made of heavily ensorcelled crystal that is
 immune to most forms of magic. The spells which created it are so powerful
-that even flesh may start to crystalize around any fragments that become
+that even flesh may start to crystallise around any fragments that become
 embedded in it - leaving its foes brittle and vulnerable.
 %%%%
 culicivora
