@@ -219,7 +219,7 @@ static armour_type _acquirement_shield_type()
 /**
  * Determine the weight (likelihood) to acquire a specific type of body armour.
  *
- * Weighted by Armour skill, though not particularly strongly.
+ * Weighted by Armour skill.
  *
  * @param armour    The type of armour in question. (E.g. ARM_ROBE.)
  * @return          A weight for the armour.
@@ -228,7 +228,8 @@ static int _body_acquirement_weight(armour_type armour)
 {
     const int base_weight = armour_acq_weight(armour);
     const int ac = armour_prop(armour, PARM_AC);
-    return base_weight * (300 + (_skill_rdiv(SK_ARMOUR) - 6) * ac);
+    return base_weight +
+            (_skill_rdiv(SK_ARMOUR) * _skill_rdiv(SK_ARMOUR) * ac * ac / 27);
 }
 
 /**

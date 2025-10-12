@@ -129,9 +129,9 @@ static const armour_def Armour_prop[] =
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
         SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
-        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 80, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, {
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 60, {
             { SPARM_FIRE_RESISTANCE,   20 },
             { SPARM_COLD_RESISTANCE,   20 },
             { SPARM_POISON_RESISTANCE, 10 },
@@ -143,11 +143,11 @@ static const armour_def Armour_prop[] =
             { SPARM_RESONANCE,          7 },
     }},
     { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   60,
-        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 60, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   180,
-        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 150, HEAVY_BODY_EGOS },
+        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 100, HEAVY_BODY_EGOS },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   600,
-        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 150 },
+        SLOT_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 100 },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_TROLL_HIDE, "removed troll hide",              0,    0,      0,
