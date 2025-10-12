@@ -1999,17 +1999,17 @@ int update_monster_pane()
 }
 #endif
 
-static const char *s_equip_slot_names[] =
-{
-    "Weapon", "Offhand", "Armour", "Helmet", "Gloves", "Boots",
-    "Barding", "Cloak", "Ring", "Amulet", "Gizmo"
-};
-
 int equip_slot_by_name(const char *s)
 {
     for (int i = SLOT_FIRST_STANDARD; i <= SLOT_LAST_STANDARD; ++i)
-        if (!strcasecmp(s_equip_slot_names[i - SLOT_FIRST_STANDARD], s))
+    {
+        const equipment_slot slot = static_cast<equipment_slot>(i);
+        if (!strcasecmp(s, equip_slot_name(slot, true)) ||
+            !strcasecmp(s, equip_slot_name(slot, false)))
+        {
             return i;
+        }
+    }
 
     return -1;
 }
