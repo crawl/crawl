@@ -406,7 +406,7 @@ a muffled joke.
 #
 # Generally, the Sword is arrogant: it sees itself as the main hero, with the
 # wielder just being a disposable tool/fool. Also, it does not like allies --
-# all the fame belong to our steely hero!
+# all the fame belongs to our steely hero!
 #
 # There are some (occasionally modified) lines from actual songs. Those are
 # okay to use, but particularly rare.
