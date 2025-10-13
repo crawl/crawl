@@ -577,10 +577,20 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
             const tileidx_t school2 = tileidx_parchment_overlay(spell, 1);
 
             if (school1 > 0)
-                m_buf_main.add(school1, x, y);
+            {
+                if (in_water || cell.cloud)
+                    m_buf_main_trans.add(school1, x, y, 0, true, false);
+                else
+                    m_buf_main.add(school1, x, y);
+            }
 
             if (school2 > 0)
-                m_buf_main.add(school2, x, y);
+            {
+                if (in_water || cell.cloud)
+                    m_buf_main_trans.add(school2, x, y, 0, true, false);
+                else
+                    m_buf_main.add(school2, x, y);
+            }
         }
     }
 
