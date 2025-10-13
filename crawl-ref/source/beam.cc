@@ -852,8 +852,10 @@ void bolt::bounce()
     // shadows, Robe of Night)
     if (bounces == 1)
     {
-        extra_range_used -= spell_range(origin_spell, agent(), ench_power, true)
-                            - range;
+        const int orig_range = origin_spell == SPELL_NO_SPELL ? LOS_RADIUS
+                                : spell_range(origin_spell, agent(), ench_power, true);
+
+        extra_range_used -= orig_range - range;
     }
 
     ASSERT(!cell_is_solid(ray.pos()));
