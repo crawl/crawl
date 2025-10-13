@@ -4624,47 +4624,14 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     const int pow = block.props[SPLINTERFROST_POWER_KEY].get_int();
     actor* agent = actor_by_mid(block.summoner);
 
-    ray_def ray;
-    if (!find_ray(block.pos(), aim, ray, opc_solid_see))
-        return false;
-
-    // Examine spaces one at a time, stopping before we'd hit a friendly
-    // non-firewood actor.
-    // XXX: It feels wrong not using a beam tracer for this, but tracers will
-    //      simply refuse to fire if an ally is anywhere in the path, rather
-    //      than ending their shot a bit earlier. That is fine for normal
-    //      monsters, but as a reactive player thing, it feels bad if the
-    //      barricade doesn't detonate when it looks like it should.
-    int steps_taken = 0;
-    coord_def aim_spot;
-    while (ray.advance() && steps_taken < LOS_RADIUS)
-    {
-        ++steps_taken;
-        const coord_def p = ray.pos();
-
-        if (!in_bounds(p) || cell_is_solid(p))
-            break;
-        else if (actor* targ = actor_at(p))
-        {
-            // Don't hurt allies.
-            if (mons_aligned(&block, targ) && !targ->is_firewood())
-                break;
-        }
-
-        aim_spot = p;
-    }
-
-    if (aim_spot.origin())
-        return false;
-
     bolt beam;
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, false, beam);
     beam.source = block.pos();
     beam.attitude = block.attitude;
     beam.set_agent(agent);
-    beam.target = aim_spot;
-    beam.range = steps_taken;
-    beam.aimed_at_spot = true;
+    beam.target = aim;
+    beam.range = LOS_RADIUS;
+    beam.stop_at_allies = true;
 
     string msg;
     if (you.can_see(block))

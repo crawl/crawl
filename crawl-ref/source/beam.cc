@@ -1270,6 +1270,16 @@ void bolt::do_fire()
             finish_beam();
             return;
         }
+
+        // If requested to stop before hitting allies, do so now.
+        const actor* act_at = actor_at(pos());
+        if (act_at && stop_at_allies && mons_atts_aligned(attitude, act_at->temp_attitude()))
+        {
+            ray.regress();
+            finish_beam();
+            return;
+        }
+
         const monster* mon_at = monster_at(pos());
         // digging is taken care of in affect_cell
         if (feat_is_solid(feat) && !can_affect_wall(pos())
@@ -2251,6 +2261,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.loudness       = parent.loudness;
     child.pierce         = parent.pierce;
     child.aimed_at_spot  = parent.aimed_at_spot;
+    child.stop_at_allies = parent.stop_at_allies;
     child.is_explosion   = parent.is_explosion;
     child.ex_size        = parent.ex_size;
     child.foe_ratio      = parent.foe_ratio;
@@ -3395,6 +3406,7 @@ void bolt::reflect()
     }
 
     flavour = real_flavour;
+    stop_at_allies = false;
     choose_ray();
 }
 
