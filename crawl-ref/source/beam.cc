@@ -1079,17 +1079,11 @@ void bolt::affect_cell()
     if (hit_player && can_affect_actor(&you))
     {
         const int prev_reflections = reflections;
-        const coord_def old_pos = pos();
         affect_player();
         if (reflections != prev_reflections)
             return;
         if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
-        // XXX: If an ally stopped a piercing beam short to avoid hitting the
-        //      player on this cell, don't attempt to hit a monster on the
-        //      cell immediately before them again.
-        if (pos() != old_pos)
-            return;
     }
 
     // Stop single target beams from affecting a monster if they already
@@ -1274,6 +1268,17 @@ void bolt::do_fire()
         // If requested to stop before hitting allies, do so now.
         const actor* act_at = actor_at(pos());
         if (act_at && stop_at_allies && mons_atts_aligned(attitude, act_at->temp_attitude()))
+        {
+            ray.regress();
+            finish_beam();
+            return;
+        }
+
+        // If this is a friendly monster, firing a penetrating beam in the player's
+        // direction, always stop immediately before them if this attack wouldn't
+        // be harmless to them.
+        if (agent() && agent()->is_monster() && mons_att_wont_attack(attitude)
+            && !ignores_player() && !harmless_to_player() && pierce && !is_explosion)
         {
             ray.regress();
             finish_beam();
@@ -4199,17 +4204,6 @@ void bolt::affect_player()
 
     if (ignores_player() || !could_harm(agent(), &you, !is_tracer()))
         return;
-
-    // If this is a friendly monster, firing a penetrating beam in the player's
-    // direction, always stop immediately before them if this attack wouldn't
-    // be harmless to them.
-    if (agent() && agent()->is_monster() && mons_att_wont_attack(attitude)
-        && !harmless_to_player() && pierce && !is_explosion)
-    {
-        ray.regress();
-        finish_beam();
-        return;
-    }
 
     // Explosions only have an effect during their explosion phase.
     // Special cases can be handled here.
