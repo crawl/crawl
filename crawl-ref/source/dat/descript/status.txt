@@ -730,7 +730,7 @@ You are bribing the inhabitants of the current branch.
 %%%%
 Cloud status
 
-You are standing in a cloud.
+You are in a cloud.
 %%%%
 -Clouds status
 
