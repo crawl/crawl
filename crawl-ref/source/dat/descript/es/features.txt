@@ -134,34 +134,34 @@ The floor
 {{
     --Some of these lines may need to be broken up
     local descript = "El piso."
-    if player_in_branch(BRANCH_DUNGEON) then
+    if you.in_branch("D") then
         descript = descript .. "\nEstá hecho de roca lisa."
-    elseif player_in_branch(BRANCH_TEMPLE) then
+    elseif you.in_branch("Temple") then
         descript = descript .. "\nHay musgo entredadera creciendo en lo."
-    elseif player_in_branch(BRANCH_ORC) then
+    elseif you.in_branch("Orc") then
         descript = descript .. "\nVes pepitas pequeñas en lo."
-    elseif player_in_branch(BRANCH_ELF) then
+    elseif you.in_branch("Elf") then
         descript = descript .. "\nTiene estampados místicos."
-    elseif player_in_branch(BRANCH_LAIR) then
+    elseif you.in_branch("Lair") then
         descript = descript .. "\nTe sientes los cantos regosos debajo de tus pies."
-    elseif player_in_branch(BRANCH_SWAMP) then
+    elseif you.in_branch("Swamp") then
         if you.airborne() then
             descript = descript .. "\nPuedes ver el barro patanoso."
         else
             --TODO: Check if player is wearing boots or even has feet.
             descript = descript .. "\nPuedes sentir el barro patanoso en tus pies."
         end
-    elseif player_in_branch(BRANCH_SHOALS) then
+    elseif you.in_branch("Shoals") then
         descript = descript .. "\nPuedes oír el movimento de la arena debajo de tus pies."
-    elseif player_in_branch(BRANCH_SNAKE) then
+    elseif you.in_branch("Snake") then
         descript = descript .. "\nTiene estampados sinuosos."
-    elseif player_in_branch(BRANCH_SPIDER) then
+    elseif you.in_branch("Spider") then
         descript = descript .. "\nEn lo hay hilos finos -- y unos no-tan-finos -- de seda."
-    elseif player_in_branch(BRANCH_SLIME) then
+    elseif you.in_branch("Slime") then
         descript = descript .. "\nEstá cubierto en baba."
-    elseif player_in_branch(BRANCH_VAULTS) then
+    elseif you.in_branch("Vaults") then
         descript = descript .. "\nHay salpicaduras de sangre en su superficie metálico."
-    elseif player_in_branch(BRANCH_CRYPT) then
+    elseif you.in_branch("Crypt") then
         descript = descript .. "\nComo el aire, su superficie es frio."
     --TODO: add descriptions for (the floors of) the rest of the branches (and sub-branches).
     --Branches: Depths, Zot, Bazaar, Volcano, Ice Cave, Necropolis, Tomb, Pan, Hells, probably more
