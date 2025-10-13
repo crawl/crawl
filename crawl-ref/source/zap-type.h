@@ -194,5 +194,6 @@ enum zap_type
     ZAP_ACID_BALL,
     ZAP_SHOOTING_STAR,
     ZAP_DIMINISH_SPELLS,
+    ZAP_VALOUR_BEAM,
     NUM_ZAPS
 };

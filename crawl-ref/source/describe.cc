@@ -1767,6 +1767,12 @@ static string _describe_weapon_brand(const item_def &item)
             ego_desc = blade_ego_desc;
     }
 
+    if (ego == SPWPN_VALOUR)
+    {
+        dice_def dmg = zap_damage(ZAP_VALOUR_BEAM, property(item, PWPN_DAMAGE), false, false);
+        ego_desc += make_stringf("The beam does %dd%d damage.", dmg.num, dmg.size);
+    }
+
     return ego_desc;
 }
 
@@ -5121,7 +5127,7 @@ static mon_attack_info _atk_info(const monster_info& mi, int i)
 
 // Return a string describing the maximum damage from a monster's weapon brand
 static string _brand_damage_string(const monster_info &mi, brand_type brand,
-                                   int dam)
+                                   int dam, int wpn_base_dmg = 0)
 {
     const char * name = brand_type_name(brand, true);
     int brand_dam;
@@ -5150,6 +5156,12 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
         case SPWPN_PAIN:
             brand_dam = mi.has_necromancy_spell() ? mi.hd * 2 : mi.hd / 2;
             break;
+        case SPWPN_VALOUR:
+        {
+            const dice_def dmg = zap_damage(ZAP_VALOUR_BEAM, wpn_base_dmg, true, false);
+            brand_dam = dmg.num * dmg.size;
+            break;
+        }
         case SPWPN_VENOM:
         case SPWPN_ANTIMAGIC:
         case SPWPN_CHAOS:
@@ -5390,7 +5402,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
         if (wpn->base_type == OBJ_WEAPONS)
         {
             brand_str = _brand_damage_string(mi, get_weapon_brand(*wpn),
-                                             real_dam);
+                                             real_dam, property(*wpn, PWPN_DAMAGE));
         }
         else if (wpn->base_type == OBJ_STAVES)
         {

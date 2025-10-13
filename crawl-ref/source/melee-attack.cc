@@ -31,6 +31,8 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "los.h"
+#include "losparam.h"
 #include "mapdef.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -882,6 +884,9 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    if (weapon && damage_brand == SPWPN_VALOUR)
+        do_valour_beam();
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())
@@ -4557,6 +4562,56 @@ void melee_attack::riposte()
     attck.launch_attack_set();
     count_action(CACT_ATTACK, ATTACK_RIPOSTE);
     you.track_reprisal(REPRISAL_FENCER, attacker->mid);
+}
+
+void melee_attack::do_valour_beam()
+{
+    // Beams only happen at >80% HP (which corresponds to 'moderately damaged'
+    // and below for monsters.)
+    if (attacker->stat_hp() <= attacker->stat_maxhp() * 4 / 5)
+        return;
+
+    // No beams for hitting allies or firewood.
+    if (mons_aligned(attacker, defender) || defender->is_firewood())
+        return;
+
+    // Find a ray that starts at the defender, but from an angle relative to the
+    // attacker (so that it plays nicely with Manifold Assault).
+    ray_def ray;
+    if (!find_ray(attacker->pos(), defender->pos(), ray, opc_no_trans))
+        return;
+
+    bool found_targ = false;
+    while (ray.advance())
+    {
+        if (ray.pos() == defender->pos())
+        {
+            found_targ = true;
+            ray.regress();
+            break;
+        }
+    }
+
+    if (!found_targ)
+        return;
+
+    bolt beam;
+    zappy(ZAP_VALOUR_BEAM, weapon_damage(), attacker->is_monster(), beam);
+    beam.set_agent(attacker);
+    beam.source = attacker->pos();
+    beam.target = defender->pos();
+    beam.range = 4;
+    beam.stop_at_allies = true;
+    beam.attitude = attacker->temp_attitude();
+    beam.ray = ray;
+    beam.chose_ray = true;
+
+    // The player can fire a lot of these when they're playing, but it's helpful
+    // not to gloss over the rare enemy using it.
+    if (attacker->is_player())
+        beam.draw_delay = 5;
+
+    beam.fire();
 }
 
 bool melee_attack::do_knockback(bool slippery)

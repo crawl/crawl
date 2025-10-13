@@ -107,6 +107,12 @@ speed (speed) weapon ego
 
 Attacks with it are significantly faster.
 %%%%
+valour (valour) weapon ego
+
+It fires a beam of energy whenever it strikes an enemy while its wielder has
+no less than 80% of their maximum hit points remaining. Unwielding it will
+briefly Weaken its wielder.
+%%%%
 vampirism (vamp) weapon ego
 
 It occasionally heals you for a portion of the damage dealt when it wounds a

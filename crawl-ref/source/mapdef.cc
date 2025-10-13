@@ -5057,6 +5057,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "reaping",
         "spectral",
         "rebuke",
+        "valour",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);

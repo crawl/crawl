@@ -2730,4 +2730,20 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_SEARING_RAY,
 },
 
+{
+    ZAP_VALOUR_BEAM,
+    "beam of energy",
+    new dicedef_calculator<4, 0, 2, 3>,
+    new tohit_calculator<20>,
+    new dicedef_calculator<4, 0, 2, 3>,
+    new tohit_calculator<20>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    TILE_BOLT_PARAGON_TEMPEST,
+},
+
 };

@@ -1978,6 +1978,13 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             mprf("%s quivers in your %s.", item_name.c_str(), you.hand_name(true).c_str());
             break;
 
+        case SPWPN_VALOUR:
+            if (you.hp > you.hp_max * 4 / 5)
+                mprf("Your weapon gleams with eagerness.");
+            else
+                mprf("%s feels dull in your %s.", item_name.c_str(), you.hand_name(true).c_str());
+            break;
+
         default:
             break;
         }
@@ -2081,6 +2088,12 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 if (showMsgs)
                     mprf("%s stops quivering.", msg.c_str());
                 break;
+
+            case SPWPN_VALOUR:
+                mpr("You feel very meek.");
+                you.weaken(&you, 10);
+                break;
+
             }
         }
     }

@@ -205,6 +205,7 @@ private:
     bool player_unrand_bad_attempt(bool check_only = false);
     void _defender_die();
     void handle_spectral_brand();
+    void do_valour_beam();
 
     // Spell effects.
     void maybe_trigger_detonation();
