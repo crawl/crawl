@@ -48,7 +48,12 @@ define(function () {
     // Halo flags
     exports.HALO_NONE = 0;
     exports.HALO_RANGE = 1;
-    exports.HALO_UMBRA = 2;
+    exports.HALO_UMBRA_FIRST = 2;
+    exports.HALO_UMBRA_1 = exports.HALO_UMBRA_FIRST;
+    exports.HALO_UMBRA_2 = 3;
+    exports.HALO_UMBRA_3 = 4;
+    exports.HALO_UMBRA_4 = 5;
+    exports.HALO_UMBRA_LAST = exports.HALO_UMBRA_4;
 
     // Tile flags.
     // Mostly this complicated because they need more than 32 bits.

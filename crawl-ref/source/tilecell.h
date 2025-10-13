@@ -8,7 +8,12 @@ enum halo_type: uint8_t
 {
     HALO_NONE = 0,
     HALO_RANGE = 1,
-    HALO_UMBRA = 2,
+    HALO_UMBRA_FIRST = 2,
+    HALO_UMBRA_1 = HALO_UMBRA_FIRST,
+    HALO_UMBRA_2,
+    HALO_UMBRA_3,
+    HALO_UMBRA_4,
+    HALO_UMBRA_LAST = HALO_UMBRA_4,
 };
 
 struct packed_cell

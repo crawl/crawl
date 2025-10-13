@@ -1552,7 +1552,11 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.halo = HALO_RANGE;
     }
     else if (mc.flags & MAP_UMBRAED)
-        cell.halo = HALO_UMBRA;
+    {
+        int num = HALO_UMBRA_LAST - HALO_UMBRA_FIRST + 1;
+        int variety = hash_with_seed(num, gc.y * GXM + gc.x, you.frame_no);
+        cell.halo = (halo_type)(HALO_UMBRA_FIRST + variety);
+    }
     else
         cell.halo = HALO_NONE;
 

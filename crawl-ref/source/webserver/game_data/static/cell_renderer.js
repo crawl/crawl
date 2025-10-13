@@ -808,8 +808,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
-                    if (cell.halo == enums.HALO_UMBRA)
+                    if (cell.halo >= enums.HALO_UMBRA_FIRST
+                        && cell.halo <= enums.HALO_UMBRA_LAST)
+                    {
                         this.draw_dngn(dngn.UMBRA, x, y);
+                    }
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
                     if (cell.quad_glow)
