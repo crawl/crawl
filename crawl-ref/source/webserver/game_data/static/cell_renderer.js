@@ -811,7 +811,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     if (cell.halo >= enums.HALO_UMBRA_FIRST
                         && cell.halo <= enums.HALO_UMBRA_LAST)
                     {
-                        this.draw_dngn(dngn.UMBRA, x, y);
+                        var variety = cell.halo - enums.HALO_UMBRA_FIRST;
+                        this.draw_dngn(dngn.UMBRA + variety, x, y);
                     }
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
