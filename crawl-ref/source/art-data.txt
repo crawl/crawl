@@ -242,17 +242,17 @@ BRAND:   SPWPN_FREEZING
 DESCRIP: Prune:     It halves damage taken while paralysed, petrified or
  unconscious.
 
+# start TAG_MAJOR_VERSION == 34
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
-INSCRIP: lifebolt
 PLUS:    +9
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   800
-DBRAND:  Lifebolt:  It occasionally discharges a powerful but inaccurate bolt
- of energy upon striking a foe, with increased chance the greater the wielder's
- current health.
+BRAND:   SPWPN_VALOUR
+BOOL:    deleted
+# end TAG_MAJOR_VERSION
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞

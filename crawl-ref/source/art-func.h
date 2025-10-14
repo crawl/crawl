@@ -47,7 +47,7 @@
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
-#include "spl-damage.h"    // For the Singing Sword and the Sword of Power.
+#include "spl-damage.h"    // For the Singing Sword
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
@@ -276,27 +276,6 @@ static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
         if (defender->alive())
             defender->poison(attacker, 2, true);
     }
-}
-
-////////////////////////////////////////////////////
-
-static void _POWER_equip(item_def * /* item */, bool *show_msgs,
-                         bool /*unmeld*/)
-{
-    _equip_mpr(show_msgs, "You sense an aura of extreme power.");
-}
-
-static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                 actor* defender, bool mondied, int /*dam*/)
-{
-    if (mondied)
-        return;
-
-    const int num_beams = div_rand_round(attacker->stat_hp(), 270);
-    coord_def targ = defender->pos();
-
-    for (int i = 0; i < num_beams; i++)
-        fire_life_bolt(*attacker, targ);
 }
 
 ////////////////////////////////////////////////////
