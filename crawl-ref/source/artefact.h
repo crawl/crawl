@@ -61,6 +61,8 @@ struct unrandart_entry
     const char *dbrand;      // description of extra brand
     const char *descrip;     // description of extra power
 
+    int pref_max_level;
+
     object_class_type base_type;
     uint8_t           sub_type;
     object_class_type fallback_base_type;

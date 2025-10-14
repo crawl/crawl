@@ -147,33 +147,36 @@
 
 # Explanation of normal fields:
 
-# AC:       Armour class modifier (for non-armour artefacts).
-# ANGRY     Each time the wielder of the weapon strikes a victim there's
-#           a num-in-100 chance of the wielder going berserk.
-# APPEAR:   Unidentified appearance of artefact.
-# COLD:     Cold resistance/vulnerability.
-# COLOUR:   The colour of the artefact, either as listed in defines.h
-#           (e.g., LIGHTRED) or as listed under element_type in view.h
-#           (e.g., ETC_FIRE)
-# SLAY:     Slaying modifier (for non-weapon artefacts).
-# DEX:      Dexterity modifier.
-# EV:       Evasion modifier.
-# FIRE:     Fire resistance/vulnerability.
-# INT:      Intelligence modifier.
-# LIFE:     Negative energy resistance/vulnerability.
-# WILL:     Willpower increase/decrease.
-# MP:       Mana capacity modifier.
-# NAME:     Name of artefact when identified.
-# REGEN:    Health regeneration, in units of HP healed every 12.5 aut
-#           (1.25 normal turns).
-# STEALTH:  Stealth modifier.
-# STR:      Strength modifier.
-# TILE:     The file containing the artefact's tile, with file type png.
-#           See Tiles section above.
-# TILE_EQ:  The file containing the equipment tile for the player doll as
-#           defined in rltiles/dc-player.txt. See Tiles section above.
-# VALUE:    item_value() will return this number instead of doing automatic
-#           calculations to determine the value.
+# AC:        Armour class modifier (for non-armour artefacts).
+# ANGRY      Each time the wielder of the weapon strikes a victim
+#            there's a num-in-100 chance of the wielder going berserk.
+# APPEAR:    Unidentified appearance of artefact.
+# COLD:      Cold resistance/vulnerability.
+# COLOUR:    The colour of the artefact, either as listed in defines.h
+#            (e.g., LIGHTRED) or as listed under element_type in view.h
+#            (e.g., ETC_FIRE)
+# SLAY:      Slaying modifier (for non-weapon artefacts).
+# DEX:       Dexterity modifier.
+# EV:        Evasion modifier.
+# FIRE:      Fire resistance/vulnerability.
+# INT:       Intelligence modifier.
+# LIFE:      Negative energy resistance/vulnerability.
+# WILL:      Willpower increase/decrease.
+# MP:        Mana capacity modifier.
+# NAME:      Name of artefact when identified.
+# REGEN:     Health regeneration, in units of HP healed every 12.5 aut
+#            (1.25 normal turns).
+# STEALTH:   Stealth modifier.
+# STR:       Strength modifier.
+# TILE:      The file containing the artefact's tile, with file type
+#            png.
+#            See Tiles section above.
+# TILE_EQ:   The file containing the equipment tile for the player doll
+#            as defined in rltiles/dc-player.txt. See Tiles section
+#            above.
+# VALUE:     item_value() will return this number instead of doing
+#            automatic calculations to determine the value.
+# MAX_LEVEL: Preferred maximum level for an artefact to be generated at.
 
 ##################################################################
 
@@ -598,14 +601,15 @@ LIFE:     1
 BOOL:     poison, deleted
 # end TAG_MAJOR_VERSION
 
-NAME:     trident of the Octopus King
-OBJ:      OBJ_WEAPONS/WPN_TRIDENT
-PLUS:     +8 # Messed with sometimes
-COLOUR:   ETC_WATER
-TILE:     urand_octopus_king
-TILE_EQ:  trident_octopus_king
-BRAND:    SPWPN_VENOM
-BOOL:     elec, poison, no_upgrade
+NAME:      trident of the Octopus King
+OBJ:       OBJ_WEAPONS/WPN_TRIDENT
+PLUS:      +8 # Messed with sometimes
+COLOUR:    ETC_WATER
+TILE:      urand_octopus_king
+TILE_EQ:   trident_octopus_king
+BRAND:     SPWPN_VENOM
+BOOL:      elec, poison, no_upgrade
+MAX_LEVEL: 11
 
 NAME:    mithril axe "Arga"
 OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
@@ -802,15 +806,16 @@ TILE_EQ: tower_shield_of_ignorance
 INT:     -4
 LIFE:    1
 
-NAME:    robe of Augmentation
-OBJ:     OBJ_ARMOUR/ARM_ROBE
-PLUS:    +4
-COLOUR:  LIGHTRED
-TILE:    urand_augmentation
-TILE_EQ: augmentation
-STR:     4
-INT:     4
-DEX:     4
+NAME:      robe of Augmentation
+OBJ:       OBJ_ARMOUR/ARM_ROBE
+PLUS:      +4
+COLOUR:    LIGHTRED
+TILE:      urand_augmentation
+TILE_EQ:   augmentation
+STR:       4
+INT:       4
+DEX:       4
+MAX_LEVEL: 11
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -857,16 +862,17 @@ WILL:     2
 DBRAND:   Bear:      Going berserk makes the wearer exceptionally tough, and
  they are slowed for a shorter time afterward.
 
-NAME:     robe of Misfortune
-OBJ:      OBJ_ARMOUR/ARM_ROBE
+NAME:      robe of Misfortune
+OBJ:       OBJ_ARMOUR/ARM_ROBE
 # try to make it bad, this is the only bad SPARM:
-FB_BRAND: SPARM_PONDEROUSNESS
-PLUS:     5
-COLOUR:   LIGHTMAGENTA
-TILE:     urand_misfortune
-TILE_EQ:  robe_misfortune
-EV:       5
-BOOL:     harm, slow, corrode
+FB_BRAND:  SPARM_PONDEROUSNESS
+PLUS:      5
+COLOUR:    LIGHTMAGENTA
+TILE:      urand_misfortune
+TILE_EQ:   robe_misfortune
+EV:        5
+BOOL:      harm, slow, corrode
+MAX_LEVEL: 11
 
 # start TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -894,15 +900,16 @@ DESCRIP:  Detect:    It allows the wearer to sense nearby creatures.
 +Stab+:     It allows the wearer to make particularly effective stabbing attacks
  against helpless or unaware enemies with any melee weapon.
 
-ENUM:    LEAR
-NAME:    Lear's hauberk
-OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
-FALLBACK: OBJ_ARMOUR/ARM_PLATE_ARMOUR
-PLUS:    18
-COLOUR:  ETC_GOLD
-TILE:    urand_lear
-TILE_EQ: lears_hauberk
-BOOL:    special
+ENUM:      LEAR
+NAME:      Lear's hauberk
+OBJ:       OBJ_ARMOUR/ARM_CHAIN_MAIL
+FALLBACK:  OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:      18
+COLOUR:    ETC_GOLD
+TILE:      urand_lear
+TILE_EQ:   lears_hauberk
+BOOL:      special
+MAX_LEVEL: 11
 
 NAME:    skin of Zhor
 OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
@@ -1046,20 +1053,21 @@ INSCRIP:  *Dazzle
 DESCRIP:  *Dazzle:   It may blind those who miss an attack against the wearer in
  melee combat.
 
-NAME:     ratskin cloak
-OBJ:      OBJ_ARMOUR/ARM_CLOAK
-PLUS:     +2
-COLOUR:   ETC_BEOGH
-TILE:     urand_ratskin_cloak
-TILE_EQ:  ratskin
-INSCRIP:  *Rats
-STR:      -1
-INT:      -1
-DEX:      1
-LIFE:     1
-BOOL:     poison
-DESCRIP:  *Rats:     When the wearer is hurt, rats may emerge from it to assist
+NAME:      ratskin cloak
+OBJ:       OBJ_ARMOUR/ARM_CLOAK
+PLUS:      +2
+COLOUR:    ETC_BEOGH
+TILE:      urand_ratskin_cloak
+TILE_EQ:   ratskin
+INSCRIP:   *Rats
+STR:       -1
+INT:       -1
+DEX:       1
+LIFE:      1
+BOOL:      poison
+DESCRIP:   *Rats:     When the wearer is hurt, rats may emerge from it to assist
  them.
+MAX_LEVEL: 11
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
@@ -1231,22 +1239,23 @@ BASE_DELAY: -2
 DBRAND:   Manifold Assault: It sometimes launches melee attacks against multiple
  visible enemies.
 
-NAME:     shillelagh "Devastator"
-INSCRIP:  shatter
-OBJ:      OBJ_WEAPONS/WPN_CLUB
-FALLBACK: OBJ_WEAPONS/WPN_EVENINGSTAR
-FB_BRAND: SPWPN_HEAVY
-TYPE:     shillelagh
-TILE:     urand_shillelagh
-TILE_EQ:  shillelagh
-PLUS:     +6
-BASE_DAM: +3
-BOOL:     special
+NAME:      shillelagh "Devastator"
+INSCRIP:   shatter
+OBJ:       OBJ_WEAPONS/WPN_CLUB
+FALLBACK:  OBJ_WEAPONS/WPN_EVENINGSTAR
+FB_BRAND:  SPWPN_HEAVY
+TYPE:      shillelagh
+TILE:      urand_shillelagh
+TILE_EQ:   shillelagh
+PLUS:      +6
+BASE_DAM:  +3
+BOOL:      special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
-COLOUR:   WHITE
-VALUE:    600
-DBRAND:   Shatter:   It releases a powerful concussive burst when it strikes,
+COLOUR:    WHITE
+VALUE:     600
+DBRAND:    Shatter:   It releases a powerful concussive burst when it strikes,
  dealing extra damage to the target and all other creatures adjacent to them.
+MAX_LEVEL: 11
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
@@ -1482,17 +1491,18 @@ REGEN:   4
 VALUE:   800
 DESCRIP: NoPotionHeal: Its wearer cannot be healed by potions.
 
-ENUM:    KRYIAS
-NAME:    Kryia's mail coat
-OBJ:     OBJ_ARMOUR/ARM_SCALE_MAIL
-PLUS:    +7
-COLOUR:  LIGHTCYAN
-TILE:    urand_kryias
-TILE_EQ: kryias
-INSCRIP: PotionHeal*2
-COLD:    1
-VALUE:   600
-DESCRIP: PotionHeal*2: Potions heal its wearer twice as much.
+ENUM:      KRYIAS
+NAME:      Kryia's mail coat
+OBJ:       OBJ_ARMOUR/ARM_SCALE_MAIL
+PLUS:      +7
+COLOUR:    LIGHTCYAN
+TILE:      urand_kryias
+TILE_EQ:   kryias
+INSCRIP:   PotionHeal*2
+COLD:      1
+VALUE:     600
+DESCRIP:   PotionHeal*2: Potions heal its wearer twice as much.
+MAX_LEVEL: 11
 
 ENUM:    FROSTBITE
 NAME:    frozen axe "Frostbite"
@@ -1631,16 +1641,17 @@ VALUE:    2000
 DESCRIP:  *Dream:    It absorbs a single lethal wound into itself, holding its
  wearer just short of death and releasing dream-creatures to guard them.
 
-NAME:     Delatra's gloves
-OBJ:      OBJ_ARMOUR/ARM_GLOVES
-PLUS:     +1
-COLOUR:   BLUE
-TILE:     urand_delatra
-TILE_EQ:  glove_blue
-INSCRIP:  ID++
-VALUE:    100
-DESCRIP:  ID++:      It heals its wearer when they drink unknown potions, and
+NAME:      Delatra's gloves
+OBJ:       OBJ_ARMOUR/ARM_GLOVES
+PLUS:      +1
+COLOUR:    BLUE
+TILE:      urand_delatra
+TILE_EQ:   glove_blue
+INSCRIP:   ID++
+VALUE:     100
+DESCRIP:   ID++:      It heals its wearer when they drink unknown potions, and
  restores their MP when they read unknown scrolls.
+MAX_LEVEL: 6
 
 NAME:       woodcutter's axe
 OBJ:        OBJ_WEAPONS/WPN_BATTLEAXE
@@ -1649,28 +1660,31 @@ BASE_DELAY: -7
 COLOUR:     BROWN
 TILE:       urand_woodcutters_axe
 TILE_EQ:    axe_short
+MAX_LEVEL:  9
 
-NAME:       Throatcutter
-OBJ:        OBJ_WEAPONS/WPN_LONG_SWORD
-FALLBACK:   OBJ_WEAPONS/WPN_SCIMITAR
-PLUS:       7
-COLOUR:     LIGHTRED
-TILE:       urand_throatcutter
-TILE_EQ:    throatcutter
-BRAND:      SPWPN_DRAINING
-INSCRIP:    coup de grace
-DBRAND:     Coup de Grace: It may instantly kill foes which have little health.
+NAME:      Throatcutter
+OBJ:       OBJ_WEAPONS/WPN_LONG_SWORD
+FALLBACK:  OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:      7
+COLOUR:    LIGHTRED
+TILE:      urand_throatcutter
+TILE_EQ:   throatcutter
+BRAND:     SPWPN_DRAINING
+INSCRIP:   coup de grace
+DBRAND:    Coup de Grace: It may instantly kill foes which have little health.
+MAX_LEVEL: 9
 
-NAME:       staff of the Meek
-OBJ:        OBJ_WEAPONS/WPN_QUARTERSTAFF
-PLUS:       7
-COLOUR:     WHITE
-TILE:       urand_meek
-TILE_EQ:    staff_mage_two
-BRAND:      SPWPN_PROTECTION
-INSCRIP:    meekguard
-DBRAND:     Meekguard: It provides extra protection to wielders with little
+NAME:      staff of the Meek
+OBJ:       OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:      7
+COLOUR:    WHITE
+TILE:      urand_meek
+TILE_EQ:   staff_mage_two
+BRAND:     SPWPN_PROTECTION
+INSCRIP:   meekguard
+DBRAND:    Meekguard: It provides extra protection to wielders with little
  health.
+MAX_LEVEL: 11
 
 ENUM:     CONDEMNATION
 NAME:     trishula "Condemnation"
@@ -1686,14 +1700,15 @@ DBRAND:   Anguish:   It makes its victims' attacks reflect back on them.
 TILE:     urand_condemnation
 TILE_EQ:  condemnation
 
-NAME:    amulet of Elemental Vulnerability
-OBJ:     OBJ_JEWELLERY/AMU_NOTHING
-COLOUR:  ETC_VEHUMET
-TILE:    urand_elemental_vulnerability
-AC:      8
-BOOL:    poison
-FIRE:    -2
-COLD:    -2
+NAME:      amulet of Elemental Vulnerability
+OBJ:       OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:    ETC_VEHUMET
+TILE:      urand_elemental_vulnerability
+AC:        8
+BOOL:      poison
+FIRE:      -2
+COLD:      -2
+MAX_LEVEL: 11
 
 NAME:    mountain boots
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
@@ -1724,14 +1739,15 @@ DBRAND:     Reach-Cleave: It can be evoked to extend its reach, and strikes at
 DESCRIP:    Poleaxe:   It uses either Axes or Polearms skill, whichever is
  higher.
 
-NAME:    Hermit's Pendant
-OBJ:     OBJ_JEWELLERY/AMU_FAITH
-COLOUR:  BROWN
-TILE:    urand_hermit_pendant
-MP:      +5
-INSCRIP: Invo=14 Evo=0
-DBRAND:  Invo=14:   It sets your Invocations skill to 14.
-+Evo=0:     It sets your Evocations skill to 0.
+NAME:      Hermit's Pendant
+OBJ:       OBJ_JEWELLERY/AMU_FAITH
+COLOUR:    BROWN
+TILE:      urand_hermit_pendant
+MP:        +5
+INSCRIP:   Invo=14 Evo=0
+DBRAND:    Invo=14:   It sets your Invocations skill to 14.
++Evo=0:    It sets your Evocations skill to 0.
+MAX_LEVEL: 9
 
 NAME:    slick slippers
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
@@ -1747,18 +1763,19 @@ DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted,
 +Slippery:  Its wearer slips away from damaging melee attacks, pulling the
  attacker onward.
 
-NAME:     Force Lance
-OBJ:      OBJ_WEAPONS/WPN_SPEAR
-FALLBACK: OBJ_WEAPONS/WPN_DEMON_TRIDENT
-INSCRIP:  knockback,
-TYPE:     lance
-BASE_DAM: +2
-PLUS:     +5
-COLOUR:   ETC_DISJUNCTION
-BRAND:    SPWPN_HEAVY
-TILE:     urand_force_lance
-TILE_EQ:  force_lance
-DBRAND:   Knockback: It sometimes drives back enemies it hits.
+NAME:      Force Lance
+OBJ:       OBJ_WEAPONS/WPN_SPEAR
+FALLBACK:  OBJ_WEAPONS/WPN_DEMON_TRIDENT
+INSCRIP:   knockback,
+TYPE:      lance
+BASE_DAM:  +2
+PLUS:      +5
+COLOUR:    ETC_DISJUNCTION
+BRAND:     SPWPN_HEAVY
+TILE:      urand_force_lance
+TILE_EQ:   force_lance
+DBRAND:    Knockback: It sometimes drives back enemies it hits.
+MAX_LEVEL: 11
 
 ENUM:     HOLY_AXE
 NAME:     consecrated labrys
@@ -1775,21 +1792,22 @@ INSCRIP:  Valiant
 DESCRIP:  Valiant:   It becomes more powerful as more dangerous foes come into
  view.
 
-NAME:     toga "Victory"
-OBJ:      OBJ_ARMOUR/ARM_ROBE
-PLUS:     +0 # varies with kills and consumable use
-SLAY:     +0 # varies
-INT:      +0 # varies
-COLOUR:   LIGHTCYAN
-TILE:     urand_victor
-TILE_EQ:  arwen
-INSCRIP:  *Victory
-BOOL:     clarity, no_upgrade
-VALUE:    600
-DESCRIP:  *Victory:  When the wearer kills a threatening monster, it has a
+NAME:      toga "Victory"
+OBJ:       OBJ_ARMOUR/ARM_ROBE
+PLUS:      +0 # varies with kills and consumable use
+SLAY:      +0 # varies
+INT:       +0 # varies
+COLOUR:    LIGHTCYAN
+TILE:      urand_victor
+TILE_EQ:   arwen
+INSCRIP:   *Victory
+BOOL:      clarity, no_upgrade
+VALUE:     600
+DESCRIP:   *Victory:  When the wearer kills a threatening monster, it has a
  chance to gain +1 AC, +1 Slay, and +1 Int, capping at +7. When the wearer uses
  a scroll or a potion with a hostile monster in sight, its bonuses reset to +0.
  Unequipping it also resets its bonuses to +0.
+MAX_LEVEL: 11
 
 ENUM:     STORM_QUEEN
 NAME:     Storm Queen's Shield

@@ -61,6 +61,7 @@ my %field_type = (
     INV      => "bool",
     FLY      => "bool",
     LIFE     => "num",
+    MAX_LEVEL => "num",
     MP       => "num",
     MUTATE   => "bool",
     NAME     => "str",
@@ -537,7 +538,7 @@ sub process_line
 my @art_order = (
     "NAME", "APPEAR", "TYPE", "\n",
     "INSCRIP", "DBRAND", "DESCRIP", "\n",
-    "base_type", "sub_type", "\n",
+    "MAX_LEVEL", "base_type", "sub_type", "\n",
     "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
     "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
