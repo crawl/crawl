@@ -493,6 +493,8 @@ struct monster_info : public monster_info_base
 
     monster* get_known_summoner() const;
 
+    bool is_stationary() const;
+
 protected:
     string _core_name() const;
     string _base_name() const;
