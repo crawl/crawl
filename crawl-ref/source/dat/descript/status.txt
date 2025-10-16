@@ -319,8 +319,7 @@ QUAD DAMAGE!
 Sil status
 
 You are silenced. This makes reading scrolls, casting spells, invoking divine
-abilities, or shouting impossible. The oppressive, unnatural effect greatly
-hampers your stealth.
+abilities, or shouting impossible.
 %%%%
 Engulf status
 
