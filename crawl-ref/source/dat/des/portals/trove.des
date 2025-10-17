@@ -912,7 +912,7 @@ ENDMAP
 NAME:   regret_index_trove_leda
 {{
 trove_setup(_G)
-local pon = "ego:ponderousness plus:" crawl.random_range(6, 10)
+local pon = "ego:ponderousness plus:" .. crawl.random_range(6, 10)
 local gen_armour = ""
 if species_has_size_limits(_G) == false then
   gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
@@ -921,7 +921,7 @@ if you.race() == "armataur" or you.race() == "naga" then
   gen_armour = gen_armour .. " / barding good_item / barding randart w:2"
 elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
   gen_armour = gen_armour .. " / pair of boots good_item w:5 " ..
-                             " / pair of boots ego:earth w:5 " ..
+                             " / pair of boots ego:earth " ..
                              " / pair of boots randart w:2"
 end
 trove_offense(_G, trove_weap_brand(_G, "heavy"),
