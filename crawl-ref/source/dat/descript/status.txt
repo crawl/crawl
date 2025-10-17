@@ -790,6 +790,11 @@ Gem status
 If you spend the indicated number of turns in this branch, its gem will be found
 and shattered by the power of Zot.
 %%%%
+Gem (*) status
+
+The power of Zot no longer hunts you, but this branch's gem still remains
+intact.
+%%%%
 rF0 status
 
 The wrath of Ignis prevents you from resisting fire.
