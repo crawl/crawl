@@ -1784,6 +1784,344 @@ c..c..c
 ..ccc..
 ENDMAP
 
+NAME:   nicolae_tiled_lozenges
+TAGS:   transparent decor
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+# By design, only one type of subvault is chosen out of the multiple options.
+: local glyphs = "DEFHJKLMN"
+: local subtype = tostring(crawl.roll_dice(1, 16))
+: for i = 1, string.len(glyphs), 1 do
+:    subvault(string.sub(glyphs, i, i) .. " : nico_loz_" .. subtype)
+: end
+MAP
+                  c
+                 .D.
+                cDDDc
+               .DDDDD.
+              cDDDDDDDc
+             .DDDDDDDDD.
+            cDDDDDDDDDDDc
+           .E.DDDDDDDDD.F.
+          cEEEcDDDDDDDcFFFc
+         .EEEEE.DDDDD.FFFFF.
+        cEEEEEEEcDDDcFFFFFFFc
+       .EEEEEEEEE.D.FFFFFFFFF.
+      cEEEEEEEEEEEcFFFFFFFFFFFc
+     .H.EEEEEEEEE.J.FFFFFFFFF.K.
+    cHHHcEEEEEEEcJJJcFFFFFFFcKKKc
+   .HHHHH.EEEEE.JJJJJ.FFFFF.KKKKK.
+  cHHHHHHHcEEEcJJJJJJJcFFFcKKKKKKKc
+ .HHHHHHHHH.E.JJJJJJJJJ.F.KKKKKKKKK.
+cHHHHHHHHHHHcJJJJJJJJJJJcKKKKKKKKKKKc
+ .HHHHHHHHH.L.JJJJJJJJJ.M.KKKKKKKKK.
+  cHHHHHHHcLLLcJJJJJJJcMMMcKKKKKKKc
+   .HHHHH.LLLLL.JJJJJ.MMMMM.KKKKK.
+    cHHHcLLLLLLLcJJJcMMMMMMMcKKKc
+     .H.LLLLLLLLL.J.MMMMMMMMM.K.
+      cLLLLLLLLLLLcMMMMMMMMMMMc
+       .LLLLLLLLL.N.MMMMMMMMM.
+        cLLLLLLLcNNNcMMMMMMMc
+         .LLLLL.NNNNN.MMMMM.
+          cLLLcNNNNNNNcMMMc
+           .L.NNNNNNNNN.M.
+            cNNNNNNNNNNNc
+             .NNNNNNNNN.
+              cNNNNNNNc
+               .NNNNN.
+                cNNNc
+                 .N.
+                  c
+ENDMAP
+
+NAME:   nicolae_subvault_loz_alandas
+TAGS:   unrand transparent nico_loz_1 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .cc
+   c....
+  .c.cccc
+ c.c......
+.c.c.c.c.c.
+ ......c.c
+  cccc.c.
+   ....c
+    cc.
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_basketball
+TAGS:   unrand transparent nico_loz_2 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    c.c
+   .c.c.
+  c.....c
+ .ccc.ccc.
+c.........c
+ .ccc.ccc.
+  c.....c
+   .c.c.
+    c.c
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_bricklayers
+TAGS:   unrand transparent nico_loz_3 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     c
+    ...
+   c.c.c
+  ...c...
+ c.c.c.c.c
+...c...c...
+ c.c.c.c.c
+  ...c...
+   c.c.c
+    ...
+     c
+ENDMAP
+
+NAME:   nicolae_subvault_loz_corridors
+TAGS:   unrand transparent nico_loz_4 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    c.c
+   .c.c.
+  c.c.c.c
+ .c.c.c.c.
+c.........c
+ .c.c.c.c.
+  c.c.c.c
+   .c.c.
+    c.c
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_fishbone
+TAGS:   unrand transparent nico_loz_5 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     c
+    .c.
+   ..c.c
+  .c...c.
+ ....c...c
+ccc.cc.c...
+ ......c.c
+  cc.ccc.
+   .....
+    c.c
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_hallways_of_length
+TAGS:   unrand transparent nico_loz_6 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .cc
+   c....
+  .ccccc.
+ c.....c..
+.ccc.c.ccc.
+ ..c.....c
+  .ccccc.
+   ....c
+    cc.
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_long_right_angles
+TAGS:   unrand transparent nico_loz_7 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .cc
+   ..c..
+  cc.c.cc
+ c.....c..
+.c.ccccc.c.
+ ..c.....c
+  cc.c.cc
+   ..c..
+    cc.
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_loop_de_loops
+TAGS:   unrand transparent nico_loz_8 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .c.
+   c.c..
+  .c.cccc
+ ..c......
+.ccc.c.ccc.
+ ......c..
+  cccc.c.
+   ..c.c
+    .c.
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_ne_plus_ultra
+TAGS:   unrand transparent nico_loz_9 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    cc.
+   c....
+  .c.c.cc
+ ....c...c
+.c.ccccc.c.
+ c...c....
+  cc.c.c.
+   ....c
+    .cc
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_polyominous
+TAGS:   unrand transparent nico_loz_10 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    cc.
+   ....c
+  cc.ccc.
+ ..c.....c
+.c.ccc.c.c.
+ c.....c..
+  .ccc.cc
+   c....
+    .cc
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_pronged
+TAGS:   unrand transparent nico_loz_11 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     c
+    .c.
+   ..c..
+  c.ccc.c
+ cc.c.c.cc
+...........
+ cc.c.c.cc
+  c.ccc.c
+   ..c..
+    .c.
+     c
+ENDMAP
+
+NAME:   nicolae_subvault_loz_rolling_hills
+TAGS:   unrand transparent nico_loz_12 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    c.c
+   .c..c
+  c.cc.c.
+ .c..c....
+c.cc.c.cc.c
+ ....c..c.
+  .c.cc.c
+   c..c.
+    c.c
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_squiggly_walls
+TAGS:   unrand transparent nico_loz_13 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    cc.
+   ..c..
+  .c.ccc.
+ ..c.....c
+.ccc.c.ccc.
+ c.....c..
+  .ccc.c.
+   ..c..
+    .cc
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_taking_ls
+TAGS:   unrand transparent nico_loz_14 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .c.
+   ..c..
+  .c.ccc.
+ ..c......
+.ccc.c.ccc.
+ ......c..
+  .ccc.c.
+   ..c..
+    .c.
+     .
+ENDMAP
+
+NAME:   nicolae_subvault_loz_tees_and_crosses
+TAGS:   unrand transparent nico_loz_15 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     c
+    ...
+   ..ccc
+  cc...c.
+ .c..c....
+c.c.ccc.c.c
+ ....c..c.
+  .c...cc
+   ccc..
+    ...
+     c
+ENDMAP
+
+NAME:   nicolae_subvault_loz_within_cells_interlinked
+TAGS:   unrand transparent nico_loz_16 allow_dup no_dump
+DEPTH:  D:8-, Depths, Crypt
+ORIENT: float
+MAP
+     .
+    .c.
+   ....c
+  ccc.cc.
+ ..c...c..
+.c...c...c.
+ ..c...c..
+  .cc.ccc
+   c....
+    .c.
+     .
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
