@@ -1593,7 +1593,7 @@ ENDMAP
 # https://www.youtube.com/watch?v=JbfhzlMk2eY
 NAME:     nicolae_hitomezashi
 TAGS:     transparent decor
-DEPTH:    D:8-, Depths
+DEPTH:    D:8-, Depths:1
 ORIENT:   float
 SUBVAULT: D : nico_hito
 SUBVAULT: E : nico_hito
@@ -1655,7 +1655,7 @@ ENDMAP
 # don't need separate subvaults for edge rows and interior rows.
 NAME:   nicolae_hito_row
 TAGS:   unrand allow_dup nico_hito
-DEPTH:  D:8-, Depths
+DEPTH:  D:8-, Depths:1
 NSUBST: @ = @ / .
 MAP
 ccc .@. ccc .@. ccc .@. ccc .@.
@@ -1728,7 +1728,7 @@ ENDMAP
 
 NAME:   nicolae_big_ol_wall_tiling
 TAGS:   transparent decor
-DEPTH:  D:8-, Depths
+DEPTH:  D:8-, Depths:1
 ORIENT: float
 : local glyphs = "DEFHJKLMNOPQRSZ-"
 : for i = 1, string.len(glyphs), 1 do
@@ -1786,7 +1786,7 @@ ENDMAP
 
 NAME:   nicolae_tiled_lozenges
 TAGS:   transparent decor
-DEPTH:  D:8-, Depths, Crypt
+DEPTH:  D:8-, Depths:1, Crypt, !Crypt:$
 ORIENT: float
 # By design, only one type of subvault is chosen out of the multiple options.
 : local glyphs = "DEFHJKLMN"
