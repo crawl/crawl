@@ -335,6 +335,7 @@ enum tag_minor_version
     TAG_MINOR_EXCLUSIVE_ROLLPAGE,  // Don't give inhibited regen mutation to rollpage characters.
     TAG_MINOR_ATTACK_ACTION_COUNTS, // Add tracking for attack action count sources
     TAG_MINOR_ACCURATE_INVIS_INDICATORS, // Invis indicators now always show at the monsters position
+    TAG_MINOR_FIX_BLOOD_KNOWLEDGE, // Add blood rotation to map knowledge so out of sight changes aren't leaked
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

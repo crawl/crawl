@@ -170,7 +170,15 @@ static void _update_feat_at(const coord_def &gp)
     }
 
     if (is_bloodcovered(gp))
+    {
         env.map_knowledge(gp).flags |= MAP_BLOODY;
+        if (testbits(env.pgrid(gp), FPROP_BLOOD_WEST))
+            env.map_knowledge(gp).flags |= MAP_BLOOD_WEST;
+        if (testbits(env.pgrid(gp), FPROP_BLOOD_NORTH))
+            env.map_knowledge(gp).flags |= MAP_BLOOD_NORTH;
+        if (testbits(env.pgrid(gp), FPROP_OLD_BLOOD))
+            env.map_knowledge(gp).flags |= MAP_OLD_BLOOD;
+    }
 
     if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
         env.map_knowledge(gp).flags |= MAP_CORRODING;

@@ -61,10 +61,3 @@ feature_property_type str_to_fprop(const string &str)
 
     return FPROP_NONE;
 }
-
-#ifdef USE_TILE
-char blood_rotation(const coord_def & p)
-{
-    return (env.pgrid(p) & FPROP_BLOOD_EAST).flags >> 16;
-}
-#endif

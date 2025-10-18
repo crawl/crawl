@@ -6986,6 +6986,27 @@ void _tag_construct_level_tiles(writer &th)
     marshallInt(th, TILE_WALL_MAX);
 }
 
+#if TAG_MAJOR_VERSION == 34
+static void _fixup_blood_knowledge(MapKnowledge& map_knowledge)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        constexpr uint32_t blood_flags = MAP_BLOOD_WEST | MAP_BLOOD_NORTH
+                                         | MAP_OLD_BLOOD;
+        map_knowledge(*ri).flags &= ~blood_flags;
+        if (map_knowledge(*ri).flags & MAP_BLOODY)
+        {
+            if (testbits(env.pgrid(*ri), FPROP_BLOOD_WEST))
+                map_knowledge(*ri).flags |= MAP_BLOOD_WEST;
+            if (testbits(env.pgrid(*ri), FPROP_BLOOD_NORTH))
+                map_knowledge(*ri).flags |= MAP_BLOOD_NORTH;
+            if (testbits(env.pgrid(*ri), FPROP_OLD_BLOOD))
+                map_knowledge(*ri).flags |= MAP_OLD_BLOOD;
+        }
+    }
+}
+#endif
+
 static void _tag_read_level(reader &th)
 {
     env.floor_colour = unmarshallUByte(th);
@@ -7044,6 +7065,11 @@ static void _tag_read_level(reader &th)
         }
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FIX_BLOOD_KNOWLEDGE)
+        _fixup_blood_knowledge(env.map_knowledge);
+#endif
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FORGOTTEN_MAP)
         env.map_forgotten.reset();
     else
@@ -7054,6 +7080,11 @@ static void _tag_read_level(reader &th)
         for (int x = 0; x < GXM; x++)
             for (int y = 0; y < GYM; y++)
                 unmarshallMapCell(th, (*f)[x][y]);
+
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_FIX_BLOOD_KNOWLEDGE)
+            _fixup_blood_knowledge(*f);
+#endif
         env.map_forgotten.reset(f);
     }
     else

@@ -1574,8 +1574,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
         {
             cell.is_bloody = true;
-            cell.blood_rotation = blood_rotation(gc);
-            cell.old_blood = bool(env.pgrid(gc) & FPROP_OLD_BLOOD);
+            cell.blood_rotation = mc.blood_rotation();
+            cell.old_blood = bool(mc.flags & MAP_OLD_BLOOD);
         }
     }
 
