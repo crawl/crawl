@@ -36,7 +36,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: Source Packages ${{ matrix.arch }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
     steps:
       - uses: actions/checkout@v3
@@ -385,7 +385,7 @@ jobs:
       contents: write #  for release creation (svenstaro/upload-release-action)
 
     name: mingw64 ${{ matrix.build_type }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         build_type:
@@ -665,7 +665,7 @@ jobs:
 
   build_android:
     name: Android
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         build_opts:
