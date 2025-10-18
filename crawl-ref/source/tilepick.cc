@@ -626,11 +626,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (env.map_knowledge(gc).flags & MAP_CORRODING)
             return TILE_FLOOR_SLIME_ACIDIC;
 
-        if (env.level_state & LSTATE_ICY_WALL
-            && env.map_knowledge(gc).flags & MAP_ICY)
-        {
+        if (env.map_knowledge(gc).flags & MAP_ICY)
             return TILE_FLOOR_ICY;
-        }
+
         // deliberate fall-through
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:

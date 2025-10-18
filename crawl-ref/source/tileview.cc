@@ -1633,11 +1633,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_CORRODING && !feat_is_wall(feat))
         cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
-    else if (env.level_state & LSTATE_ICY_WALL
-             && env.map_knowledge(gc).flags & MAP_ICY)
-    {
+    else if (mc.flags & MAP_ICY)
         cell.flv.floor = TILE_FLOOR_ICY;
-    }
     else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {
