@@ -443,7 +443,7 @@ void handle_time()
     }
 
     // Abyss maprot.
-    if (player_in_branch(BRANCH_ABYSS))
+    if (!crawl_state.game_is_arena() && player_in_branch(BRANCH_ABYSS))
         forget_map(true);
 
     // Magic contamination from spells and Orb.
