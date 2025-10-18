@@ -525,17 +525,6 @@ bool player::slow_in_water() const
         && you.body_size(PSIZE_BODY) <= SIZE_MEDIUM;
 }
 
-static void _maybe_sink(dungeon_feature_type old_feat,
-                        dungeon_feature_type new_grid)
-{
-    if (!you.can_swim()
-        && new_grid == DNGN_DEEP_WATER
-        && old_feat != DNGN_DEEP_WATER)
-    {
-        mpr("You sink to the bottom.");
-    }
-}
-
 static void _enter_water(dungeon_feature_type old_feat,
                          dungeon_feature_type new_grid, bool stepped)
 {
@@ -557,10 +546,7 @@ static void _enter_water(dungeon_feature_type old_feat,
 
     // Most of these messages are irrelevant when you're already in the water.
     if (feat_is_water(old_feat))
-    {
-        _maybe_sink(old_feat, new_grid);
         return;
-    }
 
     if (new_grid == DNGN_TOXIC_BOG)
         mprf("You %s the toxic bog.", stepped ? "enter" : "fall into");
@@ -570,8 +556,6 @@ static void _enter_water(dungeon_feature_type old_feat,
              stepped ? "enter" : "fall into",
              new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
     }
-
-    _maybe_sink(old_feat, new_grid);
 
     if (you.slow_in_water())
     {
