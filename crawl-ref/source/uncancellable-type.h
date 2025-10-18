@@ -14,4 +14,11 @@ enum uncancellable_type
 #endif
     UNC_POTION_PETITION,       // arg is ignored
     UNC_CALL_MERCHANT,         // arg is ignored
+
+    UNC_ENCHANT_WEAPON,        // arg is ignored
+    UNC_ENCHANT_ARMOUR,        // arg is ignored
+    UNC_BRAND_WEAPON,          // arg is ignored
+    UNC_AMNESIA,               // arg is ignored
+    UNC_BLINKING,                 // arg is ignored
+    UNC_IDENTIFY,              // arg is ignored
 };

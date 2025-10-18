@@ -12,6 +12,7 @@
 #include "acquire.h"
 #include "decks.h"
 #include "god-abil.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "state.h"
 #include "tag-version.h"
@@ -68,6 +69,31 @@ void run_uncancels()
 
         case UNC_CALL_MERCHANT:
             if (!gozag_call_merchant() && crawl_state.seen_hups)
+                return;
+            break;
+
+        case UNC_ENCHANT_WEAPON:
+            if (!uncancel_enchant_weapon() && crawl_state.seen_hups)
+                return;
+            break;
+        case UNC_ENCHANT_ARMOUR:
+            if (!uncancel_enchant_armour() && crawl_state.seen_hups)
+                return;
+            break;
+        case UNC_BRAND_WEAPON:
+            if (!uncancel_brand_weapon() && crawl_state.seen_hups)
+                return;
+            break;
+        case UNC_AMNESIA:
+            if (!uncancel_amnesia() && crawl_state.seen_hups)
+                return;
+            break;
+        case UNC_BLINKING:
+            if (!uncancel_blinking() && crawl_state.seen_hups)
+                return;
+            break;
+        case UNC_IDENTIFY:
+            if (!uncancel_identify() && crawl_state.seen_hups)
                 return;
             break;
         }
