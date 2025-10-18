@@ -45,7 +45,6 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-damage.h" // cancel_polar_vortex
 #include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -1051,7 +1050,6 @@ static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos)
         large_change = true;
     }
 
-    cancel_polar_vortex(true);
     _place_tloc_cloud(oldpos);
     move_player_to_grid(newpos, false);
     stop_delay(true);

@@ -546,10 +546,7 @@ void trap_def::trigger(actor& triggerer)
         if (search_result == passage_type::free)
         {
             if (you_trigger)
-            {
                 mpr("You enter the passage of Golubria.");
-                cancel_polar_vortex();
-            }
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 

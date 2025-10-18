@@ -473,7 +473,7 @@ void polar_vortex_damage(actor *caster, int dur)
     }
 }
 
-void cancel_polar_vortex(bool tloc)
+void cancel_polar_vortex()
 {
     if (!you.duration[DUR_VORTEX])
         return;
@@ -481,20 +481,9 @@ void cancel_polar_vortex(bool tloc)
     dprf("Aborting vortex.");
     if (you.duration[DUR_VORTEX] == you.duration[DUR_FLIGHT])
     {
-        if (tloc)
-        {
-            // it'd be better to abort flight instantly, but let's first
-            // make damn sure all ways of translocating are prevented from
-            // landing you in water. Insta-kill due to an arrow of dispersal
-            // is not nice.
-            you.duration[DUR_FLIGHT] = min(20, you.duration[DUR_FLIGHT]);
-        }
-        else
-        {
-            // Vortex ended by using something stairslike, so the destination
-            // is safe
-            you.duration[DUR_FLIGHT] = 0;
-        }
+        // Vortex ended by using something stairslike, so the destination
+        // is safe
+        you.duration[DUR_FLIGHT] = 0;
     }
     you.duration[DUR_VORTEX] = 0;
     you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);

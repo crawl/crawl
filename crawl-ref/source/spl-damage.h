@@ -92,7 +92,7 @@ spret cast_fragmentation(int powc, const actor *caster,
 spret cast_polar_vortex(int powc, bool fail, bool no_prompt = false);
 void polar_vortex_damage(actor *caster, int dur);
 dice_def polar_vortex_dice(int pow, bool random);
-void cancel_polar_vortex(bool tloc = false);
+void cancel_polar_vortex();
 coord_def get_thunderbolt_last_aim(actor *caster);
 dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
