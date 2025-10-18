@@ -1631,15 +1631,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     cell.flv = tile_env.flv(gc);
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
-    {
-        for (adjacent_iterator ai(gc); ai; ++ai)
-            if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
-            {
-                cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
-                break;
-            }
-    }
+    if (mc.flags & MAP_CORRODING && !feat_is_wall(feat))
+        cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
     else if (env.level_state & LSTATE_ICY_WALL
              && env.map_knowledge(gc).flags & MAP_ICY)
     {
