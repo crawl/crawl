@@ -5,11 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build && npm run copy",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write --unsafe",
+    "format": "biome format",
+    "preview": "vite preview",
+    "copy": "cp dist/index.html ../../templates/client.html && cp dist/static/* ../../static"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "@types/jquery": "1.x",
     "typescript": "~5.9.3",
     "vite": "^7.1.7"
+  },
+  "dependencies": {
+    "jquery": "^1.12.4",
+    "jquery.browser": "^0.1.0",
+    "jquery.cookie": "^1.4.1",
+    "tablesorter": "^2.32.0"
   }
 }

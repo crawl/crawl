@@ -1,56 +1,52 @@
-define(["jquery", "client", "./dungeon_renderer", "./minimap",
-        "./monster_list", "./map_knowledge", "./enums", "./display", "exports",
-        "contrib/jquery.json"],
-function ($, c, r, mm, ml, mk, enums, display, exports) {
-    "use strict";
+import $ from "jquery";
 
-    exports.client = c;
-    exports.renderer = r;
-    exports.$ = $;
-    exports.minimap = mm;
-    exports.monster_list = ml;
-    exports.map_knowledge = mk;
-    exports.display = display;
+import c from "./client";
+import r from "./dungeon_renderer";
+import mm from "./minimap";
+import ml from "./monster_list";
+import mk from "./map_knowledge";
+import display from "./display";
 
-    window.debug = exports;
+const exports = {};
 
-    // Debug helper
-    exports.mark_cell = function (x, y, mark)
-    {
-        mark = mark || "m";
+exports.client = c;
+exports.renderer = r;
+exports.$ = $;
+exports.minimap = mm;
+exports.monster_list = ml;
+exports.map_knowledge = mk;
+exports.display = display;
 
-        if (mk.get(x, y).t)
-            mk.get(x, y).t.mark = mark;
+window.debug = exports;
 
-        r.render_loc(x, y);
-    }
-    exports.unmark_cell = function (x, y)
-    {
-        var cell = mk.get(x, y);
-        if (cell)
-        {
-            delete cell.t.mark;
-        }
+// Debug helper
+exports.mark_cell = (x, y, mark) => {
+  mark = mark || "m";
 
-        r.render_loc(x, y);
-    }
-    exports.mark_all = function ()
-    {
-        var view = r.view;
-        for (var x = 0; x < r.cols; x++)
-            for (var y = 0; y < r.rows; y++)
-                mark_cell(view.x + x, view.y + y, (view.x + x) + "/" + (view.y + y));
-    }
-    exports.unmark_all = function ()
-    {
-        var view = r.view;
-        for (var x = 0; x < r.cols; x++)
-            for (var y = 0; y < r.rows; y++)
-                unmark_cell(view.x + x, view.y + y);
-    }
+  if (mk.get(x, y).t) mk.get(x, y).t.mark = mark;
 
-    exports.obj_to_str = function (o)
-    {
-        return $.toJSON(o);
-    }
-});
+  r.render_loc(x, y);
+};
+exports.unmark_cell = (x, y) => {
+  const cell = mk.get(x, y);
+  if (cell) {
+    delete cell.t.mark;
+  }
+
+  r.render_loc(x, y);
+};
+exports.mark_all = () => {
+  const view = r.view;
+  for (let x = 0; x < r.cols; x++)
+    for (let y = 0; y < r.rows; y++)
+      mark_cell(view.x + x, view.y + y, `${view.x + x}/${view.y + y}`);
+};
+exports.unmark_all = () => {
+  const view = r.view;
+  for (let x = 0; x < r.cols; x++)
+    for (let y = 0; y < r.rows; y++) unmark_cell(view.x + x, view.y + y);
+};
+
+exports.obj_to_str = (o) => $.toJSON(o);
+
+export default exports;

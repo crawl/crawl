@@ -8,4 +8,4 @@ banned_players.txt
 webtiles/version.txt
 Pipfile
 Pipfile.lock
-node_modules/
+templates/client.html

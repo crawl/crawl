@@ -1,33 +1,28 @@
-define(["jquery", "contrib/ba-linkify.min"], function ($) {
-    "use strict";
+import $ from "jquery";
+import "./contrib/ba-linkify.min";
 
-    var ALLOWED_PROTOCOLS = ["http", "https", "ftp", "irc"];
+const ALLOWED_PROTOCOLS = ["http", "https", "ftp", "irc"];
 
-    var ba_linkify = window.linkify;
-    delete window.linkify;
+const ba_linkify = window.linkify;
+delete window.linkify;
 
-    function escape_html(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+function escape_html(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
-    function linkify(text)
-    {
-        return ba_linkify(text,
-        {
-            callback: function (text, href)
-            {
-                if (!href)
-                    return escape_html(text);
-                if (!ALLOWED_PROTOCOLS.some(function (p) {
-                        return href.indexOf(p+ "://") === 0; }))
-                {
-                    return escape_html(text);
-                }
-                return $("<a>").attr("href", href).attr("target", "_blank")
-                    .text(text)[0].outerHTML;
-            }
-        });
-    }
+function linkify(text) {
+  return ba_linkify(text, {
+    callback: (text, href) => {
+      if (!href) return escape_html(text);
+      if (
+        !ALLOWED_PROTOCOLS.some((p) => href.indexOf(`${p}://`) === 0)
+      ) {
+        return escape_html(text);
+      }
+      return $("<a>").attr("href", href).attr("target", "_blank").text(text)[0]
+        .outerHTML;
+    },
+  });
+}
 
-    return linkify;
-});
+export default linkify;

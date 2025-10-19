@@ -1,118 +1,102 @@
-define(["jquery", "comm", "./map_knowledge", "./view_data", "./monster_list",
-        "./minimap", "./dungeon_renderer"],
-function ($, comm, map_knowledge, view_data, monster_list, minimap,
-          dungeon_renderer) {
-    "use strict";
+import $ from "jquery";
 
-    function invalidate(minimap_too)
-    {
-        var b = map_knowledge.bounds();
-        if (!b) return;
+import comm from "./comm";
 
-        var view = dungeon_renderer.view;
+import map_knowledge from "./map_knowledge";
+import monster_list from "./monster_list";
+import minimap from "./minimap";
+import dungeon_renderer from "./dungeon_renderer";
 
-        var xs = minimap_too ? b.left : view.x;
-        var ys = minimap_too ? b.top : view.y;
-        var xe = minimap_too ? b.right : view.x + dungeon_renderer.cols - 1;
-        var ye = minimap_too ? b.bottom : view.y + dungeon_renderer.rows - 1;
-        for (var x = xs; x <= xe; x++)
-            for (var y = ys; y <= ye; y++)
-        {
-            map_knowledge.touch(x, y);
-        }
+function invalidate(minimap_too) {
+  const b = map_knowledge.bounds();
+  if (!b) return;
+
+  const view = dungeon_renderer.view;
+
+  const xs = minimap_too ? b.left : view.x;
+  const ys = minimap_too ? b.top : view.y;
+  const xe = minimap_too ? b.right : view.x + dungeon_renderer.cols - 1;
+  const ye = minimap_too ? b.bottom : view.y + dungeon_renderer.rows - 1;
+  for (let x = xs; x <= xe; x++)
+    for (let y = ys; y <= ye; y++) {
+      map_knowledge.touch(x, y);
     }
+}
 
-    function display()
-    {
-        // Update the display.
-        if (!map_knowledge.bounds())
-            return;
+function display() {
+  // Update the display.
+  if (!map_knowledge.bounds()) return;
 
-        var t1 = new Date();
+  const t1 = new Date();
 
-        if (map_knowledge.reset_bounds_changed())
-            minimap.center();
+  if (map_knowledge.reset_bounds_changed()) minimap.center();
 
-        var dirty_locs = map_knowledge.dirty();
-        for (var i = 0; i < dirty_locs.length; i++)
-        {
-            var loc = dirty_locs[i];
-            var cell = map_knowledge.get(loc.x, loc.y);
-            cell.dirty = false;
-            monster_list.update_loc(loc);
-            dungeon_renderer.render_loc(loc.x, loc.y, cell);
-            minimap.update(loc.x, loc.y, cell);
-        }
-        map_knowledge.reset_dirty();
+  const dirty_locs = map_knowledge.dirty();
+  for (let i = 0; i < dirty_locs.length; i++) {
+    const loc = dirty_locs[i];
+    const cell = map_knowledge.get(loc.x, loc.y);
+    cell.dirty = false;
+    monster_list.update_loc(loc);
+    dungeon_renderer.render_loc(loc.x, loc.y, cell);
+    minimap.update(loc.x, loc.y, cell);
+  }
+  map_knowledge.reset_dirty();
 
-        dungeon_renderer.animate();
+  dungeon_renderer.animate();
 
-        monster_list.update();
+  monster_list.update();
 
-        var render_time = (new Date() - t1);
-        if (!window.render_times)
-            window.render_times = [];
-        if (window.render_times.length >= 20)
-            window.render_times.shift();
-        window.render_times.push(render_time);
+  const render_time = Date.now() - t1;
+  if (!window.render_times) window.render_times = [];
+  if (window.render_times.length >= 20) window.render_times.shift();
+  window.render_times.push(render_time);
+}
+
+function clear_map() {
+  map_knowledge.clear();
+
+  dungeon_renderer.clear();
+
+  minimap.clear();
+
+  monster_list.clear();
+}
+
+// Message handlers
+function handle_map_message(data) {
+  if (data.clear) clear_map();
+
+  if (data.player_on_level != null)
+    map_knowledge.set_player_on_level(data.player_on_level);
+
+  if (data.vgrdc) minimap.do_view_center_update(data.vgrdc.x, data.vgrdc.y);
+
+  if (data.cells) map_knowledge.merge(data.cells);
+
+  // Mark cells overlapped by dirty cells as dirty
+  $.each(map_knowledge.dirty().slice(), (_i, loc) => {
+    const cell = map_knowledge.get(loc.x, loc.y);
+    // high cell
+    if (cell.t?.sy && cell.t.sy < 0) map_knowledge.touch(loc.x, loc.y - 1);
+    // left overlap
+    if (cell.t?.left_overlap && cell.t.left_overlap < 0) {
+      map_knowledge.touch(loc.x - 1, loc.y);
+      // If we overlap at both top *and* left, we may additionally
+      // overlap diagonally.
+      if (cell.t.sy && cell.t.sy < 0) map_knowledge.touch(loc.x - 1, loc.y - 1);
     }
+  });
 
-    function clear_map()
-    {
-        map_knowledge.clear();
+  display();
+}
 
-        dungeon_renderer.clear();
+function _handle_vgrdc(_data) {}
 
-        minimap.clear();
-
-        monster_list.clear();
-    }
-
-    // Message handlers
-    function handle_map_message(data)
-    {
-        if (data.clear)
-            clear_map();
-
-        if (data.player_on_level != null)
-            map_knowledge.set_player_on_level(data.player_on_level);
-
-        if (data.vgrdc)
-            minimap.do_view_center_update(data.vgrdc.x, data.vgrdc.y);
-
-        if (data.cells)
-            map_knowledge.merge(data.cells);
-
-        // Mark cells overlapped by dirty cells as dirty
-        $.each(map_knowledge.dirty().slice(), function (i, loc) {
-            var cell = map_knowledge.get(loc.x, loc.y);
-            // high cell
-            if (cell.t && cell.t.sy && cell.t.sy < 0)
-                map_knowledge.touch(loc.x, loc.y - 1);
-            // left overlap
-            if (cell.t && cell.t.left_overlap && cell.t.left_overlap < 0)
-            {
-                map_knowledge.touch(loc.x - 1, loc.y);
-                // If we overlap at both top *and* left, we may additionally
-                // overlap diagonally.
-                if (cell.t.sy && cell.t.sy < 0)
-                    map_knowledge.touch(loc.x - 1, loc.y - 1);
-            }
-        });
-
-        display();
-    }
-
-    function handle_vgrdc(data)
-    {
-    }
-
-    comm.register_handlers({
-        "map": handle_map_message,
-    });
-
-    return {
-        invalidate: invalidate,
-        display: display,
-    };
+comm.register_handlers({
+  map: handle_map_message,
 });
+
+export default {
+  invalidate: invalidate,
+  display: display,
+};

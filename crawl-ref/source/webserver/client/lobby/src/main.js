@@ -1,4 +1,5 @@
-import './app.ts'
+// Redundant
+import "./app";
 
 // document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 //   <div>
