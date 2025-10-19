@@ -1326,19 +1326,53 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             benadryl_antaeus king7artist_eustachio benadryl_oni \
             ylam_formicid_shrikes lemurrobot_gozag_vaults
 
+GENERATEDJS = $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
+
+WEBSERVERGAME = webserver/game_data/static/game.js
+
+WEBSERVERLOBBY = webserver/static/index-*.js \
+				 webserver/static/index-*.css \
+				 webserver/templates/client.html
+
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
-              webserver/static/stone_soup_icon-32x32.png \
-              $(TITLEIMGS:%=webserver/static/title_%.png) \
-              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
-              webserver/webtiles/version.txt
+			  webserver/static/stone_soup_icon-32x32.png \
+			  $(TITLEIMGS:%=webserver/static/title_%.png) \
+			  $(GENERATEDJS) \
+			  $(WEBSERVERGAME) \
+			  $(WEBSERVERLOBBY) \
+			  webserver/webtiles/version.txt
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
 webserver/webtiles/version.txt: .ver
 	@git describe $(MERGE_BASE) > webserver/webtiles/version.txt
 
-webserver/game_data/static/%.js: $(RLTILES)/%.js
+webserver/game_data/static/tileinfo-%.js: $(RLTILES)/tileinfo-%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
+
+NPMPACKAGELOCKS = ../../package.json \
+				../../package-lock.json \
+				webserver/client/game/package.json \
+				webserver/client/lobby/package.json \
+
+NPMNODEMODULES = ../../node_modules/.modified
+
+$(NPMNODEMODULES): $(NPMPACKAGELOCKS)
+	npm ci
+	@rm -f ../../node_modules/.modified
+	@touch -m ../../node_modules/.modified
+
+$(WEBSERVERGAME): $(GENERATEDJS) webserver/client/game/src/*.js $(NPMNODEMODULES)
+	cd webserver/client/game
+	echo Build GAME
+	npm run build
+
+$(WEBSERVERLOBBY): webserver/client/lobby/src/*.js $(NPMNODEMODULES)
+	@rm -f webserver/static/index-*.js
+	@rm -f webserver/static/index-*.css
+	cd webserver/client/lobby
+	echo Build LOBBY
+	npm run build
 
 clean-webserver:
 	$(RM) $(STATICFILES) webserver/*.pyc

@@ -1,7 +1,7 @@
 {
     "name": "crawl-workspace",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.0.1",
     "packageManager": "npm@10.9.3",
     "workspaces": ["crawl-ref/source/webserver/client/lobby", "crawl-ref/source/webserver/client/game"],
     "scripts": {
