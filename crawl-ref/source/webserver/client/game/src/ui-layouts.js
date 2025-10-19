@@ -1,17 +1,15 @@
+import client from "client";
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
-import client from "./client";
-
-import ui from "./ui";
-import enums from "./enums";
-import cr from "./cell_renderer";
-import util from "./util";
-import scroller from "./scroller";
-import main from "../../../game_data/static/tileinfo-main";
 import gui from "../../../game_data/static/tileinfo-gui";
+import main from "../../../game_data/static/tileinfo-main";
 import player from "../../../game_data/static/tileinfo-player";
+import cr from "./cell_renderer";
+import enums from "./enums";
 import options from "./options";
+import scroller from "./scroller";
+import ui from "./ui";
+import util from "./util";
 
 const describe_scale = 2.0;
 

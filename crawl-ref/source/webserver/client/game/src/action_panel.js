@@ -1,18 +1,16 @@
-import $ from "jquery";
+import client from "client";
+import comm from "comm";
 import { createFocusTrap } from "focus-trap";
-
-import comm from "./comm";
-import client from "./client";
-
+import $ from "jquery";
+import gui from "../../../game_data/static/tileinfo-gui";
+import icons from "../../../game_data/static/tileinfo-icons";
+import main from "../../../game_data/static/tileinfo-main";
 import cr from "./cell_renderer";
 import enums from "./enums";
 import options from "./options";
 import player from "./player";
-import icons from "../../../game_data/static/tileinfo-icons";
-import gui from "../../../game_data/static/tileinfo-gui";
-import main from "../../../game_data/static/tileinfo-main";
-import util from "./util";
 import ui from "./ui";
+import util from "./util";
 
 let filtered_inv;
 let renderer, $canvas, $settings, $tooltip;

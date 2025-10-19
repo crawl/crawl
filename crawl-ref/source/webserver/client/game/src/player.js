@@ -1,7 +1,6 @@
+import client from "client";
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
-import client from "./client";
 
 import map_knowledge from "./map_knowledge";
 import messages from "./messages";

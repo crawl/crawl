@@ -1,6 +1,5 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
 
 const line_span = $("<span>");
 line_span.css("white-space", "pre");

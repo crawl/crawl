@@ -1,10 +1,8 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
-
+import options from "./options";
 import textinput from "./textinput";
 import util from "./util";
-import options from "./options";
 
 let more = false;
 let old_scroll_top;

@@ -1,8 +1,7 @@
-import $ from "jquery";
+import client from "client";
+import comm from "comm";
 import { createFocusTrap } from "focus-trap";
-
-import comm from "./comm";
-import client from "./client";
+import $ from "jquery";
 
 import options from "./options";
 

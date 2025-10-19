@@ -1,11 +1,10 @@
+import client from "client";
+import comm from "comm";
 import $ from "jquery";
-
-import client from "./client";
-import comm from "./comm";
+import key_conversion from "key_conversion";
 import display from "./display";
 import dungeon_renderer from "./dungeon_renderer";
 import enums from "./enums";
-import key_conversion from "./key_conversion";
 import messages from "./messages";
 import minimap from "./minimap";
 import mouse_control from "./mouse_control";

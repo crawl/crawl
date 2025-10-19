@@ -1,5 +1,5 @@
+import comm from "comm";
 import $ from "jquery";
-import comm from "./comm";
 
 const exports = {};
 

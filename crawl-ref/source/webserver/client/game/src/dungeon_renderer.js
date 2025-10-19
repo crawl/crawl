@@ -1,14 +1,12 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
-
+import dngn from "../../../game_data/static/tileinfo-dngn";
 import cr from "./cell_renderer";
+import enums from "./enums";
 import map_knowledge from "./map_knowledge";
 import options from "./options";
-import dngn from "../../../game_data/static/tileinfo-dngn";
 import util from "./util";
 import view_data from "./view_data";
-import enums from "./enums";
 
 let global_anim_counter = 0;
 

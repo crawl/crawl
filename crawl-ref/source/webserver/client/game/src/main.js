@@ -5,8 +5,8 @@
 // import "./simplebar.css";
 import "./game";
 
+import client from "client";
 import $ from "jquery";
-import client from "./client";
 
 // Game initialisation (moved from inline script in html template)
 $(document).trigger("game_preinit");

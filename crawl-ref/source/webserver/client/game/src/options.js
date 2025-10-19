@@ -1,6 +1,5 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
 
 let options = null;
 const listeners = $.Callbacks();

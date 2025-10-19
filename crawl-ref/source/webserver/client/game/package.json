@@ -19,7 +19,6 @@
     "vite": "^7.1.7"
   },
   "dependencies": {
-    "focus-trap": "^7.6.5",
-    "jquery": "^1.12.4"
+    "focus-trap": "^7.6.5"
   }
 }

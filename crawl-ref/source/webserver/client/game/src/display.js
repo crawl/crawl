@@ -1,11 +1,9 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
-
-import map_knowledge from "./map_knowledge";
-import monster_list from "./monster_list";
-import minimap from "./minimap";
 import dungeon_renderer from "./dungeon_renderer";
+import map_knowledge from "./map_knowledge";
+import minimap from "./minimap";
+import monster_list from "./monster_list";
 
 function invalidate(minimap_too) {
   const b = map_knowledge.bounds();

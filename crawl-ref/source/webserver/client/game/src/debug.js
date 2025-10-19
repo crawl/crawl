@@ -1,11 +1,10 @@
+import c from "client";
 import $ from "jquery";
-
-import c from "./client";
+import display from "./display";
 import r from "./dungeon_renderer";
+import mk from "./map_knowledge";
 import mm from "./minimap";
 import ml from "./monster_list";
-import mk from "./map_knowledge";
-import display from "./display";
 
 const exports = {};
 

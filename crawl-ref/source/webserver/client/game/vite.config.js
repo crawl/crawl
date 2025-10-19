@@ -10,8 +10,16 @@ export default {
     sourcemap: true,
     rollupOptions: {
       input: "src/main.js",
-      output: { entryFileNames: "static/game.js" },
-      external: { jquery: "window.jQuery" },
+      output: {
+        entryFileNames: "static/game.js",
+        globals: {
+          jquery: "jQuery",
+          client: "DCSS.client",
+          comm: "DCSS.comm",
+          key_conversion: "DCSS.key_conversion",
+        },
+      },
+      external: ["jquery", "client", "comm", "key_conversion"],
     },
   },
 };

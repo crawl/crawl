@@ -1,6 +1,5 @@
+import comm from "comm";
 import $ from "jquery";
-
-import comm from "./comm";
 
 import map_knowledge from "./map_knowledge";
 
