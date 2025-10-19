@@ -252,7 +252,7 @@ local function get_monster_info(dx,dy,no_move)
     -- firing can often be preempted by melee etc, but we have been called by
     -- CMD_AUTOFIRE, so force firing.
     -- TODO: refactor so that this is less hacky
-    info.attack_type = AF_FIRE
+    info.attack_type = you.see_cell_no_trans(dx,dy) and AF_FIRE or AF_FAILS
   end
 
   -- We can possibly move towards warded enemies, but not attack them while immune
