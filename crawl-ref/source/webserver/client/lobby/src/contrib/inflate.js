@@ -355,9 +355,9 @@
                         for (i = 0; i < 3; i++) {
                                 r[i] = 0;
                         }
-                        // for(int i=0; i<BMAX; i++){u[i]=0;}
+                        // for (int i=0; i<BMAX; i++){u[i]=0;}
                         u.set(c.subarray(0, BMAX), 0);
-                        // for(int i=0; i<BMAX+1; i++){x[i]=0;}
+                        // for (int i=0; i<BMAX+1; i++){x[i]=0;}
                         x.set(c.subarray(0, BMAX + 1), 0);
                 }
 

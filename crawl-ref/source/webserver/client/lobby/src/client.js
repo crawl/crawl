@@ -1,4 +1,3 @@
-// biome-ignore assist/source/organizeImports: must be imported first
 import $ from "jquery";
 
 import "jquery.cookie";
@@ -6,12 +5,10 @@ import "tablesorter";
 import "./contrib/jquery.waitforimages";
 import "./contrib/inflate";
 
-import { requirejs, define } from "./contrib/require";
-
-import key_conversion from "./key_conversion";
-
 import chat from "./chat";
 import comm from "./comm";
+import { define, requirejs } from "./contrib/require";
+import key_conversion from "./key_conversion";
 
 const client = {};
 
@@ -27,6 +24,9 @@ let delay_timeout;
 let message_inhibit = 0;
 const message_queue = [];
 
+// XX: The "playing" variable has always been unused, but keeping for now
+// just in case it's ever useful and for debugging purposes (could probably safely remove though).
+// biome-ignore lint/correctness/noUnusedVariables: Keeping for now
 let playing = false;
 let watching = false;
 let watching_username;
@@ -65,6 +65,7 @@ function enqueue_messages(msgtext) {
     try {
       // Can't use JSON.parse here, because 0.11 and older send
       // invalid JSON messages
+      // biome-ignore lint/security/noGlobalEval: Necessary (if unfortunate) as per comment
       msgobj = eval(`(${msgtext})`);
     } catch (e) {
       console.error("Parsing error:", e);

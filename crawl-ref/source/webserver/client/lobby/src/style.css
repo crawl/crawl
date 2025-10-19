@@ -389,6 +389,7 @@ a:hover {
 
 .hidden,
 .templates {
+  /* biome-ignore lint/complexity/noImportantStyles: necessary for legacy reasons */
   display: none !important;
 }
 

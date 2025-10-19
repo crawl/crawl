@@ -1679,8 +1679,10 @@ bool tile_list_processor::write_data(bool image, bool code)
         else
         {
             for (const auto &abstract : m_abstract)
+            {
                 fprintf(fp, "import %s from \"./tileinfo-%s\"\n",
                         abstract.first.c_str(), abstract.first.c_str());
+            }
         }
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "const exports = { ");

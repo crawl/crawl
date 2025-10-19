@@ -1,16 +1,16 @@
 import $ from "jquery";
 
-import view_data from "./view_data";
+import dngn from "../../../game_data/static/tileinfo-dngn";
 import gui from "../../../game_data/static/tileinfo-gui";
+import icons from "../../../game_data/static/tileinfo-icons";
 import main from "../../../game_data/static/tileinfo-main";
 import tileinfo_player from "../../../game_data/static/tileinfo-player";
-import icons from "../../../game_data/static/tileinfo-icons";
-import dngn from "../../../game_data/static/tileinfo-dngn";
 import enums from "./enums";
 import map_knowledge from "./map_knowledge";
-import tileinfos from "./tileinfos";
-import player from "./player";
 import options from "./options";
+import player from "./player";
+import tileinfos from "./tileinfos";
+import view_data from "./view_data";
 
 function DungeonCellRenderer() {
   this.set_cell_size(32, 32);
@@ -463,15 +463,12 @@ $.extend(DungeonCellRenderer.prototype, {
     }
   },
 
-  render_cell: function () {
-    if (window.debug_mode) this.do_render_cell.apply(this, arguments);
+  render_cell: function (cx, cy, x, y, map_cell, cell) {
+    if (window.debug_mode) this.do_render_cell(cx, cy, x, y, map_cell, cell);
     else {
       try {
-        this.do_render_cell.apply(this, arguments);
+        this.do_render_cell(cx, cy, x, y, map_cell, cell);
       } catch (err) {
-        const cx = arguments[0];
-        const cy = arguments[1];
-        const cell = arguments[5];
         console.error(
           "Error while drawing cell " +
             obj_to_str(cell) +

@@ -62,5 +62,5 @@ export default {
   set: set_option,
   send: send_option,
   clear: clear_options,
-  add_listener: add_listener,
+  add_listener,
 };

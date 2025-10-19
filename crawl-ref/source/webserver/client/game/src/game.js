@@ -1,15 +1,15 @@
 import $ from "jquery";
 
-import comm from "./comm";
 import client from "./client";
-import key_conversion from "./key_conversion";
-import dungeon_renderer from "./dungeon_renderer";
+import comm from "./comm";
 import display from "./display";
-import minimap from "./minimap";
+import dungeon_renderer from "./dungeon_renderer";
 import enums from "./enums";
+import key_conversion from "./key_conversion";
 import messages from "./messages";
-import options from "./options";
+import minimap from "./minimap";
 import mouse_control from "./mouse_control";
+import options from "./options";
 
 import "./text";
 import "./menu";
@@ -21,7 +21,6 @@ import "./ui-layouts";
 let layout_parameters = null,
   ui_state,
   input_mode;
-const _stat_width = 42;
 let msg_height;
 const show_diameter = 17;
 
@@ -98,8 +97,10 @@ function layout_params_differ(old_params, new_params) {
 }
 
 function layout(params, force) {
-  const window_width = (params.window_width = $(window).width());
-  const window_height = (params.window_height = $(window).height());
+  const window_width = $(window).width();
+  params.window_width = window_width;
+  const window_height = $(window).height();
+  params.window_height = window_height;
 
   if (!force && !layout_params_differ(layout_parameters, params)) return false;
 
