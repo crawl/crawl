@@ -36,13 +36,19 @@ To run the server, you need:
   minimally to just run the server, you need Tornado 6+, `pyyaml` (also
   required for building the crawl binary), and (for python versions from 3.13
   and onward) `crypt-r`.
+* Node.js (with npm) is required to bundle the JavaScript dependencies. The LTS
+  version (v22.10.0 at time of writing) is recommended but older verisons will
+  probably work. Installation instructions for your system can be found here:
+  https://nodejs.org/en/download (select `using "nvm"` and `with "npm"`).
 * A build of DCSS with webtiles support.
 
 To get webtiles support in the binary, you'll need to compile DCSS with `make
 WEBTILES=y` (and any other appropriate options). For publicly accessible
 servers, you should also use `USE_DGAMELAUNCH=y`; this disables some things
 like Wizmode (except to admin users), and enables the milestone and player
-location display in the lobby.
+location display in the lobby. JavaScript dependencies will be installed and
+bundled during make, so long as Node.js is installed; you don't have to do
+anything else.
 
 ## Running the server for testing purposes
 
