@@ -680,22 +680,10 @@ LUAFN(moninf_get_is_constricting_you)
 LUAFN(moninf_get_can_be_constricted)
 {
     MONINF(ls, 1, mi);
-    if (!mi->constrictor_name.empty()
-        || form_changes_anatomy()
-        || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
-                || you.is_constricting())
-            && (you.has_mutation(MUT_TENTACLE_ARMS)
-                || !you.has_usable_tentacle()))
-    {
-        lua_pushboolean(ls, false);
-    }
-    else
-    {
-        monster dummy;
-        dummy.type = mi->type;
-        dummy.base_monster = mi->base_type;
-        lua_pushboolean(ls, !dummy.res_constrict());
-    }
+    monster dummy;
+    dummy.type = mi->type;
+    dummy.base_monster = mi->base_type;
+    lua_pushboolean(ls, !dummy.res_constrict());
     return 1;
 }
 
