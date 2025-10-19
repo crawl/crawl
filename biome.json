@@ -5,6 +5,10 @@
     "clientKind": "git",
     "useIgnoreFile": false
   },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": []
+  },
   "formatter": {
     "enabled": true,
     "lineWidth": 80,
