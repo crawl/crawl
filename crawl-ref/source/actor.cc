@@ -575,24 +575,15 @@ bool actor::has_invalid_constrictor(bool move) const
     if (!attacker || !attacker->alive())
         return true;
 
-    // When the player is at the origin, they don't have the normal
-    // considerations, since they're just here to avoid messages or LOS
-    // effects. Cheibriados' time step abilities are an exception to this as
-    // they have the player "leave the normal flow of time" and so should break
-    // constriction.
-    const bool ignoring_player = attacker->is_player()
-        && attacker->pos().origin()
-        && !you.duration[DUR_TIME_STEP];
-
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
     if (constricted_type == CONSTRICT_MELEE)
-        return !ignoring_player && !adjacent(attacker->pos(), pos());
+        return !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
     return move
         // Constriction doesn't work out of LOS, to avoid sauciness.
-        || !ignoring_player && !attacker->see_cell(pos())
+        || !attacker->see_cell(pos())
         || !feat_has_solid_floor(env.grid(pos()));
 }
 
