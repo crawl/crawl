@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run copy",
+    "build": "npm-run-all build:vite copy",
+    "build:vite": "vite build",
     "lint": "biome lint ./src/*",
     "lint:fix": "biome lint ./src/* --write --unsafe",
     "format": "biome format ./src/*",

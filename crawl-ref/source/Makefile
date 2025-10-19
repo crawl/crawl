@@ -1363,16 +1363,12 @@ $(NPMNODEMODULES): $(NPMPACKAGELOCKS)
 	@touch -m ../../node_modules/.modified
 
 $(WEBSERVERGAME): $(GENERATEDJS) webserver/client/game/src/*.js $(NPMNODEMODULES)
-	cd webserver/client/game
-	echo Build GAME
-	npm run build
+	npm run build --workspace=crawl-game
 
 $(WEBSERVERLOBBY): webserver/client/lobby/src/*.js $(NPMNODEMODULES)
 	@rm -f webserver/static/index-*.js
 	@rm -f webserver/static/index-*.css
-	cd webserver/client/lobby
-	echo Build LOBBY
-	npm run build
+	npm run build --workspace=crawl-lobby
 
 clean-webserver:
 	$(RM) $(STATICFILES) webserver/*.pyc
