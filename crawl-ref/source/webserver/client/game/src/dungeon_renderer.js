@@ -244,7 +244,7 @@ $.extend(DungeonViewRenderer.prototype, {
         dest.x,
         dest.y,
         dest.width,
-        dest.height
+        dest.height,
       );
     }
 
@@ -271,7 +271,7 @@ $.extend(DungeonViewRenderer.prototype, {
       scale = options.get("tile_map_scale");
     else scale = options.get("tile_viewport_scale");
     const tile_size = Math.floor(
-      (options.get("tile_cell_pixels") * scale) / 100
+      (options.get("tile_cell_pixels") * scale) / 100,
     );
     const cell_size = {
       w: Math.floor(tile_size),
@@ -283,7 +283,7 @@ $.extend(DungeonViewRenderer.prototype, {
       this.glyph_mode_update_font_metrics();
       this.set_cell_size(
         this.glyph_mode_font_width,
-        this.glyph_mode_line_height
+        this.glyph_mode_line_height,
       );
     } else if (
       min_diameter * cell_size.w > width ||
@@ -294,11 +294,11 @@ $.extend(DungeonViewRenderer.prototype, {
       // scale down if necessary, so that los is in view
       const rescale = Math.min(
         width / (min_diameter * cell_size.w),
-        height / (min_diameter * cell_size.h)
+        height / (min_diameter * cell_size.h),
       );
       this.set_cell_size(
         Math.floor(cell_size.w * rescale),
-        Math.floor(cell_size.h * rescale)
+        Math.floor(cell_size.h * rescale),
       );
     } else this.set_cell_size(cell_size.w, cell_size.h);
 

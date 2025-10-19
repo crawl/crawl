@@ -35,13 +35,13 @@ function update_overlay() {
   const view = dungeon_renderer.view;
   overlay_ctx.clearRect(0, 0, overlay.width, overlay.height);
   overlay_ctx.strokeStyle = vcolour_to_css_colour(
-    options.get("tile_window_col")
+    options.get("tile_window_col"),
   );
   overlay_ctx.strokeRect(
     display_x + (view.x - cell_x) * cell_w + 0.5,
     display_y + (view.y - cell_y) * cell_h + 0.5,
     dungeon_renderer.cols * cell_w - 1,
-    dungeon_renderer.rows * cell_h - 1
+    dungeon_renderer.rows * cell_h - 1,
   );
 }
 
@@ -117,7 +117,7 @@ function center() {
     dx,
     dy,
     minimap.width,
-    minimap.height
+    minimap.height,
   );
 
   ctx.fillStyle = "black";
@@ -207,10 +207,10 @@ function minimap_farview(ev) {
       };
     }
     const x = Math.round(
-      (ev.pageX - display_x - offset.left) / cell_w + cell_x - 0.5
+      (ev.pageX - display_x - offset.left) / cell_w + cell_x - 0.5,
     );
     const y = Math.round(
-      (ev.pageY - display_y - offset.top) / cell_h + cell_y - 0.5
+      (ev.pageY - display_y - offset.top) / cell_h + cell_y - 0.5,
     );
     vgrdc(x, y);
   }

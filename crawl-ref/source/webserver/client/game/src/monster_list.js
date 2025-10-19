@@ -32,7 +32,8 @@ function is_excluded(monster) {
   return (
     monster.typedata.no_exp &&
     !(
-      monster.name === "active ballistomycete" || monster.name.match(/tentacle$/)
+      monster.name === "active ballistomycete" ||
+      monster.name.match(/tentacle$/)
     )
   );
 }
@@ -118,7 +119,7 @@ function update() {
                                 <canvas class='picture'></canvas>\
                                 <span class='health'></span>\
                                 <span class='name'></span>\
-                              </span>"
+                              </span>",
       );
       $list.append(node);
       canvas = node.find("canvas")[0];
@@ -142,7 +143,7 @@ function update() {
 
     renderer.set_cell_size(
       dungeon_renderer.cell_width,
-      dungeon_renderer.cell_height
+      dungeon_renderer.cell_height,
     );
     if (options.get("tile_display_mode") !== "tiles") {
       for (const key in dungeon_renderer) {
@@ -171,7 +172,10 @@ function update() {
     if (monsters.length === 1) {
       group.name_span.text(monsters[0].mon.name);
       if (options.get("tile_display_mode") === "glyphs") {
-        const map_cell = map_knowledge.get(monsters[0].loc.x, monsters[0].loc.y);
+        const map_cell = map_knowledge.get(
+          monsters[0].loc.x,
+          monsters[0].loc.y,
+        );
         const fg = map_cell.t.fg;
         let mdam = "uninjured";
         if (fg.MDAM_LIGHT) mdam = "lightly_damaged";
@@ -229,7 +233,7 @@ options.add_listener(() => {
   else {
     $("#monster_list").css(
       "font-size",
-      `${options.get("tile_font_lbl_size")}px`
+      `${options.get("tile_font_lbl_size")}px`,
     );
   }
 

@@ -68,7 +68,7 @@ function _fmt_spells_list(root, spellset, colour) {
         0,
         0,
         0,
-        false
+        false,
       );
       $item.append($canvas);
 
@@ -77,13 +77,13 @@ function _fmt_spells_list(root, spellset, colour) {
 
       if (spell.effect !== undefined)
         $item.append(
-          `<span>${util.formatted_string_to_html(spell.effect)} </span>`
+          `<span>${util.formatted_string_to_html(spell.effect)} </span>`,
         );
       if (spell.range_string !== undefined)
         $item.append(
           "<span>" +
             util.formatted_string_to_html(spell.range_string) +
-            " </span>"
+            " </span>",
         );
 
       $list.append($item);
@@ -141,7 +141,7 @@ function describe_generic(desc) {
     util.init_canvas(
       canvas[0],
       renderer.cell_width * describe_scale,
-      renderer.cell_height * describe_scale
+      renderer.cell_height * describe_scale,
     );
     renderer.init(canvas[0]);
     renderer.draw_from_texture(
@@ -153,7 +153,7 @@ function describe_generic(desc) {
       0,
       desc.tile.ymax,
       false,
-      describe_scale
+      describe_scale,
     );
   } else canvas.remove();
 
@@ -180,7 +180,7 @@ function describe_feature_wide(desc) {
     util.init_canvas(
       canvas[0],
       renderer.cell_width * describe_scale,
-      renderer.cell_height * describe_scale
+      renderer.cell_height * describe_scale,
     );
     renderer.init(canvas[0]);
     renderer.draw_from_texture(
@@ -192,7 +192,7 @@ function describe_feature_wide(desc) {
       0,
       feat.tile.ymax,
       false,
-      describe_scale
+      describe_scale,
     );
     $popup.append($feat);
   });
@@ -269,7 +269,7 @@ function describe_item(desc) {
   util.init_canvas(
     canvas[0],
     renderer.cell_width * describe_scale,
-    renderer.cell_height * describe_scale
+    renderer.cell_height * describe_scale,
   );
   renderer.init(canvas[0]);
 
@@ -283,7 +283,7 @@ function describe_item(desc) {
       0,
       tile.ymax,
       false,
-      describe_scale
+      describe_scale,
     );
   });
 
@@ -312,7 +312,7 @@ function describe_spell(desc) {
   util.init_canvas(
     canvas[0],
     renderer.cell_width * describe_scale,
-    renderer.cell_height * describe_scale
+    renderer.cell_height * describe_scale,
   );
   renderer.init(canvas[0]);
   renderer.draw_from_texture(
@@ -324,7 +324,7 @@ function describe_spell(desc) {
     0,
     desc.tile.ymax,
     false,
-    describe_scale
+    describe_scale,
   );
 
   return $popup;
@@ -348,7 +348,7 @@ function describe_cards(desc) {
     util.init_canvas(
       canvas[0],
       renderer.cell_width * describe_scale,
-      renderer.cell_height * describe_scale
+      renderer.cell_height * describe_scale,
     );
     renderer.init(canvas[0]);
     renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false, describe_scale);
@@ -365,7 +365,7 @@ function describe_god(desc) {
   const use_extra_pane = desc.extra.length > 0;
 
   $popup = $(
-    `.templates > #describe-god-${use_extra_pane ? "extra" : "basic"}`
+    `.templates > #describe-god-${use_extra_pane ? "extra" : "basic"}`,
   ).clone();
   $popup.find(".header > span").addClass(`fg${desc.colour}`).html(desc.name);
 
@@ -374,7 +374,7 @@ function describe_god(desc) {
   util.init_canvas(
     canvas,
     renderer.cell_width * describe_scale,
-    renderer.cell_height * describe_scale
+    renderer.cell_height * describe_scale,
   );
   renderer.init(canvas);
   renderer.draw_from_texture(
@@ -386,7 +386,7 @@ function describe_god(desc) {
     0,
     0,
     false,
-    describe_scale
+    describe_scale,
   );
 
   const $body = $popup.children(".body");
@@ -423,7 +423,7 @@ function describe_god(desc) {
         power +
         "</div><div>" +
         cost +
-        "</div></div>"
+        "</div></div>",
     );
   }
 
@@ -441,7 +441,7 @@ function describe_god(desc) {
     $panes
       .eq(3)
       .html(
-        `<div class=tbl>${util.formatted_string_to_html(desc.extra)}</div>`
+        `<div class=tbl>${util.formatted_string_to_html(desc.extra)}</div>`,
       );
   }
 
@@ -535,7 +535,7 @@ function describe_monster(desc) {
   util.init_canvas(
     $canvas[0],
     renderer.cell_width * describe_scale,
-    renderer.cell_height * describe_scale
+    renderer.cell_height * describe_scale,
   );
   renderer.init($canvas[0]);
 
@@ -560,7 +560,7 @@ function describe_monster(desc) {
         xofs,
         yofs,
         doll_part[1],
-        describe_scale
+        describe_scale,
       );
     });
   }
@@ -576,7 +576,7 @@ function describe_monster(desc) {
           mcache_part[1],
           mcache_part[2] + yofs,
           undefined,
-          describe_scale
+          describe_scale,
         );
       }
     });
@@ -591,7 +591,7 @@ function describe_monster(desc) {
           icons: [],
         },
       },
-      describe_scale
+      describe_scale,
     );
   }
 
@@ -605,7 +605,7 @@ function describe_monster(desc) {
         icons: desc.icons,
       },
     },
-    describe_scale
+    describe_scale,
   );
 
   for (let i = 0; i < $panes.length; i++) scroller($panes.eq(i)[0]);
@@ -653,7 +653,7 @@ function version(desc) {
   util.init_canvas(
     $canvas[0],
     renderer.cell_width * describe_scale,
-    renderer.cell_height * describe_scale
+    renderer.cell_height * describe_scale,
   );
   renderer.init($canvas[0]);
   renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false, describe_scale);
@@ -797,7 +797,7 @@ function formatted_scroller(desc) {
     const re = new RegExp(rexp, "g");
     body_html = body_html.replace(
       re,
-      (line) => `<span class=highlight>${line}</span>`
+      (line) => `<span class=highlight>${line}</span>`,
     );
   }
   $popup.attr("data-tag", desc.tag);
@@ -869,8 +869,8 @@ function focus_button($button) {
       br.top < gr.top
         ? br.top - gr.top
         : br.bottom > gr.bottom
-        ? br.bottom - gr.bottom
-        : 0;
+          ? br.bottom - gr.bottom
+          : 0;
     $scr[0].scrollTop += delta;
   }
 
@@ -920,7 +920,7 @@ function newgame_choice(msg) {
             0,
             0,
             tile.ymax,
-            false
+            false,
           );
         });
         $button.append($canvas);
@@ -931,7 +931,7 @@ function newgame_choice(msg) {
         // really have a flex-grow property?
         const $lbl = $(util.formatted_string_to_html(label)).css(
           "flex-grow",
-          "1"
+          "1",
         );
         $button.append($lbl);
       });
@@ -939,12 +939,12 @@ function newgame_choice(msg) {
       $button.find("span:empty").remove();
       $button.attr(
         "style",
-        `grid-row:${button.y + 1}; grid-column:${button.x + 1};`
+        `grid-row:${button.y + 1}; grid-column:${button.x + 1};`,
       );
       $descriptions.append(`<span class='pane'> ${button.description}</span>`);
       $button.attr(
         "data-description-index",
-        $descriptions.children().length - 1
+        $descriptions.children().length - 1,
       );
       $button.attr("data-hotkey", ui.key_value_from_utf8(button.hotkey));
       $button.addClass(`hlc-${button.highlight_colour}`);
@@ -959,7 +959,7 @@ function newgame_choice(msg) {
       $button.append(util.formatted_string_to_html(button.label));
       $button.attr(
         "style",
-        `grid-row:${button.y + 1}; grid-column:${button.x + 1};`
+        `grid-row:${button.y + 1}; grid-column:${button.x + 1};`,
       );
       $container.append($button);
     });
@@ -1018,7 +1018,7 @@ function game_over(desc) {
     0,
     0,
     desc.tile.ymax,
-    false
+    false,
   );
 
   return $popup;

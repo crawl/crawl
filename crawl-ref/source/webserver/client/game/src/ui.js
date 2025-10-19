@@ -19,7 +19,7 @@ function wrap_popup(elem, ephemeral) {
 function unwrap_popup(wrapper) {
   console.assert(
     wrapper.hasClass("ui-popup"),
-    "trying to unwrap something that hasn't been wrapped"
+    "trying to unwrap something that hasn't been wrapped",
   );
   return wrapper.find(".ui-popup-inner").children();
 }
@@ -58,7 +58,7 @@ function popup_keydown_handler(ev) {
     }
 
     const focusable = wrapper[0].querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
     if (focusable.length === 0) return;
     const first = focusable[0];
@@ -152,17 +152,17 @@ function show_popup(id, centred, generation_id) {
               document.addEventListener(
                 "mousedown",
                 popup_clickoutside_handler,
-                true
+                true,
               );
               document.addEventListener(
                 "touchstart",
                 popup_touchstart_handler,
-                true
+                true,
               );
               document.addEventListener(
                 "touchend",
                 popup_touchend_handler,
-                true
+                true,
               );
             }
             disable_contextmenu();
@@ -173,28 +173,28 @@ function show_popup(id, centred, generation_id) {
             document.removeEventListener(
               "keydown",
               popup_keydown_handler,
-              true
+              true,
             );
             document.removeEventListener(
               "keypress",
               popup_keypress_handler,
-              true
+              true,
             );
             if (options.get("tile_web_mouse_control")) {
               document.removeEventListener(
                 "mousedown",
                 popup_clickoutside_handler,
-                true
+                true,
               );
               document.removeEventListener(
                 "touchstart",
                 popup_touchstart_handler,
-                true
+                true,
               );
               document.removeEventListener(
                 "touchend",
                 popup_touchend_handler,
-                true
+                true,
               );
             }
             undisable_contextmenu();

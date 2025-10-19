@@ -59,7 +59,7 @@ function update_bar(name, propname) {
   $(`#stats_${name}_bar_full`).css("width", `${full_bar / 100}%`);
   $(`#stats_${name}_bar_${increase ? "increase" : "decrease"}`).css(
     "width",
-    `${change_bar / 100}%`
+    `${change_bar / 100}%`,
   );
   $(`#stats_${name}_bar_${increase ? "decrease" : "increase"}`).css("width", 0);
 }
@@ -318,10 +318,10 @@ const simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress"];
  */
 function update_stats_pane() {
   $("#stats_titleline").text(
-    player.name + (player.title[0] === "," ? "" : " ") + player.title
+    player.name + (player.title[0] === "," ? "" : " ") + player.title,
   );
   $("#stats_wizmode").text(
-    player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : ""
+    player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : "",
   );
 
   // Setup species
@@ -336,7 +336,7 @@ function update_stats_pane() {
       $("#stats_piety").text(
         repeat_string(".", player.piety_rank) +
           "*" +
-          repeat_string(".", 5 - player.piety_rank)
+          repeat_string(".", 5 - player.piety_rank),
       );
     } else $("#stats_piety").text("......"); // very special plaything
   } else if (
@@ -348,7 +348,7 @@ function update_stats_pane() {
         repeat_string(".", 6 - player.piety_rank - player.ostracism_pips) +
         "<span class=fg5>" +
         repeat_string("X", player.ostracism_pips) +
-        "</span>"
+        "</span>",
     );
   } else $("#stats_piety").text("");
 
@@ -363,7 +363,7 @@ function update_stats_pane() {
   }
   $("#stats_gozag_gold").toggleClass(
     "boosted_stat",
-    !!player.has_status("gold aura")
+    !!player.has_status("gold aura"),
   );
 
   $("#stats_species_god").text(species_god);
@@ -374,7 +374,7 @@ function update_stats_pane() {
     $(`#stats_${simple_stats[i]}`).text(player[simple_stats[i]]);
 
   $("#stats_hpline > .stats_caption").text(
-    player.real_hp_max !== player.hp_max ? "HP:" : "Health:"
+    player.real_hp_max !== player.hp_max ? "HP:" : "Health:",
   );
 
   if (player.real_hp_max !== player.hp_max)
@@ -451,7 +451,7 @@ function update_stats_pane() {
   else $("#stats_offhand_weapon_line").hide();
 
   $("#stats_offhand_weapon_letter").text(
-    `${index_to_letter(player.offhand_index)})`
+    `${index_to_letter(player.offhand_index)})`,
   );
   $("#stats_offhand_weapon").html(wielded_weapon(true));
 

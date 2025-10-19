@@ -219,7 +219,7 @@ function toggle_full_window_dungeon_view(full) {
     dungeon_renderer.fit_to(
       layout_parameters.remaining_width,
       layout_parameters.remaining_height,
-      show_diameter
+      show_diameter,
     );
     $("#right_column").show();
     $(".action-panel").show();
@@ -354,7 +354,7 @@ function init_custom_text_colours() {
         colours[i].g +
         ", " +
         colours[i].b +
-        ", 255)"
+        ", 255)",
     );
   }
 }

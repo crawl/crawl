@@ -300,7 +300,7 @@ $.extend(DungeonCellRenderer.prototype, {
               x,
               y,
               mcache_part[1],
-              mcache_part[2]
+              mcache_part[2],
             );
           }
         });
@@ -393,7 +393,7 @@ $.extend(DungeonCellRenderer.prototype, {
       this.ctx.fillText(
         cell.mark,
         x + 0.5 * scaled.width,
-        y + 0.5 * scaled.height
+        y + 0.5 * scaled.height,
       );
     }
 
@@ -427,7 +427,7 @@ $.extend(DungeonCellRenderer.prototype, {
         x,
         y + cell.height - bar_height,
         cell.width,
-        bar_height
+        bar_height,
       );
 
       this.ctx.fillStyle = magic;
@@ -435,7 +435,7 @@ $.extend(DungeonCellRenderer.prototype, {
         x,
         y + cell.height - bar_height,
         cell.width * mp_percent,
-        bar_height
+        bar_height,
       );
 
       hp_bar_offset += bar_height;
@@ -450,7 +450,7 @@ $.extend(DungeonCellRenderer.prototype, {
         x,
         y + cell.height - hp_bar_offset,
         cell.width,
-        bar_height
+        bar_height,
       );
 
       this.ctx.fillStyle = healthy;
@@ -458,7 +458,7 @@ $.extend(DungeonCellRenderer.prototype, {
         x,
         y + cell.height - hp_bar_offset,
         cell.width * hp_percent,
-        bar_height
+        bar_height,
       );
     }
   },
@@ -477,7 +477,7 @@ $.extend(DungeonCellRenderer.prototype, {
             "/" +
             cy +
             ": " +
-            err
+            err,
         );
       }
     }
@@ -520,13 +520,13 @@ $.extend(DungeonCellRenderer.prototype, {
         this.ctx.fillText(
           map_cell.g,
           Math.floor(x + w / 2),
-          Math.floor(y + h / 2)
+          Math.floor(y + h / 2),
         );
       } else {
         this.ctx.fillText(
           map_cell.g,
           x,
-          y + this.glyph_mode_baseline * window.devicePixelRatio
+          y + this.glyph_mode_baseline * window.devicePixelRatio,
         );
       }
     } finally {
@@ -557,7 +557,7 @@ $.extend(DungeonCellRenderer.prototype, {
       0,
       y + scaled.height,
       this.element.width,
-      this.element.height - y - scaled.height
+      this.element.height - y - scaled.height,
     );
     this.ctx.clip();
   },
@@ -809,7 +809,7 @@ $.extend(DungeonCellRenderer.prototype, {
               x,
               y,
               cell.trans,
-              img_scale
+              img_scale,
             );
           } else this.draw_main(cell.overlay1, x, y, img_scale);
         }
@@ -821,7 +821,7 @@ $.extend(DungeonCellRenderer.prototype, {
               x,
               y,
               cell.trans,
-              img_scale
+              img_scale,
             );
           } else this.draw_main(cell.overlay2, x, y, img_scale);
         }
@@ -845,7 +845,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
 
     // Pet mark
@@ -889,7 +889,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         -status_shift,
         0,
-        img_scale
+        img_scale,
       );
     }
 
@@ -906,7 +906,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
 
     if (bg.RAMPAGE)
@@ -924,7 +924,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
 
     if (bg.EXCL_CTR && bg.UNSEEN)
@@ -934,7 +934,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     else if (bg.TRAV_EXCL && bg.UNSEEN)
       this.draw_icon(
@@ -943,7 +943,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
 
     // Tutorial cursor takes precedence over other cursors.
@@ -954,7 +954,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     } else if (bg.CURSOR1) {
       this.draw_icon(icons.CURSOR, x, y, undefined, undefined, img_scale);
@@ -971,7 +971,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     }
     if (cell.travel_trail & 0xf0) {
@@ -981,7 +981,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     }
 
@@ -992,7 +992,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     else if (fg.MDAM_MOD)
       this.draw_icon(
@@ -1001,7 +1001,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     else if (fg.MDAM_HEAVY)
       this.draw_icon(
@@ -1010,7 +1010,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     else if (fg.MDAM_SEV)
       this.draw_icon(
@@ -1019,7 +1019,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
     else if (fg.MDAM_ADEAD)
       this.draw_icon(
@@ -1028,7 +1028,7 @@ $.extend(DungeonCellRenderer.prototype, {
         y,
         undefined,
         undefined,
-        img_scale
+        img_scale,
       );
 
     if (options.get("tile_show_demon_tier") === true) {
@@ -1216,7 +1216,7 @@ $.extend(DungeonCellRenderer.prototype, {
       x + Math.floor(total_x_offset * img_xscale * ratio),
       y + Math.floor(sy * img_yscale * ratio),
       scaled_w,
-      scaled_h
+      scaled_h,
     );
   },
 
@@ -1230,7 +1230,7 @@ $.extend(DungeonCellRenderer.prototype, {
       undefined,
       undefined,
       undefined,
-      img_scale
+      img_scale,
     );
   },
 
@@ -1244,7 +1244,7 @@ $.extend(DungeonCellRenderer.prototype, {
       undefined,
       undefined,
       undefined,
-      img_scale
+      img_scale,
     );
   },
 
@@ -1258,7 +1258,7 @@ $.extend(DungeonCellRenderer.prototype, {
       undefined,
       undefined,
       undefined,
-      img_scale
+      img_scale,
     );
   },
 
@@ -1272,7 +1272,7 @@ $.extend(DungeonCellRenderer.prototype, {
       ofsy,
       y_max,
       undefined,
-      img_scale
+      img_scale,
     );
   },
 
@@ -1286,7 +1286,7 @@ $.extend(DungeonCellRenderer.prototype, {
       ofsy,
       undefined,
       undefined,
-      img_scale
+      img_scale,
     );
   },
 
@@ -1314,7 +1314,7 @@ $.extend(DungeonCellRenderer.prototype, {
     ofsy,
     y_max,
     centre,
-    img_scale
+    img_scale,
   ) {
     const mod = tileinfos(tex);
     this.draw_tile(idx, x, y, mod, ofsx, ofsy, y_max, centre, img_scale);

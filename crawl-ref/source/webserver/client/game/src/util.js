@@ -33,67 +33,62 @@ function formatted_string_to_html(str) {
   // are involved at any time.
   const cur_fg = [];
   let bg_open = false; // XX nesting bg tags not handled
-  let filtered = str.replace(
-    /<?<(\/?(bg:)?[a-z]*)>?|>|&/gi,
-    (str, p1) => {
-      if (p1 === undefined) p1 = "";
-      let closing = false;
-      let bg = false;
-      if (p1.match(/^\//)) {
-        p1 = p1.substr(1);
-        closing = true;
-      }
-      if (p1.match(/^bg:/)) {
-        bg = true;
-        p1 = p1.substr(3);
-      }
-      if (p1 in cols && !str.match(/^<</) && str.match(/>$/)) {
-        if (closing) {
-          if (bg && bg_open) {
-            bg_open = false;
-            return "</span>";
-          } else if (cur_fg.length > 0) {
-            cur_fg.pop();
-            if (cur_fg.length > 0) {
-              // restart the previous color
-              return (
-                `</span><span class='fg${cur_fg[cur_fg.length - 1]}'>`
-              );
-            } else return "</span>";
-          }
-          // mismatched close tag
-          return "";
-        } else if (bg) {
-          let text = `<span class='bg${cols[p1]}'>`;
-          if (bg_open) text = `</span>${text}`;
-          // if a fg span is currently open, close it before the
-          // new background span, and reopen it inside that span.
-          // This ensures that fg spans are always nested inside
-          // bg spans.
-          if (cur_fg.length > 0) {
-            text =
-              "</span>" +
-              text +
-              "<span class='fg" +
-              cur_fg[cur_fg.length - 1] +
-              "'>";
-          }
-          bg_open = true;
-          return text;
-        } else {
-          let text = `<span class='fg${cols[p1]}'>`;
-          // close out a currently open fg span, to keep only one
-          // at a time
-          if (cur_fg.length > 0) text = `</span>${text}`;
-          cur_fg.push(cols[p1]);
-          return text;
-        }
-      } else {
-        if (str.match(/^<</)) return escape_html(str.substr(1));
-        else return escape_html(str);
-      }
+  let filtered = str.replace(/<?<(\/?(bg:)?[a-z]*)>?|>|&/gi, (str, p1) => {
+    if (p1 === undefined) p1 = "";
+    let closing = false;
+    let bg = false;
+    if (p1.match(/^\//)) {
+      p1 = p1.substr(1);
+      closing = true;
     }
-  );
+    if (p1.match(/^bg:/)) {
+      bg = true;
+      p1 = p1.substr(3);
+    }
+    if (p1 in cols && !str.match(/^<</) && str.match(/>$/)) {
+      if (closing) {
+        if (bg && bg_open) {
+          bg_open = false;
+          return "</span>";
+        } else if (cur_fg.length > 0) {
+          cur_fg.pop();
+          if (cur_fg.length > 0) {
+            // restart the previous color
+            return `</span><span class='fg${cur_fg[cur_fg.length - 1]}'>`;
+          } else return "</span>";
+        }
+        // mismatched close tag
+        return "";
+      } else if (bg) {
+        let text = `<span class='bg${cols[p1]}'>`;
+        if (bg_open) text = `</span>${text}`;
+        // if a fg span is currently open, close it before the
+        // new background span, and reopen it inside that span.
+        // This ensures that fg spans are always nested inside
+        // bg spans.
+        if (cur_fg.length > 0) {
+          text =
+            "</span>" +
+            text +
+            "<span class='fg" +
+            cur_fg[cur_fg.length - 1] +
+            "'>";
+        }
+        bg_open = true;
+        return text;
+      } else {
+        let text = `<span class='fg${cols[p1]}'>`;
+        // close out a currently open fg span, to keep only one
+        // at a time
+        if (cur_fg.length > 0) text = `</span>${text}`;
+        cur_fg.push(cols[p1]);
+        return text;
+      }
+    } else {
+      if (str.match(/^<</)) return escape_html(str.substr(1));
+      else return escape_html(str);
+    }
+  });
   if (cur_fg.length > 0) filtered += "</span>";
   if (bg_open) filtered += "</span>";
   // TODO: eliminate empty spans?

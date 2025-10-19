@@ -147,7 +147,7 @@ function show_tooltip(x, y, slot) {
   if (slot === -2) {
     $tooltip.html(
       "<span>Left click: minimize</span><br />" +
-        "<span>Right click: open settings</span>"
+        "<span>Right click: open settings</span>",
     );
   } else if (slot === -1 && game.get_input_mode() === enums.mouse_mode.COMMAND)
     $tooltip.html("<span>Left click: show main menu</span>");
@@ -160,7 +160,7 @@ function show_tooltip(x, y, slot) {
         $tooltip.append(
           "<br /><span>Left click: " +
             item.action_verb.toLowerCase() +
-            "</span>"
+            "</span>",
         );
       $tooltip.append("<br /><span>Right click: describe</span>");
     }
@@ -216,7 +216,7 @@ $(document).bind("game_init", () => {
       const input = e.target;
       if (input.type === "number" && !input.checkValidity()) return;
       options.set(input.name, input.value);
-    }
+    },
   );
 
   $("#action-panel-settings button.reset").click(function () {
@@ -242,7 +242,7 @@ $(document).bind("game_init", () => {
 });
 
 function _horizontal() {
-  return orientation  === "horizontal";
+  return orientation === "horizontal";
 }
 
 function _update_font_props() {
@@ -322,7 +322,7 @@ function draw_action(
   scale,
   needs_cursor,
   text,
-  useless
+  useless,
 ) {
   if (item && draw_glyphs) {
     // XX just the glyph is not very informative. One idea might
@@ -334,7 +334,7 @@ function draw_action(
       item,
       true,
       true,
-      scale
+      scale,
     );
   } else {
     tiles = Array.isArray(tiles) ? tiles : [tiles];
@@ -348,7 +348,7 @@ function draw_action(
         undefined,
         undefined,
         undefined,
-        scale
+        scale,
       );
     });
   }
@@ -360,7 +360,7 @@ function draw_action(
       text,
       _horizontal() ? offset : 0,
       _horizontal() ? 0 : offset,
-      font
+      font,
     );
   }
 
@@ -371,7 +371,7 @@ function draw_action(
       _horizontal() ? 0 : offset,
       undefined,
       undefined,
-      scale
+      scale,
     );
   }
 
@@ -382,7 +382,7 @@ function draw_action(
       _horizontal() ? 0 : offset,
       undefined,
       undefined,
-      scale
+      scale,
     );
   }
 }
@@ -404,7 +404,9 @@ function update() {
   }
 
   // Filter
-  filtered_inv = Object.values(player.inv).filter((item) => item.quantity && item.action_panel_order >= 0);
+  filtered_inv = Object.values(player.inv).filter(
+    (item) => item.quantity && item.action_panel_order >= 0,
+  );
 
   // primary sort: determined by the `action_panel` option
   // secondary sort: determined by subtype
@@ -438,7 +440,7 @@ function update() {
   util.init_canvas(
     $canvas[0],
     _horizontal() ? panel_length : cell_width,
-    _horizontal() ? cell_height : panel_length
+    _horizontal() ? cell_height : panel_length,
   );
   renderer.init($canvas[0]);
   renderer.clear();
@@ -450,7 +452,14 @@ function update() {
   // XX The "X" should definitely be a different/custom icon
   // TODO: select tile via something like c++ `tileidx_command`
   draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected === 0);
-  draw_action(gui, gui.CMD_GAME_MENU, null, inc, adjusted_scale, selected === 1);
+  draw_action(
+    gui,
+    gui.CMD_GAME_MENU,
+    null,
+    inc,
+    adjusted_scale,
+    selected === 1,
+  );
 
   draw_glyphs = options.get("action_panel_glyphs");
 
@@ -477,7 +486,7 @@ function update() {
       adjusted_scale,
       cursor_required,
       qty,
-      item.useless
+      item.useless,
     );
   });
 
@@ -499,7 +508,7 @@ function update() {
       y_pos * ratio,
       -2,
       -2,
-      adjusted_scale
+      adjusted_scale,
     );
   }
   $canvas.removeClass("hidden");

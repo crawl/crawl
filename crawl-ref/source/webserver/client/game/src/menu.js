@@ -77,7 +77,7 @@ function set_item_contents(item, elem) {
         0,
         0,
         this.ymax,
-        false
+        false,
       );
     });
 
@@ -234,7 +234,7 @@ function prepare_hoverable_item(item) {
       if (!(menu.flags & enums.menu_flag.ARROWS_SELECT)) set_hovered(-1);
       // otherwise, keep the hover unless mousenter moves it into
       // a new cell
-    }
+    },
   );
 }
 
@@ -320,7 +320,7 @@ function update_item_range(chunk_start, items_list) {
 function next_hoverable_item(
   reverse,
   starting_point,
-  start_at_starting_point = false
+  start_at_starting_point = false,
 ) {
   // port of some logic in menu.cc
   let items_tried = 0;
@@ -506,7 +506,7 @@ function scroll_bottom_to_item(item_or_index, was_server_initiated) {
       item.elem.height() +
       24 -
       baseline -
-      menu.elem.find(".menu_contents").innerHeight()
+      menu.elem.find(".menu_contents").innerHeight(),
   );
 
   menu.anchor_last = true;
@@ -519,7 +519,7 @@ function update_visible_indices() {
   const top = Math.max(container_rect.top, 0);
   const bottom = Math.min(
     container_rect.bottom,
-    $(window).scrollTop() + $(window).height()
+    $(window).scrollTop() + $(window).height(),
   );
   let i;
 
@@ -609,7 +609,7 @@ function title_prompt(data) {
   else prompt = data.prompt;
   title.html(prompt);
   const input = $(
-    "<input id='title_prompt' class='text title_prompt' type='text'>"
+    "<input id='title_prompt' class='text title_prompt' type='text'>",
   );
   title.append(input);
 
@@ -700,7 +700,7 @@ function update_more() {
     else if (contents[0].scrollTop >= scroll_end) scroll_percent = "bot";
     else {
       scroll_percent = `${((contents[0].scrollTop * 100) / scroll_end).toFixed(
-        0
+        0,
       )}%`;
       if (scroll_percent.length === 2) scroll_percent = ` ${scroll_percent}`;
     }

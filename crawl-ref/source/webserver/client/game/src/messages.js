@@ -114,7 +114,7 @@ options.add_listener(() => {
   else {
     $("#message_pane").css(
       "font-size",
-      `${options.get("tile_font_msg_size")}px`
+      `${options.get("tile_font_msg_size")}px`,
     );
   }
 

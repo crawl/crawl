@@ -6,10 +6,7 @@ const line_span = $("<span>");
 line_span.css("white-space", "pre");
 
 function get_container(id) {
-  return $("#ui-stack")
-    .children()
-    .last()
-    .find(`.${id}`);
+  return $("#ui-stack").children().last().find(`.${id}`);
 }
 
 function get_text_area_line(name, line) {
