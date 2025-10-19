@@ -1,3 +1,3 @@
 export default {
-  build: { assetsDir: "static" },
+  build: { assetsDir: "static", sourcemap: true },
 };

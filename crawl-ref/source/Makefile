@@ -1328,11 +1328,12 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
 
 GENERATEDJS = $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
 
-WEBSERVERGAME = webserver/game_data/static/game.js
+WEBSERVERGAME = webserver/game_data/static/game.js \
+				webserver/game_data/static/game.js.map
 
 WEBSERVERLOBBY = webserver/static/index-*.js \
-				 webserver/static/index-*.css \
-				 webserver/templates/client.html
+				webserver/static/index-*.css \
+				webserver/templates/client.html
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
 			  webserver/static/stone_soup_icon-32x32.png \
@@ -1367,6 +1368,7 @@ $(WEBSERVERGAME): $(GENERATEDJS) webserver/client/game/src/*.js $(NPMNODEMODULES
 
 $(WEBSERVERLOBBY): webserver/client/lobby/src/*.js $(NPMNODEMODULES)
 	@rm -f webserver/static/index-*.js
+	@rm -f webserver/static/index-*.js.map
 	@rm -f webserver/static/index-*.css
 	npm run build --workspace=crawl-lobby
 

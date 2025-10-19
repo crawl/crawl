@@ -8,15 +8,9 @@
         "crawl-ref/source/webserver/client/game"
     ],
     "scripts": {
-        "build": "npm-run-all build:lobby build:game",
-        "build:lobby": "npm run build --workspace=crawl-lobby",
-        "build:game": "npm run build --workspace=crawl-game",
-        "lint": "npm-run-all lint:lobby lint:game",
-        "lint:lobby": "npm run lint --workspace=crawl-lobby",
-        "lint:game": "npm run lint --workspace=crawl-game",
-        "format": "npm-run-all format:lobby format:game",
-        "format:lobby": "npm run format --workspace=crawl-lobby",
-        "format:game": "npm run format --workspace=crawl-game"
+        "build": "npm run build --workspaces",
+        "lint": "npm run lint --workspaces",
+        "format": "npm run format --workspaces"
     },
     "dependencies": {
         "npm-run-all": "^4.1.5"

@@ -7,6 +7,7 @@ export default {
     },
     modulePreload: false,
     assetsDir: "static",
+    sourcemap: true,
     rollupOptions: {
       input: "src/main.js",
       output: { entryFileNames: "static/game.js" },
