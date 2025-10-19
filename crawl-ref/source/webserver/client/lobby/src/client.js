@@ -337,7 +337,7 @@ function handle_keydown(e) {
     } else if (
       $.inArray(
         String.fromCharCode(e.which),
-        key_conversion.captured_control_keys
+        key_conversion.captured_control_keys,
       ) !== -1
     ) {
       e.preventDefault();
@@ -529,16 +529,16 @@ function admin_pw_reset_done(data) {
   else {
     admin_log_msg(`Password reset token set for ${data.username}`);
     $("#ok_message_content").html(
-      "<div><span><b>Password reset info:</b></span></div>"
+      "<div><span><b>Password reset info:</b></span></div>",
     );
     $("#ok_message_content").append(
-      `<div><span>Username: ${data.username}</span></div>`
+      `<div><span>Username: ${data.username}</span></div>`,
     );
     $("#ok_message_content").append(
-      `<div><span>User email: <tt>${data.email}</tt></span></div>`
+      `<div><span>User email: <tt>${data.email}</tt></span></div>`,
     );
     $("#ok_message_content").append(
-      `<div>Message to send:<pre>${data.email_body}</pre></div>`
+      `<div>Message to send:<pre>${data.email_body}</pre></div>`,
     );
     show_dialog("#floating_ok_message");
   }
@@ -625,7 +625,7 @@ function exit_reason_message(reason, watched_name) {
         return `${possessive(watched_name)} game crashed.`;
       case "error":
         return `${possessive(
-          watched_name
+          watched_name,
         )} game was terminated due to an error.`;
       case "disconnect":
         return `${watched_name} has been disconnected.`;
@@ -793,11 +793,11 @@ function change_email_failed(data) {
 function change_email_done(data) {
   if (data.email === "") {
     $("#ok_message_content").html(
-      "Your account is no longer associated with an email address."
+      "Your account is no longer associated with an email address.",
     );
   } else {
     $("#ok_message_content").html(
-      `Your email address has been set to ${data.email}.`
+      `Your email address has been set to ${data.email}.`,
     );
   }
 
@@ -964,7 +964,7 @@ function go_lobby() {
         exit_reason,
         exit_message,
         exit_dump,
-        was_watching ? watching_username : null
+        was_watching ? watching_username : null,
       );
     }
   }
@@ -995,7 +995,7 @@ function login_required(data) {
   show_loading_screen();
   show_prompt(
     `Login required to play <span id='prompt_game'>${data.game}</span>:`,
-    "<a href='#lobby'>Back to lobby</a>"
+    "<a href='#lobby'>Back to lobby</a>",
   );
 }
 
@@ -1120,7 +1120,7 @@ function format_duration(seconds) {
       Math.floor(seconds / (60 * 60)) +
         "h " +
         (Math.floor(seconds / 60) % 60) +
-        "m"
+        "m",
     );
   }
   return elem;
@@ -1270,6 +1270,19 @@ function receive_game_client(data) {
       }
     });
   };
+
+  const patchLegacyRequire = () => {
+    define("comm", () => comm);
+    define("client", () => client);
+    define("key_conversion", () => key_conversion);
+    define("jquery", () => $);
+    define("contrib/jquery.json", () => {
+      $.toJSON = (obj) => JSON.stringify(obj);
+    });
+    globalThis.define = define;
+    globalThis.require = requirejs;
+  };
+
   if (data.content.indexOf("<!-- DCSS.WebTiles.v2 -->") >= 0) {
     // New version. There is maybe a less hacky way to make ourselves available
     // to the game but this also works.
@@ -1287,14 +1300,12 @@ function receive_game_client(data) {
     game_script = script;
     waitForImages();
   } else if (data.content.indexOf("game_loading") === -1) {
+    patchLegacyRequire();
     // Very old version, uninhibit can happen too early
     $("#game").html(data.content);
     $("#game").waitForImages(uninhibit_messages);
   } else {
-    define("comm", comm);
-    define("client", client);
-    define("key_conversion", key_conversion);
-    define("jquery", $);
+    patchLegacyRequire();
     $("#game").html(data.content);
     waitForImages();
   }
@@ -1529,7 +1540,7 @@ $(document).ready(() => {
                 s.length +
                 " (compressed " +
                 msg.data.byteLength +
-                ")"
+                ")",
             );
           }
           enqueue_messages(s);
@@ -1575,7 +1586,7 @@ $(document).ready(() => {
         "network.websocket.override-security-block setting in " +
         "about:config</li><li>Opera 11, after " +
         " enabling WebSockets in opera:config#Enable%20WebSockets" +
-        "<li>Safari 5</li></ul>"
+        "<li>Safari 5</li></ul>",
     );
   }
 });

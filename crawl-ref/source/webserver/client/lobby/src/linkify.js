@@ -14,9 +14,7 @@ function linkify(text) {
   return ba_linkify(text, {
     callback: (text, href) => {
       if (!href) return escape_html(text);
-      if (
-        !ALLOWED_PROTOCOLS.some((p) => href.indexOf(`${p}://`) === 0)
-      ) {
+      if (!ALLOWED_PROTOCOLS.some((p) => href.indexOf(`${p}://`) === 0)) {
         return escape_html(text);
       }
       return $("<a>").attr("href", href).attr("target", "_blank").text(text)[0]

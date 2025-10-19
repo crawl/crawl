@@ -66,7 +66,7 @@ function chat_message_send(e) {
       });
       $("#chat_input").val("");
       $("#chat_history_container").scrollTop(
-        $("#chat_history_container")[0].scrollHeight
+        $("#chat_history_container")[0].scrollHeight,
       );
       message_history.unshift(content);
       if (message_history.length > history_limit)
@@ -119,7 +119,7 @@ function toggle() {
     update_message_count();
     $("#message_count").html("(Esc: close)");
     $("#chat_history_container").scrollTop(
-      $("#chat_history_container")[0].scrollHeight
+      $("#chat_history_container")[0].scrollHeight,
     );
   } else {
     $("#chat_body").slideUp(200);
