@@ -1358,19 +1358,25 @@ NPMPACKAGELOCKS = ../../package.json \
 
 NPMNODEMODULES = ../../node_modules/.modified
 
-$(NPMNODEMODULES): $(NPMPACKAGELOCKS)
+.PHONY: npm-node-modules
+npm-node-modules: $(NPMPACKAGELOCKS)
 	npm ci
 	@rm -f ../../node_modules/.modified
 	@touch -m ../../node_modules/.modified
+$(NPMNODEMODULES): npm-node-modules
 
-$(WEBSERVERGAME): $(GENERATEDJS) webserver/client/game/src/*.js $(NPMNODEMODULES)
+.PHONY: webserver-game
+webserver-game: $(GENERATEDJS) webserver/client/game/src/*.js $(NPMNODEMODULES)
 	npm run build --workspace=crawl-game
+$(WEBSERVERGAME): webserver-game
 
-$(WEBSERVERLOBBY): webserver/client/lobby/src/*.js $(NPMNODEMODULES)
+.PHONY: webserver-lobby
+webserver-lobby: webserver/client/lobby/src/*.js $(NPMNODEMODULES)
 	@rm -f webserver/static/index-*.js
 	@rm -f webserver/static/index-*.js.map
 	@rm -f webserver/static/index-*.css
 	npm run build --workspace=crawl-lobby
+$(WEBSERVERLOBBY): webserver-lobby
 
 clean-webserver:
 	$(RM) $(STATICFILES) webserver/*.pyc
