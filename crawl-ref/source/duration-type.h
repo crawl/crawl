@@ -150,7 +150,7 @@ enum duration_type
 #endif
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
-    DUR_GRASPING_ROOTS,
+    DUR_CONSTRICTED,
 #if TAG_MAJOR_VERSION == 34
     DUR_SLEEP_IMMUNITY,
 #endif
@@ -253,7 +253,9 @@ enum duration_type
     DUR_RAMPAGE_HEAL,
     DUR_CANINE_FAMILIAR_DEAD,
     DUR_TEMP_CLOUD_IMMUNITY,
-    DUR_VILE_CLUTCH,
+#if TAG_MAJOR_VERSION == 34
+    DUR_VILE_CLUTCH_OLD,
+#endif
     DUR_ALLY_RESET_TIMER,       // 5-turn buffer to cancel 'stop attack' order
     DUR_BEOGH_DIVINE_CHALLENGE,
     DUR_BEOGH_CAN_RECRUIT,

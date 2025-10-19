@@ -358,21 +358,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         surround_actor_with_cloud(this, _cloud_ring_ench_to_cloud.at(ench.ench));
         break;
 
-    case ENCH_VILE_CLUTCH:
-    case ENCH_GRASPING_ROOTS:
-    {
-        actor *source_actor = actor_by_mid(ench.source, true);
-        const string noun = ench.ench == ENCH_VILE_CLUTCH ? "Zombie hands" :
-                                                            "Roots";
-        source_actor->start_constricting(*this);
-        if (you.see_cell(pos()))
-        {
-            mprf(MSGCH_WARN, "%s grab %s.", noun.c_str(),
-                 name(DESC_THE).c_str());
-        }
-        break;
-    }
-
     case ENCH_TOUCH_OF_BEOGH:
         scale_hp(touch_of_beogh_hp_mult(*this), 100);
         break;
@@ -857,22 +842,21 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer infested.");
         break;
 
-    case ENCH_VILE_CLUTCH:
-    case ENCH_GRASPING_ROOTS:
+    case ENCH_CONSTRICTED:
     {
         if (is_constricted())
         {
             if (!quiet && you.can_see(*this))
             {
-                if (me.ench == ENCH_VILE_CLUTCH)
+                if (constricted_type == CONSTRICT_BVC)
                 {
-                    mprf("%s zombie hands return to the earth.",
-                         me.agent()->name(DESC_THE).c_str());
+                    mprf("The zombie hands holding %s return to the earth.",
+                         name(DESC_THE).c_str());
                 }
-                else
+                else if (constricted_type == CONSTRICT_ROOTS)
                 {
-                    mprf("%s grasping roots sink back into the ground.",
-                         me.agent()->name(DESC_THE).c_str());
+                    mprf("The roots around %s sink back into the ground.",
+                         name(DESC_THE).c_str());
                 }
             }
             stop_being_constricted(true);
@@ -1445,8 +1429,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_SIGN_OF_RUIN:
     case ENCH_STILL_WINDS:
-    case ENCH_VILE_CLUTCH:
-    case ENCH_GRASPING_ROOTS:
+    case ENCH_CONSTRICTED:
     case ENCH_WATERLOGGED:
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_VITRIFIED:
@@ -2192,7 +2175,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "grasping_roots_source",
 #endif
-    "grasping_roots",
+    "constricted",
     "spell_charged", "fire_vuln", "polar_vortex_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34
@@ -2234,9 +2217,9 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed",
 #if TAG_MAJOR_VERSION == 34
-    "pinned_by_whirlwind", "vortex", "vortex_cooldown",
+    "pinned_by_whirlwind", "vortex", "vortex_cooldown", "vile_clutch",
 #endif
-    "vile_clutch", "waterlogged", "ring_of_flames",
+    "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished",

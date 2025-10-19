@@ -521,20 +521,14 @@ void player_reacts_to_monsters()
     _decrement_petrification(you.time_taken);
     _decrement_sleep_and_daze(you.time_taken);
 
-    if (_decrement_a_duration(DUR_GRASPING_ROOTS, you.time_taken)
+    if (_decrement_a_duration(DUR_CONSTRICTED, you.time_taken)
         && you.is_constricted())
     {
-        actor* src = actor_by_mid(you.constricted_by);
-        mprf("%s grasping roots sink back into the ground.",
-             src ? src->name(DESC_ITS).c_str() : "The");
-        you.stop_being_constricted(true);
-    }
-    if (_decrement_a_duration(DUR_VILE_CLUTCH, you.time_taken)
-        && you.is_constricted())
-    {
-        actor* src = actor_by_mid(you.constricted_by);
-        mprf("%s zombie hands return to the earth.",
-             src ? src->name(DESC_ITS).c_str() : "The");
+        if (you.constricted_type == CONSTRICT_ROOTS)
+            mprf("The roots around you sink back into the ground.");
+        else if (you.constricted_type == CONSTRICT_BVC)
+            mprf("The zombie hands holding you return to the earth.");
+
         you.stop_being_constricted(true);
     }
 

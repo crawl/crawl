@@ -133,7 +133,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
 #endif
-    ENCH_GRASPING_ROOTS,
+    ENCH_CONSTRICTED,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
     ENCH_POLAR_VORTEX_COOLDOWN,
@@ -193,8 +193,8 @@ enum enchant_type
     ENCH_WHIRLWIND_PINNED,
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
+    ENCH_VILE_CLUTCH_OLD,
 #endif
-    ENCH_VILE_CLUTCH,
     ENCH_WATERLOGGED,
     ENCH_RING_OF_FLAMES,
     ENCH_RING_OF_CHAOS,

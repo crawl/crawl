@@ -409,6 +409,7 @@ bool actor_slime_wall_immune(const actor *act)
 void actor::clear_constricted()
 {
     constricted_by = 0;
+    constricted_type = CONSTRICT_NONE;
     escape_attempts = 0;
 }
 
@@ -422,13 +423,8 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
     if (!constrictee)
         return;
 
+    const constrict_type ctype = constrictee->constricted_type;
     constrictee->clear_constricted();
-
-    monster * const mons = monster_by_mid(whom);
-    bool roots = constrictee->is_player() && you.duration[DUR_GRASPING_ROOTS]
-        || mons && mons->has_ench(ENCH_GRASPING_ROOTS);
-    bool vile_clutch = constrictee->is_player() && you.duration[DUR_VILE_CLUTCH]
-        || mons && mons->has_ench(ENCH_VILE_CLUTCH);
 
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
@@ -437,12 +433,12 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
         const string verb = intentional ? "release" : "lose";
         bool force_plural = false;
 
-        if (vile_clutch)
+        if (ctype == CONSTRICT_BVC)
         {
             attacker_desc = "The zombie hands";
             force_plural = true;
         }
-        else if (roots)
+        else if (ctype == CONSTRICT_ROOTS)
         {
             attacker_desc = "The roots";
             force_plural = true;
@@ -468,24 +464,6 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
                 constrictee->name(DESC_THE).c_str());
         }
     }
-
-    if (vile_clutch)
-    {
-        if (mons)
-            mons->del_ench(ENCH_VILE_CLUTCH);
-        else
-            you.duration[DUR_VILE_CLUTCH] = 0;
-    }
-    else if (roots)
-    {
-        if (mons)
-            mons->del_ench(ENCH_GRASPING_ROOTS);
-        else
-            you.duration[DUR_GRASPING_ROOTS] = 0;
-    }
-
-    if (constrictee->is_player())
-        you.redraw_evasion = true;
 }
 
 void actor::stop_constricting(mid_t whom, bool intentional, bool quiet,
@@ -554,7 +532,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     {
         const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->get_constrict_type() == CONSTRICT_MELEE)
+            || constrictee->constricted_type == CONSTRICT_MELEE)
         {
             end_constriction((*constricting)[i], intentional, quiet);
             constricting->erase(constricting->begin() + i);
@@ -608,8 +586,7 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
-    const auto typ = get_constrict_type();
-    if (typ == CONSTRICT_MELEE)
+    if (constricted_type == CONSTRICT_MELEE)
         return !ignoring_player && !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
@@ -644,23 +621,44 @@ void actor::clear_invalid_constrictions(bool move)
     }
 }
 
-void actor::start_constricting(actor &whom)
+void actor::start_constricting(actor &whom, constrict_type ctype, int duration)
 {
     if (!constricting)
         constricting = new vector<mid_t>;
 
     ASSERT(!is_constricting(whom));
+    ASSERT(!whom.is_constricted());
 
     constricting->push_back(whom.mid);
     whom.constricted_by = mid;
+    whom.constricted_type = ctype;
 
     if (whom.is_player())
         you.redraw_evasion = true;
+
+    if (duration > 0)
+    {
+        if (whom.is_player())
+            you.duration[DUR_CONSTRICTED] = duration * BASELINE_DELAY;
+        else
+            whom.as_monster()->add_ench(mon_enchant(ENCH_CONSTRICTED, 0, this, duration * BASELINE_DELAY));
+    }
 }
 
-int actor::num_constricting() const
+int actor::num_constricting(constrict_type ctype) const
 {
-    return constricting ? constricting->size() : 0;
+    if (!constricting)
+        return 0;
+
+    int count = 0;
+    for (mid_t entry : *constricting)
+    {
+        const actor* constrictee = actor_by_mid(entry);
+        if (constrictee && constrictee->constricted_type == ctype)
+            ++count;
+    }
+
+    return count;
 }
 
 bool actor::is_constricting() const
@@ -680,27 +678,6 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
-/// Is this actor currently being constricted? If so, in what way?
-constrict_type actor::get_constrict_type() const
-{
-    if (!is_constricted())
-        return CONSTRICT_NONE;
-    if (is_player())
-    {
-        if (you.duration[DUR_GRASPING_ROOTS])
-            return CONSTRICT_ROOTS;
-        else if (you.duration[DUR_VILE_CLUTCH])
-            return CONSTRICT_BVC;
-        return CONSTRICT_MELEE;
-    }
-    const monster* mon = as_monster();
-    if (mon->has_ench(ENCH_VILE_CLUTCH))
-        return CONSTRICT_BVC;
-    if (mon->has_ench(ENCH_GRASPING_ROOTS))
-        return CONSTRICT_ROOTS;
-    return CONSTRICT_MELEE;
-}
-
 bool actor::can_engulf(const actor &defender) const
 {
     return can_see(defender)
@@ -715,11 +692,10 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     if (defender.is_constricted() || defender.res_constrict())
         return false;
 
-
     if (typ == CONSTRICT_MELEE)
     {
         return can_engulf(defender)
-            && (!is_constricting() || has_usable_tentacle());
+            && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
     }
 
     if (!see_cell_no_trans(defender.pos()))
@@ -743,7 +719,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
  */
 void actor::constriction_damage_defender(actor &defender)
 {
-    const auto typ = defender.get_constrict_type();
+    const auto typ = defender.constricted_type;
     int damage = constriction_damage(typ);
     DIAG_ONLY(const int basedam = damage);
     damage = defender.apply_ac(damage, 0, ac_type::half);
@@ -1144,7 +1120,7 @@ void actor::stumble_away_from(coord_def targ, string src)
     move_to_pos(newpos);
 
     stop_directly_constricting_all(true);
-    if (get_constrict_type() == CONSTRICT_MELEE)
+    if (constricted_type == CONSTRICT_MELEE)
         stop_being_constricted();
     clear_far_engulf();
 

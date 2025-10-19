@@ -734,6 +734,7 @@ static void _fix_missing_constrictions()
 static void _marshall_constriction(writer &th, const actor *who)
 {
     marshallInt(th, who->constricted_by);
+    marshallByte(th, who->constricted_type);
     marshallInt(th, who->escape_attempts);
 
     // Assumes an empty vector is marshalled as just the int 0.
@@ -751,6 +752,52 @@ static void _unmarshall_constriction(reader &th, actor *who)
         unmarshallInt(th);
 #endif
     who->constricted_by = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CONSTRICTED_TYPE)
+    {
+        // Deduce constriction type from enchants.
+        if (monster* mon = who->as_monster())
+        {
+            if (mon->has_ench(ENCH_VILE_CLUTCH_OLD))
+            {
+                who->constricted_type = CONSTRICT_BVC;
+
+                // Convert duration over to the new standardised constriction ench
+                mon_enchant ench = mon->get_ench(ENCH_VILE_CLUTCH_OLD);
+                ench.ench = ENCH_CONSTRICTED;
+                mon->add_ench(ench);
+                mon->del_ench(ENCH_VILE_CLUTCH_OLD);
+            }
+            // Used to be ENCH_GRASPING_ROOTS before this minor version
+            else if (mon->has_ench(ENCH_CONSTRICTED))
+                who->constricted_type = CONSTRICT_ROOTS;
+            else
+            {
+                who->constricted_type = (who->constricted_by ? CONSTRICT_MELEE
+                                                             : CONSTRICT_NONE);
+            }
+        }
+        else
+        {
+            if (you.duration[DUR_VILE_CLUTCH_OLD])
+            {
+                who->constricted_type = CONSTRICT_BVC;
+                you.duration[DUR_CONSTRICTED] = you.duration[DUR_VILE_CLUTCH_OLD];
+                you.duration[DUR_VILE_CLUTCH_OLD] = 0;
+            }
+            // Used to be DUR_GRASPING_ROOTS before this minor version
+            else if (you.duration[DUR_CONSTRICTED])
+                who->constricted_type = CONSTRICT_ROOTS;
+            else
+            {
+                who->constricted_type = (who->constricted_by ? CONSTRICT_MELEE
+                                                             : CONSTRICT_NONE);
+            }
+        }
+    }
+    else
+#endif
+        who->constricted_type = static_cast<constrict_type>(unmarshallByte(th));
     who->escape_attempts = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
@@ -772,6 +819,7 @@ static void _unmarshall_constriction(reader &th, actor *who)
         }
     }
     else
+#endif
     {
         vector<mid_t> cvec;
         unsigned int count = unmarshallInt(th);
@@ -781,7 +829,6 @@ static void _unmarshall_constriction(reader &th, actor *who)
         if (!cvec.empty())
             who->constricting = new vector<mid_t>(cvec);
     }
-#endif
 }
 
 template <typename marshall, typename grid>

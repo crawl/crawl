@@ -844,6 +844,13 @@ bool player::shove(const char* feat_name)
     return false;
 }
 
+void player::clear_constricted()
+{
+    duration[DUR_CONSTRICTED] = 0;
+    redraw_evasion = true;
+    actor::clear_constricted();
+}
+
 /*
  * Calculate base constriction damage.
  *

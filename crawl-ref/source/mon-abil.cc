@@ -148,8 +148,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
 static bool _should_share_ench(enchant_type type)
 {
     return type != ENCH_HELD
-           && type != ENCH_GRASPING_ROOTS
-           && type != ENCH_VILE_CLUTCH
+           && type != ENCH_CONSTRICTED
            && type != ENCH_BULLSEYE_TARGET;
 }
 

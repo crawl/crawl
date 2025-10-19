@@ -330,13 +330,10 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     mons->attitude = mon_att;
 
     // The monster copy constructor doesn't copy constriction, so no need to
-    // worry about that. We do need to worry about the enchantments associated
-    // with direct constriction, though.
-    if (mons->has_ench(ENCH_VILE_CLUTCH))
-        mons->del_ench(ENCH_VILE_CLUTCH);
-
-    if (mons->has_ench(ENCH_GRASPING_ROOTS))
-        mons->del_ench(ENCH_GRASPING_ROOTS);
+    // worry about that. We do need to worry about the enchantment associated
+    // with temporary constriction, though.
+    if (mons->has_ench(ENCH_CONSTRICTED))
+        mons->del_ench(ENCH_CONSTRICTED);
 
     // Don't copy death triggers - phantom royal jellies should not open the
     // Slime vaults on death.

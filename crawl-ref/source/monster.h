@@ -569,6 +569,7 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);
 
+    virtual void clear_constricted() override;
     bool clear_far_engulf(bool force = false, bool /*moved*/ = false) override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 

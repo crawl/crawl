@@ -799,10 +799,6 @@ static const duration_def duration_data[] =
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
         {{ "", []() { you.props[GOZAG_GOLD_AURA_KEY] = 0; you.redraw_title = true;}}}},
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
-    { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
-      "You are constricted by grasping roots.", D_NO_FLAGS},
-    { DUR_VILE_CLUTCH, 0, "", "grasped by zombie hands", "vile clutch",
-      "You are constricted by zombie hands.", D_NO_FLAGS},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
@@ -845,6 +841,7 @@ static const duration_def duration_data[] =
     { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
     { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
     { DUR_DAZED, 0, "", "", "dazed", "", D_NEGATIVE},
+    { DUR_CONSTRICTED, 0, "", "", "constricted", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -901,5 +898,6 @@ static const duration_def duration_data[] =
     { DUR_BRAINLESS, 0, "", "", "old brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "old clumsy", "", D_NO_FLAGS },
     { DUR_SLEEP_IMMUNITY, 0, "", "", "old sleep immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_VILE_CLUTCH_OLD, 0, "", "", "old vile clutch", "", D_NO_FLAGS, {{""}}},
 #endif
 };

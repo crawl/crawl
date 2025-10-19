@@ -978,6 +978,7 @@ public:
 
     bool form_uses_xl() const;
 
+    virtual void clear_constricted() override;
     bool clear_far_engulf(bool force = false, bool moved = false) override;
 
     int armour_class_scaled(int scale) const;

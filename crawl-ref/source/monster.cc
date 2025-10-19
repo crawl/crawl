@@ -96,7 +96,7 @@ monster::monster()
         foe = MHITNOT;
     shield_blocks = 0;
 
-    constricting = 0;
+    constricting = nullptr;
 
     clear_constricted();
     revealed_this_turn = false;
@@ -2879,6 +2879,12 @@ bool monster::has_damage_type(int dam_type)
     }
 
     return false;
+}
+
+void monster::clear_constricted()
+{
+    del_ench(ENCH_CONSTRICTED);
+    actor::clear_constricted();
 }
 
 int monster::constriction_damage(constrict_type typ) const
@@ -6491,15 +6497,14 @@ bool monster::attempt_escape()
 
     escape_attempts += 1;
 
-    const auto constr_typ = get_constrict_type();
     int escape_pow = 5 + get_hit_dice() + (escape_attempts * escape_attempts * 5);
     int hold_pow;
 
     if (constricted_by == MID_PLAYER)
     {
-        if (constr_typ == CONSTRICT_BVC)
+        if (constricted_type == CONSTRICT_BVC)
             hold_pow = 80 + div_rand_round(you.props[VILE_CLUTCH_POWER_KEY].get_int(), 3);
-        else if (constr_typ == CONSTRICT_ROOTS)
+        else if (constricted_type == CONSTRICT_ROOTS)
             hold_pow = 50 + div_rand_round(you.props[FASTROOT_POWER_KEY].get_int(), 2);
         else
             hold_pow = 40 + you.get_experience_level() * 3;

@@ -5578,7 +5578,7 @@ player::player()
     prev_save_version.clear();
 
     clear_constricted();
-    constricting = 0;
+    constricting = nullptr;
 
     // Protected fields:
     clear_place_info();
@@ -7602,7 +7602,7 @@ int player::usable_tentacles() const
     if (numtentacle == 0)
         return false;
 
-    int free_tentacles = numtentacle - num_constricting();
+    int free_tentacles = numtentacle - num_constricting(CONSTRICT_MELEE);
 
     if (shield())
         free_tentacles -= 2;
@@ -8252,10 +8252,9 @@ bool player::attempt_escape()
     ASSERT(themonst);
     escape_attempts += 1;
 
-    const auto constr_typ = get_constrict_type();
     const string object
-        = constr_typ == CONSTRICT_ROOTS ? "the roots'"
-          : constr_typ == CONSTRICT_BVC ? "the zombie hands'"
+        = constricted_type == CONSTRICT_ROOTS ? "the roots'"
+          : constricted_type == CONSTRICT_BVC ? "the zombie hands'"
                                         : themonst->name(DESC_ITS, true);
 
     if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
@@ -8265,7 +8264,7 @@ bool player::attempt_escape()
         // Stun the monster we struggled again and prevent the player from being
         // constricted for several turns (so that they are guaranteed to be able
         // to make it up the stairs after pulling away this way)
-        if (constr_typ == CONSTRICT_MELEE)
+        if (constricted_type == CONSTRICT_MELEE)
         {
             themonst->speed_increment -= 10;
             you.duration[DUR_CONSTRICTION_IMMUNITY] = 20;
@@ -8453,8 +8452,7 @@ static string _constriction_description()
                               num_free_tentacles > 1 ? "s" : "");
     }
 
-    const auto constr_typ = you.get_constrict_type();
-    if (constr_typ == CONSTRICT_MELEE)
+    if (you.constricted_type == CONSTRICT_MELEE)
     {
         const monster * const constrictor = monster_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -8473,7 +8471,7 @@ static string _constriction_description()
             monster *whom = monster_by_mid(entry);
             ASSERT(whom);
 
-            if (whom->get_constrict_type() != CONSTRICT_MELEE)
+            if (whom->constricted_type != CONSTRICT_MELEE)
                 continue;
 
             c_name.push_back(whom->name(DESC_A));
@@ -9183,9 +9181,8 @@ static bool _ench_triggers_trickster(enchant_type ench)
         case ENCH_MAGNETISED:
         case ENCH_BLINKITIS:
         case ENCH_PAIN_BOND:
-        case ENCH_VILE_CLUTCH:
+        case ENCH_CONSTRICTED:
         case ENCH_DRAINED:
-        case ENCH_GRASPING_ROOTS:
         case ENCH_WRETCHED:
         case ENCH_DEEP_SLEEP:
         case ENCH_VEXED:

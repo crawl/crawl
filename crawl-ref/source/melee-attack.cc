@@ -2384,7 +2384,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     if (defender->alive())
     {
         if (atk == UNAT_CONSTRICT)
-            attacker->start_constricting(*defender);
+            attacker->start_constricting(*defender, CONSTRICT_MELEE);
 
         if (damage_done > 0 || atk == UNAT_CONSTRICT || atk == UNAT_MEDUSA_STINGER)
             player_announce_aux_hit(atk);
@@ -3945,7 +3945,7 @@ void melee_attack::mons_apply_attack_flavour()
                  attacker->conj_verb("grab").c_str(),
                  defender_name(true).c_str());
         }
-        attacker->start_constricting(*defender);
+        attacker->start_constricting(*defender, CONSTRICT_MELEE);
         // if you got grabbed, interrupt stair climb and passwall
         if (defender->is_player())
             stop_delay(true);

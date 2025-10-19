@@ -244,27 +244,18 @@ bool start_ranged_constriction(actor& caster, actor& target, int duration,
     if (!caster.can_constrict(target, type))
         return false;
 
-    if (target.is_player())
+    if (you.can_see(target))
     {
+        string msg;
         if (type == CONSTRICT_ROOTS)
-        {
-            you.increase_duration(DUR_GRASPING_ROOTS, duration);
-            mprf(MSGCH_WARN, "The grasping roots grab you!");
-        }
+            msg = make_stringf("The roots grab %s!", target.name(DESC_THE).c_str());
         else if (type == CONSTRICT_BVC)
-        {
-            you.increase_duration(DUR_VILE_CLUTCH, duration);
-            mprf(MSGCH_WARN, "Zombie hands grab you from below!");
-        }
-        caster.start_constricting(you);
+            msg = make_stringf("Zombie hands grab %s from below!", target.name(DESC_THE).c_str());
+
+        mprf(target.is_player() ? MSGCH_WARN : MSGCH_PLAIN, "%s", msg.c_str());
     }
-    else
-    {
-        enchant_type etype = (type == CONSTRICT_ROOTS ? ENCH_GRASPING_ROOTS
-                                                      : ENCH_VILE_CLUTCH);
-        auto ench = mon_enchant(etype, 0, &caster, duration * BASELINE_DELAY);
-        target.as_monster()->add_ench(ench);
-    }
+
+    caster.start_constricting(target, type, duration);
 
     return true;
 }

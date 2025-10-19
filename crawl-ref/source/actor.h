@@ -377,13 +377,14 @@ public:
     // Constriction stuff:
 
     mid_t constricted_by;
+    constrict_type constricted_type;
     int escape_attempts;
 
     // mids of all actors we are constricting.
     // Freed and set to nullptr when empty.
     vector<mid_t> *constricting;
 
-    void start_constricting(actor &whom);
+    void start_constricting(actor &whom, constrict_type type, int duration = 0);
 
     void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false, const string& escape_verb = "");
@@ -400,16 +401,15 @@ public:
     void clear_invalid_constrictions(bool move = false);
     void handle_constriction();
     bool is_constricted() const;
-    constrict_type get_constrict_type() const;
     bool is_constricting() const;
     bool is_constricting(const actor &victim) const;
-    int num_constricting() const;
+    int num_constricting(constrict_type type = CONSTRICT_MELEE) const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(constrict_type typ) const = 0;
     virtual bool clear_far_engulf(bool force = false, bool moved = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
-    void clear_constricted();
+    virtual void clear_constricted();
 
     string describe_props() const;
 

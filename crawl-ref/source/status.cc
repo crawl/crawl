@@ -520,7 +520,13 @@ bool fill_status_info(int status, status_info& inf)
 
             inf.light_colour = YELLOW;
             inf.light_text   = "Constr";
-            inf.short_text   = "constricted";
+
+            if (you.constricted_type == CONSTRICT_ROOTS)
+                inf.short_text   = "constricted (roots)";
+            else if (you.constricted_type == CONSTRICT_BVC)
+                inf.short_text   = "constricted (zombie hands)";
+            else
+                inf.short_text   = "constricted";
         }
         break;
 

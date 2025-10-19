@@ -222,7 +222,7 @@ void remove_ice_movement()
 static void _clear_constriction_data()
 {
     you.stop_directly_constricting_all(true);
-    if (you.get_constrict_type() == CONSTRICT_MELEE)
+    if (you.constricted_type == CONSTRICT_MELEE)
         you.stop_being_constricted();
 }
 

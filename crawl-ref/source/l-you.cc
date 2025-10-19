@@ -477,12 +477,6 @@ LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
  */
 LUARET1(you_anchored, boolean, you.duration[DUR_DIMENSION_ANCHOR])
 
-/*** Are you rooted?
- * @treturn boolean
- * @function rooted
- */
-LUARET1(you_rooted, boolean, you.duration[DUR_GRASPING_ROOTS])
-
 /*** Are you poisoned?
  * @treturn boolean
  * @function poisoned
@@ -1504,7 +1498,6 @@ static const struct luaL_reg you_clib[] =
     { "exhausted",    you_exhausted },
     { "teleporting",  you_teleporting },
     { "anchored",     you_anchored },
-    { "rooted",       you_rooted },
     { "poisoned",     you_poisoned },
     { "poison_survival", you_poison_survival },
     { "corrosion",    you_corrosion },

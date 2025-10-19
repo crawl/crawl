@@ -95,7 +95,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_WEAK,            MB_WEAK },
     { ENCH_DIMENSION_ANCHOR, MB_DIMENSION_ANCHOR },
     { ENCH_TOXIC_RADIANCE,  MB_TOXIC_RADIANCE },
-    { ENCH_GRASPING_ROOTS,  MB_GRASPING_ROOTS },
     { ENCH_FIRE_VULN,       MB_FIRE_VULN },
     { ENCH_POLAR_VORTEX,         MB_VORTEX },
     { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
@@ -116,7 +115,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
     { ENCH_WATERLOGGED,     MB_WATERLOGGED },
     { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
     { ENCH_RING_OF_FLAMES,  MB_CLOUD_RING_FLAMES },
@@ -215,6 +213,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         if (mons_class_is_fragile(mons.type))
             return MB_WITHERING;
         return MB_SLOWLY_DYING;
+    case ENCH_CONSTRICTED:
+        if (mons.constricted_type == CONSTRICT_BVC)
+            return MB_VILE_CLUTCH;
+        else if (mons.constricted_type == CONSTRICT_ROOTS)
+            return MB_GRASPING_ROOTS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -802,8 +805,7 @@ monster_info::monster_info(const monster* m, int milev)
     constricting_name.clear();
 
     // Name of what this monster is directly constricted by, if any
-    const auto constr_typ = m->get_constrict_type();
-    if (constr_typ == CONSTRICT_MELEE)
+    if (m->constricted_type == CONSTRICT_MELEE)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
@@ -819,7 +821,7 @@ monster_info::monster_info(const monster* m, int milev)
         {
             const actor* const constrictee = actor_by_mid(entry);
 
-            if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
+            if (constrictee && constrictee->constricted_type == CONSTRICT_MELEE)
             {
                 constricting_name.push_back("constricting "
                                             + constrictee->name(
