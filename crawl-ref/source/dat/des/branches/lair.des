@@ -489,6 +489,19 @@ default-depth: Lair
 # * luniq_lairdec_stairs: has decent odds to use up the floor stairs.
 ###############################################################################
 
+# Directly place a decorative vault 25% of the time on the last few floors.
+NAME:    lair_decor
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+DEPTH:   Lair:4-5
+CHANCE:  25%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="lairdec", count=c}
+  end)
+}}
+
+
 # "Pointless plantage" by Lemuel.
 # Three separate decorative bubbles mixed into one vault.
 NAME:   lemuel_fruit_fields
