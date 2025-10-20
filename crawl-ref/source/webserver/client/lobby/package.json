@@ -11,11 +11,12 @@
     "lint:fix": "biome lint --write --unsafe",
     "format": "biome format",
     "preview": "vite preview",
-    "copy": "cp dist/index.html ../../templates/client.html && cp dist/static/* ../../static"
+    "copy": "cp -r dist/* ../../static"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
     "@types/jquery": "1.x",
+    "glob": "^11.0.3",
     "typescript": "~5.9.3",
     "vite": "^7.1.7"
   },

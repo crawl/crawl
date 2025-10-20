@@ -11,10 +11,11 @@
     "lint:fix": "biome lint --write --unsafe",
     "format": "biome format",
     "preview": "vite preview",
-    "copy": "cp dist/static/* ../../game_data/static"
+    "copy": "cp dist/* ../../game_data/static"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
+    "glob": "^11.0.3",
     "typescript": "~5.9.3",
     "vite": "^7.1.7"
   },

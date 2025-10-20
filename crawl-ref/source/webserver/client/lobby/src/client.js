@@ -7,7 +7,6 @@ import "./contrib/inflate";
 
 import chat from "./chat";
 import comm from "./comm";
-import { define, requirejs } from "./contrib/require";
 import key_conversion from "./key_conversion";
 
 const client = {};
@@ -40,7 +39,7 @@ let next_loading_img_shown = true;
 const send_message = comm.send_message;
 
 let game_version = null;
-let game_script = null;
+const game_script = null;
 let loaded_modules = null;
 let text_decoder = null;
 if ("TextDecoder" in window) text_decoder = new TextDecoder("utf-8");
@@ -1245,7 +1244,7 @@ function set_html(data) {
   $(`#${data.id}`).html(data.content);
 }
 
-requirejs.onResourceLoad = (_context, map, _depArray) => {
+require.onResourceLoad = (_context, map, _depArray) => {
   if (loaded_modules != null) loaded_modules.push(map.id);
 };
 
@@ -1279,19 +1278,22 @@ function receive_game_client(data) {
     });
   };
 
+  // window.define = define;
+  // window.require = requirejs;
+
   const patchLegacyRequire = () => {
-    define("comm", () => comm);
-    define("client", () => client);
-    define("key_conversion", () => key_conversion);
+    // define("comm", () => comm);
+    // define("chat", () => chat);
+    // define("client", () => client);
+    // define("key_conversion", () => key_conversion);
     define("jquery", () => $);
     define("contrib/jquery.json", () => {
       $.toJSON = (obj) => JSON.stringify(obj);
     });
-    window.define = define;
-    window.require = requirejs;
   };
 
   if (data.content.indexOf("<!-- DCSS.WebTiles.v2 -->") >= 0) {
+    patchLegacyRequire();
     // New version. There is maybe a less hacky way to make ourselves available
     // to the game but this also works.
     window.DCSS ??= {};
@@ -1302,10 +1304,20 @@ function receive_game_client(data) {
     window.jQuery = $;
     inhibit_messages();
     $("#game").html(data.content);
-    const script = document.createElement("script");
-    script.src = `/gamedata/${data.version}/game.js`;
-    document.head.appendChild(script);
-    game_script = script;
+
+    requirejs.config({
+      paths: { [`game-${game_version}`]: `/gamedata/${game_version}` },
+    });
+    require([`game-${game_version}/main`], (main) => {
+      // $(document).trigger("game_preinit");
+      // $(document).trigger("game_init");
+      // client.uninhibit_messages();
+    });
+
+    // const script = document.createElement("script");
+    // script.src = `/gamedata/${data.version}/game.js`;
+    // document.head.appendChild(script);
+    // game_script = script;
     waitForImages();
   } else if (data.content.indexOf("game_loading") === -1) {
     patchLegacyRequire();
