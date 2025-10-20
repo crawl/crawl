@@ -210,6 +210,11 @@ static void _do_wizard_command(int wiz_command)
             mpr("Failure to give mutation.");
         break;
 
+    case '}':
+        if (!wizard_toggle_bane())
+            mpr("Failure to toggle bane.");
+        break;
+
     case '\\': debug_make_shop(); break;
     case '|': wizard_create_all_artefacts(true); break;
 
@@ -432,6 +437,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>x</w>      gain an experience level\n"
                        "<w>$</w>      set gold to a specified value\n"
                        "<w>]</w>      get a mutation\n"
+                       "<w>}</w>      toggle a bane\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"

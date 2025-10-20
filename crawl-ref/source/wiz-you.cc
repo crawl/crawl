@@ -581,6 +581,35 @@ bool wizard_add_mutation()
     return success;
 }
 
+bool wizard_toggle_bane()
+{
+    bool success = false;
+    char specs[80];
+
+    msgwin_get_line("Which bane? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+    const bane_type bane = bane_from_name(specs);
+    if (bane == NUM_BANES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", specs));
+        success = false;
+    }
+    else if (you.has_bane(bane))
+    {
+        remove_bane(bane);
+        success = true;
+    }
+    else
+        success = add_bane(bane, "wizard power");
+
+    return success;
+}
+
 void wizard_set_abyss()
 {
     char buf[80];

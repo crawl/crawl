@@ -27,6 +27,7 @@ void wizard_change_species();
 void wizard_set_xl(bool change_skills = false);
 void set_xl(const int newxl, const bool train, const bool silent=true);
 bool wizard_add_mutation();
+bool wizard_toggle_bane();
 void wizard_set_stats();
 void wizard_edit_durations();
 void wizard_list_props();
