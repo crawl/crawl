@@ -848,6 +848,8 @@ int getch_ck()
 
     KEY_EVENT_RECORD *kr;
 
+    update_screen();
+
     // handle key repeats
     if (repeat_count > 0)
     {
