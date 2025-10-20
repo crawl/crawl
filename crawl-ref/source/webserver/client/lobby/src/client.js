@@ -1440,6 +1440,7 @@ comm.register_handlers({
 
 $(document).ready(() => {
   bind_document_events();
+  select_next_loading_img();
 
   $(window).resize((_ev) => {
     do_layout();
