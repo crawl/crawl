@@ -870,13 +870,15 @@ function edit_rc(id) {
   editing_rc = id;
 }
 
-function rcfile_contents(data) {
+async function rcfile_contents(data) {
   // Ignores wrong rcfile if on a slow connection we clicked two different
   // "edit rc" buttons quickly
   if (data.game_id && data.game_id !== editing_rc) return;
   $("#rc_file_contents").val(data.contents);
   show_dialog("#rc_edit");
   $("#rc_file_contents").focus();
+  const rceditor = await import("./rcfile-editor");
+  await rceditor.initialise(data);
 }
 
 function send_rc() {

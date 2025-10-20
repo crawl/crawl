@@ -20,6 +20,7 @@
     "vite": "^7.1.7"
   },
   "dependencies": {
+    "ace-builds": "^1.43.4",
     "jquery": "^1.12.4",
     "jquery.browser": "^0.1.0",
     "jquery.cookie": "^1.4.1",
