@@ -35,6 +35,7 @@ let current_hash;
 let exit_reason, exit_message, exit_dump;
 const normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
 let next_loading_img = 0;
+let next_loading_img_shown = true;
 
 const send_message = comm.send_message;
 
@@ -910,9 +911,13 @@ function _play_now(id) {
 }
 
 function select_next_loading_img() {
+  // This may get called multiple times, don't load multiple images when we
+  // haven't seen the first one picked.
+  if (!next_loading_img_shown) return;
+  next_loading_img_shown = false;
   const imgs = $("#loader img");
   next_loading_img = Math.floor(Math.random() * imgs.length);
-  // remove the lazy loading attribute, causing the image to load.
+  // Remove the lazy loading attribute, causing the image to load.
   // (N.b. I didn't find standards-level documentation indicating that
   // this must do anything, but it does have the desired behavior on
   // firefox/chrome at the time of testing.)
@@ -929,6 +934,7 @@ function show_loading_screen() {
   imgs.hide();
   $(imgs[next_loading_img]).show();
   set_layer("loader");
+  next_loading_img_shown = true;
 }
 
 function cleanup() {
@@ -971,7 +977,7 @@ function go_lobby() {
   exit_reason = null;
   exit_message = null;
   exit_dump = null;
-  if (current_user) select_next_loading_img();
+  select_next_loading_img();
 
   if ($("#reset_pw").length) {
     show_dialog("#reset_pw");
