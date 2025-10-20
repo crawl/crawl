@@ -155,9 +155,9 @@ ENDMAP
 
 # Small intersection with statues (Eino)
 NAME:    small_statue_intersection
-DEPTH:   D:2-, Depths:2-, !Depths:$, Elf, Crypt, Lair, Abyss
 TAGS:    transparent allow_dup no_hmirror no_vmirror extra
 TAGS:    ruin_lair ruin_abyss decor
+DEPTH:   D:2-, Depths:2-, !Depths:$, Elf, Crypt, Lair, Abyss
 MAP
 xx.xx
 xG.Gx
@@ -167,8 +167,8 @@ xx.xx
 ENDMAP
 
 NAME:  fungi_pond_lemuel
+TAGS:  transparent allow_dup extra
 DEPTH: D:8-, Lair
-TAGS:  allow_dup extra transparent
 MONS:  fungus
 SUBST: 1 = 1.
 SUBST: ? : w..
@@ -225,7 +225,7 @@ MAP
 ENDMAP
 
 NAME:  patterned_corridor
-TAGS:  transparent ruin_abyss ruin_lair decor
+TAGS:  transparent ruin_abyss ruin_lair decor lairdec
 DEPTH: D, Depths, Elf, Lair, Abyss
 SUBST: x : xxccv
 : if you.in_branch("Lair") then
@@ -366,8 +366,9 @@ b?b?b?b?b
 ENDMAP
 
 NAME:    minmay_hedge_maze
-TAGS:    extra decor transparent
+TAGS:    extra decor lairdec transparent luniq_lairdec_plantage
 DEPTH:   D, Depths, Lair
+WEIGHT:  5 (Lair), 10
 MONS:    bush
 SHUFFLE: ABC
 SUBST:   A=. , BC=1
@@ -913,7 +914,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_stone_trees_small
-TAGS:   transparent extra decor
+TAGS:   transparent extra decor lairdec
 DEPTH:  D, Depths, Lair
 WEIGHT: 6
 MAP
@@ -927,7 +928,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_stone_trees_medium
-TAGS:   transparent extra decor
+TAGS:   transparent extra decor lairdec
 DEPTH:  D, Depths, Lair
 WEIGHT: 3
 MAP
@@ -947,7 +948,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_stone_trees_large
-TAGS:    transparent extra decor
+TAGS:    transparent extra decor lairdec luniq_lairdec_large
 DEPTH:   D, Depths, Lair
 WEIGHT:  2 (Lair), 1
 SHUFFLE: TR
@@ -989,7 +990,7 @@ wwwwwwwww
 ENDMAP
 
 NAME:   minmay_holes
-TAGS:   transparent extra decor
+TAGS:   transparent extra decor lairdec
 DEPTH:  D:5-, !D:$, Depths, !Depths:$, Lair, !Lair:$
 KFEAT:  ^ = shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
@@ -2918,7 +2919,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    dreamdust_mushroom_princess
-TAGS:    extra decor transparent
+TAGS:    transparent extra decor lairdec luniq_lairdec_plantage
 DEPTH:   D, Lair, Elf
 TILE:    G = dngn_statue_princess
 : set_feature_name("granite_statue", "a statue of a princess")
@@ -3765,7 +3766,7 @@ ENDMAP
 
 # Transporter accident (mumra)
 NAME:   mumra_transporter_accident
-TAGS:   extra transparent no_descent
+TAGS:   transparent extra no_descent
 WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.

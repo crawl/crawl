@@ -220,7 +220,8 @@ ENDMAP
 # A ruined temple
 NAME:   evilmike_ruin_ashenzari
 TAGS:   uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari
-TAGS:   transparent decor
+TAGS:   transparent decor lairdec
+DEPTH:  D:3-, Lair
 SUBST:  x = xxxxx-, - = ----.
 TILE:   x = WALL_BRICK_VINES
 FTILE:  -V_ = FLOOR_SANDSTONE
@@ -779,7 +780,7 @@ ENDMAP
 
 NAME:   fedhas_altar_1
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
-TAGS:   transparent decor
+TAGS:   transparent decor lairdec
 DEPTH:  D:3-, Lair, Depths
 KFEAT:  C = altar_fedhas
 MONS:   plant
@@ -817,7 +818,8 @@ ENDMAP
 
 NAME:   fedhas_altar_3
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
-TAGS:   transparent decor
+TAGS:   transparent decor lairdec
+DEPTH:  D:3-, Lair, Depths
 KFEAT:  C = altar_fedhas
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
@@ -832,7 +834,8 @@ ENDMAP
 
 NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
-TAGS:   decor
+TAGS:   decor lairdec
+DEPTH:  D:3-, Lair, Depths
 KFEAT:  C = altar_fedhas
 FTILE:  .pt = floor_moss
 : decorative_floor(_G, 'p', "flower patch")
@@ -2756,7 +2759,8 @@ ENDMAP
 # Overgrown and disused, since many pilgrims find Ru's sacrifices too onerous.
 NAME:   nicolae_ru_the_path_less_chosen
 TAGS:   temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen lairdec
+DEPTH:  D:3-, Lair, Depths
 : interest_check(_G)
 KMONS:  p = plant / fungus w:3
 NSUBST: r = 3=^ / ^p / 7=p / 2:p. / ., i = ^^p. / 2=p / .
