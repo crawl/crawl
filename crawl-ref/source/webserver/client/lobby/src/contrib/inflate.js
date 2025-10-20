@@ -2135,4 +2135,4 @@
         }
 
     obj.Inflater = Inflater;
-})(globalThis);
+})(window);

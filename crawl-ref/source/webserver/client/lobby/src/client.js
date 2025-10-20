@@ -1279,8 +1279,8 @@ function receive_game_client(data) {
     define("contrib/jquery.json", () => {
       $.toJSON = (obj) => JSON.stringify(obj);
     });
-    globalThis.define = define;
-    globalThis.require = requirejs;
+    window.define = define;
+    window.require = requirejs;
   };
 
   if (data.content.indexOf("<!-- DCSS.WebTiles.v2 -->") >= 0) {
