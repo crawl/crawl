@@ -225,7 +225,7 @@ function send_keycode(code) {
 }
 
 function send_bytes(bytes) {
-  s = '{"msg":"input","data":[';
+  let s = '{"msg":"input","data":[';
   $.each(bytes, (i, code) => {
     if (i === 0) s += code;
     else s += `,${code}`;
