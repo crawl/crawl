@@ -593,19 +593,51 @@ bool wizard_toggle_bane()
         canned_msg(MSG_OK);
         return true;
     }
-    const bane_type bane = bane_from_name(specs);
+
+    vector<bane_type> partial_matches;
+    bane_type bane = bane_from_name(specs, &partial_matches);
+
     if (bane == NUM_BANES)
     {
-        ui::error(make_stringf("Unable to get '%s' by name", specs));
-        success = false;
-    }
-    else if (you.has_bane(bane))
-    {
-        remove_bane(bane);
-        success = true;
+        crawl_state.cancel_cmd_repeat();
+
+        if (partial_matches.empty())
+            mpr("No matching bane names.");
+        else
+        {
+            vector<string> matches;
+
+            for (bane_type ban : partial_matches)
+            {
+                const string banname = bane_name(ban, true);
+                ASSERT(!banname.empty()); // `bane_name` is empty if something went wrong getting the desc for `ban`.
+                matches.emplace_back(banname);
+            }
+
+            string prefix = make_stringf("No exact match for bane '%s', possible matches are: ", specs);
+
+            // Use mpr_comma_separated_list() because the list
+            // might be *LONG*.
+            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                     MSGCH_DIAGNOSTICS);
+        }
+
+        return false;
     }
     else
-        success = add_bane(bane, "wizard power");
+    {
+        mprf("Found #%d: %s (\"%s\")", (int) bane,
+             bane_name(bane).c_str(),
+             bane_desc(bane).c_str());
+
+        if (you.has_bane(bane))
+        {
+            remove_bane(bane);
+            success = true;
+        }
+        else
+            success = add_bane(bane, "wizard power");
+    }
 
     return success;
 }

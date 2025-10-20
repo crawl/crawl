@@ -3345,14 +3345,46 @@ const string bane_desc(bane_type bane)
     return bane_data[bane_index[bane]].description;
 }
 
-bane_type bane_from_name(string name)
+/*
+ * Given some name, return a bane type. Tries to match the short description as found in `bane-data.h`.
+ * If `partial_matches` is set, it will fill the vector with any partial matches it finds. If there is exactly one,
+ * will return this bane, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the bane type if successful, otherwise NUM_BANES if it can't find a single match.
+ */
+bane_type bane_from_name(string name, vector<bane_type> *partial_matches)
 {
-    string spec = lowercase_string(name);
-    for (int i = 0; i < NUM_BANES; ++i)
-        if (name == bane_name(static_cast<bane_type>(i), true))
-            return static_cast<bane_type>(i);
+    bane_type bane = NUM_BANES;
 
-    return NUM_BANES;
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_BANES; ++i)
+    {
+        bane_type ban = static_cast<bane_type>(i);
+        const string ban_name_c = bane_name(ban, true);
+        if (ban_name_c.empty())
+            continue;
+        const string ban_name = lowercase_string(ban_name_c);
+
+        if (spec == ban_name)
+        {
+            bane = ban;
+            break;
+        }
+
+        if (partial_matches && strstr(ban_name.c_str(), spec.c_str()))
+            partial_matches->push_back(ban);
+    }
+
+    // If only one matching bane, use that.
+    if (partial_matches && bane == NUM_BANES && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return bane;
 }
 
 static bool _bane_is_compatible(bane_type bane)
