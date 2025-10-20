@@ -1974,9 +1974,12 @@ brick_brown7
 %resetcol
 
 # Variant of BRICK_WALL_BROWN with vines
-brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+%weight 10
+brick_brown-vines0 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+brick_brown-vines1
 brick_brown-vines2
 brick_brown-vines3
+%weight 8
 brick_brown-vines4
 
 brick_gray0 WALL_BRICK_GRAY
