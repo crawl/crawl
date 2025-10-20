@@ -1795,6 +1795,521 @@ _..yyyyx````xxy.._
   _...ttttt...__S
 ENDMAP
 
+NAME:    regret_index_lairdec_lamprey_ridges
+TAGS:    transparent extra lairdec no_rotate
+DEPTH:   Lair
+KMONS:   P = plant
+ITEM:    large rock q:1 no_pickup
+SHUFFLE: ABCDEFGH / BAFDECGH / ABCEDFHG, pqrs
+NSUBST:  @ = 2:@ / 2:xx@ / *:x
+SUBST:   AC : t:30 ':20 c W:1 w:1, DH = c, BEFG = x
+SUBST:   p = ., q = x, r : xcd', s : xP'', z = x...
+FTILE:   ' = floor_sprouting_stone
+MAP
+    A@B     B@C
+    A..BB BB..C
+  AAA...BxB...CCC
+  AA.A..BBB..C.CC
+AAA.AA.r.B.s.CC.CCC
+@..AAA..r.s..CCC..@
+H.....ppp.qqq.....D
+ H..rp.......qs..D
+ HHH.r.......s.DDD
+  xHH....z....DDx
+ HHH.s.......r.DDD
+ H..sq.......pr..D
+H.....qqq.ppp.....D
+@..GGG..s.r..EEE..@
+GGG.GG.s.F.r.EE.EEE
+  GG.G..FFF..E.EE
+  GGG...FxF...EEE
+    G..FF FF..E
+    G@F     F@E
+ENDMAP
+
+NAME:    regret_index_lairdec_another_tattered_fort
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   F = fungus
+KFEAT:   ~ = broken_door
+SHUFFLE: PpQq / RrSs, tT / tT / t' / 'T
+SUBST:   t : tFx', T = GGVVVtt}}}>
+NSUBST:  x = 2:x / 2 = x' / * = F'', X = 2:x / 1:xx+~ / * = ~', - = 1:~' / *:cx
+NSUBST:  p = 2:x / 2 = x' / * = F'', P = 2:x / 1:xx+~ / * = ~', q = 1:~' / *:cx
+NSUBST:  a = 1:x / 2:F / 1:x' / 1:F' / *:', r = 1:x / 2:F / 1:x' / 1:F' / *:'
+NSUBST:  } = 1:})> / 1:]>> / *:.
+SUBST:   Rs = c, c = c:19 x:1, AS = F, z = zzc
+CLEAR:   z
+FTILE:   ' = floor_sprouting_squares / floor_sprouting_stone / floor_lair
+FTILE:   .F~+ = floor_sprouting_stone / floor_lair w:5
+MAP
+z z cccPcPcPcc`
+     Pcp.p.pQP``
+z    c..p.p..c``
+     P.p.p.p.P`z``
+c   cc..p.p.cc`````
+cXcXcccqc+cqcccRcRc
+c.x.x-.c.....s..r.c
+Xx.x.c.tt..T.c.r.rR
+c.x.x+...c...+r.r.c
+Xx.x.c.T..tt.c.r.rR
+c.x..-.....c.sx.rSc
+c.cXccccc+cccccRcRc
+`````cc.a.a..cc   c
+ ``z`c.a.a.a.c
+   ``c..a.a..c    z
+   ``cAa.a.acc
+    `cccccccccc z z
+ENDMAP
+
+NAME:    regret_index_lairdec_chain_attraction
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   P = plant
+ITEM:    stone q:1 no_pickup
+SHUFFLE: ABC, DEF
+SUBST:   A : x``, B = x, D : PPxx., E : x``, CF = .
+SUBST:   ? : PPtd, ! : xctPP>>
+CLEAR:   `
+MAP
+                  ..B
+     AxF.       ..xx.B
+    A..xx.     .xxF.
+       ..x.  ..x..        xxx
+         .x..xx.      ... .?xx
+          DxxE.     ..xx..?!?x
+ xxx  C ..x.ExD    .xx..C..?xx
+xx?. C..xx.  Dx.  .x.. C  xxx
+x?!?..xx..    .xE.x.
+xx?.. ..      .ExxD
+ xxx         .xx..x.
+           ..x.   .x.
+         .Fxx.     .xx..A
+       B.xx..       .FxA
+        B..
+ENDMAP
+
+NAME:    regret_index_lairdec_dandelion
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   P = plant
+ITEM:    stone q:1 no_pickup
+SHUFFLE: Qq / Rr / Ss
+SUBST:   x = x:80 .:9 P:9 c:2, y = xP.
+SUBST:   Q : Px., q : Px, R : P., S = ., rs = x
+SUBST:   ! = })]???FFFFcc, ? : !Vcctt, z = cxPdd
+: decorative_floor(_G, 'F', "flower patch")
+MAP
+       x.x.x
+     y.......y
+    x.x.xyx.x.x
+    ...........
+   x.x.xyxyx.x.x
+   .Q.........Q.
+  xQsQx.x.x.xQsQx
+  ..Q.........Q..
+ x.x.x...x...x.x.x
+ ..y...........y..
+xyx.x...c!c...x.xyx
+...R...ccccc...R...
+.xRrRx.?ccc?.xRrRx.
+...R...ccccc...R...
+xyx.x...ccc...x.xyx
+ ...y...zcz.....y.
+ x.x.x..zcz..x.x.x
+  ..S...zcz...S..
+  xSqSx.zcz.xSqSx
+   .S...zcz...S.
+   x.x..zcz..x.x
+    ....ccc....
+    zzzccccczzz
+   xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_lairdec_mosaic
+TAGS:    transparent no_item_gen extra lairdec no_pool_fixup
+DEPTH:   Lair
+WEIGHT:  5
+KMONS:   B = bush
+KMONS:   P = plant
+KITEM:   ~ : mundane long sword / mundane hand axe / mundane ring mail / \
+             human skeleton / centaur skeleton / hound skeleton
+KITEM:   ! = falchion ego:venom plus:-1 / whip ego:venom plus:-1, \
+             large rock q:1 no_pickup
+SHUFFLE: XYZ, '"`
+NSUBST:  a = 1:+.. / 1:PP+.. / * = xxP, A = 1:+.. / 1:PP+.. / * = xxP
+SUBST:   c = c x:1, X = x, Y : GVVVBBccWF, Z : ~., ? = ???Pcxx
+CLEAR:   ?
+FTILE:   `~ = floor_sprouting_stone
+FTILE:   ' : floor_pebble_lightblue
+FTILE:   " = floor_sprouting_squares
+# hrm.
+FTILE:   .GVB! = floor_moss
+: decorative_floor(_G, 'F', "flower patch")
+MAP
+  c   c   c??
+ ?cacacacaccc?c?
+ccc."```````cccc
+?c.."`X""""""'c?
+cc""'''"''Y"'"cc?
+?c``'..".'`'""`cc
+cc`X'.."Z`'`Y"`c
+?c`"""""""`''"`A
+?c`"'.Z"!"Z.'"`c
+?c`"''`"""""""`A
+cc`"Y`'`Z"..'X`cc
+?c`""'`'."..'``A
+ccc"'"Y''"'''""c
+ ?c'""""""X`"..A
+ cccc```````".ccc
+  c?ccccccccccc?
+    c c???c?c?c
+ENDMAP
+
+# Based off of shoals_end_grunt_ice and hellmonk_spider_rune_endless_swarm.
+NAME:    regret_index_lairdec_swarmberg
+TAGS:    transparent no_item_gen extra lairdec no_pool_fixup
+DEPTH:   Lair
+KMONS:   P = plant
+SHUFFLE: EFGHI, JK
+NSUBST:  A = 2:. / *:x, B = 1:x.. / *:., C = 1:x.. / *:., D = 2:. / *:x
+SUBST:   c = ccccx, z = cxxxx, E : xcPV.., F : xx..., J : xxPw., GHIK = .
+MAP
+                      cCc
+                    xxx.xxx
+ xxxxxxx            xx...xx
+xA.x.x.Ax          cx.J.K.xc
+x.G.E.H.x          C.......C
+xx.z.z.xx          cx.K.J.xc
+x.F.I.F.x           xx...xx
+xx.z.z.xx           xxx.xxx
+x.H.E.G.x             cCc     xxxxxxx
+xA.x.x.Ax                    xD.x.x.Dx
+ xxxxxxx     cBc             x.G.E.H.x
+           xxx.xxx           xx.z.z.xx
+           xx...xx           x.F.I.F.x
+          cx.J.K.xc          xx.z.z.xx
+          B.......B          x.H.E.G.x
+          cx.K.J.xc          xD.x.x.Dx
+           xx...xx            xxxxxxx
+           xxx.xxx
+             cBc
+ENDMAP
+
+# Based off grunt_snake_rune_serpentine_throne and grunt_swamp_rune_castle.
+NAME:    regret_index_lairdec_castle_curve
+TAGS:    transparent no_item_gen extra lairdec no_pool_fixup
+DEPTH:   Lair
+KMONS:   pP = plant
+SHUFFLE: ABC
+SUBST:   A : c.., BC = c, P = P..
+SUBST:   ? : px, ! : tV>G{}w., c = cccx, z : pxc..
+NSUBST:  { = 1:{([ / *:<, } = 1:})] / *:>
+FTILE:   '+VG{([})] = floor_lair w:15 / floor_sprouting_stone w:15 / \
+                      floor_sprouting_squares
+
+MAP
+ ccccc               ccccc
+cA'''Cc             cC'''Ac
+c'!'''c.    xx     .c'''!'c
+c'''''c.   xxxx    .c'''''c
+c'''?'c.. xxPPxx  ..c'?'''c
+cB''''+.. x....x  ..+''''Bc
+ cccc+c.. x..P.xx ..c+cccc
+  .....z..x..x..x..z.....
+    ......x..x..x......
+      xx..x..x..x..xx
+       x..x..x..x..x
+       xx.P..xx.P..x
+        x....xx....x
+        xxPPxxxxPPxx
+         xxxx  xxxx
+          xx    xx
+ENDMAP
+
+NAME:    regret_index_lairdec_grave_grove
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+WEIGHT:  5
+KMONS:   D = pile of debris
+KMONS:   P = plant
+KITEM:   d = human skeleton, large rock q:1 / gold q:2 no_pickup
+SHUFFLE: `z / ~Z / ~Z
+SUBST:   x = x:9 c:1, t = t:4 x:1, ? = Pcx...., ` = P..., z = xxx.
+NSUBST:  - = 1:++. / 1:xx+.. / *:x, ! = 1:ttx / *:'
+NSUBST:  Q = 1:. / 1:xxxP. / *:x, R = 1:. / 1:xxxP. / *:x
+NSUBST:  S = 1:. / 1:xxxP. / *:x, T = 1:. / 1:xxxP. / *:x
+NSUBST:  G = 1:GGDtx / *:G, F = 1:FFPPd / *:F
+FTILE:   'FGt = floor_sprouting_stone
+CLEAR:   ~Z
+: decorative_floor(_G, 'F', "flower patch")
+: vault_granite_statue_setup(_G, "G", "gravestone")
+MAP
+           xxQx
+          Qx..xx
+        ccc..?.Qx
+      xxttt-x.xxRx
+     xtt't'ttxxx.xx
+    xt'''t'''tx.?.R
+   xt'F''!''F'tx..x
+   xt''G't'G''t-.xx
+  ct'''''t'''''tcR
+  cttt!ttttt!tttc
+ Sct'''''t'''''tcz
+xx.-t''G't'G''tx`zz
+x..xt'F''!''F'tx``z
+S.?.xt'''t'''tx```z
+xx.xxxtt't'ttxzz`zz
+ xSxx.x-tttxx`zz`z
+  xT.?..ccc`````z
+   xx..xT zz``zz
+    xTxx   zzzz
+ENDMAP
+
+NAME:    regret_index_lairdec_dancing_grid
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   p = plant
+SHUFFLE: ABCDEF, LMNOPQ, RST
+SUBST:   LRB : pgtt, C : xx', DEFT = x, M : xc, N : xxp, O : xx', APQS = '
+: vault_granite_statue_setup(_G, "g", "broken pillar")
+FTILE:   'g = floor_sprouting_stone
+MAP
+      .xx.
+      .QL.  T    .xx.
+      .PM.       .Ax.
+      .ON.  S    .Bx.
+      .NO.       .CF.
+      .MP.  R    .DE.
+.cc.  .LQ.       .ED.
+.Ax.  .cc.       .FC.
+.Bx.             .xB.
+.CF.      .cc.   .xA.
+.DE.      .QL.   .cc.
+.ED.   R  .PM.
+.FC.      .ON.
+.xB.   S  .NO.
+.xA.      .MP.
+.xx.   T  .LQ.
+          .xx.
+ENDMAP
+
+NAME:    regret_index_lairdec_piecemeal
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+SHUFFLE: ABCD, EFGH
+SUBST:   A : xxc., E : xx., BCDFGH = .
+SUBST:   z : tcx
+CLEAR:   `
+MAP
+ ExxxxF
+Ex.x..x
+x..A..x     .
+xxDcBxx     z.
+x..C..x
+x..x.xG
+HxxxxG
+            `
+            `
+          GxxxxH
+         Gx.x..x
+         x..A..x     .
+  .z     xxDcBxx     z.
+   .     x..C..x
+         x..x.xE
+         FxxxxE
+            `
+            `
+                   ExxxxF
+                  Ex.x..x
+                  x..A..x
+           .z     xxDcBxx
+            .     x..C..x
+                  x..x.xG
+                  HxxxxG
+ENDMAP
+
+NAME:    regret_index_lairdec_entangling_icon
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+WEIGHT:  5
+KMONS:   p = plant
+ITEM:    mundane spear
+KFEAT:   z = x
+NSUBST:  @ = 1:@ / *:., & = 1:@ / *:.
+SUBST:   P : pptz!, ! = ppt
+FTILE:   ` = floor_pebble_darkgray
+FTILE:   ' = floor_pebble_lightgray
+FTILE:   . = floor_pebble_green
+FTILE:   "d = floor_pebble_lightgreen
+TILE:    z = wall_pebble_green
+MAP
+    x  xx
+ x xPxx`'x@
+xPxdxx'``'x xx
+ x"xxx``'.'xPx
+ x"xxxx'.".'x
+x.'.xx``x.".x
+ x.x'xx`xx."x
+ x'.x`xxxxx""x
+ @x'`xxPx.".x
+ xPx`xxx.""x
+  x xxxxdxxPx
+      xPx  x
+       x
+ENDMAP
+
+NAME:    regret_index_lairdec_otherside
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   p = plant
+KMONS:   b = bush
+KFEAT:   y = x
+SHUFFLE: ABC, JKLMNOP
+SUBST:   x : xxc, t = t:6 b:2 y:1
+SUBST:   A : pxt, JBC = ., K : ppbcGG., L : c., MNOP = x, ? : xxxtcGVF.
+TILE:    y : wall_pebble_green / wall_pebble_cyan w:5
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+: decorative_floor(_G, "F", "flower patch")
+MAP
+     t.t.t.t
+    ....B....
+    t.tBtBt.t
+   .....B....
+   t.t.....t.t
+  ..A.....C...
+  tAtA.?.CtCt
+ ...A.....C..
+ t.t........
+ ...........
+  t.t.......
+xxxJKLMNOPxxxxxxxxxxx
+xxxxxxxxxxxPONMLKJxxx
+         .......t.t
+         ...........
+         ........t.t
+        ..C.....A...
+        tCtC.?.AtAt
+       ...C.....A..
+       t.t.....t.t
+        ....B.....
+        t.tBtBt.t
+        ....B....
+         t.t.t.t
+ENDMAP
+
+NAME:    regret_index_lairdec_budding
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   p = plant
+KFEAT:   y = x
+SHUFFLE: ABCDEFG, LMNOP, ?! / ?V / ?f / ?f / !? / !?
+SUBST:   AB = x, C : xxppp, E : pt.., FG = ., L : yy+````, M : y``, MOP = `
+SUBST:   ! : tc, ? : px.., y : yyy`
+KMASK:   ' = no_item_gen
+CLEAR:   `
+TILE:    y : wall_pebble_red / wall_pebble_cyan / wall_pebble_green
+: decorative_floor(_G, "f", "flower patch")
+MAP
+           y             F
+         LyyyM        ..x.
+         y'?'y        E.x.
+        yy?!?yy      ..xx.
+         y'?'y      .D.x.A.
+         OyyyN      ..xx..
+           y      ..C.x.B.
+                ..B..xx..
+        .      .A..xxx.C.
+      ..F..     .xxx..D.
+    ..E..xxx   xxx..E..
+   .D..xxx.     ..F..
+  .C.xxx..A.      .
+  ..xx..B..
+ .B.x.C..      y
+ ..xx..      OyyyN
+.A.x.D.      y.?.y
+ .xx..      yy?!?yy
+ .x.E        y.?.y
+ .x..        MyyyL
+   F           y
+ENDMAP
+
+# Riffing off of evilmike_ruin_ashenzari and nicolae_ru_the_path_less_chosen.
+NAME:    regret_index_lairdec_abandoned_piercing
+TAGS:    transparent extra lairdec luniq_lairdec_plantage
+DEPTH:   Lair
+KMONS:   P = plant
+KMONS:   d = pile of debris
+KFEAT:   - = broken_door
+KFEAT:   A = altar_ashenzari
+KFEAT:   B = altar_ru
+KFEAT:   C = altar_fedhas
+SHUFFLE: Ab / B" / CT / >"
+NSUBST:  J = 1:++- / 1:ccc-' / *:z, K = 1:++- / 1:ccc-' / *:z
+NSUBST:  L = 1:++- / 1:ccc-' / *:z, M = 1:++- / 1:ccc-' / *:z
+NSUBST:  X = 2:x / 1:. / * = x.., ! = 2:' / 3:dP / *:z
+SUBST:   o : P.., O = P.., p : P., b = P
+SUBST:   y = ccx``, z = cccx, ~ = ---++cx, > : VG}])>, t : ttPPccV, T = t
+FTILE:   '"+- = floor_sprouting_stone
+CLEAR:   `
+MAP
+z..zz                 zz..z
+.O..                   ..O.
+...y                   y...
+z.yz                   zy.z
+z     c             c     z
+    yycy           ycyy
+   yycccczcc+~+cczccccyy
+   ycc''J....P....K''ccy
+  ccc'''J.X..P..X.K'''ccc
+   yzJJJc....o....cKKKzy
+   yz.......PoP.......zy
+   yzp.X..ccccccc..X.pzy
+   yzoo..ccbbbbbcc..oozy
+   yztpp.cbbbAbbbc.pptzy
+   yzoo..ccbbPbbcc..oozy
+   yzp.X..cc+~+cc..X.pzy
+   yz........P........zy
+   yzLLLc...XPX...cMMMzy
+   yz'''L.X..P..X.M'''zy
+  cccc''L..P.P.P..M''cccc
+   yyccccz!!!!!!!zccccyy
+    yycy           ycyy
+z     c             c     z
+z.yz                   zy.z
+...y                   y...
+.O..                   ..O.
+z..zz                 zz..z
+ENDMAP
+
+NAME:    regret_index_lairdec_lost_corridors
+TAGS:    transparent extra lairdec
+DEPTH:   Lair
+KMONS:   P : plant / bush w:5
+ITEM:    large rock q:1 no_pickup
+SHUFFLE: ABCD, XYZ
+SUBST:   A : `.., B : xxc, CD = c, X : xxPGd, YZ = .
+CLEAR:   `
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+MAP
+c   c             c   c
+A...c             c...A
+BX..D             D..XB
+C..Yc             cY..C
+c.Z.c             c.Z.c
+cY..C             C..Yc
+D..XB             BX..D
+c...A             A...c
+c   c             c   c
+     `           `
+      `         `
+       cBcCcCcBc
+        ..Y.Y..
+        ...Z...
+        .X...X.
+       cAcDcDcAc
+ENDMAP
+
 ###############################################################################
 # <<3>> Monster-placing vault sets.
 ###############################################################################

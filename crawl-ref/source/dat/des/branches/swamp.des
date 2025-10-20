@@ -1051,6 +1051,51 @@ MAP
   ..........
 ENDMAP
 
+# Another riff off of evilmike_swamp_ruin_house_6.
+NAME:    regret_index_swamp_ruin_house_1
+SUBST:   ' : ..`, X : xx`, ~ = -```, x = xxxx-, - = -----.
+CLEAR:   `
+: swamp_ruins(_G)
+MAP
+   ...''
+ ......
+ .xxxx x X
+..x---
+..x---~
+..x---~       X
+..x---~
+'.  ~~        x '
+' x        ~~  .'
+          ~---x..
+  X       ~---x..
+          ~---x..
+           ---x..
+       X x xxxx.
+          ......
+         ''...
+ENDMAP
+
+NAME:   regret_index_swamp_ruin_wall
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+WEIGHT: 4
+MAP
+  x       x
+  xx      xx
+ -xx-.  .-xx-.
+.-xx--..--xx--.
+.-xx------xx----
+ xxxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxxx
+  ----xx------xx-.
+   .--xx--..--xx-.
+    .-xx-.  .-xx-
+      xx      xx
+      x       x
+ENDMAP
+
+####
+
 NAME:    nicolae_swamp_ascending_descending
 TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
