@@ -729,9 +729,8 @@ ENDMAP
 NAME:   wad_woods_tower
 DEPTH:  D:2-, Lair
 ORIENT: float
-FTILE:  q13%OG. = floor_woodground
 : wad_woods_setup(_G, "large", 2, true, 21, 2, 36)
-FTILE:  '*+T4 = floor_dirt
+FTILE:  '*+TG4 = floor_sprouting_ruin
 MAP
    tttt....   .tt1   tt.t    tttt  ..t
 t.1.tttt.tt.11O..t.11ttt..  15tttt....t
@@ -1325,7 +1324,8 @@ KFEAT:  2 = cache of baked goods
 SUBST:  t = t..
 SUBST:  . = 1 .:90
 COLOUR: -*29 = lightgrey
-FTILE:  -*29 = floor_normal
+FTILE:  + = floor_sprouting_stone
+FTILE:  -*29 = floor_sprouting_squares
 MAP
       tt@@@tt
     ttt.....ttt
@@ -1881,6 +1881,7 @@ TAGS:    extra decor
 DEPTH:   Lair, !Lair:$
 MONS:    fungus w:3 / nothing, plant w:3 / nothing
 SUBST:   1 : 12, " = x.
+FTILE:   .12( = floor_sprouting_stone
 MAP
     ...xx
   ....xxx
@@ -1911,10 +1912,11 @@ SUBST:   ab = D, cp = P
 MONS:    plant, bush
 SUBST:   V = T, D = 2, P = 1
 FTILE:   ' = floor_dirt, 12`" = floor_grass_dark
-:else
+: else
 MONS:    withered plant / plant w:1, fungus
 SUBST:   P = 1, D = 122
-:end
+FTILE:   '`"12V = floor_sprouting_stone
+: end
 SUBST:   '`" = .
 MAP
 .....@.....
@@ -2069,6 +2071,8 @@ KMONS:   ! = pile of debris
 SHUFFLE: []/<>, {}/[]/(), PQ/pq, PQ
 NSUBST:  a = 2=@ / x
 SUBST:   pq = ., P = V:50 !, Q = G:50 !, x = x:80 ttt., " = xxxt
+FTILE:   .@{[(<}])t = floor_sprouting_stone
+FTILE:   !VG = floor_sprouting_squares
 MAP
       xxxxx
       x...x
@@ -2096,9 +2100,10 @@ KMONS:  p = withered plant
 KITEM:  S = any skeleton / human skeleton w:1 / elf skeleton w:1
 SUBST:  t = ttt.., . = .:60 p
 NSUBST: . = 4=S / 4=S. / .
-COLOUR: t = lightgrey w:5 / brown
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
+FTILE:  .Spt = floor_sprouting_stone
 MAP
    .......
   ..ttttt..
@@ -2175,7 +2180,10 @@ KITEM:  ` = human skeleton
 :    nsubst(string.sub(glifz, i, i) .. " = + / x")
 : end
 NSUBST: R = 2=+ / +x / x, . = 3=` / 2=`. / .
-SUBST:  G = GVt, a = .:70 t, s= t...., x = x:80 ., + = +:60 ., - = ., . = .:90 p
+SUBST:  G = GVt, a = .:70 t, s= t...., x = x:80 ., + = +:60 .
+SUBST:  - = -:90 p, . = .:90 p
+FTILE:  -pt = floor_sprouting_stone
+FTILE:  .`+GV = floor_sprouting_squares
 MAP
 -------------------
 -xxDxxxExxxFxxxHxx-
@@ -2255,8 +2263,9 @@ TAGS:   decor extra transparent
 DEPTH:  Lair
 KMONS:  P = plant
 KITEM:  S = human skeleton
-NSUBST: D = m / x, E = m / x, F = m / -, H = . / m / -
-SUBST:  M = wP, - = xx., ` = ..P
+NSUBST: D = m / x, E = m / x, F = m / -, H = ' / m / -
+SUBST:  M = wP, - = xx', ` = ''P
+FTILE:  'SPm = floor_sprouting_squares
 MAP
   .........
 xxDDDDDD--.
@@ -2829,28 +2838,29 @@ TAGS:    decor extra transparent
 DEPTH:   Lair:2-
 WEIGHT:  5
 ORIENT:  float
-KMONS:   p = plant
+KMONS:   pP = plant
 KFEAT:   - = broken_door
-NSUBST:  DE = 1=.
+NSUBST:  DE = 1:.
 SHUFFLE: VG
-SUBST:   S = {[(, D = c, E = n, + = +:35 -, G = G:35 ., V = V:35 .
-SUBST:   c = c:70 ., n = n:70 ., . = .:100 p
+SUBST:   S = {[(, D = c, E = n, + = +:35 -, G = G:35 ', V = V:35 '
+SUBST:   c = c:70 ', n = n:70 ', ' = ':100 P, . = .:100 p
+FTILE:   'P+-n = floor_sprouting_stone
 MAP
      .......
    ...cDDDc...
-  ..cEc...cEc..
- ..Gc.+.V.+.cG..
- .ccccc...ccccc.
-..E.cccc+cccc.E..
-.cc+cc.....cc+cc.
-.D...c.....c...D.
-.D.V.+..S..+.V.D.
-.D...c.....c...D.
-.cc+cc.....cc+cc.
-..E.cccc+cccc.E..
- .ccccc...ccccc.
- ..Gc.+.V.+.cG..
-  ..cEc...cEc..
+  ..cEc'''cEc..
+ ..Gc''.V'+'cG..
+ .ccccc'''ccccc.
+..E'cccc+cccc'E..
+.cc+cc''''''cc+cc.
+.D'''c'''''c'''D.
+.D'V'+''S''+'V'D.
+.D'''c'''''c'''D.
+.cc+cc'''''cc+cc.
+..E'cccc+cccc'E..
+ .ccccc'''ccccc.
+ ..Gc'+'V'+'cG..
+  ..cEc'''cEc..
    ...cDDDc...
      .......
 ENDMAP
@@ -3070,6 +3080,7 @@ SUBST:  z = x:3 c:1
 SUBST:  ; = x:3 c:1 .:4
 SUBST:  y = l 1:3 .:1
 SUBST:  % = %:1 .:3
+FTILE:  .>$%d12345 = floor_sprouting_stone
 MAP
 xxxxxzzzzzzzzzxxxxx
 xxxzzzzz..yyzzzxxxx
@@ -3087,7 +3098,7 @@ xxz.y'.Byllzzzxzxlx
 xzyy..y.yyyyxzzxlyx
 ..%....yy..yyzxyy..
 ..y.y...G.y..yy....
-.y.........y.......
+ y.........y......
 ENDMAP
 
 # Drake nest (minmay)
@@ -3166,12 +3177,12 @@ xxx....xxx
 ENDMAP
 
 # Catoblepas lookout (blackcustard)
-NAME: lookout_lair_type
-TAGS: extra no_pool_fixup transparent
-DEPTH: Lair:4-
-MONS: w:1 generate_awake patrolling catoblepas / w:4 nothing
-SUBST: a = w W .
-SUBST: ' = W .
+NAME:  lookout_lair_type
+TAGS:  extra no_pool_fixup transparent
+DEPTH: Lair:3-
+MONS:  generate_awake patrolling catoblepas
+SUBST: 1 = 1...., a = .wW, ' = .W
+FTILE: .1 = floor_sprouting_stone
 MAP
   a'a aa
  a'wwwWa
@@ -3372,7 +3383,7 @@ NSUBST: . = 2=9 / 3=0 / ., 1 = 3=1 / 1ww
 KMASK:  Ww = no_monster_gen
 CLEAR:  E
 COLOUR: -|*2 = brown
-FTILE:  =-|*2GT = floor_pebble_brown
+FTILE:  =-|*2GT = floor_sprouting_ruin
 : decorative_floor(_G, 'F', "flower patch")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3526,6 +3537,7 @@ KMONS:   C = black mamba
 KITEM:   d = serpent talisman randart, snakebite no_pickup
 SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
 SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
+FTILE:   .dABCx = floor_sprouting_stone
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx222xxxx
@@ -3577,9 +3589,11 @@ MONS:   hydra / lindwurm / mountainshell w:3
 KMONS:  PA = plant
 KFEAT:  A = W
 SUBST:  - = AAW, " = ccct, * = *%%.
-NSUBST: ; = 1=1 / 1=1. / 1=5..
-NSUBST: ' = 3:P / 4=P. / 1:t / 4=t. / 2=1234 / 2=1234.... / 1:5
-NSUBST: p = 3=1234 / 1=5.., q = 2=1234, _ = 1=134.. / 1:3 / 1:4
+NSUBST: ; = 1=1 / 1=1. / 1=5.. / *:.
+NSUBST: ' = 3:P / 4=P. / 1:t / 4=t. / 2=1234 / 2=1234.... / 1:5 / *:.
+NSUBST: p = 3=1234 / 1=5.. / *:., q = 2=1234 / *:., _ = 1=134.. / 1:3 / 1:4 / *:.
+FTILE:  .123456+%*|VG( = floor_sprouting_squares / floor_sprouting_stone w:5
+FTILE:  Pt = floor_sprouting_stone / floor_lair w:5
 MAP
   cccccccccccttcccccccc
   c6...+.ppptttt.cPtttc
@@ -3587,15 +3601,15 @@ MAP
   c*..t"Ppppppp.P...ttc
   c**tt"tppppppPPc..ttt
   cccc"cc++cm''PPcP..tt
-.cc.(.P"''.'''''Pct.Ptt
-.cG...."-''.'''''ctP.tc
-.cP...-"W-''.''''ctt.tc
+`cc.(.P"''.'''''Pct.Ptt
+`cG...."-''.'''''ctP.tc
+`cP...-"W-''.''''ctt.tc
 @+...-W"WW''.''''ttt.Pc
 @+...WWmWW''V''''ttt.Pc
 @+..q-W"WW''.''''ct...c
-.c.qqq-"W-''.'''-cP...c
-.ctqqqq"-'''.''-WcW...c
-.cctqqt"'''''.'WWcWW..c
+`c.qqq-"W-''.'''-cP...c
+`ctqqqq"-'''.''-WcW...c
+`cctqqt"'''''.'WWcWW..c
   cc++"""""tt__WccWW6.c
   c...."PP_____WWcWW..c
   c;;..+._____WWWcW..Pc
@@ -3876,8 +3890,9 @@ NSUBST:  T = 2=009 / * = .ttt
 NSUBST:  aq = 1:= / c, p = +
 SHUFFLE: rsu
 NSUBST:  r = + / c, s = + / c
-SUBST:   u = c, " = `.., `? = `..., _ = t_
+SUBST:   u = c, " = `.., `? = `''', _ = t_
 KPROP:   ` = bloody
+FTILE:   ='`12%*|BS+ = floor_sprouting_stone
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
          size_max = 3, spread_rate = 33 }
@@ -4146,7 +4161,7 @@ ITEM:    spider talisman
 # Connect the endpoints of two random quarters, open one of them to the center,
 # rarely fray walls not between chambers, fringe the openings with plants.
 SHUFFLE: AB / CD / EF / GH, DFH
-SUBST:   P = P:35 @:25, z = x:49 f:1, BCDEG = x, AH = ., F : xxP
+SUBST:   P = P:35 @:25, z = x:49 f:1, BCDEG = x, AH = `, F : xxP
 # A fixed number of chaff scattered throughout each eighth, and an even
 # distribution of the various stronger spawns.
 NSUBST:  1 = 6:1 / 4 = 11. / *:., 0 = 8:1 / 6 = 11. / 2:2 / *:.
@@ -4155,6 +4170,8 @@ NSUBST:  8 = 1:7 / 1:6 / 2 = 34 / * = 34 5:15 "
 NSUBST:  ' = 1:R / *:"
 NSUBST:  % = 10:% / 2 = %" / *:", $ = 1 = d $:90 / *:$, x = 8:c / * = x
 KMASK:   %*'" = no_monster_gen
+FTILE:   `6f = floor_sprouting_stone w:15 / floor_lair
+FTILE:   '"7%* = floor_sprouting_squares w:15 / floor_lair
 : lair_small_ending(_G)
 MAP
       PPPcccxxcccPPP
@@ -4253,6 +4270,7 @@ SHUFFLE: PQ / SZ
 SUBST:   P = 4, Q = 11..., SZ = .
 SUBST:   a = tttxxc, p = p-, q = q., r = xxx.., - = .:100 Z, Z = 12345
 COLOUR:  t = brown
+FTILE:   .@de$%*|Y+s12345678&nt = floor_sprouting_stone
 TILE:    t = dngn_tree_dead
 TILE:    G = dngn_statue_elephant
 : set_feature_name("tree", "dead tree")
@@ -4303,6 +4321,7 @@ SHUFFLE: gb
 SUBST:   T = ttt., ? = ? `:90
 KPROP:   `? = bloody
 KMASK:   '"`456H = no_item_gen
+FTILE:   `+gG = floor_sprouting_stone
 FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
 TILE:    b = bedevilled_crystal_gehenna
@@ -4416,6 +4435,7 @@ NSUBST: . = 5:1 / 3 = 10 / 3:3 / 3 = 3.. / *:., ? = 1 = ? .:90 / *:.
 NSUBST: 2 = 8:2 / 18 = 2. / *:., 4 = 6:4 / 6 = 4. / *:.
 NSUBST: 5 = 1:5 / *:6, 9 = 2:6 / 2 = 56 / *:4
 NSUBST: * = 1:| / *:*
+FTILE:  .123456$*|?RCTGt = floor_grass_dark
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -4439,7 +4459,7 @@ ttttT..tttttttttttttE      EEttttTC$TttttE
 ttttT..TtttttttttttE          ttttttttt
 ttttt...ttttttttttE            ttttttt
 tttttT..TttttttE                 EEE
-ttttttt.@ttE
+ttttttt'@ttE
 ttttttE
 tttE
 tE
@@ -4519,28 +4539,30 @@ MONS:    catoblepas / mountainshell w:2, death yak band
 MONS:    elephant, wolf, black bear / polar bear
 KMONS:   P = plant / fungus w:2 / bush w:1
 : kitem("d = " .. vault_species_skeletons(_G, "dungeon"))
-ITEM:    hive talisman
+KITEM:   e = hive talisman
 KITEM:   R = earthy gem
 SHUFFLE: 567
-SUBST:   C = cx.., P = P .:9 t:1
-NSUBST:  % = 2:| / 3:* / 1 = e %:90 /*:%
+SUBST:   C = cx'', P = P .:9 t:1
+NSUBST:  % = 2:| / 3:* / 1 = e %:90 / *:%
 NSUBST:  5 = 3:5 / 3 = 5. / *:., 6 = 3:6 / 4 = 6. / *:., 7 = 2:7 / 2 = 7. / *:.
+FTILE:   '34d = floor_sprouting_stone / floor_sprouting_squares w:5 / floor_lair
+FTILE:   12e%*|G = floor_sprouting_squares
 MAP
                 xxxxxxxxxxxxxx
           xxxxxxx5P.Pxxxxxxxxx
          xxP..5.5..P..xxxxxxxx
         xxP5d5.5.5P.P..xxP.xxx
        xx.5.5.5ccccccc....P..x
-       x...5.ccc.d...ccc.P..xx
-      xx.P.ccc..d......d...Px
-     xx..ccc...G..C..3..d..xx
-    xx..ccc.G....CcC..4..c.x
-    x.P.ccc..d..CcCcC...cc.x
-    x..ccc%.G..GRCcC...ccP.x
-   xx..ccc%%.2.dG.C..d.c...x
-   x...cccc%%.1.....G.ccP..x
-   x.P.ccccc%%.Gd.G...c..P.x
-  xx....ccccc%%.....ccc...xx
+       x...5.ccc'd'''ccc.P..xx
+      xx.P.ccc''d''''''d...Px
+     xx..ccc'''G''C''3''d..xx
+    xx..ccc'G''''CcC''4''c.x
+    x.P.ccc''d''CcCcC'''cc.x
+    x..ccc%'G''GRCcC'''ccP.x
+   xx..ccc%%'2'dG'C''d'c...x
+   x...cccc%%'1'''''G'ccP..x
+   x.P.ccccc%%'Gd'G'''c..P.x
+  xx....ccccc%%'''''ccc...xx
  xx.d..Pccccccc%cccccP.6..x
 xx.P..7..cccccccc.P.6.6.Pxx
 ..7..7.7P..ccP..P6.6d6.Pxx
@@ -4599,6 +4621,7 @@ NSUBST:  - = 12=1W / 8=2W / 4=3W / 2=4WWW / W, ' = 4=2W / 8=3W / 5 / W
 # Ruin statues, possibly place inner chamber doors. Also replace some shallow
 # water with floor and some with plants throughout the map.
 SUBST:   G = GGGW., + : +.W, W = W:125 .:10 p:10, " = W.
+FTILE:   .'TU = floor_sprouting_squares
 COLOUR:  c = white
 MAP
 """"""""""""""""""""""""
@@ -4663,7 +4686,9 @@ NSUBST:  ; = 3:5 / 3 = 15. / 1:2. / *:., ` = 3 = 5 / 3 = 15. / 1:2. / .
 NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:"
 NSUBST:  D = 1:R / 1 = ? $:90 / 1:|* / 2 = *% / 3 = $% / *:$
 NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
-KMASK:   "$%*|7 = no_trap_gen
+KMASK:   "$%*|78 = no_trap_gen
+FTILE:   ="$%*|78G = floor_sprouting_squares
+FTILE:   .123456 = floor_sprouting_stone
 TILE:    c = wall_stone_scorched
 MAP
                 xxxxxxx

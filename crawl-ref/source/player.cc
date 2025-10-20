@@ -1027,6 +1027,26 @@ bool player::unrand_equipped(int unrand_index, bool include_melded) const
         return you.equipment.unrand_active.get(unrand_index - UNRAND_START);
 }
 
+bool player::weapon_is_good_stab(const item_def *weapon) const
+{
+    const skill_type wpn_skill = weapon ? item_attack_skill(*weapon)
+                                        : SK_UNARMED_COMBAT;
+
+    return wpn_skill == SK_SHORT_BLADES
+           || you.get_mutation_level(MUT_PAWS)
+           || you.form == transformation::spider
+           || you.unrand_equipped(UNRAND_HOOD_ASSASSIN)
+              && (!weapon || is_melee_weapon(*weapon));
+}
+
+bool player::has_good_stab() const
+{
+    const item_def *weapon = you.weapon();
+    const item_def *offhand = you.offhand_weapon();
+
+    return you.weapon_is_good_stab(weapon) || you.weapon_is_good_stab(offhand);
+}
+
 bool player_can_hear(const coord_def& p, int hear_distance)
 {
     return !silenced(p)
@@ -3260,15 +3280,6 @@ int player_stealth()
     {
         stealth += (STEALTH_PIP * 2);
     }
-
-    // Radiating silence is the negative complement of shouting all the
-    // time... a sudden change from background noise to no noise is going
-    // to clue anything in to the fact that something is very wrong...
-    // a personal silence spell would naturally be different, but this
-    // silence radiates for a distance and prevents monster spellcasting,
-    // which pretty much gives away the stealth game.
-    if (you.duration[DUR_SILENCE])
-        stealth -= STEALTH_PIP;
 
     if (feat_is_water(env.grid(you.pos())))
     {
@@ -9184,8 +9195,11 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     if (!_ench_triggers_trickster(ench))
         return;
 
-    if (!you.can_see(victim) || !you.see_cell_no_trans(victim.pos()) || victim.friendly())
+    if (!you.can_see(victim) || !you.see_cell_no_trans(victim.pos())
+        || victim.friendly() || victim.is_firewood())
+    {
         return;
+    }
 
     const int min_bonus = 3 + you.experience_level / 6;
 

@@ -808,8 +808,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
-                    if (cell.halo == enums.HALO_UMBRA)
-                        this.draw_dngn(dngn.UMBRA, x, y);
+                    if (cell.halo >= enums.HALO_UMBRA_FIRST
+                        && cell.halo <= enums.HALO_UMBRA_LAST)
+                    {
+                        var variety = cell.halo - enums.HALO_UMBRA_FIRST;
+                        this.draw_dngn(dngn.UMBRA + variety, x, y);
+                    }
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
                     if (cell.quad_glow)
@@ -874,6 +878,42 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.draw_ray(x, y, cell);
         },
 
+        draw_submerged_tile: function(base_idx, idx, x, y, trans, img_scale)
+        {
+            this.ctx.save();
+            try
+            {
+                this.ctx.globalAlpha = trans ? 0.5 : 1.0;
+
+                this.set_nonsubmerged_clip(x, y, 20);
+
+                if (base_idx)
+                    this.draw_main(base_idx, x, y, img_scale);
+
+                this.draw_main(idx, x, y, img_scale);
+            }
+            finally
+            {
+                this.ctx.restore();
+            }
+
+            this.ctx.save();
+            try
+            {
+                this.ctx.globalAlpha = trans ? 0.1 : 0.3;
+                this.set_submerged_clip(x, y, 20);
+
+                if (base_idx)
+                    this.draw_main(base_idx, x, y, img_scale);
+
+                this.draw_main(idx, x, y, img_scale);
+            }
+            finally
+            {
+                this.ctx.restore();
+            }
+        },
+
         draw_foreground: function(x, y, map_cell, img_scale)
         {
             var cell = map_cell.t;
@@ -887,38 +927,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 var base_idx = cell.base;
                 if (is_in_water)
                 {
-                    this.ctx.save();
-                    try
-                    {
-                        this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
-
-                        this.set_nonsubmerged_clip(x, y, 20);
-
-                        if (base_idx)
-                            this.draw_main(base_idx, x, y, img_scale);
-
-                        this.draw_main(fg_idx, x, y, img_scale);
-                    }
-                    finally
-                    {
-                        this.ctx.restore();
-                    }
-
-                    this.ctx.save();
-                    try
-                    {
-                        this.ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
-                        this.set_submerged_clip(x, y, 20);
-
-                        if (base_idx)
-                            this.draw_main(base_idx, x, y, img_scale);
-
-                        this.draw_main(fg_idx, x, y, img_scale);
-                    }
-                    finally
-                    {
-                        this.ctx.restore();
-                    }
+                    this.draw_submerged_tile(base_idx, fg_idx, x, y,
+                                             cell.trans, img_scale);
                 }
                 else
                 {
@@ -931,9 +941,25 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 if (fg_idx >= main.PARCHMENT_LOW && fg_idx <= main.PARCHMENT_HIGH)
                 {
                     if (cell.overlay1)
-                        this.draw_main(cell.overlay1, x, y, img_scale);
+                    {
+                        if (is_in_water)
+                        {
+                            this.draw_submerged_tile(null, cell.overlay1, x, y,
+                                                     cell.trans, img_scale)
+                        }
+                        else
+                            this.draw_main(cell.overlay1, x, y, img_scale);
+                    }
                     if (cell.overlay2)
-                        this.draw_main(cell.overlay2, x, y, img_scale);
+                    {
+                        if (is_in_water)
+                        {
+                            this.draw_submerged_tile(null, cell.overlay2, x, y,
+                                                     cell.trans, img_scale)
+                        }
+                        else
+                            this.draw_main(cell.overlay2, x, y, img_scale);
+                    }
                 }
             }
             else if (options.get("tile_display_mode") == "hybrid")

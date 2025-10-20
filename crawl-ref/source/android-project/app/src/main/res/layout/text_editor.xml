@@ -27,6 +27,16 @@
             android:importantForAutofill="no"
             app:backgroundTint="@color/gray"/>
 
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/error"
+            android:text=""/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

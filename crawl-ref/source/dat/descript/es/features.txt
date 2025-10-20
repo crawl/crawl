@@ -1,43 +1,77 @@
+###############################################################################
+### Altars
+### Altares
+###############################################################################
 %%%%
-A basalt altar of Yredelemnul
+A glowing golden altar of the Shining One
 
-Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
-%%%%
-A bloodstained altar of Trog
-
-Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
-gigantes y cubierto con marcas de sangre.
+Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
+casi ciega.
 %%%%
 A blossoming altar of Fedhas
 
 Un altar a Fedhas Madash, cubierto con vibrante y colorida vida vegetal.
 %%%%
-A burning altar of Makhleb
+A candlelit altar of Ignis
 
-Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
-formas se pueden ver en las llamas.
-%%%%
-A closed door
-
-Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
+Un altar a Ignis el flama moriendo. Es cubierto con cirios de todas las formas y tamaños, pero solo uno permance encendido.
 %%%%
 A corrupted altar of Lugonu
 
 Un altar de Lugonu, posiblemente dedicado a algún otro poder antes de que fuera
 corrompido irrevocablemente.
 %%%%
-A crawl-hole back to the Lair
+A burning altar of Makhleb
 
-Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
+Un siempre ardiente altar de Makhleb el Destructor. Extrañas y retorcidas
+formas se pueden ver en las llamas.
 %%%%
 A deep blue altar of Sif Muna
 
 Un altar del azul más oscuro, cubierto de intrincadas formas y escrituras en
 alfabetos ya olvidados hace mucho, dedicado a Sif Muna.
 %%%%
-A dry fountain
+A bloodstained altar of Trog
 
-Una fuente reseca que ha visto días mejores.
+Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
+gigantes y cubierto con marcas de sangre.
+%%%%
+A basalt altar of Yredelemnul
+
+Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
+%%%%
+A glowing silver altar of Zin
+
+Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
+espera que sean los seguidores de Zin, y brillando gentilmente.
+%%%%
+###############################################################################
+### (Timed) Portals
+### Portales (Temporales)
+###############################################################################
+A frozen archway
+
+Este portal te lleva a una cueva de hielo. Está derritiéndose lentamente.
+%%%%
+A glowing drain
+
+Este pasaje te te lleva a un alcantarillado. Está oxidándose lentamente.
+%%%%
+A magical portal
+
+Un portal a un laboratorio de un mago. Está desvaneciéndose
+%%%%
+A collapsed entrance
+
+Un pasaje colapsado que no se puede ser utilizado.
+%%%%
+###############################################################################
+### Gateways (To Another Branch)
+### Puertas (A Otra Rama)
+###############################################################################
+A crawl-hole back to the Lair
+
+Puedes usarlo para volver a un sitio menos estresante y con menos telarañas.
 %%%%
 A gate leading back out of this place
 
@@ -46,6 +80,15 @@ Esta puerta te conduce de vuelta al calabozo.
 A gate leading to another region of Pandemonium
 
 Esta puerta te lleva a otra región más del Pandemonio. Siempre habrán más.
+%%%%
+A gate to the Realm of Zot
+
+Esta puerta va al Reino de Zot.
+%%%%
+A gate to the Vaults
+
+Esta puetra va a las bóvedas. Ten cuidado porque no puedes salir sin una runa
+de Zot, y la runa plata en el quinto piso está muy guardado.
 %%%%
 A gateway leading out of the Abyss
 
@@ -56,20 +99,26 @@ A gateway to Hell
 
 Este portal lleva al Vestíbulo del Infierno. Pocos irían allí voluntariamente.
 %%%%
-A glowing golden altar of the Shining One
+###############################################################################
+### Other
+### Otros
+###############################################################################
+A closed door
 
-Un altar de El Resplandeciente, hecho del oro más puro y de un resplandor que
-casi ciega.
+Una puera de madera. Para abrirla, simplemente camina hacia ella, o usa 'O'
 %%%%
-A glowing silver altar of Zin
+A dry fountain
 
-Un altar a Zin, quien dio las Leyes, hecho de una plata tan prístina como se
-espera que sean los seguidores de Zin, y brillando gentilmente.
+Una fuente reseca que ha visto días mejores.
 %%%%
 A granite statue
 
 A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
 hace tiempo.
+%%%%
+A gravestone
+
+Una tumba sin un nombre.
 %%%%
 A mechanical trap
 
@@ -80,6 +129,50 @@ A rock wall
 
 Una pared de roca sencilla.
 %%%%
+The floor
+
+{{
+    --Some of these lines may need to be broken up
+    local descript = "El piso."
+    if you.in_branch("D") then
+        descript = descript .. "\nEstá hecho de roca lisa."
+    elseif you.in_branch("Temple") then
+        descript = descript .. "\nHay musgo entredadera creciendo en lo."
+    elseif you.in_branch("Orc") then
+        descript = descript .. "\nVes pepitas pequeñas en lo."
+    elseif you.in_branch("Elf") then
+        descript = descript .. "\nTiene estampados místicos."
+    elseif you.in_branch("Lair") then
+        descript = descript .. "\nTe sientes los cantos regosos debajo de tus pies."
+    elseif you.in_branch("Swamp") then
+        if you.airborne() then
+            descript = descript .. "\nPuedes ver el barro patanoso."
+        else
+            --TODO: Check if player is wearing boots or even has feet.
+            descript = descript .. "\nPuedes sentir el barro patanoso en tus pies."
+        end
+    elseif you.in_branch("Shoals") then
+        descript = descript .. "\nPuedes oír el movimento de la arena debajo de tus pies."
+    elseif you.in_branch("Snake") then
+        descript = descript .. "\nTiene estampados sinuosos."
+    elseif you.in_branch("Spider") then
+        descript = descript .. "\nEn lo hay hilos finos -- y unos no-tan-finos -- de seda."
+    elseif you.in_branch("Slime") then
+        descript = descript .. "\nEstá cubierto en baba."
+    elseif you.in_branch("Vaults") then
+        descript = descript .. "\nHay salpicaduras de sangre en su superficie metálico."
+    elseif you.in_branch("Crypt") then
+        descript = descript .. "\nComo el aire, su superficie es frio."
+    --TODO: add descriptions for (the floors of) the rest of the branches (and sub-branches).
+    --Branches: Depths, Zot, Bazaar, Volcano, Ice Cave, Necropolis, Tomb, Pan, Hells, probably more
+    end
+    return descript
+}}
+%%%%
+###############################################################################
+### Old and Unused
+### Viejos y no usados
+###############################################################################
 A crystal clear mirror
 
 Un espejo reluciente, que refleja todo a su alrededor.

@@ -24,6 +24,7 @@ int mkstemp(char *dummy);
 #endif
 
 #ifdef __ANDROID__
+int jni_ref_display_size();
 bool jni_keyboard_control(int toggle);
 #endif
 

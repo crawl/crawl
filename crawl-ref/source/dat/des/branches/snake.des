@@ -252,20 +252,23 @@ CHANCE:  33%
 NAME:    hangedman_snake_thin_pillar_pass
 TAGS:    transparent extra snakedec
 WEIGHT:  6
+KFEAT:   z = c
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E = c...., ' = .
 : local Z = dgn.br_depth(you.branch())
 : if crawl.x_chance_in_y(Z - you.depth(), Z) then
-SUBST: c = x
+SUBST: zc = x
+: else
+TILE:  z = wall_stone_magic_shelf
 : end
 MAP
 x@.xxxxxxxxx.@x
 x......D......x
 xx.cA..c..Ac.xx
  x.....D.....x
- xx.cB.c.Cc.xx
+ xx.zB.c.Cz.xx
   x.........x
-  xx.cC.Bc.xx
+  xx.zC.Bz.xx
    x.......x
    xx.c.c.xx
     x.....x
@@ -276,19 +279,22 @@ ENDMAP
 NAME:    hangedman_snake_wide_pillar_pass
 TAGS:    transparent extra snakedec
 WEIGHT:  4
+KFEAT:   z = c
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E : c...., F : c...., ' = .
 : local Z = dgn.br_depth(you.branch())
 : if crawl.x_chance_in_y(Z - you.depth(), Z) then
-SUBST: c = x
+SUBST: cz = x
+: else
+:   tile("z = " .. crackle_def(_G))
 : end
 MAP
 x.xxx.@.xxxxxxxxxxxxx.@.xxx.x
 x...x.A......FDF......A.x...x
 xxx...c.B.....c.....C.c...xxx
-  xxx...c.C...c...B.c...xxx
+  xxx...c.C...z...B.c...xxx
     xxx...c.E...E.c...xxx
-      xxx...c...c...xxx
+      xxx...z...z...xxx
         xxx...D...xxx
           xxx.'.xxx
 ENDMAP
@@ -297,10 +303,12 @@ ENDMAP
 # a draft of evilmike's for something else entirely.
 NAME:    hangedman_snake_pattern
 TAGS:    transparent extra snakedec
+KFEAT:   z = c
 # Pillars, door positions, entrances.
 SHUFFLE: XYZ, aA-+ / aA-+ / aA-+ / Aa+- / Aa+-, ABCDE
-SUBST:   X : cx.., Y : cx...., Z = ., a = x, - : xx+, + : +++..
+SUBST:   X : cx.., Y : zx...., Z = ., a = x, - : xx+, + : +++..
 SUBST:   A : @@+, B : @@++..x, C : @+...xxx, DE = x
+: tile("z = " .. crackle_def(_G))
 MAP
    xxBxxxxxxxCxxxxxxxDxxxxxxxxExxxxxx
   xx...xx.........xx...xx.........xx
@@ -504,19 +512,21 @@ xx...xxxx...xxxxx...xx
     xxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_snake_single_loop
-TAGS: transparent extra snakedec
+NAME:  nicolae_snake_single_loop
+TAGS:  transparent extra snakedec
+SUBST: c : cx
+: tile("c = " .. crackle_def(_G))
 MAP
  xxxxxxx
 xx.....xx
 x.......xx
-@...x...xxx
+@...c...xxx
 @..xxx..xxxx
 xxxxxx..xxxxx
 xx...+..+...xx
 x....+..+....x
 x...xx..xx...x
-x..xxx..xxx..x
+x..cxx..xxc..x
 x...x...xx...x
 x.......x....x
 xx.....xx...xx
@@ -527,18 +537,20 @@ NAME:    nicolae_snake_double_loop
 TAGS:    transparent extra snakedec
 SHUFFLE: AB, CD
 SUBST:   AC = ., BD = +
+SUBST:   z : cxx, c : ccx
+TILE:    c = wall_stone_magic_shelf
 MAP
  xxxxxxx    xxxxxxx
 xx.....xxxxxx.....xx
 x.......xxxx.......x
-@...x...xxxx...x...x
+@...x...xxxx...z...x
 @..xxx..xxxx..xxx..x
-xxxxxxBBxxxxCCxxx..x
+xxxxxxBBxcxxCCxx...x
 xx...A..A..D..D....x
 x....A..A..D..D...xx
-x...xxBBxxxxCCxxxxxx
+x...xxBBxxcxCCxxxxxx
 x..xxx..xxxx..xxx..@
-x...x...xxxx...x...@
+x...z...xxxx...x...@
 x.......xxxx.......x
 xx.....xxxxxx.....xx
  xxxxxxx    xxxxxxx
@@ -1891,11 +1903,12 @@ KMONS:   D = patrolling Aizul, patrolling guardian serpent
 KMONS:   E = naga mage / guardian serpent
 : end
 SHUFFLE: ]})>
-SUBST:   ) = )>
+SUBST:   ) = )>, z : cxx, c : ccx
 NSUBST:  E = D / E
+TILE:    c = wall_stone_magic_shelf
 MAP
  xxx.@.xxx
-xx.E...E.xx
+xz.E...E.cx
 x.........x
 xE.......Ex
 ....].>....
@@ -1903,7 +1916,7 @@ xE.......Ex
 ....).}....
 xE.......Ex
 x.........x
-xx.E...E.xx
+xc.E...E.zx
  xxx.@.xxx
 ENDMAP
 
@@ -1988,7 +2001,9 @@ MONS:    anaconda / mana viper / shock serpent w:5, patrolling guardian serpent
 MONS:    patrolling black mamba
 SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
 SHUFFLE: 1234 / 1234 / 1212 / 3434
-SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
+SUBST:   hijk = ., H : xx., I : xx., J : xx., K : xx., % = $%
+FTILE:   .1234$% = floor_mystic_chasm
+FTILE:   @5 = floor_rough_lightblue
 MAP
 xxxxxxxxx@5@xxx
 xccccccccc...xxx
@@ -2014,8 +2029,10 @@ ENDMAP
 NAME:    hangedman_snake_corridor_split
 TAGS:    no_monster_gen transparent allow_dup
 MONS:    naga, black mamba, naga warrior, anaconda, naga mage, guardian serpent
-SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12
+KFEAT:   z = c
+SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12, z : zzzcx
 SHUFFLE: 34, 56, 3456 / 3456 / 3456 / 3535 / 4646 / 3636 / 4545 / 3434 / 5656
+TILE:    z = wall_stone_magic_shelf
 MAP
     xxxxxxx
    xxxxxxxxx
@@ -2023,12 +2040,12 @@ MAP
 xxxxx..X..xxxx
 xxxx..X%X.3xxxxx
 xx1..X%..X.4xxxx
-xx2YY..x..X.0.xxxxxxxxx
-x..YY.xxx..YY.xxxxxxxxx.@.
+xx2YY..x..X.0.zxxxxxxxx
+x..YY.xxx..YY.xzxxxxxxx.@.
 ..X.21xxxx.*Y...xxxxxx..X@
 @X..xxxxxx...Y*.xxxx12.X..
-.@.xxxxxxxxx.YY..xxx.YY..x
-   xxxxxxxxx.0.X..x..YY2xx
+.@.xxxxxxxzx.YY..xxx.YY..x
+   xxxxxxxxz.0.X..x..YY2xx
           xxxx6.X..%X..1xx
           xxxxx5.X%X..xxxx
             xxxx..X..xxxxx
@@ -2144,26 +2161,31 @@ KITEM:   4 = $
 KMONS:   123 = anaconda / black mamba / shock serpent / mana viper / \
          sea snake / water moccasin
 KMONS:   4 = guardian serpent
-SUBST:   ' = 1 .:25
+SUBST:   ' = 1 .:25, c : ccx
 SHUFFLE: }])
+TILE:    c = wall_stone_magic_shelf
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx'''''xxxxxxxxxxxxx.4%%*x
-xxxxxxxx'''''''''xxxxxxxxx''.4%*|x
-xxxxxxx'''''''''''xxxxxxx'''.4%%*x
-xxxxx.'''''xxx''''''xxx'''''.xxxxx
-x.....'''xxxxxxx'''''''''''xxxxxxx
-x.}...''xxxxxxxxx'''''''''xxxxxxxx
-x.....xxxxxxxxxxxxx'''''xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcxxx
+xxxxxxxxxx'''''xxxxxxxxxxxxx.4%%*xx
+xxxxxxxx'''''''''xxxxxxxxx''.4%*|cx
+xxxxxxx'''''''''''xxxxxxx'''.4%%*xx
+xxxxx.'''''xxx''''''xxx'''''.xxcxxx
+x.....'''xxxxxxx'''''''''''xxxxxxxx
+x.}...''xxxxxxxxx'''''''''xxxxxxxxx
+x.....xxxxxxxxxxxxx'''''xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
 NAME:   nicolae_snake_boneroom
 TAGS:   transparent
-MONS:   naga ritualist band / naga sharpshooter band / naga warrior band \
-        / naga mage band / nagaraja w:5
+MONS:   naga ritualist band / naga sharpshooter band / naga warrior band / \
+        naga mage band / nagaraja w:5
+KFEAT:  z = c
 NSUBST: E = . / 1, F = . / 1, q = | / 2=* / 3=% / $.
+FTILE:  .$%*|1+ : floor_mystic_chasm / floor_mosaic
+TILE:   z = wall_stone_magic_shelf
 MAP
 xxx+xxxxxxxxxxxxxxxxxxxxxxx
 xcc.ccccccccccccccccccccccx
@@ -2173,7 +2195,7 @@ xcc.ccc.E.c.c..E..c.c.E.ccx
 xc...c....ccc.....ccc....cx
 xcc.ccc.ccc.ccc.cccqccc.ccx
 xc...cq.qc...c...cq.qc...cx
-xcc.ccc.ccc.c+c.ccc.ccc.ccx
+xcc.ccz.zcc.c+c.ccz.zcc.ccx
 xc...cq.qc...c...cq.qc...cx
 xcc.cccqccc.ccc.ccc.ccc.ccx
 xc....ccc.....ccc....c...cx
@@ -2227,6 +2249,7 @@ NAME:    nicolae_snake_crotalidae_crossing
 TAGS:    transparent
 ORIENT:  float
 KMONS:   0 = 0 / 0 band
+KFEAT:   z = c
 : if you.depth() == 1 then
 SUBST:   S = )}]
 : elseif you.depth() ~= dgn.br_depth(you.branch()) then
@@ -2236,6 +2259,7 @@ SUBST:   S = ({[
 : end
 SHUFFLE: DE
 SUBST:   D = c, E = ., 0 = 00.
+TILE:    z = wall_stone_magic_shelf
 MAP
 @.0.cc                 cc.0.@
 .....cc               cc.....
@@ -2247,15 +2271,15 @@ cc...Dc..cc       cc...DE..cc
   cc...c...cc   cc..EcD..cc
    cc..ED...cc cc..cD...cc
     cc..cE...ccc..DE...cc
-     cc..DcE..c...c...cc
+     cc..DcE..z...c...cc
       cc...Dc...DDE..cc
        cc..Dc.0.cc..cc
         cc.........cc
-         cc.0.S.0.cc
+         cz.0.S.0.zc
         cc.........cc
        cc..cc.0.cD..cc
       cc..EDD...cD...cc
-     cc...c...c..EcD..cc
+     cc...c...z..EcD..cc
     cc...ED..ccc...Ec..cc
    cc...Dc..cc cc...DE..cc
   cc..DcE..cc   cc...c...cc
@@ -2375,8 +2399,8 @@ NAME:    nicolae_snake_mages_go_home
 TAGS:    transparent
 MONS:    mana viper
 MONS:    naga w:20 ; any weapon ego:antimagic / \
-            naga warrior ; any weapon ego:antimagic / \
-            salamander ; any weapon ego:antimagic
+         naga warrior ; any weapon ego:antimagic / \
+         salamander ; any weapon ego:antimagic
 SHUFFLE: DE/FH
 SUBST:   M = 1:30 2:5 .:80, N = 2:30 1:5 .:80
 SUBST:   D = c, E = %:30 *:20 .:40, FH = .:100 1 2
@@ -2398,34 +2422,37 @@ ENDMAP
 
 NAME:    nicolae_snake_magic_snake_eye
 TAGS:    patrolling transparent
-ITEM:    any book, any wand / any magical staff, any jewellery / any wand
-ITEM:    any scroll, any potion
 MONS:    naga mage / naga ritualist / naga sharpshooter / salamander mystic
 MONS:    nagaraja / salamander tyrant
 MONS:    naga mage band / naga ritualist band / naga sharpshooter band / \
          salamander mystic band
+ITEM:    any book, any wand / any magical staff, any jewellery / any wand
+ITEM:    any scroll, any potion
+KITEM:   $ = $ no_pickup
 SHUFFLE: dD / eE / fF / gG, gG / hH
 SUBST:   D = ., E = ., F = ., G = g.., H = h..
 NSUBST:  J = 1 / 2=1.. / 3 / ., K = 2=1 / 2=1.. / 2 / 3 / .
 NSUBST:  L = 2=1 / 2=1.. / 2 / 3 / .
+FTILE:   .$defgh123+ = floor_mystic_chasm
+: snake_statue_setup(_G, "Z")
 MAP
 xxxxxxx       xxxxxxx
 xxxxxccccc+cccccxxxxx
-xxxxcc.Ddc.ceE.ccxxxx
-xxxcc.KDcc.ccEL.ccxxx
-xxcc....c...c....ccxx
+xxxxcc$Ddc.ceE$ccxxxx
+xxxcc$KDcc.ccEL$ccxxx
+xxcc$...c...c...$ccxx
 xxc..K.cc.J.cc.L..cxx
 xcc....c.....c....ccx
 xc..K..c..J..c..L..cx
-xc.....c.....c.....cx
-xc..K..+..J..+..L..cx
-xc.....c.....c.....cx
+xc.....c..J..c.....cx
+xc..K..+..Z..+..L..cx
+xc.....c..J..c.....cx
 xc..K..c..J..c..L..cx
 xcc....c.....c....ccx
 xxc..K.cc.J.cc.L..cxx
-xxcc....c...c....ccxx
-xxxcc.KFcc.ccGL.ccxxx
-xxxxcc.Ffc.cgG.ccxxxx
+xxcc$...c...c...$ccxx
+xxxcc$KFcc.ccGL$ccxxx
+xxxxcc$Ffc.cgG$ccxxxx
 xxxxxccccc+cccccxxxxx
 xxxxxxx       xxxxxxx
 ENDMAP
@@ -2439,17 +2466,18 @@ KITEM:  2 = |
 KITEM:  * = *
 # Seven 1s on-average.
 SUBST:  S = 2...
+FTILE:  .123*+ = floor_mystic_chasm
 MAP
  xxxxxxxxxxxxx
  xxxxxcccccxxx
  xxxxxcSSScxxx
  xxxccc.c.cccxxxxxxxxxxxxx
 xxxxcS..S..Scccccccccxxxxx
-.Gccc.cScSc.ccc1...1cccccx
-..c...S.S.S..Sc.....c%**cx
-@.+.cScSc1cScS+..3..+%*2cx
-..c...S.S.S..Sc.....c%**cx
-.Gccc.cScSc.ccc1...1cccccx
+'Gccc.cScSc.ccc1...1cccccx
+''c...S.S.S..Sc.....c%**cx
+@'+.cScSc1cScS+..3..+%*2cx
+''c...S.S.S..Sc.....c%**cx
+'Gccc.cScSc.ccc1...1cccccx
 xxxxcS..S..Scccccccccxxxxx
  xxxccc.c.cccxxxxxxxxxxxxx
  xxxxxcSSScxxx
@@ -2670,13 +2698,15 @@ TAGS:  transparent
 KMONS: 0 = 0 / 0 band
 KMONS: 9 = 9 / 9 band
 KMONS: 8 = 8 / 8 band
+KFEAT: z = c
 SUBST: 0 = 00., 9 = 99.
+: tile("z = " .. crackle_def(_G))
 MAP
      ccccccc         ccccccc
    ccc.....ccc     ccc.....ccc
   cc....9....cc   cc....8....cc
  cc...........cc cc...........cc
-cc..0.ccccc.0..ccc..0.ccccc.0..cc
+cc..0.cczcc.0..ccc..0.cczcc.0..cc
 cc...ccccccc...ccc...ccccccc...cc
 c...ccccccccc...c...ccccccccc...c@@@ ccc
 c.0.cc.ccc.cc.0.c.9.cc|ccc*cc.9.c...cc.cc
@@ -2684,7 +2714,7 @@ c...+...c...+...c...+...c...+...c...+...c
 cc.cc...c.9.cc*ccc|cc.9.c.0.cc.ccc.cc.0.c
  ccc @@@c...ccccccccc...c...ccccccccc...c
         cc...ccccccc...ccc...ccccccc...cc
-        cc..0.ccccc.0..ccc..0.ccccc.0..cc
+        cc..0.cczcc.0..ccc..0.cczcc.0..cc
          cc...........cc cc...........cc
           cc....8....cc   cc....9....cc
            ccc.....ccc     ccc.....ccc
@@ -2696,20 +2726,22 @@ TAGS:  patrolling transparent
 KMONS: 0 = 0 / 0 band
 KMONS: 9 = 9 / 9 band
 KMONS: 8 = 8 / 8 band
+KFEAT: z = c
 SUBST: 0 = 0:50 9 .:60, 9 = 9:50 8
+TILE:  z = wall_stone_magic_shelf
 MAP
  cccccccc
-cccccccccc
+cccccczccc
 cc9..%*|cc.....@
 cc.8.%*|cc......
-cc..9ccccc..cc..
+cc..9czccc..cc..
 cc..ccccc0..cc..
 cc.0....0.09....
 cc0....0..90....
 ccccc.0.cc..0cccc
  ccccc.0cc.0cccccc
     cc9.0.0.cc||cc
-    cc.9.0..cc**cc
+    cc.9.0..cz**zc
     ccccc...cc%%cc
      ccccc..c9..cc
         cc.0..8.cc

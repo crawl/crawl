@@ -113,7 +113,7 @@ const Branch branches[NUM_BRANCHES] =
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME, NUM_FEATURES,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
-      GREEN, BROWN,
+      BROWN, BROWN,
       'M', { RUNE_SLIME }, branch_noise::quiet, 7,
       {BRANCH_LAIR, BRANCH_VAULTS } },
 

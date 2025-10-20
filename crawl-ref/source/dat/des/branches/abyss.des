@@ -71,11 +71,13 @@ ENDMAP
 
 NAME:    abyss_entry_small_statue_room
 TAGS:    nolayout_encompass
+SUBST:   c : cx
+: tile("c = " .. crackle_def(_G))
 : abyss_entry(_G, 'O')
 MAP
-xxxxx
+cxxxc
 xGOGx
-xx+xx
+cx+xc
 ENDMAP
 
 NAME:    abyss_entry_crystal
@@ -170,18 +172,20 @@ MONS:   occultist, occultist ; robe . dagger ego:distortion / orc wizard
 MONS:   deep elf demonologist / deep elf sorcerer w:5
 : mons("deep elf demonologist ; robe . " .. elfgear .. " / " ..
 :      "deep elf sorcerer w:5 ; robe . " .. elfgear)
-NSUBST: 1 = 1:1 / 1 = 1:90 2 / 1 = 3:90 4 / *:.
+NSUBST: 1 = 1:1 / 1 = 1:90 2 / 1 = 3:90 4 / *:'
 : abyss_entry(_G, 'O')
+FTILE:  " = floor_pebble_blue
+FTILE:  '1234O : floor_mystic_chasm / floor_pebble_blue
 MAP
    ......
   ..bbbb..
- ..b....b..
-..b......b..
-.b..bb1..b...
-...b.1O1.b...
-...b..1bb..b.
- ..b......b..
-  ..b....b..
+ ..b''''b..
+..b''''''b..
+.b''bb1''b...
+.""b'1O1'b"".
+...b''1bb''b.
+ ..b''''''b..
+  ..b''''b..
    ..bbbb..
     ......
 ENDMAP
@@ -220,26 +224,27 @@ SUBST:   - : xc++., 0 = 123, D : x.., E : x..
 SHUFFLE: AO
 : vault_metal_statue_setup(_G, "G", "dimensional conduit")
 : abyss_entry(_G, 'O')
+FTILE:   .123AO+G : floor_mystic_chasm / floor_grey_dirt_b
 MAP
-    x...@..xx..
-   xxx....xx....@
-  xx.xx..cc......
- xx...xx++........
+    x'''@''xx''
+   xxx....xx..''@
+  xx.xx..cc....''
+ xx...xx++......''
 xx..D..+-+..E...xxx
-.x.....++xx....xxAx
-..x...cc..x...xx0.x
- ..x.xx...xx.xx1..x
- @..xx..G..xxx....x
-   .x2.....+.....3x.
-    x....xxx..G..xx..@
-    x..1xx.xx...xx.x..
-    x.0xx...x..cc...x..
-    xOxx....xx++.....x.
+'x.....++xx....xxAx
+''x...cc..x...xx0.x
+ ''x.xx...xx.xx1..x
+ @''xx..G..xxx....x
+   'x2.....+.....3x'
+    x....xxx..G..xx''@
+    x..1xx.xx...xx.x''
+    x.0xx...x..cc...x''
+    xOxx....xx++.....x'
     xxx...E..+-+..D..xx
-     ........++xx...xx
-      ......cc..xx.xx
-      @....xx....xxx
-        ..xx..@...x
+     ''......++xx...xx
+      ''....cc..xx.xx
+      @''..xx....xxx
+        ''xx''@'''x
 ENDMAP
 
 ###############################################################################
@@ -1386,26 +1391,27 @@ NSUBST:  0 = 1:0 / 1:9 / * = 09
 NSUBST:  X = 1:1 / 1:2 / 1:3 / * = 123"", Q = 1:6 / 1:7 / * = 67...
 SHUFFLE: 12, 45
 FTILE:   A123O = floor_crystal_squares
+FTILE:   .4567890O+ = floor_mystic_chasm
 COLOUR:  123O = lightmagenta
 MAP
-    ...
-   ..c....
+    ..'
+   '.c..'.
   ..cc0.c.
- ..ccc"......
+ '.ccc"..'..'
 ..cccccccccc..
-..0ccc.4cc.cc..
-..cc9+cc+...nc.
-."c.5.cc..X..c.
+'.0ccc.4cc.cc..
+..cc9+cc+...nc'
+'"c.5.cc..X..c.
 .ccc+ccc.XcX.c.
-.....Q.c..X8.c.
-..Q.A..cn...nc.
+.....Q.c..X8.c'
+'.Q.A..cn...nc.
 .....Q..ccOcc..
 .ccccc..8ccc".0
-.ccc"ccccc"cc..
+'ccc"ccccc"cc.'
 .ccc...0....cc.
-............c0.
-           .cc.
-           ....
+.'..'...'...c0.
+           'cc.
+           ...'
 ENDMAP
 
 NAME:   doesnt_abyss_rune_brain_food
@@ -1790,6 +1796,7 @@ FTILE:   -+U4680BDFO = floor_hall
 FTILE:   .t23579ACE = floor_grass_dark
 FTILE:   a1 = floor_crystal_squares
 TILE:    x = wall_hall
+: tile("c = " .. crackle_def(_G))
 TILE:    t = dngn_demonic_tree_1 / dngn_demonic_tree_8 / \
              dngn_demonic_tree_9 / dngn_demonic_tree_16
 MAP

@@ -469,7 +469,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
-        new BoolGameOption(SIMPLE_NAME(equip_unequip), false),
+        new BoolGameOption(SIMPLE_NAME(equip_unequip), true),
         new BoolGameOption(SIMPLE_NAME(jewellery_prompt), false),
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),

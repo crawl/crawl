@@ -1107,24 +1107,26 @@ ENDMAP
 NAME:  minmay_elf_demonology
 TAGS:  misc_elf_vault transparent
 DEPTH: Elf
-MONS:  deep elf pyromancer / deep elf zephyrmancer / nothing w:20
-KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
-KITEM: 2 = randbook disc:summoning slevels:16
+KMONS: 12 = deep elf pyromancer / deep elf zephyrmancer
+KMONS: 3 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
+KITEM: 3 = randbook disc:summoning slevels:16
+SUBST: 1 = 1., 2 = 2'
+FTILE: '23% : floor_mystic_chasm / floor_hall
 MAP
         ..
        ....
       ......
      ..1xx...
-    ...xxxx...
-   ....xxxx1.1.
-  ...1..xx......
- ..xx.....1..xx1.
-..xxxx..xx..xxxx..
-..xxxx1x.2x.xxxx..
- ..xx..x%.x..xx..
-  ..1...xx....1.
-   ..xx....xx1.
-   .xxxx..xxxx.
+    ..'xxxx'..
+   ..''xxxx2'1.
+  ..'2''xx''''..
+ ..xx'''''2''xx1.
+..xxxx''xx''xxxx..
+..xxxx2x'3x'xxxx..
+ ..xx''x%'x''xx..
+  .'2'''xx''''2.
+   .'xx''''xx2.
+   .xxxx''xxxx.
    .xxxx1.xxxx.
    ..xx...1xx..
     ..1.......

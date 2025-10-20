@@ -2326,10 +2326,11 @@ ORIENT:  float
 MONS:    plant / bush w:2
 KFEAT:   B = book shop
 KFEAT:   C = jewellery shop
-SUBST:   1 : 1.
-SUBST:   1 = 1:9 .:1
+SUBST:   1 : 1., 1 = 1:9 .:1
 SUBST:   x : xc v:2 b:2
 SHUFFLE: BC
+FTILE:   @At = floor_moss
+FTILE:   .1BCT = floor_sprouting_squares
 # The empty arch is intentional!
 MAP
   xxxxxxx
@@ -2519,18 +2520,19 @@ KFEAT:  ^ = web
 KFEAT:  s = abandoned_shop
 KFEAT:  S = antiques shop / antique weapon shop / antique armour shop
 NSUBST: S = 2:S / 2:s / Ss
-SUBST:  t = ttt`, ` = 111^....
-COLOUR: t = lightgrey / darkgrey
+SUBST:  t = ttt`, ` = 111^````
+COLOUR: t = brown
+FTILE:  '`_V1sS^t = floor_pebble_darkgray
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
 xxxxxxxxxxxxx
 xxxxxtStxxxxx
-xxtSt...tStxx
-.```.```.```.
-@`V`.`_`.`V`@
-.```.```.```.
-xxtSt...tStxx
+xxtSt'''tStxx
+.```'```'```.
+@`V`'`_`'`V`@
+.```'```'```.
+xxtSt'''tStxx
 xxxxxtStxxxxx
 xxxxxxxxxxxxx
 ENDMAP

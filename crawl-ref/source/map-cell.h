@@ -26,12 +26,15 @@
 
 /* these flags require more space to serialize: put infrequently used ones there */
 #define MAP_EXCLUDED_STAIRS  0x10000
+#define MAP_BLOOD_WEST       0x20000
+#define MAP_BLOOD_NORTH      0x40000
 #define MAP_SANCTUARY_1      0x80000
 #define MAP_SANCTUARY_2     0x100000
 #define MAP_WITHHELD        0x200000
 #define MAP_LIQUEFIED       0x400000
 #define MAP_ORB_HALOED      0x800000
 #define MAP_UMBRAED        0x1000000
+#define MAP_OLD_BLOOD      0x2000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
 #define MAP_BLASPHEMY     0X10000000
@@ -312,6 +315,18 @@ struct map_cell
     {
         return _trap;
     }
+
+#ifdef USE_TILE
+    char blood_rotation() const noexcept
+    {
+        char result = 0;
+        if (flags & MAP_BLOOD_WEST)
+            result += 1;
+        if (flags & MAP_BLOOD_NORTH)
+            result += 2;
+        return result;
+    }
+#endif
 
 public:
     uint32_t flags = 0;   // Flags describing the mappedness of this square.

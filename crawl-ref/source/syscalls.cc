@@ -51,6 +51,21 @@ Java_org_libsdl_app_SDLActivity_nativeSaveGame(
         save_game(false);
 }
 
+int jni_ref_display_size()
+{
+    JNIEnv *env = Android_JNI_GetEnv();
+    jclass sdlClass = env->FindClass("org/libsdl/app/SDLActivity");
+
+    if (!sdlClass)
+        return 0;
+
+    jmethodID mid =
+        env->GetStaticMethodID(sdlClass, "jniRefDisplaySize", "()I");
+    jint size = env->CallStaticIntMethod(sdlClass, mid);
+
+    return size;
+}
+
 bool jni_keyboard_control(int action)
 {
     JNIEnv *env = Android_JNI_GetEnv();

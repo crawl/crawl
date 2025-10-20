@@ -50,6 +50,10 @@
 #include "view.h"
 #include "windowmanager.h"
 
+#ifdef __ANDROID__
+# include "syscalls.h"
+#endif
+
 #ifdef TARGET_OS_WINDOWS
 # include <windows.h>
 #endif
@@ -73,11 +77,11 @@ static int _screen_sizes[4][8] =
 // width, height, map, crt, stat, msg, tip, lbl, view scale, map scale
 static int _screen_sizes[5][10] =
 {
-    {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
-    {720, 720, 1, 13, 15, 15, 13, 13, 130, 80},
-    {640, 640, 1, 12, 14, 14, 12, 12, 120, 70},
+    {800, 800, 1, 15, 17, 17, 15, 15, 148, 74},
+    {720, 720, 1, 13, 15, 15, 13, 13, 132, 66},
+    {640, 640, 1, 12, 14, 14, 12, 12, 120, 60},
     {540, 540, 1, 10, 12, 12, 10, 10, 100, 50},
-    {480, 480, 1, 9, 11, 11, 9, 9, 90, 40}
+    {480, 480, 1, 9, 11, 11, 9, 9, 90, 45}
 };
 #endif
 
@@ -282,10 +286,10 @@ void TilesFramework::calculate_default_options()
         //     * game scale  => 2
         //     * screen size => 540x540 (usually it can be rotated)
         int adjust_scale = 1;
-        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
+        int ref_display_size = jni_ref_display_size();
+        if (Options.game_scale == ref_display_size/960+1)
             adjust_scale = Options.game_scale;
-        if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
-            && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
+        if (ref_display_size >= (_screen_sizes[auto_size][0]*adjust_scale))
 #endif
         {
             break;
@@ -1012,16 +1016,9 @@ void TilesFramework::do_layout()
 bool TilesFramework::is_using_small_layout()
 {
     if (Options.tile_use_small_layout == maybe_bool::maybe)
-#ifndef __ANDROID__
         // Rough estimation of the minimum usable window size
-        //   - width > stats font width * 45 + msg font width * 45
-        //   - height > tabs area size (192) + stats font height * 11
         // Not using Options.tile_font_xxx_size because it's reset on new game
-        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*45)
-            || m_windowsz.y < (int)(192+m_stat_font->char_height()*11);
-#else
-        return true;
-#endif
+        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*55);
     else
         return bool(Options.tile_use_small_layout);
 }

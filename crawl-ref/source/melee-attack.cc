@@ -3252,11 +3252,7 @@ void melee_attack::player_stab_check()
  */
 bool melee_attack::player_good_stab()
 {
-    return wpn_skill == SK_SHORT_BLADES
-           || you.get_mutation_level(MUT_PAWS)
-           || you.form == transformation::spider
-           || you.unrand_equipped(UNRAND_HOOD_ASSASSIN)
-              && (!weapon || is_melee_weapon(*weapon));
+    return you.weapon_is_good_stab(weapon);
 }
 
 /* Select the attack verb for attacker

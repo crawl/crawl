@@ -1061,6 +1061,8 @@ SUBST:  1 = 2.
 : else
 SUBST:  1 = 1., 3 = 11.
 : end
+FTILE:  ' = floor_rough_blue
+FTILE:  .123d = floor_mystic_chasm
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1090,7 +1092,7 @@ xx....................1xxx.........xxx.................xxx.........xx
 x........................x.........xxx..................xx..........x
 xx..................................xx.............................xx
 x...................................................................x
-xx.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.xx
+xx'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'xx
 ENDMAP
 
 NAME:   minmay_three_patterns

@@ -629,8 +629,9 @@ TAGS:    transparent extra no_pool_fixup decor
 MONS:    bush
 SHUFFLE: AB, CD, EF, GH, IJ / IJ / JI
 SUBST:   A : tww.., C : tww.., E : t., G = t.
-SUBST:   I = wt1GT., BDF = t, H = .
+SUBST:   I = wt1GT., BDF = t, HJ = .
 KMASK:   wW = no_monster_gen
+FTILE:   .@1GTt = floor_sprouting_stone
 MAP
    tt.tt@tt@tt.tt
    tt.tt.tt.tt.tt
@@ -699,6 +700,7 @@ TAGS:  transparent extra decor no_pool_fixup
 KMONS: S = sacred lotus
 KFEAT: C = altar_elyvilon / altar_fedhas / altar_wu_jian
 SUBST: S = SSw
+FTILE: .@C = floor_sprouting_ruin
 MAP
 ttt     ttt
 ..ttttttt..
@@ -808,6 +810,7 @@ SHUFFLE: AB / AB / BA, CD / CD / DC, EF / EF / FE
 SUBST:   A = t, B = ., C : Pt~.., D = ., E = t, F = P
 KMASK:   ~ = no_monster_gen
 SUBST:   ~ = w
+FTILE:   .Pt = floor_sprouting_stone
 MAP
    .www.www.
   .w...w...w.
@@ -1223,6 +1226,7 @@ SHUFFLE: JKLMNO / ------ / -----q / ----q- / ----qq / ---q-- / ---q-q / \
          q-q-q- / q-q-qq / q-qq-- / q-qq-q / q-qqqq / qq---- / qq---q / \
          qq--q- / qq--qq / qq-q-- / qq-q-q / qq-qqq
 SUBST:   JKLMNOq = t, - = ., D = t_, p : t., P : t.
+FTILE:   .@t = floor_sprouting_stone
 CLEAR:   _
 MAP
    DDDDDDDDD
@@ -1570,6 +1574,7 @@ KMONS:   A = swamp dragon
 KMONS:   B = green draconian
 SUBST:   x = t
 NSUBST:  1 = 1:2 / 1:3 / * = 1:80 23
+FTILE:   .123AB%|Gx = floor_sprouting_ruin
 : else
 KMONS:   1 = green draconian
 KMONS:   a = death drake
@@ -1598,15 +1603,15 @@ MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
 MAP
          xxxxx
         @xWxWxxxx
-       @@......<xx
-    xxxxxxxxx...Zxx
-   xxxxxcxxx..x1.<x
-  xxxWWW.WWW.xGx..x
- xxxW1..W...W.x...xx
-xxxW...twt...W..x.Wx
-xxW1.t..t..t..Wxx.xx
-xxW...t.w.t...Wxx.Wx
-xxW.t..w|w..t.Wxx.xx
+       @@''''''<xx
+    xxxxxxxxx'''Zxx
+   xxxxxcxxx..x1'<x
+  xxxWWW.WWW.xGx''x
+ xxxW1..W...W.x.''xx
+xxxW...twt...W..x'Wx
+xxW1.t..t..t..Wxx'xx
+xxW...t.w.t...Wxx'Wx
+xxW.t..w|w..t.Wxx'xx
 xc.Wwtw|A|wtwW.cx@@
 xxW.t.%w|w..t.Wxx@
 xxW...t%w.t...Wxx
@@ -3151,6 +3156,7 @@ NSUBST:  2 = 5:2 / 2:. / * = 2.., 3 = 7:3 / 3:. / * = 3..
 : if crawl.one_chance_in(11) then
 SUBST:   4 = .:999 4:1, O = &
 : end
+FTILE:   .OR1234& = floor_sprouting_squares
 MAP
       -t-t-
      2-2-2-2
@@ -3348,6 +3354,7 @@ SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
 NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 1:2 / 2 = 211 / 6:1 / *:.
 NSUBST:  5 = 1:5 / 1:6 / 1:445563 / * = 556, 9 = 1:9 / * = 3
+FTILE:   .OR12345679T = floor_sprouting_ruin
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
              dngn_demonic_tree_12 / dngn_demonic_tree_13
@@ -3404,7 +3411,8 @@ NSUBST:  @ = 1:@ / *:.
 SHUFFLE: dDP / eE? / fF!, 123
 SUBST:   EF?! = ., C = cc., = = +.
 NSUBST:  : = 6:1 / 6:2 / 6:3 / 9:4 / 3 = 0.... / 20:5 / * = '
-SUBST:   ' = .....WW, G = Gg
+SUBST:   ' = .....WW, G = Gg, - = .
+FTILE:   .123450defgDPGUV+ = floor_sprouting_ruin
 MAP
  cccccWWW'''''WWWccccc
 cc%..ccCC=C=C=CCcc..%cc
@@ -3417,7 +3425,7 @@ WC'''..'G:'C':G'..'''CW
 WC:G:G:G'''C'''G'G'G:CW
 '=::::::'':C:''::::::='
 'C'::'C'':VcV:''C'::'C.
-'=''CCCCCCcccCCCCCC''=@
+'=''CCCCCCcccCCCCCC''-@
 'C'::'C'':VcU:''C'::'C.
 '=::::::'':C:''::::::='
 WC:G'G'G'''C'''G'G'G:CW

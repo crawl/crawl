@@ -291,12 +291,13 @@ default-depth: Shoals
 
 NAME:   overgrown_tower
 TAGS:   transparent extra
-WEIGHT: 2
+WEIGHT: 5
 MONS:   plant, fungus
-SUBST:  x = x:60 . '
-SUBST:  ' = ' 1:5
-SUBST:  . = . 2:1
-SUBST:  ' = .
+SUBST:  x = x:60 `
+SUBST:  . = . 2:1, ' = ' 1:5
+FTILE:  `+ = floor_pebble_lightcyan
+FTILE:  .2 = floor_sprouting_ruin
+TILE:   x = wall_lair
 MAP
  '''''''''
 '''xx+xx'''
@@ -530,7 +531,7 @@ ENDMAP
 
 NAME:  nicolae_shoals_dead_sea_scrolls
 SUBST: Z = PWs., p = P.., s = sW
-KITEM: d = any scroll w:30 / nothing w:20 / any randbook w:1
+KITEM: d = any scroll w:30 / any parchment slevel:1 / any parchment w:2
 KMONS: Ps = plant
 KPROP: .WwpPsd = no_tide
 KFEAT: y = w
@@ -831,6 +832,8 @@ NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c, J = + / c, K = + / c, \
          P = 2=+ / 2=n / +c / nc / c, Q = + / n / +c / nc / c
 SUBST:   _ = _w, LMN = `
 KPROP:   +` = no_tide
+FTILE:   +n = floor_pebble_green
+FTILE:   ` = floor_sprouting_ruin
 CLEAR:   _
 MAP
 cccPccccPcccPccc+cc
@@ -864,12 +867,14 @@ ENDMAP
 # Appear rarely.
 #
 NAME:   overgrown_hall
-WEIGHT: 2
+WEIGHT: 5
 MONS:   plant, fungus, pile of debris
 MONS:   cyclops / stone giant w:2
-SUBST:  x = xx., G = GG33.
+SUBST:  x = xx", G = GG33.
 SUBST:  . = .:90 1:19 x:1
 SUBST:  1 = 1 2:1, ' = .
+FTILE:  " = floor_pebble_lightcyan
+FTILE:  .123G4 = floor_sprouting_ruin
 MAP
 xxxxxxxxxxx
 x.........x
@@ -942,8 +947,8 @@ SHUFFLE: 12 / 3"
 SUBST:   7 = 8
 : end
 SUBST:   6 = 66*, X = xx., x : x:9 .:1
-FTILE:   '678 = floor_pebble_red
-COLOUR:  '678 = red
+FTILE:   '678* = floor_volcanic
+COLOUR:  '678* = red
 MAP
    WWWWWWWW
  WWWW.xx.WWWW
@@ -991,10 +996,11 @@ KMONS:   P = plant
 KMONS:   f = fungus
 KMONS:   D = pile of debris
 KFEAT:   Pfp = shallow_water
-KFEAT:   D5 = deep_water
+KFEAT:   D = deep_water
 SUBST:   p = ppWw, p = Pf, y = xxxcccPPfDDw, f = PPwW, x = x:10 c:1
 SHUFFLE: 23
 SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
+FTILE:   .123pf* = floor_sprouting_ruin
 MAP
    ppp  @ ppp
   pppxx..xxppp
@@ -1117,17 +1123,18 @@ ENDMAP
 NAME:   nicolae_shoals_aquamancer_cove
 TAGS:   no_monster_gen
 KMONS:  123 = merfolk aquamancer
-SUBST:  X = x.
 KFEAT:  1 = w
 KFEAT:  2 = .
 KFEAT:  3 = W
+SUBST:  X = x., c : cx
 NSUBST: 1 = 1:1 / 1:w / * = 1www
+: tile("c = " .. crackle_def(_G))
 MAP
      xxxX.@
     xx...2.
   xxxX.Xxx.
-xxxXX...Xxxx
-xXXX..*..XXxx
+xxcXX...Xcxx
+xXX...*..XXxx
 xX...3W3...Xxx
 x..WWwwwWW..Xx
 x.Ww1www1wW.Xx
@@ -1164,17 +1171,19 @@ TAGS:    water_ok
 MONS:    cyclops / stone giant w:2
 MONS:    merfolk siren, harpy, snapping turtle, centaur / centaur warrior
 MONS:    sea snake
+KFEAT:   z = c
 SHUFFLE: 234560, ABC
-SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1
+SUBST:   A : x:6 .:1, B : xxw., C : xw.., x = x:9 c:1
 SUBST:   % = %:8 *:1 .:1
+TILE:    z = wall_stone_magic_shelf
 MAP
  xxxx        xxxxx  xxxx
 xxxcxxxxW@Wxxxxcxxxxxcxxx
-xW..%xxWABAWxx414xxx5..Wx
-WA...2x.....x%...%x%...AW
+xW..%zxWABAWxz414zxz...Wx
+WA...2x.....x%...%x%5..AW
 @B.C.1c..C..c..C..c1.C.B@
-WA...2x3...3x.....x%...AW
-xW..%xxx%1%xxWABAWxx5..Wx
+WA...2x3...3x.....x%5..AW
+xW..%zxz%1%zxWABAWxz...Wx
 xxxcxxxxxcxxxxW@Wxxxxcxxx
  xxxx  xxxxx        xxxx
 ENDMAP
@@ -1274,8 +1283,8 @@ ENDMAP
 
 NAME:  nicolae_shoals_wave_tunnel
 TAGS:  water_ok transparent
-SUBST: b = .W, + = .++
-KMONS: m = merfolk / nothing w:5
+KMONS: m = merfolk
+SUBST: m = mm., b = .W, + = .++
 MAP
     xxxxxxxxxwwwwwwwxxxxx
    xx.......xxbbbbbxx...@
@@ -1290,27 +1299,28 @@ ENDMAP
 NAME:    nicolae_shoals_flooded_hall
 TAGS:    transparent
 DEPTH:   Shoals, !Shoals:$
-SHUFFLE: }}]]))>
-KPROP:   .123wqx = no_tide
-SUBST:   . = ....W, w = wWW..., q = w, x = xxxc
-KFEAT:   123 = . w:40 / W
-KMONS:   1 = merfolk / nothing w:5
+KMONS:   01 = merfolk / nothing w:5
 KMONS:   2 = merfolk / merfolk aquamancer / merfolk javelineer \
              / merfolk impaler / nothing w:45
 KMONS:   3 = merfolk siren / merfolk avatar w:5 / nothing w:5
+KFEAT:   0123 = . w:40 / W
+SHUFFLE: }}]]))>
+KPROP:   .123wqx = no_tide
+SUBST:   . = ....W, ' = ''''W, w = wWW''', q = w, x = xxxc
+FTILE:   '123}])> = floor_sprouting_ruin
 MAP
      .......
    ...xxxxx...
-  .1..x.3.x..1..
- ....xx.2.xx........
-..xxxx..w..xxxxxxxx.
-.xx..2.www.2..1..1.@
+  .0..x'3'x..0..
+ ....xx'2'xx........
+..xxxx''w''xxxxxxxx.
+.xx''2'www'2''1''1'@
 .x}1wwwwqwwwwwwwwww@
 .x]1wwwwqwwwwwwwwww@
-.xx..2.www.2..1..1.@
-..xxxx..w..xxxxxxxx.
- ....xx.2.xx........
-  .1..x.3.x..1..
+.xx''2'www'2''1''1'@
+..xxxx''w''xxxxxxxx.
+ ....xx'2'xx........
+  .0..x'3'x..0..
    ...xxxxx...
      .......
 ENDMAP
@@ -1321,7 +1331,7 @@ DEPTH:  Shoals, !Shoals:$
 KPROP:  .xrR-Ww = no_tide
 NSUBST: - = 1:] / *:-
 NSUBST: - = 3:z / *:-
-SUBST:  r = xx:, R = xxW, ] = ]}):
+SUBST:  r = xx`, R = xxW, ] = ]})`
 KMONS:  - = nothing w:20 / plant w:5 / water elemental w:1
 KMONS:  z = water elemental
 KFEAT:  -z = . / W
@@ -1330,9 +1340,12 @@ KFEAT:  m = w
 MARKER: m = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
         size_max = 3, spread_rate = 33 }
+FTILE:  .`zWw-]}) = floor_sprouting_stone
+FTILE:  " = floor_pebble_green
+TILE:   x = wall_pebble_cyan
 MAP
-   xxxx.......
-  xxxx...xxxx@
+   xxxx'''''''
+  xxxx"""xxxx@
  xx.....xxrrxx
  x..x..xxwWrrxx
 xx..xxxxmwW--Rxx
@@ -1352,11 +1365,13 @@ ENDMAP
 NAME:   wheals_shoals_ruined_temple
 TAGS:   water_ok
 DEPTH:  Shoals, !Shoals:$
-KPROP:  c.GWuw1 = no_tide
 KMONS:  D = pile of debris
 KMONS:  1 = kraken
 KFEAT:  1D = w
+KPROP:  c.GWuw1 = no_tide
 SUBST:  u = Ww, . = .:500 0
+FTILE:  @ = floor_pebble_yellow
+FTILE:  .$C01DWwG = floor_sprouting_ruin
 TILE:   G = dngn_statue_centaur w:5 / dngn_statue_maw / dngn_statue_mermaid / \
             dngn_statue_orb w:5 / dngn_statue_princess / \
             dngn_statue_polearm / dngn_statue_tentacles
@@ -1521,7 +1536,10 @@ ENDMAP
 NAME:    regret_index_shoals_crete
 TAGS:    no_monster_gen
 MONS:    snapping turtle / elephant
-MONS:    faun, satyr, meliai, minotaur
+KMONS:   2M = faun
+KMONS:   3 = satyr
+KMONS:   4N = meliai
+KMONS:   5 = minotaur
 KMONS:   _ = merfolk javelineer
 KMONS:   b = bush
 KMONS:   p = plant
@@ -1529,15 +1547,16 @@ ITEM:    any potion, longbow good_item, arbalest good_item
 # Bacchus-approved.
 KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
-SUBST:   0 = 24., X : xp.., Y : xp..
-SUBST:   A = x, B : p., F = x, G = p., CHI = .
+SUBST:   0 = 24., X : xpP., Y : xpP.
+SUBST:   A = x, B : ppP., F = x, G : ppP., CHI = .
 : dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
 : dgn.delayed_decay(_G, 'h', 'elephant corpse')
-: decorative_floor(_G, 'p', "flower patch")
+: decorative_floor(_G, 'P', "flower patch")
+FTILE:  'def*MN35+ = floor_sprouting_ruin
 MAP
     ccccccxxxxxxxcccccc
     c3dd*xxxg_hxxx*dd5c
-    c..2xx2.b0b.4xx4..c
+    c''Mxx2.b0b.4xxN''c
     cex+xWWx...xWWx+xfc
     cxx...WW.1.WW...xxc
    xxx2.CBAWX.XWABC.4xxx
@@ -1582,38 +1601,41 @@ Xwwwwwwwwwwwwww
 XwwwwwwwWWW@WW
 ENDMAP
 
-NAME: cheibrodos_shoals_epimethial_gifts
-TAGS: no_item_gen no_monster_gen
-ORIENT: float
-KPROP: . = no_tide
-MONS: sea snake, wind drake, manticore, alligator snapping turtle
-MONS: snapping turtle, merfolk impaler / merfolk aquamancer / merfolk javelineer
-SHUFFLE: -'"
-NSUBST: - = 2:1 / 2=1.., ' = 1:2 / 3=3., " = 1:4 / 2=5., ` = 1=|* / 2=*%
-NSUBST: _ = 2:6 / *=6...
+NAME:    cheibrodos_shoals_epimethial_gifts
+TAGS:    no_item_gen no_monster_gen
+ORIENT:  float
+MONS:    sea snake, wind drake, manticore
+MONS:    alligator snapping turtle, snapping turtle
+MONS:    merfolk impaler / merfolk aquamancer / merfolk javelineer
+SHUFFLE: ABC
+NSUBST:  A = 2:1 / 2=1'', B = 1:2 / 3=3', C = 1:4 / 2=5' / *:'
+NSUBST:  6 = 2:6 / * = 6''', * = 1=|* / 2=*%
+FTILE:   '123456%*|+ = floor_sprouting_ruin
+KPROP:   .' = no_tide
 MAP
        .cccccc
-cccccc.tc_..`c
-c`.._ct.c.''.c
-c.--.c..c.''.c
-c.--.c..c..._c
-c_...+..+ccccc
+cccccc.tc6''*c
+c*''6ct.c'BB'c
+c'AA'c..c'BB'c
+c'AA'c..c'''6c
+c6'''+..+ccccc
 cccccc......t.
 ...........t.
 ...t...c+cccc
-.......c..._c
-.t.G.t.c."".c
-.......c."".c
-...t...c_..`c
+.......c'''6c
+.t.G.t.c'CC'c
+.......c'CC'c
+...t...c6''*c
 @......cccccc
 ENDMAP
 
-NAME: cheibrodos_shoals_gigantism
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_shoals_gigantism
+TAGS:   no_item_gen no_monster_gen
 ORIENT: float
-MONS: titan, cyclops / w:3 stone giant / w:3 frost giant
-SUBST: " = .:2 W, x = c:1 x
+MONS:   titan, cyclops / w:3 stone giant / w:3 frost giant
+SUBST:  " = .:2 W, x = c:1 x
 NSUBST: - = 1=|* / 1=|*% / 2=*%
+FTILE:  .%*|12Gm+ = floor_sprouting_ruin
 MAP
      xxxxxxxxx
    xxxxxxxxxxxx
@@ -1669,24 +1691,25 @@ MAP
 ....................
 ENDMAP
 
-NAME: cheibrodos_shoals_three_sisters
-TAGS: no_item_gen no_monster_gen
-DEPTH: Shoals, !Shoals:$
+NAME:   cheibrodos_shoals_three_sisters
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Shoals, !Shoals:$
 ORIENT: float
-KMONS: P = plant
-MONS: sea snake, merfolk aquamancer
-ITEM: buckler ego:reflection / kite shield ego:reflection \
-      / tower shield ego:reflection
-KPROP: . = no_tide
+MONS:   sea snake, merfolk aquamancer
+KMONS:  P = plant
+ITEM:   buckler ego:reflection / kite shield ego:reflection / \
+        tower shield ego:reflection
+KPROP:  . = no_tide
 NSUBST: " = 1:2 / 1:1 / 3=1., _ = 1:2 / 1:1 / 3=1.
 NSUBST: ' = 1:2 / 2:1 / 3=1., ` = 1=d* / 2:* / 3:% / 5=%.
-SUBST: P = PPPPP.
+SUBST:  P = PPPPP., c : cx
+TILE:   c : wall_stone_magic_shelf / stone_wall_shoals
 MAP
    P..............P
    .xxxxxxxxxxxxxx.
-   .x``x.''''.x``x.
+   .x``c.''''.c``x.
    .x``+.''''.+``x.
-   .x``x.''''.x``x.
+   .x``c.''''.c``x.
    .xxxxxx++xxxxxx.
 P....................P
 .xxxxx..........xxxxx.
@@ -1710,7 +1733,7 @@ KMONS:  ` = water elemental
 KFEAT:  " = w
 KFEAT:  ' = w
 KFEAT:  ` = w
-FTILE:  - = floor_marble
+FTILE:  - = floor_sprouting_ruin
 COLOUR: c- = white
 KPROP:  .- = no_tide
 # Should probably be less cloudy but idk what these numbers mean
@@ -2390,6 +2413,7 @@ KMASK:  =`pqrsS = no_trap_gen
 KMASK:  =`pqrsS = no_monster_gen
 SUBST:  M = w_, N = wwW.
 NSUBST: q = S / q
+FTILE:  =`pqrsS = floor_sprouting_ruin
 CLEAR:  _
 MAP
       MwwM
@@ -3091,6 +3115,7 @@ SUBVAULT: H : storm_palace_corner
 SUBVAULT: J : storm_palace_corner
 TILE:     G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
               dngn_statue_dragon / dngn_statue_maw
+LFLOORTILE: floor_sprouting_ruin
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccc

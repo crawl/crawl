@@ -320,6 +320,7 @@ dart-a MI_DART_BLINDING
 dart-c MI_DART_CURARE
 dart-d MI_DART_FRENZY
 dart-p MI_DART_POISONED
+dart-t MI_DART_DISJUNCTION
 
 # flying needles
 effect/needle0 MI_DART0

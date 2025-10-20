@@ -1857,7 +1857,7 @@ Silence spell
 
 Eliminates all sound near the caster. This makes reading scrolls, casting
 spells, invoking divine abilities, or shouting impossible in the caster's
-vicinity. The spell's oppressive, unnatural effect will greatly hamper stealth.
+vicinity.
 
 Certain monsters have innate magical or special abilities which will still be
 usable while silenced.

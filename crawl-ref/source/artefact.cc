@@ -384,7 +384,7 @@ static map<jewellery_type, vector<intrinsic_artp>> jewellery_artps = {
     { AMU_ACROBAT, { { ARTP_ACROBAT, 1 } } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
-    { RING_WIZARDRY, { { ARTP_WIZARDRY, 1} } },
+    { RING_WIZARDRY, { { ARTP_WIZARDRY, 1 } } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
@@ -1742,41 +1742,15 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-static int _preferred_max_level(int unrand_index)
-{
-    // TODO: turn this into a max preferred level field in art-data.txt
-    switch (unrand_index)
-    {
-    case UNRAND_DELATRAS_GLOVES:
-        return 6;
-    case UNRAND_WOODCUTTERS_AXE:
-    case UNRAND_THROATCUTTER:
-    case UNRAND_HERMITS_PENDANT:
-        return 9;
-    case UNRAND_DEVASTATOR:
-    case UNRAND_RATSKIN_CLOAK:
-    case UNRAND_KRYIAS:
-    case UNRAND_LEAR:
-    case UNRAND_OCTOPUS_KING:
-    case UNRAND_AUGMENTATION:
-    case UNRAND_MEEK:
-    case UNRAND_ELEMENTAL_VULNERABILITY:
-    case UNRAND_MISFORTUNE:
-    case UNRAND_FORCE_LANCE:
-    case UNRAND_VICTORY:
-        return 11;
-    default:
-        return -1;
-    }
-}
-
 static int _unrand_weight(int unrand_index, int item_level)
 {
-    // Early-game unrands (with a preferred max depth != -1) are
+    const unrandart_entry* entry = &unranddata[unrand_index];
+
+    // Early-game unrands (with a preferred max depth != 0) are
     // weighted higher within their depth and lower past it.
     // Normal unrands have a flat weight at all depths.
-    const int pref_max_level = _preferred_max_level(unrand_index);
-    if (pref_max_level == -1)
+    const int pref_max_level = entry->pref_max_level;
+    if (pref_max_level == 0)
         return 10;
     return item_level <= pref_max_level ? 100 : 1;
 }

@@ -14,7 +14,7 @@ public class DCSSTextViewer extends DCSSTextBase {
 
     private TextView viewer;
 
-    private TextView downloadStatus;
+    private TextView status;
 
     private String fileName;
 
@@ -30,20 +30,26 @@ public class DCSSTextViewer extends DCSSTextBase {
 
         viewer = findViewById(R.id.textViewer);
         viewer.setMovementMethod(new ScrollingMovementMethod());
-        downloadStatus = findViewById(R.id.downloadStatus);
+        status = findViewById(R.id.status);
 
         findViewById(R.id.backButton).setOnClickListener(this::onClickClose);
         Button downloadButton = findViewById(R.id.downloadButton);
         downloadButton.setOnClickListener(this::onClickDownload);
 
         if (file != null) {
-            openFile(file, viewer);
-            fileName = file.getName();
+            if (openFile(file, viewer)) {
+                fileName = file.getName();
+            } else {
+                status.setText(R.string.open_error);
+            }
         }
 
         if (asset != null) {
-            openAsset(asset, viewer);
-            fileName = new File(asset).getName();
+            if (openAsset(asset, viewer)) {
+                fileName = new File(asset).getName();
+            } else {
+                status.setText(R.string.open_error);
+            }
         }
 
         // Storage Access Framework is only available since Android 4.4
@@ -54,24 +60,26 @@ public class DCSSTextViewer extends DCSSTextBase {
 
     // Close button
     private void onClickClose(View v) {
+        status.setText("");
         close();
     }
 
     // Download button
     private void onClickDownload(View v) {
+        status.setText("");
         downloadFile(viewer, fileName);
     }
 
     @Override
     protected void onDownloadOk() {
-        downloadStatus.setText(R.string.download_ok);
-        downloadStatus.setTextColor(getResources().getColor(R.color.light_green));
+        status.setText(R.string.download_ok);
+        status.setTextColor(getResources().getColor(R.color.light_green));
     }
 
     @Override
     protected void onDownloadError() {
-        downloadStatus.setText(R.string.download_error);
-        downloadStatus.setTextColor(getResources().getColor(R.color.error));
+        status.setText(R.string.download_error);
+        status.setTextColor(getResources().getColor(R.color.error));
     }
 
 }

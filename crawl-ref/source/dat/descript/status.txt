@@ -319,8 +319,7 @@ QUAD DAMAGE!
 Sil status
 
 You are silenced. This makes reading scrolls, casting spells, invoking divine
-abilities, or shouting impossible. The oppressive, unnatural effect greatly
-hampers your stealth.
+abilities, or shouting impossible.
 %%%%
 Engulf status
 
@@ -730,7 +729,7 @@ You are bribing the inhabitants of the current branch.
 %%%%
 Cloud status
 
-You are standing in a cloud.
+You are in a cloud.
 %%%%
 -Clouds status
 
@@ -790,6 +789,11 @@ Gem status
 
 If you spend the indicated number of turns in this branch, its gem will be found
 and shattered by the power of Zot.
+%%%%
+Gem (*) status
+
+The power of Zot no longer hunts you, but this branch's gem still remains
+intact.
 %%%%
 rF0 status
 

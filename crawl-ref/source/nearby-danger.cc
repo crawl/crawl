@@ -67,7 +67,7 @@ static bool _mons_has_path_to_player(const monster* mon)
     // like sensed monsters via ash (which will get set as known unreachable
     // on detection).
     if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE
-                                        && !you.see_cell_no_trans(mon->pos()))
+                                        && !you.see_cell(mon->pos()))
     {
         return false;
     }

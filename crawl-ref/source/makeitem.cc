@@ -921,7 +921,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == SLOT_BODY_ARMOUR|| slot == SLOT_OFFHAND && type != ARM_ORB
+        return slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND && type != ARM_ORB
                        || slot == SLOT_CLOAK && type != ARM_SCARF || !strict;
 
     case SPARM_SPIRIT_SHIELD:
@@ -1712,7 +1712,6 @@ static void _roll_amulet_type(item_def& item)
         if (are_fixed_props_ok(item))
             return;
     }
-
 }
 
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
@@ -1966,9 +1965,9 @@ static void _setup_fallback_randart(const int unrand_id,
         && !_ego_unrand_only(item.base_type, unrand.prpty[ARTP_BRAND])
         && item.base_type == unrand.base_type // brand isn't well-defined for != case
         && ((item.base_type == OBJ_WEAPONS
-             && is_weapon_brand_ok(item.sub_type, unrand.prpty[ARTP_BRAND], true))
+             && is_weapon_brand_ok(force_type, unrand.prpty[ARTP_BRAND], true))
             || (item.base_type == OBJ_ARMOUR
-             && is_armour_brand_ok(item.sub_type, unrand.prpty[ARTP_BRAND], true))))
+             && is_armour_brand_ok(force_type, unrand.prpty[ARTP_BRAND], true))))
     {
         // maybe do jewellery too?
         item.brand = unrand.prpty[ARTP_BRAND];

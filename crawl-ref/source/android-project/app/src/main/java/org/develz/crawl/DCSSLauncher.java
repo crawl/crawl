@@ -70,6 +70,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         findViewById(R.id.startButton).setOnClickListener(this::startGame);
         findViewById(R.id.editInitFile).setOnClickListener(this::editInitFile);
         findViewById(R.id.morgueButton).setOnClickListener(this::openMorgue);
+        findViewById(R.id.modsButton).setOnClickListener(this::openMods);
 
         preferences = getPreferences(Context.MODE_PRIVATE);
         keyboardOption = preferences.getInt("keyboard", DEFAULT_KEYBOARD);
@@ -146,6 +147,12 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     // Open morgue
     private void openMorgue(View v) {
         Intent intent = new Intent(getBaseContext(), DCSSMorgue.class);
+        startActivity(intent);
+    }
+
+    // Open mods
+    private void openMods(View v) {
+        Intent intent = new Intent(getBaseContext(), DCSSMods.class);
         startActivity(intent);
     }
 

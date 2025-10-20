@@ -437,23 +437,26 @@ bool monster_pathfind::is_reachable(const coord_def& p)
 
 bool monster_pathfind::traversable(const coord_def& p)
 {
-    if (!traverse_unmapped && env.grid(p) == DNGN_UNSEEN)
+    const dungeon_feature_type feat = env.grid(p);
+    if (!traverse_unmapped && feat == DNGN_UNSEEN)
         return false;
 
     if (traverse_no_actors && actor_at(p))
         return false;
 
-    // XXX: Hack to be somewhat consistent with uses of
-    //      opc_immob elsewhere in pathfinding.
-    //      All of this should eventually be replaced by
-    //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(env.grid(p)))
+    if (feat_is_solid(feat) && (!mons || !mons->can_pass_through_feat(feat)))
+        return false;
+
+    if (monster* mon_at = monster_at(p))
     {
+        // Try to path around immobile monsters.
+        if (mon_at->is_stationary())
+            return false;
+
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.
         if (mons && mons->type == MONS_THORN_HUNTER
-            && monster_at(p)
-            && monster_at(p)->type == MONS_BRIAR_PATCH)
+            && mon_at->type == MONS_BRIAR_PATCH)
         {
             return true;
         }
@@ -464,13 +467,10 @@ bool monster_pathfind::traversable(const coord_def& p)
     if (mons)
         return mons_traversable(p);
 
-    if (traverse_doors && feat_is_closed_door(env.grid(p))
-        && !cell_is_runed(p))
-    {
+    if (traverse_doors && feat_is_closed_door(feat) && !cell_is_runed(p))
         return true;
-    }
 
-    return feat_has_solid_floor(env.grid(p));
+    return feat_has_solid_floor(feat);
 }
 
 // Checks whether a given monster can pass over a certain position, respecting

@@ -691,6 +691,9 @@ public:
                        vector<const item_def *> *matches = nullptr) const override;
     bool unrand_equipped(int unrand_index, bool include_melded = false) const override;
 
+    bool weapon_is_good_stab(const item_def *weapon = nullptr) const;
+    bool has_good_stab() const;
+
     int infusion_amount() const;
 
     item_def *weapon(int which_attack = -1) const override;

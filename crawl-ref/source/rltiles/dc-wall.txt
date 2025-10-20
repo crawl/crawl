@@ -1472,6 +1472,16 @@ wall_stone_flesh_cage4
 
 # Gloorx Vloq's level.
 %weight 10
+wall_hall_shadows0 WALL_HALL_OF_SHADOWS
+wall_hall_shadows1
+%weight 4
+wall_hall_shadows2
+wall_hall_shadows3
+wall_hall_shadows4
+%weight 2
+wall_hall_shadows5
+
+%weight 10
 wall_stone_shadow_mesh0 STONE_WALL_SHADOW_MESH
 wall_stone_shadow_mesh1
 %weight 9
@@ -2065,6 +2075,28 @@ church2
 church3
 %weight 4
 church4
+
+stone_magic_shelf0 WALL_STONE_MAGIC_SHELF
+stone_magic_shelf1
+stone_magic_shelf2
+stone_magic_shelf3
+
+%weight 4
+stone_magic_crackle_1a WALL_STONE_CRACKLE_1
+%weight 1
+stone_magic_crackle_1b
+%weight 4
+stone_magic_crackle_2a WALL_STONE_CRACKLE_2
+%weight 1
+stone_magic_crackle_2b
+%weight 4
+stone_magic_crackle_3a WALL_STONE_CRACKLE_3
+%weight 1
+stone_magic_crackle_3b
+%weight 4
+stone_magic_crackle_4a WALL_STONE_CRACKLE_4
+%weight 1
+stone_magic_crackle_4b
 
 # Wooden bookcase tiles.
 studio0 WALL_STUDIO

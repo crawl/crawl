@@ -31,10 +31,11 @@ app's code.
 To run the server, you need:
 
 * Linux, macOS, or windows using WSL (MinGW webtiles is not supported).
-* Python 3.6 or newer. (Earlier versions may work but are not supported.)
+* Python 3.8 or newer. (Earlier versions may work but are not supported.)
 * The Python dependencies specified in `requirements/`, in particular,
-  minimally to just run the server, you need Tornado 6+  and `pyyaml` (also
-  required for building the crawl binary).
+  minimally to just run the server, you need Tornado 6+, `pyyaml` (also
+  required for building the crawl binary), and (for python versions from 3.13
+  and onward) `crypt-r`.
 * A build of DCSS with webtiles support.
 
 To get webtiles support in the binary, you'll need to compile DCSS with `make
@@ -86,15 +87,16 @@ You can install the prerequisites manually using e.g. `pip` or `conda`. See the
 requirements files mentioned above for a full list, but generally for running
 the server, you need:
 
-    pip install pyyaml tornado
+    pip install pyyaml tornado crypt-r
 
 or
 
-    conda install pyyaml tornado
+    conda install pyyaml tornado crypt-r
 
 The requirements files do pin specific versions, but generally any recent
 version of either package should work. Your package manager may also provide
-these python libraries in other forms.
+these python libraries in other forms. For python versions before 3.13, you
+don't need the `crypt-r` package.
 
 ### Installing full prerequisites in a virtual environment
 
@@ -102,29 +104,37 @@ If you want all the prerequisites in the dev requirements, the easiest way to
 install them cleanly is likely to use a virtual environment. The following
 sequence of commands should set this up:
 
-    ```sh
-    python3 -m virtualenv -p python3 webserver/venv
-    . ./webserver/venv/bin/activate
-    pip install -r webserver/requirements/dev.py3.txt
-    ```
+```sh
+python3 -m virtualenv -p python3 webserver/venv
+. ./webserver/venv/bin/activate
+pip install -r webserver/requirements/dev.py3.txt
+```
 
 If you install the prerequisites this way, you will need to reactivate the
 venv (line 2 above) each time you run it.
 
 ### Setting up WSL for running the webtiles server
 
-First, install a distribution. See [the official WSL docs](https://docs.microsoft.com/en-us/windows/wsl/install) for more detail. These instructions are for Debian.
+First, install a distribution. See [the official WSL
+docs](https://docs.microsoft.com/en-us/windows/wsl/install) for more detail.
+These instructions are for Debian.
 
     wsl --install -d Debian
 
 After a while, you will get to a linux command prompt. From here, you will need
 to install the core packages for building crawl as well as the python packages
-needed by the webserver. See [INSTALL.md](../../INSTALL.md) for more details on the former.
-Here is a sequence of commands that should handle this including tornado and
-pyyaml:
+needed by the webserver. See [INSTALL.md](../../INSTALL.md) for more details on
+the former. Here is a sequence of commands that should handle this, including
+the required python modules:
 
-    sudo apt-get update
-    sudo apt-get install build-essential bzip2 python-minimal ncurses-term locales-all sqlite3 libpcre3 liblua5.1-0 locales autoconf build-essential lsof bison libncursesw5-dev libsqlite3-dev flex sudo libbot-basicbot-perl git python3-yaml lua5.1 liblua5.1-dev man libpng-dev python3-tornado
+```sh
+sudo apt-get update
+sudo apt-get install build-essential bzip2 python-minimal ncurses-term \
+locales-all sqlite3 libpcre3 liblua5.1-0 locales autoconf build-essential \
+lsof bison libncursesw5-dev libsqlite3-dev flex sudo libbot-basicbot-perl git \
+python3-yaml lua5.1 liblua5.1-dev man libpng-dev python3-tornado \
+python3-crypt-r
+```
 
 At this point, you should have enough to build and run the server following the
 usual linux instructions. One caveat is that depending on the version of WSL,
@@ -173,7 +183,6 @@ For Python developers, several utilities are available:
 * `make lint` -- run several Python linters (with Flake8)
 * `tox` -- run tests on all supported Python versions
 * `requirements.in/sync.sh` -- update requirements files
-
 
 ### Code Coverage
 

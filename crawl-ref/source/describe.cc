@@ -4514,7 +4514,7 @@ static string _player_spell_desc(spell_type spell)
     }
 
     if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
-        description << "This spell is empowered while you are enkindled.";
+        description << "This spell is empowered while you are enkindled.\n";
 
     if (!you_can_memorise(spell))
     {

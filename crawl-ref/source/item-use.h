@@ -63,3 +63,10 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp = true);
 bool use_talisman(item_def& talisman);
+
+bool uncancel_brand_weapon();
+bool uncancel_enchant_weapon();
+bool uncancel_identify();
+bool uncancel_enchant_armour();
+bool uncancel_amnesia();
+bool uncancel_blinking();

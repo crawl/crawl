@@ -2194,7 +2194,7 @@ bool targeter_explosive_beam::set_aim(coord_def a)
     tempbeam.target = origin;
     for (auto c : path_taken)
     {
-        if (cell_is_solid(c))
+        if (cell_is_invalid_target(c))
             break;
 
         tempbeam.target = c;
@@ -2495,7 +2495,7 @@ bool targeter_marionette::valid_aim(coord_def a)
     if (mons->has_ench(ENCH_SHADOWLESS))
         return notify_fail("Their shadow is too faded to take hold of.");
 
-    if (mons->is_summoned())
+    if (mons->is_summoned() && !mons->is_illusion())
         return notify_fail("A summoned shadow is too ephemeral to take hold of.");
 
     if (mons->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int() <= 0)

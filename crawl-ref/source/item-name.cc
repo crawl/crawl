@@ -3337,8 +3337,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             special_armour_type ego = get_armour_ego_type(item);
             switch (ego)
             {
+#if TAG_MAJOR_VERSION == 34
             case SPARM_SPIRIT_SHIELD:
                 return you.spirit_shield(false);
+#endif
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;

@@ -616,9 +616,12 @@ veto {{ return necropolis_veto() }}
 WEIGHT:  10 (Lair, Elf, Crypt, Depths), 0 (Orc, Snake, Spider, Vaults), 5
 : necropolis_portal_entry(_G)
 COLOUR:  t = lightblue
-TILE:    t = dngn_dead_tree_of_woe
 FTILE:   A = floor_necropolis_squares
 FTILE:   ` = floor_necropolis_square_grass
+: if you.in_branch("Shoals") then
+FTILE:   .@ = floor_sprouting_ruin
+: end
+TILE:    t = dngn_dead_tree_of_woe
 MAP
 xxxxxxxxxx
 xccccccccx
@@ -707,6 +710,9 @@ veto {{ return necropolis_veto() }}
 : if not you.in_branch("Vaults") then
 CLEAR:   -
 : end
+: if you.in_branch("Shoals") then
+FTILE:   .@= floor_sprouting_ruin
+: end
 FTILE:   A = floor_necropolis_squares
 MAP
       ---
@@ -728,6 +734,9 @@ NAME:    index_necropolis_entry_life_lattice
 veto {{ return necropolis_veto() }}
 : if you.in_branch("Swamp") then
 SUBST:   x = w
+: elseif you.in_branch("Shoals") then
+FTILE:   . = floor_sprouting_ruin
+TILE:    x = wall_lair
 : elseif you.in_branch("Vaults") then
 SUBST:   x = a
 : elseif you.in_branch("Crypt") then
@@ -4378,7 +4387,7 @@ SUBST:  ^ = ', % = %$
 MONS:   merfolk siren / bog body / faun w:2
 MONS:   naga ritualist / satyr / torpor snail w:2
 MONS:   fenstrider witch / sphinx marauder
-NSUBST: * = 1:e / 2:f, $ = 1:d / 1:i$ / *:$, 13 = 1:., 1 = 1:. / *:1
+NSUBST: * = 1:e / 2:f, $ = 1:d / 1:i$ / *:$, 13 = 1:', 1 = 1:' / *:1
 SUBST:  ^ = w
 : elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
 MONS:   deep elf archer / arcanist, great orb of eyes / crystal guardian
@@ -4407,7 +4416,7 @@ ITEM:   any weapon randart artprops:Will:-2 pre_id
 ITEM:   riddle talisman, riddle talisman randart
 : ghost_flavour_unrand_chance(_G, "$", "Z", "robe of folly")
 SUBST:  A : bb., B : c.., C : c'', D : n=, E : n=
-FTILE:  '^$%defghZ123O = floor_marble
+FTILE:  '^$%defghZ123O = floor_mystic_chasm
 TILE:   b = dngn_crystal_blue
 KPROP:  '^$%defghZ123O = no_tele_into
 : necropolis_ghost_setup(_G)

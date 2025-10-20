@@ -1696,6 +1696,7 @@ NSUBST: d = 1:e / *:.
 : else
 SUBST:  1 = 3, d = e
 : end
+FTILE:  .123de = floor_mystic_chasm
 MAP
    .....
   ....b..

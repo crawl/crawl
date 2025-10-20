@@ -256,7 +256,7 @@ It bestows one free step when moving towards enemies.
 %%%%
 reflection (Reflect) armour ego
 
-It reflects blocked missile attacks back in the direction they came from.
+It reflects blocked missile attacks.
 %%%%
 repulsion (Repulsion) armour ego
 

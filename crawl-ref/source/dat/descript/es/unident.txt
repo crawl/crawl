@@ -4,6 +4,10 @@ amulet
 Un talismán para llevar puesto al cuello, cargado con poderes arcanos de origen
 desconocido.
 %%%%
+book
+
+Un libro que contiene hechizos mágicos de origen desconocido.
+%%%%
 deck of cards
 
 Un mazo de poderosas cartas mágicas dibujadas con icor de demonios. Echar estas

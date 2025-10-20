@@ -21,6 +21,8 @@ colorama==0.4.6
     # via tox
 coverage==7.4.4
     # via -r requirements.in/dev.txt
+crypt-r==3.13.1 ; python_version >= "3.13"
+    # via -r requirements.in/base.txt
 distlib==0.3.8
     # via virtualenv
 eradicate==2.3.0

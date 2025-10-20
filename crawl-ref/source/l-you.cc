@@ -1410,6 +1410,13 @@ LUAFN(you_quiver_allows_autofight)
 
 LUARET1(you_is_web_immune, boolean, you.is_web_immune())
 
+/*** Do your successful stab attacks deal significantly increased damage,
+ * considering weapon type, equipment, and transformations?
+ * @treturn boolean
+ * @function has_good_stab
+ */
+LUARET1(you_has_good_stab, boolean, you.has_good_stab())
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1557,6 +1564,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_allows_autofight", you_quiver_allows_autofight },
     { "activate_ability",        you_activate_ability},
     { "is_web_immune",     you_is_web_immune },
+    { "has_good_stab",      you_has_good_stab },
 
     { nullptr, nullptr },
 };

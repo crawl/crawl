@@ -8930,9 +8930,9 @@ not dealing with demons.
 rejecting the service of demons.
 
 # talismans
-not transforming your body with talismans.
+not transforming your body with [talismans|baubles].
 
-shunning all talismans.
+shunning all [talismans|baubles].
 %%%%
 # the subject of your recital/lecture/whatever
 # needs the full dot or exclamation mark

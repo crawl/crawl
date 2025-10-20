@@ -1452,8 +1452,7 @@ scroll of silence
 
 A scroll that eliminates all sound near the reader. This makes reading scrolls,
 casting spells, invoking divine abilities, or shouting impossible in the
-reader's vicinity. The scroll's oppressive, unnatural effect will greatly
-hamper stealth.
+reader's vicinity.
 
 Certain monsters have innate magical or special abilities which will still be
 usable while silenced.

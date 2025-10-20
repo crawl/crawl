@@ -46,6 +46,5 @@ bool is_sanctuary(const coord_def& p);
 bool is_bloodcovered(const coord_def& p);
 bool is_tide_immune(const coord_def &p);
 feature_property_type str_to_fprop(const string &str);
-char blood_rotation(const coord_def & p);
 bool is_icecovered(const coord_def& p);
 bool is_blasphemy(const coord_def& p);

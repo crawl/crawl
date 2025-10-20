@@ -780,14 +780,19 @@ ENDMAP
 NAME:   fedhas_altar_1
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
 TAGS:   transparent decor
+DEPTH:  D:3-, Lair, Depths
 KFEAT:  C = altar_fedhas
 MONS:   plant
+: if you.in_branch("Lair") then
+FTILE:  . = floor_sprouting_stone
+: end
+FTILE:  '1C = floor_sprouting_squares
 : interest_check(_G)
 MAP
 .....
-.1.1.
-..C..
-.1.1.
+.1'1.
+.'C'.
+.1'1.
 .....
 ENDMAP
 
@@ -980,10 +985,11 @@ DEPTH:  D:4-8
 MONS:   bush, plant
 ITEM:   any skeleton
 KFEAT:  _ = altar_fedhas
-FTILE:  '!12@ = floor_moss
-COLOUR: '!@ = green
+COLOUR: '@ = green
 NSUBST:  d = 3:d / 3:e / 3 = e. / *:.
 KPROP:  .3 = no_tele_into
+FTILE:  .de = floor_sprouting_stone
+FTILE:  '_12@ = floor_moss
 : dgn.delayed_decay(_G, "e", "any corpse")
 MAP
  xxxxxxxxx
@@ -2813,7 +2819,7 @@ TAGS:   temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
 TAGS:   no_pool_fixup
 WEIGHT: 5
 KFEAT:  _ = altar_ru
-SUBST:  X : x., x : cxx, b: cbxx, + : W+++, m : mmw
+SUBST:  X : x., x : cxx, b : cbxx, + : W+++, m : mmw
 KMASK:  wW = no_monster_gen
 : interest_check(_G)
 MAP
@@ -2840,7 +2846,7 @@ TAGS:   uniq_altar_sif_muna decor transparent
 DEPTH:  D:3-, Vaults
 WEIGHT: 3 (Vaults), 10
 COLOUR: . = blue
-FTILE:  .*+_ = floor_hall
+FTILE:  .@*+_ : floor_hall / floor_mystic_chasm
 KFEAT:  _ = altar_sif_muna
 : if you.in_branch("Vaults") then
 CLEAR:  x
@@ -2870,6 +2876,7 @@ MONS:   orc wizard
 : interest_check(_G)
 NSUBST: M = 1:1 / *:"
 SUBST:  ' : "'., ' = ''.
+FTILE:  ._ : floor_mystic_chasm / floor_grey_dirt w:20
 COLOUR: . = blue
 MAP
         xx@xx
@@ -2962,9 +2969,6 @@ DEPTH:  D:3-, Vaults, Depths
 WEIGHT: 3 (Vaults), 10
 KITEM:  a = any randbook pre_id owner:Sif_Muna slevels:1
 KFEAT:  _ = altar_sif_muna
-COLOUR: a.mc+ = blue
-FTILE:  a._mc+ = floor_marble
-TILE:   c = wall_studio
 KPROP:  a = no_tele_into
 KMASK:  a = no_item_gen
 KMASK:  a = no_monster_gen
@@ -2974,6 +2978,9 @@ CLEAR:  x
 : else
 NSUBST: D = 1:+ / *:x
 : end
+COLOUR: a.mc+ = blue
+FTILE:  a._mc+ = floor_marble
+TILE:   c = wall_studio
 : interest_check(_G)
 MAP
 xxxxDDDx
@@ -4821,6 +4828,8 @@ SHUFFLE: DEF
 SUBST:   1 : GTV1
 SUBST:   X : GTt
 SUBST:   ? : t@
+FTILE:   @1t = floor_moss
+FTILE:   .DEFGTV = floor_sprouting_ruin
 MAP
   ttttttt
  tt.....tt
@@ -5571,7 +5580,6 @@ ENDMAP
 
 # General overflow vault, can be used for all gods.
 NAME:     general_overflow_altar
-WEIGHT:   10
 TAGS:     no_monster_gen no_pool_fixup temple_overflow_generic_1 no_descent
 SHUFFLE:  xXY / xXY / xXY / abc
 SHUFFLE:  XY
@@ -5592,40 +5600,43 @@ MAP
 ENDMAP
 
 NAME:    old_standard_altar
-TAGS:    transparent allow_dup decor temple_overflow_generic_1
-SHUFFLE: cvxxxx
+TAGS:    transparent allow_dup temple_overflow_generic_1
+KFEAT:   z = c
+TILE:    z = wall_stone_magic_shelf
+SUBST:   y : zx, z : zx, x : xxxxcv
 MAP
 ...........
 .xxxx.xxxx.
-.xx.....xx.
+.xy.....zx.
 .x.......x.
 .x.......x.
 .....B.....
 .x.......x.
 .x.......x.
-.xx.....xx.
+.xz.....yx.
 .xxxx.xxxx.
 ...........
 ENDMAP
 
 NAME:    lemuel_round_altar
 TAGS:    allow_dup transparent decor temple_overflow_generic_1
-SUBST:   X:x@
-SHUFFLE: cvxx
+KFEAT:   z = c
+TILE:    z = wall_stone_magic_shelf
+SUBST:   X : x@, y : z., z : z., x : xxcv
 MAP
-   xxXxx
-  xx...xx
- xx.....xx
- x.......x
- X...B...@
- x.......x
- xx.....xx
-  xx...xx
-   xxXxx
+  xxXxx
+ xx...xx
+xx.....xx
+x.y...z.x
+X...B...@
+x.z...y.x
+xx.....xx
+ xx...xx
+  xxXxx
 ENDMAP
 
 NAME:  lemuel_crystal_altar
-TAGS:  transparent allow_dup decor temple_overflow_generic_1
+TAGS:  transparent allow_dup temple_overflow_generic_1
 MAP
 b@b
 @B@
@@ -5755,18 +5766,20 @@ ENDMAP
 
 NAME:   mainiacjoe_overflow_brackets
 TAGS:   temple_overflow_generic_1 transparent
-SUBST:  c : ccnvt
+KFEAT:  z = c
+SUBST:  z : zzc, c : ccnvt
 NSUBST: w = 1:. / *:w
 SUBST:  w : wl
 KMASK:  lw = no_monster_gen
 KMASK:  w = no_pool_fixup
+TILE:   z = wall_stone_magic_shelf
 MAP
 ...........
 .wwwwwwwww.
 .w.......w.
 .w.ccccc.w.
 .w.c.....w.
-.w.c.B.c.w.
+.w.z.B.z.w.
 .w.....c.w.
 .w.ccccc.w.
 .w.......w.
@@ -6371,7 +6384,7 @@ NSUBST: _ = 3:1 / *:_
 MONS:   plant / bush
 KMASK:  T = no_monster_gen
 TILE:   x = wall_brick_brown_vines
-FTILE:  _+T12B = floor_pebble_yellow
+FTILE:  _.+TV12B = floor_sprouting_stone
 MAP
  ppppppp
 pxB_B_Bxp
@@ -6424,10 +6437,12 @@ ENDMAP
 NAME:   grunt_temple_overflow_cloverleaf
 TAGS:   temple_overflow_generic_4 transparent
 SUBST:  T : T U:1 V:1
+FTILE:  .@TUVBG+m = floor_sprouting_squares
+TILE:   c : dngn_stone_wall_green / dngn_stone_wall_blue
 MAP
  ccccc.@.ccccc
 cc...cc.cc...cc
-c.G.G.c.c.G.G.c
+c.m.G.c.c.G.m.c
 c..B..c.c..B..c
 c.G...c.c...G.c
 cc...+c.c+...cc
@@ -6437,7 +6452,7 @@ cc...+c.c+...cc
 cc...+c.c+...cc
 c.G...c.c...G.c
 c..B..c.c..B..c
-c.G.G.c.c.G.G.c
+c.m.G.c.c.G.m.c
 cc...cc.cc...cc
  ccccc.@.ccccc
 ENDMAP
@@ -6781,6 +6796,9 @@ TAGS:    temple_overflow_generic_11 temple_overflow_generic_10 \
   end
 }}
 SUBST:   D : GGTTUt, E : GGTTUt, F : GGTTUt, H : GGTTUt, J : GGTTUt, K : GGTTUt
+FTILE:   @ = floor_pebble_brown
+FTILE:   .BGTUt = floor_sprouting_ruin
+TILE:    c = dngn_stone_wall_brown
 MAP
 ccccccccccc
 ccc.....ccc
@@ -6834,6 +6852,9 @@ TAGS:  transparent
   nsubst("O = " .. altarcount .. ":B / *:l")
 }}
 KFEAT: l = altar_ecumenical
+FTILE: .Bl = floor_mystic_chasm
+FTILE: + = floor_pebble_blue
+TILE:  c = dngn_stone_wall_blue
 MAP
         @
        c+c

@@ -1186,6 +1186,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     // vault statues in the second statues.
     else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_DNGN_CACHE_OF_FRUIT)
              || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
+             || (bg_idx >= TILE_WALL_STONE_CRACKLE_1 && bg_idx <= TILE_WALL_STONE_CRACKLE_4)
              && Options.tile_misc_anim)
     {
         flv->special = random2(256);
@@ -1551,7 +1552,11 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.halo = HALO_RANGE;
     }
     else if (mc.flags & MAP_UMBRAED)
-        cell.halo = HALO_UMBRA;
+    {
+        int num = HALO_UMBRA_LAST - HALO_UMBRA_FIRST + 1;
+        int variety = hash_with_seed(num, gc.y * GXM + gc.x, you.frame_no);
+        cell.halo = (halo_type)(HALO_UMBRA_FIRST + variety);
+    }
     else
         cell.halo = HALO_NONE;
 
@@ -1569,8 +1574,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         if (mc.flags & MAP_BLOODY && !_top_item_is_corpse(mc))
         {
             cell.is_bloody = true;
-            cell.blood_rotation = blood_rotation(gc);
-            cell.old_blood = bool(env.pgrid(gc) & FPROP_OLD_BLOOD);
+            cell.blood_rotation = mc.blood_rotation();
+            cell.old_blood = bool(mc.flags & MAP_OLD_BLOOD);
         }
     }
 
@@ -1626,20 +1631,10 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     cell.flv = tile_env.flv(gc);
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
-    {
-        for (adjacent_iterator ai(gc); ai; ++ai)
-            if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
-            {
-                cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
-                break;
-            }
-    }
-    else if (env.level_state & LSTATE_ICY_WALL
-             && env.map_knowledge(gc).flags & MAP_ICY)
-    {
+    if (mc.flags & MAP_CORRODING && !feat_is_wall(feat))
+        cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
+    else if (mc.flags & MAP_ICY)
         cell.flv.floor = TILE_FLOOR_ICY;
-    }
     else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {

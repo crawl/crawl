@@ -131,8 +131,8 @@ MAP
   xxxxxxx
 xxxcccccx
 ...G...G@
-.G.G.G.G.
-.G.G.G.G.
+.G.x.G.x.
+.x.G.x.G.
 @G...G...
 xcccccxxx
 xxxxxxx
@@ -191,7 +191,7 @@ ENDMAP
 # This is an ancient vault.
 NAME:  solitary_fountain
 DEPTH: D, Depths, Elf
-TAGS:  transparent allow_dup extra decor
+TAGS:  transparent allow_dup extra
 SUBST: ?=TUV
 KMASK: TU = no_monster_gen
 MAP
@@ -225,9 +225,12 @@ MAP
 ENDMAP
 
 NAME:  patterned_corridor
-DEPTH: D, Depths, Elf, Lair, Abyss
 TAGS:  transparent ruin_abyss ruin_lair decor
+DEPTH: D, Depths, Elf, Lair, Abyss
 SUBST: x : xxccv
+: if you.in_branch("Lair") then
+FTILE: . = floor_sprouting_stone / floor_lair w:5
+: end
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 x.......x.......x.....@
@@ -457,6 +460,8 @@ ENDMAP
 NAME:  minmay_tree_intersection
 TAGS:  transparent extra decor
 DEPTH: D, Depths
+FTILE: .t = floor_sprouting_stone
+FTILE: @ = floor_moss
 MAP
 xxx@xxx
 xxt.txx
@@ -484,7 +489,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_square
-TAGS:  transparent extra decor
+TAGS:  transparent extra
 DEPTH: D, Depths
 SUBST: x = x'
 KPROP: x' = no_tele_into
@@ -519,7 +524,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_misc_feat_rows
-TAGS:  transparent extra decor
+TAGS:  transparent extra
 DEPTH: D, Depths, Elf, Crypt
 MAP
 .......
@@ -713,15 +718,19 @@ NAME:   minmay_misc_feat_cross
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf, Crypt
 SUBST:  X : x.
+: if you.in_branch("D") or you.in_branch("Depths") then
+SUBST:  c : ccx
+TILE:   c = wall_stone_magic_shelf
+: end
 MAP
 ...........
 .xxx.X.xxx.
 .xxx.X.xxx.
-.xxx.X.xxx.
+.xxc.X.cxx.
 .....X.....
 .XXXXXXXXX.
 .....X.....
-.xxx.X.xxx.
+.xxc.X.cxx.
 .xxx.X.xxx.
 .xxx.X.xxx.
 ...........
@@ -869,7 +878,7 @@ TAGS:   transparent extra decor
 DEPTH:  D, Depths
 SUBST:  Y : x.
 MAP
-....................
+.........  .........
 .x................x.
 ..xx............xx..
 ..x.x..........x.x..
@@ -878,8 +887,8 @@ MAP
 ....x.x.xYYx.x.x....
 .....x.xx..xx.x.....
 ......xx....xx......
-....................
-....................
+ ..................
+ ..................
 ......xx....xx......
 .....x.xx..xx.x.....
 ....x.x.xYYx.x.x....
@@ -888,7 +897,7 @@ MAP
 ..x.x..........x.x..
 ..xx............xx..
 .x................x.
-....................
+.........  .........
 ENDMAP
 
 NAME:   minmay_misc_feat_tiny
@@ -937,12 +946,15 @@ MAP
 .............
 ENDMAP
 
-NAME:   minmay_stone_trees_large
-TAGS:   transparent extra decor
-DEPTH:  D, Depths, Lair
-WEIGHT: 1
+NAME:    minmay_stone_trees_large
+TAGS:    transparent extra decor
+DEPTH:   D, Depths, Lair
+WEIGHT:  2 (Lair), 1
 SHUFFLE: TR
-SUBST:  T = t., R = .
+SUBST:   T = t., R = .
+: if you.in_branch("Lair") then
+FTILE:   .t = floor_lair / floor_sprouting_squares w:2
+: end
 MAP
 ...................
 ..ttt...ttt...ttt..
@@ -4785,9 +4797,14 @@ ENDMAP
 
 NAME:    minivault_25
 TAGS:    transparent allow_dup extra ruin_lair ruin_abyss decor
-DEPTH:   D, Elf, Crypt, Lair, Abyss
-SHUFFLE: XY
-SUBST:   X=x, Y=+
+DEPTH:   D, Elf, Crypt, Lair
+SHUFFLE: XY?! / YX!?
+: if not you.in_branch("Lair") then
+:   decorative_floor(_G, '!', "mop and bucket")
+: else
+SUBST:   ! = .
+: end
+SUBST:   X = x, Y = +, ? = .
 MAP
 ............
 .xxXxxxxxxx.
@@ -4798,7 +4815,7 @@ MAP
 .x........x.
 .x........x.
 .Y........x.
-.x........x.
+.x!......?x.
 .xxxxxxxXxx.
 ............
 ENDMAP

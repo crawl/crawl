@@ -1346,6 +1346,9 @@ static void _destroy_all_terrain(bool vaults)
 
 static void _ensure_player_habitable(bool dig_instead)
 {
+    if (crawl_state.game_is_arena())
+        return;
+
     dungeon_feature_type feat = env.grid(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
     {

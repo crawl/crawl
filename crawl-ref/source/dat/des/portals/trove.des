@@ -502,9 +502,10 @@ default-depth: D:12-, Swamp, Snake, Shoals, Spider
 #
 ##############################################################################
 
-NAME:   due_enter_trove_mix
-TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent no_descent
-SUBST:  c : cc., H : G.., G : GGG.
+NAME:    due_enter_trove_mix
+TAGS:    transparent no_descent
+SHUFFLE: c+ / c+ / '"
+SUBST:   '" = ., H : G.., G : GGG.
 : trove.portal(_G)
 COLOUR: c = blue
 MAP
@@ -519,17 +520,15 @@ ENDMAP
 NAME:   enter_trove_5
 TAGS:   transparent no_descent
 : trove.portal(_G)
-COLOUR: e = blue
-FTILE:  e = floor_marble
 : if you.absdepth() <= 15 then
 # Got drafted in from Vaults, while the mages try and close the portal down.
 KMONS:  e = vault guard
 : else
 # And this time he brought some friends...
 KMONS:  el = vault guard
-COLOUR: l = blue
-FTILE:  l = floor_marble
 : end
+COLOUR: e1 = blue
+FTILE:  e1 = floor_marble
 MAP
 ccccc
 c...c
@@ -913,7 +912,7 @@ ENDMAP
 NAME:   regret_index_trove_leda
 {{
 trove_setup(_G)
-local pon = "ego:ponderousness plus:" crawl.random_range(6, 10)
+local pon = "ego:ponderousness plus:" .. crawl.random_range(6, 10)
 local gen_armour = ""
 if species_has_size_limits(_G) == false then
   gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
@@ -922,7 +921,7 @@ if you.race() == "armataur" or you.race() == "naga" then
   gen_armour = gen_armour .. " / barding good_item / barding randart w:2"
 elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
   gen_armour = gen_armour .. " / pair of boots good_item w:5 " ..
-                             " / pair of boots ego:earth w:5 " ..
+                             " / pair of boots ego:earth " ..
                              " / pair of boots randart w:2"
 end
 trove_offense(_G, trove_weap_brand(_G, "heavy"),
@@ -1464,6 +1463,7 @@ end
 }}
 KPROP:   12' = no_tele_into
 TILE:    G = dngn_statue_dragon
+: tile("c = " .. crackle_def(_G))
 TILE:    v = dngn_metal_zot
 TILE:    o = wall_permarock_clear_blue
 FTILE:   '"12GHIJKLMNOo = floor_rough_blue

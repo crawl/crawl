@@ -4,19 +4,34 @@
     <string name="start_game">Start Game</string>
     <string name="edit_rc">Edit Init File</string>
     <string name="morgue">Morgue Files</string>
+    <string name="mods">Mods</string>
     <string name="rc_hint">Enter your custom configuration here.</string>
     <string name="help">Options Guide</string>
+    <string name="open_error">Error opening file</string>
     <string name="save">Save</string>
+    <string name="save_error">Error saving file</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="sort_by">Sort By</string>
     <string name="download">Download</string>
     <string name="download_ok">Download complete</string>
     <string name="download_error">Download failed</string>
+    <string name="upload">Upload</string>
+    <string name="upload_confirm">Do you want to overwrite %s?</string>
+    <string name="upload_ok">Upload complete</string>
+    <string name="upload_error">Upload failed</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm">Do you want to delete %s?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_ok">File deleted</string>
+    <string name="delete_error">Error deleting file</string>
     <string name="keyboard">Keyboard</string>
     <string name="extra_keyboard">Extra directional pad</string>
     <string name="keyboard_size">Keyboard size</string>
     <string name="full_screen">Full screen</string>
+    <string name="mods_hint">Here you can override game data resources.
+        Extra fonts need to be enabled in the init file.</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>
