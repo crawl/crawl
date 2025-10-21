@@ -978,12 +978,6 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
         _abyss_expand_mask_to_cover_vault(mask, i);
 }
 
-static void _abyss_invert_mask(map_bitmask *mask)
-{
-    for (rectangle_iterator ri(0); ri; ++ri)
-        mask->set(*ri, !mask->get(*ri));
-}
-
 // Moves everything in the given radius around the player (where radius=0 =>
 // only the player) to another part of the level, centred on target_centre.
 // Everything not in the given radius is wiped to DNGN_UNSEEN and the provided
@@ -1046,7 +1040,7 @@ static void _abyss_shift_level_contents_around_player(
     // So far we've used the mask to track the portions of the level we're
     // preserving. The inverse of the mask represents the area to be filled
     // with brand new abyss:
-    _abyss_invert_mask(&abyss_destruction_mask);
+    abyss_destruction_mask.invert();
 
     // Update env.level_vaults to discard any vaults that are no longer in
     // the picture.

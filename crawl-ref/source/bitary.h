@@ -191,4 +191,9 @@ public:
         data &= x.data;
         return *this;
     }
+
+    void invert() noexcept
+    {
+        data.flip();
+    }
 };
