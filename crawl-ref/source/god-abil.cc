@@ -253,10 +253,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
                 maybe_bloodify_square(*ri);
     }
 
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
     return true;
 }
 
@@ -1316,10 +1314,8 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
 
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
@@ -1828,10 +1824,8 @@ bool kiku_gift_capstone_spells()
     simple_god_message(" grants you forbidden knowledge!");
     library_add_spells(spells);
     flash_view(UA_PLAYER, RED);
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
     more();
     you.one_time_ability_used.set(you.religion);
     take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "forbidden knowledge"));
@@ -2088,10 +2082,8 @@ void cheibriados_time_step(int pow)
         // Update corpses, etc.
         update_level(1000);
 
-#ifndef USE_TILE_LOCAL
+        // Allow extra time for the flash to linger.
         scaled_delay(1000);
-#endif
-
     }
     _cleanup_time_steps();
 

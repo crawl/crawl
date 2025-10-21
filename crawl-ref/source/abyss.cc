@@ -2318,10 +2318,8 @@ void lugonu_corrupt_level(int power)
     _corrupt_level_features(cenv);
     run_corruption_effects(300);
 
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
 }
 
 void lugonu_corrupt_level_monster(const monster &who)
@@ -2342,10 +2340,8 @@ void lugonu_corrupt_level_monster(const monster &who)
     for (int i = 0; i < count; ++i)
         _spawn_corrupted_servant_near_monster(who);
 
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(300);
-#endif
 }
 
 /// Splash decorative corruption around the given space.

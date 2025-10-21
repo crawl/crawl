@@ -1025,18 +1025,26 @@ void animation_delay(unsigned int ms, bool do_refresh)
     scaled_delay(ms);
 }
 
+static void _flash_view(colour_t colour, targeter* where)
+{
+#ifndef USE_TILE_LOCAL
+    save_cursor_pos save;
+#endif
+
+    you.flash_colour = colour;
+    you.flash_where = where;
+    viewwindow(false);
+    update_screen();
+}
+
 void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
-#ifndef USE_TILE_LOCAL
-        save_cursor_pos save;
+        _flash_view(colour, where);
+#ifdef USE_TILE
+        tiles.redraw();
 #endif
-
-        you.flash_colour = colour;
-        you.flash_where = where;
-        viewwindow(false);
-        update_screen();
     }
 }
 
@@ -1045,9 +1053,9 @@ void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
-        flash_view(a, colour, where);
+        _flash_view(colour, where);
         scaled_delay(flash_delay);
-        flash_view(a, 0);
+        _flash_view(BLACK, nullptr);
     }
 }
 
