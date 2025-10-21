@@ -600,7 +600,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#stats").css("font-family", family);
+            document.documentElement.style.setProperty("--stat-font", family);
         }
     });
 

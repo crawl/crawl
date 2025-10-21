@@ -389,7 +389,7 @@ function ($, comm, client, options, focus_trap) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#ui-stack").css("font-family", family);
+            document.documentElement.style.setProperty("--crt-font", family);
         }
 
         $("#ui-stack").attr('data-display-mode',

@@ -535,6 +535,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         if (font_family !== new_font_family)
         {
             font_family = new_font_family;
+            document.documentElement.style.setProperty("--action-font", font_family);
             _update_font_props();
             update_required = true;
         }

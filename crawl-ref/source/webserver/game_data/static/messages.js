@@ -141,7 +141,7 @@ function ($, comm, client, textinput, util, options) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#message_pane").css("font-family", family);
+            document.documentElement.style.setProperty("--msg-font", family);
         }
     });
 

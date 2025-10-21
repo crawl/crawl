@@ -1113,8 +1113,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#crt").css("font-family", family);
-            $(".menu").css("font-family", family);
+            document.documentElement.style.setProperty("--crt-font", family);
         }
 
         handle_size_change();

@@ -2520,11 +2520,12 @@ tile_font_lbl_size  = 14
 tile_font_ft_light = false
         Selects 'light' font hinting.
 
-glyph_mode_font = monospace
+glyph_mode_font = DejaVu Sans Mono
         Font used to render the dungeon in glyph mode for WebTiles. If set to
-        monospace (default) or the font is not available, the browser's default
-        monospaced font will be used.
-        This option is only available on WebTiles.
+        monospace or the font is not available, the browser's default monospaced
+        font will be used. The default "DejaVu Sans Mono" is available as a
+        webfont (and is the same as used in the desktop version). This option
+        is only available on WebTiles.
 
 glyph_mode_font_size = 24
         Font size (in points) for the dungeon view in glyph mode for WebTiles.
