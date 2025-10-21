@@ -9046,13 +9046,8 @@ static monster* _find_ally_to_throw(const monster &mons)
             continue;
         }
 
-        // Don't try to throw anything constricted.
-        if (throwee->is_constricted())
-            continue;
-
-        // Don't try to throw tentacles or their parts.
-        // Both too big and too easy to disconnect.
-        if (mons_is_tentacle_or_tentacle_segment(throwee->type))
+        // Don't try to throw anything constricted or stationary.
+        if (throwee->is_constricted() || throwee->is_stationary())
             continue;
 
         // otherwise throw whoever's furthest from our target.
