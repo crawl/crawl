@@ -1853,7 +1853,6 @@ KPROP: wK = no_tele_into
       data={triggered = false} }
   cf:add_triggerer(DgnTriggerer:new{type="player_move"})
   lua_marker("O", cf)
-  lua_marker(":", cf)
   lua_marker("K", props_marker { merfolk_avatar_spawn = 1 })
 }}
 MAP
@@ -1862,9 +1861,9 @@ MAP
  wwwwwKwwwww
  wwwwwWwwwww
 wwwwwwWwwwwww
-wwwwWW:WWwwww
-wwwwW:O:Wwwww
-wwwwwW:Wwwwww
+wwwwWW.WWwwww
+wwwwW.O.Wwwww
+wwwwwW.Wwwwww
 wwwww.wwwwwww
  wwwww.wwwww
  wwwww.wwwww
