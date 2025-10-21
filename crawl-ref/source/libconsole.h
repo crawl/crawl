@@ -41,7 +41,7 @@ void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
 void set_mouse_enabled(bool enabled);
 
-static inline void put_colour_ch(int colour, unsigned ch)
+static inline void put_colour_ch(int colour, char32_t ch)
 {
     textcolour(colour);
     putwch(ch);
