@@ -41,9 +41,11 @@ struct cloud_struct
 
 enum cloud_tile_variation
 {
-    CTVARY_NONE,     ///< fixed tile (or special case)
+    CTVARY_NONE,     ///< fixed tile
     CTVARY_DUR,      ///< tile based on remaining cloud duration
     CTVARY_RANDOM,   ///< choose a random tile in set with every redraw
+    CTVARY_MUTAGENIC,///< choose a tile for a mutagenic cloud
+    CTVARY_VORTEX,   ///< choose a tile for a polar vortex cloud
 };
 
 struct cloud_tile_info

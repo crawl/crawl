@@ -222,7 +222,7 @@ static const cloud_data clouds[] = {
     // CLOUD_MUTAGENIC,
     { "mutagenic fog",  nullptr,                // terse, verbose name
       ETC_MUTAGENIC,                            // colour
-      { TILE_ERROR, CTVARY_NONE },              // tile
+      { TILE_ERROR, CTVARY_MUTAGENIC },         // tile
     },
     // CLOUD_MAGIC_TRAIL,
     { "magical condensation", nullptr,          // terse, verbose name
@@ -232,7 +232,7 @@ static const cloud_data clouds[] = {
     // CLOUD_VORTEX,
     { "whirling frost", nullptr,                // terse, verbose name
       ETC_VORTEX,                               // colour
-      { TILE_ERROR },                           // tile
+      { TILE_ERROR, CTVARY_VORTEX },            // tile
     },
     // CLOUD_DUST,
     { "sparse dust",  nullptr,                  // terse, verbose name

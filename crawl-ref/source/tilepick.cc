@@ -3568,28 +3568,20 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                         tile_main_count(tile_info.base),
                         cl.pos.y * GXM + cl.pos.x, you.frame_no);
                 break;
-        }
-
-        if (!ch || ch == TILE_ERROR)
-            ch = TILE_CLOUD_GREY_SMOKE;
-
-        switch (type)
-        {
-            case CLOUD_MUTAGENIC:
+            case CTVARY_MUTAGENIC:
                 ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
                       dur == 1 ? TILE_CLOUD_MUTAGENIC_1
                                : TILE_CLOUD_MUTAGENIC_2);
                 ch += ui_random(tile_main_count(ch));
                 break;
-
-            case CLOUD_VORTEX:
+            case CTVARY_VORTEX:
                 ch = get_vortex_phase(cl.pos) ? TILE_CLOUD_FREEZING_WINDS_0
-                                               : TILE_CLOUD_FREEZING_WINDS_1;
-                break;
-
-            default:
+                                              : TILE_CLOUD_FREEZING_WINDS_1;
                 break;
         }
+
+        if (!ch || ch == TILE_ERROR)
+            ch = TILE_CLOUD_GREY_SMOKE;
     }
 
     if (colour != -1)
