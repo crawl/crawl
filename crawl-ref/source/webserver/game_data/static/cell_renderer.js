@@ -247,7 +247,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.render_glyph(x, y, map_cell, false);
 
                 this.render_cursors(cx, cy, x, y);
-                this.draw_ray(x, y, cell);
                 return;
             }
 
@@ -663,22 +662,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        draw_ray: function(x, y, cell)
-        {
-            var bg = cell.bg;
-            var bg_idx = cell.bg.value;
-            var renderer = this;
-
-            if (bg.RAY)
-                this.draw_dngn(dngn.RAY, x, y);
-            else if (bg.RAY_OOR)
-                this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
-            else if (bg.LANDING)
-                this.draw_dngn(dngn.LANDING, x, y);
-            else if (bg.RAY_MULTI)
-                this.draw_dngn(dngn.RAY_MULTI, x, y);
-        },
-
         draw_background: function(x, y, cell)
         {
             var bg = cell.bg;
@@ -874,8 +857,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
             }
-
-            this.draw_ray(x, y, cell);
         },
 
         draw_submerged_tile: function(base_idx, idx, x, y, trans, img_scale)
@@ -965,7 +946,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             else if (options.get("tile_display_mode") == "hybrid")
             {
                 this.render_glyph(x, y, map_cell, true, true);
-                this.draw_ray(x, y, cell);
                 img_scale = undefined; // TODO: make this work?
             }
 

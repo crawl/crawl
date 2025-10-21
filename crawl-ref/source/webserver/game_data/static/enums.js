@@ -208,7 +208,6 @@ define(function () {
 
     // Background flags
     var bg_flags = { flags: {}, exclusive_flags: [] };
-    bg_flags.flags.RAY        = 0x00010000;
     bg_flags.flags.MM_UNSEEN  = 0x00020000;
     bg_flags.flags.UNSEEN     = 0x00040000;
     bg_flags.exclusive_flags.push({
@@ -220,7 +219,6 @@ define(function () {
     bg_flags.flags.TUT_CURSOR = 0x00200000;
     bg_flags.flags.TRAV_EXCL  = 0x00400000;
     bg_flags.flags.EXCL_CTR   = 0x00800000;
-    bg_flags.flags.RAY_OOR    = 0x01000000;
     bg_flags.flags.OOR        = 0x02000000;
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
@@ -234,8 +232,6 @@ define(function () {
 
     bg_flags.flags.RAMPAGE     = [0, 0x020];
 
-    bg_flags.flags.LANDING     = [0, 0x200];
-    bg_flags.flags.RAY_MULTI   = [0, 0x400];
     bg_flags.mask              = 0x0000FFFF;
 
     // Since the current flag implementation is really slow we use a trivial
