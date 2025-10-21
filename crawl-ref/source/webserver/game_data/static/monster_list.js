@@ -277,7 +277,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#monster_list").css("font-family", family);
+            document.documentElement.style.setProperty("--lbl-font", family);
         }
     });
 

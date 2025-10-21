@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'DejaVu Sans';
+    src: url('DejaVuSans.woff2') format('woff2'),
+        url('DejaVuSans.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Sans Mono';
+    src: url('DejaVuSansMono.woff2') format('woff2'),
+        url('DejaVuSansMono.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
