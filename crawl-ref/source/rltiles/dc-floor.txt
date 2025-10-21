@@ -964,6 +964,15 @@ crypt_domino_7a
 crypt_domino_8a
 %domino 0
 
+zot_diamonds0 FLOOR_ZOT_DIAMONDS
+zot_diamonds1
+zot_diamonds2
+zot_diamonds3
+zot_diamonds4
+zot_diamonds5
+zot_diamonds6
+zot_diamonds7
+
 iron0 FLOOR_IRON
 %weight 1
 iron1

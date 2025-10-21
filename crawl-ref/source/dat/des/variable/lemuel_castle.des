@@ -119,11 +119,15 @@ function castle_lemuel_setup(e)
    e.subst("8 = 89")
    e.subst("M : M..")
    e.subst("X = .")
-   e.colour("? = brown")
-   e.ftile("? = floor_mud")
+   if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+     e.ftile("? = floor_depthstone")
+     e.ftile("DGZ+M$%|*.~12348 = floor_zot_diamonds")
+   else
+     e.colour("? = brown")
+     e.ftile("? = floor_mud")
+     e.ftile("DGZ+M$%|*.~12348 = floor_cobble_blood")
+   end
    e.tile("c = wall_stone_smooth")
-   e.ftile("DGZ+M$%|*.~ = floor_cobble_blood")
-   e.ftile("12348 = floor_cobble_blood")
 end
 }}
 

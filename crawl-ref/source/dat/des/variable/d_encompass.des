@@ -47,6 +47,7 @@ SUBST:   & : a:80 x:15 c:3 v:1 b:1, a : c:38 v:2 b:2
 :    if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
 KITEM:   - = smoky gem
 KFEAT:   = = enter_depths
+TILE:    c = stone_wall_depths_entry
 SUBST:   }] = ., ) = =, > = <
 :    else
 SUBST:   - = .
@@ -241,13 +242,18 @@ NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
 COLOUR:  "-_ = green
 COLOUR:  '`089s%*|!? = white
 FTILE:   "-_^;artuzAFHB@&UZ = floor_grass_dark
-: if crawl.coinflip() then
-FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_vault
+: if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_depthstone
+TILE:    c = stone_wall_depths_entry
 : else
-FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_pebble_darkgray
-: end
-: if you.in_branch("Depths") then
+:   if you.in_branch("Depths") then
 FTILE:   .~mopq = floor_depthstone
+:   end
+:   if crawl.coinflip() then
+FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_vault
+:   else
+FTILE:   '`<{([>})]089s%*|!?CTDEGI = floor_pebble_darkgray
+:   end
 : end
 MARKER:  E = lua:transp_loc("spin_cycle_entry")
 MARKER:  F = lua:transp_dest_loc("spin_cycle_entry")
@@ -437,7 +443,11 @@ KPROP:    l = no_cloud_gen
 : end
 MARKER:   T = lua:props_marker { portal=1 }
 TILE:     b = wall_emerald
+: if you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
 TILE:     c = wall_crystal_squares
+: else
+TILE:     c = stone_wall_depths_entry
+: end
 TILE:     v = dngn_metal_wall_darkgray
 FTILE:    ' = floor_depthstone
 LFLOORTILE: floor_pebble_green
@@ -879,6 +889,7 @@ KFEAT:   O = enter_depths
 NSUBST:  1 = 1:2 / *:1
 SHUFFLE: O3hG
 TILE:    G = depths_column
+TILE:    c = stone_wall_depths_entry
 FTILE:   .123OhG = floor_depthstone
 MAP
   ......
@@ -907,7 +918,7 @@ SHUFFLE: defg
 NSUBST:  1 = 1:2 / *=1
 KMASK:   h = no_item_gen
 COLOUR:  .1defghO = magenta
-FTILE:   .1defghOZ = floor_hall
+FTILE:   .1defghOZ = floor_marble
 MAP
   ......
  ..1..1..

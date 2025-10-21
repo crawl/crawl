@@ -740,7 +740,7 @@ KFEAT:  Z = zot_statue
 COLOUR: c = lightmagenta
 COLOUR: JO.1+ = magenta
 TILE:   c = wall_zot_magenta
-FTILE:  JO.1+ = floor_hall
+FTILE:  JO.1+ = floor_zot_diamonds
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \
@@ -820,7 +820,7 @@ SUBST:   defghi'"`Z?_ = .
 : end
 MARKER: Y = lua:props_marker { portal=1 }
 : decorative_floor(_G, '*', "flower patch")
-FTILE:  Z~'^ = floor_marble
+FTILE:  Z~'^ = floor_zot_diamonds
 LFLOORTILE: floor_depthstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
