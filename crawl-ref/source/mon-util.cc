@@ -1098,11 +1098,6 @@ void discover_mimic(const coord_def& pos)
                                                              false, true);
     const bool plural = feature_mimic ? false : item->quantity > 1;
 
-#ifdef USE_TILE
-    tileidx_t tile = tileidx_feature(pos);
-    apply_variations(tile_env.flv(pos), &tile, pos);
-#endif
-
     if (you.see_cell(pos))
         mprf("%s %s a mimic!", name.c_str(), plural ? "are" : "is");
 
