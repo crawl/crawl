@@ -1673,39 +1673,32 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         if (m_abstract.size() == 0)
         {
-            fprintf(fp, "define([");
             if (m_start_value_module.size() > 0)
-                fprintf(fp, "\"./tileinfo-%s\"", m_start_value_module.c_str());
-            fprintf(fp, "], function(m) {\n");
+                fprintf(fp, "import m from \"./tileinfo-%s\"\n", m_start_value_module.c_str());
         }
         else
         {
-            fprintf(fp, "define([\"jquery\",");
-            for (const auto& abstract : m_abstract)
-                fprintf(fp, "\"./tileinfo-%s\", ", abstract.first.c_str());
-            fprintf(fp, "],\n       function ($, ");
-            for (size_t i = 0; i < m_abstract.size(); ++i)
+            for (const auto &abstract : m_abstract)
             {
-                if (i < m_abstract.size() - 1)
-                    fprintf(fp, "%s, ", m_abstract[i].first.c_str());
-                else
-                    fprintf(fp, "%s", m_abstract[i].first.c_str());
+                fprintf(fp, "import %s from \"./tileinfo-%s\"\n",
+                        abstract.first.c_str(), abstract.first.c_str());
             }
-            fprintf(fp, ") {\n");
         }
         fprintf(fp, "// This file has been automatically generated.\n\n");
-        fprintf(fp, "var exports = {};\n");
+        fprintf(fp, "const exports = { ");
 
         if (m_abstract.size() > 0)
         {
-            for (const auto& abstract : m_abstract)
-                fprintf(fp, "$.extend(exports, %s);\n", abstract.first.c_str());
+            for (const auto &abstract : m_abstract)
+                fprintf(fp, "...%s, ", abstract.first.c_str());
         }
 
+        fprintf(fp, "};\n");
+
         if (m_start_value_module.size() > 0)
-            fprintf(fp, "\nvar val = m.%s;\n", m_start_value.c_str());
+            fprintf(fp, "\nlet val = m.%s;\n", m_start_value.c_str());
         else
-            fprintf(fp, "\nvar val = %s;\n", m_start_value.c_str());
+            fprintf(fp, "\nlet val = %s;\n", m_start_value.c_str());
 
         string old_enum_name = "";
         int count = 0;
@@ -1862,7 +1855,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "};\n\n");
         }
 
-        fprintf(fp, "return exports;\n});\n");
+        fprintf(fp, "export default exports\n");
 
         fclose(fp);
     }

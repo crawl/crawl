@@ -1,0 +1,25 @@
+{
+  "name": "crawl-game",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm-run-all build:vite copy",
+    "build:vite": "vite build",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write --unsafe",
+    "format": "biome format",
+    "preview": "vite preview",
+    "copy": "cp dist/* ../../game_data/static"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "glob": "^11.0.3",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.7"
+  },
+  "dependencies": {
+    "focus-trap": "^7.6.5"
+  }
+}

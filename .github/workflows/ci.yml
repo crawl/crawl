@@ -30,6 +30,16 @@ jobs:
         run: util/checkconventionalcommit.py
         working-directory: crawl-ref/source
         continue-on-error: true
+      - name: Setup node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.20.0
+      - name: Install node.js dependencies
+        run: npm ci
+      - name: JavaScript linting (biome)
+        run: npm run lint
+      - name: JavaScript formatting (biome)
+        run: npm run format
 
   build_source:
     permissions:
@@ -139,6 +149,10 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
+      - name: Setup node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.20.0
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:

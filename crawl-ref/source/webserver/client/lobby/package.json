@@ -1,0 +1,30 @@
+{
+  "name": "crawl-lobby",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm-run-all build:vite copy",
+    "build:vite": "vite build",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write --unsafe",
+    "format": "biome format",
+    "preview": "vite preview",
+    "copy": "cp -r dist/* ../../static"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "@types/jquery": "1.x",
+    "glob": "^11.0.3",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.7"
+  },
+  "dependencies": {
+    "ace-builds": "^1.43.4",
+    "jquery": "^1.12.4",
+    "jquery.browser": "^0.1.0",
+    "jquery.cookie": "^1.4.1",
+    "tablesorter": "^2.32.0"
+  }
+}

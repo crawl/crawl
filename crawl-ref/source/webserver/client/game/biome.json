@@ -1,0 +1,8 @@
+{
+  "root": false,
+  "extends": "//",
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["*", "src/*", "!src/contrib"]
+  }
+}
