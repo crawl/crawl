@@ -5,10 +5,11 @@
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <script type="text/javascript">
       var socket_server = "{{ socket_server }}";
+      var game_version = "{{ game_version }}";
     </script>
-    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-    <link rel="stylesheet" type="text/css" href="/static/fonts/fonts.css">
+    <script src="{{ static_url("scripts/contrib/require.js") }}" data-main="/static/scripts/app"></script>
+    <link rel="stylesheet" type="text/css" href="{{ static_url("style.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ static_url("fonts/fonts.css") }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=860, initial-scale=1.0">
