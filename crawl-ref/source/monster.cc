@@ -5448,7 +5448,7 @@ void monster::drain_action_energy()
         speed_increment = ENERGY_THRESHOLD - roll_dice(1, 10);
 }
 
-void monster::check_redraw(const coord_def &old, bool clear_tiles) const
+void monster::check_redraw(const coord_def &old) const
 {
     if (!crawl_state.io_inited)
         return;
@@ -5457,20 +5457,14 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
     const bool see_old = you.see_cell(old);
     if ((see_new || see_old) && !view_update())
     {
-        if (see_new)
+        // Mark where the monster moved, if the player saw them stop out of sight.
+        if (see_new  || (see_old && (pos() - old).rdist() <= 1))
             view_update_at(pos());
 
         // Don't leave a trail if we can see the monster move in.
         if (see_old || (pos() - old).rdist() <= 1)
-        {
             view_update_at(old);
-#ifdef USE_TILE
-            if (clear_tiles && !see_old)
-                tile_reset_fg(old);
-#else
-            UNUSED(clear_tiles);
-#endif
-        }
+
         update_screen();
     }
 }

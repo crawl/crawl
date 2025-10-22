@@ -3649,10 +3649,10 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     _swim_or_move_energy(*mon);
     _swim_or_move_energy(*m2);
 
-    mon->check_redraw(m2->pos(), false);
+    mon->check_redraw(m2->pos());
     mon->apply_location_effects(m2->pos());
 
-    m2->check_redraw(mon->pos(), false);
+    m2->check_redraw(mon->pos());
     m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.

@@ -164,7 +164,7 @@ public:
     void drain_action_energy();
     bool matches_player_speed() const;
     int  player_speed_energy() const;
-    void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
+    void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
