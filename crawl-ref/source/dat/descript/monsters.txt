@@ -943,7 +943,7 @@ ground, the dungeon bullfrog is as large as it sounds.
 bunyip
 
 A flesh-eating beast that uses its limbs and tail interchangeably. It moves
-with alarming speed, but must pause to reorganize itself after each attack.
+with alarming speed, but must pause to reorganise itself after each attack.
 Its distinctive screams carry far and wide.
 %%%%
 butterfly
@@ -1775,7 +1775,7 @@ to grow many more!
 Hitting it with any bladed weapon bigger than a short blade risks lopping a
 head off and causing two more to grow in its place. Very large claws, such as
 trolls', are long enough to do the same. Only a weapon branded with flame will
-cauterize the wound and prevent more heads from growing.
+cauterise the wound and prevent more heads from growing.
 %%%%
 ice beast
 
@@ -2074,7 +2074,7 @@ glistens as if seen through ocean spray.
 %%%%
 merfolk avatar
 
-A beguiling merfolk whose voice mesmerizes listeners. It carries no weapon,
+A beguiling merfolk whose voice mesmerises listeners. It carries no weapon,
 but its song summons drowned souls to defend the sea against intruders.
 %%%%
 merfolk impaler
@@ -2088,7 +2088,7 @@ javelins.
 %%%%
 merfolk siren
 
-A beguiling merfolk whose voice can mesmerize listeners.
+A beguiling merfolk whose voice can mesmerise listeners.
 %%%%
 minotaur
 
@@ -2398,7 +2398,7 @@ a shield. It projects a kinetic barrier around its creator while adjacent to
 them, increasing their armour class.
 
 It will never voluntarily leave its creator's side, and if forcibly seperated,
-will prioritize returning to them over any other concerns.
+will prioritise returning to them over any other concerns.
 %%%%
 phantasmal warrior
 
@@ -3342,7 +3342,7 @@ A particularly evil-looking wolf, usually found in the company of orcs.
 war gargoyle
 
 A rare type of gargoyle, constructed from a solid steel statue and imbued with
-vicious strength, speed, and weaponized breath.
+vicious strength, speed, and weaponised breath.
 %%%%
 water elemental
 
@@ -3752,7 +3752,7 @@ A bat that is well past its sell-by date.
 %%%%
 sickly merfolk siren
 
-A young merfolk that looks quite sick, but still has the power to mesmerize its
+A young merfolk that looks quite sick, but still has the power to mesmerise its
 victims.
 %%%%
 skeletal bat

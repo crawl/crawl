@@ -22,7 +22,7 @@
 #
 #   @book_name@ @<primary school>@
 #
-# Fixed level books are categorized into "starting" (level 1),
+# Fixed level books are categorised into "starting" (level 1),
 # "easy" (level 2-4), "moderate" (level 4-6) and "difficult" (level 7-9),
 # a keyword that is used as a prefix for "level book".
 # @level@ is parsed to the word describing the spell level.
@@ -3232,7 +3232,7 @@ Manufactured
 
 Mechanical
 
-Mechanized
+Mechanised
 
 Metallic
 
@@ -3244,7 +3244,7 @@ Physical
 
 Rattling
 
-Realized
+Realised
 
 Reified
 

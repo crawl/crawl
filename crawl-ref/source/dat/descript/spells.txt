@@ -758,7 +758,7 @@ Constructs a small mechanical guardian which bolsters its creator's armour
 class for as long as it remains adjacent to them.
 
 While also capable of biting foes, the phalanx beetle will never voluntarily
-leave its creator's side, and if forcibly separated, will prioritize returning
+leave its creator's side, and if forcibly separated, will prioritise returning
 to them over any other concern.
 
 Spellpower increases the magnitude of the AC increase, as well as the beetle's

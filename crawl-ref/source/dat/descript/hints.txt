@@ -221,7 +221,7 @@ You have picked up your first potion<console> ('<w>$item[potion]</w>')</console>
 <nomouse>Press</nomouse> <w>$cmd[CMD_QUAFF]</w> to quaff it.
 
 Once you've identified a potion, either with a scroll of identification or by
-drinking it, you'll automatically recognize all other potions of the same type;
+drinking it, you'll automatically recognise all other potions of the same type;
 this means it's sometimes useful to drink potions just to identify them.
 %%%%
 HINT_SEEN_SCROLL
@@ -231,7 +231,7 @@ You have picked up your first scroll<console> ('<w>$item[scroll]</w>')</console>
 <nomouse>Press</nomouse> <w>$cmd[CMD_READ]</w> to read it.
 
 Once you've identified a scroll, either with a scroll of identification or by
-reading it, you'll automatically recognize all other scrolls of the same type;
+reading it, you'll automatically recognise all other scrolls of the same type;
 this means it's sometimes useful to read scrolls just to identify them.
 %%%%
 HINT_SEEN_WAND
