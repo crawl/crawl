@@ -2349,8 +2349,6 @@ void makhleb_tyrant_buff()
     }
 }
 
-constexpr int BLOODRITE_MIN_SHOTS = 8;
-
 void makhleb_celebrant_bloodrite()
 {
     if (you.hp * 2 > you.hp_max
@@ -2360,72 +2358,7 @@ void makhleb_celebrant_bloodrite()
         return;
     }
 
-    vector<coord_def> targs;
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!mi->wont_attack() && !mi->is_firewood())
-            targs.push_back(mi->pos());
-    }
-
-    // Don't activate or go on cooldown if there's nothing to shoot at.
-    if (targs.empty())
-        return;
-
-    mpr("You consecrate your suffering and invoke the rites of blood!");
-
-    // Set cooldown before firing, in case we recieve damage during the volley
-    // (eg: via reflected projectiles) that would trigger this again.
-    you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
-
-    shuffle_array(targs);
-
-    int shots_fired = 0;
-    int repeats = 0;
-
-    bolt beam;
-    beam.range        = you.current_vision;
-    beam.source       = you.pos();
-    beam.source_id    = MID_PLAYER;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU;
-    zappy(ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2), false, beam);
-
-    beam.draw_delay   = 10;
-
-    // Fire once at every visible target. If that doesn't hit the minimum number
-    // of shots, fire at most a second time at each of these targets.
-    while (shots_fired < BLOODRITE_MIN_SHOTS && repeats < 2)
-    {
-        for (size_t i = 0; i < targs.size()
-                && (repeats == 0 || shots_fired < BLOODRITE_MIN_SHOTS); ++i)
-        {
-            bolt shot = beam;
-            shot.target = targs[i];
-            shot.fire();
-            view_clear_overlays();
-            ++shots_fired;
-        }
-        ++repeats;
-        shuffle_array(targs);
-    }
-
-    // If firing twice at every target still didn't hit the minimum number of
-    // shots, fire the rest of them completely at random.
-    while (shots_fired < BLOODRITE_MIN_SHOTS)
-    {
-        coord_def targ = you.pos();
-        targ.x += random_range(-LOS_RADIUS, LOS_RADIUS);
-        targ.y += random_range(-LOS_RADIUS, LOS_RADIUS);
-
-        if (targ == you.pos())
-            continue;
-
-        bolt shot = beam;
-        shot.target = targ;
-        shot.fire();
-        view_clear_overlays();
-        ++shots_fired;
-    }
+    celebrant_bloodrite_fineff::schedule();
 }
 
 void makhleb_execution_activate()

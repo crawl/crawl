@@ -693,6 +693,23 @@ protected:
     int power;
 };
 
+class celebrant_bloodrite_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect&) const override { return true; }
+    void fire() override;
+
+    static void schedule()
+    {
+        final_effect::schedule(new celebrant_bloodrite_fineff());
+    }
+protected:
+    celebrant_bloodrite_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+};
+
 
 
 void fire_final_effects();
