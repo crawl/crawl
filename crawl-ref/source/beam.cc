@@ -6128,6 +6128,9 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
              && !mon->props.exists(SOUL_SPLINTERED_KEY);
         break;
 
+    case BEAM_BECKONING:
+        return can_beckon(*mon);
+
     default:
         break;
     }
