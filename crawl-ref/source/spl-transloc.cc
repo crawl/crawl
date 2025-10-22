@@ -851,15 +851,18 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
 
     charge_atk.launch_attack_set();
 
-    // Monsters will already use up attack energy via the melee attack itself,
-    // so we only need to handle delay for players.
     if (agent.is_player())
     {
-        // Normally this is 10 aut (multiplied by haste, slow, etc.), but slow
-        // weapons take longer. Most relevant for low-skill players or things
-        // like the Dark Maul.
+        // Normally casting this takes 10 aut (multiplied by haste, slow, etc.),
+        // but slow weapons take longer. Most relevant for low-skill players or
+        // things like the Dark Maul.
         you.time_taken = max(you.attack_delay().roll(), player_speed());
     }
+    // The attack will have automatically consumed energy from the monster, so
+    // let's refund that (as they will be automatically be charged for casting
+    // the spell *in addition* to that).
+    else
+        agent.as_monster()->speed_increment += agent.as_monster()->energy_cost(EUT_ATTACK);
 
     return spret::success;
 }
