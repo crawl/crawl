@@ -1413,6 +1413,7 @@ void stardust_orb_trigger(int mp_spent)
     if (!you.duration[DUR_STARDUST_COOLDOWN]
         && you.wearing_ego(OBJ_ARMOUR, SPARM_STARDUST))
     {
-        stardust_fineff::schedule(&you, stardust_orb_power(mp_spent), stardust_orb_max());
+        schedule_stardust_fineff(&you, stardust_orb_power(mp_spent),
+                                 stardust_orb_max());
     }
 }

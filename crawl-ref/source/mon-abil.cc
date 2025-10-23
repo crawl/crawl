@@ -1385,7 +1385,7 @@ bool pyrrhic_recollection(monster& nobody)
     // Allow Nobody to wake up if you kill them in their sleep
     behaviour_event(&nobody, ME_ALERT);
 
-    avoided_death_fineff::schedule(&nobody);
+    schedule_avoided_death_fineff(&nobody);
 
     return true;
 }

@@ -907,7 +907,7 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
-            dismiss_divine_allies_fineff::schedule(GOD_TROG);
+            schedule_dismiss_divine_allies_fineff(GOD_TROG);
         }
         else if (god == GOD_ZIN)
         {
@@ -920,7 +920,7 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DIVINE_SHIELD])
                you.duration[DUR_DIVINE_SHIELD] = 0;
-            dismiss_divine_allies_fineff::schedule(GOD_SHINING_ONE);
+            schedule_dismiss_divine_allies_fineff(GOD_SHINING_ONE);
         }
         else if (god == GOD_ELYVILON)
         {
@@ -990,7 +990,7 @@ static void _inc_penance(god_type god, int val)
                 okawaru_remove_finesse();
         }
         else if (god == GOD_BEOGH)
-            dismiss_divine_allies_fineff::schedule(GOD_BEOGH);
+            schedule_dismiss_divine_allies_fineff(GOD_BEOGH);
         else if (god == GOD_YREDELEMNUL)
         {
             you.props.erase(YRED_TORCH_POWER_KEY);
@@ -2971,7 +2971,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_MAKHLEB:
-        dismiss_divine_allies_fineff::schedule(GOD_MAKHLEB);
+        schedule_dismiss_divine_allies_fineff(GOD_MAKHLEB);
         if (you.form == transformation::slaughter)
             untransform();
         break;
@@ -2979,7 +2979,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_TROG:
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
-        dismiss_divine_allies_fineff::schedule(GOD_TROG);
+        schedule_dismiss_divine_allies_fineff(GOD_TROG);
         you.skills_to_show.insert(SK_SPELLCASTING);
         break;
 
@@ -3020,7 +3020,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_DIVINE_SHIELD])
             you.duration[DUR_DIVINE_SHIELD] = 0;
 
-        dismiss_divine_allies_fineff::schedule(GOD_SHINING_ONE);
+        schedule_dismiss_divine_allies_fineff(GOD_SHINING_ONE);
         break;
 
     case GOD_ZIN:

@@ -1219,7 +1219,7 @@ void melee_attack::handle_spectral_brand()
     if (attacker->type == MONS_SPECTRAL_WEAPON || !defender->alive())
         return;
     attacker->triggered_spectral = true;
-    spectral_weapon_fineff::schedule(*attacker, *defender, mutable_wpn);
+    schedule_spectral_weapon_fineff(*attacker, *defender, mutable_wpn);
 }
 
 item_def *melee_attack::primary_weapon() const
@@ -1769,7 +1769,7 @@ void melee_attack::maybe_trigger_detonation()
                        && you.duration[DUR_DETONATION_CATALYST]
                        && !cleaving && in_bounds(defender->pos()))
         {
-            detonation_fineff::schedule(defender->pos(), weapon);
+            schedule_detonation_fineff(defender->pos(), weapon);
         }
 }
 
@@ -3696,12 +3696,12 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))
-            blink_fineff::schedule(attacker);
+            schedule_blink_fineff(attacker);
         break;
 
     case AF_BLINK_WITH:
         if (coinflip())
-            blink_fineff::schedule(attacker, defender);
+            schedule_blink_fineff(attacker, defender);
         break;
 
     case AF_CONFUSE:
@@ -4647,7 +4647,7 @@ bool melee_attack::do_knockback(bool slippery)
     // Schedule following _before_ actually trampling -- if the defender
     // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
-    trample_follow_fineff::schedule(attacker, old_pos);
+    schedule_trample_follow_fineff(attacker, old_pos);
 
     if (defender->is_player())
     {

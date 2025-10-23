@@ -24,7 +24,6 @@ typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
 
 typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
-class final_effect;
 struct crawl_environment
 {
     colour_t rock_colour;
@@ -111,8 +110,6 @@ struct crawl_environment
     // Mapping mid->mindex until the transition is finished.
     map<mid_t, unsigned short> mid_cache;
 
-    // Things to happen when the current attack/etc finishes.
-    vector<final_effect *> final_effects;
     // Copies of monsters cached so they can be looked up during a final_effect
     // that will be processed after their death. Used mainly to assign proper
     // blame for dead exploders. (Cleared every time final_effects is)

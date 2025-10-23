@@ -108,7 +108,7 @@ bool attack::handle_phase_damaged()
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
         if (blood)
-            blood_fineff::schedule(defender, defender->pos(), blood);
+            schedule_blood_fineff(defender, defender->pos(), blood);
     }
 
     announce_hit();
@@ -516,7 +516,7 @@ bool attack::distortion_affects_defender()
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele())
-            blink_fineff::schedule(defender);
+            schedule_blink_fineff(defender);
         break;
     case BANISH:
         if (defender_visible)
@@ -1597,7 +1597,7 @@ actor &attack::stat_source() const
 void attack::maybe_trigger_jinxbite()
 {
     if (attacker->is_player() && you.duration[DUR_JINXBITE])
-        jinxbite_fineff::schedule(defender);
+        schedule_jinxbite_fineff(defender);
 }
 
 void attack::maybe_trigger_fugue_wail(const coord_def pos)

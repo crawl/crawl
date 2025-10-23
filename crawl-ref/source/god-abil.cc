@@ -1785,7 +1785,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     }
 
     // schedule our actual revival for the end of this combat round
-    avoided_death_fineff::schedule(mon);
+    schedule_avoided_death_fineff(mon);
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
@@ -5944,7 +5944,7 @@ spret uskayaw_grand_finale(bool fail)
         // need to do this here, because react_to_damage is never called
         mprf("%s explodes violently into a cloud of jellies%s",
                                         mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
-        trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
+        schedule_trj_spawn_fineff(&you, mons, mons->pos(), mons->hit_points);
     }
     else
         mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());

@@ -5245,8 +5245,8 @@ bool handle_mon_spell(monster* mons)
     if (mons->wearing_ego(OBJ_ARMOUR, SPARM_STARDUST)
         && !mons->has_ench(ENCH_ORB_COOLDOWN))
     {
-        stardust_fineff::schedule(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
-                                  4 + mons->get_hit_dice() / 2);
+        schedule_stardust_fineff(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
+                                 4 + mons->get_hit_dice() / 2);
     }
 
     if (!(flags & MON_SPELL_INSTANT))

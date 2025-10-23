@@ -236,8 +236,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         simple_monster_message(*mons, " form twists and warps, and jellies "
                                "spill out!", true);
-        trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
-                                   mons->hit_points);
+        schedule_trj_spawn_fineff(nullptr, mons, mons->pos(),
+                                  mons->hit_points);
     }
 
     // Inform listeners that the original monster is gone.

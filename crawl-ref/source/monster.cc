@@ -4319,8 +4319,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 int split = amount / 2;
                 if (split > 0)
                 {
-                    deferred_damage_fineff::schedule(agent, guardian,
-                                                     split, false);
+                    schedule_deferred_damage_fineff(agent, guardian,
+                                                    split, false);
                     amount -= split;
                 }
             }
@@ -4405,7 +4405,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && agent && agent->alive() && agent->is_monster()
             && agent->as_monster()->has_ench(ENCH_ANGUISH))
         {
-            anguish_fineff::schedule(agent, amount);
+            schedule_anguish_fineff(agent, amount);
         }
 
         // Handle pain bond behaviour here. Is technically passive damage.
@@ -4430,7 +4430,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             // ensure that YOU_FAULTLESS is converted to `you`. this may still
             // fail e.g. when the damage is from a vault-created cloud
             if (auto valid_agent = ensure_valid_actor(agent))
-                mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
+                schedule_mirror_damage_fineff(valid_agent, this, amount * 2 / 3);
         }
 
         // Trigger corrupting presence and orbs of glass
@@ -5913,15 +5913,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             // we intentionally allow harming the oppressor in this case,
             // so need to cast off its constness
-            shock_discharge_fineff::schedule(this,
-                                             const_cast<actor&>(*oppressor),
-                                             pos(), pow, "electric aura");
+            schedule_shock_discharge_fineff(this,
+                                            const_cast<actor&>(*oppressor),
+                                            pos(), pow, "electric aura");
         }
     }
 
     // The (real) royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY && !is_summoned())
-        trj_spawn_fineff::schedule(oppressor, this, pos(), damage);
+        schedule_trj_spawn_fineff(oppressor, this, pos(), damage);
 
     // Damage sharing from the spectral weapon to its owner
     // The damage shared should not be directly lethal, though like the
@@ -5952,8 +5952,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
                 // Share damage using a fineff, so that it's non-fatal
                 // regardless of processing order in an AoE attack.
-                deferred_damage_fineff::schedule(oppressor, owner,
-                                                 shared_damage, false, false);
+                schedule_deferred_damage_fineff(oppressor, owner,
+                                                shared_damage, false, false);
             }
         }
     }
@@ -5967,8 +5967,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int &hits = headmaster->props[TENTACLE_LORD_HITS].get_int();
             // Reduce damage taken by the parent when blasting many tentacles.
             const int master_damage = damage >> hits;
-            deferred_damage_fineff::schedule(oppressor, headmaster,
-                                             master_damage, false);
+            schedule_deferred_damage_fineff(oppressor, headmaster,
+                                            master_damage, false);
             ++hits;
         }
     }
@@ -6088,14 +6088,14 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
     else if (type == MONS_STARCURSED_MASS)
-        starcursed_merge_fineff::schedule(this);
+        schedule_starcursed_merge_fineff(this);
     else if (type == MONS_RAKSHASA && !has_ench(ENCH_PHANTOM_MIRROR)
              && hit_points < max_hit_points / 2
              && hit_points - damage > 0)
     {
         if (!props.exists(EMERGENCY_CLONE_KEY))
         {
-            rakshasa_clone_fineff::schedule(this, pos());
+            schedule_rakshasa_clone_fineff(this, pos());
             props[EMERGENCY_CLONE_KEY].get_bool() = true;
         }
     }

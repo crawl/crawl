@@ -31,6 +31,7 @@
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
+#include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -625,7 +626,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
         if (dam <= 0 || !mons || death_source == MID_YOU_FAULTLESS)
             return;
 
-        ru_retribution_fineff::schedule(mons, &you, dam);
+        schedule_ru_retribution_fineff(mons, &you, dam);
     }
 }
 
@@ -638,7 +639,7 @@ static void _maybe_inflict_anguish(int dam, mid_t death_source)
     {
         return;
     }
-    anguish_fineff::schedule(mons, dam);
+    schedule_anguish_fineff(mons, dam);
 }
 
 static void _maybe_spawn_rats(int dam, kill_method_type death_type)

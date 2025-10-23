@@ -1120,7 +1120,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 && mon->type != MONS_ELDRITCH_TENTACLE
                 && !mon->is_child_monster() && !mons_is_tentacle_segment(mon->type))
             {
-                summon_dismissal_fineff::schedule(mon);
+                schedule_summon_dismissal_fineff(mon);
                 return;
             }
             // Don't attempt to 'anger' monsters that are already hostile; this can

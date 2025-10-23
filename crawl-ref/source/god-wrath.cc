@@ -1932,6 +1932,6 @@ void gozag_incite(monster *mon)
     {
         mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
-        lugonu_meddle_fineff::schedule();
+        schedule_lugonu_meddle_fineff();
     }
 }

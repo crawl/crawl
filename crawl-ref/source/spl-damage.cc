@@ -4658,7 +4658,7 @@ static void _discharge_maxwells_coupling()
         // need to do this here, because react_to_damage is never called
         mprf("A cloud of jellies burst out of %s as the current"
              " ripples through it%s", mon->name(DESC_THE).c_str(), attack_punctuation.c_str());
-        trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
+        schedule_trj_spawn_fineff(&you, mon, mon->pos(), mon->hit_points);
     }
     else
         mprf("The electricity discharges through %s%s", mon->name(DESC_THE).c_str(), attack_punctuation.c_str());

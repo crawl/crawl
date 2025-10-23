@@ -4696,7 +4696,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
         msg = make_stringf("%s fragments into a salvo of icicles!",
                             block.name(DESC_THE).c_str());
     }
-    splinterfrost_fragment_fineff::schedule(beam, msg);
+    schedule_splinterfrost_fragment_fineff(beam, msg);
 
     return true;
 }

@@ -742,7 +742,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     behaviour_event(mons, ME_WHACK, act);
 
-    lugonu_meddle_fineff::schedule();
+    schedule_lugonu_meddle_fineff();
 
     return true;
 }
@@ -815,7 +815,7 @@ static bool _vampire_make_thrall(monster* mons)
     behaviour_event(mons, ME_EVAL);
 
     // Schedule our actual revival for the end of this combat round.
-    avoided_death_fineff::schedule(mons);
+    schedule_avoided_death_fineff(mons);
 
     return true;
 }
@@ -1110,7 +1110,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
             // monster::banish sets damage_friendly and not resetting that could
             // crash. monster::heal resets it but not if it was at full health.
             mons->damage_total = mons->damage_friendly = 0;
-            avoided_death_fineff::schedule(mons);
+            schedule_avoided_death_fineff(mons);
             return true;
         }
     }
@@ -1289,7 +1289,7 @@ static void _search_dungeon(const coord_def & start,
 static void _infestation_create_scarab(monster* mons)
 {
     mons->flags |= MF_EXPLODE_KILL;
-    infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
+    schedule_infestation_death_fineff(mons->pos(), mons->name(DESC_THE));
 }
 
 static void _pharaoh_ant_bind_souls(monster *mons)
@@ -1564,7 +1564,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     const string message = quiet ? "" :
                            god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
                            _derived_undead_message(*mons, which_z, msg);
-    make_derived_undead_fineff::schedule(mons->pos(), mg,
+    schedule_make_derived_undead_fineff(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
 
@@ -2456,7 +2456,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         && !you.props.exists(PYROMANIA_TRIGGERED_KEY)
         && x_chance_in_y(pyromania_trigger_chance(), 100))
     {
-        pyromania_fineff::schedule();
+        schedule_pyromania_fineff();
         you.props[PYROMANIA_TRIGGERED_KEY] = true;
     }
 }
@@ -2674,10 +2674,10 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         string msg = "Your " + mons_type_name(real_simu_type, DESC_PLAIN) +
                      " simulacrum begins to move.";
-        make_derived_undead_fineff::schedule(simu.pos, simu,
-                                             get_monster_data(simu.base_type)->HD,
-                                             "the player",
-                                             msg.c_str(), true);
+        schedule_make_derived_undead_fineff(simu.pos, simu,
+                                            get_monster_data(simu.base_type)->HD,
+                                            "the player",
+                                            msg.c_str(), true);
 
         silent = true;
     }
@@ -2830,7 +2830,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
                  "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
         }
-        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
+        schedule_death_spawn_fineff(MONS_PILLAR_OF_RIME,
                                     mons.pos(),
                                     random_range(4, 14) * BASELINE_DELAY,
                                     SPELL_RIMEBLIGHT);
@@ -3326,8 +3326,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (duel)
                 mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
 
-            bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
-                                          duel, gozag_bribe);
+            schedule_bennu_revive_fineff(mons.pos(), revives, att, mons.foe,
+                                         duel, gozag_bribe);
         }
         else if (mons_is_mons_class(&mons, MONS_CASSANDRA) && real_death)
             _cassandra_death_ambush();
@@ -3406,7 +3406,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         // TODO: set attacker better? (Player attacker is handled by checking
         // killer when running the fineff.)
-        mummy_death_curse_fineff::schedule(
+        schedule_mummy_death_curse_fineff(
                 invalid_monster_index(killer_index)
                                             ? nullptr : &env.mons[killer_index],
                 &mons,
@@ -3986,7 +3986,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type)
  **/
 void pikel_band_neutralise()
 {
-    delayed_action_fineff::schedule(DACT_PIKEL_MINIONS, "");
+    schedule_delayed_action_fineff(DACT_PIKEL_MINIONS, "");
 }
 
 /**
@@ -4036,7 +4036,7 @@ void hogs_to_humans()
                                  any == human ? "human" : "original",
                                  any > 1 ? "forms" : "form");
     }
-    kirke_death_fineff::schedule(final_msg);
+    schedule_kirke_death_fineff(final_msg);
 }
 
 /**

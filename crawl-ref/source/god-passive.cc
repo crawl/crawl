@@ -2358,7 +2358,7 @@ void makhleb_celebrant_bloodrite()
         return;
     }
 
-    celebrant_bloodrite_fineff::schedule();
+    schedule_celebrant_bloodrite_fineff();
 }
 
 void makhleb_execution_activate()

@@ -239,7 +239,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
          || conv == conv_t::vengeance_follower)
         && orc->alive())
     {
-        avoided_death_fineff::schedule(orc);
+        schedule_avoided_death_fineff(orc);
     }
 }
 

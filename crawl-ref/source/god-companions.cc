@@ -388,7 +388,7 @@ void beogh_end_ostracism()
 {
     // XXX: It's kind of ugly to wrap this in the resurrection function, but
     // the process of restoring dead apostles is kind of complicated...
-    beogh_resurrection_fineff::schedule(true);
+    schedule_beogh_resurrection_fineff(true);
 }
 
 static int _apostle_challenge_piety_needed()
@@ -1005,7 +1005,7 @@ void beogh_progress_resurrection(int amount)
         // This is often triggered via killing monsters, and can cause an
         // excursion before that monster is finished dying. This is needed to
         // avoid the dying monster entering an invalid state.
-        beogh_resurrection_fineff::schedule();
+        schedule_beogh_resurrection_fineff();
     }
 }
 

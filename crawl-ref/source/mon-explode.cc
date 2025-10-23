@@ -421,7 +421,8 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     {
         const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
                                      : EXPLOSION_FINEFF_GENERIC;
-        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent, poof_msg);
+        schedule_explosion_fineff(beam, boom_msg, sanct_msg, typ, agent,
+                                  poof_msg);
     }
 
     // Monster died in explosion, so don't re-attach it to the grid.

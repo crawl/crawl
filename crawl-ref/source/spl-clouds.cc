@@ -96,8 +96,8 @@ void explode_blastmotes_at(coord_def p)
 
     const string boom  = "The cloud of blastmotes explodes!";
     const string sanct = "By Zin's power, the fiery explosion is contained.";
-    explosion_fineff::schedule(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
-                               nullptr, "");
+    schedule_explosion_fineff(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
+                              nullptr, "");
 }
 
 cloud_type spell_to_cloud(spell_type spell)
