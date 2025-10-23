@@ -594,6 +594,9 @@ public:
     // write to screen (without refresh)
     void show()
     {
+#ifdef USE_TILE
+        tiles.set_need_redraw();
+#endif
         // skip if there is no layout yet
         if (width() <= 0)
             return;
