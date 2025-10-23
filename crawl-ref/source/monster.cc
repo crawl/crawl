@@ -5457,7 +5457,6 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
             UNUSED(clear_tiles);
 #endif
         }
-        update_screen();
     }
 }
 

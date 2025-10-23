@@ -522,9 +522,7 @@ static int _get_key_from_curses()
     wint_t c;
 
 #ifdef USE_TILE_WEB
-    refresh();
-
-    tiles.redraw();
+    update_screen();
     tiles.await_input(c, true);
 
     if (c != 0)
@@ -962,7 +960,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // this file. This is good, since there are some issues with
 // name space collisions between curses macros and the standard
 // C++ string class.  -- bwr
-void update_screen()
+void update_screen(unsigned int min_delay_ms)
 {
     // In objstat, headless, and similar modes, there might not be a screen to update.
     if (stdscr)
@@ -973,7 +971,10 @@ void update_screen()
     }
 
 #ifdef USE_TILE_WEB
-    tiles.set_need_redraw();
+    if (tiles.need_redraw(min_delay_ms))
+        tiles.redraw();
+#else
+    UNUSED(min_delay_ms);
 #endif
 }
 
@@ -1802,8 +1803,9 @@ void delay(unsigned int time)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
+    update_screen();
+
 #ifdef USE_TILE_WEB
-    tiles.redraw();
     if (time)
     {
         tiles.send_message("{\"msg\":\"delay\",\"t\":%d}", time);
@@ -1811,7 +1813,6 @@ void delay(unsigned int time)
     }
 #endif
 
-    refresh();
     if (time)
         usleep(time * 1000);
 }

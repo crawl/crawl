@@ -722,7 +722,6 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             // View database entry.
             describe_monster(*m);
             redraw_screen();
-            update_screen();
             clear_messages();
         }
         else if (quant == 2)
@@ -791,7 +790,6 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     };
     desc_menu.show();
     redraw_screen();
-    update_screen();
 
 
 #ifndef USE_TILE_LOCAL
@@ -951,7 +949,6 @@ monster_view_annotator::monster_view_annotator(vector<monster *> *monsters)
     {
         crawl_state.flash_monsters = monsters;
         viewwindow(false);
-        update_screen();
     }
 }
 
@@ -962,7 +959,6 @@ monster_view_annotator::~monster_view_annotator()
     {
         crawl_state.flash_monsters = nullptr;
         viewwindow(false);
-        update_screen();
     }
 }
 
@@ -2097,7 +2093,6 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         {
             set_hp(1);
             print_stats();
-            update_screen();
         }
         break;
 
@@ -2166,7 +2161,6 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         return;
     }
     redraw_screen();
-    update_screen();
 #endif
 }
 
@@ -2313,7 +2307,6 @@ void direction_chooser::show_help()
 {
     show_targeting_help();
     redraw_screen();
-    update_screen();
     clear_messages(true);
     need_all_redraw = true;
 }
@@ -2837,7 +2830,6 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     if (cleanup)
     {
         redraw_screen();
-        update_screen();
         clear_messages();
     }
     return action_taken;

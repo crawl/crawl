@@ -251,7 +251,6 @@ void TilesFramework::set_map_display(const bool display)
         m_region_tab->activate_tab(TAB_ITEM);
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
-    update_screen();
 }
 
 bool TilesFramework::get_map_display()
@@ -264,7 +263,6 @@ void TilesFramework::do_map_display()
     m_map_mode_enabled = true;
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
-    update_screen();
     if (!tiles.is_using_small_layout() && m_region_tab)
         m_region_tab->activate_tab(TAB_NAVIGATION);
 }
@@ -483,6 +481,8 @@ FontWrapper* TilesFramework::load_font(const char *font_file, int font_size,
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
+    set_need_redraw();
+
     m_active_layer = LAYER_NORMAL;
 
     if (m_region_tile)
@@ -1040,7 +1040,6 @@ void TilesFramework::zoom_dungeon(bool in)
     redraw_screen(false);
     if (current_scale != orig)
         mprf(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
-    update_screen();
 #endif
 }
 
@@ -1054,7 +1053,6 @@ void TilesFramework::toggle_tab_icons()
     m_region_tab->toggle_tab_icons();
     resize();
     redraw_screen();
-    update_screen();
 }
 
 void TilesFramework::autosize_minimap()
@@ -1364,10 +1362,7 @@ void TilesFramework::maybe_redraw_screen()
 {
     // need to call with show_updates=false, which is passed to viewwindow
     if (m_active_layer == LAYER_NORMAL && !crawl_state.game_is_arena())
-    {
         redraw_screen(false);
-        update_screen();
-    }
 }
 
 void TilesFramework::render_current_regions()

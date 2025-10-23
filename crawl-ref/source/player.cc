@@ -681,7 +681,6 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Move the player to new location.
     you.moveto(p, true);
     viewwindow();
-    update_screen();
 
     moveto_location_effects(old_grid, stepped, old_pos);
 }
@@ -2922,7 +2921,6 @@ void level_change(bool skip_attribute_increase)
         {
             // Don't want to see the dead creature at the prompt.
             redraw_screen();
-            update_screen();
 
             if (new_exp == 27)
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
@@ -2956,7 +2954,6 @@ void level_change(bool skip_attribute_increase)
             // In case of intrinsic ability changes.
             tiles.layout_statcol();
             redraw_screen();
-            update_screen();
 #endif
             if (!skip_attribute_increase)
                 species_stat_gain(you.species);
@@ -3041,7 +3038,6 @@ void level_change(bool skip_attribute_increase)
                     tiles.layout_statcol();
 #endif
                     redraw_screen();
-                    update_screen();
                 }
                 break;
 
@@ -8141,7 +8137,6 @@ bool player::do_shaft_ability()
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         redraw_screen();
-        update_screen();
         return false;
     }
 }
@@ -8805,7 +8800,6 @@ void player_open_door(coord_def doorpos)
 
     update_exclusion_los(excludes);
     viewwindow();
-    update_screen();
     you.turn_is_over = true;
 }
 

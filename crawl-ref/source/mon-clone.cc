@@ -395,7 +395,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         handle_seen_interrupt(mons);
         viewwindow();
-        update_screen();
     }
 
     if (crawl_state.game_is_arena())

@@ -342,10 +342,7 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
 
     spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
-    {
         redraw_screen();
-        update_screen();
-    }
     return choice;
 }
 
@@ -941,10 +938,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                     keyin = ESCAPE;
 
                 if (!crawl_state.doing_prev_cmd_again)
-                {
                     redraw_screen();
-                    update_screen();
-                }
 
                 if (isaalpha(keyin) || key_is_escape(keyin))
                     break;
@@ -1052,7 +1046,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             refund_hp(hp_cost);
 
         redraw_screen();
-        update_screen();
         return cast_result;
     }
 
