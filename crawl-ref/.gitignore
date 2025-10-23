@@ -117,8 +117,6 @@ chunk
 /source/webserver/game_data/static/tileinfo-*.js
 /source/webserver/static/stone_soup_icon-32x32.png
 /source/webserver/static/title_*.png
-/source/webserver/static/fonts/*.woff
-/source/webserver/static/fonts/*.woff2
 
 # Makefile-generated junk
 makefile.dep

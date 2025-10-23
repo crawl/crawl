@@ -1325,13 +1325,10 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
             benadryl_antaeus king7artist_eustachio benadryl_oni \
             ylam_formicid_shrikes lemurrobot_gozag_vaults
-FONTWOFF = DejaVuSans DejaVuSansMono
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
-			  $(FONTWOFF:%=webserver/static/fonts/%.woff) \
-			  $(FONTWOFF:%=webserver/static/fonts/%.woff2) \
               $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
               webserver/webtiles/version.txt
 
@@ -1342,12 +1339,6 @@ webserver/webtiles/version.txt: .ver
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
-
-webserver/static/fonts/%.woff: $(FONTDIR)%.woff
-	$(QUIET_COPY)$(COPY) $< webserver/static/fonts/
-
-webserver/static/fonts/%.woff2: $(FONTDIR)%.woff2
-	$(QUIET_COPY)$(COPY) $< webserver/static/fonts/
 
 clean-webserver:
 	$(RM) $(STATICFILES) webserver/*.pyc
