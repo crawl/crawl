@@ -2090,15 +2090,15 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         }
     }
 
-    if (!is_artefact(item) && !monster)
+    if (!monster)
     {
-        if (item.is_identified() && item.plus >= MAX_WPN_ENCHANT)
-            description += "\nIt cannot be enchanted further.";
-        else
+        if (is_enchantable_weapon(item))
         {
-            description += "\nIt can be maximally enchanted to +"
+            description += "\n\nIt can be maximally enchanted to +"
                            + to_string(MAX_WPN_ENCHANT) + ".";
         }
+        else
+            description += "\n\nIt cannot be enchanted further.";
     }
 
     return description;
@@ -2327,20 +2327,15 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         description += "\n" + art_desc;
     }
 
-    if (!is_artefact(item) && !monster)
+    if (!monster)
     {
-        const int max_ench = armour_max_enchant(item);
-        if (max_ench > 0)
+        if (is_enchantable_armour(item))
         {
-            if (item.plus < max_ench || !item.is_identified())
-            {
-                description += "\n\nIt can be maximally enchanted to +"
-                               + to_string(max_ench) + ".";
-            }
-            else
-                description += "\n\nIt cannot be enchanted further.";
+            description += "\n\nIt can be maximally enchanted to +"
+                           + to_string(armour_max_enchant(item)) + ".";
         }
-
+        else
+            description += "\n\nIt cannot be enchanted further.";
     }
 
     if (verbose
