@@ -90,6 +90,7 @@ static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
+static void _maybe_disable_autopickup_for_dropped_items(vector<SelItem> &items);
 static void _multidrop(vector<SelItem> tmp_items);
 static bool _merge_items_into_inv(item_def &it, int quant_got,
                                   int &inv_slot, bool quiet);
@@ -2922,6 +2923,7 @@ void drop_last()
     else
     {
         you.last_pickup.clear();
+        _maybe_disable_autopickup_for_dropped_items(items_to_drop);
         _multidrop(items_to_drop);
     }
 }
