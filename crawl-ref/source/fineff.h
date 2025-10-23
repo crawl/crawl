@@ -12,6 +12,8 @@
 #include "daction-type.h"
 #include "god-type.h"
 #include "killer-type.h"
+#include "monster-type.h"
+#include "spell-type.h"
 
 class actor;
 struct bolt;
