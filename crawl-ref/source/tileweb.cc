@@ -2030,6 +2030,8 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)
 {
+    set_need_redraw();
+
     if (vbuf.size().equals(0, 0))
         return;
 

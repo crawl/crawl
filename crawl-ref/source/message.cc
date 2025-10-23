@@ -610,9 +610,6 @@ public:
         for (size_t i = diff; i < lines.size(); ++i)
             out_line(lines[i], i - diff);
         place_cursor();
-#ifdef USE_TILE
-        tiles.set_need_redraw();
-#endif
     }
 
     // temporary: to be overwritten with next item, e.g. new turn
@@ -687,12 +684,10 @@ public:
         {
             mouse_control mc(MOUSE_MODE_MORE);
             redraw_screen();
-            update_screen();
         }
         else
         {
             print_stats();
-            update_screen();
             show();
         }
 
@@ -1896,7 +1891,6 @@ static void readkey_more(bool user_forced)
         if (keypress == CK_REDRAW)
         {
             redraw_screen();
-            update_screen();
             continue;
         }
     }

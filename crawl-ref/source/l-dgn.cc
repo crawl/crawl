@@ -779,10 +779,7 @@ static int dgn_change_floor_colour(lua_State *ls)
     env.floor_colour = colour;
 
     if (crawl_state.need_save && update_now)
-    {
         viewwindow();
-        update_screen();
-    }
     return 0;
 }
 
@@ -794,10 +791,7 @@ static int dgn_change_rock_colour(lua_State *ls)
     env.rock_colour = colour;
 
     if (crawl_state.need_save && update_now)
-    {
         viewwindow();
-        update_screen();
-    }
     return 0;
 }
 

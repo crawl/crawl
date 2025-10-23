@@ -1728,7 +1728,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_YOU_SILENCE:
         redraw_screen();
-        update_screen();
         print_hint("HINT_YOU_SILENCE");
         break;
 

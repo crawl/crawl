@@ -3624,7 +3624,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         view_update_at(mwhere);
         StashTrack.update_stash(mwhere);
-        update_screen();
     }
 
     if (!mons_reset)

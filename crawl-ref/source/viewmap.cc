@@ -1327,7 +1327,6 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     case CMD_MAP_ANNOTATE_LEVEL:
         state.excursion->go_to(state.original);
         redraw_screen();
-        update_screen();
         state.excursion->go_to(state.lpos.id);
 
         if (!is_map_persistent())

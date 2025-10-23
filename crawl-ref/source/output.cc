@@ -1689,6 +1689,7 @@ void smallterm_warning()
     CGOTOXY(1,1, GOTO_CRT);
     clrscr();
     CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+    update_screen();
 }
 #endif
 
