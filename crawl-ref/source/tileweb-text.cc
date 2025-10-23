@@ -76,6 +76,7 @@ void WebTextArea::clear()
     }
 
     m_dirty = true;
+    tiles.set_need_redraw();
 }
 
 void WebTextArea::put_character(char32_t chr, int fg, int bg, int x, int y)
@@ -85,7 +86,10 @@ void WebTextArea::put_character(char32_t chr, int fg, int bg, int x, int y)
     uint8_t col = (fg & 0xf) + (bg << 4);
 
     if (m_cbuf[x + y * mx] != chr || m_abuf[x + y * mx] != col)
+    {
         m_dirty = true;
+        tiles.set_need_redraw();
+    }
 
     m_cbuf[x + y * mx] = chr;
     m_abuf[x + y * mx] = col;
