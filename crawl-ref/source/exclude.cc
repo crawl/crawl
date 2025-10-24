@@ -328,6 +328,60 @@ void init_exclusion_los()
     curr_excludes.recompute_excluded_points(true);
 }
 
+static bool _is_gate_that_spreads_exclusion(coord_def c,
+                                            dungeon_feature_type type)
+{
+    if (!map_bounds(c))
+        return false;
+
+    if (env.grid(c) != type)
+        return false;
+
+    travel_exclude* exc = curr_excludes.get_exclude_root(c);
+    if (!exc || exc->radius != 0)
+        return false;
+
+    string prop = env.markers.property_at(c, MAT_ANY, "connected_exclude");
+    if (!prop.empty())
+        return false;
+}
+
+static void _exclude_gate(const coord_def& p, bool del = false)
+{
+    set<coord_def> all_doors;
+    find_connected_identical(p, all_doors, true);
+    for (const auto& dc : all_doors)
+    {
+        if (del)
+            del_exclude(dc);
+        else
+            set_exclude(dc, 0);
+    }
+}
+
+static void _update_gate_exclusions(coord_def c)
+{
+    const dungeon_feature_type feat = env.map_knowledge(c).feat();
+    if (!feat_is_door(feat))
+        return;
+
+    travel_exclude* exc = curr_excludes.get_exclude_root(c);
+    if (exc)
+        return;
+
+    string prop = env.markers.property_at(c, MAT_ANY, "connected_exclude");
+    if (!prop.empty())
+        return;
+
+    if (_is_gate_that_spreads_exclusion(c + coord_def(1, 0), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(-1, 0), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(0, 1), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(0, -1), feat))
+    {
+        _exclude_gate(c);
+    }
+}
+
 /*
  * Update exclusions' LOS to reflect changes within their range.
  * "changed" is a list of coordinates that have been changed.
@@ -340,7 +394,10 @@ void update_exclusion_los(vector<coord_def> changed)
         return;
 
     for (coord_def c : changed)
+    {
         _mark_excludes_non_updated(c);
+        _update_gate_exclusions(c);
+    }
 
     curr_excludes.update_excluded_points(true);
 }
@@ -435,19 +492,6 @@ void clear_excludes()
 #endif
 
     _exclude_update();
-}
-
-static void _exclude_gate(const coord_def &p, bool del = false)
-{
-    set<coord_def> all_doors;
-    find_connected_identical(p, all_doors, true);
-    for (const auto &dc : all_doors)
-    {
-        if (del)
-            del_exclude(dc);
-        else
-            set_exclude(dc, 0);
-    }
 }
 
 // Cycles the radius of an exclusion, including "off" state;
