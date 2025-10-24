@@ -337,6 +337,7 @@ enum tag_minor_version
     TAG_MINOR_ACCURATE_INVIS_INDICATORS, // Invis indicators now always show at the monsters position
     TAG_MINOR_FIX_BLOOD_KNOWLEDGE, // Add blood rotation to map knowledge so out of sight changes aren't leaked
     TAG_MINOR_BRANCH_UNIQ_MAPS,    // buniq_* tags for "only once per branch" vault groups
+    TAG_MINOR_EXEGESIS_HIDDEN,     // Divine exegesis gets a separate list of hidden spells
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
