@@ -6556,6 +6556,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             mon->add_ench(mon_enchant(good, 0, agent()));
             if (!obvious_effect && could_see && !you.can_see(*mon))
                 obvious_effect = true;
+            check_lovelessness(*mon);
             return MON_AFFECTED;
         }
 
