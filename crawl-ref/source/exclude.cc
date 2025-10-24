@@ -344,6 +344,8 @@ static bool _is_gate_that_spreads_exclusion(coord_def c,
     string prop = env.markers.property_at(c, MAT_ANY, "connected_exclude");
     if (!prop.empty())
         return false;
+
+    return true;
 }
 
 static void _exclude_gate(const coord_def& p, bool del = false)
