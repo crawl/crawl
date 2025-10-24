@@ -37,28 +37,26 @@
 #include "travel.h"
 #include "zot.h" // decr_zot_clock
 
-// Returns true if the monster has a path to the player, or it has to be
-// assumed that this is the case.
-static bool _mons_has_path_to_player(const monster* mon)
+// Checks if this is a monster that should be completely ignored for autoexplore
+// or tension purposes. This errs on the side of false positives, since there
+// are many situations where a monster is *realistically* harmless, but cannot
+// be categorically ruled out.
+bool mons_is_irrelevant(const monster* mon)
 {
-    // Short-cut if it's already adjacent.
-    if (grid_distance(mon->pos(), you.pos()) <= 1)
-        return true;
-
-    // Non-adjacent non-tentacle stationary monsters are only threatening
-    // because of any ranged attack they might possess, which is handled
-    // elsewhere in the safety checks. Presently all stationary monsters
-    // have a ranged attack, but if a melee stationary monster is introduced
-    // this will fail. Don't add a melee stationary monster it's not a good
-    // monster.
-    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
+    // If we can see a monster with no walls in the way, there's always a chance
+    // they could be relevant. (Even melee-only monsters on the other side of
+    // water can cause issues with autotravel if the player can cross water
+    // themselves).
+    if (you.see_cell_no_trans(mon->pos()))
         return false;
 
+    // Otherwise, test if the player has enough map knowledge to be sure that
+    // the monster cannot path to them somehow.
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_FOE)
-        return true;
+        return false;
 
     // use MTRAV_KNOWN_UNREACHABLE as a cache, but only for monsters
     // that aren't visible. This forces a pathfinding check whenever previously
@@ -72,11 +70,6 @@ static bool _mons_has_path_to_player(const monster* mon)
         return false;
     }
 
-    // First do a *quick* check to see whether a straight path exists to the
-    // player before bothering with full pathfinding.
-    if (can_go_straight(mon, mon->pos(), you.pos()))
-        return true;
-
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
     monster_pathfind mp;
@@ -88,38 +81,11 @@ static bool _mons_has_path_to_player(const monster* mon)
     mp.set_range(max(LOS_RADIUS, range * 2));
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
-        return true;
+        return false;
 
     // Now we know the monster cannot possibly reach the player.
     mon->travel_target = MTRAV_KNOWN_UNREACHABLE;
-
-    return false;
-}
-
-bool mons_can_hurt_player(const monster* mon)
-{
-    // FIXME: This takes into account whether the player knows the map!
-    //        It should, for the purposes of i_feel_safe. [rob]
-    // It also always returns true for sleeping monsters, but that's okay
-    // for its current purposes. (Travel interruptions and tension.)
-    if (_mons_has_path_to_player(mon))
-        return true;
-
-    // Even if the monster can not actually reach the player it might
-    // still use some ranged form of attack.
-    //
-    // This also doesn't account for explosion radii, which is a false positive
-    // for a player waiting near (but not in range of) their own fulminant
-    // prism
-    if (you.see_cell_no_trans(mon->pos())
-        && (mons_blows_up(*mon)
-            || mons_has_ranged_attack(*mon)
-            || mons_has_ranged_spell(*mon, false, true)))
-    {
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 // Returns true if a monster can be considered safe regardless
@@ -150,10 +116,8 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                     || check_dist
                        && (mon->pacified() && dist > 1
                            || crawl_state.disables[DIS_MON_SIGHT] && dist > 2
-                           // Only seen through glass walls or within water?
-                           // Assuming that there are no water-only/lava-only
-                           // monsters capable of throwing or zapping wands.
-                           || !mons_can_hurt_player(mon)));
+                           // Only seen through glass walls?
+                           || mons_is_irrelevant(mon)));
 
     // If is_safe is true, ch_mon_is_safe will always immediately return true
     // anyway, so let's skip constructing another monster_info and handling lua

@@ -4517,11 +4517,9 @@ int get_monster_tension(const monster& mons, god_type god)
     if (!mons.alive())
         return 0;
 
-    if (you.see_cell(mons.pos()))
-    {
-        if (!mons_can_hurt_player(&mons))
-            return 0;
-    }
+    // Monsters locked behind glass and similar.
+    if (mons_is_irrelevant(&mons))
+        return 0;
 
     const mon_attitude_type att = mons_attitude(mons);
 
