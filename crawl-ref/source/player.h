@@ -230,6 +230,7 @@ public:
 
     FixedBitVector<NUM_SPELLS> spell_library;
     FixedBitVector<NUM_SPELLS> hidden_spells;
+    FixedBitVector<NUM_SPELLS> hidden_exegesis_spells;
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
@@ -657,6 +658,8 @@ public:
 
     bool has_spell(spell_type spell) const override;
     bool has_any_spells() const;
+    // Different list of spells depending on whether divine exegesis is active.
+    FixedBitVector<NUM_SPELLS> *current_hidden_spells();
 
     string shout_verb(bool directed = false) const;
     int shout_volume() const;

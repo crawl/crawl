@@ -5931,6 +5931,11 @@ bool player::cannot_speak() const
     return false;
 }
 
+FixedBitVector<NUM_SPELLS> *player::current_hidden_spells()
+{
+    return divine_exegesis ? &hidden_exegesis_spells : &hidden_spells;
+}
+
 /**
  * What verb should be used to describe the player's shouting?
  *
