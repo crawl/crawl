@@ -778,8 +778,6 @@ monster_info::monster_info(const monster* m, int milev)
             ok = false;
         else if (attitude == ATT_FRIENDLY)
             ok = true;
-        else if (i == MSLOT_ALT_WEAPON)
-            ok = wields_two_weapons();
         else
             ok = true;
         if (ok)
@@ -1987,7 +1985,14 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) >= 2;
+        if (weapon && weapon_reach(*weapon) >= 2)
+            return true;
+
+        const item_def* alt_weapon = mi.inv[MSLOT_ALT_WEAPON].get();
+        if (alt_weapon && weapon_reach(*alt_weapon) >= 2)
+            return true;
+
+        return false;
     }
     else
         return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= 2;
@@ -1997,8 +2002,16 @@ static bool _has_launcher(const monster_info& mi)
 {
     if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
         return false;
+
     const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-    return weapon && is_range_weapon(*weapon);
+    if (weapon && is_range_weapon(*weapon))
+        return true;
+
+    const item_def* alt_weapon = mi.inv[MSLOT_ALT_WEAPON].get();
+    if (alt_weapon && is_range_weapon(*alt_weapon))
+        return true;
+
+    return false;
 }
 
 static bool _has_missile(const monster_info& mi)

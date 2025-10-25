@@ -3490,8 +3490,6 @@ string get_monster_equipment_desc(const monster_info& mi,
             mon_qvr = nullptr;
         if (uninteresting(mon_rng))
             mon_rng = nullptr;
-        if (uninteresting(mon_alt) && mon_alt->base_type != OBJ_WANDS)
-            mon_alt = nullptr;
     }
 #undef uninteresting
 
