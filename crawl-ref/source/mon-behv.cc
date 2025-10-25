@@ -59,29 +59,29 @@ static void _guess_invis_foe_pos(monster* mon)
         mon->target = dgn_random_point_from(mon->pos(), guess_radius);
 }
 
-static void _mon_check_foe_invalid(monster* mon)
+static bool _is_valid_foe(monster* mon, unsigned short foe)
 {
     // Assume a spectral weapon has a valid target
     // Ideally this is not outside special cased like this
     if (mons_is_avatar(mon->type))
-        return;
+        return true;
 
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
-    {
-        if (actor *foe = mon->get_foe())
-        {
-            const monster* foe_mons = foe->as_monster();
-            if (foe_mons->alive() && monster_los_is_valid(mon, foe)
-                && (mon->has_ench(ENCH_FRENZIED)
-                    || mon->friendly() != foe_mons->friendly()
-                    || mon->neutral() != foe_mons->neutral()))
-            {
-                return;
-            }
-        }
+    if (foe == MHITNOT || foe == MHITYOU)
+        return true;
 
+    const monster* foe_mons = &env.mons[foe];
+    return
+       foe_mons->alive() &&
+       monster_los_is_valid(mon, foe_mons) &&
+       (mon->has_ench(ENCH_FRENZIED)
+       || mon->friendly() != foe_mons->friendly()
+       || mon->neutral() != foe_mons->neutral());
+}
+
+static void _mon_check_foe_invalid(monster* mon)
+{
+    if (!_is_valid_foe(mon, mon->foe))
         mon->foe = MHITNOT;
-    }
 }
 
 static bool _mon_tries_regain_los(monster* mon)
@@ -348,7 +348,7 @@ void handle_behaviour(monster* mon)
              && !mons_self_destructs(*mon)
              && !mons_is_avatar(mon->type))
     {
-        if (you.pet_target != MHITNOT)
+        if (you.pet_target != MHITNOT && _is_valid_foe(mon, you.pet_target))
             mon->foe = you.pet_target;
         else
             set_nearest_monster_foe(mon, true);
