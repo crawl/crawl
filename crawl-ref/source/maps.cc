@@ -885,7 +885,7 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
            && !mapdef.has_tag("tutorial")
            && (!mapdef.has_tag_prefix("temple_")
                || !_overflow_range(place)
-                  && mapdef.has_tag_prefix("uniq_altar_"))
+                  && mapdef.has_tag_prefix("buniq_altar_"))
            && _map_matches_species(mapdef)
            && (!check_layout || _map_matches_layout_type(mapdef));
 }

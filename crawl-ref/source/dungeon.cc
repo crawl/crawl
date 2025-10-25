@@ -2444,7 +2444,7 @@ static void _build_overflow_temples()
                 }
 
                 if (num_gods == 1
-                    && get_uniq_map_tags().find("uniq_altar_" + name)
+                    && get_uniq_map_tags().find("buniq_altar_" + name)
                        != get_uniq_map_tags().end())
                 {
                     // We've already placed a specialized temple for this

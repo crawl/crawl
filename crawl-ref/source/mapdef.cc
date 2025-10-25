@@ -3007,6 +3007,7 @@ void map_def::update_cached_tags()
     cache_minivault = has_tag("minivault");
     cache_overwritable = has_tag("overwritable");
     cache_extra = has_tag("extra");
+    cache_extra_post_overflow = has_tag("extra_post_overflow");
 }
 
 bool map_def::is_minivault() const
@@ -3034,7 +3035,13 @@ bool map_def::is_extra_vault() const
 {
 #ifdef DEBUG_TAG_PROFILING
     ASSERT(cache_extra == has_tag("extra"));
-#endif
+    ASSERT(cache_extra_post_overflow == has_tag("extra_post_overflow"));
+ #endif
+    if (cache_extra_post_overflow)
+    {
+        return level_id::current().branch != BRANCH_DUNGEON
+               || level_id::current().depth > 10;
+    }
     return cache_extra;
 }
 

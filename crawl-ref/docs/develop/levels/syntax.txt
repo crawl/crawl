@@ -385,6 +385,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              minivaults on the level. If you use "extra" and your map is
              tagged "allow_dup", it is a good idea to use a "luniq" tag so
              that the same map does not place more than once on a given level.
+          * "extra_post_overflow": the "extra" tag only functions if it's not
+             made conditional, like in given branches. This makes vaults only
+             count as "extra" if they're outside D:1-10, and should be applied
+             mostly to vaults past that range with just altars or with an
+             average of 2 or less non-specified floor spawns.
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
           * "patrolling": Monsters placed (using MONS, KMONS) in this vault
