@@ -7838,8 +7838,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int hd = mons->spell_hd(spell_cast);
         const spell_type spell = living_spell_type_for(mons->type);
         const int n = living_spell_count(spell, true);
-        // XXX: will crash if wizmode player tries to cast?
-        ASSERT(spell != SPELL_NO_SPELL);
         for (int i = 0; i < n; ++i)
         {
             mgen_data mg = mgen_data(MONS_LIVING_SPELL, SAME_ATTITUDE(mons),
@@ -8512,7 +8510,7 @@ spell_type living_spell_type_for(monster_type mtyp)
     case MONS_FROSTBOUND_TOME:
         return SPELL_ICEBLAST;
     default:
-        return SPELL_NO_SPELL;
+        return SPELL_CANTRIP;
     }
 }
 
