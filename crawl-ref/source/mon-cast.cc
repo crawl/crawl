@@ -1272,9 +1272,6 @@ static function<ai_action::goodness(const monster&)> _should_selfench(enchant_ty
 {
     return [ench](const monster &caster)
     {
-        // keep non-summoned pals with haste from spamming constantly
-        if (caster.friendly() && !caster.get_foe() && !caster.is_summoned())
-            return ai_action::bad();
         return ai_action::good_or_impossible(!caster.has_ench(ench));
     };
 }
@@ -2705,15 +2702,6 @@ bool mons_can_bind_soul(monster* binder, monster* bound)
             && mons_can_be_zombified(*bound)
             && !bound->has_ench(ENCH_BOUND_SOUL)
             && mons_aligned(binder, bound);
-}
-
-// Returns true if the spell is something you wouldn't want done if
-// you had a friendly target... only returns a meaningful value for
-// non-beam spells.
-static bool _ms_direct_nasty(spell_type monspell)
-{
-    return !(get_spell_flags(monspell) & spflag::utility
-             || spell_typematch(monspell, spschool::summoning));
 }
 
 // Checks if the foe *appears* to be immune to negative energy. We
@@ -4786,12 +4774,31 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     if (mons_is_fleeing(mons) || mons.pacified())
         return _pick_spell_from_list(hspell_pass, spflag::escape);
 
+    const bool in_battle = mons.get_foe() || !mons.wont_attack();
+    const bool near_battle = in_battle || mon_enemies_around(&mons);
+
     unsigned what = random2(200);
     unsigned int i = 0;
     for (; i < hspell_pass.size(); i++)
     {
         if (_spell_flags_invalid_for_situation(mons, hspell_pass[i]))
             continue;
+
+        // Friendlies / good neutrals completely out of battle will only cast healing spells.
+        if (!near_battle
+            && !(get_spell_flags(hspell_pass[i].spell) & (spflag::recovery)))
+        {
+            continue;
+        }
+
+        // Friendlies near hostiles, but who have been instructed not to attack,
+        // will only cast supportive spells.
+        if (!in_battle
+            && !(get_spell_flags(hspell_pass[i].spell)
+                 & (spflag::helpful | spflag::selfench | spflag::recovery)))
+        {
+            continue;
+        }
 
         if (hspell_pass[i].freq >= what)
             break;
@@ -4834,15 +4841,6 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     if (mons.attitude == ATT_MARIONETTE && spell_has_marionette_override(spell))
         return true;
 
-    // All direct-effect/summoning/self-enchantments/etc.
-    const actor *foe = mons.get_foe();
-    if (_ms_direct_nasty(spell)
-        && mons_aligned(&mons, (mons.foe == MHITYOU) ?
-                        &you : foe)) // foe=get_foe() is nullptr for friendlies
-    {                                // targeting you, which is bad here.
-        return false;
-    }
-
     // Don't use blinking spells in sight of a trap the player can see if we're
     // allied with the player; this might do more harm than good to the player
     // restrict to the ones the player can see to avoid an information leak
@@ -4870,6 +4868,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
                || mons.target == you.pos() && coinflip();
     }
 
+    const actor* foe = mons.get_foe();
     ASSERT(foe);
     if (!mons.can_see(*foe))
         return false;
@@ -5007,11 +5006,6 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         if (chosen_slot.spell != SPELL_NO_SPELL)
             return chosen_slot;
     }
-
-    // If nothing found by now, safe friendlies and good
-    // neutrals will rarely cast.
-    if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
-        return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 
     bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS)
                   || mons.has_ench(ENCH_TOUCH_OF_BEOGH);
@@ -5200,7 +5194,9 @@ bool handle_mon_spell(monster* mons)
 
     // FINALLY! determine primary spell effects {dlb}:
     const bool battlesphere = mons->props.exists(BATTLESPHERE_KEY);
-    if (!(get_spell_flags(spell_cast) & spflag::utility))
+
+    // If we're performing an aggressive action, turn around to face our enemy.
+    if (!(get_spell_flags(spell_cast) & (spflag::helpful | spflag::escape | spflag::recovery)))
         make_mons_stop_fleeing(mons);
 
     mons_cast(mons, beem, spell_cast, flags);
@@ -9237,10 +9233,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     if (!foe && (get_spell_flags(spell) & spflag::targeting_mask))
         return ai_action::impossible();
-
-    // Keep friendly summoners from spamming summons constantly.
-    if (friendly && !foe && spell_typematch(spell, spschool::summoning))
-        return ai_action::bad();
 
     // Don't use abilities while rolling.
     if (mon->has_ench(ENCH_ROLLING))

@@ -2006,8 +2006,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
                                                              false)
                                             :
               //XXX: deduplicate this with mass_enchantment?
-              testbits(flags, spflag::area) ? min(200, ( powc * 3 ) / 2)
-                                            : powc;
+              testbits(flags, spflag::harms_area) ? min(200, ( powc * 3 ) / 2)
+                                                  : powc;
 
         if (spell == SPELL_ENFEEBLE)
             return bind(_desc_enfeeble_chance, placeholders::_1, eff_pow);

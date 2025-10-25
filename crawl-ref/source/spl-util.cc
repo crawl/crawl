@@ -464,14 +464,12 @@ bool spell_harms_area(spell_type spell)
 {
     const spell_flags flags = _seekspell(spell)->flags;
 
-    if (flags & (spflag::helpful | spflag::aim_at_space))
-    {
-        // XXX: This is a 'helpful' spell that also does area damage, so monster
-        //      logic should account for this, regarding Sanctuary.
-        return spell == SPELL_PERCUSSIVE_TEMPERING;
-    }
+    if (flags & spflag::harms_area)
+        return true;
 
-    if (flags & spflag::area)
+    // XXX: This is a 'helpful' spell that also does area damage, so monster
+    //      logic should account for this, regarding Sanctuary.
+    if (spell == SPELL_PERCUSSIVE_TEMPERING)
         return true;
 
     return false;

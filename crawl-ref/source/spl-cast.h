@@ -31,9 +31,12 @@ enum class spflag
     targeting_mask     = spflag::dir_or_target | spflag::target,
     obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
     helpful            = 0x00000020,      // TARG_FRIEND used
+                                          // (Can be cast by friendly monsters without a non-player foe,
+                                          //  so long as enemies are around.)
     aim_at_space       = 0x00000040,      // Spell aims at a location, not a
                                           // monster. Defaults to aiming at self
     not_self           = 0x00000080,      // aborts on isMe
+                                          // Irrelevant when cast by a monster.
     unholy             = 0x00000100,      // counts as "unholy"
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
@@ -41,7 +44,9 @@ enum class spflag
     silent             = 0x00001000,      // makes no noise on cast
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
-    area               = 0x00008000,      // area affect
+                                          // (Can be cast by friendly monsters, even when out of combat)
+    harms_area         = 0x00008000,      // Does a potentially aggressive act to an unspecified area.
+                                          // (Prevents monsters from casting while a Sanctuary exists.)
     destructive        = 0x00010000,      // not a conjuration, but still
                                           // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench
@@ -51,7 +56,7 @@ enum class spflag
     testing            = 0x00200000,      // a testing/debugging spell
                      //  0x00400000,      // was spflag::corpse_violating
                      //  0x00800000,      // was SPFLAG_ALLOW_SELF
-    utility            = 0x01000000,      // usable no matter what foe is
+                     //  0x01000000,      // was spflag::utility
     no_ghost           = 0x02000000,      // ghosts can't get this spell
     cloud              = 0x04000000,      // makes a cloud
     WL_check           = 0x08000000,      // spell that checks monster WL
