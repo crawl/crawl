@@ -661,9 +661,9 @@ static void _handle_recitation(int step)
  */
 static void _try_to_respawn_ancestor()
 {
-     monster *ancestor = create_monster(hepliaklqana_ancestor_gen_data());
-     if (!ancestor)
-         return;
+    monster *ancestor = create_monster(hepliaklqana_ancestor_gen_data());
+    if (!ancestor)
+        return;
 
     mprf("%s emerges from the mists of memory!",
          ancestor->name(DESC_YOUR).c_str());
