@@ -2017,6 +2017,28 @@ MAP
      .....
 ENDMAP
 
+NAME:    nemelex_goblin_sharper_dolorous
+TAGS:    transparent no_item_gen no_monster_gen no_trap_gen decor
+MONS:    generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
+KMASK:   1 = opaque
+KPROP:   1 = no_tele_into
+COLOUR:  b = lightmagenta
+FTILE:   'G_ = floor_pebble_magenta
+TILE:    b = dngn_crystal_lightmagenta
+: vault_granite_statue_setup(_G, "G", "scintillating statue")
+: standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
+MAP
+ ..bbbbb..
+..bbm1mbb..
+.bb'mmm'bb.
+.b'''''''b.
+.bG''_''Gb.
+.b'''''''b.
+.bb'''''bb.
+..bb'''bb..
+ ..b+++b..
+ENDMAP
+
 ### Okawaru overflow altars ###################################################
 
 NAME:    okawaru_metal_pillars_1_2
