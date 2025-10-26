@@ -8,8 +8,8 @@
 # is, the one with two crystal corners. It's easy. You'll figure it out.
 
 NAME:   serial_nicolae_subway
+TAGS:   luniq_serial extra_post_overflow
 DEPTH:  D:8-, Depths, Elf, Shoals, Snake, Zot
-TAGS:   luniq_serial
 {{
   hook("post_place", function()
     dgn.place_maps{tag="serial_nico_subway", count=3}

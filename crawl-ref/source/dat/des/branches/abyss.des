@@ -634,7 +634,7 @@ ENDMAP
 NAME:    hangedman_glass_garden
 TAGS:    no_monster_gen no_pool_fixup decor extra
 DEPTH:   D, Depths, Abyss
-WEIGHT:  1
+WEIGHT:  5 (Abyss), 2
 MONS:    butterfly, plant, unseen horror, shadow wraith
 ITEM:    potion of invisibility pre_id q:2, spriggan skeleton
 SHUFFLE: 34GT, GTt
@@ -645,7 +645,8 @@ SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
 SUBST:   AB : wwl, CD : wll
 NSUBST:  M : 1:+ / 2 = mmm+ / * = m:19 +:1
 : else
-SUBST:   M = m, 34'" = ., ABCD = W
+SUBST:   M = m, 3'" = ., 4 = F, ABCD = W
+:   decorative_floor(_G, 'F', "flower patch")
 : end
 MAP
    ''' '''

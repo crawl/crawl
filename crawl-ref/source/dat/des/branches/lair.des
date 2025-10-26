@@ -556,7 +556,7 @@ ITEM:   stone q:1 no_pickup
 KFEAT:  a = cache of fruit
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = 1.
-SUBST:  `-. = .:90 2:1, _ = d
+SUBST:  `-._ = .:90 2:1
 : else
 CLEAR:  '-_
 SUBST:  ~ = d:90 1:5 2:1, . = .:90 1:10 2:1

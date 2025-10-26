@@ -369,14 +369,14 @@ NAME:   hellmonk_scarab_ruin
 TAGS:   ruin
 DEPTH:  Crypt, Depths
 MONS:   death scarab band
-FTILE:  1.c = floor_sandstone
+FTILE:  .$1c = floor_sandstone
 TILE:   c = wall_tomb
-NSUBST: ' = 3 = 1.. / *:.
+NSUBST: ' = 2 = 1.. / *:.
 MAP
    ccccc
  ccc...ccc
-cc..c.c..cc
-ccc..1..ccc
+cc..c$c..cc
+ccc.$1$.ccc
 @...ccc...@
 ccc.....ccc
 c.ccc.ccc.c
@@ -477,6 +477,7 @@ MONS:    swamp worm perm_ench:glowing_shapeshifter / \
          steelbarb worm perm_ench:glowing_shapeshifter
 MONS:    entropy weaver, ironbound preserver / necromancer
 NSUBST:  0 = 1:. / *:0, % = 1:ddde / 3:% / *:.
+CLEAR:   X
 : else -- Depths
 MONS:    orb spider perm_ench:glowing_shapeshifter / \
          swamp worm perm_ench:glowing_shapeshifter
@@ -875,13 +876,16 @@ TAGS:   transparent
 DEPTH:  D:12-, Depths, Elf, Snake
 WEIGHT: 5
 MONS:  patrolling guardian serpent
-: local b = crawl.random2(10)
-: if b > 7 then
-ITEM:  any good_item / any mimic
-: elseif b > 1 then
-ITEM:  any good_item w:1 / any mimic w:3
-: else
-ITEM:  any mimic
+: if you.in_branch("Depths") then
+KMONS:  D = quicksilver dragon
+KITEM:  D = $ q:55 / barding good_item w:5
+NSUBST: d = 1:D / *:d
+: end
+ITEM:  any good_item / any mimic, any good_item w:1 / any mimic w:3, any mimic
+: if crawl.x_chance_in_y(3, 5) then
+SUBST: d = e
+: elseif crawl.one_chance_in(2) then
+SUBST: d = f
 : end
 MAP
 ...........
@@ -1892,7 +1896,7 @@ NSUBST: ' = 1:6 / 1:% / *:1, 1 = 3:2 / * = 25..
 : else
 NSUBST: ' = 1:6 / 1:%* / 1:. / *:1, 1 = 2:3 / * = 223.
 : end
-FTILE:  .t123456%@ = floor_moss
+FTILE:  .t123456%*@ = floor_moss
 MAP
 ttttt       tttt@t
 tttttt tt ttttt1tt
@@ -3461,7 +3465,7 @@ NAME:    hangedman_batty
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   D:11-, Crypt, !Crypt:$
 WEIGHT:  5
-MONS:    bat, phantom, vampire, unseen horror
+MONS:    vampire bat, phantom, vampire, unseen horror
 MONS:    phantasmal warrior, vampire knight, jiangshi
 KMONS:   8 = vampire bloodprince
 KFEAT:   8 = fountain_blood
@@ -6375,9 +6379,9 @@ DEPTH:  D:3-4, Orc
 SUBST:  $ = $.
 : if you.in_branch("Orc") then
 KMONS:  1 = orc high priest band
-:else
+: else
 KMONS:  1 = orc priest band
-:end
+: end
 KFEAT:  1 = altar_beogh
 TILE:   x = wall_zot_yellow
 MAP
@@ -6417,16 +6421,22 @@ MAP
 ENDMAP
 
 NAME:   kennysheep_underground_church
-TAGS:   no_pool_fixup misc_elf_vault transparent
-DEPTH:  Depths, Elf, Zot
-: if not you.in_branch("Zot") then
+TAGS:   no_pool_fixup no_wall_fixup misc_elf_vault vaults_hard vaults_orient_s
+DEPTH:  Vaults, !Vaults:$, Elf, Zot
+: if you.in_branch("Elf") then
 MONS:   deep elf high priest, deep elf pyromancer / deep elf zephyrmancer
-:else
-MONS:   draconian stormcaller, base draconian
-:end
-COLOUR: x = white
-TILE:   x = wall_church
-FTILE:  xmwFt12|*+. = floor_limestone
+SUBST:  - = +
+: elseif you.in_branch("Vaults") then
+KMONS:  1| = deep elf high priest
+KMONS:  2 = orc knight / ironbound preserver / war gargoyle
+: else -- Zot
+MONS:   draconian stormcaller, base draconian / draconian monk w:2
+KFEAT:  t = petrified_tree
+SUBST:  - = +
+: end
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  -.mcwFt12|*+ = floor_limestone
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = -1 }
@@ -6435,25 +6445,24 @@ KMASK:  wF = no_monster_gen
 SUBST:  F = w
 KMASK:  w = opaque
 MAP
- xxxxxxxxxxx
- xwwwwwwwwwx
-xxwwwmmmwwwxx
-xwwFmm|mmFwwx
-xwwmm*1*mmwwx
-xxxx*222*xxxx
-xtxx.....xxtx
-x2.xx+++xx.2x
-x...........x
-xx.........xx
- xxxx...xxxx
-    xx+xx
+ ccccccccccc
+ cwwwwwwwwwc
+ccwwwmmmwwwcc
+cwwFmm|mmFwwc
+cwwmm*1*mmwwc
+cccc*222*cccc
+ctcc.....cctc
+c2.cc+++cc.2c
+c...........c
+cc.........cc
+ cccc...cccc
+    cc-cc
 ENDMAP
 
 NAME:  kennysheep_potato
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
   cccFcccc
  ccwwHwwwccc
@@ -6474,9 +6483,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_2
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 cccccccFccccccc
 cwwwwwwHwwwwwwc
@@ -6497,9 +6505,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_3
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
   ccFFcc
  ccwHHwcc
@@ -6515,9 +6522,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_4
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFFcccc
 cwwwHHwwwc
@@ -6533,9 +6539,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_5
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFFcccc
 cwwwHHwwwc
@@ -6551,9 +6556,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_6
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFFcccc
 cwwwHHwwwc
@@ -6569,9 +6573,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_7
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFFcccc
 cwwwHHwwwc
@@ -6587,9 +6590,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_8
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFcccc
 cwwwHwwwc
@@ -6604,9 +6606,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_9
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFcccc
 cwwwHwwwc
@@ -6621,9 +6622,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_10
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFcccc
 cwwwHwwwc
@@ -6638,9 +6638,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_11
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 ccccFcccc
 cwwwHwwwc
@@ -6655,9 +6654,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_12
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 cccFFccc
 cwwHHwwc
@@ -6671,9 +6669,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_13
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 cccFccc
 cww.wwc
@@ -6687,7 +6684,7 @@ ENDMAP
 NAME:  kennysheep_generic_room_14
 DEPTH: D:2-, Depths, !D:$, !Depths:$
 SUBST: 0 = 0.
-: ks_random_setup(_G)
+: ks_random_setup(_G, true)
 MAP
 cccFcc
 cwwHwc
@@ -6699,9 +6696,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_15
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 cccFFccc
 cwwHHwwc
@@ -6715,9 +6711,8 @@ ENDMAP
 
 NAME:  kennysheep_generic_room_16
 DEPTH: D:2-, Depths, !D:$, !Depths:$
-SUBST: % = %.
-SUBST: 0 = 0.
-: ks_random_setup(_G)
+SUBST: % = %., 0 = 0.
+: ks_random_setup(_G, true)
 MAP
 cccccccFccccccc
 cwwwwwwHwwwwwwc
@@ -6738,7 +6733,7 @@ ENDMAP
 
 NAME:  kennysheep_small_circle
 DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+: ks_random_setup(_G, true)
 : if crawl.coinflip() then
 SUBST: * : %
 SUBST: % = %$..
@@ -6750,7 +6745,7 @@ KFEAT: O = any shop
 SUBST: 0 = 0.
 MAP
   ccDcc
- cwEwcc
+ ccwEwcc
 ccww0wwcc
 cwwt*twwc
 FH0*%*0HF
@@ -6762,7 +6757,7 @@ ENDMAP
 
 NAME:  kennysheep_small_square
 DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+: ks_random_setup(_G, true)
 : if crawl.coinflip() then
 SUBST: * : %
 SUBST: % = %$..
@@ -6786,7 +6781,7 @@ ENDMAP
 
 NAME:   kennysheep_inner_square
 DEPTH:  D:14-, Depths, !Depths:$
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 NSUBST: % : 1:|
 SUBST:  % = *
 SUBST:  9 = 9900.
@@ -6809,10 +6804,9 @@ ccww..xtx..wwcc
 ENDMAP
 
 NAME:   kennysheep_dice
-SUBST:  % = %$.
-SUBST:  0 = 0.
 DEPTH:  D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+SUBST:  % = %$., 0 = 0.
+: ks_random_setup(_G, false)
 MAP
 ccccccccDDcccccccc
 cwwwwwwwEEwwwwwwwc
@@ -6836,10 +6830,9 @@ ENDMAP
 
 NAME:   kennysheep_two_boxes
 DEPTH:  D:14-, Depths, !Depths:$
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 NSUBST: % : 1:|
-SUBST:  % = *
-SUBST:  9 = 9900.
+SUBST:  % = *,  9 = 9900.
 MAP
 ccccccDcccccc
 ctwwwwEwwwwtc
@@ -6857,9 +6850,8 @@ cccccc+cccccc
 ENDMAP
 
 NAME:  kennysheep_diamond
-TAGS:  extra
 DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+: ks_random_setup(_G, true)
 : if crawl.coinflip() then
 SUBST: * : %
 SUBST: % = %$..
@@ -6904,7 +6896,7 @@ SUBST:  w:.
 : else
 SUBST:  t:w
 : end
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, true, true)
 MAP
   ccccc
  ccwwwcc
@@ -6920,7 +6912,7 @@ ENDMAP
 NAME:  kennysheep_nondecorative_pillar
 TAGS:  transparent
 DEPTH: Depths:2-, !Depths:$
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, false, true)
 MAP
      ...xtx....
     .....x......
@@ -7672,11 +7664,13 @@ ccc
 ENDMAP
 
 NAME:   amcnicky_mini_pool_medium
+TAGS:   no_pool_fixup
 WEIGHT: 5
 DEPTH:  D:5-, Depths, Lair
-TAGS:   no_pool_fixup ruin_depths
-SUBST:  p:wwwWWl
-SUBST:  q=.0
+SUBST:  p : wwwWWl, q = 0.
+: if you.in_branch("Depths") then
+SUBST:  x = c
+: end
 MAP
   xx...xx
  xx..p..xx
@@ -8201,8 +8195,7 @@ DEPTH:  D:$, Depths
 WEIGHT: 3
 MONS:   obsidian statue
 MONS:   patrolling hell knight
-MONS:   sun demon / soul eater / smoke demon / neqoxec / \
-        ynoxinul / chaos spawn
+MONS:   sun demon / soul eater / smoke demon / neqoxec / ynoxinul / chaos spawn
 MONS:   ice devil / rust devil / orange demon / red devil / hellwing / \
         sixfirhy
 SUBST:  b : bbc
@@ -8238,10 +8231,8 @@ NAME:   grunt_guarded_unrand_dread_knight
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, Crypt
 WEIGHT: 3
-MONS:   death knight ; \
-        sword_of_the_dread_knight . \
-        chain mail w:7 | \
-        plate armour w:1
+MONS:   death knight ; sword_of_the_dread_knight . chain mail w:7 | \
+                       plate armour w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
 MONS:   freezing wraith / phantasmal warrior / \
         jiangshi / flayed ghost / skeletal warrior
@@ -8277,7 +8268,7 @@ WEIGHT:  3
 MONS:    minotaur, fire giant, frost giant, spriggan defender, \
          deep elf blademaster
 SHUFFLE: 12345
-ITEM:    autumn_katana
+ITEM:    autumn_katana no_pickup
 SUBST:   u = t.
 TILE:    t = DNGN_TREE_YELLOW / DNGN_TREE_LIGHTRED w:5 / DNGN_TREE_RED / \
              DNGN_TREE_DEAD w:5
@@ -8300,10 +8291,12 @@ ttttttttttttttttttttt
 ENDMAP
 
 NAME:    minmay_guarded_unrand_brilliance
+TAGS:    transparent
 DEPTH:   D:13-, Depths
 MONS:    profane servitor
-SUBST:   1 = 1.
 ITEM:    brilliance no_pickup
+KFEAT:   _ = altar_yredelemnul
+SUBST:   1 = 1.
 MAP
          ...
          .c.
@@ -8316,7 +8309,7 @@ MAP
     .cn.nc.cn.nc.
    ...cn1n1n1nc...
 ....ncncn...ncncn....
-.ncnc*..1...1..*cncn.
+.ncnc*..1._.1..*cncn.
 ....ncncn...ncncn....
    ...cn1n1n1nc...
     .cn.nc.cn.nc.
@@ -8370,7 +8363,7 @@ NAME:    minmay_guarded_unrand_variability
 TAGS:    transparent
 DEPTH:   D:8-
 WEIGHT:  3
-ITEM:    mace_of_variability no_pickup pre_id
+ITEM:    mace_of_variability no_pickup
 MONS:    chaos spawn
 KFEAT:   _ = altar_xom
 # walls are carefully placed and guarantee no islands
@@ -8394,7 +8387,7 @@ NAME:    minmay_guarded_unrand_staff_of_olgreb
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   D:5-
 WEIGHT:  3
-ITEM:    staff_of_olgreb no_pickup pre_id
+ITEM:    staff_of_olgreb no_pickup
 : if you.depth() < 9 then
 MONS:    scorpion / redback w:5
 MONS:    killer bee
@@ -9386,7 +9379,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:2-6
 WEIGHT: 3
 KFEAT:  - = broken_door
-ITEM:   delatra's gloves, any potion no_pickup / any scroll no_pickup
+ITEM:   delatra's gloves no_pickup, any potion no_pickup / any scroll no_pickup
 MONS:   orc, orc wizard, orc warrior
 : if you.depth() < 4 then
 SUBST:  1 = 1..
@@ -9417,7 +9410,7 @@ NAME:   pf_guarded_unrand_woodcutter
 TAGS:   no_monster_gen
 DEPTH:  D:2-8
 WEIGHT: 3
-ITEM:   woodcutter's axe, hand axe
+ITEM:   woodcutter's axe no_pickup, hand axe
 MONS:   gnoll, gnoll bouda, gnoll sergeant
 : if you.depth() < 4 then
 SUBST:  2 = 1

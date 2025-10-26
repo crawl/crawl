@@ -1066,7 +1066,7 @@ ENDMAP
 
 NAME:    nicolae_BIG_FREAKIN_CUBE
 TAGS:    transparent decor
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Depths:1
 ORIENT:  float
 SHUFFLE: '`-
 : if you.depth() == 1 then
@@ -1112,7 +1112,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
          xcx         xcx
@@ -1152,7 +1152,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling_large
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
               xxc
@@ -1192,7 +1192,7 @@ ENDMAP
 
 NAME:    nicolae_cairo_tiling_large_dashed
 TAGS:    transparent decor luniq_nicocairo
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Depths:1
 ORIENT:  float
 SHUFFLE: aq
 SUBST:   a = x, q = .
@@ -1236,7 +1236,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling_very_big
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
         cxxx+xxxc
@@ -1284,7 +1284,7 @@ ENDMAP
 
 NAME:   hellmonk_ruined_rings
 TAGS:   transparent ruin
-DEPTH:  D:6-, Lair, Depths
+DEPTH:  D:6-, Lair, Depths:1
 WEIGHT: 5
 ORIENT: float
 :if crawl.one_chance_in(4) and you.in_branch("D") then
@@ -1328,31 +1328,34 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_destroyed_diamonds
-TAGS:   transparent ruin
-DEPTH:  D:6-, Lair, Depths
+TAGS:   transparent
+DEPTH:  D:6-, Lair, Depths:1
 WEIGHT: 5
 ORIENT: float
-SUBST:  x : ccx
-:if crawl.coinflip() then
+# This used to use the ruin tag, but ruined tiles don't get the floor tiles.
+SUBST:  A : zz., B : zz., C : zz., D : zz., E : zz., F : zz., G : zz.
+SUBST:  H : zz., I : zz., J : zz., K : zz., L : zz., M : zz., N : zz.
+SUBST:  O : zz., P : zz., x = zz., z : xcc
+: if crawl.coinflip() then
 TILE:   c = stone_wall_shoals
-:else
+: else
 TILE:   c = wall_marble
-:end
-FTILE:  c. = floor_sand
+: end
+FTILE:  cx. = floor_sand
 MAP
    .       .       .       .
   .x..   ..x..   ..x..   ..x.
  .xxx.. ..xxx.. ..xxx.. ..xxx.
-.xxxxx...xxxxx...xxxxx...xxxxx..
- .xxx..x..xxx..x..xxx..x..xxx..x.
-  .x..xxx..x..xxx..x..xxx..x..xxx.
-   ..xxxxx...xxxxx...xxxxx...xxxxx..
+.xxAxx...xxBxx...xxCxx...xxDxx..
+ .xxA..x..xxB..x..xxC..x..xxD..x.
+  .x..Exx..x..Fxx..x..Gxx..x..Hxx.
+   ..xxExx...xxFxx...xxGxx...xxHxx..
      .xxx..x..xxx..x..xxx..x..xxx..x.
       .x..xxx..x..xxx..x..xxx..x..xxx.
-       ..xxxxx...xxxxx...xxxxx...xxxxx..
-         .xxx..x..xxx..x..xxx..x..xxx..x.
-          .x..xxx..x..xxx..x..xxx..x..xxx.
-           ..xxxxx...xxxxx...xxxxx...xxxxx.
+       ..xxIxx...xxJxx...xxKxx...xxLxx..
+         .xxI..x..xxJ..x..xxK..x..xxL..x.
+          .x..Mxx..x..Nxx..x..Oxx..x..Pxx.
+           ..xxMxx...xxNxx...xxOxx...xxPxx.
              .xxx.. ..xxx.. ..xxx.. ..xxx.
               .x..   ..x..   ..x..   ..x.
                .       .       .       .
@@ -1360,7 +1363,7 @@ ENDMAP
 
 NAME:   hellmonk_crumbling_castle
 TAGS:   transparent ruin
-DEPTH:  D:6-, Depths
+DEPTH:  D:6-, Depths:1
 WEIGHT: 5
 ORIENT: float
 MONS:   pile of debris
@@ -1406,7 +1409,7 @@ ENDMAP
 
 NAME:    nicolae_integral_box
 TAGS:    transparent extra decor luniq_snakedec_large
-DEPTH:   D, Depths, Snake
+DEPTH:   D, Depths:1, Snake
 ORIENT:  float
 SHUFFLE: Pp/Pp/Pp/Qq, Rr/Rr/Rr/Ss
 SUBST:   PR : c, pr : _, QS : G, qs : c, H : cccG, F : TTT., T = TTTTTTVVVU
@@ -1453,7 +1456,7 @@ ENDMAP
 
 NAME:   nicolae_kite_square_tiling_large
 TAGS:   transparent extra decor
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 SUBST:  + : +++.
 MAP
@@ -1500,7 +1503,7 @@ ENDMAP
 
 NAME:    nicolae_triple_integral
 TAGS:    transparent extra decor luniq_snakedec_large
-DEPTH:   D, Depths, Snake
+DEPTH:   D, Depths:1, Snake
 ORIENT:  float
 SHUFFLE: DE
 : if crawl.one_chance_in(3) and you.depth() > 1 then
@@ -1533,7 +1536,7 @@ ENDMAP
 
 NAME:    nicolae_moon_pools
 TAGS:    transparent no_pool_fixup
-DEPTH:   D:8-, Depths
+DEPTH:   D:8-, Depths:1
 ORIENT:  float
 KFEAT:   az`- = c
 SHUFFLE: `-, a`/z-
@@ -3244,6 +3247,64 @@ MAP
 ''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''
 '''''''''''''@@'''''''''''''
+ENDMAP
+
+##############################################################################
+# Megacathedral, for the bats on the brink of extinction. Or beyond. (due)
+
+NAME:    due_megacathedral
+TAGS:    no_monster_gen no_rotate no_vmirror no_hmirror
+ORIENT:  float
+DEPTH:   D:5-11, Orc
+KITEM:   ' = large rock q:1 no_pickup
+KFEAT:   _C = C
+KFEAT:   opq = m
+SHUFFLE: Dd / Ee / Ff / Hh / Ii / Jj / Kk / Ll / Mm / Nn, opq
+: if you.in_branch("D") then
+:   if you.depth() < 8 then
+KMONS:   0C = bat name:megabat n_rpl n_spe n_des n_noc tile:mons_megabat / \
+              fire bat w:2
+MONS:    phantom / spectral human / bes kemwar, wraith
+SUBST:   | = *
+:   else
+KMONS:   0C = bat draugr / fire bat
+MONS:    wraith / shadowghast w:2, phantasmal warrior / flayed ghost
+:   end
+SUBST:   DEFHI = C, defhi = 0, JKLMN = VVG''', jklmn = 1, $ = .
+TILE:    o = dngn_transparent_wall_white
+TILE:    p : dngn_transparent_wall_blue / dngn_transparent_wall_green
+TILE:    q : dngn_transparent_wall_red / dngn_transparent_wall_darkgray
+TILE:    c = dngn_stone_dark
+: else -- Orc
+KMONS:   0C = obsidian bat
+MONS:    orc sorcerer / orc high priest, spectral orc knight
+SUBST:   = = +, DEFHI = C_, defhi = 001333, JKLMN = VVG''', jklmn = 1
+TILE:    o = dngn_transparent_wall_darkgray
+TILE:    p = dngn_transparent_wall_red
+TILE:    q : dngn_transparent_wall_yellow / dngn_transparent_wall_brown
+: end
+MAP
+             cccc.cccc
+          ccccqcG.Gcqcccc
+         cco..dcc+cce..occ
+      ccccc..D$.c.c.$E..ccccc
+     ccp.occ...cc.cc...cco.pcc
+     con$.qcc+cc...cc+ccq.$foc
+  ccccc.N.oco.........oco.F.ccccc
+ ccoqoc.$.+c..pcc+ccp..c+.$.coqocc
+ cpm..cc.cc..ccc...ccc..cc.cc..hpc
+cc...$.ccc..cc..$.$..cc..ccc.$...cc
+co..M...+....+...C...+....+...H..oc
+cc...$.ccc..cc..$.$..cc..ccc.$...cc
+ cp...cc.cc..ccc...ccc..cc.cc...pc
+ ccoqoc.$.+c..pcc+ccp..c+.$.coqocc
+  ccccc.L.oco.........oco.I.ccccc
+     col$.qcc+ccG.Gcc+ccq.$ioc
+     ccp.occ...cc=cc...cco.pcc
+      ccccc..K$.c.c.$J..ccccc
+         cco..kcc2ccj..pcc
+          ccccqc|||cqcccc
+             ccccccccc
 ENDMAP
 
 ##############################################################################
@@ -10708,7 +10769,7 @@ ENDMAP
 NAME:   kennysheep_big_flooded_room
 DEPTH:  D:2-, !D:$
 ORIENT: float
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 : if you.absdepth() < 5 then
 SUBST:  9 = 0, * = %
 : end
@@ -10741,7 +10802,7 @@ ORIENT: float
 NSUBST: % : 1:|
 SUBST:  % = *
 SUBST:  9 = 9900.
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 MAP
       cccFFFccc
      ccwwHHHwwcc
@@ -10772,7 +10833,7 @@ ORIENT: float
 DEPTH:  D:14-, Depths, !Depths:$
 NSUBST: % = 5:|
 SUBST:  % : %$
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, false, true)
 MAP
     ccccccccc
    ccwwwwwwwcc

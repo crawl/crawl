@@ -2516,7 +2516,7 @@ DEPTH:  Zot
 WEIGHT: 12
 KMONS:  1 = orb of fire
 KMONS:  2 = orb of winter
-KMONS:  P = block of ice
+KMONS:  P = fire dragon-shaped block of ice / red draconian-shaped block of ice
 KFEAT:  1 = l
 KFEAT:  2P = w
 : if dgn.zot_orb_type() == "orb of fire" then

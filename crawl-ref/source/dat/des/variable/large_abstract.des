@@ -1645,7 +1645,7 @@ NAME:   kennysheep_large_spiral
 TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
 DEPTH:  D:14-, Depths, !Depths:$
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, false, true)
 SUBST:  X = x
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXX

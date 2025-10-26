@@ -131,7 +131,7 @@ KITEM:   B = large rock q:1
 COLOUR:  .xB012345D = brown
 FTILE:   .+xB012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
-: vault_metal_statue_setup(_G, "G", "dimensional conduit")
+: vault_metal_statue_setup(_G, "G", "earthen conduit")
 : init_research(_G, 'earth')
 MAP
 @'''@'''@

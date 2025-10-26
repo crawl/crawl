@@ -205,7 +205,7 @@ xxx...@..xxxx
 ENDMAP
 
 NAME:    lemuel_angel_altar
-TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
+TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup extra
 DEPTH:   Vaults, !Vaults:$, Depths
 WEIGHT:  3 (Vaults), 10
 MONS:    patrolling Angel, patrolling Daeva
