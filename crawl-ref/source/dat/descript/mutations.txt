@@ -188,8 +188,8 @@ artefact. Each level of this mutation increases that chance.
 %%%%
 reckless mutation
 
-Your SH can never rise above 0, but the damage you deal with two-handed weapons
-is increased by 15%.
+Your recklessness halves your SH, but the damage you deal with two-handed
+weapons is increased by 15%.
 %%%%
 # ------ Auxes -----
 horns mutation

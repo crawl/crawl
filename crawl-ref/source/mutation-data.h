@@ -1642,7 +1642,7 @@ static const mutation_def mut_data[] =
 { MUT_RECKLESS, 2, 1, mutflag::bad,
    "reckless",
 
-   {"You cannot block, but deal more damage with two-handed weapons.", "", ""},
+   {"Your SH is halved, but you deal more damage with two-handed weapons.", "", ""},
    {"You feel a sudden disregard for your own safety.", "", ""},
    {"You feel a little less reckless.", "", ""},
    TILEG_MUT_RECKLESS,

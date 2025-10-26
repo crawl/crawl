@@ -2187,11 +2187,8 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
 {
     int shield = 0;
 
-    if (!ignore_temporary
-        && you.incapacitated() || you.has_mutation(MUT_RECKLESS))
-    {
+    if (!ignore_temporary && you.incapacitated())
         return 0;
-    }
 
     const item_def *shield_item = you.shield();
     if (is_shield(shield_item))
@@ -2225,6 +2222,9 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
 
     if (!ignore_temporary && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
+
+    if (you.has_mutation(MUT_RECKLESS))
+        shield /= 2;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
