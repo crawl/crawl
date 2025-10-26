@@ -3849,6 +3849,8 @@ ENDMAP
 # tries to place a second small Lair end vault. Currently, there are five.
 ###############################################################################
 
+default-depth:
+
 # At some point long ago, this vault used to be about worms and slugs.
 # As standards changed, it is now left with snails and wyrms. Oh well.
 NAME:    wormcave
