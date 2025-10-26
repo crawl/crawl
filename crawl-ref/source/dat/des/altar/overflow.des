@@ -4794,9 +4794,9 @@ KPROP:  12 = no_tele_into
 MONS:   generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
 MONS:   generate_awake angel god:zin dbname:zin_angel
 TILE:   b = dngn_crystal_lightmagenta
-FTILE:  _ = floor_limestone
+FTILE:  ' = floor_limestone
 COLOUR: b = lightmagenta
-COLOUR: _ = brown
+COLOUR: ' = brown
 KMASK:  12 = opaque
 : set_feature_name("crystal_wall", "wall of pink crystal")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "A" }, { "zin", "B" } }, true)
