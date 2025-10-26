@@ -1895,7 +1895,7 @@ v.....v.
 ENDMAP
 
 NAME:   nicolae_shop_dragon_depot
-TAGS:   transparent extra no_item_gen no_tide extra
+TAGS:   transparent no_item_gen no_tide extra
 DEPTH:  D:4-, Depths, Elf, Snake, Shoals
 WEIGHT: 5
 {{
