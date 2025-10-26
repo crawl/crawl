@@ -178,7 +178,7 @@ Interface and Options
     consumable_shortcut options.
 * Resting now waits by default for all negative effects and transformations, all
   time-based cooldowns, and all magical contamination to wear off.
-  - explore_auto_rest_status option: allows adding or changing this list. 
+  - explore_auto_rest_status option: allows adding or changing this list.
 * The character overview screen (%) now displays how much damage is prevented
   by each pip of resistance the player has.
   - show_resist_percent option: can be used to hide these numbers.
