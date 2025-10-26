@@ -1818,7 +1818,6 @@ WEIGHT:  1
 KPROP:   . = bloody w:5 / nothing w:25
 KFEAT:   D = altar_ignis
 KFEAT:   E = altar_makhleb
-KFEAT:   ' = floor
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
