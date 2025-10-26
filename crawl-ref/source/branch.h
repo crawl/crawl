@@ -7,7 +7,6 @@
 
 #include <vector>
 
-#include "env.h"
 #include "enum.h"
 #include "branch-type.h"
 #include "item-prop-enum.h"
@@ -16,6 +15,8 @@
 #define BRANCH_NOISE_AMOUNT 6
 
 using std::vector;
+
+typedef set<string> string_set;
 
 enum class brflag
 {
