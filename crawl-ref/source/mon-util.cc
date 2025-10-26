@@ -3673,51 +3673,55 @@ bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
 }
 
 /**
- * Can monsters use the given spell effectively from range? (If a monster has
- * the given spell, should it try to keep its distance from its enemies?)
+ * Is a given spell capable of offensive action (including summoning something
+ * that might be)?
  *
- * @param monspell      The spell in question.
- * @param attack_only   Whether to only count spells which directly harm
- *                      enemies (ie: do damage). Overrides ench_too.
- * @param ench_too      Whether to count temporary debilitating effects (Slow,
- *                      etc).
- * @return              Whether the given spell should be considered 'ranged'.
+ * This is only used for some monster AI logic, and so even if it's a bit of an
+ * approximation in some cases, it's hopefully good enough.
+ *
+ * @param spell         The spell in question.
+ * @param needs_lof     Whether the spell is allowed to need direct line of fire
+ *                      or not.
+ * @param damage_only   Whether to exlude hexes and summoning effects.
+ *                      (This is very approximate.)
  */
-bool ms_ranged_spell(spell_type monspell, bool attack_only, bool ench_too)
+bool is_offensive_spell(spell_type spell, maybe_bool needs_lof, bool damage_only)
 {
-    // summoning spells are usable from ranged, but not direct attacks.
-    if (spell_typematch(monspell, spschool::summoning))
-        return !attack_only;
+    const spell_flags flags = get_spell_flags(spell);
+    const spschools_type schools = get_spell_disciplines(spell);
 
-    const spell_flags flags = get_spell_flags(monspell);
-
-    // buffs & escape spells aren't considered 'ranged'.
-    if (testbits(flags, spflag::selfench)
-        || testbits(flags, spflag::escape)
-        || monspell == SPELL_BLINK_OTHER_CLOSE)
-    {
-        return false;
-    }
-
-    // conjurations are attacks.
-    if (spell_typematch(monspell, spschool::conjuration))
-        return true;
-
-    // hexes that aren't conjurations or summons are enchantments.
-    if (spell_typematch(monspell, spschool::hexes))
-        return !attack_only && ench_too;
-
-    switch (monspell)
-    {
-    case SPELL_NO_SPELL:
-    case SPELL_CANTRIP:
-    case SPELL_BLINK_CLOSE:
+    // These are not offensive spells.
+    if (flags & (spflag::escape | spflag::helpful | spflag::selfench))
         return false;
 
-    default:
-        // Everything else is probably some kind of attack, hopefully.
-        return true;
+    // Spells in these schools may be directly targeted, but are rarely direct
+    // damage.
+    if (damage_only && (schools && (spschool::hexes | spschool::summoning | spschool::forgecraft)))
+    {
+        switch (spell)
+        {
+            // The only monster-castable exceptions as of now.
+            // If there are more in future, perhaps we could add a flag.
+            case SPELL_BRAIN_BITE:
+            case SPELL_DOOM_BOLT:
+            case SPELL_CRYSTALLISING_SHOT:
+                return true;
+
+            default:
+                return false;
+        }
     }
+
+    // Assume that spflag::target and spflag::harms_area both ignore line of
+    // fire, while spflag::dir_or_target requires it (regardless of whether it
+    // penetrates or not).
+
+    if (needs_lof == true && !(flags & (spflag::dir_or_target)))
+        return false;
+    else if (needs_lof == false && (flags & (spflag::dir_or_target)))
+        return false;
+
+    return true;
 }
 
 // Returns true if the monster has an ability that can affect the target
@@ -3728,16 +3732,11 @@ bool mons_has_los_ability(monster_type mon_type)
            || mon_type == MONS_STARCURSED_MASS;
 }
 
-bool mons_has_ranged_spell(const monster& mon, bool attack_only,
-                           bool ench_too)
+bool mons_has_ranged_damage_spell(const monster& mon)
 {
-    // Monsters may have spell-like abilities.
-    if (mons_has_los_ability(mon.type))
-        return true;
-
     for (const mon_spell_slot &slot : mon.spells)
     {
-        if (ms_ranged_spell(slot.spell, attack_only, ench_too)
+        if (is_offensive_spell(slot.spell, maybe_bool::maybe, true)
             // Assume spells with no defined range are always effective at
             // range.
             && spell_range(slot.spell, &mon) != 1)
@@ -3747,39 +3746,6 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
     }
 
     return false;
-}
-
-static bool _mons_has_usable_ranged_weapon(const monster* mon)
-{
-    return mon->launcher() != nullptr;
-}
-
-static bool _mons_has_attack_wand(const monster& mon)
-{
-    const item_def *wand = mon.mslot_item(MSLOT_WAND);
-
-    return wand && is_offensive_wand(*wand);
-}
-
-bool mons_has_ranged_attack(const monster& mon)
-{
-    return mons_has_ranged_spell(mon, true)
-           || _mons_has_usable_ranged_weapon(&mon)
-           || mon.missiles()
-           || mon.reach_range() > 1
-           || _mons_has_attack_wand(mon);
-}
-
-bool mons_can_attack(const monster& mon)
-{
-    const actor* foe = mon.get_foe();
-    if (!foe || !mon.can_see(*foe))
-        return false;
-
-    if (mons_has_ranged_attack(mon) && mon.see_cell_no_trans(foe->pos()))
-        return true;
-
-    return adjacent(mon.pos(), foe->pos());
 }
 
 /**

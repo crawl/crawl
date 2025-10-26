@@ -137,14 +137,6 @@ MIRET1(number, base_type, base_type)
  * @function number
  */
 MIRET1(number, number, number)
-/*** Does this monster have a ranged attack we know about?
- * A monster is considered to have a ranged attack if it has any of the
- * following: a reach attack, a throwable missile, a launcher weapon, an
- * attack wand, or an attack spell with a range greater than 1.
- * @treturn boolean
- * @function has_ranged_attack
- */
-MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 /*** A string describing monster speed.
  * Possible values are: "very slow", "slow", "normal", "fast", "very fast", and
  * "extremely fast".
@@ -735,7 +727,7 @@ LUAFN(moninf_get_range)
 {
     MONINF(ls, 1, mi);
 
-    lua_pushnumber(ls, mi->range());
+    lua_pushnumber(ls, mi->threat_range);
     return 1;
 }
 
@@ -929,7 +921,6 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(desc),
     MIREG(status),
     MIREG(name),
-    MIREG(has_known_ranged_attack),
     MIREG(speed_description),
     MIREG(spells),
     MIREG(res_poison),

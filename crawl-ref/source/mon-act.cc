@@ -310,8 +310,9 @@ static bool _unfriendly_or_impaired(const monster& mon)
 
 // Check up to eight grids in the given direction for whether there's a
 // monster of the same alignment as the given monster that happens to
-// have a ranged attack. If this is true for the first monster encountered,
-// returns true. Otherwise returns false.
+// have a line-of-fire-requiring ranged attack. If this is true for the first
+// monster encountered (and they are sufficiently close), returns true.
+// Otherwise returns false.
 static bool _ranged_ally_in_dir(monster* mon, coord_def p)
 {
     coord_def pos = mon->pos();
@@ -328,13 +329,9 @@ static bool _ranged_ally_in_dir(monster* mon, coord_def p)
 
         if (mons_aligned(mon, ally))
         {
-            // Hostile monsters of normal intelligence only move aside for
-            // monsters of the same type.
-            if (_unfriendly_or_impaired(*mon)
-                && mons_genus(mon->type) != mons_genus(ally->type))
-            {
+            // Hostile monsters only move aside for monsters of the same type.
+            if (mon->wont_attack() && mons_genus(mon->type) != mons_genus(ally->type))
                 return false;
-            }
 
             // XXX: Sometimes the player wants allies in front of them to stay
             // out of LOF. However use of allies for cover is extremely common,
@@ -343,7 +340,10 @@ static bool _ranged_ally_in_dir(monster* mon, coord_def p)
             // both cases, have allies move out of the way only for other
             // monsters.
             if (ally->is_monster())
-                return mons_has_ranged_attack(*(ally->as_monster()));
+            {
+                return grid_distance(mon->pos(), ally->pos())
+                            <= ally->as_monster()->threat_range(true, false);
+            }
         }
         break;
     }

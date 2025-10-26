@@ -31,6 +31,7 @@ public:
     void fill_traversability(const monster* mon, int range,
                              bool no_actors = false);
     bool start_pathfind(bool msg = false);
+    bool find_fallback(int need_lof_range, int ignore_lof_range);
     vector<coord_def> backtrack();
     vector<coord_def> calc_waypoints();
     bool is_reachable(const coord_def& pos);

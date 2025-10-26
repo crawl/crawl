@@ -838,9 +838,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (!mons_has_attacks(*m))
         mb.set(MB_NO_ATTACKS);
 
-    if (mons_has_ranged_attack(*m))
-        mb.set(MB_RANGED_ATTACK);
-
     if (is_ally_target(*m))
         mb.set(MB_ALLY_TARGET);
 
@@ -881,6 +878,8 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->is_firewood())
             mb.set(MB_FIREWOOD);
     }
+
+    threat_range = m->threat_range();
 
     client_id = m->get_client_id();
     last_seen_at_turn = you.num_turns;
@@ -1697,31 +1696,6 @@ bool monster_info::wields_two_weapons() const
 bool monster_info::can_regenerate() const
 {
     return !is(MB_NO_REGEN);
-}
-
-int monster_info::range() const
-{
-    int range = reach_range(true);
-    // wielding ranged weapon?
-    const item_def *weapon = inv[MSLOT_WEAPON].get();
-    if (weapon && is_range_weapon(*weapon))
-        range = LOS_DEFAULT_RANGE;
-    // quivering something?
-    const item_def *missile = inv[MSLOT_MISSILE].get();
-    if (missile)
-        range = LOS_DEFAULT_RANGE;
-    // ranged attack spells?
-    const vector<mon_spell_slot> &unique_slots = get_unique_spells(*this);
-    for (const auto& slot : unique_slots)
-        if (ms_ranged_spell(slot.spell, true, true))
-            range = max(range, mons_spell_range_for_hd(slot.spell, hd));
-    // has attack wand?
-    const item_def *wand = inv[MSLOT_WAND].get();
-    if (wand && is_offensive_wand(*wand)) {
-        const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
-        range = max(range, calc_spell_range(spell, spell_power_cap(spell), false, true));
-    }
-    return range;
 }
 
 int monster_info::reach_range(bool items) const

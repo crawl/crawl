@@ -617,7 +617,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // restore behaviour later if we start fleeing
     unwind_var<beh_type> saved_beh(mon->behaviour);
 
-    if (mons_has_ranged_attack(*mon))
+    if (mon->threat_range() > 1)
     {
         // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will

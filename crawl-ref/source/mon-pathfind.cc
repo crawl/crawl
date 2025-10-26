@@ -2,9 +2,11 @@
 
 #include "mon-pathfind.h"
 
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "los.h"
+#include "losglobal.h"
 #include "misc.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
@@ -555,4 +557,55 @@ void monster_pathfind::update_pos(coord_def npos, int total)
     }
 
     add_new_pos(npos, total);
+}
+
+// If the desired target isn't reachable, use existing pathfind data to see if
+// there are any reachable positions that are at least within a certain range of
+// the desired target. If so, set our target to that, so waypoints can be later
+// calculated using 'best fallback position'
+//
+// This must be called only after start_pathfind() has been called, as it relies
+// on the data created by this!
+bool monster_pathfind::find_fallback(int need_lof_range, int ignore_lof_range)
+{
+    // Don't bother if we have no range.
+    if (need_lof_range == 1 && ignore_lof_range == 1)
+        return false;
+
+    int best_dist = LOS_RADIUS + 1;
+    coord_def best_pos;
+    for (distance_iterator di(target, false, true, LOS_RADIUS); di; ++di)
+    {
+        const int d = grid_distance(target, *di);
+
+        // Ignore if we've already found a better spot, if this is untraversable,
+        // or it's outside of the range we calculated pathfinding for.
+        if (d > best_dist || dist[di->x][di->y] > range * 2 || traversable_cache[di->x][di->y] != true)
+            continue;
+
+        if (d <= need_lof_range && cell_see_cell(target, *di, LOS_SOLID_SEE))
+        {
+            best_pos = *di;
+            best_dist = d;
+        }
+        else if (d <= ignore_lof_range && cell_see_cell(target, *di, LOS_NO_TRANS))
+        {
+            best_pos = *di;
+            best_dist = d;
+        }
+
+        // This is about the best we can hope to do, so bail early.
+        if (best_dist == min(need_lof_range, ignore_lof_range))
+            break;
+    }
+
+    // We found a reachable spot in our threat range, so let's set this as our
+    // target instead.
+    if (!best_pos.origin())
+    {
+        target = best_pos;
+        return true;
+    }
+
+    return false;
 }

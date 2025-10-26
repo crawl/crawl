@@ -88,7 +88,7 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(*mon) < I_HUMAN || !mons_has_ranged_attack(*mon))
+    if (mons_intel(*mon) < I_HUMAN || mon->threat_range() <= 1)
         return false;
 
     // Any special case should go here.
@@ -779,11 +779,8 @@ void handle_behaviour(monster* mon)
             // try to attack. The chance is low to prevent the player from
             // dancing in and out of the water.
             try_pathfind(mon);
-            if (one_chance_in(10) && !target_is_unreachable(mon)
-                || mons_can_attack(*mon))
-            {
+            if (one_chance_in(10) && !target_is_unreachable(mon))
                 new_beh = BEH_SEEK;
-            }
             else if (!proxPlayer && one_chance_in(5))
                 new_beh = BEH_WANDER;
             else if (proxPlayer)
@@ -1089,10 +1086,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (src_idx != ANON_FRIENDLY_MONSTER)
             mon->foe = src_idx;
 
-        // If the monster can't reach its target and can't attack it
-        // either, retreat.
+        // If the monster can't reach its target (even just to get into attack
+        // range), retreat.
         try_pathfind(mon);
-        if (mons_intel(*mon) > I_BRAINLESS && !mons_can_attack(*mon)
+        if (mons_intel(*mon) > I_BRAINLESS
             && target_is_unreachable(mon) && !mons_just_slept(*mon))
         {
             mon->behaviour = BEH_RETREAT;

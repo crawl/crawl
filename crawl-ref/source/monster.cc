@@ -60,6 +60,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "religion.h"
+#include "spl-book.h"
 #include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-monench.h"
 #include "spl-other.h"
@@ -670,12 +671,9 @@ void monster::bind_melee_flags()
 
 static bool _needs_ranged_attack(const monster* mon)
 {
-    // Prevent monsters that have conjurations from grabbing missiles.
-    if (mon->has_spell_of_type(spschool::conjuration))
-        return false;
-
-    // Same for summonings, but make an exception for friendlies.
-    if (!mon->friendly() && mon->has_spell_of_type(spschool::summoning))
+    // Prevent monsters that have other sources of direct ranged damage
+    // from grabbing missiles or launchers.
+    if (mons_has_ranged_damage_spell(*mon))
         return false;
 
     // Blademasters don't want to throw stuff.
@@ -1869,11 +1867,6 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
         }
         else // None of these exceptions hold for throwing nets.
         {
-            // Spellcasters should not waste time with ammunition.
-            // Neither summons nor debuffs are counted for this purpose.
-            if (!force && mons_has_ranged_spell(*this, true, false))
-                return false;
-
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
             if (!mons_is_wandering(*this)
@@ -6744,4 +6737,64 @@ bool monster::is_firewood() const
 bool monster::is_peripheral() const
 {
     return mons_class_is_peripheral(type);
+}
+
+/**
+ * How many tiles away is the maximum distance this monster can do something
+ * harmful to another entity? We include summoning as 'something harmful', in
+ * this context.
+ *
+ * @param include_lof_requiring   Whether to consider actions that require
+ *                                direct line of fire (ie: launchers, spell
+ *                                projectiles).
+ *
+ * @param include_lof_ignoring  Whether to consider actions that don't require
+ *                              direct line of fire (like smite-targeted spells
+ *                              or reaching weapons).
+ *
+ * @return  The maximum distance of any considered option that the monster has
+ *          to harm someone.
+ */
+int monster::threat_range(bool include_lof_requiring, bool include_lof_ignoring) const
+{
+    if (include_lof_requiring && (launcher() || missiles()))
+        return LOS_RADIUS;
+
+    if (include_lof_ignoring && mons_has_los_ability(type))
+        return LOS_RADIUS;
+
+    int range = 1;
+
+    if (include_lof_ignoring)
+        range = reach_range();
+
+    if (include_lof_requiring)
+    {
+        item_def *wand = mslot_item(MSLOT_WAND);
+        if (wand && is_offensive_wand(*wand))
+            range = max(range, spell_range(spell_in_wand(static_cast<wand_type>(wand->sub_type)), this));
+    }
+
+    // Test spells for appropriate LoF properties
+    maybe_bool needs_lof = maybe_bool::maybe;
+    if (include_lof_requiring && !include_lof_ignoring)
+        needs_lof = true;
+    else if (!include_lof_requiring && include_lof_ignoring)
+        needs_lof = false;
+
+    for (const mon_spell_slot &slot : spells)
+    {
+        if (is_offensive_spell(slot.spell, needs_lof))
+        {
+            const int sp_range = spell_range(slot.spell, this);
+
+            // Assume spells with no defined range can affect all of LoS.
+            if (sp_range == -1)
+                return LOS_RADIUS;
+            else
+                range = max(range, sp_range);
+        }
+    }
+
+    return range;
 }

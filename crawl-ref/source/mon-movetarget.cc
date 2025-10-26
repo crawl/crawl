@@ -104,30 +104,25 @@ bool try_pathfind(monster* mon)
 
     bool need_pathfind = !can_go_straight(mon, mon->pos(), targpos);
 
-    // Smart monsters that can fire through obstacles won't use
-    // pathfinding.
-    if (need_pathfind
-        && !mon->friendly()
-        && mon->can_see(*foe)
-        && mons_has_los_ability(mon->type))
-    {
-        need_pathfind = false;
-    }
+    const int threat_range_lof = mon->threat_range(true, false);
+    const int threat_range_no_lof = mon->threat_range(false, true);
+    const int dist = grid_distance(mon->pos(), targpos);
 
-    // Also don't use pathfinding if the monster can shoot
-    // across the blocking terrain, and is smart enough to
-    // realise that.
+    // Monsters that are already in range to do something threatening to their
+    // target don't need pathfinding.
     if (need_pathfind
         && !mon->friendly()
-        && mons_has_ranged_attack(*mon)
-        && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
+        && ((dist <= threat_range_lof
+             && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
+             || (dist <= threat_range_no_lof
+                 && cell_see_cell(mon->pos(), targpos, LOS_NO_TRANS))))
     {
         need_pathfind = false;
     }
 
     if (!need_pathfind)
     {
-        // The target is easily reachable.
+        // The target is easily reachable (or we're close enough already).
         // Clear travel path and target, if necessary.
         if (mon->travel_target != MTRAV_PATROL
             && mon->travel_target != MTRAV_NONE)
@@ -179,8 +174,6 @@ bool try_pathfind(monster* mon)
     }
 
     // Use pathfinding to find a (new) path to the target.
-    const int dist = grid_distance(mon->pos(), targpos);
-
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
@@ -204,7 +197,11 @@ bool try_pathfind(monster* mon)
     monster_pathfind mp;
     mp.set_range(range);
 
-    if (mp.init_pathfind(mon, targpos))
+    bool found_path = mp.init_pathfind(mon, targpos);
+    if (!found_path)
+        found_path = mp.find_fallback(threat_range_lof, threat_range_no_lof);
+
+    if (found_path)
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())

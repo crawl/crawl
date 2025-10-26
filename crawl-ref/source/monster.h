@@ -204,6 +204,8 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
+    int threat_range(bool include_lof_requiring = true, bool include_lof_ignoring = true) const;
+
 #ifdef DEBUG_ENCH_CACHE_DIAGNOSTICS
     bool has_ench(enchant_type ench) const; // same but validated
 #else

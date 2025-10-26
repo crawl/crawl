@@ -119,7 +119,9 @@ enum monster_info_flags
     MB_SUPPRESSED,
 #endif
     MB_ROLLING,
+#if TAG_MAJOR_VERSION == 34
     MB_RANGED_ATTACK,
+#endif
     MB_NO_NAME_TAG,
 #if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
@@ -310,6 +312,7 @@ struct monster_info_base
     bool backlit;
     bool umbraed;
     int last_seen_at_turn;
+    int threat_range;
 
     mid_t client_id;
     mid_t summoner_id;
@@ -441,7 +444,6 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
-    int range() const;
     int reach_range(bool items = true) const;
 
     size_type body_size() const;
