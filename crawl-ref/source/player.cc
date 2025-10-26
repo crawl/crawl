@@ -4257,9 +4257,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
     else if (msg && new_level < old_level)
     {
-        if (old_amount > 1 && you.magic_contamination == 0)
-            mpr("Your magical contamination has completely faded away.");
-        else if (!player_harmful_contamination() && was_glowing)
+        if (!player_harmful_contamination() && was_glowing)
         {
             mprf(MSGCH_RECOVERY,
                  "Your magical contamination has faded to a safe level.");
@@ -4271,6 +4269,9 @@ void contaminate_player(int change, bool controlled, bool msg)
                 "glowing from magical contamination.");
         }
     }
+
+    if (msg && old_amount > 0 && you.magic_contamination == 0)
+        mpr("Your magical contamination has completely faded away.");
 
     if (you.magic_contamination > 0)
         learned_something_new(HINT_GLOWING);
