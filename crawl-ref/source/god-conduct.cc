@@ -566,7 +566,7 @@ static like_response _on_kill(const char* desc, mon_holy_type holiness,
         desc,
         really_like,
         _piety_bonus_for_holiness(holiness),
-        18,
+        22,
         god_is_good ? 0 : 2,
         " accepts your kill.",
         special
@@ -605,7 +605,7 @@ static like_response okawaru_kill(const char* desc)
         {
             piety = get_fuzzied_monster_difficulty(*victim);
             dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
-            denom = 550;
+            denom = 660;
 
             if (piety > 3200)
             {
@@ -624,7 +624,7 @@ static const like_response _fedhas_kill_living_response()
     return
     {
         "you kill living beings", false,
-        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        _piety_bonus_for_holiness(MH_NATURAL), 20, 0,
         nullptr, [] (int &, int &, const monster* victim)
         {
             if (victim && mons_class_can_leave_corpse(mons_species(victim->type)))
@@ -640,7 +640,7 @@ static const like_response _yred_kill_response()
     return
     {
         nullptr, false,
-        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        _piety_bonus_for_holiness(MH_NATURAL), 22, 0,
         nullptr, [] (int &piety, int &, const monster* victim)
         {
             if (victim)
@@ -679,7 +679,7 @@ static const like_response EXPLORE_RESPONSE = {
     [] (int &piety, int &/*denom*/, const monster* /*victim*/)
     {
         // piety = denom = level at the start of the function
-        piety = 14;
+        piety = 13;
     }
 };
 
@@ -710,7 +710,7 @@ static like_map divine_likes[] =
                     return;
 
                 const int level = denom; // also = piety
-                denom = level / 2 + 6 - you.experience_level / 4;
+                denom = level / 2 + 7 - you.experience_level / 4;
                 piety = denom - 4;
             }
         } },
@@ -772,7 +772,7 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_KILL_WIZARD, {
             "you kill wizards and other users of magic", true,
-            -6, 10, 0, " appreciates your killing of a magic user."
+            -6, 12, 0, " appreciates your killing of a magic user."
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -787,7 +787,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 20;
+                piety = 18;
             }
         } },
     },
@@ -800,7 +800,7 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_BANISH, {
             "you banish creatures to the Abyss", false,
-            -6, 18, 2, " claims a new guest."
+            -6, 22, 2, " claims a new guest."
         } },
     },
     // GOD_BEOGH,
@@ -812,7 +812,7 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
         { DID_KILL_PRIEST, {
             "you kill the priests of other religions", true,
-            -6, 18, 0, " appreciates your killing of a heretic priest."
+            -6, 22, 0, " appreciates your killing of a heretic priest."
         } },
     },
     // GOD_JIYVA,
@@ -823,7 +823,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 26;
+                piety = 21;
             }
         } },
     },
@@ -839,7 +839,7 @@ static like_map divine_likes[] =
     {
         { DID_KILL_FAST, {
             "you kill non-sluggish things", false,
-            -6, 18, 2, nullptr,
+            -6, 20, 2, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
                 const int mons_speed = mons_base_speed(*victim);
@@ -885,7 +885,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 18;
+                piety = 15;
             }
         } },
     },

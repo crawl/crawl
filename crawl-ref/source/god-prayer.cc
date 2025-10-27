@@ -231,7 +231,7 @@ int zin_tithe(const item_def& item, int quant, bool converting)
             }
             // Avg gold pile value: 10 + depth/2.
             tithe *= 47;
-            denom *= 20 + env.absdepth0;
+            denom *= 25 + env.absdepth0;
         }
         gain_piety(tithe * 3, denom);
     }

@@ -1162,7 +1162,7 @@ static bool _give_nemelex_gift(bool forced = false)
         simple_god_message(" deals you some cards!");
         mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
     }
-    _inc_gift_timeout(5 + random2avg(9, 2));
+    _inc_gift_timeout(5 + random2avg(8, 2));
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -1385,10 +1385,10 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        _inc_gift_timeout(26 + random2avg(19, 2));
+        _inc_gift_timeout(21 + random2avg(15, 2));
         break;
     case OBJ_WEAPONS:
-        _inc_gift_timeout(30 + random2avg(19, 2));
+        _inc_gift_timeout(24 + random2avg(15, 2));
         break;
     default:
         break;
@@ -1408,7 +1408,7 @@ static bool _gift_jiyva_gift(bool forced)
     {
         if (_jiyva_mutate())
         {
-            _inc_gift_timeout(45 + random2avg(30, 2));
+            _inc_gift_timeout(36 + random2avg(24, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
             return true;
@@ -1469,7 +1469,7 @@ static bool _give_sif_gift(bool forced)
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
     const int n_spells = spells_in_book(env.item[item_index]).size();
-    _inc_gift_timeout(10 + n_spells * 6 + random2avg(19, 2));
+    _inc_gift_timeout(8 + n_spells * 5 + random2avg(15, 2));
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     return true;
@@ -1602,7 +1602,7 @@ static bool _handle_veh_gift(bool forced)
 
             you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
             if (gifts >= 5)
-                _inc_gift_timeout(30 + random2avg(30, 2));
+                _inc_gift_timeout(24 + random2avg(24, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
 
@@ -4180,7 +4180,7 @@ bool god_protects_from_harm()
     if (!you.gift_timeout && have_passive(passive_t::lifesaving)
         && x_chance_in_y(you.piety(), 160))
     {
-        _inc_gift_timeout(20 + random2avg(10, 2));
+        _inc_gift_timeout(18 + random2avg(9, 2));
         return true;
     }
 
@@ -4215,39 +4215,7 @@ void handle_god_time(int /*time_delta*/)
         int sacrifice_count;
         switch (you.religion)
         {
-        case GOD_TROG:
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-        case GOD_DITHMENOS:
-        case GOD_QAZLAL:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_VEHUMET:
-        case GOD_ZIN:
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-#endif
-        case GOD_JIYVA:
-        case GOD_WU_JIAN:
-        case GOD_SIF_MUNA:
-        case GOD_YREDELEMNUL:
-            if (one_chance_in(17))
-                lose_piety(1);
-            break;
-
-        case GOD_ELYVILON:
-        case GOD_HEPLIAKLQANA:
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-        case GOD_SHINING_ONE:
-        case GOD_NEMELEX_XOBEH:
-            if (one_chance_in(35))
-                lose_piety(1);
-            break;
-
         case GOD_BEOGH:
-            if (one_chance_in(17))
-                lose_piety(1);
             maybe_generate_apostle_challenge();
             break;
 
@@ -4279,14 +4247,34 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
+        case GOD_TROG:
+        case GOD_OKAWARU:
+        case GOD_MAKHLEB:
+        case GOD_LUGONU:
+        case GOD_DITHMENOS:
+        case GOD_QAZLAL:
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_VEHUMET:
+        case GOD_ZIN:
+#if TAG_MAJOR_VERSION == 34
+        case GOD_PAKELLAS:
+#endif
+        case GOD_JIYVA:
+        case GOD_WU_JIAN:
+        case GOD_SIF_MUNA:
+        case GOD_YREDELEMNUL:
+        case GOD_ELYVILON:
+        case GOD_HEPLIAKLQANA:
+        case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
+        case GOD_SHINING_ONE:
+        case GOD_NEMELEX_XOBEH:
         case GOD_IGNIS:
-            // Losing piety over time would be extremely annoying for people
-            // trying to get polytheist with Ignis. Almost impossible.
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:
         case GOD_XOM:
-            // Gods without normal piety do nothing each tick.
+            // Most gods do nothing each tick.
             return;
 
         case GOD_NO_GOD:
