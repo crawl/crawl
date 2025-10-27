@@ -84,6 +84,11 @@ static bool _ui_coinflip()
     return static_cast<bool>(ui_random(2));
 }
 
+static bool _ui_one_chance_in(int a_million)
+{
+    return ui_random(a_million) == 0;
+}
+
 colour_t random_uncommon_colour()
 {
     colour_t result;
@@ -293,13 +298,13 @@ static int _etc_vortex(int, const coord_def& loc)
     switch (env.grid(loc))
     {
     case DNGN_LAVA:
-        return phase ? LIGHTRED : one_chance_in(3) ? MAGENTA : RED;
+        return phase ? LIGHTRED : _ui_one_chance_in(3) ? MAGENTA : RED;
     case DNGN_SHALLOW_WATER: // XX color overlap between this and land, how annoying is it?
         return phase ? LIGHTCYAN : CYAN;
     case DNGN_DEEP_WATER:
-        return phase ? BLUE : coinflip() ? LIGHTBLUE : DARKGREY;
+        return phase ? BLUE : _ui_coinflip() ? LIGHTBLUE : DARKGREY;
     default:
-        return phase ? WHITE : one_chance_in(3) ? LIGHTCYAN : LIGHTGREY;
+        return phase ? WHITE : _ui_one_chance_in(3) ? LIGHTCYAN : LIGHTGREY;
     }
 }
 
