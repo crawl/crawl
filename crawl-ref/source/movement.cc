@@ -798,6 +798,45 @@ static void _finalize_cancelled_rampage_move()
     update_acrobat_status();
 }
 
+static void _handle_trying_to_move_into_unpassable_terrain(coord_def targ,
+                                                           bool digging)
+{
+    if (env.grid(targ) == DNGN_OPEN_SEA)
+        mpr("The ferocious winds and tides of the open sea thwart your progress.");
+    else if (env.grid(targ) == DNGN_LAVA_SEA)
+        mpr("The endless sea of lava is not a nice place.");
+    else if (feat_is_tree(env.grid(targ)) && you_worship(GOD_FEDHAS))
+    {
+        if (digging)
+            mpr("You cannot dig through the dense trees.");
+        else
+            mpr("You cannot walk through the dense trees.");
+    }
+    else if (env.grid(targ) == DNGN_MALIGN_GATEWAY)
+        mpr("The malign portal rejects you as you step towards it.");
+    // Why isn't the border permarock?
+    else if (digging && !in_bounds(targ))
+        mpr("This wall is too hard to dig through.");
+    else if (digging && env.grid(targ) == DNGN_SLIMY_WALL)
+        mpr("Trying to dig through that would dissolve your mandibles.");
+    else if (digging)
+        mpr("You can't dig through that.");
+    else if (you.current_vision == 0)
+        mpr("You feel something solid in that direction.");
+
+    // Show the player the wall they've just bumped into, if they can't see it.
+    if (you.current_vision == 0)
+    {
+        map_cell& knowledge = env.map_knowledge(targ);
+        if (!knowledge.mapped() || knowledge.changed())
+        {
+            dungeon_feature_type newfeat = env.grid(targ);
+            knowledge.set_feature(newfeat, env.grid_colours(targ), TRAP_UNASSIGNED);
+            set_terrain_mapped(targ);
+        }
+    }
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 void move_player_action(coord_def move)
@@ -917,16 +956,14 @@ void move_player_action(coord_def move)
         }
     }
 
+    const bool was_digging = you.digging;
+
     const coord_def targ = you.pos() + move;
     // You can't walk out of bounds!
     if (!in_bounds(targ))
     {
-        // Why isn't the border permarock?
-        if (you.digging)
-        {
-            mpr("This wall is too hard to dig through.");
-            you.digging = false;
-        }
+        you.digging = false;
+        _handle_trying_to_move_into_unpassable_terrain(targ, was_digging);
         return;
     }
 
@@ -963,14 +1000,12 @@ void move_player_action(coord_def move)
     {
         if (feat_is_diggable(env.grid(targ)) && env.grid(targ) != DNGN_SLIMY_WALL)
             targ_pass = true;
-        else // moving or attacking ends dig
+        else
         {
+            // moving or attacking ends dig
             you.digging = false;
-            if (env.grid(targ) == DNGN_SLIMY_WALL)
-                mpr("Trying to dig through that would dissolve your mandibles.");
-            else if (feat_is_solid(env.grid(targ)))
-                mpr("You can't dig through that.");
-            else
+
+            if (!feat_is_solid(env.grid(targ)))
                 mpr("You retract your mandibles.");
         }
     }
@@ -1193,26 +1228,8 @@ void move_player_action(coord_def move)
         // No rampage check here, since you can't rampage at walls
         if (!you.is_motile())
             canned_msg(MSG_CANNOT_MOVE);
-        else if (env.grid(targ) == DNGN_OPEN_SEA)
-            mpr("The ferocious winds and tides of the open sea thwart your progress.");
-        else if (env.grid(targ) == DNGN_LAVA_SEA)
-            mpr("The endless sea of lava is not a nice place.");
-        else if (feat_is_tree(env.grid(targ)) && you_worship(GOD_FEDHAS))
-            mpr("You cannot walk through the dense trees.");
-        else if (!try_to_swap && env.grid(targ) == DNGN_MALIGN_GATEWAY)
-            mpr("The malign portal rejects you as you step towards it.");
-        // Show the player the wall they've just bumped into, if they can't see it.
-        else if (you.current_vision == 0)
-        {
-            mpr("You feel something solid in that direction.");
-            map_cell& knowledge = env.map_knowledge(targ);
-            if (!knowledge.mapped() || knowledge.changed())
-            {
-                dungeon_feature_type newfeat = env.grid(targ);
-                knowledge.set_feature(newfeat, env.grid_colours(targ), TRAP_UNASSIGNED);
-                set_terrain_mapped(targ);
-            }
-        }
+        else if (!try_to_swap)
+            _handle_trying_to_move_into_unpassable_terrain(targ, was_digging);
 
         stop_running();
         move.reset();
