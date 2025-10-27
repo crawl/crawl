@@ -1972,4 +1972,6 @@ void handle_terminal_resize()
     }
     else
         redraw_screen();
+
+    update_screen();
 }
