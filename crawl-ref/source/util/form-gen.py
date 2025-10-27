@@ -321,6 +321,7 @@ keyfns = {
     'description': Field(parse_str),
 
     'skill': Field(parse_skill),
+    'hp_skill_penalty_mult': Field(lambda s: parse_num(s, 1, 10)),
     'talisman': Field(lambda s: "TALISMAN_" + s.upper()),
 
     'melds': Field(parse_slots),
@@ -382,6 +383,7 @@ defaults = {
     'description': "",
 
     'skill': Skill(0, 0),
+    'hp_skill_penalty_mult': 1,
     'talisman': 'NUM_TALISMANS',
 
     'melds': 0,

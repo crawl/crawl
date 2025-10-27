@@ -2,7 +2,7 @@
 {{
     {full_enum}, {equivalent_mons}, "{short_name}", "{long_name}", "{wiz_name}",
     "{description}",
-    {skill.min}, {skill.max}, {talisman},
+    {skill.min}, {skill.max}, {hp_skill_penalty_mult}, {talisman},
     {melds}, {joined_resists},
     {str}, {dex}, {size}, {hp_mod}, {move_speed},
     {ac_scaling}, {ev_scaling}, {body_ac_mult_scaling}, {can_cast}, {unarmed_scaling},

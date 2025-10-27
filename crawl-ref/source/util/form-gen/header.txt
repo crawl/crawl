@@ -21,6 +21,7 @@ struct form_entry
     // Row 3:
     int min_skill;
     int max_skill;
+    int hp_skill_penalty_mult;
     talisman_type talisman;
 
     // Row 4:
