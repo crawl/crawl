@@ -100,7 +100,7 @@ static bool _mon_tries_regain_los(monster* mon)
     }
 
     // Randomize it to make it less predictable, and reduce flip-flopping.
-    return !one_chance_in(3);
+    return !one_chance_in(6);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -109,7 +109,7 @@ static bool _mon_tries_regain_los(monster* mon)
 // to ideal_range (too far = easier to escape, too close = easier to ambush).
 static void _set_firing_pos(monster* mon, coord_def target)
 {
-    const int ideal_range = LOS_DEFAULT_RANGE / 2;
+    const int ideal_range = min(LOS_DEFAULT_RANGE / 2, mon->threat_range());
     const int current_distance = mon->pos().distance_from(target);
 
     // We don't consider getting farther away unless already very close.
