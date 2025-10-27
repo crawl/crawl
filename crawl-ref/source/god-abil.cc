@@ -5025,6 +5025,7 @@ static void _extra_sacrifice_code(ability_type sac)
         }
 
         redraw_screen();
+        update_screen();
         break;
     }
     case ABIL_RU_SACRIFICE_FORMS:
@@ -5229,6 +5230,7 @@ bool ru_do_sacrifice(ability_type sac)
     _ru_expire_sacrifices();
     ru_reset_sacrifice_timer(true);
     redraw_screen(); // pretty much everything could have changed
+    update_screen();
     return true;
 }
 

@@ -1488,7 +1488,10 @@ void display_inventory()
 
     menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
 }
 
 static string _drop_menu_titlefn(const Menu*, const string &)

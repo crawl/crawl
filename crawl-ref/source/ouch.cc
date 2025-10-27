@@ -473,6 +473,7 @@ void lose_level()
     // In case of intrinsic ability changes.
     tiles.layout_statcol();
     redraw_screen();
+    update_screen();
 #endif
 
     xom_is_stimulated(200);
@@ -1217,6 +1218,7 @@ static void _print_endgame_messages(scorefile_entry &se)
 
     flush_prev_message();
     viewwindow(); // don't do for leaving/winning characters
+    update_screen();
 
     if (crawl_state.game_is_hints())
         hints_death_screen();

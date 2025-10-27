@@ -145,6 +145,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
     beam.explode(false);
 
     viewwindow();
+    update_screen();
     return spret::success;
 }
 

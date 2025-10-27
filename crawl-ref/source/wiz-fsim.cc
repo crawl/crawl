@@ -267,6 +267,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
     }
 
     redraw_screen();
+    update_screen();
     return true;
 }
 
@@ -346,6 +347,7 @@ static monster* _init_fsim()
     mon->behaviour = BEH_SEEK;
 
     redraw_screen();
+    update_screen();
 
     return mon;
 }

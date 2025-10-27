@@ -792,6 +792,7 @@ void SkillMenu::finish_experience(bool experience_change)
         if (experience_change)
         {
             redraw_screen();
+            update_screen();
             unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
             train_skills();
         }

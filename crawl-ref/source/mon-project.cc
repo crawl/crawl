@@ -426,6 +426,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
         // Update orb position so that the explosion looks centered in the
         // right place.
         redraw_screen();
+        update_screen();
         beam.explode(true, false);
     }
     else

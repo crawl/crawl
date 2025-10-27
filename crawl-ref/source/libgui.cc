@@ -217,16 +217,16 @@ void delay(unsigned int ms)
     if (crawl_state.disables[DIS_DELAY])
         return;
 
-    update_screen();
-
+    tiles.redraw();
     if (wm)
         wm->delay(ms);
 }
 
-void update_screen(unsigned int min_delay_ms)
+void update_screen()
 {
-    if (tiles.need_redraw(min_delay_ms))
-        tiles.redraw();
+    if (crawl_state.tiles_disabled)
+        return;
+    tiles.set_need_redraw();
 }
 
 bool kbhit()

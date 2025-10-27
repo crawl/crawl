@@ -114,7 +114,10 @@ bool attribute_increase()
         else
         {
             while ((keyin = getchm()) == CK_REDRAW)
+            {
                 redraw_screen();
+                update_screen();
+            }
         }
         tried_lua = true;
 

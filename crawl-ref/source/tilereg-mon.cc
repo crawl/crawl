@@ -89,6 +89,7 @@ int MonsterRegion::handle_mouse(wm_mouse_event &event)
     {
         full_describe_square(gc);
         redraw_screen();
+        update_screen();
         return CK_MOUSE_CMD;
     }
 

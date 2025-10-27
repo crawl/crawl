@@ -614,6 +614,7 @@ public:
     {
         // Update known terrain
         viewwindow();
+        update_screen();
 
         const bool exit_is_near = abyss_exit_nearness();
         const bool rune_is_near = abyss_rune_nearness();
@@ -2386,6 +2387,7 @@ void abyss_maybe_spawn_xp_exit()
     env.grid(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
+    update_screen();
     mprf(MSGCH_BANISHMENT,
          "The substance of the Abyss twists violently,"
          " and a gateway leading %s appears!", stairs ? "down" : "out");

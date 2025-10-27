@@ -1003,6 +1003,7 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
     if (large_change)
     {
         viewwindow();
+        update_screen();
         for (monster_iterator mi; mi; ++mi)
         {
             const bool see_cell = you.see_cell(mi->pos());
@@ -1080,6 +1081,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
     viewwindow();
+    update_screen();
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
@@ -1104,6 +1106,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             bool chose = show_map(lpos, false, false);
             pos = lpos.pos;
             redraw_screen();
+            update_screen();
 
             // If we've received a HUP signal then the user can't choose a
             // location, so cancel the teleport.
@@ -2627,6 +2630,7 @@ spret do_bestial_takedown(coord_def target)
     const coord_def old_pos = you.pos();
     you.moveto(landing, true);
     viewwindow();
+    update_screen();
 
     melee_attack atk(&you, targ);
     atk.dmg_mult = get_form()->get_takedown_multiplier();

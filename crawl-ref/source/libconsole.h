@@ -35,7 +35,7 @@ int getch_ck();
 bool kbhit();
 void delay(unsigned int ms);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);
-void update_screen(unsigned int min_delay_ms = 0);
+void update_screen();
 
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();

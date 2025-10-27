@@ -5,7 +5,6 @@
 #include "tilereg-text.h"
 
 #include "tilefont.h"
-#include "tiles-build-specific.h"
 #include "unicode.h"
 
 int TextRegion::print_x;
@@ -111,8 +110,6 @@ void TextRegion::addstr(const char *buffer)
 
 void TextRegion::addstr_aux(const char32_t *buffer, int len)
 {
-    tiles.set_need_redraw();
-
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
     int adrs = y * mx;
@@ -129,8 +126,6 @@ void TextRegion::addstr_aux(const char32_t *buffer, int len)
 
 void TextRegion::clear_to_end_of_line()
 {
-    tiles.set_need_redraw();
-
     int cx = print_x - cx_ofs;
     int cy = print_y - cy_ofs;
     int col = text_col;
@@ -248,8 +243,6 @@ void TextRegion::render()
 
 void TextRegion::clear()
 {
-    tiles.set_need_redraw();
-
     for (int i = 0; i < mx * my; i++)
     {
         cbuf[i] = ' ';
@@ -259,8 +252,6 @@ void TextRegion::clear()
 
 void TextRegion::scroll()
 {
-    tiles.set_need_redraw();
-
     for (int idx = 0; idx < mx*(my-1); idx++)
     {
         cbuf[idx] = cbuf[idx + mx];

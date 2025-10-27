@@ -630,7 +630,10 @@ static void _handle_recitation(int step)
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
     if (apply_area_visible(zin_recite_to_single_monster, you.pos()))
+    {
         viewwindow();
+        update_screen();
+    }
 
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple

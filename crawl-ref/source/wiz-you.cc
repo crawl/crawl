@@ -100,6 +100,7 @@ void wizard_suppress()
     tiles.layout_statcol();
 #endif
     redraw_screen();
+    update_screen();
 }
 
 void wizard_change_job_to(job_type job)
@@ -923,6 +924,7 @@ void wizard_toggle_xray_vision()
     you.wizard_vision = !you.wizard_vision;
     mprf("X-ray vision %s.", you.wizard_vision ? "enabled" : "disabled");
     viewwindow(true);
+    update_screen();
 }
 
 void wizard_freeze_time()

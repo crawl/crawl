@@ -246,6 +246,7 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 {
                     process_command(cmd);
                     redraw_screen();
+                    update_screen();
                 }
             }
 

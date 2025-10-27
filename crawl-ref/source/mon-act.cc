@@ -3111,6 +3111,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     if (was_seen)
     {
         viewwindow();
+        update_screen();
 
         // XXX: should use custom verbs
         string open_str = broken ? "breaks down the " : "opens the ";
@@ -3809,6 +3810,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             if (you.see_cell(f))
             {
                 viewwindow();
+                update_screen();
 
                 if (!you.can_see(mons))
                 {
@@ -3834,6 +3836,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             if (you.see_cell(f))
             {
                 viewwindow();
+                update_screen();
 
                 if (!you.can_see(mons))
                 {

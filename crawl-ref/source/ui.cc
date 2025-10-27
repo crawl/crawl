@@ -2578,7 +2578,10 @@ void UIRoot::render()
     if (m_root.num_children() > 0)
         m_root.get_child(m_root.num_children()-1)->render();
     else
+    {
         redraw_screen(false);
+        update_screen();
+    }
 
     if (!cursor_pos.origin())
     {

@@ -1135,6 +1135,7 @@ void wizard_mod_tide()
         {
             _shoals_force_tide(you.props, res == '+'? 2 : -2);
             viewwindow();
+            update_screen();
         }
     }
 }

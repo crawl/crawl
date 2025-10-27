@@ -1251,11 +1251,9 @@ command_type travel()
         else if (you.running.is_explore() && Options.explore_delay > -1)
         {
 #ifdef USE_TILE
-            update_screen(Options.tile_runrest_rate);
-#else
-            update_screen();
+            if (tiles.need_redraw(Options.tile_runrest_rate))
+                tiles.redraw();
 #endif
-
             if (Options.explore_delay > 0)
                 delay(Options.explore_delay);
         }
@@ -2771,6 +2769,7 @@ static level_pos _travel_depth_munge(int munge_method, const string &s,
     case '?':
         show_interlevel_travel_depth_help();
         redraw_screen();
+        update_screen();
         return level_pos(targ); // no change
     case '<':
         result.id = find_up_level(result.id);
@@ -4782,6 +4781,7 @@ void runrest::stop(bool clear_delays)
     {
         viewwindow();
         print_stats();
+        update_screen();
     }
 }
 
