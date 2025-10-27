@@ -183,6 +183,8 @@ public:
     const int min_skill;
     /// The skill level beyond which further skill provides no benefit.
     const int max_skill;
+    /// Multiplier to HP penalties for insufficient skill in talisman forms.
+    const int hp_skill_penalty_mult;
 
     /// flat str bonus
     const int str_mod;

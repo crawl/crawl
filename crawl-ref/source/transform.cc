@@ -164,6 +164,7 @@ static const form_entry &_find_form_entry(transformation form)
 Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
+      hp_skill_penalty_mult(fe.hp_skill_penalty_mult),
       str_mod(fe.str_mod), dex_mod(fe.dex_mod), base_move_speed(fe.move_speed),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
@@ -340,9 +341,7 @@ int Form::mult_hp(int base_hp, bool force_talisman, int skill) const
     const int scale = 100;
     const int lvl = skill == -1 ? get_level(scale) : skill * scale;
     // Only penalize if you're in a talisman/bauble form with insufficient skill.
-    // (Flux form gets double the HP penalty per level, since its min skill is so low.)
-    const int shortfall = (min_skill * scale - lvl)
-                          * (you.form == transformation::flux ? 2 : 1);
+    const int shortfall = (min_skill * scale - lvl) * hp_skill_penalty_mult;
     const bool should_downscale = force_talisman
                                   || you.default_form == you.form
                                   || you.form == transformation::flux;

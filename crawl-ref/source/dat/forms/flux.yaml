@@ -2,6 +2,7 @@ enum: flux
 equivalent_mons: shapeshifter
 description: something dangerously unstable.
 skill: {min: 5, max: 14}
+hp_skill_penalty_mult: 2
 special_damage: 2d5+(30/15)
 special_damage_name: Contam Dmg
 melds: [held, body, gloves]
