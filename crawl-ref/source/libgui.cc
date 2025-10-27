@@ -225,6 +225,9 @@ void delay(unsigned int ms)
 
 void update_screen(unsigned int min_delay_ms)
 {
+    if (crawl_state.tiles_disabled)
+        return;
+
     if (tiles.need_redraw(min_delay_ms))
         tiles.redraw();
 }
