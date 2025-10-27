@@ -109,6 +109,10 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
 
 static void _handle_monster_leashing(monster& mon, bool using_stairs)
 {
+    // Summoned monsters might have 'died' immediately upon being placed across floors.
+    if (!mon.alive())
+        return;
+
     // Monsters that are bored of being lured around go home
     if (!mon.friendly()
         && far_from_origin(using_stairs, mon.origin_level))
