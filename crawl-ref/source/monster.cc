@@ -1865,17 +1865,6 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
             if (caught() && item_is_stationary_net(item))
                 return false;
         }
-        else // None of these exceptions hold for throwing nets.
-        {
-            // Monsters in a fight will only pick up missiles if doing so
-            // is worthwhile.
-            if (!mons_is_wandering(*this)
-                && foe != MHITYOU
-                && (item.quantity < 5 || miss && miss->quantity >= 7))
-            {
-                return false;
-            }
-        }
     }
 
     if (miss && items_stack(*miss, item))
