@@ -1868,8 +1868,6 @@ static void _tag_construct_you(writer &th)
     for (mid_t monger : you.fearmongers)
         _marshall_as_int(th, monger);
 
-    marshallByte(th, you.piety_hysteresis);
-
     you.quiver_action.save(QUIVER_MAIN_SAVE_KEY);
 
     CANARY;
@@ -4254,7 +4252,10 @@ static void _tag_read_you(reader &th)
         you.fearmongers.push_back(unmarshall_int_as<mid_t>(th));
     }
 
-    you.piety_hysteresis = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_PIETY_DECAY_REMOVAL)
+        unmarshallByte(th);
+#endif
 
 #if TAG_MAJOR_VERSION == 34
     you.m_quiver_history.load(th);
