@@ -126,8 +126,7 @@ MDEF(in_local_population)
     // not in the population tables, but should be considered native, e.g.
     // vault gaurds in vaults, orb guardians in zot 5
     PLUARET(boolean,
-        mons_is_native_in_branch(*mons, you.where_are_you)
-     || monster_in_population(you.where_are_you, mons->type)
+     monster_in_population(you.where_are_you, mons->type)
      || monster_in_population(you.where_are_you, mons->mons_species(false))
      || monster_in_population(you.where_are_you, mons->mons_species(true)));
 }

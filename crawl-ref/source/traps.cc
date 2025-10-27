@@ -514,22 +514,6 @@ void trap_def::trigger(actor& triggerer)
 
     monster* m = triggerer.as_monster();
 
-    // Intelligent monsters native to a branch get a bonus avoiding traps
-    const bool trig_smart = m
-        && mons_is_native_in_branch(*m)
-        && mons_intel(*m) >= I_HUMAN;
-
-    // Smarter monsters and those native to the level will simply
-    // side-step shafts. Unless they are already looking for
-    // an exit, of course.
-    if (type == TRAP_SHAFT
-        && m
-        && (!m->will_trigger_shaft()
-            || trig_smart && !mons_is_fleeing(*m) && !m->pacified()))
-    {
-        return;
-    }
-
     // Tentacles aren't real monsters, and shouldn't invoke traps.
     if (m && mons_is_tentacle_or_tentacle_segment(m->type))
         return;
@@ -857,7 +841,7 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (m)
         {
-            if (one_chance_in(3) || (trig_smart && coinflip()))
+            if (one_chance_in(3))
                 simple_monster_message(*m, " evades a web.");
             else
             {
@@ -897,9 +881,8 @@ void trap_def::trigger(actor& triggerer)
         break;
 
     case TRAP_SHAFT:
-        // Known shafts don't trigger as traps.
-        // Allies don't fall through shafts (no herding!)
-        if (trig_smart || (m && m->wont_attack()) || you_trigger)
+        // Neither the player nor their allies will fall down known shafts.
+        if ((m && (m->wont_attack() || !m->will_trigger_shaft())) || you_trigger)
             break;
 
         // A chance to escape.

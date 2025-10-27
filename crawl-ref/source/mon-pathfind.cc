@@ -41,15 +41,12 @@ int mons_tracking_range(const monster* mon)
         range = 3;
         break;
     case I_ANIMAL:
-        range = 5;
+        range = 8;
         break;
     case I_HUMAN:
-        range = LOS_DEFAULT_RANGE;
+        range = 11;
         break;
     }
-
-    if (mons_is_native_in_branch(*mon))
-        range += 3;
 
     if (player_under_penance(GOD_ASHENZARI))
         range *= 5;

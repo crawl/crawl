@@ -373,9 +373,6 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 bool mons_att_wont_attack(mon_attitude_type fr);
 mon_attitude_type mons_attitude(const monster& m);
 
-bool mons_is_native_in_branch(const monster& mons,
-                              const branch_type branch = you.where_are_you);
-
 // Whether the monster is temporarily confused (class_too = false)
 // or confused at all (class_too = true; temporarily or by class).
 bool mons_is_confused(const monster& m, bool class_too = false);
