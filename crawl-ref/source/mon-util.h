@@ -416,7 +416,6 @@ bool mons_class_is_test(monster_type mc);
 bool mons_class_angered_by_attacks(monster_type mc);
 bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
-bool mons_is_abyssal_only(monster_type mc);
 bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);

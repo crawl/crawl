@@ -1844,7 +1844,10 @@ static void _initialise_level_corrupt_seeds(int power)
 
 static bool _incorruptible(monster_type mt)
 {
-    return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY;
+    return mt == MONS_ANCIENT_ZYME
+            || mt == MONS_LURKING_HORROR
+            || mt == MONS_WRETCHED_STAR
+            || mons_class_holiness(mt) == MH_HOLY;
 }
 
 // Create a corruption spawn at the given position. Returns false if further
