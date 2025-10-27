@@ -42,7 +42,6 @@
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "hints.h"
-#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "item-name.h"
