@@ -44,7 +44,7 @@ function init_forest(e, base_weight, lair_weight)
   end
   e.mons('bush')
   e.mons('plant')
-  e.kfeat('% = cache of fruit')
+  e.kfeat('% = cache_of_fruit')
   e.kprop('1 = no_tele_into')
   e.kprop('2 = no_tele_into')
   e.kprop('E = no_tele_into')

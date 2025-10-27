@@ -1427,7 +1427,7 @@ MONS:   human ; mace ego:flaming . robe ego:fire_resistance
 MONS:   occultist ; mace ego:flaming . robe ego:fire_resistance
 MONS:   orc sorcerer, toenail golem
 MONS:   dancing weapon ; mace ego:flaming
-KFEAT:  h = cache of fruit
+KFEAT:  h = cache_of_fruit
 KFEAT:  K = w
 : place_chained_volcano(_G)
 SUBST:  h = hhw
@@ -1550,7 +1550,7 @@ MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
 MONS:    patrolling fire bat band
 KMONS:   p = plant
 KITEM:   C = human skeleton
-KFEAT:   F = cache of fruit
+KFEAT:   F = cache_of_fruit
 NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3
 # fixed loot types for the cave, but shuffle it a little
 SHUFFLE: def

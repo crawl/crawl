@@ -522,7 +522,7 @@ MONS:    adder / brain worm w:2
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
-KFEAT:   f = cache of meat
+KFEAT:   f = cache_of_meat
 KFEAT:   p = shallow_water
 SUBST:   p = ppW
 SHUFFLE: DEFH

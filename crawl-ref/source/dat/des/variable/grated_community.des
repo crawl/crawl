@@ -190,7 +190,7 @@ NAME:    grated_community_mu_giant_home
 TAGS:    no_pool_fixup patrolling
 MONS:    ettin / cyclops / stone giant, fire giant / titan, frost giant
 ITEM:    giant spiked club / giant club / nothing, animal skin
-KFEAT:   M = cache of meat
+KFEAT:   M = cache_of_meat
 KITEM:   f = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
              elephant skeleton / dream sheep skeleton / manticore skeleton,\
              animal skin
@@ -250,7 +250,7 @@ KITEM:  % = $, any beam wand / any blast wand, \
 :   kitem("* = scroll of immolation pre_id / nothing, " .. s)
 :   kitem("| = scroll of immolation pre_id q: " .. q .. " / nothing, " .. s)
 KFEAT:  C = altar_vehumet / altar_makhleb w:2
-KFEAT:  P = cache of fruit
+KFEAT:  P = cache_of_fruit
 SUBST:  1 = 3, & = fffff.
 : end
 SUBST:  C = C%
@@ -277,7 +277,7 @@ MONS:   orc knight, orc warrior, orc priest, warg
 MONS:   orc warlord, orc high priest, peacekeeper
 KITEM:  % = w:12 animal skin / club / hand axe
 KITEM:  | = battleaxe / nothing, plate armour / nothing, gold, any, any
-KFEAT:  F = cache of fruit / cache of meat
+KFEAT:  F = cache_of_fruit / cache_of_meat
 KFEAT:  ? = altar_beogh / orcish_idol
 NSUBST: | = 1:| / *:W, F = 1:F. / *:?, . = 5:% / *:.
 SUBST:  2 = 2224, 3 = 3334
@@ -324,7 +324,7 @@ NAME:    grated_community_mu_taur_home
 MONS:    patrolling centaur warrior, patrolling yaktaur captain, training dummy
 KMONS:   P = plant
 ITEM:    any potion, any good_item, stone q:1 no_pickup
-KFEAT:   G = granite_statue / cache of fruit w:5
+KFEAT:   G = granite_statue / cache_of_fruit w:5
 SUBST:   G = GP
 NSUBST:  d = 1:dW / *:e
 : if you.in_branch("Vaults") then

@@ -69,7 +69,7 @@ MONS:    goblin rider, kobold brigand
 ITEM:    stone q:1 no_pickup
 KITEM:   D = gold
 KMONS:   D = hobgoblin / kobold / gnoll
-KFEAT:   M = cache of meat
+KFEAT:   M = cache_of_meat
 SHUFFLE: ABCD
 SUBST:   ABC = 2, ? = 2 1:2 .:22
 : if you.depth() > 5 then
@@ -249,7 +249,7 @@ KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock
 # Think of a giant eating fruit like we'd eat a handful of raisins,
 # or like how a hippo can just eat an entire pumpkin, rind and all.
-KFEAT:   F = cache of fruit / cache of meat
+KFEAT:   F = cache_of_fruit / cache_of_meat
 SHUFFLE: aA / bB / dD / eE
 SUBST:   ; = .', aA = ., b : x., B : x., d : x., D : x., e : x., E : x.
 SUBST:   F = Fxx, 0 = 4 7 9:2 P:18 ., 5 = 5:20 x`
@@ -424,7 +424,7 @@ KMONS:  8 = alderking
 KMONS:  P = plant
 KMONS:  B = bush
 KITEM:  % = %
-KFEAT:  % = cache of fruit
+KFEAT:  % = cache_of_fruit
 SUBST:  B : PBt p:1, p = PBt, c : xc, 9 = 999", 8 = 88', % : %$
 FTILE:  PBt+ = floor_moss
 FTILE:  '18$%* = floor_sprouting_stone
@@ -514,7 +514,7 @@ ITEM:   battleaxe good_item no_pickup / plate armour good_item no_pickup / \
         kite shield good_item no_pickup / manual of invocations / \
         $ q:50 no_pickup w:30
 KFEAT:  C = altar_beogh
-KFEAT:  e = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  e = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 SUBST:  e : e$
 : decorative_floor(_G, 'F', "orcish standard")
 MAP
@@ -565,7 +565,7 @@ CLEAR:  x
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
 SUBST:  d : d.
 : end
-KFEAT:  d = cache of fruit / cache of baked goods w:4
+KFEAT:  d = cache_of_fruit / cache_of_baked_goods w:4
 MAP
 .........@....wwwwwwwwwwwwwwwwwxx
 .ccccc.......ww....wwwwwwwwwwwwxx
@@ -1006,7 +1006,7 @@ MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer / \
         deep elf demonologist / lich
 MONS:   ancient lich / dread lich
 : end
-KFEAT:  g = cache of baked goods
+KFEAT:  g = cache_of_baked_goods
 KFEAT:  _ = altar_sif_muna
 KFEAT:  D = U
 KFEAT:  yz = c
@@ -1455,7 +1455,7 @@ FTILE:  GU = floor_depthstone
 : end
 KMONS:  p = plant
 KMONS:  P = fungus
-KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  C = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 KFEAT:  ~ = w
 NSUBST: H = 3:* / 7:1 / 3 = CC""" / *:"
 NSUBST: . = 2:9 / 5:p / *:., q = 3:1 / 6:P / *:"
@@ -1503,7 +1503,7 @@ ORIENT: north
 DEPTH:  D:4-9
 MONS:   kobold brigand, kobold geomancer, kobold
 KMONS:  p = plant
-KFEAT:  M = cache of meat
+KFEAT:  M = cache_of_meat
 NSUBST: . = 13:3 / 3 = 3. / *:., ' = 5:C / 2 = M.. / 5:3 / *:.
 : if you.depth() > 6 then
 NSUBST: 3 = 2:2 / *:3
@@ -1577,7 +1577,7 @@ DEPTH:  D:3-4
   kmons("O = " .. boss)
 }}
 MONS:   goblin, goblin ; sling, jackal
-KFEAT:  F = cache of fruit / cache of meat
+KFEAT:  F = cache_of_fruit / cache_of_meat
 SUBST:  F : F.
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
@@ -1671,8 +1671,8 @@ DEPTH:   D:6-9
 MONS:    kobold / gnoll / hobgoblin / hound w:5
 MONS:    kobold brigand / kobold geomancer w:5 / ogre / gnoll sergeant
 MONS:    orc priest / orc wizard / gnoll bouda / centaur
-KFEAT:   F = cache of fruit
-KFEAT:   f = cache of meat
+KFEAT:   F = cache_of_fruit
+KFEAT:   f = cache_of_meat
 NSUBST:  . = 4:2 / 20:1 / 5:3 / 8:% / 2:* / 10:$ / *:.
 SHUFFLE: Ff / fF / -- / -- / --
 FTILE:   'pt = floor_grass_dark
@@ -1750,7 +1750,7 @@ MONS:    kobold blastminer, kobold brigand, patrolling kobold demonologist
 MONS:    kobold / kobold geomancer w:1, plant
 MONS:    crimson imp ; sling / white imp / iron imp ; sling, obsidian statue
 KMONS:   g = bush
-KFEAT:   M = cache of meat
+KFEAT:   M = cache_of_meat
 SHUFFLE: !'
 NSUBST:  ! = 3:C / 4:- / 2:6 / *:., ' = 2:C / 3 = M.. / *:.
 NSUBST:  . = 10:4 / 4:6
@@ -2620,7 +2620,7 @@ TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_descent
 DEPTH:   D:7-, !D:$, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
 ORIENT:  north
 KMONS:   F = fungus
-KFEAT:   C = cache of fruit
+KFEAT:   C = cache_of_fruit
 SHUFFLE: op, qr
 SUBST:   o = w, p = t, q : tw., r = .
 SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF, C : C..
@@ -2944,7 +2944,7 @@ ITEM:    any wand charges:1, wand of digging charges:1 pre_id
 : kitem("| = sanguine talisman, randbook disc:necromancy disc2:alchemy " ..
 :       "numspells:5 slevels:" .. you.absdepth())
 KFEAT:   F = G
-KFEAT:   E = cache of meat
+KFEAT:   E = cache_of_meat
 SUBST:   C = c, X = xx.
 SHUFFLE: aAbB, Hhe / Idi, de, fg, hi, JKL
 SUBST:   HJK = +, ILa = c, A : c', bB = ', E : EE.

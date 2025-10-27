@@ -2986,7 +2986,7 @@ ITEM:    any potion
 : item(dgn.loot_potions)
 ITEM:    any scroll
 : item(dgn.loot_scrolls)
-KFEAT:   O = cache of baked goods
+KFEAT:   O = cache_of_baked_goods
 : if dgn.persist.necropolis_difficulty == "pre_temple_d" then
 SUBST:   h = $
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then

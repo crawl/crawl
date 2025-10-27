@@ -41,8 +41,8 @@ KMONS:   Q = bush
 KMONS:   R = plant
 KFEAT:   ~ = +
 KFEAT:   u = t
-KFEAT:   Ff = cache of fruit
-KFEAT:   B7 = cache of baked goods
+KFEAT:   Ff = cache_of_fruit
+KFEAT:   B7 = cache_of_baked_goods
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
 KFEAT:   _ = altar_trog
@@ -142,7 +142,7 @@ MONS:   tengu conjurer w:20 / chonchon band / eleionoma w:20 / \
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
             glowing shapeshifter hd:13 w:5 / quicksilver dragon / \
             tengu reaver w:5 / alderking w:15
-KFEAT:  C = cache of fruit
+KFEAT:  C = cache_of_fruit
 NSUBST: 3 = 6:3 / 4:6 / * = 36., 7 = 4:7 / * = 77., 1 = 1:8 / 2 = 118 / *:1
 SUBST:  C : CC.
 : old_forest_ends(_G)
@@ -213,7 +213,7 @@ KMONS:  P = plant
 ITEM:   gold q:1 / stone q:1 no_pickup w:20
 ITEM:   any potion, potion of moonshine pre_id
 KFEAT:  L = deep_water
-KFEAT:  F = cache of fruit
+KFEAT:  F = cache_of_fruit
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.
 FTILE:  efF124+|%*$- = floor_vines
@@ -268,7 +268,7 @@ MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         shambling mangrove w:3 / chonchon w:5
 MONS:   glowing orange brain w:5 / rakshasa w:15 / occultist / \
         eleionoma w:5 / glowing shapeshifter w:5 / stone giant w:4
-KFEAT:  C = cache of fruit
+KFEAT:  C = cache_of_fruit
 KFEAT:  _ = altar_dithmenos / altar_uskayaw
 KFEAT:  z = t
 SUBST:  T = zx, C : C..

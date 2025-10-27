@@ -2319,7 +2319,7 @@ KITEM:   ? = potion of moonshine pre_id q:3, \
 : kitem("$ = gold q:" .. crawl.random_range(33, 133) .. " no_pickup")
 KITEM:   MK` = human skeleton
 KFEAT:   Y = fountain_blood
-KFEAT:   ! = cache of meat
+KFEAT:   ! = cache_of_meat
 NSUBST:  ' = 3:1 / 4:0 / 1:410 / *:., " = 3:1 / 2:4 / 3:0 / *:., M = 1:M / *:`
 SHUFFLE: 123, 456
 SUBST:   G = G-

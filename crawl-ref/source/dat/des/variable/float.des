@@ -2203,8 +2203,8 @@ MONS:   jackal / hound, yak, human
 # like in kennysheep_goblin_castle.
 MONS:   Edmund / Jessica / Sigmund, Ijyb / Joseph
 KITEM:  d = robe, leather armour, club, dagger
-KFEAT:  e = cache of fruit
-KFEAT:  f = cache of meat
+KFEAT:  e = cache_of_fruit
+KFEAT:  f = cache_of_meat
 SUBST:  1 = 11., 3 = 3., 4 = 34, 5 = 35, d = def
 # Guarantee two winding tunnel into the center in this mess.
 SHUFFLE: rR / sS / uU / vV / wW / yY / zZ, uU / nN
@@ -2666,7 +2666,7 @@ KFEAT:   A = >
 SHUFFLE: 12 / 12 / 56
 SUBST:   W : .ww4xxx, Y = +., ~ = WW4.., ? = 456+wwww.
 : end
-KFEAT:   F = cache of fruit / cache of meat
+KFEAT:   F = cache_of_fruit / cache_of_meat
 SUBST:   ! : $., F : F.
 MAP
               xxxxx
@@ -2707,7 +2707,7 @@ MONS:   generate_awake human ; dagger | hand axe
 # these corpses are in the freezer, so never_decay is appropriate.
 KITEM:  d = $, $, animal skin good_item
 KITEM:  e = never_decay yak corpse / never_decay dream sheep corpse w:5
-KFEAT:  f = cache of meat
+KFEAT:  f = cache_of_meat
 KFEAT:  ~ = closed_clear_door
 SUBST:  e = e:2 f:1 ':7, 2=2.
 KPROP:  1de = no_tele_into
@@ -2746,8 +2746,8 @@ DEPTH:  D, Depths, Lair
 ORIENT: float
 MONS:   spriggan, spriggan rider, spriggan defender
 MONS:   boggart, spriggan druid, alderking
-KFEAT:  d = cache of fruit
-KFEAT:  e = cache of baked goods
+KFEAT:  d = cache_of_fruit
+KFEAT:  e = cache_of_baked_goods
 : if you.absdepth() < 8 then
 SUBST:  130 = ., 245 = 0
 : elseif you.absdepth() < 13 then
@@ -3370,7 +3370,7 @@ MONS:   deep elf annihilator / deep elf sorcerer / lich
 MONS:   yaktaur captain w:5 / orc warlord ; arbalest . war axe . ring mail / \
         vault warden ; arbalest . long sword . chain mail
 KITEM:  | = | / * / %
-KFEAT:  | = cache of baked goods
+KFEAT:  | = cache_of_baked_goods
 SUBST:  @W' = .
 :   vaults_hard_standard(_G)
 : else
@@ -3455,7 +3455,7 @@ FTILE:   .$%*+nTB[{(<>123456 = floor_metal_gold
 : end
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
-KFEAT:   B = cache of baked goods
+KFEAT:   B = cache_of_baked_goods
 SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP
@@ -3600,7 +3600,7 @@ MONS:    12-headed hydra / anaconda / torpor snail w:5 / \
          demonic crawler w:5 / skyshark / bunyip w:5 / sin beast w:5
 MONS:    spriggan druid, spriggan berserker / spriggan defender
 MONS:    guardian sphinx / alderking w:5 / caustic shrike
-KFEAT:   d = cache of fruit
+KFEAT:   d = cache_of_fruit
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
 NSUBST:  C : 2:1 / * = c:299 1:1
@@ -4005,7 +4005,7 @@ ORIENT: float
 DEPTH:  D:2-4
 KMONS:  1 = Ijyb / hobgoblin, hobgoblin
 KMONS:  2 = goblin
-KFEAT:  F = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  F = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 SUBST:  F : F..
 MAP
 xxxxxxxxx
@@ -4271,7 +4271,7 @@ DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   tengu warrior, tengu conjurer, chonchon, tengu reaver
 KFEAT:  m = iron_grate
-KFEAT:  F = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  F = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 NSUBST: " = 2 = FFF1W / * = ........1W
 NSUBST: ' = 2:4 / 1:3 / 1:3. / 4=12 / *:.
 NSUBST: ? = 3:* / *:%
@@ -5001,7 +5001,7 @@ KMONS:  1 = electric eel
 KMONS:  C = plant
 KFEAT:  1 = w
 KFEAT:  C = W
-KFEAT:  F = cache of fruit
+KFEAT:  F = cache_of_fruit
 SUBST:  ; = .W
 NSUBST: - = 3:1 / w, _ = 3:1 / w, A = 3:% / 1:* / 1:F / 1:. / W
 NSUBST: B = 2:% / 1:* / 1:F / 2:. / W, ` = 7:C / 4:. / W
@@ -5204,7 +5204,7 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:2-4
 ORIENT: float
 MONS:   goblin, hobgoblin
-KFEAT:  % = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  % = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 SUBST:  - = 112..., " = 12`, ' = 12`
 NSUBST: ` = 1:%. / *:.
 MAP
@@ -5258,7 +5258,7 @@ MONS:   kobold, endoplasm, jelly
 : end
 ITEM:   goblin skeleton / hobgoblin skeleton / rat skeleton / bat skeleton
 ITEM:   human skeleton, star_item
-KFEAT:  M = cache of meat
+KFEAT:  M = cache_of_meat
 KFEAT:  P = c
 NSUBST: ' = 3:1 / 5 = 1. / 1:% / 2 = %.
 NSUBST: " = 5:2 / 5 = 2' / 1:3 / 2 = 3` / 2:d / 3 = d` / *:`
@@ -5295,7 +5295,7 @@ KMONS:  p = pile of debris
 KMONS:  C = cyclops
 KFEAT:  A = granite_statue
 KFEAT:  C = W
-KFEAT:  2 = cache of fruit / cache of meat / floor w:30
+KFEAT:  2 = cache_of_fruit / cache_of_meat / floor w:30
 SUBST:  p : pPP, P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
@@ -5485,7 +5485,7 @@ KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
 KFEAT: H = iron_grate
-KFEAT: a = cache of meat
+KFEAT: a = cache_of_meat
 SHUFFLE: AB, CD
 SUBST: A = ., B = x, C = ., D = x
 NSUBST: - = 1:| / 1=|* / 2=*$ / 3=*%, q = 3:* / 3 = $$%%a / * = $$$%%
@@ -6926,7 +6926,7 @@ MONS:    centaur warrior / deep elf archer
 MONS:    deep elf master archer, alderking
 KMONS:   ? = deep elf master archer ; longbow good_item
 KITEM:   ? = quick blade good_item / cloak good_item / gold q:1000
-KFEAT:   % = cache of fruit
+KFEAT:   % = cache_of_fruit
 SUBST:   - = .tt, ' = ..t, % : %..
 NSUBST:  . = 1:3 / 2 = 22. / 3:1 / 4 = 1. / .
 TILE:    G = dngn_statue_archer
@@ -7050,8 +7050,8 @@ MONS:    chonchon, caustic shrike, spriggan druid
 MONS:    tengu warrior, tengu conjurer, tengu reaver
 KMONS:   p = plant / bush
 KFEAT:   - = +
-KFEAT:   d = cache of meat
-KFEAT:   e = cache of fruit / cache of baked goods w:4
+KFEAT:   d = cache_of_meat
+KFEAT:   e = cache_of_fruit / cache_of_baked_goods w:4
 SHUFFLE: mno, de / de / ~~
 SUBST:   n : xxm, o = x, '~ = t:2 p:3 `
 NSUBST:  2 = 2 = 112 / 2:_ / *:2
@@ -7228,7 +7228,7 @@ SUBST:   ! = '
 KITEM:   d = potion of ambrosia pre_id
 KFEAT:   X = x
 KFEAT:   C = altar_nemelex_xobeh
-KFEAT:   F = cache of fruit
+KFEAT:   F = cache_of_fruit
 SUBST:   T = tt., F : FF.
 SHUFFLE: 678
 COLOUR:  x = yellow
@@ -7469,7 +7469,7 @@ KITEM:   & = shadow dragon scales randart / manual of stealth / \
              boots ego:stealth good_item pre_id / \
              cloak ego:stealth good_item pre_id / \
              scroll of fog q:3 pre_id
-KFEAT:   B = cache of baked goods
+KFEAT:   B = cache_of_baked_goods
 KFEAT:   _ = altar_dithmenos
 KFEAT:   C = c
 NSUBST:  ? = 1:1 / 1:2 / 1:4 / 1:5 / 2 = 112245..
@@ -7748,7 +7748,7 @@ ITEM:    randbook numspells:3 disc1:ice spells:frozen_ramparts&hoarfrost_cannona
 ITEM:    randbook numspells:5 disc1:ice spells:hoarfrost_cannonade&splinterfrost_shell
 KITEM:   % = $ no_pickup, any weapon ego:freezing no_pickup
 KMONS:   P = pillar of rime
-KFEAT:   M = cache of meat
+KFEAT:   M = cache_of_meat
 SUBST:   D = 3, E = 4, F = 5
 # Wall-smearing everywhere besides V, tile set-up across branches.
 : if you.branch() == "Vaults" then

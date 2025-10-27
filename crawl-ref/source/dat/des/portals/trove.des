@@ -794,7 +794,7 @@ local small = you.race() == "Spriggan" or you.race() == "Kobold" or
 trove_unrand_chances(_G, "defghi", {"frostbite", "skin of zhor"},
                          {small, no_body_armour_species(_G)}, {"y", "z"})
 }}
-KFEAT:   ? = cache of meat / cache of fruit / cache of baked goods
+KFEAT:   ? = cache_of_meat / cache_of_fruit / cache_of_baked_goods
 KFEAT:   + = closed_clear_door
 KFEAT:   X = x
 : vault_metal_statue_setup(_G, "G", "icy conduit")

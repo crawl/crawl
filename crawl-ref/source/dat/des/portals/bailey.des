@@ -779,7 +779,7 @@ ITEM:   scroll of enchant weapon pre_id /\
         scroll of enchant armour pre_id /\
         scroll of summoning pre_id no_pickup
 : fortress_talisman_chance(_G, "h")
-KFEAT:  C = cache of meat
+KFEAT:  C = cache_of_meat
 SUBST:  1 = 11., 2 = 22., 3 = 32.
 SUBST:  4 = 43322.., 5 = 4333, 4 : 4R, C : CC.
 NSUBST: ! = 1:deee / *:e
@@ -942,7 +942,7 @@ KITEM:   $ = gold
 : fortress_talisman_chance(_G, "i")
 KFEAT:   ^ = zot trap
 KFEAT:   B = altar_okawaru
-KFEAT:   g = cache of meat
+KFEAT:   g = cache_of_meat
 KFEAT:   4 = w
 NSUBST:  | = 1:| / *:$
 NSUBST:  w = 1:4 / 6 = 4w / *:w
@@ -1255,7 +1255,7 @@ ITEM:   good_item ice dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
         good_item quicksilver dragon scales w:3
 : fortress_talisman_chance(_G, "g")
-KFEAT:  C = cache of fruit / cache of baked goods w:4
+KFEAT:  C = cache_of_fruit / cache_of_baked_goods w:4
 KFEAT:  D = deep_water
 SUBST:  C : CC., ! = t:20 x c:3, - = t c:30 x
 NSUBST: ' = 1:1 / 15 = 1... / 2 = 2... / *:.

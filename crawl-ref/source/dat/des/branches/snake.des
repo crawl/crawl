@@ -1027,7 +1027,7 @@ NAME:    regret_index_snakedec_diamondback
 TAGS:    transparent extra snakedec
 DEPTH:   Snake
 KFEAT:   C = altar_cheibriados / altar_gozag w:5
-KFEAT:   F = cache of fruit / cache of meat
+KFEAT:   F = cache_of_fruit / cache_of_meat
 SHUFFLE: '"yY`~zZ / yY'"zZ`~ / yY'"`~zZ / yY'"`~zZ / '"yYzZ`~ / '"yYzZ`~, ?!
 SUBST:   '` = ., yYzZ = x, ! : bb+, - : x:5 .
 NSUBST:  "~ = 1:{([])}}<<<>>>CCCFFTTUUVVpp

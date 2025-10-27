@@ -192,7 +192,7 @@ KITEM:   1 = gold w:5 / nothing / animal skin / \
              potion of might pre_id w:2
 ITEM:    club, potion of moonshine pre_id, gold w:5
 ITEM:    gold w:2 / nothing, potion of moonshine pre_id
-KFEAT:   C = cache of meat
+KFEAT:   C = cache_of_meat
 KFEAT:   O = enter_orcish_mines
 SHUFFLE: defO
 TILE:    C = dngn_cache_of_pizza
@@ -1736,7 +1736,7 @@ ENDMAP
 # orc fortress
 NAME:   tekkud_orc_quarters
 TAGS:   transparent
-KFEAT:  C = cache of meat
+KFEAT:  C = cache_of_meat
 NSUBST: _ = 1:89 / *=009
 SUBST:  - = IC F:4 $:4
 : decorative_floor(_G, 'F', "orcish standard")

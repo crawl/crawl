@@ -867,7 +867,7 @@ DEPTH:  D:3-, !D:$
 MONS:   plant / bush w:5
 KMONS:  S = sacred lotus
 KFEAT:  S = w
-KFEAT:  % = cache of fruit
+KFEAT:  % = cache_of_fruit
 SUBST:  S : Sww
 NSUBST: 1 = 1:' / * = 111t''', 2 = 1:%'' / * = 111t'''
 KMASK:  _1%'<> = opaque
@@ -892,7 +892,7 @@ ENDMAP
 
 NAME:    fedhas_altar_fruit_tree
 TAGS:    transparent no_item_gen no_rotate no_vmirror decor
-KFEAT:   de = cache of fruit
+KFEAT:   de = cache_of_fruit
 SHUFFLE: defghijk
 SUBST:   fghijk = .
 COLOUR:  . = green
@@ -2171,7 +2171,7 @@ NAME:   kennysheep_okawaru_gauntlet
 TAGS:   no_pool_fixup transparent
 : if you.in_branch("Depths") then
 KMONS:  1 = spriggan defender ; demon trident . robe . boomerang
-KFEAT:  1 = cache of baked goods
+KFEAT:  1 = cache_of_baked_goods
 : else
 KMONS:  1 = goblin ; spear
 : end
@@ -2997,7 +2997,7 @@ MONS:   rat / frilled lizard / quokka w:20
 MONS:   orc warrior ; war axe . animal skin
 MONS:   iguana / scorpion
 : end
-KFEAT:  d = cache of meat
+KFEAT:  d = cache_of_meat
 NSUBST: ' = 3:2 / *:.
 SUBST:  y = x, " = .
 KPROP:  1y" = bloody
@@ -3154,7 +3154,7 @@ NAME:    eat_drink_and_be_merry_uskayaw
 TAGS:    transparent
 SHUFFLE: def
 ITEM:    any potion q:1, any weapon no_pickup
-KFEAT:   f = cache of fruit / cache of meat
+KFEAT:   f = cache_of_fruit / cache_of_meat
 : standard_overflow_setup(_G, { { "uskayaw", "_" } }, true)
 MAP
 ...........

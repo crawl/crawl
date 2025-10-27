@@ -2070,7 +2070,7 @@ KITEM:      h = potion of lignification pre_id q:4 / \
                 parchment of eringya's noxious bog
 KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
-KFEAT:      F = cache of fruit
+KFEAT:      F = cache_of_fruit
 SHUFFLE:    pq/rs
 SUBST:      q : y., r : y., p = ., s = .
 NSUBST:     1 = 3:1 / *=1...., 2 = 2:2 / *=2..., 3 = 1:4 / 1:3 / *=34....
@@ -2291,7 +2291,7 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
 }}
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
 ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
-KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
+KFEAT:  C = cache_of_fruit / cache_of_meat / cache_of_baked_goods
 KFEAT:  ^ = archmage's trap
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3`, A = 1:< / *:A, C = 3 = C.. / *:.
@@ -2571,7 +2571,7 @@ KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
 KITEM:  JKL = potion of moonshine pre_id
-KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
+KFEAT:  C = cache_of_meat / cache_of_fruit / cache_of_baked_goods
 KFEAT:  E = shallow_water
 KFEAT:  ^ = harlequin's trap
 KFEAT:  N = granite_statue

@@ -121,19 +121,19 @@ Xom adds some personal touches to your environment.
 
 @Xom scenery generic@
 %%%%
-Xom scenery cache of fruit
+Xom scenery cache_of_fruit
 
 Xom accidentally drops some snacks.
 
 Xom prepares the finest cultivars of fruit found anywhere, then drops them.
 %%%%
-Xom scenery cache of meat
+Xom scenery cache_of_meat
 
 Xom [offers|fetches] you some snacks.
 
 Xom prepares a banquet formed from your trail of carnage through the Dungeon.
 %%%%
-Xom scenery cache of baked goods
+Xom scenery cache_of_baked_goods
 
 Xom offers some snacks, fresh out of the oven.
 %%%%

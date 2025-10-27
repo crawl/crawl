@@ -179,7 +179,7 @@ KITEM:   | = | / any good_item
 KFEAT:   ^ = permanent teleport trap
 KFEAT:   ~ = teleport trap
 KFEAT:   aD = stone_arch
-KFEAT:   ; = cache of fruit
+KFEAT:   ; = cache_of_fruit
 KFEAT:   A = enter_hell
 KFEAT:   & = enter_pandemonium
 KFEAT:   @ = enter_abyss
@@ -948,7 +948,7 @@ KMONS:  3 = orc priest / orc wizard / kobold geomancer w:5 / \
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:6 / manticore w:3 / black bear w:19
-KFEAT:  B = cache of baked goods
+KFEAT:  B = cache_of_baked_goods
 KITEM:  o5 = gold / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4

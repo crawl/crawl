@@ -3522,7 +3522,7 @@ NAME:   nicolae_abandoned_food_shop
 TAGS:   transparent decor extra
 DEPTH:  D:6-, Depths
 KFEAT:  a = abandoned_shop
-KFEAT:  ` = cache of meat / cache of fruit / cache of baked goods
+KFEAT:  ` = cache_of_meat / cache_of_fruit / cache_of_baked_goods
 NSUBST: ` = 3=` / 2=`. / .
 MAP
 .....
@@ -3557,10 +3557,10 @@ TAGS:   transparent decor extra
 DEPTH:  D:6-, Depths
 : if crawl.coinflip() then
 KITEM:  S = spriggan skeleton
-KFEAT:  ` = cache of meat
+KFEAT:  ` = cache_of_meat
 : else
 KITEM:  S = kobold skeleton
-KFEAT:  ` = cache of fruit
+KFEAT:  ` = cache_of_fruit
 : end
 NSUBST: ` = 4=` / - / `-
 KPROP:  S`- = no_tele_into
@@ -3904,7 +3904,7 @@ ENDMAP
 NAME:   evilmike_butchery
 TAGS:   transparent no_item_gen extra
 DEPTH:  D:9-, Depths
-KFEAT:  C = cache of meat
+KFEAT:  C = cache_of_meat
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
@@ -3929,7 +3929,7 @@ TAGS:   transparent no_item_gen no_monster_gen uniq_vineyard extra
 DEPTH:  D:2-12
 WEIGHT: 4
 ITEM:   any potion
-KFEAT:  C = cache of fruit
+KFEAT:  C = cache_of_fruit
 NSUBST: . = 6 = d. / *:.
 FTILE:  .dpC : floor_moss / floor_grass_dark
 COLOUR: .d = green

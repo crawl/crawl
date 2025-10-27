@@ -2686,7 +2686,7 @@ ORIENT:  float
 MONS:    killer klown, elephant / dire elephant / hellephant w:5, human ; club
 KITEM:   ! = club
 KFEAT:   y = x
-KFEAT:   B = cache of baked goods
+KFEAT:   B = cache_of_baked_goods
 SUBST:   2 = 22., % = !.....
 NSUBST:  1 = 3:1 / 1:2 / 2:3 / * = 112333
 SHUFFLE: })]>UVY
@@ -2897,7 +2897,7 @@ KMONS:   246 = killer klown ; club plus:12 ego:chaos | \
 KMONS:   8&! = protean progenitor
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
-KFEAT:   B = cache of baked goods
+KFEAT:   B = cache_of_baked_goods
 KFEAT:   0 = harlequin's trap
 KFEAT:   ^~ = teleport trap / dispersal trap
 KFEAT:   _ = altar_xom
@@ -3773,7 +3773,7 @@ TAGS:   no_monster_gen transparent
 DEPTH:  Zot, !Zot:$
 MONS:   lightning spire, patrolling electric golem
 KMONS:  ! = patrolling death cob
-KFEAT:  C = cache of baked goods
+KFEAT:  C = cache_of_baked_goods
 NSUBST: % = 2:! / 2:C / *:a
 : vault_metal_statue_setup(_G, "Z", "nascence circuit")
 : dgn.delayed_decay(_G, 'a', 'random draconian corpse')
@@ -3970,7 +3970,7 @@ DEPTH:  Zot
 ORIENT: float
 MONS:   purple draconian, nonbase purple draconian
 MONS:   quicksilver dragon, killer klown
-KFEAT:  B = cache of baked goods
+KFEAT:  B = cache_of_baked_goods
 NSUBST: - = 2:1 / 2 = 112.. / 1 = 3:1 . / *:., " = 1:1 / 3 = 122. / 1 = 34 / *:.
 NSUBST: ' = 2:1 / 2 = 12 / 2:3 / 1=34.. / *:., ; = 2:1 / 2 = 112.. / 1 = 3:1 . / *:.
 NSUBST: _ = 1:1 / 3 = 122. / 1:34 / *:., p = 2:1 / 2=12 / 2:3 / 1:34.. / *:.
@@ -4370,9 +4370,9 @@ SUBST:  - = ---., " = """., ' = '''., 1 = 1., T = TccV
 SUBST:  > = )}], < = ({[
 SUBST:  c:xc
 NSUBST: 2 = 1:2 / 2...
-KFEAT:  - = cache of baked goods
-KFEAT:  " = cache of fruit
-KFEAT:  ' = cache of meat
+KFEAT:  - = cache_of_baked_goods
+KFEAT:  " = cache_of_fruit
+KFEAT:  ' = cache_of_meat
 FTILE:  .'"-T12{([})] = floor_zot_diamonds
 MAP
   ccccc

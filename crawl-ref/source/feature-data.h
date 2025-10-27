@@ -673,21 +673,21 @@ FOUNTAIN(DNGN_DECORATIVE_FLOOR, "decorative floor", "decorative_floor", DARKGREY
 FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
 
 {
-    DNGN_CACHE_OF_BAKED_GOODS, "cache of baked goods", "cache of baked goods",
+    DNGN_CACHE_OF_BAKED_GOODS, "cache of baked goods", "cache_of_baked_goods",
     DCHAR_ITEM_SKELETON, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(YELLOW),
     FFT_NONE, MF_FLOOR,
 },
 
 {
-    DNGN_CACHE_OF_FRUIT, "cache of fruit", "cache of fruit",
+    DNGN_CACHE_OF_FRUIT, "cache of fruit", "cache_of_fruit",
     DCHAR_ITEM_SKELETON, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(GREEN),
     FFT_NONE, MF_FLOOR,
 },
 
 {
-    DNGN_CACHE_OF_MEAT, "cache of meat", "cache of meat",
+    DNGN_CACHE_OF_MEAT, "cache of meat", "cache_of_meat",
     DCHAR_ITEM_SKELETON, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(BROWN),
     FFT_NONE, MF_FLOOR,
