@@ -986,13 +986,6 @@ static bool _should_stop_activity(Delay* delay,
     if (user_stop.is_bool())
         return user_stop.to_bool();
 
-    // Don't interrupt player on monster's turn, they might wander off.
-    if (you.turn_is_over
-        && (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM))
-    {
-        return false;
-    }
-
     // No monster will attack you inside a sanctuary,
     // so presence of monsters won't matter.
     if (ai == activity_interrupt::see_monster && is_sanctuary(you.pos()))
