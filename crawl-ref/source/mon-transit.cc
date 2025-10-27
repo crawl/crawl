@@ -107,6 +107,30 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
     }
 }
 
+static void _handle_monster_leashing(monster& mon, bool using_stairs)
+{
+    // Monsters that are bored of being lured around go home
+    if (!mon.friendly()
+        && far_from_origin(using_stairs, mon.origin_level))
+    {
+        if (using_stairs && you.can_see(mon))
+        {
+            mprf("%s abandons %s pursuit.",
+            mon.name(DESC_THE).c_str(),
+            mon.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        mon.set_transit(mon.origin_level);
+        mon.destroy_inventory();
+        monster_cleanup(&mon);
+        return;
+    }
+
+    // When pulling monsters out of portals (or the Abyss), consider the level
+    // the player exited to be their new home.
+    if (!is_connected_branch(mon.origin_level) && is_connected_branch(level_id::current()))
+        mon.origin_level = level_id::current();
+}
+
 static void _level_place_followers(m_transit_list &m)
 {
     for (auto i = m.begin(); i != m.end();)
@@ -128,20 +152,8 @@ static void _level_place_followers(m_transit_list &m)
             {
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
-                // Monsters that are bored of being lured around go home
-                if (!new_mon->friendly()
-                    && far_from_origin(using_stairs, new_mon->origin_level))
-                {
-                    if (using_stairs)
-                    {
-                        mprf("%s abandons %s pursuit.",
-                        new_mon->name(DESC_THE).c_str(),
-                        new_mon->pronoun(PRONOUN_POSSESSIVE).c_str());
-                    }
-                    new_mon->set_transit(new_mon->origin_level);
-                    new_mon->destroy_inventory();
-                    monster_cleanup(new_mon);
-                }
+
+                _handle_monster_leashing(*new_mon, using_stairs);
             }
             m.erase(mon);
         }
@@ -259,20 +271,8 @@ static void _level_place_lost_monsters(m_transit_list &m)
             // to it.
             new_mon->apply_location_effects(new_mon->pos());
 
-            // Monsters that are bored of being lured around go home
-            if (!new_mon->friendly()
-                    && far_from_origin(using_stairs, new_mon->origin_level))
-                {
-                    if (using_stairs)
-                    {
-                        mprf("%s abandons %s pursuit.",
-                        new_mon->name(DESC_THE).c_str(),
-                        new_mon->pronoun(PRONOUN_POSSESSIVE).c_str());
-                    }
-                    new_mon->set_transit(new_mon->origin_level);
-                    new_mon->destroy_inventory();
-                    monster_cleanup(new_mon);
-                }
+            _handle_monster_leashing(*new_mon, using_stairs);
+
             m.erase(mon);
         }
     }
@@ -587,7 +587,7 @@ bool far_from_origin(bool used_stairs, level_id origin, level_id current)
     if (!is_connected_branch(current.branch) || !is_connected_branch(origin.branch))
         return false;
 
-    const int dist = level_distance(origin, current);
+    const int dist = level_distance(origin, current, true);
 
     // The floors are either far apart. If not using stairs (maybe shafted?)
     // then give a bit more wiggle room

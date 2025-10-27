@@ -108,7 +108,7 @@ int prevent_travel_to(const string &dungeon_feature_name);
 void reset_travel_terrain();
 
 // Sort dungeon features as appropriate.
-int level_distance(level_id first, level_id second);
+int level_distance(level_id first, level_id second, bool ignore_knowledge = false);
 level_id find_deepest_explored(level_id curr);
 bool branch_entered(branch_type branch);
 

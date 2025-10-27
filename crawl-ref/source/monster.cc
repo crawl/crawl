@@ -101,7 +101,7 @@ monster::monster()
     clear_constricted();
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
-    origin_level = level_id::current();
+    origin_level = level_id();
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -152,6 +152,7 @@ void monster::reset()
     god             = GOD_NO_GOD;
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
+    origin_level    = level_id();
 
     mons_remove_from_grid(*this);
     target.reset();

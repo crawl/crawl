@@ -7652,7 +7652,7 @@ void unmarshallMonster(reader &th, monster& m)
     else
     {
 #endif
-        unmarshall_level_id(th);
+        m.origin_level = unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
