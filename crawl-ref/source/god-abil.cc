@@ -2294,7 +2294,9 @@ static void _choose_curse_knowledge()
 void ashenzari_offer_new_curse()
 {
     // No curse at full piety, since shattering resets the curse timer anyway
-    if (piety_rank() > 5)
+    // Check raw piety rather than effective piety, since we don't want to
+    // offer curses while ostracised from full piety.
+    if (piety_rank(you.raw_piety) > 5)
         return;
 
     _choose_curse_knowledge();
