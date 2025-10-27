@@ -183,7 +183,7 @@ bool tile_command_not_applicable(const command_type cmd, bool safe)
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
     case CMD_USE_ABILITY:
-        return your_talents(false).empty();
+        return your_talents().empty();
     case CMD_CAST_SPELL:
         return !you.spell_no || !can_cast_spells(true);
     default:

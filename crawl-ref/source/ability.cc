@@ -900,7 +900,7 @@ string print_abilities()
 {
     string text = "\n<w>a:</w> ";
 
-    const vector<talent> talents = your_talents(false);
+    const vector<talent> talents = your_talents();
 
     if (talents.empty())
         text += "no special abilities";
@@ -1287,7 +1287,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     }
 }
 
-talent get_talent(ability_type ability, bool check_confused)
+talent get_talent(ability_type ability)
 {
     ASSERT(ability != ABIL_NON_ABILITY);
 
@@ -1296,13 +1296,6 @@ talent get_talent(ability_type ability, bool check_confused)
     // doing anything else, so that we'll handle its flags properly.
     talent result { fixup_ability(ability), 0, 0, false };
     const ability_def &abil = get_ability_def(result.which);
-
-    if (check_confused && you.confused()
-        && !testbits(abil.flags, abflag::conf_ok))
-    {
-        result.which = ABIL_NON_ABILITY;
-        return result;
-    }
 
     // Look through the table to see if there's a preference, else find
     // a new empty slot for this ability. - bwr
@@ -1381,7 +1374,7 @@ string ability_name(ability_type ability, bool dbname)
 vector<string> get_ability_names()
 {
     vector<string> result;
-    for (const talent &tal : your_talents(false))
+    for (const talent &tal : your_talents())
         result.push_back(ability_name(tal.which));
     return result;
 }
@@ -1645,7 +1638,7 @@ void no_ability_msg()
 // c_choose_ability
 bool activate_ability()
 {
-    vector<talent> talents = your_talents(false);
+    vector<talent> talents = your_talents();
 
     if (talents.empty())
     {
@@ -1813,6 +1806,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     if (abil.ability >= ABIL_FIRST_WIZ)
         return you.wizard;
 #endif
+    if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
         if (!quiet)
@@ -1826,18 +1826,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     // Silence and water elementals
     if (silenced(you.pos())
         || you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
-        talent tal = get_talent(abil.ability, false);
+        talent tal = get_talent(abil.ability);
         if (tal.is_invocation && abil.ability != ABIL_RENOUNCE_RELIGION)
         {
             if (!quiet)
@@ -4279,10 +4272,9 @@ string describe_talent(const talent& tal)
     return trimmed_string(desc.str());
 }
 
-static void _add_talent(vector<talent>& vec, const ability_type ability,
-                        bool check_confused)
+static void _add_talent(vector<talent>& vec, const ability_type ability)
 {
-    const talent t = get_talent(ability, check_confused);
+    const talent t = get_talent(ability);
     if (t.which != ABIL_NON_ABILITY)
         vec.push_back(t);
 }
@@ -4406,13 +4398,11 @@ bool player_has_ability(ability_type abil, bool include_unusable)
  *
  * Currently the only abilities that are affected by include_unusable are god
  * abilities (affect by e.g. penance or silence).
- * @param check_confused If true, abilities that don't work when confused will
- *                       be excluded.
  * @param include_unusable If true, abilities that are currently unusable will
- *                         be excluded.
+ *                         be included.
  * @return  A vector of talent structs.
  */
-vector<talent> your_talents(bool check_confused, bool include_unusable, bool ignore_piety)
+vector<talent> your_talents(bool include_unusable, bool ignore_piety)
 {
     vector<talent> talents;
 
@@ -4466,14 +4456,14 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
 
     for (auto a : check_order)
         if (player_has_ability(a, include_unusable))
-            _add_talent(talents, a, check_confused);
+            _add_talent(talents, a);
 
 
     // player_has_ability will just brute force these anyways (TODO)
     for (ability_type abil : get_god_abilities(include_unusable, ignore_piety,
                                                include_unusable))
     {
-        _add_talent(talents, abil, check_confused);
+        _add_talent(talents, abil);
     }
 
     // Side effect alert!

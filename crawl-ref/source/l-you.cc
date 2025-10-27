@@ -925,82 +925,51 @@ static int l_you_memorise(lua_State *ls)
     PLUARET(boolean, learn_spell(s, false, false));
 }
 
-/*** Available abilities
- * @treturn array An array of ability names.
- * @function abilities
+/*** Ability information.
+ * @treturn array|nil A nested table with info about the abilities you have.
+ * Returns nil if you do not have any abilities (or the provided ability).
+ * Each entry contains a table with the following:
+ *     { string name, boolean currently_usable, string hotkey }
+ * @tparam[opt] string name If provided, get info for a specific ability.
+ * @function ability_info
  */
-static int l_you_abils(lua_State *ls)
+LUAFN(you_get_ability_info)
 {
-    lua_newtable(ls);
+    string abil_name = "";
+    if (lua_gettop(ls) >= 1)
+        abil_name = luaL_checkstring(ls, 1);
 
-    vector<string>abils = get_ability_names();
-    for (int i = 0, size = abils.size(); i < size; ++i)
-    {
-        lua_pushstring(ls, abils[i].c_str());
-        lua_rawseti(ls, -2, i + 1);
-    }
-    return 1;
-}
-
-/*** Ability letters in use.
- * @treturn array An array of ability letters
- * @function ability_letters
- */
-static int l_you_abil_letters(lua_State *ls)
-{
-    lua_newtable(ls);
-
-    char buf[2];
-    buf[1] = 0;
-
-    vector<talent> talents = your_talents(false);
-    for (int i = 0, size = talents.size(); i < size; ++i)
-    {
-        buf[0] = talents[i].hotkey;
-        lua_pushstring(ls, buf);
-        lua_rawseti(ls, -2, i + 1);
-    }
-    return 1;
-}
-
-/*** Ability table.
- * @treturn table A map of letters to ability names
- * @function ability_table
- */
-static int l_you_abil_table(lua_State *ls)
-{
-    lua_newtable(ls);
-
-    char buf[2];
-    buf[1] = 0;
-
-    for (const talent &tal : your_talents(false))
-    {
-        buf[0] = tal.hotkey;
-        lua_pushstring(ls, buf);
-        lua_pushstring(ls, ability_name(tal.which).c_str());
-        lua_rawset(ls, -3);
-    }
-    return 1;
-}
-
-/*** Is this ability currently available to use?
- * @tparam string name
- * @treturn boolean
- * @function ability_available
- */
-LUAFN(you_abil_available)
-{
-    const string abil_name = luaL_checkstring(ls, 1);
     const ability_type abil = ability_by_name(abil_name);
-
-    if (abil == ABIL_NON_ABILITY)
+    if (!abil_name.empty() && abil == ABIL_NON_ABILITY)
     {
         luaL_argerror(ls, 1, ("Invalid ability: " + abil_name).c_str());
         return 0;
     }
 
-    lua_pushboolean(ls, check_ability_possible(abil, true));
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+    const vector<talent> talents = your_talents(true);
+    int index = 0;
+    for (const auto &tal : talents)
+    {
+        if (!abil_name.empty() && abil != tal.which)
+            continue;
+
+        lua_newtable(ls);
+        lua_pushstring(ls, ability_name(tal.which).c_str());
+        lua_rawseti(ls, -2, 1);
+        lua_pushboolean(ls, check_ability_possible(tal.which, true));
+        lua_rawseti(ls, -2, 2);
+        buf[0] = tal.hotkey;
+        lua_pushstring(ls, buf);
+        lua_rawseti(ls, -2, 3);
+        lua_rawseti(ls, -2, ++index);
+    }
+    if (index < 1)
+        lua_pushnil(ls);
+
     return 1;
 }
 
@@ -1468,10 +1437,7 @@ static const struct luaL_reg you_clib[] =
     { "spell_levels", you_spell_levels },
     { "mem_spells",   l_you_mem_spells },
     { "memorise",     l_you_memorise },
-    { "abilities"   , l_you_abils },
-    { "ability_letters", l_you_abil_letters },
-    { "ability_table", l_you_abil_table },
-    { "ability_available", you_abil_available },
+    { "ability_info", you_get_ability_info },
     { "known_items" , you_known_items },
     { "name"        , you_name },
     { "species"     , you_species },

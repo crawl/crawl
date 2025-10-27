@@ -1743,7 +1743,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             listed.push_back("your spells (<w>%?</w>)");
             cmd.push_back(CMD_CAST_SPELL);
         }
-        if (!your_talents(false).empty())
+        if (!your_talents().empty())
         {
             listed.push_back("your <w>%</w>bilities");
             cmd.push_back(CMD_USE_ABILITY);
@@ -2043,7 +2043,7 @@ static string _hints_throw_stuff(const item_def &item)
 void check_item_hint(const item_def &item, unsigned int num_old_talents)
 {
     if (Hints.hints_events[HINT_NEW_ABILITY_ITEM]
-        && your_talents(false).size() > num_old_talents)
+        && your_talents().size() > num_old_talents)
     {
         learned_something_new(HINT_NEW_ABILITY_ITEM);
     }

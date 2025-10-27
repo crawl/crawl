@@ -3107,7 +3107,7 @@ void level_change(bool skip_attribute_increase)
                         mpr("You feel a burst of inspiration! You are finally "
                             "ready to make a one-of-a-kind gizmo!");
                         mprf("(press <w>%c</w> on the <w>%s</w>bility menu to create your gizmo)",
-                                get_talent(ABIL_INVENT_GIZMO, false).hotkey,
+                                get_talent(ABIL_INVENT_GIZMO).hotkey,
                                 command_to_string(CMD_USE_ABILITY).c_str());
                     }
                     break;

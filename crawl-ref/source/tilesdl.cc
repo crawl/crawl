@@ -1112,7 +1112,7 @@ void TilesFramework::place_tab(int idx)
     }
     else if (idx == TAB_ABILITY)
     {
-        unsigned int talents = your_talents(false).size();
+        unsigned int talents = your_talents().size();
         if (talents == 0)
         {
             m_region_tab->enable_tab(TAB_ABILITY);

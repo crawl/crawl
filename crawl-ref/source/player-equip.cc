@@ -1517,7 +1517,7 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
 
     item_def& item = you.inv[item_slot];
 
-    const unsigned int old_talents = your_talents(false).size();
+    const unsigned int old_talents = your_talents().size();
 
 #ifdef USE_SOUND
     if (is_weapon(item))
@@ -1545,7 +1545,7 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
     }
 
 #ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
+    if (your_talents().size() != old_talents)
     {
         tiles.layout_statcol();
         redraw_screen();
@@ -1559,7 +1559,7 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
 bool unequip_item(item_def& item, bool msg, bool skip_effects)
 {
 #ifdef USE_TILE_LOCAL
-    const unsigned int old_talents = your_talents(false).size();
+    const unsigned int old_talents = your_talents().size();
 #endif
 
 #ifdef USE_SOUND
@@ -1583,7 +1583,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     you.last_unequip = item_slot;
 
 #ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
+    if (your_talents().size() != old_talents)
     {
         tiles.layout_statcol();
         redraw_screen();

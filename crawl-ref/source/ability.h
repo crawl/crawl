@@ -60,7 +60,7 @@ const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
 int ability_range(ability_type abil);
 ability_flags get_ability_flags(ability_type ability);
-talent get_talent(ability_type ability, bool check_confused);
+talent get_talent(ability_type ability);
 string ability_name(ability_type ability, bool dbname = false);
 vector<string> get_ability_names();
 string get_ability_desc(const ability_type ability, bool need_title = true);
@@ -78,8 +78,8 @@ bool activate_talent(const talent& tal, dist *target = nullptr);
 bool is_religious_ability(ability_type abil);
 bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
-vector<talent> your_talents(bool check_confused, bool include_unusable = false,
-                                        bool ignore_piety = false);
+vector<talent> your_talents(bool include_unusable = false,
+                            bool ignore_piety = false);
 bool string_matches_ability_name(const string& key);
 ability_type ability_by_name(const string &name);
 string print_abilities();

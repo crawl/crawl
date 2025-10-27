@@ -1925,7 +1925,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     ASSERT(rc == 0);
 
 #ifdef USE_TILE_LOCAL
-    const unsigned int old_talents = your_talents(false).size();
+    const unsigned int old_talents = your_talents().size();
 #endif
 
     const int levels = (which_mutation == RANDOM_CORRUPT_MUTATION
@@ -2079,7 +2079,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
 #ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
+    if (your_talents().size() != old_talents)
     {
         tiles.layout_statcol();
         redraw_screen();

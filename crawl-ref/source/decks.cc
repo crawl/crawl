@@ -526,7 +526,7 @@ deck_type ability_deck(ability_type abil)
 // deck passed.
 static char _deck_hotkey(deck_type deck)
 {
-    return get_talent(deck_ability[deck], false).hotkey;
+    return get_talent(deck_ability[deck]).hotkey;
 }
 
 static deck_type _choose_deck(const string title = "Draw")

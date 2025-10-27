@@ -1475,7 +1475,7 @@ namespace quiver
             if (autofight_check())
                 return;
 
-            talent tal = get_talent(ability, false);
+            talent tal = get_talent(ability);
             activate_talent(tal, &target);
 
             // TODO: does non-targeted case come up?
@@ -1523,7 +1523,7 @@ namespace quiver
         vector<shared_ptr<action>> get_fire_order(
             bool allow_disabled=true, bool menu=false) const override
         {
-            vector<talent> talents = your_talents(false, true, true);
+            vector<talent> talents = your_talents(true, true);
             // goes by letter order
             vector<shared_ptr<action>> result;
 
@@ -2441,7 +2441,7 @@ namespace quiver
 
     static bool _any_abils_to_quiver()
     {
-        return your_talents(true, true).size() > 0;
+        return your_talents(true).size() > 0;
     }
 
     static bool _any_items_to_quiver()
@@ -2751,7 +2751,7 @@ namespace quiver
         {
             // currently doesn't show usk disabled abilities even though they
             // are shown for Q, is this confusing?
-            vector<talent> talents = your_talents(false, true);
+            vector<talent> talents = your_talents(true);
             // TODO: better handling for no abilities?
             int selected = choose_ability_menu(talents);
 

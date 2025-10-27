@@ -175,7 +175,7 @@ static void _adjust_spell()
 
 static void _adjust_ability()
 {
-    const vector<talent> talents = your_talents(false);
+    const vector<talent> talents = your_talents();
 
     if (talents.empty())
     {

@@ -2468,10 +2468,10 @@ void announce_beogh_conversion_offer()
             mons_speaks_msg(m, getSpeakString("orc_priest_preaching"),
                             MSGCH_TALK);
 
-            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH).hotkey,
                             'A', 'z' + 1);
             mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
-                    get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                    get_talent(ABIL_CONVERT_TO_BEOGH).hotkey,
                     command_to_string(CMD_USE_ABILITY).c_str());
             you.attribute[ATTR_SEEN_BEOGH] = 1;
 
