@@ -774,40 +774,24 @@ static coord_def _find_best_step(monster* mons)
     if (!in_bounds(you.pos()))
         return dir;
 
-    // Try to stay in sight of the player if we're moving towards
-    // him/her, in order to avoid the monster coming into view,
-    // shouting, and then taking a step in a path to the player which
-    // temporarily takes it out of view, which can lead to the player
-    // getting "comes into view" and shout messages with no monster in
-    // view.
+    // Prefer to stay in sight of the player if we're moving towards them along
+    // a path the player can see. This greatly reduces flip-flopping with
+    // monster corner behavior and generally looks nicer.
 
     // Doesn't matter for arena mode.
     if (crawl_state.game_is_arena())
         return dir;
 
-    // Did we just come into view?
-    // TODO: This doesn't seem to work right. Fix, or remove?
-
-    if (mons->seen_context != SC_JUST_SEEN)
-        return dir;
-    if (testbits(mons->flags, MF_WAS_IN_VIEW))
-        return dir;
-
     const coord_def old_pos  = mons->pos();
     const int       old_dist = grid_distance(you.pos(), old_pos);
 
-    // We're already staying in the player's LOS.
-    if (you.see_cell(old_pos + dir))
+    // Don't bother if the player couldn't see us before now, or will stil see us.
+    if (!you.see_cell(old_pos) || you.see_cell(old_pos + dir))
         return dir;
 
     // We're not moving towards the player.
-    if (grid_distance(you.pos(), old_pos + dir) >= old_dist)
-    {
-        // Instead of moving out of view, we stay put.
-        if (you.see_cell(old_pos))
-            dir.reset();
+    if (mons->foe != MHITYOU || grid_distance(you.pos(), old_pos + dir) >= old_dist)
         return dir;
-    }
 
     // Try to find a move that brings us closer to the player while
     // keeping us in view.
@@ -838,11 +822,6 @@ static coord_def _find_best_step(monster* mons)
                 break;
             }
         }
-
-    // We haven't been able to find a visible cell to move to. If previous
-    // position was visible, we stay put.
-    if (you.see_cell(old_pos) && !you.see_cell(old_pos + dir))
-        dir.reset();
 
     return dir;
 }
