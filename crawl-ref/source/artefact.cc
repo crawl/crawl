@@ -783,7 +783,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
             // player-equip.cc:unequip_artefact_effect(), and regen is handled
             // in player_equip():_handle_regen_item_equip(), which is called
             // outside both of those functions. This means regen currently does
-            // *nothing* on artefacts that can only get regen from artprops.
+            // *nothing* on artefact talismans that can only get regen from
+            // artprops, since they use a different codepath from *other*
+            // artefacts that can only get regen from artprops.
             return item_class != OBJ_TALISMANS;
         case ARTP_DRAIN:
         case ARTP_CONTAM:
