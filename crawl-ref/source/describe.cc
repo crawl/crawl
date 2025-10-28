@@ -7274,9 +7274,9 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
     const int base_ac = body_armour ? you.base_ac_from(*body_armour, 100, false)
                                     : 0;
 
-    float change[3];
+    int change[3];
     for (int i = 0; i < 3; ++i)
-        change[i] = (float)(base_ac * mult[i]) / 100 / 100.0;
+        change[i] = base_ac * mult[i] / 100;
 
     vector<string> labels;
     labels.push_back("Body Armour AC");
@@ -7284,7 +7284,12 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
     for (int i = 0; i < 3; ++i)
     {
         if (mult[i] != 0)
-            labels.push_back(make_stringf("%+.1f (%+d%%)", change[i], mult[i]));
+        {
+            labels.push_back(_format_data_label(change[i], true, false, 100)
+                             + " ("
+                             + _format_data_label(mult[i], true, true)
+                             + ")");
+        }
         else
             labels.push_back("0");
     }
