@@ -398,7 +398,7 @@ Beauty
 
 Birdsong
 
-Brilliance
+Cleverness
 
 Contentment
 
@@ -506,6 +506,8 @@ Disguise
 
 Fashionability
 
+Fullness
+
 Grace
 
 Gravitas
@@ -521,8 +523,6 @@ Privacy
 Protective Custody
 
 Resilience
-
-Resonance
 
 Shadows and Fog
 
