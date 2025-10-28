@@ -785,7 +785,10 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, int prop_val,
             // outside both of those functions. This means regen currently does
             // *nothing* on artefact talismans that can only get regen from
             // artprops, since they use a different codepath from *other*
-            // artefacts that can only get regen from artprops.
+            // artefacts that can only get regen from artprops. Also, there's a
+            // hurdle to adding regen to talismans: currently, all checks for
+            // regen items' being attuned require that those items have
+            // corresponding equipment slots, and talismans are slotless.
             return item_class != OBJ_TALISMANS;
         case ARTP_DRAIN:
         case ARTP_CONTAM:
