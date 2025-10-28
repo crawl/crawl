@@ -452,6 +452,7 @@
     Zannick
     Zooko
     Zhang Haocheng
+    Brian 'buehler' Faires
 
 The Dungeon Crawl Stone Soup development team is:
     advil
