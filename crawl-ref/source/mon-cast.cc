@@ -9604,8 +9604,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         }
 
     case SPELL_IGNITE_POISON:
-        return ai_action::good_or_bad(
-            cast_ignite_poison(mon, 0, false, true) == spret::success);
+        return ai_action::good_or_bad(ignite_poison_net_work(mon) > 0);
 
     case SPELL_GLACIATE:
         ASSERT(foe);

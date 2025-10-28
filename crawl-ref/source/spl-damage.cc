@@ -2378,6 +2378,22 @@ static int _ignite_ally_harm(const coord_def &where)
 }
 
 /**
+ * Would casting Ignite Poison possibly harm one of the agent's enemies in the
+ * given cell?
+ *
+ * @param  where    The cell in question.
+ * @param  agent    The caster.
+ * @return          1 if there's potential harm, 0 otherwise.
+ */
+static int _ignite_enemy_harm(const coord_def &where, actor* agent)
+{
+    return (_ignite_poison_clouds(where, -1, agent) > 0)   ? 1 :
+           (_ignite_poison_monsters(where, -1, agent) > 0) ? 1 :
+           (_ignite_poison_bog(where, -1, agent) > 0)      ? 1 :
+            0;
+}
+
+/**
  * Let the player choose to abort a casting of ignite poison, if it seems
  * like a bad idea. (If they'd ignite themself.)
  *
@@ -2426,6 +2442,24 @@ bool ignite_poison_affects_cell(const coord_def where, actor* agent)
 }
 
 /**
+ * Estimate the amount of 'work' Ignite Poison would do if cast now.
+ *
+ * This is the expected damage to enemies, minus the expected damage to allies.
+ *
+ * @param agent     The caster
+ * @return          The expected work done
+*/
+int ignite_poison_net_work(actor* agent)
+{
+    return apply_area_visible([agent] (coord_def where) {
+        return _ignite_poison_clouds(where, -1, agent)
+             + _ignite_poison_monsters(where, -1, agent)
+             + _ignite_poison_player(where, -1, agent)
+             + _ignite_poison_bog(where, -1, agent);
+    }, agent->pos());
+}
+
+/**
  * Cast the spell Ignite Poison, burning poisoned creatures and poisonous
  * clouds in LOS.
  *
@@ -2446,15 +2480,12 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
 {
     if (tracer)
     {
-        // Estimate how much useful effect we'd get if we cast the spell now
-        const int work = apply_area_visible([agent] (coord_def where) {
-            return _ignite_poison_clouds(where, -1, agent)
-                 + _ignite_poison_monsters(where, -1, agent)
-                 + _ignite_poison_player(where, -1, agent)
-                 + _ignite_poison_bog(where, -1, agent);
+        // Count how many enemies may be harmed by the casting.
+        const int harmed = apply_area_visible([agent] (coord_def where) {
+            return _ignite_enemy_harm(where, agent);
         }, agent->pos());
 
-        return work > 0 ? spret::success : spret::abort;
+        return harmed > 0 ? spret::success : spret::abort;
     }
 
     if (agent->is_player())
