@@ -692,12 +692,12 @@ spreading it to enemies, you will return to your previous form.
 %%%%
 fortress talisman
 
-A miniature battlement, carved from a piece of shell. Transforms the wearer into a
-heavily armoured crab, fusing whatever body armour they are wearing into the
+A miniature battlement, carved from a piece of shell. Transforms the wearer into
+a heavily armoured crab, fusing whatever body armour they are wearing into the
 shell in the process. In this form, they are slow-moving, but well-defended and
-even capable of wielding a weapon in their large main claw. They can also
-breathe clouds of rust at the cost of their own HP, which corrode and weaken
-enemies.
+even capable of wielding a weapon in their large main claw. Despite all this
+bulk, they are well-adapted to the water. They can also breathe clouds of rust
+at the cost of their own HP, which corrode and weaken enemies.
 %%%%
 gell's gravitambourine
 
