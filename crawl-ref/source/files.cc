@@ -1200,12 +1200,13 @@ static void _grab_follower(monster* fol)
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(*fol);
+    const bool could_see = you.can_see(*fol);
+    const coord_def old_pos = fol->pos();
     fol->set_transit(dest);
     fol->destroy_inventory();
     monster_cleanup(fol);
     if (could_see)
-        view_update_at(fol->pos());
+        view_update_at(old_pos);
 }
 
 // Expire all friendly summons / zombies / etc. when the player is leaving a floor.
