@@ -398,6 +398,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FRENZIED:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer in a wild frenzy.");
+
         if (mons_is_elven_twin(this))
         {
             monster* twin = mons_find_elven_twin_of(this);
@@ -407,11 +410,34 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 attitude = ATT_HOSTILE;
         }
         mons_att_changed(this);
+
+        {
+            const actor* old_agent = me.agent();
+            const int duration = random_range(70, 130);
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
+        }
         break;
 
     case ENCH_BERSERK:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer berserk.");
+
         scale_hp(2, 3);
         calc_speed();
+
+        {
+            const actor* old_agent = me.agent();
+            const int duration = random_range(70, 130);
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
+        }
+        break;
+
+    case ENCH_FATIGUE:
+        if (!quiet)
+            simple_monster_message(*this, " looks more energetic.");
+        del_ench(ENCH_SLOW, true);
         break;
 
     case ENCH_FIGMENT:
@@ -1031,6 +1057,21 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " spells are no longer diminished.");
         break;
 
+    case ENCH_ANTIMAGIC:
+        if (!quiet)
+            simple_monster_message(*this, " magic is no longer disrupted.", true);
+        break;
+
+    case ENCH_MIRROR_DAMAGE:
+        if (!quiet)
+            simple_monster_message(*this, " dark mirror aura disappears.", true);
+        break;
+
+    case ENCH_SLOWLY_DYING:
+        // If you are no longer dying, you must be dead.
+        monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
+        break;
+
     default:
         break;
     }
@@ -1350,39 +1391,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     switch (me.ench)
     {
     case ENCH_FRENZIED:
-    {
-        const actor* old_agent = me.agent();
-        if (decay_enchantment(en))
-        {
-            simple_monster_message(*this, " is no longer in a wild frenzy.");
-            const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
-        }
-    }
-        break;
-
     case ENCH_BERSERK:
-    {
-        const actor* old_agent = me.agent();
-        if (decay_enchantment(en))
-        {
-            simple_monster_message(*this, " is no longer berserk.");
-            const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
-        }
-    }
-        break;
-
     case ENCH_FATIGUE:
-        if (decay_enchantment(en))
-        {
-            simple_monster_message(*this, " looks more energetic.");
-            del_ench(ENCH_SLOW, true);
-        }
-        break;
-
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
@@ -1453,12 +1463,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WARDING:
     case ENCH_DIMINISHED_SPELLS:
     case ENCH_ORB_COOLDOWN:
-        decay_enchantment(en);
-        break;
-
+    case ENCH_SLOWLY_DYING:
     case ENCH_ANTIMAGIC:
-        if (decay_enchantment(en))
-            simple_monster_message(*this, " magic is no longer disrupted.", true);
+    case ENCH_MIRROR_DAMAGE:
+        decay_enchantment(en);
         break;
 
     case ENCH_ROLLING:
@@ -1468,11 +1476,6 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
         }
         decay_enchantment(en);
-        break;
-
-    case ENCH_MIRROR_DAMAGE:
-        if (decay_enchantment(en))
-            simple_monster_message(*this, " dark mirror aura disappears.", true);
         break;
 
     case ENCH_SILENCE:
@@ -1565,12 +1568,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en, true);
         break;
     }
-
-    case ENCH_SLOWLY_DYING:
-        // If you are no longer dying, you must be dead.
-        if (decay_enchantment(en))
-            monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
-        break;
 
     case ENCH_EXPLODING:
     {
