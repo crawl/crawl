@@ -1119,10 +1119,6 @@ void floor_transition(dungeon_feature_type how,
     viewwindow();
     update_screen();
 
-    // There's probably a reason for this. I don't know it.
-    if (going_up)
-        seen_monsters_react();
-
     autotoggle_autopickup(false);
     request_autopickup();
 }
