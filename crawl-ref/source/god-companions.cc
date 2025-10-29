@@ -167,19 +167,9 @@ bool recall_offlevel_ally(mid_t mid)
     {
         msg::suppress msg;
 
-        int turns = you.elapsed_time - comp->timestamp;
-        // Note: these are auts, not turns, thus healing is 10 times as fast as
-        // for other monsters, confusion goes away after a single turn, etc.
-
-        mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
-
-        if (turns >= 10 && mons->alive())
-        {
-            // Remove confusion manually (so that the monster
-            // doesn't blink after being recalled)
-            mons->del_ench(ENCH_CONFUSION, true);
-            mons->timeout_enchantments(turns / 10);
-        }
+        int time = you.elapsed_time - comp->timestamp;
+        mons->heal(div_rand_round(time * mons->off_level_regen_rate(), 1000));
+        mons->timeout_enchantments(time);
     }
     recall_orders(mons);
 
@@ -627,7 +617,7 @@ void win_apostle_challenge(monster& apostle)
     }
 
     apostle.hit_points = apostle.max_hit_points;
-    apostle.timeout_enchantments(1000);
+    apostle.timeout_enchantments();
     apostle.attitude = ATT_GOOD_NEUTRAL;
     mons_att_changed(&apostle);
     apostle.stop_constricting_all();
@@ -727,7 +717,7 @@ void beogh_recruit_apostle()
 
     // Now actually convert and save the apostle
     real->hit_points = real->max_hit_points;
-    real->timeout_enchantments(1000);
+    real->timeout_enchantments();
     real->flags &= ~MF_APOSTLE_BAND;
     real->attitude = ATT_FRIENDLY;
     mons_make_god_gift(*real, GOD_BEOGH);

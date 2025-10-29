@@ -638,36 +638,37 @@ static void _catchup_monster_moves(monster* mon, int turns)
     dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
 }
 
+static void _timeout_enchantment(monster& mon, mon_enchant& ench, int time)
+{
+    if (ench.duration <= time)
+        mon.del_ench(ench.ench, true);
+    else
+    {
+        ench.duration -= time;
+        mon.update_ench(ench);
+    }
+}
+
 /**
- * Update a monster's enchantments when the player returns
- * to the level.
+ * Update a monster's enchantments as if a large amount of time had passed.
  *
- * Management for enchantments... problems with this are the oddities
- * (monster dying from poison several thousands of turns later), and
- * game balance.
+ * This directly subtracts a given amount of time from all enchantments
+ * (without processing any per-tick effects) and then either outright deletes
+ * any enchantments that have expired, or performs a single tick of them (to
+ * handle certain types of end effects) if the player is off-level.
  *
- * Consider: Poison/Sticky Flame a monster at range and leave, monster
- * dies but can't leave level to get to player (implied game balance of
- * the delayed damage is that the monster could be a danger before
- * it dies). This could be fixed by keeping some monsters active
- * off level and allowing them to take stairs (a very serious change).
+ * Used both when the player returns to a floor after being away for a while,
+ * or to 'heal' a variety of effects from monsters avoiding death or being
+ * recalled from another floor.
  *
- * Compare this to the current abuse where the player gets
- * effectively extended duration of these effects (although only
- * the actual effects only occur on level, the player can leave
- * and heal up without having the effect disappear).
- *
- * This is a simple compromise between the two... the enchantments
- * go away, but the effects don't happen off level.  -- bwr
- *
- * @param levels XXX: sometimes the missing aut/10, sometimes aut/100
+ * @param time  How many aut to simulate passing.
  */
-void monster::timeout_enchantments(int levels)
+void monster::timeout_enchantments(int time)
 {
     if (enchantments.empty())
         return;
 
-    const mon_enchant_list ec = enchantments;
+    mon_enchant_list ec = enchantments;
     for (auto &entry : ec)
     {
         if (entry.second.duration >= INFINITE_DURATION)
@@ -679,7 +680,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_STICKY_FLAME: case ENCH_SUMMON_TIMER:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
-        case ENCH_PARALYSIS: case ENCH_PETRIFYING:
+        case ENCH_PARALYSIS:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
         case ENCH_LOWERED_WL: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
         case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
@@ -702,58 +703,51 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CHAOS_LACE: case ENCH_VEXED: case ENCH_DEEP_SLEEP:
         case ENCH_DROWSY: case ENCH_PARADOX_TOUCHED: case ENCH_DIMINISHED_SPELLS:
         case ENCH_ORB_COOLDOWN:
-            lose_ench_levels(entry.second, levels);
+        case ENCH_ARMED: case ENCH_AWAKEN_FOREST: case ENCH_BLINKITIS:
+        case ENCH_CHANGED_APPEARANCE: case ENCH_CHANNEL_SEARING_RAY:
+        case ENCH_CONSTRICTED: case ENCH_CURSE_OF_AGONY:
+        case ENCH_DIMENSION_ANCHOR: case ENCH_DOUBLED_VIGOUR: case ENCH_DUMB:
+        case ENCH_FLIGHT: case ENCH_HATCHING: case ENCH_INSTANT_CLEAVE:
+        case ENCH_KINETIC_GRAPNEL: case ENCH_MAD: case ENCH_MISDIRECTED:
+        case ENCH_MUTE: case ENCH_PHALANX_BARRIER: case ENCH_POISON_VULN:
+        case ENCH_POLAR_VORTEX: case ENCH_POLAR_VORTEX_COOLDOWN:
+        case ENCH_PORTAL_PACIFIED: case ENCH_PORTAL_TIMER: case ENCH_RECITE_TIMER:
+        case ENCH_REPEL_MISSILES: case ENCH_WARDING: case ENCH_WATERLOGGED:
+        case ENCH_INNER_FLAME:
+        case ENCH_ROLLING: case ENCH_MERFOLK_AVATAR_SONG: case ENCH_INFESTATION:
+        case ENCH_HELD: case ENCH_BULLSEYE_TARGET: case ENCH_FATIGUE:
+        case ENCH_TIDE: case ENCH_SLOWLY_DYING:
+            _timeout_enchantment(*this, entry.second, time);
+            break;
+
+        case ENCH_FRENZIED: case ENCH_BERSERK:
+            _timeout_enchantment(*this, entry.second, time);
+            if (has_ench(ENCH_FATIGUE))
+            {
+                // Removing fatigue will also remove slow, if enough time has passed.
+                mon_enchant fatigue = get_ench(ENCH_FATIGUE);
+                _timeout_enchantment(*this, fatigue, time - entry.second.duration);
+            }
+            break;
+
+        case ENCH_PETRIFYING:
+            _timeout_enchantment(*this, entry.second, time);
+            if (has_ench(ENCH_PETRIFIED))
+            {
+                mon_enchant petr = get_ench(ENCH_PETRIFIED);
+                _timeout_enchantment(*this, petr, time - entry.second.duration);
+            }
             break;
 
         case ENCH_INVIS:
             if (!mons_class_flag(type, M_INVIS))
-                lose_ench_levels(entry.second, levels);
-            break;
-
-        case ENCH_FRENZIED:
-        case ENCH_BERSERK:
-        case ENCH_INNER_FLAME:
-        case ENCH_ROLLING:
-        case ENCH_MERFOLK_AVATAR_SONG:
-        case ENCH_INFESTATION:
-        case ENCH_HELD:
-        case ENCH_BULLSEYE_TARGET:
-            del_ench(entry.first);
-            break;
-
-        case ENCH_FATIGUE:
-            del_ench(entry.first);
-            del_ench(ENCH_SLOW);
-            break;
-
-        case ENCH_TP:
-            teleport(true);
-            del_ench(entry.first);
+                _timeout_enchantment(*this, entry.second, time);
             break;
 
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
-                del_ench(entry.first);
-            // That triggered a behaviour_event, which could have made a
-            // pacified monster leave the level.
-            if (alive() && !is_stationary())
-                monster_blink(this, true, true);
+                _timeout_enchantment(*this, entry.second, time);
             break;
-
-        case ENCH_TIDE:
-        {
-            const int actdur = speed_to_duration(speed) * levels;
-            lose_ench_duration(entry.first, actdur);
-            break;
-        }
-
-        case ENCH_SLOWLY_DYING:
-        {
-            const int actdur = speed_to_duration(speed) * levels;
-            if (lose_ench_duration(entry.first, actdur))
-                monster_die(*this, KILL_NON_ACTOR, NON_MONSTER, true);
-            break;
-        }
 
         default:
             break;
@@ -804,7 +798,7 @@ void update_level(int elapsedTime)
         mons_total++;
 #endif
 
-        if (!update_monster(**mi, turns))
+        if (!update_monster(**mi, elapsedTime))
             continue;
     }
 
@@ -819,14 +813,14 @@ void update_level(int elapsedTime)
  * Update the monster upon the player's return
  *
  * @param mon   The monster to update.
- * @param turns How many turns (not auts) since the monster left the player
+ * @param time  How many auts since the monster left the player
  * @returns     Returns nullptr if monster was destroyed by the update;
  *              Returns the updated monster if it still exists.
  */
-monster* update_monster(monster& mon, int turns)
+monster* update_monster(monster& mon, int time)
 {
     // Pacified monsters often leave the level now.
-    if (mon.pacified() && turns > random2(40) + 21)
+    if (mon.pacified() && time > random_range(210, 400))
     {
         make_mons_leave_level(&mon);
         return nullptr;
@@ -839,23 +833,21 @@ monster* update_monster(monster& mon, int turns)
     // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
     // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
 
-    mon.heal(div_rand_round(turns * mon.off_level_regen_rate(), 100));
+    mon.heal(div_rand_round(time * mon.off_level_regen_rate(), 1000));
 
     // Handle nets specially to remove the trapping property of the net.
     if (mon.caught())
         mon.del_ench(ENCH_HELD, true);
 
-    _catchup_monster_moves(&mon, turns);
+    _catchup_monster_moves(&mon, time);
 
-    mon.foe_memory = max(mon.foe_memory - turns, 0);
+    mon.foe_memory = max(mon.foe_memory - time, 0);
 
     // Yredelemnul bind soul requires the monster stay in our LOS
     if (mon.has_ench(ENCH_SOUL_RIPE))
         mon.del_ench(ENCH_SOUL_RIPE, true, false);
 
-    // FIXME:  Convert literal string 10 to constant to convert to auts
-    if (turns >= 10 && mon.alive())
-        mon.timeout_enchantments(turns / 10);
+    mon.timeout_enchantments(time);
 
     return &mon;
 }

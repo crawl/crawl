@@ -784,8 +784,7 @@ static bool _vampire_make_thrall(monster* mons)
     // End constriction and all status effects.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-    mons->del_ench(ENCH_CONFUSION, true, false);
-    mons->timeout_enchantments(10000);
+    mons->timeout_enchantments();
 
     // Includes actual spellcasters and those with magical abilities.
     if (mons->antimagic_susceptible())
@@ -943,7 +942,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         blorkula.heal(blorkula.max_hit_points);
         blorkula.del_ench(ENCH_CONFUSION, true);    // Don't blink at random
         blorkula.stop_being_constricted(true);
-        blorkula.timeout_enchantments(1000);
+        blorkula.timeout_enchantments();
     }
     blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, &blorkula,
                                   random_range(450, 900) * BASELINE_DELAY));

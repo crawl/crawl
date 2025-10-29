@@ -231,7 +231,7 @@ static monster* _place_lost_monster(follower &f)
             _place_oka_duel_target(mons);
 
         // Figure out how many turns we need to update the monster
-        int turns = (you.elapsed_time - f.transit_start_time)/10;
+        int time = (you.elapsed_time - f.transit_start_time);
 
         //Unflag as summoned or else monster will be ignored in update_monster
         mons->flags &= ~MF_JUST_SUMMONED;
@@ -240,7 +240,7 @@ static monster* _place_lost_monster(follower &f)
         // The status should already have been removed from the player, but
         // this prevents an erroneous status indicator sticking on the monster
         mons->del_ench(ENCH_BULLSEYE_TARGET);
-        return update_monster(*mons, turns);
+        return update_monster(*mons, time);
     }
     else
         return nullptr;

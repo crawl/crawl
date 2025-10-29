@@ -229,7 +229,7 @@ public:
 
     void apply_enchantments();
 
-    void timeout_enchantments(int levels);
+    void timeout_enchantments(int time = 100000);
 
     bool is_travelling() const;
     bool is_patrolling() const;

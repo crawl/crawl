@@ -771,8 +771,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
         mons.heal(mons.max_hit_points);
-        mons.del_ench(ENCH_CONFUSION, true);
-        mons.timeout_enchantments(10);
+        mons.timeout_enchantments();
 
         coord_def newpos = mi->pos();
         if (was_alive)
@@ -1360,7 +1359,7 @@ bool pyrrhic_recollection(monster& nobody)
     // but we don't have that at the moment.
     mon_enchant haste = nobody.get_ench(ENCH_HASTE);
     mon_enchant might = nobody.get_ench(ENCH_MIGHT);
-    nobody.timeout_enchantments(1000);
+    nobody.timeout_enchantments();
     nobody.add_ench(summon_timer);
     nobody.add_ench(haste);
     nobody.add_ench(might);
