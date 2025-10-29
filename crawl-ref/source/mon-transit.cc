@@ -233,8 +233,6 @@ static monster* _place_lost_monster(follower &f)
         // Figure out how many turns we need to update the monster
         int time = (you.elapsed_time - f.transit_start_time);
 
-        //Unflag as summoned or else monster will be ignored in update_monster
-        mons->flags &= ~MF_JUST_SUMMONED;
         // Don't keep chasing forever.
         mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
         // The status should already have been removed from the player, but

@@ -1747,8 +1747,14 @@ static coord_def _confused_move_dir(monster *mons)
     coord_def conf_mov;
     int pfound = 0;
     for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-        if (mons->can_pass_through(*ai) && one_chance_in(++pfound))
+    {
+        // Don't let confused monsters drown themselves while the player if off-level.
+        const bool can_enter = you.doing_monster_catchup
+                                    ? monster_habitable_grid(mons, *ai)
+                                    : mons->can_pass_through(*ai);
+        if (can_enter && one_chance_in(++pfound))
             conf_mov = *ai - mons->pos();
+    }
     return conf_mov;
 }
 
@@ -1873,7 +1879,7 @@ static void _pre_monster_move(monster& mons)
 
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
-    if (mons.foe_memory > 0 && !you.penance[GOD_ASHENZARI])
+    if (mons.foe_memory > 0 && !you.penance[GOD_ASHENZARI] && !you.doing_monster_catchup)
         mons.foe_memory -= you.time_taken;
 
     // Otherwise there are potential problems with summonings.

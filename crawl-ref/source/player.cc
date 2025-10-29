@@ -5533,6 +5533,7 @@ player::player()
     // Volatile (same-turn) state:
     turn_is_over     = false;
     banished         = false;
+    doing_monster_catchup = false;
 
     wield_change         = false;
     gear_change          = false;

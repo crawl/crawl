@@ -7434,3 +7434,19 @@ void makhleb_crucible_kill(monster& victim)
         return;
     }
 }
+
+// A simplified version of Chei's time step, used for catching up off-level
+// monster movements. (Doesn't need to relocate the player since they're not
+// fully on the level yet anyway.)
+void simulate_time_passing(int turns)
+{
+    // Prevent a wizmode crash.
+    if (turns <= 0)
+        return;
+
+    msg::suppress quiet;
+    you.duration[DUR_TIME_STEP] = turns;
+    you.doing_monster_catchup = true;
+    _run_time_step();
+    you.doing_monster_catchup = false;
+}

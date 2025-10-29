@@ -22,6 +22,7 @@
 #include "exercise.h"
 #include "externs.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
@@ -475,169 +476,6 @@ void handle_time()
     }
 }
 
-/**
- * Make ranged monsters flee from the player during their time offlevel.
- *
- * @param mon           The monster in question.
- */
-static void _monster_flee(monster *mon)
-{
-    mon->behaviour = BEH_FLEE;
-    dprf("backing off...");
-
-    if (mon->pos() != mon->target)
-        return;
-    // If the monster is on the target square, fleeing won't work.
-
-    if (in_bounds(env.old_player_pos) && env.old_player_pos != mon->pos())
-    {
-        // Flee from player's old position if different.
-        mon->target = env.old_player_pos;
-        return;
-    }
-
-    // Randomise the target so we have a direction to flee.
-    coord_def mshift;
-    mshift.x = random2(3) - 1;
-    mshift.y = random2(3) - 1;
-
-    // Bounds check: don't let fleeing monsters try to run off the grid.
-    const coord_def s = mon->target + mshift;
-    if (!in_bounds_x(s.x))
-        mshift.x = 0;
-    if (!in_bounds_y(s.y))
-        mshift.y = 0;
-
-    mon->target.x += mshift.x;
-    mon->target.y += mshift.y;
-
-    return;
-}
-
-/**
- * Make a monster take a number of moves toward (or away from, if fleeing)
- * their current target, very crudely.
- *
- * @param mon       The mon in question.
- * @param moves     The number of moves to take.
- */
-static void _catchup_monster_move(monster* mon, int moves)
-{
-    coord_def pos(mon->pos());
-
-    // Dirt simple movement.
-    for (int i = 0; i < moves; ++i)
-    {
-        coord_def inc(mon->target - pos);
-        inc = coord_def(sgn(inc.x), sgn(inc.y));
-
-        if (mons_is_retreating(*mon))
-            inc *= -1;
-
-        // Bounds check: don't let shifting monsters try to run off the
-        // grid.
-        const coord_def s = pos + inc;
-        if (!in_bounds_x(s.x))
-            inc.x = 0;
-        if (!in_bounds_y(s.y))
-            inc.y = 0;
-
-        if (inc.origin())
-            break;
-
-        const coord_def next(pos + inc);
-        const dungeon_feature_type feat = env.grid(next);
-        if (feat_is_solid(feat)
-            || monster_at(next)
-            || !monster_habitable_feat(mon, feat))
-        {
-            break;
-        }
-
-        pos = next;
-    }
-
-    if (!mon->shift(pos))
-        mon->shift(mon->pos());
-}
-
-/**
- * Move monsters around to fake them walking around while player was
- * off-level.
- *
- * Does not account for monster move speeds.
- *
- * Also make them forget about the player over time.
- *
- * @param mon       The monster under consideration
- * @param turns     The number of offlevel player turns to simulate.
- */
-static void _catchup_monster_moves(monster* mon, int turns)
-{
-    // Summoned monsters might have disappeared.
-    if (!mon->alive())
-        return;
-
-    // Don't move non-land or stationary monsters around.
-    if (!(mons_habitat(*mon) & HT_DRY_LAND)
-        || mons_is_zombified(*mon)
-           && !(mons_class_habitat(mon->base_monster) & HT_DRY_LAND)
-        || mon->is_stationary())
-    {
-        return;
-    }
-
-    // special movement code for ioods
-    if (mons_is_projectile(*mon))
-    {
-        iood_catchup(mon, turns);
-        return;
-    }
-
-    // Let sleeping monsters lie.
-    if (mon->asleep() || mon->paralysed())
-        return;
-
-    // Don't shift towards timestepped players.
-    if (mon->target.origin())
-        return;
-
-    const int mon_turns = (turns * mon->speed) / 10;
-    const int moves = min(mon_turns, 50);
-
-    // probably too annoying even for DEBUG_DIAGNOSTICS
-    dprf("mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %" PRIx64,
-         mon->mindex(), mon_turns, mon->pos().x, mon->pos().y,
-         mon->foe, mon->target.x, mon->target.y, mon->flags.flags);
-
-    if (mon_turns <= 0)
-        return;
-
-    // restore behaviour later if we start fleeing
-    unwind_var<beh_type> saved_beh(mon->behaviour);
-
-    if (mon->threat_range() > 1)
-    {
-        // If we're doing short time movement and the monster has a
-        // ranged attack (missile or spell), then the monster will
-        // flee to gain distance if it's "too close", else it will
-        // just shift its position rather than charge the player. -- bwr
-        if (grid_distance(mon->pos(), mon->target) >= 3)
-        {
-            mon->shift(mon->pos());
-            dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
-            return;
-        }
-
-        _monster_flee(mon);
-    }
-
-    _catchup_monster_move(mon, moves);
-
-    dprf("moved to (%d, %d)", mon->pos().x, mon->pos().y);
-}
-
 static void _timeout_enchantment(monster& mon, mon_enchant& ench, int time)
 {
     if (ench.duration <= time)
@@ -767,46 +605,38 @@ void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const int turns = elapsedTime / 10;
+    // Simulate up to 10 turns on the floor, then merely update durations and
+    // effects for the remaining time.
+    const int sim_turns = min(10, elapsedTime / 10);
+    elapsedTime -= sim_turns * 10;
+    const int quick_turns = (elapsedTime - (sim_turns * 10)) / 10;
 
-#ifdef DEBUG_DIAGNOSTICS
-    int mons_total = 0;
+    delete_all_clouds();
 
-    dprf("turns: %d", turns);
-#endif
+    // First, simulate up to 10 turns of monster movement and activity.
+    simulate_time_passing(sim_turns);
 
+    // Then simply time out effects for the remaining time.
     rot_corpses(elapsedTime);
-    shoals_apply_tides(turns, true);
-    timeout_tombs(turns);
+    shoals_apply_tides(quick_turns, true);
+    timeout_tombs(elapsedTime);
     timeout_terrain_changes(elapsedTime);
 
     if (env.sanctuary_time)
     {
         // XX this doesn't guarantee that the final FPROP will be removed?
-        if (turns >= env.sanctuary_time)
+        if (quick_turns >= env.sanctuary_time)
             remove_sanctuary();
         else
-            env.sanctuary_time -= turns;
+            env.sanctuary_time -= quick_turns;
     }
 
     dungeon_events.fire_event(
-        dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
+        dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), (sim_turns + quick_turns) * 10));
 
     for (monster_iterator mi; mi; ++mi)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        mons_total++;
-#endif
-
         if (!update_monster(**mi, elapsedTime))
             continue;
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    dprf("total monsters on level = %d", mons_total);
-#endif
-
-    delete_all_clouds();
 }
 
 /**
@@ -826,26 +656,11 @@ monster* update_monster(monster& mon, int time)
         return nullptr;
     }
 
-    // Ignore monsters flagged to skip their next action
-    if (mon.flags & MF_JUST_SUMMONED)
-        return &mon;
-
-    // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
-    // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
-
     mon.heal(div_rand_round(time * mon.off_level_regen_rate(), 1000));
 
     // Handle nets specially to remove the trapping property of the net.
     if (mon.caught())
         mon.del_ench(ENCH_HELD, true);
-
-    _catchup_monster_moves(&mon, time);
-
-    mon.foe_memory = max(mon.foe_memory - time, 0);
-
-    // Yredelemnul bind soul requires the monster stay in our LOS
-    if (mon.has_ench(ENCH_SOUL_RIPE))
-        mon.del_ench(ENCH_SOUL_RIPE, true, false);
 
     mon.timeout_enchantments(time);
 

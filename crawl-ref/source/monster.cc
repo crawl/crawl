@@ -4285,6 +4285,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    kill_method_type kill_type, string /*source*/,
                    string /*aux*/, bool cleanup_dead, bool attacker_effects)
 {
+    // Nothing can be injured while simulating monster movements.
+    if (you.doing_monster_catchup)
+        return 0;
+
     if (mons_is_projectile(type)
         || mid == MID_ANON_FRIEND)
     {

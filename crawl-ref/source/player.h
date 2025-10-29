@@ -434,6 +434,9 @@ public:
     // ---------------------------
     bool turn_is_over; // player has performed a timed action
 
+    // In the middle of updating monsters upon returning to an explored floor.
+    bool doing_monster_catchup;
+
     // If true, player is headed to the Abyss.
     bool banished;
     string banished_by;

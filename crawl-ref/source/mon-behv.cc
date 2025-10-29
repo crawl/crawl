@@ -181,7 +181,13 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
             // (or wasn't even attempted) and we need to set our target
             // the traditional way.
 
-            mon->target = you.pos();
+            // During monster catchup, monsters should track the player's *last* position.
+            mon->target = you.doing_monster_catchup ? env.old_player_pos : you.pos();
+
+            // And then, if they've actually reached it, should semi-randomly
+            // fan out to an appropriate range around it.
+            if (you.doing_monster_catchup && mon->target == env.old_player_pos)
+                _set_firing_pos(mon, env.old_player_pos);
         }
     }
     else
@@ -262,9 +268,11 @@ void handle_behaviour(monster* mon)
     bool isNeutral  = mon->neutral();
     bool wontAttack = mon->wont_attack() && !mon->has_ench(ENCH_FRENZIED);
 
-    // Whether the player position is in LOS of the monster.
-    bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos())
-                      && in_bounds(you.pos());
+    // Whether the player position is in LOS of the monster
+    // (or we're pretending that it is for purposes of off-level catchup).
+    bool proxPlayer = !crawl_state.game_is_arena()
+                      && ((mon->see_cell(you.pos()) && in_bounds(you.pos())
+                          || (you.doing_monster_catchup && mon->see_cell(env.old_player_pos))));
 
     // If set, pretend the player isn't there, but only for hostile monsters.
     if (proxPlayer && crawl_state.disables[DIS_MON_SIGHT] && !mon->wont_attack())
@@ -477,6 +485,10 @@ void handle_behaviour(monster* mon)
         coord_def foepos = coord_def(0,0);
         if (afoe)
             foepos = afoe->pos();
+
+        // While doing monster catchup, pretend the player is at their last-known location.
+        if (afoe == &you && you.doing_monster_catchup)
+            foepos = env.old_player_pos;
 
         if (mon->pos() == mon->firing_pos)
             mon->firing_pos.reset();
@@ -1432,7 +1444,7 @@ void shake_off_monsters(const actor* target)
             // out of sight
             dprf("Monster %d forgot about foe %d. (Previous foe_memory: %d)",
                     m->mindex(), target->mindex(), m->foe_memory);
-            m->foe_memory = min(m->foe_memory, 7);
+            m->foe_memory = min(m->foe_memory, 50);
         }
     }
 }
