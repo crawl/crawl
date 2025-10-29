@@ -590,7 +590,7 @@ duration of the call and the species of dragons called depend on spell power.
 %%%%
 Drain Life spell
 
-Drains the life force of any nearby creatures, healing the user depending on
+Drains the life force of any nearby enemies, healing the user depending on
 the damage dealt.
 %%%%
 Drain Magic spell

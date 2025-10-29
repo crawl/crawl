@@ -305,10 +305,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_DRAIN_LIFE, {
         [](const monster &caster) {
             return ai_action::good_or_bad(
-                   _los_spell_worthwhile(caster, SPELL_DRAIN_LIFE)
-                   && (!caster.friendly()
-                       || !you.visible_to(&caster)
-                       || player_prot_life(false) >= 3));
+                   _los_spell_worthwhile(caster, SPELL_DRAIN_LIFE));
         },
         [](monster &caster, mon_spell_slot slot, bolt&) {
             const int splpow = mons_spellpower(caster, slot.spell);

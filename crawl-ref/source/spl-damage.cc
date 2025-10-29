@@ -545,12 +545,7 @@ static bool _drain_lifeable(const actor* agent, const actor* act)
     if (!agent)
         return true;
 
-    const monster* mons = agent->as_monster();
-    const monster* m = act->as_monster();
-
-    return !(agent->is_player() && act->wont_attack()
-             || mons && act->is_player() && mons->wont_attack()
-             || mons && m && mons_aligned(mons, m));
+    return !mons_aligned(agent, act);
 }
 
 static int _los_spell_damage_actor(const actor* agent, actor &target,
