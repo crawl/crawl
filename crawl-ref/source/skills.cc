@@ -2591,43 +2591,37 @@ int get_crosstrain_points(skill_type sk)
 }
 
 /**
- * Is the provided skill one of the elemental spellschools?
+ * Is the provided skill one of the destructive spellschools?
  *
  * @param sk    The skill in question.
- * @param ext   If we want to also include alchemy or conjurations.
- *              (The kinda-poison and kinda-pure elements?)
- * @return      Whether it is fire, ice, earth, air, or possibly the above two.
+ * @return      Whether it is fire, ice, earth, air, alchemy or conjurations.
  */
-static bool _skill_is_elemental(skill_type sk, bool ext)
+static bool _skill_is_destructive(skill_type sk)
 {
-    if (ext)
-    {
-        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC || sk == SK_AIR_MAGIC
-               || sk == SK_ICE_MAGIC || sk == SK_ALCHEMY || sk == SK_CONJURATIONS;
-    }
-    else
-    {
-        return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
-               || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
-    }
+    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC || sk == SK_AIR_MAGIC
+            || sk == SK_ICE_MAGIC || sk == SK_ALCHEMY || sk == SK_CONJURATIONS;
 }
 
 /**
- * How skilled is the player at the elemental components of a spell?
+ * How skilled is the player at the destructive components of a spell?
  *
  * @param spell     The type of spell in question.
  * @param scale     Scaling factor for skill.
- * @return          The player's skill at the elemental parts of a given spell.
+ * @return          The player's skill at the destructive parts of a given spell.
  */
-int destructive_elemental_preference(spell_type spell, int scale)
+int destructive_preference(spell_type spell, int scale)
 {
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
+    int num_destructive = 0;
     for (skill_type sk : skill_list)
-        if (_skill_is_elemental(sk, true))
+        if (_skill_is_destructive(sk))
+        {
             preference += you.skill(sk, scale);
-    return preference;
+            num_destructive++;
+        }
+    return preference / num_destructive;
 }
 
 void dump_skills(string &text)
