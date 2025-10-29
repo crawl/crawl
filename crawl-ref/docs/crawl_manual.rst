@@ -379,9 +379,8 @@ that most monsters adjacent to you will follow when you change levels; this
 holds both for hostile and allied monsters. Notable exceptions are zombies
 and other mindless undead, who are too stupid to properly operate stairs.
 
-When taking stairs with an unknown destination, you are guaranteed a chance to
-move before any adjacent monsters. When taking stairs that you've already seen
-the other side of, monsters will be alert and get a chance to move before you.
+When taking stairs, you are guaranteed a chance to act before any monsters on
+the other side that you have not previously encountered.
 
 If you ascend an up staircase on level one, you will leave the dungeon forever;
 if you are carrying the magical Orb of Zot, you win the game by doing this.

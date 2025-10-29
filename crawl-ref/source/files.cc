@@ -2090,10 +2090,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (!you.save->has_chunk(level_name) && load_mode == LOAD_VISITOR)
         return false;
 
-    const bool fast = load_mode == LOAD_ENTER_LEVEL_FAST;
-    if (fast)
-        load_mode = LOAD_ENTER_LEVEL;
-
     const bool make_changes =
         (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
@@ -2320,14 +2316,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 descent_crumble_stairs(); // no sense waiting
         }
         else
-        {
-            // new stairs have less wary monsters, and we don't
-            // want them to attack players quite as soon.
-            // (just_created_level only relevant if we crashed.)
-            const bool fast_entry = fast || just_created_level;
-            you.time_taken *= fast_entry ? 1 : 2;
-            you.time_taken = div_rand_round(you.time_taken * 3, 4);
-        }
+            you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         if (just_created_level)
             run_map_epilogues();
@@ -2512,6 +2501,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (make_changes)
         maybe_break_floor_gem();
+
+    // When entering another floor, make monsters in sight of the player's
+    // arrival, but which the player has never seen before, skip their first turn.
+    if (make_changes)
+        for (monster_near_iterator mi(you.pos()); mi; ++mi)
+            if (!(mi->flags & MF_SEEN))
+                mi->flags |= MF_JUST_SUMMONED;
 
 #if TAG_MAJOR_VERSION == 34
     if (make_changes && you.props.exists("zig-fixup")

@@ -347,8 +347,8 @@ HINT_SEEN_STAIRS
 These<console> '$1'</console> are downstairs. You can enter the next (deeper)
 level by following them down (<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). To return to this
 level, press <w>$cmd[CMD_GO_UPSTAIRS]</w> while standing on the upstairs. When
-you take new stairs, you get a free action; after that, monsters get to move
-first.
+you take stairs, you are guaranteed a opportunity to act before any monsters you
+have not seen before; after that, monsters get to move first.
 
 <localtiles>Alternatively, you can <w>left-click</w> on stairs you're standing
 on to use them.</localtiles>

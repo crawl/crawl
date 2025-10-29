@@ -878,9 +878,6 @@ void floor_transition(dungeon_feature_type how,
 
     const coord_def stair_pos = you.pos();
 
-    // Note down whether we knew where we were going for descent timing.
-    const bool dest_known = !shaft && travel_cache.know_stair(stair_pos);
-
     if (how == DNGN_EXIT_DUNGEON)
     {
         you.depth = 0;
@@ -1076,8 +1073,7 @@ void floor_transition(dungeon_feature_type how,
         mpr("Beware, you cannot shaft yourself on this level.");
     }
 
-    const auto speed = dest_known ? LOAD_ENTER_LEVEL : LOAD_ENTER_LEVEL_FAST;
-    const bool newlevel = load_level(how, speed, old_level);
+    const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 
     if (newlevel)
     {
