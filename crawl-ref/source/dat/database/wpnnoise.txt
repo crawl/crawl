@@ -1224,8 +1224,8 @@ w:1
 # Order of the Stick's Belkar Bitterleaf, chaotic evil ranger/barbarian halfling
 @The_weapon@ @_screams_@, "I AM A SEXY SHOELESS GOD OF WAR!"
 
-# Terry Pratchett, Foul Old Ron
-@The_weapon@ @_screams_@, "BUGGRIT, MILLENNIUM HAND AND SHRIMP!"
+# Terry Pratchett, Foul Ole Ron
+@The_weapon@ @_screams_@, "BUGRIT, MILLENNIUM HAND AND SHRIMP!"
 
 # Tolkien, Turin Turambar on Gurthang
 @The_weapon@ @_screams_@, "I AM THE IRON OF DEATH! FROM NO BLOOD WILL I SHRINK!"
