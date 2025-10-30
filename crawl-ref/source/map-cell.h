@@ -14,7 +14,9 @@
 #define MAP_INVISIBLE_MONSTER   0x10
 #define MAP_DETECTED_ITEM       0x20
 #define MAP_VISIBLE_FLAG        0x40
-#define MAP_GRID_KNOWN          0xFF
+#define MAP_GRID_KNOWN (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG \
+                        | MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER \
+                        | MAP_DETECTED_ITEM | MAP_VISIBLE_FLAG)
 
 #define MAP_EMPHASIZE          0x100
 #define MAP_MORE_ITEMS         0x200
