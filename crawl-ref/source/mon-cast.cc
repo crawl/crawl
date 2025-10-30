@@ -3792,6 +3792,15 @@ static bool _incite_monsters(const monster* mon, bool actual)
     return goaded > 0;
 }
 
+// Spells to escape from a net more swiftly.
+static bool _is_net_escape_spell(spell_type spell)
+{
+    return spell == SPELL_BLINK
+            || spell == SPELL_BLINK_AWAY
+            || spell == SPELL_BLINK_RANGE
+            || spell == SPELL_BLINK_CLOSE;
+}
+
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
@@ -4974,6 +4983,12 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
                                             const monster_spells &hspell_pass,
                                             bool ignore_good_idea)
 {
+    // Monsters caught in a net often try to escape from it.
+    if (mon_enemies_around(&mons) && mons.caught() && one_chance_in(3))
+        for (const mon_spell_slot &slot : hspell_pass)
+            if (_is_net_escape_spell(slot.spell))
+                return slot;
+
     bolt orig_beem = beem;
 
     // Promote the casting of useful spells for low-HP monsters.
