@@ -260,8 +260,8 @@ their summoner, strengthening them in direct proportion with the caster's
 spellpower.
 
 Recasting this spell while your familiar is nearby will imbue it with additional
-magic, mending some of its wounds and causing its next attack to strike more
-quickly and cleave adjacent foes.
+magic, mending some of its wounds, cleansing it of poison, and causing its next
+attack to strike more quickly and cleave adjacent foes.
 %%%%
 Call Down Damnation spell
 

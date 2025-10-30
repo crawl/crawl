@@ -1077,32 +1077,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
 }
 
-bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
-{
-    if (!lev)
-        return false;
-
-    // Check if this enchantment is being sustained by someone, and don't decay
-    // in that case.
-    if (e.ench_is_aura && aura_is_active(*this, e.ench))
-        return false;
-
-    if (e.duration >= INFINITE_DURATION && !infinite)
-        return false;
-    if (e.degree <= lev)
-    {
-        del_ench(e.ench);
-        return true;
-    }
-    else
-    {
-        mon_enchant newe(e);
-        newe.degree -= lev;
-        update_ench(newe);
-        return false;
-    }
-}
-
 bool monster::lose_ench_duration(const mon_enchant &e, int dur)
 {
     if (!dur)
