@@ -257,7 +257,7 @@ static bool _multiplicity_clone(monster* mon)
         // No additional gear from these clones, but you can get XP.
         clone->mark_summoned(MON_SUMM_MULTIPLICITY);
         clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        clone->add_ench(mon_enchant(ENCH_FIGMENT, 0, nullptr, INFINITE_DURATION));
+        clone->add_ench(mon_enchant(ENCH_FIGMENT, nullptr, INFINITE_DURATION));
     }
 
     return true;
@@ -305,9 +305,9 @@ static void _maybe_mortality_summon()
         if (monster* mon = create_monster(mg))
         {
             created = true;
-            mon->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+            mon->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
             if (slow)
-                mon->add_ench(mon_enchant(ENCH_SLOW, 0, nullptr, INFINITE_DURATION));
+                mon->add_ench(mon_enchant(ENCH_SLOW, nullptr, INFINITE_DURATION));
         }
     }
 
@@ -805,8 +805,8 @@ void timeout_malign_gateways(int duration)
                     int dur = random2avg(mmark->power, 6);
                     dur -= random2(4); // sequence point between random calls
                     dur *= 10;
-                    mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
-                        caster, dur);
+                    mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED,
+                                                        caster, dur);
                     tentacle->props[BASE_POSITION_KEY].get_coord()
                                         = tentacle->pos();
                     tentacle->add_ench(kduration);

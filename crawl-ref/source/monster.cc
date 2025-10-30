@@ -2675,7 +2675,7 @@ bool monster::go_frenzy(actor *source)
 
     const int duration = 16 + random2avg(13, 2);
 
-    add_ench(mon_enchant(ENCH_FRENZIED, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_FRENZIED, source, duration * BASELINE_DELAY));
 
     mons_att_changed(this);
 
@@ -4220,8 +4220,7 @@ bool monster::drain(const actor *agent, bool quiet, int /*pow*/)
         if (res_negative_energy())
             dur /= (res_negative_energy() * 2);
 
-        const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
-                                                   dur);
+        const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, agent, dur, 1);
         add_ench(drain_ench);
     }
 
@@ -4250,9 +4249,9 @@ bool monster::corrode(const actor* source, const char* corrosion_msg, int amount
 
     // XXX: Make rust cloud corrosion wear off more quickly
     if (amount == 1)
-        add_ench(mon_enchant(ENCH_CORROSION, 0, source, random_range(15, 25)));
+        add_ench(mon_enchant(ENCH_CORROSION, source, random_range(15, 25)));
     else
-        add_ench(mon_enchant(ENCH_CORROSION, 0, source));
+        add_ench(mon_enchant(ENCH_CORROSION, source));
     return true;
 }
 
@@ -4467,7 +4466,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (mons_is_fragile(*this) && !has_ench(ENCH_SLOWLY_DYING))
         {
             // Die in 3-5 turns.
-            this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+            this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr,
                                        30 + random2(20)));
             if (you.can_see(*this))
             {
@@ -4530,7 +4529,7 @@ bool monster::vex(const actor *who, int duration, string /* source */,
         simple_monster_message(*this, special_message.c_str());
     else
         simple_monster_message(*this, " is overwhelmed by frustration!");
-    add_ench(mon_enchant(ENCH_VEXED, 0, who, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_VEXED, who, duration * BASELINE_DELAY));
 
     return true;
 }
@@ -4934,7 +4933,7 @@ bool monster::sicken(int amount)
         mprf("%s looks sick.", name(DESC_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_SICK, nullptr, amount * BASELINE_DELAY));
 
     return true;
 }
@@ -5291,7 +5290,7 @@ bool monster::malmutate(const actor* source, const string& /*reason*/)
     }
 
     simple_monster_message(*this, " twists and deforms.");
-    add_ench(mon_enchant(ENCH_WRETCHED, 1, source));
+    add_ench(mon_enchant(ENCH_WRETCHED, source));
     return true;
 }
 
@@ -5346,7 +5345,7 @@ bool monster::doom(int amount)
         enchant_type ench = random_choose(ENCH_SLOW, ENCH_VITRIFIED, ENCH_WEAK, ENCH_BLIND, ENCH_DRAINED);
 
         // High degree specifically for Draining
-        add_ench(mon_enchant(ench, 7, nullptr, random_range(1000, 2000)));
+        add_ench(mon_enchant(ench, nullptr, random_range(1000, 2000), 7));
     }
 
     return false;
@@ -5710,7 +5709,7 @@ void monster::put_to_sleep(actor* attacker, int duration, bool hibernate)
     // automatically, either - ie: mimicking natural monster sleep behaviour.
     // (Used by Step From Time.)
     if (duration > 0)
-        add_ench(mon_enchant(ENCH_DEEP_SLEEP, 0, attacker, duration));
+        add_ench(mon_enchant(ENCH_DEEP_SLEEP, attacker, duration));
 }
 
 void monster::weaken(const actor *attacker, int pow)
@@ -5724,7 +5723,7 @@ void monster::weaken(const actor *attacker, int pow)
     else
         simple_monster_message(*this, " looks even weaker.");
 
-    add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
+    add_ench(mon_enchant(ENCH_WEAK, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
 }
 
@@ -5738,7 +5737,7 @@ void monster::diminish(const actor *attacker, int pow)
     else
         mprf("%s spells grow weaker yet longer.", name(DESC_ITS).c_str());
 
-    add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, 1, attacker,
+    add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
 }
 
@@ -5751,7 +5750,7 @@ bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
     if (!quiet && !has_ench(ENCH_LOWERED_WL) && you.can_see(*this))
         mprf("%s willpower is stripped away!", name(DESC_ITS).c_str());
 
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker, dur * BASELINE_DELAY);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, attacker, dur * BASELINE_DELAY);
     return add_ench(lowered_wl);
 }
 
@@ -5768,8 +5767,8 @@ void monster::daze(int duration)
     }
     else
     {
-        add_ench(mon_enchant(ENCH_DAZED, you.elapsed_time_at_last_input, nullptr,
-                             duration * BASELINE_DELAY));
+        add_ench(mon_enchant(ENCH_DAZED, nullptr, duration * BASELINE_DELAY,
+                             you.elapsed_time_at_last_input));
     }
 }
 
@@ -5783,7 +5782,7 @@ void monster::vitrify(const actor *attacker, int duration, bool quiet)
             mprf("%s becomes as fragile as glass!", name(DESC_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_VITRIFIED, 0, attacker, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_VITRIFIED, attacker, duration * BASELINE_DELAY));
 }
 
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)

@@ -236,8 +236,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
             if (!silent)
                 simple_monster_message(*mons, " looks slightly unstable.");
 
-            mons->add_ench(mon_enchant(ENCH_TP, 0, agent,
-                                       random_range(20, 30)));
+            mons->add_ench(mon_enchant(ENCH_TP, agent, random_range(20, 30)));
         }
 
         return;

@@ -3561,8 +3561,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
         int pain = you.hp / 3;
         dec_hp(pain, false);
-        mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, pain, &you,
-                                   INFINITE_DURATION));
+        mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, &you, INFINITE_DURATION, pain));
         mprf("You wrap your dark will around %s soul!",
               mons->name(DESC_ITS).c_str());
         break;

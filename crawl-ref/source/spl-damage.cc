@@ -1967,8 +1967,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
                 mprf("%s fire resistance burns away.",
                     mon->name(DESC_ITS).c_str());
             }
-            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, &agent,
-                                      dur * BASELINE_DELAY));
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, &agent, dur * BASELINE_DELAY));
         }
         else
         {
@@ -3533,7 +3532,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
         simple_monster_message(*mon_agent,
                                " begins to radiate toxic energy.");
 
-        mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
+        mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, mon_agent,
                                         (4 + random2avg(pow/15, 2)) * BASELINE_DELAY));
         toxic_radiance_effect(agent, 10);
 
@@ -3891,7 +3890,7 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
     else
     {
         int dur = min(3 + pow / 60, 5);
-        mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
+        mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, &agent, dur);
         agent.as_monster()->add_ench(ench);
     }
 
@@ -4230,7 +4229,7 @@ void attempt_jinxbite_hit(actor& victim)
 
     monster* mons = victim.as_monster();
     const int drain_dur = random_range(3 * BASELINE_DELAY, 5 * BASELINE_DELAY);
-    mons->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, drain_dur));
+    mons->add_ench(mon_enchant(ENCH_DRAINED, &you, drain_dur, 2));
 
     if (you.can_see(victim))
     {
@@ -4898,8 +4897,7 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
     if (!mon->has_ench(ENCH_MAGNETISED))
         mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());
 
-    mon->add_ench(mon_enchant(ENCH_MAGNETISED, 1, &you,
-                              random_range(5, 8) * BASELINE_DELAY));
+    mon->add_ench(mon_enchant(ENCH_MAGNETISED, &you, random_range(5, 8) * BASELINE_DELAY));
 
     // Then zap all magnetized enemies.
     mpr("Electricity arcs towards the magnetite!");

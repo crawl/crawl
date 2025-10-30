@@ -794,13 +794,13 @@ static bool _vampire_make_thrall(monster* mons)
     }
 
     mons->attitude = ATT_FRIENDLY;
-    mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, 0, &you, INFINITE_DURATION));
+    mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, &you, INFINITE_DURATION));
 
     const int pow = get_form(transformation::vampire)->get_level(10);
     const int dur = random_range(pow, pow * 2) + 30;
 
     mons->mark_summoned(MON_SUMM_THRALL, 0, false);
-    mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &you, dur));
+    mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, &you, dur));
     mons_att_changed(mons);
     gain_exp(exp_value(*mons));
 
@@ -944,7 +944,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         blorkula.stop_being_constricted(true);
         blorkula.timeout_enchantments();
     }
-    blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, &blorkula,
+    blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, &blorkula,
                                   random_range(450, 900) * BASELINE_DELAY));
 
 #ifdef USE_TILE
@@ -1337,8 +1337,7 @@ static void _pharaoh_ant_bind_souls(monster *mons)
             simple_monster_message(*mons, " binds the souls of nearby monsters.");
         bound = true;
         mi->add_ench(
-            mon_enchant(ENCH_BOUND_SOUL, 0, mons,
-                        random_range(10, 30) * BASELINE_DELAY));
+            mon_enchant(ENCH_BOUND_SOUL, mons, random_range(10, 30) * BASELINE_DELAY));
     }
 }
 
@@ -1640,8 +1639,7 @@ static void _druid_final_boon(const monster* mons)
     for (int i = 0; i < num; ++i)
     {
         simple_monster_message(*beasts[i], " seems to grow more fierce.");
-        beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
-                                        random_range(100, 160)));
+        beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, mons, random_range(100, 160)));
     }
 }
 
@@ -1741,7 +1739,7 @@ static void _protean_explosion(monster* mons)
         if (child)
         {
             child->props[PROTEAN_TARGET_KEY] = target;
-            child->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, 0, 0, delay));
+            child->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, nullptr, delay));
             child->flags |= MF_WAS_IN_VIEW;
 
             // Prevent them from being trivially unaware of the player
@@ -1753,7 +1751,7 @@ static void _protean_explosion(monster* mons)
             if (is_summoned)
             {
                 // Match the original summoned progenitor's duration.
-                mon_enchant summon_duration_ench(ENCH_SUMMON_TIMER, 0, nullptr, summoned_duration);
+                mon_enchant summon_duration_ench(ENCH_SUMMON_TIMER, nullptr, summoned_duration);
                 child->update_ench(summon_duration_ench);
             }
 
@@ -1909,7 +1907,7 @@ static void _cassandra_death_ambush()
             if (!did_place)
                 monster_die(*mon, KILL_RESET, NON_MONSTER);
             else
-                mon->add_ench(mon_enchant(ENCH_HAUNTING, 0, &you, INFINITE_DURATION));
+                mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
         }
     }
 
@@ -4253,7 +4251,7 @@ void elven_twin_energize(monster* mons)
         if (mons->observable())
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
-        mons->add_ench(mon_enchant(ENCH_HASTE, 1, mons, INFINITE_DURATION));
+        mons->add_ench(mon_enchant(ENCH_HASTE, mons, INFINITE_DURATION));
         mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
 }

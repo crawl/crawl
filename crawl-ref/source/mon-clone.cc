@@ -187,7 +187,6 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
             if (ench == ENCH_NONE)
                 continue;
             target->add_ench(mon_enchant(ench,
-                                         0,
                                          creator,
                                          you.duration[i]));
         }

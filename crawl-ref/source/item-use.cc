@@ -3052,7 +3052,7 @@ bool read(item_def* scroll, dist *target)
             if (have_passive(passive_t::neutral_slimes) && mons_is_slime(**mi))
                 continue;
 
-            if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
+            if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, &you)))
                 had_effect = true;
         }
 

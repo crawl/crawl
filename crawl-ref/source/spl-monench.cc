@@ -99,7 +99,7 @@ bool corona_monster(monster* mons, const actor* source)
 {
     const bool was_glowing = mons->backlit();
 
-    mons->add_ench(mon_enchant(ENCH_CORONA, 1, source));
+    mons->add_ench(mon_enchant(ENCH_CORONA, source));
 
     if (!was_glowing)
         simple_monster_message(*mons, " is outlined in light.");
@@ -114,7 +114,7 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
     if (mon.stasis())
         return true;
 
-    if (mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
+    if (mon.add_ench(mon_enchant(ENCH_SLOW, agent, dur)))
     {
         if (!mon.paralysed() && !mon.petrified()
             && simple_monster_message(mon, " seems to slow down."))
@@ -128,7 +128,7 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
 
 bool silence_monster(monster& mon, const actor* agent, int dur)
 {
-    if (mon.add_ench(mon_enchant(ENCH_MUTE, 0, agent, dur)))
+    if (mon.add_ench(mon_enchant(ENCH_MUTE, agent, dur)))
     {
         simple_monster_message(mon, " loses the ability to speak.");
         return true;
@@ -173,7 +173,7 @@ bool enfeeble_monster(monster &mon, int pow)
             mon.update_ench(ench);
         }
         else
-            mon.add_ench(mon_enchant(hex, 0, &you, dur * BASELINE_DELAY));
+            mon.add_ench(mon_enchant(hex, &you, dur * BASELINE_DELAY));
     }
 
     if (res_margin > 0)
@@ -301,7 +301,7 @@ bool apply_rimeblight(monster& victim, int power, bool quiet)
 
     int duration = (random_range(8, 12) + div_rand_round(power, 30))
                     * BASELINE_DELAY;
-    victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, 0, &you, duration));
+    victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, &you, duration));
     victim.props[RIMEBLIGHT_POWER_KEY] = power;
     victim.props[RIMEBLIGHT_TICKS_KEY] = random_range(0, 2);
 
@@ -398,7 +398,7 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
             if (you.can_see(*act))
                 mprf("The sign of ruin forms upon %s!", act->name(DESC_THE).c_str());
 
-            act->as_monster()->add_ench(mon_enchant(ENCH_SIGN_OF_RUIN, 1, &caster,
+            act->as_monster()->add_ench(mon_enchant(ENCH_SIGN_OF_RUIN, &caster,
                                                     random_range(duration, duration * 3 / 2)));
         }
     }
@@ -432,7 +432,7 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
     shockwave.explode(true, true);
 
     target.heal(roll_dice(3, 10));
-    target.add_ench(mon_enchant(ENCH_TEMPERED, 0, &caster, random_range(70, 100)));
+    target.add_ench(mon_enchant(ENCH_TEMPERED, &caster, random_range(70, 100)));
 
     // Give a small bit of extra duration if we're about to time out, just to
     // avoid the sad feeling of buffing a monster who immediately vanishes.
@@ -571,7 +571,7 @@ static bool _gloom_affect_target(actor *victim, const actor *agent, int pow)
         const int numerator = _gloom_chance_numerator(mons->get_hit_dice());
         if (x_chance_in_y(numerator, _gloom_chance_denom(pow)))
         {
-            mons->add_ench(mon_enchant(ENCH_BLIND, 1, agent,
+            mons->add_ench(mon_enchant(ENCH_BLIND, agent,
                         random_range(4, 8) * BASELINE_DELAY));
             return true;
         }

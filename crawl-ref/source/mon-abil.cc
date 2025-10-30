@@ -95,9 +95,8 @@ void boris_covet_orb(monster* boris)
     if (boris->observable())
         simple_monster_message(*boris, " is empowered by the presence of the orb!");
 
-    boris->add_ench(mon_enchant(ENCH_HASTE, 1, boris, INFINITE_DURATION));
-    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, boris,
-                    INFINITE_DURATION));
+    boris->add_ench(mon_enchant(ENCH_HASTE, boris, INFINITE_DURATION));
+    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, boris, INFINITE_DURATION));
 }
 
 bool ugly_thing_mutate(monster& ugly, bool force)
@@ -646,7 +645,7 @@ static void _starcursed_scream(monster* mon, actor* target)
 
     for (monster *voice : chorus)
         if (voice->alive())
-            voice->add_ench(mon_enchant(ENCH_SCREAMED, 1, voice, 1));
+            voice->add_ench(mon_enchant(ENCH_SCREAMED, voice, 1));
 }
 
 static bool _will_starcursed_scream(monster* mon)
@@ -1364,7 +1363,7 @@ bool pyrrhic_recollection(monster& nobody)
     nobody.add_ench(haste);
     nobody.add_ench(might);
 
-    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
+    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, &nobody, random_range(300, 500)));
 
     // Don't immediately expire summons (we want them to stick around into the next phase),
     // but at least make them time out a bit faster.
@@ -1398,7 +1397,7 @@ void solar_ember_blast()
     if (!ember->has_ench(ENCH_SPELL_CHARGED))
     {
         simple_monster_message(*ember, " glows brighter.");
-        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 0, ember, random_range(70, 90)));
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, ember, random_range(70, 90)));
         return;
     }
 

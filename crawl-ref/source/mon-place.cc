@@ -1161,7 +1161,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(ENCH_CONFUSION);
 
     if (mons_class_flag(mg.cls, M_WARDED))
-        mon->add_ench(mon_enchant(ENCH_WARDING, 0, mon, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(ENCH_WARDING, mon, INFINITE_DURATION));
 
     if (mg.cls == MONS_SHAPESHIFTER)
         mon->add_ench(ENCH_SHAPESHIFTER);
@@ -1172,13 +1172,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_ABOMINATION_SMALL || mg.cls == MONS_ABOMINATION_LARGE)
     {
         enchant_type buff = random_choose(ENCH_MIGHT, ENCH_HASTE, ENCH_REGENERATION);
-        mon->add_ench(mon_enchant(buff, 0, 0, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(buff, mon, INFINITE_DURATION));
     }
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
         mon->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
-        mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, 0, 0, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, mon, INFINITE_DURATION));
     }
 
     // this MUST follow hd initialization!
@@ -1209,7 +1209,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
 
     if (mon->has_spell(SPELL_REPEL_MISSILES))
-        mon->add_ench(mon_enchant(ENCH_REPEL_MISSILES, 1, mon, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(ENCH_REPEL_MISSILES, mon, INFINITE_DURATION));
 
     if (mons_class_flag(mon->type, M_FIRE_RING))
         mon->add_ench(ENCH_RING_OF_FLAMES);
@@ -1360,7 +1360,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         }
 
         if (mon->attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
-            mon->add_ench(mon_enchant(ENCH_HAUNTING, 0, &you, INFINITE_DURATION));
+            mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
     }
 
     // Perm summons shouldn't leave gear either.
@@ -1505,7 +1505,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.summoner && mg.summoner->is_player()
         && you.unrand_equipped(UNRAND_JUSTICARS_REGALIA))
     {
-        mon->add_ench(mon_enchant(ENCH_REGENERATION, 0, &you, random_range(300, 500)));
+        mon->add_ench(mon_enchant(ENCH_REGENERATION, &you, random_range(300, 500)));
     }
 
     mon->origin_level = level_id::current();

@@ -446,7 +446,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 
     if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
-        mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
+        mons->add_ench(mon_enchant(ENCH_CONFUSION, &you));
         simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
@@ -610,7 +610,7 @@ void trigger_binding_sigil(actor& actor)
                         - div_rand_round(m->get_hit_dice(), 4))
                     * BASELINE_DELAY;
 
-    if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
+    if (m->add_ench(mon_enchant(ENCH_BOUND, &you, dur)))
     {
         simple_monster_message(*m,
             " moves over the binding sigil and is bound in place!",

@@ -1257,7 +1257,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         else
         {
             monster* mon = act->as_monster();
-            mon->add_ench(mon_enchant(ENCH_DROWSY, 0, cloud.agent(), random_range(25, 40)));
+            mon->add_ench(mon_enchant(ENCH_DROWSY, cloud.agent(), random_range(25, 40)));
             if (mon->get_ench(ENCH_DROWSY).duration >= 100)
             {
                 mon->del_ench(ENCH_DROWSY);
@@ -2108,7 +2108,7 @@ static const vector<chaos_effect> chaos_effects = {
                 blind_player(random_range(7, 12), ETC_RANDOM);
             else
             {
-                victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, source,
+                victim->as_monster()->add_ench(mon_enchant(ENCH_BLIND, source,
                                                random_range(7, 12) * BASELINE_DELAY));
             }
             return you.can_see(*victim);

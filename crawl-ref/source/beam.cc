@@ -1809,7 +1809,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
             else
             {
-                mons->add_ench(mon_enchant(ENCH_BOUND, 0, pbolt.agent(),
+                mons->add_ench(mon_enchant(ENCH_BOUND, pbolt.agent(),
                                            random_range(4, 8)));
                 mprf("The bolas warps around %s and binds %s in place!",
                      mons->name(DESC_THE).c_str(),
@@ -1929,7 +1929,7 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
         if ((wh_enchant == ENCH_FRENZIED && mi->go_frenzy(&you))
             || (wh_enchant != ENCH_FRENZIED
-                && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
+                && mi->add_ench(mon_enchant(wh_enchant, &you))))
         {
             // Do messaging.
             const char* msg = nullptr;
@@ -1969,8 +1969,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
         obvious_effect = true;
     }
 
-    mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, agent(),
-                               _ench_pow_to_dur(ench_power)));
+    mons->add_ench(mon_enchant(ENCH_PARALYSIS, agent(), _ench_pow_to_dur(ench_power)));
 }
 
 // Petrification works in two stages. First the monster is slowed down in
@@ -1994,7 +1993,7 @@ void bolt::apply_bolt_petrify(monster* mons)
         if (mons->fully_petrify(agent()))
             obvious_effect = true;
     }
-    else if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, 0, agent())))
+    else if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, agent())))
     {
         if (!mons_is_immotile(*mons)
             && simple_monster_message(*mons, " is moving more slowly."))
@@ -2025,7 +2024,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int bonus_poison)
                                          ? " seems to be slow for longer."
                                          : " seems to slow down.");
         }
-        mons->add_ench(mon_enchant (ENCH_SLOW, 0, agent));
+        mons->add_ench(mon_enchant(ENCH_SLOW, agent));
     }
 
     return true;
@@ -2042,7 +2041,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
         return false;
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
-    mons->add_ench(mon_enchant(ENCH_POISON, levels, who));
+    mons->add_ench(mon_enchant(ENCH_POISON, who, 0, levels));
     const mon_enchant new_pois = mons->get_ench(ENCH_POISON);
 
     // Actually do the poisoning. The order is important here.
@@ -2109,7 +2108,7 @@ bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose
     if (!had_sticky_flame && verbose)
         simple_monster_message(*mons, " is covered in liquid fire!");
 
-    mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, 0, who, dur * BASELINE_DELAY));
+    mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, who, dur * BASELINE_DELAY));
 
     return !had_sticky_flame;
 }
@@ -2513,7 +2512,7 @@ static void _waterlog_mon(monster &mon, int ench_pow)
     simple_monster_message(mon, " is engulfed in water.");
     const int min_dur = ench_pow + 20;
     const int dur = random_range(min_dur, min_dur * 3 / 2);
-    mon.add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you, dur));
+    mon.add_ench(mon_enchant(ENCH_WATERLOGGED, &you, dur));
 }
 
 void bolt::special_explode()
@@ -4177,9 +4176,8 @@ static const vector<pie_effect> pie_effects = {
                 monster *mons = defender.as_monster();
                 simple_monster_message(*mons,
                         " looks more vulnerable to fire.");
-                mons->add_ench(mon_enchant(ENCH_FIRE_VULN, 0,
-                             beam.agent(),
-                             15 + random2(11) * BASELINE_DELAY));
+                mons->add_ench(mon_enchant(ENCH_FIRE_VULN, beam.agent(),
+                                           15 + random2(11) * BASELINE_DELAY));
             }
             else
             {
@@ -4215,7 +4213,7 @@ static const vector<pie_effect> pie_effects = {
                 blind_player(random_range(16, 36), ETC_GLITTER);
             else
             {
-                defender.as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, beam.agent(),
+                defender.as_monster()->add_ench(mon_enchant(ENCH_BLIND, beam.agent(),
                                                 random_range(12, 18) * BASELINE_DELAY));
             }
         },
@@ -5187,7 +5185,7 @@ void bolt::kill_monster(monster &mon)
         }
 
         const int time_left = random_range(7, 17) * BASELINE_DELAY;
-        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, nullptr, time_left);
         pillar->add_ench(temp_en);
     }
 }
@@ -5247,7 +5245,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             const int dur = (5 + random_range(div_rand_round(ench_power, 2),
                                              div_rand_round(ench_power * 3, 4) + 1))
                             * BASELINE_DELAY;
-            mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, agent(), dur));
+            mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, agent(), dur));
         }
     }
 
@@ -5280,7 +5278,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
-            mon->add_ench(mon_enchant(ENCH_FROZEN, 0, agent()));
+            mon->add_ench(mon_enchant(ENCH_FROZEN, agent()));
         }
     }
 
@@ -5293,7 +5291,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         {
             mprf("%s fire resistance burns away.",
                 mon->name(DESC_ITS).c_str());
-            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, agent(),
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, agent(),
                                       dur * BASELINE_DELAY));
         }
     }
@@ -5301,8 +5299,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_THROW_BARBS && dmg > 0
         && !(mon->is_insubstantial()))
     {
-        mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(),
-                                  random_range(5, 7) * BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_BARBS, agent(),
+                                  random_range(5, 7) * BASELINE_DELAY, 1));
     }
 
     if (origin_spell == SPELL_THROW_PIE && dmg > 0)
@@ -5319,7 +5317,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         && !mon->stasis())
     {
         simple_monster_message(*mon, " is paralysed.");
-        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent(), BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, agent(), BASELINE_DELAY));
     }
 
     if (flavour == BEAM_LIGHT
@@ -5327,8 +5325,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         && !mon->has_ench(ENCH_BLIND))
     {
         const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;
-        auto ench = mon_enchant(ENCH_BLIND, 1, agent(),
-                                random_range(dur, dur * 2));
+        auto ench = mon_enchant(ENCH_BLIND, agent(), random_range(dur, dur * 2));
         if (mon->add_ench(ench))
             simple_monster_message(*mon, " is blinded.");
     }
@@ -5342,7 +5339,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         int dur = random_range(2 + agent()->skill_rdiv(SK_INVOCATIONS, 1, 5),
                                4 + agent()->skill_rdiv(SK_INVOCATIONS, 1, 3))
                                * BASELINE_DELAY;
-        mon->add_ench(mon_enchant(ENCH_MIGHT, 0, agent(), dur));
+        mon->add_ench(mon_enchant(ENCH_MIGHT, agent(), dur));
         mon->speed_increment += 10;
         simple_monster_message(*mon, " is empowered.");
     }
@@ -5350,11 +5347,11 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
     {
         simple_monster_message(*mon, " is pinned in place!");
-        mon->add_ench(mon_enchant(ENCH_BOUND, 0, agent(), random_range(2, 4) * BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_BOUND, agent(), random_range(2, 4) * BASELINE_DELAY));
     }
 
     if (origin_spell == SPELL_KINETIC_GRAPNEL && dmg > 0)
-        mon->add_ench(mon_enchant(ENCH_KINETIC_GRAPNEL, 0, agent(), random_range(30, 50)));
+        mon->add_ench(mon_enchant(ENCH_KINETIC_GRAPNEL, agent(), random_range(30, 50)));
 
     // Watery Grave
     if (name == "grasping water" && !mon->is_unbreathing())
@@ -6332,8 +6329,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mon->has_ench(ENCH_CURSE_OF_AGONY))
             mon->del_ench(ENCH_CURSE_OF_AGONY, true, false);
 
-        if (mon->add_ench(mon_enchant(ENCH_CURSE_OF_AGONY, 2, agent(),
-                      random_range(6, 8) * BASELINE_DELAY)))
+        if (mon->add_ench(mon_enchant(ENCH_CURSE_OF_AGONY, agent(),
+                                      random_range(6, 8) * BASELINE_DELAY, 2)))
         {
             obvious_effect = true;
             simple_monster_message(*mon, " is cursed with the promise of agony.");
@@ -6504,7 +6501,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         else
             dur = _ench_pow_to_dur(dur);
 
-        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, agent(), dur)))
         {
             // FIXME: Put in an exception for things you won't notice
             // becoming confused.
@@ -6548,7 +6545,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
             if (simple_monster_message(*mon, " is charmed!"))
                 obvious_effect = true;
-            mon->add_ench(mon_enchant(good, 0, agent()));
+            mon->add_ench(mon_enchant(good, agent()));
             if (!obvious_effect && could_see && !you.can_see(*mon))
                 obvious_effect = true;
             check_lovelessness(*mon);
@@ -6566,7 +6563,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         if (simple_monster_message(*mon, " is charmed."))
             obvious_effect = true;
-        mon->add_ench(mon_enchant(ENCH_CHARM, 0, agent()));
+        mon->add_ench(mon_enchant(ENCH_CHARM, agent()));
         if (you.can_see(*mon))
             obvious_effect = true;
         return MON_AFFECTED;
@@ -6600,7 +6597,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_INNER_FLAME:
         if (!mon->has_ench(ENCH_INNER_FLAME)
-            && mon->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, agent())))
+            && mon->add_ench(mon_enchant(ENCH_INNER_FLAME, agent())))
         {
             if (simple_monster_message(*mon,
                                        (mon->body_size(PSIZE_BODY) > SIZE_LARGE)
@@ -6614,7 +6611,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_DIMENSION_ANCHOR:
         if (!mon->has_ench(ENCH_DIMENSION_ANCHOR)
-            && mon->add_ench(mon_enchant(ENCH_DIMENSION_ANCHOR, 0, agent(),
+            && mon->add_ench(mon_enchant(ENCH_DIMENSION_ANCHOR, agent(),
                                          random_range(20, 30) * BASELINE_DELAY)))
         {
             if (simple_monster_message(*mon, " is firmly anchored in space."))
@@ -6661,7 +6658,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_VIRULENCE:
         if (!mon->has_ench(ENCH_POISON_VULN)
-            && mon->add_ench(mon_enchant(ENCH_POISON_VULN, 0, agent(),
+            && mon->add_ench(mon_enchant(ENCH_POISON_VULN, agent(),
                                          random_range(20, 30) * BASELINE_DELAY)))
         {
             if (simple_monster_message(*mon,
@@ -6684,7 +6681,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_SAP_MAGIC:
         if (!mon->has_ench(ENCH_SAP_MAGIC)
-            && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
+            && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, agent())))
         {
             if (you.can_see(*mon))
             {
@@ -6712,9 +6709,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!dur)
             break;
 
-        mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                  agent(), // doesn't matter
-                                  dur));
+        mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, agent(), dur));
         if (you.can_see(*mon))
         {
             mprf("%s magic leaks into the air.",
@@ -6758,7 +6753,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     {
         const int dur = (5 + random2avg(div_rand_round(ench_power,2), 2))
                             * BASELINE_DELAY;
-        mon->add_ench(mon_enchant(ENCH_INFESTATION, 0, &you, dur));
+        mon->add_ench(mon_enchant(ENCH_INFESTATION, &you, dur));
         if (simple_monster_message(*mon, " is infested!"))
             obvious_effect = true;
         return MON_AFFECTED;

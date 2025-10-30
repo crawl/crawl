@@ -1238,7 +1238,7 @@ static void _check_blazeheart_golem_link(monster& mons)
         if (mons.blazeheart_heat <= 0 && !mons.has_ench(ENCH_PARALYSIS))
         {
             simple_monster_message(mons, " core grows cold and it stops moving.", true);
-            mons.add_ench(mon_enchant(ENCH_PARALYSIS, 1, &mons, INFINITE_DURATION));
+            mons.add_ench(mon_enchant(ENCH_PARALYSIS, &mons, INFINITE_DURATION));
         }
     }
     else
@@ -2288,7 +2288,7 @@ void handle_monster_move(monster* mons)
                 " is distracted by your dazzling golden aura.");
 
             mons->add_ench(
-                mon_enchant(ENCH_DAZED, 0, nullptr,
+                mon_enchant(ENCH_DAZED, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));
             mons->foe = MHITNOT;
             mons->target = mons->pos();

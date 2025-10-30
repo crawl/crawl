@@ -33,9 +33,10 @@ public:
                                   // that needs regular checking.
 
 public:
-    mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
+    mon_enchant(enchant_type e = ENCH_NONE,
                 const actor *whose = 0,
-                int dur = 0, ench_aura_type ench_is_aura = AURA_NO);
+                int dur = 0, int deg = 0,
+                ench_aura_type ench_is_aura = AURA_NO);
 
     killer_type killer() const;
     int kill_agent() const;

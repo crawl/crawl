@@ -1916,7 +1916,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
             if (you.can_see(*mon))
                 mprf("%s is pinned by gravity.", mon->name(DESC_THE).c_str());
             mon->hurt(&you, dmg);
-            mon->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+            mon->add_ench(mon_enchant(ENCH_BOUND, &you, dur));
             behaviour_event(mon, ME_WHACK, &you, you.pos());
         }
     }
@@ -2095,7 +2095,7 @@ spret word_of_chaos(int pow, bool fail)
             do_slow_monster(*mons, &you, 20 + random2(pow));
         if (x_chance_in_y(pow, 500))
         {
-            mons->add_ench(mon_enchant(ENCH_FEAR, 0, &you));
+            mons->add_ench(mon_enchant(ENCH_FEAR, &you));
             behaviour_event(mons, ME_SCARE, &you);
         }
     }

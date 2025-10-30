@@ -3843,20 +3843,20 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
 
     int deg = 0, dur = perm ? INFINITE_DURATION : 0;
     if (ep.size() > 1 && !ep[1].empty())
-        if (!parse_int(ep[1].c_str(), deg))
-        {
-            error = make_stringf("invalid deg in ench specifier \"%s\"",
-                                 ench_str.c_str());
-            return mon_enchant();
-        }
-    if (ep.size() > 2 && !ep[2].empty())
-        if (!parse_int(ep[2].c_str(), dur))
+        if (!parse_int(ep[1].c_str(), dur))
         {
             error = make_stringf("invalid dur in ench specifier \"%s\"",
                                  ench_str.c_str());
             return mon_enchant();
         }
-    return mon_enchant(et, deg, 0, dur);
+    if (ep.size() > 2 && !ep[2].empty())
+        if (!parse_int(ep[2].c_str(), deg))
+        {
+            error = make_stringf("invalid deg in ench specifier \"%s\"",
+                                 ench_str.c_str());
+            return mon_enchant();
+        }
+    return mon_enchant(et, nullptr, dur, deg);
 }
 
 mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)

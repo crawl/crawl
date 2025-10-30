@@ -414,8 +414,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             const actor* old_agent = me.agent();
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, old_agent, duration));
         }
         break;
 
@@ -429,8 +429,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             const actor* old_agent = me.agent();
             const int duration = random_range(70, 130);
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, old_agent, duration));
-            add_ench(mon_enchant(ENCH_SLOW, 0, old_agent, duration));
+            add_ench(mon_enchant(ENCH_FATIGUE, old_agent, duration));
+            add_ench(mon_enchant(ENCH_SLOW, old_agent, duration));
         }
         break;
 
@@ -914,7 +914,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
                 simple_monster_message(*this, " lost momentum returns!", true);
-            add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
+            add_ench(mon_enchant(ENCH_SWIFT, &you,
                                  props[BINDING_SIGIL_DURATION_KEY].get_int()));
             props.erase(BINDING_SIGIL_DURATION_KEY);
         }
@@ -943,14 +943,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
 
         change_monster_type(this, poly_target, true);
-        add_ench(mon_enchant(ENCH_HASTE, 1, this, INFINITE_DURATION));
-        add_ench(mon_enchant(ENCH_MIGHT, 1, this, INFINITE_DURATION));
+        add_ench(mon_enchant(ENCH_HASTE, this, INFINITE_DURATION));
+        add_ench(mon_enchant(ENCH_MIGHT, this, INFINITE_DURATION));
 
         // We add the enchantment back with infinite duration to mark the new
         // monster as having been created by a progenitor, so that it will be
         // properly tracked as chaotic, no matter what it's turned into.
-        add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, 1,
-                             this, INFINITE_DURATION));
+        add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, this, INFINITE_DURATION));
     }
     break;
 
@@ -1706,7 +1705,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             const int breath_timeout_turns = random_range(4, 12);
 
             mons_word_of_recall(this, random_range(3, 7));
-            add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, this,
+            add_ench(mon_enchant(ENCH_BREATH_WEAPON, this,
                                  breath_timeout_turns * BASELINE_DELAY));
         }
         break;
@@ -1876,7 +1875,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             {
                 // XXX: The most awkward way to work around not being able to lower
                 //      duration directly, or decay things with INFINITE_DURATION....
-                mon_enchant timeout(ENCH_SOUL_RIPE, me.degree, &you, 20);
+                mon_enchant timeout(ENCH_SOUL_RIPE, &you, 20, me.degree);
                 del_ench(en, true, false);
                 add_ench(timeout);
             }
@@ -1896,7 +1895,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (me.duration < INFINITE_DURATION)
             {
                 // XXX: See above. I hate it. Surely there's a better way than this.
-                mon_enchant renew(ENCH_SOUL_RIPE, me.degree, &you, INFINITE_DURATION);
+                mon_enchant renew(ENCH_SOUL_RIPE, &you, INFINITE_DURATION, me.degree);
                 del_ench(en, true, false);
                 add_ench(renew);
             }
@@ -1948,14 +1947,14 @@ void monster::mark_summoned(int summon_type, int longevity, bool mark_items,
                             bool make_abjurable)
 {
     if (longevity > 0)
-        add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
+        add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, longevity));
 
     // Fully replace any existing summon source, if we're giving a new one.
     if (has_ench(ENCH_SUMMON) && summon_type != 0)
         del_ench(ENCH_SUMMON);
 
     if (!has_ench(ENCH_SUMMON))
-        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
+        add_ench(mon_enchant(ENCH_SUMMON, 0, INT_MAX, summon_type));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
@@ -2230,8 +2229,8 @@ enchant_type name_to_ench(const char *name)
     return ENCH_NONE;
 }
 
-mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
-                         int dur, ench_aura_type is_aura)
+mon_enchant::mon_enchant(enchant_type e, const actor* a, int dur, int deg,
+                         ench_aura_type is_aura)
     : ench(e), degree(deg), duration(dur), maxduration(0), ench_is_aura(is_aura)
 {
     if (a)
@@ -2397,8 +2396,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:
-        if (deg > 1)
-            cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);
         break;
     case ENCH_SLOWLY_DYING:

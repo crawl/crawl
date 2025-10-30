@@ -1113,7 +1113,7 @@ static void _confuse_monster(monster* mons, int sever)
         return;
 
     const bool was_confused = mons->confused();
-    if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+    if (mons->add_ench(mon_enchant(ENCH_CONFUSION,
           &env.mons[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
     {
         if (was_confused)
@@ -1224,9 +1224,8 @@ static void _xom_send_one_ally(int sever)
     {
         // Add a little extra length and regen. Make friends with your new pal.
         int extra = random_range(100, 200);
-        summons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, MON_SUMM_AID, nullptr, extra));
-        summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
-                                       nullptr, 2000));
+        summons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, nullptr, extra));
+        summons->add_ench(mon_enchant(ENCH_REGENERATION, nullptr, 2000));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
         if (summons->type == MONS_REAPER)
@@ -2721,7 +2720,7 @@ static void _xom_enchant_monster(int sever, bool helpful)
               (ench == ENCH_PETRIFYING || ench == ENCH_REGENERATION) ? "starts" : "looks",
               ench_name.c_str());
 
-        application->add_ench(mon_enchant(ench, 0, &you, time));
+        application->add_ench(mon_enchant(ench, &you, time));
         affected++;
     }
 
@@ -2867,7 +2866,7 @@ static void _xom_hyper_enchant_monster(int sever)
             else
                 lines += make_stringf("looks %s, ", ench_name.c_str());
 
-            targetable[0]->add_ench(mon_enchant(apply, 0, nullptr, time));
+            targetable[0]->add_ench(mon_enchant(apply, nullptr, time));
             buff_count++;
         }
 
@@ -2927,7 +2926,7 @@ static void _xom_mass_charm(int sever)
             && application->get_hit_dice() + random_range(-1, 1) <= hd_target))
         {
             simple_monster_message(*application, " is charmed.");
-            application->add_ench(mon_enchant(ENCH_CHARM, 0, &you, time));
+            application->add_ench(mon_enchant(ENCH_CHARM, &you, time));
             affected++;
         }
 
@@ -2995,7 +2994,7 @@ static void _xom_wave_of_despair(int sever)
             mon->strip_willpower(&you, pow, true);
 
             if (mon->holiness() & (MH_NATURAL | MH_PLANT))
-                mon->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, pow));
+                mon->add_ench(mon_enchant(ENCH_DRAINED, &you, pow, 2));
 
             if (!mon->wont_attack())
                 behaviour_event(mon, ME_ANNOY, &you);
@@ -3097,7 +3096,7 @@ static void _xom_time_control(int sever)
         if ((!mons_has_attacks(**mi) && ench != ENCH_PARALYSIS) || mi->stasis())
             continue;
 
-        mi->add_ench(mon_enchant(ench, 0, &you, time));
+        mi->add_ench(mon_enchant(ench, &you, time));
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
@@ -4260,8 +4259,7 @@ static void _xom_grants_word_of_recall(int /*sever*/)
     mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
                      targetable[0]->name(DESC_A, true, false).c_str(),
                      phrasing.c_str());
-    mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1,
-                                          targetable[0], duration);
+    mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, targetable[0], duration);
     targetable[0]->add_ench(chant_timer);
 
     note = make_stringf("made %s speak a word of recall",

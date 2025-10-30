@@ -212,7 +212,7 @@ void mons_update_aura(const monster& mon)
                         continue;
                 }
 
-                mon_enchant new_ench(aura.ench_type, 1, &mon, aura.base_duration,
+                mon_enchant new_ench(aura.ench_type, &mon, aura.base_duration, 0,
                                      aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY);
 
                 // Override an existing enchant rather than just add to it

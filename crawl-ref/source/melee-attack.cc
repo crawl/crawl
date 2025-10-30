@@ -319,7 +319,7 @@ bool melee_attack::handle_phase_blocked()
         && coinflip() && attacker->as_monster()->res_blind() <= 1)
     {
         const bool need_msg = !attacker->as_monster()->has_ench(ENCH_BLIND);
-        if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+        if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, &you,
                                         random_range(3, 5) * BASELINE_DELAY))
             && need_msg)
         {
@@ -523,7 +523,7 @@ void melee_attack::apply_sign_of_ruin_effects()
             case BLIND:
                 if (defender->is_monster())
                 {
-                    defender->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
+                    defender->as_monster()->add_ench(mon_enchant(ENCH_BLIND, attacker,
                                                     random_range(5, 8) * BASELINE_DELAY));
                     simple_monster_message(*defender->as_monster(), " is struck blind.");
                 }
@@ -543,8 +543,7 @@ void melee_attack::do_ooze_engulf()
         && attacker->can_engulf(*defender)
         && coinflip())
     {
-        defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
-                                                     attacker, 1));
+        defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, attacker, 1));
         mprf("You engulf %s in ooze!", defender->name(DESC_THE).c_str());
         // Smothers sticky flame.
         defender->expose_to_element(BEAM_WATER, 0);
@@ -644,7 +643,7 @@ static void _apply_flux_contam(monster &m)
         return;
     }
 
-    m.add_ench(mon_enchant(ENCH_CONTAM, 1, &you));
+    m.add_ench(mon_enchant(ENCH_CONTAM, &you, 0, 1));
     if (!old_glow.degree)
         simple_monster_message(m, " begins to glow.");
     else
@@ -698,7 +697,7 @@ void melee_attack::maybe_do_mesmerism()
     if (defender->is_player())
         you.duration[DUR_MESMERISM_COOLDOWN] = random_range(150, 200) - you.skill(SK_EVOCATIONS, 2);
     else
-        defender->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, defender, random_range(120, 200)));
+        defender->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, defender, random_range(120, 200)));
 }
 
 /* An attack has been determined to have hit something
@@ -944,11 +943,11 @@ static void _inflict_deathly_blight(monster &m)
     const int dur = random_range(3, 6) * BASELINE_DELAY;
     bool worked = false;
     if (!m.stasis())
-        worked = m.add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur)) || worked;
+        worked = m.add_ench(mon_enchant(ENCH_SLOW, &you, dur)) || worked;
     if (mons_has_attacks(m))
-        worked = m.add_ench(mon_enchant(ENCH_WEAK, 1, &you, dur)) || worked;
+        worked = m.add_ench(mon_enchant(ENCH_WEAK, &you, dur)) || worked;
     if (m.holiness() & (MH_NATURAL | MH_PLANT))
-        worked = m.add_ench(mon_enchant(ENCH_DRAINED, 2, &you, dur)) || worked;
+        worked = m.add_ench(mon_enchant(ENCH_DRAINED, &you, dur, 2)) || worked;
     if (worked && you.can_see(m))
         simple_monster_message(m, " decays.");
 }
@@ -1151,8 +1150,8 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
             {
                 mprf("%s freezes in fear!", mi->name(DESC_THE).c_str());
                 int dur = random_range(40, 70);
-                mi->add_ench(mon_enchant(ENCH_FEAR, 0, &you, dur));
-                mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+                mi->add_ench(mon_enchant(ENCH_FEAR, &you, dur));
+                mi->add_ench(mon_enchant(ENCH_BOUND, &you, dur));
                 mi->props[FROZEN_IN_FEAR_KEY] = true;
                 behaviour_event(*mi, ME_SCARE, &you);
             }
@@ -2851,7 +2850,7 @@ void melee_attack::sear_defender()
         if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
             visible_effect = true;
         defender->as_monster()->add_ench(
-            mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+            mon_enchant(ENCH_FIRE_VULN, attacker,
                         (5 + random2(attk_damage)) * BASELINE_DELAY));
     }
 
@@ -3757,9 +3756,8 @@ void melee_attack::mons_apply_attack_flavour()
                      defender->name(DESC_THE).c_str(),
                      defender->conj_verb("are").c_str());
             }
-            defender->as_monster()->add_ench(mon_enchant(ENCH_BARBS, 1,
-                                        attacker,
-                                        random_range(5, 7) * BASELINE_DELAY));
+            defender->as_monster()->add_ench(mon_enchant(ENCH_BARBS, attacker,
+                                        random_range(5, 7) * BASELINE_DELAY, 1));
         }
         break;
 
@@ -3964,7 +3962,7 @@ void melee_attack::mons_apply_attack_flavour()
             else if (defender->is_monster()
                      && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))
             {
-                defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
+                defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD,
                                                              attacker, 1));
             }
             else
@@ -4094,14 +4092,12 @@ void melee_attack::mons_apply_attack_flavour()
         if (mon->has_ench(ENCH_MIGHT))
         {
             mon->del_ench(ENCH_MIGHT, true);
-            mon->add_ench(mon_enchant(ENCH_BERSERK, 1, mon,
-                                      random_range(100, 200)));
+            mon->add_ench(mon_enchant(ENCH_BERSERK, mon, random_range(100, 200)));
             simple_monster_message(*mon, " enters a blood-rage!");
         }
         else
         {
-            mon->add_ench(mon_enchant(ENCH_MIGHT, 1, mon,
-                                      random_range(100, 200)));
+            mon->add_ench(mon_enchant(ENCH_MIGHT, mon, random_range(100, 200)));
             simple_monster_message(*mon, " tastes blood and grows stronger!");
         }
         break;
@@ -4316,10 +4312,7 @@ void melee_attack::mons_do_eyeball_confusion()
                  mon->name(DESC_THE).c_str());
 
             if (!mon->clarity())
-            {
-                mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
-                                          30 + random2(100)));
-            }
+                mon->add_ench(mon_enchant(ENCH_CONFUSION, &you, 30 + random2(100)));
         }
     }
 }
@@ -4562,7 +4555,7 @@ void melee_attack::do_starlight()
         && attacker->res_blind() <= 1
         && x_chance_in_y(min(50, (95 - defender->get_hit_dice() * 4) / 5), 50))
     {
-        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, &you,
                                          random_range(4, 8) * BASELINE_DELAY));
 
         string msg = *random_iterator(dazzle_msgs);

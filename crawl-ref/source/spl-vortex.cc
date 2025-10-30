@@ -349,7 +349,7 @@ void polar_vortex_damage(actor *caster, int dur)
                         {
                             // fly the monster so you get only one attempt
                             // at tossing them into water/lava
-                            mon_enchant ench(ENCH_FLIGHT, 0, caster, 20);
+                            mon_enchant ench(ENCH_FLIGHT, caster, 20);
                             if (mon->has_ench(ENCH_FLIGHT))
                                 mon->update_ench(ench);
                             else

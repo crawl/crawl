@@ -1691,7 +1691,7 @@ void stardust_fineff::fire()
     if (agent->is_player())
         you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
     else
-        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, 0, agent, random_range(300, 500)));
+        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
 }
 
 void pyromania_fineff::fire()

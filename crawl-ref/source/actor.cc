@@ -632,7 +632,7 @@ void actor::start_constricting(actor &whom, constrict_type ctype, int duration)
         if (whom.is_player())
             you.duration[DUR_CONSTRICTED] = duration * BASELINE_DELAY;
         else
-            whom.as_monster()->add_ench(mon_enchant(ENCH_CONSTRICTED, 0, this, duration * BASELINE_DELAY));
+            whom.as_monster()->add_ench(mon_enchant(ENCH_CONSTRICTED, this, duration * BASELINE_DELAY));
     }
 }
 

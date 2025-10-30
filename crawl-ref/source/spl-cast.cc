@@ -785,7 +785,7 @@ static void _handle_energy_orb(int cost, spret cast_result)
                 && !mi->wont_attack() && x_chance_in_y(cost, 9))
             {
                 targs.push_back(*mi);
-                mi->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, &you, random_range(20, 50)));
+                mi->add_ench(mon_enchant(ENCH_ANTIMAGIC, &you, random_range(20, 50)));
             }
         }
 

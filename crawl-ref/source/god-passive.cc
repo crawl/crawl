@@ -2203,7 +2203,7 @@ static int _prepare_audience(coord_def where)
     int power =  max(1, random2(1 + you.skill(SK_INVOCATIONS, 2))
                  + you.experience_level - mons->get_hit_dice());
     int duration = min(max(10, 5 + power), 40);
-    mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, &you, duration));
+    mons->add_ench(mon_enchant(ENCH_PARALYSIS, &you, duration));
 
     return 1;
 }
@@ -2245,7 +2245,7 @@ static int _bond_audience(coord_def where)
     int power = you.skill(SK_INVOCATIONS, 7) + you.experience_level
                  - mons->get_hit_dice();
     int duration = 20 + random2avg(power, 2);
-    mons->add_ench(mon_enchant(ENCH_PAIN_BOND, 1, &you, duration));
+    mons->add_ench(mon_enchant(ENCH_PAIN_BOND, &you, duration));
 
     return 1;
 }

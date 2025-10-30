@@ -3574,18 +3574,18 @@ void maybe_apply_bane_to_monster(monster& mons)
         && one_chance_in(7))
     {
         simple_monster_message(mons, " is touched by paradox!");
-        mons.add_ench(mon_enchant(ENCH_PARADOX_TOUCHED, 0, nullptr, INFINITE_DURATION));
+        mons.add_ench(mon_enchant(ENCH_PARADOX_TOUCHED, nullptr, INFINITE_DURATION));
     }
 
     // Give this one out to entire groups at once, since it does surprisingly
     // little to be given to just one monster in an entire group, on average.
     if (you.has_bane(BANE_WARDING) && one_chance_in(7))
     {
-        mons.add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+        mons.add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
         for (monster_near_iterator mi(mons.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (!testbits(mi->flags, MF_SEEN) && !mi->is_peripheral())
-                mi->add_ench(mon_enchant(ENCH_WARDING, 0, nullptr, INFINITE_DURATION));
+                mi->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
         }
     }
 }

@@ -111,7 +111,7 @@ static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
                      defender->name(DESC_ITS).c_str());
             }
             defender->as_monster()->add_ench(
-                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                mon_enchant(ENCH_FIRE_VULN, attacker,
                             (3 + random2(dam)) * BASELINE_DELAY));
         }
     }
@@ -141,7 +141,7 @@ static void _CONDEMNATION_melee_effects(item_def* /*weapon*/, actor* attacker,
         return;
     const int dur = random_range(40, 80);
     const bool was_guilty = mons->has_ench(ENCH_ANGUISH);
-    if (mons->add_ench(mon_enchant(ENCH_ANGUISH, 0, attacker, dur)) && !was_guilty)
+    if (mons->add_ench(mon_enchant(ENCH_ANGUISH, attacker, dur)) && !was_guilty)
         simple_monster_message(*mons, " is haunted by guilt!");
 }
 
@@ -1057,7 +1057,7 @@ static void _FIRESTARTER_melee_effects(item_def* /*weapon*/, actor* attacker,
             mprf("%s is filled with an inner flame.",
                  defender->name(DESC_THE).c_str());
             defender->as_monster()->add_ench(
-                mon_enchant(ENCH_INNER_FLAME, 0, attacker,
+                mon_enchant(ENCH_INNER_FLAME, attacker,
                             (3 + random2(dam)) * BASELINE_DELAY));
         }
     }
@@ -1100,7 +1100,7 @@ static void _CHILLY_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
             mprf("%s is flash-frozen.",
                  defender->name(DESC_THE).c_str());
             defender->as_monster()->add_ench(
-                mon_enchant(ENCH_FROZEN, 0, attacker,
+                mon_enchant(ENCH_FROZEN, attacker,
                             (5 + random2(dam)) * BASELINE_DELAY));
         }
         else if (defender->is_player()

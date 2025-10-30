@@ -754,7 +754,7 @@ bool ranged_attack::apply_missile_brand()
             if (!dmon->has_ench(ENCH_BLINKITIS))
             {
                 simple_monster_message(*dmon, " becomes untethered in space!");
-                dmon->add_ench(mon_enchant(ENCH_BLINKITIS, 0, attacker,
+                dmon->add_ench(mon_enchant(ENCH_BLINKITIS, attacker,
                                            random_range(3, 4) * BASELINE_DELAY));
                 // Trigger immediately once so that monster can't make an attack
                 // before it activates.
@@ -779,8 +779,8 @@ bool ranged_attack::apply_missile_brand()
             else
             {
                 monster* mon = defender->as_monster();
-                mon->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
-                       damage_done * BASELINE_DELAY));
+                mon->add_ench(mon_enchant(ENCH_BLIND, attacker,
+                                          damage_done * BASELINE_DELAY));
             }
         }
         defender->confuse(attacker, damage_done / 3);

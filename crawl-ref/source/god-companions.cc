@@ -477,7 +477,7 @@ static bool _try_generate_apostle_challenge(int pow, int band_pow)
     if (!apostle)
         return false;
 
-    apostle->add_ench(mon_enchant(ENCH_TOUCH_OF_BEOGH, 0, nullptr, INFINITE_DURATION));
+    apostle->add_ench(mon_enchant(ENCH_TOUCH_OF_BEOGH, nullptr, INFINITE_DURATION));
     apostle->flags |= (MF_APOSTLE_BAND | MF_HARD_RESET);
     apostle->props[ALWAYS_CORPSE_KEY] = true;
 
@@ -912,7 +912,7 @@ void beogh_swear_vengeance(const monster& apostle)
             && !mon->has_ench(ENCH_VENGEANCE_TARGET))
         {
             you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
-            mon->add_ench(mon_enchant(ENCH_VENGEANCE_TARGET, vengeance_num, &you, INFINITE_DURATION));
+            mon->add_ench(mon_enchant(ENCH_VENGEANCE_TARGET, &you, INFINITE_DURATION, vengeance_num));
             mon->patrol_point = apostle.pos();
             new_targets = true;
         }

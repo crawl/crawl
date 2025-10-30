@@ -1073,7 +1073,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case zin_eff::confuse:
         if (!mon->clarity()
-            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
+            && mon->add_ench(mon_enchant(ENCH_CONFUSION, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             if (prayertype == RECITE_HERETIC)
@@ -1085,7 +1085,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::paralyse:
-        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you,
+        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
@@ -1108,7 +1108,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::blind:
-        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck blind by the wrath of Zin!");
             affected = true;
@@ -1116,7 +1116,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::silver_corona:
-        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
+        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon, " is limned with silver light.");
@@ -1126,7 +1126,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case zin_eff::antimagic:
         ASSERT(prayertype == RECITE_HERETIC);
-        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
+        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
@@ -1137,7 +1137,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::mute:
-        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_MUTE, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck mute by the wrath of Zin!");
             affected = true;
@@ -1145,7 +1145,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::mad:
-        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_MAD, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is driven mad by the wrath of Zin!");
             affected = true;
@@ -1153,7 +1153,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::dumb:
-        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_DUMB, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is left stupefied by the wrath of Zin!");
             affected = true;
@@ -1208,7 +1208,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     // Recite time, to prevent monsters from being recited against
     // more than once in a given recite instance.
     if (affected)
-        mon->add_ench(mon_enchant(ENCH_RECITE_TIMER, degree, &you, 40));
+        mon->add_ench(mon_enchant(ENCH_RECITE_TIMER, &you, 40));
 
     // Monsters that have been affected may shout.
     if (affected
@@ -1245,7 +1245,7 @@ static void _zin_saltify(monster* mon)
     {
         // Enemies with more HD leave longer-lasting pillars of salt.
         int time_left = (random2(8) + hd) * BASELINE_DELAY;
-        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, pillar, time_left);
         pillar->add_ench(temp_en);
     }
 }
@@ -1655,7 +1655,7 @@ void yred_fathomless_shackles_effect(int delay)
 
         if (!mi->has_ench(ENCH_BOUND))
         {
-            mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, INFINITE_DURATION));
+            mi->add_ench(mon_enchant(ENCH_BOUND, &you, INFINITE_DURATION));
             mi->props[YRED_SHACKLES_KEY] = true;
         }
 
@@ -2827,7 +2827,7 @@ void dithmenos_change_shadow_appearance(monster& shadow, int dur)
 
     // Change tile to show our shadow is in decoy mode
     shadow.props[MONSTER_TILE_KEY].get_int() = tileidx_player_shadow();
-    shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, 0, &you, dur));
+    shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, &you, dur));
 #else
     UNUSED(shadow, dur);
 #endif
@@ -2902,7 +2902,7 @@ spret dithmenos_shadowslip(bool fail)
             else if (mi->foe == MHITYOU && mi->behaviour == BEH_SEEK)
             {
                 // Add enchantment and immediately update the monster's target
-                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, 0, shadow, dur));
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, shadow, dur));
                 mi->foe = shadow->mindex();
                 mi->behaviour = BEH_SEEK;
 
@@ -5341,31 +5341,31 @@ void ru_do_retribution(monster* mons, int damage)
     {
         mprf(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, act, power+random2(320)));
     }
     else if (power > 35)
     {
         mprf(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, act, power+random2(60)));
     }
     else if (power > 25)
     {
         mprf(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
+        mons->add_ench(mon_enchant(ENCH_SLOW, act, power+random2(100)));
     }
     else if (power > 10)
     {
         mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
+        mons->add_ench(mon_enchant(ENCH_BLIND, act, power+random2(100)));
     }
     else if (power > 0)
     {
         mprf(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
+        mons->add_ench(mon_enchant(ENCH_CORONA, act, power+random2(150)));
     }
 }
 
@@ -5647,7 +5647,7 @@ static int _apply_apocalypse(coord_def where)
     if (mons->alive() && enchantment != ENCH_NONE)
     {
         simple_monster_message(*mons, message.c_str());
-        mons->add_ench(mon_enchant(enchantment, 1, &you, duration));
+        mons->add_ench(mon_enchant(enchantment, &you, duration));
     }
     return 1;
 }
@@ -6073,7 +6073,7 @@ spret hepliaklqana_idealise(bool fail)
 
     const int dur = random_range(50, 80)
                     + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
-    ancestor->add_ench({ ENCH_IDEALISED, 1, &you, dur});
+    ancestor->add_ench({ ENCH_IDEALISED, &you, dur});
     return spret::success;
 }
 
@@ -6119,7 +6119,7 @@ static void _transfer_drain_nearby(coord_def destination)
         const int degree
             = random_range(1 + you.skill_rdiv(SK_INVOCATIONS, 1, 27),
                            2 + you.skill_rdiv(SK_INVOCATIONS, 4, 27));
-        if (mon->add_ench(mon_enchant(ENCH_DRAINED, degree, &you, dur)))
+        if (mon->add_ench(mon_enchant(ENCH_DRAINED, &you, dur, degree)))
             simple_monster_message(*mon, " is drained by nostalgia.");
     }
 }
@@ -7313,14 +7313,14 @@ static void _spawn_crucible_victim(bool near_player_okay = false)
     if (monster* victim = mons_place(mg))
     {
         victim->destroy_inventory();
-        victim->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, INFINITE_DURATION));
+        victim->add_ench(mon_enchant(ENCH_PARALYSIS, nullptr, INFINITE_DURATION));
 
         // Mostly meaningless, but flavorful, signs of torture
         enchant_type ench = random_choose(ENCH_CORROSION,
                                           ENCH_BLIND,
                                           ENCH_BARBS,
                                           ENCH_WEAK);
-        victim->add_ench(mon_enchant(ench, 0, nullptr, INFINITE_DURATION));
+        victim->add_ench(mon_enchant(ench, nullptr, INFINITE_DURATION));
 
         victim->hit_points = max(1, random_range(victim->hit_points * 3 / 10,
                                                  victim->hit_points * 8 / 10));

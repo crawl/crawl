@@ -594,7 +594,7 @@ spell-less monster with:
 <h>Setting enchantments</h>
 
 You may give a monster any number of enchantments. It may start hasted, blind,
-have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<degree>:<<duration></w> or
+have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<duration>:<<degree></w> or
 <w>perm_ench:<<name>:<<degree></w>. The <w><<degree></w> and <w><<duration></w> fields may be
 omitted.
 

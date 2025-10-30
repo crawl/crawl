@@ -450,7 +450,7 @@ static int l_mons_do_add_ench(lua_State *ls)
         return 0;
     }
 
-    mons->add_ench(mon_enchant(met, luaL_safe_checkint(ls, 2), 0,
+    mons->add_ench(mon_enchant(met, nullptr, luaL_safe_checkint(ls, 2),
                                luaL_safe_checkint(ls, 3)));
     return 0;
 }

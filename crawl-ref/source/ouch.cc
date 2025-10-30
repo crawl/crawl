@@ -744,8 +744,7 @@ void _maybe_blood_hastes_allies()
         {
              flash_tile(application->pos(), BLUE, 0);
              animation_delay(15, true);
-             application->add_ench(mon_enchant(ENCH_HASTE, 0, &you,
-                                   time * BASELINE_DELAY));
+             application->add_ench(mon_enchant(ENCH_HASTE, &you, time * BASELINE_DELAY));
              affected++;
         }
     }

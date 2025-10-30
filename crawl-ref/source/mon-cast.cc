@@ -381,8 +381,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int dur = BASELINE_DELAY
                 * min(4 + roll_dice(2, (caster.get_hit_dice() * 4) / 3 + 1),
                       100);
-            caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, 0, &caster, dur));
-            caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_REGENERATION, &caster, dur));
             dprf("Trog's Hand cast (dur: %d aut)", dur);
         },
         nullptr,
@@ -451,7 +451,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_KISS_OF_DEATH, { _always_worthwhile,
         [](monster &caster, mon_spell_slot slot, bolt& beam) {
             _fire_simple_beam(caster, slot, beam);
-            caster.add_ench(mon_enchant(ENCH_DRAINED, 3, &caster, random_range(100, 200)));
+            caster.add_ench(mon_enchant(ENCH_DRAINED, &caster, random_range(100, 200), 3));
         },
         _zap_setup(SPELL_KISS_OF_DEATH)
     } },
@@ -817,7 +817,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             shuffle_array(targs);
             for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
             {
-                targs[i]->add_ench(mon_enchant(ENCH_BOUND, 1, &caster,
+                targs[i]->add_ench(mon_enchant(ENCH_BOUND, &caster,
                                                 random_range(3, 5) * BASELINE_DELAY));
                 if (you.can_see(*targs[i]))
                 {
@@ -952,7 +952,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             if (!caster.wont_attack() && !foe->is_player() && caster.can_see(you))
                 foe = &you;
             caster.props[CLOCKWORK_BEE_TARGET].get_int() = foe->mid;
-            caster.add_ench(mon_enchant(ENCH_CLOCKWORK_BEE_CAST, 0, &caster, 40));
+            caster.add_ench(mon_enchant(ENCH_CLOCKWORK_BEE_CAST, &caster, 40));
             simple_monster_message(caster, " begins winding a clockwork bee!");
         },
     } },
@@ -1348,7 +1348,7 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot /*slot*/, bolt&)
 {
     const string msg = make_stringf(" is filled with unearthly specular energy.");
     simple_monster_message(mons, msg.c_str(), false, MSGCH_MONSTER_SPELL);
-    mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, &mons,
+    mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, &mons,
                               random_range(7, 9) * BASELINE_DELAY));
     mons.props[MIRROR_RECAST_KEY].get_int()
         = you.elapsed_time + 150 + random2(60);
@@ -1503,7 +1503,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
 
 static void _regen_monster(monster* mon, monster* source, int dur)
 {
-    mon->add_ench(mon_enchant(ENCH_REGENERATION, 0, source, dur));
+    mon->add_ench(mon_enchant(ENCH_REGENERATION, source, dur));
 
     // Animate visuals
     bolt beam;
@@ -2906,9 +2906,9 @@ static bool _battle_cry(const monster& chief, spell_type spell_cast,
         const int dur = random_range(12, 20) * speed_to_duration(mi->speed);
 
         if (spell_cast == SPELL_BATTLECRY)
-            mi->add_ench(mon_enchant(ENCH_MIGHT, 1, &chief, dur));
+            mi->add_ench(mon_enchant(ENCH_MIGHT, &chief, dur));
         else if (spell_cast == SPELL_HUNTING_CALL)
-            mi->add_ench(mon_enchant(ENCH_SWIFT, 1, &chief, dur));
+            mi->add_ench(mon_enchant(ENCH_SWIFT, &chief, dur));
 
         affected++;
         if (you.can_see(**mi))
@@ -3039,9 +3039,9 @@ static bool _mons_awaken_flesh(const monster& caster, const int power,
         change_monster_type(*mi, MONS_ABOMINATION_LARGE, true);
 
         // All three abomination buffs at once. Chaos is strong.
-        mi->add_ench(mon_enchant(ENCH_HASTE, 1, *mi, INFINITE_DURATION));
-        mi->add_ench(mon_enchant(ENCH_MIGHT, 1, *mi, INFINITE_DURATION));
-        mi->add_ench(mon_enchant(ENCH_REGENERATION, 1, *mi, INFINITE_DURATION));
+        mi->add_ench(mon_enchant(ENCH_HASTE, *mi, INFINITE_DURATION));
+        mi->add_ench(mon_enchant(ENCH_MIGHT, *mi, INFINITE_DURATION));
+        mi->add_ench(mon_enchant(ENCH_REGENERATION, *mi, INFINITE_DURATION));
 
         // Since it inherits the pile of flesh's summon timer, give it more
         // time to keep living if it's going to vanish soon. We just did a
@@ -4349,7 +4349,7 @@ static void _prayer_of_brilliance(monster* agent)
                mprf("%s spells are empowered by the prayer of brilliance!",
                     mi->name(DESC_ITS).c_str());
             }
-            mi->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
+            mi->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, agent));
         }
     }
 }
@@ -5202,8 +5202,7 @@ bool handle_mon_spell(monster* mons)
         trigger_battlesphere(mons);
     if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
     {
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                   mons->get_ench(ENCH_SAP_MAGIC).agent(),
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, mons->get_ench(ENCH_SAP_MAGIC).agent(),
                                    6 * BASELINE_DELAY));
     }
 
@@ -5372,8 +5371,7 @@ static void _haunt_fixup(monster* summon, coord_def pos)
     actor* victim = actor_at(pos);
     if (victim && victim != summon)
     {
-        summon->add_ench(mon_enchant(ENCH_HAUNTING, 1, victim,
-                                     INFINITE_DURATION));
+        summon->add_ench(mon_enchant(ENCH_HAUNTING, victim, INFINITE_DURATION));
         summon->foe = victim->mindex();
     }
 }
@@ -5791,7 +5789,7 @@ void setup_breath_timeout(monster* mons)
 
     dprf("breath timeout: %d", timeout);
 
-    mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, 1, mons,
+    mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, mons,
                                              timeout * BASELINE_DELAY);
     mons->add_ench(breath_timeout);
 }
@@ -5918,7 +5916,7 @@ static void _mesmerise_los(monster& agent, int power, bool check_hearing)
             }
 
             if (!mons->has_ench(ENCH_DAZED))
-                mons->add_ench(mon_enchant(ENCH_DAZED, 0, &agent, random_range(50, 90)));
+                mons->add_ench(mon_enchant(ENCH_DAZED, &agent, random_range(50, 90)));
             else
             {
                 mon_enchant dazed = mons->get_ench(ENCH_DAZED);
@@ -6059,7 +6057,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             continue;
         }
 
-        if (mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
+        if (mi->add_ench(mon_enchant(ENCH_FEAR, mons)))
         {
             retval = 1;
 
@@ -6458,7 +6456,7 @@ static void _flay(const monster &caster, actor &defender, int damage)
         }
         else
         {
-            mon_enchant flayed(ENCH_FLAYED, 1, &caster, added_dur);
+            mon_enchant flayed(ENCH_FLAYED, &caster, added_dur);
             mon->add_ench(flayed);
         }
     }
@@ -6587,10 +6585,7 @@ static bool _spell_charged(monster *mons)
     if (ench.ench == ENCH_NONE || ench.degree < max_mons_charge(mons->type))
     {
         if (ench.ench == ENCH_NONE)
-        {
-            mons->add_ench(mon_enchant(ENCH_SPELL_CHARGED, 1, mons,
-                                       INFINITE_DURATION));
-        }
+            mons->add_ench(mon_enchant(ENCH_SPELL_CHARGED, mons, INFINITE_DURATION));
         else
         {
             ench.degree++;
@@ -6872,7 +6867,7 @@ static void _mons_vortex(monster *mons)
     const int ench_dur = 60;
 
     mons->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
-    mon_enchant me(ENCH_POLAR_VORTEX, 0, mons, ench_dur);
+    mon_enchant me(ENCH_POLAR_VORTEX, mons, ench_dur);
     mons->add_ench(me);
 
     if (mons->has_ench(ENCH_FLIGHT))
@@ -6882,7 +6877,7 @@ static void _mons_vortex(monster *mons)
         mons->update_ench(me2);
     }
     else
-        mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, ench_dur));
+        mons->add_ench(mon_enchant(ENCH_FLIGHT, mons, ench_dur));
 }
 
 static bool _cast_dirge(monster& caster, bool check_only = false)
@@ -6941,9 +6936,9 @@ static bool _cast_dirge(monster& caster, bool check_only = false)
 
         // Both the might and the swiftness have the same duration.
         int buffRange = random_range(3, 5);
-        mons->add_ench(mon_enchant(ENCH_MIGHT, 1, &caster, buffRange
+        mons->add_ench(mon_enchant(ENCH_MIGHT, &caster, buffRange
                                                            * BASELINE_DELAY));
-        mons->add_ench(mon_enchant(ENCH_SWIFT, 1, &caster, buffRange
+        mons->add_ench(mon_enchant(ENCH_SWIFT, &caster, buffRange
                                                            * BASELINE_DELAY));
 
         if (mons->asleep())
@@ -7062,7 +7057,7 @@ static void _cast_bestow_arms(monster& caster)
         }
 
         give_specific_item(mon, clone);
-        mon->add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+        mon->add_ench(mon_enchant(ENCH_ARMED, &caster, dur));
 
         if (you.see_cell(mon->pos()))
             flash_tile(mon->pos(), MAGENTA, 50);
@@ -7258,7 +7253,7 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
             }
 
             simple_monster_message(*mon, " is compelled to serve!");
-            mon->add_ench(mon_enchant(ENCH_HEXED, 0, &caster));
+            mon->add_ench(mon_enchant(ENCH_HEXED, &caster));
             flash_tile(mon->pos(), BLUE);
         }
         else if (targ->is_player())
@@ -7529,7 +7524,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 if (!monfoe->has_ench(ENCH_FROZEN))
                 {
                     simple_monster_message(*monfoe, " is flash-frozen.");
-                    monfoe->add_ench(mon_enchant(ENCH_FROZEN, 0, mons));
+                    monfoe->add_ench(mon_enchant(ENCH_FROZEN, mons));
                 }
             }
         }
@@ -7630,8 +7625,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             const int tide_duration = BASELINE_DELAY
                 * random_range(80, 200, 2);
-            mons->add_ench(mon_enchant(ENCH_TIDE, 0, mons,
-                                       tide_duration));
+            mons->add_ench(mon_enchant(ENCH_TIDE, mons, tide_duration));
             mons->props[TIDE_CALL_TURN].get_int() = you.num_turns;
             if (simple_monster_message(*
                     mons,
@@ -8056,7 +8050,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         duration = (8 + random2avg(mons->spell_hd(spell_cast) * 3 / 2, 2))
                    * BASELINE_DELAY;
 
-        mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
+        mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, mons, duration));
         // Actually, it's a boolean marker... save for a sanity check.
         env.forest_awoken_until = you.elapsed_time + duration;
 
@@ -8110,7 +8104,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_WORD_OF_RECALL:
     {
-        mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
+        mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, mons, 30);
         mons->add_ench(chant_timer);
         return;
     }
@@ -8125,7 +8119,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             if (_can_injury_bond(*mons, **mi))
             {
-                mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons,
+                mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, mons,
                                                40 + random2(80));
                 mi->add_ench(bond);
             }
@@ -8325,7 +8319,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_REPEL_MISSILES:
         simple_monster_message(*mons, " begins repelling missiles!");
-        mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES, 1, mons, INFINITE_DURATION));
+        mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES, mons, INFINITE_DURATION));
         return;
 
     case SPELL_SUMMON_SCARABS:
@@ -8382,7 +8376,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             if (mons_can_bind_soul(mons, *mi))
             {
                 mi->add_ench(
-                    mon_enchant(ENCH_BOUND_SOUL, 0, mons,
+                    mon_enchant(ENCH_BOUND_SOUL, mons,
                                 random_range(10, 30) * BASELINE_DELAY));
             }
         }
@@ -9198,7 +9192,7 @@ static void _siren_sing(monster* mons, bool avatar)
     noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
-        mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));
+        mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, mons, 70));
 
     if (you.can_see(*mons))
     {

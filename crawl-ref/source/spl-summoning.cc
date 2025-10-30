@@ -275,7 +275,7 @@ spret cast_call_canine_familiar(int pow, bool fail)
 
         old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
         old_dog->del_ench(ENCH_POISON);
-        old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+        old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, &you, 50));
 
         // Give our familiar a small amount of extra duration, if its duration
         // is currently low, to avoid imbuing it and then having it immediately
@@ -628,8 +628,7 @@ void oblivion_howl(int time)
                                                  MG_FORCE_BEH).set_range(1, you.current_vision));
         if (mons)
         {
-            mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
-                                       INFINITE_DURATION));
+            mons->add_ench(mon_enchant(ENCH_HAUNTING, target, INFINITE_DURATION));
             mons->behaviour = BEH_SEEK;
             mons_add_blame(mons, "called by an oblivion hound"); // assumption!
             place_cloud(CLOUD_BLACK_SMOKE, mons->pos(), random_range(1,2), mons);
@@ -930,8 +929,7 @@ static void _animate_weapon(int pow, actor* target)
         return;
     }
 
-    mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
-                                INFINITE_DURATION));
+    mons->add_ench(mon_enchant(ENCH_HAUNTING, target, INFINITE_DURATION));
     mons->foe = target->mindex();
 
     // We are successful. Unwield the weapon, removing any wield effects.
@@ -1209,14 +1207,14 @@ spret summon_shadow_creatures()
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, MON_SUMM_SCROLL, summ_dur(2))
+                      .set_summoned(&you, MON_SUMM_SCROLL, 1)
                       .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
-            int d = min(4, 1 + div_rand_round(17, x));
-            mon_enchant me = mon_enchant(ENCH_SUMMON_TIMER, d);
+            int dur = summ_dur(min(4, 1 + div_rand_round(17, x)));
+            mon_enchant me = mon_enchant(ENCH_SUMMON_TIMER, nullptr, dur);
             me.set_duration(mons, &me);
             mons->update_ench(me);
 
@@ -1613,7 +1611,7 @@ spret cast_haunt(int pow, const coord_def& where, bool fail)
                 .set_summoned(&you, SPELL_HAUNT, summ_dur(3))))
         {
             success++;
-            mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
+            mons->add_ench(mon_enchant(ENCH_HAUNTING, m, INFINITE_DURATION));
             mons->foe = mi;
         }
     }
@@ -2905,9 +2903,8 @@ spret kiku_unearth_wretches(bool fail)
         mon->props[KIKU_WRETCH_KEY] = true;
 
         // Die in 2-3 turns.
-        mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
-                                   20 + random2(10)));
-        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, 9999));
+        mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, 20 + random2(10)));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, nullptr, 9999));
     }
     if (!created)
         simple_god_message(" has no space to call forth the wretched!");
@@ -3249,7 +3246,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
         if (ice)
         {
             ice->props[SIMULACRUM_TYPE_KEY] = mons->type;
-            ice->add_ench(mon_enchant(ENCH_SIMULACRUM_SCULPTING, 0, &you, INFINITE_DURATION));
+            ice->add_ench(mon_enchant(ENCH_SIMULACRUM_SCULPTING, &you, INFINITE_DURATION));
             ice->flags |= MF_WAS_IN_VIEW;
 
             // Make each one shift a little later than the last
@@ -3501,7 +3498,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
 
         }
 
-        wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
+        wisp->add_ench(mon_enchant(ENCH_HAUNTING, &victim, INFINITE_DURATION));
         // Let wisp act immediately (so that if it appears behind the enemy, the
         // enemy won't simply move out of range first).
         wisp->speed_increment = 80;
@@ -3634,7 +3631,7 @@ void launch_clockwork_bee(const actor& agent)
         const int pow = agent.is_player() ? calc_spell_power(SPELL_CLOCKWORK_BEE)
                                           : mons_spellpower(*agent.as_monster(), SPELL_CLOCKWORK_BEE);
         bee->number = 3 + div_rand_round(pow, 15);
-        bee->add_ench(mon_enchant(ENCH_HAUNTING, 1, targ, INFINITE_DURATION));
+        bee->add_ench(mon_enchant(ENCH_HAUNTING, targ, INFINITE_DURATION));
 
         if (you.can_see(*bee))
         {
@@ -3761,8 +3758,8 @@ bool clockwork_bee_recharge(actor& agent, monster& bee)
     bee.max_hit_points = old_max_hp;
     bee.hit_points = old_hp;
     bee.heal(roll_dice(3, 5));
-    bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, 0, &agent, random_range(400, 500)));
-    bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
+    bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, &agent, random_range(400, 500)));
+    bee.add_ench(mon_enchant(ENCH_HAUNTING, targ, INFINITE_DURATION));
     const int pow = agent.is_player() ? calc_spell_power(SPELL_CLOCKWORK_BEE)
                                       : mons_spellpower(*agent.as_monster(), SPELL_CLOCKWORK_BEE);
     bee.number = 3 + div_rand_round(pow, 15);
@@ -3784,7 +3781,7 @@ void clockwork_bee_pick_new_target(monster& bee)
         mprf("%s clockwork bee locks its sights upon %s.",
                 agent ? agent->pronoun(PRONOUN_POSSESSIVE).c_str() : "Someone's",
                 targ->name(DESC_THE).c_str());
-        bee.add_ench(mon_enchant(ENCH_HAUNTING, 0, targ, INFINITE_DURATION));
+        bee.add_ench(mon_enchant(ENCH_HAUNTING, targ, INFINITE_DURATION));
         bee.props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
     }
 }
@@ -4367,7 +4364,7 @@ static bool _do_monster_potion(monster& mons, monster& alembic)
 
         case POT_BRILLIANCE:
             simple_monster_message(mons, " magic is enhanced!", true);
-            mons.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, &alembic));
+            mons.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, &alembic));
             return true;
 
         case POT_HEAL_WOUNDS:
@@ -4715,7 +4712,7 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     if (monster* mons = create_monster(egg))
     {
         mpr("A rock-encrusted egg appears nearby and begins to stir.");
-        mons->add_ench(mon_enchant(ENCH_HATCHING, 0, &agent, random_range(6, 9)));
+        mons->add_ench(mon_enchant(ENCH_HATCHING, &agent, random_range(6, 9)));
 
         // Mark all terrain in range.
         for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)

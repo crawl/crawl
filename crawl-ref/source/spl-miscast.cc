@@ -242,7 +242,7 @@ static const map<spschool, miscast_datum> miscast_effects = {
                     // TODO: monster version? something else?
                      target.as_monster()->add_ench(
                          mon_enchant(ENCH_DIMENSION_ANCHOR,
-                                     0, source, dam * BASELINE_DELAY));
+                                     source, dam * BASELINE_DELAY));
                 }
             }
 

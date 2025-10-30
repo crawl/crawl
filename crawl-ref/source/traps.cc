@@ -234,7 +234,7 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
                                YELLOW, MAGENTA), 120, TILE_BOLT_CHAOS_BUFF);
                 }
 
-                mons->add_ench(mon_enchant(enchant, 0, nullptr, time));
+                mons->add_ench(mon_enchant(enchant, nullptr, time));
 
                 // Traps effects are established as trap-los centric,
                 // so don't inform players of monsters out of sight.

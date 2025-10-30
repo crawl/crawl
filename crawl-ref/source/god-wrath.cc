@@ -1664,7 +1664,7 @@ static bool _ignis_champion()
                                     false, GOD_IGNIS);
     // Then, we add the ench. This makes it visible if it wasn't, since it's both
     // confusing and unfun for players otherwise.
-    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION, 1));
+    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION));
     // Then we fire off update_monsters_in_view() to make the next messages make more
     // sense. This triggers 'comes into view' if needed.
     update_monsters_in_view();

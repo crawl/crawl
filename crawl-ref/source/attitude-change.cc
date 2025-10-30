@@ -337,7 +337,7 @@ void gozag_check_bribe(monster* traitor)
     if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
         traitor->props.erase(FRIENDLY_BRIBE_KEY);
-        traitor->add_ench(mon_enchant(ENCH_FRIENDLY_BRIBED, 0, 0,
+        traitor->add_ench(mon_enchant(ENCH_FRIENDLY_BRIBED, nullptr,
                                       INFINITE_DURATION));
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag permabribe");
