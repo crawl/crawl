@@ -778,7 +778,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (type != MONS_SOUL_WISP && type != MONS_CLOCKWORK_BEE)
         {
             mon_enchant timer = get_ench(ENCH_SUMMON_TIMER);
-            timer.degree = 1;
             timer.duration = min(5 + random2(30), timer.duration);
             update_ench(timer);
         }
@@ -1126,8 +1125,8 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
         return false;
 
     // Gozag-incited haste/berserk is permanent.
-    if (has_ench(ENCH_GOZAG_INCITE)
-        && (en == ENCH_HASTE || en == ENCH_BERSERK))
+    if ((en == ENCH_HASTE || en == ENCH_BERSERK)
+        && has_ench(ENCH_GOZAG_INCITE))
     {
         return false;
     }
@@ -1440,6 +1439,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOWLY_DYING:
     case ENCH_ANTIMAGIC:
     case ENCH_MIRROR_DAMAGE:
+    case ENCH_DRAINED:
         decay_enchantment(en);
         break;
 
@@ -1456,10 +1456,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LIQUEFYING:
         decay_enchantment(en);
         invalidate_agrid();
-        break;
-
-    case ENCH_DRAINED:
-        decay_enchantment(en, false);
         break;
 
     case ENCH_AQUATIC_LAND:
@@ -1539,7 +1535,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             hurt(me.agent(), dam, BEAM_STICKY_FLAME);
         }
 
-        decay_enchantment(en, true);
+        decay_enchantment(en);
         break;
     }
 
@@ -1658,7 +1654,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
-        if (decay_enchantment(en, true) && !no_tele())
+        if (decay_enchantment(en) && !no_tele())
             monster_teleport(this, true, false, true);
         break;
 
@@ -1680,8 +1676,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    // This is like Corona, but if silver harms them, it has sticky
-    // flame levels of damage.
+    // This is like Corona, but if silver harms them, it deals constant damage.
     case ENCH_SILVER_CORONA:
         if (how_chaotic())
         {
@@ -1691,7 +1686,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             hurt(me.agent(), dam);
         }
 
-        decay_enchantment(en, true);
+        decay_enchantment(en);
         break;
 
     case ENCH_WORD_OF_RECALL:

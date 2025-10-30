@@ -2279,13 +2279,6 @@ static bool _is_tyrant_buffable(monster* mon)
             || (mon->has_spells() && !mon->has_ench(ENCH_EMPOWERED_SPELLS));
 }
 
-static bool _is_infernal_servant(monster* mon)
-{
-    return mon->has_ench(ENCH_SUMMON)
-            && mon->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
-            && mon->summoner == MID_PLAYER;
-}
-
 // Upon killing an enemy, maybe buff a nearby servant
 void makhleb_tyrant_buff()
 {
@@ -2293,12 +2286,11 @@ void makhleb_tyrant_buff()
     monster* demon = nullptr;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->friendly())
+        if (mi->friendly() && mi->was_created_by(you, MON_SUMM_AID)
+            && _is_tyrant_buffable(*mi) && one_chance_in(++count))
         {
-            if (_is_infernal_servant(*mi) && _is_tyrant_buffable(*mi))
             {
-                if (one_chance_in(++count))
-                    demon = *mi;
+                demon = *mi;
             }
         }
     }

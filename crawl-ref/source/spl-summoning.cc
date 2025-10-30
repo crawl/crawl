@@ -697,8 +697,7 @@ static void _make_mons_berserk_summon(monster* mon)
     // Let Trog's gifts berserk longer, and set the abjuration timeout
     // to the berserk timeout.
     berserk.duration = berserk.duration * 3 / 2;
-    berserk.maxduration = berserk.duration;
-    timer.duration = timer.maxduration = berserk.duration;
+    timer.duration = berserk.duration;
     mon->update_ench(berserk);
     mon->update_ench(timer);
 }

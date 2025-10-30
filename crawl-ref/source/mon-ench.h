@@ -21,9 +21,10 @@ class mon_enchant
 {
 public:
     enchant_type  ench;
-    int           degree;   // The higher the degree, the faster the degree
-                            // decays, but degrees of 1 do not decay -- they
-                            // just run out when the duration does.
+    int           degree;   // Used for various internal information that
+                            // differs in meaning based on enchant_type
+                            // (eg: poison intensity, number of Curse of Agony
+                            // charges, summon source for ENCH_SUMMON....)
     int           duration, maxduration;
     kill_category who;      // Source's alignment.
     mid_t         source;   // Who set this enchantment?

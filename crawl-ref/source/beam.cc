@@ -2104,20 +2104,14 @@ bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose
     if (mons->res_sticky_flame() || dur <= 0 || mons->has_ench(ENCH_WATER_HOLD))
         return false;
 
-    const mon_enchant old_flame = mons->get_ench(ENCH_STICKY_FLAME);
+    const bool had_sticky_flame = mons->has_ench(ENCH_STICKY_FLAME);
+
+    if (!had_sticky_flame && verbose)
+        simple_monster_message(*mons, " is covered in liquid fire!");
+
     mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, 0, who, dur * BASELINE_DELAY));
-    const mon_enchant new_flame = mons->get_ench(ENCH_STICKY_FLAME);
 
-    // Actually do the napalming. The order is important here.
-    if (new_flame.degree > old_flame.degree)
-    {
-        if (verbose)
-            simple_monster_message(*mons, " is covered in liquid fire!");
-        if (who)
-            behaviour_event(mons, ME_WHACK, who);
-    }
-
-    return new_flame.degree > old_flame.degree;
+    return !had_sticky_flame;
 }
 
 static bool _curare_hits_player(actor* agent, string name,
@@ -6385,7 +6379,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_CORONA:
-        if (backlight_monster(mon, agent()))
+        if (corona_monster(mon, agent()))
         {
             obvious_effect = true;
             return MON_AFFECTED;

@@ -2561,7 +2561,7 @@ static void _xom_destruction(int sever, bool real)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monster(*mi, &you);
+            corona_monster(*mi, &you);
             continue;
         }
 

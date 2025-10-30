@@ -2624,8 +2624,7 @@ void beogh_blood_for_blood()
 
 bool mons_is_blood_for_blood_orc(const monster& mon)
 {
-    return mon.has_ench(ENCH_SUMMON)
-            && mon.get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+    return mon.was_created_by(MON_SUMM_AID)
             && mons_genus(mon.type) == MONS_ORC;
 }
 
@@ -2718,9 +2717,7 @@ void beogh_end_blood_for_blood()
          "You reach the end of your prayer and your brethren are recalled.");
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->has_ench(ENCH_SUMMON)
-            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
-            && mons_genus(mi->type) == MONS_ORC)
+        if (mons_is_blood_for_blood_orc(**mi))
         {
             place_cloud(CLOUD_TLOC_ENERGY, mi->pos(), 1 + random2(3), *mi);
             monster_die(**mi, KILL_RESET, -1, true);

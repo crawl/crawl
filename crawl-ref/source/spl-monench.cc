@@ -95,20 +95,16 @@ spret cast_englaciation(int pow, bool fail)
  *  @param source The actor responsible for this.
  *  @returns true if it got backlit (even if it was already).
  */
-bool backlight_monster(monster* mons, const actor* source)
+bool corona_monster(monster* mons, const actor* source)
 {
-    const mon_enchant bklt = mons->get_ench(ENCH_CORONA);
-    const mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
-    const int lvl = bklt.degree + zin_bklt.degree;
+    const bool was_glowing = mons->backlit();
 
     mons->add_ench(mon_enchant(ENCH_CORONA, 1, source));
 
-    if (lvl == 0)
+    if (!was_glowing)
         simple_monster_message(*mons, " is outlined in light.");
-    else if (lvl == 4)
-        simple_monster_message(*mons, " glows brighter for a moment.");
     else
-        simple_monster_message(*mons, " glows brighter.");
+        simple_monster_message(*mons, " glows brighter for a moment.");
 
     return true;
 }
