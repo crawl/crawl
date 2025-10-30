@@ -610,7 +610,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     return c;
 }
 
-bool TilesFramework::await_input(wint_t& c, bool block)
+bool TilesFramework::await_input(wint_t& c, int timeout_millisecond)
 {
     int result;
     fd_set fds;
@@ -625,16 +625,13 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             if (!m_sock_name.empty())
                 FD_SET(m_sock, &fds);
 
-            if (block)
-            {
-                tiles.flush_messages();
+            if (timeout_millisecond < 0)
                 result = select(maxfd + 1, &fds, nullptr, nullptr, nullptr);
-            }
             else
             {
                 timeval timeout;
                 timeout.tv_sec = 0;
-                timeout.tv_usec = 0;
+                timeout.tv_usec = timeout_millisecond * 1000;
 
                 result = select(maxfd + 1, &fds, nullptr, nullptr, &timeout);
             }
