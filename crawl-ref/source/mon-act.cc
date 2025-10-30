@@ -3158,17 +3158,6 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    // XXX: Allow summoners to displace their own phalanx beetles at all times
-    //      or they can sometimes get stuck behind them forever, depending on
-    //      internal action ordering.
-    if (!(mpushee->has_action_energy()
-          || (mpushee->type == MONS_PHALANX_BEETLE && mpusher->mid == mpushee->summoner))
-        && !_same_tentacle_parts(mpusher, mpushee)
-        && !mons_is_seeker(*mpushee))
-    {
-        return false;
-    }
-
     // Confused monsters can't be pushed past, sleeping monsters
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
