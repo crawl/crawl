@@ -89,6 +89,7 @@ void wizard_create_spec_object_by_name()
         mprf(MSGCH_ERROR, "Error: %s", error.c_str());
         return;
     }
+    id_floor_items();
 }
 
 void wizard_create_spec_object()
