@@ -2024,7 +2024,7 @@ MONS:    generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
 KMASK:   1 = opaque
 KPROP:   1 = no_tele_into
 COLOUR:  b = lightmagenta
-FTILE:   'G_ = floor_pebble_magenta
+FTILE:   'G_1m+ = floor_pebble_magenta
 TILE:    b = dngn_crystal_lightmagenta
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
