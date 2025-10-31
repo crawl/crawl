@@ -43,8 +43,8 @@ enum mutation_type
 #endif
     MUT_ACUTE_VISION,
     MUT_AGILE,
-    MUT_BERSERK,
 #if TAG_MAJOR_VERSION == 34
+    MUT_BERSERK,
     MUT_BLINK,
     MUT_BLURRY_VISION,
     MUT_BREATHE_FLAMES,

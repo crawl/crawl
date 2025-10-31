@@ -153,6 +153,7 @@ vector<mutation_type> get_removed_mutations()
         MUT_GOURMAND,
         MUT_AWKWARD_TONGUE,
         MUT_NOISE_DAMPENING,
+        MUT_BERSERK,
 #endif
     };
 
@@ -204,7 +205,6 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,               true},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,           true},
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  true},
-    { MUT_BERSERK,             MUT_CLARITY,                 true},
     { MUT_FAST,                MUT_SLOW,                    true},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,      true},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,      true},
@@ -1232,14 +1232,12 @@ static bool _accept_mutation(mutation_type mutat, bool temp)
 
     // Devolution gives out permanent badmuts, so we don't want to give it as
     // a temporary mut. Stat mutations are too boring to have a relevant effect
-    // on this timescale, and Berserkitis in particular is easy to miss being
-    // applied in a tempmut storm and disproportionately punishing if you don't.
+    // on this timescale, too.
     if (temp
         && (mutat == MUT_DEVOLUTION
             || mutat == MUT_WEAK
             || mutat == MUT_CLUMSY
-            || mutat == MUT_DOPEY
-            || mutat == MUT_BERSERK))
+            || mutat == MUT_DOPEY))
     {
         return false;
     }
@@ -1664,7 +1662,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
             return false;
 
         // Formicids have stasis and so prevent mutations that would do nothing.
-        if ((mut == MUT_BERSERK || mut == MUT_TELEPORT) && you.stasis())
+        if (mut == MUT_TELEPORT && you.stasis())
             return false;
 
         if (mut == MUT_ACUTE_VISION && you.innate_sinv())
@@ -1698,9 +1696,6 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
         return false;
 
     if (mut == MUT_TELEPORT && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
-        return false;
-
-    if (mut == MUT_BERSERK && you.is_lifeless_undead())
         return false;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())

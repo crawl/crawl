@@ -1,10 +1,4 @@
 %%%%
-berserk mutation
-
-Cuando haces ataques cuerpos a cuerpos a enemigos, a veces entras en un estado de rabia
-berserk. Cada nivel de esta mutación aumenta la probabilidad de entrando un
-estado de rabia berserk.
-%%%%
 cold resistance mutation
 
 Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes

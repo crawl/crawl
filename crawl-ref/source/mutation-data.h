@@ -589,6 +589,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_CLARITY
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_BERSERK, 7, 2, mutflag::bad,
   "berserk",
 
@@ -603,8 +604,8 @@ static const mutation_def mut_data[] =
   {"You feel a little more calm.",
    "You feel a little less angry.",
    ""},
-  TILEG_MUT_BERSERK,
 },
+#endif
 
 { MUT_POOR_CONSTITUTION, 10, 2, mutflag::bad,
   "poor constitution",

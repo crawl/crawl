@@ -260,8 +260,6 @@ bool actor::has_notele_item(vector<const item_def *> *matches) const
 int actor::angry(bool items) const
 {
     int anger = 0;
-    if (is_player() && you.has_mutation(MUT_BERSERK))
-        anger += pow(3, you.get_mutation_level(MUT_BERSERK));
 
     if (!items)
         return anger;
