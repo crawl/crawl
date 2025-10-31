@@ -829,21 +829,6 @@ bool player::is_binding_sigil_immune() const
     return you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
 }
 
-bool player::shove(const char* feat_name)
-{
-    for (distance_iterator di(pos()); di; ++di)
-        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(env.grid(*di))
-            && can_pass_through_feat(env.grid(*di)))
-        {
-            moveto(*di);
-            if (*feat_name)
-                mprf("You are pushed out of the %s.", feat_name);
-            dprf("Moved to (%d, %d).", pos().x, pos().y);
-            return true;
-        }
-    return false;
-}
-
 void player::clear_constricted()
 {
     duration[DUR_CONSTRICTED] = 0;

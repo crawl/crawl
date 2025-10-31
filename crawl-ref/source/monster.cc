@@ -6520,23 +6520,6 @@ bool monster::has_usable_tentacle() const
     return num_constricting() < 8;
 }
 
-// Move the monster to the nearest valid space.
-bool monster::shove(const char* feat_name)
-{
-    for (distance_iterator di(pos()); di; ++di)
-        if (monster_space_valid(this, *di, false))
-        {
-            move_to_pos(*di);
-            simple_monster_message(*this,
-                make_stringf(" is pushed out of the %s.", feat_name).c_str());
-            dprf("Moved to (%d, %d).", pos().x, pos().y);
-
-            return true;
-        }
-
-    return false;
-}
-
 bool monster::clarity(bool items) const
 {
     return type == MONS_CASSANDRA || actor::clarity(items);

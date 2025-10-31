@@ -1346,10 +1346,10 @@ static void _ensure_player_habitable(bool dig_instead)
     dungeon_feature_type feat = env.grid(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
     {
-        bool shoved = you.shove();
-        if (!shoved)
+        const coord_def old_pos = you.pos();
+        if (push_or_teleport_actor_from(you.pos()) == old_pos)
         {
-            // legal only if we just placed a vault
+            // Failing to move the player is legal only if we just placed a vault
             ASSERT(dig_instead);
             env.grid(you.pos()) = DNGN_FLOOR;
         }

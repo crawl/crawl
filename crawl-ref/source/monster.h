@@ -281,7 +281,6 @@ public:
     bool     can_flatten_tree_at(const coord_def& pos) const;
     bool     is_habitable_feat(dungeon_feature_type feat) const override;
     bool     is_habitable(const coord_def &_pos) const override;
-    bool     shove(const char* name = "") override;
 
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;

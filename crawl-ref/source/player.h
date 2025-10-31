@@ -638,7 +638,6 @@ public:
     bool        floundering() const override;
     bool        extra_balanced() const override;
     bool        slow_in_water() const;
-    bool        shove(const char* feat_name = "") override;
     bool        can_pass_through_feat(dungeon_feature_type grid) const override;
     bool        can_burrow() const override;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const
