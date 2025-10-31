@@ -148,6 +148,10 @@ Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
 %%%%
+Hellfire Court cast
+
+@The_monster@ calls forth @possessive@ servants.
+%%%%
 Hellfire Mortar cast
 
 @The_monster@ blasts a torrent of magma @at@ @target@.

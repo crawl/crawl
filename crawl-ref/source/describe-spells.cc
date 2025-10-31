@@ -477,6 +477,8 @@ static colour_t _spell_colour(spell_type spell)
             return RED;
         case SPELL_ELECTROLUNGE:
             return LIGHTCYAN;
+        case SPELL_BECKONING_GALE:
+            return LIGHTGRAY;
         default:
             break;
     }

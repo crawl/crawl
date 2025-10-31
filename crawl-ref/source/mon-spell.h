@@ -2530,7 +2530,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 22, MON_SPELL_MAGICAL },
        { SPELL_HURL_DAMNATION, 22, MON_SPELL_MAGICAL },
-       { SPELL_FIRE_SUMMON, 22, MON_SPELL_MAGICAL },
+       { SPELL_HELLFIRE_COURT, 22, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2585,7 +2585,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_IRON_SHOT, 11, MON_SPELL_MAGICAL },
        { SPELL_FIRE_STORM, 11, MON_SPELL_MAGICAL },
-       { SPELL_FIRE_SUMMON, 11, MON_SPELL_MAGICAL },
+       { SPELL_HELLFIRE_COURT, 11, MON_SPELL_MAGICAL },
        { SPELL_HASTE, 36, MON_SPELL_MAGICAL },
       }
     },

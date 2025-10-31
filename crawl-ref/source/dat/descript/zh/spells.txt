@@ -482,10 +482,6 @@ Fire Storm spell
 在造成火焰伤害的同时还会留下一些短暂存在的火旋涡。
 它造成的一半伤害，火抗无法抵御。
 %%%%
-Fire Summon spell
-
-召唤火属性的恶魔和天谴。
-%%%%
 Fireball spell
 
 掷出一个爆炸性的火球。
@@ -608,6 +604,10 @@ Haunt spell
 Heal Other spell
 
 治疗一个附近的友方。
+%%%%
+Hellfire Court spell
+
+召唤火属性的恶魔和天谴。
 %%%%
 Hunting Call spell
 

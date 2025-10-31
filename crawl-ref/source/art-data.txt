@@ -373,8 +373,8 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 BOOL:    evil, nogen
-DESCRIP: Fire Summon: It may summon demons of flame and damnation when striking
- foes.
+DESCRIP: Hellfire Court: It may summon demons of flame and damnation when
+ striking foes.
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.

@@ -250,7 +250,6 @@ eruption ERUPTION
 fake_mara_summon FAKE_MARA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
-fire_summon FIRE_SUMMON
 flaming_cloud FLAMING_CLOUD
 flash_freeze FLASH_FREEZE
 flay FLAY
@@ -259,6 +258,7 @@ ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 harpoon_shot HARPOON_SHOT
 haste_other HASTE_OTHER
+hellfire_court HELLFIRE_COURT
 hoarfrost_bullet HOARFROST_BULLET
 holy_breath HOLY_BREATH
 holy_flames HOLY_FLAMES

@@ -681,10 +681,6 @@ Calls forth a mighty storm of roaring flame directly onto the target, dealing
 damage in a large area and leaving behind short-lived fire vortices. Half of
 its damage bypasses fire resistance.
 %%%%
-Fire Summon spell
-
-Summons demons of flame and damnation.
-%%%%
 Fireball spell
 
 Hurls an explosive ball of fire.
@@ -939,6 +935,10 @@ Haunt spell
 Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
 dies. The number of spectres summoned increases with spell power.
+%%%%
+Hellfire Court spell
+
+Summons demons of flame and damnation.
 %%%%
 Hellfire Mortar spell
 

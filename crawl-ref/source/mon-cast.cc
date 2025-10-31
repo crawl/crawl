@@ -2557,7 +2557,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HOLIES:
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
-    case SPELL_FIRE_SUMMON:
+    case SPELL_HELLFIRE_COURT:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
@@ -8108,7 +8108,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_FIRE_SUMMON:
+    case SPELL_HELLFIRE_COURT:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);

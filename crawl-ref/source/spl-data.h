@@ -1997,14 +1997,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_FIRE_SUMMON, "Fire Summon",
+    SPELL_HELLFIRE_COURT, "Hellfire Court",
     spschool::summoning | spschool::fire,
     spflag::monster | spflag::mons_abjure,
     8,
     0,
     -1, -1,
     0,
-    TILEG_FIRE_SUMMON,
+    TILEG_HELLFIRE_COURT,
 },
 
 {
