@@ -23,7 +23,7 @@ default-depth: D, Lair, Snake, Depths
 
 NAME:   serial_bayou
 TAGS:   allow_dup extra luniq_serial decor
-TAGS:   nolayout_encompass luniq_snakedec_liquid
+TAGS:   nolayout_encompass luniq_lairdec_liquid luniq_snakedec_liquid
 CHANCE: 1%
 {{
   local c = 4 + crawl.random2(3)*crawl.random2(2)

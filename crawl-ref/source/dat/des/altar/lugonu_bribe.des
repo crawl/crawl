@@ -65,7 +65,7 @@ end
 
 
 NAME:   tgw_lugonu_bribe
-TAGS:   transparent
+TAGS:   transparent extra
 DEPTH:  D:12-, Depths
 KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {replica_name="altar"}

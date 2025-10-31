@@ -37,9 +37,9 @@ ENDMAP
 ##############################################################################
 # Regular vaults for depths 1-11.
 #
-# Why this is necessary: there are very few vaults in the 1-11 range (entries
-# are not considered here); to avoid too much repetition of the existing vaults,
-# we use this dummy vault.
+# Why this is necessary: there are very few larger vaults in the 1-11 range
+# (entries are not considered here); to avoid too much repetition of the
+# existing vaults, we use this dummy vault.
 #
 NAME: dummy_balancer
 DEPTH: D:1-11

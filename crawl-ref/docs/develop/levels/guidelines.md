@@ -75,7 +75,8 @@ game and we need a lot of them! These maps are good candidates for a starting
 vaultmaker who wants to try something other than an arrival vault.
 
 For overflow temples, see the comments at the start of
-[crawl-ref/source/dat/des/altar/overflow.des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/altar/overflow.des) for the specific tagging scheme to use for overflow temples, either generic or devoted to particular gods.
+[crawl-ref/source/dat/des/altar/overflow.des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/altar/overflow.des)
+for the lua function handling the tagging scheme for all overflow temples.
 
 Ecumenical altars are faded, so the player can't tell which god the altar is
 devoted to until they worship. Good lore ideas revolve around ruins and decay,
@@ -91,14 +92,21 @@ but there are plenty of other creative possibilities. The vaults are in
 
 ### General style guidelines for overflow temples
 
-* If your vault places a single specific altar and is a plausible mini vault
-  tag it `uniq_altar_GODNAME` as well as the overflow temple tags
-* Whenever possible, don't add a depth specification to such a vault.
-* If a specific monster is necessary for theme, then constrain the vault to
-  that monster's depth.
-* If your vault is decor (even if it does not have the decor tag, if there
-  are no depth-scaling monsters to fight, and no serious loot),
-  include `: interest_check(_G)` to ensure the vault is tagged appropriately.
+Aside from understanding and deploying the standard_overflow_setup(_G) function
+properly (as overflow.des establishes heavily):
+* If a very specific monster establishes a vault's theme, then constrain the
+  vault to just that monster's depth- cross-reference this
+  [crawl-ref/source/mon-pick-data.h](https://github.com/crawl/crawl/tree/master/crawl-ref/source/mon-pick-data.h).
+* When adding the vault to other branches, always specify the vault also starts
+  at D:3-. Try to not spread monster-containing vaults across multiple branches
+  unless the monsters match those branches' native populations, are scaled
+  to that branch's depth, and still match the god's flavour.
+* The "extra" boolean parameter should be "true" by default, and should be
+  passed as "false" only if there are depth-scaling monsters to fight.
+* Don't deploy crystal walls, excess counts of statues without specific tiles,
+  large amounts of plants and fungi, or path-blocking liquids, unless you
+  really know what you're doing to specifically tie themes together- we already
+  have a excess number of vaults leaning on each of these.
 
 ## Guidelines for creating serial vaults
 

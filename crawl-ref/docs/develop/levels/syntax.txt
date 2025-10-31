@@ -356,9 +356,18 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
           * "decor": this tag indicates that the vault is purely decorative,
-             and has neither threats nor items. Levels of Dungeon deeper than
-             D:14 and all of Depths have an 80% chance to place an extra vault
-             with this tag; see dungeon_decor in builder/decor.des.
+             and has neither threats nor items. (This should always be paired
+             with the "extra" tag.) Levels of Dungeon deeper than D:13 and all
+             of Depths have an 80% chance to place an extra vault with this tag;
+             see builder/decor.des.
+          *  "lairdec", "snakedec", and "zotdec" are further indicators for
+             purely decorative vaults to get their own extra vault placements
+             in Lair, Snake, and Zot respectively. These are used for solely
+             decorative vaults that place in their respective branches, but
+             other vaults that place in multiple branches can use these tags if
+             they're neither too generic nor too obtrusive- see vaults in
+             mini_features.des with and without the specific tags for comparison
+             purposes.
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
@@ -372,10 +381,15 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              placed after all other vaults. For minivaults, if the map is
              selected, the builder will attempt to place another minivault
              immediately afterwards. "extra" is good to use for things like
-             labyrinth entries that should not affect the chance of other
+             gauntlet entries that should not affect the chance of other
              minivaults on the level. If you use "extra" and your map is
              tagged "allow_dup", it is a good idea to use a "luniq" tag so
              that the same map does not place more than once on a given level.
+          * "extra_post_overflow": the "extra" tag only functions if it's not
+             made conditional, like in given branches. This makes vaults only
+             count as "extra" if they're outside D:1-10, and should be applied
+             mostly to vaults past that range with just altars or with an
+             average of 2 or less non-specified floor spawns.
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
           * "patrolling": Monsters placed (using MONS, KMONS) in this vault
@@ -389,14 +403,14 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              (mini)vault. Usually only used when the vault is completely
              enclosed and accessible through other means.
           * "no_monster_gen": Prevents random monster generation at the time of
-             the vault's creation. Highly advised for arrival vaults with a
-             player-hostile geography, MUST-HAVE for those with water/lava.
-             Can be applied only to particular symbols with KMASK.
+             the vault's creation. Highly advised for arrival vaults with
+             player-hostile geography, very frequently for those with
+             water / lava. Can be applied only to particular symbols with KMASK.
           * "no_pool_fixup": prevents water squares next to land from being
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": In Dis, the Vaults and the Crypt a vault's
              rock walls will be changed to be the same as the wall type of
-             the rest of the level. If you don't want that to happen then
+             the rest of the level. If you don't want that to happen, then
              use this tag.
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
@@ -409,7 +423,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              given level. "luniq" is only relevant when used with "allow_dup".
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one
              of the vaults with this tag can be used on any given level.
-             "luniq_BAR" is only relevant when used with "allow_dup".
+             Unlike "luniq", "luniq_BAR" does not need "allow_dup".
+          * "buniq_BAR": (buniq_ with any suffix) specifies that only one
+             of the vaults with this tag can be used in the entirety of any
+             given branch.
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
              If a branch has very few entries, a dummy entry is advisable to
@@ -847,8 +864,15 @@ MONS:     (list of monsters)
 
           Specifying "band" doesn't force bands to be placed - it
           requests that the game use the normal chances of creating a
-          band. If you use "band", leave some empty space around the
+          band, which will be zero if the monster in question has no innate
+          band company. (See mon-place.cc for lists of which monsters have
+          bands.) If you use "band", leave some empty space around the
           monster for its band members to be placed.
+
+          (Notably, band specifications can work with random specifications like
+          "place:" and "0". For the most part, the deployment of "9 band" and
+          "8 band" is somewhat discouraged in lategame due to the very spiky
+          danger level this has compared to the rest of the game.)
 
           A monster can be given specific items by following the monster
           name with a semi-colon and then with an item list as described

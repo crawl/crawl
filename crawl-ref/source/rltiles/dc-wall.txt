@@ -940,13 +940,22 @@ crypt-metal1
 crypt-metal2
 crypt-metal3
 crypt-metal4
-%weight 10
 
 %weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
 tomb3
+
+%weight 10
+wall_stone_depths_entry0 STONE_WALL_DEPTHS_ENTRY
+wall_stone_depths_entry1
+%weight 9
+wall_stone_depths_entry2
+wall_stone_depths_entry3
+%weight 8
+wall_stone_depths_entry4
+wall_stone_depths_entry5
 
 %weight 10
 wall_stone_depths0 STONE_WALL_DEPTHS
@@ -1974,9 +1983,12 @@ brick_brown7
 %resetcol
 
 # Variant of BRICK_WALL_BROWN with vines
-brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+%weight 10
+brick_brown-vines0 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+brick_brown-vines1
 brick_brown-vines2
 brick_brown-vines3
+%weight 8
 brick_brown-vines4
 
 brick_gray0 WALL_BRICK_GRAY

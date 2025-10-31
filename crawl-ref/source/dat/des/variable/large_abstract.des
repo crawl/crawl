@@ -102,14 +102,16 @@ KITEM:   R = smoky gem
 KITEM:   ? = stone no_pickup / gold q:1 no_pickup
 KFEAT:   O = enter_depths
 KFEAT:   S = stone_arch
+KFEAT:   z = c
 NSUBST:  O = 1:O / *:S, R = 1:R / *:?
 SUBST:   * = *%, | = |*, I = G
 TILE:    G = depths_column
+TILE:    z = stone_wall_depths_entry
 FTILE:   'ROS? = floor_depthstone
 : else
 MONS:    very ugly thing, glowing shapeshifter, glass eye band
 MONS:    orange crystal statue, 9 band / 8 band
-SUBST:   'ROG = ., I = x
+SUBST:   'ROG = ., Iz = x
 : end
 KFEAT:   T = fountain_eyes
 SHUFFLE: abcd, |ABCDE, n* / m$, or, pqs
@@ -118,7 +120,7 @@ SUBST:   b = + x:30, opq = +, cdrs = x, * = * |:1
 SUBST:   ABC = ., D = *, E = %., m = 0, n = 9, 4 = 4., x : x c:2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzxxxx
 xxxx....xE.......x..G.'''.x.................................xxxx
 x%E+3...x........+....'O'.x......x....x1...x2...x2...I3...I..Dxx
 x%Ex....x........x..G.'''Ex..................................DDx
@@ -145,7 +147,7 @@ xxx...1...x..'''..x...3...x...x....3....r....2...s......1.5....x
 xxx.......x..'O'..x.......x...x.........x...'''..x.............x
 xxxE.....ExE.'''.ExE.....Ex...x.........x...'O'..x.............x
 xxxAAAAAAAxBBBBBBBxCCCCCCCx...xE.......ExE..'''.Ex............Ex
-xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxzzzzzzzzzzzzzzzzzzzzzzzx...xzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1643,7 +1645,7 @@ NAME:   kennysheep_large_spiral
 TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
 DEPTH:  D:14-, Depths, !Depths:$
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, false, true)
 SUBST:  X = x
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXX

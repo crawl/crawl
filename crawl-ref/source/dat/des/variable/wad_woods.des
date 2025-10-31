@@ -1,0 +1,557 @@
+###############################################################################
+# A long set of wood themed vaults, as salvaged scraps from an idea for an
+# early outdoors portal vault. Can generate in Lair, but also occasionally D.
+# uniq_ tagged by tier: large, medium, small, rock, and lairdec.
+#
+
+{{
+function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
+    if uniq == "decor" then
+        e.tags("uniq_wad_woods_lairdec decor lairdec extra")
+    elseif uniq ~= "other" then
+        e.tags("uniq_wad_woods_" .. uniq)
+    end
+    e.weight(weight)
+    e.mons("plant")
+    e.mons("bush")
+    e.mons("fungus")
+
+    if you.in_branch("Lair") then
+        e.mons("spriggan")
+        if you.absdepth() >= 13 then
+            e.mons("wyvern w:8 / raven w:2 / elephant w:4 / dream sheep w:2")
+        else
+            e.mons("wolf / black bear w:4 / yak w:2")
+        end
+    else
+        if you.absdepth() >= 12 then
+            e.mons("centaur warrior / two-headed ogre")
+            e.mons("hell rat")
+        elseif you.absdepth() >= 8 then
+            e.mons("centaur / troll")
+            e.mons("elephant")
+        elseif you.absdepth() >= 5 then
+            e.mons("gnoll / ogre w:1")
+            e.mons("river rat")
+        else
+            e.mons("gnoll")
+            e.mons("quokka")
+        end
+    end
+
+    e.ftile(".t+%*|q012345678COGTU = floor_grass_dark")
+
+    e.kfeat("O = shallow_water")
+    if mist then
+        e.lua_marker("O", fog_machine { pow_min = 3, pow_max = 7, delay = delaynum,
+                          size = sizenum, walk_dist = 1, spread_rate = spreadnum } )
+    end
+end
+}}
+
+default-depth: Lair
+
+NAME:   wad_woods_pond
+DEPTH:  D:2-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
+FTILE:  ' = floor_dirt
+MAP
+                 .         tt.
+             tttt. tt  ttttt...ttt    tt   tt
+         tttttttt...ttttttt....tttt....t. ttt
+      tttt11.tt.t...t11t.......tt.ttttt..t..tt
+     ttttttt..tt.t1...t.1t...t...t...tttt..t.tt
+   ttt.tt.ttt1t1t.t.....tt.........t....ttt....
+  ttt....tttt.t.........Wt.t............t..t.t
+ ttttt..ttt.t...t.W.OWtWt1t....1........t....tt
+ tt11.tttt1.t..t...W1tWWtW1tWt....1....'.''..tt
+ttt1.t.1t.t......WtWWWwWWtWWtWtW.W......''...t
+ tt...t........tWtWWww.w0%WWWWWWWt.1......'..t
+  tttt...t...t....ttWWtwwtWWWtWW1W......11t1.tt
+  ttt...11t1t.t...W.W.WWWWtW1tW.tt.......t.tttt
+ tt.t.t.tt.t1tttt....W.tWtW1WO.t....1...t1.t...
+ttt..tttttt.tt.t.t.1.........1.........ttt..1t
+ tt.t...tttt.t1.11................t.t.t.ttttt
+ tt...t..t.tt1t11..1t..........t1t.t.t1t.tt1.
+ tt....1t..tt.t1...ttt1...1...t.t.t.t.t.t.t...
+ttt....tt1tt.t......1ttt1...tttt.ttt1t.t.t.tt..
+ tt...t11tt..1t........tt.1t.tt.tt.tt1t.t.t.tt.
+ .t......t..1t1.....1..1t.t.tt.t.t.t.t.t.t.t
+...t.......t1.........1t1tt..1tt..t.ttt.t.t.
+ .t1t....1.....'.....t.1..tt.t..t..11ttt1t.t
+  1.tt.1.....''''...tt..t..tt..t1.1tt..tt1t.t
+     ......'''''.....tt.t.11tt..t..t.1t..t.t.t
+      ..1...'.'''..t..t.11.t.tt...t1.ttt..t..t
+      t.........1...tt.1.tt.tt..t.tttt...t..tt
+      .t1.1..1.......t..t.t.1tt.t11..t.t..1t
+       ..1.11..1.11t.1t.tttt.t.t1.t.ttt..1ttt
+          ..111.1.ttttttt    ttttt tttttt.tt
+            ......ttttt       ttt  tttttt..
+              ..   ttt                    .
+ENDMAP
+
+NAME:   wad_woods_settlement
+DEPTH:  D:2-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
+NSUBST: 4 = 2:4 / 1 = 4' / *:', 6 = 4
+FTILE:  '4*+ = floor_dirt
+MAP
+               ..  tttt   ...   ...
+          .tt.t...t11t.......tt.ttt
+       .tt..tt.t1...t.1t...t...t...ttt
+     tt.ttt1t1t.t................t....ttt.
+      .t.tt.t.......xxx...............t..t.
+    ..ttt.t...xxx...+4x'''''''1......x.t..
+  1.tt.t1.....x4+'''xxx'....x+xx1...x.....
+t1.t.1t.t.....xxx..'1'''..1.x''x..........
+t...t..............'''1..T..x*6x..1.x......
+tttt...t...t.........'.%....xx+x1...x.11t1.
+ tt...11t1t.t.....x..''''''''''........t.ttt
+..t.t.tt.t1tt.t....x''.xxxx.......1...t1.t.
+t..tt...t.tt.t.t.1''x''+%4x..........ttt..1
+t.t...tt.tOt1.11.'....1xxxx1....t.t.t.ttttt
+ ...t..t.tt1t11.'1t..........t1t.t.t1t.tt1.
+  ...1t.%tt.t1..'tt.1....1..t.t.t.t.t.tOt...
+  ...tt1tt.t....'.1ttt1...tttt.ttt1t.t.t.tt
+  ..t11tt..1t...'....tt.1t.tt%tt.tt1t5t.t
+ ......t..1t1..G4G1..1t.t.tt.t.t.t.t.t.t.t
+.t.......t1.....'...1t1tt..1tt..t.ttt.t.t
+t1t....1........'..t.1..tt.tO.t..11ttt1t.
+1.tt.1....xxx..'..tt..t..tt5.t1.1tt..tt1tt
+  t.......x4+''....tt.t.11tt..t..t.1t..t.t.
+  tt..1...xxx....t..t.11.t.tt...t1.ttt..t...
+.t1.t.........1...tt.1.tt.tt..t.tttt...t..tt
+1.t1.t1.1..1.......t%.t.t.1tt.t11..t.t.51ttt
+tt.11..1.11..1.1  .1t.ttt      .t.ttt..1tt
+.1t   .1  111. .     tt        tt.t ttt.tt
+ENDMAP
+
+NAME:   wad_woods_tower
+DEPTH:  D:2-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "large", 2, true, 21, 2, 36)
+FTILE:  '*+TG4 = floor_sprouting_ruin
+MAP
+   tttt....   .tt1   tt.t    tttt  ..t
+t.1.tttt.tt.11O..t.11ttt..  15tttt....t
+t..11xxx.t.tttt.tttt....t1t..11t.t..ttt.
+ .t.xx4xxt.1ttt..t1t.tt.ttt.tttt.1.ttt1
+ .1x+'*'+x..t....t..t..1.t..11tt...t....
+  .txx4xx.....t.1ttt.1ttt.1..t.t...t.1
+t.15txxx.t.t.t..tt1.1G...t.t.1tt..ttt.
+ ..t.t...tt..t..1...'''%..1t..t..t...t.
+  .tt.t1...1t.1t...G'T'G.tt......t......
+ ...t..t.tt..111.t..'''.11.1..t.t.1..t.
+ ....t.t.t.ttt1.tt.1.G1t.t....t.t.5ttt..
+..t.tt.t.t..t1t..t.t1tt.ttt.t...1..ttt
+.11O...t..5.t..11t..t....1..11tt.1.t..t.
+t..t1t..t...11t..ttt..ttt....tOt.t.t.11t
+  1..t..t.  t..tt. 1t..  tt..tt  .tt.tt
+   t.t.1.   .t1.  ..     .11    .t.1...
+ENDMAP
+
+NAME:    wad_woods_stonehenge
+DEPTH:   D:2-, Lair
+ORIENT:  float
+: wad_woods_setup(_G, "med", 2, true, 21, 2, 36)
+SHUFFLE: 4% / '"
+SUBST:   '" = .
+MAP
+       .....t..tt1.t  t.t    .. tt...
+      tt1tt.1tOt.t.11ttt..1.15tttt.1..
+     ttt%t.tttt.tttt....t1t..11t.t.1tt..
+    ttttttt1ttt..t1t.tt.ttt.tttt.1.ttt1t
+    ttttttt.t.t..t..t..1.t..11tt1..t.1.ttt
+   tttttt1t.1.t.1ttt.1t..1..t.t...1t11..tt
+  15tttttt1t.t...t1..G...t.t......tt..1t11
+t.tt.t.t.tt..t..1......c...c...t..t..t.t
+.t11t.t1.t.1t.1t.........%.......t..1...
+t1..t1.t.tt.t111.t...c.04C40.c..1t.1.tt.t.
+ .1t.t.11t.ttt1.t..1.....%......t.5tttt...
+  t.tt.t.t..t1t......1.c...c...1.1..tt1.
+  1O.ttt1.5.t..11t1....1.1..11tt.1.t1...
+   t1tttt.1.11t..ttt1.tt11tt.tOt1.tt.11
+    tt..t.t1   tt.11t1.1    .tt.1ttt.
+      .t.t  .   .t..t        .t1.t
+ENDMAP
+
+NAME:   wad_woods_01
+: wad_woods_setup(_G, "small", 2, true, 21, 2, 8)
+MAP
+     tt.tt  tt.1ttt
+    tt...tt1tOtt.1.t
+   ..1ttt....tttt...
+ t4t.ttt.tttttt4t.t.1t
+ t.tt..1tt1.tt.t.tt.tt
+ .tt.%1...tt.1ttt..t.tt
+tO1.tt..tt.t.t.tttt4t1
+t.t.tt.t.tt.tG..ttt.tt
+tt.ttt.1..ttt..ttt.1.tt
+t.tt.ttttt.tt1ttt1.t.tt
+tt..tt4ttt..%.4ttOttt
+  ..1tt.t1t..G...t.t
+   .tt..4t1t.t.tt1t
+    .ttt  .t..ttt
+ENDMAP
+
+NAME:   wad_woods_02
+: wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
+MAP
+   .1t1.t   .t.1t
+   t.1...t.1t1tt.1
+   151t.t.1..t1tt...
+  1t.ttt.tt.1t1t..t1
+ t.tt.11tt1....t.tt.t
+t.tt.%4..WWW......1t.tt
+tt1.....WWwWW..t.tt.t1.
+.1t.tt...WWW...tt1.t.t4
+ t.t.t.1..W.4..t1t.1.tt
+t.tt.t1t..1..1t.t1.t.
+...1t11t1t.1%.ttt...
+ t1.1tt.t1t..G..1..
+  t11..1tt    .1.1t
+    .1..1       .1.
+ENDMAP
+
+NAME:   wad_woods_03
+: wad_woods_setup(_G, "rock", 3, false, 0, 0, 0)
+FTILE:  '%0+14 = floor_dirt
+MAP
+          .t t.tt'xx
+   .''t...tt'''''t.1x
+@'''.t''''''ttttx11x1tx
+  ttt..t.tttxttxx11xx1x
+  ...1t.tttxxxxxxx+xxx1
+  .t..tttxtx%'4x''''x1x
+  t.tt.tttxx%'0+'''0xx1
+  .tt.tttttxxxxxxxxxxxx
+   ....tt..tttxxtxxxxxx
+    ..tttt..1xtttxxxxxx
+    ...t1.ttt.1ttxxxxxx
+      ..t.tt1txxtxxxxxx
+         ttxxxxxxxxxxxx
+            t1txxtttxtx
+ENDMAP
+
+NAME:   wad_woods_04
+ORIENT: float
+: wad_woods_setup(_G, "rock", 2, true, 21, 2, 36)
+FTILE:  '+*0 = floor_dirt
+MAP
+            .tttttt.ttxtx
+          t.t.tttxtt.tttx
+      tt1t1.tt.1ttxxx.xxx
+     tt.tt..tttttttx.x.xx
+    tt1t..tt11txxtt.ttx..
+    tttt.tttttxxxx.xxxxxx
+   tt1t0tttx.xxxx....xxxx
+   ttt.1tt1.t..t.txxx.x.x
+  ..tttt1t.ttxx.xxxxxx.xx
+ .t1..tt....ttxttxt..xx.x
+.ttttt..tttt.ttt%xxx1..x.
+tt1t.t.txx..xx..xxxxxxxxx
+tt...tt.ttxx.t.xxtxxxxxxx
+x.tt.O.xxxxx..xxxxx''*xxx
+.xc1xxxxxxxxxxx101x'0'xxx
+xxcc1.........4xxx+'''xxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_woods_06
+TAGS:   extra
+: wad_woods_setup(_G, "small", 2, true, 21, 2, 36)
+MAP
+    tt.Ot1
+   tt1tttttt1
+  tttt.tttttt
+tt1tt.1.tttt
+tttt0...2tt1
+ tt...G0.1ttt
+ ttt02..1ttt
+ttttt..1ttttt
+t1tt1ttt1Ott
+   tttttt.t
+     tt1t.t
+ENDMAP
+
+NAME:   wad_woods_river_01
+TAGS:   extra
+DEPTH:  D:2-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "med", 1, false, 0, 0, 0)
+MAP
+      tttt       ttttt
+   t.tt1t.tt.   tt.t..tt
+ t...t.t.t.t.t.tt11t.tt.t
+ .1tt.t.t.ttt.t.t..t.t.t...
+ .t.tttttt.t.tt1....t.t.t1..
+ .t.t1tttt.1ttt.t.ttt.t.tt.t.
+.ttt.t.tt1t.1t.tt1t0t.tt.t.ttt
+tO.t5tt.tt.tt.t.ttt%t.t.t1tttt
+ttt1t......0..1tWWWWWWWWWWWttt
+ tt...tWWWWWWWWWWwwwwwwwwwWWWW
+WWWWWWWWwwwwwwwwwwWWWWWWwWwwww
+wWwwwwwwwwwWWWWWWWWW1.tWWWWWWW
+WWWWWWWWWWWWWt....1.......ttt
+tttt..tt.t..%.t.t.1ttt1..t.tt
+ttt5tt.t.tt1t1t.t%.tt.t5tttttt
+ tt1t.tttttt.t.tttt.t.t1t1.ttt
+  ttt.t1..t.t.t.1tt.1.tt1.tt
+  tt1.tt1t.ttttt.t.t.t.t.ttt
+    .t1tttttttttttt.ttt.t.tt
+    .tttt   tt ttttt.ttttt
+   .ttt           ttt.tt
+ENDMAP
+
+NAME:   wad_woods_river_02
+TAGS:   extra
+: wad_woods_setup(_G, "small", 1, true, 32, 2, 24)
+MAP
+      tttttttttt1tt
+   tt1ttt..WWWW..0tt
+ttt1ttt0.WWWwwWWW..tt
+t11t.WWtWWWwwwwwWWWtt
+.tt.WWWWWWwww|twwwWWt
+WWWWWWwwwwwww>OwwwWWt
+wwwwwwwwwwwwwwwwwwWWt
+WWWWWWwwwwwwwwwwWWW1t
+..ttWWWwwwwwwwWWW..tt
+tt.t.tWWWwWWWWW.t.ttt
+ttt1ttt.WWWt.ttt0t1t
+  tttt1t0.ttttttt1tt
+    tttttttttttttt
+ENDMAP
+
+NAME:   wad_woods_river_03
+TAGS:   luniq_lairdec_liquid
+: wad_woods_setup(_G, "decor", 1, false, 32, 3, 24)
+MAP
+   1t.tWwW.t.t1t
+   t.ttWwWt.tt.t
+   t.ttWwW.t1.tt
+  t11.WWwWWt.t1t
+tt1t.WWwwWW.ttt
+t1ttWWwwWW.tttt
+t.WWwwwWWtOttt
+WWWwwWWtt.t.t
+wwwWWtt.tt.t.
+WWWWt.t.t1t
+.tt.t.t1tt
+ENDMAP
+
+NAME:   wad_woods_river_04
+TAGS:   no_vmirror no_rotate luniq_lairdec_liquid luniq_lairdec_plantage
+DEPTH:  D, Lair
+TILE:   X = wall_brick_dark_leak
+TILE:   x = wall_brick_dark
+SUBST:  X = x
+: wad_woods_setup(_G, "decor", 1, false, 0, 0, 0)
+MAP
+   ttttxxxtttt
+ tt1txxxxxxxtt
+ttt1xxxxXxxxx1tt
+tttt1xxxWxxx1tt
+ttt.t.1tWt.1t1tt
+tt.t1tt1WW1tt.tt
+.1ttt1tWWtt1tt.t
+ttt11tttWWttt1t1
+tt.ttt1WWWtt*ttt
+t.ttttWWWttttt1t
+ tttt.WwWtttttt
+   tttWwW1tttt
+   tttWwW..ttt
+    ttWwWt..t
+ENDMAP
+
+NAME:   wad_woods_road_01
+: wad_woods_setup(_G, "decor", 2, true, 32, 3, 24)
+FTILE:  @' = floor_dirt
+MAP
+    t1t.t1  tt.1tt   .@
+  .1tt1..   tOtt.1.tt.'
+ tt..2ttt.11.tttt...%'.
+ t2t.ttt.ttt.tt2t.t.'.
+1t.tt0..tt1.tt.t.tt'.1
+t.tt.%12.1tt.1ttt''t1tt
+.........G.....1'...1..
+@'''''''''''''''''''''@
+.1...1...T3............
+t.t.tt.t.tt.tG..t.t.ttt
+tt.ttt1...ttt..ttt.1.tt
+ .tt.t.ttt.tt1t1t1.t.t
+ .t.tt.ttt..%.2ttOttt
+ t.11tt.t1t..G0..t.t
+  t.tt2.2 1t.t.tt1t
+  t2.t      ..tttt
+ENDMAP
+
+NAME:   wad_woods_road_02
+TAGS:   extra
+: wad_woods_setup(_G, "small", 2, false, 32, 0, 0)
+FTILE:  @' = floor_dirt
+MAP
+      ttt      t
+   ttttt1t  111ttt
+ t.tttt1ttttt1t1t.t
+t1t.tt1ttttttt1ttt.t
+t....t.'''''0t....t.
+@'''''''.G%''''''''@
+t....t0'''''.t....t.
+ttt..ttt1tt11tt.t.tt
+tt.tt.t1tt1tt1ttt.t
+tt1tt1ttt303tttt.t
+ ttt1ttt3.U.3t1.tt
+   tttt1t3.3ttt1tt
+     tt ttttt1.tt
+ENDMAP
+
+NAME:   wad_woods_road_03
+: wad_woods_setup(_G, "decor", 2, false, 0, 0, 0)
+FTILE:  @' = floor_dirt
+MAP
+       tt..@.tt
+     1tt..'..t.t
+   ttt1t..'.t.ttt
+ tt1ttt..'.t0t.t
+tt1tt...'.tttt
+ttt..'''.t1t
+....'..11ttt
+.'''..ttt1t
+@....t.1t
+...1tttt
+tttt1tt
+ENDMAP
+
+NAME:   wad_woods_road_04
+KMONS:  P = oklob plant
+: wad_woods_setup(_G, "small", 1, false, 0, 0, 0)
+FTILE:  @'+T = floor_dirt
+MAP
+  ttt..@..ttttttttt
+ t11...'.ttt1ttP11t
+ tttt1..'.t.tt1t*1tt
+tttttttt.'..ttttt1t
+  tt1tttt.'..1tt1ttt
+   tt1t...'tttt..t..
+  t1.t.t.''''''''...
+  ttttt..'.t1.tt.''@
+   ttt1t.'tttttttttt
+   tt1ttt.'.ttttttt
+  tt1tttttt'..ttttt
+  ttt1tt1..'.ttttt
+   ttt1tt..@ttt
+ENDMAP
+
+NAME:   wad_woods_road_05
+KMONS:  * = 9
+KITEM:  * = *
+: wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
+FTILE:  @'*+T = floor_dirt
+MAP
+       .ttttt1.@.tt
+     .1ttttt..'t1tt
+    .tt..1t.''tttttt
+   tt1tttt.'.t.tW1tt
+ttt.tt....'.t1t1WWtt
+tt.t.tt..'..tttttWWW
+ tttt...'..t1tttxtWw
+ t.1t.''tt1t1ttxxxtW
+ ttt.'.t1tttt1x+*xxt
+ttt.'.tttt   t1xxxtt
+tt.@t1ttt    tttxttt
+ENDMAP
+
+NAME:   wad_woods_road_06
+: wad_woods_setup(_G, "decor", 1, false, 0, 0, 0)
+FTILE:  @'*+T = floor_dirt
+MAP
+   tt.'@@..tt1ttttt..@@@..ttt
+  tttt.'..ttttt1t11..'...1t11t
+ tt1tt..'...tt1t1t...'..tt1tx1t
+ tttt1t..'....tttt...'..tttxxx1
+ ttttttt..''...ttt..'...ttttx1t
+  tttttt1t..'...t..'..1.tttt%tt
+   tttt.t1tt.''.%.'....t1tt1ttt
+     t1ttttttt.'''...tt111t1tt
+      ttttttttt1....tt1ttt1tt
+       tttttttttttt1tttttt
+           tttttttttttt
+ENDMAP
+
+NAME:   wad_woods_minihive
+TAGS:   uniq_beehive
+DEPTH:  D:8-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
+MONS:   killer bee, queen bee
+KMONS:  8 = meliai
+KITEM:  8 = %
+KFEAT:  a = x
+: if you.in_branch("Lair") and you.depth() < 4
+:  or you.in_branch("D") and you.depth() < 12 then
+SUBST:  8 = 6
+: end
+KMASK:  W = no_monster_gen
+KPROP:  678|abm" = no_tele_into
+COLOUR: a = yellow
+TILE:   a = wall_wax
+MAP
+        ttttttt..t    tt.
+      .ttt.t.tt...t  ttt..
+    ttt.tt..tt.1t.t.1t...t...
+ t.t1ttt....1WW..t....t1...t...
+t..t..t.1..tWWW.t...1..t.tt..tt.
+ttt.t1...t...tWW.1t.t...tt...ttt
+tttt....aaamaaa1Wt.t...t..tt1ttt
+t..1.t1aa6"a66aaWWt1.1t.ttttttt
+ tt.ttaaa"aba"aaaWW.t..ttttt1ttt
+  tt.aa86a7a"a"6aaWtt1t...tt.tt
+  t.aaaaaab|baaaaaa.t.......ttt
+ t1.1aa66a"a"a"8aa.t...t.t.ttttt
+tt.1..aaa"aba6aaa.1..t..tttt%ttt
+t.t....aa"8a6"aaWW.t.tt..t..t
+tt.t.1.1aaaaaaaWWwW1.t..t.tt
+ tt.t1.1....t1WWwW.....1ttt
+  1..t.tt..tt.tWWt1.1tt...
+    t.tttxtttt1ttttttxx.
+      .txxxt   ttxxtttt.
+ENDMAP
+
+NAME:   wad_woods_structure_01
+TAGS:   no_monster_gen
+DEPTH:  D:10-, Lair
+ORIENT: float
+: wad_woods_setup(_G, "large", 5, false, 0, 0, 0)
+FTILE:  "2T = floor_grass_dark
+FTILE:  @'0+ = floor_dirt
+MAP
+   ttxcxxxxxxxxxxxxxxxxxxxxxxxcxxxxxct
+ ttttxc''''+''0'xxxxxx'''+''0'cx0'0'ctt
+ t.ttxc''0'xxxx'x''00x'''x''''cx''''ctt
+ tt.txc'0''x''x'x''''x''0x''''cx''''ct1
+tt.t.xc''''x''+'+'''0x'''x''''cc+cc+ct1tt
+t.t.txccc++ccccccxcxcxcxcc++cccx'x2'2tt1tt
+tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
+  ttt..tt''''''tttcttt''''''ttxxxx2'2tt1tt
+ ttt.tt..ttttt''ttctt''t...t.ttt.2"'"2.tt
+ t.tt.t.t.t..tt''tct''ttt..tttx22""'""22tt
+ tt.tt.ttt...t.t''c''t..t.t..tx2""'''""2tt
+ ttt.ttt..t.t.t..'''tt.t.ttt..x"2''T''2"tt
+  ttt...ttt.tt...0'0t.tt...tt.x2""'''""2t
+  ttt.t.t..t.t...'''ttt..tt..tx22""'""22tt
+tcccccccccccccccc+c+ccccccccccccccc+ccccct
+ tttttt.111ttt.1x'x'xtttttttttttttt1ttttt
+ ttt%1.tttt1..tt.'''.ttttttttttttt1.1tt
+  ttt.tt..1txxxc.'''.cxxxttt1tttttt.tttt
+ tt.tttt%.ttt1tt.'''.tttttt.t1ttttt.%*tt
+  tt.1ttt.tt1txx.'''.xxtt..ttt%tttttt..t
+  ttt.%.tt.tttcG.'''.Gct1tttttt.tttt..ttt
+ ttt.t1t1t.tttxx.'''.xx1ttttttt.ttttt.ttt
+ tt.tttt*.tt1ttt.'''.11ttttttt.tt1t.1tttt
+ ttt1tttttttt1xx.'''.xxtttttt.t.%t1tt
+ ttt..ttttttttcG.'''.Gcttttttt%.t.
+  tttt1.%tt   xx..'..xxtttt
+   ttttttt     1t.@.tttt
+ENDMAP

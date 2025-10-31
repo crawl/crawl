@@ -106,7 +106,7 @@ NAME:   parchment_shop
 TAGS:   allow_dup extra parchment_shop transparent unrand
 KFEAT:  O = book shop
 MAP
-O
+O@
 ENDMAP
 
 NAME:   shop_fountains
@@ -264,8 +264,8 @@ ENDMAP
 # shops.
 NAME:  kennysheep_mini
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+DEPTH: D:4-, !D:$, Depths,!Depths:$
+: ks_random_setup(_G, false)
 : ks_shop_vault(_G, '{}CC')
 MAP
 cDc
@@ -275,8 +275,8 @@ ENDMAP
 
 NAME:  kennysheep_mini_moat
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+DEPTH: D:4-, !D:$, Depths,!Depths:$
+: ks_random_setup(_G, false)
 SUBST: . : @
 : ks_shop_vault(_G, '{}CC')
 MAP
@@ -289,8 +289,8 @@ ENDMAP
 
 NAME:  kennysheep_little_box
 TAGS:  shop temple_overflow_generic_1
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
+DEPTH: D:4-, !D:$, Depths,!Depths:$
+: ks_random_setup(_G, false)
 : ks_shop_vault(_G, '{}C....')
 MAP
 cccDccc
@@ -1149,7 +1149,7 @@ ENDMAP
 #####################################################
 # Sells only evil items.
 NAME:   nicolae_evil_shop
-TAGS:   transparent
+TAGS:   transparent extra
 WEIGHT: 2
 DEPTH:  D:6-, Depths
 SUBST:  G : YlG
@@ -1183,7 +1183,7 @@ ENDMAP
 # Items related to the good gods thematically; healing, silver, holy wrath,
 # etc.
 NAME:   nicolae_good_shop
-TAGS:   no_monster_gen no_trap_gen transparent
+TAGS:   no_monster_gen no_trap_gen transparent extra
 DEPTH:  D:6-, Depths
 WEIGHT: 2
 NSUBST: s = 1:s / *:_
@@ -1207,9 +1207,9 @@ ENDMAP
 #####################################################
 # All bardings, all the time.
 NAME: nicolae_barding_shop
+TAGS: transparent
 DEPTH: D:8-, Depths, Snake, !Snake:$
 WEIGHT: 1
-TAGS: transparent
 : if you.in_branch("Snake") then
 KMONS: s = naga w:50 / naga warrior
 : else
@@ -1346,7 +1346,8 @@ ENDMAP
 # Get away from it all.
 NAME:    nicolae_island_escapes
 DEPTH:   D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
-TAGS:    no_item_gen no_monster_gen water_ok no_tide no_pool_fixup no_descent
+TAGS:    no_item_gen no_monster_gen water_ok no_tide
+TAGS:    no_pool_fixup no_descent extra
 WEIGHT:  5
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
            scroll of blinking | scroll of teleportation w:15 | \
@@ -1399,9 +1400,9 @@ MAP
 ENDMAP
 
 NAME:   doesnt_shop_hydraphobe
+TAGS:   transparent no_pool_fixup extra
 DEPTH:  D:5-11
 WEIGHT: 5
-TAGS:   transparent no_pool_fixup
 KPROP:  -1wP = no_tele_into
 KMASK:  -w = no_monster_gen
 KMASK:  -1wP = no_item_gen
@@ -1434,25 +1435,18 @@ NAME:    minmay_shop_damaged
 TAGS:    transparent extra
 # not interesting after Lair
 DEPTH:   D:4-10
-KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
-             damaged ego:none demon whip | \
-             damaged ego:none eveningstar | \
-             damaged ego:none quick blade | \
-             damaged ego:none demon blade | \
-             damaged ego:none double sword | \
-             damaged ego:none triple sword | \
-             damaged ego:none executioner's axe | \
-             damaged ego:none partisan | \
-             damaged ego:none demon trident | \
-             damaged ego:none bardiche | \
-             damaged ego:none lajatang | \
-             damaged ego:none hand cannon | \
-             damaged ego:none triple crossbow | \
-             damaged ego:none longbow | \
-             damaged ego:none crystal plate armour | \
-             damaged ego:none barding | \
-             damaged ego:none pearl dragon scales | \
-             damaged ego:none golden dragon scales
+: local d = "damaged ego:none"
+: kfeat("S = general shop type:Lightly-Used suffix:Armoury ; " ..
+:           "demon whip " .. d .. " | eveningstar " .. d .. " | " ..
+:           "quick blade " .. d .. " | demon blade " .. d .. " | " ..
+:           "double sword " .. d .. " | eveningstar " .. d .. " | " ..
+:           "executioner's axe " .. d .. " | partisan " .. d .. " | " ..
+:           "demon trident " .. d .. " | bardiche " .. d .. " | " ..
+:           "lajatang " .. d .. " | hand cannon " .. d .. " | " ..
+:           "triple crossbow " .. d .. " | longbow " .. d .. " | " ..
+:           "crystal plate armour " .. d .. " | barding " .. d .. " | " ..
+:           "pearl dragon scales " .. d .. " | " ..
+:           "golden dragon scales " .. d)
 MAP
 S
 ENDMAP
@@ -1568,6 +1562,7 @@ ENDMAP
 
 # top tier equipment for a single gold... if you're on zot:5
 NAME:   hellmonk_bargain_basement
+TAGS:   extra
 DEPTH:  Zot:5
 WEIGHT: 3
 KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
@@ -1592,7 +1587,7 @@ ENDMAP
 # There is a 0.2% chance of rolling greed = 0, which makes everything in the
 # store cost one gold. Hopefully it's not just +0 robes and scrolls of noise.
 NAME:   nicolae_shop_clearance
-TAGS:   transparent
+TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Orc, Elf, Snake, Shoals, Vaults, Zot
 {{
 local greed = crawl.roll_dice(9, 2) - 9
@@ -1613,7 +1608,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   nicolae_shop_firing_range
-TAGS:   transparent no_monster_gen no_item_gen no_tide
+TAGS:   transparent no_monster_gen no_item_gen no_tide extra
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
@@ -1641,7 +1636,7 @@ ENDMAP
 
 # Gadget shops are back! Well, one gadget shop is back.
 NAME:    nicolae_shop_gadgets
-TAGS:    transparent
+TAGS:    transparent extra
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Gadget suffix:Gallery count:6 use_all ; \
          any wand | any wand | any wand | any wand | any misc | orb
@@ -1657,7 +1652,7 @@ ENDMAP
 # Sells wands with 25% more charges than the usual item-generation maximum,
 # with a 50% markup.
 NAME:    nicolae_shop_overcharged_wands
-TAGS:    transparent
+TAGS:    transparent extra
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
          wand of digging charges:11 | any blast wand charges:18 | \
@@ -1676,7 +1671,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_shop_self_help
-TAGS:  transparent no_pool_fixup
+TAGS:  transparent no_pool_fixup extra
 DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT: S = book shop type:Self-Improvement suffix:Boutique count:4 ; \
            any manual
@@ -1692,7 +1687,7 @@ www.www
 ENDMAP
 
 NAME:   nicolae_shop_sticking_my_neck_out
-TAGS:   transparent
+TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
 KFEAT:  S = general shop type:Neck suffix:Hole count:7 use_all ; \
         cloak | cloak | scarf | scarf | any amulet | any amulet | any amulet
@@ -1707,7 +1702,7 @@ cc     cc
 ENDMAP
 
 NAME:   hellmonk_scale_shop
-TAGS:   transparent
+TAGS:   transparent extra
 WEIGHT: 3
 DEPTH:  D:8-, Snake, Depths
 KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
@@ -1730,7 +1725,7 @@ xxllxx
 ENDMAP
 
 NAME:   monkooky_shop_mail_order
-TAGS:   transparent
+TAGS:   transparent extra
 WEIGHT: 3
 DEPTH:  D:6-, Vaults, Depths
 {{
@@ -1754,7 +1749,7 @@ S
 ENDMAP
 
 NAME:   monkooky_shop_alliterative
-TAGS:   transparent
+TAGS:   transparent extra
 WEIGHT: 3
 DEPTH:  D:8-, Orc, Elf, Depths
 {{
@@ -1793,7 +1788,7 @@ ENDMAP
 # Q: Why is the shop across from your fire supplies store burned down?
 # A: Don't worry about it. Are you going to buy something or not?
 NAME:     nicolae_shop_fire_sale
-TAGS:     extra transparent no_item_gen
+TAGS:     transparent no_item_gen extra
 DEPTH:    D:4-, Depths
 KITEM:    O = ring of protection from cold / \
           damaged dagger ego:freezing / wand of iceblast charges:1 w:5
@@ -1900,7 +1895,7 @@ v.....v.
 ENDMAP
 
 NAME:   nicolae_shop_dragon_depot
-TAGS:   transparent extra no_item_gen no_tide
+TAGS:   transparent no_item_gen no_tide extra
 DEPTH:  D:4-, Depths, Elf, Snake, Shoals
 WEIGHT: 5
 {{
@@ -1963,7 +1958,7 @@ ENDMAP
 # A reference to the special Oracle level from NetHack.
 # Like in NetHack, players can purchase readings from the Oracle. In a sense.
 NAME:   nicolae_nh_oracle_at_delphi
-TAGS:   transparent no_rotate
+TAGS:   transparent no_rotate extra
 DEPTH:  D, Depths, Elf
 WEIGHT: 5
 # In Nethack, sometimes statues can contain spellbooks if you break them open.
@@ -2031,7 +2026,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_shop_vocational
-TAGS:  transparent
+TAGS:  transparent extra
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT: S = book shop type:Vocational suffix:Training count:2 use_all ; \
            manual of invocations | manual of evocations
@@ -2162,7 +2157,7 @@ ENDMAP
 
 # Wiglaf says his gran stitched his ever-iconic hat, so.
 NAME:   mainiacjoe_granny_wiglaf_hat_shop
-TAGS:   transparent no_monster_gen no_item_gen no_trap_gen
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen extra
 DEPTH:  Vaults, Crypt, Depths, Snake:$
 WEIGHT: 5
 KFEAT:  O = altar_okawaru
@@ -2225,7 +2220,7 @@ ENDMAP
 # very nature, so I wouldn't have to pick out specific different item types.
 # 1/3 randbooks, 1/3 consumables, 1/4 gear, 1/12 magic manuals
 NAME:  nicolae_shop_magical_conduits
-TAGS:  transparent
+TAGS:  transparent extra
 DEPTH: D:6-, Depths, Elf, Snake, Shoals, Zot, !Zot:$
 KFEAT: G = metal_statue
 # The w:10 in the shop def is here for bug workaround purposes.

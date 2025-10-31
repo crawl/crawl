@@ -189,6 +189,8 @@ Creb
 
 Dorog
 
+Garatoth
+
 Garbold
 
 Gorbash
@@ -212,6 +214,8 @@ Jorge
 Koronagh
 
 Learuk
+
+Lorvak
 
 Margrim
 
@@ -238,6 +242,8 @@ Rocco
 Spirok
 
 Syrus
+
+Thalvi
 
 Thorok
 

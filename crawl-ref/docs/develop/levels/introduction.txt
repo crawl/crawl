@@ -268,7 +268,8 @@ harder than the old ones, but handing out more loot. Be strong, don't give in
 to that temptation. Later on in the game (post Lair branches), sheer volume of
 some item categories (e.g. any weapon, any armour, gold) can provide some of
 the spectacle of a large reward pile without actually powering up the player
-too much, though there should also be some amount of less specific items.
+too much, though some amount of less specific items should still be capable
+of providing random genuine loot.
 
 Have a theme (or even two!)
 ---------------------------
@@ -294,16 +295,17 @@ should be done very sparingly depending on the branch.
   * Example branches and portals with many different monster themes:
     Dungeon, Depths, Abyss, Zot, Gauntlet, Necropolis, Wizlabs.
   * Example branches and portals with very narrow monster themes:
-    Snake Pit, Spider Nest, Pits of Slime, Elven Halls, Ossuary, Ice Cave.
+    Snake Pit, Spider Nest, Pits of Slime, Elven Halls, Ossuaries, Ice Caves.
 
 The former is less likely to get nearly as much suspicion than the latter; if
 every branch contains every monster, then no branch actually stands out on its
 own original themes and merits. Some connective themes to the monsters
 already available in the branch may help (e.g. other magical constructs in Elf),
 but it is better to try and avoid these questions in the first place. If you
-want for more ideas on monster fronts, newer monsters for a branch tend to not
-be as thoroughly explored as much later monsters - check out the changelog to
-see potential better candidates.
+want for more ideas on monster fronts (beyond comprehensively checking the
+branch population charts in mon-pick-data.h), newer monsters for a branch tend
+to far less thoroughly explored than much older monsters - check out the more
+recent versions in the changelog to see potential better candidates.
 
 Testing your maps.
 ------------------

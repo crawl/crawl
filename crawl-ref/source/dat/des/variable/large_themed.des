@@ -846,11 +846,11 @@ xxv.vvvvvvvvv.V.vv+vv.V.vvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxv.........+.1.v3.3v.1.+.........vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvv...v.J.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvv+vv...vv+vvvvgvvvvvvvxxxxxxxxxxxxxxxxxx
-xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
-xxv444%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
-xxv444%g%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
-xxv444%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
-xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
+xxvvM..M..Mvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
+xxv444%%%M.Mvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
+xxv444%g%.M.+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv444%%%M.Mvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
+xxvvM..M..Mv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1450,6 +1450,7 @@ KMONS:  8U = rakshasa band / glowing shapeshifter
 KMONS:  9 = ettin / flayed ghost / phantasmal warrior w:2
 KITEM:  G = smoky gem
 KFEAT:  U = enter_depths
+TILE:   c = stone_wall_depths_entry
 FTILE:  GU = floor_depthstone
 : end
 KMONS:  p = plant
@@ -2792,6 +2793,7 @@ KFEAT:   > = enter_zot
 KFEAT:   V = zot_statue
 SUBST:   %*| = $
 NSUBST:  23 = 4 = 11d, $ = 1:R / *:$
+FTILE:   ."~01234567Rs>V$%d*|-+abcdefABCDEFn = floor_depthstone
 TILE:    v = dngn_metal_wall_magenta
 :   end
 : else   -- Zot
@@ -2808,6 +2810,7 @@ KMONS:   L = moth of wrath
 NSUBST:  V> = 1:} / 1 = ):6 >:1 / 1 = ]:6 >:1
 SUBST:   " = 1
 TILE:    v = dngn_metal_wall_red
+FTILE:   ."~01234567Rs>V%$d*|-+abcdefABCDEFTUVn = floor_zot_diamonds
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance pre_id / \
@@ -2840,26 +2843,26 @@ MAP
     xxvlv0.d.."vvv%$eeevvvvvvvvveee$%vvv.....0vlvxx
     xvvln~.......vvv7eeevvvvvvveee7vvv........nlvvx
    xxvlvv~...Ed....vvvve-.....-evvvv.....C....vvlvxx
- ..xvvln~....EE..d....vvv.....vvv.......CC.....nlvvx..
-@.lvvlvv~.Dd........F...v++v++v...A.........B..vvlvvl.@
-..Lvvln0..DD.....vv...V.........V...vv.v...BB..0nlvvL..
-."lvvvv0......vvvvvvv....A...F....vvvvvvv......0vvvvl".
-.lnvv~...v.vvvv....vvvvv0..>..0vvvvv....vvvv.....~vvnl.
-.lvlv~..vvvv.v..BB...vlv00...00vlv~".DD..v.vvvv..~vlvl.
-.lvlv+v+v.......B....nlvvv+++vvvln~..dD.......v+v+vlvl.
-.lvlv~....A..........vvlv$$$$$vlvv.........dA....~vlvl.
-.lnvv~CC.......vv22...nlvv$*$vvln~..33vv~~.....EE.vvnl.
-..lvv3.C....vvnvvnv1..vvlv*6*vlvv~.1vnvvnvv~~..Ed2vvl..
-..lvv13".vvnvlllllv1...nlvv|vvln...1vlllllvnvv~"21vvl..
- .lvvLvvnvllllvvvlvv...vvlnnnlvv.d.vvlvvvllllvnvvLvvl.
- .lvvvvllllvvvvvvvln....vvlllvv....nlvvvvvvvllllvvvvl.
-..lvvllvvvvvvvvvvvlvv....vvvvv....vvlvvvvvvvvvvvllvvl..
-..lvvvvllllvvvvvvvvlv.A.........F.vlvvvvvvvvllllvvvvl..
-@..lvlvnvvvllllvvvvln......1......nlvvvvllllvvvnvlvl..@
- .........vnvvvllllvv----vvvvv----vvllllvvvnv.........
-    ..........vnvvvv......vvv......vvvvnv..........
-          ............G.........d............
-              .....  ...  ...  ...  ....
+ ``xvvln~....EE..d....vvv.....vvv.......CC.....nlvvx``
+@`lvvlvv~.Dd........F...v++v++v...A.........B..vvlvvl`@
+``Lvvln0..DD.....vv...V.........V...vv.v...BB..0nlvvL``
+`"lvvvv0......vvvvvvv....A...F....vvvvvvv......0vvvvl"`
+`lnvv~...v.vvvv....vvvvv0..>..0vvvvv....vvvv.....~vvnl`
+`lvlv~..vvvv.v..BB...vlv00...00vlv~".DD..v.vvvv..~vlvl`
+`lvlv+v+v.......B....nlvvv+++vvvln~..dD.......v+v+vlvl`
+`lvlv~....A..........vvlv$$$$$vlvv.........dA....~vlvl`
+`lnvv~CC.......vv22...nlvv$*$vvln~..33vv~~.....EE.vvnl`
+``lvv3.C....vvnvvnv1..vvlv*6*vlvv~.1vnvvnvv~~..Ed2vvl``
+``lvv13".vvnvlllllv1...nlvv|vvln...1vlllllvnvv~"21vvl``
+ `lvvLvvnvllllvvvlvv...vvlnnnlvv.d.vvlvvvllllvnvvLvvl`
+ `lvvvvllllvvvvvvvln....vvlllvv....nlvvvvvvvllllvvvvl`
+``lvvllvvvvvvvvvvvlvv....vvvvv....vvlvvvvvvvvvvvllvvl``
+``lvvvvllllvvvvvvvvlv.A.........F.vlvvvvvvvvllllvvvvl``
+@``lvlvnvvvllllvvvvln......1......nlvvvvllllvvvnvlvl``@
+ `````````vnvvvllllvv----vvvvv----vvllllvvvnv`````````
+    ``````````vnvvvv``````vvv``````vvvvnv``````````
+          ````````````G`````````d````````````
+              `````  ```  ```  ```  `````
 ENDMAP
 
 # While most other movie material isn't much available, horror and
@@ -2952,6 +2955,8 @@ TILE:    G = dngn_statue_depths_tomes / dngn_statue_depths_zot_angel
 : elseif you.in_branch("Zot") then
 TILE:    F = dngn_statue_zot_serpent / dngn_statue_depths_zot_tentacles
 TILE:    G = dngn_statue_zot_oldest_guardian / dngn_statue_depths_zot_angel
+FTILE:   "`defghijk$%|123456781EF+M> = floor_zot_diamonds
+FTILE:   .'V5GabAB = floor_mystic_chasm
 : else
 TILE:    F = dngn_statue_maw / dngn_statue_tentacles
 TILE:    G = dngn_statue_wraith / dngn_statue_princess
@@ -3222,7 +3227,11 @@ NSUBST:   . = 1:1 / 2:2 / 2:3 / 1:112.. / 1:223.
 NSUBST:   l = 2:L / 1:Ll / *:l, 4 = 1:4 / *:*, * = 1:Y / 1:Z / 1:d / *:$
 :   end
 TILE:     y = wall_pebble_darkgray
+:   if you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
 TILE:     z = dngn_stone_wall_darkgray
+:   else
+TILE:     z = stone_wall_depths_entry
+:   end
 : elseif you.in_branch("Lair") then
 MONS:     steam dragon w:6 / wyvern / basilisk w:15 / fire bat band w:2
 MONS:     lindwurm, boulder beetle, fire crab
@@ -3273,6 +3282,7 @@ KFEAT:    Z = enter_zot
 KFEAT:    ! = zot_statue
 NSUBST:   . = 2:1 / 3:2 / 2:3 / 1:112.. / 1:4
 NSUBST:   l = 1:L / 1 = Ll / *:l, * = 1:Y / 1:Z / 1:d / 2:! / *:$
+FTILE:    .1234d$GYZ! = floor_depthstone
 :   end
 : else -- Zot
 MONS:     red draconian, red draconian monk / golden dragon
@@ -3400,8 +3410,13 @@ NSUBST:  % = 2:d / 2:e / 1:fg / * = def.
 :   end
 FTILE:   .12345defghijkrRS)- = floor_vines / floor_pebble_darkgray
 FTILE:   P = floor_pebble_brown
+:   if you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
 TILE:    x = wall_pebble_lightblue
 TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
+:   else
+TILE:    x = wall_pebble_green
+TILE:    c = stone_wall_depths_entry
+:   end
 : elseif you.in_branch("Shoals") then
 MONS:    merfolk aquamancer / frost giant w:2, merfolk avatar / satyr
 MONS:    formless jellyfish w:15 / sphinx marauder, skyshark
@@ -3427,7 +3442,7 @@ SHUFFLE: }])
 SUBST:   } = }:60 >, ] = ]:40 >
 NSUBST:  . = 2:3 / 2 = 5. / *:.
 NSUBST:  | = 3:h / 2:i / * = fgg, % = 2:d / 2:f / 2:g / 1:rR / * = e.
-FTILE:   .12345defghijkrRS}]) = floor_vines / floor_pebble_darkgray
+FTILE:   .12345defghijkrRS}])TUV = floor_vines / floor_pebble_darkgray
 :   else
 MONS:    draconian annihilator / draconian shifter
 MONS:    purple draconian / yellow draconian / \
@@ -3444,9 +3459,10 @@ KITEM:   S = midnight gem
 SUBST:   }] = %
 NSUBST:  . = 1:1 / 3 = 245. / *:.
 NSUBST:  | = 4 = hfg / 1:i / 1:hi / *:f, % = 2:d / 2 = fg / 1:R / * = ee.
-FTILE:   .12345defghijkrRZS) = floor_hall / floor_pebble_darkgray
+FTILE:   .12345defghijkrRZS)TUV = floor_zot_diamonds / floor_pebble_blue
+FTILE:   -'D = floor_depthstone
 :   end
-FTILE:   PDt = floor_pebble_brown
+FTILE:   ~PDt = floor_pebble_brown
 TILE:    x = wall_pebble_cyan
 TILE:    c = wall_marble
 : else -- Zot
@@ -3463,6 +3479,9 @@ NSUBST:  . = 2:1 / 2:2 / *:.
 :   if dgn.zot_orb_type() == "orb of entropy" then
 NSUBST:  1 = 1:Z / 1:1Z / 1:1. / 1:. / *:1
 :   end
+FTILE:   ~PDt = floor_pebble_darkgray
+FTILE:   .12345defghijkrRZS)TUV = floor_zot_diamonds / floor_pebble_magenta
+FTILE:   -'D = floor_pebble_lightgray
 : end
 : if you.in_branch("Zot") then
 KMONS:   P = withered plant

@@ -148,7 +148,7 @@ function tomb_1_stairs_setup(e)
   tomb_guardian_set(e, true)
   tomb_1_mummy_priest_set(e)
 
-  e.subst(". = 3:12 ^ .:230")
+  e.subst(". = 3 ^ .:230")
   tomb_trap_set(e)
 end
 

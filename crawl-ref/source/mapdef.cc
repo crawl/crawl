@@ -146,6 +146,7 @@ static bool _map_tag_is_selectable(const string &tag)
 {
     return !Map_Flag_Names.count(tag)
            && tag.find("luniq_") != 0
+           && tag.find("buniq_") != 0
            && tag.find("uniq_") != 0
            && tag.find("ruin_") != 0
            && tag.find("chance_") != 0;
@@ -2309,6 +2310,8 @@ bool map_def::map_already_used() const
                           get_uniq_map_tags().end())
            || has_any_tag(env.level_uniq_map_tags.begin(),
                           env.level_uniq_map_tags.end())
+           || has_any_tag(env.branch_uniq_map_tags.begin(),
+                          env.branch_uniq_map_tags.end())
            || has_any_tag(env.new_used_subvault_tags.begin(),
                           env.new_used_subvault_tags.end());
 }
@@ -3004,6 +3007,7 @@ void map_def::update_cached_tags()
     cache_minivault = has_tag("minivault");
     cache_overwritable = has_tag("overwritable");
     cache_extra = has_tag("extra");
+    cache_extra_post_overflow = has_tag("extra_post_overflow");
 }
 
 bool map_def::is_minivault() const
@@ -3031,7 +3035,13 @@ bool map_def::is_extra_vault() const
 {
 #ifdef DEBUG_TAG_PROFILING
     ASSERT(cache_extra == has_tag("extra"));
-#endif
+    ASSERT(cache_extra_post_overflow == has_tag("extra_post_overflow"));
+ #endif
+    if (cache_extra_post_overflow)
+    {
+        return level_id::current().branch != BRANCH_DUNGEON
+               || level_id::current().depth > 10;
+    }
     return cache_extra;
 }
 
@@ -3475,8 +3485,11 @@ static void _register_subvault(const string &name, const string &spaced_tags)
         env.new_used_subvault_names.insert(name);
 
     for (const string &tag : parsed_tags)
-        if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_"))
+        if (starts_with(tag, "uniq_") || starts_with(tag, "luniq_")
+            || starts_with(tag, "buniq_"))
+        {
             env.new_used_subvault_tags.insert(tag);
+        }
 }
 
 static void _reset_subvault_stack(const int reg_stack)

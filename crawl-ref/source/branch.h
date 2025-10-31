@@ -16,6 +16,8 @@
 
 using std::vector;
 
+typedef set<string> string_set;
+
 enum class brflag
 {
     none                = 0,
@@ -70,6 +72,7 @@ struct Branch
     int mon_die_size;           // size of the dice to roll to determine mons/floor
 
     vector<branch_type> descent_parents; // descent parent branches
+    string_set uniq_map_tags;   // buniq_* maps used in this branch
 };
 
 enum class branch_iterator_type

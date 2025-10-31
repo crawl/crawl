@@ -31,8 +31,13 @@ end
 -- D/F opposite/adjacent vault entrances, that may or may not be there
 -- E/H placed in front of the alternate doors. become w tiles if there's no door there
 
-function ks_random_setup(e, norandomexits)
+function ks_random_setup(e, extra, norandomexits)
     e.tags("no_pool_fixup")
+    if extra then
+      e.tags("extra")
+      e.depth_weight("Depths", 5)
+      e.depth_weight("D", 10)
+    end
     -- 1/2 chance the adjacent door is there, followed by a 1/2 chance every
     -- side has a door.
     if norandomexits == nil then

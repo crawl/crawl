@@ -1178,6 +1178,7 @@ private:
     bool cache_minivault;
     bool cache_overwritable;
     bool cache_extra;
+    bool cache_extra_post_overflow;
 
 public:
     map_def();

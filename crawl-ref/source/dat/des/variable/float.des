@@ -1066,7 +1066,7 @@ ENDMAP
 
 NAME:    nicolae_BIG_FREAKIN_CUBE
 TAGS:    transparent decor
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Depths:1
 ORIENT:  float
 SHUFFLE: '`-
 : if you.depth() == 1 then
@@ -1112,7 +1112,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
          xcx         xcx
@@ -1152,7 +1152,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling_large
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
               xxc
@@ -1192,7 +1192,7 @@ ENDMAP
 
 NAME:    nicolae_cairo_tiling_large_dashed
 TAGS:    transparent decor luniq_nicocairo
-DEPTH:   D:4-, Depths
+DEPTH:   D:4-, Depths:1
 ORIENT:  float
 SHUFFLE: aq
 SUBST:   a = x, q = .
@@ -1236,7 +1236,7 @@ ENDMAP
 
 NAME:   nicolae_cairo_tiling_very_big
 TAGS:   transparent decor luniq_nicocairo
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 MAP
         cxxx+xxxc
@@ -1284,7 +1284,7 @@ ENDMAP
 
 NAME:   hellmonk_ruined_rings
 TAGS:   transparent ruin
-DEPTH:  D:6-, Lair, Depths
+DEPTH:  D:6-, Lair, Depths:1
 WEIGHT: 5
 ORIENT: float
 :if crawl.one_chance_in(4) and you.in_branch("D") then
@@ -1328,31 +1328,34 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_destroyed_diamonds
-TAGS:   transparent ruin
-DEPTH:  D:6-, Lair, Depths
+TAGS:   transparent
+DEPTH:  D:6-, Lair, Depths:1
 WEIGHT: 5
 ORIENT: float
-SUBST:  x : ccx
-:if crawl.coinflip() then
+# This used to use the ruin tag, but ruined tiles don't get the floor tiles.
+SUBST:  A : zz., B : zz., C : zz., D : zz., E : zz., F : zz., G : zz.
+SUBST:  H : zz., I : zz., J : zz., K : zz., L : zz., M : zz., N : zz.
+SUBST:  O : zz., P : zz., x = zz., z : xcc
+: if crawl.coinflip() then
 TILE:   c = stone_wall_shoals
-:else
+: else
 TILE:   c = wall_marble
-:end
-FTILE:  c. = floor_sand
+: end
+FTILE:  cx. = floor_sand
 MAP
    .       .       .       .
   .x..   ..x..   ..x..   ..x.
  .xxx.. ..xxx.. ..xxx.. ..xxx.
-.xxxxx...xxxxx...xxxxx...xxxxx..
- .xxx..x..xxx..x..xxx..x..xxx..x.
-  .x..xxx..x..xxx..x..xxx..x..xxx.
-   ..xxxxx...xxxxx...xxxxx...xxxxx..
+.xxAxx...xxBxx...xxCxx...xxDxx..
+ .xxA..x..xxB..x..xxC..x..xxD..x.
+  .x..Exx..x..Fxx..x..Gxx..x..Hxx.
+   ..xxExx...xxFxx...xxGxx...xxHxx..
      .xxx..x..xxx..x..xxx..x..xxx..x.
       .x..xxx..x..xxx..x..xxx..x..xxx.
-       ..xxxxx...xxxxx...xxxxx...xxxxx..
-         .xxx..x..xxx..x..xxx..x..xxx..x.
-          .x..xxx..x..xxx..x..xxx..x..xxx.
-           ..xxxxx...xxxxx...xxxxx...xxxxx.
+       ..xxIxx...xxJxx...xxKxx...xxLxx..
+         .xxI..x..xxJ..x..xxK..x..xxL..x.
+          .x..Mxx..x..Nxx..x..Oxx..x..Pxx.
+           ..xxMxx...xxNxx...xxOxx...xxPxx.
              .xxx.. ..xxx.. ..xxx.. ..xxx.
               .x..   ..x..   ..x..   ..x.
                .       .       .       .
@@ -1360,7 +1363,7 @@ ENDMAP
 
 NAME:   hellmonk_crumbling_castle
 TAGS:   transparent ruin
-DEPTH:  D:6-, Depths
+DEPTH:  D:6-, Depths:1
 WEIGHT: 5
 ORIENT: float
 MONS:   pile of debris
@@ -1406,7 +1409,7 @@ ENDMAP
 
 NAME:    nicolae_integral_box
 TAGS:    transparent extra decor luniq_snakedec_large
-DEPTH:   D, Depths, Snake
+DEPTH:   D, Depths:1, Snake
 ORIENT:  float
 SHUFFLE: Pp/Pp/Pp/Qq, Rr/Rr/Rr/Ss
 SUBST:   PR : c, pr : _, QS : G, qs : c, H : cccG, F : TTT., T = TTTTTTVVVU
@@ -1453,7 +1456,7 @@ ENDMAP
 
 NAME:   nicolae_kite_square_tiling_large
 TAGS:   transparent extra decor
-DEPTH:  D:4-, Depths
+DEPTH:  D:4-, Depths:1
 ORIENT: float
 SUBST:  + : +++.
 MAP
@@ -1500,7 +1503,7 @@ ENDMAP
 
 NAME:    nicolae_triple_integral
 TAGS:    transparent extra decor luniq_snakedec_large
-DEPTH:   D, Depths, Snake
+DEPTH:   D, Depths:1, Snake
 ORIENT:  float
 SHUFFLE: DE
 : if crawl.one_chance_in(3) and you.depth() > 1 then
@@ -1533,7 +1536,7 @@ ENDMAP
 
 NAME:    nicolae_moon_pools
 TAGS:    transparent no_pool_fixup
-DEPTH:   D:8-, Depths
+DEPTH:   D:8-, Depths:1
 ORIENT:  float
 KFEAT:   az`- = c
 SHUFFLE: `-, a`/z-
@@ -2866,6 +2869,7 @@ KITEM:  g = smoky gem
 KFEAT:  U = enter_depths
 SUBST:  | = %
 FTILE:  'V12345$%G = floor_depthstone
+TILE:   c = stone_wall_depths_entry
 TILE:   G = depths_column
 : else
 MONS:   laughing skull band, vampire, unseen horror
@@ -3243,6 +3247,64 @@ MAP
 ''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''
 '''''''''''''@@'''''''''''''
+ENDMAP
+
+##############################################################################
+# Megacathedral, for the bats on the brink of extinction. Or beyond. (due)
+
+NAME:    due_megacathedral
+TAGS:    no_monster_gen no_rotate no_vmirror no_hmirror
+ORIENT:  float
+DEPTH:   D:5-11, Orc
+KITEM:   ' = large rock q:1 no_pickup
+KFEAT:   _C = C
+KFEAT:   opq = m
+SHUFFLE: Dd / Ee / Ff / Hh / Ii / Jj / Kk / Ll / Mm / Nn, opq
+: if you.in_branch("D") then
+:   if you.depth() < 8 then
+KMONS:   0C = bat name:megabat n_rpl n_spe n_des n_noc tile:mons_megabat / \
+              fire bat w:2
+MONS:    phantom / spectral human / bes kemwar, wraith
+SUBST:   | = *
+:   else
+KMONS:   0C = bat draugr / fire bat
+MONS:    wraith / shadowghast w:2, phantasmal warrior / flayed ghost
+:   end
+SUBST:   DEFHI = C, defhi = 0, JKLMN = VVG''', jklmn = 1, $ = .
+TILE:    o = dngn_transparent_wall_white
+TILE:    p : dngn_transparent_wall_blue / dngn_transparent_wall_green
+TILE:    q : dngn_transparent_wall_red / dngn_transparent_wall_darkgray
+TILE:    c = dngn_stone_dark
+: else -- Orc
+KMONS:   0C = obsidian bat
+MONS:    orc sorcerer / orc high priest, spectral orc knight
+SUBST:   = = +, DEFHI = C_, defhi = 001333, JKLMN = VVG''', jklmn = 1
+TILE:    o = dngn_transparent_wall_darkgray
+TILE:    p = dngn_transparent_wall_red
+TILE:    q : dngn_transparent_wall_yellow / dngn_transparent_wall_brown
+: end
+MAP
+             cccc.cccc
+          ccccqcG.Gcqcccc
+         cco..dcc+cce..occ
+      ccccc..D$.c.c.$E..ccccc
+     ccp.occ...cc.cc...cco.pcc
+     con$.qcc+cc...cc+ccq.$foc
+  ccccc.N.oco.........oco.F.ccccc
+ ccoqoc.$.+c..pcc+ccp..c+.$.coqocc
+ cpm..cc.cc..ccc...ccc..cc.cc..hpc
+cc...$.ccc..cc..$.$..cc..ccc.$...cc
+co..M...+....+...C...+....+...H..oc
+cc...$.ccc..cc..$.$..cc..ccc.$...cc
+ cp...cc.cc..ccc...ccc..cc.cc...pc
+ ccoqoc.$.+c..pcc+ccp..c+.$.coqocc
+  ccccc.L.oco.........oco.I.ccccc
+     col$.qcc+ccG.Gcc+ccq.$ioc
+     ccp.occ...cc=cc...cco.pcc
+      ccccc..K$.c.c.$J..ccccc
+         cco..kcc2ccj..pcc
+          ccccqc|||cqcccc
+             ccccccccc
 ENDMAP
 
 ##############################################################################
@@ -3713,7 +3775,8 @@ PLACE:  Depths:$
      kfeat("1 = enter_zot")
      kfeat("Z = zot_statue")
      colour(".+123*$R = magenta")
-     ftile(".+123*$RZ = floor_hall")
+     ftile(". = floor_depthstone")
+     ftile("+123*$RZ = floor_zot_diamonds")
      nsubst("3 = 4:2 / 2 = 2. / *:.")
      kmons("* = golden dragon / shadow dragon / storm dragon / wyrmhole w:5"
            .. " / fire dragon / ice dragon")
@@ -3796,14 +3859,15 @@ MONS:    centaur warrior zombie, deep troll, boulder beetle
 KITEM:   })] = demon whip / demon trident / demon blade / \
                hand cannon w:2 / book of the dragon / grand grimoire w:2
 TILE:    b = bedevilled_crystal_gehenna
+TILE:    c = wall_stone_scorched
 :   else
 MONS:    hell knight, deep troll, spriggan berserker zombie
 MONS:    guardian sphinx zombie, red ugly thing
 KMONS:   )] = occultist / rakshasa w:5
 KITEM:   b = smoky gem
 KFEAT:   } = enter_depths
+TILE:    c = stone_wall_depths_entry
 :   end
-TILE:    c = wall_stone_scorched
 : else
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    juggernaut, hell knight, rakshasa, fire giant, flayed ghost
@@ -3811,11 +3875,13 @@ TILE:    b = bedevilled_crystal_gehenna
 :   else
 MONS:    black draconian knight, yellow draconian
 MONS:    black draconian, juggernaut zombie, flayed ghost
-KMONS:   )]b = nonbase draconian w:30 / wyrmhole / \
-               shadow dragon / golden dragon / storm dragon
+KMONS:   "b = nonbase draconian w:30 / wyrmhole / \
+              shadow dragon / golden dragon / storm dragon
 KITEM:   b = midnight gem
 KFEAT:   } = enter_zot
 KFEAT:   )] = zot_statue
+FTILE:   '"})]b = floor_zot_diamonds
+FTILE:   .12345defgh-+& = floor_depthstone
 :   end
 : end
 ITEM:    arbalest w:190 / hand cannon, javelin q:2, potion of curing pre_id
@@ -3830,9 +3896,9 @@ MAP
              cccc
              c})c
              c]bc
-             c..c
-             c..c
-             c..c
+             c""c
+             c''c
+             c''c
              c++c
              c..c
              c2gc
@@ -4407,6 +4473,7 @@ TILE:   c = wall_stone_scorched
 : elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  } = Z, ] = $, ) = z, 1 = 9
 NSUBST: ! = 1:8 / 1:9 / 2  = 80
+FTILE:  .234569+ = floor_depthstone
 : elseif you.in_branch("Zot") then
 SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0, ? = l
 NSUBST: ! = 1:6 / 1:0 / 1:! / 1:&
@@ -5519,7 +5586,9 @@ SUBST:   5 = 4, 4 = 23
 MONS:    ghost moth / death cob / curse toe
 MONS:    nonbase draconian / protean progenitor w:2
 MONS:    ancient lich / dread lich, orb of appropriateness
+KFEAT:   t = petrified_tree
 SUBST:   3 = 2, 4 = 3, 5 = 4
+FTILE:   -UT_QRtGT12345defg|*$+ = floor_zot_diamonds
 : end
 KFEAT:   _ = altar_sif_muna / altar_vehumet
 TILE:    c = wall_studio
@@ -7045,7 +7114,7 @@ KFEAT:   ~ = enter_depths
 KFEAT:   X = c
 SUBST:   ' = "
 FTILE:   ;~" = floor_depthstone
-TILE:    X = stone_wall_depths
+TILE:    X = stone_wall_depths_entry
 :   end
 SUBST:   ^ = .
 NSUBST:  7 = 1:B / 1:C / *:., I = 1:I / *:2, 8 = 1:8. / *:8
@@ -7487,6 +7556,7 @@ KMONS:   0 = vampire mage
 KITEM:   R = $, smoky gem
 KFEAT:   0 = enter_depths
 NSUBST:  $ = 1:R / *:$
+FTILE:   "O1$%*efgh&R = floor_depthstone
 :   end
 KITEM:   & = demon blade / demon whip / demon trident
 NSUBST:  2468 = 2:., 3579 = 1:.
@@ -7513,6 +7583,7 @@ KITEM:   R = $, midnight gem
 KFEAT:   0 = enter_zot
 KFEAT:   ? = zot_statue
 NSUBST:  $ = 1:R / *:$, yYzZ = 2:?
+FTILE:   "O1$%*efgh&R = floor_depthstone
 TILE:    v = dngn_metal_wall_magenta
 :   end
 KITEM:   & = demon blade good_item / demon whip good_item / \
@@ -7597,7 +7668,8 @@ KFEAT:   ) = enter_depths
 KITEM:   R = smoky gem
 SHUFFLE: )]
 SUBST:   ^V = ., ] = R
-FTILE:   R') = floor_depthstone
+TILE:    c = stone_wall_depths_entry
+FTILE:   )R' = floor_depthstone
 :   end
 NSUBST:  | = 1:d / 1:f / *:%
 NSUBST:  DEF = 1:1, D = 1:. / *:D, E = 1:. / *:E, F = 1:. / *:F
@@ -7648,7 +7720,8 @@ NSUBST:  ^ = 2:^. / *:., 1 = 2 = 26 / *:1
 NSUBST:  D = 1:12 / *:D, E = 1:12 / *:E, F = 1:12 / *:F
 SHUFFLE: )]
 SUBST:   ] = R
-FTILE:   )R = floor_hall
+FTILE:   ' = floor_depthstone
+FTILE:   )R = floor_zot_diamonds
 :   end
 NSUBST:  | = 1:d / 1:e / 1:g / * = de
 : else   -- Zot
@@ -7693,7 +7766,10 @@ SUBST:   v = C
 TILE:    G = depths_column
 TILE:    C = stone_wall_depths
 :   else
-SUBST:   ' = ., vC = c
+:     if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
+SUBST:   ' = .
+:     end
+SUBST:   vC = c
 TILE:    cC = dngn_stone_wall_lightblue
 :     vault_granite_statue_setup(_G, "G", "gravestone")
 :   end
@@ -10327,7 +10403,7 @@ NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
 SUBST:  8 = 2
 COLOUR: c = lightmagenta
 COLOUR: -+2OR$ = magenta
-FTILE:  -+2OR$ = floor_hall
+FTILE:  -+2OR$ = floor_zot_diamonds
 : else
 KMONS:  8 = 8 band
 KMONS:  9 = 9 band
@@ -10366,7 +10442,7 @@ NSUBST: 9 = 2:3 / 1:9 / *:., | = 1:R / *:$
 SUBST:  8 = 2
 COLOUR: c = lightmagenta
 COLOUR: -+2OR$ = magenta
-FTILE:  -+2OR$ = floor_hall
+FTILE:  -+2OR$ = floor_zot_diamonds
 : else
 KMONS:  8 = 8 band
 KMONS:  9 = 9 band
@@ -10693,7 +10769,7 @@ ENDMAP
 NAME:   kennysheep_big_flooded_room
 DEPTH:  D:2-, !D:$
 ORIENT: float
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 : if you.absdepth() < 5 then
 SUBST:  9 = 0, * = %
 : end
@@ -10726,7 +10802,7 @@ ORIENT: float
 NSUBST: % : 1:|
 SUBST:  % = *
 SUBST:  9 = 9900.
-: ks_random_setup(_G)
+: ks_random_setup(_G, false)
 MAP
       cccFFFccc
      ccwwHHHwwcc
@@ -10757,7 +10833,7 @@ ORIENT: float
 DEPTH:  D:14-, Depths, !Depths:$
 NSUBST: % = 5:|
 SUBST:  % : %$
-: ks_random_setup(_G, true)
+: ks_random_setup(_G, false, true)
 MAP
     ccccccccc
    ccwwwwwwwcc

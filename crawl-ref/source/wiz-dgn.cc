@@ -848,6 +848,8 @@ void wizard_clear_used_vaults()
     you.uniq_map_names_abyss.clear();
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        branch_uniq_map_tags[i].clear();
     mpr("All vaults are now eligible for [re]use.");
 }
 

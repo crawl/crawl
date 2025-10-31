@@ -2385,6 +2385,10 @@ VISUAL:@The_monster@ flaps @possessive@ cloak.
 
 w:2
 @The_monster@ says, "I'm not crazy!"
+
+w:2
+# The Lathe of Heaven
+@The_monster@ says, "What sane person could live in this world and not be crazy?"
 %%%%
 _crazy_yiuf_speech_verbs_
 

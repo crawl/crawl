@@ -984,6 +984,26 @@ static int l_you_abil_table(lua_State *ls)
     return 1;
 }
 
+/*** Is this ability currently available to use?
+ * @tparam string name
+ * @treturn boolean
+ * @function ability_available
+ */
+LUAFN(you_abil_available)
+{
+    const string abil_name = luaL_checkstring(ls, 1);
+    const ability_type abil = ability_by_name(abil_name);
+
+    if (abil == ABIL_NON_ABILITY)
+    {
+        luaL_argerror(ls, 1, ("Invalid ability: " + abil_name).c_str());
+        return 0;
+    }
+
+    lua_pushboolean(ls, check_ability_possible(abil, true));
+    return 1;
+}
+
 /*** Get the current state of item identification as a list of strings.
  * @treturn table The list of names of known identifiable items.
  * @function known_items
@@ -1451,6 +1471,7 @@ static const struct luaL_reg you_clib[] =
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
+    { "ability_available", you_abil_available },
     { "known_items" , you_known_items },
     { "name"        , you_name },
     { "species"     , you_species },
