@@ -1298,6 +1298,9 @@ w:1
 # Swedish folk song, anonymous translation
 @The_weapon@ sings, "Come roses or sage, come lovely mint, come balm..."
 
+# Jerry Reed
+@The_weapon@ sings, "Orcs got the gold mine, I got the shaft..."
+
 ############ real songs, low tension ############
 %%%%
 _real_song_low_tension_
