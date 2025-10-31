@@ -6,6 +6,7 @@
 #pragma once
 
 bool check_next_floor_warning();
+void maybe_destroy_shaft(const coord_def &p);
 level_id stair_destination(dungeon_feature_type feat, const string &dst,
                            bool for_real = false);
 level_id stair_destination(coord_def pos, bool for_real = false);

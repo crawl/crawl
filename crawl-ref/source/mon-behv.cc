@@ -33,6 +33,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"
+#include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -1465,6 +1466,10 @@ static void _mons_indicate_level_exit(const monster* mon)
             make_stringf(" %s the shaft.",
                 mon->airborne() ? "goes down"
                                 : "jumps into").c_str());
+
+        // Shafts are one-time-use.
+        mpr("The shaft crumbles and collapses.");
+        maybe_destroy_shaft(mon->pos());
     }
 }
 
