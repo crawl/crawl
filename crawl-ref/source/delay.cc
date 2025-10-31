@@ -172,6 +172,8 @@ const char* EquipOnDelay::get_verb()
         return "haunting";
     else if (equip.base_type == OBJ_ARMOUR && you.form == transformation::fortress_crab)
         return "fusing with";
+    else if (equip.base_type == OBJ_ARMOUR && equip.sub_type == ARM_ORB)
+        return "holding";
     else
         return "putting on";
 }
