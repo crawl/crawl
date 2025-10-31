@@ -513,14 +513,13 @@ _candy_and_reaction_
 
 # Being a silly halloween exclusive, we take no care to avoid anachronisms
 
-w:10
-a handful of candy corn. Horrible!
-#death cob joke? would only make the candy slightly worse
+a handful of death cob candy corn. Why would anyone eat that!
 
-w:10
 a packet of gummi yaks. Chewy!
 
-w:10
+a handful of Chocolate Kisses of Death. 
+You feel a little drained, but the sugar reinvigorates you.
+
 a packet of Xom's Every Flavour Jellybeans. All of them are bad!
 #expand on this! way too lazy!
 

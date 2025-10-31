@@ -3000,9 +3000,7 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 
     if (feat_is_food(new_grid))
     {
-        if (today_is_halloween())
-            messageLookup += "candy pile"
-        else if (new_grid == DNGN_CACHE_OF_FRUIT)
+        if (new_grid == DNGN_CACHE_OF_FRUIT)
             messageLookup += "fruit cache";
         else if (new_grid == DNGN_CACHE_OF_MEAT)
             messageLookup += "meat cache";
