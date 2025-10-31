@@ -1783,6 +1783,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_PERMAFROST_ERUPTION:
         return permafrost_targets(you, false).empty();
 
+    case SPELL_PLASMA_BEAM:
+        return plasma_beam_targets(you, pow, false).empty();
+
     default:
         break;
     }
