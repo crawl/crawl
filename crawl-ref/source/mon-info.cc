@@ -894,6 +894,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     client_id = m->get_client_id();
     last_seen_at_turn = you.num_turns;
+    can_shoot_through_monster = shoot_through_monster(&you, m);
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
