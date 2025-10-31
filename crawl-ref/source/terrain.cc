@@ -2473,10 +2473,13 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
 
     if (push_actor_from(pos, nullptr, true).origin())
     {
-        for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+        for (distance_iterator di(pos, true, true); di; ++di)
         {
             if (!actor_at(*di)
-                && ((act->is_player() && you.can_pass_through(*di))
+                && ((act->is_player()
+                     && you.can_pass_through(*di)
+                     && !is_feat_dangerous(env.grid(*di))
+                     && !testbits(env.pgrid(*di), FPROP_NO_TELE_INTO))
                     || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
             {
                 if (act->is_player())
@@ -2486,10 +2489,6 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
                 return act->pos();
             }
         }
-
-        // Failed to find anywhere in LOS_RADIUS that was valid to put this actor,
-        // so just teleport them instead
-        act->teleport(true);
     }
 
     return act->pos();
