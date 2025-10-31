@@ -394,6 +394,7 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\l-wiz.cc" />
     <ClCompile Include="..\lang-fake.cc" />
     <ClCompile Include="..\losglobal.cc" />
+    <ClCompile Include="..\l-autofight.cc" />
     <ClCompile Include="..\l-colour.cc" />
     <ClCompile Include="..\l-crawl.cc" />
     <ClCompile Include="..\l-debug.cc" />
