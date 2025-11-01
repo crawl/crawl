@@ -657,11 +657,6 @@ monster* update_monster(monster& mon, int time)
     }
 
     mon.heal(div_rand_round(time * mon.off_level_regen_rate(), 1000));
-
-    // Handle nets specially to remove the trapping property of the net.
-    if (mon.caught())
-        mon.del_ench(ENCH_HELD, true);
-
     mon.timeout_enchantments(time);
 
     return &mon;

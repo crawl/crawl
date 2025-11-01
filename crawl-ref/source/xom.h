@@ -123,7 +123,6 @@ string xom_effect_to_name(xom_event_type effect);
 void debug_xom_effects();
 #endif
 
-bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 void validate_xom_events();

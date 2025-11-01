@@ -612,7 +612,7 @@ tileidx_t tileidx_player()
 
     if (you.attribute[ATTR_HELD])
     {
-        if (get_trapping_net(you.pos()) == NON_ITEM)
+        if (you.caught_by() == CAUGHT_WEB)
             ch |= TILE_FLAG_WEB;
         else
             ch |= TILE_FLAG_NET;

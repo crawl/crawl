@@ -840,7 +840,7 @@ bool melee_attack::handle_phase_hit()
     if (attacker->is_player() && you.form == transformation::spider
         && defender->alive() && x_chance_in_y(get_form()->get_web_chance(), 100))
     {
-        ensnare(defender);
+        defender->trap_in_web();
     }
 
     if (attacker->is_player() && you.form == transformation::sphinx && defender->alive())
@@ -3928,7 +3928,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ENSNARE:
         if (one_chance_in(3))
-            ensnare(defender);
+            defender->trap_in_web();
         break;
 
     case AF_CRUSH:
@@ -5023,7 +5023,7 @@ bool spellclaws_attack(int spell_level)
     // Struggle against nets rather than ignore them.
     if (you.caught())
     {
-        free_self_from_net();
+        you.struggle_against_net();
         return false;
     }
 

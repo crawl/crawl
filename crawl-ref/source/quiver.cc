@@ -559,7 +559,7 @@ namespace quiver
                 {
                     // assume that if a target was explicitly supplied, it was
                     // done intentionally
-                    free_self_from_net();
+                    you.struggle_against_net();
                     you.turn_is_over = true;
                     return;
                 }

@@ -4236,6 +4236,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     // Unentangle the real monster.
     if (targ->is_constricted())
         targ->stop_being_constricted();
+    targ->stop_being_caught(true);
 
     if (you.props.exists(BULLSEYE_TARGET_KEY)
         && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int() == targ->mid)
@@ -4244,8 +4245,6 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
         you.duration[DUR_DIMENSIONAL_BULLSEYE] = 0;
         you.props.erase(BULLSEYE_TARGET_KEY);
     }
-
-    mons_clear_trapping_net(targ);
 
     // Don't leak the real one with the targeting interface.
     if (you.prev_targ == targ->mid)

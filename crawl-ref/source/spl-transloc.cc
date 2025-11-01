@@ -1595,8 +1595,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 
     item_def& item = env.item[item_idx];
 
-    // Nets can be apported when they have a victim trapped.
-    if (item_is_stationary(item) && !item_is_stationary_net(item))
+    if (item_is_stationary(item))
     {
         mpr("You cannot apport that!");
         return spret::abort;
@@ -1627,14 +1626,6 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
                 "The Orb lets out a furious burst of light as your magic touches it!");
             start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
         }
-    }
-
-    // If we apport a net, free the monster under it.
-    if (item_is_stationary_net(item))
-    {
-        free_stationary_net(item_idx);
-        if (monster* mons = monster_at(where))
-            mons->del_ench(ENCH_HELD, true);
     }
 
     beam.set_is_tracer(true);
@@ -2090,7 +2081,7 @@ spret word_of_chaos(int pow, bool fail)
 
         blink_away(mons, &you, false);
         if (x_chance_in_y(pow, 500))
-            ensnare(mons);
+            mons->trap_in_web();
         if (x_chance_in_y(pow, 500))
             do_slow_monster(*mons, &you, 20 + random2(pow));
         if (x_chance_in_y(pow, 500))

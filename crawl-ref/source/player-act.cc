@@ -76,7 +76,7 @@ static void _player_moveto(const coord_def &c, bool real_movement, bool clear_ne
     if (c != you.pos())
     {
         if (clear_net)
-            clear_trapping_net();
+            you.stop_being_caught(true);
 
         // we need to do this even for fake movement -- otherwise nothing ends
         // the dur for temporal distortion. (I'm not actually sure why?)

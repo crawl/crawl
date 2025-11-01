@@ -252,15 +252,6 @@ static bool _grid_is_interesting(const coord_def& pos)
         || trap == TRAP_SHAFT;
 }
 
-bool Stash::unmark_trapping_nets()
-{
-    bool changed = false;
-    for (auto &item : items)
-        if (item_is_stationary_net(item))
-            item.net_placed = false, changed = true;
-    return changed;
-}
-
 void Stash::update()
 {
     feat = DNGN_FLOOR;
@@ -769,14 +760,6 @@ bool LevelStashes::update_stash(const coord_def& c)
     return true;
 }
 
-bool LevelStashes::unmark_trapping_nets(const coord_def &c)
-{
-    if (Stash *s = find_stash(c))
-        return s->unmark_trapping_nets();
-    else
-        return false;
-}
-
 void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
 {
     ASSERT(from != to);
@@ -1006,14 +989,6 @@ void StashTracker::move_stash(const coord_def& from, const coord_def& to)
 {
     if (LevelStashes *lev = find_current_level())
         lev->move_stash(from, to);
-}
-
-bool StashTracker::unmark_trapping_nets(const coord_def &c)
-{
-    if (LevelStashes *lev = find_current_level())
-        return lev->unmark_trapping_nets(c);
-    else
-        return false;
 }
 
 void StashTracker::remove_level(const level_id &place)

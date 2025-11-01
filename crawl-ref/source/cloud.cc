@@ -2079,7 +2079,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "ensnaring", 3, [](const actor &victim) {
         return !victim.is_web_immune(); },
         BEAM_NONE, [](actor* victim, actor* /*source*/) {
-           ensnare(victim);
+           victim->trap_in_web();
            return you.can_see(*victim);
        },
     },

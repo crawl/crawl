@@ -786,7 +786,7 @@ void floor_transition(dungeon_feature_type how,
         player_did_deliberate_movement();
 
     // Magical level changes (which currently only exist "downwards") need this.
-    clear_trapping_net();
+    you.stop_being_caught(true);
     stop_channelling_spells();
     you.stop_constricting_all();
     you.stop_being_constricted();

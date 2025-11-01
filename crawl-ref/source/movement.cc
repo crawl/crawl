@@ -353,9 +353,9 @@ void open_door_action(coord_def move)
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!crawl_state.arena_suspended);
 
-    if (you.attribute[ATTR_HELD])
+    if (you.caught())
     {
-        free_self_from_net();
+        you.struggle_against_net();
         you.turn_is_over = true;
         return;
     }
@@ -853,7 +853,7 @@ void move_player_action(coord_def move)
 
     if (you.attribute[ATTR_HELD])
     {
-        free_self_from_net();
+        you.struggle_against_net();
         you.turn_is_over = true;
         return;
     }

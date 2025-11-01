@@ -839,7 +839,13 @@ public:
     bool paralysed() const override;
     bool cannot_act() const override;
     bool confused() const override;
+
     bool caught() const override;
+    void struggle_against_net() override;
+    bool trap_in_web() override;
+    bool trap_in_net(bool real, bool quiet = false) override;
+    void stop_being_caught(bool drop_net = false) override;
+
     bool backlit(bool self_halo = true, bool temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;

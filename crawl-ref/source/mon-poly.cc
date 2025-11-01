@@ -297,8 +297,10 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     const god_type old_god        = mons->god;
     const int  old_hp             = mons->hit_points;
     const int  old_hp_max         = mons->max_hit_points;
-    const bool old_mon_caught     = mons->caught();
     const char old_ench_countdown = mons->ench_countdown;
+
+    const caught_type old_caught  = mons->caught_by();
+    mon_enchant held              = mons->get_ench(ENCH_HELD);
 
     const bool old_mon_unique = mons_is_or_was_unique(*mons);
 
@@ -406,8 +408,15 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->props.erase(POLY_SET_KEY);
     init_poly_set(mons);
 
-    if (old_mon_caught)
-        check_net_will_hold_monster(mons);
+    // Try to keep the monster caught in any existing nets, but if the new form
+    // is net immune, remember to drop the net on the ground.
+    if (old_caught >= CAUGHT_NET)
+    {
+        if (mons->trap_in_net(old_caught == CAUGHT_NET, true))
+            mons->update_ench(held);    // Preserve damage to the net.
+        else if (old_caught == CAUGHT_NET)
+            drop_net_at(mons->pos());
+    }
 
     // Even if the new form can constrict, it might be with a different
     // body part. Likewise, the new form might be too large for its

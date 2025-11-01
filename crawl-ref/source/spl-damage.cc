@@ -5043,7 +5043,7 @@ static void _do_fusillade_hit(monster* mon, int power, beam_type flavour)
                 break;
 
             case BEAM_ENSNARE:
-                ensnare(mon);
+                mon->trap_in_web();
                 break;
 
             default:

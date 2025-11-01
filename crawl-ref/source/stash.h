@@ -28,7 +28,6 @@ public:
 
     static string stash_item_name(const item_def &item);
     void update();
-    bool unmark_trapping_nets();
     void save(writer&) const;
     void load(reader&);
 
@@ -185,9 +184,6 @@ public:
     // Update stash at (x,y).
     bool  update_stash(const coord_def& c);
 
-    // Mark nets at (x,y) as no longer trapping an actor.
-    bool unmark_trapping_nets(const coord_def &c);
-
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
     bool  needs_visit(const coord_def& c, bool autopickup) const;
@@ -260,9 +256,6 @@ public:
     // updated.
     bool update_stash(const coord_def& c);
     void move_stash(const coord_def& from, const coord_def& to);
-
-    // Mark nets at (x,y) on current level as no longer trapping an actor.
-    bool unmark_trapping_nets(const coord_def &c);
 
     void add_stash(coord_def p);
 

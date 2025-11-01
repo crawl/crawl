@@ -1767,7 +1767,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_ENSNARE:
         if (doFlavouredEffects)
-            ensnare(mons);
+            mons->trap_in_web();
         break;
 
     case BEAM_DEVASTATION:
@@ -2537,7 +2537,7 @@ void bolt::affect_endpoint()
         // target (and that it's still in range)
         monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
         if (bullseye_targ && hit_count.count(bullseye_targ->mid) == 0
-            && you.can_see(*bullseye_targ))
+            && you.can_see(*bullseye_targ) && !item->is_type(OBJ_MISSILES, MI_THROWING_NET))
         {
             use_bullseye = true;
         }
@@ -2801,7 +2801,7 @@ void bolt::affect_endpoint()
             }
 
             if (actor_at(*di))
-                ensnare(actor_at(*di));
+                actor_at(*di)->trap_in_web();
             else
             {
                 temp_change_terrain(*di, DNGN_TRAP_WEB, random_range(60, 110),
@@ -2847,22 +2847,7 @@ void bolt::drop_object()
                                     ? path_taken[path_taken.size() - 2]
                                     : source
                                 : pos();
-    const int idx = copy_item_to_grid(*item, spot, 1);
-
-    if (idx != NON_ITEM
-        && idx != -1
-        && item->sub_type == MI_THROWING_NET)
-    {
-        monster* m = monster_at(spot);
-        // Player or monster at position is caught in net.
-        // Don't catch anything if the creature was already caught.
-        if (get_trapping_net(spot, true) == NON_ITEM
-            && (you.pos() == spot && you.attribute[ATTR_HELD]
-            || m && m->caught()))
-        {
-            maybe_split_nets(env.item[idx], spot);
-        }
-    }
+    copy_item_to_grid(*item, spot, 1);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -4292,6 +4277,8 @@ void bolt::affect_player()
         if (attk.reflected)
             reflect();
         extra_range_used += attk.range_used;
+        if (attk.did_net())
+            drop_item = false;
         return;
     }
 
@@ -4448,7 +4435,7 @@ void bolt::affect_player()
     }
 
     if (flavour == BEAM_ENSNARE)
-        was_affected = ensnare(&you) || was_affected;
+        was_affected = you.trap_in_web() || was_affected;
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_player();
@@ -5638,6 +5625,8 @@ void bolt::affect_monster(monster* mon)
             hit_verb = attk.attack_verb;
         if (attk.reflected)
             reflect();
+        if (attk.did_net())
+            drop_item = false;
         extra_range_used += attk.range_used;
         return;
     }

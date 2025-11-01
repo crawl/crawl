@@ -2493,37 +2493,33 @@ void monster::catch_breath()
  */
 void monster::struggle_against_net()
 {
-    if (is_stationary() || cannot_act() || asleep())
-        return;
-
     if (props.exists(NEWLY_TRAPPED_KEY))
     {
         props.erase(NEWLY_TRAPPED_KEY);
         return; // don't try to escape on the same turn you were trapped!
     }
 
-    int net = get_trapping_net(pos(), true);
+    if (is_stationary() || cannot_act() || asleep())
+        return;
 
-    if (net == NON_ITEM)
+    if (caught_by() == CAUGHT_WEB)
     {
-        trap_def *trap = trap_at(pos());
-        if (trap && trap->type == TRAP_WEB)
+        if (coinflip())
         {
-            if (coinflip())
+            if (you.see_cell(pos()))
             {
-                if (you.see_cell(pos()))
-                {
-                    if (!visible_to(&you))
-                        mpr("Something you can't see is thrashing in a web.");
-                    else
-                        simple_monster_message(*this,
-                                           " struggles to get unstuck from the web.");
-                }
-                return;
+                if (!visible_to(&you))
+                    mpr("Something you can't see is thrashing in a web.");
+                else
+                    simple_monster_message(*this,
+                                        " struggles to get unstuck from the web.");
             }
+            return;
         }
-        monster_web_cleanup(*this);
-        del_ench(ENCH_HELD);
+        else
+            simple_monster_message(*this, " tears free of the web.");
+
+        stop_being_caught();
         return;
     }
 
@@ -2542,9 +2538,11 @@ void monster::struggle_against_net()
     if (speed != 0)
         damage = div_rand_round(damage * speed, 10);
 
-    env.item[net].net_durability -= damage;
+    // The degree of the enchant is the remaining net durability.
+    mon_enchant held = get_ench(ENCH_HELD);
+    held.degree -= damage;
 
-    if (env.item[net].net_durability < NET_MIN_DURABILITY)
+    if (held.degree <= 0)
     {
         if (you.see_cell(pos()))
         {
@@ -2556,10 +2554,30 @@ void monster::struggle_against_net()
             else
                 mpr("All of a sudden the net rips apart!");
         }
-        destroy_item(net);
-
-        del_ench(ENCH_HELD, true);
+        stop_being_caught(false);
     }
+    else
+        update_ench(held);
+}
+
+void monster::stop_being_caught(bool drop_net)
+{
+    const caught_type ctype = caught_by();
+
+    if (ctype >= CAUGHT_NET)
+    {
+        props.erase(NET_IS_REAL_KEY);
+
+        // Make a fresh net to drop on the ground, with chance proportional to
+        // how much damage it suffered (assuming this is a real net).
+        if (ctype == CAUGHT_NET && drop_net
+            && x_chance_in_y(get_ench(ENCH_HELD).degree, 9))
+        {
+            drop_net_at(pos());
+        }
+    }
+
+    del_ench(ENCH_HELD);
 }
 
 static void _ancient_zyme_sicken(monster* mons)

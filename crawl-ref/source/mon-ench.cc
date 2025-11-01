@@ -655,25 +655,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " looks more healthy.");
         break;
 
-    case ENCH_HELD:
-    {
-        int net = get_trapping_net(pos());
-        if (net != NON_ITEM)
-        {
-            free_stationary_net(net);
-
-            if (props.exists(NEWLY_TRAPPED_KEY))
-                props.erase(NEWLY_TRAPPED_KEY);
-
-            if (!quiet)
-                simple_monster_message(*this, " breaks free.");
-            break;
-        }
-
-        monster_web_cleanup(*this, true);
-        break;
-    }
-
     case ENCH_SUMMON_TIMER:
         if (type == MONS_SPECTRAL_WEAPON)
             return end_spectral_weapon(this, false);
@@ -1130,12 +1111,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
         return false;
     }
 
-    // Faster monsters can wiggle out of the net more quickly.
-    const int spd = (me.ench == ENCH_HELD) ? speed :
-                                             10;
-    int actdur = speed_to_duration(spd);
-
-    if (lose_ench_duration(me, actdur))
+    if (lose_ench_duration(me, 10))
         return true;
 
     if (!decay_degree)

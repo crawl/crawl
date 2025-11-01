@@ -406,6 +406,22 @@ bool actor_slime_wall_immune(const actor *act)
         || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 
+caught_type actor::caught_by() const
+{
+    if (!caught())
+        return CAUGHT_NONE;
+
+    if (props.exists(NET_IS_REAL_KEY))
+    {
+        if (props[NET_IS_REAL_KEY].get_bool())
+            return CAUGHT_NET;
+        else
+            return CAUGHT_NET_NODROP;
+    }
+
+    return CAUGHT_WEB;
+}
+
 void actor::clear_constricted()
 {
     constricted_by = 0;

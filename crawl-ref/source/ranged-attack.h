@@ -19,6 +19,8 @@ public:
     bool attack();
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
+    bool did_net() const;
+
 private:
     /* Attack Phases */
     bool handle_phase_attempted() override;
@@ -60,4 +62,5 @@ private:
     const item_def *projectile;
     bool teleport;
     bool mulched;
+    bool _did_net;
 };

@@ -75,9 +75,7 @@ inline constexpr bool item_type_has_curses(object_class_type base_type)
 }
 
 // stationary:
-void set_net_stationary(item_def &item);
 bool item_is_stationary(const item_def &item) PURE;
-bool item_is_stationary_net(const item_def &item) PURE;
 
 // item descriptions:
 void     set_equip_desc(item_def &item, iflags_t flags);

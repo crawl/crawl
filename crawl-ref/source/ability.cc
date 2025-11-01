@@ -2375,7 +2375,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             if (!quiet)
             {
                 mprf("You cannot wall jump while caught in a %s.",
-                     get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+                     you.caught_by() == CAUGHT_WEB ? "web" : "net");
             }
             return false;
         }

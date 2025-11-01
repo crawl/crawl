@@ -1779,20 +1779,6 @@ static void _print_death_brand_changes(item_def *weapon, bool entering_death)
     }
 }
 
-static void _rip_net()
-{
-    if (you.attribute[ATTR_HELD])
-    {
-        int net = get_trapping_net(you.pos());
-        if (net != NON_ITEM)
-        {
-            mpr("The net rips apart!");
-            destroy_item(net);
-            stop_being_held();
-        }
-    }
-}
-
 /// Form-specific special effects. Should be in a class?
 static void _on_enter_form(transformation which_trans)
 {
@@ -1807,20 +1793,6 @@ static void _on_enter_form(transformation which_trans)
             mpr("You feel strangely stable.");
         }
         you.duration[DUR_FLIGHT] = 0;
-
-        if (you.attribute[ATTR_HELD])
-        {
-            const trap_def *trap = trap_at(you.pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                leave_web(true);
-                if (trap_at(you.pos()))
-                    mpr("Your branches slip out of the web.");
-                else
-                    mpr("Your branches shred the web that entangled you.");
-            }
-        }
-        _rip_net();
         break;
 
     case transformation::dragon:
@@ -1832,7 +1804,6 @@ static void _on_enter_form(transformation which_trans)
             gain_draconian_breath_uses(1);
             you.props[HAS_USED_DRAGON_TALISMAN_KEY] = true;
         }
-        _rip_net();
         break;
 
     case transformation::death:

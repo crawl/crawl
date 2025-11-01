@@ -2549,9 +2549,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     // ... and wind-stillers.
     mons.del_ench(ENCH_STILL_WINDS, true);
 
-    // and webbed monsters
-    monster_web_cleanup(mons, true);
-
     // Lose our bullseye target
     mons.del_ench(ENCH_BULLSEYE_TARGET, true);
 
@@ -2567,7 +2564,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
     handle_monster_dies_lua(mons, killer);
-    mons_clear_trapping_net(&mons);
+    mons.stop_being_caught(true);
     mons.stop_constricting_all();
     mons.stop_being_constricted();
 

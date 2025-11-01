@@ -32,7 +32,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn,
                              const item_def *wpn, const item_def *proj,
                              bool tele, actor *blame, bool mulch)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), mulched(mulch)
+      projectile(proj), teleport(tele), mulched(mulch), _did_net(false)
 {
     weapon = wpn;
     if (weapon)
@@ -280,14 +280,10 @@ bool ranged_attack::handle_phase_hit()
     {
         set_attack_verb(0);
         announce_hit();
+        if (defender->trap_in_net(true))
+            _did_net = true;
         if (defender->is_player())
-        {
-            player_caught_in_net();
-            if (attacker->is_monster())
-                xom_is_stimulated(50);
-        }
-        else
-            monster_caught_in_net(defender->as_monster());
+            xom_is_stimulated(50);
     }
     else
     {
@@ -443,6 +439,11 @@ bool ranged_attack::mulch_bonus() const
         && projectile
         && ammo_type_damage(projectile->sub_type)
         && projectile->sub_type != MI_STONE;
+}
+
+bool ranged_attack::did_net() const
+{
+    return _did_net;
 }
 
 int ranged_attack::player_apply_postac_multipliers(int damage)

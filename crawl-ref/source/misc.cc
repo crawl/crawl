@@ -48,40 +48,32 @@ void swap_with_monster(monster* mon_to_swap)
         return;
     }
 
-    const bool mon_caught = mon.caught();
-    const bool you_caught = you.attribute[ATTR_HELD];
+    const caught_type mon_caught = mon.caught_by();
+    const caught_type you_caught = you.caught_by();
 
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
-    mon.move_to_pos(you.pos(), true, true);
-
-    // XXX: destroy ammo == 1 webs if they don't catch the mons? very rare case
-
-    if (you_caught)
-    {
-        // XXX: this doesn't correctly handle web traps
-        check_net_will_hold_monster(&mon);
-        if (!mon_caught)
-            stop_being_held();
-    }
+    mon.stop_being_caught();
+    mon.move_to_pos(you.pos(), false, true);
 
     // Move you to its previous location.
+    you.stop_being_caught();
     move_player_to_grid(newpos, false);
 
-    if (mon_caught)
+    // Exchange caught status.
+    if (you_caught != CAUGHT_NONE)
     {
-        // XXX: destroy ammo == 1 webs? (rare case)
-
-        you.attribute[ATTR_HELD] = 1;
-        if (get_trapping_net(you.pos()) != NON_ITEM)
-            mpr("You become entangled in the net!");
+        if (you_caught == CAUGHT_WEB)
+            mon.trap_in_web();
         else
-            mpr("You get stuck in the web!");
-        quiver::set_needs_redraw();
-        you.redraw_evasion = true;
-
-        if (!you_caught)
-            mon.del_ench(ENCH_HELD, true);
+            mon.trap_in_net(you_caught == CAUGHT_NET);
+    }
+    if (mon_caught != CAUGHT_NONE)
+    {
+        if (mon_caught == CAUGHT_WEB)
+            you.trap_in_web();
+        else
+            you.trap_in_net(mon_caught == CAUGHT_NET);
     }
 }
 

@@ -434,7 +434,6 @@ public:
     bool cannot_act() const override;
     bool confused() const override;
     bool confused_by_you() const;
-    bool caught() const override;
     bool asleep() const override;
     bool sleepwalking() const;
     bool unswappable() const;
@@ -451,6 +450,12 @@ public:
     int natural_regen_rate() const;
     int off_level_regen_rate() const;
     bool can_feel_fear(bool include_unknown) const override;
+
+    bool caught() const override;
+    void struggle_against_net() override;
+    bool trap_in_web() override;
+    bool trap_in_net(bool real, bool quiet = false) override;
+    void stop_being_caught(bool drop_net = false) override;
 
     bool friendly() const;
     bool neutral() const;
@@ -550,7 +555,6 @@ public:
     void bind_melee_flags();
     void calc_speed();
     bool attempt_escape() override;
-    void struggle_against_net();
     void catch_breath();
     bool has_usable_tentacle() const override;
 

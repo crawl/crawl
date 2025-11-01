@@ -1716,7 +1716,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->del_ench(ENCH_INVIS, false, false);
 
     // If the monster's held in a net, get it out.
-    mons_clear_trapping_net(mon);
+    mon->stop_being_caught(true);
 
     // Rebrand or drop any holy equipment, and keep wielding the rest. Also
     // remove any active avatars.
@@ -5374,24 +5374,14 @@ void ru_draw_out_power()
     mpr("You are restored by drawing out deep reserves of power within.");
 
     //Escape nets and webs
-    int net = get_trapping_net(you.pos());
-    if (net == NON_ITEM)
+    if (you.caught())
     {
-        trap_def *trap = trap_at(you.pos());
-        if (trap && trap->type == TRAP_WEB)
-        {
-            destroy_trap(you.pos());
-            // XXX: destroying them is dubious in general - abuseable by loons?
-            // (but definitely destroy if ammo == 1, per trap-def.h!)
+        if (you.caught_by() == CAUGHT_WEB)
             mpr("You burst free from the webs!");
-        }
+        else
+            mpr("You burst free from the net!");
+        you.stop_being_caught();
     }
-    else
-    {
-        destroy_item(net);
-        mpr("You burst free from the net!");
-    }
-    stop_being_held();
 
     // Escape constriction
     you.stop_being_constricted(false, "burst");
@@ -6480,7 +6470,7 @@ spret wu_jian_wall_jump_ability()
     if (you.attribute[ATTR_HELD])
     {
         mprf("You cannot wall jump while caught in a %s.",
-             get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+             you.caught_by() == CAUGHT_WEB ? "web" : "net");
         return spret::abort;
     }
 

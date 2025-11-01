@@ -1139,17 +1139,6 @@ bool item_is_cursable(const item_def &item)
 }
 
 /**
- * Make a net stationary (because it currently traps a victim).
- *
- * @param item The net item.
-*/
-void set_net_stationary(item_def &item)
-{
-    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
-        item.net_placed = true;
-}
-
-/**
  * Is the item stationary (unmovable)?
  *
  * Currently only carrion and nets with a trapped victim are stationary.
@@ -1158,18 +1147,7 @@ void set_net_stationary(item_def &item)
 */
 bool item_is_stationary(const item_def &item)
 {
-    return item.base_type == OBJ_CORPSES || item_is_stationary_net(item);
-}
-
-/**
- * Is the item a stationary net?
- *
- * @param item The item.
- * @return  True iff the item is a stationary net.
-*/
-bool item_is_stationary_net(const item_def &item)
-{
-    return item.is_type(OBJ_MISSILES, MI_THROWING_NET) && item.net_placed;
+    return item.base_type == OBJ_CORPSES;
 }
 
 static bool _is_affordable(const item_def &item)
@@ -2973,9 +2951,6 @@ bool gives_resistance(const item_def &item)
 
 bool item_is_jelly_edible(const item_def &item)
 {
-    if (item_is_stationary_net(item))
-        return false;
-
     // Don't eat artefacts or the horn of Geryon.
     if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;

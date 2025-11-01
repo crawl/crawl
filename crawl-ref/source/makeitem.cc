@@ -2344,6 +2344,19 @@ void lucky_upgrade_item(item_def& item)
     }
 }
 
+// Drop a fresh net on the ground after an actor somehow escapes from it.
+void drop_net_at(const coord_def& pos)
+{
+    item_def item;
+    item.base_type = OBJ_MISSILES;
+    item.sub_type  = MI_THROWING_NET;
+    item.quantity  = 1;
+    set_item_ego_type(item, OBJ_MISSILES, SPMSL_NORMAL);
+    item_colour(item);
+
+    copy_item_to_grid(item, pos);
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static int _test_item_level()
 {

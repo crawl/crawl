@@ -1649,9 +1649,9 @@ static void _take_stairs(bool down)
     if (!_can_take_stairs(ygrd, down, shaft))
         return;
 
-    if (you.attribute[ATTR_HELD])
+    if (you.caught())
     {
-        free_self_from_net();
+        you.struggle_against_net();
         you.turn_is_over = true;
         return;
     }

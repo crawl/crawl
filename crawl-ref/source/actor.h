@@ -4,6 +4,7 @@
 
 #include "artefact-prop-type.h"
 #include "beam-type.h"
+#include "caught-type.h"
 #include "conduct-type.h"
 #include "constrict-type.h"
 #include "energy-use-type.h"
@@ -316,8 +317,14 @@ public:
     virtual bool paralysed() const = 0;
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
-    virtual bool caught() const = 0;
     virtual bool asleep() const { return false; }
+
+    virtual bool caught() const = 0;
+    caught_type  caught_by() const;
+    virtual void struggle_against_net() = 0;
+    virtual bool trap_in_web() = 0;
+    virtual bool trap_in_net(bool real, bool quiet = false) = 0;
+    virtual void stop_being_caught(bool drop_net = false) = 0;
 
     // self_halo: include own halo (actually if self_halo = false
     //            and has a halo, returns false; so if you have a

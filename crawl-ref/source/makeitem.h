@@ -51,6 +51,8 @@ spell_type choose_parchment_spell(int item_level, spschool school = spschool::no
 
 void lucky_upgrade_item(item_def& item);
 
+void drop_net_at(const coord_def& pos);
+
 armour_type pick_random_aux_armour_type();
 armour_type pick_random_shield_type();
 armour_type pick_random_body_armour_type(int item_level);

@@ -63,8 +63,6 @@ static string _net_immune_reason()
     return "";
 }
 
-static const string TRAP_PROJECTILE_KEY = "trap_projectile";
-
 bool trap_def::active() const
 {
     return type != TRAP_UNASSIGNED;
@@ -250,27 +248,6 @@ static vector<monster*> _find_and_buff_trap_targets(enchant_type enchant,
 }
 
 /**
- * Get the item index of the first net on the square.
- *
- * @param where The location.
- * @param trapped If true, the index of the stationary net (trapping a victim)
- *                is returned.
- * @return  The item index of the net.
-*/
-int get_trapping_net(const coord_def& where, bool trapped)
-{
-    for (stack_iterator si(where); si; ++si)
-    {
-        if (si->is_type(OBJ_MISSILES, MI_THROWING_NET)
-            && (!trapped || item_is_stationary_net(*si)))
-        {
-            return si->index();
-        }
-    }
-    return NON_ITEM;
-}
-
-/**
  * Return a string describing the reason a given actor is ensnared. (Since nets
  * & webs use the same status.
  *
@@ -281,136 +258,10 @@ const char* held_status(actor *act)
 {
     act = act ? act : &you;
 
-    if (get_trapping_net(act->pos(), true) != NON_ITEM)
+    if (act->caught_by() >= CAUGHT_NET)
         return "held in a net";
     else
         return "caught in a web";
-}
-
-static void _mark_net_trapping(const coord_def& where)
-{
-    int net = get_trapping_net(where);
-    if (net == NON_ITEM)
-    {
-        net = get_trapping_net(where, false);
-        if (net != NON_ITEM)
-            maybe_split_nets(env.item[net], where);
-    }
-}
-
-/**
- * Attempt to trap a monster in a net.
- *
- * @param mon       The monster being trapped.
- * @return          Whether the monster was successfully trapped.
- */
-bool monster_caught_in_net(monster* mon)
-{
-    if (mon->is_insubstantial() || mon->is_amorphous())
-    {
-        if (you.can_see(*mon))
-        {
-            if (mon->is_insubstantial())
-            {
-                mprf("The net passes right through %s!",
-                     mon->name(DESC_THE).c_str());
-            }
-            else
-            {
-                mprf("%s effortlessly oozes through the net!",
-                     mon->name(DESC_THE).c_str());
-            }
-        }
-        return false;
-    }
-
-    monster_info mi(mon);
-    if (mi.net_immune())
-    {
-        if (you.see_cell(mon->pos()))
-        {
-            if (mon->visible_to(&you))
-            {
-                mprf("The net is caught on %s!",
-                     mon->name(DESC_THE).c_str());
-            }
-            else
-                mpr("The net is caught on something unseen!");
-        }
-        return false;
-    }
-
-    if (!mon->caught() && mon->add_ench(ENCH_HELD))
-    {
-        if (you.see_cell(mon->pos()))
-        {
-            if (!mon->visible_to(&you))
-                mpr("Something gets caught in the net!");
-            else
-                simple_monster_message(*mon, " is caught in the net!");
-        }
-        return true;
-    }
-
-    return false;
-}
-
-bool player_caught_in_net()
-{
-    if (!_net_immune_reason().empty())
-        return false;
-
-    if (you.attribute[ATTR_HELD])
-        return false;
-
-    mpr("You become entangled in the net!");
-    stop_running();
-
-    // Set the attribute after the mpr, otherwise the screen updates
-    // and we get a glimpse of a web because there isn't a trapping net
-    // item yet
-    you.attribute[ATTR_HELD] = 1;
-    you.redraw_evasion = true;
-
-    stop_delay(true); // even stair delays
-    return true;
-}
-
-void check_net_will_hold_monster(monster* mons)
-{
-    ASSERT(mons); // XXX: should be monster &mons
-    if (mons->is_insubstantial() || mons->is_amorphous())
-    {
-        const int net = get_trapping_net(mons->pos());
-        if (net != NON_ITEM)
-            free_stationary_net(net);
-
-        if (mons->is_insubstantial())
-        {
-            simple_monster_message(*mons,
-                                   " drifts right through the net!");
-        }
-        else
-            simple_monster_message(*mons,
-                                   " oozes right through the net!");
-    }
-    else
-        mons->add_ench(ENCH_HELD);
-}
-
-static bool _player_caught_in_web()
-{
-    if (you.attribute[ATTR_HELD])
-        return false;
-
-    you.attribute[ATTR_HELD] = 1;
-
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    quiver::set_needs_redraw();
-
-    // No longer stop_running() and stop_delay().
-    return true;
 }
 
 vector<coord_def> find_golubria_on_level()
@@ -752,7 +603,7 @@ void trap_def::trigger(actor& triggerer)
         if (!you.see_cell_no_trans(pos))
             break;
         // Don't try to re-net the player when they're already netted/webbed.
-        if (you.attribute[ATTR_HELD])
+        if (you.caught())
             break;
 
         bool triggered = you_trigger;
@@ -768,16 +619,16 @@ void trap_def::trigger(actor& triggerer)
                 // Triggered, net the player.
                 triggered = true;
 
-                if (!simple_monster_message(*m,
-                                            " drops a net on you."))
-                {
+                if (!simple_monster_message(*m, " drops a net on you."))
                     mpr("Something launches a net on you.");
-                }
             }
         }
 
         if (!triggered)
             break;
+
+        if (you_trigger)
+            mpr("You trigger a net trap.");
 
         if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
         {
@@ -785,31 +636,16 @@ void trap_def::trigger(actor& triggerer)
             break;
         }
 
-        if (!player_caught_in_net())
+        if (!you.trap_in_net(false))
         {
-            if (!m) // no message already printed
-                mpr("You trigger the net trap.");
             const string reason = _net_immune_reason();
             if (!reason.empty())
                 mpr(reason);
             break;
         }
 
-        item_def item;
-        item.base_type = OBJ_MISSILES;
-        item.sub_type  = MI_THROWING_NET;
-        item.quantity  = 1;
-        set_item_ego_type(item, OBJ_MISSILES, SPMSL_NORMAL);
-        item.props[TRAP_PROJECTILE_KEY] = true;
-        item_colour(item);
-
-        copy_item_to_grid(item, you.pos());
         if (player_in_a_dangerous_place())
             xom_is_stimulated(50);
-
-        // Mark the item as trapping; after this it's
-        // safe to update the view.
-        _mark_net_trapping(you.pos());
         break;
         }
 
@@ -831,11 +667,11 @@ void trap_def::trigger(actor& triggerer)
         {
             if (one_chance_in(3))
                 mpr("You pick your way through the web.");
-            else
+            else if (you.trap_in_web())
             {
-                mpr("You are caught in the web!");
-
-                if (_player_caught_in_web() && player_in_a_dangerous_place())
+                if (ammo_qty == 1)
+                    trap_destroyed = true;
+                if (player_in_a_dangerous_place())
                     xom_is_stimulated(50);
             }
         }
@@ -845,16 +681,15 @@ void trap_def::trigger(actor& triggerer)
                 simple_monster_message(*m, " evades a web.");
             else
             {
-                if (m->visible_to(&you))
-                    simple_monster_message(*m, " is caught in a web!");
-                else
-                    mpr("A web moves frantically as something is caught in it!");
-
-                // If somehow already caught, make it worse.
-                m->add_ench(ENCH_HELD);
-
-                // Don't try to escape the web in the same turn
-                m->props[NEWLY_TRAPPED_KEY] = true;
+                if (m->trap_in_web())
+                {
+                    if (!m->visible_to(&you))
+                        mpr("A web moves frantically as something is caught in it!");
+                    // Don't try to escape the web in the same turn
+                    m->props[NEWLY_TRAPPED_KEY] = true;
+                    if (ammo_qty == 1)
+                        trap_destroyed = true;
+                }
             }
         }
         break;
@@ -962,177 +797,6 @@ trap_type get_trap_type(const coord_def& pos)
         return ptrap->type;
 
     return TRAP_UNASSIGNED;
-}
-
-/**
- * End the ATTR_HELD state & redraw appropriate UI.
- *
- * Do NOT call without clearing up nets, webs, etc first!
- */
-void stop_being_held()
-{
-    you.attribute[ATTR_HELD] = 0;
-    quiver::set_needs_redraw();
-    you.redraw_evasion = true;
-}
-
-/**
- * Exit a web that's currently holding you.
- *
- * @param quiet     Whether to squash messages.
- */
-void leave_web(bool quiet)
-{
-    const trap_def *trap = trap_at(you.pos());
-    if (!trap || trap->type != TRAP_WEB)
-        return;
-
-    if (trap->ammo_qty == 1) // temp web from e.g. jumpspider/spidersack
-    {
-        if (!quiet)
-            mpr("The web tears apart.");
-        destroy_trap(you.pos());
-    }
-    else if (!quiet)
-        mpr("You disentangle yourself.");
-
-    stop_being_held();
-}
-
-/**
- * Let the player attempt to unstick themself from a web.
- */
-static void _free_self_from_web()
-{
-    // Check if there's actually a web trap in your tile.
-    trap_def *trap = trap_at(you.pos());
-    if (trap && trap->type == TRAP_WEB)
-    {
-        // if so, roll a chance to escape the web.
-        if (x_chance_in_y(3, 10))
-        {
-            mpr("You struggle to detach yourself from the web.");
-            // but you actually accomplished nothing!
-            return;
-        }
-
-        leave_web();
-    }
-
-    // whether or not there was a web trap there, you're free now.
-    stop_being_held();
-}
-
-void free_self_from_net()
-{
-    const int net = get_trapping_net(you.pos());
-
-    if (net == NON_ITEM)
-    {
-        // If there's no net, it must be a web.
-        _free_self_from_web();
-        return;
-    }
-
-    int hold = env.item[net].net_durability;
-    dprf("net.net_durability: %d", hold);
-
-    const int damage = 1 + random2(4);
-
-    hold -= damage;
-    env.item[net].net_durability = hold;
-
-    if (hold < NET_MIN_DURABILITY)
-    {
-        mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
-
-        destroy_item(net);
-        stop_being_held();
-        return;
-    }
-
-    if (damage > 3)
-        mpr("You tear a large gash into the net.");
-    else
-        mpr("You struggle against the net.");
-}
-
-/**
- * Deals with messaging & cleanup for temporary web traps. Does not actually
- * delete ENCH_HELD!
- *
- * @param mons      The monster leaving a web.
- * @param quiet     Whether to suppress messages.
- */
-void monster_web_cleanup(const monster &mons, bool quiet)
-{
-    trap_def *trap = trap_at(mons.pos());
-    if (trap && trap->type == TRAP_WEB)
-    {
-        if (trap->ammo_qty == 1)
-        {
-            // temp web from e.g. jumpspider/spidersack
-            if (!quiet)
-                simple_monster_message(mons, " tears the web.");
-            destroy_trap(mons.pos());
-        }
-        else if (!quiet)
-            simple_monster_message(mons, " pulls away from the web.");
-    }
-}
-
-void mons_clear_trapping_net(monster* mon)
-{
-    if (!mon->caught())
-        return;
-
-    const int net = get_trapping_net(mon->pos());
-    if (net != NON_ITEM)
-        free_stationary_net(net);
-
-    mon->del_ench(ENCH_HELD, true);
-}
-
-void free_stationary_net(int item_index)
-{
-    item_def &item = env.item[item_index];
-    if (!item.is_type(OBJ_MISSILES, MI_THROWING_NET))
-        return;
-
-    const coord_def pos = item.pos;
-    // Probabilistically mulch net based on damage done, otherwise
-    // reset damage counter (ie: item.net_durability).
-    const bool mulch = item.props.exists(TRAP_PROJECTILE_KEY)
-                    || x_chance_in_y(-item.net_durability, 9);
-    if (mulch)
-        destroy_item(item_index);
-    else
-    {
-        item.net_durability = 0;
-        item.net_placed = false;
-    }
-
-    // Make sure we don't leave a bad trapping net in the stash
-    // FIXME: may leak info if a monster escapes an out-of-sight net.
-    StashTrack.update_stash(pos);
-    StashTrack.unmark_trapping_nets(pos);
-}
-
-void clear_trapping_net()
-{
-    if (!you.attribute[ATTR_HELD])
-        return;
-
-    if (!in_bounds(you.pos()))
-        return;
-
-    const int net = get_trapping_net(you.pos());
-    if (net == NON_ITEM)
-        leave_web(true);
-    else
-        free_stationary_net(net);
-
-    stop_being_held();
 }
 
 dungeon_feature_type trap_def::feature() const
@@ -1554,45 +1218,150 @@ void place_webs(int num)
     }
 }
 
-bool ensnare(actor *fly)
+bool player::trap_in_web()
 {
-    ASSERT(fly); // XXX: change to actor &fly
-    if (fly->is_web_immune())
+   if (is_web_immune() || caught())
         return false;
 
-    if (fly->caught())
-    {
-        // currently webs are stateless so except for flavour it's a no-op
-        if (fly->is_player())
-            mpr("You are even more entangled.");
-        return false;
-    }
+    you.attribute[ATTR_HELD] = 1;
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    quiver::set_needs_redraw();
 
-    // If we're over water, an open door, shop, portal, etc, the web will
-    // fail to attach and you'll be released after a single turn.
-    if (env.grid(fly->pos()) == DNGN_FLOOR)
-    {
-        place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
-        if (you.see_cell(fly->pos()))
-            env.grid(fly->pos()) = DNGN_TRAP_WEB;
-    }
-
-    if (fly->is_player())
-    {
-        if (_player_caught_in_web()) // no fail, returns false if already held
-            mpr("You are caught in a web!");
-    }
-    else
-    {
-        simple_monster_message(*fly->as_monster(), " is caught in a web!");
-        fly->as_monster()->add_ench(ENCH_HELD);
-    }
-
-    // Drowned?
-    if (!fly->alive())
-        return true;
+    mpr("You are caught in a web!");
 
     return true;
+}
+
+bool monster::trap_in_web()
+{
+    if (is_web_immune() || caught())
+        return false;
+
+    simple_monster_message(*this, " is caught in a web!");
+    add_ench(ENCH_HELD);
+
+    return true;
+}
+
+bool player::trap_in_net(bool real, bool quiet)
+{
+    if (!_net_immune_reason().empty() || caught())
+        return false;
+
+    you.attribute[ATTR_HELD] = NET_STARTING_DURABILITY;
+    you.props[NET_IS_REAL_KEY].get_bool() = real;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+    quiver::set_needs_redraw();
+
+    if (!quiet)
+        mpr("You become entangled in the net!");
+
+    stop_running();
+    stop_delay(true); // even stair delays
+    return true;
+}
+
+/**
+ * Attempt to trap a monster in a net.
+ *
+ * @param  real  Whether this net should drop on the ground after the monster
+ *               escapes (or dies).
+ * @param  quiet Whether to silence any messages caused by doing this.
+ * @return       Whether the monster was successfully trapped.
+ */
+bool monster::trap_in_net(bool real, bool quiet)
+{
+    if (caught())
+        return false;
+
+    if (is_insubstantial() || is_amorphous())
+    {
+        if (!quiet && you.can_see(*this))
+        {
+            if (is_insubstantial())
+                mprf("The net passes right through %s!", name(DESC_THE).c_str());
+            else
+                mprf("%s effortlessly oozes through the net!", name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    if (mons_is_tentacle_or_tentacle_segment(type)
+        || is_stationary() && !mons_has_attacks(*this))
+    {
+        return false;
+    }
+
+    add_ench(mon_enchant(ENCH_HELD, nullptr, 0, NET_STARTING_DURABILITY));
+    if (!quiet && you.see_cell(pos()))
+    {
+        if (!visible_to(&you))
+            mpr("Something gets caught in the net!");
+        else
+            simple_monster_message(*this, " is caught in the net!");
+    }
+
+    props[NET_IS_REAL_KEY].get_bool() = real;
+    return true;
+}
+
+void player::struggle_against_net()
+{
+    if (caught_by() == CAUGHT_WEB)
+    {
+        // Roll a chance to escape the web.
+        if (x_chance_in_y(3, 10))
+        {
+            mpr("You struggle to detach yourself from the web.");
+            return;
+        }
+        else
+        {
+            mpr("You disentangle yourself.");
+            stop_being_caught();
+            return;
+        }
+    }
+
+    // Handle nets now.
+    const int damage = random_range(1, 4);
+    you.attribute[ATTR_HELD] -= damage;
+    if (you.attribute[ATTR_HELD] <= 0)
+    {
+        mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
+        stop_being_caught();
+        return;
+    }
+
+    if (damage > 3)
+        mpr("You tear a large gash into the net.");
+    else
+        mpr("You struggle against the net.");
+}
+
+void player::stop_being_caught(bool drop_net)
+{
+    const caught_type ctype = caught_by();
+
+    if (ctype >= CAUGHT_NET)
+    {
+        props.erase(NET_IS_REAL_KEY);
+
+        // Make a fresh net to drop on the ground, with chance proportional to
+        // how much damage it suffered.
+        if (ctype == CAUGHT_NET && drop_net
+            && x_chance_in_y(you.attribute[ATTR_HELD], 9))
+        {
+            drop_net_at(pos());
+        }
+    }
+
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+    quiver::set_needs_redraw();
 }
 
 // Whether this trap type can be placed in vaults by the ^ glyph

@@ -88,14 +88,6 @@ InvEntry::InvEntry(const item_def &i)
     else
         text = i.name(DESC_A, false);
 
-    if (item_is_stationary_net(i))
-    {
-        actor *trapped = actor_at(i.pos);
-        text += make_stringf(" (holding %s)",
-                            trapped ? trapped->name(DESC_A).c_str()
-                                    : "nobody"); // buggy net, but don't crash
-    }
-
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(i.slot);
     else

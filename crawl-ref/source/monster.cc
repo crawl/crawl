@@ -1857,16 +1857,6 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
 {
     const item_def *miss = missiles();
 
-    if (!force)
-    {
-        if (item.sub_type == MI_THROWING_NET)
-        {
-            // Monster may not pick up trapping net.
-            if (caught() && item_is_stationary_net(item))
-                return false;
-        }
-    }
-
     if (miss && items_stack(*miss, item))
         return pickup(item, MSLOT_MISSILE, msg);
 
@@ -2615,7 +2605,7 @@ void monster::set_position(const coord_def &c)
 void monster::moveto(const coord_def& c, bool clear_net, bool clear_constrict)
 {
     if (clear_net && c != pos() && in_bounds(pos()))
-        mons_clear_trapping_net(this);
+        stop_being_caught(true);
 
     set_position(c);
 
@@ -5630,9 +5620,6 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    mons_clear_trapping_net(this);
-    mons_clear_trapping_net(other);
-
     // Swap monster positions. Cannot render inside here, since env.mgrid and monster
     // positions would mismatch.
     env.mgrid(old_pos) = other->mindex();
@@ -6129,8 +6116,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 "%s roars in fury and transforms into a fierce dragon!",
                 name(DESC_THE).c_str());
         }
-        if (caught())
-            check_net_will_hold_monster(this);
         if (this->is_constricted())
             this->stop_being_constricted();
 

@@ -1348,31 +1348,6 @@ static void _xom_bad_polymorph(int /*sever*/)
     _xom_polymorph_nearby_monster(false);
 }
 
-bool swap_monsters(monster* m1, monster* m2)
-{
-    monster& mon1(*m1);
-    monster& mon2(*m2);
-
-    const bool mon1_caught = mon1.caught();
-    const bool mon2_caught = mon2.caught();
-
-    mon1.swap_with(m2);
-
-    if (mon1_caught && !mon2_caught)
-    {
-        check_net_will_hold_monster(&mon2);
-        mon1.del_ench(ENCH_HELD, true);
-
-    }
-    else if (mon2_caught && !mon1_caught)
-    {
-        check_net_will_hold_monster(&mon1);
-        mon2.del_ench(ENCH_HELD, true);
-    }
-
-    return true;
-}
-
 /// Which monsters, if any, can Xom currently swap with the player?
 static vector<monster*> _rearrangeable_pieces()
 {
@@ -1421,7 +1396,7 @@ static void _xom_rearrange_pieces(int sever)
             while (mon1 == mon2)
                 mon2 = random2(num_mons);
 
-            if (swap_monsters(mons[mon1], mons[mon2]))
+            if (mons[mon1]->swap_with(mons[mon2]))
             {
                 if (!did_message)
                 {
@@ -1544,34 +1519,21 @@ static void _xom_lights_up_webs(int /*sever*/)
 
     for (coord_def pos : candidates)
     {
-        if (env.grid(pos) == DNGN_TRAP_WEB)
-        {
-            flash_tile(pos, RED, 0);
-            animation_delay(20, true);
+        flash_tile(pos, RED, 0);
+        animation_delay(20, true);
 
-            if (cloud_at(pos))
-                delete_cloud(pos);
+        if (cloud_at(pos))
+            delete_cloud(pos);
 
-            place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
+        place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
 
-            webs_count++;
-            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-            dungeon_terrain_changed(pos, DNGN_FLOOR);
+        webs_count++;
+        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        dungeon_terrain_changed(pos, DNGN_FLOOR);
 
-            if (get_trapping_net(pos, true) == NON_ITEM)
-            {
-                if (monster_at(pos) && monster_at(pos)->has_ench(ENCH_HELD))
-                {
-                    monster_web_cleanup(*monster_at(pos), true);
-                    monster_at(pos)->del_ench(ENCH_HELD);
-                }
-                else if (pos == you.pos() && you.attribute[ATTR_HELD])
-                {
-                    leave_web();
-                    stop_being_held();
-                }
-            }
-        }
+        if (actor* act = actor_at(pos))
+            if (act->caught_by() == CAUGHT_WEB)
+                act->stop_being_caught();
     }
 
     view_clear_overlays();

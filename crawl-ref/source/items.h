@@ -197,8 +197,6 @@ void say_farewell_to_weapon(const item_def &item);
 
 bool valid_item_index(int i);
 
-void maybe_split_nets(item_def &item, const coord_def& where);
-
 bool jewellery_is_redundant(const item_def& item);
 
 // stack_iterator guarantees validity so long as you don't manually

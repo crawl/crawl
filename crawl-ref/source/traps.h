@@ -14,7 +14,12 @@ using std::vector;
 
 #define NEWLY_TRAPPED_KEY "newly_trapped"
 
-#define NET_MIN_DURABILITY -7
+// If present on a held actor (even if false), it indicates they are held by a
+// net. If true, this is a 'real' net that should drop on the floor after they
+// escape.
+#define NET_IS_REAL_KEY "net_is_real"
+
+#define NET_STARTING_DURABILITY 8
 
 struct bolt;
 class monster;
@@ -22,16 +27,7 @@ struct trap_def;
 
 bool chaos_lace_criteria(monster* mon);
 
-void free_self_from_net();
-void mons_clear_trapping_net(monster* mon);
-void free_stationary_net(int item_index);
-
-int get_trapping_net(const coord_def& where, bool trapped = true);
 const char* held_status(actor *act = nullptr);
-bool monster_caught_in_net(monster* mon);
-bool player_caught_in_net();
-void clear_trapping_net();
-void check_net_will_hold_monster(monster* mon);
 vector<coord_def> find_golubria_on_level();
 
 dungeon_feature_type trap_feature(trap_type type) IMMUTABLE;
@@ -51,10 +47,6 @@ int       trap_rate_for_place();
 trap_type random_trap_for_place(bool dispersal_ok = true);
 
 void place_webs(int num);
-bool ensnare(actor *fly);
-void leave_web(bool quiet = false);
-void monster_web_cleanup(const monster &mons, bool quiet = false);
-void stop_being_held();
 
 bool is_regular_trap(trap_type trap);
 #if TAG_MAJOR_VERSION == 34

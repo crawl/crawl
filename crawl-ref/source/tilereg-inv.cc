@@ -282,14 +282,6 @@ bool InventoryRegion::update_tip_text(string& tip)
         if (!display_actions)
             return true;
 
-        if (item_is_stationary_net(item))
-        {
-            actor *trapped = actor_at(item.pos);
-            tip += make_stringf(" (holding %s)",
-                            trapped ? trapped->name(DESC_A).c_str()
-                                    : "nobody"); // buggy net, but don't crash
-        }
-
         if (!item_is_stationary(item))
         {
             tip += "\n[L-Click] Pick up (%)";

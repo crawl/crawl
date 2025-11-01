@@ -441,7 +441,7 @@ void revive()
 
     you.magic_contamination = 0;
 
-    clear_trapping_net();
+    you.stop_being_caught(true);
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     if (you.form != you.default_form)
