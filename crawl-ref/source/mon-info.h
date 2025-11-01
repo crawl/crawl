@@ -306,6 +306,7 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    bool can_shoot_through_monster;
     bool sleepwalking;
     bool backlit;
     bool umbraed;

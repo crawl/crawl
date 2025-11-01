@@ -97,6 +97,12 @@ MIRET1(boolean, is_damage_immune, is(MB_PLAYER_DAMAGE_IMMUNE))
  * @function attitude
  */
 MIRET1(number, attitude, attitude)
+/*** Whether the player can shoot through the monster.
+ *
+ * @treturn bool
+ * @function can_shoot_through_monster
+ */
+MIRET1(boolean, can_shoot_through_monster, can_shoot_through_monster)
 /*** The monster's threat level.
  * A numeric representation of the the threat level in the monster list.
  *
@@ -923,6 +929,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(holiness),
     MIREG(intelligence),
     MIREG(attitude),
+    MIREG(can_shoot_through_monster),
     MIREG(threat),
     MIREG(is_caught),
     MIREG(is_constricted),

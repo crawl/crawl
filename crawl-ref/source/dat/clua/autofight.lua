@@ -340,7 +340,62 @@ local function get_target(no_move)
   return bestx, besty, best_info
 end
 
+local function target_score(monster_x, monster_y, target_x, target_y)
+  -- TODO: this is a hack using an arbitrary beam spell. Replace with a
+  -- dedicated path function for "normal" projectiles.
+  path = spells.path("Plasma Beam", target_x, target_y, 0,0, true)
+  num_hostile = 0
+  num_friendly = 0
+  hit_original = false
+  for i,coords in ipairs(path) do
+    path_x = coords[1]
+    path_y = coords[2]
+    if path_x == monster_x and path_y == monster_y then
+      hit_original = true
+    end
+    if is_candidate_for_attack(path_x, path_y, false) then
+      num_hostile = num_hostile + 1
+    else
+      m = monster.get_monster_at(path_x, path_y)
+      if m and not m:can_shoot_through_monster() then
+        num_friendly = num_friendly + 1
+      end
+    end
+  end
+  if not hit_original then
+    -- Must hit original target.
+    return -math.huge
+  else
+    return num_hostile - 100 * num_friendly
+  end
+end
+
+-- Find the best target point to shoot at to hit (x, y).
+local function best_target(x, y)
+  local los_radius = you.los()
+  local bestx, besty
+  bestx = x
+  besty = y
+  -- Shoot straight at the target unless we can do better.
+  best_score = target_score(x, y, x, y)
+  for try_x = -los_radius,los_radius do
+    for try_y = -los_radius,los_radius do
+      if view.cell_see_cell(0,0,try_x,try_y) then
+        score = target_score(x, y, try_x, try_y)
+        if score > best_score then
+          bestx = try_x
+          besty = try_y
+          best_score = score
+        end
+      end
+    end
+  end
+  return bestx, besty
+end
+
 local function attack_fire(x,y)
+  -- Try to find a better place to shoot that goes through (x, y).
+  x, y = best_target(x, y)
   if AUTOFIGHT_FORCE_FIRE or not have_ranged() then
     -- fire from quiver
     crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_FIRE_STOP)
