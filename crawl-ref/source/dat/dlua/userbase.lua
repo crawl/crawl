@@ -203,8 +203,8 @@ end
 --
 -- This value is cleared after every ability activation.
 --
--- The current table mapping letters to abilities can be accessed with the
--- @{you.ability_table} function.
+-- The current mapping of letters to abilities can be accessed with the
+-- @{you.ability_info} function.
 chk_ability_choice = ""
 
 --- Ability choice internal hook.
