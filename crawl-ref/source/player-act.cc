@@ -821,6 +821,7 @@ bool player::is_web_immune() const
 {
     return is_insubstantial()
         || is_amorphous()
+        || you.form == transformation::spider
         || you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
 }
 
