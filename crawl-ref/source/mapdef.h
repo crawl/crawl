@@ -611,7 +611,7 @@ public:
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
-    string add_item(const string &spec, bool fix = false);
+    string add_item(const string &spec, bool fix = false, bool ignore_excluded = false);
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
@@ -631,7 +631,7 @@ private:
 
 private:
     item_spec item_by_specifier(const string &spec);
-    item_spec_slot parse_item_spec(string spec);
+    item_spec_slot parse_item_spec(string spec, bool ignore_excluded = false);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);

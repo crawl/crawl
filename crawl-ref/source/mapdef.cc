@@ -4926,11 +4926,11 @@ item_spec item_list::get_item(int index)
     return pick_item(items[index]);
 }
 
-string item_list::add_item(const string &spec, bool fix)
+string item_list::add_item(const string &spec, bool fix, bool ignore_excluded)
 {
     error.clear();
 
-    item_spec_slot sp = parse_item_spec(spec);
+    item_spec_slot sp = parse_item_spec(spec, ignore_excluded);
     if (error.empty())
     {
         if (fix)
@@ -5870,7 +5870,7 @@ void item_list::parse_raw_name(string name, item_spec &spec)
     error = make_stringf("Bad item name: '%s'", name.c_str());
 }
 
-item_list::item_spec_slot item_list::parse_item_spec(string spec)
+item_list::item_spec_slot item_list::parse_item_spec(string spec, bool ignore_excluded)
 {
     // lowercase(spec);
 
@@ -5884,7 +5884,8 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
             dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
             continue;
         }
-        if (parsed_spec.props.exists(NO_EXCLUDE_KEY)
+        if (ignore_excluded
+            || parsed_spec.props.exists(NO_EXCLUDE_KEY)
             || !item_excluded_from_set(parsed_spec.base_type, parsed_spec.sub_type))
         {
             list.ilist.push_back(parsed_spec);

@@ -40,7 +40,8 @@ int create_item_named(string name, coord_def pos, string *error)
     trim_string(name);
 
     item_list ilist;
-    const string err = ilist.add_item(name, false);
+    // Create the specified item regardless of whether it's excluded.
+    const string err = ilist.add_item(name, false, true);
     if (!err.empty())
     {
         if (error)
