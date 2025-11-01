@@ -820,6 +820,7 @@ static bool _vampire_make_thrall(monster* mons)
     return true;
 }
 
+static void _blorkula_bat_merge_message(monster* blork);
 
 /**
  * Attempt to get a deathbed conversion for the given orc.
@@ -853,6 +854,15 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         {
             ctype = follower ? conv_t::vengeance_follower
                              : conv_t::vengeance;
+        }
+
+        // XXX: If Blorkula got a deathbed conversion as a bat, he'll have
+        // re-formed into an orc by now. Properly mention this just before
+        // his conversion message.
+        if (mons.type == MONS_BLORKULA_THE_ORCULA
+            && mons.props.exists(BLORKULA_DIE_FOR_REAL_KEY))
+        {
+            _blorkula_bat_merge_message(&mons);
         }
 
         beogh_convert_orc(&mons, ctype);
@@ -1053,6 +1063,11 @@ void blorkula_bat_merge(monster& bat)
     }
     blork->move_to_pos(pos);
 
+    _blorkula_bat_merge_message(blork);
+}
+
+static void _blorkula_bat_merge_message(monster* blork)
+{
     if (you.can_see(*blork))
     {
         mprf(MSGCH_MONSTER_SPELL,
