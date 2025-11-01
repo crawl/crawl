@@ -179,12 +179,12 @@ public:
        a control message, it will be written into c; otherwise,
        it still has to be read from stdin.
 
-       If block is false, await_input will immediately return,
+       If timeout_millisecond is zero, await_input will immediately return,
        even if no input is available. The return value indicates
        whether input can be read from stdin; c will be non-zero
        if input came via a control message.
      */
-    bool await_input(wint_t& c, bool block);
+    bool await_input(wint_t& c, int timeout_millisecond);
 
     void check_for_control_messages();
 
