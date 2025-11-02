@@ -1656,6 +1656,15 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         if (ash_has_skill_boost(skill))
             you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
 
+        // Factor in wildshape amulet bonus (+5 shapeshifting levels)
+        if (skill == SK_SHAPESHIFTING && you.wearing_jewellery(AMU_WILDSHAPE))
+        {
+            const int wildshape_level = min(you.skills[skill] + 5,
+                                            (int)MAX_SKILL_LEVEL);
+            you_skill += skill_exp_needed(wildshape_level, skill)
+                         - skill_exp_needed(you.skills[skill], skill);
+        }
+
         if (you.skill_manual_points[skill])
             target = you_skill + (target - you_skill) / 2;
     }
