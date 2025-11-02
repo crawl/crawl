@@ -760,7 +760,8 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
+            tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc),
+                                     ' ');
             tip += "\n";
         }
         else

@@ -917,19 +917,23 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
 
 void tile_draw_floor()
 {
-    for (int cy = 0; cy < tile_env.fg.height(); cy++)
-        for (int cx = 0; cx < tile_env.fg.width(); cx++)
+    tile_env.icons.clear();
+
+    for (int cy = 0; cy < ENV_SHOW_DIAMETER; cy++)
+        for (int cx = 0; cx < ENV_SHOW_DIAMETER; cx++)
         {
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
+            if (!map_bounds(gc))
+                continue;
+
             tileidx_t bg = _get_floor_bg(gc);
 
             // init tiles
-            tile_env.bg(ep) = bg;
-            tile_env.fg(ep) = 0;
-            tile_env.cloud(ep) = 0;
-            tile_env.icons.erase(ep);
+            tile_env.bk_bg(gc) = bg;
+            tile_env.bk_fg(gc) = 0;
+            tile_env.bk_cloud(gc) = 0;
         }
 }
 
@@ -951,43 +955,18 @@ static void _tile_place_item(const coord_def &gc, const item_def &item,
     if (more_items)
         t |= TILE_FLAG_S_UNDER;
 
-    if (you.see_cell(gc))
-    {
-        const coord_def ep = crawl_view.grid2show(gc);
-        if (tile_env.fg(ep))
-            return;
+    tile_env.bk_fg(gc) = t;
 
-        tile_env.fg(ep) = t;
-
-        if (item_needs_autopickup(item))
-            tile_env.bg(ep) |= TILE_FLAG_CURSOR3;
-    }
-    else
-    {
-        tile_env.bk_fg(gc) = t;
-
-        if (item_needs_autopickup(item))
-            tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
-    }
+    if (item_needs_autopickup(item))
+        tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
 }
 
 static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
-    if (you.see_cell(gc))
-    {
-        const coord_def ep = crawl_view.grid2show(gc);
-        tile_env.fg(ep) |= TILE_FLAG_S_UNDER;
+    tile_env.bk_fg(gc) = ((tileidx_t)tile_env.bk_fg(gc)) | TILE_FLAG_S_UNDER;
 
-        if (item_needs_autopickup(item))
-            tile_env.bg(ep) |= TILE_FLAG_CURSOR3;
-    }
-    else
-    {
-        tile_env.bk_fg(gc) = ((tileidx_t) tile_env.bk_fg(gc)) | TILE_FLAG_S_UNDER;
-
-        if (item_needs_autopickup(item))
-            tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
-    }
+    if (item_needs_autopickup(item))
+        tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
 }
 
 /**
@@ -1004,12 +983,9 @@ static void _tile_place_invisible_monster(const coord_def &gc)
     // see tileidx_feature
     // That tile is hidden by clouds though
     if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
-    {
-        if (you.see_cell(gc))
-            tile_env.fg(ep) = TILE_UNSEEN_MONSTER;
-        else
-            tile_env.bk_fg(gc) = TILE_UNSEEN_MONSTER;
-    }
+        tile_env.bk_fg(gc) = TILE_UNSEEN_MONSTER;
+    else
+        tile_env.bk_fg(gc) = 0;
 
     if (env.map_knowledge(gc).item())
         _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
@@ -1017,8 +993,6 @@ static void _tile_place_invisible_monster(const coord_def &gc)
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
-    const coord_def ep = grid2show(gc);
-
     tileidx_t t    = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
@@ -1032,12 +1006,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
             t |= TILE_FLAG_S_UNDER;
 
             if (item_needs_autopickup(*env.map_knowledge(gc).item()))
-            {
-                if (you.see_cell(gc))
-                    tile_env.bg(ep) |= TILE_FLAG_CURSOR3;
-                else
-                    tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
-            }
+                tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
         }
     }
     else
@@ -1046,15 +1015,12 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         t = flag | (mcache_idx ? mcache_idx : t0);
     }
 
+    tile_env.bk_fg(gc) = t;
     if (!you.see_cell(gc))
-    {
-        tile_env.bk_fg(gc) = t;
         return;
-    }
-    tile_env.fg(ep) = t;
     set<tileidx_t> status_icons = status_icons_for(mon);
     if (!status_icons.empty())
-        tile_env.icons[ep] = std::move(status_icons);
+        tile_env.icons[gc] = std::move(status_icons);
 
     // Add name tags.
     if (!mons_class_gives_xp(mon.type))
@@ -1097,13 +1063,7 @@ void tile_reset_fg(const coord_def &gc)
 
 static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
 {
-    if (you.see_cell(gc))
-    {
-        const coord_def ep = grid2show(gc);
-        tile_env.cloud(ep) = tileidx_cloud(cl);
-    }
-    else
-        tile_env.bk_cloud(gc) = tileidx_cloud(cl);
+    tile_env.bk_cloud(gc) = tileidx_cloud(cl);
 }
 
 void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
@@ -1112,12 +1072,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         tile_env.bk_bg(gc) = _get_floor_bg(gc);
 
     if (you.see_cell(gc))
-    {
-        const coord_def ep = grid2show(gc);
-        tile_env.fg(ep) = 0;
-        tile_env.cloud(ep) = 0;
-        tile_env.icons.erase(ep);
-    }
+        tile_env.icons.erase(gc);
 
     const map_cell& cell = env.map_knowledge(gc);
 

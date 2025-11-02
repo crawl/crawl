@@ -15,15 +15,9 @@ struct crawl_tile_environment
     FixedArray<tile_fg_store, GXM, GYM> bk_fg;
     FixedArray<tileidx_t, GXM, GYM> bk_bg;
     FixedArray<tileidx_t, GXM, GYM> bk_cloud;
-#endif
-    FixedArray<tile_flavour, GXM, GYM> flv;
-    // indexed by (show-1) coords
-#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
-    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> fg;
-    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> bg;
-    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> cloud;
     map<coord_def, set<tileidx_t>> icons;
 #endif
+    FixedArray<tile_flavour, GXM, GYM> flv;
     tile_flavour default_flavour;
     std::vector<std::string> names;
 };
