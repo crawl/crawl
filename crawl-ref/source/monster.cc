@@ -4989,7 +4989,10 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-bool monster::can_get_mad() const
+/**
+ * Can the monster suffer ENCH_FRENZIED?
+ */
+bool monster::can_go_frenzy() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5007,26 +5010,11 @@ bool monster::can_get_mad() const
     return true;
 }
 
-/**
- * Can the monster suffer ENCH_FRENZIED?
- */
-bool monster::can_go_frenzy() const
-{
-    if (!can_get_mad())
-        return false;
-
-    // These allies have a special loyalty
-    if (never_harm_monster(&you, this))
-        return false;
-
-    return true;
-}
-
 bool monster::can_go_berserk() const
 {
     return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
            && mons_has_attacks(*this)
-           && can_get_mad();
+           && can_go_frenzy();
 }
 
 bool monster::berserk() const
