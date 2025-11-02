@@ -1789,8 +1789,7 @@ static void _add_tentacle_overlay(const coord_def pos,
     if (!in_bounds(next))
         return;
 
-    const coord_def next_showpos(grid2show(next));
-    if (!show_bounds(next_showpos))
+    if (!show_bounds(grid2show(next)))
         return;
 
     tile_flags flag;
@@ -1802,7 +1801,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case main_dir::west: flag = TILE_FLAG_TENTACLE_SE; break;
         default: die("invalid direction");
     }
-    tile_env.bg(next_showpos) |= flag;
+    tile_env.bk_bg(next) |= flag;
 
     switch (type)
     {
@@ -1814,7 +1813,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case tentacle_type::spectral_kraken: flag = TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN; break;
         default: flag = TILE_FLAG_TENTACLE_KRAKEN;
     }
-    tile_env.bg(next_showpos) |= flag;
+    tile_env.bk_bg(next) |= flag;
 }
 
 static void _handle_tentacle_overlay(const coord_def pos,

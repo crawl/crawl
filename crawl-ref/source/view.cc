@@ -1136,16 +1136,6 @@ static update_flags player_view_update_at(const coord_def &gc)
         env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
     }
 
-#ifdef USE_TILE
-    const coord_def ep = grid2show(gc);
-
-    // We remove any references to mcache when
-    // writing to the background.
-    tile_env.bk_fg(gc) = tile_env.fg(ep);
-    tile_env.bk_bg(gc) = tile_env.bg(ep);
-    tile_env.bk_cloud(gc) = tile_env.cloud(ep);
-#endif
-
     return ret;
 }
 
@@ -1187,8 +1177,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 #endif
 }
 
-static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
-                                    const coord_def &ep)
+static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
@@ -1198,16 +1187,14 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
     if (in_bounds(gc))
-        cell->tile.bg = tile_env.bg(ep);
+        cell->tile.bg = tile_env.bk_bg(gc);
 
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
-#else
-    UNUSED(ep);
 #endif
 }
 
 static void _draw_player(screen_cell_t *cell,
-                         const coord_def &gc, const coord_def &ep,
+                         const coord_def &gc,
                          bool anim_updates)
 {
     // Player overrides everything in cell.
@@ -1228,19 +1215,19 @@ static void _draw_player(screen_cell_t *cell,
     cell->colour = real_colour(cell->colour);
 
 #ifdef USE_TILE
-    cell->tile.fg = tile_env.fg(ep) = tileidx_player();
-    cell->tile.bg = tile_env.bg(ep);
-    cell->tile.cloud = tile_env.cloud(ep);
+    cell->tile.fg = tileidx_player();
+    cell->tile.bg = tile_env.bk_bg(gc);
+    cell->tile.cloud = tile_env.bk_cloud(gc);
     cell->tile.icons = status_icons_for_player();
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
-    UNUSED(ep, anim_updates);
+    UNUSED(anim_updates);
 #endif
 }
 
 static void _draw_los(screen_cell_t *cell,
-                      const coord_def &gc, const coord_def &ep,
+                      const coord_def &gc,
                       bool anim_updates)
 {
     cglyph_t g = get_cell_glyph(gc);
@@ -1248,15 +1235,15 @@ static void _draw_los(screen_cell_t *cell,
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    cell->tile.fg = tile_env.fg(ep);
-    cell->tile.bg = tile_env.bg(ep);
-    cell->tile.cloud = tile_env.cloud(ep);
-    if (set<tileidx_t>* icons = map_find(tile_env.icons, ep))
+    cell->tile.fg = tile_env.bk_fg(gc);
+    cell->tile.bg = tile_env.bk_bg(gc);
+    cell->tile.cloud = tile_env.bk_cloud(gc);
+    if (set<tileidx_t>* icons = map_find(tile_env.icons, gc))
         cell->tile.icons = *icons;
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
-    UNUSED(ep, anim_updates);
+    UNUSED(anim_updates);
 #endif
 }
 
@@ -1728,23 +1715,22 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     cell->tile.clear();
 #endif
-    const coord_def ep = grid2show(gc);
 
     if (!map_bounds(gc))
         _draw_out_of_bounds(cell);
     else if (!crawl_view.in_los_bounds_g(gc))
-        _draw_outside_los(cell, gc, coord_def());
+        _draw_outside_los(cell, gc);
     else if (gc == you.pos() && you.on_current_level
              && _layers & Layer::PLAYER
              && !crawl_state.game_is_arena()
              && !crawl_state.arena_suspended)
     {
-        _draw_player(cell, gc, ep, anim_updates);
+        _draw_player(cell, gc, anim_updates);
     }
     else if (you.see_cell(gc))
-        _draw_los(cell, gc, ep, anim_updates);
+        _draw_los(cell, gc, anim_updates);
     else
-        _draw_outside_los(cell, gc, ep); // in los bounds but not visible
+        _draw_outside_los(cell, gc); // in los bounds but not visible
 
 #ifdef USE_TILE
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();

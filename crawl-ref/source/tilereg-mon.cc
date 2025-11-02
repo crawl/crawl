@@ -171,15 +171,14 @@ void MonsterRegion::pack_buffers()
             if (mon)
             {
                 const coord_def gc = mon->pos;
-                const coord_def ep = grid2show(gc);
 
                 if (crawl_view.in_los_bounds_g(gc))
                 {
                     packed_cell cell;
-                    cell.fg = tile_env.fg(ep);
-                    cell.bg = tile_env.bg(ep);
+                    cell.fg = tile_env.bk_fg(gc);
+                    cell.bg = tile_env.bk_bg(gc);
                     cell.flv = tile_env.flv(gc);
-                    if (set<tileidx_t>* icons = map_find(tile_env.icons, ep))
+                    if (set<tileidx_t>* icons = map_find(tile_env.icons, gc))
                         cell.icons = *icons;
                     tile_apply_properties(gc, cell);
 
