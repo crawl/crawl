@@ -5343,7 +5343,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     else if (attack.flavour == AF_CRUSH)
         dam = 0;
     else if (attack.flavour == AF_PAIN)
-        flav_dam = (mi.props.exists(NECROMANCER_KEY)) ? mi.hd * 2 : mi.hd/ 2;
+        flav_dam = (mi.props.exists(NECROMANCER_KEY)) ? mi.hd * 2 : mi.hd / 2;
     else if (wpn)
     {
         // From attack::calc_damage
