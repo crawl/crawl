@@ -5193,7 +5193,7 @@ static int _monster_slaying(const monster_info& mi)
 // Max damage from a magical staff with a given amount of staff & evo skill
 static int _staff_max_damage(stave_type staff, int staff_skill, int evo_skill)
 {
-    return (2 * staff_skill + evo_skill) * staff_damage_mult(staff) / 80 - 1;
+    return max(0, (2 * staff_skill + evo_skill) * staff_damage_mult(staff) / 80 - 1);
 }
 
 // Describe the damage from a monster's magical staff
