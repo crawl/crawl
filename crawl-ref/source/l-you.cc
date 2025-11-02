@@ -1003,13 +1003,14 @@ static int you_known_items(lua_State *ls)
 }
 
 /*** Activate an ability by name, supplying a target where relevant. If the
- * ability is not targeted, the target is ignored. An invalid target will
- * open interactive targeting.
+ * ability is not targeted, the target is ignored. An invalid target will open
+ * interactive targeting.
  *
- * @tparam string the name of the ability
+ * @tparam string name the name of the ability
  * @tparam[opt=0] number x coordinate
  * @tparam[opt=0] number y coordinate
- * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @tparam[opt=false] boolean aimed_at_spot if true, aim at the target; if
+ * false, shoot past it.
  * @treturn boolean whether an action took place
  * @function activate_ability
  */

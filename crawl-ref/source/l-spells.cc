@@ -98,15 +98,15 @@ LUAFN(l_spells_min_range)
 
 
 /*** If this spell is aimed at (x,y), what path will it actually take?
- * @tparam string spell name
+ * @tparam string spell the name of the spell
  * @tparam int x coordinate to aim at, in player coordinates
  * @tparam int y coordinate to aim at, in player coordinates
- * @tparam int x coordinate of spell source, in player coordinates (default=0)
- * @tparam int y coordinate of spell source, in player coordinates (default=0)
- * @tparam boolean[opt=false] if true, have the spell aim at the target; if
- *                            false, shoot past it.
+ * @tparam[opt=0] int source_x coordinate of spell source, in player coordinates
+ * @tparam[opt=0] int source_y coordinate of spell source, in player coordinates
+ * @tparam[opt=true] boolean aimed_at_spot if true, aim at the target; if
+ * false, shoot past it.
  * @treturn table|nil a table of {x,y} of the path the spell will take, in
- *                    player coordinates.
+ * player coordinates.
  * Nil is returned if the spell does not follow a path (eg. smite-targeted
  * spells) or if the spell has zero range.
  * @function path
