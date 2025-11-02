@@ -1383,7 +1383,11 @@ static string _desc_attack_delay(const item_def &item)
     // Hide speed/heavy brand from unidentified weapons.
     item_def dummy = item;
     if (!item.is_identified())
+    {
         dummy.brand = SPWPN_NORMAL;
+        if (is_artefact(dummy))
+            artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
+    }
 
     const int cur_delay = _get_delay(dummy);
 
