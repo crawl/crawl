@@ -10,7 +10,7 @@ Build-Depends:
  flex,
  fonts-dejavu-core,
  libfreetype6-dev,
- liblua5.1-0-dev,
+ liblua5.4-dev,
  libncursesw5-dev,
  libpng-dev,
  libsdl2-dev,
