@@ -2212,6 +2212,12 @@ void fire_tracer(const monster* mons, targeting_tracer& tracer,
 
     pbolt.in_explosion_phase = false;
 
+    // XXX: Make monsters calculate fire storm radius as if it rolled the
+    // highest (or they will sometimes not realize when they might hit the
+    // player).
+    if (pbolt.origin_spell == SPELL_FIRE_STORM)
+        pbolt.ex_size = 3;
+
     // Fire!
     if (explode_only)
         pbolt.explode(tracer, false, explosion_hole);
