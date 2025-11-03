@@ -1932,6 +1932,12 @@ bool can_beckon(const actor &beckoned)
         && !mons_is_tentacle_or_tentacle_segment(beckoned.type); // a mess...
 }
 
+bool can_beckon(const monster_info& beckoned)
+{
+    return !beckoned.is_stationary()  // don't move statues, etc
+        && !mons_is_tentacle_or_tentacle_segment(beckoned.type); // a mess...
+}
+
 /**
  * Where is the closest point along the given path to its source that the given
  * actor can be moved to?

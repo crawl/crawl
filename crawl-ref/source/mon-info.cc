@@ -2231,3 +2231,9 @@ monster* monster_info::get_known_summoner() const
 
     return summoner;
 }
+
+
+bool monster_info::is_stationary() const
+{
+    return mons_class_is_stationary(type);
+}
