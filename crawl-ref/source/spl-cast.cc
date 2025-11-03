@@ -1326,8 +1326,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_smite>(&you, range);
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
-    case SPELL_GLACIATE:
-        return make_unique<targeter_cone>(&you, range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range, gravitas_radius(pow),
                                                         gravitas_radius(pow));
@@ -2759,9 +2757,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SIMULACRUM:
         return cast_simulacrum(spd.target, powc, fail);
-
-    case SPELL_GLACIATE:
-        return cast_glaciate(&you, powc, target, fail);
 
     case SPELL_GRAVE_CLAW:
         return cast_grave_claw(you, spd.target, powc, fail);

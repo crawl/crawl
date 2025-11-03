@@ -3927,46 +3927,17 @@ bool handle_searing_ray(actor& agent, int turn)
     return true;
 }
 
-/**
- * Can a casting of Glaciate by the player injure the given creature?
- *
- * @param victim        The potential victim.
- * @return              Whether Glaciate can harm that victim.
- *                      (False for IOODs or friendly battlespheres.)
- */
-static bool _player_glaciate_affects(const actor *victim)
-{
-    // TODO: deduplicate this with beam::ignores
-    if (!victim)
-        return false;
-
-    const monster* mon = victim->as_monster();
-    if (!mon) // player
-        return true;
-
-    return !mons_is_projectile(*mon)
-            && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
-}
-
 dice_def glaciate_damage(int pow, int eff_range)
 {
     // At or within range 3, this is equivalent to the old Ice Storm damage.
     return calc_dice(10, (54 + 3 * pow / 2) / eff_range);
 }
 
-spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
+spret cast_glaciate(actor *caster, int pow, coord_def aim)
 {
     const int range = spell_range(SPELL_GLACIATE, caster, pow);
     targeter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
-
-    if (caster->is_player()
-        && stop_attack_prompt(hitfunc, "glaciate", _player_glaciate_affects))
-    {
-        return spret::abort;
-    }
-
-    fail_check();
 
     bolt beam;
     beam.name              = "great icy blast";
