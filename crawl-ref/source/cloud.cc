@@ -759,7 +759,7 @@ bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
  * @param cl_type     The type of cloud to place.
  * @param ctarget     The location of the cloud.
  * @param cl_range    How many turns the cloud will take to decay.
- * @param agent       Any agent that may have caused the cloud. If this is the
+ * @param orig_agent  Any agent that may have caused the cloud. If this is the
  *                    player, god conducts are applied.
  * @param spread_rate How quickly the cloud spreads.
  * @param excl_rad    How large of an exclusion radius to make around the
@@ -770,7 +770,7 @@ bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
  * @return  Whether a cloud was actually placed at this location.
 */
 bool place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 const actor *agent, int spread_rate, int excl_rad,
+                 const actor *orig_agent, int spread_rate, int excl_rad,
                  bool do_conducts)
 {
     if (!in_bounds(ctarget) || cell_is_solid(ctarget))
@@ -789,6 +789,12 @@ bool place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         return false;
     }
 
+    // Pretend clouds made by a marionette are from the player
+    // (Except for purposes of conducts).
+    const actor* agent = orig_agent && orig_agent->temp_attitude() == ATT_MARIONETTE
+                            ? &you
+                            : orig_agent;
+
     const monster * const mons = monster_at(ctarget);
 
     god_conduct_trigger conducts[3];
@@ -798,6 +804,7 @@ bool place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (agent && agent->is_player())
     {
         if (do_conducts
+            && orig_agent == &you
             && mons && mons->alive()
             && !actor_cloud_immune(*mons, cl_type))
         {
