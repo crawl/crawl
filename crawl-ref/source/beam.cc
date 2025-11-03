@@ -2208,12 +2208,7 @@ void fire_tracer(const monster* mons, targeting_tracer& tracer,
 
     // If there's a specifically requested foe_ratio, honour it.
     if (!pbolt.foe_ratio)
-    {
         pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
-
-        if (mons_is_hepliaklqana_ancestor(mons->type))
-            pbolt.foe_ratio = 100; // do not harm the player!
-    }
 
     pbolt.in_explosion_phase = false;
 
