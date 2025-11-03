@@ -119,11 +119,13 @@ struct targeting_tracer : beam_tracer
 {
     tracer_info foe_info;
     tracer_info friend_info;
+    bool abort_for_player = false;
 
     targeting_tracer() {}
 
     bool has_hit_foe() noexcept override;
     void actor_affected(bool friendly_fire, int power) noexcept override;
+    void player_hit() noexcept override;
 
     ai_action::goodness good_to_fire(int foe_ratio) const;
 };

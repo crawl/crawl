@@ -3426,8 +3426,8 @@ void bolt::tracer_affect_player()
     if (flavour == BEAM_UNRAVELLING && player_is_debuffable())
         is_explosion = true;
 
-    const actor* ag = agent();
     const bool harmless = harmless_to_player();
+    const bool friendly = mons_att_wont_attack(attitude);
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
@@ -3435,20 +3435,16 @@ void bolt::tracer_affect_player()
         if (!harmless)
             tracer->actor_affected(true, you.experience_level);
     }
-    else if (can_see_invis
-             || !you.invisible()
-             || ag && ag->as_monster()->friendly()
-             || fuzz_invis_tracer())
+    // Hostile monsters that can see the player or guess their location.
+    else if (!friendly && !harmless
+             && (can_see_invis || !you.invisible() || fuzz_invis_tracer()))
     {
-        // Do we really want to count friendly monsters hitting the player
-        // with a harmless bolt as them hitting an enemy? -- Wizard Ike
-        bool friendly_fire = mons_att_wont_attack(attitude)
-                             && !harmless;
         int power = you.experience_level;
-        tracer->actor_affected(friendly_fire, power);
+        tracer->actor_affected(false, power);
     }
 
-    if (!harmless)
+    // Friendly monsters will always abort harmful effects that hit the player.
+    if (friendly && !harmless)
         tracer->player_hit();
     extra_range_used += range_used_on_hit();
 }
@@ -7783,6 +7779,10 @@ ai_action::goodness targeting_tracer::good_to_fire(int foe_ratio) const
     if (foe_info.count == 0)
         return ai_action::neutral();
 
+    // If a friendly harmed a player in any way, always abort.
+    if (abort_for_player)
+        return ai_action::bad();
+
     const int total_pow = foe_info.power + friend_info.power;
     // Only fire if they do acceptably low collateral damage.
     if (!friend_info.power
@@ -7933,6 +7933,11 @@ void targeting_tracer::actor_affected(bool friendly_fire, int power) noexcept
         foe_info.count++;
         foe_info.power += power;
     }
+}
+
+void targeting_tracer::player_hit() noexcept
+{
+    abort_for_player = true;
 }
 
 // returns true if the player wishes to cancel firing the bolt, false otherwise
