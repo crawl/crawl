@@ -1323,7 +1323,7 @@ void explosion_fineff::fire()
             actor *act = actor_at(*ai);
             if (!act
                 || act->is_stationary()
-                || act->is_monster() && never_harm_monster(&you, *act->as_monster()))
+                || !could_harm(&you, act))
             {
                 continue;
             }
@@ -1708,7 +1708,7 @@ void pyromania_fineff::fire()
     {
         if (monster* mon = monster_at(*ri))
         {
-            if (!never_harm_monster(&you, mon))
+            if (could_harm(&you, mon))
             {
                 found = true;
                 break;

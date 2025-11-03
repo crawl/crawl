@@ -40,7 +40,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     monster* mons = victim->as_monster();
 
     // Skip some ineligable monster categories
-    if (victim->is_peripheral() || never_harm_monster(agent, mons))
+    if (victim->is_peripheral() || !could_harm(agent, mons))
         return 0;
 
     if (victim->res_cold() > 0)
@@ -284,7 +284,7 @@ bool maybe_spread_rimeblight(monster& victim, int power)
 {
     if (!victim.has_ench(ENCH_RIMEBLIGHT)
         && !victim.is_peripheral()
-        && !never_harm_monster(&you, victim)
+        && could_harm(&you, &victim)
         && you.see_cell_no_trans(victim.pos()))
     {
         apply_rimeblight(victim, power);

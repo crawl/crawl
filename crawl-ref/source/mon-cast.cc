@@ -5966,10 +5966,6 @@ static void _mons_mesmerise(monster& mons)
 
 static ai_action::goodness _should_irradiate(const monster &mons)
 {
-    // make allied monsters extra reluctant to irradiate in melee.
-    if (mons.wont_attack() && adjacent(you.pos(), mons.pos()))
-        return ai_action::bad();
-
     bolt tracer;
     tracer.flavour = BEAM_MMISSILE;
     tracer.range = 0;

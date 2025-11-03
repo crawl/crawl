@@ -6640,9 +6640,7 @@ bool monster::angered_by_attacks() const
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
-            && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS)
-            // XXX: Is this relevant if we can't harm them in the first place?
-            && !never_harm_monster(&you, *this);
+            && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS);
 }
 
 bool monster::is_band_follower_of(const monster& leader) const

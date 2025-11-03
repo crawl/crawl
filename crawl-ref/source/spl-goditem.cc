@@ -1204,6 +1204,7 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     int damage = 0;
 
     if (where == you.pos() && you.alive()
+        && could_harm(attacker, &you)
         // The Sceptre of Torment and pain card do not affect the user.
         && !(attacker && attacker->is_player()
             && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN)))
@@ -1216,7 +1217,7 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     if (!mons
         || !mons->alive()
         || mons->res_torment()
-        || attacker && never_harm_monster(attacker, *mons, true)
+        || attacker && !could_harm(attacker, mons, true)
         // Monsters can't currently use the sceptre, but just in case.
         || attacker
            && mons == attacker->as_monster()

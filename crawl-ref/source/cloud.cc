@@ -1018,17 +1018,10 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     if (actor_cloud_immune(act, cloud.type))
         return true;
 
-    const bool player = act.is_player();
-
-    if (!player && never_harm_monster(&you, act.as_monster())
-        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
-        && (act.as_monster()->friendly() || act.as_monster()->neutral())
-        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
-    {
+    if (!could_harm(cloud.agent(), &act))
         return true;
-    }
 
-    if (!player && have_passive(passive_t::cloud_immunity)
+    if (have_passive(passive_t::cloud_immunity)
         && act.was_created_by(MON_SUMM_AID))
     {
         return true;

@@ -805,7 +805,7 @@ bool targeter_unravelling::valid_aim(coord_def a)
     }
 
     if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
-        && never_harm_monster(&you, mons))
+        && !could_harm(&you, mons))
     {
         return notify_fail("You cannot do harm to " + mons->name(DESC_THE));
     }
@@ -1434,7 +1434,7 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     const actor* act = actor_at(loc);
     if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
-    if (never_harm_monster(agent, act->as_monster()))
+    if (!could_harm(agent, act))
         return AFF_NO;
     switch (adjacent_huddlers(loc, true))
     {

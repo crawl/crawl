@@ -1055,10 +1055,7 @@ bool player_unrand_bad_attempt(const item_def &weapon,
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
         return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defending_monster,
+                               nullptr, nullptr, defending_monster,
                                check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
@@ -1068,8 +1065,7 @@ bool player_unrand_bad_attempt(const item_def &weapon,
         return stop_attack_prompt(hitfunc, "attack",
                                [] (const actor *m)
                                {
-                                   return !m->res_torment()
-                                       && !never_harm_monster(&you, m->as_monster());
+                                   return !m->res_torment();
                                },
                                   nullptr, defending_monster,
                                 check_only);
@@ -1101,12 +1097,9 @@ bool player_unrand_bad_target(const item_def &weapon,
         targeter_smite hitfunc(&you, LOS_RADIUS, 1, 1);
         hitfunc.set_aim(defender.pos());
 
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defending_monster,
-                               check_only);
+        return stop_attack_prompt(hitfunc, "attack near",
+                                  nullptr, nullptr, defending_monster,
+                                  check_only);
     }
     if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
     {
@@ -1123,12 +1116,9 @@ bool player_unrand_bad_target(const item_def &weapon,
         find_life_bolt_ray(hitfunc.beam.source, defender.pos(), hitfunc.beam.ray);
         hitfunc.set_aim(defender.pos());
 
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !never_harm_monster(&you, act->as_monster());
-                               }, nullptr, defending_monster,
-                               check_only);
+        return stop_attack_prompt(hitfunc, "attack near",
+                                  nullptr, nullptr, defending_monster,
+                                  check_only);
     }
     return false;
 }
@@ -1153,14 +1143,8 @@ bool player_unrand_bad_target(const item_def *weapon,
  */
 bool dont_harm(const actor &attacker, const actor &defender)
 {
-    if (mons_aligned(&attacker, &defender))
+    if (!could_harm_enemy(&attacker, &defender))
         return true;
-
-    if (defender.is_monster())
-        return never_harm_monster(&attacker, defender.as_monster(), true);
-
-    if (defender.is_player())
-        return attacker.wont_attack();
 
     if (attacker.is_player())
     {
@@ -1379,6 +1363,10 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (!you.can_see(*mon))
         return false;
 
+    // If we cannot hurt them anyway, don't bother warning as if we could.
+    if (!could_harm(&you, mon))
+        return false;
+
     if (attack_pos == coord_def(0, 0))
         attack_pos = you.pos();
 
@@ -1394,10 +1382,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         // There's not really any harm in attacking your own spectral weapon.
         // It won't share damage, and it'll go away anyway.
         if (mon->type == MONS_SPECTRAL_WEAPON)
-            return false;
-
-        // If we cannot hurt an ally anyway, don't bother warning as if we could
-        if (never_harm_monster(&you, mon))
             return false;
 
         if (god_hates_attacking_friend(you.religion, *mon))
@@ -1436,11 +1420,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             || you_worship(GOD_BEOGH) && mons_genus(mon->type) == MONS_ORC)
         && !mon->has_ench(ENCH_FRENZIED))
     {
-        // If we cannot hurt a neutral anyway, don't bother warning as if we
-        // could
-        if (never_harm_monster(&you, mon))
-            return false;
-
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON)
             || you_worship(GOD_BEOGH))
@@ -1450,11 +1429,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     }
     else if (mon->wont_attack())
     {
-        // If we cannot hurt a non-hostile anyway, don't bother warning as if we
-        // could
-        if (never_harm_monster(&you, mon))
-            return false;
-
         adj += "non-hostile ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
             would_cause_penance = true;
@@ -1628,7 +1602,7 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     for (coord_def p : targets)
     {
         const monster* mon = monster_at(p);
-        if (!mon || never_harm_monster(&you, mon))
+        if (!mon)
             continue;
 
         if (should_ignore && should_ignore(*mon))

@@ -2575,7 +2575,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 {
     return m.alive() && scr == SCR_TORMENT
         && !m.res_torment()
-        && !never_harm_monster(&you, m.as_monster());
+        && could_harm(&you, &m);
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)

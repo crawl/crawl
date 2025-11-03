@@ -121,8 +121,7 @@ spret cast_polar_vortex(int powc, bool fail, bool no_prompt)
     targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
     if (!no_prompt && stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
-                    return !act->res_polar_vortex()
-                        && !never_harm_monster(&you, act->as_monster());
+                    return !act->res_polar_vortex();
                 }))
     {
         return spret::abort;
@@ -371,8 +370,7 @@ void polar_vortex_damage(actor *caster, int dur)
                     // alive check here in case the annoy event above dismissed
                     // the victim.
                     if (dur > 0 && victim->alive()
-                        && (!caster->is_player()
-                            || !never_harm_monster(caster, victim->as_monster())))
+                        && (could_harm(caster, victim, true)))
                     {
                         const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg

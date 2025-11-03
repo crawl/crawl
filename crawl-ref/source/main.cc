@@ -2774,7 +2774,7 @@ static void _swing_at_target(coord_def move)
     dist target;
     target.target = you.pos() + move;
 
-    if (never_harm_monster(&you, monster_at(target.target), true))
+    if (!could_harm(&you, monster_at(target.target), true, true))
         return;
 
     // Don't warn the player "too injured to fight recklessly" when they

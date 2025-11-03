@@ -1192,7 +1192,7 @@ void direction_chooser::calculate_target_info()
                 preferred_targs.push_back(mi->pos());
             }
         }
-        if (mi->friendly() && !never_harm_monster(&you, **mi)
+        if (mi->friendly() && could_harm(&you, *mi)
             && (!hitfunc || hitfunc->affects_monster(monster_info(*mi))))
         {
             valid_friends.push_back(*mi);

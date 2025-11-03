@@ -574,7 +574,8 @@ int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
 
 int touch_of_beogh_hp_mult(const monster& mon);
 
-bool shoot_through_monster(const actor* agent, const monster& mon,bool do_message = false);
-bool shoot_through_monster(const actor* agent, const monster* mon, bool do_message = false);
-bool never_harm_monster(const actor* agent, const monster& mon, bool do_message = false);
-bool never_harm_monster(const actor* agent, const monster* mon, bool do_message = false);
+bool shoot_through_actor(const actor* agent, const actor* target, bool announce = false);
+bool could_harm(const actor* agent, const actor* target, bool announce_important = false,
+                                                         bool announce_mundane = false);
+bool could_harm_enemy(const actor* agent, const actor* target, bool announce_important = false,
+                                                               bool announce_mundane = false);

@@ -2360,7 +2360,7 @@ static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor&
 
 static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
 {
-    const bool immune = never_harm_monster(&you, victim.as_monster());
+    const bool immune = !could_harm(&you, &victim);
 
     god_conduct_trigger conducts[3];
 

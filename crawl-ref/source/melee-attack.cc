@@ -111,9 +111,6 @@ bool melee_attack::bad_attempt()
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
-    if (never_harm_monster(attacker, defender->as_monster(), true))
-        return true;
-
     if (!is_projected && player_unrand_bad_attempt())
         return true;
 

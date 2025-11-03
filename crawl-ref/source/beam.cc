@@ -1613,11 +1613,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             {
                 if (actor* act = actor_at(*ai))
                 {
-                    if (act == pbolt.agent()
-                        || never_harm_monster(pbolt.agent(), act->as_monster()))
-                    {
+                    if (act == pbolt.agent() || !could_harm(pbolt.agent(), act))
                         continue;
-                    }
 
                     if (!did_splash_msg)
                     {
@@ -1843,7 +1840,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons->is_firewood())
         return true;
-    if (never_harm_monster(&you, mons))
+    if (!could_harm(&you, mons))
         return true;
 
     switch (wh_enchant)
@@ -4557,15 +4554,8 @@ bool bolt::ignores_player() const
         return true;
     }
 
-    if (agent() && agent()->is_monster()
-        && (mons_is_hepliaklqana_ancestor(agent()->as_monster()->type)
-            || mons_is_player_shadow(*agent()->as_monster())
-            || agent()->real_attitude() == ATT_MARIONETTE
-            || agent()->type == MONS_PLATINUM_PARAGON))
-    {
-        // friends!
+    if (shoot_through_actor(agent(), &you))
         return true;
-    }
 
     if (source_id == MID_PLAYER_SHADOW_DUMMY)
         return true;
@@ -5020,12 +5010,10 @@ static void _add_chain_candidates(const bolt& beam, coord_def pos,
         actor* act = actor_at(*ai);
 
         // Ignore friendlies, firewood, and things we can fire through.
-        if (!act || mons_aligned(beam.agent(), act))
-            continue;
-
-        monster *mon = act->as_monster();
-        if (mon && (shoot_through_monster(beam.agent(), mon)
-                    || mon->is_peripheral()))
+        if (!act
+            || mons_aligned(beam.agent(), act)
+            || act->is_peripheral()
+            || shoot_through_actor(beam.agent(), act))
         {
             continue;
         }
@@ -5560,8 +5548,9 @@ void bolt::affect_monster(monster* mon)
     }
 
     // Print messages for monsters avoiding attacks.
+    bool should_skip = false;
     if (!is_tracer())
-        shoot_through_monster(agent(), mon, true);
+        should_skip = !could_harm(agent(), mon, true, true);
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer())
     {
@@ -5569,7 +5558,7 @@ void bolt::affect_monster(monster* mon)
             mprf("The %s passes through %s.", name.c_str(), mon->name(DESC_THE).c_str());
     }
 
-    if (ignores_monster(mon))
+    if (ignores_monster(mon) || should_skip)
         return;
 
     // Handle tracers separately.
@@ -5869,7 +5858,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // All kinds of beams go past orbs of destruction, the player can shoot
     // through friendly battlespheres, their own ancestor, plants if they're
     // worshipping Fedhas, etc.
-    if (shoot_through_monster(agent(), *mon))
+    if (shoot_through_actor(agent(), mon))
         return true;
 
     // Missiles go past bushes and briar patches, unless aimed directly at them
@@ -6078,10 +6067,8 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
     }
         break;
 
-    // Special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
-        rc = !never_harm_monster(agent, mon)
-             && !mons_aligned(agent, mon);
+        rc = !mons_aligned(agent, mon);
         break;
 
     case BEAM_MINDBURST:

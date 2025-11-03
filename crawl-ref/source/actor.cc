@@ -918,8 +918,8 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
 {
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
-    const bool immune = never_harm_monster(agent, as_monster());
-    const bool immune_other = other ? never_harm_monster(agent, other->as_monster())
+    const bool immune = !could_harm(agent, this);
+    const bool immune_other = other ? !could_harm(agent, other)
                                     : false;
 
     ASSERT(this != other);
@@ -948,9 +948,9 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  attack_strength_punctuation((dam + damother) / 2).c_str());
             // OK, now do the messaging for protected monsters.
             if (immune)
-                never_harm_monster(agent, *as_monster(), true);
+                could_harm(agent, this, true, true);
             if (immune_other)
-                never_harm_monster(agent, *other->as_monster(), true);
+                could_harm(agent, other, true, true);
         }
 
         if (other->is_monster() && !immune_other)
@@ -995,7 +995,7 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
         }
 
         if (immune)
-            never_harm_monster(agent, *as_monster(), true); // messaging
+            could_harm(agent, this, true, true); // messaging
     }
 
     if (!immune)

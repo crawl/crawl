@@ -5661,11 +5661,6 @@ bool ru_apocalypse()
     return true;
 }
 
-static bool _mons_stompable(const monster &mons)
-{
-    return !never_harm_monster(&you, &mons) || !mons.friendly();
-}
-
 dice_def uskayaw_stomp_extra_damage(bool allow_random)
 {
     if (allow_random)
@@ -5676,7 +5671,7 @@ dice_def uskayaw_stomp_extra_damage(bool allow_random)
 
 static bool _get_stomped(monster& mons)
 {
-    if (!_mons_stompable(mons))
+    if (!could_harm(&you, &mons))
         return false;
 
     behaviour_event(&mons, ME_ANNOY, &you);
@@ -5699,7 +5694,7 @@ bool uskayaw_stomp()
 {
     // Demonic guardians are immune but check for other friendlies
     const bool friendlies = apply_monsters_around_square([] (monster& mons) {
-        return _mons_stompable(mons) && mons_att_wont_attack(mons.attitude);
+        return could_harm(&you, &mons) && mons_att_wont_attack(mons.attitude);
     }, you.pos());
 
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
@@ -6101,7 +6096,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || mon->is_firewood() || never_harm_monster(&you, *mon))
+        if (!mon || mon->is_firewood() || !could_harm(&you, mon))
             continue;
 
         const int dur = random_range(60, 150);
