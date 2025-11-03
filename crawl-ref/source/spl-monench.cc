@@ -605,8 +605,7 @@ spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer)
 
     if (tracer)
     {
-         // XX: LOS_NO_TRANS ?
-        for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+        for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
         {
             if (!in_bounds(*ri))
                 continue;
