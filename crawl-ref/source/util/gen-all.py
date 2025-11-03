@@ -193,6 +193,14 @@ def build_rtiles():
         copy_if_needed('rltiles/' + tile_type + '.png',
                        'dat/tiles/' + tile_type + '.png')
 
+    python = sys.executable
+
+    generated_files = ['rltiles/status-icon-sizes.h',
+                       'rltiles/status-icon-sizes.js']
+    input_files = ['util/status-icon-sizes-gen.py', 'rltiles/icon-sizes.txt']
+    command = [python] + input_files
+    run_if_needed(generated_files, input_files, command)
+
 def main():
     perl = shutil.which('perl')
     if not perl:

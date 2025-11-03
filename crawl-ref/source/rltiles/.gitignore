@@ -4,3 +4,5 @@ tiledef*.h
 tool/tilegen.elf
 tile*.html
 tileinfo*.js
+status-icon-sizes.h
+status-icon-sizes.js

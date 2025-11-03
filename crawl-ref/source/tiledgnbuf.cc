@@ -8,6 +8,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-player.h"
+#include "rltiles/status-icon-sizes.h"
 #include "tag-version.h"
 #include "tiledoll.h"
 #include "tilefont.h"
@@ -458,80 +459,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     }
 }
 
-static const int FIXED_LOC_ICON = -1;
-
-static map<tileidx_t, int> status_icon_sizes = {
-    { TILEI_STICKY_FLAME,   7 },
-    { TILEI_INNER_FLAME,    7 },
-    { TILEI_CONSTRICTED,    11 },
-    { TILEI_HASTED,         6 },
-    { TILEI_SLOWED,         6 },
-    { TILEI_MIGHT,          6 },
-    { TILEI_DRAIN,          6 },
-    { TILEI_PAIN_MIRROR,    7 },
-    { TILEI_PETRIFYING,     6 },
-    { TILEI_PETRIFIED,      6 },
-    { TILEI_BLIND,          10 },
-    { TILEI_BOUND_SOUL,     6 },
-    { TILEI_POSSESSABLE,    6 },
-    { TILEI_INFESTED,       6 },
-    { TILEI_CORRODED,       6 },
-    { TILEI_SWIFT,          6 },
-    { TILEI_RECALL,         6 },
-    { TILEI_VILE_CLUTCH,    11 },
-    { TILEI_SLOWLY_DYING,   10 },
-    { TILEI_FIRE_CHAMP,     7 },
-    { TILEI_ANGUISH,        8 },
-    { TILEI_WEAKENED,       6 },
-    { TILEI_WATERLOGGED,    10 },
-    { TILEI_STILL_WINDS,    10 },
-    { TILEI_GHOSTLY,        8 },
-    { TILEI_ANTIMAGIC,      10 },
-    { TILEI_DAZED,          6 },
-    { TILEI_PARTIALLY_CHARGED, 6 },
-    { TILEI_FULLY_CHARGED,  6 },
-    { TILEI_FIRE_VULN,      8 },
-    { TILEI_CONC_VENOM,     7 },
-    { TILEI_REPEL_MISSILES, 10 },
-    { TILEI_INJURY_BOND,    10 },
-    { TILEI_TELEPORTING,    9 },
-    { TILEI_RESISTANCE,     8 },
-    { TILEI_BRILLIANCE,     10 },
-    { TILEI_MALMUTATED,     8 },
-    { TILEI_GLOW_LIGHT,     10 },
-    { TILEI_GLOW_HEAVY,     10 },
-    { TILEI_PAIN_BOND,      11 },
-    { TILEI_BULLSEYE,       10 },
-    { TILEI_VITRIFIED,      6 },
-    { TILEI_CURSE_OF_AGONY, 10 },
-    { TILEI_REGENERATION,   8 },
-
-    // These are in the bottom right, so don't need to shift.
-    { TILEI_BERSERK,        FIXED_LOC_ICON },
-    { TILEI_FRENZIED,       FIXED_LOC_ICON },
-    { TILEI_VAMPIRE_THRALL, FIXED_LOC_ICON },
-    { TILEI_IDEALISED,      FIXED_LOC_ICON },
-    { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
-    { TILEI_ENKINDLED_1,    FIXED_LOC_ICON },
-    { TILEI_ENKINDLED_2,    FIXED_LOC_ICON },
-
-    // These are always in the top left. They may overlap.
-    // (E.g. for summoned dancing weapons.)
-    { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
-    { TILEI_SUMMONED,        FIXED_LOC_ICON },
-    { TILEI_MINION,          FIXED_LOC_ICON },
-    { TILEI_UNREWARDING,     FIXED_LOC_ICON },
-    { TILEI_VENGEANCE_TARGET,FIXED_LOC_ICON },
-
-    // Along the bottom of the monster.
-    { TILEI_SHADOWLESS,      FIXED_LOC_ICON },
-
-    { TILEI_NOBODY_MEMORY_1, FIXED_LOC_ICON },
-    { TILEI_NOBODY_MEMORY_2, FIXED_LOC_ICON },
-    { TILEI_NOBODY_MEMORY_3, FIXED_LOC_ICON },
-    { TILEI_PYRRHIC, FIXED_LOC_ICON },
-};
-
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 {
     const tileidx_t fg = cell.fg;
@@ -658,17 +585,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     // Currently, they default to iteration order.
     for (auto icon : cell.icons)
     {
-        int size = status_icon_sizes[icon];
-        if (size == FIXED_LOC_ICON)
+        int size = status_icon_size(icon);
+
+        // Size of zero actually means the icon has a fixed position
+        if (size == 0)
         {
             m_buf_icons.add(icon, x, y);
             continue;
         }
 
         m_buf_icons.add(icon, x, y, -status_shift, 0);
-        if (!size)
+        if (size < 0)
         {
-            dprf("unknown icon %" PRIu64, icon);
+            mprf(MSGCH_ERROR, "unknown size for icon %" PRIu64, icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
