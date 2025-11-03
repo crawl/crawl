@@ -1,0 +1,87 @@
+# Width of zero actually means these icons have a fixed position
+berserk: 0
+idealised: 0
+touch_of_beogh: 0
+shadowless: 0
+summoned: 0
+minion: 0
+unrewarding: 0
+animated_weapon: 0
+vengeance_target: 0
+vampire_thrall: 0
+enkindled_1: 0
+enkindled_2: 0
+nobody_memory_1: 0
+nobody_memory_2: 0
+nobody_memory_3: 0
+pyrrhic: 0
+frenzied: 0
+
+drain: 6
+might: 6
+swift: 6
+dazed: 6
+hasted: 6
+slowed: 6
+corroded: 6
+infested: 6
+weakened: 6
+petrified: 6
+petrifying: 6
+bound_soul: 6
+possessable: 6
+partially_charged: 6
+fully_charged: 6
+vitrified: 6
+confused: 6
+sentinel_mark: 6
+dimmed: 6
+
+laced_with_chaos: 7
+conc_venom: 7
+fire_champ: 7
+inner_flame: 7
+pain_mirror: 7
+sticky_flame: 7
+
+anguish: 8
+fire_vuln: 8
+resistance: 8
+ghostly: 8
+malmutated: 8
+
+recall: 9
+teleporting: 9
+figment: 9
+
+blind: 10
+brilliance: 10
+slowly_dying: 10
+waterlogged: 10
+still_winds: 10
+antimagic: 10
+repel_missiles: 10
+injury_bond: 10
+glow_light: 10
+glow_heavy: 10
+bullseye: 10
+curse_of_agony: 10
+regeneration: 10
+retreat: 10
+rimeblight: 10
+undying_arms: 10
+bind: 10
+sign_of_ruin: 10
+weak_willed: 10
+doubled_vigour: 10
+kinetic_grapnel: 10
+tempered: 10
+heart: 10
+unstable: 10
+vexed: 10
+paradox: 10
+warding: 10
+
+constricted: 11
+vile_clutch: 11
+pain_bond: 11

@@ -1,9 +1,9 @@
 define(["jquery", "./view_data", "./tileinfo-gui", "./tileinfo-main",
         "./tileinfo-player", "./tileinfo-icons", "./tileinfo-dngn", "./enums",
         "./map_knowledge", "./tileinfos", "./player", "./options",
-        "contrib/jquery.json"],
+        "./status-icon-sizes", "contrib/jquery.json"],
 function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
-          map_knowledge, tileinfos, player, options) {
+          map_knowledge, tileinfos, player, options, icon_sizes) {
     "use strict";
 
     function DungeonCellRenderer()
@@ -1091,105 +1091,14 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
         draw_icon_type: function(idx, x, y, ofsx, ofsy, img_scale)
         {
-            switch (idx)
-            {
-                //These icons are in the lower right, so status_shift doesn't need changing.
-                case icons.BERSERK:
-                case icons.IDEALISED:
-                case icons.TOUCH_OF_BEOGH:
-                case icons.SHADOWLESS:
-                // Anim. weap. and summoned might overlap, but that's okay
-                case icons.SUMMONED:
-                case icons.MINION:
-                case icons.UNREWARDING:
-                case icons.ANIMATED_WEAPON:
-                case icons.VENGEANCE_TARGET:
-                case icons.VAMPIRE_THRALL:
-                case icons.ENKINDLED_1:
-                case icons.ENKINDLED_2:
-                case icons.NOBODY_MEMORY_1:
-                case icons.NOBODY_MEMORY_2:
-                case icons.NOBODY_MEMORY_3:
-                case icons.PYRRHIC:
-                case icons.FRENZIED:
-                    this.draw_icon(idx, x, y, undefined, undefined, img_scale);
-                    return 0;
-                case icons.DRAIN:
-                case icons.MIGHT:
-                case icons.SWIFT:
-                case icons.DAZED:
-                case icons.HASTED:
-                case icons.SLOWED:
-                case icons.CORRODED:
-                case icons.INFESTED:
-                case icons.WEAKENED:
-                case icons.PETRIFIED:
-                case icons.PETRIFYING:
-                case icons.BOUND_SOUL:
-                case icons.POSSESSABLE:
-                case icons.PARTIALLY_CHARGED:
-                case icons.FULLY_CHARGED:
-                case icons.VITRIFIED:
-                case icons.CONFUSED:
-                case icons.LACED_WITH_CHAOS:
-                case icons.SENTINEL_MARK:
-                case icons.DIMMED:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 6;
-                case icons.CONC_VENOM:
-                case icons.FIRE_CHAMP:
-                case icons.INNER_FLAME:
-                case icons.PAIN_MIRROR:
-                case icons.STICKY_FLAME:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 7;
-                case icons.ANGUISH:
-                case icons.FIRE_VULN:
-                case icons.RESISTANCE:
-                case icons.GHOSTLY:
-                case icons.MALMUTATED:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 8;
-                case icons.RECALL:
-                case icons.TELEPORTING:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 9;
-                case icons.BLIND:
-                case icons.BRILLIANCE:
-                case icons.SLOWLY_DYING:
-                case icons.WATERLOGGED:
-                case icons.STILL_WINDS:
-                case icons.ANTIMAGIC:
-                case icons.REPEL_MISSILES:
-                case icons.INJURY_BOND:
-                case icons.GLOW_LIGHT:
-                case icons.GLOW_HEAVY:
-                case icons.BULLSEYE:
-                case icons.CURSE_OF_AGONY:
-                case icons.REGENERATION:
-                case icons.RETREAT:
-                case icons.RIMEBLIGHT:
-                case icons.UNDYING_ARMS:
-                case icons.BIND:
-                case icons.SIGN_OF_RUIN:
-                case icons.WEAK_WILLED:
-                case icons.DOUBLED_VIGOUR:
-                case icons.KINETIC_GRAPNEL:
-                case icons.TEMPERED:
-                case icons.HEART:
-                case icons.UNSTABLE:
-                case icons.VEXED:
-                case icons.PARADOX:
-                case icons.WARDING:
-                case icons.FIGMENT:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 10;
-                case icons.CONSTRICTED:
-                case icons.VILE_CLUTCH:
-                case icons.PAIN_BOND:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 11;
-            }
+            var size = icon_sizes.status_icon_size(idx);
+            if (size < 0)
+                return 0;
+            if (size == 0)
+                this.draw_icon(idx, x, y, undefined, undefined, img_scale);
+            else
+                this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+            return size;
         },
 
         // Helper functions for drawing from specific textures

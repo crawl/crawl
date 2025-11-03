@@ -921,6 +921,7 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\recite-type.h" />
     <ClInclude Include="..\religion-enum.h" />
     <ClInclude Include="..\religion.h" />
+    <ClInclude Include="..\rltiles\status-icon-sizes.h" />
     <ClInclude Include="..\rltiles\tiledef-dngn.h" />
     <ClInclude Include="..\rltiles\tiledef-feat.h" />
     <ClInclude Include="..\rltiles\tiledef-floor.h" />
