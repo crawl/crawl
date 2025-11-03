@@ -1569,7 +1569,10 @@ LUAFN(_dgn_map_parameters)
 
 static int _dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
 {
-    return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
+    const vault_placement** ptr = clua_new_userdata<const vault_placement*>(ls,
+                                                    VAULT_PLACEMENT_METATABLE);
+    *ptr = vp;
+    return 1;
 }
 
 static int _dgn_push_vault_placement_uptr(lua_State *ls,
@@ -1961,8 +1964,7 @@ static void _dgn_register_metatables(lua_State *ls)
 {
     clua_register_metatable(ls,
                             VAULT_PLACEMENT_METATABLE,
-                            dgn_vaultplacement_ops,
-                            lua_object_gc<vault_placement>);
+                            dgn_vaultplacement_ops);
 }
 
 void dluaopen_dgn(lua_State *ls)
