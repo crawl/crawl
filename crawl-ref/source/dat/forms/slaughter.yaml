@@ -1,7 +1,7 @@
 enum: slaughter
 equivalent_mons: brimstone_fiend
 description: a vessel of demonic slaughter.
-resists: {poison: 1, neg: 3}
+resists: {poison: 1, neg: 3, miasma: 1}
 unarmed_colour: lightred
 can_fly: yes
 can_swim: no
