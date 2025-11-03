@@ -2964,11 +2964,6 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
 
-        // Doesn't do anything to monsters
-        case SPELL_MESMERISE:
-        case SPELL_SIREN_SONG:
-        case SPELL_AVATAR_SONG:
-
         // Would be buggy to try
         case SPELL_CREATE_TENTACLES:
         case SPELL_FAKE_MARA_SUMMON:
@@ -2986,8 +2981,6 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_INK_CLOUD:
 
         // Could possibly be adapted to function, but currently doesn't
-        case SPELL_SPECTRAL_CLOUD:
-        case SPELL_CORRUPTING_PULSE:
         case SPELL_SUMMON_ILLUSION:
         case SPELL_PHANTOM_BLITZ:
         case SPELL_AWAKEN_FOREST:
