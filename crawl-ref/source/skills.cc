@@ -2630,7 +2630,7 @@ int destructive_preference(spell_type spell, int scale)
             preference += you.skill(sk, scale);
             num_destructive++;
         }
-    return preference / num_destructive;
+    return num_destructive > 0 ? preference / num_destructive : 0;
 }
 
 void dump_skills(string &text)
