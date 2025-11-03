@@ -2599,40 +2599,6 @@ int get_crosstrain_points(skill_type sk)
 
 }
 
-/**
- * Is the provided skill one of the destructive spellschools?
- *
- * @param sk    The skill in question.
- * @return      Whether it is fire, ice, earth, air, alchemy or conjurations.
- */
-static bool _skill_is_destructive(skill_type sk)
-{
-    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC || sk == SK_AIR_MAGIC
-            || sk == SK_ICE_MAGIC || sk == SK_ALCHEMY || sk == SK_CONJURATIONS;
-}
-
-/**
- * How skilled is the player at the destructive components of a spell?
- *
- * @param spell     The type of spell in question.
- * @param scale     Scaling factor for skill.
- * @return          The player's skill at the destructive parts of a given spell.
- */
-int destructive_preference(spell_type spell, int scale)
-{
-    skill_set skill_list;
-    spell_skills(spell, skill_list);
-    int preference = 0;
-    int num_destructive = 0;
-    for (skill_type sk : skill_list)
-        if (_skill_is_destructive(sk))
-        {
-            preference += you.skill(sk, scale);
-            num_destructive++;
-        }
-    return num_destructive > 0 ? preference / num_destructive : 0;
-}
-
 void dump_skills(string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)

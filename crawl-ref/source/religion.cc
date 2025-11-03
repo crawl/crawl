@@ -1301,8 +1301,18 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
 
 static int _vehumet_weighting(spell_type spell)
 {
-    int bias = 70 + destructive_preference(spell, 10);
-    return bias;
+    skill_set skills;
+    spell_skills(spell, skills);
+    if (!skills.size())
+        return 0;
+
+    int weight = 0;
+    for (skill_type sk : skills)
+        weight += you.skill(sk, 10);
+
+    weight = weight / skills.size();
+
+    return 70 + weight;
 }
 
 static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
