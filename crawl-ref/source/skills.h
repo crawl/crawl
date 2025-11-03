@@ -129,8 +129,6 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 vector<skill_type> get_crosstrain_skills(skill_type sk);
 int get_crosstrain_points(skill_type sk);
 
-int destructive_preference(spell_type spell, int scale = 1);
-
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
 int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
