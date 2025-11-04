@@ -130,7 +130,7 @@ the other side.
 %%%%
 book of battle
 
-An astonishingly vain and self-aggrandizing work. The author claims credit for a
+An astonishingly vain and self-aggrandising work. The author claims credit for a
 wide swathe of weapon-augmenting magics, but seems to have misunderstood or
 misrepresented most of them. Only a few of the spells described in the book
 actually work.
