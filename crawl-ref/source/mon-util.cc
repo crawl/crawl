@@ -3572,25 +3572,6 @@ bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
         return true;
 
     // After this point, safety/self-interest checks only.
-
-
-    // Friendly monsters shouldn't be targeting you: this will happen
-    // often because the default behaviour for charmed monsters is to
-    // have you as a target. While foe_ratio will handle this, we
-    // don't want a situation where a friendly dragon breathes through
-    // you to hit other creatures... it should target the other
-    // creatures, and coincidentally hit you.
-    //
-    // FIXME: this can cause problems with reflection, bounces, etc.
-    // It would be better to have the monster fire logic never reach
-    // this point for friendlies.
-    if (monster_by_mid(beam.source_id))
-    {
-        monster* m = monster_by_mid(beam.source_id);
-        if (m->alive() && m->friendly() && beam.target == you.pos())
-            return false;
-    }
-
     return tracer.good_to_fire(beam.foe_ratio) >= ai_action::good();
 }
 
