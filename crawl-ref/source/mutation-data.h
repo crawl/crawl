@@ -590,7 +590,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_BERSERK, 7, 2, mutflag::bad,
+{ MUT_BERSERK, 0, 2, mutflag::bad,
   "berserk",
 
   {"You sometimes lose your temper in combat.",
