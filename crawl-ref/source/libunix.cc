@@ -504,12 +504,49 @@ static int proc_mouse_event(int c, const MEVENT *me)
 
 static int pending = 0;
 
+static bool _has_curses_input()
+{
+    nodelay(stdscr, TRUE);
+    timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
+    wint_t c;
+    int i = get_wch(&c);
+    nodelay(stdscr, FALSE);
+
+    switch (i)
+    {
+    case OK:
+        pending = c;
+        return true;
+    case KEY_CODE_YES:
+        pending = -c;
+        return true;
+    default:
+        return false;
+    }
+}
+
 static int _get_key_from_curses()
 {
 #ifdef WATCHDOG
     // If we have (or wait for) actual keyboard input, it's not an infinite
     // loop.
     watchdog();
+#endif
+
+#ifdef USE_TILE_WEB
+    refresh();
+
+    tiles.redraw();
+    tiles.flush_messages();
+
+    while (!_has_curses_input())
+    {
+        wint_t c;
+        bool result = tiles.await_input(c, 100);
+
+        if (result && c != 0)
+            return c;
+    }
 #endif
 
     if (pending)
@@ -520,17 +557,6 @@ static int _get_key_from_curses()
     }
 
     wint_t c;
-
-#ifdef USE_TILE_WEB
-    refresh();
-
-    tiles.redraw();
-    tiles.await_input(c, true);
-
-    if (c != 0)
-        return c;
-#endif
-
     switch (get_wch(&c))
     {
     case ERR:
@@ -576,7 +602,8 @@ static int _headless_getchk()
 #ifdef USE_TILE_WEB
     wint_t c;
     tiles.redraw();
-    tiles.await_input(c, true);
+    tiles.flush_messages();
+    tiles.await_input(c, -1);
 
     if (c != 0)
         return c;
@@ -1844,27 +1871,11 @@ bool kbhit()
     if (pending)
         return true;
 
-    wint_t c;
+
 #ifndef USE_TILE_WEB
-    int i;
-
-    nodelay(stdscr, TRUE);
-    timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    i = get_wch(&c);
-    nodelay(stdscr, FALSE);
-
-    switch (i)
-    {
-    case OK:
-        pending = c;
-        return true;
-    case KEY_CODE_YES:
-        pending = -c;
-        return true;
-    default:
-        return false;
-    }
+    return _has_curses_input();
 #else
+    wint_t c;
     bool result = tiles.await_input(c, false);
 
     if (result && c != 0)
