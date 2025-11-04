@@ -269,9 +269,14 @@ recommended to wear a pair of gardening gloves.
 %%%%
 book of the grave
 
-A heavy tome whose vellum smells faintly of dirt and decay. Those who touch it
-frequently report a palpable sense of unease, as if something unwholesome were
-buried between its very pages.
+A heavy tome of necromantic spells. Those who touch it frequently report a
+palpable sense of unease, as if something unwholesome were buried between its
+very pages.
+{{
+    if you.can_smell() then
+        return "Its vellum smells faintly of dirt and decay."
+    end
+}}
 %%%%
 book of hexes
 
