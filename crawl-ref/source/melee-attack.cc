@@ -683,8 +683,9 @@ void melee_attack::maybe_do_mesmerism()
     {
         if (actor* act = actor_at(*ri))
         {
-            if (!mons_aligned(defender, act) && !act->is_firewood()
-                && act->willpower() != WILL_INVULN && !act->clarity())
+            if (!act->is_firewood() && !act->clarity()
+                && act->willpower() != WILL_INVULN
+                && could_harm_enemy(act, defender, true))
             {
                 act->daze(random_range(3, max_dur));
             }
@@ -1141,7 +1142,7 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
         draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
         for (monster_near_iterator mi(you.pos()); mi; ++mi)
         {
-            if (!mons_aligned(&you, *mi)
+            if (could_harm_enemy(&you, *mi, true)
                 && mi->can_feel_fear(true) && !mi->has_ench(ENCH_FEAR)
                 && mi->check_willpower(&you, howl_power) <= 0)
             {
@@ -1353,7 +1354,7 @@ int melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
     {
         actor* def = targets.front();
 
-        if (def && def->alive() && !dont_harm(*attacker, *def))
+        if (def && def->alive() && should_cleave_into(*attacker, *def))
         {
             melee_attack followup(attacker, def, attack_number,
                                   ++new_effective_attack_number);
@@ -1474,7 +1475,7 @@ bool melee_attack::run_attack_set()
 
     // If we had a primary target that became ineligable after the first swing,
     // give the next swing an empty target (so we can still cleave with it).
-    if (defender && (!defender->alive() || dont_harm(*attacker, *defender)))
+    if (defender && (!defender->alive() || !should_cleave_into(*attacker, *defender)))
         defender = nullptr;
 
     if (swing_with(*second_weapon, second_weapon == offhand))
@@ -1608,6 +1609,10 @@ bool melee_attack::attack()
         handle_phase_end();
         return attack_occurred;
     }
+
+    // Abort early if the target is completely immune (possibly printing a message).
+    if (!could_harm(attacker, defender, true))
+        return attack_occurred;
 
     // Now that we finally know that this swing is really happening, count it.
     if (attacker->is_player())

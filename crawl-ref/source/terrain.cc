@@ -2555,7 +2555,7 @@ void ice_wall_damage(monster &mons, int delay)
 {
     if (!you.duration[DUR_FROZEN_RAMPARTS]
         || !you.see_cell_no_trans(mons.pos())
-        || mons_aligned(&you, &mons))
+        || !could_harm_enemy(&you, &mons))
     {
         return;
     }

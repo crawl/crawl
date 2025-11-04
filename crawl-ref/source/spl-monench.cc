@@ -365,7 +365,7 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
         if (!act)
             continue;
 
-        if (!mons_aligned(&caster, act))
+        if (could_harm_enemy(&caster, act, !check_only))
         {
             if (act->is_player() && !you.duration[DUR_SIGN_OF_RUIN]
                 || act->is_monster() && !act->as_monster()->has_ench(ENCH_SIGN_OF_RUIN))
@@ -563,6 +563,9 @@ int gloom_success_chance(int power, int target_hd)
 static bool _gloom_affect_target(actor *victim, const actor *agent, int pow)
 {
     if (victim->res_blind())
+        return false;
+
+    if (!could_harm(agent, victim, true))
         return false;
 
     if (victim->is_monster())

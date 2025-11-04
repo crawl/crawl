@@ -220,9 +220,12 @@ is increased by Invocations skill.
 %%%%
 Sanctuary ability
 
-Creates a divine refuge for a short duration. While you are inside the
-sanctuary, monsters will not attack you, but the protection will disappear at
-once should you breach the divine peace.
+Transforms the area around the user into a domain of unbreakable law for a short
+duration. So long as anyone stands within this sanctuary, no harm may be done to
+them by others, and they may do no harm to others in turn.
+
+Beings with hostile intent are unable to enter a sanctuary and those already
+nearby when it is created will be forced to flee.
 %%%%
 Cure All Mutations ability
 

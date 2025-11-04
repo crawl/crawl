@@ -19,29 +19,6 @@
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster& mon, bool axe)
 {
-    if (is_sanctuary(pos()) && !axe)
-    {
-        if (mons_is_siren_beholder(mon))
-        {
-            if (can_see(mon))
-            {
-                mprf("%s's singing sounds muted, and has no effect on you.",
-                     mon.name(DESC_THE).c_str());
-            }
-            else
-                mpr("The melody is strangely muted, and has no effect on you.");
-        }
-        else
-        {
-            if (can_see(mon))
-                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
-            else
-                mpr("Your mesmeriser suddenly seems less interesting!");
-        }
-
-        return;
-    }
-
     if (!duration[DUR_MESMERISED])
     {
         set_duration(DUR_MESMERISED, random_range(7, 15), 15);

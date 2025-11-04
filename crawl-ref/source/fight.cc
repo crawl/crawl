@@ -1138,21 +1138,21 @@ bool player_unrand_bad_target(const item_def *weapon,
  *
  * @param attacker  The creature doing the cleaving.
  * @param defender  The potential cleave-ee.
- * @return          True if the defender is an enemy of the defender; false
- *                  otherwise.
+ * @return          True if the attack should try to cleave into the defender.
  */
-bool dont_harm(const actor &attacker, const actor &defender)
+bool should_cleave_into(const actor &attacker, const actor &defender)
 {
-    if (!could_harm_enemy(&attacker, &defender))
+    if (could_harm_enemy(&attacker, &defender))
         return true;
 
-    if (attacker.is_player())
+    // The player should only cleave into neutrals if they're frenzied.
+    if (attacker.is_player()
+        && mons_attitude(*defender.as_monster()) == ATT_NEUTRAL)
     {
-        return defender.wont_attack()
-               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL
-                  && !defender.as_monster()->has_ench(ENCH_FRENZIED);
+        return defender.as_monster()->has_ench(ENCH_FRENZIED);
     }
 
+    // The defender is either immune to the attack's efforts or not an enemy.
     return false;
 }
 
@@ -1276,7 +1276,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     {
         if (*di == def) continue; // no double jeopardy
         actor *target = actor_at(*di);
-        if (!target || dont_harm(attacker, *target))
+        if (!target || !should_cleave_into(attacker, *target))
             continue;
         if (di.radius() > 1 && !can_reach_attack_between(atk, *di, cleave_radius))
             continue;
@@ -1373,9 +1373,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     adj.clear();
     suffix.clear();
     would_cause_penance = false;
-
-    if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
-        suffix = ", despite your sanctuary";
 
     if (mon->friendly())
     {

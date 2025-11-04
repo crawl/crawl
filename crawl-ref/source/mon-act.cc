@@ -228,71 +228,6 @@ static void _melee_attack_player(monster &mons, monster* ru_target)
         fight_melee(&mons, &you, nullptr, false);
 }
 
-static bool _swap_monsters(monster& mover, monster& moved)
-{
-    // Can't swap with a stationary monster.
-    // Although nominally stationary kraken tentacles can be swapped
-    // with the main body.
-    if (moved.is_stationary() && !moved.is_child_tentacle())
-        return false;
-
-    // If the target monster is constricted it is stuck
-    // and not eligible to be swapped with
-    if (moved.is_constricted() || moved.has_ench(ENCH_BOUND))
-    {
-        dprf("%s fails to swap with %s, %s.",
-            mover.name(DESC_THE).c_str(),
-            moved.name(DESC_THE).c_str(),
-            moved.is_constricted() ? "constricted" : "bound in place");
-            return false;
-    }
-
-    // Swapping is a purposeful action.
-    if (mover.confused())
-        return false;
-
-    // Right now just happens in sanctuary.
-    if (!is_sanctuary(mover.pos()) || !is_sanctuary(moved.pos()))
-        return false;
-
-    // A friendly or good-neutral monster moving past a fleeing hostile
-    // or neutral monster, or vice versa.
-    if (mover.wont_attack() == moved.wont_attack()
-        || mons_is_retreating(mover) == mons_is_retreating(moved))
-    {
-        return false;
-    }
-
-    // Don't swap places if the player explicitly ordered their pet to
-    // attack monsters.
-    if ((mover.friendly() || moved.friendly())
-        && you.pet_target != MHITYOU && you.pet_target != MHITNOT)
-    {
-        return false;
-    }
-
-    // Okay, we can probably do the swap.
-    if (!mover.swap_with(&moved))
-        return false;
-
-    if (you.can_see(mover) && you.can_see(moved))
-    {
-        mprf("%s and %s swap places.", mover.name(DESC_THE).c_str(),
-             moved.name(DESC_THE).c_str());
-    }
-
-    mover.did_deliberate_movement();
-    moved.did_deliberate_movement();
-
-    if (mons_is_seeker(moved))
-    {
-        mprf(MSGCH_GOD, "By Zin's power %s is contained!", moved.name(DESC_THE).c_str());
-        monster_die(moved, KILL_RESET, NON_MONSTER, true);
-    }
-
-    return true;
-}
-
 static energy_use_type _get_swim_or_move(monster& mon)
 {
     return mon.swimming(true) ? EUT_SWIM : EUT_MOVE;
@@ -582,42 +517,20 @@ static coord_def _find_best_step(monster* mons)
     {
         // Monsters will try to flee out of a sanctuary.
         if (is_sanctuary(mons->pos())
-            && mons_is_influenced_by_sanctuary(*mons)
-            && !mons_is_fleeing_sanctuary(*mons))
+            && mons_is_influenced_by_sanctuary(*mons))
         {
             mons_start_fleeing_from_sanctuary(*mons);
         }
+        // And stop fleeing once they are out of it.
         else if (mons_is_fleeing_sanctuary(*mons)
                  && !is_sanctuary(mons->pos()))
         {
-            // Once outside there's a chance they'll regain their courage.
-            // Nonliving and berserking monsters always stop immediately,
-            // since they're only being forced out rather than actually
-            // scared.
-            if (mons->is_nonliving()
-                || mons->berserk()
-                || mons->has_ench(ENCH_FRENZIED)
-                || x_chance_in_y(2, 5))
-            {
-                mons_stop_fleeing_from_sanctuary(*mons);
-            }
+            mons_stop_fleeing_from_sanctuary(*mons);
         }
     }
 
     coord_def delta = _get_mons_destination(mons);
     coord_def dir = _get_step_from_dest(mons, delta);
-
-    if (sanctuary_exists())
-    {
-        // Don't allow monsters to enter a sanctuary or attack you inside a
-        // sanctuary, even if you're right next to them.
-        if (is_sanctuary(mons->pos() + dir)
-            && (!is_sanctuary(mons->pos())
-                || mons->pos() + dir == you.pos()))
-        {
-            return coord_def();
-        }
-    }
 
     // Bounds check: don't let fleeing monsters try to run off the grid.
     const coord_def s = mons->pos() + dir;
@@ -870,8 +783,9 @@ static bool _handle_swoop_or_flank(monster& mons)
     if (mons.confused() || !defender || !mons.can_see(*defender)
         || (mons_aligned(&mons, defender) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons) || mons.pacified()
-        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos())
-        || mons.has_ench(ENCH_BOUND))
+        || mons.is_constricted()
+        || mons.has_ench(ENCH_BOUND)
+        || !could_harm(&mons, defender))
     {
         return false;
     }
@@ -903,10 +817,12 @@ static bool _handle_swoop_or_flank(monster& mons)
         if (tracer.path_taken[j] != target)
             continue;
 
-        if (!monster_habitable_grid(&mons, tracer.path_taken[j+1])
-            || actor_at(tracer.path_taken[j+1]))
+        const coord_def dest = tracer.path_taken[j+1];
+        if (!monster_habitable_grid(&mons, dest)
+            || actor_at(dest)
+            || is_sanctuary(dest))
         {
-            continue;
+            break;
         }
 
         if (you.can_see(mons))
@@ -960,11 +876,9 @@ static bool _handle_reaching(monster& mons)
         || mons_is_confused(mons)
         || !foe
         || range <= 1
-        || is_sanctuary(mons.pos())
-        || is_sanctuary(foe->pos())
-        || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons)
-        || mons.pacified())
+        || mons.pacified()
+        || !could_harm_enemy(&mons, foe))
     {
         return false;
     }
@@ -1595,9 +1509,6 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     else
         return false;
 
-    if (player_or_mon_in_sanct(*mons))
-        return false;
-
     const actor *act = actor_at(beem.target);
     ASSERT(missile->base_type == OBJ_MISSILES);
     if (act && missile->sub_type == MI_THROWING_NET)
@@ -1908,7 +1819,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     // hitting their foes.
     if (mons.berserk_or_frenzied())
     {
-        if (_handle_reaching(mons))
+        if (!is_sanctuary(mons.pos()) && _handle_reaching(mons))
         {
             DEBUG_ENERGY_USE_REF("_handle_reaching()");
             return true;
@@ -1940,6 +1851,9 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
             return true;
         }
     }
+
+    if (is_sanctuary(mons.pos()))
+        return false;
 
     if (_handle_wand(mons))
     {
@@ -2209,8 +2123,7 @@ void handle_monster_move(monster* mons)
         // XXX: If its foe gets set to something that is no longer in sight, it
         //      will refuse to shred entirely.
         mons->foe = MHITNOT;
-        if (!is_sanctuary(mons->pos()))
-            try_mons_cast(*mons, SPELL_SHRED);
+        try_mons_cast(*mons, SPELL_SHRED);
         mons->lose_energy(EUT_SPELL);
         return;
     }
@@ -2359,7 +2272,7 @@ void handle_monster_move(monster* mons)
     const coord_def new_pos = mons->pos() + mmov;
     if (!mons->caught())
     {
-        if (new_pos == you.pos())
+        if (new_pos == you.pos() && !is_sanctuary(mons->pos()))
         {
             ASSERT(!crawl_state.game_is_arena());
 
@@ -2416,20 +2329,15 @@ void handle_monster_move(monster* mons)
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
             && !_leash_range_exceeded(mons)
+            && !is_sanctuary(mons->pos())
             && (!(mons_aligned(mons, targ) || mons_is_seeker(*targ))
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_los_is_valid(mons, targ))
         {
-            // Maybe they can swap places?
-            if (_swap_monsters(*mons, *targ))
-            {
-                _swim_or_move_energy(*mons);
-                return;
-            }
             // Figure out if they fight.
-            else if ((!targ->is_firewood()
-                      || mons->is_child_tentacle())
-                          && fight_melee(mons, targ))
+            if ((!targ->is_firewood()
+                    || mons->is_child_tentacle())
+                        && fight_melee(mons, targ))
             {
                 _handle_battiness(*mons);
 
@@ -2585,11 +2493,10 @@ static void _ancient_zyme_sicken(monster* mons)
     if (is_sanctuary(mons->pos()))
         return;
 
-    if (!is_sanctuary(you.pos())
-        && !mons->wont_attack()
+    if (could_harm_enemy(mons, &you)
         && !you.res_miasma()
         && !you.duration[DUR_DIVINE_STAMINA]
-        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+        && cell_see_cell(you.pos(), mons->pos(), LOS_NO_TRANS))
     {
         if (!you.duration[DUR_SICKNESS])
         {
@@ -2617,9 +2524,8 @@ static void _ancient_zyme_sicken(monster* mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && !mons_aligned(mons, m)
-            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
-            && !is_sanctuary(*ri))
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && could_harm_enemy(mons, m))
         {
             m->sicken(2 * you.time_taken);
         }
@@ -3288,8 +3194,11 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     }
 
     // Inside a sanctuary don't attack anything!
-    if (is_sanctuary(mons->pos()) && actor_at(targ))
+    if (is_sanctuary(mons->pos()) && actor_at(targ)
+        && !mons_aligned(mons, actor_at(targ)))
+    {
         return false;
+    }
 
     const dungeon_feature_type target_grid = env.grid(targ);
 

@@ -1806,7 +1806,7 @@ static void _martyr_death_wail(monster &mons)
     vector <actor*> targets;
     for (actor_near_iterator ai(mons.pos(), LOS_NO_TRANS); ai; ++ai)
     {
-        if (!mons_aligned(&mons, *ai) && !!(ai->holiness() & MH_NATURAL))
+        if (!!(ai->holiness() & MH_NATURAL) && could_harm_enemy(&mons, *ai))
             targets.push_back(*ai);
     }
     shuffle_array(targets);

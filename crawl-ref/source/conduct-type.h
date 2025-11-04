@@ -32,7 +32,9 @@ enum conduct_type
     DID_KILL_SLIME,                       // Jiyva
 #endif
     DID_HASTY,                            // Cheibriados
+#if TAG_MAJOR_VERSION == 34
     DID_ATTACK_IN_SANCTUARY,              // Zin
+#endif
     DID_KILL_NONLIVING,
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_SEE_MONSTER,                      // TSO

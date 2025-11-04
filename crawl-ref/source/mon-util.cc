@@ -3435,7 +3435,14 @@ void mons_start_fleeing_from_sanctuary(monster& mons)
 {
     mons.flags |= MF_FLEEING_FROM_SANCTUARY;
     mons.target = env.sanctuary_pos;
-    behaviour_event(&mons, ME_SCARE, 0, env.sanctuary_pos);
+
+    // If the monster is on top of the center of the santuary, don't let it
+    // freeze in place.
+    if (mons.pos() == mons.target)
+        mons.target += (mons.target - you.pos()).sgn();
+
+    mons.behaviour = BEH_FLEE;
+    mons.foe = MHITYOU;
 }
 
 void mons_stop_fleeing_from_sanctuary(monster& mons)
@@ -3525,11 +3532,6 @@ static bool _mons_should_fire_beneficial(const bolt &beam,
         return false;
     }
 
-    // Should beneficial monster enchantment beams be allowed in a
-    // sanctuary? -cao
-    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
-        return false;
-
     return true;
 }
 
@@ -3566,11 +3568,9 @@ bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
     if (_beneficial_beam_flavour(beam.flavour))
         return _mons_should_fire_beneficial(beam, tracer);
 
-    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
-        return false;
-
     if (ignore_good_idea)
         return true;
+
     // After this point, safety/self-interest checks only.
 
 
@@ -4786,11 +4786,6 @@ bool mon_shape_is_humanoid(mon_body_shape shape)
            && shape <= MON_SHAPE_LAST_HUMANOID;
 }
 
-bool player_or_mon_in_sanct(const monster& mons)
-{
-    return is_sanctuary(you.pos()) || is_sanctuary(mons.pos());
-}
-
 int get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
@@ -5780,7 +5775,7 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
  *
  *  @param agent       The source of the action. May be nullptr, if the action
  *                     has a non-actor source (or possibly a dead actor).
- *  @param taret       The actor that is the target of the action.
+ *  @param target      The actor that is the target of the action.
  *  @param announce_important  If true, prints a message stating how the target
  *                             avoids harm (in cases where this avoidance is
  *                             unusual).
@@ -5800,18 +5795,36 @@ bool could_harm(const actor* agent, const actor* target, bool announce_important
     if (shoot_through_actor(agent, target, announce_mundane))
         return false;
 
-    // But sometimes we still can't harm them, even if that is untrue.
-    if (!target->is_monster())
-        return true;
+    // Players in Sanctuaries cannot harm anything.
+    if (agent && agent->is_player() && (is_sanctuary(you.pos())))
+    {
+        if (announce_important)
+        {
+            string msg = make_stringf("The Sanctuary denies your attempt to harm %s.",
+                                        target->name(DESC_THE).c_str());
+            god_speaks(GOD_ZIN, msg.c_str());
+        }
+        return false;
+    }
 
-    const monster& mon = *target->as_monster();
+    // Actors in Sanctuaries cannot be harmed by anything.
+    if (is_sanctuary(target->pos()))
+    {
+        if (announce_important && you.see_cell(target->pos()))
+        {
+            string msg = make_stringf("The Sanctuary protects %s from harm.",
+                                        target->name(DESC_THE).c_str());
+            god_speaks(GOD_ZIN, msg.c_str());
+        }
+        return false;
+    }
 
     if (agent && agent->is_player()
         && have_passive(passive_t::neutral_slimes)
-        && mons_is_slime(mon)
-        && mon.wont_attack())
+        && mons_class_is_slime(target->type)
+        && target->wont_attack())
     {
-        if (announce_mundane && you.can_see(mon))
+        if (announce_mundane && you.can_see(*target))
             simple_god_message(" protects your slime from harm.", false, GOD_JIYVA);
         return false;
     }

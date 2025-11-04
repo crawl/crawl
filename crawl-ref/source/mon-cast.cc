@@ -778,7 +778,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        [](monster &caster, mon_spell_slot, bolt& beam) {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
-                if (!mi->is_peripheral() && !mons_aligned(&caster, *mi))
+                if (!mi->is_peripheral() && could_harm_enemy(&caster, *mi))
                     targs.push_back(*mi);
 
             const unsigned int num_targs = (targs.size() * random_range(30, 50) / 100)
@@ -807,7 +807,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
             {
                 if (!mi->is_stationary() && !mi->is_firewood()
-                    && !mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_BOUND))
+                    && could_harm_enemy(&caster, *mi) && !mi->has_ench(ENCH_BOUND))
                 {
                     targs.push_back(*mi);
                 }
@@ -846,7 +846,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             {
                 monster* m = monster_at(*ri);
                 if (m && cell_see_cell(caster.pos(), *ri, LOS_NO_TRANS)
-                    && !mons_aligned(&caster, m))
+                    && could_harm_enemy(&caster, m))
                 {
                     m->hurt(&caster, dmg.roll());
                 }
@@ -866,14 +866,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             dice_def dmg = zap_damage(ZAP_SHRED, pow, true);
             for (adjacent_iterator ai(caster.pos()); ai; ++ai)
             {
-                if (!monster_at(*ai) || mons_aligned(monster_at(*ai), &caster))
+                monster* victim = monster_at(*ai);
+                if (!victim || !could_harm_enemy(&caster, victim))
                     continue;
 
                 // Don't shred things out of the player's sight
                 if (!monster_los_is_valid(&caster, *ai))
                     continue;
 
-                monster* victim = monster_at(*ai);
                 int final = victim->apply_ac(dmg.roll());
 
                 if (you.can_see(caster))
@@ -986,7 +986,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
-            return ai_action::good_or_impossible(foe->is_player() && !mons_aligned(&caster, &you)
+            return ai_action::good_or_impossible(foe->is_player() && could_harm_enemy(&caster, &you)
                                                  && adjacent(caster.pos(), you.pos()));
         },
         [](monster, mon_spell_slot, bolt&) {
@@ -1568,7 +1568,7 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
     {
         if (grid_distance(mi->pos(), caster.pos()) <= range
             && !mi->is_firewood()
-            && !mons_aligned(&caster, *mi))
+            && could_harm_enemy(&caster, *mi))
         {
             if (check_only)
                 return true;
@@ -1620,7 +1620,7 @@ static vector<actor*> _siphon_essence_victims (const actor& caster) {
     {
         if (grid_distance(caster.pos(), acti->pos()) <= siphon_essence_range()
             && !acti->res_torment() && !acti->is_peripheral()
-            && !mons_aligned(&caster, *acti))
+            && could_harm_enemy(&caster, *acti))
         {
             victims.push_back(*acti);
         }
@@ -3494,7 +3494,7 @@ static void _cast_wall_burst(monster &caster, bolt &beam, int radius)
 
         // Just draw the burst if there isn't a hostile here, and skip damage.
         actor* target = actor_at(*vi);
-        if (!target || mons_aligned(&caster, target))
+        if (!target || !could_harm_enemy(&caster, target, true))
             continue;
 
         // There's a hostile here; do the burst for real
@@ -3572,22 +3572,16 @@ static bool _pyroclastic_surge(coord_def p, bolt &beam)
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt &beam)
 {
     bool visible_effect = false;
-    // Burn the player.
-    if (!caster.wont_attack() && _near_visible_lava(caster, you))
-        visible_effect |= _pyroclastic_surge(you.pos(), beam);
 
     // Burn the player's friends.
     for (vision_iterator vi(caster); vi; ++vi)
     {
         actor* target = actor_at(*vi);
-        if (!target)
+        if (!target || !could_harm_enemy(&caster, target, true))
             continue;
 
-        monster *mon = target->as_monster();
-        if (!mon || mons_aligned(&caster, mon))
-            continue;
-        if (_near_visible_lava(caster, *mon))
-            visible_effect |= _pyroclastic_surge(mon->pos(), beam);
+        if (_near_visible_lava(caster, *target))
+            visible_effect |= _pyroclastic_surge(target->pos(), beam);
     }
     if (visible_effect)
         animation_delay(25, true);
@@ -3755,9 +3749,6 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
 
 static bool _incite_monsters(const monster* mon, bool actual)
 {
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
-        return false;
-
     // Only things both in LOS of the inciter and within radius 3.
     const int radius = 3;
     int goaded = 0;
@@ -3765,9 +3756,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
     {
         // XXX: Ugly hack to skip the spellcaster rules for meliai.
         if (*mi == mon || !mi->needs_berserk(mon->type != MONS_QUEEN_BEE))
-            continue;
-
-        if (is_sanctuary(mi->pos()))
             continue;
 
         // Cannot goad other moths of wrath!
@@ -4202,7 +4190,7 @@ static void _corrupting_pulse(monster *mons)
         targeter_radius hitfunc(mons, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
-        if (!mons_aligned(&you, mons) && !is_sanctuary(you.pos())
+        if (could_harm_enemy(mons, &you, true)
             && cell_see_cell(you.pos(), mons->pos(), LOS_NO_TRANS))
         {
             int num_mutations = one_chance_in(4) ? 2 : 1;
@@ -4215,7 +4203,7 @@ static void _corrupting_pulse(monster *mons)
     {
         monster *m = monster_at(*ri);
         if (m && cell_see_cell(mons->pos(), *ri, LOS_NO_TRANS)
-            && !mons_aligned(mons, m))
+            && could_harm_enemy(mons, m, true))
         {
             m->malmutate(mons);
         }
@@ -4491,7 +4479,7 @@ static coord_def _mons_bomblet_target(const monster& caster)
     for (actor_near_iterator ai(caster.pos()); ai; ++ai)
     {
         if (!ai->is_peripheral()
-            && !mons_aligned(&caster, *ai)
+            && could_harm_enemy(&caster, *ai)
             && grid_distance(caster.pos(), ai->pos()) > 1
             && grid_distance(caster.pos(), ai->pos()) <= spell_range(SPELL_DEPLOY_BOMBLET)
             && caster.can_see(**ai)
@@ -5070,9 +5058,6 @@ static bool _valid_caution_spell(spell_type type)
 bool handle_mon_spell(monster* mons)
 {
     ASSERT(mons);
-
-    if (is_sanctuary(mons->pos()) && !mons->wont_attack())
-        return false;
 
     // Yes, there is a logic to this ordering {dlb}:
     // .. berserk check is necessary for out-of-sequence actions like emergency
@@ -5820,7 +5805,7 @@ static int _mesmerise_could_affect(const monster& source,
                                    bool only_obvious,
                                    bool check_hearing)
 {
-    if (mons_aligned(&source, &targ)
+    if (!could_harm_enemy(&source, &targ)
         || targ.is_peripheral()
         || targ.willpower() == WILL_INVULN
         || targ.berserk()
@@ -6037,7 +6022,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         if (mons_invuln_will(**mi)
             || !(mi->holiness() & MH_NATURAL)
             || mi->is_firewood()
-            || mons_aligned(*mi, mons)
+            || !could_harm_enemy(mons, *mi, actual)
             || mi->has_ench(ENCH_FEAR))
         {
             continue;
@@ -6105,8 +6090,11 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_invuln_will(**mi) || mi->is_firewood() || mons_aligned(*mi, mons))
+        if (mons_invuln_will(**mi) || mi->is_firewood()
+            || !could_harm_enemy(mons, *mi, actual))
+        {
             continue;
+        }
 
         retval = max(retval, 0);
 
@@ -7220,8 +7208,9 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
     vector<actor*> targs;
     for (actor_near_iterator ai(caster.pos()); ai; ++ai)
     {
-        if (mons_aligned(&caster, *ai) || !(ai->holiness() & MH_UNDEAD)
-            || ai->willpower() == WILL_INVULN)
+        if (!(ai->holiness() & MH_UNDEAD)
+            || ai->willpower() == WILL_INVULN
+            || !could_harm_enemy(&caster, *ai, !check_only))
         {
             continue;
         }
@@ -9233,13 +9222,15 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     if (foe && foe->is_player() && you.duration[DUR_TIME_STEP])
         return ai_action::impossible();
 
-    if (!mon->wont_attack())
-    {
-        if (spell_harms_area(spell) && env.sanctuary_time > 0)
+    if (spell_harms_target(spell) && is_sanctuary(mon->target))
             return ai_action::impossible();
 
-        if (spell_harms_target(spell) && is_sanctuary(mon->target))
-            return ai_action::impossible();
+    // Nobody should cast anything offensive inside a sanctuary.
+    if (is_sanctuary(mon->pos())
+        && !(get_spell_flags(spell)
+                 & (spflag::helpful | spflag::selfench | spflag::recovery | spflag::escape)))
+    {
+        return ai_action::bad();
     }
 
     // Don't bother casting a summon spell if we're already at its cap

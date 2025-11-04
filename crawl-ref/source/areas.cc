@@ -302,18 +302,15 @@ static void _remove_sanctuary_property(const coord_def& where)
 
 bool sanctuary_exists()
 {
-    return in_bounds(env.sanctuary_pos);
+    return env.sanctuary_time > 0;
 }
 
 /*
  * Remove any sanctuary from the level.
  *
- * @param did_attack If true, the sanctuary removal was the result of a player
- *                   attack, so we apply penance. Otherwise the sanctuary is
- *                   removed with no penance.
  * @returns True if we removed an existing sanctuary, false otherwise.
  */
-bool remove_sanctuary(bool did_attack)
+bool remove_sanctuary()
 {
     if (env.sanctuary_time)
         env.sanctuary_time = 0;
@@ -322,23 +319,11 @@ bool remove_sanctuary(bool did_attack)
         return false;
 
     const int radius = 4;
-    bool seen_change = false;
     for (rectangle_iterator ri(env.sanctuary_pos, radius, true); ri; ++ri)
         if (is_sanctuary(*ri))
-        {
             _remove_sanctuary_property(*ri);
-            if (you.see_cell(*ri))
-                seen_change = true;
-        }
 
     env.sanctuary_pos.set(-1, -1);
-
-    if (did_attack)
-    {
-        if (seen_change)
-            simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
-        did_god_conduct(DID_ATTACK_IN_SANCTUARY, 3);
-    }
 
     // Now that the sanctuary is gone, monsters aren't afraid of it
     // anymore.

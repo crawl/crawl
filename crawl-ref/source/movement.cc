@@ -294,11 +294,7 @@ bool cancel_confused_move(bool stationary)
         {
             string suffix, adj;
             monster *mons = monster_at(*ai);
-            if (mons
-                && (stationary
-                    || !(is_sanctuary(you.pos()) && is_sanctuary(mons->pos()))
-                       && !fedhas_passthrough(mons))
-                && bad_attack(mons, adj, suffix, penance))
+            if (mons && bad_attack(mons, adj, suffix, penance))
             {
                 bad_mons = mons;
                 bad_suff = suffix;
@@ -1012,13 +1008,10 @@ void move_player_action(coord_def move)
     }
 
     // You can swap places with a friendly or good neutral monster if
-    // you're not confused, or even with hostiles if both of you are inside
-    // a sanctuary.
+    // you're not confused.
     const bool try_to_swap = targ_monst
                              && (targ_monst->wont_attack()
-                                    && !you.confused()
-                                 || is_sanctuary(you.pos())
-                                    && is_sanctuary(targ));
+                                    && !you.confused());
 
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.

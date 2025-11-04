@@ -566,16 +566,6 @@ static bool _issue_order(int keyn, int &mons_targd)
             break;
 
         case 'a':
-            if (env.sanctuary_time > 0)
-            {
-                if (!yesno("An ally attacking under your orders might violate "
-                           "sanctuary; order anyway?", false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                }
-            }
-
         {
             direction_chooser_args args;
             args.restricts = DIR_TARGET;

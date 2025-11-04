@@ -1696,9 +1696,6 @@ void stardust_fineff::fire()
 
 void pyromania_fineff::fire()
 {
-    if (is_sanctuary(you.pos()))
-        return;
-
     // Test if there's at least *something* worth hitting before exploding
     // (primarily to avoid wasting the player's time). Note: we don't check the
     // the player *wants* to hit what is there, just that there is something

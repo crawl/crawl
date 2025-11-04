@@ -1026,13 +1026,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (src_idx == YOU_FAULTLESS)
         src_idx = MHITYOU;
 
+    // Prioritize leaving Sanctuary over other interruptions.
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(*mon))
-    {
-        mon->behaviour = BEH_FLEE;
-        mon->foe       = MHITYOU;
-        mon->target    = env.sanctuary_pos;
         return;
-    }
 
     switch (event)
     {

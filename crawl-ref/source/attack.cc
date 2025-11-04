@@ -458,9 +458,7 @@ void attack::alert_defender()
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
     }
 
-    // If an enemy attacked a friend, set the pet target if it isn't set
-    // already, but not if sanctuary is in effect (pet target must be
-    // set explicitly by the player during sanctuary).
+    // If an enemy attacked a friend, set the pet target if it isn't set already.
     if (perceived_attack && attacker->alive()
         && (defender->is_player() || defender->as_monster()->friendly())
         && !attacker->is_player()
@@ -472,7 +470,7 @@ void attack::alert_defender()
             interrupt_activity(activity_interrupt::monster_attacks,
                                attacker->as_monster());
         }
-        if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
+        if (you.pet_target == MHITNOT)
             you.pet_target = attacker->mindex();
     }
 }

@@ -545,7 +545,7 @@ static bool _drain_lifeable(const actor* agent, const actor* act)
     if (!agent)
         return true;
 
-    return !mons_aligned(agent, act);
+    return could_harm_enemy(agent, act);
 }
 
 static int _los_spell_damage_actor(const actor* agent, actor &target,
@@ -3383,10 +3383,7 @@ void forest_damage(const actor *mon)
     for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
     {
         actor* foe = actor_at(*ri);
-        if (!foe || mons_aligned(foe, mon))
-            continue;
-
-        if (is_sanctuary(foe->pos()))
+        if (!foe || !could_harm_enemy(mon, foe))
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)

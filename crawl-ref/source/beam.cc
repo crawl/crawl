@@ -1439,12 +1439,10 @@ void bolt::do_fire()
         else if (foes_helped > 0 && friends_helped == 0)
             xom_is_stimulated(100);
 
-        // Allow friendlies to react to projectiles, except when in
-        // sanctuary when pet_target can only be explicitly changed by
-        // the player.
+        // Allow friendlies to react to projectiles.
         const monster* mon = monster_by_mid(source_id);
         if (foes_hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
-            && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
+            && you.pet_target == MHITNOT)
         {
             you.pet_target = mon->mindex();
         }
@@ -4216,7 +4214,7 @@ void bolt::affect_player()
 {
     hit_count[MID_PLAYER]++;
 
-    if (ignores_player())
+    if (ignores_player() || !could_harm(agent(), &you, !is_tracer()))
         return;
 
     // If this is a friendly monster, firing a penetrating beam in the player's

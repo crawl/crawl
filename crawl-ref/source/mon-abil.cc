@@ -1000,9 +1000,6 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_BALL_LIGHTNING:
-        if (is_sanctuary(mons->pos()))
-            break;
-
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) <= 2)
         {
@@ -1028,9 +1025,6 @@ bool mon_special_ability(monster* mons)
 
     case MONS_FOXFIRE:
     case MONS_SHOOTING_STAR:
-        if (is_sanctuary(mons->pos()))
-            break;
-
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) == 1)
         {
@@ -1062,9 +1056,9 @@ bool mon_special_ability(monster* mons)
         }
 
         if (!mons_is_confused(*mons)
-                && !is_sanctuary(mons->pos()) && !is_sanctuary(mons->target)
-                && _will_starcursed_scream(mons)
-                && coinflip())
+            && could_harm(mons, actor_at(mons->target))
+            && _will_starcursed_scream(mons)
+            && coinflip())
         {
             _starcursed_scream(mons, actor_at(mons->target));
             used = true;
@@ -1404,7 +1398,7 @@ void solar_ember_blast()
     vector<monster*> targs;
     for (adjacent_iterator ai(ember->pos()); ai; ++ai)
         if (monster* mon = monster_at(*ai))
-            if (!mons_aligned(ember, mon) && !mon->is_firewood() && you.see_cell_no_trans(mon->pos()))
+            if (could_harm_enemy(&you, mon) && !mon->is_firewood() && you.see_cell_no_trans(mon->pos()))
                 targs.push_back(mon);
 
     if (targs.empty())

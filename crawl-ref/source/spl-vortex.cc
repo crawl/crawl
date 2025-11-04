@@ -324,6 +324,9 @@ void polar_vortex_damage(actor *caster, int dur)
             bool leda = false; // squares with ledaed enemies are no-go
             if (actor* victim = actor_at(*dam_i))
             {
+                if (!could_harm(caster, victim, true))
+                    continue;
+
                 if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
@@ -369,8 +372,7 @@ void polar_vortex_damage(actor *caster, int dur)
 
                     // alive check here in case the annoy event above dismissed
                     // the victim.
-                    if (dur > 0 && victim->alive()
-                        && (could_harm(caster, victim, true)))
+                    if (dur > 0 && victim->alive())
                     {
                         const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg
@@ -398,7 +400,9 @@ void polar_vortex_damage(actor *caster, int dur)
                 continue;
 
             if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_VORTEX)
-                && x_chance_in_y(rpow, 20))
+                && x_chance_in_y(rpow, 20)
+                // The clouds themselves are harmless in Sanctuary, but misleading.
+                && !is_sanctuary(*dam_i))
             {
                 place_cloud(CLOUD_VORTEX, *dam_i, 2 + random2(2), caster);
             }

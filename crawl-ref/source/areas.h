@@ -24,7 +24,7 @@ class actor;
 void areas_actor_moved(const actor* act, const coord_def& oldpos);
 
 void create_sanctuary(const coord_def& center, int time);
-bool remove_sanctuary(bool did_attack = false);
+bool remove_sanctuary();
 void decrease_sanctuary_radius();
 bool sanctuary_exists();
 
