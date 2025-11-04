@@ -1510,6 +1510,7 @@ Trog player ghost
 @The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
 %%%%
 Uskayaw player ghost
+
 @The_monster@ says @to_foe@, "It's your last dance!"
 
 @The_monster@ says @to_foe@, "Let me show you true rhythm."
@@ -1518,6 +1519,8 @@ Uskayaw player ghost
 
 # La Vie Dansante, Jimmy Buffett
 @The_monster@ says, "I used to wander and follow the dancing life. Look where it got me."
+
+@The_monster@ shouts, "Finally, a proper audience!"
 %%%%
 Vehumet player ghost
 
