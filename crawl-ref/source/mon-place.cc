@@ -547,9 +547,6 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
     if (!monster_habitable_grid(montype, mg_pos)
-        || (mg.behaviour != BEH_FRIENDLY
-            && is_sanctuary(mg_pos)
-            && !mons_is_tentacle_segment(montype))
         || !has_non_solid_adjacent(mg_pos))
     {
         return false;
@@ -944,8 +941,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         fpos.reset();
     else if (!leader
         && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY ||
-            (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype)))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, mg.pos)))
@@ -3003,13 +2998,14 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
                               int preferred_radius, int max_radius,
                               int exclude_radius,
-                              const actor* in_sight_of)
+                              const actor* in_sight_of,
+                              bool no_sanctuary)
 {
     coord_def pos(0, 0);
 
     // First search within our preferred radius.
     if (find_habitable_spot_near(p, mons_class, preferred_radius, pos,
-                                 exclude_radius, in_sight_of))
+                                 exclude_radius, in_sight_of, no_sanctuary))
     {
         return pos;
     }
@@ -3018,7 +3014,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
     // until we hit max_radius.
     for (int rad = preferred_radius + 1; rad <= max_radius; ++rad)
     {
-        if (find_habitable_spot_near(p, mons_class, rad, pos, rad - 1, in_sight_of))
+        if (find_habitable_spot_near(p, mons_class, rad, pos, rad - 1, in_sight_of, no_sanctuary))
             return pos;
     }
 
@@ -3126,7 +3122,9 @@ monster* create_monster(mgen_data mg, bool fail_msg)
                                      mg.range_max, mg.range_min,
                                      (mg.flags & MG_SEE_SUMMONER)
                                         ? mg.summoner
-                                        : nullptr);
+                                        : nullptr,
+                                      mg.behaviour != BEH_FRIENDLY
+                                        || mons_is_tentacle_segment(montype));
     }
 
     if (in_bounds(mg.pos))
@@ -3163,7 +3161,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
  */
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, coord_def& result, int exclude_radius,
-                              const actor* in_sight_of)
+                              const actor* in_sight_of, bool no_sanctuary)
 {
     int good_count = 0;
 
@@ -3183,6 +3181,9 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
             continue;
 
         if (in_sight_of && !in_sight_of->see_cell_no_trans(*ri))
+            continue;
+
+        if (no_sanctuary && is_sanctuary(*ri))
             continue;
 
         if (one_chance_in(++good_count))

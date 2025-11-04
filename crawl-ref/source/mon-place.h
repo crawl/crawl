@@ -96,7 +96,8 @@ void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, coord_def& result, int exclude_radius = -1,
-                              const actor* in_sight_of = nullptr);
+                              const actor* in_sight_of = nullptr,
+                              bool no_sanctuary = true);
 bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
                                      int max_radius, int exclude_radius = 0);
 bool you_can_see_habitable_spot_near(habitat_type habitat, int max_radius,
@@ -117,7 +118,8 @@ bool has_non_solid_adjacent(coord_def pos);
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
                               int preferred_radius = 2, int max_radius = 2,
                               int exclude_radius = -1,
-                              const actor* in_sight_of = nullptr);
+                              const actor* in_sight_of = nullptr,
+                              bool no_sanctuary = true);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3,
