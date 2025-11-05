@@ -4712,19 +4712,20 @@ dice_def boulder_damage(int pow, bool random)
 
 void do_boulder_impact(monster& boulder, actor& victim, bool quiet)
 {
+    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
+    int dam = boulder_damage(pow, true).roll();
+    dam = victim.apply_ac(dam);
+
     if (you.can_see(boulder))
     {
         if (!quiet)
         {
-            mprf("%s barrels into %s!",
+            mprf("%s barrels into %s%s",
                     boulder.name(DESC_THE).c_str(),
-                    victim.name(DESC_THE).c_str());
+                    victim.name(DESC_THE).c_str(),
+                    attack_strength_punctuation(dam).c_str());
         }
     }
-
-    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
-    int dam = boulder_damage(pow, true).roll();
-    dam = victim.apply_ac(dam);
 
     if (victim.is_player())
         ouch(dam, KILLED_BY_ROLLING, boulder.mid);
