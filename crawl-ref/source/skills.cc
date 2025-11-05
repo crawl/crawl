@@ -2243,7 +2243,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Danse Macabre";
             else if ((species == SP_MERFOLK || species == SP_OCTOPODE)
                 && skill_rank == 5 && god == GOD_LUGONU)
+            {
                 result = "Abyssopelagic";
+            }
             else if (species == SP_OCTOPODE && skill_rank == 5 && is_evil_god(god))
                 result = "Leviathan";
             else if (god != GOD_NO_GOD)
