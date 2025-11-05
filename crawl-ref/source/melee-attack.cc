@@ -111,6 +111,10 @@ bool melee_attack::bad_attempt()
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
+    // If the player is confused, they are too unaware to make these checks.
+    if (you.confused())
+        return false;
+
     if (!is_projected && player_unrand_bad_attempt())
         return true;
 
@@ -1611,8 +1615,13 @@ bool melee_attack::attack()
     }
 
     // Abort early if the target is completely immune (possibly printing a message).
-    if (!could_harm(attacker, defender, true))
-        return attack_occurred;
+    // This takes no time if the attacker was the player and they should have known
+    // in advance that this attack was hopeless.
+    if (!could_harm(attacker, defender, attacker->is_player(), attacker->is_player()))
+    {
+        cancel_attack = attacker->is_player() && !(you.confused() || !you.can_see(*defender));
+        return !cancel_attack;
+    }
 
     // Now that we finally know that this swing is really happening, count it.
     if (attacker->is_player())
