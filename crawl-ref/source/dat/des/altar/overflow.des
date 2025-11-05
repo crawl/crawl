@@ -2024,6 +2024,7 @@ COLOUR:  b = lightmagenta
 FTILE:   'G_1m+ = floor_pebble_magenta
 TILE:    b = dngn_crystal_lightmagenta
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
+: set_feature_name("crystal_wall", "wall of pink crystal")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
 MAP
  ..bbbbb..
