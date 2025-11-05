@@ -6289,7 +6289,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
 
     case BEAM_AGONY:
-        torment_cell(mon->pos(), agent(), TORMENT_AGONY);
+        torment_actor(mon, agent(), TORMENT_AGONY);
         obvious_effect = true;
         return MON_AFFECTED;
 

@@ -1645,7 +1645,7 @@ static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&)
     vector<actor*> victims = _siphon_essence_victims(caster);
 
     for (actor* victim : victims)
-        damage += torment_cell(victim->pos(), &caster, TORMENT_SPELL);
+        damage += torment_actor(victim, &caster, TORMENT_SPELL);
 
     if (caster.hit_points != caster.max_hit_points && damage > 0)
     {

@@ -884,7 +884,7 @@ bool melee_attack::handle_phase_hit()
         && defender->as_monster()->has_ench(ENCH_CURSE_OF_AGONY))
     {
         mon_enchant agony = defender->as_monster()->get_ench(ENCH_CURSE_OF_AGONY);
-        torment_cell(defender->pos(), &you, TORMENT_AGONY);
+        torment_actor(defender, &you, TORMENT_AGONY);
         agony.degree -= 1;
 
         if (agony.degree == 0)

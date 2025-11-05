@@ -1199,32 +1199,26 @@ int torment_player(const actor *attacker, torment_source_type taux)
     return hploss;
 }
 
-int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
+// Returns how much damage was done (if any).
+int torment_actor(actor* victim, actor *attacker, torment_source_type taux)
 {
-    int damage = 0;
-
-    if (where == you.pos() && you.alive()
-        && could_harm(attacker, &you)
-        // The Sceptre of Torment and pain card do not affect the user.
-        && !(attacker && attacker->is_player()
-            && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN)))
+    // The Sceptre of Torment and pain card do not affect the user.
+    if (victim == attacker
+        && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN))
     {
-        damage = torment_player(attacker, taux);
+        return 0;
     }
-    // Don't return, since you could be standing on a monster.
 
-    monster* mons = monster_at(where);
-    if (!mons
-        || !mons->alive()
-        || mons->res_torment()
-        || attacker && !could_harm(attacker, mons, true)
-        // Monsters can't currently use the sceptre, but just in case.
-        || attacker
-           && mons == attacker->as_monster()
-           && taux == TORMENT_SCEPTRE)
-    {
-        return damage;
-    }
+    if (!victim->alive() || !could_harm(attacker, victim, true))
+        return 0;
+
+    if (victim->is_player())
+        return torment_player(attacker, taux);
+
+    // The rest of this code only concerns monsters.
+    monster* mons = victim->as_monster();
+    if (!victim->alive() || victim->res_torment())
+        return 0;
 
     god_conduct_trigger conducts[3];
     int hploss = max(0, mons->hit_points *
@@ -1240,7 +1234,6 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it. It does alert them, though.
-        // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
 
         if (attacker && attacker->is_player())
@@ -1264,8 +1257,7 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     // Player torment annoys the monsters it affects
     // Tolerate unknown scroll, to not annoy ally god users too much.
-    if (attacker != nullptr
-        && attacker->is_player()
+    if (attacker && attacker->is_player()
         && (taux != TORMENT_SCROLL
             || item_type_known(OBJ_SCROLLS, SCR_TORMENT)))
     {
@@ -1273,15 +1265,15 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     }
 
     mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
-    damage += hploss;
 
-    return damage;
+    return hploss;
 }
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where)
 {
     for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
-        torment_cell(*ri, attacker, taux);
+        if (actor_at(*ri))
+            torment_actor(actor_at(*ri), attacker, taux);
 }
 
 void setup_cleansing_flame_beam(bolt &beam, int pow,
