@@ -1054,7 +1054,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tile_env.fg(ep) = t;
     set<tileidx_t> status_icons = status_icons_for(mon);
     if (!status_icons.empty())
-        tile_env.icons.emplace(ep, std::move(status_icons));
+        tile_env.icons[ep] = std::move(status_icons);
 
     // Add name tags.
     if (!mons_class_gives_xp(mon.type))
