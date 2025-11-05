@@ -2070,18 +2070,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_SHORT_BLADES:
             if (species::is_elven(species) && skill_rank == 5)
-            {
                 result = "Blademaster";
-                break;
-            }
             break;
 
         case SK_LONG_BLADES:
             if (species == SP_MERFOLK && skill_rank == 5)
-            {
                 result = "Swordfish";
-                break;
-            }
             break;
 
         case SK_ARMOUR:
