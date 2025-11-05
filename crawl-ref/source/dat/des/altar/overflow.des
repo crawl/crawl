@@ -2357,7 +2357,7 @@ KFEAT:   f = lava
 KFEAT:   w = deep_water
 KFEAT:   CDEF = c
 KPROP:   e = no_tele_into
-: single_cloud(_G, "a", "thin_mist", false)
+: single_cloud(_G, "a", "thin mist", false)
 : single_cloud(_G, "e", "sparse dust", false)
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
 TILE:   C = wall_stone_scorched
