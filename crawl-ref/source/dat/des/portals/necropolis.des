@@ -174,19 +174,34 @@ function necropolis_generic_spawns(e, _0, _9, _8)
     _8 = "8"
   end
   if dgn.persist.necropolis_difficulty == "pre_temple_d" then
-    e.kmons(_0 .. " = place:D:5 w:40 / spectral jackal")
-    e.kmons(_9 .. " = place:D:7 w:30 / spectre place:D:8")
-    e.kmons(_8 .. " = place:D:9 w:15 / bes kemwar w:4 / wraith w:1")
+    e.kmons(_0 .. " = orc wizard / white imp / hound / scorpion / \
+                      howler monkey / clockroach w:5 / bombardier beetle w:5 / \
+                      jelly w:5 / ufetubus / shadow imp / \
+                      spectral scorpion / spectral hound")
+    e.kmons(_9 .. " = gnoll bouda / black bear / water moccasin / iguana / \
+                      sleepcap / drude / phantom / wight / bes kemwar w:5")
+    e.kmons(_8 .. " = ogre / orc priest / kobold geomancer / bullfrog / \
+                      ice beast / yak / spectral water moccasin / \
+                      spectral ogre w:5 / wraith w:2")
   elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
-    e.kmons(_0 .. " = place:D:8 w:60 / spectre place:D:9")
-    e.kmons(_9 .. " = place:D:11 w:40 / spectre place:D:12 / wraith w:5")
-    e.kmons(_8 .. " = place:D:14 w:30 / \
-                      gargoyle / spectre place:D:15 w:5 / shadowghast w:5")
+    e.kmons(_0 .. " = kobold brigand / gnoll sergeant / orc warrior / \
+                      orc priest / ogre w:5 / wyvern / steam dragon / \
+                      acid dragon / howler monkey / bullfrog / yak / \
+                      killer bee / vampire mosquito / drude / wight / \
+                      spectral bullfrog / spectral killer bee")
+    e.kmons(_9 .. " = kobold geomancer / arcanist / deep elf pyromancer / \
+                      tengu warrior / troll / centaur / yaktaur / \
+                      hornet / basilisk / ugly thing / \
+                      vampire / marrowcuda w:15 / wraith")
+    e.kmons(_8 .. " = kobold demonologist w:5 / two-headed ogre / \
+                      tengu conjurer / gargoyle w:15 / rakshasa / catoblepas / \
+                      spectre place:D:15 w:5 / shadowghast / freezing wraith")
   elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
     e.kmons(_0 .. " = place:D:12 w:40 / \
                       simulacrum place:D:12 / spectre place:D:12 / \
                       zombie place:D:12 / laughing skull")
-    e.kmons(_9 .. " = freezing wraith / gargoyle / boggart / necromancer")
+    e.kmons(_9 .. " = ogre mage / boggart / \
+                      freezing wraith / gargoyle /  / necromancer")
     e.kmons(_8 .. " = very ugly thing / deep troll / phantasmal warrior / \
                       shadow dragon w:5 / spectral fire dragon / \
                       spectral ice dragon / flayed ghost")
@@ -2868,9 +2883,7 @@ SUBST:   A : cv, B : cvn, CD : TTPPPPn., HI : +.., JK = .
 FTILE:   `-$%*|defOQ12 : floor_pebble_brown / floor_pebble_darkgray
 KPROP:   `-$%*|defOQ12 = no_tele_into
 TILE:    z = wall_crypt
-MARKER:  X = lua:fog_machine { cloud_type = "seething chaos", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "X", "seething chaos", false)
 : necropolis_ghost_setup(_G)
 MAP
 ....................

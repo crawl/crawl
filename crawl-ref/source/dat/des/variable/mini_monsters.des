@@ -1686,9 +1686,7 @@ KITEM:   e = rat skeleton
 KITEM:   f = frilled lizard skeleton
 MONS:    rat / frilled lizard
 KFEAT:   m = iron_grate
-MARKER:  P = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 1000, pow_max = 1000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "P", "flame", false)
 MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
              pow_min = 3, pow_max = 3, delay = 100, \
              size = 1, walk_dist = 1, start_clouds = 1 }
@@ -1756,11 +1754,7 @@ KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
                                              trident ego:draining . robe
 KITEM:  > = |
 KFEAT:  > = escape_hatch_down
-MARKER: ! = lua:fog_machine { \
-                cloud_type = "foul pestilence", \
-                pow_min = 100, pow_max = 100, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1 \
-            }
+: single_cloud(_G, "!", "foul pestilence", true)
 SUBST:  ! = .
 MAP
 ccccccccccc
@@ -1997,9 +1991,7 @@ COLOUR: # = red
 FTILE:  *|_1'c = floor_sprouting_squares
 FTILE:  +t = floor_moss
 FTILE:  # = floor_rough_lightred
-MARKER:  # = lua:fog_machine { cloud_type = "flame", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "#", "flame", false)
 SUBST:  '# = .
 MAP
 .................
@@ -2598,9 +2590,7 @@ FTILE:  - = floor_crypt
 FTILE:  -123456t = floor_grass_dark
 FTILE:  P = floor_sand
 : end
-MARKER: P = lua:fog_machine { cloud_type = "flame", \
-            pow_min = 1000, pow_max = 1000, delay = 1, \
-            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "P", "flame", true)
 MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
             pow_min = 3, pow_max = 3, delay = 100, \
             size = 1, walk_dist = 1, start_clouds = 1 }
@@ -2684,9 +2674,7 @@ DEPTH:  D:7-14
 ITEM:   throwing net
 KFEAT:  % = cache_of_meat
 KITEM:  g = orc skeleton / human skeleton / elf skeleton / dwarf skeleton
-MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "flame", false)
 MAP
  xxxxx
 xxxxxxx
@@ -2818,8 +2806,7 @@ NSUBST: . = 2=1 / 3=1. / 2 / 1=2. / .
 KMONS:  p = fungus
 COLOUR: pc = brown
 FTILE:  p' = floor_mud
-MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
-                              delay = 10, size = 1, excl_rad = 0 }
+: single_cloud(_G, "!", "flame", false)
 MAP
 ..............
 .pppppp.ccccc.
@@ -2858,9 +2845,9 @@ NSUBST: . = 2=1 / 3=1. / .
 MARKER: A = lua:fog_machine { cloud_type='rain', pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1 }
 : else
-MARKER: A = lua:fog_machine { cloud_type='thunder', pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1 }
+:   single_cloud(_G, "A", "thunder", false)
 : end
+FTILE: .1A = floor_pebble_cyan
 MAP
  ...
 .....
@@ -3402,9 +3389,7 @@ SUBST:  X = x
 TILE:   G = dngn_statue_angel
 TILE:   t = dngn_tree_dead, c = wall_stone_gray
 KFEAT:  _ = altar_yredelemnul
-MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", \
-                              pow_min = 5, pow_max = 10, delay = 30, \
-                              size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "_", "foul pestilence", true)
 : decorative_floor(_G, 'V', "broken floral vase")
 TILE:   V = dngn_flower_pot_broken / dngn_dark_flower_pot_broken
 : set_feature_name("tree", "dead tree")
@@ -3769,9 +3754,7 @@ KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
 MARKER: F = lua:fog_machine{ cloud_type = "black smoke", \
             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 1 }
-MARKER: l = lua:fog_machine { cloud_type = "flame", \
-            pow_min = 1000, pow_max = 1000, delay = 1, \
-            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "l", "flame", false)
 MAP
     v
    vvv
@@ -4199,12 +4182,11 @@ NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
 MONS:   fire bat, lava snake, fire elemental, hell hound, thermic dynamo
-NSUBST: ' = 4:' / *:.
+NSUBST: ' = 4:F / *:.
 : if you.depth() > 11 then
 NSUBST: 1 = 1:335 / *:1
 : end
-MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
-            pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "F", "flame", true)
 KPROP:  l = no_cloud_gen
 TILE:   c = wall_stone_scorched
 MAP
@@ -6437,9 +6419,7 @@ SUBST:  - = +
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE:  -.mcwFt12|*+ = floor_limestone
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = -1 }
+: single_cloud(_G, "F", "flame", false)
 KPROP:  wF = no_tele_into
 KMASK:  wF = no_monster_gen
 SUBST:  F = w
@@ -8203,9 +8183,7 @@ KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb
 KFEAT:  - = altar_makhleb
 KITEM:  - = obsidian_axe no_pickup
-MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0}
+: single_cloud(_G, "O", "flame", false)
 TILE:   b = bedevilled_crystal_gehenna / bedevilled_crystal_dis
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
@@ -10722,8 +10700,7 @@ KFEAT:   Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
                  pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
-MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
-                 delay = 10, size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "Z", "flame", false)
 NSUBST:  c = 2:a / *:b
 SHUFFLE: ABCDEFGH
 MAP
@@ -10773,9 +10750,7 @@ MONS:   human ; short sword | rapier / orc warrior ; dagger / spriggan ; dagger
 KFEAT:  d = cache_of_meat
 KFEAT:  e = cache_of_baked_goods
 TILE:   d = dngn_cache_of_pizza
-MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "flame", false)
 MAP
 xxxxxxx
 xvvvdex

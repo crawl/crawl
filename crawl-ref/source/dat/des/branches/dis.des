@@ -484,11 +484,8 @@ NAME:   kennysheep_iron_temple
 TAGS:   transparent no_rotate no_vmirror no_monster_gen
 ORIENT: centre
 MONS:   hell sentinel, iron golem
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 10, size = 1, \
-                              delay = 10, size = 1, walk_dist = 0, \
-                              excl_rad = 0 }
-NSUBST:  } = 1:} / *.
+: single_cloud(_G, "F", "flame", false)
+NSUBST: } = 1:} / *.
 KFEAT:  B = altar_makhleb
 MAP
     .....             .....

@@ -263,35 +263,52 @@ end
 -- Since there are no full-magic troves any more and troves reward less
 -- items overall, book quality has to be pushed up in compensation.
 function trove_book(_G, school)
-  return  "randbook disc:" .. school .. " splevels:27 numspells:4"
+  return "randbook disc:" .. school .. " splevels:27 numspells:4"
 end
 
--- A repeated function for spellbooks, staves, manuals, and orbs for a school.
+-- A repeated function for spellbooks, staves, manuals, and orbs for a school,
+-- also meant to handle the disjoint item names across schools.
 function trove_standard_magic(e, school, use_staff)
-  local staff = "staff of " .. school
-  local orb = "orb ego:energy randart artprops:" .. school
-  local manual = "manual of " .. school
-  -- If Conjurations or Necromancy troves are added, fix them here.
-  if school == "ice" then
-    staff = "staff of cold"
-  elseif school == "alchemy" then
-    orb = "orb ego:energy randart artprops:Alch"
-  elseif school == "summoning" then
-    orb = "orb ego:energy randart artprops:Summ"
-    manual = "manual of summonings"
+  local inames = {
+    ["conjuration"] = {"conjuration", "Conj", "conjurations"},
+    ["summoning"] = {"ERROR: set use_staff to false", "Summ", "summonings"},
+    ["necromancy"] = {"necromancy", "Necro", "Necromancy"},
+    ["translocations"] = {"ERROR: set use_staff to false", "Tloc", "translocations"},
+    ["hexes"] = {"ERROR: set use_staff to false", "Hexes", "hexes"},
+    ["fire"] = {"fire", "Fire", "fire magic"},
+    ["ice"] = {"cold", "Ice", "ice magic"},
+    ["earth"] = {"earth", "Earth", "earth magic"},
+    ["air"] = {"air", "Air", "air magic"},
+    ["alchemy"] = {"alchemy", "Alch", "alchemy"}
+  }
+  local staff, orb, manual, output = "", "", "", ""
+  local orbs = {"glass w:1", "mesmerism w:1", "attunement w:1"}
+  if you.mutation("hp casting") ~= 1 then
+    table.insert(orbs, "energy w:2")
+    table.insert(orbs, "stardust w:2")
   end
-  if school == "fire" or school == "ice" or school == "air" or school == "earth" then
-    manual = "manual of " .. school .. " magic"
+  for sc, iname in pairs(inames) do
+    if school == sc then
+      staff = "staff of " .. iname[1]
+      orb = "orb randart artprops:" .. iname[2] .. " ego:" ..
+            table.concat(orbs, " / orb randart artprops:" .. iname[2] .. " ego:")
+      manual = "manual of " .. iname[3] .. " w:6"
+    end
   end
-  local m = trove_book(_G, school) .. " w:31 / " .. manual .. " w:5"
+  output = manual
+  if you.mutation("innate caster") ~= 1 then
+    output = output .. " / " .. trove_book(_G, school) .. " w:34 "
+  end
   if you.mutation("no armour") ~= 1 and you.race ~= "Coglin" and
    you.mutation("missing a hand") ~= 1 then
-    m = m .. " / " .. orb .. " w:1"
+    output = output .. " / " .. orb
   end
   if use_staff then
-    m = m .. " / " .. staff .. " w:4 / " .. staff .. " randart"
+    output = output .. " / " .. staff .. " w:4 / " .. staff .. " randart"
   end
-  return m
+  crawl.mpr("you.mutation('hp casting') returns " .. you.mutation("hp casting"))
+  crawl.mpr("Magic definition: " .. output)
+  return output
 end
 
 -- Generates the lighter and heavier ends of armour to give properties to.
@@ -486,7 +503,6 @@ end
 function trove_unrand_chances(e, n_glyphs, unrand, criteria, i_glyphs)
   for i in ipairs(unrand) do
     if not criteria[i] and not you.unrands(unrand[i]) and crawl.one_chance_in(100) then
-
       e.kitem(i_glyphs[i] .. " = " .. unrand[i])
       e.nsubst(n_glyphs .. " = 1:" .. i_glyphs[i])
     end
@@ -1436,7 +1452,7 @@ end
 if species_is_undead(_G) or you.mutation("no forms") == 1 then
  subst("g = defk")
 end
-if you.god() == "Trog" then
+if you.god() == "Trog" or you.mutation("innate caster") == 1 then
   subst("h = defk")
 end
 if you.mutation("no jewellery") == 1 then
@@ -1450,15 +1466,14 @@ end
 trove_unrand_chances(_G, "defij", {"scales of the dragon king", "mask of the dragon"},
                      {no_body_armour_species(_G), n_hat}, {"Y", "Z"})
 
--- Decorative draagon skeletons under matching element clouds.
+-- Decorative dragon skeletons under matching element clouds.
 local dr = {"steam", "acid", "swamp", "fire", "ice", "storm", "shadow", "pearl"}
 local cl = {"steam", "acidic fog", "poison gas", "flame", "freezing vapour",
             "thunder", "excruciating misery", "blessed fire" }
 local gl = {"H", "I", "J", "K", "L", "M", "N", "O"}
 for i = 1, 8, 1 do
   kitem(gl[i] .. " = " .. dr[i] .. " dragon skeleton")
-  lua_marker( gl[i], fog_machine{ cloud_type = cl[i], pow_min = 5, pow_max = 40,
-    delay = 15, size = 1, walk_dist = 0, spread_rate = 0, excl_rad = 0 } )
+  single_cloud(_G, gl[i], cl[i], false)
 end
 }}
 KPROP:   12' = no_tele_into
@@ -1504,16 +1519,15 @@ NSUBST: ? = 6:d / 6:g / *:'
 {{
 local weap = ""
 local aux1 = ""
-local book = "randbook disc:translocation numspells:4 splevels:27 w:60 / \
-              manual of translocations"
+local magic = trove_standard_magic(_G, "translocations", false)
 local extra = "any manual w:1"
 if no_evil(_G) then
   weap = "acquire weapon / any useful weapon good_item"
 else
   weap = trove_weap_brand(_G, "chaos") .. " / " ..
          trove_weap_brand(_G, "distortion")
-  if no_friendlies(_G) == false then
-    book = book .. " / grand grimoire"
+  if no_friendlies(_G) == false and you.mutation("innate caster") ~= 1 then
+    magic = magic .. " / grand grimoire"
   end
 end
 if you.mutation("weakness stinger") ~= 3 then
@@ -1530,7 +1544,7 @@ end
 if you.mutation("inability to use devices") ~= 1 then
   extra = extra .. " / any misc w:12"
 end
-trove_offense(_G, weap, book,
+trove_offense(_G, weap, magic,
                   trove_good_talisman(_G, nil, nil), "translocations magic")
 trove_defense(_G, "acquire armour / any useful armour randart" .. aux1,
                   "robe randart artprops:Stlth:2 plus:2",
@@ -1565,9 +1579,7 @@ TILE:    t = dngn_demonic_tree_2 / dngn_demonic_tree_3 / \
              dngn_demonic_tree_8 / dngn_demonic_tree_9 / \
              dngn_demonic_tree_15 / dngn_demonic_tree_1
 FTILE:   'defghi!tp = floor_nerves_magenta / floor_nerves_darkgray
-MARKER:  F = lua:fog_machine { cloud_type = "seething chaos", \
-                pow_min = 10, pow_max = 10, delay = 100, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "F", "seething chaos", true)
 KPROP:   wFV = no_tele_into
 epilogue{{
   trove_milestone(_G, "a devouring Rift")
@@ -1621,7 +1633,7 @@ local extra = ""
 if no_friendlies(_G) == false then
   extra = extra .. " / any ally scroll q:2"
   if you.mutation("no summoning magic") ~= 1 then
-    magic = magic .. " / " .. trove_standard_magic(_G, "summoning", true) ..
+    magic = magic .. " / " .. trove_standard_magic(_G, "summoning", false) ..
             " / any magical staff randart artprops:Summ&Will w:5"
   end
 end
@@ -1631,8 +1643,10 @@ if you.mutation("inability to train armour") ~= 1 and
 end
 if you.race ~= "Coglin" and you.mutation("missing a hand") ~= 1
  and you.mutation("no armour") ~= 1 then
-  extra = extra .. " / orb ego:energy randart artprops:Earth / " ..
-                "orb ego:guile randart artprops:Summ w:5"
+  extra = extra .. " / orb ego:guile randart artprops:Summ w:5"
+  if you.mutation("innate caster") ~= 1 then
+    extra = extra .. " / orb ego:energy randart artprops:Earth"
+  end
 end
 if you.mutation("antennae") ~= 3 and you.mutation("horns") ~= 3 then
   aux = " / helmet randart artprops:Int w:15 / helmet randart artprops:Will w:15"

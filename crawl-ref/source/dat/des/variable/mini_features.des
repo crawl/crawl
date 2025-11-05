@@ -4405,8 +4405,11 @@ ENDMAP
 NAME:   lemuel_flame_loot_1
 TAGS:   no_tele_into extra_post_overflow
 DEPTH:  D, Depths, Elf, Zot, !Zot:$
-SUBST:  * = *.
-SUBST:  * : *$
+: if not you.in_branch("D") then
+SUBST:  * = %$
+: else
+SUBST:  * = *., * : *$
+: end
 NSUBST: @ = 2:@ / *:@.
 MARKER: f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
@@ -4430,36 +4433,34 @@ ENDMAP
 
 NAME:    lemuel_freeze_loot_1
 TAGS:    no_descent
-DEPTH:   D:12-, Depths, Crypt
-SUBST:   * : **$
-SUBST:   * = **|
+DEPTH:   D:12-
+KFEAT:   IJKL = w
+SUBST:   * : **$, * = %%*
 NSUBST:  N = 1:+ / *:n
-MONS:    nothing, nothing, nothing, nothing
-SHUFFLE: 1234
-MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
+SHUFFLE: IJKL
+MARKER:  I = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 85, \
              size = 2, walk_dist = 2, spread_rate= 20 }
-MARKER:  2 = lua:fog_machine { cloud_type = "freezing vapour", \
+MARKER:  J = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 95, \
              size = 2, walk_dist = 2, spread_rate= 20 }
-MARKER:  3 = lua:fog_machine { cloud_type = "freezing vapour", \
+MARKER:  K = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 105, \
              size = 2, walk_dist = 2, spread_rate= 20 }
-MARKER:  4 = lua:fog_machine { cloud_type = "freezing vapour", \
+MARKER:  L = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 115, \
              size = 2, walk_dist = 2, spread_rate= 20 }
-SUBST:   1=w, 2=w, 3=w, 4=w
 MAP
    .wwwww.
  .wwwwwwwww.
- wwwww1wwwww
+ wwwwwIwwwww
 .wwcnnNnncww.
-wwwn..F..nwww
-ww2N.***.nwww
-wwwn.***.N4ww
-wwwn..F..nwww
+wwwn..G..nwww
+wwJN.***.nwww
+wwwn.***.NLww
+wwwn..G..nwww
 .wwcnnNnncww.
- wwwww3wwwww
+ wwwwwKwwwww
  .wwwwwwwww.
    .wwwww.
 ENDMAP
@@ -4557,9 +4558,7 @@ NAME: nrook_campfire
 TAGS: transparent extra decor no_descent
 DEPTH: D, Depths
 KMASK: P = opaque
-MARKER: P = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 10, pow_max = 10, delay = 5, \
-             size = 1, walk_dist = 0, start_clouds = 1 }
+: single_cloud(_G, "P", "flame", false)
 MAP
 ........
 ..ttttt.

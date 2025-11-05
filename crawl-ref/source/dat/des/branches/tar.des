@@ -208,8 +208,7 @@ SUBST:   { : -_ |:3, } : -_ |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
 NSUBST:  - = 1:{ / 1:}, _ = 1:> / 1 = .:80 <
 NSUBST:  7 = 3:7 / 3:0 / 2 = 70
-MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
-                pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "foul pestilence", true)
 MAP
          xxxxxxxxx
         xxxx...7.xx.@@.
@@ -275,8 +274,7 @@ ITEM:    base draconian skeleton / shadow dragon skeleton
 SHUFFLE: hH / hH / Hh, iI / iI / Ii
 SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
 SUBST:   d = dde..., + = +..., { = {}., c = c:49 .:1, C = c
-MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
-             pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "F", "foul pestilence", true)
 : dgn.delayed_decay(_G, 'e', 'base draconian corpse / shadow dragon corpse')
 MAP
  .@xxxxxxxxxxxxxxxxxxxxxxx@.

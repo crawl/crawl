@@ -1381,9 +1381,7 @@ KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
            randbook disc:alchemy spells:fulsome_fusillade w:6 | \
            plutonium_sword w:1 | manual of shapeshifting w:5 | \
            manual of alchemy w:5
-MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
-   pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
-   spread_rate = 0, excl_rad = 0 }
+: single_cloud(_G, "F", "mutagenic fog", true)
 COLOUR: m = magenta
 TILE:   m = dngn_transparent_wall_magenta
 : vault_metal_statue_setup(_G, "G", "alchemical conduit")

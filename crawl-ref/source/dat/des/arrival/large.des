@@ -5,6 +5,8 @@
 # The maps in this section are not complicated, but rather big... possibly
 # too big. We are talking about sizes 25x25 and larger.
 
+: crawl_require('dlua/vault.lua')
+
 ##############################################################
 # 35 x 19
 # Ruined Dwarven Fortress Basement
@@ -882,14 +884,12 @@ ENDMAP
 ##############################################################################
 
 NAME:   lightli_arrival_farm
-ORIENT: float
 TAGS:   no_monster_gen arrival
+ORIENT: float
 MONS:   plant
 KPROP:  F1 = no_tele_into
 SUBST:  1 = 1:2 t:2 .:1
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 1, size = 1, \
-                              excl_rad = -1 }
+: single_cloud(_G, "F", "flame", false)
 MAP
          xxxxxxx
          x..{..x

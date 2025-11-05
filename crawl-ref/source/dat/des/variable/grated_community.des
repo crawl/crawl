@@ -8,13 +8,9 @@
 # and scroll of teleportation is guaranteed to ensure random teleporters can
 # escape. If all else fails, there is an escape hatch in the mall's washroom.
 
-{{
-function single_cloud(e, g, cloud)
-  e.marker(g .. " = lua:fog_machine { cloud_type = '" .. cloud .. "', " ..
-                   "pow_min = 10, pow_max = 10, delay = 10, " ..
-                   "size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }")
-end
+: crawl_require('dlua/vault.lua')
 
+{{
 function grated_community_house_setup(e)
   e.tags("grated_community_mu_home")
   e.tags("unrand")
@@ -22,7 +18,7 @@ function grated_community_house_setup(e)
   e.tags("luniq")
   e.kfeat("- = +")
   e.marker("- = lua:restrict_door()")
-  single_cloud(e, "#", "flame")
+  single_cloud(e, "#", "flame", false)
   if you.in_branch("D") then
     e.ftile("' = floor_vault")
   else
@@ -109,7 +105,7 @@ TILE:     c = wall_stone_smooth
 TILE:     x = wall_brick_vines
 FTILE:    "?tG = floor_grass_dark
 COLOUR:   "?t = green
-: single_cloud(_G, "#", "flame")
+: single_cloud(_G, "#", "flame", false)
 : if you.in_branch("D") then
 FTILE:    .d$ABCDTU123456780H+g = floor_vault
 : else
@@ -197,7 +193,7 @@ KITEM:   f = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
 KFEAT:   ? = granite_statue / orcish_idol / altar_beogh w:5 / altar_makhleb w:1
 SHUFFLE: 1# / 1# / 1# / 1# / 1# / 3!
 ####  The frost giant has an ice fireplace ok that's just how he cooks
-: single_cloud(_G, "!", "freezing vapour")
+: single_cloud(_G, "!", "freezing vapour", false)
 : if you.in_branch("Vaults") then
 SUBST:   1 = 2
 : end

@@ -373,9 +373,7 @@ ITEM:   plate armour w:30 / broad axe w:7 / glaive / kite shield / \
 KFEAT:  O = enter_vaults
 KFEAT:  Z = shallow_water
 NSUBST: 1 = 2:2 / 2 = 12 / * = 1112
-MARKER: Z = lua:fog_machine { cloud_type = "rain", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "Z", "rain", true)
 MAP
 vvvvvvvvvvvvv
 vZ1.ZZ.1..ZZv

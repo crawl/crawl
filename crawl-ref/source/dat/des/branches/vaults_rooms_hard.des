@@ -2203,9 +2203,7 @@ SUBST:   T : T F:1
 COLOUR:  _2 = yellow
 FTILE:   _A2 = floor_limestone
 FTILE:   .!13+TFG = floor_metal_gold
-MARKER:  F = lua:fog_machine { cloud_type = "blessed fire", \
-                pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "F", "blessed fire", false)
 : init_protected_by_tso(_G)
 MAP
      xxxxx
@@ -2439,9 +2437,7 @@ KMONS:  B = bush
 SUBST:  * = **%
 NSUBST: 1 = 1:1 / 1:1. / 1:2 / 1:2. / *:., 3 = 2:3 / 3 = 3. / .
 TILE:   G = dngn_statue_elephant
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "F", "flame", true)
 : vault_metal_statue_setup(_G, "g", "mystic cage")
 : vaults_hard_standard(_G, true)
 FTILE:  B = floor_sprouting_stone

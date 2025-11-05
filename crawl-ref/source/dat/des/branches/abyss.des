@@ -124,12 +124,8 @@ NAME:    abyss_entry_flame_altar
 TAGS:    nolayout_encompass
 : abyss_entry(_G, 'O')
 SUBST:   A : deG
-MARKER:  d = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
-MARKER:  e = lua:fog_machine { cloud_type = "seething chaos", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
+: single_cloud(_G, "d", "flame", false)
+: single_cloud(_G, "e", "seething chaos", true)
 KFEAT:   _ = altar_lugonu
 MAP
  bbb
@@ -1677,8 +1673,7 @@ KFEAT:   " = runelight
 SHUFFLE: HIJKL, MNOPQ
 SUBST:   HIMN = l, J : ll., KL = ., O : llP, PQ : xxxxb, c : ccv
 NSUBST:  ' = 1:4 / 1:8 / 1 = 22248 / 10 = 2216 / *:., d = 1:dddd. / *:.
-MARKER:  F = lua:fog_machine { cloud_type = "translocational energy", \
-             pow_max = 2, delay_min = 10, delay_max = 20, walk_dist = 0, size = 1 }
+: single_cloud(_G, "F", "translocational energy", true)
 FTILE:   AF3579_OG+ = floor_crystal_squares
 COLOUR:  F3579 = lightmagenta
 MAP

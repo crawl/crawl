@@ -987,152 +987,140 @@ KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
 SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ
 {{
+local light_scales = "troll leather armour good_item / " ..
+     "steam dragon scales good_item / acid dragon scales good_item"
+local medium_scales = "swamp dragon scales good_item / " ..
+     "quicksilver dragon scales / fire dragon scales good_item / " ..
+     "ice dragon scales good_item / quicksilver dragon scales / " ..
+     "pearl dragon scales good_item"
+local heavy_scales = "storm dragon scales / shadow dragon scales / " ..
+     "golden dragon scales"
+local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50 / " ..
+     "plate armour good_item w:50 / crystal plate armour good_item"
+
 -- These adventurers always place a weapon.
 
-local light_scales = "troll leather armour good_item" ..
-    " / steam dragon scales good_item / acid dragon scales good_item"
-local medium_scales = "swamp dragon scales good_item" ..
-    " / quicksilver dragon scales / fire dragon scales good_item" ..
-    " / ice dragon scales good_item / quicksilver dragon scales" ..
-    " / pearl dragon scales good_item"
-local heavy_scales = "storm dragon scales / shadow dragon scales" ..
-    " / golden dragon scales"
-local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
-    " / plate armour good_item w:50 / crystal plate armour good_item"
-
- -- TODO: turn all of the below delayed_decays into normal KITEMs
-
- -- Dwarven fighter. Maybe the minotaur got the last MD.
-dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
-    "flail randart / morningstar good_item / eveningstar w:2" ..
-    "    / demon whip w:2 / dire flail good_item / great mace good_item" ..
-    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
-    "    / executioner's axe w:2 " ..
-    ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
-    "    / " .. heavy_scales ..
-    ", kite shield good_item / tower shield good_item / " .. dgn.good_aux_armour ..
-    "    / nothing w:80" ..
-    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / nothing w:60")
+-- Dwarven fighter.
+kitem("D = dwarf skeleton, flail randart / morningstar good_item / " ..
+          "eveningstar w:2 / demon whip w:2 / dire flail good_item / " ..
+          "great mace good_item / war axe randart / broad axe good_item / " ..
+          "battleaxe good_item / executioner's axe w:2, " ..
+          " ring mail randart w:50 / " .. heavy_armour .. " / " ..
+          medium_scales .. " / " .. heavy_scales .. ", " ..
+          "kite shield good_item / tower shield good_item / " ..
+          dgn.good_aux_armour .. " / nothing w:80, any wand w:20 / " ..
+          "any misc / gold / any scroll / any potion / nothing w:60")
 
  -- Minotaur hunter.
-dgn.delayed_decay_extra(_G, "E", "minotaur skeleton",
-    "shortbow good_item / orcbow good_item / arbalest good_item" ..
-    "    / longbow w:5 / triple crossbow w:5 / javelin good_item" ..
-    ", leather armour good_item w:50 / ring mail good_item w:50" ..
-    "    / " .. heavy_armour .. " / " .. medium_scales ..
-    "    / " .. heavy_scales ..
-    ",   / " .. dgn.good_aux_armour ..
-    "    / nothing w:40" ..
-    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / nothing w:60")
+kitem("E = minotaur skeleton, shortbow good_item / orcbow good_item / " ..
+          "arbalest good_item / longbow w:5 / triple crossbow w:5 / " ..
+          "javelin good_item, leather armour good_item w:50 / " ..
+          "ring mail good_item w:50 / " .. heavy_armour .. " / " ..
+          medium_scales .. " / " .. heavy_scales .. ", " ..
+          dgn.good_aux_armour .. " / nothing w:40, any wand w:20 / " ..
+          "any misc / gold / any scroll / any potion / nothing w:60")
 
  -- Spriggan stabber.
-dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
-    "dagger good_item / short sword good_item / rapier good_item" ..
-    "    / quick blade w:5" ..
-    ", robe good_item w:120 / " .. light_scales .. " / shadow dragon scales" ..
-    ", randbook disc:hexes / book of misfortune / nothing w:20" ..
-    ", buckler good_item / hat good_item / any wand w:20 / any misc / gold" ..
-    "    / any scroll / any potion / nothing w:80")
+kitem("F = spriggan skeleton, dagger good_item / short sword good_item / " ..
+          "rapier good_item / quick blade w:5, robe good_item w:120 / " ..
+          light_scales .. " / shadow dragon scales, " ..
+          "randbook disc:hexes / book of misfortune / nothing w:20, " ..
+          "buckler good_item / hat good_item / any wand w:20 / any misc / " ..
+          "gold / any scroll / any potion / nothing w:80")
 
- -- Merfolk gladiator. 3 guaranteed items, 3.25 on-average.
-dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
-    "partisan good_item / demon trident / glaive good_item / bardiche" ..
-    ", leather armour good_item w:100 / ring mail good_item w:100" ..
-    "    / " .. light_scales .. " / " .. medium_scales ..
-    -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
-    ", buckler good_item / kite shield good_item / tower shield good_item" ..
-    "    / " .. dgn.good_aux_armour .. " / any wand w:20 / any misc / gold" ..
-    "    / any scroll / any potion / nothing w:480")
+ -- Merfolk gladiator. 3 guaranteed items, 25% chance for the last one.
+kitem("H = merfolk skeleton, partisan good_item / demon trident / " ..
+          "glaive good_item / bardiche, leather armour good_item w:100 / " ..
+          "ring mail good_item w:100 / " .. light_scales .. " / " ..
+          medium_scales .. ", javelin / throwing net q:1 w:1, " ..
+          "buckler good_item / kite shield good_item / " ..
+          "tower shield good_item / " .. dgn.good_aux_armour .. " / " ..
+          "any wand w:20 / any misc / gold / any scroll / any potion / " ..
+          "nothing w:480")
 
- -- Hill orc fighter. 3 guaranteed items, 3.25 on-average.
-dgn.delayed_decay_extra(_G, "J", "orc skeleton",
-    "long sword good_item / double sword w:5 / demon blade w:5" ..
-    "    / flail good_item / morningstar good_item / eveningstar" ..
-    "    / war axe good_item / broad axe good_item / trident good_item" ..
-    "    / demon trident w:5" ..
-    ", kite shield good_item / tower shield good_item w:5" ..
-    ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
-    "    / " .. heavy_scales ..
-    -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
-    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / " .. dgn.good_aux_armour ..  " / nothing w:390")
+ -- Orc fighter of Beogh. 3 guaranteed items, 25% chance for the last one.
+kitem("J = orc skeleton, long sword good_item / double sword w:5 / " ..
+          "demon blade w:5 / flail good_item / morningstar good_item / " ..
+          "eveningstar / war axe good_item / broad axe good_item / " ..
+          "trident good_item / demon trident w:5, " ..
+          "kite shield good_item / tower shield good_item w:5, " ..
+          "ring mail randart w:50 / " .. heavy_armour .. " / " ..
+          medium_scales .. " / " .. heavy_scales .. ", " ..
+          "any wand w:20 / any misc / gold / any scroll / any potion / " ..
+          dgn.good_aux_armour ..  " / nothing w:390")
 
- -- Ogre, maybe an ogre mage of some kind.
-dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
-    " demon trident / partisan good_item / glaive good_item / bardiche" ..
-    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
-    "    / executioner's axe w:2 / giant club good_item" ..
-    "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..
-    "    / any magical staff w:20" ..
-    ", robe good_item w:200 / " .. light_scales .. " / " .. medium_scales ..
-    "    / " .. heavy_scales ..
-    ", hat good_item w:20 / cloak good_item w:20 / kite shield good_item" ..
-    "    / tower shield good_item / nothing w:60" ..
-    ", randbook w:20 / any wand w:20 / any misc / gold / any scroll" ..
-    "    / any potion / nothing w:80")
+ -- Oni, maybe a mage of some kind.
+kitem("K = oni skeleton, demon trident / partisan good_item / " ..
+          "glaive good_item / bardiche / war axe randart / " ..
+          "broad axe good_item / battleaxe good_item / " ..
+          "executioner's axe w:2 / giant club good_item / " ..
+          "giant spiked club good_item / quarterstaff good_item / " ..
+          "lajatang / any magical staff w:20, " ..
+          "robe good_item w:200 / " .. light_scales .. " / " ..
+          medium_scales .. " / " .. heavy_scales .. ", " ..
+          "hat good_item w:20 / cloak good_item w:20 / " ..
+          "kite shield good_item / tower shield good_item / nothing w:60," ..
+          "randbook w:20 / any wand w:20 / any misc / gold / " ..
+          "any scroll / any potion / nothing w:80")
 
--- These adventurers don't always place weapons, with the exception of
--- magical staves.
+-- These don't always place weapons, with the exception of magical staves.
 
--- Human wanderer.
-dgn.delayed_decay_extra(_G, "L", "human skeleton",
-    "any armour good_item, any weapon good_item / randbook / any misc" ..
-    ", any book / any jewellery / any wand w:20 / any misc / gold" ..
-    "    / any scroll / any potion / nothing w:70" ..
-    ", any book / any jewellery / any wand w:20 / any misc / gold" ..
-    "    / any scroll / any potion / nothing w:70")
+-- Demonspawn wanderer.
+kitem("L = demonspawn skeleton, any armour good_item, " ..
+          "any weapon good_item / randbook / any misc, " ..
+          "any book / any jewellery / any wand w:20 / any misc / " ..
+          "gold / any scroll / any potion / nothing w:70, " ..
+          "any book / any jewellery / any wand w:20 / any misc / " ..
+          "gold / any scroll / any potion / nothing w:70")
 
 -- Deep Elf caster.
-dgn.delayed_decay_extra(_G, "M", "elf skeleton",
-    "randbook, any magical staff" ..
-    ", robe good_item w:50 / leather armour good_item w:50" ..
-    "    / " .. light_scales .. " / buckler good_item" ..
-    "    / " .. dgn.good_aux_armour .. " / nothing" ..
-    ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
-    "    / any scroll / any potion / nothing w:80")
+kitem("M = elf skeleton, randbook, any magical staff, " ..
+          "robe good_item w:50 / leather armour good_item w:50 / " ..
+          light_scales .. " / buckler good_item / " ..
+          dgn.good_aux_armour .. " / nothing, " ..
+         "any jewellery w:20 / any wand w:20 / any misc / " ..
+         "gold / any scroll / any potion / nothing w:80")
 
 -- Coglin artificer.
-dgn.delayed_decay_extra(_G, "N", "goblin skeleton",
-    "any wand, any misc, any wand / any misc / nothing w:20" ..
-    ", any weapon good_item / any armour good_item / gold / any scroll" ..
-    "    / any potion / nothing w:50")
+kitem("N = goblin skeleton, any wand, any misc, " ..
+          "any wand / any misc / any weapon w:20, " ..
+          "any weapon good_item / any armour good_item / gold / " ..
+          "any potion / nothing w:50")
 
 -- Octopode. Two guaranteed rings and up to two more.
 dgn.delayed_decay_extra(_G, "O", "octopode corpse",
-    "any ring good_item, any ring good_item" ..
-    ", any ring w:150 / any magical staff / trident good_item" ..
-    "    / demon trident w:5 / glaive good_item w:5 / nothing w:180" ..
-    ", any ring w:60 / hat good_item w:20 / buckler good_item w:20" ..
-    "    / kite shield good_item / tower shield good_item / any wand w:20" ..
-    "    / any misc / gold / any scroll / any potion / nothing w:180")
+          "any ring good_item, any ring good_item, " ..
+          "any ring w:150 / any magical staff / trident good_item / " ..
+          "demon trident w:5 / glaive good_item w:5 / nothing w:180, " ..
+          "any ring w:60 / hat good_item w:20 / buckler good_item w:20 / " ..
+          "kite shield good_item / tower shield good_item / any wand w:20 / " ..
+          "any misc / gold / any scroll / any potion / nothing w:180")
 
--- Felid Shapeshifter.
-dgn.delayed_decay_extra(_G, "P", "felid skeleton",
-    "maw talisman / blade talisman / serpent talisman" ..
-    ", any jewellery good_item w:60 / manual of shapeshifting" ..
-    "    / manual of unarmed combat / manual of fighting" ..
-    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / nothing w:60" ..
-    ", any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / nothing w:60")
+-- Felid shapeshifter.
+kitem("P = felid skeleton, protean talisman randart / blade talisman / " ..
+          "fortress talisman / lupine talisman / serpent talisman / " ..
+          "spider talisman / wellspring talisman, " ..
+          "any jewellery good_item w:60 / manual of shapeshifting / " ..
+          "manual of unarmed combat / manual of fighting, " ..
+          "any wand w:20 / any misc / gold / " ..
+          "any scroll / any potion / nothing w:60, " ..
+          "any wand w:20 / any misc / gold / " ..
+          "any scroll / any potion / nothing w:60")
 
--- Kobold warper.
-dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
-    "randbook disc:translocation / book of spatial translocations" ..
-    "    / book of the warp" ..
-    ", scroll of blinking / scroll of teleportation q:2" ..
-    "    / dart ego:disjunction" ..
-    ", dagger good_item / short sword good_item / rapier good_item" ..
-    "    / long sword good_item / double sword / demon blade" ..
-    "    / sling randart / hand cannon good_item / shortbow randart" ..
-    "    / orcbow randart / arbalest good_item / hand cannon good_item" ..
-    "    / triple crossbow / any armour good_item / nothing w:130" ..
-    ", buckler good_item / kite shield good_item / " .. dgn.good_aux_armour ..
-    "    / any wand w:20 / any misc / gold / any scroll / any potion" ..
-    "    / nothing w:140")
-
+-- Barachi warper.
+kitem("Q = barachi skeleton, book of spatial translocation / " ..
+          "book of displacement / there-and-back book / book of the warp / " ..
+          "randbook disc:translocation, " ..
+          "scroll of blinking / scroll of teleportation q:2 / " ..
+          "dart ego:disjunction," ..
+          "dagger good_item / short sword good_item / rapier good_item / " ..
+          "long sword good_item / double sword / demon blade / " ..
+          "hand cannon good_item / shortbow randart / orcbow randart / " ..
+          "arbalest good_item / hand cannon good_item / triple crossbow / " ..
+          "any armour good_item / nothing w:120," ..
+          "buckler good_item / kite shield good_item / " ..
+          dgn.good_aux_armour .. " / any wand w:20 / any misc / gold / " ..
+          "any scroll / any potion / nothing w:140")
 }}
 MAP
 v.v.vvvvvvv.v.v

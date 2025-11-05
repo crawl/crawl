@@ -1862,9 +1862,7 @@ KPROP:  w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
-MARKER: L = lua:fog_machine { cloud_type="flame", \
-                              pow_min = 100, pow_max = 100, delay = 100, \
-                              size = 1, excl_rad = 0, walk_dist = 0 }
+: single_cloud(_G, "L", "flame", false)
 MAP
      wwwwww
     wwxxxxww
@@ -2468,9 +2466,7 @@ KFEAT:  n = iron_grate
 SUBST:  e = ddee. *:5
 SUBST:  2 = 222. *:1
 NSUBST: 3 = 3 / f / .
-MARKER: O = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
-                                pow_max = 10, delay = 10, size = 1, \
-                                walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "flame", false)
 MAP
     xxxxx@t
     xxOxxWt
@@ -3608,9 +3604,7 @@ KFEAT:  B = stone_arch
 KFEAT:  a = c
 NSUBST: ' = 16:4 / 6 = 4. / * = W:55 .:20
 SUBST:  4 = 004449, b = baaaa
-MARKER: B = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "B", "flame", false)
 TILE:   a = wall_stone_dark
 COLOUR: a = magenta
 TILE:   G = dngn_statue_demonic_bust / dngn_statue_imp / dngn_statue_cerebov \

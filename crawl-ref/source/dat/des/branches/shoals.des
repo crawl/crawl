@@ -2004,9 +2004,7 @@ KMASK:  L = no_monster_gen
 FTILE:  123DRL*n'} = floor_limestone
 SUBST:  } = }]), * = **|
 NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
-MARKER: L = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-            pow_max = 10, delay = 10, size = 1, walk_dist = 0, \
-            start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "L", "flame", false)
 KITEM:  Q = human skeleton
 MAP
 ~~~~~~~~~~~~~~~~~~~~~~~

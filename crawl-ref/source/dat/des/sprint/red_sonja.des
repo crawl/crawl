@@ -3,26 +3,21 @@ TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmi
 DESC:   Sprint I: "Red Sonja"
 ORDER:  1
 ORIENT: encompass
-MARKER: L = lua:fog_machine { \
+MARKER: L = lua:fog_machine { cloud_type = "purple smoke", \
              pow_min = 2, pow_max = 4, delay = 5, \
-             size = 4, walk_dist = 8, spread_rate= 33, \
-             cloud_type= "purple smoke" }
-MARKER: S = lua:fog_machine { \
+             size = 4, walk_dist = 8, spread_rate = 33 }
+MARKER: S = lua:fog_machine { cloud_type = "noxious fumes", \
              pow_min = 2, pow_max = 5, delay = 10, \
-             size = 3, walk_dist = 5, spread_rate= 5, \
-             cloud_type= "noxious fumes" }
-MARKER: e = lua:fog_machine { \
+             size = 3, walk_dist = 5, spread_rate = 5}
+MARKER: e = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 4, delay = 20, \
-             size = 3, walk_dist = 14, spread_rate= 2, \
-             cloud_type= "freezing vapour" }
-MARKER: j = lua:fog_machine { \
+             size = 3, walk_dist = 14, spread_rate = 2 }
+MARKER: j = lua:fog_machine { cloud_type = "steam", \
              pow_min = 2, pow_max = 3, delay = 2, \
-             size = 10, walk_dist = 5, spread_rate= 4, \
-             cloud_type= "steam" }
-MARKER: H = lua:fog_machine { \
+             size = 10, walk_dist = 5, spread_rate = 4 }
+MARKER: H = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 2, pow_max = 3, delay = 4, \
-             size = 10, walk_dist = 6, spread_rate= 4, \
-             cloud_type= "foul pestilence" }
+             size = 10, walk_dist = 6, spread_rate = 4}
 MONS:   Ijyb, ogre, Sigmund, centaur warrior, Sonja, deep troll, hornet
 SUBST:  r = ~.....
 KFEAT:  ~ = net trap

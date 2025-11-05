@@ -1493,9 +1493,7 @@ KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
 KFEAT:  X = x
 SUBST:  e = xx..., f = xx"""
-MARKER: P = lua:fog_machine { cloud_type = "flame", \
-            pow_min = 10000, pow_max = 10000, delay = 1, \
-            size = 1, walk_dist = 0, start_clouds = 1 }
+: single_cloud(_G, "P", "flame", true)
 KPROP:  " = no_tele_into
 TILE:   X = wall_spider
 TILE:   c = wall_stone_smooth
@@ -2266,8 +2264,7 @@ MONS:   orc warrior / kobold blastminer w:4 / two-headed ogre w:2
 MONS:   orc priest, orc wizard, orc
 ITEM:   yak skeleton, wyvern skeleton
 KFEAT:  A = any shop
-MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
-                              delay = 10, size = 1, excl_rad = 0 }
+: single_cloud(_G, "O", "flame", false)
 MAP
       ccccccc
      cce.6.5ccc

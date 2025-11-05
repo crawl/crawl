@@ -1465,9 +1465,7 @@ COLOUR: '.89p = brown
 FTILE:  ' = floor_sand
 FTILE:  .pt89 = floor_dirt
 FTILE:  "C*F+12345P = floor_pebble_darkgray
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                               pow_max = 100, delay = 10, size = 1, \
-                               walk_dist = 0, excl_rad = -1 }
+: single_cloud(_G, "F", "flame", false)
 MAP
 xxxxWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 xxxx~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~W
@@ -1509,9 +1507,7 @@ NSUBST: . = 13:3 / 3 = 3. / *:., ' = 5:C / 2 = M.. / 5:3 / *:.
 NSUBST: 3 = 2:2 / *:3
 : end
 SUBST:  P = tp`
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "F", "flame", false)
 : dgn.delayed_decay(_G, 'C', 'human corpse')
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2434,8 +2430,7 @@ SUBST:  ^ = ^.
 KFEAT:  ^ = net trap
 MONS:   patrolling deep troll
 : dgn.delayed_decay(_G, "?", "yak corpse")
-MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
-                              delay = 10, size = 1, excl_rad = 0 }
+: single_cloud(_G, "!", "flame", false)
 MAP
 xxxxxxx
 x--xxxx

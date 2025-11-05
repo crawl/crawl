@@ -207,6 +207,21 @@ function master_elementalist_setup(e, sprintscale)
            "repel_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
+-- A handy boilerplate-reducing function for getting a cloud generator to place
+-- just a single cloud in-place. @fade makes it rarely briefly fade away.
+function single_cloud(e, glyph, cloud, fade)
+  local pow = ""
+  if fade == nil then fade = false end
+  if fade then
+    pow = "pow_min = 5, pow_max = 7, delay_min = 55, delay_max = 75, excl_rad = 0"
+  else
+    pow = "pow_min = 90, pow_max = 100, delay = 10, excl_rad = -1"
+  end
+  e.marker(glyph .. ' = lua:fog_machine { cloud_type = "' .. cloud .. '", ' ..
+          "size = 1, " .. pow .. ", walk_dist = 0, " ..
+          "start_clouds = 1, spread_rate = 0 }")
+end
+
 -- A function to crunch down decorative skeletons.
 -- Vaults that only want to place regular branch skeletons or given vault
 -- theme skeletons don't need to call this whole function.

@@ -1615,9 +1615,7 @@ ENDMAP
 
 NAME:   nicolae_kikubaaqudgha_miasma_corner
 TAGS:   transparent decor
-MARKER: M = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
-    pow_max = 20, delay_min = 1, delay_max = 1, size = 1, walk_dist = 0, \
-    spread_rate = 0 }
+: single_cloud(_G, "M", "foul pestilence", true)
 COLOUR: c = darkgrey
 : standard_overflow_setup(_G, { { "kikubaaqudgha", "_" } }, true)
 MAP
@@ -1818,9 +1816,8 @@ WEIGHT:  1
 KPROP:   . = bloody w:5 / nothing w:25
 KFEAT:   D = altar_ignis
 KFEAT:   E = altar_makhleb
-MARKER:  P = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 1000, pow_max = 1000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+# The shared cloud markers make smoke waft up from the one flame cloud.
+: single_cloud(_G, "P", "flame", false)
 MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
              pow_min = 3, pow_max = 3, delay = 100, \
              size = 1, walk_dist = 1, start_clouds = 1 }
@@ -2277,13 +2274,10 @@ ENDMAP
 # There's always a safe path to the altar.
 NAME:   grunt_qazlal_clouds
 TAGS:   transparent no_monster_gen no_item_gen no_trap_gen decor
-: local cl = "lua:fog_machine { cloud_type = "
-: local param = "pow_min = 5, pow_max = 7, delay_min = 55, delay_max = 75, " ..
-:               "size = 1, walk_dist = 0, spread_rate = 0, excl_rad = 0}"
-: marker("L = " .. cl .. "'flame', " .. param)
-: marker("M = " .. cl .. "'freezing vapour', " .. param)
-: marker("N = " .. cl .. "'sparse dust', " .. param)
-: marker("O = " .. cl .. "'rain', " .. param)
+: single_cloud(_G, "L", "flame", true)
+: single_cloud(_G, "M", "freezing vapour", true)
+: single_cloud(_G, "N", "sparse dust", true)
+: single_cloud(_G, "O", "rain", true)
 SHUFFLE: LMNO
 KPROP:   LMNO- = no_tele_into
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
@@ -2363,12 +2357,8 @@ KFEAT:   f = lava
 KFEAT:   w = deep_water
 KFEAT:   CDEF = c
 KPROP:   e = no_tele_into
-MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
-                               pow_min = 100, pow_max = 100, delay = 1, \
-                               size = 1, walk_dist = 0, start_clouds = 1 }
-MARKER:  e = lua:fog_machine { cloud_type = "sparse dust", \
-                               pow_min = 100, pow_max = 100, delay = 1, \
-                               size = 1, walk_dist = 0, start_clouds = 1 }
+: single_cloud(_G, "a", "thin_mist", false)
+: single_cloud(_G, "e", "sparse dust", false)
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
 TILE:   C = wall_stone_scorched
 TILE:   DEF = wall_stone_gray
@@ -3470,10 +3460,7 @@ ENDMAP
 NAME:   pdpol_wu_jian_five_deadly_venoms
 TAGS:   no_item_gen no_monster_gen decor
 KPROP:  F = no_tele_into
-MARKER: F = lua:fog_machine { \
-            cloud_type="thin mist", size = 1, \
-            pow_max = 3, pow_min = 3, delay = 10, \
-            start_clouds = 0 }
+: single_cloud(_G, "F", "thin mist", false)
 {{
   local trig_marker = TriggerableFunction:new {
     func="callback.five_deadly_venoms",
@@ -4727,10 +4714,8 @@ KPROP:  12 = no_tele_into
 KMASK:  12 = opaque
 COLOUR: c = white
 COLOUR: C = magenta
-: local pm = "pow_min = 10, pow_max = 10, delay = 10, size = 1, " ..
-:            "walk_dist = 0, spread_rate = 0, excl_rad = 0"
-: marker("K = lua:fog_machine {cloud_type = 'blessed fire', " .. pm .. " }")
-: marker("L = lua:fog_machine {cloud_type = 'foul pestilence', " .. pm .. " }")
+: single_cloud(_G, "K", "blessed fire", false)
+: single_cloud(_G, "L", "foul pestilence", false)
 : standard_overflow_setup(_G, { { "the_shining_one", "A" },
 :                               { "yredelemnul", "B" } }, true)
 MAP
@@ -5233,9 +5218,7 @@ KFEAT:  H = iron_grate
 ITEM:   any book
 NSUBST: D = 1:c / *=c......
 SUBST:  -:Hmm., J:JJ., l:Lll
-MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
-                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
-                  excl_rad = 0 }
+: single_cloud(_G, "L", "flame", false)
 TILE:   c = wall_studio
 : standard_overflow_setup(_G, { { "trog", "A" }, { "sif_muna", "B" } }, true)
 MAP

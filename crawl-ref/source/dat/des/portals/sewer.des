@@ -1423,9 +1423,7 @@ KMONS:   3 = kobold brigand / crimson imp ; club . dart ego:atropa q:2
 KMONS:   4 = kobold brigand
 KMONS:   5 = crimson imp ; club . dart ego:atropa q:2
 KFEAT:   B = altar_makhleb
-MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                               pow_max = 100, delay = 10, size = 1, \
-                               walk_dist = 0, excl_rad = 0 }
+:   single_cloud(_G, "F", "flame", false)
 : else
 KMONS:   3 = kobold brigand / kobold brigand zombie
 KMONS:   4 = patrolling rock fish zombie

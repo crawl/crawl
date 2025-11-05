@@ -546,33 +546,35 @@ MAP
        -------
 ENDMAP
 
-# Two separate small lairdec vaults mixed into one:
-NAME:   lemuel_fruit_tree
-TAGS:   extra transparent lairdec luniq_lairdec_fruit
-DEPTH:  Lair, Snake
-ORIENT: float
-MONS:   plant, fungus
-ITEM:   stone q:1 no_pickup
-KFEAT:  a = cache_of_fruit
+# Separate small decor vaults mixed into one:
+NAME:    lemuel_fruit_tree
+TAGS:    extra transparent lairdec luniq_lairdec_fruit
+DEPTH:   Lair, Snake
+MONS:    plant, fungus
+ITEM:    stone q:1 no_pickup
+KFEAT:   a = cache_of_fruit
+SHUFFLE: ABCD
+NSUBST:  A = 1:a / 1:aa' / *:.
 : if crawl.one_chance_in(5) then
-SUBST:  '"~ = 1.
-SUBST:  `-._ = .:90 2:1
+SUBST:  BCD~ = 11d, `'-. = .:90 2:1
+: elseif crawl.one_chance_in(4) then
+CLEAR:  `
+SUBST:  BCD = 1.., . = .:190 1:20 2:1, - = ., ~ = d
 : else
-CLEAR:  '-_
-SUBST:  ~ = d:90 1:5 2:1, . = .:90 1:10 2:1
+CLEAR:  `-
+SUBST:  ~ = d:90 1:5 2:1, . = .:90 1:10 2:1, BCD = .
 : end
-NSUBST: `" = 1:a / 1:a. / *:.
 MAP
-   ________
-  _--------_
- _---..~..--_
-_--'.......--_
-_---..`"`.~--_
-_---..`t`..--_
-_---..`"`..--_
- _--~....~.-_
-  _--.....-_
-   ________
+   ````````
+  `--------`
+ `---..~..--`
+`---......---`
+`--~..ABC..~--`
+`---..DtD..---`
+`---..CBA..---`
+ `--~.....~--`
+  `--.....--`
+   `````````
 ENDMAP
 
 ####

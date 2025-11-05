@@ -15,17 +15,14 @@
             e.kmons('1 = tengu warrior w:5 / tengu conjurer w:5 / ' ..
                         'glowing orange brain / flayed ghost w:5 / ' ..
                         'rakshasa / spriggan rider w:5 / ' ..
-                        'spriggan air mage w:5 / ' ..
-                        'nothing w:68')
+                        'spriggan air mage w:5 / hell knight w:5 / ' ..
+                        'nothing w:65')
             e.kmons('2 = spriggan berserker / deep elf demonologist / ' ..
                         'guardian sphinx w:5')
             e.kmons('3 = deep elf high priest / walking divine tome w:5')
         end
         e.subst('% = * %:20 .')
-        e.lua_marker(':', fog_machine { cloud_type = "flame",
-                                        pow_min = 10, pow_max = 10, delay = 10,
-                                        size = 1, spread_rate = 0,
-                                        walk_dist = 0, excl_rad = 0 })
+        single_cloud(e, ":", "flame", false)
     end
 
     function radiant_caverns_setup(e)
@@ -744,8 +741,7 @@ FTILE:  JO.1+ = floor_zot_diamonds
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \
-                              size = 1, walk_dist = 4, \
-                              spread_rate = 70 }
+                              size = 1, walk_dist = 4, spread_rate = 70 }
 MAP
   cc+cc
  cc...cc

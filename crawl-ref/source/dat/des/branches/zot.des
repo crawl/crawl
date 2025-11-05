@@ -2907,8 +2907,7 @@ SUBST:   d = tGmcc, y = c`, c = cccccbbvvx, l = wl
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / >, 9 = 0 / 9
 NSUBST:  ^ = ' / ^, ~ = " / ~, ` = 2=f / .
 SHUFFLE: 12 / 34 / 56 / 78 / &!, 56, 78, ^' / ~"
-MARKER:  f = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
-             delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
+: single_cloud(_G, "f", "seeing chaos", true)
 FTILE:   f = floor_pebble_lightmagenta
 MAP
         ccccccc
