@@ -481,7 +481,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             == CTVARY_DUR)
         {
             // duration is already clamped to 0-3
-            int dur = cell.cloudinfo()->duration;
+            int dur = cell.cloudinfo()->variety;
             switch (dur)
             {
             case 0:

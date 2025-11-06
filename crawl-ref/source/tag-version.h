@@ -338,6 +338,7 @@ enum tag_minor_version
     TAG_MINOR_FIX_BLOOD_KNOWLEDGE, // Add blood rotation to map knowledge so out of sight changes aren't leaked
     TAG_MINOR_BRANCH_UNIQ_MAPS,    // buniq_* tags for "only once per branch" vault groups
     TAG_MINOR_TRACK_ORIGIN_LEVEL,  // Track the original level on which a monster was generated
+    TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK, // Don't leak whether the polar vortex caster has moved or gone
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

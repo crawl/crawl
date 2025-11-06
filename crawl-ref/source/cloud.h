@@ -105,3 +105,5 @@ void end_still_winds();
 void surround_actor_with_cloud(const actor* a, cloud_type cloud);
 
 bool chaos_affects_actor(actor* victim, actor* source);
+
+bool get_vortex_phase(const coord_def& loc);

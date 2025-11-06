@@ -44,20 +44,20 @@
 
 struct cloud_info
 {
-    cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0),
+    cloud_info() : type(CLOUD_NONE), colour(0), variety(3), tile(0), pos(0, 0),
                    killer(KILL_NONE)
     { }
 
     cloud_info(cloud_type t, colour_t c,
                uint8_t dur, unsigned short til, coord_def gc,
                killer_type kill)
-        : type(t), colour(c), duration(dur), tile(til), pos(gc), killer(kill)
+        : type(t), colour(c), variety(dur), tile(til), pos(gc), killer(kill)
     { }
 
     friend bool operator==(const cloud_info &lhs, const cloud_info &rhs) {
         return lhs.type == rhs.type
                && lhs.colour == rhs.colour
-               && lhs.duration == rhs.duration
+               && lhs.variety == rhs.variety
                && lhs.tile == rhs.tile
                && lhs.pos == rhs.pos
                && lhs.killer == rhs.killer;
@@ -70,7 +70,9 @@ struct cloud_info
 
     cloud_type type:8;
     colour_t colour;
-    uint8_t duration; // decay/20, clamped to 0-3
+    // for clouds with duration: decay/20, clamped to 0-3
+    // for vortex clouds: the vortex phase
+    uint8_t variety;
     // TODO: should this be tileidx_t?
     unsigned short tile;
     coord_def pos;

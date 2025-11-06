@@ -3537,7 +3537,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 {
     const cloud_type type  = cl.type;
     const int colour = cl.colour;
-    const unsigned int dur = cl.duration;
+    const unsigned int variety = cl.variety;
 
     tileidx_t ch = cl.tile;
 
@@ -3551,7 +3551,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                 ch = tile_info.base;
                 break;
             case CTVARY_DUR:
-                ch = tile_info.base + min(dur,
+                ch = tile_info.base + min(variety,
                                           tile_main_count(tile_info.base) - 1);
                 break;
             case CTVARY_RANDOM:
@@ -3560,14 +3560,14 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                         cl.pos.y * GXM + cl.pos.x, you.frame_no);
                 break;
             case CTVARY_MUTAGENIC:
-                ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
-                      dur == 1 ? TILE_CLOUD_MUTAGENIC_1
-                               : TILE_CLOUD_MUTAGENIC_2);
+                ch = (variety == 0 ? TILE_CLOUD_MUTAGENIC_0 :
+                      variety == 1 ? TILE_CLOUD_MUTAGENIC_1
+                                   : TILE_CLOUD_MUTAGENIC_2);
                 ch += ui_random(tile_main_count(ch));
                 break;
             case CTVARY_VORTEX:
-                ch = get_vortex_phase(cl.pos) ? TILE_CLOUD_FREEZING_WINDS_0
-                                              : TILE_CLOUD_FREEZING_WINDS_1;
+                ch = variety ? TILE_CLOUD_FREEZING_WINDS_0
+                             : TILE_CLOUD_FREEZING_WINDS_1;
                 break;
         }
 
