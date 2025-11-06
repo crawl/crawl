@@ -3799,13 +3799,6 @@ static bool _incite_monsters(const monster* mon, bool actual)
     return goaded > 0;
 }
 
-// Spells for a quick get-away.
-// Currently only used to get out of a net.
-static bool _ms_quick_get_away(spell_type monspell)
-{
-    return monspell == SPELL_BLINK;
-}
-
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
@@ -4987,14 +4980,6 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
                                             const monster_spells &hspell_pass,
                                             bool ignore_good_idea)
 {
-    // Monsters caught in a net try to get away.
-    // This is only urgent if enemies are around.
-    // TODO this seems kind of pointless with a 1/15 chance?
-    if (mon_enemies_around(&mons) && mons.caught() && one_chance_in(15))
-        for (const mon_spell_slot &slot : hspell_pass)
-            if (_ms_quick_get_away(slot.spell))
-                return slot;
-
     bolt orig_beem = beem;
 
     // Promote the casting of useful spells for low-HP monsters.
