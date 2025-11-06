@@ -3789,7 +3789,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
     // Flying monsters don't make contact with the terrain.
-    if (!mons->ground_level())
+    if (mons->airborne())
         return;
 
     dungeon_feature_type grid = env.grid(mons->pos());

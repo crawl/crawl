@@ -50,14 +50,6 @@ level_id actor::shaft_dest() const
     return generic_shaft_dest(level_id::current());
 }
 
-/**
- * Check if the actor is on the ground (or in water).
- */
-bool actor::ground_level() const
-{
-    return !airborne();
-}
-
 // Give hands required to wield weapon.
 hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {

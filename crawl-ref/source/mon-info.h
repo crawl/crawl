@@ -454,7 +454,6 @@ struct monster_info : public monster_info_base
     bool asleep() const;
     bool incapacitated() const;
     bool airborne() const;
-    bool ground_level() const;
 
     bool is_named() const
     {

@@ -2229,7 +2229,7 @@ void return_to_default_form(bool new_form)
 void merfolk_check_swimming(dungeon_feature_type old_grid, bool stepped)
 {
     const dungeon_feature_type grid = env.grid(you.pos());
-    if (you.ground_level()
+    if (!you.airborne()
         && feat_is_water(grid)
         && you.has_mutation(MUT_MERTAIL))
     {

@@ -4438,7 +4438,7 @@ void actor_apply_toxic_bog(actor * act)
     if (env.grid(act->pos()) != DNGN_TOXIC_BOG)
         return;
 
-    if (!act->ground_level())
+    if (act->airborne())
         return;
 
     const bool player = act->is_player();

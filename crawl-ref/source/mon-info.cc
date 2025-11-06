@@ -1824,11 +1824,6 @@ bool monster_info::airborne() const
     return is(MB_AIRBORNE);
 }
 
-bool monster_info::ground_level() const
-{
-    return !airborne();
-}
-
 bool monster_info::fellow_slime() const {
     return attitude == ATT_GOOD_NEUTRAL
         && have_passive(passive_t::neutral_slimes)

@@ -790,7 +790,7 @@ void dec_penance(int val)
 // TODO: find out what this is duplicating & deduplicate it
 static bool _need_water_walking()
 {
-    return you.ground_level() && !you.has_mutation(MUT_MERTAIL)
+    return !you.airborne() && !you.has_mutation(MUT_MERTAIL)
            && env.grid(you.pos()) == DNGN_DEEP_WATER;
 }
 

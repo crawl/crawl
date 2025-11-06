@@ -674,7 +674,7 @@ static void _maybe_leave_water(const coord_def pos)
     if (env.grid(pos) != DNGN_FLOOR || !one_chance_in(5))
         return;
 
-    if (you.pos() == pos && you.ground_level())
+    if (you.pos() == pos && !you.airborne())
         mpr("The rain has left you waist-deep in water!");
     temp_change_terrain(pos, DNGN_SHALLOW_WATER,
                         random_range(500, 1000),

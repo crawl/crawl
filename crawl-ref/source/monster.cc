@@ -278,7 +278,7 @@ bool monster::swimming() const
  */
 bool monster::swimming(bool energy_cost) const
 {
-    if (!ground_level())
+    if (airborne())
         return false;
 
     const dungeon_feature_type grid = env.grid(pos());
@@ -328,7 +328,7 @@ bool monster::floundering_at(const coord_def p) const
                 // deep water, who flounder despite being treated as amphibious.
                 && !(mons_habitat(*this, true) & HT_DEEP_WATER)
                 && !extra_balanced_at(p)))
-           && ground_level();
+           && !airborne();
 }
 
 bool monster::floundering() const
@@ -2996,7 +2996,7 @@ bool monster::petrifying() const
 bool monster::liquefied_ground() const
 {
     return liquefied(pos())
-           && ground_level() && !is_insubstantial()
+           && !airborne() && !is_insubstantial()
            && !mons_class_is_stationary(type);
 }
 
@@ -5690,8 +5690,7 @@ bool monster::do_shaft()
         set_transit(lev);
 
     string msg = make_stringf(" %s a shaft!",
-                              !ground_level() ? "is sucked into"
-                                              : "falls through");
+                              airborne() ? "is sucked into" : "falls through");
 
     const bool reveal = simple_monster_message(*this, msg.c_str());
 

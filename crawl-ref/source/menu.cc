@@ -2545,7 +2545,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     // A fake monster might not have its ghost member set up properly.
-    if (!fake && m->ground_level())
+    if (!fake && !m->airborne())
     {
         if (ch == TILE_DNGN_LAVA)
             tileset.emplace_back(TILEI_MASK_LAVA);

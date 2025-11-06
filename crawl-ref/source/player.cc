@@ -323,7 +323,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
         prompt += "Are you sure you want to " + move_verb;
 
-        if (you.ground_level())
+        if (!you.airborne())
             prompt += " into ";
         else
             prompt += " over ";
@@ -594,7 +594,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(old_feat, stepped);
 
-    if (you.ground_level())
+    if (!you.airborne())
     {
         if (feat_is_water(new_grid))
             _enter_water(old_feat, new_grid, stepped);
@@ -5762,7 +5762,7 @@ bool player::is_sufficiently_rested(bool starting) const
 
 bool player::in_water() const
 {
-    return ground_level() && !you.can_water_walk() && feat_is_water(env.grid(pos()));
+    return !airborne() && !you.can_water_walk() && feat_is_water(env.grid(pos()));
 }
 
 bool player::in_liquid() const
@@ -5967,7 +5967,7 @@ bool player::liquefied_ground() const
 {
     return liquefied(pos())
            && you.species != SP_GREY_DRACONIAN
-           && ground_level() && !is_insubstantial();
+           && !airborne() && !is_insubstantial();
 }
 
 /**

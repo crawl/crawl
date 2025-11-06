@@ -1559,7 +1559,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_water(env.grid(pos())) && ground_level())
+        if (feat_is_water(env.grid(pos())) && !airborne())
         {
             if (you.can_see(*this))
             {

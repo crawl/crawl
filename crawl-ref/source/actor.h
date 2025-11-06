@@ -309,7 +309,6 @@ public:
     virtual bool is_web_immune() const = 0;
     virtual bool is_binding_sigil_immune() const = 0;
     virtual bool airborne() const = 0;
-    virtual bool ground_level() const;
 
     virtual bool is_dragonkind() const;
     virtual int  dragon_level() const;
