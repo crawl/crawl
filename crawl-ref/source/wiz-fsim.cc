@@ -577,6 +577,9 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
         else
             sk = skill_from_name(sk_str.c_str());
 
+        if (is_useless_skill(sk))
+            continue;
+
         scale[sk] = divider;
         if (divider == 1 && ret.empty())
             ret = skill_name(sk);
@@ -601,8 +604,11 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     if (Options.fsim_scale.empty())
     {
         skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
-        scale[sk] = 1;
-        col_name = skill_name(sk);
+        if (!is_useless_skill(sk))
+        {
+            scale[sk] = 1;
+            col_name = skill_name(sk);
+        }
     }
     else
         col_name = _init_scale(scale, xl_mode);
@@ -627,7 +633,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
             set_xl(i, true);
         else
         {
-            for (const auto &entry : scale)
+            for (const auto& entry : scale)
                 set_skill_level(entry.first, i / entry.second);
         }
 
