@@ -187,6 +187,8 @@ const int AGILITY_BONUS = 5;
 
 #define ZOT_ENTRY_RUNES 3
 
+#define MAX_RUNES 15
+
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
 

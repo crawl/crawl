@@ -426,7 +426,7 @@ static void _rune_effect(dungeon_feature_type ftype)
     // Zot is extra flashy.
     if (ftype == DNGN_ENTER_ZOT)
     {
-        ASSERT(runes.size() >= 3);
+        ASSERT(runes.size() >= ZOT_ENTRY_RUNES);
 
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 #ifdef USE_TILE_LOCAL

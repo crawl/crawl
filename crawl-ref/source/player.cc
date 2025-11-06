@@ -5393,7 +5393,7 @@ player::player()
     for (auto &item : inv)
         item.clear();
     runes.reset();
-    obtainable_runes = 15;
+    obtainable_runes = MAX_RUNES;
 
     gems_found.reset();
     gems_shattered.reset();

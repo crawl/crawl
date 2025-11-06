@@ -7254,8 +7254,8 @@ static void _spawn_crucible_demon(bool allow_in_sight)
 {
     int pow = (you.experience_level - 7) * 5 / 4;
 
-    if (runes_in_pack() > 3)
-        pow += (runes_in_pack() - 3) * 2 / 3;
+    if (runes_in_pack() > ZOT_ENTRY_RUNES)
+        pow += (runes_in_pack() - ZOT_ENTRY_RUNES) * 2 / 3;
 
     if (coinflip())
         pow = pow * 2 / 3;

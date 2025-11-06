@@ -1237,7 +1237,7 @@ static string _branch_transit_runes(branch_type br)
 
     string desc;
     const bool exit = br == BRANCH_VAULTS;
-    const int num_runes = br == BRANCH_ZOT ? 3 : 1;
+    const int num_runes = br == BRANCH_ZOT ? ZOT_ENTRY_RUNES : 1;
     return make_stringf("\n\nThis branch can only be %sed while carrying at "
                         "least %d rune%s of Zot.",
                         exit ? "exit" : "enter",

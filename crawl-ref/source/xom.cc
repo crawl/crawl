@@ -977,8 +977,8 @@ static int _xom_pal_counting(int roll, bool isFriendly)
             count = random_range(2, 3);
     }
 
-    if (you.runes.count() > 4)
-        count += div_rand_round(you.runes.count(), 5);
+    if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
+        count += div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES + 2);
 
     if (!isFriendly && _xom_feels_nasty())
         count *= 1.5;
@@ -2136,7 +2136,7 @@ static void _xom_spray_lightning(coord_def position)
     beam.aux_source   = "Xom's lightning strike";
 
     int power = 20 + you.experience_level * 5;
-    if (you.runes.count() > 4)
+    if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
         power += you.runes.count() * 3;
 
     // uncontrolled, so no player tracer.
@@ -2563,8 +2563,8 @@ static void _xom_destruction(int sever, bool real)
         }
 
         int dice = 2 + div_rand_round(you.experience_level, 13);
-        if (you.runes.count() > 4)
-            dice += div_rand_round(you.runes.count(), 3);
+        if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
+            dice += div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES);
 
         bolt beam;
 
@@ -2743,7 +2743,8 @@ static void _xom_bad_enchant_monster(int sever)
 static vector<monster*> _xom_find_weak_monsters(bool range)
 {
     vector<monster*> targetable;
-    int runes = (you.runes.count() > 3) ? div_rand_round(you.runes.count(), 3) : 0;
+    int runes = (you.runes.count() > ZOT_ENTRY_RUNES) ?
+                    div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES) : 0;
     int maximum_hd = 3 + you.experience_level * 7 / 20 + runes;
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

@@ -778,7 +778,7 @@ void dgn_reset_player_data()
 
     // item stuff that can interact with the builder
     you.runes.reset();
-    you.obtainable_runes = 15;
+    you.obtainable_runes = MAX_RUNES;
     initialise_item_sets(true);
     you.unique_items.init(UNIQ_NOT_EXISTS);
     you.octopus_king_rings = 0x00;

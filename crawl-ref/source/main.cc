@@ -1408,7 +1408,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         }
         break;
     case DNGN_ENTER_ZOT:
-        if (runes_in_pack() < 3 && !crawl_state.game_is_descent())
+        if (runes_in_pack() < ZOT_ENTRY_RUNES && !crawl_state.game_is_descent())
         {
             mpr("You need at least three runes to enter the Realm of Zot.");
             return false;
