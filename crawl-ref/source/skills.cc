@@ -1957,7 +1957,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     }
 
     // All rune deathless felid
-    if (you.species == SP_FELID && runes_in_pack() >= 15 && you.deaths == 0)
+    if (you.species == SP_FELID && runes_in_pack() >= you.obtainable_runes && you.deaths == 0)
         return "Incurious";
 
     // A harder version of the ruthless efficiency banner
@@ -1972,13 +1972,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     }
 
     // all runes with a zealot without ever abandoning
-    if (runes_in_pack() >= 15 && you.char_class == JOB_CHAOS_KNIGHT
+    if (runes_in_pack() >= you.obtainable_runes && you.char_class == JOB_CHAOS_KNIGHT
         && you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1)
     {
         return "Chaos Fanatic";
     }
 
-    if (runes_in_pack() >= 15 && you.char_class == JOB_CINDER_ACOLYTE
+    if (runes_in_pack() >= you.obtainable_runes && you.char_class == JOB_CINDER_ACOLYTE
         && you_worship(GOD_IGNIS) && you.worshipped[GOD_IGNIS] == 1)
     {
         return "Keeper of the Flame";
