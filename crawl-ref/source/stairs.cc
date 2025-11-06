@@ -428,6 +428,9 @@ static void _rune_effect(dungeon_feature_type ftype)
     {
         ASSERT(runes.size() >= ZOT_ENTRY_RUNES);
 
+        // XXX: The messaging below assumes exactly three runes are needed.
+        ASSERT(ZOT_ENTRY_RUNES == 3);
+
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 #ifdef USE_TILE_LOCAL
         view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
