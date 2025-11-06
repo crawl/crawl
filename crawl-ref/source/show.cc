@@ -288,17 +288,33 @@ void update_item_at(const coord_def &gp, bool wizard)
     env.map_knowledge(gp).set_item(eitem, more_items);
 }
 
+static int _get_cloud_variety(cloud_struct& cloud)
+{
+    const cloud_tile_info& tile_info = cloud_type_tile_info(cloud.type);
+    switch (tile_info.variation)
+    {
+    case CTVARY_VORTEX:
+        return get_vortex_phase(cloud.pos);
+
+    case CTVARY_DUR:
+    case CTVARY_MUTAGENIC:
+    default:
+        int dur = cloud.decay / 20;
+        if (dur < 0)
+            dur = 0;
+        else if (dur > 3)
+            dur = 3;
+        return dur;
+    }
+    return 0;
+}
+
 static void _update_cloud(cloud_struct& cloud)
 {
     const coord_def gp = cloud.pos;
+    const int variety = _get_cloud_variety(cloud);
 
-    int dur = cloud.decay/20;
-    if (dur < 0)
-        dur = 0;
-    else if (dur > 3)
-        dur = 3;
-
-    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), variety, 0, gp,
                   cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }

@@ -277,25 +277,11 @@ static int _etc_mangrove(int, const coord_def& loc)
     return col == LIGHTGREEN ? BROWN : col;
 }
 
-bool get_vortex_phase(const coord_def& loc)
-{
-    coord_def center = get_cloud_originator(loc);
-    if (center.origin())
-        return _ui_coinflip(); // source died/went away
-    else
-    {
-        int x = loc.x - center.x;
-        int y = loc.y - center.y;
-        double dir = atan2(x, y)/PI;
-        double dist = sqrt(x*x + y*y);
-        return ((int)floor(dir*2 + dist*0.33 - (you.frame_no % 54)/2.7))&1;
-    }
-}
-
 static int _etc_vortex(int, const coord_def& loc)
 {
-    const bool phase = get_vortex_phase(loc);
-    switch (env.grid(loc))
+    const cloud_info* cloud = env.map_knowledge(loc).cloudinfo();
+    const bool phase = cloud ? (bool)cloud->variety : true;
+    switch (env.map_knowledge(loc).feat())
     {
     case DNGN_LAVA:
         return phase ? LIGHTRED : _ui_one_chance_in(3) ? MAGENTA : RED;

@@ -6291,7 +6291,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
         cloud_info* ci = cell.cloudinfo();
         marshallUnsigned(th, ci->type);
         marshallUnsigned(th, ci->colour);
-        marshallUnsigned(th, ci->duration);
+        marshallUnsigned(th, ci->variety);
         marshallShort(th, ci->tile);
         marshallUByte(th, ci->killer);
     }
@@ -6359,7 +6359,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         cloud_info ci;
         ci.type = (cloud_type)unmarshallUnsigned(th);
         unmarshallUnsigned(th, ci.colour);
-        unmarshallUnsigned(th, ci.duration);
+        unmarshallUnsigned(th, ci.variety);
         ci.tile = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() >= TAG_MINOR_CLOUD_OWNER)
@@ -7014,6 +7014,16 @@ static void _fixup_blood_knowledge(MapKnowledge& map_knowledge)
         }
     }
 }
+
+static void _fixup_cloud_varieties(MapKnowledge& map_knowledge)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        cloud_info* ci = map_knowledge(*ri).cloudinfo();
+        if (ci && ci->type == CLOUD_VORTEX)
+            ci->variety = get_vortex_phase(*ri);
+    }
+}
 #endif
 
 static void _tag_read_level(reader &th)
@@ -7076,6 +7086,8 @@ static void _tag_read_level(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FIX_BLOOD_KNOWLEDGE)
         _fixup_blood_knowledge(env.map_knowledge);
+    if (th.getMinorVersion() <= TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK)
+        _fixup_cloud_varieties(env.map_knowledge);
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -7093,6 +7105,8 @@ static void _tag_read_level(reader &th)
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_FIX_BLOOD_KNOWLEDGE)
             _fixup_blood_knowledge(*f);
+        if (th.getMinorVersion() <= TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK)
+            _fixup_cloud_varieties(*f);
 #endif
         env.map_forgotten.reset(f);
     }

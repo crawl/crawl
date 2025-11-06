@@ -125,7 +125,6 @@ colour_t make_high_colour(colour_t colour) IMMUTABLE;
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 int get_disjunct_phase(const coord_def& loc);
-bool get_vortex_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);
 colour_t rune_colour(int type);
