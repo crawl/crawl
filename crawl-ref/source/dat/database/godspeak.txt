@@ -638,6 +638,8 @@ Xom send in the clones
 Xom feels like there should be more of you to share with the Dungeon.
 
 Xom gently smashes a mirror over your [@random_body_part_external_singular@|@random_body_part_external_plural@].
+
+"Multiply and go forth!"
 %%%%
 # drain your mp, produce magicspawn
 Xom brain drain
