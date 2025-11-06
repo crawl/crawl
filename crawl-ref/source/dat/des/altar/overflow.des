@@ -4805,7 +4805,6 @@ FTILE:  ' = floor_limestone
 COLOUR: b = lightmagenta
 COLOUR: ' = brown
 KMASK:  12 = opaque
-: set_feature_name("crystal_wall", "wall of pink crystal")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "A" }, { "zin", "B" } }, true)
 MAP
  ....bbbb+vvvv....
