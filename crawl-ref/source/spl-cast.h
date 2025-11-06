@@ -45,8 +45,7 @@ enum class spflag
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
                                           // (Can be cast by friendly monsters, even when out of combat)
-    harms_area         = 0x00008000,      // Does a potentially aggressive act to an unspecified area.
-                                          // (Prevents monsters from casting while a Sanctuary exists.)
+                     //  0x00008000,
     destructive        = 0x00010000,      // not a conjuration, but still
                                           // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench

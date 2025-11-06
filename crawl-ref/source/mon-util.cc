@@ -3615,7 +3615,7 @@ bool is_offensive_spell(spell_type spell, maybe_bool needs_lof, bool damage_only
         }
     }
 
-    // Assume that spflag::target and spflag::harms_area both ignore line of
+    // Assume that spflag::target and untagged spells both ignore line of
     // fire, while spflag::dir_or_target requires it (regardless of whether it
     // penetrates or not).
 

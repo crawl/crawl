@@ -460,21 +460,6 @@ bool spell_harms_target(spell_type spell)
     return false;
 }
 
-bool spell_harms_area(spell_type spell)
-{
-    const spell_flags flags = _seekspell(spell)->flags;
-
-    if (flags & spflag::harms_area)
-        return true;
-
-    // XXX: This is a 'helpful' spell that also does area damage, so monster
-    //      logic should account for this, regarding Sanctuary.
-    if (spell == SPELL_PERCUSSIVE_TEMPERING)
-        return true;
-
-    return false;
-}
-
 /**
  * Does the spell cause damage directly on a successful, non-resisted, cast?
  * This is much narrower than "harm", and excludes e.g. hexes that harm in a
