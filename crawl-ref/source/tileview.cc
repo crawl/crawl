@@ -976,7 +976,6 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 **/
 static void _tile_place_invisible_monster(const coord_def &gc)
 {
-    const coord_def ep = grid2show(gc);
     const map_cell& cell = env.map_knowledge(gc);
 
     // Shallow water has its own modified tile for disturbances
