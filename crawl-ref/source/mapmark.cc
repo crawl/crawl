@@ -864,7 +864,7 @@ bool map_terrain_change_marker::any_at(coord_def pos, function<bool(map_terrain_
                 return true;
         }
     return false;
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // map_cloud_spreader_marker
