@@ -1103,7 +1103,7 @@ flow of clouds.
 %%%%
 A wall of orange crystal
 
-<A crystal wall>
+A wall made from orange crystal. It has a mind-boggling sheen.
 %%%%
 A wall of white crystal
 
