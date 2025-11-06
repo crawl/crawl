@@ -925,7 +925,7 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            if (!map_bounds(gc))
+            if (!you.see_cell(gc))
                 continue;
 
             tileidx_t bg = _get_floor_bg(gc);
