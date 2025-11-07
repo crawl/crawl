@@ -264,6 +264,7 @@ public:
     int      get_experience_level() const override;
     god_type deity() const override;
     bool     alive() const override;
+    bool     alive_or_reviving() const override;
     bool     defined() const { return alive(); }
     bool     swimming() const override;
     bool     swimming(bool energy_cost) const;

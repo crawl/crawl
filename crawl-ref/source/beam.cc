@@ -3146,7 +3146,7 @@ void bolt::affect_place_explosion_clouds()
             mg.set_summoned(summ, SPELL_FIRE_STORM, summ_dur(1), false, false);
 
             // Spell-summoned monsters need to have a live summoner.
-            if (summ == nullptr || !summ->alive())
+            if (summ == nullptr || !summ->alive_or_reviving())
             {
                 if (!source_name.empty())
                     mg.non_actor_summoner = source_name;

@@ -623,6 +623,7 @@ public:
 
     god_type  deity() const override;
     bool      alive() const override;
+    bool      alive_or_reviving() const override;
     bool      is_summoned() const override { return false; };
     bool      was_created_by(int) const override { return false; };
     bool      was_created_by(const actor&, int = SPELL_NO_SPELL) const override

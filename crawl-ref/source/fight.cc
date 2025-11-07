@@ -436,11 +436,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // monster mid-revival (since they're still actually supposed to be there).
     if (!defender->alive())
     {
-        if (defender->is_monster()
-            && (defender->as_monster()->flags & MF_PENDING_REVIVAL))
-        {
+        if (defender->alive_or_reviving())
             return true;
-        }
         else
         {
             die("%s trying to attack a dead %s", attacker->name(DESC_THE).c_str(),
@@ -571,7 +568,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             for (adjacent_iterator i(attacker->pos()); i; ++i)
             {
                 if (*i == you.pos()
-                    && !mons_aligned(attacker, &you))
+                    && !mons_aligned(attacker, &you)
+                    && you.alive())
                 {
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
