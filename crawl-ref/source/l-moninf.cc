@@ -63,7 +63,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
  * @treturn boolean
  * @function damage_level
  */
-MIRET1(number, damage_level, dam)
+MIRET1(integer, damage_level, dam)
 /*** Is this monster safe by default?
  * Check if this monster is thought of as safe by crawl internally. Does not
  * check @{Hooks.ch_mon_is_safe}, so this can be used there without causing an
@@ -96,7 +96,7 @@ MIRET1(boolean, is_damage_immune, is(MB_PLAYER_DAMAGE_IMMUNE))
  * @treturn int
  * @function attitude
  */
-MIRET1(number, attitude, attitude)
+MIRET1(integer, attitude, attitude)
 /*** The monster's threat level.
  * A numeric representation of the the threat level in the monster list.
  *
@@ -108,7 +108,7 @@ MIRET1(number, attitude, attitude)
  * @treturn int
  * @function threat
  */
-MIRET1(number, threat, threat)
+MIRET1(integer, threat, threat)
 /*** Simple monster name.
  * Returns the name of the monster.
  * @treturn string
@@ -120,23 +120,23 @@ MIRET1(string, mname, mname.c_str())
  * @treturn int
  * @function type
  */
-MIRET1(number, last_seen_at_turn, last_seen_at_turn)
+MIRET1(integer, last_seen_at_turn, last_seen_at_turn)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
  */
-MIRET1(number, type, type)
+MIRET1(integer, type, type)
 /*** Monster base type as in monster_type.h.
  * @treturn int
  * @function base_type
  */
-MIRET1(number, base_type, base_type)
+MIRET1(integer, base_type, base_type)
 /*** Monster number field.
  * Contains hydra heads or slime size. Meaningless for all others.
  * @treturn int
  * @function number
  */
-MIRET1(number, number, number)
+MIRET1(integer, number, number)
 /*** A string describing monster speed.
  * Possible values are: "very slow", "slow", "normal", "fast", "very fast", and
  * "extremely fast".
@@ -148,12 +148,12 @@ MIRET1(string, speed_description, speed_description().c_str())
  * @treturn int
  * @function x_pos
  */
-MIRET1(number, x_pos, pos.x - you.pos().x)
+MIRET1(integer, x_pos, pos.x - you.pos().x)
 /*** The monster's y coordinate in player centered coordinates.
  * @treturn int
  * @function y_pos
  */
-MIRET1(number, y_pos, pos.y - you.pos().y)
+MIRET1(integer, y_pos, pos.y - you.pos().y)
 
 /*** Monster glyph colour.
  * Return is a crawl colour number.
@@ -163,7 +163,7 @@ MIRET1(number, y_pos, pos.y - you.pos().y)
 static int moninf_get_colour(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, mi->colour());
+    lua_pushinteger(ls, mi->colour());
     return 1;
 }
 
@@ -175,8 +175,8 @@ static int moninf_get_colour(lua_State *ls)
 static int moninf_get_pos(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, mi->pos.x - you.pos().x);
-    lua_pushnumber(ls, mi->pos.y - you.pos().y);
+    lua_pushinteger(ls, mi->pos.x - you.pos().x);
+    lua_pushinteger(ls, mi->pos.y - you.pos().y);
     return 2;
 }
 
@@ -184,7 +184,7 @@ static int moninf_get_pos(lua_State *ls)
     static int moninf_get_##field(lua_State *ls) \
     { \
         MONINF(ls, 1, mi); \
-        lua_pushnumber(ls, get_resist(mi->resists(), resist)); \
+        lua_pushinteger(ls, get_resist(mi->resists(), resist)); \
         return 1; \
     }
 
@@ -252,7 +252,7 @@ static int moninf_get_max_hp(lua_State *ls)
 static int moninf_get_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(1.0*mi->willpower()/WL_PIP));
+    lua_pushinteger(ls, ceil(1.0*mi->willpower()/WL_PIP));
     return 1;
 }
 
@@ -293,7 +293,7 @@ static int moninf_get_defeat_wl(lua_State *ls)
     zap_type zap = spell_to_zap(spell);
     int eff_power = zap == NUM_ZAPS ? power : zap_ench_power(zap, power, false);
     int success = hex_success_chance(wl, eff_power, 100);
-    lua_pushnumber(ls, success);
+    lua_pushinteger(ls, success);
     return 1;
 }
 
@@ -305,7 +305,7 @@ static int moninf_get_defeat_wl(lua_State *ls)
 static int moninf_get_ac(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(mi->ac/5.0));
+    lua_pushinteger(ls, ceil(mi->ac/5.0));
     return 1;
 }
 /*** The monster's EV value, in "pips" (number of +'s shown on its description).
@@ -319,7 +319,7 @@ static int moninf_get_ev(lua_State *ls)
     int value = mi->ev;
     if (!value && mi->base_ev != INT_MAX)
         value = mi->base_ev;
-    lua_pushnumber(ls, ceil(value/5.0));
+    lua_pushinteger(ls, ceil(value/5.0));
     return 1;
 }
 
@@ -460,7 +460,7 @@ LUAFN(moninf_get_intelligence)
 LUAFN(moninf_get_avg_local_depth)
 {
     MONINF(ls, 1, mi);
-    PLUARET(number, monster_pop_depth_avg(you.where_are_you, mi->type));
+    PLUARET(integer, monster_pop_depth_avg(you.where_are_you, mi->type));
 }
 
 /*** Get the monster's probability of randomly generating on the current floor
@@ -474,7 +474,7 @@ LUAFN(moninf_get_avg_local_depth)
 LUAFN(moninf_get_avg_local_prob)
 {
     MONINF(ls, 1, mi);
-    PLUARET(number, monster_probability(level_id::current(), mi->type));
+    PLUARET(integer, monster_probability(level_id::current(), mi->type));
 }
 
 
@@ -727,7 +727,7 @@ LUAFN(moninf_get_range)
 {
     MONINF(ls, 1, mi);
 
-    lua_pushnumber(ls, mi->threat_range);
+    lua_pushinteger(ls, mi->threat_range);
     return 1;
 }
 
@@ -739,7 +739,7 @@ LUAFN(moninf_get_reach_range)
 {
     MONINF(ls, 1, mi);
 
-    lua_pushnumber(ls, mi->reach_range());
+    lua_pushinteger(ls, mi->reach_range());
     return 1;
 }
 
@@ -875,8 +875,8 @@ LUAFN(moninf_get_summoner_pos)
     const auto *summoner = mi->get_known_summoner();
     if (summoner)
     {
-        lua_pushnumber(ls, summoner->pos().x - you.pos().x);
-        lua_pushnumber(ls, summoner->pos().y - you.pos().y);
+        lua_pushinteger(ls, summoner->pos().x - you.pos().x);
+        lua_pushinteger(ls, summoner->pos().y - you.pos().y);
         return 2;
     }
     else

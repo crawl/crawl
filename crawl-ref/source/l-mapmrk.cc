@@ -9,8 +9,8 @@
 static int mapmarker_pos(lua_State *ls)
 {
     MAPMARKER(ls, 1, mark);
-    lua_pushnumber(ls, mark->pos.x);
-    lua_pushnumber(ls, mark->pos.y);
+    lua_pushinteger(ls, mark->pos.x);
+    lua_pushinteger(ls, mark->pos.y);
     return 2;
 }
 

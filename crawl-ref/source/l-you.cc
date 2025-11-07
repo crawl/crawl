@@ -146,86 +146,86 @@ LUARET1(you_one_time_ability_used, boolean,
  * @treturn int current max hp
  * @function hp
  */
-LUARET2(you_hp, number, you.hp, you.hp_max)
+LUARET2(you_hp, integer, you.hp, you.hp_max)
 
 /*** Magic points.
  * @treturn int current mp
  * @treturn int current max mp
  * @function mp
  */
-LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
+LUARET2(you_mp, integer, you.magic_points, you.max_magic_points)
 
 /*** Base max mp.
  * @treturn int
  * @function base_mp
  */
-LUARET1(you_base_mp, number, get_real_mp(false))
+LUARET1(you_base_mp, integer, get_real_mp(false))
 
 /*** Armour class.
  * @treturn int
  * @function ac
  */
-LUARET1(you_ac, number, you.armour_class_scaled(1))
+LUARET1(you_ac, integer, you.armour_class_scaled(1))
 
 /*** Evasion.
  * @treturn int
  * @function ev
  */
-LUARET1(you_ev, number, you.evasion_scaled(1))
+LUARET1(you_ev, integer, you.evasion_scaled(1))
 
 /*** Shield class.
  * @treturn int
  * @function sh
  */
-LUARET1(you_sh, number, player_displayed_shield_class())
+LUARET1(you_sh, integer, player_displayed_shield_class())
 
 /*** How much drain.
  * @treturn int
  * @function drain
  */
-LUARET1(you_drain, number, player_drained())
+LUARET1(you_drain, integer, player_drained())
 
 /*** Minimum hp after poison wears off.
  * @treturn int
  * @function poison_survival
  */
-LUARET1(you_poison_survival, number, poison_survival())
+LUARET1(you_poison_survival, integer, poison_survival())
 
 /*** Corrosion amount.
  * @treturn int
  * @function corrosion
  */
-LUARET1(you_corrosion, number, you.corrosion_amount())
+LUARET1(you_corrosion, integer, you.corrosion_amount())
 
 /*** Strength.
  * @treturn int current strength
  * @function strength
  */
-LUARET1(you_strength, number, you.strength(false))
+LUARET1(you_strength, integer, you.strength(false))
 
 /*** Intelligence.
  * @treturn int current intelligence
  * @function intelligence
  */
-LUARET1(you_intelligence, number, you.intel(false))
+LUARET1(you_intelligence, integer, you.intel(false))
 
 /*** Dexterity.
  * @treturn int current dexterity
  * @function dexterity
  */
-LUARET1(you_dexterity, number, you.dex(false))
+LUARET1(you_dexterity, integer, you.dex(false))
 
 /*** XL.
  * @treturn int xl
  * @function xl
  */
-LUARET1(you_xl, number, you.experience_level)
+LUARET1(you_xl, integer, you.experience_level)
 
 /*** XL progress.
  * @treturn number percentage of the way to the next xl [0,100]
  * @function xl_progress
  */
-LUARET1(you_xl_progress, number, get_exp_progress())
+LUARET1(you_xl_progress, integer, get_exp_progress())
 
 /*** Skill progress.
  * @tparam string name skill name
@@ -237,7 +237,7 @@ LUAFN(you_skill_progress)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    PLUARET(number, get_skill_percentage(sk));
+    PLUARET(integer, get_skill_percentage(sk));
 }
 
 /*** Can a skill be trained?
@@ -282,7 +282,7 @@ static int you_unarmed_damage_rating(lua_State *ls)
 {
     int rating = 0;
     string rating_desc = damage_rating(nullptr, &rating);
-    lua_pushnumber(ls, rating);
+    lua_pushinteger(ls, rating);
     lua_pushstring(ls, rating_desc.c_str());
 
     return 2;
@@ -315,43 +315,43 @@ static int you_unarmed_ego(lua_State *ls)
  * @treturn int resistance level
  * @function res_poison
  */
-LUARET1(you_res_poison, number, player_res_poison(false))
+LUARET1(you_res_poison, integer, player_res_poison(false))
 
 /*** Fire resistance (rF).
  * @treturn int resistance level
  * @function res_fire
  */
-LUARET1(you_res_fire, number, player_res_fire(false))
+LUARET1(you_res_fire, integer, player_res_fire(false))
 
 /*** Cold resistance (rC).
  * @treturn int resistance level
  * @function res_cold
  */
-LUARET1(you_res_cold, number, player_res_cold(false))
+LUARET1(you_res_cold, integer, player_res_cold(false))
 
 /*** Negative energy resistance (rN).
  * @treturn int resistance level
  * @function res_draining
  */
-LUARET1(you_res_draining, number, player_prot_life(false))
+LUARET1(you_res_draining, integer, player_prot_life(false))
 
 /*** Electric resistance (rElec).
  * @treturn int resistance level
  * @function res_shock
  */
-LUARET1(you_res_shock, number, player_res_electricity(false))
+LUARET1(you_res_shock, integer, player_res_electricity(false))
 
 /*** Stealth pips.
  * @treturn int number of stealth pips
  * @function stealth_pips
  */
-LUARET1(you_stealth_pips, number, stealth_pips())
+LUARET1(you_stealth_pips, integer, stealth_pips())
 
 /*** Willpower (WL).
  * @treturn int number of WL pips
  * @function willpower
  */
-LUARET1(you_willpower, number, player_willpower() / WL_PIP)
+LUARET1(you_willpower, integer, player_willpower() / WL_PIP)
 
 /*** Are you currently immune to torment?
  * @treturn boolean
@@ -369,7 +369,7 @@ LUARET1(you_res_drowning, boolean, you.res_water_drowning())
  * @treturn int resistance level
  * @function res_mutation
  */
-LUARET1(you_res_mutation, number, you.rmut_from_item() ? 1 : 0)
+LUARET1(you_res_mutation, integer, you.rmut_from_item() ? 1 : 0)
 
 /*** See invisible (sInv).
  * @treturn boolean
@@ -382,7 +382,7 @@ LUARET1(you_see_invisible, boolean, you.can_see_invisible())
  * @treturn int
  * @function spirit_shield
  */
-LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
+LUARET1(you_spirit_shield, integer, you.spirit_shield() ? 1 : 0)
 
 /*** Corrosion resistance (rCorr).
  * @treturn int resistance level
@@ -419,7 +419,7 @@ LUARET1(you_confused, boolean, you.confused())
  * @treturn int Swift level
  * @function swift
  */
-LUARET1(you_swift, number, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SWIFTNESS] >= 0) ? 1 : -1) : 0)
+LUARET1(you_swift, integer, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SWIFTNESS] >= 0) ? 1 : -1) : 0)
 
 /*** What was the loudest noise you heard in the last turn?
  * Returns a number from [0, 1000], representing the current noise bar.
@@ -432,7 +432,7 @@ LUARET1(you_swift, number, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SW
  * @treturn int noise value
  * @function noise_perception
  */
-LUARET1(you_noise_perception, number, silenced(you.pos())
+LUARET1(you_noise_perception, integer, silenced(you.pos())
                                       ? 0 : you.get_noise_perception(true))
 
 /*** Are you paralysed?
@@ -565,13 +565,13 @@ LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
  * @treturn number
  * @function contamination
  */
-LUARET1(you_contamination, number, you.magic_contamination / 10)
+LUARET1(you_contamination, integer, you.magic_contamination / 10)
 
 /*** How much damage could you take right now if your magic contamination exploded?
  * @treturn number
  * @function contam_max_damage
  */
-LUARET1(you_contam_max_damage, number, contam_max_damage())
+LUARET1(you_contam_max_damage, integer, contam_max_damage())
 
 /*** Do you feel safe?
  * @treturn boolean
@@ -583,13 +583,13 @@ LUARET1(you_feel_safe, boolean, i_feel_safe())
  * @treturn int
  * @function deaths
  */
-LUARET1(you_deaths, number, you.deaths)
+LUARET1(you_deaths, integer, you.deaths)
 
 /*** How many extra lives do you have?
  * @treturn int
  * @function lives
  */
-LUARET1(you_lives, number, you.lives)
+LUARET1(you_lives, integer, you.lives)
 
 /*** Where are you?
  * @treturn string
@@ -631,7 +631,7 @@ LUARET1(you_absdepth, integer, env.absdepth0 + 1)
  * @treturn number
  * @function turns_on_level
  */
-LUARET1(you_turns_on_level, number, env.turns_on_level)
+LUARET1(you_turns_on_level, integer, env.turns_on_level)
 
 /*** Interrupt the current multi-turn activity or macro sequence.
  * @function stop_activity
@@ -648,25 +648,25 @@ LUARET1(you_taking_stairs, boolean, player_stair_delay())
  * @treturn int
  * @function turns
  */
-LUARET1(you_turns, number, you.num_turns)
+LUARET1(you_turns, integer, you.num_turns)
 
 /*** Total elapsed time in auts.
  * @treturn int
  * @function time
  */
-LUARET1(you_time, number, you.elapsed_time)
+LUARET1(you_time, integer, you.elapsed_time)
 
 /*** Total elapsed real time in seconds.
  * @treturn int
  * @function real_time
  */
-LUARET1(you_real_time, number, you.real_time())
+LUARET1(you_real_time, integer, you.real_time())
 
 /*** How many spell levels are currently available.
  * @treturn int
  * @function spell_levels
  */
-LUARET1(you_spell_levels, number, player_spell_levels())
+LUARET1(you_spell_levels, integer, player_spell_levels())
 
 /*** Can you smell?
  * @treturn boolean
@@ -678,13 +678,13 @@ LUARET1(you_can_smell, boolean, you.can_smell())
  * @treturn int claws level
  * @function has_claws
  */
-LUARET1(you_has_claws, number, you.has_claws(false))
+LUARET1(you_has_claws, integer, you.has_claws(false))
 
 /*** How many temporary mutations do you have?
  * @treturn int
  * @function temp_mutations
  */
-LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
+LUARET1(you_temp_mutations, integer, you.attribute[ATTR_TEMP_MUTATIONS])
 
 /*** Mutation overview string.
  * @treturn string
@@ -696,7 +696,7 @@ LUARET1(you_mutation_overview, string, terse_mutation_list().c_str())
  * @treturn int
  * @function los
  */
-LUARET1(you_los, number, get_los_radius())
+LUARET1(you_los, integer, get_los_radius())
 
 /*** Can you see a cell?
  * Uses player-centered coordinates
@@ -752,7 +752,7 @@ LUARET1(you_see_cell_solid_see_rel, boolean,
  * @treturn int
  * @function piety_rank
  */
-LUARET1(you_piety_rank, number, piety_rank())
+LUARET1(you_piety_rank, integer, piety_rank())
 
 /*** Are you under penance?
  * @treturn boolean
@@ -1050,7 +1050,7 @@ static int you_gold(lua_State *ls)
         else if (old_gold > new_gold)
             you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
     }
-    PLUARET(number, you.gold);
+    PLUARET(integer, you.gold);
 }
 
 /*** Do you have the given rune?
@@ -1093,7 +1093,7 @@ static int you_immune_to_hex(lua_State *ls)
  * @treturn int
  * @function num_runes
  */
-LUARET1(you_num_runes, number, runes_in_pack())
+LUARET1(you_num_runes, integer, runes_in_pack())
 
 /*** Do you have the orb?
  * @treturn boolean
@@ -1173,7 +1173,7 @@ LUAFN(you_how_mutated)
     bool temp = lua_isboolean(ls, 4) ? lua_toboolean(ls, 4) : false;
     bool levels = lua_isboolean(ls, 5) ? lua_toboolean(ls, 5) : true;
     int result = you.how_mutated(normal, silver, all_innate, temp, levels);
-    PLUARET(number, result);
+    PLUARET(integer, result);
 }
 
 /*** Deprecated: use @{you.get_base_mutation_level}.
@@ -1287,7 +1287,7 @@ LUAFN(you_train_skill)
         reset_training();
     }
 
-    PLUARET(number, you.train[sk]);
+    PLUARET(integer, you.train[sk]);
 }
 
 /*** Get a training target.
@@ -1592,9 +1592,9 @@ void cluaopen_you(lua_State *ls)
 
 LUARET1(you_can_hear_pos, boolean,
         player_can_hear(coord_def(luaL_safe_checkint(ls,1), luaL_safe_checkint(ls, 2))))
-LUARET1(you_x_pos, number, you.pos().x)
-LUARET1(you_y_pos, number, you.pos().y)
-LUARET2(you_pos, number, you.pos().x, you.pos().y)
+LUARET1(you_x_pos, integer, you.pos().x)
+LUARET1(you_y_pos, integer, you.pos().y)
+LUARET2(you_pos, integer, you.pos().x, you.pos().y)
 
 LUARET1(you_see_cell, boolean,
         you.see_cell(coord_def(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2))))
@@ -1665,7 +1665,7 @@ static int _you_piety(lua_State *ls)
         const int new_piety = min(max(luaL_safe_checkint(ls, 1), 0), MAX_PIETY);
         set_piety(new_piety);
     }
-    PLUARET(number, you.raw_piety);
+    PLUARET(integer, you.raw_piety);
 }
 
 static int you_dock_piety(lua_State *ls)
@@ -1878,12 +1878,12 @@ LUAFN(you_init)
 LUAWRAP(you_enter_wizard_mode, you.wizard = true)
 #endif
 
-LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
+LUARET1(you_exp_needed, integer, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(l_skill(ls), 1))
-LUARET1(you_skill_cost_level, number, you.skill_cost_level)
-LUARET1(you_skill_points, number,
+LUARET1(you_skill_cost_level, integer, you.skill_cost_level)
+LUARET1(you_skill_points, integer,
         you.skill_points[l_skill(ls)])
-LUARET1(you_zigs_completed, number, you.zigs_completed)
+LUARET1(you_zigs_completed, integer, you.zigs_completed)
 
 static const struct luaL_Reg you_dlib[] =
 {

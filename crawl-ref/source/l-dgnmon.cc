@@ -228,11 +228,11 @@ static int _dgn_monster_spec(lua_State *ls)
     return 1;
 }
 
-LUARET1(_dgn_max_monsters, number, MAX_MONSTERS)
+LUARET1(_dgn_max_monsters, integer, MAX_MONSTERS)
 
 LUAFN(dgn_dismiss_monsters)
 {
-    PLUARET(number,
+    PLUARET(integer,
             dismiss_monsters(lua_gettop(ls) == 0 ? "" :
                              luaL_checkstring(ls, 1)));
 }

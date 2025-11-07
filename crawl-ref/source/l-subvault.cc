@@ -36,8 +36,8 @@ static int dgn_subvault_size(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    lua_pushnumber(ls, map->subvault_width());
-    lua_pushnumber(ls, map->subvault_height());
+    lua_pushinteger(ls, map->subvault_width());
+    lua_pushinteger(ls, map->subvault_height());
     return 2;
 }
 

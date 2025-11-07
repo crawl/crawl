@@ -23,8 +23,8 @@ BRANCH(br, 1);                   \
 PLUARET(type, expr);             \
 }
 
-BRANCHFN(floorcol, number, br.floor_colour)
-BRANCHFN(rockcol, number, br.rock_colour)
+BRANCHFN(floorcol, integer, br.floor_colour)
+BRANCHFN(rockcol, integer, br.rock_colour)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
@@ -40,7 +40,7 @@ LUAFN(dgn_br_depth)
         if (brn == NUM_BRANCHES)
             luaL_argerror(ls, 1, "No such branch");
     }
-    PLUARET(number, brdepth[brn]);
+    PLUARET(integer, brdepth[brn]);
 }
 
 LUAFN(dgn_br_exists)
