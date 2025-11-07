@@ -279,12 +279,12 @@ LUAFN(crawl_get_target) {
 /*** Get input key (combo).
  * @treturn int the key (combo) input
  * @function getch */
-LUARET1(crawl_getch, number, getchm())
+LUARET1(crawl_getch, integer, getchm())
 /*** Check for pending input.
  * @return int 1 if there is, 0 otherwise
  * @function kbhit
  */
-LUARET1(crawl_kbhit, number, kbhit())
+LUARET1(crawl_kbhit, integer, kbhit())
 /*** Flush the input buffer (typeahead).
  * @function flush_input
  */
@@ -708,7 +708,7 @@ static int crawl_msgch_num(lua_State *ls)
     if (ch == -1)
         return 0;
 
-    lua_pushnumber(ls, ch);
+    lua_pushinteger(ls, ch);
     return 1;
 }
 
@@ -976,7 +976,7 @@ static int crawl_string_compare(lua_State *ls)
 {
     const string s1 = luaL_checkstring(ls, 1),
                  s2 = luaL_checkstring(ls, 2);
-    lua_pushnumber(ls, s1.compare(s2));
+    lua_pushinteger(ls, s1.compare(s2));
     return 1;
 }
 
@@ -1137,16 +1137,16 @@ static int crawl_worley(lua_State *ls)
     double pz = lua_tonumber(ls,3);
 
     worley::noise_datum n = worley::noise(px,py,pz);
-    lua_pushnumber(ls, n.distance[0]);
-    lua_pushnumber(ls, n.distance[1]);
-    lua_pushnumber(ls, n.id[0]);
-    lua_pushnumber(ls, n.id[1]);
-    lua_pushnumber(ls, n.pos[0][0]);
-    lua_pushnumber(ls, n.pos[0][1]);
-    lua_pushnumber(ls, n.pos[0][2]);
-    lua_pushnumber(ls, n.pos[1][0]);
-    lua_pushnumber(ls, n.pos[1][1]);
-    lua_pushnumber(ls, n.pos[1][2]);
+    lua_pushinteger(ls, n.distance[0]);
+    lua_pushinteger(ls, n.distance[1]);
+    lua_pushinteger(ls, n.id[0]);
+    lua_pushinteger(ls, n.id[1]);
+    lua_pushinteger(ls, n.pos[0][0]);
+    lua_pushinteger(ls, n.pos[0][1]);
+    lua_pushinteger(ls, n.pos[0][2]);
+    lua_pushinteger(ls, n.pos[1][0]);
+    lua_pushinteger(ls, n.pos[1][1]);
+    lua_pushinteger(ls, n.pos[1][2]);
     return 10;
 }
 
@@ -1165,8 +1165,8 @@ static int crawl_worley_diff(lua_State *ls)
     double pz = lua_tonumber(ls,3);
 
     worley::noise_datum n = worley::noise(px,py,pz);
-    lua_pushnumber(ls, n.distance[1]-n.distance[0]);
-    lua_pushnumber(ls, n.id[0]);
+    lua_pushinteger(ls, n.distance[1]-n.distance[0]);
+    lua_pushinteger(ls, n.id[0]);
 
     return 2;
 }
@@ -1183,7 +1183,7 @@ static int crawl_worley_diff(lua_State *ls)
  */
 static int crawl_split_bytes(lua_State *ls)
 {
-    uint32_t val = lua_tonumber(ls,1);
+    uint32_t val = lua_tointeger(ls,1);
     uint8_t bytes[4] =
     {
         (uint8_t)(val >> 24),
@@ -1191,10 +1191,10 @@ static int crawl_split_bytes(lua_State *ls)
         (uint8_t)(val >> 8),
         (uint8_t)(val)
     };
-    lua_pushnumber(ls, bytes[0]);
-    lua_pushnumber(ls, bytes[1]);
-    lua_pushnumber(ls, bytes[2]);
-    lua_pushnumber(ls, bytes[3]);
+    lua_pushinteger(ls, bytes[0]);
+    lua_pushinteger(ls, bytes[1]);
+    lua_pushinteger(ls, bytes[2]);
+    lua_pushinteger(ls, bytes[3]);
     return 4;
 }
 
@@ -1680,11 +1680,11 @@ LUAFN(_crawl_millis)
     tt |= ft.dwLowDateTime;
     tt /= 10000;
     tt -= 11644473600000ULL;
-    lua_pushnumber(ls, tt);
+    lua_pushinteger(ls, tt);
 #else
     struct timeval tv;
     gettimeofday(&tv, nullptr);
-    lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    lua_pushinteger(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
 #endif
     return 1;
 }
@@ -1838,7 +1838,7 @@ LUAWRAP(crawl_clear_message_store, clear_message_store())
  * @treturn int the number of hups seen
  * @function seen_hups
  */
-LUARET1(crawl_seen_hups, number, crawl_state.seen_hups)
+LUARET1(crawl_seen_hups, integer, crawl_state.seen_hups)
 
 LUAFN(crawl_setfenv)
 {

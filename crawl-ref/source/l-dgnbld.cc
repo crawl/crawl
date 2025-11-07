@@ -518,7 +518,7 @@ LUAFN(dgn_count_feature_in_box)
     coord_def tl(x1, y1);
     coord_def br(x2, y2);
 
-    PLUARET(number, lines.count_feature_in_box(tl, br, feat));
+    PLUARET(integer, lines.count_feature_in_box(tl, br, feat));
 }
 
 LUAFN(dgn_count_antifeature_in_box)
@@ -535,7 +535,7 @@ LUAFN(dgn_count_antifeature_in_box)
     coord_def br(x2, y2);
 
     int sum = (br.x - tl.x + 1) * (br.y - tl.y + 1);
-    PLUARET(number, sum - lines.count_feature_in_box(tl, br, feat));
+    PLUARET(integer, sum - lines.count_feature_in_box(tl, br, feat));
 }
 
 LUAFN(dgn_count_neighbors)
@@ -552,7 +552,7 @@ LUAFN(dgn_count_neighbors)
     coord_def tl(x-1, y-1);
     coord_def br(x+1, y+1);
 
-    PLUARET(number, lines.count_feature_in_box(tl, br, feat));
+    PLUARET(integer, lines.count_feature_in_box(tl, br, feat));
 }
 
 LUAFN(dgn_count_passable_neighbors)
@@ -565,11 +565,11 @@ LUAFN(dgn_count_passable_neighbors)
 
     if (!_valid_coord(ls, lines, x, y))
     {
-        lua_pushnumber(ls, 0);
+        lua_pushinteger(ls, 0);
         return 1;
     }
 
-    lua_pushnumber(ls, _count_passable_neighbors(ls, lines, x, y, passable));
+    lua_pushinteger(ls, _count_passable_neighbors(ls, lines, x, y, passable));
     return 1;
 }
 
@@ -721,7 +721,7 @@ LUAFN(dgn_find_in_area)
 LUAFN(dgn_height)
 {
     LINES(ls, 1, map, lines);
-    PLUARET(number, lines.height());
+    PLUARET(integer, lines.height());
 }
 
 LUAFN(dgn_primary_vault_dimensions)
@@ -762,10 +762,10 @@ LUAFN(dgn_primary_vault_dimensions)
         if (y_max == -NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has x_min %d but no y_max", x_min);
 
-        lua_pushnumber(ls, x_min);
-        lua_pushnumber(ls, x_max);
-        lua_pushnumber(ls, y_min);
-        lua_pushnumber(ls, y_max);
+        lua_pushinteger(ls, x_min);
+        lua_pushinteger(ls, x_max);
+        lua_pushinteger(ls, y_min);
+        lua_pushinteger(ls, y_max);
     }
     else  // no primary vault found
     {
@@ -1065,7 +1065,7 @@ LUAFN(dgn_make_box_doors)
         }
     }
 
-    lua_pushnumber(ls, door_count);
+    lua_pushinteger(ls, door_count);
     return 1;
 }
 
@@ -2219,7 +2219,7 @@ LUAFN(dgn_add_pools)
 static int dgn_width(lua_State *ls)
 {
     LINES(ls, 1, map, lines);
-    PLUARET(number, lines.width());
+    PLUARET(integer, lines.width());
 }
 
 LUAFN(dgn_delve)
@@ -2292,8 +2292,8 @@ LUAFN(dgn_farthest_from)
     ASSERT(!queue.empty());
     // There may be multiple farthest cells, pick one at random.
     coord_def loc = *random_iterator(queue);
-    lua_pushnumber(ls, loc.x);
-    lua_pushnumber(ls, loc.y);
+    lua_pushinteger(ls, loc.x);
+    lua_pushinteger(ls, loc.y);
     return 2;
 }
 

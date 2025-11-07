@@ -54,7 +54,7 @@ LUAFN(los_cell_see_cell)
 {
     COORDS(p, 1, 2);
     COORDS(q, 3, 4);
-    PLUARET(number, cell_see_cell(p, q, LOS_DEFAULT));
+    PLUARET(integer, cell_see_cell(p, q, LOS_DEFAULT));
 }
 
 const struct luaL_Reg los_dlib[] =
@@ -73,16 +73,16 @@ const struct luaL_Reg los_dlib[] =
 LUAFN(ray_start)
 {
     RAY(ls, 1, ray);
-    lua_pushnumber(ls, ray->r.start.x);
-    lua_pushnumber(ls, ray->r.start.y);
+    lua_pushinteger(ls, ray->r.start.x);
+    lua_pushinteger(ls, ray->r.start.y);
     return 2;
 }
 
 LUAFN(ray_dir)
 {
     RAY(ls, 1, ray);
-    lua_pushnumber(ls, ray->r.dir.x);
-    lua_pushnumber(ls, ray->r.dir.y);
+    lua_pushinteger(ls, ray->r.dir.x);
+    lua_pushinteger(ls, ray->r.dir.y);
     return 2;
 }
 
@@ -97,8 +97,8 @@ LUAFN(ray_pos)
 {
     RAY(ls, 1, ray);
     coord_def p = ray->pos();
-    lua_pushnumber(ls, p.x);
-    lua_pushnumber(ls, p.y);
+    lua_pushinteger(ls, p.x);
+    lua_pushinteger(ls, p.y);
     return 2;
 }
 

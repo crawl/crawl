@@ -65,7 +65,7 @@ static int crawl_begin_test(lua_State *ls)
     mprf(MSGCH_PROMPT, "Starting %s: %s",
          activity,
          luaL_checkstring(ls, 1));
-    lua_pushnumber(ls, ++ntests);
+    lua_pushinteger(ls, ++ntests);
     return 1;
 }
 
@@ -73,7 +73,7 @@ static int crawl_test_success(lua_State *ls)
 {
     if (!crawl_state.script)
         mprf(MSGCH_PROMPT, "Test success: %s", luaL_checkstring(ls, 1));
-    lua_pushnumber(ls, ++nsuccess);
+    lua_pushinteger(ls, ++nsuccess);
     return 1;
 }
 

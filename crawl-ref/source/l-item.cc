@@ -502,7 +502,7 @@ IDEFN(stacks, do_stacks)
  */
 IDEF(quantity)
 {
-    PLUARET(number, item? item->quantity : 0);
+    PLUARET(integer, item? item->quantity : 0);
 }
 
 /*** This item's inventory slot.
@@ -511,7 +511,7 @@ IDEF(quantity)
 IDEF(slot)
 {
     if (item && in_inventory(*item))
-        lua_pushnumber(ls, letter_to_index(item->slot));
+        lua_pushinteger(ls, letter_to_index(item->slot));
     else
         lua_pushnil(ls);
     return 1;
@@ -562,7 +562,7 @@ IDEF(weap_skill)
     }
     else
         lua_pushstring(ls, skill_name(skill));
-    lua_pushnumber(ls, skill);
+    lua_pushinteger(ls, skill);
     return 2;
 }
 
@@ -575,7 +575,7 @@ IDEF(reach_range)
         return 0;
 
     int rt = weapon_reach(*item);
-    lua_pushnumber(ls, rt);
+    lua_pushinteger(ls, rt);
     return 1;
 }
 
@@ -715,7 +715,7 @@ IDEF(hands)
         return 0;
 
     int hands = you.hands_reqd(*item) == HANDS_TWO ? 2 : 1;
-    lua_pushnumber(ls, hands);
+    lua_pushinteger(ls, hands);
 
     return 1;
 }
@@ -766,7 +766,7 @@ IDEF(plus)
                    || item->sub_type == RING_INTELLIGENCE
                    || item->sub_type == AMU_REFLECTION)))
     {
-        lua_pushnumber(ls, item->plus);
+        lua_pushinteger(ls, item->plus);
     }
     else
         lua_pushnil(ls);
@@ -849,7 +849,7 @@ IDEF(artprops)
         if (value)
         {
             lua_pushstring(ls, artp_name((artefact_prop_type)i));
-            lua_pushnumber(ls, value);
+            lua_pushinteger(ls, value);
             lua_settable(ls, -3);
         }
     }
@@ -868,7 +868,7 @@ IDEF(damage)
     if (is_weapon(*item)
         || item->base_type == OBJ_MISSILES)
     {
-        lua_pushnumber(ls, property(*item, PWPN_DAMAGE));
+        lua_pushinteger(ls, property(*item, PWPN_DAMAGE));
     }
     else
         lua_pushnil(ls);
@@ -889,7 +889,7 @@ static int l_item_do_damage_rating(lua_State *ls)
     {
         int rating = 0;
         string rating_desc = damage_rating(item, &rating);
-        lua_pushnumber(ls, rating);
+        lua_pushinteger(ls, rating);
         lua_pushstring(ls, rating_desc.c_str());
     }
     else
@@ -930,7 +930,7 @@ IDEF(accuracy)
         return 0;
 
     if (is_weapon(*item))
-        lua_pushnumber(ls, property(*item, PWPN_HIT));
+        lua_pushinteger(ls, property(*item, PWPN_HIT));
     else
         lua_pushnil(ls);
 
@@ -946,7 +946,7 @@ IDEF(delay)
         return 0;
 
     if (is_weapon(*item))
-        lua_pushnumber(ls, property(*item, PWPN_SPEED));
+        lua_pushinteger(ls, property(*item, PWPN_SPEED));
     else
         lua_pushnil(ls);
 
@@ -962,7 +962,7 @@ IDEF(ac)
         return 0;
 
     if (item->base_type == OBJ_ARMOUR)
-        lua_pushnumber(ls, property(*item, PARM_AC));
+        lua_pushinteger(ls, property(*item, PARM_AC));
     else
         lua_pushnil(ls);
 
@@ -978,7 +978,7 @@ IDEF(encumbrance)
         return 0;
 
     if (item->base_type == OBJ_ARMOUR)
-        lua_pushnumber(ls, -property(*item, PARM_EVASION) / 10);
+        lua_pushinteger(ls, -property(*item, PARM_EVASION) / 10);
     else
         lua_pushnil(ls);
 
@@ -1051,7 +1051,7 @@ static int l_item_do_pluses(lua_State *ls)
         return 1;
     }
 
-    lua_pushnumber(ls, item->plus);
+    lua_pushinteger(ls, item->plus);
 
     return 1;
 }
@@ -1236,7 +1236,7 @@ static int l_item_letter_to_index(lua_State *ls)
     const char *s = luaL_checkstring(ls, 1);
     if (!s || !*s || s[1])
         return 0;
-    lua_pushnumber(ls, isaalpha(*s) ? letter_to_index(*s) : -1);
+    lua_pushinteger(ls, isaalpha(*s) ? letter_to_index(*s) : -1);
     return 1;
 }
 
@@ -1328,7 +1328,7 @@ static int l_item_pickup(lua_State *ls)
             qty = luaL_safe_checkint(ls, 2);
 
         if (l_item_pickup2(item, qty))
-            lua_pushnumber(ls, 1);
+            lua_pushinteger(ls, 1);
         else
             lua_pushnil(ls);
         return 1;
@@ -1352,7 +1352,7 @@ static int l_item_pickup(lua_State *ls)
             }
         }
         if (dropped)
-            lua_pushnumber(ls, dropped);
+            lua_pushinteger(ls, dropped);
         else
             lua_pushnil(ls);
         return 1;
@@ -1536,7 +1536,7 @@ int lua_push_shop_items_at(lua_State *ls, const coord_def &s)
         lua_newtable(ls);
         _clua_push_item_temp(ls, item);
         lua_rawseti(ls, -2, 1);
-        lua_pushnumber(ls, item_price(item, *shop));
+        lua_pushinteger(ls, item_price(item, *shop));
         lua_rawseti(ls, -2, 2);
         lua_pushboolean(ls, shopping_list.is_on_list(item));
         lua_rawseti(ls, -2, 3);
@@ -1575,7 +1575,7 @@ static int l_item_shopping_list(lua_State *ls)
         lua_newtable(ls);
         lua_pushstring(ls, item.first.c_str());
         lua_rawseti(ls, -2, 1);
-        lua_pushnumber(ls, item.second);
+        lua_pushinteger(ls, item.second);
         lua_rawseti(ls, -2, 2);
         lua_rawseti(ls, -2, ++index);
     }
