@@ -430,9 +430,11 @@ being described.
 book of transmutation
 
 A meticulous compendium of research notes, filled with formulae for decomposing
-and reconstituting all manner of substances. The author appears to have had a
-strange obsession with becoming a spider, but even if their ultimate aim eluded
-them, many of the spells detailed therein are nonetheless quite practical.
+and reconstituting all manner of substances. It was written by one of the
+legendary alchemists among the sludge elves, before that species mysteriously
+vanished from the world. The author appears to have had a strange obsession with
+becoming a butterfly, but even if their ultimate aim eluded them, many of the
+spells detailed therein are nonetheless quite practical.
 %%%%
 book of the tundra
 
