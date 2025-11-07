@@ -130,9 +130,9 @@ the required python modules:
 ```sh
 sudo apt-get update
 sudo apt-get install build-essential bzip2 python-minimal ncurses-term \
-locales-all sqlite3 libpcre3 liblua5.1-0 locales autoconf build-essential \
+locales-all sqlite3 libpcre3 liblua5.4-0 locales autoconf build-essential \
 lsof bison libncursesw5-dev libsqlite3-dev flex sudo libbot-basicbot-perl git \
-python3-yaml lua5.1 liblua5.1-dev man libpng-dev python3-tornado \
+python3-yaml lua5.4 liblua5.4-dev man libpng-dev python3-tornado \
 python3-crypt-r
 ```
 
