@@ -217,7 +217,7 @@ LUARET1(you_dexterity, number, you.dex(false))
 
 /*** XL.
  * @treturn int xl
- * @tfunction xl
+ * @function xl
  */
 LUARET1(you_xl, number, you.experience_level)
 
