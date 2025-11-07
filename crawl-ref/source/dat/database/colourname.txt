@@ -810,60 +810,6 @@ any_glowing_colour
 
 @glowing_adj@ @any_colour@
 %%%%
-writing_adj
-
-angular
-
-blocky
-
-bold
-
-flowing
-
-jagged
-
-shifting
-
-sinuous
-
-spidery
-
-swirling
-
-writhing
-%%%%
-writing_noun
-
-binary code
-
-figures
-
-glyphs
-
-hieroglyphics
-
-print-out
-
-runes
-
-scrawl
-
-sigils
-
-symbols
-
-text
-
-writing
-%%%%
-coloured_writing
-
-@any_colour@ @writing_noun@
-
-@writing_adj@ @any_colour@ @writing_noun@
-
-@any_glowing_colour@ @writing_noun@
-%%%%
 any_pattern
 
 arabesque
@@ -917,6 +863,60 @@ tartan
 triangles
 
 whorls
+%%%%
+writing_adj
+
+angular
+
+blocky
+
+bold
+
+flowing
+
+jagged
+
+shifting
+
+sinuous
+
+spidery
+
+swirling
+
+writhing
+%%%%
+writing_noun
+
+binary code
+
+figures
+
+glyphs
+
+hieroglyphics
+
+print-out
+
+runes
+
+scrawl
+
+sigils
+
+symbols
+
+text
+
+writing
+%%%%
+coloured_writing
+
+@any_colour@ @writing_noun@
+
+@writing_adj@ @any_colour@ @writing_noun@
+
+@any_glowing_colour@ @writing_noun@
 %%%%
 any_colour_pattern
 
