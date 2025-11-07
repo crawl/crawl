@@ -45,7 +45,7 @@ default peaceful fountain_sparkling
   elseif you.transform() == "storm" then
     return "The fountain curiously crackles underneath you."
   elseif crawl.coinflip() or you.god == "Zin" or you.god == "Cheibriados" then
-    return "The fountain pulses a strange @any_colour_pattern@, and you decide not to drink from it."
+    return "The fountain pulses a strange @any_colour@, and you decide not to drink from it."
   else
     return "You take a small sip from the fountain. @sparkling_message@"
   end
