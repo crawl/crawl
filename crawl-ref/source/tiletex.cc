@@ -47,12 +47,9 @@ bool GenericTexture::load_texture(const char *filename,
     return success;
 }
 
-bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
-                                  unsigned int new_height,
-                                  MipMapOptions mip_opt,
-                                  int offsetx, int offsety)
+bool GenericTexture::load_texture(LoadTextureArgs texture)
 {
-    if (!new_width || !new_height)
+    if (!texture.width || !texture.height)
         return false;
 
     // sequence of events:
@@ -62,15 +59,15 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
     // 2. we bind the texture name for writing
     // 3. load the texture with the actual tile sheet (or other texture data)
     //    in question
-    if (offsetx == -1 && offsety == -1)
+    if (!texture.has_offset())
     {
-        m_width = new_width;
-        m_height = new_height;
+        m_width = texture.width;
+        m_height = texture.height;
         glmanager->generate_textures(1, &m_handle);
     }
 
     bind();
-    glmanager->load_texture(pixels, new_width, new_height, mip_opt, offsetx, offsety);
+    glmanager->load_texture(texture);
 
     return true;
 }
@@ -173,14 +170,11 @@ ImageManager::~ImageManager()
     unload_textures();
 }
 
-bool ImageManager::load_textures(bool need_mips)
+bool ImageManager::load_textures(MipMapOptions mip_opts)
 {
-    MipMapOptions mip = need_mips ?
-        MIPMAP_CREATE : MIPMAP_NONE;
-
     int i = 0;
     for (const auto &f : get_texture_filenames())
-        if (!m_textures[i++].load_texture(f.c_str(), mip))
+        if (!m_textures[i++].load_texture(f.c_str(), mip_opts))
             return false;
 
     m_textures[TEX_FLOOR].set_info(TILE_FLOOR_MAX, &tile_floor_info);
