@@ -649,9 +649,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
         defender->hurt(attacker, bonus_dam);
 
-        // Allow the lance to charge when killing dragonform felid players.
-        mondied = defender->is_player() ? defender->as_player()->pending_revival
-                                        : !defender->alive();
+        mondied = !defender->alive();
     }
 
     if (!mondied || !hd)

@@ -1560,11 +1560,8 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
         // Stop further attacks if we somehow died in the process.
         // (e.g. from riposte, spiny or injury mirror)
-        if (agent.is_player() && (you.hp <= 0 || you.pending_revival)
-            || agent.is_monster() && !agent.alive())
-        {
+        if (!agent.alive())
             break;
-        }
     }
 
     // Refund duration for catalyst, but only if we cast the spell.

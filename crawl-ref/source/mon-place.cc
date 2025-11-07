@@ -1379,7 +1379,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "summoned by ";
 
-        if (mg.summoner != nullptr && mg.summoner->alive()
+        if (mg.summoner != nullptr && mg.summoner->alive_or_reviving()
             && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1410,10 +1410,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // by the Fire Storm spell); a deceased summoner's mindex might also
     // be reused to create its summon, so make sure the summon doesn't
     // think it has summoned itself.
-    else if (mg.summoner != nullptr && mg.summoner->alive()
+    else if (mg.summoner != nullptr && mg.summoner->alive_or_reviving()
              && mg.summoner != mon)
     {
-        ASSERT(mg.summoner->alive());
         mon->summoner = mg.summoner->mid;
         if (mg.summoner->is_player())
             mons_add_blame(mon, blame_prefix + "the player character");

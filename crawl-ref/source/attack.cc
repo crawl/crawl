@@ -713,7 +713,7 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     const int final = defender->hurt(responsible, dam, flavour, kill_type,
                                      "", aux_source.c_str(), clean);
 
-    if (!defender->alive())
+    if (defender->is_monster() && !defender->alive())
         defender->props[ATTACK_KILL_KEY] = true;
 
     return final;
@@ -1588,8 +1588,8 @@ actor &attack::stat_source() const
     if (summoner_mid == MID_NOBODY)
         return *attacker;
 
-    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
-    if (!summoner || !summoner->alive())
+    actor* summoner = actor_by_mid(summoner_mid);
+    if (!summoner || !summoner->alive_or_reviving())
         return *attacker;
     return *summoner;
 }

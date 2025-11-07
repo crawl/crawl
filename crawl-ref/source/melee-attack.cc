@@ -870,12 +870,12 @@ bool melee_attack::handle_phase_hit()
 
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
-        && defender->as_monster()->has_blood()
+        && defender->has_blood()
         && wu_jian_has_momentum(wu_jian_attack))
     {
-        blood_spray(defender->pos(), defender->as_monster()->type,
-                    damage_done / 5);
-        defender->as_monster()->flags |= MF_EXPLODE_KILL;
+        blood_spray(defender->pos(), defender->type, damage_done / 5);
+        if (defender->is_monster())
+            defender->as_monster()->flags |= MF_EXPLODE_KILL;
     }
 
     // Trigger Curse of Agony after most normal damage is already applied
@@ -1208,8 +1208,11 @@ bool melee_attack::handle_phase_killed()
     if (execute)
         makhleb_execution_activate();
 
-    if (attacker->is_player() && you.form == transformation::werewolf)
+    if (attacker->is_player() && you.form == transformation::werewolf
+        && defender->is_monster())
+    {
         _handle_werewolf_kill_bonus(*defender->as_monster(), is_bestial_takedown);
+    }
 
     return killed;
 }

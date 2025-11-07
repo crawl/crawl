@@ -1486,7 +1486,11 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
               BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
     _whack(caster, *foe);
 
-    if (foe->alive())
+    // XXX: It's a bit late now to call `apply_location_effects` for monster's
+    // that are pending revival as `hurt` likely already moved them and even
+    // if it didn't `apply_location_effects` would need fixing to handle them.
+    // Even the messaging for player's that are pending revival isn't good.
+    if (foe->alive() || (foe->is_player() && foe->alive_or_reviving()))
         foe->apply_location_effects(old_pos);
 }
 

@@ -59,6 +59,11 @@ bool player::alive() const
 {
     // Simplistic, but if the player dies the game is over anyway, so
     // nobody can ask further questions.
+    return !crawl_state.game_is_arena() && !pending_revival;
+}
+
+bool player::alive_or_reviving() const
+{
     return !crawl_state.game_is_arena();
 }
 

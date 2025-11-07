@@ -4203,6 +4203,11 @@ bool monster::alive() const
     return hit_points > 0 && type != MONS_NO_MONSTER;
 }
 
+bool monster::alive_or_reviving() const
+{
+    return monster::alive() || testbits(flags, MF_PENDING_REVIVAL);
+}
+
 god_type monster::deity() const
 {
     return god;
@@ -5940,11 +5945,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         if (owner && owner != oppressor && oppressor->mid != summoner)
         {
             int shared_damage = div_rand_round(damage*7,10);
-            if (shared_damage > 0)
+            if (shared_damage > 0 && owner->alive())
             {
                 if (owner->is_player())
                     mpr("Your spectral weapon shares its damage with you!");
-                else if (owner->alive() && you.can_see(*owner))
+                else if (you.can_see(*owner))
                 {
                     string buf = " shares ";
                     buf += owner->pronoun(PRONOUN_POSSESSIVE);

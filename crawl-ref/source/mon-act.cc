@@ -1998,7 +1998,7 @@ static bool _leash_range_exceeded(const monster* mons)
         return false;
 
     actor* creator = actor_by_mid(mons->summoner);
-    return creator && creator->alive()
+    return creator && creator->alive_or_reviving()
            && grid_distance(creator->pos(), mons->pos()) > max_dist;
 }
 
@@ -3386,7 +3386,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (leash_range > 0)
     {
         actor* creator = actor_by_mid(mons->summoner);
-        if (creator && creator->alive())
+        if (creator && creator->alive_or_reviving())
         {
             if (grid_distance(creator->pos(), mons->pos()) <= leash_range
                 && grid_distance(creator->pos(), targ) > leash_range)
@@ -3413,7 +3413,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE)
     {
         actor* creator = actor_by_mid(mons->summoner);
-        if (creator && creator->alive())
+        if (creator && creator->alive_or_reviving())
         {
             if (creator->see_cell_no_trans(mons->pos())
                 && !creator->see_cell_no_trans(targ))

@@ -1277,7 +1277,7 @@ void shock_discharge_fineff::fire()
 
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY;
-    const string name = serpent && serpent->alive() ?
+    const string name = serpent && serpent->alive_or_reviving() ?
                         serpent->name(DESC_A, true) :
                         "a shock serpent"; // dubious
     oppressor.hurt(serpent, final_dmg, beam.flavour, KILLED_BY_BEAM,

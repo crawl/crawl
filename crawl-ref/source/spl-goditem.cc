@@ -1203,7 +1203,7 @@ int torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
     int damage = 0;
 
-    if (where == you.pos()
+    if (where == you.pos() && you.alive()
         // The Sceptre of Torment and pain card do not affect the user.
         && !(attacker && attacker->is_player()
             && (taux == TORMENT_SCEPTRE || taux == TORMENT_CARD_PAIN)))

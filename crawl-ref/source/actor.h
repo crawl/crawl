@@ -42,6 +42,7 @@ public:
     virtual god_type  deity() const = 0;
 
     virtual bool      alive() const = 0;
+    virtual bool      alive_or_reviving() const = 0;
 
     // Should return false for perma-summoned things.
     virtual bool is_summoned() const = 0;
