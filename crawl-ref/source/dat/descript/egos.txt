@@ -282,7 +282,8 @@ It reduces the distance you can be seen at and can see.
 sniping (Snipe) armour ego
 
 It increases your damage by an additional 50% with ranged and thrown weapons
-against incapacitated targets.
+against incapacitated targets. Incapacitated targets are those that are asleep,
+paralysed, petrified, confused or caught in a net.
 %%%%
 spirit shield (Spirit) armour ego
 
