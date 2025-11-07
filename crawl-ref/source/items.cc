@@ -4634,14 +4634,14 @@ bool get_item_by_name(item_def *item, const char* specs,
         for (const auto i : all_item_subtypes(item->base_type))
         {
             item->sub_type = i;
-            size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
+            size_t pos = lowercase_string(item->name(DESC_DBNAME)).find(specs);
             if (pos != string::npos)
             {
                 // Earliest match is the winner.
                 if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(item->name(DESC_PLAIN));
+                        mpr(item->name(DESC_DBNAME));
                     type_wanted = i;
                     best_index = pos;
                 }
