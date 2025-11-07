@@ -5091,7 +5091,7 @@ void reset_rampage_heal_duration()
     you.set_duration(DUR_RAMPAGE_HEAL, heal_dur);
 }
 
-void apply_rampage_heal()
+void apply_rampage_heal(int distance_moved)
 {
     if (!you.has_mutation(MUT_ROLLPAGE))
         return;
@@ -5099,8 +5099,7 @@ void apply_rampage_heal()
     reset_rampage_heal_duration();
 
     const int heal = you.props[RAMPAGE_HEAL_KEY].get_int();
-    if (heal < RAMPAGE_HEAL_MAX)
-        you.props[RAMPAGE_HEAL_KEY] = heal + 1;
+    you.props[RAMPAGE_HEAL_KEY] = min(RAMPAGE_HEAL_MAX, heal + distance_moved);
 }
 
 bool invis_allowed(bool quiet, string *fail_reason, bool temp)
@@ -5724,13 +5723,26 @@ bool player::airborne() const
         || get_form()->enables_flight();
 }
 
-bool player::rampaging() const
+int player::rampaging() const
 {
-    return you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS)
-            || you.has_mutation(MUT_ROLLPAGE)
-            || you.form == transformation::spider
-            || you.duration[DUR_EXECUTION]
-            || actor::rampaging();
+    int rampage = 0;
+    rampage += actor::rampaging();
+
+    if (you.has_mutation(MUT_ROLLPAGE))
+        rampage++;
+
+    if (you.form == transformation::spider)
+        rampage++;
+
+    if (you.duration[DUR_EXECUTION])
+        rampage++;
+
+    rampage = min(3, rampage);
+
+    if (you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
+        rampage = get_los_radius();
+
+    return rampage;
 }
 
 bool player::is_banished() const
@@ -6466,10 +6478,23 @@ int player::armour_class_scaled(int scale) const
 void player::refresh_rampage_hints()
 {
     rampage_hints.clear();
-    if (you.rampaging())
-        for (coord_def delta : Compass)
-            if ((delta.x || delta.y) && get_rampage_target(delta))
-                you.rampage_hints.insert(you.pos() + delta);
+    const int rampage = you.rampaging();
+    if (!rampage)
+        return;
+
+    for (coord_def delta : Compass)
+    {
+        if (!(delta.x || delta.y))
+            continue;
+
+        const monster* target = get_rampage_target(delta);
+        if (!target)
+            continue;
+
+        const int dist = min(rampage, (target->pos() - you.pos()).rdist() - 1);
+        for (int i = 1; i <= dist; ++i)
+            you.rampage_hints.insert(you.pos() + delta * i);
+    }
 }
 
  /**

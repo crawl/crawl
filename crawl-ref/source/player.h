@@ -535,7 +535,7 @@ public:
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
-    bool rampaging() const override;
+    int rampaging() const override;
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
@@ -1230,7 +1230,7 @@ void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
 void reset_rampage_heal_duration();
-void apply_rampage_heal();
+void apply_rampage_heal(int distance_moved);
 void trickster_trigger(const monster& victim, enchant_type ench);
 int trickster_bonus();
 int enkindle_max_charges();

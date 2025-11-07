@@ -2702,6 +2702,24 @@ string dump_overview_screen()
     return text;
 }
 
+static string _rampage_passive_string()
+{
+    string desc = "";
+    const int rampage = you.rampaging();
+    if (rampage)
+    {
+        desc += you.has_mutation(MUT_ROLLPAGE) ? "roll" : "rampage";
+
+        const bool infinite = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
+        const char *inf = Options.char_set == CSET_ASCII ? "+inf"
+                                                         : "+\u221e"; //"∞"
+
+        desc += infinite    ? inf :
+                rampage > 1 ? make_stringf("+%d", rampage) : "";
+    }
+    return desc;
+}
+
 static string _extra_passive_effects()
 {
     vector<string> passives;
@@ -2775,15 +2793,7 @@ static string _extra_passive_effects()
         passives.emplace_back("guardian spirit");
 
     if (you.rampaging())
-    {
-        const bool infinite = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
-        const char *inf = Options.char_set == CSET_ASCII ? "+inf"
-                                                          : "+\u221e"; //"∞"
-        passives.emplace_back(
-            make_stringf("%s%s",
-                         you.has_mutation(MUT_ROLLPAGE) ? "roll" : "rampage",
-                         infinite ? inf : "").c_str());
-    }
+        passives.emplace_back(_rampage_passive_string().c_str());
 
     if (you.faith())
         passives.emplace_back("faith");

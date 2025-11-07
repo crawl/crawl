@@ -554,9 +554,8 @@ bool prompt_descent_shortcut(dungeon_feature_type ftype)
 
 static coord_def _rampage_destination(coord_def move, monster* target)
 {
-    if (!you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
-        return you.pos() + move;
-    const int dist = grid_distance(you.pos(), target->pos()) - 1;
+    const int dist = min(grid_distance(you.pos(), target->pos()) - 1,
+                         you.rampaging());
     return you.pos() + move * dist;
 }
 
@@ -742,6 +741,10 @@ static spret _rampage_forward(coord_def move)
     _clear_constriction_data();
     _mark_potential_pursuers(rampage_destination);
 
+    // Calculate rollpage distance travelled before the move; we don't want to
+    // count potential trap movement or floor transitions later.
+    const int distance_moved = (rampage_destination - old_pos).rdist();
+
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(rampage_destination, true);
 
@@ -750,12 +753,12 @@ static spret _rampage_forward(coord_def move)
             || you.wizmode_teleported_into_rock);
 
     you.clear_far_engulf(false, true);
-    // No full-LOS stabbing.
+    // No full-LOS stabbing from seven-league.
     if (enhanced)
         behaviour_event(mon_target, ME_ALERT, &you, you.pos());
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
-    apply_rampage_heal();
+    apply_rampage_heal(distance_moved);
     player_did_deliberate_movement(true);
     remove_ice_movement();
     you.clear_far_engulf(false, true);
@@ -1186,7 +1189,7 @@ void move_player_action(coord_def move)
             _mark_potential_pursuers(targ);
             move_player_to_grid(targ, true);
             if (rampaged)
-                apply_rampage_heal();
+                apply_rampage_heal(1);
             player_did_deliberate_movement();
             remove_ice_movement();
             you.clear_far_engulf(false, true);
