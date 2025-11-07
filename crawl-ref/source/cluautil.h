@@ -250,6 +250,6 @@ int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #define LUA_PUSHBOOL(key, value) { lua_pushboolean(ls, value); lua_setfield(ls, -2, key); }
 
-#define LUA_PUSHINT(key, value) { lua_pushnumber(ls, value); lua_setfield(ls, -2, key); }
+#define LUA_PUSHINT(key, value) { lua_pushinteger(ls, value); lua_setfield(ls, -2, key); }
 
 #define LUA_PUSHSTRING(key, value) { lua_pushstring(ls, value); lua_setfield(ls, -2, key); }

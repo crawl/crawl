@@ -54,13 +54,13 @@ static int file_minor_version(lua_State *ls)
     if (lua_gettop(ls) != 1)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
-    lua_pushnumber(ls, th.getMinorVersion());
+    lua_pushinteger(ls, th.getMinorVersion());
     return 1;
 }
 
 static int file_major_version(lua_State *ls)
 {
-    lua_pushnumber(ls, TAG_MAJOR_VERSION);
+    lua_pushinteger(ls, TAG_MAJOR_VERSION);
     return 1;
 }
 

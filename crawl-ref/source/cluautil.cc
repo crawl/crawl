@@ -11,12 +11,12 @@ int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
     {
     case ai_payload::hp_loss:
         {
-            lua_pushnumber(ls, t->ait_hp_loss_data->hp);
-            lua_pushnumber(ls, t->ait_hp_loss_data->hurt_type);
+            lua_pushinteger(ls, t->ait_hp_loss_data->hp);
+            lua_pushinteger(ls, t->ait_hp_loss_data->hurt_type);
             return 1;
         }
     case ai_payload::int_payload:
-        lua_pushnumber(ls, *t->int_data);
+        lua_pushinteger(ls, *t->int_data);
         break;
     case ai_payload::string_payload:
         lua_pushstring(ls, t->string_data);
@@ -97,8 +97,8 @@ int clua_stringtable(lua_State *ls, const vector<string> &s)
 // different from dlua_pushcoord.
 int clua_pushpoint(lua_State *ls, const coord_def &pos)
 {
-    lua_pushnumber(ls, pos.x);
-    lua_pushnumber(ls, pos.y);
+    lua_pushinteger(ls, pos.x);
+    lua_pushinteger(ls, pos.y);
     CLua &vm(CLua::get_vm(ls));
     if (!vm.callfn("dgn.point", 2, 1))
     {

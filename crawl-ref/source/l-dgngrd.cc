@@ -17,7 +17,7 @@
 static int dgn_feature_number(lua_State *ls)
 {
     const string &name = luaL_checkstring(ls, 1);
-    PLUARET(number, dungeon_feature_by_name(name));
+    PLUARET(integer, dungeon_feature_by_name(name));
 }
 
 static int dgn_feature_name(lua_State *ls)
@@ -84,15 +84,15 @@ static int dgn_feature_desc_at(lua_State *ls)
 
 static int dgn_max_bounds(lua_State *ls)
 {
-    lua_pushnumber(ls, GXM);
-    lua_pushnumber(ls, GYM);
+    lua_pushinteger(ls, GXM);
+    lua_pushinteger(ls, GYM);
     return 2;
 }
 
 static int dgn_builder_bounds(lua_State *ls)
 {
-    lua_pushnumber(ls, dgn_builder_x());
-    lua_pushnumber(ls, dgn_builder_y());
+    lua_pushinteger(ls, dgn_builder_x());
+    lua_pushinteger(ls, dgn_builder_y());
     return 2;
 }
 
@@ -123,14 +123,14 @@ static int dgn_grid(lua_State *ls)
             }
         }
     }
-    PLUARET(number, env.grid(c));
+    PLUARET(integer, env.grid(c));
 }
 
 LUAFN(dgn_distance)
 {
     COORDS(p1, 1, 2);
     COORDS(p2, 3, 4);
-    lua_pushnumber(ls, distance2(p1, p2));
+    lua_pushinteger(ls, distance2(p1, p2));
     return 1;
 }
 
