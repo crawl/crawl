@@ -872,6 +872,8 @@ blocky
 
 bold
 
+curvy
+
 flowing
 
 jagged
@@ -879,6 +881,8 @@ jagged
 shifting
 
 sinuous
+
+sloping
 
 spidery
 
@@ -890,11 +894,15 @@ writing_noun
 
 binary code
 
+cuneiform
+
 figures
 
 glyphs
 
 hieroglyphics
+
+ideograms
 
 print-out
 
