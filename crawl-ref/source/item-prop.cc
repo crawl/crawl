@@ -501,7 +501,7 @@ static const weapon_def Weapon_prop[] =
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10, 0, 5, CLUB_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_SPIKED_FLAIL,      "spiked flail",        5,  3, 13,
+    { WPN_SPIKED_FLAIL,      "old spiked flail",    5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, 0, {} },
 #endif
@@ -622,7 +622,7 @@ static const weapon_def Weapon_prop[] =
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 25, 55, SBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_CUTLASS,          "cutlass",              8,  4, 12,
+    { WPN_CUTLASS,          "old cutlass",          8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 #endif
@@ -766,7 +766,7 @@ static const weapon_def Weapon_prop[] =
 
     // Range weapons
 #if TAG_MAJOR_VERSION == 34
-    { WPN_BLOWGUN,           "blowgun",             0,  2, 10,
+    { WPN_BLOWGUN,           "old blowgun",         0,  2, 10,
         SK_THROWING,     SIZE_LITTLE, SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 0, 0, 0, {}, },
 #endif
@@ -788,7 +788,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_ANTIMAGIC,     2 },
         } },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
+    { WPN_FUSTIBALUS,        "old fustibalus",     10, -2, 16,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
         DAMV_NON_MELEE, 0, 0, 150, RANGED_BRANDS },
 #endif
