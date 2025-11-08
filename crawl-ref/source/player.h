@@ -1184,7 +1184,7 @@ int player_movement_speed(bool check_terrain = true, bool temp = true,
                           int scale = 1);
 // Final delay for a movement action, including speed and movement speed
 int player_overall_move_delay(int scale = 1, bool check_terrain = true,
-                              bool temp = true);
+                              bool temp = true, bool sampled = true);
 
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();

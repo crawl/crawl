@@ -1949,19 +1949,28 @@ int player_movement_speed(bool check_terrain, bool temp, int scale)
     return mv;
 }
 
-// The time, in auts, for the player to take a single step.
-//
-// This is scaled and random rounded, so scale=1 gives a sample time to move
-// and other scales are useful for further calculation without unnecessary
-// rounding.
-int player_overall_move_delay(int scale, bool check_terrain, bool temp)
+/**
+ * The time, in auts, for the player to take a single step.
+ *
+ * @param scale          The scale to apply.
+ * @param check_terrain  Whether to take into account terrain.
+ * @param temp           Whether to take into account temporarty effects.
+ * @param sampled        Whether to sample by randomly rounding. If false, will
+ *                       round to the nearest value (after scaling).
+ * @return               The time in auts for a movement step.
+ */
+int player_overall_move_delay(int scale, bool check_terrain,
+                              bool temp, bool sampled)
 {
     int delay_scale = 60;
-    return div_rand_round(player_speed(delay_scale)
-                            * player_movement_speed(check_terrain, temp,
-                                                    delay_scale)
-                            * scale,
-                          BASELINE_DELAY * delay_scale * delay_scale);
+    int val = player_speed(delay_scale)
+              * player_movement_speed(check_terrain, temp, delay_scale)
+              * scale;
+    int overall_scale = BASELINE_DELAY * delay_scale * delay_scale;
+    if (sampled)
+        return div_rand_round(val, overall_scale);
+    else
+        return div_round_near(val, overall_scale);
 }
 
 bool is_effectively_light_armour(const item_def *item)
@@ -3471,7 +3480,7 @@ static void _display_char_status(int value, const char *fmt, ...)
 
 static void _display_movement_speed()
 {
-    const int move_cost = player_overall_move_delay();
+    const int move_cost = player_overall_move_delay(1, true, true, false);
 
     const bool water  = you.in_liquid();
     const bool swim   = you.swimming();
