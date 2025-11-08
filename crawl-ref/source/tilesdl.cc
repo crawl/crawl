@@ -1015,10 +1015,13 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    if (Options.tile_use_small_layout == maybe_bool::maybe)
+    if (Options.tile_use_small_layout == maybe_bool::maybe
+        && m_stat_font && m_msg_font)
+    {
         // Rough estimation of the minimum usable window size
         // Not using Options.tile_font_xxx_size because it's reset on new game
         return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*55);
+    }
     else
         return bool(Options.tile_use_small_layout);
 }
