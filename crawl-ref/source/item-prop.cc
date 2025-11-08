@@ -627,7 +627,6 @@ static const weapon_def Weapon_prop[] =
         DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 #endif
 
-
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
