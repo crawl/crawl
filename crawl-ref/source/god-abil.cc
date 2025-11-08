@@ -7355,8 +7355,8 @@ void makhleb_enter_crucible_of_flesh(int debt)
     for (int i = 0; i < num_victims; ++i)
         _spawn_crucible_victim(true);
 
-    simple_god_message(" says \"Flay and bleed and purify yourself, if you wish"
-                       " to be found worthy of leaving this place!\"", false,
+    simple_god_message(" says: Flay and bleed and purify yourself, if you wish"
+                       " to be found worthy of leaving this place!", false,
                        GOD_MAKHLEB);
 
     mpr("(Slaughtering mortal victims (and sometimes even demons) will "
