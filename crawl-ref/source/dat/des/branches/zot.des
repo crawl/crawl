@@ -2907,7 +2907,7 @@ SUBST:   d = tGmcc, y = c`, c = cccccbbvvx, l = wl
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / >, 9 = 0 / 9
 NSUBST:  ^ = ' / ^, ~ = " / ~, ` = 2=f / .
 SHUFFLE: 12 / 34 / 56 / 78 / &!, 56, 78, ^' / ~"
-: single_cloud(_G, "f", "seeing chaos", true)
+: single_cloud(_G, "f", "seething chaos", true)
 FTILE:   f = floor_pebble_lightmagenta
 MAP
         ccccccc
