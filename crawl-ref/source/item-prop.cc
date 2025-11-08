@@ -521,7 +521,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_ANTIMAGIC,      1 },
         }},
 #if TAG_MAJOR_VERSION == 34
-    { WPN_HAMMER,            "hammer",              7,  3, 13,
+    { WPN_HAMMER,            "old hammer",          7,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0, 0, 0, M_AND_F_BRANDS },
 #endif
@@ -712,7 +712,7 @@ static const weapon_def Weapon_prop[] =
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 5, 15, 40, POLEARM_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_SCYTHE,            "scythe",             14, -4, 20,
+    { WPN_SCYTHE,            "old scythe",         14, -4, 20,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 0, 0, POLEARM_BRANDS },
 #endif
