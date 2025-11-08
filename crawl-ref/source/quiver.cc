@@ -396,12 +396,14 @@ namespace quiver
                 menu_colour(weapon.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
+            else if (you.corrosion_amount())
+                qdesc.textcolour(RED);
             else if (prefcol != -1)
                 qdesc.textcolour(prefcol);
             else
                 qdesc.textcolour(LIGHTGREY);
 
-            qdesc += weapon.name(DESC_PLAIN, true);
+            qdesc += weapon.name(DESC_PLAIN, true, false, true, false, true);
             return qdesc;
         }
 

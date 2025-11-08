@@ -93,7 +93,8 @@ public:
 
     string name(description_level_type descrip, bool terse = false,
                 bool ident = false, bool with_inscription = true,
-                bool quantity_in_words = false) const;
+                bool quantity_in_words = false,
+                bool consider_corrosion = false) const;
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
@@ -155,7 +156,7 @@ public:
 
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
-                    bool with_inscription) const;
+                    bool with_inscription, bool consider_corrosion) const;
 
     colour_t randart_colour() const;
 

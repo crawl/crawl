@@ -1454,7 +1454,8 @@ string damage_rating(const item_def *item, int *rating_value)
 
     const int slaying = slaying_bonus(thrown, false);
     const int ench = item && item->is_identified() ? item->plus : 0;
-    const int plusses = slaying + ench;
+    const int corr = you.corrosion_amount();
+    const int plusses = slaying + ench - corr;
 
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
@@ -1464,6 +1465,7 @@ string damage_rating(const item_def *item, int *rating_value)
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
+    rating = max(0, rating);
 
     if (rating_value)
         *rating_value = rating;
@@ -1479,12 +1481,13 @@ string damage_rating(const item_def *item, int *rating_value)
     string plusses_desc;
     if (plusses)
     {
-        plusses_desc = make_stringf(" %s %d (%s)",
-                                    plusses < 0 ? "-" : "+",
-                                    abs(plusses),
-                                    slaying && ench ? "Ench + Slay" :
-                                               ench ? "Ench"
-                                                    : "Slay");
+        string plusses_reason = ench ? "Ench" : "";
+        if (slaying)
+            plusses_reason += ench ? " + Slay" : "Slay";
+        if (corr)
+            plusses_reason += (ench || slaying) ? " - Corr" : "Corr";
+        plusses_desc = make_stringf(" %s %d (%s)", plusses < 0 ? "-" : "+",
+                                    abs(plusses), plusses_reason.c_str());
     }
 
     const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item) : "";
@@ -5775,7 +5778,7 @@ void describe_hit_chance(int hit_chance, ostringstream &result, const item_def *
         if (weapon == nullptr)
             result << "your " << you.hand_name(true);
         else
-            result << weapon->name(DESC_YOUR, false, false, false);
+            result << weapon->name(DESC_YOUR, false, false, false, false, true);
     }
 
     if (you.duration[DUR_BLIND])

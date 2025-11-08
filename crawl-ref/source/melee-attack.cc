@@ -3345,7 +3345,7 @@ string melee_attack::weapon_desc()
 {
     if (!weapon || !you.offhand_weapon())
         return "";
-    return " with " + weapon->name(DESC_YOUR, false, false, false);
+    return " with " + weapon->name(DESC_YOUR, false, false, false, false, true);
 }
 
 string melee_attack::charge_desc()
