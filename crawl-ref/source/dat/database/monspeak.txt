@@ -2322,7 +2322,7 @@ Xom Crazy Yiuf
 @The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
 
 # The Principia Discordia
-@The_monster@ says, "The real reality is there, but everything you know about it is in your mind and yours to do with as you like."
+@The_monster@ says, "The real reality is there, but everything you KNOW about 'it' is in your mind and yours to do with as you like."
 
 VISUAL:@The_monster@ considers dialectic materialism.
 
