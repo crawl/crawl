@@ -3305,6 +3305,7 @@ bool use_talisman(item_def& talisman)
              real_item.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());
 
         real_item.sub_type = new_type;
+        seen_item(real_item);
         return use_talisman(real_item);
     }
 
