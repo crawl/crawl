@@ -35,6 +35,7 @@ class SpellRegion;
 class MemoriseRegion;
 class ActorRegion;
 class MonsterRegion;
+class PauseButtonRegion;
 class SkillRegion;
 class CommandRegion;
 class ActorRegion;
@@ -272,6 +273,7 @@ protected:
     SpellRegion     *m_region_spl;
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;
+    PauseButtonRegion *m_region_pause;
     SkillRegion     *m_region_skl;
     CommandRegion   *m_region_cmd;
     CommandRegion   *m_region_cmd_meta;

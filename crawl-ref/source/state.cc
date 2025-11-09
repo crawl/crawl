@@ -33,7 +33,7 @@ game_state::game_state()
       seed(0),
       io_inited(false),
       need_save(false), save_after_turn(false),
-      game_started(false), saving_game(false),
+      game_started(false), game_paused(false), saving_game(false),
       updating_scores(false),
       parsing_rc(false),
 #ifndef USE_TILE_LOCAL
@@ -88,6 +88,7 @@ game_state::game_state()
 void game_state::reset_game()
 {
     game_started = false;
+    game_paused = false;
     // need_save is unset by death, but not by saving with restart_after_save.
     need_save = false;
     type = GAME_TYPE_UNSPECIFIED;

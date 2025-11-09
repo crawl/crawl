@@ -56,6 +56,7 @@ struct game_state
     bool need_save;         // Set to true when game can be saved, false when the game ends.
     bool save_after_turn;
     bool game_started;      // Set to true when a game has started.
+    bool game_paused;       // Set to true when the game is paused.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
     bool parsing_rc;
@@ -249,6 +250,11 @@ public:
     {
         marked_as_won = true;
     }
+
+    // Pause game functionality
+    void pause_game() { game_paused = true; }
+    void unpause_game() { game_paused = false; }
+    bool is_game_paused() const { return game_paused; }
 
     friend class mon_acting;
 };

@@ -106,6 +106,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "pause-menu.h"
 #include "player.h"
 #include "player-reacts.h"
 #include "prompt.h"
@@ -1294,7 +1295,7 @@ static void _input()
         you.turn_is_over = false;
 #endif
 
-    if (you.turn_is_over)
+    if (you.turn_is_over && !crawl_state.is_game_paused())
     {
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
@@ -2059,6 +2060,36 @@ void process_command(command_type cmd, command_type prev_cmd)
         if (m.cmd == CMD_NO_CMD)
             return;
         cmd = m.cmd;
+    }
+
+    if (cmd == CMD_PAUSE_GAME)
+    {
+        crawl_state.pause_game();
+        PauseMenu pause_menu;
+        pause_menu.show();
+        
+        switch (pause_menu.selected_cmd)
+        {
+        case CMD_NO_CMD:
+            // Resume game
+            crawl_state.unpause_game();
+            return;
+        case CMD_DISPLAY_CHARACTER_STATUS:
+            pause_menu.show_character_stats();
+            crawl_state.unpause_game();
+            return;
+        case CMD_SAVE_GAME_NOW:
+            crawl_state.unpause_game();
+            cmd = CMD_SAVE_GAME_NOW;
+            break;
+        case CMD_QUIT:
+            crawl_state.unpause_game();
+            cmd = CMD_QUIT;
+            break;
+        default:
+            crawl_state.unpause_game();
+            return;
+        }
     }
 
     switch (cmd)

@@ -36,6 +36,7 @@
 #include "tilereg-mem.h"
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
+#include "tilereg-pause.h"
 #include "tilereg-skl.h"
 #include "tilereg-spl.h"
 #include "tilereg-stat.h"
@@ -192,6 +193,7 @@ void TilesFramework::shutdown()
     delete m_region_spl;
     delete m_region_mem;
     delete m_region_mon;
+    delete m_region_pause;
     delete m_region_cmd;
     delete m_region_cmd_meta;
     delete m_region_cmd_map;
@@ -207,6 +209,7 @@ void TilesFramework::shutdown()
     m_region_spl   = nullptr;
     m_region_mem   = nullptr;
     m_region_mon   = nullptr;
+    m_region_pause = nullptr;
     m_region_cmd   = nullptr;
     m_region_cmd_meta = nullptr;
     m_region_cmd_map  = nullptr;
@@ -390,6 +393,7 @@ bool TilesFramework::initialise()
     m_region_mem  = new MemoriseRegion(m_init);
     m_region_abl  = new AbilityRegion(m_init);
     m_region_mon  = new MonsterRegion(m_init);
+    m_region_pause = new PauseButtonRegion(m_init);
     m_region_skl  = new SkillRegion(m_init);
     m_region_cmd  = new CommandRegion(m_init, ct_action_commands,
                                       ARRAYSZ(ct_action_commands));
@@ -422,6 +426,7 @@ bool TilesFramework::initialise()
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
+    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_pause);
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
 
@@ -986,6 +991,15 @@ void TilesFramework::do_layout()
     m_region_stat->resize(m_region_stat->mx, min_stat_height);
 
     layout_statcol();
+
+    // Position pause button in bottom-right corner
+    if (m_region_pause)
+    {
+        m_region_pause->resize_to_fit(100, 30); // Fixed size
+        int pause_x = m_windowsz.x - m_region_pause->wx - 10; // 10px margin from right
+        int pause_y = m_windowsz.y - m_region_pause->wy - 10; // 10px margin from bottom
+        m_region_pause->place(pause_x, pause_y);
+    }
 
     m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);

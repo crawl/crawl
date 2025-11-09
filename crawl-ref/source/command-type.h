@@ -108,6 +108,7 @@ enum command_type
     CMD_SAVE_GAME,
     CMD_SAVE_GAME_NOW,
     CMD_SUSPEND_GAME,
+    CMD_PAUSE_GAME,
     CMD_QUIT,
     CMD_WIZARD,
     CMD_EXPLORE_MODE,
