@@ -2070,7 +2070,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
         you.last_pickup[inv_slot] = quant_got;
 
         // If we are purchasing an identified item from a shop, maybe update our
-        // item slot. (Pre-identified items on the floor will already be handle
+        // item slot. (Pre-identified items on the floor will already be handled
         // by seen_item().)
         const short old_slot = you.inv[inv_slot].slot;
         if (inventory_category_for(it) == INVENT_CONSUMABLE
