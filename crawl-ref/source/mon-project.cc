@@ -621,16 +621,6 @@ move_again:
             }
         }
 
-        // TODO remove this goto (and the other one)
-        if (mons && mons->type == MONS_BATTLESPHERE)
-        {
-            if (mon.swap_with(mons))
-                return false;
-            // if swap fails, move ahead (but it shouldn't!)
-            mon.lose_energy(EUT_MOVE);
-            goto move_again;
-        }
-
         if (victim && _iood_shielded(mon, *victim))
         {
             if (!victim->reflection())
