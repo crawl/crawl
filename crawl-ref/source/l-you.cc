@@ -1883,7 +1883,6 @@ LUARET1(you_zigs_completed, number, you.zigs_completed)
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
-{ "silenced",           you_silenced },
 { "x_pos",              you_x_pos },
 { "y_pos",              you_y_pos },
 { "pos",                you_pos },
