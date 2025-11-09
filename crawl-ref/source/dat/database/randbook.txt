@@ -1331,6 +1331,8 @@ the Volcano
 %%%%
 Hexes
 
+Ambsace
+
 Anathema
 
 Bad Luck
