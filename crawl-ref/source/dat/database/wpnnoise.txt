@@ -284,6 +284,8 @@ w:20
 
 @Your_weapon@ tootles away.
 
+@Your_weapon@ buzzes like a kazoo.
+
 @Your_weapon@ chimes like a gong.
 
 @Your_weapon@ applauds itself.
@@ -358,6 +360,8 @@ maniacal laughter.
 snatches of song.
 
 a twanging sound.
+
+the buzz of a distant kazoo.
 
 the chiming of a distant gong.
 
