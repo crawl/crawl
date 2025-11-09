@@ -229,7 +229,7 @@ local function inside_oval(x,y,item)
   local h = (item.corner2.x + item.corner1.x)/2
   local k = (item.corner2.y + item.corner1.y)/2
   -- Test
-  return ((math.pow(x-h,2)/math.pow(rx,2) + math.pow(y-k,2)/math.pow(ry,2))<=1)
+  return (x - h) ^ 2 / rx ^ 2 + (y - k) ^ 2 / ry ^ 2 <= 1
 end
 
 local function inside_trapese(x,y,item)

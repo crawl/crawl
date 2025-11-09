@@ -133,7 +133,7 @@ end
 function hyper.paint.inside_oval(x,y,item)
   -- Circle test
   local ax,ay = hyper.paint.map_to_unit(x,y,item)
-  return (math.pow(ax * 2 - 1,2) + math.pow(ay * 2 - 1,2)) <= 1
+  return (ax * 2 - 1) ^ 2 + (ay * 2 - 1) ^ 2 <= 1
 end
 
 -- Determine if a point is inside a simple trapeze
