@@ -212,21 +212,19 @@ void set_cursor_region(GotoRegion region)
     tiles.set_cursor_region(region);
 }
 
-void delay(unsigned int ms)
+void delay_sys(unsigned int ms)
 {
-    if (crawl_state.disables[DIS_DELAY])
-        return;
-
-    tiles.redraw();
     if (wm)
         wm->delay(ms);
 }
 
-void update_screen()
+void update_screen(int min_delay_ms)
 {
     if (crawl_state.tiles_disabled)
         return;
-    tiles.set_need_redraw();
+
+    if (tiles.need_redraw(min_delay_ms))
+        tiles.redraw();
 }
 
 bool kbhit()

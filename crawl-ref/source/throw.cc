@@ -187,7 +187,6 @@ void fire_target_behaviour::display_help()
 {
     show_targeting_help();
     redraw_screen();
-    update_screen();
     need_redraw = true;
     set_prompt();
 }
@@ -846,7 +845,6 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow();
-        update_screen();
         pbolt.fire();
     }
 
@@ -922,7 +920,6 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
     viewwindow();
-    update_screen();
     const coord_def target = beam.target;
     if (teleport)
     {

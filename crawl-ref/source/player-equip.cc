@@ -1549,7 +1549,6 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
     {
         tiles.layout_statcol();
         redraw_screen();
-        update_screen();
     }
 #endif
 
@@ -1588,7 +1587,6 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     {
         tiles.layout_statcol();
         redraw_screen();
-        update_screen();
     }
 #endif
 
@@ -2421,7 +2419,6 @@ static void _change_wildshape_status()
     calc_hp();
     calc_mp();
     redraw_screen();
-    update_screen();
 }
 
 static void _handle_regen_item_equip(const item_def& item)

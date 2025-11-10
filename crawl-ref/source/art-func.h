@@ -1481,7 +1481,6 @@ static int _harvest_corpses()
                 beam.draw_delay = 3;
                 beam.fire();
                 viewwindow();
-                update_screen();
             }
 
             destroy_item(item.index());

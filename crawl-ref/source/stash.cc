@@ -1381,7 +1381,6 @@ void StashTracker::search_stashes(string search_term)
             {
                 show_stash_search_help();
                 redraw_screen();
-                update_screen();
             }
             else
                 break;
@@ -1856,7 +1855,6 @@ bool StashTracker::display_search_results(
 
     vector<MenuEntry*> sel = stashmenu.show();
     redraw_screen();
-    update_screen();
     default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
     if (stashmenu.request_toggle_sort_method)
     {

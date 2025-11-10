@@ -72,6 +72,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "tileview.h"
 #endif
 #include "traps.h"
@@ -5465,7 +5466,9 @@ void monster::check_redraw(const coord_def &old, bool clear_tiles) const
             UNUSED(clear_tiles);
 #endif
         }
-        update_screen();
+#ifdef USE_TILE
+        tiles.set_need_redraw();
+#endif
     }
 }
 

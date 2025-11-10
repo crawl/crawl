@@ -414,12 +414,12 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        if (Options.rest_delay >= 0
-            && tiles.need_redraw(Options.tile_runrest_rate))
-        {
-            tiles.redraw();
-        }
+        const int runrest_rate = Options.tile_runrest_rate;
+#else
+        const int runrest_rate = 0;
 #endif
+        if (Options.rest_delay >= 0)
+            update_screen(runrest_rate);
 
         if (!is_resting() && you.running.hp == you.hp
             && you.running.mp == you.magic_points)
@@ -435,9 +435,12 @@ static command_type _get_running_command()
     else if (you.running.is_explore() && Options.explore_delay > -1)
     {
 #ifdef USE_TILE
-        if (tiles.need_redraw(Options.tile_runrest_rate))
-            tiles.redraw();
+        const int runrest_rate = Options.tile_runrest_rate;
+#else
+        const int runrest_rate = 0;
 #endif
+        update_screen(runrest_rate);
+
         if (Options.explore_delay > 0)
             delay(Options.explore_delay);
     }
@@ -702,7 +705,6 @@ void Delay::handle()
         you.wield_change = true;
         _pop_delay();
         print_stats();  // force redraw of the stats
-        update_screen();
 #ifdef USE_TILE
         tiles.update_tabs();
 #endif
@@ -784,7 +786,6 @@ void PasswallDelay::finish()
             mpr("...yet there is something new on the other side. "
                 "You quickly turn back.");
             redraw_screen();
-            update_screen();
             return;
         }
         break;
@@ -806,7 +807,6 @@ void PasswallDelay::finish()
         {
             mpr("...and sense your way blocked. You quickly turn back.");
             redraw_screen();
-            update_screen();
             return;
         }
 

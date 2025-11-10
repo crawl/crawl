@@ -926,11 +926,8 @@ bool kbhit()
     return 0;
 }
 
-void delay(unsigned int ms)
+void delay_sys(unsigned int ms)
 {
-    if (crawl_state.disables[DIS_DELAY])
-        return;
-
     Sleep((DWORD)ms);
 }
 
@@ -951,8 +948,10 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
     textcolour(WHITE);
 }
 
-void update_screen()
+void update_screen(int min_delay_ms)
 {
+    UNUSED(min_delay_ms);
+
     // see if we have a dirty area
     if (dirty_area_start.X == dirty_area_end.X)
         return;

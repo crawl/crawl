@@ -820,7 +820,6 @@ void debug_pathfind(int idx)
     bool chose = show_map(ldest, false, false);
     dest = ldest.pos;
     redraw_screen();
-    update_screen();
     if (!chose)
     {
         canned_msg(MSG_OK);
@@ -865,7 +864,6 @@ static void _miscast_screen_update()
 
     you.redraw_status_lights = true;
     print_stats();
-    update_screen();
 
 #ifndef USE_TILE_LOCAL
     update_monster_pane();

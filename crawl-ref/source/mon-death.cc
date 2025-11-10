@@ -76,6 +76,9 @@
 #include "rltiles/tiledef-player.h"
 #endif
 #include "tilepick.h"
+#ifdef USE_TILE
+#include "tiles-build-specific.h"
+#endif
 #include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
@@ -3660,7 +3663,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         view_update_at(mwhere);
         StashTrack.update_stash(mwhere);
-        update_screen();
+#ifdef USE_TILE
+        tiles.set_need_redraw();
+#endif
     }
 
     if (!mons_reset)

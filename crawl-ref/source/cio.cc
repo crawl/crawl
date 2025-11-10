@@ -1050,7 +1050,6 @@ int line_reader::process_key(int ch)
         return -1;
     case CK_REDRAW:
         redraw_screen();
-        update_screen();
         return -1;
     default:
         if (mode == EDIT_MODE_OVERWRITE)
