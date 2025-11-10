@@ -52,7 +52,5 @@ void tile_wizmap_terrain(const coord_def &gc);
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, packed_cell &cell);
-void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc);
 
 void tile_forget_map(const coord_def &gc);
