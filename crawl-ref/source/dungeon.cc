@@ -5727,6 +5727,7 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
                 env.map_knowledge(*ri).set_feature(feature, 0,
                                                    get_trap_type(*ri));
 #ifdef USE_TILE
+                // XXX: this will not be the correct tile for the feature...
                 tile_env.bk_bg(*ri) = feature;
 #endif
             }

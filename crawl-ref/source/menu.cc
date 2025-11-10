@@ -2453,13 +2453,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     tileidx_t       ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
-    {
         ch = tileidx_feature(c);
-        if (ch == TILE_FLOOR_NORMAL)
-            ch = tile_env.flv(c).floor;
-        else if (ch == TILE_WALL_NORMAL)
-            ch = tile_env.flv(c).wall;
-    }
 
     tileset.emplace_back(ch);
 

@@ -3460,7 +3460,6 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
         f.body = trimmed_string(inf.body.str());
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
-        apply_variations(tile_env.flv(pos), &tile, pos);
         f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);

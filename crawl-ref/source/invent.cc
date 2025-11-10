@@ -694,11 +694,6 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         if (c != coord_def() && show_background && item.link != ITEM_IN_SHOP)
         {
             ch = tileidx_feature(c);
-            if (ch == TILE_FLOOR_NORMAL)
-                ch = tile_env.flv(c).floor;
-            else if (ch == TILE_WALL_NORMAL)
-                ch = tile_env.flv(c).wall;
-
             tileset.emplace_back(ch);
         }
         tileidx_t base_item = tileidx_known_base_item(idx);

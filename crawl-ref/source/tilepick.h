@@ -28,7 +28,11 @@ bool is_door_tile(tileidx_t tile);
 
 TextureID get_tile_texture(tileidx_t idx);
 
+void apply_variations(const tile_flavour& flv, tileidx_t* bg,
+                      const coord_def& gc);
+
 // Tile index lookup from Crawl data.
+tileidx_t tileidx_feature_no_flavour(const coord_def& gc);
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_trap(trap_type type);
 tileidx_t tileidx_shop(const shop_struct *shop);
