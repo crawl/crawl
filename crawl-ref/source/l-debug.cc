@@ -348,7 +348,6 @@ LUAFN(debug_check_uniques)
 LUAFN(debug_viewwindow)
 {
     viewwindow(lua_toboolean(ls, 1));
-    update_screen();
     return 0;
 }
 

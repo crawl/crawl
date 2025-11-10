@@ -186,7 +186,6 @@ void fire_target_behaviour::display_help()
 {
     show_targeting_help();
     redraw_screen();
-    update_screen();
     need_redraw = true;
     set_prompt();
 }
@@ -919,7 +918,6 @@ static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
         // Fire beam in reverse.
         pbolt.beam.setup_retrace();
         viewwindow();
-        update_screen();
         pbolt.fire();
     }
 
@@ -975,7 +973,6 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
     viewwindow();
-    update_screen();
     const coord_def target = beam.target;
     if (teleport)
     {
@@ -992,7 +989,6 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
         // Fire beam in reverse.
         beam.setup_retrace();
         viewwindow();
-        update_screen();
         ratk.fire();
     }
 

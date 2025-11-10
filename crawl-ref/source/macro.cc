@@ -1676,7 +1676,6 @@ void macro_menu()
     menu.show();
 
     redraw_screen();
-    update_screen();
 }
 
 /*

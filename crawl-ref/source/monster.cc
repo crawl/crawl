@@ -75,6 +75,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "tileview.h"
 #endif
 #include "traps.h"
@@ -5353,8 +5354,6 @@ void monster::check_redraw(const coord_def &old) const
         // Don't leave a trail if we can see the monster move in.
         if (see_old || (pos() - old).rdist() <= 1)
             view_update_at(old);
-
-        update_screen();
     }
 }
 

@@ -875,7 +875,6 @@ static void _debug_acquirement_stats()
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);
             viewwindow();
-            update_screen();
         }
     }
 
@@ -1267,7 +1266,6 @@ static void _debug_randart_stats()
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);
             viewwindow();
-            update_screen();
         }
     }
 

@@ -34,8 +34,9 @@ void putwch(char32_t c);
 int getch_ck();
 bool kbhit();
 void delay(unsigned int ms);
+void delay_sys(unsigned int ms);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);
-void update_screen();
+void update_screen(int min_delay_ms = 0);
 
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();

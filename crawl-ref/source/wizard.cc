@@ -289,7 +289,6 @@ void handle_wizard_command()
         tiles.layout_statcol();
 #endif
         redraw_screen();
-        update_screen();
         if (crawl_state.cmd_repeat_start)
         {
             crawl_state.cancel_cmd_repeat("Can't repeat re-activating wizard "
@@ -325,7 +324,6 @@ void handle_wizard_command()
         tiles.layout_statcol();
 #endif
         redraw_screen();
-        update_screen();
 
         if (crawl_state.cmd_repeat_start)
         {
@@ -410,7 +408,6 @@ void enter_explore_mode()
         you.explore = true;
         save_game(false);
         redraw_screen();
-        update_screen();
 
         if (crawl_state.cmd_repeat_start)
         {
@@ -544,10 +541,7 @@ int list_wizard_commands(bool do_redraw_screen)
 
     int key = show_keyhelp_menu(cols.formatted_lines());
     if (do_redraw_screen)
-    {
         redraw_screen();
-        update_screen();
-    }
     return key;
 }
 #endif // defined(WIZARD)

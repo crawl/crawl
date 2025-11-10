@@ -435,7 +435,6 @@ static void _rune_effect(dungeon_feature_type ftype)
         view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2]),
                                                      you.pos()));
         viewwindow(false);
-        update_screen();
 #else
         flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
@@ -445,7 +444,6 @@ static void _rune_effect(dungeon_feature_type ftype)
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
         big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
-        update_screen();
         mpr("Heavy smoke blows from the lock!");
         // included in default force_more_message
     }

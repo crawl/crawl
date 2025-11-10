@@ -69,7 +69,6 @@ static bool _check_monster_alert(const monster& mon)
     {
         // If the player encountered this by moving, make sure to actually
         // draw the monster we're warning about.
-        update_screen();
         viewwindow();
 
         // And if it wasn't a monster that would get an encounter warning due to
