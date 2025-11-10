@@ -1056,7 +1056,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
     if (temp
         && item->base_type == OBJ_MISCELLANY
         && item->sub_type == MISC_HORN_OF_GERYON
-        && silenced(you.pos()))
+        && you.is_silenced())
     {
         return "You can't produce a sound!";
     }

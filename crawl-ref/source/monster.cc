@@ -6215,7 +6215,7 @@ void monster::steal_item_from_player()
         // Found no item worth stealing, try gold.
         if (you.gold == 0)
         {
-            if (silenced(pos()))
+            if (is_silenced())
                 return;
 
             string complaint = getSpeakString("Maurice nonstealing");

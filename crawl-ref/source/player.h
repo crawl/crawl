@@ -839,6 +839,7 @@ public:
     bool paralysed() const override;
     bool cannot_act() const override;
     bool confused() const override;
+    bool is_silenced() const override;
 
     bool caught() const override;
     void struggle_against_net() override;
@@ -1224,6 +1225,8 @@ void shake_off_sticky_flame();
 void end_sticky_flame_player();
 
 void silence_player(int turns);
+
+const char* player_silenced_reason();
 
 bool spell_slow_player(int pow);
 bool slow_player(int turns);

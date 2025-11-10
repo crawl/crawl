@@ -1826,9 +1826,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    // Silence and water elementals
-    if (silenced(you.pos())
-        || you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    // Silence and engulf
+    if (you.is_silenced())
     {
         talent tal = get_talent(abil.ability);
         if (tal.is_invocation && abil.ability != ABIL_RENOUNCE_RELIGION)
@@ -1836,20 +1842,14 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             if (!quiet)
             {
                 mprf("You cannot call out to %s while %s.",
-                     god_name(you.religion).c_str(),
-                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
-                                                  : "silenced");
+                     god_name(you.religion).c_str(), player_silenced_reason());
             }
             return false;
         }
         if (abil.ability == ABIL_WORD_OF_CHAOS)
         {
             if (!quiet)
-            {
-                mprf("You cannot speak a word of chaos while %s.",
-                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
-                                                  : "silenced");
-            }
+                mprf("You cannot speak a word of chaos while %s.", player_silenced_reason());
             return false;
         }
     }
@@ -4365,7 +4365,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_WORD_OF_CHAOS:
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
-               && (!silenced(you.pos()) || include_unusable);
+               && (!you.is_silenced() || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.form != you.default_form && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -4734,7 +4734,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         }
     }
 
-    if (!ignore_silence && silenced(you.pos()))
+    if (!ignore_silence && you.is_silenced())
     {
         if (have_passive(passive_t::wu_jian_wall_jump))
             abilities.push_back(ABIL_WU_JIAN_WALLJUMP);

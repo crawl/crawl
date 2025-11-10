@@ -553,7 +553,7 @@ LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
  * @treturn boolean
  * @function silenced
  */
-LUARET1(you_silenced, boolean, silenced(you.pos()))
+LUARET1(you_silenced, boolean, you.is_silenced())
 
 /*** Are you sick?
  * @treturn boolean

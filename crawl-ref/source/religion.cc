@@ -4678,7 +4678,7 @@ int get_tension(god_type god)
         { player_on_orb_run(),                           {2, 1} },
         { you.caught(),                                  {2, 1} },
         { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
-        { silenced(you.pos()),                           {5, 3} },
+        { you.is_silenced(),                             {5, 3} },
         { you.form == transformation::fungus
             || you.form == transformation::pig
             || you.form == transformation::tree,         {5, 3} },
@@ -4699,7 +4699,6 @@ int get_tension(god_type god)
         { you.duration[DUR_AFRAID] > 0,                  {6, 5} },
         { you.duration[DUR_BLIND] > 0,                   {6, 5} },
         { you.duration[DUR_MESMERISED] > 0,              {6, 5} },
-        { you.duration[DUR_WATER_HOLD] > 0,              {6, 5} },
         { env.grid(you.pos()) == DNGN_SHALLOW_WATER && !you.airborne()
             && !you.can_swim(),                          {6, 5} },
         { player_in_branch(BRANCH_PANDEMONIUM),          {9, 8} },

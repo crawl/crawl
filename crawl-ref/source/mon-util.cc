@@ -857,7 +857,7 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
                 && !you.has_mutation(MUT_FORLORN)
                 && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
-                && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
+                && !mon.is_silenced()
                 && !mons_is_confused(mon) && mons_is_seeking(mon)
                 && mon.foe == MHITYOU && !mons_is_immotile(mon)
                 && you.can_see(mon);

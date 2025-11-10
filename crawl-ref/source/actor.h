@@ -318,6 +318,7 @@ public:
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool asleep() const { return false; }
+    virtual bool is_silenced() const = 0;
 
     virtual bool caught() const = 0;
     caught_type  caught_by() const;

@@ -1135,7 +1135,7 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
     // (Bestial takedown kills always make you howl.)
     if (takedown || (power >= 5 && (old_power < 5 || one_chance_in(4))))
     {
-        if (silenced(you.pos()))
+        if (you.is_silenced())
         {
             mpr("You raise your head to howl, but no sound comes out.");
             return;

@@ -5947,6 +5947,22 @@ bool player::confused() const
     return duration[DUR_CONF];
 }
 
+bool player::is_silenced() const
+{
+    return silenced(you.pos())
+            || you.duration[DUR_WATER_HOLD] && !you.res_water_drowning();
+}
+
+const char* player_silenced_reason()
+{
+    if (silenced(you.pos()))
+        return "silenced";
+    else if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+        return "unable to breathe";
+    else
+        return "";
+}
+
 bool player::caught() const
 {
     return attribute[ATTR_HELD];

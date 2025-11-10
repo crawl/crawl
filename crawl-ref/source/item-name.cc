@@ -3077,12 +3077,8 @@ static string _general_cannot_read_reason()
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
-    if (silenced(you.pos()))
-        return "Magic scrolls do not work when you're silenced!";
-
-    // water elementals
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-        return "You cannot read scrolls while unable to breathe!";
+    if (you.is_silenced())
+        return make_stringf("You cannot read scrolls while %s!", player_silenced_reason());
 
     if (you.has_mutation(MUT_HOARD_SCROLLS) && you.props.exists(HOARD_SCROLLS_TIMER_KEY))
         return "You cannot bring yourself to waste a scroll at the moment!";

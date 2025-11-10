@@ -710,13 +710,6 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        if (!quiet)
-            mpr("You cannot cast spells while unable to breathe!");
-        return false;
-    }
-
     if (you.duration[DUR_NO_CAST])
     {
         if (!quiet)
@@ -746,11 +739,13 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (silenced(you.pos()))
+    if (you.is_silenced())
     {
         if (!quiet)
-            mpr("You cannot cast spells when silenced!");
-        // included in default force_more_message
+        {
+            mprf("You cannot cast spells while %s!", player_silenced_reason());
+            // included in default force_more_message
+        }
         return false;
     }
 

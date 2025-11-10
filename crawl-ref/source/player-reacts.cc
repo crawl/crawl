@@ -601,7 +601,7 @@ void player_reacts_to_monsters()
 
 static bool _check_recite()
 {
-    if (silenced(you.pos())
+    if (you.is_silenced()
         || you.paralysed()
         || you.confused()
         || you.asleep()
