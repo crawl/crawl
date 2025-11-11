@@ -443,15 +443,14 @@ bool monster_pathfind::traversable(const coord_def& p)
     if (traverse_no_actors && actor_at(p))
         return false;
 
-    if (feat_is_solid(feat) && (!mons || !mons->can_pass_through_feat(feat)))
+    if (feat_is_solid(feat) && !feat_is_closed_door(feat)
+        && (!mons || !mons->can_pass_through_feat(feat)))
+    {
         return false;
+    }
 
     if (monster* mon_at = monster_at(p))
     {
-        // Try to path around immobile monsters.
-        if (mon_at->is_stationary())
-            return false;
-
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.
         if (mons && mons->type == MONS_THORN_HUNTER
@@ -460,7 +459,9 @@ bool monster_pathfind::traversable(const coord_def& p)
             return true;
         }
 
-        return false;
+        // Try to path around immobile monsters.
+        if (mon_at->is_stationary())
+            return false;
     }
 
     if (mons)
