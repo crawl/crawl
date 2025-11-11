@@ -437,7 +437,12 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     if (!defender->alive())
     {
         if (defender->alive_or_reviving())
+        {
+            // Still consume energy so we don't cause an infinite loop
+            if (monster* mon = attacker->as_monster())
+                mon->lose_energy(EUT_ATTACK);
             return true;
+        }
         else
         {
             die("%s trying to attack a dead %s", attacker->name(DESC_THE).c_str(),
