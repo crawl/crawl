@@ -771,6 +771,7 @@ public:
     void daze(int duration) override;
     void end_daze();
     void vitrify(const actor *attacker, int duration, bool quiet = false) override;
+    bool floodify(const actor *attacker, int duration, const char* substance = "water") override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -988,7 +989,6 @@ public:
     bool form_uses_xl() const;
 
     virtual void clear_constricted() override;
-    bool clear_far_engulf(bool force = false, bool moved = false) override;
 
     int armour_class_scaled(int scale) const;
 

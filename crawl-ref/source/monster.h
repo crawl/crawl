@@ -520,6 +520,7 @@ public:
     bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void daze(int duration) override;
     void vitrify(const actor *attacker, int duration, bool quiet = false) override;
+    bool floodify(const actor *attacker, int duration, const char* substance = "water") override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;
 
@@ -573,7 +574,6 @@ public:
     void remove_summons(bool check_attitude = false);
 
     virtual void clear_constricted() override;
-    bool clear_far_engulf(bool force = false, bool /*moved*/ = false) override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;

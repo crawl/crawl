@@ -1124,8 +1124,8 @@ int main(int argc, char* argv[])
                                                             hd * 3 / 4,
                                                             hd * 3 / 2));
                     break;
-                case AF_ENGULF:
-                    monsterattacks += colour(LIGHTBLUE, "(engulf)");
+                case AF_FLOOD:
+                    monsterattacks += colour(LIGHTBLUE, "(flood)");
                     break;
                 case AF_DRAIN_SPEED:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain speed)");

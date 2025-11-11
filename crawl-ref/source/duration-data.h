@@ -790,7 +790,7 @@ static const duration_def duration_data[] =
     { DUR_STUN_IMMUNITY, 0, "", "", "immune to disabling effects", "", D_NO_FLAGS},
     { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
     { DUR_SICKENING, 0, "", "", "sickening", "", D_NEGATIVE, {{""}}},
-    { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NEGATIVE},
+    { DUR_FLOODED, RED, "Flooded", "", "flooded", "", D_NEGATIVE},
     // Regeneration information handled separately.
     { DUR_TROGS_HAND, 0, "", "strong-willed", "trogs hand",
       "Your willpower is greatly increased.", D_EXPIRES,

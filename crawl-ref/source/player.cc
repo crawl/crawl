@@ -4667,7 +4667,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || duration <= 0 || you.duration[DUR_WATER_HOLD]
+    if (player_res_sticky_flame() || duration <= 0
         || feat_is_water(env.grid(you.pos())))
     {
         return false;
@@ -5248,67 +5248,6 @@ bool land_player(bool quiet)
     return true;
 }
 
-static void _end_water_hold()
-{
-    you.duration[DUR_WATER_HOLD] = 0;
-    you.props.erase(WATER_HOLDER_KEY);
-    you.props.erase(WATER_HOLD_SUBSTANCE_KEY);
-}
-
-static string _water_hold_substance()
-{
-    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
-}
-
-bool player::clear_far_engulf(bool force, bool moved)
-{
-    if (!you.duration[DUR_WATER_HOLD])
-        return false;
-
-    monster* const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
-    if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
-    {
-        if (moved)
-        {
-            mprf("You slip free of the %s engulfing you.",
-                 _water_hold_substance().c_str());
-        }
-        else
-        {
-            mprf("The %s engulfing you falls away.",
-                 _water_hold_substance().c_str());
-        }
-
-        if (!you.res_water_drowning())
-            mpr("You gasp with relief as air once again reaches your lungs.");
-
-        _end_water_hold();
-        return true;
-    }
-    return false;
-}
-
-void handle_player_drowning(int delay)
-{
-    if (you.clear_far_engulf())
-        return;
-    if (you.res_water_drowning())
-    {
-        // Reset so damage doesn't ramp up while able to breathe
-        you.duration[DUR_WATER_HOLD] = 10;
-    }
-    else
-    {
-        you.duration[DUR_WATER_HOLD] += delay;
-        int dam =
-            div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
-                            * delay,
-                            BASELINE_DELAY * 10);
-        ouch(dam, KILLED_BY_WATER, you.props[WATER_HOLDER_KEY].get_int());
-        mprf(MSGCH_WARN, "Your lungs strain for air!");
-    }
-}
-
 player::player()
 {
     // warning: this constructor is called for `you` in an indeterminate order
@@ -5805,15 +5744,13 @@ bool player::has_any_spells() const
 
 bool player::cannot_speak() const
 {
-    if (silenced(pos()))
+    if (you.is_silenced())
         return true;
 
     if (paralysed() || petrified()) // we allow talking during sleep ;)
         return true;
 
     // No transform that prevents the player from speaking yet.
-    // ... yet setting this would prevent saccing junk and similar activities
-    // for no good reason.
     return false;
 }
 
@@ -5950,14 +5887,14 @@ bool player::confused() const
 bool player::is_silenced() const
 {
     return silenced(you.pos())
-            || you.duration[DUR_WATER_HOLD] && !you.res_water_drowning();
+            || you.duration[DUR_FLOODED];
 }
 
 const char* player_silenced_reason()
 {
     if (silenced(you.pos()))
         return "silenced";
-    else if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    else if (you.duration[DUR_FLOODED])
         return "unable to breathe";
     else
         return "";
@@ -8411,6 +8348,26 @@ void player::vitrify(const actor* /*attacker*/, int dur, bool quiet)
     }
 
     you.increase_duration(DUR_VITRIFIED, dur, 50);
+}
+
+bool player::floodify(const actor* attacker, int dur, const char* substance)
+{
+    if (res_water_drowning() || dur <= 0 || dur <= duration[DUR_FLOODED])
+        return false;
+
+    const bool already_flooded =
+            duration[DUR_FLOODED] > 0
+                && props[WATER_HOLD_SUBSTANCE_KEY].get_string() == substance;
+
+    duration[DUR_FLOODED] = dur;
+    props[WATER_HOLD_SUBSTANCE_KEY] = substance;
+    props[WATER_HOLDER_KEY].get_int() = attacker->mid;
+    props[WATER_HOLDER_NAME_KEY] = attacker->name(DESC_A, true);
+
+    mprf(MSGCH_WARN, "%s%s floods into your lungs!",
+         already_flooded ? "More " : "", substance);
+
+    return true;
 }
 
 /**

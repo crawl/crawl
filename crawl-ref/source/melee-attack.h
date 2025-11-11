@@ -171,7 +171,7 @@ private:
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
     void apply_sign_of_ruin_effects();
-    void do_ooze_engulf();
+    void do_ooze_flood();
     void try_parry_disarm();
     void do_vampire_lifesteal();
 private:

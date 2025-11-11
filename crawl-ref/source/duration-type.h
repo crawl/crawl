@@ -129,7 +129,7 @@ enum duration_type
 #endif
     DUR_SENTINEL_MARK,
     DUR_SICKENING,
-    DUR_WATER_HOLD,
+    DUR_FLOODED,
 #if TAG_MAJOR_VERSION == 34
     DUR_WATER_HOLD_IMMUNITY,
 #endif

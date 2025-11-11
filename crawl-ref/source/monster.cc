@@ -630,9 +630,8 @@ bool monster::is_silenced() const
 {
     return silenced(pos())
             || has_ench(ENCH_MUTE)
-            || (has_ench(ENCH_WATER_HOLD)
-                || has_ench(ENCH_WATERLOGGED))
-               && !res_water_drowning();
+            || (has_ench(ENCH_FLOODED))
+                && !res_water_drowning();
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -2612,10 +2611,7 @@ void monster::moveto(const coord_def& c, bool clear_net, bool clear_constrict)
     // Do constriction invalidation after to the move, so that all LOS checking
     // is available.
     if (clear_constrict)
-    {
         clear_invalid_constrictions(true);
-        clear_far_engulf();
-    }
 }
 
 bool monster::fumbles_attack()
@@ -5619,9 +5615,6 @@ bool monster::swap_with(monster* other)
     clear_invalid_constrictions(true);
     other->clear_invalid_constrictions(true);
 
-    clear_far_engulf();
-    other->clear_far_engulf();
-
     return true;
 }
 
@@ -5758,6 +5751,39 @@ void monster::vitrify(const actor *attacker, int duration, bool quiet)
     }
 
     add_ench(mon_enchant(ENCH_VITRIFIED, attacker, duration * BASELINE_DELAY));
+}
+
+bool monster::floodify(const actor* attacker, int duration, const char* substance)
+{
+    if (res_water_drowning() || duration <= 0)
+        return false;
+
+    if (has_ench(ENCH_FLOODED) && get_ench(ENCH_FLOODED).duration >= duration)
+        return false;
+
+    bool already_flooded = false;
+    if (has_ench(ENCH_FLOODED))
+    {
+        if (props[WATER_HOLD_SUBSTANCE_KEY].get_string() == substance)
+            already_flooded = true;
+        del_ench(ENCH_FLOODED, true, false);
+    }
+
+    add_ench(mon_enchant(ENCH_FLOODED, attacker, duration));
+    props[WATER_HOLD_SUBSTANCE_KEY].get_string() = substance;
+
+    if (you.can_see(*this))
+    {
+        // Assume any vertebrate bodyplan (and is alive and isn't aquatic) has
+        // something that can be called lungs.
+        const bool has_lungs = get_mon_shape(*this) < MON_SHAPE_INSECT;
+        mprf("%s%s floods into %s %s!",
+                already_flooded ? "More " : "",
+                substance, name(DESC_ITS).c_str(),
+                has_lungs ? "lungs" : "airways");
+    }
+
+    return true;
 }
 
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)

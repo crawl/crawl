@@ -116,7 +116,7 @@ enum attack_flavour
     AF_ANTIMAGIC,
     AF_PAIN,
     AF_ENSNARE,
-    AF_ENGULF,
+    AF_FLOOD,
     AF_PURE_FIRE,
     AF_DRAIN_SPEED,
     AF_VULN,

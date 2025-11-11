@@ -93,10 +93,7 @@ static void _player_moveto(const coord_def &c, bool real_movement, bool clear_ne
 
     // clear invalid constrictions even with fake movement
     if (clear_constrict)
-    {
         you.clear_invalid_constrictions();
-        you.clear_far_engulf();
-    }
 }
 
 player_vanishes::player_vanishes(bool _movement)

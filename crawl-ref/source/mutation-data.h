@@ -2691,10 +2691,10 @@ static const mutation_def mut_data[] =
   TILEG_MUT_FLAT_HP,
 },
 
-{ MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva | mutflag::substance,
-  "engulf",
+{ MUT_OOZE_FLOOD, 0, 1, mutflag::good | mutflag::jiyva | mutflag::substance,
+  "ooze flood",
 
-    {"Your melee attacks may engulf your foes in ooze.", "", ""},
+    {"Your melee attacks may flood your foes with ooze.", "", ""},
     {"You begin exuding ooze.", "", ""},
     {"You stop exuding ooze.", "", ""},
   TILEG_MUT_ENGULF,

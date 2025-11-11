@@ -874,9 +874,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         end_still_winds();
         break;
 
-    case ENCH_WATERLOGGED:
-        if (!quiet)
-            simple_monster_message(*this, " is no longer waterlogged.");
+    case ENCH_FLOODED:
+        if (!quiet && you.can_see(*this))
+        {
+            mprf("%s finishes expelling the %s from %s %s.",
+                    name(DESC_THE).c_str(),
+                    props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str(),
+                    pronoun(PRONOUN_POSSESSIVE).c_str(),
+                    get_mon_shape(*this) >= MON_SHAPE_INSECT ? "airways" : "lungs");
+        }
+        props.erase(WATER_HOLD_SUBSTANCE_KEY);
         break;
 
     case ENCH_ROLLING:
@@ -1142,23 +1149,6 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(bool force, bool /*moved*/)
-{
-    if (you.duration[DUR_WATER_HOLD]
-        && (mid_t) you.props[WATER_HOLDER_KEY].get_int() == mid)
-    {
-        you.clear_far_engulf(force);
-    }
-
-    const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
-    if (me.ench == ENCH_NONE)
-        return false;
-    const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
-    if (nonadj || force)
-        del_ench(ENCH_WATER_HOLD);
-    return nonadj || force;
-}
-
 // Returns true if you resist the merfolk avatar's call.
 static bool _merfolk_avatar_movement_effect(const monster* mons)
 {
@@ -1388,7 +1378,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SIGN_OF_RUIN:
     case ENCH_STILL_WINDS:
     case ENCH_CONSTRICTED:
-    case ENCH_WATERLOGGED:
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
@@ -1720,22 +1709,11 @@ void monster::apply_enchantment(const mon_enchant &me)
             decay_enchantment(en);
         break;
 
-    case ENCH_WATER_HOLD:
-        if (!clear_far_engulf())
+    case ENCH_FLOODED:
+        if (!decay_enchantment(en))
         {
-            if (!res_water_drowning())
-            {
-                lose_ench_duration(me, -speed_to_duration(speed));
-                int dur = speed_to_duration(speed); // sequence point for randomness
-                int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
-                                          * dur,
-                            BASELINE_DELAY * 10);
-                if (dam > 0)
-                {
-                    simple_monster_message(*this, " is asphyxiated!");
-                    hurt(me.agent(), dam);
-                }
-            }
+            simple_monster_message(*this, " gasps for air!");
+            hurt(me.agent(), roll_dice(3, 2));
         }
         break;
 
@@ -2104,7 +2082,11 @@ static const char *enchant_names[] =
     "ozocubus_armour",
 #endif
     "wretched", "screamed", "rune_of_recall",
-    "injury bond", "drowning", "flayed", "haunting",
+    "injury bond",
+#if TAG_MAJOR_VERSION == 34
+    "drowning",
+#endif
+    "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
 #endif
@@ -2160,7 +2142,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "pinned_by_whirlwind", "vortex", "vortex_cooldown", "vile_clutch",
 #endif
-    "waterlogged", "ring_of_flames",
+    "flooded", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished",

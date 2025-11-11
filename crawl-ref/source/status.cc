@@ -626,20 +626,12 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case DUR_WATER_HOLD:
-        inf.light_text   = "Engulf";
-        if (you.res_water_drowning())
-        {
-            inf.short_text   = "engulfed";
-            inf.long_text    = "You are engulfed.";
-            inf.light_colour = DARKGREY;
-        }
-        else
-        {
-            inf.short_text   = "engulfed (cannot breathe)";
-            inf.long_text    = "You are engulfed and unable to breathe.";
-            inf.light_colour = RED;
-        }
+    case DUR_FLOODED:
+        inf.light_text  = "Flooded";
+        inf.short_text  = "flooded lungs";
+        inf.long_text   = make_stringf("Your lungs are flooded with %s and you "
+                                       "cannot breathe.",
+                                       you.props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str());
         break;
 
     case STATUS_DRAINED:

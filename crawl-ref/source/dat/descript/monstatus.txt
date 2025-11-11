@@ -35,12 +35,6 @@ increased damage.
 
 [[high-tier stab monstatus]]
 %%%%
-asphyxiating monstatus
-
-This creature has been engulfed by another creature and is unable to breathe.
-It will take minor damage each turn and cannot cast spells or invoke divine
-aid until either it escapes or the engulfing creature dies.
-%%%%
 berserk monstatus
 
 This creature has 50% more health, deals 50% more damage with melee attacks, and
@@ -207,23 +201,6 @@ encased in ice monstatus
 
 This creature has been flash-frozen and its movement speed is greatly reduced for
 a short time.
-%%%%
-engulfed monstatus
-
-This creature has been engulfed by another creature, but its aquatic or unbreathing
-nature prevents it from suffering any ill effects.
-%%%%
-engulfing you monstatus
-
-{{
-if you.res_drowning() then
-    return "This creature is engulfing you, but your immunity to drowning renders " ..
-           "it harmless."
-else
-    return "This creature is engulfing you, which prevents you from casting or " ..
-           "reading scrolls until either you move away from it or the creature dies."
-end
-}}
 %%%%
 entangled in a net monstatus
 
@@ -714,9 +691,10 @@ very poisoned monstatus
 
 This creature is poisoned and will take damage every turn.
 %%%%
-waterlogged monstatus
+unable to breathe monstatus
 
 This creature is unable to breathe and cannot cast spells or invoke divine aid.
+It also takes minor asphyxiation damage every turn.
 %%%%
 weak monstatus
 

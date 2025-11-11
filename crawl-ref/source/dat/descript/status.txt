@@ -321,24 +321,11 @@ Sil status
 You are silenced. This makes reading scrolls, casting spells, invoking divine
 abilities, or shouting impossible.
 %%%%
-Engulf status
+Flooded status
 
-{{
-    local desc = "You are engulfed by an adjacent creature"
-
-    if not you.res_drowning() then
-        desc = desc .. " and are unable to breathe. You will take increasing"
-                       .. " damage from asphyxiation every turn until you"
-                       .. " escape. This makes reading scrolls, casting"
-                       .. " spells, and invoking divine abilities impossible."
-                       .. " Moving away from the engulfing creature will end"
-                       .. " the effect"
-    else
-        desc = desc .. " but suffer no negative effects"
-    end
-
-    return desc .. "."
-}}
+Your lungs are filled with liquid, preventing you from breathing properly. This
+makes reading scrolls, casting spells, and invoking divine abilities impossible.
+You will also take asphyxiation damage every turn.
 %%%%
 Stealth status
 

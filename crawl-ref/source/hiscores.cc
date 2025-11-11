@@ -1502,6 +1502,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
     }
 
+    // Deaths without a living source must (at least in modern Crawl) be from Flooding.
+    if (death_type == KILLED_BY_WATER && !source_monster)
+        death_source_name = you.props[WATER_HOLDER_NAME_KEY].get_string();
+
     if (death_type == KILLED_BY_BLINKING)
     {
         death_source_name = you.props[BLINKITIS_SOURCE_KEY].get_string();

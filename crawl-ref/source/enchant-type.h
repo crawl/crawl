@@ -115,7 +115,9 @@ enum enchant_type
     ENCH_SCREAMED,       // Starcursed scream timer
     ENCH_WORD_OF_RECALL, // Chanting word of recall
     ENCH_INJURY_BOND,
+#if TAG_MAJOR_VERSION == 34
     ENCH_WATER_HOLD,     // Silence and asphyxiation damage
+#endif
     ENCH_FLAYED,
     ENCH_HAUNTING,
 #if TAG_MAJOR_VERSION == 34
@@ -195,7 +197,7 @@ enum enchant_type
     ENCH_VORTEX_COOLDOWN,
     ENCH_VILE_CLUTCH_OLD,
 #endif
-    ENCH_WATERLOGGED,
+    ENCH_FLOODED,
     ENCH_RING_OF_FLAMES,
     ENCH_RING_OF_CHAOS,
     ENCH_RING_OF_MUTATION,

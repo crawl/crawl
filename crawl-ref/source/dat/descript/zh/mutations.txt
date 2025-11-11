@@ -654,11 +654,6 @@ jelly absorbing missiles mutation
 
 当你被飞弹击中时（比如箭或弩箭），你身上的胶冻可能会吞掉它，并进行一定治疗。
 %%%%
-engulf mutation
-
-你在近战时可能会吞噬与你同样大小或比你更小的活物。
-那些敌人将被沉默且无法呼吸。
-%%%%
 otherworldly mutation
 
 你与这个世界格格不入，很容易被黑暗势力察觉。

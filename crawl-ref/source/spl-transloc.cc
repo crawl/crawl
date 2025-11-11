@@ -812,7 +812,6 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
 
     noisy(4, agent.pos());
     agent.did_deliberate_movement();
-    agent.clear_far_engulf(false, true);
 
     // Draw a cloud trail behind the charging agent
     ray_def ray;
@@ -1034,8 +1033,6 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #else
     UNUSED(old_pos);
 #endif
-
-    you.clear_far_engulf();
 }
 
 // Not called for wizmode teleports.

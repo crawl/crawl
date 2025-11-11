@@ -2705,7 +2705,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_FIRE_CHAMPION, TILEI_FIRE_CHAMP },
     { MB_ANGUISH, TILEI_ANGUISH },
     { MB_WEAK, TILEI_WEAKENED },
-    { MB_WATERLOGGED, TILEI_WATERLOGGED },
+    { MB_FLOODED, TILEI_WATERLOGGED },
     { MB_STILL_WINDS, TILEI_STILL_WINDS },
     { MB_ANTIMAGIC, TILEI_ANTIMAGIC },
     { MB_DAZED, TILEI_DAZED },

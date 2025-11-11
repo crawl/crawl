@@ -2120,7 +2120,7 @@ string mon_attack_name(attack_type attack, bool with_object)
 bool flavour_triggers_damageless(attack_flavour flavour)
 {
     return flavour == AF_CRUSH
-        || flavour == AF_ENGULF
+        || flavour == AF_FLOOD
         || flavour == AF_PAIN
         || flavour == AF_PURE_FIRE
         || flavour == AF_AIRSTRIKE

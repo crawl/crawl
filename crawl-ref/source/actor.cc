@@ -685,15 +685,6 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
-bool actor::can_engulf(const actor &defender) const
-{
-    return can_see(defender)
-        && !confused()
-        && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-        && !defender.is_insubstantial()
-        && adjacent(pos(), defender.pos());
-}
-
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
     if (defender.is_constricted() || defender.res_constrict())
@@ -701,8 +692,12 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
 
     if (typ == CONSTRICT_MELEE)
     {
-        return can_engulf(defender)
-            && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
+        return can_see(defender)
+                && !confused()
+                && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
+                && !defender.is_insubstantial()
+                && adjacent(pos(), defender.pos())
+                && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
     }
 
     if (!see_cell_no_trans(defender.pos()))
@@ -1129,7 +1124,6 @@ void actor::stumble_away_from(coord_def targ, string src)
     stop_directly_constricting_all(true);
     if (constricted_type == CONSTRICT_MELEE)
         stop_being_constricted();
-    clear_far_engulf();
 
     apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
                                                : KILL_MON_MISSILE,

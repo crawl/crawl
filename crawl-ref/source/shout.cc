@@ -730,17 +730,17 @@ void yell(const actor* mon)
     {
         if (mon)
         {
-            if (you.paralysed() || you.duration[DUR_WATER_HOLD])
-            {
-                mprf("You feel a strong urge to %s, but "
-                     "you are unable to make a sound!",
-                     shout_verb.c_str());
-            }
-            else
+            if (silenced(you.pos()))
             {
                 mprf("You feel %s rip itself from your throat, "
                      "but you make no sound!",
                      article_a(shout_verb).c_str());
+            }
+            else
+            {
+                mprf("You feel a strong urge to %s, but "
+                     "you are unable to make a sound!",
+                     shout_verb.c_str());
             }
         }
         else

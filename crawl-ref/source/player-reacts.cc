@@ -886,8 +886,24 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_DETONATION_CATALYST, delay,
         "Your catalyst becomes inert.");
 
-    if (you.duration[DUR_WATER_HOLD])
-        handle_player_drowning(delay);
+    if (you.duration[DUR_FLOODED])
+    {
+        // eg: if you turned into a tree.
+        if (you.res_water_drowning())
+            you.duration[DUR_FLOODED] = 0;
+        else if (_decrement_a_duration(DUR_FLOODED, delay))
+        {
+            mprf(MSGCH_RECOVERY, "You finishing coughing all the %s out of your lungs.",
+                 you.props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str());
+        }
+        else
+        {
+            mprf(MSGCH_WARN, "Your lungs strain for air.");
+            const int dmg = roll_dice(2, 5);
+            ouch(div_rand_round(dmg * delay, BASELINE_DELAY), KILLED_BY_WATER,
+                                                you.props[WATER_HOLDER_KEY].get_int());
+        }
+    }
 
     if (you.duration[DUR_FLAYED])
     {

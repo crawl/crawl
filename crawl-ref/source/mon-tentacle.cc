@@ -889,7 +889,6 @@ void move_solo_tentacle(monster* tentacle)
             stop_delay(true);
     }
     tentacle->clear_invalid_constrictions();
-    tentacle->clear_far_engulf();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;

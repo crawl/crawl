@@ -611,7 +611,7 @@ _mon_hex_zap(ZAP_VEX, BEAM_VEX),
 { // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
     "torrent of water",
-    new calcdice_calculator<4, 14, 3, 5>,
+    new calcdice_calculator<4, 10, 1, 5>,
     new tohit_calculator<10, 1, 25>,
     // Water attack is weaker than the pure elemental damage attacks, but also
     // less resistible.

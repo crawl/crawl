@@ -7,7 +7,7 @@ genus: elemental
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, flavour: engulf, damage: 22}
+ - {type: engulf, flavour: flood, damage: 22}
 hd: 6
 hp_10x: 420
 ac: 4

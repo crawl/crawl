@@ -115,7 +115,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_WATERLOGGED,     MB_WATERLOGGED },
+    { ENCH_FLOODED,         MB_FLOODED },
     { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
     { ENCH_RING_OF_FLAMES,  MB_CLOUD_RING_FLAMES },
     { ENCH_RING_OF_CHAOS,   MB_CLOUD_RING_CHAOS },
@@ -179,11 +179,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     {
     case ENCH_HELD:
         return mons.caught_by() == CAUGHT_WEB ? MB_WEBBED : MB_CAUGHT;
-    case ENCH_WATER_HOLD:
-        if (mons.res_water_drowning())
-            return MB_WATER_HOLD;
-        else
-            return MB_WATER_HOLD_DROWN;
     case ENCH_DRAINED:
         {
             const bool heavily_drained = mons.get_ench(ench).degree
@@ -826,12 +821,6 @@ monster_info::monster_info(const monster* m, int milev)
                                                   true));
             }
         }
-    }
-
-    if (you.duration[DUR_WATER_HOLD]
-        && m->mid == (mid_t)you.props[WATER_HOLDER_KEY].get_int())
-    {
-        mb.set(MB_ENGULFING_PLAYER);
     }
 
     if (!mons_has_attacks(*m))

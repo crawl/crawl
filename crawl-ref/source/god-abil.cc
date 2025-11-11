@@ -6395,7 +6395,6 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     you.moveto(wall_jump_landing_spot);
     bool attacked = wu_jian_wall_jump_effects();
-    you.clear_far_engulf(false, true);
     you.apply_location_effects(initial_position);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2

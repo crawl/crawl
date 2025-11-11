@@ -205,6 +205,7 @@ public:
                                  bool quiet = false) = 0;
     virtual void daze(int duration) = 0;
     virtual void vitrify(const actor *attacker, int duration, bool quiet = false) = 0;
+    virtual bool floodify(const actor *attacker, int duration, const char* substance = "water") = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    const actor* source = nullptr,
                                    bool slow_cold_blood = true) = 0;
@@ -403,7 +404,6 @@ public:
     virtual bool attempt_escape() = 0;
 
     bool can_constrict(const actor &defender, constrict_type typ) const;
-    bool can_engulf(const actor &defender) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
     void handle_constriction();
@@ -413,7 +413,6 @@ public:
     int num_constricting(constrict_type type = CONSTRICT_MELEE) const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(constrict_type typ) const = 0;
-    virtual bool clear_far_engulf(bool force = false, bool moved = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     virtual void clear_constricted();

@@ -2095,7 +2095,7 @@ bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose
     if (!mons->alive())
         return false;
 
-    if (mons->res_sticky_flame() || dur <= 0 || mons->has_ench(ENCH_WATER_HOLD))
+    if (mons->res_sticky_flame() || dur <= 0)
         return false;
 
     const bool had_sticky_flame = mons->has_ench(ENCH_STICKY_FLAME);
@@ -2502,13 +2502,12 @@ int bolt::get_cloud_size(bool min, bool max) const
 
 static void _waterlog_mon(monster &mon, int ench_pow)
 {
-    if (!mon.alive() || mon.res_water_drowning() || mon.has_ench(ENCH_WATERLOGGED))
+    if (!mon.alive() || mon.res_water_drowning() || mon.has_ench(ENCH_FLOODED))
         return;
 
-    simple_monster_message(mon, " is engulfed in water.");
     const int min_dur = ench_pow + 20;
     const int dur = random_range(min_dur, min_dur * 3 / 2);
-    mon.add_ench(mon_enchant(ENCH_WATERLOGGED, &you, dur));
+    mon.floodify(&you, dur);
 }
 
 void bolt::special_explode()
@@ -5299,9 +5298,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (mon->add_ench(ench))
             simple_monster_message(*mon, " is blinded.");
     }
-
-    if (origin_spell == SPELL_PRIMAL_WAVE && agent() && agent()->is_player())
-        _waterlog_mon(*mon, ench_power);
 
     if (origin_spell == SPELL_HURL_TORCHLIGHT && mon->holiness() & MH_UNDEAD
         && agent() && mons_aligned(mon, agent()))

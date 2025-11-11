@@ -166,15 +166,6 @@ static void _monster_regenerate(monster* mons)
     }
 }
 
-static void _escape_water_hold(monster& mons)
-{
-    if (mons.has_ench(ENCH_WATER_HOLD))
-    {
-        simple_monster_message(mons, " is no longer engulfed.");
-        mons.del_ench(ENCH_WATER_HOLD);
-    }
-}
-
 // Returns true iff the monster does nothing.
 static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
 {
@@ -3765,8 +3756,6 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (mons_is_seeker(mons))
         --mons.steps_remaining;
-
-    _escape_water_hold(mons);
 
     if (env.grid(mons.pos()) == DNGN_DEEP_WATER && env.grid(f) != DNGN_DEEP_WATER
         && !monster_habitable_feat(&mons, DNGN_DEEP_WATER))

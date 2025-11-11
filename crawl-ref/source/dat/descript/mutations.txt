@@ -828,10 +828,10 @@ jelly absorbing missiles mutation
 When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
 body may eat it, healing you somewhat.
 %%%%
-engulf mutation
+ooze flood mutation
 
-Your melee attacks may engulf living foes that are your size or smaller.
-Those foes will be silenced and unable to breathe.
+Your melee attacks may flood the airways of your foes with ooze. Those that need
+to breathe air will be silenced and take asphyxiation damage over time.
 %%%%
 otherworldly mutation
 
@@ -1000,8 +1000,8 @@ inevitably turn to dust after a short time.
 insubstantial mutation
 
 You are insubstantial and immune to many effects that require a solid body. You
-cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
-flame, or caught by webs, nets, or bolas.
+cannot be constricted, petrified, skewered by barbs, covered in sticky flame, or
+caught by webs, nets, or bolas.
 %%%%
 frigid aura mutation
 

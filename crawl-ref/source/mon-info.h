@@ -130,8 +130,10 @@ enum monster_info_flags
     MB_SCREAMED,
     MB_WORD_OF_RECALL,
     MB_INJURY_BOND,
+#if TAG_MAJOR_VERSION == 34
     MB_WATER_HOLD,
     MB_WATER_HOLD_DROWN,
+#endif
     MB_FLAYED,
 #if TAG_MAJOR_VERSION == 34
     MB_RETCHING,
@@ -193,7 +195,7 @@ enum monster_info_flags
     MB_PINNED,
 #endif
     MB_VILE_CLUTCH,
-    MB_WATERLOGGED,
+    MB_FLOODED,
     MB_CLOUD_RING_THUNDER,
     MB_CLOUD_RING_FLAMES,
     MB_CLOUD_RING_CHAOS,
@@ -241,7 +243,9 @@ enum monster_info_flags
     MB_PLAYER_SERVITOR,
     MB_FROZEN_IN_TERROR,
     MB_SOUL_SPLINTERED,
+#if TAG_MAJOR_VERSION == 34
     MB_ENGULFING_PLAYER,
+#endif
     MB_DOUBLED_VIGOUR,
     MB_ABJURABLE,
     MB_UNREWARDING,

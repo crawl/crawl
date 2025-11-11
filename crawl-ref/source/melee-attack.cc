@@ -535,19 +535,14 @@ void melee_attack::apply_sign_of_ruin_effects()
     }
 }
 
-void melee_attack::do_ooze_engulf()
+void melee_attack::do_ooze_flood()
 {
     if (attacker->is_player()
-        && you.has_mutation(MUT_ENGULF)
+        && you.has_mutation(MUT_OOZE_FLOOD)
         && defender->alive()
-        && !defender->as_monster()->has_ench(ENCH_WATER_HOLD)
-        && attacker->can_engulf(*defender)
         && coinflip())
     {
-        defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, attacker, 1));
-        mprf("You engulf %s in ooze!", defender->name(DESC_THE).c_str());
-        // Smothers sticky flame.
-        defender->expose_to_element(BEAM_WATER, 0);
+        defender->floodify(attacker, random_range(30, 70), "ooze");
     }
 }
 
@@ -907,10 +902,10 @@ bool melee_attack::handle_phase_hit()
     if (damage_done > 0)
     {
         apply_black_mark_effects();
-        do_ooze_engulf();
         try_parry_disarm();
         maybe_do_mesmerism();
     }
+    do_ooze_flood();
 
     if (attacker->is_player())
     {
@@ -3960,36 +3955,12 @@ void melee_attack::mons_apply_attack_flavour()
             stop_delay(true);
         break;
 
-    case AF_ENGULF:
-        if (x_chance_in_y(2, 3) && attacker->can_engulf(*defender))
+    case AF_FLOOD:
+        if (coinflip())
         {
-            const bool watery = attacker->type != MONS_VOID_OOZE;
-            if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
-            {
-                you.duration[DUR_WATER_HOLD] = 10;
-                you.props[WATER_HOLDER_KEY].get_int() = attacker->as_monster()->mid;
-                you.props[WATER_HOLD_SUBSTANCE_KEY].get_string() = watery ? "water" : "ooze";
-            }
-            else if (defender->is_monster()
-                     && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))
-            {
-                defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD,
-                                                             attacker, 1));
-            }
-            else
-                return; //Didn't apply effect; no message
-
-            if (needs_message)
-            {
-                mprf("%s %s %s%s!",
-                     atk_name(DESC_THE).c_str(),
-                     attacker->conj_verb("engulf").c_str(),
-                     defender_name(true).c_str(),
-                     watery ? " in water" : "");
-            }
+            defender->floodify(attacker, random_range(30, 50),
+                               attacker->type == MONS_VOID_OOZE ? "ooze" : "water");
         }
-
-        defender->expose_to_element(BEAM_WATER, 0);
         break;
 
     case AF_PURE_FIRE:

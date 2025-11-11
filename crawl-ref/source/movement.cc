@@ -746,7 +746,6 @@ static spret _rampage_forward(coord_def move)
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
             || you.wizmode_teleported_into_rock);
 
-    you.clear_far_engulf(false, true);
     // No full-LOS stabbing from seven-league.
     if (enhanced)
         behaviour_event(mon_target, ME_ALERT, &you, you.pos());
@@ -755,7 +754,6 @@ static spret _rampage_forward(coord_def move)
     apply_rampage_heal(distance_moved);
     player_did_deliberate_movement(true);
     remove_ice_movement();
-    you.clear_far_engulf(false, true);
     apply_cloud_trail(old_pos);
 
     // If there is somehow an active run delay here, update the travel trail.
@@ -1183,7 +1181,6 @@ void move_player_action(coord_def move)
                 apply_rampage_heal(1);
             player_did_deliberate_movement();
             remove_ice_movement();
-            you.clear_far_engulf(false, true);
             apply_cloud_trail(old_pos);
         }
 

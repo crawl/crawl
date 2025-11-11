@@ -5038,7 +5038,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_HOLY,              "extra damage to undead/demons" },
         { AF_PAIN,              "extra pain damage to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
-        { AF_ENGULF,            "engulf" },
+        { AF_FLOOD,             "flood the defender's lungs" },
         { AF_PURE_FIRE,         "" },
         { AF_VULN,              "reduce willpower" },
         { AF_SHADOWSTAB,        "increased damage when unseen" },
@@ -6311,7 +6311,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (mi.is(MB_UNBLINDABLE))
         extreme_resists.emplace_back("blinding");
-    // Resists engulfing/waterlogging but still dies on falling into deep water.
+    // Resists flooding but still dies on falling into deep water.
     if (mi.is(MB_RES_DROWN))
         base_resists.emplace_back("drowning");
 
