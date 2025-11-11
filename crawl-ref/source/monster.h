@@ -421,7 +421,7 @@ public:
     bool can_see_invisible() const override;
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
-    int reach_range() const override;
+    int reach_range(bool include_weapon = true) const override;
     bool nightvision() const override;
 
     bool is_icy() const override;

@@ -7162,13 +7162,18 @@ bool player::nightvision() const
            || you.unrand_equipped(UNRAND_SHADOWS);
 }
 
-int player::reach_range() const
+int player::reach_range(bool include_weapon) const
 {
+    const int bonus = you.form == transformation::aqua ? 2 : 0;
+
+    if (!include_weapon)
+        return 1 + bonus;
+
     const item_def *wpn = weapon();
     const item_def *off = offhand_weapon();
     const int wpn_reach = wpn ? weapon_reach(*wpn) : 1;
     const int off_reach = off ? weapon_reach(*off) : 1;
-    const int bonus = you.form == transformation::aqua ? 2 : 0;
+
     return max(wpn_reach, off_reach) + bonus;
 }
 

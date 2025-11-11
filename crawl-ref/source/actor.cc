@@ -594,7 +594,7 @@ bool actor::has_invalid_constrictor(bool move) const
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
     if (constricted_type == CONSTRICT_MELEE)
-        return !adjacent(attacker->pos(), pos());
+        return grid_distance(attacker->pos(), pos()) > attacker->reach_range(false);
 
     // Indirect constriction requires the defender not to move.
     return move
@@ -617,11 +617,18 @@ void actor::clear_invalid_constrictions(bool move)
     if (!constricting)
         return;
 
+    const coord_def last_pos = last_move_pos.origin() ? pos() : last_move_pos;
     for (int i = constricting->size() - 1; i >= 0; --i)
     {
         const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->has_invalid_constrictor())
+            || constrictee->has_invalid_constrictor()
+            // Break melee constriction that is still otherwise valid if we
+            // moved further away from our target than we previously were.
+            || (constrictee->constricted_type == CONSTRICT_MELEE
+                && grid_distance(last_pos, constrictee->pos())
+                   < grid_distance(pos(), constrictee->pos()))
+            )
         {
             stop_constricting((*constricting)[i], false, false);
         }
@@ -696,7 +703,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
                 && !confused()
                 && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
                 && !defender.is_insubstantial()
-                && adjacent(pos(), defender.pos())
+                && grid_distance(pos(), defender.pos()) <= reach_range(false)
                 && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
     }
 

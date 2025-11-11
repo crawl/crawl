@@ -6195,7 +6195,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
 }
 
-int monster::reach_range() const
+int monster::reach_range(bool include_weapon) const
 {
     int range = 1;
 
@@ -6211,9 +6211,12 @@ int monster::reach_range() const
         }
     }
 
-    const item_def *wpn = primary_weapon();
-    if (wpn)
-        range = max(range, weapon_reach(*wpn));
+    if (include_weapon)
+    {
+        const item_def *wpn = primary_weapon();
+        if (wpn)
+            range = max(range, weapon_reach(*wpn));
+    }
 
     if (type == MONS_PLAYER_SHADOW && you.form == transformation::aqua)
         range += 2;
