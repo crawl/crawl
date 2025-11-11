@@ -4626,16 +4626,7 @@ bool melee_attack::do_knockback(bool slippery)
     // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
     schedule_trample_follow_fineff(attacker, old_pos);
-
-    if (defender->is_player())
-    {
-        move_player_to_grid(new_pos, false);
-        // Interrupt stair travel and passwall.
-        stop_delay(true);
-    }
-    else
-        defender->move_to_pos(new_pos);
-
+    defender->move_to(new_pos);
     return true;
 }
 
@@ -4683,18 +4674,8 @@ bool melee_attack::do_drag()
     // Only move the attacker back if the defender was already adjacent and we
     // want to move them *into* the attacker's space.
     if (new_defender_pos == attacker->pos())
-    {
-        attacker->move_to_pos(new_attacker_pos);
-        attacker->apply_location_effects(new_attacker_pos);
-        attacker->did_deliberate_movement();
-    }
-
-    defender->move_to_pos(new_defender_pos);
-    defender->apply_location_effects(new_defender_pos);
-    defender->did_deliberate_movement();
-
-    if (defender->is_player())
-        stop_delay(true);
+        attacker->move_to(new_attacker_pos, MV_DELIBERATE);
+    defender->move_to(new_defender_pos);
 
     return true;
 }

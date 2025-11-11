@@ -26,9 +26,6 @@
 
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
-    // We rely on the non-generalized move_player_to_cell.
-    ASSERT(is_player());
-
     if (dest == pos())
         return false;
 
@@ -42,12 +39,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
 
-    stop_delay(true);
-
-    const coord_def origin = pos();
-    move_player_to_grid(dest, false);
-
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
+    place_cloud(CLOUD_TLOC_ENERGY, pos(), 1 + random2(3), this);
+    move_to(dest, MV_TRANSLOCATION);
 
     return true;
 }
@@ -85,7 +78,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         seen_context = jump ? SC_LEAP_IN : SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest, true))
+    if (!move_to(dest, MV_TRANSLOCATION, true))
         return false;
 
     // Leave a cloud.
@@ -96,9 +89,8 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     }
 
     check_redraw(oldplace);
-    apply_location_effects(oldplace);
 
-    mons_relocated(this);
+    finalise_movement();
 
     return true;
 }
@@ -262,7 +254,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
     const coord_def oldplace = mons->pos();
 
     // Move it to its new home.
-    mons->move_to_pos(newpos);
+    mons->move_to(newpos, MV_TRANSLOCATION, true);
 
     const bool now_visible = you.see_cell(newpos);
     if (!silent && now_visible)
@@ -290,9 +282,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
         place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
-    mons->apply_location_effects(oldplace);
-
-    mons_relocated(mons);
+    mons->finalise_movement();
 
     shake_off_monsters(mons);
 }

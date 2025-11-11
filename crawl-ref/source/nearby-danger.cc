@@ -429,7 +429,7 @@ bool bring_to_safety()
     if (min_threat == DBL_MAX)
         return false;
 
-    you.moveto(best_pos);
+    you.move_to(best_pos, MV_INTERNAL);
     return true;
 }
 

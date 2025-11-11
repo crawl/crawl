@@ -1378,7 +1378,7 @@ static void _xom_rearrange_pieces(int sever)
 
     // Swap places with a random monster.
     monster* mon = mons[random2(num_mons)];
-    swap_with_monster(mon);
+    transpose_with_monster(mon);
 
     // Sometimes confuse said monster.
     if (coinflip())
@@ -1396,7 +1396,7 @@ static void _xom_rearrange_pieces(int sever)
             while (mon1 == mon2)
                 mon2 = random2(num_mons);
 
-            if (mons[mon1]->swap_with(mons[mon2]))
+            if (mons[mon1]->swap_with(mons[mon2], MV_TRANSLOCATION))
             {
                 if (!did_message)
                 {

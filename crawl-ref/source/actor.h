@@ -12,6 +12,7 @@
 #include "item-prop-enum.h"
 #include "kill-method-type.h"
 #include "mon-holy-type.h"
+#include "movement-type.h"
 #include "random-var.h"
 #include "ouch.h"
 #include "pronoun-type.h"
@@ -54,23 +55,12 @@ public:
     virtual bool is_firewood() const = 0;
     virtual bool is_peripheral() const = 0;
 
-    // [ds] Low-level moveto() - moves the actor without updating relevant
-    // grids, such as env.mgrid.
-    virtual void moveto(const coord_def &c, bool clear_net = true,
-                        bool clear_constrict = true) = 0;
-
-    // High-level actor movement. If in doubt, use this. Returns false if the
-    // actor cannot be moved to the target, possibly because it is already
-    // occupied.
-    virtual bool move_to_pos(const coord_def &c, bool clear_net = true,
-                             bool force = false, bool clear_constrict = true) = 0;
-
-    virtual void apply_location_effects(const coord_def &oldpos,
-                                        killer_type killer = KILL_NONE,
-                                        int killernum = -1) = 0;
-
-    // Handles sticky flame / barbs on deliberate movement.
-    virtual void did_deliberate_movement() = 0;
+    virtual bool move_to(const coord_def& newpos, movement_type flags = MV_DEFAULT,
+                         bool defer_finalisation = false) = 0;
+    virtual void finalise_movement(const actor* to_blame = nullptr) = 0;
+    void trigger_movement_effects(movement_type mvflags = MV_DEFAULT,
+                                  const actor* to_blame = nullptr);
+    void clear_deferred_move();
 
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
@@ -391,6 +381,11 @@ public:
     // mids of all actors we are constricting.
     // Freed and set to nullptr when empty.
     vector<mid_t> *constricting;
+
+    // Volatile state related to movement finalisation (should not be serialised)
+    bool move_needs_finalisation;
+    coord_def last_move_pos;
+    movement_type last_move_flags;
 
     void start_constricting(actor &whom, constrict_type type, int duration = 0);
 

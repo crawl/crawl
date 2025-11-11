@@ -59,35 +59,35 @@
 
 static void _apply_move_time_taken();
 
-// Swap monster to this location. Player is swapped elsewhere.
-// Moves the monster into position, but does not move the player
-// or apply location effects: the latter should happen after the
-// player is moved.
-static void _swap_places(monster* mons, const coord_def &loc)
+// Move a monster to a given location, in preparation for the player moving to
+// their current location themselves.
+//
+// This position is usually the player's current position, but in some cases
+// may not be (for instance, if the monster being swapped into cannot occupy
+// the player's previous location, it may be pushed elsewhere instead.
+//
+// Note: This does not apply movement finalisation, relying on the caller to do
+//       this later themselves!
+void player_displace_monster(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
     ASSERT(monster_habitable_grid(mons, loc));
+    ASSERT(!monster_at(loc));
 
-    if (monster_at(loc))
-    {
-        mpr("Something prevents you from swapping places.");
-        return;
-    }
-
-    // Friendly seekers dissipate instead of damaging the player.
-    if (mons_is_seeker(*mons))
+    // Friendly seekers dissipate when the player swaps into them.
+    if (loc != you.pos())
+        mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
+    else if (mons_is_seeker(*mons))
     {
         simple_monster_message(*mons, " dissipates!", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
         monster_die(*mons, KILL_RESET, NON_MONSTER, true);
         return;
     }
+    else
+        mprf("You swap places with %s.", mons->name(DESC_THE).c_str());
 
-    mpr("You swap places.");
-
-    mons->move_to_pos(loc, true, true);
-
-    return;
+    mons->move_to(loc, MV_ALLOW_OVERLAP, true);
 }
 
 // Check squares adjacent to player for given feature and return how
@@ -217,13 +217,6 @@ void remove_ice_movement()
         end_frozen_ramparts();
         mprf(MSGCH_DURATION, "The frozen ramparts melt away as you move.");
     }
-}
-
-static void _clear_constriction_data()
-{
-    you.stop_directly_constricting_all(true);
-    if (you.constricted_type == CONSTRICT_MELEE)
-        you.stop_being_constricted();
 }
 
 static void _mark_potential_pursuers(coord_def new_pos)
@@ -673,6 +666,7 @@ static spret _rampage_forward(coord_def move)
 
     const coord_def rampage_destination = _rampage_destination(move, mon_target);
     const coord_def rampage_target = rampage_destination + move;
+    const int distance_moved = (rampage_destination - you.pos()).rdist();
 
     // Will the second move be an attack?
     const bool attacking = mon_target->pos() == rampage_target;
@@ -713,7 +707,6 @@ static spret _rampage_forward(coord_def move)
     }
 
     // We've passed the validity checks, go ahead and rampage.
-    const coord_def old_pos = you.pos();
 
     clear_messages();
     const monster* current = monster_at(you.pos());
@@ -732,15 +725,9 @@ static spret _rampage_forward(coord_def move)
     }
 
     // First, apply any necessary pre-move effects:
-    _clear_constriction_data();
     _mark_potential_pursuers(rampage_destination);
 
-    // Calculate rollpage distance travelled before the move; we don't want to
-    // count potential trap movement or floor transitions later.
-    const int distance_moved = (rampage_destination - old_pos).rdist();
-
-    // stepped = true, we're flavouring this as movement, not a blink.
-    move_player_to_grid(rampage_destination, true);
+    you.move_to(rampage_destination, MV_DELIBERATE | MV_RAMPAGE);
 
     // Verify the new position is valid, in case something unexpected happened.
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
@@ -750,11 +737,7 @@ static spret _rampage_forward(coord_def move)
     if (enhanced)
         behaviour_event(mon_target, ME_ALERT, &you, you.pos());
 
-    // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_rampage_heal(distance_moved);
-    player_did_deliberate_movement(true);
-    remove_ice_movement();
-    apply_cloud_trail(old_pos);
 
     // If there is somehow an active run delay here, update the travel trail.
     if (you_are_delayed() && current_delay()->is_run())
@@ -1160,7 +1143,7 @@ void move_player_action(coord_def move)
         }
 
         if (swap)
-            _swap_places(targ_monst, mon_swap_dest);
+            player_displace_monster(targ_monst, mon_swap_dest);
 
         if (running && env.travel_trail.empty())
             env.travel_trail.push_back(you.pos());
@@ -1169,26 +1152,21 @@ void move_player_action(coord_def move)
 
         _apply_move_time_taken();
 
-        coord_def old_pos = you.pos();
         // Don't trigger things that require movement
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            _clear_constriction_data();
             _mark_potential_pursuers(targ);
-            move_player_to_grid(targ, true);
+            you.move_to(targ, MV_DELIBERATE);
             if (rampaged)
                 apply_rampage_heal(1);
-            player_did_deliberate_movement();
-            remove_ice_movement();
-            apply_cloud_trail(old_pos);
         }
 
         // Now it is safe to apply the swappee's location effects and add
         // trailing effects. Doing so earlier would allow e.g. shadow traps to
         // put a monster at the player's location.
         if (swap)
-            targ_monst->apply_location_effects(targ);
+            targ_monst->finalise_movement();
 
         if (swap && targ_monst->type == MONS_SOLAR_EMBER
             && targ_monst->hit_points < targ_monst->max_hit_points)

@@ -513,12 +513,11 @@ public:
 
     // Set player position without updating view geometry.
     void set_position(const coord_def &c) override;
-    // Low-level move the player. Use this instead of changing pos directly.
-    void moveto(const coord_def &c, bool clear_net = true,
-                bool clear_constrict = true) override;
-    bool move_to_pos(const coord_def &c, bool clear_net = true,
-                     bool /*force*/ = false,
-                     bool clear_constrict = true) override;
+
+    bool move_to(const coord_def& newpos, movement_type flags = MV_DEFAULT,
+                 bool defer_finalisation = false) override;
+    void finalise_movement(const actor* to_blame = nullptr) override;
+
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false) override;
@@ -932,12 +931,6 @@ public:
     int scale_potion_healing(int healing_amount);
     int scale_potion_mp_healing(int healing_amount);
 
-    void apply_location_effects(const coord_def &oldpos,
-                                killer_type killer = KILL_NONE,
-                                int killernum = -1) override;
-
-    void did_deliberate_movement() override;
-
     void be_agile(int pow);
 
     int rev_percent() const;
@@ -1008,15 +1001,10 @@ struct item_def;
 class player_vanishes
 {
     coord_def source;
-    bool movement;
 public:
-    player_vanishes(bool _movement=false);
+    player_vanishes();
     ~player_vanishes();
 };
-
-// Helper. Use move_player_to_grid or player::apply_location_effects instead.
-void moveto_location_effects(dungeon_feature_type old_feat,
-                             bool stepped=false, const coord_def& old_pos=coord_def());
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
                   bool physically = true);

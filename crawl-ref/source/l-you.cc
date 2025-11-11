@@ -1595,7 +1595,7 @@ LUAFN(you_moveto)
 {
     const coord_def place(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2));
     ASSERT(map_bounds(place));
-    you.moveto(place);
+    you.move_to(place, MV_INTERNAL);
     return 0;
 }
 

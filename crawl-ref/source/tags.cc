@@ -3141,7 +3141,7 @@ static void _tag_read_you(reader &th)
     const int y = unmarshallShort(th);
     // SIGHUP during Step from Time/etc is ok.
     ASSERT(!x && !y || in_bounds(x, y));
-    you.moveto(coord_def(x, y));
+    you.move_to(coord_def(x, y), MV_INTERNAL);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_WEIGHTLESS)

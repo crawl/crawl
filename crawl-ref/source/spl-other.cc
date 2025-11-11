@@ -194,13 +194,13 @@ bool try_recall(mid_t mid)
     }
     coord_def empty;
     if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
-        || !mons->move_to_pos(empty))
+        || !mons->move_to(empty, MV_TRANSLOCATION, true))
     {
         return false;
     }
     recall_orders(mons);
     simple_monster_message(*mons, " is recalled.");
-    mons->apply_location_effects(mons->pos());
+    mons->finalise_movement();
     // mons may have been killed, shafted, etc,
     // but they were still recalled!
     return true;

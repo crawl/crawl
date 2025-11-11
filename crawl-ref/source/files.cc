@@ -1161,7 +1161,7 @@ static bool _shaft_safely()
             continue;
         }
 
-        you.moveto(pos);
+        you.move_to(pos, MV_INTERNAL);
         return true;
     }
 
@@ -1184,8 +1184,8 @@ static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
             return;
         // If we can't find a safe place, fall through to default random placement.
     }
-    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
-                                     hatch_name));
+    you.move_to(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
+                                      hatch_name), MV_INTERNAL);
 }
 
 static void _clear_env_map()
@@ -1436,7 +1436,7 @@ static void _place_player_randomly()
     monster* const mons = monster_at(newpos);
     if (mons)
         mons->teleport(true);
-    you.moveto(newpos);
+    you.move_to(newpos, MV_INTERNAL);
 }
 
 /**
@@ -1451,9 +1451,9 @@ static void _place_player(dungeon_feature_type stair_taken,
                           const coord_def &dest_pos, const string &hatch_name)
 {
     if (player_in_branch(BRANCH_ABYSS))
-        you.moveto(ABYSS_CENTRE);
+        you.move_to(ABYSS_CENTRE, MV_INTERNAL);
     else if (!return_pos.origin())
-        you.moveto(return_pos);
+        you.move_to(return_pos, MV_INTERNAL);
     else if (stair_taken == DNGN_ALTAR_IGNIS) // hack: we're rocketeers!
         _place_player_randomly();
     else
@@ -1471,12 +1471,10 @@ static void _place_player(dungeon_feature_type stair_taken,
                 && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
                 if (you.pos() != *di)
-                    you.moveto(*di);
+                    you.move_to(*di, MV_INTERNAL);
                 break;
             }
     }
-
-
 
     // This should fix the "monster occurring under the player" bug.
     monster *mon = monster_at(you.pos());
@@ -1486,7 +1484,7 @@ static void _place_player(dungeon_feature_type stair_taken,
         {
             if (!monster_at(*di) && mon->is_habitable(*di))
             {
-                mon->move_to_pos(*di);
+                mon->move_to(*di, MV_INTERNAL);
                 return;
             }
         }
@@ -1496,6 +1494,8 @@ static void _place_player(dungeon_feature_type stair_taken,
         monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
+
+    you.finalise_movement();
 
     // Dump all arena contents on the player's feet when exiting the arena
     if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
@@ -2033,7 +2033,7 @@ static void _rescue_player_from_wall()
         }
         // if things get this messed up, don't make them worse
         ASSERT(in_bounds(target));
-        you.moveto(target);
+        you.move_to(target, MV_INTERNAL);
     }
 }
 

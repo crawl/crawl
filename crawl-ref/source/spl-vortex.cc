@@ -428,7 +428,7 @@ void polar_vortex_damage(actor *caster, int dur)
             // Temporarily move to (0,0) to allow permutations.
             if (env.mgrid(act->pos()) == act->mindex())
                 env.mgrid(act->pos()) = NON_MONSTER;
-            act->moveto(coord_def());
+            act->set_position(coord_def());
             if (act->is_player())
                 stop_delay(true);
         }
@@ -453,7 +453,7 @@ void polar_vortex_damage(actor *caster, int dur)
         {
             const coord_def newpos = entry.second;
             ASSERT(!actor_at(newpos));
-            act->move_to_pos(newpos);
+            act->move_to(newpos, MV_DEFAULT, true);
             ASSERT(act->pos() == newpos);
 
             if (act->is_player())
@@ -473,6 +473,11 @@ void polar_vortex_damage(actor *caster, int dur)
                      .c_str());
         }
     }
+
+    // Finalise movement (traps, etc.)
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first))
+            act->finalise_movement();
 }
 
 void cancel_polar_vortex()

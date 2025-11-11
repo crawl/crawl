@@ -386,14 +386,12 @@ void trap_def::trigger(actor& triggerer)
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
             // Should always be true.
-            bool moved = triggerer.move_to_pos(to);
+            bool moved = triggerer.move_to(to, MV_TRANSLOCATION);
             ASSERT(moved);
 
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
             know_trap_destroyed = you_trigger;
-            if (you_trigger)
-                id_floor_items();
         }
         else if (you_trigger)
         {
@@ -1354,7 +1352,9 @@ void player::stop_being_caught(bool drop_net)
         if (ctype == CAUGHT_NET && drop_net
             && x_chance_in_y(you.attribute[ATTR_HELD], 9))
         {
-            drop_net_at(pos());
+            // If we're in the middle of moving, drop the net at the player's
+            // previous position.
+            drop_net_at(last_move_pos.origin() ? pos() : last_move_pos);
         }
     }
 

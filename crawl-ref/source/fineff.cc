@@ -999,10 +999,7 @@ void trample_follow_fineff::fire()
         && adjacent(attack->pos(), posn)
         && attack->is_habitable(posn))
     {
-        const coord_def old_pos = attack->pos();
-        attack->move_to_pos(posn);
-        attack->apply_location_effects(old_pos);
-        attack->did_deliberate_movement();
+        attack->move_to(posn, MV_DELIBERATE);
     }
 }
 
@@ -1211,7 +1208,7 @@ void starcursed_merge_fineff::fire()
             coord_def sgn = (*di - mon->pos()).sgn();
             if (mon_can_move_to_pos(mon, sgn))
             {
-                mon->move_to_pos(mon->pos()+sgn, false);
+                mon->move_to(mon->pos()+sgn, MV_DELIBERATE, true);
                 moved = true;
             }
             else if (abs(sgn.x) != 0)
@@ -1219,7 +1216,7 @@ void starcursed_merge_fineff::fire()
                 coord_def dx(sgn.x, 0);
                 if (mon_can_move_to_pos(mon, dx))
                 {
-                    mon->move_to_pos(mon->pos()+dx, false);
+                    mon->move_to(mon->pos()+dx, MV_DELIBERATE, true);
                     moved = true;
                 }
             }
@@ -1228,7 +1225,7 @@ void starcursed_merge_fineff::fire()
                 coord_def dy(0, sgn.y);
                 if (mon_can_move_to_pos(mon, dy))
                 {
-                    mon->move_to_pos(mon->pos()+dy, false);
+                    mon->move_to(mon->pos()+dy, MV_DELIBERATE, true);
                     moved = true;
                 }
             }
@@ -1237,6 +1234,7 @@ void starcursed_merge_fineff::fire()
             {
                 simple_monster_message(*mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
+                mon->finalise_movement();
             }
         }
     }
@@ -1332,18 +1330,14 @@ void explosion_fineff::fire()
             if (newpos == *ai || actor_at(newpos) || !act->is_habitable(newpos))
                 continue;
 
-            act->move_to_pos(newpos);
-            if (act->is_player())
-                stop_delay(true);
+            act->move_to(newpos, MV_DEFAULT, true);
             if (you.can_see(*act))
             {
                 mprf("%s %s knocked back by the blast.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
             }
-
-            act->apply_location_effects(*ai, beam.killer(),
-                                        actor_to_death_source(beam.agent()));
+            act->finalise_movement();
         }
     }
 

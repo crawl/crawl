@@ -331,7 +331,7 @@ static void _passively_summon_butterfly(const monster &summoner)
             closest_pos = *ai;
         }
     }
-    butt->move_to_pos(closest_pos);
+    butt->move_to(closest_pos, MV_INTERNAL);
 }
 
 static bool _mons_can_cast_dig(const monster* mons, bool random)
@@ -831,13 +831,11 @@ static bool _handle_swoop_or_flank(monster& mons)
                 defender->name(DESC_THE).c_str());
             }
         }
-        const coord_def old_pos = mons.pos();
-        mons.move_to_pos(tracer.path_taken[j+1]);
-        // Apply traps and other location effects to the monster.
-        mons.apply_location_effects(old_pos);
+        mons.move_to(tracer.path_taken[j+1], MV_DELIBERATE, true);
         fight_melee(&mons, defender);
         mons.props[SWOOP_COOLDOWN_KEY].get_int() = you.elapsed_time
                                                   + 40 + random2(51);
+        mons.finalise_movement();
         return true;
     }
 
@@ -1324,7 +1322,7 @@ static bool _handle_rending_blade_trigger(monster* blade)
 
             if (_scan_rending_blade_paths(*ai, spots, max_score, best_targ, best_score, best_dist))
             {
-                blade->move_to_pos(*ai, true, true);
+                blade->move_to(*ai, MV_INTERNAL);
                 _fire_rending_blade(*blade, best_targ, pow);
                 return true;
             }
@@ -2041,8 +2039,8 @@ void handle_monster_move(monster* mons)
             if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
                                          -1, &you))
             {
-                mons->move_to_pos(spot, true, true);
                 simple_monster_message(*mons, " returns to your side.");
+                mons->move_to(spot, MV_TRANSLOCATION);
             }
             // If returning is impossible, kill it immediately.
             else
@@ -2472,7 +2470,9 @@ void monster::stop_being_caught(bool drop_net)
         if (ctype == CAUGHT_NET && drop_net
             && x_chance_in_y(get_ench(ENCH_HELD).degree, 9))
         {
-            drop_net_at(pos());
+            // If we're in the middle of moving, drop the net at the monster's
+            // previous position.
+            drop_net_at(last_move_pos.origin() ? pos() : last_move_pos);
         }
     }
 
@@ -2814,7 +2814,7 @@ static bool _jelly_divide(monster& parent)
     child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
     child->set_new_monster_id();
-    child->move_to_pos(child_spot);
+    child->move_to(child_spot, MV_INTERNAL);
 
     if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent.pos()) || player_can_hear(child->pos())))
@@ -3535,24 +3535,18 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         return false;
     }
 
-    if (!mon->swap_with(m2))
+    if (!mon->swap_with(m2, MV_DELIBERATE))
         return false;
 
     _swim_or_move_energy(*mon);
     _swim_or_move_energy(*m2);
 
     mon->check_redraw(m2->pos());
-    mon->apply_location_effects(m2->pos());
-
     m2->check_redraw(mon->pos());
-    m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
-
-    mon->did_deliberate_movement();
-    m2->did_deliberate_movement();
 
     // Pushing past a seeker gets you hit (since only opposed monsters will try)
     if (mons_is_seeker(*m2))
@@ -3764,21 +3758,14 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         mons.seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
 
-    mons.move_to_pos(f, false);
-
-    // Let go of all constrictees; only stop *being* constricted if we are now
-    // too far away (done in move_to_pos above).
-    mons.stop_directly_constricting_all(false);
-
+    mons.move_to(f, MV_DELIBERATE);
     mons.check_redraw(mons.pos() - delta);
-    mons.apply_location_effects(mons.pos() - delta);
+
     if (!invalid_monster(&mons) && you.can_see(mons))
     {
         handle_seen_interrupt(&mons);
         seen_monster(&mons);
     }
-
-    mons.did_deliberate_movement();
 
     _swim_or_move_energy(mons);
 

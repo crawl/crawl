@@ -1933,7 +1933,7 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
 
     // Update merfolk swimming for the form change.
     if (you.has_innate_mutation(MUT_MERTAIL))
-        merfolk_check_swimming(env.grid(you.pos()), false);
+        merfolk_check_swimming(env.grid(you.pos()));
 
     // In the case where we didn't actually meld any gear (but possibly used
     // a new artefact talisman or were forcibly polymorphed away from one),
@@ -2133,7 +2133,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
 
         // Update merfolk swimming for the form change.
         if (you.has_innate_mutation(MUT_MERTAIL))
-            merfolk_check_swimming(env.grid(you.pos()), false);
+            merfolk_check_swimming(env.grid(you.pos()));
     }
 
 #ifdef USE_TILE
@@ -2195,16 +2195,15 @@ void return_to_default_form(bool new_form)
  * redundantly checking conditions.
  *
  * @param old_grid The feature type that the player was previously on.
- * @param stepped  Whether the player is performing a normal walking move.
  */
-void merfolk_check_swimming(dungeon_feature_type old_grid, bool stepped)
+void merfolk_check_swimming(dungeon_feature_type old_grid)
 {
     const dungeon_feature_type grid = env.grid(you.pos());
     if (!you.airborne()
         && feat_is_water(grid)
         && you.has_mutation(MUT_MERTAIL))
     {
-        merfolk_start_swimming(stepped);
+        merfolk_start_swimming();
     }
     else
         merfolk_stop_swimming();
@@ -2214,15 +2213,12 @@ void merfolk_check_swimming(dungeon_feature_type old_grid, bool stepped)
         you.redraw_evasion = true;
 }
 
-void merfolk_start_swimming(bool stepped)
+void merfolk_start_swimming()
 {
     if (you.fishtail)
         return;
 
-    if (stepped)
-        mpr("Your legs become a tail as you enter the water.");
-    else
-        mpr("Your legs become a tail as you dive into the water.");
+    mpr("Your legs become a tail as you dive into the water.");
 
     if (you.invisible())
         mpr("...but don't expect to remain undetected.");

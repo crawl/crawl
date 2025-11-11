@@ -154,10 +154,8 @@ static void _level_place_followers(m_transit_list &m)
             // Now that the monster is onlevel, we can safely apply traps to it.
             if (monster* new_mon = monster_by_mid(mon->mons.mid))
             {
-                // old loc isn't really meaningful
-                new_mon->apply_location_effects(new_mon->pos());
-
                 _handle_monster_leashing(*new_mon, using_stairs);
+                new_mon->trigger_movement_effects();
             }
             m.erase(mon);
         }
@@ -210,7 +208,7 @@ static void _place_oka_duel_target(monster* mons)
     }
 
     if (!targ.origin())
-        mons->move_to_pos(targ);
+        mons->move_to(targ);
 }
 
 static monster* _place_lost_monster(follower &f)
@@ -269,11 +267,8 @@ static void _level_place_lost_monsters(m_transit_list &m)
 
         if (monster* new_mon =_place_lost_monster(*mon))
         {
-            // Now that the monster is on the level, we can safely apply traps
-            // to it.
-            new_mon->apply_location_effects(new_mon->pos());
-
             _handle_monster_leashing(*new_mon, using_stairs);
+            new_mon->trigger_movement_effects();
 
             m.erase(mon);
         }
@@ -561,6 +556,9 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from)
     {
         env.map_knowledge(pos).clear_monster();
         dprf("%s is transported.", fol->name(DESC_THE, true).c_str());
+
+        // Apply traps, etc.
+        fol->trigger_movement_effects(MV_TRANSLOCATION);
 
         return true;
     }

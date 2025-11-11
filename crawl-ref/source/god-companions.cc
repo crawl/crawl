@@ -155,8 +155,7 @@ bool recall_offlevel_ally(mid_t mid)
     simple_monster_message(*mons, " is recalled.");
 
     // Now that the monster is onlevel, we can safely apply traps to it.
-    // old location isn't very meaningful, so use current loc
-    mons->apply_location_effects(mons->pos());
+    mons->trigger_movement_effects(MV_TRANSLOCATION);
     // check if it was killed/shafted by a trap...
     if (!mons->alive())
         return true; // still successfully recalled!

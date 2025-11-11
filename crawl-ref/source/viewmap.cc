@@ -1365,7 +1365,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
             break;
         if (cell_is_solid(state.lpos.pos))
             you.wizmode_teleported_into_rock = true;
-        you.moveto(state.lpos.pos);
+        you.move_to(state.lpos.pos, MV_INTERNAL);
         state.map_alive = false;
         break;
 #endif

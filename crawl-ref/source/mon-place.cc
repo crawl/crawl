@@ -1310,9 +1310,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Set pos and link monster into monster grid.
-    // This must be done after setting the monster's attitude as `move_to_pos`
-    // might check it.
-    if (!dont_place && !mon->move_to_pos(fpos))
+    // This must be done after setting the monster's attitude as `move_to`
+    // might check it (eg: to determine whether a plant can be on the same cell
+    // as a Fedhas-worshipping player.)
+    if (!dont_place && !mon->move_to(fpos, MV_INTERNAL))
     {
         env.mid_cache.erase(mon->mid);
         mon->reset();

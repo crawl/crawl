@@ -701,13 +701,13 @@ move_again:
             return true;
     }
 
-    if (!mon.move_to_pos(pos))
+    if (!mon.move_to(pos))
     {
         _iood_stop(mon);
         return true;
     }
 
-    // move_to_pos() just trashed the coords, set them again
+    // move_to() just trashed the coords, set them again
     mon.props[IOOD_X] = x;
     mon.props[IOOD_Y] = y;
 

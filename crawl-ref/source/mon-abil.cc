@@ -775,7 +775,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         coord_def newpos = mi->pos();
         if (was_alive)
         {
-            mons.move_to_pos(newpos);
+            mons.move_to(newpos, MV_INTERNAL);
             mons.flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
         }
 
@@ -1134,9 +1134,10 @@ bool mon_special_ability(monster* mons)
             break;
         }
 
-        if (mons->move_to_pos(spot))
+        if (mons->move_to(spot, MV_DELIBERATE | MV_TRANSLOCATION, true))
         {
             simple_monster_message(*mons, " flows with the water.");
+            mons->finalise_movement();
             used = true;
         }
     }
@@ -1156,10 +1157,11 @@ bool mon_special_ability(monster* mons)
             break;
 
         const coord_def target = _find_nearer_tree(mons->pos(), foe->pos());
-        if (target.origin() || !mons->move_to_pos(target))
+        if (target.origin() || !mons->move_to(target, MV_DELIBERATE | MV_TRANSLOCATION, true))
             break;
 
         simple_monster_message(*mons, " flows through the trees.");
+        mons->finalise_movement();
         used = true;
     }
     break;

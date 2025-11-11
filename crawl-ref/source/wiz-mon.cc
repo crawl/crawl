@@ -613,7 +613,7 @@ static void _move_player(const coord_def& where)
         env.grid(where) = DNGN_FLOOR;
         set_terrain_changed(where);
     }
-    move_player_to_grid(where, false);
+    you.move_to(where, MV_INTERNAL);
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
@@ -636,7 +636,7 @@ static void _move_monster(const coord_def& where, int idx1)
     const int idx2 = env.mgrid(moves.target);
     monster* mon2 = monster_at(moves.target);
 
-    mon1->moveto(moves.target);
+    mon1->move_to(moves.target, MV_INTERNAL | MV_NO_MGRID_UPDATE);
     env.mgrid(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
@@ -644,7 +644,7 @@ static void _move_monster(const coord_def& where, int idx1)
 
     if (mon2 != nullptr)
     {
-        mon2->moveto(where);
+        mon2->move_to(where, MV_INTERNAL | MV_NO_MGRID_UPDATE);
         mon1->check_redraw(where);
     }
     if (!you.see_cell(moves.target))

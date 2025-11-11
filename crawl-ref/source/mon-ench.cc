@@ -39,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "movement.h"
 #include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
@@ -687,7 +688,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FLIGHT:
-        apply_location_effects(pos(), me.killer(), me.kill_agent());
+        // Fall to the ground and possibly drown.
+        trigger_movement_effects(MV_DEFAULT, me.agent());
         break;
 
     case ENCH_DAZED:
@@ -1186,50 +1188,24 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
 
     bool swapping = false;
     monster* mon = monster_at(newpos);
+    coord_def swapdest;
     if (mon)
     {
-        coord_def swapdest;
-        if (mon->wont_attack()
-            && !mon->is_stationary()
-            && !mons_is_projectile(*mon)
-            && !mon->cannot_act()
-            && !mon->asleep()
-            && swap_check(mon, swapdest, true))
-        {
+        if (mon->wont_attack() && swap_check(mon, swapdest, true))
             swapping = true;
-        }
         else
             return true;
     }
 
-    const coord_def oldpos = you.pos();
-    mpr("The pull of its song draws you forwards.");
+    mprf("The pull of %s song draws you forwards.", mons->name(DESC_ITS).c_str());
 
     if (swapping)
-    {
-        if (monster_at(oldpos))
-        {
-            mprf("Something prevents you from swapping places with %s.",
-                 mon->name(DESC_THE).c_str());
-            return false;
-        }
+        player_displace_monster(mon, swapdest);
 
-        int swap_mon = env.mgrid(newpos);
-        // Pick the monster up.
-        env.mgrid(newpos) = NON_MONSTER;
-        mon->moveto(oldpos);
-
-        // Plunk it down.
-        env.mgrid(mon->pos()) = swap_mon;
-
-        mprf("You swap places with %s.",
-             mon->name(DESC_THE).c_str());
-    }
-    move_player_to_grid(newpos, true);
-    stop_delay(true);
+    you.move_to(newpos, MV_DEFAULT);
 
     if (swapping)
-        mon->apply_location_effects(newpos);
+        mon->finalise_movement();
 
     return false;
 }

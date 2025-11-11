@@ -1034,7 +1034,7 @@ static void _blorkula_bat_death(monster& bat, killer_type killer, int killer_ind
 
     // No other bats left, so pass this death onto Blorkula as 'real'
     monster* blork = _retrieve_saved_blorkula(bat);
-    blork->swap_with(&bat);
+    blork->swap_with(&bat, MV_INTERNAL);
     blork->props[BLORKULA_DIE_FOR_REAL_KEY] = true;
 
     // Otherwise we won't get proper XP or piety for banishing Blork via banishing
@@ -1076,7 +1076,7 @@ void blorkula_bat_merge(monster& bat)
         blork->hit_points = min(blork->max_hit_points,
                                 (blork->max_hit_points * 2 / 7) * bat_count);
     }
-    blork->move_to_pos(pos);
+    blork->move_to(pos, MV_INTERNAL);
 
     _blorkula_bat_merge_message(blork, bat_count);
 }
@@ -1892,7 +1892,7 @@ static void _cassandra_death_ambush()
             {
                 if (mp.is_reachable(pos))
                 {
-                    mon->move_to_pos(pos, true, true);
+                    mon->move_to(pos, MV_INTERNAL);
                     did_place = true;
                     ++placed;
 
@@ -3762,7 +3762,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
 {
     monster mon;
     mon.type = mc;
-    mon.moveto(daddy->pos());
+    mon.set_position(daddy->pos());
     define_monster(mon); // assumes mc is not a zombie
     mon.flags = daddy->flags;
 

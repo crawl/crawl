@@ -329,7 +329,7 @@ static monster* _init_fsim()
     if (!adjacent(mon->pos(), you.pos()))
     {
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (mon->move_to_pos(*ai))
+            if (mon->move_to(*ai, MV_INTERNAL))
                 break;
     }
 
@@ -453,8 +453,8 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     you.stop_constricting_all(true, true);
     mon.stop_constricting_all(true, true);
 
-    mon.move_to_pos(start_pos);
-    you.move_to_pos(you_start_pos);
+    mon.move_to(start_pos, MV_INTERNAL);
+    you.move_to(you_start_pos, MV_INTERNAL);
 }
 
 static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)

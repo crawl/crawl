@@ -1525,7 +1525,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
     abyssal_state.phase = 0.0;
     abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
-    you.moveto(ABYSS_CENTRE);
+    you.move_to(ABYSS_CENTRE, MV_INTERNAL);
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask, true, true);
 }
@@ -1647,7 +1647,7 @@ static void _abyss_generate_new_area()
     _abyss_wipe_unmasked_area(abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
 
-    you.moveto(ABYSS_CENTRE);
+    you.move_to(ABYSS_CENTRE, MV_INTERNAL);
     abyss_genlevel_mask.init(true);
     _generate_area(abyss_genlevel_mask);
     if (one_chance_in(5))

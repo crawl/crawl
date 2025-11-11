@@ -1428,7 +1428,6 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
     ASSERT(foe);
 
     bool moved = false;
-    const coord_def old_pos = foe->pos();
     const int pow = mons_spellpower(caster, SPELL_BECKONING_GALE);
 
     int damage_taken = zap_damage(ZAP_BECKONING_GALE, pow, true).roll();
@@ -1461,7 +1460,7 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
             }
 
             place_cloud(CLOUD_DUST, foe->pos(), random_range(2, 3), &caster);
-            foe->move_to_pos(new_foe_pos);
+            foe->move_to(new_foe_pos, MV_DEFAULT, true);
             moved = true;
         }
     }
@@ -1481,12 +1480,7 @@ static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
               BEAM_MISSILE, KILLED_BY_BEAM, "", "by a beckoning gale");
     _whack(caster, *foe);
 
-    // XXX: It's a bit late now to call `apply_location_effects` for monster's
-    // that are pending revival as `hurt` likely already moved them and even
-    // if it didn't `apply_location_effects` would need fixing to handle them.
-    // Even the messaging for player's that are pending revival isn't good.
-    if (foe->alive() || (foe->is_player() && foe->alive_or_reviving()))
-        foe->apply_location_effects(old_pos);
+    foe->finalise_movement();
 }
 
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
@@ -3276,6 +3270,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
     if (!warden->can_see(you) || warden->foe != MHITYOU)
         return false;
 
+    vector<actor*> pushed;
+
     // Greedy iteration through doors/stairs that you can see.
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
@@ -3316,12 +3312,10 @@ static bool _seal_doors_and_stairs(const monster* warden,
                                                                 dc.x, dc.y);
                     coord_def newpos = targets.front();
 
-                    actor_at(dc)->move_to_pos(newpos);
+                    act->move_to(newpos, MV_DEFAULT, true);
+                    pushed.push_back(act);
                     if (act->is_player())
-                    {
-                        stop_delay(true);
                         player_pushed = true;
-                    }
                     veto_spots.push_back(newpos);
                 }
                 push_items_from(dc, &door_spots);
@@ -3411,6 +3405,9 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
         if (player_pushed)
             mpr("You are pushed out of the doorway!");
+
+        for (actor* act : pushed)
+            act->finalise_movement();
 
         return true;
     }
@@ -3829,7 +3826,6 @@ bool _should_recall(monster* caller)
  */
 bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
 {
-    unsigned short num_recalled = 0;
     vector<monster* > mon_list;
 
     // Build the list of recallable monsters and randomize
@@ -3857,6 +3853,7 @@ bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
     const unsigned short foe = (mons) ? mons->foe   : short{MHITYOU};
 
     // Now actually recall things
+    vector<monster*> recalled;
     for (monster *mon : mon_list)
     {
         const bool could_see = you.can_see(*mon);
@@ -3864,21 +3861,26 @@ bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
         coord_def pos = find_newmons_square(mons_base_type(*mon), target,
                             min_dist + 2, min_dist + 3, min_dist);
 
-        if (!pos.origin() && mon->move_to_pos(pos))
+        if (!pos.origin() && mon->move_to(pos, MV_TRANSLOCATION, true))
         {
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;
-            ++num_recalled;
+            recalled.push_back(mon);
+
             if (you.can_see(*mon))
                 simple_monster_message(*mon, " is recalled.");
             else if (could_see)
                 mprf("%s is recalled away.", mon->name(DESC_THE, true).c_str());
         }
         // Can only recall a couple things at once
-        if (num_recalled == recall_target)
+        if ((int)recalled.size() == recall_target)
             break;
     }
-    return num_recalled;
+
+    for (monster* mon: recalled)
+        mon->finalise_movement();
+
+    return recalled.size();
 }
 
 static bool _valid_vine_spot(coord_def p)
@@ -4012,7 +4014,7 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
         if (base_spot.origin())
             continue;
 
-        beast->move_to_pos(base_spot);
+        beast->move_to(base_spot, MV_INTERNAL);
 
         // Wake the beast up and calculate a path to the druid's target.
         // (Note that both BEH_WANDER and MTRAV_PATROL are necessary for it
@@ -4252,7 +4254,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     // copy. Swap chance is 1/2, then 1/3, 1/4, etc. This gives the caster an
     // even chance of ending up at any of the original or illusion positions.
     if (one_chance_in(clone_index + 2))
-        targ->swap_with(mirror);
+        targ->swap_with(mirror, MV_INTERNAL);
 
     return mirror;
 }
@@ -9061,7 +9063,6 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
     actor* foe = thrower.get_foe();
     ASSERT(foe);
 
-    const coord_def old_pos = throwee.pos();
     const bool thrower_seen = you.can_see(thrower);
     const bool throwee_was_seen = you.can_see(throwee);
     const bool throwee_will_be_seen = throwee.visible_to(&you)
@@ -9099,9 +9100,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
         beam.fire();
     }
 
-    throwee.move_to_pos(chosen_dest);
-    throwee.apply_location_effects(old_pos);
-    throwee.check_redraw(old_pos);
+    throwee.move_to(chosen_dest, MV_DEFAULT, true);
 
     const string killed_by = make_stringf("Hit by %s thrown by %s",
                                           throwee.name(DESC_A, true).c_str(),
@@ -9112,6 +9111,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
 
     // wake sleepy goblins
     behaviour_event(&throwee, ME_DISTURB, &thrower, throwee.pos());
+    throwee.finalise_movement();
 }
 
 static int _throw_ally_site_score(const monster& thrower, const actor& /*throwee*/,

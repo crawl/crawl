@@ -870,7 +870,7 @@ void move_solo_tentacle(monster* tentacle)
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->move_to_pos(new_pos, true, false, false);
+    tentacle->move_to(new_pos, MV_DELIBERATE | MV_PRESERVE_CONSTRICTION, true);
 
     if (pull_constrictee)
     {
@@ -879,16 +879,8 @@ void move_solo_tentacle(monster* tentacle)
             mprf("The vine drags %s backwards!",
                     constrictee->name(DESC_THE).c_str());
         }
-
-        const coord_def old_constrictee_pos  = constrictee->pos();
-        constrictee->move_to_pos(shift_pos);
-        constrictee->apply_location_effects(old_constrictee_pos);
-
-        // Interrupt stair travel and passwall.
-        if (constrictee->is_player())
-            stop_delay(true);
+        constrictee->move_to(shift_pos);
     }
-    tentacle->clear_invalid_constrictions();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -914,7 +906,7 @@ void move_solo_tentacle(monster* tentacle)
     }
 
     tentacle->check_redraw(old_pos);
-    tentacle->apply_location_effects(old_pos);
+    tentacle->finalise_movement();
 }
 
 void move_child_tentacles(monster* mons)
@@ -1063,7 +1055,7 @@ void move_child_tentacles(monster* mons)
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
         // env.mgrid the search fails (sometimes), Don't know why. -cao
-        tentacle->move_to_pos(new_pos);
+        tentacle->move_to(new_pos, MV_DELIBERATE);
 
         if (pull_constrictee)
         {
@@ -1072,17 +1064,8 @@ void move_child_tentacles(monster* mons)
                 mprf("The tentacle pulls %s backwards!",
                      constrictee->name(DESC_THE).c_str());
             }
-
-            if (constrictee->as_player())
-                move_player_to_grid(old_pos, false);
-            else
-                constrictee->move_to_pos(old_pos);
-
-            // Interrupt stair travel and passwall.
-            if (constrictee->is_player())
-                stop_delay(true);
+            constrictee->move_to(old_pos);
         }
-        tentacle->clear_invalid_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
@@ -1102,7 +1085,7 @@ void move_child_tentacles(monster* mons)
         }
 
         tentacle->check_redraw(old_pos);
-        tentacle->apply_location_effects(old_pos);
+        tentacle->finalise_movement();
     }
 }
 

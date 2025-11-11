@@ -566,111 +566,151 @@ static void _enter_water(dungeon_feature_type old_feat,
         mpr("Don't expect to remain undetected while in the water.");
 }
 
-void moveto_location_effects(dungeon_feature_type old_feat,
-                             bool stepped, const coord_def& old_pos)
+bool player::move_to(const coord_def& newpos, movement_type flags, bool defer_finalisation)
 {
-    const dungeon_feature_type new_grid = env.grid(you.pos());
+    ASSERT(!crawl_state.game_is_arena());
 
-    // Terrain effects.
+    // For internal movements, do the bare minimum to reposition the player and
+    // do no validation. (This is often used as an 'inbetween' state, during
+    // multi-part movements or level transitions).
+    if ((flags & MV_INTERNAL))
+    {
+        crawl_view.set_player_at(newpos);
+        set_position(newpos);
+        return true;
+    }
+
+    // Ensure that the player is legally allowed to stand here.
+    ASSERT_IN_BOUNDS(newpos);
+    ASSERT(can_pass_through_feat(env.grid(newpos)));
+
+    ASSERT(!monster_at(newpos)
+           || (flags & MV_ALLOW_OVERLAP)
+           || fedhas_passthrough(monster_at(newpos))
+           || mons_is_wrath_avatar(*monster_at(newpos)));
+
+    // Store current position for later finalisation (but if we have been moved
+    // multiple times in sequence before finalisation, which some effects like
+    // Gavotte do, only remember the first tile we left).
+    if (!move_needs_finalisation)
+        last_move_pos = pos();
+    move_needs_finalisation = true;
+    last_move_flags = flags;
+
+    // Move the player to new location.
+    crawl_view.set_player_at(newpos);
+    set_position(newpos);
+
+    viewwindow();
+    update_screen();
+
+    // Finalise immediately if we weren't told to defer.
+    if (!defer_finalisation)
+        finalise_movement();
+
+    return true;
+}
+
+void player::finalise_movement(const actor* /*to_blame*/)
+{
+    if (!move_needs_finalisation || pending_revival)
+        return;
+
+    if (!(last_move_flags & MV_PRESERVE_CONSTRICTION))
+        clear_invalid_constrictions();
+
+    if (last_move_flags & MV_TRANSLOCATION)
+        stop_being_caught(true);
+
+    if (last_move_pos != you.pos())
+    {
+        stop_channelling_spells();
+        remove_ice_movement();
+
+        if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
+            player_did_deliberate_movement((bool)(last_move_flags & MV_RAMPAGE));
+    }
+
+    // Assuming that entering the same square means coming from above (flight)
+    const dungeon_feature_type new_grid = env.grid(pos());
+    const bool from_above = (last_move_pos == pos());
+    const dungeon_feature_type old_grid =
+        (from_above) ? DNGN_FLOOR : env.grid(last_move_pos);
+
     if (is_feat_dangerous(new_grid))
         fall_into_a_pool(new_grid);
 
-    // called after fall_into_a_pool, in case of emergency untransform
-    if (you.has_innate_mutation(MUT_MERTAIL))
-        merfolk_check_swimming(old_feat, stepped);
+    if (has_innate_mutation(MUT_MERTAIL))
+        merfolk_check_swimming(old_grid);
 
-    if (!you.airborne())
+    if (!airborne())
     {
         if (feat_is_water(new_grid))
-            _enter_water(old_feat, new_grid, stepped);
-        else if (you.props.exists(TEMP_WATERWALK_KEY))
-            you.props.erase(TEMP_WATERWALK_KEY);
+        {
+            const bool stepped = (last_move_pos == pos() || !(last_move_flags & MV_TRANSLOCATION));
+            _enter_water(old_grid, new_grid, stepped);
+        }
+        else if (props.exists(TEMP_WATERWALK_KEY))
+            props.erase(TEMP_WATERWALK_KEY);
+    }
+
+    if (last_move_pos != pos())
+    {
+        cloud_struct* cloud = cloud_at(pos());
+        if (cloud && cloud->type == CLOUD_BLASTMOTES)
+            explode_blastmotes_at(pos()); // schedules a fineff
+
+        // Traps go off.
+        // (But not when losing flight - i.e., moving into the same tile)
+        trap_def* ptrap = trap_at(pos());
+        if (ptrap)
+            ptrap->trigger(you);
+
+        if (env.grid(pos()) == DNGN_BINDING_SIGIL)
+            trigger_binding_sigil(you);
+
+        apply_cloud_trail(last_move_pos);
     }
 
     id_floor_items();
 
-    // Falling into a toxic bog, take the damage
-    if (old_pos == you.pos() && stepped)
-        actor_apply_toxic_bog(&you);
-
-    if (!actor_slime_wall_immune(&you))
+    if (!actor_slime_wall_immune(this))
     {
-        const bool was_slimy = slime_wall_neighbour(old_pos);
-        const bool is_slimy = slime_wall_neighbour(you.pos());
+        const bool was_slimy = slime_wall_neighbour(last_move_pos);
+        const bool is_slimy = slime_wall_neighbour(pos());
         if (was_slimy || is_slimy)
        {
-           you.redraw_armour_class = true;
-           you.wield_change = true;
+           redraw_armour_class = true;
+           wield_change = true;
            if (!was_slimy)
                mpr("Acid dripping from the walls corrodes you.");
        }
     }
 
-    if (old_pos != you.pos())
-    {
-        cloud_struct* cloud = cloud_at(you.pos());
-        if (cloud && cloud->type == CLOUD_BLASTMOTES)
-            explode_blastmotes_at(you.pos()); // schedules a fineff
-
-        // Traps go off.
-        // (But not when losing flight - i.e., moving into the same tile)
-        trap_def* ptrap = trap_at(you.pos());
-        if (ptrap)
-            ptrap->trigger(you);
-
-        if (env.grid(you.pos()) == DNGN_BINDING_SIGIL)
-            trigger_binding_sigil(you);
-    }
-
-    if (stepped)
-        _moveto_maybe_repel_stairs();
+    _moveto_maybe_repel_stairs();
 
     // Reveal adjacent mimics.
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    for (adjacent_iterator ai(pos(), false); ai; ++ai)
         discover_mimic(*ai);
 
-    bool was_running = you.running;
+    const bool was_running = you.running;
 
     update_monsters_in_view();
-    if (check_for_interesting_features() && you.running.is_explore())
+    if (check_for_interesting_features() && running.is_explore())
         stop_running();
+
+    // Most forms of movement that aren't the player manually taking steps should
+    // interrupt delays.
+    if (!(last_move_flags & (MV_DELIBERATE | MV_NO_TRAVEL_STOP) || (last_move_flags & MV_TRANSLOCATION)))
+        stop_delay(true);
 
     // If travel was interrupted, we need to add the last step
     // to the travel trail.
-    if (was_running && !you.running)
-        env.travel_trail.push_back(you.pos());
+    if (was_running && !running)
+        env.travel_trail.push_back(pos());
+
+    clear_deferred_move();
 }
-
-// Use this function whenever the player enters (or lands and thus re-enters)
-// a grid.
-//
-// stepped     - normal walking moves
-void move_player_to_grid(const coord_def& p, bool stepped)
-{
-    ASSERT(!crawl_state.game_is_arena());
-    ASSERT_IN_BOUNDS(p);
-
-    // assuming that entering the same square means coming from above (flight)
-    const coord_def old_pos = you.pos();
-    const bool from_above = (old_pos == p);
-    const dungeon_feature_type old_grid =
-        (from_above) ? DNGN_FLOOR : env.grid(old_pos);
-
-    // Really must be clear.
-    ASSERT(you.can_pass_through_feat(env.grid(p)));
-
-    ASSERT(!monster_at(p)
-           || fedhas_passthrough(monster_at(p))
-           || mons_is_wrath_avatar(*monster_at(p)));
-
-    // Move the player to new location.
-    you.moveto(p, true);
-    viewwindow();
-    update_screen();
-
-    moveto_location_effects(old_grid, stepped, old_pos);
-}
-
 
 /**
  * Check if the given terrain feature is safe for the player to move into.
@@ -5244,7 +5284,7 @@ bool land_player(bool quiet)
         mpr("You float gracefully downwards.");
 
     // Re-enter the terrain.
-    move_player_to_grid(you.pos(), false);
+    you.trigger_movement_effects();
     return true;
 }
 
@@ -5519,6 +5559,8 @@ player::player()
 
     clear_constricted();
     constricting = nullptr;
+
+    clear_deferred_move();
 
     // Protected fields:
     clear_place_info();

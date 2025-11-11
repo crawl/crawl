@@ -2055,9 +2055,7 @@ static void _cheibriados_displace_monster(monster* mon)
         mp.set_range(50);   // Don't search further than this
         if (mp.init_pathfind(pos, mon->pos(), false))
         {
-            coord_def old_pos = mon->pos();
-            mon->move_to_pos(pos, true);
-            mon->apply_location_effects(old_pos);
+            mon->move_to(pos, MV_INTERNAL);
             break;
         }
         else
@@ -2074,8 +2072,9 @@ void cheibriados_time_step(int pow)
     // effects will work properly). This is more than adequate for most purposes
     // and monster wandering behavior doesn't improve tremendously beyond this.
     you.duration[DUR_TIME_STEP] = 100;
+    dec_frozen_ramparts(1000);
     {
-        player_vanishes absent(true);
+        player_vanishes absent;
 
         you.time_taken = 10;
         _run_time_step();
@@ -2860,15 +2859,14 @@ spret dithmenos_shadowslip(bool fail)
     you.stop_being_constricted(false, "slip");
 
     const coord_def shadow_pos = shadow->pos();
-    const coord_def you_pos = you.pos();
 
     mpr("You swap places with your shadow and weave the vestiges of your form into it.");
 
-    shadow->move_to_pos(you.pos(), true, true);
-    you.move_to_pos(shadow_pos, true, true);
+    shadow->move_to(you.pos(), MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
+    you.move_to(shadow_pos, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
 
-    you.apply_location_effects(you_pos);
-    shadow->apply_location_effects(shadow_pos);
+    you.finalise_movement();
+    shadow->finalise_movement();
 
     // Paranoia, in case swapping somehow killed our shadow entirely
     // (But clouds don't trigger without time passing? Maybe there's some way...)
@@ -5518,8 +5516,7 @@ bool ru_power_leap()
         return true;
     }
 
-    move_player_to_grid(beam.target, false);
-    player_did_deliberate_movement();
+    you.move_to(beam.target, MV_DELIBERATE);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5832,8 +5829,7 @@ bool uskayaw_line_pass()
     {
         you.stop_being_constricted(false, "dance");
         line_pass.fire();
-        move_player_to_grid(beam.target, false);
-        player_did_deliberate_movement();
+        you.move_to(beam.target, MV_DELIBERATE);
     }
 
     crawl_state.cancel_cmd_again();
@@ -5939,7 +5935,7 @@ spret uskayaw_grand_finale(bool fail)
 
     // a lost soul may sneak in here
     if (!mons->alive() && !monster_at(beam.target))
-        move_player_to_grid(beam.target, false);
+        you.move_to(beam.target, MV_TRANSLOCATION | MV_DELIBERATE);
     else
         mpr("You spring back to your original position.");
 
@@ -6178,11 +6174,11 @@ spret hepliaklqana_transference(bool fail)
     {
         if (cancel_harmful_move(false))
             return spret::abort;
-        ancestor->move_to_pos(target, true, true);
-        victim->move_to_pos(destination, true, true);
+        ancestor->move_to(target, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
+        victim->move_to(destination, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
     }
     else
-        ancestor->swap_with(victim->as_monster());
+        ancestor->swap_with(victim->as_monster(), MV_TRANSLOCATION, true);
 
     mprf("%s swap%s with %s!",
          victim->name(DESC_THE).c_str(),
@@ -6192,11 +6188,8 @@ spret hepliaklqana_transference(bool fail)
     place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
     place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
 
-    if (victim->is_monster())
-        mons_relocated(victim->as_monster());
-
-    ancestor->apply_location_effects(destination);
-    victim->apply_location_effects(target);
+    ancestor->finalise_movement();
+    victim->finalise_movement();
     if (victim->is_monster())
         behaviour_event(victim->as_monster(), ME_DISTURB, &you, target);
 
@@ -6393,9 +6386,9 @@ bool wu_jian_do_wall_jump(coord_def targ)
     }
 
     auto initial_position = you.pos();
-    you.moveto(wall_jump_landing_spot);
+    you.stop_being_constricted(false, "jump");
+    you.move_to(wall_jump_landing_spot, MV_DELIBERATE, true);
     bool attacked = wu_jian_wall_jump_effects();
-    you.apply_location_effects(initial_position);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
@@ -6412,6 +6405,8 @@ bool wu_jian_do_wall_jump(coord_def targ)
     you.turn_is_over = true;
     request_autopickup();
     wu_jian_post_move_effects(true, initial_position);
+
+    you.finalise_movement();
 
     return true;
 }
@@ -6502,12 +6497,9 @@ spret wu_jian_wall_jump_ability()
     if (!wu_jian_do_wall_jump(beam.target))
         return spret::abort;
 
-    you.stop_being_constricted(false, "jump");
-
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    player_did_deliberate_movement();
     return spret::success;
 }
 

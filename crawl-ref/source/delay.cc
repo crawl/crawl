@@ -18,6 +18,7 @@
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
+#include "coordit.h"
 #include "corpse.h"
 #include "database.h"
 #include "describe.h"
@@ -42,6 +43,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-gear.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -798,26 +800,32 @@ void PasswallDelay::finish()
         break;
     }
 
-    // Move any monsters out of the way.
+    // Try to move any monsters out of the way.
     if (monster* m = monster_at(dest))
     {
         // One square only, this isn't a tloc spell!
-        if (!m->shift())
+        for (fair_adjacent_iterator ai(dest); ai; ++ai)
+        {
+            if (!actor_at(*ai) && m->is_habitable(*ai))
+            {
+                m->move_to(*ai);
+                // Wake the monster if it's asleep.
+                behaviour_event(m, ME_ALERT, &you);
+                break;
+            }
+        }
+
+        // If we failed to move them, cancel.
+        if (m->pos() == dest)
         {
             mpr("...and sense your way blocked. You quickly turn back.");
             redraw_screen();
             update_screen();
             return;
         }
-
-        move_player_to_grid(dest, false);
-
-        // Wake the monster if it's asleep.
-        if (m)
-            behaviour_event(m, ME_ALERT, &you);
     }
-    else
-        move_player_to_grid(dest, false);
+
+    you.move_to(dest, MV_DELIBERATE | MV_TRANSLOCATION);
 
     // the last phase of the delay is a fake (0-time) turn, so world_reacts
     // and player_reacts aren't triggered. Need to do a tiny bit of cleanup.

@@ -28,8 +28,9 @@
 #include "tileview.h"
 #include "traps.h"
 
-// Make the player swap positions with a given monster.
-void swap_with_monster(monster* mon_to_swap)
+// Magically swap the player's position with a given monster, even entangling
+// each one in the other's nets.
+void transpose_with_monster(monster* mon_to_swap)
 {
     monster& mon(*mon_to_swap);
     ASSERT(mon.alive());
@@ -53,12 +54,14 @@ void swap_with_monster(monster* mon_to_swap)
 
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
+    // Must remove nets first (with no drop) so that we don't clone nets during
+    // this swap.
     mon.stop_being_caught();
-    mon.move_to_pos(you.pos(), false, true);
+    mon.move_to(you.pos(), MV_TRANSLOCATION | MV_ALLOW_OVERLAP);
 
     // Move you to its previous location.
     you.stop_being_caught();
-    move_player_to_grid(newpos, false);
+    you.move_to(newpos, MV_TRANSLOCATION | MV_ALLOW_OVERLAP);
 
     // Exchange caught status.
     if (you_caught != CAUGHT_NONE)

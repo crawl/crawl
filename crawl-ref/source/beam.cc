@@ -5403,9 +5403,7 @@ void bolt::pull_actor(actor *act, int dam)
             break;
         }
 
-        act->move_to_pos(newpos);
-        if (act->is_player())
-            stop_delay(true);
+        act->move_to(newpos, MV_DEFAULT);
     }
 
     if (newpos == oldpos)
@@ -5420,8 +5418,7 @@ void bolt::pull_actor(actor *act, int dam)
     if (act->pos() != newpos)
         act->collide(newpos, agent(), default_collision_damage(ench_power, true).roll());
 
-    act->apply_location_effects(oldpos, killer(),
-                                actor_to_death_source(agent()));
+    act->finalise_movement();
 }
 
 // Return true if the player's god will be unforgiving about the effects

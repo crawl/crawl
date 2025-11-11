@@ -183,7 +183,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 {
     // Transiting monsters exist outside the normal monster list (env.mons or
     // env.mons for short). Be careful not to write them into the monster grid, by,
-    // for example, calling monster::move_to_pos on them.
+    // for example, calling monster::move_to() on them.
     // See _daction_hog_to_human for an example.
     switch (act)
     {
@@ -452,13 +452,13 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     *mon = orig;
 
     // If the hog is in transit, then it is NOT stored in the normal
-    // monster list (env.mons or env.mons for short). We cannot call move_to_pos
-    // on such a hog, because move_to_pos will attempt to update the
-    // monster grid (env.mgrid or env.mgrid for short). Since the hog is not
-    // stored in the monster list, this will corrupt the grid. The transit code
-    // will update the grid properly once the transiting hog has been placed.
+    // monster list (env.mons or env.mons for short). We cannot call move_to()
+    // on such a hog, because move_to() will attempt to update the
+    // monster grid (ie: env.mgrid). Since the hog is not stored in the monster
+    // list, this will corrupt the grid. The transit code will update the grid
+    // properly once the transiting hog has been placed.
     if (!in_transit)
-        mon->move_to_pos(pos);
+        mon->move_to(pos, MV_INTERNAL);
     // "else {mon->position = pos}" is unnecessary because the transit code will
     // ignore the old position anyway.
     mon->enchantments = enchantments;

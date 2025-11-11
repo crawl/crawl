@@ -165,20 +165,19 @@ public:
     bool matches_player_speed() const;
     int  player_speed_energy() const;
     void check_redraw(const coord_def &oldpos) const;
-    void apply_location_effects(const coord_def &oldpos,
-                                killer_type killer = KILL_NONE,
-                                int killernum = -1) override;
-    void did_deliberate_movement() override;
     void self_destruct() override;
 
     void set_position(const coord_def &c) override;
-    void moveto(const coord_def& c, bool clear_net = true,
-                bool clear_constrict = true) override;
-    bool move_to_pos(const coord_def &newpos, bool clear_net = true,
-                     bool force = false, bool clear_constrict = true) override;
-    bool swap_with(monster* other);
     bool blink_to(const coord_def& c, bool quiet = false) override;
     bool blink_to(const coord_def& c, bool quiet, bool jump);
+
+    bool move_to(const coord_def& newpos, movement_type flags = MV_DEFAULT,
+                 bool defer_finalisation = false) override;
+    void finalise_movement(const actor* to_blame = nullptr) override;
+
+    bool swap_with(monster* other, movement_type mvflags = MV_DEFAULT,
+                   bool defer_finalisation = false);
+
     kill_category kill_alignment() const override;
 
     int  foe_distance() const;
@@ -510,7 +509,6 @@ public:
     void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
-    bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp_target = -1);
 
     void put_to_sleep(actor *attacker, int duration = 0, bool hibernate = false)

@@ -358,9 +358,8 @@ monster_type transform_mons();
 string blade_parts(bool terse = false);
 const char* transform_name(transformation form = you.form);
 
-void merfolk_check_swimming(dungeon_feature_type old_grid,
-                            bool stepped = false);
-void merfolk_start_swimming(bool step = false);
+void merfolk_check_swimming(dungeon_feature_type old_grid);
+void merfolk_start_swimming();
 void merfolk_stop_swimming();
 
 transformation form_for_talisman(const item_def &talisman);

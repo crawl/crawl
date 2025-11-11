@@ -1045,9 +1045,7 @@ bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
             break;
         }
 
-        move_to_pos(newpos);
-        if (is_player())
-            stop_delay(true);
+        move_to(newpos, MV_DEFAULT, true);
     }
 
     if (newpos == oldpos)
@@ -1070,8 +1068,7 @@ bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
     if (is_monster())
         as_monster()->speed_increment -= random2(6) + 4;
 
-    apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
-                                actor_to_death_source(&cause));
+    finalise_movement();
 
     return true;
 }
@@ -1104,7 +1101,6 @@ coord_def actor::stumble_pos(coord_def targ) const
 
 void actor::stumble_away_from(coord_def targ, string src)
 {
-    const coord_def oldpos = pos();
     const coord_def newpos = stumble_pos(targ);
 
     if (newpos.origin()
@@ -1119,21 +1115,34 @@ void actor::stumble_away_from(coord_def targ, string src)
     else if (you.can_see(*this) && !src.empty())
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
-    move_to_pos(newpos);
-
-    stop_directly_constricting_all(true);
-    if (constricted_type == CONSTRICT_MELEE)
-        stop_being_constricted();
-
-    apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
-                                               : KILL_MON_MISSILE,
-                           actor_to_death_source(this));
+    move_to(newpos);
 }
 
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
+}
+
+// Triggers post-movement effects for this actor as if they had just moved into
+// their current location by some means.
+//
+// Prefer using ::finalise_movement() wherever possible. This should ideally be
+// used only for situations where that is not practical, such as moving a
+// monster between floors.
+void actor::trigger_movement_effects(movement_type mvflags, const actor* to_blame)
+{
+    move_needs_finalisation = true;
+    last_move_pos = pos();
+    last_move_flags = mvflags;
+    finalise_movement(to_blame);
+}
+
+void actor::clear_deferred_move()
+{
+    move_needs_finalisation = false;
+    last_move_pos = coord_def();
+    last_move_flags = MV_DEFAULT;
 }
 
 /**

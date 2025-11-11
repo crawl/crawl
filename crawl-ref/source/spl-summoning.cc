@@ -1876,7 +1876,7 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
         {
             coord_def empty;
             if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2, empty)
-                && battlesphere->move_to_pos(empty))
+                && battlesphere->move_to(empty, MV_TRANSLOCATION, true))
             {
                 recalled = true;
             }
@@ -1898,6 +1898,7 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
         battlesphere->set_hit_dice(_battlesphere_hd(pow));
         timer.duration = min(timer.duration + random_range(300, 500), 500);
         battlesphere->update_ench(timer);
+        battlesphere->finalise_movement();
     }
     else
     {
@@ -2131,7 +2132,7 @@ bool trigger_battlesphere(actor* agent)
         if (_battlesphere_should_fire(target, *di, beam, fallback_pos))
         {
             const coord_def old_pos = battlesphere->pos();
-            battlesphere->move_to_pos(*di, true, true);
+            battlesphere->move_to(*di, MV_DELIBERATE, true);
 
             // Show battlesphere at its new location and attempt to prevent it
             // from moving further until after the next action.
@@ -2139,7 +2140,7 @@ bool trigger_battlesphere(actor* agent)
             battlesphere->speed_increment -= 30;
 
             _fire_battlesphere(battlesphere, beam);
-            battlesphere->apply_location_effects(old_pos);
+            battlesphere->finalise_movement();
             return true;
         }
     }
@@ -2149,13 +2150,13 @@ bool trigger_battlesphere(actor* agent)
     if (!fallback_pos.origin())
     {
         const coord_def old_pos = battlesphere->pos();
-        battlesphere->move_to_pos(fallback_pos, true, true);
+        battlesphere->move_to(fallback_pos, MV_DELIBERATE, true);
         battlesphere->check_redraw(old_pos);
         battlesphere->speed_increment -= 30;
 
         beam.source = fallback_pos;
         _fire_battlesphere(battlesphere, beam);
-        battlesphere->apply_location_effects(old_pos);
+        battlesphere->finalise_movement();
         return true;
     }
 
@@ -3963,9 +3964,9 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     if (can_drag)
         agent_pos += drag_shift;
 
-    // Move agent to theiir destination grid *first*, so there's room to move the
+    // Move agent to their destination grid *first*, so there's room to move the
     // other things (but don't trigger location effects yet)
-    agent.move_to_pos(agent_pos, true, true);
+    agent.move_to(agent_pos, MV_DEFAULT, true);
 
     actor* victim = actor_at(targ);
 
@@ -3979,6 +3980,8 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     // Probably only possible if the monster array is filled?
     if (!croc)
     {
+        agent.move_to(start_pos, MV_INTERNAL);
+        agent.clear_deferred_move();
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
@@ -4028,7 +4031,7 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
         }
     }
 
-    agent.apply_location_effects(start_pos);
+    agent.finalise_movement();
 
     return spret::success;
 }
@@ -4055,7 +4058,7 @@ static void _paragon_tempest(const coord_def& target)
         visual.aimed_at_spot = true;
         visual.fire();
 
-        paragon->move_to_pos(target, true, true);
+        paragon->move_to(target, MV_INTERNAL);
         paragon->check_redraw(old_pos);
     }
 

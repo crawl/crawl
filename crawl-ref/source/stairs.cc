@@ -791,7 +791,7 @@ void floor_transition(dungeon_feature_type how,
     you.stop_being_constricted();
     you.clear_beholders();
     you.clear_fearmongers();
-    dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
+    remove_ice_movement();
     if (you.duration[DUR_OOZEMANCY])
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
@@ -1100,7 +1100,6 @@ void floor_transition(dungeon_feature_type how,
 
     new_level();
 
-    moveto_location_effects(whence);
     if (is_hell_subbranch(you.where_are_you))
         _hell_effects();
 
@@ -1115,8 +1114,8 @@ void floor_transition(dungeon_feature_type how,
     // Preventing obvious finding of stairs at your position.
     env.map_seen.set(you.pos());
 
-    viewwindow();
-    update_screen();
+    // Apply location effects.
+    you.trigger_movement_effects(MV_NO_TRAVEL_STOP);
 
     autotoggle_autopickup(false);
     request_autopickup();

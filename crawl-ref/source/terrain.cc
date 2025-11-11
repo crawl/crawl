@@ -1172,7 +1172,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     {
         if (monster* mon = monster_at(src))
         {
-            mon->moveto(dst);
+            mon->move_to(dst, MV_INTERNAL);
             if (mon->type == MONS_ELDRITCH_TENTACLE)
             {
                 if (mon->props.exists(BASE_POSITION_KEY))
@@ -1184,8 +1184,6 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
                 }
 
             }
-            env.mgrid(dst) = env.mgrid(src);
-            env.mgrid(src) = NON_MONSTER;
         }
     }
 
@@ -1270,7 +1268,7 @@ void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     if (monster* m = monster_at(pos))
-        m->apply_location_effects(pos);
+        m->trigger_movement_effects();
 }
 
 // Clear blood or off of terrain that shouldn't have it. Also clear of blood if
@@ -1310,7 +1308,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-        move_player_to_grid(pos, false);
+        you.trigger_movement_effects();
     else
         push_or_teleport_actor_from(pos);
 }
@@ -2449,9 +2447,9 @@ coord_def push_actor_from(const coord_def& pos,
     const coord_def newpos = random ? targets[random2(targets.size())]
                                     : targets.front();
     ASSERT(!newpos.origin());
-    act->move_to_pos(newpos);
-    // The new position of the monster is now an additional veto spot for
-    // monsters.
+    act->move_to(newpos, MV_INTERNAL);
+    // The new position of the monster might be used as an additional veto spot
+    // for other monsters.
     return newpos;
 }
 
@@ -2482,10 +2480,7 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
                      && !testbits(env.pgrid(*di), FPROP_NO_TELE_INTO))
                     || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
             {
-                if (act->is_player())
-                    move_player_to_grid(*di, false);
-                else
-                    act->move_to_pos(*di);
+                act->move_to(*di, MV_INTERNAL);
                 return act->pos();
             }
         }

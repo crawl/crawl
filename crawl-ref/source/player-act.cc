@@ -67,39 +67,11 @@ bool player::alive_or_reviving() const
     return !crawl_state.game_is_arena();
 }
 
-// n.b. it might be better to use this as player::moveto's function signature
-// itself (or something more flexible), but that involves annoying refactoring
-// because of the actor/monster signature.
-static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net,
-                           bool clear_constrict = true)
+player_vanishes::player_vanishes()
+    : source(you.pos())
 {
-    if (c != you.pos())
-    {
-        if (clear_net)
-            you.stop_being_caught(true);
-
-        // we need to do this even for fake movement -- otherwise nothing ends
-        // the dur for temporal distortion. (I'm not actually sure why?)
-        stop_channelling_spells();
-        if (real_movement)
-        {
-            // Remove spells that break upon movement
-            remove_ice_movement();
-        }
-    }
-
-    crawl_view.set_player_at(c);
-    you.set_position(c);
-
-    // clear invalid constrictions even with fake movement
-    if (clear_constrict)
-        you.clear_invalid_constrictions();
-}
-
-player_vanishes::player_vanishes(bool _movement)
-    : source(you.pos()), movement(_movement)
-{
-    _player_moveto(coord_def(0,0), movement, true);
+    stop_channelling_spells();
+    you.move_to(coord_def(), MV_INTERNAL);
 }
 
 player_vanishes::~player_vanishes()
@@ -113,33 +85,7 @@ player_vanishes::~player_vanishes()
             monster_teleport(stubborn, true, true);
     }
 
-    _player_moveto(source, movement, true);
-}
-
-void player::moveto(const coord_def &c, bool clear_net, bool clear_constrict)
-{
-    _player_moveto(c, true, clear_net, clear_constrict);
-}
-
-bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/,
-                         bool clear_constrict)
-{
-    if (actor_at(c))
-        return false;
-    moveto(c, clear_net, clear_constrict);
-    return true;
-}
-
-void player::apply_location_effects(const coord_def &oldpos,
-                                    killer_type /*killer*/,
-                                    int /*killernum*/)
-{
-    moveto_location_effects(env.grid(oldpos));
-}
-
-void player::did_deliberate_movement()
-{
-    player_did_deliberate_movement();
+    you.move_to(source, MV_INTERNAL);
 }
 
 void player::set_position(const coord_def &c)

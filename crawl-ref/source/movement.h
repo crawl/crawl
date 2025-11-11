@@ -5,6 +5,8 @@
 
 #pragma once
 
+void player_displace_monster(monster* mons, const coord_def &loc);
+
 void player_did_deliberate_movement(bool rampaging = false);
 void remove_ice_movement();
 bool cancel_harmful_move(bool physically = true, bool rampaging = false);

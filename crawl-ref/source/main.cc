@@ -1616,13 +1616,14 @@ static void _take_transporter()
             mpr("The transporter is blocked by a creature on the other side!");
             return;
         }
+        // Trigger any traps thatmight be at the displaced monster's destination.
+        else
+            mon->trigger_movement_effects(MV_TRANSLOCATION);
     }
 
-    if (you.move_to_pos(dest, true))
-        you.turn_is_over = true;
-
-    if (you.turn_is_over)
+    if (you.move_to(dest, MV_DELIBERATE, true))
     {
+        you.turn_is_over = true;
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
         transport_followers_from(old_pos);
         if (is_unknown_transporter(old_pos))
@@ -1633,7 +1634,7 @@ static void _take_transporter()
             explored_tracked_feature(DNGN_TRANSPORTER);
         }
         mpr("You enter the transporter and appear at another place.");
-        id_floor_items();
+        you.finalise_movement();
     }
 }
 
@@ -1677,8 +1678,6 @@ static void _take_stairs(bool down)
         // only returns false if no trap was found, which shouldn't happen
         ASSERT(trap_triggered);
         you.turn_is_over = (you.pos() != old_pos);
-        if (you.turn_is_over)
-            id_floor_items();
     }
     else
     {

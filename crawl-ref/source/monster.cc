@@ -103,6 +103,8 @@ monster::monster()
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
     origin_level = level_id();
+
+    clear_deferred_move();
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -168,6 +170,8 @@ void monster::reset()
     clear_constricted();
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
+
+    clear_deferred_move();
 
     client_id = 0;
 
@@ -2601,19 +2605,6 @@ void monster::set_position(const coord_def &c)
     actor::set_position(c);
 }
 
-void monster::moveto(const coord_def& c, bool clear_net, bool clear_constrict)
-{
-    if (clear_net && c != pos() && in_bounds(pos()))
-        stop_being_caught(true);
-
-    set_position(c);
-
-    // Do constriction invalidation after to the move, so that all LOS checking
-    // is available.
-    if (clear_constrict)
-        clear_invalid_constrictions(true);
-}
-
 bool monster::fumbles_attack()
 {
     if (floundering() && one_chance_in(4))
@@ -4129,39 +4120,6 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     }
 }
 
-/**
- * Move a monster to an approximate location.
- *
- * @param p the position to end up near.
- * @return whether it tried to move the monster at all.
- */
-bool monster::shift(coord_def p)
-{
-    coord_def result;
-
-    int count = 0;
-
-    if (p.origin())
-        p = pos();
-
-    for (adjacent_iterator ai(p); ai; ++ai)
-    {
-        // Don't drop on anything but vanilla floor right now.
-        if (env.grid(*ai) != DNGN_FLOOR)
-            continue;
-
-        if (actor_at(*ai))
-            continue;
-
-        if (one_chance_in(++count))
-            result = *ai;
-    }
-
-    if (count > 0)
-        move_to_pos(result);
-
-    return count > 0;
-}
 void monster::blink(bool ignore_stasis)
 {
     monster_blink(this, ignore_stasis);
@@ -4724,10 +4682,16 @@ bool monster::find_home_near_place(const coord_def &c)
         q.pop();
         if (dist(p - c) >= last_dist && nvalid)
         {
-            bool moved_to_pos = move_to_pos(place);
+            bool moved_to_pos = move_to(place, MV_INTERNAL);
             ASSERT(moved_to_pos);
             // can't apply location effects here, since the monster might not
             // be on the level yet, which interacts poorly with e.g. shafts
+            //
+            // XXX: Given that the original caller can be quite distant from this
+            // method, simply deferring finalisation might result in unexpected
+            // future behavior if the caller doesn't manually finalise. Instead,
+            // we do an internal move; the caller can apply location effects
+            // manually, if they wish.
             return true;
         }
         else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
@@ -4762,7 +4726,7 @@ bool monster::find_home_anywhere()
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
         {
-            bool moved_to_pos = move_to_pos(place);
+            bool moved_to_pos = move_to(place, MV_INTERNAL);
             ASSERT(moved_to_pos);
             // can't apply location effects here, since the monster might not
             // be on the level yet, which interacts poorly with e.g. shafts
@@ -5428,15 +5392,101 @@ void monster::check_redraw(const coord_def &old) const
     }
 }
 
-void monster::apply_location_effects(const coord_def &oldpos,
-                                     killer_type killer,
-                                     int killernum)
+void monster::self_destruct()
 {
-    if (oldpos != pos())
+    suicide();
+    monster_die(*as_monster(), KILL_MON, mindex());
+}
+
+/**
+ * Moves the monster to a specified position and performs various post-movement
+ * effects and cleanup, such as trap handling (or, optionally, defers that for later).
+ *
+ * @param newpos    The location to move the monster to.
+ * @param mvflags   A set of flags defining the semantics for this movement.
+ * @param defer_finalisation    Whether to defer post-movement effects, such as traps
+ *                              or falling into water, until the next time
+ *                              finalise_movement() is called on this monster. This is
+ *                              useful to ensure a logical message order when multiple
+ *                              things are intended to happen 'along the way' of a monster
+ *                              moving from point A to point B.
+ *
+ * @return True if the monster was actually moved (which should happen in all cases
+ *         where the destination was not occupied by another actor). *
+ */
+bool monster::move_to(const coord_def& newpos, movement_type mvflags, bool defer_finalisation)
+{
+    const actor* a = actor_at(newpos);
+    if (a
+        // When doing manual mgrid updating, assume ovelaps with other monsters are expected.
+        && !(mvflags & MV_NO_MGRID_UPDATE)
+        && !(a->is_player() && (fedhas_passthrough(this) || testbits(mvflags, MV_ALLOW_OVERLAP))))
+    {
+        return false;
+    }
+
+    // Store current position for later finalisation (but if we have been moved
+    // multiple times in sequence before finalisation, which some effects like
+    // Gavotte do, only remember the first tile we left).
+    if (!(mvflags & MV_INTERNAL) && !move_needs_finalisation)
+    {
+        move_needs_finalisation = true;
+        last_move_pos = pos();
+        last_move_flags = mvflags;
+    }
+
+    // Set monster x,y to new value and put on mgrid.
+    if (!(mvflags & MV_NO_MGRID_UPDATE))
+    {
+        const int index = mindex();
+        if (in_bounds(pos()) && env.mgrid(pos()) == index)
+            env.mgrid(pos()) = NON_MONSTER;
+
+        env.mgrid(newpos) = index;
+    }
+    set_position(newpos);
+
+    // Finalise immediately if we weren't told to defer.
+    if (!defer_finalisation && !(mvflags & MV_INTERNAL))
+        finalise_movement();
+
+    return true;
+}
+
+/**
+ * Handles post-movement effects for the last time move_to() was called on this actor
+ * with defer_finalisation = true. This include traps, falling into liquids, taking
+ * damage from Barbs, updating constriction, and many similar things.
+ *
+ * It is the caller's responsibility to call this at some point after any time that
+ * move_to is called with defer_finalisation = true.
+ *
+ * @param to_blame  The actor that was responsible for this monster being moved to
+ *                  its current location. Note that this *only* matters in cases
+ *                  where this movement might result in a monster dying to deep
+ *                  water or lava, and can usually be omitted.
+ */
+void monster::finalise_movement(const actor* to_blame)
+{
+    // If the monster is dead, its position may already be reset at this point,
+    // making much of this code useless (and a lot of the rest of it doesn't make
+    // sense to apply with a dead monster at any rate).
+    if (!move_needs_finalisation || !alive())
+        return;
+
+    // We may abort early if the monster dies, so make sure not to repeat this.
+    move_needs_finalisation = false;
+
+    if (!(last_move_flags & MV_PRESERVE_CONSTRICTION))
+        clear_invalid_constrictions(true);
+
+    if (last_move_flags & MV_TRANSLOCATION)
+        stop_being_caught(true);
+
+    if (last_move_pos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
-    if (alive()
-        && !(mons_habitat(*this) & HT_DRY_LAND)
+    if (!(mons_habitat(*this) & HT_DRY_LAND)
         && !monster_habitable_grid(this, pos())
         && type != MONS_HELLFIRE_MORTAR
         && !has_ench(ENCH_AQUATIC_LAND))
@@ -5444,11 +5494,11 @@ void monster::apply_location_effects(const coord_def &oldpos,
         add_ench(ENCH_AQUATIC_LAND);
     }
 
-    if (alive() && has_ench(ENCH_AQUATIC_LAND))
+    if (has_ench(ENCH_AQUATIC_LAND))
     {
         if (!monster_habitable_grid(this, pos()))
             simple_monster_message(*this, " flops around on dry land!");
-        else if (!monster_habitable_grid(this, oldpos))
+        else if (!monster_habitable_grid(this, last_move_pos))
         {
             if (you.can_see(*this))
             {
@@ -5458,11 +5508,23 @@ void monster::apply_location_effects(const coord_def &oldpos,
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead
-        // of by the monster moving move, in that case env.grid(oldpos) will
+        // of by the monster moving move, in that case env.grid(old_pos) will
         // be the current position that became watery.
         else
             del_ench(ENCH_AQUATIC_LAND);
     }
+
+    // Possibly calculate blame information if we're about to drop a monster in lava.
+    killer_type killer = KILL_NONE;
+    int killernum = -1;
+    if (to_blame)
+    {
+        killer = to_blame->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+        killernum = actor_to_death_source(to_blame);
+    }
+    mons_check_pool(this, pos(), killer, killernum);
+    if (!alive())
+        return;
 
     cloud_struct* cloud = cloud_at(pos());
     if (cloud && cloud->type == CLOUD_BLASTMOTES)
@@ -5473,14 +5535,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (ptrap)
         ptrap->trigger(*this);
 
-    if (alive())
-        mons_check_pool(this, pos(), killer, killernum);
-
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);
 
     terrain_property_t &prop = env.pgrid(pos());
-
     if (prop & FPROP_BLOODY)
     {
         monster_type genus = mons_genus(type);
@@ -5496,98 +5554,88 @@ void monster::apply_location_effects(const coord_def &oldpos,
             }
         }
     }
-}
 
-void monster::did_deliberate_movement()
-{
-    // Apply barbs damage
-    if (has_ench(ENCH_BARBS))
+    // Barbs and Sticky Flame are only affected by deliberate, physical movement.
+    if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
     {
-        mon_enchant barbs = get_ench(ENCH_BARBS);
+        // Apply barbs damage
+        if (has_ench(ENCH_BARBS))
+        {
+            mon_enchant barbs = get_ench(ENCH_BARBS);
 
-        // Save these first because hurt() might kill the monster.
-        const coord_def _pos = pos();
-        const monster_type typ = type;
-        hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(_pos, typ, 2, false);
+            // Save these first because hurt() might kill the monster.
+            const coord_def _pos = pos();
+            const monster_type typ = type;
+            hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
+            bleed_onto_floor(_pos, typ, 2, false);
+            if (!alive())
+                return;
+
+            if (coinflip())
+            {
+                barbs.duration--;
+                update_ench(barbs);
+            }
+        }
+
+        // And then shake off sticky flame
+        if (has_ench(ENCH_STICKY_FLAME))
+        {
+            mon_enchant flame = get_ench(ENCH_STICKY_FLAME);
+
+            flame.duration -= 50;
+            if (flame.duration <= 0)
+            {
+                const string message = " shakes off the sticky flame as "
+                    + pronoun(PRONOUN_SUBJECTIVE) + " "
+                    + conjugate_verb("move", pronoun_plurality()) + ".";
+                simple_monster_message(*this, message.c_str());
+                del_ench(ENCH_STICKY_FLAME, true);
+            }
+            else
+                update_ench(flame);
+        }
+    }
+    // If tentacle monsters get moved by any means other than themselves, kill and cleanup.
+    else if (!(last_move_flags & MV_DELIBERATE) || (last_move_flags & MV_TRANSLOCATION))
+    {
+        if (mons_is_tentacle_head(mons_base_type(*this)))
+            destroy_tentacles(this); // If the main body teleports get rid of the tentacles
+        else if (is_child_monster())
+            destroy_tentacle(this); // If a tentacle/segment is relocated just kill the tentacle
+        else if (type == MONS_ELDRITCH_TENTACLE
+                 || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
+            // Kill an eldritch tentacle and all its segments.
+            monster* tentacle = type == MONS_ELDRITCH_TENTACLE
+                                ? this : monster_by_mid(tentacle_connect);
+
+            // this should take care of any tentacles
+            monster_die(*tentacle, KILL_RESET, -1, true);
+        }
+
         if (!alive())
             return;
-
-        if (coinflip())
-        {
-            barbs.duration--;
-            update_ench(barbs);
-        }
     }
 
-    // And then shake off sticky flame
-    if (has_ench(ENCH_STICKY_FLAME))
-    {
-        mon_enchant flame = get_ench(ENCH_STICKY_FLAME);
-
-        flame.duration -= 50;
-        if (flame.duration <= 0)
-        {
-            const string message = " shakes off the sticky flame as "
-                + pronoun(PRONOUN_SUBJECTIVE) + " "
-                + conjugate_verb("move", pronoun_plurality()) + ".";
-            simple_monster_message(*this, message.c_str());
-            del_ench(ENCH_STICKY_FLAME, true);
-        }
-        else
-            update_ench(flame);
-    }
-}
-
-void monster::self_destruct()
-{
-    suicide();
-    monster_die(*as_monster(), KILL_MON, mindex());
-}
-
-/** A higher-level moving method than moveto().
- *
- *  @param newpos    where to move this monster
- *  @param clear_net whether to clear any trapping nets
- *  @param force     whether to move it even if you're standing there
- *  @returns whether the move took place.
- */
-bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force,
-                          bool clear_constrict)
-{
-    const actor* a = actor_at(newpos);
-    if (a && !(a->is_player() && (fedhas_passthrough(this) || force)))
-        return false;
-
-    const int index = mindex();
-
-    // Clear old cell pointer.
-    if (in_bounds(pos()) && env.mgrid(pos()) == index)
-        env.mgrid(pos()) = NON_MONSTER;
-
-    // Set monster x,y to new value.
-    moveto(newpos, clear_net, clear_constrict);
-
-    // Set new monster grid pointer to this monster.
-    env.mgrid(newpos) = index;
-
-    return true;
+    clear_deferred_move();
 }
 
 /** Swap positions with another monster.
  *
- *  move_to_pos can't be used in this case, since it can't move something
- *  to a spot that's occupied. This will abort if either monster can't survive
- *  in the new place.
+ *  This will abort if either monster can't survive in the new place.
  *
- *  We also cannot use moveto, since that calls clear_invalid_constrictions,
- *  which may cause a more(), causing a render. While monsters are being
- *  swapped, their positions and the env.mgrid mismatch, so rendering would crash.
+ *  move_to() can't be used directly in this case, since it can't move something
+ *  to a spot that's occupied by another monster.
  *
- *  @param other the monster to swap with
- *  @returns whether they ended up moving.
+ *  @param other     The monster to swap with
+ *  @param mvflags   A set of flags defining the semantics for this movement.
+ *  @param defer_finalisation   Whether to defer post-movement effects, such as traps
+ *                              or falling into water, until the next time
+ *                              finalise_movement() is called on this monster.
+ *  @returns True if they ended up moving. False otherwise.
  */
-bool monster::swap_with(monster* other)
+bool monster::swap_with(monster* other, movement_type mvflags, bool defer_finalisation)
 {
     const coord_def old_pos = pos();
     const coord_def new_pos = other->pos();
@@ -5604,16 +5652,20 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    // Swap monster positions. Cannot render inside here, since env.mgrid and monster
-    // positions would mismatch.
+    // Swap monster positions. Cannot render inside here, since env.mgrid and
+    // monster positions would mismatch.
+    move_to(new_pos, mvflags | MV_NO_MGRID_UPDATE, true);
+    other->move_to(old_pos, mvflags | MV_NO_MGRID_UPDATE, true);
+
     env.mgrid(old_pos) = other->mindex();
     env.mgrid(new_pos) = mindex();
-    set_position(new_pos);
-    other->set_position(old_pos);
 
     // Okay to render again now
-    clear_invalid_constrictions(true);
-    other->clear_invalid_constrictions(true);
+    if (!defer_finalisation)
+    {
+        finalise_movement();
+        other->finalise_movement();
+    }
 
     return true;
 }
