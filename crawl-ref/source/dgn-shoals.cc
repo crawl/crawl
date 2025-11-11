@@ -932,10 +932,9 @@ static void _shoals_apply_tide(int tide)
         for (const coord_def &c : cpage)
         {
             const dungeon_feature_type herefeat(env.grid(c));
-            const bool was_wet = (_shoals_tide_passable_feat(herefeat)
-                                  && !is_temp_terrain(c));
+            const bool was_wet = _shoals_tide_passable_feat(herefeat);
             seen_points(c) = true;
-            if (_shoals_tide_susceptible_feat(herefeat))
+            if (_shoals_tide_susceptible_feat(herefeat) && !is_temp_terrain(c))
                 _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
 
             const bool is_wet(feat_is_water(env.grid(c)));
