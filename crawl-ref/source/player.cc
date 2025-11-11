@@ -70,6 +70,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "species.h" // random_starting_species
+#include "spl-book.h"
 #include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-damage.h"
 #include "spl-monench.h"
@@ -2866,6 +2867,7 @@ static void _revenant_spell_gift()
 
     mprf("You remember %s.", msg.c_str());
     mprf("(You can now cast %s.)", spell_title(spell));
+    library_add_spells({spell}, true);
     add_spell_to_memory(spell);
 }
 
