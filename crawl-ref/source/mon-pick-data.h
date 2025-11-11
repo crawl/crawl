@@ -1359,9 +1359,8 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 // This is done to avoid duplicating the Depths list and can be
 // changed once TAG_MAJOR_VERSION > 35
 #define DEPTHS_LAVA_POP {\
-  {  1,  6,   22, FALL, MONS_FIRE_ELEMENTAL },\
-  {  1,  6,   22, FALL, MONS_FIRE_BAT },\
-  {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },\
+  {  1,  6,   33, FALL, MONS_FIRE_ELEMENTAL },\
+  {  1,  6,   22, FALL, MONS_MOLTEN_GARGOYLE },\
   {  1,  6,   60, FLAT, MONS_SALAMANDER },\
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },\
   {  1,  8,   40, RISE, MONS_SALAMANDER_TYRANT },\
@@ -1372,11 +1371,12 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 static const vector<pop_entry> population_lava[] =
 {
     { // Dungeon lava monsters
+      {  7,  27,   20, FLAT, MONS_FIRE_BAT },
       {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
       {  11, 27,  360, RISE, MONS_FIRE_ELEMENTAL },
       {  11, 27,  145, RISE, MONS_MOLTEN_GARGOYLE },
       {  11, 27,   75, RISE, MONS_NO_MONSTER },
-      {  7,  27,  290, FLAT, MONS_NO_MONSTER },
+      {  7,  27,  270, FLAT, MONS_NO_MONSTER },
     },
     GENERIC_LAVA_POP, // Temple
     GENERIC_LAVA_POP, // Orc
