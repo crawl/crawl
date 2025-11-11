@@ -8995,7 +8995,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     switch (thrower.type)
     {
     case MONS_ROBIN:
-        return throwee.mons_species() == MONS_GOBLIN;
+        return mons_genus(throwee.type) == MONS_GOBLIN;
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
