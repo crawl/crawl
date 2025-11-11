@@ -3675,6 +3675,7 @@ w:50
 
 @The_monster@ says, "I hate explosions."
 
+@The_monster@ says, "You're supposed to blow everything up for a god who barely gives you powers?"
 %%%%
 Ashenzari Donald
 
