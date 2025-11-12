@@ -138,7 +138,7 @@ Edmund
 他急着想要靠他的昂贵的连枷和诡计来杀死几个倒霉的冒险者，
 以此来证明他的实力。
 %%%%
-the Enchantress
+Enchantress
 
 妖术女王是她的同族中的至尊，也是最令人胆寒的，统领整个的地牢的树精。
 她常穿着龙皮制成的乳白色外衣，闪烁着各色光芒。
@@ -278,7 +278,7 @@ Kirke
 
 一个变化无常、背信弃义的大师。小心点，不然你会变成她身边的一头猪！
 %%%%
-the Lernaean hydra
+Lernaean hydra
 
 这头身形庞大的野兽，是九头蛇中的最强者，在传说和神话中臭名昭著。
 它在水中游动的速度比人类跑得快，游动时会将树拍到一边，仿佛它们是火柴杆。
@@ -508,22 +508,22 @@ Zenata
 她进入地牢是为了探寻一个古老的、长期被压制的邪教的秘密，
 据说这个邪教推崇金属胜于肉体。知识的代价是她的人性——这是她热切付出的代价。
 %%%%
-the Serpent of Hell gehenna
+Serpent of Hell gehenna
 
 一条巨大的、发出红光的三头龙，被笼罩在诅咒之中。
 它被欣嫩谷的实质及其永恒之火所缠绕。
 %%%%
-the Serpent of Hell cocytus
+Serpent of Hell cocytus
 
 一条巨大的白色三头龙，覆有锃亮的冰块碎片，
 完全被悲叹河那噩梦般的寒冷所附着。
 %%%%
-the Serpent of Hell dis
+Serpent of Hell dis
 
 一个极高大的三头野兽，有着军队的利剑一般的牙齿。
 它的每个鳞片都是边缘锋利的盾牌。
 %%%%
-the Serpent of Hell tartarus
+Serpent of Hell tartarus
 
 黑暗中似乎悬着三双可怕的洋红色眼睛，后面一条蜿蜒的巨龙轮廓隐约可见。
 其恶意昭然若揭。
@@ -2029,7 +2029,7 @@ rockslime
 一个涌出的山崩，它隆隆前进时冲刷着下方的地面。
 它只吞食受害者的金属和骨头，用它们来进一步增强自身。
 %%%%
-the Royal Jelly
+Royal Jelly
 
 一个特别浓郁的金色凝胶状物质。
 更小的胶冻在它的表面下游泳、搏动，只要稍加触碰就会爆发。

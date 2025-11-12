@@ -163,7 +163,7 @@ none of Sigmund's skills in magic, but makes up for it with his skills in
 fighting and a canny head for money. He is eager to prove his superiority by
 killing hapless adventurers with his expensive flail and quick wit.
 %%%%
-the Enchantress
+Enchantress
 
 First and most fearful of her kind, the Enchantress rules over the spriggans of
 the dungeon. She wears an opalescent outfit made of dragon skin that shimmers
@@ -317,7 +317,7 @@ Kirke
 A master of transformation and treachery. Beware, or you may be the next swine
 to join her herd!
 %%%%
-the Lernaean hydra
+Lernaean hydra
 
 A huge beast, mightiest of hydras, infamous in myth and legend. It flows
 through the water faster than a human can run, swatting aside trees as though
@@ -610,22 +610,22 @@ tell where one ends and the other begins. She entered the Dungeon to search for
 the secrets of an ancient, long-suppressed cult, said to have exalted metal over
 flesh. The price of knowledge was her humanity - a price she paid eagerly.
 %%%%
-the Serpent of Hell gehenna
+Serpent of Hell gehenna
 
 A huge, red-glowing, three-headed dragon, shrouded in damnation. It is
 possessed by the very essence of Gehenna and its eternal fire.
 %%%%
-the Serpent of Hell cocytus
+Serpent of Hell cocytus
 
 A massive white three-headed dragon, covered with shards of gleaming ice,
 wholly possessed by the nightmarish cold of Cocytus.
 %%%%
-the Serpent of Hell dis
+Serpent of Hell dis
 
 A towering three-headed beast with an army's worth of swords for teeth. Each of
 its scales is a shield with a razored edge.
 %%%%
-the Serpent of Hell tartarus
+Serpent of Hell tartarus
 
 Seemingly three pairs of lurid magenta eyes hanging in the darkness, the
 outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
@@ -2627,7 +2627,7 @@ An oozing avalanche, scouring the ground beneath it as it rumbles forward.
 It consumes only the metal and bone from its victims, using them to reinforce
 itself even further.
 %%%%
-the Royal Jelly
+Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.

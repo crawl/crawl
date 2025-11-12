@@ -523,7 +523,7 @@ unseen Ensnare Arachne cast
 
 一连串的网从稀薄的空气中喷射而来。
 %%%%
-Lehudib's Crystal Spear the Serpent of Hell cast
+Lehudib's Crystal Spear Serpent of Hell cast
 
 @The_monster@喷吐的水晶@at@ @target@。
 %%%%

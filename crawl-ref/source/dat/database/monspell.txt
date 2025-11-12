@@ -614,7 +614,7 @@ Rupert cast targeted
 
 @The_monster@ yells loudly @at@ @target@.
 %%%%
-Lehudib's Crystal Spear the Serpent of Hell cast
+Lehudib's Crystal Spear Serpent of Hell cast
 
 @The_monster@ spits crystal @at@ @target@.
 %%%%
