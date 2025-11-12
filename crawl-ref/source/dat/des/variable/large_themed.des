@@ -2887,7 +2887,7 @@ KITEM:   % = any skeleton
 :   end
 :   if crawl.coinflip() then
 FTILE:   "defghijk34 = floor_tomb
-FTILE:   'V5GabAB = floor_crypt
+FTILE:   'V5GabABHIJKL+ = floor_crypt
 :   else
 TILE:    HIJKLc : dngn_stone_dark / dngn_stone_wall
 :   end

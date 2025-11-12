@@ -329,11 +329,11 @@ tttttt
 ENDMAP
 
 NAME:   mainiacjoe_swamp_entry_angry_trees
-TAGS:   swamp_entry transparent patrolling
+TAGS:   swamp_entry transparent no_monster_gen patrolling
 MONS:   spriggan druid ; mundane damaged quarterstaff . robe
 MONS:   spriggan, bullfrog w:8 / hornet / swamp drake
 KFEAT:  O = enter_swamp
-NSUBST: S = 1:1 / *:T, T = 1:122 / 2:3 / 1:3tt / 16:t / *:.
+NSUBST: S = 1:1 / *:T, T = 1:2 / 2:3 / 1:3tt / 16:t / *:.
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }

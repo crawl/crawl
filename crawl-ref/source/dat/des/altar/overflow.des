@@ -4612,6 +4612,9 @@ COLOUR: . = yellow
 COLOUR: c = white
 FTILE:  @._+ = floor_limestone
 TILE:   c = wall_church
+: if you.in_branch("Depths") then
+TILE:   v = dngn_metal_wall_yellow
+: end
 : standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
 MAP
      xxxxx

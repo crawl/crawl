@@ -306,8 +306,6 @@ function trove_standard_magic(e, school, use_staff)
   if use_staff then
     output = output .. " / " .. staff .. " w:4 / " .. staff .. " randart"
   end
-  crawl.mpr("you.mutation('hp casting') returns " .. you.mutation("hp casting"))
-  crawl.mpr("Magic definition: " .. output)
   return output
 end
 

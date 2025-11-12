@@ -72,19 +72,18 @@ function setup_xom_dancing_weapon(e, glyph)
     -- Progress the base type of weapons so that it's more reasonable as reward
     -- as depth increases. The very rare weapons only show up at all in later
     -- depths and always with lower weight.
-    if you.absdepth() < 9 then
+    if dgn.persist.necropolis_difficulty == "pre_temple_d" or dgn.persist.necropolis_difficulty == "pre_lair_d" then
         base_weapons = {"dagger", "short sword", "rapier", "falchion",
-                        "long sword", "whip", "mace", "hand axe", "spear",
-                        "trident"}
+                        "whip", "mace", "hand axe", "spear"}
         good_weapons = {"scimitar", "flail", "war axe", "quarterstaff"}
         quality = crawl.one_chance_in(6) and "good_item" or ""
-    elseif you.absdepth() < 12 then
+    elseif dgn.persist.necropolis_difficulty == "lair" or dgn.persist.necropolis_difficulty == "orc" or dgn.persist.necropolis_difficulty == "post_lair_d" then
         base_weapons = {"rapier", "long sword", "scimitar", "mace", "flail",
                         "hand axe", "war axe", "trident", "halberd",
                         "quarterstaff"}
         good_weapons = {"morningstar", "dire flail", "broad axe", "partisan"}
         quality = crawl.one_chance_in(4) and "good_item" or ""
-    elseif you.absdepth() < 14 then
+    elseif dgn.persist.necropolis_difficulty == "snake" or dgn.persist.necropolis_difficulty == "swamp" or dgn.persist.necropolis_difficulty == "shoals" or dgn.persist.necropolis_difficulty == "spider" then
         base_weapons = {"rapier", "long sword", "scimitar", "flail",
                         "morningstar", "dire flail", "war axe", "broad axe",
                         "trident", "partisan", "halberd", "quarterstaff"}
