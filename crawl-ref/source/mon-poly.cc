@@ -280,7 +280,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         if (flags & MF_NAME_MASK)
             // Remove the replacement name from the new monster
-            flags = flags & ~MF_ALL_NAMES;
+            flags &= ~MF_ALL_NAMES;
         else
             name = mons->mname;
     }
