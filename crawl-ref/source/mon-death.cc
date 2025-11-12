@@ -960,7 +960,10 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
     shuffle_array(bat_colours);
 #endif
 
+    mon_enchant vengeance_target = blorkula.get_ench(ENCH_VENGEANCE_TARGET);
     follower saved_blork = follower(blorkula);
+    if (vengeance_target.ench != ENCH_NONE)
+        saved_blork.mons.del_ench(ENCH_VENGEANCE_TARGET, true, false);
     bool placed_bat = false;
     for (int i = 0; i < num_bats; ++i)
     {
@@ -979,6 +982,11 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
             mons_add_blame(bat, "manifested out of " + blorkula.name(DESC_A, true));
             bat->flags |= (MF_NO_REWARD | MF_WAS_IN_VIEW);
             placed_bat = true;
+            if (vengeance_target.ench != ENCH_NONE)
+            {
+                bat->add_ench(vengeance_target);
+                you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+            }
         }
     }
 
@@ -1004,7 +1012,15 @@ static monster* _retrieve_saved_blorkula(monster& bat)
 {
     follower saved_blork;
     saved_blork.read_from_prop(bat.props[SAVED_BLORKULA_KEY].get_vector());
+    const bool is_vengeance_target = bat.has_ench(ENCH_VENGEANCE_TARGET);
+    if (is_vengeance_target)
+    {
+        saved_blork.mons.add_ench(bat.get_ench(ENCH_VENGEANCE_TARGET));
+        you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+    }
     monster* blork = saved_blork.place();
+    if (!blork && is_vengeance_target)
+        beogh_progress_vengeance();
     return blork;
 }
 
