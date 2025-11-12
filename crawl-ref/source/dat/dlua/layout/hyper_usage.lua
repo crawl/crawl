@@ -63,9 +63,13 @@ function hyper.usage.set_usage(usage_grid,x,y,usage)
   if usage_grid[y] == nil or usage_grid[y][x] == nil then return false end
   -- Check existing usage, remove it from eligibles if it's there
   local current = usage_grid[y][x]
-  if current.eligibles_index ~= nil then
-    table.remove(usage_grid.eligibles[current.eligibles_which],current.eligibles_index)
+  for i,usage in ipairs(usage_grid.eligibles[current.eligibles_which]) do
+    if usage == current then
+      table.remove(usage_grid.eligibles[current.eligibles_which],i)
+      break
+    end
   end
+
   if current ~= usage and current.anchors ~= nil then
     for i,anchor in ipairs(current.anchors) do
       -- TODO: util.remove will be pretty slow on large lists (which is why for eligibles we cache the index)
