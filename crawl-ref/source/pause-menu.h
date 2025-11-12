@@ -36,4 +36,5 @@ public:
     void fill_entries();
     vector<MenuEntry *> show(bool reuse_selections = false) override;
     void show_character_stats();
+    void show_keybinds();
 };

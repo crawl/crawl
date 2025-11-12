@@ -2086,6 +2086,10 @@ void process_command(command_type cmd, command_type prev_cmd)
             crawl_state.unpause_game();
             cmd = CMD_QUIT;
             break;
+        case CMD_SHOW_KEYBINDS:
+            pause_menu.show_keybinds();
+            crawl_state.unpause_game();
+            return;
         default:
             crawl_state.unpause_game();
             return;
