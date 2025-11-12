@@ -264,16 +264,16 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         name   = "shaped Lernaean hydra";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->mons_species() == MONS_SERPENT_OF_HELL
-             || mons->mname == "shaped Serpent of Hell")
-    {
-        name   = "shaped Serpent of Hell";
-        flags |= MF_NAME_SUFFIX;
-    }
     else if (mons->type == MONS_ENCHANTRESS
              || mons->mname == "shaped Enchantress")
     {
         name   = "shaped Enchantress";
+        flags |= MF_NAME_SUFFIX;
+    }
+    else if (mons->mons_species() == MONS_SERPENT_OF_HELL
+             || mons->mname == "shaped Serpent of Hell")
+    {
+        name   = "shaped Serpent of Hell";
         flags |= MF_NAME_SUFFIX;
     }
     else if (!mons->mname.empty())
