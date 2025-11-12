@@ -1762,7 +1762,7 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
     if (starts_with(mon.mname, "shaped "))
         mon.flags |= MF_NAME_SUFFIX;
 
-    // It's unlikely there's a desc for "Duvessa the elf draugr", but
+    // It's unlikely there's a desc for "Duvessa the elf zombie", but
     // we still want to allow it if overridden.
     if (!mon.props.exists(DBNAME_KEY))
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
