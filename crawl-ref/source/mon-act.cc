@@ -1848,6 +1848,8 @@ static void _pre_monster_move(monster& mons)
 
     fedhas_neutralise(&mons);
     slime_convert(&mons);
+    if (mons.type == MONS_NATASHA)
+        orbrun_convert_natasha(&mons);
 
     // Check for golem summoner proximity whether we have energy to act or not.
     // (Avoids awkward situations of moving next to a dormant golem with very
