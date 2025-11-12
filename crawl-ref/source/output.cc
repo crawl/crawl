@@ -1428,6 +1428,29 @@ static void _draw_wizmode_flag(const char *word)
     CPRINTF(" *%s*", word);
 }
 
+static void _print_seed()
+{
+    if (!crawl_state.seed_is_known())
+        return;
+
+    const int y_pos = 13;
+    const char *label = "Seed: ";
+    char seed_text[64];
+    snprintf(seed_text, sizeof(seed_text), "%" PRIu64, you.game_seed);
+
+    // Compute total width to align right side of HUD
+    const int label_width = strwidth(label);
+    const int seed_width  = strwidth(seed_text);
+    const int total_width = label_width + seed_width + 1;
+    const int x_pos = max(1, (crawl_view.hudsz.x - total_width) - 20);
+
+    CGOTOXY(x_pos, y_pos, GOTO_STAT);
+    textcolour(Options.status_caption_colour);
+    CPRINTF("%s", label);
+    textcolour(LIGHTGREY);
+    CPRINTF("%s", seed_text);
+}
+
 static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -1467,6 +1490,7 @@ static void _redraw_title()
         _draw_wizmode_flag("EX-WIZARD");
     else if (you.explore && !small_layout)
         _draw_wizmode_flag("EXPLORE");
+    _print_seed();
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
