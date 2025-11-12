@@ -243,6 +243,42 @@ xx..D..+-+..E...xxx
         ''xx''@'''x
 ENDMAP
 
+NAME:    regret_index_abyss_entry_lash
+TAGS:    transparent nolayout_encompass
+MONS:    rakshasa / occultist / very ugly thing / \
+         kobold fleshcrafter w:4 / glass eye w:2
+MONS:    tentacled monstrosity / lich / \
+         chonchon w:4 / storm dragon simulacrum w:2
+KFEAT:   y = c
+KFEAT:   z = x
+SHUFFLE: AB / CD, IJKLM, 0G / 0G / G0
+SUBST:   A : "zzz, B : cybb, CD = ', IJ : xcc, K : x`, LM = .
+NSUBST:  0 = 1:2 / *:1
+FTILE:   '12OG : floor_mystic_chasm / floor_grey_dirt_b
+FTILE:   " : floor_nerves_blue / floor_nerves_magenta
+TILE:    b : dngn_crystal_blue / dngn_crystal_magenta
+: tile("y = " .. crackle_def(_G))
+TILE:    z = wall_abyss_blue
+: abyss_entry(_G, 'O')
+CLEAR:   `
+MAP
+     J.   I   .J
+      J   I   J
+      J   I   J
+       J  .  J
+ K      . x .      K
+ .KK    xxxxx    KK.
+    K  xxx0xxx  K
+     .xxx'''xxx.
+    xxxx'ACB'xxxx
+LL.xxxx0'DOD'0xxxx.LL
+    xxxx'BCA'xxxx
+     .xxx'''xxx.
+    M  xx'x'xx  M
+ .MM    xx'xx    MM.
+ M       .x.       M
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 ###############################################################################

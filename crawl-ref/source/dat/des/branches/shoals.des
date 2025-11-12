@@ -857,6 +857,34 @@ c`````L```M```N```c
 cccPccccPcccPccc+cc
 ENDMAP
 
+NAME:    regret_index_shoalsdec_tripartite
+TAGS:    transparent water_ok shoalsdec
+DEPTH:   Shoals
+SHUFFLE: ABC, DEF
+SUBST:   AD = @, B : c``, E : c``, CF = c
+CLEAR:   `
+MAP
+cccABCccc cccFEDccc
+c       ccc       c
+c      cc cc      c
+A    wcc   ccw    D
+B   wcc     ccw   E
+C  wcc       ccw  F
+c  cc         cc  c
+c cc           cc c
+ccc             ccc
+ c
+ccc
+c cc
+c  cc
+F  wcc
+E   wcc
+D    wcc
+c      cc
+c       c
+cccDEFccc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.

@@ -2037,6 +2037,92 @@ MAP
  ..b+++b..
 ENDMAP
 
+NAME:    regret_index_nemelex_hall_of_doors
+TAGS:    patrolling no_item_gen no_pool_fixup
+DEPTH:   D:3-, Elf, Depths
+WEIGHT:  7
+SHUFFLE: '!1 / $sS / "%P / `^w
+# Mostly looking for the more dangerous options in the pre-Lair-depth selection,
+# with mild nods to some of the Summoning deck cards (Swarm, Elements, Dance).
+# Even if the choice can't open doors, it's still guarding a vault reward.
+: if you.in_branch("D") then
+TAGS:    no_monster_gen
+:   if you.depth() < 5 then
+MONS:    bombardier beetle / clockroach / gnoll
+:   elseif you.depth() < 8 then
+MONS:    ogre / killer bee / ice beast / marrowcuda / drude
+:   elseif you.depth() < 12 then
+MONS:    hornet / centaur / ugly thing / rakshasa
+:   else
+MONS:    fire dragon / ice dragon / very ugly thing / \
+         laughing skull band / centaur warrior / dancing weapon
+:   end
+KITEM:   d$sS = $ q:1
+: else
+# Past D, we can afford to be mildly meaner about the minigame here.
+:   if you.in_branch("Elf") then
+MONS:    generate_awake thermic dynamo band / \
+         generate_awake dancing weapon ; demon blade ego:chaos | \
+         demon trident ego:chaos | broad axe ego:chaos | rapier ego:chaos
+:   else -- Depths
+MONS:    generate_awake chonchon band / \
+         guardian sphinx / juggernaut / tengu reaver
+KMONS:   S = golden dragon
+:   end
+KITEM:   d = $ q:1
+KITEM:   $S = $ q:7
+: end
+KMONS:   P = bush
+# An item deliberately unlikely to be of much value, but which default
+# autoexplore stops to look at, to emphasize entering a gimmick vault.
+KITEM:   ~ = damaged short sword ego:heavy / \
+             damaged sling ego:flaming / damaged whip ego:freezing
+KITEM:   ! = any potion q:1 / any scroll q:1 w:5
+KFEAT:   % = cache_of_fruit
+KFEAT:   ^ = teleport trap
+KFEAT:   HIJ = G
+SUBST:   s = $
+FTILE:   '!1 = floor_pebble_red
+FTILE:   $sS = floor_pebble_yellow
+FTILE:   "%P = floor_pebble_lightgreen
+FTILE:   `^w = floor_pebble_lightblue
+# To emphasize the game theme, mark the doors with differing statue tiles.
+: local stat
+: if you.in_branch("Depths") then
+:   stat = util.random_subset( {"depths_tomes", "depths_zot_devil",
+:               "depths_zot_ancient_evil", "depths_zot_tentacles",
+:               "depths_zot_lich", "depths_zot_dragon" }, 4)
+:
+: else
+:   stat = util.random_subset( {"archer", "demonic_bust", "dragon",
+:               "hydra", "imp", "mermaid", "princess", "sword" }, 4)
+: end
+: tile("G = dngn_statue_" .. stat[1])
+: tile("H = dngn_statue_" .. stat[2])
+: tile("I = dngn_statue_" .. stat[3])
+: tile("J = dngn_statue_" .. stat[4])
+KPROP:   '!1 = bloody
+: standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
+MAP
+xxxxx       xxxxx
+xcccx  ccc  xcccx
+xc1ccccc.cccccScx
+xcc!'cc.U.cc$sccx
+xxc''+.....+$$cxx
+  cc++.....++cc
+  cc..G.~.H..cc
+ cc...........cc
+ c.U...._....U.c
+ cc...........cc
+  cc..I.d.J..cc
+  cc++.....++cc
+xxc``+..d..+""cxx
+xcc^`cc.U.cc"%ccx
+xcwcccccdcccccPcx
+xcccx  c+c  xcccx
+xxxxx       xxxxx
+ENDMAP
+
 ### Okawaru overflow altars ###################################################
 
 NAME:    okawaru_metal_pillars_1_2
@@ -2564,6 +2650,39 @@ MAP
 .A.A'A'''''''B"""""B''A....
 ...A'''xxxx''B"xxx"B''A.....
 .xxxxxxx  xxxxxx xxxxxxxxx..
+ENDMAP
+
+NAME:   regret_index_qazlal_sundered_split
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen decor
+DEPTH:  D:3-, Depths, Zot
+KFEAT:  NO = A
+NSUBST: F = 1:L / 1:M / 1:N / 1:O, @ = 2:@ / *:.
+: single_cloud(_G, "L", "flame", true)
+: single_cloud(_G, "M", "freezing vapour", true)
+: single_cloud(_G, "N", "sparse dust", true)
+: single_cloud(_G, "O", "rain", true)
+KPROP:   LMNO- = no_tele_into
+FTILE:   LM = floor_pebble_darkgray
+: if you.in_branch("Zot") then
+TILE:   x = wall_zot_darkgray
+: else
+TILE:   x = wall_pebble_darkgray
+: end
+: standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
+MAP
+         xxcccc
+         @...Fc
+          .x..c
+        xxxxx.c
+ccccxx   xxx..c
+cF.....@..xxx.c
+c..x..._...x..c
+c.xxx..@.....Fc
+c..xxx   xxcccc
+c.xxxxx
+c..x.
+cF...@
+ccccxx
 ENDMAP
 
 # Ru overflow altar vaults ####################################################
