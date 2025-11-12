@@ -324,3 +324,6 @@ DEF_BITFIELD(monster_flags_t, monster_flag_type);
 constexpr monster_flags_t MF_NAME_MASK = MF_NAME_REPLACE;
 constexpr monster_flags_t MF_MELEE_MASK = MF_FIGHTER | MF_TWO_WEAPONS
                                         | MF_ARCHER;
+constexpr monster_flags_t MF_ALL_NAMES = MF_NAME_MASK | MF_NAME_DESCRIPTOR
+                                       | MF_NAME_DEFINITE | MF_NAME_SPECIES
+                                       | MF_NAME_ZOMBIE | MF_NAME_NOCORPSE;
