@@ -122,10 +122,10 @@ end
 -- should guarantee that `D` is present.
 function serpent_of_hell_setup(e)
   local b = soh_hangout()
-  if not you.uniques("the Serpent of Hell")
+  if not you.uniques("Serpent of Hell")
         and you.in_branch(b)
         and you.depth() == dgn.br_depth(b) then
-    e.kmons('D = the Serpent of Hell')
+    e.kmons('D = Serpent of Hell')
   end
 end
 
