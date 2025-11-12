@@ -1,6 +1,6 @@
 name: "Grunn"
 glyph: {char: "j", colour: lightgreen}
-flags: [speaks, unique, male]
+flags: [speaks, unique, male, no_zombie]
 exp: 1718
 species: gnoll
 holiness: [undead]
@@ -11,7 +11,6 @@ hd: 16
 hp_10x: 2000
 ac: 6
 ev: 6
-has_corpse: true
 shout: growl
 intelligence: human
 uses: weapons_armour
