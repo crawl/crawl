@@ -1531,7 +1531,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr, spell, 0, false);
     mg.set_base(mons->type);
     // Prefer to be created wherever the dead monster was, but allow placing up
-    // to 2 spaces away, if needbe.
+    // to 2 spaces away, if need be.
     mg.set_range(0, 2);
 
     if (spell == MON_SUMM_WPN_REAP)
