@@ -93,6 +93,7 @@ void PauseMenu::fill_entries()
     
     add_entry(new PauseMenuEntry("Resume Game", 'r', CMD_NO_CMD, true));
     add_entry(new PauseMenuEntry("Character Stats", 'c', CMD_DISPLAY_CHARACTER_STATUS, false));
+    add_entry(new PauseMenuEntry("Show Keybinds for Game", 'k', CMD_SHOW_KEYBINDS, false));
     add_entry(new PauseMenuEntry("Return to Main Menu", 'm', CMD_SAVE_GAME_NOW, false));
     add_entry(new PauseMenuEntry("", 0, CMD_NO_CMD, false)); // Subtitle spacer
     add_entry(new PauseMenuEntry("Quit Game", 'q', CMD_QUIT, false));
@@ -167,5 +168,41 @@ void PauseMenu::show_character_stats()
     textcolour(LIGHTGREY);
     cprintf("\nPress any key to return to pause menu...");
     
+    getchm();
+}
+
+void PauseMenu::show_keybinds()
+{
+    clrscr();
+    formatted_string fs;
+
+    fs.cprintf("Beginner tips for playing dungeon crawl\n\n");
+    fs.cprintf("Use the following keys to move, act, and interact in the dungeon.\n\n");
+
+    fs.cprintf("Arrow keys / Numpad  - Move\n");
+    fs.cprintf("F2                   - Pause / Open Menu\n");
+    fs.cprintf("i                    - Inventory\n");
+    fs.cprintf("a                    - Abilities\n");
+    fs.cprintf("c                    - Character info\n");
+    fs.cprintf("q                    - Quit game\n");
+    fs.cprintf(".                    - Wait a turn\n");
+    fs.cprintf("g                    - Pick up items\n");
+    fs.cprintf(">                    - Go downstairs\n");
+    fs.cprintf("<                    - Go upstairs\n");
+    fs.cprintf("\nPress any key to return to the game...\n\n\n");
+    fs.cprintf("Please Recognize that all of these binds below are capitalized\n");
+    fs.cprintf("C                    - Close a door\n");
+    fs.cprintf("E                    - Check your experience\n");
+    fs.cprintf("I                    - Display all spells\n");
+    fs.cprintf("R                    - Remove Jewellery\n");
+    fs.cprintf("S                    - Save game\n");
+    fs.cprintf("CTRL + S             - Save game now\n");
+    fs.cprintf("F2                   - Open pause menu\n");
+    fs.cprintf("T                    - Remove armour\n");
+
+    clrscr();
+    cgotoxy(1, 2);
+    fs.display();
+
     getchm();
 }
