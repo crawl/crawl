@@ -1664,7 +1664,7 @@ local scary_monsters = {
   ["Xtahua"] = check_resist(100,"rF",1),
   ["deep elf annihilator"] = 100,
   ["deep elf sorcerer"] = 100,
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["Vashnia"] = 100,
   ["Sojobo"] = 100,
   ["Roxanne"] = 100,
@@ -1761,7 +1761,7 @@ local bia_monsters = {
 
   ["deep troll shaman"] = 100,
   ["spriggan air mage"] = check_resist(100,"rElec",1),
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["Sojobo"] = 100,
   ["Roxanne"] = 100,
   ["Erolcha"] = 100,
@@ -1834,7 +1834,7 @@ local hand_monsters = {
   ["guardian sphinx"] = 100,
   ["great orb of eyes"] = 100,
   ["vault sentinel"] = 100,
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["satyr"] = 100,
   ["vampire knight"] = 100,
   ["siren"] = 100,
@@ -2401,7 +2401,7 @@ function mon_speed_num(m)
   if m:status("slow") then
     num = num - 1
   end
-  if m:name():find("spriggan") or m:name() == "the Enchantress" then
+  if m:name():find("spriggan") or m:name() == "Enchantress" then
     num = num + 1
   elseif m:name():find("naga") or m:name() == "Vashnia" then
     num = num - 1
