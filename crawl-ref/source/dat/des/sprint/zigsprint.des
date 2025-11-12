@@ -577,9 +577,9 @@ local rnd = crawl.random2(142)
                Antaeus / Asmodeus / Boris / Cerebov / Dispater / Dissolution /\
                Ereshkigal / Frederick / Geryon / Gloorx Vloq / Ignacio /\
                Ilsuiw / Jory / Khufu / Lom Lobon / Mara / Margery / Mennas /\
-               Mnoleg / Murray / Nobody / Sojobo / the Enchantress /\
-               the Lernaean hydra / the Serpent of Hell /\
-               the Royal Jelly / Tiamat / Vv / Xtahua / Nellie / Chuck")
+               Mnoleg / Murray / Nobody / Sojobo / Enchantress /\
+               Lernaean hydra / Serpent of Hell /\
+               Royal Jelly / Tiamat / Vv / Xtahua / Nellie / Chuck")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \

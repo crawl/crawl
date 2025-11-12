@@ -140,12 +140,12 @@ function base_monster_setup(e)
                Kirke band / Nessos / Ilsuiw band / Polyphemus /\
                Rupert / Saint Roka band / Snorg / Xak'krixis")
   e.kmons("K = Arachne band / Boris / Dissolution / Frederick / Jory /\
-               Josephina band / the Lernaean hydra /  Margery band / Mennas /\
+               Josephina band / Lernaean hydra /  Margery band / Mennas /\
                Mara / Nikola / Nobody / Grunn band / Parghit / Wiglaf / Xtahua")
   e.kmons("L = Vv / Zenata / Khufu band / Tiamat band / Murray / Mnoleg /\
                Gloorx Vloq / Lom Lobon / Cerebov / Dispater / Asmodeus /\
-               Antaeus / Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
-               the Serpent of Hell")
+               Antaeus / Ereshkigal / Ignacio / Geryon / Royal Jelly /\
+               Serpent of Hell")
   -- These just get occasional placements regardless of tiering for some of
   -- the later vaults, to... reduce Lair branch gimmickry or something?
   e.kmons("M = stone giant / frost giant / fire giant / iron troll")

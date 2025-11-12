@@ -58,7 +58,7 @@ KMONS:  e = oklob plant exp:601 name:demonologist n_suf \
 KMONS:  f = oklob plant exp:607 name:annihilator n_suf \
             spells:spit_acid.67.natural;poison_arrow.20.wizard;\
                    orb_of_destruction.20.wizard;bolt_of_cold.20.wizard
-KMONS:  g = the Enchantress
+KMONS:  g = Enchantress
 KMONS:  h = moth of wrath
 KMONS:  m = river rat
 KMONS:  n = scorpion

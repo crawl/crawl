@@ -718,7 +718,7 @@ ENDMAP
 NAME:   sprint2_transparent_cluster_1
 TAGS:   sprint2_transparent_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
-MONS:   oklob plant, orc warlord / Nikola / draconian knight, toenail golem, the Lernaean hydra
+MONS:   oklob plant, orc warlord / Nikola / draconian knight, toenail golem, Lernaean hydra
 SUBST:  ' = '.....
 KFEAT:  ' = net trap
 KFEAT:  , = book shop

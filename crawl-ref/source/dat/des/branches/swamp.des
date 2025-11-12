@@ -3186,7 +3186,7 @@ TAGS:    no_rotate
 MONS:    swamp dragon, swamp drake, hydra
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:1 / ice dragon w:1 / hydra w:18
-KMONS:   & = the lernaean hydra
+KMONS:   & = lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   O& = decaying rune of Zot
 SHUFFLE: 12
@@ -3229,7 +3229,7 @@ MONS:    swamp dragon, swamp drake, hydra, lindwurm, rime drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
-KMONS:   & = the lernaean hydra
+KMONS:   & = lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   OP& = decaying rune of Zot
 SHUFFLE: OR / de, 123,  lLO4 / wWP5, 56
@@ -3269,7 +3269,7 @@ PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  southeast
 MONS:    swamp dragon, hydra, swamp drake
-MONS:    the lernaean hydra
+MONS:    lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   O = decaying rune of Zot
 SHUFFLE: ab, 12
@@ -3440,7 +3440,7 @@ PLACE:   Swamp:$
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, bog body
 MONS:    fungus w:12 / plant w:5 / bush w:1
-KMONS:   d = patrolling the lernaean hydra / hydra w:1, hydra
+KMONS:   d = patrolling lernaean hydra / hydra w:1, hydra
 KMONS:   ef = patrolling hydra
 KMONS:   P = pile of debris
 KITEM:   d = decaying rune of Zot
@@ -3488,7 +3488,7 @@ ORIENT:  float
 WEIGHT:  20
 KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
 : if crawl.one_chance_in(11) then
-     KMONS: O = the lernaean hydra
+     KMONS: O = lernaean hydra
 : else
      KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
      KITEM: * = *
@@ -3540,7 +3540,7 @@ MONS:    patrolling spriggan druid god:fedhas
 KMONS:   p = plant
 KMONS:   ' = oklob plant
 KMONS:   q = ghoul
-KMONS:   L = patrolling the lernaean hydra zombie
+KMONS:   L = patrolling lernaean hydra zombie
 KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   _ = altar_fedhas

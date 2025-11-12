@@ -528,7 +528,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the Royal Jelly, shining eye, glass eye, acid blob, azure jelly
+MONS: Royal Jelly, shining eye, glass eye, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
@@ -690,7 +690,7 @@ TAGS: sprint_mu_swamp no_rotate no_hmirror no_vmirror
 
 : local swamprnd = crawl.random2(4)
 : if swamprnd == 0 then
-MONS: swamp drake, swamp dragon, hydra, the Lernaean hydra
+MONS: swamp drake, swamp dragon, hydra, Lernaean hydra
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
                  size = 2, size_buildup_amnt = 3, \
@@ -1214,7 +1214,7 @@ ENDMAP
 # Gehenna 1, hellfire
 NAME: sprint_mu_gehenna_hellfire
 TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror
-KMONS: 1 = patrolling the serpent of hell
+KMONS: 1 = patrolling serpent of hell
 KFEAT: 1 = lava
 KMONS: 2 = hellion
 KMONS: 3 = brimstone fiend

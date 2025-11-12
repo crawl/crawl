@@ -318,8 +318,8 @@ DEPTH:  Depths, Elf:$, Vaults, Crypt, Tomb
 
 NAME:   uniq_enchantress
 DEPTH:  Depths
-MONS:   the Enchantress band
-: place_unique(_G, "the Enchantress band")
+MONS:   Enchantress band
+: place_unique(_G, "Enchantress band")
 
 NAME:   uniq_frederick
 DEPTH:  Depths:3-, Vaults:2-, Crypt

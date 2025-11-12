@@ -50,7 +50,7 @@ end
 function setup_slime_pit_ending(e)
   e.place("Slime:$")
   e.orient("encompass")
-  e.mons("the Royal Jelly")
+  e.mons("Royal Jelly")
   e.mons("acid blob")
   e.mons("great orb of eyes / nothing")
   e.kfeat("Z = altar_jiyva")

@@ -4125,10 +4125,10 @@ KMONS:    M = elemental wellspring
 KMONS:    N = ettin / stone giant / frost giant / fire giant
 KMONS:    O = juggernaut
 KMONS:    P = titan
-KMONS:    Q = the enchantress band
+KMONS:    Q = enchantress band
 # Place either a giant band headed by a titan or the Enchantress band, if the
 # latter is available.
-: if not you.uniques("the Enchantress") then
+: if not you.uniques("Enchantress") then
 SHUFFLE:  NOP / kkQ
 : end
 KMONS:    h = plant / fungus

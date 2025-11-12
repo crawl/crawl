@@ -177,7 +177,7 @@
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
             e.mons("spriggan defender / alderking w:3")
-            e.kmons("D = the Enchantress, alderking / nothing")
+            e.kmons("D = Enchantress, alderking / nothing")
             e.subst("3 = D3")
             e.subst("A = t")
             e.subst("B = tT")
