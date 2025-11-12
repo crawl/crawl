@@ -30,7 +30,7 @@ function vaults_new_layout(width, height)
   return new_layout(width,height)
 end
 local function new_usage(width, height)
-  usage_grid = { eligibles = { }, width = width, height = height }
+  local usage_grid = { eligibles = { }, width = width, height = height }
 
   for y = 0, (height-1), 1 do
     usage_grid[y] = { }
