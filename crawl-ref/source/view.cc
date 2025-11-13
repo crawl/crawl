@@ -432,8 +432,6 @@ static string _describe_monsters_from_species(const vector<details> &species)
             if (det.mon->is_named() && det.count == 1
                 || !you.can_see(*det.mon))
             {
-                if (mons_is_the(det.mon->type))
-                    name = "the " + name;
                 return name;
             }
             else if (det.count > 1 && det.genus)

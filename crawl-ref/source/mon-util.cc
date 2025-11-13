@@ -3114,6 +3114,8 @@ string mons_type_name(monster_type mc, description_level_type desc)
         case DESC_PLAIN: default:             break;
         }
     }
+    else if (mons_is_the(mc))
+        result = "the ";
 
     switch (mc)
     {
