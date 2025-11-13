@@ -545,9 +545,8 @@ static void _recap_mon_keys(vector<string> &keys)
         if (!_is_soh(keys[i]))
         {
             monster_type type = get_monster_by_name(keys[i]);
-            keys[i] = mons_type_name(type, DESC_PLAIN);
-            if (starts_with(keys[i], "the "))
-                keys[i] = keys[i].substr(4); // strlen("the ")
+            // No "the Royal Jelly".
+            keys[i] = remove_prepended_the(mons_type_name(type, DESC_PLAIN));
         }
     }
 }
@@ -898,9 +897,8 @@ vector<string> LookupType::matching_keys(string regex) const
 
 static string _mons_desc_key(monster_type type)
 {
-    string name = mons_type_name(type, DESC_PLAIN);
-    if (starts_with(name, "the "))
-        name = name.substr(4); // strlen("the ")
+    // No "the Royal Jelly".
+    string name = remove_prepended_the(mons_type_name(type, DESC_PLAIN));
     if (mons_species(type) == MONS_SERPENT_OF_HELL)
         return name + " " + serpent_of_hell_flavour(type);
     return name;

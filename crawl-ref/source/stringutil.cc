@@ -563,6 +563,12 @@ vector<string> split_string(const string &sep, string s, bool trim_segments,
     return segments;
 }
 
+string remove_prepended_the(string s)
+{
+    if (starts_with(s, "the "))
+        s.erase(0, 4); // strlen("the ")
+    return s;
+}
 
 // Crude, but functional.
 string make_time_string(time_t abs_time, bool terse)

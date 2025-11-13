@@ -2706,9 +2706,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!monster_habitable_grid(simu.base_type, mons.pos()))
             find_habitable_spot_near(mons.pos(), simu.base_type, 3, simu.pos, 0);
 
-        string name = mons_type_name(simu.base_type, DESC_PLAIN);
-        if (starts_with(name, "the "))
-            name = name.substr(4); // strlen("the ")
+        // No "the Enchantress".
+        string name = remove_prepended_the(mons_type_name(simu.base_type, DESC_PLAIN));
 
         string msg = "Your " + name + " simulacrum begins to move.";
         schedule_make_derived_undead_fineff(simu.pos, simu,

@@ -1491,9 +1491,8 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         return true;
 
     // Listed in the form: "your rat", "Blorkula the orcula".
-    string mon_name = mon->name(DESC_PLAIN);
-    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
-        mon_name = mon_name.substr(4); // strlen("the ")
+    // No "your the Royal Jelly" nor "the the Royal Jelly".
+    string mon_name = remove_prepended_the(mon->name(DESC_PLAIN));
     if (!starts_with(adj, "your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;

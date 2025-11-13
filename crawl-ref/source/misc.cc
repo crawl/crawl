@@ -172,9 +172,8 @@ void attacked_monster_list::add(const monster& mons, string adj, string suffix,
 
 string attacked_monster_list::describe() const
 {
-    string mon_name = m_victims.describe(DESC_PLAIN);
-    if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
-        mon_name = mon_name.substr(4); // strlen("the ")
+    // No "your the Royal Jelly" nor "the the Royal Jelly".
+    string mon_name = remove_prepended_the(m_victims.describe(DESC_PLAIN));
     const char* prefix = "";
     if (!starts_with(m_adj, "your"))
         prefix = "the ";

@@ -250,6 +250,8 @@ set<size_t> find_escapes(const string &s);
 string deescape(string s, const set<size_t> &escapes);
 string deescape(string s);
 
+string remove_prepended_the(string s);
+
 // time
 
 string make_time_string(time_t abs_time, bool terse = false);
