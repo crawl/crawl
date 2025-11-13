@@ -2831,8 +2831,11 @@ static void _print_battlecry_announcement(const monster& chief,
                                 { return m->type != first_type; });
     monster_type group_type = generic ? mons_genus(chief.type) : first_type;
 
-    const string ally_desc
-        = pluralise_monster(mons_type_name(group_type, DESC_PLAIN));
+    // No monster has a "the " name, can cast either of these spells, and can
+    // show up in more than one instance (outside wizard mode and wuth some
+    // major code changes), but make sure the wording is right just in case.
+    string name = remove_prepended_the(mons_type_name(group_type, DESC_PLAIN));
+    const string ally_desc = pluralise_monster(name);
 
     if (spell_cast == SPELL_BATTLECRY)
     {
@@ -8579,14 +8582,17 @@ static void _speech_keys(vector<string>& key_list,
     // We don't include "real" or "gestures" here since that can be
     // be determined from the monster type; or "targeted" since that
     // can be determined from the spell.
-    key_list.push_back(spell_name + " "
-                       + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
-    key_list.push_back(spell_name + " "
-                       + mons_type_name(mons_species(mons->type), DESC_PLAIN)
-                       + cast_str);
-    key_list.push_back(spell_name + " "
-                       + mons_type_name(mons_genus(mons->type), DESC_PLAIN)
-                       + cast_str);
+
+    // No "the Serpent of Hell". (Its genus doesn't start with "the ", but
+    // just in case that changes...)
+    string mon_type = remove_prepended_the(mons_type_name(mons->type, DESC_PLAIN));
+    string spe_type = remove_prepended_the(mons_type_name(mons_species(mons->type), DESC_PLAIN));
+    string gen_type = remove_prepended_the(mons_type_name(mons_genus(mons->type), DESC_PLAIN));
+
+    key_list.push_back(spell_name + " " + mon_type + cast_str);
+    key_list.push_back(spell_name + " " + spe_type + cast_str);
+    key_list.push_back(spell_name + " " + gen_type + cast_str);
+
     if (wizard)
     {
         key_list.push_back(make_stringf("%s %swizard%s",
@@ -8627,11 +8633,9 @@ static void _speech_keys(vector<string>& key_list,
     const unsigned int num_spell_keys = key_list.size();
 
     // Next the monster type name, then species name, then genus name.
-    key_list.push_back(mons_type_name(mons->type, DESC_PLAIN) + cast_str);
-    key_list.push_back(mons_type_name(mons_species(mons->type), DESC_PLAIN)
-                       + cast_str);
-    key_list.push_back(mons_type_name(mons_genus(mons->type), DESC_PLAIN)
-                       + cast_str);
+    key_list.push_back(mon_type + cast_str);
+    key_list.push_back(spe_type + cast_str);
+    key_list.push_back(gen_type + cast_str);
 
     // Last, generic wizard, priest or magical.
     if (wizard)
