@@ -3079,12 +3079,13 @@ void _walk_on_decor(dungeon_feature_type new_grid)
     }
 }
 
-static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
+static string _base_feature_desc(dungeon_feature_type grid, trap_type trap,
+                                 branch_type branch = you.where_are_you)
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
         return full_trap_name(trap);
 
-    if (grid == DNGN_ROCK_WALL && player_in_branch(BRANCH_PANDEMONIUM))
+    if (grid == DNGN_ROCK_WALL && branch == BRANCH_PANDEMONIUM)
         return "wall of the weird stuff which makes up Pandemonium";
     else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
         return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
@@ -3097,9 +3098,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
 string feature_description(dungeon_feature_type grid, trap_type trap,
                            const string & cover_desc,
-                           description_level_type dtype)
+                           description_level_type dtype,
+                           branch_type branch)
 {
-    string desc = _base_feature_desc(grid, trap);
+    string desc = _base_feature_desc(grid, trap, branch);
     desc += cover_desc;
 
     if (grid == DNGN_FLOOR && dtype == DESC_A)
