@@ -1781,7 +1781,7 @@ bool monster_info::net_immune() const
            && mons_class_is_stationary(base_type);
 }
 
-bool monster_info::cannot_move() const
+bool monster_info::cannot_act() const
 {
     return is(MB_PARALYSED) || is(MB_PETRIFIED);
 }
@@ -1795,7 +1795,7 @@ bool monster_info::asleep() const
 bool monster_info::incapacitated() const
 {
     // Duplicates actor::incapacitated
-    return cannot_move()
+    return cannot_act()
             || asleep()
             || is(MB_CONFUSED)
             || is(MB_CAUGHT);

@@ -449,8 +449,7 @@ struct monster_info : public monster_info_base
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
-    // Note: actor version is now actor::cannot_act.
-    bool cannot_move() const;
+    bool cannot_act() const;
     bool asleep() const;
     bool incapacitated() const;
     bool airborne() const;
