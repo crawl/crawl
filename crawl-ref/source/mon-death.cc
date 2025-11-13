@@ -2706,8 +2706,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!monster_habitable_grid(simu.base_type, mons.pos()))
             find_habitable_spot_near(mons.pos(), simu.base_type, 3, simu.pos, 0);
 
-        string msg = "Your " + mons_type_name(simu.base_type, DESC_PLAIN) +
-                     " simulacrum begins to move.";
+        string name = mons_type_name(simu.base_type, DESC_PLAIN);
+        if (starts_with(name, "the "))
+            name = name.substr(4); // strlen("the ")
+
+        string msg = "Your " + name + " simulacrum begins to move.";
         schedule_make_derived_undead_fineff(simu.pos, simu,
                                             get_monster_data(simu.base_type)->HD,
                                             "the player",
