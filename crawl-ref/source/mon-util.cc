@@ -1757,7 +1757,10 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
     // Also for the Enchantress: treat Enchantress as an adjective to
     // avoid mentions of "Enchantress the spriggan zombie".
     else if (mc == MONS_ENCHANTRESS)
+    {
+        mon.mname = "Enchantress";
         mon.flags |= MF_NAME_ADJECTIVE;
+    }
     else if (mons_species(mc) == MONS_SERPENT_OF_HELL)
         mon.mname = "";
 
