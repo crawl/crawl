@@ -728,7 +728,7 @@ static bool _displace_charge_blocker(actor& agent, coord_def pos)
 spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target)
 {
     // Check for unholy weapons, breadswinging, etc
-    if (agent.is_player() && !wielded_weapon_check(you.weapon(), "charge"))
+    if (agent.is_player() && !wielded_weapon_check("charge"))
         return spret::abort;
 
     coord_def dest_pos = get_electric_charge_landing_spot(agent, target);
@@ -1466,7 +1466,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
     if (agent.is_player() && !katana_defender)
     {
-        if (!wielded_weapon_check(weapon))
+        if (!wielded_weapon_check())
             return spret::abort;
 
         if (player_unrand_bad_attempt(weapon, offhand, nullptr, false))

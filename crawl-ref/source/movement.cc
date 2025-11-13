@@ -623,7 +623,7 @@ static bool _check_rampage(bool attacking, coord_def rampage_destination,
     if (attacking)
     {
         return check_moveto(rampage_destination, noun)
-               && wielded_weapon_check(you.weapon(), noun + " and attack");
+               && wielded_weapon_check(" and attack");
     }
     // You won't always move over rampage_destination, sometimes an invisible
     // monster will get in the way and stop you on it. But warning about this
@@ -1114,7 +1114,7 @@ void move_player_action(coord_def move)
 
         // Allow (e.g.) "Really move and attack while wielding nothing?" abort.
         if (!rampaged && wu_jian_move_triggers_attacks(targ)
-            && !wielded_weapon_check(you.weapon(), "move and attack"))
+            && !wielded_weapon_check("move and attack"))
         {
             return;
         }

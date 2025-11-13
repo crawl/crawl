@@ -1111,7 +1111,7 @@ LUARET1(crawl_random_real, number, random_real())
  * @treturn boolean
  * @function weapon_check
  */
-LUARET1(crawl_weapon_check, boolean, wielded_weapon_check(you.weapon()))
+LUARET1(crawl_weapon_check, boolean, wielded_weapon_check())
 
 /*** Get the full Worley noise datum for a given point
  * @tparam number px

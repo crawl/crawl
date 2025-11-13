@@ -568,13 +568,11 @@ namespace quiver
 
             bool targ_mid = false;
 
-            const item_def *weapon = you.weapon();
-
             // This is redundant with a later check in fight_melee; but, the
             // way this check works, if the player overrides it once it won't
             // give a warning until they switch weapons. UI-wise, if there is
             // going to be a targeter it makes sense to show it first.
-            if (target.needs_targeting() && !wielded_weapon_check(weapon))
+            if (target.needs_targeting() && !wielded_weapon_check())
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code

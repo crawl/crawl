@@ -494,8 +494,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(*defender) && !simu
-            && !wielded_weapon_check(you.weapon()))
+        if (you.can_see(*defender) && !simu && !wielded_weapon_check())
         {
             you.turn_is_over = false;
             return false;
@@ -1001,8 +1000,9 @@ static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
             });
 }
 
-bool wielded_weapon_check(const item_def *weapon, string attack_verb)
+bool wielded_weapon_check(string attack_verb)
 {
+    const item_def *weapon = you.weapon();
     const item_def *offhand = you.offhand_weapon();
     if (you.received_weapon_warning || you.confused())
         return true;
