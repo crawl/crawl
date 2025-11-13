@@ -19,6 +19,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "command.h"
@@ -3080,14 +3081,25 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 }
 
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap,
-                                 branch_type branch = you.where_are_you)
+                                 level_id place = level_id::current())
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
         return full_trap_name(trap);
 
-    if (grid == DNGN_ROCK_WALL && branch == BRANCH_PANDEMONIUM)
-        return "wall of the weird stuff which makes up Pandemonium";
-    else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
+    switch (place.branch)
+    {
+    case BRANCH_PANDEMONIUM:
+        if (grid == DNGN_ROCK_WALL)
+            return "wall of the weird stuff which makes up Pandemonium";
+        break;
+    case BRANCH_VAULTS:
+        const int num_levels = branches[BRANCH_VAULTS].numlevels;
+        if (place.depth == num_levels - 1 && feat_is_stone_stair_down(grid))
+            return "metal staircase leading down";
+        break;
+    }
+
+    if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
         return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
     else if (!is_valid_feature_type(grid))
         return "";
@@ -3099,9 +3111,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap,
 string feature_description(dungeon_feature_type grid, trap_type trap,
                            const string & cover_desc,
                            description_level_type dtype,
-                           branch_type branch)
+                           level_id place)
 {
-    string desc = _base_feature_desc(grid, trap, branch);
+    string desc = _base_feature_desc(grid, trap, place);
     desc += cover_desc;
 
     if (grid == DNGN_FLOOR && dtype == DESC_A)
