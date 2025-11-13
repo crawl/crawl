@@ -7232,6 +7232,9 @@ Terence triumphant
 
 # Ayla, Chrono Trigger
 @The_monster@ says, "Win and live. Lose and die. It's the rule of life."
+
+# Realm of Atland; this is especially appropriate if he's wielding Throatcutter
+@The_monster@ says, "Honour does not prevent me from taking a tactical advantage."
 ## END Terence ###
 %%%%
 ##################### A coarse and lanky orc. Urug lost her eye in a fight with a harpy,
