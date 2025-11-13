@@ -1962,11 +1962,9 @@ void bolt::apply_bolt_paralysis(monster* mons)
 {
     if (mons->paralysed() || mons->stasis())
         return;
-    // asleep monsters can still be paralysed (and will be always woken by
-    // trying to resist); the message might seem wrong but paralysis is
-    // always visible.
+
     if (!mons->is_firewood()
-        && simple_monster_message(*mons, " suddenly stops moving!"))
+        && simple_monster_message(*mons, " cannot move!"))
     {
         obvious_effect = true;
     }
