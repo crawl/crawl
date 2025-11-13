@@ -110,8 +110,7 @@ xom_event_type xom_acts(int sever, maybe_bool niceness = maybe_bool::maybe,
 xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
 void xom_take_action(xom_event_type action, int sever);
 
-xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
-                                            bool debug = false);
+void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);

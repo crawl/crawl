@@ -453,7 +453,7 @@ void banished(const string &who, const int power)
     if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
         && who != "a distortion unwield")
     {
-        xom_maybe_reverts_banishment(false, false);
+        xom_maybe_reverts_banishment();
     }
 }
 

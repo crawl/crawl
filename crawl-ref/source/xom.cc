@@ -2077,6 +2077,7 @@ static void _xom_give_mutations(bool good)
 
     for (int i = num_tries; i > 0; --i)
     {
+        // One bad mutation guaranteed when under Xom wrath.
         if (you.penance[GOD_XOM] && i == num_tries && !good)
         {
             if (!mutate(RANDOM_BAD_MUTATION, "Xom's mischief",
@@ -2085,6 +2086,8 @@ static void _xom_give_mutations(bool good)
                 failMsg = false;
             }
         }
+        // RANDOM_XOM_MUTATION is a flat coinflip for good or bad,
+        // as opposed to RANDOM_MUTATION being 60-40 good or bad.
         else if (!mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
                     good ? "Xom's grace" : "Xom's mischief",
                     failMsg, false, true, false, MUTCLASS_NORMAL))
@@ -4317,21 +4320,11 @@ static void _revert_banishment(bool xom_banished = true)
                    "revert banishment"), true);
 }
 
-xom_event_type xom_maybe_reverts_banishment(bool xom_banished, bool debug)
+// Only used for Xom rarely reverting others' banishment, now.
+void xom_maybe_reverts_banishment()
 {
-    // Never revert if Xom is bored or the player is under penance.
-    if (_xom_feels_nasty())
-        return XOM_BAD_BANISHMENT;
-
-    // Sometimes Xom will immediately revert banishment.
-    // Always if the banishment happened below the minimum exp level and Xom was responsible.
-    if (xom_banished && !_has_min_banishment_level() || x_chance_in_y(you.raw_piety, 1000))
-    {
-        if (!debug)
-            _revert_banishment(xom_banished);
-        return XOM_BAD_PSEUDO_BANISHMENT;
-    }
-    return XOM_BAD_BANISHMENT;
+    if (!_xom_feels_nasty() && x_chance_in_y(you.raw_piety, 1000))
+        _revert_banishment(false);
 }
 
 static void _xom_do_banishment(bool real)
@@ -4991,9 +4984,27 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                             _xom_feels_nasty());}
     },
     {
-        xom_maybe_reverts_banishment(true, true), 2, 1, [](int /*sv*/, int /*tn*/)
-        {return _allow_xom_banishment() && !player_in_branch(BRANCH_ABYSS)
-         && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
+        // Since this is an enum-based vector list and we can't adjust weights
+        // on conditions otherwise, this duplicates the Doom entry to apply
+        // slightly extra Doom on the rN∞ rMut∞ undead. Since direct Banes
+        // require boredom or wrath, it should mostly just scare players and
+        // block Xomscumming more than anything pressing on Xom balance.
+        XOM_BAD_DOOM, 50, 100, [](int /*sv*/, int tn)
+        {return tn <= 8 && you.is_lifeless_undead() &&
+                (you.attribute[ATTR_DOOM] < 80 || _xom_feels_nasty());}
+    },
+    {
+        XOM_BAD_PSEUDO_BANISHMENT, 2, 1, [](int /*sv*/, int /*tn*/)
+        {return !_xom_feels_nasty() && _allow_xom_banishment()
+                && !player_in_branch(BRANCH_ABYSS)
+                && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
+    },
+    {
+        XOM_BAD_BANISHMENT, 1, 1, [](int /*sv*/, int /*tn*/)
+        {return _allow_xom_banishment()
+                && !x_chance_in_y(you.raw_piety * 2, 1000)
+                && !player_in_branch(BRANCH_ABYSS)
+                && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
     },
 
     // Highly circumstantial effects with less total
@@ -5560,7 +5571,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                     15}},
     { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring, 25}},
     { XOM_BAD_FAKE_SHATTER, {"fake shatter", _xom_fake_shatter, 25}},
-    { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
+    { XOM_BAD_MUTATION, { "random mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
     { XOM_BAD_SEND_IN_THE_CLONES, {"friendly and hostile illusions",
                                    _xom_send_in_clones, 40}},
