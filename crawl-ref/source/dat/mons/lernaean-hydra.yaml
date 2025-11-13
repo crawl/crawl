@@ -1,5 +1,4 @@
 name: "Lernaean hydra"
-enum: lernaean_hydra
 glyph: {char: "D", colour: yellow}
 flags: [name_the, cold_blood, unique, fast_regen, tall_tile]
 resists: {poison: 1}
