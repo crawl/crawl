@@ -74,6 +74,8 @@ void circle_def::init(int param, circle_type ctype)
     case C_SQUARE:
         radius = param;
         break;
+    default:
+        die("Unhandled circle_type");
     }
     is_square = (ctype == C_SQUARE);
     init_bbox();
