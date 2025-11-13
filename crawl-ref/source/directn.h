@@ -367,7 +367,7 @@ string feature_description(dungeon_feature_type grid,
                            trap_type trap = NUM_TRAPS,
                            const string & cover_desc = "",
                            description_level_type dtype = DESC_A,
-                           branch_type branch = you.where_are_you);
+                           level_id place = level_id::current());
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
