@@ -614,10 +614,6 @@ Rupert cast targeted
 
 @The_monster@ yells loudly @at@ @target@.
 %%%%
-Lehudib's Crystal Spear Serpent of Hell cast
-
-@The_monster@ spits crystal @at@ @target@.
-%%%%
 Vv cast
 
 VISUAL:@The_monster@ gestures sharply.
