@@ -53,7 +53,7 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
         "libncursesw5-dev",
         "bison",
         "flex",
-        "liblua5.1-0-dev",
+        "liblua5.4-dev",
         "libsqlite3-dev",
         "libz-dev",
         "pkg-config",

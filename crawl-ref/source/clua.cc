@@ -466,11 +466,11 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             break;
         }
         case 'd':       // Integer
-            lua_pushnumber(ls, va_arg(args, int));
+            lua_pushinteger(ls, va_arg(args, int));
             break;
         case 'L':
             die("ambiguous long in Lua push_args");
-            lua_pushnumber(ls, va_arg(args, long));
+            lua_pushinteger(ls, va_arg(args, long));
             break;
         case 'b':
             lua_pushboolean(ls, va_arg(args, int));
@@ -767,11 +767,7 @@ void CLua::init_lua()
     };
 
     for (auto l : lua_core_libs)
-    {
-        lua_pushcfunction(_state, l.second);
-        lua_pushstring(_state, l.first.c_str());
-        lua_call(_state, 1, 0);
-    }
+        luaL_requiref(_state, l.first.c_str(), l.second, 1);
 #endif
 
     lua_pushboolean(_state, managed_vm);

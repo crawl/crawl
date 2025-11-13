@@ -256,7 +256,7 @@ function dgn_run_map(...)
     local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
     for _, map_chunk_function in ipairs(map_chunk_functions) do
       if map_chunk_function then
-        ret = setfenv(map_chunk_function, env)()
+        ret = crawl.setfenv(map_chunk_function, env)()
       end
     end
     return ret
@@ -276,7 +276,7 @@ function dgn.places_connected(map, map_glyph, test_connect, ...)
          error("Can't find coords for '" .. glyph .. "'")
       end
    end
-   return test_connect(map, unpack(points))
+   return test_connect(map, table.unpack(points))
 end
 
 function dgn.any_glyph_connected(map, ...)

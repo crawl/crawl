@@ -27,7 +27,7 @@ local function test_losight_symmetry()
   -- For each position in LOS, jump to that position and make sure we
   -- can see the original spot.
   for _, spot in ipairs(visible_spots) do
-    local x, y = unpack(spot)
+    local x, y = table.unpack(spot)
     you.moveto(x, y)
     if not you.see_cell(you_x, you_y) then
       -- Draw the view to show the problem.

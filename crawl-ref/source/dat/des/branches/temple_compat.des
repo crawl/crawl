@@ -20,7 +20,7 @@ function get_altar_count(e, default)
   local params = dgn.map_parameters()
   local count = "";
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       -- temple_altars_ is 14 characters
       count = string.sub(tag, 15)
