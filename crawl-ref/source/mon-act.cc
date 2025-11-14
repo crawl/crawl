@@ -3667,7 +3667,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         return true;
     }
 
-    if (mons.is_constricted())
+    if (mons.is_constricted() && !mons.has_ench(ENCH_BOUND))
     {
         if (mons.attempt_escape())
             simple_monster_message(mons, " escapes!");
