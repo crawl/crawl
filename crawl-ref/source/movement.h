@@ -9,7 +9,7 @@ void player_displace_monster(monster* mons, const coord_def &loc);
 
 void player_did_deliberate_movement();
 void remove_ice_movement();
-bool cancel_harmful_move(bool physically = true, bool rampaging = false);
+bool cancel_harmful_move(bool physically = true);
 void apply_noxious_bog(const coord_def old_pos);
 bool apply_cloud_trail(const coord_def old_pos);
 bool cancel_confused_move(bool stationary);

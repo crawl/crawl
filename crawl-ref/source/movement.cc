@@ -120,12 +120,11 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-static bool _cancel_barbed_move(bool rampaging)
+static bool _cancel_barbed_move()
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
         std::string prompt = "The barbs in your skin will harm you if you move.";
-        prompt += rampaging ? " Rampaging like this could really hurt!" : "";
         prompt += " Continue?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -193,9 +192,9 @@ static bool _cancel_ice_move()
     return false;
 }
 
-bool cancel_harmful_move(bool physically, bool rampaging)
+bool cancel_harmful_move(bool physically)
 {
-    return physically ? (_cancel_barbed_move(rampaging) || _cancel_ice_move())
+    return physically ? (_cancel_barbed_move() || _cancel_ice_move())
         : _cancel_ice_move();
 }
 
