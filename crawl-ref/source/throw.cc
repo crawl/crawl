@@ -207,8 +207,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
-    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET) && mi.net_immune())
-        descs.emplace_back("immune to nets");
+    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    {
+        if (mi.net_immune())
+            descs.emplace_back("immune to nets");
+        else if (mi.net_escape_capable())
+            descs.emplace_back("can blink free");
+    }
 
     // Display the chance for a dart of para/confuse/sleep/frenzy
     // to affect monster

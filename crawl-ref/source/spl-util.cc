@@ -2004,6 +2004,15 @@ bool spell_can_be_enkindled(spell_type spell)
     }
 }
 
+// Spells to escape from a net more swiftly.
+bool is_monster_net_escape_spell(spell_type spell)
+{
+    return spell == SPELL_BLINK
+            || spell == SPELL_BLINK_AWAY
+            || spell == SPELL_BLINK_RANGE
+            || spell == SPELL_BLINK_CLOSE;
+}
+
 /* How to regenerate this:
    comm -2 -3 \
     <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=34 | sort) \

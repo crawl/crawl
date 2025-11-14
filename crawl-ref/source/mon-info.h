@@ -448,6 +448,7 @@ struct monster_info : public monster_info_base
 
     size_type body_size() const;
     bool net_immune() const;
+    bool net_escape_capable() const;
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)

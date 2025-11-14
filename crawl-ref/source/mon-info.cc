@@ -1755,6 +1755,15 @@ bool monster_info::net_immune() const
            && mons_class_is_stationary(base_type);
 }
 
+bool monster_info::net_escape_capable() const
+{
+    for (const auto& spell : get_unique_spells(*this))
+        if (is_monster_net_escape_spell(spell.spell))
+            return true;
+
+    return false;
+}
+
 bool monster_info::cannot_act() const
 {
     return is(MB_PARALYSED) || is(MB_PETRIFIED);
