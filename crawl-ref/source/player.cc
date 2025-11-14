@@ -628,7 +628,7 @@ void player::finalise_movement(const actor* /*to_blame*/)
         remove_ice_movement();
 
         if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
-            player_did_deliberate_movement((bool)(last_move_flags & MV_RAMPAGE));
+            player_did_deliberate_movement();
     }
 
     // Assuming that entering the same square means coming from above (flight)

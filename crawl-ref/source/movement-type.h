@@ -22,25 +22,21 @@ enum movement_type_flags
     // would otherwise not be able to stand on).
     MV_ALLOW_OVERLAP            = 1<<3,
 
-    // Is a subsequent movement caused by Rampaging (which has some different
-    // timing considerations).
-    MV_RAMPAGE                  = 1<<4,
-
     // Movement done by some internal process that should not result in any
     // post-movement effects. For players, also implies MV_ALLOW_OVERLAP and
     // bypasses some sanity checks.
-    MV_INTERNAL                 = 1<<5,
+    MV_INTERNAL                 = 1<<4,
 
     // Movement should not actually update the monster grid, if performed on a
     // monster. **This is very dangerous and should never be done unless you're
     // confident in what you're doing!**
-    MV_NO_MGRID_UPDATE          = 1<<6,
+    MV_NO_MGRID_UPDATE          = 1<<5,
 
     // Movement should not interrupt travel on its own.
-    MV_NO_TRAVEL_STOP           = 1<<7,
+    MV_NO_TRAVEL_STOP           = 1<<6,
 
     MV_LAST = MV_NO_TRAVEL_STOP,
 };
-DEF_BITFIELD(movement_type, movement_type_flags, 7);
+DEF_BITFIELD(movement_type, movement_type_flags, 6);
 COMPILE_CHECK(movement_type::exponent(movement_type::last_exponent)
                                             == movement_type_flags::MV_LAST);

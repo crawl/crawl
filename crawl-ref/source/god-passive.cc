@@ -1826,7 +1826,7 @@ void dithmenos_shadow_spell(spell_type spell)
     mons_cast(mon, beam, shadow_spell, MON_SPELL_WIZARD);
 }
 
-void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)
+void wu_jian_trigger_serpents_lash(bool wall_jump)
 {
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
        return;
@@ -1853,8 +1853,6 @@ void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)
         you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
         mpr("Your supernatural speed expires.");
     }
-
-    place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
 }
 
 static void _wu_jian_increment_heavenly_storm()
@@ -1946,8 +1944,6 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         _wu_jian_increment_heavenly_storm();
 
-    you.apply_berserk_penalty = false;
-
     const int number_of_attacks = _wu_jian_number_of_attacks(false);
 
     if (number_of_attacks == 0)
@@ -2014,8 +2010,6 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
 
         if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
             _wu_jian_increment_heavenly_storm();
-
-        you.apply_berserk_penalty = false;
 
         const int number_of_attacks = _wu_jian_number_of_attacks(false);
         if (number_of_attacks == 0)
@@ -2119,8 +2113,6 @@ bool wu_jian_wall_jump_effects()
         if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
             _wu_jian_increment_heavenly_storm();
 
-        you.apply_berserk_penalty = false;
-
         // Twice the attacks as Wall Jump spends twice the time
         const int number_of_attacks = _wu_jian_number_of_attacks(true);
         if (number_of_attacks == 0)
@@ -2160,8 +2152,8 @@ bool wu_jian_post_move_effects(bool did_wall_jump,
     if (!did_wall_jump)
         attacked = _wu_jian_trigger_martial_arts(old_pos, you.pos());
 
-    if (you.turn_is_over)
-        wu_jian_trigger_serpents_lash(did_wall_jump, old_pos);
+    if (you.attribute[ATTR_SERPENTS_LASH])
+        place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
 
     return attacked;
 }

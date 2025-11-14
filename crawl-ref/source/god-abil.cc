@@ -6405,6 +6405,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     you.turn_is_over = true;
     request_autopickup();
     wu_jian_post_move_effects(true, initial_position);
+    wu_jian_trigger_serpents_lash(true);
 
     you.finalise_movement();
 
