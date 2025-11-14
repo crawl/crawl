@@ -145,7 +145,7 @@ public:
 
     static bool is_managed_vm(lua_State *ls);
 
-    void print_stack();
+    void print_stack(FILE* file);
 
     /* Add the libraries and globals currently used by clua and dlua */
     void init_libraries();

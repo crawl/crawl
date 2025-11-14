@@ -875,28 +875,28 @@ void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 
 // Can be called from within a debugger to look at the current Lua
 // call stack. (Borrowed from ToME 3)
-void CLua::print_stack()
+void CLua::print_stack(FILE* file)
 {
     struct lua_Debug dbg;
     int              i = 0;
     lua_State       *L = state();
 
-    fprintf(stderr, "\n");
+    fprintf(file, "\n");
     while (lua_getstack(L, i++, &dbg) == 1)
     {
         lua_getinfo(L, "lnuS", &dbg);
 
-        char* file = strrchr(dbg.short_src, '/');
-        if (file == nullptr)
-            file = dbg.short_src;
+        char* lua_file = strrchr(dbg.short_src, '/');
+        if (lua_file == nullptr)
+            lua_file = dbg.short_src;
         else
-            file++;
+            lua_file++;
 
-        fprintf(stderr, "%s, function %s, line %d\n", file,
+        fprintf(file, "%s, function %s, line %d\n", lua_file,
                 dbg.name, dbg.currentline);
     }
 
-    fprintf(stderr, "\n");
+    fprintf(file, "\n");
 }
 
 // //////////////////////////////////////////////////////////////////////

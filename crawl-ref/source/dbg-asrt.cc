@@ -739,10 +739,10 @@ void do_crash_dump()
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
     fprintf(file, "clua stack:\n");
-    clua.print_stack();
+    clua.print_stack(file);
 
     fprintf(file, "dlua stack:\n");
-    dlua.print_stack();
+    dlua.print_stack(file);
 
     // Lastly try to dump the Lua persistent data and the contents of the Lua
     // markers, since actually running Lua code has the greatest chance of
