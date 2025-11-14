@@ -826,7 +826,6 @@ namespace arena
     static void do_fight()
     {
         viewwindow();
-        update_screen();
         clear_messages(true);
 
         {
@@ -857,10 +856,7 @@ namespace arena
                 ASSERT(you.pet_target == MHITNOT);
             }
             if (!contest_cancelled)
-            {
                 viewwindow();
-                update_screen();
-            }
         }
 
         if (contest_cancelled)

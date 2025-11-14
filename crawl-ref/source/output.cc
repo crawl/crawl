@@ -1622,6 +1622,10 @@ void print_stats()
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
 #endif
+
+#ifdef USE_TILE
+    tiles.set_need_redraw();
+#endif
 }
 
 void print_stats_level()
@@ -1689,6 +1693,10 @@ void smallterm_warning()
     CGOTOXY(1,1, GOTO_CRT);
     clrscr();
     CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
+#ifdef USE_TILE
+    tiles.set_need_redraw();
+#endif
+    update_screen();
 }
 #endif
 
@@ -1755,6 +1763,10 @@ void redraw_screen(bool show_updates)
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
+#endif
+
+#ifdef USE_TILE
+    tiles.set_need_redraw();
 #endif
 }
 

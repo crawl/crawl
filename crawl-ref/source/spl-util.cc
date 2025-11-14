@@ -393,7 +393,6 @@ bool add_spell_to_memory(spell_type spell)
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
-    update_screen();
 #endif
 
     return true;
@@ -421,7 +420,6 @@ bool del_spell_from_memory_by_slot(int slot)
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
-    update_screen();
 #endif
 
     return true;

@@ -456,6 +456,20 @@ void clrscr()
 
 #endif // !USE_TILE_LOCAL
 
+void delay(unsigned int ms)
+{
+    if (crawl_state.disables[DIS_DELAY])
+        return;
+#ifdef USE_TILE
+    // XXX: The old implemented of delay would always unconditionally redraw
+    // tiles. Which has lead to code that calls delay not always calling
+    // `tiles.set_need_redraw()` when it needs to redraw tiles.
+    tiles.set_need_redraw();
+#endif
+    update_screen();
+    delay_sys(ms);
+}
+
 coord_def cgetsize(GotoRegion region)
 {
     switch (region)

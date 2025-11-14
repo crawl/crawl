@@ -780,7 +780,6 @@ void change_species_to(species_type sp)
     init_player_doll();
 #endif
     redraw_screen();
-    update_screen();
 
     you.equipment.update();
 }

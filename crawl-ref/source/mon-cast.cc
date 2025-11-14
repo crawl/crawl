@@ -1151,7 +1151,6 @@ static void _fire_simple_beam(monster &/*caster*/, mon_spell_slot, bolt &pbolt)
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
     viewwindow();
-    update_screen();
     pbolt.fire();
 }
 
@@ -1167,7 +1166,6 @@ static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &pbolt)
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
     viewwindow();
-    update_screen();
     const actor* foe = caster.get_foe();
     const bool need_more = foe && (foe->is_player()
                                    || you.see_cell(foe->pos()));

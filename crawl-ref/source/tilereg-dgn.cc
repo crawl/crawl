@@ -588,7 +588,6 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         pickup_menu(o);
                         flush_prev_message();
                         redraw_screen();
-                        update_screen();
                         return CK_MOUSE_CMD;
                     }
                     return encode_command_as_key(CMD_PICKUP);
