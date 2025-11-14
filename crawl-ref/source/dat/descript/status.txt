@@ -1237,7 +1237,6 @@ Phobia status
 Your claustrophobia has given you a slaying malus. This is dependent on the
 number of walls surrounding you.
 %%%%
-
 Dim status
 
 The power of all your spells is reduced by half.
