@@ -164,6 +164,8 @@ private:
  */
 static monster_type _soh_type(string &soh_name)
 {
+    // If no branch or no valid branch was specified, this will be "hell", in
+    // which case we default to Gehenna below.
     const string flavour = lowercase_string(soh_name.substr(soh_name.find_last_of(' ')+1));
 
     branch_type branch = NUM_BRANCHES;
@@ -180,9 +182,8 @@ static monster_type _soh_type(string &soh_name)
         case BRANCH_TARTARUS:
             return MONS_SERPENT_OF_HELL_TARTARUS;
         case BRANCH_GEHENNA:
-            return MONS_SERPENT_OF_HELL;
         default:
-            die("bad serpent of hell name");
+            return MONS_SERPENT_OF_HELL;
     }
 }
 
