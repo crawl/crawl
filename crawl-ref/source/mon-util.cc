@@ -3849,8 +3849,11 @@ bool mons_class_can_pass(monster_type mc, dungeon_feature_type grid)
     if (mons_class_habitat(mc) & HT_WALLS_ONLY)
     {
         // See the comment in habitat_is_compatible().
-        return feat_is_wall(grid) && !feat_is_permarock(grid) ||
-               feat_is_statuelike(grid);
+        if (feat_is_wall(grid) && !feat_is_permarock(grid) ||
+            feat_is_statuelike(grid))
+        {
+            return true;
+        }
     }
 
     return !feat_is_solid(grid);
