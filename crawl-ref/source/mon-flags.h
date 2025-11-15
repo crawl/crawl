@@ -158,7 +158,7 @@ enum monclass_flag_type : uint64_t
     /// Is a priest regardless of whether they have priest spells
     M_PRIEST            = BIT(48),
 
-    /// Monster name always starts with "the ". Only used by uniques.
+    /// Monster name always starts with "the ". Only works on uniques.
     M_NAME_THE          = BIT(49),
 
                         //BIT(50),
