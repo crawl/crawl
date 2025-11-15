@@ -1551,19 +1551,25 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (spell == MON_SUMM_WPN_REAP)
         mg.summon_duration = random_range(200, 400);
 
-    if (!mons->mname.empty())
+    if (mons_is_unique(mons->type) || !mons->mname.empty())
     {
-        if (!(mons->flags & MF_NAME_NOCORPSE))
-            mg.mname = mons->mname;
+        monster_flags_t orig_mon_flags = mons->flags;
+
+        if (!mons->mname.empty())
+        {
+            if (!(mons->flags & MF_NAME_NOCORPSE))
+                mg.mname = mons->mname;
+            else
+                // Remove all the monster's name flags, since it lost its name.
+                orig_mon_flags &= ~MF_ALL_NAMES;
+        }
         else
-            // Remove all the monster's name flags, since it lost its name.
-            mons->flags &= ~MF_ALL_NAMES;
+            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+
+        mg.extra_flags = orig_mon_flags & (MF_NAME_SUFFIX
+                                             | MF_NAME_ADJECTIVE
+                                             | MF_NAME_DESCRIPTOR);
     }
-    else if (mons_is_unique(mons->type))
-        mg.mname = mons_type_name(mons->type, DESC_PLAIN);
-    mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
-                                      | MF_NAME_ADJECTIVE
-                                      | MF_NAME_DESCRIPTOR);
 
     // Kiku wrath and Bind Soul simulacrum are permanent and shouldn't give rewards
     if (god == GOD_KIKUBAAQUDGHA || spell == SPELL_BIND_SOULS)
