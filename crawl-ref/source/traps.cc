@@ -386,7 +386,7 @@ void trap_def::trigger(actor& triggerer)
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
             // Should always be true.
-            bool moved = triggerer.move_to(to, MV_TRANSLOCATION);
+            bool moved = triggerer.move_to(to, MV_TRANSLOCATION | MV_GOLUBRIA);
             ASSERT(moved);
 
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);

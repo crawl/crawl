@@ -35,6 +35,10 @@ enum movement_type_flags
     // Movement should not interrupt travel on its own.
     MV_NO_TRAVEL_STOP           = 1<<6,
 
+    // Movement was from entering a Passage of Golubria (and so should not
+    // trigger the exit passage upon arrival, resulting in an infinite loop).
+    MV_GOLUBRIA                 = 1<<7,
+
     MV_LAST = MV_NO_TRAVEL_STOP,
 };
 DEF_BITFIELD(movement_type, movement_type_flags, 6);

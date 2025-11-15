@@ -670,7 +670,7 @@ void player::finalise_movement(const actor* /*to_blame*/)
         // Traps go off.
         // (But not when losing flight - i.e., moving into the same tile)
         trap_def* ptrap = trap_at(pos());
-        if (ptrap)
+        if (ptrap && (ptrap->type != TRAP_GOLUBRIA || !(last_move_flags & MV_GOLUBRIA)))
             ptrap->trigger(you);
 
         // If a trap we triggered moved us, much of the rest of this produces

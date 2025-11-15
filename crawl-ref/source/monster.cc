@@ -5616,7 +5616,7 @@ void monster::finalise_movement(const actor* to_blame)
     // Trigger traps last (since they could cause movement that might affect
     // some of the rest of this).
     trap_def* ptrap = trap_at(pos());
-    if (ptrap)
+    if (ptrap && (ptrap->type != TRAP_GOLUBRIA || !(last_move_flags & MV_GOLUBRIA)))
         ptrap->trigger(*this);
 
     clear_deferred_move();
