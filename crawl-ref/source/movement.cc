@@ -966,9 +966,21 @@ void move_player_action(coord_def move)
     {
         targ += move;
 
+        // Don't warn about traps or clouds on a space we will not be entering.
+        if (monster* mon_at = monster_at(targ))
+        {
+            coord_def dummy;
+            if (you.can_see(*mon_at)
+                && !mon_at->wont_attack()
+                   || !swap_check(mon_at, dummy, true))
+            {
+                continue;
+            }
+        }
+
         // Check for moving *over* all spaces but our destination.
         // (ie: ignore clouds, since we don't expect to be staying here).
-        if (i == end_step && !(monster_at(targ) && you.can_see(*monster_at(targ))))
+        if (i == end_step)
         {
             if (!check_moveto(targ, move_verb))
                 return;
