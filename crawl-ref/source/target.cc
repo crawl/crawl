@@ -2750,6 +2750,17 @@ bool targeter_teleport_other::valid_aim(coord_def a)
     return true;
 }
 
+bool targeter_teleport_other::preferred_aim(coord_def a)
+{
+    // Prefer not to target monsters which are already teleporting.
+    const monster_info* mi = env.map_knowledge(a).monsterinfo();
+
+    if (!mi)
+        return false;
+
+    return !mi->is(MB_TELEPORTING);
+}
+
 targeter_malign_gateway::targeter_malign_gateway(actor& caster)
 {
     agent = &caster;
