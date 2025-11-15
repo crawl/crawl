@@ -2842,7 +2842,7 @@ bool monster::has_damage_type(int dam_type)
 
 void monster::clear_constricted()
 {
-    del_ench(ENCH_CONSTRICTED);
+    del_ench(ENCH_CONSTRICTED, true, false);
     actor::clear_constricted();
 }
 
