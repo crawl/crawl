@@ -893,7 +893,7 @@ static void _decrement_durations()
             you.duration[DUR_FLOODED] = 0;
         else if (_decrement_a_duration(DUR_FLOODED, delay))
         {
-            mprf(MSGCH_RECOVERY, "You finishing coughing all the %s out of your lungs.",
+            mprf(MSGCH_RECOVERY, "You finish coughing all the %s out of your lungs.",
                  you.props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str());
         }
         else
