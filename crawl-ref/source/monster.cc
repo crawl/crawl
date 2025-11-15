@@ -5530,11 +5530,6 @@ void monster::finalise_movement(const actor* to_blame)
     if (cloud && cloud->type == CLOUD_BLASTMOTES)
         explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
 
-    // Monsters stepping on traps:
-    trap_def* ptrap = trap_at(pos());
-    if (ptrap)
-        ptrap->trigger(*this);
-
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);
 
@@ -5617,6 +5612,12 @@ void monster::finalise_movement(const actor* to_blame)
         if (!alive())
             return;
     }
+
+    // Trigger traps last (since they could cause movement that might affect
+    // some of the rest of this).
+    trap_def* ptrap = trap_at(pos());
+    if (ptrap)
+        ptrap->trigger(*this);
 
     clear_deferred_move();
 }

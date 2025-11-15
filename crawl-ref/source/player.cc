@@ -616,6 +616,8 @@ void player::finalise_movement(const actor* /*to_blame*/)
     if (!move_needs_finalisation || pending_revival)
         return;
 
+    const coord_def start_pos = pos();
+
     if (!(last_move_flags & MV_PRESERVE_CONSTRICTION))
         clear_invalid_constrictions();
 
@@ -660,16 +662,24 @@ void player::finalise_movement(const actor* /*to_blame*/)
         if (cloud && cloud->type == CLOUD_BLASTMOTES)
             explode_blastmotes_at(pos()); // schedules a fineff
 
+        if (env.grid(pos()) == DNGN_BINDING_SIGIL)
+            trigger_binding_sigil(you);
+
+        apply_cloud_trail(last_move_pos);
+
         // Traps go off.
         // (But not when losing flight - i.e., moving into the same tile)
         trap_def* ptrap = trap_at(pos());
         if (ptrap)
             ptrap->trigger(you);
 
-        if (env.grid(pos()) == DNGN_BINDING_SIGIL)
-            trigger_binding_sigil(you);
-
-        apply_cloud_trail(last_move_pos);
+        // If a trap we triggered moved us, much of the rest of this produces
+        // dubious results and should be skipped.
+        if (pos() != start_pos)
+        {
+            clear_deferred_move();      // Just in case.
+            return;
+        }
     }
 
     id_floor_items();
