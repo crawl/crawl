@@ -1335,7 +1335,6 @@ martyred_shade MONS_MARTYRED_SHADE
 %rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP
 %rim 1
-insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 ## Dwarves ('q')
 %sdir mon/humanoids
@@ -1466,6 +1465,7 @@ vampire_form_naga TRAN_VAMPIRE_NAGA
 vampire_form_octopode TRAN_VAMPIRE_OCTOPODE
 vampire_form_tengu TRAN_VAMPIRE_TENGU
 mushroom_form TRAN_MUSHROOM
+wisp_form TRAN_WISP
 storm_form TRAN_STORM_HUMANOID
 storm_form_felid TRAN_STORM_FELID
 storm_form_octopode TRAN_STORM_OCTOPODE

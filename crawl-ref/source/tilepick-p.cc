@@ -528,7 +528,7 @@ tileidx_t tileidx_player()
         else
             ch = TILEP_TRAN_SERPENT;
         break;
-    case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
+    case transformation::wisp:      ch = TILEP_TRAN_WISP;      break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif

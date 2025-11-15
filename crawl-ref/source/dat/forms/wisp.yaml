@@ -1,5 +1,5 @@
 enum: wisp
-equivalent_mons: insubstantial_wisp
+equivalent_mons: twister
 description: an insubstantial wisp.
 melds: [all]
 resists: {fire: 2, cold: 2, elec: 1, neg: 3, corr: 1}
