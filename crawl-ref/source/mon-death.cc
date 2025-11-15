@@ -1551,8 +1551,14 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (spell == MON_SUMM_WPN_REAP)
         mg.summon_duration = random_range(200, 400);
 
-    if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
-        mg.mname = mons->mname;
+    if (!mons->mname.empty())
+    {
+        if (!(mons->flags & MF_NAME_NOCORPSE))
+            mg.mname = mons->mname;
+        else
+            // Remove all the monster's name flags, since it lost its name.
+            mons->flags &= ~MF_ALL_NAMES;
+    }
     else if (mons_is_unique(mons->type))
         mg.mname = mons_type_name(mons->type, DESC_PLAIN);
     mg.extra_flags = mons->flags & (MF_NAME_SUFFIX

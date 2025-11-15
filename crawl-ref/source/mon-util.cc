@@ -1701,16 +1701,23 @@ void name_zombie_from_mon(monster& mon, const monster& orig)
         return;
 
     string name;
+    monster_flags_t orig_mon_flags = orig.flags;
 
     if (!orig.mname.empty())
-        name = orig.mname;
+    {
+        if (!(orig.flags & MF_NAME_NOCORPSE))
+            name = orig.mname;
+        else
+            // Remove all the monster's name flags, since it lost its name.
+            orig_mon_flags &= ~MF_ALL_NAMES;
+    }
     else
         name = mons_type_name(orig.type, DESC_PLAIN);
 
     name_zombie_from_class(mon, orig.type, name);
-    mon.flags |= orig.flags & (MF_NAME_SUFFIX
-                                 | MF_NAME_ADJECTIVE
-                                 | MF_NAME_DESCRIPTOR);
+    mon.flags |= orig_mon_flags & (MF_NAME_SUFFIX
+                                     | MF_NAME_ADJECTIVE
+                                     | MF_NAME_DESCRIPTOR);
 }
 
 // Derived undead deal 80% of the damage of the base form.
