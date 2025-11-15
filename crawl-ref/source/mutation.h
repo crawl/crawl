@@ -21,6 +21,7 @@ class formatted_string;
 
 #define HOARD_POTIONS_TIMER_KEY "hoard_potions_timer"
 #define HOARD_SCROLLS_TIMER_KEY "hoard_scrolls_timer"
+#define TELEPORTITIS_COOLDOWN_KEY "teleportitis_cooldown"
 
 enum mutation_permanence_class
 {

@@ -452,8 +452,12 @@ but less powerful. Each level of this mutation increases both effects further.
 # ------ Badmuts without matching goodmuts -----
 teleportitis mutation
 
-You occasionally teleport across the level to hostile monsters. Each level of
-this mutation increases the frequency with which this occurs.
+You periodically teleport towards hostile monsters. You will sense yourself
+destabilising several turns in advance of this happening, and may suppress it
+temporarily by reading a scroll of teleporation.
+
+Each level of this mutation increases the frequency with which you start to
+teleport.
 %%%%
 deformed body mutation
 

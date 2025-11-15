@@ -21,7 +21,9 @@
 
 using std::string;
 
-#define SJ_TELEPORTITIS_SOURCE "SJ_TELEPORTITIS_SOURCE"
+// The mid of the source for a pending hostile teleport.
+// (Can be the player, if caused by teleportitis.)
+#define TELEPORTITIS_SOURCE "TELEPORTITIS_SOURCE"
 
 using std::vector;
 

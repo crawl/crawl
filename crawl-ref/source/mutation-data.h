@@ -288,7 +288,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_CLUMSY,
 },
 
-{ MUT_TELEPORT, 3, 2, mutflag::bad,
+{ MUT_TELEPORTITIS, 3, 2, mutflag::bad,
   "teleportitis",
 
   {"You are occasionally teleported next to monsters.",

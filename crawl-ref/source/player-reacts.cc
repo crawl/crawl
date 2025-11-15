@@ -1250,9 +1250,16 @@ void player_reacts()
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
         const int teleportitis_level = get_teleportitis_level();
-        // this is instantaneous
-        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(false, true, "You feel strangely unstable.");
+
+        if (teleportitis_level > 0
+            && !you.duration[DUR_TELEPORT]
+            && one_chance_in(40 / teleportitis_level)
+            && hostile_teleport_is_possible()
+            && you.elapsed_time >= you.props[TELEPORTITIS_COOLDOWN_KEY].get_int())
+        {
+            you_teleport(true, MID_PLAYER);
+            you.props[TELEPORTITIS_COOLDOWN_KEY] = you.elapsed_time + random_range(500, 1000);
+        }
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {

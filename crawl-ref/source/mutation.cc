@@ -1673,7 +1673,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
             return false;
 
         // Formicids have stasis and so prevent mutations that would do nothing.
-        if (mut == MUT_TELEPORT && you.stasis())
+        if (mut == MUT_TELEPORTITIS && you.stasis())
             return false;
 
         if (mut == MUT_ACUTE_VISION && you.innate_sinv())
@@ -1706,7 +1706,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
     if (_mut_has_flag(def, mutflag::makhleb) && !you_worship(GOD_MAKHLEB))
         return false;
 
-    if (mut == MUT_TELEPORT && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
+    if (mut == MUT_TELEPORTITIS && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
         return false;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
@@ -1882,7 +1882,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         return false;
 
     // [Cha] don't allow teleportitis in sprint
-    if (mutat == MUT_TELEPORT && crawl_state.game_is_sprint())
+    if (mutat == MUT_TELEPORTITIS && crawl_state.game_is_sprint())
         return false;
 
     if (!mut_is_compatible(mutat, true))

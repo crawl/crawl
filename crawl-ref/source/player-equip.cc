@@ -2705,11 +2705,12 @@ void unwield_distortion(bool brand)
                            "weapon.", brand ? "rebrand" : "unwield").c_str());
         return;
     }
-    // Makes no sense to discourage unwielding a temporarily
-    // branded weapon since you can wait it out. This also
-    // fixes problems with unwield prompts (mantis #793).
+
     if (coinflip())
-        you_teleport_now(false, true, "Space warps around you!");
+    {
+        you.props[TELEPORTITIS_SOURCE].get_int() = MID_PLAYER;
+        you_teleport_now(false, "Space warps around you!");
+    }
     else if (coinflip())
     {
         you.banish(nullptr,

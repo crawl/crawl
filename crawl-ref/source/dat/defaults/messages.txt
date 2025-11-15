@@ -103,6 +103,7 @@ force_more_message += This is a scroll of acquirement
 force_more_message += create your gizmo
 force_more_message += malevolent force fills
 force_more_message += malevolence running through your instability
+force_more_message += You feel space start to destabilise
 
 ## Zot is coming!
 force_more_message += You have lingered too long

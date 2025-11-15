@@ -3910,8 +3910,8 @@ static void _tag_read_you(reader &th)
         if (you.mutation[MUT_BERSERK] > 2)
             you.mutation[MUT_BERSERK] = 2;
 
-        if (you.mutation[MUT_TELEPORT] > 2)
-            you.mutation[MUT_TELEPORT] = 2;
+        if (you.mutation[MUT_TELEPORTITIS] > 2)
+            you.mutation[MUT_TELEPORTITIS] = 2;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_RAMPAGE_HEAL

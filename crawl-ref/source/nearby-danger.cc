@@ -481,7 +481,7 @@ void revive()
         }
 
         if (dur == DUR_TELEPORT)
-            you.props.erase(SJ_TELEPORTITIS_SOURCE);
+            you.props.erase(TELEPORTITIS_SOURCE);
     }
 
     update_vision_range(); // in case you had darkness cast before

@@ -1103,7 +1103,7 @@ int get_teleportitis_level()
     if (you.stasis())
         return 0;
 
-    return you.get_mutation_level(MUT_TELEPORT) * 6;
+    return you.get_mutation_level(MUT_TELEPORTITIS);
 }
 
 // Computes bonuses to regeneration from most sources. Does not handle

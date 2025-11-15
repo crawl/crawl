@@ -930,7 +930,7 @@ spret cast_blink(int pow, bool fail)
     return spret::success;
 }
 
-void you_teleport()
+void you_teleport(bool is_hostile, mid_t teleportitis_source)
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
@@ -940,11 +940,16 @@ void you_teleport()
     {
         mpr("You feel strangely stable.");
         you.duration[DUR_TELEPORT] = 0;
-        you.props.erase(SJ_TELEPORTITIS_SOURCE);
+        you.props.erase(TELEPORTITIS_SOURCE);
     }
     else
     {
-        mpr("You feel strangely unstable.");
+        if (teleportitis_source == MID_PLAYER)
+            mprf(MSGCH_WARN, "You feel space start to destabilise around you!");
+        else if (is_hostile)
+            mprf(MSGCH_WARN, "You feel a distressing malevolence running through your instability!");
+        else
+            mpr("You feel strangely unstable.");
 
         int teleport_delay = 3 + random2(3);
 
@@ -960,6 +965,9 @@ void you_teleport()
         }
 
         you.set_duration(DUR_TELEPORT, teleport_delay);
+
+        if (is_hostile)
+            you.props[TELEPORTITIS_SOURCE].get_int() = teleportitis_source;
     }
 }
 
@@ -1023,10 +1031,9 @@ static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos)
     return large_change;
 }
 
-static bool _teleport_player(bool wizard_tele, bool teleportitis,
-                             string reason="")
+static bool _teleport_player(bool wizard_tele, string reason="")
 {
-    if (!wizard_tele && !teleportitis
+    if (!wizard_tele
         && (crawl_state.game_is_sprint() || you.no_tele())
             && !player_in_branch(BRANCH_ABYSS))
     {
@@ -1036,10 +1043,8 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         return false;
     }
 
-    // After this point, we're guaranteed to teleport. Kill the appropriate
-    // delays. Teleportitis needs to check the target square first, though.
-    if (!teleportitis)
-        interrupt_activity(activity_interrupt::teleport);
+    // After this point, we're guaranteed to teleport. Kill the appropriate delays.
+    interrupt_activity(activity_interrupt::teleport);
 
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
@@ -1116,36 +1121,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         // it doesn't count as a random teleport for Xom purposes.
         if (tries == 0)
             return false;
-        // Teleportitis requires a monster in LOS of the new location, else
-        // it silently fails.
-        else if (teleportitis)
-        {
-            int mons_near_target = 0;
-            for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-                if (mons_is_threatening(**mi) && mons_attitude(**mi) == ATT_HOSTILE)
-                    mons_near_target++;
-            if (!mons_near_target)
-            {
-                dprf("teleportitis: no monster near target");
-                return false;
-            }
-            else if (you.no_tele())
-            {
-                if (!reason.empty())
-                    mpr(reason);
-                canned_msg(MSG_STRANGE_STASIS);
-                return false;
-            }
-            else
-            {
-                interrupt_activity(activity_interrupt::teleport);
-                if (!reason.empty())
-                    mpr(reason);
-                mprf("You are yanked towards %s nearby monster%s!",
-                     mons_near_target > 1 ? "some" : "a",
-                     mons_near_target > 1 ? "s" : "");
-            }
-        }
 
         large_change = _real_teleport_cleanup(old_pos, newpos);
     }
@@ -1156,20 +1131,33 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
     return !wizard_tele;
 }
 
-// Teleportitis is currently balanced around it silently failing constantly.
-// For the rare circumstance we want to guarantee danger via monster teleport
-// other (and its equivalents), instead check for every monster and then every
-// place near a monster we could move to, and also bring the source of the spell
-// to you, so there's still some risk of escaping towards rats instead.
-// Worst-case calculation scenarios should be rare; the uses of it are rare.
-static bool hostile_teleport_player()
+static bool _is_hostile_teleport_target(const monster& mon)
+{
+    return mon.temp_attitude() == ATT_HOSTILE
+            && mons_is_threatening(mon)
+            && !testbits(env.pgrid(mon.pos()), FPROP_NO_TELE_INTO);
+}
+
+// Checks that there is at least one monster on the floor that the player could
+// be teleported towards.
+bool hostile_teleport_is_possible()
+{
+    for (monster_iterator mi; mi; ++mi)
+        if (_is_hostile_teleport_target(**mi))
+            return true;
+
+    return false;
+}
+
+// Used for teleportitis and soujourning bolt. Teleports the player immediately
+// to somewhere in LoS of some valid monster on the floor, optionally
+// teleporting a source monster with them.
+bool hostile_teleport_player(monster* source)
 {
     const coord_def oldpos = you.pos();
     coord_def newpos;
     bool large_change = false;
     vector<monster*> targets;
-    const mid_t source_mid = you.props[SJ_TELEPORTITIS_SOURCE].get_int();
-    monster* source = monster_by_mid(source_mid);
 
     if (you.no_tele())
     {
@@ -1181,10 +1169,8 @@ static bool hostile_teleport_player()
     // Since the source monster is coming along, don't count it as an option.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_is_threatening(**mi)
-            && mons_attitude(**mi) == ATT_HOSTILE
-            && !testbits(env.pgrid(mi->pos()), FPROP_NO_TELE_INTO)
-            && mi->mid != source_mid)
+        if (_is_hostile_teleport_target(**mi)
+            && (!source || *mi != source))
         {
             targets.push_back(*mi);
         }
@@ -1193,7 +1179,7 @@ static bool hostile_teleport_player()
     // If there aren't any other monsters, teleport randomly.
     bool did_teleport = false;
     if (targets.empty())
-        did_teleport = _teleport_player(false, false);
+        did_teleport = _teleport_player(false);
     else
     {
         shuffle_array(targets);
@@ -1227,7 +1213,7 @@ static bool hostile_teleport_player()
 
         // Somehow found no valid spots. Teleport randomly.
         if (newpos.origin())
-            did_teleport = _teleport_player(false, false);
+            did_teleport = _teleport_player(false);
     }
 
     if (!newpos.origin())
@@ -1239,9 +1225,9 @@ static bool hostile_teleport_player()
                 break;
         }
 
-        mprf("The spatial malevolence pulls you towards %s monster%s!",
-            mons_near_target > 1 ? "some" : "a",
-            mons_near_target > 1 ? "s" : "");
+        mprf("You are hurled through space towards %s monster%s!",
+                mons_near_target > 1 ? "some" : "a",
+                mons_near_target > 1 ? "s" : "");
 
         interrupt_activity(activity_interrupt::teleport);
         large_change = _real_teleport_cleanup(oldpos, newpos);
@@ -1337,17 +1323,18 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
+void you_teleport_now(bool wizard_tele, string reason)
 {
     bool randtele;
 
-    if (!wizard_tele && you.props.exists(SJ_TELEPORTITIS_SOURCE))
+    if (!wizard_tele && you.props.exists(TELEPORTITIS_SOURCE))
     {
-        randtele = hostile_teleport_player();
-        you.props.erase(SJ_TELEPORTITIS_SOURCE);
+        monster* source = monster_by_mid(you.props[TELEPORTITIS_SOURCE].get_int());
+        randtele = hostile_teleport_player(source);
+        you.props.erase(TELEPORTITIS_SOURCE);
     }
     else
-        randtele = _teleport_player(wizard_tele, teleportitis, reason);
+        randtele = _teleport_player(wizard_tele, reason);
 
     // Xom is amused by teleports that land you in a dangerous place, unless
     // the player is in the Abyss and teleported to escape from all the

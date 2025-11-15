@@ -518,7 +518,7 @@ void debuff_player(bool ignore_resistance)
         {
             len = 0;
             mprf(MSGCH_DURATION, "You feel strangely stable.");
-            you.props.erase(SJ_TELEPORTITIS_SOURCE);
+            you.props.erase(TELEPORTITIS_SOURCE);
         }
         else if (duration == DUR_PETRIFYING)
         {

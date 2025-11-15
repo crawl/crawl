@@ -1242,7 +1242,7 @@ static ai_action::goodness _sojourning_bolt_goodness(const monster &caster)
     const actor* foe = caster.get_foe();
     ASSERT(foe);
     return ai_action::good_or_impossible(!(foe->is_player()
-                                           && you.props.exists(SJ_TELEPORTITIS_SOURCE)));
+                                           && you.props.exists(TELEPORTITIS_SOURCE)));
 }
 
 /**

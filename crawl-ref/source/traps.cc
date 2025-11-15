@@ -1028,6 +1028,10 @@ void do_trap_effects()
 
         case TRAP_TELEPORT:
         {
+            // XXX: Approximate old chance of triggering on an average floor.
+            if (!(one_chance_in(3)))
+                break;
+
             string msg = make_stringf("%s and a teleportation trap "
                                       "spontaneously manifests!",
                                       _malev_msg().c_str());
@@ -1037,7 +1041,7 @@ void do_trap_effects()
                 simple_god_message(" warns you in time for you to avoid it.");
                 return;
             }
-            you_teleport_now(false, true, msg);
+            you_teleport_now(false, msg);
             break;
         }
 

@@ -4463,12 +4463,7 @@ void bolt::affect_player()
     if (origin_spell == SPELL_SOJOURNING_BOLT
         && final_dam > 0 && x_chance_in_y(2, 3))
     {
-        you.teleport();
-        if (you.duration[DUR_TELEPORT])
-        {
-            mprf(MSGCH_DANGER, "You feel a distressing malevolence running through your instability!");
-            you.props[SJ_TELEPORTITIS_SOURCE].get_int() = agent(true) ? agent(true)->mid : MID_NOBODY;
-        }
+        you_teleport(true, agent(true) ? agent(true)->mid : MID_NOBODY);
     }
 
     if (origin_spell == SPELL_THROW_PIE && final_dam > 0)

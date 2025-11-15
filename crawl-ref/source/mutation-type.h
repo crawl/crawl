@@ -135,7 +135,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_STRONG_STIFF,
 #endif
-    MUT_TELEPORT,
+    MUT_TELEPORTITIS,
 #if TAG_MAJOR_VERSION == 34
     MUT_TELEPORT_CONTROL,
 #endif

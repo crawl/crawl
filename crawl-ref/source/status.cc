@@ -924,7 +924,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_TELEPORT:
-        if (you.props.exists(SJ_TELEPORTITIS_SOURCE))
+        if (you.props.exists(TELEPORTITIS_SOURCE))
         {
             inf.light_text   = "!Tele!";
             inf.light_colour = RED;

@@ -926,7 +926,8 @@ static void _lugonu_transloc_retribution()
     {
         // Give extra opportunities for embarrassing teleports.
         simple_god_message(" wrath scatters you!", true, god);
-        you_teleport_now(false, true, "Space warps around you!");
+        you.props[TELEPORTITIS_SOURCE].get_int() = MID_NOBODY;
+        you_teleport_now(false, "Space warps around you!");
     }
     else if (coinflip())
     {
