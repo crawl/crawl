@@ -1027,9 +1027,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         define_zombie(mon, ztype, mg.cls);
 
         if (!mg.mname.empty())
-            name_zombie(*mon, ztype, mg.mname);
+            name_zombie_from_class(*mon, ztype, mg.mname);
         else if (mons_is_unique(ztype))
-            name_zombie(*mon, ztype, mons_type_name(ztype, DESC_THE));
+            name_zombie_from_class(*mon, ztype, mons_type_name(ztype, DESC_THE));
     }
     else
         define_monster(*mon, mg.behaviour == BEH_FRIENDLY

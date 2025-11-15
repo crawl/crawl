@@ -1665,7 +1665,7 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     return true;
 }
 
-void name_zombie(monster& mon, monster_type mc, const string &mon_name)
+void name_zombie_from_class(monster& mon, monster_type mc, const string &mon_name)
 {
     mon.mname = mon_name;
 
@@ -1695,7 +1695,7 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 }
 
-void name_zombie(monster& mon, const monster& orig)
+void name_zombie_from_mon(monster& mon, const monster& orig)
 {
     if (!mons_is_unique(orig.type) && orig.mname.empty())
         return;
@@ -1707,7 +1707,7 @@ void name_zombie(monster& mon, const monster& orig)
     else
         name = mons_type_name(orig.type, DESC_PLAIN);
 
-    name_zombie(mon, orig.type, name);
+    name_zombie_from_class(mon, orig.type, name);
     mon.flags |= orig.flags & (MF_NAME_SUFFIX
                                  | MF_NAME_ADJECTIVE
                                  | MF_NAME_DESCRIPTOR);

@@ -332,8 +332,8 @@ bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
                          dungeon_feature_type stair = DNGN_UNSEEN);
-void name_zombie(monster& mon, monster_type mc, const string &mon_name);
-void name_zombie(monster& mon, const monster& orig);
+void name_zombie_from_class(monster& mon, monster_type mc, const string &mon_name);
+void name_zombie_from_mon(monster& mon, const monster& orig);
 
 int mons_power(monster_type mc);
 

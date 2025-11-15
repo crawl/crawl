@@ -1762,7 +1762,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     mon->props[KNOWN_MAX_HP_KEY] = mon->max_hit_points;
 
-    name_zombie(*mon, orig);
+    name_zombie_from_mon(*mon, orig);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
