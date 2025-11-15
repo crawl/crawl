@@ -3086,26 +3086,19 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap,
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
         return full_trap_name(trap);
 
-    switch (place.branch)
+    if (grid == DNGN_ROCK_WALL && place.branch == BRANCH_PANDEMONIUM)
+        return "wall of the weird stuff which makes up Pandemonium";
+    else if (feat_is_stone_stair_down(grid) && place.branch == BRANCH_VAULTS
+             && place.depth == branches[BRANCH_VAULTS].numlevels - 1)
     {
-    case BRANCH_PANDEMONIUM:
-        if (grid == DNGN_ROCK_WALL)
-            return "wall of the weird stuff which makes up Pandemonium";
-        break;
-    case BRANCH_VAULTS:
-        const int num_levels = branches[BRANCH_VAULTS].numlevels;
-        if (place.depth == num_levels - 1 && feat_is_stone_stair_down(grid))
-            return "metal staircase leading down";
-        break;
+        return "metal staircase leading down";
     }
-
-    if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
+    else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
         return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
     else if (!is_valid_feature_type(grid))
         return "";
     else
         return get_feature_def(grid).name;
-
 }
 
 string feature_description(dungeon_feature_type grid, trap_type trap,
