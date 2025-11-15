@@ -340,6 +340,7 @@ enum mutation_type
     MUT_LUCKY,
     MUT_CONTAMINATION_SUSCEPTIBLE,
     MUT_RECKLESS,
+    MUT_REMOVED_MUTATION,       // Dummy entry for removed mutations.
     NUM_MUTATIONS,
     CATEGORY_MUTATIONS,
     RANDOM_MUTATION = CATEGORY_MUTATIONS,

@@ -154,6 +154,12 @@ vector<mutation_type> get_removed_mutations()
         MUT_AWKWARD_TONGUE,
         MUT_NOISE_DAMPENING,
         MUT_BERSERK,
+        MUT_STOCHASTIC_TORMENT_RESISTANCE,
+        MUT_ROLL,
+        MUT_CURL,
+        MUT_NO_CHARM_MAGIC,
+        MUT_NO_TRANSMUTATION_MAGIC,
+        MUT_VAMPIRISM,
 #endif
     };
 
@@ -292,6 +298,11 @@ void init_mut_index()
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
         }
     }
+
+    // Add dummy data for removed mutations
+    vector<mutation_type> removed_muts = get_removed_mutations();
+    for (unsigned int i = 0; i < removed_muts.size(); ++i)
+        mut_index[removed_muts[i]] = ARRAYSZ(mut_data) - 1;
 
     // this is all a bit silly but ok
     for (int i = 0; i < MUT_NON_MUTATION - CATEGORY_MUTATIONS; ++i)

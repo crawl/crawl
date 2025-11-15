@@ -3936,6 +3936,9 @@ static void _tag_read_you(reader &th)
         _clear_mutation(MUT_INHIBITED_REGENERATION);
     }
 
+    if (you.mutation[MUT_STOCHASTIC_TORMENT_RESISTANCE])
+        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
+
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())
         _clear_mutation(m);

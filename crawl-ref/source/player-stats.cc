@@ -271,11 +271,6 @@ static const vector<mut_stat_effect> mut_stat_effects = {
     { MUT_CLUMSY,    0,  0, -2 },
     { MUT_THIN_SKELETAL_STRUCTURE,
                      0,  0,  2 },
-#if TAG_MAJOR_VERSION == 34
-    { MUT_ROUGH_BLACK_SCALES, 0, 0, -1},
-    { MUT_STRONG_STIFF, 1, 0, -1 },
-    { MUT_FLEXIBLE_WEAK, -1, 0, 1 },
-#endif
 };
 
 static int _get_mut_effects(stat_type which_stat, bool innate_only)
