@@ -11,6 +11,7 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "cloud.h"
 #include "english.h"
@@ -34,6 +35,7 @@
 #include "spl-goditem.h"
 #include "stringutil.h"
 #include "transform.h"
+#include "view.h"
 #include "xom.h"
 
 static int _scale_pot_duration(int base, bool is_potion)
@@ -916,6 +918,52 @@ const PotionEffect* get_potion_effect(potion_type pot)
     }
 }
 
+static const map<potion_type, string> _spore_msg =
+{
+    { POT_CURING, "curing" },
+    { POT_HEAL_WOUNDS, "healing" },
+    { POT_HASTE, "quickening", },
+    { POT_MIGHT, "strenghtening", },
+    { POT_BRILLIANCE, "amplifying" },
+    { POT_ENLIGHTENMENT, "enlightening" },
+    { POT_INVISIBILITY, "invisible" },
+    { POT_MAGIC, "magical" },
+    { POT_BERSERK_RAGE, "infuriating" },
+    { POT_RESISTANCE, "bolstering" },
+};
+
+static void _handle_potion_fungus(potion_type potion)
+{
+    // Baseline chance not to trigger.
+    if (!one_chance_in(3))
+        return;
+
+    // Now check if there are any monsters in sight which could benefit from
+    // this potion.
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (mons_benefits_from_potion(**mi, potion))
+            targs.push_back(*mi);
+
+    // Don't print a message if nothing will happen.
+    if (targs.empty())
+        return;
+
+    draw_ring_animation(you.pos(), you.current_vision, WHITE, CYAN, true, 10);
+
+    // Affect a percentage of nearby targets, but always at least one.
+    shuffle_array(targs);
+    int num_affected = min((int)targs.size(), random_range(targs.size() * 4 / 10 + 1,
+                                                           targs.size() * 9 / 10 + 1));
+
+
+    mprf("Your fungus emits %s spores!", _spore_msg.at(potion).c_str());
+
+
+    for (int i = 0; i < num_affected; ++i)
+        mons_potion_effect(*targs[i], potion, you);
+}
+
 /**
  * Quaff a potion, identifying it if appropriate & triggering its effects on
  * the player. Does not handle decrementing item quantities.
@@ -942,6 +990,9 @@ bool quaff_potion(item_def &potion)
             mpr("You extract magical energy from the potion.");
             inc_mp(random_range(3, 6));
         }
+
+        if (you.has_mutation(MUT_POTION_FUNGUS))
+            _handle_potion_fungus(ptyp);
 
         return true;
     }
@@ -972,4 +1023,106 @@ int _xom_factor(bool was_known)
             xom_factor *= 3;
     }
     return xom_factor;
+}
+
+// Returns true if a given monster could currently gain some benefit from a
+// given potion effect. (Among those implemented for monsters).
+bool mons_benefits_from_potion(const monster& mon, potion_type potion)
+{
+    switch (potion)
+    {
+        case POT_HASTE:
+            return !mon.has_ench(ENCH_HASTE) && !mon.stasis();
+
+        case POT_MIGHT:
+            return !mon.has_ench(ENCH_MIGHT) && mons_has_attacks(mon);
+
+        case POT_BRILLIANCE:
+            return !mon.has_ench(ENCH_EMPOWERED_SPELLS) && mon.antimagic_susceptible();
+
+        case POT_HEAL_WOUNDS:
+            return mon.hit_points < mon.max_hit_points;
+
+        case POT_CURING:
+            return mon.hit_points < mon.max_hit_points
+                    || mon.has_ench(ENCH_POISON)
+                    || mon.has_ench(ENCH_CONFUSION);
+
+        case POT_ENLIGHTENMENT:
+            return !mon.has_ench(ENCH_FLIGHT) || !mon.has_ench(ENCH_STRONG_WILLED);
+
+        case POT_INVISIBILITY:
+            return !mon.has_ench(ENCH_INVIS) && !mon.backlit();
+
+        case POT_MAGIC:
+            return mon.has_ench(ENCH_ANTIMAGIC);
+
+        case POT_BERSERK_RAGE:
+            return !mon.has_ench(ENCH_BERSERK) && mon.can_go_berserk();
+
+        case POT_RESISTANCE:
+            return !mon.has_ench(ENCH_RESISTANCE);
+
+        default:
+            return false;
+    }
+}
+
+void mons_potion_effect(monster& mon, potion_type potion, const actor& source)
+{
+    switch (potion)
+    {
+        case POT_HASTE:
+            enchant_actor_with_flavour(&mon, &source, BEAM_HASTE);
+            break;
+
+        case POT_MIGHT:
+            enchant_actor_with_flavour(&mon, &source, BEAM_MIGHT);
+            break;
+
+        case POT_BRILLIANCE:
+            simple_monster_message(mon, " magic is enhanced!", true);
+            mon.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, &source));
+            break;
+
+        case POT_HEAL_WOUNDS:
+            simple_monster_message(mon, " is healed!");
+            mon.heal(random_range(30, 50));
+            break;
+
+        case POT_CURING:
+            simple_monster_message(mon, " is healed!");
+            mon.heal(random_range(10, 20));
+            mon.del_ench(ENCH_POISON);
+            mon.del_ench(ENCH_CONFUSION);
+            break;
+
+        case POT_ENLIGHTENMENT:
+        {
+            simple_monster_message(mon, " is enlightened!");
+            const int dur = random_range(300, 450);
+            mon.add_ench(mon_enchant(ENCH_FLIGHT, &source, dur));
+            mon.add_ench(mon_enchant(ENCH_STRONG_WILLED, &source, dur));
+        }
+            break;
+
+        case POT_INVISIBILITY:
+            enchant_actor_with_flavour(&mon, &source, BEAM_INVISIBILITY);
+            break;
+
+        case POT_MAGIC:
+            mon.del_ench(ENCH_ANTIMAGIC);
+            break;
+
+        case POT_BERSERK_RAGE:
+            mon.go_berserk(false);
+            break;
+
+        case POT_RESISTANCE:
+            enchant_actor_with_flavour(&mon, &source, BEAM_RESISTANCE);
+            break;
+
+        default:
+            break;
+    }
 }

@@ -503,6 +503,12 @@ booming voice mutation
 When reading scrolls in sight of hostile monsters, your voice resounds with a
 truly stupendous volume.
 %%%%
+potion fungus mutation
+
+Your body is covered in a fungus that metabolises beneficial potions you drink
+and sometimes emits spores which transmit their effects to nearby monsters -
+whether friend or foe.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 

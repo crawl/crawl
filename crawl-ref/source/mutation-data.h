@@ -1815,6 +1815,15 @@ static const mutation_def mut_data[] =
   TILEG_MUT_BOOMING_VOICE,
 },
 
+{ MUT_POTION_FUNGUS, 4, 1, mutflag::bad,
+  "potion fungus",
+
+  {"You may spread the effect of potions you drink to nearby monsters.", "", ""},
+  {"A symbiotic fungus spreads across your body.", "", ""},
+  {"The fungus across your body shrivels and falls away.", "", ""},
+  TILEG_MUT_POTION_FUNGUS,
+},
+
 { MUT_NO_STEALTH, 0, 1, mutflag::bad,
   "no stealth",
 

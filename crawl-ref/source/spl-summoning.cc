@@ -4338,11 +4338,11 @@ static bool _do_monster_potion(monster& mons, monster& alembic)
 {
     vector<pair<potion_type, int>> weights;
 
-    if (!mons.has_ench(ENCH_HASTE))
+    if (mons_benefits_from_potion(mons, POT_HASTE))
         weights.push_back({POT_HASTE, 50});
-    if (!mons.has_ench(ENCH_MIGHT) && mons_has_attacks(mons))
+    if (mons_benefits_from_potion(mons, POT_MIGHT))
         weights.push_back({POT_MIGHT, 75});
-    if (!mons.has_ench(ENCH_EMPOWERED_SPELLS) && mons.antimagic_susceptible())
+    if (mons_benefits_from_potion(mons, POT_BRILLIANCE))
         weights.push_back({POT_BRILLIANCE, 75});
     if (mons.hit_points * 2 / 3 < mons.max_hit_points)
         weights.push_back({POT_HEAL_WOUNDS, 35});
@@ -4355,31 +4355,8 @@ static bool _do_monster_potion(monster& mons, monster& alembic)
     flash_tile(mons.pos(), random_choose(LIGHTBLUE, LIGHTGREEN, LIGHTMAGENTA),
                60, TILE_BOLT_ALEMBIC_POTION);
 
-    switch (potion)
-    {
-        case POT_HASTE:
-            enchant_actor_with_flavour(&mons, &alembic, BEAM_HASTE);
-            return true;
-
-        case POT_MIGHT:
-            enchant_actor_with_flavour(&mons, &alembic, BEAM_MIGHT);
-            return true;
-
-        case POT_BRILLIANCE:
-            simple_monster_message(mons, " magic is enhanced!", true);
-            mons.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, &alembic));
-            return true;
-
-        case POT_HEAL_WOUNDS:
-            simple_monster_message(mons, " is healed!");
-            mons.heal(random_range(30, 50));
-            return true;
-
-        default:
-            break;
-    }
-
-    return false;
+    mons_potion_effect(mons, potion, alembic);
+    return true;
 }
 
 void alembic_brew_potion(monster& mons)
