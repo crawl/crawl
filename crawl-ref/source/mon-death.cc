@@ -1551,25 +1551,13 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (spell == MON_SUMM_WPN_REAP)
         mg.summon_duration = random_range(200, 400);
 
-    if (mons_is_unique(mons->type) || !mons->mname.empty())
-    {
-        monster_flags_t orig_mon_flags = mons->flags;
-
-        if (!mons->mname.empty())
-        {
-            if (!(mons->flags & MF_NAME_NOCORPSE))
-                mg.mname = mons->mname;
-            else
-                // Remove all the monster's name flags, since it lost its name.
-                orig_mon_flags &= ~MF_ALL_NAMES;
-        }
-        else
-            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
-
-        mg.extra_flags = orig_mon_flags & (MF_NAME_SUFFIX
-                                             | MF_NAME_ADJECTIVE
-                                             | MF_NAME_DESCRIPTOR);
-    }
+    // Properly get the name and name flags of the original monster. Since the
+    // function requires a monster to save them to, make a fake one for that
+    // purpose, and then copy the saved name and name flags to mg.
+    monster fake_mons;
+    name_zombie_from_mon(fake_mons, *mons);
+    mg.mname = fake_mons.mname;
+    mg.extra_flags = fake_mons.flags;
 
     // Kiku wrath and Bind Soul simulacrum are permanent and shouldn't give rewards
     if (god == GOD_KIKUBAAQUDGHA || spell == SPELL_BIND_SOULS)
