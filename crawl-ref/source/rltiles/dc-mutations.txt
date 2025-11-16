@@ -168,6 +168,7 @@ scream_1 SCREAM
 scream_2
 teleport_1 TELEPORT
 teleport_2
+booming_voice BOOMING_VOICE
 
 # Demonspawn mutations
 demonic_touch1 DEMONIC_TOUCH

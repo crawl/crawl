@@ -2921,10 +2921,15 @@ bool read(item_def* scroll, dist *target)
         return false;
     }
 
+    const bool is_loud = you.has_mutation(MUT_BOOMING_VOICE)
+                         && there_are_monsters_nearby(true, true, false);
+    const coord_def original_pos = you.pos();
+
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you read the %s, it %s.",
+            make_stringf("As you %s the %s, it %s.",
+                          is_loud ? "thunderously recite" : "read",
                           scroll->name(DESC_QUALNAME).c_str(),
                          which_scroll == SCR_FOG ? "dissolves into smoke" : "crumbles to dust");
     if (!_is_cancellable_scroll(which_scroll))
@@ -3196,6 +3201,9 @@ bool read(item_def* scroll, dist *target)
 
         count_action(CACT_USE, OBJ_SCROLLS);
         count_action(CACT_READ, scroll->sub_type);
+
+        if (is_loud)
+            noisy(40, original_pos, MID_PLAYER);
     }
 
     if (!alreadyknown

@@ -498,6 +498,11 @@ initially attractive mutation
 The first time you see a monster, it may be magically pulled toward you.
 This does not wake sleeping monsters.
 %%%%
+booming voice mutation
+
+When reading scrolls in sight of hostile monsters, your voice resounds with a
+truly stupendous volume.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 

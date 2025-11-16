@@ -1806,6 +1806,15 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MISSING_HAND,
 },
 
+{ MUT_BOOMING_VOICE, 3, 1, mutflag::bad,
+  "booming voice",
+
+  {"You read scrolls incredibly loudly when enemies are in sight.", "", ""},
+  {"You feel your voice swell to a thunderous volume.", "", ""},
+  {"You voice quiets to a reasonable volume.", "", ""},
+  TILEG_MUT_BOOMING_VOICE,
+},
+
 { MUT_NO_STEALTH, 0, 1, mutflag::bad,
   "no stealth",
 
