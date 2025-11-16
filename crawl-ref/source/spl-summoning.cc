@@ -1207,7 +1207,7 @@ spret summon_shadow_creatures()
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, MON_SUMM_SCROLL, 1)
+                      .set_summoned(&you, MON_SUMM_SCROLL, summ_dur(2))
                       .set_place(level_id::current()),
             false))
         {
