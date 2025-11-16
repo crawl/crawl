@@ -43,6 +43,7 @@ fire_champ: 7
 inner_flame: 7
 pain_mirror: 7
 sticky_flame: 7
+strong_willed: 7
 
 anguish: 8
 fire_vuln: 8
