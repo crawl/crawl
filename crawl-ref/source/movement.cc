@@ -812,6 +812,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
     else if (!you.can_pass_through(targ))
     {
         if (!you.digging
+            || !in_bounds(targ)
             || !feat_is_diggable(env.grid(targ))
             || env.grid(targ) == DNGN_SLIMY_WALL)
         {
