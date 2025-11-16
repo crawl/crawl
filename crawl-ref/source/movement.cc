@@ -934,7 +934,13 @@ void move_player_action(coord_def move)
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
 
-    ASSERT(!you.turn_is_over);
+    // XXX: In theory, it should be impossible to reach this function while this
+    //      statement is untrue. But current bugs with mouse input handling can
+    //      sometimes result in taking an action in the middle of taking another
+    //      action. Simple abort silently in this case, until the more
+    //      fundamental bugs can be fixed.
+    if (!you.turn_is_over)
+        return;
 
     if (you.running.check_stop_running())
         return;
