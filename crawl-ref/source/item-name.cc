@@ -3089,8 +3089,8 @@ static string _general_cannot_read_reason()
     if (you.is_silenced())
         return make_stringf("You cannot read scrolls while %s!", player_silenced_reason());
 
-    if (you.has_mutation(MUT_HOARD_SCROLLS) && you.props.exists(HOARD_SCROLLS_TIMER_KEY))
-        return "You cannot bring yourself to waste a scroll at the moment!";
+    if (you.has_mutation(MUT_RENOUNCE_SCROLLS) && you.props.exists(RENOUNCE_SCROLLS_TIMER_KEY))
+        return "You refuse to depend on such disposable conveniences.";
 
     return "";
 }
@@ -3245,8 +3245,8 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
         if (you.berserk())
             return "You are too berserk!";
 
-        if (you.has_mutation(MUT_HOARD_POTIONS) && you.props.exists(HOARD_POTIONS_TIMER_KEY))
-            return "You cannot bring yourself to waste a potion at the moment!";
+        if (you.has_mutation(MUT_RENOUNCE_POTIONS) && you.props.exists(RENOUNCE_POTIONS_TIMER_KEY))
+            return "You refuse to indulge in frivolous drinking.";
 
         if (player_in_branch(BRANCH_COCYTUS))
             return "It's too cold; everything's frozen solid!";

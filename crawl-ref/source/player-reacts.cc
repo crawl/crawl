@@ -469,32 +469,24 @@ static void _handle_uskayaw_time(int time_taken)
 
 static void _handle_hoarding()
 {
-    const int potion_lv = you.get_mutation_level(MUT_HOARD_POTIONS);
-    if (potion_lv)
+    if (you.has_mutation(MUT_RENOUNCE_POTIONS))
     {
-        const int trigger_hp = potion_lv == 1 ? you.hp_max * 65 / 100
-                                              : you.hp_max * 4 / 10;
-
-        if (you.hp <= trigger_hp)
-            you.props.erase(HOARD_POTIONS_TIMER_KEY);
-        else if (!i_feel_safe(false, false, true))
-            you.props[HOARD_POTIONS_TIMER_KEY].get_int() = you.elapsed_time + 60;
-        else if (you.elapsed_time > you.props[HOARD_POTIONS_TIMER_KEY].get_int())
-            you.props.erase(HOARD_POTIONS_TIMER_KEY);
+        if (you.hp < you.hp_max / 2)
+            you.props.erase(RENOUNCE_POTIONS_TIMER_KEY);
+        else if (there_are_monsters_nearby(true, true, false))
+            you.props[RENOUNCE_POTIONS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[RENOUNCE_POTIONS_TIMER_KEY].get_int())
+            you.props.erase(RENOUNCE_POTIONS_TIMER_KEY);
     }
 
-    const int scroll_lv = you.get_mutation_level(MUT_HOARD_SCROLLS);
-    if (scroll_lv)
+    if (you.has_mutation(MUT_RENOUNCE_SCROLLS))
     {
-        const int trigger_hp = scroll_lv == 1 ? you.hp_max * 65 / 100
-                                              : you.hp_max * 4 / 10;
-
-        if (you.hp <= trigger_hp)
-            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
-        else if (!i_feel_safe(false, false, true))
-            you.props[HOARD_SCROLLS_TIMER_KEY].get_int() = you.elapsed_time + 60;
-        else if (you.elapsed_time > you.props[HOARD_SCROLLS_TIMER_KEY].get_int())
-            you.props.erase(HOARD_SCROLLS_TIMER_KEY);
+        if (you.hp <= you.hp_max / 2)
+            you.props.erase(RENOUNCE_SCROLLS_TIMER_KEY);
+        else if (there_are_monsters_nearby(true, true, false))
+            you.props[RENOUNCE_SCROLLS_TIMER_KEY].get_int() = you.elapsed_time + 60;
+        else if (you.elapsed_time > you.props[RENOUNCE_SCROLLS_TIMER_KEY].get_int())
+            you.props.erase(RENOUNCE_SCROLLS_TIMER_KEY);
     }
 }
 

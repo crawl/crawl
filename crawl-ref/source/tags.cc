@@ -2638,6 +2638,8 @@ static void _cap_mutation_at(mutation_type mut, int cap)
     }
     if (you.innate_mutation[mut] > cap)
         you.innate_mutation[mut] = cap;
+    if (you.sacrifices[mut] > cap)
+        you.sacrifices[mut] = cap;
 }
 
 static void _clear_mutation(mutation_type mut)
@@ -3938,6 +3940,9 @@ static void _tag_read_you(reader &th)
 
     if (you.mutation[MUT_STOCHASTIC_TORMENT_RESISTANCE])
         you.mutation[MUT_TORMENT_RESISTANCE] = 1;
+
+    _cap_mutation_at(MUT_RENOUNCE_SCROLLS, 1);
+    _cap_mutation_at(MUT_RENOUNCE_POTIONS, 1);
 
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())

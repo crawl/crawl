@@ -19,8 +19,8 @@ class formatted_string;
 
 #define EVOLUTION_MUTS_KEY "evolution_muts"
 
-#define HOARD_POTIONS_TIMER_KEY "hoard_potions_timer"
-#define HOARD_SCROLLS_TIMER_KEY "hoard_scrolls_timer"
+#define RENOUNCE_POTIONS_TIMER_KEY "renounce_potions_timer"
+#define RENOUNCE_SCROLLS_TIMER_KEY "renounce_scrolls_timer"
 #define TELEPORTITIS_COOLDOWN_KEY "teleportitis_cooldown"
 
 enum mutation_permanence_class

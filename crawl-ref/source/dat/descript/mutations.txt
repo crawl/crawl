@@ -1241,19 +1241,17 @@ period of time, in exchange for being dragged down into the Crucible of Flesh
 afterward and made to fight for your freedom.
 %%%%
 # ------ Ru sacrifices ------
-potion hoarding mutation
+renounce potions mutation
 
 You refuse to drink potions in combat unless badly injured. While enemies are in
 your line of sight (and for several turns afterward), you will be unable to
-drink anything unless your HP is below 65% or 40% of its maximum, depending on
-the level of the mutation.
+drink anything unless your HP is below 50% of its maximum.
 %%%%
-scroll hoarding mutation
+renounce scrolls mutation
 
 You refuse to read scrolls in combat unless badly injured. While enemies are in
 your line of sight (and for several turns afterward), you will be unable to
-read anything unless your HP is below 65% or 40% of its maximum, depending on
-the level of the mutation.
+read anything unless your HP is below 50% of its maximum.
 %%%%
 missing a hand mutation
 
