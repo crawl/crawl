@@ -939,7 +939,7 @@ void move_player_action(coord_def move)
     //      sometimes result in taking an action in the middle of taking another
     //      action. Simple abort silently in this case, until the more
     //      fundamental bugs can be fixed.
-    if (!you.turn_is_over)
+    if (you.turn_is_over)
         return;
 
     if (you.running.check_stop_running())
