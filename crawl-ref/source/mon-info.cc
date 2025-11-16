@@ -1121,7 +1121,9 @@ string monster_info::common_name(description_level_type desc) const
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
                           && mons_is_unique(base_type)
-                          && base_type == mons_species(base_type)
+                          // XXX: Hack to keep zombified Gehenna SoH's name.
+                          && (base_type == mons_species(base_type)
+                              && base_type != MONS_SERPENT_OF_HELL)
                         || type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE);
 
     ostringstream ss;
