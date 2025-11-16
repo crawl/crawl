@@ -361,7 +361,9 @@ enum monster_type                      // env.mons[].type
     MONS_GOLDEN_EYE,
     MONS_FIRE_VORTEX,
     MONS_SPATIAL_VORTEX,
+#if TAG_MAJOR_VERSION == 34
     MONS_INSUBSTANTIAL_WISP,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_THERMIC_DYNAMO,
     MONS_WILL_O_THE_WISP,
