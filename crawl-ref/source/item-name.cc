@@ -1924,6 +1924,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << _name << ' ';
         }
 
+        if (!_name.empty() && name_type == MF_NAME_SUFFIX)
+            buff << _name << " ";
+
         if (item_typ == CORPSE_BODY)
             buff << "corpse";
         else if (item_typ == CORPSE_SKELETON)

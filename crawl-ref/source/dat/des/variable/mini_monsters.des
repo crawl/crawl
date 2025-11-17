@@ -2622,7 +2622,7 @@ ENDMAP
 
 NAME:   the_bakery
 DEPTH:  D:7-14
-MONS:   spriggan col:white name:baker n_suf ; robe . dagger
+MONS:   spriggan col:white name:baker n_suf n_noc ; robe . dagger
 # It's a chef's hat. Maybe we should get a tile for that?
 ITEM:   hat
 KFEAT:  e = cache_of_baked_goods

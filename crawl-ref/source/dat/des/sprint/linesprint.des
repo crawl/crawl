@@ -946,7 +946,7 @@ ENDMAP
 
 NAME:     forest_end
 TAGS:     forest_end
-KMONS:    1 = spriggan col:white name:baker n_suf ; robe . dagger
+KMONS:    1 = spriggan col:white name:baker n_suf n_noc ; robe . dagger
 COLOUR:   t = green / lightgreen w:5
 COLOUR:   1 = brown
 : line_setup(_G)
