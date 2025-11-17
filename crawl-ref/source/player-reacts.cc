@@ -1321,6 +1321,9 @@ void player_reacts()
         you.duration[DUR_MEDUSA_COOLDOWN] = 0;
     }
 
+    if (you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] && you.hp == you.hp_max)
+        you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 0;
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

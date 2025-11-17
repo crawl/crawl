@@ -7768,6 +7768,11 @@ default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
 %%%%
+################## Erythrospite #############################
+erythrospite
+
+VISUAL:@The_monster@ throbs to the beat of your heart.
+%%%%
 ################## Frilled lizard ##############################
 frilled lizard
 

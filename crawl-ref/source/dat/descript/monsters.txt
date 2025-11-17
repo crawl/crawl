@@ -1413,6 +1413,14 @@ entropy weaver
 A gaunt humanoid with flaking, pale chitin. Its spindly limbs are capable of
 startlingly quick movement and end in razor-sharp talons.
 %%%%
+erythrospite
+
+A churning mass of flowing blood that throbs to the beat of an absent heart.
+
+Does it wish to bury itself in your arteries because it recognises, on some
+primordial level, that this is where it belongs? Alas, all it is capable of in
+this fleeing moment of sentience is violence.
+%%%%
 ettin
 
 A two-headed giant, stronger than most, and able to land devastating blows left

@@ -2410,6 +2410,18 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ACCURSED,
 },
 
+{ MUT_SPITEFUL_BLOOD, 2, 2, mutflag::bad | mutflag::need_blood,
+  "spiteful blood",
+
+  {"Your shed blood may rise up to attack you.",
+   "Your shed blood may rise up to attack you as a group.", ""},
+  {"You feel a willful anger gathering in your blood.",
+   "You feel your blood grow even more spiteful.", ""},
+  {"Your blood calms down again.",
+   "Your blood feels a little less spiteful.", ""},
+  TILEG_MUT_GENERIC_BAD_MUTATION,
+},
+
 // Makhleb-specific mutations
 
 { MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good,

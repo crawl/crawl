@@ -351,6 +351,7 @@ enum monster_type                      // env.mons[].type
     MONS_FIRE_ELEMENTAL,
     MONS_AIR_ELEMENTAL,
 #if TAG_MAJOR_VERSION > 34
+    MONS_ERYTHROSPITE,
     MONS_IRON_ELEMENTAL,
     MONS_QUICKSILVER_ELEMENTAL,
     MONS_ELEMENTAL_WELLSPRING,
@@ -1397,6 +1398,7 @@ enum monster_type                      // env.mons[].type
     MONS_KOBOLD_GEOMANCER,
     MONS_MOUNTAINSHELL,
     MONS_UNDERTAKER,
+    MONS_ERYTHROSPITE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

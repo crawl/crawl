@@ -4059,6 +4059,9 @@ static bool _monster_move(monster* mons, coord_def& delta)
 
         if (mons->type == MONS_CURSE_TOE)
             place_cloud(CLOUD_MIASMA, mons->pos(), 2 + random2(3), mons);
+
+        if (mons->type == MONS_ERYTHROSPITE)
+            bleed_onto_floor(mons->pos(), MONS_ERYTHROSPITE, 100, false);
     }
     else
     {

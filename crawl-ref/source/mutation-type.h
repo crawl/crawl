@@ -343,6 +343,7 @@ enum mutation_type
     MUT_REMOVED_MUTATION,       // Dummy entry for removed mutations.
     MUT_BOOMING_VOICE,
     MUT_POTION_FUNGUS,
+    MUT_SPITEFUL_BLOOD,
     NUM_MUTATIONS,
     CATEGORY_MUTATIONS,
     RANDOM_MUTATION = CATEGORY_MUTATIONS,

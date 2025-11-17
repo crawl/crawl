@@ -2839,6 +2839,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             activate_tesseracts();
         }
     }
+    else if (mons.type == MONS_ERYTHROSPITE && !mons.is_abjurable())
+        bleed_onto_floor(mons.pos(), MONS_ERYTHROSPITE, 100, false);
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {
@@ -3221,6 +3223,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 msg = " expends the last of its power.";
             else if (mons.type == MONS_RENDING_BLADE)
                 msg = " implodes with a snap.";
+            else if (mons.type == MONS_ERYTHROSPITE)
+                msg = " expends the last of its anger.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))

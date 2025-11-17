@@ -1,0 +1,15 @@
+name: "erythrospite"
+glyph: {char: "E", colour: etc_blood}
+flags: [see_invis, unblindable, amorphous, no_skeleton, speaks, warm_blood]
+exp: 42
+will: 10
+attacks:
+ - {type: hit, flavour: vampiric, damage: 3}
+hd: 3
+hp_10x: 165
+ac: 0
+ev: 7
+intelligence: brainless
+habitat: amphibious
+size: small
+shape: blob

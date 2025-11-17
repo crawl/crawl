@@ -743,6 +743,7 @@ shadow_vine_stalker MONS_PLAYER_SHADOW_VINE_STALKER
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 aspiring_flesh MONS_ASPIRING_FLESH
+erythrospite MONS_ERYTHROSPITE
 
 %sdir mon/demihumanoids
 entropy_weaver MONS_ENTROPY_WEAVER

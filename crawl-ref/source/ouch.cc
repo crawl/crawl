@@ -988,6 +988,37 @@ static void _handle_poor_constitution(int dam)
     }
 }
 
+static void _maybe_trigger_spiteful_blood()
+{
+    if (you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN]
+        || !you.has_mutation(MUT_SPITEFUL_BLOOD)
+        || you.hp * 10 > you.hp_max * 6)
+    {
+        return;
+    }
+
+    // Go on cooldown regarless of whether we choose to trigger or not, so that
+    // the player gets a reprieve until the next battle.
+    you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 1;
+
+    if (!one_chance_in(4))
+        return;
+
+    mgen_data mg(MONS_ERYTHROSPITE, BEH_HOSTILE, you.pos(), MHITYOU, MG_NONE);
+    mg.set_summoned(&you, MON_SUMM_SPITEFUL_BLOOD, random_range(18, 26) * BASELINE_DELAY, false).set_range(1, 3);
+    mg.hd = pow(you.experience_level, 1.1);
+    mg.hp = 5 + pow(you.experience_level, 1.25);
+
+    const int num = you.get_mutation_level(MUT_SPITEFUL_BLOOD);
+    bool made_mon = false;
+    for (int i = 0; i < num; ++i)
+        if (create_monster(mg))
+            made_mon = true;
+
+    if (made_mon)
+        mpr("Your spilled blood starts moving with violent intent!");
+}
+
 int corrosion_chance(int sources)
 {
     return 3 * sources;
@@ -1403,6 +1434,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_splash_water(dam);
             _maybe_hive_swarm();
             _maybe_medusa_lithotoxin();
+            _maybe_trigger_spiteful_blood();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();

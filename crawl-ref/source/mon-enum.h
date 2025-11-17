@@ -190,6 +190,7 @@ enum mon_summon_type
     MON_SUMM_MULTIPLICITY, // Bane of Multiplicity
     MON_SUMM_MORTALITY, // Bane of Mortality
     MON_SUMM_STARDUST,  // Orb of Stardust
+    MON_SUMM_SPITEFUL_BLOOD, // Spiteful Blood mutation
 };
 
 #include "mon-flags.h"
