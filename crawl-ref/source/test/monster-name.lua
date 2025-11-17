@@ -87,7 +87,7 @@ local name_checks = {
   { "kobold name:Durwent",
     { "a", "Durwent the kobold" },
     { "a", "the kobold corpse of Durwent" } },
-  { "kobold name:wearing_mittens name_suffix",
+  { "kobold name:wearing_mittens name_suffix name_nocorpse",
     { "a", "a kobold wearing mittens" },
     "kobold corpse" },
   { "gnoll name:gnoll_lieutenant name_replace name_descriptor name_species",
