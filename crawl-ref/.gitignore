@@ -115,6 +115,7 @@ chunk
 /source/webserver/game_data/static/gui.png
 /source/webserver/game_data/static/icons.png
 /source/webserver/game_data/static/tileinfo-*.js
+/source/webserver/game_data/static/status-icon-sizes.js
 /source/webserver/static/stone_soup_icon-32x32.png
 /source/webserver/static/title_*.png
 
