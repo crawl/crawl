@@ -179,6 +179,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
                & MF_NAME_SPECIES)
               && !(corpse_flags & MF_NAME_DEFINITE))
+         && !(corpse_flags & MF_NAME_ADJECTIVE)
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
         || item_is_orb(*this)
