@@ -966,8 +966,8 @@ MONS:     (list of monsters)
 
           Finally, name_nocorpse will cause the name to be completely ignored
           for corpses. For example:
-              MONS: wizard name:sad name_adjective name_nocorpse
-          will result in "a sad wizard" that leaves "a wizard corpse".
+              MONS: kobold name:sad name_adjective name_nocorpse
+          will result in "a sad kobold" that leaves "a kobold corpse".
 
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
