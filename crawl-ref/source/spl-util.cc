@@ -172,6 +172,12 @@ bool spell_data_initialized()
     return _get_spell_name_cache().size() > 0;
 }
 
+bool spell_is_monster_only(spell_type s)
+{
+    return testbits(get_spell_flags(s), spflag::monster);
+}
+
+
 spell_type spell_by_name(string name, bool partial_match)
 {
     if (name.empty())
@@ -182,8 +188,24 @@ spell_type spell_by_name(string name, bool partial_match)
     if (!partial_match)
         return lookup(_get_spell_name_cache(), name, SPELL_NO_SPELL);
 
-    const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
-                                              is_valid_spell, spell_title);
+    // First try castable spells.
+    spell_type sp = find_earliest_match(
+        name, SPELL_NO_SPELL, NUM_SPELLS,
+        [](spell_type s)
+        {
+            return is_valid_spell(s)
+                   && !spell_removed(s)
+                   && !spell_is_monster_only(s);
+        },
+        spell_title);
+
+    if (sp == NUM_SPELLS)
+    {
+        // Fall back to include remove spells.
+        sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
+                                 is_valid_spell, spell_title);
+    }
+
     return sp == NUM_SPELLS ? SPELL_NO_SPELL : sp;
 }
 
