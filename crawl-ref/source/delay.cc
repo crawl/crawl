@@ -184,7 +184,7 @@ bool EquipOnDelay::try_interrupt(bool force)
 
     if (force)
         interrupt = true;
-    else if (duration > 1 && !was_prompted)
+    else if (!was_prompted)
     {
         // yesno might call this function again, don't double prompt
         was_prompted = true;
@@ -226,7 +226,7 @@ bool EquipOffDelay::try_interrupt(bool force)
 
     if (force)
         interrupt = true;
-    else if (duration > 1 && !was_prompted)
+    else if (!was_prompted)
     {
         const bool is_armour = equip.base_type == OBJ_ARMOUR
                                // Shields and orbs aren't clothes.
@@ -287,7 +287,7 @@ bool TransformDelay::try_interrupt(bool force)
 
     if (force)
         interrupt = true;
-    else if (duration > 1 && !was_prompted)
+    else if (!was_prompted)
     {
         // yesno might call this function again, don't double prompt
         was_prompted = true;
@@ -310,7 +310,7 @@ bool ImbueDelay::try_interrupt(bool force)
 
     if (force)
         interrupt = true;
-    else if (duration > 1 && !was_prompted)
+    else if (!was_prompted)
     {
         // yesno might call this function again, don't double prompt
         was_prompted = true;
