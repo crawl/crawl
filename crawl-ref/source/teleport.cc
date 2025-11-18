@@ -58,19 +58,18 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     if (dest == pos())
         return false;
 
-    bool was_constricted = false;
     const string verb = (jump ? mons_genus(type) == MONS_FROG ? "hop" : "leap" : "blink");
 
     if (is_constricted())
     {
-        was_constricted = true;
-        stop_being_constricted(false, "blinks");
+        // Constriction escape will already produce an appropriate message.
+        quiet = true;
+        stop_being_constricted(false, verb + "s");
     }
 
     if (!quiet)
     {
-        string message = " " + conj_verb(verb)
-                         + (was_constricted ? " free!" : "!");
+        string message = " " + conj_verb(verb) + "!";
         simple_monster_message(*this, message.c_str());
     }
 

@@ -466,7 +466,7 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
         // blinking or similar
         if (!escape_verb.empty())
         {
-            mprf("%s %s free of %s.",
+            mprf("%s %s free of %s!",
                  constrictee->name(DESC_THE).c_str(), escape_verb.c_str(),
                  lowercase(attacker_desc).c_str());
         }
