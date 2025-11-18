@@ -454,6 +454,8 @@ Queen
 
 Saviour
 
+Scapegrace
+
 Scavenger
 
 Traitor
