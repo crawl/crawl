@@ -1050,15 +1050,15 @@ interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
 
-        Possible delay types are: armour_on, armour_off, ascending_stairs,
-        descending_stairs, drop_item, exsanguinate, jewellery_on, macro,
-        macro_process_key, memorise, multidrop, passwall, rest, revivify,
-        run, shaft_self, travel. (These are derived from the `name()`
-        functions in delay.h.)
+        Possible delay types are: equip_on, equip_off, ascending_stairs,
+        descending_stairs, imbue_servitor, imprint_weapon, macro,
+	macro_process_key, memorise, multidrop, passwall, rest, run,
+	shaft_self, transform, travel. (These are derived from the `name()`
+	functions in delay.h.)
 
         Possible interrupt types are: abyss_exit_spawned, ally_attacked,
         ancestor_hp, force, full_hp, full_mp, hp_loss, hit_monster, keypress,
-        message, mimic, monster, monster_attack, stat, sense_monster, teleport.
+        message, mimic, monster, monster_attack, sense_monster, teleport.
         (These are derived from the `activity_interrupt_names` array in
         delay.cc.)
 

@@ -255,7 +255,7 @@ public:
 
     const char* name() const override
     {
-        return "armour_on";
+        return "equip_on";
     }
 
     bool is_being_used(const item_def& item) const override
@@ -291,7 +291,7 @@ public:
 
     const char* name() const override
     {
-        return "armour_off";
+        return "equip_off";
     }
 
     bool is_being_used(const item_def& item) const override

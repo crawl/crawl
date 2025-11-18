@@ -1388,14 +1388,8 @@ void game_options::update_enemy_hp_colour()
 
 static string _correct_spelling(const string& str)
 {
-    if (str == "armor_on")
-        return "armour_on";
-    if (str == "armor_off")
-        return "armour_off";
     if (str == "memorize")
         return "memorise";
-    if (str == "jewelry_on")
-        return "jewellery_on";
     return str;
 }
 
@@ -1403,29 +1397,18 @@ void game_options::set_default_activity_interrupts()
 {
     const char *default_activity_interrupts[] =
     {
-        "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
-        "interrupt_armour_off = interrupt_armour_on",
-        "interrupt_drop_item = interrupt_armour_on",
-        "interrupt_jewellery_on = interrupt_armour_on",
-        "interrupt_transform = interrupt_armour_on",
+        "interrupt_equip_on = hp_loss, monster_attack, monster, mimic",
+        "interrupt_equip_off = interrupt_equip_on",
+        "interrupt_drop_item = interrupt_equip_on",
+        "interrupt_transform = interrupt_equip_on",
         "interrupt_memorise = hp_loss, monster_attack",
-        "interrupt_butcher = interrupt_armour_on, teleport",
-        "interrupt_imbue_servitor = interrupt_butcher",
+        "interrupt_imbue_servitor = interrupt_equip_on, teleport",
+        "interrupt_imprint_weapon = interrupt_imbue_servitor",
         "interrupt_multidrop = hp_loss, monster_attack, teleport",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
+        "interrupt_travel = interrupt_equip_on, teleport, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
-
-        // Stair ascents/descents cannot be interrupted except by
-        // teleportation. Attempts to interrupt the delay will just
-        // trash all queued delays, including travel.
-        "interrupt_ascending_stairs = teleport",
-        "interrupt_descending_stairs = teleport",
-        // These are totally uninterruptible by default, since it's
-        // impossible for them to be interrupted anyway.
-        "interrupt_drop_item = ",
-        "interrupt_jewellery_off =",
     };
 
     for (const char* line : default_activity_interrupts)
