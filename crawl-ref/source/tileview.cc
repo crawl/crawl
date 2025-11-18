@@ -900,9 +900,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
 
     if (map_bounds(gc))
     {
-        // XXX: We don't invalidate tile_env.bk_bg when we should, so partially
-        // mitigate this by calculating the flavour when accessing it.
-        bg = tileidx_feature_no_flavour(gc);
+        bg = tileidx_feature_for_cache(gc);
 
         if (is_unknown_stair(gc)
             && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT

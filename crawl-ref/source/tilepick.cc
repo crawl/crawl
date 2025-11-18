@@ -655,12 +655,10 @@ static int _get_door_offset(tileidx_t base_tile,
     return offset + gateway_type;
 }
 
-void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc)
+static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
 {
-    // TODO: there's an awful lot of hardcoding going on here...
-    tileidx_t orig = (*bg) & TILE_FLAG_MASK;
-    tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
+    tileidx_t orig = tile & TILE_FLAG_MASK;
+    tileidx_t flag = tile & (~TILE_FLAG_MASK);
 
     // TODO: allow the stone type to be set in a cleaner way.
     if (player_in_branch(BRANCH_GAUNTLET))
@@ -782,6 +780,12 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SHOALS;
+        else if (orig == TILE_DNGN_DEEP_WATER)
+            orig = TILE_SHOALS_DEEP_WATER;
+        else if (orig == TILE_DNGN_SHALLOW_WATER)
+            orig = TILE_SHOALS_SHALLOW_WATER;
+        else if (orig == TILE_DNGN_SHALLOW_WATER_DISTURBANCE)
+            orig = TILE_SHOALS_SHALLOW_WATER_DISTURBANCE;
     }
     else if (player_in_branch(BRANCH_DEPTHS))
     {
@@ -849,6 +853,14 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                 orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
         }
     }
+    return orig | flag;
+}
+
+void apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                      const coord_def &gc)
+{
+    tileidx_t orig = (*bg) & TILE_FLAG_MASK;
+    tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
@@ -899,7 +911,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     *bg |= flag;
 }
 
-tileidx_t tileidx_feature_no_flavour(const coord_def &gc)
+static tileidx_t _tileidx_feature_no_flavour(const coord_def &gc)
 {
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
@@ -1009,9 +1021,6 @@ tileidx_t tileidx_feature_no_flavour(const coord_def &gc)
         {
             return TILE_DNGN_DEEP_WATER_MURKY;
         }
-        else if (player_in_branch(BRANCH_SHOALS))
-            return TILE_SHOALS_DEEP_WATER;
-
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
         {
@@ -1021,8 +1030,6 @@ tileidx_t tileidx_feature_no_flavour(const coord_def &gc)
             {
                 t = TILE_DNGN_SHALLOW_WATER_MURKY;
             }
-            else if (player_in_branch(BRANCH_SHOALS))
-                t = TILE_SHOALS_SHALLOW_WATER;
 
             if (env.map_knowledge(gc).invisible_monster())
             {
@@ -1037,9 +1044,20 @@ tileidx_t tileidx_feature_no_flavour(const coord_def &gc)
     }
 }
 
+/*
+* Similar to tileidx_feature but doesn't include animations and effects that
+* depend on neighboring squares as these make invalidating the cache harder.
+* Use apply_variations on its result to apply these effects.
+*/
+tileidx_t tileidx_feature_for_cache(coord_def gc)
+{
+    tileidx_t tile = _tileidx_feature_no_flavour(gc);
+    return _apply_branch_tile_overrides(tile, gc);
+}
+
 tileidx_t tileidx_feature(const coord_def& gc)
 {
-    tileidx_t tile = tileidx_feature_no_flavour(gc);
+    tileidx_t tile = tileidx_feature_for_cache(gc);
     apply_variations(tile_env.flv(gc), &tile, gc);
     return tile;
 }
