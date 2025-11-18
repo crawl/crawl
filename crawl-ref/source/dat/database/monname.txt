@@ -183,6 +183,8 @@ Borgun
 
 Brandogh
 
+Brun
+
 Brunolf
 
 Creb
@@ -218,6 +220,8 @@ Learuk
 Lorvak
 
 Margrim
+
+Mogdar
 
 Morguth
 
