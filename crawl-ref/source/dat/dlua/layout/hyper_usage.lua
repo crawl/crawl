@@ -64,9 +64,10 @@ function hyper.usage.set_usage(usage_grid,x,y,usage)
   -- Check existing usage, remove it from eligibles if it's there
   local current = usage_grid[y][x]
   if current.eligibles_which ~= nil then
-    for i,usage in ipairs(usage_grid.eligibles[current.eligibles_which]) do
+    local eligibles = usage_grid.eligibles[current.eligibles_which]
+    for i,usage in ipairs(eligibles) do
       if usage == current then
-        table.remove(usage_grid.eligibles,i)
+        table.remove(eligibles, i)
         break
       end
     end
