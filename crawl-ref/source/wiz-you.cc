@@ -191,7 +191,7 @@ void wizard_memorise_spec_spell()
         }
     }
 
-    if (get_spell_flags(static_cast<spell_type>(spell)) & spflag::monster)
+    if (spell_is_monster_only(static_cast<spell_type>(spell)))
         mpr("Spell is monster-only - unpredictable behaviour may result.");
     if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
