@@ -1376,7 +1376,7 @@ bool interrupt_activity(activity_interrupt ai,
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
-    "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
+    "hp_loss", "monster", "monster_attack", "teleport", "hit_monster",
     "sense_monster", MIMIC_KEY, "ally_attacked", "abyss_exit_spawned"
 };
 

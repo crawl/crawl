@@ -13,7 +13,6 @@ enum class activity_interrupt
     ancestor_hp,        // Player's ancestor is fully healed
     message,            // Message was displayed
     hp_loss,
-    stat_change,
     see_monster,
     monster_attacks,
     teleport,

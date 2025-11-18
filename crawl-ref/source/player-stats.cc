@@ -178,10 +178,6 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
     if (amount == 0)
         return;
 
-    // Stop delays if a stat drops.
-    if (amount < 0)
-        interrupt_activity(activity_interrupt::stat_change);
-
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
@@ -204,10 +200,6 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     // sanity - is non-zero amount?
     if (amount == 0)
         return;
-
-    // Stop delays if a stat drops.
-    if (amount < 0)
-        interrupt_activity(activity_interrupt::stat_change);
 
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
