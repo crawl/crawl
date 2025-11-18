@@ -3422,7 +3422,8 @@ void bolt::tracer_affect_player()
         is_explosion = true;
 
     const bool harmless = harmless_to_player();
-    const bool friendly = mons_att_wont_attack(attitude);
+    const bool friendly = agent() ? agent()->wont_attack()
+                                  : mons_att_wont_attack(attitude);
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
