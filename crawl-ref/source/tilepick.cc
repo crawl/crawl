@@ -905,6 +905,26 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         *bg = orig + 6 + flv.special % 6;
     }
+    else if (orig == TILE_DNGN_TRAP_WEB)
+    {
+        // Determine web connectivity on all sides
+        const coord_def neigh[4] =
+        {
+            coord_def(gc.x, gc.y - 1),
+            coord_def(gc.x + 1, gc.y),
+            coord_def(gc.x, gc.y + 1),
+            coord_def(gc.x - 1, gc.y),
+        };
+        int solid = 0;
+        for (int i = 0; i < 4; i++)
+            if (feat_is_solid(env.map_knowledge(neigh[i]).feat())
+                || env.map_knowledge(neigh[i]).trap() == TRAP_WEB)
+            {
+                solid |= 1 << i;
+            }
+        if (solid)
+            *bg = TILE_DNGN_TRAP_WEB_N - 1 + solid;
+    }
     else if (orig < TILE_DNGN_MAX)
         *bg = pick_dngn_tile(orig, flv.special);
 
@@ -986,32 +1006,6 @@ static tileidx_t _tileidx_feature_no_flavour(const coord_def &gc)
         return tileidx_trap(env.map_knowledge(gc).trap());
 #endif
 
-    case DNGN_TRAP_WEB:
-    {
-        /*
-        trap_type this_trap_type = get_trap_type(gc);
-        // There's room here to have different types of webs (acid? fire? ice? different strengths?)
-        if (this_trap_type==TRAP_WEB) {*/
-
-        // Determine web connectivity on all sides
-        const coord_def neigh[4] =
-        {
-            coord_def(gc.x, gc.y - 1),
-            coord_def(gc.x + 1, gc.y),
-            coord_def(gc.x, gc.y + 1),
-            coord_def(gc.x - 1, gc.y),
-        };
-        int solid = 0;
-        for (int i = 0; i < 4; i++)
-            if (feat_is_solid(env.map_knowledge(neigh[i]).feat())
-                || env.map_knowledge(neigh[i]).trap() == TRAP_WEB)
-            {
-                solid |= 1 << i;
-            }
-        if (solid)
-            return TILE_DNGN_TRAP_WEB_N - 1 + solid;
-        return TILE_DNGN_TRAP_WEB;
-    }
     case DNGN_ENTER_SHOP:
         return tileidx_shop(shop_at(gc));
 
