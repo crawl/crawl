@@ -356,6 +356,12 @@ void stop_delay(bool stop_relocations, bool force)
     // list of delays before clearing it.
     _clear_pending_delays();
 
+    // If we may be about to ask the player whether to stop doing something,
+    // make sure to actually print the message about what happened that is
+    // causing us to ask this question.
+    if (!force)
+        flush_prev_message();
+
     if ((!delay->is_relocation() || stop_relocations)
         && delay->try_interrupt(force))
     {
