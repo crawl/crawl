@@ -3570,35 +3570,14 @@ bool mons_should_fire(const bolt& beam, const targeting_tracer &tracer,
  * @param spell         The spell in question.
  * @param needs_lof     Whether the spell is allowed to need direct line of fire
  *                      or not.
- * @param damage_only   Whether to exlude hexes and summoning effects.
- *                      (This is very approximate.)
  */
-bool is_offensive_spell(spell_type spell, maybe_bool needs_lof, bool damage_only)
+bool is_offensive_spell(spell_type spell, maybe_bool needs_lof)
 {
     const spell_flags flags = get_spell_flags(spell);
-    const spschools_type schools = get_spell_disciplines(spell);
 
     // These are not offensive spells.
     if (flags & (spflag::escape | spflag::helpful | spflag::selfench))
         return false;
-
-    // Spells in these schools may be directly targeted, but are rarely direct
-    // damage.
-    if (damage_only && (schools && (spschool::hexes | spschool::summoning | spschool::forgecraft)))
-    {
-        switch (spell)
-        {
-            // The only monster-castable exceptions as of now.
-            // If there are more in future, perhaps we could add a flag.
-            case SPELL_BRAIN_BITE:
-            case SPELL_DOOM_BOLT:
-            case SPELL_CRYSTALLISING_SHOT:
-                return true;
-
-            default:
-                return false;
-        }
-    }
 
     // Assume that spflag::target and untagged spells both ignore line of
     // fire, while spflag::dir_or_target requires it (regardless of whether it
@@ -3618,22 +3597,6 @@ bool mons_has_los_ability(monster_type mon_type)
 {
     return mons_is_siren_beholder(mon_type)
            || mon_type == MONS_STARCURSED_MASS;
-}
-
-bool mons_has_ranged_damage_spell(const monster& mon)
-{
-    for (const mon_spell_slot &slot : mon.spells)
-    {
-        if (is_offensive_spell(slot.spell, maybe_bool::maybe, true)
-            // Assume spells with no defined range are always effective at
-            // range.
-            && spell_range(slot.spell, &mon) != 1)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 /**

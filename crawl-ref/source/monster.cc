@@ -674,11 +674,6 @@ void monster::bind_melee_flags()
 
 static bool _needs_ranged_attack(const monster* mon)
 {
-    // Prevent monsters that have other sources of direct ranged damage
-    // from grabbing missiles or launchers.
-    if (mons_has_ranged_damage_spell(*mon))
-        return false;
-
     // Blademasters don't want to throw stuff.
     if (mon->type == MONS_DEEP_ELF_BLADEMASTER)
         return false;

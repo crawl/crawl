@@ -357,9 +357,7 @@ bool mons_should_fire(const bolt &beam, const targeting_tracer& tracer,
                       bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
-bool is_offensive_spell(spell_type spell, maybe_bool needs_lof = maybe_bool::maybe,
-                        bool damage_only = false);
-bool mons_has_ranged_damage_spell(const monster& mon);
+bool is_offensive_spell(spell_type spell, maybe_bool needs_lof = maybe_bool::maybe);
 bool _mons_has_smite_attack(const monster* mons);
 
 gender_type mons_class_gender(monster_type mc);
