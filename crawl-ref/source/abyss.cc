@@ -2028,10 +2028,6 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
     else if (feat == DNGN_FLOOR)
         env.grid_colours(c) = floor;
 
-    // if you add new features to this, you'll probably need to do some
-    // hand-tweaking in tilepick.cc apply_variations.
-    // TODO: these tile assignments here seem to get overridden in
-    // apply_variations, or not used at all...what gives?
     if (feat == DNGN_ROCK_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
@@ -2053,6 +2049,7 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         // in _is_grid_corruptible
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
                                            cenv.rock_colour);
+        // XXX: wall flavour only affects rock walls, so this does nothing
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
         _recolour_wall(c, idx);
     }
@@ -2060,6 +2057,7 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
                                            cenv.rock_colour);
+        // XXX: wall flavour only affects rock walls, so this does nothing
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
         _recolour_wall(c, idx);
     }

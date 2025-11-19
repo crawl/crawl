@@ -856,56 +856,50 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
     return orig | flag;
 }
 
+static colour_t _feat_colour(coord_def gc)
+{
+    colour_t colour = env.map_knowledge(gc).feat_colour();
+    if (colour != 0)
+        return colour;
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    if (feat == DNGN_FLOOR)
+        return env.floor_colour;
+    if (feat == DNGN_ROCK_WALL)
+        return env.rock_colour;
+    return 0; // meh
+}
+
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                       const coord_def &gc)
 {
-    tileidx_t orig = (*bg) & TILE_FLAG_MASK;
+    tileidx_t tile = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
-    if (orig == TILE_FLOOR_NORMAL)
-        *bg = flv.floor;
-    else if (orig == TILE_WALL_NORMAL)
-        *bg = flv.wall;
-    else if (orig == TILE_DNGN_STONE_WALL
-             || orig == TILE_DNGN_CRYSTAL_WALL
-             || orig == TILE_WALL_PERMAROCK
-             || orig == TILE_WALL_PERMAROCK_CLEAR
-             || orig == TILE_DNGN_METAL_WALL
-             || orig == TILE_DNGN_TREE)
-    {
-        // TODO: recoloring vaults stone walls from corruption?
-        *bg = pick_dngn_tile(tile_dngn_coloured(orig, env.grid_colours(gc)),
-                             flv.special);
-    }
-    else if (is_door_tile(orig))
+    if (tile == TILE_DNGN_UNSEEN)
+        return;
+
+    bool needs_tile_picking = false;
+    if (tile == TILE_FLOOR_NORMAL)
+        tile = flv.floor;
+    else if (tile == TILE_WALL_NORMAL)
+        tile = flv.wall;
+    else if (is_door_tile(tile))
     {
         tileidx_t override = flv.feat;
         // For vaults overriding door tiles, like Cigotuvi's Fleshworks.
         if (is_door_tile(override))
         {
-            bool opened = (orig == TILE_DNGN_OPEN_DOOR);
-            bool runed = (orig == TILE_DNGN_RUNED_DOOR);
-            bool broken = (orig == TILE_DNGN_BROKEN_DOOR);
+            bool opened = (tile == TILE_DNGN_OPEN_DOOR);
+            bool runed = (tile == TILE_DNGN_RUNED_DOOR);
+            bool broken = (tile == TILE_DNGN_BROKEN_DOOR);
             int offset = _get_door_offset(override, opened, runed, broken,
-                                          flv.special);
-            *bg = override + offset;
+                flv.special);
+            tile = override + offset;
         }
         else
-            *bg = orig + min((int)flv.special, 6);
+            tile = tile + min((int)flv.special, 6);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
-             || orig == TILE_DNGN_EXIT_NECROPOLIS
-             || orig == TILE_DNGN_TRAP_HARLEQUIN)
-    {
-        *bg = orig + flv.special % tile_dngn_count(orig);
-    }
-    else if ((orig == TILE_SHOALS_SHALLOW_WATER
-              || orig == TILE_SHOALS_DEEP_WATER)
-             && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)
-    {
-        *bg = orig + 6 + flv.special % 6;
-    }
-    else if (orig == TILE_DNGN_TRAP_WEB)
+    else if (tile == TILE_DNGN_TRAP_WEB)
     {
         // Determine web connectivity on all sides
         const coord_def neigh[4] =
@@ -923,15 +917,44 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                 solid |= 1 << i;
             }
         if (solid)
-            *bg = TILE_DNGN_TRAP_WEB_N - 1 + solid;
+            tile = TILE_DNGN_TRAP_WEB_N - 1 + solid;
     }
-    else if (orig < TILE_DNGN_MAX)
-        *bg = pick_dngn_tile(orig, flv.special);
+    else
+        needs_tile_picking = true;
 
-    *bg |= flag;
+    tileidx_t base = tile_dngn_basetile(tile);
+    tileidx_t variety = tile - base;
+    colour_t colour = _feat_colour(gc);
+    tile = tile_dngn_coloured(base, real_colour(colour, gc));
+    unsigned int count = tile_dngn_count(tile);
+    if (variety < count)
+        tile += variety;
+
+    if (!needs_tile_picking)
+    {
+        *bg = tile | flag;
+        return;
+    }
+
+    if (tile == TILE_DNGN_PORTAL_WIZARD_LAB
+             || tile == TILE_DNGN_EXIT_NECROPOLIS
+             || tile == TILE_DNGN_TRAP_HARLEQUIN)
+    {
+        tile = tile + flv.special % tile_dngn_count(tile);
+    }
+    else if ((tile == TILE_SHOALS_SHALLOW_WATER
+              || tile == TILE_SHOALS_DEEP_WATER)
+             && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)
+    {
+        tile = tile + 6 + flv.special % 6;
+    }
+    else if (tile < TILE_DNGN_MAX)
+        tile = pick_dngn_tile(tile, flv.special);
+
+    *bg = tile | flag;
 }
 
-static tileidx_t _tileidx_feature_no_flavour(const coord_def &gc)
+static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
 {
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
@@ -957,47 +980,10 @@ static tileidx_t _tileidx_feature_no_flavour(const coord_def &gc)
         if (env.map_knowledge(gc).flags & MAP_ICY)
             return TILE_FLOOR_ICY;
 
-        // deliberate fall-through
+        return tile_env.flv(gc).floor;
+
     case DNGN_ROCK_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_STONE_WALL:
-    case DNGN_CRYSTAL_WALL:
-    case DNGN_PERMAROCK_WALL:
-    case DNGN_CLEAR_PERMAROCK_WALL:
-    {
-        unsigned colour = env.map_knowledge(gc).feat_colour();
-        if (colour == 0)
-        {
-            colour = feat == DNGN_FLOOR     ? env.floor_colour :
-                     feat == DNGN_ROCK_WALL ? env.rock_colour
-                                            : 0; // meh
-        }
-        if (colour >= ETC_FIRST)
-        {
-            tileidx_t idx = (feat == DNGN_FLOOR) ? tile_env.flv(gc).floor :
-                (feat == DNGN_ROCK_WALL) ? tile_env.flv(gc).wall
-                : tileidx_feature_base(feat);
-
-            if (feat == DNGN_STONE_WALL)
-                apply_variations(tile_env.flv(gc), &idx, gc);
-
-            tileidx_t base = tile_dngn_basetile(idx);
-            tileidx_t spec = idx - base;
-            unsigned rc = real_colour(colour, gc);
-            return tile_dngn_coloured(base, rc) + spec; // XXX
-        }
-        // If there's an unseen change here, the old (remembered) flavour is
-        // available in the terrain change marker
-        if (!you.see_cell(gc))
-            if (map_marker *mark = env.markers.find(gc, MAT_TERRAIN_CHANGE))
-            {
-                map_terrain_change_marker *marker =
-                    dynamic_cast<map_terrain_change_marker*>(mark);
-                if (marker->flv_old_feature)
-                    return marker->flv_old_feature;
-            }
-        return tileidx_feature_base(feat);
-    }
+        return tile_env.flv(gc).wall;
 
 #if TAG_MAJOR_VERSION == 34
     // New trap-type-specific features are handled in default case.
@@ -1045,7 +1031,7 @@ static tileidx_t _tileidx_feature_no_flavour(const coord_def &gc)
 */
 tileidx_t tileidx_feature_for_cache(coord_def gc)
 {
-    tileidx_t tile = _tileidx_feature_no_flavour(gc);
+    tileidx_t tile = _tileidx_feature_no_overrides(gc);
     return _apply_branch_tile_overrides(tile, gc);
 }
 
