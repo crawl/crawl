@@ -7,10 +7,13 @@
 # Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
 # and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
-# interesting when encountered at low level (river rat, bullfrog etc.) Loot
-# consists of renewable items; the harder maps contain a few good items.
+# interesting when encountered at low level in wet environs (like bullfrogs),
+# plus a few semi-unique tutorializing enemies like brain worms and crocodiles.
+# Loot consists of consumables; the harder maps contain a few good items.
 #
 ##############################################################################
+
+: crawl_require('dlua/vault.lua')
 
 {{
 
@@ -562,6 +565,67 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx.xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# If we're going to only rarely deploy warded pets across a moat,
+# we might as well lean into a certain reputation of trap-master jerks.
+NAME:    regret_index_sewer_gulch_wild_fort
+TAGS:    no_monster_gen no_item_gen no_pool_fixup
+ORIENT:  encompass
+MONS:    dart slug, ribbon worm, clockroach
+MONS:    brain worm, kobold, kobold brigand
+KMONS:   P = pile of debris
+: item(dgn.loot_potions)
+: item(dgn.loot_scrolls)
+ITEM:    any scroll / any potion, flux bauble
+ITEM:    stone q:1 no_pickup / stone q:2 no_pickup
+KITEM:   $ = $ no_pickup
+KFEAT:   M = cache_of_meat / cache_of_baked_goods w:3
+KFEAT:   Y = W
+KFEAT:   y = w
+SUBST:   0 = 1111223, 6 = 556, Z = xxvw.., z = xxWw...
+SHUFFLE: BCDEF
+# Higher average count of loot (but not a higher cap), in exchange for the pain.
+NSUBST:  B = 1:def / 1:$ / 3:1 / 1:2 / 1:3 / 3 = 1123... / *:.
+NSUBST:  C = 1:d / 2 = f$ / 4:5 / 2 = 5. / *:.
+NSUBST:  D = 1:def$$ / 2:3 / 2:5 / 1:35. / *:.
+NSUBST:  E = 2:f / 2:$ / 3 = 123.. / 1:4 / 1:M / *:.
+NSUBST:  F = 1:d / 1:e / 1:g / 1:4 / 2:5 / 2 = 5. / 1:6 / 1:M / *:.
+KPROP:   yY = no_tele_into
+: sewer_setup(_G)
+MAP
+     vxxxxx                   xxxxxv
+     xWBBBvx                 xvDDDWx
+     xWBBBBx                 xDDDDWx
+     xWBBBBx  xvvvvvvvvvvvx  xDDDDWx
+     vxxBBxvvvv...vYyyv...vvvvxDDxxv
+       vx+vW....v.vyYYv.v....Wv+xv
+       xvWw.Z.....vYyYv.....Z.wWvx
+      xvW.Z.....v.vYYyv.v.....Z.Wvx
+  vxv v...........vyyYv...........v vxv
+vxxCxxv..Z.Z....v.vnnnv.v....Z.Z..vxxExxv
+xWCCCvW...........+.n.+...........WvEEEWx
+xWCCC+w.Z.Z.......v.<.v.......Z.Z.w+EEEWx
+xWCCCvW...........+.n.+...........WvEEEWx
+vxxCxxv..Z.Z....v.vnnnv.v....Z.Z..vxxExxv
+  vxv v...........vyyYv...........v vxv
+      xvW.Z.....v.vYYyv.v.....Z.Wvx
+       xvWw.Z.....vYyYv.....Z.wWvx
+       vx+vW....v.vyYYv.v....Wv+xv
+     vxx..xvvvv...vYyyv...vvvvxFFxxv
+     xW.hh.xwWxn+nvnnnvn+nxWwxFFFFWx
+     xW.hh.xwwWW3W+W3W+W3WWwwxFFFFWx
+     xW...vPwwwwwwvwwwvwwwwwwxvFFFWx
+     vxxxxPw.5......W........wxxxxxv
+        xww.6.1x...zxz....x...wwx
+        xwx5.1x...WWWWW....x..xwx
+        xxxxxxxxxxxxxxxxxxxxxx.xx
+       xx<.xWW.00xWW....x0.0x...xx
+       xw..xxxWz0xxxWz..x0w0x.z.wx
+       xw....WW....WW...xWxWx...wx
+       xw...zWxxx.zWxxx.w.x.w.z.wx
+       xxA....WWx...WWx...x....<xx
+        xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ### FROGS ##################################################################
 # Giant frogs, specifically.
 
@@ -576,14 +640,14 @@ SUBST:    - = WWW.
 SHUFFLE:  |de
 : item(dgn.loot_scrolls)
 ITEM:     scroll of blinking pre_id
-MONS:     frilled lizard w:20 / ball python / clockroach w:20 / \
+MONS:     frilled lizard / ball python / endoplasm w:15 / \
           dart slug / adder w:8
 KMONS:    ? = dart slug
 KMONS:    ! = bullfrog
 KFEAT:    ? = W
 KFEAT:    ! = w
-NSUBST:   . = 80 = 1.. / *:.
-NSUBST:   ! = 1:! / 1:!!!!. / *:w
+NSUBST:   . = 72 = 1.. / 8:1 / *:.
+NSUBST:   ! = 1:! / 1:!!!!w / *:w
 COLOUR:   ? = lightgreen
 COLOUR:   ! = green
 SUBST:    ~ = .
@@ -607,8 +671,8 @@ c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
 c-WwWWWwwww?---wwwwww?wwccccc.WwW.c
 c-WwW.WwwwwwwwwwwwwwWwwwccccc-WwW.c
 c.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-c
-c.WwWW..WWWWwwWwWW.........---Www-c
-c.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-c
+c.Ww??..WWWWwwWwWW.........---Www-c
+c.Www?WWWwwwWWwWWWWWWWWWWWWWWWWwW-c
 c.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.c
 c..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-c
 cc........................----WwW-c
@@ -1008,21 +1072,21 @@ NAME:    sewer_fruit_machine
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   " = bat
-KMONS:   ? = bat / frilled lizard / ball python / clockroach / \
+KMONS:   ? = dart slug / frilled lizard / ball python w:25 / \
              quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
 MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
-MONS:    adder, river rat, brain worm, dart slug
+MONS:    adder, river rat, brain worm
 ITEM:    any scroll, potion of enlightenment pre_id
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
 KFEAT:   " = w
 KFEAT:   ? = W
-SHUFFLE: QED$ de
+SHUFFLE: QED$
 NSUBST:  Q = 1:442 / 2 = 2.. / * = ., E = 3 = 3355. / * = .
 SUBST:   D : fgh, - = WW.
 NSUBST:  e = 2:e / *:$, f = 1:f / *:', g = 2:g / *:', h = 2:h / *:'
-NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
+NSUBST:  w = 14 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
 COLOUR:  " = green
 COLOUR:  ? = lightgreen
 : sewer_setup(_G)
