@@ -992,13 +992,10 @@ void TilesFramework::do_layout()
 
     layout_statcol();
 
-    // Position pause button in bottom-right corner
     if (m_region_pause)
     {
-        m_region_pause->resize_to_fit(100, 30); // Fixed size
-        int pause_x = m_windowsz.x - m_region_pause->wx - 10; // 10px margin from right
-        int pause_y = m_windowsz.y - m_region_pause->wy - 10; // 10px margin from bottom
-        m_region_pause->place(pause_x, pause_y);
+        m_region_pause->place(0, 0, 0);
+        m_region_pause->resize(1, 1);
     }
 
     m_region_crt->place(0, 0, 0);

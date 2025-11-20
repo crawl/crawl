@@ -7,7 +7,6 @@ class PauseButtonRegion : public TileRegion
 {
 public:
     PauseButtonRegion(const TileRegionInit &init);
-
     virtual void render() override;
     virtual void clear() override;
     virtual int handle_mouse(wm_mouse_event &event) override;
@@ -18,7 +17,6 @@ protected:
 
 private:
     bool m_hover;
-    void show_pause_menu();
 };
 
 #endif

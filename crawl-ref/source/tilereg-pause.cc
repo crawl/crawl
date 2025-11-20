@@ -1,9 +1,6 @@
 #include "AppHdr.h"
-
 #ifdef USE_TILE_LOCAL
-
 #include "tilereg-pause.h"
-
 #include "colour.h"
 #include "command.h"
 #include "format.h"
@@ -25,18 +22,18 @@ void PauseButtonRegion::render()
         return;
 
     set_transform();
-    
-    // Draw pause text centered
-    const string text = m_hover ? "[PAUSE]" : "PAUSE";
+
+    const string full_text = "[PAUSE]";
+    const string display_text = m_hover ? full_text : "PAUSE";
     colour_t text_colour = m_hover ? CYAN : WHITE;
-    
-    int text_width = m_tag_font->char_width() * text.length();
+
+    int text_width = m_tag_font->char_width() * full_text.length(); 
     int text_height = m_tag_font->char_height();
-    
+
     int text_x = ox + (wx - text_width) / 2;
     int text_y = oy + (wy - text_height) / 2;
-    
-    m_tag_font->render_string(text_x, text_y, formatted_string(text, text_colour));
+
+    m_tag_font->render_string(text_x, text_y, formatted_string(display_text, text_colour));
 }
 
 void PauseButtonRegion::clear()
@@ -46,37 +43,32 @@ void PauseButtonRegion::clear()
 
 int PauseButtonRegion::handle_mouse(wm_mouse_event &event)
 {
-    int cx, cy;
-    if (!mouse_pos(event.px, event.py, cx, cy))
-    {
-        if (m_hover)
-        {
-            m_hover = false;
-            return CK_REDRAW;
-        }
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
-    }
 
-    // Handle hover
-    if (!m_hover)
+    bool is_inside = inside(event.px, event.py);
+
+    if (is_inside != m_hover)
     {
-        m_hover = true;
+        m_hover = is_inside;
         return CK_REDRAW;
     }
 
-    // Handle click
-    if (event.event == wm_mouse_event::PRESS)
-    {
-        show_pause_menu();
-        return CK_REDRAW;
-    }
+    if (!is_inside)
+        return 0;
 
-    return 0;
+    if (event.event != wm_mouse_event::PRESS || event.button != wm_mouse_event::LEFT)
+        return 0;
+
+    return encode_command_as_key(CMD_PAUSE_GAME);
 }
 
 bool PauseButtonRegion::update_tip_text(string &tip)
 {
-    tip = "Click to pause the game (F2)";
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return false;
+
+    tip = "[L-Click] Pause game (F2)";
     return true;
 }
 
@@ -101,13 +93,6 @@ void PauseButtonRegion::on_resize()
     // Calculate pixel dimensions
     wx = dx;
     wy = dy;
-}
-
-void PauseButtonRegion::show_pause_menu()
-{
-    // Use the same logic as the F2 key press
-    PauseMenu menu;
-    menu.show();
 }
 
 #endif
