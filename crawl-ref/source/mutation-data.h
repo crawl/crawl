@@ -802,6 +802,7 @@ static const mutation_def mut_data[] =
    ""},
 
   {"", "", ""},
+  TILEG_MUT_IN_TOUCH_WITH_DEATH,
 },
 
 { MUT_TENGU_FLIGHT, 0, 1, mutflag::good,
@@ -1031,8 +1032,8 @@ static const mutation_def mut_data[] =
    "Your tail grows strong enough to constrict your enemies.", ""},
   {"Your lower body returns to normal.",
    "Your snake tail weakens and can no longer constrict your enemies.", ""},
-   0,
-   {0, "Your tail will grow strong enough to constrict your foes."}
+   TILEG_MUT_NAGA_TAIL,
+  {0, "Your tail will grow strong enough to constrict your foes."},
 },
 
 { MUT_STINGER, 8, 3, mutflag::good | mutflag::anatomy,
@@ -1898,7 +1899,7 @@ static const mutation_def mut_data[] =
    "You feel your blood thin.",
    "You feel your blood thin."},
 
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_SANGUINE_ARMOUR,
 },
 
 { MUT_BIG_BRAIN, 0, 3, mutflag::good,
@@ -2050,7 +2051,7 @@ static const mutation_def mut_data[] =
   {"Your melee attacks may debilitate your foes.", "", ""},
   {"An ominous black mark forms on your body.", "", ""},
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_BLACK_MARK,
 },
 
 { MUT_SILENCE_AURA, 0, 1, mutflag::good,
@@ -2068,7 +2069,7 @@ static const mutation_def mut_data[] =
   {"Your hexes are more powerful.", "", ""},
   {"You feel devilish.", "", ""},
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_BEDEVILLING,
 },
 
 { MUT_CORRUPTING_PRESENCE, 0, 2, mutflag::good,
@@ -2762,6 +2763,7 @@ static const mutation_def mut_data[] =
   {"You gain doubled healing and magic from potions.", "", ""},
   {"You heal twice as much from potions.", "", ""},
   {"You no longer heal twice as much from potions.", "", ""},
+  TILEG_MUT_DOUBLE_POTION_HEAL,
 },
 
 { MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good,

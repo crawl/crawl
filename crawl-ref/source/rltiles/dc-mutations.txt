@@ -42,6 +42,9 @@ sharp_scales_3
 thin_skeletal_structure_1 THIN_SKELETAL_STRUCTURE
 thin_skeletal_structure_2
 thin_skeletal_structure_3
+sanguine_armour_1 SANGUINE_ARMOUR
+sanguine_armour_2
+sanguine_armour_3
 yellow_scales_1 YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
@@ -204,6 +207,8 @@ demonic_will DEMONIC_WILL
 torment_res_1 TORMENT_RES
 torment_res_2
 hurl_damnation HURL_DAMNATION
+bedevilling BEDEVILLING
+black_mark BLACK_MARK
 silence_aura SILENCE_AURA
 word_of_chaos WORD_OF_CHAOS
 
@@ -237,10 +242,15 @@ nightstalker_2
 nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
 mertail MERTAIL
+in_touch_with_death_1 IN_TOUCH_WITH_DEATH
+in_touch_with_death_2
 no_drink NO_DRINK
 faith FAITH
+naga_tail_1 NAGA_TAIL
+naga_tail_2
 spit_poison_1 SPIT_POISON
 spit_poison_2
+double_potion_heal DOUBLE_POTION_HEAL
 acrobatic ACROBATIC
 antimagic_bite ANTIMAGIC_BITE
 no_potion_heal_1 NO_POTION_HEAL
