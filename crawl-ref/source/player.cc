@@ -711,7 +711,7 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
     // Most forms of movement that aren't the player manually taking steps should
     // interrupt delays.
-    if (!(last_move_flags & (MV_DELIBERATE | MV_NO_TRAVEL_STOP) || (last_move_flags & MV_TRANSLOCATION)))
+    if ((!(last_move_flags & (MV_DELIBERATE | MV_NO_TRAVEL_STOP)) || (last_move_flags & MV_TRANSLOCATION)))
         stop_delay(true);
 
     // If travel was interrupted, we need to add the last step

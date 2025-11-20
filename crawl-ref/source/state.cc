@@ -212,7 +212,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
-    case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:
     case activity_interrupt::monster_attacks:

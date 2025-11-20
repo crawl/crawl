@@ -1332,8 +1332,7 @@ bool interrupt_activity(activity_interrupt ai,
     if (_should_stop_activity(delay.get(), ai, at))
     {
         _monster_warning(ai, at, delay, msgs_buf);
-        // Teleport stops stair delays.
-        stop_delay(ai == activity_interrupt::teleport);
+        stop_delay();
         quiver::set_needs_redraw();
 
         return true;
@@ -1376,7 +1375,7 @@ bool interrupt_activity(activity_interrupt ai,
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
-    "hp_loss", "monster", "monster_attack", "teleport", "hit_monster",
+    "hp_loss", "monster", "monster_attack", "hit_monster",
     "sense_monster", MIMIC_KEY, "ally_attacked", "abyss_exit_spawned"
 };
 

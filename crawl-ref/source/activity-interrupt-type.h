@@ -15,7 +15,6 @@ enum class activity_interrupt
     hp_loss,
     see_monster,
     monster_attacks,
-    teleport,
     hit_monster,        // Player hit invis monster during travel/explore.
     sense_monster,      // Any non-hit event (detection as well as things like
                         // door opening) that reveals the presence of an unseen

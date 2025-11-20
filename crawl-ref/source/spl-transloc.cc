@@ -1043,9 +1043,6 @@ static bool _teleport_player(bool wizard_tele, string reason="")
         return false;
     }
 
-    // After this point, we're guaranteed to teleport. Kill the appropriate delays.
-    interrupt_activity(activity_interrupt::teleport);
-
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
@@ -1229,7 +1226,6 @@ bool hostile_teleport_player(monster* source)
                 mons_near_target > 1 ? "some" : "a",
                 mons_near_target > 1 ? "s" : "");
 
-        interrupt_activity(activity_interrupt::teleport);
         large_change = _real_teleport_cleanup(oldpos, newpos);
         crawl_state.potential_pursuers.clear();
         _handle_teleport_update(large_change);
