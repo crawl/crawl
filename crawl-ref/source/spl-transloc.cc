@@ -1987,7 +1987,7 @@ vector<monster *> find_chaos_targets(bool just_check)
         if (!mons_is_tentacle_or_tentacle_segment(mi->type)
             && !mons_class_is_stationary(mi->type)
             && !mi->is_peripheral()
-            && !mi->friendly())
+            && !mi->wont_attack())
         {
             if (!just_check || you.can_see(**mi))
                 targets.push_back(*mi);

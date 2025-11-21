@@ -1824,7 +1824,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     switch (wh_enchant)
     {
     case ENCH_FEAR:
-        if (mons->friendly())
+        if (mons->wont_attack())
             return true;
 
         if (!mons->can_feel_fear(true))
@@ -1843,7 +1843,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         }
         break;
     case ENCH_ANGUISH:
-        if (mons->friendly())
+        if (mons->wont_attack())
             return true;
         if (mons_intel(*mons) <= I_BRAINLESS)
         {
