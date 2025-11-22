@@ -1107,13 +1107,6 @@ static void _input()
 
     update_monsters_in_view();
 
-    // Monster update can cause a weapon swap.
-    if (you.turn_is_over)
-    {
-        world_reacts();
-        return;
-    }
-
     hints_new_turn();
 
     if (you.duration[DUR_VEXED])
