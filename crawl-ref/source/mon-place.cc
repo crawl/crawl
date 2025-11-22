@@ -1506,6 +1506,28 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     mon->origin_level = level_id::current();
 
+    if (mg.behaviour > NUM_BEHAVIOURS)
+    {
+        if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.game_is_arena())
+            check_lovelessness(*mon);
+
+        behaviour_event(mon, ME_EVAL);
+    }
+
+    // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
+    // towards it immediately.
+    if (mg.flags & MG_AUTOFOE && (mon->attitude == ATT_FRIENDLY
+                                  || mg.behaviour == BEH_CHARMED))
+    {
+        set_nearest_monster_foe(mon, true);
+        const actor* foe = mon->get_foe();
+        if (foe)
+        {
+            mon->behaviour = BEH_SEEK;
+            mon->target = foe->pos();
+        }
+    }
+
     return mon;
 }
 
@@ -2846,42 +2868,6 @@ monster* mons_place(mgen_data mg)
         return 0;
 
     dprf(DIAG_MONPLACE, "Created %s.", creation->base_name(DESC_A, true).c_str());
-
-    // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
-    // HOSTILE.
-    if (mg.behaviour > NUM_BEHAVIOURS)
-    {
-        if (mg.behaviour == BEH_FRIENDLY)
-            creation->flags |= MF_NO_REWARD;
-
-        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL)
-            creation->flags |= MF_WAS_NEUTRAL;
-
-        if (mg.behaviour == BEH_CHARMED)
-        {
-            creation->attitude = ATT_HOSTILE;
-            creation->add_ench(ENCH_CHARM);
-        }
-
-        if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.game_is_arena())
-            check_lovelessness(*creation);
-
-        behaviour_event(creation, ME_EVAL);
-    }
-
-    // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
-    // towards it immediately.
-    if (mg.flags & MG_AUTOFOE && (creation->attitude == ATT_FRIENDLY
-                                  || mg.behaviour == BEH_CHARMED))
-    {
-        set_nearest_monster_foe(creation, true);
-        const actor* foe = creation->get_foe();
-        if (foe)
-        {
-            creation->behaviour = BEH_SEEK;
-            creation->target = foe->pos();
-        }
-    }
 
     return creation;
 }
