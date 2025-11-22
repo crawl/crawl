@@ -109,6 +109,9 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
         return true;
     }
 
+    if (mon->is_stationary())
+        return false;
+
     return start_pathfind(msg);
 }
 
