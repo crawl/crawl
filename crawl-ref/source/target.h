@@ -734,6 +734,7 @@ class targeter_teleport_other : public targeter_smite
 public:
     targeter_teleport_other(const actor *act, int range);
     bool valid_aim(coord_def a) override;
+    bool preferred_aim(coord_def a) override;
 };
 
 class targeter_malign_gateway : public targeter
