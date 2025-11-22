@@ -1715,16 +1715,19 @@ mcache_demon::mcache_demon(const monster_info& minf)
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
 
     m_demon.head = tile_player_coloured(TILEP_DEMON_HEAD,
-                                        element_colour(minf.colour()))
+                                        element_colour(minf.colour(),
+                                                       minf.pos))
         + hash_with_seed(tile_player_count(TILEP_DEMON_HEAD), seed, 1);
     m_demon.body = tile_player_coloured(TILEP_DEMON_BODY,
-                                        element_colour(minf.colour()))
+                                        element_colour(minf.colour(),
+                                                       minf.pos))
         + hash_with_seed(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
     if (minf.is(MB_AIRBORNE))
     {
         m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS,
-                                             element_colour(minf.colour()))
+                                             element_colour(minf.colour(),
+                                                            minf.pos))
             + hash_with_seed(tile_player_count(TILEP_DEMON_WINGS), seed, 3);
     }
     else

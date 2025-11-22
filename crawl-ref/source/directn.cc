@@ -360,7 +360,7 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
         colour = mcol;
     }
     return {static_cast<char32_t>(glych),
-            static_cast<unsigned short>(real_colour(colour))};
+            static_cast<unsigned short>(real_colour(colour, pos))};
 }
 
 // Unseen monsters in shallow water show a "strange disturbance".

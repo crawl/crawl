@@ -44,14 +44,19 @@ protected:
     random_colour_map rand_vals;
 };
 
-int base_colour_calc::rand(bool non_random) const
+int base_colour_calc::rand(bool non_random, coord_def pos) const
 {
-    return non_random ? 0 : ui_random(rand_max);
+    if (non_random)
+        return 0;
+    uint32_t data[] = { (uint32_t)you.birth_time, (uint32_t)pos.x,
+                        (uint32_t)pos.y, (uint32_t)you.frame_no,
+                        (uint32_t)type, (uint32_t)you.depth };
+    return hash32(data, sizeof(data)) % rand_max;
 }
 
 int element_colour_calc::get(const coord_def& loc, bool non_random) const
 {
-    return (*calc)(rand(non_random), loc);
+    return (*calc)(rand(non_random, loc), loc);
 }
 
 int element_colour_calc::get_nth(int /*n*/) const
@@ -59,9 +64,9 @@ int element_colour_calc::get_nth(int /*n*/) const
     return get(you.pos()); // arbitrary - hopefully unused
 }
 
-int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random) const
+int random_element_colour_calc::get(const coord_def& loc, bool non_random) const
 {
-    const auto max_val = rand(non_random);
+    const auto max_val = rand(non_random, loc);
     int accum = 0;
     for (const auto &entry : rand_vals)
         if ((accum += entry.first) > max_val)
@@ -74,19 +79,9 @@ int random_element_colour_calc::get_nth(int n) const
     return rand_vals[n % rand_vals.size()].second;
 }
 
-colour_t random_colour(bool ui_rand)
+colour_t random_colour()
 {
-    return 1 + (ui_rand ? ui_random : random2)(15);
-}
-
-static bool _ui_coinflip()
-{
-    return static_cast<bool>(ui_random(2));
-}
-
-static bool _ui_one_chance_in(int a_million)
-{
-    return ui_random(a_million) == 0;
+    return 1 + random2(15);
 }
 
 colour_t random_uncommon_colour()
@@ -139,12 +134,12 @@ static bool _is_element_colour(int col)
 
 static int _etc_floor(int, const coord_def& loc)
 {
-    return element_colour(env.floor_colour, false, loc);
+    return element_colour(env.floor_colour, loc, false);
 }
 
 static int _etc_rock(int, const coord_def& loc)
 {
-    return element_colour(env.rock_colour, false, loc);
+    return element_colour(env.rock_colour, loc, false);
 }
 
 static int _etc_elven_brick(int, const coord_def& loc)
@@ -176,24 +171,29 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
-static int _etc_elemental(int, const coord_def& loc)
+static int _etc_elemental(int rand, const coord_def& loc)
 {
     int cycle = (you.elapsed_time / 200) % 4;
     switch (cycle)
     {
         default:
         case 0:
-            return element_colour(ETC_EARTH, false, loc);
+            return element_colour(ETC_EARTH, loc, false);
         case 1:
-            return element_colour(_ui_coinflip() ? ETC_AIR : ETC_ELECTRICITY,
-                                  false, loc);
+            return element_colour(rand % 2 ? ETC_AIR : ETC_ELECTRICITY,
+                                  loc, false);
         case 2:
             // Not ETC_FIRE, which is Makhleb; instead do magma-y colours.
-            if (_ui_coinflip())
-                return RED;
-            return _ui_coinflip() ? BROWN : LIGHTRED;
+            switch (rand % 4)
+            {
+            case 0:
+                return BROWN;
+            case 1:
+                return LIGHTRED;
+            }
+            return RED;
         case 3:
-            return element_colour(ETC_ICE, false, loc);
+            return element_colour(ETC_ICE, loc, false);
     }
 }
 
@@ -277,20 +277,20 @@ static int _etc_mangrove(int, const coord_def& loc)
     return col == LIGHTGREEN ? BROWN : col;
 }
 
-static int _etc_vortex(int, const coord_def& loc)
+static int _etc_vortex(int rand, const coord_def& loc)
 {
     const cloud_info* cloud = env.map_knowledge(loc).cloudinfo();
     const bool phase = cloud ? (bool)cloud->variety : true;
     switch (env.map_knowledge(loc).feat())
     {
     case DNGN_LAVA:
-        return phase ? LIGHTRED : _ui_one_chance_in(3) ? MAGENTA : RED;
+        return phase ? LIGHTRED : !(rand % 3) ? MAGENTA : RED;
     case DNGN_SHALLOW_WATER: // XX color overlap between this and land, how annoying is it?
         return phase ? LIGHTCYAN : CYAN;
     case DNGN_DEEP_WATER:
-        return phase ? BLUE : _ui_coinflip() ? LIGHTBLUE : DARKGREY;
+        return phase ? BLUE : rand % 2 ? LIGHTBLUE : DARKGREY;
     default:
-        return phase ? WHITE : _ui_one_chance_in(3) ? LIGHTCYAN : LIGHTGREY;
+        return phase ? WHITE : !(rand % 3) ? LIGHTCYAN : LIGHTGREY;
     }
 }
 
@@ -345,9 +345,9 @@ colour_t rune_colour(int type)
     }
 }
 
-static int _etc_random(int, const coord_def&)
+static int _etc_random(int rand, const coord_def& loc)
 {
-    return random_colour(true);
+    return 1 + rand % 15;
 }
 
 void add_element_colour(base_colour_calc *colour)
@@ -670,7 +670,7 @@ void init_element_colours()
                        ));
 }
 
-int element_colour(int element, bool no_random, const coord_def& loc)
+int element_colour(int element, coord_def loc, bool no_random)
 {
     // pass regular colours through for safety.
     if (!_is_element_colour(element))
@@ -826,7 +826,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
     if (_is_element_colour(raw_colour))
-        raw_colour = colflags | element_colour(raw_colour, false, loc);
+        raw_colour = colflags | element_colour(raw_colour, loc, false);
 
     return raw_colour;
 }

@@ -170,7 +170,7 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
     if (in_los_bounds_v(drawp))
     {
 #ifdef USE_TILE
-        view_add_tile_overlay(p, tileidx_zap(colour));
+        view_add_tile_overlay(p, tileidx_zap(colour, p));
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
@@ -224,7 +224,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     }
 
-    _zap_animation(element_colour(elem), mon, force);
+    _zap_animation(element_colour(elem, mon->pos()), mon, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
@@ -813,11 +813,11 @@ void bolt::draw(const coord_def& p, bool force_refresh)
 #ifdef USE_TILE
     // Set default value if none specified.
     if (tile_beam == 0)
-        tile_beam = tileidx_zap(colour);
+        tile_beam = tileidx_zap(colour, p);
     view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
 #endif
-    const unsigned short c = colour == BLACK ? random_colour(true)
-                                             : element_colour(colour);
+    colour_t adjusted_colour = colour == BLACK ? ETC_RANDOM : colour;
+    const unsigned short c = element_colour(adjusted_colour, p);
     view_add_glyph_overlay(p, {glyph, c});
 
     // If reduce_animations is set, the redraw is unnecessary and
@@ -7202,12 +7202,12 @@ bool bolt::explosion_draw_cell(const coord_def& p)
                 if (tile_beam != 0)
                     tile_explode = tile_beam;
                 else
-                    tile_explode = tileidx_zap(colour);
+                    tile_explode = tileidx_zap(colour, p);
             }
             view_add_tile_overlay(p, vary_bolt_tile(tile_explode, source, target, p));
 #endif
-            const unsigned short c = colour == BLACK ?
-                    random_colour(true) : element_colour(colour, false, p);
+            colour_t adjusted_colour = colour == BLACK ? ETC_RANDOM : colour;
+            const unsigned short c = element_colour(adjusted_colour, p, false);
             view_add_glyph_overlay(p, {dchar_glyph(DCHAR_EXPLOSION), c});
 
             return true;
