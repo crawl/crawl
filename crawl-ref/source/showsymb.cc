@@ -613,7 +613,7 @@ cglyph_t get_mons_glyph(const monster_info& mi)
 
     g.ch = mons_char(stype);
     g.col = _get_mons_colour(mi);
-    g.col = real_colour(g.col);
+    g.col = real_colour(g.col, mi.pos);
     return g;
 }
 

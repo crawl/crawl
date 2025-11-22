@@ -944,7 +944,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
     else if ((tile == TILE_SHOALS_SHALLOW_WATER
               || tile == TILE_SHOALS_DEEP_WATER)
-             && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)
+             && element_colour(ETC_WAVES, gc, false) == LIGHTCYAN)
     {
         tile = tile + 6 + flv.special % 6;
     }
@@ -3955,7 +3955,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     }
 }
 
-tileidx_t tileidx_zap(int colour)
+tileidx_t tileidx_zap(int colour, coord_def pos)
 {
     switch (colour)
     {
@@ -3963,7 +3963,7 @@ tileidx_t tileidx_zap(int colour)
         colour = YELLOW;
         break;
     default:
-        colour = element_colour(colour);
+        colour = element_colour(colour, pos);
         break;
     }
 

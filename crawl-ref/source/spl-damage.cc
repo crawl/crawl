@@ -1404,7 +1404,7 @@ static bool _init_frag_grid(frag_effect &effect,
    else
    {
        effect.colour = element_colour(get_feature_def(grid).colour(),
-                                     false, target);
+                                     target, false);
    }
     return true;
 }

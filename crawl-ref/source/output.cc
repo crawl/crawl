@@ -738,7 +738,8 @@ static void _print_stats_equip(int x, int y)
                 {
                     const item_def& item = entries[i].get_item();
                     cglyph_t g = get_item_glyph(item);
-                    g.col = element_colour(g.col, !Options.animate_equip_bar);
+                    g.col = element_colour(g.col, you.pos(),
+                                           !Options.animate_equip_bar);
                     formatted_string::parse_string(glyph_to_tagstr(g)).display();
                 }
             }
@@ -1873,9 +1874,9 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
 
             monster_info mi = mons[start];
 #ifdef TARGET_OS_WINDOWS
-            textcolour(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP));
+            textcolour(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP, mi.pos));
 #else
-            textcolour(real_colour(dam_colour(mi) | COLFLAG_REVERSE));
+            textcolour(real_colour(dam_colour(mi) | COLFLAG_REVERSE, mi.pos));
 #endif
             CPRINTF(" ");
             textbackground(BLACK);
