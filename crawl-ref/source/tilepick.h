@@ -56,7 +56,7 @@ tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
                          const coord_def& target, const coord_def& pos);
 tileidx_t vary_bolt_tile(tileidx_t tile, int dir = 0, int dist = 0);
-tileidx_t tileidx_zap(int colour);
+tileidx_t tileidx_zap(int colour, coord_def pos);
 tileidx_t tileidx_spell(const spell_type spell);
 tileidx_t tileidx_skill(const skill_type skill, int train);
 tileidx_t tileidx_command(const command_type cmd);

@@ -32,7 +32,7 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random) const
     lua_State *ls = dlua.state();
 
     function.push();
-    lua_pushinteger(ls, rand(non_random));
+    lua_pushinteger(ls, rand(non_random, loc));
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
     if (!dlua.callfn(nullptr, 3, 1))

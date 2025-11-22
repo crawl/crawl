@@ -91,7 +91,7 @@ struct base_colour_calc
 protected:
     int rand_max {120}; // 0-119 is the range of randomness promised to
                         // Lua colour functions.
-    int rand(bool non_random) const;
+    int rand(bool non_random, coord_def pos) const;
 };
 
 
@@ -116,20 +116,19 @@ const string colour_to_str(colour_t colour, bool human_readable=false);
 
 void init_element_colours();
 void add_element_colour(base_colour_calc *colour);
-colour_t random_colour(bool ui_rand = false);
+colour_t random_colour();
 colour_t random_uncommon_colour();
 bool is_low_colour(colour_t colour) IMMUTABLE;
 bool is_high_colour(colour_t colour) IMMUTABLE;
 colour_t make_low_colour(colour_t colour) IMMUTABLE;
 colour_t make_high_colour(colour_t colour) IMMUTABLE;
-int  element_colour(int element, bool no_random = false,
-                    const coord_def& loc = coord_def());
+int element_colour(int element, coord_def loc, bool no_random = false);
 int get_disjunct_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);
 colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions
-unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
+unsigned real_colour(unsigned raw_colour, const coord_def& loc);
 
 string colourize_str(string base, colour_t col);

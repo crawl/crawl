@@ -981,7 +981,7 @@ void view_update_at(const coord_def &pos)
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-            ? real_colour(flash_colour)
+            ? real_colour(flash_colour, pos)
             : g.col;
 
     const coord_def vp = grid2view(pos);
@@ -1212,7 +1212,7 @@ static void _draw_player(screen_cell_t *cell,
 #endif
         cell->colour |= COLFLAG_REVERSE;
 
-    cell->colour = real_colour(cell->colour);
+    cell->colour = real_colour(cell->colour, gc);
 
 #ifdef USE_TILE
     cell->tile.fg = tileidx_player();
@@ -1564,7 +1564,7 @@ void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
         if (tile > 0)
             view_add_tile_overlay(p, vary_bolt_tile(tile));
         else
-            view_add_tile_overlay(p, tileidx_zap(colour));
+            view_add_tile_overlay(p, tileidx_zap(colour, p));
 #else
         UNUSED(tile);
 #endif
@@ -1754,7 +1754,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     if (you.duration[DUR_BLIND] && you.see_cell(gc))
     {
-        cell->flash_colour = real_colour(you.props[BLIND_COLOUR_KEY].get_int());
+        cell->flash_colour = real_colour(you.props[BLIND_COLOUR_KEY].get_int(), gc);
         // Using a square curve for the alpha is nicer on the eyes than a straight multiple.
         // The effect of alpha is already disproportionate depending on the flash colour
         // and may need to be revised: for a white flash the effect is already extreme by
@@ -1770,10 +1770,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if (!you.see_cell(gc))
             cell->colour = DARKGREY;
         else if (gc != you.pos() && allow_mon_recolour)
-            cell->colour = real_colour(flash_colour);
+            cell->colour = real_colour(flash_colour, gc);
 #ifdef USE_TILE
         if (you.see_cell(gc)) {
-            cell->flash_colour = real_colour(flash_colour);
+            cell->flash_colour = real_colour(flash_colour, gc);
             cell->flash_alpha = 0;
         }
 #endif

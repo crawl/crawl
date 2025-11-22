@@ -1431,7 +1431,7 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     }
     else
         col = fdef.seen_colour();
-    g.col = real_colour(col);
+    g.col = real_colour(col, gc);
     return g;
 }
 #endif

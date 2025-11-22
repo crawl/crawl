@@ -53,7 +53,7 @@ static int bgr[8] = {0, 4, 2, 6, 1, 5, 3, 7};
 static string colour(int colour, string text, bool bg = false)
 {
     if (_is_element_colour(colour))
-        colour = element_colour(colour, true);
+        colour = element_colour(colour, coord_def(), true);
 
     if (isatty(1))
     {
