@@ -1036,7 +1036,7 @@ string monster_info::_core_name() const
             if (inv[MSLOT_WEAPON])
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
-                s = item.name(DESC_PLAIN);
+                s = "dancing " + item.name(DESC_PLAIN);
             }
             break;
 
