@@ -941,15 +941,19 @@ coloured_graffiti
 %%%%
 any_colour_pattern
 
+w:40
 # Single colour
 @any_colour@ @any_pattern@
 
+w:40
 # Two colours. There's a chance of them being the same but
 # in practise it happens little enough to just be funny when it does.
 @any_colour@ on @any_colour@ @any_pattern@
 
+w:20
 # Coloured writing
 @coloured_writing@
 
+w:10
 # Coloured graffiti
 @coloured_graffiti@
