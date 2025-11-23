@@ -283,7 +283,7 @@ Dim shapes swim through @the_feature@.
 
 Faint @any_colour@ flames crawl over @the_feature@.
 
-@The_feature@ is briefly covered in @any_colour_pattern@.
+@The_feature@ is briefly covered in @any_colour_pattern_plus_writing@.
 %%%%
 Xom feature metal wall
 
@@ -497,7 +497,7 @@ Xom cloak slot
 
 @Your_item@ briefly wraps itself around your @head@!
 
-@Your_item@ is briefly covered in lurid @any_colour_pattern@!
+@Your_item@ is briefly covered in lurid @any_colour_pattern_plus_writing@!
 %%%%
 Xom helmet slot
 
