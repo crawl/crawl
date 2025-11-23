@@ -930,6 +930,15 @@ coloured_writing
 
 @any_glowing_colour@ @writing_noun@
 %%%%
+# Use @graffiti author@ from monname.txt here.
+coloured_graffiti
+
+@any_colour@ graffiti signed by @graffiti author@
+
+@writing_adj@ @any_colour@ graffiti signed by @graffiti author@
+
+@any_glowing_colour@ graffiti signed by @graffiti author@
+%%%%
 any_colour_pattern
 
 # Single colour
@@ -941,3 +950,6 @@ any_colour_pattern
 
 # Coloured writing
 @coloured_writing@
+
+# Coloured graffiti
+@coloured_graffiti@
