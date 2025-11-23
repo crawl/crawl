@@ -1809,8 +1809,11 @@ w:50
 w:10
 @orc name@ the orc
 
-w:1
+w:2
 @_bland_male_name_@
 
-w:1
+w:2
 @_bland_female_name_@
+
+w:1
+Kilroy
