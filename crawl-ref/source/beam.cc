@@ -5404,7 +5404,7 @@ void bolt::pull_actor(actor *act, int dam)
             break;
         }
 
-        act->move_to(newpos, MV_DEFAULT);
+        act->move_to(newpos, MV_DEFAULT, true);
     }
 
     if (newpos == oldpos)
