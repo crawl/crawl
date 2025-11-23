@@ -184,9 +184,18 @@ void seen_monsters_react(int stealth)
     }
 }
 
-static monster_type _mons_genus_keep_uniques(monster_type mc)
+static monster_type _mons_merge_genus(monster_type mc)
 {
-    return mons_is_unique(mc) ? mc : mons_genus(mc);
+    switch (mc)
+    {
+        case MONS_ZOMBIE:
+        case MONS_SIMULACRUM:
+        case MONS_DRAUGR:
+            return mons_genus(mc);
+
+        default:
+            return mc;
+    }
 }
 
 typedef struct
@@ -234,7 +243,7 @@ static void _genus_factoring(map<const string, details> &types,
     auto it = types.begin();
     do
     {
-        if (_mons_genus_keep_uniques(it->second.mon->type) != genus)
+        if (_mons_merge_genus(it->second.mon->type) != genus)
         {
             ++it;
             continue;
@@ -348,7 +357,7 @@ static void _count_monster_types(const vector<monster*> &monsters,
         const string name = mon->name(DESC_PLAIN);
         auto &det = species_s[name];
         det = {mon, name, det.count+1, false};
-        genera[_mons_genus_keep_uniques(mon->type)]++;
+        genera[_mons_merge_genus(mon->type)]++;
     }
 
     // Don't merge named monsters (ghosts and the like). They're exciting!
