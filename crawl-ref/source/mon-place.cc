@@ -306,15 +306,19 @@ void spawn_random_monsters()
         mg.foe = MHITYOU;
         // Don't count orb run spawns in the xp_by_level dump
         mg.xp_tracking = XP_UNTRACKED;
+        mg.announce_type = SC_ORBRUN;
     }
 
-    // Deep Abyss can also do orbrun-style spawns in LOS.
-    if (player_in_branch(BRANCH_ABYSS)
-        && you.depth > 5
-        && one_chance_in(10 / (you.depth - 5)))
+    if (player_in_branch(BRANCH_ABYSS))
     {
-        mg.proximity = PROX_CLOSE_TO_PLAYER;
-        mg.foe = MHITYOU;
+        mg.announce_type = SC_ABYSS;
+
+        // Deep Abyss can also do orbrun-style spawns in LOS.
+        if (you.depth > 5 && one_chance_in(10 / (you.depth - 5)))
+        {
+            mg.proximity = PROX_CLOSE_TO_PLAYER;
+            mg.foe = MHITYOU;
+        }
     }
 
     mons_place(mg);
@@ -752,20 +756,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         mprf("Monster %s is patrolling around (%d, %d).",
              mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
 #endif
-    }
-
-    if (player_in_branch(BRANCH_ABYSS)
-        && !mg.summoner
-        && !(mg.extra_flags & MF_WAS_IN_VIEW))
-    {
-        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
-
-        if (you.can_see(*mon)
-             && !crawl_state.generating_level
-             && !crawl_state.is_god_acting())
-        {
-            mon->seen_context = SC_ABYSS;
-        }
     }
 
     // Now, forget about banding if the first placement failed, or there are
@@ -1527,6 +1517,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->target = foe->pos();
         }
     }
+
+    // Random Abyss monster spawns.
+    if (mg.announce_type == SC_ABYSS)
+        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
+
+    if (mg.announce_type != SC_NONE)
+        queue_monster_announcement(*mon, mg.announce_type);
 
     return mon;
 }

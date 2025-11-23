@@ -10,6 +10,7 @@
 #include "defines.h"
 #include "options.h"
 #include "player.h" // player_stealth()
+#include "seen-context-type.h"
 #include "viewgeom.h"
 
 using std::vector;
@@ -104,8 +105,15 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
-void flush_comes_into_view();
 void toggle_show_terrain();
 void reset_show_terrain();
+
+void maybe_notice_monster(monster& mons, bool stepped = false);
+void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announce,
+                         seen_context_type sc = SC_NONE);
+void monster_encounter_message(monster& mon);
+
+void queue_monster_announcement(monster& mons, seen_context_type sc);
+void notice_queued_monsters();
 
 void handle_terminal_resize();

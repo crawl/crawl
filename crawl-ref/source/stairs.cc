@@ -296,6 +296,10 @@ void leaving_level_now(dungeon_feature_type stair_used)
 
     _clear_golubria_traps();
     _remove_unstable_monsters();
+
+    // Allow players to be interrupted by sensed monsters on their return to this level.
+    for (monster_iterator mi; mi; ++mi)
+        mi->flags &= ~MF_SENSED;
 }
 
 static void _update_travel_cache(const level_id& old_level,

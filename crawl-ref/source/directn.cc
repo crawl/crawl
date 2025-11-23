@@ -3424,7 +3424,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 }
 
 // This method is called in two cases:
-// a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
+// a) Monsters coming into view: "You encounter an ogre. It is wielding ..."
 // b) Monster description via 'x': "An ogre, wielding a club, and wearing ..."
 string get_monster_equipment_desc(const monster_info& mi,
                                   mons_equip_desc_level_type level,

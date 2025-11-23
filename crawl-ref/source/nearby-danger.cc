@@ -90,7 +90,7 @@ bool mons_is_irrelevant(const monster* mon)
 
 // Returns true if a monster can be considered safe regardless
 // of distance.
-static bool _mons_is_always_safe(const monster *mon)
+bool mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack() && (!mons_blows_up(*mon) || mon->type == MONS_SHADOW_PRISM))
           || mon->type == MONS_BUTTERFLY
@@ -112,7 +112,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 
     int  dist    = grid_distance(you.pos(), mon->pos());
 
-    bool is_safe = (_mons_is_always_safe(mon)
+    bool is_safe = (mons_is_always_safe(mon)
                     || check_dist
                        && (mon->pacified() && dist > 1
                            || crawl_state.disables[DIS_MON_SIGHT] && dist > 2

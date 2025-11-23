@@ -528,10 +528,7 @@ static void _forget_map(bool wizard_forget = false)
             tile_forget_map(*ri);
 #endif
             if (monster *m = monster_at(*ri))
-            {
-                m->seen_context = SC_NONE;
-                m->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
-            }
+                m->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN | MF_SENSED);
         }
         else if (flags & MAP_SEEN_FLAG)
         {

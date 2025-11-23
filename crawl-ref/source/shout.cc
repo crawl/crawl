@@ -227,14 +227,6 @@ void monster_shout(monster &mons, int shout)
 
         strip_channel_prefix(message, channel);
 
-        if (seen)
-        {
-            // Otherwise it can move away with no feedback.
-            if (!(mons.flags & MF_WAS_IN_VIEW))
-                handle_seen_interrupt(&mons);
-            seen_monster(&mons);
-        }
-
         if (channel != MSGCH_TALK_VISUAL || seen)
         {
             message = do_mon_str_replacements(message, mons, s_type);

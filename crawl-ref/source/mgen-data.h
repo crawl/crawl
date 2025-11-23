@@ -8,6 +8,7 @@
 #include "mon-flags.h"
 #include "mon-util.h"
 #include "player.h"
+#include "seen-context-type.h"
 #include "xp-tracking-type.h"
 
 // Hash key for passing a weapon to be given to
@@ -120,6 +121,8 @@ struct mgen_data
     // What class of XP is this for LevelXPInfo tracking purposes.
     xp_tracking_type xp_tracking;
 
+    seen_context_type announce_type;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               const coord_def &p = coord_def(-1, -1),
@@ -132,7 +135,8 @@ struct mgen_data
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
           exp(0), extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
-          initial_shifter(RANDOM_MONSTER), xp_tracking(XP_NON_VAULT)
+          initial_shifter(RANDOM_MONSTER), xp_tracking(XP_NON_VAULT),
+          announce_type(SC_NONE)
     { }
 
     mgen_data &set_non_actor_summoner(string nas)

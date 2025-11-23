@@ -442,6 +442,10 @@ public:
     string banished_by;
     int banished_power;
 
+    // Position from which the player made an involuntary shout this turn.
+    // (To reduce message spam when encountering many monsters at once.)
+    coord_def shouted_pos;
+
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
 

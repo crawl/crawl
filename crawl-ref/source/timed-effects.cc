@@ -441,6 +441,8 @@ void handle_time()
                 if (x_chance_in_y(i, 5))
                     spawn_random_monsters();
         }
+
+        notice_queued_monsters();
     }
 
     // Abyss maprot.

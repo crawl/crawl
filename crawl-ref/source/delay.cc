@@ -356,12 +356,6 @@ void stop_delay(bool stop_relocations, bool force)
     // list of delays before clearing it.
     _clear_pending_delays();
 
-    // If we may be about to ask the player whether to stop doing something,
-    // make sure to actually print the message about what happened that is
-    // causing us to ask this question.
-    if (!force)
-        flush_prev_message();
-
     if ((!delay->is_relocation() || stop_relocations)
         && delay->try_interrupt(force))
     {
@@ -1000,17 +994,13 @@ static bool _should_stop_activity(Delay* delay,
     if (user_stop.is_bool())
         return user_stop.to_bool();
 
-    // Don't interrupt player on monster's turn, they might wander off.
-    if (you.turn_is_over
-        && (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM))
+    // No monster will attack you inside a sanctuary,
+    // so presence of monsters won't matter until it starts shrinking.
+    if (ai == activity_interrupt::see_monster && is_sanctuary(you.pos())
+        && env.sanctuary_time >= 5)
     {
         return false;
     }
-
-    // No monster will attack you inside a sanctuary,
-    // so presence of monsters won't matter.
-    if (ai == activity_interrupt::see_monster && is_sanctuary(you.pos()))
-        return false;
 
     auto curr = current_delay(); // Not necessarily what we were passed.
 
@@ -1033,218 +1023,8 @@ static bool _should_stop_activity(Delay* delay,
         }
     }
 
-    // Don't interrupt feeding or butchering for monsters already in view.
-    if (ai == activity_interrupt::see_monster
-        && testbits(at.mons_data->flags, MF_WAS_IN_VIEW))
-    {
-        return false;
-    }
-
     return ai == activity_interrupt::force
            || Options.activity_interrupts[delay->name()][static_cast<int>(ai)];
-}
-
-static string _abyss_monster_creation_message(const monster* mon)
-{
-    if (mon->type == MONS_DEATH_COB)
-    {
-        return coinflip() ? " appears in a burst of microwaves!"
-                          : " pops from nullspace!";
-    }
-
-    // You may ask: "Why these weights?" So would I!
-    const vector<pair<string, int>> messages = {
-        { " appears in a shower of translocational energy.", 17 },
-        { " appears in a shower of sparks.", 34 },
-        { " materialises.", 45 },
-        { " emerges from chaos.", 13 },
-        { " emerges from the beyond.", 26 },
-        { make_stringf(" assembles %s!",
-                       mon->pronoun(PRONOUN_REFLEXIVE).c_str()), 33 },
-        { " erupts from nowhere.", 9 },
-        { " bursts from nowhere.", 18 },
-        { " is cast out of space.", 7 },
-        { " is cast out of reality.", 14 },
-        { " coalesces out of pure chaos.", 5 },
-        { " coalesces out of seething chaos.", 10 },
-        { " punctures the fabric of time!", 2 },
-        { " punctures the fabric of the universe.", 7 },
-        { make_stringf(" manifests%s!",
-                       silenced(you.pos()) ? "" : " with a bang"), 3 },
-
-
-    };
-
-    return *random_choose_weighted(messages);
-}
-
-static inline bool _monster_warning(activity_interrupt ai,
-                                    const activity_interrupt_data &at,
-                                    shared_ptr<Delay> delay,
-                                    vector<string>* msgs_buf = nullptr)
-{
-    if (ai == activity_interrupt::sense_monster)
-    {
-        mprf(MSGCH_WARN, "You sense a monster nearby.");
-        return true;
-    }
-    if (ai != activity_interrupt::see_monster)
-        return false;
-    if (delay && !delay->is_run())
-        return false;
-    if (at.context != SC_NEWLY_SEEN && !delay)
-        return false;
-
-    ASSERT(at.apt == ai_payload::monster);
-    monster* mon = at.mons_data;
-    ASSERT(mon);
-    if (!you.can_see(*mon))
-        return false;
-
-    // Disable message for summons.
-    if (mon->is_summoned() && !delay)
-        return false;
-
-    if (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM)
-    {
-        // Only say "comes into view" if the monster wasn't in view
-        // during the previous turn.
-        if (testbits(mon->flags, MF_WAS_IN_VIEW) && delay)
-        {
-            mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_THE).c_str());
-        }
-    }
-    else if (mon->seen_context == SC_JUST_SEEN)
-        return false;
-    else
-    {
-        // XXX: This needs to be here to ensure correct messaging for
-        // autoexplore, even though the correct place to process it is
-        // seen_monster
-        view_monster_equipment(mon);
-
-        string text;
-        if (mon->has_base_name())
-            text = getMiscString(mon->mname + " title");
-        else
-            text = getMiscString(mon->name(DESC_DBNAME) + " title");
-        if (text.empty())
-            text = mon->full_name(DESC_A);
-        if (mon->type == MONS_PLAYER_GHOST)
-        {
-            text += make_stringf(" (%s)",
-                                 short_ghost_description(mon).c_str());
-        }
-
-        if (at.context == SC_DOOR)
-            text += " opens the door.";
-        else if (at.context == SC_GATE)
-            text += " opens the gate.";
-        else if (at.context == SC_TELEPORT_IN)
-            text += " appears from thin air!";
-        else if (at.context == SC_LEAP_IN)
-            text += " leaps into view!";
-        else if (at.context == SC_FISH_SURFACES)
-        {
-            text += " bursts forth from the ";
-            const habitat_type habitat = mons_habitat(*mon);
-            if (habitat & HT_LAVA)
-                text += "lava";
-            else if (habitat & HT_WATER)
-                text += "water";
-            else
-                text += "realm of bugdom";
-            text += ".";
-        }
-        else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
-            text += " emerges from the water.";
-        else if (at.context == SC_UPSTAIRS)
-            text += " comes up the stairs.";
-        else if (at.context == SC_DOWNSTAIRS)
-            text += " comes down the stairs.";
-        else if (at.context == SC_ARCH)
-            text += " comes through the gate.";
-        else if (at.context == SC_ABYSS)
-            text += _abyss_monster_creation_message(mon);
-        else if (at.context == SC_THROWN_IN)
-            text += " is thrown into view!";
-        else
-            text += " comes into view.";
-
-        bool zin_id = false;
-        string god_warning;
-
-        if (have_passive(passive_t::warn_shapeshifter)
-            && mon->is_shapeshifter()
-            && !(mon->flags & MF_KNOWN_SHIFTER))
-        {
-            zin_id = true;
-            mon->props[ZIN_ID_KEY] = true;
-            discover_shifter(*mon);
-            god_warning = uppercase_first(god_name(you.religion))
-                          + " warns you: "
-                          + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
-                          + " "
-                          + conjugate_verb("are", mon->pronoun_plurality())
-                          + " a foul ";
-            if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-                god_warning += "glowing ";
-            god_warning += "shapeshifter.";
-        }
-
-        // Refresh our monster info cache, so xv shows the ID'd items.
-        monster_info mi(mon);
-        env.map_knowledge(mon->pos()).set_monster(mi);
-
-        const string mweap = get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                                        DESC_NONE);
-
-        if (!mweap.empty())
-        {
-            text += " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
-                + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + (mweap[0] != ' ' ? " " : "")
-                + mweap + ".";
-        }
-
-        if (msgs_buf)
-            msgs_buf->push_back(text);
-        else
-        {
-            mprf(MSGCH_MONSTER_WARNING, "%s", text.c_str());
-            if (zin_id)
-                mprf(MSGCH_GOD, "%s", god_warning.c_str());
-#ifndef USE_TILE_LOCAL
-            if (zin_id)
-                update_monster_pane();
-#endif
-            if (player_under_penance(GOD_GOZAG)
-                && !mon->wont_attack()
-                && !mon->is_stationary()
-                && !mon->is_peripheral())
-            {
-                if (coinflip()
-                    && mon->get_experience_level() >=
-                       random2(you.experience_level))
-                {
-                    mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
-                         mon->name(DESC_THE).c_str());
-                    gozag_incite(mon);
-                }
-            }
-        }
-        if (should_shout_at_mons(*mon))
-            yell(mon);
-        else if (you.form == transformation::maw)
-            maw_growl_check(mon);
-        mons_set_just_seen(mon);
-    }
-
-    if (crawl_state.game_is_hints())
-        hints_monster_seen(*mon);
-
-    return true;
 }
 
 // Turns autopickup off if we ran into an invisible monster or saw a monster
@@ -1275,10 +1055,34 @@ void autotoggle_autopickup(bool off)
     }
 }
 
+// If we are being interrupted by a monster we've previously seen (and thus already
+// had its encounter message), print a shorter one instead so that the player
+// has some idea why they're being interrupted.
+void monster_interrupt_message(activity_interrupt ai, const activity_interrupt_data &at)
+{
+    if (!(ai == activity_interrupt::see_monster || ai == activity_interrupt::sense_monster)
+        || at.context == SC_NEWLY_SEEN)
+    {
+        return;
+    }
+
+    if (ai == activity_interrupt::sense_monster)
+    {
+        mprf(MSGCH_WARN, "You sense a monster nearby.");
+        return;
+    }
+
+    monster* mon = at.mons_data;
+    ASSERT(mon);
+
+    if (at.context == SC_ALREADY_IN_VIEW)
+        mprf(MSGCH_MONSTER_WARNING, "%s is now too close for your liking.", mon->name(DESC_THE).c_str());
+    else
+        mprf(MSGCH_MONSTER_WARNING, "%s comes into view.", mon->name(DESC_A).c_str());
+}
+
 // Returns true if any activity was stopped. Not reentrant.
-bool interrupt_activity(activity_interrupt ai,
-                        const activity_interrupt_data &at,
-                        vector<string>* msgs_buf)
+bool interrupt_activity(activity_interrupt ai, const activity_interrupt_data &at)
 {
     if (interrupt_block::blocked())
         return false;
@@ -1296,14 +1100,7 @@ bool interrupt_activity(activity_interrupt ai,
         return interrupt_cmd_repeat(ai, at);
 
     if (!you_are_delayed())
-    {
-        // Printing "[foo] comes into view." messages even when not
-        // auto-exploring/travelling.
-        if (ai == activity_interrupt::see_monster)
-            return _monster_warning(ai, at, nullptr, msgs_buf);
-        else
-            return false;
-    }
+        return false;
 
     const auto delay = current_delay();
 
@@ -1331,7 +1128,16 @@ bool interrupt_activity(activity_interrupt ai,
 
     if (_should_stop_activity(delay.get(), ai, at))
     {
-        _monster_warning(ai, at, delay, msgs_buf);
+        monster_interrupt_message(ai, at);
+
+        // We may be about to ask the player whether to stop doing something,
+        // so make sure to actually flush the message about what happened to
+        // causing us to ask this question (and ensure that monsters which just
+        // came into LoS are drawn).
+        flush_prev_message();
+        viewwindow();
+        update_screen();
+
         stop_delay();
         quiver::set_needs_redraw();
 
@@ -1353,7 +1159,6 @@ bool interrupt_activity(activity_interrupt ai,
             {
                 if (you.delay_queue[j]->is_run())
                 {
-                    _monster_warning(ai, at, you.delay_queue[j], msgs_buf);
                     _clear_pending_delays(i);
                     return true;
                 }

@@ -2978,6 +2978,8 @@ static void _do_cmd_repeat()
         return;
     }
 
+    const bool is_safe = i_feel_safe();
+
     keyseq repeat_keys;
     int i = 0;
     if (cmd != CMD_PREV_CMD_AGAIN)
@@ -2993,7 +2995,15 @@ static void _do_cmd_repeat()
         repeat_keys = crawl_state.prev_cmd_keys;
 
     crawl_state.repeat_cmd                = real_cmd;
-    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
+    crawl_state.cmd_repeat_started_unsafe = !is_safe;
+
+    // XXX: If this command repetition was started while safe, a monster may
+    //      have come into view on the first action, before the reptition is
+    //      officially started. Wipe out awareness of all monsters in sight
+    //      to force them to interrupt again, if appropriate.
+    if (is_safe)
+        for (monster_near_iterator mi(you.pos()); mi; ++mi)
+            mi->flags &= ~MF_WAS_IN_VIEW;
 
     int last_repeat_turn;
     for (; i < count && crawl_state.is_repeating_cmd(); ++i)

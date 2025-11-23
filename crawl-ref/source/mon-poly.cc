@@ -18,6 +18,8 @@
 #include "dungeon.h"
 #include "fineff.h"
 #include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -25,18 +27,23 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
+#include "output.h"
 #include "religion.h"
+#include "spl-transloc.h"
+#include "shout.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 #define ORIG_HD_KEY "orig_hd"
@@ -747,21 +754,42 @@ void slimify_monster(monster* mon)
         elven_twin_died(mon, false, KILL_YOU, MID_PLAYER);
 }
 
-void seen_monster(monster* mons)
+static void _maybe_shout_at(const monster* mons)
 {
-    set_unique_annotation(mons);
+    // Don't repeatedly shout in place on the same turn.
+    if (you.shouted_pos == you.pos())
+        return;
 
-    // id equipment (do this every time we see them, it may have changed)
-    view_monster_equipment(mons);
+    if (you.form == transformation::maw && maw_growl_check(mons))
+        you.shouted_pos = you.pos();
+    else if (you.get_mutation_level(MUT_SCREAM) && should_shout_at_mons(*mons))
+    {
+        yell(mons);
+        you.shouted_pos = you.pos();
+    }
+}
+
+void seen_monster(monster* mons, bool do_encounter_message)
+{
+    if (!(mons->flags & MF_WAS_IN_VIEW))
+    {
+        set_unique_annotation(mons);
+        view_monster_equipment(mons);
+        mons_set_just_seen(mons);
+    }
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
 
-    if (mons->flags & MF_SEEN)
+    // Don't perform most of these effects for friendly/good neutral monsters.
+    if (mons->flags & MF_SEEN || mons_att_wont_attack(mons->attitude))
         return;
 
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
+
+    if (do_encounter_message)
+        monster_encounter_message(*mons);
 
     if (crawl_state.game_is_hints())
         hints_monster_seen(*mons);
@@ -816,5 +844,41 @@ void seen_monster(monster* mons)
     if (you.form == transformation::sphinx)
         sphinx_notice_riddle_target(mons);
 
+    // If the player has the attractive mutation, maybe attract newly-seen monsters.
+    if (should_attract_mons(*mons))
+    {
+        const int dist = grid_distance(you.pos(), mons->pos());
+        attract_monster(*mons, dist - 2); // never attract adjacent
+    }
+
     maybe_apply_bane_to_monster(*mons);
+
+    if (player_under_penance(GOD_GOZAG)
+        && !mons->wont_attack()
+        && !mons->is_stationary()
+        && !mons->is_peripheral()
+        && coinflip()
+        && mons->get_experience_level() >= random2(you.experience_level))
+    {
+        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
+                mons->name(DESC_THE).c_str());
+        gozag_incite(mons);
+    }
+
+    if (mons->is_shapeshifter()
+        && !(mons->flags & MF_KNOWN_SHIFTER)
+        && have_passive(passive_t::warn_shapeshifter))
+    {
+        string msg = make_stringf(" warns you: %s is a foul%s shapeshifter.",
+                                    uppercase_first(mons->name(DESC_THE)).c_str(),
+                                    mons->has_ench(ENCH_GLOWING_SHAPESHIFTER) ? " glowing" : "");
+        simple_god_message(msg.c_str());
+        discover_shifter(*mons);
+        #ifndef USE_TILE_LOCAL
+            // XXX: should this really be here...?
+            update_monster_pane();
+        #endif
+    }
+
+    _maybe_shout_at(mons);
 }

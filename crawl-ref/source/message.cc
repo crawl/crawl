@@ -1361,8 +1361,6 @@ void dprf(diag_type param, const char *format, ...)
 }
 #endif
 
-static bool _updating_view = false;
-
 static bool _check_option(const string& line, msg_channel_type channel,
                           const vector<message_filter>& option)
 {
@@ -1528,15 +1526,6 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     if (msg::uses_stderr(channel))
         fprintf(stderr, "%s\n", formatted_string::parse_string(text).tostring().c_str());
-
-    // Flush out any "comes into view" monster announcements before the
-    // monster has a chance to give any other messages.
-    if (!_updating_view && crawl_state.io_inited)
-    {
-        _updating_view = true;
-        flush_comes_into_view();
-        _updating_view = false;
-    }
 
     if (channel == MSGCH_GOD && param == 0)
         param = you.religion;

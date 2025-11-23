@@ -741,5 +741,6 @@ void run_macro(const char *macroname = nullptr);
 void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt ai,
                         const activity_interrupt_data &a
-                            = activity_interrupt_data(),
-                        vector<string>* msgs_buf = nullptr);
+                            = activity_interrupt_data());
+
+void monster_interrupt_message(activity_interrupt ai, const activity_interrupt_data &at);

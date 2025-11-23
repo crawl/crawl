@@ -2672,20 +2672,17 @@ vector<monster *> just_seen_queue;
 
 void mons_set_just_seen(monster *mon)
 {
-    mon->seen_context = SC_JUST_SEEN;
     just_seen_queue.push_back(mon);
 }
 
 void mons_reset_just_seen()
 {
-    // this may be called when the pointers are not valid, so don't mess with
-    // seen_context.
     just_seen_queue.clear();
 }
 
 static void _display_just_seen()
 {
-    // these are monsters that were marked as SC_JUST_SEEN at some point since
+    // these are monsters that were marked as SC_NEWLY_SEEN at some point since
     // last time this was called. We announce any that leave all at once so
     // as to handle monsters that may move multiple times per world_reacts.
     if (in_bounds(you.pos()))
@@ -2698,7 +2695,7 @@ static void _display_just_seen()
             // The monster should be visible to be in this queue.
             if (in_bounds(m->pos()) && !you.see_cell(m->pos()))
             {
-                mprf(MSGCH_PLAIN, "%s moves out of view.",
+                mprf(MSGCH_PLAIN, "%s leaves your sight.",
                      m->name(DESC_THE, true).c_str());
             }
         }
@@ -3019,19 +3016,15 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         open_str += noun;
         open_str += ".";
 
-        // Should this be conditionalized on you.can_see(mons?)
-        mons.seen_context = (all_door.size() <= 2) ? SC_DOOR : SC_GATE;
-
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
             interrupt_activity(activity_interrupt::sense_monster);
         }
-        else if (!you_are_delayed())
-        {
-            mprf("%s %s", mons.name(DESC_A).c_str(),
-                 open_str.c_str());
-        }
+        else
+            mprf("%s %s", mons.name(DESC_A).c_str(), open_str.c_str());
+
+        update_monsters_in_view();
     }
 
     mons.lose_energy(EUT_MOVE);
@@ -3544,10 +3537,6 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->check_redraw(m2->pos());
     m2->check_redraw(mon->pos());
 
-    // The seen context no longer applies if the monster is moving normally.
-    mon->seen_context = SC_NONE;
-    m2->seen_context = SC_NONE;
-
     // Pushing past a seeker gets you hit (since only opposed monsters will try)
     if (mons_is_seeker(*m2))
         seeker_attack(*m2, *mon);
@@ -3705,6 +3694,8 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
+
+                update_monsters_in_view();
             }
         }
         else if (mons_can_open_door(mons, f))
@@ -3731,6 +3722,8 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 }
                 else
                     simple_monster_message(mons, " eats the door!");
+
+                update_monsters_in_view();
             }
         } // done door-eating jellies
     }
@@ -3745,27 +3738,11 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         learned_something_new(HINT_MONSTER_LEFT_LOS, mons.pos());
     }
 
-    // The seen context no longer applies if the monster is moving normally.
-    mons.seen_context = SC_NONE;
-
     if (mons_is_seeker(mons))
         --mons.steps_remaining;
 
-    if (env.grid(mons.pos()) == DNGN_DEEP_WATER && env.grid(f) != DNGN_DEEP_WATER
-        && !monster_habitable_feat(&mons, DNGN_DEEP_WATER))
-    {
-        // er, what?  Seems impossible.
-        mons.seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
-    }
-
     mons.move_to(f, MV_DELIBERATE);
     mons.check_redraw(mons.pos() - delta);
-
-    if (!invalid_monster(&mons) && you.can_see(mons))
-    {
-        handle_seen_interrupt(&mons);
-        seen_monster(&mons);
-    }
 
     _swim_or_move_energy(mons);
 

@@ -38,4 +38,4 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 void slimify_monster(monster* mons);
 bool mon_can_be_slimified(const monster* mons);
 
-void seen_monster(monster* mons);
+void seen_monster(monster* mons, bool do_encounter_message = true);

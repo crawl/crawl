@@ -86,7 +86,7 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(), xp_tracking(XP_NON_VAULT),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
-      foe_memory(0), god(GOD_NO_GOD), ghost(), seen_context(SC_NONE),
+      foe_memory(0), god(GOD_NO_GOD), ghost(),
       client_id(0), hit_dice(0)
 
 {
@@ -165,7 +165,6 @@ void monster::reset()
     travel_target = MTRAV_NONE;
     travel_path.clear();
     ghost.reset(nullptr);
-    seen_context = SC_NONE;
     props.clear();
     clear_constricted();
     // no actual in-game monster should be reset while still constricting
@@ -5613,6 +5612,9 @@ void monster::finalise_movement(const actor* to_blame)
     trap_def* ptrap = trap_at(pos());
     if (ptrap && (ptrap->type != TRAP_GOLUBRIA || !(last_move_flags & MV_GOLUBRIA)))
         ptrap->trigger(*this);
+
+    maybe_notice_monster(*this, (last_move_flags & MV_DELIBERATE)
+                                    && !(last_move_flags & MV_TRANSLOCATION));
 
     clear_deferred_move();
 }

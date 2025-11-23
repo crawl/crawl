@@ -391,13 +391,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         *obvious = true;
     }
 
-    if (you.can_see(*mons))
-    {
-        handle_seen_interrupt(mons);
-        viewwindow();
-        update_screen();
-    }
-
     if (crawl_state.game_is_arena())
         arena_placed_monster(mons);
 

@@ -3877,6 +3877,8 @@ bool mons_word_of_recall(monster* mons, int recall_target, int min_dist)
             break;
     }
 
+    update_monsters_in_view();
+
     for (monster* mon: recalled)
         mon->finalise_movement();
 
@@ -9068,9 +9070,6 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
     const bool throwee_will_be_seen = throwee.visible_to(&you)
                                       && you.see_cell(chosen_dest);
     const bool throwee_seen = throwee_was_seen || throwee_will_be_seen;
-
-    if (!(throwee.flags & MF_WAS_IN_VIEW))
-        throwee.seen_context = SC_THROWN_IN;
 
     if (thrower_seen || throwee_seen)
     {

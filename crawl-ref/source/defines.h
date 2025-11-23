@@ -305,7 +305,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define REAPING_DAMAGE_KEY "reaping_damage"
 #define REAPER_KEY "reaper"
 #define BAND_LEADER_KEY "band_leader"
-#define ZIN_ID_KEY "zin_id"
 #define BLAME_KEY "blame"
 #define NO_ANNOTATE_KEY "no_annotate"
 #define BENNU_REVIVES_KEY "bennu_revives"

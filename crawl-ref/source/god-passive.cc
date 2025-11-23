@@ -34,6 +34,7 @@
 #include "mapdef.h"
 #include "melee-attack.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
@@ -1846,6 +1847,7 @@ void wu_jian_trigger_serpents_lash(bool wall_jump)
         you.redraw_status_lights = true;
         update_turn_count();
         fire_final_effects();
+        mons_reset_just_seen();
     }
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)

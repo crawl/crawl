@@ -315,7 +315,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             }
 
             autotoggle_autopickup(!friendly());
-            handle_seen_interrupt(this);
+            maybe_notice_monster(*this);
         }
 
         // TODO -- and friends
@@ -569,7 +569,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
 
-            handle_seen_interrupt(this);
+            maybe_notice_monster(*this);
         }
         break;
 
@@ -616,7 +616,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // and fire activity interrupts
             interrupt_activity(activity_interrupt::see_monster,
-                               activity_interrupt_data(this, SC_UNCHARM));
+                               activity_interrupt_data(this, SC_ALREADY_IN_VIEW));
         }
 
         if (is_patrolling())

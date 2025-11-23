@@ -300,7 +300,7 @@ string Note::describe(bool when, bool where, bool what) const
                    << " to level " << second;
             break;
         case NOTE_SEEN_MONSTER:
-            result << "Noticed " << name;
+            result << "Encountered " << name;
             break;
         case NOTE_DEFEAT_MONSTER:
             if (second)

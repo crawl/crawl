@@ -113,9 +113,6 @@ public:
 
     unique_ptr<ghost_demon> ghost;     // Ghost information.
 
-    seen_context_type seen_context;    // Non-standard context for
-                                       // activity_interrupt::see_monster
-
     int damage_friendly;               // Damage taken by a player-related source
                                        // (used for XP calculations)
     int damage_total;

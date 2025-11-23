@@ -38,6 +38,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
+#include "view.h"
 
 static void _guess_invis_foe_pos(monster* mon)
 {
@@ -1142,8 +1143,18 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                     behaviour_event(head, event, src, src_pos, allow_shout);
                 }
 
+                const bool was_friend = mons_att_wont_attack(mon->attitude);
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
+
+                // If we're angered a monster that previously would not have
+                // registered as hostile, let the player encounter them 'again'.
+                // (ie: for the first time).
+                if (was_friend)
+                {
+                    mon->flags &= ~MF_WAS_IN_VIEW;
+                    seen_monster(mon);
+                }
             }
         }
 

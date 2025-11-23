@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cio.h"
@@ -45,8 +46,10 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h" // boris_covet_orb
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-gear.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -89,46 +92,44 @@ static layers_type _layers_saved = Layer::None;
 
 crawl_view_geometry crawl_view;
 
-bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
+// Just-generated monsters which are slated to be announced together with
+// special messages.
+static vector<monster*> to_notice;
+seen_context_type special_announce_context;
+
+static bool _try_seen_interrupt(monster& mons, seen_context_type sc)
 {
-    activity_interrupt_data aid(mons);
-    if (mons->seen_context)
-        aid.context = mons->seen_context;
-    // XXX: Hack to make the 'seen' monster spec flag work.
-    else if (testbits(mons->flags, MF_WAS_IN_VIEW)
-             || testbits(mons->flags, MF_SEEN))
-    {
-        aid.context = SC_ALREADY_SEEN;
-    }
-    else
-        aid.context = SC_NEWLY_SEEN;
+    if (mons_is_safe(&mons))
+        return false;
 
-    if (!mons_is_safe(mons))
-    {
-        return interrupt_activity(activity_interrupt::see_monster,
-                                  aid, msgs_buf);
-    }
-
-    return false;
+    activity_interrupt_data aid(&mons, sc);
+    return interrupt_activity(activity_interrupt::see_monster, aid);
+}
 }
 
-void flush_comes_into_view()
+// Observe a monster that may have potentially moved into the player's LoS,
+// printing messages and performing other effects if this is the first time the
+// player has seen them, and firing activity interrupts even if it isn't.
+void maybe_notice_monster(monster& mons, bool stepped)
 {
-    if (!you.turn_is_over
-        || (!you_are_delayed() && !crawl_state.is_repeating_cmd()))
-    {
+    // Already noticed or unable to be noticed.
+    if ((mons.flags & MF_WAS_IN_VIEW) || !you.can_see(mons))
         return;
-    }
 
-    monster* mon = crawl_state.which_mon_acting();
+    const bool already_seen = (bool)(mons.flags & MF_SEEN);
+    seen_monster(&mons);
 
-    if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
-        || !you.can_see(*mon))
+    // If the monster has been seen before (and thus won't print an encounter
+    // message), tell interrupt_activity to print something else if needed.
+    if (crawl_state.is_repeating_cmd() || you_are_delayed())
     {
-        return;
+        if (_try_seen_interrupt(mons, !already_seen ? SC_NEWLY_SEEN
+                                                    : stepped ? SC_NONE
+                                                              : SC_ALREADY_IN_VIEW))
+        {
+            return;
+        }
     }
-
-    handle_seen_interrupt(mon);
 }
 
 void seen_monsters_react(int stealth)
@@ -252,14 +253,14 @@ static void _genus_factoring(map<const string, details> &types,
     types[name] = {mon, name, num, true};
 }
 
-static bool _is_mon_equipment_worth_listing(const monster_info &mi)
+static bool _is_mon_equipment_worth_listing(const monster_info &mi, bool list_all)
 {
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (!mi.inv[i])
             continue;
 
-        if (item_is_worth_listing(*mi.inv[i].get()))
+        if (list_all || item_is_worth_listing(*mi.inv[i].get()))
             return true;
     }
     return false;
@@ -273,34 +274,26 @@ static bool _does_core_name_include_inventory(const monster *mon)
            || mon->type == MONS_ARMOUR_ECHO;
 }
 
-/// Return a warning for the player about newly-seen monsters, as appropriate.
-static string _monster_headsup(const vector<monster*> &monsters,
+/// Output an equipment warning for newly-seen monsters to 'out'.
+static void _monster_headsup(const vector<monster*> &monsters,
                                const unordered_set<const monster*> &single,
-                               bool divine)
+                               ostringstream& out)
 {
-    string warning_msg = "";
+    bool did_linebreak = false;
     for (const monster* mon : monsters)
     {
         monster_info mi(mon);
-        const bool zin_ided = mon->props.exists(ZIN_ID_KEY);
-        const bool has_interesting_equipment
-            = _is_mon_equipment_worth_listing(mi);
-        if ((divine && !zin_ided)
-            || (!divine && !has_interesting_equipment))
-        {
+        if (!_is_mon_equipment_worth_listing(mi, monsters.size() == 1))
             continue;
-        }
-
-        if (!divine && monsters.size() == 1)
-            continue; // don't give redundant warnings for enemies
 
         // Don't repeat inventory. Non-single monsters may be merged, in which
         // case the name is just the name of the monster type.
         if (_does_core_name_include_inventory(mon) && single.count(mon))
             continue;
 
-        if (warning_msg.size())
-            warning_msg += " ";
+        // Put equipment messages on a new line if there's more than one monster.
+        if (!did_linebreak && monsters.size() > 1)
+            out << "\n";
 
         string monname;
         if (monsters.size() == 1)
@@ -311,70 +304,17 @@ static string _monster_headsup(const vector<monster*> &monsters,
             monname = mon->full_name(DESC_THE);
         else
             monname = mon->full_name(DESC_A);
-        warning_msg += uppercase_first(monname);
+        out << uppercase_first(monname) << " ";
 
-        warning_msg += " ";
         if (monsters.size() == 1)
-            warning_msg += conjugate_verb("are", mon->pronoun_plurality());
+            out << conjugate_verb("are", mon->pronoun_plurality());
         else
-            warning_msg += "is";
+            out << "is";
 
-        mons_equip_desc_level_type level = mon->type != MONS_DANCING_WEAPON
-            ? DESC_IDENTIFIED : DESC_WEAPON_WARNING;
-
-        if (!divine)
-        {
-            if (mon->type != MONS_DANCING_WEAPON)
-                warning_msg += " ";
-            warning_msg += get_monster_equipment_desc(mi, level, DESC_NONE);
-            warning_msg += ".";
-            continue;
-        }
-
-        if (you_worship(GOD_ZIN))
-        {
-            warning_msg += " a foul ";
-            if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-                warning_msg += "glowing ";
-            warning_msg += "shapeshifter";
-        }
-        else
-        {
-            // TODO: deduplicate
-            if (mon->type != MONS_DANCING_WEAPON)
-                warning_msg += " ";
-            warning_msg += get_monster_equipment_desc(mi, level, DESC_NONE);
-        }
-        warning_msg += ".";
+        if (mon->type != MONS_DANCING_WEAPON)
+            out << " ";
+        out << get_monster_equipment_desc(mi, DESC_IDENTIFIED, DESC_NONE) << ". ";
     }
-
-    return warning_msg;
-}
-
-/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
-static void _divine_headsup(const vector<monster*> &monsters,
-                            const unordered_set<const monster*> &single)
-{
-    const string warnings = _monster_headsup(monsters, single, true);
-    if (!warnings.size())
-        return;
-
-    const string warning_msg = " warns you: " + warnings;
-    simple_god_message(warning_msg.c_str());
-#ifndef USE_TILE_LOCAL
-    // XXX: should this really be here...?
-    if (you_worship(GOD_ZIN))
-        update_monster_pane();
-#endif
-}
-
-static void _secular_headsup(const vector<monster*> &monsters,
-                             const unordered_set<const monster*> &single)
-{
-    const string warnings = _monster_headsup(monsters, single, false);
-    if (!warnings.size())
-        return;
-    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
 }
 
 /**
@@ -460,125 +400,167 @@ string describe_monsters_condensed(const vector<monster*>& monsters)
     return _describe_monsters_from_species(species);
 }
 
+static string _abyss_monster_creation_message(const monster* mon)
+{
+    if (mon->type == MONS_DEATH_COB)
+    {
+        return coinflip() ? " appears in a burst of microwaves!"
+                          : " pops from nullspace!";
+    }
+
+    // You may ask: "Why these weights?" So would I!
+    const vector<pair<string, int>> messages = {
+        { " appears in a shower of translocational energy.", 17 },
+        { " appears in a shower of sparks.", 34 },
+        { " materialises.", 45 },
+        { " emerges from chaos.", 13 },
+        { " emerges from the beyond.", 26 },
+        { make_stringf(" assembles %s!",
+                       mon->pronoun(PRONOUN_REFLEXIVE).c_str()), 33 },
+        { " erupts from nowhere.", 9 },
+        { " bursts from nowhere.", 18 },
+        { " is cast out of space.", 7 },
+        { " is cast out of reality.", 14 },
+        { " coalesces out of pure chaos.", 5 },
+        { " coalesces out of seething chaos.", 10 },
+        { " punctures the fabric of time!", 2 },
+        { " punctures the fabric of the universe.", 7 },
+        { make_stringf(" manifests%s!",
+                       silenced(you.pos()) ? "" : " with a bang"), 3 },
+
+
+    };
+
+    return *random_choose_weighted(messages);
+}
+
 /**
- * Handle printing "foo comes into view" messages for newly appeared monsters.
+ * Handle printing "You encounter X" messages for newly appeared monsters.
  * Also let Ash/Zin warn the player about newly-seen monsters, as appropriate.
  *
- * @param msgs          A list of individual 'comes into view' messages; e.g.
- *                      "the goblin comes into view.", "Mara opens the gate."
  * @param monsters      A list of monsters that just became visible.
+ * @param sc            Any special context for how these monsters came into
+ *                      view (or existence).
  */
-static void _handle_comes_into_view(const vector<string> &msgs,
-                                    const vector<monster*> monsters)
+static void _handle_encounter_messages(const vector<monster*> monsters,
+                                       seen_context_type sc = SC_NONE)
 {
     unordered_set<const monster*> single;
     vector<details> species;
+
+    for (monster* mon : monsters)
+        if (!(mon->flags & MF_WAS_IN_VIEW))
+            view_monster_equipment(mon);
+
     _count_monster_types(monsters, single, species);
 
-    if (monsters.size() == 1)
-        mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
+    ostringstream out;
+
+    // Abyss spawn messages should be printed one at a time, regardless of how
+    // many things are seen at once.
+    if (sc == SC_ABYSS)
+    {
+        // But make all monsters of the same species use the same flavor message,
+        // to condense message spam a little.
+        for (details& sp : species)
+        {
+            string msg = _abyss_monster_creation_message(sp.mon);
+            for (int i = 0; i < sp.count; ++i)
+            {
+                mprf(MSGCH_MONSTER_WARNING, "%s%s", sp.mon->name(DESC_A).c_str(),
+                                                    msg.c_str());
+            }
+        }
+    }
+    else if (sc == SC_ORBRUN)
+    {
+        out << _describe_monsters_from_species(species).c_str() << "appear";
+        if (monsters.size() == 1)
+            out << "s";
+        out << " in pursuit of the Orb! ";
+    }
     else
-        mprf(MSGCH_MONSTER_WARNING, "%s come into view.",
-             _describe_monsters_from_species(species).c_str());
+        out << "You encounter " << _describe_monsters_from_species(species) << ". ";
 
-    _divine_headsup(monsters, single);
-    _secular_headsup(monsters, single);
+    _monster_headsup(monsters, single, out);
+
+    string msg = out.str();
+    if (!msg.empty())
+        mprf(MSGCH_MONSTER_WARNING, "%s", out.str().c_str());
 }
 
-/// If the player has the shout mutation, maybe shout at newly-seen monsters.
-static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
+static bool _monster_needs_warning(const monster& mon)
 {
-    if (you.form == transformation::maw)
-        for (const monster* mon : monsters)
-            if (maw_growl_check(mon))
-                return;
-
-    if (!you.get_mutation_level(MUT_SCREAM))
-        return;
-
-    for (const monster* mon : monsters)
-    {
-        if (should_shout_at_mons(*mon))
-        {
-            yell(mon);
-            return;
-        }
-    }
+    return !mon.is_firewood() && !mon.is_summoned() && !mons_is_always_safe(&mon);
 }
 
-/// If the player has the attractive mutation, maybe attract newly-seen monsters.
-static void _maybe_trigger_attractivitis(const vector<monster*> monsters)
+/**
+ * Print encounter messages and process all on-first-seen effects for a given
+ * set of monsters.
+ *
+ * @param   monsters      A list of monsters newly seen, for which on-first-seen
+ *                        effects should be processed.
+ * @param   to_announce   A list of monsters for which encounter messages should
+ *                        be printed (which may not include all monsters in the
+ *                        previous list).
+ */
+void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announce,
+                         seen_context_type sc)
 {
+    // We may only wish to announce a subset of monsters seen.
+    if (!to_announce.empty())
+        _handle_encounter_messages(to_announce, sc);
+
+    // But should flag all of them as seen, even if they're harmless.
     for (monster* mon : monsters)
-    {
-        if (!should_attract_mons(*mon))
-            continue;
-        const int dist = grid_distance(you.pos(), mon->pos());
-        attract_monster(*mon, dist - 2); // never attract adjacent
-    }
+        seen_monster(mon, false);
+
+    if (crawl_state.is_repeating_cmd() || you_are_delayed())
+        for (monster* mon : monsters)
+            _try_seen_interrupt(*mon, to_announce.empty() ? SC_NONE : SC_NEWLY_SEEN);
 }
 
-/// Let Gozag's wrath buff newly-seen hostile monsters, maybe.
-static void _maybe_gozag_incite(vector<monster*> monsters)
+void queue_monster_announcement(monster& mons, seen_context_type sc)
 {
-    if (!player_under_penance(GOD_GOZAG))
-        return;
+    special_announce_context = sc;
+    to_notice.push_back(&mons);
+}
 
-    counted_monster_list mon_count;
-    vector<monster *> incited;
-    for (monster* mon : monsters)
-    {
-        // XXX: some of this is probably redundant with interrupt_activity
-        if (mon->wont_attack()
-            || mon->is_stationary()
-            || mon->is_peripheral())
-        {
-            continue;
-        }
+void notice_queued_monsters()
+{
+    // Remove any not still in the player's LoS. (Clouds created when Abyss
+    // monsters spawn may conceal some of these between creation and announcement.)
+    to_notice.erase(std::remove_if(to_notice.begin(), to_notice.end(),
+                    [](const monster * m) { return !you.can_see(*m); }),
+                    to_notice.end());
 
-        if (coinflip()
-            && mon->get_experience_level() >= random2(you.experience_level))
-        {
-            mon_count.add(mon);
-            incited.push_back(mon);
-        }
-    }
-
-    if (incited.empty())
-        return;
-
-    string msg = make_stringf("%s incites %s against you.",
-                              god_name(GOD_GOZAG).c_str(),
-                              mon_count.describe().c_str());
-    if (strwidth(msg) >= get_number_of_cols() - 2)
-    {
-        msg = make_stringf("%s incites your enemies against you.",
-                           god_name(GOD_GOZAG).c_str());
-    }
-    mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-
-    for (monster *mon : incited)
-        gozag_incite(mon);
+    notice_new_monsters(to_notice, to_notice, special_announce_context);
+    to_notice.clear();
 }
 
 void update_monsters_in_view()
 {
     int num_hostile = 0;
-    vector<string> msgs;
+
+    // Newly-spotted monsters.
     vector<monster*> monsters;
+    vector<monster*> to_announce;
 
     for (monster_iterator mi; mi; ++mi)
     {
         if (you.see_cell(mi->pos()))
         {
-            if (mi->attitude == ATT_HOSTILE)
+            if (mi->attitude == ATT_HOSTILE && !mi->is_firewood())
                 num_hostile++;
 
             if (mi->visible_to(&you))
             {
-                if (handle_seen_interrupt(*mi, &msgs))
+                if (!(mi->flags & MF_WAS_IN_VIEW))
+                {
                     monsters.push_back(*mi);
-                seen_monster(*mi);
+                    if (_monster_needs_warning(**mi) && !(mi->flags & MF_SEEN))
+                        to_announce.push_back(*mi);
+                }
             }
             else
                 mi->flags &= ~MF_WAS_IN_VIEW;
@@ -593,29 +575,10 @@ void update_monsters_in_view()
             }
 
             mi->flags &= ~MF_WAS_IN_VIEW;
-
-            // If the monster hasn't been seen by the time that the player
-            // gets control back then seen_context is out of date.
-            mi->seen_context = SC_NONE;
         }
     }
 
-    // Summoners may have lost their summons upon seeing us and converting
-    // leaving invalid monsters in this vector.
-    monsters.erase(
-        std::remove_if(monsters.begin(), monsters.end(),
-            [](const monster * m) { return !m->alive(); }),
-        monsters.end());
-
-    if (!msgs.empty())
-    {
-        _handle_comes_into_view(msgs, monsters);
-        // XXX: does interrupt_activity() add 'comes into view' messages to
-        // 'msgs' in ALL cases we want shoutitis/gozag wrath to trigger?
-        _maybe_trigger_shoutitis(monsters);
-        _maybe_trigger_attractivitis(monsters);
-        _maybe_gozag_incite(monsters);
-    }
+    notice_new_monsters(monsters, to_announce);
 
     // Xom thinks it's hilarious the way the player picks up an ever
     // growing entourage of monsters while running through the Abyss.
@@ -632,6 +595,11 @@ void update_monsters_in_view()
     }
 }
 
+void monster_encounter_message(monster& mon)
+{
+    if (_monster_needs_warning(mon))
+        _handle_encounter_messages({&mon});
+}
 
 // We logically associate a difficulty parameter with each tile on each level,
 // to make deterministic passive mapping work. It is deterministic so that the
