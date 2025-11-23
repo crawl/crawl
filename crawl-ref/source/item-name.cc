@@ -1461,7 +1461,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const bool basename = _use_basename(weap, desc, ident);
     const bool qualname = (desc == DESC_QUALNAME);
 
-    const bool identified = weap.is_identified();
+    const bool identified = ident || weap.is_identified();
 
     const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
     const string plus_text = identified && !dbname && !qualname ? _plus_prefix(weap) : "";
@@ -1536,13 +1536,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     // Shortcuts
     const int item_typ   = sub_type;
 
-    const bool know_type = ident || is_identified();
-
     const bool dbname   = (desc == DESC_DBNAME);
     const bool basename = _use_basename(*this, desc, ident);
     const bool qualname = (desc == DESC_QUALNAME);
 
-    const bool identified = is_identified();
+    const bool identified = ident || is_identified();
 
     // Display runed/glowing/embroidered etc?
     // Only display this if brand is unknown.
@@ -1670,7 +1668,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
-        if (know_type)
+        if (identified)
             buff << "wand of " << _wand_type_name(item_typ);
         else
         {
@@ -1682,7 +1680,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (dbname)
             break;
 
-        if (know_type && charges > 0)
+        if (identified && charges > 0)
             buff << " (" << charges << ")";
 
         break;
@@ -1694,7 +1692,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
-        if (know_type)
+        if (identified)
             buff << "potion of " << potion_type_name(item_typ);
         else
         {
@@ -1745,7 +1743,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         else
             buff << " ";
 
-        if (know_type)
+        if (identified)
             buff << "of " << scroll_type_name(item_typ);
         else
             buff << "labelled " << make_name(subtype_rnd, MNAME_SCROLL);
@@ -1774,7 +1772,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
-        if (know_type)
+        if (identified)
         {
             if (!dbname && jewellery_has_pluses(*this))
                 buff << make_stringf("%+d ", plus);
@@ -1852,14 +1850,14 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_artefact(*this) && !dbname)
         {
-            if (know_type)
+            if (identified)
                 buff << staff_type_name(static_cast<stave_type>(sub_type)) << " staff";
             // TODO: crop long artefact names when not controlled by webtiles
             buff << get_artefact_name(*this, ident);
-            if (!know_type)
+            if (!identified)
                 buff << "staff";
         }
-        else if (!know_type)
+        else if (!identified)
         {
             if (!basename)
             {
