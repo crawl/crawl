@@ -334,9 +334,9 @@ public:
 enum mons_equip_desc_level_type
 {
     DESC_WEAPON,
+    DESC_NOTEWORTHY,
+    DESC_NOTEWORTHY_AND_WEAPON,
     DESC_FULL,
-    DESC_IDENTIFIED,
-    DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
 void direction(dist &moves, const direction_chooser_args& args);

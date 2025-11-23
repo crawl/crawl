@@ -260,8 +260,13 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi, bool list_al
         if (!mi.inv[i])
             continue;
 
-        if (list_all || item_is_worth_listing(*mi.inv[i].get()))
+        const item_def& item = *mi.inv[i].get();
+        if (list_all
+            || item_is_worth_listing(item)
+            || i == MSLOT_ALT_WEAPON && is_range_weapon(item))
+        {
             return true;
+        }
     }
     return false;
 }
@@ -313,7 +318,9 @@ static void _monster_headsup(const vector<monster*> &monsters,
 
         if (mon->type != MONS_DANCING_WEAPON)
             out << " ";
-        out << get_monster_equipment_desc(mi, DESC_IDENTIFIED, DESC_NONE) << ". ";
+        out << get_monster_equipment_desc(mi, monsters.size() > 1 ? DESC_NOTEWORTHY
+                                                                  : DESC_NOTEWORTHY_AND_WEAPON,
+                                          DESC_NONE) << ". ";
     }
 }
 

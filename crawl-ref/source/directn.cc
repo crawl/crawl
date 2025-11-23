@@ -3276,16 +3276,16 @@ string feature_description_at(const coord_def& where, bool covering,
     }
 }
 
-static string _describe_monster_weapon(const monster_info& mi, bool ident)
+static string _describe_monster_weapon(const monster_info& mi)
 {
     string desc = "";
     string name1, name2;
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
-    if (weap && (!ident || weap->is_identified()))
+    if (weap)
         name1 = weap->name(DESC_A, false, false, true, false);
-    if (alt && (!ident || alt->is_identified()) && mi.wields_two_weapons())
+    if (alt && mi.wields_two_weapons())
         name2 = alt->name(DESC_A, false, false, true, false);
 
     if (name1.empty() && !name2.empty())
@@ -3473,12 +3473,13 @@ string get_monster_equipment_desc(const monster_info& mi,
         }
     }
 
-    string weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
+    string weap = _describe_monster_weapon(mi);
 
     // Print the rest of the equipment only for full descriptions.
-    if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
+    if (level == DESC_WEAPON)
         return desc + weap;
 
+    item_def* mon_wpn = mi.inv[MSLOT_WEAPON].get();
     item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
     item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
     item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
@@ -3487,8 +3488,8 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
 #define uninteresting(x) (x && !item_is_worth_listing(*x))
-    // For "comes into view" msgs, only list interesting items
-    if (level == DESC_IDENTIFIED)
+    // For encounter messages, only list interesting items
+    if (level >= DESC_NOTEWORTHY)
     {
         if (uninteresting(mon_arm))
             mon_arm = nullptr;
@@ -3512,8 +3513,11 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     // Dancing weapons have all their weapon information in their full_name, so
     // we don't need to add another weapon description here (see Mantis 11887).
-    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type))
+    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type)
+        && (level >= DESC_NOTEWORTHY_AND_WEAPON || item_is_worth_listing(*mon_wpn)))
+    {
         item_descriptions.push_back(weap.substr(1)); // strip leading space
+    }
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
     if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)
