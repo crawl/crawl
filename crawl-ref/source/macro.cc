@@ -941,12 +941,14 @@ void flush_input_buffer(int reason)
     if (crawl_state.is_replaying_keys() && reason != FLUSH_ABORT_MACRO
         && reason != FLUSH_KEY_REPLAY_CANCEL
         && reason != FLUSH_REPLAY_SETUP_FAILURE
-        && reason != FLUSH_ON_FAILURE)
+        && reason != FLUSH_ON_FAILURE
+        && reason != FLUSH_FORCE_MORE)
     {
         return;
     }
 
     if (Options.flush_input[ reason ] || reason == FLUSH_ABORT_MACRO
+        || reason == FLUSH_FORCE_MORE
         || reason == FLUSH_KEY_REPLAY_CANCEL
         || reason == FLUSH_REPLAY_SETUP_FAILURE
         || reason == FLUSH_REPEAT_SETUP_DONE)

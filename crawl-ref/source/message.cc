@@ -17,6 +17,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "luaterp.h"
+#include "macro.h"
 #include "menu.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -695,6 +696,9 @@ public:
             update_screen();
             show();
         }
+
+        if (user)
+            flush_input_buffer(FLUSH_FORCE_MORE);
 
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())

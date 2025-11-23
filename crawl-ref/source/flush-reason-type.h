@@ -4,6 +4,7 @@ enum flush_reason_type
 {
     FLUSH_ON_FAILURE,                  // spell/ability failed to cast
     FLUSH_BEFORE_COMMAND,              // flush before getting a command
+    FLUSH_FORCE_MORE,                  // flush on a forced --more--
     FLUSH_ON_MESSAGE,                  // flush when printing a message
     FLUSH_ON_WARNING_MESSAGE,          // flush on MSGCH_WARN messages
     FLUSH_ON_DANGER_MESSAGE,           // flush on MSGCH_DANGER messages
