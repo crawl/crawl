@@ -928,22 +928,30 @@ text
 
 writing
 %%%%
+writing_type
+
+@any_colour@
+
+@writing_adj@ @any_colour@
+
+@any_glowing_colour@
+%%%%
 coloured_writing
 
-@any_colour@ @writing_noun@
+@writing_type@ @writing_noun@
+%%%%
+graffiti_type
 
-@writing_adj@ @any_colour@ @writing_noun@
-
-@any_glowing_colour@ @writing_noun@
+@writing_type@ graffiti
 %%%%
 # Use @graffiti author name@ from monname.txt here.
 coloured_graffiti
 
-@any_colour@ graffiti signed by @graffiti author name@
+@graffiti_type@ signed by @graffiti author name@
 
-@writing_adj@ @any_colour@ graffiti signed by @graffiti author name@
+@graffiti_type@ of @graffiti author name@ praising @graffiti author name@
 
-@any_glowing_colour@ graffiti signed by @graffiti author name@
+@graffiti_type@ of @graffiti author name@ cursing @graffiti author name@
 %%%%
 any_colour_pattern
 
