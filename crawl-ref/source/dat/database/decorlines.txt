@@ -28,6 +28,9 @@ default peaceful fountain_blue
     return "You briefly stop to clean @your_weapon@."
   end
 }}
+
+w:1
+You see @coloured_graffiti@ on the fountain.
 %%%%
 default fountain_blue
 
@@ -50,6 +53,9 @@ default peaceful fountain_sparkling
     return "You take a small sip from the fountain. @sparkling_message@"
   end
 }}
+
+w:1
+You see @coloured_graffiti@ on the fountain.
 %%%%
 sparkling_message
 

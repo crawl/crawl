@@ -3075,6 +3075,9 @@ void _walk_on_decor(dungeon_feature_type new_grid)
         decorLine = replace_all(decorLine, "@your_weapon@", weap);
         decorLine = replace_all(decorLine, "@your_hands@", "your " + you.hand_name(true));
 
+        // For randomly named graffiti authors.
+        decorLine = replace_all(decorLine, "@RANDGEN@", make_name());
+
         if (!(decorLine == "" || decorLine == "__NONE"))
             mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
     }
