@@ -3393,7 +3393,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         // XXX: The formless mutation doesn't technically mean you don't have a
-        // form; it means you don't have a head. */
+        // form; it means you don't have a head.
         str = replace_all(str, "@head@",
                           you.has_mutation(MUT_FORMLESS) ? "form" : "head");
 
