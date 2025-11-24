@@ -971,7 +971,7 @@ a felid hanging from a tree branch
 
 an eggplant just sitting there
 %%%%
-# Use @graffiti author name@ from monname.txt here.
+# Use graffiti author names from monname.txt here.
 coloured_graffiti
 
 graffiti of @writing_type@
@@ -992,4 +992,8 @@ graffiti of @writing_type@
 
 @graffiti_type@[| signed by @graffiti author name@] of @graffiti_image@
 
+@graffiti_type@[| signed by @orc graffiti author name@] proselytising Beogh
+
 @graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
+
+@graffiti_type@[| of @orc graffiti author name@] swearing vengeance on @graffiti author name@
