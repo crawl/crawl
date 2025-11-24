@@ -956,13 +956,18 @@ graffiti_type
 %%%%
 graffiti_image
 
-[a goblin|a kobold] with its head poking out of a tunnel
+[a goblin|a kobold|a spriggan] with its head poking out of a tunnel
 
-[an elephant|a yak] trampling over all in its path
+[a dragon|an elephant|a yak] trampling over all in its path
 
-[a gnoll|an orc] brandishing a nasty-looking weapon
+[a gnoll|a human|an orc] brandishing a nasty-looking weapon
 
-[a deep elf|a tengu] shooting a blast of magic
+[an ogre|an oni|a troll] ripping one of its enemies in half
+
+[a deep elf|a lich|a tengu] shooting a blast of magic
+
+# Hang in There, Baby
+a felid hanging from a tree branch
 
 an eggplant just sitting there
 %%%%
@@ -984,6 +989,8 @@ graffiti of @writing_type@
 @graffiti_type@[| signed by @graffiti author name@] telling of a secret passageway straight from here to the Orb of Zot
 
 @graffiti_type@[| signed by @graffiti author name@] counting down the days until the world ends
+
+@graffiti_type@[| signed by @graffiti author name@] claiming to know the meaning of life
 
 @graffiti_type@[| of @graffiti author name@] praising @graffiti author name@
 
