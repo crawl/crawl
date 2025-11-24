@@ -1665,7 +1665,7 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     return true;
 }
 
-void name_zombie_from_class(monster& mon, monster_type mc, const string &mon_name)
+void name_zombie_from_class(monster& mon, monster_type mc, const string& mon_name)
 {
     mon.mname = mon_name;
 
@@ -4210,7 +4210,7 @@ static string _replace_speech_tag(string msg, string from, const string &to)
 
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
-string do_mon_str_replacements(const string &in_msg, const monster& mons,
+string do_mon_str_replacements(const string& in_msg, const monster& mons,
                                int s_type)
 {
     string msg = in_msg;
