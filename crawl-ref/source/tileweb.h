@@ -169,6 +169,7 @@ public:
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }
 
+    wint_t try_await_input();
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
        able to handle other control messages (for example,
@@ -176,15 +177,10 @@ public:
 
        This function waits until input is available either via
        stdin or from a control message. If the input came from
-       a control message, it will be written into c; otherwise,
-       it still has to be read from stdin.
-
-       If block is false, await_input will immediately return,
-       even if no input is available. The return value indicates
-       whether input can be read from stdin; c will be non-zero
-       if input came via a control message.
+       a control message, it will be returned; otherwise, zero
+       will be returned and it still has to be read from stdin.
      */
-    bool await_input(wint_t& c, bool block);
+    wint_t await_input(bool(*has_console_input)());
 
     void check_for_control_messages();
 
