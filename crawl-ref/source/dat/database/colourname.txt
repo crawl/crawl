@@ -929,7 +929,7 @@ text
 
 writing
 %%%%
-writing_type
+writing_style
 
 @any_colour@
 
@@ -937,13 +937,13 @@ writing_type
 
 @any_glowing_colour@
 %%%%
-coloured_writing
+writing_type
 
-@writing_type@ @writing_noun@
+@writing_style@ @writing_noun@
 %%%%
 graffiti_type
 
-@writing_type@ graffiti
+@writing_style@ graffiti
 %%%%
 graffiti_image
 
@@ -959,6 +959,8 @@ an eggplant just sitting there
 %%%%
 # Use @graffiti author name@ from monname.txt here.
 coloured_graffiti
+
+graffiti of @writing_type@
 
 @graffiti_type@[| signed by @graffiti author name@]
 
@@ -989,14 +991,10 @@ any_colour_pattern
 # in practise it happens little enough to just be funny when it does.
 @any_colour@ on @any_colour@ @any_pattern@
 %%%%
-any_colour_pattern_writing_graffiti
+any_colour_pattern_or_graffiti
 
 w:40
 @any_colour_pattern@
-
-w:20
-# Coloured writing
-@coloured_writing@
 
 w:10
 # Coloured graffiti
