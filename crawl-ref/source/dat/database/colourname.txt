@@ -950,15 +950,21 @@ coloured_graffiti
 
 @graffiti_type@[| signed by @graffiti author name@]
 
-@graffiti_type@[| signed by @graffiti author name@] praising the gods
+@graffiti_type@[| signed by @graffiti author name@] glorifying the gods
 
 @graffiti_type@[| signed by @graffiti author name@] blaspheming the gods
 
 @graffiti_type@[| signed by @graffiti author name@] speculating about the powers of the Orb of Zot
 
-@graffiti_type@ of @graffiti author name@ praising @graffiti author name@
+@graffiti_type@[| signed by @graffiti author name@] on how the Orb of Zot will [save|destroy] everyone and everything
 
-@graffiti_type@ of @graffiti author name@ cursing @graffiti author name@
+@graffiti_type@[| signed by @graffiti author name@] telling of a secret passageway straight from here to the Orb of Zot
+
+@graffiti_type@[| signed by @graffiti author name@] counting down the days until the world ends
+
+@graffiti_type@[| of @graffiti author name@] praising @graffiti author name@
+
+@graffiti_type@[| of @graffiti author name@] cursing @graffiti author name@
 %%%%
 any_colour_pattern
 
