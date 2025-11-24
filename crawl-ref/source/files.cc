@@ -66,6 +66,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"

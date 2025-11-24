@@ -59,6 +59,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -1226,14 +1227,6 @@ void player_reacts()
     if (you_worship(GOD_BEOGH))
         beogh_ally_healing();
 
-    //XXX: does this _need_ to be calculated up here?
-    const int stealth = player_stealth();
-
-#ifdef DEBUG_STEALTH
-    // Too annoying for regular diagnostics.
-    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
-#endif
-
     unrand_reacts();
 
     _handle_fugue(you.time_taken);
@@ -1345,7 +1338,7 @@ void player_reacts()
     discover_mimic(you.pos());
 
     // Player stealth check.
-    seen_monsters_react(stealth);
+    seen_monsters_react();
 
     // XOM now ticks from here, to increase his reaction time to tension.
     if (you_worship(GOD_XOM))

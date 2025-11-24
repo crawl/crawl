@@ -5,18 +5,24 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "directn.h"
+#include "dgn-overview.h"
 #include "env.h"
 #include "level-state-type.h"
+#include "message.h"
 #include "notes.h"
 #include "religion.h"
+#include "stringutil.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
  #include "tileview.h"
 #endif
 #include "tiles-build-specific.h"
+#include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewmap.h"
 
 void set_terrain_mapped(const coord_def gc)
 {
@@ -372,4 +378,227 @@ bool in_known_map_bounds(const coord_def& p)
     std::pair<coord_def, coord_def> b = known_map_bounds();
     return p.x >= b.first.x && p.y >= b.first.y
         && p.x <= b.second.x && p.y <= b.second.y;
+}
+
+static colour_t _feat_default_map_colour(dungeon_feature_type feat)
+{
+    if (player_in_branch(BRANCH_SEWER) && feat_is_water(feat))
+        return feat == DNGN_DEEP_WATER ? GREEN : LIGHTGREEN;
+    return BLACK;
+}
+
+// We logically associate a difficulty parameter with each tile on each level,
+// to make deterministic passive mapping work. It is deterministic so that the
+// reveal order doesn't, for example, change on reload.
+//
+// This function returns the difficulty parameters for each tile on the current
+// level, whose difficulty is less than a certain amount.
+//
+// Random difficulties are used in the few cases where we want repeated maps
+// to give different results; scrolls and cards, since they are a finite
+// resource.
+static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
+{
+    // We will often be called with the same level parameter and cutoff, so
+    // cache this (DS with passive mapping autoexploring could be 5000 calls
+    // in a second or so).
+    static FixedArray<uint8_t, GXM, GYM> cache;
+    static int cache_seed = -1;
+
+    if (random)
+    {
+        cache_seed = -1;
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+            for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+                cache[x][y] = random2(100);
+        return cache;
+    }
+
+    // must not produce the magic value (-1)
+    int seed = ((static_cast<int>(you.where_are_you) << 8) + you.depth)
+             ^ (you.game_seed & 0x7fffffff);
+
+    if (seed == cache_seed)
+        return cache;
+
+    cache_seed = seed;
+
+    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+            cache[x][y] = hash_with_seed(100, seed, y * GXM + x);
+
+    return cache;
+}
+
+// Returns true if it succeeded.
+bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
+                   bool force, bool deterministic, bool full_info,
+                   bool range_falloff, coord_def origin, bool respect_no_automap)
+{
+    if (!force && !is_map_persistent())
+    {
+        if (!suppress_msg)
+            canned_msg(MSG_DISORIENTED);
+
+        return false;
+    }
+
+    if (map_radius < 5)
+        map_radius = 5;
+
+    // now gradually weaker with distance:
+    const int pfar     = map_radius * 7 / 10;
+    const int very_far = map_radius * 9 / 10;
+
+    bool did_map = false;
+    int  num_altars        = 0;
+    int  num_shops_portals = 0;
+
+    const FixedArray<uint8_t, GXM, GYM>& difficulty =
+        _tile_difficulties(!deterministic);
+
+    for (radius_iterator ri(in_bounds(origin) ? origin : you.pos(),
+                            map_radius, C_SQUARE);
+         ri; ++ri)
+    {
+        coord_def pos = *ri;
+
+        if (respect_no_automap && env.pgrid(pos) & FPROP_NO_AUTOMAP)
+            continue;
+
+        if (range_falloff)
+        {
+            int threshold = proportion;
+
+            const int dist = grid_distance(you.pos(), pos);
+
+            if (dist > very_far)
+                threshold = threshold / 3;
+            else if (dist > pfar)
+                threshold = threshold * 2 / 3;
+
+            if (difficulty(pos) > threshold)
+                continue;
+        }
+
+        map_cell& knowledge = env.map_knowledge(pos);
+
+        if (knowledge.changed())
+        {
+            // If the player has already seen the square, update map
+            // knowledge with the new terrain. Otherwise clear what we had
+            // before.
+            if (knowledge.seen())
+            {
+                dungeon_feature_type newfeat = env.grid(pos);
+                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
+                knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
+            }
+            else
+                knowledge.clear();
+        }
+
+        // Don't assume that DNGN_UNSEEN cells ever count as mapped.
+        // Because of a bug at one point in map forgetting, cells could
+        // spuriously get marked as mapped even when they were completely
+        // unseen.
+        const bool already_mapped = knowledge.mapped()
+                            && knowledge.feat() != DNGN_UNSEEN;
+
+        if (!full_info && (knowledge.seen() || already_mapped))
+            continue;
+
+        const dungeon_feature_type feat = env.grid(pos);
+
+        bool open = true;
+
+        if (feat_is_solid(feat) && !feat_is_closed_door(feat))
+        {
+            open = false;
+            for (adjacent_iterator ai(pos); ai; ++ai)
+            {
+                if (map_bounds(*ai) && (!feat_is_opaque(env.grid(*ai))
+                                        || feat_is_closed_door(env.grid(*ai))))
+                {
+                    open = true;
+                    break;
+                }
+            }
+        }
+
+        if (open)
+        {
+            if (full_info)
+            {
+                knowledge.set_feature(feat, _feat_default_map_colour(feat),
+                    feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
+                                           : TRAP_UNASSIGNED);
+            }
+            else if (!knowledge.feat())
+            {
+                auto base_feat = magic_map_base_feat(feat);
+                auto colour = _feat_default_map_colour(base_feat);
+                auto trap = feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
+                                                   : TRAP_UNASSIGNED;
+                knowledge.set_feature(base_feat, colour, trap);
+            }
+            if (emphasise(pos))
+                knowledge.flags |= MAP_EMPHASIZE;
+
+            if (full_info)
+            {
+                if (is_notable_terrain(feat))
+                    seen_notable_thing(feat, pos);
+
+                set_terrain_seen(pos);
+                StashTrack.add_stash(pos);
+                show_update_at(pos);
+#ifdef USE_TILE
+                tile_wizmap_terrain(pos);
+#endif
+            }
+            else
+            {
+                set_terrain_mapped(pos);
+
+                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
+                    seen_notable_thing(feat, pos);
+
+                if (get_feature_dchar(feat) == DCHAR_ALTAR)
+                    num_altars++;
+                else if (get_feature_dchar(feat) == DCHAR_ARCH)
+                    num_shops_portals++;
+            }
+
+            did_map = true;
+        }
+    }
+
+    if (!suppress_msg)
+    {
+        if (did_map)
+            mpr("You feel aware of your surroundings.");
+        else
+            canned_msg(MSG_DISORIENTED);
+
+        vector<string> sensed;
+
+        if (num_altars > 0)
+        {
+            sensed.push_back(make_stringf("%d altar%s", num_altars,
+                                          num_altars > 1 ? "s" : ""));
+        }
+
+        if (num_shops_portals > 0)
+        {
+            const char* plur = num_shops_portals > 1 ? "s" : "";
+            sensed.push_back(make_stringf("%d shop%s/portal%s",
+                                          num_shops_portals, plur, plur));
+        }
+
+        if (!sensed.empty())
+            mpr_comma_separated_list("You sensed ", sensed);
+    }
+
+    return did_map;
 }

@@ -59,6 +59,7 @@
 #include "mon-transit.h"
 #include "notes.h"
 #include "ouch.h"
+#include "player-notices.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-clouds.h" // explode_blastmotes_at

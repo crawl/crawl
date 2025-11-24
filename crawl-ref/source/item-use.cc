@@ -39,6 +39,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"

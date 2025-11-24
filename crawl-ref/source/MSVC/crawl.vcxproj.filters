@@ -445,6 +445,8 @@
     <ClCompile Include="..\potion.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\player-notices.cc">
+      <Filter>cc</Filter>
     <ClCompile Include="..\player-stats.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1741,6 +1743,8 @@
     <ClInclude Include="..\player-equip.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="..\player-notices.h">
+      <Filter>h</Filter>
     <ClInclude Include="..\player-reacts.h">
       <Filter>h</Filter>
     </ClInclude>

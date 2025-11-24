@@ -37,6 +37,7 @@
 #include "mon-place.h"
 #include "nearby-danger.h"
 #include "orb.h"
+#include "player-notices.h"
 #include "random.h"
 #include "religion.h"
 #include "shout.h"

@@ -39,6 +39,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "player.h"
+#include "player-notices.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"

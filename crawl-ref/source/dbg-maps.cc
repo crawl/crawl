@@ -16,6 +16,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "maps.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "ng-init.h"
 #include "ng-setup.h"

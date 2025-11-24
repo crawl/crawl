@@ -15,17 +15,6 @@
 
 using std::vector;
 
-bool mon_enemies_around(const monster* mons);
-void seen_monsters_react(int stealth = player_stealth());
-
-string describe_monsters_condensed(const vector<monster*>& monsters);
-
-bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force = false, bool deterministic = false,
-                   bool full_info = false, bool range_falloff = true,
-                   coord_def origin = coord_def(-1, -1),
-                   bool respect_no_automap = false);
-
 string screenshot();
 
 colour_t viewmap_flash_colour();
@@ -103,17 +92,7 @@ void viewwindow(bool show_updates = true, bool tiles_only = false,
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
-void update_monsters_in_view();
-bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
 void toggle_show_terrain();
 void reset_show_terrain();
-
-void maybe_notice_monster(monster& mons, bool stepped = false);
-void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announce,
-                         seen_context_type sc = SC_NONE);
-void monster_encounter_message(monster& mon);
-
-void queue_monster_announcement(monster& mons, seen_context_type sc);
-void notice_queued_monsters();
 
 void handle_terminal_resize();

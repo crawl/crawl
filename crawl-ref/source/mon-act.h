@@ -37,3 +37,6 @@ void handle_monster_move(monster* mon);
 void queue_monster_for_action(monster* mons);
 
 void clear_monster_flags();
+
+bool mon_enemies_around(const monster* mons);
+void seen_monsters_react();

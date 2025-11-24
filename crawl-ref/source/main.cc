@@ -107,6 +107,7 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "player-notices.h"
 #include "player-reacts.h"
 #include "prompt.h"
 #include "quiver.h"

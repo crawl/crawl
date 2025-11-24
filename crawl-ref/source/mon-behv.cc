@@ -30,6 +30,7 @@
 #include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "ouch.h"
+#include "player-notices.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"

@@ -52,6 +52,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-notices.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"

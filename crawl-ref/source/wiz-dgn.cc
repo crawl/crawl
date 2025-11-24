@@ -21,8 +21,11 @@
 #include "files.h"
 #include "libutil.h"
 #include "maps.h"
+#include "map-knowledge.h"
+#include "mon-act.h"
 #include "message.h"
 #include "place.h"
+#include "player-notices.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-goditem.h" // detect_items

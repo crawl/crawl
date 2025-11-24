@@ -15,6 +15,12 @@ int count_detected_mons();
 
 void update_cloud_knowledge();
 
+bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
+                   bool force = false, bool deterministic = false,
+                   bool full_info = false, bool range_falloff = true,
+                   coord_def origin = coord_def(-1, -1),
+                   bool respect_no_automap = false);
+
 /**
  * @brief Clear non-terrain knowledge from the map.
  *

@@ -17,6 +17,7 @@
 #include "map-knowledge.h"
 #include "mon-death.h"
 #include "player.h"
+#include "player-notices.h"
 #include "religion.h"
 #include "stringutil.h"
 #include "terrain.h"

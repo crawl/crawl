@@ -41,6 +41,7 @@
 #include "mon-tentacle.h"
 #include "movement.h"
 #include "player.h"
+#include "player-notices.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"

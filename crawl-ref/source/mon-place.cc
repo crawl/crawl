@@ -38,6 +38,7 @@
 #include "mon-pick.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "player-notices.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

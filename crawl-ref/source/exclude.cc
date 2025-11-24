@@ -20,6 +20,7 @@
 #include "libutil.h"
 #include "mon-util.h"
 #include "options.h"
+#include "player-notices.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"

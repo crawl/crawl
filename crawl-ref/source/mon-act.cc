@@ -50,6 +50,7 @@
 #include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "nearby-danger.h"
+#include "player-notices.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
@@ -4084,4 +4085,88 @@ static bool _monster_move(monster* mons, coord_def& delta)
     }
 
     return ret;
+}
+
+void seen_monsters_react()
+{
+    if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
+        return;
+
+    const int stealth = player_stealth();
+
+#ifdef DEBUG_STEALTH
+    // Too annoying for regular diagnostics.
+    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
+#endif
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if ((mi->asleep() || mi->behaviour == BEH_WANDER)
+            && check_awaken(*mi, stealth))
+        {
+            behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
+
+            // That might have caused a pacified monster to leave the level.
+            if (!(*mi)->alive())
+                continue;
+
+            monster_consider_shouting(**mi);
+        }
+
+        if (!mi->visible_to(&you))
+            continue;
+
+        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
+        {
+            // Trigger Duvessa & Dowan upgrades
+            if (mi->props.exists(ELVEN_ENERGIZE_KEY))
+            {
+                mi->props.erase(ELVEN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
+            else if (mi->type == MONS_BORIS && player_has_orb()
+                     && !mi->props.exists(BORIS_ORB_KEY))
+            {
+                mi->props[BORIS_ORB_KEY] = true;
+                boris_covet_orb(*mi);
+            }
+#if TAG_MAJOR_VERSION == 34
+            else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
+            else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
+#endif
+        }
+    }
+}
+
+bool mon_enemies_around(const monster* mons)
+{
+    // If the monster has a foe, return true.
+    if (mons->foe != MHITNOT && mons->foe != MHITYOU)
+        return true;
+
+    if (crawl_state.game_is_arena())
+    {
+        // If the arena-mode code in _handle_behaviour() hasn't set a foe then
+        // we don't have one.
+        return false;
+    }
+    else if (mons->wont_attack())
+    {
+        // Additionally, if an ally is nearby and *you* have a foe,
+        // consider it as the ally's enemy too.
+        return you.can_see(*mons) && there_are_monsters_nearby(true);
+    }
+    else
+    {
+        // For hostile monster* you* are the main enemy.
+        return mons->can_see(you);
+    }
 }
