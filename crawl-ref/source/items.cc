@@ -5036,8 +5036,7 @@ bool maybe_identify_base_type(item_def &item)
 void name_weapon(item_def &item)
 {
     string name = getRandMonNameString("steelspirit");
-    if (name == "RANDGEN")
-        name = make_name();
+    do_mon_name_replacements(name);
     item.props[WEAPON_NAME_KEY] = name;
 
     if (!item.inscription.empty())

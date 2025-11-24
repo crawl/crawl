@@ -474,6 +474,7 @@ string random_body_part_name(bool plural, int part_class);
 
 string do_mon_str_replacements(const string& msg, const monster& mons,
                                int s_type = -1);
+string do_mon_name_replacements(const string& name);
 
 mon_body_shape get_mon_shape(const monster& mon);
 mon_body_shape get_mon_shape(const monster_type mc);

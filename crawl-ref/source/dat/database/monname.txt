@@ -949,7 +949,7 @@ w:50
 @ancestor name@
 
 w:1
-RANDGEN
+@RANDGEN@
 
 # The names below are contemporary, not antique.
 # That's why we aren't using them for ancestors.

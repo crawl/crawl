@@ -1745,7 +1745,8 @@ static string _make_ancestor_name(gender_type gender)
     const string gender_name = gender == GENDER_MALE ? " male " :
                                gender == GENDER_FEMALE ? " female " : " ";
     const string suffix = gender_name + "name";
-    const string name = getRandMonNameString("ancestor" + suffix);
+    string name = getRandMonNameString("ancestor" + suffix);
+    name = do_mon_name_replacements(name);
     return name.empty() ? make_name() : name;
 }
 

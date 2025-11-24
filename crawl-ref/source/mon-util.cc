@@ -3077,10 +3077,11 @@ static string _get_proper_monster_name(const monster& mon)
         return "";
 
     string name = getRandMonNameString(me->name);
-    if (!name.empty())
-        return name;
+    if (name.empty())
+        name = getRandMonNameString(get_monster_data(mons_genus(mon.type))->name);
+    name = do_mon_name_replacements(name);
 
-    return getRandMonNameString(get_monster_data(mons_genus(mon.type))->name);
+    return name;
 }
 
 // Names a monster (will rename it if it already had a name)
@@ -3097,7 +3098,9 @@ bool give_monster_proper_name(monster& mon)
 static bool _give_apostle_proper_name(monster& mon, apostle_type type)
 {
     string apostle_key = "orc apostle " + apostle_type_names[type] + " name";
-    mon.mname = getRandMonNameString(apostle_key);
+    string name = getRandMonNameString(apostle_key);
+    name = do_mon_name_replacements(name);
+    mon.mname = name;
 
     // XXX: The rest of this is duplicated from give_monster_proper_name().
     if (!mon.props.exists(DBNAME_KEY))
@@ -4607,6 +4610,15 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
     msg = maybe_capitalise_substring(msg);
 
     return msg;
+}
+
+string do_mon_name_replacements(const string& in_name)
+{
+    string name = in_name;
+
+    name = replace_all(name, "@RANDGEN@", make_name());
+
+    return name;
 }
 
 /**
