@@ -9178,22 +9178,6 @@ w:5
 w:1
 @The_monster@ says, "I wanted to be a wyvern-rider, but @my_God@ had other plans!"
 %%%%
-# Cards not from any Nemelex deck
-_misplaced_card_
-
-the Ace of Spades
-
-the Old Maid
-
-# Tarot
-the Hanged Man
-
-# Tarot via the Simpsons
-the Happy Squirrel
-
-# Uno
-Wild Draw Four
-%%%%
 # Nemelex's old Deck of Oddities; just names, not lines
 _deck_of_oddities_card_
 
@@ -9212,6 +9196,22 @@ the Genie
 the Helix
 
 Xom
+%%%%
+# Cards not from any Nemelex deck
+_misplaced_card_
+
+the Ace of Spades
+
+the Old Maid
+
+# Tarot
+the Hanged Man
+
+# Tarot via the Simpsons
+the Happy Squirrel
+
+# Uno
+Wild Draw Four
 %%%%
 # Nemelex's deck of destruction
 _deck_of_destruction_line_
