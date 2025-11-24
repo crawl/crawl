@@ -896,6 +896,7 @@ swirling
 
 writhing
 %%%%
+# Any word other than "graffiti" will work here.
 writing_noun
 
 binary code
