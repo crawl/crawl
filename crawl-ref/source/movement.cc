@@ -734,6 +734,15 @@ static string _get_move_verb(bool is_rampage)
            : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 }
 
+static bool _cannot_step_into(const coord_def& pos)
+{
+    return !you.can_pass_through(pos)
+            && (!you.digging
+                || !in_bounds(pos)
+                || !feat_is_diggable(env.grid(pos))
+                || env.grid(pos) == DNGN_SLIMY_WALL);
+}
+
 // Handles the player trying to move/attack/swap into a given location.
 // Returns true if handling of further steps should continue after this.
 static bool _handle_player_step(const coord_def& targ, int& delay, bool rampaging,
@@ -762,7 +771,6 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
         {
             if (!fight_melee(&you, mon))
             {
-                // SALMON
                 stop_running();
                 return false;
             }
@@ -809,17 +817,11 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
         canned_msg(MSG_CANNOT_MOVE);
         return false;
     }
-    else if (!you.can_pass_through(targ))
+    else if (_cannot_step_into(targ))
     {
-        if (!you.digging
-            || !in_bounds(targ)
-            || !feat_is_diggable(env.grid(targ))
-            || env.grid(targ) == DNGN_SLIMY_WALL)
-        {
-            _handle_trying_to_move_into_unpassable_terrain(targ);
-            you.digging = false;
-            return false;
-        }
+        _handle_trying_to_move_into_unpassable_terrain(targ);
+        you.digging = false;
+        return false;
     }
 
     if (!you.confused())
@@ -971,17 +973,24 @@ void move_player_action(coord_def move)
     const int end_step = rampage_attack ? num_steps - 2 : num_steps - 1;
     for (int i = 0; i < num_steps; ++i)
     {
+        if (!you.is_motile())
+            break;
+
         targ += move;
 
-        // Don't warn about traps or clouds on a space we will not be entering.
+        // Don't warn about traps or clouds on spaces we will not be entering.
+        if (_cannot_step_into(targ))
+            break;
+
         if (monster* mon_at = monster_at(targ))
         {
             coord_def dummy;
             if (you.can_see(*mon_at)
                 && !mon_at->wont_attack()
-                   || !swap_check(mon_at, dummy, true))
+                   || !(fedhas_passthrough(mon_at)
+                        || swap_check(mon_at, dummy, true)))
             {
-                continue;
+                break;
             }
         }
 
