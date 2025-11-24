@@ -260,7 +260,7 @@ bool xom_is_nice(int tension)
         // Whether Xom is nice depends largely on his mood (== piety).
         return x_chance_in_y(effective_piety, MAX_PIETY);
     }
-    else // CARD_XOM
+    else // CARD_XOM (XXX: There is no Xom card anymore. Is this needed?)
         return coinflip();
 }
 
