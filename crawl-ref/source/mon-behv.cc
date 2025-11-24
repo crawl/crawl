@@ -1395,7 +1395,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mons_speaks_msg(mon, getSpeakString("orc_priest_preaching"), MSGCH_TALK);
 
     ASSERT(!crawl_state.game_is_arena()
-           || mon->foe != MHITYOU && mon->target != you.pos());
+           || mon->foe != MHITYOU && (mon->target.origin() || mon->target != you.pos()));
 }
 
 void make_mons_stop_fleeing(monster* mon)
