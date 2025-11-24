@@ -958,7 +958,7 @@ graffiti_image
 
 [a goblin|a kobold] with its head poking out of a tunnel
 
-[an elephant|a death yak] trampling over all in its path
+[an elephant|a yak] trampling over all in its path
 
 [a gnoll|an orc] brandishing a nasty-looking weapon
 
