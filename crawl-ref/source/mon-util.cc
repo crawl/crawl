@@ -4616,7 +4616,7 @@ string do_mon_name_replacements(const string& in_name)
 {
     string name = in_name;
 
-    name = replace_all(name, "@RANDGEN@", make_name());
+    name = replace_all_func(name, "@RANDGEN@", make_name_randgen);
 
     return name;
 }

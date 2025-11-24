@@ -2677,6 +2677,11 @@ string make_name(uint32_t seed, makename_type name_type)
 }
 #undef ITEMNAME_SIZE
 
+string make_name_randgen()
+{
+    return make_name();
+}
+
 /**
  * Is the given character a lower-case ascii consonant?
  *

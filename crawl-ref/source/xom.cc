@@ -3158,7 +3158,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
                               uppercase_first(in_view_name[iv]));
 
             // For randomly named graffiti authors.
-            str = replace_all(str, "@RANDGEN@", make_name());
+            str = replace_all_func(str, "@RANDGEN@", make_name_randgen);
 
             messages.push_back(str);
         }

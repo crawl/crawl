@@ -130,6 +130,7 @@ string cannot_drink_item_reason(const item_def *item=nullptr,
 
 string make_name(uint32_t seed = rng::get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);
+string make_name_randgen();
 void make_name_tests();
 
 const char* brand_type_name(brand_type brand, bool terse) PURE;
