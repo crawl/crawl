@@ -1082,6 +1082,12 @@ void move_player_action(coord_def move)
         you.berserk_penalty = 0;
     }
 
+    if (!did_move && !did_attack)
+    {
+        stop_running();
+        crawl_state.cancel_cmd_repeat();
+    }
+
     if (you.pos() != initial_pos || i_feel_safe())
         request_autopickup();
 }
