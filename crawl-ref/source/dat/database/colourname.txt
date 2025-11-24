@@ -948,7 +948,13 @@ graffiti_type
 # Use @graffiti author name@ from monname.txt here.
 coloured_graffiti
 
-@graffiti_type@ signed by @graffiti author name@
+@graffiti_type@[| signed by @graffiti author name@]
+
+@graffiti_type@[| signed by @graffiti author name@] praising the gods
+
+@graffiti_type@[| signed by @graffiti author name@] blaspheming the gods
+
+@graffiti_type@[| signed by @graffiti author name@] speculating about the powers of the Orb of Zot
 
 @graffiti_type@ of @graffiti author name@ praising @graffiti author name@
 
