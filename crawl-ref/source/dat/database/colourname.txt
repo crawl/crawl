@@ -370,6 +370,8 @@ ivy green
 
 jade
 
+jale
+
 jasmine
 
 jonquil
@@ -588,6 +590,8 @@ red emerald
 
 red ochre
 
+rej
+
 rocket green
 
 rockmelon
@@ -705,6 +709,8 @@ topaz
 turmeric
 
 turquoise
+
+ulfire
 
 ultramarine
 
