@@ -504,6 +504,52 @@ static int proc_mouse_event(int c, const MEVENT *me)
 
 static int pending = 0;
 
+static bool _curses_fetch_pending_key(bool blocking)
+{
+    if (pending)
+        return true;
+
+    wint_t c;
+    int i;
+    if (blocking)
+        i = get_wch(&c);
+    else
+    {
+        nodelay(stdscr, TRUE);
+        // apparently some need this to guarantee non-blocking -- bwr
+        timeout(0);
+        i = get_wch(&c);
+        nodelay(stdscr, FALSE);
+    }
+
+    switch (i)
+    {
+    case ERR:
+        // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
+        // but the alternative is to explicitly check for -1 everywhere where
+        // we might otherwise spin in a tight keyboard input loop.
+        // XXX: this doesn't work with `blocking` false, because we can't tell
+        // a timeout from an error...
+        if (!blocking)
+            return false;
+        pending = ESCAPE;
+        return true;
+    case OK:
+        // a normal (printable) key
+        pending = c;
+        return true;
+    case KEY_CODE_YES:
+    default:
+        pending = -c;
+        return true;
+    }
+}
+
+static bool _curses_has_key()
+{
+    return _curses_fetch_pending_key(false);
+}
+
 static int _get_key_from_curses()
 {
 #ifdef WATCHDOG
@@ -512,38 +558,19 @@ static int _get_key_from_curses()
     watchdog();
 #endif
 
-    if (pending)
-    {
-        int c = pending;
-        pending = 0;
-        return c;
-    }
-
-    wint_t c;
-
 #ifdef USE_TILE_WEB
     refresh();
-
     tiles.redraw();
-    tiles.await_input(c, true);
 
+    wint_t c = tiles.await_input(&_curses_has_key);
     if (c != 0)
         return c;
 #endif
 
-    switch (get_wch(&c))
-    {
-    case ERR:
-        // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
-        // but the alternative is to explicitly check for -1 everywhere where
-        // we might otherwise spin in a tight keyboard input loop.
-        return ESCAPE;
-    case OK:
-        // a normal (printable) key
-        return c;
-    }
-
-    return -c;
+    _curses_fetch_pending_key(true);
+    int result = pending;
+    pending = 0;
+    return result;
 }
 
 #if defined(KEY_RESIZE) || defined(USE_UNIX_SIGNALS)
@@ -574,10 +601,8 @@ static int _headless_getchk()
 
 
 #ifdef USE_TILE_WEB
-    wint_t c;
     tiles.redraw();
-    tiles.await_input(c, true);
-
+    wint_t c = tiles.await_input([]() { return false; });
     if (c != 0)
         return c;
 #endif
@@ -591,11 +616,9 @@ static int _headless_getch_ck()
     do
     {
         c = _headless_getchk();
-        // TODO: release?
-        // XX this should possibly sleep
-    } while (
-             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-                 && !crawl_state.mouse_enabled));
+    }
+    while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+               && !crawl_state.mouse_enabled);
 
     return c;
 }
@@ -1818,21 +1841,19 @@ void delay(unsigned int time)
 
 static bool _headless_kbhit()
 {
-    // TODO: ??
     if (pending)
         return true;
 
 #ifdef USE_TILE_WEB
-    wint_t c;
-    bool result = tiles.await_input(c, false);
-
-    if (result && c != 0)
+    wint_t c = tiles.try_await_input();
+    if (c != 0)
+    {
         pending = c;
-
-    return result;
-#else
-    return false;
+        return true;
+    }
 #endif
+
+    return false;
 }
 
 /* This is Juho Snellman's modified kbhit, to work with macros */
@@ -1844,32 +1865,17 @@ bool kbhit()
     if (pending)
         return true;
 
-    wint_t c;
-#ifndef USE_TILE_WEB
-    int i;
+    if (_curses_has_key())
+        return true;
 
-    nodelay(stdscr, TRUE);
-    timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    i = get_wch(&c);
-    nodelay(stdscr, FALSE);
-
-    switch (i)
+#ifdef USE_TILE_WEB
+    wint_t c = tiles.try_await_input();
+    if (c != 0)
     {
-    case OK:
         pending = c;
         return true;
-    case KEY_CODE_YES:
-        pending = -c;
-        return true;
-    default:
-        return false;
     }
-#else
-    bool result = tiles.await_input(c, false);
-
-    if (result && c != 0)
-        pending = c;
-
-    return result;
 #endif
+
+    return false;
 }

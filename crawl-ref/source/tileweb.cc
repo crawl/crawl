@@ -7,6 +7,7 @@
 #include <cerrno>
 #include <cstdarg>
 
+#include <signal.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -610,61 +611,95 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     return c;
 }
 
-bool TilesFramework::await_input(wint_t& c, bool block)
+wint_t TilesFramework::try_await_input()
 {
+    if (m_sock_name.empty())
+        return 0;
+
+    fd_set fds;
+    int result;
+    while (true)
+    {
+        FD_ZERO(&fds);
+        FD_SET(m_sock, &fds);
+
+        timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+
+        result = select(m_sock + 1, &fds, nullptr, nullptr, &timeout);
+        if (result == -1 && errno == EINTR)
+            continue;
+
+        if (result <= 0)
+            return 0;
+
+        wint_t c = _receive_control_message();
+        if (c != 0)
+            return c;
+    }
+}
+
+struct save_signal_mask
+{
+    save_signal_mask()
+    {
+        sigprocmask(SIG_SETMASK, nullptr, &old);
+    }
+
+    ~save_signal_mask()
+    {
+        sigprocmask(SIG_SETMASK, &old, nullptr);
+    }
+
+    sigset_t old;
+};
+
+wint_t TilesFramework::await_input(bool(*has_console_input)())
+{
+    if (m_sock_name.empty())
+        return 0;
+
     int result;
     fd_set fds;
-    int maxfd = m_sock_name.empty() ? STDIN_FILENO : m_sock;
+    int maxfd = m_sock;
+
+    save_signal_mask saved_sig_mask;
+    sigset_t signals_to_wait_for;
+    sigemptyset(&signals_to_wait_for);
+    sigaddset(&signals_to_wait_for, SIGWINCH);
+    sigprocmask(SIG_BLOCK, &signals_to_wait_for, nullptr);
 
     while (true)
     {
-        do
+        FD_ZERO(&fds);
+        FD_SET(STDIN_FILENO, &fds);
+        FD_SET(m_sock, &fds);
+
+        tiles.flush_messages();
+
+        if (has_console_input())
+            return 0;
+        result = pselect(maxfd + 1, &fds, nullptr, nullptr, nullptr,
+                         &saved_sig_mask.old);
+        if (has_console_input())
+            return 0;
+        if (result == -1 && errno == EINTR || result == 0)
+            continue;
+        if (result > 0)
         {
-            FD_ZERO(&fds);
-            FD_SET(STDIN_FILENO, &fds);
-            if (!m_sock_name.empty())
-                FD_SET(m_sock, &fds);
-
-            if (block)
+            if (FD_ISSET(m_sock, &fds))
             {
-                tiles.flush_messages();
-                result = select(maxfd + 1, &fds, nullptr, nullptr, nullptr);
-            }
-            else
-            {
-                timeval timeout;
-                timeout.tv_sec = 0;
-                timeout.tv_usec = 0;
-
-                result = select(maxfd + 1, &fds, nullptr, nullptr, &timeout);
-            }
-        }
-        while (result == -1 && errno == EINTR);
-
-        if (result == 0)
-            return false;
-        else if (result > 0)
-        {
-            if (!m_sock_name.empty() && FD_ISSET(m_sock, &fds))
-            {
-                c = _receive_control_message();
-
+                wint_t c = _receive_control_message();
                 if (c != 0)
-                    return true;
-            }
-
-            if (FD_ISSET(STDIN_FILENO, &fds))
-            {
-                c = 0;
-                return true;
+                    return c;
             }
         }
         else if (errno == EBADF)
         {
             // This probably means that stdin got closed because of a
             // SIGHUP. We'll just return.
-            c = 0;
-            return false;
+            return 0;
         }
         else
             die("select error: %s", strerror(errno));
