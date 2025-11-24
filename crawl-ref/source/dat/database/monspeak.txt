@@ -9202,6 +9202,8 @@ _misplaced_card_
 
 the Ace of Spades
 
+the Joker
+
 the Old Maid
 
 # Tarot
