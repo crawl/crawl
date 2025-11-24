@@ -3145,6 +3145,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
                  || in_view[iv] == DNGN_CRYSTAL_WALL)
         {
             str = _get_xom_speech("feature translucent wall");
+
+            // For randomly named graffiti authors.
+            str = replace_all(str, "@RANDGEN@", make_name());
         }
         else if (in_view[iv] == DNGN_METAL_WALL)
             str = _get_xom_speech("feature metal wall");
