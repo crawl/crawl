@@ -2235,14 +2235,14 @@ macros += M \{9} za
 
 flush.failure = true
 flush.command = false
-flush.message = false
+flush.lua     = true
         These are useful when using macros. Setting one of these
         sub-options to true will cause the entire input buffer to be
         dumped and thus effectively stop the macro. The sub-options
         currently are
            failure -- when spells/abilities get miscast
            command -- whenever the game is about to get the next command
-           message -- whenever the game outputs a non-mute message
+           lua     -- whenever crawl.flush_input() is called from lua
 
 additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.

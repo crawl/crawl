@@ -1615,7 +1615,6 @@ void game_options::reset_options()
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
-    flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
 
     fire_items_start       = 0;           // start at slot 'a'
@@ -4036,11 +4035,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         {
             flush_input[FLUSH_BEFORE_COMMAND]
                 = read_bool(state.field, flush_input[FLUSH_BEFORE_COMMAND]);
-        }
-        else if (state.subkey == "message")
-        {
-            flush_input[FLUSH_ON_MESSAGE]
-                = read_bool(state.field, flush_input[FLUSH_ON_MESSAGE]);
         }
         else if (state.subkey == "lua")
         {
