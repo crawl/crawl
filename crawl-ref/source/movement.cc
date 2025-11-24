@@ -1010,6 +1010,7 @@ void move_player_action(coord_def move)
     // Now, we can assume the player has been fully prompted for any movement,
     // so take each step in order (tracking whether we actually moved or attack,
     // and how much time it took to move through each space).
+    const coord_def initial_pos = you.pos();
     targ = you.pos();
     int delay = 0;
     int steps_taken = 0;
@@ -1081,5 +1082,6 @@ void move_player_action(coord_def move)
         you.berserk_penalty = 0;
     }
 
-    request_autopickup();
+    if (you.pos() != initial_pos || i_feel_safe())
+        request_autopickup();
 }
