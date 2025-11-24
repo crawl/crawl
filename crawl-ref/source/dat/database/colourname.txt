@@ -945,6 +945,18 @@ graffiti_type
 
 @writing_type@ graffiti
 %%%%
+graffiti_image
+
+[a goblin|a kobold] with its head poking out of a tunnel
+
+[an elephant|a death yak] trampling over all in its path
+
+[a gnoll|an orc] brandishing a nasty-looking weapon
+
+[a deep elf|a tengu] shooting a blast of magic
+
+an eggplant just sitting there
+%%%%
 # Use @graffiti author name@ from monname.txt here.
 coloured_graffiti
 
@@ -965,6 +977,8 @@ coloured_graffiti
 @graffiti_type@[| of @graffiti author name@] praising @graffiti author name@
 
 @graffiti_type@[| of @graffiti author name@] cursing @graffiti author name@
+
+@graffiti_type@[| signed by @graffiti author name@] of @graffiti_image@
 %%%%
 any_colour_pattern
 
