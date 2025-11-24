@@ -798,7 +798,6 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
             }
 
             // Make sure we have a legitimate tile.
-            proceed = false;
             if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;

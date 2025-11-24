@@ -5516,7 +5516,7 @@ static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&)
                          : mons.get_experience_level() > 11 ? 2
                          : 1;
 
-        int pow = min(100, mons.get_experience_level() * 5);
+        int pow;
 
         // Choose weapon type consistently based on the caster
         item_def& wpn(*weapon->weapon());

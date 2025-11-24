@@ -2875,7 +2875,7 @@ static void _xom_mass_charm(int sever)
         }
     }
 
-    hd_target /= target_count;
+    hd_target /= max(1, target_count);
     shuffle_array(targetable);
 
     god_speaks(GOD_XOM, _get_xom_speech("mass charm").c_str());

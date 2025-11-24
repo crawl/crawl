@@ -1565,7 +1565,6 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     {
         const int bonus = min<int>(bonus_left, you.skill_manual_points[exsk]);
         skill_inc += bonus;
-        bonus_left -= bonus;
         you.skill_manual_points[exsk] -= bonus;
         if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
         {

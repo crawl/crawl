@@ -2585,7 +2585,7 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
 string mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
-        return nullptr;
+        return "";
 
     string mut_desc =
         lowercase_first(mutation_desc(mut, you.mutation[mut] + 1));

@@ -3098,7 +3098,7 @@ bool is_offhand(const item_def &item)
 bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 {
     // If there's no shield or off-hand weapon, there's no problem.
-    if (!shield && !(shield = you.shield()) && !you.offhand_weapon())
+    if (!shield && !you.shield() && !you.offhand_weapon())
         return false;
 
     hands_reqd_type hand = you.hands_reqd(weapon);

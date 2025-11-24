@@ -2764,7 +2764,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
                             true /*possibly wrong*/, this);
         }
     }
-    monster_die(*this, KILL_BANISHED, agent->mindex());
+    monster_die(*this, KILL_BANISHED, agent ? agent->mindex() : 0);
 
     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
