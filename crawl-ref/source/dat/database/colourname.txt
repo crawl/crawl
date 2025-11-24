@@ -978,9 +978,7 @@ graffiti of @writing_type@
 
 @graffiti_type@[| signed by @graffiti author name@]
 
-@graffiti_type@[| signed by @graffiti author name@] glorifying the gods
-
-@graffiti_type@[| signed by @graffiti author name@] blaspheming the gods
+@graffiti_type@[| signed by @graffiti author name@] [glorifying|blaspheming] the gods
 
 @graffiti_type@[| signed by @graffiti author name@] speculating about the powers of the Orb of Zot
 
@@ -992,8 +990,6 @@ graffiti of @writing_type@
 
 @graffiti_type@[| signed by @graffiti author name@] claiming to know the meaning of life
 
-@graffiti_type@[| of @graffiti author name@] praising @graffiti author name@
-
-@graffiti_type@[| of @graffiti author name@] cursing @graffiti author name@
-
 @graffiti_type@[| signed by @graffiti author name@] of @graffiti_image@
+
+@graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
