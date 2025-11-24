@@ -975,7 +975,7 @@ any_colour_pattern
 # in practise it happens little enough to just be funny when it does.
 @any_colour@ on @any_colour@ @any_pattern@
 %%%%
-any_colour_pattern_plus_writing
+any_colour_pattern_writing_graffiti
 
 w:40
 @any_colour_pattern@
