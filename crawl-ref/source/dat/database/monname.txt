@@ -1801,7 +1801,7 @@ Wira
 
 Udom
 %%%%
-graffiti author
+graffiti author name
 
 w:50
 @ancestor name@

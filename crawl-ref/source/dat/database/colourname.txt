@@ -930,14 +930,14 @@ coloured_writing
 
 @any_glowing_colour@ @writing_noun@
 %%%%
-# Use @graffiti author@ from monname.txt here.
+# Use @graffiti author name@ from monname.txt here.
 coloured_graffiti
 
-@any_colour@ graffiti signed by @graffiti author@
+@any_colour@ graffiti signed by @graffiti author name@
 
-@writing_adj@ @any_colour@ graffiti signed by @graffiti author@
+@writing_adj@ @any_colour@ graffiti signed by @graffiti author name@
 
-@any_glowing_colour@ graffiti signed by @graffiti author@
+@any_glowing_colour@ graffiti signed by @graffiti author name@
 %%%%
 any_colour_pattern
 
