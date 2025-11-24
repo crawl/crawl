@@ -23,6 +23,7 @@
 #include "level-gen-type.h"
 #include "maybe-bool.h"
 #include "mon-dam-level-type.h"
+#include "mon-util.h"
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
@@ -645,6 +646,12 @@ public:
     FixedVector<char, NUM_SCROLLS> scroll_shortcuts;
     FixedVector<char, NUM_WANDS + NUM_MISCELLANY + NUM_BAUBLES> evokable_shortcuts;
 
+    vector<string> monster_alert_option;
+    FixedVector<bool, NUM_MONSTERS> monster_alert;    // Whether to force_more on first seeing each monster type
+    bool monster_alert_uniques;                       // Whether to force_more on first seeing any unique
+    bool monster_alert_unusual;                       // Whether to force_more on first seeing any monster it unusual items
+    mon_threat_level_type monster_alert_min_threat;   // What is the minimum threat level to warn on?
+
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
@@ -1012,6 +1019,7 @@ private:
 
     void update_consumable_shortcuts();
     void process_unusual_items();
+    void update_monster_alerts();
 
     static const string interrupt_prefix;
 

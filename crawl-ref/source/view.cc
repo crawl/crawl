@@ -105,6 +105,30 @@ static bool _try_seen_interrupt(monster& mons, seen_context_type sc)
     activity_interrupt_data aid(&mons, sc);
     return interrupt_activity(activity_interrupt::see_monster, aid);
 }
+
+static bool _check_monster_alert(const monster& mon)
+{
+    if (Options.monster_alert[mon.type]
+        || Options.monster_alert_uniques && mons_is_unique(mon.type)
+        || Options.monster_alert_min_threat < MTHRT_UNDEF
+           && mons_threat_level(mon) >= Options.monster_alert_min_threat
+        || Options.monster_alert_unusual && monster_info(&mon).has_unusual_items())
+    {
+        // If the player encountered this by moving, make sure to actually
+        // draw the monster we're warning about.
+        update_screen();
+        viewwindow();
+
+        // And if it wasn't a monster that would get an encounter warning due to
+        // being a summon, make sure to say something.
+        if (mon.is_summoned())
+            mprf(MSGCH_WARN, "%s comes into view.", mon.name(DESC_A).c_str());
+
+        more(true);
+        return true;
+    }
+
+    return false;
 }
 
 // Observe a monster that may have potentially moved into the player's LoS,
@@ -130,6 +154,9 @@ void maybe_notice_monster(monster& mons, bool stepped)
             return;
         }
     }
+
+    if (!already_seen)
+        _check_monster_alert(mons);
 }
 
 void seen_monsters_react(int stealth)
@@ -526,6 +553,12 @@ void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announ
     // We may only wish to announce a subset of monsters seen.
     if (!to_announce.empty())
         _handle_encounter_messages(to_announce, sc);
+
+    // Potentially stop the player for warnings.
+    for (monster* mon : monsters)
+        if (!(mon->flags & MF_SEEN))
+            if (_check_monster_alert(*mon))
+                break;
 
     // But should flag all of them as seen, even if they're harmless.
     for (monster* mon : monsters)

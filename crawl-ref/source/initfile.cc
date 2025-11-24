@@ -602,6 +602,8 @@ const vector<GameOption*> game_options::build_options_list()
 
         new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true,
                                          {[this]() { process_unusual_items(); }}),
+        new ListGameOption<string>(ON_SET_NAME(monster_alert),
+            {"uniques"}, false, [this]() { update_monster_alerts(); }),
 
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
@@ -3137,6 +3139,36 @@ void game_options::process_unusual_items()
         }
 
         unusual_monster_items.erase(unusual_monster_items.begin() + i);
+    }
+}
+
+void game_options::update_monster_alerts()
+{
+    monster_alert.init(false);
+    monster_alert_uniques = false;
+    monster_alert_unusual = false;
+    monster_alert_min_threat = MTHRT_UNDEF;
+
+    for (string& str : monster_alert_option)
+    {
+        if (str == "uniques")
+            monster_alert_uniques = true;
+        else if (str == "nasty")
+            monster_alert_min_threat = min(MTHRT_NASTY, monster_alert_min_threat);
+        else if (str == "tough")
+            monster_alert_min_threat = min(MTHRT_TOUGH, monster_alert_min_threat);
+        else if (str == "easy")
+            monster_alert_min_threat = min(MTHRT_EASY, monster_alert_min_threat);
+        else if (str == "trivial")
+            monster_alert_min_threat = min(MTHRT_TRIVIAL, monster_alert_min_threat);
+        else if (str == "unusual")
+            monster_alert_unusual = true;
+        else
+        {
+            monster_type type = get_monster_by_name(str);
+            if (type != MONS_PROGRAM_BUG)
+                monster_alert[type] = true;
+        }
     }
 }
 
