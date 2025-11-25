@@ -224,7 +224,8 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     }
 
-    _zap_animation(element_colour(elem, mon->pos()), mon, force);
+    coord_def loc = mon ? mon->pos() : you.pos();
+    _zap_animation(element_colour(elem, loc), mon, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
