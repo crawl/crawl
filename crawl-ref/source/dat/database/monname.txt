@@ -1805,6 +1805,13 @@ orc graffiti author name
 
 @orc name@ the orc
 %%%%
+bland graffiti author name
+
+[@_bland_male_name_@|@_bland_female_name_@]
+
+w:2
+[@_bland_male_name_@|@_bland_female_name_@] ([not that one|the other one])
+%%%%
 graffiti author name
 
 w:50
@@ -1814,10 +1821,7 @@ w:10
 @orc graffiti author name@
 
 w:2
-@_bland_male_name_@
-
-w:2
-@_bland_female_name_@
+@bland graffiti author name@
 
 w:2
 @RANDGEN@
