@@ -746,7 +746,7 @@ static bool _cannot_step_into(const coord_def& pos)
 // Handles the player trying to move/attack/swap into a given location.
 // Returns true if handling of further steps should continue after this.
 static bool _handle_player_step(const coord_def& targ, int& delay, bool rampaging,
-                                bool& did_move, bool& did_attack)
+                                bool& did_move, bool& did_attack, bool& did_open_door)
 {
     const coord_def initial_pos = you.pos();
     monster* mon = monster_at(targ);
@@ -805,6 +805,12 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
             || !you.running)
         {
             open_door_action(targ - you.pos());
+
+            // Used to not interrupt travel, even if we didn't 'move' this turn.
+            // (Technically the player may not have opened the door, due to a
+            // cancelled prompt, but an interrupt will have already stopped
+            // travel in that case.)
+            did_open_door = true;
         }
         return false;
     }
@@ -1025,6 +1031,7 @@ void move_player_action(coord_def move)
     int steps_taken = 0;
     bool did_move = false;
     bool did_attack = false;
+    bool did_open_door = false;
     for (; steps_taken < num_steps; ++steps_taken)
     {
         // If we have somehow ended up somewhere other than where we tried
@@ -1042,7 +1049,7 @@ void move_player_action(coord_def move)
             break;
         }
 
-        if (!_handle_player_step(targ, delay, num_steps > 1, did_move, did_attack))
+        if (!_handle_player_step(targ, delay, num_steps > 1, did_move, did_attack, did_open_door))
             break;
 
     }
@@ -1091,7 +1098,7 @@ void move_player_action(coord_def move)
         you.berserk_penalty = 0;
     }
 
-    if (!did_move && !did_attack)
+    if (!did_move && !did_attack && !did_open_door)
     {
         stop_running();
         crawl_state.cancel_cmd_repeat();
