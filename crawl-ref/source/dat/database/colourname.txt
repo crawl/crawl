@@ -5,6 +5,9 @@
 # things such as names of colour patterns and various types of coloured
 # graffiti.
 #
+# You can use graffiti author names, @RANDGEN@, and names in general
+# from monname.txt here.
+#
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more
 # or less likely.
@@ -1012,7 +1015,6 @@ of a group of Xom worshippers contemplating the Divine Madness
 
 of a group of orcs promoting Beogh's word
 %%%%
-# Use graffiti author names from monname.txt here.
 coloured_graffiti
 
 graffiti of @writing_type@
