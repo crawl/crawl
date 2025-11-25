@@ -145,18 +145,55 @@ kill_category bolt::whose_kill() const
     return KC_OTHER;
 }
 
+static element_type _ench_beam_to_element(beam_type flavour)
+{
+    switch (flavour)
+    {
+    case BEAM_HEALING:
+        return ETC_HEAL;
+    case BEAM_INFESTATION:
+    case BEAM_PAIN:
+    case BEAM_AGONY:
+    case BEAM_CURSE_OF_AGONY:
+    case BEAM_VILE_CLUTCH:
+    case BEAM_VAMPIRIC_DRAINING:
+    case BEAM_SOUL_SPLINTER:
+        return ETC_UNHOLY;
+    case BEAM_DISPEL_UNDEAD:
+        return ETC_HOLY;
+    case BEAM_POLYMORPH:
+    case BEAM_MALMUTATE:
+        return ETC_MUTAGENIC;
+    case BEAM_CHAOS:
+        return ETC_RANDOM;
+    case BEAM_TELEPORT:
+    case BEAM_BANISH:
+    case BEAM_BLINK:
+    case BEAM_BLINK_CLOSE:
+    case BEAM_BECKONING:
+        return ETC_WARP;
+    case BEAM_MAGIC:
+        return ETC_MAGIC;
+    case BEAM_ROOTS:
+        return ETC_EARTH;
+    default:
+        return ETC_ENCHANT;
+    }
+}
+
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const actor& act, bool force)
+static void _ench_animation(beam_type flavour, const actor& act, bool force)
 {
+    const coord_def p = act.pos();
+
     if (!force && act.is_monster() && !act.visible_to(&you))
         return;
-
-    const coord_def p = act.pos();
 
     if (!you.see_cell(p))
         return;
 
+    const int colour = element_colour(_ench_beam_to_element(flavour), p);
     const coord_def drawp = grid2view(p);
 
     if (in_los_bounds_v(drawp))
@@ -168,55 +205,6 @@ static void _zap_animation(int colour, const actor& act, bool force)
                                    static_cast<unsigned short>(colour)});
         animation_delay(50, true);
     }
-}
-
-// Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_animation(int flavour, const actor& act, bool force)
-{
-    element_type elem;
-    switch (flavour)
-    {
-    case BEAM_HEALING:
-        elem = ETC_HEAL;
-        break;
-    case BEAM_INFESTATION:
-    case BEAM_PAIN:
-    case BEAM_AGONY:
-    case BEAM_CURSE_OF_AGONY:
-    case BEAM_VILE_CLUTCH:
-    case BEAM_VAMPIRIC_DRAINING:
-    case BEAM_SOUL_SPLINTER:
-        elem = ETC_UNHOLY;
-        break;
-    case BEAM_DISPEL_UNDEAD:
-        elem = ETC_HOLY;
-        break;
-    case BEAM_POLYMORPH:
-    case BEAM_MALMUTATE:
-        elem = ETC_MUTAGENIC;
-        break;
-    case BEAM_CHAOS:
-        elem = ETC_RANDOM;
-        break;
-    case BEAM_TELEPORT:
-    case BEAM_BANISH:
-    case BEAM_BLINK:
-    case BEAM_BLINK_CLOSE:
-    case BEAM_BECKONING:
-        elem = ETC_WARP;
-        break;
-    case BEAM_MAGIC:
-        elem = ETC_MAGIC;
-        break;
-    case BEAM_ROOTS:
-        elem = ETC_EARTH;
-        break;
-    default:
-        elem = ETC_ENCHANT;
-        break;
-    }
-
-    _zap_animation(element_colour(elem, act.pos()), act, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
