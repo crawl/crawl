@@ -982,6 +982,8 @@ of [a deep elf|a lich|a tengu] shooting a blast of magic
 of a felid hanging from a tree branch
 
 of an eggplant just sitting there
+
+that looks like nothing you recognise
 %%%%
 graffiti_unique_complaint
 
