@@ -512,8 +512,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             {
                 flash_tile(you.pos(), LIGHTBLUE, 25);
                 mpr("Mutagenic energy flows into you.");
-                contaminate_player(random_range(80, 120)
-                                    + (you.magic_contamination < 1000 ? 40 : 0));
+                contaminate_player(random_range(160, 270)
+                                    + (you.magic_contamination < 1000 ? 120 : 0));
             }
             else if (coinflip())
                 foe->malmutate(&caster, "mutagenic gaze");
