@@ -1005,3 +1005,5 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 @graffiti_type@ saying that @graffiti author name@ was here
 
 @graffiti_type@ saying that @graffiti author name@ loves @graffiti author name@
+
+@graffiti_type@ saying that the ghost of @graffiti author name@ still haunts @graffiti author name@
