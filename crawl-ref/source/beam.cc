@@ -88,8 +88,6 @@
 #include "xom.h"
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const actor& act,
-                            bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
 int _ench_pow_to_dur(int pow);
@@ -149,18 +147,12 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monster* mon = nullptr,
-                           bool force = false)
+static void _zap_animation(int colour, const actor& act, bool force)
 {
-    coord_def p = you.pos();
+    if (!force && act.is_monster() && !act.visible_to(&you))
+        return;
 
-    if (mon)
-    {
-        if (!force && !mon->visible_to(&you))
-            return;
-
-        p = mon->pos();
-    }
+    const coord_def p = act.pos();
 
     if (!you.see_cell(p))
         return;
@@ -224,7 +216,7 @@ static void _ench_animation(int flavour, const actor& act, bool force)
         break;
     }
 
-    _zap_animation(element_colour(elem, act.pos()), act.as_monster(), force);
+    _zap_animation(element_colour(elem, act.pos()), act, force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
@@ -3652,7 +3644,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     // You didn't resist it.
     if (animate)
-        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, you);
+        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, you, false);
 
     bool nasty = true, nice = false;
 
