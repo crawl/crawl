@@ -88,7 +88,7 @@
 #include "xom.h"
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const monster* mon = nullptr,
+static void _ench_animation(int flavour, const actor& act,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
@@ -179,7 +179,7 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
 }
 
 // Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_animation(int flavour, const monster* mon, bool force)
+static void _ench_animation(int flavour, const actor& act, bool force)
 {
     element_type elem;
     switch (flavour)
@@ -224,8 +224,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     }
 
-    coord_def loc = mon ? mon->pos() : you.pos();
-    _zap_animation(element_colour(elem, loc), mon, force);
+    _zap_animation(element_colour(elem, act.pos()), act.as_monster(), force);
 }
 
 // If needs_tracer is true, we need to check the beam path for friendly
@@ -3653,7 +3652,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     // You didn't resist it.
     if (animate)
-        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
+        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, you);
 
     bool nasty = true, nice = false;
 
@@ -4938,7 +4937,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     {
         _ench_animation(effect_known ? real_flavour
                                      : BEAM_MAGIC,
-                        mon, effect_known);
+                        *mon, effect_known);
     }
 
     // Try to hit the monster with the enchantment. The behaviour_event above
