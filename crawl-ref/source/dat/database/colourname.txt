@@ -976,7 +976,7 @@ coloured_graffiti
 
 graffiti of @writing_type@
 
-graffiti of @writing_type@ that is unreadable except for the bits hailing Xom
+graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and a signature by @graffiti author name@]
 
 @graffiti_type@[| signed by @graffiti author name@]
 
