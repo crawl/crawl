@@ -184,7 +184,7 @@ static void _genus_factoring(map<const string, details> &types,
     types[name] = {mon, name, num, true};
 }
 
-static bool _is_mon_equipment_worth_listing(const monster_info &mi, bool list_all)
+static bool _is_mon_equipment_worth_listing(const monster_info &mi, bool any_weapon)
 {
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
@@ -192,7 +192,7 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi, bool list_al
             continue;
 
         const item_def& item = *mi.inv[i].get();
-        if (list_all
+        if (any_weapon && is_weapon(item)
             || item_is_worth_listing(item)
             || i == MSLOT_ALT_WEAPON && is_range_weapon(item))
         {

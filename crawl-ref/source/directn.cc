@@ -3489,7 +3489,7 @@ string get_monster_equipment_desc(const monster_info& mi,
 
 #define uninteresting(x) (x && !item_is_worth_listing(*x))
     // For encounter messages, only list interesting items
-    if (level >= DESC_NOTEWORTHY)
+    if (level == DESC_NOTEWORTHY || level == DESC_NOTEWORTHY_AND_WEAPON)
     {
         if (uninteresting(mon_arm))
             mon_arm = nullptr;
