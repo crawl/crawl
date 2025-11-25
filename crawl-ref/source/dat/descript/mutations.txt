@@ -522,6 +522,16 @@ until you heal fully.
 The second level of this mutation causes two erythrospites to be created at
 once.
 %%%%
+spatial entanglement mutation
+
+Whenever you translocation, there is a chance that another monster is pulled
+along to your new location. If you translocated a short distance, this will
+always be some monster in sight of your previous location, but long distance
+teleports may pull a monster from anywhere else on the floor.
+
+The experience is mildly disorienting for the monster, and it will not be able
+to act immediately after being pulled this way.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 

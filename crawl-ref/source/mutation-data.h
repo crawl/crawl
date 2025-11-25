@@ -1325,6 +1325,15 @@ static const mutation_def mut_data[] =
    TILEG_MUT_RECKLESS,
 },
 
+{ MUT_SPATIAL_ENTANGLEMENT, 2, 1, mutflag::bad,
+  "spatial entanglement",
+
+  {"When you translocate, a monster is sometimes pulled along with you.", "", ""},
+  {"You feel space start to knot itself around you." "", ""},
+  {"You feel space untangle itself from you.", "", ""},
+  TILEG_MUT_TELEPORT,
+},
+
 // Scale mutations
 { MUT_DISTORTION_FIELD, 0, 3, mutflag::good,
   "repulsion field",
