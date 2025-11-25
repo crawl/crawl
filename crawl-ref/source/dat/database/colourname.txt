@@ -983,6 +983,16 @@ a felid hanging from a tree branch
 
 an eggplant just sitting there
 %%%%
+graffiti_unique_complaint
+
+Cassandra should stop being so negative
+
+Crazy Yiuf needs to stop making so [little|much] sense
+
+Donald should shut up and stop complaining
+
+Sigmund needs to put down the scythe
+%%%%
 # Use graffiti author names from monname.txt here.
 coloured_graffiti
 
@@ -1013,6 +1023,8 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 @graffiti_type@[| of @orc graffiti author name@] swearing vengeance on @graffiti author name@
 
 @graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
+
+@graffiti_type@ saying that @graffiti_unique_complaint@
 
 @graffiti_type@ saying that @graffiti author name@ was here
 
