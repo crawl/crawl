@@ -1,3 +1,15 @@
+##########################################################
+# colourname.txt: lookup colour names
+#
+# This file contains a list of names of colours, and of colour-related
+# things such as names of colour patterns and various types of coloured
+# graffiti.
+#
+# Feel free to add to this list. Like for the other database lists,
+# you may add weights (defaults to w:10) to make certain names more
+# or less likely.
+#
+##########################################################
 %%%%
 rainbow_colour
 
