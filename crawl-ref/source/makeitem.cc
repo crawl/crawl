@@ -2318,8 +2318,8 @@ void lucky_upgrade_item(item_def& item)
     if (item.flags & (ISFLAG_SEEN | ISFLAG_ARTEFACT_MASK))
         return;
 
-    // 2-4% chance of upgrading an item.
-    if (!x_chance_in_y(you.get_mutation_level(MUT_LUCKY), 50))
+    // 3-5% chance of upgrading an item.
+    if (!x_chance_in_y(1 + you.get_mutation_level(MUT_LUCKY) * 2, 100))
         return;
 
     string old_name = uppercase_first(item.name(DESC_THE, false, true));
