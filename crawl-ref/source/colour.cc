@@ -345,7 +345,7 @@ colour_t rune_colour(int type)
     }
 }
 
-static int _etc_random(int rand, const coord_def& loc)
+static int _etc_random(int rand, const coord_def& /*loc*/)
 {
     return 1 + rand % 15;
 }

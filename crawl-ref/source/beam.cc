@@ -816,7 +816,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
         tile_beam = tileidx_zap(colour, p);
     view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
 #endif
-    colour_t adjusted_colour = colour == BLACK ? ETC_RANDOM : colour;
+    colour_t adjusted_colour = colour == BLACK ? colour_t{ETC_RANDOM} : colour;
     const unsigned short c = element_colour(adjusted_colour, p);
     view_add_glyph_overlay(p, {glyph, c});
 
@@ -7206,7 +7206,7 @@ bool bolt::explosion_draw_cell(const coord_def& p)
             }
             view_add_tile_overlay(p, vary_bolt_tile(tile_explode, source, target, p));
 #endif
-            colour_t adjusted_colour = colour == BLACK ? ETC_RANDOM : colour;
+            colour_t adjusted_colour = colour == BLACK ? colour_t{ETC_RANDOM} : colour;
             const unsigned short c = element_colour(adjusted_colour, p, false);
             view_add_glyph_overlay(p, {dchar_glyph(DCHAR_EXPLOSION), c});
 
