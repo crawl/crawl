@@ -1055,4 +1055,6 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@ saying that the ghost of @graffiti author name@ still haunts @graffiti author name@
 
+@graffiti_type@ saying that @RANDGEN@ has changed names and now goes by @RANDGEN@
+
 @graffiti_type@ advertising a meeting @graffiti_meeting_type@
