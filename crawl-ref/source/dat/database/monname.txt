@@ -365,6 +365,8 @@ Gladwin
 
 Hondscioh
 
+Hrodric
+
 Hrodulf
 
 Hrothgar
@@ -378,6 +380,8 @@ Leofric
 Leofsige
 
 Osbert
+
+Sigurd
 
 Theodoric
 
@@ -676,7 +680,11 @@ Edwyna
 
 Friðuswiþ
 
+Gudrun
+
 Kendra
+
+Noreen
 
 Saranna
 
