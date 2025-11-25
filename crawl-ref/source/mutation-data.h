@@ -1773,7 +1773,7 @@ static const mutation_def mut_data[] =
   {"You refuse to drink potions in combat unless seriously injured.", "", ""},
   {"You renounce the hedonism of uninhibited drinking.", "", ""},
   {"You feel willing to use your potions freely once again.", "", ""},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_RENOUNCE_POTIONS,
 },
 
 { MUT_RENOUNCE_SCROLLS, 0, 1, mutflag::bad,
@@ -1782,7 +1782,7 @@ static const mutation_def mut_data[] =
   {"You refuse to read scrolls in combat unless seriously injured.", "", ""},
   {"You renounce the frivolity of worldly writings.", "", ""},
   {"You feel willing to use your scrolls freely once again."},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_RENOUNCE_SCROLLS,
 },
 
 { MUT_MISSING_HAND, 0, 1, mutflag::bad,

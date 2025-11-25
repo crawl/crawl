@@ -312,6 +312,8 @@ no_ice_magic NO_ICE_MAGIC
 no_air_magic NO_AIR_MAGIC
 no_earth_magic NO_EARTH_MAGIC
 no_forms NO_FORMS
+renounce_potions RENOUNCE_POTIONS
+renounce_scrolls RENOUNCE_SCROLLS
 temperature_sensitivity TEMPERATURE_SENSITIVITY
 weak_willed_1 WEAK_WILLED
 weak_willed_2
