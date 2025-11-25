@@ -4,7 +4,8 @@
 # This file contains a list of names for monster names.
 # This is currently only used when one of your orcish followers as
 # Beogh's messiah gets named by Beogh, and for Hep's ancestor names.
-# The dual-wielding species also gets their weapon names from here.
+# The dual-wielding coglin species also gets their weapon names from
+# here, and graffiti authors also get their names from here.
 #
 # Some important orcish syllables
 #   beogh, bog = referring to Beogh
