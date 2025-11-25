@@ -3772,6 +3772,9 @@ int slaying_bonus(bool throwing, bool random)
     ret += 3 * augmentation_amount();
     ret += you.get_mutation_level(MUT_SHARP_SCALES);
 
+    if (you.has_mutation(MUT_MEEK))
+        ret -= 1 + you.get_mutation_level(MUT_MEEK) * 2;
+
     if (you.get_mutation_level(MUT_PROTEAN_GRACE))
         ret += protean_grace_amount();
 

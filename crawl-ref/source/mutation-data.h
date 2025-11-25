@@ -288,6 +288,21 @@ static const mutation_def mut_data[] =
   TILEG_MUT_CLUMSY,
 },
 
+{ MUT_MEEK, 3, 3, mutflag::bad,
+  "meek",
+
+  {"Your attacks are a little less effective. (Slay -3)",
+   "Your attacks are less effective. (Slay -5)",
+   "Your attacks are much less effective. (Slay -7)"},
+  {"You feel meek.",
+   "You feel even more meek.",
+   "You feel meek as a lamb."},
+  {"You feel aggression return to you.",
+   "You feel a little less meek.",
+   "You feel a little less meek."},
+  TILEG_MUT_WEAK,
+},
+
 { MUT_TELEPORTITIS, 3, 2, mutflag::bad,
   "teleportitis",
 

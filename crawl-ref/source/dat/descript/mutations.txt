@@ -532,6 +532,11 @@ teleports may pull a monster from anywhere else on the floor.
 The experience is mildly disorienting for the monster, and it will not be able
 to act immediately after being pulled this way.
 %%%%
+meek mutation
+
+All of your attacks are less effective, dealing less damage and being a little
+less accurate. This effect worsens with each level of this mutation.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
