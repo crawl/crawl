@@ -573,6 +573,7 @@ static bool _valid_entanglement_target(const monster& mon, bool check_no_tele)
     return !mon.no_tele()
            && !mon.wont_attack()
            && !mon.is_peripheral()
+           && !adjacent(mon.pos(), you.pos())
            && (!check_no_tele || !(env.pgrid(mon.pos()) & FPROP_NO_TELE_INTO));
 }
 
