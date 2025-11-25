@@ -1064,7 +1064,7 @@ static void _print_stats_contam(int x, int y)
     // Hide the bar entirely if the player has no contam
     if (you.magic_contamination == 0 && !Options.always_show_doom_contam)
     {
-        CPRINTF("          ");
+        CPRINTF("            ");
         return;
     }
 
