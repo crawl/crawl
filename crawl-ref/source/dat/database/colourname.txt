@@ -1006,7 +1006,7 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@[| signed by @graffiti author name@] of @graffiti_image@
 
-@graffiti_type@[| signed by @orc graffiti author name@] proselytising Beogh
+@graffiti_type@[| signed by @orc graffiti author name@] proselytising for Beogh
 
 @graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
 
