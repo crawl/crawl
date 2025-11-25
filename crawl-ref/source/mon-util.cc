@@ -3310,13 +3310,10 @@ bool should_shout_at_mons(const monster &m)
 /// Does this monster trigger your attractitis? (Random.)
 bool should_attract_mons(const monster &m)
 {
-    return you.has_mutation(MUT_INITIALLY_ATTRACTIVE)
-        && one_chance_in(3)
-        && grid_distance(you.pos(), m.pos()) > 2
-        && !mons_is_tentacle_or_tentacle_segment(m.type)
-        && !m.is_peripheral()
-        && !m.is_summoned() // XXX: unsure about this
-        && !m.no_tele();
+    return x_chance_in_y(you.get_mutation_level(MUT_INITIALLY_ATTRACTIVE), 3)
+            && grid_distance(you.pos(), m.pos()) > 2
+            && !m.is_peripheral()
+            && !m.no_tele();
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)

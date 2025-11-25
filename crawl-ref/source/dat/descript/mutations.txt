@@ -495,8 +495,11 @@ You absorb twice as much mutagenic energy from being contaminated.
 %%%%
 initially attractive mutation
 
-The first time you see a monster, it may be magically pulled toward you.
-This does not wake sleeping monsters.
+The first time you see a monster, it may be magically pulled toward you. This
+has a chance of waking sleeping monsters, though they will not necessarily be
+alerted to your position.
+
+The second level of this mutation increases the chance of this happening.
 %%%%
 booming voice mutation
 

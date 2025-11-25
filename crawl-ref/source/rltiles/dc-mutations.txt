@@ -170,6 +170,7 @@ teleport_1 TELEPORT
 teleport_2
 booming_voice BOOMING_VOICE
 potion_fungus POTION_FUNGUS
+initially_attractive INITIALLY_ATTRACTIVE
 
 # Demonspawn mutations
 demonic_touch1 DEMONIC_TOUCH

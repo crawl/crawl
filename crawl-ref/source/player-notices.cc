@@ -24,6 +24,7 @@
 #include "message.h"
 #include "mutation.h"
 #include "mon-act.h"
+#include "mon-behv.h"
 #include "mon-gear.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -639,6 +640,10 @@ void seen_monster(monster* mons, bool do_encounter_message)
     {
         const int dist = grid_distance(you.pos(), mons->pos());
         attract_monster(*mons, dist - 2); // never attract adjacent
+
+        // Possibly wake the monster (but don't automatically make it find the player)
+        if (coinflip())
+            behaviour_event(mons, ME_DISTURB, nullptr, you.pos());
     }
 
     maybe_apply_bane_to_monster(*mons);
