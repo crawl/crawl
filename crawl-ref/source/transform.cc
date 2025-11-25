@@ -1918,7 +1918,8 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
     // for example if Xom decides to transform you while you're busy
     // running around.
     // If you're turned into a tree, you stop taking stairs.
-    stop_delay(which_trans == transformation::tree);
+    if (!using_talisman)
+        stop_delay(which_trans == transformation::tree);
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
