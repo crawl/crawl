@@ -8483,20 +8483,18 @@ void player::vitrify(const actor* /*attacker*/, int dur, bool quiet)
 
 bool player::floodify(const actor* attacker, int dur, const char* substance)
 {
-    if (res_water_drowning() || dur <= 0 || dur <= duration[DUR_FLOODED])
+    if (res_water_drowning() || dur <= 0
+        || duration[DUR_FLOODED] || duration[DUR_FLOODED_IMMUNITY])
+    {
         return false;
-
-    const bool already_flooded =
-            duration[DUR_FLOODED] > 0
-                && props[WATER_HOLD_SUBSTANCE_KEY].get_string() == substance;
+    }
 
     duration[DUR_FLOODED] = dur;
     props[WATER_HOLD_SUBSTANCE_KEY] = substance;
     props[WATER_HOLDER_KEY].get_int() = attacker->mid;
     props[WATER_HOLDER_NAME_KEY] = attacker->name(DESC_A, true);
 
-    mprf(MSGCH_WARN, "%s%s floods into your lungs!",
-         already_flooded ? "More " : "", substance);
+    mprf(MSGCH_WARN, "%s floods into your lungs!", substance);
 
     return true;
 }

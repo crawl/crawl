@@ -5806,19 +5806,8 @@ void monster::vitrify(const actor *attacker, int duration, bool quiet)
 
 bool monster::floodify(const actor* attacker, int duration, const char* substance)
 {
-    if (res_water_drowning() || duration <= 0)
+    if (res_water_drowning() || duration <= 0 || has_ench(ENCH_FLOODED))
         return false;
-
-    if (has_ench(ENCH_FLOODED) && get_ench(ENCH_FLOODED).duration >= duration)
-        return false;
-
-    bool already_flooded = false;
-    if (has_ench(ENCH_FLOODED))
-    {
-        if (props[WATER_HOLD_SUBSTANCE_KEY].get_string() == substance)
-            already_flooded = true;
-        del_ench(ENCH_FLOODED, true, false);
-    }
 
     add_ench(mon_enchant(ENCH_FLOODED, attacker, duration));
     props[WATER_HOLD_SUBSTANCE_KEY].get_string() = substance;
@@ -5828,8 +5817,7 @@ bool monster::floodify(const actor* attacker, int duration, const char* substanc
         // Assume any vertebrate bodyplan (and is alive and isn't aquatic) has
         // something that can be called lungs.
         const bool has_lungs = get_mon_shape(*this) < MON_SHAPE_INSECT;
-        mprf("%s%s floods into %s %s!",
-                already_flooded ? "More " : "",
+        mprf("%s floods into %s %s!",
                 substance, name(DESC_ITS).c_str(),
                 has_lungs ? "lungs" : "airways");
     }

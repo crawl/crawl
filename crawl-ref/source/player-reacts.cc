@@ -889,6 +889,7 @@ static void _decrement_durations()
         {
             mprf(MSGCH_RECOVERY, "You finish coughing all the %s out of your lungs.",
                  you.props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str());
+            you.duration[DUR_FLOODED_IMMUNITY] = you.time_taken + 1;
         }
         else
         {

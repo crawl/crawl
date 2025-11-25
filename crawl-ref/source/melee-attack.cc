@@ -3958,7 +3958,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_FLOOD:
         if (coinflip())
         {
-            defender->floodify(attacker, random_range(30, 50),
+            defender->floodify(attacker, random_range(30, 60),
                                attacker->type == MONS_VOID_OOZE ? "ooze" : "water");
         }
         break;
