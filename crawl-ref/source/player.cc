@@ -5832,7 +5832,7 @@ int player::shout_volume() const
 {
     const int base_noise = 12 + get_form()->shout_volume_modifier;
 
-    return base_noise + 2 * (get_mutation_level(MUT_SCREAM));
+    return base_noise + 4 * (get_mutation_level(MUT_SCREAM));
 }
 
 void player::god_conduct(conduct_type thing_done, int level)

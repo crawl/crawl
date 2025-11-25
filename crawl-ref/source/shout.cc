@@ -707,20 +707,20 @@ void issue_orders()
 }
 
 /**
- * Make the player yell, either at a monster or at nothing in particular.
+ * Make the player yell, either at a monster, themselves, or at nothing in particular.
  *
- * @mon     The monster to yell at; may be null.
+ * @target     The target to yell at; may be null.
  */
-void yell(const actor* mon)
+void yell(const actor* target)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const string shout_verb = you.shout_verb(mon != nullptr);
+    const string shout_verb = you.shout_verb(target != nullptr);
     const int noise_level = you.shout_volume();
 
     if (you.cannot_speak())
     {
-        if (mon)
+        if (target)
         {
             if (silenced(you.pos()))
             {
@@ -741,12 +741,13 @@ void yell(const actor* mon)
         return;
     }
 
-    if (mon)
+    if (target)
     {
         mprf("You %s%s at %s!",
              shout_verb.c_str(),
              you.duration[DUR_RECITE] ? " your recitation" : "",
-             mon->name(DESC_THE).c_str());
+             target && target->is_player() ? "yourself"
+                                           : target->name(DESC_THE).c_str());
     }
     else
     {

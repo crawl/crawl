@@ -414,8 +414,8 @@ static const mutation_def mut_data[] =
 { MUT_SCREAM, 6, 2, mutflag::bad,
   "screaming",
 
-  {"You occasionally shout uncontrollably at your foes.",
-   "You frequently scream uncontrollably at your foes.",
+  {"You occasionally shout uncontrollably at those who injure you.",
+   "You frequently scream uncontrollably at those who injure you.",
    ""},
 
   {"You feel the urge to shout.",

@@ -467,10 +467,11 @@ by armour enchantments.
 %%%%
 screaming mutation
 
-You are sometimes seized by an uncontrollable urge to scream at foes when they
-first come into sight. All of your shouts are also louder than usual. The
-second level of this mutation makes this urge harder to resist and makes your
-shouts even louder.
+You are sometimes seized by an uncontrollable urge to scream whenever you
+sustain an injury. All of your shouts are also louder than usual.
+
+The second level of this mutation makes this urge harder to resist and makes
+your shouts even louder.
 %%%%
 poor constitution mutation
 

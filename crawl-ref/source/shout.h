@@ -7,7 +7,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg = nullptr,
            mid_t who = MID_NOBODY, bool fake_noise = false);
 bool fake_noisy(int loudness, const coord_def& where);
 
-void yell(const actor* mon = nullptr);
+void yell(const actor* target = nullptr);
 void issue_orders();
 
 void item_noise(const item_def& item, actor &act, string msg, int loudness = 25);

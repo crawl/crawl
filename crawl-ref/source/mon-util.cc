@@ -3300,13 +3300,6 @@ bool mons_self_destructs(const monster& m)
     return mons_blows_up(m) || mons_destroyed_on_impact(m);
 }
 
-/// Does this monster trigger your shoutitis? (Random.)
-bool should_shout_at_mons(const monster &m)
-{
-    return !m.is_peripheral()
-        && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100);
-}
-
 /// Does this monster trigger your attractitis? (Random.)
 bool should_attract_mons(const monster &m)
 {

@@ -545,19 +545,14 @@ void monster_encounter_message(monster& mon)
         _handle_encounter_messages({&mon});
 }
 
-static void _maybe_shout_at(const monster* mons)
+static void _maybe_growl_at(const monster* mons)
 {
-    // Don't repeatedly shout in place on the same turn.
+    // Don't repeatedly growl in place on the same turn.
     if (you.shouted_pos == you.pos())
         return;
 
     if (you.form == transformation::maw && maw_growl_check(mons))
         you.shouted_pos = you.pos();
-    else if (you.get_mutation_level(MUT_SCREAM) && should_shout_at_mons(*mons))
-    {
-        yell(mons);
-        you.shouted_pos = you.pos();
-    }
 }
 
 void seen_monster(monster* mons, bool do_encounter_message)
@@ -675,5 +670,5 @@ void seen_monster(monster* mons, bool do_encounter_message)
 #endif
     }
 
-    _maybe_shout_at(mons);
+    _maybe_growl_at(mons);
 }

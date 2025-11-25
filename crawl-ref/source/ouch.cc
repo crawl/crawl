@@ -1064,6 +1064,19 @@ static void _maybe_get_vitrified(mid_t source)
     }
 }
 
+static void _maybe_scream(mid_t source)
+{
+    // Don't repeatedly scream in place on the same turn.
+    if (you.shouted_pos == you.pos())
+        return;
+
+    if (x_chance_in_y(you.get_mutation_level(MUT_SCREAM), 20))
+    {
+        yell(actor_by_mid(source));
+        you.shouted_pos = you.pos();
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1435,6 +1448,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_hive_swarm();
             _maybe_medusa_lithotoxin();
             _maybe_trigger_spiteful_blood();
+            _maybe_scream(source);
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();
