@@ -955,10 +955,7 @@ w:1
 # That's why we aren't using them for ancestors.
 
 w:1
-@_bland_male_name_@
-
-w:1
-@_bland_female_name_@
+@bland name@
 
 @_cantonese_female_name_@
 
@@ -990,22 +987,15 @@ w:15
 @_thai_female_name_@
 
 @_thai_male_name_@
-
 %%%%
-_bland_male_name_
+bland name
 
 # Look, it's funny to me.
 # No offense intended.
 
-Bob
+@_bland_female_name_@
 
-Dave
-
-Jeff
-
-Jim
-
-Pete
+@_bland_male_name_@
 %%%%
 _bland_female_name_
 
@@ -1018,6 +1008,18 @@ Deb
 Carrie
 
 Vera
+%%%%
+_bland_male_name_
+
+Bob
+
+Dave
+
+Jeff
+
+Jim
+
+Pete
 %%%%
 _cantonese_female_name_
 
@@ -1807,10 +1809,10 @@ orc graffiti author name
 %%%%
 bland graffiti author name
 
-[@_bland_male_name_@|@_bland_female_name_@]
+@bland name@
 
 w:2
-[@_bland_male_name_@|@_bland_female_name_@] ([not that one|the other one])
+@bland name@ ([not that one|the other one])
 %%%%
 graffiti author name
 
