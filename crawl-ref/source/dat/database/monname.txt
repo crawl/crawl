@@ -1812,7 +1812,7 @@ bland graffiti author name
 @bland name@
 
 w:2
-@bland name@ ([not that one|the other one])
+@bland name@ ([not that one|the other one|yes, that one])
 %%%%
 graffiti author name
 
