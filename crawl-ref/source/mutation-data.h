@@ -261,8 +261,8 @@ static const mutation_def mut_data[] =
 { MUT_WEAK, 8, 2, mutflag::bad,
   "weak",
 
-  {"You are weak. (Str -2)",
-   "You are very weak. (Str -4)", ""},
+  {"You are weak. (Str -3)",
+   "You are very weak. (Str -6)", ""},
   {"", "", ""},
   {"", "", ""},
   TILEG_MUT_WEAK,
@@ -271,8 +271,8 @@ static const mutation_def mut_data[] =
 { MUT_DOPEY, 8, 2, mutflag::bad,
   "dopey",
 
-  {"You are dopey. (Int -2)",
-   "You are very dopey. (Int -4)", ""},
+  {"You are dopey. (Int -3)",
+   "You are very dopey. (Int -6)", ""},
   {"", "", ""},
   {"", "", ""},
   TILEG_MUT_DOPEY,
@@ -281,8 +281,8 @@ static const mutation_def mut_data[] =
 { MUT_CLUMSY, 8, 2, mutflag::bad,
   "clumsy",
 
-  {"You are clumsy. (Dex -2)",
-   "You are very clumsy. (Dex -4)", ""},
+  {"You are clumsy. (Dex -3)",
+   "You are very clumsy. (Dex -6)", ""},
   {"", "", ""},
   {"", "", ""},
   TILEG_MUT_CLUMSY,

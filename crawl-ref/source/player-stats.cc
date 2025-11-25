@@ -257,10 +257,10 @@ static const vector<mut_stat_effect> mut_stat_effects = {
     { MUT_STRONG,    4, -1, -1 },
     { MUT_AGILE,    -1, -1,  4 },
     { MUT_CLEVER,   -1,  4, -1 },
-    { MUT_WEAK,     -2,  0,  0 },
+    { MUT_WEAK,     -3,  0,  0 },
     { MUT_BIG_BRAIN, 0,  2,  0 },
-    { MUT_DOPEY,     0, -2,  0 },
-    { MUT_CLUMSY,    0,  0, -2 },
+    { MUT_DOPEY,     0, -3,  0 },
+    { MUT_CLUMSY,    0,  0, -3 },
     { MUT_THIN_SKELETAL_STRUCTURE,
                      0,  0,  2 },
 };
