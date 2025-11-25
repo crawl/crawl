@@ -976,6 +976,8 @@ coloured_graffiti
 
 graffiti of @writing_type@
 
+graffiti of @writing_type@ that is unreadable except for the bits hailing Xom
+
 @graffiti_type@[| signed by @graffiti author name@]
 
 @graffiti_type@[| signed by @graffiti author name@] [glorifying|blaspheming] the gods
@@ -997,3 +999,9 @@ graffiti of @writing_type@
 @graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
 
 @graffiti_type@[| of @orc graffiti author name@] swearing vengeance on @graffiti author name@
+
+@graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
+
+@graffiti_type@ saying that @graffiti author name@ was here
+
+@graffiti_type@ saying that @graffiti author name@ loves @graffiti author name@
