@@ -1049,6 +1049,12 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @RANDGEN@ has changed names and now goes by @RANDGEN@
 %%%%
+graffiti_species
+
+bemoaning how bizarre coglin engineering is to non-coglins
+
+wondering what led the barachim to rebel against the gods
+%%%%
 graffiti_unique_complaint
 
 saying that Cassandra should stop being so negative
@@ -1083,9 +1089,9 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_unique_complaint@
 
-@graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
+@graffiti_type@[| signed by @graffiti author name@] @graffiti_species@
 
-@graffiti_type@[| of @graffiti author name@] bemoaning how bizarre coglin engineering is to non-coglins
+@graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
 
 @graffiti_type@ advertising a meeting @graffiti_meeting@
 
