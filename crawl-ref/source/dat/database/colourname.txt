@@ -1005,13 +1005,15 @@ with @graffiti author name@ for a good time
 
 of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
 
-of a local sharper club playing cards the way Nemelex Xobeh intended
+of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
 
 of a local master class on insults being taught by imps
 
-of a group of Zin worshippers promoting the Axioms of Law
+of a group of Zin worshippers supporting the Axioms of Law
 
-of a group of Xom worshippers contemplating the Divine Madness
+of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
+
+of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
 
 of a group of orcs promoting Beogh's word
 %%%%
@@ -1039,7 +1041,13 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_image@
 
-@graffiti_type@[| signed by @orc graffiti author name@] proselytising for Beogh
+@graffiti_type@[| signed by @graffiti author name@] delighting in Nemelex Xobeh and whatever the next deck brings
+
+@graffiti_type@[| signed by @graffiti author name@] lauding Zin and Zin's laws
+
+@graffiti_type@[| signed by @graffiti author name@] extolling Yredelemnul and all things unholy
+
+@graffiti_type@[| signed by @orc graffiti author name@] proselytising for Beogh and proper orcishness
 
 @graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
 
