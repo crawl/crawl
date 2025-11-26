@@ -1039,9 +1039,11 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ loves @graffiti author name@
+@graffiti author name@ [curses|loves|praises] @graffiti author name@
 
 @graffiti author name@ [is dead|still lives]
+
+@orc graffiti author name@ swears vengeance on @graffiti author name@
 
 the ghost of @graffiti author name@ still haunts @graffiti author name@
 
@@ -1080,10 +1082,6 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_rumour@
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_unique_complaint@
-
-@graffiti_type@[| of @graffiti author name@] [praising|cursing] @graffiti author name@
-
-@graffiti_type@[| of @orc graffiti author name@] swearing vengeance on @graffiti author name@
 
 @graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
 
