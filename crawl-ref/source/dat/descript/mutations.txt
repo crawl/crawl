@@ -454,7 +454,7 @@ teleportitis mutation
 
 You periodically teleport towards hostile monsters. You will sense yourself
 destabilising several turns in advance of this happening, and may suppress it
-temporarily by reading a scroll of teleporation.
+temporarily by reading a scroll of teleportation.
 
 Each level of this mutation increases the frequency with which you start to
 teleport.
