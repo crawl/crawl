@@ -3307,14 +3307,7 @@ void set_evolution_mut_xp(bool malignant)
 
 int protean_grace_amount()
 {
-    int amount = you.how_mutated(true, false, false, true, false);
-
-    // A soft cap for Xom, Jiyva, and Demonspawn.
-    // XXX: rewrite _player_base_evasion_modifiers() to allow +0.5 EV bonuses?
-    if (amount > 7)
-        amount = 7 + floor((amount - 7) / 2);
-
-    return amount;
+    return div_round_up(you.how_mutated(true, false, false, true, false), 2);
 }
 
 const string bane_name(bane_type bane, bool dbkey)

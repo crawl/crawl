@@ -2068,7 +2068,6 @@ static int _player_base_evasion_modifiers()
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
-    // XXX: rescale these modifiers to allow +0.5 EV bonuses past the soft cap?
     if (you.get_mutation_level(MUT_PROTEAN_GRACE))
         evbonus += protean_grace_amount();
 
