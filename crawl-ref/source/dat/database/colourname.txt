@@ -988,16 +988,18 @@ of an eggplant just sitting there
 
 that looks like nothing you recognise
 %%%%
-graffiti_meeting
+graffiti_ordinary_meeting
 
 # Possibly too lowbrow, but a good time can mean many things.
 with @graffiti author name@ for a good time
 
 of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
 
-of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
-
 of a local master class on insults being taught by imps
+%%%%
+graffiti_religious_meeting
+
+of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
 
 of a group of Zin worshippers supporting the Axioms of Law
 
@@ -1008,6 +1010,12 @@ of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable G
 of a group of [rich people|Gozag worshippers] discussing how to make more money
 
 of a group of orcs promoting Beogh's word
+%%%%
+graffiti_any_meeting
+
+@graffiti_ordinary_meeting@
+
+@graffiti_religious_meeting@
 %%%%
 graffiti_religion
 
@@ -1101,6 +1109,6 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
 
-@graffiti_type@ advertising a meeting @graffiti_meeting@
+@graffiti_type@ advertising a meeting @graffiti_any_meeting@
 
 @graffiti_type@ saying that @graffiti_short_saying@
