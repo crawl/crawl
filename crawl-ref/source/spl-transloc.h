@@ -1,5 +1,6 @@
 #pragma once
 
+#include "externs.h"
 #include "spl-cast.h"
 
 class actor;
