@@ -4275,7 +4275,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
             foe_name = foe->name(DESC_THE);
 
         string prep = "at";
-        if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL)
+        if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL_VOLUME)
             prep = "to";
         msg = replace_all(msg, "@says@ @to_foe@", "@says@ " + prep + " @foe@");
 
@@ -4583,7 +4583,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT
-        "says",         // S_NORMAL
+        "says",         // S_NORMAL_VOLUME
         "shouts",       // S_LOUD
         "screams",      // S_VERY_LOUD
         "caws",

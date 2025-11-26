@@ -321,7 +321,7 @@ enum shout_type
     // Only used for the verb/volume of random demon taunts
     S_VERY_SOFT,
     S_SOFT,
-    S_NORMAL,
+    S_NORMAL_VOLUME,
     S_LOUD,
     S_VERY_LOUD,
 
