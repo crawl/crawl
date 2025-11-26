@@ -94,17 +94,17 @@ giving -1 to both your Strength and Intelligence for each level.
 weak mutation
 
 Your muscles have grown unnaturally weak. Each level of this mutation provides
--2 Strength.
+-3 Strength.
 %%%%
 dopey mutation
 
-Your mind has become unnaturally dopey. Each level of this mutation provides -2
+Your mind has become unnaturally dopey. Each level of this mutation provides -3
 Intelligence.
 %%%%
 clumsy mutation
 
 Your reflexes have become unnaturally clumsy. Each level of this mutation
-provides -2 Dexterity.
+provides -3 Dexterity.
 %%%%
 high mp mutation
 
