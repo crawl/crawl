@@ -991,11 +991,15 @@ that looks like nothing you recognise
 graffiti_ordinary_meeting
 
 # Possibly too lowbrow, but a good time can mean many things.
-with @graffiti author name@ for a good time
+with @graffiti author name@ for [a good time|tips on how to survive in the dungeon]
 
 of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
 
 of a local master class on insults being taught by imps
+
+of a local support group for veterans of the surface wars
+
+of a group of local [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
 %%%%
 graffiti_religious_meeting
 
