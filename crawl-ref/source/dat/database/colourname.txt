@@ -1017,6 +1017,8 @@ of a group of orcs promoting Beogh's word
 %%%%
 coloured_graffiti
 
+graffiti of @any_colour_pattern@
+
 graffiti of @writing_type@
 
 graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and a signature by @graffiti author name@]
