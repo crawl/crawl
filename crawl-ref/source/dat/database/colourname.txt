@@ -1005,6 +1005,8 @@ of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
 
 of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
 
+of a group of [rich people|Gozag worshippers] discussing how to make more money
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_religion
@@ -1018,6 +1020,8 @@ delighting in Nemelex Xobeh and whatever the next deck brings
 lauding Zin and Zin's laws
 
 extolling Yredelemnul and all things unholy
+
+commending Gozag and how enough gold can buy anything
 %%%%
 graffiti_orc_religion
 
