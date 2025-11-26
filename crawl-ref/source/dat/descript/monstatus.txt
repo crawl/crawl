@@ -562,6 +562,10 @@ spells empowered monstatus
 
 This creature's spells are strengthened and it will cast them more frequently.
 %%%%
+spells diminished monstatus
+
+This creature's spells are significantly weakened.
+%%%%
 stilling the winds monstatus
 
 This creature is preventing any clouds from being created on the current floor.
@@ -695,6 +699,14 @@ unable to breathe monstatus
 
 This creature is unable to breathe and cannot cast spells or invoke divine aid.
 It also takes minor asphyxiation damage every turn.
+%%%%
+damage-immune at range monstatus
+
+This creature takes no damage by any means unless the original source of that
+damage is adjacent to them. Non-damaging side-effects happen normally.
+
+(The source of damage from clouds and projectile-like monsters, such as foxfires,
+is always considered whatever creature first created them.)
 %%%%
 weak monstatus
 
