@@ -1038,7 +1038,8 @@ void do_trap_effects()
                 simple_god_message(" warns you in time for you to avoid it.");
                 return;
             }
-            you_teleport_now(false, msg);
+            mpr(msg);
+            hostile_teleport_player();
             break;
         }
 

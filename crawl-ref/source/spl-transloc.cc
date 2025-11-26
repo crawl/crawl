@@ -1011,17 +1011,24 @@ static void _handle_teleport_update(bool large_change)
 }
 
 // Not called for wizmode teleports.
-static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos)
+static bool _real_teleport_cleanup(coord_def oldpos, coord_def newpos, bool quiet = false)
 {
     bool large_change = false;
 
     if (newpos == oldpos)
-        mpr("Your surroundings flicker for a moment.");
+    {
+        if (!quiet)
+            mpr("Your surroundings flicker for a moment.");
+    }
     else if (you.see_cell(newpos))
-        mpr("Your surroundings seem slightly different.");
+    {
+        if (!quiet)
+            mpr("Your surroundings seem slightly different.");
+    }
     else
     {
-        mpr("Your surroundings suddenly seem different.");
+        if (!quiet)
+            mpr("Your surroundings suddenly seem different.");
         large_change = true;
     }
 
@@ -1118,6 +1125,9 @@ static bool _teleport_player(bool wizard_tele, string reason="")
         // it doesn't count as a random teleport for Xom purposes.
         if (tries == 0)
             return false;
+
+        if (!reason.empty())
+            mpr(reason);
 
         large_change = _real_teleport_cleanup(old_pos, newpos);
     }
@@ -1226,7 +1236,7 @@ bool hostile_teleport_player(monster* source)
                 mons_near_target > 1 ? "some" : "a",
                 mons_near_target > 1 ? "s" : "");
 
-        large_change = _real_teleport_cleanup(oldpos, newpos);
+        large_change = _real_teleport_cleanup(oldpos, newpos, true);
         crawl_state.potential_pursuers.clear();
         _handle_teleport_update(large_change);
         did_teleport = true;
