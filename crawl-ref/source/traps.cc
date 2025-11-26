@@ -1327,8 +1327,7 @@ void player::struggle_against_net()
 
     // Handle nets now.
     const int damage = random_range(1, 4);
-    you.attribute[ATTR_HELD] -= damage;
-    if (you.attribute[ATTR_HELD] <= 0)
+    if (damage >= you.attribute[ATTR_HELD])
     {
         mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
         stop_being_caught();
@@ -1339,6 +1338,8 @@ void player::struggle_against_net()
         mpr("You tear a large gash into the net.");
     else
         mpr("You struggle against the net.");
+
+    you.attribute[ATTR_HELD] -= damage;
 }
 
 void player::stop_being_caught(bool drop_net)
