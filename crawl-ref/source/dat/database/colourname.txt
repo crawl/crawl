@@ -1040,7 +1040,7 @@ saying that Sigmund needs to put down the scythe
 
 wondering how Robin can possibly throw that hard
 %%%%
-graffiti_meeting_type
+graffiti_meeting
 
 # Possibly too lowbrow, but a good time can mean many things.
 with @graffiti author name@ for a good time
@@ -1091,4 +1091,4 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@ saying that @graffiti_short_saying@
 
-@graffiti_type@ advertising a meeting @graffiti_meeting_type@
+@graffiti_type@ advertising a meeting @graffiti_meeting@
