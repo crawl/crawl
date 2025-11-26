@@ -988,6 +988,25 @@ of an eggplant just sitting there
 
 that looks like nothing you recognise
 %%%%
+graffiti_meeting
+
+# Possibly too lowbrow, but a good time can mean many things.
+with @graffiti author name@ for a good time
+
+of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
+
+of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
+
+of a local master class on insults being taught by imps
+
+of a group of Zin worshippers supporting the Axioms of Law
+
+of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
+
+of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
+
+of a group of orcs promoting Beogh's word
+%%%%
 graffiti_religion
 
 [glorifying|blaspheming] the gods
@@ -1040,25 +1059,6 @@ saying that Sigmund needs to put down the scythe
 
 wondering how Robin can possibly throw that hard
 %%%%
-graffiti_meeting
-
-# Possibly too lowbrow, but a good time can mean many things.
-with @graffiti author name@ for a good time
-
-of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
-
-of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
-
-of a local master class on insults being taught by imps
-
-of a group of Zin worshippers supporting the Axioms of Law
-
-of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
-
-of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
-
-of a group of orcs promoting Beogh's word
-%%%%
 coloured_graffiti
 
 graffiti of @any_colour_pattern@
@@ -1089,6 +1089,6 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@[| of @graffiti author name@] bemoaning how bizarre coglin engineering is to non-coglins
 
-@graffiti_type@ saying that @graffiti_short_saying@
-
 @graffiti_type@ advertising a meeting @graffiti_meeting@
+
+@graffiti_type@ saying that @graffiti_short_saying@
