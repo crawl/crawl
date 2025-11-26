@@ -1091,6 +1091,8 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_species@
 
+@graffiti_type@ of an argument between @graffiti author name@ and @graffiti author name@
+
 @graffiti_type@ of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
 
 @graffiti_type@ advertising a meeting @graffiti_meeting@
