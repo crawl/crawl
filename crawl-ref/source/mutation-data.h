@@ -300,7 +300,7 @@ static const mutation_def mut_data[] =
   {"You feel aggression return to you.",
    "You feel a little less meek.",
    "You feel a little less meek."},
-  TILEG_MUT_WEAK,
+  TILEG_MUT_MEEK,
 },
 
 { MUT_TELEPORTITIS, 3, 2, mutflag::bad,
@@ -1346,7 +1346,7 @@ static const mutation_def mut_data[] =
   {"When you translocate, a monster is sometimes pulled along with you.", "", ""},
   {"You feel space start to knot itself around you." "", ""},
   {"You feel space untangle itself from you.", "", ""},
-  TILEG_MUT_TELEPORT,
+  TILEG_MUT_SPATIAL_ENTANGLEMENT,
 },
 
 // Scale mutations

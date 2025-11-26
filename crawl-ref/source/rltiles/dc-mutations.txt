@@ -82,6 +82,9 @@ subdued_magic_2
 subdued_magic_3
 efficient_magic_1 EFFICIENT_MAGIC
 efficient_magic_2
+meek_1 MEEK
+meek_2
+meek_3
 
 # Generic resists and vulnerabilities
 cold_res_1 COLD_RESISTANCE
@@ -168,6 +171,7 @@ scream_1 SCREAM
 scream_2
 teleport_1 TELEPORT
 teleport_2
+spatial_entanglement SPATIAL_ENTANGLEMENT
 booming_voice BOOMING_VOICE
 potion_fungus POTION_FUNGUS
 initially_attractive INITIALLY_ATTRACTIVE
