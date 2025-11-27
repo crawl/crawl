@@ -446,7 +446,7 @@ wiz-monster
 
 <w>kobold name:Durwent name_replace</w>
 
-会生成“<cyan>Durwent</cyan>”而不是“<cyan>Durwent the Kobold</cyan>”。
+会生成“<cyan>Durwent</cyan>”而不是“<cyan>Durwent the kobold</cyan>”。
 而尸体则仍然是“<cyan>kobold corpse of Durwent</cyan>”。
 
 <w>name_species</w>按原样使用尸体的名称，

@@ -466,7 +466,7 @@ monster was a unique:
 
 <w>kobold name:Durwent name_replace</w>
 
-Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the Kobold</cyan>". The corpse will
+Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the kobold</cyan>". The corpse will
 still be a "<cyan>kobold corpse of Durwent</cyan>".
 
 <w>name_species</w> uses the name for corpses as-is, without prefixing it with
