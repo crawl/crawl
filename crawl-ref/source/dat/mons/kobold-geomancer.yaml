@@ -6,7 +6,7 @@ species: kobold
 will: 20
 attacks:
  - {type: hit, damage: 4}
-hd: 3
+hd: 5
 hp_10x: 290
 ac: 2
 ev: 13
