@@ -1830,6 +1830,8 @@ Kilroy
 # Not just in the documentation!
 Durwent the kobold
 
+Zlaz the goblin
+
 # Norby and the Terrified Taxi
 Garc the Great
 %%%%
