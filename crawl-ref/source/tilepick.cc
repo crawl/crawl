@@ -2749,6 +2749,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_WARDING, TILEI_WARDING },
     { MB_DIMINISHED_SPELLS, TILEI_DIMMED },
     { MB_STRONG_WILLED, TILEI_STRONG_WILLED },
+    { MB_TESSERACT_SPAWN, TILEI_TESSERACT_SPAWN },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

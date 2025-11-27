@@ -318,6 +318,9 @@ enum monster_flag_type : uint64_t
     /// Is a priest regardless of whether they have priest spells
     MF_PRIEST             = BIT(44),
 
+    /// Was created by a Boundless Tesseract
+    MF_TESSERACT_SPAWN    = BIT(45),
+
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

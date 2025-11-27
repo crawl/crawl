@@ -25,6 +25,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "fineff.h"
@@ -45,6 +46,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
@@ -1429,6 +1431,43 @@ void solar_ember_blast()
     ember->del_ench(ENCH_SPELL_CHARGED);
 }
 
+static bool _make_tesseract_spawn(bool near_player, bool outside_vault = false)
+{
+    mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
+    mg.place = level_id::current();
+    mg.place.depth = 7;
+    mg.flags |= MG_FORBID_BANDS;
+    mg.extra_flags |= (MF_HARD_RESET | MF_TESSERACT_SPAWN);
+    mg.foe = MHITYOU;
+    mg.non_actor_summoner = "a Boundless Tesseract";
+    mg.proximity = near_player ? PROX_CLOSE_TO_PLAYER
+                               : PROX_AWAY_FROM_PLAYER;
+
+    if (outside_vault)
+    {
+        int tries = 500;
+        while (--tries > 0)
+        {
+            coord_def pos = random_in_bounds();
+            if (!monster_habitable_grid(mg.cls, pos))
+                continue;
+
+            const vault_placement *vp = dgn_vault_at(pos);
+            if (!(vp && vp->map_name_at(pos) == "hall_of_Zot"))
+            {
+                mg.pos = pos;
+                mg.flags |= MG_FORCE_PLACE;
+                break;
+            }
+        }
+
+        if (tries <= 0)
+            return false;
+    }
+
+    return mons_place(mg);
+}
+
 void activate_tesseracts()
 {
     if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
@@ -1451,14 +1490,24 @@ void activate_tesseracts()
         if (!did_activate)
         {
             mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
+            take_note(Note(NOTE_TESSERACT_ACTIVATED));
             mark_milestone("tesseract.activate", "activated a tesseract");
+            // Tracked on the player instead of the monster so status lookup is quicker.
+            you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
             mi->props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
-            mi->props[TESSERACT_XP_KEY] = 15000;
+
+            // Remove patrolling from everything but Orb guardians.
+            for (monster_iterator mi2; mi2; ++mi2)
+                if (mi2->type != MONS_ORB_GUARDIAN && !mi2->friendly())
+                    mi2->patrol_point.reset();
+
             tesseract_action(**mi);
             did_activate = true;
 
-            // Tracked on the player instead of the monster so status lookup is quicker.
-            you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
+            // Spawn several monsters outside the orb vault immediately.
+            const int num = random_range(4, 7);
+            for (int i = 0; i < num; ++i)
+                _make_tesseract_spawn(false, true);
         }
     }
 }
@@ -1490,7 +1539,7 @@ void tesseract_action(monster& mon)
     int non_spawn_count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->props.exists(TESSERACT_CREATED_KEY))
+        if (mi->flags & MF_TESSERACT_SPAWN)
             ++spawn_count;
         else if (!mi->is_summoned() && !mi->is_peripheral() && !mi->wont_attack())
             ++non_spawn_count;
@@ -1505,38 +1554,12 @@ void tesseract_action(monster& mon)
     // we activated.
     while (you.elapsed_time >= timer && allowed > 0)
     {
-        // Spawn the earliest monsters from the tesseract more quickly, then
-        // slow down to a constant rate.
-        const int interval = 70 + (min(15, count) * 50 / 2);
-        timer += random_range(interval, interval * 5 / 4);
+        // Spawn a monster every ~50 turns.
+        timer += random_range(350, 650);
 
-        mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
-        mg.place = level_id::current();
-        mg.place.depth = 7;
-        mg.flags |= MG_FORBID_BANDS;
-        mg.foe = MHITYOU;
-        mg.non_actor_summoner = "a Boundless Tesseract";
-        mg.proximity = PROX_AWAY_FROM_PLAYER;
-        if (count >= 80 && one_chance_in(4))
-            mg.proximity = PROX_CLOSE_TO_PLAYER;
+        if (!_make_tesseract_spawn(count >= 50 && coinflip()))
+            break;
 
-        monster* spawn = mons_place(mg);
-
-        if (!spawn)
-            continue;
-
-        // Allow the monster to be a normal monster if there is XP left in our
-        // pool; otherwise, make them unrewarding (to make early spawns feel
-        // less unfun while still removing any incentive to farm them).
-        int& xp_pool = mon.props[TESSERACT_XP_KEY];
-        int xp = exp_value(*spawn);
-
-        if (xp_pool >= xp)
-            xp_pool -= xp;
-        else
-            spawn->flags |= (MF_HARD_RESET | MF_NO_REWARD);
-
-        spawn->props[TESSERACT_CREATED_KEY] = true;
         --allowed;
         ++count;
     }

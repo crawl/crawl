@@ -6,6 +6,7 @@ shadowless: 0
 summoned: 0
 minion: 0
 unrewarding: 0
+tesseract_spawn: 0
 animated_weapon: 0
 vengeance_target: 0
 vampire_thrall: 0

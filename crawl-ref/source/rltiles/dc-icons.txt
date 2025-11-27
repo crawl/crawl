@@ -117,6 +117,7 @@ warding WARDING
 dim DIMMED
 sentinel_mark SENTINEL_MARK
 strong_willed STRONG_WILLED
+tesseract_spawn TESSERACT_SPAWN
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

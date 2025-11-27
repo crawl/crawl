@@ -750,15 +750,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (chose_ood_monster)
         mon->props[MON_OOD_KEY].get_bool() = true;
 
-    if (mg.needs_patrol_point())
-    {
-        mon->patrol_point = mon->pos();
-#ifdef DEBUG_PATHFIND
-        mprf("Monster %s is patrolling around (%d, %d).",
-             mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
-#endif
-    }
-
     // Now, forget about banding if the first placement failed, or there are
     // too many monsters already.
     if (mon->mindex() >= MAX_MONSTERS - 30)
@@ -1309,6 +1300,25 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         env.mid_cache.erase(mon->mid);
         mon->reset();
         return 0;
+    }
+
+    // Keep random monsters created inside the Orb vault from passively
+    // wandering out until the tesseracts are activated.
+    bool needs_patrol = false;
+    if (mg.place == level_id(BRANCH_ZOT, 5) && !mg.is_summoned())
+    {
+        const vault_placement *vp = dgn_vault_at(mon->pos());
+        if (vp && vp->map_name_at(mon->pos()) == "hall_of_Zot")
+            needs_patrol = true;
+    }
+
+    if (mg.needs_patrol_point() || needs_patrol)
+    {
+        mon->patrol_point = mon->pos();
+#ifdef DEBUG_PATHFIND
+        mprf("Monster %s is patrolling around (%d, %d).",
+             mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
+#endif
     }
 
     // Don't leave shifters in their starting shape.

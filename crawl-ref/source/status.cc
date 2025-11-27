@@ -996,13 +996,10 @@ bool fill_status_info(int status, status_info& inf)
             && you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
         {
             const int count = you.props[TESSERACT_SPAWN_COUNTER_KEY].get_int();
-
-            if (count <= 15)
-                inf.light_colour = RED;
-            else if (count >= 80)
+            if (count >= 50)
                 inf.light_colour = LIGHTMAGENTA;
             else
-                inf.light_colour = YELLOW;
+                inf.light_colour = RED;
 
             inf.light_text = "Tesseract";
         }

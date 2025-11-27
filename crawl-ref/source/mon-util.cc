@@ -678,6 +678,7 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
             && (!testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
                 || victim.has_ench(ENCH_MAD))           // ...except frenzied ones
             && !testbits(victim.flags, MF_NO_REWARD)    // no reward for no_reward
+            && !testbits(victim.flags, MF_TESSERACT_SPAWN)
             && !mon_killed_friend;
 }
 

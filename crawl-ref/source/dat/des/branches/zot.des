@@ -4594,10 +4594,10 @@ ENDMAP
 ##############################################################################
 
 NAME:    hall_of_Zot
-TAGS:    no_dump no_trap_gen
+TAGS:    no_dump no_trap_gen patrolling
 PLACE:   Zot:$
 ORIENT:  north
-MONS:    patrolling orb guardian, boundless tesseract
+MONS:    orb guardian, boundless tesseract
 MONS:    electric golem, killer klown, ancient lich / dread lich
 MONS:    orb of appropriateness
 KITEM:   R = prismatic gem

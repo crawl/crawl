@@ -60,6 +60,12 @@ bound in place monstatus
 This creature cannot move under its own power, but may still use translocations
 or be forcibly displaced by someone else.
 %%%%
+called by a tesseract monstatus
+
+This monster has been called from a parallel reality. Killing it will grant no
+experience points, but it will be immediately cast back to its original reality
+as soon as the tesseract is destroyed.
+%%%%
 catching its breath monstatus
 
 This creature has used a breath ability recently and cannot use it again for a

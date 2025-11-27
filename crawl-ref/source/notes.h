@@ -72,6 +72,7 @@ enum NOTE_TYPES
     NOTE_VEXED,
     NOTE_GET_BANE,              /* needs: bane type, reason (string) */
     NOTE_LOSE_BANE,             /* needs: bane_type */
+    NOTE_TESSERACT_ACTIVATED,
     NOTE_NUM_TYPES
 };
 

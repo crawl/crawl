@@ -856,6 +856,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->damage_immune(&you))
         mb.set(MB_PLAYER_DAMAGE_IMMUNE);
 
+    if (m->flags & MF_TESSERACT_SPAWN)
+        mb.set(MB_TESSERACT_SPAWN);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {

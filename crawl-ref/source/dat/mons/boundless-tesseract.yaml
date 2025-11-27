@@ -1,7 +1,7 @@
 name: "boundless tesseract"
 glyph: {char: "I", colour: etc_orb_glow}
 flags: [see_invis, speaks, stationary, insubstantial, fast_regen]
-exp: 1000
+exp: 9999
 holiness: [nonliving]
 will: invuln
 attacks:

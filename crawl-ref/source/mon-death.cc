@@ -81,6 +81,7 @@
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
+#include "viewmap.h"
 #include "view.h"
 
 /**
@@ -256,10 +257,6 @@ static int _calc_player_experience(const monster* mons)
 
     experience = experience * mons->damage_friendly / mons->damage_total;
     ASSERT(mons->damage_friendly <= mons->damage_total);
-
-    // Award the player any XP remaining in the tesseract's XP pool.
-    if (mons->type == MONS_BOUNDLESS_TESSERACT && mons->props.exists(TESSERACT_XP_KEY))
-        experience += mons->props[TESSERACT_XP_KEY].get_int();
 
     return experience;
 }
@@ -2810,6 +2807,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_PLAYER_SHADOW)
         dithmenos_cleanup_player_shadow(&mons);
     else if (mons.type == MONS_ORB_GUARDIAN
+             && real_death
              && level_id::current() == level_id(BRANCH_ZOT, 5)
              && !player_on_orb_run()
              && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
@@ -3368,38 +3366,42 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Must be done after health is set to zero and monster is properly marked dead.
-    if (mons.type == MONS_BOUNDLESS_TESSERACT)
+    if (mons.type == MONS_BOUNDLESS_TESSERACT && you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
     {
-        // Remove all non-rewarding spawns, along with the other tesseract.
+        you.props.erase(TESSERACT_SPAWN_COUNTER_KEY);
+
+        mprf(MSGCH_ORB, "A wave of disorienting energy ripples outward as you feel the reach of Zot diminish.");
+        mark_milestone("tesseract.kill", "destroyed the tesseracts.");
+
+        draw_ring_animation(mons.pos(), LOS_RADIUS, MAGENTA, BLUE, true, 5);
+
+        // Remove all tesseract spawns, along with the other tesseract.
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid
-                && !(mi->flags & MF_BANISHED))
+            if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid)
             {
-                monster_die(**mi, killer, killer_index);
+                monster_die(**mi, KILL_RESET, NON_MONSTER);
+                env.map_knowledge(mi->pos()).clear_monster();
+                //set_terrain_seen(mi->pos());
+                view_update_at(mi->pos());
+#ifdef USE_TILE
+                tiles.update_minimap(mi->pos());
+#endif
             }
-            else if ((mi->flags & (MF_HARD_RESET | MF_NO_REWARD)
-                     && mi->props.exists(BLAME_KEY)))
+            else if ((mi->flags & MF_TESSERACT_SPAWN))
             {
-                const CrawlVector& blame = mi->props[BLAME_KEY].get_vector();
-                if (blame[blame.size() - 1].get_string() == "created by a Boundless Tesseract")
+                if (you.can_see(**mi))
                 {
-                    if (you.can_see(**mi))
-                    {
-                        mprf(MSGCH_MONSTER_TIMEOUT, "%s is pulled back into %s original reality.",
-                             mi->name(DESC_THE).c_str(), mi->pronoun(PRONOUN_POSSESSIVE).c_str());
-                        }
-                    monster_die(**mi, KILL_RESET, NON_MONSTER);
+                    mprf(MSGCH_MONSTER_TIMEOUT, "%s is cast back into %s original reality.",
+                            mi->name(DESC_THE).c_str(), mi->pronoun(PRONOUN_POSSESSIVE).c_str());
                 }
+                monster_die(**mi, KILL_RESET, NON_MONSTER);
             }
         }
 
-        if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
-        {
-            mprf(MSGCH_ORB, "You feel the reach of Zot diminish.");
-            mark_milestone("tesseract.kill", "destroyed the tesseracts.");
-            you.props.erase(TESSERACT_SPAWN_COUNTER_KEY);
-        }
+        for (distance_iterator di(mons.pos(), false, true, LOS_RADIUS); di; ++di)
+            if (monster* mon = monster_at(*di))
+                mon->daze(random_range(7, 12));
     }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
@@ -3449,8 +3451,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Activate various on-kill effects for the player (like divine healing,
-    // Powered by Death, berserk extension, etc.)
-    _player_on_kill_effects(mons, killer, gives_player_xp, pet_kill);
+    // Powered by Death, berserk extension, etc.).
+    // Tesseract spawns give no XP, but still trigger kill effects as though they did.
+    _player_on_kill_effects(mons, killer,
+                            gives_player_xp || (mons.flags & MF_TESSERACT_SPAWN),
+                            pet_kill);
 
     if (mons.has_ench(ENCH_RIMEBLIGHT) && !was_banished && !mons_reset)
     {
