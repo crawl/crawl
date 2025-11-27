@@ -1085,6 +1085,8 @@ graffiti_short_saying
 
 the ghost of @graffiti author name@ still haunts @graffiti author name@
 
+@graffiti author name@ sells [inferior|superior] wares
+
 w:2
 @graffiti_author_changed_names@
 %%%%
