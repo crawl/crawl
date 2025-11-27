@@ -802,7 +802,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
     ray_def ray;
     if (find_ray(orig_pos, target, ray, opc_solid))
         while (ray.advance() && ray.pos() != target)
-            if (!agent.is_player() || !apply_cloud_trail(ray.pos()))
+            if (!agent.is_player() || ray.pos() == dest_pos || !apply_cloud_trail(ray.pos()))
                 place_cloud(CLOUD_ELECTRICITY, ray.pos(), 2 + random2(3), &agent);
 
     // If a blocker was displaced onto a dispersal trap, things may not be as
