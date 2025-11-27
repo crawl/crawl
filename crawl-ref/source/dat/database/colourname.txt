@@ -1072,6 +1072,9 @@ telling of a secret passageway straight from here to the Orb of Zot
 counting down the days until the world ends
 
 claiming to know the meaning of life
+
+# A reference to ploggifying in make_name().
+alluding to the "Plog" Conspiracy and why it hides that word everywhere
 %%%%
 graffiti_short_saying
 
