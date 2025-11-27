@@ -1087,6 +1087,8 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @graffiti author name@ sells [inferior|superior] wares
 
+@graffiti author name@ steals from @graffiti author name@
+
 @graffiti author name@ is converting to @random_god@
 
 # These next four can produce orcs who worship Zin or non-orcs who
