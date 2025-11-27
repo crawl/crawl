@@ -1087,6 +1087,20 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @graffiti author name@ sells [inferior|superior] wares
 
+@graffiti author name@ is converting to @random_god@
+
+# These next four can produce orcs who worship Zin or non-orcs who
+# worship Beogh, but that's why you shouldn't believe everything you
+# read.
+
+@graffiti author name@ secretly worships Zin[| instead of @random_chaotic_god@]
+
+@graffiti author name@ secretly worships @random_chaotic_god@[| instead of Zin]
+
+@graffiti author name@ secretly worships @random_good_god@[| instead of @random_evil_god@]
+
+@graffiti author name@ secretly worships @random_evil_god@[| instead of @random_good_god@]
+
 w:2
 @graffiti_author_changed_names@
 %%%%
