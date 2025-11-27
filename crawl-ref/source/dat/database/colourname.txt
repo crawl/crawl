@@ -5,8 +5,8 @@
 # things such as names of colour patterns and various types of coloured
 # graffiti.
 #
-# You can use graffiti author names, @RANDGEN@, and names in general
-# from monname.txt here.
+# You can use graffiti author names and everything else from monname.txt
+# here.
 #
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more

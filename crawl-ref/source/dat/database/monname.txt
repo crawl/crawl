@@ -18,11 +18,9 @@
 # apostle warrior name" or "orc apostle wizard name". An apostle can get
 # a name unique to its specific type or an ordinary orc name.
 #
-# To generate a random name, the game looks for @RANDGEN@. Every
-# instance of it gets replaced with a newly generated random name, even
-# within the same line. This is so that "an argument between @RANDGEN@
-# and @RANDGEN@" won't produce e.g. "an argument between Liranlobol and
-# Liranlobol" every time.
+# Monster names support a small subset of what monster speech does:
+# @RANDGEN@, @random_god@, @random_god_chaotic@, @random_god_evil@, and
+# @random_god_good@.
 #
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more
