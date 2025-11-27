@@ -24,7 +24,7 @@ The speak database contains messages defined in these files:
 
 * monspeak.txt  handles messages for monsters communicating with you
 * wpnnoise.txt  handles randart weapons with the noises property
-* godspeak.txt  handles randomized speech by the gods, as well as
+* godspeak.txt  handles randomised speech by the gods, as well as
                 speech used for some divine abilities
 * insult.txt    Same file as above.
 
@@ -512,8 +512,8 @@ The following variables are hardcoded:
 @says@          : synonym of "say" that fits monsters' (hardcoded)
                   speech pattern and noise level.
 
-Capitalized forms (@Monster@, @A_something@, @Possessive@, @My_God@)
-are expanded with capitalized text.
+Capitalised forms (@Monster@, @A_something@, @Possessive@, @My_God@)
+are expanded with capitalised text.
 
 [1] Note that plural body parts such as @hands@, @arms@, and @feet@ may
 be inappropriate for some monsters (for example, a fungus's @foot@
@@ -719,7 +719,7 @@ may pick any noisy monster speech, but the message output will care
 and refuse to print such nonsense, so that in this case the monster
 will actually stay silent after all.
 
-To summarize, chances of silent "speech" are overall lower (as is
+To summarise, chances of silent "speech" are overall lower (as is
 intended) but only VISUAL messages even have a chance to be printed
 under these circumstances.
 
