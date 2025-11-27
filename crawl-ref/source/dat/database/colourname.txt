@@ -969,6 +969,20 @@ graffiti_type
 
 @writing_style@ graffiti
 %%%%
+# There's sometimes a chance of the two names being the same, but maybe
+# the author's crazy, or maybe the author spells their name the same way
+# as before but pronounces it differently.
+#
+# Don't change from orc names to non-orc names or vice versa. That
+# implies the orc left Beogh, and there's more than just a name change
+# involved in that.
+graffiti_author_changed_names
+
+@non-orc graffiti author name@ has changed names and now goes by @non-orc graffiti author name@
+
+w:2
+@orc graffiti author name@ has changed names and now goes by @orc graffiti author name@
+%%%%
 graffiti_image
 
 of [a goblin|a kobold|a spriggan] with its head poking out of a tunnel
@@ -1067,7 +1081,8 @@ graffiti_short_saying
 
 the ghost of @graffiti author name@ still haunts @graffiti author name@
 
-@RANDGEN@ has changed names and now goes by @RANDGEN@
+w:2
+@graffiti_author_changed_names@
 %%%%
 graffiti_species
 
