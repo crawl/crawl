@@ -1011,7 +1011,7 @@ graffiti_ordinary_meeting
 # Possibly too lowbrow, but a good time can mean many things.
 with @graffiti author name@ for [a good time|tips on how to survive in the dungeon]
 
-of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Worm]
+of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
 
 of a local master class on insults being taught by imps
 
