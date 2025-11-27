@@ -3991,6 +3991,12 @@ static string _replace_god_name(god_type god, bool need_verb = false,
     return result;
 }
 
+static bool _is_any_god(god_type god)
+{
+    UNUSED(god);
+    return true;
+}
+
 static string _random_class_of_god_name(bool (*class_of_god)(god_type god))
 {
     string result;
@@ -4517,8 +4523,13 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
         msg = replace_all(msg, "@My_God@", godcap);
     }
 
-    if (msg.find("@random_god_") != string::npos)
+    // For randomly generated names.
+    msg = replace_all_func(msg, "@RANDGEN@", make_name_randgen);
+
+    if (msg.find("@random_god") != string::npos)
     {
+        msg = replace_all(msg, "@random_god@",
+                          _random_class_of_god_name(_is_any_god));
         msg = replace_all(msg, "@random_god_chaotic@",
                           _random_class_of_god_name(is_chaotic_god));
         msg = replace_all(msg, "@random_god_evil@",
@@ -4605,12 +4616,25 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
     return msg;
 }
 
+// This should take a small subset of what do_mon_str_replacements() does.
 string do_mon_name_replacements(const string& in_name)
 {
     string name = in_name;
 
     // For randomly generated names.
     name = replace_all_func(name, "@RANDGEN@", make_name_randgen);
+
+    if (name.find("@random_god") != string::npos)
+    {
+        name = replace_all(name, "@random_god@",
+                          _random_class_of_god_name(_is_any_god));
+        name = replace_all(name, "@random_god_chaotic@",
+                          _random_class_of_god_name(is_chaotic_god));
+        name = replace_all(name, "@random_god_evil@",
+                          _random_class_of_god_name(is_evil_god));
+        name = replace_all(name, "@random_god_good@",
+                          _random_class_of_god_name(is_good_god));
+    }
 
     return name;
 }

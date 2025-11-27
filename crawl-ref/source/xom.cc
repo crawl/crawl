@@ -3157,8 +3157,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = replace_all(str, "@The_feature@",
                               uppercase_first(in_view_name[iv]));
 
-            // For randomly generated names.
-            str = replace_all_func(str, "@RANDGEN@", make_name_randgen);
+            // For name-related bits in graffiti.
+            str = do_mon_name_replacements(str);
 
             messages.push_back(str);
         }
