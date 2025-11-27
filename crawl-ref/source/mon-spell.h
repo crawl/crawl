@@ -403,7 +403,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_COGNITOGAUNT,
       {
-       { SPELL_BRAIN_BITE, 64, MON_SPELL_MAGICAL },
+       { SPELL_BRAIN_BITE, 76, MON_SPELL_MAGICAL },
       }
     },
 
@@ -738,8 +738,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SCREAMING_REFRACTION,
       {
-       { SPELL_INJURY_MIRROR, 30, MON_SPELL_MAGICAL },
-       { SPELL_LRD, 30, MON_SPELL_MAGICAL },
+       { SPELL_INJURY_MIRROR, 40, MON_SPELL_MAGICAL },
+       { SPELL_LRD, 40, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1539,7 +1539,7 @@ static const mon_spellbook mspell_list[] =
     // ('W') Incorporeal undead.
     {  MST_BES_KEMWAR,
       {
-       { SPELL_DIMINISH_SPELLS, 33, MON_SPELL_NATURAL },
+       { SPELL_DIMINISH_SPELLS, 44, MON_SPELL_NATURAL },
       }
     },
 
