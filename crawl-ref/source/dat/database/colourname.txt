@@ -975,8 +975,9 @@ graffiti_type
 #
 # Don't change from orc names to non-orc names or vice versa; that
 # implies the orc left Beogh, and there's more than just a name change
-# involved in that. Also, don't change from rare names to non-rare names or
-# vice versa; the rare names are effectively aliases or titles.
+# involved in that. Also, don't change from rare names to non-rare names
+# or vice versa; the rare names are effectively aliases or titles that
+# may also have suffixes.
 graffiti_author_changed_names
 
 @changeable graffiti author name@ has changed names and now goes by @changeable graffiti author name@
