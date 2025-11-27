@@ -261,7 +261,7 @@ following order:
 1. The actual monster name.
    Examples: "crystal guardian", "default confused moth of wrath"
 2. The monster genus.
-   Examples: If "friendly ogre mage" wasn't found, try "friendly ogre"
+   Examples: If "friendly coglin" wasn't found, try "friendly goblin"
              instead. Same for "dragon" if "swamp drake" was
              unsuccessful.
 3. Then the monster glyph, with prefix "cap-" for capital letters.
@@ -477,30 +477,37 @@ The following variables are hardcoded:
 @a_monster@     : Indefinite article plus monster name,
                   or only the name if it is unique ("Sigmund").
 @the_monster@   : Definite article plus monster name ("the rat"),
-                  or a possessive if it is friendly ("your rat"),
-                  or only the name if it is unique ("Sigmund").
+                  or a possessive article if it is friendly ("your
+                  rat"), or only the name if it is unique ("Sigmund").
+@the_monster_possessive@: Definite article plus possessive form of the
+                          monster's name ("the rat's"), or a possessive
+                          article plus the possessive form of the
+                          monster's name if it is friendly ("your
+                          rat's"), or only the possessive form of the
+                          monster's name if it is unique ("Sigmund's").
 @something@     : Like @monster@, with monster name replaced by
                   "something" if the monster is invisible and the
                   player cannot see invisible.
 @a_something@   : similar
 @the_something@ : similar
+@the_something_possessive@: similar
 @player_name@   : Player name.
-@player_species@: Player base species, with Draconian rather than the
-                  actual subtype.
-@player_genus@  : Player genus, i.e. "Elf" rather than the exact type,
-                  or "Orc" instead of "Hill Orc".
-@player_genus_plural@ : pluralised genus form.
-@player_god@    : Player's god name, or "you" if non-religious.
+@player_name_possessive@: similar
+@a_player_genus@: Indefinite article plus player genus.
+@player_genus@  : Player genus, i.e. "Draconian" rather than the exact
+                  type, or "Dwarf" instead of "Mountain Dwarf".
+@player_genus_plural@: pluralised genus form.
 @god_is@        : replaced with "<god name> is" or "you are", if
                   non-religious.
 @a_God@         : Monster's god name, or "a god" if nameless. [1]
 @my_God@        : Monster's god name, or "my God" if nameless. [1]
-@possessive_God@  : Monster's god name, or "its/his/her god" if nameless. [1]
+@possessive_God@: Monster's god name, or "its/his/her god" if nameless. [1]
 @surface@       : Whatever the monster is standing on.
 @feature@       : The monster's square's feature description.
 @subjective@    : it, she, he, as appropriate
-@objective@     : it, her, him, as appropriate
 @possessive@    : its, her, his, as appropriate
+@reflexive@     : itself, herself, himself, as appropriate
+@objective@     : it, her, him, as appropriate
 @imp_taunt@     : imp type insults (see insult.txt)
 @demon_taunt@   : demon type insults (see insult.txt)
 @hand@          : whatever body part serves as the monster's "hand".
@@ -511,6 +518,38 @@ The following variables are hardcoded:
 @feet@          : plural of @foot@ [1]
 @says@          : synonym of "say" that fits monsters' (hardcoded)
                   speech pattern and noise level.
+@RANDGEN@       : Replaced with a randomly generated name. Every
+                  instance of this, even within the same line, will
+                  produce a different randomly generated name.
+@random_god@    : Replaced with a random available god (gods you've
+                  killed are not available).
+@random_god_chaotic@: Replaced with a random available god that is
+                      chaotic.
+@random_god_evil@: Replaced with a random available god that is evil.
+@random_god_good@: Replaced with a random available god that is good.
+@random_body_part_any_singular@: Replaced with a random player body part
+                                 that has a singular name, such as
+                                 "tail".
+@random_body_part_internal_singular@: Replaced with a random player body
+                                      part that is internal and has a
+                                      singular name, such as "blood".
+@random_body_part_external_singular@: Replaced with a random body part
+                                      that is external and has a
+                                      singular name, such as "head".
+@random_body_part_any_plural@: Replaced with a random player body part
+                               that has a plural name, such as "ears".
+@random_body_part_internal_plural@: Replaced with a random body part
+                                    that is internal and has a plural
+                                    name, such as "bones".
+@random_body_part_external_plural@: Replaced with a random body part
+                                    that is external and has a plural
+                                    name, such as "hair".
+@species_insult_adj1@: Replaced with the first of two adjectives
+                       insulting the player's species.
+@species_insult_adj2@: Replaced with the second of two adjectives
+                       insulting the player's species.
+@species_insult_noun@: Replaced with a noun insulting the player's
+                       species.
 
 Capitalised forms (@Monster@, @A_something@, @Possessive@, @My_God@)
 are expanded with capitalised text.
@@ -532,8 +571,9 @@ handling. If the parser encounters such a variable, it will search the
 database for the corresponding specific entry, i.e. "insult <genus>
 adj1/adj2/noun" where <genus> is replaced with the actual genus name,
 that is "draconian", "elf" or "dwarf" instead of the more specific
-species name, "ogre" for "ogre mage", or the actual species name in all
-other cases.
+species name, "frog" for "barachi", "goblin" for "coglin", "cat" for
+felid, "Ant" for "formicid", "octopus" for "octopode, "geist" for
+"poltergeist", or the actual species name in all other cases.
 
 If this specific search doesn't yield any results, i.e., such an
 entry hasn't been defined for the species in question, the general
