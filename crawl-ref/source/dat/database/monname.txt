@@ -1832,6 +1832,9 @@ Zlaz the goblin
 
 # Norby and the Terrified Taxi
 Garc the Great
+
+# A reference to ploggifying in make_name().
+Plog the Peerless
 %%%%
 # Same as @graffiti author name@ below, but without orc names.
 non-orc graffiti author name
