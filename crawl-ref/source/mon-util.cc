@@ -4627,13 +4627,13 @@ string do_mon_name_replacements(const string& in_name)
     if (name.find("@random_god") != string::npos)
     {
         name = replace_all(name, "@random_god@",
-                          _random_class_of_god_name(_is_any_god));
+                           _random_class_of_god_name(_is_any_god));
         name = replace_all(name, "@random_god_chaotic@",
-                          _random_class_of_god_name(is_chaotic_god));
+                           _random_class_of_god_name(is_chaotic_god));
         name = replace_all(name, "@random_god_evil@",
-                          _random_class_of_god_name(is_evil_god));
+                           _random_class_of_god_name(is_evil_god));
         name = replace_all(name, "@random_god_good@",
-                          _random_class_of_god_name(is_good_god));
+                           _random_class_of_god_name(is_good_god));
     }
 
     return name;
