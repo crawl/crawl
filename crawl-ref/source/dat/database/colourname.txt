@@ -1016,6 +1016,8 @@ of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A
 
 of a local master class on insults being taught by imps
 
+of a local @graffiti_remedial_class@
+
 of a local support group for veterans of the surface wars
 
 of a group of local [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
@@ -1061,6 +1063,56 @@ graffiti_orc_religion
 proselytising for Beogh and proper orcishness
 
 proclaiming that Beogh's messiah will soon come
+%%%%
+# Use changeable names here so we can handle orcs (which, as graffiti
+# authors, get names ending with " the orc") and rare names (aliases or
+# titles that may also have suffixes) separately from them, just as we
+# do with changed names above.
+graffiti_professor_any
+
+@changeable graffiti author name@
+
+w:2
+@orc graffiti author name@
+
+w:2
+@rare graffiti author name@ (supposedly)
+%%%%
+# Use changeable names here so we can handle orcs (which, as graffiti
+# authors, get names ending with " the orc") and rare names (aliases or
+# titles that may also have suffixes) separately from them, just as we
+# do with changed names above.
+graffiti_professor_magic
+
+@changeable graffiti author name@ the wizard
+
+w:2
+@orc graffiti author name@ wizard
+
+w:2
+the wizard @rare graffiti author name@ (supposedly)
+%%%%
+# Use changeable names here so we can handle orcs (which, as graffiti
+# authors, get names ending with " the orc") and rare names (aliases or
+# titles that may also have suffixes) separately from them, just as we
+# do with changed names above.
+graffiti_professor_mundane
+
+@changeable graffiti author name@ the warrior
+
+w:2
+@orc graffiti author name@ warrior
+
+w:2
+the warrior @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_remedial_class
+
+Remedial @random_skill@ class taught by @graffiti_professor_any@
+
+Remedial @random_skill_magic@ class taught by @graffiti_professor_magic@
+
+Remedial @random_skill_mundane@ class taught by @graffiti_professor_mundane@
 %%%%
 graffiti_rumour
 
