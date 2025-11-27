@@ -979,7 +979,7 @@ graffiti_type
 # vice versa; the rare names are effectively aliases or titles.
 graffiti_author_changed_names
 
-@changeable graffiti author name@ has changed names and now goes by @changeable author name@
+@changeable graffiti author name@ has changed names and now goes by @changeable graffiti author name@
 
 w:2
 @orc graffiti author name@ has changed names and now goes by @orc graffiti author name@
