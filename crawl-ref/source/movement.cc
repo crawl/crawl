@@ -248,7 +248,7 @@ bool apply_cloud_trail(const coord_def old_pos)
     if (you.duration[DUR_CLOUD_TRAIL])
     {
         if (cell_is_solid(old_pos))
-            ASSERT(you.wizmode_teleported_into_rock);
+            return false;
         else
         {
             auto cloud = static_cast<cloud_type>(
