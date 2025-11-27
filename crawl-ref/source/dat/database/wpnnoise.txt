@@ -1305,6 +1305,9 @@ w:1
 # Jerry Reed
 @The_weapon@ sings, "Orcs got the gold mine, I got the shaft..."
 
+# Terry Jacks
+@The_weapon@ sings, "We had joy, we had fun, we slew demons in the sun..."
+
 ############ real songs, low tension ############
 %%%%
 _real_song_low_tension_
