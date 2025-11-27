@@ -19,8 +19,9 @@
 # a name unique to its specific type or an ordinary orc name.
 #
 # Monster names support a small subset of what monster speech does:
-# @RANDGEN@, @random_god@, @random_god_chaotic@, @random_god_evil@, and
-# @random_god_good@.
+# @RANDGEN@, @random_god@, @random_god_chaotic@, @random_god_evil@,
+# @random_god_good@, @random_skill@, @random_skill_magic@, and
+# @random_skill_mundane@.
 #
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more

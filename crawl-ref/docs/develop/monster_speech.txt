@@ -523,6 +523,11 @@ The following variables are hardcoded:
                   produce a different randomly generated name.
 @random_god@    : Replaced with a random available god (gods you've
                   killed are not available).
+@random_skill@  : Replaced with a random skill.
+@random_skill_magic@: Replaced with a random magic skill.
+@random_skill_mundane@: Replaced with a random mundane skill (a skill
+                        not involving magic, god powers, or magic item
+                        use).
 @random_god_chaotic@: Replaced with a random available god that is
                       chaotic.
 @random_god_evil@: Replaced with a random available god that is evil.

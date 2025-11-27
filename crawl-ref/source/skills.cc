@@ -996,6 +996,11 @@ static bool _level_up_check(skill_type sk, bool simu)
     return false;
 }
 
+bool is_mundane_skill(skill_type sk)
+{
+    return sk <= SK_LAST_MUNDANE;
+}
+
 bool is_magic_skill(skill_type sk)
 {
     return sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC;
@@ -2401,6 +2406,20 @@ bool is_removed_skill(skill_type skill)
     UNUSED(skill);
 #endif
     return false;
+}
+
+skill_type random_skill()
+{
+    skill_type skill;
+
+    do
+    {
+        skill =
+            static_cast<skill_type>(random2(NUM_SKILLS));
+    }
+    while (is_removed_skill(skill));
+
+    return skill;
 }
 
 static map<skill_type, mutation_type> skill_sac_muts = {

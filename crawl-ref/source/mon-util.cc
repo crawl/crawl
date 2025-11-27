@@ -60,6 +60,7 @@
 #include "random.h"
 #include "religion.h"
 #include "showsymb.h"
+#include "skills.h"
 #include "species.h"
 #include "spl-util.h"
 #include "state.h"
@@ -4014,6 +4015,29 @@ static string _random_class_of_god_name(bool (*class_of_god)(god_type god))
     return result;
 }
 
+static bool _is_any_skill(skill_type skill)
+{
+    UNUSED(skill);
+    return true;
+}
+
+static string _random_class_of_skill_name(bool (*class_of_skill)(skill_type skill))
+{
+    string result;
+    skill_type some_skill;
+
+    do
+    {
+        some_skill = random_skill();
+    }
+    while (!class_of_skill(some_skill));
+
+    const string skillname = skill_name(some_skill);
+    result = skillname;
+
+    return result;
+}
+
 // part_class should be a body_part_class_flags value.
 string random_body_part_name(bool plural, int part_class)
 {
@@ -4538,6 +4562,16 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                           _random_class_of_god_name(is_good_god));
     }
 
+    if (msg.find("@random_skill") != string::npos)
+    {
+        msg = replace_all(msg, "@random_skill@",
+                          _random_class_of_skill_name(_is_any_skill));
+        msg = replace_all(msg, "@random_skill_magic@",
+                          _random_class_of_skill_name(is_magic_skill));
+        msg = replace_all(msg, "@random_skill_mundane@",
+                          _random_class_of_skill_name(is_mundane_skill));
+    }
+
     if (msg.find("@random_body_part") != string::npos)
     {
         msg = replace_all(msg, "@random_body_part_any_singular@",
@@ -4634,6 +4668,16 @@ string do_mon_name_replacements(const string& in_name)
                            _random_class_of_god_name(is_evil_god));
         name = replace_all(name, "@random_god_good@",
                            _random_class_of_god_name(is_good_god));
+    }
+
+    if (name.find("@random_skill") != string::npos)
+    {
+        name = replace_all(name, "@random_skill@",
+                           _random_class_of_skill_name(_is_any_skill));
+        name = replace_all(name, "@random_skill_magic@",
+                           _random_class_of_skill_name(is_magic_skill));
+        name = replace_all(name, "@random_skill_mundane@",
+                           _random_class_of_skill_name(is_mundane_skill));
     }
 
     return name;
