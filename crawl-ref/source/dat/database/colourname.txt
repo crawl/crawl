@@ -1029,11 +1029,13 @@ revering Xom and the randomness in everything
 
 delighting in Nemelex Xobeh and whatever the next deck brings
 
-lauding Zin and Zin's laws
-
 extolling Yredelemnul and all things unholy
 
 commending Gozag and how enough gold can buy anything
+%%%%
+graffiti_non-orc_religion
+
+lauding Zin and Zin's laws
 %%%%
 graffiti_orc_religion
 
@@ -1100,6 +1102,8 @@ graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_image@
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_religion@
+
+@graffiti_type@[| signed by @non-orc graffiti author name@] @graffiti_non-orc_religion@
 
 @graffiti_type@[| signed by @orc graffiti author name@] @graffiti_orc_religion@
 

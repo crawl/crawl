@@ -1833,6 +1833,20 @@ Durwent the kobold
 # Norby and the Terrified Taxi
 Garc the Great
 %%%%
+non-orc graffiti author name
+
+w:50
+@ancestor name@
+
+w:2
+@bland graffiti author name@
+
+w:2
+@RANDGEN@
+
+w:1
+@rare graffiti author name@
+%%%%
 graffiti author name
 
 w:50
