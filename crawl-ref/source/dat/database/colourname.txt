@@ -1064,10 +1064,11 @@ proselytising for Beogh and proper orcishness
 
 proclaiming that Beogh's messiah will soon come
 %%%%
-# Use changeable names here so we can handle orcs (which, as graffiti
-# authors, get names ending with " the orc") and rare names (aliases or
-# titles that may also have suffixes) separately from them, just as we
-# do with changed names above.
+# Use changeable names for all graffiti professors (any, magic, and
+# mundane) so we can handle orcs (which, as graffiti authors, get names
+# ending with " the orc") and rare names (aliases or titles that may
+# also have suffixes) separately from them, just as we do with changed
+# names above.
 graffiti_professor_any
 
 @changeable graffiti author name@
@@ -1078,10 +1079,6 @@ w:2
 w:2
 @rare graffiti author name@ (supposedly)
 %%%%
-# Use changeable names here so we can handle orcs (which, as graffiti
-# authors, get names ending with " the orc") and rare names (aliases or
-# titles that may also have suffixes) separately from them, just as we
-# do with changed names above.
 graffiti_professor_magic
 
 @changeable graffiti author name@ the wizard
@@ -1092,10 +1089,6 @@ w:2
 w:2
 the wizard @rare graffiti author name@ (supposedly)
 %%%%
-# Use changeable names here so we can handle orcs (which, as graffiti
-# authors, get names ending with " the orc") and rare names (aliases or
-# titles that may also have suffixes) separately from them, just as we
-# do with changed names above.
 graffiti_professor_mundane
 
 @changeable graffiti author name@ the warrior
