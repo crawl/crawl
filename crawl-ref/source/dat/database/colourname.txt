@@ -973,15 +973,19 @@ graffiti_type
 # the author's crazy, or maybe the author spells their name the same way
 # as before but pronounces it differently.
 #
-# Don't change from orc names to non-orc names or vice versa. That
+# Don't change from orc names to non-orc names or vice versa; that
 # implies the orc left Beogh, and there's more than just a name change
-# involved in that.
+# involved in that. Also, don't change from rare names to non-rare names or
+# vice versa; the rare names are effectively aliases or titles.
 graffiti_author_changed_names
 
-@non-orc graffiti author name@ has changed names and now goes by @non-orc graffiti author name@
+@changeable graffiti author name@ has changed names and now goes by @changeable author name@
 
 w:2
 @orc graffiti author name@ has changed names and now goes by @orc graffiti author name@
+
+w:2
+@rare graffiti author name@ has passed on the name to someone else worthy of it
 %%%%
 graffiti_image
 
