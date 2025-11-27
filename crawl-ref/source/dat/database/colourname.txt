@@ -1100,13 +1100,13 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 # worship Beogh, but that's why you shouldn't believe everything you
 # read.
 
-@graffiti author name@ secretly worships Zin[| instead of @random_chaotic_god@]
+@graffiti author name@ secretly worships Zin[| instead of @random_god_chaotic@]
 
-@graffiti author name@ secretly worships @random_chaotic_god@[| instead of Zin]
+@graffiti author name@ secretly worships @random_god_chaotic@[| instead of Zin]
 
-@graffiti author name@ secretly worships @random_good_god@[| instead of @random_evil_god@]
+@graffiti author name@ secretly worships @random_god_good@[| instead of @random_god_evil@]
 
-@graffiti author name@ secretly worships @random_evil_god@[| instead of @random_good_god@]
+@graffiti author name@ secretly worships @random_god_evil@[| instead of @random_god_good@]
 
 w:2
 @graffiti_author_changed_names@
