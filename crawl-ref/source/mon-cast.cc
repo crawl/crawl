@@ -988,11 +988,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(foe->is_player() && could_harm_enemy(&caster, &you)
-                                                 && adjacent(caster.pos(), you.pos()));
+                                                 && grid_distance(caster.pos(), you.pos()) <= 3);
         },
         [](monster, mon_spell_slot, bolt&) {
             flash_tile(you.pos(), BLUE, 150, TILE_BOLT_OSTRACISE);
-            ostracise_player(random_range(10, 25));
+            ostracise_player(random_range(7, 18));
         }
     } },
     { SPELL_DOOMSAYING, {

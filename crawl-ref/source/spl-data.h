@@ -4521,7 +4521,7 @@ static const struct spell_desc spelldata[] =
     spflag::monster | spflag::target,
     7,
     200,
-    1, 1,
+    3, 3,
     0,
     TILEG_OSTRACISE,
 },
