@@ -1193,7 +1193,7 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @graffiti author name@ is [abandoning|converting away from|converting to] @random_god@
 
-@graffiti author name@ is secretly an atheist
+@graffiti author name@ is secretly [|not ]an atheist
 
 # These next four can produce orcs who worship Zin or non-orcs who
 # worship Beogh, but that's why you shouldn't believe everything you
