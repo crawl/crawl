@@ -1162,16 +1162,18 @@ speculating about the powers of the Orb of Zot
 
 on how the Orb of Zot will [save|destroy] everyone and everything
 
-on how everyone is mistaken and the Orb of Zot is really the Cube of Zot
+on how everyone is mistaken and the Orb of Zot is really the [Cube|Pyramid] of Zot
 
 telling of a secret passageway straight from here to the Orb of Zot
 
 counting down the days until the world ends
 
-claiming to know the meaning of life
+claiming to know the meaning of [life|unlife]
 
 # A reference to ploggifying in make_name().
 alluding to the "Plog" Conspiracy and why it hides that word everywhere
+
+repeating the legend of the lost prototype exo-suit that let a coglin wield three weapons at once
 %%%%
 graffiti_short_saying
 
