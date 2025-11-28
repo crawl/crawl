@@ -95,7 +95,7 @@ at Necromancy, but learn other skills very slowly. They cannot drink potions.
 %%%%
 Naga
 
-Nagas are hybrids; human from the waist up, with a snake-like tail instead of
+Nagas are hybrids: human from the waist up, with a snake-like tail instead of
 legs. They move very slowly but are naturally resilient.
 %%%%
 Octopode
