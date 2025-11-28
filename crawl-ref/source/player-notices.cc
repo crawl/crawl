@@ -55,6 +55,10 @@ static bool _try_seen_interrupt(monster& mons, seen_context_type sc)
 
 static bool _check_monster_alert(const monster& mon)
 {
+    // Beogh-converted orcs may have left the floor on the turn they were encountered.
+    if (!mon.alive())
+        return false;
+
     if (Options.monster_alert[mon.type]
         || Options.monster_alert_uniques && mons_is_unique(mon.type)
         || Options.monster_alert_min_threat < MTHRT_UNDEF
