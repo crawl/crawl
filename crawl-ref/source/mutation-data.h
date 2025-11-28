@@ -2585,7 +2585,11 @@ static const mutation_def mut_data[] =
 
 // Dummy entry for removed mutations.
 // XXX: Must be last!
-{ MUT_REMOVED_MUTATION, 0, 0, mutflag::good, "Removed Mutation" },
+{ MUT_REMOVED_MUTATION, 0, 0, mutflag::good, "Removed Mutation",
+  {"Removed mutation", "Removed mutation", "Removed mutation"},
+  {"", "", ""},
+  {"", "", ""},
+},
 
 };
 
