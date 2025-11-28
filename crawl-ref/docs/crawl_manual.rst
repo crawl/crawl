@@ -1597,7 +1597,6 @@ Gargoyles (Gr)
   earth-based conjurers.
 
 Mountain Dwarves (MD)
-
   Mountain Dwarves are stout and hardy folk, adept at fighting with axes and
   blugeoning weapons, though lacking the dexterity to excel at other forms of
   combat. Their reserves of magic are somewhat poor, though they still make
