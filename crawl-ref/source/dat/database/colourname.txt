@@ -1047,6 +1047,8 @@ of a group of [rich people|Gozag worshippers] discussing how to make more money
 
 of a group of [berserkers|Trog worshippers] practising barely-restrained combat
 
+of a group of Okawaru worshippers practising solo combat
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1102,6 +1104,8 @@ extolling Yredelemnul and all things unholy
 commending Gozag and how enough gold can buy anything
 
 revering Trog and how blood rage can get rid of anything in your way
+
+adoring Okawaru and how the god is the only ally you need as a warrior
 %%%%
 graffiti_non-orc_religion
 
