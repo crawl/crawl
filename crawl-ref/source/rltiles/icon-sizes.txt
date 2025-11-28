@@ -51,6 +51,7 @@ fire_vuln: 8
 resistance: 8
 ghostly: 8
 malmutated: 8
+magnetised: 8
 
 recall: 9
 teleporting: 9
