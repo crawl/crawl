@@ -550,7 +550,7 @@ const vector<GameOption*> game_options::build_options_list()
                         set_menu_sort(frag);
             }),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
-        new BoolGameOption(SIMPLE_NAME(show_paged_inventory), false),
+        new BoolGameOption(SIMPLE_NAME(show_paged_inventory), true),
         new MultipleChoiceGameOption<slot_select_mode>(
             SIMPLE_NAME(assign_item_slot),
             SS_FORWARD,

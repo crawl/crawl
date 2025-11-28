@@ -1568,7 +1568,7 @@ single_column_item_menus = true
         This option is only available on local tiles and console; on WebTiles
         all menus are single-column regardless of the value of this option.
 
-show_paged_inventory = false
+show_paged_inventory = true
         If set to true, the 'i' menu will divide the player's items into
         pages (gear, potions, scrolls, and evocable items) in the same way
         that the 'd'rop menu does.
