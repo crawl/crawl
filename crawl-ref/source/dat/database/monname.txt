@@ -1838,6 +1838,8 @@ Garc the Great
 
 # A reference to ploggifying in make_name().
 Plog the Peerless
+
+Dead Wendell
 %%%%
 # Same as @graffiti author name@ below, but without orc names.
 non-orc graffiti author name
