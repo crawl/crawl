@@ -1049,6 +1049,12 @@ of a group of [berserkers|Trog worshippers] practising barely-restrained combat
 
 of a group of Okawaru worshippers practising solo combat
 
+of a group of [spellcasters|Sif Muna worshippers] practising [eclectic|esoteric] magic
+
+of a group of [spellcasters|Vehumet worshippers] practising [cataclysmic|destructive] magic
+
+of a group of [necromancers|Kikubaaqudgha worshippers] practising [necromancy|bringing things to unlife]
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1106,6 +1112,12 @@ commending Gozag and how enough gold can buy anything
 praising Trog and how blood rage can get rid of anything in your way
 
 adoring Okawaru and how the god is the only ally you need as a warrior
+
+applauding Sif Muna and how all magic is accessible with enough effort
+
+venerating Vehumet and how weaponised magic is the key to victory
+
+fawning over Kikubaaqudgha and how necromancy turns all flesh and blood into useful tools
 %%%%
 graffiti_non-orc_religion
 
