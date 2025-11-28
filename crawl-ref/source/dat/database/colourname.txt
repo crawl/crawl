@@ -993,6 +993,9 @@ graffiti_fight
 of an argument between @graffiti author name@ and @graffiti author name@
 
 of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
+
+w:2
+of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
 %%%%
 graffiti_image
 
@@ -1040,6 +1043,8 @@ of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable G
 
 of a group of [rich people|Gozag worshippers] discussing how to make more money
 
+of a group of [berserkers|Trog worshippers] practising barely-restrained combat
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1059,6 +1064,8 @@ delighting in Nemelex Xobeh and whatever the next card deck brings
 extolling Yredelemnul and all things unholy
 
 commending Gozag and how enough gold can buy anything
+
+revering Trog and how blood rage can get rid of anything in your way
 %%%%
 graffiti_non-orc_religion
 
