@@ -149,7 +149,7 @@ Pellinorc
 Urtork
 %%%%
 # Other
-# (54 at last count)
+# (60 at last count)
 _other_orcish_name_
 
 Agrik
@@ -227,6 +227,8 @@ Morguth
 Morun
 
 Murdo
+
+Myglar
 
 Norbak
 
