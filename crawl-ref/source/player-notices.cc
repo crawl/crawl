@@ -412,7 +412,7 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
     }
     else if (sc == SC_ORBRUN)
     {
-        out << _describe_monsters_from_species(species).c_str() << "appear";
+        out << _describe_monsters_from_species(species).c_str() << " appear";
         if (monsters.size() == 1)
             out << "s";
         out << " in pursuit of the Orb! ";
