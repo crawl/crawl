@@ -1175,7 +1175,7 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ [curses|loves|praises][| @graffiti_relative@ of] @graffiti author name@
+@graffiti author name@ [curses|loves|insults|praises][| @graffiti_relative@ of] @graffiti author name@
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
 
