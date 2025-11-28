@@ -2624,25 +2624,6 @@ public:
     }
 };
 
-class targeter_silence : public targeter_maybe_radius
-{
-    targeter_radius inner_rad;
-public:
-    targeter_silence(int r1, int r2)
-        : targeter_maybe_radius(&you, LOS_DEFAULT, r2),
-          inner_rad(&you, LOS_DEFAULT, r1)
-    {
-    }
-
-    aff_type is_affected(coord_def loc) override
-    {
-        if (inner_rad.is_affected(loc) == AFF_YES)
-            return AFF_YES;
-        else
-            return targeter_maybe_radius::is_affected(loc);
-    }
-};
-
 class targeter_poison_scroll : public targeter_radius
 {
 public:
@@ -2688,16 +2669,18 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
     {
     case SCR_FEAR:
         return find_spell_targeter(SPELL_CAUSE_FEAR, 1000, LOS_RADIUS);
-    case SCR_BUTTERFLIES: // close enough...
+    // Indicate the knockback radius differently than the butterfly radius.
+    case SCR_BUTTERFLIES:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 5, 0, 0, 2);
     case SCR_SUMMONING:
         // TODO: shadow creatures targeter doesn't handle band placement very
-        // well, and this is more obvious with the scroll
-        return find_spell_targeter(SPELL_SHADOW_CREATURES, 1000, LOS_RADIUS);
+        //       well, so this is an overestimate.
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 5, 0, 1);
     case SCR_VULNERABILITY:
     case SCR_IMMOLATION:
         return make_unique<targeter_finite_will>();
     case SCR_SILENCE:
-        return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+        return find_spell_targeter(SPELL_SILENCE, 30, LOS_RADIUS);
     case SCR_TORMENT:
         return make_unique<targeter_torment>();
     case SCR_POISON:
