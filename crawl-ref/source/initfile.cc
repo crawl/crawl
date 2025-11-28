@@ -1657,6 +1657,10 @@ void game_options::reset_options()
           ABIL_WATERY_GRAVE };
     always_use_static_ability_targeters = false;
 
+    force_scroll_targeter =
+        { SCR_FEAR, SCR_SILENCE, SCR_VULNERABILITY, SCR_IMMOLATION, SCR_TORMENT };
+    always_use_static_scroll_targeters = false;
+
 #ifdef DGAMELAUNCH
     // not settable via rc on DGL, so no Options object to initialize them
     restart_after_game = false;
@@ -1926,6 +1930,48 @@ void game_options::remove_force_ability_targeter(const string &s)
         report_error("Unknown ability '%s'\n", s.c_str());
     else
         force_ability_targeter.erase(abil);
+}
+
+void game_options::add_force_scroll_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_scroll_targeters = true;
+        return;
+    }
+
+    string name;
+    if (starts_with(s, "scroll of"))
+        name = s;
+    else
+        name = "scroll of " + s;
+    item_kind kind = item_kind_by_name(name);
+
+    if (kind.base_type == OBJ_SCROLLS)
+        force_scroll_targeter.insert(kind.sub_type);
+    else
+        report_error("Unknown scroll '%s'\n", s.c_str());
+}
+
+void game_options::remove_force_scroll_targeter(const string &s)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_scroll_targeters = false;
+        return;
+    }
+
+    string name;
+    if (starts_with(s, "scroll of"))
+        name = s;
+    else
+        name = "scroll of " + s;
+    item_kind kind = item_kind_by_name(name);
+
+    if (kind.base_type == OBJ_SCROLLS)
+        force_scroll_targeter.erase(kind.sub_type);
+    else
+        report_error("Unknown scroll '%s'\n", s.c_str());
 }
 
 static monster_type _mons_class_by_string(const string &name)
@@ -4223,6 +4269,21 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         split_parse(state, ",",
             &game_options::add_force_ability_targeter,
             &game_options::remove_force_ability_targeter,
+            false);
+        return true;
+    }
+    else if (key == "force_scroll_targeter")
+    {
+        if (state.plain())
+        {
+            always_use_static_ability_targeters = false;
+            force_scroll_targeter.clear();
+        }
+
+        state.ignore_prepend();
+        split_parse(state, ",",
+            &game_options::add_force_scroll_targeter,
+            &game_options::remove_force_scroll_targeter,
             false);
         return true;
     }

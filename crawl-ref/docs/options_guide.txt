@@ -56,10 +56,11 @@ The contents of this text are:
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
-                force_ability_targeter, allow_self_target, ability_menu,
-                spell_menu, easy_floor_use, sort_menus, spell_slot, gear_slot,
-                consumable_shortcut, ability_slot, autofight_stop,
-                autofight_warning, autofight_fires, autofight_nomove_fires,
+                force_ability_targeter, force_scroll_targeter,
+                allow_self_target, ability_menu, spell_menu, easy_floor_use,
+                sort_menus, spell_slot, gear_slot, consumable_shortcut,
+                ability_slot, autofight_stop, autofight_warning,
+                autofight_fires, autofight_nomove_fires,
                 autofight_fire_stop, autofight_caught, autofight_wait,
                 autofight_prompt_range, automagic_enable, automagic_slot,
                 automagic_fight, automagic_stop, fail_severity_to_confirm,
@@ -1210,6 +1211,13 @@ force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
         with an unusual targeting pattern. If "all" appears in the options list,
         the rest of the list (however constructed) will be ignored, and
         targeters will be shown with every ability.
+
+force_scroll_targeter = fear, silence, vulnerability, immolation, torment
+        Force showing a targeter for the listed scrolls when reading them
+        normally (since these are unaimed, this is generally to show success
+        chance or what targets might be affected). If "all" appears in the
+        options list, the rest of the list (however constructed) will be
+        ignored, and targeters will be shown for every scroll that has one.
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Stone Arrow

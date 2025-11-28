@@ -2810,6 +2810,12 @@ bool scroll_hostile_check(scroll_type which_scroll)
     return false;
 }
 
+static bool _scroll_has_forced_targeter(scroll_type scroll)
+{
+    return Options.always_use_static_scroll_targeters
+            || Options.force_scroll_targeter.count(scroll) > 0;
+}
+
 /**
  * Read the provided scroll.
  *
@@ -2847,7 +2853,9 @@ bool read(item_def* scroll, dist *target)
 
         const bool bad_item = (is_dangerous_item(*scroll, true)
                                     || is_bad_item(*scroll))
-                            && Options.bad_item_prompt;
+                            && Options.bad_item_prompt
+                            // Don't double-prompt if we're already asking for confirmation.
+                            && !_scroll_has_forced_targeter(static_cast<scroll_type>(scroll->sub_type));
 
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)
@@ -2913,13 +2921,19 @@ bool read(item_def* scroll, dist *target)
 
     if (alreadyknown
         && scroll_has_targeter(which_scroll)
-        && which_scroll != SCR_BLINKING // blinking calls its own targeter
-        && !_scroll_targeting_check(which_scroll, target))
+        && which_scroll != SCR_BLINKING) // blinking calls its own targeter
     {
-        // a targeter can't be used for unid'd or uncancellable scrolls, so
-        // we can skip the rest of the function
-        you.turn_is_over = false;
-        return false;
+        dist force_target;
+        if (alreadyknown && !target && _scroll_has_forced_targeter(which_scroll))
+            target = &force_target;
+
+        if (!_scroll_targeting_check(which_scroll, target))
+        {
+            // a targeter can't be used for unid'd or uncancellable scrolls, so
+            // we can skip the rest of the function
+            you.turn_is_over = false;
+            return false;
+        }
     }
 
     const bool is_loud = you.has_mutation(MUT_BOOMING_VOICE)

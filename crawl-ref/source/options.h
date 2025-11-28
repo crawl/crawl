@@ -538,6 +538,8 @@ public:
                                                    // static spell targeters
     bool        always_use_static_ability_targeters; // whether to always use
                                                      // static ability targeters
+    bool        always_use_static_scroll_targeters; // whether to always use
+                                                    // static targets for scrolls
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
@@ -604,6 +606,8 @@ public:
                                              // targeter for
     unordered_set<int> force_ability_targeter; // ability types to always use a
                                                // targeter for
+    unordered_set<int> force_scroll_targeter; // scroll types to always use a
+                                              // targeter for
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
@@ -1016,6 +1020,8 @@ private:
     void remove_force_spell_targeter(const string &s);
     void add_force_ability_targeter(const string &s, bool prepend);
     void remove_force_ability_targeter(const string &s);
+    void add_force_scroll_targeter(const string &s, bool prepend);
+    void remove_force_scroll_targeter(const string &s);
 
     void update_consumable_shortcuts();
     void process_unusual_items();
