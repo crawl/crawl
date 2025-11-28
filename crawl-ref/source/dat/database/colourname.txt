@@ -1172,8 +1172,6 @@ claiming to know the meaning of [life|unlife]
 
 # A reference to ploggifying in make_name().
 alluding to the "Plog" Conspiracy and why it hides that word everywhere
-
-repeating the legend of the lost prototype exo-suit that let a coglin wield three weapons at once
 %%%%
 graffiti_short_saying
 
@@ -1214,7 +1212,11 @@ graffiti_species
 
 bemoaning how bizarre coglin engineering is to non-coglins
 
+repeating the legend of the lost prototype exo-suit that let a coglin wield three weapons at once
+
 wondering what led the barachim to rebel against the gods
+
+wondering if boneless species can ever spawn revenants
 %%%%
 graffiti_unique_complaint
 
