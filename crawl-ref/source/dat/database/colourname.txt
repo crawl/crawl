@@ -1053,6 +1053,40 @@ graffiti_any_meeting
 
 @graffiti_religious_meeting@
 %%%%
+graffiti_relative
+
+all associates
+
+the bloodline
+
+the child
+
+the children
+
+the entire species
+
+the family
+
+the friend
+
+the friends
+
+the lover
+
+the lovers
+
+the mate
+
+the mates
+
+the parent
+
+the parents
+
+the spouse
+
+the spouses
+%%%%
 graffiti_religion
 
 [glorifying|blaspheming] the gods
@@ -1141,7 +1175,7 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ [curses|loves|praises] @graffiti author name@
+@graffiti author name@ [curses|loves|praises][| @graffiti_relative@ of] @graffiti author name@
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
 
