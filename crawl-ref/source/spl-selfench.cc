@@ -211,12 +211,12 @@ void do_fugue_wail(const coord_def pos)
 
 int silence_min_range(int pow)
 {
-    return shrinking_aoe_range((20 + pow/5) * BASELINE_DELAY);
+    return shrinking_aoe_range(min(100, (20 + pow/5)) * BASELINE_DELAY);
 }
 
 int silence_max_range(int pow)
 {
-    return shrinking_aoe_range((19 + pow/5 + pow/2) * BASELINE_DELAY);
+    return shrinking_aoe_range(min(100, (20 + pow/5 + pow/2)) * BASELINE_DELAY);
 }
 
 spret cast_silence(int pow, bool fail)
