@@ -997,6 +997,13 @@ of a three-way argument between @graffiti author name@, @graffiti author name@, 
 w:2
 of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
 %%%%
+graffiti_hailed_god
+
+Xom
+
+w:2
+an unknown god
+%%%%
 graffiti_happened_reason
 
 an accident
@@ -1319,8 +1326,8 @@ graffiti of @any_colour_pattern@
 graffiti of @writing_type@
 
 # This is not in graffiti_religion because it's structured too differently.
-# Assume one can hail Xom without necessarily worshipping Xom.
-graffiti of @writing_type@ that is unreadable except for bits hailing Xom[| and a signature by @graffiti author name@]
+# Assume one can hail a god without necessarily worshipping a god.
+graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_hailed_god@[| and a signature by @graffiti author name@]
 
 @graffiti_type@[| signed by @graffiti author name@]
 
