@@ -3012,7 +3012,8 @@ bool monster::pacified() const
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
     return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && !berserk_or_frenzied();
+           && !berserk_or_frenzied()
+           && !clarity();
 }
 
 /**
