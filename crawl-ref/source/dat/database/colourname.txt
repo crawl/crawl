@@ -1269,6 +1269,8 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 what happened to @graffiti author name@ was @graffiti_happened_reason@
 
+@graffiti author name@ has been replaced by [a duplicate|a duplicate indistinguishable from the original|an imposter|a shapeshifter]
+
 @graffiti author name@ is [abandoning|converting away from|converting to] @random_god@
 
 @graffiti author name@ is secretly [|not ]an atheist
