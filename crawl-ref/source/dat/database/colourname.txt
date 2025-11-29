@@ -1168,6 +1168,10 @@ graffiti_religion
 
 [glorifying|blaspheming] the gods
 
+glorifying @random_god@ and blaspheming @random_god@
+
+glorifying an unknown god
+
 revering Xom and the randomness of everything
 
 delighting in Nemelex Xobeh and whatever the next card deck brings
