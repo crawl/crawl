@@ -439,7 +439,8 @@ static bool _mons_can_follow_player_from(const monster &mons,
         || mons.is_stationary()
         || mons.is_constricted()
         || mons.has_ench(ENCH_BOUND)
-        || mons.has_ench(ENCH_VEXED))
+        || mons.has_ench(ENCH_VEXED)
+        || mons.has_ench(ENCH_DAZED))
     {
         return false;
     }
