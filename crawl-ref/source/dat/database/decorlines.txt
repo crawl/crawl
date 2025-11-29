@@ -172,11 +172,11 @@ Hepliaklqana fountain_blue
 
 The fountain's ripples stir distant, transient memories.
 %%%%
-Hepliakqana dry_fountain
+Hepliaklqana dry_fountain
 
 You swear to never forget your legacy as this fountain's builders were forgotten.
 %%%%
-Hepliakqana peaceful fountain_blood
+Hepliaklqana peaceful fountain_blood
 
 You observe a moment of silence for whomever's blood flows through this fountain.
 %%%%
