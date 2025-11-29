@@ -20,6 +20,8 @@ stop += [Ss]omething.* misses you.
 stop += from outside your range of vision
 stop += emerges from the mists of memory
 
+stop += You feel space start to destabilise
+
 # Traps and doors
 stop += A malevolent force
 stop += A sentinel's mark forms upon you\.
