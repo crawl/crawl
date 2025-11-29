@@ -1310,6 +1310,22 @@ repeating the legend of the lost prototype exo-suit that let a coglin wield thre
 wondering what led the barachim to rebel against the gods
 
 wondering if boneless species can ever spawn revenants
+
+wondering if Trog stops dead berserkers from spawning revenants
+
+claiming to know where goblins originally came from
+
+claiming to know the true origin of kobolds
+
+detailing the persecution of the cave orcs' ancestors
+
+claiming that some of the gods secretly serve the oni instead of the other way around
+
+# References to removed species mentioned elsewhere.
+
+claiming that some of the hill dwarves still live
+
+wondering what really happened to the last of the sludge elves
 %%%%
 graffiti_unique_complaint
 
