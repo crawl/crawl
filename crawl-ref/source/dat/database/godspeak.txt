@@ -300,6 +300,8 @@ Xom feature stone arch
 @The_feature@ briefly shows a lifeless wasteland on the other side.
 
 @The_feature@ briefly shows strange @glowing_adj@ figures on the other side.
+
+@The_feature@ briefly shows a wall covered in @coloured_graffiti@ on the other side.
 %%%%
 Xom underfoot general
 
