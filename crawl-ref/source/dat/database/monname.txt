@@ -1833,6 +1833,8 @@ Durwent the kobold
 
 Zlaz the goblin
 
+# Funny option for rumours that "Woog the god" worships another god or
+# is secretly an atheist.
 Woog the god
 
 Fneeb the oni
@@ -1843,6 +1845,8 @@ Garc the Great
 # A reference to ploggifying in make_name().
 Plog the Peerless
 
+# Funny option for rumours that "Dead [deliberately not Undead] Wendell"
+# deserves life, death, or undeath; or worships the Shining One.
 Dead Wendell
 %%%%
 # Same as @graffiti author name@ below, but without orc names.
