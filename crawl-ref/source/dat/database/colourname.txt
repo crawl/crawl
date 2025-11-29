@@ -1055,6 +1055,8 @@ of a group of [spellcasters|Vehumet worshippers] practising [cataclysmic|destruc
 
 of a group of [necromancers|Kikubaaqudgha worshippers] practising [necromancy|bringing things to unlife]
 
+of a group of Cheibriados worshippers discussing [perfection|the nature of time] for who knows how long
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1118,6 +1120,8 @@ applauding Sif Muna and how all magic is accessible with enough effort
 venerating Vehumet and how weaponised magic is the key to victory
 
 fawning over Kikubaaqudgha and how necromancy turns all flesh and blood into useful tools
+
+giving kudos to Cheibriados and how the slow and steady can conquer all
 %%%%
 graffiti_non-orc_religion
 
