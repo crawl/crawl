@@ -1906,6 +1906,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_FORMLESS_JELLYFISH, { { 0, 0, []() {
         return player_in_branch(BRANCH_SLIME); }},
                                   {{ BAND_JELLYFISH, {1, 3} }}}},
+    { MONS_COLOSSAL_AMOEBA, { {0, 0, [](){
+        return player_in_branch(BRANCH_SLIME)
+               && x_chance_in_y(you.depth + 2, you.depth + 11); }},
+                                   {{ BAND_AMOEBA_ORGANS, {1, 2} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_CHONCHON,        { {2}, {{ BAND_CHONCHON, {2, 3} }}}},
@@ -2403,6 +2407,9 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_VERY_UGLY_THING, 1}},
 
                                  {{MONS_VERY_UGLY_THING, 1}}}},
+
+    { BAND_AMOEBA_ORGANS,       {{{MONS_GLASS_EYE, 2},
+                                  {MONS_GLOWING_ORANGE_BRAIN, 1}}}},
 
     { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
                                   {MONS_SEARING_WRETCH, 3}},

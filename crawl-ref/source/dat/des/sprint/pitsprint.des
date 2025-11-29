@@ -82,8 +82,8 @@ function base_monster_setup(e)
                deep elf elementalist / shadow dragon /\
                deep elf blademaster w:5 / deep elf master archer w:5 /\
                spriggan air mage / spriggan berserker /\
-               spriggan defender / chonchon band / glass eye /\
-               walking divine tome / walking earthen tome /\
+               spriggan defender / chonchon band / colossal amoeba /\
+               glass eye / walking divine tome / walking earthen tome /\
                nagaraja / salamander tyrant / guardian serpent /\
                shock serpent w:5 / thorn hunter / fenstrider witch / bunyip /\
                will-o-the-wisp w:5 / death drake w:5 /\
@@ -175,7 +175,7 @@ function base_monster_setup(e)
                hell sentinel / executioner /\
                demonspawn warmonger band w:5 / demonspawn corrupter band w:5 /\
                demonspawn blood saint band w:5 / demonspawn soul scholar band w:5")
-  e.kmons("U = place:Slime:$ / slime creature band /\
+  e.kmons("U = place:Slime:$ / titanic slime creature /\
                rockslime / azure jelly / acid blob /\
                glass eye w:3 / void ooze w:3 / eye of devastation /\
                golden eye w:3 / shining eye w:3")

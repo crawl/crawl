@@ -316,6 +316,8 @@ d..fwwwfww.b
     aaaa..fw
 ENDMAP
 
+
+
 NAME: nicolae_slime_jelly_donut
 DEPTH: Slime, !Slime:$
 ORIENT: float
@@ -375,13 +377,15 @@ c..........b
                   aaaaa
 ENDMAP
 
-NAME: nicolae_slime_welcoming_committee
-TAGS: no_monster_gen no_item_gen no_trap_gen
-DEPTH: Slime:2-, !Slime:$
-SUBST: X = x., { = {[(
-KMONS: 1 : jelly w:20 / endoplasm / slime creature w:30 / \
-   acid blob w:5 / rockslime w:5 / void ooze w:5 /\
-   azure jelly w:5
+NAME:   nicolae_slime_welcoming_committee
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Slime:2-, !Slime:$
+SUBST:  X = x., { = {[(, 1 : 1:70 2
+KMONS:  1 : jelly w:20 / slime creature w:30 / acid blob w:5 / \
+            rockslime w:5 / void ooze w:5 / azure jelly w:5
+KMONS:  2 = endoplasm
+KMONS:  3 = colossal amoeba
+NSUBST: 2 = 2:3 / *:2
 MAP
       xxx
    xxxxxxxx
@@ -396,13 +400,13 @@ xxxXX.....1.@
       xxx
 ENDMAP
 
-NAME: nicolae_slime_phagocytosis
-DEPTH: Slime, !Slime:$
-TAGS: transparent
-SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
-NSUBST: W = 4:1 / *:W
-KMONS: 1 = slime creature
-KFEAT: 1 = W
+NAME:   nicolae_slime_phagocytosis
+TAGS:   transparent
+DEPTH:  Slime, !Slime:$
+KMONS:  1 = colossal amoeba
+KFEAT:  1 = W
+SUBST:  a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
+NSUBST: W = 3:1 / *:W
 CLEAR: _
 MAP
        '.......'

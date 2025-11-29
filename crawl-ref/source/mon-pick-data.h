@@ -460,9 +460,12 @@ static const vector<pop_entry> population[] =
 },
 
 { // Slime Pits
-  {  1,  5, 2000, FLAT, MONS_SLIME_CREATURE },
+  {  1,  5, 1600, FLAT, MONS_SLIME_CREATURE },
+  { -2,  5,  400, FALL, MONS_SLIME_CREATURE },
+  {  1,  5,   65, FLAT, MONS_COLOSSAL_AMOEBA },
+  { -2,  5,  350, RISE, MONS_COLOSSAL_AMOEBA },
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
-  {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
+  {  1,  5,  500, FLAT, MONS_AZURE_JELLY },
   {  1,  5,  515, FLAT, MONS_ROCKSLIME },
   {  1,  5,  515, FLAT, MONS_VOID_OOZE },
   {  1,  5,  515, FLAT, MONS_SHINING_EYE },

@@ -145,6 +145,7 @@ enum band_type
     BAND_BES_KEMWAR,
     BAND_ROCK_FISH,
     BAND_UNDERTAKERS,
+    BAND_AMOEBA_ORGANS,
     NUM_BANDS                   // always last
 };
 

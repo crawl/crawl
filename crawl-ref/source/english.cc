@@ -64,7 +64,8 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(lowname, "larva") || ends_with(lowname, "antenna")
-             || ends_with(lowname, "hypha") || ends_with(lowname, "noma"))
+             || ends_with(lowname, "hypha") || ends_with(lowname, "noma")
+             || ends_with(lowname, "amoeba"))
     {
         return name + "e";
     }

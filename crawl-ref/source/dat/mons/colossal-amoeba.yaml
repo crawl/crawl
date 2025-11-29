@@ -1,0 +1,19 @@
+name: "colossal amoeba"
+glyph: {char: "J", colour: red}
+flags: [eat_doors, see_invis, unblindable, fast_regen, amorphous, no_skeleton]
+resists: {poison: 1}
+exp: 1464
+genus: jelly
+will: 100
+attacks:
+ - {type: hit, flavour: swarm, damage: 43}
+ - {type: engulf, flavour: drag, damage: 23}
+hd: 17
+hp_10x: 1665
+ac: 3
+ev: 9
+intelligence: brainless
+habitat: amphibious
+speed: 13
+size: giant
+shape: blob

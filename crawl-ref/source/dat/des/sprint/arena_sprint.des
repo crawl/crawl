@@ -560,7 +560,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "broodmother w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
-                "place:Slime:$ / w:30 acid blob / azure jelly / glass eye /\
+                "place:Slime:$ / w:30 acid blob / colossal amoeba / glass eye /\
                     void ooze",
                 "dancing weapon ; bardiche good_item",
                 "chonchon w:2 / spriggan defender / spriggan air mage /\

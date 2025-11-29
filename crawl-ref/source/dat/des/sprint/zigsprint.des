@@ -443,7 +443,7 @@ function choose_mset_4(e)
 local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:5 / slime creature w:30 /\
+    e.kmons("1 = jelly w:5 / slime creature w:25 / colossal amoeba w:5 /\
                glass eye w:2 / golden eye w:4 / void ooze w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                rockslime / azure jelly / great orb of eyes w:4 /\
