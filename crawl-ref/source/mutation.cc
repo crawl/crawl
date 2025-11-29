@@ -1712,6 +1712,9 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
         return false;
 
+    if (mut == MUT_TIME_WARPED_BLOOD && you_worship(GOD_CHEIBRIADOS))
+        return false;
+
     if (mut == MUT_NIMBLE_SWIMMER && !feat_is_water(env.grid(you.pos())))
         return false;
 
