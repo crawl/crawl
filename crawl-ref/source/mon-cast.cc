@@ -6140,7 +6140,7 @@ static coord_def _mons_fragment_target(const monster &mon)
     {
         bool temp;
 
-        if (!cell_see_cell(mons->pos(), *di, LOS_SOLID))
+        if (!cell_see_cell(mons->pos(), *di, LOS_NO_TRANS))
             continue;
 
         bolt beam;
