@@ -608,6 +608,7 @@ public:
                                                // targeter for
     unordered_set<int> force_scroll_targeter; // scroll types to always use a
                                               // targeter for
+    bool        show_invis_targeter;  // Whether to show a targeter for going invisible
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 

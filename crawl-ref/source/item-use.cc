@@ -3247,6 +3247,72 @@ bool read(item_def* scroll, dist *target)
     return true;
 }
 
+class targeter_invisibility : public targeter_multimonster
+{
+public:
+    targeter_invisibility();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+targeter_invisibility::targeter_invisibility()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_invisibility::affects_monster(const monster_info& mon)
+{
+    return !mon.is(MB_FIREWOOD) && !mon.can_see_invisible();
+}
+
+static vector<string> _desc_see_invis(const monster_info& mi)
+{
+    vector<string> r;
+    if (mi.can_see_invisible())
+        r.push_back("can see invisible");
+    return r;
+}
+
+// Show a targeter indicating what monsters would lose sight of the player if
+// they went invisible right now, and return false if the player wishes to cancel.
+bool invisibility_target_check()
+{
+    bool found_any = false;
+    bool found_susceptible = false;
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mi->is_firewood())
+        {
+            found_any = true;
+            if (!mi->can_see_invisible())
+            {
+                found_susceptible = true;
+                break;
+            }
+        }
+    }
+
+    // Allow the player to go invisible outside of LoS of enemies with no prompt.
+    // However, going invisible in LoS of only enemies with sInv is more likely
+    // to be a mistake.
+    if (!found_any)
+        return true;
+    if (!found_susceptible)
+        return yesno("You can't see any enemy this would conceal you from. Use anyway?", true, 'n');
+
+    direction_chooser_args args;
+    unique_ptr<targeter> hitfunc = make_unique<targeter_invisibility>();
+    args.get_desc_func = _desc_see_invis;
+    args.mode = TARG_ANY;
+    args.self = confirm_prompt_type::cancel;
+    args.hitfunc = hitfunc.get();
+    scroll_targeting_behaviour beh;
+    args.behaviour = &beh;
+
+    dist target;
+    direction(target, args);
+    return target.isValid && !target.isCancel;
+}
+
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
 {
     ASSERT(talisman.base_type == OBJ_TALISMANS);

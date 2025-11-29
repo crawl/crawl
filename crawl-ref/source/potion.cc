@@ -519,6 +519,12 @@ public:
             canned_msg(MSG_OK);
             return false;
         }
+        if (Options.show_invis_targeter && !invisibility_target_check())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
         return true;
     }
 

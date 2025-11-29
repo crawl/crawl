@@ -26,6 +26,7 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper,
 
 bool oni_drunken_swing();
 bool drink(item_def* potion = nullptr);
+bool invisibility_target_check();
 
 bool god_hates_brand(const int brand);
 
