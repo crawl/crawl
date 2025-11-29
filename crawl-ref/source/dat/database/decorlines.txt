@@ -111,8 +111,16 @@ The fountain's eyes stare blankly through you.
 The fountain's eyes stare idly in all directions.
 
 The fountain's eyes stare into nothing.
+%%%%
+default peaceful dry_fountain
 
-# nothing for default dry_fountain, they don't exactly do anything inherently.
+w:1
+You see @coloured_graffiti@ on the fountain.
+%%%%
+default dry_fountain
+
+w:1
+You see @coloured_graffiti@ on the fountain.
 %%%%
 Ashenzari peaceful fountain_blue
 
