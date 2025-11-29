@@ -1016,7 +1016,7 @@ a travesty
 
 a warning to others
 
-against the will of the gods
+[|against ]the will of the gods
 
 completely random
 
@@ -1036,8 +1036,6 @@ part of a larger plot
 the work of the "Plog" Conspiracy
 
 self-inflicted
-
-the will of the gods
 
 uncalled for
 
