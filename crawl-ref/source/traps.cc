@@ -1021,6 +1021,7 @@ void do_trap_effects()
             mpr("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
+            apply_noises(); // Otherwise the noise from them won't kick in until the end of the turn.
             break;
 
         case TRAP_TELEPORT:
