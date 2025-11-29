@@ -261,6 +261,8 @@ static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
 
 bool ranged_attack::handle_phase_hit()
 {
+    perceived_attack = true;
+
     if (mulch_bonus()
         // XXX: this kind of hijacks the shield block check
         || !is_penetrating_attack(*attacker, weapon, *projectile))
