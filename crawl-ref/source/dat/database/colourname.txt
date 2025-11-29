@@ -1113,7 +1113,7 @@ graffiti_any_meeting
 
 @graffiti_religious_meeting@
 %%%%
-graffiti_relative
+graffiti_relative_or_quality
 
 all associates
 
@@ -1123,6 +1123,8 @@ the child
 
 the children
 
+the dexterity
+
 the entire species
 
 the family
@@ -1130,6 +1132,10 @@ the family
 the friend
 
 the friends
+
+the god
+
+the intellect
 
 the lover
 
@@ -1143,9 +1149,13 @@ the parent
 
 the parents
 
+the personality
+
 the spouse
 
 the spouses
+
+the strength
 %%%%
 graffiti_religion
 
@@ -1245,7 +1255,7 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ [curses|defends|hates|insults|loves|praises][| @graffiti_relative@ of] @graffiti author name@
+@graffiti author name@ [curses|defends|hates|insults|loves|praises][| @graffiti_relative_or_quality@ of] @graffiti author name@
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
 
