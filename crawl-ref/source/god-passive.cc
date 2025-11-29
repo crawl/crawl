@@ -1220,10 +1220,11 @@ static monster* _find_shot_target(coord_def origin, coord_def aim)
 
     while (ray.advance())
     {
-        if (grid_distance(ray.pos(), origin) > LOS_RADIUS)
+        const coord_def pos = ray.pos();
+        if (grid_distance(pos, origin) > LOS_RADIUS || !you.see_cell_no_trans(pos))
             break;
-        else if (monster_at(ray.pos()))
-            return monster_at(ray.pos());
+        else if (monster* mon = monster_at(pos))
+            return mon;
     }
 
     return nullptr;
