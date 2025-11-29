@@ -1042,9 +1042,8 @@ static void _handle_emergency_flight()
 
     if (!is_feat_dangerous(orig_terrain(you.pos()), true, false))
     {
-        mpr("You float gracefully downwards.");
-        land_player();
         you.props.erase(EMERGENCY_FLIGHT_KEY);
+        land_player();
     }
     else
     {
