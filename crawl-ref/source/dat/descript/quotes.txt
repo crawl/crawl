@@ -3579,9 +3579,8 @@ ogre mage
 oklob plant
 
 “Carbonic acid is one of the three materials which together form the starting
- point of vegetable growth; the others being water and
- nitric acid. This acid
- is formed of carbon and oxygen in the proportion of one part of the former to
+ point of vegetable growth; the others being water and nitric acid. This acid is
+ formed of carbon and oxygen in the proportion of one part of the former to
  two of the latter chemically combined. It is a colorless gas, having an acid
  taste and smell; is soluble in water; weighs one-half more than air and can be
  poured from one vessel to another, as a liquid may be; 100 parts of water
