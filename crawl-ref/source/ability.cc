@@ -3629,8 +3629,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         //      monster and one that does both, though at higher invo it stops
         //      being possible to get one wthout rPois, so the warning is only
         //      *almost* correct.
-        if (!player_summon_check({MONS_ORANGE_DEMON, MONS_BLIZZARD_DEMON}))
+        if (!you.has_mutation(MUT_MAKHLEB_MARK_CARNAGE)
+            && !player_summon_check({MONS_ORANGE_DEMON, MONS_BLIZZARD_DEMON}))
+        {
             return spret::abort;
+        }
 
         fail_check();
         makhleb_infernal_servant();
