@@ -3734,7 +3734,7 @@ void monster_cleanup(monster* mons)
         invalidate_agrid();
     }
 
-    if (mons->type == MONS_PLATINUM_PARAGON)
+    if (mons->type == MONS_PLATINUM_PARAGON && mons->was_created_by(you, SPELL_PLATINUM_PARAGON))
         you.duration[DUR_PARAGON_ACTIVE] = 0;
     if (mons->type == MONS_SEISMOSAURUS_EGG)
         for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
