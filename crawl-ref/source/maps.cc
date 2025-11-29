@@ -1330,6 +1330,12 @@ static bool _load_map_index(const string& cache, const string &base,
             return false;
         }
 
+#if TAG_MAJOR_VERSION == 34
+        // Throw out des cache with bytecode generated under Lua 5.1.
+        if (minor < TAG_MINOR_LUA_5_4)
+            return false;
+
+#endif
         lc_global_prelude.read(inf);
         fclose(fp);
 
@@ -1353,11 +1359,11 @@ static bool _load_map_index(const string& cache, const string &base,
     }
 
 #if TAG_MAJOR_VERSION == 34
-    // Throw out indices that could have CHANCE priority entirely.
-    if (minor < TAG_MINOR_NO_PRIORITY)
+    // Throw out des cache with bytecode generated under Lua 5.1.
+    if (minor < TAG_MINOR_LUA_5_4)
         return false;
-#endif
 
+#endif
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
@@ -1387,11 +1393,8 @@ static bool _load_map_cache(const string &filename, const string &cachename)
 
     file_lock deslock(descache_base + ".lk", "rb", false);
 
-    time_t mtime = file_modtime(filename);
-    string file_idx = descache_base + ".idx";
-    string file_dsc = descache_base + ".dsc";
-
     // What's the point in checking these twice (here and in load_ma_index)?
+    time_t mtime = file_modtime(filename);
     if (!_verify_map_index(descache_base, mtime)
         || !_verify_map_full(descache_base, mtime))
     {
