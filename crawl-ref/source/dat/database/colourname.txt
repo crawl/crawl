@@ -997,6 +997,56 @@ of a three-way argument between @graffiti author name@, @graffiti author name@, 
 w:2
 of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
 %%%%
+graffiti_happened_reason
+
+an accident
+
+# Garak, Star Trek: Deep Space Nine
+a coincidence[| but @graffiti author name@ doesn't trust coincidences]
+
+a cover-up
+
+a farce
+
+a frame-up
+
+a mistake
+
+a travesty
+
+a warning to others
+
+against the will of the gods
+
+completely random
+
+deliberate
+
+deserved
+
+necessary
+
+no accident
+
+no mistake
+
+part of a larger plot
+
+# A reference to ploggifying in make_name().
+the work of the "Plog" Conspiracy
+
+self-inflicted
+
+the will of the gods
+
+uncalled for
+
+unthinkable
+
+undeserved
+
+unnecessary
+%%%%
 graffiti_image
 
 of [a goblin|a kobold|a spriggan] with its head poking out of a tunnel
@@ -1208,6 +1258,8 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@
 @graffiti author name@ sells [inferior|superior] wares
 
 @graffiti author name@ steals from @graffiti author name@
+
+what happened to @graffiti author name@ was @graffiti_happened_reason@
 
 @graffiti author name@ is [abandoning|converting away from|converting to] @random_god@
 
