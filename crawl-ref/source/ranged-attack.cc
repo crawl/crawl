@@ -138,8 +138,6 @@ bool ranged_attack::attack()
     if (!defender->pos().origin())
         handle_noise(defender->pos());
 
-    alert_defender();
-
     if (!defender->alive())
         handle_phase_killed();
 

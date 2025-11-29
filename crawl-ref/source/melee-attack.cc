@@ -1737,8 +1737,6 @@ bool melee_attack::attack()
         noisy_equipment(*weapon);
     }
 
-    alert_defender();
-
     if (!defender->alive())
         handle_phase_killed();
 

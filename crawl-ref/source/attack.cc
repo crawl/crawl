@@ -151,6 +151,7 @@ bool attack::handle_phase_killed()
 bool attack::handle_phase_end()
 {
     maybe_trigger_fugue_wail(defender->pos());
+    alert_defender();
 
     return true;
 }
@@ -449,7 +450,7 @@ void attack::alert_defender()
     if (perceived_attack
         && defender->is_monster()
         && attacker->is_monster()
-        && attacker->alive() && defender->alive()
+        && defender->alive()
         && (defender->as_monster()->foe == MHITNOT
     // Necessary to keep monsters from sometimes being able to injured dazed enemies.
             || defender->as_monster()->has_ench(ENCH_DAZED)
