@@ -275,8 +275,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
             return false;
 
         // Swimmers and water-walkers get deep water.
+        // Note that checking whether your base form can swim is not good enough;
+        // your current form must *also* be able to swim.
         if (grid == DNGN_DEEP_WATER
-            && (player_likes_water(true) || have_passive(passive_t::water_walk)))
+            && ((player_likes_water(true) && you.can_swim())
+                 || have_passive(passive_t::water_walk)))
         {
             return true;
         }
