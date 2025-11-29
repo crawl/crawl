@@ -219,7 +219,7 @@ static void _monster_headsup(const vector<monster*> &monsters,
                                const unordered_set<const monster*> &single,
                                ostringstream& out)
 {
-    bool did_linebreak = false;
+    int listed = 0;
     for (const monster* mon : monsters)
     {
         monster_info mi(mon);
@@ -232,8 +232,12 @@ static void _monster_headsup(const vector<monster*> &monsters,
             continue;
 
         // Put equipment messages on a new line if there's more than one monster.
-        if (!did_linebreak && monsters.size() > 1)
-            out << "\n";
+        if (listed == 0)
+            out << (monsters.size() > 1 ? "\n" : " ");
+        else
+            out << " ";
+
+        ++listed;
 
         string monname;
         if (monsters.size() == 1)
@@ -255,7 +259,7 @@ static void _monster_headsup(const vector<monster*> &monsters,
             out << " ";
         out << get_monster_equipment_desc(mi, monsters.size() > 1 ? DESC_NOTEWORTHY
                                                                   : DESC_NOTEWORTHY_AND_WEAPON,
-                                          DESC_NONE) << ". ";
+                                          DESC_NONE) << ".";
     }
 }
 
@@ -422,7 +426,7 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
         out << " in pursuit of the Orb! ";
     }
     else
-        out << "You encounter " << _describe_monsters_from_species(species) << ". ";
+        out << "You encounter " << _describe_monsters_from_species(species) << ".";
 
     _monster_headsup(monsters, single, out);
 
