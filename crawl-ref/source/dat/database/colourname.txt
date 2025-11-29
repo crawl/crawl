@@ -1120,6 +1120,13 @@ graffiti_any_meeting
 
 @graffiti_religious_meeting@
 %%%%
+graffiti_obscenities
+
+of various obscenities
+
+w:2
+of some very imaginative obscenities you've never seen before
+%%%%
 graffiti_relative_or_quality
 
 all associates
@@ -1374,3 +1381,6 @@ graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_
 @graffiti_type@ advertising a meeting @graffiti_any_meeting@
 
 @graffiti_type@ saying that @graffiti_short_saying@
+
+w:2
+@graffiti_type@ @graffiti_obscenities@
