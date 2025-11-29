@@ -35,6 +35,9 @@ You see @coloured_graffiti@ on the fountain.
 default fountain_blue
 
 The fountain briefly ripples from your approaching presence.
+
+w:1
+You see @coloured_graffiti@ on the fountain.
 %%%%
 default peaceful fountain_sparkling
 
@@ -73,6 +76,9 @@ Your emotions uncomfortably twist.
 default fountain_sparkling
 
 The sparkling fountain shimmers a faint @any_colour@.
+
+w:1
+You see @coloured_graffiti@ on the fountain.
 %%%%
 default fountain_blood
 
