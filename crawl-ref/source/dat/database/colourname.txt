@@ -1131,6 +1131,9 @@ of a group of monks practising martial [attacks|movements]
 
 # Non-religious version of Elyvilon below.
 of a group of potion makers practising healing others
+
+# Non-religious version of Ru below.
+of a group of ascetics despising their bodies and discussing sacrifices
 %%%%
 graffiti_religious_meeting
 
@@ -1173,6 +1176,8 @@ of a group of Qazlal worshippers changing the weather indoors
 of a group of Elyvilon worshippers practising healing others
 
 of a group of Ashenzari worshippers practising scrying on things
+
+of a group of Ru worshippers despising their bodies and discussing sacrifices
 
 of a group of orcs promoting Beogh's word
 %%%%
@@ -1286,6 +1291,8 @@ acclaiming Qazlal and talking about how the elements can work for you
 promoting Elyvilon and talking about how bringing peace to the world is essential
 
 admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
+
+paying homage to Ru and talking about how all of reality is not what you think it is
 %%%%
 graffiti_non-orc_religion
 
