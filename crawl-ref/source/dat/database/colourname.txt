@@ -1089,6 +1089,45 @@ of a local @graffiti_remedial_class@
 of a local support group for veterans of the surface wars
 
 of a group of local [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
+
+# Non-religious version of Gozag below.
+of a group of rich people discussing how to make more money
+
+# Non-religious version of Trog below.
+of a group of warriors practising barely-restrained combat
+
+# Non-religious version of Okawaru below.
+of a group of warriors practising solo combat
+
+# Non-religious version of Sif Muna below.
+of a group of spellcasters practising [eclectic|esoteric] magic
+
+# Non-religious version of Vehumet below.
+of a group of spellcasters practising [cataclysmic|destructive] magic
+
+# Non-religious version of Kikubaaqudgha below.
+of a group of necromancers practising [necromancy|bringing things to unlife]
+
+# Non-religious version of Cheibriados below.
+of a group of philosophers discussing [perfection|the nature of time] for who knows how long
+
+# Non-religious version of Makhleb below.
+of a group of masochists holding a pain endurance contest
+
+# Non-religious version of Fedhas below.
+of a group of gardeners showing off their green thumbs
+
+# Non-religious version of Hepliaklqana below.
+of a group of [bards|historians|lorekeepers] sharing glorious tales of their ancestors
+
+# Non-religious version of Uskayaw below.
+of a group of revellers throwing a wild dance party
+
+# Non-religious version of Dithmenos below.
+of a group of artists holding a shadow play
+
+# Non-religious version of the Wu Jian Council below.
+of a group of monks practising martial [attacks|movements]
 %%%%
 graffiti_religious_meeting
 
@@ -1100,17 +1139,17 @@ of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
 
 of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
 
-of a group of [rich people|Gozag worshippers] discussing how to make more money
+of a group of Gozag worshippers discussing how to make more money
 
 of a group of [berserkers|Trog worshippers] practising barely-restrained combat
 
 of a group of Okawaru worshippers practising solo combat
 
-of a group of [spellcasters|Sif Muna worshippers] practising [eclectic|esoteric] magic
+of a group of Sif Muna worshippers practising [eclectic|esoteric] magic
 
-of a group of [spellcasters|Vehumet worshippers] practising [cataclysmic|destructive] magic
+of a group of Vehumet worshippers practising [cataclysmic|destructive] magic
 
-of a group of [necromancers|Kikubaaqudgha worshippers] practising [necromancy|bringing things to unlife]
+of a group of Kikubaaqudgha worshippers practising [necromancy|bringing things to unlife]
 
 of a group of Cheibriados worshippers discussing [perfection|the nature of time] for who knows how long
 
