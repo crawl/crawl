@@ -92,8 +92,6 @@ public:
     CLua(bool managed = true);
     ~CLua();
 
-    static CLua &get_vm(lua_State *);
-
     lua_State *state();
 
     operator lua_State * ()
@@ -127,6 +125,7 @@ public:
 
     void pushglobal(const string &name);
 
+    int pcall(int argc, int retc);
     maybe_bool callmbooleanfn(const char *fn, const char *params, ...);
     maybe_bool callmaybefn(const char *fn, const char *params, ...);
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
@@ -138,12 +137,12 @@ public:
     void add_shutdown_listener(lua_shutdown_listener *);
     void remove_shutdown_listener(lua_shutdown_listener *);
 
+    static CLua &get_vm(lua_State *);
+    static bool is_managed_vm(lua_State *ls);
     static int file_write(lua_State *ls);
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
     static bool is_path_safe(string file, bool trusted = false);
-
-    static bool is_managed_vm(lua_State *ls);
 
     void print_stack(FILE* file);
 
@@ -180,25 +179,24 @@ private:
 
 private:
     void init_lua();
-    void set_error(int err, lua_State *ls = nullptr);
+    void set_error(int err);
     void init_throttle();
 
     static void _getregistry(lua_State *, const char *name);
+    static int return_count(const char *format);
 
     void vfnreturns(const char *par, va_list va);
 
     bool proc_returns(const char *par) const;
 
-    bool calltopfn(lua_State *ls, const char *format, va_list args,
-                   int retc = -1, va_list *fnr = nullptr);
+    bool calltopfn(const char *format, va_list args, int retc = -1,
+                   va_list *fnr = nullptr);
     maybe_bool callmbooleanfn(const char *fn, const char *params,
                               va_list args);
     maybe_bool callmaybefn(const char *fn, const char *params,
                            va_list args);
 
-    int push_args(lua_State *ls, const char *format, va_list args,
-                    va_list *cpto = nullptr);
-    int return_count(lua_State *ls, const char *format);
+    int push_args(const char *format, va_list args, va_list *cpto = nullptr);
 
     struct CLuaSave
     {

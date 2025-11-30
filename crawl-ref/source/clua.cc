@@ -65,8 +65,7 @@ CLua::~CLua()
 
 lua_State *CLua::state()
 {
-    if (!_state)
-        init_lua();
+    init_lua();
     return _state;
 }
 
@@ -117,7 +116,7 @@ void CLua::gc()
 
 void CLua::save(writer &outf)
 {
-    if (!_state)
+    if (!state())
         return;
 
     string res;
@@ -201,21 +200,23 @@ FILE *CLua::CLuaSave::get_file()
     return handle;
 }
 
-void CLua::set_error(int err, lua_State *ls)
+void CLua::set_error(int err)
 {
     if (!err)
     {
         error.clear();
         return;
     }
-    if (!ls && !(ls = _state))
+
+    if (!state())
     {
         error = "<LUA not initialised>";
         return;
     }
-    const char *serr = lua_tostring(ls, -1);
-    lua_pop(ls, 1);
-    error = serr? serr : "<Unknown error>";
+
+    const char *serr = lua_tostring(_state, -1);
+    lua_pop(_state, 1);
+    error = serr ? serr : "<Unknown error>";
 }
 
 void CLua::init_throttle()
@@ -237,7 +238,7 @@ void CLua::init_throttle()
 
     if (!mixed_call_depth)
     {
-        lua_sethook(_state, _clua_throttle_hook,
+        lua_sethook(state(), _clua_throttle_hook,
                     LUA_MASKCOUNT, throttle_unit_lines);
         throttle_sleep_ms = 0;
         n_throttle_sleeps = 0;
@@ -248,7 +249,7 @@ void CLua::init_throttle()
 int CLua::loadbuffer(const char *buf, size_t size, const char *context)
 {
     const int err = luaL_loadbuffer(state(), buf, size, context);
-    set_error(err, state());
+    set_error(err);
     return err;
 }
 
@@ -263,10 +264,8 @@ int CLua::execstring(const char *s, const char *context, int nresults)
     if ((err = loadstring(s, context)))
         return err;
 
-    lua_State *ls = state();
-    lua_call_throttle strangler(this);
-    err = lua_pcall(ls, 0, nresults, 0);
-    set_error(err, ls);
+    err = pcall(0, nresults);
+    set_error(err);
     return err;
 }
 
@@ -319,11 +318,10 @@ int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
     if (!force && sourced_files.count(filename))
         return 0;
 
-    lua_State *ls = state();
-    int err = loadfile(ls, filename, trusted || !managed_vm, die_on_fail);
-    lua_call_throttle strangler(this);
+    int err = loadfile(state(), filename,
+                       trusted || !managed_vm, die_on_fail);
     if (!err)
-        err = lua_pcall(ls, 0, 0, 0);
+        err = pcall(0, 0);
     if (!err)
         sourced_files.insert(filename);
     set_error(err);
@@ -339,30 +337,29 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 {
     error.clear();
 
-    lua_State *ls = state();
-    if (!ls)
+    if (!state())
         return false;
 
-    lua_stack_cleaner clean(ls);
+    lua_stack_cleaner clean(_state);
 
     pushglobal(hook);
-    if (!lua_istable(ls, -1))
+    if (!lua_istable(_state, -1))
         return false;
     for (int i = 1; ; ++i)
     {
-        lua_stack_cleaner clean2(ls);
+        lua_stack_cleaner clean2(_state);
 
-        lua_rawgeti(ls, -1, i);
-        if (!lua_isfunction(ls, -1))
+        lua_rawgeti(_state, -1, i);
+        if (!lua_isfunction(_state, -1))
         {
-            lua_pop(ls, 1);
+            lua_pop(_state, 1);
             break;
         }
 
         // So what's on top *is* a function. Call it with the args we have.
         va_list args;
         va_start(args, params);
-        calltopfn(ls, params, args);
+        calltopfn(params, args);
         va_end(args);
     }
     return true;
@@ -370,9 +367,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 
 void CLua::fnreturns(const char *format, ...)
 {
-    lua_State *ls = _state;
-
-    if (!format || !ls)
+    if (!format || !state())
         return;
 
     va_list args;
@@ -383,8 +378,10 @@ void CLua::fnreturns(const char *format, ...)
 
 void CLua::vfnreturns(const char *format, va_list args)
 {
-    lua_State *ls = _state;
-    int nrets = return_count(ls, format);
+    if (!state())
+        return;
+
+    int nrets = return_count(format);
     int sp = -nrets - 1;
 
     const char *gs = strchr(format, '>');
@@ -400,19 +397,19 @@ void CLua::vfnreturns(const char *format, va_list args)
         switch (argtype)
         {
         case 'u':
-            if (lua_islightuserdata(ls, sp))
-                *(va_arg(args, void**)) = lua_touserdata(ls, sp);
+            if (lua_islightuserdata(_state, sp))
+                *(va_arg(args, void**)) = lua_touserdata(_state, sp);
             break;
         case 'd':
-            if (lua_isnumber(ls, sp))
-                *(va_arg(args, int*)) = luaL_safe_checkint(ls, sp);
+            if (lua_isnumber(_state, sp))
+                *(va_arg(args, int*)) = luaL_safe_checkint(_state, sp);
             break;
         case 'b':
-            *(va_arg(args, bool *)) = lua_toboolean(ls, sp);
+            *(va_arg(args, bool *)) = lua_toboolean(_state, sp);
             break;
         case 's':
             {
-                const char *s = lua_tostring(ls, sp);
+                const char *s = lua_tostring(_state, sp);
                 if (s)
                     *(va_arg(args, string *)) = s;
                 break;
@@ -423,13 +420,12 @@ void CLua::vfnreturns(const char *format, va_list args)
 
     }
     // Pop args off the stack
-    lua_pop(ls, nrets);
+    lua_pop(_state, nrets);
 }
 
-int CLua::push_args(lua_State *ls, const char *format, va_list args,
-                    va_list *targ)
+int CLua::push_args(const char *format, va_list args, va_list *targ)
 {
-    if (!format)
+    if (!format || !state())
     {
         if (targ)
             va_copy(*targ, args);
@@ -451,45 +447,45 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
         switch (argtype)
         {
         case 'u':       // Light userdata
-            lua_pushlightuserdata(ls, va_arg(args, void*));
+            lua_pushlightuserdata(_state, va_arg(args, void*));
             break;
         case 'i':
-            clua_push_item(ls, va_arg(args, item_def*));
+            clua_push_item(_state, va_arg(args, item_def*));
             break;
         case 's':       // String
         {
             const char *s = va_arg(args, const char *);
             if (s)
-                lua_pushstring(ls, s);
+                lua_pushstring(_state, s);
             else
-                lua_pushnil(ls);
+                lua_pushnil(_state);
             break;
         }
         case 'd':       // Integer
-            lua_pushinteger(ls, va_arg(args, int));
+            lua_pushinteger(_state, va_arg(args, int));
             break;
         case 'L':
             die("ambiguous long in Lua push_args");
-            lua_pushinteger(ls, va_arg(args, long));
+            lua_pushinteger(_state, va_arg(args, long));
             break;
         case 'b':
-            lua_pushboolean(ls, va_arg(args, int));
+            lua_pushboolean(_state, va_arg(args, int));
             break;
         case 'D':
-            clua_push_dgn_event(ls, va_arg(args, const dgn_event *));
+            clua_push_dgn_event(_state, va_arg(args, const dgn_event *));
             break;
         case 'm':
-            clua_push_map(ls, va_arg(args, map_def *));
+            clua_push_map(_state, va_arg(args, map_def *));
             break;
         case 'M':
-            push_monster(ls, va_arg(args, monster*));
+            push_monster(_state, va_arg(args, monster*));
             break;
         case 'I':
-            lua_push_moninf(ls, va_arg(args, monster_info *));
+            lua_push_moninf(_state, va_arg(args, monster_info *));
             break;
         case 'A':
-            argc += push_activity_interrupt(
-                        ls, va_arg(args, activity_interrupt_data *));
+            argc += push_activity_interrupt(_state,
+                        va_arg(args, activity_interrupt_data *));
             break;
         default:
             --argc;
@@ -501,10 +497,8 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
     return argc;
 }
 
-int CLua::return_count(lua_State *ls, const char *format)
+int CLua::return_count(const char *format)
 {
-    UNUSED(ls);
-
     if (!format)
         return 0;
 
@@ -528,16 +522,24 @@ int CLua::return_count(lua_State *ls, const char *format)
     return 0;
 }
 
-bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
-                     int retc, va_list *copyto)
+int CLua::pcall(int argc, int retc)
+{
+    if (!state())
+        return 1;
+
+    lua_call_throttle strangler(this);
+    return lua_pcall(_state, argc, retc, 0);
+}
+
+bool CLua::calltopfn(const char *params, va_list args, int retc,
+                     va_list *copyto)
 {
     // We guarantee to remove the function from the stack
-    int argc = push_args(ls, params, args, copyto);
+    int argc = push_args(params, args, copyto);
     if (retc == -1)
-        retc = return_count(ls, params);
-    lua_call_throttle strangler(this);
-    int err = lua_pcall(ls, argc, retc, 0);
-    set_error(err, ls);
+        retc = return_count(params);
+    int err = pcall(argc, retc);
+    set_error(err);
     return !err;
 }
 
@@ -545,21 +547,20 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
                                 va_list args)
 {
     error.clear();
-    lua_State *ls = state();
-    if (!ls)
+    if (!state())
         return maybe_bool::maybe;
 
-    lua_stack_cleaner clean(ls);
+    lua_stack_cleaner clean(_state);
 
     pushglobal(fn);
-    if (!lua_isfunction(ls, -1))
+    if (!lua_isfunction(_state, -1))
         return maybe_bool::maybe;
 
-    bool ret = calltopfn(ls, params, args, 1);
+    bool ret = calltopfn(params, args, 1);
     if (!ret)
         return maybe_bool::maybe;
 
-    return lua_toboolean(ls, -1);
+    return lua_toboolean(_state, -1);
 }
 
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
@@ -574,21 +575,20 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
 {
     error.clear();
-    lua_State *ls = state();
-    if (!ls)
+    if (!state())
         return maybe_bool::maybe;
 
-    lua_stack_cleaner clean(ls);
+    lua_stack_cleaner clean(_state);
 
     pushglobal(fn);
-    if (!lua_isfunction(ls, -1))
+    if (!lua_isfunction(_state, -1))
         return maybe_bool::maybe;
 
-    bool ret = calltopfn(ls, params, args, 1);
-    if (!ret || !lua_isboolean(ls, -1))
+    bool ret = calltopfn(params, args, 1);
+    if (!ret || !lua_isboolean(_state, -1))
         return maybe_bool::maybe;
 
-    return lua_toboolean(ls, -1);
+    return lua_toboolean(_state, -1);
 }
 
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
@@ -622,32 +622,33 @@ bool CLua::proc_returns(const char *par) const
 //
 void CLua::pushglobal(const string &name)
 {
-    vector<string> pieces = split_string(".", name);
-    lua_State *ls(state());
+    if (!state())
+        return;
 
+    vector<string> pieces = split_string(".", name);
     if (pieces.empty())
-        lua_pushnil(ls);
+        lua_pushnil(_state);
 
     for (unsigned i = 0, size = pieces.size(); i < size; ++i)
     {
         if (!i)
-            lua_getglobal(ls, pieces[i].c_str());
+            lua_getglobal(_state, pieces[i].c_str());
         else
         {
-            if (lua_istable(ls, -1))
+            if (lua_istable(_state, -1))
             {
-                lua_pushstring(ls, pieces[i].c_str());
-                lua_gettable(ls, -2);
+                lua_pushstring(_state, pieces[i].c_str());
+                lua_gettable(_state, -2);
                 // Swap the value we just found with the table itself.
-                lua_insert(ls, -2);
+                lua_insert(_state, -2);
                 // And remove the table.
-                lua_pop(ls, 1);
+                lua_pop(_state, 1);
             }
             else
             {
                 // We expected a table here, but got something else. Fail.
-                lua_pop(ls, 1);
-                lua_pushnil(ls);
+                lua_pop(_state, 1);
+                lua_pushnil(_state);
                 break;
             }
         }
@@ -657,14 +658,13 @@ void CLua::pushglobal(const string &name)
 bool CLua::callfn(const char *fn, const char *params, ...)
 {
     error.clear();
-    lua_State *ls = state();
-    if (!ls)
+    if (!state())
         return false;
 
     pushglobal(fn);
-    if (!lua_isfunction(ls, -1))
+    if (!lua_isfunction(_state, -1))
     {
-        lua_pop(ls, 1);
+        lua_pop(_state, 1);
         return false;
     }
 
@@ -672,7 +672,7 @@ bool CLua::callfn(const char *fn, const char *params, ...)
     va_list fnret;
     va_start(args, params);
 
-    bool ret = calltopfn(ls, params, args, -1, &fnret);
+    bool ret = calltopfn(params, args, -1, &fnret);
     if (ret)
     {
         // If we have a > in format, gather return params now.
@@ -687,28 +687,26 @@ bool CLua::callfn(const char *fn, const char *params, ...)
 bool CLua::callfn(const char *fn, int nargs, int nret)
 {
     error.clear();
-    lua_State *ls = state();
-    if (!ls)
+    if (!state())
         return false;
 
     // If a function is not provided on the stack, get the named function.
     if (fn)
     {
         pushglobal(fn);
-        if (!lua_isfunction(ls, -1))
+        if (!lua_isfunction(_state, -1))
         {
-            lua_settop(ls, -nargs - 2);
+            lua_settop(_state, -nargs - 2);
             return false;
         }
 
         // Slide the function in front of its args and call it.
         if (nargs)
-            lua_insert(ls, -nargs - 1);
+            lua_insert(_state, -nargs - 1);
     }
 
-    lua_call_throttle strangler(this);
-    int err = lua_pcall(ls, nargs, nret, 0);
-    set_error(err, ls);
+    int err = pcall(nargs, nret);
+    set_error(err);
     return !err;
 }
 
@@ -799,6 +797,7 @@ void CLua::init_libraries()
     lua_setglobal(_state, "loadstring");
     lua_pushnil(_state);
     lua_setglobal(_state, "load");
+
 
     // Open Crawl bindings
     cluaopen_kills(_state);
