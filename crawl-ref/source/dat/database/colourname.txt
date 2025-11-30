@@ -997,7 +997,7 @@ of a three-way argument between @graffiti author name@, @graffiti author name@, 
 w:2
 of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
 
-w:2 of a fight bwtween Dithmenos worshippers and necromancers over whether something was a shadow or a shadowghast
+w:2 of a fight between Dithmenos worshippers and necromancers over whether something was a shadow or a shadowghast
 %%%%
 graffiti_hailed_god
 
@@ -1170,7 +1170,7 @@ of a group of Wu Jian Council worshippers practising martial [attacks|movements]
 
 of a group of Qazlal worshippers changing the weather indoors
 
-of a group of Elyvilon worshippers prsctising healing others
+of a group of Elyvilon worshippers practising healing others
 
 of a group of Ashenzari worshippers practising scrying on things
 
