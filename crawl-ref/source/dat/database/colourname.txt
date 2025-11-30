@@ -996,6 +996,8 @@ of a three-way argument between @graffiti author name@, @graffiti author name@, 
 
 w:2
 of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
+
+w:2 of a fight bwtween Dithmenos worshippers and necromancers over whether something was a shadow or a shadowghast
 %%%%
 graffiti_hailed_god
 
@@ -1120,6 +1122,8 @@ of a group of Hepliaklqana worshippers sharing glorious tales of their ancestors
 
 of a group of Uskayaw worshippers throwing a wild dance party
 
+of a group of Dithmenos worshippers holding a shadow play
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1222,6 +1226,8 @@ exalting Fedhas and the enduring powers of nature
 honouring Hepliaklqana and how those who live on in others' memories never truly die
 
 showing devotion to Uskayaw and the complex dance that is life itself
+
+doting on Dithmenos and the many things [shadows|the night] can do
 %%%%
 graffiti_non-orc_religion
 
