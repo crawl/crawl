@@ -1124,6 +1124,8 @@ of a group of Uskayaw worshippers throwing a wild dance party
 
 of a group of Dithmenos worshippers holding a shadow play
 
+of a group of Wu Jian Council worshippers practising martial [attacks|movements]
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1228,6 +1230,8 @@ honouring Hepliaklqana and how those who live on in others' memories never truly
 showing devotion to Uskayaw and the complex dance that is life itself
 
 doting on Dithmenos and the many things [shadows|the night] can do
+
+giving thanks to the Wu Jian Council and how proper discipline is the key to greatness
 %%%%
 graffiti_non-orc_religion
 
