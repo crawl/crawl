@@ -1134,6 +1134,9 @@ of a group of potion makers practising healing others
 
 # Non-religious version of Ru below.
 of a group of ascetics despising their bodies and discussing sacrifices
+
+# Non-religious version of the Shining One below.
+of a group of [crusaders|moralists] [discussing|opposing] evil in the world
 %%%%
 graffiti_religious_meeting
 
@@ -1178,6 +1181,8 @@ of a group of Elyvilon worshippers practising healing others
 of a group of Ashenzari worshippers practising scrying on things
 
 of a group of Ru worshippers despising their bodies and discussing sacrifices
+
+of a group of worshippers of the Shining One [discussing|opposing] evil in the world
 
 of a group of orcs promoting Beogh's word
 %%%%
@@ -1293,6 +1298,8 @@ promoting Elyvilon and talking about how bringing peace to the world is essentia
 admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
 
 paying homage to Ru and talking about how all of reality is not what you think it is
+
+giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
 %%%%
 graffiti_non-orc_religion
 
