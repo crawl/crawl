@@ -1297,6 +1297,10 @@ paying homage to Ru and talking about how all of reality is not what you think i
 graffiti_non-orc_religion
 
 lauding Zin and Zin's laws
+
+lauding Zin and talking about how following Zin's laws is essential
+
+lauding Zin and talking about how those who break Zin's laws deserve punishment
 %%%%
 graffiti_orc_religion
 
@@ -1304,7 +1308,7 @@ proselytising for Beogh and proper orcishness
 
 proclaiming that Beogh's messiah will soon come
 
-thanking Beogh for saving them while the other gods just watched
+thanking Beogh for granting salvation while the other gods just watched
 %%%%
 # Use changeable names for all graffiti professors (any, magic, and
 # mundane) so we can handle orcs (which, as graffiti authors, get names
