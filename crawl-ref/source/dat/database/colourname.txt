@@ -1172,6 +1172,8 @@ of a group of Qazlal worshippers changing the weather indoors
 
 of a group of Elyvilon worshippers prsctising healing others
 
+of a group of Ashenzari worshippers practising scrying on things
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1282,6 +1284,8 @@ giving thanks to the Wu Jian Council and talking about how proper discipline is 
 acclaiming Qazlal and talking about how the elements can work for you
 
 promoting Elyvilon and talking about how bringing peace to the world is essential
+
+admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
 %%%%
 graffiti_non-orc_religion
 
