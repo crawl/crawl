@@ -1137,6 +1137,9 @@ of a group of ascetics despising their bodies and discussing sacrifices
 
 # Non-religious version of the Shining One below.
 of a group of [crusaders|moralists] [discussing|opposing] evil in the world
+
+# Non-religious version of Lugonu below.
+of a varied group of people discussing their experiences in the Abyss
 %%%%
 graffiti_religious_meeting
 
@@ -1183,6 +1186,8 @@ of a group of Ashenzari worshippers practising scrying on things
 of a group of Ru worshippers despising their bodies and discussing sacrifices
 
 of a group of worshippers of the Shining One [discussing|opposing] evil in the world
+
+of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their experiences in the Abyss
 
 of a group of orcs promoting Beogh's word
 %%%%
@@ -1300,6 +1305,8 @@ admiring Ashenzari and talking about how curses and bondage are blessings when t
 paying homage to Ru and talking about how all of reality is not what you think it is
 
 giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
+
+flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
 %%%%
 graffiti_non-orc_religion
 
