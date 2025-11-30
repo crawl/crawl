@@ -1094,16 +1094,16 @@ of a group of local [bakers|fruit vendors|meat vendors] peddling their wares in 
 of a group of rich people discussing how to make more money
 
 # Non-religious version of Trog below.
-of a group of warriors practising barely-restrained combat
+of a group of [veterans|warriors] practising barely-restrained combat
 
 # Non-religious version of Okawaru below.
-of a group of warriors practising solo combat
+of a group of [veterans|warriors] practising solo combat
 
 # Non-religious version of Sif Muna below.
-of a group of spellcasters practising [eclectic|esoteric] magic
+of a group of [mages|sorcerers|spellcasters|wizards] practising [eclectic|esoteric] magic
 
 # Non-religious version of Vehumet below.
-of a group of spellcasters practising [cataclysmic|destructive] magic
+of a group of [mages|sorcerers|spellcasters|wizards] practising [cataclysmic|destructive] magic
 
 # Non-religious version of Kikubaaqudgha below.
 of a group of necromancers practising [necromancy|bringing things to unlife]
