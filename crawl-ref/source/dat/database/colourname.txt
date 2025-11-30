@@ -1116,6 +1116,8 @@ of a group of Makhleb worshippers holding a pain endurance contest
 
 of a group of Fedhas worshippers showing off their green thumbs
 
+of a group of Hepliaklqana worshippers sharing glorious tales of their ancestors
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1214,6 +1216,8 @@ giving kudos to Cheibriados and how the slow and steady can conquer all
 paying tribute to Makhleb and all the powers of hell that Makhleb grants
 
 exalting Fedhas and the enduring powers of nature
+
+honouring Hepliaklqana and how those who live on in others' memories never truly die
 %%%%
 graffiti_non-orc_religion
 
