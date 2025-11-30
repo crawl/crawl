@@ -1126,6 +1126,8 @@ of a group of Dithmenos worshippers holding a shadow play
 
 of a group of Wu Jian Council worshippers practising martial [attacks|movements]
 
+of a group of Qazlal worshippers changing the weather indoors
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1232,6 +1234,8 @@ showing devotion to Uskayaw and the complex dance that is life itself
 doting on Dithmenos and the many things [shadows|the night] can do
 
 giving thanks to the Wu Jian Council and how proper discipline is the key to greatness
+
+acclaiming Qazlal and how the elements can work for you
 %%%%
 graffiti_non-orc_religion
 
