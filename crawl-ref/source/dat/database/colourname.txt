@@ -1112,6 +1112,8 @@ of a group of [necromancers|Kikubaaqudgha worshippers] practising [necromancy|br
 
 of a group of Cheibriados worshippers discussing [perfection|the nature of time] for who knows how long
 
+of a group of Makhleb worshippers holding a pain endurance contest
+
 of a group of orcs promoting Beogh's word
 %%%%
 graffiti_any_meeting
@@ -1206,6 +1208,8 @@ venerating Vehumet and how weaponised magic is the key to victory
 fawning over Kikubaaqudgha and how necromancy turns all flesh and blood into useful tools
 
 giving kudos to Cheibriados and how the slow and steady can conquer all
+
+paying tribute to Makhleb and all the powers of hell that Makhleb grants
 %%%%
 graffiti_non-orc_religion
 
