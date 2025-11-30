@@ -1296,6 +1296,8 @@ graffiti_orc_religion
 proselytising for Beogh and proper orcishness
 
 proclaiming that Beogh's messiah will soon come
+
+thanking Beogh for saving them while the other gods just watched
 %%%%
 # Use changeable names for all graffiti professors (any, magic, and
 # mundane) so we can handle orcs (which, as graffiti authors, get names
