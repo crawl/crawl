@@ -1179,6 +1179,14 @@ glorifying @random_god@ and blaspheming @random_god@
 
 glorifying an unknown god
 
+# No entries for Ignis or Jiyva here. Ignis has one worshipper in the
+# Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
+# Royal Jelly who is brainless and tied to the Slime Pits. More
+# importantly, if the player kills Jiyva, Jiyva will no longer show up
+# in @random_god@ or @random_god_chaotic@, which will make detailed
+# graffiti praising Jiyva (which won't use @random_god@ or
+# @random_god_chaotic@) incongruous.
+
 revering Xom and the randomness of everything
 
 delighting in Nemelex Xobeh and whatever the next card deck brings
