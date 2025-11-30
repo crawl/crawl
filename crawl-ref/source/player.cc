@@ -7477,7 +7477,7 @@ void player::paralyse(const actor *who, int str, string source)
     paralysis = min(str, 13) * BASELINE_DELAY;
 
     stop_delay(true, true);
-    stop_directly_constricting_all(false);
+    stop_directly_constricting_all();
     stop_channelling_spells();
     redraw_armour_class = true;
     redraw_evasion = true;
@@ -7575,7 +7575,7 @@ bool player::vex(const actor* who, int dur, string source, string special_msg)
         props.erase(DISABLED_BY_KEY);
 
     stop_delay(true, true);
-    stop_directly_constricting_all(false);
+    stop_directly_constricting_all();
     stop_channelling_spells();
 
     return true;
@@ -8129,7 +8129,7 @@ void player::put_to_sleep(actor* source, int dur, bool hibernate)
     mpr("You fall asleep.");
     _pruneify();
 
-    stop_directly_constricting_all(false);
+    stop_directly_constricting_all();
     stop_channelling_spells();
     stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
@@ -8364,8 +8364,9 @@ bool player::attempt_escape()
     escape_attempts += 1;
 
     const string object
-        = constricted_type == CONSTRICT_ROOTS ? "the roots'"
-          : constricted_type == CONSTRICT_BVC ? "the zombie hands'"
+        = constricted_type == CONSTRICT_ROOTS      ? "the roots'"
+          : constricted_type == CONSTRICT_BVC      ? "the zombie hands'"
+          : constricted_type == CONSTRICT_ENTANGLE ? "the vines'"
                                         : themonst->name(DESC_ITS, true);
 
     if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
@@ -8499,7 +8500,7 @@ bool player::drain_magic(actor */*attacker*/, int pow)
 void player::daze(int dur)
 {
     stop_delay(true, true);
-    stop_directly_constricting_all(false);
+    stop_directly_constricting_all();
     stop_channelling_spells();
 
     you.duration[DUR_DAZED] += dur * BASELINE_DELAY;

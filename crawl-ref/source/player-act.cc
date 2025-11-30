@@ -805,6 +805,8 @@ int player::constriction_damage(constrict_type typ) const
         // Min power 2d5, max power ~2d19
         return roll_dice(2, div_rand_round(25 +
                     you.props[FASTROOT_POWER_KEY].get_int(), 7));
+    case CONSTRICT_ENTANGLE:
+        return roll_dice(2, 2);
     default:
         return roll_dice(2, div_rand_round(5 * (22 + 5 * you.experience_level), 81));
     }

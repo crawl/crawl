@@ -1888,7 +1888,7 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
     // from one form that allows constricting to another, but that seems too
     // rare to justify the complexity. The confusion of changing forms makes
     // you lose your grip, or something.
-    you.stop_directly_constricting_all(false);
+    you.stop_directly_constricting_all();
 
     // Stop being constricted if we are now too large, or are now immune.
     if (you.constricted_type == CONSTRICT_MELEE)

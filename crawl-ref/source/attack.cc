@@ -1373,6 +1373,15 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker);
         break;
 
+    case SPWPN_ENTANGLING:
+        if (coinflip() && attacker->can_constrict(*defender, CONSTRICT_ENTANGLE))
+        {
+            if (you.can_see(*defender))
+                mprf("%s becomes entangled by vines.", defender->name(DESC_THE).c_str());
+            attacker->start_constricting(*defender, CONSTRICT_ENTANGLE);
+        }
+        break;
+
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
             attacker->god_conduct(DID_EVIL, 2 + random2(3));

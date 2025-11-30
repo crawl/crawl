@@ -28,6 +28,10 @@ electrocution (elec) weapon ego
 
 It sometimes electrocutes victims (1/4 chance, 8-20 damage).
 %%%%
+entangling (entangle) weapon ego
+
+It sometimes constricts those it attacks with vines. (1/2 chance, 2-4 damage).
+%%%%
 flaming (flame) weapon ego
 
 It burns victims, dealing an additional one-quarter of any damage that pierces

@@ -411,6 +411,7 @@ static const char *weapon_brands_terse[] =
     "obsolete", "confuse",
 #endif
     "penet", "reap", "spect", "rebuke", "valour",
+    "entangle",
     "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
@@ -440,6 +441,7 @@ static const char *weapon_brands_verbose[] =
     "obsolescence", "confusion",
 #endif
     "penetration", "reaping", "spectralising", "rebuke", "valour",
+    "entangling",
     "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
@@ -469,6 +471,7 @@ static const char *weapon_brands_adj[] =
     "obsolete", "confusing",
 #endif
     "penetrating", "reaping", "spectral", "rebuking", "valourous",
+    "entangling",
     "num_special", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",

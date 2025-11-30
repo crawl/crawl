@@ -766,6 +766,9 @@ static bool _immune_to_brand(brand_type brand)
         case SPWPN_ELECTROCUTION:
             return you.res_elec() >= 1;
 
+        case SPWPN_ENTANGLING:
+            return you.res_constrict();
+
         default:
             return false;
     }

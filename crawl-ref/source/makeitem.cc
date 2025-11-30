@@ -337,6 +337,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_FOUL_FLAME: // only exists on Pan lords/Brilliance
     case SPWPN_REBUKE:
     case SPWPN_VALOUR:
+    case SPWPN_ENTANGLING:
         if (is_range_weapon(item))
             return false;
         break;

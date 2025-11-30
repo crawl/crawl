@@ -1985,6 +1985,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 mprf("%s feels dull in your %s.", item_name.c_str(), you.hand_name(true).c_str());
             break;
 
+        case SPWPN_ENTANGLING:
+            mprf("Vines begin sprouting from %s.", item_name.c_str());
+            break;
+
         default:
             break;
         }
@@ -2094,6 +2098,9 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 you.weaken(&you, 10);
                 break;
 
+            case SPWPN_ENTANGLING:
+                mprf("The vines retreat back into %s.", msg.c_str());
+                you.stop_directly_constricting_all(true);
             }
         }
     }

@@ -394,8 +394,7 @@ public:
     void stop_constricting(mid_t whom, bool intentional = false,
                            bool quiet = false, const string& escape_verb = "");
     void stop_constricting_all(bool intentional = false, bool quiet = false);
-    void stop_directly_constricting_all(bool intentional = false,
-                                        bool quiet = false);
+    void stop_directly_constricting_all(bool entangling_only = false);
     void stop_being_constricted(bool quiet = false, const string& escape_verb = "");
 
     virtual bool attempt_escape() = 0;

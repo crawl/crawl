@@ -447,20 +447,19 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
     {
         string attacker_desc;
         const string verb = intentional ? "release" : "lose";
-        bool force_plural = false;
+        bool force_plural = true;
 
         if (ctype == CONSTRICT_BVC)
-        {
             attacker_desc = "The zombie hands";
-            force_plural = true;
-        }
         else if (ctype == CONSTRICT_ROOTS)
-        {
             attacker_desc = "The roots";
-            force_plural = true;
-        }
+        else if (ctype == CONSTRICT_ENTANGLE)
+            attacker_desc = "The vines";
         else
+        {
+            force_plural = false;
             attacker_desc = name(DESC_THE);
+        }
 
         // Print a different message when breaking free of constriction via
         // blinking or similar
@@ -535,11 +534,9 @@ static bool _invalid_constricting_map_entry(const actor *constrictee)
 /**
  * Stop directly constricting all defenders.
  *
- * @param intentional True if this was intentional, which affects the language
- *                    in any message.
- * @param quiet       If True, don't display a message.
+ * @param intentional If true, only end entangling brand constriction.
  */
-void actor::stop_directly_constricting_all(bool intentional, bool quiet)
+void actor::stop_directly_constricting_all(bool entangling_only)
 {
     if (!constricting)
         return;
@@ -548,9 +545,10 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     {
         const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->constricted_type == CONSTRICT_MELEE)
+            || ((!entangling_only && constrictee->constricted_type == CONSTRICT_MELEE)
+                || constrictee->constricted_type == CONSTRICT_ENTANGLE))
         {
-            end_constriction((*constricting)[i], intentional, quiet);
+            end_constriction((*constricting)[i], false, false);
             constricting->erase(constricting->begin() + i);
         }
     }
@@ -592,9 +590,12 @@ bool actor::has_invalid_constrictor(bool move) const
         return true;
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
-    // must happen between adjacent squares.
+    // must happen with aux range. Entangling brand constriction gets to add
+    // the polearm range on top of that.
     if (constricted_type == CONSTRICT_MELEE)
         return grid_distance(attacker->pos(), pos()) > attacker->reach_range(false);
+    else if (constricted_type == CONSTRICT_ENTANGLE)
+        return grid_distance(attacker->pos(), pos()) > attacker->reach_range();
 
     // Indirect constriction requires the defender not to move.
     return move
@@ -625,7 +626,8 @@ void actor::clear_invalid_constrictions(bool move)
             || constrictee->has_invalid_constrictor()
             // Break melee constriction that is still otherwise valid if we
             // moved further away from our target than we previously were.
-            || (constrictee->constricted_type == CONSTRICT_MELEE
+            || ((constrictee->constricted_type == CONSTRICT_MELEE
+                 || constrictee->constricted_type == CONSTRICT_ENTANGLE)
                 && grid_distance(last_pos, constrictee->pos())
                    < grid_distance(pos(), constrictee->pos()))
             )
@@ -702,9 +704,13 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
         return can_see(defender)
                 && !confused()
                 && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-                && !defender.is_insubstantial()
                 && grid_distance(pos(), defender.pos()) <= reach_range(false)
                 && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
+    }
+    else if (typ == CONSTRICT_ENTANGLE)
+    {
+        return grid_distance(pos(), defender.pos()) <= reach_range()
+                && !num_constricting(CONSTRICT_ENTANGLE);
     }
 
     if (!see_cell_no_trans(defender.pos()))
@@ -748,18 +754,20 @@ void actor::constriction_damage_defender(actor &defender)
     if (is_player() || you.can_see(*this))
     {
         string attacker_desc;
-        bool force_plural = false;
+        bool force_plural = true;
         switch (typ)
         {
         case CONSTRICT_BVC:
             attacker_desc = "The zombie hands";
-            force_plural = true;
             break;
         case CONSTRICT_ROOTS:
             attacker_desc = "The grasping roots";
-            force_plural = true;
+            break;
+        case CONSTRICT_ENTANGLE:
+            attacker_desc = "The vines";
             break;
         default:
+            force_plural = false;
             if (is_player())
                 attacker_desc = "You";
             else

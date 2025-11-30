@@ -2864,6 +2864,8 @@ int monster::constriction_damage(constrict_type typ) const
     case CONSTRICT_BVC:
         return roll_dice(3, div_rand_round(40 +
                     mons_spellpower(*this, SPELL_BORGNJORS_VILE_CLUTCH), 30));
+    case CONSTRICT_ENTANGLE:
+        return roll_dice(2, 2);
     default:
         return 0;
     }
@@ -5727,7 +5729,7 @@ void monster::put_to_sleep(actor* attacker, int duration, bool hibernate)
     if (!valid_target)
         return;
 
-    stop_directly_constricting_all(false);
+    stop_directly_constricting_all();
     behaviour = BEH_SLEEP;
     flags |= MF_JUST_SLEPT;
     if (hibernate)
