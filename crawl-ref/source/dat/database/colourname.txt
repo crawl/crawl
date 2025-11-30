@@ -1124,7 +1124,7 @@ of a group of [bards|historians|lorekeepers] sharing glorious tales of their anc
 of a group of revellers throwing a wild dance party
 
 # Non-religious version of Dithmenos below.
-of a group of artists holding a shadow play
+of a group of ["artists" holding a "shadow play"|artists holding a shadow play]
 
 # Non-religious version of the Wu Jian Council below.
 of a group of monks practising martial [attacks|movements]
@@ -1173,7 +1173,7 @@ of a group of Hepliaklqana worshippers sharing glorious tales of their ancestors
 
 of a group of Uskayaw worshippers throwing a wild dance party
 
-of a group of Dithmenos worshippers holding a shadow play
+of a group of Dithmenos worshippers holding a ["shadow play"|shadow play]
 
 of a group of worshippers of the Wu Jian Council practising martial [attacks|movements]
 
