@@ -1993,6 +1993,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             mprf("%s gleams with a vicious edge.", item_name.c_str());
             break;
 
+        case SPWPN_CONCUSSION:
+            mprf("%s radiates an overwhelming force.", item_name.c_str());
+            break;
+
         default:
             break;
         }
@@ -2109,6 +2113,11 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             case SPWPN_SUNDERING:
                 mprf("%s goes dull.", msg.c_str());
+                break;
+
+            case SPWPN_CONCUSSION:
+                if (showMsgs)
+                    mprf("%s stops radiating force.", msg.c_str());
                 break;
             }
         }

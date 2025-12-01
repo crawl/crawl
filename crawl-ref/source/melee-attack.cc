@@ -20,6 +20,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "delay.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -647,6 +648,54 @@ void melee_attack::do_vampire_lifesteal()
     }
 }
 
+void melee_attack::handle_concussion_brand()
+{
+    const coord_def old_pos = defender->pos();
+    bool did_move = false;
+    if (defender->stumble_away_from(attack_position, "concussive force"))
+    {
+        did_move = true;
+        if (monster* mon = defender->as_monster())
+        {
+            const int delay = random2(min(10, attacker->attack_delay().roll())) * 3 / 4;
+            const int old_energy = mon->speed_increment;
+            mon->speed_increment -= delay;
+
+            // Print a message if cumulative attacks have cost enough energy to lose a turn.
+            if (mon->speed_increment / 10 < old_energy / 10)
+                simple_monster_message(*mon, " is staggered.");
+        }
+    }
+    else if (damage_done > 0)
+    {
+        const coord_def back = defender->pos() + (defender->pos() - attacker->pos()).sgn();
+        if (feat_is_solid(env.grid(back)))
+        {
+            special_damage = random2(damage_done) / 2 + 1;
+            if (needs_message)
+            {
+                mprf("%s crush%s %s against the %s%s",
+                        attacker->name(DESC_THE).c_str(),
+                        attacker->is_monster() ? "es" : "",
+                        defender->name(DESC_THE).c_str(),
+                        feat_is_wall(env.grid(back)) ? "wall"
+                                                    : raw_feature_description(back).c_str(),
+                        attack_strength_punctuation(special_damage).c_str());
+            }
+            inflict_damage(special_damage);
+        }
+    }
+
+    // Do followup movement only for attacks that have a reasonably defined
+    // 'primary target', such as regular bump attacks, lunges, or Vhi's.
+    if (did_move && !is_projected && !cleaving && !never_cleave
+        && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
+        && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+        && adjacent(attacker->pos(), old_pos))
+    {
+        schedule_trample_follow_fineff(attacker, old_pos);
+    }
+}
 
 static void _apply_flux_contam(monster &m)
 {
@@ -852,6 +901,9 @@ bool melee_attack::handle_phase_hit()
 
     if (weapon && damage_brand == SPWPN_VALOUR)
         do_valour_beam();
+
+    if (weapon && damage_brand == SPWPN_CONCUSSION)
+        handle_concussion_brand();
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())

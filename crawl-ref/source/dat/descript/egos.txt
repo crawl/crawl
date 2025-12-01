@@ -12,6 +12,12 @@ chaos (chaos) weapon ego
 
 Each hit from it has a different, random effect.
 %%%%
+concussion (concuss) weapon ego
+
+It pushes those it hits backwards, briefly stunning them in the process. If it
+pushes them into a solid feature, they will instead take an additional one-quarter
+of any damage that pierces their armour.
+%%%%
 distortion (distort) weapon ego
 
 It warps and distorts space around it, and may blink, banish, or inflict extra

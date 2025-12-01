@@ -810,7 +810,7 @@ bool trample_follow_fineff::mergeable(const final_effect &fe) const
 {
     const trample_follow_fineff *o =
         dynamic_cast<const trample_follow_fineff *>(&fe);
-    return o && att == o->att && posn == o->posn;
+    return o && att == o->att;
 }
 
 bool blink_fineff::mergeable(const final_effect &fe) const

@@ -210,6 +210,7 @@ private:
     void handle_spectral_brand();
     void do_valour_beam();
     bool is_sundering_weapon() const;
+    void handle_concussion_brand();
 
     // Spell effects.
     void maybe_trigger_detonation();

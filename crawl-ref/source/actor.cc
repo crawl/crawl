@@ -1114,7 +1114,8 @@ coord_def actor::stumble_pos(coord_def targ) const
     return newpos;
 }
 
-void actor::stumble_away_from(coord_def targ, string src)
+// Returns true if this actor actually moved.
+bool actor::stumble_away_from(coord_def targ, string src)
 {
     const coord_def newpos = stumble_pos(targ);
 
@@ -1122,7 +1123,7 @@ void actor::stumble_away_from(coord_def targ, string src)
         || actor_at(newpos)
         || resists_dislodge("being knocked back"))
     {
-        return;
+        return false;
     }
 
     if (is_player() && !src.empty())
@@ -1131,6 +1132,8 @@ void actor::stumble_away_from(coord_def targ, string src)
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
     move_to(newpos);
+
+    return true;
 }
 
 /// Is this creature despised by the so-called 'good gods'?

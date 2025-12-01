@@ -176,6 +176,7 @@ enum brand_type // item_def.special
     SPWPN_VALOUR,
     SPWPN_ENTANGLING,
     SPWPN_SUNDERING,
+    SPWPN_CONCUSSION,
 
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,
