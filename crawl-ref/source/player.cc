@@ -4843,8 +4843,9 @@ void dec_sticky_flame_player(int delay)
     int base_damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
     int damage = resist_adjust_damage(&you, BEAM_FIRE, base_damage);
 
-    mprf(MSGCH_WARN, "The liquid fire burns you%s!",
-         damage > base_damage ? " terribly" : "");
+    mprf(MSGCH_WARN, "The liquid fire burns you%s%s",
+         damage > base_damage ? " terribly" : "",
+         damage < base_damage ? ". You resist." : "!");
 
     damage = div_rand_round(damage * delay, BASELINE_DELAY);
 

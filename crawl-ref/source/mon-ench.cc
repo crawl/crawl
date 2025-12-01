@@ -1471,7 +1471,14 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            simple_monster_message(*this, " burns!");
+            int rf = this->res_fire();
+            string msg = " burns";
+            if (rf < 0)
+                msg += " terribly";
+            msg += rf > 0 ? "." : "!";
+            simple_monster_message(*this, msg.c_str());
+            if (rf > 0)
+                simple_monster_message(*this, " resists.");
             dprf("sticky flame damage: %d", dam);
             hurt(me.agent(), dam, BEAM_STICKY_FLAME);
         }
