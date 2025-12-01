@@ -292,7 +292,7 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
 
     string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
         real_action.c_str());
-    more_str = pad_more_with_esc(more_str + "   [<w>?</w>] help");
+    string help_desc = make_stringf("   [<w>?</w>] help    ");
     string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
@@ -301,7 +301,7 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
         toggle_desc += "/[<w>I</w>]";
     }
     toggle_desc += " toggle spell headers";
-    more_str = pad_more_with(more_str, toggle_desc);
+    more_str = pad_more_with_esc(more_str + help_desc + toggle_desc);
     spell_menu.set_more(formatted_string::parse_string(more_str));
     // TODO: should allow toggling between execute and examine
     spell_menu.menu_action = viewing ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
