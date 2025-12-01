@@ -5232,7 +5232,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
             sources.push_back("crown");
 
         if (temp && you.wearing_ego(OBJ_ARMOUR, SPARM_LIGHT))
-            sources.push_back("orb");
+            sources.push_back("armour");
 
         if (temp && you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
             || you.religion == GOD_SHINING_ONE) // non-temp
