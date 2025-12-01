@@ -731,6 +731,7 @@ KFEAT:    FL = l
 KFEAT:    y = x
 : vault_metal_statue_setup(_G, "G", "fiery conduit")
 NSUBST:   l = 4:LLF / 4:LLFll / *:l
+KFEAT:    ~ = l
 TILE:     c = wall_stone_scorched
 TILE:     m = dngn_transparent_wall_red
 TILE:     o = wall_permarock_clear_darkgray
@@ -756,12 +757,12 @@ xllllllloxm'....myolllllxlllllllllxllx
 xlllllllommm.<.mmmolllllxllllllllxlllx
 xllllllloym.....mxoooooolllllllllxlllx
 xlllllllox...m...xxxxxxollllllllxllllx
-xllllllloxA.mmm..dxyllxolllllllxlllllx
-xllllllloxxxymxxd'W'Glxolllllllxlllllx
+xllllllloxA.mmm..dxy~~xolllllllxlllllx
+xllllllloxxxymxxd'W'G~xolllllllxlllllx
 xllllllloooooooxxWdW'yxollllllxllllllx
 xllllllxlllllloxy'WdWxxooooooolllllllx
-xlllllxllllllloxlG'W'dxxmyxxxolllllllx
-xlllllxllllllloxllyxd'.mmm.Axolllllllx
+xlllllxlllllllox~G'W'dxxmyxxxolllllllx
+xlllllxlllllllox~~yxd'.mmm.Axolllllllx
 xllllxlllllllloxxxxxx...m...xolllllllx
 xlllxlllllllllooooooxm.....myolllllllx
 xlllxllllllllxlllllommm.<.mmmolllllllx
