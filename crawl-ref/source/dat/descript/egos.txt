@@ -268,8 +268,9 @@ It protects you from the effects of both fire and cold.
 %%%%
 resonance (Resonance) armour ego
 
-It improves the success rate of your Forgecraft spells and enhances your melee
-attacks proportionally to your Forgecraft skill.
+It improves the success rate of your Forgecraft spells, and enhances your melee
+attacks proportionally to your Forgecraft skill when you melee an enemy that is
+adjacent to one of your constructs.
 %%%%
 see invisible (SInv) armour ego
 
