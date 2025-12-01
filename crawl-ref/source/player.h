@@ -650,9 +650,11 @@ public:
     brand_type  damage_brand(int which_attack = -1) override;
     vorpal_damage_type damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool rescale = true) const override;
+                             bool rescale = true,
+                             bool ignore_temporary = false) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
-                                  const item_def *weapon) const;
+                                  const item_def *weapon,
+                                  bool ignore_temporary = false) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -913,13 +915,16 @@ public:
     // given item, along with the fail rate on all their known spells.
     void preview_stats_with_specific_item(int scale, const item_def& new_item,
                                           int *ac, int *ev, int *sh,
-                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail,
+                                          int *ad);
     void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
                                              int *ac, int *ev, int *sh,
-                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail,
+                                             int *ad);
     void preview_stats_in_specific_form(int scale, const item_def& talisman,
                                         int *ac, int *ev, int *sh,
-                                        FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+                                        FixedVector<int, MAX_KNOWN_SPELLS> *fail,
+                                        int *ad);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -1057,6 +1062,8 @@ int player_armour_shield_spell_penalty();
 int player_armour_stealth_penalty();
 
 int player_movement_speed(bool check_terrain = true, bool temp = true);
+
+int player_displayed_attack_delay(bool ignore_temporary);
 
 int player_icemail_armour_class();
 int player_condensation_shield_class();

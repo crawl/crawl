@@ -1841,21 +1841,22 @@ static string _equipment_switchto_string(const item_def &item)
 static string _equipment_property_change_description(const item_def &item,
                                                      bool remove = false)
 {
-    // First, test if there is any AC/EV/SH change at all.
+    // First, test if there is any status change at all.
     const int cur_ac = you.base_ac(100);
     const int cur_ev = you.evasion_scaled(100, true);
     const int cur_sh = player_displayed_shield_class(100, true);
-    int new_ac, new_ev, new_sh;
+    const int cur_ad = player_displayed_attack_delay(true);
+    int new_ac, new_ev, new_sh, new_ad;
     FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail, &new_ad);
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        you.preview_stats_in_specific_form(100, item, &new_ac, &new_ev, &new_sh, &new_fail, &new_ad);
     else
-        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail, &new_ad);
 
     // Check if any spell failures changed, and save the greatest magnitude that
     // any of them changed.
@@ -1943,23 +1944,30 @@ static string _equipment_property_change_description(const item_def &item,
         }
     }
 
+    // Only display attack delay line with non-weapons
+    if (item.base_type != OBJ_WEAPONS && cur_ad != new_ad)
+    {
+        description += "\nYour attack delay would "
+                       + _describe_point_diff(cur_ad * 10, new_ad * 10) + ".";
+    }
+
     return description;
 }
 
 static string _spell_fail_change_description(const item_def &item,
                                              bool remove = false)
 {
-    int dummy1, dummy2, dummy3;
+    int dummy1, dummy2, dummy3, dummy4;
     FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail, &dummy4);
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        you.preview_stats_in_specific_form(100, item, &dummy1, &dummy2, &dummy3, &new_fail, &dummy4);
     else
-        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail, &dummy4);
 
     // Check if any spell failures changed.
     int fail_change = 0;
