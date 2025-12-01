@@ -5507,7 +5507,8 @@ void bolt::affect_monster(monster* mon)
         {
             mprf(MSGCH_GOD, GOD_JIYVA,
                  "%s absorbs the %s as it strikes your slime.",
-                 god_speaker(GOD_JIYVA).c_str(), name.c_str());
+                 god_speaker(GOD_JIYVA).c_str(), !name.empty() ? name.c_str()
+                 : _beam_type_name(flavour).c_str());
         }
 
         finish_beam();
