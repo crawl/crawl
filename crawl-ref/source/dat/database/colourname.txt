@@ -1350,6 +1350,16 @@ w:2
 w:2
 the [mage|sorcerer|spellcaster|wizard] @rare graffiti author name@ (supposedly)
 %%%%
+graffiti_professor_necromancy
+
+@changeable graffiti author name@ the necromancer
+
+w:2
+@orc graffiti author name@ necromancer
+
+w:2
+the necromancer @rare graffiti author name@ (supposedly)
+%%%%
 graffiti_professor_mundane
 
 @changeable graffiti author name@ the [knight|veteran|warlord|warrior]
@@ -1367,6 +1377,14 @@ Remedial @random_skill@ class taught by @graffiti_professor_any@
 Remedial @random_skill_magic@ class taught by @graffiti_professor_magic@
 
 Remedial @random_skill_mundane@ class taught by @graffiti_professor_mundane@
+
+# Necromancers should be able to teach necromancy or other magic (from
+# branching out) the same way other spellcasters can.
+w:2
+Remedial Necromancy class taught by @graffiti_professor_necromancy@
+
+w:2
+Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
 %%%%
 graffiti_rumour
 
