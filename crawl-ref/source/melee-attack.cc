@@ -42,6 +42,7 @@
 #include "shout.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
+#include "spl-monench.h" // is_valid_tempering_target
 #include "spl-summoning.h" //AF_SPIDER
 #include "state.h"
 #include "stepdown.h"
@@ -2506,6 +2507,21 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     return damage;
 }
 
+static bool _player_construct_adjacent(coord_def pos)
+{
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && is_valid_tempering_target(*mon, you, true))
+        {
+            mprf("Your blow resonates through %s.", mon->name(DESC_THE).c_str());
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Multipliers to be applied to the final (pre-stab, pre-AC) damage.
 // It might be tempting to try to pick and choose what pieces of the damage
 // get affected by such multipliers, but putting them at the end is the
@@ -2521,7 +2537,11 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     damage = martial_damage_mod(damage);
 
     // resonance armour damage modifier
-    damage = resonance_damage_mod(damage, true);
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE)
+            && _player_construct_adjacent(defender->pos()))
+    {
+        damage = resonance_damage_mod(damage, true);
+    }
 
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
