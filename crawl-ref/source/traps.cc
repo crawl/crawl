@@ -185,6 +185,7 @@ bool trap_def::is_safe(actor* act) const
 // or draining attacks. They also need attacks that aren't already chaos brand.
 bool chaos_lace_criteria (monster* mon) {
     return mons_has_attacks(*mon) && !(mon->is_peripheral())
+            && !(mons_is_zombified(*mon))
             && !(mon->is_holy()) && !(is_good_god(mon->god))
             && (mons_attack_spec(*mon, 0, true).flavour != AF_CHAOTIC);
 }
