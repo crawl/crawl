@@ -1080,15 +1080,15 @@ graffiti_ordinary_meeting
 # Possibly too lowbrow, but a good time can mean many things.
 with @graffiti author name@ for [a good time|tips on how to survive in the dungeon]
 
-of a local athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
+of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
 
-of a local master class on insults being taught by imps
+of a master class on insults being taught by imps
 
-of a local @graffiti_remedial_class@
+of a @graffiti_remedial_class@
 
-of a local support group for veterans of the surface wars
+of a support group for veterans of the surface wars
 
-of a group of local [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
+of a group of [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
 
 # Non-religious version of Gozag below.
 of a group of rich people discussing how to make more money
@@ -1143,7 +1143,7 @@ of a varied group of people discussing their experiences in the Abyss
 %%%%
 graffiti_religious_meeting
 
-of a [local sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
+of a [sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
 
 of a group of Zin worshippers supporting the Axioms of Law
 
