@@ -1312,6 +1312,7 @@ static const char* _attack_count_names[]
     "Spellmotor",
     "Spellclaws",
     "Drunken Brawl",
+    "Sundering",
 };
 COMPILE_CHECK(ARRAYSZ(_attack_count_names) == NUM_ATTACK_COUNT_TYPES);
 

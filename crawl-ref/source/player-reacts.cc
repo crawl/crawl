@@ -1284,6 +1284,8 @@ void player_reacts()
 
     if (you.attempted_attack)
         update_parrying_status();
+    else
+        you.attribute[ATTR_SUNDERING_CHARGE] = 0;
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should

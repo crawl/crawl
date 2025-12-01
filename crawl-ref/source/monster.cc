@@ -5495,7 +5495,11 @@ void monster::finalise_movement(const actor* to_blame)
         stop_being_caught(true);
 
     if (last_move_pos != pos())
+    {
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
+        if (has_ench(ENCH_SUNDER_CHARGE))
+            del_ench(ENCH_SUNDER_CHARGE);
+    }
 
     if (!(mons_habitat(*this) & HT_DRY_LAND)
         && !monster_habitable_grid(this, pos())
@@ -6620,6 +6624,15 @@ bool monster::damage_immune(const actor* source) const
         return true;
 
     return false;
+}
+
+bool monster::sunder_is_ready() const
+{
+    if (!has_ench(ENCH_SUNDER_CHARGE))
+        return false;
+
+    return get_ench(ENCH_SUNDER_CHARGE).degree >= 4
+            && wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING);
 }
 
 bool monster::is_illusion() const

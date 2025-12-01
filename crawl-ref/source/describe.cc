@@ -5165,6 +5165,8 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
         case SPWPN_ENTANGLING:
             brand_dam = 4;
             break;
+        case SPWPN_SUNDERING:
+            return make_stringf(" + %d per 4 attacks", dam * 3 / 2);
         case SPWPN_VENOM:
         case SPWPN_ANTIMAGIC:
         case SPWPN_CHAOS:

@@ -110,5 +110,8 @@ enum attribute_type
     ATTR_DOOM,                 // How much Doom the player has accrued
     ATTR_OSTRACISM,            // How much your piety is temporarily capped by
     ATTR_LAST_CONTAM,          // Timestamp of when contam was last inflicted
+    ATTR_SUNDERING_CHARGE,     // Number of standard attack actions that have
+                               // happened since the last time the player spent
+                               // a turn without attempting an attack.
     NUM_ATTRIBUTES
 };

@@ -592,6 +592,8 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
     if (!trigger_effects)
         return;
 
+    you.attribute[ATTR_SUNDERING_CHARGE]++;
+
     if (will_have_passive(passive_t::shadow_attacks))
         dithmenos_shadow_melee(primary_target);
 
@@ -1183,10 +1185,12 @@ bool weapon_multihits(const item_def *weap)
  *                       even if it otherwise would not (ie: for Inugami instant
  *                       cleave).
  * @param weapon         The weapon being used to make this attack.
+ * @param reach_bonus    Bonus radius to be added to this calculation.
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack,
-                        bool force_cleaving, const item_def *weapon)
+                        bool force_cleaving, const item_def *weapon,
+                        int reach_bonus)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -1203,8 +1207,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     const coord_def atk = attacker.pos();
     // Players in aqua form specifically do not get enormous cleaving, but
     // monsters with natural reach cleave for their while reach.
-    const int cleave_radius = attacker.is_monster() ? attacker.reach_range()
-                                : weap ? weapon_reach(*weap) : 1;
+    const int cleave_radius = (attacker.is_monster() ? attacker.reach_range()
+                                : weap ? weapon_reach(*weap) : 1) + reach_bonus;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
     {

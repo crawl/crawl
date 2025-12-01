@@ -84,6 +84,7 @@ unstable: 10
 vexed: 10
 paradox: 10
 warding: 10
+sundering: 10
 
 constricted: 11
 vile_clutch: 11

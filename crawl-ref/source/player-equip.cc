@@ -1989,6 +1989,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             mprf("Vines begin sprouting from %s.", item_name.c_str());
             break;
 
+        case SPWPN_SUNDERING:
+            mprf("%s gleams with a vicious edge.", item_name.c_str());
+            break;
+
         default:
             break;
         }
@@ -2101,6 +2105,11 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
             case SPWPN_ENTANGLING:
                 mprf("The vines retreat back into %s.", msg.c_str());
                 you.stop_directly_constricting_all(true);
+                break;
+
+            case SPWPN_SUNDERING:
+                mprf("%s goes dull.", msg.c_str());
+                break;
             }
         }
     }

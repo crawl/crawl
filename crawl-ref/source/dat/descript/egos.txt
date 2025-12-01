@@ -111,6 +111,11 @@ speed (speed) weapon ego
 
 Attacks with it are significantly faster.
 %%%%
+sundering (sunder) weapon ego
+
+After you perform multiple consecutive attacks, its next attack will deal
+greatly increased damage and also cleave into targets an extra space away.
+%%%%
 valour (valour) weapon ego
 
 It fires a beam of energy whenever it strikes an enemy while its wielder has

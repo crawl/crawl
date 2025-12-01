@@ -860,6 +860,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->flags & MF_TESSERACT_SPAWN)
         mb.set(MB_TESSERACT_SPAWN);
 
+    if (m->sunder_is_ready())
+        mb.set(MB_SUNDERING_READY);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {

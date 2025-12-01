@@ -1010,6 +1010,14 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_SUNDER_READY:
+        if (you.sunder_is_ready())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text = "Sunder";
+        }
+        break;
+
     default:
         if (!found)
         {

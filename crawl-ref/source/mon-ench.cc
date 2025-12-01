@@ -1381,6 +1381,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANTIMAGIC:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DRAINED:
+    case ENCH_SUNDER_CHARGE:
         decay_enchantment(en);
         break;
 
@@ -2142,7 +2143,7 @@ static const char *enchant_names[] =
     "deep_sleep", "drowsy",
     "vampire_thrall", "pyrrhic_recollection", "clockwork_bee_cast",
     "phalanx_barrier", "figment", "paradox-touched", "warding",
-    "diminished_spells", "orb_cooldown",
+    "diminished_spells", "orb_cooldown", "sunder_charge",
     "buggy", // NUM_ENCHANTMENTS
 };
 

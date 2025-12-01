@@ -3670,6 +3670,17 @@ bool player::cloud_immune(bool items) const
            || actor::cloud_immune(items);
 }
 
+bool player::sunder_is_ready() const
+{
+    if (you.attribute[ATTR_SUNDERING_CHARGE] >= 0
+        && you.attribute[ATTR_SUNDERING_CHARGE] < SUNDERING_THRESHOLD)
+    {
+        return false;
+    }
+
+    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING);
+}
+
 /**
  * How much XP does it take to reach the given XL from 0?
  *

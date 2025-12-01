@@ -2731,6 +2731,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_DIMINISHED_SPELLS, TILEI_DIMMED },
     { MB_STRONG_WILLED, TILEI_STRONG_WILLED },
     { MB_TESSERACT_SPAWN, TILEI_TESSERACT_SPAWN },
+    { MB_SUNDERING_READY, TILEI_SUNDERING },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3928,6 +3929,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_CHAOS:
     case TILE_BOLT_CHAOS_BUFF:
     case TILE_BOLT_GLOOM:
+    case TILE_BOLT_SUNDERING:
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:

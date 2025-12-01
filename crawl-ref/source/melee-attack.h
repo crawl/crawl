@@ -57,6 +57,7 @@ public:
     bool         is_projected;    // projected weapon spell attack (eg: from
                                   // Manifold Assault)
     bool         is_bestial_takedown;   // bestial takedown attack
+    bool         is_sunder;       // triggered attack from Sundering brand
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, even if it ordinariy would.
@@ -208,6 +209,7 @@ private:
     void _defender_die();
     void handle_spectral_brand();
     void do_valour_beam();
+    bool is_sundering_weapon() const;
 
     // Spell effects.
     void maybe_trigger_detonation();

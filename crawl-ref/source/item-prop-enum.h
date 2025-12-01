@@ -126,6 +126,7 @@ enum armour_property_type
 
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
+const int SUNDERING_THRESHOLD = 5;
 
 // Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
@@ -174,6 +175,7 @@ enum brand_type // item_def.special
     SPWPN_REBUKE,
     SPWPN_VALOUR,
     SPWPN_ENTANGLING,
+    SPWPN_SUNDERING,
 
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,

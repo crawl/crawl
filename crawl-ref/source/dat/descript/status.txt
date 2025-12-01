@@ -1247,3 +1247,9 @@ number of walls surrounding you.
 Dim status
 
 The power of all your spells is reduced by half.
+%%%%
+Sunder status
+
+Your next attack will have increased accuracy, inflict three times its normal
+damage, and cleave at an increased range. This bonus is lost if you perform any
+action besides attacking.

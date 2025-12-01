@@ -468,6 +468,12 @@ ready to howl monstatus
 
 This creature has not yet inflicted you with Oblivion Howl and may attempt to do so.
 %%%%
+ready to sunder monstatus
+
+This creature's Sundering weapon is fully charged and its next attack will be
+more accurate, inflict greatly increased damage, and cleave with increased range.
+This effect will be lost if it moves.
+%%%%
 reflecting blocked projectiles monstatus
 
 This creature reflects any projectile it blocks back to their original source.

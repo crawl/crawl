@@ -124,6 +124,11 @@ bomblet_blast1
 paragon_tempest0 BOLT_PARAGON_TEMPEST
 paragon_tempest1
 
+sundering0 BOLT_SUNDERING
+sundering1
+sundering2
+sundering3
+
 # Necromantic bolts
 drain0 BOLT_DRAIN
 drain1

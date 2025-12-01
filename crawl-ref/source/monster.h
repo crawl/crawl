@@ -411,6 +411,7 @@ public:
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
     bool damage_immune(const actor* source = nullptr) const;
+    bool sunder_is_ready() const override;
 
     bool airborne() const override;
     bool is_banished() const override;

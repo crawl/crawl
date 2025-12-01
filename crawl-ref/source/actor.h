@@ -291,6 +291,7 @@ public:
     virtual bool no_cast(bool items = true) const;
     virtual bool reflection(bool items = true) const;
     virtual int extra_harm(bool items = true) const;
+    virtual bool sunder_is_ready() const = 0;
 
     virtual bool rmut_from_item() const;
     virtual bool evokable_invis() const;

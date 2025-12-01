@@ -749,7 +749,7 @@ void view_clear_overlays()
 }
 
 void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
-                         colour_t colour_alt, bool outward, int delay)
+                         colour_t colour_alt, bool outward, int delay, tileidx_t tile)
 {
     const int start = outward ? 0 : radius;
     const int end = outward ? radius : 0;
@@ -765,7 +765,7 @@ void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
                 colour_t draw_colour = colour_alt != BLACK ? coinflip() ? colour
                                                                         : colour_alt
                                                            : colour;
-                flash_tile(*di, draw_colour, 0);
+                flash_tile(*di, draw_colour, 0, tile);
             }
         }
 

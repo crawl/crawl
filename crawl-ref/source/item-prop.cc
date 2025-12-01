@@ -455,6 +455,7 @@ static const vector<brand_weight_tuple> AXE_BRANDS = {
     { SPWPN_FREEZING,       10 },
     { SPWPN_VENOM,           8 },
     { SPWPN_VAMPIRISM,       5 },
+    { SPWPN_SUNDERING,       5 },
     { SPWPN_DRAINING,        3 },
     { SPWPN_DISTORTION,      2 },
     { SPWPN_ANTIMAGIC,       2 },

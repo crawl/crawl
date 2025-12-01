@@ -78,7 +78,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     total_damage_done(0),
     cleaving(false), is_followup(false), is_riposte(false),
-    is_projected(false), is_bestial_takedown(false), charge_pow(0),
+    is_projected(false), is_bestial_takedown(false), is_sunder(false),
+    charge_pow(0),
     never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), to_hit_bonus(0),
     is_involuntary(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
@@ -101,7 +102,8 @@ bool melee_attack::can_reach(int dist)
     return dist <= 1
            || attk_type == AT_HIT && wpn_reach + range_bonus >= dist
            || flavour_has_reach(attk_flavour)
-           || is_projected;
+           || is_projected
+           || is_sunder;
 }
 
 bool melee_attack::bad_attempt()
@@ -1368,6 +1370,7 @@ void melee_attack::copy_params_to(melee_attack &other)
     other.is_riposte            = is_riposte;
     other.is_projected          = is_projected;
     other.is_bestial_takedown   = is_bestial_takedown;
+    other.is_sunder             = is_sunder;
     other.charge_pow            = charge_pow;
     other.never_cleave          = never_cleave;
     other.dmg_mult              = dmg_mult;
@@ -1451,6 +1454,7 @@ bool melee_attack::swing_with(item_def &wpn, bool offhand)
     copy_params_to(swing);
     swing.set_weapon(&wpn, offhand);
     bool success = swing.attack();
+    is_sunder |= swing.is_sunder;
     cancel_attack = swing.cancel_attack;
     is_attacking_hostiles = is_attacking_hostiles || swing.is_attacking_hostiles;
     return success;
@@ -1503,6 +1507,7 @@ bool melee_attack::run_monster_attack_set()
     bool success = false;
     int effective_attack_num = 0;
     int attack_num;
+    bool charge_sunder = false;
     for (attack_num = 0; attack_num < nrounds && attacker->alive();
          ++attack_num, ++effective_attack_num)
     {
@@ -1564,9 +1569,16 @@ bool melee_attack::run_monster_attack_set()
                                 effective_attack_num);
 
         copy_params_to(melee_attk);
-        success |= melee_attk.attack();
 
+        const bool attack_succeeded = melee_attk.attack();
+
+        success |= attack_succeeded;
         did_hit |= melee_attk.did_hit;
+        is_sunder |= melee_attk.is_sunder;
+
+        // Charge up for monsters (player is handled in player_attempted_attack)
+        if (melee_attk.is_sundering_weapon() && !is_projected && attack_succeeded)
+            charge_sunder = true;
 
         fire_final_effects();
     }
@@ -1577,6 +1589,9 @@ bool melee_attack::run_monster_attack_set()
         mon->del_ench(ENCH_INSTANT_CLEAVE);
         mon->speed_increment += mon->action_energy(EUT_ATTACK);
     }
+
+    if (charge_sunder)
+        mon->add_ench(mon_enchant(ENCH_SUNDER_CHARGE, attacker, random_range(30, 50), 1));
 
     return success;
 }
@@ -1785,6 +1800,13 @@ bool melee_attack::attack()
         }
         else
             count_action(CACT_MELEE, -1, -1); // unarmed subtype/auxtype
+    }
+
+    if (is_sunder && !cleaving && is_sundering_weapon() && you.can_see(*attacker))
+    {
+        mprf("%s %s flashes viciously!", attacker->name(DESC_ITS).c_str(),
+                                         weapon->name(DESC_PLAIN).c_str());
+        draw_ring_animation(attacker->pos(), 2, WHITE, WHITE, true, 25, TILE_BOLT_SUNDERING);
     }
 
     // Apparently I'm insane for believing that we can still stay general past
@@ -4812,10 +4834,24 @@ void melee_attack::cleave_setup()
         return;
     }
 
+    // If sunder will trigger, we need to apply it before finding cleave targets.
+    if (is_sundering_weapon() && attacker->sunder_is_ready())
+    {
+        is_sunder = true;
+        to_hit_bonus = 12;
+        dmg_mult = attacker->is_monster() ? 150 : 200;
+
+        if (attacker->is_player())
+            you.attribute[ATTR_SUNDERING_CHARGE] = -1;
+        else
+            attacker->as_monster()->del_ench(ENCH_SUNDER_CHARGE);
+    }
+
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
     get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
-                       cleave_targets, attack_number, false, weapon);
+                       cleave_targets, attack_number, false, weapon,
+                       is_sunder ? 1 : 0);
 
     // We're already attacking this guy.
     if (defender)
@@ -4946,7 +4982,7 @@ int melee_attack::apply_damage_modifiers(int damage)
              damage);
     }
 
-    if (cleaving)
+    if (cleaving && !is_sunder)
         damage = cleave_damage_mod(damage);
 
     if (dmg_mult)
@@ -4970,6 +5006,11 @@ bool melee_attack::apply_damage_brand(const char *what)
 {
     // Staff damage overrides any brands
     return apply_staff_damage() || attack::apply_damage_brand(what);
+}
+
+bool melee_attack::is_sundering_weapon() const
+{
+    return damage_brand == SPWPN_SUNDERING;
 }
 
 string mut_aux_attack_desc(mutation_type mut)

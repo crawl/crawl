@@ -266,6 +266,7 @@ enum monster_info_flags
     MB_PLAYER_DAMAGE_IMMUNE,    // Currently immune to damage from the player for any reason
     MB_DIMINISHED_SPELLS,
     MB_TESSERACT_SPAWN,
+    MB_SUNDERING_READY,
     NUM_MB_FLAGS
 };
 

@@ -161,4 +161,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_WARDING, "warded", "damage-immune at range", "warded"},
     { MB_DIMINISHED_SPELLS, "dim", "diminished spells", "dim"},
     { MB_TESSERACT_SPAWN, "", "called by a tesseract", ""},
+    { MB_SUNDERING_READY, "", "ready to sunder", ""},
 };

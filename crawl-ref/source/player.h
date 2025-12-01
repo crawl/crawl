@@ -864,6 +864,7 @@ public:
     bool reflection(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
+    bool sunder_is_ready() const override;
 
     bool airborne() const override;
     bool permanent_flight(bool include_equip = true) const;

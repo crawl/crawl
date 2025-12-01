@@ -229,7 +229,8 @@ i-reaping BRAND_REAPING
 i-spectral BRAND_SPECTRAL
 i-sickness BRAND_REBUKE
 i-valour BRAND_VALOUR
-i-entangling BRAND_ENTANGLING BRAND_WEP_LAST
+i-entangling BRAND_ENTANGLING
+i-sundering BRAND_SUNDERING BRAND_WEP_LAST
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION
