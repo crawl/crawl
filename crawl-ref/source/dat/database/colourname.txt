@@ -1094,10 +1094,10 @@ of a group of [bakers|fruit vendors|meat vendors] peddling their wares in the du
 of a group of rich people discussing how to make more money
 
 # Non-religious version of Trog below.
-of a group of [veterans|warriors] practising barely-restrained combat
+of a group of [knights|veterans|warlords|warriors] practising barely-restrained combat
 
 # Non-religious version of Okawaru below.
-of a group of [veterans|warriors] practising solo combat
+of a group of [knights|veterans|warlords|warriors] practising solo combat
 
 # Non-religious version of Sif Muna below.
 of a group of [mages|sorcerers|spellcasters|wizards] practising [eclectic|esoteric] magic
@@ -1328,7 +1328,8 @@ thanking Beogh for granting salvation while the other gods just watched
 # mundane) so we can handle orcs (which, as graffiti authors, get names
 # ending with " the orc") and rare names (aliases or titles that may
 # also have suffixes) separately from them, just as we do with changed
-# names above.
+# names above. Professors can sometimes get titles that monsters can't
+# (e.g. orc mages), but they're supposed to be special.
 graffiti_professor_any
 
 @changeable graffiti author name@
@@ -1341,23 +1342,23 @@ w:2
 %%%%
 graffiti_professor_magic
 
-@changeable graffiti author name@ the wizard
+@changeable graffiti author name@ the [mage|sorcerer|spellcaster|wizard]
 
 w:2
-@orc graffiti author name@ wizard
+@orc graffiti author name@ [mage|sorcerer|spellcaster|wizard]
 
 w:2
-the wizard @rare graffiti author name@ (supposedly)
+the [mage|sorcerer|spellcaster|wizard] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_mundane
 
-@changeable graffiti author name@ the warrior
+@changeable graffiti author name@ the [knight|veteran|warlord|warrior]
 
 w:2
-@orc graffiti author name@ warrior
+@orc graffiti author name@ [knight|veteran|warlord|warrior]
 
 w:2
-the warrior @rare graffiti author name@ (supposedly)
+the [knight|veteran|warlord|warrior] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_remedial_class
 
