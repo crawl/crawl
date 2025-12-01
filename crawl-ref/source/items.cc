@@ -4570,22 +4570,12 @@ static bool _book_from_spell(const char* specs, item_def &item)
     if (type == SPELL_NO_SPELL)
         return false;
 
-    for (int i = 0; i < NUM_BOOKS; ++i)
-    {
-        const auto bt = static_cast<book_type>(i);
-        if (!book_exists(bt))
-            continue;
-        for (spell_type sp : spellbook_template(bt))
-        {
-            if (sp == type)
-            {
-                item.sub_type = i;
-                return true;
-            }
-        }
-    }
+    if (!is_player_book_spell(type))
+        return false;
 
-    return false;
+    item.sub_type = BOOK_PARCHMENT;
+    item.plus = static_cast<int>(type);
+    return true;
 }
 
 bool get_item_by_name(item_def *item, const char* specs,
@@ -4650,7 +4640,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             switch (class_wanted)
             {
             case OBJ_BOOKS:
-                // Try if we get a match against a spell.
+                // Make a parchment if we get a match against a spell.
                 if (_book_from_spell(specs, *item))
                     type_wanted = item->sub_type;
                 break;
@@ -4763,6 +4753,16 @@ bool get_item_by_name(item_def *item, const char* specs,
                 item->skill = SK_FIGHTING; // Was probably that anyway.
             }
             item->skill_points = random_range(2000, 3000);
+        }
+        else if (item->sub_type == BOOK_PARCHMENT)
+        {
+            char buf[80];
+            msgwin_get_line_autohist("What parchment spell? ", buf, sizeof(buf));
+            if (buf[0] != '\0')
+            {
+                if (!_book_from_spell(buf, *item))
+                    mpr("That parchment doesn't seem to exist.");
+            }
         }
         else if (type_wanted == BOOK_RANDART_THEME)
             build_themed_book(*item, capped_spell_filter(20));
