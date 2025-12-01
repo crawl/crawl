@@ -393,7 +393,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
-        fail_reduce = fail_reduce / 2;
+        fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
         fail_reduce = fail_reduce * 2 / 3;
@@ -825,14 +825,6 @@ static bool _majin_charge_hp()
     return you.unrand_equipped(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
 }
 
-static bool _death_ego_charge_hp(spell_type spell)
-{
-    return you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH)
-            && !spell_typematch(spell, spschool::necromancy)
-            && !you.duration[DUR_DEATHS_DOOR];
-}
-
-
 /**
  * Cast a spell.
  *
@@ -1030,8 +1022,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
     if (_majin_charge_hp())
         pay_hp(hp_cost);
-    if (_death_ego_charge_hp(spell))
-        pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target, force_failure);
@@ -1043,8 +1033,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         // Return the MP since the spell is aborted.
         refund_mp(cost);
         if (_majin_charge_hp())
-            refund_hp(hp_cost);
-        if (_death_ego_charge_hp(spell))
             refund_hp(hp_cost);
 
         redraw_screen();

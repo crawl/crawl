@@ -1190,7 +1190,8 @@ static string _why_reject(const item_def &item, int agent)
     }
 
     // Death brand is useless if you've sacrificed Necro.
-    if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+    if ((you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        || you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
         && get_armour_ego_type(item) == SPARM_DEATH)
     {
         return "Destroying armour of death after Necro sac!";
