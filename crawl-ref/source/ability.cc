@@ -2064,6 +2064,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             && !you.duration[DUR_SLOW]
             && !you.attribute[ATTR_HELD]
             && !you.petrifying()
+            && !you.beheld()
+            && !you.afraid()
             && !you.is_constricted())
         {
             if (!quiet)

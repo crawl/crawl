@@ -5366,6 +5366,10 @@ void ru_draw_out_power()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
 
+    // remove fearmongers and mesmerizers
+    you.clear_beholders();
+    you.clear_fearmongers();
+
     int hp_inc = div_rand_round(you.piety(), 16);
     hp_inc += roll_dice(div_rand_round(you.piety(), 20), 6);
     inc_hp(hp_inc);
