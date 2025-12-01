@@ -1326,7 +1326,7 @@ static void _infestation_create_scarab(monster* mons)
 static void _pharaoh_ant_bind_souls(monster *mons)
 {
     bool bound = false;
-    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_can_bind_soul(mons, *mi))
             continue;
@@ -1601,7 +1601,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
 static void _druid_final_boon(const monster* mons)
 {
     vector<monster*> beasts;
-    for (monster_near_iterator mi(mons); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
     {
         if (mons_is_beast(mons_base_type(**mi)) && mons_aligned(mons, *mi))
             beasts.push_back(*mi);
