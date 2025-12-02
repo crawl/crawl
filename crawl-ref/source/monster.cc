@@ -2309,6 +2309,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
             case MONS_GLASS_EYE:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
+            case MONS_EYE_OF_DRAINING:
             case MONS_GOLDEN_EYE:
                 *can_plural = false;
                 // Deliberate fallthrough.

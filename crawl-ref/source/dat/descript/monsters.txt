@@ -1442,6 +1442,12 @@ eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.
 %%%%
+eye of draining
+
+A hovering horror, rare and unnatural even amongst servitor eyes, radiating
+baleful energies. They monitor the flow of chaotic life and ever-present death
+for the divine Jiyva.
+%%%%
 faun
 
 A hybrid with the torso of a human atop the forelegs of a goat. It is fabled

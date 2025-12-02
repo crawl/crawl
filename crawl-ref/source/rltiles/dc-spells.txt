@@ -203,6 +203,7 @@ warp_space WARP_SPACE
 generic GENERIC_MONSTER_SPELL
 acid_ball ACID_BALL
 air_elementals AIR_ELEMENTALS
+antimagic_gaze ANTIMAGIC_GAZE
 avatar_song AVATAR_SONG
 awaken_flesh AWAKEN_FLESH
 awaken_forest AWAKEN_FOREST

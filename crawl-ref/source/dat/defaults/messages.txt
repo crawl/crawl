@@ -7,7 +7,7 @@ msc := message_colour
 # Really important messages
 #
 msc += $danger:drains you
-msc += $danger:feel drained
+msc += $danger:feel (heavily|very heavily|extremely) drained
 msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
 msc += $danger:Space warps( horribly)? around you
@@ -32,6 +32,7 @@ msc += lightmagenta:malevolent force fills
 
 # Less urgent, but still significant messages
 #
+msc += $warning:feel drained
 msc += $warning:solemn chanting
 msc += $warning:hear.*funeral chant
 msc += $warning:funeral rites reach a fever pitch

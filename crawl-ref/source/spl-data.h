@@ -2912,15 +2912,27 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DRAINING_GAZE, "Draining Gaze",
+    SPELL_ANTIMAGIC_GAZE, "Antimagic Gaze",
     spschool::hexes,
     spflag::target | spflag::monster,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
+    TILEG_ANTIMAGIC_GAZE,
+},
+
+{
+    SPELL_DRAINING_GAZE, "Draining Gaze",
+    spschool::necromancy,
+    spflag::target | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
     TILEG_DRAINING_GAZE,
 },
+
 
 {
     SPELL_WEAKENING_GAZE, "Weakening Gaze",

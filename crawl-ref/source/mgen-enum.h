@@ -146,6 +146,7 @@ enum band_type
     BAND_ROCK_FISH,
     BAND_UNDERTAKERS,
     BAND_AMOEBA_ORGANS,
+    BAND_DRAINING_EYE_CORPS,
     NUM_BANDS                   // always last
 };
 

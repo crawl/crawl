@@ -527,8 +527,17 @@ bool drain_player(int power, bool announce_full, bool ignore_protection, bool qu
         dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
         calc_hp();
 
+        string intensifier = "";
+        int perc = 100 * -you.hp_max_adj_temp / get_real_hp(false, false);
+        if (perc >= 50)
+            intensifier = "extremely ";
+        else if (perc >= 30)
+            intensifier = "very heavily ";
+        else if (perc >= 20)
+            intensifier = "heavily ";
+
         if (!quiet)
-            mpr("You feel drained.");
+            mprf("You feel %sdrained.", intensifier.c_str());
         xom_is_stimulated(15);
         return true;
     }

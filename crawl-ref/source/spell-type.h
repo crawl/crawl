@@ -440,7 +440,7 @@ enum spell_type : int
     SPELL_AVATAR_SONG,
     SPELL_PARALYSIS_GAZE,
     SPELL_CONFUSION_GAZE,
-    SPELL_DRAINING_GAZE,
+    SPELL_ANTIMAGIC_GAZE,
     SPELL_DEATH_RATTLE,
     SPELL_SUMMON_SCARABS,
 #if TAG_MAJOR_VERSION == 34
@@ -651,5 +651,6 @@ enum spell_type : int
     SPELL_DOOMSAYING,       // Cassandra's one-shot doom and death effect
     SPELL_SLEETSTRIKE,
     SPELL_DIMINISH_SPELLS,
+    SPELL_DRAINING_GAZE,
     NUM_SPELLS
 };

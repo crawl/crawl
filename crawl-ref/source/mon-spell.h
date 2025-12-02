@@ -784,7 +784,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GHOST_MOTH,
       {
-       { SPELL_DRAINING_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_ANTIMAGIC_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
@@ -1068,6 +1068,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_EYE_OF_DRAINING,
+      {
+       { SPELL_DRAINING_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+      }
+    },
+
     {  MST_EYE_OF_DEVASTATION,
       {
        { SPELL_BOLT_OF_DEVASTATION, 60, MON_SPELL_MAGICAL },
@@ -1163,7 +1169,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ORANGE_CRYSTAL_STATUE,
       {
        { SPELL_SHADOW_CREATURES, 50, MON_SPELL_MAGICAL },
-       { SPELL_DRAINING_GAZE, 25, MON_SPELL_MAGICAL },
+       { SPELL_ANTIMAGIC_GAZE, 25, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 25, MON_SPELL_MAGICAL },
       }
     },
@@ -2498,7 +2504,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NORRIS,
       {
-       { SPELL_DRAINING_GAZE, 36, MON_SPELL_PRIEST },
+       { SPELL_ANTIMAGIC_GAZE, 36, MON_SPELL_PRIEST },
        { SPELL_PRIMAL_WAVE, 30, MON_SPELL_PRIEST },
       }
     },

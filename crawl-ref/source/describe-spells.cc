@@ -540,7 +540,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner,
     if (spell == SPELL_BRAIN_BITE)
         return "4-8*"; // >_>
 
-    if (spell == SPELL_DRAINING_GAZE)
+    if (spell == SPELL_ANTIMAGIC_GAZE)
         return make_stringf("0-%d MP", pow / 8); // >_> >_>
 
     if (spell == SPELL_WIND_BLAST)

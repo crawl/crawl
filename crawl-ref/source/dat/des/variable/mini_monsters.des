@@ -4205,7 +4205,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, ophan, glass eye, eye of devastation
+MONS:   golden eye, eye of draining, glass eye, eye of devastation
 MONS:   great orb of eyes / shining eye w:3
 ITEM:   scroll of vulnerability q:1 pre_id / orb ego:guile randart w:4 / \
         book of the spheres w:4 / potion of enlightenment q:2 pre_id

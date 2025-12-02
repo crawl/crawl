@@ -229,6 +229,7 @@ splinters_thornwood7
 
 entropic_weave BOLT_ENTROPIC_WEAVE
 
+antimagic_gaze BOLT_ANTIMAGIC_GAZE
 draining_gaze BOLT_DRAINING_GAZE
 
 bolas BOLT_BOLAS

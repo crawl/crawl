@@ -733,7 +733,7 @@ TAGS:    transparent patrolling
 DEPTH:   Slime
 KMONS:   1 = glowing orange brain
 KMONS:   2 = glass eye / golden eye / shining eye / eye of devastation / \
-             great orb of eyes
+             great orb of eyes / eye of draining
 SHUFFLE: DEF
 SUBST:   ` = 2..., D = @, E : @., F : @..., - = _x
 CLEAR:   _

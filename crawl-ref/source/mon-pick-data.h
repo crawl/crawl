@@ -199,9 +199,7 @@ static const vector<pop_entry> population[] =
   { 24, 27,   22, RISE, MONS_VAMPIRE_KNIGHT },
   { 24, 27,  136, RISE, MONS_TENGU_REAVER },
   { 24, 27,    8, RISE, MONS_DANCING_WEAPON },
-  { 24, 27,   25, FLAT, MONS_WAR_GARGOYLE },
-  { 27, 27,   18, FLAT, MONS_SHADOW_DRAGON },
-  { 27, 27,    8, FLAT, MONS_IRON_DRAGON },
+  { 25, 28,   50, RISE, MONS_EYE_OF_DRAINING },
 },
 
 { // Temple
@@ -468,13 +466,14 @@ static const vector<pop_entry> population[] =
   {  1,  5,  500, FLAT, MONS_AZURE_JELLY },
   {  1,  5,  515, FLAT, MONS_ROCKSLIME },
   {  1,  5,  515, FLAT, MONS_VOID_OOZE },
-  {  1,  5,  515, FLAT, MONS_SHINING_EYE },
+  {  1,  5,  500, FLAT, MONS_SHINING_EYE },
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  8,  265, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  8,  255, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  2,  8,  315, SEMI, MONS_GLASS_EYE },
+  {  3,  8,   40, SEMI, MONS_EYE_OF_DRAINING },
 },
 
 { // The Vaults (OOD cap: 12)

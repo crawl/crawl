@@ -79,7 +79,8 @@ WEIGHT:  15
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich, dread lich
 MONS:    angel / pearl dragon w:2, daeva / fravashi w:2
-MONS:    eye of devastation / great orb of eyes / shining eye, glass eye
+MONS:    eye of devastation / great orb of eyes / shining eye
+MONS:    glass eye / eye of draining w:2
 # Iron grates are guaranteed to get at least one monster that can threaten
 # from behind the grates, while transparent rock is not.
 SHUFFLE: Aa / 'A
@@ -261,8 +262,8 @@ KMONS: A : guardian serpent / moth of wrath w:5 / ironbound convoker / \
            curse toe w:5 / mummy priest w:5 / royal mummy w:5 / stoker / \
            shadow demon / demonspawn corrupter / fravashi
 KMONS:  B : naga ritualist w:5 / salamander tyrant / entropy weaver / \
-            ghost moth / glass eye / deep elf high priest / titan / \
-            flayed ghost w:5 / soul eater w:5 / tormentor w:5 / \
+            ghost moth / glass eye / eye of draining / deep elf high priest / \
+            titan / flayed ghost w:5 / soul eater w:5 / tormentor w:5 / \
             demonspawn soul scholar / ophan / daeva
 KMONS:  C : glowing orange brain / torpor snail / tainted leviathan w:5 / \
             undying armoury w:5 / apis

@@ -388,14 +388,17 @@ end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
-  local e = math.min(8, math.floor((you.depth()) / 5) + 4 + you.zigs_completed())
-  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
+  local e = math.max(1, 4 - you.zigs_completed())
+  local f = math.min(8, math.floor((you.depth()) / 5) + 4 + you.zigs_completed())
+  local g = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
+  local h = math.max(4, you.zigs_completed() * 2)
   return "soul eater w:" .. d .. " / laughing skull w:" .. d .. " / " ..
-         "deep elf death mage w:2 / shadow dragon w:8 / ghost crab w:4 / " ..
-         "eidolon w:4 / revenant soulmonger w:" .. e .. " / " ..
+         "eye of draining w:" .. e .. " / deep elf death mage w:2 / " ..
+         "shadow dragon w:8 / ghost crab w:4 / eidolon w:4 / " ..
+         "revenant soulmonger w:" .. f .. " / " ..
          "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "halazid warlock w:" .. e .. " / player ghost w:" .. f .. " / " ..
-         "orb of entropy w:" .. f
+         "halazid warlock w:" .. g .. " / player ghost w:" .. g .. " / " ..
+         "orb of entropy w:" .. h
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()

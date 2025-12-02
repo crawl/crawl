@@ -178,7 +178,7 @@ function base_monster_setup(e)
   e.kmons("U = place:Slime:$ / titanic slime creature /\
                rockslime / azure jelly / acid blob /\
                glass eye w:3 / void ooze w:3 / eye of devastation /\
-               golden eye w:3 / shining eye w:3")
+               shining eye w:3 / eye of draining w:3")
   e.kmons("V = azure jelly / rockslime / acid blob")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
                storm dragon / swamp drake / lindwurm / rime drake /\

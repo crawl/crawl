@@ -880,6 +880,8 @@ mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 %rim 0
+eye_of_draining0 MONS_EYE_OF_DRAINING
+eye_of_draining1
 shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
 %rim 1

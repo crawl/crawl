@@ -1987,6 +1987,10 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 3} }}}},
+    { MONS_EYE_OF_DRAINING,        { {2, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
     { MONS_CEREBOV,         { {}, {{ BAND_CEREBOV, {5, 8}, true }}}},
     { MONS_GLOORX_VLOQ,     { {}, {{ BAND_GLOORX_VLOQ, {5, 8}, true }}}},
     { MONS_MNOLEG,          { {}, {{ BAND_MNOLEG, {5, 8}, true }}}},
@@ -2210,6 +2214,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
+    case MONS_EYE_OF_DRAINING:
+        if (player_in_branch(BRANCH_SLIME))
+        {
+            natural_leader = true;
+            band = BAND_DRAINING_EYE_CORPS;
+        }
+        break;
+
     case MONS_SPHINX_MARAUDER:
          if (player_in_branch(BRANCH_VAULTS))
          {
@@ -2411,6 +2423,10 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_AMOEBA_ORGANS,       {{{MONS_GLASS_EYE, 2},
                                   {MONS_GLOWING_ORANGE_BRAIN, 1}}}},
 
+    { BAND_DRAINING_EYE_CORPS,  {{{MONS_VOID_OOZE, 1},
+                                  {MONS_EYE_OF_DEVASTATION, 2},
+                                  {MONS_GLOWING_ORANGE_BRAIN, 1}}}},
+
     { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
                                   {MONS_SEARING_WRETCH, 3}},
 
@@ -2587,6 +2603,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SALAMANDER, 1}},
 
                                  {{MONS_SALAMANDER, 1}}}},
+
     { BAND_ROBIN,               {{{MONS_GOBLIN, 3},
                                   {MONS_HOBGOBLIN, 1}}}},
 

@@ -589,7 +589,7 @@ Primal Wave Norris cast
 
 @The_monster@ prays to the universe for peace to reach @target@.
 %%%%
-Draining Gaze Norris cast
+Antimagic Gaze Norris cast
 
 Something numinous underneath @the_monster_possessive@ waves suddenly gazes at @target@.
 
@@ -763,6 +763,10 @@ A torrent of water rises up through @the_monster@!
 Summon Water Elementals elemental wellspring cast
 
 Water spirits pour forth from @the_monster@!
+%%%%
+eye of draining cast
+
+@The_monster@ smirks and gazes @at@ @target@.
 %%%%
 flayed ghost cast
 

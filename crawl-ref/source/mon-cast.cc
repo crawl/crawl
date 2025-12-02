@@ -146,6 +146,7 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_beckoning_gale(monster &mons, mon_spell_slot slot, bolt&);
+static void _cast_draining_gaze(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
@@ -459,6 +460,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
     { SPELL_BECKONING_GALE, { _foe_not_nearby, _cast_beckoning_gale, } },
+    { SPELL_DRAINING_GAZE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return _negative_energy_spell_goodness(foe);
+        },
+        _cast_draining_gaze,
+    } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall,
@@ -481,7 +490,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             caster.get_foe()->paralyse(&caster, 2 + random2(3));
         },
     } },
-    { SPELL_DRAINING_GAZE, {
+    { SPELL_ANTIMAGIC_GAZE, {
         _caster_sees_foe,
         [](monster &caster, mon_spell_slot slot, bolt&) {
             flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_DRAINING_GAZE);
@@ -1415,6 +1424,34 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
     }
     else
         foe->drain_magic(&caster, mons_spellpower(caster, slot.spell));
+}
+
+static void _cast_draining_gaze(monster &caster, mon_spell_slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+    int drain = 0;
+
+    if (foe->is_player())
+    {
+        // 10% of max HP post-draining: takes 8 casts to drain to 50% at rN0,
+        // 15 at rN+, and 29 at rN++. No minimum amount.
+        flash_tile(foe->pos(), CYAN, 160, TILE_BOLT_DRAINING_GAZE);
+        drain = 75 * you.hp_max / (you.hp_max - you.hp_max_adj_temp);
+        drain_player(drain, false, false, false);
+    }
+    else
+    {
+        // 20% of HD draining, with a minimum of draining twice.
+        flash_tile(foe->pos(), CYAN, 60, TILE_BOLT_DRAINING_GAZE);
+        monster* m_foe = foe->as_monster();
+        drain = max(div_round_up(m_foe->get_experience_level()
+                                 - m_foe->get_ench(ENCH_DRAINED).degree, 5), 2);
+        if (m_foe->add_ench(mon_enchant(ENCH_DRAINED, &you, random_range(60, 150), drain)))
+            simple_monster_message(*m_foe, " is drained!");
+
+        _whack(caster, *foe);
+    }
 }
 
 static void _cast_beckoning_gale(monster &caster, mon_spell_slot, bolt&)
@@ -2585,6 +2622,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CLEANSING_FLAME:
     case SPELL_DRAINING_GAZE:
     case SPELL_CONFUSION_GAZE:
+    case SPELL_ANTIMAGIC_GAZE:
     case SPELL_MARTYRS_KNELL:
     case SPELL_HAUNT:
     case SPELL_VANQUISHED_VANGUARD:
@@ -8034,7 +8072,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
-                                        10, MONS_EYE_OF_DEVASTATION);
+                                        10, MONS_EYE_OF_DEVASTATION,
+                                        10, MONS_EYE_OF_DRAINING);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe,
