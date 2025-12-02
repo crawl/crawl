@@ -1896,6 +1896,16 @@ w:2
 w:2
 @RANDGEN@
 %%%%
+# Same as @graffiti author name@ below, but without orc names, randomly
+# generated names, or rare names.
+changeable non-randgen graffiti author name
+
+w:50
+@ancestor name@
+
+w:2
+@bland graffiti author name@
+%%%%
 graffiti author name
 
 w:50

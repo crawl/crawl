@@ -987,6 +987,9 @@ w:2
 
 w:2
 @rare graffiti author name@ has passed on the name to someone else worthy of it
+
+w:2
+@changeable non-randgen graffiti author name@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
 graffiti_fight
 
