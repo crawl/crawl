@@ -1350,16 +1350,6 @@ w:2
 w:2
 the [mage|sorcerer|spellcaster|wizard] @rare graffiti author name@ (supposedly)
 %%%%
-graffiti_professor_necromancy
-
-@changeable graffiti author name@ the necromancer
-
-w:2
-@orc graffiti author name@ necromancer
-
-w:2
-the necromancer @rare graffiti author name@ (supposedly)
-%%%%
 graffiti_professor_mundane
 
 @changeable graffiti author name@ the [knight|veteran|warlord|warrior]
@@ -1369,6 +1359,16 @@ w:2
 
 w:2
 the [knight|veteran|warlord|warrior] @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_necromancy
+
+@changeable graffiti author name@ the necromancer
+
+w:2
+@orc graffiti author name@ necromancer
+
+w:2
+the necromancer @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_remedial_class
 
