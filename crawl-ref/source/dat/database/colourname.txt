@@ -1082,6 +1082,8 @@ with @graffiti author name@ for [a good time|tips on how to survive in the dunge
 
 of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
 
+of an artificer club [testing|tinkering with] [devices|evokables|wands]
+
 of a master class on insults being taught by imps
 
 of a @graffiti_remedial_class@
