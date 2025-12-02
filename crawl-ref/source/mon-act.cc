@@ -2681,7 +2681,7 @@ void mons_reset_just_seen()
     just_seen_queue.clear();
 }
 
-static void _display_just_seen()
+void print_mons_left_view_messages()
 {
     // these are monsters that were marked as SC_NEWLY_SEEN at some point since
     // last time this was called. We announce any that leave all at once so
@@ -2763,7 +2763,6 @@ void handle_monsters(bool with_noise)
             break;
         }
     }
-    _display_just_seen();
 
     // Process noises now (before clearing the sleep flag).
     if (with_noise)

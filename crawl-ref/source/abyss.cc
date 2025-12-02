@@ -37,6 +37,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
@@ -462,6 +463,7 @@ void check_banished()
     if (you.banished)
     {
         you.banished = false;
+        mons_reset_just_seen();
         ASSERT(brdepth[BRANCH_ABYSS] != -1);
         if (!player_in_branch(BRANCH_ABYSS))
             mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");

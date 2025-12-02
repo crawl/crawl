@@ -2623,6 +2623,11 @@ void world_reacts()
 
     handle_time();
     manage_clouds();
+
+    // This needs to happen after `manage_clouds` is called as fog clouds
+    // decaying will affect whether a monster is still in view
+    print_mons_left_view_messages();
+
     if (env.level_state & LSTATE_GOLUBRIA)
         _update_golubria_traps(you.time_taken);
     if (env.level_state & LSTATE_STILL_WINDS)
