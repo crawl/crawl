@@ -1392,6 +1392,16 @@ w:2
 w:2
 the necromancer @rare graffiti author name@ (supposedly)
 %%%%
+graffiti_professor_shapeshifting
+
+@changeable graffiti author name@ the [shapeshifter|talismancer]
+
+w:2
+@orc graffiti author name@ [shapeshifter|talismancer]
+
+w:2
+the [shapeshifter|talismancer] @rare graffiti author name@ (supposedly)
+%%%%
 graffiti_remedial_class
 
 Remedial @random_skill@ class taught by @graffiti_professor_any@
@@ -1413,6 +1423,9 @@ Remedial Necromancy class taught by @graffiti_professor_necromancy@
 
 w:2
 Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
+
+w:2
+Remedial Shapeshifting class taught by @graffiti_professor_shapeshifting@
 %%%%
 graffiti_rumour
 
