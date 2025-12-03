@@ -1,6 +1,6 @@
 name: "erythrospite"
 glyph: {char: "E", colour: etc_blood}
-flags: [see_invis, unblindable, amorphous, no_skeleton, speaks, warm_blood]
+flags: [see_invis, unblindable, amorphous, no_skeleton, speaks, warm_blood, no_poly_to]
 exp: 42
 will: 10
 attacks:
