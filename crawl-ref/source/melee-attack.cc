@@ -223,38 +223,9 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attacker->is_monster())
-    {
-        // Only the first attack costs any energy normally.
-        // Projected attacks will have already had their energy costs paid
-        // elsewhere (ie: from casting Manifold Assault or making a normal attack
-        // with the Autumn Katana)
-        if (!effective_attack_number && !is_projected)
-        {
-            int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
-            int delay = attacker->attack_delay().roll();
-            dprf(DIAG_COMBAT, "Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
-            ASSERT(energy > 0);
-            ASSERT(delay > 0);
-
-            attacker->as_monster()->speed_increment
-                -= div_rand_round(energy * delay, 10);
-        }
-
-        // Statues and other special monsters which have AT_NONE need to lose
-        // energy, but otherwise should exit the melee attack now.
-        if (attk_type == AT_NONE)
-            return false;
-
-        // If we're a monster that was supposed to get a free instant cleave
-        // attack, refund the energy now.
-        monster* mons = attacker->as_monster();
-        if (mons->has_ench(ENCH_INSTANT_CLEAVE))
-        {
-            mons->del_ench(ENCH_INSTANT_CLEAVE);
-            mons->speed_increment += mons->action_energy(EUT_ATTACK);
-        }
-    }
+    // If this is a non-attack, exit now.
+    if (attk_type == AT_NONE)
+        return false;
 
     if (attacker != defender && !is_riposte)
     {
@@ -348,9 +319,7 @@ bool melee_attack::handle_phase_blocked()
                 needs_block_message = false;
             }
 
-            // Note: effective attack number must be non-zero or the monster
-            // will be charged energy a second time for this attack.
-            melee_attack rebuke(attacker, best_targ, attack_number, 1);
+            melee_attack rebuke(attacker, best_targ, attack_number, 0);
             copy_params_to(rebuke);
             rebuke.responsible = attacker;
             rebuke.never_cleave = true;

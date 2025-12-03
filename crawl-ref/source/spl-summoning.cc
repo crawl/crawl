@@ -4009,8 +4009,6 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
         atk.attack();
     }
 
-    croc->flags & ~MF_JUST_SUMMONED;
-
     if (you.can_see(agent))
     {
         mprf("%s dismount%s %s crocodile.",

@@ -603,15 +603,33 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                                 effective_attack_number);
 
         melee_attk.simu = simu;
+        melee_attk.attack();
 
-        // If the attack fails out, keep effective_attack_number up to
-        // date so that we don't cause excess energy loss in monsters
-        if (!melee_attk.attack())
-            effective_attack_number = melee_attk.effective_attack_number;
-        else if (did_hit && !(*did_hit))
+        if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
 
         fire_final_effects();
+    }
+
+    if (!attacker->alive())
+        return true;
+
+    // Lose energy for the attack.
+    int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
+    int delay = attacker->attack_delay().roll();
+    dprf(DIAG_COMBAT, "Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
+    ASSERT(energy > 0);
+    ASSERT(delay > 0);
+    attacker->as_monster()->speed_increment -= div_rand_round(energy * delay, 10);
+
+    // If this attack was supposed to be instant, refund the energy now.
+    if (monster* mons = attacker->as_monster())
+    {
+        if (mons->has_ench(ENCH_INSTANT_CLEAVE))
+        {
+            mons->del_ench(ENCH_INSTANT_CLEAVE);
+            mons->speed_increment += mons->action_energy(EUT_ATTACK);
+        }
     }
 
     // Here, rather than in melee_attack, so that it only triggers on attack

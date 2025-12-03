@@ -836,11 +836,6 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
         // things like the Dark Maul.
         you.time_taken = max(you.attack_delay().roll(), player_speed());
     }
-    // The attack will have automatically consumed energy from the monster, so
-    // let's refund that (as they will be automatically be charged for casting
-    // the spell *in addition* to that).
-    else
-        agent.as_monster()->speed_increment += agent.as_monster()->energy_cost(EUT_ATTACK);
 
     // Finally, apply traps at the agent's destination *after* the attack.
     agent.finalise_movement();
