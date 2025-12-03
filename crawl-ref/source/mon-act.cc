@@ -1152,12 +1152,6 @@ static void _check_blazeheart_golem_link(monster& mons)
         {
             mons.del_ench(ENCH_PARALYSIS, true);
             simple_monster_message(mons, " core flares to life once more.", true);
-
-            // Since we check this at the END of the golem's move, even if it
-            // started its turn with the player next to them (due to player
-            // movement), grant some instant energy to make it look like it
-            // activated first.
-            //mons.speed_increment += mons.action_energy(EUT_MOVE);
         }
 
         // Give the golem another turn before it goes cold.
