@@ -94,20 +94,17 @@ void maybe_notice_monster(monster& mons, bool stepped)
     const bool already_seen = (bool)(mons.flags & MF_SEEN);
     seen_monster(&mons);
 
+    if (!already_seen)
+        _check_monster_alert(mons);
+
     // If the monster has been seen before (and thus won't print an encounter
     // message), tell interrupt_activity to print something else if needed.
     if (crawl_state.is_repeating_cmd() || you_are_delayed())
     {
-        if (_try_seen_interrupt(mons, !already_seen ? SC_NEWLY_SEEN
-                                                    : stepped ? SC_NONE
-                                                              : SC_ALREADY_IN_VIEW))
-        {
-            return;
-        }
+        _try_seen_interrupt(mons, !already_seen ? SC_NEWLY_SEEN
+                                                : stepped ? SC_NONE
+                                                          : SC_ALREADY_IN_VIEW);
     }
-
-    if (!already_seen)
-        _check_monster_alert(mons);
 }
 
 static monster_type _mons_merge_genus(monster_type mc)
