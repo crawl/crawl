@@ -216,8 +216,7 @@ bool melee_attack::handle_phase_attempted()
     // Skip invalid and dummy attacks.
     if (defender && !can_reach(grid_distance(attack_position, defender->pos()))
         || attk_flavour == AF_CRUSH
-           && (!attacker->can_constrict(*defender, CONSTRICT_MELEE)
-               || attacker->is_monster() && attacker->mid == MID_PLAYER))
+           && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
     {
         --effective_attack_number;
 
