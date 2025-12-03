@@ -16,7 +16,6 @@
 
 #define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
-#define TESSERACT_DUMMY_KEY "tesseract_dummy"
 
 class actor;
 class monster;

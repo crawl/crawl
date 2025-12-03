@@ -1479,14 +1479,6 @@ void activate_tesseracts()
         if (mi->type != MONS_BOUNDLESS_TESSERACT)
             continue;
 
-        behaviour_event(*mi, ME_ALERT);
-        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
-        set_terrain_seen(mi->pos());
-        view_update_at(mi->pos());
-#ifdef USE_TILE
-        tiles.update_minimap(mi->pos());
-#endif
-
         if (!did_activate)
         {
             mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
@@ -1509,6 +1501,14 @@ void activate_tesseracts()
             for (int i = 0; i < num; ++i)
                 _make_tesseract_spawn(false, true);
         }
+
+        behaviour_event(*mi, ME_ALERT);
+        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        set_terrain_seen(mi->pos());
+        view_update_at(mi->pos());
+#ifdef USE_TILE
+        tiles.update_minimap(mi->pos());
+#endif
     }
 }
 

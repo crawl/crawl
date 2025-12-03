@@ -3380,13 +3380,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             if (mi->type == MONS_BOUNDLESS_TESSERACT && mi->mid != mons.mid)
             {
-                monster_die(**mi, KILL_RESET, NON_MONSTER);
-                env.map_knowledge(mi->pos()).clear_monster();
-                //set_terrain_seen(mi->pos());
+                env.map_knowledge(mi->pos()).clear();
                 view_update_at(mi->pos());
 #ifdef USE_TILE
                 tiles.update_minimap(mi->pos());
 #endif
+                monster_die(**mi, KILL_RESET, NON_MONSTER);
             }
             else if ((mi->flags & MF_TESSERACT_SPAWN))
             {
