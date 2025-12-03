@@ -3589,6 +3589,7 @@ static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
     // and before the monster's.
     // No, there is no logic to this ordering (pf):
     if (!mon.alive()
+        || mon.type == MONS_SPECTRAL_WEAPON
         || !one_chance_in(3)
         || mon.wont_attack()
         || !mons_has_attacks(mon)
