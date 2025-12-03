@@ -1997,6 +1997,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             mprf("%s radiates an overwhelming force.", item_name.c_str());
             break;
 
+        case SPWPN_DEVIOUS:
+            mpr("You feel a baleful cunning.");
+            break;
+
         default:
             break;
         }
@@ -2118,6 +2122,12 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
             case SPWPN_CONCUSSION:
                 if (showMsgs)
                     mprf("%s stops radiating force.", msg.c_str());
+                break;
+
+            case SPWPN_DEVIOUS:
+                mpr("You feel guileless.");
+                you.duration[DUR_DEVIOUS] = 0;
+                you.redraw_evasion = true;
                 break;
             }
         }

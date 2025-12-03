@@ -3331,6 +3331,7 @@ int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
         if (armour)
             ev += property(*armour, PARM_EVASION) / 60;
     }
+    ev += 8 * wearing_ego(OBJ_WEAPONS, SPWPN_DEVIOUS);
 
     // evasion from jewellery
     const item_def *ring = mslot_item(MSLOT_JEWELLERY);
@@ -4010,7 +4011,8 @@ int monster::willpower() const
 
 int monster::slaying(bool /*throwing*/, bool /*random*/) const
 {
-    return wearing_jewellery(RING_SLAYING) + scan_artefacts(ARTP_SLAYING);
+    return wearing_jewellery(RING_SLAYING) + scan_artefacts(ARTP_SLAYING)
+            + wearing_ego(OBJ_WEAPONS, SPWPN_DEVIOUS) * 6;
 }
 
 bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const

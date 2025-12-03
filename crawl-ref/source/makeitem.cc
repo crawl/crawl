@@ -340,6 +340,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_ENTANGLING:
     case SPWPN_SUNDERING:
     case SPWPN_CONCUSSION:
+    case SPWPN_DEVIOUS:
         if (is_range_weapon(item))
             return false;
         break;

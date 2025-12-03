@@ -231,7 +231,8 @@ i-sickness BRAND_REBUKE
 i-valour BRAND_VALOUR
 i-entangling BRAND_ENTANGLING
 i-sundering BRAND_SUNDERING
-i-concussion BRAND_CONCUSSION BRAND_WEP_LAST
+i-concussion BRAND_CONCUSSION
+i-devious BRAND_DEVIOUS BRAND_WEP_LAST
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION

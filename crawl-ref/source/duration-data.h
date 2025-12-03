@@ -765,6 +765,13 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_armour_class = true;
       }}}},
+    { DUR_DEVIOUS,
+      BLUE, "Devious",
+      "devious", "devious",
+      "You feel very devious.", D_DISPELLABLE | D_EXPIRES | D_ATTACK_EXTENDED,
+      {{ "You feel less devious.", [](){
+          you.redraw_evasion = true;
+      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

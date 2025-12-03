@@ -595,6 +595,18 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text = make_stringf("Slay +%d", you.props[WEREFURY_KEY].get_int());
     break;
 
+    case DUR_DEVIOUS:
+    {
+        const int stacks = you.props[DEVIOUS_KEY].get_int();
+        if (stacks == 1)
+            inf.light_colour = BLUE;
+        else if (stacks == 2)
+            inf.light_colour = LIGHTBLUE;
+        else
+            inf.light_colour = WHITE;
+    }
+    break;
+
     case STATUS_CLAUSTROPHOBIA:
         if (you.has_bane(BANE_CLAUSTROPHOBIA))
         {

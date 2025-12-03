@@ -1253,3 +1253,8 @@ Sunder status
 Your next attack will have increased accuracy, inflict three times its normal
 damage, and cleave at an increased range. This bonus is lost if you perform any
 action besides attacking.
+%%%%
+Devious status
+
+Your evasion and slaying are increased. This stacks up to 3 times and will never
+expire so long as you continue to perform melee attacks.

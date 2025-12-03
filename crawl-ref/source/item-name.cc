@@ -411,7 +411,7 @@ static const char *weapon_brands_terse[] =
     "obsolete", "confuse",
 #endif
     "penet", "reap", "spect", "rebuke", "valour",
-    "entangle", "sunder", "concuss",
+    "entangle", "sunder", "concuss", "devious",
     "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
@@ -441,7 +441,7 @@ static const char *weapon_brands_verbose[] =
     "obsolescence", "confusion",
 #endif
     "penetration", "reaping", "spectralising", "rebuke", "valour",
-    "entangling", "sundering", "concussion",
+    "entangling", "sundering", "concussion", "devious",
     "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
@@ -471,7 +471,7 @@ static const char *weapon_brands_adj[] =
     "obsolete", "confusing",
 #endif
     "penetrating", "reaping", "spectral", "rebuking", "valourous",
-    "entangling", "sundering", "concussing",
+    "entangling", "sundering", "concussing", "devious",
     "num_special", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
@@ -487,7 +487,7 @@ COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
 COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_HEAVY, SPWPN_SPECTRAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_HEAVY, SPWPN_SPECTRAL, SPWPN_DEVIOUS };
 
 /**
  * What's the name of a type of weapon brand?

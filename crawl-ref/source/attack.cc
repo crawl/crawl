@@ -1469,6 +1469,21 @@ int attack::player_stab(int damage)
         // Construct reasonable message.
         stab_message();
         practise_stabbing();
+
+        if (using_weapon() && get_weapon_brand(*weapon) == SPWPN_DEVIOUS)
+        {
+            if (!you.duration[DUR_DEVIOUS])
+            {
+                mprf(MSGCH_DURATION, "You feel devious.");
+                you.props.erase(DEVIOUS_KEY);
+            }
+
+            you.duration[DUR_DEVIOUS] = max(you.duration[DUR_DEVIOUS],
+                                            random_range(50, 90));
+            int& stacks = you.props[DEVIOUS_KEY].get_int();
+            stacks = min(stacks + 1, 3);
+            you.redraw_evasion = true;
+        }
     }
     else
     {
@@ -1526,9 +1541,12 @@ void attack::player_stab_check()
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && stab_bonus > 1)
     {
+        const bool devious = using_weapon()
+                                && get_weapon_brand(*weapon) == SPWPN_DEVIOUS;
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
-                                     + you.dex() + 1,
+                                     + you.dex() + 1
+                                     + (devious ? 10 : 0),
                                      100);
     }
 

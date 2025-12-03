@@ -24,6 +24,11 @@ It warps and distorts space around it, and may blink, banish, or inflict extra
 damage upon those it strikes. Unwielding it can teleport you to foes or banish
 you to the Abyss.
 %%%%
+devious (devious) weapon ego
+
+It has an increased chance to perform stab attacks against vulnerable targets,
+and temporarily increases the wielder's EV and slaying each time they do so.
+%%%%
 draining (drain) weapon ego
 
 It sometimes drains living victims (1/2 chance). This deals an additional
