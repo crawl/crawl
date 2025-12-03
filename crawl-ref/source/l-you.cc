@@ -561,11 +561,11 @@ LUARET1(you_silenced, boolean, you.is_silenced())
  */
 LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
 
-/*** Are you contaminated?
+/*** How badly are you contaminated?
  * @treturn number
- * @function contaminated
+ * @function contamination
  */
-LUARET1(you_contaminated, number, you.magic_contamination > 0)
+LUARET1(you_contamination, number, you.magic_contamination / 10)
 
 /*** How much damage could you take right now if your magic contamination exploded?
  * @treturn number
@@ -1520,7 +1520,7 @@ static const struct luaL_reg you_clib[] =
     { "brilliant",    you_brilliant },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
-    { "contaminated", you_contaminated },
+    { "contamination", you_contamination },
     { "contam_max_damage", you_contam_max_damage },
     { "feel_safe",    you_feel_safe },
     { "deaths",       you_deaths },
