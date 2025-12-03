@@ -1493,40 +1493,30 @@ MAP
     ...........
 ENDMAP
 
-NAME: cheibrodos_spider_deadly_dance
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_spider_deadly_dance
+TAGS:   no_item_gen no_monster_gen
 ORIENT: float
-MONS: dancing weapon ; short sword / dancing weapon ; mace \
-      / dancing weapon ; war axe / dancing weapon ; trident \
-      / dancing weapon ; mace
-MONS: tarantella / redback w:3
-KMONS: - = dancing weapon ; short sword / dancing weapon ; mace \
-           / dancing weapon ; war axe / dancing weapon ; trident \
-           / dancing weapon ; mace
-KMONS: " = dancing weapon ; rapier / dancing weapon ; scimitar \
-           / dancing weapon ; broad axe / dancing weapon ; partisan \
-           / dancing weapon ; morningstar
-KITEM: - = plate armour / plate armour good_item w:1 / chain mail \
-           / chain mail good_item w:1 / scale mail / scale mail good_item w:1 \
-           / ring mail / ring mail good_item w:1
-KITEM: " = plate armour / plate armour good_item w:1 / chain mail \
-           / chain mail good_item w:1 / scale mail / scale mail good_item w:1 \
-           / ring mail / ring mail good_item w:1
-KFEAT: ^ = web trap
+KMONS:  01 = dancing weapon ; short sword | mace w:15 | war axe | trident
+KMONS:  2 = tarantella / redback w:3
+KMONS:  3 = dancing weapon ; rapier | scimitar | broad axe | \
+                             partisan | morningstar
+KITEM:  03 = plate armour / plate armour good_item w:1 / chain mail / \
+             chain mail good_item w:1 / scale mail / scale mail good_item w:1
+KFEAT:  ^ = web trap
 NSUBST: ` = 4:2 / 4=2., ' = 2=*% / 5=%., . = 2:^ / 4=^.
 MAP
     ccccccccccccc
-    cm"mc'''cm"mc
+    cm3mc'''cm3mc
     c2...'''...2c
     c2...'''...2c
 cccccc+cccGccc+cccccc
 cm`.....c2.2c.....`mc
-c-......+.1.+......-c
+c0......+.1.+......0c
 cm`.....c...c.....`mc
 ccccc...cc=cc...ccccc
     c...c...c...c
     c`.`c...c`.`c
-    cm-mc...cm-mc
+    cm0mc...cm0mc
     ccccc.@.ccccc
 ENDMAP
 

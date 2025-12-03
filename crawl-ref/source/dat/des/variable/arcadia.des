@@ -4,6 +4,8 @@
 # Only one of these can place per Depths, and are mutually exclusive with
 # random Enchantress placement; they've also diluted with appropriate natives.
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function old_forest_ends(e)
     e.tags('uniq_old_forest_end no_monster_gen')
@@ -210,15 +212,17 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow | arbalest / \
         glowing orange brain w:5 / rakshasa / chonchon / eleionoma
 KMONS:  L = water nymph
 KMONS:  P = plant
-ITEM:   gold q:1 / stone q:1 no_pickup w:20
-ITEM:   any potion, potion of moonshine pre_id
+ITEM:   stone q:1 no_pickup, any potion, potion of moonshine pre_id
 KFEAT:  L = deep_water
 KFEAT:  F = cache_of_fruit
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.
-FTILE:  efF124+|%*$- = floor_vines
+FTILE:  efF124+|%*$!- = floor_vines
+FTILE:  d = floor_rough_brown
+FTILE:  P = floor_moss
 NSUBST: 5 = 1:4 / 3:6 / 1:56 / *:5
-NSUBST: 2 = 1:3 / 1:223 / *:2, e = 3:F / * = e f:35
+NSUBST: 2 = 1:3 / 1:223 / *:2, e = 3:F / 3:! / 2:e / * = e f:35
+: decorative_floor(_G, '!', "set of bottled spirits")
 : old_forest_ends(_G)
 veto {{
   return crawl.game_started() and you.uniques("Enchantress")
@@ -231,14 +235,14 @@ XttTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTtxx
 XttT.5..................................0Ttxx
 XttT..PdPdP.cccccccccccccccccccccccccccc.Ttxx
 XttT..PdPdP.ce-e-e-e-e-e-e-eceeeeee+|||c.Ttxx
-XttT..PdPdP.c-e-e-e-c-e-e-e-c------c|||c.Ttxx
+XttT..PdPdP.c-e-e-e-c-e-e-e-c!-----c|||c.Ttxx
 XttT..PdPdP.ce-e2e-ece-e2e-ec------cc+cc.Ttxx
 XttT..PdPdP.cc+ccccccc+cccccc---2-4c%**c.Ttxx
 XttT..PdPdP5c-----4---4-----+----1-c%**c.Ttxx
 XttT..PdPdP.c-------2-------+---2-4c%**c.Ttxx
 XtT...PdPdP.c--wwwwwwwwwww--+------c%**c.Ttxx
 XtT...PdPdP.c--wwwwwwwwwww--c------c$$$c.Ttxx
-XtT...PdPdP.c-----4---4-----c------c$$$c.Ttxx
+XtT...PdPdP.c-----4---4-----c!-----c$$$c.Ttxx
 XtT...PdPdP.c---------------ceeeeee+$$$c.Ttxx
 XTT...PdPdP.cc++cccccccccccccccccccccccc.Ttxx
 T.......5......5............5...........5Ttxx

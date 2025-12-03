@@ -4636,12 +4636,10 @@ KITEM:  2 = devastator / eveningstar ego:heavy randart pre_id \
 : if you.in_branch("D") then
 :     if you.depth() < 13 then
 MONS:   two-headed ogre / basilisk / gargoyle / boulder beetle w:5
-KMONS:  2 = catoblepas w:30 / stone giant / war gargoyle \
-        / deep troll earth mage
+KMONS:  2 = catoblepas w:30 / stone giant / deep troll earth mage
 :     else
 MONS:   basilisk / gargoyle / boulder beetle / catoblepas
-KMONS:  2 = stone giant / deep troll earth mage / war gargoyle \
-        / iron dragon / crystal guardian
+KMONS:  2 = stone giant / deep troll earth mage / crystal guardian
 :     end
 : elseif you.in_branch("Elf") then
 MONS:   earth elemental w:20 / stone giant / war gargoyle
@@ -11960,7 +11958,7 @@ SUBST:  b : cx
 SUBST:  b : bcvx
 : end
 NSUBST: ' = d / e / $
-: vaults_hard_standard(_G, false, "-QR189de|*$")
+: vaults_hard_standard(_G, false, "-QR189de|*$G")
 MARKER: P = lua:transp_loc("sealed_arena_entry")
 MARKER: Q = lua:transp_dest_loc("sealed_arena_entry")
 MARKER: R = lua:transp_loc("sealed_arena_exit")

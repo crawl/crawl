@@ -264,15 +264,15 @@ function pan_entry_vault_contents(e, glyph)
         e.kmons(glyph .. "1 = " .. tiertwo)
         e.kmons("2 = " .. tierthree)
         e.nsubst("2 = 2 = 22. / *:.")
-        e.nsubst("1 = 1:112 / *:.")
+        e.nsubst("1 = 1:1 / *:.")
     else
         e.subst("12 = .")
         e.kmons(glyph .. " = " .. tiertwo .. " / " ..
                 tierthree .. " / " .. tierthree)
     end
 
-    e.ftile(".+12O : floor_demonic_red / floor_demonic_blue / " ..
-                    "floor_demonic_green / floor_demonic_magenta")
+    e.ftile(".+12O$ : floor_demonic_red / floor_demonic_blue / " ..
+                     "floor_demonic_green / floor_demonic_magenta")
 end
 
 function pan_declare_demonic_rune(holy)

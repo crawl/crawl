@@ -2402,7 +2402,7 @@ MONS:    stone giant / deep troll earth mage / golden dragon
 MONS:    iron troll / iron dragon, iron giant
 KMONS:   pP = pile of debris
 KFEAT:   ~ = broken_door
-SHUFFLE: xP~ / 'P' / '''
+SHUFFLE: xP~ / "P" / """
 SUBST:   ' = .
 TILE:    b = dngn_crystal_cyan
 : ghost_good_loot(_G)

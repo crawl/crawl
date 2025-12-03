@@ -703,11 +703,18 @@ TAGS:  transparent shop extra allow_dup
 KFEAT: S = any shop
 KFEAT: D = demonic_tree
 SUBST: t : t:35 D:1
+: if you.in_branch("Shoals") then
+FTILE: @'tD = floor_rough_lightgreen
+FTILE: .S = floor_grass
+: else
+FTILE: @'tD = floor_moss
+FTILE: .S = floor_grass_dark
+: end
 MAP
 xxxx
 xS.t
-x...
-xt.@
+x..'
+xt'@
 ENDMAP
 
 NAME:   nicolae_shop_real_fake_doors
@@ -2401,6 +2408,7 @@ SHUFFLE: AB, CD
 SUBST:   C : .:80 xcvbmGtT
 SUBST:   D : .:80 xcvbmGtT
 SUBST:   B : A.
+FTILE:   t = floor_moss
 MAP
     xxx@xxx
    xxd...dxx
@@ -2425,6 +2433,9 @@ DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
 KFEAT: D = general shop type:General suffix:Store
 KFEAT: E = general shop type:Specific suffix:Store count:1
 SUBST: G : GTUtwx, x : x:120 c:60 bv.
+: if you.in_branch("Orc") then
+KMONS: t = fungus
+: end
 MAP
 xx...xx
 xG...Gx

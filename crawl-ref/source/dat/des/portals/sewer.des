@@ -853,7 +853,7 @@ cc.....cc
    cdc      cc---..cc
    c.c     cc---w...cc
 cccc.ccccccc---www...cc
-c24........---wwwww.A<c
+c23........---wwwww.A<c
 cccc.ccccccc---www...cc
    c.c     cc---w...cc
    c-c      cc---..cc
@@ -933,6 +933,7 @@ KMONS:   F = patrolling rock fish
 : kitem("! = " .. dgn.loot_scrolls)
 KFEAT:   1 = W
 KFEAT:   2 = w
+KFEAT:   F = x
 SUBST:   QR = .
 NSUBST:  2 = 2:2 / 1:w / * = 2w, F = 2:F / 1:Fx / *:x
 NSUBST:  . = 1:1 / 1 = 1. / * = .WW

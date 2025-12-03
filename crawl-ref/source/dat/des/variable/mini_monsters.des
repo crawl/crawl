@@ -4986,8 +4986,8 @@ NAME:   wad_dig_loot
 TAGS:   transparent no_descent
 DEPTH:  D:8-, Elf, Depths, !Depths:$
 WEIGHT: 4
-KPROP:  %*8DEF = no_tele_into
-KMASK:  %*|8aDEF' = opaque
+KPROP:  %*8DEeF = no_tele_into
+KMASK:  %*|8aDEeF' = opaque
 KITEM:  EF = *
 KMONS:  EF = 8
 KMONS:  p = plant
@@ -5001,8 +5001,9 @@ KMONS:  D = deep troll earth mage
 SUBST:  EF = '
 : elseif you.in_branch("Elf") then
 KITEM:  D = |
-KMONS:  D = deep elf elementalist
-SUBST:  F = '
+KMONS:  D = patrolling cacodemon
+KMONS:  e = patrolling deep elf demonologist
+SUBST:  E = e, F = '
 : elseif you.in_branch("Depths") then
 KITEM:  D = |
 KMONS:  D = deep troll earth mage / cacodemon
@@ -5010,8 +5011,14 @@ KMONS:  D = deep troll earth mage / cacodemon
 : else
 SUBST:  DE = v, F = '
 : end
+: if you.in_branch("Elf") then
+TILE:   v = dngn_metal_wall_red
+FTILE:  " = floor_infernal_blank
+COLOUR: " = red
+: else
 FTILE:  " = floor_pebble_brown
 COLOUR: " = brown
+: end
 MAP
 @....vvvvv..G.@
 .""".vvvvvp....
