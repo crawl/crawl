@@ -4291,6 +4291,21 @@ bool player_harmful_contamination()
     return you.magic_contamination >= 1000;
 }
 
+// Returns the maximum damage the player could take if their current magic
+// contamination exploded.
+int contam_max_damage()
+{
+    if (you.magic_contamination < 1000)
+        return 0;
+
+    const bool severe = you.magic_contamination >= 2000;
+    const int pow = severe ? you.experience_level * 3 / 2
+                           : you.experience_level;
+    dice_def dmg = zap_damage(ZAP_CONTAM_EXPLOSION, pow, false, false);
+
+    return dmg.size * dmg.num;
+}
+
 /**
  * Provide a description of the player's magic contamination.
  *
@@ -4322,7 +4337,13 @@ string describe_contamination(bool verbose)
     const unsigned int lvl = you.magic_contamination / 1000;
     ASSERT(lvl < ARRAYSZ(verbose_desc));
 
-    return verbose ? verbose_desc[lvl] : terse_desc[lvl];
+    string msg = verbose ? verbose_desc[lvl] : terse_desc[lvl];
+
+    const int dmg = contam_max_damage();
+    if (dmg > 0)
+        msg = make_stringf("%s (up to %d damage)", msg.c_str(), dmg);
+
+    return msg;
 }
 
 // Controlled is true if the player actively did something to cause

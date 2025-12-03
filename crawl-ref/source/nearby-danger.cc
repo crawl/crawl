@@ -261,6 +261,13 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             return false;
         }
 
+        if (contam_max_damage() >= you.hp)
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are contaminated with a potentially lethal amount of magic!");
+            return false;
+        }
+
         if (you.duration[DUR_STICKY_FLAME])
         {
             if (announce)

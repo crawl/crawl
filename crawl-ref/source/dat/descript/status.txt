@@ -110,6 +110,13 @@ You are glowing with mutagenic radiation. This can inflict mutations over time
 (usually negative) or even cause you to suffer damage as the unstable magic
 explodes violently. In addition, your glow prevents invisibility and reduces
 your stealth.
+{{
+    local dmg = you.contam_max_damage();
+    if dmg > 0 then
+        return "\nAn explosion at your current level of contamination could " ..
+               "inflict up to " .. dmg .. " damage."
+    end
+}}
 %%%%
 Drain status
 

@@ -1181,6 +1181,7 @@ int get_real_hp(bool trans, bool drained = true);
 int get_real_mp(bool include_items);
 
 bool player_harmful_contamination();
+int contam_max_damage();
 string describe_contamination(bool verbose = true);
 
 bool sanguine_armour_valid();
