@@ -395,16 +395,6 @@ static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
     return feat == DNGN_SHALLOW_WATER || feat == DNGN_MANGROVE;
 }
 
-static tileidx_t _base_wave_tile(colour_t colour)
-{
-    switch (colour)
-    {
-        case BLACK: return TILE_DNGN_WAVE_N;
-        case GREEN: return TILE_MURKY_WAVE_N;
-        default: die("no %s deep water wave tiles", colour_to_str(colour).c_str());
-    }
-}
-
 static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
 {
     auto& cell = vbuf(gc).tile;
@@ -420,10 +410,10 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     if (!feat_is_water(feat) && !feat_is_lava(feat))
         return;
 
-    if (feat == DNGN_DEEP_WATER && (colour == BLACK || colour == GREEN))
+    if (feat == DNGN_DEEP_WATER)
     {
         // +7 and -- reverse the iteration order
-        int tile = _base_wave_tile(colour) + 7;
+        int tile = tile_dngn_coloured(TILE_DNGN_WAVE_N, colour) + 7;
         for (adjacent_iterator ai(gc); ai; ++ai, --tile)
         {
             if (ai->x < 0 || ai->x >= vbuf.size().x || ai->y < 0 || ai->y >= vbuf.size().y)
@@ -437,7 +427,7 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), vbuf);
     bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), vbuf);
 
-    if (north || west || east && (colour == BLACK || colour == LIGHTGREEN))
+    if (north || west || east)
     {
         if (north)
             cell.add_overlay(TILE_SHORE_N);

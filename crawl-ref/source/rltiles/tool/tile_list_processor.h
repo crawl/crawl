@@ -30,6 +30,12 @@ protected:
         const vector<string> &uc_max_enum,
         bool is_js = false);
 
+    struct variation
+    {
+        int idx;
+        int col;
+    };
+
     string m_name;
 
     tile_page m_page;
@@ -53,8 +59,7 @@ protected:
     vector<int> m_ctg_counts;
     tile m_compose;
     tile* m_texture;
-    int m_variation_idx;
-    int m_variation_col;
+    vector<variation> m_variations;
     int m_weight;
     double m_alpha;
     int m_domino;

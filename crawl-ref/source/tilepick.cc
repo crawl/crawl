@@ -995,30 +995,11 @@ static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
     case DNGN_ENTER_SHOP:
         return tileidx_shop(shop_at(gc));
 
-    case DNGN_DEEP_WATER:
-        if (env.map_knowledge(gc).feat_colour() == GREEN
-            || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
-        {
-            return TILE_DNGN_DEEP_WATER_MURKY;
-        }
-        return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
-        {
-            tileidx_t t = TILE_DNGN_SHALLOW_WATER;
-            if (env.map_knowledge(gc).feat_colour() == GREEN
-                || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
-            {
-                t = TILE_DNGN_SHALLOW_WATER_MURKY;
-            }
+        if (env.map_knowledge(gc).invisible_monster())
+            return TILE_DNGN_SHALLOW_WATER_DISTURBANCE;
+        return TILE_DNGN_SHALLOW_WATER;
 
-            if (env.map_knowledge(gc).invisible_monster())
-            {
-                // Add disturbance to tile.
-                t += tile_dngn_count(t);
-            }
-
-            return t;
-        }
     default:
         return tileidx_feature_base(feat);
     }

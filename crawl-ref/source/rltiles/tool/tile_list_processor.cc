@@ -22,8 +22,6 @@ tile_list_processor::tile_list_processor() :
     m_start_value("0"),
     m_start_value_module(""),
     m_texture(0),
-    m_variation_idx(-1),
-    m_variation_col(-1),
     m_weight(1),
     m_alpha(0.0),
     m_domino(0)
@@ -733,8 +731,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 return false;
             }
 
-            m_variation_idx = idx;
-            m_variation_col = colour;
+            m_variations.push_back(variation{idx, colour});
         }
         else if (strcmp(arg, "reset_mirror") == 0)
         {
@@ -935,11 +932,9 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;
 
-    if (m_variation_idx != -1)
-    {
-        m_page.add_variation(m_last_enum, m_variation_idx, m_variation_col);
-        m_variation_idx = -1;
-    }
+    for (variation v : m_variations)
+        m_page.add_variation(m_last_enum, v.idx, v.col);
+    m_variations.clear();
 }
 
 void tile_list_processor::add_abstracts(
