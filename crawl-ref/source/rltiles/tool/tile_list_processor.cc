@@ -23,6 +23,7 @@ tile_list_processor::tile_list_processor() :
     m_start_value_module(""),
     m_texture(0),
     m_weight(1),
+    m_weight_has_been_used(false),
     m_alpha(0.0),
     m_domino(0)
 {
@@ -584,6 +585,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 return false;
             }
 
+            m_weight_has_been_used = false;
             m_weight = tmp;
         }
         else if (strcmp(arg, "domino") == 0)
@@ -764,6 +766,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 img.copy(*m_page.m_tiles[idx + i]);
                 recolour(img);
                 maybe_mirror(img);
+                m_weight_has_been_used = false;
                 m_weight = m_page.m_probs[idx + i] - old_w;
                 old_w    = m_page.m_probs[idx + i];
                 add_image(img, (i == 0 && m_args[2]) ? m_args[2] : nullptr);
@@ -809,6 +812,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     img.copy(*m_page.m_tiles[idx+i]);
                     recolour(img);
                     maybe_mirror(img);
+                    m_weight_has_been_used = false;
                     m_weight = m_page.m_probs[idx+i] - old_w;
                     old_w    = m_page.m_probs[idx+i];
                     add_image(img, i == 0 ? enumname.c_str() : nullptr);
@@ -917,7 +921,15 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
 
     int weight = m_weight;
     if (enumname)
+    {
+        if (m_weight_has_been_used)
+        {
+            // the weight was for the previous group of tiles
+            m_weight = 1;
+            weight = 1;
+        }
         m_last_enum = m_page.m_counts.size() - 1;
+    }
     else if (m_last_enum < m_page.m_counts.size() && !m_page.m_probs.empty())
     {
         m_page.m_counts[m_last_enum]++;
@@ -926,6 +938,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
 
     m_page.m_base_tiles.push_back(m_last_enum);
 
+    m_weight_has_been_used = true;
     m_page.m_probs.push_back(weight);
     m_page.m_domino.push_back(m_domino);
 

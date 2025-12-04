@@ -289,6 +289,7 @@ swamp1
 swamp2
 swamp3
 
+%weight 3
 salt0 FLOOR_SALT
 %weight 2
 salt1
@@ -298,7 +299,6 @@ salt3
 salt4
 %weight 5
 salt5
-%weight 10
 
 %weight 20
 spider00 FLOOR_SPIDER
@@ -317,7 +317,6 @@ spider09
 %weight 1
 spider10
 spider11
-%weight 3
 
 tomb0 FLOOR_TOMB
 tomb1
@@ -973,6 +972,7 @@ zot_diamonds5
 zot_diamonds6
 zot_diamonds7
 
+%weight 10
 iron0 FLOOR_IRON
 %weight 1
 iron1
@@ -1152,6 +1152,7 @@ studio7
 studio8
 studio9
 
+%weight 3
 cage0 FLOOR_CAGE
 cage1
 cage2
