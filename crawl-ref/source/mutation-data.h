@@ -2451,6 +2451,19 @@ static const mutation_def mut_data[] =
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
 
+{ MUT_NATURAL_SHIFTER, 0, 3, mutflag::good,
+  "natural shifter",
+  {"You feel a little tougher and smarter while shapeshifted. (AC +4, Int +2)",
+   "You feel tougher and smarter while shapeshifted. (AC +6, Int +3)",
+   "You feel much tougher and smarter while shapeshifted. (AC +8, Int +4)"},
+  {"You feel ready to transform.",
+   "You feel ready to transform.",
+   "You feel ready to transform."},
+  {"You want to get back in your own skin.",
+   "You feel less ready to transform.",
+   "You feel less ready to transform."}
+},
+
 // Makhleb-specific mutations
 
 { MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good,

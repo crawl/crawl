@@ -3395,7 +3395,7 @@ bool use_talisman(item_def& talisman)
     }
 
     count_action(CACT_FORM, (int)trans);
-    start_delay<TransformDelay>(trans, &real_item);
+    start_delay<TransformDelay>(trans, &real_item, false);
     if (god_despises_item(real_item, you.religion))
         excommunication();
     you.turn_is_over = true;

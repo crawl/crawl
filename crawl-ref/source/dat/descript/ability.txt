@@ -193,6 +193,10 @@ Golden Breath ability
 Exhales a powerful blast of elemental devastation, which inflicts both fire and
 cold damage, and leaves clouds of poisonous vapour in its wake.
 %%%%
+Innate Transformation ability
+
+Shapeshifts you into your body's natural form.
+%%%%
 # Zin
 Recite ability
 

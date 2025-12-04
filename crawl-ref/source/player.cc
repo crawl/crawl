@@ -3230,6 +3230,16 @@ void level_change(bool skip_attribute_increase)
                     _revenant_spell_gift();
                 break;
 
+            case SP_SLUDGE_ELF:
+                if (new_exp == 4)
+                {
+                    mutate(RANDOM_GOOD_MUTATION, "sludge genetics", false, true,
+                        false, true);
+                }
+                else if (new_exp == 10)
+                    set_innate_transformation();
+                break;
+
             default:
                 break;
             }

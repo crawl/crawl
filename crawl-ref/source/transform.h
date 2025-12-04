@@ -16,6 +16,8 @@ constexpr int DRAGON_FANGS = 5;
 #define FLUX_ENERGY_KEY "flux_energy"
 constexpr int FLUX_ENERGY_WARNING = 10;
 
+#define INNATE_TRANSFORMATION_KEY "innate_transformation"
+
 enum form_capability
 {
     FC_DEFAULT,
@@ -372,3 +374,5 @@ void sun_scarab_spawn_ember(bool first_time);
 monster* get_solar_ember();
 
 bool maw_growl_check(const monster* mon);
+
+void set_innate_transformation();
