@@ -421,6 +421,19 @@ static int _handle_cell_click(const coord_def &gc, int button, bool force)
     return CK_MOUSE_CLICK;
 }
 
+static char32_t _remove_first_character_utf8(string& text)
+{
+    if (text.empty())
+        return 0;
+    char32_t result = 0;
+    int length = utf8towc(&result, text.c_str());
+    if (!length)
+        text.clear();
+    else
+        text.erase(0, length);
+    return result;
+}
+
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 {
     JsonWrapper obj = json_decode(data.c_str());
@@ -433,7 +446,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     fprintf(stderr, "websocket: Received control message '%s' in %d byte.\n", msgtype.c_str(), (int) data.size());
 #endif
 
-    int c = 0;
+    wint_t c = 0;
 
     if (msgtype == "attach")
     {
@@ -607,6 +620,14 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         // (possibly just as a string, like the lua API for this)
         process_command(CMD_GAME_MENU);
     }
+    else if (msgtype == "text_input")
+    {
+        JsonWrapper text = json_find_member(obj.node, "text");
+        text.check(JSON_STRING);
+        ASSERT(m_pending_text_input.empty());
+        m_pending_text_input = text->string_;
+        c = _remove_first_character_utf8(m_pending_text_input);
+    }
 
     return c;
 }
@@ -615,6 +636,10 @@ wint_t TilesFramework::try_await_input()
 {
     if (m_sock_name.empty())
         return 0;
+
+    wint_t c = _remove_first_character_utf8(m_pending_text_input);
+    if (c != 0)
+        return c;
 
     fd_set fds;
     int result;
@@ -634,7 +659,7 @@ wint_t TilesFramework::try_await_input()
         if (result <= 0)
             return 0;
 
-        wint_t c = _receive_control_message();
+        c = _receive_control_message();
         if (c != 0)
             return c;
     }
@@ -659,6 +684,10 @@ wint_t TilesFramework::await_input(bool(*has_console_input)())
 {
     if (m_sock_name.empty())
         return 0;
+
+    wint_t c = _remove_first_character_utf8(m_pending_text_input);
+    if (c != 0)
+        return c;
 
     int result;
     fd_set fds;
@@ -690,7 +719,7 @@ wint_t TilesFramework::await_input(bool(*has_console_input)())
         {
             if (FD_ISSET(m_sock, &fds))
             {
-                wint_t c = _receive_control_message();
+                c = _receive_control_message();
                 if (c != 0)
                     return c;
             }

@@ -387,7 +387,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
     function handle_mobile_input(e)
     {
         e.target.value = e.target.defaultValue;
-        comm.send_message("input", { text: e.originalEvent.data });
+        comm.send_message("text_input", { text: e.originalEvent.data });
     }
 
     function handle_mobile_keydown(e)

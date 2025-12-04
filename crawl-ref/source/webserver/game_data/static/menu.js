@@ -736,7 +736,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 input.off("focusout");
                 var enter = String.fromCharCode(13);
                 var text = input.val() + enter;
-                comm.send_message("input", { text: text });
+                comm.send_message("text_input", { text: text });
 
                 restore();
                 ev.preventDefault();
@@ -1079,14 +1079,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 if (event.which == 1)
                     comm.send_message("key", { keycode: 13 });
                 else if (event.which == 3)
-                    comm.send_message("input", { text: '\'' });
+                    comm.send_message("text_input", { text: '\'' });
             }
             else if (menu.flags & enums.menu_flag.MULTISELECT)
             {
                 if (event.which == 1)
                     comm.send_message("key", { keycode: 32 });
                 else if (event.which == 3)
-                    comm.send_message("input", { text: '\'' });
+                    comm.send_message("text_input", { text: '\'' });
             }
         }
         // TODO: don't rely on hotkeys here

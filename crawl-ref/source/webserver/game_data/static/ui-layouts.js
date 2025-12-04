@@ -73,7 +73,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                 if (colour)
                     $item.addClass("fg"+spell.colour);
                 $item.on("click", function () {
-                    comm.send_message("input", { text: letter });
+                    comm.send_message("text_input", { text: letter });
                 });
             });
             $container.append($list);

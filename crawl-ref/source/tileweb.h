@@ -315,6 +315,8 @@ protected:
 
     player_info m_current_player_info;
 
+    string m_pending_text_input;
+
     void _send_version();
     void _send_layout();
 

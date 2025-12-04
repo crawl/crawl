@@ -502,11 +502,14 @@ static int proc_mouse_event(int c, const MEVENT *me)
 }
 #endif
 
-static int pending = 0;
+static int curses_pending_key = 0;
+#ifdef USE_TILE_WEB
+static int tiles_pending_key = 0;
+#endif
 
 static bool _curses_fetch_pending_key(bool blocking)
 {
-    if (pending)
+    if (curses_pending_key)
         return true;
 
     wint_t c;
@@ -532,15 +535,15 @@ static bool _curses_fetch_pending_key(bool blocking)
         // a timeout from an error...
         if (!blocking)
             return false;
-        pending = ESCAPE;
+        curses_pending_key = ESCAPE;
         return true;
     case OK:
         // a normal (printable) key
-        pending = c;
+        curses_pending_key = c;
         return true;
     case KEY_CODE_YES:
     default:
-        pending = -c;
+        curses_pending_key = -c;
         return true;
     }
 }
@@ -562,14 +565,21 @@ static int _get_key_from_curses()
     refresh();
     tiles.redraw();
 
+    if (tiles_pending_key)
+    {
+        wint_t c = tiles_pending_key;
+        tiles_pending_key = 0;
+        return c;
+    }
+
     wint_t c = tiles.await_input(&_curses_has_key);
     if (c != 0)
         return c;
 #endif
 
     _curses_fetch_pending_key(true);
-    int result = pending;
-    pending = 0;
+    int result = curses_pending_key;
+    curses_pending_key = 0;
     return result;
 }
 
@@ -592,16 +602,16 @@ static int _headless_getchk()
     watchdog();
 #endif
 
-    if (pending)
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+
+    if (tiles_pending_key)
     {
-        int c = pending;
-        pending = 0;
+        wint_t c = tiles_pending_key;
+        tiles_pending_key = 0;
         return c;
     }
 
-
-#ifdef USE_TILE_WEB
-    tiles.redraw();
     wint_t c = tiles.await_input([]() { return false; });
     if (c != 0)
         return c;
@@ -1841,14 +1851,13 @@ void delay(unsigned int time)
 
 static bool _headless_kbhit()
 {
-    if (pending)
-        return true;
-
 #ifdef USE_TILE_WEB
+    if (tiles_pending_key)
+        return true;
     wint_t c = tiles.try_await_input();
     if (c != 0)
     {
-        pending = c;
+        tiles_pending_key = c;
         return true;
     }
 #endif
@@ -1862,17 +1871,16 @@ bool kbhit()
     if (_headless_mode)
         return _headless_kbhit();
 
-    if (pending)
-        return true;
-
     if (_curses_has_key())
         return true;
 
 #ifdef USE_TILE_WEB
+    if (tiles_pending_key)
+        return true;
     wint_t c = tiles.try_await_input();
     if (c != 0)
     {
-        pending = c;
+        tiles_pending_key = c;
         return true;
     }
 #endif
