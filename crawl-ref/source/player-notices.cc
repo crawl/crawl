@@ -9,6 +9,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
+#include "database.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
@@ -312,9 +313,12 @@ static string _describe_monsters_from_species(const vector<details> &species)
         [] (const details &det)
         {
             string name = det.name;
-            if (det.mon->is_named() && det.count == 1
-                || !you.can_see(*det.mon))
+            if (det.mon->is_named() && det.count == 1)
             {
+                string title = getMiscString(det.mon->name(DESC_DBNAME) + " title");
+                if (!title.empty())
+                    return title;
+
                 return name;
             }
             else if (det.count > 1 && det.genus)
