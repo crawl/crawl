@@ -300,6 +300,7 @@ public:
     item_def *melee_weapon() const;
     item_def *missiles() const;
     item_def *shield() const override;
+    item_def *offhand_item() const override;
     item_def *body_armour() const override;
     item_def *get_defining_object() const;
 

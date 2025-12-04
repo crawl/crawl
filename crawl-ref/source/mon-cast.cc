@@ -7003,7 +7003,7 @@ static void _cast_bestow_arms(monster& caster)
 
             targs.push_back(*mi);
 
-            if (!mi->shield())
+            if (!mi->offhand_item())
                 two_hand_eligable = true;
 
             // Attempting to give a ranged weapon to a dual-wielder is strange

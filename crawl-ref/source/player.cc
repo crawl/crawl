@@ -2296,7 +2296,7 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
         return 0;
 
     const item_def *shield_item = you.shield();
-    if (is_shield(shield_item))
+    if (shield_item)
         shield += _sh_from_shield(*shield_item);
 
     // mutations
@@ -6111,8 +6111,9 @@ void player::shield_block_succeeded(actor *attacker)
         shield_blocks++;
 
     practise_shield_block();
-    if (is_shield(shield()))
-        count_action(CACT_BLOCK, shield()->sub_type);
+    item_def* sh = shield();
+    if (sh)
+        count_action(CACT_BLOCK, sh->sub_type);
     else
         count_action(CACT_BLOCK, -1, BLOCK_OTHER); // non-shield block
 }

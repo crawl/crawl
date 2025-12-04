@@ -2025,9 +2025,14 @@ item_def *monster::shield() const
 {
     item_def *shield = mslot_item(MSLOT_SHIELD);
 
-    if (shield && shield->sub_type != ARM_ORB)
+    if (shield && is_shield(*shield))
         return shield;
     return nullptr;
+}
+
+item_def *monster::offhand_item() const
+{
+    return mslot_item(MSLOT_SHIELD);
 }
 
 item_def* monster::body_armour() const
@@ -3030,7 +3035,7 @@ int monster::shield_class() const
 {
     int sh = 0;
     const item_def *shld = shield();
-    if (shld && is_shield(*shld))
+    if (shld)
     {
         // Look, this is all nonsense.
         // First, take the item properties.

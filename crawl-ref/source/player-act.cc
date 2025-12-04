@@ -354,9 +354,15 @@ hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 item_def *player::shield() const
 {
     item_def *offhand_item = you.equipment.get_first_slot_item(SLOT_OFFHAND, false);
-    if (!offhand_item || offhand_item->base_type != OBJ_ARMOUR)
+    if (!offhand_item || !is_shield(*offhand_item))
         return nullptr;
     return offhand_item;
+}
+
+// Returns any non-weapon item the player has in their offhand (ie: a shield or an orb)
+item_def *player::offhand_item() const
+{
+    return you.equipment.get_first_slot_item(SLOT_OFFHAND, false);
 }
 
 item_def* player::body_armour() const

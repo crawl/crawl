@@ -1699,11 +1699,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         print_hint("HINT_YOU_MISCAST");
 
-        if (!player_effectively_in_light_armour()
-            || is_shield(you.shield()))
-        {
+        if (!player_effectively_in_light_armour() || you.shield())
             print_hint("HINT_MISCAST_ARMOUR");
-        }
 
         print_hint("HINT_MISCAST_CONTAMINATION_AND_MP");
         break;

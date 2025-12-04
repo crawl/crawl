@@ -104,6 +104,7 @@ public:
                                     bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
+    virtual item_def *offhand_item() const = 0;
     virtual item_def *body_armour() const = 0;
     virtual int wearing(object_class_type obj_type, int sub_type,
                         bool count_plus = 0, bool check_attuned = false) const = 0;

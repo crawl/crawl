@@ -705,6 +705,7 @@ public:
     item_def *weapon(int which_attack = -1) const override;
     item_def *body_armour() const override;
     item_def *shield() const override;
+    item_def *offhand_item() const override;
     item_def *offhand_weapon() const override;
     item_def *active_talisman() const;
 
