@@ -907,7 +907,7 @@ xtttttttttttttttx
 xtttttt...ttttttx
 xtttttg...gtttttx
 xtttt.......ttttx
-xtttf..._C...ftttx
+xtttf..._...ftttx
 xttt.........tttx
 xtt...e...e...ttx
 xttdt.......tdttx
@@ -3429,6 +3429,7 @@ ENDMAP
 NAME:    vehumet_statue
 TAGS:    transparent
 DEPTH:   D:3-12
+SHUFFLE: 12
 MONS:    statue name:charred name_adjective tile:mons_statue_mage \
                 hp:12 hd:3 spells:throw_flame.53.magical
 MONS:    statue name:frost-covered name_adjective tile:mons_statue_mage \
