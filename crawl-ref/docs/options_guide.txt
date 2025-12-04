@@ -578,7 +578,7 @@ one_SDL_sound_channel = false
 3-a     Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!+"/♦
+autopickup = $?!+%"/♦
         The above is the default list. The valid symbols are
         )       Weapons
         (       Missiles
@@ -590,6 +590,7 @@ autopickup = $?!+"/♦
         + or :  Books
         |       Staves
         0       Orbs
+        %       Talismans
         }       Misc. items
         $       Gold
         ♦       Gems
