@@ -319,6 +319,9 @@ static string _describe_monsters_from_species(const vector<details> &species)
                 if (!title.empty())
                     return title;
 
+                if (mons_is_unique(det.mon->type) && mons_is_the(det.mon->type))
+                    name = "the " + name;
+
                 return name;
             }
             else if (det.count > 1 && det.genus)
