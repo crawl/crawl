@@ -590,6 +590,7 @@ autopickup = $?!+"/♦
         + or :  Books
         |       Staves
         0       Orbs
+        %       Talismans
         }       Misc. items
         $       Gold
         ♦       Gems
