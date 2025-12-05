@@ -1952,6 +1952,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     if (gems_held_intact() >= 11)
         return "Flawless";
 
+    // A harder version of the speed demon banner
+    if (you.real_time() < 3600 && player_has_orb())
+        return "Quick";
+
+    // A turncount version of a speedrun
+    if (you.num_turns < 25000 && player_has_orb())
+        return "Efficient";
+
     // A very hard version of the ascetic banner
     if (you.experience_level > 17
         && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
