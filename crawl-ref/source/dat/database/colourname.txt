@@ -998,10 +998,10 @@ of an argument between @graffiti author name@ and @graffiti author name@
 of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
 
 w:2
-of a fight between berserkers and erythrospite sufferers over the true meaning of blood rage
+of a fight between [berserkers|Trog worshippers] and erythrospite sufferers over the true meaning of blood rage
 
 w:2
-of a fight between Dithmenos worshippers and necromancers over whether something was a shadow or a shadowghast
+of a fight between [artists|Dithmenos worshippers] and [death knights|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
 %%%%
 graffiti_hailed_god
 
