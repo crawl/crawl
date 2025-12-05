@@ -312,6 +312,12 @@ static int _int_modifier(bool innate_only)
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 
+        if (you.get_mutation_level(MUT_NATURAL_SHIFTER)
+                && you.form != transformation::none)
+        {
+            result += 2 + you.get_mutation_level(MUT_NATURAL_SHIFTER);
+        }
+
         result += chei_stat_boost();
 
         // ego items of intelligence

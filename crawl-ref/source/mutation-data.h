@@ -2453,9 +2453,9 @@ static const mutation_def mut_data[] =
 
 { MUT_NATURAL_SHIFTER, 0, 3, mutflag::good,
   "natural shifter",
-  {"You feel a little tougher and smarter while shapeshifted. (AC +4, Int +2)",
-   "You feel tougher and smarter while shapeshifted. (AC +6, Int +3)",
-   "You feel much tougher and smarter while shapeshifted. (AC +8, Int +4)"},
+  {"You feel a little tougher and smarter while shapeshifted. (AC +3, Int +3)",
+   "You feel tougher and smarter while shapeshifted. (AC +5, Int +4)",
+   "You feel much tougher and smarter while shapeshifted. (AC +7, Int +5)"},
   {"You feel ready to transform.",
    "You feel ready to transform.",
    "You feel ready to transform."},
