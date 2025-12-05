@@ -1566,6 +1566,16 @@ bool melee_attack::attack()
             }
         }
 
+        if (attacker->is_player()
+            && player_under_penance(GOD_ELYVILON)
+            && god_hates_your_god(GOD_ELYVILON)
+            && !is_followup
+            && one_chance_in(20))
+        {
+            simple_god_message(" prevents your attack.", false, GOD_ELYVILON);
+            return false;
+        }
+
         // Wall jump attacks supposedly happen 'mid-air' and so shouldn't care
         // about water at the landing spot.
         if (wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
@@ -1690,15 +1700,6 @@ bool melee_attack::attack()
         set_attack_conducts(conducts, *defender->as_monster(),
                             you.can_see(*defender) && !you.duration[DUR_VEXED]);
 
-        if (player_under_penance(GOD_ELYVILON)
-            && god_hates_your_god(GOD_ELYVILON)
-            && ev_margin >= 0
-            && one_chance_in(20))
-        {
-            simple_god_message(" blocks your attack.", false, GOD_ELYVILON);
-            handle_phase_end();
-            return false;
-        }
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
         // Make sure we hit if we passed the stab check.
@@ -2290,15 +2291,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 bool melee_attack::player_aux_test_hit()
 {
     const int evasion = defender->evasion(false, attacker);
-
-    if (player_under_penance(GOD_ELYVILON)
-        && god_hates_your_god(GOD_ELYVILON)
-        && to_hit >= evasion
-        && one_chance_in(20))
-    {
-        simple_god_message(" blocks your attack.", false, GOD_ELYVILON);
-        return false;
-    }
 
     bool auto_hit = one_chance_in(30);
 
