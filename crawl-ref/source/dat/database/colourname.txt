@@ -1513,7 +1513,7 @@ claiming that some of the hill dwarves still live
 
 wondering what really happened to the last of the sludge elves
 %%%%
-graffiti_unique_complaint
+graffiti_unique_comment
 
 saying that Cassandra should stop being so negative
 
@@ -1551,7 +1551,7 @@ graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_rumour@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_unique_complaint@
+@graffiti_type@[| signed by @graffiti author name@] @graffiti_unique_comment@
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_species@
 
