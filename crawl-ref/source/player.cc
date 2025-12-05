@@ -6546,7 +6546,7 @@ int player::armour_class_scaled(int scale) const
         AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
 
     if (has_mutation(MUT_NATURAL_SHIFTER) && you.form != transformation::none)
-        AC += 200 + 200 * get_mutation_level(MUT_NATURAL_SHIFTER);
+        AC += 100 + 200 * get_mutation_level(MUT_NATURAL_SHIFTER);
 
     AC -= 100 * corrosion_amount();
 
