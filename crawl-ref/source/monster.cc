@@ -4914,35 +4914,6 @@ void monster::calc_speed()
         speed = haste_div(speed);
 }
 
-// Check speed and speed_increment sanity.
-void monster::check_speed()
-{
-    // FIXME: If speed is borked, recalculate. Need to figure out how
-    // speed is getting borked.
-    if (speed < 0 || speed > 130)
-    {
-        dprf("Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
-             name(DESC_PLAIN).c_str(),
-             speed, speed_increment, get_hit_dice(),
-             describe_enchantments().c_str());
-
-        calc_speed();
-
-        dprf("Fixed speed for %s to %d", name(DESC_PLAIN).c_str(), speed);
-    }
-
-    if (speed_increment < 0)
-        speed_increment = 0;
-
-    if (speed_increment > 200)
-    {
-        dprf("Clamping speed increment on %s: %d",
-             name(DESC_PLAIN).c_str(), speed_increment);
-
-        speed_increment = 140;
-    }
-}
-
 actor *monster::get_foe() const
 {
     if (foe == MHITNOT)

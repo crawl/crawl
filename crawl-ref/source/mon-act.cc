@@ -1783,8 +1783,6 @@ static void _pre_monster_move(monster& mons)
 
     if (mons.type == MONS_SHAPESHIFTER)
         mons.add_ench(ENCH_SHAPESHIFTER);
-
-    mons.check_speed();
 }
 
 // Handle weird stuff like spells/special abilities, item use,

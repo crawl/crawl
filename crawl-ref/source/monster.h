@@ -541,9 +541,6 @@ public:
     const monster* as_monster() const override { return this; }
     const player* as_player() const override { return nullptr; }
 
-    // Hacks, with a capital H.
-    void check_speed();
-
     string describe_enchantments() const;
 
     int action_energy(energy_use_type et) const;

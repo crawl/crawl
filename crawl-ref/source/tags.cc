@@ -8000,8 +8000,6 @@ void unmarshallMonster(reader &th, monster& m)
 
     // If an upgrade synthesizes ghost_demon, please mark it in "parts" above.
     ASSERT(parts & MP_GHOST_DEMON || !mons_is_ghost_demon(m.type));
-
-    m.check_speed();
 }
 
 static void _tag_read_level_monsters(reader &th)
