@@ -131,6 +131,9 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] == 0)
         return false;
 
+    if (you.attempted_attack && duration_extended_by_attacks(dur))
+        return false;
+
     ASSERT(!exploss || expmsg != nullptr);
     const int exppoint = duration_expire_point(dur);
     ASSERTM(!exploss || exploss * BASELINE_DELAY < exppoint,
@@ -1030,6 +1033,8 @@ static void _decrement_durations()
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
 
+
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
@@ -1276,6 +1281,9 @@ void player_reacts()
         frigid_walls_damage(you.time_taken);
 
     _decrement_durations();
+
+    if (you.attempted_attack)
+        update_parrying_status();
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should

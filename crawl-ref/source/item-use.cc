@@ -1881,6 +1881,7 @@ bool oni_drunken_swing()
 
     if (!targets.empty())
     {
+        bool success = false;
         if (you.weapon())
         {
             mprf("You take a swig of the potion and twirl %s.",
@@ -1896,10 +1897,11 @@ bool oni_drunken_swing()
 
             if (!attk.would_prompt_player())
             {
-                attk.launch_attack_set();
+                success |= attk.launch_attack_set(true);
                 count_action(CACT_ATTACK, ATTACK_DRUNKEN_BRAWLING);
             }
         }
+        player_attempted_attack(success);
 
         return true;
     }

@@ -31,7 +31,9 @@ enum stab_type
 
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
-void do_player_post_attack(actor *defender, bool was_firewood, bool simu = false);
+
+void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
+                             actor* primary_target = nullptr);
 
 beam_type get_beam_resist_type(beam_type flavour);
 int resist_adjust_damage(const actor *defender, beam_type flavour,

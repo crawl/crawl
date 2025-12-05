@@ -681,7 +681,6 @@ static bool _adjust_confused_movement(coord_def& move)
         if (move.origin())
         {
             mpr("You're too confused to move!");
-            you.apply_berserk_penalty = true;
             you.turn_is_over = true;
             crawl_state.cancel_cmd_repeat();
             return false;
@@ -696,7 +695,6 @@ static bool _adjust_confused_movement(coord_def& move)
         mprf("You bump into %s.",
                     feature_description_at(new_targ, false,
                                         DESC_THE).c_str());
-        you.apply_berserk_penalty = true;
         you.turn_is_over = true;
         crawl_state.cancel_cmd_repeat();
         return false;
@@ -705,7 +703,6 @@ static bool _adjust_confused_movement(coord_def& move)
     {
         mprf("You nearly stumble into %s!",
                 feature_description_at(new_targ, false, DESC_THE).c_str());
-        you.apply_berserk_penalty = true;
         you.turn_is_over = true;
         crawl_state.cancel_cmd_repeat();
         return false;
@@ -1090,12 +1087,6 @@ void move_player_action(coord_def move)
 
         if (num_steps > 1)
             apply_rampage_heal(steps_taken);
-    }
-
-    if (did_attack)
-    {
-        you.apply_berserk_penalty = false;
-        you.berserk_penalty = 0;
     }
 
     if (!did_move && !did_attack && !did_open_door)

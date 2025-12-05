@@ -5643,6 +5643,8 @@ player::player()
     time_taken          = 0;
     shield_blocks       = 0;
     reprisals.clear();
+    triggers_done.init(0);
+    attempted_attack    = false;
 
     abyss_speed         = 0;
     game_seed           = 0;
@@ -8795,6 +8797,8 @@ void player::rev_up(int dur)
 
     if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_REVGUARD))
         you.redraw_armour_class = true;
+
+    you.did_trigger(DID_REV_UP);
 }
 
 void player_open_door(coord_def doorpos)
@@ -9507,4 +9511,9 @@ bool player::did_reprisal(reprisal_type rtype, mid_t target_mid)
             return true;
 
     return false;
+}
+
+void player::did_trigger(player_trigger_type trigger)
+{
+    triggers_done[trigger]++;
 }

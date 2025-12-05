@@ -400,6 +400,9 @@ static void _do_medusa_stinger()
         }
     }
 
+    if (targs.empty())
+        return;
+
     shuffle_array(targs);
     int num = min(div_rand_round(get_form()->get_effect_size(), 10), (int)targs.size());
     for (int i = 0; i < num; ++i)
@@ -407,6 +410,8 @@ static void _do_medusa_stinger()
         melee_attack sting(&you, targs[i]);
         sting.player_do_aux_attack(UNAT_MEDUSA_STINGER);
     }
+
+    you.did_trigger(DID_MEDUSA_STINGER);
 }
 
 /**
@@ -511,8 +516,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (did_hit)
             *did_hit = attk.did_hit;
-
-        do_player_post_attack(defender, !attk.did_attack_hostiles(), simu);
 
         count_action(CACT_ATTACK, ATTACK_NORMAL);
 
@@ -641,42 +644,51 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 }
 
 /**
- * Handle effects that should happen after each time the player performs a
- * single 'attack action' (which might be either a normal attack, or a martial
- * attack caused by movement).
+ * Tracks that the player made an attack attempt this turn. This will prevent
+ * various status effects from losing duration that turn, as well as potentially
+ * trigger follow-up actions like Dith shadow mimic.
  *
- * @param defender       The target the player attacked. (Which might be dead,
- *                       or even null in the case of WJC martial attacks!)
- * @param only_firewood  Whether the defender (and all potential cleave targets)
- *                       were firewood while alive.
- * @param simu           Whether this is an fsim simulation.
+ * Calling this is normally handled by melee_attack::launch_attack_set(), but
+ * certain special attacks like Whirlwind will need to call this manually
+ * afterward (so that each attack of the set still counts as a single attack action).
+ *
+ * @param trigger_effects    Whether to trigger post-attack effects like shadow
+ *                           mimic or paragon.
+ * @param maintain_statuses  Whether to maintain durations like Werefury or
+ *                           Detonation Catalyst. (Typically false only if this
+ *                           attack was entirely against firewood or friendly
+ *                           targets.)
+ * @param primary_target     The primary target of an attack action, if any.
+ *                           (It may already be dead at this point, or may never
+ *                           have existed for things like WJC Whirlwind).
  */
-void do_player_post_attack(actor *defender, bool only_firewood, bool simu)
+void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
+                             actor* primary_target)
 {
-    if (!simu && will_have_passive(passive_t::shadow_attacks))
-        dithmenos_shadow_melee(defender);
+    // Berserking can be extended even by attacking firewood. (Other things cannot.)
+    you.apply_berserk_penalty = false;
+    you.berserk_penalty = 0;
 
-    if (you.form == transformation::medusa)
-        _do_medusa_stinger();
+    if (maintain_statuses)
+        you.attempted_attack = true;
 
-    if (only_firewood)
+    if (!trigger_effects)
         return;
 
-    // Various status will not expire so long as the player keeps attacking.
-    if (you.duration[DUR_EXECUTION])
-        you.duration[DUR_EXECUTION] += you.time_taken;
-    if (you.duration[DUR_WEREFURY])
-        you.duration[DUR_WEREFURY] += you.time_taken;
-    if (you.duration[DUR_DETONATION_CATALYST])
-        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+    if (will_have_passive(passive_t::shadow_attacks))
+        dithmenos_shadow_melee(primary_target);
 
-    if (you.duration[DUR_PARAGON_ACTIVE])
+    if (you.duration[DUR_PARAGON_ACTIVE] && !you.triggers_done[DID_PARAGON])
         paragon_attack_trigger();
 
-    if (you.form == transformation::sun_scarab)
+    if (you.form == transformation::sun_scarab && !you.triggers_done[DID_SOLAR_EMBER])
         solar_ember_blast();
 
-    update_parrying_status();
+    if (you.form == transformation::medusa && !you.triggers_done[DID_MEDUSA_STINGER])
+        _do_medusa_stinger();
+
+    if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP])
+        you.rev_up(you.attack_delay().roll());
 }
 
 /**
@@ -1198,7 +1210,6 @@ bool force_player_cleave(coord_def target)
         melee_attack atk(&you, nullptr);
         atk.launch_attack_set();
         count_action(CACT_ATTACK, ATTACK_NORMAL);
-        do_player_post_attack(nullptr, !atk.did_attack_hostiles(), false);
         return true;
     }
 

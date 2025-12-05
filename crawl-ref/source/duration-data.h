@@ -107,6 +107,8 @@ enum duration_flags : uint32_t
     // Whether it is a time-based cooldown for an effect.
     D_COOLDOWN    = 1<< 3,
 
+    // Whether it won't lose duration while the player continues to attack.
+    D_ATTACK_EXTENDED = 1<< 4,
 };
 
 /// A description of the behaviour when a duration begins 'expiring'.
@@ -725,7 +727,7 @@ static const duration_def duration_data[] =
     { DUR_EXECUTION,
       LIGHTBLUE, "Execution",
       "surrounded by blades", "execution",
-      "You are surrounded by a whirlwind of blades.", D_EXPIRES,
+      "You are surrounded by a whirlwind of blades.", D_EXPIRES | D_ATTACK_EXTENDED,
       {{ "You feel a little less murderous for the moment." }}},
     { DUR_GROWING_DESTRUCTION,
       LIGHTBLUE, "Destr",
@@ -745,7 +747,7 @@ static const duration_def duration_data[] =
       {{ "Your flames start to waver.", end_enkindled_status }}},
     { DUR_DETONATION_CATALYST, BLUE, "Catalyst",
       "catalyst", "catalyst",
-      "Your strikes ignite an explosive catalyst.", D_EXPIRES},
+      "Your strikes ignite an explosive catalyst.", D_EXPIRES | D_ATTACK_EXTENDED},
     { DUR_SHROUD_TIMEOUT,
       DARKGREY, "Shroud",
       "shroud timeout", "shroud timeout",
@@ -754,7 +756,7 @@ static const duration_def duration_data[] =
     { DUR_WEREFURY,
       BLUE, "Slay",
       "full of bloodlust", "bloodlust",
-      "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES,
+      "Your melee attacks are strengthened by primal bloodlust.", D_EXPIRES | D_ATTACK_EXTENDED,
       {{ "Your bloodlust subsides." },
        { "You feel your bloodlust ebbing." }}, 6},
     { DUR_PARRYING, 0, "",

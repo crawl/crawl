@@ -4207,6 +4207,7 @@ void paragon_attack_trigger()
     mpr("Your paragon attacks with you!");
     fight_melee(paragon, targ);
     paragon->speed_increment += paragon->action_energy(EUT_ATTACK);
+    you.did_trigger(DID_PARAGON);
 }
 
 int paragon_charge_level(const monster& paragon)

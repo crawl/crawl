@@ -903,6 +903,11 @@ static bool _shadow_will_act(bool spell, bool melee)
     if (!have_passive(pasv))
         return false;
 
+    if (you.triggers_done[DID_DITH_SHADOW])
+        return false;
+
+    return true;
+
     // If we're making a weapon shadow and haven't done so for a while,
     // guarantee it. (This helps consistency when fishing for shadowslip stab
     // opportunities a lot.)
@@ -1207,6 +1212,8 @@ void dithmenos_shadow_melee(actor* initial_target)
 
     you.props[DITH_SHADOW_INTERVAL_KEY] = you.elapsed_time
         + random_range(DITH_MELEE_SHADOW_INTERVAL, DITH_MELEE_SHADOW_INTERVAL * 2);
+
+    you.did_trigger(DID_DITH_SHADOW);
 }
 
 // Determine the first monster that could be hit by an arrow fired from one spot
@@ -1504,6 +1511,8 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         mon->props[DITH_SHADOW_LAST_TARGET_KEY].get_int() = monster_at(aim)->mid;
     else
         mon->props.erase(DITH_SHADOW_LAST_TARGET_KEY);
+
+    you.did_trigger(DID_DITH_SHADOW);
 }
 
 static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target)
@@ -1826,6 +1835,7 @@ void dithmenos_shadow_spell(spell_type spell)
     setup_mons_cast(mon, beam, shadow_spell);
     beam.target = aim;
     mons_cast(mon, beam, shadow_spell, MON_SPELL_WIZARD);
+    you.did_trigger(DID_DITH_SHADOW);
 }
 
 void wu_jian_trigger_serpents_lash(bool wall_jump)
@@ -1953,7 +1963,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
     {
         mprf("You lunge at %s, but your attack speed is too slow for a blow "
              "to land.", mons->name(DESC_THE).c_str());
-        return false;
+        return true;
     }
     else
     {
@@ -2039,12 +2049,17 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
             melee_attack whirlwind(&you, mons);
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
-            whirlwind.launch_attack_set();
-            did_at_least_one_attack = true;
+            did_at_least_one_attack |= whirlwind.launch_attack_set(true);
         }
     }
 
-    return did_at_least_one_attack;
+    // Even failing to land any blows due to movement speed will maintain
+    // status effects, but we can't trigger things like paragon unless a real
+    // attack was made.
+    if (!common_targets.empty())
+        player_attempted_attack(did_at_least_one_attack);
+
+    return !common_targets.empty();
 }
 
 static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
@@ -2065,12 +2080,6 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
 
     if (have_passive(passive_t::wu_jian_whirlwind))
         attacked |= _wu_jian_whirlwind(old_pos, new_pos, check_only);
-
-    // Trigger post-attack effects. (We don't track which monsters were
-    // actually attacked, but it's safe to say they weren't firewood, since
-    // martial attacks aren't launched against those in general.)
-    if (attacked && !check_only)
-        do_player_post_attack(nullptr, false, false);
 
     return attacked;
 }
@@ -2102,12 +2111,13 @@ bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
 
 // Returns true if at least one monster could have been attacked (even if our
 // attack speed was somehow too slow to succeed at doing so.)
-bool wu_jian_wall_jump_effects()
+void wu_jian_wall_jump_effects()
 {
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
         place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
 
     vector<monster*> targets = _wu_jian_wall_jump_monsters(you.pos());
+    bool did_attack = false;
     for (auto target : targets)
     {
         if (!target->alive())
@@ -2141,11 +2151,12 @@ bool wu_jian_wall_jump_effects()
             melee_attack aerial(&you, target);
             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
             aerial.wu_jian_number_of_targets = targets.size();
-            aerial.launch_attack_set();
+            did_attack |= aerial.launch_attack_set();
         }
     }
 
-    return !targets.empty();
+    if (!targets.empty())
+        player_attempted_attack(did_attack);
 }
 
 bool wu_jian_post_move_effects(bool did_wall_jump,

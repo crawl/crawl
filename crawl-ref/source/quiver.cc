@@ -623,12 +623,6 @@ namespace quiver
                 return;
             }
 
-            // Failing to hit someone due to a friend blocking is infuriating,
-            // shadow-boxing empty space is not (and would be abusable to wait
-            // with no penalty).
-            if (mons)
-                you.apply_berserk_penalty = false;
-
             // Calculate attack delay now in case we have to apply it.
             const int attack_delay = you.attack_delay().roll();
 
@@ -688,19 +682,23 @@ namespace quiver
                         || !midmons->wont_attack())
                     && coinflip())
                 {
+                    if (midmons->wont_attack())
+                    {
+                        // Let's assume friendlies cooperate.
+                        mprf("You fail to reach past %s.", midmons->name(DESC_THE).c_str());
+                        you.time_taken = attack_delay;
+                        you.turn_is_over = true;
+
+                        // Trying to attack and enemy and failing still counts as an attempted
+                        // attack for purposes of berserk and duration extensions.
+                        player_attempted_attack(false, !mons->is_firewood() && !mons->wont_attack());
+                        return;
+                    }
                     success = false;
                     target.target = middle;
                     mons = midmons;
                     targ_mid = true;
                     t = target;
-                    if (mons->wont_attack())
-                    {
-                        // Let's assume friendlies cooperate.
-                        mprf("You fail to reach past %s.", mons->name(DESC_THE).c_str());
-                        you.time_taken = attack_delay;
-                        you.turn_is_over = true;
-                        return;
-                    }
                 }
 
                 if (success)
@@ -748,8 +746,6 @@ namespace quiver
                     you.time_taken = attack_delay;
                     you.turn_is_over = true;
                 }
-                you.berserk_penalty = 0;
-                you.apply_berserk_penalty = false;
             }
 
             return;

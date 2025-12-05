@@ -117,6 +117,11 @@ bool duration_negative(duration_type dur)
     return _lookup_duration(dur)->duration_has_flag(D_NEGATIVE);
 }
 
+bool duration_extended_by_attacks(duration_type dur)
+{
+    return _lookup_duration(dur)->duration_has_flag(D_ATTACK_EXTENDED);
+}
+
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
     if (lvl >= red)

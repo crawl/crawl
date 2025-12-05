@@ -123,6 +123,16 @@ enum reprisal_type
     REPRISAL_FENCER,    // Fencer's Glove riposte
 };
 
+enum player_trigger_type
+{
+    DID_PARAGON,        // Platinum Paragon follow-up attack
+    DID_DITH_SHADOW,    // Dithmenos shadow mimic
+    DID_MEDUSA_STINGER, // Medusa form stinger attack
+    DID_SOLAR_EMBER,    // Sun scarab ember attack
+    DID_REV_UP,         // Coglin rev
+    NUM_PLAYER_TRIGGER_TYPES,
+};
+
 // needed for assert in is_player()
 #ifdef DEBUG_GLOBALS
 #define you (*real_you)
@@ -496,6 +506,14 @@ public:
     // List of monsters the player has performed specific types of once-per-turn
     // effects against.
     vector<pair<mid_t, reprisal_type>> reprisals;
+
+    // List of triggered actions that can happen a limited number of times a turn.
+    FixedVector<int, NUM_PLAYER_TRIGGER_TYPES> triggers_done;
+
+    // Whether some form of attack was attempted at least once on the current
+    // turn (which can include failing due to fumbling in water, failing to
+    // reach past allies, or moving too fast for a martial attack to succeed).
+    bool attempted_attack;
 
     // When other levels are loaded (e.g. viewing), is the player on this level?
     bool on_current_level;
@@ -958,6 +976,8 @@ public:
 
     void track_reprisal(reprisal_type type, mid_t target_mid);
     bool did_reprisal(reprisal_type type, mid_t target_mid);
+
+    void did_trigger(player_trigger_type trigger);
 
     // TODO: move this somewhere else
     void refresh_rampage_hints();

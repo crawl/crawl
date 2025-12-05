@@ -84,6 +84,7 @@ duration_type duration_by_name(const string &name);
 vector<duration_type> all_duration_with_flag(uint64_t flag);
 bool duration_dispellable(duration_type dur);
 bool duration_negative(duration_type dur);
+bool duration_extended_by_attacks(duration_type dur);
 void init_duration_index();
 
 bool duration_decrements_normally(duration_type dur);

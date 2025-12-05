@@ -1504,9 +1504,8 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             // Only the katana can attack through space!
             atk.attack();
         }
-        // Only rev up once, no matter how many targets you hit.
         else
-            atk.launch_attack_set(i == 0);
+            atk.launch_attack_set(true);
 
         if (i == 0)
             you.time_taken = you.attack_delay().roll();
@@ -1517,10 +1516,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             break;
     }
 
-    // Refund duration for catalyst, but only if we cast the spell.
-    // Autumn Katana already refunded duration in melee_attack.
-    if (!katana_defender && you.duration[DUR_DETONATION_CATALYST])
-        you.duration[DUR_DETONATION_CATALYST] += you.time_taken;
+    player_attempted_attack(false);
 
     return spret::success;
 }

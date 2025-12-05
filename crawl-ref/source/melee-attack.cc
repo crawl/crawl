@@ -1458,22 +1458,29 @@ bool melee_attack::swing_with(item_def &wpn, bool offhand)
 /**
  * Launches a set of melee attacks. If the player is using two weapons, this
  * launches attacks with the primary and off-hand weapon in a random order.
- * Otherwise, this is equivalent to ::attack().
  *
- * Returns true iff either sub-attack succeeded.
+ * @param skip_player_post_attack  If true, will not cause any post-attack
+ *                                 effects such as extended durations or
+ *                                 triggering shadow mimic.
+ *
+ * @return True iff either sub-attack succeeded (ie: wasn't cancelled or fumbled).
  */
-bool melee_attack::launch_attack_set(bool allow_rev)
+bool melee_attack::launch_attack_set(bool skip_player_post_attack)
 {
     if (!attacker->is_player())
         return attack();
 
     bool success = run_attack_set();
-    if (allow_rev && is_attacking_hostiles
-        && you.has_mutation(MUT_WARMUP_STRIKES)
-        && one_chance_in(wu_jian_number_of_targets))
+
+    if (!skip_player_post_attack)
     {
-        you.rev_up(you.attack_delay().roll());
+        // Fumbled attacks still extend durations, but do not otherwise trigger
+        // post-attack effects. Attacks only against firewood or friendlies do
+        // neither.
+        player_attempted_attack(success && is_attacking_hostiles,
+                                is_attacking_hostiles, defender);
     }
+
     return success;
 }
 
@@ -4516,7 +4523,7 @@ void melee_attack::riposte()
     }
     melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
     attck.is_riposte = true;
-    attck.launch_attack_set();
+    attck.launch_attack_set(true);
     count_action(CACT_ATTACK, ATTACK_RIPOSTE);
     you.track_reprisal(REPRISAL_FENCER, attacker->mid);
 }

@@ -1396,6 +1396,7 @@ void solar_ember_blast()
     {
         simple_monster_message(*ember, " glows brighter.");
         ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, ember, random_range(70, 90)));
+        you.did_trigger(DID_SOLAR_EMBER);
         return;
     }
 
@@ -1429,6 +1430,8 @@ void solar_ember_blast()
 
     ember->hurt(ember, random_range(7, 10));
     ember->del_ench(ENCH_SPELL_CHARGED);
+
+    you.did_trigger(DID_SOLAR_EMBER);
 }
 
 static bool _make_tesseract_spawn(bool near_player, bool outside_vault = false)
