@@ -3113,13 +3113,15 @@ monster* create_monster(mgen_data mg, bool fail_msg)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, env.grid(mg.pos)))
     {
+        const bool unfriendly = mg.behaviour != BEH_FRIENDLY
+                                && !(mg.behaviour == BEH_COPY && mg.summoner->wont_attack());
+
         mg.pos = find_newmons_square(montype, mg.pos, mg.range_preferred,
                                      mg.range_max, mg.range_min,
                                      (mg.flags & MG_SEE_SUMMONER)
                                         ? mg.summoner
                                         : nullptr,
-                                      mg.behaviour != BEH_FRIENDLY
-                                        || mons_is_tentacle_segment(montype));
+                                      unfriendly || mons_is_tentacle_segment(montype));
     }
 
     if (in_bounds(mg.pos))
