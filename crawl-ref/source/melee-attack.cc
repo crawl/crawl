@@ -86,7 +86,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     is_attacking_hostiles(false),
     is_special_mon_stab(false)
 {
-    attack_occurred = false;
     attack_position = attacker->pos();
     set_weapon(attacker->weapon(attack_num));
 }
@@ -273,8 +272,6 @@ bool melee_attack::handle_phase_attempted()
         }
     }
 
-    attack_occurred = true;
-
     // Check for player practicing dodging
     if (defender && defender->is_player())
         practise_being_attacked();
@@ -282,7 +279,7 @@ bool melee_attack::handle_phase_attempted()
     return true;
 }
 
-bool melee_attack::handle_phase_blocked()
+void melee_attack::handle_phase_blocked()
 {
     //We need to handle jinxbite here instead of in
     //attack::handle_phase_blocked as some attacks
@@ -351,7 +348,7 @@ bool melee_attack::handle_phase_blocked()
         }
     }
 
-    return attack::handle_phase_blocked();
+    attack::handle_phase_blocked();
 }
 
 static int _minotaur_headbutt_chance()
@@ -359,7 +356,7 @@ static int _minotaur_headbutt_chance()
     return 23 + you.experience_level;
 }
 
-bool melee_attack::handle_phase_dodged()
+void melee_attack::handle_phase_dodged()
 {
     did_hit = false;
 
@@ -414,7 +411,7 @@ bool melee_attack::handle_phase_dodged()
                     headbutt.player_aux_setup(UNAT_HEADBUTT);
                     headbutt.player_aux_apply(UNAT_HEADBUTT);
                     if (!attacker->alive())
-                        return false;
+                        return;
                 }
 
                 if (you.duration[DUR_EXECUTION])
@@ -423,13 +420,13 @@ bool melee_attack::handle_phase_dodged()
                     retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
                     retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
                     if (!attacker->alive())
-                        return false;
+                        return;
                 }
             }
 
             maybe_riposte();
             if (!attacker->alive())
-                return false;
+                return;
         }
 
         // ...but passive ones do not.
@@ -438,8 +435,6 @@ bool melee_attack::handle_phase_dodged()
         if (you.unrand_equipped(UNRAND_STARLIGHT))
             do_starlight();
     }
-
-    return true;
 }
 
 void melee_attack::maybe_riposte()
@@ -1199,10 +1194,8 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
 /**
  * Handle effects that fire when the defender (the target of the attack) is
  * killed.
- *
- * @return  Not sure; it seems to never be checked & always be true?
  */
-bool melee_attack::handle_phase_killed()
+void melee_attack::handle_phase_killed()
 {
     if (attacker->is_player()
         && you.form == transformation::maw
@@ -1236,7 +1229,7 @@ bool melee_attack::handle_phase_killed()
     // monster of a group, so let's not cause the player that disappointment.
                             && there_are_monsters_nearby(true, true, false);
 
-    bool killed = attack::handle_phase_killed();
+    attack::handle_phase_killed();
 
     if (execute)
         makhleb_execution_activate();
@@ -1246,8 +1239,6 @@ bool melee_attack::handle_phase_killed()
     {
         _handle_werewolf_kill_bonus(*defender->as_monster(), is_bestial_takedown);
     }
-
-    return killed;
 }
 
 void melee_attack::handle_spectral_brand()
@@ -1274,18 +1265,17 @@ item_def *melee_attack::offhand_weapon() const
     return offhand;
 }
 
+// Returns true if any cleave attack succeeded.
 bool melee_attack::handle_phase_cleaving()
 {
     if (!cleave_targets.empty() && !simu)
-    {
-        total_damage_done += do_followup_attacks(cleave_targets, true);
-        return true;
-    }
+        return do_followup_attacks(cleave_targets, true);
 
     return false;
 }
 
-void melee_attack::handle_phase_multihit()
+// Returns true if any followup attack succeeded.
+bool melee_attack::handle_phase_multihit()
 {
     if (!is_followup && weapon_multihits(weapon) && defender && defender->alive())
     {
@@ -1295,13 +1285,16 @@ void melee_attack::handle_phase_multihit()
             extra_hits.push_back(defender);
         // effective_attack_number will be wrong for a monster that
         // does a cleaving multi-hit attack. God help us.
-        total_damage_done += do_followup_attacks(extra_hits, false);
-        if (attacker->is_player())
+        const bool success = do_followup_attacks(extra_hits, false);
+        if (success && attacker->is_player())
             print_wounds(*defender->as_monster());
+        return success;
     }
+
+    return false;
 }
 
-bool melee_attack::handle_phase_end()
+void melee_attack::handle_phase_end()
 {
     handle_phase_multihit();
     handle_phase_cleaving();
@@ -1362,7 +1355,7 @@ bool melee_attack::handle_phase_end()
         monster_die(*attacker->as_monster(), KILL_NON_ACTOR, NON_MONSTER);
     }
 
-    return attack::handle_phase_end();
+    attack::handle_phase_end();
 }
 
 // Copy over initial melee-specific attack parameters (ie: things that must be
@@ -1384,9 +1377,13 @@ void melee_attack::copy_params_to(melee_attack &other)
     other.wu_jian_attack        = wu_jian_attack;
     other.wu_jian_number_of_targets = wu_jian_number_of_targets;
 }
-int melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
+
+// Perform followup attacks (from cleaving or quick blades).
+// Returns true if at least one of these attacks succeeded.
+bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
 {
     int new_effective_attack_number = effective_attack_number + 1;
+    bool success = false;
     while (attacker->alive() && !targets.empty())
     {
         actor* def = targets.front();
@@ -1402,14 +1399,13 @@ int melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
             followup.cleaving = is_cleaving;
             followup.is_followup = !is_cleaving;
 
-            followup.attack();
-
+            success |= followup.attack();
             total_damage_done += followup.total_damage_done;
         }
         targets.pop_front();
     }
 
-    return total_damage_done;
+    return success;
 }
 
 void melee_attack::set_weapon(item_def *wpn, bool offhand)
@@ -1582,8 +1578,7 @@ bool melee_attack::attack()
 
             // We may try for additional quick blade attacks, even if we fumble
             // the first.
-            handle_phase_multihit();
-            return false;
+            return handle_phase_multihit();
         }
 
         if (!handle_phase_attempted())
@@ -1602,9 +1597,11 @@ bool melee_attack::attack()
     {
         mprf("You attempt to attack %s, but flinch away in fear!",
              defender->name(DESC_THE).c_str());
-        handle_phase_multihit();
-        handle_phase_cleaving();
-        return false;
+
+        bool success = false;
+        success |= handle_phase_multihit();
+        success |= handle_phase_cleaving();
+        return success;
     }
 
     if (attacker != defender && attacker->is_monster()
@@ -1644,7 +1641,7 @@ bool melee_attack::attack()
     {
         handle_phase_killed();
         handle_phase_end();
-        return attack_occurred;
+        return true;
     }
 
     // Abort early if the target is completely immune (possibly printing a message).
@@ -1653,7 +1650,7 @@ bool melee_attack::attack()
     if (!could_harm(attacker, defender, attacker->is_player(), attacker->is_player()))
     {
         cancel_attack = attacker->is_player() && !(you.confused() || !you.can_see(*defender));
-        return !cancel_attack;
+        return false;
     }
 
     // Now that we finally know that this swing is really happening, count it.
@@ -1723,7 +1720,7 @@ bool melee_attack::attack()
         if (!attacker->alive())
         {
             handle_phase_end();
-            return false;
+            return true;
         }
     }
     else
@@ -1738,7 +1735,7 @@ bool melee_attack::attack()
             // Spines can kill! With Usk's pain bond, they can even kill the
             // defender.
             if (!attacker->alive() || !defender->alive())
-                return false;
+                return true;
         }
 
         if (ev_margin >= 0)
@@ -1754,7 +1751,7 @@ bool melee_attack::attack()
                     if (!defender->alive())
                         handle_phase_killed();
                     handle_phase_end();
-                    return false;
+                    return true;
                 }
             }
         }
@@ -1784,7 +1781,7 @@ bool melee_attack::attack()
 
     handle_phase_end();
 
-    return attack_occurred;
+    return true;
 }
 
 bool melee_attack::check_unrand_effects()

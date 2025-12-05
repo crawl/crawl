@@ -33,7 +33,6 @@ public:
     // or a monster if this is a reflected ranged attack.
     actor *responsible;
 
-    bool    attack_occurred;
     bool    cancel_attack;
     bool    did_hit;
     bool    needs_message;
@@ -115,12 +114,12 @@ protected:
 
     /* Attack Phases */
     virtual bool handle_phase_attempted();
-    virtual bool handle_phase_dodged() = 0;
-    virtual bool handle_phase_blocked();
+    virtual void handle_phase_dodged() = 0;
+    virtual void handle_phase_blocked();
     virtual bool handle_phase_hit() = 0;
     virtual bool handle_phase_damaged();
-    virtual bool handle_phase_killed();
-    virtual bool handle_phase_end();
+    virtual void handle_phase_killed();
+    virtual void handle_phase_end();
 
     /* Combat Calculations */
     virtual bool using_weapon() const = 0;

@@ -149,19 +149,17 @@ bool ranged_attack::attack()
 
     handle_phase_end();
 
-    return attack_occurred;
+    return true;
 }
 
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
     attacker->attacking(defender);
-    attack_occurred = true;
-
     return true;
 }
 
-bool ranged_attack::handle_phase_blocked()
+void ranged_attack::handle_phase_blocked()
 {
     ASSERT(!ignores_shield());
     string punctuation = ".";
@@ -201,10 +199,10 @@ bool ranged_attack::handle_phase_blocked()
         maybe_trigger_jinxbite();
     }
 
-    return attack::handle_phase_blocked();
+    attack::handle_phase_blocked();
 }
 
-bool ranged_attack::handle_phase_dodged()
+void ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
@@ -216,7 +214,7 @@ bool ranged_attack::handle_phase_dodged()
         if (defender->is_player())
             count_action(CACT_DODGE, DODGE_REPEL);
 
-        return true;
+        return;
     }
 
     if (defender->is_player())
@@ -237,8 +235,6 @@ bool ranged_attack::handle_phase_dodged()
     }
 
     maybe_trigger_autodazzler();
-
-    return true;
 }
 
 static bool _jelly_eat_missile(const item_def& projectile, int damage_done)

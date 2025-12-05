@@ -57,7 +57,7 @@
 */
 attack::attack(actor *attk, actor *defn, actor *blame)
     : attacker(attk), defender(defn), responsible(blame ? blame : attk),
-      attack_occurred(false), cancel_attack(false), did_hit(false),
+      cancel_attack(false), did_hit(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
       perceived_attack(false), obvious_effect(false), to_hit(0),
       damage_done(0), special_damage(0), aux_damage(0),
@@ -80,7 +80,7 @@ bool attack::handle_phase_attempted()
     return true;
 }
 
-bool attack::handle_phase_blocked()
+void attack::handle_phase_blocked()
 {
     damage_done = 0;
 
@@ -92,8 +92,6 @@ bool attack::handle_phase_blocked()
         tso_expend_divine_shield_charge();
 
     defender->shield_block_succeeded(attacker);
-
-    return true;
 }
 
 bool attack::handle_phase_damaged()
@@ -135,7 +133,7 @@ bool attack::handle_phase_damaged()
     return defender->is_player() || !invalid_monster(defender->as_monster());
 }
 
-bool attack::handle_phase_killed()
+void attack::handle_phase_killed()
 {
     monster* mon = defender->as_monster();
     if (!invalid_monster(mon))
@@ -146,16 +144,12 @@ bool attack::handle_phase_killed()
         else
             monster_die(*mon, attacker);
     }
-
-    return true;
 }
 
-bool attack::handle_phase_end()
+void attack::handle_phase_end()
 {
     maybe_trigger_fugue_wail(defender->pos());
     alert_defender();
-
-    return true;
 }
 
 /**

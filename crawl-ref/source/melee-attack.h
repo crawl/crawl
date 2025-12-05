@@ -95,17 +95,17 @@ public:
 private:
     /* Attack phases */
     bool handle_phase_attempted() override;
-    bool handle_phase_blocked() override;
-    bool handle_phase_dodged() override;
+    void handle_phase_blocked() override;
+    void handle_phase_dodged() override;
     bool handle_phase_hit() override;
     bool handle_phase_damaged() override;
     bool handle_phase_aux(); // specific to melee attacks
-    bool handle_phase_killed() override;
-    bool handle_phase_end() override;
+    void handle_phase_killed() override;
+    void handle_phase_end() override;
 
     // Handle cleaving and quick blade additional attacks
     bool handle_phase_cleaving();
-    void handle_phase_multihit();
+    bool handle_phase_multihit();
 
     /* Combat Calculations */
     bool using_weapon() const override;
@@ -221,7 +221,7 @@ private:
     // XXX: set up a copy constructor instead?
     void copy_params_to(melee_attack &other);
 
-    int do_followup_attacks(list<actor*>& targets, bool is_cleaving);
+    bool do_followup_attacks(list<actor*>& targets, bool is_cleaving);
 
     bool is_attacking_hostiles;
 
