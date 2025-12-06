@@ -979,11 +979,14 @@ slime_creature2
 slime_creature3
 slime_creature4
 slime_creature5
+%rim 1
+azure_jelly MONS_AZURE_JELLY
+%rim 0
 colossal_amoeba MONS_COLOSSAL_AMOEBA
 rockslime MONS_ROCKSLIME
 void_ooze MONS_VOID_OOZE
+morphogenic_ooze MONS_MORPHOGENIC_OOZE
 %rim 1
-azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
 
 ## Kobolds ('K')
@@ -1420,6 +1423,7 @@ misc/unseen PLAYER
 bat_form TRAN_BAT
 bat_form_gargoyle TRAN_BAT_GARGOYLE
 beast_form TRAN_BEAST
+jelly_form TRAN_JELLY
 spider_form TRAN_SPIDER
 spider_form_gargoyle TRAN_SPIDER_GARGOYLE
 pig_form TRAN_PIG

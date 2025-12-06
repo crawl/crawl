@@ -444,10 +444,10 @@ local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:5 / slime creature w:25 / colossal amoeba w:5 /\
-               glass eye w:2 / golden eye w:4 / void ooze w:2 /\
+               glass eye w:2 / golden eye w:4 / void ooze w:4 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                rockslime / azure jelly / great orb of eyes w:4 /\
-               glowing orange brain w:2 / eye of draining w:2")
+               morphogenic ooze w:2 / eye of draining w:2")
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = anaconda / mana viper / shock serpent / naga mage /\

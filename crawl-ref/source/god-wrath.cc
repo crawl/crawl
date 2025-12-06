@@ -1158,6 +1158,7 @@ static void _jiyva_summon_slimes()
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
         MONS_SLIME_CREATURE,
+        MONS_MORPHOGENIC_OOZE,
     };
 
     const int how_many = 1 + (you.experience_level / 10) + random2(3);

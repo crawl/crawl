@@ -853,6 +853,8 @@ static const duration_def duration_data[] =
     { DUR_DAZED, 0, "", "", "dazed", "", D_NEGATIVE},
     { DUR_CONSTRICTED, 0, "", "", "constricted", "", D_NO_FLAGS},
     { DUR_SPITEFUL_BLOOD_COOLDOWN, 0, "", "", "spiteful_blood", "", D_NO_FLAGS},
+    { DUR_SLIMIFYING, 0, "Slimifying", "", "slimifying", "", D_DISPELLABLE | D_NEGATIVE,
+       {{"Your slimification abates."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

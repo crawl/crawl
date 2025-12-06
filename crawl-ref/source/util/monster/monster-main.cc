@@ -1139,6 +1139,9 @@ int main(int argc, char* argv[])
                 case AF_CORRODE:
                     monsterattacks += colour(BROWN, "(corrosion)");
                     break;
+                case AF_SLIMIFY:
+                    monsterattacks += colour(LIGHTMAGENTA, "(slimify)");
+                    break;
                 case AF_TRAMPLE:
                     monsterattacks += colour(BROWN, "(trample)");
                     break;

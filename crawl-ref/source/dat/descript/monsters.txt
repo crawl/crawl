@@ -2128,6 +2128,15 @@ the brim with explosives. It can rapidly fill an area with bomblets, and when
 commanded by its creator, will explode them all (and itself) to devastating
 effect.
 %%%%
+morphogenic ooze
+
+An multihued mire of roiling flesh and fluctuating sludge, striving and failing
+for more coherence than any other slime. As a fresh carrier of the ruinous
+contagion that overtook the Slime Pits, it can impart unto others the same
+horrible fate. While it may not be a permanent transformation for you, the
+melding of weapons and armour, as well as the severe weakening of spells, may
+make it a lethal one regardless.
+%%%%
 moth of wrath
 
 A moth known for its ability to inspire rage by touching its foes, or merely

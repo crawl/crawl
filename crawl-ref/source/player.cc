@@ -6944,7 +6944,7 @@ int player::how_chaotic(bool /*check_spells_god*/) const
 bool player::is_unbreathing() const
 {
     return is_nonliving() || is_lifeless_undead()
-           || bool(holiness() & MH_PLANT);
+           || bool(holiness() & MH_PLANT || form == transformation::jelly);
 }
 
 bool player::is_insubstantial() const
@@ -6956,7 +6956,7 @@ bool player::is_insubstantial() const
 
 bool player::is_amorphous() const
 {
-    return you.form == transformation::aqua;
+    return form == transformation::aqua || form == transformation::jelly;
 }
 
 int player::res_corr() const
@@ -7086,7 +7086,7 @@ int player::res_blind() const
 {
     if (bool(holiness() & MH_PLANT))
         return 2;
-    else if (undead_state() != US_ALIVE)
+    else if (undead_state() != US_ALIVE || you.form == transformation::jelly)
         return 1;
     else
         return 0;
@@ -7823,6 +7823,9 @@ bool player::innate_sinv() const
         return true;
 
     if (get_mutation_level(MUT_EYEBALLS) == 3)
+        return true;
+
+    if (form == transformation::jelly)
         return true;
 
     if (have_passive(passive_t::sinv))

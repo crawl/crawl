@@ -1,0 +1,19 @@
+name: "morphogenic ooze"
+glyph: {char: "J", colour: etc_mutagenic}
+flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton]
+resists: {poison: 1, fire: 1, cold: 1, corr: 3}
+exp: 1362
+genus: jelly
+will: 80
+attacks:
+ - {type: random, flavour: slimify, damage: 41}
+ - {type: random, damage: 15}
+hd: 18
+hp_10x: 1165
+ac: 2
+ev: 23
+intelligence: brainless
+speed: 14
+habitat: amphibious
+size: large
+shape: blob

@@ -4682,7 +4682,8 @@ int get_tension(god_type god)
         { you.is_silenced(),                             {5, 3} },
         { you.form == transformation::fungus
             || you.form == transformation::pig
-            || you.form == transformation::tree,         {5, 3} },
+            || you.form == transformation::tree
+            || you.form == transformation::jelly,        {5, 3} },
         { player_in_branch(BRANCH_ABYSS),                {3, 2} },
         { you.duration[DUR_ATTRACTIVE] > 0,              {3, 2} },
         { you.duration[DUR_NO_CAST] > 0,                 {3, 2} },

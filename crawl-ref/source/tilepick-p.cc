@@ -529,9 +529,7 @@ tileidx_t tileidx_player()
             ch = TILEP_TRAN_SERPENT;
         break;
     case transformation::wisp:      ch = TILEP_TRAN_WISP;      break;
-#if TAG_MAJOR_VERSION == 34
-    case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
-#endif
+    case transformation::jelly:     ch = TILEP_TRAN_JELLY;     break;
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
     case transformation::bat_swarm:
         if (you.species == SP_GARGOYLE)

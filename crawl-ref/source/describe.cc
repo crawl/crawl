@@ -5068,6 +5068,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_TRICKSTER,         "drain, daze, or confuse" },
         { AF_REACH_CLEAVE_UGLY, "random ugly thing damage" },
         { AF_DOOM,              "inflict doom" },
+        { AF_SLIMIFY,           "slowly slimify the target" },
         { AF_PLAIN,             "" },
     };
 

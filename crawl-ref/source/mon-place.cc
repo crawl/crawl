@@ -1910,6 +1910,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_SLIME)
                && x_chance_in_y(you.depth + 2, you.depth + 11); }},
                                    {{ BAND_AMOEBA_ORGANS, {1, 2} }}}},
+    { MONS_MORPHOGENIC_OOZE, { {}, {{ BAND_MORPHOGENIC_OOZE, {1, 4} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_CHONCHON,        { {2}, {{ BAND_CHONCHON, {2, 3} }}}},
@@ -2426,6 +2427,11 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_DRAINING_EYE_CORPS,  {{{MONS_VOID_OOZE, 1},
                                   {MONS_EYE_OF_DEVASTATION, 2},
                                   {MONS_GLOWING_ORANGE_BRAIN, 1}}}},
+
+    { BAND_MORPHOGENIC_OOZE,    {{{MONS_MORPHOGENIC_OOZE, 1}},
+
+                                 {{MONS_GOLDEN_EYE, 4},
+                                  {MONS_GREAT_ORB_OF_EYES, 1}}}},
 
     { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
                                   {MONS_SEARING_WRETCH, 3}},

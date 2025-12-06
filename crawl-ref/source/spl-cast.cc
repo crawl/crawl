@@ -634,6 +634,9 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::air)
         enhanced += player_spec_air();
 
+    if (you.form == transformation::jelly)
+        enhanced -= 2;
+
     if (you.unrand_equipped(UNRAND_BATTLE))
     {
         if (vehumet_supports_spell(spell))

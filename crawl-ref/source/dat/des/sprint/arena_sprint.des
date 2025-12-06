@@ -562,7 +562,7 @@ function arena_sprint_get_monster_set(round, boss)
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / colossal amoeba / glass eye /\
-                    void ooze",
+                    void ooze / morphogenic ooze",
                 "dancing weapon ; bardiche good_item",
                 "chonchon w:2 / spriggan defender / spriggan air mage /\
                     spriggan druid / spriggan berserker / alderking",
@@ -640,7 +640,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "thorn hunter w:5 / green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "nagaraja w:20 / guardian serpent / salamander tyrant",
-                "acid blob w:30 / rockslime / glass eye / void ooze",
+                "acid blob w:30 / rockslime w:5 / morphogenic ooze w:5 /\
+                    glass eye / void ooze",
                 "dancing weapon ; bardiche ego:speed / zenata w:1",
                 "chonchon w:2 / spriggan air mage / alderking",
                 "ancient lich / curse skull w:6 / boris w:1",

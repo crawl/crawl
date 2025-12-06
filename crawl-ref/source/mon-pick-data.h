@@ -459,21 +459,22 @@ static const vector<pop_entry> population[] =
 
 { // Slime Pits
   {  1,  5, 1600, FLAT, MONS_SLIME_CREATURE },
-  { -2,  5,  400, FALL, MONS_SLIME_CREATURE },
+  { -2,  5,  380, FALL, MONS_SLIME_CREATURE },
   {  1,  5,   65, FLAT, MONS_COLOSSAL_AMOEBA },
-  { -2,  5,  350, RISE, MONS_COLOSSAL_AMOEBA },
+  { -2,  5,  365, RISE, MONS_COLOSSAL_AMOEBA },
+  { -1,  4,  105, RISE, MONS_MORPHOGENIC_OOZE },
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
   {  1,  5,  500, FLAT, MONS_AZURE_JELLY },
-  {  1,  5,  515, FLAT, MONS_ROCKSLIME },
+  {  1,  5,  500, FLAT, MONS_ROCKSLIME },
   {  1,  5,  515, FLAT, MONS_VOID_OOZE },
   {  1,  5,  500, FLAT, MONS_SHINING_EYE },
-  {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
+  {  1,  5,  175, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  8,  255, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  8,  240, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  2,  8,  315, SEMI, MONS_GLASS_EYE },
-  {  3,  8,   40, SEMI, MONS_EYE_OF_DRAINING },
+  {  3,  8,   50, SEMI, MONS_EYE_OF_DRAINING },
 },
 
 { // The Vaults (OOD cap: 12)

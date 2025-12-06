@@ -1258,3 +1258,17 @@ Devious status
 
 Your evasion and slaying are increased. This stacks up to 3 times and will never
 expire so long as you continue to perform melee attacks.
+%%%%
+Slimifying status
+
+Your body is slowly being turned into slime. Even if a full transformation
+occurs, you have enough force of will to eventually revert back.
+%%%%
+Jelly status
+
+You have been temporarily transformed into a jelly. You have several unusual
+resistances and extra health, but heavily weakened spells.
+
+Any equipped weapons and armour are melded. The effectiveness of your
+newly-acidic melee attacks while in this form is based on your experience level
+rather than Unarmed Combat skill.

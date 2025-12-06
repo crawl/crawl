@@ -3513,6 +3513,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_MUTANT_BEAST
         || type == MONS_WRETCHED_STAR
+        || type == MONS_MORPHOGENIC_OOZE
         || type == MONS_KOBOLD_FLESHCRAFTER // Mutated tentacles!
         || type == MONS_KILLER_KLOWN      // For their random attacks.
         || type == MONS_TIAMAT            // For her colour-changing.
@@ -3543,6 +3544,9 @@ int monster::known_chaos(bool check_spells_god) const
     }
 
     if (has_attack_flavour(AF_CHAOTIC))
+        chaotic++;
+
+    if (has_attack_flavour(AF_SLIMIFY))
         chaotic++;
 
     if (is_chaotic_god(god))

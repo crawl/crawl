@@ -21,9 +21,7 @@ enum class transformation
     porcupine,
 #endif
     wisp,
-#if TAG_MAJOR_VERSION == 34
     jelly,
-#endif
     fungus,
 #if TAG_MAJOR_VERSION == 34
     shadow,

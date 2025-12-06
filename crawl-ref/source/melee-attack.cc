@@ -4301,6 +4301,42 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         defender->put_to_sleep(attacker, random_range(3, 5) * BASELINE_DELAY);
         break;
 
+    case AF_SLIMIFY:
+        if (defender->can_polymorph())
+        {
+            if (monster* mon = defender->as_monster())
+            {
+                // Rather than adding a new status to track, just make it
+                // a small chance- the only current living perma-allies have
+                // rPolymorph, anyway.
+                if (mon_can_be_slimified(mon) && one_chance_in(4))
+                    slimify_monster(mon);
+            }
+            else if (you.form != transformation::jelly)
+            {
+                // Zin's protection blocks this from the start, since having the
+                // passive will stop the transformation at the end.
+                if (have_passive(passive_t::resist_polymorph))
+                    simple_god_message(" protects your body from unnatural transformation!");
+                else
+                {
+                    bool initial = you.duration[DUR_SLIMIFYING] == 0;
+                    you.duration[DUR_SLIMIFYING] += random_range(35, 45);
+                    if (you.duration[DUR_SLIMIFYING] >= 100)
+                    {
+                        you.duration[DUR_SLIMIFYING] = 0;
+                        transform(20 + roll_dice(3, 10),
+                                transformation::jelly, true, false);
+                    }
+                    else
+                    {
+                        mprf(MSGCH_DANGER, "You %s!",
+                            initial ? "start to liquefy" : "liquefy further");
+                    }
+                }
+            }
+        }
+        break;
 
     case AF_ALEMBIC:
     {

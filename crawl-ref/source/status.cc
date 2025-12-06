@@ -971,6 +971,15 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTGREY;
         break;
 
+    case DUR_SLIMIFYING:
+        if (you.duration[DUR_SLIMIFYING] > 70)
+            inf.light_colour = LIGHTMAGENTA;
+        else if (you.duration[DUR_SLIMIFYING] >= 35)
+            inf.light_colour = MAGENTA;
+        else
+            inf.light_colour = RED;
+        break;
+
     case STATUS_MNEMOPHAGE:
         if (!you.duration[DUR_ENKINDLED] && you.has_mutation(MUT_MNEMOPHAGE))
         {

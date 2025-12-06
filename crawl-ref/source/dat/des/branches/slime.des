@@ -380,12 +380,12 @@ ENDMAP
 NAME:   nicolae_slime_welcoming_committee
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  Slime:2-, !Slime:$
-SUBST:  X = x., { = {[(, 1 : 1:70 2
-KMONS:  1 : jelly w:20 / slime creature w:30 / acid blob w:5 / \
-            rockslime w:5 / void ooze w:5 / azure jelly w:5
-KMONS:  2 = endoplasm
-KMONS:  3 = colossal amoeba
-NSUBST: 2 = 2:3 / *:2
+SUBST:  X = x., { = {[(, 1 : 1:40 2
+KMONS:  1 : slime creature w:30 / rockslime w:5 / azure jelly w:5
+KMONS:  23 : jelly w:20 / endoplasm
+KMONS:  4 : acid blob / void ooze
+KMONS:  5 : colossal amoeba / morphogenic ooze
+NSUBST: 2 = 3:4 / *:2, 3 = 2:5 / *:2
 MAP
       xxx
    xxxxxxxx
@@ -697,7 +697,7 @@ ENDMAP
 # inspired by a comment of spacejung on SomethingAwful (dpeg)
 NAME:   dissolution_awaits
 DEPTH:  Slime:2-, !Slime:$
-KMONS:  1 = patrolling Dissolution, azure jelly / great orb of eyes
+KMONS:  1 = patrolling Dissolution, morphogenic ooze / colossal amoeba
 MAP
  .....
 ...{...

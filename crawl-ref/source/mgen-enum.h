@@ -147,6 +147,7 @@ enum band_type
     BAND_UNDERTAKERS,
     BAND_AMOEBA_ORGANS,
     BAND_DRAINING_EYE_CORPS,
+    BAND_MORPHOGENIC_OOZE,
     NUM_BANDS                   // always last
 };
 
