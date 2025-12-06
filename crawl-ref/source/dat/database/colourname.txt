@@ -1079,7 +1079,7 @@ of an eggplant just sitting there
 
 that looks like nothing you recognise
 %%%%
-graffiti_ordinary_meeting
+graffiti_meeting_ordinary
 
 # Possibly too lowbrow, but a good time can mean many things.
 with @graffiti author name@ for [a good time|tips on how to survive in the dungeon]
@@ -1147,7 +1147,7 @@ of a group of [crusaders|moralists] [discussing|opposing] evil in the world
 # Non-religious version of Lugonu below.
 of a varied group of people discussing their experiences in the Abyss
 %%%%
-graffiti_religious_meeting
+graffiti_meeting_religious
 
 of a [sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
 
@@ -1197,11 +1197,11 @@ of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their exper
 
 of a group of orcs promoting Beogh's word
 %%%%
-graffiti_any_meeting
+graffiti_meeting_any
 
-@graffiti_ordinary_meeting@
+@graffiti_meeting_ordinary@
 
-@graffiti_religious_meeting@
+@graffiti_meeting_religious@
 %%%%
 graffiti_obscenities
 
@@ -1209,126 +1209,6 @@ of various obscenities
 
 w:2
 of some very imaginative obscenities you've never seen before
-%%%%
-graffiti_relative_or_quality
-
-all associates
-
-the bloodline
-
-the child
-
-the children
-
-the dexterity
-
-the entire species
-
-the family
-
-the friend
-
-the friends
-
-the god
-
-the intelligence
-
-the lover
-
-the lovers
-
-the mate
-
-the mates
-
-the parent
-
-the parents
-
-the personality
-
-the spouse
-
-the spouses
-
-the strength
-%%%%
-graffiti_religion
-
-[glorifying|blaspheming] the gods
-
-glorifying @random_god@ and blaspheming @random_god@
-
-glorifying an unknown god
-
-# No entries for Ignis or Jiyva here. Ignis has one worshipper in the
-# Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
-# Royal Jelly who is brainless and tied to the Slime Pits. More
-# importantly, if the player kills Jiyva, Jiyva will no longer show up
-# in @random_god@ or @random_god_chaotic@, which will make detailed
-# graffiti praising Jiyva (which won't use @random_god@ or
-# @random_god_chaotic@) incongruous.
-
-revering Xom and the randomness of everything
-
-delighting in Nemelex Xobeh and whatever the next card deck brings
-
-extolling Yredelemnul and all things unholy
-
-commending Gozag and talking about how enough gold can buy anything
-
-praising Trog and talking about how blood rage can get rid of anything in your way
-
-adoring Okawaru and talking about how Okawaru is the only ally you need as a warrior
-
-applauding Sif Muna and talking about how all magic is accessible with enough effort
-
-venerating Vehumet and talking about how weaponised magic is the key to victory
-
-fawning over Kikubaaqudgha and talking about how necromancy turns all flesh and blood into useful tools
-
-giving kudos to Cheibriados and talking about how the slow and steady can conquer all
-
-paying tribute to Makhleb and talking about all the powers of hell that Makhleb grants
-
-exulting Fedhas and the enduring powers of nature
-
-honouring Hepliaklqana and talking about how those who live on in others' memories never truly die
-
-showing devotion to Uskayaw and talking about the complex dance that is life itself
-
-doting on Dithmenos and talking about the many things [shadows|the night] can do
-
-giving thanks to the Wu Jian Council and talking about how proper discipline is the key to greatness
-
-acclaiming Qazlal and talking about how the elements can work for you
-
-promoting Elyvilon and talking about how bringing peace to the world is essential
-
-admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
-
-paying homage to Ru and talking about how all of reality is not what you think it is
-
-giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
-
-flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
-%%%%
-graffiti_non-orc_religion
-
-lauding Zin and Zin's laws
-
-lauding Zin and talking about how following Zin's laws is essential
-
-lauding Zin and talking about how those who break Zin's laws deserve punishment
-%%%%
-graffiti_orc_religion
-
-proselytising for Beogh and proper orcishness
-
-proclaiming that Beogh's messiah will soon come
-
-thanking Beogh for granting salvation while the other gods just watched
 %%%%
 # Use changeable names for all graffiti professors (any, magic, and
 # mundane) so we can handle orcs (which, as graffiti authors, get names
@@ -1405,6 +1285,126 @@ w:2
 
 w:2
 the [shapeshifter|talismancer] @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_relative_or_quality
+
+all associates
+
+the bloodline
+
+the child
+
+the children
+
+the dexterity
+
+the entire species
+
+the family
+
+the friend
+
+the friends
+
+the god
+
+the intelligence
+
+the lover
+
+the lovers
+
+the mate
+
+the mates
+
+the parent
+
+the parents
+
+the personality
+
+the spouse
+
+the spouses
+
+the strength
+%%%%
+graffiti_religion_any
+
+[glorifying|blaspheming] the gods
+
+glorifying @random_god@ and blaspheming @random_god@
+
+glorifying an unknown god
+
+# No entries for Ignis or Jiyva here. Ignis has one worshipper in the
+# Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
+# Royal Jelly who is brainless and tied to the Slime Pits. More
+# importantly, if the player kills Jiyva, Jiyva will no longer show up
+# in @random_god@ or @random_god_chaotic@, which will make detailed
+# graffiti praising Jiyva (which won't use @random_god@ or
+# @random_god_chaotic@) incongruous.
+
+revering Xom and the randomness of everything
+
+delighting in Nemelex Xobeh and whatever the next card deck brings
+
+extolling Yredelemnul and all things unholy
+
+commending Gozag and talking about how enough gold can buy anything
+
+praising Trog and talking about how blood rage can get rid of anything in your way
+
+adoring Okawaru and talking about how Okawaru is the only ally you need as a warrior
+
+applauding Sif Muna and talking about how all magic is accessible with enough effort
+
+venerating Vehumet and talking about how weaponised magic is the key to victory
+
+fawning over Kikubaaqudgha and talking about how necromancy turns all flesh and blood into useful tools
+
+giving kudos to Cheibriados and talking about how the slow and steady can conquer all
+
+paying tribute to Makhleb and talking about all the powers of hell that Makhleb grants
+
+exulting Fedhas and the enduring powers of nature
+
+honouring Hepliaklqana and talking about how those who live on in others' memories never truly die
+
+showing devotion to Uskayaw and talking about the complex dance that is life itself
+
+doting on Dithmenos and talking about the many things [shadows|the night] can do
+
+giving thanks to the Wu Jian Council and talking about how proper discipline is the key to greatness
+
+acclaiming Qazlal and talking about how the elements can work for you
+
+promoting Elyvilon and talking about how bringing peace to the world is essential
+
+admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
+
+paying homage to Ru and talking about how all of reality is not what you think it is
+
+giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
+
+flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
+%%%%
+graffiti_religion_non-orc
+
+lauding Zin and Zin's laws
+
+lauding Zin and talking about how following Zin's laws is essential
+
+lauding Zin and talking about how those who break Zin's laws deserve punishment
+%%%%
+graffiti_religion_orc
+
+proselytising for Beogh and proper orcishness
+
+proclaiming that Beogh's messiah will soon come
+
+thanking Beogh for granting salvation while the other gods just watched
 %%%%
 graffiti_remedial_class
 
@@ -1541,19 +1541,20 @@ graffiti of @any_colour_pattern@
 
 graffiti of @writing_type@
 
-# This is not in graffiti_religion because it's structured too differently.
-# Assume one can hail a god without necessarily worshipping a god.
+# This is not in graffiti_religion_any because it's structured too
+# differently. Assume one can hail a god without necessarily worshipping
+# a god.
 graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_hailed_god@[| and a signature by @graffiti author name@]
 
 @graffiti_type@[| signed by @graffiti author name@]
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_image@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_religion@
+@graffiti_type@[| signed by @graffiti author name@] @graffiti_religion_any@
 
-@graffiti_type@[| signed by @non-orc graffiti author name@] @graffiti_non-orc_religion@
+@graffiti_type@[| signed by @non-orc graffiti author name@] @graffiti_religion_non-orc@
 
-@graffiti_type@[| signed by @orc graffiti author name@] @graffiti_orc_religion@
+@graffiti_type@[| signed by @orc graffiti author name@] @graffiti_religion_orc@
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_rumour@
 
@@ -1563,7 +1564,7 @@ graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_
 
 @graffiti_type@ @graffiti_fight@
 
-@graffiti_type@ advertising a meeting @graffiti_any_meeting@
+@graffiti_type@ advertising a meeting @graffiti_meeting_any@
 
 @graffiti_type@ saying that @graffiti_short_saying@
 
