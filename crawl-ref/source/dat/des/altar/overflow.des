@@ -3404,8 +3404,8 @@ MAP
 .....       .....
 ENDMAP
 
-# Ru said it, not me. 
-# The code is copied more or less verbatim from nicolae_arrival_memento_mori, 
+# Ru said it, not me.
+# The code is copied more or less verbatim from nicolae_arrival_memento_mori,
 # although a lot of the relevant code in that vault was edited by amalloy, so I
 # can't take all the credit.
 NAME:  nicolae_ru_cut_away_your_false_body!
