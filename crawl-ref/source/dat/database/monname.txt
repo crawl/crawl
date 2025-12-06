@@ -75,7 +75,7 @@ any orc name
 @orc apostle priest name@
 %%%%
 # Obvious references to Beogh
-# (17 at last count)
+# (18 at last count)
 _beogh_name_
 
 Arbeogh
