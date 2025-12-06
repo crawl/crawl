@@ -1835,9 +1835,6 @@ Udom
 orc graffiti author name
 
 @orc name@ the orc
-
-w:1
-@rare orc graffiti author name@
 %%%%
 bland graffiti author name
 
