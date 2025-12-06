@@ -1524,6 +1524,10 @@ claiming that some of the gods secretly serve the oni instead of the other way a
 claiming that some of the hill dwarves still live
 
 wondering what really happened to the last of the sludge elves
+
+# References to removed species not mentioned elsewhere.
+
+claiming that gnomes really exist and are just superb at hiding
 %%%%
 graffiti_unique_comment
 
