@@ -1494,6 +1494,10 @@ what happened to @graffiti author name@ was @graffiti_happened_reason@
 
 w:2
 @graffiti_author_changed_names@
+
+# Strong Bad
+w:1
+@graffiti author name@ is actually a wagon full of pancakes
 %%%%
 graffiti_species
 
