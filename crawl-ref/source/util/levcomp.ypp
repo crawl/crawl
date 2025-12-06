@@ -97,8 +97,7 @@ level           : name map_specs
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    string err =
-                        lc_map.validate_map_def(lc_default_depths);
+                    string err = lc_map.validate_map_def();
                     dump_map(lc_map);
                     if (!err.empty())
                         yyerror(err.c_str());

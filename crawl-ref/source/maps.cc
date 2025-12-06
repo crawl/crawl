@@ -195,14 +195,6 @@ static bool _resolve_map_lua(map_def &map)
     }
 
     map.fixup();
-    err = map.resolve();
-    if (!err.empty())
-    {
-        crawl_state.last_builder_error = err;
-        crawl_state.last_builder_error_fatal = true;
-        mprf(MSGCH_ERROR, "Map resolution error: %s", err.c_str());
-        return false;
-    }
 
     // this is non-fatal: maps use validation to enforce basic placement
     // constraints, and a failure here should mean retrying
