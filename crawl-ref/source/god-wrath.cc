@@ -1618,6 +1618,7 @@ static monster* _ignis_champion_target()
             || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
             || mon->is_stationary()
             || mon->wont_attack()
+            || mons_is_zombified(*mon)
             // no stealing another god's pals :P
             || mon->is_priest()
             || mon->god != GOD_NO_GOD)
