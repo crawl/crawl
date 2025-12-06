@@ -1583,6 +1583,24 @@ graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti
 
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@ and a signature by @graffiti author name@
 %%%%
+graffiti_with_signature_maybe
+
+@graffiti_type@
+
+@graffiti_type@ signed by @graffiti author name@
+%%%%
+graffiti_with_signature_maybe_non-orc
+
+@graffiti_type@
+
+@graffiti_type@ signed by @non-orc graffiti author name@
+%%%%
+graffiti_with_signature_maybe_orc
+
+@graffiti_type@
+
+@graffiti_type@ signed by @orc graffiti author name@
+%%%%
 coloured_graffiti
 
 graffiti of @any_colour_pattern@
@@ -1591,21 +1609,21 @@ graffiti of @writing_type@
 
 @graffiti_unreadable@
 
-@graffiti_type@[| signed by @graffiti author name@]
+@graffiti_with_signature_maybe@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_image@
+@graffiti_with_signature_maybe@ @graffiti_image@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_religion_not_non-orc_or_orc@
+@graffiti_with_signature_maybe@ @graffiti_religion_not_non-orc_or_orc@
 
-@graffiti_type@[| signed by @non-orc graffiti author name@] @graffiti_religion_non-orc@
+@graffiti_with_signature_maybe_non-orc@ @graffiti_religion_non-orc@
 
-@graffiti_type@[| signed by @orc graffiti author name@] @graffiti_religion_orc@
+@graffiti_with_signature_maybe_orc@ @graffiti_religion_orc@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_rumour@
+@graffiti_with_signature_maybe@ @graffiti_rumour@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_unique_comment@
+@graffiti_with_signature_maybe@ @graffiti_unique_comment@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_species@
+@graffiti_with_signature_maybe@ @graffiti_species@
 
 @graffiti_type@ @graffiti_fight@
 
