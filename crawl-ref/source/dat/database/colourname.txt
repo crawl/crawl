@@ -988,7 +988,7 @@ w:2
 w:2
 @rare graffiti author name@ has passed on the name to someone else worthy of it
 
-w:2
+w:1
 @changeable non-randgen graffiti author name@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
 graffiti_fight
@@ -1011,11 +1011,11 @@ w:2
 an unknown god
 
 # From the rare graffiti author name.
-w:2
+w:1
 Woog the god
 
 # Behold the power of cheese!
-w:2
+w:1
 the power of cheese
 %%%%
 graffiti_happened_reason
@@ -1215,7 +1215,7 @@ graffiti_obscenities
 
 of various obscenities
 
-w:2
+w:1
 of some very imaginative obscenities you've never seen before
 %%%%
 # Use changeable names for all graffiti professors (any, magic, and
@@ -1231,7 +1231,7 @@ graffiti_professor_any
 w:2
 @orc graffiti author name@
 
-w:2
+w:1
 @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_evocations
@@ -1241,7 +1241,7 @@ graffiti_professor_evocations
 w:2
 @orc graffiti author name@ [artificer|tinkerer]
 
-w:2
+w:1
 the [artificer|tinkerer] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_invocations
@@ -1251,7 +1251,7 @@ graffiti_professor_invocations
 w:2
 @orc graffiti author name@ [cleric|high priest|priest|theologian]
 
-w:2
+w:1
 the [cleric|high priest|priest|theologian] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_magic
@@ -1261,7 +1261,7 @@ graffiti_professor_magic
 w:2
 @orc graffiti author name@ [mage|sorcerer|spellcaster|wizard]
 
-w:2
+w:1
 the [mage|sorcerer|spellcaster|wizard] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_mundane
@@ -1271,7 +1271,7 @@ graffiti_professor_mundane
 w:2
 @orc graffiti author name@ [knight|veteran|warlord|warrior]
 
-w:2
+w:1
 the [knight|veteran|warlord|warrior] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_necromancy
@@ -1281,7 +1281,7 @@ graffiti_professor_necromancy
 w:2
 @orc graffiti author name@ necromancer
 
-w:2
+w:1
 the necromancer @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_professor_shapeshifting
@@ -1291,7 +1291,7 @@ graffiti_professor_shapeshifting
 w:2
 @orc graffiti author name@ [shapeshifter|talismancer]
 
-w:2
+w:1
 the [shapeshifter|talismancer] @rare graffiti author name@ (supposedly)
 %%%%
 graffiti_relative_or_quality
@@ -1576,5 +1576,5 @@ graffiti of @writing_type@ that is unreadable except for bits hailing @graffiti_
 
 @graffiti_type@ saying that @graffiti_short_saying@
 
-w:2
+w:1
 @graffiti_type@ @graffiti_obscenities@
