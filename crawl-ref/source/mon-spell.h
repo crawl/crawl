@@ -1076,7 +1076,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_EYE_OF_DEVASTATION,
       {
-       { SPELL_BOLT_OF_DEVASTATION, 60, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_DEVASTATION, 90, MON_SPELL_MAGICAL },
       }
     },
 

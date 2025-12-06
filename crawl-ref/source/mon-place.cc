@@ -1910,6 +1910,9 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_SLIME)
                && x_chance_in_y(you.depth + 2, you.depth + 11); }},
                                    {{ BAND_AMOEBA_ORGANS, {1, 2} }}}},
+    { MONS_EYE_OF_DEVASTATION, { { 0, 0, []() {
+        return player_in_branch(BRANCH_SLIME); }},
+                                  {{ BAND_GOLDEN_EYE, {0, 2} }}}},
     { MONS_MORPHOGENIC_OOZE, { {}, {{ BAND_MORPHOGENIC_OOZE, {1, 4} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},

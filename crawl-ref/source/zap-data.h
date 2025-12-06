@@ -83,7 +83,7 @@ static const zap_info zap_data[] =
     "bolt of devastation",
     nullptr,
     nullptr,
-    new dicedef_calculator<3, 20, 0, 1>,
+    new dicedef_calculator<3, 24, 0, 1>,
     new tohit_calculator<15, 1, 30>,
     MAGENTA,
     false,
