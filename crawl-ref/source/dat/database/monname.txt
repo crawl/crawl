@@ -1843,21 +1843,25 @@ bland graffiti author name
 w:2
 @bland name@ ([not that one|the other one|yes, that one])
 %%%%
-rare graffiti author name
+rare god graffiti author name
 
-# Kilroy was here!
-Kilroy
+# Funny option for rumours that "Woog the god" worships another god or
+# is secretly an atheist.
+Woog the god
+%%%%
+rare ordinary graffiti author name
 
 # Not just in the documentation!
 Durwent the kobold
 
 Zlaz the goblin
 
-# Funny option for rumours that "Woog the god" worships another god or
-# is secretly an atheist.
-Woog the god
-
 Fneeb the oni
+%%%%
+rare title graffiti author name
+
+# Kilroy was here!
+Kilroy
 
 # Norby and the Terrified Taxi
 Garc the Great
@@ -1868,6 +1872,17 @@ Plog the Peerless
 # Funny option for rumours that "Dead [deliberately not Undead] Wendell"
 # deserves life, death, or undeath; or worships the Shining One.
 Dead Wendell
+%%%%
+rare graffiti author name
+
+w:10
+@rare ordinary graffiti author name@
+
+w:2
+@rare title graffiti author name@
+
+w:1
+@rare god graffiti author name@
 %%%%
 # Same as @graffiti author name@ below, but without orc names.
 non-orc graffiti author name

@@ -1010,9 +1010,8 @@ Xom
 w:2
 an unknown god
 
-# From the rare graffiti author name.
 w:1
-Woog the god
+@rare god graffiti author name@
 
 # Behold the power of cheese!
 w:1
