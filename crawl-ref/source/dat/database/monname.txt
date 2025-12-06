@@ -1875,7 +1875,6 @@ Dead Wendell
 %%%%
 rare graffiti author name
 
-w:10
 @rare ordinary graffiti author name@
 
 w:2
@@ -1926,7 +1925,6 @@ graffiti author name
 w:50
 @ancestor name@
 
-w:10
 @orc graffiti author name@
 
 w:2

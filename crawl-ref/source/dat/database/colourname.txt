@@ -789,7 +789,6 @@ w:40
 w:20
 @misc_colour@
 
-w:10
 @mono_colour@
 %%%%
 any_pattern
