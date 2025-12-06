@@ -1020,8 +1020,10 @@ graffiti_happened_reason
 
 an accident
 
+a coincidence
+
 # Garak, Star Trek: Deep Space Nine
-a coincidence[| but @graffiti author name@ doesn't trust coincidences]
+a coincidence but @graffiti author name@ doesn't trust coincidences
 
 a cover-up
 
@@ -1035,7 +1037,7 @@ a travesty
 
 a warning to others
 
-[|against ]the will of the gods
+against the will of the gods
 
 completely random
 
@@ -1055,6 +1057,8 @@ part of a larger plot
 the work of the "Plog" Conspiracy
 
 self-inflicted
+
+the will of the gods
 
 uncalled for
 
@@ -1085,10 +1089,26 @@ of an eggplant just sitting there
 
 that looks like nothing you recognise
 %%%%
+graffiti_loves_or_hates
+
+curses
+
+defends
+
+hates
+
+insults
+
+loves
+
+praises
+%%%%
 graffiti_meeting_ordinary
 
 # Possibly too lowbrow, but a good time can mean many things.
-with @graffiti author name@ for [a good time|tips on how to survive in the dungeon]
+with @graffiti author name@ for a good time
+
+with @graffiti author name@ to learn how to survive in the dungeon
 
 of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
 
@@ -1459,7 +1479,7 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ [curses|defends|hates|insults|loves|praises][| @graffiti_relative_or_quality@ of] @graffiti author name@
+@graffiti author name@ @graffiti_loves_or_hates@[| @graffiti_relative_or_quality@ of] @graffiti author name@
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
 
