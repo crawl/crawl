@@ -1832,6 +1832,9 @@ Wira
 
 Udom
 %%%%
+# This doesn't include rare orc names (which are aliases), so that rare
+# orc names don't show up significantly more often than other rare
+# names. Assume orcs are less inclined to hide behind aliases.
 orc graffiti author name
 
 @orc name@ the orc
