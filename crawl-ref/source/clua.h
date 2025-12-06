@@ -133,6 +133,7 @@ public:
     bool callfn(const char *fn, const char *params, ...);
     void fnreturns(const char *params, ...);
     bool runhook(const char *hook, const char *params, ...);
+    string get_stack_trace();
 
     void add_shutdown_listener(lua_shutdown_listener *);
     void remove_shutdown_listener(lua_shutdown_listener *);
@@ -143,8 +144,6 @@ public:
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
     static bool is_path_safe(string file, bool trusted = false);
-
-    void print_stack(FILE* file);
 
     /* Add the libraries and globals currently used by clua and dlua */
     void init_libraries();
@@ -244,3 +243,19 @@ private:
 extern CLua clua;
 
 string quote_lua_string(const string &s);
+
+struct CLuaError
+{
+    CLuaError() {}
+    CLuaError(string &msg, string &trace) : message(msg), stack_trace(trace) {}
+
+    void save(writer& outf) const;
+    void load(reader& inf);
+
+    string message;
+    string stack_trace;
+};
+
+extern vector<CLuaError> dlua_errors;
+void save_dlua_errors(writer& outf);
+void load_dlua_errors(reader& inf);
