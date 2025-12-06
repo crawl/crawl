@@ -1479,9 +1479,11 @@ what happened to @graffiti author name@ was @graffiti_happened_reason@
 
 @graffiti author name@ is secretly [|not ]an atheist
 
-# These next four can produce orcs who worship Zin or non-orcs who
-# worship Beogh, but that's why you shouldn't believe everything you
-# read.
+# These next five can produce an orc who worships (or is) Zin, or a
+# non-orc who worships (or is) Beogh, but that's why you shouldn't
+# believe everything you read.
+
+@graffiti author name@ is secretly @random_god@
 
 @graffiti author name@ secretly worships Zin[| instead of @random_god_chaotic@]
 

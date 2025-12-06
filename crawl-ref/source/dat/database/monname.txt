@@ -1845,8 +1845,10 @@ w:2
 %%%%
 rare god graffiti author name
 
-# Funny option for rumours that "Woog the god" worships another god or
-# is secretly an atheist.
+# Funny option for rumours that "Woog the god" worships another god, or
+# is secretly an atheist, or is secretly Wu Jian (the similarity in
+# names is merely a coincidence, although it's likely tied to why this
+# god is rare).
 Woog the god
 %%%%
 rare orc graffiti author name
