@@ -1365,6 +1365,8 @@ glorifying @random_god@ and blaspheming @random_god@
 
 glorifying an unknown god
 
+not just hailing but glorifying @graffiti_hailed_god@
+
 # No entries for Ignis or Jiyva here. Ignis has one worshipper in the
 # Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
 # Royal Jelly who is brainless and tied to the Slime Pits. More
