@@ -1229,7 +1229,7 @@ public:
     // Executes post-generation lua code.
     bool run_lua_epilogue(bool croak = false);
 
-    string validate_map_def(const depth_ranges &);
+    string validate_map_def();
     string validate_temple_map();
     // Returns true if this map is in the middle of validation.
     bool is_validating() const { return validating_map_flag; }
@@ -1241,7 +1241,6 @@ public:
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
-    string resolve();
     void fixup();
 
     bool is_usable_in(const level_id &lid) const;
