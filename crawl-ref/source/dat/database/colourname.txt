@@ -1357,7 +1357,7 @@ the spouses
 
 the strength
 %%%%
-graffiti_religion_any
+graffiti_religion_not_non-orc_or_orc
 
 [glorifying|blaspheming] the gods
 
@@ -1595,7 +1595,7 @@ graffiti of @writing_type@
 
 @graffiti_type@[| signed by @graffiti author name@] @graffiti_image@
 
-@graffiti_type@[| signed by @graffiti author name@] @graffiti_religion_any@
+@graffiti_type@[| signed by @graffiti author name@] @graffiti_religion_not_non-orc_or_orc@
 
 @graffiti_type@[| signed by @non-orc graffiti author name@] @graffiti_religion_non-orc@
 
