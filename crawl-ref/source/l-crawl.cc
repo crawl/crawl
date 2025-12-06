@@ -1840,8 +1840,27 @@ LUAWRAP(crawl_clear_message_store, clear_message_store())
  */
 LUARET1(crawl_seen_hups, integer, crawl_state.seen_hups)
 
+/*** Set the environment table for a lua function.
+ * By default, functions have _G as their environment. This function can
+ * change a function's environment to an arbitrary table.
+ * @within dlua
+ * @tparam function fn The lua function to modify
+ * @tparam table env The new environment for the function
+ * @treturn function The function fn
+ * @function setfenv
+ */
 LUAFN(crawl_setfenv)
 {
+    if (!lua_isfunction(ls, 1))
+        luaL_error(ls, "crawl.setfenv: First argument must be a function");
+    if (!lua_istable(ls, 2))
+    {
+        luaL_error(ls, "crawl.setfenv: Second argument must be an environment "
+                   "table");
+    }
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "crawl.setfenv: Too many arguments given");
+
     lua_setupvalue(ls, 1, 1);
     return 1;
 }
