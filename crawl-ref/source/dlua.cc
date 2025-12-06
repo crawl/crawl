@@ -221,6 +221,8 @@ bool dlua_chunk::rewrite_chunk_errors(string &s) const
     if (!dlwhere)
     {
         s = rewrite_chunk_prefix(s);
+        if (!dlua_errors.empty())
+            dlua_errors.back().message = s;
         return true;
     }
 
@@ -243,6 +245,9 @@ bool dlua_chunk::rewrite_chunk_errors(string &s) const
         }
     }
     s = newmsg;
+    if (!dlua_errors.empty())
+        dlua_errors.back().message = s;
+
     return true;
 }
 

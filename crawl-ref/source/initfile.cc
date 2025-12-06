@@ -1688,7 +1688,10 @@ void game_options::reset_options()
 
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
+    {
         dump_order.push_back("turns_by_place");
+        dump_order.push_back("dlua_errors");
+    }
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY

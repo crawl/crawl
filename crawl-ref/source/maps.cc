@@ -191,6 +191,9 @@ static bool _resolve_map_lua(map_def &map)
         crawl_state.last_builder_error = err;
         crawl_state.last_builder_error_fatal = true;
         mprf(MSGCH_ERROR, "Fatal lua error: %s", err.c_str());
+        // If our errors are going to stderr, we'll just put the trace here.
+        if (msg::uses_stderr(MSGCH_ERROR) && !dlua_errors.empty())
+            mprf(MSGCH_ERROR, "\n%s", dlua_errors.back().stack_trace.c_str());
         return false;
     }
 
@@ -1586,6 +1589,11 @@ void run_map_local_preludes()
             {
                 mprf(MSGCH_ERROR, "Lua error (map %s): %s",
                      vdef.name.c_str(), err.c_str());
+                if (msg::uses_stderr(MSGCH_ERROR) && !dlua_errors.empty())
+                {
+                    mprf(MSGCH_ERROR, "\n%s",
+                         dlua_errors.back().stack_trace.c_str());
+                }
             }
         }
     }

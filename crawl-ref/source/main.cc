@@ -369,6 +369,7 @@ static void _reset_game()
     overview_clear();
     clear_message_window();
     note_list.clear();
+    dlua_errors.clear();
     msg::deinitialise_mpr_streams();
     quiver::reset_state();
 

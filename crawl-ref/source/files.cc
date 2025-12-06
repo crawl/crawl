@@ -2582,6 +2582,9 @@ static void _save_game_base()
     /* messages */
     SAVEFILE("msg", "messages", save_messages);
 
+    /* dlua errors */
+    SAVEFILE("de", "dlua_errors", save_dlua_errors);
+
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
     // Save the current equipment into a file.
@@ -3319,6 +3322,13 @@ static bool _restore_game(const string& filename)
     {
         reader inf(you.save, CHUNK("msg", "messages"), minorVersion);
         load_messages(inf);
+    }
+
+    /* dlua errors */
+    if (you.save->has_chunk(CHUNK("de", "dlua_errors")))
+    {
+        reader inf(you.save, CHUNK("de", "dlua_errors"), minorVersion);
+        load_dlua_errors(inf);
     }
 
     // Handle somebody SIGHUP'ing out of the skill menu with every skill

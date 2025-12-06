@@ -28,6 +28,20 @@
 #define NO_CUSTOM_ALLOCATOR
 #endif
 
+void CLuaError::save(writer& outf) const
+{
+    marshallString4(outf, message);
+    marshallString4(outf, stack_trace);
+}
+
+void CLuaError::load(reader& inf)
+{
+    unmarshallString4(inf, message);
+    unmarshallString4(inf, stack_trace);
+}
+
+vector<CLuaError> dlua_errors;
+
 static int  _clua_panic(lua_State *);
 static void _clua_throttle_hook(lua_State *, lua_Debug *);
 #ifndef NO_CUSTOM_ALLOCATOR
@@ -37,6 +51,8 @@ static int  _clua_guarded_pcall(lua_State *);
 static int  _clua_require(lua_State *);
 static int  _clua_dofile(lua_State *);
 static int  _clua_loadfile(lua_State *);
+static string _clua_stack_trace(lua_State *ls, bool skip_first);
+static int _clua_trace_handler(lua_State *ls);
 static string _get_persist_file();
 
 CLua::CLua(bool managed)
@@ -527,8 +543,18 @@ int CLua::pcall(int argc, int retc)
     if (!state())
         return 1;
 
+    int msgh = 0;
     lua_call_throttle strangler(this);
-    return lua_pcall(_state, argc, retc, 0);
+
+    // For the dlua state, we use an error handler that saves a stack trace.
+    if (!managed_vm)
+    {
+        lua_pushcfunction(_state, _clua_trace_handler);
+        lua_insert(_state, 1);
+        msgh = 1;
+    }
+
+    return lua_pcall(_state, argc, retc, msgh);
 }
 
 bool CLua::calltopfn(const char *params, va_list args, int retc,
@@ -710,6 +736,16 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     return !err;
 }
 
+string CLua::get_stack_trace()
+{
+    // We might be called after an arbitrary crash, so don't try to
+    // initialize via CLua::state().
+    if (!_state)
+        return "";
+
+    return _clua_stack_trace(_state, false);
+}
+
 void CLua::init_lua()
 {
     if (_state)
@@ -868,30 +904,22 @@ void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
     erase_val(shutdown_listeners, listener);
 }
 
-// Can be called from within a debugger to look at the current Lua
-// call stack. (Borrowed from ToME 3)
-void CLua::print_stack(FILE* file)
+void save_dlua_errors(writer& outf)
 {
-    struct lua_Debug dbg;
-    int              i = 0;
-    lua_State       *L = state();
+    marshallInt(outf, dlua_errors.size());
+    for (const CLuaError &error : dlua_errors)
+        error.save(outf);
+}
 
-    fprintf(file, "\n");
-    while (lua_getstack(L, i++, &dbg) == 1)
+void load_dlua_errors(reader& inf)
+{
+    int num = unmarshallInt(inf);
+    for (int i = 0; i < num; ++i)
     {
-        lua_getinfo(L, "lnuS", &dbg);
-
-        char* lua_file = strrchr(dbg.short_src, '/');
-        if (lua_file == nullptr)
-            lua_file = dbg.short_src;
-        else
-            lua_file++;
-
-        fprintf(file, "%s, function %s, line %d\n", lua_file,
-                dbg.name, dbg.currentline);
+        CLuaError error;
+        error.load(inf);
+        dlua_errors.push_back(error);
     }
-
-    fprintf(file, "\n");
 }
 
 // //////////////////////////////////////////////////////////////////////
@@ -1276,6 +1304,46 @@ static int _clua_dofile(lua_State *ls)
 
     lua_call(ls, 0, LUA_MULTRET);
     return lua_gettop(ls);
+}
+
+static string _clua_stack_trace(lua_State *ls, bool skip_first = true)
+{
+    struct lua_Debug dbg;
+    int i = skip_first ? 1 : 0;
+    string trace;
+
+    while (lua_getstack(ls, i++, &dbg) == 1)
+    {
+        lua_getinfo(ls, "lnuS", &dbg);
+
+        char* lua_file = strrchr(dbg.short_src, '/');
+        if (lua_file == nullptr)
+            lua_file = dbg.short_src;
+        else
+            lua_file++;
+
+        trace += make_stringf("%s, function %s, line %d\n", lua_file,
+                dbg.name, dbg.currentline);
+    }
+
+    return trace;
+}
+
+static int _clua_trace_handler(lua_State *ls)
+{
+    CLuaError error;
+
+    const char *err = lua_tostring(ls, 1);
+    if (err)
+        error.message = err;
+
+    // The error message of this chunk will likely be rewritten for accurate
+    // line numbers, but save the original in case that's not necessary.
+    error.message = err;
+    error.stack_trace = _clua_stack_trace(ls);
+    dlua_errors.push_back(error);
+
+    return 1;
 }
 
 string quote_lua_string(const string &s)
