@@ -1219,9 +1219,10 @@ of some very imaginative obscenities you've never seen before
 # Use changeable names for all graffiti professors (any, magic, and
 # mundane) so we can handle orcs (which, as graffiti authors, get names
 # ending with " the orc") and rare names (aliases or titles that may
-# also have suffixes) separately from them, just as we do with changed
-# names above. Professors can sometimes get titles that monsters can't
-# (e.g. orc mages), but they're supposed to be special.
+# also have suffixes, and may also be orcs) separately from them, just
+# as we do with changed names above. Professors can sometimes get titles
+# that monsters can't (e.g. orc mages), but they're supposed to be
+# special.
 graffiti_professor_any
 
 @changeable graffiti author name@
