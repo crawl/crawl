@@ -1,0 +1,47 @@
+enum: SP_SLUDGE_ELF
+monster: MONS_ELF
+name: Sludge Elf
+short_name: SE
+adjective: Elven
+genus: Elf
+difficulty: Intermediate
+aptitudes:
+  xp: 0
+  hp: -1
+  mp_mod: 1
+  wl: 3
+  fighting: 1
+  short_blades: -3
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  armour: -1
+  shields: -2
+  unarmed_combat: 1
+  spellcasting: 1
+  conjurations: -1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  shapeshifting: 1
+str: 8
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - dex
+  - str
+  - int
+mutations:
+  1:
+    MUT_PROTEAN_GRACE: 1
+    MUT_NATURAL_SHIFTER: 1
+  7:
+    MUT_NATURAL_SHIFTER: 1
+recommended_jobs:
+  - shapeshifter
+  - chaos knight
+
+orc_name: Sludge Orc

@@ -69,6 +69,8 @@ enum ability_type
     ABIL_CACOPHONY,
     // Revenants
     ABIL_ENKINDLE,
+    // Sludge Elves
+    ABIL_INNATE_TRANSFORMATION,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 

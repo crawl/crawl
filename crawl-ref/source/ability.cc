@@ -408,6 +408,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_ENKINDLE, "Enkindle",
                 0, 0, 0, -1, {}, abflag::instant },
 
+        { ABIL_INNATE_TRANSFORMATION, "Innate Transformation",
+                0, 0, 0, -1, {}, abflag::none },
+
         { ABIL_SPIDER_JUMP, "Jump",
                 0, 0, 0, -1, {}, abflag::none },
 
@@ -1595,6 +1598,18 @@ string get_ability_desc(const ability_type ability, bool need_title)
         }
         break;
 
+        case ABIL_INNATE_TRANSFORMATION:
+        {
+            if (you.props.exists(INNATE_TRANSFORMATION_KEY))
+            {
+                const int tr = you.props[INNATE_TRANSFORMATION_KEY].get_int();
+                lookup += "\nYou will enter ";
+                lookup += transform_name(static_cast<transformation>(tr));
+                lookup += " form.";
+            }
+        }
+        break;
+
         default:
         break;
     }
@@ -2231,6 +2246,27 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             if (!quiet)
                 mpr("You don't have any memories left to burn.");
 
+            return false;
+        }
+
+        return true;
+    }
+
+    case ABIL_INNATE_TRANSFORMATION:
+    {
+        transformation tr = static_cast<transformation>(you.props[INNATE_TRANSFORMATION_KEY].get_int());
+        if (you.default_form == tr)
+        {
+            if (!quiet)
+                mpr("You are already in that form!");
+
+            return false;
+        }
+        const string reason = cant_transform_reason(tr);
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason);
             return false;
         }
 
@@ -3090,6 +3126,12 @@ static spret _siphon_essence(bool fail)
     return spret::success;
 }
 
+static bool _in_innate_form()
+{
+    return you.props.exists(INNATE_TRANSFORMATION_KEY)
+        && you.form == static_cast<transformation>(you.props[INNATE_TRANSFORMATION_KEY].get_int());
+}
+
 /**
  * What power does the player use draconian (and dragon form) breath abilities
  * at?
@@ -3388,6 +3430,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_END_TRANSFORMATION:
         if (transforming_is_unsafe(you.default_form))
             return spret::abort;
+        if (_in_innate_form()) // untransforming from our innate sludge elf form
+            set_default_form(transformation::none, nullptr);
         return_to_default_form();
         break;
 
@@ -3421,6 +3465,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
+    case ABIL_INNATE_TRANSFORMATION:
+    {
+        transformation tr = static_cast<transformation>(you.props[INNATE_TRANSFORMATION_KEY].get_int());
+        if (transforming_is_unsafe(tr))
+            return spret::abort;
+        start_delay<TransformDelay>(tr, nullptr, true);
+        break;
+
+    }
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
@@ -4363,6 +4416,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.form == transformation::vampire;
     case ABIL_ENKINDLE:
         return you.has_mutation(MUT_MNEMOPHAGE);
+    case ABIL_INNATE_TRANSFORMATION:
+        return you.props.exists(INNATE_TRANSFORMATION_KEY);
     case ABIL_IMBUE_SERVITOR:
         return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
     case ABIL_IMPRINT_WEAPON:
@@ -4374,7 +4429,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
                && (!you.is_silenced() || include_unusable);
     case ABIL_END_TRANSFORMATION:
-        return you.form != you.default_form && !you.transform_uncancellable;
+        return (you.form != you.default_form || _in_innate_form())
+               && !you.transform_uncancellable;
     // TODO: other god abilities
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
@@ -4438,6 +4494,7 @@ vector<talent> your_talents(bool include_unusable, bool ignore_piety)
             ABIL_CACOPHONY,
             ABIL_BAT_SWARM,
             ABIL_ENKINDLE,
+            ABIL_INNATE_TRANSFORMATION,
             ABIL_SPIDER_JUMP,
             ABIL_WATERY_GRAVE,
             ABIL_BESTIAL_TAKEDOWN,

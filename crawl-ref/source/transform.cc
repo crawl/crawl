@@ -214,6 +214,13 @@ bool Form::slot_is_blocked(equipment_slot slot) const
  */
 int Form::get_level(int scale) const
 {
+    if (you.props.exists(INNATE_TRANSFORMATION_KEY))
+    {
+        transformation tr = static_cast<transformation>(you.props[INNATE_TRANSFORMATION_KEY].get_int());
+
+        if ((this->wiz_name).c_str() == transform_name(tr))
+            return min(4 * scale + you.skill(SK_SHAPESHIFTING, scale), max_skill * scale);
+    }
     return min(you.skill(SK_SHAPESHIFTING, scale), max_skill * scale);
 }
 
@@ -2424,4 +2431,32 @@ bool maw_growl_check(const monster* mon)
     }
 
     return false;
+}
+
+void set_innate_transformation()
+{
+    ASSERT(!you.props.exists(INNATE_TRANSFORMATION_KEY));
+    int form = NUM_TRANSFORMS;
+    int count = 0;
+
+    for (int i = 1; i < NUM_TRANSFORMS; ++i)
+    {
+        const auto tr = static_cast<transformation>(i);
+
+        // only high level forms are allowed
+        if (get_form(tr)->min_skill <= 12)
+            continue;
+
+        count++;
+        // reservoir sample
+        if (one_chance_in(count))
+            form = i;
+    }
+
+    ASSERT(form != NUM_TRANSFORMS);
+
+    mprf("You feel ready to transform into %s form.",
+        transform_name(static_cast<transformation>(form)));
+
+    you.props[INNATE_TRANSFORMATION_KEY] = form;
 }
