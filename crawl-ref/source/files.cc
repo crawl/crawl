@@ -2544,16 +2544,16 @@ void save_level(const level_id& lid)
 }
 
 #if TAG_MAJOR_VERSION == 34
-# define CHUNK(short, long) short
+# define CHUNK(short_name, long_name) short_name
 #else
-# define CHUNK(short, long) long
+# define CHUNK(short_name, long_name) long_name
 #endif
 
-#define SAVEFILE(short, long, savefn)           \
-    do                                          \
-    {                                           \
-        writer w(you.save, CHUNK(short, long)); \
-        savefn(w);                              \
+#define SAVEFILE(short_name, long_name, savefn)           \
+    do                                                    \
+    {                                                     \
+        writer w(you.save, CHUNK(short_name, long_name)); \
+        savefn(w);                                        \
     } while (false)
 
 // Stack allocated string's go in separate function, so Valgrind doesn't
