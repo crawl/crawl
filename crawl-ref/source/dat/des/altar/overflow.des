@@ -339,6 +339,111 @@ m...........m
 m    .@.    m
 ENDMAP
 
+NAME:  nicolae_ashenzari_church_of_fetters
+TAGS:  transparent decor
+KFEAT: - = iron_grate
+KMASK: ` = opaque
+KMASK: ` = no_trap_gen
+KMASK: ` = no_item_gen
+KMASK: ` = no_monster_gen
+KPROP: ` = no_tele_into
+: standard_overflow_setup(_G, { { "ashenzari",  "_" } },  true)
+MAP
+  vvv....
+ vv`vv...@
+.-```v--...
+.vv`vv.--..
+..vvv...--.
+@....._..-.
+..vvv...--.
+.vv`vv.--..
+.-```v--...
+ vv`vv...@
+  vvv....
+ENDMAP
+
+NAME: nicolae_ashenzari_crystal_shattered
+TAGS: transparent decor
+# Couldn't get the subvaulting working, so it's time for a zillion (20) glyphs.
+: local glifz = "DEFHJKLMNOPQRSZapqrs"
+: for i = 1, string.len(glifz), 1 do
+:    nsubst(string.sub(glifz, i, i) .. " = b / .")
+: end
+: standard_overflow_setup(_G, { { "ashenzari",  "_" } },  true)
+MAP
+     .....
+    ...b...
+   ...sbDD..
+  ...s.EF.H..
+ ..rrbEEFHH...
+..a.r..bb.bJ...
+..aqqb....L.J..
+.bbppb._.bLLbb.
+..Z.p....bMMK..
+...Zb.bb..N.K..
+ ...SSRQQbNN..
+  ..S.RQ.O...
+   ..PPbO...
+    ...b...
+     .....
+ENDMAP
+
+NAME: nicolae_ashenzari_skychains
+TAGS: transparent decor
+: standard_overflow_setup(_G, { { "ashenzari",  "_" } },  true)
+MAP
+.....   .....
+.nnn.....nnn.
+.nvn.....nvn.
+.nnv.....vnn.
+....v...v....
+ ....v.v....
+ ....._.....
+ ....v.v....
+....v...v....
+.nnv.....vnn.
+.nvn.....nvn.
+.nnn.....nnn.
+.....   .....
+ENDMAP
+
+NAME:   nicolae_ashenzari_temple_of_vision
+TAGS:   transparent decor
+KFEAT:  + = closed_clear_door
+NSUBST: + = + / m
+: standard_overflow_setup(_G, { { "ashenzari",  "_" } },  true)
+MAP
+  .......
+ ...mmm...
+...........
+..mmmmmmm..
+...m...m...
+.m.+._.m.m.
+...m...m...
+..mmm+mmm..
+...........
+ ...mmm...
+  .......
+ENDMAP
+
+NAME: nicolae_ashenzari_tiny_skybox
+TAGS: transparent decor
+: if crawl.coinflip() then
+SUBST:   Q = P, q = p
+: end
+SHUFFLE: Pp
+SUBST:   P = v, p : n., Qq = .
+: standard_overflow_setup(_G, { { "ashenzari",  "_" } },  true)
+MAP
+.......
+.nn.nn.
+.nv.vn.
+.Pp_pP.
+.nvqvn.
+.nnQnn.
+.......
+ENDMAP
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_2
@@ -473,6 +578,85 @@ MAP
   .WWW
 ENDMAP
 
+NAME:   nicolae_cheibriados_dopplering
+TAGS:   decor transparent
+ORIENT: float
+KFEAT:  pqr = c
+COLOUR: p = white
+COLOUR: q = lightred
+COLOUR: r = red
+: standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
+MAP
+                   rrrrrrr
+.............................................
+.p.p.p.q..q...q....r.....r....q...q..q.p.p.p.
+@p.p.p.q..q...q....r.._..r....q...q..q.p.p.p@
+.p.p.p.q..q...q....r.....r....q...q..q.p.p.p.
+.............................................
+                   rrrrrrr
+ENDMAP
+
+NAME:   nicolae_cheibriados_redshifting
+TAGS:   transparent decor
+KFEAT:  pqrsz = c
+KFEAT:  PQRSZ = n
+COLOUR: Pp = blue
+COLOUR: Qq = green
+COLOUR: Rr = yellow
+COLOUR: Ss = brown
+COLOUR: Zz = red
+TILE:   P = dngn_transparent_stone_blue, Q = dngn_transparent_stone_green, \
+        R = dngn_transparent_stone_yellow, S = dngn_transparent_stone_brown, \
+        Z = dngn_transparent_stone_red
+: standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
+MAP
+  .......................
+ ppPppqqQqqrrRrrssSsszzZzz
+.P...PQ...QR...RS...SZ...Z.
+......................._.z.
+.P...PQ...QR...RS...SZ...Z.
+ ppPppqqQqqrrRrrssSsszzZzz
+  .......................
+ENDMAP
+
+NAME:   nicolae_cheibriados_the_sands_of_time
+TAGS:   transparent decor
+COLOUR: ` = brown
+FTILE:  ` = floor_sand
+: standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
+MAP
+ ccc+ccc
+.n`````n.
+.nn```nn.
+..nn.nn..
+@..n_n..@
+..nn.nn..
+.nn```nn.
+.n`````n.
+ ccc+ccc
+ENDMAP
+
+NAME:  nicolae_cheibriados_time_spiral
+TAGS:  transparent decor
+SUBST: c : cvb
+: standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
+MAP
+   ......
+  ..cccc.
+ ..c.......
+..c..ccccc..
+.c..c.....c..
+.c.c..ccc..c.
+.c.c.c...c.c.
+.c.c.c_c.c.c.
+.c.c..c..c.c.
+.c..c...c..c.
+..c..ccc..c..
+ ..c.....c..
+  ..ccccc..
+   .......
+ENDMAP
+
 ### Dithmenos overflow altars ################################################
 
 NAME:   grunt_dithmenos_smoke
@@ -593,6 +777,77 @@ MAP
 ...mm..xx
  .....xx
   ..xxx
+ENDMAP
+
+NAME:   nicolae_dithmenos_dark_matter_galaxy
+TAGS:   transparent decor
+COLOUR: x = magenta, ` = lightmagenta
+FTILE:  `_x = floor_pebble_darkgray
+TILE:   x : wall_pebble_darkgray
+: standard_overflow_setup(_G, { { "dithmenos", "_" } }, true)
+MAP
+ ......
+..xxx`..
+@xx`xx`..
+xx`x`xx`.
+x`xxx`x`x
+x`xx_xx`x
+x`x`xxx`x
+.`xx`x`xx
+..`xx`xx@
+ ..`xxx..
+  ......
+ENDMAP
+
+# By standing on the altar, you can feel the shadows closing in...
+NAME:   nicolae_dithmenos_not_quite_primordial_nightfall
+TAGS:   decor transparent
+COLOUR: x = magenta, m = lightmagenta
+TILE:   m = dngn_transparent_wall_darkgray
+TILE:   x = wall_brick_darkgray
+: single_cloud(_G, "-", "black smoke", false)
+: single_cloud(_G, "_", "black smoke", false)
+: standard_overflow_setup(_G, { { "dithmenos", "_" } }, true)
+MAP
+...........
+....xmx....
+..mx...xm..
+..x-----x..
+.x.-----.x.
+.m.--_--.m.
+.x.-----.x.
+..x-----x..
+..mx...xm..
+....xmx....
+...........
+ENDMAP
+
+# Shadowy tendrils reach out to envelop the dying god of flame and put out the
+# flickering light forever...
+NAME:   nicolae_dithmenos_snuffed_out
+TAGS:   transparent decor uniq_ignis_plus_one_overflow
+WEIGHT: 1
+KFEAT:  D = altar_ignis
+NSUBST: p = ~ / `
+SUBST:  ' = .`x, ~ = `x, q = .`
+COLOUR: x = magenta, ` = lightmagenta, - = lightgray
+FTILE:  `_x = floor_pebble_darkgray
+FTILE:  -D = floor_rough_lightgray
+TILE:   x : wall_pebble_darkgray
+: standard_overflow_setup(_G, { { "dithmenos", "_" } }, true)
+MAP
+   xxxxxx
+ xxxxx`xxx
+ x```x``xxx
+xx`_`xx`x`x
+xx````x`~`xx
+xxxx``p````x
+x``xxp---~`x
+xx````-D-xxx
+xxxx~`---q'
+ xx```~xq..
+  xxx``x'.@
+    xxxx
 ENDMAP
 
 ### Elyvilon overflow altars ##################################################
@@ -740,6 +995,91 @@ cww...wwwwwwwwwwwww
 ccswUwwccppcppcppcp
  ccwwwcc @ppppppppp
   ccccc
+ENDMAP
+
+NAME:   nicolae_elyvilon_cradling_hands
+TAGS:   transparent decor no_trap_gen no_monster_gen no_pool_fixup
+KMONS:  w = sacred lotus
+KMONS:  _ = patrolling butterfly att:good_neutral
+KFEAT:  w = w
+SUBST:  - = ..f
+COLOUR: .f@ = green
+FTILE:  ._f@ = floor_grass
+: decorative_floor(_G, 'f', "flower patch")
+: standard_overflow_setup(_G, { { "elyvilon",  "_" } }, true)
+MAP
+ xxxxxx
+xxccccxx
+xccf-ccxx
+@cc-..ccx
+..cc...cx
+@...._.wx
+..cc...cx
+@cc-..ccx
+xccf-ccxx
+xxccccxx
+ xxxxxx
+ENDMAP
+
+# https://www.youtube.com/watch?v=KNfjpmvbQG0
+NAME:   nicolae_elyvilon_little_fluffy_clouds
+TAGS:   transparent decor
+KITEM:  _ = none w:100 / orb / orb ego:light w:1
+MARKER: _ = lua:fog_machine{cloud_type = "white fluffiness", pow_min = 10, \
+             pow_max = 15, delay_min = 20, delay_max = 30, size = 1, \
+             walk_dist = 3, spread_rate = 0}
+COLOUR: ` = green
+FTILE:  `_ = floor_grass
+: standard_overflow_setup(_G, { { "elyvilon",  "_" } }, true)
+MAP
+.......
+.`````.
+.`````.
+.``_``.
+.`````.
+.`````.
+.......
+ENDMAP
+
+NAME:   nicolae_elyvilon_pacification_demonstration
+TAGS:   transparent decor no_trap_gen no_monster_gen no_item_gen
+KMONS:  1 = common demon att:neutral w:60 / phantom att:neutral / \
+            wraith att:neutral / necrophage att:neutral / \
+            mummy att:neutral / wight att:neutral / vampire att:neutral
+NSUBST: ` = 4=f / 4=f` / 4=1 / 4=1` / `
+KMASK:  1n`f = opaque
+KPROP:  1n`f = no_tele_into
+COLOUR: 1`f  = green
+FTILE:  1n`f = floor_grass
+: decorative_floor(_G, 'f', "flower patch")
+: standard_overflow_setup(_G, { { "elyvilon",  "_" } }, true)
+MAP
+xxxxxxxxxxx
+xcccccccccx
+xc```````cx
+xc```````cx
+xc```````cx
+xc```nnnncx
+xc```n...cx
+xc```n._.cx
+xc```n.....
+xccccccc...
+xxxxxxxx..@
+ENDMAP
+
+NAME:   nicolae_elyvilon_white_marble_altar
+TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+COLOUR: @c. = white
+FTILE:  @c.U_ = floor_w_marble
+: standard_overflow_setup(_G, { { "elyvilon",  "_" } }, true)
+MAP
+ccccccc
+c.....c
+c.U...c
+@..._.c
+c.U...c
+c.....c
+ccccccc
 ENDMAP
 
 ### Fedhas overflow altars ####################################################
@@ -957,6 +1297,26 @@ x..dx'xd..x
 xxxxx'xxxxx
    xx'xx
    x2@2x
+ENDMAP
+
+NAME:   nicolae_fedhas_fungal_naptime
+TAGS:   transparent decor
+DEPTH:  D:4-8
+KMONS:  1_ = sleepcap
+KMONS:  p = fungus
+: if you.depth() >= 6 then
+NSUBST: ` = 1 / `
+: end
+SUBST:  p = ppp., ` = ```p
+: standard_overflow_setup(_G, { { "fedhas", "_" } }, true)
+MAP
+.......
+.`p`p`.
+.p`p`p.
+.`p_p`.
+.p`p`p.
+.`p`p`.
+.......
 ENDMAP
 
 ### Gozag overflow altars #####################################################
@@ -1179,6 +1539,27 @@ x..ccc+cccz$$..$$zx
     x...
      x.@
       xx
+ENDMAP
+
+NAME:   nicolae_gozag_stack_of_coins
+TAGS:   transparent decor
+COLOUR: .v = yellow
+FTILE:  _.vG = floor_limestone
+TILE:   v = dngn_metal_wall_yellow
+: vault_metal_statue_setup(_G, "G", "golden statue")
+: standard_overflow_setup(_G, { { "gozag", "_" } }, true)
+MAP
+...........
+.vvv...vvv.
+.....G.....
+.vvv...vvv.
+...........
+.vvv._.vvv.
+...........
+.vvv...vvv.
+.....G.....
+.vvv...vvv.
+...........
 ENDMAP
 
 ### Hepliaklqana overflow altars #############################################
@@ -1456,6 +1837,42 @@ ccccc...ccccccc.
     ccccc
 ENDMAP
 
+NAME:   nicolae_hepliaklqana_antique_land
+TAGS:   transparent decor
+COLOUR: . = brown w:20 / none
+FTILE:  GV_. = floor_sandstone w:20 / none
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+: standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
+MAP
+G.G.G
+.V.V.
+G._.G
+.V.V.
+G.G.G
+ENDMAP
+
+NAME:    nicolae_hepliaklqana_hall_of_mighty_ancestors
+TAGS:    decor transparent
+SHUFFLE: PQ
+SUBST:   P = +, Q : xx+, + : +++@
+# note to self: add dngn_statue_dwarf once that bug gets fixed
+TILE:    G = dngn_statue_ancient_hero w:2 / dngn_statue_archer / \
+             dngn_statue_axe / dngn_statue_cat w:2 / dngn_statue_centaur / \
+             dngn_statue_mermaid / dngn_statue_naga / \
+             dngn_statue_polearm / dngn_statue_princess / dngn_statue_tengu
+: standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
+MAP
+ xxxPxxx
+ x.....x
+xx.G.G.xx
+x.......x
+Q.G._.G.Q
+x.......x
+xx.G.G.xx
+ x.....x
+ xxxPxxx
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -1661,6 +2078,56 @@ Yxxxxx
  Yxxx
 ENDMAP
 
+NAME:   nicolae_kikubaaqudgha_church_of_necroconduits
+TAGS:   transparent
+DEPTH:  D:3-, Depths, Crypt
+KMONS:  z = zombie
+NSUBST: z = z / . / z.
+COLOUR: c = darkgrey
+: vault_metal_statue_setup(_G, "G", "soul conduit")
+: standard_overflow_setup(_G, { { "kikubaaqudgha", "_" } }, true)
+MAP
+  xxxxxxx
+ xxcccccxx
+xxccGcGccx
+xcc.z.z.c
+xc_.czc.@
+xcc.z.z.c
+xxccGcGccx
+ xxcccccxx
+  xxxxxxx
+ENDMAP
+
+NAME:   nicolae_kikubaaqudgha_piles_of_ancient_bones
+TAGS:   transparent no_trap_gen no_monster_gen
+DEPTH:  D:3-, Depths, Crypt
+KMONS:  _ = draugr / 9 draugr w:2
+KMONS:  1 = zombie / 9 zombie w:2 / nothing
+# Sometimes ends up with invertebrate corpses instead of skeletons, which is
+# somewhat off-theme but Kikubaaqudgha likes corpses too so I'll let it slide.
+KITEM:  - = 0 skeleton w:15 / 9 skeleton / human skeleton w:1
+NSUBST: - = 5=` / 2=` / ----``., d = ...-
+COLOUR: c = darkgrey
+: kitem("` = " .. vault_species_skeletons(_G, "all"))
+: standard_overflow_setup(_G, { { "kikubaaqudgha", "_" } }, true)
+MAP
+   xxcc@ccxx
+   xcc...ccx
+   xcd.c.dcx
+xxxxcc...ccxxxx
+xcccccc1ccccccx
+ccdcccc-ccccdcc
+c...cc---cc...c
+@.c.1--_--1.c.@
+c...cc---cc...c
+ccdcccc-ccccdcc
+xcccccc1ccccccx
+xxxxcc...ccxxxx
+   xcd.c.dcx
+   xcc...ccx
+   xxcc@ccxx
+ENDMAP
+
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
@@ -1811,6 +2278,7 @@ ENDMAP
 # counts as a Makhleb overflow altar vault itself.
 NAME:    dolorous_makhleb_big_flames_little_flames
 TAGS:    transparent no_monster_gen no_item_gen no_trap_gen
+TAGS:    uniq_ignis_plus_one_overflow
 DEPTH:   D:4-
 WEIGHT:  1
 KPROP:   . = bloody w:5 / nothing w:25
@@ -1859,6 +2327,43 @@ x'..'  '..'  .''.x
  yyyy  yyyy  yyyy
 ENDMAP
 
+NAME:    nicolae_makhleb_no_cleanup_necessary
+TAGS:    transparent decor
+KITEM:   d = human skeleton
+KFEAT:   e = .
+SHUFFLE: def
+SUBST:   - = ..`, ` = .``
+KPROP:   def`_ = bloody
+FTILE:   .`_def = floor_marble
+: decorative_floor(_G, 'f', "bloodied mop and bucket")
+: standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
+MAP
+....--`
+.df.--`
+.e..-``
+..._```
+---````
+--`````
+```````
+ENDMAP
+
+NAME:   nicolae_makhleb_poor_unfortunate_consoles
+TAGS:   transparent decor
+COLOUR: -_ = fire
+FTILE:  -_ = floor_demonic
+TILE:   b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
+: standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
+MAP
+xxx+xxx
+xbb-bbx
+xb---bx
+x--_--x
+xb---bx
+xbb-bbx
+xxxxxxx
+ENDMAP
+
 ### Nemelex overflow altars ###################################################
 
 NAME:  nemelex_xobeh_ov_fountains_minmay
@@ -1870,7 +2375,6 @@ U@U
 U@U
 ENDMAP
 
-###################################################################
 # Nemelex altar (Shiori)
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
@@ -2121,6 +2625,58 @@ xcc^`cc.U.cc"%ccx
 xcwcccccdcccccPcx
 xcccx  c+c  xcccx
 xxxxx       xxxxx
+ENDMAP
+
+NAME: nicolae_nemelex_xobeh_five-card_draw
+TAGS: transparent decor no_trap_gen
+: local cards = util.random_subset({"darkgray", "lightblue", "lightgreen",
+: "lightcyan", "lightred", "lightmagenta", "yellow", "white"}, 5)
+: colour("p = " .. cards[1])
+: colour("q = " .. cards[2])
+: colour("r = " .. cards[3])
+: colour("s = " .. cards[4])
+: colour("z = " .. cards[5])
+# Why use the demonic floor tiles? Nemelex's cards are canonically painted in
+# the ichor of demons, and the floor tiles here represent a hand of cards.
+FTILE: pqrsz = floor_demonic
+# We specify the floor tile underneath the altar by color specifically, since
+# using a COLOUR directive would recolor the altar itself in console, which is
+# not what we want. And by "we" I mean "me".
+: ftile("_ = floor_demonic_" .. cards[1])
+: standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
+MAP
+ccccc
+cpppcc
+cpppqcc
+cp_pqrcc
+cpppqrscc
+cpppqrszc
+ccqqqrsz.
+ ccrrrsz.
+  ccsssz.
+   cczzz.
+    cc..@
+ENDMAP
+
+# An abstract representation of a colorful jester's hat as seen from above.
+NAME:    nicolae_nemelex_xobeh_surely_you_jest
+TAGS:    transparent decor
+KFEAT:   PQRS = c
+KFEAT:   pqrs = v
+SHUFFLE: Pp/Qq/Rr/Ss
+COLOUR:  P = lightred, p = red, Q = lightblue, q = blue
+COLOUR:  R = lightgreen, r = green, S = yellow, s = brown
+: standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
+MAP
+.........
+.r.....s.
+..PP.QQ..
+..PP.QQ..
+...._....
+..SS.RR..
+..SS.RR..
+.q.....p.
+.........
 ENDMAP
 
 ### Okawaru overflow altars ###################################################
@@ -2685,6 +3241,21 @@ cF...@
 ccccxx
 ENDMAP
 
+# "Aurora borealis? At this time of year, at this time of day, in this branch of
+# the dungeon, localized entirely within your altar room?"
+NAME:   nicolae_qazlal_console_elemental
+TAGS:   transparent decor
+COLOUR: @._m = elemental
+FTILE:  @._m = floor_rough
+: standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
+MAP
+mm@mm
+m...m
+m._.m
+m...m
+mmmmm
+ENDMAP
+
 # Ru overflow altar vaults ####################################################
 
 # A few unlucky monsters permanently afflicted with Ru's various status effects.
@@ -2816,6 +3387,81 @@ xxxxxx.....mmmmmm
 ......xxxxx......
 ENDMAP
 
+# Abstract interpretation of the Ru altar tile.
+NAME:  nicolae_ru_balanced_heart_vs_power
+TAGS:  transparent decor no_pool_fixup
+KPROP: l = no_cloud_gen
+: standard_overflow_setup(_G, { { "ru", "_" } }, true)
+MAP
+.....       .....
+..v..       .www.
+.ccc.........www.
+..v.ccc......www.
+..v....c_c....v..
+.lll......ccc.v..
+.lll.........ccc.
+.lll.       ..v..
+.....       .....
+ENDMAP
+
+# Ru said it, not me. 
+# The code is copied more or less verbatim from nicolae_arrival_memento_mori, 
+# although a lot of the relevant code in that vault was edited by amalloy, so I
+# can't take all the credit.
+NAME:  nicolae_ru_cut_away_your_false_body!
+TAGS:  transparent decor no_monster_gen
+KITEM: d = dagger
+SUBST: - = `-
+KPROP: du`_ = bloody
+FTILE: du_`-' = floor_w_marble
+: local race = you.race()
+: local mons = you.monster()
+: local yourname = string.gsub(you.name(), " ", "_")
+: -- The corpseless. Before the game starts, you.monster() is "program bug".
+: if (not crawl.game_started())
+:     or race == "Mummy" or race == "Gargoyle" or race == "Vine Stalker"
+:     or race == "Poltergeist" or race == "Revenant" or race == "Djinni"
+:     or race == "Yak" then
+:   mons = "human"
+: end
+: dgn.delayed_decay(_G, 'u', mons .. " name:" .. yourname .. " corpse")
+: standard_overflow_setup(_G, { { "ru", "_" } }, true)
+MAP
+xxxxxxxxxxx
+xxx---''''x
+@..-u`d`_'x
+xxx---''''x
+xxxxxxxxxxx
+ENDMAP
+
+# Ignore the distractions.
+NAME:    nicolae_ru_illusory_world
+TAGS:    no_monster_gen no_item_gen no_trap_gen transparent decor
+# Lowered weight, since it's a weird and slightly obnoxious one.
+WEIGHT:  2
+KITEM:   d = any weapon good_item mimic
+KITEM:   e = plate armour good_item mimic
+KITEM:   f = randbook mimic
+KITEM:   g = gold good_item mimic
+KITEM:   h = any manual mimic
+KITEM:   i = scroll of acquirement pre_id mimic
+KITEM:   j = potion of experience pre_id mimic
+KFEAT:   G = G mimic
+KFEAT:   c = c mimic
+SHUFFLE: defghij
+: standard_overflow_setup(_G, { { "ru", "_" } }, true)
+MAP
+xxxxxxxxx
+xcccccccx
+xcG.e.Gcxxx.
+xc.....G.G..
+xcd._......@
+xc.....G.G..
+xcG.f.Gcxxx.
+xcccccccx
+xxxxxxxxx
+ENDMAP
+
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
@@ -2853,25 +3499,25 @@ FTILE:  ._ : floor_mystic_chasm / floor_grey_dirt w:20
 COLOUR: . = blue
 : standard_overflow_setup(_G, { { "sif_muna", "_" } }, true)
 MAP
-        xx@xx
-        x...x
-        x...x
-      xxx...xxx
-     xx'''''''xx
-    xx'''...'''xx
-    x'''.www.'''x
-   xx''.wwwww.''xx
-   x''.wwM"Mww.''x
-   x''.wwM>Mww.''x
-   x''.wwMMMww.''x
-   xx''.wwwww.''xx
-    x'''.www.'''x
-    xx'''...'''xx
-     xx'''''''xx
-      xxx...xxx
-        x._.x
-        x...x
-        xxxxx
+     xx@xx
+     x...x
+     x...x
+   xxx...xxx
+  xx'''''''xx
+ xx'''...'''xx
+ x'''.www.'''x
+xx''.wwwww.''xx
+x''.wwM"Mww.''x
+x''.wwM>Mww.''x
+x''.wwMMMww.''x
+xx''.wwwww.''xx
+ x'''.www.'''x
+ xx'''...'''xx
+  xx'''''''xx
+   xxx...xxx
+     x._.x
+     x...x
+     xxxxx
 ENDMAP
 
 NAME:   led_sif_book
@@ -3021,6 +3667,61 @@ xxc.....cxx
   xx@@@xx
 ENDMAP
 
+# Based on a suggestion from regret-index.
+NAME:   nicolae_sif_muna_archmage's_trap
+TAGS:   transparent no_pool_fixup
+DEPTH:  D:3-10
+KMONS:  1 = orc wizard
+KFEAT:  ~ = archmage's trap
+COLOUR: @` = blue
+FTILE:  @`~_ = floor_mystic_chasm
+: standard_overflow_setup(_G, { { "sif_muna", "_" } }, true)
+MAP
+xxxxxxxxxx
+xxxxxx```x
+xwww1.`_`x
+xwww.ww``x
+xww``ww.xx
+x..`~`.1xx
+x.ww``wwxx
+``ww.wwwxx
+```..wwwxx
+@``xxxxxxx
+ENDMAP
+
+NAME:   nicolae_sif_muna_console_shimmering_blue
+TAGS:   transparent decor
+COLOUR: c = shimmer_blue
+: standard_overflow_setup(_G, { { "sif_muna", "_" } }, true)
+MAP
+.c.c.
+.....
+c._.c
+.....
+.c.c.
+ENDMAP
+
+NAME:   nicolae_sif_muna_just_conduit
+TAGS:   decor transparent
+KFEAT:  - = +
+COLOUR: c.- = blue
+FTILE:  c.+-G_ = floor_marble
+# Since Sif specializes in all kinds of magic, any conduit works here.
+: local conduittype = {"arcane", "dimensional", "misfortune",
+:   "soul", "fiery", "alchemical", "icy", "earthen", "storm"}
+: local whichconduit = crawl.random2(#conduittype) + 1
+: vault_metal_statue_setup(_G, "G", conduittype[whichconduit] .. " conduit")
+: standard_overflow_setup(_G, { { "sif_muna", "_" } }, true)
+MAP
+xxxxxxx
+xcccccx+xx
+xc...c...x
+xc._.-.G.+
+xc...c...x
+xcccccx+xx
+xxxxxxx
+ENDMAP
+
 ### Trog overflow altars ######################################################
 
 NAME:  bloody_trog
@@ -3068,19 +3769,19 @@ SUBST:  + = +....
 KFEAT:  o = iron_grate
 : standard_overflow_setup(_G, { { "trog", "_" } }, true)
 MAP
-      xxxxxxx
-     xxxMMMxxx
-    xxMMM2MMMxx
-   xxMM22_22MMxx
-   xx.........xx
-   x....ooo....x
-   x...oo1oo...x
-   x....ooo....x
-   x...........x
-   xx.........xx
-    xx.......xx
-     xxxx+xxxx
-       xx@xx
+   xxxxxxx
+  xxxMMMxxx
+ xxMMM2MMMxx
+xxMM22_22MMxx
+xx.........xx
+x....ooo....x
+x...oo1oo...x
+x....ooo....x
+x...........x
+xx.........xx
+ xx.......xx
+  xxxx+xxxx
+    xx@xx
 ENDMAP
 
 NAME:   trog_antimagical
@@ -3259,6 +3960,28 @@ cxxx.."..."..."..xxxc
       c   c   c
 ENDMAP
 
+NAME:   nicolae_trog_berserking_free_trial
+TAGS:   transparent
+DEPTH:  D:3-10
+KMONS:  1 = kobold ; dart ego:datura
+KMONS:  2 = kobold brigand ; dart ego:datura
+: if you.depth() >= 8 then
+SUBST:  1 = 2
+: elseif you.depth() >= 6 then
+NSUBST:  1 = 1 / 112
+: elseif you.depth() < 5 then
+NSUBST: 1 = 1 / .
+: end
+# If you.depth() == 5, no change to the map -> two kobolds
+: standard_overflow_setup(_G, { { "trog", "_" } }, false)
+MAP
+.........
+.xG...Gx.
+.x1._.1x.
+.xG...Gx.
+.........
+ENDMAP
+
 ### Uskayaw overflow altars ###################################################
 
 NAME:   dancing_weapons_uskayaw
@@ -3404,6 +4127,76 @@ x.FllH.L..ll.JNl
 xxxxxxlll..O..ll
 ENDMAP
 
+# They're here to watch the dance performance, and you interrupted them. Rude.
+# Monster list is player species, since we already know those species can
+# appreciate the dance.
+NAME:   nicolae_uskayaw_dance_theater
+TAGS:   transparent
+KMONS:  1 = kobold / goblin / hobgoblin / gnoll / orc / ogre w:5
+KMONS:  2 = gnoll bouda / orc wizard / gnoll sergeant / kobold brigand
+KMONS:  3 = orc warrior / troll / vampire / gargoyle / tengu warrior w:5 / \
+            deep elf pyromancer w:5 / deep elf zephyrmancer w:5
+KMONS:  4 = vampire knight / kobold fleshcrafter / tengu reaver / \
+            spriggan defender / deep troll earth mage w:5 / \
+            deep troll shaman w:5
+: if you.in_branch("D") then
+:     if you.depth() <= 6 then
+NSUBST: - = 4=1 / 4=1. / .
+:     elseif you.depth() <= 11 then
+NSUBST: - = 3=2 / 3=1 / 2=12. / .
+:     else --D:12-15
+NSUBST: - = 3=3 / 3=2 / 2=2233. / .
+:     end
+: else -- in Depths
+NSUBST: - = 4=4 / 4=3 / 4=34 / .
+: end
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+: standard_overflow_setup(_G, { { "uskayaw", "_" } }, false)
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxGcccccGxxxxxx
+xxxxG..c._.c..Gxxxx
+xxG.............Gxx
+G.....xT-.-Tx.....G
+@..x..-xx.xx-..x..@
+x..-x...-.-...x-..x
+xx..-xxT...Txx-..xx
+xx-...-xx.xx-...-xx
+xxxx-.........-xxxx
+xxxxxx.T...T.xxxxxx
+xxxxxxxxx@xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_uskayaw_OPEN_UP_THE_PIT
+TAGS:   transparent decor
+KMONS:  1 = human att:neutral ; nothing / orc att:neutral ; nothing / \
+            elf att:neutral ; nothing / dwarf att:neutral ; nothing / \
+            merfolk att:neutral ; nothing / naga att:neutral ; nothing / \
+            oni att:neutral ; nothing
+KFEAT:  ` = .
+NSUBST: ` = 5=1 / 4=1` / `
+KPROP:  1` = no_tele_into
+KMASK:  1` = opaque
+KMASK:  1` = no_trap_gen
+KMASK:  1` = no_item_gen
+KMASK:  1` = no_monster_gen
+# I've already used disco color for an Uskayaw vault, so instead use Uskayaw's
+# altar's elemental console color. Still looks pretty rave-y.
+COLOUR: 1m` = incarnadine
+FTILE:  1m` = floor_nerves
+FTILE:  - = floor_pebble
+: standard_overflow_setup(_G, { { "uskayaw", "_" } }, true)
+MAP
+.....
+.xxxmxxxxxxx
+.x`````m---x
+.x`````m---x
+.m``m``m-_-+
+.x`````m---x
+.x`````m---x
+.xxxmxxxxxxx
+.....
+ENDMAP
 
 ### Vehumet overflow altars ###################################################
 
@@ -3531,6 +4324,76 @@ x.LJ.FDEDF.JL.x
    ..MLMLM..
     .......
      xxxxx
+ENDMAP
+
+NAME:   nicolae_vehumet_console_conduits
+TAGS:   transparent decor
+COLOUR: bG`_ = vehumet
+FTILE:  bG`_ = floor_rough
+: vault_metal_statue_setup(_G, "G", "arcane conduit")
+: standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
+MAP
+ccc...ccc
+cbG`_`Gbc
+ccc...ccc
+ENDMAP
+
+NAME:  nicolae_vehumet_first_one's_free
+TAGS:  transparent decor
+KITEM: p = parchment of freeze / parchment of foxfire / parchment of shock / \
+           parchment of poisonous vapours / parchment of magic dart / \
+           parchment of kiss of death / parchment of sandblast
+: single_cloud(_G, "M", "flame", true)
+: single_cloud(_G, "N", "freezing vapour", true)
+: standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
+MAP
+cccccccc
+cM....Nc
+c..cc..c
+c_.pc..+
+c..cc..c
+cN....Mc
+cccccccc
+ENDMAP
+
+NAME:    nicolae_vehumet_we're_having_a_blast
+TAGS:    transparent
+: if you.in_branch("D") then
+:     if you.depth() <= 8 then
+KMONS:   1 = orc wizard
+KMONS:   2 = white imp
+:     elseif you.depth() <= 12 then
+KMONS:   1 = deep elf pyromancer
+KMONS:   2 = deep elf zephyrmancer
+:     else -- D:13-15
+KMONS:   1 = occultist
+KMONS:   2 = arcanist
+:     end
+:     if you.depth() >= 5 and you.depth() <= 12 then
+KMONS:   _ = kobold geomancer
+:     elseif you.depth() >= 14 then
+KMONS:   _ = deep troll earth mage
+:     end
+: else  -- in Depths
+KMONS:   1 = fire giant
+KMONS:   2 = frost giant
+KMONS:   _ = tengu reaver
+: end
+SHUFFLE: pq
+SUBST:   p = c, q = n
+: standard_overflow_setup(_G, { { "vehumet", "_" } }, false)
+MAP
+@..cbbbc..@
+.q.......q.
+..p..q..p..
+c....p....c
+b...1.....b
+b.qp._.pq.b
+b.....2...b
+c....p....c
+..p..q..p..
+.q.......q.
+@..cbbbc..@
 ENDMAP
 
 ### Wu Jian overflow altars ###################################################
@@ -3685,6 +4548,130 @@ x..ww.........x
   Q.........Q
    xx.....xx
      xxQxx
+ENDMAP
+
+NAME:  nicolae_wu_jian_enter_the_monastery
+TAGS:  transparent
+DEPTH: D:3-
+KMONS: D = training dummy
+KMONS: p = plant
+KITEM: r = stone q:1 / large rock q:1 w:5
+{{
+  local monsters = {}
+  -- Traditional wuxia weaponry, according to the Wikipedias:
+  local weapons = " ; long sword | short sword | spear | club | " ..
+     "partisan | quarterstaff | great sword "
+  if you.depth() <= 4 then
+     table.insert(monsters, "goblin")
+     table.insert(monsters, "kobold")
+     table.insert(monsters, "orc")
+  end
+  if you.depth() >= 5 and you.depth() <= 8 then
+     table.insert(monsters, "gnoll")
+     table.insert(monsters, "orc")
+  end
+  if you.depth() >= 5 and you.depth() <= 13 then
+     table.insert(monsters, "centaur")
+     table.insert(monsters, "gnoll sergeant")
+     table.insert(monsters, "kobold brigand")
+     table.insert(monsters, "orc warrior")
+  end
+  if you.depth() >= 10 then
+     table.insert(monsters, "gargoyle")
+     table.insert(monsters, "skeletal warrior")
+  end
+  if you.depth() >= 13 then
+     table.insert(monsters, "centaur warrior")
+     table.insert(monsters, "orc knight")
+     table.insert(monsters, "tengu warrior")
+  end
+  for i, m in ipairs(monsters) do
+     monsters[ i ] = m .. weapons
+  end
+  kmons("1_ = " .. util.join(" / ", monsters))
+}}
+SUBST:  p = p``, ` = `:13 r:1, - = ``-
+KPROP:  - = bloody
+COLOUR: -` = brown
+FTILE:  W-`tpr = floor_sand
+FTILE:  D1._ = floor_spider
+: standard_overflow_setup(_G, { { "wu_jian", "_" } }, false)
+MAP
+xxxxxxxxxxxxx
+xx.x.._..x.xx
+x.D1-----1D.x
+xx..-----..xx
+xx..-----..xx
+x.D1-----1D.x
+xx.x.....x.xx
+xxxxxx+xxxxxx
+xtttt```ttttx
+xtp```p```ptx
+xtpWptttpWptx
+xtpWptttpWptx
+xtp```p```ptx
+xtttt```ttttx
+xxxxxx+xxxxxx
+ENDMAP
+
+NAME:  nicolae_wu_jian_rivers_and_lakes
+TAGS:  transparent decor no_pool_fixup
+SUBST: ` = Wwww, - = tt.
+: standard_overflow_setup(_G, { { "wu_jian", "_" } }, true)
+MAP
+  ....`w`....
+ @....wwww`...
+.....`wtt`w....
+...WWw`--.w`....
+.`wWW.....`w....@
+.w`..-`w`-.w`.....
+`wt-.`www`.`ww`....
+wwt-.wwwww...`ww`...
+`ww`.`www`..--.`w....
+..`w.-`w`-..--..w`...
+...w`....._.....`w...
+...`w..--..-`w`-.w`..
+....w`.--..`www`.`ww`
+ ...`ww`...wwwww.-tww
+  ....`ww`.`www`.-tw`
+   .....`w.-`w`-..`w.
+    @....w`.....WWw`.
+     ....`w.--`wWW...
+      ....w`ttw`.....
+       ...`wwww....@
+        ....`w`....
+ENDMAP
+
+NAME:   nicolae_wu_jian_sharp_slivers_of_steel
+TAGS:   transparent
+DEPTH:  D:3-10
+KMONS:  1 = kobold ; dart ego:poisoned
+KMONS:  2 = kobold brigand ; dart ego:poisoned
+KMONS:  3 = kobold brigand ; dart ego:curare
+: if you.depth() >= 9 then
+NSUBST: 1 = 3 / 23 / 2.
+: elseif you.depth() > 6 then
+NSUBST: 1 = 2 / 223 / 2..
+: elseif you.depth() < 6 then
+NSUBST: 1 = 1 / . / 1..
+: else
+NSUBST: 1 = 1 / 12 / 1.
+: end
+NSUBST: P = v / ., Q = v / ., R = v / ., S = v / .
+NSUBST: p = v / ., q = v / ., r = v / ., s = v / .
+: standard_overflow_setup(_G, { { "wu_jian", "_" } }, true)
+MAP
+          .......
+    ........PvvP.
+    .QvvQ..........
+  .....1..vvv......
+  ..RvvR...1..SvvS.
+........._.........
+.svvs..1...rvvr..
+......vvv..1.....
+..........qvvq.
+  .pvvp........
+  .......
 ENDMAP
 
 ### Xom overflow altars #######################################################
@@ -4373,6 +5360,78 @@ kkcKg1gcg1gcg1gcx
   kkxxxxxxxxxxxxx
 ENDMAP
 
+# Yredelemnul's altars are described as being worked from columnar basalt, which
+# naturally forms hexagonal columns in nature. So:
+NAME:   nicolae_yredelemnul_columnar_basalt
+TAGS:   transparent decor
+KMONS:  1 = zombie
+NSUBST: 1 = 2=1 / 2=1. / .
+SUBST:  D = cccc., . = ....`
+COLOUR: c. = darkgrey
+FTILE:  1c_. = floor_depthstone
+TILE:   c = dngn_stone_dark
+: standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
+MAP
+   ```DDD```
+  ```D...D```
+  DDD..1..DDD
+ D...c...c...D
+D..1..ccc..1..D
+`D...c...c...D`
+``Dcc.._..ccD``
+`D...c...c...D`
+D..1..ccc..1..D
+ D...c...c...D
+  DDD..1..DDD
+  ```D...D```
+   ```DDD```
+ENDMAP
+
+# Gimmick shamelessly copied from nicolae_crypt_disinterred, but I checked with
+# the author of that vault and he doesn't mind.
+NAME:   nicolae_yredelemnul_open_graves
+TAGS:   transparent no_wall_fixup
+DEPTH:  D:3-, !D:$, Depths, !Depths:$, Crypt, !Crypt:$
+KMONS:  1 = zombie
+KFEAT:  ^ = shaft trap
+SUBST:  - = t.
+COLOUR: t = brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+: vault_granite_statue_setup(_G, "G", "gravestone")
+: standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
+MAP
+    xxxxx
+ xxxxtttxxxx
+ xtt-.G.-ttx
+ xtG..^..Gtx
+xx-.^.1.^.-xx
+xt...1.1...tx
+xtG^1._.1^Gtx
+xt-.......-tx
+xxxx-.@.-xxxx
+ENDMAP
+
+NAME:  nicolae_yredelemnul_rated_r_for_profanity
+TAGS:  transparent decor
+KMONS: 1 = profane servitor
+KMASK: 1 = opaque
+KMASK: 1 = no_trap_gen
+KMASK: 1 = no_item_gen
+KPROP: 1 = no_tele_into
+: standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
+MAP
+xxxxxxxxxxx
+xxxxcccxxxx
+xxxcc1ccxxx
+xxccnnnccxx
+xcc.....ccx
+xc..._...cx
+xcc.....ccx
+xxcc...ccxx
+xxxcc+ccxxx
+ENDMAP
+
 ### Zin overflow altars #######################################################
 
 NAME:   zin_angel
@@ -4528,6 +5587,66 @@ MAP
 .S.....S.
  ..G.G..
   .....
+ENDMAP
+
+# Bad pun, not a typo.
+NAME:   nicolae_zin_agzebo
+TAGS:   transparent decor no_trap_gen no_monster_gen
+COLOUR: v = white
+TILE:   v = dngn_metal_wall_white
+: vault_metal_statue_setup(_G, "S", "silver statue")
+: set_feature_name("metal_wall", "silver wall")
+: standard_overflow_setup(_G, { { "zin", "_" } }, true)
+MAP
+ vvvvv
+vvS.Svv
+.......
+@S._.S@
+.......
+vvS.Svv
+ vvvvv
+ENDMAP
+
+NAME:    nicolae_zin_hit_'em_with_the_salt
+TAGS:    decor transparent
+# p = Demon, q = Undead, r = Unclean (but not demon/undead/chaotic), s = Chaotic
+KMONS:   p = greater demon-shaped pillar of salt
+KMONS:   q = lich-shaped pillar of salt / curse skull-shaped pillar of salt / \
+           vampire mage-shaped pillar of salt / \
+           guardian mummy-shaped pillar of salt
+KMONS:   r = ancient zyme-shaped pillar of salt / \
+           tyrant leech-shaped pillar of salt / culicivora-shaped pillar of salt
+KMONS:   s = very ugly thing-shaped pillar of salt / \
+           large abomination-shaped pillar of salt / \
+           shapeshifter-shaped pillar of salt
+SHUFFLE: P-/S`
+NSUBST:  P = p / q / r / s
+SUBST:   ` = `.
+MARKER:  _ = lua:fog_machine { cloud_type = "salt", pow_min = 5, pow_max = 15, \
+           delay_min = 5, delay_max = 20, size = 1, \
+           walk_dist = 3, spread_rate = 0 }
+FTILE:   pqrs._-S = floor_salt
+: vault_metal_statue_setup(_G, "S", "silver statue")
+: standard_overflow_setup(_G, { { "zin", "_" } }, true)
+MAP
+``.-.``
+`S.P.S`
+.......
+-P._.P-
+.......
+`S.P.S`
+``.-.``
+ENDMAP
+
+NAME:   nicolae_zin_silver_trinity
+COLOUR: @. = white
+FTILE:  @._G = floor_limestone
+: vault_metal_statue_setup(_G, "G", "silver statue")
+: standard_overflow_setup(_G, { { "zin", "_" } }, true)
+MAP
+G@G
+._@
+@G.
 ENDMAP
 
 ### The Shining One overflow altars ###########################################
@@ -4694,6 +5813,81 @@ MAP
 ..cccc.cccc..
 .............
 .............
+ENDMAP
+
+NAME:   nicolae_tso_fravashi_hole
+TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+KMONS:  1 = fravashi
+KMONS:  2 = deep elf blademaster ; short sword ego:holy_wrath . \
+              short sword ego:holy_wrath . pearl dragon scales
+KMONS:  3 = spriggan defender ; rapier ego:holy_wrath | flail ego:holy_wrath . \
+              pearl dragon scales
+KMASK:  123 = opaque
+KPROP:  123 = no_tele_into
+COLOUR: c = white
+FTILE:  _n123`+ = floor_limestone
+TILE:   c = wall_church
+: standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
+MAP
+ xxxxxxxxx
+ xcccccccx
+..c```n2cx
+@.+`_`n1cx
+..c```n3cx
+ xcccccccx
+ xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_tso_holy_fire
+TAGS:   transparent decor no_item_gen no_monster_gen no_trap_gen
+KMASK:  ` = opaque
+KPROP:  ` = no_tele_into
+COLOUR: `. = yellow
+COLOUR: cn = white
+FTILE:  c`n._ = floor_limestone
+TILE:   c = wall_church
+: single_cloud(_G, "`", "blessed fire", false)
+: standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
+MAP
+  xxxxxxx
+  xcccccx
+xxxc```cxxx
+xcccnnncccx
+xc`n...n`cx
+xc`n._.n`cx
+xc`n...n`cx
+xccc...cccx
+xxxxx+xxxxx
+ENDMAP
+
+NAME:   nicolae_tso_implements_of_victory
+TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+KITEM:  d = hand axe plus:0 ego:holy_wrath pre_id no_uniq / \
+            mace plus:0 ego:holy_wrath pre_id no_uniq / \
+            falchion plus:0 ego:holy_wrath pre_id no_uniq / \
+            spear plus:0 ego:holy_wrath pre_id no_uniq / \
+            dagger plus:0 ego:holy_wrath pre_id no_uniq / \
+            whip plus:0 ego:holy_wrath pre_id no_uniq / \
+            short sword plus:0 ego:holy_wrath pre_id no_uniq
+KMASK:  d = opaque
+KPROP:  d = no_tele_into
+COLOUR: cn = white
+COLOUR: . = yellow
+FTILE:  ._nd+ = floor_limestone
+TILE:   c = wall_church
+: standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
+MAP
+xxxcc+ccxxx
+xxxc...cxxx
+xxxc...cxxx
+xccc...cccx
+xcnn...nncx
+xcdn._.ndcx
+xcnn...nncx
+xcccnnncccx
+xxxcndncxxx
+xxxcccccxxx
+xxxxxxxxxxx
 ENDMAP
 
 ### Multiple god overflow altars ###############################################
@@ -5885,13 +7079,13 @@ DEPTH:   D:3
 KFEAT:   _ = altar_ecumenical
 KFEAT:   ~! = T
 KFEAT:   HJ = G
+SHUFFLE: !GH/JT~
+SUBST:   } = }])
 KMASK:   'B}])H~ = opaque
 KMASK:   'B}])H~ = no_monster_gen
 KMASK:   'B}])H~ = no_item_gen
-SHUFFLE: !GH/JT~
-SUBST:   } = }])
-FTILE:   '`_}])+~cnBGHT = floor_limestone
 COLOUR:  '` = yellow
+FTILE:   '`_}])+~cnBGHT = floor_limestone
 : standard_overflow_setup(_G, { { "generic", "B" } }, true)
 MAP
 ...............
@@ -5917,11 +7111,11 @@ NAME:   nicolae_overflow_prove_your_dedication
 TAGS:   transparent no_descent
 DEPTH:  D:3-, !D:$, Depths, !Depths:$
 KFEAT:  F : G w:20 / T / U
+SUBST:  G : GGTU
 KMASK:  `E>FB = opaque
 KMASK:  `E>FB = no_monster_gen
 KMASK:  `E>FB = no_item_gen
 KPROP:  `E>FB = no_tele_into
-SUBST:  G : GGTU
 MARKER: D = lua:transp_loc("nico_of_prove")
 MARKER: E = lua:transp_dest_loc("nico_of_prove")
 : standard_overflow_setup(_G, { { "generic", "B" } }, true)
@@ -5933,6 +7127,29 @@ MAP
 ..cF```Fc..
 .GcccncccG.
 ...........
+ENDMAP
+
+# I don't even see the code anymore. I just see shop, altar, bad pun.
+NAME:  nicolae_overflow_streaming_green_lines
+TAGS:  transparent decor
+SUBST: p = bb.
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+      ...
+    ...b...
+  ...b...b...
+...b...b...b...
+.b...b.p.b...b.
+...b.p.b.p.b...
+.b.p.b...b.p.b.
+.p.b.p.B.p.b.p.
+.b.p.b...b.p.b.
+...b.p.b.p.b...
+.b...b.p.b...b.
+...b...b...b...
+  ...b...b...
+    ...b...
+      ...
 ENDMAP
 
 NAME:   amethyst_overflow_temple_binary
