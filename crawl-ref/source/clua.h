@@ -92,8 +92,6 @@ public:
     CLua(bool managed = true);
     ~CLua();
 
-    static CLua &get_vm(lua_State *);
-
     lua_State *state();
 
     operator lua_State * ()
@@ -127,6 +125,7 @@ public:
 
     void pushglobal(const string &name);
 
+    int pcall(int argc, int retc);
     maybe_bool callmbooleanfn(const char *fn, const char *params, ...);
     maybe_bool callmaybefn(const char *fn, const char *params, ...);
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
@@ -134,18 +133,17 @@ public:
     bool callfn(const char *fn, const char *params, ...);
     void fnreturns(const char *params, ...);
     bool runhook(const char *hook, const char *params, ...);
+    string get_stack_trace();
 
     void add_shutdown_listener(lua_shutdown_listener *);
     void remove_shutdown_listener(lua_shutdown_listener *);
 
+    static CLua &get_vm(lua_State *);
+    static bool is_managed_vm(lua_State *ls);
     static int file_write(lua_State *ls);
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
     static bool is_path_safe(string file, bool trusted = false);
-
-    static bool is_managed_vm(lua_State *ls);
-
-    void print_stack(FILE* file);
 
     /* Add the libraries and globals currently used by clua and dlua */
     void init_libraries();
@@ -180,25 +178,24 @@ private:
 
 private:
     void init_lua();
-    void set_error(int err, lua_State *ls = nullptr);
+    void set_error(int err);
     void init_throttle();
 
     static void _getregistry(lua_State *, const char *name);
+    static int return_count(const char *format);
 
     void vfnreturns(const char *par, va_list va);
 
     bool proc_returns(const char *par) const;
 
-    bool calltopfn(lua_State *ls, const char *format, va_list args,
-                   int retc = -1, va_list *fnr = nullptr);
+    bool calltopfn(const char *format, va_list args, int retc = -1,
+                   va_list *fnr = nullptr);
     maybe_bool callmbooleanfn(const char *fn, const char *params,
                               va_list args);
     maybe_bool callmaybefn(const char *fn, const char *params,
                            va_list args);
 
-    int push_args(lua_State *ls, const char *format, va_list args,
-                    va_list *cpto = nullptr);
-    int return_count(lua_State *ls, const char *format);
+    int push_args(const char *format, va_list args, va_list *cpto = nullptr);
 
     struct CLuaSave
     {
@@ -246,3 +243,19 @@ private:
 extern CLua clua;
 
 string quote_lua_string(const string &s);
+
+struct CLuaError
+{
+    CLuaError() {}
+    CLuaError(string &msg, string &trace) : message(msg), stack_trace(trace) {}
+
+    void save(writer& outf) const;
+    void load(reader& inf);
+
+    string message;
+    string stack_trace;
+};
+
+extern vector<CLuaError> dlua_errors;
+void save_dlua_errors(writer& outf);
+void load_dlua_errors(reader& inf);

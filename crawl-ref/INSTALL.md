@@ -78,7 +78,7 @@ These instructions may work for other DPKG-based distros.
 
 ```sh
 # python-is-python3 is required for Ubuntu 20.04 and newer
-sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
+sudo apt install build-essential libncursesw5-dev bison flex liblua5.4-dev \
 libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3
 
 # Dependencies for tiles builds
@@ -120,7 +120,7 @@ You can install these dependencies from your OS package manager, or use DCSS's
 packaged versions (as described in [Packaged
 Dependencies](#packaged-dependencies) above):
 
-* lua 5.1
+* lua 5.4
 * sqlite
 * zlib
 * pcre

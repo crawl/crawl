@@ -166,13 +166,13 @@ static int dgn_item_property(lua_State *ls)
             lua_pushboolean(ls, item->props[key].get_byte());
             break;
         case 'b':
-            lua_pushnumber(ls, item->props[key].get_byte());
+            lua_pushinteger(ls, item->props[key].get_byte());
             break;
         case 'S':
-            lua_pushnumber(ls, item->props[key].get_short());
+            lua_pushinteger(ls, item->props[key].get_short());
             break;
         case 'i':
-            lua_pushnumber(ls, item->props[key].get_int());
+            lua_pushinteger(ls, item->props[key].get_int());
             break;
         case 'f':
             lua_pushnumber(ls, item->props[key].get_float());
@@ -183,8 +183,8 @@ static int dgn_item_property(lua_State *ls)
         case 'C':
         {
             const coord_def p(item->props[key].get_coord());
-            lua_pushnumber(ls, p.x);
-            lua_pushnumber(ls, p.y);
+            lua_pushinteger(ls, p.x);
+            lua_pushinteger(ls, p.y);
             return 2;
         }
         default:
@@ -250,7 +250,7 @@ static int dgn_stash_items(lua_State *ls)
     return 2;
 }
 
-const struct luaL_reg dgn_item_dlib[] =
+const struct luaL_Reg dgn_item_dlib[] =
 {
     { "item_from_index", dgn_item_from_index },
     { "items_at", dgn_items_at },

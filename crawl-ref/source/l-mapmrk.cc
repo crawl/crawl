@@ -9,8 +9,8 @@
 static int mapmarker_pos(lua_State *ls)
 {
     MAPMARKER(ls, 1, mark);
-    lua_pushnumber(ls, mark->pos.x);
-    lua_pushnumber(ls, mark->pos.y);
+    lua_pushinteger(ls, mark->pos.x);
+    lua_pushinteger(ls, mark->pos.y);
     return 2;
 }
 
@@ -36,7 +36,7 @@ static int mapmarker_property(lua_State *ls)
     return 1;
 }
 
-const struct luaL_reg mapmarker_dlib[] =
+const struct luaL_Reg mapmarker_dlib[] =
 {
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },

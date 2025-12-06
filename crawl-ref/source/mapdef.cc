@@ -2728,6 +2728,11 @@ bool map_def::run_lua_epilogue(bool die_on_lua_error)
 string map_def::rewrite_chunk_errors(const string &s) const
 {
     string res = s;
+    if (!lc_global_prelude.empty()
+            && lc_global_prelude.rewrite_chunk_errors(res))
+    {
+        return res;
+    }
     if (prelude.rewrite_chunk_errors(res))
         return res;
     if (mapchunk.rewrite_chunk_errors(res))
@@ -2796,6 +2801,8 @@ string map_def::validate_map_placeable()
     if (has_depth() || !place.empty())
         return "";
 
+    dlua_set_map dl(this);
+
     // Ok, the map wants to be placed by tag. In this case it should have
     // at least one tag that's not a map flag.
     bool has_selectable_tag = false;
@@ -2847,10 +2854,8 @@ bool map_def::has_exit() const
     return false;
 }
 
-string map_def::validate_map_def(const depth_ranges &default_depths)
+string map_def::validate_map_def()
 {
-    UNUSED(default_depths);
-
     unwind_bool valid_flag(validating_map_flag, true);
 
     string err = run_lua(true);
@@ -2858,7 +2863,6 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         return err;
 
     fixup();
-    resolve();
     test_lua_validate(true);
     run_lua_epilogue(true);
 
@@ -2983,7 +2987,6 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         }
     }
 
-    dlua_set_map dl(this);
     return validate_map_placeable();
 }
 
@@ -3325,12 +3328,6 @@ void map_def::normalise()
 {
     // Pad out lines that are shorter than max.
     map.normalise(' ');
-}
-
-string map_def::resolve()
-{
-    dlua_set_map dl(this);
-    return "";
 }
 
 void map_def::fixup()

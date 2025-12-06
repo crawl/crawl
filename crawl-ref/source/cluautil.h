@@ -63,11 +63,11 @@ lua_Integer luaL_safe_tointeger(lua_State *L, int idx);
 // FIXME: remove one of these.
 void luaopen_setmeta(lua_State *ls,
                      const char *global,
-                     const luaL_reg *lua_lib,
+                     const luaL_Reg *lua_lib,
                      const char *meta);
 
 void clua_register_metatable(lua_State *ls, const char *tn,
-                             const luaL_reg *lr,
+                             const luaL_Reg *lr,
                              int (*gcfn)(lua_State *ls) = nullptr);
 
 int clua_stringtable(lua_State *ls, const vector<string> &s);
@@ -250,6 +250,6 @@ int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #define LUA_PUSHBOOL(key, value) { lua_pushboolean(ls, value); lua_setfield(ls, -2, key); }
 
-#define LUA_PUSHINT(key, value) { lua_pushnumber(ls, value); lua_setfield(ls, -2, key); }
+#define LUA_PUSHINT(key, value) { lua_pushinteger(ls, value); lua_setfield(ls, -2, key); }
 
 #define LUA_PUSHSTRING(key, value) { lua_pushstring(ls, value); lua_setfield(ls, -2, key); }

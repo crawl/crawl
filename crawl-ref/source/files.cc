@@ -2544,16 +2544,16 @@ void save_level(const level_id& lid)
 }
 
 #if TAG_MAJOR_VERSION == 34
-# define CHUNK(short, long) short
+# define CHUNK(short_name, long_name) short_name
 #else
-# define CHUNK(short, long) long
+# define CHUNK(short_name, long_name) long_name
 #endif
 
-#define SAVEFILE(short, long, savefn)           \
-    do                                          \
-    {                                           \
-        writer w(you.save, CHUNK(short, long)); \
-        savefn(w);                              \
+#define SAVEFILE(short_name, long_name, savefn)           \
+    do                                                    \
+    {                                                     \
+        writer w(you.save, CHUNK(short_name, long_name)); \
+        savefn(w);                                        \
     } while (false)
 
 // Stack allocated string's go in separate function, so Valgrind doesn't
@@ -2581,6 +2581,9 @@ static void _save_game_base()
 
     /* messages */
     SAVEFILE("msg", "messages", save_messages);
+
+    /* dlua errors */
+    SAVEFILE("de", "dlua_errors", save_dlua_errors);
 
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
@@ -3319,6 +3322,13 @@ static bool _restore_game(const string& filename)
     {
         reader inf(you.save, CHUNK("msg", "messages"), minorVersion);
         load_messages(inf);
+    }
+
+    /* dlua errors */
+    if (you.save->has_chunk(CHUNK("de", "dlua_errors")))
+    {
+        reader inf(you.save, CHUNK("de", "dlua_errors"), minorVersion);
+        load_dlua_errors(inf);
     }
 
     // Handle somebody SIGHUP'ing out of the skill menu with every skill

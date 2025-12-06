@@ -116,8 +116,8 @@ LUAFN(l_find_deepest_explored)
     if (lid.branch == NUM_BRANCHES)
         luaL_error(ls, "Bad branch name: '%s'", branch.c_str());
     if (!is_known_branch_id(lid.branch))
-        PLUARET(number, 0);
-    PLUARET(number, find_deepest_explored(lid).depth);
+        PLUARET(integer, 0);
+    PLUARET(integer, find_deepest_explored(lid).depth);
 }
 
 /*** Deltas to a given waypoint.
@@ -134,8 +134,8 @@ LUAFN(l_waypoint_delta)
     if (waypoint.id != level_id::current())
         return 0;
     coord_def delta = you.pos() - waypoint.pos;
-    lua_pushnumber(ls, delta.x);
-    lua_pushnumber(ls, delta.y);
+    lua_pushinteger(ls, delta.x);
+    lua_pushinteger(ls, delta.y);
     return 2;
 }
 
@@ -190,7 +190,7 @@ LUAFN(l_set_travel_trail)
     return 0;
 }
 
-static const struct luaL_reg travel_lib[] =
+static const struct luaL_Reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
     { "del_exclude", l_del_exclude },
@@ -208,5 +208,7 @@ static const struct luaL_reg travel_lib[] =
 
 void cluaopen_travel(lua_State *ls)
 {
-    luaL_openlib(ls, "travel", travel_lib, 0);
+    lua_newtable(ls);
+    luaL_setfuncs(ls, travel_lib, 0);
+    lua_setglobal(ls, "travel");
 }

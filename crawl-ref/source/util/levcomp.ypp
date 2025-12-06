@@ -18,13 +18,16 @@ int yylex();
 
 extern int yylineno;
 
-static NORETURN void yyerror(const char *e)
+static NORETURN void yyerror(const char *e, bool dlua_error = false)
 {
-    // Bail bail bail.
     if (strstr(e, lc_desfile.c_str()) == e)
-        end(1, false, "%s\n", e);
+        fprintf(stderr, "%s\n", e);
     else
-        end(1, false, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
+        fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
+    if (dlua_error && !dlua_errors.empty())
+        fprintf(stderr, "%s\n", dlua_errors.back().stack_trace.c_str());
+    // Bail bail bail.
+    end(1);
 }
 
 %}
@@ -97,11 +100,10 @@ level           : name map_specs
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    string err =
-                        lc_map.validate_map_def(lc_default_depths);
+                    string err = lc_map.validate_map_def();
                     dump_map(lc_map);
                     if (!err.empty())
-                        yyerror(err.c_str());
+                        yyerror(err.c_str(), true);
                     add_parsed_map(lc_map);
                 }
                 ;

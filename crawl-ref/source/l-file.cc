@@ -14,7 +14,7 @@
 // User-accessible file operations
 //
 
-static const struct luaL_reg file_clib[] =
+static const struct luaL_Reg file_clib[] =
 {
     { "write", CLua::file_write },
     { nullptr, nullptr },
@@ -22,7 +22,12 @@ static const struct luaL_reg file_clib[] =
 
 void cluaopen_file(lua_State *ls)
 {
-    luaL_openlib(ls, "file", file_clib, 0);
+    if (lua_getglobal(ls, "file") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, file_clib, 0);
+    lua_setglobal(ls, "file");
 }
 
 //
@@ -49,13 +54,13 @@ static int file_minor_version(lua_State *ls)
     if (lua_gettop(ls) != 1)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
-    lua_pushnumber(ls, th.getMinorVersion());
+    lua_pushinteger(ls, th.getMinorVersion());
     return 1;
 }
 
 static int file_major_version(lua_State *ls)
 {
-    lua_pushnumber(ls, TAG_MAJOR_VERSION);
+    lua_pushinteger(ls, TAG_MAJOR_VERSION);
     return 1;
 }
 
@@ -215,7 +220,7 @@ LUAFN(_file_writefile)
     return 1;
 }
 
-static const struct luaL_reg file_dlib[] =
+static const struct luaL_Reg file_dlib[] =
 {
     { "marshall",   file_marshall },
     { "marshall_meta", file_marshall_meta },
@@ -233,5 +238,10 @@ static const struct luaL_reg file_dlib[] =
 
 void dluaopen_file(lua_State *ls)
 {
-    luaL_openlib(ls, "file", file_dlib, 0);
+    if (lua_getglobal(ls, "file") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, file_dlib, 0);
+    lua_setglobal(ls, "file");
 }

@@ -1676,10 +1676,8 @@ void scorefile_entry::init(time_t dt)
     points = 0;
     bool base_score = true;
 
-    dlua.pushglobal("dgn.persist.calc_score");
-    lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
-    if (dlua.callfn(nullptr, 1, 2))
-        dlua.fnreturns(">db", &points, &base_score);
+    dlua.callfn("dgn.persist.calc_score", "b>db",
+                death_type == KILLED_BY_WINNING, &points, &base_score);
 
     num_runes      = runes_in_pack();
     num_diff_runes = num_runes;

@@ -92,6 +92,7 @@ static void _sdump_action_counts(dump_params &);
 static void _sdump_apostles(dump_params &);
 static void _sdump_separator(dump_params &);
 static void _sdump_lua(dump_params &);
+static void _sdump_dlua_errors(dump_params &);
 static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
@@ -143,6 +144,7 @@ static dump_section_handler dump_handlers[] =
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
     { "vaults",         _sdump_vault_list    },
+    { "dlua_errors",    _sdump_dlua_errors   },
     { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
     { "skill_gains",    _sdump_skill_gains   },
@@ -1158,6 +1160,17 @@ static void _sdump_vault_list(dump_params &par)
         par.text += dump_vault_maps();
         par.text += "\n";
     }
+}
+
+static void _sdump_dlua_errors(dump_params &par)
+{
+    par.text += "DLua errors:\n";
+    for (const CLuaError &error : dlua_errors)
+    {
+        par.text += error.message + "\n";
+        par.text += error.stack_trace + "\n";
+    }
+    par.text += "\n";
 }
 
 static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,

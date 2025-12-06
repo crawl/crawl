@@ -47,7 +47,7 @@ function group_kills(a, namemap, keys, selector)
                 return selector(key, k)
             end
         )
-        if table.getn(selected) > 0 then
+        if #selected > 0 then
             if count > 0 then
                 kills.rawwrite("")
             end
@@ -132,7 +132,7 @@ function symbol_list(a)
 end
 
 function classic_list(title, a, suffix)
-    if table.getn(a) == 0 then return end
+    if #a == 0 then return end
     kills.rawwrite(title)
     for i, k in ipairs(a) do
         kills.rawwrite("    " .. kills.desc(k))
@@ -179,7 +179,7 @@ function c_kill_list(a, who, needsep)
         return false
     end
     -- If there aren't any kills yet, bail out
-    if not a or table.getn(a) == 0 then
+    if not a or #a == 0 then
         if not a and who and who ~= "" then
             -- This is the grand total
             separator()

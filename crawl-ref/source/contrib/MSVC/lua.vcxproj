@@ -127,6 +127,8 @@
     <ClCompile Include="..\lua\src\lauxlib.c" />
     <ClCompile Include="..\lua\src\lbaselib.c" />
     <ClCompile Include="..\lua\src\lcode.c" />
+    <ClCompile Include="..\lua\src\lcorolib.c" />
+    <ClCompile Include="..\lua\src\lctype.c" />
     <ClCompile Include="..\lua\src\ldblib.c" />
     <ClCompile Include="..\lua\src\ldebug.c" />
     <ClCompile Include="..\lua\src\ldo.c" />
@@ -150,9 +152,9 @@
     <ClCompile Include="..\lua\src\ltablib.c" />
     <ClCompile Include="..\lua\src\ltm.c" />
     <ClCompile Include="..\lua\src\lundump.c" />
+    <ClCompile Include="..\lua\src\lutf8lib.c" />
     <ClCompile Include="..\lua\src\lvm.c" />
     <ClCompile Include="..\lua\src\lzio.c" />
-    <ClCompile Include="..\lua\src\print.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lua\src\lapi.h" />
