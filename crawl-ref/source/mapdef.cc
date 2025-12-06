@@ -2728,6 +2728,11 @@ bool map_def::run_lua_epilogue(bool die_on_lua_error)
 string map_def::rewrite_chunk_errors(const string &s) const
 {
     string res = s;
+    if (!lc_global_prelude.empty()
+            && lc_global_prelude.rewrite_chunk_errors(res))
+    {
+        return res;
+    }
     if (prelude.rewrite_chunk_errors(res))
         return res;
     if (mapchunk.rewrite_chunk_errors(res))

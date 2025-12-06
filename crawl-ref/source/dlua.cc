@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "l-libs.h"
+#include "maps.h"
 #include "stringutil.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
@@ -264,9 +265,10 @@ string dlua_chunk::rewrite_chunk_prefix(const string &line, bool skip_body) cons
         pe = lns + newlnum.length();
     }
 
-    return s.substr(0, ps) + (file.empty()? context : file) + ":"
-        + (skip_body? s.substr(lns, pe - lns)
-                    : s.substr(lns));
+    return s.substr(0, ps) + (file.empty() ? context : file)
+        + ":" + s.substr(lns, pe - lns)
+        + (lc_map.name.empty() ? "" : " (map " + lc_map.name + ")")
+        + (skip_body ? "" : s.substr(pe));
 }
 
 string dlua_chunk::get_chunk_prefix(const string &sorig) const
