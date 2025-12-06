@@ -286,13 +286,14 @@ Apart from (de)selecting skills, you also have the following toggles:
 %%%%
 spell-library
 <h>Spell Library</h>
-<w>!</w>        : Cycle between <w>Memorise</w>, <w>Describe</w>, <w>Hide</w>, and <w>Show</w> pages.
-<w>Ctrl-F</w>   : Filter the list of spells shown with a regex.
-<w>?</w>        : Show this help.
+<w>Tab</w> or <w>!</w>  : Cycle rightward through <w>Memorise</w>, <w>Describe</w>, <w>Hide</w>, and <w>Show</w> pages.
+<w>Shift-Tab</w> : Cycle leftward through the pages.
+<w>Ctrl-F</w>    : Filter the list of spells shown with a regex.
+<w>?</w>         : Show this help.
 
 By default, the spell library opens to the <w>Memorise</w> page; to begin memorising a
 spell, just press its letter. To read a spell's description, first switch to
-the <w>Describe</w> page by pressing <w>!</w>, then press the spell's letter.
+the <w>Describe</w> page by pressing <w>Tab</w>, then press the spell's letter.
 
 Most characters will not be interested in memorising the majority of spells that
 accumulate in their spell library; this is where the <w>Show</w> and <w>Hide</w> pages come in
