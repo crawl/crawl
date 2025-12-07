@@ -278,6 +278,7 @@ public:
     virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
     virtual int inaccuracy() const;
     int inaccuracy_penalty() const;
+    virtual int slaying(bool throwing = false, bool random = true) const = 0;
     virtual bool antimagic_susceptible() const = 0;
 
     bool has_notele_item(vector<const item_def *> *matches = nullptr) const;

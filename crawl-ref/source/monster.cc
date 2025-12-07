@@ -4008,6 +4008,11 @@ int monster::willpower() const
     return u;
 }
 
+int monster::slaying(bool /*throwing*/, bool /*random*/) const
+{
+    return wearing_jewellery(RING_SLAYING) + scan_artefacts(ARTP_SLAYING);
+}
+
 bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.

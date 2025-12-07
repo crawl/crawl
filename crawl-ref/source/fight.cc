@@ -87,7 +87,7 @@ int aux_to_hit()
     if (you.duration[DUR_VERTIGO])
         to_hit -= 5;
 
-    to_hit += slaying_bonus();
+    to_hit += you.slaying();
 
     return to_hit;
 

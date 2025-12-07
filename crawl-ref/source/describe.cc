@@ -1452,7 +1452,7 @@ string damage_rating(const item_def *item, int *rating_value)
     const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : 100;
     const int skill_mult = apply_fighting_skill(weapon_skill_mult, false, false);
 
-    const int slaying = slaying_bonus(thrown, false);
+    const int slaying = you.slaying(thrown, false);
     const int ench = item && item->is_identified() ? item->plus : 0;
     const int plusses = slaying + ench;
 
@@ -5176,35 +5176,6 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
     return make_stringf(" + %d (%s)", brand_dam, name);
 }
 
-// Return a monster's slaying bonus (not including weapon enchantment)
-static int _monster_slaying(const monster_info& mi)
-{
-    int slaying = 0;
-    const artefact_prop_type artp = ARTP_SLAYING;
-
-    // Largely a duplication of monster::scan_artefacts,
-    // but there's no equivalent for monster_info :(
-    const item_def *armour       = mi.inv[MSLOT_ARMOUR].get();
-    const item_def *shield       = mi.inv[MSLOT_SHIELD].get();
-    const item_def *jewellery    = mi.inv[MSLOT_JEWELLERY].get();
-
-    if (jewellery && jewellery->base_type == OBJ_JEWELLERY)
-    {
-        if (jewellery->is_type(OBJ_JEWELLERY, RING_SLAYING))
-            slaying += jewellery->plus;
-        if (is_artefact(*jewellery))
-            slaying += artefact_property(*jewellery, artp);
-    }
-
-    if (armour && armour->base_type == OBJ_ARMOUR && is_artefact(*armour))
-        slaying += artefact_property(*armour, artp);
-
-    if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
-        slaying += artefact_property(*shield, artp);
-
-    return slaying;
-}
-
 // Max damage from a magical staff with a given amount of staff & evo skill
 static int _staff_max_damage(stave_type staff, int staff_skill, int evo_skill)
 {
@@ -5351,7 +5322,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
     int dam = attack.damage;
-    int slaying = _monster_slaying(mi);
+    int slaying = mi.slaying();
 
     if (attack.flavour == AF_PURE_FIRE)
         dam = flav_dam;
@@ -5525,7 +5496,7 @@ static void _attacks_table_row_throwing(const monster_info &mi,
         const mon_attack_def &attack = info.definition;
         int dam = attack.damage;
         dam += property(*quiv, PWPN_DAMAGE) - 1;
-        dam += max(_monster_slaying(mi), 0);
+        dam += max(mi.slaying(), 0);
         if (mons_class_flag(mi.type, M_ARCHER))
             dam += archer_bonus_damage(mi.hd);
         string silver_str;

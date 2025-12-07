@@ -301,6 +301,7 @@ struct monster_info_base
     int base_ev;
     int sh;
     int mr;
+    int slay;
     resists_t mresists;
     bool can_see_invis;
     mon_itemuse_type mitemuse;
@@ -438,6 +439,7 @@ struct monster_info : public monster_info_base
     bool can_see_invisible() const;
     bool nightvision() const;
     int willpower() const;
+    int slaying() const;
     int lighting_modifiers() const;
 
     int base_speed() const

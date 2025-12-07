@@ -856,6 +856,7 @@ public:
     int willpower() const override;
     bool no_tele(bool blink = false, bool temp = true) const override;
     string no_tele_reason(bool blink = false, bool temp = true) const;
+    int slaying(bool throwing = false, bool random = true) const override;
     bool antimagic_susceptible() const override;
 
     bool clarity(bool items = true) const override;
@@ -1152,8 +1153,6 @@ int player_total_spell_levels();
 int get_teleportitis_level();
 
 int player_monster_detect_radius();
-
-int slaying_bonus(bool throwing = false, bool random = true);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);

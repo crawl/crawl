@@ -574,6 +574,7 @@ monster_info::monster_info(const monster* m, int milev)
     base_ev = m->base_evasion();
     sh = m->shield_class();
     mr = m->willpower();
+    slay = m->slaying(false, false);
     can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
@@ -1618,6 +1619,11 @@ bool monster_info::nightvision() const
 int monster_info::willpower() const
 {
     return mr;
+}
+
+int monster_info::slaying() const
+{
+    return slay;
 }
 
 static bool _add_energy_desc(int energy, string name, int speed, vector<string> &out)

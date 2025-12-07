@@ -404,6 +404,7 @@ public:
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
+    int slaying(bool throwing = false, bool random = true) const override;
     bool antimagic_susceptible() const override;
 
     bool clarity(bool items = true) const override;

@@ -3762,7 +3762,7 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(bool throwing, bool random)
+int player::slaying(bool throwing, bool random) const
 {
     int ret = 0;
 

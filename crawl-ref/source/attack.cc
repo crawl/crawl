@@ -214,7 +214,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING, random);
+        mhit += you.slaying(wpn_skill == SK_THROWING, random);
 
         // vertigo penalty
         if (you.duration[DUR_VERTIGO])
@@ -230,14 +230,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         if (using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
-        const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-        if (jewellery != NON_ITEM
-            && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
-        {
-            mhit += env.item[jewellery].plus;
-        }
-
-        mhit += attacker->scan_artefacts(ARTP_SLAYING);
+        mhit += attacker->slaying();
     }
 
     return mhit;
@@ -861,7 +854,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     const bool ranged = throwing
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
-    damage_plus += slaying_bonus(throwing);
+    damage_plus += you.slaying(throwing);
     damage_plus -= you.corrosion_amount();
 
     // XXX: should this also trigger on auxes?
@@ -944,14 +937,7 @@ int attack::calc_damage()
             if (weapon) // can be 0 for throwing projectiles
                 wpn_damage_plus = get_weapon_plus();
 
-            const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-            if (jewellery != NON_ITEM
-                && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
-            {
-                wpn_damage_plus += env.item[jewellery].plus;
-            }
-
-            wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
+            wpn_damage_plus += attacker->slaying();
 
             damage = _core_apply_slaying(damage, wpn_damage_plus);
         }
