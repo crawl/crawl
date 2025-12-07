@@ -75,6 +75,11 @@ static const char *conducts[] =
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
+string conduct_description(conduct_type conduct)
+{
+    return conducts[conduct];
+}
+
 /**
  * Change piety & add penance in response to a conduct.
  *
@@ -89,7 +94,6 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
     const int old_piety = you.raw_piety;
 #ifndef DEBUG_DIAGNOSTICS
     UNUSED(thing_done);
-    UNUSED(conducts);
     UNUSED(old_piety);
 #endif
 
@@ -508,6 +512,7 @@ struct like_response
         // may modify gain/denom
         if (special)
             special(gain, denom, victim);
+        you.piety_info.record_conduct_like(thing_done, gain, denom);
 
         _handle_piety_penance(max(0, gain), max(1, denom), 0, thing_done);
     }

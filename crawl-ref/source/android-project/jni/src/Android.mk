@@ -205,6 +205,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/pattern.cc \
     $(CRAWL_PATH)/pcg.cc \
     $(CRAWL_PATH)/perlin.cc \
+    $(CRAWL_PATH)/piety-info.cc \
     $(CRAWL_PATH)/place-info.cc \
     $(CRAWL_PATH)/place.cc \
     $(CRAWL_PATH)/playable.cc \
