@@ -3517,7 +3517,6 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         return false;
 
     _swim_or_move_energy(*mon);
-    _swim_or_move_energy(*m2);
 
     mon->check_redraw(m2->pos());
     m2->check_redraw(mon->pos());
@@ -3526,7 +3525,7 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     if (mons_is_seeker(*m2))
         seeker_attack(*m2, *mon);
 
-    return false;
+    return true;
 }
 
 static void _maybe_randomize_energy(monster &mons, coord_def orig_pos)
