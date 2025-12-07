@@ -1137,16 +1137,16 @@ static int crawl_worley(lua_State *ls)
     double pz = lua_tonumber(ls,3);
 
     worley::noise_datum n = worley::noise(px,py,pz);
-    lua_pushinteger(ls, n.distance[0]);
-    lua_pushinteger(ls, n.distance[1]);
+    lua_pushnumber(ls, n.distance[0]);
+    lua_pushnumber(ls, n.distance[1]);
     lua_pushinteger(ls, n.id[0]);
     lua_pushinteger(ls, n.id[1]);
-    lua_pushinteger(ls, n.pos[0][0]);
-    lua_pushinteger(ls, n.pos[0][1]);
-    lua_pushinteger(ls, n.pos[0][2]);
-    lua_pushinteger(ls, n.pos[1][0]);
-    lua_pushinteger(ls, n.pos[1][1]);
-    lua_pushinteger(ls, n.pos[1][2]);
+    lua_pushnumber(ls, n.pos[0][0]);
+    lua_pushnumber(ls, n.pos[0][1]);
+    lua_pushnumber(ls, n.pos[0][2]);
+    lua_pushnumber(ls, n.pos[1][0]);
+    lua_pushnumber(ls, n.pos[1][1]);
+    lua_pushnumber(ls, n.pos[1][2]);
     return 10;
 }
 
@@ -1165,7 +1165,7 @@ static int crawl_worley_diff(lua_State *ls)
     double pz = lua_tonumber(ls,3);
 
     worley::noise_datum n = worley::noise(px,py,pz);
-    lua_pushinteger(ls, n.distance[1]-n.distance[0]);
+    lua_pushnumber(ls, n.distance[1]-n.distance[0]);
     lua_pushinteger(ls, n.id[0]);
 
     return 2;
