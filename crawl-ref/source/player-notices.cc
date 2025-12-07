@@ -319,7 +319,9 @@ static string _describe_monsters_from_species(const vector<details> &species)
                 if (!title.empty())
                     return title;
 
-                if (mons_is_unique(det.mon->type) && mons_is_the(det.mon->type))
+                const monster_type base_type = mons_is_zombified(*(det.mon)) ? det.mon->base_monster
+                                                                             : det.mon->type;
+                if (mons_is_unique(base_type) && mons_is_the(base_type))
                     name = "the " + name;
 
                 return name;
