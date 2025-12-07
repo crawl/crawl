@@ -313,14 +313,19 @@ static string _describe_monsters_from_species(const vector<details> &species)
         [] (const details &det)
         {
             string name = det.name;
-            if (det.mon->is_named() && det.count == 1)
+            const monster_type base_type =
+                mons_is_zombified(*(det.mon)) ? det.mon->base_monster
+                                              : det.mon->type;
+            // Treat all monsters with unique base types as named, since all
+            // uniques should have names. We need to do this to properly handle
+            // the spectral Serpent of Hell, which has its name removed in
+            // name_zombie_from_class(), but should still be treated as named.
+            if ((det.mon->is_named() || mons_is_unique(base_type)) && det.count == 1)
             {
                 string title = getMiscString(det.mon->name(DESC_DBNAME) + " title");
                 if (!title.empty())
                     return title;
 
-                const monster_type base_type = mons_is_zombified(*(det.mon)) ? det.mon->base_monster
-                                                                             : det.mon->type;
                 if (mons_is_unique(base_type) && mons_is_the(base_type))
                     name = "the " + name;
 
