@@ -851,7 +851,6 @@ static bool _handle_swoop_or_flank(monster& mons)
  */
 static bool _handle_reaching(monster& mons)
 {
-    bool       ret = false;
     const int range = mons.reach_range();
     actor *foe = mons.get_foe();
 
@@ -875,14 +874,11 @@ static bool _handle_reaching(monster& mons)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {
-        ret = true;
-
-        ASSERT(foe->is_player() || foe->is_monster());
-
         fight_melee(&mons, foe);
+        return true;
     }
 
-    return ret;
+    return false;
 }
 
 static void _handle_boulder_movement(monster& boulder)
