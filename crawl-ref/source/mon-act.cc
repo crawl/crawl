@@ -256,20 +256,16 @@ static bool _ranged_ally_in_dir(monster* mon, coord_def p)
 
         if (mons_aligned(mon, ally))
         {
-            // Hostile monsters only move aside for monsters of the same type.
-            if (mon->wont_attack() && mons_genus(mon->type) != mons_genus(ally->type))
-                return false;
-
             // XXX: Sometimes the player wants allies in front of them to stay
             // out of LOF. However use of allies for cover is extremely common,
             // so it doesn't work well to always have allies move out of player
             // LOF. Until a better interface or method can be found to handle
             // both cases, have allies move out of the way only for other
             // monsters.
-            if (ally->is_monster())
+            if (ally->is_monster() && !mon->was_created_by(*ally))
             {
                 return grid_distance(mon->pos(), ally->pos())
-                            <= ally->as_monster()->threat_range(true, false);
+                            < ally->as_monster()->threat_range(true, false);
             }
         }
         break;
@@ -293,9 +289,10 @@ static bool _allied_monster_at(monster* mon, coord_def delta)
     if (ally->is_stationary() || ally->reach_range() > 1)
         return false;
 
-    // Hostile monsters of normal intelligence only move aside for
-    // monsters of the same genus.
+    // Hostile monsters of animal intelligence only move aside for monsters of
+    // the same genus. Human intelligence monsters will do so for any ally.
     if (_unfriendly_or_impaired(*mon)
+        && mons_intel(*mon) < I_HUMAN
         && mons_genus(mon->type) != mons_genus(ally->type))
     {
         return false;
