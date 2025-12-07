@@ -341,6 +341,7 @@ enum tag_minor_version
     TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK, // Don't leak whether the polar vortex caster has moved or gone
     TAG_MINOR_CONSTRICTED_TYPE,    // Refactor saving of constriction type on actors
     TAG_MINOR_LUA_5_4,             // Upgrade from Lua 5.1 to Lua 5.4.
+    TAG_MINOR_PIETY_LOGGING,       // Log piety events
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

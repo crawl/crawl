@@ -185,6 +185,7 @@ package.o \
 pattern.o \
 pcg.o \
 perlin.o \
+piety-info.o \
 place-info.o \
 place.o \
 playable.o \
