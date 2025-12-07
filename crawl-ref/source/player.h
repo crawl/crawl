@@ -27,6 +27,7 @@
 #include "maybe-bool.h"
 #include "mon-holy-type.h"
 #include "mutation-type.h"
+#include "piety-info.h"
 #include "place-info.h"
 #include "player-equip.h"
 #include "quiver.h"
@@ -365,6 +366,8 @@ public:
     PlaceInfo global_info;
 
     LevelXPInfo global_xp_info;
+
+    PietyInfo piety_info;
 
     quiver::ammo_history m_quiver_history;
 

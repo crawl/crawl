@@ -60,6 +60,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "piety-info.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -2510,6 +2511,7 @@ static void _gain_piety_point()
     if (player_under_penance(you.religion))
     {
         dec_penance(1);
+        you.piety_info.register_piety_gain(PG_EVENT_PENANCE_PAYMENT);
         return;
     }
     else if (you.gift_timeout > 0)
@@ -2526,6 +2528,7 @@ static void _gain_piety_point()
 #ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
 #endif
+            you.piety_info.register_piety_gain(PG_EVENT_GIFT_PENALTY);
             return;
         }
     }
@@ -2545,6 +2548,7 @@ static void _gain_piety_point()
             || you.raw_piety >= piety_breakpoint(5) && one_chance_in(3)
             || you.raw_piety >= piety_breakpoint(3) && one_chance_in(3))
         {
+            you.piety_info.register_piety_gain(PG_EVENT_STEPDOWN);
             do_god_gift();
             return;
         }
@@ -2561,6 +2565,7 @@ static void _gain_piety_point()
     // Apply hysteresis.
     // piety_hysteresis is the amount of _loss_ stored up, so this
     // may look backwards.
+    you.piety_info.register_piety_gain(PG_EVENT_TRUE_GAIN);
     if (you.piety_hysteresis)
         you.piety_hysteresis--;
     else if (you.raw_piety < MAX_PIETY)
@@ -2707,6 +2712,7 @@ void lose_piety(int pgn)
 {
     if (pgn <= 0)
         return;
+    you.piety_info.register_piety_loss(pgn);
 
     // Note that this is *not* using raw piety, since its purpose is to convey
     // messages to the player when their piety rank has lowered, and this should
@@ -2899,6 +2905,8 @@ void excommunication(bool voluntary, god_type new_god)
     you.num_current_gifts[old_god] = 0;
 
     you.religion = GOD_NO_GOD;
+
+    you.piety_info.register_excommunication();
 
     if (best_skill(SK_FIRST_SKILL, SK_LAST_SKILL) == SK_INVOCATIONS
        && you.attribute[ATTR_TRAITOR] == 0)
@@ -3870,6 +3878,7 @@ void join_religion(god_type which_god)
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
     take_note(Note(NOTE_GET_GOD, you.religion));
+    you.piety_info.register_join();
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
@@ -4208,6 +4217,12 @@ bool god_protects_from_harm()
     return false;
 }
 
+void decay_piety()
+{
+    lose_piety(1);
+    you.piety_info.register_piety_decay();
+}
+
 void handle_god_time(int /*time_delta*/)
 {
     if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
@@ -4253,7 +4268,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_SIF_MUNA:
         case GOD_YREDELEMNUL:
             if (one_chance_in(17))
-                lose_piety(1);
+                decay_piety();
             break;
 
         case GOD_ELYVILON:
@@ -4263,12 +4278,12 @@ void handle_god_time(int /*time_delta*/)
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
-                lose_piety(1);
+                decay_piety();
             break;
 
         case GOD_BEOGH:
             if (one_chance_in(17))
-                lose_piety(1);
+                decay_piety();
             maybe_generate_apostle_challenge();
             break;
 

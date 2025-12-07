@@ -445,6 +445,9 @@
     <ClCompile Include="..\potion.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\piety-info.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\player-notices.cc">
       <Filter>cc</Filter>
     <ClCompile Include="..\player-stats.cc">
@@ -1724,6 +1727,9 @@
     </ClInclude>
     <ClInclude Include="..\perlin.h">
       <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\piety-info.h">
+      <Filter>cc</Filter>
     </ClInclude>
     <ClInclude Include="..\place.h">
       <Filter>h</Filter>
