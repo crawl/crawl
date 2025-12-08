@@ -324,10 +324,11 @@ static string _describe_monsters_from_species(const vector<details> &species)
                 if (!title.empty())
                     return title;
 
-                if (mons_is_unique(base_type) && mons_is_the(base_type))
-                    return apply_description(DESC_THE, name, det.count);
-
-                return name;
+                // Use monster_info to get the monster's full name, so we get
+                // proper articles for all named monsters as well as proper
+                // types for all zombified uniques.
+                monster_info mi(det.mon);
+                return mi.full_name(DESC_A);
             }
             else if (det.count > 1 && det.genus)
             {
