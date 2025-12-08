@@ -5,7 +5,7 @@ exp: 2712
 species: oni
 will: 100
 attacks:
- - {type: hit, flavour: drag, damage: 58}
+ - {type: hit, flavour: drag, damage: 50}
  - {type: headbutt, damage: 24}
 hd: 19
 hp_10x: 1500

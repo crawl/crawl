@@ -1366,7 +1366,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ONI_INCARCERATOR,
       {
-       { SPELL_MANIFOLD_ASSAULT, 50, MON_SPELL_WIZARD },
+       { SPELL_MANIFOLD_ASSAULT, 40, MON_SPELL_WIZARD },
        { SPELL_THROW_BOLAS, 12, MON_SPELL_WIZARD },
       }
     },
