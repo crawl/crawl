@@ -124,8 +124,10 @@ private:
     bool attack_chops_heads(int damage_done);
     void decapitate();
 
-    bool run_attack_set();
+    bool run_player_attack_set();
     bool swing_with(item_def &weapon, bool offhand);
+
+    bool run_monster_attack_set();
 
     /* Axe cleaving */
     void cleave_setup();

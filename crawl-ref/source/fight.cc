@@ -537,82 +537,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         return false;
     }
 
-    const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
-        ? attacker->heads() + (attacker->type == MONS_DRAUGR)
-        : MAX_NUM_ATTACKS;
-    coord_def pos = defender->pos();
-
-    // Melee combat, tell attacker to wield its melee weapon.
-    attacker->as_monster()->wield_melee_weapon();
-
-    bool was_hostile = !mons_aligned(attacker, defender);
-
-    int effective_attack_number = 0;
-    int attack_number;
-    for (attack_number = 0; attack_number < nrounds && attacker->alive();
-         ++attack_number, ++effective_attack_number)
-    {
-        if (!attacker->alive())
-            return false;
-
-        // Monster went away or become friendly?
-        if (!defender->alive()
-            || defender->pos() != pos
-            || defender->is_banished()
-            || was_hostile && mons_aligned(attacker, defender)
-               && !mons_is_confused(*attacker->as_monster())
-               && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
-        {
-            if (attacker == defender
-               || !attacker->as_monster()->has_hydra_multi_attack())
-            {
-                break;
-            }
-
-            // Hydras can try and pick up a new monster to attack to
-            // finish out their round. -cao
-            bool end = true;
-            for (adjacent_iterator i(attacker->pos()); i; ++i)
-            {
-                if (*i == you.pos()
-                    && !mons_aligned(attacker, &you)
-                    && you.alive())
-                {
-                    attacker->as_monster()->foe = MHITYOU;
-                    attacker->as_monster()->target = you.pos();
-                    defender = &you;
-                    was_hostile = true;
-                    end = false;
-                    break;
-                }
-
-                monster* mons = monster_at(*i);
-                if (mons && !mons_aligned(attacker, mons))
-                {
-                    defender = mons;
-                    was_hostile = true;
-                    end = false;
-                    pos = mons->pos();
-                    break;
-                }
-            }
-
-            // No adjacent hostiles.
-            if (end)
-                break;
-        }
-
-        melee_attack melee_attk(attacker, defender, attack_number,
-                                effective_attack_number);
-
-        melee_attk.simu = simu;
-        melee_attk.attack();
-
-        if (did_hit && !(*did_hit))
-            *did_hit = melee_attk.did_hit;
-
-        fire_final_effects();
-    }
+    melee_attack attk(attacker, defender);
+    attk.simu = simu;
+    attk.launch_attack_set();
 
     if (!attacker->alive())
         return true;
@@ -624,16 +551,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     ASSERT(energy > 0);
     ASSERT(delay > 0);
     attacker->as_monster()->speed_increment -= div_rand_round(energy * delay, 10);
-
-    // If this attack was supposed to be instant, refund the energy now.
-    if (monster* mons = attacker->as_monster())
-    {
-        if (mons->has_ench(ENCH_INSTANT_CLEAVE))
-        {
-            mons->del_ench(ENCH_INSTANT_CLEAVE);
-            mons->speed_increment += mons->action_energy(EUT_ATTACK);
-        }
-    }
 
     // Here, rather than in melee_attack, so that it only triggers on attack
     // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)

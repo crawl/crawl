@@ -1376,6 +1376,7 @@ void melee_attack::copy_params_to(melee_attack &other)
     other.is_involuntary        = is_involuntary;
     other.wu_jian_attack        = wu_jian_attack;
     other.wu_jian_number_of_targets = wu_jian_number_of_targets;
+    other.simu                  = simu;
 }
 
 // Perform followup attacks (from cleaving or quick blades).
@@ -1468,9 +1469,9 @@ bool melee_attack::swing_with(item_def &wpn, bool offhand)
 bool melee_attack::launch_attack_set(bool skip_player_post_attack)
 {
     if (!attacker->is_player())
-        return attack();
+        return run_monster_attack_set();
 
-    bool success = run_attack_set();
+    bool success = run_player_attack_set();
 
     if (!skip_player_post_attack)
     {
@@ -1484,7 +1485,99 @@ bool melee_attack::launch_attack_set(bool skip_player_post_attack)
     return success;
 }
 
-bool melee_attack::run_attack_set()
+bool melee_attack::run_monster_attack_set()
+{
+    ASSERT(attacker->is_monster());
+    monster* mon = attacker->as_monster();
+
+    const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
+        ? attacker->heads() + (attacker->type == MONS_DRAUGR)
+        : MAX_NUM_ATTACKS;
+    coord_def pos = defender->pos();
+
+    // Melee combat, tell attacker to wield its melee weapon.
+    mon->wield_melee_weapon();
+
+    bool was_hostile = !mons_aligned(attacker, defender);
+
+    bool success = false;
+    int effective_attack_num = 0;
+    int attack_num;
+    for (attack_num = 0; attack_num < nrounds && attacker->alive();
+         ++attack_num, ++effective_attack_num)
+    {
+        if (!attacker->alive())
+            return false;
+
+        // Monster went away or become friendly?
+        if (!defender->alive()
+            || defender->pos() != pos
+            || defender->is_banished()
+            || was_hostile && mons_aligned(attacker, defender)
+               && !mons_is_confused(*attacker->as_monster())
+               && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
+        {
+            if (attacker == defender
+               || !attacker->as_monster()->has_hydra_multi_attack())
+            {
+                break;
+            }
+
+            // Hydras can try and pick up a new monster to attack to
+            // finish out their round. -cao
+            bool end = true;
+            for (adjacent_iterator i(attacker->pos()); i; ++i)
+            {
+                if (*i == you.pos()
+                    && !mons_aligned(attacker, &you)
+                    && you.alive())
+                {
+                    attacker->as_monster()->foe = MHITYOU;
+                    attacker->as_monster()->target = you.pos();
+                    defender = &you;
+                    was_hostile = true;
+                    end = false;
+                    break;
+                }
+
+                monster* mons = monster_at(*i);
+                if (mons && !mons_aligned(attacker, mons))
+                {
+                    defender = mons;
+                    was_hostile = true;
+                    end = false;
+                    pos = mons->pos();
+                    break;
+                }
+            }
+
+            // No adjacent hostiles.
+            if (end)
+                break;
+        }
+
+        melee_attack melee_attk(attacker, defender, attack_num,
+                                effective_attack_num);
+
+        copy_params_to(melee_attk);
+        success |= melee_attk.attack();
+
+        did_hit |= melee_attk.did_hit;
+
+        fire_final_effects();
+    }
+
+    // If this attack was supposed to be instant, refund the energy now.
+    if (mon->has_ench(ENCH_INSTANT_CLEAVE))
+    {
+        mon->del_ench(ENCH_INSTANT_CLEAVE);
+        mon->speed_increment += mon->action_energy(EUT_ATTACK);
+    }
+
+    return success;
+}
+
+bool melee_attack::run_player_attack_set()
 {
     item_def *primary = you.weapon();
     item_def *offhand = you.offhand_weapon();
