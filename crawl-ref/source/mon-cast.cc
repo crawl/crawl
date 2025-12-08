@@ -7028,6 +7028,9 @@ static void _cast_bestow_arms(monster& caster)
                                        4,  SPWPN_CHAOS,
                                        1,  SPWPN_DISTORTION);
 
+    if (!is_range_weapon(wpn) && one_chance_in(10))
+        wpn.brand = get_special_brand_for(static_cast<weapon_type>(wpn.sub_type));
+
     wpn.plus = random_range(4, 9);
     wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_IDENTIFIED);
     wpn.quantity = 1;
