@@ -7,8 +7,8 @@ genus: thrashing_horror
 holiness: [demonic]
 will: 120
 attacks:
- - {type: hit, damage: 20}
  - {type: trample, flavour: trample, damage: 25}
+ - {type: hit, damage: 20}
 hd: 15
 hp_10x: 1400
 ac: 10

@@ -1511,8 +1511,12 @@ bool melee_attack::run_monster_attack_set()
 
         // Monster went away or become friendly?
         if (!defender->alive()
-            || defender->pos() != pos
             || defender->is_banished()
+            // We rely on the attack itself to verify that the target is still
+            // in range, but hydras want to know earlier that it will fail so
+            // they can pick a new target.
+            || attacker->as_monster()->has_hydra_multi_attack()
+               && defender->pos() != pos && !adjacent(defender->pos(), attacker->pos())
             || was_hostile && mons_aligned(attacker, defender)
                && !mons_is_confused(*attacker->as_monster())
                && !attacker->as_monster()->has_ench(ENCH_FRENZIED))

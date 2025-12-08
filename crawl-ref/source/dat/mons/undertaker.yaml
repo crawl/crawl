@@ -5,8 +5,8 @@ exp: 2415
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: punch, damage: 42}
- - {type: claw, flavour: drag, damage: 32}
+ - {type: claw, flavour: drag, damage: 42}
+ - {type: punch, damage: 32}
 hd: 19
 hp_10x: 1240
 ac: 18

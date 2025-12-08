@@ -5,8 +5,8 @@ exp: 842
 genus: giant_lizard
 will: 40
 attacks:
- - {type: tail_slap, damage: 14}
  - {type: bite, flavour: drag, damage: 27}
+ - {type: tail_slap, damage: 14}
 hd: 12
 hp_10x: 620
 ac: 4
