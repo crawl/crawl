@@ -1396,8 +1396,9 @@ replaced with a different one, and any brand forbidden by your current god will
 not be chosen. Artefacts cannot be branded in this way.
 
 Melee weapons will commonly be branded with the flaming, freezing, heavy,
-venom or protection brand, and rarely with the draining, electrocution,
-spectral, vampiric or chaos brand.
+venom or protection brand (or with the special brand exclusive to the category
+of weapon being branded), and rarely with the draining, electrocution, spectral,
+vampiric or chaos brand.
 
 Ranged weapons will commonly be branded with the flaming, freezing, heavy or
 draining brand, and rarely with the electrocution or chaos brand.

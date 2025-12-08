@@ -1284,6 +1284,20 @@ brand_type get_weapon_brand(const item_def &item)
     return static_cast<brand_type>(item.brand);
 }
 
+brand_type get_special_brand_for(weapon_type wpn_type)
+{
+    switch (item_attack_skill(OBJ_WEAPONS, wpn_type))
+    {
+        case SK_SHORT_BLADES:       return SPWPN_DEVIOUS;
+        case SK_LONG_BLADES:        return SPWPN_VALOUR;
+        case SK_MACES_FLAILS:       return SPWPN_CONCUSSION;
+        case SK_AXES:               return SPWPN_SUNDERING;
+        case SK_POLEARMS:           return SPWPN_ENTANGLING;
+        case SK_STAVES:             return SPWPN_REBUKE;
+        default:                    return SPWPN_NORMAL;
+    }
+}
+
 special_missile_type get_ammo_brand(const item_def &item)
 {
     // No artefact arrows yet. -- bwr

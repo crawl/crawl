@@ -2094,16 +2094,19 @@ static void _rebrand_weapon(item_def& wpn)
                                                2, SPWPN_HEAVY,
                                                2, SPWPN_VENOM,
                                                2, SPWPN_PROTECTION,
+                                               2, NUM_SPECIAL_WEAPONS,
                                                1, SPWPN_DRAINING,
                                                1, SPWPN_ELECTROCUTION,
                                                1, SPWPN_SPECTRAL,
                                                1, SPWPN_VAMPIRISM,
                                                1, SPWPN_CHAOS);
+
+            if (new_brand == NUM_SPECIAL_WEAPONS)
+                new_brand = get_special_brand_for(static_cast<weapon_type>(wpn.sub_type));
         }
     }
 
     set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
-    convert2bad(wpn);
 }
 
 static string _item_name(item_def &item)
@@ -2177,6 +2180,36 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_SPECTRAL:
         flash_colour = BLUE;
         mprf("%s acquires a faint afterimage.", itname.c_str());
+        break;
+
+    case SPWPN_REBUKE:
+        flash_colour = WHITE;
+        mprf("%s quivers with indignation.", itname.c_str());
+        break;
+
+    case SPWPN_VALOUR:
+        flash_colour = WHITE;
+        mprf("%s thrums with vital power.", itname.c_str());
+        break;
+
+    case SPWPN_ENTANGLING:
+        flash_colour = LIGHTGREEN;
+        mprf("%s erupts in a tangle of vines.", itname.c_str());
+        break;
+
+    case SPWPN_SUNDERING:
+        flash_colour = LIGHTRED;
+        mprf("%s becomes viciously sharp.", itname.c_str());
+        break;
+
+    case SPWPN_CONCUSSION:
+        flash_colour = YELLOW;
+        mprf("%s begins to exert an overwhelming pressure.", itname.c_str());
+        break;
+
+    case SPWPN_DEVIOUS:
+        flash_colour = BLUE;
+        mprf("%s glints wickedly in the shadows.", itname.c_str());
         break;
 
     default:

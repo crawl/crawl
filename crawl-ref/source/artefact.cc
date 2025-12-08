@@ -577,6 +577,7 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = random_choose_weighted(
             47, SPWPN_FLAMING,
             47, SPWPN_FREEZING,
+            35, NUM_SPECIAL_WEAPONS,
             26, SPWPN_HEAVY,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
@@ -591,6 +592,9 @@ static void _add_randart_weapon_brand(const item_def &item,
              6, SPWPN_REAPING,
              3, SPWPN_DISTORTION,
              3, SPWPN_CHAOS);
+
+        if (item_props[ARTP_BRAND] == NUM_SPECIAL_WEAPONS)
+            item_props[ARTP_BRAND] = get_special_brand_for(static_cast<weapon_type>(item.sub_type));
     }
 
     // no brand = magic flag to reject and retry
