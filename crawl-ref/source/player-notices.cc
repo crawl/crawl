@@ -327,7 +327,7 @@ static string _describe_monsters_from_species(const vector<details> &species)
                     return title;
 
                 if (mons_is_unique(base_type) && mons_is_the(base_type))
-                    name = apply_description(DESC_THE, name, det.count);
+                    return apply_description(DESC_THE, name, det.count);
 
                 return name;
             }
