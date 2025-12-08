@@ -45,7 +45,7 @@ public:
 
 const PotionEffect* get_potion_effect(potion_type pot);
 
-bool quaff_potion(item_def &potion);
+bool quaff_potion(item_def &potion, bool force);
 void potionlike_effect(potion_type effect, int pow, bool was_known = true);
 
 bool mons_benefits_from_potion(const monster& mon, potion_type potion);

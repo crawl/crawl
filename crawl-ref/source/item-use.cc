@@ -1975,16 +1975,17 @@ bool drink(item_def* potion)
 
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
+    bool did_swing = false;
     if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
         && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
     {
-        oni_drunken_swing();
+        did_swing = oni_drunken_swing();
     }
 
     // Check for Delatra's gloves before potentially melding them.
     bool heal_on_id = you.unrand_equipped(UNRAND_DELATRAS_GLOVES);
 
-    if (!quaff_potion(*potion))
+    if (!quaff_potion(*potion, did_swing))
         return false;
 
     // XXX: maybe being a status-effect potion should be in item-prop.cc?

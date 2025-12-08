@@ -975,9 +975,10 @@ static void _handle_potion_fungus(potion_type potion)
  * the player. Does not handle decrementing item quantities.
  *
  * @param potion    The potion (stack) being quaffed.
+ * @param force     Whether to consume the potion even if it is known to be useless.
  * @return          true if the potion was used; false if the player aborted.
  */
-bool quaff_potion(item_def &potion)
+bool quaff_potion(item_def &potion, bool force)
 {
     const bool was_known = item_type_known(potion);
 
@@ -988,7 +989,7 @@ bool quaff_potion(item_def &potion)
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
-    if (get_potion_effect(ptyp)->quaff(was_known))
+    if (get_potion_effect(ptyp)->quaff(was_known && !force))
     {
         if (you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true)
             && you.magic_points < you.max_magic_points)
