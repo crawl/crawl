@@ -445,36 +445,68 @@ void InvMenu::set_page(int page)
 
 bool InvMenu::process_command(command_type cmd)
 {
-    if (flags & MF_PAGED_INVENTORY)
+    switch (cmd)
     {
-        if (cmd == CMD_MENU_ACCEPT_SELECTION)
+        case CMD_MENU_ACCEPT_SELECTION:
         {
-            get_selected(&sel);
-            return false;
+            if (!is_set(MF_PAGED_INVENTORY) && is_disambiguating())
+            {
+                // Exiting a disambiguation menu and returning to the
+                // selection/drop menu.
+                overloaded_hotkey = '\0';
+                restore_previous_menu();
+                return true;
+            }
+            else
+            {
+                get_selected(&sel);
+                return false;
+            }
         }
-        else if (cmd == CMD_MENU_EXIT)
+        case CMD_MENU_EXIT:
         {
-            // Must clear offscreen selection or exiting the menu will still act
-            // upon those items.
-            for (size_t i = 0; i < ARRAYSZ(offscreen_sel); ++i)
-                offscreen_sel[i].clear();
-            sel.clear();
-            lastch = CK_ESCAPE; // XX is this correct?
-            return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+            if (is_set(MF_PAGED_INVENTORY))
+            {
+                // Must clear offscreen selection or exiting the menu will still act
+                // upon those items.
+                for (size_t i = 0; i < ARRAYSZ(offscreen_sel); ++i)
+                    offscreen_sel[i].clear();
+                sel.clear();
+                lastch = CK_ESCAPE; // XX is this correct?
+                return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+            }
+            else if (is_disambiguating())
+            {
+                // Exiting a disambiguation menu and returning to the inventory
+                // menu.
+                overloaded_hotkey = '\0';
+                restore_previous_menu();
+                return true;
+            }
+            else
+            {
+                return Menu::process_command(cmd);
+            }
         }
-        else if (cmd == CMD_MENU_LEFT)
+        case CMD_MENU_LEFT:
         {
-            cycle_page(-1);
-            return true;
+            if (is_set(MF_PAGED_INVENTORY))
+            {
+                cycle_page(-1);
+                return true;
+            }
         }
-        else if (cmd == CMD_MENU_RIGHT)
+        case CMD_MENU_RIGHT:
         {
-            cycle_page(1);
-            return true;
+            if (is_set(MF_PAGED_INVENTORY))
+            {
+                cycle_page(1);
+                return true;
+            }
         }
+        default:
+            return Menu::process_command(cmd);
     }
-
-    return Menu::process_command(cmd);
 }
 
 void InvMenu::select_index(int index, int qty)
@@ -1145,6 +1177,119 @@ int InvMenu::getkey() const
     return mkey;
 }
 
+
+bool InvMenu::disambiguate(int keyin)
+{
+    int matches = 0;
+
+    for (int i = 0; i < static_cast<int>(items.size()); ++i)
+        if (is_hotkey(i, keyin))
+        {
+            matches++;
+        }
+
+    if (matches > 1)
+    {
+        overloaded_hotkey = keyin;
+
+        copy_items(items, previous_items);
+        // Make MenuEntrys for the items which share the same hotkey
+        vector<MenuEntry*> overloaded;
+        menu_letter new_hotkey;
+        for (int i = 0; i < static_cast<int>(items.size()); ++i)
+            if (is_hotkey(i, overloaded_hotkey))
+            {
+                item_def& chosen = you.inv[dynamic_cast<InvEntry*>(items[i])->item->link];
+                InvEntry* ie = new InvEntry(chosen);
+                ie->hotkeys[0] = new_hotkey++;
+                ie->selected_qty = items[i]->selected_qty;
+                overloaded.push_back(ie);
+            }
+
+        clear();
+        for (MenuEntry* me : overloaded)
+        {
+            add_entry(me);
+        }
+
+        update_more();
+        reset();
+        update_menu(true);
+        return true;
+    }
+
+    return false;
+}
+
+bool InvMenu::is_disambiguating() const
+{
+    return (overloaded_hotkey != '\0');
+}
+
+void InvMenu::restore_previous_menu()
+{
+    // Copy selected_qtys into previous_items
+    update_selected_qty(items, previous_items);
+    // Wipe items clean
+    clear();
+    // Fill items with data from previous_items to restore the original menu
+    copy_items(previous_items, items);
+    // Refresh our record of selected items
+    get_selected(&sel);
+
+    update_more();
+    reset();
+    update_menu(true);
+}
+
+void InvMenu::update_selected_qty(vector<MenuEntry*> &A, vector<MenuEntry*> &B)
+{
+    for (MenuEntry* mea : A)
+    {
+        InvEntry *iea = dynamic_cast<InvEntry*>(mea);
+        if (iea)
+        {
+            for (MenuEntry* meb : B)
+            {
+                InvEntry *ieb = dynamic_cast<InvEntry*>(meb);
+                if (ieb)
+                {
+                    if (iea->item->link == ieb->item->link)
+                    {
+                        meb->selected_qty = mea->selected_qty;
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+}
+void InvMenu::copy_items(vector<MenuEntry*> &A, vector<MenuEntry*> &B)
+{
+    // Copy A to B
+    deleteAll(B);
+    for (int i = 0; i < static_cast<int>(A.size()); ++i)
+    {
+        MenuEntry* me = A[i];
+        InvEntry* ie = dynamic_cast<InvEntry*>(me);
+        MenuEntry* new_me;
+        if (ie)
+        {
+            item_def& chosen = you.inv[ie->item->link];
+            new_me = new InvEntry(chosen);
+            new_me->selected_qty = me->selected_qty;
+        }
+        else
+        {
+            new_me = new MenuEntry(*me);
+        }
+        new_me->tag = tag;
+        B.push_back(new_me);
+    }
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 
 bool in_inventory(const item_def &i)
@@ -1460,9 +1605,21 @@ static int _invent_select(const char *title = nullptr,
     return menu.getkey();
 }
 
+
+static string _inv_menu_titlefn(const Menu* menu, const string &)
+{
+    string extra_help = "";
+    const InvMenu *imenu = dynamic_cast<const InvMenu*>(menu);
+    if (imenu && imenu->is_disambiguating())
+    {
+        extra_help = "Please disambiguate. ";
+    }
+
+    return "Inventory: " + extra_help + slot_description();
+}
+
 void display_inventory()
 {
-
     int flags = MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL;
     if (Options.show_paged_inventory)
         flags |= MF_PAGED_INVENTORY;
@@ -1470,8 +1627,10 @@ void display_inventory()
         flags |= MF_SELECT_BY_CATEGORY;
 
     InvMenu menu(flags);
+    menu.set_title_annotator(_inv_menu_titlefn);
     menu.load_inv_items(Options.show_paged_inventory ? OSEL_GEAR : OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
+
 
     // Jump to the first non-empty page.
     if ((flags & MF_PAGED_INVENTORY) && menu.item_count(false) == 0)
@@ -1485,9 +1644,22 @@ void display_inventory()
     }
 }
 
-static string _drop_menu_titlefn(const Menu*, const string &)
+static string _drop_menu_titlefn(const Menu* menu, const string &)
 {
-    return "Drop what? (Left/Right to switch category) " + slot_description() + " (_ for help)";
+    string extra_help = "";
+    if (menu->is_set(MF_PAGED_INVENTORY))
+    {
+        extra_help = "(Left/Right to switch category) ";
+    }
+    else
+    {
+        const InvMenu *imenu = dynamic_cast<const InvMenu*>(menu);
+        if (imenu && imenu->is_disambiguating())
+        {
+            extra_help = "Please disambiguate. ";
+        }
+    }
+    return "Drop what? " + extra_help + slot_description() + " (_ for help)";
 }
 
 /**
@@ -1502,16 +1674,29 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
     vector<SelItem> items;
 
     // multi-select some items to drop
+    int flags = MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY;
+    int item_selector;
+
+    if (Options.show_paged_inventory)
+    {
+        flags |=  MF_PAGED_INVENTORY;
+        item_selector = OSEL_GEAR;
+    }
+    else
+    {
+        item_selector = OSEL_ANY;
+    }
+
     _invent_select("",
-                      menu_type::drop,
-                      OSEL_GEAR,
-                      -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY | MF_PAGED_INVENTORY,
-                      _drop_menu_titlefn,
-                      &items,
-                      &Options.drop_filter,
-                      nullptr,
-                      &preselected_items);
+                   menu_type::drop,
+                   item_selector,
+                   -1,
+                   flags,
+                   _drop_menu_titlefn,
+                   &items,
+                   &Options.drop_filter,
+                   nullptr,
+                   &preselected_items);
 
     return items;
 }
@@ -1884,7 +2069,7 @@ int prompt_invent_item(const char *prompt,
                 keyin = _invent_select(
                     current_type_expected == OSEL_ANY && view_all_prompt
                         ? view_all_prompt : prompt,
-                    mtype, current_type_expected, -1, mflags, nullptr, &items);
+                    mtype, current_type_expected, -1, mflags, _inv_menu_titlefn, &items);
 
                 if (allow_list_known && keyin == '\\')
                 {
