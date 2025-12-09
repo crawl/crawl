@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 
 #include "beh-type.h"
@@ -66,6 +67,7 @@ void schedule_infestation_death_fineff(coord_def pos, const string& name);
 void schedule_make_derived_undead_fineff(coord_def pos, mgen_data mg, int xl,
                                          const string& agent,
                                          const string& msg,
+                                         function<bool ()> should_trigger = []() { return true; },
                                          bool act_immediately = false);
 void schedule_mummy_death_curse_fineff(const actor* attack,
                                        const monster* dead_mummy,
