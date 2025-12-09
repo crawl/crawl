@@ -990,6 +990,13 @@ w:2
 w:1
 @changeable non-randgen graffiti author name@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
+graffiti_author_vengeance
+
+@graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
+
+# Vengeance is more common among orcs.
+@orc graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
+%%%%
 graffiti_fight
 
 of an argument between @graffiti author name@ and @graffiti author name@
@@ -1490,8 +1497,6 @@ graffiti_short_saying
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
 
-@orc graffiti author name@ swears vengeance on @graffiti author name@
-
 the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @graffiti author name@ sells [inferior|superior] wares
@@ -1519,6 +1524,8 @@ what happened to @graffiti author name@ was @graffiti_happened_reason@
 @graffiti author name@ secretly worships @random_god_good@[| instead of @random_god_evil@]
 
 @graffiti author name@ secretly worships @random_god_evil@[| instead of @random_god_good@]
+
+@graffiti_author_vengeance@
 
 w:2
 @graffiti_author_changed_names@
@@ -1589,6 +1596,28 @@ graffiti of unreadable @writing_type@
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@
 
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@ and a signature by @graffiti author name@
+%%%%
+graffiti_vengeance_reason
+
+abandoning @graffiti author name@
+
+abandoning them
+
+betraying @graffiti author name@
+
+betraying them
+
+killing @graffiti author name@
+
+killing them
+
+stealing from @graffiti author name@
+
+stealing from them
+
+wounding @graffiti author name@
+
+wounding them
 %%%%
 graffiti_with_signature_maybe
 
