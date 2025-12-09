@@ -3400,7 +3400,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         for (distance_iterator di(mons.pos(), false, true, LOS_RADIUS); di; ++di)
             if (monster* mon = monster_at(*di))
-                mon->daze(random_range(7, 12));
+                if (!mon->wont_attack())
+                    mon->daze(random_range(7, 12));
     }
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
