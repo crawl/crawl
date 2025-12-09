@@ -231,8 +231,9 @@ static void _monster_headsup(const vector<monster*> &monsters,
             continue;
 
         // Put equipment messages on a new line if there's more than one monster.
+        // (But skip the leading space if nothing else is in this message.)
         if (listed == 0)
-            out << (monsters.size() > 1 ? "\n" : " ");
+            out << (monsters.size() > 1 ? "\n" : out.tellp() > 0 ? " " : "");
         else
             out << " ";
 
