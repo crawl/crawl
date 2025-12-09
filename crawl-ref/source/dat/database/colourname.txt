@@ -1128,6 +1128,8 @@ of an artificer club [testing|tinkering with] [devices|evokables|wands]
 
 of a master class on insults being taught by imps
 
+of a master class on the uses of giant clubs being taught by ogres
+
 of a @graffiti_remedial_class@
 
 of a support group for veterans of the surface wars
