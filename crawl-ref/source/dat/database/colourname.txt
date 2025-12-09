@@ -994,8 +994,13 @@ graffiti_author_vengeance
 
 @graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
 
+the ghost of @graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
+
 # Vengeance is more common among orcs.
+
 @orc graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
+
+the ghost of @orc graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
 %%%%
 graffiti_fight
 
@@ -1496,8 +1501,6 @@ graffiti_short_saying
 @graffiti author name@ @graffiti_loves_or_hates@[| @graffiti_relative_or_quality@ of] @graffiti author name@
 
 @graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
-
-the ghost of @graffiti author name@ still haunts @graffiti author name@
 
 @graffiti author name@ sells [inferior|superior] wares
 
