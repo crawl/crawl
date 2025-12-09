@@ -2251,8 +2251,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.markers.activate_all(message);
     }
 
-    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
+    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek
+        && stair_taken != DNGN_EXIT_ARENA)
+    {
         update_level(you.elapsed_time - env.elapsed_time);
+    }
 
     // Apply all delayed actions, if any. TODO: logic for marshalling this is
     // kind of odd.
