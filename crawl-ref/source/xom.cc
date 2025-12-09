@@ -4233,19 +4233,7 @@ static void _xom_grants_word_of_recall(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
 }
 
-static bool _has_min_banishment_level()
-{
-    int min = you.penance[GOD_XOM] ? 6 : 9;
-    return you.experience_level >= min;
-}
-
-// Rolls whether banishment will be averted.
-static bool _will_not_banish()
-{
-    return x_chance_in_y(5, you.experience_level);
-}
-
-// Disallow early banishment and make it much rarer later-on.
+// Disallow early banishment and make it rarer at lower XL in general.
 // While Xom is bored, the chance is increased.
 static bool _allow_xom_banishment()
 {
@@ -4253,20 +4241,11 @@ static bool _allow_xom_banishment()
     if (player_under_penance(GOD_XOM))
         return true;
 
-    // If Xom is bored or wrathful, banishment becomes viable earlier.
-    if (_xom_feels_nasty())
-        return !_will_not_banish();
+    if (you.experience_level < 9)
+        return false;
 
-    // Below the minimum experience level, only fake banishment is allowed.
-    if (!_has_min_banishment_level())
-    {
-        // Allow banishment; it will be retracted right away.
-        if (one_chance_in(5) && x_chance_in_y(you.raw_piety, 1000))
-            return true;
-        else
-            return false;
-    }
-    else if (_will_not_banish())
+    const int lv = min(you.experience_level - 9, 11) + (_xom_is_bored() ? 10 : 0);
+    if (!x_chance_in_y(lv, lv + 5))
         return false;
 
     return true;
@@ -4958,7 +4937,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     },
     {
         XOM_BAD_PSEUDO_BANISHMENT, 2, 1, [](int /*sv*/, int /*tn*/)
-        {return !_xom_feels_nasty() && _allow_xom_banishment()
+        {return !_xom_feels_nasty()
                 && !player_in_branch(BRANCH_ABYSS)
                 && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
     },
