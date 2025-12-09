@@ -8130,8 +8130,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             if (_can_injury_bond(*mons, **mi))
             {
                 mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, mons,
-                                               40 + random2(80));
-                mi->add_ench(bond);
+                                               70 + random2(80));
                 mi->add_ench(bond, false);
             }
         }

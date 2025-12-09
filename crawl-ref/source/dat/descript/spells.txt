@@ -1035,8 +1035,8 @@ death.
 %%%%
 Injury Bond spell
 
-Binds the caster to nearby allies, redirecting half of any damage they suffer
-to the caster.
+Binds the caster to nearby allies, reducing all damage they take by half in
+exchange for suffering half of the prevented damage themselves.
 %%%%
 Injury Mirror spell
 

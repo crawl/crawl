@@ -4247,7 +4247,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 if (split > 0)
                 {
                     schedule_deferred_damage_fineff(agent, guardian,
-                                                    split, false);
+                                                    split / 2, false);
                     amount -= split;
                 }
             }

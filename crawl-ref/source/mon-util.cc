@@ -1476,8 +1476,8 @@ int mons_class_regen_amount(monster_type mc)
     case MONS_PARGHIT:            return 27;
     case MONS_DEMONIC_CRAWLER:
     case MONS_PROTEAN_PROGENITOR:
-    case MONS_ASPIRING_FLESH:
-    case MONS_MARTYRED_SHADE:     return 6;
+    case MONS_ASPIRING_FLESH:       return 6;
+    case MONS_MARTYRED_SHADE:       return 4;
     case MONS_BOUNDLESS_TESSERACT: return 10;
     default:                      return 1;
     }
