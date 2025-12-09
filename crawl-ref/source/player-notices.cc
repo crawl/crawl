@@ -60,11 +60,12 @@ static bool _check_monster_alert(const monster& mon)
     if (!mon.alive())
         return false;
 
-    if (Options.monster_alert[mon.type]
-        || Options.monster_alert_uniques && mons_is_unique(mon.type)
-        || Options.monster_alert_min_threat < MTHRT_UNDEF
-           && mons_threat_level(mon) >= Options.monster_alert_min_threat
-        || Options.monster_alert_unusual && monster_info(&mon).has_unusual_items())
+    if ((Options.monster_alert[mon.type]
+         || Options.monster_alert_uniques && mons_is_unique(mon.type)
+         || Options.monster_alert_min_threat < MTHRT_UNDEF
+            && mons_threat_level(mon) >= Options.monster_alert_min_threat
+         || Options.monster_alert_unusual && monster_info(&mon).has_unusual_items())
+        && !mon.is_firewood())
     {
         // If the player encountered this by moving, make sure to actually
         // draw the monster we're warning about.
