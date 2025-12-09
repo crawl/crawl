@@ -1335,6 +1335,8 @@ the child
 
 the children
 
+the clan
+
 the dexterity
 
 the entire species
