@@ -65,7 +65,7 @@ static bool _check_monster_alert(const monster& mon)
          || Options.monster_alert_min_threat < MTHRT_UNDEF
             && mons_threat_level(mon) >= Options.monster_alert_min_threat
          || Options.monster_alert_unusual && monster_info(&mon).has_unusual_items())
-        && !mon.is_firewood())
+        && !mon.is_firewood() && !mons_att_wont_attack(mon.attitude))
     {
         // If the player encountered this by moving, make sure to actually
         // draw the monster we're warning about.
