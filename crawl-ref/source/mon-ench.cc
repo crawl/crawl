@@ -165,7 +165,7 @@ void monster::update_ench(const mon_enchant &ench)
     }
 }
 
-bool monster::add_ench(const mon_enchant &ench)
+bool monster::add_ench(const mon_enchant &ench, bool stack_duration)
 {
     // silliness
     if (ench.ench == ENCH_NONE)
@@ -190,7 +190,12 @@ bool monster::add_ench(const mon_enchant &ench)
     bool new_enchantment = false;
     mon_enchant *added = map_find(enchantments, ench.ench);
     if (added)
+    {
+        const int old_dur = added->duration;
         *added += ench;
+        if (!stack_duration)
+            added->duration = max(old_dur, ench.duration);
+    }
     else
     {
         new_enchantment = true;

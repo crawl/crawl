@@ -166,14 +166,8 @@ bool enfeeble_monster(monster &mon, int pow)
     {
         if (hex == ENCH_DAZED)
             mon.daze(random_range(3, 5));
-        else if (mon.has_ench(hex))
-        {
-            mon_enchant ench = mon.get_ench(hex);
-            ench.duration = max(dur * BASELINE_DELAY, ench.duration);
-            mon.update_ench(ench);
-        }
         else
-            mon.add_ench(mon_enchant(hex, &you, dur * BASELINE_DELAY));
+            mon.add_ench(mon_enchant(hex, &you, dur * BASELINE_DELAY), false);
     }
 
     if (res_margin > 0)
