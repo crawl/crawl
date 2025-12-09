@@ -1516,7 +1516,8 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             break;
     }
 
-    player_attempted_attack(false);
+    if (agent.is_player())
+        player_attempted_attack(false);
 
     return spret::success;
 }
