@@ -1426,6 +1426,9 @@ lauding Zin and Zin's laws
 lauding Zin and talking about how following Zin's laws is essential
 
 lauding Zin and talking about how those who break Zin's laws deserve punishment
+
+# Paradox!
+lauding Zin but warning that putting graffiti on surfaces is often unlawful
 %%%%
 graffiti_religion_orc
 
@@ -1434,6 +1437,8 @@ proselytising for Beogh and proper orcishness
 proclaiming that Beogh's messiah will soon come
 
 thanking Beogh for granting salvation while the other gods just watched
+
+talking about how Beogh will help you when the other gods turn away from you
 %%%%
 graffiti_remedial_class
 
