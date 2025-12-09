@@ -3366,7 +3366,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Must be done after health is set to zero and monster is properly marked dead.
-    if (mons.type == MONS_BOUNDLESS_TESSERACT && you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
+    if (mons.type == MONS_BOUNDLESS_TESSERACT && killer != KILL_RESET)
     {
         you.props.erase(TESSERACT_SPAWN_COUNTER_KEY);
 
