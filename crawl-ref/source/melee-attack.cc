@@ -2922,19 +2922,13 @@ void melee_attack::set_attack_verb(int damage)
 
     case DAM_WHIP:
         if (damage < HIT_MED)
-            attack_verb = "whack";
+            attack_verb = "flog";
         else if (damage < HIT_STRONG)
-            attack_verb = "thrash";
+            attack_verb = "flagellate";
         else
         {
-            if (defender->holiness() & (MH_HOLY | MH_NATURAL | MH_DEMONIC))
-            {
-                attack_verb = "punish";
-                verb_degree = ", causing immense pain";
-                break;
-            }
-            else
-                attack_verb = "devastate";
+            attack_verb = "thrash";
+            verb_degree = "mercilessly";
         }
         break;
 
