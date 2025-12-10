@@ -2658,7 +2658,8 @@ vector<monster *> just_seen_queue;
 
 void mons_set_just_seen(monster *mon)
 {
-    just_seen_queue.push_back(mon);
+    if (!mon->is_firewood())
+        just_seen_queue.push_back(mon);
 }
 
 void mons_reset_just_seen()
