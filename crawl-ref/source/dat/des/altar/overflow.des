@@ -362,8 +362,9 @@ MAP
   vvv....
 ENDMAP
 
-NAME: nicolae_ashenzari_crystal_shattered
-TAGS: transparent decor
+NAME:   nicolae_ashenzari_crystal_shattered
+TAGS:   transparent decor
+WEIGHT: 7
 # Couldn't get the subvaulting working, so it's time for a zillion (20) glyphs.
 : local glifz = "DEFHJKLMNOPQRSZapqrs"
 : for i = 1, string.len(glifz), 1 do
@@ -638,7 +639,7 @@ ENDMAP
 
 NAME:  nicolae_cheibriados_time_spiral
 TAGS:  transparent decor
-SUBST: c : cvb
+SUBST: c : ccvvb
 : standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
 MAP
    ......
@@ -783,7 +784,7 @@ NAME:   nicolae_dithmenos_dark_matter_galaxy
 TAGS:   transparent decor
 COLOUR: x = magenta, ` = lightmagenta
 FTILE:  `_x = floor_pebble_darkgray
-TILE:   x : wall_pebble_darkgray
+TILE:   x = wall_pebble_darkgray
 : standard_overflow_setup(_G, { { "dithmenos", "_" } }, true)
 MAP
  ......
@@ -1024,6 +1025,7 @@ ENDMAP
 # https://www.youtube.com/watch?v=KNfjpmvbQG0
 NAME:   nicolae_elyvilon_little_fluffy_clouds
 TAGS:   transparent decor
+WEIGHT: 7
 KITEM:  _ = none w:100 / orb / orb ego:light w:1
 MARKER: _ = lua:fog_machine{cloud_type = "white fluffiness", pow_min = 10, \
              pow_max = 15, delay_min = 20, delay_max = 30, size = 1, \
@@ -1043,8 +1045,9 @@ ENDMAP
 
 NAME:   nicolae_elyvilon_pacification_demonstration
 TAGS:   transparent decor no_trap_gen no_monster_gen no_item_gen
+WEIGHT: 7
 KMONS:  1 = common demon att:neutral w:60 / phantom att:neutral / \
-            wraith att:neutral / necrophage att:neutral / \
+            wraith att:neutral / bes kemwar att:neutral / \
             mummy att:neutral / wight att:neutral / vampire att:neutral
 NSUBST: ` = 4=f / 4=f` / 4=1 / 4=1` / `
 KMASK:  1n`f = opaque
@@ -1853,6 +1856,7 @@ ENDMAP
 
 NAME:    nicolae_hepliaklqana_hall_of_mighty_ancestors
 TAGS:    decor transparent
+DEPTH:   D:3-
 SHUFFLE: PQ
 SUBST:   P = +, Q : xx+, + : +++@
 # note to self: add dngn_statue_dwarf once that bug gets fixed
@@ -1860,6 +1864,7 @@ TILE:    G = dngn_statue_ancient_hero w:2 / dngn_statue_archer / \
              dngn_statue_axe / dngn_statue_cat w:2 / dngn_statue_centaur / \
              dngn_statue_mermaid / dngn_statue_naga / \
              dngn_statue_polearm / dngn_statue_princess / dngn_statue_tengu
+: end
 : standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
 MAP
  xxxPxxx
@@ -2101,7 +2106,7 @@ ENDMAP
 NAME:   nicolae_kikubaaqudgha_piles_of_ancient_bones
 TAGS:   transparent no_trap_gen no_monster_gen
 DEPTH:  D:3-, Depths, Crypt
-KMONS:  _ = draugr / 9 draugr w:2
+KMONS:  _ = draugr
 KMONS:  1 = zombie / 9 zombie w:2 / nothing
 # Sometimes ends up with invertebrate corpses instead of skeletons, which is
 # somewhat off-theme but Kikubaaqudgha likes corpses too so I'll let it slide.
@@ -3243,10 +3248,11 @@ ENDMAP
 
 # "Aurora borealis? At this time of year, at this time of day, in this branch of
 # the dungeon, localized entirely within your altar room?"
-NAME:   nicolae_qazlal_console_elemental
-TAGS:   transparent decor
-COLOUR: @._m = elemental
-FTILE:  @._m = floor_rough
+NAME:    nicolae_qazlal_console_elemental
+TAGS:    transparent decor
+WEIGHT:  7
+COLOUR:  @._m = elemental
+FTILE:   @._m = floor_rough
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
 MAP
 mm@mm
@@ -3408,12 +3414,13 @@ ENDMAP
 # The code is copied more or less verbatim from nicolae_arrival_memento_mori,
 # although a lot of the relevant code in that vault was edited by amalloy, so I
 # can't take all the credit.
-NAME:  nicolae_ru_cut_away_your_false_body!
-TAGS:  transparent decor no_monster_gen
-KITEM: d = dagger
-SUBST: - = `-
-KPROP: du`_ = bloody
-FTILE: du_`-' = floor_w_marble
+NAME:   nicolae_ru_cut_away_your_false_body!
+TAGS:   transparent decor no_monster_gen uniq_your_own_corpse
+WEIGHT: 2
+KITEM:  d = dagger
+SUBST:  - = `-
+KPROP:  du`_ = bloody
+FTILE:  du_`-' = floor_w_marble
 : local race = you.race()
 : local mons = you.monster()
 : local yourname = string.gsub(you.name(), " ", "_")
@@ -3961,10 +3968,11 @@ cxxx.."..."..."..xxxc
 ENDMAP
 
 NAME:   nicolae_trog_berserking_free_trial
-TAGS:   transparent
+TAGS:   transparent patrolling
 DEPTH:  D:3-10
 KMONS:  1 = kobold ; dart ego:datura
 KMONS:  2 = kobold brigand ; dart ego:datura
+KFEAT:  M = iron_grate
 : if you.depth() >= 8 then
 SUBST:  1 = 2
 : elseif you.depth() >= 6 then
@@ -3976,9 +3984,9 @@ NSUBST: 1 = 1 / .
 : standard_overflow_setup(_G, { { "trog", "_" } }, false)
 MAP
 .........
-.xG...Gx.
+.xM...Mx.
 .x1._.1x.
-.xG...Gx.
+.xM...Mx.
 .........
 ENDMAP
 
@@ -4139,6 +4147,7 @@ KMONS:  3 = orc warrior / troll / vampire / gargoyle / tengu warrior w:5 / \
 KMONS:  4 = vampire knight / kobold fleshcrafter / tengu reaver / \
             spriggan defender / deep troll earth mage w:5 / \
             deep troll shaman w:5
+KITEM:  4 = % no_pickup / $ no_pickup
 : if you.in_branch("D") then
 :     if you.depth() <= 6 then
 NSUBST: - = 4=1 / 4=1. / .
@@ -4326,10 +4335,11 @@ x.LJ.FDEDF.JL.x
      xxxxx
 ENDMAP
 
-NAME:   nicolae_vehumet_console_conduits
-TAGS:   transparent decor
-COLOUR: bG`_ = vehumet
-FTILE:  bG`_ = floor_rough
+NAME:    nicolae_vehumet_console_conduits
+TAGS:    transparent decor
+WEIGHT:  7
+COLOUR:  bG`_ = vehumet
+FTILE:   bG`_ = floor_rough
 : vault_metal_statue_setup(_G, "G", "arcane conduit")
 : standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
 MAP
@@ -4364,10 +4374,10 @@ KMONS:   1 = orc wizard
 KMONS:   2 = white imp
 :     elseif you.depth() <= 12 then
 KMONS:   1 = deep elf pyromancer
-KMONS:   2 = deep elf zephyrmancer
+KMONS:   2 = arcanist
 :     else -- D:13-15
 KMONS:   1 = occultist
-KMONS:   2 = arcanist
+KMONS:   2 = deep elf zephyrmancer
 :     end
 :     if you.depth() >= 5 and you.depth() <= 12 then
 KMONS:   _ = kobold geomancer
@@ -5365,11 +5375,16 @@ ENDMAP
 NAME:   nicolae_yredelemnul_columnar_basalt
 TAGS:   transparent decor
 KMONS:  1 = zombie
+: if you.depth() <= 5 then
+KMONS:  _ = zombie
+SUBST:  1 = .
+: else
 NSUBST: 1 = 2=1 / 2=1. / .
+: end
 SUBST:  D = cccc., . = ....`
 COLOUR: c. = darkgrey
 FTILE:  1c_. = floor_depthstone
-TILE:   c = dngn_stone_dark
+TILE:   c = floor_cobble_blood
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
    ```DDD```
@@ -5412,13 +5427,14 @@ xt-.......-tx
 xxxx-.@.-xxxx
 ENDMAP
 
-NAME:  nicolae_yredelemnul_rated_r_for_profanity
-TAGS:  transparent decor
-KMONS: 1 = profane servitor
-KMASK: 1 = opaque
-KMASK: 1 = no_trap_gen
-KMASK: 1 = no_item_gen
-KPROP: 1 = no_tele_into
+NAME:   nicolae_yredelemnul_rated_r_for_profanity
+TAGS:   transparent decor
+WEIGHT: 3
+KMONS:  1 = profane servitor
+KMASK:  1 = opaque
+KMASK:  1 = no_trap_gen
+KMASK:  1 = no_item_gen
+KPROP:  1 = no_tele_into
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
 xxxxxxxxxxx
@@ -5609,13 +5625,14 @@ ENDMAP
 
 NAME:    nicolae_zin_hit_'em_with_the_salt
 TAGS:    decor transparent
+WEIGHT:  5
 # p = Demon, q = Undead, r = Unclean (but not demon/undead/chaotic), s = Chaotic
 KMONS:   p = greater demon-shaped pillar of salt
 KMONS:   q = lich-shaped pillar of salt / curse skull-shaped pillar of salt / \
            vampire mage-shaped pillar of salt / \
            guardian mummy-shaped pillar of salt
 KMONS:   r = ancient zyme-shaped pillar of salt / \
-           tyrant leech-shaped pillar of salt / culicivora-shaped pillar of salt
+           tyrant leech-shaped pillar of salt / radroach-shaped pillar of salt
 KMONS:   s = very ugly thing-shaped pillar of salt / \
            large abomination-shaped pillar of salt / \
            shapeshifter-shaped pillar of salt
@@ -5817,6 +5834,7 @@ ENDMAP
 
 NAME:   nicolae_tso_fravashi_hole
 TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+WEIGHT: 3
 KMONS:  1 = fravashi
 KMONS:  2 = deep elf blademaster ; short sword ego:holy_wrath . \
               short sword ego:holy_wrath . pearl dragon scales
