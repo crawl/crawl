@@ -917,8 +917,6 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
         else
             mpr("Walls emerge from the floor!");
 
-        you.update_beholders();
-        you.update_fearmongers();
         const int tomb_duration = BASELINE_DELAY * pow;
         env.markers.add(new map_tomb_marker(where,
                                             tomb_duration,

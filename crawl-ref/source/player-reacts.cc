@@ -594,6 +594,11 @@ void player_reacts_to_monsters()
 
     you.props.erase(PYROMANIA_TRIGGERED_KEY);
     you.shouted_pos.reset();
+
+    // Cloud spreading or monster actions may have changed the player's LoS,
+    // so check these again now.
+    you.update_beholders();
+    you.update_fearmongers();
 }
 
 static bool _check_recite()

@@ -228,9 +228,6 @@ spret cast_silence(int pow, bool fail)
                             + random2avg(div_rand_round(pow,2), 2), 100);
     invalidate_agrid(true);
 
-    if (you.beheld())
-        you.update_beholders();
-
     learned_something_new(HINT_YOU_SILENCE);
     return spret::success;
 }
