@@ -624,7 +624,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Dithmenos
         { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
-            4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
+            4, 60, 4, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
         { ABIL_DITHMENOS_APHOTIC_MARIONETTE, "Aphotic Marionette",
             5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
         { ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL, "Primordial Nightfall",
