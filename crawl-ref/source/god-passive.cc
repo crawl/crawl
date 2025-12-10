@@ -971,12 +971,16 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     // If a player shadow already exists, remove it first.
     // But save some state, in case it was currently in decoy mode.
     int decoy_duration = 0;
+    int decoy_hp = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mons_is_player_shadow(**mi))
         {
             if (mi->has_ench(ENCH_CHANGED_APPEARANCE))
+            {
                 decoy_duration = mi->get_ench(ENCH_CHANGED_APPEARANCE).duration;
+                decoy_hp = mi->hit_points;
+            }
             monster_die(**mi, KILL_RESET, true);
             break;
         }
@@ -1012,7 +1016,7 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     mg.hp = 5 + you.experience_level * 3 / 2;
     // Preserve the health boost from an active decoy
     if (decoy_duration > 0)
-        mg.hp += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
+        mg.hp += you.skill_rdiv(SK_INVOCATIONS, 5, 2);
 
     if (!friendly)
         mg.hp = mg.hp * 2;
@@ -1077,6 +1081,7 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
                 mi->update_ench(en);
             }
         }
+        mon->hit_points = decoy_hp;
     }
 
     return mon;

@@ -2916,7 +2916,7 @@ spret dithmenos_shadowslip(bool fail)
     mon_enchant timer = shadow->get_ench(ENCH_SUMMON_TIMER);
     timer.duration = max(timer.duration, dur);
     shadow->update_ench(timer);
-    shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
+    shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 5, 2);
     shadow->hit_points = shadow->max_hit_points;
     shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
 
