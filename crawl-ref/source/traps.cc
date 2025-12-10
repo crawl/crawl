@@ -989,7 +989,7 @@ void do_trap_effects()
     //  it would be into a dangerous end.
     if (_is_valid_shaft_effect_level() && you.shaftable())
         available_traps.push_back(TRAP_SHAFT);
-    // No alarms on the first 3 floors
+    // No alarms on the first 4 floors
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
 
