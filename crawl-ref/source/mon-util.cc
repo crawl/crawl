@@ -1917,8 +1917,6 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     {
         if (m.has_ench(ENCH_FIRE_CHAMPION))
             attk.flavour = AF_FIRE;
-        else if (m.has_ench(ENCH_CHAOS_LACE))
-            attk.flavour = AF_CHAOTIC;
 
         if (mon.type == MONS_PLAYER_SHADOW)
         {

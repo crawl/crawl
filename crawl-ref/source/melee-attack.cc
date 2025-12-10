@@ -3672,16 +3672,8 @@ bool melee_attack::mons_attack_effects()
     {
         mons_apply_attack_flavour();
 
-        if (needs_message && !special_damage_message.empty())
-            mpr(special_damage_message);
-
-        if (special_damage > 0 && defender->alive())
-        {
-            inflict_damage(special_damage, special_damage_flavour);
-            special_damage = 0;
-            special_damage_message.clear();
-            special_damage_flavour = BEAM_NONE;
-        }
+        if (attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
+            mons_apply_attack_flavour(AF_CHAOTIC);
     }
 
     if (defender->is_player())
@@ -3769,11 +3761,17 @@ static bool _attack_flavour_needs_living_defender(attack_flavour flavour)
     }
 }
 
-void melee_attack::mons_apply_attack_flavour()
+void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
 {
+    if (!attacker->alive())
+        return;
+
     // Most of this is from BWR 4.1.2.
 
-    attack_flavour flavour = attk_flavour;
+    // If unspecified, use standard flavour for this attack.
+    if (flavour == AF_PLAIN)
+        flavour = attk_flavour;
+
     if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
 
@@ -4402,6 +4400,17 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
 
+    }
+
+    if (needs_message && !special_damage_message.empty())
+        mpr(special_damage_message);
+
+    if (special_damage > 0 && defender->alive())
+    {
+        inflict_damage(special_damage, special_damage_flavour);
+        special_damage = 0;
+        special_damage_message.clear();
+        special_damage_flavour = BEAM_NONE;
     }
 }
 

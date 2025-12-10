@@ -3533,9 +3533,7 @@ int monster::known_chaos(bool check_spells_god) const
         chaotic++;
     }
 
-    // No kiting monsters over to harlequin traps for silver vulnerability.
-    // It's a temporary affliction, anyway.
-    if (has_attack_flavour(AF_CHAOTIC) && !(has_ench(ENCH_CHAOS_LACE)))
+    if (has_attack_flavour(AF_CHAOTIC))
         chaotic++;
 
     if (is_chaotic_god(god))
