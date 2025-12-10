@@ -105,7 +105,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SIGN_OF_RUIN,    MB_SIGN_OF_RUIN },
     { ENCH_SAP_MAGIC,       MB_SAP_MAGIC },
     { ENCH_CORROSION,       MB_CORROSION },
-    { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
+    { ENCH_DEFLECT_MISSILES,MB_DEFLECT_MSL },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },

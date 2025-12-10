@@ -58,7 +58,7 @@ static const vector<mon_aura_data> aura_map =
         ENCH_INJURY_BOND, 30, false},
 
     {MONS_POLTERGUARDIAN,
-        ENCH_REPEL_MISSILES, 1, false},
+        ENCH_DEFLECT_MISSILES, 1, false},
 
     {MONS_GLOWING_ORANGE_BRAIN,
         ENCH_EMPOWERED_SPELLS, 1, false,

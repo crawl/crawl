@@ -6,7 +6,6 @@ conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
 magnavolt MAGNAVOLT
 maxwells MAXWELLS_COUPLING
-repel_missiles REPEL_MISSILES
 shock SHOCK
 silence SILENCE
 static_discharge STATIC_DISCHARGE
@@ -234,6 +233,7 @@ create_tentacles CREATE_TENTACLES
 creeping_frost CREEPING_FROST
 crystallising_shot CRYSTALLISING_SHOT
 death_rattle DEATH_RATTLE
+deflect_missiles DEFLECT_MISSILES
 dimensional_anchor DIMENSIONAL_ANCHOR
 diminish_spells DIMINISH_SPELLS
 dominate_undead DOMINATE_UNDEAD

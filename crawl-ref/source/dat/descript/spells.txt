@@ -477,6 +477,11 @@ Debugging Ray spell
 
 Fires a ray which does massive damage (1500 hp) and always hits.
 %%%%
+Deflect Missiles spell
+
+Envelops the caster in a repulsion field, greatly increasing their evasion
+against all types of projectile - even while otherwise incapacitated.
+%%%%
 Detonation Catalyst spell
 
 Affixes a volatile catalyst to the caster's fists or melee weapon, causing each
@@ -1655,11 +1660,6 @@ Casting this spell temporarily drains *all* of the caster's remaining magical
 power to constitute the blade, but this energy will be returned to them as soon
 as the blade ceases to exist. Each point of magical power sequestered this way
 slightly increases the damage the blade inflicts.
-%%%%
-Repel Missiles spell
-
-Envelops the caster in a repulsion field, increasing their evasion against all
-types of projectile - even while otherwise incapacitated.
 %%%%
 Resonance Strike spell
 

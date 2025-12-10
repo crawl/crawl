@@ -2735,7 +2735,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
 static void _xom_hyper_enchant_monster(int sever)
 {
     vector<enchant_type> buff_list { ENCH_MIGHT, ENCH_HASTE, ENCH_INVIS,
-                                     ENCH_EMPOWERED_SPELLS, ENCH_REPEL_MISSILES,
+                                     ENCH_EMPOWERED_SPELLS, ENCH_DEFLECT_MISSILES,
                                      ENCH_RESISTANCE, ENCH_REGENERATION,
                                      ENCH_STRONG_WILLED, ENCH_TOXIC_RADIANCE,
                                      ENCH_DOUBLED_VIGOUR, ENCH_MIRROR_DAMAGE,
@@ -2817,7 +2817,7 @@ static void _xom_hyper_enchant_monster(int sever)
                 continue;
             }
 
-            if (apply == ENCH_REPEL_MISSILES || apply == ENCH_REGENERATION
+            if (apply == ENCH_DEFLECT_MISSILES || apply == ENCH_REGENERATION
                 || apply == ENCH_TOXIC_RADIANCE || apply == ENCH_MIRROR_DAMAGE
                 || apply == ENCH_SWIFT)
             {

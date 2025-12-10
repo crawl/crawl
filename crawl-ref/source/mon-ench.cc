@@ -826,9 +826,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " seems less drained.");
         break;
 
-    case ENCH_REPEL_MISSILES:
+    case ENCH_DEFLECT_MISSILES:
         if (!quiet)
-            simple_monster_message(*this, " is no longer repelling missiles.");
+            simple_monster_message(*this, " is no longer deflecting missiles.");
         break;
 
     case ENCH_RESISTANCE:
@@ -1366,7 +1366,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
     case ENCH_MAGNETISED:
-    case ENCH_REPEL_MISSILES:
+    case ENCH_DEFLECT_MISSILES:
     case ENCH_MISDIRECTED:
     case ENCH_CHANGED_APPEARANCE:
     case ENCH_KINETIC_GRAPNEL:
@@ -2109,9 +2109,9 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "gold_lust",
 #endif
-    "drained", "repel_missiles",
+    "drained", "deflect_missiles",
 #if TAG_MAJOR_VERSION == 34
-    "deflect missiles",
+    "deflect missiles old",
     "negative_vuln", "condensation_shield",
 #endif
     "resistant", "hexed",

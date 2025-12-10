@@ -361,6 +361,11 @@ Debugging Ray spell
 
 射出一道能造成巨大伤害（1500 hp）的射线，而且百发百中。
 %%%%
+Deflect Missiles spell
+
+降低施法者受到投射攻击的几率，使其更容易躲闪。
+单目标性攻击比穿透性攻击更容易回避。
+%%%%
 Dig spell
 
 从未成形的岩石中挖出一条通道。
@@ -1017,11 +1022,6 @@ Pyroclastic Surge spell
 Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
-%%%%
-Repel Missiles spell
-
-降低施法者受到投射攻击的几率，使其更容易躲闪。
-单目标性攻击比穿透性攻击更容易回避。
 %%%%
 Resonance Strike spell
 

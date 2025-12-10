@@ -929,7 +929,7 @@ public:
     int shield_bonus() const override;
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *attacker) override;
-    bool missile_repulsion() const override;
+    int missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty(bool archery = false) const;

@@ -3566,7 +3566,7 @@ bool bolt::misses_player()
 
     defer_rand r;
 
-    const int repel = you.missile_repulsion() ? REPEL_MISSILES_EV_BONUS : 0;
+    const int repel = you.missile_repulsion();
     dodge += repel;
 
     const int hit_margin = you.duration[DUR_AUTODODGE] ? -1000
@@ -5663,7 +5663,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
     defer_rand r;
-    const int repel = mon->missile_repulsion() ? REPEL_MISSILES_EV_BONUS : 0;
+    const int repel = mon->missile_repulsion();
     int rand_ev = random2(mon->evasion() + repel);
 
     int hit_margin = _test_beam_hit(beam_hit, rand_ev, r);

@@ -70,7 +70,7 @@ fire_vulnerable FIRE_VULN
 injury_bond INJURY_BOND
 partially_charged PARTIALLY_CHARGED
 fully_charged FULLY_CHARGED
-repel_missiles REPEL_MISSILES
+deflect_missiles DEFLECT_MISSILES
 ghostly GHOSTLY
 still_winds STILL_WINDS
 waterlogged WATERLOGGED

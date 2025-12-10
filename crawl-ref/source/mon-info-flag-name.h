@@ -54,7 +54,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FRENZIED, "frenzied", "frenzied and wild", "frenzied"},
     { MB_FEAR_INSPIRING, "scary", "inspiring fear", "scary"},
     { MB_WORD_OF_RECALL, "chanting recall", "chanting recall", "chanting recall"},
-    { MB_REPEL_MSL, "repels missiles", "repelling missiles", "repel missiles"},
+    { MB_DEFLECT_MSL, "deflects missiles", "deflecting missiles", "deflect missiles"},
     { MB_TOXIC_RADIANCE, "toxic aura", "radiating toxic energy", "toxic auras"},
     { MB_CONCENTRATE_VENOM, "curare", "concentrated venom", "curare" },
     { MB_SIGN_OF_RUIN, "sign of ruin", "marked with the sign of ruin", "signs of ruin"},

@@ -11,7 +11,7 @@ attacks:
 hd: 20
 hp_10x: 1500
 ac: 2
-ev: 24
+ev: 22
 spells: sojobo
 has_corpse: true
 shout: shout

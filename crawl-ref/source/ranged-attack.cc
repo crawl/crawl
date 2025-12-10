@@ -103,8 +103,7 @@ bool ranged_attack::attack()
     int ev = defender->evasion(false, attacker);
 
     // Works even if the defender is incapacitated
-    if (defender->missile_repulsion())
-        ev += REPEL_MISSILES_EV_BONUS;
+    ev += defender->missile_repulsion();
 
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked();
@@ -206,7 +205,7 @@ void ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    if (defender->missile_repulsion() && ev_margin > -REPEL_MISSILES_EV_BONUS)
+    if (ev_margin > -defender->missile_repulsion())
     {
         if (needs_message && defender_visible)
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());

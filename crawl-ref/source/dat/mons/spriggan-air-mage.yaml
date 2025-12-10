@@ -9,7 +9,7 @@ attacks:
 hd: 14
 hp_10x: 490
 ac: 1
-ev: 24
+ev: 20
 spells: spriggan_air_mage
 has_corpse: true
 shout: shout

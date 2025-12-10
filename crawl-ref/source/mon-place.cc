@@ -1185,8 +1185,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
 
-    if (mon->has_spell(SPELL_REPEL_MISSILES))
-        mon->add_ench(mon_enchant(ENCH_REPEL_MISSILES, mon, INFINITE_DURATION));
+    if (mon->has_spell(SPELL_DEFLECT_MISSILES))
+        mon->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES, mon, INFINITE_DURATION));
 
     if (mons_class_flag(mon->type, M_FIRE_RING))
         mon->add_ench(ENCH_RING_OF_FLAMES);

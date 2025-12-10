@@ -204,7 +204,7 @@ function master_elementalist_setup(e, sprintscale)
            "fire_storm.11.wizard;" ..
            "ozocubu's_refrigeration.11.wizard;" ..
            "haste.11.wizard;" ..
-           "repel_missiles.11.wizard" .. equip_def .. " . ring of willpower"
+           "deflect_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
 -- A handy boilerplate-reducing function for getting a cloud generator to place

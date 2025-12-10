@@ -240,7 +240,7 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *attacker);
-    virtual bool missile_repulsion() const = 0;
+    virtual int missile_repulsion() const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 

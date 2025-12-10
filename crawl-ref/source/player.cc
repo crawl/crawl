@@ -6140,12 +6140,17 @@ void player::shield_block_succeeded(actor *attacker)
         count_action(CACT_BLOCK, -1, BLOCK_OTHER); // non-shield block
 }
 
-bool player::missile_repulsion() const
+int player::missile_repulsion() const
 {
-    return get_mutation_level(MUT_DISTORTION_FIELD) == 3
+    if (get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(OBJ_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL)
-        || have_passive(passive_t::upgraded_storm_shield);
+        || have_passive(passive_t::upgraded_storm_shield))
+    {
+        return REPEL_MISSILES_EV_BONUS;
+    }
+
+    return 0;
 }
 
 /**

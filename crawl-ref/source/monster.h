@@ -533,7 +533,7 @@ public:
     int     shield_bonus() const override;
     void    shield_block_succeeded(actor *attacker) override;
     int     shield_bypass_ability(int tohit) const override;
-    bool    missile_repulsion() const override;
+    int     missile_repulsion() const override;
 
     bool is_player() const override { return false; }
     monster* as_monster() override { return this; }

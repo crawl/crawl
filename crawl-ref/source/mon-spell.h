@@ -139,7 +139,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SLOW, 12, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
-       { SPELL_REPEL_MISSILES, 12, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 12, MON_SPELL_WIZARD },
        { SPELL_BLINK_RANGE, 36, MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE },
       }
     },
@@ -149,7 +149,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HOARFROST_CANNONADE, 33, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 11, MON_SPELL_WIZARD },
        { SPELL_LRD, 33, MON_SPELL_WIZARD },
-       { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
       }
     },
@@ -308,7 +308,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LIGHTNING_BOLT, 16, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 32, MON_SPELL_WIZARD },
-       { SPELL_REPEL_MISSILES, 16, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 16, MON_SPELL_WIZARD },
       }
     },
 
@@ -329,7 +329,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_WIND_BLAST, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_AIRSTRIKE, 29, MON_SPELL_NATURAL },
-       { SPELL_REPEL_MISSILES, 29, MON_SPELL_NATURAL },
+       { SPELL_DEFLECT_MISSILES, 29, MON_SPELL_NATURAL },
       }
     },
 
@@ -1414,7 +1414,7 @@ static const mon_spellbook mspell_list[] =
         { SPELL_CORROSIVE_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_BOLT_OF_DRAINING, 11, MON_SPELL_WIZARD },
-        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
+        { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
       }
     },
 
@@ -1452,7 +1452,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_NEKOMATA,
       {
        { SPELL_PHANTOM_BLITZ, 48, MON_SPELL_MAGICAL },
-       { SPELL_REPEL_MISSILES, 12, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2006,7 +2005,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MASS_CONFUSION, 11, MON_SPELL_WIZARD },
        { SPELL_STRIP_WILLPOWER, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
-       { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 11, MON_SPELL_WIZARD },
       }
     },
 
@@ -2260,7 +2259,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_LIGHTNING_BOLT, 14, MON_SPELL_WIZARD },
        { SPELL_AIRSTRIKE, 14, MON_SPELL_WIZARD },
        { SPELL_AIR_ELEMENTALS, 14, MON_SPELL_WIZARD },
-       { SPELL_REPEL_MISSILES, 14, MON_SPELL_WIZARD },
+       { SPELL_DEFLECT_MISSILES, 14, MON_SPELL_WIZARD },
       }
     },
 

@@ -63,7 +63,7 @@ slowly_dying: 10
 waterlogged: 10
 still_winds: 10
 antimagic: 10
-repel_missiles: 10
+deflect_missiles: 10
 injury_bond: 10
 glow_light: 10
 glow_heavy: 10

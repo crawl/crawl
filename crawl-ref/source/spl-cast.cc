@@ -1642,7 +1642,7 @@ static int _to_hit_pct(const monster_info& mi, int acc)
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
-    const int base_ev = mi.ev + (mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
+    const int base_ev = mi.ev + (mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
 
     int hits = 0;
     int iters = 0;

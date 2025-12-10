@@ -102,7 +102,7 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
     const double AUTO_MISS_CHANCE = is_aux ? 0 : 2.5;
     const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : 2.5;
 
-    int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
+    int ev = mi.ev + (!melee && mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
         return 1 - AUTO_MISS_CHANCE / 200.0;

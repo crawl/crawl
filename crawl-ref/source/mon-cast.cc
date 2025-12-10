@@ -2580,7 +2580,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
     case SPELL_AVATAR_SONG:
-    case SPELL_REPEL_MISSILES:
+    case SPELL_DEFLECT_MISSILES:
     case SPELL_SUMMON_SCARABS:
     case SPELL_CLEANSING_FLAME:
     case SPELL_DRAINING_GAZE:
@@ -8327,9 +8327,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _siren_sing(mons, true);
         return;
 
-    case SPELL_REPEL_MISSILES:
-        simple_monster_message(*mons, " begins repelling missiles!");
-        mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES, mons, INFINITE_DURATION));
+    case SPELL_DEFLECT_MISSILES:
+        simple_monster_message(*mons, " begins deflecting missiles!");
+        mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES, mons, INFINITE_DURATION));
         return;
 
     case SPELL_SUMMON_SCARABS:
@@ -9584,8 +9584,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_SIREN_SONG:
         return _mesmerise_is_effective(mon, true);
 
-    case SPELL_REPEL_MISSILES:
-        return ai_action::good_or_impossible(!mon->has_ench(ENCH_REPEL_MISSILES));
+    case SPELL_DEFLECT_MISSILES:
+        return ai_action::good_or_impossible(!mon->has_ench(ENCH_DEFLECT_MISSILES));
 
     case SPELL_CONFUSION_GAZE:
         // why is this handled here unlike other gazes?

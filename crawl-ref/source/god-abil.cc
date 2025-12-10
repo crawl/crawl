@@ -2944,7 +2944,7 @@ bool valid_marionette_spell(spell_type spell)
     switch (spell)
     {
         // Generally bad for the player (or cannot be stolen by them)
-        case SPELL_REPEL_MISSILES:
+        case SPELL_DEFLECT_MISSILES:
         case SPELL_SPRINT:
         case SPELL_ROLL:
         case SPELL_WOODWEAL:
