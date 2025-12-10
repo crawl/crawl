@@ -906,8 +906,6 @@ static bool _shadow_will_act(bool spell, bool melee)
     if (you.triggers_done[DID_DITH_SHADOW])
         return false;
 
-    return true;
-
     // If we're making a weapon shadow and haven't done so for a while,
     // guarantee it. (This helps consistency when fishing for shadowslip stab
     // opportunities a lot.)
