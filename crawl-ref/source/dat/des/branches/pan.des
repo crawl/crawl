@@ -155,7 +155,7 @@ disco_choices = {
         end
     end,
     function (x, y, ballx, bally, turn, rand)
-        local angle = math.atan2(y - bally, x - ballx)
+        local angle = math.atan(y - bally, x - ballx)
         local segment = (math.floor(angle / (2 * math.pi) * (2 * #colours)) + 2 * #colours) % (2 * #colours)
         local index = (math.floor((segment + turn) / 2) % #colours) + 1
         if rand > 60 then
