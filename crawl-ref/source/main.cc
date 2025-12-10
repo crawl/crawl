@@ -2643,10 +2643,10 @@ void world_reacts()
 
     add_auto_excludes();
 
-    _check_trapped();
-
     viewwindow();
     update_screen();
+
+    _check_trapped();
 
     if ((you.cannot_act() || you.duration[DUR_DAZED] || you.duration[DUR_VEXED])
         && any_messages()
