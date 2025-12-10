@@ -1213,7 +1213,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH),
     true,
     BEAM_MINDBURST,
     NUM_DCHAR_TYPES,
-    true,
+    false,
     false,
 },
 
