@@ -3305,12 +3305,19 @@ static vector<string> _desc_see_invis(const monster_info& mi)
     vector<string> r;
     if (mi.can_see_invisible())
         r.push_back("can see invisible");
+    else if (!mi.is(MB_CANT_SEE_YOU))
+    {
+        if (!you.backlit())
+            r.push_back("will become unable to see you");
+        else
+            r.push_back("cannot see invisible");
+    }
     return r;
 }
 
 // Show a targeter indicating what monsters would lose sight of the player if
 // they went invisible right now, and return false if the player wishes to cancel.
-bool invisibility_target_check()
+bool invisibility_target_check(const char* prompt)
 {
     bool found_any = false;
     bool found_susceptible = false;
@@ -3341,6 +3348,7 @@ bool invisibility_target_check()
     args.mode = TARG_ANY;
     args.self = confirm_prompt_type::cancel;
     args.hitfunc = hitfunc.get();
+    args.target_prefix = prompt;
     scroll_targeting_behaviour beh;
     args.behaviour = &beh;
 
