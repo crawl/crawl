@@ -78,7 +78,7 @@ static int file_unmarshall_number(lua_State *ls)
     if (lua_gettop(ls) != 1)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
-    lua_pushnumber(ls, unmarshallInt(th));
+    lua_pushinteger(ls, unmarshallInt(th));
     return 1;
 }
 
