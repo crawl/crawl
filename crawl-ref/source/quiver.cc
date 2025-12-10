@@ -691,7 +691,8 @@ namespace quiver
 
                         // Trying to attack and enemy and failing still counts as an attempted
                         // attack for purposes of berserk and duration extensions.
-                        player_attempted_attack(false, !mons->is_firewood() && !mons->wont_attack());
+                        if (mons)
+                            player_attempted_attack(false, !mons->is_firewood() && !mons->wont_attack());
                         return;
                     }
                     success = false;
