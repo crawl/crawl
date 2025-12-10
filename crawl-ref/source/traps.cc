@@ -1027,7 +1027,7 @@ void do_trap_effects()
         case TRAP_TELEPORT:
         {
             // XXX: Approximate old chance of triggering on an average floor.
-            if (!(one_chance_in(3)))
+            if (!one_chance_in(3) || !hostile_teleport_is_possible())
                 break;
 
             string msg = make_stringf("%s and a teleportation trap "
