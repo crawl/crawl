@@ -502,6 +502,15 @@ void notice_queued_monsters()
     to_notice.clear();
 }
 
+// Returns a string describing the names of multiple monsters, nicely organized.
+string multimonster_name_string(vector<monster*> monsters)
+{
+    unordered_set<const monster*> single;
+    vector<details> species;
+    _count_monster_types(monsters, single, species);
+    return _describe_monsters_from_species(species);
+}
+
 void update_monsters_in_view()
 {
     int num_hostile = 0;

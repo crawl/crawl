@@ -17,3 +17,5 @@ void queue_monster_announcement(monster& mons, seen_context_type sc);
 void notice_queued_monsters();
 
 void seen_monster(monster* mons, bool do_encounter_message = true);
+
+string multimonster_name_string(vector<monster*> monsters);

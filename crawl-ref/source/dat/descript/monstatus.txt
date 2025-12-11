@@ -243,7 +243,8 @@ significantly weakened.
 flame-wreathed monstatus
 
 This creature has been empowered by the flames of Ignis. It deals additional
-fire damage with its melee attacks and moves 33% more quickly.
+fire damage with its melee attacks, moves 33% more quickly, and has increased AC
+and resistance to fire.
 %%%%
 fleeing monstatus
 

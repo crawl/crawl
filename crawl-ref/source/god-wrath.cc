@@ -41,6 +41,7 @@
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
+#include "player-notices.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -1603,12 +1604,12 @@ static bool _ignis_shaft()
  *  Finds the highest HD monster in sight that would make a suitable vessel
  *  for Ignis's vengeance.
 */
-static monster* _ignis_champion_target()
+static vector<monster*> _ignis_champion_targets()
 {
-    monster* best_mon = nullptr;
+    vector<monster*> eligible;
+
     // Never pick monsters that are incredibly weak. That's just sad.
     int min_xl = you.get_experience_level() / 2;
-    int seen = 0;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
@@ -1621,7 +1622,8 @@ static monster* _ignis_champion_target()
             // no stealing another god's pals :P
             || mon->is_priest()
             || mon->god != GOD_NO_GOD
-            || !mons_has_attacks(*mon))
+            || !mons_has_attacks(*mon)
+            || mon->has_ench(ENCH_FIRE_CHAMPION))
         {
             continue;
         }
@@ -1631,44 +1633,54 @@ static monster* _ignis_champion_target()
         if (hd < min_xl)
             continue;
 
-        // Is this the new strongest thing we've seen? If so, reset the
-        // HD floor & the seen count.
-        if (hd > min_xl)
-        {
-            min_xl = hd;
-            seen = 0;
-        }
-
-        // Reservoir sampling among monsters of this HD.
-        ++seen;
-        if (one_chance_in(seen))
-            best_mon = mon;
+        eligible.push_back(mon);
     }
 
-    return best_mon;
+    // Annoint the strongest 1-3 eligible monsters
+    const int num = min((int)eligible.size(), random_range(1, 3));
+
+    // If all eligable monsters should be chosen, return early.
+    if ((int)eligible.size() == num)
+        return eligible;
+
+    // Otherwise sort by XP and return the best X.
+    sort(eligible.begin(), eligible.end(),
+        [](const monster* a, const monster* b)
+                {return exp_value(*a) > exp_value(*b);});
+
+    vector<monster*> chosen(eligible.begin(), eligible.begin() + num);
+    return chosen;
 }
 
 static bool _ignis_champion()
 {
-    monster *mon = _ignis_champion_target();
-    if (!mon)
+    vector<monster*> mons = _ignis_champion_targets();
+    if (mons.empty())
         return false;
+
     // Message ordering is a bit touchy here.
     // First, we say what we're doing. TODO: more fun messages
-    simple_god_message(make_stringf(" anoints %s as an instrument of "
-                                    "vengeance!", mon->name(DESC_THE).c_str()).c_str(),
+    simple_god_message(make_stringf(" anoints %s as %s of "
+                                    "vengeance!", multimonster_name_string(mons).c_str(),
+                                    mons.size() > 1 ? "instruments" : "an instrument").c_str(),
                                     false, GOD_IGNIS);
-    // Then, we add the ench. This makes it visible if it wasn't, since it's both
-    // confusing and unfun for players otherwise.
-    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION));
-    // Then we explain what 'fire champion' does, for those who don't go through xv
-    // with a fine-toothed comb afterward.
-    simple_monster_message(*mon, " is coated in flames, covering ground quickly"
-                                 " and attacking fiercely!");
-    // Then we alert it last. It's just reacting, after all.
-    behaviour_event(mon, ME_ALERT, &you);
-    // Assign blame (so we can look up funny deaths)
-    mons_add_blame(mon, "anointed by " + god_name(GOD_IGNIS));
+
+    // Describe the effect on the monsters.
+    mprf("%s %s shrouded in protective flame, covering ground quickly, and attacking fiercely!",
+         mons.size() == 1 ? mons[0]->name(DESC_THE).c_str() : "The monsters",
+         mons.size() == 1 ? "is" : "are");
+
+    for (monster* mon : mons)
+    {
+        // Then, we add the ench. This makes it visible if it wasn't, since it's
+        // both confusing and unfun for players otherwise.
+        mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION));
+        // Then we alert it last. It's just reacting, after all.
+        behaviour_event(mon, ME_ALERT, &you);
+        // Assign blame (so we can look up funny deaths)
+        mons_add_blame(mon, "anointed by " + god_name(GOD_IGNIS));
+    }
+
     return true;
 }
 

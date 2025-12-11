@@ -3226,6 +3226,9 @@ int monster::armour_class() const
     if (has_ench(ENCH_PHALANX_BARRIER))
         ac += 10;
 
+    if (has_ench(ENCH_FIRE_CHAMPION))
+        ac += 7;
+
     return max(ac, 0);
 }
 
@@ -3624,6 +3627,9 @@ int monster::res_fire() const
         u--;
 
     if (has_ench(ENCH_RESISTANCE))
+        u++;
+
+    if (has_ench(ENCH_FIRE_CHAMPION))
         u++;
 
     if (u < -3)
