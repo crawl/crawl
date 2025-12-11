@@ -2930,21 +2930,7 @@ static void _xom_wave_of_despair(int sever)
     if (skeleton_count)
         mpr("Skeletons, inanimate yet cursed, drop down from the ceiling.");
 
-    for (int i = 0; i <= you.current_vision; ++i)
-    {
-        for (distance_iterator di(you.pos(), false, false, i); di; ++di)
-        {
-            if (grid_distance(you.pos(), *di) == i && !feat_is_solid(env.grid(*di))
-                && you.see_cell_no_trans(*di))
-            {
-                flash_tile(*di, random_choose(DARKGRAY, MAGENTA), 0);
-            }
-        }
-
-        animation_delay(35, true);
-        view_clear_overlays();
-    }
-
+    draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, MAGENTA, true, 35);
     mprf(MSGCH_DANGER, "A draining tide of despair and horror washes over you and your surroundings!");
 
     const int pow = 50 + random_range(sever / 2, sever);
