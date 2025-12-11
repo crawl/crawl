@@ -1385,6 +1385,12 @@ void dungeon_terrain_changed(const coord_def &pos,
 
     // Deal with doors being created by changing features.
     tile_init_flavour(pos);
+
+    // If we just placed a trap under an actor, trigger it immediately.
+    if (actor* act = actor_at(pos))
+        if (feat_is_trap(nfeat))
+            if (trap_def* ptrap = trap_at(pos))
+                ptrap->trigger(*act);
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)

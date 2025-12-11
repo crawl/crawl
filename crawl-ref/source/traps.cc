@@ -409,14 +409,16 @@ void trap_def::trigger(actor& triggerer)
         else
             mprf("%s enters %s!", triggerer.name(DESC_THE).c_str(),
                     name(DESC_A).c_str());
-        mid_t triggerer_mid = triggerer.mid;
-        apply_visible_monsters([triggerer_mid] (monster& mons) {
-                return (mons.mid != triggerer_mid) && !mons.no_tele() && monster_blink(&mons);
-            }, pos);
-        if (!you_trigger && you.see_cell_no_trans(pos))
-            you.blink();
-        // Don't chain disperse
-        triggerer.blink();
+
+        for (monster_near_iterator mi(pos, LOS_NO_TRANS); mi; ++mi)
+            if (!mi->no_tele())
+                mi->blink();
+
+        you.blink();
+
+        // Make the trap go dormant briefly.
+        temp_change_terrain(pos, DNGN_TRAP_DISPERSAL_INACTIVE,
+                            random_range(4, 7) * BASELINE_DELAY);
         break;
     }
     case TRAP_TELEPORT:

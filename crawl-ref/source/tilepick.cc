@@ -286,6 +286,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_PLATE;
     case DNGN_TRAP_DISPERSAL:
         return TILE_DNGN_TRAP_DISPERSAL;
+    case DNGN_TRAP_DISPERSAL_INACTIVE:
+        return TILE_DNGN_TRAP_DISPERSAL_INACTIVE;
     case DNGN_TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case DNGN_TRAP_TELEPORT_PERMANENT:

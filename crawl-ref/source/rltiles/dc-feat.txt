@@ -541,6 +541,7 @@ harlequin3
 harlequin4
 devourer DNGN_TRAP_DEVOURER
 dispersal DNGN_TRAP_DISPERSAL
+dispersal_inactive DNGN_TRAP_DISPERSAL_INACTIVE
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
 zot DNGN_TRAP_ZOT

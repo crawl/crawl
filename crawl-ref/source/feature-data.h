@@ -363,6 +363,13 @@ TRAP(DNGN_PASSAGE_OF_GOLUBRIA, "passage of Golubria", "passage of golubria", GRE
 TRAP(DNGN_TRAP_SHAFT, "shaft", "shaft", BROWN),
 TRAP(DNGN_TRAP_WEB, "web", "trap_web", LIGHTGREY),
 
+{
+    DNGN_TRAP_DISPERSAL_INACTIVE, "dispersal trap (recharging)", "trap_dispersal_inactive",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(LIGHTGREY),
+    FFT_NONE, MF_TRAP,
+},
+
 #if TAG_MAJOR_VERSION == 34
 {
     DNGN_UNDISCOVERED_TRAP, "floor", "undiscovered_trap",
