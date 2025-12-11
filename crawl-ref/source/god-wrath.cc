@@ -1620,16 +1620,11 @@ static monster* _ignis_champion_target()
             || mon->wont_attack()
             // no stealing another god's pals :P
             || mon->is_priest()
-            || mon->god != GOD_NO_GOD)
+            || mon->god != GOD_NO_GOD
+            || !mons_has_attacks(*mon))
         {
             continue;
         }
-
-        // Don't anoint monsters with no melee attacks or with an
-        // existing attack flavour.
-        const mon_attack_def atk = mons_attack_spec(*mon, 0, true);
-        if (atk.type == AT_NONE || atk.flavour != AF_PLAIN)
-            continue;
 
         // Don't pick something weaker than a different mon we've already seen.
         const int hd = mon->get_experience_level();

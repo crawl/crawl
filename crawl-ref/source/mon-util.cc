@@ -1915,9 +1915,6 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (attk_number == 0)
     {
-        if (m.has_ench(ENCH_FIRE_CHAMPION))
-            attk.flavour = AF_FIRE;
-
         if (mon.type == MONS_PLAYER_SHADOW)
         {
             if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))

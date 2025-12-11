@@ -3672,6 +3672,9 @@ bool melee_attack::mons_attack_effects()
     {
         mons_apply_attack_flavour();
 
+        if (attacker->as_monster()->has_ench(ENCH_FIRE_CHAMPION))
+            mons_apply_attack_flavour(AF_FIRE);
+
         if (attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
             mons_apply_attack_flavour(AF_CHAOTIC);
     }
