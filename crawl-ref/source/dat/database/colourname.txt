@@ -979,10 +979,7 @@ graffiti_advertisement
 a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
 
 w:2
-@graffiti_class_master@
-
-w:2
-@graffiti_class_remedial@
+@graffiti_class_any@
 
 w:1
 a meet-up with @graffiti author name@ to learn how to survive in the dungeon
@@ -1028,6 +1025,13 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@[| for @g
 @orc graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
 
 the ghost of @orc graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
+%%%%
+graffiti_class_any
+
+@graffiti_class_remedial@
+
+w:2
+@graffiti_class_master@
 %%%%
 graffiti_class_master
 
