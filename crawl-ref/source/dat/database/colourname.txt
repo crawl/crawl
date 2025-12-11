@@ -970,6 +970,23 @@ graffiti_type
 
 @writing_style@ graffiti
 %%%%
+graffiti_advertisement
+
+@graffiti_mass_meeting_type@ @graffiti_mass_meeting_ordinary@
+
+@graffiti_mass_meeting_type@ @graffiti_mass_meeting_religious@
+
+@graffiti_class_master@
+
+@graffiti_class_remedial@
+
+w:2
+a meet-up with @graffiti author name@ to learn how to survive in the dungeon
+
+# Possibly too lowbrow, but a good time can mean many things.
+w:1
+a meet-up with @graffiti author name@ for a good time
+%%%%
 # There's sometimes a chance of the two names being the same, but maybe
 # the author's crazy, or maybe the author spells their name the same way
 # as before but pronounces it differently.
@@ -1003,6 +1020,37 @@ the ghost of @graffiti author name@ still haunts @graffiti author name@[| for @g
 @orc graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
 
 the ghost of @orc graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
+%%%%
+graffiti_class_master
+
+a master class on insults taught by imps
+
+a master class on the uses of giant clubs taught by ogres
+%%%%
+graffiti_class_remedial
+
+a Remedial @random_skill@ class taught by @graffiti_professor_any@
+
+a Remedial @random_skill_magic@ class taught by @graffiti_professor_magic@
+
+a Remedial @random_skill_mundane@ class taught by @graffiti_professor_mundane@
+
+w:2
+a Remedial Evocations class taught by @graffiti_professor_evocations@
+
+w:2
+a Remedial Invocations class taught by @graffiti_professor_invocations@
+
+# Necromancers should be able to teach necromancy or other magic (from
+# branching out) the same way other spellcasters can.
+w:2
+a Remedial Necromancy class taught by @graffiti_professor_necromancy@
+
+w:2
+a Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
+
+w:2
+a Remedial Shapeshifting class taught by @graffiti_professor_shapeshifting@
 %%%%
 graffiti_fight
 
@@ -1117,22 +1165,17 @@ loves
 
 praises
 %%%%
-graffiti_meeting_ordinary
+graffiti_mass_meeting_type
 
-# Possibly too lowbrow, but a good time can mean many things.
-with @graffiti author name@ for a good time
+a gathering
 
-with @graffiti author name@ to learn how to survive in the dungeon
+a meeting
+%%%%
+graffiti_mass_meeting_ordinary
 
 of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
 
 of an artificer club [testing|tinkering with] [devices|evokables|wands]
-
-of a master class on insults being taught by imps
-
-of a master class on the uses of giant clubs being taught by ogres
-
-of a @graffiti_remedial_class@
 
 of a support group for veterans of the surface wars
 
@@ -1191,7 +1234,7 @@ of a group of [crusaders|moralists] [discussing|opposing] evil in the world
 # Non-religious version of Lugonu below.
 of a varied group of people discussing their experiences in the Abyss
 %%%%
-graffiti_meeting_religious
+graffiti_mass_meeting_religious
 
 of a [sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
 
@@ -1240,12 +1283,6 @@ of a group of worshippers of the Shining One [discussing|opposing] evil in the w
 of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their experiences in the Abyss
 
 of a group of orcs promoting Beogh's word
-%%%%
-graffiti_meeting_any
-
-@graffiti_meeting_ordinary@
-
-@graffiti_meeting_religious@
 %%%%
 graffiti_obscenities
 
@@ -1460,31 +1497,6 @@ thanking Beogh for granting salvation while the other gods just watched
 
 talking about how Beogh will help you when the other gods turn away from you
 %%%%
-graffiti_remedial_class
-
-Remedial @random_skill@ class taught by @graffiti_professor_any@
-
-Remedial @random_skill_magic@ class taught by @graffiti_professor_magic@
-
-Remedial @random_skill_mundane@ class taught by @graffiti_professor_mundane@
-
-w:2
-Remedial Evocations class taught by @graffiti_professor_evocations@
-
-w:2
-Remedial Invocations class taught by @graffiti_professor_invocations@
-
-# Necromancers should be able to teach necromancy or other magic (from
-# branching out) the same way other spellcasters can.
-w:2
-Remedial Necromancy class taught by @graffiti_professor_necromancy@
-
-w:2
-Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
-
-w:2
-Remedial Shapeshifting class taught by @graffiti_professor_shapeshifting@
-%%%%
 graffiti_rumour
 
 speculating about the powers of the Orb of Zot
@@ -1676,7 +1688,7 @@ graffiti of @writing_type@
 
 @graffiti_type@ @graffiti_fight@
 
-@graffiti_type@ advertising a meeting @graffiti_meeting_any@
+@graffiti_type@ advertising @graffiti_advertisement@
 
 @graffiti_type@ saying that @graffiti_short_saying@
 
