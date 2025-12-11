@@ -412,6 +412,12 @@ void marshallInt(writer &th, int32_t data)
     th.writeByte(b4);
 }
 
+// Useful for using marshallMap with ints.
+static void marshallIntReference(writer &th, const int32_t &data)
+{
+    marshallInt(th, data);
+}
+
 // Unmarshall 4 byte signed int in network order.
 int32_t unmarshallInt(reader &th)
 {
@@ -892,6 +898,12 @@ void marshallFloat(writer &th, float data)
     float_marshall_kludge k;
     k.f_num = data;
     marshallInt(th, k.l_num);
+}
+
+// Useful for using marshallMap with floats.
+static void marshallFloatReference(writer &th, const float &data)
+{
+    marshallFloat(th, data);
 }
 
 // single precision float -- unmarshall in network order.
@@ -2082,6 +2094,89 @@ static void marshallLevelXPInfo(writer &th, LevelXPInfo xp_info)
     marshallInt(th, xp_info.vault_count);
 }
 
+static void marshallRankPietyInfo(writer &th, RankPietyInfo r)
+{
+    marshallByte(th, r.god);
+    marshallInt(th, r.initial_piety);
+    marshallInt(th, r.start_time);
+    marshallInt(th, r.piety_lost);
+    marshallInt(th, r.piety_gained);
+    marshallInt(th, r.piety_decayed);
+    marshallInt(th, r.piety_on_penance);
+    marshallInt(th, r.piety_on_gifts);
+    marshallInt(th, r.piety_on_stepdowns);
+}
+
+static void marshallConductInfo(writer &th, const ConductPietyInfo &cp_info)
+{
+    marshallMap(th, cp_info.conducts_count,
+                _marshall_as_int<conduct_type>, marshallIntReference);
+    marshallMap(th, cp_info.piety_from_conducts,
+                _marshall_as_int<conduct_type>, marshallFloatReference);
+}
+
+static void marshallXLToConductMap(writer &th,
+    const map<int, ConductPietyInfo> &conduct_info_by_xl)
+{
+    marshallMap(th, conduct_info_by_xl,
+                marshallIntReference, marshallConductInfo);
+}
+
+static void marshallPietyInfo(writer &th, PietyInfo piety_info)
+{
+    marshallShort(th, piety_info.rank_info.size());
+    for (auto &r : piety_info.rank_info)
+        marshallRankPietyInfo(th, r);
+    marshallMap(th, piety_info.conduct_info_by_god, _marshall_as_int<god_type>,
+                marshallXLToConductMap);
+    marshallInt(th, piety_info.rank);
+}
+
+static RankPietyInfo unmarshallRankPietyInfo(reader &th)
+{
+    RankPietyInfo r;
+    r.god = static_cast<god_type>(unmarshallUByte(th));
+    r.initial_piety = unmarshallInt(th);
+    r.start_time = unmarshallInt(th);
+    r.piety_lost = unmarshallInt(th);
+    r.piety_gained = unmarshallInt(th);
+    r.piety_decayed = unmarshallInt(th);
+    r.piety_on_penance = unmarshallInt(th);
+    r.piety_on_gifts = unmarshallInt(th);
+    r.piety_on_stepdowns = unmarshallInt(th);
+    return r;
+}
+
+static ConductPietyInfo unmarshallConductInfo(reader &th)
+{
+    ConductPietyInfo cp_info;
+    unmarshallMap(th, cp_info.conducts_count,
+                  unmarshall_int_as<conduct_type>, unmarshallInt);
+    unmarshallMap(th, cp_info.piety_from_conducts,
+                  unmarshall_int_as<conduct_type>, unmarshallFloat);
+    return cp_info;
+}
+
+static map<int, ConductPietyInfo> unmarshallXLToConductInfo(reader &th)
+{
+    map<int, ConductPietyInfo> conduct_info_by_xl;
+    unmarshallMap(th, conduct_info_by_xl,
+                  unmarshallInt, unmarshallConductInfo);
+    return conduct_info_by_xl;
+}
+
+static PietyInfo unmarshallPietyInfo(reader &th)
+{
+    PietyInfo piety_info;
+    int rank_info_size = unmarshallShort(th);
+    for (int i = 0; i < rank_info_size; ++i)
+        piety_info.rank_info.push_back(unmarshallRankPietyInfo(th));
+    unmarshallMap(th, piety_info.conduct_info_by_god,
+        unmarshall_int_as<god_type>, unmarshallXLToConductInfo);
+    piety_info.rank = unmarshallInt(th);
+    return piety_info;
+}
+
 static void _tag_construct_you_dungeon(writer &th)
 {
     // how many unique creatures?
@@ -2150,6 +2245,8 @@ static void _tag_construct_you_dungeon(writer &th)
 
     marshallMonType(th, you.zot_orb_monster);
     marshallBoolean(th, you.zot_orb_monster_known);
+
+    marshallPietyInfo(th, you.piety_info);
 }
 
 static void marshall_follower(writer &th, const follower &f)
@@ -5447,6 +5544,11 @@ static void _tag_read_you_dungeon(reader &th)
     else
 #endif
     you.zot_orb_monster_known = unmarshallBoolean(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_PIETY_LOGGING)
+        you.piety_info = unmarshallPietyInfo(th);
+#endif
 }
 
 static void _tag_read_lost_monsters(reader &th)

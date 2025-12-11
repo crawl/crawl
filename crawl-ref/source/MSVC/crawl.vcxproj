@@ -436,6 +436,7 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\package.cc" />
     <ClCompile Include="..\pcg.cc" />
     <ClCompile Include="..\perlin.cc" />
+    <ClCompile Include="..\piety-info.cc" />
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
     <ClCompile Include="..\player-equip.cc" />
@@ -894,6 +895,7 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\pattern.h" />
     <ClInclude Include="..\pcg.h" />
     <ClInclude Include="..\perlin.h" />
+    <ClInclude Include="..\piety-info.h" />
     <ClInclude Include="..\place-info.h" />
     <ClInclude Include="..\place.h" />
     <ClInclude Include="..\platform.h" />
