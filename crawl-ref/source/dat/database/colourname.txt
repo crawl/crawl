@@ -1023,9 +1023,9 @@ the ghost of @orc graffiti author name@ still haunts @graffiti author name@[| fo
 %%%%
 graffiti_class_master
 
-a master class on insults taught by imps
+a master class on insults taught by [demons|imps]
 
-a master class on the uses of giant clubs taught by ogres
+a master class on the uses of giant clubs taught by [ogres|oni]
 %%%%
 graffiti_class_remedial
 
