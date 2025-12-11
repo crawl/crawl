@@ -1014,17 +1014,65 @@ w:2
 w:1
 @changeable non-randgen graffiti author name@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
+# This can produce an orc who worships (or is) Zin, or a non-orc who
+# worships (or is) Beogh, but you shouldn't believe everything you read.
+graffiti_author_changed_religions
+
+@graffiti author name@ has abandoned @random_god@
+
+@graffiti author name@ has converted away from @random_god@
+
+@graffiti author name@ has converted to @random_god@
+
+@graffiti author name@ is secretly an atheist
+
+@graffiti author name@ is secretly not an atheist
+
+@graffiti author name@ is secretly @random_god@
+
+@graffiti author name@ secretly worships Zin
+
+@graffiti author name@ secretly worships Zin instead of @random_god_chaotic@
+
+@graffiti author name@ secretly worships @random_god_chaotic@
+
+@graffiti author name@ secretly worships @random_god_chaotic@ instead of Zin
+
+@graffiti author name@ secretly worships @random_god_good@
+
+@graffiti author name@ secretly worships @random_god_good@ instead of @random_god_evil@
+
+@graffiti author name@ secretly worships @random_god_evil@
+
+@graffiti author name@ secretly worships @random_god_evil@ instead of @random_god_good@
+%%%%
 graffiti_author_vengeance
 
-@graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
+@graffiti author name@ has avenged @graffiti author name@
 
-the ghost of @graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
+@graffiti author name@ has avenged @graffiti author name@ for @graffiti_vengeance_reason@
+
+@graffiti author name@ swears vengeance on @graffiti author name@
+
+@graffiti author name@ swears vengeance on @graffiti author name@ for @graffiti_vengeance_reason@
+
+the ghost of @graffiti author name@ still haunts @graffiti author name@
+
+the ghost of @graffiti author name@ still haunts @graffiti author name@ for @graffiti_vengeance_reason@
 
 # Vengeance is more common among orcs.
 
-@orc graffiti author name@ [has avenged|swears vengeance on] @graffiti author name@[| for @graffiti_vengeance_reason@]
+@orc graffiti author name@ has avenged @graffiti author name@
 
-the ghost of @orc graffiti author name@ still haunts @graffiti author name@[| for @graffiti_vengeance_reason@]
+@orc graffiti author name@ has avenged @graffiti author name@ for @graffiti_vengeance_reason@
+
+@orc graffiti author name@ swears vengeance on @graffiti author name@
+
+@orc graffiti author name@ swears vengeance on @graffiti author name@ for @graffiti_vengeance_reason@
+
+the ghost of @orc graffiti author name@ still haunts @graffiti author name@
+
+the ghost of @orc graffiti author name@ still haunts @graffiti author name@ for @graffiti_vengeance_reason@
 %%%%
 graffiti_class_any
 
@@ -1069,6 +1117,16 @@ a Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
 w:2
 a Remedial Shapeshifting class taught by @graffiti_professor_shapeshifting@
 %%%%
+graffiti_duplicate
+
+a duplicate
+
+a duplicate indistinguishable from the original
+
+an impostor
+
+a shapeshifter
+%%%%
 graffiti_fight
 
 of an argument between @graffiti author name@ and @graffiti author name@
@@ -1079,7 +1137,7 @@ w:2
 of a fight between [berserkers|Trog worshippers] and erythrospite sufferers over the true meaning of blood rage
 
 w:2
-of a fight between [artists|Dithmenos worshippers] and [death knights|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
+of a fight between [artists|Dithmenos worshippers] and [death knights|death mages|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
 %%%%
 graffiti_hailed_god
 
@@ -1168,6 +1226,20 @@ of an eggplant just sitting there
 
 that looks like nothing you recognise
 %%%%
+graffiti_life_or_death
+
+deserves death
+
+deserves undeath
+
+deserves life
+
+is dead
+
+is undead
+
+lives
+%%%%
 graffiti_loves_or_hates
 
 curses
@@ -1216,7 +1288,7 @@ of a group of [mages|sorcerers|spellcasters|wizards] practising [eclectic|esoter
 of a group of [mages|sorcerers|spellcasters|wizards] practising [cataclysmic|destructive] magic
 
 # Non-religious version of Kikubaaqudgha below.
-of a group of necromancers practising [necromancy|bringing things to unlife]
+of a group of [death mages|necromancers] practising [necromancy|bringing things to unlife]
 
 # Non-religious version of Cheibriados below.
 of a group of philosophers discussing [perfection|the nature of time] for who knows how long
@@ -1327,63 +1399,111 @@ w:1
 %%%%
 graffiti_professor_evocations
 
-@changeable graffiti author name@ the [artificer|tinkerer]
+@changeable graffiti author name@ the @graffiti_professor_evocations_type@
 
 w:2
-@orc graffiti author name@ [artificer|tinkerer]
+@orc graffiti author name@ @graffiti_professor_evocations_type@
 
 w:1
-the [artificer|tinkerer] @rare graffiti author name@ (supposedly)
+the @graffiti_professor_evocations_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_evocations_type
+
+artificer
+
+tinkerer
 %%%%
 graffiti_professor_invocations
 
-@changeable graffiti author name@ the [cleric|high priest|priest|theologian]
+@changeable graffiti author name@ the @graffiti_professor_invocations_type@
 
 w:2
-@orc graffiti author name@ [cleric|high priest|priest|theologian]
+@orc graffiti author name@ @graffiti_professor_invocations_type@
 
 w:1
-the [cleric|high priest|priest|theologian] @rare graffiti author name@ (supposedly)
+the @graffiti_professor_invocations_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_invocations_type
+
+cleric
+
+high priest
+
+priest
+
+theologian
 %%%%
 graffiti_professor_magic
 
-@changeable graffiti author name@ the [mage|sorcerer|spellcaster|wizard]
+@changeable graffiti author name@ the @graffiti_professor_magic_type@
 
 w:2
-@orc graffiti author name@ [mage|sorcerer|spellcaster|wizard]
+@orc graffiti author name@ @graffiti_professor_magic_type@
 
 w:1
-the [mage|sorcerer|spellcaster|wizard] @rare graffiti author name@ (supposedly)
+the @graffiti_professor_magic_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_magic_type
+
+mage
+
+sorcerer
+
+spellcaster
+
+wizard
 %%%%
 graffiti_professor_mundane
 
-@changeable graffiti author name@ the [knight|veteran|warlord|warrior]
+@changeable graffiti author name@ the @graffiti_professor_mundane_type@
 
 w:2
-@orc graffiti author name@ [knight|veteran|warlord|warrior]
+@orc graffiti author name@ @graffiti_professor_mundane_type@
 
 w:1
-the [knight|veteran|warlord|warrior] @rare graffiti author name@ (supposedly)
+the @graffiti_professor_mundane_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_mundane_type
+
+knight
+
+veteran
+
+warlord
+
+warrior
 %%%%
 graffiti_professor_necromancy
 
-@changeable graffiti author name@ the necromancer
+@changeable graffiti author name@ the @graffiti_professor_necromancy_type@
 
 w:2
-@orc graffiti author name@ necromancer
+@orc graffiti author name@ @graffiti_professor_necromancy_type@
 
 w:1
-the necromancer @rare graffiti author name@ (supposedly)
+the @graffiti_professor_necromancy_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_necromancy_type
+
+death mage
+
+necromancer
 %%%%
 graffiti_professor_shapeshifting
 
-@changeable graffiti author name@ the [shapeshifter|talismancer]
+@changeable graffiti author name@ the @graffiti_professor_shapeshifting_type@
 
 w:2
-@orc graffiti author name@ [shapeshifter|talismancer]
+@orc graffiti author name@ @graffiti_professor_shapeshifting_type@
 
 w:1
-the [shapeshifter|talismancer] @rare graffiti author name@ (supposedly)
+the @graffiti_professor_shapeshifting_type@ @rare graffiti author name@ (supposedly)
+%%%%
+graffiti_professor_shapeshifting_type
+
+shapeshifter
+
+talismancer
 %%%%
 graffiti_relative_or_quality
 
@@ -1520,7 +1640,7 @@ speculating about the powers of the Orb of Zot
 
 on how the Orb of Zot will [save|destroy] everyone and everything
 
-on how everyone is mistaken and the Orb of Zot is really [the Cube|the Egg|the Pyramid] of Zot
+on how everyone is mistaken and the Orb of Zot is really the [Cube|Egg|Pyramid] of Zot
 
 telling of a secret passageway straight from here to the Orb of Zot
 
@@ -1535,37 +1655,23 @@ graffiti_short_saying
 
 @graffiti author name@ was here
 
-@graffiti author name@ @graffiti_loves_or_hates@[| @graffiti_relative_or_quality@ of] @graffiti author name@
+@graffiti author name@ @graffiti_loves_or_hates@ @graffiti author name@
 
-@graffiti author name@ [deserves death|deserves undeath|deserves life|is dead|is undead|lives]
+@graffiti author name@ @graffiti_loves_or_hates@ @graffiti_relative_or_quality@ of @graffiti author name@
 
-@graffiti author name@ sells [inferior|superior] wares
+@graffiti author name@ @graffiti_life_or_death@
+
+@graffiti author name@ sells @graffiti_ware_quality@ wares
 
 @graffiti author name@ steals from @graffiti author name@
 
 what happened to @graffiti author name@ was @graffiti_happened_reason@
 
-@graffiti author name@ has been replaced by [a duplicate|a duplicate indistinguishable from the original|an impostor|a shapeshifter]
-
-@graffiti author name@ has [abandoned|converted away from|converted to] @random_god@
-
-@graffiti author name@ is secretly [|not ]an atheist
-
-# These next five can produce an orc who worships (or is) Zin, or a
-# non-orc who worships (or is) Beogh, but that's why you shouldn't
-# believe everything you read.
-
-@graffiti author name@ is secretly @random_god@
-
-@graffiti author name@ secretly worships Zin[| instead of @random_god_chaotic@]
-
-@graffiti author name@ secretly worships @random_god_chaotic@[| instead of Zin]
-
-@graffiti author name@ secretly worships @random_god_good@[| instead of @random_god_evil@]
-
-@graffiti author name@ secretly worships @random_god_evil@[| instead of @random_god_good@]
+@graffiti author name@ has been replaced by @graffiti_duplicate@
 
 @graffiti_author_vengeance@
+
+@graffiti_author_changed_religions@
 
 w:2
 @graffiti_author_changed_names@
@@ -1660,6 +1766,16 @@ stealing from them
 wounding @graffiti author name@
 
 wounding them
+%%%%
+graffiti_ware_quality
+
+inferior
+
+high-quality
+
+low-quality
+
+superior
 %%%%
 graffiti_with_signature_maybe
 
