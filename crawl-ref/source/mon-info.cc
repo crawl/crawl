@@ -321,6 +321,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     sh = 0;
+    slay = 0;
     mresists = get_mons_class_resists(type);
     mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
