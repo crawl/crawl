@@ -225,6 +225,24 @@ graffiti_type
 
 @writing_style@ graffiti
 %%%%
+graffiti_type_with_signature_maybe
+
+@graffiti_type@
+
+@graffiti_type@ signed by @graffiti_author_any@
+%%%%
+graffiti_type_with_signature_maybe_non-orc
+
+@graffiti_type@
+
+@graffiti_type@ signed by @graffiti_author_any_non-orc@
+%%%%
+graffiti_type_with_signature_maybe_orc
+
+@graffiti_type@
+
+@graffiti_type@ signed by @graffiti_author_orc@
+%%%%
 graffiti_advertisement
 
 @graffiti_mass_meeting_type@ @graffiti_mass_meeting_ordinary@
@@ -891,7 +909,7 @@ graffiti_short_saying
 
 @graffiti_author_any@ @graffiti_life_or_death@
 
-@graffiti_author_any@ sells @graffiti_ware_quality@ wares
+@graffiti_author_any@ sells @graffiti_wares_quality@ wares
 
 @graffiti_author_any@ steals from @graffiti_author_any@
 
@@ -1025,7 +1043,7 @@ wounding @graffiti_author_any@
 
 wounding them
 %%%%
-graffiti_ware_quality
+graffiti_wares_quality
 
 inferior
 
@@ -1035,24 +1053,6 @@ low-quality
 
 superior
 %%%%
-graffiti_with_signature_maybe
-
-@graffiti_type@
-
-@graffiti_type@ signed by @graffiti_author_any@
-%%%%
-graffiti_with_signature_maybe_non-orc
-
-@graffiti_type@
-
-@graffiti_type@ signed by @graffiti_author_any_non-orc@
-%%%%
-graffiti_with_signature_maybe_orc
-
-@graffiti_type@
-
-@graffiti_type@ signed by @graffiti_author_orc@
-%%%%
 any_graffiti
 
 graffiti of @any_colour_pattern@
@@ -1061,21 +1061,21 @@ graffiti of @writing_type@
 
 @graffiti_unreadable@
 
-@graffiti_with_signature_maybe@
+@graffiti_type_with_signature_maybe@
 
-@graffiti_with_signature_maybe@ @graffiti_image@
+@graffiti_type_with_signature_maybe@ @graffiti_image@
 
-@graffiti_with_signature_maybe@ @graffiti_religion_not_non-orc_or_orc@
+@graffiti_type_with_signature_maybe@ @graffiti_religion_not_non-orc_or_orc@
 
-@graffiti_with_signature_maybe_non-orc@ @graffiti_religion_non-orc@
+@graffiti_type_with_signature_maybe_non-orc@ @graffiti_religion_non-orc@
 
-@graffiti_with_signature_maybe_orc@ @graffiti_religion_orc@
+@graffiti_type_with_signature_maybe_orc@ @graffiti_religion_orc@
 
-@graffiti_with_signature_maybe@ @graffiti_rumour@
+@graffiti_type_with_signature_maybe@ @graffiti_rumour@
 
-@graffiti_with_signature_maybe@ @graffiti_unique_comment@
+@graffiti_type_with_signature_maybe@ @graffiti_unique_comment@
 
-@graffiti_with_signature_maybe@ @graffiti_species@
+@graffiti_type_with_signature_maybe@ @graffiti_species@
 
 @graffiti_type@ @graffiti_fight@
 
