@@ -1035,9 +1035,13 @@ w:2
 %%%%
 graffiti_class_master
 
+a master class on excavation taught by formicids
+
 a master class on insults taught by [demons|imps]
 
 a master class on the uses of giant clubs taught by [ogres|oni]
+
+a master class on Unarmed Combat taught by felids
 %%%%
 graffiti_class_remedial
 
