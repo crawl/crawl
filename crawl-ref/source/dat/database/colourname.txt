@@ -980,6 +980,8 @@ graffiti_advertisement
 
 @graffiti_class_remedial@
 
+a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
+
 w:2
 a meet-up with @graffiti author name@ to learn how to survive in the dungeon
 
@@ -1179,7 +1181,7 @@ of an artificer club [testing|tinkering with] [devices|evokables|wands]
 
 of a support group for veterans of the surface wars
 
-of a group of [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
+of a group of [bakers|fruit vendors|meat vendors|shopkeepers] peddling their wares in the dungeon
 
 of a group of [apiarists|hive talisman users] discussing the [antics|emotional state|health] of their bees
 
