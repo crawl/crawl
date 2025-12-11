@@ -285,7 +285,7 @@ Faint @any_colour@ flames crawl over @the_feature@.
 
 @The_feature@ is briefly covered in @any_colour_pattern@.
 
-@The_feature@ is briefly covered in @coloured_graffiti@.
+@The_feature@ is briefly covered in @any_graffiti@.
 %%%%
 Xom feature metal wall
 
@@ -305,7 +305,7 @@ Xom feature stone arch
 
 @The_feature@ briefly shows a translucent wall covered in @any_colour_pattern@ on the other side.
 
-@The_feature@ briefly shows a translucent wall covered in @coloured_graffiti@ on the other side.
+@The_feature@ briefly shows a translucent wall covered in @any_graffiti@ on the other side.
 %%%%
 Xom underfoot general
 

@@ -30,14 +30,14 @@ default peaceful fountain_blue
 }}
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 default fountain_blue
 
 The fountain briefly ripples from your approaching presence.
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 default peaceful fountain_sparkling
 
@@ -58,7 +58,7 @@ default peaceful fountain_sparkling
 }}
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 sparkling_message
 
@@ -78,7 +78,7 @@ default fountain_sparkling
 The sparkling fountain shimmers a faint @any_colour@.
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 default fountain_blood
 
@@ -115,12 +115,12 @@ The fountain's eyes stare into nothing.
 default peaceful dry_fountain
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 default dry_fountain
 
 w:1
-You see @coloured_graffiti@ on the fountain.
+You see @any_graffiti@ on the fountain.
 %%%%
 Ashenzari peaceful fountain_blue
 

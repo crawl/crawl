@@ -1054,7 +1054,7 @@ graffiti_with_signature_maybe_orc
 
 @graffiti_type@ signed by @graffiti_author_orc@
 %%%%
-coloured_graffiti
+any_graffiti
 
 graffiti of @any_colour_pattern@
 
