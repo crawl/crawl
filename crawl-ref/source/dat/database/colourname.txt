@@ -1091,6 +1091,10 @@ a master class on insults taught by [demons|imps]
 a master class on the many uses of giant clubs taught by [ogres|oni]
 
 a master class on Unarmed Combat taught by felids
+
+# Calligraphy is useful for many things, among them written graffiti.
+w:1
+a master class on calligraphy
 %%%%
 graffiti_class_remedial
 
