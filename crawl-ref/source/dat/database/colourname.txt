@@ -976,13 +976,15 @@ graffiti_advertisement
 
 @graffiti_mass_meeting_type@ @graffiti_mass_meeting_religious@
 
-@graffiti_class_master@
-
-@graffiti_class_remedial@
-
 a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
 
 w:2
+@graffiti_class_master@
+
+w:2
+@graffiti_class_remedial@
+
+w:1
 a meet-up with @graffiti author name@ to learn how to survive in the dungeon
 
 # Possibly too lowbrow, but a good time can mean many things.
