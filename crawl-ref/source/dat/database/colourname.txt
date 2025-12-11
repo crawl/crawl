@@ -1136,6 +1136,8 @@ of a support group for veterans of the surface wars
 
 of a group of [bakers|fruit vendors|meat vendors] peddling their wares in the dungeon
 
+of a group of [apiarists|hive talisman users] discussing the [antics|emotional state|health] of their bees
+
 # Non-religious version of Gozag below.
 of a group of rich people discussing how to make more money
 
@@ -1582,6 +1584,8 @@ saying that Donald should shut up and stop complaining
 saying that Sigmund needs to put down the scythe
 
 saying that Edmund needs to get over himself
+
+saying that Sprozz has gone too far trying to replace real bees with mechanical ones
 
 wondering how Robin can possibly throw that hard
 
