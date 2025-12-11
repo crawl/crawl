@@ -2011,12 +2011,9 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int bonus_poison)
 
     if (mons->alive() && !mons->stasis())
     {
-        if (!mons->cannot_act())
-        {
-            simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
+        simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
                                          ? " seems to be slow for longer."
                                          : " seems to slow down.");
-        }
         mons->add_ench(mon_enchant(ENCH_SLOW, agent));
     }
 
