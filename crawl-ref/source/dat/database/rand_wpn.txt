@@ -327,6 +327,8 @@ Conscience
 
 Courage
 
+Daring
+
 Defiance
 
 Duty
@@ -356,8 +358,6 @@ Tenacity
 True Grit
 
 Valiance
-
-Valour
 
 Watchfulness
 
