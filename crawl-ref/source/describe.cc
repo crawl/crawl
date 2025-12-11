@@ -5285,6 +5285,48 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
     }
 }
 
+static void _add_attack_flavour_desc(string& desc, attack_flavour flavour,
+                                     const mon_attack_def &attack,
+                                     mon_attack_desc_info &di, int flav_dam, int real_dam,
+                                     int attk_mult)
+{
+    if (!desc.empty())
+        desc += " + ";
+
+    desc += uppercase_first(_flavour_base_desc(flavour));
+    if (flav_dam && attack.flavour != AF_PURE_FIRE)
+    {
+        desc += make_stringf(" (max %d%s)",
+                                flav_dam,
+                                attk_mult > 1 ? " each" : "");
+    }
+    else if (flavour == AF_DRAIN)
+        desc += make_stringf(" (max %d damage)", real_dam / 2);
+    else if (flavour == AF_CRUSH)
+    {
+        desc += make_stringf(" (%d-%d dam)", attack.damage,
+                                attack.damage*2);
+    }
+
+    if (di.flavour_without_dam
+        && !desc.empty()
+        && !flavour_triggers_damageless(attack.flavour)
+        && !flavour_has_mobility(attack.flavour)
+        && !(attack.flavour == AF_REACH_CLEAVE_UGLY))
+    {
+        desc += " (if damage dealt)";
+    }
+
+    if (flavour_has_reach(attack.flavour))
+    {
+        desc += (desc.empty() ? "Reaches"
+                        : (flavour == AF_REACH_CLEAVE_UGLY) ? "; cleaves"
+                        : "; reaches");
+        desc += (flavour == AF_RIFT ? " very far"
+                                    : " from afar");
+    }
+}
+
 // Get all the info required to form one row of the table of attacks.
 static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
                                const mon_attack_info &info, const item_def* wpn)
@@ -5403,37 +5445,20 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     // Attack flavours don't apply to ranged weapon attacks...
     if (!ranged)
     {
-        bonus_desc = uppercase_first(_flavour_base_desc(attack.flavour));
-        if (flav_dam && attack.flavour != AF_PURE_FIRE)
+        _add_attack_flavour_desc(bonus_desc, attack.flavour, attack, di, flav_dam, real_dam, attk_mult);
+
+        if (mi.is(MB_FIRE_CHAMPION))
         {
-            bonus_desc += make_stringf(" (max %d%s)",
-                                    flav_dam,
-                                    attk_mult > 1 ? " each" : "");
-        }
-        else if (attack.flavour == AF_DRAIN)
-            bonus_desc += make_stringf(" (max %d damage)", real_dam / 2);
-        else if (attack.flavour == AF_CRUSH)
-        {
-            bonus_desc += make_stringf(" (%d-%d dam)", attack.damage,
-                                    attack.damage*2);
+            _add_attack_flavour_desc(bonus_desc, AF_FIRE, attack, di,
+                                     flavour_damage(AF_FIRE, mi.hd, false), real_dam, attk_mult);
+            di.has_any_flavour = true;
         }
 
-        if (di.flavour_without_dam
-            && !bonus_desc.empty()
-            && !flavour_triggers_damageless(attack.flavour)
-            && !flavour_has_mobility(attack.flavour)
-            && !(attack.flavour == AF_REACH_CLEAVE_UGLY))
+        if (mi.is(MB_CHAOS_LACE))
         {
-            bonus_desc += " (if damage dealt)";
-        }
-
-        if (flavour_has_reach(attack.flavour))
-        {
-            bonus_desc += (bonus_desc.empty() ? "Reaches"
-                           : (attack.flavour == AF_REACH_CLEAVE_UGLY) ? "; cleaves"
-                           : "; reaches");
-            bonus_desc += (attack.flavour == AF_RIFT ? " very far"
-                                                     : " from afar");
+            _add_attack_flavour_desc(bonus_desc, AF_CHAOTIC, attack, di, 0, real_dam, attk_mult);
+            di.flavour_without_dam = !di.has_any_flavour;
+            di.has_any_flavour = true;
         }
     }
     // ...except Nessos' ranged attacks apply venom as a special effect
