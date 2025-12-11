@@ -4760,9 +4760,6 @@ bool melee_attack::do_knockback(bool slippery)
     if (defender->is_stationary())
         return false; // don't even print a message
 
-    if (attacker->cannot_act())
-        return false;
-
     const int size_diff =
         attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
     const coord_def old_pos = defender->pos();
@@ -4825,9 +4822,6 @@ bool melee_attack::do_drag()
 {
     if (defender->is_stationary())
         return false; // don't even print a message
-
-    if (attacker->cannot_act())
-        return false;
 
     // Calculate what is 'backwards' from the attacker's perspective, relative
     // to the defender. (Remember, this can occur on reaching attacks, so

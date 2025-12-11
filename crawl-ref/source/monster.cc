@@ -2904,6 +2904,11 @@ bool monster::paralysed() const
 
 bool monster::cannot_act() const
 {
+    return paralysed() || petrified() || has_ench(ENCH_DAZED) || has_ench(ENCH_VEXED);
+}
+
+bool monster::helpless() const
+{
     return paralysed() || petrified();
 }
 

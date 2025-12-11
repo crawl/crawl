@@ -2208,7 +2208,7 @@ static int _player_evasion(int final_scale, bool ignore_temporary)
        + (_player_temporary_evasion_modifiers() * scale);
 
     // Cap EV at a very low level if the player cannot act or is a tree.
-    if ((you.cannot_act() || you.form == transformation::tree))
+    if ((you.helpless() || you.form == transformation::tree))
     {
         final_evasion = min((2 + _player_evasion_size_factor() / 2) * scale,
                             final_evasion);
@@ -6046,6 +6046,13 @@ bool player::paralysed() const
 
 bool player::cannot_act() const
 {
+    return asleep() || paralysed() || petrified()
+            || you.duration[DUR_VEXED]
+            || you.duration[DUR_DAZED];
+}
+
+bool player::helpless() const
+{
     return asleep() || paralysed() || petrified();
 }
 
@@ -8468,7 +8475,7 @@ bool player::made_nervous_by(const monster *mons)
     if (!mons_is_wandering(*mons)
         && !mons->asleep()
         && !mons->confused()
-        && !mons->cannot_act()
+        && !mons->helpless()
         && mons_is_threatening(*mons)
         && !mons->wont_attack()
         && !mons->neutral())

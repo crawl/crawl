@@ -1320,7 +1320,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         if (you.form == transformation::slaughter)
             dam = dam * 10 / 15;
-        if (you.may_pruneify() && you.cannot_act())
+        if (you.may_pruneify() && you.helpless())
             dam /= 2;
         if (you.petrified())
             dam /= 2;

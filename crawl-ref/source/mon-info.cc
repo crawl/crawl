@@ -1767,7 +1767,7 @@ bool monster_info::net_escape_capable() const
     return false;
 }
 
-bool monster_info::cannot_act() const
+bool monster_info::helpless() const
 {
     return is(MB_PARALYSED) || is(MB_PETRIFIED);
 }
@@ -1781,7 +1781,7 @@ bool monster_info::asleep() const
 bool monster_info::incapacitated() const
 {
     // Duplicates actor::incapacitated
-    return cannot_act()
+    return helpless()
             || asleep()
             || is(MB_CONFUSED)
             || is(MB_CAUGHT);

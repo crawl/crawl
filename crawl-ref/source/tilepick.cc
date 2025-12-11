@@ -2852,7 +2852,7 @@ tileidx_t tileidx_player_mons()
             return TILEP_TRAN_FORTRESS_CRAB;
     }
 
-    if (you.may_pruneify() && you.cannot_act())
+    if (you.may_pruneify() && you.helpless())
         return TILEP_MONS_PRUNE;
 
     monster_type mons;

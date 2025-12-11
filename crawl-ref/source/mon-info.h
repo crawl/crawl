@@ -460,7 +460,7 @@ struct monster_info : public monster_info_base
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
-    bool cannot_act() const;
+    bool helpless() const;
     bool asleep() const;
     bool incapacitated() const;
     bool airborne() const;

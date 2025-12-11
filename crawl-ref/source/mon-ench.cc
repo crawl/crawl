@@ -1640,7 +1640,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
-            || confused() || asleep() || has_ench(ENCH_FEAR) || has_ench(ENCH_DAZED))
+            || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             del_ench(en, true, false);
             if (you.can_see(*this))
@@ -1660,7 +1660,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_CLOCKWORK_BEE_CAST:
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
-            || confused() || asleep() || has_ench(ENCH_FEAR) || has_ench(ENCH_DAZED))
+            || confused() || asleep() || has_ench(ENCH_FEAR))
         {
             del_ench(en, true, false);
             if (you.can_see(*this))
@@ -1783,7 +1783,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CHANNEL_SEARING_RAY:
         // If we've gotten incapacitated since we started, cancel the spell
         if (is_silenced() || cannot_act() || confused() || asleep()
-            || has_ench(ENCH_FEAR) || has_ench(ENCH_DAZED))
+            || has_ench(ENCH_FEAR))
         {
             del_ench(en, true, false);
             if (you.can_see(*this))

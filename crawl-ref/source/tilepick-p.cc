@@ -1412,7 +1412,7 @@ bool player_uses_monster_tile()
     return Options.tile_use_monster != MONS_0
             || you.duration[DUR_EXECUTION]
             || you.form == transformation::fortress_crab
-            || (you.may_pruneify() && you.cannot_act());
+            || (you.may_pruneify() && you.helpless());
 }
 
 #endif

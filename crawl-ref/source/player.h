@@ -875,6 +875,7 @@ public:
 
     bool paralysed() const override;
     bool cannot_act() const override;
+    bool helpless() const override;
     bool confused() const override;
     bool is_silenced() const override;
 

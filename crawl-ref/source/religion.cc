@@ -4524,7 +4524,7 @@ int get_monster_tension(const monster& mons, god_type god)
 
     const mon_attitude_type att = mons_attitude(mons);
 
-    if (mons.cannot_act())
+    if (mons.helpless())
         return 0;
 
     int exp = exp_value(mons);

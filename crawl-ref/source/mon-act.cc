@@ -2070,6 +2070,13 @@ void handle_monster_move(monster* mons)
         for (int i = 0; i < 2; i++)
             _passively_summon_butterfly(*mons);
 
+    if (mons->has_ench(ENCH_VEXED))
+    {
+        do_vexed_attack(*mons);
+        mons->lose_energy(EUT_ATTACK);
+        return;
+    }
+
     // Please change _slouch_damage to match!
     if (mons->cannot_act()
         || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
@@ -2130,13 +2137,6 @@ void handle_monster_move(monster* mons)
     if (mons_is_player_shadow(*mons))
     {
         mons->lose_energy(EUT_MOVE);
-        return;
-    }
-
-    if (mons->has_ench(ENCH_VEXED))
-    {
-        do_vexed_attack(*mons);
-        mons->lose_energy(EUT_ATTACK);
         return;
     }
 
@@ -2336,7 +2336,7 @@ void handle_monster_move(monster* mons)
             return;
         }
 
-        if (mons->cannot_act() || !_monster_move(mons, mmov))
+        if (!_monster_move(mons, mmov))
             mons->speed_increment -= non_move_energy;
     }
     you.update_beholder(mons);

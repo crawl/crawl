@@ -311,6 +311,7 @@ public:
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_act() const = 0;
+    virtual bool helpless() const = 0;
     virtual bool confused() const = 0;
     virtual bool asleep() const { return false; }
     virtual bool is_silenced() const = 0;
