@@ -988,6 +988,10 @@ a meet-up with @graffiti author name@ to learn how to survive in the dungeon
 # Possibly too lowbrow, but a good time can mean many things.
 w:1
 a meet-up with @graffiti author name@ for a good time
+
+# Paint that can come in this many colours and types is special.
+w:1
+the very paint used to make it
 %%%%
 # There's sometimes a chance of the two names being the same, but maybe
 # the author's crazy, or maybe the author spells their name the same way
