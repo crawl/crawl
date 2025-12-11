@@ -4,15 +4,151 @@
 # This file contains a list of graffiti, and of graffiti-related
 # things such as writing types.
 #
-# You can use graffiti author names and everything else from
-# monname.txt, as well as colour names and everything else from
-# colourname.txt, here.
+# You can use monster names and everything else from monname.txt, as
+# well as colour names and everything else from colourname.txt, here.
 #
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more
 # or less likely.
 #
 ##########################################################
+%%%%
+# Aside from apostle-specific names, this doesn't include rare orc
+# names (which are aliases), so that rare orc names don't show up
+# significantly more often than other rare names. Assume orcs are less
+# inclined to hide behind aliases.
+orc graffiti author name
+
+@any orc name@ the orc
+%%%%
+bland graffiti author name
+
+@bland name@
+
+w:2
+@bland name@ (not that one)
+
+w:2
+@bland name@ (the other one)
+
+w:2
+@bland name@ (yes, that one)
+%%%%
+rare god graffiti author name
+
+# Funny option for rumours that "Woog the god" worships another god, or
+# is secretly an atheist, or is secretly Wu Jian (the similarity in
+# names is merely a coincidence, although it's likely tied to why this
+# god is rare).
+Woog the god
+%%%%
+rare orc graffiti author name
+
+Spartorcus the orc
+%%%%
+rare ordinary graffiti author name
+
+# Not just in the documentation!
+Durwent the kobold
+
+Zlaz the goblin
+
+Fneeb the oni
+
+Vethion the elf
+%%%%
+rare title graffiti author name
+
+# Kilroy was here!
+Kilroy
+
+# Norby and the Terrified Taxi
+Garc the Great
+
+# A reference to ploggifying in make_name().
+Plog the Peerless
+
+# Funny option for rumours that "Dead [deliberately not Undead] Wendell"
+# deserves life, death, or undeath; or worships the Shining One.
+Dead Wendell
+%%%%
+# Same as @rare graffiti author name@ below, but without orc names.
+rare non-orc graffiti author name
+
+@rare ordinary graffiti author name@
+
+w:2
+@rare title graffiti author name@
+
+w:1
+@rare god graffiti author name@
+%%%%
+rare graffiti author name
+
+@rare ordinary graffiti author name@
+
+w:2
+@rare orc graffiti author name@
+
+w:2
+@rare title graffiti author name@
+
+w:1
+@rare god graffiti author name@
+%%%%
+# Same as @graffiti author name@ below, but without orc names.
+non-orc graffiti author name
+
+w:50
+@ancestor name@
+
+w:2
+@bland graffiti author name@
+
+w:2
+@RANDGEN@
+
+w:1
+@rare non-orc graffiti author name@
+%%%%
+# Same as @graffiti author name@ below, but without orc names or rare
+# names (or rare orc names).
+changeable graffiti author name
+
+w:50
+@ancestor name@
+
+w:2
+@bland graffiti author name@
+
+w:2
+@RANDGEN@
+%%%%
+# Same as @graffiti author name@ below, but without orc names, randomly
+# generated names, or rare names (or rare orc names).
+changeable non-randgen graffiti author name
+
+w:50
+@ancestor name@
+
+w:2
+@bland graffiti author name@
+%%%%
+graffiti author name
+
+w:50
+@ancestor name@
+
+@orc graffiti author name@
+
+w:2
+@bland graffiti author name@
+
+w:2
+@RANDGEN@
+
+w:1
+@rare graffiti author name@
 %%%%
 writing_adj
 
