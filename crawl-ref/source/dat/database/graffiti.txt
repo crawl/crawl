@@ -13,15 +13,61 @@
 #
 ##########################################################
 %%%%
-# Aside from apostle-specific names, this doesn't include rare orc
-# names (which are aliases), so that rare orc names don't show up
-# significantly more often than other rare names. Assume orcs are less
-# inclined to hide behind aliases.
-orc graffiti author name
+graffiti_author_any
 
-@any orc name@ the orc
+w:50
+@ancestor name@
+
+@graffiti_author_orc@
+
+w:2
+@graffiti_author_bland@
+
+w:2
+@RANDGEN@
+
+w:1
+@rare_graffiti_author_any@
 %%%%
-bland graffiti author name
+# Same as @graffiti_author_any@, but without orc names or rare names (or
+# rare orc names).
+graffiti_author_any_changeable
+
+w:50
+@ancestor name@
+
+w:2
+@graffiti_author_bland@
+
+w:2
+@RANDGEN@
+%%%%
+# Same as @graffiti_author_any@, but without orc names, randomly
+# generated names, or rare names (or rare orc names).
+graffiti_author_any_changeable_non-randgen
+
+w:50
+@ancestor name@
+
+w:2
+@graffiti_author_bland@
+%%%%
+# Same as @graffiti_author_any@, but without orc names.
+graffiti_author_any_non-orc
+
+w:50
+@ancestor name@
+
+w:2
+@graffiti_author_bland@
+
+w:2
+@RANDGEN@
+
+w:1
+@rare_graffiti_author_any_non-orc@
+%%%%
+graffiti_author_bland
 
 @bland name@
 
@@ -34,7 +80,39 @@ w:2
 w:2
 @bland name@ (yes, that one)
 %%%%
-rare god graffiti author name
+# Aside from apostle-specific names, this doesn't include rare orc
+# names (which are aliases), so that rare orc names don't show up
+# significantly more often than other rare names. Assume orcs are less
+# inclined to hide behind aliases.
+graffiti_author_orc
+
+@any orc name@ the orc
+%%%%
+rare_graffiti_author_any
+
+@rare_graffiti_author_ordinary@
+
+w:2
+@rare_graffiti_author_orc@
+
+w:2
+@rare_graffiti_author_title@
+
+w:1
+@rare_graffiti_author_god@
+%%%%
+# Same as @rare_graffiti_author_any@, but without orc names.
+rare_graffiti_author_any_non-orc
+
+@rare_graffiti_author_ordinary@
+
+w:2
+@rare_graffiti_author_title@
+
+w:1
+@rare_graffiti_author_god@
+%%%%
+rare_graffiti_author_god
 
 # Funny option for rumours that "Woog the god" worships another god, or
 # is secretly an atheist, or is secretly Wu Jian (the similarity in
@@ -42,11 +120,11 @@ rare god graffiti author name
 # god is rare).
 Woog the god
 %%%%
-rare orc graffiti author name
+rare_graffiti_author_orc
 
 Spartorcus the orc
 %%%%
-rare ordinary graffiti author name
+rare_graffiti_author_ordinary
 
 # Not just in the documentation!
 Durwent the kobold
@@ -57,7 +135,7 @@ Fneeb the oni
 
 Vethion the elf
 %%%%
-rare title graffiti author name
+rare_graffiti_author_title
 
 # Kilroy was here!
 Kilroy
@@ -71,84 +149,6 @@ Plog the Peerless
 # Funny option for rumours that "Dead [deliberately not Undead] Wendell"
 # deserves life, death, or undeath; or worships the Shining One.
 Dead Wendell
-%%%%
-# Same as @rare graffiti author name@ below, but without orc names.
-rare non-orc graffiti author name
-
-@rare ordinary graffiti author name@
-
-w:2
-@rare title graffiti author name@
-
-w:1
-@rare god graffiti author name@
-%%%%
-rare graffiti author name
-
-@rare ordinary graffiti author name@
-
-w:2
-@rare orc graffiti author name@
-
-w:2
-@rare title graffiti author name@
-
-w:1
-@rare god graffiti author name@
-%%%%
-# Same as @graffiti author name@ below, but without orc names.
-non-orc graffiti author name
-
-w:50
-@ancestor name@
-
-w:2
-@bland graffiti author name@
-
-w:2
-@RANDGEN@
-
-w:1
-@rare non-orc graffiti author name@
-%%%%
-# Same as @graffiti author name@ below, but without orc names or rare
-# names (or rare orc names).
-changeable graffiti author name
-
-w:50
-@ancestor name@
-
-w:2
-@bland graffiti author name@
-
-w:2
-@RANDGEN@
-%%%%
-# Same as @graffiti author name@ below, but without orc names, randomly
-# generated names, or rare names (or rare orc names).
-changeable non-randgen graffiti author name
-
-w:50
-@ancestor name@
-
-w:2
-@bland graffiti author name@
-%%%%
-graffiti author name
-
-w:50
-@ancestor name@
-
-@orc graffiti author name@
-
-w:2
-@bland graffiti author name@
-
-w:2
-@RANDGEN@
-
-w:1
-@rare graffiti author name@
 %%%%
 writing_adj
 
@@ -237,11 +237,11 @@ w:2
 @graffiti_class_any@
 
 w:1
-a meet-up with @graffiti author name@ to learn how to survive in the dungeon
+a meet-up with @graffiti_author_any@ to learn how to survive in the dungeon
 
 # Possibly too lowbrow, but a good time can mean many things.
 w:1
-a meet-up with @graffiti author name@ for a good time
+a meet-up with @graffiti_author_any@ for a good time
 
 # Paint that can come in this many colours and types is special.
 w:1
@@ -258,76 +258,76 @@ the very paint used to make it
 # may also have suffixes.
 graffiti_author_changed_names
 
-@changeable graffiti author name@ has changed names and now goes by @changeable graffiti author name@
+@graffiti_author_any_changeable@ has changed names and now goes by @graffiti_author_any_changeable@
 
 w:2
-@orc graffiti author name@ has changed names and now goes by @orc graffiti author name@
+@graffiti_author_orc@ has changed names and now goes by @graffiti_author_orc@
 
 w:2
-@rare graffiti author name@ has passed on the name to someone else worthy of it
+@rare_graffiti_author_any@ has passed on the name to someone else worthy of it
 
 w:1
-@changeable non-randgen graffiti author name@ has changed names due to Xom's influence and now goes by @RANDGEN@
+@graffiti_author_any_changeable_non-randgen@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
 # This can produce an orc who worships (or is) Zin, or a non-orc who
 # worships (or is) Beogh, but you shouldn't believe everything you read.
 graffiti_author_changed_religions
 
-@graffiti author name@ has abandoned @random_god@
+@graffiti_author_any@ has abandoned @random_god@
 
-@graffiti author name@ has converted away from @random_god@
+@graffiti_author_any@ has converted away from @random_god@
 
-@graffiti author name@ has converted to @random_god@
+@graffiti_author_any@ has converted to @random_god@
 
-@graffiti author name@ is secretly an atheist
+@graffiti_author_any@ is secretly an atheist
 
-@graffiti author name@ is secretly not an atheist
+@graffiti_author_any@ is secretly not an atheist
 
-@graffiti author name@ is secretly @random_god@
+@graffiti_author_any@ is secretly @random_god@
 
-@graffiti author name@ secretly worships Zin
+@graffiti_author_any@ secretly worships Zin
 
-@graffiti author name@ secretly worships Zin instead of @random_god_chaotic@
+@graffiti_author_any@ secretly worships Zin instead of @random_god_chaotic@
 
-@graffiti author name@ secretly worships @random_god_chaotic@
+@graffiti_author_any@ secretly worships @random_god_chaotic@
 
-@graffiti author name@ secretly worships @random_god_chaotic@ instead of Zin
+@graffiti_author_any@ secretly worships @random_god_chaotic@ instead of Zin
 
-@graffiti author name@ secretly worships @random_god_good@
+@graffiti_author_any@ secretly worships @random_god_good@
 
-@graffiti author name@ secretly worships @random_god_good@ instead of @random_god_evil@
+@graffiti_author_any@ secretly worships @random_god_good@ instead of @random_god_evil@
 
-@graffiti author name@ secretly worships @random_god_evil@
+@graffiti_author_any@ secretly worships @random_god_evil@
 
-@graffiti author name@ secretly worships @random_god_evil@ instead of @random_god_good@
+@graffiti_author_any@ secretly worships @random_god_evil@ instead of @random_god_good@
 %%%%
 graffiti_author_vengeance
 
-@graffiti author name@ has avenged @graffiti author name@
+@graffiti_author_any@ has avenged @graffiti_author_any@
 
-@graffiti author name@ has avenged @graffiti author name@ for @graffiti_vengeance_reason@
+@graffiti_author_any@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
 
-@graffiti author name@ swears vengeance on @graffiti author name@
+@graffiti_author_any@ swears vengeance on @graffiti_author_any@
 
-@graffiti author name@ swears vengeance on @graffiti author name@ for @graffiti_vengeance_reason@
+@graffiti_author_any@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
 
-the ghost of @graffiti author name@ still haunts @graffiti author name@
+the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@
 
-the ghost of @graffiti author name@ still haunts @graffiti author name@ for @graffiti_vengeance_reason@
+the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
 
 # Vengeance is more common among orcs.
 
-@orc graffiti author name@ has avenged @graffiti author name@
+@graffiti_author_orc@ has avenged @graffiti_author_any@
 
-@orc graffiti author name@ has avenged @graffiti author name@ for @graffiti_vengeance_reason@
+@graffiti_author_orc@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
 
-@orc graffiti author name@ swears vengeance on @graffiti author name@
+@graffiti_author_orc@ swears vengeance on @graffiti_author_any@
 
-@orc graffiti author name@ swears vengeance on @graffiti author name@ for @graffiti_vengeance_reason@
+@graffiti_author_orc@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
 
-the ghost of @orc graffiti author name@ still haunts @graffiti author name@
+the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@
 
-the ghost of @orc graffiti author name@ still haunts @graffiti author name@ for @graffiti_vengeance_reason@
+the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
 %%%%
 graffiti_class_any
 
@@ -388,9 +388,9 @@ a shapeshifter
 %%%%
 graffiti_fight
 
-of an argument between @graffiti author name@ and @graffiti author name@
+of an argument between @graffiti_author_any@ and @graffiti_author_any@
 
-of a three-way argument between @graffiti author name@, @graffiti author name@, and @graffiti author name@
+of a three-way argument between @graffiti_author_any@, @graffiti_author_any@, and @graffiti_author_any@
 
 w:2
 of a fight between [berserkers|Trog worshippers] and erythrospite sufferers over the true meaning of blood rage
@@ -406,7 +406,7 @@ w:2
 an unknown god
 
 w:1
-@rare god graffiti author name@
+@rare_graffiti_author_god@
 
 # Behold the power of cheese!
 w:1
@@ -419,7 +419,7 @@ an accident
 a coincidence
 
 # Garak, Star Trek: Deep Space Nine
-a coincidence but @graffiti author name@ doesn't trust coincidences
+a coincidence but @graffiti_author_any@ doesn't trust coincidences
 
 a cover-up
 
@@ -648,23 +648,23 @@ of some very imaginative obscenities you've never seen before
 # special.
 graffiti_professor_any
 
-@changeable graffiti author name@
+@graffiti_author_any_changeable@
 
 w:2
-@orc graffiti author name@
+@graffiti_author_orc@
 
 w:1
-@rare graffiti author name@ (supposedly)
+@rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_evocations
 
-@changeable graffiti author name@ the @graffiti_professor_evocations_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_evocations_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_evocations_type@
+@graffiti_author_orc@ @graffiti_professor_evocations_type@
 
 w:1
-the @graffiti_professor_evocations_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_evocations_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_evocations_type
 
@@ -674,13 +674,13 @@ tinkerer
 %%%%
 graffiti_professor_invocations
 
-@changeable graffiti author name@ the @graffiti_professor_invocations_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_invocations_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_invocations_type@
+@graffiti_author_orc@ @graffiti_professor_invocations_type@
 
 w:1
-the @graffiti_professor_invocations_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_invocations_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_invocations_type
 
@@ -694,13 +694,13 @@ theologian
 %%%%
 graffiti_professor_magic
 
-@changeable graffiti author name@ the @graffiti_professor_magic_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_magic_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_magic_type@
+@graffiti_author_orc@ @graffiti_professor_magic_type@
 
 w:1
-the @graffiti_professor_magic_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_magic_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_magic_type
 
@@ -714,13 +714,13 @@ wizard
 %%%%
 graffiti_professor_mundane
 
-@changeable graffiti author name@ the @graffiti_professor_mundane_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_mundane_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_mundane_type@
+@graffiti_author_orc@ @graffiti_professor_mundane_type@
 
 w:1
-the @graffiti_professor_mundane_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_mundane_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_mundane_type
 
@@ -734,13 +734,13 @@ warrior
 %%%%
 graffiti_professor_necromancy
 
-@changeable graffiti author name@ the @graffiti_professor_necromancy_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_necromancy_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_necromancy_type@
+@graffiti_author_orc@ @graffiti_professor_necromancy_type@
 
 w:1
-the @graffiti_professor_necromancy_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_necromancy_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_necromancy_type
 
@@ -750,13 +750,13 @@ necromancer
 %%%%
 graffiti_professor_shapeshifting
 
-@changeable graffiti author name@ the @graffiti_professor_shapeshifting_type@
+@graffiti_author_any_changeable@ the @graffiti_professor_shapeshifting_type@
 
 w:2
-@orc graffiti author name@ @graffiti_professor_shapeshifting_type@
+@graffiti_author_orc@ @graffiti_professor_shapeshifting_type@
 
 w:1
-the @graffiti_professor_shapeshifting_type@ @rare graffiti author name@ (supposedly)
+the @graffiti_professor_shapeshifting_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_shapeshifting_type
 
@@ -912,21 +912,21 @@ alluding to the "Plog" Conspiracy and why it hides that word everywhere
 %%%%
 graffiti_short_saying
 
-@graffiti author name@ was here
+@graffiti_author_any@ was here
 
-@graffiti author name@ @graffiti_loves_or_hates@ @graffiti author name@
+@graffiti_author_any@ @graffiti_loves_or_hates@ @graffiti_author_any@
 
-@graffiti author name@ @graffiti_loves_or_hates@ @graffiti_relative_or_quality@ of @graffiti author name@
+@graffiti_author_any@ @graffiti_loves_or_hates@ @graffiti_relative_or_quality@ of @graffiti_author_any@
 
-@graffiti author name@ @graffiti_life_or_death@
+@graffiti_author_any@ @graffiti_life_or_death@
 
-@graffiti author name@ sells @graffiti_ware_quality@ wares
+@graffiti_author_any@ sells @graffiti_ware_quality@ wares
 
-@graffiti author name@ steals from @graffiti author name@
+@graffiti_author_any@ steals from @graffiti_author_any@
 
-what happened to @graffiti author name@ was @graffiti_happened_reason@
+what happened to @graffiti_author_any@ was @graffiti_happened_reason@
 
-@graffiti author name@ has been replaced by @graffiti_duplicate@
+@graffiti_author_any@ has been replaced by @graffiti_duplicate@
 
 @graffiti_author_vengeance@
 
@@ -937,7 +937,7 @@ w:2
 
 # Strong Bad
 w:1
-@graffiti author name@ is actually a wagon full of pancakes
+@graffiti_author_any@ is actually a wagon full of pancakes
 %%%%
 graffiti_species
 
@@ -1002,27 +1002,27 @@ graffiti of unreadable @writing_type@
 
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@
 
-graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@ and a signature by @graffiti author name@
+graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@ and a signature by @graffiti_author_any@
 %%%%
 graffiti_vengeance_reason
 
-abandoning @graffiti author name@
+abandoning @graffiti_author_any@
 
 abandoning them
 
-betraying @graffiti author name@
+betraying @graffiti_author_any@
 
 betraying them
 
-killing @graffiti author name@
+killing @graffiti_author_any@
 
 killing them
 
-stealing from @graffiti author name@
+stealing from @graffiti_author_any@
 
 stealing from them
 
-wounding @graffiti author name@
+wounding @graffiti_author_any@
 
 wounding them
 %%%%
@@ -1040,19 +1040,19 @@ graffiti_with_signature_maybe
 
 @graffiti_type@
 
-@graffiti_type@ signed by @graffiti author name@
+@graffiti_type@ signed by @graffiti_author_any@
 %%%%
 graffiti_with_signature_maybe_non-orc
 
 @graffiti_type@
 
-@graffiti_type@ signed by @non-orc graffiti author name@
+@graffiti_type@ signed by @graffiti_author_any_non-orc@
 %%%%
 graffiti_with_signature_maybe_orc
 
 @graffiti_type@
 
-@graffiti_type@ signed by @orc graffiti author name@
+@graffiti_type@ signed by @graffiti_author_orc@
 %%%%
 coloured_graffiti
 
