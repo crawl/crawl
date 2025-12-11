@@ -865,6 +865,8 @@ dark
 
 dull
 
+dusky
+
 faint
 
 gleaming
