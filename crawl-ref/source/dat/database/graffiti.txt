@@ -1051,6 +1051,8 @@ high-quality
 
 low-quality
 
+mediocre
+
 superior
 %%%%
 any_graffiti
