@@ -256,7 +256,7 @@ the very paint used to make it
 # involved in that. Also, don't change from rare names to non-rare names
 # or vice versa; the rare names are effectively aliases or titles that
 # may also have suffixes.
-graffiti_author_changed_names
+graffiti_changed_names
 
 @graffiti_author_any_changeable@ has changed names and now goes by @graffiti_author_any_changeable@
 
@@ -271,7 +271,7 @@ w:1
 %%%%
 # This can produce an orc who worships (or is) Zin, or a non-orc who
 # worships (or is) Beogh, but you shouldn't believe everything you read.
-graffiti_author_changed_religions
+graffiti_changed_religions
 
 @graffiti_author_any@ has abandoned @random_god@
 
@@ -300,34 +300,6 @@ graffiti_author_changed_religions
 @graffiti_author_any@ secretly worships @random_god_evil@
 
 @graffiti_author_any@ secretly worships @random_god_evil@ instead of @random_god_good@
-%%%%
-graffiti_author_vengeance
-
-@graffiti_author_any@ has avenged @graffiti_author_any@
-
-@graffiti_author_any@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
-
-@graffiti_author_any@ swears vengeance on @graffiti_author_any@
-
-@graffiti_author_any@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
-
-the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@
-
-the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
-
-# Vengeance is more common among orcs.
-
-@graffiti_author_orc@ has avenged @graffiti_author_any@
-
-@graffiti_author_orc@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
-
-@graffiti_author_orc@ swears vengeance on @graffiti_author_any@
-
-@graffiti_author_orc@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
-
-the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@
-
-the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
 %%%%
 graffiti_class_any
 
@@ -928,12 +900,12 @@ what happened to @graffiti_author_any@ was @graffiti_happened_reason@
 
 @graffiti_author_any@ has been replaced by @graffiti_duplicate@
 
-@graffiti_author_vengeance@
+@graffiti_vengeance@
 
-@graffiti_author_changed_religions@
+@graffiti_changed_religions@
 
 w:2
-@graffiti_author_changed_names@
+@graffiti_changed_names@
 
 # Strong Bad
 w:1
@@ -1003,6 +975,34 @@ graffiti of unreadable @writing_type@
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@
 
 graffiti of @writing_type@ that are unreadable except for bits hailing @graffiti_hailed_god@ and a signature by @graffiti_author_any@
+%%%%
+graffiti_vengeance
+
+@graffiti_author_any@ has avenged @graffiti_author_any@
+
+@graffiti_author_any@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
+
+@graffiti_author_any@ swears vengeance on @graffiti_author_any@
+
+@graffiti_author_any@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
+
+the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@
+
+the ghost of @graffiti_author_any@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
+
+# Vengeance is more common among orcs.
+
+@graffiti_author_orc@ has avenged @graffiti_author_any@
+
+@graffiti_author_orc@ has avenged @graffiti_author_any@ for @graffiti_vengeance_reason@
+
+@graffiti_author_orc@ swears vengeance on @graffiti_author_any@
+
+@graffiti_author_orc@ swears vengeance on @graffiti_author_any@ for @graffiti_vengeance_reason@
+
+the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@
+
+the ghost of @graffiti_author_orc@ still haunts @graffiti_author_any@ for @graffiti_vengeance_reason@
 %%%%
 graffiti_vengeance_reason
 
