@@ -72,7 +72,7 @@ w:50
 orc apostle priest name
 
 w:1
-_orc_priest_name_
+@_orc_priest_name_@
 
 w:50
 @orc name@
