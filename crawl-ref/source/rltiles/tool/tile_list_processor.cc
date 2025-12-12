@@ -1586,7 +1586,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                 for (unsigned int c = 0; c < lcenum.size(); c++)
                     lcenum[c] = toalower(lcenum[c]);
 
-                if (i == 0 || m_page.m_counts[i] == 1)
+                if (m_page.m_counts[i] == 1)
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
                 else
                 {
