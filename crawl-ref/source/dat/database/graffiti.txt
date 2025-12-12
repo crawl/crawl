@@ -634,8 +634,8 @@ of some very imaginative obscenities you've never seen before
 # ending with " the orc") and rare names (aliases or titles that may
 # also have suffixes, and may also be orcs) separately from them, just
 # as we do with changed names above. Professors can sometimes get titles
-# that monsters can't (e.g. orc mages), but they're supposed to be
-# special.
+# that monsters can't (e.g. "the mage So-and-so the orc"), but they're
+# supposed to be special.
 graffiti_professor
 
 @graffiti_author_any_changeable@
