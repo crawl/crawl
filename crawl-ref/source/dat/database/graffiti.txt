@@ -508,12 +508,6 @@ loves
 
 praises
 %%%%
-graffiti_mass_meeting_type
-
-a gathering
-
-a meeting
-%%%%
 graffiti_mass_meeting_ordinary
 
 of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
@@ -626,6 +620,12 @@ of a group of worshippers of the Shining One [discussing|opposing] evil in the w
 of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their experiences in the Abyss
 
 of a group of orcs promoting Beogh's word
+%%%%
+graffiti_mass_meeting_type
+
+a gathering
+
+a meeting
 %%%%
 graffiti_obscenities
 
