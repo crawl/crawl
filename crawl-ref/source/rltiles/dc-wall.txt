@@ -738,6 +738,9 @@ slime_stone1
 slime_stone2
 slime_stone3
 
+slimy_transparent_stone0 SLIMY_TRANSPARENT_STONE
+slimy_transparent_stone1
+
 %weight 10
 orc0 WALL_ORC
 orc1
