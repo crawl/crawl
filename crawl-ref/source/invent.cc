@@ -1473,6 +1473,10 @@ void display_inventory()
     menu.load_inv_items(Options.show_paged_inventory ? OSEL_GEAR : OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
+    // Jump to the first non-empty page.
+    if (flags & MF_PAGED_INVENTORY)
+        menu.cycle_page(1);
+
     menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
     {
