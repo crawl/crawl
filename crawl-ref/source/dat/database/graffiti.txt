@@ -740,6 +740,17 @@ the spouses
 
 the strength
 %%%%
+graffiti_religion_non-orc
+
+lauding Zin and Zin's laws
+
+lauding Zin and talking about how following Zin's laws is essential
+
+lauding Zin and talking about how those who break Zin's laws deserve punishment
+
+# Paradox!
+lauding Zin but warning that putting graffiti on surfaces is often unlawful
+%%%%
 graffiti_religion_not_non-orc_or_orc
 
 [glorifying|blaspheming] the gods
@@ -801,17 +812,6 @@ paying homage to Ru and talking about how all of reality is not what you think i
 giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
 
 flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
-%%%%
-graffiti_religion_non-orc
-
-lauding Zin and Zin's laws
-
-lauding Zin and talking about how following Zin's laws is essential
-
-lauding Zin and talking about how those who break Zin's laws deserve punishment
-
-# Paradox!
-lauding Zin but warning that putting graffiti on surfaces is often unlawful
 %%%%
 graffiti_religion_orc
 
