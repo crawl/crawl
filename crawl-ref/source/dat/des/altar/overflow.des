@@ -1864,7 +1864,6 @@ TILE:    G = dngn_statue_ancient_hero w:2 / dngn_statue_archer / \
              dngn_statue_axe / dngn_statue_cat w:2 / dngn_statue_centaur / \
              dngn_statue_mermaid / dngn_statue_naga / \
              dngn_statue_polearm / dngn_statue_princess / dngn_statue_tengu
-: end
 : standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
 MAP
  xxxPxxx
@@ -7168,6 +7167,95 @@ MAP
   ...b...b...
     ...b...
       ...
+ENDMAP
+
+NAME:    nicolae_overflow_four_feature_corners
+TAGS:    no_pool_fixup transparent decor
+KFEAT:   - = iron_grate
+SHUFFLE: bvcmwl-
+KPROP:   l = no_cloud_gen
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+xxxx@xxxx
+xbx...xbx
+xx..v..xx
+x.......x
+@.v.B.v.@
+x.......x
+xx..v..xx
+xbx...xbx
+xxxx@xxxx
+ENDMAP
+
+NAME:    nicolae_overflow_rhomboverflow
+TAGS:    no_pool_fixup transparent decor
+SHUFFLE: cw
+SUBST:   w : wwwwl
+KPROP:   l = no_cloud_gen
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+    w
+   wcw
+  wc.cw
+ wc...cw
+wc..B..cw
+ wc...cw
+  wc.cw
+   w.w
+    @
+ENDMAP
+
+NAME:    nicolae_overflow_some_kind_of_shallow_water_thing
+TAGS:    no_pool_fixup transparent decor
+SHUFFLE: Ww
+SUBST:   w : w:90 c:30 l
+KPROP:   l = no_cloud_gen
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+.......
+.wWwWw.
+.WwWwW.
+.wWBWw.
+.WwWwW.
+.wWwWw.
+.......
+ENDMAP
+
+# Each transporter will take you in a straight line across the intersection, but
+# only one will stop in the middle with the altar first.
+NAME:    nicolae_overflow_soul_deal_at_the_crossroads
+TAGS:    transparent decor
+WEIGHT:  2
+SHUFFLE: Sz/UB, Sz, UB
+KMASK:   `BUSz = opaque
+MARKER:  p = lua:transp_loc("nico_xroads_s")
+MARKER:  P = lua:transp_dest_loc("nico_xroads_s")
+MARKER:  q = lua:transp_loc("nico_xroads_e")
+MARKER:  Q = lua:transp_dest_loc("nico_xroads_e")
+MARKER:  r = lua:transp_loc("nico_xroads_n")
+MARKER:  R = lua:transp_dest_loc("nico_xroads_n")
+MARKER:  s = lua:transp_loc("nico_xroads_altar")
+MARKER:  S = lua:transp_dest_loc("nico_xroads_altar")
+MARKER:  z = lua:transp_loc("nico_xroads_w")
+MARKER:  Z = lua:transp_dest_loc("nico_xroads_w")
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+     xb@@bx
+    xxc..cxx
+   xxxc..cxxx
+  xxxxc..cxxxx
+ xxxxxcpRcxxxxx
+xxxxxbcnncbxxxxx
+bccccc````cccccb
+@...Zn`SB`ns...@
+@...qn`Uz`nQ...@
+bccccc````cccccb
+xxxxxbcnncbxxxxx
+ xxxxxcPrcxxxxx
+  xxxxc..cxxxx
+   xxxc..cxxx
+    xxc..cxx
+     xb@@bx
 ENDMAP
 
 NAME:   amethyst_overflow_temple_binary
