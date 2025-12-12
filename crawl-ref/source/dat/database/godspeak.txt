@@ -285,6 +285,8 @@ Faint @any_colour@ flames crawl over @the_feature@.
 
 @The_feature@ is briefly covered in @any_colour_pattern@.
 
+@The_feature@ is briefly covered in @any_glowing_colour_pattern@.
+
 @The_feature@ is briefly covered in @any_graffiti@.
 %%%%
 Xom feature metal wall
@@ -304,6 +306,8 @@ Xom feature stone arch
 @The_feature@ briefly shows bizarre @glowing_adj@ buildings on the other side.
 
 @The_feature@ briefly shows a translucent wall covered in @any_colour_pattern@ on the other side.
+
+@The_feature@ briefly shows a translucent wall covered in @any_glowing_colour_pattern@ on the other side.
 
 @The_feature@ briefly shows a translucent wall covered in @any_graffiti@ on the other side.
 %%%%
@@ -505,7 +509,7 @@ Xom cloak slot
 
 @Your_item@ briefly wraps itself around your @head@!
 
-@Your_item@ is briefly covered in lurid @any_colour_pattern@!
+@Your_item@ is briefly covered in @any_glowing_colour_pattern@!
 %%%%
 Xom helmet slot
 

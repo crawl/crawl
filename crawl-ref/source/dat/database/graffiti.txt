@@ -1059,6 +1059,8 @@ any_graffiti
 
 graffiti of @any_colour_pattern@
 
+graffiti of @any_glowing_colour_pattern@
+
 graffiti of @writing_type@
 
 @graffiti_unreadable@
