@@ -1474,7 +1474,7 @@ void display_inventory()
     menu.set_type(menu_type::describe);
 
     // Jump to the first non-empty page.
-    if (flags & MF_PAGED_INVENTORY)
+    if ((flags & MF_PAGED_INVENTORY) && menu.item_count(false) == 0)
         menu.cycle_page(1);
 
     menu.show(true);
