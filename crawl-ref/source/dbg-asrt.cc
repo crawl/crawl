@@ -736,6 +736,14 @@ void do_crash_dump()
         fprintf(file, "%s\n", screenshot().c_str());
     }
 
+    fprintf(file, "dlua errors:\n");
+    for (const CLuaError &error : dlua_errors)
+    {
+        fprintf(file, "%s\n%s\n", error.message.c_str(),
+                error.stack_trace.c_str());
+    }
+    fprintf(file, "\n");
+
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
     fprintf(file, "clua stack:\n");
