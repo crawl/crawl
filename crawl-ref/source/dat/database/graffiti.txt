@@ -923,9 +923,9 @@ wondering what else Ijyb can make besides wands
 
 speculating on the true nature of Jeremiah's master
 %%%%
-# This is not in @graffiti_religion_any@ because it's structured too
-# differently. Assume one can hail a god without necessarily worshipping
-# a god.
+# This is not in @graffiti_religion_[whatever]@ because it's structured
+# too differently. Assume one can hail a god without necessarily
+# worshipping a god.
 graffiti_unreadable
 
 graffiti of unreadable @writing_type@
