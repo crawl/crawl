@@ -1008,12 +1008,6 @@ graffiti of @writing_type@
 
 @graffiti_type_with_signature_maybe@ @graffiti_image@
 
-@graffiti_type_with_signature_maybe@ @graffiti_religion_not_non-orc_or_orc@
-
-@graffiti_type_with_signature_maybe_non-orc@ @graffiti_religion_non-orc@
-
-@graffiti_type_with_signature_maybe_orc@ @graffiti_religion_orc@
-
 @graffiti_type_with_signature_maybe@ @graffiti_rumour@
 
 @graffiti_type_with_signature_maybe@ @graffiti_unique_comment@
@@ -1025,6 +1019,15 @@ graffiti of @writing_type@
 @graffiti_type@ @graffiti_advertisement@
 
 @graffiti_type@ saying that @graffiti_short_saying@
+
+w:2
+@graffiti_type_with_signature_maybe@ @graffiti_religion_not_non-orc_or_orc@
+
+w:2
+@graffiti_type_with_signature_maybe_non-orc@ @graffiti_religion_non-orc@
+
+w:2
+@graffiti_type_with_signature_maybe_orc@ @graffiti_religion_orc@
 
 w:1
 @graffiti_type@ @graffiti_obscenities@
