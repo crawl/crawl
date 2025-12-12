@@ -251,31 +251,25 @@ graffiti_type_with_signature_maybe_orc
 %%%%
 graffiti_advertisement
 
-@graffiti_advertisement_type@ @graffiti_mass_meeting_type@ @graffiti_mass_meeting_ordinary@
+advertising a meeting @graffiti_mass_meeting_ordinary@
 
-@graffiti_advertisement_type@ @graffiti_mass_meeting_type@ @graffiti_mass_meeting_religious@
+advertising a meeting @graffiti_mass_meeting_religious@
 
-@graffiti_advertisement_type@ a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
+advertising a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
 
 w:2
-@graffiti_advertisement_type@ @graffiti_class_any@
+advertising @graffiti_class_any@
 
 w:1
-@graffiti_advertisement_type@ a meet-up with @graffiti_author_any@ to learn how to survive in the dungeon
+advertising a meet-up with @graffiti_author_any@ to learn how to survive in the dungeon
 
 # Possibly too lowbrow, but a good time can mean many things.
 w:1
-@graffiti_advertisement_type@ a meet-up with @graffiti_author_any@ for a good time
+advertising a meet-up with @graffiti_author_any@ for a good time
 
 # Paint that can come in this many colours and types is special.
 w:1
-@graffiti_advertisement_type@ the very paint used to make it
-%%%%
-graffiti_advertisement_type
-
-advertising
-
-promoting
+advertising the very paint used to make it
 %%%%
 # There's sometimes a chance of the two names being the same, but maybe
 # the author's crazy, or maybe the author spells their name the same way
@@ -626,12 +620,6 @@ of a group of worshippers of the Shining One [discussing|opposing] evil in the w
 of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their experiences in the Abyss
 
 of a group of orcs promoting Beogh's word
-%%%%
-graffiti_mass_meeting_type
-
-a gathering
-
-a meeting
 %%%%
 graffiti_obscenities
 
