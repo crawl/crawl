@@ -1972,27 +1972,13 @@ void bolt::apply_bolt_paralysis(monster* mons)
 // drastically reduced.
 void bolt::apply_bolt_petrify(monster* mons)
 {
-    if (mons->petrified())
+    if (mons->petrifying() || mons->petrified())
         return;
 
-    if (mons->petrifying())
+    if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, agent())))
     {
-        // If the petrifying is not yet finished, we can force it to happen
-        // right away by casting again. Otherwise, the spell has no further
-        // effect.
-        mons->del_ench(ENCH_PETRIFYING, true, false);
-        // del_ench() would do it, but let's call it ourselves for proper agent
-        // blaming and messaging.
-        if (mons->fully_petrify(agent()))
-            obvious_effect = true;
-    }
-    else if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, agent())))
-    {
-        if (!mons_is_immotile(*mons)
-            && simple_monster_message(*mons, " is moving more slowly."))
-        {
-            obvious_effect = true;
-        }
+        simple_monster_message(*mons, " begins to petrify.");
+        obvious_effect = true;
     }
 }
 

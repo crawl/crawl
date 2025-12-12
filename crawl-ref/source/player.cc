@@ -7513,7 +7513,7 @@ void player::petrify(const actor *who, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (res_petrify() && !force)
+    if (res_petrify() && !force || petrifying() || petrified())
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -7528,17 +7528,9 @@ void player::petrify(const actor *who, bool force)
     // Petrification always wakes you up
     you.wake_up();
 
-    if (petrifying())
-    {
-        mpr("Your limbs have turned to stone.");
-        duration[DUR_PETRIFYING] = 1;
-        return;
-    }
-
-    if (petrified())
-        return;
-
-    duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
+    // Give the player a standard 30 aut to react after starting to petrify,
+    // instead of sometimes getting much less due to what they were doing last turn.
+    duration[DUR_PETRIFYING] = 30 + you.time_taken;
 
     if (who)
         props[DISABLED_BY_KEY] = who->name(DESC_A, true);

@@ -577,7 +577,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 return _foe_effect_viable(caster, DUR_VEXED, ENCH_VEXED);
     }, 5) },
     { SPELL_VITRIFY, _hex_logic(SPELL_VITRIFY, _foe_vitrify_goodness) },
-    { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
+    { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY, nullptr, 6) },
     // A dazed target is 'maximally enfeebled', so don't bother recasting.
     { SPELL_ENFEEBLE, _hex_logic(SPELL_ENFEEBLE, [](const monster& caster) {
                 return _foe_effect_viable(caster, DUR_DAZED, ENCH_DAZED);}) },

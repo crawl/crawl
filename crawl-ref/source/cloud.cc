@@ -1120,7 +1120,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     {
         if (player)
         {
-            if (random2(55) - 13 >= you.experience_level)
+            if (random2(62) - 13 >= you.experience_level)
             {
                 you.petrify(cloud.agent());
                 return true;
