@@ -40,10 +40,23 @@ w:12
 w:45
 @_other_orcish_name_@
 %%%%
+_orc_warrior_name_
+
+Orconan
+%%%%
+_orc_wizard_name_
+
+Simorc Magus
+%%%%
+_orc_priest_name_
+
+# Watch out! :p
+Judas
+%%%%
 orc apostle warrior name
 
 w:1
-Orconan
+@_orc_warrior_name_@
 
 w:50
 @orc name@
@@ -51,16 +64,15 @@ w:50
 orc apostle wizard name
 
 w:1
-Simorc Magus
+@_orc_wizard_name_@
 
 w:50
 @orc name@
 %%%%
 orc apostle priest name
 
-# Watch out! :p
 w:1
-Judas
+_orc_priest_name_
 
 w:50
 @orc name@
@@ -68,11 +80,17 @@ w:50
 # Any orc name, apostle-specific or otherwise.
 any orc name
 
-@orc apostle warrior name@
+w:1
+@_orc_warrior_name_@
 
-@orc apostle wizard name@
+w:1
+@_orc_wizard_name_@
 
-@orc apostle priest name@
+w:1
+@_orc_priest_name_@
+
+w:50
+@orc name@
 %%%%
 # Obvious references to Beogh
 # (18 at last count)
