@@ -312,12 +312,13 @@ dice_def mon_explode_dam(monster_type mc, int hd)
 
 bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
 {
-    if (mons->hit_points > 0 || mons->hit_points <= -15
+    if (mons->hit_points <= -15
         || killer == KILL_RESET || killer == KILL_RESET_KEEP_ITEMS
-        || killer == KILL_BANISHED)
+        || killer == KILL_BANISHED
+    // Ball lightning explode on timeout, but more conventional summons should not
+        || killer == KILL_TIMEOUT && !(mons->flags & MF_PERSISTS))
     {
-        if (killer != KILL_TIMEOUT)
-            return false;
+        return false;
     }
 
     bolt beam;
