@@ -375,7 +375,10 @@ string Note::describe(bool when, bool where, bool what) const
 #endif
             break;
         case NOTE_PARALYSIS:
-            result << "Paralysed by " << name << " for " << first << " turns";
+        {
+            const float turns = first / 10.0;
+            result << "Paralysed by " << name << " for " << setprecision(2) << turns << " turns";
+        }
             break;
         case NOTE_VEXED:
             result << "Vexed by " << name << " for " << first << " turns";

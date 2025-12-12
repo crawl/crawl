@@ -1937,7 +1937,7 @@ int player_speed()
     int ps = 10;
 
     // When paralysed, speed is irrelevant.
-    if (you.cannot_act())
+    if (you.helpless())
         return ps;
 
     if (you.duration[DUR_SLOW] || have_stat_zero())
@@ -4499,13 +4499,6 @@ bool confuse_player(int amount, bool quiet, bool force)
     return true;
 }
 
-void paralyse_player(string source)
-{
-    const int cur_para = you.duration[DUR_PARALYSIS] / BASELINE_DELAY;
-    const int dur = random_range(2, 5 + cur_para);
-    you.paralyse(nullptr, dur, source);
-}
-
 bool poison_player(int amount, string source, string source_aux, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -6039,6 +6032,11 @@ int player::get_noise_perception(bool adjusted) const
     return BAR_MAX;
 }
 
+bool player::can_be_paralysed() const
+{
+    return !stasis() && !duration[DUR_STUN_IMMUNITY];
+}
+
 bool player::paralysed() const
 {
     return duration[DUR_PARALYSIS];
@@ -7460,10 +7458,9 @@ void player::confuse(actor */*who*/, int str)
 /**
  * Paralyse the player for str turns.
  *
- *  Duration is capped at 13.
  *
  * @param who Pointer to the actor who paralysed the player.
- * @param str The number of turns the paralysis will last.
+ * @param str The number of turns the paralysis will last (plus 5 aut).
  * @param source Description of the source of the paralysis.
  */
 void player::paralyse(const actor *who, int str, string source)
@@ -7476,42 +7473,40 @@ void player::paralyse(const actor *who, int str, string source)
         return;
     }
 
-    // The who check has an effect in a few cases, most notably making
-    // Death's Door + Borg's paralysis unblockable.
-    if (who && (duration[DUR_PARALYSIS] || duration[DUR_STUN_IMMUNITY]))
+    // The player cannot use stun immunity to avoid self-para from Borg+DDoor.
+    if (who && who != &you
+        && (duration[DUR_PARALYSIS] || duration[DUR_STUN_IMMUNITY]))
     {
         mpr("You shrug off the repeated attempt to disable you.");
         return;
     }
-
-    int &paralysis(duration[DUR_PARALYSIS]);
-
-    const bool use_actor_name = source.empty() && who != nullptr;
-    if (use_actor_name)
-        source = who->name(DESC_A);
-
-    if (!paralysis && !source.empty())
-    {
-        take_note(Note(NOTE_PARALYSIS, str, 0, source));
-        // use the real name here even for invisible monsters
-        props[DISABLED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)
-                                               : source;
-    }
-    else
-        props.erase(DISABLED_BY_KEY);
 
     you.wake_up();
 
     mpr("You suddenly lose the ability to move!");
     _pruneify();
 
-    paralysis = min(str, 13) * BASELINE_DELAY;
+    you.duration[DUR_PARALYSIS] = str * BASELINE_DELAY + 5;
 
     stop_delay(true, true);
     stop_directly_constricting_all();
     stop_channelling_spells();
     redraw_armour_class = true;
     redraw_evasion = true;
+
+    const bool use_actor_name = source.empty() && who != nullptr;
+    if (use_actor_name)
+        source = who->name(DESC_A);
+
+    if (!source.empty())
+    {
+        take_note(Note(NOTE_PARALYSIS, you.duration[DUR_PARALYSIS], 0, source));
+        // use the real name here even for invisible monsters
+        props[DISABLED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)
+                                               : source;
+    }
+    else
+        props.erase(DISABLED_BY_KEY);
 }
 
 void player::petrify(const actor *who, bool force)
@@ -7590,13 +7585,10 @@ bool player::vex(const actor* who, int dur, string source, string special_msg)
         mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
     you.duration[DUR_VEXED] = dur * BASELINE_DELAY;
 
-    int &vex(duration[DUR_VEXED]);
-
     const bool use_actor_name = source.empty() && who != nullptr;
     if (use_actor_name)
         source = who->name(DESC_A);
-
-    if (vex && !source.empty())
+    if (!source.empty())
     {
         take_note(Note(NOTE_VEXED, dur, 0, source));
         props[DISABLED_BY_KEY] = use_actor_name ? who->name(DESC_A, true)

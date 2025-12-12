@@ -330,14 +330,22 @@ static bool _zin_retribution()
         switch (random2(4))
         {
         case 0:
+            if (you.can_be_paralysed())
+            {
+                you.paralyse(nullptr, random_range(2, 5), _god_wrath_name(god));
+                return false;
+            }
+            // Deliberate fallthrough
+        case 1:
+            if (you.can_sleep())
+            {
+                you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
+                break;
+            }
+            // Deliberate fallthrough
+        case 2:
             confuse_player(5 + random2(3));
             break;
-        case 1:
-            you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
-            break;
-        case 2:
-            paralyse_player(_god_wrath_name(god));
-            return false;
         case 3:
             blind_player(20 + random2(15), ETC_SILVER);
             return false;
@@ -1718,11 +1726,11 @@ static bool _uskayaw_retribution()
 
     case 2:
     case 3:
-        if (mon)
+        if (mon && you.can_be_paralysed())
         {
             simple_god_message(" booms out: Time for someone else to take a "
                                "solo!", false, god);
-            paralyse_player(_god_wrath_name(god));
+            you.paralyse(nullptr, random_range(2, 5), _god_wrath_name(god));
             dec_penance(god, 1);
             return false;
         }

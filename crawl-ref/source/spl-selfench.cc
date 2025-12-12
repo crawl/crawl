@@ -102,7 +102,7 @@ spret cast_revivification(int pow, bool fail)
     {
         mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
         // XXX: better cause name?
-        paralyse_player("Death's Door abortion");
+        you.paralyse(&you, random_range(2, 5), "breaking free from death's doorway");
         you.duration[DUR_DEATHS_DOOR] = 0;
     }
     return spret::success;

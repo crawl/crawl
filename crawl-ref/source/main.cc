@@ -1056,6 +1056,19 @@ static void _update_place_stats()
     curr_PlaceInfo.assert_validity();
 }
 
+// How much time should pass this turn because the player cannot act?
+// (Pass time in increments of 10 aut, but never more than our remaining stun duration.)
+static int _stun_delay()
+{
+    int stun_dur = you.duration[DUR_PARALYSIS];
+    stun_dur = max(stun_dur, you.duration[DUR_SLEEP]);
+    stun_dur = max(stun_dur, you.duration[DUR_VEXED]);
+    stun_dur = max(stun_dur, you.duration[DUR_DAZED]);
+    stun_dur = max(stun_dur, you.duration[DUR_PETRIFIED]);
+
+    return min(stun_dur, BASELINE_DELAY);
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1111,9 +1124,6 @@ static void _input()
 
     hints_new_turn();
 
-    if (you.duration[DUR_VEXED])
-        do_vexed_attack(you);
-
     if (you.cannot_act())
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
@@ -1121,6 +1131,23 @@ static void _input()
             crawl_state.cancel_cmd_repeat("Cannot control self, cancelling command "
                                           "repetition.");
         }
+
+        // If the player has enough Vexed time left to make a proper attack, do
+        // so. Otherwise, just wait out the rest of it.
+        if (you.duration[DUR_VEXED])
+        {
+            const int attk_delay = you.attack_delay().roll();
+            if (you.duration[DUR_VEXED] >= attk_delay)
+            {
+                do_vexed_attack(you);
+                you.time_taken = attk_delay;
+            }
+            else
+                you.time_taken = _stun_delay();
+        }
+        else
+            you.time_taken = _stun_delay();
+
         world_reacts();
         return;
     }

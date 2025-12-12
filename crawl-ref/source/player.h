@@ -873,6 +873,7 @@ public:
     int get_noise_perception(bool adjusted = true) const;
     bool is_dragonkind() const override;
 
+    bool can_be_paralysed() const;
     bool paralysed() const override;
     bool cannot_act() const override;
     bool helpless() const override;
@@ -1240,7 +1241,6 @@ bool confuse_player(int amount, bool quiet = false, bool force = false);
 
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);
-void paralyse_player(string source);
 void handle_player_poison(int delay);
 void reduce_player_poison(int amount);
 int get_player_poisoning();
