@@ -886,11 +886,21 @@ any_glowing_colour
 
 @glowing_adj@ @any_colour@
 %%%%
+# Patterns can be single colour or two colours. There's a chance of the
+# two colours being the same but in practise it happens little enough to
+# just be funny when it does.
 any_colour_pattern
 
-# Single colour
 @any_colour@ @any_pattern@
 
-# Two colours. There's a chance of them being the same but
-# in practise it happens little enough to just be funny when it does.
 @any_colour@ on @any_colour@ @any_pattern@
+%%%%
+any_glowing_colour_pattern
+
+@any_glowing_colour@ @any_pattern@
+
+@any_glowing_colour@ on @any_colour@ @any_pattern@
+
+@any_colour@ on @any_glowing_colour@ @any_pattern@
+
+@any_glowing_colour@ on @any_glowing_colour@ @any_pattern@
