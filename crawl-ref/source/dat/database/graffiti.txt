@@ -251,25 +251,31 @@ graffiti_type_with_signature_maybe_orc
 %%%%
 graffiti_advertisement
 
-@graffiti_mass_meeting_type@ @graffiti_mass_meeting_ordinary@
+@graffiti_advertisement_type@ @graffiti_mass_meeting_type@ @graffiti_mass_meeting_ordinary@
 
-@graffiti_mass_meeting_type@ @graffiti_mass_meeting_religious@
+@graffiti_advertisement_type@ @graffiti_mass_meeting_type@ @graffiti_mass_meeting_religious@
 
-a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
+@graffiti_advertisement_type@ a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
 
 w:2
-@graffiti_class_any@
+@graffiti_advertisement_type@ @graffiti_class_any@
 
 w:1
-a meet-up with @graffiti_author_any@ to learn how to survive in the dungeon
+@graffiti_advertisement_type@ a meet-up with @graffiti_author_any@ to learn how to survive in the dungeon
 
 # Possibly too lowbrow, but a good time can mean many things.
 w:1
-a meet-up with @graffiti_author_any@ for a good time
+@graffiti_advertisement_type@ a meet-up with @graffiti_author_any@ for a good time
 
 # Paint that can come in this many colours and types is special.
 w:1
-the very paint used to make it
+@graffiti_advertisement_type@ the very paint used to make it
+%%%%
+graffiti_advertisement_type
+
+advertising
+
+promoting
 %%%%
 # There's sometimes a chance of the two names being the same, but maybe
 # the author's crazy, or maybe the author spells their name the same way
@@ -1087,7 +1093,7 @@ graffiti of @writing_type@
 
 @graffiti_type@ @graffiti_fight@
 
-@graffiti_type@ advertising @graffiti_advertisement@
+@graffiti_type@ @graffiti_advertisement@
 
 @graffiti_type@ saying that @graffiti_short_saying@
 
