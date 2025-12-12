@@ -860,7 +860,11 @@ gleaming
 
 glossy
 
+intense
+
 luminous
+
+lurid
 
 lustrous
 
