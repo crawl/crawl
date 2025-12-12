@@ -348,28 +348,29 @@ a master class on [art|calligraphy] taught by anonymous graffiti authors
 %%%%
 graffiti_class_remedial
 
-a Remedial @random_skill@ class taught by @graffiti_professor_any@
+a Remedial @random_skill@ class taught by @graffiti_professor@
 
-a Remedial @random_skill_magic@ class taught by @graffiti_professor_magic@
+a Remedial @random_skill_magic@ class taught by the @graffiti_professor_magic_type@ @graffiti_professor@
 
-a Remedial @random_skill_mundane@ class taught by @graffiti_professor_mundane@
-
-w:2
-a Remedial Evocations class taught by @graffiti_professor_evocations@
+a Remedial @random_skill_mundane@ class taught by the @graffiti_professor_mundane_type@ @graffiti_professor@
 
 w:2
-a Remedial Invocations class taught by @graffiti_professor_invocations@
+a Remedial Evocations class taught by the @graffiti_professor_evocations_type@ @graffiti_professor@
+
+w:2
+a Remedial Invocations class taught by the @graffiti_professor_invocations_type@ @graffiti_professor@
+
+w:2
+a Remedial Shapeshifting class taught by the @graffiti_professor_shapeshifting_type@ @graffiti_professor@
 
 # Necromancers should be able to teach necromancy or other magic (from
 # branching out) the same way other spellcasters can.
-w:2
-a Remedial Necromancy class taught by @graffiti_professor_necromancy@
 
 w:2
-a Remedial @random_skill_magic@ class taught by @graffiti_professor_necromancy@
+a Remedial Necromancy class taught by the @graffiti_professor_necromancy_type@ @graffiti_professor@
 
 w:2
-a Remedial Shapeshifting class taught by @graffiti_professor_shapeshifting@
+a Remedial @random_skill_magic@ class taught by the @graffiti_professor_necromancy_type@ @graffiti_professor@
 %%%%
 graffiti_duplicate
 
@@ -635,7 +636,7 @@ of some very imaginative obscenities you've never seen before
 # as we do with changed names above. Professors can sometimes get titles
 # that monsters can't (e.g. orc mages), but they're supposed to be
 # special.
-graffiti_professor_any
+graffiti_professor
 
 @graffiti_author_any_changeable@
 
@@ -645,31 +646,11 @@ w:2
 w:1
 @rare_graffiti_author_any@ (supposedly)
 %%%%
-graffiti_professor_evocations
-
-@graffiti_author_any_changeable@ the @graffiti_professor_evocations_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_evocations_type@
-
-w:1
-the @graffiti_professor_evocations_type@ @rare_graffiti_author_any@ (supposedly)
-%%%%
 graffiti_professor_evocations_type
 
 artificer
 
 tinkerer
-%%%%
-graffiti_professor_invocations
-
-@graffiti_author_any_changeable@ the @graffiti_professor_invocations_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_invocations_type@
-
-w:1
-the @graffiti_professor_invocations_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_invocations_type
 
@@ -681,16 +662,6 @@ priest
 
 theologian
 %%%%
-graffiti_professor_magic
-
-@graffiti_author_any_changeable@ the @graffiti_professor_magic_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_magic_type@
-
-w:1
-the @graffiti_professor_magic_type@ @rare_graffiti_author_any@ (supposedly)
-%%%%
 graffiti_professor_magic_type
 
 mage
@@ -700,16 +671,6 @@ sorcerer
 spellcaster
 
 wizard
-%%%%
-graffiti_professor_mundane
-
-@graffiti_author_any_changeable@ the @graffiti_professor_mundane_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_mundane_type@
-
-w:1
-the @graffiti_professor_mundane_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_mundane_type
 
@@ -721,31 +682,11 @@ warlord
 
 warrior
 %%%%
-graffiti_professor_necromancy
-
-@graffiti_author_any_changeable@ the @graffiti_professor_necromancy_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_necromancy_type@
-
-w:1
-the @graffiti_professor_necromancy_type@ @rare_graffiti_author_any@ (supposedly)
-%%%%
 graffiti_professor_necromancy_type
 
 death mage
 
 necromancer
-%%%%
-graffiti_professor_shapeshifting
-
-@graffiti_author_any_changeable@ the @graffiti_professor_shapeshifting_type@
-
-w:2
-@graffiti_author_orc@ @graffiti_professor_shapeshifting_type@
-
-w:1
-the @graffiti_professor_shapeshifting_type@ @rare_graffiti_author_any@ (supposedly)
 %%%%
 graffiti_professor_shapeshifting_type
 
