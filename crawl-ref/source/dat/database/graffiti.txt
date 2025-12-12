@@ -150,6 +150,12 @@ Plog the Peerless
 # deserves life, death, or undeath; or worships the Shining One.
 Dead Wendell
 %%%%
+pattern_type
+
+@any_colour_pattern@
+
+@any_glowing_colour_pattern@
+%%%%
 writing_adj
 
 angular
@@ -1057,9 +1063,7 @@ superior
 %%%%
 any_graffiti
 
-graffiti of @any_colour_pattern@
-
-graffiti of @any_glowing_colour_pattern@
+graffiti of @pattern_type@
 
 graffiti of @writing_type@
 
