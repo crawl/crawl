@@ -2351,20 +2351,25 @@ MAP
 ```````
 ENDMAP
 
-NAME:   nicolae_makhleb_poor_unfortunate_consoles
-TAGS:   transparent decor
-COLOUR: -_ = fire
-FTILE:  -_ = floor_demonic
-TILE:   b = bedevilled_crystal_pandemonium
+NAME:    nicolae_makhleb_poor_unfortunate_consoles
+TAGS:    transparent decor
+KFEAT:   DEFH = b
+SHUFFLE: DEFH
+COLOUR:  -_ = fire
+FTILE:   -_ = floor_demonic
+TILE:    D = bedevilled_crystal_gehenna
+TILE:    E = bedevilled_crystal_cocytus
+TILE:    F = bedevilled_crystal_dis
+TILE:    H = bedevilled_crystal_tartarus
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
 MAP
 xxx+xxx
-xbb-bbx
-xb---bx
+xDD-EEx
+xD---Ex
 x--_--x
-xb---bx
-xbb-bbx
+xH---Fx
+xHH-FFx
 xxxxxxx
 ENDMAP
 
