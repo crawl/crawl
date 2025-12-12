@@ -519,7 +519,7 @@ Xom offhand slot
 
 @Your_item@ spins!
 
-@Your_item@ briefly flashes a lurid @any_colour@!
+@Your_item@ briefly flashes @any_glowing_colour@!
 %%%%
 Xom gloves slot
 
