@@ -29,7 +29,9 @@
 #
 ##########################################################
 %%%%
-# Any orc name, apostle-specific or otherwise.
+# Any orc name, apostle-specific or otherwise. Any name will work here,
+# as long as it's not already in @_rare_graffiti_author_orc_@ in
+# graffiti.txt.
 any orc name
 
 w:1

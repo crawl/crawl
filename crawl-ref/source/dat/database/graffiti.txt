@@ -120,6 +120,8 @@ _rare_graffiti_author_god_
 # god is rare).
 Woog the god
 %%%%
+# Any name will work here, as long as it's not already in the orc names
+# in monname.txt.
 _rare_graffiti_author_orc_
 
 Spartorcus the orc
@@ -156,6 +158,8 @@ _pattern_type_
 
 @any_glowing_colour_pattern@
 %%%%
+# Any word will work here, as long as it's not already in @glowing_adj@
+# in colourname.txt.
 _writing_adj_
 
 angular

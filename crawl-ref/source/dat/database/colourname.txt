@@ -841,7 +841,8 @@ triangles
 
 whorls
 %%%%
-# Any word other than "glowing" itself will work here.
+# Any word other than "glowing" itself will work here, as long as it's
+# not already in @_writing_adj_@ in graffiti.txt.
 glowing_adj
 
 bright
