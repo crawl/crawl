@@ -293,11 +293,10 @@ w:2
 w:1
 @_graffiti_author_any_changeable_non-randgen_@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
-# This includes a few religious things that aren't actually changes, but
-# don't fit anywhere else. It can produce an orc who worships (or is)
-# Zin, or a non-orc who worships (or is) Beogh, but you shouldn't
-# believe everything you read.
-_graffiti_changed_religions_
+# This can produce an author who's compared to themselves, an orc who
+# worships (or is) Zin, or a non-orc who worships (or is) Beogh, but you
+# shouldn't believe everything you read.
+_graffiti_changed_or_compared_religions_
 
 @_graffiti_author_any_@ has abandoned @random_god@
 
@@ -880,7 +879,7 @@ what happened to @_graffiti_author_any_@ was @_graffiti_happened_reason_@
 
 @_graffiti_vengeance_@
 
-@_graffiti_changed_religions_@
+@_graffiti_changed_or_compared_religions_@
 
 w:2
 @_graffiti_changed_names_@
