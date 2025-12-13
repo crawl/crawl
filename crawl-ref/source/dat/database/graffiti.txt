@@ -303,6 +303,8 @@ _graffiti_changed_religions_
 
 @_graffiti_author_any_@ has converted to @random_god@
 
+@_graffiti_author_any_@ is @_graffiti_religion_better_or_worse_@ than @_graffiti_author_any_@
+
 @_graffiti_author_any_@ is secretly an atheist
 
 @_graffiti_author_any_@ is secretly not an atheist
@@ -740,6 +742,20 @@ the spouses
 
 the strength
 %%%%
+_graffiti_religion_better_or_worse_
+
+less of a believer
+
+more of a believer
+
+# Yes, I've actually heard the phrase "I'm a better atheist than you."
+
+w:1
+a better atheist
+
+w:1
+a worse atheist
+%%%%
 _graffiti_religion_non-orc_
 
 lauding Zin and Zin's laws
@@ -822,6 +838,8 @@ proclaiming that Beogh's messiah will soon come
 thanking Beogh for granting salvation while the other gods just watched
 
 talking about how Beogh will help you when the other gods turn away from you
+
+talking about how Beogh is with them and not those other heretic orcs
 %%%%
 _graffiti_rumour_
 
