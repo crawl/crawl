@@ -430,7 +430,7 @@ static bool _slime_merge(monster* thing)
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
         if (!actor_at(*ai)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(*ai)))
+            && monster_habitable_grid(MONS_SLIME_CREATURE, *ai))
         {
             return false;
         }
@@ -471,7 +471,7 @@ static bool _slime_merge(monster* thing)
 
 static bool _slime_can_spawn(const coord_def target)
 {
-    return mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
+    return monster_habitable_grid(MONS_SLIME_CREATURE, target)
            && !actor_at(target);
 }
 
