@@ -180,6 +180,8 @@ spidery
 
 swirling
 
+twitching
+
 writhing
 %%%%
 # Any word other than "graffiti" will work here.
