@@ -29,6 +29,21 @@
 #
 ##########################################################
 %%%%
+# Any orc name, apostle-specific or otherwise.
+any orc name
+
+w:1
+@_orc_warrior_name_@
+
+w:1
+@_orc_wizard_name_@
+
+w:1
+@_orc_priest_name_@
+
+w:50
+@orc name@
+%%%%
 orc name
 
 w:14
@@ -39,19 +54,6 @@ w:12
 
 w:45
 @_other_orcish_name_@
-%%%%
-_orc_warrior_name_
-
-Orconan
-%%%%
-_orc_wizard_name_
-
-Simorc Magus
-%%%%
-_orc_priest_name_
-
-# Watch out! :p
-Judas
 %%%%
 orc apostle warrior name
 
@@ -77,20 +79,18 @@ w:1
 w:50
 @orc name@
 %%%%
-# Any orc name, apostle-specific or otherwise.
-any orc name
+_orc_warrior_name_
 
-w:1
-@_orc_warrior_name_@
+Orconan
+%%%%
+_orc_wizard_name_
 
-w:1
-@_orc_wizard_name_@
+Simorc Magus
+%%%%
+_orc_priest_name_
 
-w:1
-@_orc_priest_name_@
-
-w:50
-@orc name@
+# Watch out! :p
+Judas
 %%%%
 # Obvious references to Beogh
 # (18 at last count)
