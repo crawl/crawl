@@ -294,9 +294,9 @@ w:1
 @_graffiti_author_any_changeable_non-randgen_@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
 # This can produce an author who's compared to themselves, an author who
-# is secretly e.g. the power of cheese, an orc who worships (or is) Zin,
-# or a non-orc who worships (or is) Beogh, but you shouldn't believe
-# everything you read.
+# is secretly the power of cheese or a wagon full of pancakes, an orc
+# who worships (or is) Zin, or a non-orc who worships (or is) Beogh, but
+# you shouldn't believe everything you read.
 _graffiti_changed_or_compared_religions_
 
 @_graffiti_author_any_@ has abandoned @random_god@
@@ -785,10 +785,6 @@ _graffiti_religion_not_non-orc_or_orc_
 
 glorifying @random_god@ and blaspheming @random_god@
 
-glorifying an unknown god
-
-not just hailing but glorifying @_graffiti_hailed_god_@
-
 # No entries for Ignis or Jiyva here. Ignis has one worshipper in the
 # Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
 # Royal Jelly who is brainless and tied to the Slime Pits. More
@@ -840,6 +836,12 @@ paying homage to Ru and talking about how all of reality is not what you think i
 giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
 
 flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
+
+w:1
+glorifying an unknown god
+
+w:1
+not just hailing but glorifying @_graffiti_hailed_god_@
 %%%%
 _graffiti_religion_orc_
 
