@@ -392,15 +392,16 @@ function Triggerable.make_replica(replica_id)
   return props_marker { replica_to = replica_id }
 end
 
+Triggerable.primary_initialized = {}
 function Triggerable.synchronized_markers(primary)
-  local first = true
   local replica_id = lmark.next_replica_id()
+  Triggerable.primary_initialized[replica_id] = false
   return function ()
-           if first then
-             first = false
-             return Triggerable.make_primary(primary, replica_id)
-           else
+           if Triggerable.primary_initialized[replica_id] then
              return Triggerable.make_replica(replica_id)
+           else
+             Triggerable.primary_initialized[replica_id] = true
+             return Triggerable.make_primary(primary, replica_id)
            end
          end
 end
