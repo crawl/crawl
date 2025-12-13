@@ -700,6 +700,8 @@ _west_european_female_name_
 
 Audrea
 
+Bealdhild
+
 Cyneburga
 
 Eadburga
@@ -717,8 +719,6 @@ Godgifu
 Gudrun
 
 Kendra
-
-Noreen
 
 Saranna
 
