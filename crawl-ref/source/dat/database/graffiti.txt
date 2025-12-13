@@ -170,6 +170,8 @@ flowing
 
 jagged
 
+pulsating
+
 shifting
 
 sinuous
