@@ -696,6 +696,8 @@ _west_european_female_name_
 
 Ælfthryth
 
+Ælfwynn
+
 Æðelind
 
 Audrea
@@ -703,6 +705,8 @@ Audrea
 Bealdhild
 
 Cyneburga
+
+Cynethryth
 
 Eadburga
 
@@ -712,6 +716,8 @@ Edmée
 
 Edwyna
 
+Eormenhild
+
 Friðuswiþ
 
 Godgifu
@@ -719,6 +725,8 @@ Godgifu
 Gudrun
 
 Kendra
+
+Milburga
 
 Saranna
 
