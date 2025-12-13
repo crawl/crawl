@@ -1473,14 +1473,15 @@ int mons_class_regen_amount(monster_type mc)
 {
     switch (mc)
     {
-    case MONS_PARGHIT:            return 27;
+    case MONS_PARGHIT:              return 27;
     case MONS_DEMONIC_CRAWLER:
     case MONS_COLOSSAL_AMOEBA:
     case MONS_PROTEAN_PROGENITOR:
     case MONS_ASPIRING_FLESH:       return 6;
+    case MONS_SLYMDRA:
     case MONS_MARTYRED_SHADE:       return 4;
-    case MONS_BOUNDLESS_TESSERACT: return 10;
-    default:                      return 1;
+    case MONS_BOUNDLESS_TESSERACT:  return 10;
+    default:                        return 1;
     }
 }
 
@@ -2480,6 +2481,10 @@ int exp_value(const monster& mon, bool real, bool legacy)
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         x_val *= mon.blob_size;
 
+    // Give real XP for all real slime creatures eaten.
+    if (mon.type == MONS_SLYMDRA)
+        x_val += mon.props[SLYMDRA_SLIMES_EATEN_KEY].get_int() * 236;
+
     if (mon.has_ench(ENCH_FIGMENT))
         x_val /= 3;
 
@@ -2735,6 +2740,10 @@ void define_monster(monster& mons, bool friendly)
     case MONS_LERNAEAN_HYDRA:
         // The Lernaean hydra starts off with 27 heads.
         mons.num_heads = 27;
+        break;
+
+    case MONS_SLYMDRA:
+        mons.num_heads = random_range(3, 5);
         break;
 
     case MONS_TIAMAT:

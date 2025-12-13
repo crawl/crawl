@@ -32,6 +32,7 @@
 #include "losglobal.h"
 #include "message.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-gear.h"
@@ -1254,6 +1255,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->max_hit_points *= mon->blob_size;
     }
 
+    if (mon->type == MONS_SLYMDRA)
+    {
+        // Heads beyond the default number should count as additional real slimes
+        // (since they will be able to generate them).
+        mon->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() = (mon->num_heads - 4);
+        slymdra_scale_hp(*mon);
+    }
+
     // Set attitude, behaviour and target.
     mon->attitude  = ATT_HOSTILE;
     mon->behaviour = mg.behaviour;
@@ -1827,6 +1836,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
     { MONS_SLIME_CREATURE,  { {}, {{ BAND_SLIME_CREATURES, {2, 6} }}}},
+    { MONS_SLYMDRA,         { {}, {{ BAND_SLIME_CREATURES, {3, 5} }}}},
     { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
     { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},

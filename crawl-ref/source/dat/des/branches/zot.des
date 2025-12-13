@@ -2599,15 +2599,18 @@ NAME:   lemuel_acid_trip
 DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
-MONS:   any nonbase yellow draconian, orb of entropy
+MONS:   any nonbase yellow draconian, slymdra band, orb of entropy
 KFEAT:  ^ = devourer's trap
 SUBST:  1 = 1:2 .
 SUBST:  . = .:20 3:3 2:1
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
-# If orbs of entropy are available, have a chance to place one and also
-# reduce the total monster count to somewhat balance this out.
-: if dgn.zot_orb_type() == "orb of entropy" and crawl.coinflip() then
+# Have a small chance to place a top-tier acid threat, using either the Zot
+# orb or slymdra depending on which is available.
+: if crawl.x_chance_in_y(2, 5) then
 NSUBST: 2 = 1:6 / 2:. / *:2, 4 = 2:. / *:4, 5 = 1:. / *:5
+: end
+: if dgn.zot_orb_type() == "orb of entropy" then
+SUBST:  6 = 7
 : end
 FTILE:  .12345})]>^+ = floor_zot_diamonds
 MAP

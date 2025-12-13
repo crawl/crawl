@@ -2889,6 +2889,19 @@ An icky glob of slime that slithers along the ground. It can merge with other
 slime creatures to become dramatically more dangerous, and is especially likely
 to do so in confined spaces.
 %%%%
+slymdra
+
+A quivering amalgam of viscous slime, its many pseudopods gnashing at the air
+like a throng of reptilian maws. It rapidly absorbs nearby slime creatures into
+itself, growing a new 'head' for each one and becoming even more resilient.
+
+Whether through convergent evolution or genetic memory, it also shares the
+hydra's most infamous trait: lopping off a head with a bladed weapon will just
+make it grow two more unless the wound is cauterised by a flaming weapon.
+
+When not stalking prey, its constituent slimes may separate from it again,
+perhaps to seek new food sources on their own.
+%%%%
 small abomination
 
 A hideous mass of body parts. Each varies in speed, strength, or resilience by

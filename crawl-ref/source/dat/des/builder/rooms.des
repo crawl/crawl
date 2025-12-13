@@ -230,7 +230,7 @@ function sroom_jelly_pit(e)
         mons = "large slime creature w:20 / great orb of eyes / " ..
                "colossal amoeba w:5 / golden eye w:5 / shining eye w:5 / " ..
                "void ooze / azure jelly / rockslime w:5 / acid blob w:5"
-        lord_mon = "morphogenic ooze / acid blob"
+        lord_mon = "morphogenic ooze / acid blob / three-headed slymdra"
     else
         mons = "great orb of eyes / golden eye w:5 / shining eye w:5 / " ..
                "void ooze / azure jelly / rockslime w:5 / acid blob w:5"

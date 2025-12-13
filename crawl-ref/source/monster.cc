@@ -4802,7 +4802,8 @@ void monster::load_ghost_spells()
 
 bool monster::has_hydra_multi_attack() const
 {
-    return mons_genus(mons_base_type(*this)) == MONS_HYDRA;
+    return mons_genus(mons_base_type(*this)) == MONS_HYDRA
+            || mons_base_type(*this) == MONS_SLYMDRA;
 }
 
 int monster::heads() const
@@ -5234,6 +5235,11 @@ bool monster::polymorph(poly_power_type power)
     if (type == MONS_SLIME_CREATURE)
     {
         slime_creature_polymorph(*this, power);
+        return true;
+    }
+    else if (type == MONS_SLYMDRA)
+    {
+        slymdra_polymorph(*this, power);
         return true;
     }
 

@@ -161,6 +161,7 @@ enum monster_type                      // env.mons[].type
     MONS_COLOSSAL_AMOEBA,
 #if TAG_MAJOR_VERSION > 34
     MONS_MORPHOGENIC_OOZE,
+    MONS_SLYMDRA,
     MONS_ROCKSLIME,
     MONS_VOID_OOZE,
 #endif
@@ -1400,6 +1401,7 @@ enum monster_type                      // env.mons[].type
     MONS_UNDERTAKER,
     MONS_ERYTHROSPITE,
     MONS_MORPHOGENIC_OOZE,
+    MONS_SLYMDRA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

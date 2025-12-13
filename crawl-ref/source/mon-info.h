@@ -486,6 +486,7 @@ struct monster_info : public monster_info_base
     }
 
     bool fellow_slime() const;
+    bool has_hydra_multi_attack() const;
 
     vector<string> get_unusual_items() const;
     bool has_unusual_items() const;

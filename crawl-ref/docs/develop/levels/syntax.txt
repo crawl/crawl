@@ -769,9 +769,9 @@ MONS:     (list of monsters)
           monsters in sight of the hero are removed. This does not hold for
           plants. You can use weights as for ITEM: lines.
 
-          A hydra can be given a specific number of heads by calling it
-          an "n-headed hydra" (with a maximum of 20 heads):
-              MONS: four-headed hydra
+          Hydras and slymdras can be given a specific number of heads by calling
+          for a "n-headed hydra" or "n-headed slymdra", with a maximum of 20:
+              MONS: four-headed hydra / six-headed slymdra
 
           A mutant beast can be customized by prefacing it with a maturity level
           and/or hyphen-separated set of traits, as follows:

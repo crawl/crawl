@@ -2642,8 +2642,8 @@ tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         of monster with multiple tiles, such as hydra and large abominations,
         or special tiles like Cigotuvi's Monster or player transformations that
         don't have their own base monster. The tile name must be the full name,
-        e.g. mons_hydra_7. For example, to use the hydra tile with many heads,
-        use a value of tile:mons_hydra_7. The tile names can be found in the
+        e.g. mons_slymdra_7. For example, to use the hydra tile with many heads,
+        use a value of tile:mons_slymdra_7. The tile names can be found in the
         source tree folder source/rltiles in the files dc-mon.txt,
         dc-demon.txt, and dc-player.txt. In these files, the tile name is in
         the second word in each entry after the file name of the image, and

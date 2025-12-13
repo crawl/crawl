@@ -155,7 +155,7 @@ static bool _should_share_ench(enchant_type type)
 
 // Inflict any enchantments the parent slime has on its offspring,
 // leaving durations unchanged, I guess. -cao
-static void _split_ench_durations(monster* initial_slime, monster* split_off)
+static void _share_ench_durations(monster* initial_slime, monster* split_off)
 {
     for (const auto &entry : initial_slime->enchantments)
     {
@@ -218,6 +218,18 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
     }
 }
 
+// Scale current slymdra HP based on head count.
+void slymdra_scale_hp(monster& slymdra)
+{
+    const monsterentry *m_ent = get_monster_data(MONS_SLYMDRA);
+    const int new_avg_hp = div_rand_round(m_ent->avg_hp_10x * slymdra.get_hit_dice(), m_ent->HD);
+    const int hp = hit_points(new_avg_hp) + SLYMDRA_HP_PER_HEAD * slymdra.num_heads;
+
+    const int diff = slymdra.max_hit_points - hp;
+    slymdra.max_hit_points -= diff;
+    slymdra.hit_points = max(1, slymdra.hit_points - diff);
+}
+
 // Calculate slime creature hp based on how many are merged.
 static void _stats_from_blob_count(monster* slime, float max_per_blob,
                                    float current_per_blob)
@@ -228,14 +240,16 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
-// Now it returns index of new slime (-1 if it fails).
-static monster* _do_split(monster* thing, const coord_def & target)
+// Returns the new slime (nullptr if it fails).
+static monster* _do_split(monster* thing, const coord_def & target, bool quiet = false)
 {
     ASSERT(thing); // XXX: change to monster &thing
     ASSERT(thing->alive());
 
     // Create a new slime.
-    mgen_data new_slime_data = mgen_data(thing->type,
+    monster_type type = thing->type == MONS_SLYMDRA ? MONS_SLIME_CREATURE
+                                                    : thing->type;
+    mgen_data new_slime_data = mgen_data(type,
                                          SAME_ATTITUDE(thing),
                                          target,
                                          thing->foe,
@@ -251,11 +265,19 @@ static monster* _do_split(monster* thing, const coord_def & target)
     if (!new_slime)
         return 0;
 
-    if (you.can_see(*thing))
-        mprf("%s splits.", thing->name(DESC_A).c_str());
+    if (!quiet && you.can_see(*thing))
+    {
+        if (thing->type == MONS_SLYMDRA)
+        {
+            mprf("%s separates from %s.", new_slime->name(DESC_A).c_str(),
+                                          thing->name(DESC_A).c_str());
+        }
+        else
+            mprf("%s splits.", thing->name(DESC_A).c_str());
+    }
 
     // Inflict the new slime with any enchantments on the parent.
-    _split_ench_durations(thing, new_slime);
+    _share_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
     new_slime->behaviour = thing->behaviour;
     new_slime->flags = thing->flags;
@@ -263,18 +285,39 @@ static monster* _do_split(monster* thing, const coord_def & target)
     new_slime->summoner = thing->summoner;
     if (thing->props.exists(BLAME_KEY))
         new_slime->props[BLAME_KEY] = thing->props[BLAME_KEY].get_vector();
+    if (thing->type == MONS_SLYMDRA)
+    {
+        new_slime->props.erase(POLY_SET_KEY);
+        init_poly_set(new_slime);
+    }
 
-    int split_off = thing->blob_size / 2;
-    float max_per_blob = thing->max_hit_points / float(thing->blob_size);
-    float current_per_blob = thing->hit_points / float(thing->blob_size);
+    // Lose heads and HP equivalent to those heads
+    if (thing->type == MONS_SLYMDRA)
+    {
+        --thing->num_heads;
+        const monsterentry *m_ent = get_monster_data(MONS_SLYMDRA);
 
-    thing->blob_size -= split_off;
-    new_slime->blob_size = split_off;
+        const int new_avg_hp = div_rand_round(m_ent->avg_hp_10x * thing->get_hit_dice(), m_ent->HD);
+        const int hp = hit_points(new_avg_hp) + SLYMDRA_HP_PER_HEAD * thing->num_heads;
 
-    new_slime->set_hit_dice(thing->get_experience_level());
+        const int diff = thing->max_hit_points - hp;
+        thing->max_hit_points -= diff;
+        thing->hit_points = max(1, thing->hit_points - diff);
+    }
+    else
+    {
+        int split_off = thing->blob_size / 2;
+        float max_per_blob = thing->max_hit_points / float(thing->blob_size);
+        float current_per_blob = thing->hit_points / float(thing->blob_size);
 
-    _stats_from_blob_count(thing, max_per_blob, current_per_blob);
-    _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
+        thing->blob_size -= split_off;
+        new_slime->blob_size = split_off;
+
+        new_slime->set_hit_dice(thing->get_experience_level());
+
+        _stats_from_blob_count(thing, max_per_blob, current_per_blob);
+        _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
+    }
 
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
@@ -478,7 +521,7 @@ static bool _slime_can_spawn(const coord_def target)
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
-static monster *_slime_split(monster* thing, bool force_split)
+static monster *_slime_split(monster* thing, bool force_split, bool quiet = false)
 {
     if (!thing || thing->blob_size <= 1 || thing->hit_points < 4
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
@@ -523,7 +566,7 @@ static monster *_slime_split(monster* thing, bool force_split)
             // This can fail if placing a new monster fails. That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return _do_split(thing, *ai);
+            return _do_split(thing, *ai, quiet);
         }
     }
 
@@ -567,6 +610,62 @@ bool slime_creature_polymorph(monster& slime, poly_power_type power)
     }
 
     return monster_polymorph(&slime, RANDOM_POLYMORPH_MONSTER, power);
+}
+
+static int _slymdra_split(monster& slymdra, int count = -1, bool quiet = false)
+{
+    int num_splits = 0;
+    int& fake_heads = slymdra.props[SLYMDRA_FAKE_HEADS_KEY].get_int();
+    int& real_slimes = slymdra.props[SLYMDRA_SLIMES_EATEN_KEY].get_int();
+    if (count == -1)
+        count = slymdra.num_heads - 4;
+
+    if (real_slimes == 0 && fake_heads == 0)
+        return 0;
+    for (distance_iterator di(slymdra.pos(), true, true, 2); di; ++di)
+    {
+        if (cell_see_cell(slymdra.pos(), *di, LOS_NO_TRANS) && _slime_can_spawn(*di))
+        {
+            if (monster* slime = _do_split(&slymdra, *di, quiet))
+            {
+                if (real_slimes > 0)
+                    --real_slimes;
+                else
+                {
+                    slime->flags |= (MF_NO_REWARD | MF_HARD_RESET);
+                    --fake_heads;
+                }
+
+                // If we've split out as many things as we want or as many as we *can*, return.
+                if (++num_splits == count || real_slimes == 0 && fake_heads == 0)
+                    return num_splits;
+            }
+        }
+    }
+
+    return num_splits;
+}
+
+bool slymdra_polymorph(monster& slymdra, poly_power_type power)
+{
+    ASSERT(slymdra.type == MONS_SLYMDRA);
+    int count = _slymdra_split(slymdra, -1, true);
+
+    if (you.can_see(slymdra) && count > 0)
+    {
+        if (count == 1)
+        {
+            mprf("A slime creature is ejected from %s body as it begins to warp and change.",
+                 slymdra.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("%d slime creatures are ejected from %s body as it begins to warp and change.",
+                 count, slymdra.name(DESC_ITS).c_str());
+        }
+    }
+
+    return monster_polymorph(&slymdra, RANDOM_POLYMORPH_MONSTER, power);
 }
 
 static bool _starcursed_split(monster* mon)
@@ -964,6 +1063,83 @@ void seismosaurus_egg_hatch(monster* mons)
     mons->update_ench(hatch);
 }
 
+// Attempt to merge with any nearby aligned slime creatures
+static bool _slymdra_try_merge(monster* mons)
+{
+    int did_merge = 0;
+    const int old_heads = mons->num_heads;
+    int new_heads = old_heads;
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        if (monster* mon_at = monster_at(*ai))
+        {
+            if (mon_at->type == MONS_SLIME_CREATURE
+                && mons_aligned(mons, mon_at))
+            {
+                const int extra_heads = mon_at->blob_size;
+
+                // Don't absorb more heads than we can handle.
+                if (new_heads + extra_heads > 20)
+                    continue;
+
+                if (mon_at->is_unrewarding() || mon_at->is_summoned())
+                    mons->props[SLYMDRA_FAKE_HEADS_KEY].get_int() += extra_heads;
+                else
+                    mons->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() += extra_heads;
+
+                new_heads += extra_heads;
+                merge_ench_durations(*mon_at, *mons);
+                monster_die(*mon_at, KILL_RESET, NON_MONSTER);
+
+                ++did_merge;
+            }
+        }
+    }
+
+    if (did_merge > 0)
+    {
+        if (you.see_cell(mons->pos()))
+        {
+            flash_tile(mons->pos(), LIGHTGREEN);
+            const int gained_heads = new_heads - old_heads;
+            const string head_msg = gained_heads == 1 ? "sprouts a new head"
+                                                      : make_stringf("sprouts %d new heads", gained_heads);
+            if (did_merge > 1)
+            {
+                mprf("%s absorbs %d nearby slime creatures and %s.",
+                        mons->name(DESC_THE).c_str(), did_merge, head_msg.c_str());
+            }
+            else
+            {
+                mprf("%s absorbs a nearby slime creature and %s.",
+                        mons->name(DESC_THE).c_str(), head_msg.c_str());
+            }
+        }
+        mons->num_heads = new_heads;
+        slymdra_scale_hp(*mons);
+        return true;
+    }
+
+    return false;
+}
+
+static bool _slymdra_split_or_merge(monster* mons)
+{
+    if (mons->behaviour == BEH_SEEK)
+    {
+        const actor* foe = mons->get_foe();
+        if (foe && mons->see_cell_no_trans(foe->pos()) && coinflip())
+            return _slymdra_try_merge(mons);
+    }
+    else if (mons->behaviour == BEH_WANDER && mons->num_heads > 4
+             && one_chance_in(15))
+    {
+        return _slymdra_split(*mons, 1);
+    }
+
+    return false;
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -980,7 +1156,8 @@ bool mon_special_ability(monster* mons)
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep())
-         && mons->type != MONS_SLIME_CREATURE)
+         && !(mons->type == MONS_SLIME_CREATURE
+              || mons->type == MONS_SLYMDRA))
     {
         return false;
     }
@@ -1000,6 +1177,10 @@ bool mon_special_ability(monster* mons)
         used = _slime_split_merge(mons);
         if (!mons->alive())
             return true;
+        break;
+
+    case MONS_SLYMDRA:
+        used = _slymdra_split_or_merge(mons);
         break;
 
     case MONS_BALL_LIGHTNING:

@@ -318,7 +318,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
                                 ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
-        if (mons->mons_species() == MONS_HYDRA)
+        if (mons->has_hydra_multi_attack())
             mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
     if (!mons->props.exists(ORIG_HD_KEY))

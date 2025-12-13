@@ -286,10 +286,12 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
 }
 
 /// is the given monster_info a hydra, zombie hydra, lerny, etc?
-static bool _has_hydra_multi_attack(const monster_info &mi)
+bool monster_info::has_hydra_multi_attack() const
 {
-    return mons_genus(mi.type) == MONS_HYDRA
-           || mons_genus(mi.base_type) == MONS_HYDRA;
+    return mons_genus(type) == MONS_HYDRA
+           || mons_genus(base_type) == MONS_HYDRA
+           || type == MONS_SLYMDRA
+           || base_type == MONS_SLYMDRA;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -306,7 +308,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : classy_drac ? MONS_DRACONIAN
                 : type;
 
-    if (_has_hydra_multi_attack(*this))
+    if (has_hydra_multi_attack())
         num_heads = 1;
     else
         number = 0;
@@ -452,7 +454,7 @@ monster_info::monster_info(const monster* m, int milev)
         slime_size = m->blob_size;
     else if (type == MONS_BALLISTOMYCETE)
         is_active = !!m->ballisto_activity;
-    else if (_has_hydra_multi_attack(*this))
+    else if (has_hydra_multi_attack())
         num_heads = m->num_heads;
     else if (type == MONS_SEISMOSAURUS_EGG)
         number = m->number;
@@ -901,6 +903,8 @@ int monster_info::get_known_max_hp() const
 
     if (type == MONS_SLIME_CREATURE)
         mhp *= slime_size;
+    else if (type == MONS_SLYMDRA)
+        mhp += num_heads * SLYMDRA_HP_PER_HEAD * scale;
 
     mhp /= scale;
 
@@ -1157,7 +1161,7 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if (_has_hydra_multi_attack(*this)
+    if (has_hydra_multi_attack()
         && type != MONS_SENSED
         && !mons_class_is_remnant(type))
     {
@@ -1362,7 +1366,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (_has_hydra_multi_attack(m1))
+        if (m1.has_hydra_multi_attack())
         {
             if (m1.num_heads > m2.num_heads)
                 return true;

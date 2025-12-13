@@ -1,0 +1,17 @@
+name: "slymdra"
+glyph: {char: "J", colour: magenta}
+flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton, fast_regen]
+resists: {poison: 1, corr: 3}
+exp: 3100
+genus: jelly
+will: 120
+attacks:
+ - {type: hit, flavour: acid, damage: 33}
+hd: 18
+hp_10x: 700
+ac: 10
+ev: 3
+intelligence: brainless
+habitat: amphibious
+size: giant
+shape: blob

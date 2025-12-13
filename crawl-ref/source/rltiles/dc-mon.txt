@@ -986,6 +986,14 @@ colossal_amoeba MONS_COLOSSAL_AMOEBA
 rockslime MONS_ROCKSLIME
 void_ooze MONS_VOID_OOZE
 morphogenic_ooze MONS_MORPHOGENIC_OOZE
+slymdra1 MONS_SLYMDRA
+slymdra2
+slymdra3
+slymdra4
+slymdra5
+slymdra6
+slymdra7
+slymdra8
 %rim 1
 acid_blob MONS_ACID_BLOB
 

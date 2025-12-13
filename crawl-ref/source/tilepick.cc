@@ -1974,6 +1974,8 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
     case MONS_HYDRA:
         // Number of heads
         return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
+    case MONS_SLYMDRA:
+        return tileidx_mon_clamp(TILEP_MONS_SLYMDRA, number - 1);
     case MONS_SLIME_CREATURE:
         return tileidx_mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_LERNAEAN_HYDRA:

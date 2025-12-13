@@ -100,7 +100,7 @@ function base_monster_setup(e)
                tentacled monstrosity / undying armoury w:5 /\
                deep elf blademaster / deep elf master archer /\
                walking frostbound tome / walking crystal tome / acid blob /\
-               rockslime / moth of wrath w:15 / ghost moth /\
+               rockslime / slymdra band / moth of wrath w:15 / ghost moth /\
                killer klown / draconian monk w:4 / draconian stormcaller w:7 /\
                draconian scorcher w:7 / draconian annihilator w:7 /\
                draconian knight w:7 / alderking / vampire bloodprince /\
@@ -179,7 +179,7 @@ function base_monster_setup(e)
                rockslime / azure jelly / acid blob /\
                glass eye w:3 / void ooze w:3 / eye of devastation /\
                shining eye w:3 / eye of draining w:3")
-  e.kmons("V = azure jelly / rockslime / acid blob")
+  e.kmons("V = azure jelly / rockslime / acid blob / slymdra")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
                storm dragon / swamp drake / lindwurm / rime drake /\
                shadow dragon w:5")

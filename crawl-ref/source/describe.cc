@@ -5242,7 +5242,7 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
         // Multi-headed monsters must always have their multi-attack in the
         // first slot (unless they're draugr, where the weapon hit is always
         // first).
-        if ((mons_genus(mi.base_type) == MONS_HYDRA)
+        if (mi.has_hydra_multi_attack()
              && i == (mi.type == MONS_DRAUGR ? 1 : 0))
         {
             // XXX: Subtract the copies of this attack that will be found in

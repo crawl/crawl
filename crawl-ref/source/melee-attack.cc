@@ -36,6 +36,7 @@
 #include "losparam.h"
 #include "mapdef.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h" // maybe_drop_monster_organ
 #include "mon-poly.h"
@@ -3132,7 +3133,16 @@ bool melee_attack::consider_decapitation(int dam)
 
     simple_monster_message(*defender->as_monster(), " grows two more!");
     defender->as_monster()->num_heads += 2;
-    defender->heal(8 + random2(8));
+
+    if (defender->type == MONS_SLYMDRA)
+    {
+        // Don't pretend this was from a real slime creature merging or the
+        // player can slowly farm real XP off this.
+        defender->props[SLYMDRA_FAKE_HEADS_KEY].get_int()++;
+        slymdra_scale_hp(*defender->as_monster());
+    }
+    else
+        defender->heal(8 + random2(8));
 
     return false;
 }

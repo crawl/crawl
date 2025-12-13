@@ -1785,7 +1785,8 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
 {
     if ((mons.asleep() || mons_is_wandering(mons))
         // Slime creatures can split while wandering or resting.
-        && mons.type != MONS_SLIME_CREATURE)
+        && mons.type != MONS_SLIME_CREATURE
+        && mons.type != MONS_SLYMDRA)
     {
         return false;
     }
@@ -1813,7 +1814,8 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     if (friendly_or_near
         || mons.type == MONS_TEST_SPAWNER
         // Slime creatures can split when offscreen.
-        || mons.type == MONS_SLIME_CREATURE)
+        || mons.type == MONS_SLIME_CREATURE
+        || mons.type == MONS_SLYMDRA)
     {
         // [ds] Special abilities shouldn't overwhelm
         // spellcasting in monsters that have both. This aims

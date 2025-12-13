@@ -4429,7 +4429,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     spec.type = MONS_PROGRAM_BUG;
 }
 
-mons_spec mons_list::get_hydra_spec(const string &name) const
+mons_spec mons_list::get_hydra_spec(const string &name, monster_type mtype) const
 {
     string prefix = name.substr(0, name.find("-"));
 
@@ -4460,7 +4460,7 @@ mons_spec mons_list::get_hydra_spec(const string &name) const
         nheads = 20;
     }
 
-    mons_spec spec(MONS_HYDRA);
+    mons_spec spec(mtype);
     spec.props[MGEN_NUM_HEADS] = nheads;
     return spec;
 }
@@ -4695,7 +4695,10 @@ mons_spec mons_list::mons_by_name(string name) const
         return MONS_ORB_OF_APPROPRIATENESS;
 
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
-        return get_hydra_spec(name);
+        return get_hydra_spec(name, MONS_HYDRA);
+
+    if (ends_with(name, "-headed slymdra") && !starts_with(name, "spectral "))
+        return get_hydra_spec(name, MONS_SLYMDRA);
 
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);

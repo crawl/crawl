@@ -1570,7 +1570,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (fail_msg.empty())
         fail_msg = "A " + mist + " mist gathers momentarily, then fades.";
 
-    if (mons->mons_species() == MONS_HYDRA)
+    if (mons->mons_species() == MONS_HYDRA || mons->type == MONS_SLYMDRA)
     {
         // No undead 0-headed hydras, sorry.
         if (mons->heads() == 0)

@@ -314,8 +314,8 @@ wiz-monster
 To create a monster with the default equipment for its species, simply enter
 the species name, such as <w>kobold</w> or <w>Yiuf</w>.
 
-A hydra can be given a specific number of heads by calling it an n<w>-headed</w>
-<w>hydra</w> (with a maximum of 20 heads):
+A hydra or slymdra can be given a specific number of heads by calling it an
+n<w>-headed</w> <w>hydra</w> or n<w>-headed</w> <w>slymdra</w> (with a maximum of 20 heads):
 
 <w>four-headed hydra</w>
 

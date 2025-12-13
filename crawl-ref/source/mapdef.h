@@ -740,7 +740,7 @@ private:
     mons_spec drac_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
-    mons_spec get_hydra_spec(const string &name) const;
+    mons_spec get_hydra_spec(const string &name, monster_type type) const;
     mons_spec get_slime_spec(const string &name) const;
     mons_spec get_shaped_spec(const string &name, monster_type type) const;
     mons_spec get_zombified_monster(const string &name,

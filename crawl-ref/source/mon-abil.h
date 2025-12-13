@@ -17,6 +17,9 @@
 #define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
 
+#define SLYMDRA_FAKE_HEADS_KEY "slymdra_fake_heads"
+#define SLYMDRA_SLIMES_EATEN_KEY "slymdra_slimes_eaten"
+
 class actor;
 class monster;
 struct bolt;
@@ -30,6 +33,8 @@ void boris_covet_orb(monster* boris);
 bool ugly_thing_mutate(monster& ugly, bool force = true);
 bool slime_creature_polymorph(monster& slime, poly_power_type power = PPT_SAME);
 void merge_ench_durations(monster& initial, monster& merge_to, bool usehd = false);
+bool slymdra_polymorph(monster& slimedra, poly_power_type power = PPT_SAME);
+void slymdra_scale_hp(monster& slymdra);
 
 bool lost_soul_revive(monster& mons, killer_type killer);
 
