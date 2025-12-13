@@ -294,8 +294,8 @@ w:1
 @_graffiti_author_any_changeable_non-randgen_@ has changed names due to Xom's influence and now goes by @RANDGEN@
 %%%%
 # This can produce an author who's compared to themselves, an author who
-# is secretly the power of cheese, an orc who worships (or is) Zin, or a
-# non-orc who worships (or is) Beogh, but you shouldn't believe
+# is secretly e.g. the power of cheese, an orc who worships (or is) Zin,
+# or a non-orc who worships (or is) Beogh, but you shouldn't believe
 # everything you read.
 _graffiti_changed_or_compared_religions_
 
@@ -417,6 +417,10 @@ w:1
 # Behold the power of cheese!
 w:1
 the power of cheese
+
+# Strong Bad Email #117, "montage"
+w:1
+a wagon full of pancakes
 %%%%
 _graffiti_happened_reason_
 
@@ -890,10 +894,6 @@ what happened to @_graffiti_author_any_@ was @_graffiti_happened_reason_@
 
 w:2
 @_graffiti_changed_names_@
-
-# Strong Bad
-w:1
-@_graffiti_author_any_@ is actually a wagon full of pancakes
 %%%%
 _graffiti_species_
 
