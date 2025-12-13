@@ -956,8 +956,10 @@ _graffiti_unreadable_
 
 graffiti of unreadable @_writing_type_@
 
+w:1
 graffiti of @_writing_type_@ that are unreadable except for bits hailing @_graffiti_hailed_god_@
 
+w:1
 graffiti of @_writing_type_@ that are unreadable except for bits hailing @_graffiti_hailed_god_@ and a signature by @_graffiti_author_any_@
 %%%%
 _graffiti_vengeance_
