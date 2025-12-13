@@ -61,6 +61,7 @@ protected:
     tile* m_texture;
     vector<variation> m_variations;
     int m_weight;
+    bool m_weight_has_been_used;
     double m_alpha;
     int m_domino;
 
