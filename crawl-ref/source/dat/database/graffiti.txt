@@ -180,6 +180,8 @@ spidery
 
 swirling
 
+throbbing
+
 twitching
 
 writhing
