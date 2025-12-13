@@ -93,7 +93,7 @@ _orc_priest_name_
 Judas
 %%%%
 # Obvious references to Beogh
-# (18 at last count)
+# (20 at last count)
 _beogh_name_
 
 Arbeogh
@@ -110,6 +110,8 @@ Bogbrand
 Bogfrid
 
 Boghold
+
+Bogloth
 
 Bogmar
 
@@ -130,6 +132,8 @@ Marbaugh
 Morbeogh
 
 Orbeogh
+
+Vorbog
 
 Warbeogh
 %%%%
