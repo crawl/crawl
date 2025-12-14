@@ -270,6 +270,7 @@ ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
 launch_bomblet LAUNCH_BOMBLET
+launch_sporangium LAUNCH_SPORANGIUM
 magma_barrage MAGMA_BARRAGE
 malmutate MALMUTATE
 march_of_sorrows MARCH_OF_SORROWS

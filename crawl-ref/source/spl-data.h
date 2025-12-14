@@ -3345,6 +3345,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_LAUNCH_SPORANGIUM, "Launch Sporangium",
+    spschool::conjuration,
+    spflag::monster,
+    5,
+    200,
+    -1, -1,
+    0,
+    TILEG_LAUNCH_SPORANGIUM,
+},
+
+{
     SPELL_STARBURST, "Starburst",
     spschool::conjuration | spschool::fire,
     spflag::none,

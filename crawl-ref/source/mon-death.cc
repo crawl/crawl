@@ -3223,6 +3223,11 @@ item_def* monster_die(monster& mons, killer_type killer,
                 msg = " implodes with a snap.";
             else if (mons.type == MONS_ERYTHROSPITE)
                 msg = " expends the last of its anger.";
+            else if (mons.type == MONS_CREEPING_PLASMODIUM
+                     || mons.type == MONS_NASCENT_PLASMODIUM)
+            {
+                msg = " shivels and dies.";
+            }
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))

@@ -2195,6 +2195,18 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_CREEPING_PLASMODIUM,
+      {
+       { SPELL_LAUNCH_SPORANGIUM, 70, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_NASCENT_PLASMODIUM,
+      {
+       { SPELL_ACID_BALL, 70, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('K') Kobolds.
     {  MST_SONJA,
       {

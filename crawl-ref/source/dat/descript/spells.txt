@@ -1144,6 +1144,13 @@ the cost of 1 MP.
 Spellpower increases the number of attacks the bee may perform before going
 dormant.
 %%%%
+Launch Sporangium spell
+
+Launches a caustic sporangium which will pursue any intriguing sources of
+nutrients - such as yourself - and engulf them in a massive acidic explosion.
+Nascent plasmodia, capable of firing acid of their own, may take root on any
+walls this explosion touches - though none within 2 tiles of any other.
+%%%%
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.

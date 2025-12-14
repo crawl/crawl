@@ -994,6 +994,9 @@ slymdra5
 slymdra6
 slymdra7
 slymdra8
+creeping_plasmodium MONS_CREEPING_PLASMODIUM
+nascent_plasmodium MONS_NASCENT_PLASMODIUM
+caustic_sporangium MONS_CAUSTIC_SPORANGIUM
 %rim 1
 acid_blob MONS_ACID_BLOB
 

@@ -978,6 +978,12 @@ caustic shrike
 A swift, nightmarish bird whose razor-sharp metallic feathers drip with
 corrosive acid.
 %%%%
+caustic sporangium
+
+A balloon-like sac of slime mold spores, suspended in a nutrient slurry to
+sustain them on their search for a new home. To the great misfortune of any
+adventurers in the vicinity, this slurry is also a highly potent acid.
+%%%%
 centaur
 
 A hybrid with the torso of a human atop the body of a horse. It is highly
@@ -1049,6 +1055,12 @@ creeping inferno
 A formless mass of ancient fire, bound by heat and malevolence. It longs to
 unleash itself as a wild fire storm, yet must first patiently burn towards its
 victims with implaceable inevitability.
+%%%%
+creeping plasmodium
+
+An enormous and unnervingly motile slime mold colony. It creeps along the
+crevices of the walls in search of nutrients and can spread itself to new
+locations by launching enormous sporangia.
 %%%%
 crimson imp
 
@@ -2201,6 +2213,11 @@ nameless horror
 A malign force from the space between planes. It is hostile to the magic forces
 that removed it from its home. These horrors are often the result of mistaken
 summoning spells and have slain many aspiring wizards.
+%%%%
+nascent plasmodium
+
+A slime mold colony in an early phase of its life cycle. Not yet mature enough
+to reproduce, it can still defend itself by firing globs of potent acid.
 %%%%
 nargun
 

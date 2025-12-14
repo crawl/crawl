@@ -429,6 +429,8 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
             return detonation_catalyst_damage(pow, false);
         case SPELL_BOULDER:
             return boulder_damage(pow, false);
+        case SPELL_LAUNCH_SPORANGIUM:
+            return mon_explode_dam(MONS_CAUSTIC_SPORANGIUM, 1);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
@@ -479,6 +481,8 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTCYAN;
         case SPELL_BECKONING_GALE:
             return LIGHTGRAY;
+        case SPELL_LAUNCH_SPORANGIUM:
+            return YELLOW;
         default:
             break;
     }

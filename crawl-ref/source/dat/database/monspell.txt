@@ -1148,6 +1148,10 @@ Manifold Assault natural cast
 
 @The_monster@ seems to occupy many places at once.
 %%%%
+Acid Ball nascent plasmodium cast
+
+@The_monster@ squirts acid @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

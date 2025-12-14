@@ -432,13 +432,15 @@ MAP
    ''...........''
 ENDMAP
 
-NAME: nicolae_slime_round_cave
-DEPTH: Slime:2-, !Slime:$
-TAGS: no_monster_gen no_descent
-SHUFFLE: {}/()/[]
-NSUBST: a = X / .
-SUBST: X = x., z = x_, 0 = 0009.., 9 = 9998
-CLEAR: _
+NAME:    nicolae_slime_round_cave
+TAGS:    no_monster_gen no_descent
+DEPTH:   Slime:2-, !Slime:$
+KMONS:   y = creeping plasmodium
+KFEAT:   y = x
+SHUFFLE: {} / () / []
+NSUBST:  a = X / .
+SUBST:   X = x., z = x_, 0 = 0009.., 9 = 9998
+CLEAR:   _
 MAP
        zzzzzzzzzzz
      zzzXXXXXXXXXzzz
@@ -450,11 +452,11 @@ MAP
 zzX..0..XXxx.xxXX.....Xzz
 zXX....XXxxX.XxxXX....XXz
 zX..0.XXxxXX.XXxxXX.9..Xz
-zXX..aXxxXX...XxxxX...XXz
+zXX..aXxxXX...XxyxX...XXz
 zX....XxXX.............Xz
-zXX.{.......}....9..0.XXz
+zXX.{.......}.......0.XXz
 zX....XxXX.............Xz
-zXX..aXxxXX...XxxxX...XXz
+zXX..aXxxXX...XxyxX...XXz
 zX..0.XXxxXX.XXxxXX.9..Xz
 zXX....XXxxX.XxxXX....XXz
 zzX..0..XXxx.xxXX.....Xzz

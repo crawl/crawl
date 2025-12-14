@@ -3296,6 +3296,15 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
     }
 
+    // Plasmodium can only move along the surface of walls.
+    if ((mons->type == MONS_CREEPING_PLASMODIUM
+         || mons->type == MONS_NASCENT_PLASMODIUM)
+        && feat_is_wall(target_grid)
+        && !has_non_solid_adjacent(targ))
+    {
+        return false;
+    }
+
     // Submerged water creatures avoid the shallows where
     // they would be forced to surface. -- bwr
     // [dshaligram] Monsters now prefer to head for deep water only if

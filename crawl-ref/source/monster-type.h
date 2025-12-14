@@ -164,6 +164,8 @@ enum monster_type                      // env.mons[].type
     MONS_SLYMDRA,
     MONS_ROCKSLIME,
     MONS_VOID_OOZE,
+    MONS_CREEPING_PLASMODIUM,
+    MONS_NASCENT_PLASMODIUM,
 #endif
     MONS_AZURE_JELLY,
 #if TAG_MAJOR_VERSION == 34
@@ -1049,6 +1051,7 @@ enum monster_type                      // env.mons[].type
     MONS_PILE_OF_DEBRIS,
     MONS_PILE_OF_FLESH,
     MONS_SHOOTING_STAR,
+    MONS_CAUSTIC_SPORANGIUM,
 #endif
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
@@ -1402,6 +1405,9 @@ enum monster_type                      // env.mons[].type
     MONS_ERYTHROSPITE,
     MONS_MORPHOGENIC_OOZE,
     MONS_SLYMDRA,
+    MONS_CREEPING_PLASMODIUM,
+    MONS_CAUSTIC_SPORANGIUM,
+    MONS_NASCENT_PLASMODIUM,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

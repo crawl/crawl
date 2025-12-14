@@ -1000,6 +1000,34 @@ void bolt::burn_wall_effect()
     finish_beam();
 }
 
+void bolt::sporangium_wall_effect()
+{
+    if (monster_at(pos()))
+        return;
+
+    // Trace the ownership of this sporangium explosion back to the original
+    // creeping plasmodium, and exit if we can't find it.
+    const monster* ag = cached_monster_copy_by_mid(source_id);
+    if (!ag)
+        return;
+    monster* orig_plasmodium = monster_by_mid(ag->summoner);
+    if (!orig_plasmodium)
+        return;
+
+    // Don't make plasmodia too close together.
+    for (distance_iterator di(pos(), false, true, 2); di; ++di)
+        if (monster* mon_at = monster_at(*di))
+            if (mon_at->type == MONS_NASCENT_PLASMODIUM && mons_aligned(orig_plasmodium, mon_at))
+                return;
+
+    mgen_data mg(MONS_NASCENT_PLASMODIUM, BEH_COPY, pos(), orig_plasmodium->foe,
+                 MG_FORCE_PLACE);
+    mg.set_summoned(orig_plasmodium, SPELL_LAUNCH_SPORANGIUM, INFINITE_DURATION, false);
+
+    if (monster* plasm = create_monster(mg))
+        simple_monster_message(*plasm, " begins to grow on the wall!", false, MSGCH_PLAIN, 0, DESC_A);
+}
+
 int bolt::range_used(bool leg_only) const
 {
     const int leg_length = pos().distance_from(leg_source());
@@ -1029,7 +1057,9 @@ void bolt::affect_wall()
     }
     if (in_bounds(pos()))
     {
-        if (flavour == BEAM_DIGGING)
+        if (origin_spell == SPELL_LAUNCH_SPORANGIUM)
+            sporangium_wall_effect();
+        else if (flavour == BEAM_DIGGING)
             digging_wall_effect();
         else if (can_burn_trees())
             burn_wall_effect();
@@ -2925,6 +2955,10 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
         return true; // smite targeting, we don't care
+
+    // Can create a new plasmodium on another wall
+    if (origin_spell == SPELL_LAUNCH_SPORANGIUM)
+        return true;
 
     return false;
 }
@@ -7039,7 +7073,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // Run DFS to determine which cells are influenced
     explosion_map exp_map;
     exp_map.init(INT_MAX);
-    determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
+    const bool stop_at_walls = (origin_spell != SPELL_LAUNCH_SPORANGIUM);
+    determine_affected_cells(exp_map, coord_def(), 0, r, stop_at_walls, stop_at_walls);
 
     // We get a bit fancy, drawing all radius 0 effects, then radius
     // 1, radius 2, etc. It looks a bit better that way.

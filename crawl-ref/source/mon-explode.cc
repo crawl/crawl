@@ -237,6 +237,23 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 
 }
 
+static dice_def _sporangium_damage(int)
+{
+    return dice_def(3, 20);
+}
+
+static void _setup_sporangium_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_ACID;
+    beam.damage  = _sporangium_damage(0);
+    beam.name    = "caustic explosion";
+    beam.explode_noise_msg = "You hear an extremely violent squelch.";
+    beam.colour  = YELLOW;
+    beam.ex_size = 3;
+    beam.origin_spell = SPELL_LAUNCH_SPORANGIUM;
+}
+
 struct monster_explosion {
     function<void(bolt&, const monster&)> prep_explode;
     function<dice_def(int)> damage;
@@ -281,6 +298,10 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BLAZEHEART_CORE, {
         _setup_blazeheart_core_explosion,
         _blazeheart_damage,
+    } },
+    { MONS_CAUSTIC_SPORANGIUM, {
+        _setup_sporangium_explosion,
+        _sporangium_damage,
     } }
 };
 
@@ -316,7 +337,7 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
         || killer == KILL_RESET || killer == KILL_RESET_KEEP_ITEMS
         || killer == KILL_BANISHED
     // Ball lightning explode on timeout, but more conventional summons should not
-        || killer == KILL_TIMEOUT && !(mons->flags & MF_PERSISTS))
+        || (killer == KILL_TIMEOUT && !((mons->flags & MF_PERSISTS))))
     {
         return false;
     }

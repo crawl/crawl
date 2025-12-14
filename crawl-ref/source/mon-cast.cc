@@ -2655,6 +2655,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HELLFIRE_MORTAR:
     case SPELL_GLOOM:
     case SPELL_SLEETSTRIKE:
+    case SPELL_LAUNCH_SPORANGIUM:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -8460,6 +8461,35 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             max(0, mons->spell_hd() - mons_class_hit_dice(mons->type));
 
         create_monster(mgen);
+
+        return;
+    }
+
+    case SPELL_LAUNCH_SPORANGIUM:
+    {
+        mgen_data mgen (MONS_CAUSTIC_SPORANGIUM,
+                mons->friendly() ? BEH_FRIENDLY : BEH_HOSTILE, mons->pos(),
+                mons->foe, MG_FORCE_PLACE);
+        mgen.set_summoned(mons, SPELL_LAUNCH_SPORANGIUM, random_range(90, 220), false, false);
+
+        // Since this is used by a wall monster, if we're actually trying to
+        // harm something specific, prefer to avoid placing the sporangium on
+        // the wrong side of the wall to be able to hit them.
+        for (fair_adjacent_iterator ai(mons->pos()); ai; ++ai)
+        {
+            if (!feat_is_solid(env.grid(*ai)) && !actor_at(*ai)
+                && cell_see_cell(*ai, foe->pos(), LOS_NO_TRANS))
+            {
+                mgen.pos = *ai;
+                mgen.flags |= MG_FORCE_PLACE;
+                break;
+            }
+        }
+        if (mgen.pos.origin())
+            return;
+
+        if (create_monster(mgen))
+            simple_monster_message(*mons, " launches a sporangium.");
 
         return;
     }

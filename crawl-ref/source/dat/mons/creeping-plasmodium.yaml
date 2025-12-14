@@ -1,0 +1,19 @@
+name: "creeping plasmodium"
+glyph: {char: "J", colour: etc_gold}
+flags: [see_invis, unblindable, amorphous, no_skeleton]
+resists: {poison: 1, corr: 3}
+exp: 1800
+genus: jelly
+will: 160
+attacks:
+hd: 10
+hp_10x: 750
+ac: 17
+ev: 3
+intelligence: brainless
+speed: 10
+energy: {spell: 20}
+size: medium
+shape: blob
+spells: creeping_plasmodium
+habitat: walls_only

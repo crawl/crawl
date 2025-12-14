@@ -1,0 +1,15 @@
+name: "caustic sporangium"
+glyph: {char: "*", colour: etc_gold}
+flags: [flies, no_exp_gain, peripheral]
+resists: {poison: 1, corr: 3}
+will: invuln
+attacks:
+ - {type: hit, damage: 1}
+hd: 1
+hp_10x: 300
+ac: 0
+ev: 10
+intelligence: brainless
+speed: 15
+size: small
+shape: orb
