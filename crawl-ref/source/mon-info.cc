@@ -377,7 +377,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         ev += get_mons_class_ev(base_type);
     }
 
-    if (mons_is_unique(base_type))
+    // Tiamat's base type is set to MONS_DRACONIAN.
+    if (mons_is_unique(base_type) || type == MONS_TIAMAT)
     {
         if (mons_is_the(base_type))
             mb.set(MB_NAME_THE);
@@ -498,7 +499,8 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_UNREWARDING);
     }
 
-    if (mons_is_unique(base_type))
+    // Tiamat's base type is set to MONS_DRACONIAN.
+    if (mons_is_unique(base_type) || type == MONS_TIAMAT)
     {
         if (mons_is_the(base_type))
             mb.set(MB_NAME_THE);
