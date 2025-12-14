@@ -2345,7 +2345,7 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
  * Exactly half the internal value, for legacy reasons.
  * @param scale           How much to scale the value by (higher scale increases
                           precision, as SH is a number with 2 decimal places)
- * @param bool_temporary  Whether to include temporary effects like
+ * @param ignore_temporary  Whether to include temporary effects like
                           TSO's divine shield.
  * @return                The SH value to be displayed.
  */
@@ -3509,13 +3509,13 @@ static void _display_tohit()
 #endif
 }
 
-static int _delay(const item_def *weapon)
+static int _delay(const item_def *weapon, bool ignore_temporary = false)
 {
     if (!weapon || !is_range_weapon(*weapon))
-        return you.attack_delay().expected();
+        return you.attack_delay(nullptr, true, ignore_temporary).expected();
     item_def fake_proj;
     populate_fake_projectile(*weapon, fake_proj);
-    return you.attack_delay(&fake_proj).expected();
+    return you.attack_delay(&fake_proj, true, ignore_temporary).expected();
 }
 
 static bool _at_min_delay(const item_def *weapon)
@@ -6684,7 +6684,8 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
  */
 void player::preview_stats_with_specific_item(int scale, const item_def& new_item,
                                               int *ac, int *ev, int *sh,
-                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail,
+                                              int *ad)
 {
     // Since there are a lot of things which can affect the calculation of
     // EV/SH/fail, including artifact properties on either the item we're
@@ -6753,10 +6754,11 @@ void player::preview_stats_with_specific_item(int scale, const item_def& new_ite
     you.equipment.add(item, slot);
     you.equipment.update();
 
-    // Now, simply calculate AC/EV/SH without temporary boosts.
+    // Now, simply calculate AC/EV/SH/delay without temporary boosts.
     *ac = base_ac(scale);
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
+    *ad = player_displayed_attack_delay(true);
 
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         (*fail)[i] = raw_spell_fail(spells[i]);
@@ -6769,7 +6771,8 @@ void player::preview_stats_with_specific_item(int scale, const item_def& new_ite
 void player::preview_stats_without_specific_item(int scale,
                                                  const item_def& item_to_remove,
                                                  int *ac, int *ev, int *sh,
-                                                 FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+                                                 FixedVector<int, MAX_KNOWN_SPELLS> *fail,
+                                                 int *ad)
 {
     // Verify that the item is currently equipped
     // (or this function will give bogus info)
@@ -6786,6 +6789,7 @@ void player::preview_stats_without_specific_item(int scale,
     *ac = base_ac(scale);
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
+    *ad = player_displayed_attack_delay(true);
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         (*fail)[i] = raw_spell_fail(spells[i]);
 }
@@ -6803,7 +6807,7 @@ void player::preview_stats_without_specific_item(int scale,
  */
 void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
     int *ac, int *ev, int *sh,
-    FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+    FixedVector<int, MAX_KNOWN_SPELLS> *fail, int *ad)
 {
     ASSERT(talisman.base_type == OBJ_TALISMANS);
 
@@ -6844,6 +6848,7 @@ void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
     *ac = base_ac(scale);
     *ev = evasion_scaled(scale, true);
     *sh = player_displayed_shield_class(scale, true);
+    *ad = player_displayed_attack_delay(true);
 
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         (*fail)[i] = raw_spell_fail(spells[i]);
@@ -9502,6 +9507,20 @@ bool player::allies_forbidden()
 {
     return get_mutation_level(MUT_NO_LOVE)
            || have_passive(passive_t::no_allies);
+}
+
+/**
+ * Calculate the attack delay value that should be displayed to players.
+ * Currently only used for equipment swap preview.
+ *
+ * @param ignore_temporary  Whether to include temporary effects like haste.
+                          Currently counts stat drain / heroism skill boosts
+                          even if enabled.
+ * @return                The attack delay to be displayed.
+ */
+int player_displayed_attack_delay(bool ignore_temporary)
+{
+    return _delay(you.weapon(), ignore_temporary);
 }
 
 item_def* player::active_talisman() const
