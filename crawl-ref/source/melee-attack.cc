@@ -4234,6 +4234,11 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
             defender->weaken(attacker, 12);
         break;
 
+    case AF_DIM:
+        if (!one_chance_in(3))
+            defender->diminish(attacker, 12);
+        break;
+
     case AF_SEAR:
         if (!one_chance_in(3))
             sear_defender();

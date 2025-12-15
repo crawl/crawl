@@ -1157,6 +1157,7 @@ static void _jiyva_summon_slimes()
         MONS_VOID_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
+        MONS_STAR_JELLY,
         MONS_SLIME_CREATURE,
         MONS_MORPHOGENIC_OOZE,
     };

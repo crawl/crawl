@@ -2134,7 +2134,8 @@ bool flavour_triggers_damageless(attack_flavour flavour)
         || flavour == AF_AIRSTRIKE
         || flavour == AF_SHADOWSTAB
         || flavour == AF_DROWN
-        || flavour == AF_CORRODE;
+        || flavour == AF_CORRODE
+        || flavour == AF_DIM;
 }
 
 /**
@@ -3966,7 +3967,8 @@ monster_type royal_jelly_ejectable_monster()
     return random_choose(MONS_ACID_BLOB,
                          MONS_AZURE_JELLY,
                          MONS_ROCKSLIME,
-                         MONS_VOID_OOZE);
+                         MONS_VOID_OOZE,
+                         MONS_STAR_JELLY);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.

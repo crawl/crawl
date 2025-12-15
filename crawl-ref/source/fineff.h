@@ -81,7 +81,8 @@ void schedule_death_spawn_fineff(monster_type mon_type, coord_def pos, int dur,
                                  int summon_type = SPELL_NO_SPELL);
 void schedule_death_spawn_fineff(mgen_data mg);
 void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn);
-void schedule_stardust_fineff(actor* agent, int power, int max_stars);
+void schedule_stardust_fineff(actor* agent, int power, int max_stars,
+                              bool is_star_jelly = false);
 void schedule_pyromania_fineff();
 void schedule_celebrant_bloodrite_fineff();
 

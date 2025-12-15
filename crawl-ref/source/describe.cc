@@ -5069,6 +5069,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_CLEAVE_UGLY, "random ugly thing damage" },
         { AF_DOOM,              "inflict doom" },
         { AF_SLIMIFY,           "slowly slimify the target" },
+        { AF_DIM,               "diminish the target's spells" },
         { AF_PLAIN,             "" },
     };
 
@@ -6450,6 +6451,12 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << "It will release varied jellies when damaged or killed, with"
             " the number of jellies proportional to the amount of damage.\n";
         result << "It will release all of its jellies when polymorphed.\n";
+    }
+
+    if (mi.type == MONS_STAR_JELLY)
+    {
+        dice_def dmg = zap_damage(ZAP_SHOOTING_STAR, 150, true, false);
+        result << "Shooting star damage: " << dmg.num << "d" << dmg.size << " (x3)\n";
     }
 
     if (mi.airborne())

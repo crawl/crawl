@@ -2379,6 +2379,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
                    : base;
 
+        case MONS_STAR_JELLY:
+            if (mon.is(MB_DIMINISHED_SPELLS))
+                return TILEP_MONS_STAR_JELLY_EXPENDED;
+            return base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.

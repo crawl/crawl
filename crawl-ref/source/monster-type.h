@@ -166,6 +166,7 @@ enum monster_type                      // env.mons[].type
     MONS_VOID_OOZE,
     MONS_CREEPING_PLASMODIUM,
     MONS_NASCENT_PLASMODIUM,
+    MONS_STAR_JELLY,
 #endif
     MONS_AZURE_JELLY,
 #if TAG_MAJOR_VERSION == 34
@@ -1408,6 +1409,7 @@ enum monster_type                      // env.mons[].type
     MONS_CREEPING_PLASMODIUM,
     MONS_CAUSTIC_SPORANGIUM,
     MONS_NASCENT_PLASMODIUM,
+    MONS_STAR_JELLY,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

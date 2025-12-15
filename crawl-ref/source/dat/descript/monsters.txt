@@ -3040,6 +3040,12 @@ spriggan rider
 A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
 %%%%
+star jelly
+
+A white gelatinous mound that pulses with a strange iridescence. Its body
+absorbs magical energy like a sponge, and when sufficiently injured, will
+unleash this energy as a flurry of shooting stars.
+%%%%
 starcursed mass
 
 A mass of stellar detritus that glows with the sickly putrescence of a dying
@@ -3339,10 +3345,10 @@ with a humanoid.
 %%%%
 void ooze
 
-The viscous detritus of a thousand failed spells, surging forward with a speed
-that defies its towering size. Its very substance is a hole in the fabric of
-magic; enchantments find no purchase there and it leaches magical power from
-anything it touches like a dry sponge in water.
+The viscous detritus of a thousand failed spells, surging forward with unnerving
+speed. Its very substance is a hole in the fabric of magic; enchantments find no
+purchase there and even momentary contact with it can leave one's spells greatly
+diminished.
 %%%%
 walking alembic
 

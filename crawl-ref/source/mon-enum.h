@@ -161,6 +161,7 @@ enum attack_flavour
     AF_REACH_CLEAVE_UGLY,
     AF_DOOM,
     AF_SLIMIFY,
+    AF_DIM,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

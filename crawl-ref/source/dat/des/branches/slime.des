@@ -384,7 +384,7 @@ DEPTH:  Slime:2-, !Slime:$
 SUBST:  X = x., { = {[(, 1 : 1:35 2 3:5
 KMONS:  1 : slime creature w:30 / rockslime w:5 / azure jelly w:5
 KMONS:  23 : jelly w:20 / endoplasm
-KMONS:  4 : acid blob / void ooze
+KMONS:  4 : acid blob / void ooze / star jelly
 KMONS:  5 : colossal amoeba / morphogenic ooze / four-headed slymdra
 NSUBST: 2 = 3:4 / *:2, 3 = 2:5 / *:2
 MAP

@@ -6010,6 +6010,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             ++hits;
         }
     }
+    // Using diminished magic as a thematically-appropriate cooldown
+    else if (type == MONS_STAR_JELLY & !has_ench(ENCH_DIMINISHED_SPELLS)
+             && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
+    {
+        add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, this, random_range(500, 650)));
+        schedule_stardust_fineff(this, 150, 3, true);
+    }
 
     // Interrupt autorest for allies standing clouds, on fire, etc.
     // (We exclude poison, since even in cases where this is lethal, there's

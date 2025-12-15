@@ -484,7 +484,7 @@ function arena_sprint_get_monster_set(round, boss)
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:5 / naga mage / naga warrior / w:20 nagaraja /\
                     guardian serpent / w:5 anaconda",
-                "place:Slime:$ / acid blob / azure jelly / great orb of eyes",
+                "place:Slime:$ / acid blob / star jelly / great orb of eyes",
                 "dancing weapon",
                 "place:Forest:$ w:20 / spriggan defender / spriggan rider /\
                     spriggan air mage / spriggan druid w:3 / spriggan berserker",
@@ -528,7 +528,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "undertaker",
-                "chonchon",
+                "chonchon", "star jelly / starcursed mass",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
                 "unseen horror / shadow wraith w:15 / ghost moth",
@@ -561,8 +561,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "broodmother w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
-                "place:Slime:$ / w:30 acid blob / colossal amoeba / glass eye /\
-                    void ooze / morphogenic ooze / slymdra w:5",
+                "place:Slime:$ / acid blob w:30 / colossal amoeba / glass eye /\
+                    void ooze / star jelly w:5 / morphogenic ooze / slymdra w:5",
                 "dancing weapon ; bardiche good_item",
                 "chonchon w:2 / spriggan defender / spriggan air mage /\
                     spriggan druid / spriggan berserker / alderking",
@@ -601,7 +601,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "profane servitor w:25 / angel / daeva / fravashi w:5 /\
                     cherub / seraph",
                 -- Gimmicks
-                "undertaker", "chonchon", "catoblepas",
+                "undertaker", "chonchon", "star jelly / starcursed mass",
                 "moth of wrath / w:20 ettin", "orb spider", "nekomata",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth",
@@ -640,8 +640,9 @@ function arena_sprint_get_monster_set(round, boss)
                 "thorn hunter w:5 / green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "nagaraja w:20 / guardian serpent / salamander tyrant",
-                "acid blob w:25 / rockslime w:5 / six-headed slymdra w:5 / \
-                    morphogenic ooze w:5 / glass eye / void ooze",
+                "acid blob w:25 / rockslime w:5 / star jelly w:5 /\
+                    six-headed slymdra w:5 / morphogenic ooze w:5 /\
+                    glass eye / void ooze",
                 "dancing weapon ; bardiche ego:speed / zenata w:1",
                 "chonchon w:2 / spriggan air mage / alderking",
                 "ancient lich / curse skull w:6 / boris w:1",

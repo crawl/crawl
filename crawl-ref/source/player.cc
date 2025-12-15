@@ -8487,7 +8487,7 @@ void player::diminish(const actor */*attacker*/, int pow)
     if (!duration[DUR_DIMINISHED_SPELLS])
         mprf(MSGCH_WARN, "You feel your spells grow feeble.");
     else
-        mprf(MSGCH_WARN, "You feel as though your spells will be weakened yet longer.");
+        mprf(MSGCH_WARN, "You feel as though your spells will be weakened for longer.");
 
     increase_duration(DUR_DIMINISHED_SPELLS, pow + random2(pow + 3), 50);
 }

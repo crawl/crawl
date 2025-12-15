@@ -525,16 +525,21 @@ protected:
 class stardust_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect&/*a*/) const override { return true; };
+    bool mergeable(const final_effect&/*a*/) const override { return false; };
     void fire() override;
 
-    stardust_fineff(actor* agent, int _power, int _max)
-        : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max)
+    stardust_fineff(actor* agent, int _power, int _max, bool _is_star_jelly)
+        : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max),
+                                                   is_star_jelly(_is_star_jelly)
     {
+        // If this is a star jelly who just got smashed, cache it.
+        if (agent->is_monster() && !agent->alive())
+            env.final_effect_monster_cache.push_back(*agent->as_monster());
     }
 protected:
     int power;
     int max_stars;
+    bool is_star_jelly;
 };
 
 class pyromania_fineff : public final_effect
@@ -770,9 +775,9 @@ void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn)
     _schedule_final_effect(new detonation_fineff(pos, wpn));
 }
 
-void schedule_stardust_fineff(actor* agent, int power, int max_stars)
+void schedule_stardust_fineff(actor* agent, int power, int max_stars, bool force_max)
 {
-    _schedule_final_effect(new stardust_fineff(agent, power, max_stars));
+    _schedule_final_effect(new stardust_fineff(agent, power, max_stars, force_max));
 }
 
 void schedule_pyromania_fineff()
@@ -1648,7 +1653,10 @@ void stardust_fineff::fire()
 {
     actor* agent = actor_by_mid(att);
 
-    if (!agent || !agent->alive())
+    // In case the agent is dead, check for a cached copy.
+    if (!agent)
+        agent = cached_monster_copy_by_mid(att);
+    if (!agent)
         return;
 
     if (agent->is_player() && is_sanctuary(you.pos()))
@@ -1656,18 +1664,19 @@ void stardust_fineff::fire()
 
     int count = 0;
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
-    {
         if (!ai->is_firewood() && !mons_aligned(agent, *ai))
             ++count;
-    }
 
     // Don't activate or go on cooldown if there's nothing to shoot at.
     if (count == 0)
         return;
 
-    mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
+    if (is_star_jelly)
+        mprf("A flurry of magic pours from %s injured body!", agent->name(DESC_ITS).c_str());
+    else
+        mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
 
-    count = min(max_stars, count + 1);
+    count = is_star_jelly ? max_stars : min(max_stars, count + 1);
     const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
@@ -1679,12 +1688,12 @@ void stardust_fineff::fire()
         mg.hd = power;
         mg.hp = 100;
         if (monster* mon = create_monster(mg))
-            mon->steps_remaining = 15;
+            mon->steps_remaining = 12;
     }
 
     if (agent->is_player())
         you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
-    else
+    else if (!is_star_jelly)
         agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
 }
 

@@ -83,10 +83,10 @@ function base_monster_setup(e)
                deep elf blademaster w:5 / deep elf master archer w:5 /\
                spriggan air mage / spriggan berserker /\
                spriggan defender / chonchon band / colossal amoeba /\
-               morphogenic ooze / glass eye / walking divine tome /\
-               walking earthen tome / nagaraja / salamander tyrant /\
-               guardian serpent / shock serpent w:5 / thorn hunter /\
-               fenstrider witch / bunyip / will-o-the-wisp w:5 /\
+               star jelly / morphogenic ooze / glass eye /\
+               walking divine tome / walking earthen tome / nagaraja /\
+               salamander tyrant / guardian serpent / shock serpent w:5 /\
+               thorn hunter / fenstrider witch / bunyip / will-o-the-wisp w:5 /\
                death drake w:5 / merfolk javelineer band w:5 / orb spider w:5 /\
                emperor scorpion / ghost moth w:5 / azure jelly / death cob /\
                jiangshi band / ghoul band w:5 / mummy priest /\

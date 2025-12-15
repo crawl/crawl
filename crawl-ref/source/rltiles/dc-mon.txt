@@ -997,6 +997,11 @@ slymdra8
 creeping_plasmodium MONS_CREEPING_PLASMODIUM
 nascent_plasmodium MONS_NASCENT_PLASMODIUM
 caustic_sporangium MONS_CAUSTIC_SPORANGIUM
+star_jelly0 MONS_STAR_JELLY
+star_jelly1
+star_jelly2
+star_jelly3
+star_jelly_expended MONS_STAR_JELLY_EXPENDED
 %rim 1
 acid_blob MONS_ACID_BLOB
 
