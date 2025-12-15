@@ -5387,8 +5387,8 @@ NSUBST: 1 = 2=1 / 2=1. / .
 : end
 SUBST:  D = cccc., . = ....`
 COLOUR: c. = darkgrey
-FTILE:  1c_. = floor_depthstone
-TILE:   c = floor_cobble_blood
+FTILE:  1c_. = floor_cobble_blood
+TILE:   c = dngn_stone_dark
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
    ```DDD```
@@ -7192,6 +7192,58 @@ xbx...xbx
 xxxx@xxxx
 ENDMAP
 
+NAME: nicolae_overflow_four_foyers_diagonal
+TAGS: transparent decor
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
++xxx@xxx+
+x..mTm..x
+x.+xmx+.x
+xmx...xmx
+@Tm.B.mT@
+xmx...xmx
+x.+xmx+.x
+x..mTm..x
++xxx@xxx+
+ENDMAP
+
+NAME: nicolae_overflow_four_foyers_orthogonal
+TAGS: transparent decor
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+@..x+x..@
+.T.m.m.T.
+..mx+xm..
+xmx...xmx
++.+.B.+.+
+xmx...xmx
+..mx+xm..
+.T.m.m.T.
+@..x+x..@
+ENDMAP
+
+NAME:    nicolae_overflow_lobbying_the_gods
+TAGS:    transparent decor
+SHUFFLE: {}/[]/(), DE, pq
+SUBST:   D = c, E = @, p = T, q = G
+SHUFFLE: TG
+: standard_overflow_setup(_G, { { "generic", "B" } }, true)
+MAP
+cEEEcccccEEEc
+D...c...c...D
+D.T.+.G.+.T.D
+D...c...c...D
+ccccc...ccccc
+c...c...c...c
+c.{.+.B.+.}.c
+c...c...c...c
+ccccc...ccccc
+D...c...c...D
+D.p.+.q.+.p.D
+D...c...c...D
+cEEEcccccEEEc
+ENDMAP
+
 NAME:    nicolae_overflow_rhomboverflow
 TAGS:    no_pool_fixup transparent decor
 SHUFFLE: cw
@@ -7227,7 +7279,7 @@ MAP
 ENDMAP
 
 # Each transporter will take you in a straight line across the intersection, but
-# only one will stop in the middle with the altar first.
+# only one will stop in the middle wi th the altar first.
 NAME:    nicolae_overflow_soul_deal_at_the_crossroads
 TAGS:    transparent decor
 WEIGHT:  2
@@ -7535,6 +7587,22 @@ DcEB.......BHcF
 DcEEEcD.FcHHHcF
 DcccccD.FcccccF
 DDDDDDD@FFFFFFF
+ENDMAP
+
+NAME:  nicolae_overflow_divine_pier_pressure
+TAGS:  temple_overflow_generic_2 transparent decor no_pool_fixup
+FTILE: @.mB : floor_sprouting_squares / floor_sprouting_stone / floor_vines / \
+              floor_moss / floor_sprouting_ruin
+MAP
+wwwwwwwww
+wwwwwwwww
+wwmmmmmww
+wwm.B.mww
+@.......@
+wwm.B.mww
+wwmmmmmww
+wwwwwwwww
+wwwwwwwww
 ENDMAP
 
 NAME: minmay_overflow_temple_star_quad
@@ -8092,4 +8160,48 @@ MAP
  .nn0..R...nn.
  ..nnnnnnnnn..
   ...........
+ENDMAP
+
+NAME:  nicolae_overflow_sandstone_temple
+TAGS:  temple_overflow_generic_7 temple_overflow_generic_6 \
+       temple_overflow_generic_4 temple_overflow_generic_3 \
+       temple_overflow_generic_1 transparent decor
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 1
+  else
+    altarcount = tonumber(get_overflow_altar_count(_G))
+  end
+  if altarcount == 7 then
+    subst("DEF : B")
+  elseif altarcount == 6 then
+    subst("EF : B")
+  elseif altarcount == 4 then
+    subst("DF : B")
+  elseif altarcount == 3 then
+    subst("E : B")
+  elseif altarcount == 1 then
+    subst("D : B")
+  else
+    subst("D : B")
+  end
+}}
+SUBST:   D : G, E : T, F : U
+SHUFFLE: GTU
+COLOUR:  c` = brown
+FTILE:   c`GTUB = floor_sandstone
+TILE:    c = wall_sandstone
+MAP
+    ...
+ .ccc.ccc.
+ ..`````..
+ cc`F`E`cc
+.c```````c.
+..`E`D`F`..
+.c```````c.
+ cc`F`E`cc
+ ..`````..
+ .ccc.ccc.
+    ...
 ENDMAP
