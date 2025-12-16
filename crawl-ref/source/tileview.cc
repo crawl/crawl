@@ -547,9 +547,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     else
         tile_env.flv(gc).wall = pick_dngn_tile(tile_env.flv(gc).wall, rand2);
 
-    if (feat_is_stone_stair(env.grid(gc)) && (player_in_branch(BRANCH_SHOALS) ||
-                                              player_in_branch(BRANCH_VAULTS) ||
-                                              player_in_branch(BRANCH_ZOT)))
+    if (feat_is_stone_stair(env.grid(gc)))
     {
         const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
         if (player_in_branch(BRANCH_SHOALS))
@@ -570,6 +568,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
                 tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_DOWN;
             else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
                 tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_UP;
+        }
+        else if (player_in_branch(BRANCH_SLIME) && !you.royal_jelly_dead)
+        {
+            if (up)
+                tile_env.flv(gc).feat = TILE_DNGN_SLIMY_STAIRS_UP;
+            else
+                tile_env.flv(gc).feat = TILE_DNGN_SLIMY_STAIRS_DOWN;
         }
     }
 

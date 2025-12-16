@@ -52,10 +52,6 @@
 
             apply_circle(x, y, 4, 1, 1, 1, make_floor)
 
-            if in_slime then
-                apply_circle(x, y, 8, 2, 1, 1, make_floor)
-            end
-
             if elevator and glyph == '}' then
                 mapgrd[x + 1][y] = '{'
             end
@@ -874,6 +870,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     if you.in_branch("orc") or you.in_branch("slime") then
         if you.at_branch_bottom() then
             iterations = 600 + crawl.random2(600)
+            connected = true
+        elseif you.in_branch("slime") then
+            iterations = 350 + crawl.random2(250)
             connected = true
         else
             iterations = 100 + crawl.random2(500)

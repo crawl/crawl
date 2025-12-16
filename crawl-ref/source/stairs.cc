@@ -238,6 +238,13 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
              you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
+    else if (old_branch == BRANCH_SLIME && !you.royal_jelly_dead)
+    {
+        if (going_up)
+            mpr("You ooze up the stairs.");   // Jiyva-worshippers only
+        else
+            mpr("You slide down the stairs.");
+    }
     else if (stair != DNGN_ALTAR_IGNIS)
     {
         mprf("You %s %swards.",

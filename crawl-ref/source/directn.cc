@@ -3096,6 +3096,16 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap,
     {
         return "metal staircase leading down";
     }
+    else if (feat_is_stone_stair_down(grid) && place.branch == BRANCH_SLIME
+             && !you.royal_jelly_dead)
+    {
+        return "slimy stone staircase leading down";
+    }
+    else if (feat_is_stone_stair_up(grid) && place.branch == BRANCH_SLIME
+             && !you.royal_jelly_dead)
+    {
+        return "slimy stone staircase leading up";
+    }
     else if (grid == DNGN_ZOT_STATUE && you.zot_orb_monster_known)
         return make_stringf("statue of %s", mons_type_name(you.zot_orb_monster, DESC_A).c_str());
     else if (!is_valid_feature_type(grid))

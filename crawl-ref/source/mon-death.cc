@@ -1239,6 +1239,16 @@ void fire_monster_death_event(monster* mons,
 
         if (jiyva_is_dead())
             _jiyva_died();
+
+        // Update the stair tiles on this floor so that they properly look like normal stairs again.
+        for (rectangle_iterator ri(1); ri; ++ri)
+        {
+            if (feat_is_stone_stair(env.grid(*ri)))
+            {
+                tile_clear_flavour(*ri);
+                tile_init_flavour(*ri);
+            }
+        }
     }
 }
 

@@ -109,7 +109,7 @@ const Branch branches[NUM_BRANCHES] =
       {BRANCH_ORC} },
 
     { BRANCH_SLIME, BRANCH_LAIR, 4, 5, 5, 17,
-      brflag::no_items | brflag::dangerous_end | brflag::spotty,
+      brflag::no_items | brflag::dangerous_end | brflag::spotty | brflag::no_shafts,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME, NUM_FEATURES,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,

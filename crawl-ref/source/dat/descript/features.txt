@@ -277,6 +277,36 @@ A staircase leading up from the grand vaults containing the silver rune of Zot,
 whose wealth attracts the most powerful champions from across the Dungeon to its
 defence.
 %%%%
+A slimy stone staircase leading down
+
+A stone staircase leading futher down.
+
+{{
+    if you.god() == "Jiyva" then
+        return "It is slick with slippery slime, but that is no obstacle for one " ..
+               "such as yourself who has embraced the way of all slime."
+    else
+        return "It is slick with slippery slime which will make it impossible " ..
+               "for you to climb back up again until the power ruling this place " ..
+               "is destroyed (or you choose to join it)."
+    end
+}}
+%%%%
+A slimy stone staircase leading up
+
+A stone staircase leading back up.
+
+{{
+    if you.god() == "Jiyva" then
+        return "It is slick with slippery slime, but that is no obstacle for one " ..
+               "such as yourself who has embraced the way of all slime."
+    else
+        return "It is slick with slippery slime, making it impossible for to climb " ..
+               "until the power ruling this place is destroyed (or you choose to " ..
+               "join it)."
+    end
+}}
+%%%%
 A tree
 
 A large tree. While in most places the dim light of the dungeon is not bright

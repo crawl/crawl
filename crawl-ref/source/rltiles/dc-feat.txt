@@ -584,6 +584,8 @@ metal_stairs_down DNGN_METAL_STAIRS_DOWN
 metal_stairs_up DNGN_METAL_STAIRS_UP
 zot_stairs_down DNGN_ZOT_STAIRS_DOWN
 zot_stairs_up DNGN_ZOT_STAIRS_UP
+slimy_stairs_down DNGN_SLIMY_STAIRS_DOWN
+slimy_stairs_up DNGN_SLIMY_STAIRS_UP
 enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN

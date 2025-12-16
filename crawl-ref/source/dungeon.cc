@@ -107,6 +107,7 @@ static int _place_uniques();
 static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
+static void _adjust_slime_stairs();
 
 static void _add_plant_clumps(int rarity, int clump_sparseness,
                               int clump_radius);
@@ -1278,20 +1279,6 @@ static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
                                                       unsigned mask = MMT_VAULT)
 {
     coord_def place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
-    if (player_in_branch(BRANCH_SLIME))
-    {
-        int tries = 100;
-        while (!place.origin()  // stop if we fail to find floor.
-               && (dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
-                   || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
-               && tries-- > 0)
-        {
-            place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
-        }
-
-        if (tries < 0)  // tries == 0 means we succeeded on the last attempt
-            place.reset();
-    }
     if (place.origin())
         throw dgn_veto_exception("Cannot place feature at random floor square.");
     else
@@ -2766,6 +2753,9 @@ static void _build_dungeon_level()
         // Ruination and plant clumps.
         _post_vault_build();
 
+        if (player_in_branch(BRANCH_SLIME))
+            _adjust_slime_stairs();
+
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
         _place_uniques();
@@ -3630,6 +3620,111 @@ static void _place_traps()
     }
 }
 
+// Unique stair-placement function for Slime.
+// Ensures that all up stairs are non-adjacent to walls, and that all down stairs
+// are at least 12 tiles away from any up stair.
+static void _adjust_slime_stairs()
+{
+    const int stair_start = DNGN_STONE_STAIRS_DOWN_I;
+    const int stair_count = DNGN_STONE_STAIRS_UP_III - stair_start + 1;
+
+    FixedVector < coord_def, stair_count > existing;
+    int down_stairs_needed = at_branch_bottom() ? 0 : 3;
+
+    // Find all existing stairs, removing those which are not in vaults and
+    // noting those which are, so that we know which we need to place ourselves.
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (feat_is_stone_stair(env.grid(*ri)))
+        {
+            if (map_masked(*ri, MMT_VAULT))
+            {
+                existing[env.grid(*ri) - stair_start] = *ri;
+                if (feat_is_stone_stair_down(env.grid(*ri)))
+                    --down_stairs_needed;
+            }
+            else
+                _set_grd(*ri, DNGN_FLOOR);
+        }
+    }
+
+    // Up stairs should be placed first.
+    const int num_upstairs = you.depth == 1 ? 1 : 3;
+    for (int i = DNGN_STONE_STAIRS_UP_I; i < DNGN_STONE_STAIRS_UP_I + num_upstairs; ++i)
+    {
+        // Stair already exists on the floor, so no need to place.
+        if (!existing[i - stair_start].origin())
+            continue;
+
+        int tries = 100;
+        coord_def place = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT, DNGN_FLOOR);
+        while (!place.origin()  // stop if we fail to find floor.
+                && (dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
+                    || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
+               && tries-- > 0)
+        {
+            place = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT, DNGN_FLOOR);
+        }
+
+        // If we can't place a stair by now, give up.
+        if (place.origin())
+            return;
+        else
+        {
+            _set_grd(place, static_cast<dungeon_feature_type>(i));
+            existing[i - stair_start] = place;
+        }
+    }
+
+    if (down_stairs_needed == 0)
+        return;
+
+    // Now place down stairs. We're a little more exhaustive about determining possible
+    // positions, since some configurations of up stairs may exclude much of the floor.
+    vector<coord_def> valid;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        // Only floor outside of vaults is valid.
+        if (env.grid(*ri) != DNGN_FLOOR || map_masked(*ri, MMT_VAULT))
+            continue;
+
+        if (!dgn_has_adjacent_feat(*ri, DNGN_FLOOR))
+            continue;
+
+        // Check that we're a sufficient distance from all up stairs.
+        bool too_close = false;
+        for (int i = DNGN_STONE_STAIRS_UP_I - stair_start; i < DNGN_STONE_STAIRS_UP_I + num_upstairs - stair_start; ++i)
+        {
+            if (grid_distance(*ri, existing[i]) < 12)
+            {
+                too_close = true;
+                break;
+            }
+        }
+
+        if (!too_close)
+            valid.push_back(*ri);
+    }
+
+    if ((int)valid.size() < down_stairs_needed)
+        throw dgn_veto_exception("Cannot place sufficient down stairs.");
+
+    for (int i = DNGN_STONE_STAIRS_DOWN_I; i <= DNGN_STONE_STAIRS_DOWN_III; ++i)
+    {
+        // Stair already exists on the floor, so no need to place.
+        if (!existing[i - stair_start].origin())
+            continue;
+
+        // Pick a random valid spot, then mark it unused.
+        int rng = random2(valid.size());
+        while (valid[rng].origin())
+            rng = random2(valid.size());
+
+        _set_grd(valid[rng], static_cast<dungeon_feature_type>(i));
+        valid[rng].reset();
+    }
+}
+
 // Create randomly-placed stone stairs.
 void dgn_place_stone_stairs(bool maybe_place_hatches)
 {
@@ -3646,7 +3741,7 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
 
     int pair_count = 3;
 
-    if (maybe_place_hatches && coinflip())
+    if (maybe_place_hatches && !player_in_branch(BRANCH_SLIME) && coinflip())
         pair_count++;
 
     for (int i = 0; i < pair_count; ++i)

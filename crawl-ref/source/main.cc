@@ -1441,6 +1441,13 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         break;
     }
 
+    if (player_in_branch(BRANCH_SLIME) && !down && you.depth > 1
+            && !you_worship(GOD_JIYVA) && !you.royal_jelly_dead)
+    {
+        mpr("The stairs are too slimy for you to climb back up!");
+        return false;
+    }
+
     return true;
 }
 
@@ -1604,6 +1611,18 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         if (!confirm_prompt("yes", "You cannot leave the Vaults without holding a Rune of "
                                    "Zot, and the runes within are jealously guarded."
                                    " Continue?"))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    // Only give the slimy stair warning on Slime:1. If below that, they're already stuck anyway.
+    if (down && player_in_branch(BRANCH_SLIME) && you.depth == 1
+        && !you.royal_jelly_dead && !you_worship(GOD_JIYVA))
+    {
+        if (!yesno("You will be unable to climb back up again until you either destroy or join "
+                   "the power ruling this place. Continue?", true, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
