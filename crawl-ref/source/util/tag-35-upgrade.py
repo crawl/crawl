@@ -103,6 +103,5 @@ if __name__ == "__main__":
 
     _delete_file("dat/forms/deprecated-appendage.yaml")
     _delete_file("dat/forms/deprecated-hydra.yaml")
-    _delete_file("dat/forms/deprecated-jelly.yaml")
     _delete_file("dat/forms/deprecated-porcupine.yaml")
     _delete_file("dat/forms/deprecated-shadow.yaml")
