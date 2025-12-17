@@ -1707,6 +1707,8 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
         return false;
 
     if (mut == MUT_TELEPORTITIS && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
+
+    if (mut == MUT_SPATIAL_ENTANGLEMENT && you.stasis())
         return false;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
