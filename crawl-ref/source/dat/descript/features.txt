@@ -301,9 +301,9 @@ A stone staircase leading back up.
         return "It is slick with slippery slime, but that is no obstacle for one " ..
                "such as yourself who has embraced the way of all slime."
     else
-        return "It is slick with slippery slime, making it impossible for to climb " ..
-               "until the power ruling this place is destroyed (or you choose to " ..
-               "join it)."
+        return "It is slick with slippery slime, making it impossible for you to " ..
+               "climb until the power ruling this place is destroyed (or you choose " ..
+               "to join it)."
     end
 }}
 %%%%
