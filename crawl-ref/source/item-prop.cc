@@ -953,7 +953,7 @@ static const gem_def Gem_prop[] =
     { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   6000 },
     { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  6000 },
 
-    { GEM_SLIME,   "starry",      BRANCH_SLIME,   1200 }, // usually dived fast
+    { GEM_SLIME,   "starry",      BRANCH_SLIME,   1500 }, // usually dived fast
     { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  7500 }, // big, travel time
     { GEM_CRYPT,   "ivory",       BRANCH_CRYPT,   6000 },
     { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    6000 },
