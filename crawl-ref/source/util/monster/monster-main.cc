@@ -1112,6 +1112,9 @@ int main(int argc, char* argv[])
                 case AF_ANTIMAGIC:
                     monsterattacks += colour(LIGHTBLUE, "(antimagic)");
                     break;
+                case AF_DIM:
+                    monsterattacks += colour(LIGHTBLUE, "(dim)");
+                    break;
                 case AF_STEAL:
                     monsterattacks += colour(CYAN, "(steal)");
                     break;
