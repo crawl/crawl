@@ -2737,9 +2737,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             mons.flags |= MF_PERSISTS;
             mons.flags &= ~MF_ACTUAL_SUMMON;
 
-            // Give exactly enough energy to act immediately after the player's
-            // next action, but never blow up during the same action that the
-            // golem died.
+            // Make sure the core doesn't have enough energy to act again on the
+            // same turn that it died, but enough (with its high speed) that
+            // any action at all afterward will cause it to detonate.
             mons.speed_increment = 79;
 
             // Short-circuiting death, since we didn't 'die'

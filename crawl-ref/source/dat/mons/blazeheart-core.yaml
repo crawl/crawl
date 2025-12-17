@@ -10,6 +10,7 @@ hd: 15
 hp_10x: 50000
 ac: 0
 ev: 99
+speed: 50
 intelligence: brainless
 size: small
 shape: orb
