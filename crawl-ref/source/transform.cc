@@ -923,7 +923,6 @@ public:
     string get_untransform_message() const override { return "You condense into your normal self."; }
 };
 
-#if TAG_MAJOR_VERSION == 34
 class FormJelly : public Form
 {
 private:
@@ -932,7 +931,6 @@ private:
 public:
     static const FormJelly &instance() { static FormJelly inst; return inst; }
 };
-#endif
 
 class FormFungus : public Form
 {
