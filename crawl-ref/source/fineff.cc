@@ -1002,7 +1002,8 @@ void trample_follow_fineff::fire()
     if (attack
         && attack->pos() != posn
         && adjacent(attack->pos(), posn)
-        && attack->is_habitable(posn))
+        && attack->is_habitable(posn)
+        && !monster_at(posn))
     {
         attack->move_to(posn, MV_DELIBERATE);
     }
