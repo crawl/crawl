@@ -1,6 +1,7 @@
 name: "eye of devastation"
 glyph: {char: "G", colour: yellow}
 flags: [flies, see_invis, no_skeleton]
+resists: {corr: 3}
 exp: 464
 genus: floating_eye
 will: 100

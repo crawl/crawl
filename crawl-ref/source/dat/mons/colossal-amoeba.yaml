@@ -1,7 +1,7 @@
 name: "colossal amoeba"
 glyph: {char: "J", colour: red}
 flags: [eat_doors, see_invis, unblindable, fast_regen, amorphous, no_skeleton]
-resists: {poison: 1}
+resists: {poison: 1, corr: 3}
 exp: 1464
 genus: jelly
 will: 100
