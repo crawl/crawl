@@ -709,10 +709,19 @@ bool mon_can_be_slimified(const monster* mons)
 
 static monster_type _slime_target(const monster &mon)
 {
+    // Easter egg!
+    if (mons_genus(mon.type) == MONS_HYDRA)
+        return MONS_SLYMDRA;
+
     const int hd = mon.get_hit_dice();
     const int target = random_range(hd - 4, hd + 4);
     if (!feat_has_solid_floor(env.grid(mon.pos())))
-        return target < 7 ? MONS_JELLY : MONS_SLIME_CREATURE; // Don't drown.
+    {
+        // Don't drown.
+        return target < 7    ? MONS_JELLY
+               : target < 12 ? MONS_SLIME_CREATURE
+                             : MONS_ROCKSLIME;
+    }
 
     if (target < 3)
         return MONS_ENDOPLASM;
@@ -720,9 +729,8 @@ static monster_type _slime_target(const monster &mon)
         return MONS_JELLY;
     if (target < 12)
         return MONS_SLIME_CREATURE;
-    if (coinflip())
-        return MONS_ACID_BLOB;
-    return MONS_AZURE_JELLY;
+    else
+        return royal_jelly_ejectable_monster();
 }
 
 void slimify_monster(monster* mon)
