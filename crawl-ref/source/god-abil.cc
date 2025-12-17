@@ -6279,8 +6279,7 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(env.grid(target))
-        || !you.is_motile()
-        || you.digging)
+        || !you.is_motile())
     {
         return false;
     }
@@ -6404,12 +6403,6 @@ spret wu_jian_wall_jump_ability()
     {
         crawl_state.cancel_cmd_all("You can't repeat a wall jump.");
         return spret::abort;
-    }
-
-    if (you.digging)
-    {
-        you.digging = false;
-        mpr("You retract your mandibles.");
     }
 
     string wj_error;
