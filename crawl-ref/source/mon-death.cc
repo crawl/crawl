@@ -3236,7 +3236,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             else if (mons.type == MONS_CREEPING_PLASMODIUM
                      || mons.type == MONS_NASCENT_PLASMODIUM)
             {
-                msg = " shivels and dies.";
+                msg = " shrivels and dies.";
             }
             else
             {

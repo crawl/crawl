@@ -279,7 +279,7 @@ defence.
 %%%%
 A slimy stone staircase leading down
 
-A stone staircase leading futher down.
+A stone staircase leading further down.
 
 {{
     if you.god() == "Jiyva" then
