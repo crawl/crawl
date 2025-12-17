@@ -1343,7 +1343,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "this spell is already in effect.";
             if (player_movement_speed(false) <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already travelling as fast as you can.";
-            if (!you.is_motile())
+            if (you.cannot_move())
                 return "you can't move.";
         }
         break;
@@ -1419,7 +1419,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // a drastically simplified version of it
         if (!temp)
             break;
-        if (!you.is_motile())
+        if (you.cannot_move())
             return "you can't move.";
         if (!passwall_simplified_check(you))
             return "you aren't next to any passable walls.";
@@ -1484,7 +1484,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_MOMENTUM_STRIKE:
-        if (temp && !you.is_motile())
+        if (temp && you.cannot_move())
             return "you cannot redirect your momentum while unable to move.";
         break;
 
@@ -1493,7 +1493,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your stasis prevents you from launching yourself.";
         if (temp)
         {
-            if (!you.is_motile())
+            if (you.cannot_move())
                 return "you cannot launch yourself while unable to move.";
             if (you.no_tele(true))
                 return lowercase_first(you.no_tele_reason(true));

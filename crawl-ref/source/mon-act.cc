@@ -773,7 +773,7 @@ static bool _handle_swoop_or_flank(monster& mons)
         || (mons_aligned(&mons, defender) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons) || mons.pacified()
         || mons.is_constricted()
-        || mons.has_ench(ENCH_BOUND)
+        || mons.cannot_move()
         || !could_harm(&mons, defender))
     {
         return false;
@@ -3653,7 +3653,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         return true;
     }
 
-    if (mons.is_constricted() && !mons.has_ench(ENCH_BOUND))
+    if (mons.is_constricted() && !mons.cannot_move())
     {
         if (mons.attempt_escape())
             simple_monster_message(mons, " escapes!");
@@ -3667,7 +3667,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     // We should have handled all cases of a monster attempting to attack instead of *just* move, so it should fine to simply silently
     // stand in place here.
-    if (mons.has_ench(ENCH_BOUND))
+    if (mons.cannot_move())
         return false;
 
     ASSERT(!cell_is_runed(f)); // should be checked in mons_can_traverse

@@ -2986,11 +2986,13 @@ bool activate_talent(const talent& tal, dist *target)
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
-    if (you.is_motile())
-        return false;
+    if (you.cannot_move())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return true;
+    }
 
-    canned_msg(MSG_CANNOT_MOVE);
-    return true;
+    return false;
 }
 
 static int _orb_of_dispater_power()

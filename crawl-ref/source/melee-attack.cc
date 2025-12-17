@@ -692,7 +692,8 @@ void melee_attack::handle_concussion_brand()
     if (did_move && !is_projected && !cleaving && !never_cleave
         && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
         && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
-        && adjacent(attacker->pos(), old_pos))
+        && adjacent(attacker->pos(), old_pos)
+        && !attacker->cannot_move())
     {
         schedule_trample_follow_fineff(attacker, old_pos);
     }
@@ -3710,28 +3711,20 @@ bool melee_attack::mons_attack_effects()
        inflict_damage(hurt, BEAM_ELECTRICITY);
     }
 
-    // If the attacker and/or defender are bound in place, don't move
-    // them via trampling or dragging (which only monsters can do).
-    const bool att_bound = attacker->is_monster()
-                           && attacker->as_monster()->has_ench(ENCH_BOUND);
-    const bool def_bound = defender->is_monster()
-                           && defender->as_monster()->has_ench(ENCH_BOUND);
-    if (!att_bound && !def_bound)
+    const bool slippery = defender->is_player()
+                        && adjacent(attacker->pos(), defender->pos())
+                        && !player_stair_delay() // feet otherwise occupied
+                        && you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
+    if (attacker != defender && !is_projected
+        && (attk_flavour == AF_TRAMPLE
+            || slippery && attk_flavour != AF_DRAG)
+        && (slippery || !attacker->cannot_move()))
     {
-        const bool slippery = defender->is_player()
-                          && adjacent(attacker->pos(), defender->pos())
-                          && !player_stair_delay() // feet otherwise occupied
-                          && you.unrand_equipped(UNRAND_SLICK_SLIPPERS);
-        if (attacker != defender && !is_projected
-            && (attk_flavour == AF_TRAMPLE
-                || slippery && attk_flavour != AF_DRAG))
-        {
-            do_knockback(slippery);
-        }
-
-        if (attacker != defender && attk_flavour == AF_DRAG)
-            do_drag();
+        do_knockback(slippery);
     }
+
+    if (attacker != defender && attk_flavour == AF_DRAG)
+        do_drag();
 
     special_damage = 0;
     special_damage_message.clear();
@@ -4864,7 +4857,8 @@ bool melee_attack::do_knockback(bool slippery)
     // Schedule following _before_ actually trampling -- if the defender
     // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
-    schedule_trample_follow_fineff(attacker, old_pos);
+    if (!attacker->cannot_move())
+        schedule_trample_follow_fineff(attacker, old_pos);
     defender->move_to(new_pos);
     return true;
 }
@@ -4883,6 +4877,12 @@ bool melee_attack::do_drag()
     // Only move the attacker back if the defender was already adjacent and we
     // want to move them *into* the attacker's space.
     bool move_attacker = new_defender_pos == attacker->pos();
+
+    // Immobile monsters can drag things towards them with reaching weapons,
+    // but cannot drag if that would require also moving themselves.
+    if (move_attacker && attacker->cannot_move())
+        return false;
+
     coord_def new_attacker_pos = (move_attacker ? attacker->pos() + drag_shift
                                                 : attacker->pos());
 

@@ -2926,9 +2926,8 @@ bool monster::sleepwalking() const
 /// Can't be swapped with by either players or monsters.
 bool monster::unswappable() const
 {
-    return is_stationary()
+    return cannot_move()
         || cannot_act()
-        || has_ench(ENCH_BOUND)
         || caught()
         || mons_is_projectile(*this);
 }
@@ -5124,6 +5123,11 @@ bool monster::has_bones(bool /*temp*/) const
 bool monster::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+bool monster::cannot_move() const
+{
+    return is_stationary() || has_ench(ENCH_BOUND);
 }
 
 bool monster::can_burrow() const

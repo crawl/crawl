@@ -773,7 +773,6 @@ public:
     bool has_bones(bool temp = true) const override;
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
-    bool is_motile() const;
     bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int dur, bool allow_immobile = true) override;
     bool doom(int amount) override;
@@ -875,6 +874,7 @@ public:
 
     bool can_be_paralysed() const;
     bool paralysed() const override;
+    bool cannot_move() const;
     bool cannot_act() const override;
     bool helpless() const override;
     bool confused() const override;

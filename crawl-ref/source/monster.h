@@ -429,6 +429,7 @@ public:
     bool is_skeletal() const override;
     bool is_spiny() const;
     bool paralysed() const override;
+    bool cannot_move() const override;
     bool cannot_act() const override;
     bool helpless() const override;
     bool confused() const override;

@@ -813,8 +813,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             vector<monster*> targs;
             for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mi->is_stationary() && !mi->is_firewood()
-                    && could_harm_enemy(&caster, *mi) && !mi->has_ench(ENCH_BOUND))
+                if (!mi->cannot_move() && !mi->is_firewood()
+                    && could_harm_enemy(&caster, *mi))
                 {
                     targs.push_back(*mi);
                 }

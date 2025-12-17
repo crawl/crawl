@@ -521,7 +521,7 @@ namespace quiver
 
             if (you.confused())
             {
-                if (!you.is_motile())
+                if (you.cannot_move())
                 {
                     // XX duplicate code with movement.cc:move_player_action
                     if (cancel_confused_move(true))

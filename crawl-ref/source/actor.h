@@ -310,6 +310,7 @@ public:
     virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
+    virtual bool cannot_move() const = 0;
     virtual bool cannot_act() const = 0;
     virtual bool helpless() const = 0;
     virtual bool confused() const = 0;

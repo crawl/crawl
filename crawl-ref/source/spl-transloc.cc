@@ -523,7 +523,7 @@ string movement_impossible_reason()
 {
     if (you.attribute[ATTR_HELD])
         return make_stringf("You cannot do that while %s.", held_status());
-    if (!you.is_motile())
+    if (you.cannot_move())
         return "You cannot move."; // MSG_CANNOT_MOVE
     return "";
 }

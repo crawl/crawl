@@ -552,7 +552,7 @@ monster* get_rampage_target(coord_def move)
     // Don't rampage if the player has status effects that should prevent it.
     if (you.is_nervous()
         || you.confused()
-        || !you.is_motile()
+        || you.cannot_move()
         || you.is_constricted())
     {
         return nullptr;
@@ -658,7 +658,7 @@ static void _handle_trying_to_move_into_unpassable_terrain(coord_def targ)
 // Returns true if movement handling should continue after this point.
 static bool _adjust_confused_movement(coord_def& move)
 {
-    if (!you.is_motile())
+    if (you.cannot_move())
     {
         // Don't choose a random location to try to attack into - allows
         // abuse, since trying to move (not attack) takes no time, and
@@ -815,7 +815,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
     // Now we know we actually want to move *into* this spot, let's see if we can.
     // XXX: Liquids the player cannot enter are handled by check_moveto_terrain(),
     //      which has already been called, so no need to check again.
-    if (!you.is_motile())
+    if (you.cannot_move())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
@@ -976,7 +976,7 @@ void move_player_action(coord_def move)
     const int end_step = rampage_attack ? num_steps - 2 : num_steps - 1;
     for (int i = 0; i < num_steps; ++i)
     {
-        if (!you.is_motile())
+        if (you.cannot_move())
             break;
 
         targ += move;

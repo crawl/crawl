@@ -427,7 +427,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
     loc = you.pos();
 
-    if (!you.is_motile())
+    if (you.cannot_move())
         return false;
 
     // Don't move onto dangerous terrain.
@@ -5850,7 +5850,7 @@ bool player::is_sufficiently_rested(bool starting) const
                                 static_cast<int>(activity_interrupt::full_hp)];
     const bool mp_interrupts = Options.activity_interrupts["rest"][
                                 static_cast<int>(activity_interrupt::full_mp)];
-    const bool can_freely_move = you.is_motile() && !you.duration[DUR_BARBS];
+    const bool can_freely_move = !you.cannot_move() && !you.duration[DUR_BARBS];
 
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
@@ -7968,10 +7968,10 @@ bool player::is_stationary() const
     return form == transformation::tree;
 }
 
-bool player::is_motile() const
+bool player::cannot_move() const
 {
-    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM]
-                            && !you.duration[DUR_FORTRESS_BLAST_TIMER];
+    return is_stationary() || you.duration[DUR_NO_MOMENTUM]
+                           || you.duration[DUR_FORTRESS_BLAST_TIMER];
 }
 
 bool player::malmutate(const actor* /*source*/, const string &reason)
@@ -8242,10 +8242,10 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    if (!you.is_motile())
+    if (you.cannot_move())
     {
         if (!quiet)
-            mpr("You can't shaft yourself while stuck.");
+            mpr("You can't shaft yourself while unable to move.");
         return false;
     }
 
