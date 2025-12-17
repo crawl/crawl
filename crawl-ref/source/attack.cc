@@ -1470,7 +1470,8 @@ int attack::player_stab(int damage)
         stab_message();
         practise_stabbing();
 
-        if (using_weapon() && get_weapon_brand(*weapon) == SPWPN_DEVIOUS)
+        if (using_weapon() && get_weapon_brand(*weapon) == SPWPN_DEVIOUS
+            && !defender->wont_attack())
         {
             if (!you.duration[DUR_DEVIOUS])
             {
