@@ -1090,11 +1090,15 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             return;
         }
 
-        // ANON_FRENDLY_MONSTER is mostly used for blame attribution for
-        // friendly monsters that are *dead* by the time of doing damage, so
-        // monsters shouldn't check if they need to run away from it.
-        if (src_idx != ANON_FRIENDLY_MONSTER)
+        // Even when hit, don't make monsters set their foe to 'nothing' or to
+        // an ally (which will cause hostile monsters to automatically set it to
+        // MHITNOT later anyway). If they do so, seeking monsters not currently
+        // in the player's LoS will immediately forget about them.
+        if (src_idx != ANON_FRIENDLY_MONSTER && src_idx != MHITNOT
+            && !(src && mons_aligned(mon, src)))
+        {
             mon->foe = src_idx;
+        }
 
         // If the monster can't reach its target (even just to get into attack
         // range), retreat.
