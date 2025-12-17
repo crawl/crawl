@@ -692,6 +692,8 @@ void melee_attack::handle_concussion_brand()
     if (did_move && !is_projected && !cleaving && !never_cleave
         && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
         && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+        && (attacker->is_player()
+            && you.form != transformation::tree)
         && adjacent(attacker->pos(), old_pos))
     {
         schedule_trample_follow_fineff(attacker, old_pos);
