@@ -1041,7 +1041,7 @@ attacks, eventually leaving it unable to move until its creator winds it again.
 colossal amoeba
 
 An unfathomably massive pile of mystic pulsating protoplasm. The slightest
-threat will cause it to undergo rapid weaponized mitosis, rapidly overwhelming
+threat will cause it to undergo rapid weaponised mitosis, rapidly overwhelming
 potential meals in a cytoplasmic tidal wave.
 %%%%
 crawling flesh cage
