@@ -1673,9 +1673,16 @@ void name_zombie_from_class(monster& mon, monster_type mc, const string& mon_nam
 {
     mon.mname = mon_name;
 
-    // For the Lernaean hydra: treat Lernaean as an adjective to
+    // For the Royal Jelly: treat Royal Jelly as a replacement name to
+    // avoid mentions of "Royal Jelly the spectral jelly".
+    if (mc == MONS_ROYAL_JELLY)
+    {
+        mon.mname = "Royal Jelly";
+        mon.flags |= MF_NAME_REPLACE;
+    }
+    // Also for the Lernaean hydra: treat Lernaean as an adjective to
     // avoid mentions of "Lernaean hydra the X-headed hydra zombie".
-    if (mc == MONS_LERNAEAN_HYDRA)
+    else if (mc == MONS_LERNAEAN_HYDRA)
     {
         mon.mname = "Lernaean";
         mon.flags |= MF_NAME_ADJECTIVE;
