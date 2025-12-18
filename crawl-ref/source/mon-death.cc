@@ -4024,6 +4024,23 @@ bool mons_is_mons_class(const monster* mons, monster_type type)
 }
 
 /**
+ * Determine if a specified monster is or was a specified monster species.
+ *
+ * Checks the species of both the monster type and the ORIGINAL_TYPE_KEY
+ * prop, thus allowing the type to be transferred through polymorph.
+ *
+ * @param mons    The monster to be checked.
+ * @param spec    The species it might be.
+ * @return        True if the monster was or is the species, otherwise false.
+**/
+bool mons_is_mons_species(const monster* mons, monster_type spec)
+{
+    return mons_species(mons->type) == spec
+           || mons->props.exists(ORIGINAL_TYPE_KEY)
+              && mons_species(static_cast<monster_type>(mons->props[ORIGINAL_TYPE_KEY].get_int())) == spec;
+}
+
+/**
  * Perform neutralisation for members of Pikel's band upon Pikel's 'death'.
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,

@@ -86,6 +86,8 @@ int dismiss_monsters(string pattern);
 string summoned_poof_msg(const monster& mons);
 
 bool mons_is_mons_class(const monster* mons, monster_type type);
+bool mons_is_mons_species(const monster* mons, monster_type spec);
+
 void pikel_band_neutralise();
 
 bool mons_is_elven_twin(const monster* mons);

@@ -260,26 +260,22 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     string name;
 
     // Preserve the names of uniques and named monsters.
-    if (mons->type == MONS_ROYAL_JELLY
-        || mons->mname == "shaped Royal Jelly")
+    if (mons_is_mons_class(mons, MONS_ROYAL_JELLY))
     {
         name   = "shaped Royal Jelly";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->type == MONS_LERNAEAN_HYDRA
-             || mons->mname == "shaped Lernaean hydra")
+    else if (mons_is_mons_class(mons, MONS_LERNAEAN_HYDRA))
     {
         name   = "shaped Lernaean hydra";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->type == MONS_ENCHANTRESS
-             || mons->mname == "shaped Enchantress")
+    else if (mons_is_mons_class(mons, MONS_ENCHANTRESS))
     {
         name   = "shaped Enchantress";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->mons_species() == MONS_SERPENT_OF_HELL
-             || mons->mname == "shaped Serpent of Hell")
+    else if (mons_is_mons_species(mons, MONS_SERPENT_OF_HELL))
     {
         name   = "shaped Serpent of Hell";
         flags |= MF_NAME_SUFFIX;
