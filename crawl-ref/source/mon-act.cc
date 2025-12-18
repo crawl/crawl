@@ -1114,15 +1114,12 @@ static void _handle_hellfire_mortar(monster& mortar)
                 return;
             }
 
-            if (_do_move_monster(mortar, new_pos - mortar.pos()))
-                return;
+            mortar.move_to(new_pos);
+            break;
         }
     }
 
-    // Generally we shouldn't reach this point, but if we're unable to move
-    // *and* don't look like we should die either, consume energy so we don't
-    // cause an infinite loop.
-    mortar.lose_energy(EUT_ATTACK);
+    mortar.lose_energy(EUT_MOVE);
 }
 
 static void _check_blazeheart_golem_link(monster& mons)
