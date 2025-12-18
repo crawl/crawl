@@ -1308,7 +1308,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-        you.trigger_movement_effects();
+        you.trigger_movement_effects(MV_NO_TRAVEL_STOP);
     else
         push_or_teleport_actor_from(pos);
 }
