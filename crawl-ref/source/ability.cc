@@ -3199,10 +3199,9 @@ public:
 
     bool affects_monster(const monster_info& mon)
     {
-        return mon.type != MONS_ROYAL_JELLY
-                && !(mon.mname == "shaped Royal Jelly"
-                     && mon.type != MONS_PLAYER_GHOST
-                     && mon.type != MONS_PLAYER_ILLUSION);
+        return !(mon.type == MONS_ROYAL_JELLY
+                 || mon.props.exists(ORIGINAL_TYPE_KEY)
+                    && mon.props[ORIGINAL_TYPE_KEY].get_int() == MONS_ROYAL_JELLY);
     }
 };
 

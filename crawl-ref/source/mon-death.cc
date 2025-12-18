@@ -1194,15 +1194,9 @@ void fire_monster_death_event(monster* mons,
 {
     int type = mons->type;
 
-    // Treat whatever the Royal Jelly polymorphed into as if it were still
-    // the Royal Jelly (but if a player chooses the character name
-    // "shaped Royal Jelly" don't unlock the vaults when the player's
-    // ghost is killed).
-    if (mons->mname == "shaped Royal Jelly"
-        && !mons_is_pghost(mons->type))
-    {
+    // Handle TRJ properly, even when polymorphed.
+    if (mons_is_mons_class(mons, MONS_ROYAL_JELLY))
         type = MONS_ROYAL_JELLY;
-    }
 
     if (!polymorph)
     {

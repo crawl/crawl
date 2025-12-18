@@ -2756,7 +2756,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
         }
     }
 
-    if (type == MONS_ROYAL_JELLY || (mname == "shaped Royal Jelly" && !mons_is_pghost(type)))
+    if (mons_is_mons_class(this, MONS_ROYAL_JELLY))
     {
         simple_monster_message(*this, " wobbles defiantly for a moment.");
         return;
