@@ -2483,7 +2483,7 @@ int exp_value(const monster& mon, bool real, bool legacy)
         x_val *= mon.blob_size;
 
     // Give real XP for all real slime creatures eaten.
-    if (mon.type == MONS_SLYMDRA)
+    if (mon.type == MONS_SLYMDRA && mon.props.exists(SLYMDRA_SLIMES_EATEN_KEY))
         x_val += mon.props[SLYMDRA_SLIMES_EATEN_KEY].get_int() * 236;
 
     if (mon.has_ench(ENCH_FIGMENT))
