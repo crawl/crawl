@@ -1706,7 +1706,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
     if (_mut_has_flag(def, mutflag::makhleb) && !you_worship(GOD_MAKHLEB))
         return false;
 
-    if (mut == MUT_TELEPORTITIS && base_only ? you.stasis() : you.no_tele(false) || player_in_branch(BRANCH_ABYSS))
+    if (mut == MUT_TELEPORTITIS && (base_only ? you.stasis() : you.no_tele(false) || player_in_branch(BRANCH_ABYSS)))
         return false;
 
     if (mut == MUT_SPATIAL_ENTANGLEMENT && you.stasis())
