@@ -896,7 +896,7 @@ Chance
 
 Change
 
-Chaos
+Confusion
 
 Constant Reorganisation
 
@@ -931,6 +931,8 @@ Incongruity
 Mayhem
 
 Revolt
+
+True Chaos
 
 Tumult
 
