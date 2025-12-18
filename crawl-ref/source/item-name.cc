@@ -180,8 +180,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                & MF_NAME_SPECIES)
               && !(corpse_flags & MF_NAME_DEFINITE))
          && !(corpse_flags & MF_NAME_ADJECTIVE)
-         && !(corpse_flags & MF_NAME_SUFFIX)
-         && !starts_with(get_corpse_name(*this), "shaped "))
+         && !(corpse_flags & MF_NAME_SUFFIX))
         || item_is_orb(*this)
         || item_is_horn_of_geryon(*this)
         || (ident || is_identified())
@@ -1911,8 +1910,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         const string _name = get_corpse_name(*this, &name_flags);
         const monster_flags_t name_type = name_flags & MF_NAME_MASK;
 
-        const bool shaped = starts_with(_name, "shaped ");
-
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
 
@@ -1923,9 +1920,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             const monster_type mc = mon_type;
             if (!(mons_is_unique(mc) && mons_species(mc) == mc))
                 buff << mons_type_name(mc, DESC_PLAIN) << ' ';
-
-            if (!_name.empty() && shaped)
-                buff << _name << ' ';
         }
 
         if (!_name.empty() && name_type == MF_NAME_SUFFIX)
@@ -1938,7 +1932,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         else
             buff << "corpse bug";
 
-        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
+        if (!_name.empty() && name_type != MF_NAME_ADJECTIVE
             && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX
             && !dbname)
         {
