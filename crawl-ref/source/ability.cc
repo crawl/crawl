@@ -3191,6 +3191,21 @@ static spret _do_cacophony()
     return spret::success;
 }
 
+class targeter_banishment : public targeter_multimonster
+{
+public:
+    targeter_banishment() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        return mon.type != MONS_ROYAL_JELLY
+                && !(mon.mname == "shaped Royal Jelly"
+                     && mon.type != MONS_PLAYER_GHOST
+                     && mon.type != MONS_PLAYER_ILLUSION);
+    }
+};
+
 /*
  * Use an ability.
  *
@@ -3735,9 +3750,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
+        targeter_banishment btarg;
         args.get_desc_func = bind(desc_wl_success_chance, placeholders::_1,
                                   zap_ench_power(ZAP_BANISHMENT, pow, false),
-                                  nullptr);
+                                  &btarg);
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
 

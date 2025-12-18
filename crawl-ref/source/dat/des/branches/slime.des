@@ -60,13 +60,9 @@ function setup_slime_pit_ending(e)
 
 -- Attach function to the Royal Jelly itself. This will follow it wherever
 -- it goes, even through polymorphs, and set dgn.persist.fix_slime_vaults
--- when it dies through means other than being banished.
+-- when it dies.
   local function trj_die(monster, killer_type, killer_index, silent, wizard)
-      if killer_type == "banished" then
-        crawl.mpr("You feel a great sense of loss, and a brush of the Abyss.")
-      else
-        dgn.persist.fix_slime_vaults = true
-      end
+      dgn.persist.fix_slime_vaults = true
   end
 
   local wall_fixup_marker = TriggerableFunction:new( {

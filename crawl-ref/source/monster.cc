@@ -2756,6 +2756,12 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
         }
     }
 
+    if (type == MONS_ROYAL_JELLY || (mname == "shaped Royal Jelly" && !mons_is_pghost(type)))
+    {
+        simple_monster_message(*this, " wobbles defiantly for a moment.");
+        return;
+    }
+
     simple_monster_message(*this, " is devoured by a tear in reality.", false,
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(*this, *agent) && damage_contributes_xp(*agent))
