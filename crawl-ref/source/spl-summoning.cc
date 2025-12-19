@@ -3134,7 +3134,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     ray_def ray;
     if (!find_ray(agent.pos(), targ, ray, opc_solid) || !ray.advance())
     {
-        mpr("There's something in the way.");
+        canned_msg(MSG_SOMETHING_IN_WAY);
         return spret::abort;
     }
     const coord_def pos = ray.pos();
