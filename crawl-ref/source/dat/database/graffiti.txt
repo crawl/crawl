@@ -151,6 +151,8 @@ Plog the Peerless
 # Funny option for rumours that "Dead [deliberately not Undead] Wendell"
 # deserves life, death, or undeath; or worships the Shining One.
 Dead Wendell
+
+Lady Dreamflight
 %%%%
 _pattern_type_
 
