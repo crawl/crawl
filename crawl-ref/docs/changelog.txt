@@ -7,7 +7,7 @@ Highlights
 * Big overhauls to strategic damage, adding new types and reducing mutation.
 * Dozens more new monsters have been spread throughout the Dungeon.
 * Many new egos have been added for weapons, armour, amulets, and orbs.
-* Troves, the Slime Pits, and the Halls of Zot have recieved major updates.
+* Troves, the Slime Pits, and the Halls of Zot have received major updates.
 
 Artefacts
 ---------
@@ -260,9 +260,9 @@ Interface and Options
 
 Items
 -----
-* Players now have four seperate inventories: 52 pieces of gear (including
+* Players now have four separate inventories: 52 pieces of gear (including
   throwing weapons, and unlimited potions, scrolls, and evokable items.
-  - Each inventory uses a seperate 52 letters (ie: both a scroll and a potion
+  - Each inventory uses a separate 52 letters (ie: both a scroll and a potion
     may be mapped to the same letter at the same time), and most consumables
     now have default letter assignments when identified.
 * Parchments now replace the majority of spellbooks found in game, each
@@ -354,14 +354,14 @@ Monsters
     approaching and encircling the last staircase they saw the player use.
   - After travelling through any stairs, known or not, monsters the player
     hasn't seen before will always skip their first turn.
-* The Slime Pits have many new and returning monsters
-  - Colossal amoeba, which create copies of themselves when they hit foes.
-  - Creeping plasmodium, which launch explosive acid spores that can spread
+* The Slime Pits have many new and returning monsters:
+  - Colossal amoebae, which create copies of themselves when they hit foes.
+  - Creeping plasmodia, which launch explosive acid spores that can spread
     weaker plasmodia to other walls.
   - Eyes of draining, rare sights that rapidly drain the player's maximum HP
   - Morphogenic oozes, whose melee attacks can temporarily turn players into
     jellies.
-  - Slymdra, lethally acidic combinations of hydras and slime creatures.
+  - Slymdras, lethally acidic combinations of hydras and slime creatures.
   - Star jellies, which launch shooting stars when seriously injured.
 * Two new orb types rotate with orbs of fire in Zot each game:
   - Orbs of Winter, which cast Flash Freeze, Ozocubu's Refrigeration,
@@ -386,7 +386,7 @@ Monsters
   - Undertakers, wall-swimming constructs for Tartarus.
   - Zykzyls, the new malmutating tier-2 demon, now focused on hexes.
 * Antaeus trades Flash Freeze for Sleetstrike, a variant of Airstrike that
-  inflicts the Frozen status and deals more damage partially resistable with rC.
+  inflicts the Frozen status and deals more damage partially resistible with rC.
 * Blizzard demons trade out Airstrike and Bolt of Cold for Sleetstrike and
   Deflect Missiles.
 * Bone dragons now breathe clouds of excruciating misery, and now have less
