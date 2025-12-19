@@ -461,6 +461,8 @@ deliberate
 
 deserved
 
+just
+
 necessary
 
 no accident
@@ -477,6 +479,8 @@ self-inflicted
 the will of the gods
 
 uncalled for
+
+unjust
 
 unthinkable
 
