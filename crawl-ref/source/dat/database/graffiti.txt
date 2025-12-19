@@ -914,6 +914,9 @@ what happened to @_graffiti_author_any_@ was @_graffiti_happened_reason_@
 
 @_graffiti_changed_or_compared_religions_@
 
+# Chrono Trigger, and a reference to ploggifying in make_name().
+all life begins with "Plog" and ends with "Plog"
+
 w:2
 @_graffiti_changed_names_@
 %%%%
