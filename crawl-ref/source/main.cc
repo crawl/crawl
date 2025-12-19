@@ -351,6 +351,9 @@ int main(int argc, char *argv[])
 
 static void _reset_game()
 {
+    clua.close();
+    dlua.close();
+
     clrscr();
     // Unset by death, but not by saving with restart_after_save.
     crawl_state.reset_game();

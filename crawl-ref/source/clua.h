@@ -90,6 +90,8 @@ class CLua
 {
 public:
     CLua(bool managed = true);
+
+    void close();
     ~CLua();
 
     lua_State *state();
@@ -154,7 +156,6 @@ public:
     // If managed_vm is set, we have to take steps to control badly-behaved
     // scripts.
     bool managed_vm;
-    bool shutting_down;
     int throttle_unit_lines;
     int throttle_sleep_ms;
     int throttle_sleep_start, throttle_sleep_end;

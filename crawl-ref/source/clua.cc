@@ -56,27 +56,37 @@ static int _clua_trace_handler(lua_State *ls);
 static string _get_persist_file();
 
 CLua::CLua(bool managed)
-    : error(), managed_vm(managed), shutting_down(false),
-      throttle_unit_lines(50000),
-      throttle_sleep_ms(0), throttle_sleep_start(2),
-      throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
-      lua_call_depth(0), max_mixed_call_depth(8),
-      max_lua_call_depth(100), memory_used(0),
-      _state(nullptr), sourced_files(), uniqindex(0)
+    : error(), managed_vm(managed), throttle_unit_lines(50000),
+    throttle_sleep_ms(0), throttle_sleep_start(2), throttle_sleep_end(800),
+    n_throttle_sleeps(0), mixed_call_depth(0), lua_call_depth(0),
+    max_mixed_call_depth(8), max_lua_call_depth(100), memory_used(0),
+    _state(nullptr), sourced_files(), uniqindex(0)
 {
 }
 
 CLua::~CLua()
 {
-    // Copy the listener vector, because listeners may remove
-    // themselves from the listener list when we notify them of a
-    // shutdown.
+    close();
+}
+
+// Remove all lua datum instances, close the lua state, and reset our
+// internal tracking.
+void CLua::close()
+{
+    // Copy the listener vector, because listeners may remove themselves from
+    // the listener list when we notify them of a shutdown.
     const vector<lua_shutdown_listener*> slisteners = shutdown_listeners;
     for (lua_shutdown_listener *listener : slisteners)
         listener->shutdown(*this);
-    shutting_down = true;
+
     if (_state)
+    {
         lua_close(_state);
+        _state = nullptr;
+    }
+
+    sourced_files.clear();
+    error.clear();
 }
 
 lua_State *CLua::state()
