@@ -412,7 +412,7 @@ w:2
 of a fight between [berserkers|Trog worshippers] and erythrospite sufferers over the true meaning of blood rage
 
 w:2
-of a fight between [artists|Dithmenos worshippers] and [death knights|death mages|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
+of a fight between ["artists"|artists|Dithmenos worshippers] and [death knights|death mages|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
 %%%%
 _graffiti_hailed_god_
 
