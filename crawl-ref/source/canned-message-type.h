@@ -38,4 +38,5 @@ enum canned_message_type
     MSG_SOMETHING_IN_WAY,
     MSG_CANNOT_SEE,
     MSG_GOD_DECLINES,
+    MSG_NO_AVAILABLE_SPACE,
 };

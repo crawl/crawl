@@ -167,7 +167,7 @@ bool player_summon_check(const vector<monster_type>& types, int max_range,
     // monsters we've been given.
     if (!_can_summon_any_of(types, max_range, exclude_range, pos.origin() ? you.pos() : pos))
     {
-        mpr("There is no available space!");
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
         return false;
     }
 
@@ -1188,7 +1188,7 @@ spret summon_shadow_creatures()
     // so it is technically still usable above water or lava
     if (!you_can_see_habitable_spot_near(HT_FLYER, 2))
     {
-        mpr("There is no available space!");
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
         return spret::abort;
     }
 
@@ -2863,7 +2863,7 @@ spret kiku_unearth_wretches(bool fail)
     // technically still usable above water or lava
     if (!you_can_see_habitable_spot_near(HT_FLYER, 4))
     {
-        mpr("There is no available space!");
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
         return spret::abort;
     }
 

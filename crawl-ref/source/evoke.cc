@@ -675,7 +675,7 @@ static spret _phantom_mirror(dist *target)
     //      than their base type.
     if (!you_can_see_habitable_spot_near(victim->pos(), habitat, 1))
     {
-        mpr("There is no available space!");
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
         return spret::abort;
     }
     if (stop_summoning_prompt(mi.mresists, mf))

@@ -2085,6 +2085,9 @@ void canned_msg(canned_message_type which_message)
         case MSG_GOD_DECLINES:
             mpr("Your god isn't willing to do this for you now.");
             break;
+        case MSG_NO_AVAILABLE_SPACE:
+            mpr("There is no available space!");
+            break;
     }
 }
 
