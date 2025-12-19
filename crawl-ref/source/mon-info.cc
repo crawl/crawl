@@ -327,7 +327,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     slay = 0;
     mresists = get_mons_class_resists(type);
     mr = mons_class_willpower(type, base_type);
-    can_see_invis = mons_class_sees_invis(type, base_type);
+    if (mons_class_sees_invis(type, base_type))
+        mb.set(MB_SEE_INVIS);
 
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
@@ -579,7 +580,8 @@ monster_info::monster_info(const monster* m, int milev)
     sh = m->shield_class();
     mr = m->willpower();
     slay = m->slaying(false, false);
-    can_see_invis = m->can_see_invisible();
+    if (m->can_see_invisible())
+        mb.set(MB_SEE_INVIS);
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
     mresists = m->all_resists();
@@ -1614,7 +1616,7 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
  */
 bool monster_info::can_see_invisible() const
 {
-    return can_see_invis;
+    return is(MB_SEE_INVIS);
 }
 
 /**

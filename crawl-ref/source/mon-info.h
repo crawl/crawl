@@ -267,6 +267,7 @@ enum monster_info_flags
     MB_DIMINISHED_SPELLS,
     MB_TESSERACT_SPAWN,
     MB_SUNDERING_READY,
+    MB_SEE_INVIS,
     NUM_MB_FLAGS
 };
 
@@ -292,8 +293,6 @@ struct monster_info_base
     mon_dam_level_type dam;
     // TODO: maybe we should store the position instead
     dungeon_feature_type fire_blocker;
-    string description;
-    string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
     int hd;
@@ -304,7 +303,6 @@ struct monster_info_base
     int mr;
     int slay;
     resists_t mresists;
-    bool can_see_invis;
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;

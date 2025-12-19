@@ -6586,23 +6586,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (mi.type == MONS_ORC_APOSTLE && mi.attitude == ATT_FRIENDLY)
         db_name = "orc apostle follower";
 
-    // This is somewhat hackish, but it's a good way of over-riding monsters'
-    // descriptions in Lua vaults by using MonPropsMarker. This is also the
-    // method used by set_feature_desc_long, etc. {due}
-    if (!mi.description.empty())
-        inf.body << mi.description;
     // Don't get description for player ghosts.
-    else if (mi.type != MONS_PLAYER_GHOST
-             && mi.type != MONS_PLAYER_ILLUSION)
-    {
+    if (mi.type != MONS_PLAYER_GHOST && mi.type != MONS_PLAYER_ILLUSION)
         inf.body << getLongDescription(db_name);
-    }
 
     // And quotes {due}
-    if (!mi.quote.empty())
-        inf.quote = mi.quote;
-    else
-        inf.quote = getQuoteString(db_name);
+    inf.quote = getQuoteString(db_name);
 
     string symbol;
     symbol += get_monster_data(mi.type)->basechar;

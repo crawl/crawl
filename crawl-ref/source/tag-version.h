@@ -342,6 +342,7 @@ enum tag_minor_version
     TAG_MINOR_CONSTRICTED_TYPE,    // Refactor saving of constriction type on actors
     TAG_MINOR_LUA_5_4,             // Upgrade from Lua 5.1 to Lua 5.4.
     TAG_MINOR_PIETY_LOGGING,       // Log piety events
+    TAG_MINOR_MONINFO_CLEANUP,     // Stop marshalling some unused info and start marshalling some overlooked info
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -6717,8 +6717,6 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.threat);
     marshallUnsigned(th, mi.dam);
     marshallUnsigned(th, mi.fire_blocker);
-    marshallString(th, mi.description);
-    marshallString(th, mi.quote);
     marshallUnsigned(th, mi.holi.flags);
     marshallUnsigned(th, mi.mintel);
     marshallUnsigned(th, mi.hd);
@@ -6726,6 +6724,8 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.ev);
     marshallUnsigned(th, mi.base_ev);
     marshallUnsigned(th, mi.sh);
+    marshallUnsigned(th, mi.mr);
+    marshallUnsigned(th, mi.slay);
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
@@ -6800,8 +6800,14 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
-    mi.description = unmarshallString(th);
-    mi.quote = unmarshallString(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONINFO_CLEANUP)
+    {
+        unmarshallString(th);
+        unmarshallString(th);
+    }
+#endif
 
     uint64_t holi_flags = unmarshallUnsigned(th);
 #if TAG_MAJOR_VERSION == 34
@@ -6860,8 +6866,19 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 #endif
         mi.sh = 0;
 
-    mi.mr = mons_class_willpower(mi.type, mi.base_type);
-    mi.can_see_invis = mons_class_sees_invis(mi.type, mi.base_type);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONINFO_CLEANUP)
+        mi.mr = mons_class_willpower(mi.type, mi.base_type);
+    else
+#endif
+    unmarshallUnsigned(th, mi.mr);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONINFO_CLEANUP)
+        mi.slay = 0;
+    else
+#endif
+    unmarshallUnsigned(th, mi.slay);
 
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
