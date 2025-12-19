@@ -3174,21 +3174,15 @@ int mons_class_zombie_base_speed(monster_type zombie_base_mc, bool slow)
  * What's this monster's base speed, before temporary effects are applied?
  *
  * @param mon       The monster in question.
- * @param known     Whether to include only information the player knows about,
- *                  i.e. not the speed of certain monsters with varying speeds
- *                  (abominations, hell beasts)
  * @return          The speed of the monster.
  */
-int mons_base_speed(const monster& mon, bool known)
+int mons_base_speed(const monster& mon)
 {
     if (mon.ghost)
         return mon.ghost->speed;
 
-    if (mon.props.exists(MON_SPEED_KEY)
-        && (!known || mon.type == MONS_MUTANT_BEAST))
-    {
+    if (mon.props.exists(MON_SPEED_KEY))
         return mon.props[MON_SPEED_KEY];
-    }
 
     if (mon.mons_species() == MONS_SPECTRAL_THING
         || mon.mons_species() == MONS_DRAUGR)

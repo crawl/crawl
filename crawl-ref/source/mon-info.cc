@@ -584,7 +584,7 @@ monster_info::monster_info(const monster* m, int milev)
         props[NIGHTVISION_KEY] = true;
     mresists = m->all_resists();
     mitemuse = mons_itemuse(*m);
-    mbase_speed = mons_base_speed(*m, true);
+    mbase_speed = mons_base_speed(*m);
     menergy = mons_energy(*m);
     can_go_frenzy = m->can_go_frenzy();
     can_feel_fear = m->can_feel_fear(false);
