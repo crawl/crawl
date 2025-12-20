@@ -88,7 +88,7 @@
 #include "xom.h"
 
 // Helper functions (some of these should probably be public).
-static beam_type _chaos_beam_flavour(bolt* beam);
+static beam_type _chaos_beam_flavour();
 static string _beam_type_name(beam_type type);
 int _ench_pow_to_dur(int pow);
 
@@ -549,49 +549,19 @@ bool bolt::can_affect_actor(const actor *act) const
     return true;
 }
 
-// Choose the beam effect for BEAM_CHAOS that's analogous to the effect used by
-// SPWPN_CHAOS, with weightings similar to those use by that brand. XXX: Rework
-// this and SPWPN_CHAOS to use the same tables.
-static beam_type _chaos_beam_flavour(bolt* beam)
+// Choose the beam effect for the damage portion of BEAM_CHAOS.
+// (Secondary effects have a chance of being applied on top of this.)
+static beam_type _chaos_beam_flavour()
 {
-    UNUSED(beam);
-
-    beam_type flavour;
-    flavour = random_choose_weighted(
-         // SPWPN_CHAOS randomizes to brands analogous to these beam effects
-         // with similar weights.
-         80, BEAM_FIRE,
-         80, BEAM_COLD,
-         80, BEAM_ELECTRICITY,
-         80, BEAM_POISON,
-         // Combined weight from drain + vamp.
-         80, BEAM_NEG,
-         40, BEAM_HOLY,
-         40, BEAM_DRAIN_MAGIC,
-         16, BEAM_FOUL_FLAME,
-         // From here are beam effects analogous to effects that happen when
-         // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
-         // Weights similar to those from chaos_effects in attack.cc
-          5, BEAM_BERSERK,
-         12, BEAM_HASTE,
-         12, BEAM_MIGHT,
-         10, BEAM_RESISTANCE,
-         10, BEAM_SLOW,
-         12, BEAM_CONFUSION,
-         10, BEAM_WEAKNESS,
-         10, BEAM_VULNERABILITY,
-         10, BEAM_ACID,
-          5, BEAM_VITRIFY,
-          5, BEAM_ENSNARE,
-          3, BEAM_BLINK,
-          3, BEAM_PARALYSIS,
-          3, BEAM_PETRIFY,
-          3, BEAM_SLEEP,
-         // Combined weight for poly and clone effects.
-          4, BEAM_POLYMORPH,
-          5, BEAM_LIGHT);
-
-    return flavour;
+    return random_choose_weighted(
+            80, BEAM_FIRE,
+            80, BEAM_COLD,
+            80, BEAM_ELECTRICITY,
+            80, BEAM_POISON,
+            80, BEAM_NEG,
+            40, BEAM_HOLY,
+            20, BEAM_ACID,
+            10, BEAM_FOUL_FLAME);
 }
 
 dice_def combustion_breath_damage(int pow, bool allow_random)
@@ -866,7 +836,7 @@ void bolt::fake_flavour()
     if (real_flavour == BEAM_RANDOM)
         flavour = static_cast<beam_type>(random_range(BEAM_FIRST_RANDOM, BEAM_LAST_RANDOM));
     else if (real_flavour == BEAM_CHAOS)
-        flavour = _chaos_beam_flavour(this);
+        flavour = is_tracer() ? BEAM_MMISSILE : _chaos_beam_flavour();
 }
 
 void bolt::digging_wall_effect()
@@ -4337,7 +4307,7 @@ void bolt::affect_player()
 
     if (is_enchantment())
     {
-        if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+        if (real_flavour == BEAM_RANDOM)
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
@@ -4390,8 +4360,10 @@ void bolt::affect_player()
     if (flavour != BEAM_VISUAL && !is_enchantment()
         && !(damage.num == 0 && is_big_cloud()))
     {
-        mprf("The %s %s %s%s%s", name.c_str(), hit_verb.c_str(),
+        mprf("The %s %s %s%s%s%s", name.c_str(), hit_verb.c_str(),
              you.hp > 0 ? "you" : "your lifeless body",
+             real_flavour != BEAM_CHAOS ? ""
+                    : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
              final_dam ? "" : " but does no damage",
              attack_strength_punctuation(final_dam).c_str());
     }
@@ -4401,6 +4373,9 @@ void bolt::affect_player()
     // Note that this must be called with the pre-resistance damage, so that
     // poison effects etc work properly.
     check_your_resists(pre_res_dam, flavour, "", this, true);
+
+    if (real_flavour == BEAM_CHAOS && coinflip())
+        chaos_affects_actor(&you, agent());
 
     if (flavour == BEAM_STUN_BOLT
         && !you.duration[DUR_PARALYSIS]
@@ -5217,6 +5192,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mon->is_firewood())
         you.pet_target = mon->mindex();
 
+    if (real_flavour == BEAM_CHAOS && coinflip())
+        chaos_affects_actor(mon, agent());
+
     // We check player Sticky Flame by name and other effects by flavour, since
     // the player spell has impact damage that the others do not, and thus is
     // BEAM_FIRE instead.
@@ -5642,7 +5620,7 @@ void bolt::affect_monster(monster* mon)
 
     if (is_enchantment())
     {
-        if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+        if (real_flavour == BEAM_RANDOM)
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
@@ -5671,7 +5649,7 @@ void bolt::affect_monster(monster* mon)
     // We need to know how much the monster _would_ be hurt by this,
     // before we decide if it actually hits.
     int preac, postac, final;
-    if (!determine_damage(mon, preac, postac, final))
+    if (!determine_damage(mon, preac, postac, final) && real_flavour != BEAM_CHAOS)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -5784,10 +5762,12 @@ void bolt::affect_monster(monster* mon)
         // no need to also say "does no damage" here.
         if (damage.num > 0 || !is_big_cloud())
         {
-            mprf("The %s %s %s%s%s",
+            mprf("The %s %s %s%s%s%s",
                 name.c_str(),
                 hit_verb.c_str(),
                 mon->name(DESC_THE).c_str(),
+                real_flavour != BEAM_CHAOS ? ""
+                    : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
                 postac ? "" : " but does no damage",
                 attack_strength_punctuation(final).c_str());
         }
@@ -6187,15 +6167,11 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         {
             ;
         }
-        // Chaos effects don't get a resistance check to match melee chaos.
-        else if (real_flavour != BEAM_CHAOS)
+        else if (mon->check_willpower(agent(true), ench_power) > 0)
         {
-            if (mon->check_willpower(agent(true), ench_power) > 0)
-            {
-                // Note only actually used by messages in this case.
-                res_margin = mon->willpower() - ench_power_stepdown(ench_power);
-                return MON_RESIST;
-            }
+            // Note only actually used by messages in this case.
+            res_margin = mon->willpower() - ench_power_stepdown(ench_power);
+            return MON_RESIST;
         }
     }
 
