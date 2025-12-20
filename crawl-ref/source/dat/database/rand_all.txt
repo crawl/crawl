@@ -373,6 +373,8 @@ Dishonesty
 
 Dishonour
 
+Equivocation
+
 Foolhardiness
 
 Immorality
@@ -393,7 +395,11 @@ Sin
 
 Spite
 
+Tergiversation
+
 Untruth
+
+Vice
 
 Youthful Indiscretion
 
