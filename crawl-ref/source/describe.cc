@@ -7433,16 +7433,19 @@ static string _describe_talisman_form(transformation form_type)
 {
     const Form* form = get_form(form_type);
 
-    // First comes the big table of scaling values
-    const int skill[3] = {form->min_skill, form->max_skill, form->get_level(1)};
+    // First comes the big table of scaling values, at min, max and current
+    // skill; we get values at the latter by passing -1 to the various form
+    // methods.
+    const int skill[3] = {form->min_skill, form->max_skill, -1};
     vector<vector<string>> items;
 
     items.push_back({" ", "Min", "Max", "Cur"});
 
-    const int shapeshifting = you.skill(SK_SHAPESHIFTING, 1);
-    const string cur_skill = (shapeshifting < form->min_skill ? make_stringf("<red>%d</red>", shapeshifting)
-                             : (shapeshifting >= form->max_skill ? make_stringf("[%d]", form->max_skill)
-                             : make_stringf("%d", shapeshifting)));
+    const int shapeshifting = you.skill(SK_SHAPESHIFTING, 10);
+    const string skill_string = make_stringf("%d.%d", shapeshifting / 10, shapeshifting % 10);
+    const string cur_skill = (shapeshifting < 10*form->min_skill ? make_stringf("<red>%s</red>", skill_string.c_str())
+                             : (shapeshifting >= 10*form->max_skill ? make_stringf("[%d]", form->max_skill)
+                             : skill_string));
     items.push_back({"Skill", to_string(skill[0]), to_string(skill[1]), cur_skill});
 
     _maybe_populate_form_table(items, bind(&Form::mult_hp, form, 100, true, placeholders::_1), "HP", skill, -100, true, true, 1);
