@@ -16,6 +16,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
+#include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "cleansing-flame-source-type.h"
@@ -3048,7 +3049,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 static bool _mons_awaken_flesh(const monster& caster, const int power,
                                bool check_only = false)
 {
-    int affected = 0;
+    vector<monster*> affected;
     int seen_affected = 0;
     for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -3060,57 +3061,59 @@ static bool _mons_awaken_flesh(const monster& caster, const int power,
         if (check_only)
             return true; // just need to check
 
-        if (mi->asleep())
-            behaviour_event(*mi, ME_DISTURB, 0, mi->pos());
-
+        affected.push_back(*mi);
         if (you.can_see(**mi))
+            seen_affected++;
+    }
+
+    if (affected.empty())
+        return false;
+
+    if (seen_affected > 0)
+    {
+        mprf("Chaos surges forth from %s of flesh, awakening new unlife!",
+             seen_affected == 1 ? "the pile" : "piles");
+    }
+
+    for (monster* mon : affected)
+    {
+        if (mon->asleep())
+            behaviour_event(mon, ME_DISTURB, 0, mon->pos());
+
+        if (you.can_see(*mon))
         {
-            flash_tile(mi->pos(), random_choose(RED, BLUE, GREEN, YELLOW, MAGENTA),
+            flash_tile(mon->pos(), random_choose(RED, BLUE, GREEN, YELLOW, MAGENTA),
                     60, TILE_BOLT_CHAOS_BUFF);
         }
+
+        change_monster_type(mon, MONS_ABOMINATION_LARGE, true);
+
+        // All three abomination buffs at once. Chaos is strong.
+        mon->add_ench(mon_enchant(ENCH_HASTE, mon, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(ENCH_MIGHT, mon, INFINITE_DURATION));
+        mon->add_ench(mon_enchant(ENCH_REGENERATION, mon, INFINITE_DURATION));
+
+        // Give it some baseline time alive, and make sure to put its 'ownership'
+        // under the monster that just awakened it.
+        mon->del_ench(ENCH_SUMMON_TIMER, true, false);
+        mon->mark_summoned(SPELL_AWAKEN_FLESH, random_range(250, 350));
+        if (mon->attitude != caster.temp_attitude())
+        {
+            mon->attitude = caster.temp_attitude();
+            mons_att_changed(mon);
+        }
+        mon->summoner = caster.mid;
 
         bolt shockwave;
         shockwave.set_agent(&caster);
         shockwave.attitude = caster.temp_attitude();
-        shockwave.source = mi->pos();
-        shockwave.target = mi->pos();
+        shockwave.source = mon->pos();
+        shockwave.target = mon->pos();
         shockwave.is_explosion = true;
         shockwave.ex_size = 1;
         shockwave.origin_spell = SPELL_AWAKEN_FLESH;
         zappy(ZAP_AWAKEN_FLESH, power, true, shockwave);
         shockwave.explode(true, true);
-
-        change_monster_type(*mi, MONS_ABOMINATION_LARGE, true);
-
-        // All three abomination buffs at once. Chaos is strong.
-        mi->add_ench(mon_enchant(ENCH_HASTE, *mi, INFINITE_DURATION));
-        mi->add_ench(mon_enchant(ENCH_MIGHT, *mi, INFINITE_DURATION));
-        mi->add_ench(mon_enchant(ENCH_REGENERATION, *mi, INFINITE_DURATION));
-
-        // Since it inherits the pile of flesh's summon timer, give it more
-        // time to keep living if it's going to vanish soon. We just did a
-        // fancy chaos explosion to highlight it being made, and all.
-        if (mi->has_ench(ENCH_SUMMON_TIMER))
-        {
-            mon_enchant dur = mi->get_ench(ENCH_SUMMON_TIMER);
-            if (dur.duration < 100)
-            {
-                dur.duration += random_range(80, 100);
-                mi->update_ench(dur);
-            }
-        }
-
-        affected++;
-        if (you.can_see(**mi))
-            seen_affected++;
-    }
-
-    if (affected == 0)
-        return false;
-    else if (seen_affected > 0)
-    {
-        mprf("Chaos surges forth from %s of flesh, awakening new unlife!",
-             affected == 1 ? "the pile" : "piles");
     }
 
     return true;
