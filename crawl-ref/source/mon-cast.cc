@@ -1024,6 +1024,25 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                                           mons_spellpower(caster, SPELL_BOULDER), false);
         }
     } },
+    { SPELL_BOLT_OF_FLESH, { _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& beam) {
+
+            // Find the last affected target of this beam and set our range to
+            // it so that the beam does not visually appear to extend past where
+            // the pile of flesh lands.
+            bolt range_check_beam = beam;
+            range_check_beam.set_is_tracer(true);
+            range_check_beam.fire();
+            beam.range = grid_distance(caster.pos(), range_check_beam.get_last_affected_pos());
+
+            _fire_simple_beam(caster, slot, beam);
+        },
+        [](bolt &beam, const monster &, int power)
+        {
+            zappy(spell_to_zap(SPELL_BOLT_OF_FLESH), power, true, beam);
+            beam.stop_at_allies = true;
+        }
+    } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -2255,7 +2274,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STUNNING_BURST:
     case SPELL_MALIGN_OFFERING:
     case SPELL_BOLT_OF_DEVASTATION:
-    case SPELL_BOLT_OF_FLESH:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLISING_SHOT:
     case SPELL_HELLFIRE_MORTAR:

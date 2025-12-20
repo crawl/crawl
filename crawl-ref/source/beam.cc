@@ -2789,11 +2789,17 @@ void bolt::affect_endpoint()
         if (!agent(true) || !agent(true)->alive())
             break;
 
+        // Try to place the pile of flesh at the last spot immediately after the
+        // last thing it hits (provided that spot is somewhere flesh can go).
+        coord_def p = get_last_affected_pos(1);
+        if (actor_at(p) || !monster_habitable_grid(MONS_PILE_OF_FLESH, p))
+            p = get_last_affected_pos(0);
+
         create_monster(mgen_data(MONS_PILE_OF_FLESH,
                        SAME_ATTITUDE(agent(true)->as_monster()),
-                       pos(), agent(true)->as_monster()->foe)
+                       p, agent(true)->as_monster()->foe)
                        .set_summoned(agent(true), SPELL_BOLT_OF_FLESH, summ_dur(3), false)
-                       .set_range(1));
+                       .set_range(0, 1));
     }
     break;
 
