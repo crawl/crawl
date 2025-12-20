@@ -4387,11 +4387,12 @@ void bolt::affect_player()
     if (hit_verb.empty())
         hit_verb = engulfs ? "engulfs" : "hits";
 
-    if (flavour != BEAM_VISUAL && !is_enchantment())
+    if (flavour != BEAM_VISUAL && !is_enchantment()
+        && !(damage.num == 0 && is_big_cloud()))
     {
         mprf("The %s %s %s%s%s", name.c_str(), hit_verb.c_str(),
              you.hp > 0 ? "you" : "your lifeless body",
-             final_dam || damage.num == 0 ? "" : " but does no damage",
+             final_dam ? "" : " but does no damage",
              attack_strength_punctuation(final_dam).c_str());
     }
 
@@ -4825,13 +4826,9 @@ bool bolt::has_relevant_side_effect(monster* mon)
     else if (flavour == BEAM_ENSNARE || flavour == BEAM_LIGHT)
         return true;
 
-    if ((origin_spell == SPELL_NOXIOUS_CLOUD || origin_spell == SPELL_POISONOUS_CLOUD
-         || origin_spell == SPELL_NOXIOUS_BREATH)
-        && mon->res_poison() < 1)
-    {
-        return true;
-    }
-    else if (origin_spell == SPELL_RAVENOUS_SWARM && !(mon->holiness() & MH_UNDEAD))
+    const cloud_type cloud = flavour == BEAM_MEPHITIC ? CLOUD_MEPHITIC
+                                                      : get_cloud_type();
+    if (cloud != CLOUD_NONE && !actor_cloud_immune(*mon, cloud))
         return true;
 
     return false;
@@ -5785,13 +5782,15 @@ void bolt::affect_monster(monster* mon)
         // If the beam did no damage because of resistances,
         // mons_adjust_flavoured below will print "%s completely resists", so
         // no need to also say "does no damage" here.
-        mprf("The %s %s %s%s%s",
-             name.c_str(),
-             hit_verb.c_str(),
-             mon->name(DESC_THE).c_str(),
-             postac || damage.num == 0 ? "" : " but does no damage",
-             attack_strength_punctuation(final).c_str());
-
+        if (damage.num > 0 || !is_big_cloud())
+        {
+            mprf("The %s %s %s%s%s",
+                name.c_str(),
+                hit_verb.c_str(),
+                mon->name(DESC_THE).c_str(),
+                postac ? "" : " but does no damage",
+                attack_strength_punctuation(final).c_str());
+        }
     }
     else if (heard && !hit_noise_msg.empty())
         mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());

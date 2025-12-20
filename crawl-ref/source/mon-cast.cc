@@ -2284,6 +2284,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DOOM_BOLT:
     case SPELL_WARP_BODY:
     case SPELL_ACID_BALL:
+    case SPELL_FLAMING_CLOUD:
+    case SPELL_CHAOS_BREATH:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -2343,11 +2345,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
             power = power * 3/2;
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source  = "blast of searing breath";
-        break;
-
-    case SPELL_CHAOS_BREATH:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.aux_source   = "blast of chaotic breath";
         break;
 
     case SPELL_COLD_BREATH:
@@ -2410,12 +2407,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     //      damage is done via another means
     case SPELL_FREEZE:
         beam.flavour    = BEAM_COLD;
-        break;
-
-    case SPELL_FLAMING_CLOUD:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.aux_source   = "blast of fiery breath";
-        beam.short_name   = "flames";
         break;
 
     case SPELL_RAVENOUS_SWARM:
