@@ -110,13 +110,13 @@ bool bolt::is_blockable() const
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
     return !pierce && !is_explosion && flavour != BEAM_ELECTRICITY
-           && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
+           && hit != AUTOMATIC_HIT;
 }
 
 /// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
 bool bolt::is_omnireflectable() const
 {
-    return !is_explosion && flavour != BEAM_VISUAL
+    return !is_explosion
             && origin_spell != SPELL_GLACIATE
             && flavour != BEAM_VAMPIRIC_DRAINING; // buggy :(
 }
@@ -637,6 +637,9 @@ void bolt::initialise_fire()
         use_target_as_pos = true;
     }
 
+    if (flavour == BEAM_VISUAL)
+        affects_nothing = true;
+
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->defined());
@@ -1093,6 +1096,9 @@ bool bolt::need_regress() const
 
 void bolt::affect_cell()
 {
+    if (affects_nothing)
+        return;
+
     fake_flavour();
 
     monster *m = monster_at(pos());
@@ -1382,7 +1388,7 @@ void bolt::do_fire()
                 finish_beam();
             }
         }
-        else if (!affects_nothing)
+        else
             affect_cell();
 
         if (range_used() > range)
@@ -1396,7 +1402,7 @@ void bolt::do_fire()
         ASSERT(!cell_is_solid(pos())
                || is_tracer() && can_affect_wall(pos(), true)
                || mon_at // If there *was* a monster (they might have died by now)
-               || affects_nothing); // returning weapons
+               || affects_nothing); // returning weapons and BEAM_VISUAL
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
@@ -1446,8 +1452,7 @@ void bolt::do_fire()
     }
 
     // The beam has terminated.
-    if (!affects_nothing)
-        affect_endpoint();
+    affect_endpoint();
 
     // Tracers need nothing further.
     if (is_tracer() || affects_nothing)
@@ -2545,6 +2550,9 @@ void bolt::special_explode()
 
 void bolt::affect_endpoint()
 {
+    if (affects_nothing)
+        return;
+
     // Test if this shot should trigger Dimensional Bullseye.
     bool use_bullseye = false;
     if (can_trigger_bullseye)
@@ -3503,9 +3511,6 @@ int bolt::apply_lighting(int base_hit, const actor &targ) const
  */
 bool bolt::misses_player()
 {
-    if (flavour == BEAM_VISUAL)
-        return true;
-
     if ((is_explosion || aimed_at_feet)
         && origin_spell != SPELL_CALL_DOWN_LIGHTNING
         && origin_spell != SPELL_MOMENTUM_STRIKE)
@@ -4357,7 +4362,7 @@ void bolt::affect_player()
     if (hit_verb.empty())
         hit_verb = engulfs ? "engulfs" : "hits";
 
-    if (flavour != BEAM_VISUAL && !is_enchantment()
+    if (!is_enchantment()
         && !(damage.num == 0 && is_big_cloud()))
     {
         mprf("The %s %s %s%s%s%s", name.c_str(), hit_verb.c_str(),
@@ -7014,6 +7019,9 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
     else
         real_flavour = flavour;
+
+    if (flavour == BEAM_VISUAL)
+        affects_nothing = true;
 
     const int r = min(ex_size, MAX_EXPLOSION_RADIUS);
     in_explosion_phase = true;

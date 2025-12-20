@@ -4313,7 +4313,6 @@ static void _imb_actor(actor * act, int pow, coord_def source)
     beam.target          = act->pos();
 
     beam.flavour          = BEAM_VISUAL;
-    beam.affects_nothing = true;
     beam.fire();
 
     zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
