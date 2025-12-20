@@ -683,8 +683,15 @@ static string _sdump_god_conduct_info(god_type god, const map<int, ConductPietyI
 static void _sdump_piety_info(dump_params &par)
 {
     // Only log piety after death, because it can leak exact piety values.
-    if (!par.full_id)
+    if (!par.full_id
+#ifdef WIZARD
+        && !you.wizard && !you.suppress_wizard
+#endif
+     )
+    {
         return;
+    }
+
     string &text(par.text);
 
     vector<RankPietyInfo> all_info = you.piety_info.rank_info;
