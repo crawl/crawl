@@ -2095,7 +2095,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GLOOM, "Gloom",
     spschool::hexes | spschool::necromancy,
-    spflag::none,
+    spflag::silent,
     3,
     50,
     2, 3,
