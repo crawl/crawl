@@ -140,7 +140,7 @@ Vorbog
 Warbeogh
 %%%%
 # Obvious references to orcs in general
-# (extremely subjective, and 19 at last count)
+# (extremely subjective, and 20 at last count)
 _orcish_name_
 
 Alork
@@ -180,6 +180,8 @@ Oruk
 Pellinorc
 
 Urtork
+
+Zandor
 %%%%
 # Other
 # (61 at last count)
