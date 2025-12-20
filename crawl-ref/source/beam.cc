@@ -5598,13 +5598,6 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    // Visual - wake monsters.
-    if (flavour == BEAM_VISUAL)
-    {
-        behaviour_event(mon, ME_DISTURB, agent(), source);
-        return;
-    }
-
     if (flavour == BEAM_MISSILE && item)
     {
         // Test if this qualifies to trigger Dimensional Bullseye later on.
