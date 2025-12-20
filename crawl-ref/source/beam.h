@@ -244,6 +244,8 @@ struct bolt
     coord_def bounce_pos = {0,0}; // position of latest wall bounce,
                                   // reset if a reflection happens
 
+    coord_def last_affected_actor_pos = {0,0};   // position of the last actor affected by this beam
+
     int   reflections = 0;        // # times beam reflected off shields
     mid_t reflector = MID_NOBODY; // latest thing to reflect beam
 
@@ -313,6 +315,8 @@ public:
     void special_explode();
 
     bool self_targeted() const;
+
+    coord_def get_last_affected_pos(int step = 0);
 
     // Setup.
     void fake_flavour();

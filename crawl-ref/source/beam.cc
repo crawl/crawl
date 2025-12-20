@@ -1076,6 +1076,41 @@ coord_def bolt::pos() const
         return ray.pos();
 }
 
+// Returns the position of the last actor affected by this beam (or, optionally
+// some specified number of steps before or after).
+coord_def bolt::get_last_affected_pos(int step)
+{
+    if (step == 0)
+        return last_affected_actor_pos;
+
+    // If we want to step forward/backward from this spot, we must iterate the path taken.
+    for (unsigned int i = 0; i < path_taken.size(); ++i)
+    {
+        if (path_taken[i] == last_affected_actor_pos)
+        {
+            const int index = i + step;
+
+            // If we want a step further than the beam took, we must trace a ray again.
+            if (index >= (int)path_taken.size())
+            {
+                bolt path_tracer = *this;
+                path_tracer.set_is_tracer(true);
+                path_tracer.range = i + step + 1;
+                path_tracer.fire();
+                return path_tracer.path_taken.back();
+            }
+            // Returning an earlier step is easy.
+            else if (index >= 0)
+                return path_taken[index];
+            // Unless we're trying to rewind past the source, in which case return the source.
+            else
+                return source;
+        }
+    }
+
+    return last_affected_actor_pos;
+}
+
 bool bolt::need_regress() const
 {
     // XXX: The affects_wall check probably makes some of the
@@ -1110,6 +1145,7 @@ void bolt::affect_cell()
     {
         const int prev_reflections = reflections;
         affect_player();
+        last_affected_actor_pos = pos();
         if (reflections != prev_reflections)
             return;
         if (hit == AUTOMATIC_HIT && !pierce)
@@ -1124,6 +1160,10 @@ void bolt::affect_cell()
         {
             const bool ignored = ignores_monster(m);
             affect_monster(m);
+
+            if (!ignored)
+                last_affected_actor_pos = pos();
+
             const dungeon_feature_type feat = env.grid(pos());
             if (hit == AUTOMATIC_HIT && !ignored
                 // Piercing beams are still stopped by wall monsters
