@@ -2628,7 +2628,7 @@ void bolt::affect_endpoint()
         tgt.set_aim(pos());
         for (const auto &entry : tgt.seen)
         {
-            if (entry.second != AFF_YES && entry.second != AFF_MAYBE)
+            if (entry.second != AFF_YES)
                 continue;
 
             if (entry.first == you.pos())
