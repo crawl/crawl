@@ -114,6 +114,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/json.cc \
     $(CRAWL_PATH)/kills.cc \
     $(CRAWL_PATH)/known-items.cc \
+    $(CRAWL_PATH)/l-autofight.cc \
     $(CRAWL_PATH)/l-colour.cc \
     $(CRAWL_PATH)/l-crawl.cc \
     $(CRAWL_PATH)/l-debug.cc \
