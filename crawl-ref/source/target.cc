@@ -1061,14 +1061,14 @@ targeter_cloud::targeter_cloud(const actor* act, cloud_type ct, int r,
         origin = aim = act->pos();
 }
 
-static bool _cloudable(coord_def loc, cloud_type ctype)
+static bool _cloudable(coord_def loc, cloud_type ctype, const actor *agent)
 {
     const cloud_struct *cloud = cloud_at(loc);
     return in_bounds(loc)
            && !cell_is_solid(loc)
            && (!cloud || cloud_is_stronger(ctype, *cloud))
            && (!is_sanctuary(loc) || is_harmless_cloud(ctype))
-           && cell_see_cell(you.pos(), loc, LOS_NO_TRANS);
+           && (!agent || agent->see_cell_no_trans(loc));
 }
 
 bool targeter_cloud::valid_aim(coord_def a)
@@ -1097,7 +1097,7 @@ bool targeter_cloud::valid_aim(coord_def a)
             return notify_fail("You can't place harmful clouds in a "
                                "sanctuary.");
         }
-        ASSERT(_cloudable(a, ctype));
+        ASSERT(_cloudable(a, ctype, agent));
     }
     return true;
 }
@@ -1121,7 +1121,7 @@ bool targeter_cloud::set_aim(coord_def a)
         for (coord_def c : queue[d1])
         {
             for (adjacent_iterator ai(c); ai; ++ai)
-                if (_cloudable(*ai, ctype) && !seen.count(*ai))
+                if (_cloudable(*ai, ctype, agent) && !seen.count(*ai))
                 {
                     unsigned int d2 = d1 + 1;
                     if (d2 >= queue.size())
