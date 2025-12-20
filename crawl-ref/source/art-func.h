@@ -440,10 +440,10 @@ static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 ///////////////////////////////////////////////////
 
 static void _VARIABILITY_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                       actor* /*defender*/, bool mondied,
+                                       actor* /*defender*/, bool /*mondied*/,
                                        int /*dam*/)
 {
-    if (!mondied && one_chance_in(5))
+    if (one_chance_in(5))
     {
         const int pow = 75 + random2avg(75, 2);
         if (you.can_see(*attacker))
