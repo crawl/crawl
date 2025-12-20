@@ -1141,16 +1141,6 @@ static int _wpn_name_colour(const item_def &wpn)
     return LIGHTGREY;
 }
 
-static string _wpn_name_corroded(const item_def &weapon)
-{
-    if (!you.corrosion_amount() || weapon.base_type != OBJ_WEAPONS)
-        return weapon.name(DESC_PLAIN, true);
-
-    item_def wpn_copy = weapon;
-    wpn_copy.plus -= you.corrosion_amount();
-    return wpn_copy.name(DESC_PLAIN, true);
-}
-
 static void _print_unarmed_name()
 {
     textcolour(HUD_CAPTION_COLOUR);
@@ -1171,7 +1161,7 @@ static void _print_weapon_name(const item_def &weapon, int width)
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour(weapon));
     const int max_name_width = width - slot_name.size();
-    const string name = _wpn_name_corroded(weapon);
+    const string name = weapon.name(DESC_PLAIN, true, false, true, false, true);
     CPRINTF("%s", chop_string(name, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
