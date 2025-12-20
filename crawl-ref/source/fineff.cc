@@ -330,19 +330,11 @@ public:
     bool mergeable(const final_effect&) const override { return false; }
     void fire() override;
 
-    bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-        unsigned short _foe, bool _duel,
-        mon_enchant _gozag_bribe)
-        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
-        duel(_duel), gozag_bribe(_gozag_bribe)
+    bennu_revive_fineff(const monster* bennu)
+        : final_effect(bennu, 0, bennu->pos())
     {
+        env.final_effect_monster_cache.push_back(*bennu);
     }
-protected:
-    int revives;
-    beh_type attitude;
-    unsigned short foe;
-    bool duel;
-    mon_enchant gozag_bribe;
 };
 
 class avoided_death_fineff : public final_effect
@@ -683,12 +675,9 @@ void schedule_rakshasa_clone_fineff(const actor* defend, const coord_def& pos)
     _schedule_final_effect(new rakshasa_clone_fineff(defend, pos));
 }
 
-void schedule_bennu_revive_fineff(coord_def pos, int revives,
-                                  beh_type attitude, unsigned short foe,
-                                  bool duel, mon_enchant gozag_bribe)
+void schedule_bennu_revive_fineff(const monster* bennu)
 {
-    _schedule_final_effect(new bennu_revive_fineff(pos, revives, attitude,
-                                                   foe, duel, gozag_bribe));
+    _schedule_final_effect(new bennu_revive_fineff(bennu));
 }
 
 void schedule_avoided_death_fineff(monster* mons)
@@ -1087,7 +1076,8 @@ void trj_spawn_fineff::fire()
         if (monster *mons = mons_place(
                               mgen_data(jelly, spawn_beh, jpos, foe,
                                         MG_DONT_COME, GOD_JIYVA)
-                              .set_summoned(trj, 0)))
+                              .set_summoned(trj, 0)
+                              .copy_from_parent(trj)))
         {
             // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD | MF_HARD_RESET;
@@ -1391,28 +1381,26 @@ void rakshasa_clone_fineff::fire()
 
 void bennu_revive_fineff::fire()
 {
-    // Bennu only resurrect once and immediately in the same spot,
-    // so this is rather abbreviated compared to felids.
-    // XXX: Maybe generalize felid_revives and merge the two anyway?
-
     bool res_visible = you.see_cell(posn);
 
+    const monster* orig = cached_monster_copy_by_mid(att);
 
-    monster *newmons = create_monster(mgen_data(MONS_BENNU, attitude, posn, foe,
+    monster *newmons = create_monster(mgen_data(MONS_BENNU, BEH_HOSTILE, posn, orig->foe,
                                                 res_visible ? MG_DONT_COME
-                                                            : MG_NONE));
-    if (newmons)
-        newmons->props[BENNU_REVIVES_KEY].get_byte() = revives + 1;
+                                                            : MG_NONE).copy_from_parent(orig));
+
+    if (!newmons)
+        return;
+
+    const int old_revives = orig->props.exists(BENNU_REVIVES_KEY) ? orig->props[BENNU_REVIVES_KEY].get_byte() : 0;
+    newmons->props[BENNU_REVIVES_KEY].get_byte() = old_revives + 1;
 
     // If we were dueling the original bennu, the duel continues.
-    if (duel)
+    if (orig->props.exists(OKAWARU_DUEL_TARGET_KEY))
     {
         newmons->props[OKAWARU_DUEL_TARGET_KEY] = true;
         newmons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
     }
-
-    if (gozag_bribe.ench != ENCH_NONE)
-        newmons->add_ench(gozag_bribe);
 }
 
 void avoided_death_fineff::fire()

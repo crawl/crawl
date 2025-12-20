@@ -1698,16 +1698,6 @@ static void _protean_explosion(monster* mons)
     else if (mons_class_hit_dice(target) < 12 && coinflip())
         ++num_children;
 
-    int summoned_duration = 0;
-    int summon_type = 0;
-    bool is_summoned = mons->is_summoned();
-    if (is_summoned)
-    {
-        mon_enchant summ = mons->get_ench(ENCH_SUMMON);
-        summoned_duration = summ.duration;
-        summon_type = summ.degree;
-    }
-
     // Then create and scatter the piles around
     int delay = random_range(2, 4) * BASELINE_DELAY;
     for (int i = 0; i < num_children; ++i)
@@ -1730,11 +1720,8 @@ static void _protean_explosion(monster* mons)
         mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, SAME_ATTITUDE(mons),
                                  spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH,
                                  mons->god);
-        if (is_summoned)
-        {
-            const actor* const summoner = actor_by_mid(mons->summoner);
-            mg.set_summoned(summoner, summon_type, 1 /* dummy value*/);
-        }
+        mg.copy_from_parent(mons);
+
         monster *child = create_monster(std::move(mg));
 
         if (child)
@@ -1748,13 +1735,6 @@ static void _protean_explosion(monster* mons)
             child->behaviour = BEH_SEEK;
 
             mons_add_blame(child, "spawned from " + mons->name(DESC_A, true), true);
-
-            if (is_summoned)
-            {
-                // Match the original summoned progenitor's duration.
-                mon_enchant summon_duration_ench(ENCH_SUMMON_TIMER, nullptr, summoned_duration);
-                child->update_ench(summon_duration_ench);
-            }
 
             // Make each one shift a little later than the last
             delay += random_range(1, 2) * BASELINE_DELAY;
@@ -3351,24 +3331,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         else if (mons.type == MONS_BENNU && !mons.pacified() && real_death
                  && mons_bennu_can_revive(&mons))
         {
-            // All this information may be lost by the time the monster revives.
-            const int revives = (mons.props.exists(BENNU_REVIVES_KEY))
-                                ? mons.props[BENNU_REVIVES_KEY].get_byte() : 0;
-            const bool duel = mons.props.exists(OKAWARU_DUEL_CURRENT_KEY);
-            const beh_type att = mons.has_ench(ENCH_CHARM)
-                                 ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
-
-            // Carry over bribe enchantments (as otherwise revived bribed
-            // bennu will follow the player out of their branch)
-            const mon_enchant gozag_bribe = mons.get_ench(ENCH_NEUTRAL_BRIBED,
-                                                          ENCH_FRIENDLY_BRIBED);
-
-            // Don't consider this a victory yet, and duel the new bennu.
-            if (duel)
-                mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
-
-            schedule_bennu_revive_fineff(mons.pos(), revives, att, mons.foe,
-                                         duel, gozag_bribe);
+            schedule_bennu_revive_fineff(&mons);
         }
         else if (mons_is_mons_class(&mons, MONS_CASSANDRA) && real_death)
             _cassandra_death_ambush();

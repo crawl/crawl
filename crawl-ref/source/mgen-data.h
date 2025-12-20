@@ -234,6 +234,19 @@ struct mgen_data
         return *this;
     }
 
+    // Mark this monster as copying the summon/charm status of another monster.
+    // (For instance, to ensure that you can't get permanently friendly
+    // monsters by charming certain things.)
+    mgen_data &copy_from_parent(const actor* mon)
+    {
+        // XXX: Otherwise charmed monsters will produce unrewarding children since
+        //      they were 'created friendly'.
+        behaviour = BEH_HOSTILE;
+        summoner = mon;
+        flags |= MG_COPY_PARENT;
+        return *this;
+    }
+
     bool permit_bands() const
     {
         // The permit flag is set but the forbid flag is not.
@@ -251,7 +264,7 @@ struct mgen_data
     //      designate a band member's leader, so we need to rule that out.
     bool is_summoned() const { return summon_type != SPELL_NO_SPELL
                                       || summon_duration > 0
-                                      || (summoner != nullptr && !(flags & MG_BAND_MINION)); }
+                                      || (summoner != nullptr && !(flags & (MG_BAND_MINION | MG_COPY_PARENT))); }
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,

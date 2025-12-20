@@ -1369,6 +1369,33 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
     }
 
+    if ((mg.flags & MG_COPY_PARENT) && mg.summoner && mg.summoner->is_monster())
+    {
+        const monster* parent = mg.summoner->as_monster();
+
+        // Copy the underlying attitude of the parent, along with any temporary
+        // changes to it.
+        mon->attitude = parent->attitude;
+        if (parent->has_ench(ENCH_CHARM))
+            mon->add_ench(parent->get_ench(ENCH_CHARM));
+        if (parent->has_ench(ENCH_HEXED))
+            mon->add_ench(parent->get_ench(ENCH_HEXED));
+        if (parent->has_ench(ENCH_FRIENDLY_BRIBED))
+            mon->add_ench(parent->get_ench(ENCH_FRIENDLY_BRIBED));
+        if (parent->has_ench(ENCH_NEUTRAL_BRIBED))
+            mon->add_ench(parent->get_ench(ENCH_NEUTRAL_BRIBED));
+
+        // Then mark the child as summoned if the parent is.
+        if (parent->is_summoned())
+        {
+            const int summ_type = mon->has_ench(ENCH_SUMMON) ? mon->get_ench(ENCH_SUMMON).degree
+                                                             : parent->get_ench(ENCH_SUMMON).degree;
+            const int summ_dur = parent->get_ench(ENCH_SUMMON_TIMER).duration;
+
+            mon->mark_summoned(summ_type, summ_dur, true, parent->is_abjurable());
+        }
+    }
+
     // Perm summons shouldn't leave gear either.
     if (mg.extra_flags & MF_HARD_RESET && mg.extra_flags & MF_NO_REWARD)
         mon->mark_summoned();
