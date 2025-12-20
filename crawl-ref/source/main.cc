@@ -1934,13 +1934,13 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
 
     if (cmd == CMD_AUTOFIRE)
     {
-        auto a = quiver::get_secondary_action();
-        if (!a || !a->is_valid())
+        if (quiver::is_empty())
         {
-            mpr("Nothing quivered!"); // Can this happen?
+            mpr("Nothing quivered!");
             return;
         }
 
+        auto a = quiver::get_secondary_action();
         const bool secondary_enabled = a->is_enabled();
 
         // Some quiver actions need to be triggered directly. Disabled quiver

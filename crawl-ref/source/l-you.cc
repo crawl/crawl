@@ -1381,8 +1381,7 @@ LUAFN(you_status)
  */
 LUAFN(you_quiver_valid)
 {
-    PLUARET(boolean, !you.quiver_action.is_empty()
-                   && you.quiver_action.get()->is_valid());
+    PLUARET(boolean, !quiver::is_empty());
 }
 
 /*** Is your quivered action enabled?
@@ -1391,8 +1390,7 @@ LUAFN(you_quiver_valid)
  */
 LUAFN(you_quiver_enabled)
 {
-    PLUARET(boolean, !you.quiver_action.is_empty()
-                   && you.quiver_action.get()->is_enabled());
+    PLUARET(boolean, quiver::get_secondary_action()->is_enabled());
 }
 
 /*** Does your quivered action use MP?
