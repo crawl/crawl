@@ -257,9 +257,11 @@ static void _monster_headsup(const vector<monster*> &monsters,
 
         if (mon->type != MONS_DANCING_WEAPON)
             out << " ";
-        out << get_monster_equipment_desc(mi, monsters.size() > 1 ? DESC_NOTEWORTHY
-                                                                  : DESC_NOTEWORTHY_AND_WEAPON,
-                                          DESC_NONE) << ".";
+
+        mons_equip_desc_level_type level = mon->type == MONS_DANCING_WEAPON ? DESC_WEAPON
+                                                : monsters.size() > 1 ? DESC_NOTEWORTHY
+                                                                      : DESC_NOTEWORTHY_AND_WEAPON;
+        out << get_monster_equipment_desc(mi, level, DESC_NONE) << ".";
     }
 }
 
