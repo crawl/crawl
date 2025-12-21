@@ -1523,13 +1523,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     // Ok, we'll try it.
-    setup_monster_throw_beam(mons, beem);
+    setup_missile_beam(mons, beem, *missile, nullptr);
 
     // Set fake damage for the tracer.
     beem.damage = dice_def(10, 10);
-
-    // Set item for tracer, even though it probably won't be used
-    beem.item = missile;
 
     ru_interference interference = DO_NOTHING;
     // See if Ru worshippers block or redirect the attack.

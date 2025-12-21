@@ -41,5 +41,9 @@ void fire_item_no_quiver(dist *target=nullptr);
 
 void throw_it(quiver::action &a);
 
+void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+                        item_def const *launcher);
+// This method is superceded by setup_missile_beam, which sets the beam
+// up more comprehensively.
 void setup_monster_throw_beam(monster* mons, bolt &beam);
 bool mons_throw(monster* mons, bolt &beam, bool teleport = false);
