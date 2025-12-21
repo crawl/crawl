@@ -2896,7 +2896,23 @@ bool bolt::found_player() const
             && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
 
-    return grid_distance(pos(), you.pos()) <= dist;
+    if (grid_distance(pos(), you.pos()) > dist)
+        return false;
+
+    if (!needs_fuzz)
+        return true;
+
+    // Check whether we've already hit the fuzzed player and not bounced. If
+    // so, don't count this, as we don't want to double count hits, which can
+    // otherwise happen for tracers for invisible players.
+    //
+    // This isn't *exactly* the right check - ideally we'd check whether we've
+    // hit the player since the last bounce - but it's going to be right almost
+    // all the time.
+    auto cnt = hit_count.find(you.mid);
+    if (cnt != hit_count.end() && cnt->second > bounces + reflections)
+        return false;
+    return true;
 }
 
 void bolt::affect_ground()
