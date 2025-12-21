@@ -941,42 +941,6 @@ HEADER_END
         }
     }
 
-    $tilefile = "dc-player.txt";
-    unless (open(TILES, "<$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for reading: $!\n";
-    }
-
-    my $curr_part = "";
-    my $content = do { local $/; <TILES> };
-    my @lines   = split "\n", $content;
-    foreach my $line (@lines)
-    {
-        if ($line =~ /parts_ctg\s+(\S+)/)
-        {
-            $curr_part = $1;
-            next;
-        }
-        next if (not defined $parts{$curr_part});
-
-        if ($line =~ /^(\S+)\s+(\S+)/)
-        {
-            my $name = $1;
-            my $enum = $2;
-
-            foreach my $art (@{$parts{$curr_part}})
-            {
-                if ($art->{TILE_EQ} eq $name)
-                {
-                    $art->{TILE_EQ_ENUM} = "TILEP_".$curr_part."_".$enum;
-                    # Don't break from the loop in case several artefacts
-                    # share the same tile.
-                }
-            }
-        }
-    }
-    close(TILES);
-
     # Create tiledef-unrand.cc for the function unrandart_to_tile().
     # Should we also create tiledef-unrand.h this way?
     $tilefile = "tiledef-unrand.cc";
@@ -1039,14 +1003,8 @@ HEADER_END
         $text .= (" " x 4) . "// $part\n";
         foreach my $artefact (@{$parts{$part}})
         {
-            if (not defined $artefact->{TILE_EQ_ENUM})
-            {
-                print STDERR "Tile '$artefact->{TILE_EQ}' for part '$part' not "
-                           . "found in 'dc-player.txt'.\n";
-                next;
-            }
             my $enum   = "UNRAND_$artefact->{_ENUM}";
-            my $t_enum = $artefact->{TILE_EQ_ENUM};
+            my $t_enum = "TILEP_".$part."_".$artefact->{TILE_EQ};
             $text .= (" " x 4) . "case $enum:"
                 . " " x ($longest_enum - length($enum) + 2) . "return $t_enum;\n";
         }
