@@ -459,8 +459,8 @@ static bool _returning(const item_def &item)
     return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
 }
 
-static void _setup_missile_beam(const actor *agent, bolt &beam,
-                                item_def &item, item_def const *launcher)
+void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+                        item_def const *launcher)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
@@ -662,7 +662,7 @@ void throw_it(quiver::action &a)
     if (ammo_slot != -1)
         item.slot     = index_to_letter(item.link);
 
-    _setup_missile_beam(&you, pbolt, item, launcher);
+    setup_missile_beam(&you, pbolt, item, launcher);
 
     bolt alt_pbolt;
     item_def alt_fake_proj;
@@ -670,7 +670,7 @@ void throw_it(quiver::action &a)
     {
         alt_pbolt.set_target(a.target);
         populate_fake_projectile(*alt_launcher, alt_fake_proj);
-        _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
+        setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
     }
 
     // Don't trace at all when confused.
@@ -864,18 +864,6 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         delete pbolt.special_explosion;
 }
 
-void setup_monster_throw_beam(monster* mons, bolt &beam)
-{
-    beam.range = you.current_vision;
-    beam.source_id = mons->mid;
-
-    beam.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
-    beam.flavour = BEAM_MISSILE;
-    beam.thrower = KILL_MON_MISSILE;
-    beam.aux_source.clear();
-    beam.pierce  = false;
-}
-
 bool mons_throw(monster* mons, bolt &beam, bool teleport)
 {
     ASSERT(beam.item);
@@ -900,7 +888,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     item_def *launcher = nullptr;
     if (!is_throwable(mons, item))
         launcher = mons->weapon(0);
-    _setup_missile_beam(mons, beam, item, launcher);
+    setup_missile_beam(mons, beam, item, launcher);
     beam.aimed_at_spot |= _returning(item);
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.

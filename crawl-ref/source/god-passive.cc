@@ -1493,8 +1493,7 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
 
     bolt shot;
     shot.target = aim;
-    setup_monster_throw_beam(mon, shot);
-    shot.item = missile;
+    setup_missile_beam(mon, shot, *missile, launcher);
 
     mons_throw(mon, shot);
 
