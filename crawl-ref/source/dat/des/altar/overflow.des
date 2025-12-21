@@ -1877,6 +1877,32 @@ xx.G.G.xx
  xxxPxxx
 ENDMAP
 
+NAME:   nicolae_hepliaklqana_this_could_be_you
+TAGS:   transparent decor
+: local mons = you.monster()
+: if (not crawl.game_started()) then
+:    mons = "human"
+: end
+: kmons("1 = " .. mons)
+KMONS:  2 = ancestor
+KMASK:  12` = opaque
+KMASK:  12` = no_monster_gen
+KMASK:  12` = no_item_gen
+KMASK:  12` = no_trap_gen
+KPROP:  12` = no_tele_into
+MARKER: ` = lua:fog_machine {cloud_type = "thin mist", size = 1, pow_min = 5, \
+  pow_max = 7, delay = 10, start_clouds = 1, walk_dist = 5, spread_rate = 10}
+: standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
+MAP
+xxxxxxxx@
+xccn.....
+xc1n...xx
+xc`n._.xx
+xc2n...xx
+xccn.....
+xxxxxxxx@
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -2918,6 +2944,26 @@ xcG...GcG`L`Gcx
 xcc...ccccccccx
 xxc...cxxxxxxxx
 xxc@@@cxxxxxxxx
+ENDMAP
+
+# This still uses the iron statue description intended for Dis:7. It still
+# kind of works, though.
+NAME:  nicolae_okawaru_hey_there's_oka_statue_tiles
+TAGS:  transparent decor
+KFEAT: G = metal_statue
+TILE:  G = dngn_oka_iron_statue
+: set_feature_name("metal_statue", "iron statue")
+: standard_overflow_setup(_G, { { "okawaru", "_" } }, true)
+MAP
+.........
+..vvvvv..
+.vvGvGvv.
+.v.....v.
+......_v.
+.v.....v.
+.vvGvGvv.
+..vvvvv..
+.........
 ENDMAP
 
 ### Qazlal overflow altars ####################################################
@@ -4370,6 +4416,26 @@ cN....Mc
 cccccccc
 ENDMAP
 
+NAME:   nicolae_vehumet_let_it_end_in_hellfire!
+TAGS:   transparent decor
+KMONS:  1 = hellfire mortar
+KFEAT:  1 = l
+KMASK:  1 = opaque
+KPROP:  1 = no_tele_into
+COLOUR: cn = red
+: standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
+MAP
+xxxxx..@
+xccn..n.@
+xc1n.ncn.
+xnnn..n..
+x..._...x
+..n..nnnx
+.ncn.n1cx
+@.n..nccx
+ @..xxxxx
+ENDMAP
+
 NAME:    nicolae_vehumet_we're_having_a_blast
 TAGS:    transparent
 : if you.in_branch("D") then
@@ -5061,6 +5127,16 @@ c''x_x'1cyzc.?x'x
       x'''x
        x'x
         c
+ENDMAP
+
+NAME:  nicolae_xom_the_eyes_have_it
+TAGS:  transparent decor
+KFEAT: T = fountain_eyes
+: standard_overflow_setup(_G, { { "xom", "_" } }, true)
+MAP
+T.T
+._.
+T.T
 ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
@@ -7279,7 +7355,7 @@ MAP
 ENDMAP
 
 # Each transporter will take you in a straight line across the intersection, but
-# only one will stop in the middle wi th the altar first.
+# only one will stop in the middle with the altar first.
 NAME:    nicolae_overflow_soul_deal_at_the_crossroads
 TAGS:    transparent decor
 WEIGHT:  2
