@@ -6724,7 +6724,7 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.ev);
     marshallUnsigned(th, mi.base_ev);
     marshallUnsigned(th, mi.sh);
-    marshallUnsigned(th, mi.mr);
+    marshallUnsigned(th, mi.wl);
     marshallUnsigned(th, mi.slay);
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
@@ -6868,10 +6868,10 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_MONINFO_CLEANUP)
-        mi.mr = mons_class_willpower(mi.type, mi.base_type);
+        mi.wl = mons_class_willpower(mi.type, mi.base_type);
     else
 #endif
-    unmarshallUnsigned(th, mi.mr);
+    unmarshallUnsigned(th, mi.wl);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_MONINFO_CLEANUP)

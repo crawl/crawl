@@ -326,7 +326,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     sh = 0;
     slay = 0;
     mresists = get_mons_class_resists(type);
-    mr = mons_class_willpower(type, base_type);
+    wl = mons_class_willpower(type, base_type);
     if (mons_class_sees_invis(type, base_type))
         mb.set(MB_SEE_INVIS);
 
@@ -578,7 +578,7 @@ monster_info::monster_info(const monster* m, int milev)
     ev = m->evasion();
     base_ev = m->base_evasion();
     sh = m->shield_class();
-    mr = m->willpower();
+    wl = m->willpower();
     slay = m->slaying(false, false);
     if (m->can_see_invisible())
         mb.set(MB_SEE_INVIS);
@@ -1629,7 +1629,7 @@ bool monster_info::nightvision() const
 
 int monster_info::willpower() const
 {
-    return mr;
+    return wl;
 }
 
 int monster_info::slaying() const

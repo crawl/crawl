@@ -300,7 +300,7 @@ struct monster_info_base
     int ev;
     int base_ev;
     int sh;
-    int mr;
+    int wl;
     int slay;
     resists_t mresists;
     mon_itemuse_type mitemuse;
