@@ -413,7 +413,6 @@ private:
     // methods to change the path
     void bounce();
     void reflect();
-    bool fuzz_invis_tracer();
 public:
     void choose_ray();
 

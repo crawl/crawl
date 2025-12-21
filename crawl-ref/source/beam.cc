@@ -3222,30 +3222,6 @@ void bolt::internal_ouch(int dam)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, what);
 }
 
-// [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
-// an invisible player. This makes invisibility slightly more powerful.
-bool bolt::fuzz_invis_tracer()
-{
-    // Did the monster have a rough idea of where you are?
-    int dist = grid_distance(target, you.pos());
-
-    // No, ditch this.
-    if (dist > 2)
-        return false;
-
-    // Apply fuzz now.
-    coord_def fuzz;
-    fuzz.x = random_range(-2, 2);
-    fuzz.y = random_range(-2, 2);
-    coord_def newtarget = target + fuzz;
-
-    if (in_bounds(newtarget))
-        target = newtarget;
-
-    // Fire away!
-    return true;
-}
-
 // A first step towards to-hit sanity for beams. We're still being
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
@@ -3472,9 +3448,12 @@ void bolt::tracer_affect_player()
         if (!harmless)
             tracer->actor_affected(true, you.experience_level);
     }
-    // Hostile monsters that can see the player or guess their location.
+    // Hostile monsters that can see the player or are targetting their rough
+    // location.
     else if (!friendly && !harmless
-             && (can_see_invis || !you.invisible() || fuzz_invis_tracer()))
+             && (can_see_invis
+                 || !you.invisible()
+                 || grid_distance(target, you.pos()) <= 2))
     {
         int power = you.experience_level;
         tracer->actor_affected(false, power);
