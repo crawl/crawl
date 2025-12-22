@@ -796,6 +796,11 @@ Freezing Cloud spell
 
 Conjures up a large cloud of lethally cold vapour.
 %%%%
+Freezing Gust spell
+
+Fires a penetrating bolt of frigid air that leaves clouds of lethally cold
+vapour in its wake.
+%%%%
 Frozen Ramparts spell
 
 Encases surrounding walls with ice for a short time. Foes that wander near the

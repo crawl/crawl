@@ -317,6 +317,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FREEZING_GUST, "Freezing Gust",
+    spschool::conjuration | spschool::ice | spschool::air,
+    spflag::target | spflag::needs_tracer | spflag::cloud | spflag::monster,
+    5,
+    200,
+    5, 5,
+    2,
+    TILEG_FREEZING_CLOUD,
+},
+
+{
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
     spschool::conjuration | spschool::alchemy | spschool::air,
     spflag::dir_or_target | spflag::needs_tracer | spflag::cloud,

@@ -2286,11 +2286,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_ACID_BALL:
     case SPELL_FLAMING_CLOUD:
     case SPELL_CHAOS_BREATH:
+    case SPELL_FREEZING_GUST:
         zappy(spell_to_zap(real_spell), power, true, beam);
-        break;
-
-    case SPELL_FREEZING_CLOUD: // battlesphere special-case
-        zappy(ZAP_FREEZING_BLAST, power, true, beam);
         break;
 
     case SPELL_MALMUTATE:
@@ -9727,7 +9724,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return _ally_needs_regeneration(*mon);
 
     case SPELL_POISONOUS_CLOUD:
-    case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_NOXIOUS_CLOUD:
     case SPELL_SPECTRAL_CLOUD:

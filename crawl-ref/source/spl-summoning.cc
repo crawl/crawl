@@ -1682,7 +1682,6 @@ static spell_type servitor_spells[] =
     SPELL_IRRADIATE,
     SPELL_BOULDER,
     SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
-    SPELL_FREEZING_CLOUD,
     SPELL_MEPHITIC_CLOUD,
 };
 

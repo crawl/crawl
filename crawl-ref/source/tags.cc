@@ -7780,6 +7780,11 @@ void unmarshallMonster(reader &th, monster& m)
             slot.spell = SPELL_SPIT_ACID;
             m.spells.push_back(slot);
         }
+        else if (slot.spell == SPELL_FREEZING_CLOUD)
+        {
+            slot.spell = SPELL_FREEZING_GUST;
+            m.spells.push_back(slot);
+        }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
                  && slot.spell != SPELL_GRAVITAS

@@ -1053,7 +1053,7 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_BOLT_OF_DRAINING,
                                  SPELL_BOLT_OF_DEVASTATION,
                                  SPELL_QUICKSILVER_BOLT,
-                                 SPELL_FREEZING_CLOUD,
+                                 SPELL_FREEZING_GUST,
                                  SPELL_POISONOUS_CLOUD,
                                  SPELL_METAL_SPLINTERS);
         case 6:

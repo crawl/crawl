@@ -2468,7 +2468,7 @@ cloud_type bolt::get_cloud_type() const
     if (origin_spell == SPELL_MIASMA_BREATH)
         return CLOUD_MIASMA;
 
-    if (origin_spell == SPELL_FREEZING_CLOUD)
+    if (origin_spell == SPELL_FREEZING_GUST)
         return CLOUD_COLD;
 
     if (origin_spell == SPELL_SPECTRAL_CLOUD)
@@ -2482,7 +2482,7 @@ cloud_type bolt::get_cloud_type() const
 
 int bolt::get_cloud_pow() const
 {
-    if (origin_spell == SPELL_FREEZING_CLOUD
+    if (origin_spell == SPELL_FREEZING_GUST
         || origin_spell == SPELL_POISONOUS_CLOUD)
     {
         return random_range(10, 15);
@@ -2501,7 +2501,7 @@ int bolt::get_cloud_size(bool min, bool max) const
 {
     if (origin_spell == SPELL_MEPHITIC_CLOUD
         || origin_spell == SPELL_MIASMA_BREATH
-        || origin_spell == SPELL_FREEZING_CLOUD)
+        || origin_spell == SPELL_FREEZING_GUST)
     {
         return 10;
     }

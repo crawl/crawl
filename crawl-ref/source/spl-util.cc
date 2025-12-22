@@ -1969,7 +1969,7 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
               SPELL_FIREBALL } },
         { SPELL_SERPENT_OF_HELL_COC_BREATH,
             { SPELL_COLD_BREATH,
-              SPELL_FREEZING_CLOUD,
+              SPELL_FREEZING_GUST,
               SPELL_FLASH_FREEZE } },
         { SPELL_SERPENT_OF_HELL_DIS_BREATH,
             { SPELL_IRON_SHOT,

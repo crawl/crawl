@@ -1567,8 +1567,8 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_FREEZING_BLAST,
-    "freezing blast",
+    ZAP_FREEZING_GUST,
+    "freezing gust",
     nullptr,
     nullptr,
     new dicedef_calculator<2, 9, 1, 11>,
