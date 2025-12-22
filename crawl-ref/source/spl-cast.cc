@@ -1310,9 +1310,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-    case SPELL_HOLY_BREATH:
-        return make_unique<targeter_cloud>(&you, spell_to_cloud(spell), range);
+        return make_unique<targeter_cloud>(&you, CLOUD_COLD, range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
                    get_thunderbolt_last_aim(&you));
@@ -2458,10 +2456,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
 
     // Clouds and explosions.
-    case SPELL_POISONOUS_CLOUD:
-    case SPELL_HOLY_BREATH:
     case SPELL_FREEZING_CLOUD:
-        return cast_big_c(powc, spell, &you, beam, fail);
+        return cast_freezing_cloud(powc, beam, fail);
 
     case SPELL_FIRE_STORM:
         return cast_fire_storm(powc, beam, fail);

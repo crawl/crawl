@@ -100,20 +100,7 @@ void explode_blastmotes_at(coord_def p)
                               nullptr, "");
 }
 
-cloud_type spell_to_cloud(spell_type spell)
-{
-    static map<spell_type, cloud_type> cloud_map =
-    {
-        { SPELL_POISONOUS_CLOUD, CLOUD_POISON },
-        { SPELL_FREEZING_CLOUD, CLOUD_COLD },
-        { SPELL_HOLY_BREATH, CLOUD_HOLY },
-    };
-
-    return lookup(cloud_map, spell, CLOUD_NONE);
-}
-
-spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
-                 bool fail)
+spret cast_freezing_cloud(int pow, bolt &beam, bool fail)
 {
     if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
@@ -129,35 +116,9 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
         return spret::abort;
     }
 
-    cloud_type cty = spell_to_cloud(spl);
-    if (is_sanctuary(beam.target) && !is_harmless_cloud(cty))
+    if (is_sanctuary(beam.target))
     {
         mpr("You can't place harmful clouds in a sanctuary.");
-        return spret::abort;
-    }
-
-    //XXX: there should be a better way to specify beam cloud types
-    switch (spl)
-    {
-        case SPELL_POISONOUS_CLOUD:
-            beam.flavour = BEAM_POISON;
-            beam.name = "blast of poison";
-            break;
-        case SPELL_HOLY_BREATH:
-            beam.flavour = BEAM_HOLY;
-            beam.origin_spell = SPELL_HOLY_BREATH;
-            break;
-        case SPELL_FREEZING_CLOUD:
-            beam.flavour = BEAM_COLD;
-            beam.name = "freezing blast";
-            break;
-        default:
-            break;
-    }
-
-    if (cty == CLOUD_NONE)
-    {
-        mpr("That kind of cloud doesn't exist!");
         return spret::abort;
     }
 
@@ -165,7 +126,9 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = CONVENIENT_NONZERO_DAMAGE;
     beam.use_target_as_pos = true;
-    beam.origin_spell      = spl;
+    beam.origin_spell      = SPELL_FREEZING_CLOUD;
+    beam.flavour           = BEAM_COLD;
+    beam.name              = "freezing blast";
     player_beam_tracer tracer;
     beam.affect_endpoint(tracer);
     if (cancel_beam_prompt(beam, tracer))
@@ -173,8 +136,8 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 
     fail_check();
 
-    big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
-    noisy(spell_effect_noise(spl), beam.target);
+    big_cloud(CLOUD_COLD, &you, beam.target, pow, 8 + random2(3), -1);
+    noisy(spell_effect_noise(SPELL_FREEZING_CLOUD), beam.target);
     return spret::success;
 }
 

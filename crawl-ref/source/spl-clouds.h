@@ -12,12 +12,10 @@ spret cast_putrefaction(monster* target, int pow, bool fail);
 spret kindle_blastmotes(int pow, bool fail);
 void explode_blastmotes_at(coord_def p);
 
-cloud_type spell_to_cloud(spell_type spell);
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1);
 
-spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
-                      bool fail);
+spret cast_freezing_cloud(int pow, bolt &beam, bool fail);
 
 void holy_flames(monster* caster, actor* defender);
 

@@ -1695,10 +1695,8 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-    case SPELL_HOLY_BREATH:
     {
-        targeter_cloud tgt(&you, spell_to_cloud(spell), range);
+        targeter_cloud tgt(&you, CLOUD_COLD, range);
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
