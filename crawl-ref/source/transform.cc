@@ -294,9 +294,20 @@ int Form::get_ac_bonus(int skill) const
     return max(0, scaling_value(ac, skill, false, 1));
 }
 
+
+/**
+ * What EV bonus does the player get while in this form?
+ *
+ * @param level The shapeshifting skill level to calculate this bonus for.
+ *              (Default is -1, meaning 'Use the player's current skill')
+ *
+ * @return  The EV bonus currently granted by the form, multiplied by 100 to
+ *          allow for pseudo-decimal flexibility and to match the scale used
+ *          in the player evasion calculation.
+ */
 int Form::ev_bonus(int skill) const
 {
-    return max(0, scaling_value(ev, skill));
+    return max(0, scaling_value(ev, skill, false, 1));
 }
 
 /**
