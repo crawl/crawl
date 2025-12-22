@@ -4194,6 +4194,7 @@ static string _player_spell_stats(const spell_type spell)
     if (!crawl_state.need_save
         || (get_spell_flags(spell) & spflag::monster))
     {
+        description += "\n";
         return description; // all other info is player-dependent
     }
 
