@@ -65,6 +65,8 @@ struct beam_tracer
     // Should the beam stop at the target if there is a friendly monster
     // after it?
     virtual bool should_stop() noexcept { return false; }
+    // How many times the player was hit by this tracer.
+    virtual int player_hit_count() noexcept { return 0; }
 
     // Called when a meaningful target is affected
     virtual void actor_affected(bool friendly_fire, int power)
@@ -72,7 +74,10 @@ struct beam_tracer
         UNUSED(friendly_fire, power);
     }
 
-    virtual void player_hit() {}
+    virtual void player_hit(bool was_friendly = true)
+    {
+        UNUSED(was_friendly);
+    }
     virtual void monster_hit(const bolt& bolt, const monster& mon)
     {
         UNUSED(bolt, mon);
@@ -111,7 +116,7 @@ struct player_beam_tracer : beam_tracer
     bool has_hit_foe() noexcept override;
     bool should_stop() noexcept override;
     void actor_affected(bool friendly_fire, int power) noexcept override;
-    void player_hit() noexcept override;
+    void player_hit(bool was_friendly) noexcept override;
     void monster_hit(const bolt& bolt, const monster& mon) override;
     void blocked(string message) noexcept override;
 };
@@ -122,12 +127,14 @@ struct targeting_tracer : beam_tracer
     tracer_info foe_info;
     tracer_info friend_info;
     bool abort_for_player = false;
+    int hurt_player_count = 0;
 
     targeting_tracer() {}
 
     bool has_hit_foe() noexcept override;
     void actor_affected(bool friendly_fire, int power) noexcept override;
-    void player_hit() noexcept override;
+    void player_hit(bool was_friendly) noexcept override;
+    int player_hit_count() noexcept override;
 
     ai_action::goodness good_to_fire(int foe_ratio) const;
 };

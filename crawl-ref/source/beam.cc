@@ -2885,34 +2885,28 @@ void bolt::drop_object()
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = is_tracer()
-            && !YOU_KILL(thrower)
-            && !can_see_invis && you.invisible()
-            && (!agent()
-                || (agent()->is_monster()
-                    && !agent()->as_monster()->friendly()
-                    && agent()->as_monster()->attitude != ATT_MARIONETTE))
-            // No point in fuzzing to a position that could never be hit.
-            && you.see_cell_no_trans(pos());
-    const int dist = needs_fuzz? 2 : 0;
+    const int dist = grid_distance(pos(), you.pos());
 
-    if (grid_distance(pos(), you.pos()) > dist)
-        return false;
-
-    if (!needs_fuzz)
+    // For monsters looking for an invisible player they cannot see, pretend
+    // they might be anywhere within 2 tiles of their real location that isn't
+    // a solid object or already occupied by something else.
+    if (is_tracer()
+        && !can_see_invis && you.invisible()
+        && !YOU_KILL(thrower)
+        && dist <= 2
+        && (!agent()
+            || (agent()->is_monster()
+                && !agent()->as_monster()->friendly()
+                && agent()->as_monster()->attitude != ATT_MARIONETTE))
+        // No point in fuzzing to a position that could never be hit.
+        && you.see_cell_no_trans(pos())
+        && !cell_is_solid(pos())
+        && !monster_at(pos()))
+    {
         return true;
+    }
 
-    // Check whether we've already hit the fuzzed player and not bounced. If
-    // so, don't count this, as we don't want to double count hits, which can
-    // otherwise happen for tracers for invisible players.
-    //
-    // This isn't *exactly* the right check - ideally we'd check whether we've
-    // hit the player since the last bounce - but it's going to be right almost
-    // all the time.
-    auto cnt = hit_count.find(you.mid);
-    if (cnt != hit_count.end() && cnt->second > bounces + reflections)
-        return false;
-    return true;
+    return dist == 0;
 }
 
 void bolt::affect_ground()
@@ -3466,13 +3460,25 @@ void bolt::tracer_affect_player()
     }
     // Hostile monsters that can see the player or are targetting their rough
     // location.
-    else if (!friendly && !harmless
-             && (can_see_invis
-                 || !you.invisible()
-                 || grid_distance(target, you.pos()) <= 2))
+    else if (!friendly && !harmless)
     {
+        // If a monster is guessing at the player's position, don't act like
+        // they might be in multiple tiles at once and assume that each
+        // bounce can hit them at most once.
+        //
+        // This isn't *exactly* the right check - theoretically we could
+        // have avoided the player on the initial shot and then hit them
+        // repeatedly on the bounce - but it's going to be right almost
+        // all the time.
+        if (!can_see_invis && you.invisible()
+            && tracer->player_hit_count() > bounces + reflections)
+        {
+            return;
+        }
+
         int power = you.experience_level;
         tracer->actor_affected(false, power);
+        tracer->player_hit(false);
     }
 
     // Friendly monsters will always abort harmful effects that hit the player.
@@ -7814,7 +7820,7 @@ void player_beam_tracer::actor_affected(bool friendly_fire, int power) noexcept
         ++foe_count;
 }
 
-void player_beam_tracer::player_hit() noexcept
+void player_beam_tracer::player_hit(bool /*was_friendly*/) noexcept
 {
     hit_self_count++;
 }
@@ -7886,9 +7892,17 @@ void targeting_tracer::actor_affected(bool friendly_fire, int power) noexcept
     }
 }
 
-void targeting_tracer::player_hit() noexcept
+void targeting_tracer::player_hit(bool was_friendly) noexcept
 {
-    abort_for_player = true;
+    if (was_friendly)
+        abort_for_player = true;
+    else
+        hurt_player_count++;
+}
+
+int targeting_tracer::player_hit_count() noexcept
+{
+    return hurt_player_count;
 }
 
 // returns true if the player wishes to cancel firing the bolt, false otherwise
