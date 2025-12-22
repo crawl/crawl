@@ -148,7 +148,10 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     if (portal_notes.count(pos1))
         portal_notes[pos2]          = portal_notes[pos1];
 
-    unnotice_feature(pos1);
+    // Don't unnotice branch entrances since we're only noticing which level
+    // it's on and that hasn't changed.
+    if (!feat_is_branch_entrance(env.grid(orig)))
+        unnotice_feature(pos1);
 
     return true;
 }
