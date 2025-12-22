@@ -274,12 +274,14 @@ protected:
     vector<pair<string,string>> fakemuts;
     vector<pair<string,string>> badmuts;
 
-    /// Calculate the given FormScaling for this form, multiplied by scale.
-    int scaling_value(const FormScaling &sc, bool random,
-                      int level = -1, int scale = 1) const;
-    /// Calculate the given FormScaling for this form, with math internally multiplied by scale.
-    int divided_scaling(const FormScaling &sc, bool random,
-                        int level = -1, int scale = 1) const;
+    /// Calculate a given FormScaling for this form, multiplied by 100.
+    int raw_scaling_value(const FormScaling &sc, int level = -1) const;
+
+    /// Calculate a given FormScaling for this form, with math internally
+    /// using the raw_scaling_value, divided (possibly randomly) by some value
+    /// after calculation.
+    int scaling_value(const FormScaling &sc, int level = -1, bool random = false,
+                      int divisor = 100) const;
 
 private:
     /// Can this form fly?

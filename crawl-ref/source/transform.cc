@@ -252,14 +252,13 @@ string Form::get_untransform_message() const
     return "Your transformation has ended.";
 }
 
-int Form::scaling_value(const FormScaling &sc, bool random,
-                        int level, int scale) const
+int Form::raw_scaling_value(const FormScaling &sc, int level) const
 {
+    const int scale = 100;
+
     if (sc.xl_based)
     {
         const int s = sc.scaling * you.experience_level * scale;
-        if (random)
-            return sc.base * scale + div_rand_round(s, 27);
         return sc.base * scale + s / 27;
     }
     if (max_skill == min_skill)
@@ -268,18 +267,16 @@ int Form::scaling_value(const FormScaling &sc, bool random,
     const int lvl = level == -1 ? get_level(scale) : level * scale;
     const int over_min = lvl - min_skill * scale; // may be negative
     const int denom = max_skill - min_skill;
-    if (random)
-        return sc.base * scale + div_rand_round(over_min * sc.scaling, denom);
+
     return sc.base * scale + over_min * sc.scaling / denom;
 }
 
-int Form::divided_scaling(const FormScaling &sc, bool random,
-                          int level, int scale) const
+int Form::scaling_value(const FormScaling &sc, int level, bool random, int divisor) const
 {
-    const int scaled_val = scaling_value(sc, random, level, scale);
+    const int scaled_val = raw_scaling_value(sc, level);
     if (random)
-        return div_rand_round(scaled_val, scale);
-    return scaled_val / scale;
+        return div_rand_round(scaled_val, divisor);
+    return scaled_val / divisor;
 }
 
 /**
@@ -294,12 +291,12 @@ int Form::divided_scaling(const FormScaling &sc, bool random,
  */
 int Form::get_ac_bonus(int skill) const
 {
-    return max(0, scaling_value(ac, false, skill, 100));
+    return max(0, scaling_value(ac, skill, false, 1));
 }
 
 int Form::ev_bonus(int skill) const
 {
-    return max(0, scaling_value(ev, false, skill, 1));
+    return max(0, scaling_value(ev, skill));
 }
 
 /**
@@ -315,13 +312,13 @@ int Form::ev_bonus(int skill) const
  */
 int Form::get_body_ac_mult(int skill) const
 {
-    return max(-100, scaling_value(body_ac_mult, false, skill, 1));
+    return max(-100, scaling_value(body_ac_mult, skill));
 }
 
 int Form::get_base_unarmed_damage(bool random, int skill) const
 {
     // All forms start with base 3 UC damage.
-    return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, skill, 100));
+    return 3 + max(0, scaling_value(unarmed_bonus_dam, skill, random));
 }
 
 bool Form::can_offhand_punch() const
@@ -580,7 +577,7 @@ public:
 
     int get_web_chance(int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Base(20).Scaling(20), false, skill, 100);
+        return scaling_value(FormScaling().Base(20).Scaling(20), skill);
     }
 };
 
@@ -1020,7 +1017,7 @@ public:
 
     int get_aux_damage(bool random, int skill) const override
     {
-        return divided_scaling(FormScaling().Base(10).Scaling(8), random, skill, 100);
+        return scaling_value(FormScaling().Base(10).Scaling(8), skill, random);
     }
 };
 
@@ -1107,18 +1104,18 @@ public:
 
     int regen_bonus(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(160).Scaling(120), false, skill));
+        return max(0, scaling_value(FormScaling().Base(160).Scaling(120), skill));
     }
 
     int mp_regen_bonus(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(60).Scaling(40), false, skill));
+        return max(0, scaling_value(FormScaling().Base(60).Scaling(40), skill));
     }
 
     // Number of bees created (x10)
     int get_effect_size(int skill = -1) const override
     {
-        return max(10, scaling_value(FormScaling().Base(32).Scaling(23), false, skill));
+        return max(10, scaling_value(FormScaling().Base(32).Scaling(23), skill));
     }
 };
 
@@ -1173,17 +1170,17 @@ public:
     // Amount of slaying gained per kill (multiplied by 10). 50% more for initial kill.
     int get_werefury_kill_bonus(int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Base(12).Scaling(10), false, skill);
+        return scaling_value(FormScaling().Base(12).Scaling(10), skill);
     }
 
     virtual int get_takedown_multiplier(int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Base(75).Scaling(50), false, skill);
+        return scaling_value(FormScaling().Base(75).Scaling(50), skill);
     }
 
     virtual int get_howl_power(int skill = -1) const override
     {
-        return divided_scaling(FormScaling().Base(80).Scaling(40), false, skill);
+        return scaling_value(FormScaling().Base(80).Scaling(40), skill);
     }
 };
 
@@ -1197,7 +1194,7 @@ public:
 
     int max_mp_bonus(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(4).Scaling(5), false, skill);
+        return scaling_value(FormScaling().Base(4).Scaling(5), skill);
     }
 };
 
@@ -1212,7 +1209,7 @@ public:
     // Number of clouds placed
     int get_effect_size(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(9).Scaling(16), false, skill);
+        return scaling_value(FormScaling().Base(9).Scaling(16), skill);
     }
 };
 
@@ -1254,13 +1251,13 @@ public:
     // so that it can start at 2.5)
     int get_effect_size(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(25).Scaling(15), false, skill);
+        return scaling_value(FormScaling().Base(25).Scaling(15), skill);
     }
 
     // Chance of lithotoxin petrification.
     int get_effect_chance(int skill = -1) const override
     {
-        return scaling_value(FormScaling().Base(55).Scaling(15), false, skill);
+        return scaling_value(FormScaling().Base(55).Scaling(15), skill);
     }
 };
 
