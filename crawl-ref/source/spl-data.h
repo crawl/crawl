@@ -3770,7 +3770,7 @@ static const struct spell_desc spelldata[] =
     spflag::target | spflag::not_self,
     4,
     100,
-    1, 1,
+    LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_BOULDER,
 },
