@@ -2177,7 +2177,7 @@ end
 local kstr = "S = armour shop name:Granny_Wiglaf " .. shopname ..
     " count:" .. count .. " greed:15 use_all no_mimic ; " ..
     " | hat randart tile:thelm_cap_jester" ..
-    " | hat randart tile:thelm_hat_art_last"
+    " | hat randart tile:thelm_hat_wizard"
 
 local egos = util.random_subset({"intelligence", "see_invisible",
                                  "willpower", "sniping", "ice"}, 2)

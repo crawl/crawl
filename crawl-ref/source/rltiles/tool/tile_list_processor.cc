@@ -765,7 +765,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                             list_file, line, m_args[i]);
                     return false;
                 }
-                pending_variation new_v{ idx, colour };
+                pending_variation new_v{(unsigned int)idx, colour};
                 for (pending_variation v : m_pending_colour_variations)
                 {
                     if (new_v == v)
@@ -800,7 +800,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                             list_file, line, m_args[i]);
                     return false;
                 }
-                pending_variation new_v{idx, enchant};
+                pending_variation new_v{(unsigned int)idx, enchant};
                 for (pending_variation v : m_pending_enchant_variations)
                 {
                     if (new_v == v)

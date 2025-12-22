@@ -677,6 +677,7 @@ hat_archer2
 %enchant_variation THELM_HAT randart
 hat3 THELM_HAT_RANDART
 wizard_hat
+%syn THELM_HAT_WIZARD
 
 helmet1 THELM_HELM
 helmet2
