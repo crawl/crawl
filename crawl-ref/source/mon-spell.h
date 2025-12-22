@@ -2060,7 +2060,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AIRSTRIKE, 23, MON_SPELL_WIZARD },
        { SPELL_SUMMON_SMALL_MAMMAL, 12, MON_SPELL_WIZARD },
        { SPELL_SLOW, 12, MON_SPELL_WIZARD },
-       { SPELL_SPRINT, 12, MON_SPELL_WIZARD },
+       { SPELL_FLEETFOOT, 12, MON_SPELL_WIZARD },
       }
     },
 
@@ -2533,7 +2533,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_DOOMSAYING, 200, MON_SPELL_NATURAL },
        { SPELL_DOOM_BOLT, 34, MON_SPELL_WIZARD },
-       { SPELL_SWIFTNESS, 24, MON_SPELL_WIZARD },
+       { SPELL_FLEETFOOT, 24, MON_SPELL_WIZARD },
       }
     },
     // ('&', mostly) Demon lords.

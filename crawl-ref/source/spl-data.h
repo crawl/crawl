@@ -3112,14 +3112,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SPRINT, "Sprint",
-    spschool::hexes,
+    SPELL_FLEETFOOT, "Fleetfoot",
+    spschool::air,
     spflag::hasty | spflag::selfench | spflag::monster,
     2,
     100,
     -1, -1,
     0,
-    TILEG_SPRINT,
+    TILEG_SWIFTNESS,
 },
 
 {

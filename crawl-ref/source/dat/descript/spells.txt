@@ -716,6 +716,10 @@ A single soul from within the armoury leaps out, striking with their weapon and
 then duelling independently for a short time before returning to the maelstrom
 once more.
 %%%%
+Fleetfoot spell
+
+Calls forth winds to increase the caster's movement speed for a short duration.
+%%%%
 Force Lance spell
 
 Fires a shaft of concussive force. If the impact deals damage, it may knock the
@@ -1993,10 +1997,6 @@ Sporulate spell
 Releases a fast, gas-filled floating spore. After seeking out its foe, the
 spore will explode, damaging anything caught in the blast and further confusing
 living creatures.
-%%%%
-Sprint spell
-
-Causes the caster to move across terrain more rapidly for a short duration.
 %%%%
 Starburst spell
 

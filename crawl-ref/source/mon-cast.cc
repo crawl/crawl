@@ -2570,10 +2570,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_BROTHERS_IN_ARMS:
     case SPELL_BERSERKER_RAGE:
-    case SPELL_SPRINT:
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_SWIFTNESS:
-#endif
+    case SPELL_FLEETFOOT:
     case SPELL_CREATE_TENTACLES:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_CHAIN_OF_CHAOS:
@@ -7663,13 +7660,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->go_berserk(true);
         return;
 
-#if TAG_MAJOR_VERSION == 34
-    // Replaced with monster-specific version.
-    case SPELL_SWIFTNESS:
-#endif
-    case SPELL_SPRINT:
+    case SPELL_FLEETFOOT:
         mons->add_ench(ENCH_SWIFT);
-        simple_monster_message(*mons, " puts on a burst of speed!");
+        simple_monster_message(*mons, " movement is quickened by the wind!", true);
         return;
 
     case SPELL_SILENCE:
@@ -9376,10 +9369,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_BERSERKER_RAGE:
         return ai_action::good_or_impossible(mon->needs_berserk(false));
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_SWIFTNESS:
-#endif
-    case SPELL_SPRINT:
+    case SPELL_FLEETFOOT:
         return ai_action::good_or_impossible(!mon->has_ench(ENCH_SWIFT));
 
     case SPELL_MAJOR_HEALING:

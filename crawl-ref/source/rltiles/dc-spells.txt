@@ -315,7 +315,6 @@ spit_acid SPIT_ACID
 spit_poison SPIT_POISON
 spit_lava SPIT_LAVA
 sporulate SPORULATE
-sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
 sticks_to_snakes STICKS_TO_SNAKES

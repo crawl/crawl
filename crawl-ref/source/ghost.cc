@@ -1120,7 +1120,7 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_BLINK;
 #endif
     case SPELL_SWIFTNESS:
-        return SPELL_SPRINT;
+        return SPELL_FLEETFOOT;
     case SPELL_CONFUSING_TOUCH:
         return SPELL_CONFUSE;
     case SPELL_CURSE_OF_AGONY:
