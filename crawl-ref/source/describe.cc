@@ -7254,18 +7254,19 @@ string get_command_description(const command_type cmd, bool terse)
 #endif
 
 static string _format_data_label(int value, bool show_sign, bool is_percent,
-                                 int divisor = 0)
+                                 int divisor = 0, int decimal_places = 0)
 {
     const bool red = value < 0;
 
     if (divisor > 0)
     {
         float fvalue = (float)value / (float) divisor;
-        const char* fstring = show_sign ? "%s%+.2f%s%s" : "%s%.2f%s%s";
+        const string fstring = (show_sign ? "%s%+." : "%s%.") +
+                                to_string(decimal_places) + "f%s%s";
 
-        return make_stringf(fstring, red ? "<red>" : "",
-                                     fvalue, is_percent ?  "%" : "",
-                                     red ? "</red>" : "");
+        return make_stringf(fstring.c_str(), red ? "<red>" : "",
+                                             fvalue, is_percent ?  "%" : "",
+                                             red ? "</red>" : "");
     }
 
     const char* fstring = show_sign ? "%s%+d%s%s" : "%s%d%s%s";
@@ -7300,7 +7301,7 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
     {
         if (mult[i] != 0)
         {
-            labels.push_back(_format_data_label(change[i], true, false, 100)
+            labels.push_back(_format_data_label(change[i], true, false, 100, 1)
                              + " ("
                              + _format_data_label(mult[i], true, true)
                              + ")");
@@ -7365,20 +7366,20 @@ static void _maybe_note_airstrike_damage(vector<vector<string>>& items,
  * @param is_percent Whether to add a percentage sign to each entry.
  * @param show_sign  Whether to show +/- in front of each entry.
  * @param divisor   A number to divide the return value of func by.
- * @param show_decimal Show a decimals for divided numbers, instead of truncating.
+ * @param decimal_places How many decimal places to show for dividing numbers?
  */
 static void _maybe_populate_form_table(vector<vector<string>>& items,
                                        function<int(int)> func, string label,
                                        const int skill[3],
                                        int flat_factor = 0, bool is_percent = false,
                                        bool show_sign = true,
-                                       int divisor = 1, bool show_decimal = false)
+                                       int divisor = 1, int decimal_places = 0)
 {
     int data[3];
     // Collect the data values. (Apply the divisor immediately if we're doing
     // int division; otherwise, apply it in _format_data_label)
     for (int i = 0; i < 3; ++i)
-        data[i] = (func(skill[i]) + flat_factor) / (show_decimal ? 1 : divisor);
+        data[i] = (func(skill[i]) + flat_factor) / (decimal_places ? 1 : divisor);
 
     // This parameter is never non-zero, so don't bother noting is.
     if (data[0] == 0 && data[1] == 0 && data[2] == 0)
@@ -7386,9 +7387,9 @@ static void _maybe_populate_form_table(vector<vector<string>>& items,
 
     vector<string> labels;
     labels.push_back(label);
-    labels.push_back(_format_data_label(data[0], show_sign, is_percent, show_decimal ? divisor : 0));
-    labels.push_back(_format_data_label(data[1], show_sign, is_percent, show_decimal ? divisor : 0));
-    labels.push_back(_format_data_label(data[2], show_sign, is_percent, show_decimal ? divisor : 0));
+    labels.push_back(_format_data_label(data[0], show_sign, is_percent, decimal_places ? divisor : 0, decimal_places));
+    labels.push_back(_format_data_label(data[1], show_sign, is_percent, decimal_places ? divisor : 0, decimal_places));
+    labels.push_back(_format_data_label(data[2], show_sign, is_percent, decimal_places ? divisor : 0, decimal_places));
 
     items.push_back(labels);
 }
@@ -7439,12 +7440,12 @@ static string _describe_talisman_form(transformation form_type)
 
     _maybe_populate_form_table(items, bind(&Form::mult_hp, form, 100, true, placeholders::_1), "HP", skill, -100, true, true, 1);
     _maybe_populate_form_table(items, bind(&Form::get_base_unarmed_damage, form, false, placeholders::_1), "UC Base Dmg", skill, -3);
-    _maybe_populate_form_table(items, bind(&Form::get_ac_bonus, form, placeholders::_1), "AC", skill, 0, false, true, 100);
-    _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill);
+    _maybe_populate_form_table(items, bind(&Form::get_ac_bonus, form, placeholders::_1), "AC", skill, 0, false, true, 100, 1);
+    _maybe_populate_form_table(items, bind(&Form::ev_bonus, form, placeholders::_1), "EV", skill, 0, false, true, 100, 1);
     _maybe_populate_form_table(items, bind(&Form::max_mp_bonus, form, placeholders::_1), "MP", skill);
     _maybe_populate_form_table(items, bind(&Form::slay_bonus, form, false, placeholders::_1), "Slay", skill);
-    _maybe_populate_form_table(items, bind(&Form::regen_bonus, form, placeholders::_1), "Regen", skill, 0, false, true, 100, true);
-    _maybe_populate_form_table(items, bind(&Form::mp_regen_bonus, form, placeholders::_1), "MP Regen", skill, 0, false, true, 100, true);
+    _maybe_populate_form_table(items, bind(&Form::regen_bonus, form, placeholders::_1), "Regen", skill, 0, false, true, 100, 2);
+    _maybe_populate_form_table(items, bind(&Form::mp_regen_bonus, form, placeholders::_1), "MP Regen", skill, 0, false, true, 100, 2);
     _maybe_populate_form_table(items, bind(&Form::get_vamp_chance, form, placeholders::_1), "Vamp Chance (while <50% HP)", skill, 0, true, false);
     _maybe_populate_form_table(items, bind(&Form::get_web_chance, form, placeholders::_1), "Ensnare Chance", skill, 0, true, false);
     _maybe_note_armour_modifier(items, *form, skill);
@@ -7455,22 +7456,22 @@ static string _describe_talisman_form(transformation form_type)
     if (form_type == transformation::maw)
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
     if (form_type == transformation::hive)
-        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, 1);
     if (form_type == transformation::sphinx)
         _maybe_note_airstrike_damage(items, skill);
     if (form_type == transformation::werewolf)
     {
-        _maybe_populate_form_table(items, bind(&Form::get_werefury_kill_bonus, form, placeholders::_1), "+Slay/Kill", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_werefury_kill_bonus, form, placeholders::_1), "+Slay/Kill", skill, 0, false, false, 10, 1);
         _maybe_populate_form_table(items, bind(&Form::get_takedown_multiplier, form, placeholders::_1), "Takedown Dmg", skill, 0, true, true);
         _maybe_populate_form_table(items, bind(&Form::get_howl_power, form, placeholders::_1), "Howl Power", skill, 0, false, false);
     }
     if (form_type == transformation::walking_scroll)
-        _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, true);
+        _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, 1);
     if (form_type == transformation::fortress_crab)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Rust Breath Size", skill, 0, false, false);
     if (form_type == transformation::medusa)
     {
-        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Tendril targets", skill, 0, false, false, 10, true);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Tendril targets", skill, 0, false, false, 10, 1);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Petrify chance", skill, 0, true, false);
     }
 
