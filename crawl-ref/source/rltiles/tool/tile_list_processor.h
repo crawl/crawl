@@ -32,8 +32,19 @@ protected:
 
     struct variation
     {
-        int idx;
-        int col;
+        unsigned int from_idx;
+        unsigned int to_idx;
+        int variety;
+
+        bool operator<(const variation& other) const noexcept;
+    };
+
+    struct pending_variation
+    {
+        unsigned int idx;
+        int variety;
+
+        bool operator==(const pending_variation& other) const noexcept;
     };
 
     string m_name;
@@ -59,7 +70,10 @@ protected:
     vector<int> m_ctg_counts;
     tile m_compose;
     tile* m_texture;
-    vector<variation> m_variations;
+    vector<pending_variation> m_pending_colour_variations;
+    vector<variation> m_colour_variations;
+    vector<pending_variation> m_pending_enchant_variations;
+    vector<variation> m_enchant_variations;
     int m_weight;
     double m_alpha;
     int m_domino;

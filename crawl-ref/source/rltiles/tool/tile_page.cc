@@ -134,17 +134,6 @@ bool tile_page::add_synonym(int idx, const string &syn)
     return true;
 }
 
-bool tile_page::add_synonym(const string &enumname, const string &syn)
-{
-    int idx = find(enumname);
-    if (idx == -1)
-        return false;
-
-    m_tiles[idx]->add_enumname(syn);
-
-    return true;
-}
-
 bool tile_page::write_image(const char *filename)
 {
 #ifdef USE_TILE
@@ -187,12 +176,4 @@ bool tile_page::write_image(const char *filename)
 #else
     return true;
 #endif
-}
-
-void tile_page::add_variation(int var_idx, int base_idx, int colour)
-{
-    assert(var_idx < (2 << 15));
-    assert(base_idx < (2 << 15));
-
-    m_tiles[base_idx]->add_variation(colour, var_idx);
 }

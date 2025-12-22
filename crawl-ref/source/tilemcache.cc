@@ -1554,7 +1554,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     if (!Options.tile_grinch && today_is_halloween())
         m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_PUMPKIN;
     else if (m_doll.parts[TILEP_PART_HELM] == TILEP_HELM_PUMPKIN)
-        m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_FIRST_NORM; // every day is *not* halloween
+        m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_NORMAL; // every day is *not* halloween
 
 
     if (ac > 25)

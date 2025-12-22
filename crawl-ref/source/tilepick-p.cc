@@ -22,11 +22,6 @@
 #include "transform.h"
 #include "traps.h"
 
-static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
-{
-    return first + mod % (last - first + 1);
-}
-
 static tileidx_t _part_start(int p)
 {
     if (p != TILEP_PART_HAND2)
@@ -60,15 +55,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     if (item.base_type != OBJ_WEAPONS)
         return 0;
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
     tileidx_t tile = 0;
-
     switch (item.sub_type)
     {
     // Blunt
@@ -233,7 +220,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         tile = item.props[WORN_TILE_KEY].get_short();
 
-    return tile ? tileidx_enchant_equ(item, tile, true) : 0;
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_shield(const item_def &item)
@@ -247,29 +234,23 @@ tileidx_t tilep_equ_shield(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
-        case ARM_KITE_SHIELD:
-            return _modrng(item.rnd, TILEP_HAND2_KITE_SHIELD_FIRST_NORM,
-                           TILEP_HAND2_KITE_SHIELD_LAST_NORM);
-        case ARM_BUCKLER:
-            return _modrng(item.rnd, TILEP_HAND2_BUCKLER_FIRST_NORM,
-                           TILEP_HAND2_BUCKLER_LAST_NORM);
-        case ARM_TOWER_SHIELD:
-            return _modrng(item.rnd, TILEP_HAND2_TOWER_SHIELD_FIRST_NORM,
-                           TILEP_HAND2_TOWER_SHIELD_LAST_NORM);
-        case ARM_ORB:
-            return _modrng(item.rnd, TILEP_HAND2_ORB_FIRST,
-                           TILEP_HAND2_ORB_LAST);
-        default: return 0;
+    case ARM_KITE_SHIELD:
+        tile = TILEP_HAND2_KITE_SHIELD;
+        break;
+    case ARM_BUCKLER:
+        tile = TILEP_HAND2_BUCKLER;
+        break;
+    case ARM_TOWER_SHIELD:
+        tile = TILEP_HAND2_TOWER_SHIELD;
+        break;
+    case ARM_ORB:
+        tile = TILEP_HAND2_ORB;
+        break;
     }
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t mirror_weapon(const item_def &weapon)
@@ -288,22 +269,10 @@ tileidx_t tilep_equ_armour(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
-    if (item.sub_type == ARM_ROBE)
-    {
-        return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
-                       TILEP_BODY_ROBE_LAST_NORM);
-    }
-
     tileidx_t tile = 0;
     switch (item.sub_type)
     {
+    case ARM_ROBE:                  tile = TILEP_BODY_ROBE_NORMAL; break;
     case ARM_LEATHER_ARMOUR:        tile = TILEP_BODY_LEATHER_ARMOUR; break;
     case ARM_RING_MAIL:             tile = TILEP_BODY_RINGMAIL; break;
     case ARM_CHAIN_MAIL:            tile = TILEP_BODY_CHAINMAIL; break;
@@ -328,7 +297,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     default:                        tile = 0;
     }
 
-    return tileidx_enchant_equ(item, tile, true);
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_cloak(const item_def &item)
@@ -339,25 +308,18 @@ tileidx_t tilep_equ_cloak(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
-        case ARM_CLOAK:
-            return _modrng(item.rnd, TILEP_CLOAK_FIRST_NORM,
-                           TILEP_CLOAK_LAST_NORM);
-
-        case ARM_SCARF:
-            return _modrng(item.rnd, TILEP_CLOAK_SCARF_FIRST_NORM,
-                           TILEP_CLOAK_SCARF_LAST_NORM);
+    case ARM_CLOAK:
+        tile = TILEP_CLOAK_NORMAL;
+        break;
+    case ARM_SCARF:
+        tile = TILEP_CLOAK_SCARF_NORMAL;
+        break;
     }
 
-    return 0;
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_helm(const item_def &item)
@@ -368,54 +330,44 @@ tileidx_t tilep_equ_helm(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-
-        // Although there shouldn't be any, just in case
-        // unhandled artefacts fall through to defaults...
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
 #if TAG_MAJOR_VERSION == 34
-        case ARM_CAP:
+    case ARM_CAP:
 #endif
-        case ARM_HAT:
+    case ARM_HAT:
+    {
+        auto equip_tile = tileidx_enchant_equ(item, TILE_THELM_HAT);
+        if (item.props.exists(ITEM_TILE_KEY))
+            equip_tile = item.props[ITEM_TILE_KEY].get_short();
+        switch (equip_tile)
         {
-            auto equip_tile = tileidx_enchant_equ(item, TILE_THELM_HAT, false);
-            if (item.props.exists(ITEM_TILE_KEY))
-                equip_tile = item.props[ITEM_TILE_KEY].get_short();
-            switch (equip_tile)
-            {
-            case TILE_THELM_ARCHER:
-                return TILEP_HELM_ARCHER;
-            case TILE_THELM_ARCHER2:
-                return TILEP_HELM_ARCHER2;
-            case TILE_THELM_HAT_EXPLORER:
-                return TILEP_HELM_EXPLORER;
-            case TILE_THELM_HAT_EXPLORER2:
-                return TILEP_HELM_EXPLORER2;
-            case TILE_THELM_HAT_SANTA:
-                return TILEP_HELM_SANTA;
-            case TILE_THELM_HAT_APRIL1:
-                return TILEP_HELM_APRIL1;
-            case TILE_THELM_HAT_APRIL2:
-                return TILEP_HELM_APRIL2;
-            default:
-                return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
-                               TILEP_HELM_HAT_LAST_NORM);
-            }
+        case TILE_THELM_ARCHER:
+            return TILEP_HELM_ARCHER;
+        case TILE_THELM_ARCHER2:
+            return TILEP_HELM_ARCHER2;
+        case TILE_THELM_HAT_EXPLORER:
+            return TILEP_HELM_EXPLORER;
+        case TILE_THELM_HAT_EXPLORER2:
+            return TILEP_HELM_EXPLORER2;
+        case TILE_THELM_HAT_SANTA:
+            return TILEP_HELM_SANTA;
+        case TILE_THELM_HAT_APRIL1:
+            return TILEP_HELM_APRIL1;
+        case TILE_THELM_HAT_APRIL2:
+            return TILEP_HELM_APRIL2;
+        default:
+            tile = TILEP_HELM_HAT_NORMAL;
+            break;
         }
-
-        case ARM_HELMET:
-            return _modrng(item.rnd, TILEP_HELM_FIRST_NORM,
-                           TILEP_HELM_LAST_NORM);
     }
 
-    return 0;
+    case ARM_HELMET:
+        tile = TILEP_HELM_NORMAL;
+        break;
+    }
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_gloves(const item_def &item)
@@ -426,14 +378,7 @@ tileidx_t tilep_equ_gloves(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
-    return _modrng(item.rnd, TILEP_ARM_FIRST_NORM, TILEP_ARM_LAST_NORM);
+    return tileidx_enchant_equ(item, TILEP_ARM_NORMAL);
 }
 
 tileidx_t tilep_equ_boots(const item_def &item)
@@ -444,7 +389,7 @@ tileidx_t tilep_equ_boots(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    auto equip_tile = tileidx_enchant_equ(item, TILE_ARM_BOOTS, true);
+    auto equip_tile = tileidx_enchant_equ(item, TILE_ARM_BOOTS);
     switch (equip_tile)
     {
         case TILE_ARM_BOOTS_APRIL1:
@@ -455,26 +400,18 @@ tileidx_t tilep_equ_boots(const item_def &item)
             break;
     }
 
-    if (is_unrandom_artefact(item))
+    tileidx_t tile = 0;
+    switch (item.sub_type)
     {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
+    case ARM_BARDING:
+        tile = TILEP_BOOTS_BARDING;
+        break;
+    case ARM_BOOTS:
+        tile = TILEP_BOOTS_NORMAL;
+        break;
     }
 
-    if (item.sub_type == ARM_BARDING)
-    {
-        if (is_artefact(item))
-            return TILEP_BOOTS_BARDING_RANDART;
-        if (item.flags & ISFLAG_COSMETIC_MASK)
-            return TILEP_BOOTS_BARDING_EGO;
-        return TILEP_BOOTS_BARDING;
-    }
-
-    if (item.sub_type != ARM_BOOTS)
-        return 0;
-
-    return _modrng(item.rnd, TILEP_BOOTS_FIRST_NORM, TILEP_BOOTS_LAST_NORM);
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tileidx_player()
@@ -1257,7 +1194,7 @@ void tilep_fill_order_and_flags(const dolls_data &doll, int (&order)[TILEP_PART_
     }
 
     // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
+    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_OFFSET)
     {
         order[4] = order[5];
         order[5] = order[6];

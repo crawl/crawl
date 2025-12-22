@@ -1923,11 +1923,6 @@ static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 }
 #endif
 
-static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
-{
-    return first + mod % (last - first + 1);
-}
-
 #ifdef USE_TILE
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
@@ -3026,7 +3021,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_BOOMERANG:
         switch (brand)
         {
-        default:             return TILE_MI_BOOMERANG + 1;
+        default:             return TILE_MI_BOOMERANG_MAGIC;
         case 0:              return TILE_MI_BOOMERANG;
         case SPMSL_SILVER:   return TILE_MI_BOOMERANG_SILVER;
         }
@@ -3034,7 +3029,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_DART:
         switch (brand)
         {
-        default:                return TILE_MI_DART + 1;
+        default:                return TILE_MI_DART_MAGIC;
         case 0:                 return TILE_MI_DART;
         case SPMSL_POISONED:    return TILE_MI_DART_POISONED;
         case SPMSL_CURARE:      return TILE_MI_DART_CURARE;
@@ -3046,7 +3041,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_ARROW:
         switch (brand)
         {
-        default:             return TILE_MI_ARROW + 1;
+        default:             return TILE_MI_ARROW_MAGIC;
         case 0:              return TILE_MI_ARROW;
 #if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
@@ -3057,7 +3052,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_BOLT:
         switch (brand)
         {
-        default:             return TILE_MI_BOLT + 1;
+        default:             return TILE_MI_BOLT_MAGIC;
         case 0:              return TILE_MI_BOLT;
 #if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
@@ -3069,7 +3064,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_SLING_BULLET:
         switch (brand)
         {
-        default:             return TILE_MI_SLING_BULLET + 1;
+        default:             return TILE_MI_SLING_BULLET_MAGIC;
         case 0:              return TILE_MI_SLING_BULLET;
 #if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
@@ -3080,7 +3075,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_JAVELIN:
         switch (brand)
         {
-        default:             return TILE_MI_JAVELIN + 1;
+        default:             return TILE_MI_JAVELIN_MAGIC;
         case 0:              return TILE_MI_JAVELIN;
 #if TAG_MAJOR_VERSION == 34
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
@@ -3501,8 +3496,6 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item, UNRAND_WYRMBANE))
             return _tileidx_wyrmbane(item.plus);
-        else if (is_unrandom_artefact(item))
-            return _tileidx_unrand_artefact(find_unrandart_index(item));
         else
             return _tileidx_weapon(item);
 
@@ -3510,10 +3503,7 @@ tileidx_t tileidx_item(const item_def &item)
         return _tileidx_missile(item);
 
     case OBJ_ARMOUR:
-        if (is_unrandom_artefact(item))
-            return _tileidx_unrand_artefact(find_unrandart_index(item));
-        else
-            return _tileidx_armour(item);
+        return _tileidx_armour(item);
 
     case OBJ_WANDS:
         if (item.is_identified())
@@ -3574,16 +3564,11 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_POTION_OFFSET + item.subtype_rnd % NDSC_POT_PRI;
 
     case OBJ_BOOKS:
-        if (is_random_artefact(item))
-        {
-            const int offset = rnd % tile_main_count(TILE_BOOK_RANDART_OFFSET);
-            return TILE_BOOK_RANDART_OFFSET + offset;
-        }
-
+    {
+        tileidx_t tile = TILE_BOOK;
         if (item.sub_type == BOOK_MANUAL)
-            return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
-
-        if (item.sub_type == BOOK_PARCHMENT)
+            tile = TILE_BOOK_MANUAL;
+        else if (item.sub_type == BOOK_PARCHMENT)
         {
             const int lvl = spell_difficulty(static_cast<spell_type>(item.plus));
             if (lvl >= 8)
@@ -3593,9 +3578,8 @@ tileidx_t tileidx_item(const item_def &item)
             else
                 return TILE_PARCHMENT_LOW;
         }
-
-        return TILE_BOOK_OFFSET
-               + rnd % tile_main_count(TILE_BOOK_OFFSET);
+        return tileidx_enchant_equ(item, tile);
+    }
 
     case OBJ_STAVES:
         if (is_artefact(item))
@@ -4984,11 +4968,6 @@ int enchant_to_int(const item_def &item)
     if (is_random_artefact(item))
         return 4;
 
-    // Dragon scales and troll hides can't have egos.
-    // Only apply their special tiles to randarts.
-    if (armour_is_hide(item))
-        return 0;
-
     switch (item.flags & ISFLAG_COSMETIC_MASK)
     {
         default:
@@ -5002,116 +4981,67 @@ int enchant_to_int(const item_def &item)
     }
 }
 
-tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
+
+
+tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
 {
-    static const int etable[5][5] =
-    {
-      {0, 0, 0, 0, 0},  // all variants look the same
-      {0, 1, 1, 1, 1},  // normal, ego/randart
-      {0, 1, 1, 1, 2},  // normal, ego, randart
-      {0, 1, 1, 2, 3},  // normal, ego (shiny/runed), ego (glowing), randart
-      {0, 1, 2, 3, 4}   // normal, shiny, runed, glowing, randart
-    };
-
     const int etype = enchant_to_int(item);
+    const bool is_player_tile = tile >= TILE_MAIN_MAX;
 
-    // XXX: only helmets, hats, orbs, robes and boots have variants, but it would be nice
-    // if this weren't hardcoded.
+    if (is_unrandom_artefact(item))
+    {
+        int unrand_index = find_unrandart_index(item);
+        if (is_player_tile)
+        {
+            const tileidx_t unrand_tile = unrandart_to_doll_tile(unrand_index);
+            if (unrand_tile)
+                return unrand_tile;
+        }
+        else
+        {
+            const tileidx_t tile = unrandart_to_tile(unrand_index);
+            return tile ? tile : tileidx_t{TILE_TODO};
+        }
+    }
+
     if (tile == TILE_THELM_HAT)
     {
         switch (etype)
         {
-            case 1:
-            case 2:
-            case 3:
-                if (item.rnd % 2 && today_is_serious())
-                    tile = TILE_THELM_HAT_APRIL1;
-                else
-                    tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
-                break;
-            case 4:
-                if (item.rnd % 2 && december_holidays())
-                    tile = TILE_THELM_HAT_SANTA;
-                else if (item.rnd % 2 && today_is_serious())
-                    tile = (item.rnd % 3) ? TILE_THELM_CAP_JESTER : TILE_THELM_HAT_APRIL2;
-                else
-                    tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
-                break;
-            default:
-                tile = _modrng(item.rnd, TILE_THELM_HAT_FIRST, TILE_THELM_HAT_LAST);
+        case 1:
+        case 2:
+        case 3:
+            if (item.rnd % 2 && today_is_serious())
+                tile = TILE_THELM_HAT_APRIL1;
+            break;
+        case 4:
+            if (item.rnd % 2 && december_holidays())
+                tile = TILE_THELM_HAT_SANTA;
+            else if (item.rnd % 2 && today_is_serious())
+                tile = (item.rnd % 3) ? TILE_THELM_CAP_JESTER : TILE_THELM_HAT_APRIL2;
+            break;
         }
     }
-
-    if (tile == TILE_THELM_HELM)
+    else if (tile == TILE_ARM_BOOTS)
     {
         switch (etype)
         {
-            case 1:
-            case 2:
-            case 3:
-                tile = _modrng(item.rnd, TILE_THELM_EGO_FIRST, TILE_THELM_EGO_LAST);
-                break;
-            case 4:
-                tile = _modrng(item.rnd, TILE_THELM_ART_FIRST, TILE_THELM_ART_LAST);
-                break;
-            default:
-                tile = _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
+        case 1:
+        case 2:
+        case 3:
+            if (item.rnd % 2 && today_is_serious())
+                tile = (item.rnd % 3) ? TILE_ARM_BOOTS_APRIL1 : TILE_ARM_BOOTS_APRIL2;
+            break;
         }
-        return tile;
     }
 
-    if (tile == TILE_ARM_ORB && etype == 4)
-        return _modrng(item.rnd, TILE_ARM_ORB_ART_FIRST, TILE_ARM_ORB_ART_LAST);
-
-    if (tile == TILE_ARM_ROBE)
+    if (is_player_tile)
     {
-        switch (etype)
-        {
-            case 1:
-            case 2:
-            case 3:
-                tile = _modrng(item.rnd, TILE_ARM_ROBE_EGO_FIRST, TILE_ARM_ROBE_EGO_LAST);
-                break;
-            case 4:
-                tile = _modrng(item.rnd, TILE_ARM_ROBE_ART_FIRST, TILE_ARM_ROBE_ART_LAST);
-                break;
-            default:
-                tile = _modrng(item.rnd, TILE_ARM_ROBE_FIRST, TILE_ARM_ROBE_LAST);
-        }
-        return tile;
+        tile = tile_player_enchanted(tile, etype);
+        return tile + item.rnd % tile_player_count(tile);
     }
-
-    if (tile == TILE_ARM_BOOTS)
-    {
-        switch (etype)
-        {
-            case 1:
-            case 2:
-            case 3:
-                if (item.rnd % 2 && today_is_serious())
-                    tile = (item.rnd % 3) ? TILE_ARM_BOOTS_APRIL1 : TILE_ARM_BOOTS_APRIL2;
-                else
-                    tile = _modrng(item.rnd, TILE_ARM_BOOTS_EGO_FIRST, TILE_ARM_BOOTS_EGO_LAST);
-                break;
-            case 4:
-                tile = _modrng(item.rnd, TILE_ARM_BOOTS_ART_FIRST, TILE_ARM_BOOTS_ART_LAST);
-                break;
-            default:
-                tile = _modrng(item.rnd, TILE_ARM_BOOTS_FIRST, TILE_ARM_BOOTS_LAST);
-        }
-        return tile;
-    }
-
-    int idx;
-    if (player)
-        idx = tile_player_count(tile) - 1;
-    else
-        idx = tile_main_count(tile) - 1;
-    ASSERT(idx < 5);
-
-    tile += etable[idx][etype];
-
-    return tile;
+    tile = tile_main_enchanted(tile, etype);
+    return tile + item.rnd % tile_main_count(tile);
 }
 
 #ifdef USE_TILE

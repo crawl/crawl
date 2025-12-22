@@ -76,8 +76,7 @@ set<tileidx_t> status_icons_for_player();
 // Return the level of enchantment as an int. None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
-tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,
-                              bool player = false);
+tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile);
 
 void bind_item_tile(item_def &item);
 

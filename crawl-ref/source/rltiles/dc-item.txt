@@ -1,15 +1,27 @@
 # A note on variations. To create additional variations for weapons or armour,
-# simply create 1-5 images, e.g.:
+# use the %enchant_variation command e.g.:
 #
 #    weapon_normal WEP_SOME_WEAPON
-#    weapon_shiny
-#    weapon_runed
-#    weapon_glowing
-#    weapon_randart
+#    %enchant_variation WEP_SOME_WEAPON shiny
+#    weapon_shiny WEP_SOME_WEAPON_SHINY
+#    %enchant_variation WEP_SOME_WEAPON runed
+#    weapon_runed WEP_SOME_WEAPON_RUNED
+#    %enchant_variation WEP_SOME_WEAPON glowing
+#    weapon_glowing WEP_SOME_WEAPON_GLOWING
+#    %enchant_variation WEP_SOME_WEAPON randart
+#    weapon_randart WEP_SOME_WEAPON_RANDART
 #
-# If only the first linrune has a define on it, then the following images will be
-# considered as variations. If you don't have five, images will be reused for
-# multiple types. See tilepick.cc for more details.
+# You can also use the same tile for multiple variations e.g.:
+#
+#    %enchant_variation WEP_SOME_WEAPON shiny runed glowing randart
+#    weapon_magic WEP_SOME_WEAPON_MAGIC
+#
+# You can also give a single variation mutliple tiles that are chosen from
+# randomly when the item is created e.g. to have two randart tiles:
+#
+#    %enchant_variation WEP_SOME_WEAPON randart
+#    weapon_randart1 WEP_SOME_WEAPON_RANDART
+#    weapon_randart2
 
 ##### Artefacts (fixed and unrandart)
 %include dc-unrand.txt
@@ -24,133 +36,208 @@ urand_wyrmbane4 UNRAND_WYRMBANE4
 %rim 0
 ##Maces and Flails
 club WPN_CLUB
-club2
+%enchant_variation WPN_CLUB shiny runed glowing randart
+club2 WPN_CLUB_MAGIC
 mace1 WPN_MACE
-mace2
-mace3
+%enchant_variation WPN_MACE shiny runed glowing
+mace2 WPN_MACE_MAGIC
+%enchant_variation WPN_MACE randart
+mace3 WPN_MACE_RANDART
 mace_large1 WPN_GREAT_MACE
-mace_large2
-mace_large3
+%enchant_variation WPN_GREAT_MACE shiny runed glowing
+mace_large2 WPN_GREAT_MACE_MAGIC
+%enchant_variation WPN_GREAT_MACE randart
+mace_large3 WPN_GREAT_MACE_RANDART
 flail1 WPN_FLAIL
-flail2
-flail3
+%enchant_variation WPN_FLAIL shiny runed glowing
+flail2 WPN_FLAIL_MAGIC
+%enchant_variation WPN_FLAIL randart
+flail3 WPN_FLAIL_RANDART
 dire_flail1 WPN_DIRE_FLAIL
-dire_flail2
-dire_flail3
+%enchant_variation WPN_DIRE_FLAIL shiny runed glowing
+dire_flail2 WPN_DIRE_FLAIL_MAGIC
+%enchant_variation WPN_DIRE_FLAIL randart
+dire_flail3 WPN_DIRE_FLAIL_RANDART
 morningstar1 WPN_MORNINGSTAR
-morningstar2
-morningstar3
+%enchant_variation WPN_MORNINGSTAR shiny runed glowing
+morningstar2 WPN_MORNINGSTAR_MAGIC
+%enchant_variation WPN_MORNINGSTAR randart
+morningstar3 WPN_MORNINGSTAR_RANDART
 eveningstar1 WPN_EVENINGSTAR
-eveningstar2
-eveningstar3
+%enchant_variation WPN_EVENINGSTAR shiny runed glowing
+eveningstar2 WPN_EVENINGSTAR_MAGIC
+%enchant_variation WPN_EVENINGSTAR randart
+eveningstar3 WPN_EVENINGSTAR_RANDART
 hammer1 WPN_HAMMER
-hammer2
-hammer3
+%enchant_variation WPN_HAMMER shiny runed glowing
+hammer2 WPN_HAMMER_MAGIC
+%enchant_variation WPN_HAMMER shiny runed glowing randart
+hammer3 WPN_HAMMER_RANDART
 bullwhip WPN_WHIP
-bullwhip2
-bullwhip3
+%enchant_variation WPN_WHIP shiny runed glowing
+bullwhip2 WPN_WHIP_MAGIC
+%enchant_variation WPN_WHIP randart
+bullwhip3 WPN_WHIP_RANDART
 giant_club WPN_GIANT_CLUB
-giant_club2
-giant_club3
+%enchant_variation WPN_GIANT_CLUB shiny runed glowing
+giant_club2 WPN_GIANT_CLUB_MAGIC
+%enchant_variation WPN_GIANT_CLUB randart
+giant_club3 WPN_GIANT_CLUB_RANDART
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
-giant_spiked_club2
-giant_spiked_club3
+%enchant_variation WPN_GIANT_SPIKED_CLUB shiny runed glowing
+giant_spiked_club2 WPN_GIANT_SPIKED_CLUB_MAGIC
+%enchant_variation WPN_GIANT_SPIKED_CLUB randart
+giant_spiked_club3 WPN_GIANT_SPIKED_CLUB_RANDART
 demon_whip WPN_DEMON_WHIP
-demon_whip2
-demon_whip3
+%enchant_variation WPN_DEMON_WHIP shiny runed glowing
+demon_whip2 WPN_DEMON_WHIP_MAGIC
+%enchant_variation WPN_DEMON_WHIP randart
+demon_whip3 WPN_DEMON_WHIP_RANDART
 sacred_scourge WPN_SACRED_SCOURGE
 
 ##Short Blades
 dagger WPN_DAGGER
-dagger2
-dagger3
+%enchant_variation WPN_DAGGER shiny runed glowing
+dagger2 WPN_DAGGER_MAGIC
+%enchant_variation WPN_DAGGER randart
+dagger3 WPN_DAGGER_RANDART
 short_sword1 WPN_SHORT_SWORD
-short_sword2
-short_sword3
+%enchant_variation WPN_SHORT_SWORD shiny runed glowing
+short_sword2 WPN_SHORT_SWORD_MAGIC
+%enchant_variation WPN_SHORT_SWORD randart
+short_sword3 WPN_SHORT_SWORD_RANDART
 rapier1 WPN_RAPIER
-rapier2
-rapier3
+%enchant_variation WPN_RAPIER shiny runed glowing
+rapier2 WPN_RAPIER_MAGIC
+%enchant_variation WPN_RAPIER randart
+rapier3 WPN_RAPIER_RANDART
 quickblade1 WPN_QUICK_BLADE
-quickblade2
-quickblade3
+%enchant_variation WPN_QUICK_BLADE shiny runed glowing
+quickblade2 WPN_QUICK_BLADE_MAGIC
+%enchant_variation WPN_QUICK_BLADE randart
+quickblade3 WPN_QUICK_BLADE_RANDART
 
 ##Long Blades
 falchion1 WPN_FALCHION
-falchion2
-falchion3
+%enchant_variation WPN_FALCHION shiny runed glowing
+falchion2 WPN_FALCHION_MAGIC
+%enchant_variation WPN_FALCHION randart
+falchion3 WPN_FALCHION_RANDART
 scimitar1 WPN_SCIMITAR
-scimitar2
-scimitar3
+%enchant_variation WPN_SCIMITAR shiny runed glowing
+scimitar2 WPN_SCIMITAR_MAGIC
+%enchant_variation WPN_SCIMITAR randart
+scimitar3 WPN_SCIMITAR_RANDART
 long_sword1 WPN_LONG_SWORD
-long_sword2
-long_sword3
+%enchant_variation WPN_LONG_SWORD shiny runed glowing
+long_sword2 WPN_LONG_SWORD_MAGIC
+%enchant_variation WPN_LONG_SWORD randart
+long_sword3 WPN_LONG_SWORD_RANDART
 greatsword1 WPN_GREAT_SWORD
-greatsword2
-greatsword3
+%enchant_variation WPN_GREAT_SWORD shiny runed glowing
+greatsword2 WPN_GREAT_SWORD_MAGIC
+%enchant_variation WPN_GREAT_SWORD randart
+greatsword3 WPN_GREAT_SWORD_RANDART
 double_sword WPN_DOUBLE_SWORD
-double_sword2
-double_sword3
+%enchant_variation WPN_DOUBLE_SWORD shiny runed glowing
+double_sword2 WPN_DOUBLE_SWORD_MAGIC
+%enchant_variation WPN_DOUBLE_SWORD randart
+double_sword3 WPN_DOUBLE_SWORD_RANDART
 triple_sword WPN_TRIPLE_SWORD
-triple_sword2
-triple_sword3
+%enchant_variation WPN_TRIPLE_SWORD shiny runed glowing
+triple_sword2 WPN_TRIPLE_SWORD_MAGIC
+%enchant_variation WPN_TRIPLE_SWORD randart
+triple_sword3 WPN_TRIPLE_SWORD_RANDART
 demon_blade WPN_DEMON_BLADE
-demon_blade2
-demon_blade3
+%enchant_variation WPN_DEMON_BLADE shiny runed glowing
+demon_blade2 WPN_DEMON_BLADE_MAGIC
+%enchant_variation WPN_DEMON_BLADE randart
+demon_blade3 WPN_DEMON_BLADE_RANDART
 blessed_blade WPN_BLESSED_BLADE
 
 ##Axes
 hand_axe1 WPN_HAND_AXE
-hand_axe2
-hand_axe3
+%enchant_variation WPN_HAND_AXE shiny runed glowing
+hand_axe2 WPN_HAND_AXE_MAGIC
+%enchant_variation WPN_HAND_AXE randart
+hand_axe3 WPN_HAND_AXE_RANDART
 war_axe1 WPN_WAR_AXE
-war_axe2
-war_axe3
+%enchant_variation WPN_WAR_AXE shiny runed glowing
+war_axe2 WPN_WAR_AXE_MAGIC
+%enchant_variation WPN_WAR_AXE randart
+war_axe3 WPN_WAR_AXE_RANDART
 broad_axe1 WPN_BROAD_AXE
-broad_axe2
-broad_axe3
+%enchant_variation WPN_BROAD_AXE shiny runed glowing
+broad_axe2 WPN_BROAD_AXE_MAGIC
+%enchant_variation WPN_BROAD_AXE randart
+broad_axe3 WPN_BROAD_AXE_RANDART
 battle_axe1 WPN_BATTLEAXE
-battle_axe2
-battle_axe3
+%enchant_variation WPN_BATTLEAXE shiny runed glowing
+battle_axe2 WPN_BATTLEAXE_MAGIC
+%enchant_variation WPN_BATTLEAXE randart
+battle_axe3 WPN_BATTLEAXE_RANDART
 executioner_axe1 WPN_EXECUTIONERS_AXE
-executioner_axe2
-executioner_axe3
+%enchant_variation WPN_EXECUTIONERS_AXE shiny runed glowing
+executioner_axe2 WPN_EXECUTIONERS_AXE_MAGIC
+%enchant_variation WPN_EXECUTIONERS_AXE randart
+executioner_axe3 WPN_EXECUTIONERS_AXE_RANDART
 
 ##Polearms
 spear1 WPN_SPEAR
-spear2
-spear3
+%enchant_variation WPN_SPEAR shiny runed glowing
+spear2 WPN_SPEAR_MAGIC
+%enchant_variation WPN_SPEAR randart
+spear3 WPN_SPEAR_RANDART
 trident1 WPN_TRIDENT
-trident2
-trident3
+%enchant_variation WPN_TRIDENT shiny runed glowing
+trident2 WPN_TRIDENT_MAGIC
+%enchant_variation WPN_TRIDENT randart
+trident3 WPN_TRIDENT_RANDART
 halberd1 WPN_HALBERD
-halberd2
-halberd3
+%enchant_variation WPN_HALBERD shiny runed glowing
+halberd2 WPN_HALBERD_MAGIC
+%enchant_variation WPN_HALBERD randart
+halberd3 WPN_HALBERD_RANDART
 scythe1 WPN_SCYTHE
-scythe2
-scythe3
+%enchant_variation WPN_SCYTHE shiny runed glowing
+scythe2 WPN_SCYTHE_MAGIC
+%enchant_variation WPN_SCYTHE randart
+scythe3 WPN_SCYTHE_RANDART
 glaive1 WPN_GLAIVE
-glaive2
-glaive3
+%enchant_variation WPN_GLAIVE shiny runed glowing
+glaive2 WPN_GLAIVE_MAGIC
+%enchant_variation WPN_GLAIVE randart
+glaive3 WPN_GLAIVE_RANDART
 bardiche1 WPN_BARDICHE
-bardiche2
-bardiche3
+%enchant_variation WPN_BARDICHE shiny runed glowing
+bardiche2 WPN_BARDICHE_MAGIC
+%enchant_variation WPN_BARDICHE randart
+bardiche3 WPN_BARDICHE_RANDART
 partisan1 WPN_PARTISAN
-partisan2
-partisan3
+%enchant_variation WPN_PARTISAN shiny runed glowing
+partisan2 WPN_PARTISAN_MAGIC
+%enchant_variation WPN_PARTISAN randart
+partisan3 WPN_PARTISAN_RANDART
 
 demon_trident WPN_DEMON_TRIDENT
-demon_trident2
-demon_trident3
+%enchant_variation WPN_DEMON_TRIDENT shiny runed glowing
+demon_trident2 WPN_DEMON_TRIDENT_MAGIC
+%enchant_variation WPN_DEMON_TRIDENT randart
+demon_trident3 WPN_DEMON_TRIDENT_RANDART
 trishula WPN_TRISHULA
 
 ##Staves
 staff WPN_STAFF
 quarterstaff WPN_QUARTERSTAFF
-quarterstaff2
-quarterstaff3
+%enchant_variation WPN_QUARTERSTAFF shiny runed glowing
+quarterstaff2 WPN_QUARTERSTAFF_MAGIC
+%enchant_variation WPN_QUARTERSTAFF randart
+quarterstaff3 WPN_QUARTERSTAFF_RANDART
 lajatang1 WPN_LAJATANG
-lajatang2
-lajatang3
+%enchant_variation WPN_LAJATANG shiny runed glowing
+lajatang2 WPN_LAJATANG_MAGIC
+%enchant_variation WPN_LAJATANG randart
+lajatang3 WPN_LAJATANG_RANDART
 
 staff_mummy WPN_STAFF_MUMMY
 xmas-scythe WPN_XMAS_SCYTHE
@@ -162,31 +249,45 @@ april_staff2 WPN_APRIL_STAFF2
 ##Ranged
 %sdir item/weapon/ranged
 blowgun1 WPN_BLOWGUN
-blowgun2
+%enchant_variation WPN_BLOWGUN shiny runed glowing randart
+blowgun2 WPN_BLOWGUN_MAGIC
 
 sling1 WPN_SLING
-sling2
-sling3
+%enchant_variation WPN_SLING shiny runed glowing
+sling2 WPN_SLING_MAGIC
+%enchant_variation WPN_SLING randart
+sling3 WPN_SLING_RANDART
 
 %rim 0
 shortbow1 WPN_SHORTBOW
-shortbow2
-shortbow3
+%enchant_variation WPN_SHORTBOW shiny runed glowing
+shortbow2 WPN_SHORTBOW_MAGIC
+%enchant_variation WPN_SHORTBOW randart
+shortbow3 WPN_SHORTBOW_RANDART
 orcbow1 WPN_ORCBOW
-orcbow2
-orcbow3
+%enchant_variation WPN_ORCBOW shiny runed glowing
+orcbow2 WPN_ORCBOW_MAGIC
+%enchant_variation WPN_ORCBOW randart
+orcbow3 WPN_ORCBOW_RANDART
 longbow1 WPN_LONGBOW
-longbow2
-longbow3
+%enchant_variation WPN_LONGBOW shiny runed glowing
+longbow2 WPN_LONGBOW_MAGIC
+%enchant_variation WPN_LONGBOW randart
+longbow3 WPN_LONGBOW_RANDART
 
 hand_cannon WPN_HAND_CANNON
-hand_cannon2
-hand_cannon3
+%enchant_variation WPN_HAND_CANNON shiny runed glowing
+hand_cannon2 WPN_HAND_CANNON_MAGIC
+%enchant_variation WPN_HAND_CANNON randart
+hand_cannon3 WPN_HAND_CANNON_RANDART
 arbalest1 WPN_ARBALEST
-arbalest2
-arbalest3
+%enchant_variation WPN_ARBALEST shiny runed glowing
+arbalest2 WPN_ARBALEST_MAGIC
+%enchant_variation WPN_ARBALEST randart
+arbalest3 WPN_ARBALEST_RANDART
 triple_crossbow WPN_TRIPLE_CROSSBOW
-triple_crossbow2
+%enchant_variation WPN_TRIPLE_CROSSBOW shiny runed glowing randart
+triple_crossbow2 WPN_TRIPLE_CROSSBOW_MAGIC
 
 %sdir item/weapon/brands
 %rim 0
@@ -264,25 +365,34 @@ stone MI_STONE
 effect/stone0 MI_STONE0
 
 sling_bullet1 MI_SLING_BULLET
-sling_bullet2
+%enchant_variation MI_SLING_BULLET shiny runed glowing randart
+sling_bullet2 MI_SLING_BULLET_MAGIC
 steel_sling_bullet1 MI_SLING_BULLET_STEEL
-steel_sling_bullet2
+%enchant_variation MI_SLING_BULLET_STEEL shiny runed glowing randart
+steel_sling_bullet2 MI_SLING_BULLET_STEEL_MAGIC
 silver_sling_bullet1 MI_SLING_BULLET_SILVER
-silver_sling_bullet2
+%enchant_variation MI_SLING_BULLET_SILVER shiny runed glowing randart
+silver_sling_bullet2 MI_SLING_BULLET_SILVER_MAGIC
 # flying bullets
 effect/sling_bullet0 MI_SLING_BULLET0
-effect/sling_bullet_runed0
+%enchant_variation MI_SLING_BULLET0 shiny runed glowing randart
+effect/sling_bullet_runed0 MI_SLING_BULLET0_MAGIC
 effect/steel_sling_bullet0 MI_SLING_BULLET_STEEL0
-effect/steel_sling_bullet_runed0
+%enchant_variation MI_SLING_BULLET_STEEL0 shiny runed glowing randart
+effect/steel_sling_bullet_runed0 MI_SLING_BULLET_STEEL0_MAGIC
 effect/silver_sling_bullet0 MI_SLING_BULLET_SILVER0
-effect/silver_sling_bullet_runed0
+%enchant_variation MI_SLING_BULLET_SILVER0 shiny runed glowing randart
+effect/silver_sling_bullet_runed0 MI_SLING_BULLET_SILVER0_MAGIC
 
 arrow1 MI_ARROW
-arrow2
+%enchant_variation MI_ARROW shiny runed glowing randart
+arrow2 MI_ARROW_MAGIC
 steel_arrow1 MI_ARROW_STEEL
-steel_arrow2
+%enchant_variation MI_ARROW_STEEL shiny runed glowing randart
+steel_arrow2 MI_ARROW_STEEL_MAGIC
 silver_arrow1 MI_ARROW_SILVER
-silver_arrow2
+%enchant_variation MI_ARROW_SILVER shiny runed glowing randart
+silver_arrow2 MI_ARROW_SILVER_MAGIC
 # flying arrows
 effect/arrow0 MI_ARROW0
 effect/arrow1 MI_ARROW1
@@ -294,11 +404,14 @@ effect/arrow6 MI_ARROW6
 effect/arrow7 MI_ARROW7
 
 crossbow_bolt1 MI_BOLT
-crossbow_bolt2
+%enchant_variation MI_BOLT shiny runed glowing randart
+crossbow_bolt2 MI_BOLT_MAGIC
 steel_crossbow_bolt1 MI_BOLT_STEEL
-steel_crossbow_bolt2
+%enchant_variation MI_BOLT_STEEL shiny runed glowing randart
+steel_crossbow_bolt2 MI_BOLT_STEEL_MAGIC
 silver_crossbow_bolt1 MI_BOLT_SILVER
-silver_crossbow_bolt2
+%enchant_variation MI_BOLT_SILVER shiny runed glowing randart
+silver_crossbow_bolt2 MI_BOLT_SILVER_MAGIC
 # flying bolts
 effect/bolt0 MI_BOLT0
 effect/bolt1 MI_BOLT1
@@ -311,7 +424,8 @@ effect/bolt7 MI_BOLT7
 
 %rim 0
 boomerang1 MI_BOOMERANG
-boomerang2
+%enchant_variation MI_BOOMERANG shiny runed glowing randart
+boomerang2 MI_BOOMERANG_MAGIC
 silver_boomerang MI_BOOMERANG_SILVER
 # flying boomerangs
 effect/boomerang0 MI_BOOMERANG0
@@ -321,7 +435,8 @@ effect/boomerang3 MI_BOOMERANG3
 
 %rim 1
 dart1 MI_DART
-dart2
+%enchant_variation MI_DART shiny runed glowing randart
+dart2 MI_DART_MAGIC
 dart-a MI_DART_BLINDING
 dart-c MI_DART_CURARE
 dart-d MI_DART_FRENZY
@@ -340,11 +455,14 @@ effect/needle7 MI_DART7
 
 %rim 0
 javelin1 MI_JAVELIN
-javelin2
+%enchant_variation MI_JAVELIN shiny runed glowing randart
+javelin2 MI_JAVELIN_MAGIC
 steel_javelin1 MI_JAVELIN_STEEL
-steel_javelin2
+%enchant_variation MI_JAVELIN_STEEL shiny runed glowing randart
+steel_javelin2 MI_JAVELIN_STEEL_MAGIC
 silver_javelin1 MI_JAVELIN_SILVER
-silver_javelin2
+%enchant_variation MI_JAVELIN_SILVER shiny runed glowing randart
+silver_javelin2 MI_JAVELIN_SILVER_MAGIC
 %rim 1
 # flying javelins
 effect/javelin0 MI_JAVELIN0
@@ -385,106 +503,149 @@ effect/slug7 MI_SLUG7
 
 ######OBJ_ARMOUR
 %sdir item/armour
-robe1 ARM_ROBE ARM_ROBE_FIRST
-robe2 ARM_ROBE_LAST
-robe_ego1 ARM_ROBE_EGO_FIRST
-robe_ego2 ARM_ROBE_EGO_LAST
-robe_art1 ARM_ROBE_ART_FIRST
-robe_art2 ARM_ROBE_ART_LAST
+robe1 ARM_ROBE
+robe2
+%enchant_variation ARM_ROBE shiny runed glowing
+robe_ego1 ARM_ROBE_MAGIC
+robe_ego2
+%enchant_variation ARM_ROBE randart
+robe_art1 ARM_ROBE_RANDART
+robe_art2
 
 leather_armour1 ARM_LEATHER_ARMOUR
-leather_armour2
-leather_armour3
+%enchant_variation ARM_LEATHER_ARMOUR shiny runed glowing
+leather_armour2 ARM_LEATHER_ARMOUR_MAGIC
+%enchant_variation ARM_LEATHER_ARMOUR randart
+leather_armour3 ARM_LEATHER_ARMOUR_RANDART
 
 ring_mail1 ARM_RING_MAIL
-ring_mail2
-ring_mail3
+%enchant_variation ARM_RING_MAIL shiny runed glowing
+ring_mail2 ARM_RING_MAIL_MAGIC
+%enchant_variation ARM_RING_MAIL randart
+ring_mail3 ARM_RING_MAIL_RANDART
 
 scale_mail1 ARM_SCALE_MAIL
-scale_mail2
-scale_mail3
+%enchant_variation ARM_SCALE_MAIL shiny runed glowing
+scale_mail2 ARM_SCALE_MAIL_MAGIC
+%enchant_variation ARM_SCALE_MAIL randart
+scale_mail3 ARM_SCALE_MAIL_RANDART
 
 chain_mail1 ARM_CHAIN_MAIL
-chain_mail2
-chain_mail3
+%enchant_variation ARM_CHAIN_MAIL shiny runed glowing
+chain_mail2 ARM_CHAIN_MAIL_MAGIC
+%enchant_variation ARM_CHAIN_MAIL randart
+chain_mail3 ARM_CHAIN_MAIL_RANDART
 
 plate1 ARM_PLATE_ARMOUR
-plate2
-plate3
+%enchant_variation ARM_PLATE_ARMOUR shiny runed glowing
+plate2 ARM_PLATE_ARMOUR_MAGIC
+%enchant_variation ARM_PLATE_ARMOUR randart
+plate3 ARM_PLATE_ARMOUR_RANDART
 
 crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
-crystal_plate2
-crystal_plate3
+%enchant_variation ARM_CRYSTAL_PLATE_ARMOUR shiny runed glowing
+crystal_plate2 ARM_CRYSTAL_PLATE_ARMOUR_MAGIC
+%enchant_variation ARM_CRYSTAL_PLATE_ARMOUR randart
+crystal_plate3 ARM_CRYSTAL_PLATE_ARMOUR_RANDART
 
 animal_skin1 ARM_ANIMAL_SKIN
-animal_skin2
-animal_skin3
+%enchant_variation ARM_ANIMAL_SKIN shiny runed glowing
+animal_skin2 ARM_ANIMAL_SKIN_MAGIC
+%enchant_variation ARM_ANIMAL_SKIN randart
+animal_skin3 ARM_ANIMAL_SKIN_RANDART
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-troll_leather_armour_art
+%enchant_variation ARM_TROLL_LEATHER_ARMOUR randart
+troll_leather_armour_art ARM_TROLL_LEATHER_ARMOUR_RANDART
 fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
-fire_dragon_armour_art
+%enchant_variation ARM_FIRE_DRAGON_ARMOUR randart
+fire_dragon_armour_art ARM_FIRE_DRAGON_ARMOUR_RANDART
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
-ice_dragon_armour_art
+%enchant_variation ARM_ICE_DRAGON_ARMOUR randart
+ice_dragon_armour_art ARM_ICE_DRAGON_ARMOUR_RANDART
 steam_dragon_armour ARM_STEAM_DRAGON_ARMOUR
-steam_dragon_armour_art
+%enchant_variation ARM_STEAM_DRAGON_ARMOUR randart
+steam_dragon_armour_art ARM_STEAM_DRAGON_ARMOUR_RANDART
 acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
-acid_dragon_armour_art
+%enchant_variation ARM_ACID_DRAGON_ARMOUR randart
+acid_dragon_armour_art ARM_ACID_DRAGON_ARMOUR_RANDART
 quicksilver_dragon_armour ARM_QUICKSILVER_DRAGON_ARMOUR
-quicksilver_dragon_armour_art
+%enchant_variation ARM_QUICKSILVER_DRAGON_ARMOUR randart
+quicksilver_dragon_armour_art ARM_QUICKSILVER_DRAGON_ARMOUR_RANDART
 storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
-storm_dragon_armour_art
+%enchant_variation ARM_STORM_DRAGON_ARMOUR randart
+storm_dragon_armour_art ARM_STORM_DRAGON_ARMOUR_RANDART
 shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
-shadow_dragon_armour_art
+%enchant_variation ARM_SHADOW_DRAGON_ARMOUR randart
+shadow_dragon_armour_art ARM_SHADOW_DRAGON_ARMOUR_RANDART
 golden_dragon_armour ARM_GOLDEN_DRAGON_ARMOUR
-golden_dragon_armour_art
+%enchant_variation ARM_GOLDEN_DRAGON_ARMOUR randart
+golden_dragon_armour_art ARM_GOLDEN_DRAGON_ARMOUR_RANDART
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
-swamp_dragon_armour_art
+%enchant_variation ARM_SWAMP_DRAGON_ARMOUR randart
+swamp_dragon_armour_art ARM_SWAMP_DRAGON_ARMOUR_RANDART
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
-pearl_dragon_armour_art
+%enchant_variation ARM_PEARL_DRAGON_ARMOUR randart
+pearl_dragon_armour_art ARM_PEARL_DRAGON_ARMOUR_RANDART
 
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER
 
 %rim 1
 cloak1_leather ARM_CLOAK
-cloak2
-cloak3
-cloak4
+%enchant_variation ARM_CLOAK shiny runed
+cloak2 ARM_CLOAK_MAGIC
+%enchant_variation ARM_CLOAK glowing
+cloak3 ARM_CLOAK_GLOWING
+%enchant_variation ARM_CLOAK randart
+cloak4 ARM_CLOAK_RANDART
 
 scarf1 ARM_SCARF
-scarf2_1
-scarf2_2
-scarf2_3
-scarf3
+%enchant_variation ARM_SCARF shiny
+scarf2_1 ARM_SCARF_SHINY
+%enchant_variation ARM_SCARF runed
+scarf2_2 ARM_SCARF_RUNED
+%enchant_variation ARM_SCARF glowing
+scarf2_3 ARM_SCARF_GLOWING
+%enchant_variation ARM_SCARF randart
+scarf3 ARM_SCARF_RANDART
 
 barding1 ARM_BARDING
-barding2
-barding3
+%enchant_variation ARM_BARDING shiny runed glowing
+barding2 ARM_BARDING_MAGIC
+%enchant_variation ARM_BARDING randart
+barding3 ARM_BARDING_RANDART
 
 %sdir item/armour/shields
 
 %rim 0
 orb ARM_ORB
-orb_randart1 ARM_ORB_ART_FIRST
+%enchant_variation ARM_ORB randart
+orb_randart1 ARM_ORB_RANDART
 orb_randart2
 orb_randart3
-orb_randart4 ARM_ORB_ART_LAST
+orb_randart4
 
 buckler1 ARM_BUCKLER
-buckler2
-buckler3
+%enchant_variation ARM_BUCKLER shiny runed glowing
+buckler2 ARM_BUCKLER_MAGIC
+%enchant_variation ARM_BUCKLER randart
+buckler3 ARM_BUCKLER_RANDART
 %rim 1
 
 buckler_spriggan ARM_BUCKLER_SPRIGGAN
 
 kite_shield1 ARM_KITE_SHIELD
-kite_shield2
-kite_shield3
+%enchant_variation ARM_KITE_SHIELD shiny runed glowing
+kite_shield2 ARM_KITE_SHIELD_MAGIC
+%enchant_variation ARM_KITE_SHIELD randart
+kite_shield3 ARM_KITE_SHIELD_RANDART
 
 tower_shield1 ARM_TOWER_SHIELD
-tower_shield2
-tower_shield3
+%enchant_variation ARM_TOWER_SHIELD shiny runed glowing
+tower_shield2 ARM_TOWER_SHIELD_MAGIC
+%enchant_variation ARM_TOWER_SHIELD randart
+tower_shield3 ARM_TOWER_SHIELD_RANDART
 
 kite_shield_dd KITE_SHIELD_DEEP_DWARF
 kite_shield_dd_scion KITE_SHIELD_DEEP_DWARF_SCION
@@ -506,42 +667,54 @@ april_hat1 THELM_HAT_APRIL1
 april_hat2 THELM_HAT_APRIL2
 
 %rim 0
-hat1 THELM_HAT THELM_HAT_FIRST
-hat_archer THELM_ARCHER THELM_HAT_LAST
-hat2 THELM_HAT_EGO_FIRST
-hat_archer2 THELM_ARCHER2 THELM_HAT_EGO_LAST
-hat3 THELM_HAT_ART_FIRST
-wizard_hat THELM_HAT_ART_LAST
+hat1 THELM_HAT
+hat_archer
+%syn THELM_ARCHER
+%enchant_variation THELM_HAT shiny runed glowing
+hat2 THELM_HAT_MAGIC
+hat_archer2
+%syn THELM_ARCHER2
+%enchant_variation THELM_HAT randart
+hat3 THELM_HAT_RANDART
+wizard_hat
 
-helmet1 THELM_HELM THELM_FIRST
+helmet1 THELM_HELM
 helmet2
 helmet3
 helmet4
-helmet5 THELM_LAST
-helmet_ego1 THELM_EGO_FIRST
+helmet5
+%enchant_variation THELM_HELM shiny runed glowing
+helmet_ego1 THELM_HELM_MAGIC
 helmet_ego2
 helmet_ego3
-helmet_ego4 THELM_EGO_LAST
-helmet_art1 THELM_ART_FIRST
+helmet_ego4
+%enchant_variation THELM_HELM randart
+helmet_art1 THELM_HELM_RANDART
 helmet_art2
-helmet_art3 THELM_ART_LAST
+helmet_art3
 
 %sdir item/armour
 ###### GLOVES
 glove1 ARM_GLOVES
-glove2
-glove3
-glove4
-glove5
+%enchant_variation ARM_GLOVES shiny
+glove2 ARM_GLOVES_SHINY
+%enchant_variation ARM_GLOVES runed
+glove3 ARM_GLOVES_RUNED
+%enchant_variation ARM_GLOVES glowing
+glove4 ARM_GLOVES_GLOWING
+%enchant_variation ARM_GLOVES randart
+glove5 ARM_GLOVES_RANDART
 
 ###### BOOTS
 %rim 1
-boots1 ARM_BOOTS ARM_BOOTS_FIRST
-boots2 ARM_BOOTS_LAST
-boots_ego1 ARM_BOOTS_EGO_FIRST
-boots_ego2 ARM_BOOTS_EGO_LAST
-boots_art1 ARM_BOOTS_ART_FIRST
-boots_art2 ARM_BOOTS_ART_LAST
+boots1 ARM_BOOTS
+boots2
+%enchant_variation ARM_BOOTS shiny runed glowing
+boots_ego1 ARM_BOOTS_MAGIC
+boots_ego2
+%enchant_variation ARM_BOOTS randart
+boots_art1 ARM_BOOTS_RANDART
+boots_art2
 april_boots1 ARM_BOOTS_APRIL1
 april_boots2 ARM_BOOTS_APRIL2
 
@@ -1045,7 +1218,7 @@ gizmo9
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
 %sdir item/book
-light_gray BOOK_OFFSET UNSEEN_BOOK
+light_gray BOOK UNSEEN_BOOK
 dark_blue
 dark_green
 cyan
@@ -1080,7 +1253,8 @@ manual1 BOOK_MANUAL
 manual2
 # randarts
 %sdir item/book/artefact
-wrinkled BOOK_RANDART_OFFSET
+%enchant_variation BOOK randart
+wrinkled BOOK_RANDART
 vellum
 velvet
 thick

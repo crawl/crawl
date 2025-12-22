@@ -24,9 +24,6 @@ tile::tile(const tile &img, const char *enumnam, const char *parts) :
         m_enumname.push_back(enumnam);
     if (parts)
         m_parts_ctg = parts;
-
-    for (int i = 0; i < MAX_COLOUR; ++i)
-        m_variations[i] = -1;
 }
 
 tile::~tile()
@@ -610,20 +607,4 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
 
     w = x1 - x0 + 1;
     h = y1 - y0 + 1;
-}
-
-void tile::add_variation(int colour, int idx)
-{
-    assert(colour >= 0);
-    assert(colour < MAX_COLOUR);
-    m_variations[colour] = idx;
-}
-
-bool tile::get_variation(int colour, int &idx)
-{
-    if (m_variations[colour] == -1)
-        return false;
-
-    idx = m_variations[colour];
-    return true;
 }
