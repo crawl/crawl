@@ -3097,10 +3097,9 @@ static spret _siphon_essence(bool fail)
  * at?
  *
  * @param shapeshifting_skill   If -1 (the default), use the player's current
- *                              dragon form power bonus (if they're actually in
- *                              it). If otherwise, return what it would be if
- *                              they were in dragon form with the given amount
- *                              of shapeshifting.
+ *                              dragon form power bonus. Otherwise, pretend
+ *                              we're in it at the given level of shapeshifting
+ *                              skill (for talisman previews).
  *
  * @return The power the player uses these breath abilities at.
  */

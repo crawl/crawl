@@ -806,6 +806,8 @@ public:
         }
     }
 
+    // Note that this is only used for UI purposes. The actual breath weapons
+    // calculate their damage from draconian_breath_power() directly.
     dice_def get_special_damage(bool random = true, int skill = -1) const override
     {
         ability_type abil = species::draconian_breath(you.species);
@@ -813,6 +815,9 @@ public:
                                                     : draconian_breath_to_spell(abil);
 
         const zap_type zap = spell_to_zap(spell);
+
+        if (skill == -1)
+            skill = get_level(1);
 
         if (spell == SPELL_COMBUSTION_BREATH)
             return combustion_breath_damage(draconian_breath_power(skill), random);
