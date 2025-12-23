@@ -931,7 +931,7 @@ bool melee_attack::handle_phase_hit()
     if (attacker->is_player() && you.form == transformation::sphinx && defender->alive())
     {
         const int spaces = airstrike_space_around(defender->pos(), true);
-        const int dmg = player_airstrike_melee_damage(get_form()->get_level(1), spaces).roll();
+        const int dmg = player_airstrike_melee_damage(spaces).roll();
         special_damage = defender->apply_ac(dmg, 0);
 
         if (needs_message && special_damage)
@@ -5302,10 +5302,4 @@ bool spellclaws_attack(int spell_level)
     }
 
     return true;
-}
-
-// For Sphinx form
-dice_def player_airstrike_melee_damage(int pow, int open_spaces)
-{
-    return dice_def(1 + open_spaces / 2, 1 + pow * 5 / 7);
 }

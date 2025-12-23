@@ -243,5 +243,3 @@ vector<string> get_player_aux_names();
 
 bool coglin_spellmotor_attack();
 bool spellclaws_attack(int spell_level);
-
-dice_def player_airstrike_melee_damage(int pow, int open_spaces);
