@@ -1101,11 +1101,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         tile_env.bk_cloud(gc) = 0;
 }
 
-void tile_wizmap_terrain(const coord_def &gc)
-{
-    tile_env.bk_bg(gc) = _get_floor_bg(gc);
-}
-
 static bool _is_torch(tileidx_t basetile)
 {
     return basetile == TILE_WALL_BRICK_DARK_2_TORCH
