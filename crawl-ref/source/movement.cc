@@ -122,7 +122,8 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 
 static bool _cancel_barbed_move()
 {
-    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY)
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         std::string prompt = "The barbs in your skin will harm you if you move.";
         prompt += " Continue?";
