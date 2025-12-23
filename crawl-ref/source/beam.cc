@@ -2963,7 +2963,7 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
 
     // digging might affect unseen squares, as far as the player knows
     if (map_knowledge && flavour == BEAM_DIGGING &&
-                                        !env.map_knowledge(pos()).seen())
+                                        !env.map_knowledge(p).known())
     {
         return true;
     }

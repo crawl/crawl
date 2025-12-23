@@ -1111,11 +1111,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         tile_env.bk_cloud(gc) = 0;
 }
 
-void tile_wizmap_terrain(const coord_def &gc)
-{
-    tile_env.bk_bg(gc) = _get_floor_bg(gc);
-}
-
 #ifndef USE_TILE_WEB
 static bool _tile_has_cycling_misc_animation(tileidx_t tile)
 {
