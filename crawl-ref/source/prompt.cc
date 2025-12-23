@@ -238,7 +238,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                 if (actual_key != EOF && actual_key > UCHAR_MAX)
                     actual_key = tmp;
 
-                if (isalpha(actual_key) && actual_key != tmp)
+                if (isaalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
             }
