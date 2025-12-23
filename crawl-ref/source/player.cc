@@ -5593,7 +5593,6 @@ player::player()
     type_ids.init(false);
 
     banished_by.clear();
-    banished_power = 0;
 
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
@@ -5945,8 +5944,7 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(const actor* /*agent*/, const string &who, const int power,
-                    bool force)
+void player::banish(const actor* /*agent*/, const string &who, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -5982,7 +5980,6 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
 
     banished    = true;
     banished_by = who;
-    banished_power = power;
 }
 
 /*

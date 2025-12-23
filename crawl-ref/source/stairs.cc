@@ -846,17 +846,10 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
-    // Fix this up now so the milestones and notes report the correct
+    // Determine this now so the milestones and notes report the correct
     // destination floor.
     if (whither.branch == BRANCH_ABYSS)
-    {
-        if (!you.props.exists(ABYSS_MIN_DEPTH_KEY))
-            you.props[ABYSS_MIN_DEPTH_KEY] = 1;
-
-        whither.depth = max(you.props[ABYSS_MIN_DEPTH_KEY].get_int(),
-                            whither.depth);
-        you.props[ABYSS_MIN_DEPTH_KEY] = whither.depth;
-    }
+        whither.depth = abyss_depth_for_xl();
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
@@ -876,7 +869,6 @@ void floor_transition(dungeon_feature_type how,
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
                                                   + random2(100);
         you.banished_by = "";
-        you.banished_power = 0;
     }
 
     // Interlevel travel data.

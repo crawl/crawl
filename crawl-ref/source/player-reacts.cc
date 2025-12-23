@@ -1270,6 +1270,8 @@ void player_reacts()
     }
 
     abyss_maybe_spawn_xp_exit();
+    if (player_in_branch(BRANCH_ABYSS) && you.depth >= 5 && you.experience_level == 27)
+        you.props[ABYSS_LOITERING_TIME_KEY].get_int() += you.time_taken;
 
     actor_apply_cloud(&you);
     // Immunity due to just casting Volatile Blastmotes. Only lasts for one

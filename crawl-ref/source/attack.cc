@@ -509,8 +509,7 @@ bool attack::distortion_affects_defender()
     case BANISH:
         if (defender_visible)
             obvious_effect = true;
-        defender->banish(attacker, attacker->name(DESC_PLAIN, true),
-                         attacker->get_experience_level());
+        defender->banish(attacker, attacker->name(DESC_PLAIN, true));
         return true;
     case NONE:
         // Do nothing

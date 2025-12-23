@@ -941,7 +941,7 @@ static void _lugonu_transloc_retribution()
     else if (coinflip())
     {
         simple_god_message(" draws you home!", false, god);
-        you.banish(nullptr, "Lugonu's touch", you.get_experience_level(), true);
+        you.banish(nullptr, "Lugonu's touch", true);
     }
 }
 

@@ -2724,7 +2724,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
     }
 }
 
-void monster::banish(const actor *agent, const string &, const int, bool force)
+void monster::banish(const actor *agent, const string &, bool force)
 {
     coord_def old_pos = pos();
 
@@ -2751,7 +2751,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
         monster* head = monster_by_mid(tentacle_connect);
         if (head)
         {
-            head->banish(agent, "", 0, force);
+            head->banish(agent, "", force);
             return;
         }
     }

@@ -18,9 +18,11 @@ extern const coord_def ABYSS_CENTRE;
 #define ABYSS_SPAWNED_XP_EXIT_KEY "abyss_spawned_xp_exit"
 const int EXIT_XP_COST = 10; // ref _reduce_abyss_xp_timer() for details
 // but it's equivalent to roughly half the recharge xp for an elemental evoker
-#define ABYSS_MIN_DEPTH_KEY "abyss_min_depth_key"
 
 #define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
+
+// How much time the player has spent on Abyss:5 at XL 27
+#define ABYSS_LOITERING_TIME_KEY "abyss_loitering_timer"
 
 struct abyss_state
 {
@@ -36,9 +38,11 @@ extern abyss_state abyssal_state;
 
 void abyss_morph();
 
-void banished(const string &who = "", const int power = 0);
+void banished(const string &who = "");
 void check_banished();
 void push_features_to_abyss();
+
+int abyss_depth_for_xl();
 
 void clear_abyssal_rune_knowledge();
 void generate_abyss();

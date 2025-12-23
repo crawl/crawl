@@ -4259,10 +4259,8 @@ static void _xom_do_banishment(bool real)
 {
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
-    int power = _xom_feels_nasty() ? you.experience_level * 3 / 2 - 10
-                                   : you.experience_level * 5 / 4 - 13;
-    // Handles note taking, scales depth by XL
-    banished("Xom", max(1, power));
+    // Handles note taking
+    banished("Xom");
     if (!real)
         _revert_banishment();
 }

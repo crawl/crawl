@@ -707,7 +707,7 @@ static bool _displace_charge_blocker(actor& agent, coord_def pos)
         if (mon->pos() != orig)
             continue;
 
-        mon->banish(&agent, "electric charge", -1, true);
+        mon->banish(&agent, "electric charge", true);
         if (!mon->alive())
             continue;
 

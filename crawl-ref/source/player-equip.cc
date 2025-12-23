@@ -2773,7 +2773,7 @@ void unwield_distortion(bool brand)
         you.banish(nullptr,
                    make_stringf("%sing a weapon of distortion",
                                 brand ? "rebrand" : "unwield").c_str(),
-                   you.get_experience_level(), true);
+                   true);
     }
     else
     {

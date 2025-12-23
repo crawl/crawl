@@ -397,25 +397,7 @@ static string _who_banished(const string &who)
     return who.empty() ? who : " (" + who + ")";
 }
 
-static int _banished_depth(const int power)
-{
-    // Linear, with the max going from (1,1) to (25,5)
-    // and the min going from (9,1) to (27,5)
-    // Currently using HD for power
-
-    // This means an orc will send you to A:1, an orc warrior
-    // has a small chance of A:2,
-    // Elves have a good shot at sending you to A:3, but won't
-    // always
-    // Ancient Liches are sending you to A:5 and there's nothing
-    // you can do about that.
-    const int maxdepth = div_rand_round((power + 5), 6);
-    const int mindepth = min(maxdepth, (4 * power + 7) / 23);
-    const int bottom = brdepth[BRANCH_ABYSS];
-    return min(bottom, max(1, random_range(mindepth, maxdepth)));
-}
-
-void banished(const string &who, const int power)
+void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -434,16 +416,14 @@ void banished(const string &who, const int power)
         return;
     }
 
-    const int depth = _banished_depth(power);
-
     stop_delay(true);
     splash_corruption(you.pos());
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
-                     level_id(BRANCH_ABYSS, depth), true);
+                     level_id(BRANCH_ABYSS), true);
     // This is an honest abyss entry, mark milestone and take note
-    // floor_transition might change our final destination in the abyss
+    // floor_transition will determine our final destination in the abyss
     const string what = make_stringf("Cast into level %d of the Abyss",
                                      you.depth) + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
@@ -472,7 +452,7 @@ void check_banished()
         else
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         // these are included in default force_more_message
-        banished(you.banished_by, you.banished_power);
+        banished(you.banished_by);
     }
 }
 
@@ -1735,23 +1715,43 @@ void abyss_morph()
     los_changed();
 }
 
-// Force the player one level deeper in the abyss during an abyss teleport with
-// probability:
-//   (max(0, XL - Depth))^2 / 27^2 * 3
-//
-// Consequences of this formula:
-// - Chance to be pulled deeper increases with XL and decreases with current
-//   abyss depth.
-// - Characters won't get pulled to a depth higher than their XL
-// - Characters at XL 13 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 6.6%/5.5%/4.5%/3.7%.
-// - Characters at XL 27 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 31%/28.5%/26.3%/24.1%.
+
+constexpr int ABYSS_DEPTH_6_TIME = 7500;
+constexpr int ABYSS_DEPTH_7_TIME = 15000;
+
+// Determine what the 'baseline' Abyss depth is for the player's current XL.
+int abyss_depth_for_xl()
+{
+    if (you.experience_level <= 13)
+        return 1;
+    else if (you.experience_level >= 25)
+    {
+        // If the player has been spending a lot of time on J:5 in endgame,
+        // pull them even lower than this. It should be very unlikely to ever
+        // have this happening unless you're deliberately spending time there.
+        const int timer = you.props[ABYSS_LOITERING_TIME_KEY].get_int();
+        if (timer > ABYSS_DEPTH_7_TIME)
+            return 7;
+        else if (timer > ABYSS_DEPTH_6_TIME)
+            return 6;
+        return 5;
+    }
+    else
+        return 1 + div_rand_round((you.experience_level - 13), 3);
+}
+
 static bool _abyss_force_descent()
 {
-    const int depth = level_id::current().depth;
-    const int xl_factor = max(0, you.experience_level - depth);
-    return x_chance_in_y(xl_factor * xl_factor, 729 * 3);
+    // If the player could already have entered at a deeper depth than this for
+    // their XL, have a chance of pulling them deeper. (And much higher one if
+    // the player has been loitering.)
+    if (abyss_depth_for_xl() > you.depth
+        && (one_chance_in(4) || you.experience_level == 27))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void abyss_teleport(bool wizard_tele)

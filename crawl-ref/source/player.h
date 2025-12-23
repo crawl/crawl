@@ -460,7 +460,6 @@ public:
     // If true, player is headed to the Abyss.
     bool banished;
     string banished_by;
-    int banished_power;
 
     // Position from which the player made an involuntary shout this turn.
     // (To reduce message spam when encountering many monsters at once.)
@@ -780,7 +779,7 @@ public:
     bool polymorph(int dur, bool allow_immobile = true) override;
     bool doom(int amount) override;
     void backlight();
-    void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
+    void banish(const actor* /*agent*/, const string &who = "",
                 bool force = false) override;
     void blink(bool ignore_stasis = false) override;
     void teleport(bool right_now = false,

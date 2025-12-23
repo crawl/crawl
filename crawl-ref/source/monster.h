@@ -364,7 +364,7 @@ public:
     bool polymorph(int dur, bool allow_immobile = true) override;
     bool polymorph(poly_power_type power = PPT_SAME);
     bool doom(int amount) override;
-    void banish(const actor *agent, const string &who = "", const int power = 0,
+    void banish(const actor *agent, const string &who = "",
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
                            const actor* source = nullptr,

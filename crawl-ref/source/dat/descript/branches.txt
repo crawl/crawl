@@ -152,12 +152,13 @@ found from the third level onwards, and is more common at greater depths.
 Portals back to the dungeon are scattered throughout the Abyss, and are found
 more commonly at greater depths or while carrying the abyssal rune.
 
-Adventurers who linger in the Abyss will find themselves drawn irresistibly
-deeper. Killing monsters will warp the substance of the Abyss, eventually
-generating a gateway out. Further persistence will wear holes in the Abyss,
-allowing descent into deeper layers. The Abyss remembers its visitors - once
-an adventurer has entered a level, future visits to the Abyss will always
-take them at least that far down.
+Killing monsters will warp the substance of the Abyss, eventually generating a
+gateway out. Further persistence will wear holes in the Abyss, allowing descent
+into deeper layers.
+
+The fabric of the Abyss takes greater notice of the powerful; no matter how
+they arrive, more experienced adventurers will find themselves drawn deeper
+within the maddening expanse of that realm.
 %%%%
 Pandemonium
 
