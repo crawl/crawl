@@ -7390,8 +7390,8 @@ static void _maybe_note_airstrike_damage(vector<vector<string>>& items,
     dice_def data[3][2];
     for (int i = 0; i < 3; ++i)
     {
-        data[i][0] = player_airstrike_melee_damage(skill[i], 0);
-        data[i][1] = player_airstrike_melee_damage(skill[i], 7);
+        data[i][0] = player_airstrike_melee_damage(0, skill[i]);
+        data[i][1] = player_airstrike_melee_damage(7, skill[i]);
     }
 
     vector<string> labels;
