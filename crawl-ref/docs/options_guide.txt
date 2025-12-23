@@ -2602,14 +2602,12 @@ tile_layout_priority = command, spell, monster
         This option allows you to move the tabs from the inventory window into
         their own lines.  These lines will always be placed below the minimap
         and above the inventory, in the reverse order of the config.  
-        On small resolution, there won't be enough room for everything, so only
-        the first items will be placed. The inventory tab will always be placed 
-        below these fields but is initialised at a minimum size (4 lines).
-        Placed tabs may override the inventory tab on smaller resolutions, and will
-        have priority over it such that inventory may not be able to expand to 
-        its maximum size (6 lines). The possible options are: 
-        abilities, commands, memorisation, monsters, navigation, skills, spells,
-        system commands
+        The inventory tab will always be placed below these fields, initialised
+        at a minimum size (4 lines). Placed tabs may override the inventory tab
+        on smaller resolutions, and will have priority over it such that 
+        inventory may not be able to expand to its maximum size (6 lines). 
+        The possible options are: abilities, commands, memorisation, monsters,
+        navigation, skills, spells, system commands
 
 tile_display_mode = (tiles | glyphs | hybrid)
         Controls how the dungeon is rendered. You can use normal tiles (default)
