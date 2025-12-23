@@ -1424,13 +1424,11 @@ fff.g.hhh
 x.f.g.h.x
 ENDMAP
 
-# XXX: doesn't this produce teleport closets?...
-NAME: nicolae_vaults_little_squares_5
-TAGS: vaults_empty allow_dup
-NSUBST: a = 1:+ / *:xx+
-NSUBST: b = 1:+ / *:xx+
+NAME:    nicolae_vaults_little_squares_5
+TAGS:    vaults_empty allow_dup
 SHUFFLE: cd
-SUBST: c : +, d = x+
+NSUBST:  a = 1:+ / *:xx+, b = 1:+ / *:xx+, c = 1:+ / * = xxx+
+SUBST:   c = +
 MAP
 xxxxx..xx
 xxxxx..xx
