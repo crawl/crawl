@@ -4999,8 +4999,8 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
         }
         else
         {
-            const tileidx_t tile = unrandart_to_tile(unrand_index);
-            return tile ? tile : tileidx_t{TILE_TODO};
+            const tileidx_t unrand_tile = unrandart_to_tile(unrand_index);
+            return unrand_tile ? unrand_tile : tileidx_t{TILE_TODO};
         }
     }
 
