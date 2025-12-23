@@ -2448,7 +2448,7 @@ static const mutation_def mut_data[] =
    "You feel your blood grow even more spiteful.", ""},
   {"Your blood calms down again.",
    "Your blood feels a little less spiteful.", ""},
-  TILEG_MUT_GENERIC_BAD_MUTATION,
+  TILEG_MUT_SPITEFUL_BLOOD,
 },
 
 // Makhleb-specific mutations

@@ -162,19 +162,22 @@ time_warped_blood_1 TIME_WARPED_BLOOD
 time_warped_blood_2
 
 # Generic bad mutations
+booming_voice BOOMING_VOICE
+contamination_susceptible CONTAMINATION_SUSCEPTIBLE
 deterioration_1 POOR_CONSTITUTION
 deterioration_2
-contamination_susceptible CONTAMINATION_SUSCEPTIBLE
+initially_attractive_1 INITIALLY_ATTRACTIVE
+initially_attractive_2
 persistent_drain PERSISTENT_DRAIN
+potion_fungus POTION_FUNGUS
 reckless RECKLESS
 scream_1 SCREAM
 scream_2
+spatial_entanglement SPATIAL_ENTANGLEMENT
+spiteful_blood_1 SPITEFUL_BLOOD
+spiteful_blood_2
 teleport_1 TELEPORT
 teleport_2
-spatial_entanglement SPATIAL_ENTANGLEMENT
-booming_voice BOOMING_VOICE
-potion_fungus POTION_FUNGUS
-initially_attractive INITIALLY_ATTRACTIVE
 
 # Demonspawn mutations
 demonic_touch1 DEMONIC_TOUCH
