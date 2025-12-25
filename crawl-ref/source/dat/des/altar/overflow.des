@@ -2379,7 +2379,11 @@ ENDMAP
 
 NAME:   grunt_qazlal_sundering
 TAGS:   no_monster_gen no_item_gen no_trap_gen
+: if you.depth() ~= dgn.br_depth(you.branch()) then
 KFEAT:  ^ = shaft trap
+: else
+KFEAT:  ^ = floor
+: end
 KPROP:  -c = no_tele_into
 SUBST:  c = cccl^.
 SUBST:  - = ..l^
