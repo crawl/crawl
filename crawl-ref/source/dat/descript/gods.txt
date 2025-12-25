@@ -707,5 +707,4 @@ Wu Jian extra
   ..#....       ..#....  two turns. Activated via the (a)bility menu.
 
 These prevent enemies from getting free attacks on you while you move away.
-You cannot launch martial attacks while digging.
 %%%%
