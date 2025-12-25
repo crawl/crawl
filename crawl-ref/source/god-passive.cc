@@ -1928,18 +1928,26 @@ static bool _can_attack_martial(const monster* mons)
 // A mismatch between attack speed and move speed may cause any particular
 // martial attack to be doubled, tripled, or not happen at all. Given enough
 // time moving, you would have made the same amount of attacks as tabbing.
-static int _wu_jian_number_of_attacks(bool wall_jump)
+static int _wu_jian_number_of_attacks(int& dmg_penalty, bool wall_jump)
 {
     // Under the effect of serpent's lash, move delay is normalized to
     // 10 aut for every character, to avoid punishing fast races.
-    const int move_delay = you.attribute[ATTR_SERPENTS_LASH]
-                           ? 100
-                           : player_movement_speed() * player_speed();
+    const int move_delay = (you.attribute[ATTR_SERPENTS_LASH]
+                            ? 100
+                            : player_movement_speed() * player_speed())
+                                                        * (wall_jump ? 2 : 1);
 
-    int attack_delay = you.attack_delay().roll();
+    int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
 
-    return div_rand_round(wall_jump ? 2 * move_delay : move_delay,
-                          attack_delay * BASELINE_DELAY);
+    // Rather than sometimes performing 0 attacks if we're moving too quickly for
+    // our attack speed, perform a single attack with proportionally lowered damage.
+    if (attack_delay > move_delay)
+    {
+        dmg_penalty = (move_delay * 100 / attack_delay) - 100;
+        return 1;
+    }
+
+    return div_rand_round(move_delay, attack_delay);
 }
 
 static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
@@ -1957,22 +1965,14 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         _wu_jian_increment_heavenly_storm();
 
-    const int number_of_attacks = _wu_jian_number_of_attacks(false);
+    int dmg_mult = 0;
+    const int number_of_attacks = _wu_jian_number_of_attacks(dmg_mult, false);
 
-    if (number_of_attacks == 0)
-    {
-        mprf("You lunge at %s, but your attack speed is too slow for a blow "
-             "to land.", mons->name(DESC_THE).c_str());
-        return true;
-    }
-    else
-    {
-        mprf("You lunge%s at %s%s.",
-             wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
-                 " with incredible momentum" : "",
-             mons->name(DESC_THE).c_str(),
-             number_of_attacks > 1 ? ", in a flurry of attacks" : "");
-    }
+    mprf("You lunge%s at %s%s.",
+            wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
+                " with incredible momentum" : "",
+            mons->name(DESC_THE).c_str(),
+            number_of_attacks > 1 ? ", in a flurry of attacks" : "");
 
     count_action(CACT_ATTACK, ATTACK_LUNGE);
 
@@ -1982,6 +1982,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
             break;
         melee_attack lunge(&you, mons);
         lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+        lunge.dmg_mult = dmg_mult;
         lunge.launch_attack_set();
     }
 
@@ -2024,21 +2025,13 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
         if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
             _wu_jian_increment_heavenly_storm();
 
-        const int number_of_attacks = _wu_jian_number_of_attacks(false);
-        if (number_of_attacks == 0)
-        {
-            mprf("You spin to attack %s, but your attack speed is too slow for "
-                 "a blow to land.", mons->name(DESC_THE).c_str());
-            continue;
-        }
-        else
-        {
-            mprf("You spin and attack %s%s%s.",
-                 mons->name(DESC_THE).c_str(),
-                 number_of_attacks > 1 ? " repeatedly" : "",
-                 wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
-                     ", with incredible momentum" : "");
-        }
+        int dmg_mult = 0;
+        const int number_of_attacks = _wu_jian_number_of_attacks(dmg_mult, false);
+        mprf("You spin and attack %s%s%s.",
+                mons->name(DESC_THE).c_str(),
+                number_of_attacks > 1 ? " repeatedly" : "",
+                wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
+                    ", with incredible momentum" : "");
 
         count_action(CACT_ATTACK, ATTACK_WHIRLWIND);
 
@@ -2048,6 +2041,7 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
                 break;
             melee_attack whirlwind(&you, mons);
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
+            whirlwind.dmg_mult = dmg_mult;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             did_at_least_one_attack |= whirlwind.launch_attack_set(true);
         }
@@ -2127,21 +2121,13 @@ void wu_jian_wall_jump_effects()
             _wu_jian_increment_heavenly_storm();
 
         // Twice the attacks as Wall Jump spends twice the time
-        const int number_of_attacks = _wu_jian_number_of_attacks(true);
-        if (number_of_attacks == 0)
-        {
-            mprf("You attack %s from above, but your attack speed is too slow"
-                 " for a blow to land.", target->name(DESC_THE).c_str());
-            continue;
-        }
-        else
-        {
-            mprf("You %sattack %s from above%s.",
-                 number_of_attacks > 1 ? "repeatedly " : "",
-                 target->name(DESC_THE).c_str(),
-                 wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
-                     ", with incredible momentum" : "");
-        }
+        int dmg_mult = 0;
+        const int number_of_attacks = _wu_jian_number_of_attacks(dmg_mult, true);
+        mprf("You %sattack %s from above%s.",
+                number_of_attacks > 1 ? "repeatedly " : "",
+                target->name(DESC_THE).c_str(),
+                wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
+                    ", with incredible momentum" : "");
 
         for (int i = 0; i < number_of_attacks; i++)
         {
@@ -2150,6 +2136,7 @@ void wu_jian_wall_jump_effects()
 
             melee_attack aerial(&you, target);
             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
+            aerial.dmg_mult = dmg_mult;
             aerial.wu_jian_number_of_targets = targets.size();
             did_attack |= aerial.launch_attack_set();
         }
