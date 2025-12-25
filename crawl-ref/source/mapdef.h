@@ -1234,9 +1234,6 @@ public:
     // Returns true if this map is in the middle of validation.
     bool is_validating() const { return validating_map_flag; }
 
-    void add_prelude_line(int line,  const string &s);
-    void add_main_line(int line, const string &s);
-
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
