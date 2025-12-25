@@ -190,8 +190,16 @@ static bool _resolve_map_lua(map_def &map)
 #endif
         crawl_state.last_builder_error = err;
         crawl_state.last_builder_error_fatal = true;
-        mprf(MSGCH_ERROR, "Fatal lua error: %s", err.c_str());
-        // If our errors are going to stderr, we'll just put the trace here.
+
+        // Modes like mapstat/objstat that put errors on stderr need to see the
+        // per-iteration seed.
+        string seed_inf = "";
+        if (msg::uses_stderr(MSGCH_ERROR))
+            seed_inf = make_stringf(" in seed %" PRIu64, crawl_state.seed);
+        mprf(MSGCH_ERROR, "Fatal lua error%s: %s", seed_inf.c_str(),
+             err.c_str());
+        // If we're using stderr, we don't have a morgue, so any dlua stack
+        // trace should also go to stderr.
         if (msg::uses_stderr(MSGCH_ERROR) && !dlua_errors.empty())
             mprf(MSGCH_ERROR, "\n%s", dlua_errors.back().stack_trace.c_str());
         return false;
@@ -1587,8 +1595,14 @@ void run_map_local_preludes()
             string err = vdef.run_lua(true);
             if (!err.empty())
             {
-                mprf(MSGCH_ERROR, "Lua error (map %s): %s",
-                     vdef.name.c_str(), err.c_str());
+                string seed_inf = "";
+                if (msg::uses_stderr(MSGCH_ERROR))
+                {
+                    seed_inf = make_stringf(" in seed %" PRIu64,
+                                            crawl_state.seed);
+                }
+                mprf(MSGCH_ERROR, "Lua error (map %s)%s: %s",
+                     vdef.name.c_str(), seed_inf.c_str(), err.c_str());
                 if (msg::uses_stderr(MSGCH_ERROR) && !dlua_errors.empty())
                 {
                     mprf(MSGCH_ERROR, "\n%s",

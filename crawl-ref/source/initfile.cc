@@ -5858,6 +5858,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     SysEnv.map_gen_iters = 1;
                 else if (SysEnv.map_gen_iters > 10000)
                     SysEnv.map_gen_iters = 10000;
+
+                if (Options.seed_from_rc && SysEnv.map_gen_iters > 1)
+                {
+                    end(1, false, "Can't run more than one mapstat/objstat "
+                        "iterations with a custom seed\n");
+                }
+
                 nextUsed = true;
             }
 #else

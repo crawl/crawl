@@ -254,10 +254,12 @@ bool mapstat_build_levels()
         fflush(stdout);
 
         dgn_reset_player_data();
+        rng::reset();
         initial_dungeon_setup();
 
         if (!_build_dungeon())
             return false;
+
         if (crawl_state.obj_stat_gen)
             objstat_iteration_stats();
     }
