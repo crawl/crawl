@@ -462,3 +462,20 @@ MAP
 ..1..
 .....
 ENDMAP
+
+### Miscellaneous minor god altars ###########################################
+
+# places a random non-temple god that is hard to access
+NAME:   hellmonk_sealed_altar
+TAGS:   no_monster_gen no_descent extra
+DEPTH:  D:5-
+KFEAT:  B = altar_jiyva w:5 / altar_lugonu / altar_ignis w:2 / altar_beogh
+MAP
+lllll
+lxxxl
+lxBxl
+lx<xl
+lxmxl
+lllll
+  @
+ENDMAP

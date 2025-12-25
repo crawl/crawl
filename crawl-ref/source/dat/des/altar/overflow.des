@@ -5772,6 +5772,54 @@ G@G
 @G.
 ENDMAP
 
+NAME:   hellmonk_zin_sealed_chaos
+TAGS:   transparent no_monster_gen no_item_gen no_descent
+DEPTH:  D:4-
+WEIGHT: 7
+: if crawl.coinflip() then
+MONS:   boggart, swamp drake, chaos spawn, laughing skull
+KITEM:  ' = $ no_pickup
+KFEAT:  ~ = altar_xom
+COLOUR: c = lightmagenta / cyan / yellow
+FTILE:  '1234~ = floor_rough_lightmagenta / floor_rough_cyan / floor_rough_yellow
+: elseif crawl.coinflip() then
+MONS:   weeping skull, brain worm, small abomination, large abomination
+KFEAT:  ~ = altar_lugonu
+TILE:   c : stone_wall_abyss_a / stone_wall_abyss_b / stone_wall_abyss_c
+FTILE:  '1234~ : floor_nerves_magenta / floor_nerves_cyan
+: else
+MONS:   golden eye, jelly, slime creature, eye of devastation
+KFEAT:  ~ = altar_jiyva
+KFEAT:  c = slimy_wall
+FTILE:  '1234~ = floor_rough_green
+: end
+: if you.depth() > 11 then
+SUBST:  2 = 4
+: elseif you.depth() > 7 then
+SUBST:  2 = 3
+: end
+COLOUR: . = white
+FTILE:  _.S = floor_limestone
+FTILE:  = = floor_pebble_darkgray
+KPROP:  '%~1234 = no_tele_into
+COLOUR: v = white
+TILE:   v = dngn_metal_wall_white
+: vault_metal_statue_setup(_G, "S", "silver statue")
+: set_feature_name("metal_wall", "silver wall")
+: standard_overflow_setup(_G, { { "zin", "_" } }, true)
+MAP
+  vvvvv
+ vvcccvv
+ vcc~ccv
+"vc212cv"
+ vc'''cv
+ vv===vv
+  S...S
+  .....
+   ._.
+    .
+ENDMAP
+
 ### The Shining One overflow altars ###########################################
 
 # TSO's small temple (1KB)
