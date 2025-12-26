@@ -2,7 +2,6 @@
 %prefix TILE
 %startvalue TILE_WALL_MAX wall
 
-%weight 10
 %sdir dngn/trees
 tree1 DNGN_TREE
 tree2
@@ -334,7 +333,6 @@ statue_zot_oldest_guardian
 %syn DNGN_STATUE_ZOT_OLDEST_GUARDIAN
 
 # damaged statues
-%weight 1
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
 crumbled_column_3
@@ -412,7 +410,6 @@ mystic_cage_2
 ## magical conduits for themed magic branches, portals, vaults
 ## conj, hex, summ / tloc, necro, alch, fire, ice, air, earth
 
-%weight 1
 arcane_conduit_0 ARCANE_CONDUIT
 arcane_conduit_1
 arcane_conduit_2
@@ -849,6 +846,7 @@ cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
 cache_of_fruit_1
 %weight 10
 cache_of_fruit_2
+%weight 10
 cache_of_meat_0 DNGN_CACHE_OF_MEAT
 %weight 3
 %syn DNGN_CACHE_OF_PIZZA

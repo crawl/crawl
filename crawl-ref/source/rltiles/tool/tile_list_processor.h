@@ -75,6 +75,7 @@ protected:
     vector<pending_variation> m_pending_enchant_variations;
     vector<variation> m_enchant_variations;
     int m_weight;
+    bool m_weight_has_been_used;
     double m_alpha;
     int m_domino;
 

@@ -938,15 +938,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         return;
     }
 
-    if (tile == TILE_DNGN_PORTAL_WIZARD_LAB
-             || tile == TILE_DNGN_EXIT_NECROPOLIS
-             || tile == TILE_DNGN_TRAP_HARLEQUIN)
-    {
-        tile = tile + flv.special % tile_dngn_count(tile);
-    }
-    else if ((tile == TILE_SHOALS_SHALLOW_WATER
-              || tile == TILE_SHOALS_DEEP_WATER)
-             && element_colour(ETC_WAVES, gc, false) == LIGHTCYAN)
+    if ((tile == TILE_SHOALS_SHALLOW_WATER || tile == TILE_SHOALS_DEEP_WATER)
+         && element_colour(ETC_WAVES, gc, false) == LIGHTCYAN)
     {
         tile = tile + 6 + flv.special % 6;
     }
