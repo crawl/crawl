@@ -8681,9 +8681,14 @@ static ghost_demon _unmarshallGhost(reader &th)
     {
         if (th.getMinorVersion() < TAG_MINOR_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
+        if (slot.spell == SPELL_FREEZING_CLOUD)
+        {
+            slot.spell = SPELL_FREEZING_GUST;
+            ghost.spells.push_back(slot);
+        }
         // Gravitas needs special handling, since it was removed for monsters
         // but NOT players (and thus isn't a 'removed spell' in general)
-        if (!spell_removed(slot.spell) && slot.spell != SPELL_GRAVITAS)
+        else if (!spell_removed(slot.spell) && slot.spell != SPELL_GRAVITAS)
             ghost.spells.push_back(slot);
     }
 #endif
