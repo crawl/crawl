@@ -217,7 +217,7 @@ static void _melee_attack_player(monster &mons, monster* ru_target)
         fight_melee(&mons, ru_target);
     }
     else
-        fight_melee(&mons, &you, nullptr, false);
+        fight_melee(&mons, &you);
 }
 
 static energy_use_type _get_swim_or_move(monster& mon)

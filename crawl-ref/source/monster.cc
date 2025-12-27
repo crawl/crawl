@@ -5846,6 +5846,16 @@ bool monster::floodify(const actor* attacker, int duration, const char* substanc
     return true;
 }
 
+void monster::stagger(int energy_loss)
+{
+    const int old_energy = speed_increment;
+    speed_increment -= energy_loss;
+
+    // Print a message if enough energy is lost to cost a normal-speed turn.
+    if (speed_increment / 10 < old_energy / 10)
+        simple_monster_message(*this, " is staggered.");
+}
+
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)
 {
     return mons_adjust_flavoured(this, beam, hurted, doEffects);

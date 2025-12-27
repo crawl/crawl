@@ -426,7 +426,8 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It increases damage dealt and taken.",
             prop_note::plain },
         { ARTP_RAMPAGING,
-            "It bestows one free step when moving towards enemies.",
+            "It causes one to take an extra step when moving towards enemies, "
+            "briefly stunning them if this results in an attack.",
             prop_note::plain },
         { ARTP_STEALTH,
             "buggy stealth",

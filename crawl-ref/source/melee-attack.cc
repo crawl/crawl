@@ -657,15 +657,7 @@ void melee_attack::handle_concussion_brand()
     {
         did_move = true;
         if (monster* mon = defender->as_monster())
-        {
-            const int delay = random2(min(10, attacker->attack_delay().roll())) * 3 / 4;
-            const int old_energy = mon->speed_increment;
-            mon->speed_increment -= delay;
-
-            // Print a message if cumulative attacks have cost enough energy to lose a turn.
-            if (mon->speed_increment / 10 < old_energy / 10)
-                simple_monster_message(*mon, " is staggered.");
-        }
+            mon->stagger(random2(min(10, attacker->attack_delay().roll())) * 3 / 4);
     }
     else if (damage_done > 0)
     {
