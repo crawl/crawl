@@ -1212,6 +1212,12 @@ public:
     }
 };
 
+int walking_scroll_skill_bonus(int scale, int skill)
+{
+    int scaled_skill = skill == -1 ? FormWalkingScroll::instance().get_level(10) : skill * 10;
+    return (10 + scaled_skill) * scale / 20;
+}
+
 class FormFortressCrab : public Form
 {
 private:

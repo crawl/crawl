@@ -6266,7 +6266,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     if (you.form == transformation::walking_scroll
         && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
     {
-        level += (10 + get_form()->get_level(10)) * scale / 20;
+        level += walking_scroll_skill_bonus(scale);
     }
 
     if (temp && skill_has_dilettante_penalty(sk))

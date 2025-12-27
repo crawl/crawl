@@ -377,3 +377,5 @@ bool maw_considers_appetising(const monster& mon);
 bool maw_hunger_check(monster* mon);
 
 bool vampire_mesmerism_check(monster& mon);
+
+int walking_scroll_skill_bonus(int scale, int skill = -1);

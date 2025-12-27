@@ -7464,11 +7464,6 @@ static void _desc_form_val(TablePrinter& pr, string label, int val)
     pr.AddCell(label, make_stringf("%+d", val).c_str(), val < 0 ? RED : LIGHTGREY);
 }
 
-static int _get_scroll_skill_boost(int skill)
-{
-    return 5 + skill * 5;
-}
-
 static string _describe_talisman_form(transformation form_type)
 {
     const Form* form = get_form(form_type);
@@ -7523,7 +7518,7 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_howl_power, form, placeholders::_1), "Howl Power", skill, 0, false, false);
     }
     if (form_type == transformation::walking_scroll)
-        _maybe_populate_form_table(items, _get_scroll_skill_boost, "Spell Skill Boost", skill, 0, false, true, 10, 1);
+        _maybe_populate_form_table(items, bind(walking_scroll_skill_bonus, 10, placeholders::_1), "Spell Skill Boost", skill, 0, false, true, 10, 1);
     if (form_type == transformation::fortress_crab)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Rust Breath Size", skill, 0, false, false);
     if (form_type == transformation::medusa)
