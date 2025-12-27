@@ -246,6 +246,32 @@ string process_description(const describe_info &inf, bool include_title)
     return desc;
 }
 
+// Format an ego or artprop description, wrapping the description within a
+// column defined by the length of the name (usually pre-padded with whitespace).
+//
+// XXX: Assumes the output has at least 80 characters of width. This is true by
+//      default in most versions, but it is possible to shrink a webtiles window
+//      small enough to make this false. However, that is generally past the
+//      point where other parts of the UI also start being unreadable, so this
+//      seems acceptable.
+static string _format_prop_desc(string prop_name, string prop_desc)
+{
+    // XXX: It is possible some Android layouts are too small to wrap properly
+    //      to 80 characters (and I am currently not certain how to check on my
+    //      own), so let's just not do any justification.
+#ifdef USE_TILE_LOCAL
+    if (tiles.is_using_small_layout())
+        return prop_name + prop_desc;
+#endif
+
+    const int name_len = strwidth(prop_name);
+    linebreak_string(prop_desc, 80 - name_len);
+    string padding = string(name_len, ' ');
+    string justified_desc = replace_all(prop_desc, "\n", "\n" + padding);
+
+    return prop_name + justified_desc;
+}
+
 const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
@@ -739,7 +765,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
         // these two have some custom string replacement
         if (prop == ARTP_WILLPOWER)
         {
-            lines.push_back(make_stringf("%s It %s%s your willpower.",
+            lines.push_back(make_stringf("%sIt %s%s your willpower.",
                      _padded_artp_name(ARTP_WILLPOWER, stval).c_str(),
                      (stval < -1 || stval > 1) ? "greatly " : "",
                      (stval < 0) ? "decreases" : "increases"));
@@ -747,7 +773,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
         }
         else if (prop == ARTP_STEALTH)
         {
-            lines.push_back(make_stringf("%s It makes you %s%s stealthy.",
+            lines.push_back(make_stringf("%sIt makes you %s%s stealthy.",
                      _padded_artp_name(ARTP_STEALTH, stval).c_str(),
                      (stval < -1 || stval > 1) ? "much " : "",
                      (stval < 0) ? "less" : "more"));
@@ -782,9 +808,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
             sdesc = prefixes[idx] + sdesc + '.';
         }
 
-        lines.push_back(make_stringf("%s %s",
-                                     _padded_artp_name(desc.property, stval).c_str(),
-                                     sdesc.c_str()));
+        lines.push_back(_format_prop_desc(_padded_artp_name(desc.property, stval), sdesc.c_str()));
     }
 }
 
@@ -801,10 +825,8 @@ static string _desc_randart_jewel(const item_def &item)
         // DBRANDS in weird ways
         return string(desc);
     }
-    // XX a custom ego description isn't well handled here. The
-    // main case of this is Vitality
-    return make_stringf("%-*s %s", MAX_ARTP_NAME_LEN + 1,
-                        (string(type) + ":").c_str(), desc);
+    return _format_prop_desc(make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1,
+                              (string(type) + ":").c_str()), desc);
 }
 
 static string _randart_descrip(const item_def &item)
@@ -840,10 +862,9 @@ static string _format_dbrand(string dbrand)
         {
             ASSERT(brand.size() == 2);
             const string &desc = brand[1];
-            const int prefix_len = max(MAX_ARTP_NAME_LEN, (int)brand[0].size());
-            const string pre = padded_str(brand[0] + ":", prefix_len + 2);
-                                                          // +2 for ": "
-            out.push_back(pre + desc);
+            const int prefix_len = max(MAX_ARTP_NAME_LEN + 1, (int)brand[0].size() + 2);
+            const string pre = padded_str(brand[0] + ":", prefix_len);
+            out.push_back(_format_prop_desc(pre, desc));
         }
     }
     return join_strings(out.begin(), out.end(), "\n");
@@ -1616,10 +1637,12 @@ static void _append_weapon_stats(string &description, const item_def &item)
         const brand_type brand = get_weapon_brand(item);
         string brand_name = uppercase_first(brand_type_name(brand, true));
         // Hack to match artefact prop formatting.
-        description += make_stringf("\n\n%-*s %s",
-                                    MAX_ARTP_NAME_LEN + 1,
-                                    (brand_name + ":").c_str(),
-                                    brand_desc.c_str());
+
+        string fmt_name = make_stringf("\n\n%-*s",
+                                        MAX_ARTP_NAME_LEN + 1,
+                                        (brand_name + ":").c_str());
+
+        description += _format_prop_desc(fmt_name, brand_desc);
     }
     if (is_unrandom_artefact(item))
     {
@@ -1635,7 +1658,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         {
             string ego_key = _weapon_ego_key(SPWPN_CHAOS);
             string ego_desc = getEgoString(ego_key);
-            description += "\nChaotic:    " + ego_desc;
+            description += _format_prop_desc("\nChaotic:   ", ego_desc);
         }
 
         // XX spacing following brand and dbrand for randarts/unrands is a bit
@@ -2308,22 +2331,24 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     {
         description += "\n\n";
 
+        string ego_prefix;
         if (is_artefact(item))
         {
             // Make this match the formatting in _randart_descrip,
             // since instead of the item being named something like
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
-            string name = string(armour_ego_name(item, true)) + ":";
-            description += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
+            string name = string(armour_ego_name(item, true)) + ": ";
+            ego_prefix = make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
         }
         else
-            description += "'Of " + string(armour_ego_name(item, false)) + "': ";
+            ego_prefix = "'Of " + string(armour_ego_name(item, false)) + "': ";
 
         string ego_key = _armour_ego_key(ego);
         string ego_desc = getEgoString(ego_key);
         if (is_artefact(item))
-            ego_desc = " " + uppercase_first(ego_desc);
-        description += ego_desc;
+            ego_desc = uppercase_first(ego_desc);
+
+        description += _format_prop_desc(ego_prefix, ego_desc);
     }
 
     string art_desc = _artefact_descrip(item);
@@ -2526,34 +2551,37 @@ static string _describe_gizmo(const item_def &item)
 
     if (item.brand)
     {
-        string name = string(gizmo_effect_name(item.brand)) + ":";
-        ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
+        const string name = string(gizmo_effect_name(item.brand)) + ":";
+        const string fname = make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
+        string desc;
         switch (item.brand)
         {
             case SPGIZMO_SPELLMOTOR:
-                ret += "Your spells cost less MP as you Rev up. Whenever you "
+                desc = "Your spells cost less MP as you Rev up. Whenever you "
                        "cast a spell, you make a melee attack against a random "
-                       "enemy in range.\n";
+                       "enemy in range.";
                 break;
 
             case SPGIZMO_GADGETEER:
-                ret += "Your evocable items recharge 30% faster and wands have "
-                       "a 30% chance to not spend a charge.\n";
+                desc = "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge.";
                 break;
 
             case SPGIZMO_REVGUARD:
-                ret += "Your AC increases as you Rev (up to +5) and while "
-                       "fully Revved, your attacks may disarm enemies.\n";
+                desc = "Your AC increases as you Rev (up to +5) and while "
+                       "fully Revved, your attacks may disarm enemies.";
                 break;
 
             case SPGIZMO_AUTODAZZLE:
-                ret += "It sometimes fires a blinding ray at enemies whose attacks "
-                       "you dodge.\n";
+                desc  = "It sometimes fires a blinding ray at enemies whose attacks "
+                       "you dodge.";
                 break;
 
             default:
                 break;
         }
+
+        ret += _format_prop_desc(fname, desc) + "\n";
     }
 
     ret += _artefact_descrip(item);
