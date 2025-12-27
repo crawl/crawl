@@ -334,24 +334,17 @@ void fill_doll_equipment(dolls_data &result)
             || is_player_tile(base_tile, TILEP_BASE_FELID))
         {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
         }
         else if (is_player_tile(base_tile, TILEP_BASE_FELID_SILLY))
         {
             // TODO: add variant blade hands for alt felid tiles
             result.parts[TILEP_PART_HAND1] = 0;
-            result.parts[TILEP_PART_HAND2] = 0;
         }
         else if (is_player_tile(base_tile, TILEP_BASE_OCTOPODE))
-        {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
-        }
         else
-        {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
-        }
+        result.parts[TILEP_PART_HAND2] = 0;
         break;
     }
     case transformation::statue:
