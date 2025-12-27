@@ -760,7 +760,7 @@ static bool _yred_bind_soul(monster* mons, killer_type killer)
     return false;
 }
 
-static bool _vampire_make_thrall(monster* mons)
+static bool _vampire_make_thrall(monster* mons, killer_type killer)
 {
     if (!mons->props.exists(VAMPIRIC_THRALL_KEY) || you.allies_forbidden())
         return false;
@@ -769,6 +769,9 @@ static bool _vampire_make_thrall(monster* mons)
     for (monster_iterator mi; mi; ++mi)
         if (mi->was_created_by(MON_SUMM_THRALL))
             return false;
+
+    const xp_tracking_type xp_tracking = mons->xp_tracking;
+    const unsigned int exp = exp_value(*mons);
 
     // Okay, let's try to make them for real!
     mprf("%s rises to serve you!", mons->name(DESC_THE).c_str());
@@ -799,7 +802,7 @@ static bool _vampire_make_thrall(monster* mons)
     mons->mark_summoned(MON_SUMM_THRALL, 0, false);
     mons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, &you, dur));
     mons_att_changed(mons);
-    gain_exp(exp_value(*mons));
+    _give_player_experience(exp, killer, false, true, xp_tracking);
 
     // Cancel fleeing and such.
     mons->behaviour = BEH_SEEK;
@@ -1160,7 +1163,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     if (_ely_heal_monster(mons, killer, killer_index))
         return true;
 
-    if (_vampire_make_thrall(mons))
+    if (_vampire_make_thrall(mons, killer))
         return true;
 
     return false;
