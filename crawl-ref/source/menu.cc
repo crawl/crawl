@@ -2044,9 +2044,7 @@ bool Menu::process_key(int keyin)
         // Derived classes may override disambiguate to handle overloaded keypresses.
         // When disambiguate wants to handle the keypress it should return true.
         if (!is_set(MF_PAGED_INVENTORY) && disambiguate(keyin))
-        {
             return true;
-        }
 
         const int primary_index = hotkey_to_index(keyin, true);
         const int key_index = hotkey_to_index(keyin, false);

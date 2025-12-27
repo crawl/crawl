@@ -484,9 +484,7 @@ bool InvMenu::process_command(command_type cmd)
                 return true;
             }
             else
-            {
                 return Menu::process_command(cmd);
-            }
         }
         case CMD_MENU_LEFT:
         {
@@ -1184,9 +1182,7 @@ bool InvMenu::disambiguate(int keyin)
 
     for (int i = 0; i < static_cast<int>(items.size()); ++i)
         if (is_hotkey(i, keyin))
-        {
             matches++;
-        }
 
     if (matches > 1)
     {
@@ -1208,9 +1204,7 @@ bool InvMenu::disambiguate(int keyin)
 
         clear();
         for (MenuEntry* me : overloaded)
-        {
             add_entry(me);
-        }
 
         update_more();
         reset();
@@ -1223,7 +1217,7 @@ bool InvMenu::disambiguate(int keyin)
 
 bool InvMenu::is_disambiguating() const
 {
-    return (overloaded_hotkey != '\0');
+    return overloaded_hotkey != '\0';
 }
 
 void InvMenu::restore_previous_menu()
@@ -1281,9 +1275,7 @@ void InvMenu::copy_items(vector<MenuEntry*> &A, vector<MenuEntry*> &B)
             new_me->selected_qty = me->selected_qty;
         }
         else
-        {
             new_me = new MenuEntry(*me);
-        }
         new_me->tag = tag;
         B.push_back(new_me);
     }
@@ -1611,9 +1603,7 @@ static string _inv_menu_titlefn(const Menu* menu, const string &)
     string extra_help = "";
     const InvMenu *imenu = dynamic_cast<const InvMenu*>(menu);
     if (imenu && imenu->is_disambiguating())
-    {
         extra_help = "Please disambiguate. ";
-    }
 
     return "Inventory: " + extra_help + slot_description();
 }
@@ -1648,16 +1638,12 @@ static string _drop_menu_titlefn(const Menu* menu, const string &)
 {
     string extra_help = "";
     if (menu->is_set(MF_PAGED_INVENTORY))
-    {
         extra_help = "(Left/Right to switch category) ";
-    }
     else
     {
         const InvMenu *imenu = dynamic_cast<const InvMenu*>(menu);
         if (imenu && imenu->is_disambiguating())
-        {
             extra_help = "Please disambiguate. ";
-        }
     }
     return "Drop what? " + extra_help + slot_description() + " (_ for help)";
 }
@@ -1683,9 +1669,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
         item_selector = OSEL_GEAR;
     }
     else
-    {
         item_selector = OSEL_ANY;
-    }
 
     _invent_select("",
                    menu_type::drop,
