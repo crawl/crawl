@@ -169,6 +169,10 @@ public:
     void cycle_page(int dir);
     void set_page(int page);
 
+    bool disambiguate(int keyin);
+    bool is_disambiguating() const;
+
+
 protected:
     void do_preselect(InvEntry *ie);
     bool examine_index(int i) override;
@@ -179,6 +183,10 @@ protected:
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
     void select_index(int index, int qty) override;
+    void copy_items(vector<MenuEntry*> &A, vector<MenuEntry*> &B);
+    void update_selected_qty(vector<MenuEntry*> &A, vector<MenuEntry*> &B);
+    void restore_previous_menu();
+
 
 protected:
     menu_type type;
@@ -191,6 +199,9 @@ protected:
     // Has no effect if that flag is not set.
     int cur_osel;
     vector<SelItem> offscreen_sel[4];
+
+    vector<MenuEntry *> previous_items;
+    char overloaded_hotkey = '\0';
 };
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
