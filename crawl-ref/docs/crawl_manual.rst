@@ -1784,6 +1784,19 @@ Barachim (Ba)
   allow them to leap great distances. When not leaping, they are somewhat
   slow-moving, and the long sight-lines that their heritage creates can be a
   major disadvantage, but they can master almost any skill.
+  
+Sludge Elves (SE)
+  A species of expert shapeshifters and fanatical mutators, Sludge Elves lack 
+  the intelligence and proficiencies of other elves - which is fitting, since
+  they are not "true" elves at all. They were so named for the elegance and
+  grace with which they imbue their motions, even within the most twisted and
+  hideous forms.
+  
+  Sludge Elves have somewhat poor proficiency with most skills besides Unarmed 
+  Combat and Shapeshifting, and their health is below average. While nominally
+  humanoid in shape, they are most themselves when transformed and receive large
+  bonuses while shapeshifted. More experienced Sludge Elves discover a form
+  which feels like their own, and become able to use it even without a talisman.
 
 Advanced Species
 ================

@@ -3231,6 +3231,16 @@ void level_change(bool skip_attribute_increase)
                     _revenant_spell_gift();
                 break;
 
+            case SP_SLUDGE_ELF:
+                if (new_exp == 4)
+                {
+                    mutate(RANDOM_GOOD_MUTATION, "sludge genetics", false, true,
+                        false, true);
+                }
+                else if (new_exp == 10)
+                    set_innate_transformation();
+                break;
+
             default:
                 break;
             }
@@ -6581,6 +6591,9 @@ int player::armour_class_scaled(int scale) const
 
     if (you.duration[DUR_PHALANX_BARRIER])
         AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
+
+    if (has_mutation(MUT_NATURAL_SHIFTER) && you.form != transformation::none)
+        AC += 100 + 200 * get_mutation_level(MUT_NATURAL_SHIFTER);
 
     AC -= 100 * corrosion_amount();
 
