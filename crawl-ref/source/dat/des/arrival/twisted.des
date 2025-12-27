@@ -887,7 +887,7 @@ XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIx@
 ENDMAP
 
 NAME: nicolae_arrival_memento_mori
-TAGS: arrival no_monster_gen no_trap_gen
+TAGS: arrival no_monster_gen no_trap_gen uniq_your_own_corpse
 ORIENT: float
 SUBST: n = nN
 KPROP: u = no_tele_into
