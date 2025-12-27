@@ -618,7 +618,7 @@ bool targeter_dig::valid_aim(coord_def a)
         {
             possible_squares_affected = 0;
             for (auto p : path_taken)
-                if (beam.can_affect_wall(p) ||
+                if (beam.can_affect_wall(p, true) ||
                         in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
                 {
                     possible_squares_affected++;
@@ -665,7 +665,7 @@ aff_type targeter_dig::is_affected(coord_def loc)
         {
             if (!cell_is_solid(pc))
                 current = AFF_TRACER;
-            else if (!beam.can_affect_wall(pc))
+            else if (!beam.can_affect_wall(pc, true))
             {
                 current = AFF_TRACER; // show tracer at the barrier cell
                 hit_barrier = true;
@@ -2439,7 +2439,7 @@ aff_type targeter_mortar::is_affected(coord_def loc)
         // mmapped walls.
         if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
         {
-            if (cell_is_solid(pc) && !beam.can_affect_wall(pc)
+            if (cell_is_solid(pc) && !beam.can_affect_wall(pc, true)
                 || (monster_at(pc) && you.can_see(*monster_at(pc))
                     && !beam.ignores_monster(monster_at(pc))))
             {
