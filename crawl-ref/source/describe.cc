@@ -2368,7 +2368,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             description += "\n\nIt can be maximally enchanted to +"
                            + to_string(armour_max_enchant(item)) + ".";
         }
-        else
+        else if (armour_is_enchantable(item))
             description += "\n\nIt cannot be enchanted further.";
     }
 
