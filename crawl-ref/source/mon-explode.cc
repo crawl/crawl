@@ -426,10 +426,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     if (type == MONS_LURKING_HORROR)
         torment(mons, TORMENT_LURKING_HORROR, mons->pos());
 
-    // Detach monster from the grid first, so it doesn't get hit by
-    // its own explosion. (GDL)
-    env.mgrid(mons->pos()) = NON_MONSTER;
-
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
 
@@ -447,6 +443,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
                                   poof_msg);
     }
 
-    // Monster died in explosion, so don't re-attach it to the grid.
+    // Monster died in explosion, so don't print a death message for it.
     return true;
 }
