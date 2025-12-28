@@ -3402,6 +3402,7 @@ static void _find_good_alternate_move(monster* mons, coord_def& delta,
     const coord_def target = mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
     const int current_distance = distance2(mons->pos(), target);
+    const bool can_see_now = cell_see_cell(mons->pos(), target, LOS_NO_TRANS);
 
     int dir = _compass_idx(delta);
 
@@ -3423,15 +3424,20 @@ static void _find_good_alternate_move(monster* mons, coord_def& delta,
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
         {
             const int newdir = (dir + 8 + mod) % 8;
+            const coord_def newpos = mons->pos() + mon_compass[newdir];
+            const bool retreating = mons_is_retreating(*mons);
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
-                dist[i] = distance2(mons->pos()+mon_compass[newdir], target);
+            {
+                // Monsters which are not fleeing should not lose LoS.
+                const bool lost_los = (can_see_now
+                                       && !cell_see_cell(newpos, target, LOS_NO_TRANS));
+                dist[i] = (lost_los && !retreating) ? FAR_AWAY : distance2(newpos, target);
+            }
             else
             {
                 // If we can cut firewood there, it's still not a good move,
                 // but update delta so we can fall back to it.
-                monster* targ = monster_at(mons->pos() + mon_compass[newdir]);
-                const bool retreating = mons_is_retreating(*mons);
-
+                monster* targ = monster_at(newpos);
                 dist[i] = (targ && _may_cutdown(mons, targ))
                           ? current_distance
                           : retreating ? -FAR_AWAY : FAR_AWAY;
