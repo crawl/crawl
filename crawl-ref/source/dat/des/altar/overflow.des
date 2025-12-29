@@ -4534,6 +4534,37 @@ MAP
   .....
 ENDMAP
 
+NAME:   hellmonk_zin_sealed_chaos
+TAGS:   no_item_gen no_monster_gen no_descent
+DEPTH:  D:3-
+COLOUR: . = white
+TILE:   c = wall_cobalt_stone
+FTILE:  _.S = floor_limestone
+KPROP:  ~1' = no_tele_into
+: if crawl.one_chance_in(3) then
+KFEAT:  ~ = altar_xom
+KMONS:  1 = chaos spawn
+: elseif crawl.coinflip() then
+KFEAT:  ~ = altar_lugonu
+KMONS:  1 = small abomination
+: else
+KFEAT:  ~ = altar_jiyva
+KMONS:  1 = slime creature
+: end
+: vault_metal_statue_setup(_G, "S", "silver statue")
+: standard_overflow_setup(_G, { { "zin", "_" } }, true)
+MAP
+ ccc
+cc~cc
+c1'1c
+c'''c
+c===c
+S...S
+..S..
+ ._.
+  .
+ENDMAP
+
 ### The Shining One overflow altars ###########################################
 
 # TSO's small temple (1KB)
