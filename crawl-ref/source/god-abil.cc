@@ -5921,9 +5921,29 @@ spret uskayaw_grand_finale(bool fail)
     if (mons->alive())
         monster_die(*mons, KILL_YOU, NON_MONSTER);
 
+    // remove the habitable wall or statue the monster may have existed in
+    // Is there anything other solid feature we'd rather not destroy?
+    // Is there a better way to do this?
+    if (!mons->alive()
+        && feat_is_solid(env.grid(beam.target))
+        && env.grid(beam.target) != DNGN_MALIGN_GATEWAY
+        && env.grid(beam.target) != DNGN_SPIKE_LAUNCHER
+        && env.grid(beam.target) != DNGN_FRIGID_WALL
+        && !feat_is_permarock(env.grid(beam.target)))
+    {
+        mpr(make_stringf("The %s collapses around you!",
+            feat_type_name(env.grid(beam.target))));
+        destroy_wall(beam.target);
+    }
+
     // a lost soul may sneak in here
-    if (!mons->alive() && !monster_at(beam.target))
+    // or a wall/statue may still be here
+    if (!mons->alive()
+        && !monster_at(beam.target)
+        && !feat_is_solid(env.grid(beam.target)))
+    {
         you.move_to(beam.target, MV_TRANSLOCATION | MV_DELIBERATE);
+    }
     else
         mpr("You spring back to your original position.");
 
