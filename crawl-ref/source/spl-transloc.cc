@@ -1500,7 +1500,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         if (katana_defender)
         {
             if (offhand && is_unrandom_artefact(*offhand, UNRAND_AUTUMN_KATANA))
-                atk.set_weapon(offhand, true);
+                atk.set_weapon(offhand);
             // Only the katana can attack through space!
             atk.attack();
         }

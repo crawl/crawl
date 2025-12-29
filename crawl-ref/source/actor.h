@@ -92,8 +92,6 @@ public:
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
 
-    virtual brand_type damage_brand(int which_attack = -1) = 0;
-    virtual vorpal_damage_type damage_type(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) const = 0;
     const item_def *primary_weapon() const
     {

@@ -678,8 +678,8 @@ public:
         override;
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
-    brand_type  damage_brand(int which_attack = -1) override;
-    vorpal_damage_type damage_type(int which_attack = -1) override;
+    brand_type  damage_brand(const item_def* weapon) const;
+    vorpal_damage_type damage_type(const item_def* weapon) const;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,

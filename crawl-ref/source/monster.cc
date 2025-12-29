@@ -401,7 +401,7 @@ int monster::ghost_umbra_radius() const
     return ghost->umbra_rad;
 }
 
-brand_type monster::damage_brand(int which_attack)
+brand_type monster::damage_brand(int which_attack) const
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -412,7 +412,7 @@ brand_type monster::damage_brand(int which_attack)
                                     : SPWPN_NORMAL;
 }
 
-vorpal_damage_type monster::damage_type(int which_attack)
+vorpal_damage_type monster::damage_type(int which_attack) const
 {
     const item_def *mweap = weapon(which_attack);
 

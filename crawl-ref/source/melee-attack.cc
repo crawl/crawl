@@ -1450,8 +1450,7 @@ bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
         {
             melee_attack followup(attacker, def, attack_number,
                                   ++new_effective_attack_number);
-            followup.set_weapon(mutable_wpn,
-                                attacker->is_player() && attack_number > 0);
+            followup.set_weapon(mutable_wpn);
 
             copy_params_to(followup);
             followup.cleaving = is_cleaving;
@@ -1466,20 +1465,18 @@ bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
     return success;
 }
 
-void melee_attack::set_weapon(item_def *wpn, bool offhand)
+void melee_attack::set_weapon(item_def *wpn)
 {
     weapon = mutable_wpn = wpn;
-    if (offhand)
+    if (const monster* mons = attacker->as_monster())
     {
-        ASSERT(attacker->is_player());
-        damage_type = get_vorpal_type(*weapon);
-        if (!you.duration[DUR_CONFUSING_TOUCH])
-            damage_brand = get_weapon_brand(*weapon);
+        damage_brand = mons->damage_brand(attack_number);
+        damage_type = mons->damage_type(attack_number);
     }
     else
     {
-        damage_brand = attacker->damage_brand(attack_number);
-        damage_type = attacker->damage_type(attack_number);
+        damage_brand = you.damage_brand(wpn);
+        damage_type = you.damage_type(wpn);
     }
 
     init_attack(SK_UNARMED_COMBAT, attack_number);
@@ -1488,7 +1485,7 @@ void melee_attack::set_weapon(item_def *wpn, bool offhand)
 }
 
 // Perform a player attack with a specific weapon.
-bool melee_attack::swing_with(item_def &wpn, bool offhand)
+bool melee_attack::swing_with(item_def &wpn)
 {
     const bool reaching = weapon_reach(wpn) > 1
                             || you.form == transformation::aqua;
@@ -1506,7 +1503,7 @@ bool melee_attack::swing_with(item_def &wpn, bool offhand)
                        attack_number,
                        effective_attack_number);
     copy_params_to(swing);
-    swing.set_weapon(&wpn, offhand);
+    swing.set_weapon(&wpn);
     bool success = swing.attack();
     is_sunder |= swing.is_sunder;
     cancel_attack = swing.cancel_attack;
@@ -1658,7 +1655,7 @@ bool melee_attack::run_player_attack_set()
     {
         // Don't launch UC attacks when you have an offhand weapon.
         if (offhand)
-            set_weapon(offhand, true);
+            set_weapon(offhand);
         return attack();
     }
 
@@ -1672,7 +1669,7 @@ bool melee_attack::run_player_attack_set()
         second_weapon = primary;
     }
 
-    bool success = swing_with(*first_weapon, first_weapon == offhand);
+    bool success = swing_with(*first_weapon);
     if (cancel_attack)
         return success;
 
@@ -1684,7 +1681,7 @@ bool melee_attack::run_player_attack_set()
     if (defender && (!defender->alive() || !should_cleave_into(*attacker, *defender)))
         defender = nullptr;
 
-    if (swing_with(*second_weapon, second_weapon == offhand))
+    if (swing_with(*second_weapon))
         success = true;
     ASSERT(!cancel_attack);
     return success;

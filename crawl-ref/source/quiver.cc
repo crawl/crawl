@@ -460,7 +460,7 @@ namespace quiver
                     // this is actually a bitmask, but we will simplify quite a
                     // bit here and only use this for unarmed/forms. See
                     // melee_attack::set_attack_verb for the real thing.
-                    const int dt = you.damage_type();
+                    const vorpal_damage_type dt = you.damage_type(nullptr);
                     if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
                         return "attack";
                 }

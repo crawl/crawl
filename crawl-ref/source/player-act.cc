@@ -182,9 +182,9 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-vorpal_damage_type player::damage_type(int)
+vorpal_damage_type player::damage_type(const item_def* wp) const
 {
-    if (const item_def* wp = weapon())
+    if (wp)
         return get_vorpal_type(*wp);
     if (form == transformation::blade_hands)
         return DAMV_PIERCING;
@@ -198,13 +198,13 @@ vorpal_damage_type player::damage_type(int)
 /**
  * What weapon brand does the player attack with in melee?
  */
-brand_type player::damage_brand(int)
+brand_type player::damage_brand(const item_def* wpn) const
 {
     // confusing touch always overrides
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    if (item_def* wpn = you.weapon())
+    if (wpn)
     {
         if (is_range_weapon(*wpn))
             return SPWPN_NORMAL;
