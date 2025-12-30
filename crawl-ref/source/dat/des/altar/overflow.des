@@ -341,7 +341,7 @@ ENDMAP
 
 NAME:  nicolae_ashenzari_church_of_fetters
 TAGS:  transparent decor
-KFEAT: - = iron_grate
+KFEAT: M = iron_grate
 KMASK: ` = opaque
 KMASK: ` = no_trap_gen
 KMASK: ` = no_item_gen
@@ -351,13 +351,13 @@ KPROP: ` = no_tele_into
 MAP
   vvv....
  vv`vv...@
-.-```v--...
-.vv`vv.--..
-..vvv...--.
-@....._..-.
-..vvv...--.
-.vv`vv.--..
-.-```v--...
+.M```vMM...
+.vv`vv.MM..
+..vvv...MM.
+@....._..M.
+..vvv...MM.
+.vv`vv.MM..
+.M```vMM...
  vv`vv...@
   vvv....
 ENDMAP
@@ -4416,26 +4416,6 @@ cN....Mc
 cccccccc
 ENDMAP
 
-NAME:   nicolae_vehumet_let_it_end_in_hellfire!
-TAGS:   transparent decor
-KMONS:  1 = hellfire mortar
-KFEAT:  1 = l
-KMASK:  1 = opaque
-KPROP:  1 = no_tele_into
-COLOUR: cn = red
-: standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
-MAP
-xxxxx..@
-xccn..n.@
-xc1n.ncn.
-xnnn..n..
-x..._...x
-..n..nnnx
-.ncn.n1cx
-@.n..nccx
- @..xxxxx
-ENDMAP
-
 NAME:    nicolae_vehumet_we're_having_a_blast
 TAGS:    transparent
 : if you.in_branch("D") then
@@ -7252,8 +7232,8 @@ ENDMAP
 
 NAME:    nicolae_overflow_four_feature_corners
 TAGS:    no_pool_fixup transparent decor
-KFEAT:   - = iron_grate
-SHUFFLE: bvcmwl-
+KFEAT:   M = iron_grate
+SHUFFLE: bvcmwlM
 KPROP:   l = no_cloud_gen
 : standard_overflow_setup(_G, { { "generic", "B" } }, true)
 MAP
