@@ -1390,13 +1390,13 @@ static int _get_delay(const item_def &item)
     {
         item_def fake_proj;
         populate_fake_projectile(item, fake_proj);
-        return you.attack_delay_with(&fake_proj, false, &item).expected();
+        return you.attack_delay_with(&fake_proj, &item).expected();
     }
 
     if (is_throwable(&you, item))
-        return you.attack_delay(&item, false).expected();
+        return you.attack_delay(&item).expected();
 
-    return you.attack_delay_with(nullptr, false, &item).expected();
+    return you.attack_delay_with(nullptr, &item).expected();
 }
 
 static string _desc_attack_delay(const item_def &item)

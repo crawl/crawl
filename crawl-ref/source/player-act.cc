@@ -220,16 +220,14 @@ brand_type player::damage_brand(const item_def* wpn) const
  * Return the delay caused by attacking with your weapon or this projectile.
  *
  * @param projectile  The projectile to be thrown, if any.
- * @param rescale         Whether to re-scale the time to account for the fact that
- *                   finesse doesn't stack with haste.
  * @return           A random_var representing the range of possible values of
  *                   attack delay. It can be casted to an int, in which case
  *                   its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *projectile, bool rescale) const
+random_var player::attack_delay(const item_def *projectile) const
 {
     const item_def *primary = weapon();
-    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
+    const random_var primary_delay = attack_delay_with(projectile, primary);
     if (projectile && !is_launcher_ammo(*projectile))
         return primary_delay; // throwing doesn't use the offhand
 
@@ -242,11 +240,11 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     }
 
     // re-use of projectile is very dubious here
-    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
+    const random_var offhand_delay = attack_delay_with(projectile, offhand);
     return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
-random_var player::attack_delay_with(const item_def *projectile, bool rescale,
+random_var player::attack_delay_with(const item_def *projectile,
                                      const item_def *weap) const
 {
     random_var attk_delay(15);
@@ -322,7 +320,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         ASSERT(!you.duration[DUR_BERSERK]);
         // Finesse shouldn't stack with Haste, so we make this attack take
         // longer so when Haste speeds it up, only Finesse will apply.
-        if (you.duration[DUR_HASTE] && rescale)
+        if (you.duration[DUR_HASTE])
             attk_delay = haste_mul(attk_delay);
         attk_delay = div_rand_round(attk_delay, 2);
     }

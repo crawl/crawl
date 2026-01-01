@@ -680,9 +680,8 @@ public:
                           bool base = false) const override;
     brand_type  damage_brand(const item_def* weapon) const;
     vorpal_damage_type damage_type(const item_def* weapon) const;
-    random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool rescale = true) const override;
-    random_var  attack_delay_with(const item_def *projectile, bool rescale,
+    random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  attack_delay_with(const item_def *projectile,
                                   const item_def *weapon) const;
     int         constriction_damage(constrict_type typ) const override;
 
