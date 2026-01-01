@@ -2213,12 +2213,6 @@ bool is_throwable(const actor *actor, const item_def &wpn)
     return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
 }
 
-// Decide if something is launched or thrown.
-launch_retval is_launched(const actor *actor, const item_def &missile)
-{
-    return is_throwable(actor, missile) ? launch_retval::THROWN : launch_retval::FUMBLED;
-}
-
 // Sorry about this.
 void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
 {

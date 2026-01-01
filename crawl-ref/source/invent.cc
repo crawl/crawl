@@ -625,7 +625,6 @@ string no_selectables_message(int item_selector)
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
     case OSEL_QUIVER_ACTION:
-    case OSEL_QUIVER_ACTION_FORCE:
         return "You don't have any quiverable items.";
     }
 
@@ -1277,8 +1276,7 @@ bool item_is_selected(const item_def &i, int selector)
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
 
     case OSEL_LAUNCHING:
-        return itype == OBJ_MISSILES
-                        && is_launched(&you, i) != launch_retval::FUMBLED
+        return itype == OBJ_MISSILES && is_throwable(&you, i)
                 || itype == OBJ_WEAPONS && is_range_weapon(i)
                                         && item_is_equipped(i);
 
@@ -1324,13 +1322,11 @@ bool item_is_selected(const item_def &i, int selector)
             // However, we do want to allow selecting ammo/launchers under
             // confusion...
             // XX should the primary weapon be allowed here?
-            return a->is_valid()
-                && (a->is_targeted()
-                    || you.confused() && item_is_selected(i, OSEL_LAUNCHING));
+            return a && a->is_valid()
+                     && (a->is_targeted()
+                         || you.confused() && item_is_selected(i, OSEL_LAUNCHING));
         }
         return false;
-    case OSEL_QUIVER_ACTION_FORCE:
-        return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
     case OSEL_WORN_JEWELLERY_OR_TALISMAN:
         return item_is_equipped(i) && item_is_selected(i, OSEL_JEWELLERY_OR_TALISMAN);

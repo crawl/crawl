@@ -42,7 +42,6 @@ private:
     int dart_duration_roll(special_missile_type type);
     bool apply_missile_brand();
     bool throwing() const;
-    bool clumsy_throwing() const;
 
     /* Weapon Effects */
     bool check_unrand_effects() override;

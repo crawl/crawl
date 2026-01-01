@@ -1634,7 +1634,6 @@ static int l_item_acquirement_items(lua_State *ls)
  * @tparam[opt=0] number x coordinate
  * @tparam[opt=0] number y coordinate
  * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
- * @tparam[opt=false] boolean whether to allow fumble throwing of non-activatable items
  * @treturn boolean whether an action took place
  * @function fire
  */
@@ -1654,8 +1653,7 @@ static int l_item_fire(lua_State *ls)
     dist target;
     target.target = c;
     target.isEndpoint = lua_toboolean(ls, 4); // can be nil
-    const bool force = lua_toboolean(ls, 5); // can be nil
-    quiver::slot_to_action(slot, force)->trigger(target);
+    quiver::slot_to_action(slot)->trigger(target);
     PLUARET(boolean, you.turn_is_over);
 }
 

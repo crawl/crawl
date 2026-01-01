@@ -299,29 +299,20 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
 
     int slot = -1;
     const string title = make_stringf(
-        "<lightgray>Fire%s/use which item?%s</lightgray>",
-        (can_throw ? "/throw" : ""),
-        (can_throw ? " ([<w>*</w>] to toss any item)" : ""));
-    const string alt_title =
-        "<lightgray>Toss away which item?</lightgray>";
-    int selector = fireables ? OSEL_QUIVER_ACTION : OSEL_ANY;
+        "<lightgray>Fire%s/use which item?</lightgray>",
+        (can_throw ? "/throw" : ""));
     // TODO: the output api here is awkward
     // TODO: it would be nice if items with disabled actions got grayed out
     slot = prompt_invent_item(
                 title.c_str(),
                 menu_type::invlist,
-                selector, OPER_FIRE,
-                invprompt_flag::no_warning // warning handled in quiver
-                    | invprompt_flag::hide_known,
-                '\0',
-                can_throw ? alt_title.c_str() : nullptr,
-                &selector);
+                OSEL_QUIVER_ACTION, OPER_FIRE,
+                invprompt_flag::no_warning, // warning handled in quiver
+                '\0');
     if (slot == -1)
         return nullptr;
 
-    return selector == OSEL_ANY && can_throw
-        ? quiver::ammo_to_action(slot, true) // throw/toss only
-        : quiver::slot_to_action(slot, false); // use
+    return quiver::slot_to_action(slot);
 }
 
 // Returns true if warning is given.
@@ -419,14 +410,7 @@ void fire_item_no_quiver(dist *target)
     // handles slot == -1
     if (!a || !a->is_valid())
     {
-        string warn;
-        if (a && a->get_item() >= 0
-                    && !quiver::toss_validate_item(a->get_item(), &warn))
-        {
-            mpr(warn);
-        }
-        else if (!a)
-            canned_msg(MSG_OK);
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -776,7 +760,6 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
     const int ammo_brand = get_ammo_brand(item);
     const bool returning = _returning(item);
     const bool is_thrown = is_throwable(&you, item);
-    const bool tossing = !launcher && !is_thrown;
 
     if (launcher)
     {
@@ -797,7 +780,7 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
 
     // Create message.
     mprf("You %s %s%s.",
-          is_thrown ? "throw" : launcher ? "shoot" : "toss away",
+          is_thrown ? "throw" : "shoot" ,
           _ammo_name(item, launcher).c_str(),
           you.current_vision == 0 ? " into the darkness" : "");
 
@@ -813,7 +796,7 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
     // when we walk over it.
     if (item.base_type == OBJ_MISSILES)
         item.flags |= ISFLAG_THROWN;
-    pbolt.item_mulches = !tossing && _thrown_object_destroyed(item);
+    pbolt.item_mulches = _thrown_object_destroyed(item);
     pbolt.drop_item = !pbolt.item_mulches && !returning;
     pbolt.hit = 0;
 

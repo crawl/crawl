@@ -277,14 +277,6 @@ enum jewellery_type
     NUM_JEWELLERY
 };
 
-enum class launch_retval
-{
-    BUGGY = -1, // could be 0 maybe? TODO: test
-    FUMBLED,
-    LAUNCHED,
-    THROWN,
-};
-
 enum misc_item_type
 {
 #if TAG_MAJOR_VERSION == 34

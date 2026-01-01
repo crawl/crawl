@@ -292,7 +292,7 @@ void swap_inv_slots(item_def& to_adjust, int to_slot, bool verbose)
     }
 
     if (new_quiver >= 0)
-        you.quiver_action.replace(quiver::slot_to_action(new_quiver, true));
+        you.quiver_action.replace(quiver::slot_to_action(new_quiver));
     you.m_quiver_history.maybe_swap(from_slot, to_slot);
 
     if (verbose)

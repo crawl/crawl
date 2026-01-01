@@ -1488,7 +1488,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
             current.plus = evoker_charges(current.sub_type);
         if (in_inventory(current))
         {
-            auto action = quiver::slot_to_action(current.link, false);
+            auto action = quiver::slot_to_action(current.link);
             // TODO: does this stay in sync? Do anything with enabledness?
             if (action && action->is_valid())
                 json_write_string("action_verb", action->quiver_verb());

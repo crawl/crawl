@@ -181,7 +181,6 @@ bool is_slowed_by_armour(const item_def *item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
 bool is_throwable(const actor *actor, const item_def &wpn) PURE;
 bool is_launcher_ammo(const item_def &wpn) PURE;
-launch_retval is_launched(const actor *actor, const item_def &missile) PURE;
 
 bool ammo_always_destroyed(const item_def &missile) PURE;
 bool ammo_never_destroyed(const item_def &missile) PURE;

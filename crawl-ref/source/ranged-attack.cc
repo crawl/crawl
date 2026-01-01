@@ -357,16 +357,8 @@ bool ranged_attack::using_weapon() const
     return weapon && !throwing();
 }
 
-bool ranged_attack::clumsy_throwing() const
-{
-    return throwing() && !is_throwable(attacker, *projectile);
-}
-
 int ranged_attack::weapon_damage() const
 {
-    if (clumsy_throwing())
-        return 0;
-
     int dam = property(*projectile, PWPN_DAMAGE);
     if (using_weapon())
         dam += property(*weapon, PWPN_DAMAGE);
@@ -381,8 +373,6 @@ int ranged_attack::weapon_damage() const
  */
 int ranged_attack::calc_base_unarmed_damage() const
 {
-    if (clumsy_throwing())
-        return 0;
     return throwing_base_damage_bonus(*projectile, true);
 }
 

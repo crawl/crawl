@@ -249,7 +249,6 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
                                      const item_def *weap) const
 {
-    // The delay for swinging non-weapons and tossing non-missiles.
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
@@ -312,7 +311,6 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
 
     // Slow attacks with ranged weapons, but not clumsy bashes.
     // Don't slow throwing attacks while holding a ranged weapon.
-    // Don't slow tossing.
     if (ranged_weapon_attack && is_slowed_by_armour(weap))
     {
         const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
