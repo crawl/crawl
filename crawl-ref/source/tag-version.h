@@ -351,6 +351,7 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_MORTAR_MARKERS, // Remove map_hellfire_mortar_lava_marker and refactor again
     TAG_MINOR_FIX_VENGEANCE_CLEANUP, // Fix a crash when changing levels due to old vengeance targets
     TAG_MINOR_FLAVOUR_KNOWLEDGE,   // Save player knowledge of feature flavour
+    TAG_MINOR_REMOVE_PIETY_DECAY,  // Remove piety decay and hysteresis mechanics
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
