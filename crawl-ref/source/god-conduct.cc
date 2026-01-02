@@ -516,7 +516,7 @@ struct like_response
  * for gods that like killing this sort of thing.
  */
 static like_response _on_kill(const char* desc,
-                              int scaled_piety = 100,
+                              int scaled_piety = 90,
                               special_piety_t special = nullptr,
                               bool really_like = false)
 {
@@ -531,31 +531,31 @@ static like_response _on_kill(const char* desc,
 }
 
 /// Response for gods that like killing the living.
-static const like_response kill_living_response(int scaled_piety = 100)
+static const like_response kill_living_response(int scaled_piety = 90)
 {
     return _on_kill("you kill living beings", scaled_piety);
 }
 
 /// Response for non-good gods that like killing (?) undead.
-static const like_response kill_undead_response(int scaled_piety = 100)
+static const like_response kill_undead_response(int scaled_piety = 90)
 {
     return _on_kill("you destroy the undead", scaled_piety);
 }
 
 /// Response for non-good gods that like killing (?) demons.
-static const like_response kill_demon_response(int scaled_piety = 100)
+static const like_response kill_demon_response(int scaled_piety = 90)
 {
     return _on_kill("you kill demons", scaled_piety);
 }
 
 /// Response for gods that like killing (?) holies.
-static const like_response kill_holy_response(int scaled_piety = 100)
+static const like_response kill_holy_response(int scaled_piety = 90)
 {
     return _on_kill("you kill holy beings", scaled_piety);
 }
 
 /// Response for non-good gods that like killing (?) nonliving enemies.
-static const like_response kill_nonliving_response(int scaled_piety = 100)
+static const like_response kill_nonliving_response(int scaled_piety = 90)
 {
     return _on_kill("you destroy nonliving beings", scaled_piety);
 }
@@ -572,7 +572,7 @@ static like_response okawaru_kill(const char* desc)
         {
             piety = get_fuzzied_monster_difficulty(*victim);
             dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
-            denom = 550;
+            denom = 600;
 
             if (piety > 3200)
             {
@@ -591,7 +591,7 @@ static const like_response _fedhas_kill_living_response()
     return
     {
         "you kill living beings", false,
-        100, 100,
+        95, 100,
         nullptr, [] (int &, int &, const monster* victim)
         {
             if (victim && mons_class_can_leave_corpse(mons_species(victim->type)))
@@ -607,7 +607,7 @@ static const like_response _yred_kill_response()
     return
     {
         nullptr, false,
-        100, 100,
+        90, 100,
         nullptr, [] (int &piety, int &, const monster* victim)
         {
             if (victim)
@@ -677,8 +677,8 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_ZIN,
     {
-        { DID_KILL_UNCLEAN, _on_kill("you kill unclean or chaotic beings") },
-        { DID_KILL_CHAOTIC, _on_kill(nullptr) },
+        { DID_KILL_UNCLEAN, _on_kill("you kill unclean or chaotic beings", 100) },
+        { DID_KILL_CHAOTIC, _on_kill(nullptr, 100) },
     },
     // GOD_SHINING_ONE,
     {
@@ -728,24 +728,24 @@ static like_map divine_likes[] =
         {
             { DID_KILL_WIZARD, {
                 "you kill wizards and other users of magic", true,
-                100, 100, " appreciates your killing of a magic user."
+                90, 100, " appreciates your killing of a magic user."
             } },
         }
     ),
     // GOD_NEMELEX_XOBEH,
     {
-        { DID_EXPLORATION, explore_response(56) },
+        { DID_EXPLORATION, explore_response(47) },
     },
     // GOD_ELYVILON,
     {
-        { DID_EXPLORATION, explore_response(80) },
+        { DID_EXPLORATION, explore_response(71) },
     },
     // GOD_LUGONU,
     default_kill_conduct_with_extra(
         {
             { DID_BANISH, {
                 "you banish creatures to the Abyss", false,
-                100, 100, " claims a new guest."
+                90, 100, " claims a new guest."
             } },
         }
     ),
@@ -761,21 +761,25 @@ static like_map divine_likes[] =
     // GOD_JIYVA,
     {
         { DID_EXPLORATION, explore_response(
-            104, "you explore the world outside of the Slime Pits") },
+            93, "you explore the world outside of the Slime Pits") },
     },
     // GOD_FEDHAS,
     {
+        // Fedhas gets slightly more piety for killing than other gods.
+        // This may well be a historical accident, and possibly should
+        // be adjusted by reducing his base piety rate to 0.9 like all
+        // the other normal killy gods.
         { DID_KILL_LIVING, _fedhas_kill_living_response() },
-        { DID_KILL_UNDEAD, kill_undead_response() },
-        { DID_KILL_DEMON, kill_demon_response() },
-        { DID_KILL_HOLY, kill_holy_response() },
-        { DID_KILL_NONLIVING, kill_nonliving_response() },
+        { DID_KILL_UNDEAD, kill_undead_response(95) },
+        { DID_KILL_DEMON, kill_demon_response(95) },
+        { DID_KILL_HOLY, kill_holy_response(95) },
+        { DID_KILL_NONLIVING, kill_nonliving_response(95) },
     },
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
             "you kill non-sluggish things", false,
-            4, 3, nullptr,
+            123, 100, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
                 const int mons_speed = mons_base_speed(*victim);
@@ -812,7 +816,7 @@ static like_map divine_likes[] =
     },
     // GOD_DITHMENOS,
     {
-        { DID_EXPLORATION, explore_response(72) },
+        { DID_EXPLORATION, explore_response(55) },
     },
     // GOD_GOZAG,
     like_map(),
@@ -854,7 +858,7 @@ static like_map divine_likes[] =
     },
     // GOD_HEPLIAKLQANA
     {
-        { DID_EXPLORATION, explore_response(56) },
+        { DID_EXPLORATION, explore_response(47) },
     },
     // GOD_WU_JIAN
     DEFAULT_KILL_CONDUCT,

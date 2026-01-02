@@ -2545,8 +2545,8 @@ static void _gain_piety_point()
     if (!you_worship(GOD_RU))
     {
         if (you.raw_piety >= MAX_PIETY
-            || you.raw_piety >= piety_breakpoint(5) && one_chance_in(3)
-            || you.raw_piety >= piety_breakpoint(3) && one_chance_in(3))
+            || you.raw_piety >= piety_breakpoint(5) && x_chance_in_y(3, 5)
+            || you.raw_piety >= piety_breakpoint(3) && x_chance_in_y(3, 5))
         {
             you.piety_info.register_piety_gain(PG_EVENT_STEPDOWN);
             do_god_gift();
@@ -4217,12 +4217,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-void decay_piety()
-{
-    lose_piety(1);
-    you.piety_info.register_piety_decay();
-}
-
 void handle_god_time(int /*time_delta*/)
 {
     if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
@@ -4251,39 +4245,7 @@ void handle_god_time(int /*time_delta*/)
         int sacrifice_count;
         switch (you.religion)
         {
-        case GOD_TROG:
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-        case GOD_DITHMENOS:
-        case GOD_QAZLAL:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_VEHUMET:
-        case GOD_ZIN:
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-#endif
-        case GOD_JIYVA:
-        case GOD_WU_JIAN:
-        case GOD_SIF_MUNA:
-        case GOD_YREDELEMNUL:
-            if (one_chance_in(17))
-                decay_piety();
-            break;
-
-        case GOD_ELYVILON:
-        case GOD_HEPLIAKLQANA:
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-        case GOD_SHINING_ONE:
-        case GOD_NEMELEX_XOBEH:
-            if (one_chance_in(35))
-                decay_piety();
-            break;
-
         case GOD_BEOGH:
-            if (one_chance_in(17))
-                decay_piety();
             maybe_generate_apostle_challenge();
             break;
 
@@ -4315,16 +4277,6 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
-        case GOD_IGNIS:
-            // Losing piety over time would be extremely annoying for people
-            // trying to get polytheist with Ignis. Almost impossible.
-        case GOD_USKAYAW:
-            // We handle Uskayaw elsewhere because this func gets called rarely
-        case GOD_GOZAG:
-        case GOD_XOM:
-            // Gods without normal piety do nothing each tick.
-            return;
-
         case GOD_NO_GOD:
         case GOD_RANDOM:
         case GOD_ECUMENICAL:
@@ -4332,11 +4284,9 @@ void handle_god_time(int /*time_delta*/)
         case NUM_GODS:
             die("Bad god, no bishop!");
             return;
-
+        default:
+            return;
         }
-
-        if (you.raw_piety < 1)
-            excommunication();
     }
 
     if (player_in_branch(BRANCH_CRUCIBLE))
