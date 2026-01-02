@@ -4911,9 +4911,9 @@ tileidx_t tileidx_known_brand(const item_def &item)
         case SPMSL_DISPERSAL:
         case SPMSL_DISJUNCTION:
             return TILE_BRAND_DISPERSAL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;
-#if TAG_MAJOR_VERSION == 34
         case SPMSL_CONFUSION:
             return TILE_BRAND_CONFUSION;
         case SPMSL_PARALYSIS:

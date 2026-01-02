@@ -318,8 +318,8 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
     case SPMSL_CURARE:
     case SPMSL_BLINDING:
     case SPMSL_FRENZY:
-    case SPMSL_EXPLODING:
 #if TAG_MAJOR_VERSION == 34
+    case SPMSL_EXPLODING:
     case SPMSL_STEEL:
 #endif
     case SPMSL_SILVER:

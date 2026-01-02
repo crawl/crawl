@@ -2237,8 +2237,7 @@ bool ammo_always_destroyed(const item_def &missile)
     const int brand = get_ammo_brand(missile);
     return missile.sub_type == MI_STONE
            || brand == SPMSL_CHAOS
-           || brand == SPMSL_DISPERSAL
-           || brand == SPMSL_EXPLODING;
+           || brand == SPMSL_DISPERSAL;
 }
 
 /**

@@ -562,8 +562,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_PENETRATION,
 #endif
     SPMSL_DISPERSAL,
-    SPMSL_EXPLODING,                   // Only used by Damnation crossbow
 #if TAG_MAJOR_VERSION == 34
+    SPMSL_EXPLODING,
     SPMSL_STEEL,
 #endif
     SPMSL_SILVER,

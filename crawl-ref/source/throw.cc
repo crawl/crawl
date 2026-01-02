@@ -483,31 +483,6 @@ void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         entry->launch(&beam);
         return;
     }
-
-    if (item.base_type == OBJ_MISSILES
-        && get_ammo_brand(item) == SPMSL_EXPLODING)
-    {
-        bolt *expl = new bolt(beam);
-
-        expl->is_explosion = true;
-        expl->damage       = dice_def(2, 5);
-        expl->ex_size      = 1;
-
-        if (beam.flavour == BEAM_MISSILE)
-        {
-            expl->flavour = BEAM_FRAG;
-            expl->name   += " fragments";
-
-            const string short_name =
-                item.name(DESC_BASENAME, true, false, false, false);
-
-            expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
-                                     short_name);
-        }
-        expl->name = "explosion of " + expl->name;
-
-        beam.special_explosion = expl;
-    }
 }
 
 static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ)
