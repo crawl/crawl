@@ -682,20 +682,18 @@ static like_map divine_likes[] =
     },
     // GOD_SHINING_ONE,
     {
-        { DID_KILL_UNDEAD, _on_kill("you kill the undead") },
-        { DID_KILL_DEMON, _on_kill("you kill demons") },
-        { DID_KILL_NATURAL_EVIL, _on_kill("you kill evil beings") },
+        // TSO gets substantially boosted piety for killing evil beings,
+        // and reduced piety for seeings (but not killing) other monsters.
+        { DID_KILL_UNDEAD, _on_kill("you kill the undead", 147) },
+        { DID_KILL_DEMON, _on_kill("you kill demons", 147) },
+        { DID_KILL_NATURAL_EVIL, _on_kill("you kill evil beings", 147) },
         { DID_SEE_MONSTER, {
             "you encounter other hostile creatures", false,
-            0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
+            43, 100, nullptr, [] (int &piety, int &denom, const monster* victim)
             {
                 // don't give piety for seeing things we get piety for killing.
                 if (victim && victim->evil())
-                    return;
-
-                const int level = denom; // also = piety
-                denom = level / 2 + 6 - you.experience_level / 4;
-                piety = denom - 4;
+                    piety = 0;
             }
         } },
     },
