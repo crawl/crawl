@@ -84,7 +84,6 @@
 #    define DEBUG_PIETY
 #endif
 
-#define PIETY_HYSTERESIS_LIMIT 1
 
 #define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
 #define YRED_SEEN_ZOMBIE_KEY "yred_seen_zombie"
@@ -2562,13 +2561,7 @@ static void _gain_piety_point()
     }
 
     int old_piety = you.piety();
-    // Apply hysteresis.
-    // piety_hysteresis is the amount of _loss_ stored up, so this
-    // may look backwards.
-    you.piety_info.register_piety_gain(PG_EVENT_TRUE_GAIN);
-    if (you.piety_hysteresis)
-        you.piety_hysteresis--;
-    else if (you.raw_piety < MAX_PIETY)
+    if (you.raw_piety < MAX_PIETY)
         you.raw_piety++;
 
     _handle_piety_gain(old_piety);
@@ -2720,18 +2713,6 @@ void lose_piety(int pgn)
     // repeatedly reporting that the player has lost abilities that were already
     // disabled due to Ostracism.)
     const int old_piety = you.piety();
-
-    // Apply hysteresis.
-    const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = min<int>(PIETY_HYSTERESIS_LIMIT,
-                                    you.piety_hysteresis + pgn);
-    const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
-    pgn -= pgn_borrowed;
-#ifdef DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS,
-         "Piety decreasing by %d (and %d added to hysteresis)",
-         pgn, pgn_borrowed);
-#endif
 
     if (you.raw_piety - pgn < 0)
         you.raw_piety = 0;
@@ -2888,7 +2869,6 @@ void excommunication(bool voluntary, god_type new_god)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.duration[DUR_RECITE] = 0;
     you.raw_piety = 0;
-    you.piety_hysteresis = 0;
 
     // so that the player isn't punished for "switching" between good gods via aX
     if (is_good_god(old_god) && voluntary)
@@ -3591,14 +3571,12 @@ static void _set_initial_god_piety()
 
     case GOD_ASHENZARI:
         you.raw_piety = ASHENZARI_BASE_PIETY;
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         initialize_ashenzari_props();
         break;
 
     case GOD_RU:
         you.raw_piety = 10; // one moderate sacrifice should get you to *.
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
 
         // I'd rather this be in on_join(), but then it overrides the
@@ -3622,7 +3600,6 @@ static void _set_initial_god_piety()
             you.raw_piety = you.props[MIN_IGNIS_PIETY_KEY].get_int();
         else
             you.raw_piety = 130; // matches zealot with ecu bonus
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         break;
 
@@ -3630,7 +3607,6 @@ static void _set_initial_god_piety()
         you.raw_piety = 15; // to prevent near instant excommunication
         if (you.piety_max[you.religion] < 15)
             you.piety_max[you.religion] = 15;
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         break;
     }
