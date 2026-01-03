@@ -508,7 +508,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!full_info && (knowledge.seen() || already_mapped))
             continue;
 
-        const dungeon_feature_type feat = env.grid(pos);
+        dungeon_feature_type feat = env.grid(pos);
+        if (!full_info)
+            feat = magic_map_base_feat(feat);
 
         bool open = true;
 
@@ -528,47 +530,31 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (open)
         {
-            if (full_info)
-            {
-                knowledge.set_feature(feat, _feat_default_map_colour(feat),
-                    feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
-                                           : TRAP_UNASSIGNED);
-            }
-            else if (!knowledge.feat())
-            {
-                auto base_feat = magic_map_base_feat(feat);
-                auto colour = _feat_default_map_colour(base_feat);
-                auto trap = feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
-                                                   : TRAP_UNASSIGNED;
-                knowledge.set_feature(base_feat, colour, trap);
-            }
+            knowledge.set_feature(feat, _feat_default_map_colour(feat),
+                feat_is_trap(env.grid(pos)) ? get_trap_type(pos) : TRAP_UNASSIGNED);
+            if (is_notable_terrain(feat))
+                seen_notable_thing(feat, pos);
+
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;
 
             if (full_info)
             {
-                if (is_notable_terrain(feat))
-                    seen_notable_thing(feat, pos);
-
                 set_terrain_seen(pos);
                 StashTrack.add_stash(pos);
                 show_update_at(pos);
-#ifdef USE_TILE
-                tile_wizmap_terrain(pos);
-#endif
             }
             else
             {
                 set_terrain_mapped(pos);
-
-                if (get_cell_map_feature(knowledge) == MF_STAIR_BRANCH)
-                    seen_notable_thing(feat, pos);
-
                 if (get_feature_dchar(feat) == DCHAR_ALTAR)
                     num_altars++;
                 else if (get_feature_dchar(feat) == DCHAR_ARCH)
                     num_shops_portals++;
             }
+#ifdef USE_TILE
+            tile_draw_map_cell(pos);
+#endif
 
             did_map = true;
         }

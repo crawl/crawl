@@ -1309,11 +1309,8 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
 
     const map_cell &cell = env.map_knowledge(gc);
 
-    // Override terrain for magic mapping.
-    if (!cell.seen() && env.map_knowledge(gc).mapped())
-        *bg = tileidx_feature_base(cell.feat());
-    else
-        *bg = mem_bg;
+    // Set unseen flag.
+    *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
 
     // Override foreground for monsters/items
