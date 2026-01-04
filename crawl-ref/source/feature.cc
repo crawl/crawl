@@ -236,43 +236,14 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
  */
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-        case DNGN_ENDLESS_SALT:
-            return DNGN_FLOOR;
-        case DNGN_OPEN_SEA:
-        case DNGN_LAVA_SEA:
-            return DNGN_SHALLOW_WATER;
-        case DNGN_DECORATIVE_FLOOR:
-            return DNGN_DECORATIVE_FLOOR;
-        default:
-            break;
-    }
-
     const feature_def& fdef = get_feature_def(feat);
     switch (fdef.dchar)
     {
-    case DCHAR_STATUE:
-        return DNGN_GRANITE_STATUE;
-    case DCHAR_FLOOR:
-        return DNGN_FLOOR;
-    case DCHAR_WAVY:
-        return DNGN_SHALLOW_WATER;
     case DCHAR_ARCH:
         return DNGN_UNKNOWN_PORTAL;
-    case DCHAR_FOUNTAIN:
-        return DNGN_FOUNTAIN_BLUE;
-    case DCHAR_WALL:
-        // special-case vaults walls because the vast majority of vaults walls
-        // are stone, and the rock walls look totally different
-        if (you.where_are_you == BRANCH_VAULTS)
-            return DNGN_STONE_WALL;
-        else
-            return DNGN_ROCK_WALL;
     case DCHAR_ALTAR:
         return DNGN_UNKNOWN_ALTAR;
     default:
-        // We could do more, e.g. map the different upstairs together.
         return feat;
     }
 }

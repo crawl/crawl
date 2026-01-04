@@ -122,7 +122,7 @@ opacity_type opacity_no_actor::operator()(const coord_def& p) const
 opacity_type opacity_excl::operator()(const coord_def& p) const
 {
     map_cell& cell = env.map_knowledge(p);
-    if (!cell.seen())
+    if (!cell.known())
         return OPC_CLEAR;
     else if (!cell.changed())
         return feat_is_opaque(env.grid(p)) ? OPC_OPAQUE : OPC_CLEAR;
