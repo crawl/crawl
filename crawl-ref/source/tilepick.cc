@@ -939,8 +939,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
 
     if (tile == TILE_DNGN_PORTAL_WIZARD_LAB
-             || tile == TILE_DNGN_EXIT_NECROPOLIS
-             || tile == TILE_DNGN_TRAP_HARLEQUIN)
+        || tile == TILE_DNGN_EXIT_NECROPOLIS
+        || tile == TILE_DNGN_TRAP_HARLEQUIN
+        || tile == TILE_WALL_BRICK_DARK_2_TORCH
+        || tile == TILE_WALL_BRICK_DARK_4_TORCH
+        || tile == TILE_WALL_BRICK_DARK_6_TORCH)
     {
         tile = tile + flv.special % tile_dngn_count(tile);
     }

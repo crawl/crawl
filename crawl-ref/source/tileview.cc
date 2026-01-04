@@ -456,6 +456,8 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     return idx;
 }
 
+static bool _is_torch(tileidx_t basetile);
+
 static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 {
     ASSERT(!candidates.empty());
@@ -474,7 +476,12 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
         for (unsigned int j = 0; j < count; ++j)
         {
             if (rand < tile_dngn_probs(tidx + j))
+            {
+                // XXX: this should be for any animated tile
+                if (_is_torch(tidx))
+                    return tidx;
                 return tidx + j;
+            }   
         }
         rand -= tile_dngn_probs(tidx + count - 1);
     }
@@ -1123,7 +1130,8 @@ static bool _tile_has_cycling_misc_animation(tileidx_t tile)
            || tile == TILE_DNGN_EXIT_NECROPOLIS
            || tile == TILE_DNGN_ALTAR_JIYVA
            || tile == TILE_DNGN_TRAP_HARLEQUIN
-           || tile >= TILE_ARCANE_CONDUIT && tile < TILE_DNGN_SARCOPHAGUS_SEALED;
+           || tile >= TILE_ARCANE_CONDUIT && tile < TILE_DNGN_SARCOPHAGUS_SEALED
+           || _is_torch(tile);
 }
 
 static bool _tile_has_random_misc_animation(tileidx_t tile)
@@ -1162,12 +1170,6 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     }
     else if (_tile_has_random_misc_animation(bg_idx))
         flv->special = random2(256);
-    else if (bg_idx == TILE_WALL_NORMAL && Options.tile_misc_anim)
-    {
-        tileidx_t basetile = tile_dngn_basetile(flv->wall);
-        if (_is_torch(basetile))
-            flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
-    }
 #else
     UNUSED(bg, flv);
 #endif
