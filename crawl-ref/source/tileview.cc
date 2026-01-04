@@ -1120,6 +1120,7 @@ static bool _is_torch(tileidx_t basetile)
            || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
 }
 
+#ifndef USE_TILE_WEB
 static bool _tile_has_cycling_misc_animation(tileidx_t tile)
 {
     if (!Options.tile_misc_anim)
@@ -1145,6 +1146,7 @@ static bool _tile_has_random_misc_animation(tileidx_t tile)
            || tile >= TILE_DNGN_SILVER_STATUE && tile < TILE_ARCANE_CONDUIT
            || tile >= TILE_WALL_STONE_CRACKLE_1 && tile <= TILE_WALL_STONE_CRACKLE_4;
 }
+#endif
 
 // Updates the "flavour" of tiles that are animated.
 // Unfortunately, these are all hard-coded for now.
