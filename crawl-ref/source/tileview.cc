@@ -1113,6 +1113,31 @@ static bool _is_torch(tileidx_t basetile)
            || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
 }
 
+static bool _tile_has_cycling_misc_animation(tileidx_t tile)
+{
+    if (!Options.tile_misc_anim)
+        return false;
+    // Wizlab entries, conduits, and harlequin traps both have spinning
+    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
+    return tile == TILE_DNGN_PORTAL_WIZARD_LAB
+           || tile == TILE_DNGN_EXIT_NECROPOLIS
+           || tile == TILE_DNGN_ALTAR_JIYVA
+           || tile == TILE_DNGN_TRAP_HARLEQUIN
+           || tile >= TILE_ARCANE_CONDUIT && tile < TILE_DNGN_SARCOPHAGUS_SEALED;
+}
+
+static bool _tile_has_random_misc_animation(tileidx_t tile)
+{
+    if (!Options.tile_misc_anim)
+        return false;
+    // This includes branch / portal entries and exits, altars, runelights, and
+    // fountains in the first range, and some randomly-animated weighted
+    // vault statues in the second statues.
+    return tile >= TILE_DNGN_ENTER_ZOT_CLOSED && tile < TILE_DNGN_CACHE_OF_FRUIT
+           || tile >= TILE_DNGN_SILVER_STATUE && tile < TILE_ARCANE_CONDUIT
+           || tile >= TILE_WALL_STONE_CRACKLE_1 && tile <= TILE_WALL_STONE_CRACKLE_4;
+}
+
 // Updates the "flavour" of tiles that are animated.
 // Unfortunately, these are all hard-coded for now.
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
@@ -1120,15 +1145,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    // Wizlab entries, conduits, and harlequin traps both have spinning
-    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB || bg_idx == TILE_DNGN_EXIT_NECROPOLIS
-       || bg_idx == TILE_DNGN_ALTAR_JIYVA || bg_idx == TILE_DNGN_TRAP_HARLEQUIN
-       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
-        && Options.tile_misc_anim)
-    {
+    if (_tile_has_cycling_misc_animation(bg_idx))
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    }
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1142,16 +1160,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    // This includes branch / portal entries and exits, altars, runelights, and
-    // fountains in the first range, and some randomly-animated weighted
-    // vault statues in the second statues.
-    else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_DNGN_CACHE_OF_FRUIT)
-             || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
-             || (bg_idx >= TILE_WALL_STONE_CRACKLE_1 && bg_idx <= TILE_WALL_STONE_CRACKLE_4)
-             && Options.tile_misc_anim)
-    {
+    else if (_tile_has_random_misc_animation(bg_idx))
         flv->special = random2(256);
-    }
     else if (bg_idx == TILE_WALL_NORMAL && Options.tile_misc_anim)
     {
         tileidx_t basetile = tile_dngn_basetile(flv->wall);
