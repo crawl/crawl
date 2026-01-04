@@ -361,6 +361,7 @@ tileidx_t tilep_equ_helm(const item_def &item)
             tile = TILEP_HELM_HAT_NORMAL;
             break;
         }
+        break;
     }
 
     case ARM_HELMET:
