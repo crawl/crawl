@@ -226,10 +226,12 @@ brand_type player::damage_brand(const item_def* wpn) const
  *                   attack delay. It can be casted to an int, in which case
  *                   its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *projectile, bool rescale) const
+random_var player::attack_delay(const item_def *projectile, bool rescale,
+                                bool ignore_temporary) const
 {
     const item_def *primary = weapon();
-    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
+    const random_var primary_delay = attack_delay_with(projectile, rescale, primary,
+                                        ignore_temporary);
     if (projectile && !is_launcher_ammo(*projectile))
         return primary_delay; // throwing doesn't use the offhand
 
@@ -242,12 +244,13 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     }
 
     // re-use of projectile is very dubious here
-    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
+    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand,
+                                        ignore_temporary);
     return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
-                                     const item_def *weap) const
+                                     const item_def *weap, bool ignore_temporary) const
 {
     // The delay for swinging non-weapons and tossing non-missiles.
     random_var attk_delay(15);
@@ -268,7 +271,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         const skill_type wpn_skill = SK_THROWING;
         const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
         attk_delay = random_var(projectile_delay);
-        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
+        attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10, false, !ignore_temporary)),
                                      DELAY_SCALE);
 
         // apply minimum to weapon skill modification
@@ -278,7 +281,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
     else if (unarmed_attack)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
-                                  skill(SK_UNARMED_COMBAT, 10);
+                                  skill(SK_UNARMED_COMBAT, 10, false, !ignore_temporary);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
     else if (melee_weapon_attack || ranged_weapon_attack)
@@ -286,7 +289,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding
         // doesn't make speed brand benefit from higher skill.
-        const int wpn_sklev = min(you.skill(wpn_skill, 10),
+        const int wpn_sklev = min(you.skill(wpn_skill, 10, false, !ignore_temporary),
                                   10 * weapon_min_delay_skill(*weap));
 
         attk_delay = random_var(property(*weap, PWPN_SPEED));
@@ -319,7 +322,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
     }
 
-    if (you.duration[DUR_FINESSE])
+    if (you.duration[DUR_FINESSE] && !ignore_temporary)
     {
         ASSERT(!you.duration[DUR_BERSERK]);
         // Finesse shouldn't stack with Haste, so we make this attack take
@@ -329,7 +332,10 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    return rv::max(div_rand_round(attk_delay * player_speed(), BASELINE_DELAY),
+    if (ignore_temporary)
+        return rv::max(attk_delay,random_var(1));
+    else
+        return rv::max(div_rand_round(attk_delay * player_speed(), BASELINE_DELAY),
                    random_var(1));
 }
 
