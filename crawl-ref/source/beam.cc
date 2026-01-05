@@ -521,12 +521,8 @@ bool bolt::can_affect_actor(const actor *act) const
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
     // Damnation doesn't blast the one firing.
-    else if (item
-            && item->props.exists(DAMNATION_BOLT_KEY)
-            && act->mid == source_id)
-    {
+    else if (safe_to_user && act->mid == source_id)
         return false;
-    }
     // Xak'krixis' prisms are smart enough not to affect friendlies
     else if (origin_spell == SPELL_FULMINANT_PRISM && thrower == KILL_MON
         && act->temp_attitude() == attitude)
@@ -642,14 +638,13 @@ void bolt::initialise_fire()
 
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
-    ASSERT(!drop_item || item && item->defined());
-    ASSERTM(range >= 0, "beam '%s', source '%s', item '%s'; has range -1",
+    ASSERT(!drop_item || ranged_atk);
+    ASSERTM(range >= 0, "beam '%s', source '%s', has range -1",
             name.c_str(),
             (source_id == MID_PLAYER ? "player" :
                           monster_by_mid(source_id) ?
                              monster_by_mid(source_id)->name(DESC_PLAIN, true) :
-                          "unknown").c_str(),
-            (item ? item->name(DESC_PLAIN, false, true) : "none").c_str());
+                          "unknown").c_str());
     ASSERT(!aimed_at_feet || source == target);
 
     real_flavour = flavour;
@@ -1213,6 +1208,12 @@ void bolt::fire(beam_tracer& new_tracer)
     fire();
 }
 
+void bolt::fire_as_ranged_attack(ranged_attack& atk)
+{
+    unwind_var<ranged_attack*> old_atk(ranged_atk, &atk);
+    fire();
+}
+
 void bolt::do_fire()
 {
     initialise_fire();
@@ -1221,26 +1222,13 @@ void bolt::do_fire()
     {
 #ifdef DEBUG
         dprf(DIAG_BEAM, "fire_beam() called on already done beam "
-             "'%s' (item = '%s')", name.c_str(),
-             item ? item->name(DESC_PLAIN).c_str() : "none");
+             "'%s'", name.c_str());
 #endif
         return;
     }
 
     apply_beam_conducts();
     cursor_control coff(false);
-
-#ifdef USE_TILE
-    // Set up uninitialized / item-based beam tile, if we're actually firing.
-    if (!is_tracer())
-    {
-        if (item && (flavour == BEAM_MISSILE || flavour == BEAM_VISUAL))
-        {
-            const coord_def diff = target - source;
-            tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
-        }
-    }
-#endif
 
     msg_generated = false;
     if (!aimed_at_feet)
@@ -2543,7 +2531,7 @@ void bolt::special_explode()
     _copy_affected_counts(*special_explosion, *this);
     special_explosion->in_explosion_phase = false;
     special_explosion->target = pos();
-    special_explosion->refine_for_explosion();
+    special_explosion->refine_for_explosion("the " + name + " explodes!");
     special_explosion->explode();
     _copy_affected_counts(*this, *special_explosion);
 }
@@ -2562,7 +2550,8 @@ void bolt::affect_endpoint()
         // target (and that it's still in range)
         monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
         if (bullseye_targ && hit_count.count(bullseye_targ->mid) == 0
-            && you.can_see(*bullseye_targ) && !item->is_type(OBJ_MISSILES, MI_THROWING_NET))
+            && you.can_see(*bullseye_targ)
+            && !ranged_atk->weapon->is_type(OBJ_MISSILES, MI_THROWING_NET))
         {
             use_bullseye = true;
         }
@@ -2571,20 +2560,14 @@ void bolt::affect_endpoint()
     // hack: we use hit_verb to communicate whether a ranged
     // attack hit. (And ranged attacks should only explode if
     // they hit the target, to avoid silliness with . targeting.)
-    if (special_explosion && (is_tracer() || !item || !hit_verb.empty()))
+    if (special_explosion && (is_tracer() || !hit_verb.empty()))
         special_explode();
 
     // Leave an object, if applicable.
-    if (item && !is_tracer() && was_missile)
-    {
-        ASSERT(item->defined());
-        if (item->flags & ISFLAG_SUMMONED || item_mulches)
-            item_was_destroyed(*item);
-        // Dimensional bullseye should make objects drop at the bullseye target
-        // instead of the end of the ray
-        else if (drop_item && !use_bullseye)
-            drop_object();
-    }
+    // (Dimensional bullseye should make objects drop at the bullseye target
+    // instead of the end of the ray.)
+    if (drop_item && !is_tracer() && !use_bullseye)
+        drop_object();
 
     if (is_explosion)
     {
@@ -2661,7 +2644,7 @@ void bolt::affect_endpoint()
             drop_object();
         }
 
-        if (special_explosion && (is_tracer() || !item || !hit_verb.empty()))
+        if (special_explosion && (is_tracer() || !hit_verb.empty()))
             special_explode();
     }
 
@@ -2864,8 +2847,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT(item != nullptr);
-    ASSERT(item->defined());
+    ASSERT(ranged_atk);
 
     // If the player is throwing this item at a wall, attempt to place it at
     // the tile on the path immediately before hitting the wall.
@@ -2878,7 +2860,12 @@ void bolt::drop_object()
                                     ? path_taken[path_taken.size() - 2]
                                     : source
                                 : pos();
-    copy_item_to_grid(*item, spot, 1);
+    int id = copy_item_to_grid(*ranged_atk->weapon, spot, 1);
+
+    // If the player threw this, mark it as thrown so that they'll pick it up
+    // again when they walk over it.
+    if (id != NON_ITEM && ranged_atk->attacker->is_player())
+        env.item[id].flags |= ISFLAG_THROWN;
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -3433,8 +3420,7 @@ void bolt::reflect()
         reflector = MID_NOBODY;
 #ifdef DEBUG
         dprf(DIAG_BEAM, "Bolt reflected by neither player nor "
-             "monster (bolt = %s, item = %s)", name.c_str(),
-             item ? item->name(DESC_PLAIN).c_str() : "none");
+             "monster (bolt = %s)", name.c_str());
 #endif
     }
 
@@ -4272,21 +4258,9 @@ void bolt::affect_player()
             interrupt_activity(activity_interrupt::monster_attacks);
     }
 
-    if (flavour == BEAM_MISSILE && item)
+    if (ranged_atk)
     {
-        ranged_attack attk(agent(true), &you, launcher,
-                           item, use_target_as_pos,
-                           agent(), item_mulches);
-        attk.attack();
-        // fsim purposes - throw_it detects if an attack connected through
-        // hit_verb
-        if (attk.ev_margin >= 0 && hit_verb.empty())
-            hit_verb = attk.attack_verb;
-        if (attk.reflected)
-            reflect();
-        extra_range_used += attk.range_used;
-        if (attk.did_net())
-            drop_item = false;
+        do_ranged_attack(you);
         return;
     }
 
@@ -5578,7 +5552,7 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    if (flavour == BEAM_MISSILE && item)
+    if (ranged_atk)
     {
         // Test if this qualifies to trigger Dimensional Bullseye later on.
         if (agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
@@ -5588,35 +5562,7 @@ void bolt::affect_monster(monster* mon)
             can_trigger_bullseye = true;
         }
 
-        actor *ag = agent(true);
-        // if the immediate agent is now dead, check to see if we can get a
-        // usable agent by factoring in reflections.
-        // At this point, it is possible that the agent is the dummy monster
-        // associated with YOU_FAULTLESS. This case will cause
-        // "INVALID YOU_FAULTLESS" to show up in dprfs and mess up the to-hit,
-        // but it otherwise works.
-        // TODO: is there a good way of handling the to-hit correctly? (And why
-        // should the to-hit be affected by reflections at all?)
-        // An alternative would be to stop the missile at this point.
-        if (!ag)
-            ag = agent(false);
-        // if that didn't work, blanket fall back on YOU_FAULTLESS. This covers
-        // a number of other weird penetration cases.
-        if (!ag)
-            ag = &env.mons[YOU_FAULTLESS];
-        ASSERT(ag);
-        ranged_attack attk(ag, mon, launcher,
-                           item, use_target_as_pos, agent(), item_mulches);
-        attk.attack();
-        // fsim purposes - throw_it detects if an attack connected through
-        // hit_verb
-        if (attk.ev_margin >= 0 && hit_verb.empty())
-            hit_verb = attk.attack_verb;
-        if (attk.reflected)
-            reflect();
-        if (attk.did_net())
-            drop_item = false;
-        extra_range_used += attk.range_used;
+        do_ranged_attack(*mon);
         return;
     }
 
@@ -6897,7 +6843,7 @@ const map<spell_type, explosion_sfx> spell_explosions = {
 
 // Takes a bolt and refines it for use in the explosion function.
 // Explosions which do not follow from beams bypass this function.
-void bolt::refine_for_explosion()
+void bolt::refine_for_explosion(const string& explode_msg)
 {
     ASSERT(!special_explosion);
 
@@ -6912,10 +6858,9 @@ void bolt::refine_for_explosion()
     // gets burned by it anyway.  :)
     msg_generated = true;
 
-    if (item != nullptr)
+    if (!explode_msg.empty())
     {
-        seeMsg  = "The " + item->name(DESC_PLAIN, false, false, false)
-                  + " explodes!";
+        seeMsg  = explode_msg;
         hearMsg = "You hear an explosion!";
     }
     else
@@ -7525,8 +7470,8 @@ string bolt::get_short_name() const
     if (!short_name.empty())
         return short_name;
 
-    if (item != nullptr && item->defined())
-        return item->name(DESC_A, false, false, false, false);
+    if (ranged_atk)
+        return ranged_atk->projectile_name();
 
     if (real_flavour == BEAM_RANDOM
         || real_flavour == BEAM_CHAOS)
@@ -7872,6 +7817,17 @@ void player_beam_tracer::blocked(string message) noexcept
     blocked_count++;
 }
 
+// Returns true if there is anything this tracer might possibly want to prompt
+// the player about.
+bool player_beam_tracer::has_any_warnings() noexcept
+{
+    return blocked_count > 0
+            || god_hated_target
+            || bad_charm_target
+            || hit_self_count > 0
+            || !bad_attack_targets.empty();
+}
+
 bool targeting_tracer::has_hit_foe() noexcept
 {
     return foe_info.count != 0;
@@ -7942,14 +7898,14 @@ bool cancel_beam_prompt(const bolt& beam, const player_beam_tracer& tracer,
         {
             prompt = make_stringf("That %s could hit you up to %d times."
                 " Continue anyway?",
-                beam.item ? beam.name.c_str() : "beam",
+                beam.ranged_atk ? beam.ranged_atk->projectile_name().c_str() : "beam",
                 tracer.hit_self_count);
         }
         else
         {
             prompt = make_stringf("That %s is likely to hit you."
                 " Continue anyway?",
-                beam.item ? beam.name.c_str() : "beam");
+                beam.ranged_atk ? beam.ranged_atk->projectile_name().c_str() : "beam");
         }
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -8006,6 +7962,48 @@ void bolt::set_is_tracer(bool value) noexcept
 
     static beam_tracer default_tracer;
     tracer = &default_tracer;
+}
+
+void bolt::do_ranged_attack(actor& targ)
+{
+    actor *ag = agent(true);
+    // if the immediate agent is now dead, check to see if we can get a
+    // usable agent by factoring in reflections.
+    // At this point, it is possible that the agent is the dummy monster
+    // associated with YOU_FAULTLESS. This case will cause
+    // "INVALID YOU_FAULTLESS" to show up in dprfs and mess up the to-hit,
+    // but it otherwise works.
+    // TODO: is there a good way of handling the to-hit correctly? (And why
+    // should the to-hit be affected by reflections at all?)
+    // An alternative would be to stop the missile at this point.
+    if (!ag)
+        ag = agent(false);
+    // if that didn't work, blanket fall back on YOU_FAULTLESS. This covers
+    // a number of other weird penetration cases.
+    if (!ag)
+        ag = &env.mons[YOU_FAULTLESS];
+    ASSERT(ag);
+
+    // XXX: Use this to track if the player was firing in the direction of a
+    //      real foe, for purposes of Coglin Rev and similar effects.
+    //      (This takes advantage of the fact that foes_hurt is not used for
+    //      any other purpose by ranged attack beams, but this is maybe a little
+    //      brittle...)
+    if (ag->is_player() && !targ.wont_attack() && !targ.is_firewood())
+        foes_hurt++;
+
+    ranged_attack attk(ag, &targ, ranged_atk->weapon, use_target_as_pos, agent());
+    attk.will_mulch = ranged_atk->will_mulch;
+
+    attk.attack();
+    // XXX: hit_verb is used later to make Damnation bolts only explode on it.
+    if (attk.ev_margin >= 0 && hit_verb.empty())
+        hit_verb = attk.attack_verb;
+    if (attk.reflected)
+        reflect();
+    extra_range_used += attk.range_used;
+    if (attk.did_net())
+        drop_item = false;
 }
 
 // Returns the effective willpower an actor with a given willpower would have

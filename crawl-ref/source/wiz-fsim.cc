@@ -392,7 +392,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
             && !iweap)
         {
-            ranged_attack attk(&you, &mon, nullptr, &you.inv[missile], false);
+            ranged_attack attk(&you, &mon, &you.inv[missile]);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)
@@ -406,9 +406,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         else if (iweap && iweap->base_type == OBJ_WEAPONS
                 && is_range_weapon(*iweap))
         {
-            item_def fake_proj;
-            populate_fake_projectile(*iweap, fake_proj);
-            ranged_attack attk(&you, &mon, iweap, &fake_proj, false);
+            ranged_attack attk(&you, &mon, iweap);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)
@@ -416,7 +414,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
                 did_hit = true;
                 fd.player.hits++;
             }
-            you.time_taken = you.attack_delay(&fake_proj).roll();
+            you.time_taken = you.attack_delay(iweap).roll();
         }
         else // otherwise, melee combat
         {

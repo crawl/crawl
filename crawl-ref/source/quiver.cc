@@ -353,7 +353,7 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
         }
 
         item_def *get_launcher() const override
@@ -902,8 +902,7 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            // TODO: refactor throw_it into here?
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
 
             // Update the legacy quiver history data structure
             // TODO: eliminate this? History should be stored per quiver, not

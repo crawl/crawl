@@ -3041,40 +3041,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_DISJUNCTION: return TILE_MI_DART_DISJUNCTION;
         }
 
-    case MI_ARROW:
-        switch (brand)
-        {
-        default:             return TILE_MI_ARROW_MAGIC;
-        case 0:              return TILE_MI_ARROW;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
-        }
-
-    case MI_BOLT:
-        switch (brand)
-        {
-        default:             return TILE_MI_BOLT_MAGIC;
-        case 0:              return TILE_MI_BOLT;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
-        }
-
-    case MI_SLUG:
-    case MI_SLING_BULLET:
-        switch (brand)
-        {
-        default:             return TILE_MI_SLING_BULLET_MAGIC;
-        case 0:              return TILE_MI_SLING_BULLET;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
-        }
-
     case MI_JAVELIN:
         switch (brand)
         {
@@ -3085,9 +3051,10 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
 #endif
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
-    }
 
-    return TILE_ERROR;
+    default:
+        return TILE_ERROR;
+    }
 }
 
 static tileidx_t _tileidx_missile(const item_def &item)
@@ -3665,79 +3632,43 @@ static int _tile_bolt_dir(int dx, int dy)
         return (dy > 0) ? 5: 7;
 }
 
-tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
+tileidx_t tileidx_item_projectile(const item_def &item)
 {
     if (item.base_type == OBJ_MISSILES)
     {
-        int ch = -1;
-        int dir = _tile_bolt_dir(dx, dy);
-
-        // Thrown items with multiple directions
         switch (item.sub_type)
         {
-            case MI_ARROW:
-                ch = TILE_MI_ARROW0;
-                break;
-            case MI_BOLT:
-                ch = TILE_MI_BOLT0;
-                break;
-            case MI_DART:
-                ch = TILE_MI_DART0;
-                break;
-            case MI_JAVELIN:
-                ch = TILE_MI_JAVELIN0;
-                break;
-            case MI_THROWING_NET:
-                ch = TILE_MI_THROWING_NET0;
-                break;
-            case MI_SLUG:
-                ch = TILE_MI_SLUG0;
-                break;
-            default:
-                break;
+            case MI_DART:           return TILE_MI_DART0;
+            case MI_JAVELIN:        return TILE_MI_JAVELIN0;
+            case MI_THROWING_NET:   return TILE_MI_THROWING_NET0;
+            case MI_STONE:          return TILE_MI_STONE0;
+            case MI_LARGE_ROCK:     return TILE_MI_LARGE_ROCK0;
+            case MI_BOOMERANG:      return TILE_MI_BOOMERANG0;
         }
-        if (ch != -1)
-            return ch + dir;
-
-        // Thrown items with a single direction
+    }
+    else if (is_range_weapon(item))
+    {
         switch (item.sub_type)
         {
-            case MI_STONE:
-                ch = TILE_MI_STONE0;
-                break;
-            case MI_SLING_BULLET:
-                switch (item.brand)
-                {
-                default:
-                    ch = TILE_MI_SLING_BULLET0;
-                    break;
-#if TAG_MAJOR_VERSION == 34
-                case SPMSL_STEEL:
-                    ch = TILE_MI_SLING_BULLET_STEEL0;
-                    break;
-#endif
-                case SPMSL_SILVER:
-                    ch = TILE_MI_SLING_BULLET_SILVER0;
-                    break;
-                }
-                break;
-            case MI_LARGE_ROCK:
-                ch = TILE_MI_LARGE_ROCK0;
-                break;
-            case MI_THROWING_NET:
-                ch = TILE_MI_THROWING_NET0;
-                break;
-            case MI_BOOMERANG:
-                ch = TILE_MI_BOOMERANG0;
-            default:
-                break;
+            case WPN_SLING:
+                return TILE_MI_SLING_BULLET0;
+
+            case WPN_SHORTBOW:
+            case WPN_ORCBOW:
+            case WPN_LONGBOW:
+                return TILE_MI_ARROW0;
+
+            case WPN_ARBALEST:
+            case WPN_TRIPLE_CROSSBOW:
+                return TILE_MI_BOLT0;
+
+            case WPN_HAND_CANNON:
+                return TILE_MI_SLUG0;
         }
-        if (ch != -1)
-            return tileidx_enchant_equ(item, ch);
     }
 
-    // If not a special case, just return the default tile.
-    return tileidx_item(item);
+    // Arbitary fallback
+    return TILE_MI_ARROW0;
 }
 #endif // USE_TILE
 
@@ -3890,6 +3821,12 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_HARPOON_SHOT:
     case TILE_BOLT_METAL_SPLINTERS:
     case TILE_BOLT_FROSTFIRE:
+    case TILE_MI_DART0:
+    case TILE_MI_JAVELIN0:
+    case TILE_MI_THROWING_NET0:
+    case TILE_MI_ARROW0:
+    case TILE_MI_BOLT0:
+    case TILE_MI_SLUG0:
         return tile + dir;
 
     case TILE_BOLT_ZAP:

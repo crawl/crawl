@@ -380,12 +380,7 @@ static bool _autofire_at(actor *defender)
 {
     if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
         return false;
-    dist t;
-    t.target = defender->pos();
-    shared_ptr<quiver::action> ract = quiver::find_ammo_action();
-    ract->set_target(t);
-    throw_it(*ract);
-    return true;
+    return do_player_ranged_attack(defender->pos());
 }
 
 static void _do_medusa_stinger()
@@ -484,8 +479,15 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         {
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
-            if (!simu && _autofire_at(defender))
-                return you.turn_is_over;
+
+            if (_autofire_at(defender))
+            {
+                you.time_taken = you.attack_delay().roll();
+                you.turn_is_over = true;
+                return true;
+            }
+            else
+                return false;
         }
 
         melee_attack attk(&you, defender);
@@ -509,7 +511,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (attk.cancel_attack)
             you.turn_is_over = false;
         else
-            you.time_taken = you.attack_delay().roll();
+            you.time_taken = you.melee_attack_delay().roll();
 
         if (!success)
             return !attk.cancel_attack;
@@ -607,7 +609,7 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
         _do_medusa_stinger();
 
     if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP])
-        you.rev_up(you.attack_delay().roll());
+        you.rev_up(you.melee_attack_delay().roll());
 }
 
 /**

@@ -66,9 +66,6 @@ public:
     brand_type      damage_brand;
     skill_type      wpn_skill;
 
-    // If weapon is an artefact, its properties.
-    artefact_properties_t art_props;
-
     // If a weapon is an unrandart, its unrandart entry.
     const unrandart_entry *unrand_entry;
 
@@ -111,7 +108,7 @@ public:
 
 // Private Methods
 protected:
-    virtual void init_attack(skill_type unarmed_skill, int attack_number);
+    virtual void init_attack(int attack_number);
 
     /* Attack Phases */
     virtual bool handle_phase_attempted();

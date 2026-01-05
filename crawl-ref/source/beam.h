@@ -31,6 +31,7 @@ using std::vector;
                                     // from remaining range
 
 class monster;
+class ranged_attack;
 
 enum mon_resist_type
 {
@@ -119,6 +120,7 @@ struct player_beam_tracer : beam_tracer
     void player_hit(bool was_friendly) noexcept override;
     void monster_hit(const bolt& bolt, const monster& mon) override;
     void blocked(string message) noexcept override;
+    bool has_any_warnings() noexcept;
 };
 
 // Used to check if casting a spell might be useful
@@ -154,9 +156,6 @@ struct bolt
                                            // will remain the same while flavour
                                            // changes
     bool        drop_item = false;     // should drop an item when done
-    bool        item_mulches = false;  // item will mulch on hit
-    const item_def*   item = nullptr;  // item to drop
-    const item_def*   launcher = nullptr; // origin launcher, if any
     coord_def   source = {0,0};           // beam origin
     coord_def   target = {0,0};           // intended target
     dice_def    damage = dice_def(0,0);
@@ -187,6 +186,7 @@ struct bolt
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
     bool   stop_at_allies = false; // Should beam automatically stop before reaching allies
+    bool   safe_to_user = false;  //
     string aux_source = "";       // source of KILL_NON_ACTOR beams
 
     bool   affects_nothing = false; // should not hit monsters or features
@@ -207,8 +207,6 @@ struct bolt
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam
                                         // itself.
-    bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
-                                  // FROST etc so that we can change mulch rate
     // Do we draw animations?
     bool   animate;
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.
@@ -240,6 +238,9 @@ struct bolt
     int foes_helped = 0;             // number of foes actually helped
     int friends_hurt = 0;            // number of friends actually hurt
     int friends_helped = 0;          // number of friends actually helped
+
+    // Ranged attack to perform on each actor reached (for ranged attack beams)
+    ranged_attack* ranged_atk = nullptr;
 
     beam_tracer* tracer = nullptr;
 
@@ -286,6 +287,7 @@ public:
 
     void fire();
     void fire(beam_tracer& tracer);
+    void fire_as_ranged_attack(ranged_attack& atk);
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
@@ -313,7 +315,7 @@ public:
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
     bool explode(beam_tracer& tracer, bool show_more = true,
                  bool hole_in_the_middle = false);
-    void refine_for_explosion();
+    void refine_for_explosion(const string& explode_msg = "");
     bool explosion_draw_cell(const coord_def& p);
     void explosion_affect_cell(const coord_def& p);
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
@@ -351,6 +353,8 @@ private:
     bool bush_immune(const monster &mons) const;
     bool at_blocking_monster() const;
     int apply_lighting(int base_hit, const actor &target) const;
+
+    void do_ranged_attack(actor& target);
 
     set<string> message_cache;
     void emit_message(const char* msg);

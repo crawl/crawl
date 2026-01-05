@@ -1139,7 +1139,7 @@ static void _input()
         // so. Otherwise, just wait out the rest of it.
         if (you.duration[DUR_VEXED])
         {
-            const int attk_delay = you.attack_delay().roll();
+            const int attk_delay = you.melee_attack_delay().roll();
             if (you.duration[DUR_VEXED] >= attk_delay)
             {
                 do_vexed_attack(you);

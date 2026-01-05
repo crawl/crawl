@@ -1398,16 +1398,18 @@ static coord_def _shadow_already_okay_for_ranged(coord_def preferred_target)
     return coord_def();
 }
 
-void dithmenos_shadow_shoot(const dist &d, const item_def &item)
+void dithmenos_shadow_shoot(const coord_def& targ, const item_def* thrown_projectile)
 {
-    ASSERT(d.isValid);
+    ASSERT(!thrown_projectile || thrown_projectile->base_type == OBJ_MISSILES);
+
     if (!_shadow_will_act(false, false))
         return;
-    // Determine preferred target for ranged shadow mimic by tracing along the
-    // ray used by the player to fire their own shot and stopping at the first
+
+    // Determine preferred target for ranged shadow mimic by tracing towards the
+    // target used by the player to fire their own shot and stopping at the first
     // hostile thing we see in that path.
-    coord_def aim = d.target;
-    monster* target = _find_shot_target(you.pos(), d.target);
+    coord_def aim = targ;
+    monster* target = _find_shot_target(you.pos(), targ);
     if (target && mons_aligned(&you, target))
         target = nullptr;
 
@@ -1459,11 +1461,11 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
     // XXX: Code partially copied from handle_throw to populate fake/real
     //      projectiles, depending on whether the shadow is using a launcher
     //      or not, and whether can existing shadow is being reused or not.
-    const item_def *launcher = mon->launcher();
+    item_def *launcher = mon->launcher();
     item_def *throwable = mon->missiles();
     item_def fake_proj;
     item_def *missile = &fake_proj;
-    if (is_throwable(mon, item))
+    if (thrown_projectile)
     {
         // If the shadow doesn't already have a missile item, make one for them
         if (!throwable)
@@ -1479,8 +1481,8 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         }
 
         // Set properties of the missile item it's using
-        missile->base_type = item.base_type;
-        missile->sub_type  = item.sub_type;
+        missile->base_type = OBJ_MISSILES;
+        missile->sub_type  = thrown_projectile->sub_type;
         missile->quantity  = 1;
         missile->rnd       = 1;
         missile->flags    |= ISFLAG_SUMMONED;
@@ -1488,14 +1490,11 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         if (!throwable)
             mon->pickup_item(*missile, false, true);
     }
-    else if (launcher)
-        populate_fake_projectile(*launcher, fake_proj);
 
-    bolt shot;
-    shot.target = aim;
-    setup_missile_beam(mon, shot, *missile, launcher);
-
-    mons_throw(mon, shot);
+    ranged_attack_beam atk(*mon, thrown_projectile ? *missile : *launcher);
+    atk.beam.target = aim;
+    atk.beam.stop_at_allies = true;
+    mons_throw(mon, atk);
 
     // Give Coglins a shot with their other weapon, if they have one
     if (you.has_mutation(MUT_WIELD_OFFHAND)
@@ -1503,9 +1502,8 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         && is_range_weapon(*mon->mslot_item(MSLOT_ALT_WEAPON)))
     {
         mon->swap_weapons(false);
-        populate_fake_projectile(*mon->launcher(), fake_proj);
-        shot.item = missile;
-        mons_throw(mon, shot);
+        ranged_attack_beam atk2(*mon, *launcher);
+        mons_throw(mon, atk2);
     }
 
     // Store this action's target so that it can be reused on future turns.

@@ -365,21 +365,24 @@ enum missile_type
     MI_DART,
 #if TAG_MAJOR_VERSION == 34
     MI_NEEDLE,
-#endif
     MI_ARROW,
     MI_BOLT,
+#endif
     MI_JAVELIN,
 
     MI_STONE,
     MI_LARGE_ROCK,
+#if TAG_MAJOR_VERSION == 34
     MI_SLING_BULLET,
+#endif
     MI_THROWING_NET,
     MI_BOOMERANG,
 
+#if TAG_MAJOR_VERSION == 34
     MI_SLUG,
+#endif
 
     NUM_MISSILES,
-    MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
 
 enum rune_type

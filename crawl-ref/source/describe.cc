@@ -1384,21 +1384,6 @@ static void _append_skill_target_desc(string &description, skill_type skill,
     }
 }
 
-static int _get_delay(const item_def &item)
-{
-    if (is_range_weapon(item))
-    {
-        item_def fake_proj;
-        populate_fake_projectile(item, fake_proj);
-        return you.attack_delay_with(&fake_proj, &item).expected();
-    }
-
-    if (is_throwable(&you, item))
-        return you.attack_delay(&item).expected();
-
-    return you.attack_delay_with(nullptr, &item).expected();
-}
-
 static string _desc_attack_delay(const item_def &item)
 {
     // Hide speed/heavy brand from unidentified weapons.
@@ -1410,7 +1395,7 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const int cur_delay = _get_delay(dummy);
+    const int cur_delay = you.attack_delay_with(&dummy).expected();
 
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
 }
@@ -5785,18 +5770,10 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
 
         return;
     }
-    else if (weapon->base_type == OBJ_MISSILES)
-    {
-        ranged_attack attk(&you, nullptr, nullptr, weapon, false);
-        const bool penetrating = is_penetrating_attack(you, nullptr, *weapon);
-        acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
-    }
     else
     {
-        item_def fake_proj;
-        populate_fake_projectile(*weapon, fake_proj);
-        const bool penetrating = is_penetrating_attack(you, weapon, fake_proj);
-        ranged_attack attk(&you, nullptr, weapon, &fake_proj, false);
+        ranged_attack attk(&you, nullptr, weapon, false);
+        const bool penetrating = is_penetrating_attack(*weapon);
         acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
     }
 

@@ -283,6 +283,7 @@ public:
     brand_type  damage_brand(int which_attack) const;
     vorpal_damage_type damage_type(int which_attack = -1) const;
     random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  melee_attack_delay() const override;
     int         has_claws(bool allow_tran = true) const override;
 
     int wearing(object_class_type obj_type, int sub_type,

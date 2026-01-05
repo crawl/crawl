@@ -1479,7 +1479,7 @@ void melee_attack::set_weapon(item_def *wpn)
         damage_type = you.damage_type(wpn);
     }
 
-    init_attack(SK_UNARMED_COMBAT, attack_number);
+    init_attack(attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 }

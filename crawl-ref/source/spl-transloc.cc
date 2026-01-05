@@ -834,7 +834,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
         // Normally casting this takes 10 aut (multiplied by haste, slow, etc.),
         // but slow weapons take longer. Most relevant for low-skill players or
         // things like the Dark Maul.
-        you.time_taken = max(you.attack_delay().roll(), player_speed());
+        you.time_taken = max(you.melee_attack_delay().roll(), player_speed());
     }
 
     // Finally, apply traps at the agent's destination *after* the attack.
@@ -2567,7 +2567,7 @@ spret do_bestial_takedown(coord_def target)
     atk.is_bestial_takedown = true;
     atk.launch_attack_set();
 
-    you.time_taken = you.attack_delay().roll();
+    you.time_taken = you.melee_attack_delay().roll();
 
     you.finalise_movement();
     noisy(5, you.pos(), MID_PLAYER);

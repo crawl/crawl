@@ -681,8 +681,8 @@ public:
     brand_type  damage_brand(const item_def* weapon) const;
     vorpal_damage_type damage_type(const item_def* weapon) const;
     random_var  attack_delay(const item_def *projectile = nullptr) const override;
-    random_var  attack_delay_with(const item_def *projectile,
-                                  const item_def *weapon) const;
+    random_var  melee_attack_delay() const override;
+    random_var  attack_delay_with(const item_def *weapon, bool melee_only = false) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;

@@ -446,6 +446,12 @@ random_var monster::attack_delay(const item_def *projectile) const
     return delay;
 }
 
+random_var monster::melee_attack_delay() const
+{
+    // Clumsy bashing doesn't really exist for monsters....
+    return attack_delay();
+}
+
 int monster::has_claws(bool /*allow_tran*/) const
 {
     for (int i = 0; i < MAX_NUM_ATTACKS; i++)

@@ -9,17 +9,21 @@ public:
     int range_used;
     bool reflected;
 
+    bool will_mulch;
+
 // Public Methods
 public:
     ranged_attack(actor *attacker, actor *defender,
-                  const item_def *wpn, const item_def *projectile,
-                  bool teleport, actor *blame = 0, bool mulched = false);
+                  const item_def *wpn,
+                  bool teleport = false, actor *blame = 0);
 
     // Applies attack damage and other effects.
     bool attack();
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
     bool did_net() const;
+
+    string projectile_name() const;
 
 private:
     /* Attack Phases */
@@ -32,7 +36,6 @@ private:
     /* Combat Calculations */
     bool using_weapon() const override;
     int weapon_damage() const override;
-    int calc_base_unarmed_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int player_apply_final_multipliers(int damage, bool aux = false) override;
@@ -58,8 +61,7 @@ private:
     bool mulch_bonus() const;
 
 private:
-    const item_def *projectile;
+    string proj_name;
     bool teleport;
-    bool mulched;
     bool _did_net;
 };

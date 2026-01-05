@@ -9,6 +9,7 @@
 
 #include "enum.h"
 #include "quiver.h"
+#include "ranged-attack.h"
 
 // TODO: this whole thing is a mess
 enum fire_type
@@ -32,15 +33,29 @@ enum fire_type
 struct bolt;
 class dist;
 
-bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
-                           const item_def& projectile);
+// A simple wrapper around the beams used to fire ranged attacks.
+struct ranged_attack_beam
+{
+    bolt beam;
+    ranged_attack atk;
+
+    ranged_attack_beam(actor& agent, item_def& item);
+    ranged_attack_beam(actor& agent, item_def& item, bolt& beam);
+
+    void fire();
+
+private:
+    void initialise_beam(actor &agent, item_def &item);
+};
+
+bool is_penetrating_attack(const item_def& weapon);
 bool fire_warn_if_impossible(bool silent, item_def *weapon);
 shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void untargeted_fire(quiver::action &a);
 void fire_item_no_quiver(dist *target=nullptr);
 
-void throw_it(quiver::action &a);
+void aim_player_ranged_attack(quiver::action &a);
+bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile = nullptr,
+                             bool auto_abort = true);
 
-void setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
-                        item_def const *launcher);
-bool mons_throw(monster* mons, bolt &beam, bool teleport = false);
+bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false);

@@ -1465,27 +1465,21 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons_is_fleeing(*mons) || mons->pacified())
         return false;
 
-    const item_def *launcher = mons->launcher();
+    item_def *launcher = mons->launcher();
     item_def *throwable = mons->missiles();
     const bool can_throw = (throwable && is_throwable(mons, *throwable));
-    item_def fake_proj;
-    item_def *missile = &fake_proj;
-    bool using_launcher = false;
+    item_def *wpn = nullptr;
     // If a monster somehow has both a launcher and a throwable, use the
     // launcher 2/3 of the time.
     if (launcher && (!can_throw || !one_chance_in(3)))
-    {
-        populate_fake_projectile(*launcher, fake_proj);
-        using_launcher = true;
-    }
+        wpn = launcher;
     else if (can_throw)
-        missile = throwable;
+        wpn = throwable;
     else
         return false;
 
     const actor *act = actor_at(beem.target);
-    ASSERT(missile->base_type == OBJ_MISSILES);
-    if (act && missile->sub_type == MI_THROWING_NET)
+    if (act && wpn->is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
         // Throwing a net at a target that is already caught would be
         // completely useless, so bail out.
@@ -1523,10 +1517,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     // Ok, we'll try it.
-    setup_missile_beam(mons, beem, *missile, nullptr);
-
-    // Set fake damage for the tracer.
-    beem.damage = dice_def(10, 10);
+    ranged_attack_beam ratk(*mons, *wpn, beem);
 
     ru_interference interference = DO_NOTHING;
     // See if Ru worshippers block or redirect the attack.
@@ -1564,7 +1555,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
                 {
                     mons->target = new_target->pos();
                     mons->foe = new_target->mindex();
-                    beem.target = mons->target;
+                    ratk.beam.target = mons->target;
                 }
             }
         }
@@ -1573,13 +1564,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     targeting_tracer tracer;
     // Fire tracer.
     if (!teleport)
-        fire_tracer(mons, tracer, beem);
-
-    // Clear fake damage (will be set correctly in mons_throw).
-    beem.damage = dice_def();
+        fire_tracer(mons, tracer, ratk.beam);
 
     // Good idea?
-    if (teleport || mons_should_fire(beem, tracer) || interference != DO_NOTHING)
+    if (teleport || mons_should_fire(ratk.beam, tracer) || interference != DO_NOTHING)
     {
         if (check_only)
             return true;
@@ -1587,11 +1575,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
-        if (launcher && using_launcher && launcher != mons->weapon())
+        if (wpn == launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
-        beem.name.clear();
-        return mons_throw(mons, beem, teleport);
+        return mons_throw(mons, ratk, teleport);
     }
 
     return false;

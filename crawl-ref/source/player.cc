@@ -3505,15 +3505,6 @@ static void _display_tohit()
 #endif
 }
 
-static int _delay(const item_def *weapon)
-{
-    if (!weapon || !is_range_weapon(*weapon))
-        return you.attack_delay().expected();
-    item_def fake_proj;
-    populate_fake_projectile(*weapon, fake_proj);
-    return you.attack_delay(&fake_proj).expected();
-}
-
 static bool _at_min_delay(const item_def *weapon)
 {
     return weapon
@@ -3528,7 +3519,7 @@ static bool _at_min_delay(const item_def *weapon)
 static void _display_attack_delay(const item_def *offhand)
 {
     const item_def* weapon = you.weapon();
-    const int delay = _delay(weapon);
+    const int delay = you.attack_delay().expected();
     const bool at_min_delay = _at_min_delay(weapon)
                               && (!offhand || _at_min_delay(offhand));
 
