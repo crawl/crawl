@@ -1283,6 +1283,12 @@ starwater_11
 
 toxic_bog1 DNGN_TOXIC_BOG
 toxic_bog2
+toxic_bog3
+toxic_bog4
+toxic_bog5
+toxic_bog6
+toxic_bog7
+toxic_bog8
 
 grey_dirt_bb SHORE_N
 grey_dirt_bl SHORE_W

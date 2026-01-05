@@ -1429,11 +1429,16 @@ draco-job-shifter MONS_DRACONIAN_SHIFTER
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 
-%rim 1
-mon/nonliving/test_spawner MONS_TEST_SPAWNER
+%sdir mon/nonliving
+test_blob MONS_TEST_BLOB
+%sdir mon/statues
+test_spawner MONS_TEST_SPAWNER
+test_statue MONS_TEST_STATUE
+undefined_statue MONS_STATUE
 
 misc/unseen PLAYER
 
+%rim 0
 ## Transformations
 %sdir player/transform
 bat_form TRAN_BAT
@@ -1465,10 +1470,8 @@ dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
 dragon_form_gargoyle TRAN_DRAGON_GARGOYLE
-%rim 0
 dragon_form_octopode TRAN_DRAGON_OCTOPODE
 dragon_form_felid TRAN_DRAGON_FELID
-%rim 1
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_armataur TRAN_LICH_ARMATAUR
