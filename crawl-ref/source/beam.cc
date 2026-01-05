@@ -1301,7 +1301,9 @@ void bolt::do_fire()
 
         // If requested to stop before hitting allies, do so now.
         const actor* act_at = actor_at(pos());
-        if (act_at && stop_at_allies && mons_atts_aligned(attitude, act_at->temp_attitude()))
+        if (act_at && stop_at_allies && mons_atts_aligned(attitude, act_at->temp_attitude())
+            && can_affect_actor(act_at)
+            && !(act_at->is_player() && ignores_player() || ignores_monster(act_at->as_monster())))
         {
             ray.regress();
             finish_beam();
