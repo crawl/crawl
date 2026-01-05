@@ -1192,6 +1192,35 @@ MAP
  ....      ....
 ENDMAP
 
+# 3/28
+
+NAME:    tekkud_abyss_stardom
+TAGS:    patrolling no_monster_gen
+WEIGHT:  5
+MONS:    starflower, starcursed mass / tentacled starspawn w:5 / sun demon
+KMONS:   O = wretched star
+KITEM:   O = $ no_pickup good_item, orb ego:stardust pre_id
+NSUBST:  . = 1:12 / 4:2 / 4 = 2.. / *:.
+NSUBST:  @ = 1:@ / * = x@
+SHUFFLE: xm
+MAP
+       x
+      mxm
+      m.m
+     xm.mx
+    @x...x@
+   xx.....xx
+ mmm.......mmm
+xx.....O.....xx
+ mmm.......mmm
+   xx.....xx
+    @x...x@
+     xm.mx
+      m.m
+      mxm
+       x
+ENDMAP
+
 ###############################################################################
 # Abyss rune vaults
 #
@@ -2577,4 +2606,21 @@ MAP
  ccc.....ccc
 cccO......1ccc
  ccc.....ccc
+ENDMAP
+
+# based on entry_crystal
+NAME:    tekkud_abyss_exit_so_close
+TAGS:    abyss_exit
+: kitem("d = " .. vault_species_skeletons(_G, "late"))
+KFEAT:   t = demonic_tree
+NSUBST:  y = 1:TTt / * = t.., z = 1:TTt / * = t.., ' = 3:d / *:.
+: init_abyss_exit(_G, "O")
+MAP
+   xxxxx
+  xxbbbxx
+ xxbbObbxx
+xxbbt'tbbxx
+xbbt'''tbbx
+xbt'.'.'tbx
+xt.......tx
 ENDMAP

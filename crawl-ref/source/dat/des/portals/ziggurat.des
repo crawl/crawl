@@ -187,6 +187,29 @@ MAP
    .....
 ENDMAP
 
+NAME:   tekkud_enter_ziggurat_i
+WEIGHT: 2
+MONS:   orange crystal statue, obsidian statue / ice statue
+NSUBST: 1 = 1:1 / 1:2 / * = 12
+SUBST:  w : wl, n : mn
+COLOUR: mn : red / blue / green / yellow / magenta
+: ziggurat_entry(_G, true)
+MAP
+...... ......
+.nnnn...nnnn.
+.n1w.w.w.w1n.
+.nw.w.w.w.wn.
+.n.w.w.w.w.n.
+..w.w...w.w..
+ ..w..O..w..
+..w.w...w.w..
+.n.w.w.w.w.n.
+.nw.w.w.w.wn.
+.n1w.w.w.w1n.
+.nnnn...nnnn.
+...... ......
+ENDMAP
+
 default-depth: Zig
 
 #######################################################################
