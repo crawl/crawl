@@ -691,7 +691,6 @@ void aim_player_ranged_attack(quiver::action &a)
     // Actually perform the attack and spend time.
     you.time_taken = you.attack_delay(item).roll();
     _fire_player_ranged_attacks(atks);
-    alert_nearby_monsters();
     you.turn_is_over = true;
 }
 

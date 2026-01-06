@@ -2534,7 +2534,6 @@ bool melee_attack::player_do_aux_attack(unarmed_attack_type atk)
     to_hit += post_roll_to_hit_modifiers(to_hit, false);
 
     handle_noise(defender->pos());
-    alert_nearby_monsters();
 
     // Just about anything could've happened after all that racket.
     // Let's be paranoid.

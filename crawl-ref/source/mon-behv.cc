@@ -1424,19 +1424,6 @@ beh_type attitude_creation_behavior(mon_attitude_type att)
     }
 }
 
-// If you're invis and throw/zap whatever, alerts env.mons to your position.
-void alert_nearby_monsters()
-{
-    // Judging from the above comment, this function isn't
-    // intended to wake up monsters, so we're only going to
-    // alert monsters that aren't sleeping. For cases where an
-    // event should wake up monsters and alert them, I'd suggest
-    // calling noisy() before calling this function. - bwr
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
-        if (!mi->asleep())
-             behaviour_event(*mi, ME_ALERT, &you);
-}
-
 //Make all monsters lose track of a given target after a few turns
 void shake_off_monsters(const actor* target)
 {

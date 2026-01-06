@@ -1480,12 +1480,7 @@ int attack::player_stab(int damage)
         }
     }
     else
-    {
         stab_bonus = 0;
-        // Ok.. if you didn't backstab, you wake up the neighborhood.
-        // I can live with that.
-        alert_nearby_monsters();
-    }
 
     if (stab_bonus)
     {
