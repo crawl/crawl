@@ -5718,13 +5718,13 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
-static string _monster_notice_chance(monster *m)
+static string _monster_notice_chance(const monster_info& mi)
 {
     ostringstream result;
 
     result << "Chance to notice you: ";
 
-    int perception = monster_perception(m) * 100;
+    int perception = mi.perception() * 100;
     int stealth = player_stealth() * 100;
 
     if (stealth < perception)
@@ -6325,9 +6325,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mi.attitude == ATT_HOSTILE && (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)
         || mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
     {
-        monster *m = monster_at(mi.pos);
-        if (m)
-            result << _monster_notice_chance(m);
+        result << _monster_notice_chance(mi);
     }
 
     if (crawl_state.game_started)

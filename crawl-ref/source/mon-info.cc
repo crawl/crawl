@@ -151,6 +151,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PARADOX_TOUCHED, MB_PARADOX },
     { ENCH_WARDING,         MB_WARDING },
     { ENCH_DIMINISHED_SPELLS, MB_DIMINISHED_SPELLS },
+    { ENCH_SLEEP_WARY, MB_SLEEP_WARY },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -2221,4 +2222,33 @@ monster* monster_info::get_known_summoner() const
 bool monster_info::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+int monster_info::perception() const
+{
+    int perc = 10 + mons_class_intel(type) * 4 + hd;
+
+    if (is(MB_WANDERING) || is(MB_UNAWARE))
+        perc += 15;
+
+    if (is(MB_CANT_SEE_YOU))
+        perc -= 75;
+
+    if (is(MB_SLEEPING))
+    {
+        if ((holi) & (MH_NATURAL))
+        {
+            if (is(MB_SLEEP_WARY))
+                perc -= 10;
+        }
+        else
+            perc += 10;
+    }
+
+    if (perc < 4)
+        perc = 4;
+
+    perc += 1;
+
+    return perc;
 }

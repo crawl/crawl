@@ -268,6 +268,7 @@ enum monster_info_flags
     MB_TESSERACT_SPAWN,
     MB_SUNDERING_READY,
     MB_SEE_INVIS,
+    MB_SLEEP_WARY,
     NUM_MB_FLAGS
 };
 
@@ -502,6 +503,7 @@ struct monster_info : public monster_info_base
     monster* get_known_summoner() const;
 
     bool is_stationary() const;
+    int perception() const;
 
 protected:
     string _core_name() const;
