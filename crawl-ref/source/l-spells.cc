@@ -9,6 +9,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "spl-cast.h"
 #include "describe.h"
 
 /*** Is this spell memorised?
@@ -354,6 +355,32 @@ static int l_spells_describe(lua_State *ls)
     PLUARET(string, player_spell_desc(spell).c_str());
 }
 
+/*** Get the damage string for a spell.
+ * @tparam string spell name
+ * @tparam[opt=false] boolean evoked whether the spell is evoked
+ * @tparam[opt=-1] number power spell power; if -1, use current power
+ * @tparam[opt=false] boolean terse whether to use terse formatting
+ * @treturn string damage string
+ * @function damage
+ */
+LUAFN(l_spells_damage)
+{
+    const string spell_name = luaL_checkstring(ls, 1);
+    spell_type spell = spell_by_name(spell_name, false);
+    if (!is_valid_spell(spell))
+    {
+        luaL_argerror(ls, 1, ("Invalid spell: " + spell_name).c_str());
+        return 0;
+    }
+
+    bool evoked = lua_isboolean(ls, 2) ? lua_toboolean(ls, 2) : false;
+    int pow = lua_isnumber(ls, 3) ? lua_tointeger(ls, 3) : -1;
+    bool terse = lua_isboolean(ls, 4) ? lua_toboolean(ls, 4) : false;
+
+    const string damstr = spell_damage_string(spell, evoked, pow, terse);
+    PLUARET(string, damstr.c_str());
+}
+
 
 static const struct luaL_Reg spells_clib[] =
 {
@@ -376,6 +403,7 @@ static const struct luaL_Reg spells_clib[] =
     { "targ_obj"      , l_spells_targ_obj },
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
+    { "damage"        , l_spells_damage },
     { "cast"          , l_spells_cast },
     { "describe"      , l_spells_describe },
     { nullptr, nullptr }
