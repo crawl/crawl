@@ -2234,9 +2234,9 @@ int monster_info::perception() const
     if (is(MB_CANT_SEE_YOU))
         perc -= 75;
 
-    if (is(MB_SLEEPING))
+    if (is(MB_SLEEPING) || is(MB_DORMANT))
     {
-        if ((holi) & (MH_NATURAL))
+        if (holi & MH_NATURAL)
         {
             if (is(MB_SLEEP_WARY))
                 perc -= 10;
