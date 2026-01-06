@@ -489,8 +489,6 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
                 you.turn_is_over = true;
                 return true;
             }
-            else
-                return false;
         }
 
         melee_attack attk(&you, defender);
