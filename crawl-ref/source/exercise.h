@@ -24,5 +24,5 @@ void practise_being_shot();
 void practise_being_shot_at();
 void practise_shield_block(bool successful = true);
 
-void practise_sneaking(bool invis);
+void practise_sneaking();
 void practise_waiting();

@@ -241,6 +241,52 @@ void monster_shout(monster &mons, int shout)
         learned_something_new(HINT_MONSTER_SHOUT, mons.pos());
 }
 
+int monster_perception(monster* mons)
+{
+    int mons_perc = 10 + (mons_intel(*mons) * 4) + mons->get_hit_dice();
+
+    // Critters that are wandering but still have MHITYOU as their foe are
+    // still actively on guard for the player, even if they can't see you.
+    // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
+    // a while, removing this bonus.
+    if (mons_is_wandering(*mons) && mons->foe == MHITYOU)
+        mons_perc += 15;
+
+    // Invis reduces monster perception tremendously
+    // It is functionally impossible for a monster to get more than 75
+    // perception (30 HD human int wandering is 63), so this effectively sets
+    // perception to the minimum value in all cases.
+    if (!you.visible_to(mons))
+        mons_perc -= 75;
+
+    if (mons->asleep())
+    {
+        if (mons->holiness() & MH_NATURAL)
+        {
+            // Monster is "hibernating"... reduce chance of waking.
+            if (mons->has_ench(ENCH_SLEEP_WARY))
+                mons_perc -= 10;
+        }
+        else // unnatural creature
+        {
+            // Unnatural monsters don't actually "sleep", they just
+            // haven't noticed an intruder yet... we'll assume that
+            // they're diligently on guard.
+            mons_perc += 10;
+        }
+    }
+
+    // Minimum perception. Yes, this means stealth value less than 5 doesn't
+    // do anything to prevent monsters waking.
+    if (mons_perc < 4)
+        mons_perc = 4;
+
+    // the x_chance_in_y roll previously used mons_perc + 1. Refactored it here.
+    mons_perc += 1;
+
+    return mons_perc;
+}
+
 bool check_awaken(monster* mons, int stealth)
 {
     // Usually redundant because we iterate over player LOS.
@@ -262,44 +308,9 @@ bool check_awaken(monster* mons, int stealth)
         return true;
 
 
-    int mons_perc = 10 + (mons_intel(*mons) * 4) + mons->get_hit_dice();
+    int mons_perc = monster_perception(mons);
 
-    bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
-
-    // Critters that are wandering but still have MHITYOU as their foe are
-    // still actively on guard for the player, even if they can't see you.
-    // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
-    // a while, removing this bonus.
-    if (mons_is_wandering(*mons) && mons->foe == MHITYOU)
-        mons_perc += 15;
-
-    if (!you.visible_to(mons))
-    {
-        mons_perc -= 75;
-        unnatural_stealthy = true;
-    }
-
-    if (mons->asleep())
-    {
-        if (mons->holiness() & MH_NATURAL)
-        {
-            // Monster is "hibernating"... reduce chance of waking.
-            if (mons->has_ench(ENCH_SLEEP_WARY))
-                mons_perc -= 10;
-        }
-        else // unnatural creature
-        {
-            // Unnatural monsters don't actually "sleep", they just
-            // haven't noticed an intruder yet... we'll assume that
-            // they're diligently on guard.
-            mons_perc += 10;
-        }
-    }
-
-    if (mons_perc < 4)
-        mons_perc = 4;
-
-    if (x_chance_in_y(mons_perc + 1, stealth))
+    if (x_chance_in_y(mons_perc, stealth))
         return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
@@ -308,7 +319,7 @@ bool check_awaken(monster* mons, int stealth)
         && !mons->neutral() // include pacified monsters
         && mons_class_gives_xp(mons->type))
     {
-        practise_sneaking(unnatural_stealthy);
+        practise_sneaking();
     }
 
     return false;

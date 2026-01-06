@@ -16,6 +16,7 @@ void noisy_equipment(const item_def &item);
 void monster_consider_shouting(monster &mon);
 bool monster_attempt_shout(monster &mon);
 void monster_shout(monster &mons, int s_type);
+int monster_perception(monster* mons);
 bool check_awaken(monster* mons, int stealth);
 
 void apply_noises();

@@ -481,7 +481,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
                 if (_is_torch(tidx))
                     return tidx;
                 return tidx + j;
-            }   
+            }
         }
         rand -= tile_dngn_probs(tidx + count - 1);
     }
