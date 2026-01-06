@@ -30,7 +30,7 @@
 {{
 -- Functionality for some Grunt vaults.
 function grunt_ministairs_setup(e, hatches)
-  e.tags("luniq_generic_threat_stair")
+  e.tags("luniq_generic_threat_stair buniq_grunt_ministairs")
   if you.in_branch("Crypt") or you.in_branch("Zot") then
     e.shuffle("GT")
     if you.in_branch("Crypt") then
@@ -1484,10 +1484,9 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:4-7
-: local s = "halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe"
-: mons("gnoll ; " .. s)
-: mons("hobgoblin ; " .. s)
-: mons("orc ; " .. s)
+: mons("gnoll ; " .. scythe(_G) .. " . robe")
+: mons("hobgoblin ; " .. scythe(_G) .. " . robe")
+: mons("orc ; " .. scythe(_G) .. " . robe")
 MONS:    Sigmund
 SUBST:   n = 1:20 n:5
 SHUFFLE: x+1 / x+1 / x+1 / y-5
@@ -2403,7 +2402,7 @@ MONS:    plant / bush
 KMONS:   S = Sigmund
 KMONS:   E = Edmund
 KITEM:   ( = flail / any armour
-KITEM:   s = halberd itemname:scythe tile:wpn_scythe wtile:scythe / robe
+: kitem("s = " .. scythe(_G) .. " / robe")
 KFEAT:   F = cache_of_meat / cache_of_fruit
 SHUFFLE: SE, 1' / 'F
 NSUBST:  S = 1:S / *:., E = 1:E / *:., 1 = 1:1 / * = 1.

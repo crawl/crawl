@@ -2329,19 +2329,18 @@ MONS:   bog body / ice dragon w:5 / nothing w:5
 NSUBST: 3 = 3G / G
 # D:14-
 : elseif you.in_branch("D") then
-MONS:   polar bear w:25 / rime drake w:25 / deep troll simulacrum \
-        / minotaur simulacrum / entropy weaver simulacrum \
-        / spriggan defender simulacrum / ice devil
-MONS:   white ugly thing w:60 / lindwurm simulacrum / dire elephant simulacrum \
-        / alligator simulacrum / harpy simulacrum / anaconda simulacrum \
-        / freezing wraith
+MONS:   polar bear w:25 / rime drake w:25 / deep troll simulacrum / \
+        minotaur simulacrum / entropy weaver simulacrum / \
+        lindwurm simulacrum / ice devil
+MONS:   white ugly thing w:60 / dire elephant simulacrum / \
+        alligator simulacrum / harpy simulacrum / anaconda simulacrum / \
+        spriggan defender simulacrum / freezing wraith
 MONS:   ice statue
 MONS:   freezing wraith / death yak
-MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum \
-        / caustic shrike simulacrum
-MONS:   bog body / ice dragon / white very ugly thing / frost giant \
-        / reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-        ego:freezing / blizzard demon
+MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum / \
+        caustic shrike simulacrum
+:  mons("bog body / ice dragon / white very ugly thing / frost giant / " ..
+:       "blizzard demon / reaper ; " .. scythe(_G, "freezing"))
 SUBST:  3 = 3G
 # Depths
 : else
@@ -2349,8 +2348,7 @@ MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
 MONS:   ettin simulacrum / spriggan defender simulacrum \
         / golden dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
-MONS:   frost giant / reaper ; halberd itemname:scythe tile:wpn_scythe \
-        wtile:scythe ego:freezing / blizzard demon
+:   mons("frost giant / blizzard demon / reaper ; " .. scythe(_G, "freezing"))
 MONS:   titan / wendigo / nargun
 MONS:   ice fiend / walking frostbound tome
 : end

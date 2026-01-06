@@ -452,7 +452,7 @@ ENDMAP
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_2
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_s_overflow_glass
 WEIGHT: 1
 MONS:   torpor snail
 KPROP:  1 = no_tele_into
@@ -922,6 +922,7 @@ ENDMAP
 
 NAME:   elyvilon_altar_4
 TAGS:   no_monster_gen transparent patrolling decor vaults_empty
+TAGS:   buniq_s_overflow_holy_exhibit
 DEPTH:  D:3-, Vaults, !Vaults:$
 WEIGHT: 1 (Vaults), 5
 : local g = "att:good_neutral"
@@ -1057,6 +1058,7 @@ ENDMAP
 
 NAME:   nicolae_elyvilon_pacification_demonstration
 TAGS:   transparent decor no_trap_gen no_monster_gen no_item_gen
+TAGS:   buniq_s_overflow_holy_exhibit
 WEIGHT: 7
 KMONS:  1 = common demon att:neutral w:60 / phantom att:neutral / \
             wraith att:neutral / bes kemwar att:neutral / \
@@ -1434,8 +1436,9 @@ ENDMAP
 
 NAME:   nicolae_gozag_conspicuous_consumption
 TAGS:   transparent no_trap_gen vaults_empty no_pool_fixup decor
+TAGS:   buniq_s_overflow_glass
 DEPTH:  D:3-, Vaults, !Vaults:$, Depths
-WEIGHT: 1
+WEIGHT: 2
 KITEM:  $ = gold
 KPROP:  $ = no_tele_into
 KMASK:  $ = opaque
@@ -1546,7 +1549,7 @@ MAP
 x..ccc+cccz$$..$$zx
 x..cP...TcXX.X..3$x
 @x.c.1...c..X....$xx
-  .-..2..+....C...%x
+  .-..2..+...._...%x
 @x.c...1.c..X....$xx
 x..cT...VcXX.X..3$x
 x..ccc+cccz$$..$$zx
@@ -1756,9 +1759,9 @@ NSUBST:  123 = 2:.
 KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe / \
              orc wizard ; quarterstaff good_item . robe, \
              orc wizard ; quarterstaff good_item . robe
-KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe / \
-             kobold brigand ; dagger ego:draining . dart ego:atropa, \
-             kobold brigand ; dagger ego:draining . dart ego:atropa
+: kmons("2 = sigmund ; " .. scythe(_G, "draining") .. " . robe / " ..
+:       "kobold brigand ; dagger ego:draining . dart ego:atropa, " ..
+:       "kobold brigand ; dagger ego:draining . dart ego:atropa")
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail / \
              orc warrior ; flail good_item . kite shield . chain mail / \
              gnoll sergeant ; flail good_item . kite shield . chain mail, \
@@ -1891,7 +1894,7 @@ xx.G.G.xx
 ENDMAP
 
 NAME:   nicolae_hepliaklqana_this_could_be_you
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_s_overflow_glass
 : local mons = you.monster()
 : if (not crawl.game_started()) then
 :    mons = "human"
@@ -2215,7 +2218,7 @@ MAP
 ENDMAP
 
 NAME:  makhleb_altar_promises_db
-TAGS:  transparent
+TAGS:  transparent buniq_s_overflow_glass
 KPROP: 12 = no_tele_into
 KMASK: 12 = no_trap_gen
 KMASK: 12 = opaque
@@ -2392,7 +2395,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_makhleb_poor_unfortunate_consoles
-TAGS:    transparent decor
+TAGS:    transparent decor buniq_e_colour_overflow
 WEIGHT:  5
 KFEAT:   DEFH = b
 SHUFFLE: DEFH
@@ -2430,7 +2433,7 @@ ENDMAP
 # and different patterns.
 NAME:   nemelex_altar_shiori
 TAGS:   no_pool_fixup no_monster_gen no_item_gen decor no_rotate
-TAGS:   layout_rooms layout_city layout_open
+TAGS:   layout_rooms layout_city layout_open buniq_s_overflow_glass
 SUBST:  e : dd', d : n', g : f', f : nn', i : hh', h : nn', k : j' , j : n'
 SUBST:  G : GGTTUUbl
 KPROP:  'RS = no_tele_into
@@ -2570,6 +2573,7 @@ ENDMAP
 
 NAME:    nemelex_goblin_sharper_dolorous
 TAGS:    transparent no_item_gen no_monster_gen no_trap_gen decor
+TAGS:    buniq_s_overflow_glass
 WEIGHT:  7
 MONS:    generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
 KMASK:   1 = opaque
@@ -3030,7 +3034,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_qazlal_eye_of_the_storm
-TAGS:  no_trap_gen no_item_gen no_monster_gen decor
+TAGS:  no_trap_gen no_item_gen no_monster_gen decor buniq_s_overflow_glass
 KPROP: 'd = no_tele_into
 KMONS: d = diamond obelisk
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
@@ -3051,6 +3055,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_qazlal_style_of_elements
+# Doesn't count as a glass exhibit due to the escapees.
 TAGS:    no_trap_gen no_item_gen no_monster_gen transparent decor
 SHUFFLE: Cf / Da / Ee / Fw
 DEPTH:   D:5-, Elf
@@ -3318,7 +3323,7 @@ ENDMAP
 # "Aurora borealis? At this time of year, at this time of day, in this branch of
 # the dungeon, localized entirely within your altar room?"
 NAME:    nicolae_qazlal_console_elemental
-TAGS:    transparent decor
+TAGS:    transparent decor buniq_e_colour_overflow
 WEIGHT:  7
 COLOUR:  @._m = elemental
 FTILE:   @._m = floor_rough
@@ -3766,7 +3771,7 @@ x.ww``wwxx
 ENDMAP
 
 NAME:   nicolae_sif_muna_console_shimmering_blue
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_e_colour_overflow
 WEIGHT: 7
 COLOUR: c = shimmer_blue
 : standard_overflow_setup(_G, { { "sif_muna", "_" } }, true)
@@ -4064,7 +4069,7 @@ ENDMAP
 ### Uskayaw overflow altars ###################################################
 
 NAME:   dancing_weapons_uskayaw
-TAGS:   transparent
+TAGS:   transparent buniq_s_overflow_glass
 MONS:   generate_awake dancing weapon ; dagger | hand axe
 NSUBST: ' = 2:1 / *:'
 KMASK:  1' = no_monster_gen
@@ -4138,7 +4143,7 @@ xxxxxxxxx
 ENDMAP
 
 NAME:   nicolae_uskayaw_en_pointe
-TAGS:   transparent no_trap_gen generate_awake decor
+TAGS:   transparent no_trap_gen generate_awake decor buniq_s_overflow_glass
 KPROP:  'D = no_tele_into
 MONS:   dancing weapon ; mundane short sword
 MONS:   dancing weapon ; mundane falchion, dancing weapon ; mundane spear
@@ -4167,7 +4172,7 @@ ENDMAP
 
 NAME:   nicolae_uskayaw_murder_on_the_dancefloor
 # But you'd better not kill the groove.
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_e_colour_overflow
 NSUBST: . = 4=D / 3=D.
 SUBST:  . = ..a, D = DDE
 : dgn.delayed_decay(_G, "DE", "random corpse")
@@ -4248,12 +4253,11 @@ xxxxxxxxx@xxxxxxxxx
 ENDMAP
 
 NAME:   nicolae_uskayaw_OPEN_UP_THE_PIT
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_s_overflow_glass buniq_e_colour_overflow
 WEIGHT: 7
-KMONS:  1 = human att:neutral ; nothing / orc att:neutral ; nothing / \
-            elf att:neutral ; nothing / dwarf att:neutral ; nothing / \
-            merfolk att:neutral ; nothing / naga att:neutral ; nothing / \
-            oni att:neutral ; nothing
+: local a = "att:neutral ; nothing"
+: kmons("1 = human " .. a .. " / orc " .. a .. " / elf " .. a .. " / " ..
+:           "dwarf " .. a .. " / merfolk " .. a .. " / naga " .. " / oni ".. a)
 KFEAT:  ` = .
 NSUBST: ` = 5=1 / 4=1` / `
 KPROP:  1` = no_tele_into
@@ -4523,7 +4527,7 @@ xxxxxx.xxxxxx
 ENDMAP
 
 NAME:   pdpol_wu_jian_five_deadly_venoms
-TAGS:   no_item_gen no_monster_gen decor
+TAGS:   no_item_gen no_monster_gen decor buniq_s_overflow_glass
 KPROP:  F = no_tele_into
 : single_cloud(_G, "F", "thin mist", false)
 {{
@@ -5089,8 +5093,7 @@ TILE:    c = dngn_stone_wall_red
 FTILE:   '12_GY = floor_pebble_darkgray
 : elseif you.in_branch("Crypt") then
 MONS:    draugr ; great mace ego:chaos | great sword ego:chaos
-MONS:    laughing skull band / \
-         reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:chaos
+:   mons("laughing skull band / reaper ; " .. scythe(_G, "chaos"))
 SUBST:   $ = *, c = v
 TILE:    x = wall_undead_red
 TILE:    v = dngn_metal_wall_red
@@ -5514,7 +5517,7 @@ xxxx-.@.-xxxx
 ENDMAP
 
 NAME:   nicolae_yredelemnul_rated_r_for_profanity
-TAGS:   transparent decor
+TAGS:   transparent decor buniq_s_overflow_glass
 WEIGHT: 3
 KMONS:  1 = profane servitor
 KMASK:  1 = opaque
@@ -5538,6 +5541,7 @@ ENDMAP
 
 NAME:   zin_angel
 TAGS:   no_item_gen no_monster_gen vaults_empty vaults_orient_s decor
+TAGS:   buniq_s_overflow_holy_glass
 DEPTH:  D:3-, Vaults, !Vaults:$, Depths
 WEIGHT: 3 (Vaults), 10
 KPROP:  1 = no_tele_into
@@ -5710,7 +5714,7 @@ vvS.Svv
 ENDMAP
 
 NAME:    nicolae_zin_hit_'em_with_the_salt
-TAGS:    decor transparent
+TAGS:    transparent decor
 WEIGHT:  5
 # p = Demon, q = Undead, r = Unclean (but not demon/undead/chaotic), s = Chaotic
 KMONS:   p = greater demon-shaped pillar of salt
@@ -5864,7 +5868,6 @@ xxcc..vvv..ccxx
     xcc+ccx
 ENDMAP
 
-
 NAME:   nicolae_tso_carved_into_rock
 TAGS:   transparent decor
 SUBST:  X = xxx.
@@ -5927,6 +5930,7 @@ ENDMAP
 
 NAME:   nicolae_tso_fravashi_hole
 TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+TAGS:   buniq_s_overflow_holy_glass
 WEIGHT: 3
 KMONS:  1 = fravashi
 KMONS:  2 = deep elf blademaster ; short sword ego:holy_wrath . \
@@ -5951,6 +5955,7 @@ ENDMAP
 
 NAME:   nicolae_tso_holy_fire
 TAGS:   transparent decor no_item_gen no_monster_gen no_trap_gen
+TAGS:   buniq_s_overflow_holy_glass
 KMASK:  ` = opaque
 KPROP:  ` = no_tele_into
 COLOUR: `. = yellow
@@ -5973,6 +5978,7 @@ ENDMAP
 
 NAME:   nicolae_tso_implements_of_victory
 TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+TAGS:   buniq_s_overflow_holy_glass
 : local p = "plus:0 ego:holy_wrath pre_id no_uniq"
 : kitem("d = hand axe " .. p .. " / mace " .. p .. " / falchion " .. p ..
 :           " / spear " .. p .. " / dagger " .. p .. " / whip " .. p ..
@@ -6169,10 +6175,9 @@ ENDMAP
 
 NAME:  grunt_temple_overflow_order_and_chaos_1
 TAGS:  transparent decor
-MONS:  angel god:zin dbname:zin_angel perm_ench:confusion generate_awake / \
-       angel god:zin dbname:zin_angel perm_ench:mute generate_awake w:1 / \
-       angel god:zin dbname:zin_angel perm_ench:mad generate_awake w:1 / \
-       angel god:zin dbname:zin_angel perm_ench:dumb generate_awake w:1
+: mons("angel god:zin dbname:zin_angel generate_awake perm_ench:" ..
+:       util.random_choose_weighted{{"confusion", 10}, {"mute", 1},
+:                                    {"mad", 1}, {"dumb", 1}})
 KPROP: _1 = no_tele_into
 KMASK: _1 = opaque
 KMASK: _1 = no_trap_gen

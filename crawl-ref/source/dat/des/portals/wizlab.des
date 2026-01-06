@@ -1756,8 +1756,7 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
  kmons("2 = rakshasa ; " .. distoquip .. " / boggart ; " .. distoquip)
  kmons("04 = " .. lowtier)
  kmons("95 = " .. midtier)
- kmons("6 = " .. hightier .. " / reaper w:15 ; halberd itemname:scythe " ..
-                                 "tile:wpn_scythe wtile:scythe ego:distortion")
+ kmons("6 = " .. hightier .. " / reaper w:15 ; " .. scythe(_G, "distortion"))
 
  dgn.set_random_mon_list(lowtier .. " / " .. midtier .. " / " .. midtier ..
                          " / " .. hightier .. " / " .. hightier .. " / reaper")

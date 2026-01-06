@@ -629,18 +629,16 @@ ENDMAP
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
 ORIENT:  float
-MONS:    w:30 nothing / clockroach / w:2 ribbon worm
-MONS:    w:30 nothing / endoplasm
-MONS:    w:20 nothing / jackal / rat
-MONS:    w:30 nothing / endoplasm / w:2 jelly / dart slug / w:2 ribbon worm / \
-         w:5 jackal / w:5 rat
-FTILE:   1234ABCDEabcdem = floor_dirt
+MONS:    clockroach w:2 / ribbon worm / jelly, endoplasm, jackal / rat
+MONS:    endoplasm / dart slug w:12 / jackal w:5 / rat w:5
+NSUBST:  1 = 1:1 / 1:1' / *:'
+SUBST:   2 = 2''', 3 = 33', 4 = 4'
+FTILE:   1234ABCDEabcdem' = floor_dirt
 SHUFFLE: abcde / fghij
-SUBST:   f=A, g=B, h=C, i=D, j=E
-SUBST:   abcde = mx
-SUBST:   ABCDE : mx
+SUBST:   f = A, g = B, h = C, i = D, j = E
+SUBST:   abcde = mx, ABCDE : mx
 SHUFFLE: xc, 123
-KMASK:   T = no_monster_gen
+KPROP:   1234' = no_tele_into
 MAP
 .................
 .xxxxxxxxxxxxxxx.

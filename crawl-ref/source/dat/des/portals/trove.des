@@ -1412,7 +1412,8 @@ TAGS:    no_species_dr no_species_fe
 MONS:    spectral golden dragon, spectral quicksilver dragon
 {{
 -- All dragon scales, some elemental books, some elemental / slay jewellery,
--- hats to match the Mask, some consumables, and some decoration.
+-- hats and a manual of invocations to match the Mask, some consumables,
+-- and some decoration.
 local dg = "dragon_scales good_item"
 local dr = "dragon scales randart"
 kitem("d = steam " .. dr .. " / acid " .. dr .. " / swamp " .. dg .. " w:7 / \
@@ -1440,26 +1441,29 @@ kitem("j = useful hat ego:see_invisible good_item w:5 / \
 kitem("k = " .. trove_cons(_G, {"fear q:2", "enchant armour w:15 q:2"},
                           {"berserk rage q:2", "enlightenment q:2"},
                            "any beam wand charges:8", nil, nil))
+kitem("l = manual of invocations")
 kitem("$ = gold q:1")
 kitem("? = mundane spear")
-nsubst("d = 1:d / 1:e / 1:f / 1:def / 1:g / 1:h / 2:i / 1:j / 1:k / \
-            1:defgij / 1:hiijj / *:.")
+nsubst("d = 1:d / 1:e / 1:f / 1:defll / 1:g / 1:h / 2:i / 1:j / 1:k / \
+            1:ijll / 1:hiijj / *:.")
 -- Various checks to filter through useless item drops.
 if no_body_armour_species(_G) then
   nsubst("def = 2:g / * = iik")
 end
 if species_is_undead(_G) or you.mutation("no forms") == 1 then
- subst("g = defk")
+ subst("g = defkl")
 end
 if you.god() == "Trog" or you.mutation("innate caster") == 1 then
   subst("h = defk")
 end
 if you.mutation("no jewellery") == 1 then
-  subst("i = defk")
+  subst("i = defkl")
 end
-local n_hat = you.mutation("antennae") == 3 or you.mutation("horns") == 1
-              or you.mutation("no armour") == 1
-if n_hat then
+if you.species() == "Demigod" then
+  subst("l = defk")
+end
+if you.mutation("antennae") == 3 or you.mutation("horns") == 1 or
+   you.mutation("no armour") == 1 then
   subst("j = defk")
 end
 trove_unrand_chances(_G, "defij", {"scales of the dragon king", "mask of the dragon"},

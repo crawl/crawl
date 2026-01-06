@@ -133,9 +133,9 @@ MAP
 ENDMAP
 
 NAME:   minmay_slime_entry_eyes
-TAGS:   ruin_lair
-WEIGHT: 2
-MONS:   eye of devastation, glass eye
+TAGS:   ruin_lair patrolling
+WEIGHT: 3
+MONS:   golden eye, basilisk
 : slime_pits_entry(_G)
 MAP
  ....   ....
@@ -143,9 +143,9 @@ MAP
 .xxxx.x.xxxx.
 .xxx.....xxx.
 ..x.S...S.x..
- ...........
- xxS.1O2.Sxx
- ....._.....
+ ....1......
+ xxS..O2.Sxx
+ ....1_.....
 ..x.S...S.x..
 .xxx.....xxx.
 .xxxx.x.xxxx.
@@ -498,11 +498,10 @@ XXxxxxxx@@@@@xxxxxxXX
   XXXX         XXXX
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_1
-DEPTH: Slime, !Slime:$
-TAGS: decor transparent ruin
-ORIENT: float
-SUBST: B = xxxW., C = W., D = VVW.
+NAME:   cheibrodos_slime_lost_civilization_1
+TAGS:   decor transparent ruin
+DEPTH:  Slime, !Slime:$
+SUBST:  B = xxxW., C = W., D = VVW.
 MAP
 xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx
@@ -523,9 +522,9 @@ xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_2
-DEPTH: Slime, !Slime:$
-TAGS: decor
+NAME:   cheibrodos_slime_lost_civilization_2
+TAGS:   decor
+DEPTH:  Slime, !Slime:$
 ORIENT: float
 MAP
    xxxxx
@@ -541,13 +540,12 @@ xxxx...xxxx
   xx@@@xx
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_3
-DEPTH: Slime, !Slime:$
-TAGS: decor transparent
-ORIENT: float
+NAME:    cheibrodos_slime_lost_civilization_3
+TAGS:    decor transparent
+DEPTH:   Slime, !Slime:$
 SHUFFLE: W.
-SUBST: W = WW.
-KMASK: W = no_monster_gen
+SUBST:   W = WW.
+KMASK:   W = no_monster_gen
 MAP
 xxxxxxxxxxxxx
 xWWWxWWWxWWWx
@@ -562,9 +560,9 @@ xWWWxWWWxWWWx
 xxxxxxxxxxxxx
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_4
+NAME:  cheibrodos_slime_lost_civilization_4
+TAGS:  decor
 DEPTH: Slime, !Slime:$
-TAGS: decor
 MAP
 .x...x.
 .......
@@ -573,11 +571,11 @@ x..G..x
 .x...x.
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_5
-DEPTH: Slime, !Slime:$
-TAGS: decor
-SUBST: A=x, B=.
+NAME:    cheibrodos_slime_lost_civilization_5
+TAGS:    decor
+DEPTH:   Slime, !Slime:$
 SHUFFLE: AB
+SUBST:   A = x,  B = .
 MAP
      ...
     ..B..
@@ -615,9 +613,10 @@ MAP
 .............
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_7
+NAME:  cheibrodos_slime_lost_civilization_7
+TAGS:  decor
 DEPTH: Slime, !Slime:$
-TAGS: decor
+KFEAT: V = dry_fountain / fountain_eyes
 MAP
   ...........
  .............
@@ -632,11 +631,11 @@ MAP
   ...........
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_8
-DEPTH: Slime, !Slime:$
-TAGS: decor
+NAME:   cheibrodos_slime_lost_civilization_8
+TAGS:   decor
+DEPTH:  Slime, !Slime:$
 ORIENT: float
-SUBST: - = xxx., " = ...x
+SUBST:  - = xxx., " = ...x
 MAP
 @.............
 .(..----------
@@ -654,11 +653,10 @@ MAP
 .-------xxxxxx
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_9
-DEPTH: Slime, !Slime:$
-TAGS: decor transparent
-ORIENT: float
-SUBST: x = xxx., G = G..
+NAME:   cheibrodos_slime_lost_civilization_9
+TAGS:   decor transparent
+DEPTH:  Slime, !Slime:$
+SUBST:  x = xxx., G = G..
 MAP
 .............
 .xx.xx.xx.xx.
@@ -673,11 +671,11 @@ MAP
 .............
 ENDMAP
 
-NAME: cheibrodos_slime_lost_civilization_10
+NAME:  cheibrodos_slime_lost_civilization_10
+TAGS:  transparent decor
 DEPTH: Slime, !Slime:$
-TAGS: decor transparent
-ORIENT: float
 SUBST: x = xxxx.
+KFEAT: V = dry_fountain / fountain_eyes
 MAP
 ...............
 .xxxxxxxxxxxxx.

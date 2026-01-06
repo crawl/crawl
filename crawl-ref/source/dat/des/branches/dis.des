@@ -879,17 +879,18 @@ KMONS:  2} = dancing weapon ; executioner's axe good_item ego:heavy | \
 # The ones with armour get the best armour on their list.
 # Balrugs and profane servitors get weapons outside their normal purview,
 # because I wanted them here but they don't normally wield blades.
-KMONS:  3 = ancient champion ; battleaxe good_item | \
-          great sword good_item . plate armour / \
-        hell knight ; battleaxe good_item | glaive good_item | \
-          great sword good_item . plate armour / \
-        reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-          good_item / \
-        war gargoyle ; lajatang good_item / \
-        fire giant ; great sword good_item ego:flaming / \
-        frost giant ; battleaxe good_item ego:freezing / \
-        balrug ; demon blade good_item / \
-        profane servitor ; demon blade good_item
+: local ba = "battleaxe good_item"
+: local gs = "great sword good_item"
+: local gl = "glaive good_item"
+: kmons("3 = ancient champion ; " .. ba .. " | " .. gs .. " . plate armour / " ..
+:           "hell knight ; " .. ba .. " | " .. gs .. " | " .. gl ..
+:                          " . plate armour / " ..
+:           "reaper ; " .. scythe(_G) .. " good_item / " ..
+:           "war gargoyle ; lajatang good_item / " ..
+:           "fire giant ; " .. gs .. " ego:flaming / " ..
+:           "frost giant ; " .. ba .. " ego:freezing / " ..
+:           "balrug ; demon blade good_item / " ..
+:           "profane servitor ; demon blade good_item")
 KFEAT:  } = }
 NSUBST: } = } / 1
 SUBST:  S = 12233.

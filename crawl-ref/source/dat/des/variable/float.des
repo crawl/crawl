@@ -32,7 +32,8 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_generic_threat_stair transparent ruin_lair")
+  e.tags("extra luniq_generic_threat_stair buniq_grunt_megastairs")
+  e.tags("transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot")
   e.subst("@ = @+")
   if you.depth() == 1 then
@@ -4218,11 +4219,10 @@ MONS:   nagaraja / naga ritualist / w:8 green death
 MONS:   jumping spider / wolf spider / tarantella
 MONS:   emperor scorpion / w:8 green death / w:3 ghost moth
 : else
-MONS:   skeletal warrior ; long sword ego:venom | broad axe ego:venom \
-        | partisan ego:venom
-MONS:   reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:venom \
-        / w:8 green death / ancient champion ; great mace ego:venom | \
-        battleaxe ego:venom | glaive ego:venom
+MONS:   skeletal warrior ; long sword ego:venom | broad axe ego:venom | \
+                           partisan ego:venom
+:   mons("reaper ; " .. scythe(_G "venom") .. " / green death w:8 / " ..
+:        "ancient champion ; battleaxe ego:venom | glaive ego:venom")
 : end
 KMONS:  A = lich
 KFEAT:  A = stone_arch
@@ -7131,8 +7131,7 @@ KMONS:   D = spectral glowing shapeshifter / spectral pearl dragon
 KMONS:   E = laughing skull band
 KMONS:   F = mummy priest god:Xom
 KMONS:   G = tentacled monstrosity
-KMONS:   H = reaper ; halberd itemname:scythe \
-                      tile:wpn_scythe wtile:scythe ego:chaos
+:   kmons("H = reaper ; " .. scythe(_G, "chaos"))
 KFEAT:   ^ = harlequin's trap
 SUBST:   ^ = ^..., ; = ., ~ = ', X = c
 : end
