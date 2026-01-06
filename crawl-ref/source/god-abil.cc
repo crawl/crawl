@@ -5876,6 +5876,11 @@ spret uskayaw_grand_finale(bool fail)
         {
             // try again (messages handled by check_moveto)
         }
+        else if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            mprf("You cannot occupy %s.", article_a(feat_type_name(env.grid(beam.target))).c_str());
+        }
         else if (you.see_cell_no_trans(beam.target))
         {
             // Grid in los, no problem.
