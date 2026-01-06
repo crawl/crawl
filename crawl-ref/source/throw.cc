@@ -47,6 +47,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
 #include "viewchar.h"
