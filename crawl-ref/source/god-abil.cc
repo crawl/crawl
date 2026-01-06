@@ -5876,6 +5876,11 @@ spret uskayaw_grand_finale(bool fail)
         {
             // try again (messages handled by check_moveto)
         }
+        else if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            canned_msg(MSG_UNTHINKING_ACT);
+        }
         else if (you.see_cell_no_trans(beam.target))
         {
             // Grid in los, no problem.
