@@ -1423,7 +1423,7 @@ static bool _handle_wand(monster& mons)
     return true;
 }
 
-bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
+bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only, bool force)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
@@ -1491,29 +1491,34 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             return false;
     }
 
-    if (prefer_ranged_attack)
+    // The random chance to not bother to fire should only occur as part of 'normal'
+    // monster behavior and not when specifially telling them to shoot something.
+    if (!check_only && !force)
     {
-        // Master archers are always quite likely to shoot you, if they can.
-        //
-        // (They always fire when in melee, to keep them from rarely swapping
-        // their launchers away when they inevitably bump attack their target
-        // anyway)
-        if (one_chance_in(10) && !adjacent(beem.target, mons->pos()))
+        if (prefer_ranged_attack)
+        {
+            // Master archers are always quite likely to shoot you, if they can.
+            //
+            // (They always fire when in melee, to keep them from rarely swapping
+            // their launchers away when they inevitably bump attack their target
+            // anyway)
+            if (one_chance_in(10) && !adjacent(beem.target, mons->pos()))
+                return false;
+        }
+        else if (launcher)
+        {
+            // Fellas with ranged weapons are likely to use them, though slightly
+            // less likely than master archers. XXX: this is a bit silly and we
+            // could probably collapse this chance and master archers' together.
+            if (one_chance_in(5))
+                return false;
+        }
+        else if (!one_chance_in(3))
+        {
+            // Monsters with throwing weapons only use them one turn in three
+            // if they're not master archers.
             return false;
-    }
-    else if (launcher)
-    {
-        // Fellas with ranged weapons are likely to use them, though slightly
-        // less likely than master archers. XXX: this is a bit silly and we
-        // could probably collapse this chance and master archers' together.
-        if (one_chance_in(5))
-            return false;
-    }
-    else if (!one_chance_in(3))
-    {
-        // Monsters with throwing weapons only use them one turn in three
-        // if they're not master archers.
-        return false;
+        }
     }
 
     // Ok, we'll try it.
@@ -1521,7 +1526,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     ru_interference interference = DO_NOTHING;
     // See if Ru worshippers block or redirect the attack.
-    if (does_ru_wanna_redirect(*mons))
+    if (!check_only && does_ru_wanna_redirect(*mons))
     {
         interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)
@@ -1828,7 +1833,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     if (friendly_or_near)
     {
         bolt beem = setup_targeting_beam(mons);
-        if (handle_throw(&mons, beem, false, false))
+        if (handle_throw(&mons, beem, false, false, false))
         {
             DEBUG_ENERGY_USE_REF("_handle_throw()");
             return true;

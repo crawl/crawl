@@ -8254,7 +8254,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (swap && is_range_weapon(*swap) && (!weapon || !is_range_weapon(*weapon)))
             mons->swap_weapons();
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
-        handle_throw(mons, pbolt, true, false);
+        handle_throw(mons, pbolt, true, false, true);
         return;
     }
 
