@@ -1166,6 +1166,13 @@ public:
     int will_bonus() const override { return WL_PIP; }
 };
 
+dice_def player_airstrike_melee_damage(int open_spaces, int skill)
+{
+    if (skill == -1)
+        skill = FormSphinx::instance().get_level(1);
+    return dice_def(1 + open_spaces / 2, 1 + skill * 5 / 7);
+}
+
 class FormWerewolf : public Form
 {
 private:
@@ -1208,6 +1215,12 @@ public:
         return scaling_value(FormScaling().Base(4).Scaling(5), skill);
     }
 };
+
+int walking_scroll_skill_bonus(int scale, int skill)
+{
+    int scaled_skill = skill == -1 ? FormWalkingScroll::instance().get_level(10) : skill * 10;
+    return (10 + scaled_skill) * scale / 20;
+}
 
 class FormFortressCrab : public Form
 {
