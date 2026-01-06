@@ -456,7 +456,12 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     return idx;
 }
 
-static bool _is_torch(tileidx_t basetile);
+static bool _is_torch(tileidx_t basetile)
+{
+    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
+}
 
 static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 {
@@ -1111,13 +1116,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 void tile_wizmap_terrain(const coord_def &gc)
 {
     tile_env.bk_bg(gc) = _get_floor_bg(gc);
-}
-
-static bool _is_torch(tileidx_t basetile)
-{
-    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
 }
 
 #ifndef USE_TILE_WEB
