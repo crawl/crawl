@@ -246,13 +246,16 @@ int monster_perception(monster* mons)
     if (!you.visible_to(mons))
         return 5;
 
+    return monster_perception(mons->get_hit_dice(), mons_intel(*mons), mons->asleep());
+}
+
+int monster_perception(int HD, mon_intel_type intel, bool is_asleep)
+{
     // Intelligent monsters are better at noticing the player, and those who are
     // awake are significantly moreso.
     static const int intel_factor[] = {15, 20, 30};
-    const int perc_mult = intel_factor[mons_intel(*mons)]
-                                + (!mons->asleep() ? 15 : 0);
-
-    const int perc = (5 + mons->get_hit_dice() * 3 / 2) * perc_mult / 20;
+    const int perc_mult = intel_factor[intel] + (!is_asleep ? 15 : 0);
+    const int perc = (5 + HD * 3 / 2) * perc_mult / 20;
 
     // Very low HD enemies still have a minimum perception.
     return max(12, perc);

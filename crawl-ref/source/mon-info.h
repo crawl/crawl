@@ -502,6 +502,7 @@ struct monster_info : public monster_info_base
     monster* get_known_summoner() const;
 
     bool is_stationary() const;
+    int perception() const;
 
 protected:
     string _core_name() const;

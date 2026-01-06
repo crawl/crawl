@@ -68,6 +68,7 @@
 #include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
+#include "shout.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-cast.h"
@@ -5702,6 +5703,27 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
+static string _monster_notice_chance(const monster_info& mi)
+{
+    ostringstream result;
+
+    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
+           << conjugate_verb("have", mi.pronoun_plurality())
+           << " a ";
+
+    int perception = mi.perception() * 100;
+    int stealth = player_stealth() * 100;
+
+    if (stealth < perception)
+        result << 100;
+    else
+        result << perception * 100 / stealth;
+
+    result << "% chance to notice you each turn.\n";
+
+    return result.str();
+}
+
 static void _describe_aux_hit_chance(ostringstream &result, vector<string>& auxes, int chance)
 {
     result << " and " << chance << "% to hit with your ";
@@ -6290,6 +6312,14 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << ".\n";
     }
     result << _monster_attacks_description(mi);
+    if (crawl_state.game_started)
+    {
+        if (mi.attitude == ATT_HOSTILE && (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)
+        || mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
+        {
+            result << _monster_notice_chance(mi);
+        }
+    }
 
     const mon_resist_flags special_resists[] =
     {
