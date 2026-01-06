@@ -1484,9 +1484,9 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:4-7
-: mons("gnoll ; " .. scythe(_G) .. " . robe")
-: mons("hobgoblin ; " .. scythe(_G) .. " . robe")
-: mons("orc ; " .. scythe(_G) .. " . robe")
+: mons("gnoll ; " .. scythe() .. " . robe")
+: mons("hobgoblin ; " .. scythe() .. " . robe")
+: mons("orc ; " .. scythe() .. " . robe")
 MONS:    Sigmund
 SUBST:   n = 1:20 n:5
 SHUFFLE: x+1 / x+1 / x+1 / y-5
@@ -2402,7 +2402,7 @@ MONS:    plant / bush
 KMONS:   S = Sigmund
 KMONS:   E = Edmund
 KITEM:   ( = flail / any armour
-: kitem("s = " .. scythe(_G) .. " / robe")
+: kitem("s = " .. scythe() .. " / robe")
 KFEAT:   F = cache_of_meat / cache_of_fruit
 SHUFFLE: SE, 1' / 'F
 NSUBST:  S = 1:S / *:., E = 1:E / *:., 1 = 1:1 / * = 1.

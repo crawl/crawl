@@ -1773,7 +1773,7 @@ local egos = {"chaos", "draining", "distortion", "electrocution",  "flaming",
               "freezing", "heavy", "speed", "spectral", "protection", "pain"}
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; dagger ego:devious | " ..
-             scythe(_G, "speed") .. " | " .. scythe(_G, "spectral")
+             scythe("speed") .. " | " .. scythe("spectral")
 --add any weapon-ego pair with matching first letter
 for _, weapon in ipairs(weaponnames) do
   for _, ego in ipairs(egos) do

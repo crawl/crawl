@@ -885,7 +885,7 @@ KMONS:  2} = dancing weapon ; executioner's axe good_item ego:heavy | \
 : kmons("3 = ancient champion ; " .. ba .. " | " .. gs .. " . plate armour / " ..
 :           "hell knight ; " .. ba .. " | " .. gs .. " | " .. gl ..
 :                          " . plate armour / " ..
-:           "reaper ; " .. scythe(_G) .. " good_item / " ..
+:           "reaper ; " .. scythe() .. " good_item / " ..
 :           "war gargoyle ; lajatang good_item / " ..
 :           "fire giant ; " .. gs .. " ego:flaming / " ..
 :           "frost giant ; " .. ba .. " ego:freezing / " ..

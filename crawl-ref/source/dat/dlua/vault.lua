@@ -208,7 +208,7 @@ function master_elementalist_setup(e, sprintscale)
 end
 
 -- A function to reduce all the scythe definition boilerplate.
-function scythe(e, ego)
+function scythe(ego)
   local s = "halberd itemname:scythe tile:wpn_scythe wtile:scythe"
   if ego ~= nil then
     s = s .. " ego:" .. ego

@@ -1759,7 +1759,7 @@ NSUBST:  123 = 2:.
 KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe / \
              orc wizard ; quarterstaff good_item . robe, \
              orc wizard ; quarterstaff good_item . robe
-: kmons("2 = sigmund ; " .. scythe(_G, "draining") .. " . robe / " ..
+: kmons("2 = sigmund ; " .. scythe("draining") .. " . robe / " ..
 :       "kobold brigand ; dagger ego:draining . dart ego:atropa, " ..
 :       "kobold brigand ; dagger ego:draining . dart ego:atropa")
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail / \
@@ -5093,7 +5093,7 @@ TILE:    c = dngn_stone_wall_red
 FTILE:   '12_GY = floor_pebble_darkgray
 : elseif you.in_branch("Crypt") then
 MONS:    draugr ; great mace ego:chaos | great sword ego:chaos
-:   mons("laughing skull band / reaper ; " .. scythe(_G, "chaos"))
+:   mons("laughing skull band / reaper ; " .. scythe("chaos"))
 SUBST:   $ = *, c = v
 TILE:    x = wall_undead_red
 TILE:    v = dngn_metal_wall_red

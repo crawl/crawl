@@ -1989,7 +1989,7 @@ ORIENT: float
 # Monster density might be off here
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
 MONS: hell knight / necromancer w:2, bone dragon
-: mons("reaper ; " .. scythe(_G, flaming))
+: mons("reaper ; " .. scythe("flaming"))
 MONS: lich
 KMONS: A0 = fire dragon draugr w:12 / quicksilver dragon draugr w:4 / \
             laughing skull w:6

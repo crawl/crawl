@@ -2340,7 +2340,7 @@ MONS:   freezing wraith / death yak
 MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum / \
         caustic shrike simulacrum
 :  mons("bog body / ice dragon / white very ugly thing / frost giant / " ..
-:       "blizzard demon / reaper ; " .. scythe(_G, "freezing"))
+:       "blizzard demon / reaper ; " .. scythe("freezing"))
 SUBST:  3 = 3G
 # Depths
 : else
@@ -2348,7 +2348,7 @@ MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
 MONS:   ettin simulacrum / spriggan defender simulacrum \
         / golden dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
-:   mons("frost giant / blizzard demon / reaper ; " .. scythe(_G, "freezing"))
+:   mons("frost giant / blizzard demon / reaper ; " .. scythe("freezing"))
 MONS:   titan / wendigo / nargun
 MONS:   ice fiend / walking frostbound tome
 : end

@@ -2864,7 +2864,7 @@ KMONS:   2 : laughing skull band / guardian sphinx / \
 SUBST:   % = dde
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 :   kmons("2 : hellephant / sin beast / apocalypse crab / " ..
-:             "reaper ; " .. scythe(_g, "chaos"))
+:             "reaper ; " .. scythe("chaos"))
 SUBST:   % = d
 : end
 KMONS:   O = player_ghost
