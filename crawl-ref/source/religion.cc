@@ -2281,6 +2281,7 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
 {
     static int last_piety_lecture   = -1;
     static int last_penance_lecture = -1;
+    god_type current_god = you.religion;
 
     if (piety_loss <= 0 && penance <= 0)
         return;
@@ -2304,9 +2305,7 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
         lose_piety(piety_loss);
     }
 
-    if (you.raw_piety < 1)
-        excommunication();
-    else if (penance)       // only if still in religion
+    if (you.religion == current_god && penance)       // only if still in religion
     {
         if (last_penance_lecture != you.num_turns && !no_lecture)
         {
@@ -2726,6 +2725,9 @@ void lose_piety(int pgn)
         you.props[MIN_IGNIS_PIETY_KEY] = you.raw_piety;
 
     _handle_piety_loss(old_piety);
+
+    if (you.raw_piety < 1)
+        excommunication();
 }
 
 /// Whether Fedhas would set `target` to a neutral attitude
