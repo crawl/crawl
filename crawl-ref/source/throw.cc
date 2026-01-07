@@ -802,7 +802,7 @@ static void _player_shoot(ranged_attack_beam &pbolt)
         dec_inv_item_quantity(item.link, 1);
 }
 
-bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport)
+bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was_redirected)
 {
     const item_def &weapon = *ratk.atk.weapon;
     bolt& beam = ratk.beam;
@@ -818,8 +818,10 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport)
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
-    // Avoid overshooting (piercing beam tracers should already handle this).
-    beam.stop_at_allies |= !beam.pierce;
+    // Avoid overshooting unless we're *trying* to hit allies.
+    // (Piercing beam tracers should already handle this).
+    if (!was_redirected)
+        beam.stop_at_allies |= !beam.pierce;
     beam.aimed_at_spot  |= _returning(weapon);
 
     const bool thrown = is_throwable(mons, weapon);

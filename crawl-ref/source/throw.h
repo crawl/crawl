@@ -58,4 +58,5 @@ void aim_player_ranged_attack(quiver::action &a);
 bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile = nullptr,
                              bool auto_abort = false);
 
-bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false);
+bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false,
+                bool was_redirected = false);

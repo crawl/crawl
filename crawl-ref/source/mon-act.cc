@@ -1583,7 +1583,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only, bo
         if (wpn == launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
-        return mons_throw(mons, ratk, teleport);
+        return mons_throw(mons, ratk, teleport, interference == DO_REDIRECT_ATTACK);
     }
 
     return false;
