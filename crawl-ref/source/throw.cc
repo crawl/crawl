@@ -637,8 +637,12 @@ static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
                                     ? atks[0].atk.weapon
                                     : nullptr;
 
-        if (will_have_passive(passive_t::shadow_attacks))
+        if (will_have_passive(passive_t::shadow_attacks)
+            && (!missile || (missile->sub_type != MI_DART
+                             && missile->sub_type != MI_THROWING_NET)))
+        {
             dithmenos_shadow_shoot(atks[0].beam.target, missile);
+        }
 
         if (you.duration[DUR_PARAGON_ACTIVE] && !you.triggers_done[DID_PARAGON])
             paragon_attack_trigger();
