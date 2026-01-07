@@ -376,13 +376,6 @@ static bool _can_shoot_with(const item_def *weapon)
         && !you.berserk();
 }
 
-static bool _autofire_at(actor *defender)
-{
-    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
-        return false;
-    return do_player_ranged_attack(defender->pos());
-}
-
 static void _do_medusa_stinger()
 {
     vector<monster*> targs;
@@ -483,11 +476,16 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
 
-            if (_autofire_at(defender))
+            if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
             {
-                you.time_taken = you.attack_delay().roll();
-                you.turn_is_over = true;
-                return true;
+                if (do_player_ranged_attack(defender->pos()))
+                {
+                    you.time_taken = you.attack_delay().roll();
+                    you.turn_is_over = true;
+                    return true;
+                }
+                else
+                    return false;
             }
         }
 
