@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include "ability.h"
+#include "abyss.h"
 #include "adjust.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -3314,6 +3315,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                                  command_to_string(CMD_DISPLAY_MAP).c_str(),
                                  command_to_string(look_dir).c_str());
             }
+        }
+        else if (feat == DNGN_ENTER_ABYSS || feat == DNGN_EXIT_THROUGH_ABYSS)
+        {
+            long_desc += make_stringf("\n(If you entered the Abyss now, you could be "
+                                          "pulled as deep as Abyss:%d.)",
+                                      abyss_default_depth(true));
         }
         else if (feat_is_portal(feat)
             || feat == DNGN_ENTER_ZIGGURAT) // augh this is technically a gate

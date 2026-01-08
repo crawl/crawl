@@ -518,9 +518,14 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ZIGGURAT:
-    case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
+    case DNGN_ENTER_ABYSS:
+    {
+        return yesno(make_stringf("If you enter this portal you could be pulled as "
+                     "deep as Abyss:%d and might not be able to return immediately. "
+                     "Continue?", abyss_default_depth(true)).c_str(), false, 'n');
+    }
     default:
         return true;
     }

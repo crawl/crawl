@@ -1722,7 +1722,7 @@ constexpr int ABYSS_DEPTH_7_TIME = 15000;
 // Determine what the 'baseline' Abyss depth is for the player's current XP.
 // (We use skill_cost_level instead of XL to try and be more equitable between
 // species and also to avoid issues with Ru's Sac Experience)
-int abyss_default_depth()
+int abyss_default_depth(bool max_possible)
 {
     if (you.skill_cost_level <= 13)
         return 1;
@@ -1738,6 +1738,8 @@ int abyss_default_depth()
             return 6;
         return 5;
     }
+    else if (max_possible)
+        return 1 + div_round_up((you.skill_cost_level - 13), 3);
     else
         return 1 + div_rand_round((you.skill_cost_level - 13), 3);
 }
