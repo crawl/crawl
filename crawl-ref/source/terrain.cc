@@ -2230,11 +2230,11 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
                 if (tmarker->colour != BLACK)
                     colour = tmarker->colour;
                 if (!newfeat)
+                {
                     newfeat = tmarker->old_feature;
-                if (!newfeat_flv)
                     newfeat_flv = tmarker->flv_old_feature;
-                if (!newfeat_flv_idx)
                     newfeat_flv_idx = tmarker->flv_old_feature_idx;
+                }
                 env.markers.remove(tmarker);
             }
             else
@@ -2244,6 +2244,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
                     tmarker->colour = colour;
                 colour = BLACK;
                 newfeat = tmarker->new_feature;
+                newfeat_flv = 0;
+                newfeat_flv_idx = 0;
             }
         }
     }
