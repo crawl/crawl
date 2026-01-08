@@ -4376,7 +4376,7 @@ static const struct spell_desc spelldata[] =
     spflag::destructive,
     6,
     75,
-    2, 2,
+    3, 3,
     20,
     TILEG_FORTRESS_BLAST,
 },
