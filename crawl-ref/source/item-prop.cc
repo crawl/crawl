@@ -606,7 +606,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_DISTORTION,      1 },
             { SPWPN_ANTIMAGIC,       1 },
         }},
-    { WPN_QUICK_BLADE,       "quick blade",         4,  6, 12,
+    { WPN_QUICK_BLADE,       "quick blade",         4,  6, 15,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE,
         DAMV_PIERCING, 0, 25, 250, {
             { SPWPN_NORMAL,         43 },
