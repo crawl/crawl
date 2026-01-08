@@ -160,7 +160,7 @@ public:
     virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const actor* source, const string &reason = "") = 0;
-    virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
+    virtual bool polymorph(int dur) = 0;
     virtual bool doom(int amount) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;

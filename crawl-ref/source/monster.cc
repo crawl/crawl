@@ -5220,7 +5220,7 @@ bool monster::malmutate(const actor* source, const string& /*reason*/)
     return true;
 }
 
-bool monster::polymorph(int /* dur */, bool /*allow_immobile*/)
+bool monster::polymorph(int /* dur */)
 {
     return polymorph();
 }

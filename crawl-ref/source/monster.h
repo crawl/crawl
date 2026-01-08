@@ -361,7 +361,7 @@ public:
     bool has_bones(bool temp = true) const override;
     bool is_stationary() const override;
     bool malmutate(const actor* source, const string& reason = "") override;
-    bool polymorph(int dur, bool allow_immobile = true) override;
+    bool polymorph(int dur) override;
     bool polymorph(poly_power_type power = PPT_SAME);
     bool doom(int amount) override;
     void banish(const actor *agent, const string &who = "",

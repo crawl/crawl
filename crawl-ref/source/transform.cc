@@ -1755,13 +1755,10 @@ bool check_transform_into(transformation which_trans, bool involuntary,
     //      melding and unwinding the player's entire inventory, which feels a
     //      bit heavyweight for item_is_useless()
     const auto feat = env.grid(you.pos());
-    if (feat_dangerous_for_form(which_trans, feat, talisman))
+    if (!involuntary && feat_dangerous_for_form(which_trans, feat, talisman))
     {
-        if (!involuntary)
-        {
-            mprf("Transforming right now would cause you to %s!",
-                        feat == DNGN_DEEP_WATER ? "drown" : "burn");
-        }
+        mprf("Transforming right now would cause you to %s!",
+             feat == DNGN_DEEP_WATER ? "drown" : "burn");
         return false;
     }
 
