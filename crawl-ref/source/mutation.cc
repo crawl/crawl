@@ -3589,13 +3589,28 @@ void maybe_apply_bane_to_monster(monster& mons)
 
     // Give this one out to entire groups at once, since it does surprisingly
     // little to be given to just one monster in an entire group, on average.
-    if (you.has_bane(BANE_WARDING) && one_chance_in(7))
+    if (you.has_bane(BANE_WARDING) && one_chance_in(6))
     {
         mons.add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
-        for (monster_near_iterator mi(mons.pos(), LOS_NO_TRANS); mi; ++mi)
+
+        // Cap the magnitude of number of things affects in extremely dense
+        // situations, preferring
+        int max_affected = 8;
+        for (distance_iterator di(mons.pos(), true, true, LOS_RADIUS); di; ++di)
         {
-            if (!testbits(mi->flags, MF_SEEN) && !mi->is_peripheral())
-                mi->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
+            if (!mons.see_cell_no_trans(*di))
+                continue;
+
+            if (monster* mon2 = monster_at(*di))
+            {
+                if (!testbits(mon2->flags, MF_SEEN) && !mon2->is_peripheral()
+                    && mon2->attitude == ATT_HOSTILE)
+                {
+                    mon2->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
+                    if (--max_affected == 0)
+                        break;
+                }
+            }
         }
     }
 }
