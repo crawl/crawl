@@ -378,7 +378,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
          || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
         && you.has_bane(BANE_HEATSTROKE))
     {
-        int chance = 40;
+        int chance = 80;
         const int rF = you.res_fire();
         if (rF < 0)
             chance = chance * 3 / 2;
@@ -395,7 +395,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     if ((flavour == BEAM_COLD || flavour == BEAM_ICE)
         && you.has_bane(BANE_SNOW_BLINDNESS))
     {
-        int chance = 40;
+        int chance = 80;
         const int rC = you.res_cold();
         if (rC < 0)
             chance = chance * 3 / 2;
@@ -415,7 +415,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
          || flavour == BEAM_STUN_BOLT)
         && you.has_bane(BANE_ELECTROSPASM))
     {
-        int chance = 30;
+        int chance = 60;
         const int rElec = you.res_elec();
         if (rElec < 0)
             chance = chance * 3 / 2;
