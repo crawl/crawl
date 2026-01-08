@@ -593,6 +593,10 @@ int calc_spell_power(spell_type spell)
     if (you.duration[DUR_DIMINISHED_SPELLS])
         power = power / 2;
 
+    // Claustrophobia reduces power by 10% per wall.
+    if (you.has_bane(BANE_CLAUSTROPHOBIA))
+        power = power * (100 - you.props[CLAUSTROPHOBIA_KEY].get_int() * 5) / 100;
+
     return power;
 }
 

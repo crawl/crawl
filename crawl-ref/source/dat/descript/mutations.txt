@@ -1432,8 +1432,9 @@ current level of electrical resistance.
 %%%%
 claustrophobia bane
 
-Your damage and accuracy with weapons is decreased for each wall you are
-currently adjacent to.
+You suffer a penalty to the damage and accuracy of your attacks and the power of
+your spells based on the number of solid feature you are currently adjacent to.
+(-2 slaying and -10% spell power per solid feature.)
 %%%%
 stumbling bane
 

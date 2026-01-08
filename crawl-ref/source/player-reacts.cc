@@ -396,7 +396,7 @@ static void _update_claustrophobia()
     int count = 0;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        if (feat_is_wall(env.grid(*ai)))
+        if (feat_is_solid(env.grid(*ai)))
             ++count;
     }
 
