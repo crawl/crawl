@@ -1144,11 +1144,16 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
     // If our list contains only identical items, return the first without a
     // prompt.
     bool found_non_match = false;
-    for (size_t i = 0; i < candidates.size() - 1; ++i)
+    for (size_t i = 0; i < candidates.size(); ++i)
     {
         item_def* item = candidates[i];
+
+        // If this option is true, all jewellery is considered 'non-matching'
         if (item->base_type == OBJ_JEWELLERY && Options.jewellery_prompt)
-            continue;
+        {
+            found_non_match = true;
+            break;
+        }
 
         for (size_t j = i + 1; j < candidates.size(); ++j)
         {
@@ -1389,19 +1394,7 @@ bool try_equip_item(item_def& item)
             }
 
             if (candidates.size() == 1)
-            {
-                if (item.base_type == OBJ_JEWELLERY && Options.jewellery_prompt)
-                {
-                    item_def* ret = _item_swap_prompt(candidates);
-
-                    if (ret)
-                        to_remove.push_back(ret);
-                    else
-                        return false;
-                }
-                else
-                    to_remove.push_back(candidates[0]);
-            }
+                to_remove.push_back(candidates[0]);
             else
             {
                 // Save which item was selected to remove.
