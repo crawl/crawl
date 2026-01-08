@@ -1278,3 +1278,8 @@ OozeRegen status
 You are covered in regenerative ooze from your recent trip down the stairs. For
 a brief time, your wounds will heal rapidly and your reserves of magic will
 recover quickly.
+%%%%
+-Hellfire status
+
+You are unable to cast Hellfire Mortar again until the effect of your last cast
+ends.

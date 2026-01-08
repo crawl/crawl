@@ -1538,8 +1538,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_HELLFIRE_MORTAR:
-        if (temp && count_summons(&you, SPELL_HELLFIRE_MORTAR) > 0)
-            return "you already have an active mortar!";
+        if (temp && you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN])
+            return "you must wait for your last cast of this to end!";
         break;
 
     case SPELL_STARBURST:

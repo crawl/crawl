@@ -3400,7 +3400,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     }
 
     // Make the lava
-    int dur = random_range(15, 19) * BASELINE_DELAY;
+    int dur = len * 3 / 2 * BASELINE_DELAY;
     for (int i = 0; i < len; ++i)
     {
         const coord_def pos = beam.path_taken[i];
@@ -3422,7 +3422,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         }
 
         temp_change_terrain(beam.path_taken[i], DNGN_LAVA,
-                            dur - (i * BASELINE_DELAY),
+                            dur - (i * BASELINE_DELAY / 2),
                             TERRAIN_CHANGE_HELLFIRE_MORTAR);
 
         flash_tile(pos, RED, 5);
@@ -3458,6 +3458,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
     mprf("With a deafening crack, the ground splits apart in the path of %s "
         "chthonic artillery!", agent.name(DESC_ITS).c_str());
+    you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;
 
     return spret::success;
 }
