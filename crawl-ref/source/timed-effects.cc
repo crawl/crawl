@@ -53,6 +53,9 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tileview.h"
+#ifdef USE_TILE
+    #include "tile-env.h"
+#endif
 #include "throw.h"
 #include "travel.h"
 #include "view.h"
@@ -886,14 +889,20 @@ void end_enkindled_status()
     you.props.erase(ENKINDLE_CHARGES_KEY);
 }
 
+struct terrain_change_reversion
+{
+    coord_def pos;
+    terrain_change_type type;
+    bool was_in_los;
+};
+
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
         return;
 
     int num_seen[NUM_TERRAIN_CHANGE_TYPES] = {0};
-    // n.b. unordered_set doesn't work here because pair isn't hashable
-    set<pair<coord_def, terrain_change_type>> revert;
+    vector<terrain_change_reversion> revert;
 
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
@@ -930,13 +939,34 @@ void timeout_terrain_changes(int duration, bool force)
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;
-            revert.insert(pair<coord_def, terrain_change_type>(marker->pos,
-                                                        marker->change_type));
+            revert.push_back({marker->pos, marker->change_type, you.see_cell(marker->pos)});
         }
     }
     // finally, revert the changes and delete the markers
+
+    // Sort terrain expiration from near to far, from the player's perspective
+    // (which results in more intuitive behavior when pushing the player out of walls).
+    sort(revert.begin(), revert.end(), [](terrain_change_reversion& a,
+                                          terrain_change_reversion& b)
+    {
+        return grid_distance(you.pos(), a.pos) < grid_distance(you.pos(), b.pos);
+    });
+
     for (const auto &m_pos : revert)
-        revert_terrain_change(m_pos.first, m_pos.second);
+    {
+        revert_terrain_change(m_pos.pos, m_pos.type);
+
+        // When multiple tiles are reverting at once, walls reappearing may
+        // obscure otherwise-unambiguous information about terrain behind them,
+        // so forcibly redraw anything the player could see at the start of them.
+        if (m_pos.was_in_los)
+        {
+            env.map_knowledge(m_pos.pos).set_feature(env.grid(m_pos.pos));
+#ifdef USE_TILE
+            tile_env.bk_bg(m_pos.pos) = tileidx_feature_base(env.grid(m_pos.pos));
+#endif
+        }
+    }
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
         mpr("The runic seals fade away.");
