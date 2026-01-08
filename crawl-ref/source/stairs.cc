@@ -849,7 +849,7 @@ void floor_transition(dungeon_feature_type how,
     // Determine this now so the milestones and notes report the correct
     // destination floor.
     if (whither.branch == BRANCH_ABYSS && how != DNGN_ABYSSAL_STAIR)
-        whither.depth = abyss_depth_for_xl();
+        whither.depth = abyss_default_depth();
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
