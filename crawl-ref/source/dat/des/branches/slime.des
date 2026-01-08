@@ -294,6 +294,27 @@ ENDMAP
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
+
+# With the slimy staircase changes, it's now much harder for potential converts
+# to reach Jiyva on Slime:5. For the sake of divers and emergency exits alike,
+# this vault guarantees some altars on earlier floors.
+NAME:    regret_index_scattered_jiyva_altar
+TAGS:    transparent allow_dup extra luniq no_dump
+DEPTH:   Slime, !Slime:$
+CHANCE:  50% (Slime:1), 100%
+KFEAT:   _ = altar_jiyva
+SHUFFLE: ABCDEFGH
+SUBST:   A : x.., B : x.., C = ., D : .', E : .'', FGH = '
+CLEAR:   '
+MAP
+ CDE
+AB.FG
+H._.H
+GF.BA
+ EDC
+ENDMAP
+
+################################################################################
 NAME:    nicolae_slime_pool
 TAGS:    transparent
 DEPTH:   Slime, !Slime:$
