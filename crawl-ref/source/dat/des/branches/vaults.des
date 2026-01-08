@@ -9,30 +9,30 @@
 {{
 -- Vaults:$ common loot substitutions and wall setting.
 function vaults_end_loot(e)
-    if (dgn.persist.vaults_end_crystal) then
-        e.subst("x = b")
-    else
-        e.subst("x = v")
-    end
-    e.subst("? = | * .:43")
-    e.subst("| = | *:2")
-    e.subst("* = * |:2")
+  if (dgn.persist.vaults_end_crystal) then
+    e.subst("x = b")
+  else
+    e.subst("x = v")
+  end
+  e.subst("? = | * .:43")
+  e.subst("| = | *:2")
+  e.subst("* = * |:2")
+  e.nsubst("*| = 1:$")
 end
 
 -- Vaults:$ cross-vault rune substitution. Turn 'O' into a rune (if it doesn't
 -- exist yet) or a good item. Note that this assumes that only one "prize"
 -- subvault is ever picked, and that it is the first subvault of the four.
 function vaults_end_rune(e)
-    if dgn.map_by_tag("vaults_end_rune")
-       and (e.has_tag("vaults_end_quadrant_prize") and crawl.one_chance_in(4)
-            or e.has_tag("vaults_end_quadrant"))
-    then
+  if dgn.map_by_tag("vaults_end_rune") and
+     (e.has_tag("vaults_end_quadrant_prize") and crawl.one_chance_in(4) or
+      e.has_tag("vaults_end_quadrant")) then
         e.subvault("k : vaults_end_gem")
         e.subvault("O : vaults_end_rune")
-    else
+  else
         e.subvault("O : vaults_end_norune")
         e.subst("k = *")
-    end
+  end
 end
 }}
 
