@@ -173,11 +173,9 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool god_favoured = have_passive(passive_t::attract_abyssal_rune);
 
-    const double depth = you.depth + god_favoured;
-
-    return (int) pow(100.0, depth/6);
+    static const int chance[] = {0, 0, 10, 15, 22, 100, 100};
+    return chance[you.depth] * (have_passive(passive_t::attract_abyssal_rune) ? 2 : 1);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
