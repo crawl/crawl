@@ -622,6 +622,10 @@ void win_apostle_challenge(monster& apostle)
     apostle.stop_constricting_all();
     apostle.stop_being_constricted();
 
+    // If they were given these by banes, don't allow them to persist indefinitely.
+    apostle.del_ench(ENCH_WARDING);
+    apostle.del_ench(ENCH_PARADOX_TOUCHED);
+
     // Don't let the player get XP from killing off apostles with e.g. ?poison
     apostle.flags |= MF_NO_REWARD;
 
