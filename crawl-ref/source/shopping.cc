@@ -766,7 +766,7 @@ unsigned int item_value(item_def item, bool ident)
         {
             int level = spell_difficulty(static_cast<spell_type>(item.plus));
             // more expensive per spell than books
-            valued = level * 27 + 27;
+            valued = level * level * 7 + 33;
         }
 #if TAG_MAJOR_VERSION == 34
         else if (book == BOOK_BUGGY_DESTRUCTION)
@@ -774,12 +774,12 @@ unsigned int item_value(item_def item, bool ident)
 #endif
         else
         {
-            int levels = 0;
             const vector<spell_type> spells = spells_in_book(item);
             for (spell_type spell : spells)
-                levels += spell_difficulty(spell);
-            // Level 9 spells are worth 4x level 1 spells.
-            valued += levels * 20 + spells.size() * 20;
+            {
+                const int lv = spell_difficulty(spell);
+                valued += pow(lv, 1.75) * 6 + 30;
+            }
         }
         break;
     }
