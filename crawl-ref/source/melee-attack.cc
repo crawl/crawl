@@ -922,7 +922,7 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player() && you.form == transformation::sphinx && defender->alive())
     {
-        const int spaces = airstrike_space_around(defender->pos(), true);
+        const int spaces = min(7, airstrike_space_around(defender->pos(), true));
         const int dmg = player_airstrike_melee_damage(get_form()->get_level(1), spaces).roll();
         special_damage = defender->apply_ac(dmg, 0);
 
