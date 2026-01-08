@@ -3436,9 +3436,13 @@ void bolt::tracer_affect_player()
     if (flavour == BEAM_UNRAVELLING && player_is_debuffable())
         is_explosion = true;
 
-    const bool harmless = harmless_to_player();
     const bool friendly = agent() ? agent()->wont_attack()
                                   : mons_att_wont_attack(attitude);
+
+    // XXX: For now, only friendly monsters can know player immunities this way.
+    //      (In future, this should handle 'obvious' immunities from things like
+    //      being undead, while hiding things like equipment modifiers.)
+    const bool harmless = friendly && harmless_to_player();
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
