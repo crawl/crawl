@@ -2866,7 +2866,7 @@ void bolt::drop_object()
 
     // If the player threw this, mark it as thrown so that they'll pick it up
     // again when they walk over it.
-    if (id != NON_ITEM && ranged_atk->attacker->is_player())
+    if (id >= 0 && id != NON_ITEM && ranged_atk->attacker->is_player())
         env.item[id].flags |= ISFLAG_THROWN;
 }
 
