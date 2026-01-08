@@ -420,12 +420,12 @@ spret cast_sphinx_sisters(const actor& caster, int pow, bool fail)
         if (mi->was_created_by(caster, SPELL_SPHINX_SISTERS))
             monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
 
-    int dur = summ_dur(3);
+    int dur = summ_dur(2);
 
     mgen_data mdata = _summon_data(caster, MONS_SPHINX_MARAUDER, dur,
                                                             SPELL_SPHINX_SISTERS);
     if (caster.is_player())
-        mdata.hd = 11 + div_rand_round(pow, 25);
+        mdata.hd = 9 + div_rand_round(pow, 25);
 
     monster* marauder = create_monster(mdata);
 
