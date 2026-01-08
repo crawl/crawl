@@ -1507,8 +1507,8 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         else
             atk.launch_attack_set(true);
 
-        if (i == 0)
-            you.time_taken = you.attack_delay().roll();
+        if (i == 0 && agent.is_player())
+            you.time_taken = you.melee_attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.
         // (e.g. from riposte, spiny or injury mirror)
