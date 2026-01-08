@@ -395,6 +395,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_PYROMANIA:
             case SPARM_STARDUST:
             case SPARM_MESMERISM:
+            case SPARM_GUILE:
                 valued += 50;
                 break;
 
@@ -406,7 +407,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_HARM:
             case SPARM_RAGE:
             case SPARM_MAYHEM:
-            case SPARM_GUILE:
                 valued += 20;
                 break;
 
