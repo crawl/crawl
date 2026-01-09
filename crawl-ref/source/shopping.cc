@@ -1582,9 +1582,9 @@ void destroy_shop_at(coord_def p)
 {
     if (shop_at(p))
     {
+        unnotice_feature(level_pos(level_id::current(), p));
         env.shop.erase(p);
         env.grid(p) = DNGN_ABANDONED_SHOP;
-        unnotice_feature(level_pos(level_id::current(), p));
     }
 }
 

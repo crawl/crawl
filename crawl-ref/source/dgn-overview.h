@@ -16,7 +16,7 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest);
 bool overview_knows_portal(branch_type portal);
 int  overview_knows_num_portals(dungeon_feature_type portal);
 void display_overview();
-bool unnotice_feature(const level_pos &pos);
+void unnotice_feature(const level_pos &pos);
 string overview_description_string(bool display);
 void enter_branch(branch_type branch, level_id from);
 void mark_corrupted_level(level_id li);
