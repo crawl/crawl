@@ -1459,6 +1459,12 @@ static int _invent_select(const char *title = nullptr,
 void display_inventory()
 {
 
+    if (inv_count() < 1)
+    {
+        canned_msg(MSG_NOTHING_CARRIED);
+        return;
+    }
+
     int flags = MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL;
     if (Options.show_paged_inventory)
         flags |= MF_PAGED_INVENTORY;
