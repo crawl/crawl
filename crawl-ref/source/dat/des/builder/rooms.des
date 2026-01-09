@@ -224,8 +224,8 @@ function sroom_jelly_pit(e)
 
     if you.in_branch("Lair") then
         mons = "jelly w:60 / large slime creature w:25 / " ..
-               "void ooze / great orb of eyes w:5 / azure jelly w:5"
-        lord_mon = "void ooze / azure jelly"
+               "golden eye / great orb of eyes w:5 / azure jelly w:5"
+        lord_mon = "great orb of eyes / azure jelly"
     elseif you.in_branch("Slime") then
         mons = "large slime creature w:20 / great orb of eyes / " ..
                "colossal amoeba w:5 / golden eye w:5 / shining eye w:5 / " ..

@@ -353,7 +353,7 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
         }
 
         item_def *get_launcher() const override
@@ -460,7 +460,7 @@ namespace quiver
                     // this is actually a bitmask, but we will simplify quite a
                     // bit here and only use this for unarmed/forms. See
                     // melee_attack::set_attack_verb for the real thing.
-                    const int dt = you.damage_type();
+                    const vorpal_damage_type dt = you.damage_type(nullptr);
                     if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
                         return "attack";
                 }
@@ -833,7 +833,7 @@ namespace quiver
 
     /**
      * An ammo_action is an action that fires ammo from a slot in the
-     * inventory. This covers throwing; tossing is handled by a subclass.
+     * inventory (ie: throwing)
      */
     struct ammo_action : public item_action
     {
@@ -902,8 +902,7 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            // TODO: refactor throw_it into here?
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
 
             // Update the legacy quiver history data structure
             // TODO: eliminate this? History should be stored per quiver, not
@@ -989,37 +988,6 @@ namespace quiver
             return result;
         }
 
-    };
-
-    bool toss_validate_item(int slot, string *err)
-    {
-        // make people manually take stuff off if they want to toss it
-        if (item_is_worn(slot))
-        {
-            if (err)
-            {
-                *err = make_stringf("You are %s that object!",
-                            you.inv[slot].base_type == OBJ_WEAPONS ? "wielding"
-                                                                   : "wearing");
-            }
-            return false;
-        }
-        return true;
-    }
-
-    // for fumble throwing / tossing
-    struct fumble_action : public ammo_action
-    {
-        fumble_action(int slot=-1) : ammo_action(slot, "fumble_action")
-        {
-        }
-
-        // uses ammo_action fire order
-
-        bool launch_type_check() const override
-        {
-            return toss_validate_item(item_slot);
-        }
     };
 
     static bool _spell_needs_manual_targeting(spell_type s)
@@ -1906,6 +1874,8 @@ namespace quiver
 #if TAG_MAJOR_VERSION == 34
         else if (type == "launcher_ammo_action")
             return make_shared<ammo_action>(-1);
+        else if (type == "fumble_action")
+            return make_shared<ammo_action>(-1);
 #endif
         else if (type == "spell_action")
             return make_shared<spell_action>(static_cast<spell_type>(param));
@@ -1917,8 +1887,6 @@ namespace quiver
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
             return make_shared<misc_action>(param);
-        else if (type == "fumble_action")
-            return make_shared<fumble_action>(param);
         else if (type == "melee_action")
             return make_shared<melee_action>();
         else if (type == "ranged_action")
@@ -2277,42 +2245,15 @@ namespace quiver
     }
 
     /**
-     * Given an inventory slot containing ammo, return an appropriate throwing
-     * or firing action. If `slot` doesn't contain ammo, returns either an
-     * invalid action or a fumble action based on `force`.
-     *
-     * @param slot the inventory slot number to use.
-     * @param force whether to force non-ammo items to be throwable via
-     *              fumble throwing.
-     * @return the resulting action. May be invalid, or nullptr on an error.
-     */
-    shared_ptr<action> ammo_to_action(int slot, bool force)
-    {
-        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
-            return nullptr;
-
-
-        shared_ptr<action> a = nullptr;
-        // use ammo as the fallback -- may well end up invalid
-        if (!a || !a->is_valid())
-            a = make_shared<ammo_action>(slot);
-        if (force && (!a || !a->is_valid()))
-            return make_shared<fumble_action>(slot);
-        return a;
-    }
-
-    /**
      * Given an inventory slot, return an appropriate action if possible.
      * For a weapon with both an attack and an evokable ability, this
      * will always give the latter. If not possible, this will return an invalid
-     * action or nullptr.
+     * action.
      *
      * @param slot the inventory slot number to use.
-     * @param force whether to force non-throwable, non-evokable items to be
-     *              throwable via fumble throwing.
-     * @return the resulting action. May be invalid, or nullptr on an error.
+     * @return the resulting action. May be invalid.
      */
-    shared_ptr<action> slot_to_action(int slot, bool force)
+    shared_ptr<action> slot_to_action(int slot)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
@@ -2326,16 +2267,16 @@ namespace quiver
         {
             return make_shared<consumable_action>(slot);
         }
+        else if (you.inv[slot].base_type == OBJ_MISSILES)
+            return make_shared<ammo_action>(slot);
         else if (you.weapon() && you.weapon()->link == slot
                                 && is_range_weapon(*you.weapon()))
         {
             return get_primary_action();
         }
 
-        // use ammo as the fallback -- may well end up invalid. This means that
-        // by this call, it isn't possible to get toss actions for anything
-        // handled in the above conditional.
-        return ammo_to_action(slot, force);
+        // An always-invalid action.
+        return make_shared<ammo_action>(-1);
     }
 
     /**
@@ -2441,12 +2382,7 @@ namespace quiver
 
     static bool _any_items_to_quiver()
     {
-        // regular species can force-quiver any (non-equipped) item, but
-        // felids have a more limited selection, so we need to directly
-        // calculate it.
-        return you.has_mutation(MUT_NO_GRASPING)
-            ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
-            : inv_count() > 0;
+        return any_items_of_type(OSEL_QUIVER_ACTION);
     }
 
     // note for editing this: Menu::action is defined and will take precedence
@@ -2716,8 +2652,8 @@ namespace quiver
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
-                                            ? "Quiver which item? (- for none, * to toggle full inventory)"
-                                            : "Quiver which item? (* to toggle full inventory)",
+                                            ? "Quiver which item? (- for none)"
+                                            : "Quiver which item?",
                                           menu_type::invlist, OSEL_QUIVER_ACTION,
                                           OPER_QUIVER, invprompt_flag::hide_known, '-');
 
@@ -2738,7 +2674,7 @@ namespace quiver
             // the message can  be seen.
             // TODO: in failure it would be better to set the more with an
             // error instead of exiting the menu
-            set_to_quiver(slot_to_action(slot, true));
+            set_to_quiver(slot_to_action(slot));
             return false;
         }
 
@@ -2810,7 +2746,7 @@ namespace quiver
                 item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
                 if (item && in_inventory(*item))
                 {
-                    auto a = slot_to_action(item->link, true);
+                    auto a = slot_to_action(item->link);
                     // XX would be better to show an error if a is invalid?
                     if (a->is_valid())
                     {

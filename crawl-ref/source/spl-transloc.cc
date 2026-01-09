@@ -834,7 +834,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
         // Normally casting this takes 10 aut (multiplied by haste, slow, etc.),
         // but slow weapons take longer. Most relevant for low-skill players or
         // things like the Dark Maul.
-        you.time_taken = max(you.attack_delay().roll(), player_speed());
+        you.time_taken = max(you.melee_attack_delay().roll(), player_speed());
     }
 
     // Finally, apply traps at the agent's destination *after* the attack.
@@ -1500,15 +1500,15 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         if (katana_defender)
         {
             if (offhand && is_unrandom_artefact(*offhand, UNRAND_AUTUMN_KATANA))
-                atk.set_weapon(offhand, true);
+                atk.set_weapon(offhand);
             // Only the katana can attack through space!
             atk.attack();
         }
         else
             atk.launch_attack_set(true);
 
-        if (i == 0)
-            you.time_taken = you.attack_delay().roll();
+        if (i == 0 && agent.is_player())
+            you.time_taken = you.melee_attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.
         // (e.g. from riposte, spiny or injury mirror)
@@ -2567,7 +2567,7 @@ spret do_bestial_takedown(coord_def target)
     atk.is_bestial_takedown = true;
     atk.launch_attack_set();
 
-    you.time_taken = you.attack_delay().roll();
+    you.time_taken = you.melee_attack_delay().roll();
 
     you.finalise_movement();
     noisy(5, you.pos(), MID_PLAYER);

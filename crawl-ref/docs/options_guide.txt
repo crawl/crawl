@@ -1163,11 +1163,10 @@ equip_unequip = true
         respectively) will unequip that item.
 
 jewellery_prompt = false
-        If this is true, equipping rings will always prompt for the slot to
-        use, instead of automatically equipping the ring if there is an
-        available empty slot. Unequipping jewellery will also always prompt for
-        an item to remove, instead of skipping the prompt if only one item
-        of jewellery is equipped.
+        If this is true, unequipping jewellery will always prompt for an item
+        to remove, instead of skipping the prompt if only one item of jewellery
+        is equipped. Also, if all slots are filled when equipping a jewellery
+        item, it will prompt for which you remove even if they are all identical.
 
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:

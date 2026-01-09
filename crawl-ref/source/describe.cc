@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include "ability.h"
+#include "abyss.h"
 #include "adjust.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -68,6 +69,7 @@
 #include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
+#include "shout.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-cast.h"
@@ -246,6 +248,32 @@ string process_description(const describe_info &inf, bool include_title)
     return desc;
 }
 
+// Format an ego or artprop description, wrapping the description within a
+// column defined by the length of the name (usually pre-padded with whitespace).
+//
+// XXX: Assumes the output has at least 80 characters of width. This is true by
+//      default in most versions, but it is possible to shrink a webtiles window
+//      small enough to make this false. However, that is generally past the
+//      point where other parts of the UI also start being unreadable, so this
+//      seems acceptable.
+static string _format_prop_desc(string prop_name, string prop_desc)
+{
+    // XXX: It is possible some Android layouts are too small to wrap properly
+    //      to 80 characters (and I am currently not certain how to check on my
+    //      own), so let's just not do any justification.
+#ifdef USE_TILE_LOCAL
+    if (tiles.is_using_small_layout())
+        return prop_name + prop_desc;
+#endif
+
+    const int name_len = strwidth(prop_name);
+    linebreak_string(prop_desc, 80 - name_len);
+    string padding = string(name_len, ' ');
+    string justified_desc = replace_all(prop_desc, "\n", "\n" + padding);
+
+    return prop_name + justified_desc;
+}
+
 const char* jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
@@ -399,7 +427,8 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It increases damage dealt and taken.",
             prop_note::plain },
         { ARTP_RAMPAGING,
-            "It bestows one free step when moving towards enemies.",
+            "It causes one to take an extra step when moving towards enemies, "
+            "briefly stunning them if this results in an attack.",
             prop_note::plain },
         { ARTP_STEALTH,
             "buggy stealth",
@@ -739,7 +768,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
         // these two have some custom string replacement
         if (prop == ARTP_WILLPOWER)
         {
-            lines.push_back(make_stringf("%s It %s%s your willpower.",
+            lines.push_back(make_stringf("%sIt %s%s your willpower.",
                      _padded_artp_name(ARTP_WILLPOWER, stval).c_str(),
                      (stval < -1 || stval > 1) ? "greatly " : "",
                      (stval < 0) ? "decreases" : "increases"));
@@ -747,7 +776,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
         }
         else if (prop == ARTP_STEALTH)
         {
-            lines.push_back(make_stringf("%s It makes you %s%s stealthy.",
+            lines.push_back(make_stringf("%sIt makes you %s%s stealthy.",
                      _padded_artp_name(ARTP_STEALTH, stval).c_str(),
                      (stval < -1 || stval > 1) ? "much " : "",
                      (stval < 0) ? "less" : "more"));
@@ -782,9 +811,7 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
             sdesc = prefixes[idx] + sdesc + '.';
         }
 
-        lines.push_back(make_stringf("%s %s",
-                                     _padded_artp_name(desc.property, stval).c_str(),
-                                     sdesc.c_str()));
+        lines.push_back(_format_prop_desc(_padded_artp_name(desc.property, stval), sdesc.c_str()));
     }
 }
 
@@ -801,10 +828,8 @@ static string _desc_randart_jewel(const item_def &item)
         // DBRANDS in weird ways
         return string(desc);
     }
-    // XX a custom ego description isn't well handled here. The
-    // main case of this is Vitality
-    return make_stringf("%-*s %s", MAX_ARTP_NAME_LEN + 1,
-                        (string(type) + ":").c_str(), desc);
+    return _format_prop_desc(make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1,
+                              (string(type) + ":").c_str()), desc);
 }
 
 static string _randart_descrip(const item_def &item)
@@ -840,10 +865,9 @@ static string _format_dbrand(string dbrand)
         {
             ASSERT(brand.size() == 2);
             const string &desc = brand[1];
-            const int prefix_len = max(MAX_ARTP_NAME_LEN, (int)brand[0].size());
-            const string pre = padded_str(brand[0] + ":", prefix_len + 2);
-                                                          // +2 for ": "
-            out.push_back(pre + desc);
+            const int prefix_len = max(MAX_ARTP_NAME_LEN + 1, (int)brand[0].size() + 2);
+            const string pre = padded_str(brand[0] + ":", prefix_len);
+            out.push_back(_format_prop_desc(pre, desc));
         }
     }
     return join_strings(out.begin(), out.end(), "\n");
@@ -1363,21 +1387,6 @@ static void _append_skill_target_desc(string &description, skill_type skill,
     }
 }
 
-static int _get_delay(const item_def &item)
-{
-    if (is_range_weapon(item))
-    {
-        item_def fake_proj;
-        populate_fake_projectile(item, fake_proj);
-        return you.attack_delay_with(&fake_proj, false, &item).expected();
-    }
-
-    if (is_throwable(&you, item))
-        return you.attack_delay(&item, false).expected();
-
-    return you.attack_delay_with(nullptr, false, &item).expected();
-}
-
 static string _desc_attack_delay(const item_def &item)
 {
     // Hide speed/heavy brand from unidentified weapons.
@@ -1389,7 +1398,7 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const int cur_delay = _get_delay(dummy);
+    const int cur_delay = you.attack_delay_with(&dummy).expected();
 
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
 }
@@ -1616,10 +1625,12 @@ static void _append_weapon_stats(string &description, const item_def &item)
         const brand_type brand = get_weapon_brand(item);
         string brand_name = uppercase_first(brand_type_name(brand, true));
         // Hack to match artefact prop formatting.
-        description += make_stringf("\n\n%-*s %s",
-                                    MAX_ARTP_NAME_LEN + 1,
-                                    (brand_name + ":").c_str(),
-                                    brand_desc.c_str());
+
+        string fmt_name = make_stringf("\n\n%-*s",
+                                        MAX_ARTP_NAME_LEN + 1,
+                                        (brand_name + ":").c_str());
+
+        description += _format_prop_desc(fmt_name, brand_desc);
     }
     if (is_unrandom_artefact(item))
     {
@@ -1635,7 +1646,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         {
             string ego_key = _weapon_ego_key(SPWPN_CHAOS);
             string ego_desc = getEgoString(ego_key);
-            description += "\nChaotic:    " + ego_desc;
+            description += _format_prop_desc("\nChaotic:   ", ego_desc);
         }
 
         // XX spacing following brand and dbrand for randarts/unrands is a bit
@@ -2308,22 +2319,24 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     {
         description += "\n\n";
 
+        string ego_prefix;
         if (is_artefact(item))
         {
             // Make this match the formatting in _randart_descrip,
             // since instead of the item being named something like
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
-            string name = string(armour_ego_name(item, true)) + ":";
-            description += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
+            string name = string(armour_ego_name(item, true)) + ": ";
+            ego_prefix = make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
         }
         else
-            description += "'Of " + string(armour_ego_name(item, false)) + "': ";
+            ego_prefix = "'Of " + string(armour_ego_name(item, false)) + "': ";
 
         string ego_key = _armour_ego_key(ego);
         string ego_desc = getEgoString(ego_key);
         if (is_artefact(item))
-            ego_desc = " " + uppercase_first(ego_desc);
-        description += ego_desc;
+            ego_desc = uppercase_first(ego_desc);
+
+        description += _format_prop_desc(ego_prefix, ego_desc);
     }
 
     string art_desc = _artefact_descrip(item);
@@ -2343,7 +2356,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             description += "\n\nIt can be maximally enchanted to +"
                            + to_string(armour_max_enchant(item)) + ".";
         }
-        else
+        else if (armour_is_enchantable(item))
             description += "\n\nIt cannot be enchanted further.";
     }
 
@@ -2526,34 +2539,37 @@ static string _describe_gizmo(const item_def &item)
 
     if (item.brand)
     {
-        string name = string(gizmo_effect_name(item.brand)) + ":";
-        ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
+        const string name = string(gizmo_effect_name(item.brand)) + ":";
+        const string fname = make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
+        string desc;
         switch (item.brand)
         {
             case SPGIZMO_SPELLMOTOR:
-                ret += "Your spells cost less MP as you Rev up. Whenever you "
+                desc = "Your spells cost less MP as you Rev up. Whenever you "
                        "cast a spell, you make a melee attack against a random "
-                       "enemy in range.\n";
+                       "enemy in range.";
                 break;
 
             case SPGIZMO_GADGETEER:
-                ret += "Your evocable items recharge 30% faster and wands have "
-                       "a 30% chance to not spend a charge.\n";
+                desc = "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge.";
                 break;
 
             case SPGIZMO_REVGUARD:
-                ret += "Your AC increases as you Rev (up to +5) and while "
-                       "fully Revved, your attacks may disarm enemies.\n";
+                desc = "Your AC increases as you Rev (up to +5) and while "
+                       "fully Revved, your attacks may disarm enemies.";
                 break;
 
             case SPGIZMO_AUTODAZZLE:
-                ret += "It sometimes fires a blinding ray at enemies whose attacks "
-                       "you dodge.\n";
+                desc  = "It sometimes fires a blinding ray at enemies whose attacks "
+                       "you dodge.";
                 break;
 
             default:
                 break;
         }
+
+        ret += _format_prop_desc(fname, desc) + "\n";
     }
 
     ret += _artefact_descrip(item);
@@ -3299,6 +3315,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                                  command_to_string(CMD_DISPLAY_MAP).c_str(),
                                  command_to_string(look_dir).c_str());
             }
+        }
+        else if (feat == DNGN_ENTER_ABYSS || feat == DNGN_EXIT_THROUGH_ABYSS)
+        {
+            long_desc += make_stringf("\n(If you entered the Abyss now, you could be "
+                                          "pulled as deep as Abyss:%d.)",
+                                      abyss_default_depth(true));
         }
         else if (feat_is_portal(feat)
             || feat == DNGN_ENTER_ZIGGURAT) // augh this is technically a gate
@@ -5689,6 +5711,27 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
+static string _monster_notice_chance(const monster_info& mi)
+{
+    ostringstream result;
+
+    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
+           << conjugate_verb("have", mi.pronoun_plurality())
+           << " a ";
+
+    int perception = mi.perception() * 100;
+    int stealth = player_stealth() * 100;
+
+    if (stealth < perception)
+        result << 100;
+    else
+        result << perception * 100 / stealth;
+
+    result << "% chance to notice you each turn.\n";
+
+    return result.str();
+}
+
 static void _describe_aux_hit_chance(ostringstream &result, vector<string>& auxes, int chance)
 {
     result << " and " << chance << "% to hit with your ";
@@ -5757,18 +5800,10 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
 
         return;
     }
-    else if (weapon->base_type == OBJ_MISSILES)
-    {
-        ranged_attack attk(&you, nullptr, nullptr, weapon, false);
-        const bool penetrating = is_penetrating_attack(you, nullptr, *weapon);
-        acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
-    }
     else
     {
-        item_def fake_proj;
-        populate_fake_projectile(*weapon, fake_proj);
-        const bool penetrating = is_penetrating_attack(you, weapon, fake_proj);
-        ranged_attack attk(&you, nullptr, weapon, &fake_proj, false);
+        ranged_attack attk(&you, nullptr, weapon, false);
+        const bool penetrating = is_penetrating_attack(*weapon);
         acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
     }
 
@@ -6285,6 +6320,14 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << ".\n";
     }
     result << _monster_attacks_description(mi);
+    if (crawl_state.game_started)
+    {
+        if (mi.attitude == ATT_HOSTILE && (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)
+        || mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
+        {
+            result << _monster_notice_chance(mi);
+        }
+    }
 
     const mon_resist_flags special_resists[] =
     {

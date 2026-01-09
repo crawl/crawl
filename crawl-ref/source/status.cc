@@ -317,6 +317,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
                           (-1 * you.corrosion_amount()));
+        inf.short_text = make_stringf("corroded (%d)", (-1 * you.corrosion_amount()));
         break;
 
     case DUR_FLAYED:

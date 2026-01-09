@@ -182,9 +182,9 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-vorpal_damage_type player::damage_type(int)
+vorpal_damage_type player::damage_type(const item_def* wp) const
 {
-    if (const item_def* wp = weapon())
+    if (wp)
         return get_vorpal_type(*wp);
     if (form == transformation::blade_hands)
         return DAMV_PIERCING;
@@ -198,13 +198,13 @@ vorpal_damage_type player::damage_type(int)
 /**
  * What weapon brand does the player attack with in melee?
  */
-brand_type player::damage_brand(int)
+brand_type player::damage_brand(const item_def* wpn) const
 {
     // confusing touch always overrides
     if (duration[DUR_CONFUSING_TOUCH])
         return SPWPN_CONFUSE;
 
-    if (item_def* wpn = you.weapon())
+    if (wpn)
     {
         if (is_range_weapon(*wpn))
             return SPWPN_NORMAL;
@@ -215,58 +215,57 @@ brand_type player::damage_brand(int)
     return get_form()->get_uc_brand();
 }
 
+static random_var _player_attack_delay(bool melee_only)
+{
+    const item_def *primary = you.weapon();
+    const random_var primary_delay = you.attack_delay_with(primary, melee_only);
+
+    const item_def *offhand = you.offhand_weapon();
+    if (!offhand || is_melee_weapon(*offhand) != is_melee_weapon(*primary))
+        return primary_delay;
+
+    const random_var offhand_delay = you.attack_delay_with(offhand, melee_only);
+    return div_rand_round(primary_delay + offhand_delay, 2);
+}
 
 /**
  * Return the delay caused by attacking with your weapon or this projectile.
  *
  * @param projectile  The projectile to be thrown, if any.
- * @param rescale         Whether to re-scale the time to account for the fact that
- *                   finesse doesn't stack with haste.
  * @return           A random_var representing the range of possible values of
  *                   attack delay. It can be casted to an int, in which case
  *                   its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *projectile, bool rescale) const
+random_var player::attack_delay(const item_def *projectile) const
 {
-    const item_def *primary = weapon();
-    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
-    if (projectile && !is_launcher_ammo(*projectile))
-        return primary_delay; // throwing doesn't use the offhand
+    if (projectile && projectile->base_type == OBJ_MISSILES)
+        return attack_delay_with(projectile);
 
-    const item_def *offhand = you.offhand_weapon();
-    if (!offhand
-        || is_melee_weapon(*offhand) && projectile
-        || is_range_weapon(*offhand) && !projectile)
-    {
-        return primary_delay;
-    }
-
-    // re-use of projectile is very dubious here
-    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
-    return div_rand_round(primary_delay + offhand_delay, 2);
+    return _player_attack_delay(false);
 }
 
-random_var player::attack_delay_with(const item_def *projectile, bool rescale,
-                                     const item_def *weap) const
+// Return the delay caused by using the player's equipped weapon in melee, even
+// if they are ranged weapons!
+random_var player::melee_attack_delay() const
 {
-    // The delay for swinging non-weapons and tossing non-missiles.
+    return _player_attack_delay(true);
+}
+
+random_var player::attack_delay_with(const item_def *weap, bool melee_only) const
+{
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
 
-    const bool throwing = projectile && is_throwable(this, *projectile);
-    const bool unarmed_attack = !weap && !projectile;
-    const bool melee_weapon_attack = !projectile
-                                     && weap
-                                     && is_melee_weapon(*weap);
-    const bool ranged_weapon_attack = projectile
-                                      && is_launcher_ammo(*projectile);
-    if (throwing)
+    // Ranged weapons can only clumsily bash in melee.
+    const bool ranged_weapon_attack = !melee_only && weap && is_range_weapon(*weap);
+
+    if (weap && is_throwable(this, *weap))
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
-        const int projectile_delay = 10 + property(*projectile, PWPN_DAMAGE) / 2;
+        const int projectile_delay = 10 + property(*weap, PWPN_DAMAGE) / 2;
         attk_delay = random_var(projectile_delay);
         attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
                                      DELAY_SCALE);
@@ -275,13 +274,13 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay = rv::max(attk_delay,
                 random_var(FASTEST_PLAYER_THROWING_SPEED));
     }
-    else if (unarmed_attack)
+    else if (!weap)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
-    else if (melee_weapon_attack || ranged_weapon_attack)
+    else if (is_melee_weapon(*weap) || ranged_weapon_attack)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding
@@ -311,9 +310,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
                        DELAY_SCALE);
 
     // Slow attacks with ranged weapons, but not clumsy bashes.
-    // Don't slow throwing attacks while holding a ranged weapon.
-    // Don't slow tossing.
-    if (ranged_weapon_attack && is_slowed_by_armour(weap))
+    if (ranged_weapon_attack)
     {
         const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
@@ -324,7 +321,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         ASSERT(!you.duration[DUR_BERSERK]);
         // Finesse shouldn't stack with Haste, so we make this attack take
         // longer so when Haste speeds it up, only Finesse will apply.
-        if (you.duration[DUR_HASTE] && rescale)
+        if (you.duration[DUR_HASTE])
             attk_delay = haste_mul(attk_delay);
         attk_delay = div_rand_round(attk_delay, 2);
     }

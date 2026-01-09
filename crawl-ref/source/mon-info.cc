@@ -40,6 +40,7 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-goditem.h" // dispellable_enchantments
@@ -2221,4 +2222,12 @@ monster* monster_info::get_known_summoner() const
 bool monster_info::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+int monster_info::perception() const
+{
+    if (is(MB_CANT_SEE_YOU) || is(MB_BLIND))
+        return 5;
+
+    return monster_perception(hd, mintel, is(MB_SLEEPING) || is(MB_DORMANT));
 }

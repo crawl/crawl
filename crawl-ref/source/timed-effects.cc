@@ -276,13 +276,6 @@ static void _maybe_mortality_summon()
         }
     }
 
-    // Only activate a fraction of the times we're resting while injured.
-    if (coinflip())
-    {
-        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(800, 1300);
-        return;
-    }
-
     // Summon permaslow reapers at low XL, and scale the number with XL also.
     const bool slow = you.experience_level < 14;
     int num = 1;
@@ -315,7 +308,7 @@ static void _maybe_mortality_summon()
     if (created)
     {
         mprf("Death has come for you....");
-        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(3500, 6500);
+        you.props[MORTALITY_TIME_KEY] = you.elapsed_time + random_range(2250, 4500);
     }
 }
 
@@ -368,7 +361,7 @@ static void _bane_triggers(int /*time_delta*/)
 
     if (you.has_bane(BANE_MORTALITY)
         && you.elapsed_time > you.props[MORTALITY_TIME_KEY].get_int()
-        && you.hp * 2 < you.hp_max)
+        && you.hp * 10 <= you.hp_max * 4)
     {
         _maybe_mortality_summon();
     }

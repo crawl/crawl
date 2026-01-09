@@ -42,7 +42,7 @@ void banished(const string &who = "");
 void check_banished();
 void push_features_to_abyss();
 
-int abyss_depth_for_xl();
+int abyss_default_depth(bool max_possible = false);
 
 void clear_abyssal_rune_knowledge();
 void generate_abyss();

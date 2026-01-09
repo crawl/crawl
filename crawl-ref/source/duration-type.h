@@ -302,5 +302,6 @@ enum duration_type
     DUR_FLOODED_IMMUNITY,
     DUR_DEVIOUS,
     DUR_SLIMIFYING,
+    DUR_OOZE_REGEN,
     NUM_DURATIONS
 };

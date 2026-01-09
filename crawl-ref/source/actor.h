@@ -92,16 +92,14 @@ public:
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
 
-    virtual brand_type damage_brand(int which_attack = -1) = 0;
-    virtual vorpal_damage_type damage_type(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) const = 0;
     const item_def *primary_weapon() const
     {
         return weapon(0);
     }
     virtual item_def *offhand_weapon() const { return nullptr; }
-    virtual random_var attack_delay(const item_def *projectile = nullptr,
-                                    bool rescale = true) const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr) const = 0;
+    virtual random_var melee_attack_delay() const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
     virtual item_def *offhand_item() const = 0;
@@ -162,7 +160,7 @@ public:
     virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const actor* source, const string &reason = "") = 0;
-    virtual bool polymorph(int dur, bool allow_immobile = true) = 0;
+    virtual bool polymorph(int dur) = 0;
     virtual bool doom(int amount) = 0;
     virtual bool drain(const actor *agent, bool quiet = false,
                        int pow = 3) = 0;

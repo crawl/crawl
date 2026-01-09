@@ -321,7 +321,7 @@ struct ability_def
 
 static int _lookup_ability_slot(ability_type abil);
 static spret _do_ability(const ability_def& abil, bool fail, dist *target,
-                         bolt beam);
+                         bolt& beam);
 static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp_cost);
 
 static vector<ability_def> &_get_ability_list()
@@ -3214,7 +3214,7 @@ public:
  *  or was canceled (spret::abort). Never returns spret::none.
  */
 static spret _do_ability(const ability_def& abil, bool fail, dist *target,
-                         bolt beam)
+                         bolt& beam)
 {
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr

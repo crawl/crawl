@@ -593,6 +593,10 @@ int calc_spell_power(spell_type spell)
     if (you.duration[DUR_DIMINISHED_SPELLS])
         power = power / 2;
 
+    // Claustrophobia reduces power by 10% per wall.
+    if (you.has_bane(BANE_CLAUSTROPHOBIA))
+        power = power * (100 - you.props[CLAUSTROPHOBIA_KEY].get_int() * 5) / 100;
+
     return power;
 }
 
@@ -1072,7 +1076,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     makhleb_celebrant_bloodrite();
     _maybe_blood_hastes_allies();
     you.turn_is_over = true;
-    alert_nearby_monsters();
 
     return cast_result;
 }
@@ -1131,9 +1134,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
     }
-
-    alert_nearby_monsters();
-
 }
 
 #ifdef WIZARD

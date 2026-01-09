@@ -47,7 +47,7 @@ CHANCE: 20% (D:2)
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake)
 CHANCE: 8% (Elf)
-CHANCE: 5% (Lair, Slime, Crypt)
+CHANCE: 5% (Lair, Crypt)
 CHANCE: 1% (Zot)
 CHANCE: 0
 : if crawl.one_chance_in(4) then

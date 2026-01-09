@@ -1194,6 +1194,7 @@ endless_salt3
 %sdir dngn/floor
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn
+%weight 1
 lava00 DNGN_LAVA
 lava01
 lava02
@@ -1283,6 +1284,12 @@ starwater_11
 
 toxic_bog1 DNGN_TOXIC_BOG
 toxic_bog2
+toxic_bog3
+toxic_bog4
+toxic_bog5
+toxic_bog6
+toxic_bog7
+toxic_bog8
 
 grey_dirt_bb SHORE_N
 grey_dirt_bl SHORE_W

@@ -23,7 +23,6 @@
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 #define FIXED_PROPS_KEY     "artefact_fixed_props"
 
-#define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
 #define VICTORY_STAT_KEY    "victory_stat"
 #define VICTORY_CONDUCT_KEY "victory_conduct"

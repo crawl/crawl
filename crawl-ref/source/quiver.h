@@ -109,8 +109,7 @@ namespace quiver
 
     bool toss_validate_item(int selected, string *err=nullptr);
     shared_ptr<action> find_ammo_action();
-    shared_ptr<action> ammo_to_action(int slot, bool force=false);
-    shared_ptr<action> slot_to_action(int slot, bool force=false);
+    shared_ptr<action> slot_to_action(int slot);
     shared_ptr<action> spell_to_action(spell_type spell);
     shared_ptr<action> ability_to_action(ability_type abil);
     shared_ptr<action> get_primary_action();

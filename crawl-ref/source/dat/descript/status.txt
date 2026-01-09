@@ -1272,3 +1272,9 @@ resistances and extra health, but heavily weakened spells.
 Any equipped weapons and armour are melded. The effectiveness of your
 newly-acidic melee attacks while in this form is based on your experience level
 rather than Unarmed Combat skill.
+%%%%
+OozeRegen status
+
+You are covered in regenerative ooze from your recent trip down the stairs. For
+a brief time, your wounds will heal rapidly and your reserves of magic will
+recover quickly.

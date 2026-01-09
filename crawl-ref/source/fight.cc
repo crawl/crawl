@@ -376,18 +376,6 @@ static bool _can_shoot_with(const item_def *weapon)
         && !you.berserk();
 }
 
-static bool _autofire_at(actor *defender)
-{
-    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
-        return false;
-    dist t;
-    t.target = defender->pos();
-    shared_ptr<quiver::action> ract = quiver::find_ammo_action();
-    ract->set_target(t);
-    throw_it(*ract);
-    return true;
-}
-
 static void _do_medusa_stinger()
 {
     vector<monster*> targs;
@@ -417,21 +405,24 @@ static void _do_medusa_stinger()
 /**
  * Handle melee combat between attacker and defender.
  *
- * Works using the new fight rewrite. For a monster attacking, this method
- * loops through all their available attacks, instantiating a new melee_attack
- * for each attack. Combat effects should not go here, if at all possible. This
+ * Combat effects should generally not go here, unless intended to be once per
+ * complete attack action (including all of a monster's multiple attacks). This
  * is merely a wrapper function which is used to start combat.
  *
  * @param[in] attacker,defender The (non-null) participants in the attack.
  *                              Either may be killed as a result of the attack.
  * @param[out] did_hit If non-null, receives true if the attack hit the
  *                     defender, and false otherwise.
+ * @param is_rampage   Is this an attack caused by rampaging? Adjusts damage of
+ *                     the attack based on movement speed and possibly staggers
+ *                     the target. (Only effect for player attackers)
  * @param simu Is this a simulated attack?  Disables a few problematic
  *             effects such as blood spatter and distortion teleports.
  *
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
+bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
+                 bool *did_hit, bool simu)
 {
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
@@ -484,8 +475,18 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         {
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
-            if (!simu && _autofire_at(defender))
-                return you.turn_is_over;
+
+            if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
+            {
+                if (do_player_ranged_attack(defender->pos()))
+                {
+                    you.time_taken = you.attack_delay().roll();
+                    you.turn_is_over = true;
+                    return true;
+                }
+                else
+                    return false;
+            }
         }
 
         melee_attack attk(&you, defender);
@@ -505,11 +506,21 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
+        // Rampage attacks happen at movement speed, so proportionally lower the
+        // damage of an attack which would otherwise have been slower than this.
+        if (is_rampage)
+        {
+            const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
+            const int move_delay = player_movement_speed() * player_speed();
+            if (attack_delay > move_delay)
+                attk.dmg_mult =  (move_delay * 100 / attack_delay) - 100;
+        }
+
         const bool success = attk.launch_attack_set();
         if (attk.cancel_attack)
             you.turn_is_over = false;
         else
-            you.time_taken = you.attack_delay().roll();
+            you.time_taken = you.melee_attack_delay().roll();
 
         if (!success)
             return !attk.cancel_attack;
@@ -607,7 +618,7 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
         _do_medusa_stinger();
 
     if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP])
-        you.rev_up(you.attack_delay().roll());
+        you.rev_up(you.melee_attack_delay().roll());
 }
 
 /**

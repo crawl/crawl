@@ -64,7 +64,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-      art_props(0), unrand_entry(nullptr),
+      unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       defender_shield(nullptr), simu(false),
@@ -364,19 +364,14 @@ string attack::anon_pronoun(pronoun_type pron)
 /* Initializes an attack, setting up base variables and values
  *
  * Does not make any changes to any actors, items, or the environment,
- * in case the attack is cancelled or otherwise fails. Only initializations
- * that are universal to all types of attacks should go into this method,
- * any initialization properties that are specific to one attack or another
- * should go into their respective init_attack.
+ * in case the attack is cancelled or otherwise fails.
  *
- * Although this method will get overloaded by the derived class, we are
- * calling it from attack::attack(), before the overloading has taken place.
  */
-void attack::init_attack(skill_type unarmed_skill, int attack_number)
+void attack::init_attack(int attack_number)
 {
     ASSERT(attacker);
 
-    wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
+    wpn_skill       = weapon ? item_attack_skill(*weapon) : SK_UNARMED_COMBAT;
 
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
@@ -388,7 +383,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     unrand_entry = nullptr;
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
-        artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }
@@ -953,8 +947,8 @@ int attack::calc_damage()
     {
         int potential_damage, damage;
 
-        potential_damage = using_weapon() || wpn_skill == SK_THROWING
-            ? adjusted_weapon_damage() : calc_base_unarmed_damage();
+        potential_damage = using_weapon() ? adjusted_weapon_damage()
+                                          : calc_base_unarmed_damage();
 
         // Multiply damage before modifying by stats to avoid large breakpoints.
         potential_damage = stat_modify_damage(potential_damage * 100, wpn_skill);
@@ -1486,12 +1480,7 @@ int attack::player_stab(int damage)
         }
     }
     else
-    {
         stab_bonus = 0;
-        // Ok.. if you didn't backstab, you wake up the neighborhood.
-        // I can live with that.
-        alert_nearby_monsters();
-    }
 
     if (stab_bonus)
     {

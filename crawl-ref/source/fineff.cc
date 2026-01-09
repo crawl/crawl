@@ -1069,14 +1069,11 @@ void trj_spawn_fineff::fire()
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
-        coord_def jpos = find_newmons_square_contiguous(jelly, posn, 3, false);
-        if (!in_bounds(jpos))
-            continue;
-
-        if (monster *mons = mons_place(
-                              mgen_data(jelly, spawn_beh, jpos, foe,
+        if (monster *mons = create_monster(
+                              mgen_data(jelly, spawn_beh, posn, foe,
                                         MG_DONT_COME, GOD_JIYVA)
                               .set_summoned(trj, 0)
+                              .set_range(1, LOS_RADIUS)
                               .copy_from_parent(trj)))
         {
             // Don't allow milking the Royal Jelly.

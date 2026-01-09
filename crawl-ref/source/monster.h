@@ -280,10 +280,10 @@ public:
 
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
-    brand_type  damage_brand(int which_attack = -1) override;
-    vorpal_damage_type damage_type(int which_attack = -1) override;
-    random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool rescale = true) const override;
+    brand_type  damage_brand(int which_attack) const;
+    vorpal_damage_type damage_type(int which_attack = -1) const;
+    random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  melee_attack_delay() const override;
     int         has_claws(bool allow_tran = true) const override;
 
     int wearing(object_class_type obj_type, int sub_type,
@@ -361,7 +361,7 @@ public:
     bool has_bones(bool temp = true) const override;
     bool is_stationary() const override;
     bool malmutate(const actor* source, const string& reason = "") override;
-    bool polymorph(int dur, bool allow_immobile = true) override;
+    bool polymorph(int dur) override;
     bool polymorph(poly_power_type power = PPT_SAME);
     bool doom(int amount) override;
     void banish(const actor *agent, const string &who = "",
@@ -522,6 +522,7 @@ public:
     void daze(int duration) override;
     void vitrify(const actor *attacker, int duration, bool quiet = false) override;
     bool floodify(const actor *attacker, int duration, const char* substance = "water") override;
+    void stagger(int energy_loss);
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;
 

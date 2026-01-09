@@ -46,7 +46,7 @@ static const bane_def bane_data[] =
         BANE_CLAUSTROPHOBIA,
         BANE_DUR_MEDIUM,
         "Claustrophobia",
-        "Your damage and accuracy is decreased for each wall adjacent to you.",
+        "Your slaying and spellpower are decreased in confined spaces.",
     },
 
     {

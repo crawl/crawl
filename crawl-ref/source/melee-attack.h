@@ -76,7 +76,7 @@ public:
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = 0, int effective_attack_num = 0);
-    void set_weapon(item_def *weapon, bool offhand = false);
+    void set_weapon(item_def *weapon);
 
     bool launch_attack_set(bool skip_player_post_attack = false);
     bool attack();
@@ -126,7 +126,7 @@ private:
     void decapitate();
 
     bool run_player_attack_set();
-    bool swing_with(item_def &weapon, bool offhand);
+    bool swing_with(item_def &weapon);
 
     bool run_monster_attack_set();
 

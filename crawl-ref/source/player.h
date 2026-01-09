@@ -678,12 +678,11 @@ public:
         override;
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
-    brand_type  damage_brand(int which_attack = -1) override;
-    vorpal_damage_type damage_type(int which_attack = -1) override;
-    random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool rescale = true) const override;
-    random_var  attack_delay_with(const item_def *projectile, bool rescale,
-                                  const item_def *weapon) const;
+    brand_type  damage_brand(const item_def* weapon) const;
+    vorpal_damage_type damage_type(const item_def* weapon) const;
+    random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  melee_attack_delay() const override;
+    random_var  attack_delay_with(const item_def *weapon, bool melee_only = false) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -776,7 +775,7 @@ public:
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
     bool malmutate(const actor* source, const string &reason = "") override;
-    bool polymorph(int dur, bool allow_immobile = true) override;
+    bool polymorph(int dur) override;
     bool doom(int amount) override;
     void backlight();
     void banish(const actor* /*agent*/, const string &who = "",

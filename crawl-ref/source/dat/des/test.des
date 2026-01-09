@@ -95,3 +95,67 @@ MAP
 .=.=.=.=.=.
 ...........
 ENDMAP
+
+#################################################
+# redefined monster names
+#
+# Check that all the encounter messages for these monsters are correct, as well
+# as their tooltips in tiles mode, and their corpses when you kill them. Also
+# check that when you cast Animate Dead (zombies), cast Death Channel (spectral
+# things), cast Sculpt Simulacrum (simulacra), or bind souls under Yredelemnul
+# (bound souls), all the names of the resulting undead are set properly.
+NAME:   redefined_monster_names_test
+TAGS:   transparent no_item_gen no_monster_gen no_trap_gen no_rotate no_hmirror no_vmirror
+WEIGHT: 0
+KMONS:  1 = generate_awake goblin name:gallivanting hp:1 always_corpse n_adj n_des
+KMONS:  2 = generate_awake goblin name:non-gallivanting hp:1 always_corpse n_adj n_des n_noc
+KMONS:  3 = generate_awake goblin name:grumbler hp:1 always_corpse n_suf n_des
+KMONS:  4 = generate_awake goblin name:non-grumbler hp:1 always_corpse n_suf n_des n_noc
+KMONS:  5 = generate_awake goblin name:Gudrun hp:1 always_corpse
+KMONS:  6 = generate_awake goblin name:non-Gudrun hp:1 always_corpse n_noc
+KMONS:  7 = generate_awake goblin name:Gunther hp:1 always_corpse n_rpl
+KMONS:  8 = generate_awake goblin name:non-Gunther hp:1 always_corpse n_rpl n_noc
+KMONS:  9 = generate_awake goblin name:Goober hp:1 always_corpse n_rpl n_des
+KMONS:  0 = generate_awake goblin name:non-Goober hp:1 always_corpse n_rpl n_des n_noc
+KMONS:  d = generate_awake goblin name:Grand_Marshal hp:1 always_corpse n_rpl n_the
+KMONS:  e = generate_awake goblin name:non-Grand_Marshal hp:1 always_corpse n_rpl n_the n_noc
+KMONS:  f = generate_awake goblin name:Grim_One hp:1 always_corpse n_rpl n_the n_des
+KMONS:  g = generate_awake goblin name:non-Grim_One hp:1 always_corpse n_rpl n_the n_des n_noc
+KMONS:  h = generate_awake goblin name:glob hp:1 always_corpse n_spe
+KMONS:  i = generate_awake goblin name:non-glob hp:1 always_corpse n_spe n_noc
+KMONS:  j = generate_awake goblin name:gumball hp:1 always_corpse n_spe n_rpl
+KMONS:  k = generate_awake goblin name:non-gumball hp:1 always_corpse n_spe n_rpl n_noc
+KMONS:  p = generate_awake goblin name:gravel hp:1 always_corpse n_spe n_rpl n_the
+KMONS:  q = generate_awake goblin name:non-gravel hp:1 always_corpse n_spe n_rpl n_the n_noc
+KMONS:  r = generate_awake goblin name:gremlin hp:1 always_corpse n_spe n_rpl n_the n_des
+KMONS:  s = generate_awake goblin name:non-gremlin hp:1 always_corpse n_spe n_rpl n_the n_des n_noc
+KMASK:  1234567890defghijkpqrs = opaque
+MAP
+xxxxxxxx+++xxxxxxxx
+x.................x
+x.o=o.o=o.o=o.o=o.x
+x.o1o.o2o.o3o.o4o.x
+x.ooo.ooo.ooo.ooo.x
+x.................x
+x.o=o.o=o.o=o.o=o.x
+x.o5o.o6o.o7o.o8o.x
+x.ooo.ooo.ooo.ooo.x
+x.................x
+x.....o=o.o=o.....x
+x.....o9o.o0o.....x
+x.....ooo.ooo.....x
+x.................x
+x.o=o.o=o.o=o.o=o.x
+x.odo.oeo.ofo.ogo.x
+x.ooo.ooo.ooo.ooo.x
+x.................x
+x.o=o.o=o.o=o.o=o.x
+x.oho.oio.ojo.oko.x
+x.ooo.ooo.ooo.ooo.x
+x.................x
+x.o=o.o=o.o=o.o=o.x
+x.opo.oqo.oro.oso.x
+x.ooo.ooo.ooo.ooo.x
+x.................x
+xxxxxxxx+++xxxxxxxx
+ENDMAP

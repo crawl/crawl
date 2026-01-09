@@ -207,6 +207,15 @@ function master_elementalist_setup(e, sprintscale)
            "deflect_missiles.11.wizard" .. equip_def .. " . ring of willpower"
 end
 
+-- A function to reduce all the scythe definition boilerplate.
+function scythe(ego)
+  local s = "halberd itemname:scythe tile:wpn_scythe wtile:scythe"
+  if ego ~= nil then
+    s = s .. " ego:" .. ego
+  end
+  return s
+end
+
 -- A handy boilerplate-reducing function for getting a cloud generator to place
 -- just a single cloud in-place. @fade makes it rarely briefly fade away.
 function single_cloud(e, glyph, cloud, fade)

@@ -1429,11 +1429,16 @@ draco-job-shifter MONS_DRACONIAN_SHIFTER
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 
-%rim 1
-mon/nonliving/test_spawner MONS_TEST_SPAWNER
+%sdir mon/nonliving
+test_blob MONS_TEST_BLOB
+%sdir mon/statues
+test_spawner MONS_TEST_SPAWNER
+test_statue MONS_TEST_STATUE
+undefined_statue MONS_STATUE
 
 misc/unseen PLAYER
 
+%rim 0
 ## Transformations
 %sdir player/transform
 bat_form TRAN_BAT

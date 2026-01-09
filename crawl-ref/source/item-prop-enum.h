@@ -277,14 +277,6 @@ enum jewellery_type
     NUM_JEWELLERY
 };
 
-enum class launch_retval
-{
-    BUGGY = -1, // could be 0 maybe? TODO: test
-    FUMBLED,
-    LAUNCHED,
-    THROWN,
-};
-
 enum misc_item_type
 {
 #if TAG_MAJOR_VERSION == 34
@@ -373,21 +365,24 @@ enum missile_type
     MI_DART,
 #if TAG_MAJOR_VERSION == 34
     MI_NEEDLE,
-#endif
     MI_ARROW,
     MI_BOLT,
+#endif
     MI_JAVELIN,
 
     MI_STONE,
     MI_LARGE_ROCK,
+#if TAG_MAJOR_VERSION == 34
     MI_SLING_BULLET,
+#endif
     MI_THROWING_NET,
     MI_BOOMERANG,
 
+#if TAG_MAJOR_VERSION == 34
     MI_SLUG,
+#endif
 
     NUM_MISSILES,
-    MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
 
 enum rune_type
@@ -570,8 +565,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_PENETRATION,
 #endif
     SPMSL_DISPERSAL,
-    SPMSL_EXPLODING,                   // Only used by Damnation crossbow
 #if TAG_MAJOR_VERSION == 34
+    SPMSL_EXPLODING,
     SPMSL_STEEL,
 #endif
     SPMSL_SILVER,

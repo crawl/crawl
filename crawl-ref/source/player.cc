@@ -1215,6 +1215,9 @@ static int _player_bonus_regen()
         rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
     }
 
+    if (you.duration[DUR_OOZE_REGEN])
+        rr += you.hp_max * 4;
+
     return rr;
 }
 
@@ -1305,6 +1308,9 @@ int player_mp_regen()
     // Rampage healing grants a variable regen boost while active.
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
+
+    if (you.duration[DUR_OOZE_REGEN])
+        regen_amount += you.max_magic_points * 4;
 
     if (have_passive(passive_t::jelly_regen))
     {
@@ -3505,15 +3511,6 @@ static void _display_tohit()
 #endif
 }
 
-static int _delay(const item_def *weapon)
-{
-    if (!weapon || !is_range_weapon(*weapon))
-        return you.attack_delay().expected();
-    item_def fake_proj;
-    populate_fake_projectile(*weapon, fake_proj);
-    return you.attack_delay(&fake_proj).expected();
-}
-
 static bool _at_min_delay(const item_def *weapon)
 {
     return weapon
@@ -3528,7 +3525,7 @@ static bool _at_min_delay(const item_def *weapon)
 static void _display_attack_delay(const item_def *offhand)
 {
     const item_def* weapon = you.weapon();
-    const int delay = _delay(weapon);
+    const int delay = you.attack_delay().expected();
     const bool at_min_delay = _at_min_delay(weapon)
                               && (!offhand || _at_min_delay(offhand));
 
@@ -7984,7 +7981,7 @@ bool player::malmutate(const actor* /*source*/, const string &reason)
     return false;
 }
 
-bool player::polymorph(int dur, bool allow_immobile)
+bool player::polymorph(int dur)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7996,13 +7993,15 @@ bool player::polymorph(int dur, bool allow_immobile)
     vector<transformation> forms = {
         transformation::bat,
         transformation::wisp,
-        transformation::pig,
     };
-    if (allow_immobile)
-    {
+
+    // Don't polymorph the player into something that would require emergency flight.
+    if (!feat_dangerous_for_form(transformation::pig, env.grid(you.pos())))
+        forms.emplace_back(transformation::pig);
+    if (!feat_dangerous_for_form(transformation::tree, env.grid(you.pos())))
         forms.emplace_back(transformation::tree);
+    if (!feat_dangerous_for_form(transformation::fungus, env.grid(you.pos())))
         forms.emplace_back(transformation::fungus);
-    }
 
     for (int tries = 0; tries < 3; tries++)
     {

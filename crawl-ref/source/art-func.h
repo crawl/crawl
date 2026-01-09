@@ -55,6 +55,7 @@
 #include "spl-transloc.h"  // For Autumn Katana's Manifold Assault
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "tilepick.h"
 #include "rltiles/tiledef-main.h"
 #include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
@@ -859,6 +860,7 @@ static void _DAMNATION_launch(bolt* beam)
     expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
     expl->tile_explode = TILE_BOLT_DAMNATION;
+    expl->safe_to_user = true;
 
     beam->special_explosion = expl;
 }
@@ -1451,11 +1453,11 @@ static int _harvest_corpses()
                 bolt beam;
                 beam.source = *ri;
                 beam.target = you.pos();
+                beam.tile_beam = tileidx_item(item);
                 beam.glyph = get_item_glyph(item).ch;
                 beam.colour = item.get_colour();
                 beam.range = LOS_RADIUS;
                 beam.aimed_at_spot = true;
-                beam.item = &item;
                 beam.flavour = BEAM_VISUAL;
                 beam.draw_delay = 3;
                 beam.fire();

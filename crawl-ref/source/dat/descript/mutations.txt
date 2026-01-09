@@ -1432,8 +1432,9 @@ current level of electrical resistance.
 %%%%
 claustrophobia bane
 
-Your damage and accuracy with weapons is decreased for each wall you are
-currently adjacent to.
+You suffer a penalty to the damage and accuracy of your attacks and the power of
+your spells based on the number of solid feature you are currently adjacent to.
+(-2 slaying and -10% spell power per solid feature.)
 %%%%
 stumbling bane
 
@@ -1477,7 +1478,7 @@ they will never lose track of your position, no matter where you flee.
 %%%%
 mortality bane
 
-When you are injured and alone, a reaper may come to claim you. These reapers
+When you are badly injured and alone, a reaper may come to claim you. These reapers
 will be immune to all damage from non-adjacent sources and, if your XL is less
 than 14, will additionally be slow. At higher XL, multiple reapers may appear at
 once.

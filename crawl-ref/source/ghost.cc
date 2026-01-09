@@ -1135,6 +1135,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_ALL_PURPOSE_TEMPERING;
     case SPELL_FREEZING_CLOUD:
         return SPELL_FREEZING_GUST;
+    case SPELL_NOXIOUS_BOG:
+        return SPELL_HURL_SLUDGE;
     default:
         break;
     }

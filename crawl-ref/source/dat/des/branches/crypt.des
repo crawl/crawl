@@ -88,6 +88,8 @@ function crypt_loot_plus(e, glyph)
                                    "broad axe"})
   local top_rg = util.random_from({"longbow", "triple crossbow", "hand cannon"})
   local high_sb = util.random_from({"quick blade", "rapier"})
+  local top_mel = util.random_from({top_lb, "quick blade", top_pa, top_ax,
+                                    "eveningstar", "lajatang"})
   local top_weap = util.random_from({top_lb, "quick blade", top_pa, top_ax,
                                     "eveningstar", "lajatang", top_rg, top_rg})
   local high_weap = util.random_subset({"great sword", high_sb, "battleaxe",
@@ -96,6 +98,7 @@ function crypt_loot_plus(e, glyph)
                                   "any magical staff randart artprops:Necro"})
   local drain_plus = crawl.random_range(1, 4)
   local weaps = util.random_subset({top_weap .. " ego:draining plus:" .. drain_plus,
+                                    top_mel .. " randart ego:reaping",
                                     high_weap[1] .. " ego:pain good_item",
                                     high_weap[2] .. " ego:vampirism good_item",
                                     staff}, 2)
@@ -108,13 +111,14 @@ function crypt_loot_plus(e, glyph)
                                    "scythe_of_curses", "sceptre_of_torment",
                                    "undeadhunter", "brilliance", "majin-bo",
                                    "cigotuvis_embrace", "skull of zonguldrok"})
-  table.insert(inv, util.random_from({ring, amulet}))
+  local aux = util.random_from({"hat", "helmet", "cloak", "pair of gloves",
+                                "pair of boots"}) .. " randart artprops:Bane"
+  local rand = util.random_choose_weighted {
+    {unrand, 10}, {amulet, 10}, {ring, 5}, {aux, 5},
+  }
 
-  if crawl.one_chance_in(3) then
-    table.insert(inv, unrand)
-  else
-    table.insert(inv, util.random_from({ring, amulet}))
-  end
+  table.insert(inv, util.random_from({ring, amulet}))
+  table.insert(inv, rand)
 
   local book = "randbook disc:necromancy numspells:3 spells:"
   table.insert(inv, util.random_from({"necronomicon", book .. "death's_door",
@@ -135,8 +139,9 @@ function crypt_loot_plus(e, glyph)
   }
 
   local shield = util.random_from({"tower shield randart artprops:rN:1",
-                                   "tower shield ego:positive_energy"})
-  local etc = util.random_from({shield, "shadow dragon scales randart",
+                                   "tower shield ego:positive_energy",
+                                   "kite shield randart artprops:Bane&&rN:1"})
+  local etc = util.random_from({shield, "shadow dragon scales randart artprops:Bane",
                                 "plate armour randart ego:death",
                                 "orb ego:" .. orbs .. " randart artprops:Necro"})
   table.insert(inv, etc)
@@ -148,7 +153,7 @@ function crypt_loot_plus(e, glyph)
 
   -- Replace a little bit of the loot with gold to compensate for the
   -- shop items, and set up a standard gem glyph.
-  e.kitem("d = $ q:" .. crawl.random_range(100, 200))
+  e.kitem("d = $ q:" .. crawl.random_range(66, 166))
   e.kitem("g = ivory gem")
 end
 }}
@@ -1984,7 +1989,7 @@ ORIENT: float
 # Monster density might be off here
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
 MONS: hell knight / necromancer w:2, bone dragon
-MONS: reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:flaming
+: mons("reaper ; " .. scythe("flaming"))
 MONS: lich
 KMONS: A0 = fire dragon draugr w:12 / quicksilver dragon draugr w:4 / \
             laughing skull w:6
@@ -2700,11 +2705,12 @@ KMONS:  G = undying armoury
 KMONS:  Z = laughing skull
 KFEAT:  _ = altar_kikubaaqudgha / altar_yredelemnul
 KFEAT:  Z = w
+KFEAT:  > = enter_tomb
 # decorative red wall
 KFEAT:  r = v
 COLOUR: r = red
 TILE:   r = dngn_metal_wall_red
-NSUBST: ? = 3:+ / *:v
+NSUBST: - = 3:+ / *:v
 # enemy randomization
 NSUBST:  3 = 2:3B / *:3
 SHUFFLE: LMOP, LMN, OPQ
@@ -2718,7 +2724,6 @@ NSUBST: ! = > / |**
 NSUBST: ? = 1:>
 SUBST:  ! = |**
 : end
-KFEAT:  > = enter_tomb
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
 NSUBST: *| = 2:d
@@ -2732,29 +2737,29 @@ vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vZwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vZZZZwwwwwwwwwwv
-vwwwwwwvvvv?vvvv......rrarr*/?*rrarr......v?v?v?v?vwwwwwwv
+vwwwwwwvvvv-vvvv......rrarr*/Z*rrarr......v-v-v-v-vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....5..v.....rrrr?r$$$$r?rrrr.....v.......?wwwwwwv
+vwwwwww-....5..v.....rrrrZr$$$$rZrrrr.....v.......-wwwwwwv
 vwwwwwwv....5..+........rrr$Sg$rrr........+.2..5..vwwwwwwv
-vwwwwww?....5..v......6...r$$$$r...6......v....5..?wwwwwwv
+vwwwwww-....5..v......6...r$$$$r...6......v....5..-wwwwwwv
 vwwwwwwv.2.vvvvv...rrr....rr++rr....rrr...v....5..vwwwwwwv
-vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
+vwwwwww-...v...vv....rr.rrrU..Urrr.rr....vvv+v....-wwwwwwv
 vwwwwwwv...v.E..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..9_..U.r....vvvv.....+1vwwwwwwv
 vwwwwwwv...v..7.$vvv...rr........rr...vvv1+.....+vvwwwwwwv
-vwwwwwwv...v...$?v.vv...rrrU..Urrr...vv.vvv.....+1vwwwwwwv
+vwwwwwwv...v...$-v.vv...rrrU..Urrr...vv.vvv.....+1vwwwwwwv
 vwwwwwwv...vvvvvvv..vv....rr..rr....vv..v1+.....vvvwwwwwwv
 vwwwwwwv...vvv...v...vv............vv...vvv.....+1vwwwwwwv
 vwwwwwwv...vv....+....vv..........vv....+....4..+vvwwwwwwv
 vwwwwwwv...v43...v.....vv........vv.....vvv.....+1vwwwwwwv
-vwwwwww?...v.1...v.....Fvv......vvF.....v1+.....+vvwwwwwwv
+vwwwwww-...v.1...v.....Fvv......vvF.....v1+.....+vvwwwwwwv
 vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+1vwwwwwwv
-vwwwwww?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
+vwwwwww-.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
 vwwwwwZv......vv....vv..............vv....vv1v..+1vwwwwwwv
-vwwwwwZ?.....vv....vv................vv....vvv..+vvwwwwwwv
+vwwwwwZ-.....vv....vv................vv....vvv..+vvwwwwwwv
 vwwwZZZv.....v....vv.......4..4.......vv....vv..+1vwwwwwwv
 vwvvvvvvvvvvvvv+vvvvv+vv.133..331.vv+vvvvv+vvvvvvvvvvvvvwv
-vwvv.........v..F.v....v..........v....v.........v..%?vvwv
+vwvv.........v..F.v....v..........v....v.........v..%-vvwv
 vwvv.........v....v....v..........v....v.........v...$vvwv
 vwvv.....L...+....v....v..........v....v.....M..M+....vvwv
 vwvv....L....v....v..3.v..........v.3..v.........v....vvwv

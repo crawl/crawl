@@ -1457,7 +1457,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
         return start;
 
     unwind_bool slime_wall_check(g_Slime_Wall_Check,
-                                 !actor_slime_wall_immune(&you));
+                                 !ignore_player_traversability
+                                 && !actor_slime_wall_immune(&you));
     unwind_slime_wall_precomputer slime_neighbours(g_Slime_Wall_Check);
 
     // How many points we'll consider next iteration.

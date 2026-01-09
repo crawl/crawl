@@ -396,7 +396,7 @@ static void _update_claustrophobia()
     int count = 0;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        if (feat_is_wall(env.grid(*ai)))
+        if (feat_is_solid(env.grid(*ai)))
             ++count;
     }
 
@@ -1270,7 +1270,7 @@ void player_reacts()
     }
 
     abyss_maybe_spawn_xp_exit();
-    if (player_in_branch(BRANCH_ABYSS) && you.depth >= 5 && you.experience_level == 27)
+    if (player_in_branch(BRANCH_ABYSS) && you.depth >= 5 && you.skill_cost_level == 27)
         you.props[ABYSS_LOITERING_TIME_KEY].get_int() += you.time_taken;
 
     actor_apply_cloud(&you);

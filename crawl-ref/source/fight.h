@@ -29,8 +29,8 @@ enum stab_type
     NUM_STABS
 };
 
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
-                 bool simu = false);
+bool fight_melee(actor *attacker, actor *defender, bool is_rampage = false,
+                 bool *did_hit = nullptr, bool simu = false);
 
 void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
                              actor* primary_target = nullptr);

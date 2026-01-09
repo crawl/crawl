@@ -30,7 +30,8 @@ void print_mons_left_view_messages();
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);
 
-bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only);
+bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only,
+                  bool force = false);
 
 void handle_monsters(bool with_noise = false);
 void handle_monster_move(monster* mon);

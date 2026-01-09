@@ -10,6 +10,7 @@
 #include <functional>
 
 #include "ability.h"
+#include "abyss.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cio.h"
@@ -1256,6 +1257,11 @@ static string _branch_depth(branch_type br)
     const int depth = branches[br].numlevels;
 
     // Abyss depth is explained in the description.
+    if (br == BRANCH_ABYSS)
+    {
+        desc = make_stringf("\n(If you entered the Abyss now, you could be "
+                            "pulled as deep as Abyss:%d.)", abyss_default_depth(true));
+    }
     if (depth > 1 && br != BRANCH_ABYSS)
     {
         desc = make_stringf("\n\nThis %s is %d levels deep.",

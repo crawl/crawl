@@ -1383,11 +1383,11 @@ TAGS:  transparent no_item_gen no_monster_gen extra
 DEPTH: D:8-, Depths, Zot
 KFEAT: S = general shop type:Changing suffix:Room count:9 ; \
            potion of mutation w:15 | potion of lignification w:15 | \
-           wand of polymorph | amulet of wildshape | any talisman | \
+           wand of polymorph w:5 | amulet of wildshape | any talisman | \
            staff of alchemy | randbook disc:alchemy spells:irradiate w:6 | \
            randbook disc:alchemy spells:fulsome_fusillade w:6 | \
            plutonium_sword w:1 | manual of shapeshifting w:5 | \
-           manual of alchemy w:5
+           manual of alchemy w:5 | flux bauble w:5
 : single_cloud(_G, "F", "mutagenic fog", true)
 COLOUR: m = magenta
 TILE:   m = dngn_transparent_wall_magenta
@@ -1661,9 +1661,9 @@ TAGS:    transparent extra
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
          wand of digging charges:11 | any blast wand charges:18 | \
-         any beam wand charges:18 | wand of charming charges:18 | \
-         wand of paralysis charges:18 | wand of polymorph charges:18 | \
-         wand of mindburst charges:30 | wand of flame charges:40
+         any beam wand charges:18 | any hex wand charges:18 | \
+         wand of polymorph charges:18 | wand of mindburst charges:30 | \
+         wand of flame charges:40 w:5
 SHUFFLE: bv/bc/cv/bm/vm/cm
 MAP
 .......
@@ -1769,12 +1769,11 @@ local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
                     "club w:20", "flail", "demon whip w:3",
                     "dire flail", "eveningstar w:6",
                     "spear", "halberd", "partisan w:6", "demon trident w:3"}
-local egos = {"chaos", "draining", "distortion", "electrocution", "flaming",
+local egos = {"chaos", "draining", "distortion", "electrocution",  "flaming",
               "freezing", "heavy", "speed", "spectral", "protection", "pain"}
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
-             "suffix:Armaments count:" .. count .. " ; " ..
-             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
-             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral"
+             "suffix:Armaments count:" .. count .. " ; dagger ego:devious | " ..
+             scythe("speed") .. " | " .. scythe("spectral")
 --add any weapon-ego pair with matching first letter
 for _, weapon in ipairs(weaponnames) do
   for _, ego in ipairs(egos) do
@@ -1799,11 +1798,11 @@ KITEM:    O = ring of protection from cold / \
           damaged dagger ego:freezing / wand of iceblast charges:1 w:5
 KFEAT:    O = abandoned_shop
 KFEAT:    P = general shop type:Fire suffix:Supplies ; \
-          ring of protection from fire | staff of fire | wand of flame | \
+          ring of protection from fire | staff of fire | wand of flame w:5 | \
           any weapon ego:flaming w:30 | scroll of immolation | \
           randbook disc:fire w:20 | manual of fire magic w:1 | \
           any armour ego:fire_resistance w:25 | fire dragon scales w:5 | \
-          pair of gloves ego:fire w:5
+          pair of gloves ego:fire w:5 | orb ego:pyromania
 KFEAT:    C = c
 SUBVAULT: ' : nico_deadtrees
 MARKER:   O = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
@@ -2105,8 +2104,9 @@ WEIGHT: 1 (Zot, Crypt), 3
 local shopname = util.random_from({"type:Orb suffix:Outfitters",
    "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
    "type:Globular suffix:Garage"})
-local kstr = "S = general shop " .. shopname .. " count:6 ; " ..
-             "orb randart w:20 | orb w:5 | book of the spheres w:1 "
+local kstr = "S = general shop " .. shopname .. " count:6 ; orb w:5 | " ..
+             "orb randart w:20 | manual of evocations w:1 | " ..
+             "book of the spheres w:1"
 
 if not you.unrands("sphere of Battle") then
       kstr = kstr .. " | sphere of Battle w:2"

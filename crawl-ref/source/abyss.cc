@@ -173,11 +173,9 @@ static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
-    const bool god_favoured = have_passive(passive_t::attract_abyssal_rune);
 
-    const double depth = you.depth + god_favoured;
-
-    return (int) pow(100.0, depth/6);
+    static const int chance[] = {0, 0, 10, 15, 22, 100, 100};
+    return chance[you.depth] * (have_passive(passive_t::attract_abyssal_rune) ? 2 : 1);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -1719,12 +1717,14 @@ void abyss_morph()
 constexpr int ABYSS_DEPTH_6_TIME = 7500;
 constexpr int ABYSS_DEPTH_7_TIME = 15000;
 
-// Determine what the 'baseline' Abyss depth is for the player's current XL.
-int abyss_depth_for_xl()
+// Determine what the 'baseline' Abyss depth is for the player's current XP.
+// (We use skill_cost_level instead of XL to try and be more equitable between
+// species and also to avoid issues with Ru's Sac Experience)
+int abyss_default_depth(bool max_possible)
 {
-    if (you.experience_level <= 13)
+    if (you.skill_cost_level <= 13)
         return 1;
-    else if (you.experience_level >= 25)
+    else if (you.skill_cost_level >= 25)
     {
         // If the player has been spending a lot of time on J:5 in endgame,
         // pull them even lower than this. It should be very unlikely to ever
@@ -1736,8 +1736,10 @@ int abyss_depth_for_xl()
             return 6;
         return 5;
     }
+    else if (max_possible)
+        return 1 + div_round_up((you.skill_cost_level - 13), 3);
     else
-        return 1 + div_rand_round((you.experience_level - 13), 3);
+        return 1 + div_rand_round((you.skill_cost_level - 13), 3);
 }
 
 static bool _abyss_force_descent()
@@ -1745,8 +1747,8 @@ static bool _abyss_force_descent()
     // If the player could already have entered at a deeper depth than this for
     // their XL, have a chance of pulling them deeper. (And much higher one if
     // the player has been loitering.)
-    if (abyss_depth_for_xl() > you.depth
-        && (one_chance_in(4) || you.experience_level == 27))
+    if (abyss_default_depth() > you.depth
+        && (one_chance_in(4) || you.skill_cost_level == 27))
     {
         return true;
     }

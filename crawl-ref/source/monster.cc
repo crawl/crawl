@@ -401,7 +401,7 @@ int monster::ghost_umbra_radius() const
     return ghost->umbra_rad;
 }
 
-brand_type monster::damage_brand(int which_attack)
+brand_type monster::damage_brand(int which_attack) const
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -412,7 +412,7 @@ brand_type monster::damage_brand(int which_attack)
                                     : SPWPN_NORMAL;
 }
 
-vorpal_damage_type monster::damage_type(int which_attack)
+vorpal_damage_type monster::damage_type(int which_attack) const
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -436,8 +436,7 @@ vorpal_damage_type monster::damage_type(int which_attack)
  * @return            The time taken by an attack with the monster's weapon
  *                    and the given projectile, in aut.
  */
-random_var monster::attack_delay(const item_def *projectile,
-                                 bool /*rescale*/) const
+random_var monster::attack_delay(const item_def *projectile) const
 {
     const item_def* weap = weapon();
     if (!weap || (projectile && is_throwable(this, *projectile)))
@@ -445,6 +444,12 @@ random_var monster::attack_delay(const item_def *projectile,
 
     random_var delay(weapon_adjust_delay(*weap, 10));
     return delay;
+}
+
+random_var monster::melee_attack_delay() const
+{
+    // Clumsy bashing doesn't really exist for monsters....
+    return attack_delay();
 }
 
 int monster::has_claws(bool /*allow_tran*/) const
@@ -5215,7 +5220,7 @@ bool monster::malmutate(const actor* source, const string& /*reason*/)
     return true;
 }
 
-bool monster::polymorph(int /* dur */, bool /*allow_immobile*/)
+bool monster::polymorph(int /* dur */)
 {
     return polymorph();
 }
@@ -5839,6 +5844,16 @@ bool monster::floodify(const actor* attacker, int duration, const char* substanc
     }
 
     return true;
+}
+
+void monster::stagger(int energy_loss)
+{
+    const int old_energy = speed_increment;
+    speed_increment -= energy_loss;
+
+    // Print a message if enough energy is lost to cost a normal-speed turn.
+    if (speed_increment / 10 < old_energy / 10)
+        simple_monster_message(*this, " is staggered.");
 }
 
 int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string /*source*/)

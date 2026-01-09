@@ -15,4 +15,3 @@ speed: 14
 energy: {swim: 6}
 size: large
 shape: misc
-tile: test_spawner

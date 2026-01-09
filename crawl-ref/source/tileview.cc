@@ -363,40 +363,50 @@ void tile_init_flavour()
 
 // 11111333333   55555555
 //   222222444444   6666666666
-static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
+static void _get_dungeon_wall_tiles_by_depth(int depth,
+                                             vector<pair<tileidx_t, int>>& t)
 {
     if (crawl_state.game_is_sprint() || crawl_state.game_is_arena())
     {
-        t.push_back(TILE_WALL_CATACOMBS);
+        t.emplace_back(TILE_WALL_CATACOMBS, 1);
         return;
     }
     if (depth <= 5)
-        t.push_back(TILE_WALL_BRICK_DARK_1);
+        t.emplace_back(TILE_WALL_BRICK_DARK_1, 460);
     if (depth > 2 && depth <= 8)
     {
-        t.push_back(TILE_WALL_BRICK_DARK_2);
-        t.push_back(TILE_WALL_BRICK_DARK_2_TORCH);
+        t.emplace_back(TILE_WALL_BRICK_DARK_2, 440);
+        t.emplace_back(TILE_WALL_BRICK_DARK_2_TORCH, 20);
     }
     if (depth > 5 && depth <= 11)
-        t.push_back(TILE_WALL_BRICK_DARK_3);
+        t.emplace_back(TILE_WALL_BRICK_DARK_3, 464);
+    int torch_4_weight = 0;
     if (depth > 8)
     {
-        t.push_back(TILE_WALL_BRICK_DARK_4);
-        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        t.emplace_back(TILE_WALL_BRICK_DARK_4, 452);
+        torch_4_weight += 40;
     }
+    // Torches are more common on D:$
     if (depth == brdepth[BRANCH_DUNGEON])
-        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);  // torches are more common on D:14...
+        torch_4_weight += 40;
+
+    if (torch_4_weight)
+        t.emplace_back(TILE_WALL_BRICK_DARK_4_TORCH, torch_4_weight);
 }
 
-static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
+static void _get_depths_wall_tiles_by_depth(int depth,
+                                            vector<pair<tileidx_t, int>>& t)
 {
-    t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
     if (depth <= 3)
-        t.push_back(TILE_WALL_BRICK_DARK_5);
+        t.emplace_back(TILE_WALL_BRICK_DARK_5, 476);
     if (depth > 3)
-        t.push_back(TILE_WALL_BRICK_DARK_6);
+        t.emplace_back(TILE_WALL_BRICK_DARK_6, 464);
+
+    int torch_weight = 60;
+    // Torches are more common on Depths:$
     if (depth == brdepth[BRANCH_DEPTHS])
-        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
+        torch_weight += 60;
+    t.emplace_back(TILE_WALL_BRICK_DARK_6_TORCH, torch_weight);
 }
 
 static int _find_variants(tileidx_t idx, int variant, vector<int> &out)
@@ -456,27 +466,34 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     return idx;
 }
 
-static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
+static bool _is_torch(tileidx_t basetile)
 {
-    ASSERT(!candidates.empty());
+    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
+}
 
+static tileidx_t _pick_dngn_tile_multi(
+                                const vector<pair<tileidx_t, int>>& candidates,
+                                int rand)
+{
     int total = 0;
-    for (tileidx_t tidx : candidates)
-    {
-        const unsigned int count = tile_dngn_count(tidx);
-        total += tile_dngn_probs(tidx + count - 1);
-    }
-    int rand = value % total;
+    for (const pair<tileidx_t, int>& candidate : candidates)
+        total += candidate.second;
 
-    for (tileidx_t tidx : candidates)
+    int rand1 = rand % total;
+    int rand2 = rand / total;
+
+    for (const pair<tileidx_t, int>& candidate : candidates)
     {
-        const unsigned int count = tile_dngn_count(tidx);
-        for (unsigned int j = 0; j < count; ++j)
+        if (rand1 < candidate.second)
         {
-            if (rand < tile_dngn_probs(tidx + j))
-                return tidx + j;
+            // XXX: this should be for any animated tile
+            if (_is_torch(candidate.first))
+                return candidate.first;
+            return pick_dngn_tile(candidate.first, rand2, -1);
         }
-        rand -= tile_dngn_probs(tidx + count - 1);
+        rand1 -= candidate.second;
     }
 
     // Should never reach this place
@@ -528,7 +545,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
         if ((player_in_branch(BRANCH_DUNGEON) || player_in_branch(BRANCH_DEPTHS))
             && tile_env.default_flavour.wall == TILE_WALL_NORMAL)
         {
-            vector<tileidx_t> tile_candidates;
+            vector<pair<tileidx_t, int>> tile_candidates;
             if (player_in_branch(BRANCH_DEPTHS))
                 _get_depths_wall_tiles_by_depth(you.depth, tile_candidates);
             else
@@ -1106,12 +1123,33 @@ void tile_wizmap_terrain(const coord_def &gc)
     tile_env.bk_bg(gc) = _get_floor_bg(gc);
 }
 
-static bool _is_torch(tileidx_t basetile)
+#ifndef USE_TILE_WEB
+static bool _tile_has_cycling_misc_animation(tileidx_t tile)
 {
-    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
+    if (!Options.tile_misc_anim)
+        return false;
+    // Wizlab entries, conduits, and harlequin traps both have spinning
+    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
+    return tile == TILE_DNGN_PORTAL_WIZARD_LAB
+           || tile == TILE_DNGN_EXIT_NECROPOLIS
+           || tile == TILE_DNGN_ALTAR_JIYVA
+           || tile == TILE_DNGN_TRAP_HARLEQUIN
+           || tile >= TILE_ARCANE_CONDUIT && tile < TILE_DNGN_SARCOPHAGUS_SEALED
+           || _is_torch(tile);
 }
+
+static bool _tile_has_random_misc_animation(tileidx_t tile)
+{
+    if (!Options.tile_misc_anim)
+        return false;
+    // This includes branch / portal entries and exits, altars, runelights, and
+    // fountains in the first range, and some randomly-animated weighted
+    // vault statues in the second statues.
+    return tile >= TILE_DNGN_ENTER_ZOT_CLOSED && tile < TILE_DNGN_CACHE_OF_FRUIT
+           || tile >= TILE_DNGN_SILVER_STATUE && tile < TILE_ARCANE_CONDUIT
+           || tile >= TILE_WALL_STONE_CRACKLE_1 && tile <= TILE_WALL_STONE_CRACKLE_4;
+}
+#endif
 
 // Updates the "flavour" of tiles that are animated.
 // Unfortunately, these are all hard-coded for now.
@@ -1120,15 +1158,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    // Wizlab entries, conduits, and harlequin traps both have spinning
-    // sequential cycle tile animations. The Jiyva altar, meanwhile, drips.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB || bg_idx == TILE_DNGN_EXIT_NECROPOLIS
-       || bg_idx == TILE_DNGN_ALTAR_JIYVA || bg_idx == TILE_DNGN_TRAP_HARLEQUIN
-       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
-        && Options.tile_misc_anim)
-    {
+    if (_tile_has_cycling_misc_animation(bg_idx))
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    }
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1142,22 +1173,8 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    // This includes branch / portal entries and exits, altars, runelights, and
-    // fountains in the first range, and some randomly-animated weighted
-    // vault statues in the second statues.
-    else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_DNGN_CACHE_OF_FRUIT)
-             || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
-             || (bg_idx >= TILE_WALL_STONE_CRACKLE_1 && bg_idx <= TILE_WALL_STONE_CRACKLE_4)
-             && Options.tile_misc_anim)
-    {
+    else if (_tile_has_random_misc_animation(bg_idx))
         flv->special = random2(256);
-    }
-    else if (bg_idx == TILE_WALL_NORMAL && Options.tile_misc_anim)
-    {
-        tileidx_t basetile = tile_dngn_basetile(flv->wall);
-        if (_is_torch(basetile))
-            flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
-    }
 #else
     UNUSED(bg, flv);
 #endif

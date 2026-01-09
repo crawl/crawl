@@ -243,7 +243,7 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         if (going_up)
             mpr("You ooze up the stairs.");   // Jiyva-worshippers only
         else
-            mpr("You slide down the stairs.");
+            mpr("You slide down the stairs, becoming coated in regenerative ooze.");
     }
     else if (stair != DNGN_ALTAR_IGNIS)
     {
@@ -848,8 +848,8 @@ void floor_transition(dungeon_feature_type how,
 
     // Determine this now so the milestones and notes report the correct
     // destination floor.
-    if (whither.branch == BRANCH_ABYSS)
-        whither.depth = abyss_depth_for_xl();
+    if (whither.branch == BRANCH_ABYSS && how != DNGN_ABYSSAL_STAIR)
+        whither.depth = abyss_default_depth();
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
@@ -1109,6 +1109,9 @@ void floor_transition(dungeon_feature_type how,
 
     if (you.unrand_equipped(UNRAND_VAINGLORY))
         _vainglory_arrival();
+
+    if (old_level.branch == BRANCH_SLIME && !going_up && !you.royal_jelly_dead)
+        you.duration[DUR_OOZE_REGEN] = random_range(170, 210);
 
     trackers_init_new_level();
 

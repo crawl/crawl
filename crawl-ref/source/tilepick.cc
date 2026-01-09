@@ -669,8 +669,6 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
-        else if (orig == TILE_WALL_PERMAROCK)
-            orig = TILE_WALL_PERMAROCK_BROWN;
     }
     else if (player_in_branch(BRANCH_CRYPT))
     {
@@ -708,25 +706,16 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
             orig = TILE_WALL_COBALT_STONE;
         else if (orig == TILE_DNGN_CRYSTAL)
             orig = TILE_WALL_EMERALD;
-        else if (orig == TILE_DNGN_METAL_WALL)
-            orig = TILE_DNGN_METAL_WALL_DARKGRAY;
     }
     else if (player_in_branch(BRANCH_GEHENNA))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_PYRE;
-        if (orig == TILE_DNGN_METAL_WALL)
-            orig = TILE_DNGN_METAL_WALL_RED;
     }
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_STONE_SMOOTH;
-    }
-    else if (player_in_branch(BRANCH_OSSUARY))
-    {
-        if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_DNGN_STONE_WALL_BROWN;
     }
     else if (player_in_branch(BRANCH_SLIME))
     {
@@ -831,18 +820,6 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
     {
         if (orig == TILE_DNGN_CRYSTAL_WALL)
             orig = TILE_CRYSTAL_WALL_ZOT;
-        else if (orig == TILE_DNGN_STONE_WALL)
-        {
-        /* Matches hall_of_zot 2 through 5. */
-            if (you.depth == 2)
-                orig = TILE_DNGN_STONE_WALL_BLUE;
-            else if (you.depth == 3)
-                orig = TILE_DNGN_STONE_WALL_LIGHTBLUE;
-            else if (you.depth == 4)
-                orig = TILE_DNGN_STONE_WALL_MAGENTA;
-            else if (you.depth == 5)
-                orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
-        }
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_DNGN_METAL_ZOT;
         else if (orig == TILE_DNGN_GRANITE_STATUE)
@@ -864,10 +841,44 @@ static colour_t _feat_colour(coord_def gc)
     if (colour != 0)
         return colour;
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (feat == DNGN_FLOOR)
+    switch (feat)
+    {
+    case DNGN_FLOOR:
         return env.floor_colour;
-    if (feat == DNGN_ROCK_WALL)
+    case DNGN_ROCK_WALL:
         return env.rock_colour;
+    case DNGN_STONE_WALL:
+        switch (you.where_are_you)
+        {
+        case BRANCH_OSSUARY:
+            return BROWN;
+        case BRANCH_ZOT:
+            /* Matches hall_of_zot 2 through 5. */
+            if (you.depth == 2)
+                return BLUE;
+            if (you.depth == 3)
+                return LIGHTBLUE;
+            if (you.depth == 4)
+                return MAGENTA;
+            if (you.depth == 5)
+                return LIGHTMAGENTA;
+            break;
+        }
+        break;
+    case DNGN_PERMAROCK_WALL:
+        if (player_in_branch(BRANCH_GAUNTLET))
+            return BROWN;
+        break;
+    case DNGN_METAL_WALL:
+        switch (you.where_are_you)
+        {
+        case BRANCH_TARTARUS:
+            return DARKGRAY;
+        case BRANCH_GEHENNA:
+            return RED;
+        }
+        break;
+    }
     return 0; // meh
 }
 
@@ -939,8 +950,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
 
     if (tile == TILE_DNGN_PORTAL_WIZARD_LAB
-             || tile == TILE_DNGN_EXIT_NECROPOLIS
-             || tile == TILE_DNGN_TRAP_HARLEQUIN)
+        || tile == TILE_DNGN_EXIT_NECROPOLIS
+        || tile == TILE_DNGN_TRAP_HARLEQUIN)
     {
         tile = tile + flv.special % tile_dngn_count(tile);
     }
@@ -3038,40 +3049,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_DISJUNCTION: return TILE_MI_DART_DISJUNCTION;
         }
 
-    case MI_ARROW:
-        switch (brand)
-        {
-        default:             return TILE_MI_ARROW_MAGIC;
-        case 0:              return TILE_MI_ARROW;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
-        }
-
-    case MI_BOLT:
-        switch (brand)
-        {
-        default:             return TILE_MI_BOLT_MAGIC;
-        case 0:              return TILE_MI_BOLT;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
-        }
-
-    case MI_SLUG:
-    case MI_SLING_BULLET:
-        switch (brand)
-        {
-        default:             return TILE_MI_SLING_BULLET_MAGIC;
-        case 0:              return TILE_MI_SLING_BULLET;
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
-#endif
-        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
-        }
-
     case MI_JAVELIN:
         switch (brand)
         {
@@ -3082,9 +3059,10 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
 #endif
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
-    }
 
-    return TILE_ERROR;
+    default:
+        return TILE_ERROR;
+    }
 }
 
 static tileidx_t _tileidx_missile(const item_def &item)
@@ -3662,79 +3640,43 @@ static int _tile_bolt_dir(int dx, int dy)
         return (dy > 0) ? 5: 7;
 }
 
-tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
+tileidx_t tileidx_item_projectile(const item_def &item)
 {
     if (item.base_type == OBJ_MISSILES)
     {
-        int ch = -1;
-        int dir = _tile_bolt_dir(dx, dy);
-
-        // Thrown items with multiple directions
         switch (item.sub_type)
         {
-            case MI_ARROW:
-                ch = TILE_MI_ARROW0;
-                break;
-            case MI_BOLT:
-                ch = TILE_MI_BOLT0;
-                break;
-            case MI_DART:
-                ch = TILE_MI_DART0;
-                break;
-            case MI_JAVELIN:
-                ch = TILE_MI_JAVELIN0;
-                break;
-            case MI_THROWING_NET:
-                ch = TILE_MI_THROWING_NET0;
-                break;
-            case MI_SLUG:
-                ch = TILE_MI_SLUG0;
-                break;
-            default:
-                break;
+            case MI_DART:           return TILE_MI_DART0;
+            case MI_JAVELIN:        return TILE_MI_JAVELIN0;
+            case MI_THROWING_NET:   return TILE_MI_THROWING_NET0;
+            case MI_STONE:          return TILE_MI_STONE0;
+            case MI_LARGE_ROCK:     return TILE_MI_LARGE_ROCK0;
+            case MI_BOOMERANG:      return TILE_MI_BOOMERANG0;
         }
-        if (ch != -1)
-            return ch + dir;
-
-        // Thrown items with a single direction
+    }
+    else if (is_range_weapon(item))
+    {
         switch (item.sub_type)
         {
-            case MI_STONE:
-                ch = TILE_MI_STONE0;
-                break;
-            case MI_SLING_BULLET:
-                switch (item.brand)
-                {
-                default:
-                    ch = TILE_MI_SLING_BULLET0;
-                    break;
-#if TAG_MAJOR_VERSION == 34
-                case SPMSL_STEEL:
-                    ch = TILE_MI_SLING_BULLET_STEEL0;
-                    break;
-#endif
-                case SPMSL_SILVER:
-                    ch = TILE_MI_SLING_BULLET_SILVER0;
-                    break;
-                }
-                break;
-            case MI_LARGE_ROCK:
-                ch = TILE_MI_LARGE_ROCK0;
-                break;
-            case MI_THROWING_NET:
-                ch = TILE_MI_THROWING_NET0;
-                break;
-            case MI_BOOMERANG:
-                ch = TILE_MI_BOOMERANG0;
-            default:
-                break;
+            case WPN_SLING:
+                return TILE_MI_SLING_BULLET0;
+
+            case WPN_SHORTBOW:
+            case WPN_ORCBOW:
+            case WPN_LONGBOW:
+                return TILE_MI_ARROW0;
+
+            case WPN_ARBALEST:
+            case WPN_TRIPLE_CROSSBOW:
+                return TILE_MI_BOLT0;
+
+            case WPN_HAND_CANNON:
+                return TILE_MI_SLUG0;
         }
-        if (ch != -1)
-            return tileidx_enchant_equ(item, ch);
     }
 
-    // If not a special case, just return the default tile.
-    return tileidx_item(item);
+    // Arbitary fallback
+    return TILE_MI_ARROW0;
 }
 #endif // USE_TILE
 
@@ -3887,6 +3829,12 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_HARPOON_SHOT:
     case TILE_BOLT_METAL_SPLINTERS:
     case TILE_BOLT_FROSTFIRE:
+    case TILE_MI_DART0:
+    case TILE_MI_JAVELIN0:
+    case TILE_MI_THROWING_NET0:
+    case TILE_MI_ARROW0:
+    case TILE_MI_BOLT0:
+    case TILE_MI_SLUG0:
         return tile + dir;
 
     case TILE_BOLT_ZAP:
@@ -4908,9 +4856,9 @@ tileidx_t tileidx_known_brand(const item_def &item)
         case SPMSL_DISPERSAL:
         case SPMSL_DISJUNCTION:
             return TILE_BRAND_DISPERSAL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;
-#if TAG_MAJOR_VERSION == 34
         case SPMSL_CONFUSION:
             return TILE_BRAND_CONFUSION;
         case SPMSL_PARALYSIS:

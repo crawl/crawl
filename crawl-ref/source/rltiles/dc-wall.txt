@@ -35,7 +35,7 @@ brick_dark_2_5
 brick_dark_2_6
 brick_dark_2_7
 
-%weight 5
+%weight 1
 brick_dark_2_8 WALL_BRICK_DARK_2_TORCH
 brick_dark_2_9
 brick_dark_2_10
@@ -77,7 +77,7 @@ brick_dark_4_13
 brick_dark_4_14
 brick_dark_4_15
 
-%weight 10
+%weight 1
 brick_dark_4_8 WALL_BRICK_DARK_4_TORCH
 brick_dark_4_9
 brick_dark_4_10
@@ -127,7 +127,7 @@ brick_dark_6_17
 brick_dark_6_18
 brick_dark_6_19
 
-%weight 15
+%weight 1
 brick_dark_6_12 WALL_BRICK_DARK_6_TORCH
 brick_dark_6_13
 brick_dark_6_14

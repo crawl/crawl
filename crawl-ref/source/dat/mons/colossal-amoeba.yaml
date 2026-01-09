@@ -6,12 +6,12 @@ exp: 1464
 genus: jelly
 will: 100
 attacks:
- - {type: hit, flavour: swarm, damage: 43}
+ - {type: hit, flavour: swarm, damage: 40}
  - {type: engulf, flavour: drag, damage: 23}
 hd: 17
-hp_10x: 1665
+hp_10x: 1400
 ac: 3
-ev: 9
+ev: 6
 intelligence: brainless
 habitat: amphibious
 speed: 13
