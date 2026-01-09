@@ -1215,6 +1215,9 @@ static int _player_bonus_regen()
         rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
     }
 
+    if (you.duration[DUR_OOZE_REGEN])
+        rr += you.hp_max * 4;
+
     return rr;
 }
 
@@ -1305,6 +1308,9 @@ int player_mp_regen()
     // Rampage healing grants a variable regen boost while active.
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
+
+    if (you.duration[DUR_OOZE_REGEN])
+        regen_amount += you.max_magic_points * 4;
 
     if (have_passive(passive_t::jelly_regen))
     {

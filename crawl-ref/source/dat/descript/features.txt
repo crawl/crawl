@@ -228,8 +228,8 @@ walls.
 %%%%
 A slime covered rock wall
 
-A rock wall coated with bright green slime. It is acidic to the touch; just
-standing near it is enough to cause temporary corrosion.
+A rock wall coated with acidic green slime; just standing near it is enough to
+cause temporary corrosion.
 %%%%
 A metal wall
 
@@ -288,7 +288,9 @@ A stone staircase leading further down.
     else
         return "It is slick with slippery slime which will make it impossible " ..
                "for you to climb back up again until the power ruling this place " ..
-               "is destroyed (or you choose to join it)."
+               "is destroyed (or you choose to join it). However, being coated in " ..
+               "this slime will greatly increase your HP and MP regenaration for " ..
+               "short while afterward."
     end
 }}
 %%%%

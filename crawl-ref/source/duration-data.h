@@ -855,6 +855,8 @@ static const duration_def duration_data[] =
     { DUR_SPITEFUL_BLOOD_COOLDOWN, 0, "", "", "spiteful_blood", "", D_NO_FLAGS},
     { DUR_SLIMIFYING, 0, "Slimifying", "", "slimifying", "", D_DISPELLABLE | D_NEGATIVE,
        {{"Your slimification abates."}}},
+    { DUR_OOZE_REGEN, LIGHTBLUE, "OozeRegen", "ooze regen", "ooze regen", "coated in regenerative ooze", D_NO_FLAGS,
+       {{"The regenerative ooze finishes dripping off of you."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
