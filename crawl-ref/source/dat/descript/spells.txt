@@ -1132,6 +1132,12 @@ on contact with open flame or with creatures - including any caster foolish
 enough to linger in them! The explosion is concussive, knocking adjacent
 creatures away. Damage done rises with the spell's power.
 %%%%
+Landbreaker spell
+
+Violently fractures the landscape, causing rubble to fall upon several nearby
+enemies and also the ground behind them - obstructing their path to flee the
+caster.
+%%%%
 Launch Bomblet spell
 
 Fires a bomblet on a ballistic trajectory that ignores line of fire, dealing

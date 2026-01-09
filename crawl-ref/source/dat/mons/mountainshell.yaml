@@ -1,7 +1,7 @@
 name: "mountainshell"
 glyph: {char: "t", colour: yellow}
 flags: [cold_blood, warded]
-exp: 940
+exp: 870
 will: 80
 attacks:
  - {type: headbutt, damage: 24}

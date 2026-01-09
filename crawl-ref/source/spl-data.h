@@ -4627,6 +4627,17 @@ static const struct spell_desc spelldata[] =
     TILEG_SLEETSTRIKE,
 },
 
+{
+    SPELL_LANDBREAKER, "Landbreaker",
+    spschool::earth,
+    spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    8,
+    TILEG_SEISMIC_STOMP,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

@@ -185,6 +185,7 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
 static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster);
 static void _cast_wall_burst(monster &caster, bolt &beam, int radius = LOS_RADIUS);
 static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_only = false);
+static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only = false);
 static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster);
 static vector<actor*> _siphon_essence_victims (const actor& caster);
 static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&);
@@ -1044,6 +1045,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             beam.stop_at_allies = true;
         }
     } },
+    { SPELL_LANDBREAKER, {
+        [](const monster &caster)
+        {
+            bolt dummy;
+            return ai_action::good_or_impossible(
+                _cast_landbreaker(caster, dummy, true));
+        },
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            _cast_landbreaker(caster, beam);
+        },
+        _zap_setup(SPELL_LANDBREAKER) } },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -1651,6 +1663,76 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
                 mon->speed_increment -= random_range(10, 13);
             }
         }
+    }
+
+    return true;
+}
+
+static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only)
+{
+    vector<actor*> targs;
+    for (actor_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->is_firewood() && could_harm_enemy(&caster, *mi))
+        {
+            if (check_only)
+                return true;
+
+            targs.push_back(*mi);
+        }
+    }
+
+    if (targs.empty())
+        return false;
+
+    const int pow = mons_spellpower(caster, SPELL_LANDBREAKER);
+    const unsigned int num_targs = 2 + div_rand_round((int)max(0, pow - 50), 40);
+    shuffle_array(targs);
+    for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+    {
+        if (you.see_cell(targs[i]->pos()))
+            flash_tile(targs[i]->pos(), YELLOW, 0);
+    }
+    animation_delay(50, true);
+
+    mgen_data rubble(MONS_PILE_OF_DEBRIS, BEH_COPY, coord_def(), MHITNOT);
+    rubble.hd = 2;
+    rubble.set_range(0, 0);
+    rubble.set_summoned(&caster, SPELL_LANDBREAKER, 40, false, false);
+
+    int rubble_made = 0;
+    for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+    {
+        if (!targs[i]->alive())
+            continue;
+
+        beam.source = targs[i]->pos();
+        beam.target = targs[i]->pos();
+        beam.fire();
+
+        // Place rubble 'behind' the target, relative to the caster.
+        const coord_def aim((targs[i]->pos() - caster.pos()) + targs[i]->pos());
+        vector<coord_def> spots = get_splinterfrost_block_spots(targs[i]->pos(), aim, random_range(3, 5));
+        for (coord_def& spot : spots)
+        {
+            if (actor_at(spot))
+                continue;
+
+            rubble.pos = spot;
+            rubble.summon_duration = random_range(20, 60);
+            if (create_monster(rubble))
+                rubble_made++;
+        }
+    }
+
+    // Place some additional rumble at random locations.
+    const int bonus_rubble = max(0, 8 - rubble_made);
+    rubble.pos = caster.pos();
+    rubble.set_range(4, 7, 1);
+    for (int i = 0; i < bonus_rubble; ++i)
+    {
+        rubble.summon_duration = random_range(20, 60);
+        create_monster(rubble);
     }
 
     return true;

@@ -454,6 +454,10 @@ Seismic Stomp cast
 Hurl Torchlight cast
 
 @The_monster@ raises the black torch.
+%%%%
+Landbreaker natural cast
+
+@The_monster@ fractures the ground with @possessive@ footsteps.
 ########################################################################
 # Unique monsters
 ########################################################################

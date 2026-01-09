@@ -2746,4 +2746,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_PARAGON_TEMPEST,
 },
 
+{
+    ZAP_LANDBREAKER,
+    "falling rubble",
+    nullptr,
+    nullptr,
+    new dicedef_calculator<4, 2, 1, 23>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    YELLOW,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };
