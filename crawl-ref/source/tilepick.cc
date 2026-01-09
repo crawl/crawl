@@ -669,8 +669,6 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
             orig = TILE_WALL_LAB_STONE;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
-        else if (orig == TILE_WALL_PERMAROCK)
-            orig = TILE_WALL_PERMAROCK_BROWN;
     }
     else if (player_in_branch(BRANCH_CRYPT))
     {
@@ -708,25 +706,16 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
             orig = TILE_WALL_COBALT_STONE;
         else if (orig == TILE_DNGN_CRYSTAL)
             orig = TILE_WALL_EMERALD;
-        else if (orig == TILE_DNGN_METAL_WALL)
-            orig = TILE_DNGN_METAL_WALL_DARKGRAY;
     }
     else if (player_in_branch(BRANCH_GEHENNA))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_PYRE;
-        if (orig == TILE_DNGN_METAL_WALL)
-            orig = TILE_DNGN_METAL_WALL_RED;
     }
     else if (player_in_branch(BRANCH_BAILEY))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_STONE_SMOOTH;
-    }
-    else if (player_in_branch(BRANCH_OSSUARY))
-    {
-        if (orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_DNGN_STONE_WALL_BROWN;
     }
     else if (player_in_branch(BRANCH_SLIME))
     {
@@ -831,18 +820,6 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
     {
         if (orig == TILE_DNGN_CRYSTAL_WALL)
             orig = TILE_CRYSTAL_WALL_ZOT;
-        else if (orig == TILE_DNGN_STONE_WALL)
-        {
-        /* Matches hall_of_zot 2 through 5. */
-            if (you.depth == 2)
-                orig = TILE_DNGN_STONE_WALL_BLUE;
-            else if (you.depth == 3)
-                orig = TILE_DNGN_STONE_WALL_LIGHTBLUE;
-            else if (you.depth == 4)
-                orig = TILE_DNGN_STONE_WALL_MAGENTA;
-            else if (you.depth == 5)
-                orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
-        }
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_DNGN_METAL_ZOT;
         else if (orig == TILE_DNGN_GRANITE_STATUE)
@@ -864,10 +841,44 @@ static colour_t _feat_colour(coord_def gc)
     if (colour != 0)
         return colour;
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (feat == DNGN_FLOOR)
+    switch (feat)
+    {
+    case DNGN_FLOOR:
         return env.floor_colour;
-    if (feat == DNGN_ROCK_WALL)
+    case DNGN_ROCK_WALL:
         return env.rock_colour;
+    case DNGN_STONE_WALL:
+        switch (you.where_are_you)
+        {
+        case BRANCH_OSSUARY:
+            return BROWN;
+        case BRANCH_ZOT:
+            /* Matches hall_of_zot 2 through 5. */
+            if (you.depth == 2)
+                return BLUE;
+            if (you.depth == 3)
+                return LIGHTBLUE;
+            if (you.depth == 4)
+                return MAGENTA;
+            if (you.depth == 5)
+                return LIGHTMAGENTA;
+            break;
+        }
+        break;
+    case DNGN_PERMAROCK_WALL:
+        if (player_in_branch(BRANCH_GAUNTLET))
+            return BROWN;
+        break;
+    case DNGN_METAL_WALL:
+        switch (you.where_are_you)
+        {
+        case BRANCH_TARTARUS:
+            return DARKGRAY;
+        case BRANCH_GEHENNA:
+            return RED;
+        }
+        break;
+    }
     return 0; // meh
 }
 
