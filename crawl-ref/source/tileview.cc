@@ -1206,6 +1206,15 @@ static uint8_t _get_direction_index(const coord_def& delta)
     return 0;
 }
 
+static unsigned int _pick_floor_tile(tileidx_t base_tile, coord_def gc)
+{
+    unsigned int count = tile_dngn_count(base_tile);
+    uint32_t seed = you.where_are_you + (you.depth << 8)
+                    + (gc.x << 16) + (gc.y << 24);
+    unsigned int offset = hash_with_seed(count, seed, you.birth_time);
+    return base_tile + offset;
+}
+
 void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 {
     if (is_excluded(gc))
@@ -1312,13 +1321,14 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     cell.flv = tile_env.flv(gc);
 
     if (mc.flags & MAP_CORRODING && !feat_is_wall(feat))
-        cell.flv.floor = TILE_FLOOR_SLIME_ACIDIC;
+        cell.flv.floor = _pick_floor_tile(TILE_FLOOR_SLIME_ACIDIC, gc);
     else if (mc.flags & MAP_ICY)
-        cell.flv.floor = TILE_FLOOR_ICY;
+        cell.flv.floor = _pick_floor_tile(TILE_FLOOR_ICY, gc);
     else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {
         // Use the id of the underlying tile to randomize the rock appearance.
+        // XXX: This doesn't look great when the underlying tile is animated.
         tileidx_t tile = TILE_FLOOR_SEISMOROCK
                             + cell.bg % tile_dngn_count(TILE_FLOOR_SEISMOROCK);
 
