@@ -5,12 +5,9 @@
 #include "options.h"
 #include "tilereg-tab.h"
 
-#include "command.h"
-#include "command-type.h"
 #include "cio.h"
 #include "english.h"
 #include "libutil.h"
-#include "macro.h"
 #include "state.h"
 #include "stringutil.h"
 #include "rltiles/tiledef-gui.h"
@@ -36,13 +33,16 @@ void TabbedRegion::set_icon_pos(int idx)
         return;
 
     int start_y = 0;
-
-    for (int i = 0; i < (int)m_tabs.size(); ++i)
+    for (int i = idx; i > 0;)
     {
-        if (i == idx || (!m_tabs[i].reg && m_tabs[i].cmd==CMD_NO_CMD))
+        --i;
+        if (!m_tabs[i].enabled && !m_use_small_layout)
             continue;
-        start_y = max(m_tabs[i].max_y + 1, start_y);
+
+        start_y = m_tabs[i].max_y + 1;
+        break;
     }
+
     m_tabs[idx].min_y = start_y;
     if (!m_use_small_layout)
         m_tabs[idx].max_y = start_y + m_tabs[idx].height;
@@ -61,38 +61,12 @@ void TabbedRegion::reset_icons(int from_idx)
         set_icon_pos(i);
 }
 
-int TabbedRegion::push_tab_button(command_type cmd, tileidx_t tile_tab)
-{
-    return _push_tab(nullptr, cmd, tile_tab);
-}
 int TabbedRegion::push_tab_region(GridRegion *reg, tileidx_t tile_tab)
 {
-    return _push_tab(reg, CMD_NO_CMD, tile_tab);
-}
-
-int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab)
-{
-    int idx = m_tabs.size();
-    ASSERT(idx >= 0);
-    ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
+    ASSERT(reg);
     ASSERT(tile_tab);
 
-    TabInfo inf;
-    inf.reg = nullptr;
-    inf.cmd = CMD_NO_CMD;
-    inf.tile_tab = 0;
-    inf.ofs_y = 0;
-    inf.min_y = 0;
-    inf.max_y = 0;
-    inf.height = 0;
-    inf.orig_dx = 0;
-    inf.orig_dy = 0;
-    inf.enabled = true;
-    m_tabs.push_back(inf);
-
-    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab
-                                                  : tileidx_t{TILEG_TAB_BLANK};
-    const tile_info &tinf = tile_gui_info(actual_tile_tab);
+    const tile_info &tinf = tile_gui_info(tile_tab);
     _icon_width = max((int)tinf.width, ox);
     ox = _icon_width;
 #ifndef __ANDROID__
@@ -104,18 +78,23 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
     {
-        const tile_info &inf_other = tile_gui_info(actual_tile_tab + i);
+        const tile_info &inf_other = tile_gui_info(tile_tab + i);
         ASSERT(inf_other.height == tinf.height);
         ASSERT(inf_other.width == tinf.width);
     }
 
-    ASSERT((int)m_tabs.size() > idx);
-    m_tabs[idx].reg = reg;
-    m_tabs[idx].cmd = cmd;
-    m_tabs[idx].tile_tab = tile_tab;
-    m_tabs[idx].height = tinf.height;
-    m_tabs[idx].orig_dx = reg->dx;
-    m_tabs[idx].orig_dy = reg->dy;
+    int idx = (int)m_tabs.size();
+
+    TabInfo inf;
+    inf.reg = reg;
+    inf.tile_tab = tile_tab;
+    inf.min_y = 0;
+    inf.max_y = 0;
+    inf.height = tinf.height;
+    inf.orig_dx = reg->dx;
+    inf.orig_dy = reg->dy;
+    inf.enabled = true;
+    m_tabs.push_back(inf);
     set_icon_pos(idx);
 
     recalculate();
@@ -156,11 +135,8 @@ void TabbedRegion::activate_tab(int idx)
     m_is_deactivated = false;
     tiles.set_need_redraw();
 
-    if (m_tabs[m_active].reg)
-    {
-        m_tabs[m_active].reg->activate();
-        m_tabs[m_active].reg->update();
-    }
+    m_tabs[m_active].reg->activate();
+    m_tabs[m_active].reg->update();
 }
 
 void TabbedRegion::deactivate_tab()
@@ -170,13 +146,11 @@ void TabbedRegion::deactivate_tab()
     m_dirty = true;
     tiles.set_need_redraw();
 
-    if (m_tabs[m_active].reg)
-        m_tabs[m_active].reg->clear();
+    m_tabs[m_active].reg->clear();
 
     if (m_use_small_layout)
     {
-        if (m_tabs[0].reg)
-            m_tabs[0].reg->clear();
+        m_tabs[0].reg->clear();
         m_active = 0;
     }
 }
@@ -232,8 +206,6 @@ bool TabbedRegion::active_is_valid() const
         return false;
     if (!m_tabs[m_active].enabled && !m_use_small_layout)
         return false;
-    if (!m_tabs[m_active].reg)
-        return false;
 
     return true;
 }
@@ -251,8 +223,7 @@ void TabbedRegion::update()
 void TabbedRegion::clear()
 {
     for (TabInfo &tab : m_tabs)
-        if (tab.reg)
-            tab.reg->clear();
+        tab.reg->clear();
 }
 
 void TabbedRegion::pack_buffers()
@@ -271,14 +242,9 @@ void TabbedRegion::pack_buffers()
         else
             ofs = TAB_OFS_UNSELECTED;
 
-        tileidx_t tileidx = (m_tabs[i].cmd==CMD_NO_CMD) ? m_tabs[i].tile_tab + ofs : TILEG_TAB_BLANK + ofs;
+        tileidx_t tileidx = m_tabs[i].tile_tab + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
         m_buf_gui.add(tileidx, 0, 0, -inf.width, m_tabs[i].min_y, false);
-        if (m_tabs[i].cmd != CMD_NO_CMD)
-        {
-            const tile_info &inf_icon = tile_gui_info(m_tabs[i].tile_tab);
-            m_buf_gui.add(m_tabs[i].tile_tab, 0, 0, -inf_icon.width, m_tabs[i].min_y, false, TILE_Y, TILE_X*inf_icon.width/inf.width, TILE_Y*inf_icon.height/inf.height);
-        }
     }
 }
 
@@ -314,8 +280,6 @@ void TabbedRegion::draw_tag()
         return;
 
     GridRegion *tab = m_tabs[m_mouse_tab].reg;
-    if (!tab)
-        return;
 
     draw_desc(tab->name().c_str());
 }
@@ -337,9 +301,6 @@ void TabbedRegion::on_resize()
 
     for (const TabInfo &tab : m_tabs)
     {
-        if (!tab.reg)
-            continue;
-
         // on small layout we want to draw tab from top-right corner inwards (down and left)
         if (m_use_small_layout)
         {
@@ -403,13 +364,9 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
     {
         if (event.event == wm_mouse_event::PRESS)
         {
-            if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
-            {
-                activate_tab(m_mouse_tab);
-                return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
-            }
-            else
-                return encode_command_as_key(m_tabs[m_mouse_tab].cmd);
+            activate_tab(m_mouse_tab);
+            // prevent clicking on tab from 'bubbling up' to other regions
+            return CK_NO_KEY;
         }
     }
 
@@ -433,8 +390,7 @@ bool TabbedRegion::update_tip_text(string &tip)
     if (m_mouse_tab != -1)
     {
         GridRegion *reg = m_tabs[m_mouse_tab].reg;
-        if (reg)
-            return reg->update_tab_tip_text(tip, m_mouse_tab == m_active);
+        return reg->update_tab_tip_text(tip, m_mouse_tab == m_active);
     }
 
     return get_tab_region(active_tab())->update_tip_text(tip);
@@ -454,9 +410,6 @@ int TabbedRegion::find_tab(string tab_name) const
     string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        if (m_tabs[i].reg == nullptr)
-            continue;
-
         string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)
             return i;
