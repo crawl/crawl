@@ -171,8 +171,8 @@ It protects you from the effects of acid and corrosion.
 %%%%
 death (Death) armour ego
 
-It empowers your Necromancy spells and improves their success rate, but imposes
-a health cost for other magic.
+It improves the power and success of your Necromancy spells in proportion to
+your Armour skill.
 %%%%
 dexterity (Dex+3) armour ego
 
