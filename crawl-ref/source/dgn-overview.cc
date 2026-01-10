@@ -670,37 +670,41 @@ static string _get_notes(bool display)
 }
 
 template <typename Z, typename Key>
-static inline bool _find_erase(Z &map, const Key &k)
+static inline void _find_erase(Z &map, const Key &k)
 {
     if (map.count(k))
-    {
         map.erase(k);
-        return true;
+}
+
+static void _unnotice_portal(const level_pos &pos)
+{
+    const dungeon_feature_type feat = env.grid(pos.pos);
+    if (feat_is_portal(feat))
+    {
+        _find_erase(portals_present, pos);
+        _find_erase(portal_notes, pos);
     }
-    return false;
 }
 
-static bool _unnotice_portal(const level_pos &pos)
+static void _unnotice_altar(const level_pos &pos)
 {
-    (void) _find_erase(portal_notes, pos);
-    return _find_erase(portals_present, pos);
+    const dungeon_feature_type feat = env.grid(pos.pos);
+    if (feat_is_altar(feat))
+        _find_erase(altars_present, pos);
 }
 
-static bool _unnotice_altar(const level_pos &pos)
+static void _unnotice_shop(const level_pos &pos)
 {
-    return _find_erase(altars_present, pos);
+    const dungeon_feature_type feat = env.grid(pos.pos);
+    if (feat == DNGN_ENTER_SHOP)
+        _find_erase(shops_present, pos);
 }
 
-static bool _unnotice_shop(const level_pos &pos)
-{
-    return _find_erase(shops_present, pos);
-}
-
-static bool _unnotice_stair(const level_pos &pos)
+static void _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
     if (feat == DNGN_ENTER_HELL || !feat_is_branch_entrance(feat))
-        return false;
+        return;
 
     for (branch_iterator it; it; ++it)
         if (it->entry_stairs == feat)
@@ -711,21 +715,23 @@ static bool _unnotice_stair(const level_pos &pos)
                 stair_level[br].erase(level_id::current());
                 if (stair_level[br].empty())
                     stair_level.erase(br);
-                return true;
+                return;
             }
         }
-
-    return false;
 }
 
-bool unnotice_feature(const level_pos &pos)
+void unnotice_feature(const level_pos &pos)
 {
-    StashTrack.remove_shop(pos);
-    shopping_list.forget_pos(pos);
-    return _unnotice_portal(pos)
-        || _unnotice_altar(pos)
-        || _unnotice_shop(pos)
-        || _unnotice_stair(pos);
+    const dungeon_feature_type feat = env.grid(pos.pos);
+    if (feat == DNGN_ENTER_SHOP)
+    {
+        StashTrack.remove_shop(pos);
+        shopping_list.forget_pos(pos);
+    }
+    _unnotice_portal(pos);
+    _unnotice_altar(pos);
+    _unnotice_shop(pos);
+    _unnotice_stair(pos);
 }
 
 class dgn_overview : public formatted_scroller
