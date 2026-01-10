@@ -838,7 +838,7 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
 static colour_t _feat_colour(coord_def gc)
 {
     colour_t colour = env.map_knowledge(gc).feat_colour();
-    if (colour != 0)
+    if (colour != COLOUR_UNDEF)
         return colour;
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     switch (feat)
@@ -862,13 +862,14 @@ static colour_t _feat_colour(coord_def gc)
                 return MAGENTA;
             if (you.depth == 5)
                 return LIGHTMAGENTA;
-            break;
+            return COLOUR_UNDEF;
+        default:
+            return COLOUR_UNDEF;
         }
-        break;
     case DNGN_PERMAROCK_WALL:
         if (player_in_branch(BRANCH_GAUNTLET))
             return BROWN;
-        break;
+        return COLOUR_UNDEF;
     case DNGN_METAL_WALL:
         switch (you.where_are_you)
         {
@@ -876,10 +877,12 @@ static colour_t _feat_colour(coord_def gc)
             return DARKGRAY;
         case BRANCH_GEHENNA:
             return RED;
+        default:
+            return COLOUR_UNDEF;
         }
-        break;
+    default:
+        return COLOUR_UNDEF;
     }
-    return 0; // meh
 }
 
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
