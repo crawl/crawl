@@ -4466,7 +4466,12 @@ void bolt::affect_player()
             foes_hurt++;
     }
 
+    extra_range_used += range_used_on_hit();
+
     internal_ouch(final_dam);
+
+    if (!you.alive())
+        return;
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (origin_spell == SPELL_CORROSIVE_BOLT && !one_chance_in(4))
@@ -4492,8 +4497,6 @@ void bolt::affect_player()
         mprf("%s!", effect.desc);
         effect.effect(you, *this);
     }
-
-    extra_range_used += range_used_on_hit();
 
     knockback_actor(&you, final_dam);
     pull_actor(&you, final_dam);
