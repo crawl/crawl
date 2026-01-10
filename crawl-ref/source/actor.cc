@@ -1032,8 +1032,11 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
 
 bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
 {
-    if (is_stationary() || resists_dislodge("being knocked back"))
+    if (is_stationary() || resists_dislodge("being knocked back") ||
+        (is_player() && as_player()->pending_revival))
+    {
         return false;
+    }
 
     const coord_def source = cause.pos();
     const coord_def oldpos = pos();
