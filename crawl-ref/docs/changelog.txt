@@ -1,4 +1,4 @@
-Stone Soup 0.34 (through 0.34-a0-1850-g8a85f5c4e6)
+Stone Soup 0.34 (through 0.34-a0-1989-gd38d1f0726)
 --------------------------------------------------
 
 Highlights
@@ -37,9 +37,15 @@ Branches, Environment
 * The Crypt end vault's old thematic item rewards have been moved into a unique,
   guaranteed shop containing a larger quantity of the prior options at high
   prices.
-* Staircases in the Slime Pits can no longer be climbed back up until The Royal
-  Jelly is dead (or the player worships Jiyva). Floors can no longer generated
-  disconnected, and up and down stairs are placed further apart.
+* The Slime Pits has recieved layout changes:
+  - All staircases in the branch are now slimy and can no longer be climbed back
+    up until The Royal Jelly is dead (or the player worships Jiyva).
+  - Going down on a slimy staircase confers a status that greatly increases HP
+    and MP regen for a short while.
+  - All floors are now fully connected and up and down stairs are placed further
+    apart.
+  - Altars to Jiyva are guaranteed on Slime:2-4 with a 50% chance for one on
+    Slime:1.
 * The Depths now more consistently contains threatening minivaults.
 * The Halls of Zot will now contain one of three types of orb monster each game,
   each wielding a different element and form of strategic damage.
@@ -61,6 +67,13 @@ Branches, Environment
     turns.
 * The Orb status from being in Zot or having picked up the Orb of Zot now also
   fuzzes the destination of scrolls of blinking by up to two spaces.
+* The depth at which the player enters the Abyss is now based upon their XL,
+  regarldess of whether they arrive by banishment or entering a gateway
+  themselves.
+  - Abyss shifts can no longer pull the player deeper than they otherwise would
+    have entered it (unless they spend a while there at max XL), and the Abyss
+    will no longer 'remember' the deepest depth a player previously reached.
+  - Finding the rune on Abyss:4-5 takes longer on average than before.
 * Hell effects can now inflict a small amount of Doom instead of inflicting
   transient mutations.
 * Troves' prices and contents have been heavily revised:
@@ -174,6 +187,10 @@ Character
   as their default attack speed would be.
 * Players can now negate intrinsic rPois- with two sources of rPois.
 * Players can stack up to 3 sources of rampage.
+* Performing an attack while rampaging no longer affects the time that movement
+  took. Instead, rampage attacks inflict a half-turn ministun on the target and
+  inflict reduced damage if the player's attack speed is slower than their
+  movement speed.
 * Players succeeding at certain optional challenges can now obtain unique titles
   proclaiming their triumph (or madness).
 
@@ -196,11 +213,17 @@ Gods
 * Vehumet's first level 1 spell gift is now given immediately upon worship.
 * Vehumet's spell gift choices now account for Conjurations and Alchemy skill,
   and skew more to average spell skill levels instead of their sums.
+* Wu Jian martial attacks can no longer fail if the player's attack speed is
+  slower than their movement speed, but will perform a lower damage attack
+  instead.
 * Xom has a new action: slightly Dooming the player.
 * All gods besides the good gods no longer allow rejoining them if one is
   undergoing their wrath.
 * Several wrath adjustments:
   - Fedhas and Jiyva wraths have been simplified.
+  - Ignis's Fire Champion effect now gives a monster rF+, 7 AC, adds fire damage
+    to their attacks (rather than overwriting their normal effect). It can be
+    applied to a wider range of monsters and sometimes multiple at once.
   - Kiku wrath applies the Sign of Ruin instead of tormenting, has a hard cap
     on draining for lower amounts that can no longer be resisted by rN+, and
     also now applies Doom.
@@ -246,6 +269,8 @@ Interface and Options
   direction they left will be indicated.
 * Monsters with any status effects now list the mechanics of those status
   effects on a new tab when examined (xv).
+* Sleeping and wandering monsters now display their chance of noticing the
+  player each turn when examined (xv).
 * The "Trivial" monster threat level threshold is now a little higher.
 * Monsters with holy wrath weapons are highlighted by default as having unusual
   items if one is vulnerable to them by being undead or demonic.
@@ -354,6 +379,9 @@ Monsters
     approaching and encircling the last staircase they saw the player use.
   - After travelling through any stairs, known or not, monsters the player
     hasn't seen before will always skip their first turn.
+* Wandering monsters no longer automatically notice the player whenever you
+  perform attacks, cast spells, or zap wands. In exchange, they are somewhat
+  more likely to notice the player each turn (especially strong monsters).
 * The Slime Pits have many new and returning monsters:
   - Colossal amoebae, which create copies of themselves when they hit foes.
   - Creeping plasmodia, which launch explosive acid spores that can spread
@@ -421,6 +449,8 @@ Monsters
 * Oni incarcerators deal less damage and cast Manifold Assault less often.
 * Purple very / ugly things now have extra Will and antimagic attacks.
 * Reapers have a new non-skeletal flavour and now fly.
+* The Royal Jelly can no longer be banished and can produce star jellies when
+  injured (in addition to the other types of monsters it could already create).
 * Shining eyes trade Malmutate for Mutagenic Gaze, which inflicts contamination
   over time (but is usable anywhere in line of sight).
 * Sphinx marauders do less damage on average with their airstrike attacks.
@@ -460,6 +490,7 @@ Monsters
   outside of light effects, Enfeeble, and divine powers are limited to
   natural / demonic / holy monsters, while light can also work on undead and
   Enfeeble / most divine Blind effects ignore Blind resistance entirely.
+* All jelly and eye-type monsters are now immune to acid.
 * Daze now makes monsters skip their actions until they take any damage,
   instead of giving them a 1-in-4 chance to skip each action (but last less time).
 * Removed monsters: giant cockroaches, Psyche.
@@ -467,7 +498,7 @@ Monsters
 Spells
 ------
 * Dazzling Flash has been renamed Gloom and moved from Hexes / Fire to
-  Hexes / Necromancy.
+  Hexes / Necromancy. It is now silent.
 * Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
   spellpower rather than inflicting antimagic.
 * Martyr's Knell's shade now has lower max HP and regeneration (to account for
