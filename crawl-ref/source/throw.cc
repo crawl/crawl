@@ -482,7 +482,7 @@ void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
     beam.pierce       = is_penetrating_attack(item);
     beam.aux_source.clear();
 
-    beam.name = item.name(DESC_PLAIN, false, false, false);
+    beam.name = launched_projectile_name(item);
 
     const unrandart_entry* entry = is_unrandom_artefact(item)
         ? get_unrand_entry(item.unrand_idx) : nullptr;
