@@ -697,7 +697,7 @@ static vector<pair<string,string>> _get_form_fakemuts()
         }
     }
 
-    if (you.form == transformation::blade_hands
+    if (you.form == transformation::blade
         && you_can_wear(SLOT_BODY_ARMOUR, false) != false)
     {
         const int penalty_percent = form->get_body_ac_mult();
@@ -1620,7 +1620,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
         return false;
     if (_mut_has_flag(def, mutflag::need_hands)
         && (you.has_mutation(MUT_TENTACLE_ARMS)
-            || (!base_only && you.form == transformation::blade_hands)))
+            || (!base_only && you.form == transformation::eel_hands)))
     {
         return false;
     }
@@ -2494,7 +2494,7 @@ string get_mutation_tags(mutation_type mut)
     if (_mut_has_flag(def, mutflag::need_bones))
         _add_mut_tag(tags, "Bones", disabled && !you.has_bones());
     if (_mut_has_flag(def, mutflag::need_hands))
-        _add_mut_tag(tags, "Hands", disabled && you.form == transformation::blade_hands);
+        _add_mut_tag(tags, "Hands", disabled && you.form == transformation::eel_hands);
 
     if (tags.empty())
         return "";

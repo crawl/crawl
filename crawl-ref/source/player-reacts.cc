@@ -1092,6 +1092,12 @@ static void _decrement_durations()
     if (you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] && you.hp == you.hp_max)
         you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 0;
 
+    if (you.duration[DUR_EELJOLT_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "Your %s have fully recharged.", you.hand_name(true).c_str());
+        you.duration[DUR_EELJOLT_COOLDOWN] = 0;
+    }
+
     if (you.has_mutation(MUT_TRICKSTER))
         _handle_trickster_decay(delay);
 
@@ -1259,6 +1265,28 @@ static void _handle_fugue(int delay)
     }
 }
 
+static void _do_eel_flavour_msg()
+{
+    // No time for play while there's enemies to zap!
+    if (there_are_monsters_nearby(true, true, false))
+        return;
+
+    string msg;
+    if (you.arm_count() == 1)
+        msg = getSpeakString("eel hand solo actions");
+    else
+        msg = getSpeakString("eel hand actions");
+
+    // XXX: Apologies for the ad hoc string replacement. We really need a
+    //      centralised place to do this...
+    msg = replace_all(msg, "@head@",
+                        you.has_mutation(MUT_FORMLESS) ? "form" : "head");
+
+    msg = replace_all(msg, "@skin@", species::skin_name(you.species).c_str());
+
+    mprf(MSGCH_TALK, "%s", msg.c_str());
+}
+
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1270,6 +1298,9 @@ void player_reacts()
         beogh_ally_healing();
 
     unrand_reacts();
+
+    if (you.form == transformation::eel_hands && one_chance_in(500))
+        _do_eel_flavour_msg();
 
     _handle_fugue(you.time_taken);
     if (you.has_mutation(MUT_WARMUP_STRIKES))

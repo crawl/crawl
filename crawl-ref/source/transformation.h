@@ -6,7 +6,7 @@ enum class transformation
 {
     none,
     spider,
-    blade_hands,
+    blade,
     statue,
     serpent,
     dragon,
@@ -43,6 +43,7 @@ enum class transformation
     fortress_crab,
     sun_scarab,
     medusa,
+    eel_hands,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

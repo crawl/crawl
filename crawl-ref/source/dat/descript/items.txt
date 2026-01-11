@@ -99,15 +99,12 @@ A large war axe with a formidable double-sided head.
 %%%%
 blade talisman
 
-A jagged cluster of blades, almost impossible to grasp without injury.
-{{
-    local hands = you.hand() .. "s"
-    return "Causes long, needle-thin blades to grow from the " ..
-           "wearer's " .. hands
-}}, and smaller fragments of metal to grow inside their body, deforming them
-and reducing the effectiveness of body armour. Shapeshifting skill mitigates
-and eventually eliminates the latter effect, as well as increasing damage
-dealt.
+A jagged cluster of blades, almost impossible to grasp without injury. Causes
+long, needle-thin blades to grow from the wearer's body, allowing them to
+perform rapid auxiliary melee attacks and even parry blows. The many fragments
+of metal inside the body reduces the effectiveness of body armour, but
+Shapeshifting skill mitigates and eventually eliminates the latter effect, as
+well as increasing damage dealt.
 %%%%
 book of air
 
@@ -636,6 +633,19 @@ earthy gem
 
 Deep within this gem, flowing leaves and swaying branches seem to lurk. And
 here, a bone picked clean - there, a predator's eyes, staring hungrily out..?
+%%%%
+eel talisman
+
+A strange sea fossil, adorned with abalone and pearl.
+{{
+    local hands = you.hand() .. "s"
+    return "Causes the wearer's " .. hands
+}}
+to transform into a pair of wriggling electric eels that sometimes discharge
+arcs of electricity through connected targets when used to strike enemies. When
+the wearer's health becomes dangerously low, they will discharge an even more
+violent voltage.
+%%%%
 %%%%
 eggplant
 

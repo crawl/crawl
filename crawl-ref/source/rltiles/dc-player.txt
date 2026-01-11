@@ -234,6 +234,7 @@ fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 %sdir player/transform
 medusa_form_armataur_back MEDUSA_FORM_ARMATAUR
 medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
+blade_form_humanoid BLADE_FORM_HUMANOID
 
 ###Scarf
 %sdir player/cloak
@@ -975,9 +976,9 @@ spark SPARK
 fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
-bladehands BLADEHAND
-bladehands_op BLADEHAND_OP
-bladehands_fe BLADEHAND_FE LAST
+%sdir player/transform
+eel_form_humanoid EEL_FORM_HUMANOID
+eel_form_octopode EEL_FORM_OCTOPODE LAST
 %end_ctg
 
 %parts_ctg HAND1_MIRROR
@@ -1121,7 +1122,6 @@ torch TORCH
 pj PJ
 torch2 TORCH2
 
-bladehands BLADEHAND
 %end_ctg
 
 ###Hair
@@ -1223,6 +1223,8 @@ muttonchops_green MUTTONCHOPS_GREEN
 bushy_green BUSHY_GREEN
 pj PJ
 wizard WIZARD
+%sdir player/transform
+blade_form_octopode BLADE_FORM_OCTOPODE
 %end_ctg
 
 ###Helms

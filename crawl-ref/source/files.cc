@@ -2045,7 +2045,7 @@ static void _fixup_transmuters()
         { SPELL_BEASTLY_APPENDAGE, TALISMAN_QUILL },
         { SPELL_SPIDER_FORM,       TALISMAN_SPIDER },
         { SPELL_ICE_FORM,          TALISMAN_SERPENT },
-        { SPELL_BLADE_HANDS,       TALISMAN_BLADE },
+        { SPELL_BLADE_HANDS,       TALISMAN_EEL },
         { SPELL_STATUE_FORM,       TALISMAN_STATUE },
         { SPELL_DRAGON_FORM,       TALISMAN_DRAGON },
         { SPELL_STORM_FORM,        TALISMAN_STORM },

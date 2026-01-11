@@ -1539,6 +1539,8 @@ medusa_form_octopode TRAN_MEDUSA_OCTOPODE
 flux_form_humanoid TRAN_FLUX_HUMANOID
 flux_form_felid TRAN_FLUX_FELID
 flux_form_octopode TRAN_FLUX_OCTOPODE
+blade_form_felid TRAN_BLADE_FELID
+eel_form_felid TRAN_EEL_FELID
 
 %rim 1
 

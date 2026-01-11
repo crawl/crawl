@@ -620,7 +620,7 @@ public:
 class FormBlade : public Form
 {
 private:
-    FormBlade() : Form(transformation::blade_hands) { }
+    FormBlade() : Form(transformation::blade) { }
     DISALLOW_COPY_AND_ASSIGN(FormBlade);
 public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
@@ -638,9 +638,8 @@ public:
      */
     string get_description(bool past_tense) const override
     {
-        return make_stringf("You %s blades for %s.",
-                            past_tense ? "had" : "have",
-                            blade_parts().c_str());
+        return make_stringf("You %s blades growing out of your body.",
+                            past_tense ? "had" : "have");
     }
 
     /**
@@ -648,12 +647,7 @@ public:
      */
     string transform_message() const override
     {
-        const bool singular = you.arm_count() == 1;
-
-        // XXX: a little ugly
-        return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
-                            blade_parts().c_str(), singular ? "s" : "",
-                            singular ? " a" : "", singular ? "" : "s");
+        return "Blades grow out of your body!";
     }
 
     /**
@@ -661,20 +655,18 @@ public:
      */
     string get_untransform_message() const override
     {
-        const bool singular = you.arm_count() == 1;
-
-        // XXX: a little ugly
-        return make_stringf("Your %s revert%s to %s normal proportions.",
-                            blade_parts().c_str(), singular ? "s" : "",
-                            singular ? "its" : "their");
+        return "Your blades shrink back into your body and disappear.";
     }
 
-    /**
-     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
-     */
-    string get_uc_attack_name(string /*default_name*/) const override
+    int get_aux_damage(bool random, int skill) const override
     {
-        return "Blade " + blade_parts(true);
+        return scaling_value(FormScaling().Base(10).Scaling(8), skill, random);
+    }
+
+    // Base parrying bonus
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(8).Scaling(8), skill));
     }
 };
 
@@ -1280,6 +1272,68 @@ public:
     }
 };
 
+class FormEelHands : public Form
+{
+private:
+    FormEelHands() : Form(transformation::eel_hands) { }
+    DISALLOW_COPY_AND_ASSIGN(FormEelHands);
+public:
+    static const FormEelHands &instance() { static FormEelHands inst; return inst; }
+
+    /**
+     * % screen description
+     */
+    string get_long_name() const override
+    {
+        return you.base_hand_name(true, true);
+    }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("You %s %s for %s.",
+                            past_tense ? "had" : "have",
+                            you.arm_count() == 1 ? "an electric eel" : "electric eels",
+                            hand_transform_parts().c_str());
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        const bool singular = you.arm_count() == 1;
+
+        // XXX: a little ugly
+        return make_stringf("Your %s turn%s into%s wriggling electric eel%s!",
+                            hand_transform_parts().c_str(), singular ? "s" : "",
+                            singular ? " a" : " a pair of", singular ? "" : "s");
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        const bool singular = you.arm_count() == 1;
+
+        // XXX: a little ugly
+        return make_stringf("Your %s revert%s to %s normal form.",
+                            hand_transform_parts().c_str(), singular ? "s" : "",
+                            singular ? "its" : "their");
+    }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string /*default_name*/) const override
+    {
+        return "Eel " + hand_transform_parts(true);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1324,6 +1378,7 @@ static const Form* forms[] =
     &FormFortressCrab::instance(),
     &FormSunScarab::instance(),
     &FormMedusa::instance(),
+    &FormEelHands::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1525,20 +1580,22 @@ monster_type transform_mons()
 }
 
 /**
- * What is the name of the player parts that will become blades?
+ * What is the name of the player parts that will transform with an eel talisman?
  */
-string blade_parts(bool terse)
+string hand_transform_parts(bool terse)
 {
-    // there's special casing in base_hand_name to use "blade" everywhere, so
+    // there's special casing in base_hand_name to use "eel" everywhere, so
     // use the non-temp name
     string str = you.base_hand_name(true, false);
 
-    // creatures with paws (aka felids) have four paws, but only two of them
-    // turn into blades.
+    // creatures with paws (aka felids) have four paws, but only two of them transform.
     if (!terse && you.has_mutation(MUT_PAWS, false))
         str = "front " + str;
     else if (!terse && you.arm_count() > 2)
         str = "main " + str; // Op have four main tentacles
+
+    if (you.arm_count() == 1)
+        str = "a " + str;
 
     return str;
 }
@@ -2113,6 +2170,8 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         you.duration[DUR_WEREFURY] = 0;
     else if (old_form == transformation::maw)
         you.duration[DUR_ENGORGED] = 0;
+    else if (old_form == transformation::eel_hands)
+        you.duration[DUR_EELJOLT_COOLDOWN] = 0;
 
     // If the player is no longer be eligible to equip some of the items that
     // they were wearing (possibly due to losing slots from their default form

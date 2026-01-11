@@ -899,6 +899,7 @@ enum talisman_type
     TALISMAN_FORTRESS,
     TALISMAN_SCARAB,
     TALISMAN_MEDUSA,
+    TALISMAN_EEL,
     NUM_TALISMANS,
 };
 

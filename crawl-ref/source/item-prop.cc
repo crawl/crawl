@@ -3174,6 +3174,7 @@ string talisman_type_name(int type)
     case TALISMAN_MEDUSA:   return "medusa talisman";
     case TALISMAN_MAW:      return "maw talisman";
     case TALISMAN_SERPENT:  return "serpent talisman";
+    case TALISMAN_EEL:      return "eel talisman";
     case TALISMAN_BLADE:    return "blade talisman";
     case TALISMAN_WEREWOLF: return "lupine talisman";
     case TALISMAN_FORTRESS: return "fortress talisman";
@@ -3201,6 +3202,7 @@ static const pair<talisman_type, int> _talisman_tiers[] =
 
     { TALISMAN_SERPENT,     3 },
     { TALISMAN_BLADE,       3 },
+    { TALISMAN_EEL,         3 },
     { TALISMAN_FORTRESS,    3 },
     { TALISMAN_WEREWOLF,    3 },
     { TALISMAN_SPIDER,      3 },

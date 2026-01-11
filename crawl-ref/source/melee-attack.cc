@@ -944,6 +944,9 @@ bool melee_attack::handle_phase_hit()
         inc_mp(1);
     }
 
+    if (attacker->is_player() && you.form == transformation::eel_hands && coinflip())
+        do_eel_melee_jolt(defender->pos());
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->has_blood()
@@ -2144,9 +2147,6 @@ public:
         const int base_dam = damage + (random ? you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2)
                                               : you.skill(SK_UNARMED_COMBAT) / 2);
 
-        if (you.form == transformation::blade_hands)
-            return base_dam + 6;
-
         if (you.has_usable_claws())
         {
             const int claws = you.has_claws();
@@ -2169,8 +2169,8 @@ public:
 
     string get_verb() const override
     {
-        if (you.form == transformation::blade_hands)
-            return "slash";
+        if (you.form == transformation::eel_hands)
+            return "eel-slap";
 
         if (you.has_usable_claws())
             return "claw";
@@ -2384,6 +2384,22 @@ public:
     }
 };
 
+class AuxTalismanBlade: public AuxAttackType
+{
+public:
+    AuxTalismanBlade()
+    : AuxAttackType(0, 60, "slice") { };
+    int get_damage(bool random) const override {
+        return get_form()->get_aux_damage(random);
+    };
+    bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.form == transformation::blade;
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -2398,6 +2414,7 @@ static const AuxMaw         AUX_MAW = AuxMaw();
 static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
 static const AuxMedusaStinger AUX_MEDUSA_STINGER = AuxMedusaStinger();
+static const AuxTalismanBlade AUX_TALISMAN_BLADE = AuxTalismanBlade();
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -2414,6 +2431,8 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_EXECUTIONER_BLADE,
     &AUX_FUNGAL_FISTICLOAK,
     &AUX_MEDUSA_STINGER,
+    &AUX_TALISMAN_BLADE,
+    &AUX_TALISMAN_BLADE,
 };
 
 
@@ -2535,6 +2554,10 @@ bool melee_attack::player_do_aux_attack(unarmed_attack_type atk)
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
+
+    // XXX: Merge action counts into a single entry. (They're otherwise identical.)
+    if (atk == UNAT_TALISMAN_BLADE_2)
+        atk = UNAT_TALISMAN_BLADE_1;
 
     count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
 

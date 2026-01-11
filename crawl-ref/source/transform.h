@@ -357,7 +357,7 @@ void set_form(transformation which_trans, int dur, bool scale_hp = true);
 void return_to_default_form(bool new_form = false);
 
 monster_type transform_mons();
-string blade_parts(bool terse = false);
+string hand_transform_parts(bool terse = false);
 const char* transform_name(transformation form = you.form);
 
 void merfolk_check_swimming(dungeon_feature_type old_grid);

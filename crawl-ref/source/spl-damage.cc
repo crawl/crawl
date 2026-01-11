@@ -2831,7 +2831,8 @@ dice_def arcjolt_damage(int pow, bool random)
 }
 
 static vector<coord_def> _get_chain_targets(const actor &agent,
-                                            vector<coord_def>& seed_points, bool actual)
+                                            vector<coord_def>& seed_points, bool actual,
+                                            bool skip_allies = false)
 {
     set<coord_def> seen;
     vector<coord_def> targets;
@@ -2856,9 +2857,12 @@ static vector<coord_def> _get_chain_targets(const actor &agent,
             if (!could_harm(&agent, act))
                 continue;
 
+            if (skip_allies && mons_aligned(&agent, act) && !act->is_firewood())
+                continue;
+
             targets.push_back(p);
 
-            for (adjacent_iterator ai(p); ai; ++ai)
+            for (fair_adjacent_iterator ai(p); ai; ++ai)
             {
                 if (!seen.count(*ai) && agent.see_cell(*ai))
                 {
@@ -2982,6 +2986,33 @@ void do_galvanic_jolt(const actor& agent, coord_def pos, dice_def damage)
 {
     auto targets = galvanic_targets(agent, pos, true);
     _do_chain_jolt(agent, targets, damage);
+}
+
+void do_eel_melee_jolt(coord_def pos)
+{
+    vector<coord_def> targets;
+    targets.push_back(pos);
+
+    targets = _get_chain_targets(you, targets, true, true);
+    targets.resize(random_range(3, 6));
+    _do_chain_jolt(you, targets, get_form()->get_special_damage());
+}
+
+void do_eel_arcjolt()
+{
+    mprf("Your %s violently discharge electricity!", you.hand_name(true).c_str());
+
+    vector<coord_def> to_check;
+    to_check.push_back(you.pos());
+
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        to_check.push_back(*ri);
+
+    to_check = _get_chain_targets(you, to_check, true);
+
+    dice_def dmg = get_form()->get_special_damage();
+    dmg.size *= 2;
+    _do_chain_jolt(you, to_check, dmg);
 }
 
 static bool _plasma_targetable(const actor &agent, monster &m, bool actual)

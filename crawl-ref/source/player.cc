@@ -2012,6 +2012,9 @@ int player_parrying()
 
     sh += 10 * you.wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE);
 
+    if (you.form == transformation::blade)
+        sh += get_form()->get_effect_size() + you.slaying();
+
     return sh;
 }
 

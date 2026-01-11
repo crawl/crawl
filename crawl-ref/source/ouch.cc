@@ -981,6 +981,19 @@ static void _maybe_medusa_lithotoxin()
     you.duration[DUR_MEDUSA_COOLDOWN] = 1;
 }
 
+static void _maybe_eeljolt()
+{
+    if (you.form != transformation::eel_hands
+        || you.hp * 10 > you.hp_max * 4
+        || you.duration[DUR_EELJOLT_COOLDOWN])
+    {
+        return;
+    }
+
+    do_eel_arcjolt();
+    you.duration[DUR_EELJOLT_COOLDOWN] = 1;
+}
+
 static void _handle_poor_constitution(int dam)
 {
     const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
@@ -1456,6 +1469,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_splash_water(dam);
             _maybe_hive_swarm();
             _maybe_medusa_lithotoxin();
+            _maybe_eeljolt();
             _maybe_trigger_spiteful_blood();
             _maybe_scream(source);
             if (sanguine_armour_valid())

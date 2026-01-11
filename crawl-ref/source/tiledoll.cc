@@ -324,29 +324,6 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
         break;
-    case transformation::blade_hands:
-    {
-        _fill_doll_equipment_default(result);
-
-        const bool natasha = Options.tile_use_monster == MONS_NATASHA;
-        const tileidx_t base_tile = result.parts[TILEP_PART_BASE];
-        if (natasha
-            || is_player_tile(base_tile, TILEP_BASE_FELID))
-        {
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
-        }
-        else if (is_player_tile(base_tile, TILEP_BASE_FELID_SILLY))
-        {
-            // TODO: add variant blade hands for alt felid tiles
-            result.parts[TILEP_PART_HAND1] = 0;
-        }
-        else if (is_player_tile(base_tile, TILEP_BASE_OCTOPODE))
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
-        else
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
-        result.parts[TILEP_PART_HAND2] = 0;
-        break;
-    }
     case transformation::statue:
         switch (you.species)
         {
@@ -517,6 +494,34 @@ void fill_doll_equipment(dolls_data &result)
             break;
         default:
             result.parts[TILEP_PART_BODY] = TILEP_TRAN_FLUX_HUMANOID;
+            break;
+        }
+        break;
+    case transformation::eel_hands:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_EEL_FORM_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_EEL_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_EEL_FORM_HUMANOID;
+            break;
+        }
+        break;
+    case transformation::blade:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BEARD] = TILEP_BEARD_BLADE_FORM_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_BLADE_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLADE_FORM_HUMANOID;
             break;
         }
         break;

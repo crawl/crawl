@@ -2029,3 +2029,37 @@ You long to contribute to the soil cycle.
 You ponder forming a long-term relationship with algae.
 
 You feel a longing for dead leaves.
+###############################################################################
+###############################################################################
+#
+# Eel hands
+#
+###############################################################################
+###############################################################################
+%%%%
+eel hand actions
+
+An eel nuzzles against your @head@.
+
+A quiet electric buzzing fills the air.
+
+Your eels briefly tussle with each other.
+
+One of your eels playfully nips at the other.
+
+An eel wriggles against you, leaving your @skin@ tingling.
+
+An eel investigates your inventory.
+
+Your eels vigilantly scan the vacinity for threats.
+%%%%
+eel hand solo actions
+
+w:20
+Your eel searches [frantically|wistfully] for its partner.
+
+Your eel nuzzles against your @head@.
+
+A quiet electric buzzing fills the air.
+
+Your eel wriggles against you, leaving your @skin@ tingling.

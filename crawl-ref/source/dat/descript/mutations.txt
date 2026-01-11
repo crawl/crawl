@@ -1155,6 +1155,25 @@ growling stomach mutation
 Your maw's appetite is insatiable. Whenever you first encounter an edible
 monster, there is a chance to become mesmerised by it and let out a loud growl.
 %%%%
+eel punch mutation
+
+Your melee hits have a 33% chance of discharging an arc of electricity that
+travels between several connected enemies.
+%%%%
+eeljolt mutation
+
+When your health drops to 40% of your max HP, your eels violently discharge
+electricity, striking all connected targets within 2 tiles of yourself - be they
+friend or foe - for twice the damage their electricity normally does.
+
+This effect cannot activate again until you fully heal.
+%%%%
+blade parry mutation
+
+You briefly gain SH equal to your slaying whenever you perform a melee attack
+(with a small flat bonus on top). Even when not wearing a shield, you are able
+to block up to 3 attacks per round.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

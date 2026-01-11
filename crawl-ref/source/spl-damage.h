@@ -78,6 +78,8 @@ dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
 vector<coord_def> galvanic_targets(const actor &agent, coord_def pos, bool actual);
 void do_galvanic_jolt(const actor& agent, coord_def pos, dice_def damage);
+void do_eel_melee_jolt(coord_def pos);
+void do_eel_arcjolt();
 bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail);
 vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);

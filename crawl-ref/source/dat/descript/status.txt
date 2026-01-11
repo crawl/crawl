@@ -1288,3 +1288,11 @@ Engorged status
 
 Your maw has just consumed a delicious meal, greatly increasing your
 regeneration until it finishes digesting it.
+%%%%
+Eel status
+
+Your arms are a pair of electric eels.
+%%%%
+Blade status
+
+Multiple vicious blades are growing out of your body.

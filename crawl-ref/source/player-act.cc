@@ -186,8 +186,6 @@ vorpal_damage_type player::damage_type(const item_def* wp) const
 {
     if (wp)
         return get_vorpal_type(*wp);
-    if (form == transformation::blade_hands)
-        return DAMV_PIERCING;
     if (has_usable_claws())
         return DVORP_CLAWING;
     if (has_usable_tentacles())
@@ -466,11 +464,11 @@ string player::base_hand_name(bool plural, bool temp, bool *can_plural) const
     *can_plural = you.arm_count() > 1;
 
     string singular;
-    // For flavor reasons we use "blade X" in a bunch of places, not just the
+    // For flavor reasons we use "eel X" in a bunch of places, not just the
     // UC weapon display, where X is the custom hand name. For that reason, we
     // need to do the calculation here.
-    if (temp && form == transformation::blade_hands)
-        singular += "blade ";
+    if (temp && form == transformation::eel_hands)
+        singular += "eel ";
     singular += _hand_name_singular(temp);
     if (plural && *can_plural)
         return pluralise(singular);

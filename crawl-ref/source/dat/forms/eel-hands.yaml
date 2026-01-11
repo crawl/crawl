@@ -1,0 +1,17 @@
+enum: eel_hands
+equivalent_mons: player
+short_name: Eel
+long_name: ''
+talisman: eel
+skill: {min: 12, max: 20}
+melds: [held, gloves]
+resists: {elec: 1}
+unarmed: {base: 5, scaling: 5}
+unarmed_colour: lightcyan
+unarmed_verbs: [hit, punch, bite, thrash]
+offhand_punch: yes
+special_damage: 1d2+5/2
+special_damage_name: Jolt damage
+fakemuts:
+  - ["eel punch", "Electricity sometimes discharges through enemies you attack."]
+  - ["eeljolt", "When badly injured, your eels discharge electricity violently."]

@@ -7502,6 +7502,11 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Devour Regen", skill, 0, false, true, 100, 2);
     }
+    if (form_type == transformation::blade)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Blade Dmg", skill, 0, false, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Parry SH", skill, 0, false, false);
+    }
     if (form_type == transformation::hive)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, 1);
     if (form_type == transformation::sphinx)
@@ -7595,6 +7600,10 @@ static string _describe_talisman_form(transformation form_type)
     }
     else if (form_type == transformation::maw)
         pr.AddCell("Bite speed", "15 aut");
+    else if (form_type == transformation::eel_hands)
+        pr.AddCell("Elec chance", "50%");
+    else if (form_type == transformation::blade)
+        pr.AddCell("Aux chance", "60% (x2)");
     else if (form_type == transformation::death)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)
@@ -7642,7 +7651,7 @@ static string _describe_talisman_form(transformation form_type)
         changes.emplace_back("Blood");
     if (form->has_bones == FC_FORBID)
         changes.emplace_back("Bones");
-    if (form_type == transformation::blade_hands)
+    if (form_type == transformation::eel_hands)
         changes.emplace_back("Hands");
 
     if (!changes.empty())
