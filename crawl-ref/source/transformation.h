@@ -44,6 +44,7 @@ enum class transformation
     sun_scarab,
     medusa,
     eel_hands,
+    spore,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

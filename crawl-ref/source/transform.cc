@@ -1334,6 +1334,40 @@ public:
     }
 };
 
+class FormSpore : public Form
+{
+private:
+    FormSpore() : Form(transformation::spore) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSpore);
+public:
+    static const FormSpore &instance() { static FormSpore inst; return inst; }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return make_stringf("Dense mycelia sprout from your %s and %s.",
+                            you.arm_name(false).c_str(),
+                            you.foot_name(true).c_str());
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return make_stringf("Your mycelia shrivel away.");
+    }
+
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your %s %s a mass of colorful fungus.",
+                            you.arm_name(false).c_str(),
+                            past_tense ? "was" : "is");
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1379,6 +1413,7 @@ static const Form* forms[] =
     &FormSunScarab::instance(),
     &FormMedusa::instance(),
     &FormEelHands::instance(),
+    &FormSpore::instance(),
 };
 
 const Form* get_form(transformation xform)

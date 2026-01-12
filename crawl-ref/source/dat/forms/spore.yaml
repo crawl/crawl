@@ -1,0 +1,15 @@
+enum: spore
+equivalent_mons: player
+short_name: Spore
+long_name: ''
+talisman: spore
+skill: {min: 8, max: 14}
+melds: [offhand, boots]
+unarmed: {base: 4}
+unarmed_colour: brown
+offhand_punch: yes
+special_damage: 2d1+4/5
+special_damage_name: Burstshroom damage
+fakemuts:
+  - ["weakening spores", "Your melee attacks may weaken breathing enemies."]
+  - ["sporulate", "Your melee attacks cause explosive burstshrooms to grow."]

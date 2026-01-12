@@ -1122,6 +1122,10 @@ torch TORCH
 pj PJ
 torch2 TORCH2
 
+%sdir player/transform
+spore_form_humanoid SPORE_FORM_HUMANOID
+spore_form_octopode SPORE_FORM_OCTOPODE
+
 %end_ctg
 
 ###Hair

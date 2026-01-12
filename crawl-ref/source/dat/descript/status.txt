@@ -1296,3 +1296,7 @@ Your arms are a pair of electric eels.
 Blade status
 
 Multiple vicious blades are growing out of your body.
+%%%%
+Spore status
+
+Your arm is a mass of multicoloured fungus.

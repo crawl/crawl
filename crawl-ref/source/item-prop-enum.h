@@ -900,6 +900,7 @@ enum talisman_type
     TALISMAN_SCARAB,
     TALISMAN_MEDUSA,
     TALISMAN_EEL,
+    TALISMAN_SPORE,
     NUM_TALISMANS,
 };
 

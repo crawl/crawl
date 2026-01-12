@@ -196,8 +196,9 @@ spret monarch_detonation(const actor& agent, int pow, bool fail);
 
 spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim, int pow,
                              bool fail);
-vector<coord_def> get_splinterfrost_block_spots(const coord_def& agent,
-                                                const coord_def& aim, int num_walls);
+vector<coord_def> get_wall_ring_spots(const coord_def& center,
+                                      const coord_def& aim,
+                                      int num_walls, bool water_okay = false);
 bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);

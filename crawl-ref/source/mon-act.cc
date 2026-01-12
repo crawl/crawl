@@ -68,6 +68,7 @@
 #include "terrain.h"
 #include "throw.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1355,6 +1356,66 @@ static void _handle_lightning_spire(monster& spire)
     }
 }
 
+static void _burstshroom_grow(monster& mons)
+{
+    mons.number += you.time_taken;
+    if (mons.number >= 50)
+    {
+        if (mons.was_created_by(you, MON_SUMM_SPORE) && !you.can_see(mons))
+        {
+            monster_die(mons, KILL_TIMEOUT, NON_MONSTER);
+            return;
+        }
+
+        vector<monster*> affected;
+        bool need_redraw = false;
+        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        {
+            if (monster* mon_at = monster_at(*ai))
+            {
+                if (mons_aligned(&mons, mon_at))
+                    continue;
+
+                if (!mon_at->is_unbreathing())
+                    affected.push_back(mon_at);
+            }
+
+            if (you.see_cell(*ai) && !cell_is_solid(*ai))
+            {
+                flash_tile(*ai, WHITE, 0);
+                need_redraw = true;
+            }
+        }
+
+        simple_monster_message(mons, " violently releases its spores.");
+        if (need_redraw)
+            animation_delay(20, true);
+
+        bolt spores;
+        zappy(ZAP_BURSTSPORE, 1, false, spores);
+        spores.damage = get_form(transformation::spore)->get_special_damage();
+        spores.set_agent(&you);
+        spores.source = mons.pos();
+        spores.hit_verb = "engulf";
+        spores.in_explosion_phase = true;
+
+        for (monster* targ : affected)
+        {
+            spores.explosion_affect_cell(targ->pos());
+            if (targ->alive() && !targ->has_ench(ENCH_DAZED)
+                && x_chance_in_y(get_form(transformation::spore)->get_level(10), targ->get_hit_dice() * 30))
+            {
+                targ->daze(random_range(2, 5));
+                simple_monster_message(*targ, " is dazed by the spores.");
+            }
+        }
+
+        monster_die(mons, KILL_RESET, NON_MONSTER);
+    }
+    else
+        mons.lose_energy(EUT_MOVE);
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -2023,6 +2084,12 @@ void handle_monster_move(monster* mons)
                 return;
             }
         }
+    }
+
+    if (mons->type == MONS_BURSTSHROOM)
+    {
+        _burstshroom_grow(*mons);
+        return;
     }
 
     mons->shield_blocks = 0;

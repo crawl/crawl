@@ -1,0 +1,15 @@
+name: "burstshroom"
+glyph: {char: "P", colour: etc_earth}
+flags: [stationary, no_exp_gain]
+resists: {poison: 1}
+genus: fungus
+holiness: [plant]
+will: invuln
+attacks:
+hd: 1
+hp_10x: 52
+ac: 1
+ev: 0
+intelligence: brainless
+size: tiny
+shape: fungus

@@ -525,6 +525,20 @@ void fill_doll_equipment(dolls_data &result)
             break;
         }
         break;
+    case transformation::spore:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_SPORE_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_HUMANOID;
+            break;
+        }
+        break;
     case transformation::slaughter:
     {
         switch (you.species)

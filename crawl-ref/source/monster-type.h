@@ -393,6 +393,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SLEEPCAP,
     MONS_DEATHCAP,
+    MONS_BURSTSHROOM,
 #endif
     MONS_PLANT,
     MONS_OKLOB_SAPLING,
@@ -1410,6 +1411,7 @@ enum monster_type                      // env.mons[].type
     MONS_CAUSTIC_SPORANGIUM,
     MONS_NASCENT_PLASMODIUM,
     MONS_STAR_JELLY,
+    MONS_BURSTSHROOM,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -1239,6 +1239,7 @@ ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
 sleepcap MONS_SLEEPCAP
+burstshroom MONS_BURSTSHROOM
 %rim 1
 
 ## Goblins ('g')
@@ -1541,6 +1542,7 @@ flux_form_felid TRAN_FLUX_FELID
 flux_form_octopode TRAN_FLUX_OCTOPODE
 blade_form_felid TRAN_BLADE_FELID
 eel_form_felid TRAN_EEL_FELID
+spore_form_felid TRAN_SPORE_FELID
 
 %rim 1
 

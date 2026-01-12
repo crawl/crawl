@@ -4540,8 +4540,9 @@ static bool _push_line_back(const coord_def& center, const coord_def& dir)
 }
 
 
-vector<coord_def> get_splinterfrost_block_spots(const coord_def& center,
-                                                const coord_def& aim, int num_walls)
+vector<coord_def> get_wall_ring_spots(const coord_def& center,
+                                      const coord_def& aim,
+                                      int num_walls, bool water_okay)
 {
     vector<coord_def> spots;
 
@@ -4569,6 +4570,7 @@ vector<coord_def> get_splinterfrost_block_spots(const coord_def& center,
         const coord_def spot = center + Compass[index];
         if (in_bounds(spot) && !cell_is_solid(spot)
             && env.grid(spot) != DNGN_LAVA
+            && (water_okay || env.grid(spot) != DNGN_DEEP_WATER)
             && !feat_is_trap(env.grid(spot)))
         {
             spots.push_back(spot);
@@ -4593,7 +4595,7 @@ spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim,
     mg.hd = 10 + div_rand_round(pow, 20);
     mg.set_range(0);
 
-    vector<coord_def> spots = get_splinterfrost_block_spots(agent.pos(), aim, 4);
+    vector<coord_def> spots = get_wall_ring_spots(agent.pos(), aim, 4, true);
     int num_created = 0;
     for (size_t i = 0; i < spots.size(); ++i)
     {

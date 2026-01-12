@@ -2761,4 +2761,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_BURSTSPORE,
+    "dizzying spores",
+    new dicedef_calculator<2, 6, 1, 4>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<3, 10, 1, 17>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BROWN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
 };

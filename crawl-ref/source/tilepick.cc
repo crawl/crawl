@@ -3354,6 +3354,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_SPIDER:   return TILE_TALISMAN_SPIDER;
     case TALISMAN_AQUA:     return TILE_TALISMAN_AQUA;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
+    case TALISMAN_SPORE:    return TILE_TALISMAN_SPORE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_EEL:      return TILE_TALISMAN_EEL;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;

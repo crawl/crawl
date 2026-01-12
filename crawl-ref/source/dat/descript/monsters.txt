@@ -929,6 +929,12 @@ burial acolyte
 A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
 to both rouse the dead and send them to eternal rest.
 %%%%
+burstshroom
+
+A rapidly-growing mushroom whose life-cycle culminates in an explosive release
+of spores. These spores have a mild psychoactive effect and can sometimes daze
+creatures who breathe them in.
+%%%%
 bush
 
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is

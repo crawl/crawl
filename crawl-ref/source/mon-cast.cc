@@ -1712,7 +1712,7 @@ static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only
 
         // Place rubble 'behind' the target, relative to the caster.
         const coord_def aim((targs[i]->pos() - caster.pos()) + targs[i]->pos());
-        vector<coord_def> spots = get_splinterfrost_block_spots(targs[i]->pos(), aim, random_range(3, 5));
+        vector<coord_def> spots = get_wall_ring_spots(targs[i]->pos(), aim, random_range(3, 5));
         for (coord_def& spot : spots)
         {
             if (actor_at(spot))

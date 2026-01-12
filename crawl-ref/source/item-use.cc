@@ -3408,7 +3408,7 @@ bool use_talisman(item_def& talisman)
         const talisman_type new_type = random_choose(TALISMAN_RIMEHORN,
                                                      TALISMAN_SCARAB,
                                                      TALISMAN_MEDUSA,
-                                                     TALISMAN_MAW);
+                                                     TALISMAN_SPORE);
 
         mprf("%s responds to your shapeshifting skill and transforms into a %s!",
              real_item.name(DESC_YOUR).c_str(), talisman_type_name(new_type).c_str());

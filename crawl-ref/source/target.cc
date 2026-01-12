@@ -2614,7 +2614,7 @@ bool targeter_wall_arc::set_aim(coord_def a)
     if (!targeter_smite::set_aim(a) || !valid_aim(a) || a == agent->pos())
         return false;
 
-    spots = get_splinterfrost_block_spots(agent->pos(), a, num_walls);
+    spots = get_wall_ring_spots(agent->pos(), a, num_walls, true);
 
     return true;
 }
