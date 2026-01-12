@@ -840,6 +840,19 @@ static bool _death_ego_charge_hp(spell_type spell)
 }
 
 
+static int _spell_addition_hp_cost(spell_type spell)
+{
+    const int spell_cost = spell_mana(spell);
+    int hp_cost = 0;
+    if (_majin_charge_hp())
+        hp_cost += spell_cost;
+    if (_death_ego_charge_hp(spell))
+        hp_cost += spell_cost;
+    // The cost shouldn't ever kill you
+    hp_cost = min(hp_cost, you.hp - 1);
+    return hp_cost;
+}
+
 /**
  * Cast a spell.
  *
@@ -1032,12 +1045,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     const int cost = spell_mana(spell);
     pay_mp(cost);
 
-    // Majin Bo HP cost taken at the same time
-    // (but after hp costs from HP casting)
-    const int hp_cost = min(spell_mana(spell), you.hp - 1);
-    if (_majin_charge_hp())
-        pay_hp(hp_cost);
-    if (_death_ego_charge_hp(spell))
+    // Needs to happen after hp costs from HP casting
+    const int hp_cost = _spell_addition_hp_cost(spell);
+    if (hp_cost)
         pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
@@ -1070,7 +1080,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         count_action(CACT_CAST, spell);
     }
 
-    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
+    finalize_mp_cost(hp_cost > 0);
     // Check if an HP payment brought us low enough
     // to trigger Celebrant or time-warped blood.
     makhleb_celebrant_bloodrite();

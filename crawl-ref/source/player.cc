@@ -3951,7 +3951,7 @@ void drain_mp(int mp_loss, bool ignore_resistance)
 void pay_hp(int cost)
 {
     you.hp -= cost;
-    ASSERT(you.hp);
+    ASSERT(you.hp > 0);
 }
 
 void pay_mp(int cost)
