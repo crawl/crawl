@@ -6,7 +6,7 @@ skill: {min: 12, max: 20}
 talisman: fortress
 melds: [offhand, aux]
 ac: {base: 3}
-body_ac_mult: {base: 70, scaling: 65}
+body_ac_mult: {base: 70, scaling: 80}
 resists: {poison: -1, corr: 1}
 unarmed: {base: 5, scaling: 5}
 unarmed_name: pincers
@@ -23,7 +23,7 @@ hand_name: pincers
 prayer_action: "scuttle before"
 flesh_name: shell
 fakemuts:
-  - ["armoured shell", "Your body armour is fused into your shell, multiplying its AC."]
+  - ["armoured shell", "Your body armour is fused into your shell, improving its AC and properties."]
   - ["rust breath", "You can exhale clouds of rust."]
 badmuts:
   - ["slow movement", "You cover ground slowly."]

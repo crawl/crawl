@@ -575,7 +575,14 @@ void player_equip_set::update()
         if (!entry.melded)
         {
             if (item.base_type == OBJ_ARMOUR)
+            {
                 armour_egos[get_armour_ego_type(item)] += 1;
+                if (you.form == transformation::fortress_crab
+                    && get_armour_slot(item) == SLOT_BODY_ARMOUR)
+                {
+                    armour_egos[get_armour_ego_type(item)] += 1;
+                }
+            }
             else if (item.base_type == OBJ_GIZMOS)
                 gizmo_egos[item.brand] = true;
         }
@@ -595,6 +602,14 @@ void player_equip_set::update()
 
                 for (int j = 0; j < (int)artprops.size(); ++j)
                     artprop_cache[j] += artprops[j];
+
+                if (you.form == transformation::fortress_crab
+                    && item.base_type == OBJ_ARMOUR
+                    && get_armour_slot(item) == SLOT_BODY_ARMOUR)
+                {
+                    for (int j = 0; j < (int)artprops.size(); ++j)
+                        artprop_cache[j] += artprops[j];
+                }
             }
         }
     }

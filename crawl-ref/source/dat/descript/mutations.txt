@@ -1181,6 +1181,13 @@ tiles behind your target. If they are allowed to grow for several turns, they
 will explode in a burst of spores that damages nearby enemies and can briefly
 daze them.
 %%%%
+armoured shell mutation
+
+Your body armour is fused into your shell, multiplying its base AC by a factor
+that increases with your Shapeshifting skill. The effectiveness of its ego and
+most artefact properties will also be doubled, though certain rare artefacts may
+be too unusual to enhance this way.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

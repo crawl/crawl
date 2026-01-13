@@ -418,7 +418,7 @@ static vector<ability_def> &_get_ability_list()
             4, 0, 0, 5, {}, abflag::target },
 
         { ABIL_BREATHE_RUST, "Breathe Rust",
-                0, scaling_cost(120, 12), 0, 4, {}, abflag::none },
+                0, scaling_cost(100, 12), 0, 4, {}, abflag::none },
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",

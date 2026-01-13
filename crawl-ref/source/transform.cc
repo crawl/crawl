@@ -1930,6 +1930,13 @@ static void _on_enter_form(transformation which_trans)
         sun_scarab_spawn_ember(true);
         break;
 
+    // It's hard to tell what properties might be affected by armour doubling, so redraw all.
+    case transformation::fortress_crab:
+        notify_stat_change();
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        break;
+
     default:
         break;
     }
@@ -2207,6 +2214,12 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         you.duration[DUR_ENGORGED] = 0;
     else if (old_form == transformation::eel_hands)
         you.duration[DUR_EELJOLT_COOLDOWN] = 0;
+    else if (old_form == transformation::fortress_crab)
+    {
+        notify_stat_change();
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+    }
 
     // If the player is no longer be eligible to equip some of the items that
     // they were wearing (possibly due to losing slots from their default form
