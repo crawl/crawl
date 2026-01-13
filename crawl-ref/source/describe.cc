@@ -7629,6 +7629,9 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("Melee damage", "-50%", RED);
     }
 
+    if (form_type == transformation::vampire || form_type == transformation::sphinx)
+        pr.AddCell("SInv", "+");
+
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)
     {

@@ -7821,8 +7821,12 @@ bool player::innate_sinv() const
     if (get_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (form == transformation::jelly)
+    if (form == transformation::jelly
+        || form == transformation::sphinx
+        || form == transformation::vampire)
+    {
         return true;
+    }
 
     if (have_passive(passive_t::sinv))
         return true;
