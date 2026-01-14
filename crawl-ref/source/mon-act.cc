@@ -4159,7 +4159,8 @@ void seen_monsters_react()
             if (!(*mi)->alive())
                 continue;
 
-            monster_consider_shouting(**mi);
+            if (!vampire_mesmerism_check(**mi))
+                monster_consider_shouting(**mi);
         }
 
         if (!mi->visible_to(&you))

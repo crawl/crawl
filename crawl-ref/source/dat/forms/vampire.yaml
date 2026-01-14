@@ -10,6 +10,7 @@ fakemuts:
   - ["bloodcurse", "When you kill a living creature with a stab, you may create a vampiric thrall."]
   - ["torment resistance 1", "You are resistant to unholy torment."]
   - ["bat form", "You can occasionally transform into a swarm of bats."]
+  - ["hypnotic gaze", "You often daze monsters when they first notice you."]
   - ["very stealthy", "You are very stealthy."]
 badmuts:
   - ["inhibited regeneration", "You do not regenerate when monsters are visible."]

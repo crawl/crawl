@@ -1020,8 +1020,7 @@ vampire fangs mutation
 
 When you perform a stab attack against a living monster with blood, you heal for
 a portion of the total damage dealt. When you are at 50% of your max HP or less,
-this has a chance to happen on all melee attacks which increases with your
-Shapeshifting skill.
+this has a 2/3 chance to happen on all melee attacks.
 %%%%
 bloodcurse mutation
 
@@ -1187,6 +1186,13 @@ Your body armour is fused into your shell, multiplying its base AC by a factor
 that increases with your Shapeshifting skill. The effectiveness of its ego and
 most artefact properties will also be doubled, though certain rare artefacts may
 be too unusual to enhance this way.
+%%%%
+hypnotic gaze mutation
+
+Your gaze has a hypnotic effect on many creatures. Whenever a living, demonic,
+or holy monster first notices you, it may become momentarily dazed, preventing
+it from shouting. Creatures which fail a Willpower check will be dazed for even
+longer.
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation

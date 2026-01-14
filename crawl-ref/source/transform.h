@@ -144,7 +144,6 @@ public:
     virtual int get_ac_bonus(int skill = -1) const;
     virtual int ev_bonus(int /*skill*/ = -1) const;
     virtual int get_body_ac_mult(int /*skill*/ = -1) const;
-    virtual int get_vamp_chance(int /*skill*/ = -1) const { return 0; }
     virtual int get_web_chance(int /*skill*/ = -1) const {return 0; }
     virtual int regen_bonus(int /*skill*/ = -1) const {return 0; }
     virtual int mp_regen_bonus(int /*skill*/ = -1) const {return 0; }
@@ -375,3 +374,5 @@ monster* get_solar_ember();
 
 bool maw_considers_appetising(const monster& mon);
 bool maw_hunger_check(monster* mon);
+
+bool vampire_mesmerism_check(monster& mon);

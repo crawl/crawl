@@ -163,7 +163,8 @@ from your body is so immense that it even fills nearby spaces like a choking
 cloud, assailing enemies and gradually putting them to sleep.
 
 After using this ability, you must gain experience points before you can recover
-enough power to use it again.
+enough power to use it again. (Shapeshifting skill will increase the rate at
+which this skill recharges.)
 %%%%
 Enkindle ability
 

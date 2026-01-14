@@ -38,6 +38,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 
@@ -1379,7 +1380,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (was_unaware && allow_shout
         && mon->foe == MHITYOU && !mon->wont_attack())
     {
-        monster_consider_shouting(*mon);
+        if (!vampire_mesmerism_check(*mon))
+            monster_consider_shouting(*mon);
     }
 
     const bool isPacified = mon->pacified();

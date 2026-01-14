@@ -1078,12 +1078,16 @@ private:
 public:
     static const FormVampire &instance() { static FormVampire inst; return inst; }
 
-    int get_vamp_chance(int skill = -1) const override
+    // Bat swarm recharge rate
+    int get_effect_size(int skill = -1) const override
     {
-        if (skill == -1)
-            skill = get_level(1);
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+    }
 
-        return 100 - (1000 / (skill + 10));
+    // Daze power
+    int get_effect_chance(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(70).Scaling(75), skill));
     }
 };
 
@@ -2561,6 +2565,34 @@ bool maw_hunger_check(monster* mon)
         }
 
         noisy(you.shout_volume(), you.pos(), MID_PLAYER);
+        return true;
+    }
+
+    return false;
+}
+
+bool vampire_mesmerism_check(monster& mon)
+{
+    if (you.form == transformation::vampire && you.can_see(mon) && mon.can_see(you)
+        && (mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        && !one_chance_in(4))
+    {
+        if (mon.check_willpower(&you, get_form()->get_effect_chance()) <= 0)
+        {
+            mprf("%s loses %s in your eye%s.",
+                    mon.name(DESC_THE).c_str(),
+                    mon.pronoun(PRONOUN_REFLEXIVE).c_str(),
+                    you.has_mutation(MUT_MISSING_EYE) ? "" : "s");
+            mon.daze(random_range(3, 5));
+        }
+        else
+        {
+            mprf("%s is briefly mesmerised by your gaze.", mon.name(DESC_THE).c_str());
+            // This works even if called during the stealth check, whereas a 1-turn daze
+            // would wear off with no effect and produce extra messages on top of that.
+            mon.speed_increment -= 10;
+        }
+
         return true;
     }
 

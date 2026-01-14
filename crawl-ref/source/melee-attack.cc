@@ -610,9 +610,8 @@ void melee_attack::do_vampire_lifesteal()
         && adjacent(you.pos(), mon->pos())
         && !mons_class_flag(defender->type, M_ACID_SPLASH))
     {
-        // Stabs always heal, but thirsty attacks have a shapeshifting-based
-        // chance to heal.
-        if (!stab_attempt && !x_chance_in_y(get_form()->get_vamp_chance(), 100))
+        // Stabs always heal, while thirsty attacks have a 2/3 chance.
+        if (!stab_attempt && !x_chance_in_y(2, 3))
             return;
 
         const bool can_heal = actor_is_susceptible_to_vampirism(*mon);
