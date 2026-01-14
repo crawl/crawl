@@ -848,7 +848,7 @@ void floor_transition(dungeon_feature_type how,
 
     // Determine this now so the milestones and notes report the correct
     // destination floor.
-    if (whither.branch == BRANCH_ABYSS && how != DNGN_ABYSSAL_STAIR)
+    if (how == DNGN_ENTER_ABYSS || how == DNGN_EXIT_THROUGH_ABYSS)
         whither.depth = abyss_default_depth();
 
     // Not entirely accurate - the player could die before
@@ -1298,6 +1298,11 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 #if TAG_MAJOR_VERSION == 34
         if (you.char_class == JOB_ABYSSAL_KNIGHT && you.level_stack.empty())
             return level_id(BRANCH_DUNGEON, 1);
+
+        // For a short while after 1e4f93a, it was possible to become eternally
+        // stuck in the Abyss via Duel. Attempt to fix up any such cases.
+        while (!you.level_stack.empty() && you.level_stack.back().id.branch == BRANCH_ABYSS)
+            you.level_stack.pop_back();
     case DNGN_EXIT_PORTAL_VAULT:
 #endif
     case DNGN_EXIT_PANDEMONIUM:
