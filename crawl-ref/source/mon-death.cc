@@ -1864,7 +1864,7 @@ static void _cassandra_death_ambush()
     // we create a random monster near the player, attempt to place it in a
     // valid location, and then delete it if we fail (and try a different one).
     int placed = 0;
-    for (int tries = 0; tries < 10 && placed <= num; ++tries)
+    for (int tries = 0; tries < 10 && placed < num; ++tries)
     {
         if (monster* mon = create_monster(mg))
         {
@@ -1880,6 +1880,9 @@ static void _cassandra_death_ambush()
                     did_place = true;
                     ++placed;
 
+                    mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
+                    mg.set_place(level_id::current()); // Only the first monster created is from a deeper depth.
+
                     // Effectively erase this position from the list, so we
                     // don't try to reuse it.
                     pos.x = 0;
@@ -1890,8 +1893,6 @@ static void _cassandra_death_ambush()
 
             if (!did_place)
                 monster_die(*mon, KILL_RESET, NON_MONSTER);
-            else
-                mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
         }
     }
 
