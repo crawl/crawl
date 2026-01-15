@@ -328,6 +328,8 @@ static void _bane_triggers(int /*time_delta*/)
             if (!mons_aligned(&you, *mi) && !mi->is_summoned()
                 && !mi->is_peripheral() && !mons_is_unique(mi->type)
                 && !mi->has_ench(ENCH_FIGMENT)
+                && !mi->has_spell(SPELL_ILL_OMEN)
+                && !mi->has_attack_flavour(AF_DOOM)
                 && !mons_is_immotile(**mi))
             {
                 to_clone.push_back(*mi);
