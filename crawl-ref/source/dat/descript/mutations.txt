@@ -1170,8 +1170,7 @@ This effect cannot activate again until you fully heal.
 blade parry mutation
 
 You briefly gain SH equal to your slaying whenever you perform a melee attack
-(with a small flat bonus on top). Even when not wearing a shield, you are able
-to block up to 3 attacks per round.
+(with an additional flat bonus based on your Shapeshifting skill).
 %%%%
 sporulate mutation
 
