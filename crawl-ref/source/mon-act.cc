@@ -1358,8 +1358,8 @@ static void _handle_lightning_spire(monster& spire)
 
 static void _burstshroom_grow(monster& mons)
 {
-    mons.number += you.time_taken;
-    if (mons.number >= 50)
+    mons.number -= 1;
+    if (mons.number <= 0)
     {
         if (mons.was_created_by(you, MON_SUMM_SPORE) && !you.can_see(mons))
         {

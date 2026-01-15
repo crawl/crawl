@@ -792,7 +792,7 @@ static void _grow_mushrooms(const monster& mon)
         if (monster* shroom = create_monster(mgen))
         {
             // Randomize detonation time a little.
-            shroom->number = random_range(0, 20);
+            shroom->number = random_range(3, 5);
             created = true;
         }
     }
