@@ -1578,7 +1578,7 @@ spore talisman
 
 A small charm made from a still-living mushroom. Transforms one of the wearer's
 arms and parts of their lower body into a vibrant mass of multicoloured fungus.
-Melee attacks in this form may release spores that weaker their target, as well
+Melee attacks in this form may release spores that weaken their target, as well
 as cause mushrooms to sprout on the ground behind them which will release their
 own bursts of dazing spores if allowed to grow. Shapeshifting skill increases
 the durability of these mushrooms as well as their damage.
