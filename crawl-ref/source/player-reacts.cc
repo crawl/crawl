@@ -705,6 +705,29 @@ static void _decrement_rampage_heal_duration(int delay)
     }
 }
 
+static void _handle_trickster_decay(int delay)
+{
+    if (you.duration[DUR_TRICKSTER_GRACE] || delay == 0)
+        return;
+
+    if (!you.props.exists(TRICKSTER_POW_KEY))
+        return;
+
+    int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
+
+    // Decay at a rate of ~1 AC per 30 aut.
+    const int reduction = div_rand_round(3, delay);
+    stacks -= reduction;
+    if (stacks <= 0)
+    {
+        you.props.erase(TRICKSTER_POW_KEY);
+        mprf(MSGCH_DURATION, "You feel your existence waver again.");
+    }
+
+    if (reduction > 0)
+        you.redraw_armour_class = true;
+}
+
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
  * when it hits 50% and 0% remaining.
@@ -1038,7 +1061,39 @@ static void _decrement_durations()
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
 
+    if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");
+        you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
+    }
 
+    if (you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] && you.hp == you.hp_max)
+    {
+        // Don't print it the message if the mutation is lost
+        // before the cooldown wears off.
+        if (you.get_mutation_level(MUT_TIME_WARPED_BLOOD))
+            mprf(MSGCH_DURATION, "Your time-warped blood is ready to ripple again.");
+
+        you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
+    }
+
+    if (you.duration[DUR_HIVE_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
+        you.duration[DUR_HIVE_COOLDOWN] = 0;
+    }
+
+    if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        you.duration[DUR_MEDUSA_COOLDOWN] = 0;
+    }
+
+    if (you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] && you.hp == you.hp_max)
+        you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 0;
+
+    if (you.has_mutation(MUT_TRICKSTER))
+        _handle_trickster_decay(delay);
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -1204,29 +1259,6 @@ static void _handle_fugue(int delay)
     }
 }
 
-static void _handle_trickster_decay(int delay)
-{
-    if (you.duration[DUR_TRICKSTER_GRACE] || delay == 0)
-        return;
-
-    if (!you.props.exists(TRICKSTER_POW_KEY))
-        return;
-
-    int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
-
-    // Decay at a rate of ~1 AC per 30 aut.
-    const int reduction = div_rand_round(3, delay);
-    stacks -= reduction;
-    if (stacks <= 0)
-    {
-        you.props.erase(TRICKSTER_POW_KEY);
-        mprf(MSGCH_DURATION, "You feel your existence waver again.");
-    }
-
-    if (reduction > 0)
-        you.redraw_armour_class = true;
-}
-
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1287,6 +1319,8 @@ void player_reacts()
     if (you.duration[DUR_RIME_YAK_AURA])
         frigid_walls_damage(you.time_taken);
 
+    _regenerate_hp_and_mp(you.time_taken);
+
     _decrement_durations();
 
     if (you.attempted_attack)
@@ -1302,44 +1336,8 @@ void player_reacts()
 
     you.handle_constriction();
 
-    _regenerate_hp_and_mp(you.time_taken);
-
-    if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
-    {
-        mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");
-        you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
-    }
-
-    if (you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] && you.hp == you.hp_max)
-    {
-        // Don't print it the message if the mutation is lost
-        // before the cooldown wears off.
-        if (you.get_mutation_level(MUT_TIME_WARPED_BLOOD))
-            mprf(MSGCH_DURATION, "Your time-warped blood is ready to ripple again.");
-
-        you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
-    }
-
-    if (you.duration[DUR_HIVE_COOLDOWN] && you.hp == you.hp_max)
-    {
-        mprf(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
-        you.duration[DUR_HIVE_COOLDOWN] = 0;
-    }
-
-    if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
-    {
-        mprf(MSGCH_DURATION, "You feel your defenses recover.");
-        you.duration[DUR_MEDUSA_COOLDOWN] = 0;
-    }
-
-    if (you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] && you.hp == you.hp_max)
-        you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 0;
-
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    if (you.has_mutation(MUT_TRICKSTER))
-        _handle_trickster_decay(you.time_taken);
 
     if (you.form == transformation::bat_swarm)
     {
