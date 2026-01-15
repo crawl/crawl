@@ -55,6 +55,7 @@
 #include "tileview.h"
 #ifdef USE_TILE
     #include "tile-env.h"
+    #include "tilepick.h"
 #endif
 #include "throw.h"
 #include "travel.h"
