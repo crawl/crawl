@@ -482,6 +482,7 @@ function armoury_setup(e)
           any armour good_item pre_id w:20")
   e.kitem("c = any weapon good_item pre_id")
   e.kitem("d = any armour good_item pre_id")
+  e.kitem("8 = fortress talisman / blade talisman")
   e.subst("c = ccc(")
   e.subst("d = ddd[")
   e.lua_marker('~', props_marker {
@@ -692,7 +693,7 @@ KITEM: j = scimitar plus:2 ego:flaming pre_id /\
        scimitar plus:2 ego:holy_wrath pre_id /\
        scimitar plus:2 good_item pre_id
 KITEM: k = protean talisman / serpent talisman /\
-           blade talisman / maw talisman, /\
+           eel talisman / maw talisman, /\
            pair of gloves mundane pre_id /\
            pair of boots mundane pre_id /\
            helmet mundane pre_id /\

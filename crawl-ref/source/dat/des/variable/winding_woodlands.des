@@ -902,6 +902,8 @@ NAME:   nzn_winding_woodlands_15x15_eel_pit
 TAGS:   no_monster_gen
 DEPTH:  D:7-12, Lair
 KMONS:  1 = electric eel
+KMONS:  8 = 8
+KITEM:  8 = eel talisman / $ no_pickup w:30
 KFEAT:  1 = w
 NSUBST: 1 = 3:1 / 2 = 1ww / *:w
 : woodlands_sub_setup(_G, "15x15")

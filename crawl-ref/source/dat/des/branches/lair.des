@@ -351,7 +351,8 @@ TAGS:   transparent
 MONS:   water moccasin w:30 / scorpion / bullfrog w:30 / \
         black bear w:25 / yak / komodo dragon w:5
 KMONS:  P = plant / fungus
-SUBST:  P = P:60 `
+ITEM:   spore talisman
+SUBST:  P = P:60 `, d = d...
 NSUBST: 1 = 3:1 / * = 1:30 P .
 NSUBST: . = 10:P / 10 = P. / 4:1 / 2 = 3. / *:.
 : lair_entry_setup(_G)
@@ -365,7 +366,7 @@ MAP
 ....P.PPPP1PP.PPP....
 .P.PPP1P.PPP.P.PPP...
 ...PPPP.P1PP.P.PPP...
-...PPP.PPPO.PP.P.P...
+...PPP.PPPOdPP.P.P...
 .P.P1....PPPP1PP.P.P.
 ..PPPPPP.PPP.PP.P....
  ....PPPP.P.PP.P..P.
@@ -1225,16 +1226,17 @@ ENDMAP
 NAME:   nicolae_lair_fungal_den
 TAGS:   transparent extra lairdec
 KMONS:  F = fungus
+ITEM:   spore talisman
 KITEM:  S = yak skeleton / dream sheep skeleton / human skeleton w:5
 NSUBST: S = 2=S / SE / E
-SUBST:  ` = x_, E = F..
+SUBST:  ` = x_, E = F.., d = d...
 CLEAR:  _
 MAP
   ````````
 `xxxxxxxxxx`
 xx...xEEFFxx`
 x..x..E.SSFxx`
-xx.xx.FE.SFxx`
+xx.xx.FEdSFxx`
 `x..xxE.SSFxx`
  .@.xxxEFFxx`
     `xxxxxx`
@@ -1812,7 +1814,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_lamprey_ridges
 TAGS:    transparent extra lairdec no_rotate
-DEPTH:   Lair
 KMONS:   P = plant
 ITEM:    large rock q:1 no_pickup
 SHUFFLE: ABCDEFGH / BAFDECGH / ABCEDFHG, pqrs
@@ -1844,7 +1845,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_another_tattered_fort
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   F = fungus
 KFEAT:   ~ = broken_door
 SHUFFLE: PpQq / RrSs, tT / tT / t' / 'T
@@ -1879,7 +1879,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_chain_attraction
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   P = plant
 ITEM:    stone q:1 no_pickup
 SHUFFLE: ABC, DEF
@@ -1906,7 +1905,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_dandelion
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   P = plant
 ITEM:    stone q:1 no_pickup
 SHUFFLE: Qq / Rr / Ss
@@ -1943,7 +1941,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_mosaic
 TAGS:    transparent no_item_gen extra lairdec no_pool_fixup
-DEPTH:   Lair
 WEIGHT:  5
 KMONS:   B = bush
 KMONS:   P = plant
@@ -1984,7 +1981,6 @@ ENDMAP
 # Based off of shoals_end_grunt_ice and hellmonk_spider_rune_endless_swarm.
 NAME:    regret_index_lairdec_swarmberg
 TAGS:    transparent no_item_gen extra lairdec no_pool_fixup
-DEPTH:   Lair
 KMONS:   P = plant
 SHUFFLE: EFGHI, JK
 NSUBST:  A = 2:. / *:x, B = 1:x.. / *:., C = 1:x.. / *:., D = 2:. / *:x
@@ -2044,7 +2040,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_grave_grove
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 WEIGHT:  5
 KMONS:   D = pile of debris
 KMONS:   P = plant
@@ -2083,7 +2078,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_dancing_grid
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   p = plant
 SHUFFLE: ABCDEF, LMNOPQ, RST
 SUBST:   LRB : pgtt, C : xx', DEFT = x, M : xc, N : xxp, O : xx', APQS = '
@@ -2111,7 +2105,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_piecemeal
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 SHUFFLE: ABCD, EFGH
 SUBST:   A : xxc., E : xx., BCDFGH = .
 SUBST:   z : tcx
@@ -2146,7 +2139,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_entangling_icon
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 WEIGHT:  5
 KMONS:   p = plant
 ITEM:    mundane spear
@@ -2176,7 +2168,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_otherside
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   p = plant
 KMONS:   b = bush
 KFEAT:   y = x
@@ -2215,7 +2206,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_budding
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   p = plant
 KFEAT:   y = x
 SHUFFLE: ABCDEFG, LMNOP, ?! / ?V / ?f / ?f / !? / !?
@@ -2252,7 +2242,6 @@ ENDMAP
 # Riffing off of evilmike_ruin_ashenzari and nicolae_ru_the_path_less_chosen.
 NAME:    regret_index_lairdec_abandoned_piercing
 TAGS:    transparent extra lairdec luniq_lairdec_plantage
-DEPTH:   Lair
 KMONS:   P = plant
 KMONS:   d = pile of debris
 KFEAT:   - = broken_door
@@ -2299,7 +2288,6 @@ ENDMAP
 
 NAME:    regret_index_lairdec_lost_corridors
 TAGS:    transparent extra lairdec
-DEPTH:   Lair
 KMONS:   P : plant / bush w:5
 ITEM:    large rock q:1 no_pickup
 SHUFFLE: ABCD, XYZ
@@ -3160,9 +3148,9 @@ NAME:   kennysheep_abandoned_house
 TAGS:   ruin transparent
 MONS:   rat, river rat, hell rat
 KMONS:  D = pile of debris
-ITEM:   quill talisman / quill talisman randart w:2
+ITEM:   quill talisman / quill talisman randart w:4, spore talisman
 KFEAT:  C = cache_of_fruit / cache_of_baked_goods w:4
-NSUBST: d = 1:d / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
+NSUBST: d = 1:d / 1:eCC / 1:C / 1:F / 1:* / 1:d / 1:9 / 1:3 / * = $11223.......
 NSUBST: c = 5:Dc / *:c
 : decorative_floor(_G, 'F', "broken floral vase")
 MAP
@@ -3284,7 +3272,7 @@ ORIENT: north
 KMONS:  pq = plant / fungus / toadstool
 KMONS:  1 = electric eel / rime drake / elephant / wyvern
 KMONS:  2 = lindwurm / dire elephant / catoblepas / mountainshell w:3
-KITEM:  2 = * / |
+KITEM:  2 = eel talisman w:2 / * / |
 KFEAT:  q = W
 KFEAT:  1 = w
 KFEAT:  T = t
@@ -3702,9 +3690,10 @@ NAME:  nicolae_lair_liquid_snakes
 TAGS:  no_pool_fixup transparent
 KMONS: 1 = lava snake
 KMONS: 2 = electric eel
+ITEM:  eel talisman
 KFEAT: 1 = l
 KFEAT: 2 = w
-SUBST: L = ..D, M = ..E, - = xx_, D = 1 l:240, E = 2 w:240
+SUBST: d : d.., L = ..D, M = ..E, - = xx_, D = 1 l:240, E = 2 w:240
 CLEAR: _
 MAP
         -----------
@@ -3712,10 +3701,10 @@ MAP
 --------xxDDD1DDDxx-
 xxxxxxxxxDDLLLLLDDxx
 xDDDDxxxDDLL...LLDDx
-x.LLDDxDDLL.....LL.x
+x.LLDDxDDLLd....LL.x
 @..LLD1DLL.MMMMM...@
 @...LLLLL.MME2EMM..@
-x.MM.....MMEExEEMM.x
+x.MM....dMMEExEEMM.x
 xEEMM...MMEExxxEEEEx
 xxEEMMMMMEExxxxxxxxx
 -xxEEE2EEExx--------
@@ -3727,7 +3716,9 @@ NAME:   nicolae_lair_run_with_the_wolves
 TAGS:   ruin transparent
 KMONS:  1 = wolf spider
 KMONS:  2 = wolf band
+ITEM:   lupine talisman / lupine talisman randart w:1
 NSUBST: D = 1 / 12 / 2
+SUBST:  d = d..
 MAP
          xxxxx
       xxxxxxxxxxx
@@ -3737,7 +3728,7 @@ xxxxxxxx.......xxxxxxxx
 @..........D..........@
 ...........D...........
 xxxxxxxx.......xxxxxxxx
-   xxxxxxx...xxxxxxx
+   xxxxxxx.d.xxxxxxx
       xxxxxxxxxxx
          xxxxx
 ENDMAP
@@ -3867,7 +3858,7 @@ SHUFFLE: ABC, GU, HhIi5 / JjKk6
 NSUBST:  1 = 1:1 / *:., 4 = 3:4 / *:.
 NSUBST:  A = 3:4 / 1:23 / * = ....4
 NSUBST:  B = 2:2 / 1:1 / * = ....4
-NSUBST:  C = 1:1 / 1:2 / 1:3 / *:., $ = 1 = d $:90 / 1:R / *:$
+NSUBST:  C = 1:1 / 1:2 / 1:3 / *:., $ = 1 = d $:70 / 1:R / *:$
 SUBST:   Hi = -, h6 = $, I = p, JjK = x, k = c
 SUBST:   0 = 1, P = pp-, X = x., z = x'
 CLEAR:   '
@@ -3916,7 +3907,7 @@ KITEM:   *| = gold, gold, gold, any good_item
 KITEM:   ? = lupine talisman
 NSUBST:  2 = 3:22334 / *:3, 8 = 1:8 / *:.
 SHUFFLE: %'*" / %'"|
-SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP., ? = ? .:90
+SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP., ? = ? .:70
 SUBST:   H = 3:3 4:1, 0 = 2
 CLEAR:   `
 : lair_small_ending(_G)
@@ -3962,7 +3953,7 @@ MONS:    basilisk / komodo dragon, iguana
 MONS:    fire dragon / ice dragon, swamp dragon
 KMONS:   P = plant
 ITEM:    dragon-coil talisman
-SUBST:   - = wwWW....%Ptt233, W = WWW., ? = 12**, d = d .:90
+SUBST:   - = wwWW....%Ptt233, W = WWW., ? = 12**, d = d .:70
 SHUFFLE: 45
 : lair_small_ending(_G)
 MAP
@@ -4019,7 +4010,7 @@ KITEM:   ~ = any good_item
 SHUFFLE: 2d3e4f / 5g6h7i / 8j9k0l / AABBCC, $%*|
 NSUBST:  J = 2:. / 1 = x:9 .:1 / *:x, K = 2:. / 1 = x:9 .:1 / *:x
 NSUBST:  L = 2:. / 1 = x:9 .:1 / *:x
-SUBST:   X = xx..., P = PP., defghijkl = ., E = 44700C, ? = ? .:90
+SUBST:   X = xx..., P = PP., defghijkl = ., E = 44700C, ? = ? .:70
 : lair_small_ending(_G)
 MAP
      xxx  xx  xxxx   xxxx  xx  xxx
@@ -4063,7 +4054,7 @@ NSUBST:  1 = 6:1 / 4 = 11. / *:., 0 = 8:1 / 6 = 11. / 2:2 / *:.
 NSUBST:  9 = 1:256 / 2:3 / 2:4 / * = 33445
 NSUBST:  8 = 1:7 / 1:6 / 2 = 34 / * = 34 5:15 "
 NSUBST:  ' = 1:R / *:"
-NSUBST:  % = 10:% / 2 = %" / *:", $ = 1 = d $:90 / *:$, x = 8:c / * = x
+NSUBST:  % = 10:% / 2 = %" / *:", $ = 1 = d $:70 / *:$, x = 8:c / * = x
 KMASK:   %*'" = no_monster_gen
 FTILE:   `6f = floor_sprouting_stone w:15 / floor_lair
 FTILE:   '"7%* = floor_sprouting_squares w:15 / floor_lair
@@ -4124,20 +4115,19 @@ KMONS:   8 = raven
 # The anaconda's name is Kaa.
 KMONS:   R = spectral anaconda
 # A necromancy-themed loot item behind the obsidian statue.
-ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
-         / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
-         / demon blade ego:draining / skull of zonguldruk w:1 \
-         / great sword ego:draining / triple sword ego:draining \
-         / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
-         / eveningstar ego:draining / sceptre of torment w:1 \
-         / great mace ego:draining / majin-bo w:1 / lajatang ego:draining \
-         / broad axe ego:draining / battleaxe ego:draining \
-         / executioner's axe ego:draining / shadow dragon scales \
-         / cigotuvi's embrace w:1 / amulet of regeneration randart \
-         / ring of positive energy randart / staff of necromancy \
-         / book of necromancy / book of death / book of unlife \
-         / randbook owner:Kikubaaqudgha disc:necromancy \
-         / necronomicon w:1
+ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 / \
+         quickblade ego:pain w:5 / quickblade ego:draining w:5 / \
+         demon blade ego:draining / skull of zonguldruk w:1 / \
+         great sword ego:draining / triple sword ego:draining / \
+         demon whip ego:pain w:5 / demon whip ego:draining w:5 / \
+         eveningstar ego:draining / sceptre of torment w:1 / \
+         great mace ego:draining / majin-bo w:1 / lajatang ego:draining / \
+         broad axe ego:draining / battleaxe ego:draining / \
+         executioner's axe ego:draining / shadow dragon scales / \
+         cigotuvi's embrace w:1 / amulet of regeneration randart / \
+         ring of positive energy randart / staff of necromancy / \
+         book of necromancy / book of death / book of unlife / \
+         randbook owner:Kikubaaqudgha disc:necromancy / necronomicon w:1
 ITEM:    sanguine talisman
 KITEM:   & = |, earthy gem
 KFEAT:   R = deep_water
@@ -4213,7 +4203,7 @@ KFEAT:   z = stone_wall
 KFEAT:   L = endless_lava
 NSUBST:  1 = 3 = 11122 / * = 1h, 4 = 5:4 / 1:4H / *:H
 SHUFFLE: gb
-SUBST:   T = ttt., ? = ? `:90
+SUBST:   T = ttt., ? = ? `:70
 KPROP:   `? = bloody
 KMASK:   '"`456H = no_item_gen
 FTILE:   `+gG = floor_sprouting_stone
@@ -4274,7 +4264,7 @@ KFEAT:   123678p = W
 # and 7.1 vampire mosquitoes on average.
 NSUBST:  XW = 3:1 / 5:2 / 5:3 / 7 = 11WWW / 11 = 22WWW / 7 = 44WWW
 NSUBST:  W = 3 = 678 / *:W, 5 = 1:5 / *:4W
-NSUBST:  % = 1:d / 1:* / 1:R / 1 = e:20 %:180 *:45 |:45 / * = %%*|
+NSUBST:  % = 1:d / 1:* / 1:R / 1 = e:20 %:70 *:35 |:35 / * = %%*|
 SHUFFLE: AB, CD
 SUBST:   AB = x, CD = w
 SUBST:   X = x:80 W:15 .:10 p:10
@@ -4326,7 +4316,7 @@ KITEM:  ? = riddle talisman
 KFEAT:  C = cache_of_fruit
 SUBST:  T : T:20 .:1 t:1, T = tt..., E = t_, C = C..
 CLEAR:  _
-NSUBST: . = 5:1 / 3 = 10 / 3:3 / 3 = 3.. / *:., ? = 1 = ? .:90 / *:.
+NSUBST: . = 5:1 / 3 = 10 / 3:3 / 3 = 3.. / *:., ? = 1 = ? .:70 / *:.
 NSUBST: 2 = 8:2 / 18 = 2. / *:., 4 = 6:4 / 6 = 4. / *:.
 NSUBST: 5 = 1:5 / *:6, 9 = 2:6 / 2 = 56 / *:4
 NSUBST: * = 1:| / *:*
@@ -4376,7 +4366,7 @@ MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 KMONS:  P = withered plant
 KMONS:  f = petrified flower
-SUBST:  P = P., f = f., e = e -:90
+SUBST:  P = P., f = f., e = e -:70
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222
 COLOUR: d|*$4c-R = lightgrey
@@ -4485,7 +4475,7 @@ KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 / \
              trident randart w:8 / trident of the octopus king w:2 / \
              partisan good_item w:2 / demon trident w:5 / phial of floods / \
              ring of the octopus king w:2, / \
-             fortress talisman / nothing w:90, earthy gem
+             fortress talisman / nothing w:70, earthy gem
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
@@ -4579,7 +4569,7 @@ SHUFFLE: ';`, -~ / -~ / ~-
 NSUBST:  ' = 3:3 / 2 = 3. / 1:5 / 2 = 15. / 1:2. / *:.
 NSUBST:  ; = 3:5 / 3 = 15. / 1:2. / *:., ` = 3 = 5 / 3 = 15. / 1:2. / .
 NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:"
-NSUBST:  D = 1:R / 1 = ? %:90 / 1:|* / 1:* / 1 = *% / 3 = $% / *:$
+NSUBST:  D = 1:R / 1 = ? %:70 / 1:|* / 1:* / 1 = *% / 3 = $% / *:$
 NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
 KMASK:   "$%*|78 = no_trap_gen
 FTILE:   ="$%*|78G = floor_sprouting_squares
@@ -4638,7 +4628,7 @@ KMONS:   7 = spriggan ; rapier ego:distortion
 KITEM:   O = spriggan skeleton / wolf skeleton w:3 /\
              polar bear skeleton w:2 / black bear skeleton w:2
 KITEM:   R = earthy gem, %
-KITEM:   ? = maw talisman randart
+KITEM:   ? = maw talisman
 KFEAT:   u = demonic_tree
 KFEAT:   N = enter_abyss
 KFEAT:   _ = altar_lugonu
@@ -4648,7 +4638,7 @@ FTILE:   '%MN_u = floor_nerves_magenta
 NSUBST:  %d = 1:R / 2:| / 3:* / *:%
 NSUBST:  1 = 5:1 / 1.., 2 = 3:2 / 2:. / * = 2..
 NSUBST:  4 = 4 / *:3, ' = 2:6 / 2 = 56 / 3:O / 5 = 5543O. / *:.
-SUBST:   7M = 7O, ? = ? ':90
+SUBST:   7M = 7O, ? = ? ':70
 # 33% chance each for additional openings at the south or north east.
 SHUFFLE: yzD / JKL / JKL
 SUBST:   y = @, zD= ., JK = t, L = p

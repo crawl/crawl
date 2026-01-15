@@ -92,7 +92,7 @@
        "book of displacement", "book of decay", "book of duality" }
 
       elseif s == "E" then i = { "manual of evocations", "potion of enlightenment",
-       "eveningstar", "ring of evasion", "executioner's axe",
+       "eveningstar", "ring of evasion", "executioner's axe", "eel talisman",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
        "book of the earth", "scroll of enchant weapon", "manual of earth magic",
        "everburning encyclopedia" }
@@ -163,7 +163,7 @@
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "scale mail", "spear", "scarab talisman", "spider talisman",
        "serpent talisman", "sanguine talisman", "storm talisman",
-       "ring of see invisible", "ring of slaying",
+       "spore talisman", "ring of see invisible", "ring of slaying",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence", "shortbow",
        "manual of staves", "steam dragon scales", "manual of shapeshifting",

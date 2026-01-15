@@ -821,7 +821,7 @@ KITEM:    T = storm_bow pre_id, \
               devastator pre_id, \
               firestarter pre_id
 KITEM:    S = quill talisman, inkwell talisman, lupine talisman, \
-              blade talisman, serpent talisman, spider talisman, \
+              eel talisman, serpent talisman, spider talisman, \
               wellspring talisman, fortress talisman
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue

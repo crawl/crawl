@@ -2209,18 +2209,19 @@ ENDMAP
 NAME:   nicolae_snake_bzzzt
 KMONS:  1 = electric eel
 KMONS:  2 = shock serpent
+ITEM:   eel talisman
 KFEAT:  1 = w
-SUBST:  S = w', E = x'
+SUBST:  S = w', E = x', d = d'''
 NSUBST: w = 2=1 / 4=1www / w, ' = 2=2 / 4=2... / .
 MAP
    xxxxxxx
   xxwwwwwxx
  xxwwSSSwwxx
 xxwwSS'SSwwxx
-xwwSS'''SSSwx
+xwwSS''dSSSwx
 @..''EEE''Swx
 @..''EEE''Swx
-xwwSS'''SSSwx
+xwwSS''dSSSwx
 xxwwSS'SSwwxx
  xxwwSSSwwxx
   xxwwwwwxx

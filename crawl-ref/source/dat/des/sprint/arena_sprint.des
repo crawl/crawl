@@ -1120,13 +1120,13 @@ KFEAT:  L = armour shop count:18 greed:12 type:Basic suffix:Armour use_all ; \
             mundane troll leather armour | mundane crystal plate armour |\
             mundane plate armour | mundane barding | mundane cloak |\
             mundane buckler | mundane pair of gloves | mundane helmet
-KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:19 greed:7 use_all ; \
+KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:20 greed:7 use_all ; \
             quill talisman | inkwell talisman | rimehorn talisman |\
-            scarab talisman | medusa talisman | maw talisman | blade talisman |\
+            scarab talisman | medusa talisman | maw talisman | eel talisman |\
             serpent talisman | spider talisman | lupine talisman |\
             wellspring talisman | fortress talisman | sanguine talisman |\
             dragon-coil talisman | granite talisman | riddle talisman |\
-            hive talisman | storm talisman | talisman of death
+            hive talisman | blade talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:7 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of alchemy | staff of necromancy | staff of conjuration

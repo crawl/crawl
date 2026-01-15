@@ -4641,9 +4641,9 @@ ENDMAP
 
 # Modified for DCSS 0.8, as 16 good items on D:1 is too good. -dpeg
 NAME:  minivault_10
-DEPTH: D:6-, Depths, !Depths:$
-SUBST: * = %:30 * |:1
 TAGS:  extra transparent
+DEPTH: D:6-, Depths
+SUBST: * = %:30 * |:1
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -4678,16 +4678,22 @@ MAP
 ENDMAP
 
 # Water cross
-NAME: minivault_14
-TAGS: transparent allow_dup extra decor
+NAME:  minivault_14
+TAGS:  transparent allow_dup extra decor
+ITEM:  eel talisman
+: if you.absdepth() > 6 and not you.in_branch("Crypt") then
+SUBST: d : d...
+: else
+SUBST: d = .
+: end
 MAP
 ............
 .wwwww.wwww.
 .wwwww.wwww.
 .wwwww.wwww.
 .wwwww.wwww.
-.......wwww.
-.wwww.......
+.....d.wwww.
+.wwww.d.....
 .wwww.wwwww.
 .wwww.wwwww.
 .wwww.wwwww.

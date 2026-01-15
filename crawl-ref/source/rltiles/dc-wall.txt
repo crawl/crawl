@@ -1957,7 +1957,7 @@ brick_brown7
 
 %variation WALL_BRICK lightred
 %hue 30 0
-%lum 30 10
+%lum 30 0
 %lum 0 5
 %repeat WALL_BRICK WALL_BRICK_LIGHTRED
 %resetcol

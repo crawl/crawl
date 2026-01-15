@@ -1063,7 +1063,7 @@ WEIGHT: 7
 KMONS:  1 = common demon att:neutral w:60 / phantom att:neutral / \
             wraith att:neutral / bes kemwar att:neutral / \
             mummy att:neutral / wight att:neutral / vampire att:neutral
-NSUBST: ` = 4=f / 4=f` / 4=1 / 4=1` / `
+NSUBST: f = 4:f / 4 = f` / * :`, ` = 4:1 / 4 = 1` / `
 KMASK:  1n`f = opaque
 KPROP:  1n`f = no_tele_into
 COLOUR: 1`f  = green
@@ -1073,19 +1073,23 @@ FTILE:  1n`f = floor_grass
 MAP
 xxxxxxxxxxx
 xcccccccccx
-xc```````cx
-xc```````cx
-xc```````cx
-xc```nnnncx
-xc```n...cx
-xc```n._.cx
-xc```n.....
+xcf`f`f`fcx
+xc`f`f`f`cx
+xcf`f`f`fcx
+xc`f`nnnncx
+xcf`fn...cx
+xc`f`n._.cx
+xcf`fn.....
 xccccccc...
 xxxxxxxx..@
 ENDMAP
 
 NAME:   nicolae_elyvilon_white_marble_altar
 TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+TAGS:   vaults_room_empty
+: if you.in_branch("Vaults") then
+SUBST:  @ = .
+: end
 COLOUR: @c. = white
 FTILE:  @c.U_ = floor_w_marble
 : standard_overflow_setup(_G, { { "elyvilon",  "_" } }, true)
@@ -1321,11 +1325,13 @@ TAGS:   transparent decor
 DEPTH:  D:4-8
 KMONS:  1_ = sleepcap
 KMONS:  p = fungus
+ITEM:   spore talisman
 : if you.depth() >= 6 then
 NSUBST: ` = 1 / `
 : end
-SUBST:  p = ppp', ` = ```p
-FTILE:  '`_1p = floor_rough_brown
+NSUBST: ` = 1:d``` / * = ```p
+SUBST:  p = ppp'
+FTILE:  '`_1pd = floor_rough_brown
 : standard_overflow_setup(_G, { { "fedhas", "_" } }, true)
 MAP
 .......
@@ -1561,7 +1567,8 @@ x..ccc+cccz$$..$$zx
 ENDMAP
 
 NAME:   nicolae_gozag_stack_of_coins
-TAGS:   transparent decor
+TAGS:   transparent decor vaults_room_empty
+DEPTH:  D:3-, Vaults, Depths
 COLOUR: .v = yellow
 FTILE:  _.vG = floor_limestone
 TILE:   v = dngn_metal_wall_yellow
@@ -2476,6 +2483,8 @@ MONS:    ogre ; giant club
 : end
 MONS:    endoplasm
 SHUFFLE: 12_
+# This doesn't show up in tiles due to not defining any particular floor tiles
+# with colour variants. This is fine, since it'd be excessively visually busy.
 COLOUR:  x = darkgray
 COLOUR:  12' = random
 TILE:    x = wall_pebble_darkgray

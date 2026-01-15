@@ -1097,7 +1097,7 @@ dgn.delayed_decay_extra(_G, "O", "octopode corpse",
           "any misc / gold / any scroll / any potion / nothing w:180")
 
 -- Felid shapeshifter.
-kitem("P = felid skeleton, protean talisman randart / blade talisman / " ..
+kitem("P = felid skeleton, protean talisman randart / eel talisman / " ..
           "fortress talisman / lupine talisman / serpent talisman / " ..
           "spider talisman / wellspring talisman, " ..
           "any jewellery good_item w:60 / manual of shapeshifting / " ..

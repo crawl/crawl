@@ -280,7 +280,7 @@ NAME:  nicolae_slime_entry_field_trip
 TAGS:  transparent
 KMONS: F = fungus
 KMONS: JO_ = jelly / nothing w:5
-ITEM:  human skeleton
+KITEM: d = spore talisman / nothing w:90, human skeleton
 : slime_pits_entry(_G)
 SUBST: ' = G
 MAP
@@ -947,12 +947,12 @@ xxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxx
 xxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxx
 xxxxxxxx''..............."cc*|O|*n4nn*|P|*cc"...............'xxxxxxxxx
 xxxxxxxx'................"cc**|*nn..nn*|**cc"................'''xxxxxx
-xxxxxxxx'................"ccc**nonn4npn**|cc"..................xxxxxxx
+xxxxxxxx'................"ccc**nonn.npn**|cc"..................xxxxxxx
 xxxxxxx'................."ccccnnnn.3nnnncccc"..................'xxxxxx
 xxxxxxx'................."c.4.n.4.1..4.n.4.c"..................''xxxxx
 xxxxxxx'..................2.c.4.n..Z.n.4.c.2....................'xxxxx
 xxxxxx'.................."ccccnnnn3.nnnncccc"...................'xxxxx
-xxxxxx'.................."cc|**nqnn4nrn**ccc"...................'xxxxx
+xxxxxx'.................."cc|**nqnn.nrn**ccc"...................'xxxxx
 xxxxxx'.................."cc**|*nn..nn*|**cc"..................'xxxxxx
 xxxxx'..................."cc*|Q|*n4nn*|R|*cc"..................'xxxxxx
 xxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxx
@@ -993,7 +993,7 @@ ENDMAP
 NAME:    slime_pit_nicolae_amoeboid
 SHUFFLE: PQRS
 NSUBST:  k = 1:k / *:*, P = 1 / Z, QRS = 4=2 / 2=3 / 230, { = { / [ / ( / 4..
-SUBST:   QRS = 4, ' = x., - = c.
+SUBST:   QRS = 44., ' = x., - = c.
 : setup_slime_pit_ending(_G, true)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1190,8 +1190,8 @@ MAP
  c**cc............''xxxxxxxxx'''.3.''xxxxxxxxx''............cc**c
  cn**cc............'''''''''''2....2'''''''''''............cc**nc
 cc|n**n............'...'...'........'...'...'..............n**n|cc
-c$|on*n..............4...4...3..1.....4...4...4............n|nq|$c
-c|O|n|n............4...4...4.....Z..3...4...4..............n*n|Q|c
+c$|on*n..............4...4...3..1.........4...4............n|nq|$c
+c|O|n|n............4...4.........Z..3...4...4..............n*n|Q|c
 cc|n**n..............'...'...'........'...'...'............n**n|cc
  cn**cc............'''''''''''2....2'''''''''''............cc**nc
  c**cc............''xxxxxxxxx''.3.'''xxxxxxxxx''............cc**c

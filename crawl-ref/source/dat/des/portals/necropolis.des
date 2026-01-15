@@ -2519,7 +2519,7 @@ TAGS:   luniq_necropolis_ghost_forest
 : if dgn.persist.necropolis_difficulty == "shoals" then
 WEIGHT: 5
 : end
-KITEM:  O = potion of lignification pre_id
+KITEM:  O = potion of lignification pre_id, spore talisman / nothing w:90
 KMONS:  O = player ghost
 MONS:   wolf / black bear / polar bear
 MONS:   spriggan ; spear | trident, spriggan ; spear randart | trident randart
@@ -4241,10 +4241,10 @@ ITEM:    staff of cold pre_id / war axe ego:freezing pre_id w:15 / \
          rimehorn talisman w:5
 ITEM:    staff of air pre_id / dagger ego:electrocution pre_id w:15 / \
          book of air / ring of evasion pre_id w:15 / \
-         damaged storm dragon scales w:5 pre_id
+         damaged storm dragon scales w:5 pre_id / eel talisman w:5
 ITEM:    staff of earth pre_id / flail ego:heavy pre_id w:15 / \
          book of geomancy / ring of protection pre_id w:15 / \
-         damaged crystal plate armour w:5 pre_id
+         damaged crystal plate armour w:5 pre_id / medusa talisman w:5
 ITEM:    staff of fire randart pre_id w:5 / \
          scimitar ego:flaming good_item pre_id w:15 / \
          randbook disc:fire slevels:9 / fire dragon scales good_item / \
@@ -4255,10 +4255,12 @@ ITEM:    staff of cold randart pre_id w:5 / \
          rimehorn talisman randart w:5
 ITEM:    staff of air randart pre_id w:5 / \
          rapier ego:electrocution good_item pre_id w:15 / \
-         randbook disc:air slevels:9 / storm dragon scales good_item
+         randbook disc:air slevels:9 / storm dragon scales good_item / \
+         eel randart talisman w:5
 ITEM:    staff of earth randart pre_id w:5 / \
          morningstar ego:heavy good_item pre_id w:15 / \
-         randbook disc:earth slevels:9 / crystal plate armour good_item
+         randbook disc:earth slevels:9 / crystal plate armour good_item / \
+         medusa talisman randart w:5
 KITEM:   D = any magical staff randart artprops:Fire&&rF:1 pre_id / \
              double sword randart ego:flaming pre_id / \
              triple sword randart ego:flaming  pre_id/ \

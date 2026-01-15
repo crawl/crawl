@@ -4997,10 +4997,11 @@ DEPTH:  D:5-10
 ORIENT: float
 KMONS:  1 = electric eel
 KMONS:  C = plant
+ITEM:   eel talisman
 KFEAT:  1 = w
 KFEAT:  C = W
 KFEAT:  F = cache_of_fruit
-SUBST:  ; = .W
+SUBST:  ; = .W, d = d...
 NSUBST: - = 3:1 / w, _ = 3:1 / w, A = 3:% / 1:* / 1:F / 1:. / W
 NSUBST: B = 2:% / 1:* / 1:F / 2:. / W, ` = 7:C / 4:. / W
 SUBST:  F : F..
@@ -5010,13 +5011,13 @@ MAP
 xx;xxxxxxxx;xx
 xWxx..`BB_xx0x
 xWx...``B__x.x
-x;x....`BB_m.x
+x;x...d`BB_m.x
 x.x+..``B__x;x
 x..x..`BB_xxWxx
 xx;xxxxxxxxxxWxx
  xWWxx..`AA-xxWx
  xxWx...``A--x;x
-  x;x....`AA-m.x
+  x;x...d`AA-m.x
   x.x+..``A--x.x
   x..x..`AA-xx+x
   xx9xxxxxxxx.@.
@@ -5815,7 +5816,7 @@ DEPTH:  D:3-9
 ORIENT: float
 KMONS:  p = plant
 KMONS:  1 = electric eel
-ITEM:   wand of flame pre_id
+ITEM:   wand of flame pre_id, eel talisman / $ w:30
 KFEAT:  1p = W
 NSUBST: 1 = 2:1 / 1WW
 SUBST:  - : D., D=WWWWp, t = ttTU
@@ -5827,9 +5828,9 @@ MAP
  .................
  .nnnnnnnnnnnnnnn.
  .nGpnWWW1W1WnpGn.
-..n..n..-----n..n..
-@PnQd+..-t---+*RnS@
-..n..n..-----n..n..
+..n..n..-----n*.n..
+@PnQd+..-t---+.RnS@
+..n..n..-----ne.n..
  .nGpnWWW1W1WnpGn.
  .nnnnnnnnnnnnnnn.
  .................

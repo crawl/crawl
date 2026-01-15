@@ -666,14 +666,15 @@ ENDMAP
 # The Lair of the Golden Dragons (by Mu.)
 #
 NAME:   gold_lair_mu
-ORIENT: southeast
 TAGS:   no_monster_gen no_descent
+ORIENT: southeast
 DEPTH:  Depths, !Depths:$
 MONS:   golden dragon, any draconian
 MONS:   rime drake / swamp drake / lindwurm
 KMONS:  D = wind drake w:5 / death drake / lindwurm w:5 / wyrmhole w:5
 KMONS:  f = fungus
 KMONS:  p = plant
+ITEM:   dragon-coil talisman / $ w:20
 KITEM:  D = $
 KFEAT:  D = >
 SUBST:  $ = $|
@@ -707,7 +708,7 @@ MAP
 ..ffwwxxx....xxx..cc3.llll$$$$$cx
 .ffffwxxxx..xxx2.xcc..lll$$$$$$cx
 ..8ffwwxxx...xx>xxcc..ll$$$$$$1cx
-.3.fffwwxxx..xxxxxccc.ll$$$$$$ccx
+.3.fffwwxxx..xxxxxccc.ll$$$$$dccx
 ....fffmwwwxxxxxxxcccGllD$$$1cccx
 .....fffmmwwwwwwwwccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -746,16 +747,17 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_twisted_water
+TAGS:   no_descent
 DEPTH:  D:9-
 ORIENT: north
-TAGS:   no_descent
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant
-KITEM:  ? = wellspring talisman
-SUBST:  W = wW
-NSUBST: * = 1:?* / *:*
+KITEM:  ? = rimehorn talisman randart / eel talisman
+KITEM:  ! = wellspring talisman
+SUBST:  W = wW, ? = ?-
+NSUBST: * = 1:!* / *:*
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
-KPROP:  wW-*|?123 = no_tele_into
+KPROP:  wW-*|?!123 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -766,7 +768,7 @@ xxxxxxxxxxxxxwwwxxxWWxxxWwxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxwwxwwwwxx*xxwxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxwwwwwxxxxxwwxxxxxxxxxxxwwW-xxxxx
 xxxxxxxxxxxxx--xxwwwwwxxxwwwxxxxxxxxwwwwwWWWwxxx
-xxxxxxxxxxx-----Wwwxwwwwwwwwxxxxxxwwwwwwwwwwwwxx
+xxxxxxxxxxx?----Wwwxwwwwwwwwxxxxxxwwwwwwwwwwwwxx
 xxxxxxxxxxx-----xwwxwwwwwxxxxxxxxwwwwwwwwwwwwwxx
 xxxxxxxxxxxx-3-xxxwxxwwxxxxxxxxxxwwwwwwwwwwwwwwx
 xxxxxxxxxxxxWWWxxxwxxxxxxxxxxxxxwwwwwwxxxwwwwwwx
@@ -1059,7 +1061,10 @@ DEPTH:   D:11-, Depths
 ORIENT:  southeast
 ITEM:    any armour, any armour good_item
 ITEM:    any weapon, any weapon good_item
-ITEM:    boomerang, javelin w:3, throwing net w:3, gold
+ITEM:    boomerang, javelin w:3, throwing net w:3
+ITEM:    morningstar ego:concussion / broad axe ego:sundering / \
+         partisan ego:entangling / lajatang ego:rebuke / \
+         rapier ego:devious / scimitar ego:valour
 : if you.in_branch("D") then
 MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
 MONS:    orc warrior w:20 / centaur warrior
@@ -2706,9 +2711,10 @@ KITEM:   & = swamp dragon scales randart / swamp dragon scales good_item / \
              scroll of poison q:4 pre_id / \
              potion of lignification q:4 pre_id / \
              ring of poison resistance randart / ring of flight randart
+KITEM:   ; = spore talisman randart / eel talisman
 KFEAT:   ~ = w
 NSUBST:  1 = 1:. / 3 = 1. / *:1, 2 = 2 = 2. / *:2
-NSUBST:  3 = 2 = 3. / *:3, | = 1:&| / *:*
+NSUBST:  3 = 2 = 3. / *:3, | = 1:&| / *:*, $ = 1:;$$ / *:$
 MARKER:  ~ = lua:fog_machine { cloud_type = "thin mist", pow_min = 20, \
                                pow_max = 30, delay = 50, walk_dist = 3, \
                                size_min = 1, size_max = 1 }
