@@ -2523,7 +2523,7 @@ static void _handle_regen_item_equip(const item_def& item)
     }
 #endif
     if (regen_mp && !regen_hp && !player_regenerates_mp()
-        && !item.is_type(OBJ_JEWELLERY, AMU_ALCHEMY))
+        && !item.is_type(OBJ_JEWELLERY, AMU_CHEMISTRY))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
@@ -2651,7 +2651,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         _change_wildshape_status();
         break;
 
-    case AMU_ALCHEMY:
+    case AMU_CHEMISTRY:
         mpr("You feel a deeper understanding of alchemy.");
         break;
 

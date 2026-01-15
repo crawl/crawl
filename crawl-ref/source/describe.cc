@@ -292,7 +292,7 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_FAITH:
     case AMU_REFLECTION:
     case AMU_WILDSHAPE:
-    case AMU_ALCHEMY:
+    case AMU_CHEMISTRY:
     case AMU_DISSIPATION:
         return jewellery_effect_name(subtype, true);
     }
@@ -711,9 +711,9 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It reflects blocked missile attacks.";
     case AMU_WILDSHAPE:
         return "It improves your skill with shapeshifting (+5).";
-    case AMU_ALCHEMY:
-        return "It enhances your alchemy spells and restores some MP when you "
-               "drink potions.";
+    case AMU_CHEMISTRY:
+        return "It restores some MP whenever you drink a potion and also enhances "
+               "your alchemy spells.";
     case AMU_DISSIPATION:
         return "It reduces the duration of hostile enchantments and decays "
                "magical contamination more quickly.";

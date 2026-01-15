@@ -627,7 +627,7 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_ACROBAT:
                 case AMU_REFLECTION:
                 case AMU_WILDSHAPE:
-                case AMU_ALCHEMY:
+                case AMU_CHEMISTRY:
                 case AMU_DISSIPATION:
                     valued += 300;
                     break;

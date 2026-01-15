@@ -991,11 +991,11 @@ bool quaff_potion(item_def &potion, bool force)
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
     if (get_potion_effect(ptyp)->quaff(was_known && !force))
     {
-        if (you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true)
+        if (you.wearing(OBJ_JEWELLERY, AMU_CHEMISTRY, false, true)
             && you.magic_points < you.max_magic_points)
         {
             mpr("You extract magical energy from the potion.");
-            inc_mp(random_range(3, 6));
+            inc_mp(random_range(5, 9));
         }
 
         if (you.has_mutation(MUT_POTION_FUNGUS))

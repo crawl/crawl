@@ -1015,7 +1015,7 @@ trove_offense(_G, trove_weap_brand(_G, "spectral"),
                   "alchemy magic")
 trove_defense(_G, "swamp dragon scales good_item / swamp dragon scales randart",
                    trove_ego_gen_armour(_G, "poison_resistance", "rPois"),
-                   trove_jewel_type(_G, "rPois") .. " / amulet of alchemy randart",
+                   trove_jewel_type(_G, "rPois") .. " / amulet of chemistry randart",
                    trove_cons(_G, scroll, {"lignification q:3 w:5"},
                               "any beam wand charges:8",
                               "wand of roots charges:8 w:5", box))

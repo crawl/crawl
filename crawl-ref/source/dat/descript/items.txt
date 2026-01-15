@@ -6,12 +6,12 @@ much protection as the armour made from the scales of some larger dragons, it is
 somewhat lighter and less encumbering. It is also remarkably smooth, letting
 corrosive slime flow off it like water.
 %%%%
-amulet of alchemy
+amulet of chemistry
 
-An amulet that enhances the power of the wearer's alchemy spells and also allows
-them to extract small amounts of magical energy from any potion they drink. The
-latter effect only functions once the amulet has attuned itself to the wearer's
-body with full reserves of magic.
+An amulet which allows the wearer to extract small amounts of magical energy
+from any potion they drink and also enhances the power of their alchemy spells.
+The magic restoration effect requires the amulet to attune itself to the
+wearer's body while their reserves of magic are full.
 %%%%
 amulet of dissipation
 

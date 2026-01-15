@@ -826,7 +826,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_REFLECTION:             return "reflection";
         case AMU_REGENERATION:           return "regeneration";
         case AMU_WILDSHAPE:              return "wildshape";
-        case AMU_ALCHEMY:                return "alchemy";
+        case AMU_CHEMISTRY:              return "chemistry";
         case AMU_DISSIPATION:            return "dissipation";
         case AMU_NOTHING:                return "nothing";
         default: return "buggy jewellery";
@@ -881,7 +881,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_REFLECTION:             return "Reflect";
         case AMU_REGENERATION:           return "Regen";
         case AMU_WILDSHAPE:              return "Wildshape";
-        case AMU_ALCHEMY:                return "Alch+";
+        case AMU_CHEMISTRY:              return "Chemistry";
         case AMU_DISSIPATION:            return "Dissipate";
         case AMU_NOTHING:                return "";
         default: return "buggy";
@@ -3483,7 +3483,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.has_mutation(MUT_NO_FORMS)
                     || species_apt(SK_SHAPESHIFTING) == UNUSABLE_SKILL;
 
-        case AMU_ALCHEMY:
+        case AMU_CHEMISTRY:
             return you.has_mutation(MUT_NO_ALCHEMY_MAGIC)
                    && !you.can_drink(temp);
 

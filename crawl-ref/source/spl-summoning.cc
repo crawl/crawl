@@ -4319,12 +4319,12 @@ static void _do_player_potion()
 
     if (you.magic_points < you.max_magic_points)
     {
-        const int amu = you.wearing(OBJ_JEWELLERY, AMU_ALCHEMY, false, true);
+        const int amu = you.wearing(OBJ_JEWELLERY, AMU_CHEMISTRY, false, true);
         if (amu)
         {
             mprf("You extract %smagical energy from the potion.",
                  amu > 1 ? "even more " : "");
-            inc_mp(random_range(3, 6) * amu);
+            inc_mp(random_range(5, 9) * amu);
         }
     }
 

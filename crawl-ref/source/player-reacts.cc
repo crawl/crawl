@@ -1136,7 +1136,7 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
 
     bool gained_regen = false;
     bool gained_mana_regen = false;
-    bool gained_alchemy = false;
+    bool gained_chemistry = false;
 
     for (player_equip_entry& entry : you.equipment.items)
     {
@@ -1152,8 +1152,8 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
             // Track which properties we should notify the player they have gained.
             if (!gained_regen && is_regen_item(arm))
                 gained_regen = true;
-            if (arm.is_type(OBJ_JEWELLERY, AMU_ALCHEMY))
-                gained_alchemy = true;
+            if (arm.is_type(OBJ_JEWELLERY, AMU_CHEMISTRY))
+                gained_chemistry = true;
             else if (!gained_mana_regen && is_mana_regen_item(arm))
                 gained_mana_regen = true;
 
@@ -1178,7 +1178,7 @@ void maybe_attune_regen_items(bool attune_regen, bool attune_mana_regen)
                 gained_regen && gained_mana_regen ? " health and magic"
                 : (gained_regen ? "" : " magic")));
     }
-    if (gained_alchemy)
+    if (gained_chemistry)
         msgs.emplace_back("extract magic from the potions you drink");
 
     plural = plural || eq_list.size() > 1;
