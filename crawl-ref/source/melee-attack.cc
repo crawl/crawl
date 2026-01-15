@@ -657,14 +657,14 @@ void melee_attack::handle_concussion_brand()
     {
         did_move = true;
         if (monster* mon = defender->as_monster())
-            mon->stagger(random2(min(10, attacker->attack_delay().roll())) * 3 / 4);
+            mon->stagger(1 + random2(min(10, attacker->attack_delay().roll())) * 3 / 4);
     }
     else if (damage_done > 0)
     {
         const coord_def back = defender->pos() + (defender->pos() - attacker->pos()).sgn();
         if (feat_is_solid(env.grid(back)))
         {
-            special_damage = random2(damage_done) / 2 + 1;
+            special_damage = random2(damage_done) * 3 / 4 + 1;
             if (needs_message)
             {
                 mprf("%s crush%s %s against the %s%s",

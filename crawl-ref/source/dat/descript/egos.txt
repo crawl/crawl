@@ -15,7 +15,7 @@ Each hit from it has a different, random effect.
 concussion (concuss) weapon ego
 
 It pushes those it hits backwards, briefly stunning them in the process. If it
-pushes them into a solid feature, they will instead take an additional one-quarter
+pushes them into a solid feature, they will instead take an additional one-third
 of any damage that pierces their armour.
 %%%%
 distortion (distort) weapon ego

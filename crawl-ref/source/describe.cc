@@ -5164,7 +5164,7 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
         case SPWPN_FREEZING:
         case SPWPN_DRAINING:
         case SPWPN_CONCUSSION:
-            brand_dam = dam / 2;
+            brand_dam = dam * 3 / 4;
             break;
         case SPWPN_ELECTROCUTION:
             brand_dam = 20;
