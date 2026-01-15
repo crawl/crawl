@@ -777,6 +777,11 @@ static const duration_def duration_data[] =
       {{ "You feel less devious.", [](){
           you.redraw_evasion = true;
       }}}},
+    { DUR_ENGORGED,
+      LIGHTBLUE, "Engorged",
+      "engorged", "engorged",
+      "Your maw is digesting a delicious meal.", D_NO_FLAGS,
+      {{ "You finish digesting your meal." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

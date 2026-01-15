@@ -19,13 +19,15 @@
 #include "stringutil.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monster& mon, bool axe)
+void player::add_beholder(monster& mon, bool forced, int dur)
 {
     if (!duration[DUR_MESMERISED])
     {
-        set_duration(DUR_MESMERISED, random_range(7, 15), 15);
+        if (!dur)
+            dur = random_range(7, 15);
+        set_duration(DUR_MESMERISED, dur, 15);
         beholders.push_back(mon.mid);
-        if (!axe)
+        if (!forced)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
                              mon.name(DESC_THE).c_str());
@@ -33,10 +35,17 @@ void player::add_beholder(const monster& mon, bool axe)
     }
     else
     {
-        increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
+        if (!dur)
+            dur = random_range(5, 8);
+        increase_duration(DUR_MESMERISED, dur, 15);
         if (!beheld_by(mon))
             beholders.push_back(mon.mid);
     }
+
+    // If forced externally onto a creature, make sure it doesn't break if they
+    // become disabled.
+    if (forced)
+        mon.props[FORCED_MESMERISE_KEY] = true;
 }
 
 // Whether player is mesmerised.
@@ -80,12 +89,13 @@ monster* player::get_any_beholder() const
 }
 
 // Removes a monster from the list of beholders if present.
-void player::remove_beholder(const monster& mon)
+void player::remove_beholder(monster& mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon.mid)
         {
             beholders.erase(beholders.begin() + i);
+            mon.props.erase(FORCED_MESMERISE_KEY);
             _removed_beholder();
             return;
         }
@@ -143,11 +153,12 @@ void player::update_beholders()
     bool removed = false;
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
-        const monster* mon = monster_by_mid(beholders[i]);
+        monster* mon = monster_by_mid(beholders[i]);
         if (!possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
             removed = true;
+            mon->props.erase(FORCED_MESMERISE_KEY);
 
             // If that was the last one, clear the duration before
             // printing any subsequent messages, or a --more-- can
@@ -161,7 +172,7 @@ void player::update_beholders()
 }
 
 // Update a single beholder.
-void player::update_beholder(const monster* mon)
+void player::update_beholder(monster* mon)
 {
     if (possible_beholder(mon))
         return;
@@ -169,6 +180,7 @@ void player::update_beholder(const monster* mon)
         if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
+            mon->props.erase(FORCED_MESMERISE_KEY);
             // Do this dance to clear the duration before printing messages
             // (#8844), but still print all messages in the right order.
             _removed_beholder(true);
@@ -206,5 +218,5 @@ bool player::possible_beholder(const monster* mon) const
              && !mon->asleep() && !mon->cannot_act()
              && !mon->berserk_or_frenzied()
              && !mons_is_fleeing(*mon))
-            || you.unrand_equipped(UNRAND_DEMON_AXE));
+            || mon->props.exists(FORCED_MESMERISE_KEY));
 }

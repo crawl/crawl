@@ -373,4 +373,5 @@ void sphinx_check_riddle();
 void sun_scarab_spawn_ember(bool first_time);
 monster* get_solar_ember();
 
-bool maw_growl_check(const monster* mon);
+bool maw_considers_appetising(const monster& mon);
+bool maw_hunger_check(monster* mon);

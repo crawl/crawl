@@ -1122,21 +1122,9 @@ static void _devour(monster &victim)
         orig = (monster_type) victim.props[ORIGINAL_TYPE_KEY].get_int();
     maybe_drop_monster_organ(victim.type, orig, victim.pos());
 
-    // Healing.
-    if (you.duration[DUR_DEATHS_DOOR])
-        return;
+    you.duration[DUR_ENGORGED] += 10 + random_range(victim.get_experience_level() * 10 / 3,
+                                                    victim.get_experience_level() * 20 / 3);
 
-    const int xl = victim.get_experience_level();
-    const int xl_heal = xl * 3 / 4 + random2(xl);
-    const int scale = 100;
-    const int form_lvl = get_form()->get_level(scale);
-    const int form_heal = div_rand_round(form_lvl, scale) + random2(15); // max 28
-    const int healing = 1 + min(xl_heal, form_heal);
-    dprf("healing for %d", healing);
-
-    you.heal(healing);
-    calc_hp();
-    canned_msg(MSG_GAIN_HEALTH);
 }
 
 
@@ -1157,9 +1145,7 @@ static void _consider_devouring(monster &defender)
     }
 
     // can't eat enemies that leave no corpses...
-    if (!mons_class_can_leave_corpse(mons_species(defender.type))
-        || defender.is_summoned()
-        || defender.flags & MF_HARD_RESET
+    if (!maw_considers_appetising(defender)
         // the curse of midas...
         || have_passive(passive_t::goldify_corpses))
     {
@@ -1180,8 +1166,6 @@ static void _consider_devouring(monster &defender)
         return;
     }
 
-    if (one_chance_in(3))
-        return;
 
     // chow down.
     _devour(defender);
@@ -2334,7 +2318,7 @@ class AuxMaw: public AuxAttackType
 {
 public:
     AuxMaw()
-    : AuxAttackType(0, 75, "bite") { };
+    : AuxAttackType(0, 100, "chomp") { };
     int get_damage(bool random) const override {
         return get_form()->get_aux_damage(random);
     };
@@ -4990,6 +4974,15 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 
     if (!x_chance_in_y(aux->get_chance(), 100))
         return false;
+
+    // Maw bites are aut-normalized (so that one will happen every 15 aut on average)
+    if (atk == UNAT_MAW)
+    {
+        if (is_followup)
+            return false;
+        if (!x_chance_in_y(you.attack_delay().roll(), 15))
+            return false;
+    }
 
     if (wu_jian_attack != WU_JIAN_ATTACK_NONE
         && !x_chance_in_y(1, wu_jian_number_of_targets))

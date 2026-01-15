@@ -576,16 +576,6 @@ void monster_encounter_message(monster& mon)
         _handle_encounter_messages({&mon});
 }
 
-static void _maybe_growl_at(const monster* mons)
-{
-    // Don't repeatedly growl in place on the same turn.
-    if (you.shouted_pos == you.pos())
-        return;
-
-    if (you.form == transformation::maw && maw_growl_check(mons))
-        you.shouted_pos = you.pos();
-}
-
 void seen_monster(monster* mons, bool do_encounter_message)
 {
     if (!(mons->flags & MF_WAS_IN_VIEW))
@@ -701,5 +691,6 @@ void seen_monster(monster* mons, bool do_encounter_message)
 #endif
     }
 
-    _maybe_growl_at(mons);
+    if (you.form == transformation::maw)
+        maw_hunger_check(mons);
 }

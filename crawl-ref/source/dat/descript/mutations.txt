@@ -1138,6 +1138,23 @@ surging through will contaminate them. Upon landing the third strike in a row,
 this contamination will grow so acute that it will twist their bodily form,
 inflicting significant AC-ignoring damage and malmutating them.
 %%%%
+maw attack mutation
+
+Your maw sometimes bites enemies in melee, at a rate independant of your own
+attack speed (once per 15 aut, on average). Its base damage is directly
+increased by 3/4rd of your strength.
+%%%%
+devouring maw mutation
+
+When you kill an edible enemy in melee (anything which drops a corpse), your
+maw devours it, greatly increasing your regeneration for a short while. More
+powerful enemies provide a longer duration of this effect.
+%%%%
+growling stomach mutation
+
+Your maw's appetite is insatiable. Whenever you first encounter an edible
+monster, there is a chance to become mesmerised by it and let out a loud growl.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

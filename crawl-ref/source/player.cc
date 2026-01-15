@@ -1208,6 +1208,9 @@ static int _player_bonus_regen()
     if (you.duration[DUR_POWERED_BY_DEATH])
         rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
+    if (you.duration[DUR_ENGORGED])
+        rr += get_form()->get_effect_size();
+
     // Rampage healing grants a variable regen boost while active.
     if (you.get_mutation_level(MUT_ROLLPAGE) > 1
         && you.duration[DUR_RAMPAGE_HEAL])

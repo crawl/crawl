@@ -7498,7 +7498,10 @@ static string _describe_talisman_form(transformation form_type)
                           form_type == transformation::dragon && !species::is_draconian(you.species) ? " (x2)" : "");
 
     if (form_type == transformation::maw)
+    {
         _maybe_populate_form_table(items, bind(&Form::get_aux_damage, form, false, placeholders::_1), "Bite Dmg", skill, 0, false, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Devour Regen", skill, 0, false, true, 100, 2);
+    }
     if (form_type == transformation::hive)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "# of Bees", skill, 0, false, false, 10, 1);
     if (form_type == transformation::sphinx)
@@ -7591,7 +7594,7 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("EV", "-20%", RED);
     }
     else if (form_type == transformation::maw)
-        pr.AddCell("Bite chance", "75%");
+        pr.AddCell("Bite speed", "15 aut");
     else if (form_type == transformation::death)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)

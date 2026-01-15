@@ -63,6 +63,7 @@
 #define WATERY_GRAVE_XP_KEY "watery_grave_xp"
 #define WEREFURY_KEY "werefury_bonus"
 #define DEVIOUS_KEY "devious_stacks"
+#define FORCED_MESMERISE_KEY "forced_mesmerise"
 
 constexpr int ENKINDLE_CHARGE_COST = 40;
 #define ENKINDLE_CHARGES_KEY "enkindle_charges"
@@ -601,15 +602,15 @@ public:
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster& mon, bool axe = false);
+    void add_beholder(monster& mon, bool forced = false, int dur = 0);
     bool beheld() const;
     bool beheld_by(const monster& mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
-    void remove_beholder(const monster& mon);
+    void remove_beholder(monster& mon);
     void clear_beholders();
     void update_beholders();
-    void update_beholder(const monster* mon);
+    void update_beholder(monster* mon);
     bool possible_beholder(const monster* mon) const;
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.

@@ -1028,7 +1028,15 @@ public:
 
     int get_aux_damage(bool random, int skill) const override
     {
-        return scaling_value(FormScaling().Base(10).Scaling(8), skill, random);
+        return scaling_value(FormScaling().Base(8).Scaling(6), skill, random)
+                    + (random ? div_rand_round(you.strength() * 3, 4)
+                              : you.strength() * 3 / 4);
+    }
+
+    // Engorged regeneration rate
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(220).Scaling(280), skill));
     }
 };
 
@@ -2103,6 +2111,8 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     }
     else if (old_form == transformation::werewolf)
         you.duration[DUR_WEREFURY] = 0;
+    else if (old_form == transformation::maw)
+        you.duration[DUR_ENGORGED] = 0;
 
     // If the player is no longer be eligible to equip some of the items that
     // they were wearing (possibly due to losing slots from their default form
@@ -2415,16 +2425,34 @@ monster* get_solar_ember()
     return monster_by_mid(you.props[SOLAR_EMBER_MID_KEY].get_int());
 }
 
-bool maw_growl_check(const monster* mon)
+bool maw_considers_appetising(const monster& mon)
 {
-    // Only growl at things that look edible. (Alas, they still look edible for
-    // Gozag worshippers, even if you are doomed to suffer the curse of Midas.)
-    if (mons_class_can_leave_corpse(mons_species(mon->type))
-        && !mon->is_summoned()
-        && !(mon->flags & MF_HARD_RESET)
-        && one_chance_in(7))
+    return mons_class_can_leave_corpse(mons_species(mon.type))
+           && !mon.is_summoned()
+           && !(mon.flags & MF_HARD_RESET);
+}
+
+bool maw_hunger_check(monster* mon)
+{
+    if (you.beheld())
+        return false;
+
+    // Only become mesmerised by things that look edible. (Alas, they still look
+    // edible for Gozag worshippers, even if you are doomed to suffer the curse
+    // of Midas.)
+    if (maw_considers_appetising(*mon) && one_chance_in(6))
     {
-        mprf("Your maw growls hungrily at %s.", mon->name(DESC_THE).c_str());
+        if (!you.clarity())
+        {
+            mprf("Your maw growls hungrily at the sight of %s.", mon->name(DESC_THE).c_str());
+            you.add_beholder(*mon, true, random_range(6, 10));
+        }
+        else
+        {
+            mprf("Your maw growls hungrily at the sight of %s, but you resist your urges.",
+                 mon->name(DESC_THE).c_str());
+        }
+
         noisy(you.shout_volume(), you.pos(), MID_PLAYER);
         return true;
     }

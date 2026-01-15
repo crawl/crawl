@@ -1283,3 +1283,8 @@ recover quickly.
 
 You are unable to cast Hellfire Mortar again until the effect of your last cast
 ends.
+%%%%
+Engorged status
+
+Your maw has just consumed a delicious meal, greatly increasing your
+regeneration until it finishes digesting it.
