@@ -846,6 +846,8 @@ static colour_t _feat_colour(coord_def gc)
     case DNGN_FLOOR:
         return env.floor_colour;
     case DNGN_ROCK_WALL:
+        if (player_in_branch(BRANCH_BAILEY))
+            return COLOUR_UNDEF;
         return env.rock_colour;
     case DNGN_STONE_WALL:
         switch (you.where_are_you)
