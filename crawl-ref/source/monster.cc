@@ -5589,7 +5589,8 @@ void monster::finalise_movement(const actor* to_blame)
         }
     }
     // If tentacle monsters get moved by any means other than themselves, kill and cleanup.
-    else if (!(last_move_flags & MV_DELIBERATE) || (last_move_flags & MV_TRANSLOCATION))
+    else if (last_move_pos != pos()
+             && (!(last_move_flags & MV_DELIBERATE) || (last_move_flags & MV_TRANSLOCATION)))
     {
         if (mons_is_tentacle_head(mons_base_type(*this)))
             destroy_tentacles(this); // If the main body teleports get rid of the tentacles
