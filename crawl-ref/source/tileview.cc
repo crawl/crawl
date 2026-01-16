@@ -466,13 +466,6 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     return idx;
 }
 
-static bool _is_torch(tileidx_t basetile)
-{
-    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
-           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
-}
-
 static tileidx_t _pick_dngn_tile_multi(
                                 const vector<pair<tileidx_t, int>>& candidates,
                                 int rand)
@@ -489,7 +482,7 @@ static tileidx_t _pick_dngn_tile_multi(
         if (rand1 < candidate.second)
         {
             // XXX: this should be for any animated tile
-            if (_is_torch(candidate.first))
+            if (is_torch_tile(candidate.first))
                 return candidate.first;
             return pick_dngn_tile(candidate.first, rand2, -1);
         }
@@ -1135,7 +1128,7 @@ static bool _tile_has_cycling_misc_animation(tileidx_t tile)
            || tile == TILE_DNGN_ALTAR_JIYVA
            || tile == TILE_DNGN_TRAP_HARLEQUIN
            || tile >= TILE_ARCANE_CONDUIT && tile < TILE_DNGN_SARCOPHAGUS_SEALED
-           || _is_torch(tile);
+           || is_torch_tile(tile);
 }
 
 static bool _tile_has_random_misc_animation(tileidx_t tile)
@@ -1183,7 +1176,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 static bool _suppress_blood(tileidx_t bg_idx)
 {
     tileidx_t basetile = tile_dngn_basetile(bg_idx);
-    return _is_torch(basetile);
+    return is_torch_tile(basetile);
 }
 
 // If the top tile is a corpse, don't draw blood underneath.

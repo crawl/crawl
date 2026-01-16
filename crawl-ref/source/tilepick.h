@@ -24,6 +24,7 @@ struct monster_info;
 struct shop_struct;
 struct show_type;
 
+bool is_torch_tile(tileidx_t tile);
 bool is_door_tile(tileidx_t tile);
 
 TextureID get_tile_texture(tileidx_t idx);

@@ -597,6 +597,13 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     }
 }
 
+bool is_torch_tile(tileidx_t tile)
+{
+    return tile == TILE_WALL_BRICK_DARK_2_TORCH
+           || tile == TILE_WALL_BRICK_DARK_4_TORCH
+           || tile == TILE_WALL_BRICK_DARK_6_TORCH;
+}
+
 bool is_door_tile(tileidx_t tile)
 {
     return tile >= TILE_DNGN_CLOSED_DOOR &&
@@ -938,7 +945,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             tile = TILE_DNGN_TRAP_WEB_N - 1 + solid;
     }
     else
-        needs_tile_picking = true;
+    {
+        dungeon_feature_type feat = env.map_knowledge(gc).feat();
+        needs_tile_picking = (feat != DNGN_FLOOR && feat != DNGN_ROCK_WALL)
+                             || is_torch_tile(tile);
+    }
 
     tileidx_t base = tile_dngn_basetile(tile);
     tileidx_t variety = tile - base;
