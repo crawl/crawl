@@ -1238,7 +1238,13 @@ static int _item_training_target(const item_def &item)
     if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
     if (item.base_type == OBJ_TALISMANS)
-        return get_form(form_for_talisman(item))->min_skill * 10;
+    {
+        // Train to minimum level if below it, else maximum level.
+        int current_skill = get_form(form_for_talisman(item))->get_level(10);
+        int min_skill = get_form(form_for_talisman(item))->min_skill * 10;
+        int max_skill = get_form(form_for_talisman(item))->max_skill * 10;
+        return current_skill < min_skill ? min_skill : max_skill;
+    }
     if (item.base_type == OBJ_BAUBLES)
         return get_form(transformation::flux)->min_skill * 10;
     return 0;
