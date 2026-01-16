@@ -623,6 +623,13 @@ static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
     if (atks.size() > 1)
         shuffle_array(atks);
 
+    // XXX: We must save this before the ranged attack itself is fired, since
+    //      consuming the last of a stack of missiles will erase all information
+    //      about what type of missile was just thrown.
+    const missile_type missile = atks[0].atk.weapon->base_type == OBJ_MISSILES
+                                    ? static_cast<missile_type>(atks[0].atk.weapon->sub_type)
+                                    : NUM_MISSILES;
+
     bool shot_at_enemy = false;
     for (ranged_attack_beam& atk : atks)
     {
@@ -633,13 +640,8 @@ static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
 
     if (shot_at_enemy)
     {
-        const item_def* missile = atks[0].atk.weapon->base_type == OBJ_MISSILES
-                                    ? atks[0].atk.weapon
-                                    : nullptr;
-
         if (will_have_passive(passive_t::shadow_attacks)
-            && (!missile || (missile->sub_type != MI_DART
-                             && missile->sub_type != MI_THROWING_NET)))
+            && (missile != MI_DART && missile != MI_THROWING_NET))
         {
             dithmenos_shadow_shoot(atks[0].beam.target, missile);
         }
@@ -647,7 +649,7 @@ static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
         if (you.duration[DUR_PARAGON_ACTIVE] && !you.triggers_done[DID_PARAGON])
             paragon_attack_trigger();
 
-        if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP] && !missile)
+        if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP] && missile == NUM_MISSILES)
             you.rev_up(you.attack_delay().roll());
     }
 }

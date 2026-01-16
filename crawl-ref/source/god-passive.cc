@@ -1398,10 +1398,8 @@ static coord_def _shadow_already_okay_for_ranged(coord_def preferred_target)
     return coord_def();
 }
 
-void dithmenos_shadow_shoot(const coord_def& targ, const item_def* thrown_projectile)
+void dithmenos_shadow_shoot(const coord_def& targ, missile_type thrown_projectile)
 {
-    ASSERT(!thrown_projectile || thrown_projectile->base_type == OBJ_MISSILES);
-
     if (!_shadow_will_act(false, false))
         return;
 
@@ -1465,7 +1463,7 @@ void dithmenos_shadow_shoot(const coord_def& targ, const item_def* thrown_projec
     item_def *throwable = mon->missiles();
     item_def fake_proj;
     item_def *missile = &fake_proj;
-    if (thrown_projectile)
+    if (thrown_projectile != NUM_MISSILES)
     {
         // If the shadow doesn't already have a missile item, make one for them
         if (!throwable)
@@ -1482,7 +1480,7 @@ void dithmenos_shadow_shoot(const coord_def& targ, const item_def* thrown_projec
 
         // Set properties of the missile item it's using
         missile->base_type = OBJ_MISSILES;
-        missile->sub_type  = thrown_projectile->sub_type;
+        missile->sub_type  = thrown_projectile;
         missile->quantity  = 1;
         missile->rnd       = 1;
         missile->flags    |= ISFLAG_SUMMONED;

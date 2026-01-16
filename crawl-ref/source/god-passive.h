@@ -299,7 +299,7 @@ monster* dithmenos_get_player_shadow();
 monster* create_player_shadow(coord_def pos, bool friendly = true,
                               spell_type spell_known = SPELL_NO_SPELL);
 void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_shoot(const coord_def& targ, const item_def* thrown_projectile = nullptr);
+void dithmenos_shadow_shoot(const coord_def& targ, missile_type thrown_projectile = NUM_MISSILES);
 void dithmenos_shadow_spell(spell_type spell);
 
 void uskayaw_prepares_audience();
