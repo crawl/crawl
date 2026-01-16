@@ -1187,7 +1187,7 @@ undulate between flesh and bone and perhaps even metal. A sufficiently skilled
 shapeshifter can stabilise it into a useable - if unpredictable - form.
 
 (If your Shapeshifting skill is at least 6, attempting to put this on will
-transform it into a random one of: Rimehorn, Scarab, Medusa, or Maw talismans.)
+transform it into a random one of: Rimehorn, Scarab, Medusa, or Spore talismans.)
 %%%%
 quad damage
 
