@@ -3458,7 +3458,9 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
     mprf("With a deafening crack, the ground splits apart in the path of %s "
         "chthonic artillery!", agent.name(DESC_ITS).c_str());
-    you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;
+
+    if (agent.is_player())
+        you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;
 
     return spret::success;
 }
