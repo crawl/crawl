@@ -1073,7 +1073,7 @@ public:
     // Bat swarm recharge rate
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+        return max(50, scaling_value(FormScaling().Base(100).Scaling(100), skill));
     }
 
     // Daze power
@@ -2118,10 +2118,9 @@ bool transform(int dur, transformation which_trans, bool involuntary,
         return true;
     }
 
-    // Vampire should shift in and out of bat swarm without reverting to fully untransformed in the middle
+    // Vampire should shift into bat swarm without reverting to fully untransformed in the middle
     if (you.form != transformation::none
-        && !((you.form == transformation::vampire || you.form == transformation::bat_swarm)
-               && (which_trans == transformation::vampire || which_trans == transformation::bat_swarm)))
+        && !(you.form == transformation::vampire && which_trans == transformation::bat_swarm))
     {
         untransform(true, !using_talisman, !using_talisman, which_trans);
     }
