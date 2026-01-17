@@ -669,20 +669,13 @@ static string _get_notes(bool display)
     return "\n<green>Annotations:</green>\n" + disp;
 }
 
-template <typename Z, typename Key>
-static inline void _find_erase(Z &map, const Key &k)
-{
-    if (map.count(k))
-        map.erase(k);
-}
-
 static void _unnotice_portal(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
     if (feat_is_portal(feat))
     {
-        _find_erase(portals_present, pos);
-        _find_erase(portal_notes, pos);
+        portals_present.erase(pos);
+        portal_notes.erase(pos);
     }
 }
 
@@ -690,14 +683,14 @@ static void _unnotice_altar(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
     if (feat_is_altar(feat))
-        _find_erase(altars_present, pos);
+        altars_present.erase(pos);
 }
 
 static void _unnotice_shop(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
     if (feat == DNGN_ENTER_SHOP)
-        _find_erase(shops_present, pos);
+        shops_present.erase(pos);
 }
 
 static void _unnotice_stair(const level_pos &pos)
