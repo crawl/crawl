@@ -626,14 +626,6 @@ public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
 
     /**
-     * % screen description
-     */
-    string get_long_name() const override
-    {
-        return you.base_hand_name(true, true);
-    }
-
-    /**
      * @ description
      */
     string get_description(bool past_tense) const override
