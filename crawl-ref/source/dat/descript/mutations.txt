@@ -1156,7 +1156,7 @@ monster, there is a chance to become mesmerised by it and let out a loud growl.
 %%%%
 eel punch mutation
 
-Your melee hits have a 33% chance of discharging an arc of electricity that
+Your melee hits have a 50% chance of discharging an arc of electricity that
 travels between several connected enemies.
 %%%%
 eeljolt mutation
