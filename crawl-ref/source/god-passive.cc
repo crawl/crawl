@@ -1489,7 +1489,7 @@ void dithmenos_shadow_shoot(const coord_def& targ, missile_type thrown_projectil
             mon->pickup_item(*missile, false, true);
     }
 
-    ranged_attack_beam atk(*mon, thrown_projectile ? *missile : *launcher);
+    ranged_attack_beam atk(*mon, thrown_projectile != NUM_MISSILES ? *missile : *launcher);
     atk.beam.target = aim;
     atk.beam.stop_at_allies = true;
     mons_throw(mon, atk);
