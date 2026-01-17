@@ -474,8 +474,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
         return 0;
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
-        && event.event == wm_mouse_event::PRESS
-        && event.button == wm_mouse_event::LEFT)
+        && event.event == wm_mouse_event::PRESS)
     {
         m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
 
@@ -484,7 +483,10 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
         const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
         tiles.place_cursor(CURSOR_MOUSE, gc);
 
-        return CK_MOUSE_CLICK;
+        if (event.button == wm_mouse_event::LEFT)
+            return CK_MOUSE_CLICK;
+        else if (event.button == wm_mouse_event::RIGHT)
+            return CK_MOUSE_CMD;
     }
 
     if (mouse_control::current_mode() == MOUSE_MODE_MACRO
