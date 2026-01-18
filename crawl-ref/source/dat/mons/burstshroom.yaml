@@ -1,6 +1,6 @@
 name: "burstshroom"
 glyph: {char: "P", colour: etc_earth}
-flags: [stationary, no_exp_gain]
+flags: [stationary, peripheral, no_exp_gain]
 resists: {poison: 1}
 genus: fungus
 holiness: [plant]
