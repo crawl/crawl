@@ -949,8 +949,8 @@ void timeout_terrain_changes(int duration, bool force)
 
     // Sort terrain expiration from near to far, from the player's perspective
     // (which results in more intuitive behavior when pushing the player out of walls).
-    sort(revert.begin(), revert.end(), [](terrain_change_reversion& a,
-                                          terrain_change_reversion& b)
+    sort(revert.begin(), revert.end(), [](const terrain_change_reversion& a,
+                                          const terrain_change_reversion& b)
     {
         return grid_distance(you.pos(), a.pos) < grid_distance(you.pos(), b.pos);
     });
