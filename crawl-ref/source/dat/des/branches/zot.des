@@ -4554,7 +4554,7 @@ DEPTH:  Zot, !Zot:$
 WEIGHT: 3
 KMONS:  1 = killer klown
 KMONS:  2 = protean progenitor w:14 / juggernaut / draconian monk /\
-            draconian knight / executioner w:6
+            draconian knight / death cob / executioner w:6
 # XXX: Very awkward to see the rewards without knowledge of ctrl-x.
 KITEM:  1 = | no_pickup / any weapon ego:chaos good_item no_pickup w:5
 KITEM:  2 = orb no_pickup / orb randart no_pickup w:5
