@@ -4811,13 +4811,15 @@ ccccccccccc@ccccccccccc
           ccc
 ENDMAP
 
+# Until somebody comes up with a gimmick to revive the old unrand and its
+# name, this just provides a randart using the brand it was graduated into.
 NAME:    minmay_guarded_unrand_sword_of_power
 TAGS:    vaults_orient_e
 DEPTH:   D:13-, Vaults, !Vaults:$
 ORIENT:  float
 WEIGHT:  3 (Vaults), 10
 MONS:    vault guard
-ITEM:    sword_of_power no_pickup
+: item("great sword randart ego:valour plus:" .. crawl.random_range(6, 9))
 : vaults_hard_standard(_G)
 MAP
  vvvvvvvv
