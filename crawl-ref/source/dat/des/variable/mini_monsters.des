@@ -1906,7 +1906,7 @@ ENDMAP
 
 NAME:    billiards_dpeg
 TAGS:    transparent
-DEPTH:   D:6-, Elf
+DEPTH:   D:6-, !D:$, Elf, !Elf:$
 MONS:    orc wizard, deep elf pyromancer, arcanist / deep elf zephyrmancer
 ITEM:    scarab talisman
 KFEAT:   ^ = shaft trap
