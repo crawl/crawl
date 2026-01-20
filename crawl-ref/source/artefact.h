@@ -114,6 +114,8 @@ void artefact_desc_properties(const item_def         &item,
 
 void artefact_properties(const item_def &item,
                               artefact_properties_t  &proprt);
+void populate_armour_intrinsic_artps(const armour_type arm,
+                                     artefact_properties_t &proprt);
 
 int artefact_property(const item_def &item, artefact_prop_type prop);
 

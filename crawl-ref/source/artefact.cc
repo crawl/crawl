@@ -321,8 +321,8 @@ void set_unique_item_status(const item_def& item,
  * @param arm           The armour_type of the armour in question.
  * @param proprt[out]   The properties list to be populated.
  */
-static void _populate_armour_intrinsic_artps(const armour_type arm,
-                                             artefact_properties_t &proprt)
+void populate_armour_intrinsic_artps(const armour_type arm,
+                                     artefact_properties_t &proprt)
 {
     proprt[ARTP_FIRE] += armour_type_prop(arm, ARMF_RES_FIRE);
     proprt[ARTP_COLD] += armour_type_prop(arm, ARMF_RES_COLD);
@@ -495,8 +495,8 @@ static void _populate_item_intrinsic_artps(const item_def &item,
     switch (item.base_type)
     {
         case OBJ_ARMOUR:
-            _populate_armour_intrinsic_artps((armour_type)item.sub_type,
-                                             props);
+            populate_armour_intrinsic_artps((armour_type)item.sub_type,
+                                            props);
             break;
         case OBJ_STAVES:
             _populate_staff_intrinsic_artps((stave_type)item.sub_type, props);

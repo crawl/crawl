@@ -577,10 +577,14 @@ void player_equip_set::update()
             if (item.base_type == OBJ_ARMOUR)
             {
                 armour_egos[get_armour_ego_type(item)] += 1;
+                // Put armour type properties directly into the artprop cache (eg: dragon armour resists)
+                populate_armour_intrinsic_artps(static_cast<armour_type>(item.sub_type), artprop_cache);
+
                 if (you.form == transformation::fortress_crab
                     && get_armour_slot(item) == SLOT_BODY_ARMOUR)
                 {
                     armour_egos[get_armour_ego_type(item)] += 1;
+                    populate_armour_intrinsic_artps(static_cast<armour_type>(item.sub_type), artprop_cache);
                 }
             }
             else if (item.base_type == OBJ_GIZMOS)
@@ -607,6 +611,7 @@ void player_equip_set::update()
                     && item.base_type == OBJ_ARMOUR
                     && get_armour_slot(item) == SLOT_BODY_ARMOUR)
                 {
+
                     for (int j = 0; j < (int)artprops.size(); ++j)
                         artprop_cache[j] += artprops[j];
                 }

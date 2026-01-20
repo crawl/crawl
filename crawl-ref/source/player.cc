@@ -1191,6 +1191,8 @@ static int _player_bonus_regen()
             && armour_type_prop(item->sub_type, ARMF_REGENERATION))
         {
             rr += REGEN_PIP;
+            if (you.form == transformation::fortress_crab)
+                rr += REGEN_PIP;
         }
         if (item->is_type(OBJ_JEWELLERY, AMU_REGENERATION))
             rr += REGEN_PIP;
@@ -1376,16 +1378,11 @@ int player_res_fire(bool allow_random, bool temp, bool items)
         // Staves
         rf += you.wearing(OBJ_STAVES, STAFF_FIRE);
 
-        // body armour:
-        const item_def *body_armour = you.body_armour();
-        if (body_armour)
-            rf += armour_type_prop(body_armour->sub_type, ARMF_RES_FIRE);
-
         // ego armours
         rf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE_RESISTANCE);
         rf += you.wearing_ego(OBJ_ARMOUR, SPARM_RESISTANCE);
 
-        // randart weapons:
+        // artefacts and dragon armour
         rf += you.scan_artefacts(ARTP_FIRE);
 
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1476,16 +1473,11 @@ int player_res_cold(bool allow_random, bool temp, bool items)
         // Staves
         rc += you.wearing(OBJ_STAVES, STAFF_COLD);
 
-        // body armour:
-        const item_def *body_armour = you.body_armour();
-        if (body_armour)
-            rc += armour_type_prop(body_armour->sub_type, ARMF_RES_COLD);
-
         // ego armours
         rc += you.wearing_ego(OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
         rc += you.wearing_ego(OBJ_ARMOUR, SPARM_RESISTANCE);
 
-        // randart weapons:
+        // artefacts and dragon armour
         rc += you.scan_artefacts(ARTP_COLD);
 
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1555,12 +1547,7 @@ int player_res_electricity(bool allow_random, bool temp, bool items)
         // staff
         re += you.wearing(OBJ_STAVES, STAFF_AIR);
 
-        // body armour:
-        const item_def *body_armour = you.body_armour();
-        if (body_armour)
-            re += armour_type_prop(body_armour->sub_type, ARMF_RES_ELEC);
-
-        // randart weapons:
+        // artefacts and dragon armour
         re += you.scan_artefacts(ARTP_ELECTRICITY);
 
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1628,12 +1615,7 @@ int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
         // ego armour:
         rp += you.wearing_ego(OBJ_ARMOUR, SPARM_POISON_RESISTANCE);
 
-        // body armour:
-        const item_def *body_armour = you.body_armour();
-        if (body_armour)
-            rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
-
-        // rPois+ artefacts
+        // rPois+ artefacts and dragon armour
         rp += you.scan_artefacts(ARTP_POISON);
 
         // dragonskin cloak: 0.5 to draconic resistances
@@ -1832,15 +1814,10 @@ int player_prot_life(bool allow_random, bool temp, bool items)
         // rings
         pl += you.wearing_jewellery(RING_POSITIVE_ENERGY);
 
-        // armour (checks body armour only)
+        // ego armour
         pl += you.wearing_ego(OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
 
-        // pearl dragon counts
-        const item_def *body_armour = you.body_armour();
-        if (body_armour)
-            pl += armour_type_prop(body_armour->sub_type, ARMF_RES_NEG);
-
-        // randart wpns
+        // randarts and dragon armour
         pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY);
 
         // dragonskin cloak: 0.5 to draconic resistances
@@ -3375,9 +3352,6 @@ int player_stealth()
         const int evp = player_armour_stealth_penalty();
         const int penalty = evp * evp * 2 / 3;
         stealth -= penalty;
-
-        const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
-        stealth += pips * STEALTH_PIP;
     }
 
     stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
@@ -7103,13 +7077,8 @@ int player_willpower(bool temp)
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 
-    // randarts
+    // randarts and dragon armour
     rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
-
-    // body armour
-    const item_def *body_armour = you.body_armour();
-    if (body_armour)
-        rm += armour_type_prop(body_armour->sub_type, ARMF_WILLPOWER) * WL_PIP;
 
     // ego armours
     rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
