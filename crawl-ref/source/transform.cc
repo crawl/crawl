@@ -2062,6 +2062,8 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
     // a new artefact talisman or were forcibly polymorphed away from one),
     // refresh equipment properties.
     you.equipment.update();
+    if (which_trans == transformation::fortress_crab)
+        calc_mp();
 
     if (using_talisman && is_artefact(*you.active_talisman()))
         equip_artefact_effect(*you.active_talisman(), nullptr, false);
@@ -2224,6 +2226,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         you.duration[DUR_EELJOLT_COOLDOWN] = 0;
     else if (old_form == transformation::fortress_crab)
     {
+        calc_mp();
         notify_stat_change();
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
