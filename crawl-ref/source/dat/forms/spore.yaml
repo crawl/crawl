@@ -1,7 +1,7 @@
 enum: spore
 equivalent_mons: player
 short_name: Spore
-long_name: ''
+long_name: 'spore-form'
 talisman: spore
 skill: {min: 8, max: 14}
 melds: [offhand, boots]
