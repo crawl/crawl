@@ -171,7 +171,9 @@ void view_update_at(const coord_def &pos)
 
 void redraw_view_at(coord_def pos)
 {
+#ifdef USE_TILE
     tile_draw_map_cell(pos);
+#endif
 #ifdef USE_TILE_WEB
     tiles.mark_for_redraw(pos);
 #endif
