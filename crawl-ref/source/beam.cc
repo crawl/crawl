@@ -2959,18 +2959,18 @@ bool bolt::can_burn_trees() const
 
 bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
 {
-    dungeon_feature_type wall = env.grid(p);
-
-    // digging might affect unseen squares, as far as the player knows
-    if (map_knowledge && flavour == BEAM_DIGGING &&
-                                        !env.map_knowledge(p).known())
-    {
-        return true;
-    }
+    dungeon_feature_type wall = map_knowledge ? env.map_knowledge(p).feat()
+                                              : env.grid(p);
 
     // digging
-    if (flavour == BEAM_DIGGING && feat_is_diggable(wall))
-        return true;
+    if (flavour == BEAM_DIGGING)
+    {
+        if (feat_is_diggable(wall))
+            return true;
+        // digging might affect unseen squares, as far as the player knows
+        if (wall == DNGN_UNSEEN)
+            return true;
+    }
 
     if (can_burn_trees())
         return feat_is_flammable(wall);

@@ -618,11 +618,8 @@ bool targeter_dig::valid_aim(coord_def a)
         {
             possible_squares_affected = 0;
             for (auto p : path_taken)
-                if (beam.can_affect_wall(p, true) ||
-                        in_bounds(p) && env.map_knowledge(p).feat() == DNGN_UNSEEN)
-                {
+                if (beam.can_affect_wall(p, true))
                     possible_squares_affected++;
-                }
         }
         aim_test_cache[a] = possible_squares_affected;
     }
@@ -661,9 +658,10 @@ aff_type targeter_dig::is_affected(coord_def loc)
         // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
         // mapping etc. TODO: console tracers use the same symbol/color as
         // mmapped walls.
-        if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
+        const dungeon_feature_type feat = env.map_knowledge(pc).feat();
+        if (in_bounds(pc) && feat != DNGN_UNSEEN)
         {
-            if (!cell_is_solid(pc))
+            if (!feat_is_solid(feat))
                 current = AFF_TRACER;
             else if (!beam.can_affect_wall(pc, true))
             {
