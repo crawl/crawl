@@ -119,24 +119,14 @@ colour_t viewmap_flash_colour()
     return BLACK;
 }
 
-// Updates one square of the view area. Should only be called for square
-// in LOS.
-void view_update_at(const coord_def &pos)
+#ifndef USE_TILE_LOCAL
+static void _redraw_console_at(coord_def pos)
 {
     if (pos == you.pos())
         return;
-
-    show_update_at(pos);
-#ifdef USE_TILE
-    tile_draw_map_cell(pos, true);
-#endif
-#ifdef USE_TILE_WEB
-    tiles.mark_for_redraw(pos);
-#endif
-
-#ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
+
     cglyph_t g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
@@ -160,10 +150,33 @@ void view_update_at(const coord_def &pos)
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
     textcolour(LIGHTGREY);
+}
+#endif
 
+// Updates one square of the view area. Should only be called for square
+// in LOS.
+void view_update_at(const coord_def &pos)
+{
+    show_update_at(pos);
+#ifdef USE_TILE
+    tile_draw_map_cell(pos, true);
 #endif
 #ifdef USE_TILE_WEB
     tiles.mark_for_redraw(pos);
+#endif
+#ifndef USE_TILE_LOCAL
+    _redraw_console_at(pos);
+#endif
+}
+
+void redraw_view_at(coord_def pos)
+{
+    tile_draw_map_cell(pos);
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(pos);
+#endif
+#ifndef USE_TILE_LOCAL
+    _redraw_console_at(pos);
 #endif
 }
 

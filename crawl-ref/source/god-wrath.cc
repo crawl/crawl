@@ -1916,9 +1916,15 @@ void gozag_abandon_shops_on_level()
         ASSERT(feat);
         if (feat->feat == DNGN_ABANDONED_SHOP)
         {
+            const coord_def pos = feat->pos;
             // TODO: clear shop data out?
-            env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
-            view_update_at(feat->pos);
+            env.grid(pos) = DNGN_ABANDONED_SHOP;
+            if (env.map_knowledge(pos).feat() == DNGN_ENTER_SHOP)
+            {
+                const colour_t col = env.map_knowledge(pos).feat_colour();
+                env.map_knowledge(pos).set_feature(DNGN_ABANDONED_SHOP, col);
+                redraw_view_at(pos);
+            }
             env.markers.remove(feat);
         }
     }

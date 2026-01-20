@@ -20,6 +20,7 @@ string screenshot();
 colour_t viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
+void redraw_view_at(coord_def pos);
 class targeter;
 
 static inline void scaled_delay(unsigned int ms)
