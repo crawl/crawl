@@ -765,10 +765,18 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
     if (!mons->props.exists(VAMPIRIC_THRALL_KEY) || you.allies_forbidden())
         return false;
 
-    // Check if another thrall is already alive
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->was_created_by(MON_SUMM_THRALL))
+    // Check if another thrall is already alive.
+    // (We don't use a monster_iterator since we want to check 'dead' monsters
+    // to see if one is already a pending thrall, or we can end up with two at
+    // once if we stab them simultaneously.)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        if (env.mons[i].alive_or_reviving()
+            && env.mons[i].was_created_by(MON_SUMM_THRALL))
+        {
             return false;
+        }
+    }
 
     const xp_tracking_type xp_tracking = mons->xp_tracking;
     const unsigned int exp = exp_value(*mons);
