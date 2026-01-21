@@ -292,33 +292,6 @@ local function compare_monster_info(m1, m2)
   return false
 end
 
-local function is_candidate_for_attack(x,y, no_move)
-  m = monster.get_monster_at(x, y)
-  --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:name()) end
-  if not m then
-    return false
-  end
-  if m:name() == "butterfly"
-      or m:name() == "orb of destruction" then
-    return false
-  end
-  if m:is_firewood() then
-  --crawl.mpr("... is firewood.")
-    if string.find(m:name(), "ballistomycete") then
-      return true
-    end
-    return false
-  end
-  if m:is_damage_immune() and (no_move or not m:is("warding")) then
-    return false
-  end
-  if m:attitude() == ATT_HOSTILE
-      or m:attitude() == ATT_NEUTRAL and m:is("frenzied") then
-    return true
-  end
-  return false
-end
-
 local function get_target(no_move)
   local los_radius = you.los()
   local x, y, bestx, besty, best_info, new_info
@@ -327,7 +300,7 @@ local function get_target(no_move)
   best_info = nil
   for x = -los_radius,los_radius do
     for y = -los_radius,los_radius do
-      if is_candidate_for_attack(x, y, no_move) then
+      if autofight.is_candidate_for_attack(x, y, no_move) then
         new_info = get_monster_info(x, y, no_move)
         if (not best_info) or compare_monster_info(new_info, best_info) then
           bestx = x
@@ -341,6 +314,8 @@ local function get_target(no_move)
 end
 
 local function attack_fire(x,y)
+  -- Try to find a better place to shoot that goes through (x, y).
+  x, y = autofight.best_aim(x, y)
   if AUTOFIGHT_FORCE_FIRE or not have_ranged() then
     -- fire from quiver
     crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_FIRE_STOP)
