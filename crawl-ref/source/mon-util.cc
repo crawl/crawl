@@ -1399,8 +1399,8 @@ int mons_res_blind(monster_type mc)
 bool mons_resists_drowning(monster_type type, monster_type base)
 {
     const habitat_type ht = mons_habitat_type(type, base, true);
-
-    return mons_is_unbreathing(type) || ht == HT_WATER || ht == HT_AMPHIBIOUS;
+    const bool lives_in_deep_water = (ht & HT_DEEP_WATER) == HT_DEEP_WATER;
+    return mons_is_unbreathing(type) || lives_in_deep_water;
 }
 
 char32_t mons_char(monster_type mc)
