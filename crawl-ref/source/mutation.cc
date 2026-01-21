@@ -107,7 +107,9 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 // XXX: Any normal mutation which removes a slot should be in this list, whether
 //      or not it is actually part of a demonspawn facet, as this is used in
-//      code which protects against mutations shattering cursed equipment.
+//      code which protects against mutations shattering cursed equipment, as
+//      well as preventing multiple different mutations that affect the same
+//      slot coexisting.
 static const body_facet_def _body_facets[] =
 {
     { SLOT_HELMET, MUT_HORNS },
@@ -116,6 +118,7 @@ static const body_facet_def _body_facets[] =
     { SLOT_GLOVES, MUT_CLAWS },
     { SLOT_GLOVES, MUT_DEMONIC_TOUCH },
     { SLOT_BOOTS, MUT_HOOVES },
+    { SLOT_BOOTS, MUT_TALONS },
     { SLOT_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
