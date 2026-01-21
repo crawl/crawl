@@ -2686,20 +2686,20 @@ void descent_crumble_stairs()
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        dungeon_feature_type feat = env.grid(*ri);
-        if (_feat_is_descent_upstairs(feat))
+        dungeon_feature_type original_feat = orig_terrain(*ri);
+        if (!_feat_is_descent_upstairs(original_feat))
+            continue;
+
+        dungeon_change_base_terrain(*ri, DNGN_FLOOR);
+        if (you.see_cell(*ri) && !is_temp_terrain(*ri))
+            mpr("The exit collapses.");
+        if (env.map_knowledge(*ri).feat() == original_feat)
         {
-            dungeon_terrain_changed(*ri, DNGN_FLOOR);
-            if (you.see_cell(*ri))
-                mpr("The exit collapses.");
-            if (env.map_knowledge(*ri).feat())
-            {
-                env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
-                set_terrain_mapped(*ri);
-            }
-            force_show_update_at(*ri);
-            view_update_at(*ri);
+            env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
+            set_terrain_mapped(*ri);
         }
+        force_show_update_at(*ri);
+        view_update_at(*ri);
     }
 
     env.properties[DESCENT_STAIRS_KEY] = true;
