@@ -863,7 +863,7 @@ static vector<pair<string, string>> _get_fakemuts()
     if (species::is_draconian(you.species))
     {
         armour_mut = {"unfitting armour",
-                      _innatemut("You cannot fit into any form of body armour.")};
+                      _innatemut("You cannot fit into any form of body armour or wear helmets.")};
     }
     if (!weapon_mut.first.empty() && !you.has_mutation(MUT_NO_GRASPING))
         result.push_back(weapon_mut);
