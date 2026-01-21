@@ -24,6 +24,8 @@ namespace quiver
 {
     void reset_state();
 
+    formatted_string _empty_quiver_string(bool short_desc);
+
     struct action : public enable_shared_from_this<action>
     {
         action()
@@ -53,6 +55,9 @@ namespace quiver
 
         virtual void invalidate() { }
         virtual bool is_enabled() const { return false; }
+        // Whether this can be quivered. If false, this being the quivered
+        // action is equivalent to nothing being quivered at all (which can
+        // happen e.g. if the action runs out of ammo).
         virtual bool is_valid() const { return true; }
         virtual bool is_targeted() const { return false; }
         bool do_inscription_check() const;
@@ -75,7 +80,13 @@ namespace quiver
 
         virtual vector<tile_def> get_tiles() const;
 
-        virtual formatted_string quiver_description(bool short_desc=false) const;
+        virtual formatted_string valid_quiver_description(bool short_desc=false) const;
+        virtual formatted_string quiver_description(bool short_desc=false) const
+        {
+            return is_valid() ? valid_quiver_description(short_desc)
+                              : _empty_quiver_string(short_desc);
+
+        };
         virtual string quiver_verb() const { return ""; } // currently only for items
 
         // basically noops for this class, but keep `target` clean
@@ -114,6 +125,7 @@ namespace quiver
     shared_ptr<action> ability_to_action(ability_type abil);
     shared_ptr<action> get_primary_action();
     shared_ptr<action> get_secondary_action();
+    bool is_empty();
     void set_needs_redraw();
 
     bool anything_to_quiver();
@@ -127,7 +139,10 @@ namespace quiver
         void load(const string key);
 
         shared_ptr<action> get() const;
-        virtual bool is_empty() const { return *current == action(); }
+        virtual bool is_empty() const
+        {
+            return *current == action() || !current->is_valid();
+        }
         bool spell_is_quivered(spell_type s) const;
         bool item_is_quivered(const item_def &item);
         bool item_is_quivered(int item_slot) const;
