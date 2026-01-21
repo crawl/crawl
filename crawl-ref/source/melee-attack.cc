@@ -775,7 +775,7 @@ static void _grow_mushrooms(const monster& mon)
 {
     // Can't extract position from a reset monster (which may have happened due
     // to disto banishment).
-    if (mon.type == MONS_NO_MONSTER)
+    if (mon.type == MONS_NO_MONSTER || mon.is_firewood() || mon.wont_attack())
         return;
 
     vector<coord_def> spots = get_wall_ring_spots(mon.pos(),
