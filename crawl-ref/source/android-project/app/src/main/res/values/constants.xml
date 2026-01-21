@@ -32,11 +32,14 @@
     </style>
     <dimen name="key_height">40dp</dimen>
     <color name="black">#000000</color>
+    <color name="black_focused">#171717</color>
     <color name="white">#ffffff</color>
     <color name="gray">#404040</color>
     <color name="light_purple">#8d42dc</color>
     <color name="dark_purple">#490f57</color>
     <color name="light_green">#268868</color>
+    <color name="light_green_focused">#40967a</color>
     <color name="dark_green">#0c3941</color>
+    <color name="dark_green_focused">#2a5158</color>
     <color name="error">#ff0000</color>
 </resources>

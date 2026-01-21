@@ -1,9 +1,11 @@
 package org.develz.crawl;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,22 @@ public class DCSSMorgue extends AppCompatActivity
     // Status messages
     private TextView status;
 
+    private class CustomLayoutManager extends LinearLayoutManager {
+        public CustomLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public View onInterceptFocusSearch(@NonNull View focused, int direction) {
+            if (direction == View.FOCUS_LEFT) {
+                return findViewById(R.id.morgueBack);
+            } else if (direction == View.FOCUS_RIGHT) {
+                return findViewById(R.id.sortSpinner);
+            }
+            return super .onInterceptFocusSearch(focused, direction);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +64,7 @@ public class DCSSMorgue extends AppCompatActivity
         sortSpinner.setSelection(DEFAULT_ORDER);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        CustomLayoutManager layoutManager = new CustomLayoutManager(getBaseContext());
         recyclerView.setLayoutManager(layoutManager);
 
         findViewById(R.id.morgueBack).setOnClickListener(this::onClickClose);

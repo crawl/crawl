@@ -20,7 +20,9 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="top"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:nextFocusLeft="@id/backButton"
+            android:nextFocusRight="@id/downloadButton"/>
 
         <View
             android:layout_width="fill_parent"

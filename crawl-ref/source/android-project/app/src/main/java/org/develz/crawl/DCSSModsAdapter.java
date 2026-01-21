@@ -1,10 +1,12 @@
 package org.develz.crawl;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,16 +37,28 @@ public class DCSSModsAdapter extends RecyclerView.Adapter<DCSSModsAdapter.ViewHo
         this.modsListener = modsListener;
     }
 
+    // Returns the selected item
+    public int getSelected() {
+        return selected;
+    }
+
     // Single element in the RecyclerView
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnFocusChangeListener {
+        private final LinearLayout layout;
         private final TextView nameView;
         private OnModsListener modsListener;
 
         public ViewHolder(View view, OnModsListener modsListener) {
             super(view);
+            layout = view.findViewById(R.id.layout);
             nameView = view.findViewById(R.id.fileName);
             view.setOnClickListener(this);
+            view.setOnFocusChangeListener(this);
             this.modsListener = modsListener;
+        }
+
+        public LinearLayout getLayout() {
+            return layout;
         }
 
         public TextView getNameView() {
@@ -54,6 +68,25 @@ public class DCSSModsAdapter extends RecyclerView.Adapter<DCSSModsAdapter.ViewHo
         @Override
         public void onClick(View v) {
             this.modsListener.onModsClick(getBindingAdapterPosition());
+        }
+
+        @Override
+        public void onFocusChange(View view, boolean b) {
+            Resources resources = getNameView().getResources();
+            int selected = ((DCSSModsAdapter)getBindingAdapter()).getSelected();
+            if (getBindingAdapterPosition() == selected) {
+                if (view.isFocused()) {
+                    getLayout().setBackgroundColor(resources.getColor(R.color.dark_green_focused));
+                } else {
+                    getLayout().setBackgroundColor(resources.getColor(R.color.dark_green));
+                }
+            } else {
+                if (view.isFocused()) {
+                    getLayout().setBackgroundColor(resources.getColor(R.color.black_focused));
+                } else {
+                    getLayout().setBackgroundColor(resources.getColor(R.color.black));
+                }
+            }
         }
     }
 
@@ -71,9 +104,9 @@ public class DCSSModsAdapter extends RecyclerView.Adapter<DCSSModsAdapter.ViewHo
         viewHolder.getNameView().setText(modsFiles[position].getName());
         Resources resources = viewHolder.getNameView().getResources();
         if (position == selected) {
-            viewHolder.getNameView().setBackgroundColor(resources.getColor(R.color.light_green));
+            viewHolder.getLayout().setBackgroundColor(resources.getColor(R.color.dark_green_focused));
         } else {
-            viewHolder.getNameView().setBackgroundColor(resources.getColor(R.color.black));
+            viewHolder.getLayout().setBackgroundColor(resources.getColor(R.color.black));
         }
     }
 

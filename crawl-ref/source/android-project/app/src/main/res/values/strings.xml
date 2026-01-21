@@ -10,6 +10,7 @@
     <string name="open_error">Error opening file</string>
     <string name="save">Save</string>
     <string name="save_error">Error saving file</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="sort_by">Sort By</string>
@@ -26,12 +27,15 @@
     <string name="no">No</string>
     <string name="delete_ok">File deleted</string>
     <string name="delete_error">Error deleting file</string>
-    <string name="keyboard">Keyboard</string>
+    <string name="virtual_keyboard">Virtual keyboard</string>
     <string name="extra_keyboard">Extra directional pad</string>
     <string name="keyboard_size">Keyboard size</string>
     <string name="full_screen">Full screen</string>
     <string name="mods_hint">Here you can override game data resources.
         Extra fonts need to be enabled in the init file.</string>
+    <string name="tv_warning">WARNING\n\nYou need a keyboard, a mouse or a touch screen in order
+        to play Crawl.\n\nIf only a mouse or touch screen are available, it is recommended to
+        enable the virtual keyboard on the next screen.</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>
@@ -39,10 +43,10 @@
         <item>Date desc.</item>
     </string-array>
     <string-array name="keyboard_options">
+        <item>Disabled</item>
         <item>Classic keyboard</item>
         <item>Transparent keyboard</item>
         <item>Android keyboard</item>
-        <item>No keyboard</item>
     </string-array>
     <string-array name="extra_keyboard_options">
         <item>Disabled</item>

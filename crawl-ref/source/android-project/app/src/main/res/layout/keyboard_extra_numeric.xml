@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/key_extra_7"
-            android:tag="14"
+            android:tag="151"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -31,7 +31,7 @@
 
         <Button
             android:id="@+id/key_extra_8"
-            android:tag="15"
+            android:tag="152"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -41,7 +41,7 @@
 
         <Button
             android:id="@+id/key_extra_9"
-            android:tag="16"
+            android:tag="153"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -71,7 +71,7 @@
 
         <Button
             android:id="@+id/key_extra_4"
-            android:tag="11"
+            android:tag="148"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -81,7 +81,7 @@
 
         <Button
             android:id="@+id/key_extra_5"
-            android:tag="12"
+            android:tag="149"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -91,7 +91,7 @@
 
         <Button
             android:id="@+id/key_extra_6"
-            android:tag="13"
+            android:tag="150"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -121,7 +121,7 @@
 
         <Button
             android:id="@+id/key_extra_1"
-            android:tag="8"
+            android:tag="145"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -131,7 +131,7 @@
 
         <Button
             android:id="@+id/key_extra_2"
-            android:tag="9"
+            android:tag="146"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
@@ -141,7 +141,7 @@
 
         <Button
             android:id="@+id/key_extra_3"
-            android:tag="10"
+            android:tag="147"
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"

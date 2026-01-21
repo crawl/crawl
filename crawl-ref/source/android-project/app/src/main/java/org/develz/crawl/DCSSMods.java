@@ -1,6 +1,7 @@
 package org.develz.crawl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +48,22 @@ public class DCSSMods extends AppCompatActivity implements DCSSModsAdapter.OnMod
     private Button modsDownload;
     private Button modsDelete;
 
+    private class CustomLayoutManager extends LinearLayoutManager {
+        public CustomLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public View onInterceptFocusSearch(@NonNull View focused, int direction) {
+            if (direction == View.FOCUS_LEFT) {
+                return findViewById(R.id.modsBack);
+            } else if (direction == View.FOCUS_RIGHT) {
+                return findViewById(R.id.modsDelete);
+            }
+            return super .onInterceptFocusSearch(focused, direction);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +76,7 @@ public class DCSSMods extends AppCompatActivity implements DCSSModsAdapter.OnMod
         status = findViewById(R.id.status);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        CustomLayoutManager layoutManager = new CustomLayoutManager(getBaseContext());
         recyclerView.setLayoutManager(layoutManager);
 
         findViewById(R.id.modsBack).setOnClickListener(this::onClickClose);

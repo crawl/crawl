@@ -25,6 +25,8 @@
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
             android:importantForAutofill="no"
+            android:nextFocusLeft="@id/saveButton"
+            android:nextFocusRight="@id/helpButton"
             app:backgroundTint="@color/gray"/>
 
         <TextView

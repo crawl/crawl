@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_weight="1"
-                android:background="@color/dark_green"
+                android:background="@drawable/green_spinner"
                 android:popupBackground="@color/dark_green"
                 android:spinnerMode="dropdown"/>
         </LinearLayout>

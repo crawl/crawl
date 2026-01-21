@@ -3,6 +3,7 @@ package org.develz.crawl;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -26,10 +28,6 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     public final static String TAG = "LAUNCHER";
 
     private static final String INIT_FILE = "/init.txt";
-
-    private static final int DEFAULT_KEYBOARD = 0;
-
-    private static final boolean DEFAULT_FULL_SCREEN = true;
 
     // Crawl's init file
     private File initFile;
@@ -72,10 +70,17 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         findViewById(R.id.morgueButton).setOnClickListener(this::openMorgue);
         findViewById(R.id.modsButton).setOnClickListener(this::openMods);
 
+        boolean isPC = getPackageManager().hasSystemFeature(PackageManager.FEATURE_PC);
+        boolean isTV = getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+        int defaultKeyboard = 1;
+        if (isPC || isTV) {
+            defaultKeyboard = 0;
+        }
+
         preferences = getPreferences(Context.MODE_PRIVATE);
-        keyboardOption = preferences.getInt("keyboard", DEFAULT_KEYBOARD);
-        extraKeyboardOption = preferences.getInt("extra_keyboard", DEFAULT_KEYBOARD);
-        fullScreen = preferences.getBoolean("full_screen", DEFAULT_FULL_SCREEN);
+        keyboardOption = preferences.getInt("keyboard", defaultKeyboard);
+        extraKeyboardOption = preferences.getInt("extra_keyboard", 0);
+        fullScreen = preferences.getBoolean("full_screen", true);
 
         // Density is the relationship between px and dp
         density = getResources().getDisplayMetrics().density;
@@ -111,8 +116,24 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         fullScreenSwitch.setChecked(fullScreen);
         fullScreenSwitch.setOnCheckedChangeListener(this);
 
+        // Create the init file if needed
         initFile = new File(getExternalFilesDir(null)+INIT_FILE);
         resetInitFile(false);
+
+        // TV users get a warning
+        if (isTV) {
+            boolean shown = preferences.getBoolean("tv_warning_shown", false);
+            if (!shown) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DCSSLauncher.this);
+                builder.setMessage(R.string.tv_warning);
+                builder.setCancelable(false);
+                builder.setNegativeButton(R.string.ok, (dialog, which) -> {
+                    dialog.cancel();
+                });
+                builder.create().show();
+                preferences.edit().putBoolean("tv_warning_shown", true).apply();
+            }
+        }
     }
 
     // Start game

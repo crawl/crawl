@@ -58,6 +58,7 @@
                 android:text="@string/mods"/>
 
             <LinearLayout
+                android:id="@+id/keyboardSpinnerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -70,7 +71,7 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:layout_marginEnd="6dp"
-                    android:text="@string/keyboard"
+                    android:text="@string/virtual_keyboard"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -78,12 +79,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:layout_weight="1"
-                    android:background="@color/dark_green"
+                    android:background="@drawable/green_spinner"
                     android:popupBackground="@color/dark_green"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/extraKeyboardSpinnerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -104,18 +106,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:layout_weight="1"
-                    android:background="@color/dark_green"
+                    android:background="@drawable/green_spinner"
                     android:popupBackground="@color/dark_green"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/keyboardSizeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginHorizontal="6dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:orientation="horizontal">
 
                 <TextView
@@ -132,16 +133,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/fullScreen" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fullScreenLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginHorizontal="6dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:orientation="horizontal">
 
                 <TextView
@@ -158,8 +159,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.SwitchCompat

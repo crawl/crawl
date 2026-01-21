@@ -217,7 +217,7 @@ public class DCSSKeyboard extends DCSSKeyboardBase implements View.OnClickListen
     @Override
     public void initKeyboard(int keyboardOption, int size) {
         super.initKeyboard(keyboardOption, size);
-        if (keyboardOption == 1) {
+        if (keyboardOption == 2) {
             transparentKeyboard();
         }
     }
