@@ -3400,7 +3400,7 @@ KMONS:   5 = frilled lizard / ball python / quokka / adder
 # One floor OoD: the vault is usually only accessible from D:4 or tele.
 KMONS:   5 = ball python / quokka / adder / black bear / sleepcap
 :   end
-FTILE:   .t24}> = floor_grass
+FTILE:   .t25}> = floor_grass
 :   decorative_floor(_G, 'p', "garden patch")
 : elseif you.in_branch("Lair") then
 :   kmons("3 = naga " .. gn .. " / merfolk " .. gn .. " / formicid " .. gn)
@@ -3414,7 +3414,7 @@ KMONS:   5 = spark wasp band / alderking / caustic shrike band
 # All fitting Depths monsters are top-end threats, do not spawn 3.
 NSUBST:  5 = 1:5 / *:.
 :   decorative_floor(_G, 'p', "garden patch")
-FTILE:   .t24}> = floor_grass_dark
+FTILE:   .t25}> = floor_grass_dark
 TILE:    c = wall_church
 : elseif you.in_branch("Zot") then
 KMONS:   3 = base draconian att:good_neutral ; nothing
@@ -3646,6 +3646,7 @@ KMONS:   2 = hound / adder w:5
 KMONS:   6 = clockroach / sleepcap
 : end
 NSUBST:  e = 1:e / *:d
+COLOUR:  '4 = red
 FTILE:   '4 = floor_rough_red
 : vault_granite_statue_setup(_G, "G", "broken pillar")
 : decorative_floor(_G, 'D', "djembe set")
@@ -8764,7 +8765,7 @@ TILE:    tT = dngn_tree_dead
 TILE:    X = wall_pebble_darkgray
 :   set_feature_name("tree", "dead tree")
 :   if you.in_branch("Lair") then
-FTILE:   .defkstTGX1234?}` = floor_rough_darkgray
+FTILE:   .defkstGX1234?}` = floor_rough_darkgray
 :   end
 : end
 : vault_granite_statue_setup(_G, "G", "gravestone")
