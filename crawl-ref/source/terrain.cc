@@ -2697,9 +2697,8 @@ void descent_crumble_stairs()
         {
             env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
             set_terrain_mapped(*ri);
+            redraw_view_at(*ri);
         }
-        force_show_update_at(*ri);
-        view_update_at(*ri);
     }
 
     env.properties[DESCENT_STAIRS_KEY] = true;
