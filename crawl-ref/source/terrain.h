@@ -126,10 +126,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
                              bool preserve_features = false,
                              bool preserve_items = false,
-                             bool temporary = false,
-                             bool wizmode = false,
-                             unsigned short flv_nfeat = 0,
-                             unsigned short flv_nfeat_idx = 0);
+                             bool wizmode = false);
+void dungeon_change_base_terrain(coord_def pos, dungeon_feature_type nfeat);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,

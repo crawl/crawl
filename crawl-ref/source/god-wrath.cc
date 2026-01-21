@@ -1918,7 +1918,7 @@ void gozag_abandon_shops_on_level()
         {
             const coord_def pos = feat->pos;
             // TODO: clear shop data out?
-            env.grid(pos) = DNGN_ABANDONED_SHOP;
+            dungeon_change_base_terrain(pos, DNGN_ABANDONED_SHOP);
             if (env.map_knowledge(pos).feat() == DNGN_ENTER_SHOP)
             {
                 const colour_t col = env.map_knowledge(pos).feat_colour();

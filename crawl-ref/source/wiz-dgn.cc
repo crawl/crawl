@@ -335,7 +335,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
         tile_env.flv(pos).special = 0;
         env.grid_colours(pos) = 0;
         const dungeon_feature_type old_feat = env.grid(pos);
-        dungeon_terrain_changed(pos, feat, false, false, false, true);
+        dungeon_terrain_changed(pos, feat, false, false, true);
         // Update gate tiles, if existing.
         if (feat_is_door(old_feat) || feat_is_door(feat))
         {
