@@ -5255,9 +5255,12 @@ bool coglin_spellmotor_attack()
     if (delay > 10 && !x_chance_in_y(10, delay))
         return false;
 
-    // Gather all possible targets in attack range
+    // Gather all possible targets in attack range.
+    // (We have to manually add aqua form's reaching bonus, since it normally
+    // doesn't apply to cleaving attacks.)
     list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true);
+    get_cleave_targets(you, coord_def(), targets, -1, true, nullptr,
+                       you.form == transformation::aqua ? 2 : 0);
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
