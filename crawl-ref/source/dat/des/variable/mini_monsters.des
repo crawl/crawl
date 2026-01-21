@@ -522,6 +522,53 @@ Xx0....0x.xxx.x0....0xX
      XXX  @@@  XXX
 ENDMAP
 
+NAME:    darby_bombarded_bulwark
+TAGS:    no_monster_gen
+DEPTH:   D:3-7, Depths
+: if you.in_branch("D") then
+MONS:    bombardier beetle
+MONS:    orc wizard w:20 / orc wizard band w:15 / orc band / orc w:5
+KITEM:   any weapon ego:flaming w:18 / parchment disc:fire w:18 / \
+         wand of flame w:18 / scarab talisman w:18 / \
+         ring of protection from fire w:18 / manual of fire magic w:15 / \
+         fire dragon scales w:15 / pair of gloves ego:fire w:5 / \
+         staff of fire w:5 / orb ego:pyromania w:5
+: elseif you.in_branch("Depths") then
+MONS:    balrug, fire giant / fire dragon
+ITEM:    any weapon ego:flaming good_item w:21 / dragon-coil talisman w:21 / \
+         randbook disc:fire numspells:2 w:21 / manual of fire magic w:18 / \
+         fire dragon scales good_item w:15 / \
+         pair of gloves ego:fire good_item w:5 / \
+         any magical staff randart artprops:Fire w:5 / \
+         orb randart artprops:fire w:5
+: end
+SHUFFLE: Pp / Qq / Rr
+SUBST:   } = }., P = @, QqRr = T, t = lt, l = .l, T = tT, pL = l
+NSUBST:  ? = 1:1 / 1:. / * = 12., 2 = 1:2. / *:2
+CLEAR:   T
+COLOUR:  t = brown
+FTILE:   ' = floor_vault
+TILE:    c = wall_stone_scorched
+: set_feature_name("tree", "dead tree")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+MAP
+ xxx    TppPpTT
+xxWx   TcccccccT
+xWW....lcLttlLcT
+ W2..tlLcl...lcTTT
+WW..tccccl.G.tccccT
+ WW.tctlt..?..tlLcq
+ ''..c..........lcq
+@''..+..G1.}.?GdtcQ
+ ''..c..........tcq
+ WW.tcltt..?..llLcT
+WW2.tcccct.G.lccccT
+WWW..tlLcl...lcTTT
+ WWx...lcLlttLcT
+xWxx   TcccccccT
+xxx     TTrRrrT
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -1410,6 +1457,308 @@ MAP
  `xxxx3x333
   'x'xx3x3@
      x3
+ENDMAP
+
+# A simply-themed but decorated pale ruin, once peaceful, left now
+# to the scavenging pests endemic to the early game.
+NAME:    darby_scavenged_remnants
+TAGS:    no_monster_gen ruin_lair ruin_swamp
+DEPTH:   D:1-8, Lair, Swamp
+# The D version places scavengers that might be found rifling
+# through old food. Lair and Swamp place normal spawns, as similar
+# ruins are common in their normal level generation.
+: if you.in_branch("D") then
+:   if you.depth() == 1 then
+MONS:    rat / endoplasm / dart slug
+:   elseif you.depth() == 2 then
+MONS:    rat / endoplasm / dart slug / ribbon worm
+:   elseif you.depth() == 3 then
+MONS:    rat / endoplasm / dart slug / ribbon worm / \
+         bombardier beetle w:6 / clockroach w:6
+:   elseif you.depth() == 4 then
+MONS:    endoplasm / dart slug / ribbon worm / bombardier beetle / \
+         clockroach / jelly / sleepcap / black bear
+:   else -- D:5-8
+MONS:    bombardier beetle / clockroach / jelly / sleepcap / \
+         black bear / bes kemwar band
+:   end
+: end
+: if you.in_branch("D") and you.depth() > 3 then
+KMONS:   p = fungus / toadstool
+: else
+KMONS:   p = plant / pile of debris w:2
+: end
+KMONS:   D = pile of debris
+KMONS:   s = sacred lotus
+# Take a cue and scavenge the food and old books yourself.
+ITEM:    any potion, any scroll / parchment
+KFEAT:   z = c
+KFEAT:   M = cache_of_baked_goods / cache_of_fruit
+KFEAT:   + = broken_door
+KFEAT:   ^ = web trap
+NSUBST:  e = 2:e / *:!
+SUBST:   G = GG., ? = .p, ! = .p^
+: decorative_floor(_G, 'F', "broken floral vase")
+: if you.in_branch("Lair") then
+FTILE:   .cdempDFGMPV1@%^+> = floor_lair / floor_sprouting_stone
+: elseif you.in_branch("D") then
+FTILE:   .cdempDGMPV1@%^+> = floor_sprouting_stone / floor_pebble_lightgray
+# decorative_floor recolors the tile below if possible, so avoid pebble floor.
+FTILE:   F = floor_sprouting_stone
+: else -- Swamp
+SUBST:   . = W..
+: end
+TILE:    z = wall_studio
+: random_stair(_G, ">")
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+MAP
+    ccccc
+  cccezeccc
+ cc!!.e.!!cc
+ cF..?G?..Fc
+cc!1G???G.!cc
+ceM?..???.?ec
+cz1G.?>?.G1zc
+ce?.???..?Mec
+cc!.G???G1.ccF..
+ c!.?.G?..!+!.1?.
+ cc!.?..!!ccFwww?.
+ cc+c!F!ccc!.wsw%.
+cc.!ccmcc  .?www?.
+c!1dFc.     .???.
+c!M1!+!.     ...
+cc!!cc!.
+ ccccF?.
+    .@.
+ENDMAP
+
+# A breezy autumn forest, or demonic mockery thereof.
+NAME:    darby_harvest_season
+TAGS:    no_monster_gen no_pool_fixup
+DEPTH:   D:1-4, Lair, Depths, Zot, Pan
+# IX: Monsters on 1 need to be able to traverse water one way or another.
+: if you.in_branch("D") then
+:   if you.depth() == 1 then
+KMONS:   1 = frilled lizard / ball python
+KMONS:   2 = frilled lizard w:5 / ball python w:5 / quokka / dart slug
+:   elseif you.depth() < 4 then
+MONS:    1 = frilled lizard / ball python / adder
+MONS:    2 = frilled lizard w:5 / ball python w:5 / \
+             adder w:5 / quokka / dart slug
+:   else
+KMONS:   1 = ball python / adder
+KMONS:   2 = ball python w:5 / adder w:5 / quokka / \
+             dart slug / black bear w:35 / sleepcap w:35
+:   end
+: elseif you.in_branch("Lair") then
+KMONS:   1 = bullfrog / water moccasin / cane toad w:12 / \
+             komodo dragon / skyshark w:8 / hydra
+KMONS:   2 = 0 w:25 / 9
+: elseif you.in_branch("Depths") then
+# It's a dry season underground, the autumn leaves burn easily.
+KMONS:   1 = tengu conjurer band / tengu reaver
+KMONS:   2 = spriggan air mage / spriggan berserker / spriggan defender
+SUBST:   % = %**
+: elseif you.in_branch("Zot") then
+KMONS:   1 = moth of wrath / storm dragon / tentacled monstrosity
+KMONS:   2 = death cob / moth of wrath w:5
+SUBST:   % = **|
+: elseif you.in_branch("Pandemonium") then
+KMONS:   1 = reaper / nekomata w:5
+KMONS:   2 = reaper w:5 / sin beast / executioner
+SUBST:   % = *||
+: end
+: if you.in_branch("Pandemonium") then
+# Submitted with crimson imps as pseudo-butterflies. Instead, have harvesters.
+KMONS:   3 = red devil
+: else
+KMONS:   3 = butterfly
+: end
+KFEAT:   1 = w
+SHUFFLE: TR
+SUBST:   F = F., d = %w, e = 2%, T : tww, R = w
+KPROP:   %*| = no_tele_into
+: if you.in_branch("Zot") or you.in_branch("Pandemonium") then
+KMONS:   F = withered plant
+KFEAT:   tT = demonic_tree
+COLOUR:  dw1 = green
+# The autumnal and white demonic tree tiles.
+TILE:    tT = dngn_demonic_tree_2 / dngn_demonic_tree_3 / \
+              dngn_demonic_tree_4 w:5 / dngn_demonic_tree_5 w:5 / \
+              dngn_demonic_tree_6 / dngn_demonic_tree_7 / \
+              dngn_demonic_tree_14 w:20 / dngn_demonic_tree_15 w:20
+: else
+KMONS:   F = fungus / toadstool
+COLOUR:  t = lightred / red / yellow / green
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow / dngn_tree
+: end
+MAP
+            t      t tt
+ t   t tttt   ttttt   tt
+tt       t  ttttttttt
+t  ttttt   ttttttttttt t
+  tttttttttttttF..3ttt
+F.t.Fwttttttt...3.%.ttt
+....wwwtwwwtF.wwwF.3ttt
+@t.%wwwTTtRRwwwdww.Fttt
+.F...ww1tttF.www1w.tttt
+...t.Fwttttt...ww..ttt
+   ttttttttttt....tttt t
+  ttttttttFtttt.tttttF
+t ttttttFt.ttF.tt.tt2. t
+t tttt....t.ttt..tetF.tt
+  ttt.2..ttt.2.tttttt.t
+t ttt.Ft..t.ttt.t.tet.
+t  tt.ttt.ttettt.F.tt@
+   tt..tt.FtttFttttt..
+tt  tt.tF.......tt...t
+ tt  .....tF.Ft....t..
+ENDMAP
+
+# The dusty underground desert remnants of a lost village.
+NAME:    darby_desolate_dusts
+TAGS:    no_monster_gen
+DEPTH:   D:1-10
+WEIGHT:  7 (D:1), 10
+: if you.depth() < 4 then
+KMONS:   12 = jackal band / gnoll w:5
+SUBST:   ? = .
+: elseif you.depth() < 6 then
+KMONS:   1 = scorpion / hound / howler monkey band / gnoll bouda band w:5
+KMONS:   2 = jackal band / gnoll band w:5
+SHUFFLE: !?
+: else
+KMONS:   1 = gnoll bouda band / gnoll sergeant band / howler monkey band
+# Encountered in the open, but player is likely to retreat to a corridor
+# to deal with the other monsters (and they're thematic).
+KMONS:   2 = rock fish band
+NSUBST:  ? = 2:2 / *:.
+: end
+KMONS:   p = fungus / toadstool / withered plant
+KMONS:   D = pile of debris
+# Species one might find underground, but not as enemies.
+KITEM:   s = human skeleton / dwarf skeleton / oni skeleton
+KFEAT:   ^ = shaft trap
+KFEAT:   + = broken_door
+NSUBST:  ! = 1:1 / *:., ? = 1:2 / *:.
+SUBST:   X = D:1 `:5 .:5, " = "., . = .:20 ':20 p:2 ^:1 s:1, > = >..
+MARKER:  F = lua:fog_machine { cloud_type = "sparse dust", \
+             pow_min = 9, pow_max = 12, delay = 45, \
+             size = 2, walk_dist = 1, spread_rate = 33 }
+FTILE:   ' = floor_pebble_darkbrown
+FTILE:   DX"` = floor_mud
+: random_stair(_G, ">")
+: vault_granite_statue_setup(_G, "G", "gravestone")
+MAP
+    ...
+  ......    ...
+ ........?.......
+ .XXx+xX..........
+..X""""X.........
+..X"%""X.....G...
+ .X"""FX.!..F....
+ .XXXXXX.........
+  ...............
+  ?...!..>..!...?.
+  ................
+ ..........XXXXX...
+...G.GF..!.XF%"x...
+...........X"""+...
+...........XXXXx..
+ ................
+ ........?.......
+  ..   .........
+          ....
+ENDMAP
+
+# An overgrown courtyard. Fast land animals hide in the underbrush.
+NAME:    darby_ripple_courtyard
+TAGS:    no_monster_gen ruin_lair
+DEPTH:   D:1-3, Lair, Depths
+: if you.in_branch("D") then
+:   if you.depth() == 1 then
+MONS:    ball python / quokka
+:   else
+MONS:    ball python / quokka / adder
+:   end
+ITEM:    any potion
+# floor_grass is only for outdoor deployment, but it's believable that
+# this might be at the bottom of a chasm to the sky above.
+FTILE:   'tP12? = floor_grass
+FTILE:   .cGUdp+ = floor_pebble_white
+: elseif you.in_branch("Lair") then
+MONS:    black mamba / bullfrog / water moccasin / cane toad
+ITEM:    any potion / any potion q:2
+FTILE:   .cGUdp+ = floor_lair / floor_sprouting_stone
+: elseif you.in_branch("Depths") then
+# In the Depths, it is instead an Erl-King's court.
+MONS:    spriggan air mage / spriggan berserker / spriggan defender, alderking
+ITEM:    any potion q:3
+NSUBST:  ? = 1:2 / *:?
+FTILE:   'tP12? = floor_grass_dark
+FTILE:   .cdpGU+ = floor_sprouting_squares
+: end
+KMONS:   Pp = plant
+NSUBST:  @ = 1:+ / *:@, ? = 1:1 / *:?
+SUBST:   @ = c+, ? = 1P, ' = P'', p = p.
+: if you.in_branch("Depths") then
+TILE:    G = depths_column / depths_crumbled_column
+: else
+:   vault_granite_statue_setup(_G, "G", "broken pillar")
+: end
+: decorative_floor(_G, 'F', "garden patch")
+MAP
+   cccccc
+ ccc....ccc     c@c
+cc........ccccccc.c
+c...GpGpGp........c
+c.Gp''F'''Gp...pG.c
+c.p'''W'?'''GpG'p.c
+c.G'?'W''t''F'''G.c
+c.p't'W'pdp'W'?'p.c
+c.G'''Wt.U.tW'''G.c
+c.p'?'W'p.p'W't'p.c
+c.G'''F''.''W'?'G.c
+c.p'GpG''.''W'''p.c
+c.Gp...pG.''F''pG.c
+c.........GpGpG...c
+c.ccccccc........cc
+c@c     ccc....ccc
+          cccccc
+ENDMAP
+
+NAME:     darby_fish_out_of_rock
+TAGS:     no_monster_gen no_pool_fixup
+DEPTH:    D:6-10
+KMONS:    1 = rock fish band / rock fish w:5
+KMONS:    2 = kobold geomancer
+KMONS:    F = fungus / toadstool
+ITEM:     parchment disc:earth w:20 / tin of tremorstones w:8 / \
+          wand of digging w:4 / granite talisman w:4 / staff of earth w:1 / \
+          manual of earth magic w:4 / pair of boots ego:earth w:1 / \
+          barding ego:earth w:1 / orb randart artprops:earth w:1
+ITEM:     stone no_pickup / large rock q:1 no_pickup
+KFEAT:    1X = x
+SHUFFLE:  Aa / Bb, Aa / Aa / Cc
+SUBST:    2 = 2.., F = FF., e = ee., AaBb = ., C = X, c = x
+TILE:     1X = wall_pebble_brown
+MAP
+ xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx
+xxxXXXXXXXXXXxxx
+xxXXXX1wXXXw1Xxx
+xxXXXewwwwwweXxx
+xxXXe.wwdwww.Xxx
+xxXX.Fww.wwF.Xxx
+xxXF..ww.Fw.XXxx
+xxX2..Fw....XXxx
+xxXXF....eFBXXxx
+xxXXXXe.FXXBBXxx
+xxXXXXXAXXXXBBbb
+xxXXXXXAXXXXXXxx
+xxxXXXXAXXXXXxxx
+xxxxxxxaxxxxxxxx
+ xxxxxxaxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -3025,6 +3374,351 @@ MAP
 .WWxxxxxxxxxxxxxxww
 ...wwwwwwwwwwwwwww
    wwwwwwwwwwwwww
+ENDMAP
+
+# A staircase open to the surface, or a secret underground garden?
+# Friendly hosts (usually)? Part of a set with misty_motte since one
+# can otherwise recognise the vault ahead of time.
+NAME:    darby_backdoor_grove
+TAGS:    extra no_descent no_monster_gen uniq_backdoor
+DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
+WEIGHT:  7
+: local gn = "att:good_neutral  ; nothing"
+KMONS:   1 = felid att:good_neutral
+KMONS:   2 = generate_awake butterfly
+# Prefer natural, animal-intelligence enemies, ideally "cute" ones,
+# and random branch-fitting or unusual surface-dwelling hosts. Avoid
+# slow enemies, since player can escape to the hosts.
+: if you.in_branch("D") then
+:   kmons("3 = human " .. gn .. " / barachi " .. gn .. " / formicid " .. gn)
+KMONS:   4 = goblin / kobold / hobgoblin / gnoll
+:   if you.depth() == 1 then
+KMONS:   5 = frilled lizard / ball python / quokka
+:   elseif you.depth() == 2 then
+KMONS:   5 = frilled lizard / ball python / quokka / adder
+:   else
+# One floor OoD: the vault is usually only accessible from D:4 or tele.
+KMONS:   5 = ball python / quokka / adder / black bear / sleepcap
+:   end
+FTILE:   .t24}> = floor_grass
+:   decorative_floor(_G, 'p', "garden patch")
+: elseif you.in_branch("Lair") then
+:   kmons("3 = naga " .. gn .. " / merfolk " .. gn .. " / formicid " .. gn)
+KMONS:   4 = spriggan
+:   decorative_floor(_G, 'p', "flower patch")
+SUBST:   X = Xx
+: elseif you.in_branch("Depths") then
+:   kmons("3 = tengu " .. gn .. " / spriggan " .. gn)
+KMONS:   4 = tengu warrior / tengu conjurer / tengu reaver
+KMONS:   5 = spark wasp band / alderking / caustic shrike band
+# All fitting Depths monsters are top-end threats, do not spawn 3.
+NSUBST:  5 = 1:5 / *:.
+:   decorative_floor(_G, 'p', "garden patch")
+FTILE:   .t24}> = floor_grass_dark
+TILE:    c = wall_church
+: elseif you.in_branch("Zot") then
+KMONS:   3 = base draconian att:good_neutral ; nothing
+KMONS:   4 = base draconian
+KMONS:   5 = moth of wrath w:20 / quicksilver dragon / \
+             shadow dragon /storm dragon / golden dragon / \
+             death cob w:20 / tentacled monstrosity w:20
+# Use all demonic tree variations, a riot of colour befits Zot.
+KFEAT:   t = demonic_tree
+:   decorative_floor(_G, 'p', "flower patch")
+: end
+# Friendly hosts share drink and a random magical secret.
+ITEM:    any potion, parchment
+KFEAT:   z = c
+KFEAT:   F = cache_of_fruit / cache_of_baked_goods
+KFEAT:   ~ = closed_clear_door
+SHUFFLE: de, 13= / 13= / 04~
+CLEAR:   X
+FTILE:   =deF0134~' = floor_studio
+TILE:    z = wall_studio
+# Layout and runed door designed so hosts do not help fight. Runed
+# door also makes early placements less a trap for Oka/sac love.
+MAP
+   XXXXXXXXXXXXXXX
+  XxxxxxxxxxxxxxxxX
+ XxxxxxxxxxxxxxxxxxX
+XxxxxtttttxtttxxxxxxX
+Xxxxtt5..ttt5tttxxxxX
+Xxxxt..w.......ttxxxX
+Xxxtt.www.p.t.2.txxxX
+Xxxt..ww2......tttxxX
+Xxxtt..w.ccccc...txxX
+Xxxt.t...cz3dcp.ttxxX
+Xxxt...}.czF1=.>.txxX
+Xxxtt.2..cz3ecp..txxX
+Xxxxtt.p.ccccc..ttxxX
+Xxxxxt.....2....txxxX
+Xxxxxtt.t5tttt.ttxxxX
+XxxxxxtttttxxtttxxxxX
+ XxxxxxxxxxxxxxxxxxX
+  XxxxxxxxxxxxxxxxX
+   XXXXXXXXXXXXXXX
+ENDMAP
+
+# A vaguely sky-themed bailey in microcosm, contrast backdoor_grove.
+NAME:    darby_backdoor_misty_motte
+TAGS:    extra no_descent no_monster_gen no_item_gen no_pool_fixup uniq_backdoor
+DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
+: if you.in_branch("D") then
+KMONS:   1 = bat
+:   if you.depth() == 1 then
+KMONS:   2 = goblin / kobold
+KMONS:   3 = hobgoblin / gnoll
+:   else
+KMONS:   2 = gnoll / orc
+KMONS:   3 = Terence / gnoll band w:2, Sigmund / gnoll band w:2, gnoll band
+:   end
+: elseif you.in_branch("Lair") then
+# Specifically winged monsters, not just amphibious.
+KMONS:   1 = rime drake / wyvern / raven
+KFEAT:   + = broken_door
+SUBST:   X = Xx, 2 = 0, 3 = 9
+: elseif you.in_branch("Depths") then
+# Tengu fit the combined military and sky theme too well to dilute
+# with other Depths monsters.
+KMONS:   1 = tengu warrior / tengu conjurer
+KMONS:   2 = tengu warrior band / tengu conjurer band / tengu reaver
+KMONS:   3 = Sojobo band / tengu reaver w:1, tengu reaver
+: elseif you.in_branch("Zot") then
+KMONS:   1 = black draconian w:20 / quicksilver dragon / \
+             shadow dragon / storm dragon / golden dragon
+KMONS:   2 = base draconian band / nonbase draconian
+# The vault constrains Tiamat's band, but already places enough
+# draconians as is.
+KMONS:   3 = Tiamat band / nonbase draconian band w:2, nonbase draconian band
+: end
+ITEM:    any weapon good_item, any armour good_item, any missile
+KFEAT:   1! = deep_water
+# Bailey-like ("motte and bailey"), so tyrant's traps fit.
+KFEAT:   ^ = tyrant's trap
+KFEAT:   3 = escape_hatch_down
+KFEAT:   y = x
+SHUFFLE: def
+CLEAR:   X
+MARKER:  ! = lua:fog_machine { cloud_type = "thin mist", \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+: if you.in_branch("Lair") then
+KFEAT:   ~ = broken_clear_door
+FTILE:   .cdefmyG123~%^+}> = floor_lair / floor_sprouting_stone
+: else
+KFEAT:   ~ = closed_clear_door
+FTILE:   .cdefmyG123~%^+}> = floor_pebble_white
+: end
+: if you.in_branch("Depths") or you.in_branch("Zot") then
+SUBST:   ^ = .^
+TILE:    c = wall_marble
+: else
+SUBST:   ^ = .
+: end
+TILE:    y = wall_pebble_white
+: vault_metal_statue_setup(_G, "G", "iron statue")
+TILE:    G = dngn_oka_iron_statue
+MAP
+  XXXXXXXXXXXXXXXXX
+ XxxxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxxxxxX
+XxxyyyyyyxxxyyyyyyxxX
+Xxxy!w1wyyyyyw1w!yxxX
+Xxxyw...ww1ww...wyxxX
+Xxxyw.G.......2.wyxxX
+Xxxyw..^ccmcc~c.wyxxX
+Xxxyywc~c2.dc.cwyyxxX
+Xxxxy1c.+.3ec.cwyxxxX
+Xxxyywc2c2.fc~cwyyxxX
+Xxxyw^cmccccc^..wyxxX
+Xxxyw.}^..2...G.wyxxX
+Xxxyw...ww!ww...wyxxX
+XxxywwwwyyyyywwwwyxxX
+XxxyyyyyyxxxyyyyyyxxX
+XxxxxxxxxxxxxxxxxxxxX
+ XxxxxxxxxxxxxxxxxxX
+  XXXXXXXXXXXXXXXXX
+ENDMAP
+
+# Mining and underhanded tactics, two classic kobold motifs. Why not
+# both? Intended to *seem* mean but not be especially difficult. Monster
+# set mainly split between ranged "miners," melee "guards," and one
+# usually-random branch spawn near the entrance.
+NAME:    darby_miner_ambush
+TAGS:    no_monster_gen no_pool_fixup
+DEPTH:   D, Orc
+WEIGHT:  5 (D:1-3), 10
+: if you.in_branch("D") then
+:   if you.depth() == 1 then
+KMONS:   134 = kobold ; dagger | whip . stone
+KMONS:   267 = kobold
+SUBST:   ^! = '
+:   elseif you.depth() < 5 then
+KMONS:   134 = kobold ; dagger | whip . dart ego:poisoned | stone
+KMONS:   27 = kobold
+:   elseif you.depth() < 12 then
+KMONS:   14 = kobold geomancer
+KMONS:   267 = kobold ; dagger good_item | whip good_item / \
+             kobold brigand
+KMONS:   3 = kobold geomancer / kobold brigand
+:   else
+KMONS:   14 = kobold blastminer
+KMONS:   267 = kobold geomancer / kobold brigand / kobold demonologist
+KMONS:   3 = kobold blastminer / kobold geomancer
+:   end
+: elseif you.in_branch("Orc") then
+KMONS:   1 = kobold demonologist
+KMONS:   27 = kobold geomancer / kobold brigand / kobold demonologist
+KMONS:   3 = kobold blastminer / kobold geomancer
+KMONS:   46 = kobold blastminer
+# A demon-summoning orc working with the kobold demonologist.
+KMONS:   5 = orc high priest / orc sorcerer
+SUBST:   R = Rx
+: end
+# It's not an ambush if you see it coming. Sometimes, they're already
+# dead of mysterious causes.
+SHUFFLE: 347"/347"/eeee
+: if you.in_branch("D") and you.depth() < 5 then
+KFEAT:   ^ = net trap / tyrant's trap
+: else
+KFEAT:   ^ = net trap / tyrant's trap / alarm trap
+SHUFFLE: 34, wl
+: end
+KFEAT:   M = cache_of_meat
+# Always found while autoexploring into gold. Used to pause and reveal
+# the "bait" to the player, and the "secret door" is thematic.
+KFEAT:   - = x mimic
+KFEAT:   X = x
+SHUFFLE: M%, ^!
+SUBST:   ^ = ^', ! = '
+CLEAR:   R
+FTILE:   '"$eMX23467%^!- = floor_orc
+TILE:    X- = wall_orc
+: dgn.delayed_decay(_G, 'e', 'kobold corpse')
+: decorative_floor(_G, 'S', "skull pike")
+MAP
+    RRRRRRRRRRRRRRRRR
+ RRRxxxxxxxxxxxxxxxxxRRR
+RxxxxXXXXXXXXXXXXXXXxxxxR
+RxXXXXXXXXXXXXXXXXXXXXXxR
+RxXXXXXX''''''''''XXXXXxR
+RxXXXXXX'www''www'''$XXxR
+RxXX'''''w''M%''w'XXXXXxR
+RxXX"XXX3w7X^!X7w4XXXXXxR
+RxXX$XXXXXXX''XXXXXXXXXxR
+RxXXXXXXXXXX!^XXXXXXXXXxR
+RxXXXXXXXXXX--XXXXXXXXXxR
+RxxXXXXXX$''''XXXX$XXXxxR
+ RxXXXXXXXXX'''''''XXXxR
+ RxxXXXXXXXX62XXXXXXXxxR
+  Rxxxxxxxxx++xxxxxxxxR
+  Rxxxxxxx...1xxxxxxxxR
+   RRRRRRx5wwwxRRRRRRR
+         x..S.
+           ...
+ENDMAP
+
+# Quoth the goblin description, "Sadly, no number of raucous goblin
+# parties will put them in a welcoming mood toward adventurers."
+NAME:    darby_raucous_goblin_parties
+TAGS:    no_monster_gen no_pool_fixup
+DEPTH:   D:1-4
+# 1: Bouncer. 2: Guard pet. 3-4: Partiers. 5: Drummer. 6: Kitchen pest.
+KMONS:   1 = hobgoblin
+KMONS:   34 = goblin
+KMONS:   5 = Robin band, hobgoblin
+KMONS:   p = withered plant
+KMONS:   F = fungus / toadstool
+ITEM:    potion of moonshine pre_id
+ITEM:    potion of ambrosia pre_id / potion of berserk rage pre_id
+KFEAT:   MP = cache_of_meat
+SHUFFLE: 12, dM, Pe
+: if you.depth() == 1 then
+KMONS:   2 = jackal / ball python w:5
+KMONS:   6 = rat w:20 / endoplasm / dart slug
+SUBST:   5 = 1, e = de
+NSUBST:  4 = 1:4 / *:'
+: elseif you.depth() == 3 then
+KMONS:   2 = jackal band / jackal w:5
+KMONS:   6 = rat / clockroach
+: elseif you.depth() == 4 then
+KMONS:   2 = hound / adder w:5
+KMONS:   6 = clockroach / sleepcap
+: end
+NSUBST:  e = 1:e / *:d
+FTILE:   '4 = floor_rough_red
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+: decorative_floor(_G, 'D', "djembe set")
+MAP
+        x
+       xxx
+      xx.xx
+     xx.5.xx
+    xxF.D..xx     x
+   xxd......xx   xxx
+  xxM.G...G..xx xxPxx
+ xxd.4''''''..xxxF6Pxx
+xxF3.'4'4'4'...+....Fxx
+ xxM.4''''''..xxxe3Fxx
+  xxd.G...G..xx xxexx
+   xxF......xx   xxx
+    xx.....xx     x
+     xm...mx
+     xmx.xmx
+    xxpx+xpxx
+    xp.1.2.px
+ENDMAP
+
+# The gnolls tire of killing adventurers, and would prefer to scare
+# you away, but if you insist... Themed around infamous top killers
+# and experiments in heavy warning without runed doors. Unlike true
+# runed doors, the monsters here are smart enough to path to you if
+# you linger in their home.
+NAME:    darby_intimidation_tactics
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:1-6
+WEIGHT:  5 (D:1-3), 10
+# They are still in-depth, since the vault is both early and is not
+# no_tele_into, just the meanest representatives of their depth.
+: if you.depth() == 1 then
+MONS:    bat / rat / ball python, jackal band, gnoll
+: elseif you.depth() < 4 then
+MONS:    bat / rat / ball python / ribbon worm / adder, gnoll band
+KMONS:   3 = Sigmund, gnoll ; halberd . throwing net
+: else
+MONS:    adder / scorpion / hound / black bear, gnoll bouda band
+KMONS:   3 = Sigmund, gnoll sergeant
+: end
+KMONS:   D = pile of debris
+ITEM:    mundane mace no_pickup / mundane hand axe no_pickup / \
+         mundane spear no_pickup / mundane falchion no_pickup / \
+         mundane dagger no_pickup
+KFEAT:   z = v
+SUBST:   z = vzz
+NSUBST:  e = 2:e / * = e'', ' = 1:' / * = '..
+KPROP:   z' = bloody
+TILE:    vz = dngn_metal_wall_darkgray
+TILE:    m = dngn_transparent_wall_red
+: dgn.delayed_decay(_G, 'e', 'human corpse')
+: decorative_floor(_G, 's', "skull pike")
+MAP
+  xxxxxxxxxxxxxxx
+  xvvvvvvvvvvvvvx
+  xv.....D.....vx
+  xv.s...D.....vx
+xxxv.....D.....vxxx
+xvvv...vvvvv+++vzzx
+xv.......v'e'eeeezx
+xv$..3..$ve1e'e1ezx
+xv%v.2.v%v'e'eeeezx
+xvvvmmmvvvvv+++vzzx
+xxxv.....D.....vxxx
+  xv.}...D...s.vx
+  xv.....D.....vx
+  .v+++vvvvvvvvv.
+  .zeeezdddvdddv.
+  .ze1ez.s.v.s.v.
+  ..eee..........
 ENDMAP
 
 ################################################################################
@@ -7978,6 +8672,134 @@ XXXXXXXXXccccccczc?.....c-.1.tV.&
         XXXXXXXXXccccccccc......c
                 XXXXXXXXXcccccccc
                         XXXXXXX
+ENDMAP
+
+# A gloomy forest spreads throughout the depth, a dark tunnel
+# leading to the misty lake at its heart.
+NAME:    darby_gloom_lake
+TAGS:    no_monster_gen no_item_gen no_pool_fixup
+DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$, Pan
+WEIGHT:  7 (D:1), 10
+# Monsters that might fit a dark or Gothic forest atmosphere, with
+# Doom, rN checks, and similar mechanics where available.
+: if you.in_branch("D") then
+KMONS:   1 = bat
+KMONS:   2 = jackal band / spectral hobgoblin
+KMONS:   3 = rat / kobold / endoplasm
+KITEM:   k = human skeleton / barachi skeleton / centaur skeleton
+SUBST:   4 = 3
+NSUBST:  ! = 4:1 / *:w
+: elseif you.in_branch("Lair") then
+KMONS:   1 = raven
+KMONS:   2 = catoblepas / death yak band
+KMONS:   3 = basilisk / wolf band
+# Never spawn a death yak band atop the "secret" staircase.
+KMONS:   4 = catoblepas / basilisk / wolf band
+KITEM:   k = naga skeleton / merfolk skeleton
+SUBST:   R = Rx
+NSUBST:  ! = 2:1 / *:w
+: elseif you.in_branch("Depths") then
+KMONS:   1 = vampire mage / shadow dragon
+KMONS:   2 = alderking
+KMONS:   3 = occultist w:5 / necromancer / vampire knight / lich
+KITEM:   k = spriggan skeleton / tengu skeleton
+SUBST:   4 = 3
+NSUBST:  ! = 2:1 / *:w
+: elseif you.in_branch("Pandemonium") then
+KMONS:   1 = soul eater / reaper w:5
+KMONS:   2 = tzitzimitl / profane servitor w:5
+KMONS:   3 = demonspawn soul scholar band / tormentor
+KMONS:   4 = profane servitor
+KITEM:   k = demonspawn skeleton
+KFEAT:   C = altar_yredelemnul
+SUBST:   G = C, } = {., W = w
+NSUBST:  ! = 4:1 / *:w
+: elseif you.in_branch("Zot") then
+KMONS:   1 = shadow dragon / curse toe / spectral draconian
+KMONS:   2 = orb of entropy
+KMONS:   3 = draugr
+KITEM:   k = draconian skeleton
+NSUBST:  ! = 2:1 / *:w
+SUBST:   4 = 3, W = w
+: end
+# 2 common necromantic items and 1 rare one.
+ITEM:    any weapon ego:draining / parchment of Soul Splinter w:4 / \
+         parchment of Kiss of Death w:1 / parchment of Gloom w:1
+ITEM:    any weapon ego:pain / any weapon ego:vampirism / \
+         any weapon ego:draining good_item / parchment disc:necromancy
+ITEM:    sanguine talisman w:30 / staff of necromancy w:30 / \
+         shadow dragon scales good_item w:30 / manual of necromancy w:15 / \
+         scale mail ego:death good_item / chain mail ego:death good_item / \
+         plate armour ego:death good_item
+KFEAT:   1F = deep_water
+KFEAT:   X = x
+SHUFFLE: '"` / #&$, s} / s} / S]
+NSUBST:  ? = 1:2 / *:3
+SUBST:   2 = 23, k = k., " = @, # = X, & = x
+SUBST:   ` : w., $ = ., s = t, S = ., ] = }.
+: if not you.in_branch("D") then
+NSUBST:  d = 1:f / *:e
+: end
+CLEAR:   R
+MARKER:  F = lua:fog_machine { cloud_type = "thin mist", \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+: if you.in_branch("Pandemonium") then
+KFEAT:   tT = demonic_tree
+FTILE:   .defkstCGX1234?{}` = floor_nerves_darkgray
+TILE:    X# = wall_hall_of_shadows
+TILE:    tT = dngn_demonic_tree_1 / dngn_demonic_tree_16 / \
+              dngn_demonic_tree_4 / dngn_demonic_tree_5 / \
+              dngn_demonic_tree_6 w:5 / dngn_demonic_tree_7 w:5 / \
+              dngn_demonic_tree_8 w:5 / dngn_demonic_tree_9 w:5
+TILE:    w1F = dngn_starwater
+: elseif you.in_branch("Zot") then
+KFEAT:   tT = petrified_tree
+TILE:    X# = wall_abyss_darkgray
+TILE:    w1F = dngn_starwater
+: else
+KFEAT:   T = t
+COLOUR:  tT = brown
+TILE:    tT = dngn_tree_dead
+TILE:    X = wall_pebble_darkgray
+:   set_feature_name("tree", "dead tree")
+:   if you.in_branch("Lair") then
+FTILE:   .defkstTGX1234?}` = floor_rough_darkgray
+:   end
+: end
+: vault_granite_statue_setup(_G, "G", "gravestone")
+veto {{
+  return dgn.zot_orb_type() ~= "orb of entropy" and you.in_branch("Zot")
+}}
+# "Secret" gravestone area is a very mild spoiler, revealed when
+# entering from below. In Pan, a guaranteed servitor reveals it.
+MAP
+                 T    T
+          T        TTT     T
+ RRR           TTTTTtTTTTT
+RxxxxX@Xx     TTtttttttttTT
+RxxxXX.XxRT  TTtttwtttwwttT
+RxxXX3XXxR  TTtttwwwwwwwwtTT
+RxxX`XXxxRTTTttttwwwwwwwwttT T
+RxxX``Xxxxxxxtttww!wwwwwwwtT
+RxxXX`XXxXXXttk.wwwwwwwwwwtTT
+RxxxX``XXX.Xk?d.wwwwwFwwwttTT
+RxxxXX``.......wwwwwwwwwwttT
+RxxxxX.`wwwwWWwwwwwwwww!wttTT
+RxxxXX.w!ww....kwwwwwwwwwttT
+RxxxX..ww..XXk?d.wwwwwwwwwtT T
+RxxxX..W.XXXXt..SwwwwwwwwwtTT
+RxxXX.ww..XXXtsttww!wwwwwwttT
+RxxX..www.XXXtssttwwwwwwwtttT
+RxxX.ww1ww.XXttstwwwwFwwwttTT
+RxxX..wwww.XXtt..wwwwwwwwttT
+RxxXX...w..XXt.}G.wwwwww!wtT T
+RxxxXXX...XXXt.d4.wwwwwwwwtT
+RxxxxxXX'XXxxtt.tttwwwwwwttTT
+Rxxxxxxx"xxxxtttttttttwtttTT
+ RRRRRR     TTTTTTTTTtttTTT
+          T   TT    TTTTT   T
+                 T     T
 ENDMAP
 
 ################################################################

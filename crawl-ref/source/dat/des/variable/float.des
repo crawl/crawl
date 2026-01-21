@@ -7810,6 +7810,290 @@ Xxx..........................XXX...Xx
      xxx   xxxxccccccccccccccccccccccccxx   vvv
 ENDMAP
 
+####
+
+# IX: An experiment, where transporters aren't necessary for entering a vault's
+#     given contents, but which connect deliberately disjoint sections.
+NAME:     darby_doomed_tower
+TAGS:     no_monster_gen
+DEPTH:    D:5-10, Depths:2-, !Depths:$, Crypt:2, !Crypt:$
+ORIENT:   float
+: if you.in_branch("D") then
+KMONS:    123 = drude
+KMONS:    4 = phantom / sky beast / steam dragon
+KMONS:    5 = orc wizard / kobold geomancer / sleepcap
+KMONS:    6 = ufetubus band / shadow imp / bes kemwar band
+KMONS:    7 = bombardier beetle / clockroach / jelly
+:   if you.depth() < 8 then
+NSUBST:   56 = 1:'
+:   else
+NSUBST:   ' = 1:5 / *:'
+:   end
+NSUBST:   d = 1:d / *:", e = 1:e / *:', f = 1:f / *:'
+TILE:     c = wall_stone_scorched
+: else
+NSUBST:   d = 1:d / 1:d"" / *:", e = 1:e / 1:e' / *:', f = 1:f / 1:f'' / *:'
+:   if you.in_branch("Depths") then
+KMONS:    123 = cacodemon
+KMONS:    4 = chonchon band / glowing orange brain / guardian sphinx
+KMONS:    5 = occultist / necromancer band / kobold fleshcrafter band / \
+              vampire mage band / tengu conjurer band / tengu reaver / \
+              lich / spriggan air mage / walking frostbound tome / \
+              walking earthen tome / walking crystal tome / walking divine tome
+KMONS:    6 = rakshasa band w:20 / ugly thing band / very ugly thing band
+KMONS:    7 = wyrmhole w:20 / fire giant / salamander tyrant
+KFEAT:    mM = n
+TILE:     mM = dngn_transparent_stone_darkgray
+:   elseif you.in_branch("Crypt") then
+KMONS:    123 = draugr
+KMONS:    4 = cognitogaunt
+KMONS:    5 = necromancer / vampire mage / deep elf death mage / lich
+KMONS:    6 = cognitogaunt / soul eater / reaper
+KMONS:    7 = revenant soulmonger / bone dragon
+KMONS:    8 = vampire bloodprince
+KFEAT:    c = v
+FTILE:    ptD- = floor_grey_dirt
+TILE:     v = dngn_metal_wall_magenta
+NSUBST:   4 = 1:48 / *:4
+:   end
+: end
+: if not you.in_branch("Depths") then
+KFEAT:    M = m
+SUBST:    A = ;
+TILE:     mM = dngn_transparent_wall_darkgray
+: end
+KMONS:    p = withered plant
+KMONS:    F = fungus / toadstool
+KITEM:    d = wand of warping w:40 no_pickup / dart ego:disjunction no_pickup / \
+              any weapon ego:distortion no_pickup
+KITEM:    e = randbook disc:translocation numspells:2 / \
+              randbook disc:summoning numspells:2
+KITEM:    f = scroll of summoning pre_id w:60 / parchment of call imp / \
+              parchment of malign gateway / parchment of summon horrible things
+KITEM:    g = scroll of blinking pre_id / scroll of teleportation pre_id w:5
+KFEAT:    BC = c
+KFEAT:    HIJ = G
+KFEAT:    ^ = dispersal trap
+KFEAT:    ~ = archmage's trap
+KFEAT:    _ = teleport trap
+SHUFFLE:  {<, g>
+NSUBST:   # = 1:1 / 1:" / * = 1"", & = 1:3 / 1:` / *=3``
+NSUBST:   ? = 1:2 / 1:' / * = 2'', ! = 1:2 / 1:' / *=2''
+SUBST:    p = p -:5, F = F ':5
+KMASK:    pD- = no_item_gen
+KPROP:    pD- = no_tele_into
+MARKER:   K = lua:transp_loc("doomed_tower_upper_library")
+MARKER:   L = lua:transp_dest_loc("doomed_tower_upper_library")
+MARKER:   N = lua:transp_loc("doomed_tower_upper_lab")
+MARKER:   O = lua:transp_dest_loc("doomed_tower_upper_lab")
+MARKER:   P = lua:transp_loc("doomed_tower_lower_library")
+MARKER:   Q = lua:transp_dest_loc("doomed_tower_lower_library")
+MARKER:   R = lua:transp_loc("doomed_tower_lower_lab")
+MARKER:   S = lua:transp_dest_loc("doomed_tower_lower_lab")
+MARKER:   D = lua:fog_machine { \
+              pow_min = 8, pow_max = 12, delay = 25, \
+              size = 2, walk_dist = 1, spread_rate= 33 }
+MARKER:   A = lua:props_marker { portal=1 }
+COLOUR:   t = brown
+FTILE:    "dKMN14_{< = floor_pebble_white
+FTILE:    'efmFLOPR256~^ = floor_pebble_lightgray
+FTILE:    `gG37> = floor_pebble_darkgray
+FTILE:    ;AQS = floor_vault
+TILE:     B = wall_studio
+TILE:     C = wall_stone_magic_shelf
+TILE:     t = dngn_tree_dead
+TILE:     b = bedevilled_crystal_abyss
+: set_feature_name("tree", "dead tree")
+: vault_metal_statue_setup(_G, "G", "dimensional conduit")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
+MAP
+  xxxxxxxxxxx             xxxxxxxxxxx
+  xxxxxxxxxxx             xxxxxxxxxxx
+  xxccccxxxxx......@......xxxxxccccxx
+  xxcFFccccxx.............xxcccc"{cxx
+  xxcFFBBFcccc.BB.....BB.ccccdC"""cxx
+  xxccF?'FBBFcccc.....ccccFM""""Bccxx
+  xxxcC'''''FBBFccc.cccFBBFM"B""Bcxxx
+  xxxcFF'B'B''eFFFc+cFFFe5'M"B""#cxxx
+ xxxxccF'B'BF'''''~''''''F'M"B"Bccxxxx
+xxxxttcC'BeBF'F''''?'''~'''M"""Bcttxxxx
+xxxtttcF'B5BF'''''''F''''''M""""ctttxxx
+xxtttpcc'B'B'mmmm'''''mmmm'M""Bccttttxx
+xxttpppm'F'F'mG`mmmPmmm`Gm'M""Bctttttxx
+xxttpDpm''?''m```7mmm```gmLM"""cpptttxx
+xxtppppccmmmmm`;;;;m;;MMMMMM""ccpppttxx
+xxtpppppc&`````;ll;Q;lM"""K4""Mppppttxx
+xxttppppcc`````;;lllllM""""""ccppppptxx
+xxt}-----+`````&AlllllM_d#""ccppDppptxx
+xxttppppcc`````;;lllllM""""""ccppppptxx
+xxttppppc&`````;ll;S;lM"""N4""Mppppptxx
+xxttpppccmmmmm`;;;;m;;MMMMMM""ccpppttxx
+xxtppDpm''!''m```7mmm```>mOM"""cpttttxx
+xxtppppm'''''mG`mmmRmmm`Gm'M"""ctttttxx
+xxttppcc''vv'mmmm'''''mmmm'M"""ccttttxx
+xxxtttcf'vv''''''''''''''''M""""ctttxxx
+xxxxttcC'vb6'''''''!'''^'''M"""vcttxxxx
+ xxxxcc''vv'''''''^''''6'''M"_"bccxxxx
+  xxxcf'''vv''vbv'c+c'vbv''M"""v#cxxx
+  xxxcC''''''''fccc.cccf'''M"""""cxxx
+  xxcc'''''''cccc.....cccc'M"""""ccxx
+  xxc'''''cccc.vbv...vbv.ccccdC"""cxx
+  xxc!'ccccxx.............xxcccc"<cxx
+  xxccccxxxxx......@......xxxxxccccxx
+  xxxxxxxxxxx             xxxxxxxxxxx
+  xxxxxxxxxxx             xxxxxxxxxxx
+ENDMAP
+
+NAME:     darby_geomancy_lab
+TAGS:     no_monster_gen no_pool_fixup
+DEPTH:    D:5-11, Depths
+ORIENT:   float
+: if you.in_branch("D") then
+KMONS:    1 = patrolling kobold geomancer
+:   if you.depth() < 9 then
+KMONS:    2 = kobold ; dagger . stone
+KMONS:    3 = kobold brigand band
+:   else
+KMONS:    2 = kobold brigand
+KMONS:    3 = kobold demonologist band ; dagger . robe . stone
+:   end
+KITEM:    % = parchment of sandblast
+TILE:     b = wall_emerald
+: elseif you.in_branch("Depths") then
+KMONS:    1 = patrolling deep troll earth mage
+KMONS:    2 = deep troll / iron troll
+KMONS:    3 = deep troll shaman band
+KITEM:    % = parchment of lee's rapid deconstruction
+: end
+ITEM:     tin of tremorstones w:20 / granite talisman / staff of earth w:5 / \
+          manual of earth magic / orb randart artprops:earth w:5
+ITEM:     wand of digging / damaged pair of boots ego:earth
+ITEM:     stone no_pickup / large rock q:1 no_pickup
+KFEAT:    BC = c
+KFEAT:    X = x
+KFEAT:    ~ = archmage's trap
+KFEAT:    # = iron_grate
+SUBVAULT: s : geo_lab
+SHUFFLE:  BC, -_=
+SUBST:    2 = 1:5 3, ~ = ~ .:5, -_ = +, = : c +:5
+NSUBST:   3 = 1:3 / 1:23 / *:2, d = 1:d / 1:e / 1:% / *:.
+TILE:     B = wall_studio
+TILE:     C = wall_stone_magic_shelf
+TILE:     X = wall_pebble_brown
+: vault_metal_statue_setup(_G, "G", "earthen conduit")
+MAP
+     ccccccccccccccccccc
+     c....+..3..+...sssc
+     c3c.ccc.G.ccccccssc
+     cdc+cccfffccccccssc
+cccccccc.cccXbvccccccsscccccc
+cllvdc1....cccccssssssssssssc
+clfv.-......+..cssssssssssssc
+clfG.-......+~.cssssssssssssc
+clf..c2....ccc.cssssssssssssc
+ccc==ccc.ccccc.cssssssssssssc
+c.....Cc+ccccc.cssssssssssssc
+cB....Cc.cCCcc.cssssssssssssc
+cB.3..Cc.c..w#.cssssssssssssc
+c.....Cc.+.1w#.cssssssssssssc
+c.CCCCCc.c..w#.cssssssssssssc
+c..d..3_.cBBcc.cssssssssssssc
+cccccccccccccc+cccccccccccccc
+ xbbbbbbbbbbbb+bbbbbbbbbbbbx
+ xxxxx.....G.....G.....xxxxx
+      .................
+ENDMAP
+
+NAME:     darby_geo_lab_end_default
+TAGS:     unrand allow_dup geo_lab
+DEPTH:    D:5-11, Depths
+: if you.in_branch("D") then
+KMONS:    12 = kobold geomancer
+:   if you.depth() < 9 then
+KMONS:    3 = kobold geomancer / kobold ; dagger . stone / kobold brigand band
+:   else
+KMONS:    3 = kobold geomancer / kobold brigand / \
+              kobold demonologist band ; dagger . robe . stone
+:   end
+TILE:     b = wall_emerald
+KITEM:    d = randbook disc:earth spells:lee's_rapid_deconstruction
+KITEM:    e = gold q:2 no_pickup / gold q:3 no_pickup
+: elseif you.in_branch("Depths") then
+KMONS:    1 = deep troll earth mage
+KMONS:    2 = deep troll / iron troll
+KMONS:    3 = deep troll shaman band
+MARKER:   O = lua:props_marker { portal=1 }
+:   local s = util.random_from{ "permafrost_eruption", "magnavolt"}
+:   kitem("d = randbook disc:earth spells:" .. s)
+KITEM:    e = gold q:6 no_pickup / gold q:8 no_pickup
+: end
+KFEAT:    ~ = archmage's trap
+KFEAT:    ^ = net trap
+KFEAT:    & = alarm trap
+SHUFFLE:  ^&
+SUBST:    ~ = ~ .:5
+FTILE:    'de1^& = floor_crystal
+MAP
+    ...
+     ~.
+     ++
+     ..
+2..........3
+.O..........
+............
+..bbbbbbbb..
+ccb'''1'eb++
+..+''''eeb..
+..+''^&edb..
+..+''''eeb..
+.~b'''1'eb..
+..bbbbbbbb~.
+............
+ENDMAP
+
+NAME:     darby_geo_lab_end_accident
+TAGS:     unrand allow_dup geo_lab
+DEPTH:    D:5-11, Depths
+WEIGHT:   5
+: if you.in_branch("D") then
+:   if you.depth() < 9 then
+KMONS:    1 = clockroach / phantom / bes kemwar band / drude
+:   else
+KMONS:    1 = shadowghast / wraith / unseen horror
+:   end
+:   dgn.delayed_decay(_G, 'f', 'kobold corpse')
+: elseif you.in_branch("Depths") then
+KMONS:    1 = glowing orange brain / flayed ghost / tentacled monstrosity
+MARKER:   O = lua:props_marker { portal=1 }
+:   dgn.delayed_decay(_G, 'f', 'deep troll corpse')
+: end
+KMONS:    D = pile of debris
+KITEM:    d = parchment of hellfire mortar / parchment of shatter
+KITEM:    e = stone no_pickup / large rock q:1 no_pickup
+KFEAT:    X = x
+KFEAT:    + = broken_door
+NSUBST:   d = 1:d / *:., " = 4:f / *:"
+SUBST:    " = Xl D:5 ':20, ' = .:20 ' e:5
+FTILE:    ' = floor_pebble_darkbrown
+TILE:     X = wall_pebble_brown
+MAP
+    ''"
+     '1
+     ++
+     '"
+...'''""....
+.""l"'""""..
+'"XX"''''''.
+"XX"'1ll.X".
+cXl''llXXX++
+"X'''OllXX""
+'''ll''"X"""
+."llXX''""'.
+.""llXX'""".
+..""ll"'""..
+d...""1'...d
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.

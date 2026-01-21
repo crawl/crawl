@@ -1366,6 +1366,23 @@ A mix of various alcoholic drinks with worn-down labels. Unfortunately, the
 preservative magic sealing each bottle makes it impossible to sample from them
 without smashing their bottles open.
 %%%%
+A djembe set
+
+A drum ensemble whose rhythm serves as peaceful recreation here in the depths of
+the earth.
+%%%%
+A caliginous standard
+
+A murky flag of dark conquest shimmering with vile energies, planted in the name
+of some grand despoiling crusade.
+%%%%
+a skull pike
+
+Bones are a common sight in the Dungeon, but skulls left impaled in a shrike's
+manner on display send a more deliberate message to trespassers: the pike has
+room for one more skull, and whoever set it up is happy to help relieve its
+owner of theirs.
+%%%%
 # Graveyards, Crypt, Necropolis.
 A mourning vase
 

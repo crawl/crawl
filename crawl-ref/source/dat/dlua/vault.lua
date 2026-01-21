@@ -323,8 +323,11 @@ function decorative_floor (e, glyph, type)
                               "dngn_dark_flower_pot_broken"},
     ["orcish standard"] = {"lightcyan", "dngn_ensign_beogh"},
     ["infernal standard"] = {"red", "dngn_ensign_gehenna"},
+    ["caliginous standard"] = {"magenta", "dngn_ensign_dark"},
     ["fur brush"] = {"brown", "dngn_yak_fur"},
     ["set of bottled spirits"] = {"lightgreen", "dngn_bottled_spirits"},
+    ["djembe set"] = {"brown", "dngn_djembe"},
+    ["skull pike"] = {"lightgrey", "dngn_skull_pike"},
     ["mop and bucket"] = {"lightblue", "dngn_mop"},
     ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"},
     ["weapon-inlaid floor"] = {"lightgrey", "floor_blade"}

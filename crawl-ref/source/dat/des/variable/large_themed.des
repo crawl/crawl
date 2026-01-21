@@ -3560,3 +3560,290 @@ cccc%...ccct...|t|..0ccc.......cc0CC.|.|.CCPccc....cccc
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''
   y&yyy@@@yyyy&&&yyy&&yyyyyyyyyyy&&yyy&&&yyyy@@@yyy&y
 ENDMAP
+
+NAME:     darby_marrow_cove
+TAGS:     no_monster_gen no_pool_fixup
+DEPTH:    D:5-11, Zot
+ORIENT:   north
+: if you.in_branch("D") then
+KMONS:    1 = marrowcuda
+KMONS:    2 = wight ; trident | trident plus:2 w:8 | \
+                      trident ego:freezing w:2 . robe
+KMONS:    3 = Erica, marrowcuda / electric eel
+KMONS:    F = fungus
+KITEM:    S = human skeleton
+:   if you.depth() < 8 then
+NSUBST:   1 = 1:w / *:1
+SUBST:    3 = w
+:   end
+SUBST:    ( = $
+: elseif you.in_branch("Zot") then
+KMONS:    1 = storm dragon / tentacled monstrosity / protean progenitor w:1
+KMONS:    2 = draconian stormcaller ; trident . cloak / \
+              draconian knight ; trident . cloak . kite shield | nothing
+KMONS:    F = withered plant
+KITEM:    S = draconian skeleton
+SUBST:    3 = 1
+: end
+KITEM:    d = wellspring talisman randart artprops:rN / \
+              fortress talisman randart artprops:rN
+KITEM:    e = phial of floods / storm dragon scales w:5
+KITEM:    f = randbook disc:necromancy numspells:2 / staff of necromancy / \
+              manual of necromancy w:5
+KFEAT:    ~ = open_sea
+KFEAT:    deFS2 = shallow_water
+KFEAT:    13 = deep_water
+KFEAT:    X = x
+# IX: Randomize entrances, and provide rewards for each blocked-off entrance.
+SHUFFLE:  aAp / bBq / cCr, aAp / MNO, bBq / PQR, {( / }) / f|
+SUBST:    MP = x, NQ = X, O = d, R = e
+SUBST:    abc = ., ApBqCr = W, | = def, F = F W:5
+: if you.in_branch("D") then
+TILE:     X = wall_pebble_darkgray
+: end
+: decorative_floor(_G, 's', "skull pike")
+MAP
+xxxX~~~~~~~~~~~~~~~~~~~~~~~~Xxxx
+xxxX~~~~~~~~~~~~~~~~~~~~~~~XXxxx
+xxxXww1wwwwwwwww1wwwwww1wwwXxxxx
+xxxXXwwwwwwwwXXwwwwwwwwwwwXXxxxx
+xxxxXwwwwwwwXXXXwwwwwwwwwwXxxxxx
+xxxxXwwwXwwwwwXwwwwwwwwwwXXXXXxx
+xxxxXwwwwwwwwwwwwwwwwwwXwwwFCXXx
+xxxXXWWwWSWwwWFw.(.wFWwwwwwWrCcc
+xXXXFWW2WWWWWW...{...WWwSwWWCXXx
+bbBqWWwwwWWwW..X....WWW2WWWXXXxx
+xXXFWwwwwwwwF.....wFWwwwwFXXxxxx
+xxXXWwwwwwwww.s..wwwwwwwwwXxxxxx
+xxxXwwwwwwwww...wwwwwwwwwwXxxxxx
+xxxXXwwwwwXwww..FwwwXwwwwwXXxxxx
+xxxxXwwwwXXwwF.WWwwXXXXwwwwXxxxx
+xxxXXwwwwXwwwWWWwwwXXXXXwwwXxxxx
+xxxX3wwwwwwwwwWWWwwwXXXwwwwXxxxx
+xxxXXwwwwwwwwwwWWSwwwwwwwwXXxxxx
+xxxxXwwwwwwwwwF2wwwwwwwwwwXxxxxx
+xxxxXXwwwwwwXXXWWWWwXXXX3XXxxxxx
+ xxxxXXXwwwXXxXXpFXXXxxXXXxxxxx
+  xxxxxXXXXXxxxXAXXxxxxxxxxxxx
+   xxxxxxxxxxxxXaXxxxxxxxxxxx
+    xxxxxxxxxxxxaxxxxxxxxxxx
+ENDMAP
+
+# IX: A vault using many different means to hide a randomized end secret.
+NAME:     darby_rabbit_hole
+TAGS:     no_monster_gen no_pool_fixup
+ORIENT:   northwest
+DEPTH:    D, !D:$, Depths, !Depths:$
+WEIGHT:   5 (D:2-4), 10
+: if you.in_branch("D") then
+:   if you.depth() < 5 then
+KMONS:    1 = goblin / hobgoblin
+KMONS:    2 = gnoll / gnoll band
+KMONS:    3 = rat w:20 / endoplasm / dart slug
+KMONS:    456 = endoplasm / dart slug / ribbon worm
+KMONS:    7 = bat / ball python / adder
+:   elseif you.depth() < 9 then
+KMONS:    1 = gnoll / gnoll bouda
+KMONS:    2 = gnoll sergeant / gnoll band
+KMONS:    3 = bombardier beetle / clockroach
+KMONS:    456 = jelly / sleepcap / bes kemwar band
+KMONS:    7 = water moccasin / marrowcuda
+:   elseif you.depth() < 12 then
+KMONS:    1 = wight band / shadowghast w:5
+KMONS:    2 = vampire / wraith
+KMONS:    3 = killer bee band / hornet / vampire mosquito band
+KMONS:    4567 = steam dragon / wyvern / acid dragon / shadowghast w:5
+:   else
+KMONS:    1 = centaur / centaur band
+KMONS:    2 = centaur warrior / centaur warrior band
+KMONS:    3 = vampire mosquito band / boulder beetle
+KMONS:    456 = ugly thing / basilisk / slime creature band
+KMONS:    7 = acid dragon / slime creature band
+:   end
+SUBST:    R = c C:5
+TILE:     P = wall_pebble_white
+: elseif you.in_branch("Depths") then
+KMONS:    1 = tengu warrior band / tengu conjurer band
+KMONS:    2 = tengu reaver / glass eye
+KMONS:    3 = walking frostbound tome / walking earthen tome / \
+              walking crystal tome / walking divine tome / \
+              spark wasp band w:40
+KMONS:    4567 = fire dragon / ice dragon / tentacled monstrosity w:20
+SUBST:    R = c x:5
+TILE:     P = wall_pebble_darkgray
+: end
+KMONS:    D = pile of debris
+KMONS:    F = fungus / toadstool
+KMONS:    p = withered plant
+KITEM:    $ = gold q:2 no_pickup / gold q:3 no_pickup
+KFEAT:    rXCP = rock_wall
+KFEAT:    M = c mimic
+KFEAT:    ~ = tyrant's trap / net trap
+KFEAT:    ^ = web trap
+KFEAT:    - = broken_door
+KFEAT:    D7 = shallow_water
+SUBVAULT: s : rabbit_hole
+SUBST:    ~ = ~ .:5, V = w W:5, ^ =  ^.
+TILE:     x = wall_pebble_darkgray
+TILE:     X = wall_pebble_lightgray
+TILE:     C = wall_pebble_white
+FTILE:    '>6pxB = floor_pebble_darkgray
+FTILE:    "5X = floor_pebble_lightgray
+FTILE:    ;4FC = floor_pebble_white
+: if you.in_branch("Depths") then
+TILE:    G = depths_column w:5 / depths_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: else
+: vault_granite_statue_setup(_G, "G", "broken pillar")
+: end
+: decorative_floor(_G, 'E', "caliginous standard")
+MAP
+ssssssssssssxxxxxxxxxxxxccccccccccc
+sssssssssssxxxxxxxxxxxxxccccccccccc
+sssssssssssxxxxxxxxxxxxxccccccccccc
+sssssssssssxxxxxxxxxxxxxccccccccccc
+ssssssssssssxxxxxxxxxxxxccccccccccc
+sssssssssssxxxWxxxxxxxxxccccc%$%c
+sssssssssssxx'xVxWxxxxxxRRRRc$.$c
+sssssssssssxx'xxWxWwwxxxR^..M..$c
+ssssssssssssxx'xxxwWwwxxR.G$c...c
+sssssssssssssx'xxww7wwxxR^.^c...c
+sssxxxxsssssx6xxwwwWwwxxR^G.c+ccccc
+sxxxxxxxxssxxxxxwwWWwwxxR^.^c.E2E.c
+xxxxxxxxxxxxxxxxxwWwwxxxRR-Rc.1.1.c
+XxxxxxxxxxxxxxxxxWWwxxxxR^.^c.....c
+XXXxxxxxxxxxxxxxxpWWxxxXR.G^c.....c
+XXXXxx'''x'p6xxx'''pxxXXR^3Wc..~..c
+XXX""''x'''x'''''>'xxXXCR^GWccc+ccc
+XX""XXxxxpxxxx'p'xxxXXCCR^WWccc.c
+XX"XXXXxxxxxxxxxxxXXXCCCRPR+ccc.c
+XX5XXXXXxxXXXXXXXXXCCCCCRWVWccc.c
+XX"XXXXXXXXCCCCCCCCCFCCCR+RRccc.c
+XX""X"""XXCCF;;;;;CC;;CCRWWwccc.c
+XX""""X"";4;;;CCC;;C;;4WDWwwccc+ccc
+XXX""XXXCCCCCFCCCC;;;FCCRWwwc.....c
+XXXXXXXCCCCCCCCCCCCCCCCCRWWwc.....c
+XXXXXXCCCCCCCCCCCCCCCCCCRWWDc1.E.1c
+ccccccccccccccccccccccccccccc.....c
+rrrrrrrrrrrrrrrrrrrrrrrrrrrrc.....c
+                            ccc+ccc
+ENDMAP
+
+NAME:     darby_rabbit_hole_end_ignis
+TAGS:     unrand allow_dup rabbit_hole
+DEPTH:    D:2-, Depths
+: if you.in_branch("D") then
+:   if you.depth() < 4 then
+MONS:     goblin ; sling ego:flaming plus:-2 . dagger ego:flaming plus:-2
+:   elseif you.depth() < 8 then
+MONS:     bombardier beetle
+:   elseif you.depth() < 12 then
+MONS:     fire bat
+:   else
+MONS:     fire elemental
+:   end
+: elseif you.in_branch("Depths") then
+MONS:     fire giant / fire dragon
+: end
+: if you.in_branch("D") and you.depth() < 5 then
+SUBST:    ? = ., e = .
+: else
+SUBST:    ? = 1
+: end
+ITEM:     any weapon ego:flaming / randbook disc:fire numspells:2
+ITEM:     scarab talisman / staff of fire / fire dragon scales
+ITEM:
+KFEAT:    L = endless_lava
+KFEAT:    B = altar_ignis
+FTILE:    .deB1> = floor_pebble_darkgray
+MAP
+LLLLLLLLLLLL
+LLLLLLLLLLL
+LLLLLLlllll
+LLLLlllllll
+LLLlllllllll
+LLLllllllll
+LLlllllllll
+LLlllllll1.
+LLllllld....
+LLllllll.B>..
+LLl    le...
+L        ?.
+ENDMAP
+
+NAME:    darby_rabbit_hole_end_shop
+TAGS:    unrand allow_dup rabbit_hole
+DEPTH:   D, Depths
+WEIGHT:  12
+MONS:    butterfly
+KMONS:   p = plant
+KFEAT:   s = any shop
+SUBST:   p = p..
+COLOUR:  t = lightred / red / yellow / green w:60
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow / \
+            dngn_tree w:60
+FTILE:   .pt1> = floor_grass_dark
+FTILE:   'Us% = floor_pebble_white
+MAP
+tttttttttttt
+ttttt.ptttp
+tttp..1.p..
+tt...t.'''.
+tt.t...'s'.>
+tp1..p.'%'.
+tt.pWW.'U't
+tt.WWp.'''.
+tt.pW.1.'...
+tt....t.'''''
+tp.    .....
+t        p.
+ENDMAP
+
+NAME:     darby_rabbit_hole_end_abyss
+TAGS:     unrand allow_dup rabbit_hole
+DEPTH:    D:2-, Depths
+: if you.in_branch("D") then
+:   if you.depth() < 4 then
+MONS:     endoplasm / ribbon worm, lurking horror
+SUBST:    e = d, f = .
+:   elseif you.depth() < 7 then
+MONS:     jelly / ufetubus band, brain worm
+SUBST:    f = f.
+:   elseif you.depth() < 11 then
+MONS:     drude / sky beast, orange demon / chaos spawn
+SUBST:    f = df
+:   else
+MONS:     unseen horror / ugly thing, sixfirhy / neqoxec
+:   end
+: elseif you.in_branch("Depths") then
+MONS:     very ugly thing band / tentacled monstrosity, cognitogaunt / zykzyl
+SUBST:    f = g
+: end
+KMONS:    p = demonic plant
+ITEM:     any weapon ego:distortion good_item
+ITEM:     randbook disc:translocation numspells:2, protean talisman
+ITEM:     blade talisman / dragon-coil talisman / sanguine talisman
+KFEAT:    t = demonic_tree
+KFEAT:    B = altar_lugonu
+KFEAT:    O = enter_abyss
+SHUFFLE:  de
+SUBST:    p = p .:5
+TILE:     x = wall_abyss_blue / wall_abyss_magenta
+TILE:     t = dngn_demonic_tree_8 / dngn_demonic_tree_9 / \
+              dngn_demonic_tree_10 / dngn_demonic_tree_11 / \
+              dngn_demonic_tree_12 / dngn_demonic_tree_13
+FTILE:    .deptBO12> = floor_nerves_blue / floor_nerves_magenta
+MAP
+tttttttttttt
+ttttp.ttttp
+tt2.d..tp.1
+tp.O.B.....
+ttf.e..txp.>
+tttp.t..xx.
+ttt..xx..x.
+ttt.xxxx...
+ttp..xp.....
+tt......t.x..
+tp1    .....
+t        p.
+ENDMAP
