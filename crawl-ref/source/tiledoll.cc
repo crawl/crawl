@@ -528,6 +528,15 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::spore:
         switch (you.species)
         {
+        case SP_ARMATAUR:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_ARMATAUR;
+            break;
+        case SP_DJINNI:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_DJINNI;
+            break;
+        case SP_NAGA:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_NAGA;
+            break;
         case SP_OCTOPODE:
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_OCTOPODE;
             break;

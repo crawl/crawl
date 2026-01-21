@@ -4602,7 +4602,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_PASSAGE_OF_GOLUBRIA,
+    TILEG_PLANAR_OVERLAY,
 },
 
 {

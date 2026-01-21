@@ -289,6 +289,7 @@ paralysis_gaze PARALYSIS_GAZE
 petrifying_cloud PETRIFYING_CLOUD
 phantom_blitz PHANTOM_BLITZ
 phantom_mirror PHANTOM_MIRROR
+planar_overlay PLANAR_OVERLAY
 plane_rend PLANE_REND
 polymorph POLYMORPH
 porkalator PORKALATOR
