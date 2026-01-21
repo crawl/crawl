@@ -448,16 +448,17 @@ static map<talisman_type, vector<intrinsic_artp>> talisman_artps = {
     { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
     { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
     { TALISMAN_SERPENT,     {{ARTP_POISON, 1}}},
+    { TALISMAN_EEL,         {{ARTP_ELECTRICITY, 1}}},
     { TALISMAN_SPIDER,      {{ARTP_RAMPAGING, 1}}},
     { TALISMAN_FORTRESS,    {{ARTP_RCORR, 1}}},
     { TALISMAN_STATUE,  {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1},
                          {ARTP_NEGATIVE_ENERGY, 1}}},
     { TALISMAN_DRAGON,  {{ARTP_FIRE, 1}, {ARTP_COLD, 1}, {ARTP_POISON, 1}, {ARTP_FLY, 1}}},
-    { TALISMAN_SPHINX,  {{ARTP_FLY, 1}}},
+    { TALISMAN_SPHINX,  {{ARTP_FLY, 1}, {ARTP_SEE_INVISIBLE, 1}}},
     { TALISMAN_STORM,   {{ARTP_POISON, 1}, {ARTP_ELECTRICITY, 1}, {ARTP_FLY, 1}}},
     { TALISMAN_DEATH,   {{ARTP_POISON, 1}, {ARTP_NEGATIVE_ENERGY, 3},
                         {ARTP_COLD, 1}}},
-    { TALISMAN_VAMPIRE, {{ARTP_COLD, 1}, {ARTP_NEGATIVE_ENERGY, 1}}},
+    { TALISMAN_VAMPIRE, {{ARTP_COLD, 1}, {ARTP_NEGATIVE_ENERGY, 1}, {ARTP_SEE_INVISIBLE, 1}}},
 };
 
 /**
