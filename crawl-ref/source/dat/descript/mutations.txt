@@ -154,13 +154,14 @@ types, doubling the duration of all status effects gained via potions.
 protean grace mutation
 
 Your limbs are overflowing with morphogenic power, guiding your every movement.
-Every two non-innate mutations you have (rounded up) also provides +1 EV and
-Slay +1, improving your accuracy and damage with melee and ranged attacks. This
-still applies even when the mutations would be suppressed by a different form.
+Each other non-innate mutation you have also provides +1 EV and Slay +1 (up to
+a limit of 7), improving your accuracy and damage with melee and ranged attacks.
+This still applies even when the mutations would be suppressed by a different
+form.
 
 You currently gain
 {{
-    num = math.ceil(you.how_mutated(true, false, false, true, false) / 2)
+    num = math.min(you.how_mutated(true, false, false, true, false), 7) - 1
     return "+" .. num .. " EV and Slay +" .. num .. " from this mutation."
 }}
 %%%%

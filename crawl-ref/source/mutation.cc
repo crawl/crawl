@@ -3316,7 +3316,7 @@ void set_evolution_mut_xp(bool malignant)
 
 int protean_grace_amount()
 {
-    return div_round_up(you.how_mutated(true, false, false, true, false), 2);
+    return min(you.how_mutated(true, false, false, true, false) - 1, 7);
 }
 
 const string bane_name(bane_type bane, bool dbkey)
