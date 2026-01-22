@@ -830,11 +830,10 @@ void wizard_recreate_level()
 
     leaving_level_now(stair_taken);
     delete_level(lev);
-    const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
+    load_level(stair_taken, LOAD_START_GAME, lev);
     if (you.get_place_info().levels_seen > 1)
         you.get_place_info().levels_seen--; // this getting to 0 -> crashes
 
-    tile_new_level(newlevel);
     if (!crawl_state.test)
         save_game_state();
     new_level();
