@@ -850,12 +850,19 @@ static colour_t _feat_colour(coord_def gc)
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     switch (feat)
     {
+        // Floor and rock tiles already have a colour e.g. a red floor might
+        // have the tile floor_rough_red and this is often different from
+        // env.floor_colour or env.rock_colour as these are the colours for
+        // console. However, animated colours can't be specified this way so if
+        // console has an animated colour use it for tiles to.
     case DNGN_FLOOR:
-        return env.floor_colour;
+        if (env.floor_colour >= ETC_FIRST)
+            return env.floor_colour;
+        return COLOUR_UNDEF;
     case DNGN_ROCK_WALL:
-        if (player_in_branch(BRANCH_BAILEY))
-            return COLOUR_UNDEF;
-        return env.rock_colour;
+        if (env.rock_colour >= ETC_FIRST)
+            return env.rock_colour;
+        return COLOUR_UNDEF;
     case DNGN_STONE_WALL:
         switch (you.where_are_you)
         {
