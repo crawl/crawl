@@ -164,8 +164,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     _wizard_level_target = pos.id;
 
     leaving_level_now(stair_taken);
-    const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
-    tile_new_level(newlevel);
+    load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     if (!crawl_state.test)
         save_game_state();
     new_level();
