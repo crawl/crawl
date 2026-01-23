@@ -4334,6 +4334,28 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
+    const int target = you.get_training_target(skill);
+    if (target > 0 && target <= 270 && target > you.skill(skill, 10))
+    {
+        result +=  make_stringf("\nYour current training target is %.1f.",
+                                target / 10.0);
+
+        // Copied from _append_skill_target_desc with tweaked formatting.
+        // We shouldn't be able to set skill targets with distributed training
+        // in the first place but maybe it could happen in wizmode.
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)){
+            result += "\n" + _skill_target_desc(skill, target, 100);
+        }
+
+        if (you.training[skill] > 0 && you.training[skill] < 100)
+        {
+            result += "\n" + _skill_target_desc(skill, target,
+                                                you.training[skill]);
+        }
+
+        result += "\n";
+    }
+
     if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
         && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
     {
