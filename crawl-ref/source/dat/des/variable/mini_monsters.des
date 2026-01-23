@@ -1542,8 +1542,8 @@ DEPTH:   D:1-4, Lair, Depths, Zot, Pan
 KMONS:   1 = frilled lizard / ball python
 KMONS:   2 = frilled lizard w:5 / ball python w:5 / quokka / dart slug
 :   elseif you.depth() < 4 then
-MONS:    1 = frilled lizard / ball python / adder
-MONS:    2 = frilled lizard w:5 / ball python w:5 / \
+KMONS:   1 = frilled lizard / ball python / adder
+KMONS:   2 = frilled lizard w:5 / ball python w:5 / \
              adder w:5 / quokka / dart slug
 :   else
 KMONS:   1 = ball python / adder
