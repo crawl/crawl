@@ -65,6 +65,7 @@ end
 #
 NAME:   zot_entry_small
 TAGS:   zot_entry
+WEIGHT: 0
 KFEAT:  X = x
 COLOUR: X = lightmagenta
 COLOUR: .+ = magenta

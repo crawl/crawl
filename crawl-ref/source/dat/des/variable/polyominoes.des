@@ -17,6 +17,7 @@ function polyominoes_setup(e, extra)
   e.subst('b : xcvbmGT%0 .:50')
   e.subst('" : xcvbmGT%0 .:120')
   e.subst('x : x:240 c:30 v:30 b m')
+  e.tile("x = wall_pebble_green")
   e.subst('0 = 000.')
   e.subst('% = %%%.')
 end

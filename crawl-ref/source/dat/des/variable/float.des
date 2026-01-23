@@ -3769,7 +3769,7 @@ PLACE:  Depths:$
      kfeat("1 = stone_stairs_down_i / stone_stairs_down_ii / "
            .. "stone_stairs_down_iii / escape_hatch_down")
      kfeat("t = petrified_tree")
-     subst("*$R = ., Z = .")
+     subst("*$RZ = .")
   elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
      kmons("1 = nonbase draconian")
      kmons("2 = base draconian")
@@ -3793,7 +3793,8 @@ PLACE:  Depths:$
      kmons("3 = nothing")
      kitem("1 = superb_item")
      kitem("2 = any")
-     subst("R = $, Z = .")
+     subst("R = $")
+     subst("Z = .")
   end
 }}
 SUBST:  G = GTt

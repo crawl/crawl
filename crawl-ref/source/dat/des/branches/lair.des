@@ -4569,7 +4569,7 @@ SHUFFLE: ';`, -~ / -~ / ~-
 NSUBST:  ' = 3:3 / 2 = 3. / 1:5 / 2 = 15. / 1:2. / *:.
 NSUBST:  ; = 3:5 / 3 = 15. / 1:2. / *:., ` = 3 = 5 / 3 = 15. / 1:2. / .
 NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:"
-NSUBST:  D = 1:R / 1 = ? %:70 / 1:|* / 1:* / 1 = *% / 3 = $% / *:$
+NSUBST:  D = 1:R / 1 = ? %:70 / 1:| / 1:* / 1 = *% / 2:% / 3 = $% / *:$
 NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
 KMASK:   "$%*|78 = no_trap_gen
 FTILE:   ="$%*|78G = floor_sprouting_squares
@@ -4596,7 +4596,7 @@ MAP
  xxxx....;.;.;llPccLLccllllIIxxxxxxxxx
  Ax.....;.;.xllPccDDDDccllxx'xxGxGxxx
  x.....;.;xxlllOcDDDDDDcllx'.'...xxxx
-xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
+xAxxxx..;.;.;.lln"D--D"nlx`.`...xGxxx
  xxxxxx..;.;.;xln"----"nlN.`.`.`xxxx
    xxxxx;.;.;.xlcKK--KKcNl`.`.`.xxxx
    xxxxG...;.xxlccKKKKccNlx`.`.`xxxxx

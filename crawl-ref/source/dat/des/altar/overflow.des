@@ -585,7 +585,7 @@ ENDMAP
 
 NAME:   nicolae_cheibriados_dopplering
 TAGS:   decor transparent
-ORIENT: float
+DEPTH:  D:3-
 KFEAT:  pqr = c
 COLOUR: p = white
 # XXX: Not super obvious in tiles. Still need more overflow altar tiles....

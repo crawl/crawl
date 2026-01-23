@@ -59,14 +59,12 @@ function st_box_setup(e)
   e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
                iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
-               catoblepas / moth of wrath w:1 / ghost moth /\
-               glass eye / eye of devastation / glowing orange brain /\
-               nagaraja / guardian serpent /\
-               vampire knight / vampire mage / deep elf sorcerer /\
+               catoblepas / crystal guardian / eye of devastation / \
+               glowing orange brain / nagaraja / guardian serpent /\
+               vampire knight / vampire mage / lich / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
                deep elf annihilator / deep elf high priest / orc warlord /\
-               base draconian w:15 / guardian sphinx / shapeshifter /\
-               glowing shapeshifter")
+               base draconian w:15 / guardian sphinx / glowing shapeshifter")
   e.subst("0 = 0:9 Z:1")
   e.subst("9 = 9:3 Z:1")
 end
