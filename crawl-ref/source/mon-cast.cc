@@ -6392,8 +6392,8 @@ static branch_summon_pair _invitation_summons[] =
   { BRANCH_SHOALS,
     { // Shoals enemies
       {  1,   1,   60, FLAT, MONS_SNAPPING_TURTLE },
-      {  1,   1,   40, FLAT, MONS_MANTICORE },
-      {  1,   1,   20, FLAT, MONS_MERFOLK_AQUAMANCER },
+      {  1,   1,   40, FLAT, MONS_MERFOLK_SIREN },
+      {  1,   1,   20, FLAT, MONS_WATER_NYMPH },
     }},
   { BRANCH_ELF,
     { // Elf enemies
@@ -6403,8 +6403,8 @@ static branch_summon_pair _invitation_summons[] =
     }},
   { BRANCH_VAULTS,
     { // Vaults enemies
-      {  1,   1,   60, FLAT, MONS_VERY_UGLY_THING },
-      {  1,   1,   40, FLAT, MONS_IRONBOUND_FROSTHEART },
+      {  1,   1,   60, FLAT, MONS_POLTERGUARDIAN },
+      {  1,   1,   40, FLAT, MONS_IRONBOUND_PRESERVER },
       {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
     }},
   { BRANCH_CRYPT,
