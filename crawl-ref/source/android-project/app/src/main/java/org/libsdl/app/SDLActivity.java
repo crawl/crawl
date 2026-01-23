@@ -450,6 +450,14 @@ public class SDLActivity extends AppCompatActivity {
             }
             return true;
         }
+        // TV devices send DPAD_CENTER instead of ENTER
+        else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_ENTER);
+            } else {
+                SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_ENTER);
+            }
+        }
 
         // Ignore certain special keys so they're handled by Android
         if (keyCode == KeyEvent.KEYCODE_CAMERA ||
