@@ -1308,13 +1308,14 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
  * current training rate.
  */
 static void _append_skill_target_desc(string &description, skill_type skill,
-                                        int scaled_target)
+                                        int scaled_target, int indent)
 {
+    const string prefix = "\n" + string(indent, ' ');
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        description += "\n    " + _skill_target_desc(skill, scaled_target, 100);
+        description += prefix + _skill_target_desc(skill, scaled_target, 100);
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
-        description += "\n    " + _skill_target_desc(skill, scaled_target,
+        description += prefix + _skill_target_desc(skill, scaled_target,
                                                     you.training[skill]);
     }
 }
@@ -1470,7 +1471,7 @@ static void _append_skill_needed(string &description, const item_def &item,
     }
 
     if (below_target)
-        _append_skill_target_desc(description, skill, target_skill);
+        _append_skill_target_desc(description, skill, target_skill, 4);
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
@@ -4314,6 +4315,17 @@ string get_skill_description(skill_type skill, bool need_title)
     }
 
     result += getLongDescription(lookup);
+
+    const int target = you.get_training_target(skill);
+    if (target > 0 && target <= 270 && target > you.skill(skill, 10))
+    {
+        result +=  make_stringf("\nYour current training target is %.1f.",
+                                target / 10.0);
+
+        _append_skill_target_desc(result, skill, target, 0);
+
+        result += "\n";
+    }
 
     if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
         && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
