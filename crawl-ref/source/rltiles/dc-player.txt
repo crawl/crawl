@@ -836,13 +836,15 @@ trident_demon DEMON_TRIDENT
 randart_demon_trident DEMON_TRIDENT_RANDART
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
-%enchant_variation TRIDENT2 shiny runed glowing randart
+%enchant_variation TRIDENT2 shiny runed glowing
 trident_two2 TRIDENT2_MAGIC
+%enchant_variation TRIDENT2 randart
+trident_two3 TRIDENT2_RANDART
 trident_three TRIDENT3
 partisan_1 PARTISAN
 %enchant_variation PARTISAN shiny runed glowing
 partisan_2 PARTISAN_MAGIC
-%enchant_variation TRIDENT2 randart
+%enchant_variation PARTISAN randart
 partisan_3 PARTISAN_RANDART
 lance LANCE
 lance_two LANCE2
