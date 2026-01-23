@@ -2051,7 +2051,7 @@ An eel wriggles against you, leaving your @skin@ tingling.
 
 An eel investigates your inventory.
 
-Your eels vigilantly scan the vacinity for threats.
+Your eels vigilantly scan the vicinity for threats.
 %%%%
 eel hand solo actions
 
