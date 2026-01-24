@@ -4343,9 +4343,8 @@ string get_skill_description(skill_type skill, bool need_title)
         // Copied from _append_skill_target_desc with tweaked formatting.
         // We shouldn't be able to set skill targets with distributed training
         // in the first place but maybe it could happen in wizmode.
-        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)){
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             result += "\n" + _skill_target_desc(skill, target, 100);
-        }
 
         if (you.training[skill] > 0 && you.training[skill] < 100)
         {
