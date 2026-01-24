@@ -1805,11 +1805,11 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
         return false;
     }
 
-    CrawlHashTable *thing = new CrawlHashTable();
-    (*thing)[SHOPPING_THING_COST_KEY] = cost;
-    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
-    (*thing)[SHOPPING_THING_ITEM_KEY] = item;
-    list->push_back(*thing);
+    CrawlHashTable thing;
+    thing[SHOPPING_THING_COST_KEY] = cost;
+    thing[SHOPPING_THING_POS_KEY]  = pos;
+    thing[SHOPPING_THING_ITEM_KEY] = item;
+    list->push_back(CrawlStoreValue(thing));
     refresh();
 
     return true;
