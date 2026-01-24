@@ -7337,6 +7337,7 @@ static void _tag_read_level(reader &th)
     // how many shops?
     const int num_shops = unmarshallShort(th);
     shop_struct shop;
+    env.shop.clear();
     for (int i = 0; i < num_shops; i++)
     {
         unmarshall_shop(th, shop);
