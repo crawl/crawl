@@ -2363,7 +2363,7 @@ elseif you.in_branch("Elf") then
   inv = inv .. " | " .. low .. " | " .. high .. " | " .. high
   nsubst("0 = 4:6 / *:6.")
 else -- Depths
-  inv = inv .. " | " .. high .. " | " .. high " | manual of air magic"
+  inv = inv .. " | " .. high .. " | " .. high .. " | manual of air magic"
   nsubst("0 = 3:7 / 2 = 7. / *:.")
 end
 
