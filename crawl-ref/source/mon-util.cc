@@ -1010,6 +1010,10 @@ void discover_mimic(const coord_def& pos)
 
     const dungeon_feature_type feat = env.grid(pos);
 
+    // If the feature mimic is covered by something else, don't reveal it.
+    if (feature_mimic && orig_terrain(pos) != feat)
+        return;
+
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
     {

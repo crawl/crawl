@@ -1363,8 +1363,6 @@ static void _terrain_changed(coord_def pos,
     _dgn_check_terrain_monsters(pos);
     if (!wizmode)
         _dgn_check_terrain_player(pos);
-    if (!temporary && feature_mimic_at(pos))
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
 
     set_terrain_changed(pos);
 
