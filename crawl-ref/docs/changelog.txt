@@ -1,4 +1,4 @@
-Stone Soup 0.34 (through 0.34-a0-1989-gd38d1f0726)
+Stone Soup 0.34 (through 0.34-a0-2090-gf52bb6b557)
 --------------------------------------------------
 
 Highlights
@@ -301,8 +301,17 @@ Items
     Sif Muna gifts.
   - Higher-spell-level are now somewhat rarer early in the game and more
     common later.
+* New talismans:
+  - Spore talismans, tier 2 talismans providing Spore Form. This meld one's
+    offhand and feet into sporulating fungi, allowing attacks to weaken enemies
+    and creating rows of burstshrooms behind them. These burstshrooms explode
+    after a short delay and sometimes daze those hit.
+  - Eel talismans, tier 3 talismans providing Eel Hands Form. This melds one's
+    gloves, weapon, and offhand slots into twin eels, which provide rElec, and
+    also make one's melee attacks sometimes produce short-range electric jolts.
+    When one falls below 50%, a stronger jolt will trigger immediately.
 * New amulets:
-  - Amulets of Alchemy, which give an Alchemy enhancer and also grant
+  - Amulets of Chemistry, which give an Alchemy enhancer and also grant
     players a small amount of mp whenever they drink non-useless potions.
   - Amulets of Dissipation, which cause time-based negative status effects to
     expire twice as quickly.
@@ -360,12 +369,33 @@ Items
 * Shields can now get the corrosion resistance ego, and Tower Shields may be
   Ponderous.
 * Cloaks of preservation are now renamed to be of corrosion resistance.
+* Fire dragon scales encumbrance rating has decreased, from 11 to 9.
+* Further talisman changes:
+  - Blade Form has been reworked. It is now tier 4, melds nothing, and provides
+    two melee auxiliary attacks instead of an unarmed combat bonus. In addition,
+    it provides SH while attacking based on your Slaying.
+  - Fortress Crab Form now doubles most egos and artifact properties on the body
+    armour equipped. It also provides a slightly higher multiplier to body
+    armour AC (from +135% at max skill to +150%) and Breathe Rust costs slightly
+    less HP.
+  - Maw Form is now tier 3. Its bite attack triggers less often with fast
+    weapons, but gets additional bonus damage from strength. Kills now heal more
+    in total (especially at high skill), but over several turns. It can now
+    briefly mesmerise the player when an edible monster is first encountered.
+  - Protean talismans can no longer become maw talismans, but can become spore
+    talismans instead.
+  - Sphinx Form and Vampire Form now see invisible.
+  - Vampire Form has a high chance to briefly daze living / demonic / holy
+    monsters when they first notice the player, preventing them from shouting.
+    The Bat Swarm ability can now be manually cancelled, and its cooldown is now
+    shortened by Shapeshifting skill.
+  - Werewolf Form now can wear helmets and cloaks.
 * Further general orb changes:
   - Orbs of energy and orbs of guile now scale their effects with the wielder's
     Evocations skill.
   - Orbs of light no longer spawn naturally, but are still given to Monks on
     starting the game.
-  - Orbs are now more common.
+  - Orbs are now more common, and more expensive in shops.
 * Talismans are cheaper in shops.
 * Stones are now much less common.
 * Removed items: rings of fire, rings of ice, orbs of wrath.
@@ -501,12 +531,16 @@ Spells
   Hexes / Necromancy. It is now silent.
 * Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
   spellpower rather than inflicting antimagic.
+* Fortress Blast's explosion radius has been increased from 5x5 to 7x7.
+* Hellfire Mortar can no longer be recast until the lava from a previous cast
+  has expired, but this lava now disappears more quickly.
 * Martyr's Knell's shade now has lower max HP and regeneration (to account for
   the improvement to Injury Bond), but higher AC and EV.
 * Both players and monsters failing to resist Petrification while already
   petrifying no longer instantly completes the Petrification, but Petrification
   is slightly more difficult to resist in exchange.
 * Silence no longer has an innate Stealth penalty.
+* Sphinx Sisters' summons are now slightly weaker and have a shorter duration.
 * Summon Horrible Things now increases the caster's Doom rather than sometimes
   inflicting temporary Will- mutations.
 
