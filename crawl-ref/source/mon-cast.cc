@@ -495,7 +495,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_ANTIMAGIC_GAZE, {
         _caster_sees_foe,
         [](monster &caster, mon_spell_slot slot, bolt&) {
-            flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_DRAINING_GAZE);
+            flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_ANTIMAGIC_GAZE);
             caster.get_foe()->drain_magic(&caster, mons_spellpower(caster, slot.spell));
         },
     } },
@@ -1468,8 +1468,10 @@ static void _cast_draining_gaze(monster &caster, mon_spell_slot, bolt&)
     {
         // 10% of max HP post-draining: takes 8 casts to drain to 50% at rN0,
         // 15 at rN+, and 29 at rN++. No minimum amount.
-        flash_tile(foe->pos(), CYAN, 160, TILE_BOLT_DRAINING_GAZE);
         drain = 75 * you.hp_max / (you.hp_max - you.hp_max_adj_temp);
+        flash_tile(foe->pos(), CYAN,
+                   175 + (75 * -you.hp_max_adj_temp / you.hp_max),
+                   TILE_BOLT_DRAINING_GAZE);
         drain_player(drain, false, false, false);
     }
     else

@@ -750,8 +750,10 @@ sword_twist SWORD_TWIST
 knife KNIFE
 heavy_sword HEAVY_SWORD
 rapier RAPIER
-%enchant_variation RAPIER shiny runed glowing randart
+%enchant_variation RAPIER shiny runed glowing
 rapier2 RAPIER_MAGIC
+%enchant_variation RAPIER randart
+rapier3 RAPIER_RANDART
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
@@ -920,6 +922,8 @@ war_axe2 WAR_AXE_MAGIC
 broad_axe BROAD_AXE
 %enchant_variation BROAD_AXE shiny runed glowing randart
 broad_axe2 BROAD_AXE_MAGIC
+%enchant_variation BROAD_AXE randart
+broad_axe3 BROAD_AXE_RANDART
 battleaxe BATTLEAXE
 %enchant_variation BATTLEAXE shiny runed glowing randart
 battleaxe2 BATTLEAXE_MAGIC
