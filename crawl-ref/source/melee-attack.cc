@@ -4372,12 +4372,13 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
                 else
                 {
                     bool initial = you.duration[DUR_SLIMIFYING] == 0;
-                    you.duration[DUR_SLIMIFYING] += random_range(35, 45);
-                    if (you.duration[DUR_SLIMIFYING] >= 100)
+                    you.duration[DUR_SLIMIFYING] += random_range(70, 90);
+                    if (you.duration[DUR_SLIMIFYING] >= 200)
                     {
                         you.duration[DUR_SLIMIFYING] = 0;
                         transform(20 + roll_dice(3, 10),
-                                transformation::jelly, true, false);
+                                  transformation::jelly, true, false);
+                        you.transform_uncancellable = true;
                     }
                     else
                     {

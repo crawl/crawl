@@ -973,12 +973,12 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_SLIMIFYING:
-        if (you.duration[DUR_SLIMIFYING] > 70)
+        if (you.duration[DUR_SLIMIFYING] > 140)
             inf.light_colour = LIGHTMAGENTA;
-        else if (you.duration[DUR_SLIMIFYING] >= 35)
-            inf.light_colour = MAGENTA;
-        else
+        else if (you.duration[DUR_SLIMIFYING] >= 75)
             inf.light_colour = RED;
+        else
+            inf.light_colour = YELLOW;
         break;
 
     case STATUS_MNEMOPHAGE:
