@@ -2172,7 +2172,7 @@ void ShoppingList::remove_gozag_shops()
     // Only restore the excursion at the very end.
     level_excursion le;
 
-    // We don't want to be iterating over *list when calling 
+    // We don't want to be iterating over *list when calling
     // gozag_abandon_shops_on_level as it can remove items from it stuffing up
     // the iteration. So gather all the levels first.
     set<level_id> levels_with_shopping;

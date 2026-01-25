@@ -907,7 +907,7 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && (trap->type == TRAP_TELEPORT_PERMANENT
                           || trap->type == TRAP_DISPERSAL));
     }
-    else 
+    else
         return feat_is_traversable(feat);
 }
 
