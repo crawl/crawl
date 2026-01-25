@@ -3101,7 +3101,7 @@ void excommunication(bool voluntary, god_type new_god)
             branch_bribe[it->id] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
-        shopping_list.remove_dead_shops();
+        shopping_list.remove_gozag_shops();
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;

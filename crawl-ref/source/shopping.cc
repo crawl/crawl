@@ -40,6 +40,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "terrain.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
@@ -2166,39 +2167,54 @@ void ShoppingList::spells_added_to_library(const vector<spell_type>& spells, boo
     del_thing_at_indices(indices_to_del);
 }
 
-void ShoppingList::remove_dead_shops()
+void ShoppingList::remove_gozag_shops()
 {
     // Only restore the excursion at the very end.
     level_excursion le;
 
-    // This is potentially a lot of excursions, it might be cleaner to do this
-    // by annotating the shopping list directly
-    set<level_pos> shops_to_remove;
-    set<level_id> levels_seen;
-
-    for (CrawlHashTable &thing : *list)
+    // We don't want to be iterating over *list when calling 
+    // gozag_abandon_shops_on_level as it can remove items from it stuffing up
+    // the iteration. So gather all the levels first.
+    set<level_id> levels_with_shopping;
+    for (const CrawlHashTable& thing : *list)
     {
         const level_pos place = thing_pos(thing);
-        le.go_to(place.id);
-        if (!levels_seen.count(place.id))
-        {
-            // Alternatively, this could call catchup_dactions. But that might
-            // have other side effects.
-            gozag_abandon_shops_on_level();
-            levels_seen.insert(place.id);
-        }
-        const shop_struct *shop = shop_at(place.pos);
-
-        if (!shop)
-            shops_to_remove.insert(place);
+        levels_with_shopping.insert(place.id);
     }
 
-    for (auto pos : shops_to_remove)
-        forget_pos(pos);
+    for (level_id level : levels_with_shopping)
+    {
+        le.go_to(level);
+        // Alternatively, this could call catchup_dactions. But that might
+        // have other side effects.
+        gozag_abandon_shops_on_level();
+    }
 
     // Prices could have changed.
     refresh();
 }
+
+#if TAG_MAJOR_VERSION == 34
+void ShoppingList::remove_dead_shops()
+{
+    remove_gozag_shops();
+
+    // Only restore the excursion at the very end.
+    level_excursion le;
+
+    set<level_pos> shops_to_remove;
+    for (const CrawlHashTable& thing : *list)
+    {
+        const level_pos place = thing_pos(thing);
+        le.go_to(place.id);
+        if (orig_terrain(place.pos) != DNGN_ENTER_SHOP)
+            shops_to_remove.insert(place);
+    }
+
+    for (level_pos place : shops_to_remove)
+        forget_pos(place);
+}
+#endif
 
 vector<shoplist_entry> ShoppingList::entries()
 {
