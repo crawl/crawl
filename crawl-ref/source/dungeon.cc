@@ -371,8 +371,8 @@ bool builder(bool enable_random_maps)
                 // possibly the flavor tile for the entrance.
                 for (rectangle_iterator ri(0); ri; ++ri)
                 {
-                    dungeon_feature_type feat = env.grid(*ri);
-                    if (feat_is_portal_entrance(feat) && !feature_mimic_at(*ri))
+                    dungeon_feature_type feat = feat_at_no_mimic(*ri);
+                    if (feat_is_portal_entrance(feat))
                     {
                         level_id whither = stair_destination(feat, "", false);
                         dprf("    Removing portal entrance to %s at %d,%d",
@@ -899,15 +899,16 @@ static void _dgn_unregister_vault(const map_def &map)
 
 bool dgn_square_travel_ok(const coord_def &c)
 {
-    const dungeon_feature_type feat = env.grid(c);
+    // the mimic check here relies on full placement operating, e.g. not &L
+    const dungeon_feature_type feat = feat_at_no_mimic(c);
     if (feat_is_trap(feat))
     {
         const trap_def * const trap = trap_at(c);
         return !(trap && (trap->type == TRAP_TELEPORT_PERMANENT
                           || trap->type == TRAP_DISPERSAL));
     }
-    else // the mimic check here relies on full placement operating, e.g. not &L
-        return feat_is_traversable(feat) || feature_mimic_at(c);
+    else 
+        return feat_is_traversable(feat);
 }
 
 static bool _dgn_square_is_tele_connected(const coord_def &c)
@@ -1040,16 +1041,18 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
 
-    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
+    const dungeon_feature_type feat = feat_at_no_mimic(c);
+
+    if (feat == DNGN_EXIT_HELL)
         return false;
 
-    if (feat_is_stone_stair_up(env.grid(c))
-        || feat_is_branch_exit(env.grid(c)))
+    if (feat_is_stone_stair_up(feat)
+        || feat_is_branch_exit(feat))
     {
         return true;
     }
 
-    switch (env.grid(c))
+    switch (feat)
     {
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -1062,20 +1065,22 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 
 static bool _is_exit_stair(const coord_def &c)
 {
-    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
+    const dungeon_feature_type feat = feat_at_no_mimic(c);
+
+    if (feat == DNGN_EXIT_HELL)
         return false;
 
     // Branch entries, portals, and abyss entries are not considered exit
     // stairs here, as they do not provide an exit (in a transitive sense) from
     // the current level.
-    if (feat_is_stone_stair(env.grid(c))
-        || feat_is_escape_hatch(env.grid(c))
-        || feat_is_branch_exit(env.grid(c)))
+    if (feat_is_stone_stair(feat)
+        || feat_is_escape_hatch(feat)
+        || feat_is_branch_exit(feat))
     {
         return true;
     }
 
-    switch (env.grid(c))
+    switch (feat)
     {
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -1859,10 +1864,7 @@ static list<coord_def> _find_stone_stairs(bool up_stairs)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def& c = *ri;
-        if (feature_mimic_at(c))
-            continue;
-
-        const dungeon_feature_type feat = env.grid(c);
+        const dungeon_feature_type feat = feat_at_no_mimic(c);
         if (feat_is_stone_stair(feat)
             && up_stairs == feat_is_stone_stair_up(feat))
         {
@@ -3927,12 +3929,14 @@ static void _place_branch_entrances(bool use_vaults)
             continue;
 
         for (branch_iterator it; it; ++it)
-            if (it->entry_stairs == env.grid(*ri)
-                && !feature_mimic_at(*ri))
+        {
+            const dungeon_feature_type feat = feat_at_no_mimic(*ri);
+            if (it->entry_stairs == feat)
             {
                 branch_entrance_placed[it->id] = true;
                 break;
             }
+        }
     }
 
     if (crawl_state.game_is_descent())
@@ -6863,8 +6867,10 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex)
                              + (ypos-basey)*(ypos-basey);
 
-            if (orig_terrain(coord_def(xpos, ypos)) == stair_to_find
-                && !feature_mimic_at(coord_def(xpos, ypos)))
+            const coord_def pos(xpos, ypos);
+            const dungeon_feature_type feat = orig_terrain_no_mimic(pos);
+
+            if (feat == stair_to_find)
             {
                 found++;
                 if (find_closest)
@@ -6907,7 +6913,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int ypos  = (basey + ydiff + GYM) % GYM;
 
             bool good_stair;
-            const int looking_at = orig_terrain(coord_def(xpos, ypos));
+            const int looking_at = orig_terrain_no_mimic(coord_def(xpos, ypos));
 
             if (feat_is_stone_stair_down(stair_to_find)
                 || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
@@ -6925,7 +6931,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex)
                              + (ypos-basey)*(ypos-basey);
 
-            if (good_stair && !feature_mimic_at(coord_def(xpos, ypos)))
+            if (good_stair)
             {
                 found++;
                 if (find_closest && dist < best_dist)
@@ -7173,10 +7179,7 @@ static bool _fixup_interlevel_connectivity()
     int max_region = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (feature_mimic_at(*ri))
-            continue;
-
-        dungeon_feature_type feat = env.grid(*ri);
+        const dungeon_feature_type feat = feat_at_no_mimic(*ri);
         switch (feat)
         {
         case DNGN_STONE_STAIRS_DOWN_I:

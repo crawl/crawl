@@ -671,33 +671,25 @@ static string _get_notes(bool display)
 
 static void _unnotice_portal(const level_pos &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat_is_portal(feat))
-    {
-        portals_present.erase(pos);
-        portal_notes.erase(pos);
-    }
+    portals_present.erase(pos);
+    portal_notes.erase(pos);
 }
 
 static void _unnotice_altar(const level_pos &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat_is_altar(feat))
-        altars_present.erase(pos);
+    altars_present.erase(pos);
 }
 
 static void _unnotice_shop(const level_pos &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat == DNGN_ENTER_SHOP)
-        shops_present.erase(pos);
+    StashTrack.remove_shop(pos);
+    shopping_list.forget_pos(pos);
+    shops_present.erase(pos);
 }
 
 static void _unnotice_stair(const level_pos &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat == DNGN_ENTER_HELL || !feat_is_branch_entrance(feat))
-        return;
+    const dungeon_feature_type feat = orig_terrain(pos.pos);
 
     for (branch_iterator it; it; ++it)
         if (it->entry_stairs == feat)
@@ -715,12 +707,6 @@ static void _unnotice_stair(const level_pos &pos)
 
 void unnotice_feature(const level_pos &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat == DNGN_ENTER_SHOP)
-    {
-        StashTrack.remove_shop(pos);
-        shopping_list.forget_pos(pos);
-    }
     _unnotice_portal(pos);
     _unnotice_altar(pos);
     _unnotice_shop(pos);

@@ -49,9 +49,14 @@
 
 #define ORIG_HD_KEY "orig_hd"
 
-bool feature_mimic_at(const coord_def &c)
+bool base_feature_is_mimic_at(coord_def c)
 {
     return map_masked(c, MMT_MIMIC);
+}
+
+bool current_feature_is_mimic_at(coord_def c)
+{
+    return base_feature_is_mimic_at(c) && !is_temp_terrain(c);
 }
 
 item_def* item_mimic_at(const coord_def &c)
@@ -64,7 +69,7 @@ item_def* item_mimic_at(const coord_def &c)
 
 bool mimic_at(const coord_def &c)
 {
-    return feature_mimic_at(c) || item_mimic_at(c);
+    return current_feature_is_mimic_at(c) || item_mimic_at(c);
 }
 
 void monster_drop_things(monster* mons,

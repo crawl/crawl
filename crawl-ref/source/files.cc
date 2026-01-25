@@ -1633,9 +1633,9 @@ void update_portal_entrances()
     // add any portals not currently registered
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        dungeon_feature_type feat = env.grid(*ri);
+        dungeon_feature_type feat = feat_at_no_mimic(*ri);
         // excludes pan, hell, abyss.
-        if (feat_is_portal_entrance(feat) && !feature_mimic_at(*ri))
+        if (feat_is_portal_entrance(feat))
         {
             level_id whither = stair_destination(feat, "", false);
             if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated

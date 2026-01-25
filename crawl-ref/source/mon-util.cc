@@ -1003,7 +1003,7 @@ static void _destroy_mimic_feature(const coord_def &pos)
 void discover_mimic(const coord_def& pos)
 {
     item_def* item = item_mimic_at(pos);
-    const bool feature_mimic = !item && feature_mimic_at(pos);
+    const bool feature_mimic = !item && current_feature_is_mimic_at(pos);
     // Is there really a mimic here?
     if (!item && !feature_mimic)
         return;
