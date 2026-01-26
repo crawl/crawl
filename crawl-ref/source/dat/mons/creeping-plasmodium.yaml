@@ -7,7 +7,7 @@ genus: jelly
 will: 160
 attacks:
 hd: 10
-hp_10x: 750
+hp_10x: 980
 ac: 17
 ev: 3
 intelligence: brainless

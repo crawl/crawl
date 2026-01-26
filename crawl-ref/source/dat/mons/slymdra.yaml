@@ -8,7 +8,7 @@ will: 120
 attacks:
  - {type: hit, flavour: acid, damage: 33}
 hd: 18
-hp_10x: 700
+hp_10x: 400
 ac: 10
 ev: 3
 intelligence: brainless
