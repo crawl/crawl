@@ -612,8 +612,10 @@ bool slime_creature_polymorph(monster& slime, poly_power_type power)
     return monster_polymorph(&slime, RANDOM_POLYMORPH_MONSTER, power);
 }
 
-static int _slymdra_split(monster& slymdra, int count = -1, bool quiet = false)
+int slymdra_split(monster& slymdra, int count, bool quiet)
 {
+    ASSERT(slymdra.type == MONS_SLYMDRA);
+
     int num_splits = 0;
     int& fake_heads = slymdra.props[SLYMDRA_FAKE_HEADS_KEY].get_int();
     int& real_slimes = slymdra.props[SLYMDRA_SLIMES_EATEN_KEY].get_int();
@@ -637,7 +639,7 @@ static int _slymdra_split(monster& slymdra, int count = -1, bool quiet = false)
                 }
 
                 // If we've split out as many things as we want or as many as we *can*, return.
-                if (++num_splits == count || real_slimes == 0 && fake_heads == 0)
+                if (++num_splits >= count || real_slimes == 0 && fake_heads == 0)
                     return num_splits;
             }
         }
@@ -649,7 +651,7 @@ static int _slymdra_split(monster& slymdra, int count = -1, bool quiet = false)
 bool slymdra_polymorph(monster& slymdra, poly_power_type power)
 {
     ASSERT(slymdra.type == MONS_SLYMDRA);
-    int count = _slymdra_split(slymdra, -1, true);
+    int count = slymdra_split(slymdra, -1, true);
 
     if (you.can_see(slymdra) && count > 0)
     {
@@ -1117,16 +1119,16 @@ static bool _slymdra_try_merge(monster* mons)
 
 static bool _slymdra_split_or_merge(monster* mons)
 {
-    if (mons->behaviour == BEH_SEEK)
+    const actor* foe = mons->get_foe();
+    if (mons->behaviour == BEH_SEEK
+        && foe && mons->see_cell_no_trans(foe->pos()) && coinflip())
     {
-        const actor* foe = mons->get_foe();
-        if (foe && mons->see_cell_no_trans(foe->pos()) && coinflip())
-            return _slymdra_try_merge(mons);
+        return _slymdra_try_merge(mons);
     }
-    else if (mons->behaviour == BEH_WANDER && mons->num_heads > 4
-             && one_chance_in(15))
+    else if (mons->num_heads > 4
+             && (!foe || !mons->see_cell(foe->pos())) && one_chance_in(10))
     {
-        return _slymdra_split(*mons, 1);
+        return slymdra_split(*mons, 1);
     }
 
     return false;

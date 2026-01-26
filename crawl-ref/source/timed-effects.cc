@@ -30,6 +30,7 @@
 #include "message.h"
 #include "mgen-data.h"
 #include "monster.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
@@ -660,6 +661,9 @@ monster* update_monster(monster& mon, int time)
 
     mon.heal(div_rand_round(time * mon.off_level_regen_rate(), 1000));
     mon.timeout_enchantments(time);
+
+    if (mon.type == MONS_SLYMDRA)
+        slymdra_split(mon, min(div_rand_round(time, 10), mon.num_heads - 4), true);
 
     return &mon;
 }
