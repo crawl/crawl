@@ -1,7 +1,7 @@
 name: "water nymph"
 glyph: {char: "m", colour: magenta}
 flags: [speaks, warm_blood]
-exp: 444
+exp: 660
 will: 100
 attacks:
  - {type: touch, flavour: drown, damage: 12}
