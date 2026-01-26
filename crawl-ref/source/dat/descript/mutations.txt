@@ -1142,7 +1142,7 @@ maw attack mutation
 
 Your maw sometimes bites enemies in melee, at a rate independant of your own
 attack speed (once per 15 aut, on average). Its base damage is directly
-increased by 3/4rd of your strength.
+increased by 75% of your strength.
 %%%%
 devouring maw mutation
 
