@@ -2545,7 +2545,8 @@ monster* get_solar_ember()
 
 bool maw_considers_appetising(const monster& mon)
 {
-    return mons_class_can_leave_corpse(mons_species(mon.type))
+    return (mon.holiness() & (MH_NATURAL | MH_PLANT))
+           && !mon.is_firewood()
            && !mon.is_summoned()
            && !(mon.flags & MF_HARD_RESET);
 }
