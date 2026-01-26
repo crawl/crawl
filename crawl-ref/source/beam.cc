@@ -4423,7 +4423,7 @@ void bolt::affect_player()
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
         barb_player(random_range(4, 8), 4);
 
-    if (origin_spell == SPELL_GRAVE_CLAW)
+    if (origin_spell == SPELL_GRAVE_CLAW && !you.unrand_equipped(UNRAND_SLICK_SLIPPERS))
     {
         mpr("You are skewered in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(2, 4));
