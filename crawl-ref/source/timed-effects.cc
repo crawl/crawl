@@ -321,7 +321,7 @@ static void _bane_triggers(int /*time_delta*/)
 {
     if (you.has_bane(BANE_MULTIPLICITY)
         && you.elapsed_time > you.props[MULTIPLICITY_TIME_KEY].get_int()
-        && coinflip())
+        && one_chance_in(3))
     {
         vector<monster*> to_clone;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -357,7 +357,7 @@ static void _bane_triggers(int /*time_delta*/)
 
         // Apply cooldown.
         if (did_clone)
-            you.props[MULTIPLICITY_TIME_KEY] = you.elapsed_time + random_range(150, 400);
+            you.props[MULTIPLICITY_TIME_KEY] = you.elapsed_time + random_range(270, 600);
 
         if (seen)
         {
