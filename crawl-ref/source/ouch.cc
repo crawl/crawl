@@ -1023,13 +1023,13 @@ static void _maybe_trigger_spiteful_blood()
     // the player gets a reprieve until the next battle.
     you.duration[DUR_SPITEFUL_BLOOD_COOLDOWN] = 1;
 
-    if (!one_chance_in(4))
+    if (!x_chance_in_y(2, 5))
         return;
 
     mgen_data mg(MONS_ERYTHROSPITE, BEH_HOSTILE, you.pos(), MHITYOU, MG_NONE);
     mg.set_summoned(&you, MON_SUMM_SPITEFUL_BLOOD, random_range(18, 26) * BASELINE_DELAY, false).set_range(1, 3);
     mg.hd = pow(you.experience_level, 1.1);
-    mg.hp = 5 + pow(you.experience_level, 1.25);
+    mg.hp = 5 + pow(you.experience_level, 1.35) * 5 / 4;
 
     const int num = you.get_mutation_level(MUT_SPITEFUL_BLOOD);
     bool made_mon = false;
