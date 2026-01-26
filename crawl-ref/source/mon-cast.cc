@@ -6031,11 +6031,11 @@ static void _mesmerise_los(monster& agent, int power, bool check_hearing)
             }
 
             if (!mons->has_ench(ENCH_DAZED))
-                mons->add_ench(mon_enchant(ENCH_DAZED, &agent, random_range(50, 90)));
+                mons->add_ench(mon_enchant(ENCH_DAZED, &agent, random_range(50, 80)));
             else
             {
                 mon_enchant dazed = mons->get_ench(ENCH_DAZED);
-                dazed.duration = min(120, random_range(50, 90));
+                dazed.duration = max(dazed.duration, min(100, dazed.duration + random_range(50, 80)));
                 mons->update_ench(dazed);
             }
         }
