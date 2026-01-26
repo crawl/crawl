@@ -578,34 +578,6 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
         return false;
     }
 
-    // The remaining checks concern only the player.
-    if (agent.is_monster())
-        return true;
-
-    const monster* beholder = you.get_beholder(target);
-    if (beholder)
-    {
-        if (fail_reason)
-        {
-            *fail_reason = make_stringf("You cannot charge away from %s!",
-                                        beholder->name(DESC_THE, true).c_str());
-        }
-
-        return false;
-    }
-
-    const monster* fearmonger = you.get_fearmonger(target);
-    if (fearmonger)
-    {
-        if (fail_reason)
-        {
-            *fail_reason = make_stringf("You cannot charge closer to %s!",
-                                        fearmonger->name(DESC_THE, true).c_str());
-        }
-
-        return false;
-    }
-
     return true;
 }
 
@@ -658,6 +630,34 @@ coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
                 }
 
                 return coord_def(0, 0);
+            }
+
+            // Check that the player is allowed to move to the landing spot.
+            if (agent.is_player())
+            {
+                const monster* beholder = you.get_beholder(ray.pos());
+                if (beholder)
+                {
+                    if (fail_reason)
+                    {
+                        *fail_reason = make_stringf("You cannot charge away from %s!",
+                                                    beholder->name(DESC_THE, true).c_str());
+                    }
+
+                    return coord_def(0, 0);
+                }
+
+                const monster* fearmonger = you.get_fearmonger(ray.pos());
+                if (fearmonger)
+                {
+                    if (fail_reason)
+                    {
+                        *fail_reason = make_stringf("You cannot charge closer to %s!",
+                                                    fearmonger->name(DESC_THE, true).c_str());
+                    }
+
+                    return coord_def(0, 0);
+                }
             }
 
             // We've already verified that our target is okay, and now we know
