@@ -1175,7 +1175,8 @@ static void _devour(monster &victim)
 
     you.duration[DUR_ENGORGED] += 10 + random_range(victim.get_experience_level() * 10 / 3,
                                                     victim.get_experience_level() * 20 / 3);
-
+    if (you.duration[DUR_ENGORGED] > 400)
+        you.duration[DUR_ENGORGED] = 400;
 }
 
 
