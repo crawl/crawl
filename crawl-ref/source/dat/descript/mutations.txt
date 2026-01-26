@@ -507,7 +507,7 @@ Your body is covered in a fungus that metabolises beneficial potions you drink
 and sometimes emits spores which transmit their effects to nearby monsters -
 whether friend or foe.
 %%%%
-spiteful blood
+spiteful blood mutation
 
 Your blood pulses with a strange predatory malice. When you become significantly
 injured, some of it may rise up to attack you - though this may not happen again
