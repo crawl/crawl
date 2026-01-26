@@ -479,7 +479,15 @@ void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announ
 
     // But should flag all of them as seen, even if they're harmless.
     for (monster* mon : monsters)
+    {
+        // A summoned monster can be killed by its summoner becoming friendly
+        // to the player upon being seen (e.g. when the summoner accepts a
+        // Gozag bribe)
+        if (!mon->alive())
+            continue;
         seen_monster(mon, false);
+    }
+
 
     if (crawl_state.is_repeating_cmd() || you_are_delayed())
         for (monster* mon : monsters)
