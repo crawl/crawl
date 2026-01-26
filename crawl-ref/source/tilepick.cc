@@ -952,11 +952,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             tile = TILE_DNGN_TRAP_WEB_N - 1 + solid;
     }
     else
-    {
-        dungeon_feature_type feat = env.map_knowledge(gc).feat();
-        needs_tile_picking = (feat != DNGN_FLOOR && feat != DNGN_ROCK_WALL)
-                             || is_torch_tile(tile);
-    }
+        needs_tile_picking = true;
 
     tileidx_t base = tile_dngn_basetile(tile);
     tileidx_t variety = tile - base;
@@ -1016,10 +1012,7 @@ static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
         if (env.map_knowledge(gc).flags & MAP_ICY)
             return TILE_FLOOR_ICY;
 
-        return tile_env.flv(gc).floor;
-
-    case DNGN_ROCK_WALL:
-        return tile_env.flv(gc).wall;
+        return tileidx_feature_base(feat);
 
 #if TAG_MAJOR_VERSION == 34
     // New trap-type-specific features are handled in default case.
