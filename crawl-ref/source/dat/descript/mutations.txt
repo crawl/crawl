@@ -1146,9 +1146,9 @@ increased by 3/4rd of your strength.
 %%%%
 devouring maw mutation
 
-When you kill an edible enemy in melee (anything which drops a corpse), your
-maw devours it, greatly increasing your regeneration for a short while. More
-powerful enemies provide a longer duration of this effect.
+When you kill an edible enemy in melee (any hostile, non-summoned, living or
+plant monster), your maw devours it, greatly increasing your regeneration for a
+short while. More powerful enemies provide a longer duration of this effect.
 %%%%
 growling stomach mutation
 
