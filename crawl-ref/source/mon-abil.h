@@ -51,3 +51,5 @@ void solar_ember_blast();
 
 void activate_tesseracts();
 void tesseract_action(monster& mon);
+
+int slymdra_split(monster& slymdra, int count = -1, bool quiet = false);

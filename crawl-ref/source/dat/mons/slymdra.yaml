@@ -1,6 +1,6 @@
 name: "slymdra"
 glyph: {char: "J", colour: magenta}
-flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton, fast_regen]
+flags: [eat_doors, see_invis, unblindable, amorphous, no_skeleton, fast_regen, herd]
 resists: {poison: 1, corr: 3}
 exp: 3100
 genus: jelly
