@@ -524,8 +524,9 @@ public:
         : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max),
                                                    is_star_jelly(_is_star_jelly)
     {
-        // If this is a star jelly who just got smashed, cache it.
-        if (agent->is_monster() && !agent->alive())
+        // If this is a star jelly, cache it (even if it's not dead yet; since
+        // it may die to further damage events within the same attack action.)
+        if (is_star_jelly)
             env.final_effect_monster_cache.push_back(*agent->as_monster());
     }
 protected:
