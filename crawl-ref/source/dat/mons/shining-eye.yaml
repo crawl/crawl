@@ -7,7 +7,7 @@ genus: floating_eye
 will: 100
 attacks:
 hd: 10
-hp_10x: 700
+hp_10x: 580
 ac: 3
 ev: 1
 spells: shining_eye

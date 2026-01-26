@@ -191,7 +191,7 @@ static inline int get_resist(resists_t all, mon_resist_flags res)
     return v;
 }
 
-constexpr int SLYMDRA_HP_PER_HEAD = 30;
+constexpr int SLYMDRA_HP_PER_HEAD = 27;
 
 dungeon_feature_type preferred_feature_type(monster_type mt);
 
