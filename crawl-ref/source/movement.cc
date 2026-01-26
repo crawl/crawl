@@ -1105,6 +1105,6 @@ void move_player_action(coord_def move)
         crawl_state.cancel_cmd_repeat();
     }
 
-    if (you.pos() != initial_pos || i_feel_safe())
+    if (you.pos() != initial_pos)
         request_autopickup();
 }
