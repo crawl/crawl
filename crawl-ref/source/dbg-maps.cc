@@ -253,8 +253,25 @@ bool mapstat_build_levels()
         printf("%d..", i + 1);
         fflush(stdout);
 
-        dgn_reset_player_data();
+        // At the end of each iteration, the lua state is closed, so we
+        // re-initialize what we need. Skip this for the first iteration,
+        // since it was already done during startup initialization.
+        if (i > 0)
+        {
+            dgn_reset_player_data();
+            init_dungeon_lua();
+            read_maps();
+            run_map_global_preludes();
+        }
+
+        // This is done in a post-init startup phase that was skipped for
+        // mapstat/objstat, so do it here.
+        run_map_local_preludes();
+
+        // Load either the seed in Options or a random seed.
         rng::reset();
+        you.game_seed = crawl_state.seed;
+
         initial_dungeon_setup();
 
         if (!_build_dungeon())
@@ -262,6 +279,8 @@ bool mapstat_build_levels()
 
         if (crawl_state.obj_stat_gen)
             objstat_iteration_stats();
+
+        dlua.close();
     }
     printf("Finished.\n");
     fflush(stdout);

@@ -1400,10 +1400,6 @@ void objstat_generate_stats()
     initialise_item_descriptions();
     initialise_branch_depths();
 
-    // We have to run map preludes ourselves.
-    run_map_global_preludes();
-    run_map_local_preludes();
-
     // Populate a vector of the levels ids for levels we're tabulating.
     for (branch_iterator it; it; ++it)
     {
