@@ -1240,25 +1240,67 @@ static int l_item_letter_to_index(lua_State *ls)
     return 1;
 }
 
-/*** Swap item slots.
+/*** Swap gear slots.
  * Requires item indexes, use @{letter_to_index} if you want to swap letters.
  * @tparam int idx1
  * @tparam int idx2
- * @function swap_slots
+ * @function swap_gear_slots
  */
-static int l_item_swap_slots(lua_State *ls)
+static int l_item_swap_gear_slots(lua_State *ls)
 {
     int slot1 = luaL_safe_checkint(ls, 1),
         slot2 = luaL_safe_checkint(ls, 2);
     bool verbose = lua_toboolean(ls, 3);
-    if (slot1 < 0 || slot1 >= ENDOFPACK
-        || slot2 < 0 || slot2 >= ENDOFPACK
+    if (slot1 < 0 || slot1 >= MAX_GEAR
+        || slot2 < 0 || slot2 >= MAX_GEAR
         || slot1 == slot2 || !you.inv[slot1].defined())
     {
         return 0;
     }
 
     swap_inv_slots(you.inv[slot1], slot2, verbose);
+
+    return 0;
+}
+
+/*** Swap consumable slots.
+ * @tparam string The category of item ('potion', 'scroll', or 'evocable')
+ * @tparam string letter 1
+ * @tparam string letter 2
+ * @function swap_consumable_slots
+ */
+static int l_item_swap_consumable_slots(lua_State *ls)
+{
+    const string &s = luaL_checkstring(ls, 1);
+
+    int sel_type = OSEL_ANY;
+    if (s == "potion")
+        sel_type = OBJ_POTIONS;
+    else if (s == "scroll")
+        sel_type = OBJ_SCROLLS;
+    else if (s == "evocable")
+        sel_type = OSEL_EVOKABLE;
+    // Not a valid category.
+    else
+        return 0;
+
+    const string &letter1 = luaL_checkstring(ls, 2);
+    const string &letter2 = luaL_checkstring(ls, 3);
+
+    // Not valid letters.
+    if (letter1.empty() || letter2.empty() || !isaalpha(letter1[0]) || !isaalpha(letter2[0]))
+        return 0;
+
+    for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined()
+            && (you.inv[i].base_type == sel_type || item_is_selected(you.inv[i], sel_type))
+            && you.inv[i].slot == letter1[0])
+        {
+            swap_inv_slots(you.inv[i], letter_to_index(letter2[0]), lua_toboolean(ls, 4));
+            break;
+        }
+    }
 
     return 0;
 }
@@ -1808,7 +1850,8 @@ static const struct luaL_Reg item_lib[] =
     { "inventory",         l_item_inventory },
     { "letter_to_index",   l_item_letter_to_index },
     { "index_to_letter",   l_item_index_to_letter },
-    { "swap_slots",        l_item_swap_slots },
+    { "swap_gear_slots",   l_item_swap_gear_slots },
+    { "swap_consumable_slots", l_item_swap_consumable_slots },
     { "pickup",            l_item_pickup },
     { "equipped_at",       l_item_equipped_at },
     { "slot_is_available", l_slot_is_available },
