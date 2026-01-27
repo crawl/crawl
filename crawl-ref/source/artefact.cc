@@ -561,17 +561,17 @@ static void _add_randart_weapon_brand(const item_def &item,
         if (is_crossbow(item) && one_chance_in(6))
             item_props[ARTP_BRAND] = SPWPN_PENETRATION;
     }
-    else if (is_demonic(item) && x_chance_in_y(7, 9))
+    else if (is_demonic(item) && one_chance_in(3))
     {
-        item_props[ARTP_BRAND] = random_choose(
-            SPWPN_DRAINING,
-            SPWPN_FLAMING,
-            SPWPN_FREEZING,
-            SPWPN_ELECTROCUTION,
-            SPWPN_VAMPIRISM,
-            SPWPN_PAIN,
-            SPWPN_VENOM);
-        // fall back to regular melee brands 2/9 of the time
+        item_props[ARTP_BRAND] = random_choose_weighted(
+            2, SPWPN_CHAOS,
+            2, SPWPN_DRAINING,
+            2, SPWPN_REAPING,
+            2, SPWPN_VAMPIRISM,
+            1, SPWPN_ANTIMAGIC,
+            1, SPWPN_DISTORTION,
+            1, SPWPN_PAIN);
+        // fall back to regular melee brands 2/3 of the time
     }
     else
     {
