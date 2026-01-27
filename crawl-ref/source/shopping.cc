@@ -362,6 +362,15 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 250;
                 break;
 
+            case SPARM_GLASS:
+            case SPARM_PYROMANIA:
+            case SPARM_STARDUST:
+            case SPARM_MESMERISM:
+            case SPARM_GUILE:
+            case SPARM_ATTUNEMENT:
+                valued += 200;
+                break;
+
             case SPARM_ICE:
             case SPARM_FIRE:
             case SPARM_AIR:
@@ -392,11 +401,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_LIGHT:
             case SPARM_ENERGY:
             case SPARM_PARRYING:
-            case SPARM_GLASS:
-            case SPARM_PYROMANIA:
-            case SPARM_STARDUST:
-            case SPARM_MESMERISM:
-            case SPARM_GUILE:
+            case SPARM_MAYHEM:
                 valued += 50;
                 break;
 
@@ -407,7 +412,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_SPIRIT_SHIELD:
             case SPARM_HARM:
             case SPARM_RAGE:
-            case SPARM_MAYHEM:
                 valued += 20;
                 break;
 

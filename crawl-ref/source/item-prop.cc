@@ -236,7 +236,7 @@ static const armour_def Armour_prop[] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_ORB,                 "orb",                     0,   0,   150,
+    { ARM_ORB,                 "orb",                     0,   0,   40,
         SLOT_OFFHAND,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
             { SPARM_GLASS,      1 },
             { SPARM_MAYHEM,     1 },
