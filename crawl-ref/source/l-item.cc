@@ -510,7 +510,7 @@ IDEF(quantity)
  */
 IDEF(slot)
 {
-    if (item && in_inventory(*item))
+    if (item && in_inventory(*item) && isalpha(item->slot))
         lua_pushinteger(ls, letter_to_index(item->slot));
     else
         lua_pushnil(ls);
