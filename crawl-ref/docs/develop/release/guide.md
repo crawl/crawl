@@ -80,13 +80,14 @@ servers, their admin, and preferred point of contact.
 * CDO: Recently CDO has not been installing stable branches and just hosts
   trunk. It still hosts the crawl website and tournament, among other things.
 * CNC: ASCIIPhilia on the dev Discord.
-* CUE: TZer0, on the dev Discord or the CUE Discord.
+* CPO: mcursa on the dev Discord or the crawl-anz Discord.
+* CUE: TZer0 on the dev Discord or the CUE Discord.
 * CXC: melvinkitnick on the dev Discord or the CXC Discord.
 * LLD: dplusplus on the Roguelikes Discord or the LLD Discord.
 
 Server admins may not have the new release branch set for daily updates. Hence
-it may be necessary to ask them to rebuild the stable branch shortly before
-tournament.
+it may be necessary to ask them to rebuild the stable branch after the release
+is tagged.
 
 ## 4. Fix bugs in the beta branch until release time
 
