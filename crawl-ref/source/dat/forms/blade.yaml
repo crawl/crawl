@@ -3,7 +3,7 @@ equivalent_mons: player
 short_name: Blade
 talisman: blade
 skill: {min: 17, max: 25}
-body_ac_mult: {base: -70, scaling: 70}
+body_ac_mult: {base: -50, scaling: 30}
 fakemuts:
   - ["blade aux", "You can perform multiple auxiliary attacks with your blades."]
   - ["blade parry", "You gain SH while attacking, based on your slaying."]
