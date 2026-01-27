@@ -773,7 +773,7 @@ unsigned int item_value(item_def item, bool ident)
         {
             int level = spell_difficulty(static_cast<spell_type>(item.plus));
             // more expensive per spell than books
-            valued = level * level * 7 + 33;
+            valued = level * level * 6 + 34;
         }
 #if TAG_MAJOR_VERSION == 34
         else if (book == BOOK_BUGGY_DESTRUCTION)
