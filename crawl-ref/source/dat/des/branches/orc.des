@@ -1567,6 +1567,7 @@ KFEAT:  m = iron_grate
 KFEAT:  q = web / floor
 KFEAT:  X = x
 SUBST:  e = xx..., f = xx""", g = xm
+KMASK:  "2q = no_monster_gen
 KPROP:  "2q = no_tele_into
 TILE:   X = wall_spider
 TILE:   c = wall_stone_smooth
