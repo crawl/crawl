@@ -657,13 +657,13 @@ public:
 
     int get_aux_damage(bool random, int skill) const override
     {
-        return scaling_value(FormScaling().Base(10).Scaling(8), skill, random);
+        return scaling_value(FormScaling().Base(10).Scaling(6), skill, random);
     }
 
     // Base parrying bonus
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(8).Scaling(8), skill));
+        return max(0, scaling_value(FormScaling().Base(6).Scaling(6), skill));
     }
 };
 

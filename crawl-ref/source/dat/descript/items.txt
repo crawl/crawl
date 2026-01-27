@@ -101,10 +101,10 @@ blade talisman
 
 A jagged cluster of blades, almost impossible to grasp without injury. Causes
 long, needle-thin blades to grow from the wearer's body, allowing them to
-perform rapid auxiliary melee attacks and even parry blows. The many fragments
-of metal inside the body reduces the effectiveness of body armour, but
-Shapeshifting skill mitigates and eventually eliminates the latter effect, as
-well as increasing damage dealt.
+perform rapid auxiliary melee attacks and even parry blows. Having so many
+fragments of metal inside one's body reduces the effectiveness of body armour,
+but Shapeshifting skill mitigates this effect as well as increases the damage
+dealt.
 %%%%
 book of air
 
