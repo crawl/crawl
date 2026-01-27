@@ -4548,7 +4548,7 @@ int get_monster_tension(const monster& mons, god_type god)
     // is offhand, but they should count for _some_ minimal tension.
     if (exp <= 0)
     {
-        if (mons.is_peripheral())
+        if (mons.is_peripheral() && !mons.is_firewood())
             exp = 50;
         else
             return 0;
