@@ -377,7 +377,12 @@ dice_def Form::get_special_damage(bool random, int skill) const
         skill = get_level(1);
 
     if (special_dice)
-        return (*special_dice)(skill, random);
+    {
+        dice_def dmg = (*special_dice)(skill, random);
+        if (dmg.size <= 0)
+            dmg.size = 1;
+        return dmg;
+    }
     else
         return dice_def();
 }

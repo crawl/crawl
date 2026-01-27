@@ -298,7 +298,7 @@ def parse_dice(s):
 
     for i in range(0, 4):
         if len(arg_str) > i:
-            args[i] = parse_num(int(arg_str[i].strip()), 0, 1000)
+            args[i] = parse_num(int(arg_str[i].strip()), -100, 1000)
 
     return DiceDef(args[0], args[1], args[2], args[3])
 
