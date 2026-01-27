@@ -606,6 +606,7 @@ void bolt::initialise_fire()
     extra_range_used   = 0;
     in_explosion_phase = false;
     use_target_as_pos  = false;
+    enchant_chaining_done = false;
     hit_count.clear();
 
     if (special_explosion != nullptr)
@@ -5067,10 +5068,13 @@ void bolt::handle_enchant_chaining(coord_def centre)
 {
     // Handle ray bounces
     if (!(origin_spell == SPELL_PETRIFY || origin_spell == SPELL_RIMEBLIGHT)
-        || hit_count.size() != 1)
+        || enchant_chaining_done)
     {
         return;
     }
+
+    // Prevent the following calls to affect_actor from recursing into here
+    enchant_chaining_done = true;
 
     vector<coord_def> chain_targs;
     fill_chain_targets(*this, centre, chain_targs, true);

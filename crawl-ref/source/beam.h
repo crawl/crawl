@@ -231,6 +231,7 @@ struct bolt
     bool noise_generated = false; // a noise has already been generated at this pos
     bool passed_target = false;   // Beam progressed beyond target.
     bool in_explosion_phase = false; // explosion phase (as opposed to beam phase)
+    bool enchant_chaining_done = false; // wheather we have already chained to nearby actors
     mon_attitude_type attitude = ATT_HOSTILE; // attitude of whoever fired the bolt
     int foe_ratio = 0;           // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected
