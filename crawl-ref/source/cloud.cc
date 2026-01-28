@@ -1374,7 +1374,17 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
 
     if (!player && (side_effects || final_damage > 0))
-        behaviour_event(mons, ME_DISTURB, 0, act->pos());
+    {
+        actor *oppressor = cloud.agent();
+        if (oppressor && oppressor->alive())
+        {
+            // Alert the monster to the oppressor but don't give away their
+            // position.
+            behaviour_event(mons, ME_ALERT, oppressor, act->pos());
+        }
+        else
+            behaviour_event(mons, ME_DISTURB, 0, act->pos());
+    }
 
     if (final_damage)
     {
