@@ -1376,7 +1376,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
     if (!player && (side_effects || final_damage > 0))
     {
         actor *oppressor = cloud.agent();
-        if(oppressor && oppressor->alive())
+        if (oppressor && oppressor->alive())
             behaviour_event(mons, ME_ALERT, oppressor, oppressor->pos());
         else
             behaviour_event(mons, ME_DISTURB, 0, act->pos());
