@@ -1378,7 +1378,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
         actor *oppressor = cloud.agent();
         if (oppressor && oppressor->alive())
         {
-            // Alert the monster to the oppressor but don't give away their 
+            // Alert the monster to the oppressor but don't give away their
             // position.
             behaviour_event(mons, ME_ALERT, oppressor, act->pos());
         }
