@@ -411,11 +411,11 @@ static void _do_medusa_stinger()
  *
  * @param[in] attacker,defender The (non-null) participants in the attack.
  *                              Either may be killed as a result of the attack.
- * @param[out] did_hit If non-null, receives true if the attack hit the
- *                     defender, and false otherwise.
  * @param is_rampage   Is this an attack caused by rampaging? Adjusts damage of
  *                     the attack based on movement speed and possibly staggers
  *                     the target. (Only effect for player attackers)
+ * @param[out] did_hit If non-null, receives true if the attack hit the
+ *                     defender, and false otherwise.
  * @param simu Is this a simulated attack?  Disables a few problematic
  *             effects such as blood spatter and distortion teleports.
  *
@@ -551,6 +551,9 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
     melee_attack attk(attacker, defender);
     attk.simu = simu;
     attk.launch_attack_set();
+
+    if (did_hit)
+        *did_hit = attk.did_hit;
 
     if (!attacker->alive())
         return true;
