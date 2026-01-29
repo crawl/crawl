@@ -1687,6 +1687,8 @@ static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only
     if (targs.empty())
         return false;
 
+    // Just in case something kills in along the way.
+    const coord_def caster_pos = caster.pos();
     const int pow = mons_spellpower(caster, SPELL_LANDBREAKER);
     const unsigned int num_targs = 2 + div_rand_round((int)max(0, pow - 50), 40);
     shuffle_array(targs);
@@ -1713,7 +1715,7 @@ static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only
         beam.fire();
 
         // Place rubble 'behind' the target, relative to the caster.
-        const coord_def aim((targs[i]->pos() - caster.pos()) + targs[i]->pos());
+        const coord_def aim((targs[i]->pos() - caster_pos) + targs[i]->pos());
         vector<coord_def> spots = get_wall_ring_spots(targs[i]->pos(), aim, random_range(3, 5));
         for (coord_def& spot : spots)
         {
@@ -1729,7 +1731,7 @@ static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only
 
     // Place some additional rumble at random locations.
     const int bonus_rubble = max(0, 8 - rubble_made);
-    rubble.pos = caster.pos();
+    rubble.pos = caster_pos;
     rubble.set_range(4, 7, 1);
     for (int i = 0; i < bonus_rubble; ++i)
     {
