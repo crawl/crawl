@@ -562,6 +562,18 @@ public:
     }
 };
 
+class eeljolt_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect&) const override { return true; }
+    void fire() override;
+
+    eeljolt_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+};
+
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
 
@@ -778,6 +790,11 @@ void schedule_pyromania_fineff()
 void schedule_celebrant_bloodrite_fineff()
 {
     _schedule_final_effect(new celebrant_bloodrite_fineff());
+}
+
+void schedule_eeljolt_fineff()
+{
+    _schedule_final_effect(new eeljolt_fineff());
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -1788,6 +1805,11 @@ void celebrant_bloodrite_fineff::fire()
         view_clear_overlays();
         ++shots_fired;
     }
+}
+
+void eeljolt_fineff::fire()
+{
+    do_eel_arcjolt();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

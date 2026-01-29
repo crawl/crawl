@@ -990,7 +990,7 @@ static void _maybe_eeljolt()
         return;
     }
 
-    do_eel_arcjolt();
+    schedule_eeljolt_fineff();
     you.duration[DUR_EELJOLT_COOLDOWN] = 1;
 }
 
