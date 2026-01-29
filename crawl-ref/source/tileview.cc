@@ -1090,6 +1090,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 
     const map_cell& cell = env.map_knowledge(gc);
 
+    tile_env.bk_fg(gc) = 0;
     if (cell.invisible_monster())
         _tile_place_invisible_monster(gc);
     else if (cell.monsterinfo())
@@ -1101,8 +1102,6 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         else
             _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
     }
-    else
-        tile_env.bk_fg(gc) = 0;
 
     // Always place clouds now they have their own layer
     if (cell.cloud() != CLOUD_NONE)
