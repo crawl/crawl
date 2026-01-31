@@ -2198,7 +2198,7 @@ TILE:    G = dngn_statue_imp / dngn_statue_demonic_bust
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, false)
 MAP
 xxxxxxxxxxxxxxx
-x............x
+x.............x
 x.ll.......ll.x
 x.ll'.._..'ll.x
 x.ll...3...ll.x
@@ -2297,14 +2297,15 @@ TAGS:   transparent no_monster_gen
 # white imp depth
 DEPTH:  D:5-8
 MONS:   shadow imp w:2 / drude w:4 / crimson imp w:6
-TILE:   c = wall_hall
+KFEAT:  X = x
+TILE:   X = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
 SUBST:  ' = .
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
 MAP
  xxxxx
-xxcccxx
-xwcAcwx
+xxXXXxx
+xwXAXwx
 xww_wwx
 xww1wwx
 x.w'w.x
@@ -6561,8 +6562,8 @@ SUBST: 2 = 12--
 MONS: mummy / wight / zombie / steam dragon draugr w:2 / \
       howler monkey draugr w:2 / centaur draugr w:2 / phantom w:5 / \
       bes kemwar w:5
-MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
-MONS: flayed ghost / death knight
+MONS: wraith / vampire / shadowghast / freezing wraith w:5 / skeletal warrior w:5
+MONS: flayed ghost / phantasmal warrior
 NSUBST: 2 = 2 / 2-
 : end
 SUBST:  1 = 11-

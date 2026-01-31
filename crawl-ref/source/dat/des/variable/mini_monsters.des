@@ -9103,7 +9103,9 @@ DEPTH:   D:13-, Depths
 MONS:    profane servitor
 ITEM:    brilliance no_pickup
 KFEAT:   _ = altar_yredelemnul
-SUBST:   1 = 1.
+SUBST:   1 = 1'
+KMASK:   '*d1_ = no_monster_gen
+KPROP:   '*d1_ = no_tele_into
 MAP
          ...
          .c.
@@ -9112,16 +9114,16 @@ MAP
   .c... ..n.. ...c.
   ..cn...ncn...nc..
    .ncnc.cdc.cncn.
-   ..n*ncn.ncn*n..
-    .cn.nc.cn.nc.
+   ..n*ncn'ncn*n..
+    .cn'nc'cn'nc.
    ...cn1n1n1nc...
-....ncncn...ncncn....
-.ncnc*..1._.1..*cncn.
-....ncncn...ncncn....
+....ncncn'''ncncn....
+.ncnc*''1'_'1''*cncn.
+....ncncn'''ncncn....
    ...cn1n1n1nc...
-    .cn.nc.cn.nc.
-   ..n*ncn.ncn*n..
-  ..ncnc.c.c.cncn..
+    .cn'nc'cn'nc.
+   ..n*ncn'ncn*n..
+  ..ncnc.c'c.cncn..
   .ncn...n=n...ncn.
  ..cn.. ..... ..nc..
  .c...   .c.   ...c.

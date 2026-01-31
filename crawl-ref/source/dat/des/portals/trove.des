@@ -1591,8 +1591,9 @@ end
 trove_offense(_G, weap, magic,
                   trove_good_talisman(_G, nil, nil), "translocations magic")
 trove_defense(_G, "acquire armour / any useful armour randart" .. aux1,
-                  "robe randart artprops:Stlth:2 plus:2",
-                   trove_jewel_type(_G, "+Blink&^Contam"),
+                  "robe randart artprops:Stlth:2 plus:2 w:5",
+                   trove_jewel_type(_G, "+Blink&^Contam") .. " / " ..
+                   "any amulet randart artprops:Stlth:2",
                    trove_cons(_G, {"fog q:3"},
                               {"enlightenment q:2 w:5", "attraction q:3 w:5"},
                               "", "wand of warping charges:8", nil))
