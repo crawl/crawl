@@ -5104,7 +5104,8 @@ ORIENT: float
 MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
-MONS: death knight / wraith w:5 / freezing wraith w:1 / skeletal warrior w:4
+MONS: skeletal warrior / phantasmal warrior w:5 / \
+      wraith w:5 / freezing wraith w:1
 : end
 ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain / \
       demon blade ego:draining / demon trident ego:pain / \

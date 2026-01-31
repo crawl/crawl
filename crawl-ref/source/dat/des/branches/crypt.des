@@ -2718,11 +2718,11 @@ NSUBST:  L = 1:G / *:077, M = 1:8 / *:3, N = 1:0A / *:B
 NSUBST:  O = 1:CDD / *:C, P = 1:E / 1:F / *:., Q = 1:E / 1:F / *:.
 # Tomb entrance
 : if crawl.x_chance_in_y(5, 7) then
-SUBST:  ? = *
-NSUBST: ! = > / |**
+SUBST:  z = *
+NSUBST: ! = 1:> / * = **|
 : else
-NSUBST: ? = 1:>
-SUBST:  ! = |**
+NSUBST: z = 1:> / *:$
+SUBST:  ! = **|
 : end
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
@@ -2737,9 +2737,9 @@ vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vZwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vZZZZwwwwwwwwwwv
-vwwwwwwvvvv-vvvv......rrarr*/Z*rrarr......v-v-v-v-vwwwwwwv
+vwwwwwwvvvv-vvvv......rrarr*/z*rrarr......v-v-v-v-vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww-....5..v.....rrrrZr$$$$rZrrrr.....v.......-wwwwwwv
+vwwwwww-....5..v.....rrrrzr$$$$rzrrrr.....v.......-wwwwwwv
 vwwwwwwv....5..+........rrr$Sg$rrr........+.2..5..vwwwwwwv
 vwwwwww-....5..v......6...r$$$$r...6......v....5..-wwwwwwv
 vwwwwwwv.2.vvvvv...rrr....rr++rr....rrr...v....5..vwwwwwwv
@@ -3085,7 +3085,7 @@ ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
 tttT.t........v-%-4v..ccc--Bcc0---0ccB--ccc.T...v4%4-v.T...t.....Ttttt...c%%%ctt
 ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
 tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc.s...s.ctt
-ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3.s.s.3ctt
+ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tcs.s.s.3ctt
 tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tpcccnnnccctt
 ttttT..t..cc----+---------c-+-''Z''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
 ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
