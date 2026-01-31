@@ -527,6 +527,7 @@ Monsters
 
 Spells
 ------
+* Curse of Agony's range has been increased by 1.
 * Dazzling Flash has been renamed Gloom and moved from Hexes / Fire to
   Hexes / Necromancy. It is now silent.
 * Enfeeble now inflicts a new Diminished Spells debuff that lowers the target's
