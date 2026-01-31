@@ -1469,8 +1469,9 @@ static void _cast_draining_gaze(monster &caster, mon_spell_slot, bolt&)
         // 10% of max HP post-draining: takes 8 casts to drain to 50% at rN0,
         // 15 at rN+, and 29 at rN++. No minimum amount.
         drain = 75 * you.hp_max / (you.hp_max - you.hp_max_adj_temp);
+        flash_tile(caster.pos(), CYAN, 0, TILE_BOLT_DRAINING_SMIRK);
         flash_tile(foe->pos(), CYAN,
-                   175 + (75 * -you.hp_max_adj_temp / you.hp_max),
+                   180 + (75 * -you.hp_max_adj_temp / you.hp_max),
                    TILE_BOLT_DRAINING_GAZE);
         drain_player(drain, false, false, false);
     }
