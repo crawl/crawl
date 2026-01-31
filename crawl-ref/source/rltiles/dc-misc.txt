@@ -231,6 +231,7 @@ entropic_weave BOLT_ENTROPIC_WEAVE
 
 antimagic_gaze BOLT_ANTIMAGIC_GAZE
 draining_gaze BOLT_DRAINING_GAZE
+draining_smirk BOLT_DRAINING_SMIRK
 
 bolas BOLT_BOLAS
 
