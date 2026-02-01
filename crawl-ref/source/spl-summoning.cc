@@ -1496,11 +1496,13 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
     for (distance_iterator di(caster->pos(), false, true,
                               LOS_DEFAULT_RANGE); di; ++di)
     {
+        actor* act = actor_at(*di);
         if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
              && !feat_is_endless(env.grid(*di))
-             && x_chance_in_y(pow, 150))
+             && x_chance_in_y(pow, 150)
+             && (!act || act->is_habitable_feat(DNGN_TREE)))
             || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
-                && !actor_at(*di) && !plant_forbidden_at(*di, true)))
+                && !act && !plant_forbidden_at(*di, true)))
         {
             temp_change_terrain(*di, DNGN_TREE, duration,
                     TERRAIN_CHANGE_FORESTED);
