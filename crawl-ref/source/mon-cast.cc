@@ -3207,7 +3207,7 @@ static void _corrupt_locale(monster &mons)
     lugonu_corrupt_level_monster(mons);
 }
 
-static void _set_door(set<coord_def> door, dungeon_feature_type feat)
+static void _set_door(const vector<coord_def>& door, dungeon_feature_type feat)
 {
     for (const auto &dc : door)
     {
@@ -3216,9 +3216,10 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
     }
 }
 
-static int _tension_door_closed(set<coord_def> door,
-                                dungeon_feature_type old_feat)
+static int _tension_door_closed(const vector<coord_def>& door)
 {
+    ASSERT(!door.empty());
+    const dungeon_feature_type old_feat = env.grid(door[0]);
     // this unwind is a bit heavy, but because out-of-los clouds dissipate
     // instantly, they can be wiped out by these door tests.
     unwind_var<map<coord_def, cloud_struct>> cloud_state(env.cloud);
@@ -3229,145 +3230,188 @@ static int _tension_door_closed(set<coord_def> door,
 }
 
 /**
- * Can any actors and items be pushed out of a doorway? An actor can be pushed
+ * Can all actors and items be pushed out of a doorway? An actor can be pushed
  * for purposes of this check if there is a habitable target location and the
  * actor is either the player or non-hostile. Items can be moved if there is
  * any free space.
  *
- * @param door the door position
+ * @param door_spots the positions of all the squares that contain the door
  *
- * @return true if any actors and items can be pushed out of the door.
+ * @return true if all actors and items can be pushed out of the door.
  */
-static bool _can_force_door_shut(const coord_def& door)
+static bool _can_force_door_shut(const vector<coord_def>& door_spots)
 {
-    if (!feat_is_open_door(env.grid(door)))
-        return false;
-
-    set<coord_def> all_door;
-    find_connected_identical(door, all_door);
-    auto veto_spots = vector<coord_def>(all_door.begin(), all_door.end());
-    auto door_spots = veto_spots;
-
-    for (const auto &dc : all_door)
+    for (coord_def dc : door_spots)
     {
-        // Only attempt to push players and non-hostile monsters out of
-        // doorways
-        actor* act = actor_at(dc);
-        if (act)
-        {
-            if (act->is_player()
-                || act->is_monster()
-                    && act->as_monster()->attitude != ATT_HOSTILE)
-            {
-                vector<coord_def> targets = get_push_spaces(dc, true, &veto_spots);
-                if (targets.empty())
-                    return false;
-                veto_spots.push_back(targets.front());
-            }
-            else
-                return false;
-        }
         // If there are items in the way, see if there's room to push them
         // out of the way. Having push space for an actor doesn't guarantee
         // push space for items (e.g. with a flying actor over lava).
-        if (env.igrid(dc) != NON_ITEM)
+        if (env.igrid(dc) != NON_ITEM
+            && !has_push_spaces(dc, false, &door_spots))
         {
-            if (!has_push_spaces(dc, false, &door_spots))
+            return false;
+        }
+    }
+
+    for (coord_def dc : door_spots)
+    {
+        const actor* act = actor_at(dc);
+        if (!act)
+            continue;
+        // Only attempt to push players and non-hostile monsters out of
+        // doorways
+        bool should_push = act->is_player()
+                           || act->as_monster()->attitude != ATT_HOSTILE;
+        if (!should_push)
+            return false;
+    }
+
+    vector<const actor*> pushed_actors;
+    vector<vector<coord_def>> push_locations;
+    vector<unsigned int> push_location_indices;
+    for (coord_def dc : door_spots)
+    {
+        const actor* act = actor_at(dc);
+        if (!act)
+            continue;
+        pushed_actors.push_back(act);
+        vector<coord_def> targets = get_push_spaces(dc, true, &door_spots);
+        if (targets.empty())
+            return false;
+        push_locations.push_back(std::move(targets));
+        push_location_indices.push_back(0);
+    }
+
+    if (pushed_actors.empty())
+        return true;
+    unsigned int pushed_actor_count = (unsigned int)pushed_actors.size();
+
+    while (true)
+    {
+        set<coord_def> used_push_locations;
+        for (unsigned int i = 0; i < pushed_actor_count; ++i)
+        {
+            coord_def pos = push_locations[i][push_location_indices[i]];
+            used_push_locations.insert(pos);
+        }
+        if (used_push_locations.size() == pushed_actor_count)
+            return true;
+        for (unsigned int i = 0;;)
+        {
+            push_location_indices[i]++;
+            if (push_location_indices[i] < push_locations[i].size())
+                break;
+            push_location_indices[i] = 0;
+            ++i;
+            if (i >= pushed_actor_count)
                 return false;
         }
     }
-
-    // Didn't find any actors or items we couldn't displace
-    return true;
+    return false;
 }
 
 /**
- * Get push spaces for an actor that maximize tension. If there are any push
- * spaces at all, this function is guaranteed to return something.
+ * Get push spaces that maximize tension for all actors in a door.
  *
- * @param pos the position of the actor
- * @param excluded a set of pre-excluded spots
+ * @param door_spots the positions of all the squares that contain the door
+ * @param positions[out] the push locations for the actors
  *
- * @return a vector of coordinates, empty if there are no push spaces at all.
+ * @return the tension with all the actors push from the door
  */
-static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
-                                            const vector<coord_def>* excluded)
+static int _find_shut_door_actor_positions_with_max_tension(
+                                           const vector<coord_def>& door_spots,
+                                           vector<coord_def>& positions)
 {
-    vector<coord_def> possible_spaces = get_push_spaces(pos, true, excluded);
-    if (possible_spaces.empty())
-        return possible_spaces;
-    vector<coord_def> best;
-    int max_tension = -1;
-    actor *act = actor_at(pos);
-    ASSERT(act);
+    positions.clear();
 
-    for (auto c : possible_spaces)
+    vector<actor*> pushed_actors;
+    vector<coord_def> old_actor_positions;
+    vector<vector<coord_def>> push_locations;
+    vector<unsigned int> push_location_indices;
+    for (coord_def dc : door_spots)
     {
-        set<coord_def> all_door;
-        find_connected_identical(pos, all_door);
-        dungeon_feature_type old_feat = env.grid(pos);
+        actor* act = actor_at(dc);
+        if (!act)
+            continue;
+        pushed_actors.push_back(act);
+        old_actor_positions.push_back(act->pos());
+        vector<coord_def> targets = get_push_spaces(dc, true, &door_spots);
+        // at this point, _can_force_door_shut should have
+        // indicated that the door can be shut.
+        ASSERTM(!targets.empty(), "No push space from (%d,%d)",
+                dc.x, dc.y);
+        push_locations.push_back(std::move(targets));
+        push_location_indices.push_back(0);
 
-        act->set_position(c);
-        int new_tension = _tension_door_closed(all_door, old_feat);
-        act->set_position(pos);
+    }
+    if (pushed_actors.empty())
+        return _tension_door_closed(door_spots);
+    unsigned int pushed_actor_count = (unsigned int)pushed_actors.size();
 
-        if (new_tension == max_tension)
-            best.push_back(c);
-        else if (new_tension > max_tension)
+    int best_tension = -1;
+    bool done = false;
+    while (!done)
+    {
+        set<coord_def> used_push_locations;
+        for (unsigned int i = 0; i < pushed_actor_count; ++i)
         {
-            max_tension = new_tension;
-            best.clear();
-            best.push_back(c);
+            coord_def pos = push_locations[i][push_location_indices[i]];
+            used_push_locations.insert(pos);
+        }
+        if (used_push_locations.size() == pushed_actor_count)
+        {
+            for (unsigned int i = 0; i < pushed_actor_count; ++i)
+            {
+                coord_def pos = push_locations[i][push_location_indices[i]];
+                actor* act = pushed_actors[i];
+                act->set_position(pos);
+            }
+            int new_tension = _tension_door_closed(door_spots);
+            for (unsigned int i = 0; i < pushed_actor_count; ++i)
+                pushed_actors[i]->set_position(old_actor_positions[i]);
+            if (new_tension > best_tension)
+            {
+                best_tension = new_tension;
+                positions.clear();
+                for (unsigned int i = 0; i < pushed_actor_count; ++i)
+                {
+                    coord_def p = push_locations[i][push_location_indices[i]];
+                    positions.push_back(p);
+                }
+            }
+        }
+        for (unsigned int i = 0;;)
+        {
+            push_location_indices[i]++;
+            if (push_location_indices[i] < push_locations[i].size())
+                break;
+            push_location_indices[i] = 0;
+            ++i;
+            if (i >= pushed_actor_count)
+            {
+                done = true;
+                break;
+            }
         }
     }
-    return best;
+    ASSERT(!positions.empty());
+    return best_tension;
 }
 
 /**
  * Would forcing a door shut (possibly pushing the player) lower tension too
  * much?
  *
- * @param door the door to check
+ * @param cur_tension the tension with the door open
+ *
+ * @param new_tension the tension with the door closed
  *
  * @return true iff forcing the door shut won't lower tension by more than 1/3.
  */
-static bool _should_force_door_shut(const coord_def& door)
+static bool _should_force_door_shut(int cur_tension, int new_tension)
 {
-    if (!feat_is_open_door(env.grid(door)))
-        return false;
 
-    dungeon_feature_type old_feat = env.grid(door);
-
-    set<coord_def> all_door;
-    find_connected_identical(door, all_door);
-    auto veto_spots = vector<coord_def>(all_door.begin(), all_door.end());
-
-    bool player_in_door = false;
-    for (const auto &dc : all_door)
-    {
-        if (you.pos() == dc)
-        {
-            player_in_door = true;
-            break;
-        }
-    }
-
-    const int cur_tension = get_tension(GOD_NO_GOD);
-    coord_def oldpos = you.pos();
-
-    if (player_in_door)
-    {
-        coord_def newpos =
-                _get_push_spaces_max_tension(you.pos(), &veto_spots).front();
-        you.set_position(newpos);
-    }
-
-    const int new_tension = _tension_door_closed(all_door, old_feat);
-
-    if (player_in_door)
-        you.set_position(oldpos);
-
-    dprf("Considering sealing cur tension: %d, new tension: %d",
+    dprf("Considering sealing current tension: %d, new tension: %d",
          cur_tension, new_tension);
 
     // If closing the door would reduce player tension by too much, probably
@@ -3407,49 +3451,47 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
         if (feat_is_open_door(env.grid(*ri)))
         {
-            if (!_can_force_door_shut(*ri))
+            set<coord_def> all_door;
+            find_connected_identical(*ri, all_door);
+            const vector<coord_def> door_spots(all_door.begin(), all_door.end());
+
+            if (!_can_force_door_shut(door_spots))
                 continue;
 
+            int current_tension = get_tension(GOD_NO_GOD);
+            vector<coord_def> positions;
+            int new_tension = _find_shut_door_actor_positions_with_max_tension(
+                                                                    door_spots,
+                                                                    positions);
+
             // If it's scarier to leave this door open, do so
-            if (!_should_force_door_shut(*ri))
+            if (!_should_force_door_shut(current_tension, new_tension))
                 continue;
 
             if (check_only)
                 return true;
 
-            set<coord_def> all_door;
-            find_connected_identical(*ri, all_door);
-            auto veto_spots = vector<coord_def>(all_door.begin(), all_door.end());
-            auto door_spots = veto_spots;
-
-            for (const auto &dc : all_door)
+            unsigned int actor_index = 0;
+            for (coord_def dc : door_spots)
             {
+                push_items_from(dc, &door_spots);
                 // If there are things in the way, push them aside
                 // This is only reached for the player or non-hostile actors
                 actor* act = actor_at(dc);
-                if (act)
-                {
-                    vector<coord_def> targets =
-                                _get_push_spaces_max_tension(dc, &veto_spots);
-                    // at this point, _can_force_door_shut should have
-                    // indicated that the door can be shut.
-                    ASSERTM(!targets.empty(), "No push space from (%d,%d)",
-                                                                dc.x, dc.y);
-                    coord_def newpos = targets.front();
-
-                    act->move_to(newpos, MV_DEFAULT, true);
-                    pushed.push_back(act);
-                    if (act->is_player())
-                        player_pushed = true;
-                    veto_spots.push_back(newpos);
-                }
-                push_items_from(dc, &door_spots);
+                if (!act)
+                    continue;
+                coord_def new_pos = positions[actor_index];
+                act->move_to(new_pos, MV_DEFAULT, true);
+                pushed.push_back(act);
+                if (act->is_player())
+                    player_pushed = true;
+                ++actor_index;
             }
 
             // Close the door
             bool seen = false;
             vector<coord_def> excludes;
-            for (const auto &dc : all_door)
+            for (coord_def dc : door_spots)
             {
                 dgn_close_door(dc);
                 set_terrain_changed(dc);
@@ -3466,7 +3508,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
 
             if (seen)
             {
-                for (const auto &dc : all_door)
+                for (coord_def dc : door_spots)
                 {
                     if (env.map_knowledge(dc).seen())
                     {
