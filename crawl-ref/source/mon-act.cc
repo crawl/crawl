@@ -1955,6 +1955,8 @@ void handle_monster_move(monster* mons)
     if (!mons->alive())
         return;
 
+    mon_acting mact(mons);
+
     if (!disabled && mons_is_tentacle_head(mons_base_type(*mons)))
         move_child_tentacles(mons);
 
