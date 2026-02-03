@@ -1687,7 +1687,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    if (oper == OPER_EVOKE || oper == OPER_PUTON && god_hates_item(item))
+    if ((oper == OPER_EVOKE || oper == OPER_PUTON)
+        && god_hates_item(item))
     {
         penance = true;
         return true;
