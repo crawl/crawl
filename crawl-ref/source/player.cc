@@ -7705,7 +7705,7 @@ int player::usable_tentacles() const
         free_tentacles -= 2 * hands_req + 2;
     }
 
-    return free_tentacles;
+    return max(0, free_tentacles);
 }
 
 int player::has_pseudopods(bool allow_tran) const
