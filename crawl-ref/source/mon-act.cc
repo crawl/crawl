@@ -3578,6 +3578,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         return false;
     }
 
+    const coord_def orig_m2_pos = m2->pos();
+
     if (!mon->swap_with(m2, MV_DELIBERATE))
         return false;
 
@@ -3586,9 +3588,14 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->check_redraw(m2->pos());
     m2->check_redraw(mon->pos());
 
-    // Pushing past a seeker gets you hit (since only opposed monsters will try)
+    // Pushing into a seeker gets you hit (only opposed monsters will try).
+    // (This is to keep things repeatable actions like Foxfire from being overly
+    // strong by blocking enemy movement.)
+    //
+    // Shooting stars need special handling to make sure the knockback direction
+    // is preserved (ie: that they push the monster back to where it started.)
     if (mons_is_seeker(*m2))
-        seeker_attack(*m2, *mon);
+        seeker_attack(*m2, *mon, orig_m2_pos + delta);
 
     return true;
 }
