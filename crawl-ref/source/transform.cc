@@ -1857,6 +1857,20 @@ string cant_transform_reason(transformation which_trans,
 bool check_transform_into(transformation which_trans, bool involuntary,
                           const item_def* talisman)
 {
+
+    if (!involuntary && talisman && you.active_talisman()
+            && !check_warning_inscriptions(*you.active_talisman(), OPER_REMOVE))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    if (!involuntary && talisman && you.active_talisman() != talisman
+            && !check_warning_inscriptions(*talisman , OPER_PUTON))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
     const string reason = cant_transform_reason(which_trans, involuntary, true);
     if (!reason.empty())
     {
