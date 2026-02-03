@@ -622,7 +622,7 @@ int slymdra_split(monster& slymdra, int count, bool quiet)
     if (count == -1)
         count = slymdra.num_heads - 4;
 
-    if (real_slimes == 0 && fake_heads == 0)
+    if (count <= 0 || real_slimes == 0 && fake_heads == 0)
         return 0;
     for (distance_iterator di(slymdra.pos(), true, true, 2); di; ++di)
     {
