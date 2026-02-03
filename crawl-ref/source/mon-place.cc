@@ -1259,7 +1259,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         // Heads beyond the default number should count as additional real slimes
         // (since they will be able to generate them).
-        mon->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() = (mon->num_heads - 4);
+        mon->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() = max(0, mon->num_heads - 4);
         slymdra_scale_hp(*mon);
     }
 
