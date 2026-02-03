@@ -420,7 +420,8 @@ public:
     string resist_margin_phrase(int margin) const;
 
     void collide(coord_def newpos, const actor *agent, int damage);
-    bool knockback(const actor &cause, int dist, int pow, string source_name);
+    bool knockback(const actor &cause, int dist, int pow, string source_name,
+                   coord_def source = coord_def());
     coord_def stumble_pos(coord_def targ) const;
     bool stumble_away_from(coord_def targ, string src = "");
 
