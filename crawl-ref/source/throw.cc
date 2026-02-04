@@ -853,6 +853,7 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
     if (teleport)
     {
         beam.use_target_as_pos = true;
+        unwind_var<ranged_attack*> old_atk(beam.ranged_atk, &ratk.atk);
         beam.affect_cell();
         beam.affect_endpoint();
     }
