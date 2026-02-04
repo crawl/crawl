@@ -1903,7 +1903,7 @@ bool melee_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender) && !you.duration[DUR_VEXED]);
+                            you.can_see(*defender) && !is_involuntary);
 
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
