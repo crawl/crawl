@@ -1366,16 +1366,19 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
     if (player && cloud_max_base_damage > 0 && resist > 0)
         canned_msg(MSG_YOU_RESIST);
 
+    // Get the cloud's agent now as _actor_apply_cloud_side_effects can delete
+    // blastmotes clouds
+    actor* oppressor = cloud.agent();
+
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
     if (cloud_flavour != BEAM_NONE)
-        act->expose_to_element(cloud_flavour, 7, cloud.agent());
+        act->expose_to_element(cloud_flavour, 7, oppressor);
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);
 
     if (!player && (side_effects || final_damage > 0))
     {
-        actor *oppressor = cloud.agent();
         if (oppressor && oppressor->alive())
         {
             // Alert the monster to the oppressor but don't give away their
@@ -1388,7 +1391,6 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 
     if (final_damage)
     {
-        actor *oppressor = cloud.agent();
         const string oppr_name =
             oppressor ? " "+apostrophise(oppressor->name(DESC_THE))
                       : "";
