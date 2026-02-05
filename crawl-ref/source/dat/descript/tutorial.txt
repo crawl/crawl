@@ -535,7 +535,8 @@ this ring.
 tutorial4 mephitic_cloud
 
 Mephitic Cloud is a level 3 spell, so you can't memorise it yet. To level up
-quickly, here are more training dummies — without stones to throw this time.
+quickly, here are more training dummies — without boomerangs to throw this
+time.
 
 At experience level 3, you'll be able to increase one of your stats — choosing
 <input>I</input>ntelligence will help your spellcasting even further.
