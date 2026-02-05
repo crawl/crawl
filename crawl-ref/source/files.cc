@@ -2973,9 +2973,10 @@ vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
     }
     inf.close();
 
-    if (!debug_check_ghosts(result))
+    string err_msg;
+    if (!debug_check_ghosts(result, err_msg))
     {
-        string error = "Bones file is buggy: " + ghost_filename;
+        string error = "Bones file is buggy: " + ghost_filename + "\n" + err_msg;;
         throw corrupted_save(error, version);
     }
 
