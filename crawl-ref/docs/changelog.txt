@@ -37,7 +37,7 @@ Branches, Environment
 * The Crypt end vault's old thematic item rewards have been moved into a unique,
   guaranteed shop containing a larger quantity of the prior options at high
   prices.
-* The Slime Pits has recieved layout changes:
+* The Slime Pits has received layout changes:
   - All staircases in the branch are now slimy and can no longer be climbed back
     up until The Royal Jelly is dead (or the player worships Jiyva).
   - Going down on a slimy staircase confers a status that greatly increases HP
@@ -50,14 +50,14 @@ Branches, Environment
 * The Halls of Zot will now contain one of three types of orb monster each game,
   each wielding a different element and form of strategic damage.
   - The orb type one will encounter that game is indicated via statues placed
-    by the Temple entrance in the Dungeon and the Zot entrance in Depths. This
-    can also be viewed from the the Dungeon overview screen (ctrl+O) once seen.
+    by the Temple entrance in the Dungeon and the Zot entrance in the Depths.
+    This can also be viewed from the Dungeon overview screen (ctrl+O) once seen.
 * The last floor of Zot contains now contains two Boundless Tesseracts, immobile
   enemy spawners with fast regeneration.
   - Tesseracts wake up the first time one kills an Orb Guardian. Once a
     tesseract wakes up, both are automatically detected, and 4 to 7 new monsters
     will appear outside of the Orb vault. Further monsters will spawn at random
-    locations across the entire floor an average of once every 50 turns. These
+    locations across the entire floor on average of once every 50 turns. These
     will always be outside of the player's sight until at least 50 monsters have
     been created this way. These spawns reward no XP, are marked as originating
     from the tesseracts, are capped to 60 on the floor at a time, and will
@@ -68,7 +68,7 @@ Branches, Environment
 * The Orb status from being in Zot or having picked up the Orb of Zot now also
   fuzzes the destination of scrolls of blinking by up to two spaces.
 * The depth at which the player enters the Abyss is now based upon their XL,
-  regarldess of whether they arrive by banishment or entering a gateway
+  regardless of whether they arrive by banishment or entering a gateway
   themselves.
   - Abyss shifts can no longer pull the player deeper than they otherwise would
     have entered it (unless they spend a while there at max XL), and the Abyss
@@ -80,7 +80,7 @@ Branches, Environment
   - Troves will no longer ask for any consumables besides scrolls of acquirement
     and will no longer ask for specific named items from shops.
   - Equipment costs are less common. Demon weapons are all interchangeable and
-    and heavier dragon scales are rarer.
+    heavier dragon scales are rarer.
   - The Slimy / Abyssal rune troves and Horn of Geryon troves are more common.
   - Piety troves now use a new debuff that temporarily caps one's piety at 0
     until XP is gained instead of permanently draining it, allowing them to
@@ -227,7 +227,7 @@ Gods
   - Kiku wrath applies the Sign of Ruin instead of tormenting, has a hard cap
     on draining for lower amounts that can no longer be resisted by rN+, and
     also now applies Doom.
-  - Okawaru wrath summons are more varied and scale more smoothly to player xl.
+  - Okawaru wrath summons are more varied and scale more smoothly to player XL.
   - Qazlal wrath now applies the Banes of Heatstroke, Snow-blindness, and
     Electrospasm instead of transient mutations of rF-, rC-, or rElec-.
 
@@ -240,7 +240,7 @@ Interface and Options
     - New show_paged_inventory option: disables this page behaviour for the
       (i)nventory screen.
   - Talismans are now considered gear and are (p)ut on instead of e(v)oked.
-  - Jewellery autopick-up no longer picks up extra copies of non-artifact
+  - Jewellery autopickup no longer picks up extra copies of non-artifact
     jewellery past the max amount one can wear at a time.
   - Dropping consumables now disables them from autopickup by default.
   - The item_slot option has been replaced with gear_slot and
@@ -302,7 +302,7 @@ Items
   - Higher-spell-level are now somewhat rarer early in the game and more
     common later.
 * New talismans:
-  - Spore talismans, tier 2 talismans providing Spore Form. This meld one's
+  - Spore talismans, tier 2 talismans providing Spore Form. This melds one's
     offhand and feet into sporulating fungi, allowing attacks to weaken enemies
     and creating rows of burstshrooms behind them. These burstshrooms explode
     after a short delay and sometimes daze those hit.
@@ -315,17 +315,17 @@ Items
     players a small amount of mp whenever they drink non-useless potions.
   - Amulets of Dissipation, which cause time-based negative status effects to
     expire twice as quickly.
-  - Amulets of Wildshape, which gives +5 Shapeshifting skill.
+  - Amulets of Wildshape, which give +5 Shapeshifting skill.
 * New orbs:
   - Orbs of attunement, which double the enhancers provided by wielded
-    magical staves and also makes melee attacks performed with them restore a
+    magical staves and also make melee attacks performed with them restore a
     small amount of MP.
   - Orbs of glass, which may inflict Fragility on nearby enemies whenever
     they're injured, scaling with Evocations skill.
   - Orbs of mesmerism, which inflict Daze on nearby enemies when one is injured
     by melee attacks, are recharged by not moving, and scaled heavily with
     Evocations skill.
-  - Orbs of pyromania, which give a Fire enhancer and also produces explosions
+  - Orbs of pyromania, which give a Fire enhancer and also produce explosions
     around the wielder whenever they directly kill a monster without using
     attacks, scaling with Evocations skill.
   - Orbs of stardust, which conjure fast-moving shooting star projectiles
@@ -350,10 +350,10 @@ Items
   - Armour of command, which gives Summoning spells a success chance and
     spellpower bonuses based on one's Armour skill.
   - Armour of death, which gives Necromancy spells a success chance and
-    spellpower bonus, but make all non-Necromancy spells cost as much HP as they
+    spellpower bonus, but makes all non-Necromancy spells cost as much HP as they
     cost MP.
   - Armour of resonance, which gives Forgecraft spells a success rate bonus and
-    also increase the damage of the wearer's melee attacks based on their
+    also increases the damage of the wearer's melee attacks based on their
     Forgecraft skill.
 * New other armour egos:
   - Hats of sniping, which increase ranged weapon and thrown item damage
@@ -416,7 +416,7 @@ Monsters
   - Colossal amoebae, which create copies of themselves when they hit foes.
   - Creeping plasmodia, which launch explosive acid spores that can spread
     weaker plasmodia to other walls.
-  - Eyes of draining, rare sights that rapidly drain the player's maximum HP
+  - Eyes of draining, rare sights that rapidly drain the player's maximum HP.
   - Morphogenic oozes, whose melee attacks can temporarily turn players into
     jellies.
   - Slymdras, lethally acidic combinations of hydras and slime creatures.
