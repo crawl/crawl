@@ -2349,7 +2349,7 @@ void lucky_upgrade_item(item_def& item)
         // Messaging is really weird if we don't do this, and it seems a
         // relatively unimportant freebie.
         identify_item(item);
-        mprf("<cyan>Lucky! %s was actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
+        mprf("<cyan>Lucky! %s is actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
     }
 }
 
