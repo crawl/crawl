@@ -224,9 +224,15 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (companion_list.count(mon->mid))
                 break;
 
-            simple_monster_message(*mon, " is freed.");
-            // The monster disappears.
-            monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+            // XXX: Killing a transiting monster that can drop items directly is
+            //      very unsafe, since their item links will point to other
+            //      items on the player's current floor. Instead, mark them to
+            //      die the moment they actually get placed.
+            if (in_transit)
+                mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, &you, 1));
+            else
+                monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:
