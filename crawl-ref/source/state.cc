@@ -440,7 +440,6 @@ void game_state::dec_mon_acting(monster* mon)
     if (size > 0)
     {
         mon_act = mon_act_stack[size - 1];
-        ASSERT(!invalid_monster(mon_act));
         mon_act_stack.pop_back();
     }
 }
