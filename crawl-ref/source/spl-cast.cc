@@ -2467,7 +2467,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     // Clouds and explosions.
     case SPELL_FREEZING_CLOUD:
-        return cast_freezing_cloud(powc, beam, fail);
+        return cast_freezing_cloud(powc, beam.target, fail);
 
     case SPELL_FIRE_STORM:
         return cast_fire_storm(powc, beam, fail);

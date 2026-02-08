@@ -106,7 +106,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr,
-                        bool check_only = false);
+                        bool check_only = false,
+                        bool include_player = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
