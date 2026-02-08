@@ -158,7 +158,9 @@ void player::update_beholders()
         {
             beholders.erase(beholders.begin() + i);
             removed = true;
-            mon->props.erase(FORCED_MESMERISE_KEY);
+
+            if (mon)
+                mon->props.erase(FORCED_MESMERISE_KEY);
 
             // If that was the last one, clear the duration before
             // printing any subsequent messages, or a --more-- can
