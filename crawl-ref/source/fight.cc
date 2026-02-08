@@ -1453,7 +1453,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects,
                         bool *prompted, const monster *defender,
-                        bool check_only)
+                        bool check_only, bool include_player)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
@@ -1492,7 +1492,9 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         }
     }
 
-    if (victims.empty())
+    const bool hits_player = include_player && hitfunc.is_affected(you.pos());
+
+    if (victims.empty() && !hits_player)
         return false;
 
     // We have already determined that this attack *would* prompt, so stop here
@@ -1500,8 +1502,16 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         return true;
 
     // Listed in the form: "your rat", "Blorkula the orcula".
-    string mon_name = victims.describe();
+    string mon_name = !victims.empty() ? victims.describe() : "";
     const bool penance = victims.penance();
+
+    if (hits_player)
+    {
+        if (mon_name.empty())
+            mon_name = "yourself";
+        else
+            mon_name = "yourself and " + mon_name;
+    }
 
     const string prompt = make_stringf("Really %s%s %s%s?%s",
              verb, defender_ok ? " near" : "", mon_name.c_str(),
