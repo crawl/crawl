@@ -49,6 +49,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "longwalk-range-mode.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -768,6 +769,14 @@ const vector<GameOption*> game_options::build_options_list()
              {"open", travel_open_doors_type::open},
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
+        new MultipleChoiceGameOption<longwalk_range_mode>(
+            SIMPLE_NAME(longwalk_range),
+            longwalk_range_mode::LWR_LOS,
+            {{"los", longwalk_range_mode::LWR_LOS},
+            {"visible", LWR_VISIBLE},
+            {"unlimited", LWR_UNLIMITED},
+            {"constant", LWR_CONSTANT}}),
+        new IntGameOption(SIMPLE_NAME(longwalk_range_constant), 7, 1, 100),
 
         new MultipleChoiceGameOption<level_gen_type>(
             SIMPLE_NAME(pregen_dungeon),

@@ -21,6 +21,7 @@
 #include "kill-dump-options-type.h"
 #include "lang-t.h"
 #include "level-gen-type.h"
+#include "longwalk-range-mode.h"
 #include "maybe-bool.h"
 #include "mon-dam-level-type.h"
 #include "mon-util.h"
@@ -512,6 +513,8 @@ public:
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     travel_open_doors_type travel_open_doors; // open doors while exploring
+    longwalk_range_mode longwalk_range; // Maximum distance type for longwalking.
+    int         longwalk_range_constant;
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
