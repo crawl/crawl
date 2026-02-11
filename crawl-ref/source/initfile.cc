@@ -49,6 +49,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "longwalk-range-mode.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -769,6 +770,8 @@ const vector<GameOption*> game_options::build_options_list()
              {"open", travel_open_doors_type::open},
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
+        new StringGameOption(ON_SET_NAME(longwalk_range), "15", false,
+            [this]() { set_longwalk_range(longwalk_range_option); }),
 
         new MultipleChoiceGameOption<level_gen_type>(
             SIMPLE_NAME(pregen_dungeon),
@@ -3558,6 +3561,33 @@ void game_options::set_menu_sort(const string &field)
         }
 
     sort_menus.push_back(cond);
+}
+
+// Option syntax is:
+// longwalk_range = los | visible | unlimited | <positive integer>
+// A bare number sets a constant maximum distance.
+void game_options::set_longwalk_range(const string &field)
+{
+    const string f = lowercase_string(trimmed_string(field));
+
+    if (f == "los")
+        longwalk_range = LWR_LOS;
+    else if (f == "visible")
+        longwalk_range = LWR_VISIBLE;
+    else if (f == "unlimited")
+        longwalk_range = LWR_UNLIMITED;
+    else
+    {
+        int dist;
+        if (!parse_int(f.c_str(), dist) || dist < 1)
+        {
+            report_error("Bad longwalk_range: \"%s\" (expected los, visible, "
+                         "unlimited, or a positive number)", field.c_str());
+            return;
+        }
+        longwalk_range = LWR_CONSTANT;
+        longwalk_range_constant = dist;
+    }
 }
 
 void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
