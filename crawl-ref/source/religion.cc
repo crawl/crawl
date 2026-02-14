@@ -4259,7 +4259,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_QAZLAL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
-        case GOD_ZIN:
 #if TAG_MAJOR_VERSION == 34
         case GOD_PAKELLAS:
 #endif
@@ -4271,14 +4270,25 @@ void handle_god_time(int /*time_delta*/)
                 decay_piety();
             break;
 
-        case GOD_ELYVILON:
+        case GOD_ZIN:
+            if (one_chance_in(17)
+                && !player_under_penance(you.religion))
+                decay_piety()
+            break;
+
         case GOD_HEPLIAKLQANA:
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
-        case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
                 decay_piety();
+            break;
+        
+        case GOD_ELYVILON:
+        case GOD_SHINING_ONE:
+            if (one_chance_in(35)
+                && !player_under_penance(you.religion))
+                decay_piety()
             break;
 
         case GOD_BEOGH:
