@@ -4654,7 +4654,8 @@ static void _get_spell_description(const spell_type spell,
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
         const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
-                                || spell == SPELL_FLASHING_BALESTRA) ? 2 : 0;
+                                || spell == SPELL_FLASHING_BALESTRA
+                                || spell == SPELL_BECKONING_GALE ? 3 : 0);
 
         description += "\nRange : ";
         description += range_string(range, -1, minrange);
