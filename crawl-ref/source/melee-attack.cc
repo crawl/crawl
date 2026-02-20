@@ -3730,7 +3730,9 @@ bool melee_attack::mons_attack_effects()
         if (attacker->as_monster()->has_ench(ENCH_FIRE_CHAMPION))
             mons_apply_attack_flavour(AF_FIRE);
 
-        if (attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
+        // XXX: If we try this on a reset monster, the resist check to determine
+        //      chaos brand will assert.
+        if (defender->alive() && attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
             mons_apply_attack_flavour(AF_CHAOTIC);
     }
 
