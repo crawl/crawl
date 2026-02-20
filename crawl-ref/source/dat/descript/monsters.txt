@@ -1982,7 +1982,7 @@ for underhanded tactics.
 %%%%
 kobold blastminer
 
-A kobold, ready with multiple armaments to defends itself from the many
+A kobold, ready with multiple armaments to defend itself from the many
 dangers of the depths. The blastmote-packed cannon on its shoulder bears its
 maker's mark, and is fiercely loyal; it will fire for none other.
 %%%%
