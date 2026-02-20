@@ -350,6 +350,15 @@ namespace quiver
                 fire_warn_if_impossible(false, you.weapon()); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
+            monster* mons = monster_at(target.target);
+            if (mons && is_valid_tempering_target(*mons, you, true) && !you.confused())
+            {
+                mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
+                you.turn_is_over = true;
+                return;
+            }
+
             if (autofight_check() || !do_inscription_check())
                 return;
 
