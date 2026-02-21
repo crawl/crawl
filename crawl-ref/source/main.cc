@@ -77,6 +77,7 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
+#include "command-palette-menu.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -2296,6 +2297,9 @@ void process_command(command_type cmd, command_type prev_cmd)
         redraw_screen();
         update_screen();
         break;
+    case CMD_COMMAND_PALETTE:
+         process_command(display_command_palette(), CMD_COMMAND_PALETTE);
+         break;
     case CMD_DISPLAY_MUTATIONS:
         display_mutations();
         redraw_screen();
@@ -2492,7 +2496,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // The backslash in ?\? is there so it doesn't start a trigraph.
         if (crawl_state.game_is_hints())
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
-        else // well, not examine, but...
+        else if (prev_cmd != CMD_COMMAND_PALETTE) // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
         if (feat_is_altar(env.grid(you.pos())))
