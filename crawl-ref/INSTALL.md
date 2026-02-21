@@ -490,6 +490,7 @@ set up.
 
 On Linux, try installing the `ccache` with your package manager. You will need
 to add the ccache directory to your `PATH`.
+See [this StackExchange answer](https://askubuntu.com/a/470636).
 
 On macOS, run `brew install ccache` and follow the instructions to update your
 `PATH`.
