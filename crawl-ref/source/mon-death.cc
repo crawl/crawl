@@ -1592,8 +1592,10 @@ static void _make_derived_undead(monster* mons, bool quiet,
 
     if (mons->mons_species() == MONS_HYDRA || mons->type == MONS_SLYMDRA)
     {
+        if (which_z == MONS_SPECTRAL_THING)
+            mg.props[MGEN_NUM_HEADS] = mons->props[OLD_HEADS_KEY].get_int();
         // No undead 0-headed hydras, sorry.
-        if (mons->heads() == 0)
+        else if (mons->heads() == 0)
         {
             if (!quiet)
                 mpr(fail_msg);
