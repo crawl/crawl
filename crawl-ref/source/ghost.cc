@@ -1257,12 +1257,6 @@ bool debug_check_ghost(const ghost_demon &ghost, string &err)
         return false;
     }
 
-    if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
-    {
-        err = make_stringf("Bad rElec: %d", get_resist(ghost.resists, MR_RES_ELEC));
-        return false;
-    }
-
     if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
     {
         err = make_stringf("Bad brand: %d", ghost.brand);
