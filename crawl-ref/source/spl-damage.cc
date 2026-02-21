@@ -4854,9 +4854,13 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
     // Calculate paths for all existing magnetized enemies and the one we plan
     // to magnetize now.
     vector<coord_def> targets = get_magnavolt_targets();
-    // Add the new target only if it isn't already here, or we'll zap it twice.
-    if (find(targets.begin(), targets.end(), target) == targets.end())
+    // Add the new target only if there's a monster there and it isn't already
+    // in the list, or we'll zap it twice.
+    if (monster_at(target)
+        && find(targets.begin(), targets.end(), target) == targets.end())
+    {
         targets.push_back(target);
+    }
     vector<coord_def> paths = get_magnavolt_beam_paths(targets);
 
     if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths,
@@ -4870,23 +4874,31 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
     // First apply the debuff to the targeted enemy.
     monster* mon = monster_at(target);
 
-    if (!mon->has_ench(ENCH_MAGNETISED))
-        mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());
+    if (mon)
+    {
+        if (!mon->has_ench(ENCH_MAGNETISED))
+            mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());
 
-    mon->add_ench(mon_enchant(ENCH_MAGNETISED, &you, random_range(5, 8) * BASELINE_DELAY));
+        mon->add_ench(mon_enchant(ENCH_MAGNETISED, &you, random_range(5, 8) * BASELINE_DELAY));
+    }
+    else
+        mpr("Metal shards fall down harmlessly.");
 
     // Then zap all magnetized enemies.
-    mpr("Electricity arcs towards the magnetite!");
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    if (!targets.empty())
     {
-        bolt volt;
-        zappy(ZAP_MAGNAVOLT, pow, false, volt);
-        volt.source = you.pos();
-        volt.target = targets[i];
-        volt.aimed_at_spot = true;
-        volt.range = LOS_RADIUS;
-        volt.thrower = KILL_YOU_MISSILE;
-        volt.fire();
+        mpr("Electricity arcs towards the magnetite!");
+        for (unsigned int i = 0; i < targets.size(); ++i)
+        {
+            bolt volt;
+            zappy(ZAP_MAGNAVOLT, pow, false, volt);
+            volt.source = you.pos();
+            volt.target = targets[i];
+            volt.aimed_at_spot = true;
+            volt.range = LOS_RADIUS;
+            volt.thrower = KILL_YOU_MISSILE;
+            volt.fire();
+        }
     }
 
     return spret::success;
