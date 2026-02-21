@@ -3541,7 +3541,7 @@ static void _display_damage_rating(const item_def *weapon)
 {
     string weapon_name;
     if (weapon)
-        weapon_name = weapon->name(DESC_YOUR);
+        weapon_name = weapon->name(DESC_YOUR, false, false, true, false, true);
     else
         weapon_name = "unarmed combat";
 
