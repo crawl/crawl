@@ -340,7 +340,7 @@ void InvMenu::set_title(const string &s)
             case 2: str = "Scrolls: "; break;
             case 3: str = "Evocable Items: "; break;
         }
-        str += "    (Left/Right to switch category)";
+        str += "    (Left/Right/Tab to switch category)";
         set_title(new InvTitle(this, str, title_annotate));
         return;
     }
@@ -1489,7 +1489,7 @@ void display_inventory()
 
 static string _drop_menu_titlefn(const Menu*, const string &)
 {
-    return "Drop what? (Left/Right to switch category) " + slot_description() + " (_ for help)";
+    return "Drop what? (Left/Right/Tab to switch category) " + slot_description() + " (_ for help)";
 }
 
 /**

@@ -8,7 +8,7 @@ Use the usual navigation keys (<w>arrow</w> keys, <w>pgdn</w>/<w>pgup</w>, <w>ho
 items, and <w>Space</w>/<w>.</w> to toggle whether the selected item will be picked up or
 dropped. Pressing an item's letter key will also toggle its pickup/drop state.
 Gear, potions, scrolls, and evocable items are on separate pages which can be
-switched between by <w>left arrow</w> and <w>right arrow</w>.
+switched between by <w>left arrow</w> and <w>right arrow</w> or <w>Tab</w> and <w>Shift-Tab</w>.
 Press <w>Return</w> to accept the current set of items.
 
 Entering a number before selecting by letter will toggle just that quantity of
