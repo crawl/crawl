@@ -187,6 +187,30 @@ MAP
    .....
 ENDMAP
 
+NAME:    tekkud_enter_ziggurat_i
+TAGS:    zig_entry transparent no_pool_fixup no_monster_gen no_descent
+MONS:    orange crystal statue
+MONS:    obsidian statue / ice statue
+KFEAT:   O = enter_ziggurat no_mimic
+NSUBST:  1 = 1:1 / 1:2 / *=12
+SHUFFLE: wl , mn
+COLOUR:  mn : red / blue / green / yellow / magenta
+MAP
+.............
+.nnnn...nnnn.
+.n1w.w.w.w1n.
+.nw.w.w.w.wn.
+.n.w.w.w.w.n.
+..w.w...w.w..
+...w..O..w...
+..w.w...w.w..
+.n.w.w.w.w.n.
+.nw.w.w.w.wn.
+.n1w.w.w.w1n.
+.nnnn...nnnn.
+.............
+ENDMAP
+
 default-depth: Zig
 
 #######################################################################
