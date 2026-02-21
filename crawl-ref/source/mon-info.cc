@@ -591,6 +591,7 @@ monster_info::monster_info(const monster* m, int milev)
     menergy = mons_energy(*m);
     can_go_frenzy = m->can_go_frenzy();
     can_feel_fear = m->can_feel_fear(false);
+    can_shoot_through_monster = shoot_through_monster(&you, m);
     sleepwalking = m->sleepwalking();
     backlit = m->backlit(false);
     umbraed = m->umbra();

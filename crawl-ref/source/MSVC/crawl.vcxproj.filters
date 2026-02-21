@@ -726,6 +726,9 @@
     <ClCompile Include="..\l-dgn.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\l-autofight.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\l-crawl.cc">
       <Filter>cc</Filter>
     </ClCompile>

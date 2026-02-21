@@ -865,6 +865,7 @@ void CLua::init_libraries()
     cluaopen_travel(_state);
     cluaopen_view(_state);
     cluaopen_spells(_state);
+    cluaopen_autofight(_state);
 
     cluaopen_globals(_state);
 
