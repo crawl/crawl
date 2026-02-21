@@ -3,6 +3,8 @@
  * @brief Contains monster death functionality, including unique code.
 **/
 
+#include <functional>
+
 #include "AppHdr.h"
 
 #include "mon-death.h"
@@ -1516,17 +1518,20 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
 /**
  * Make derived undead out of a dying/dead monster.
  *
- * @param mons       the monster that died
- * @param quiet      whether to print flavour messages
- * @param which_z    the kind of zombie
- * @param beh        the zombie's behavior
- * @param spell      the spell or summon type used (if any)
- * @param god        the god involved (if any)
+ * @param mons           the monster that died
+ * @param quiet          whether to print flavour messages
+ * @param which_z        the kind of zombie
+ * @param beh            the zombie's behavior
+ * @param spell          the spell or summon type used (if any)
+ * @param god            the god involved (if any)
+ * @param should_trigger condition to check just before triggering the effect
  */
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
                                  int spell, god_type god,
-                                 string msg = "", string fail_msg = "")
+                                 string msg = "", string fail_msg = "",
+                                 function<bool ()> should_trigger = []() { return true; }
+                                )
 {
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_DRAUGR;
     // This function is used by several different sorts of things, each with
@@ -1615,7 +1620,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
                            god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
                            _derived_undead_message(*mons, which_z, msg);
     schedule_make_derived_undead_fineff(mons->pos(), mg,
-            mons->get_experience_level(), agent_name, message);
+            mons->get_experience_level(), agent_name, message, should_trigger);
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -2705,7 +2710,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         schedule_make_derived_undead_fineff(simu.pos, simu,
                                             get_monster_data(simu.base_type)->HD,
                                             "the player",
-                                            msg.c_str(), true);
+                                            msg.c_str(), []() { return true; }, true);
 
         silent = true;
     }
@@ -3483,10 +3488,15 @@ item_def* monster_die(monster& mons, killer_type killer,
             && you.duration[DUR_DEATH_CHANNEL]
             && !have_passive(passive_t::reaping))
         {
+            // Need to recheck death channel is still up, as it may expire between
+            // scheduling and execution.
+            function<bool ()> should_trigger = []() { return you.duration[DUR_DEATH_CHANNEL] > 0; };
             _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
                                  BEH_FRIENDLY,
                                  SPELL_DEATH_CHANNEL,
-                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                                 "", "",
+                                 should_trigger);
         }
         else if (!you_worship(GOD_YREDELEMNUL))
             (_reaping_brand(mons));

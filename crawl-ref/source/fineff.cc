@@ -374,9 +374,10 @@ public:
 
     make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
         const string& _agent, const string& _msg,
-        bool _act_immediately)
+        function<bool ()> _should_trigger, bool _act_immediately)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
-        agent(_agent), message(_msg), act_immediately(_act_immediately)
+        agent(_agent), message(_msg), should_trigger(_should_trigger),
+        act_immediately(_act_immediately)
     {
     }
 protected:
@@ -384,6 +385,7 @@ protected:
     int experience_level;
     string agent;
     string message;
+    function<bool ()> should_trigger;
     bool act_immediately;
 };
 
@@ -721,10 +723,12 @@ void schedule_infestation_death_fineff(coord_def pos, const string& name)
 void schedule_make_derived_undead_fineff(coord_def pos, mgen_data mg, int xl,
                                          const string& agent,
                                          const string& msg,
+                                         function<bool ()> should_trigger,
                                          bool act_immediately)
 {
     _schedule_final_effect(new make_derived_undead_fineff(pos, mg, xl, agent,
                                                           msg,
+                                                          should_trigger,
                                                           act_immediately));
 }
 
@@ -1486,6 +1490,9 @@ void infestation_death_fineff::fire()
 
 void make_derived_undead_fineff::fire()
 {
+    if (!should_trigger())
+        return;
+
     monster *undead = create_monster(mg);
     if (!undead)
         return;
