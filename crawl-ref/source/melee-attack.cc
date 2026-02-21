@@ -222,8 +222,6 @@ bool melee_attack::handle_phase_attempted()
         || attk_flavour == AF_CRUSH
            && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
     {
-        --effective_attack_number;
-
         return false;
     }
 
@@ -1658,6 +1656,9 @@ bool melee_attack::run_monster_attack_set()
         // Charge up for monsters (player is handled in player_attempted_attack)
         if (melee_attk.is_sundering_weapon() && !is_projected && attack_succeeded)
             charge_sunder = true;
+
+        if (!attack_succeeded)
+            --effective_attack_num;
 
         fire_final_effects();
     }
