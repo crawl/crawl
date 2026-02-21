@@ -6469,6 +6469,13 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mons_class_flag(mi.type, M_BURROWS))
         result << uppercase_first(pronoun) << " can burrow through diggable terrain.\n";
 
+    if (mons_class_flag(mi.type, M_ACID_SPLASH))
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("inflict", plural)
+               << " 1d5 acid damage when struck in melee.\n";
+    }
+
     // Insubstantialness should take priority.
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
     {
