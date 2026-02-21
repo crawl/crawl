@@ -3947,6 +3947,29 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
 {
     fail_check();
 
+    const coord_def start_pos = agent.pos();
+    const coord_def drag_shift = -(targ - agent.pos()).sgn();
+
+    // Check for traps where the player expects to move.
+    if (agent.is_player())
+    {
+        coord_def one_square_move = agent.pos() + drag_shift;
+        const string verb = "ride";
+        if (surprising_crocodile_can_drag(agent, targ, false))
+        {
+            // The player will end up in one_square_move + drag_shift, and the
+            // crocodile in one_square_move. Check the crocodile position only
+            // for traps, which it will trigger.
+            if (!check_moveto_trap(one_square_move, verb)
+                || !check_moveto(one_square_move + drag_shift, verb))
+            {
+                return spret::abort;
+            }
+        }
+        else if (!check_moveto(one_square_move, verb))
+            return spret::abort;
+    }
+
     // The targeter will prevent casting this at times where the player *knows*
     // it won't work, but it's possible there's still an invisible creature in
     // the way that will cause this to fail.
@@ -3962,8 +3985,6 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
     // move one tile back or two.
     bool can_drag = surprising_crocodile_can_drag(agent, targ, true);
 
-    const coord_def start_pos = agent.pos();
-    const coord_def drag_shift = -(targ - agent.pos()).sgn();
     coord_def agent_pos = agent.pos() + drag_shift;
     if (can_drag)
         agent_pos += drag_shift;
