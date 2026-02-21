@@ -995,7 +995,7 @@ static int crawl_string_compare(lua_State *ls)
  * And some specific types for partial item naming:
  *
  *  - "base": base name of the item subtype
- *  - "qualname": name without articles, quantities, or enchantments
+ *  - "qual": name without articles, quantities, or enchantments
  *
  * These are used as the allowable values for how.
  * @tparam string what thing to describe
