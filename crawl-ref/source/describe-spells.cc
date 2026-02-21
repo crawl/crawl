@@ -371,7 +371,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 
     int minrange = 0;
     if (spell == SPELL_CALL_DOWN_LIGHTNING || spell == SPELL_FLASHING_BALESTRA)
-        minrange = 2;
+        minrange = 3;
 
     const bool in_range = has_range
                     && crawl_state.need_save
