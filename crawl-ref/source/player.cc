@@ -5501,7 +5501,6 @@ player::player()
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
     raw_piety        = 0;
-    piety_hysteresis = 0;
     gift_timeout     = 0;
     saved_good_god_piety = 0;
     previous_good_god = GOD_NO_GOD;

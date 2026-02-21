@@ -84,7 +84,6 @@
 #    define DEBUG_PIETY
 #endif
 
-#define PIETY_HYSTERESIS_LIMIT 1
 
 #define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
 #define YRED_SEEN_ZOMBIE_KEY "yred_seen_zombie"
@@ -2282,6 +2281,7 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
 {
     static int last_piety_lecture   = -1;
     static int last_penance_lecture = -1;
+    god_type current_god = you.religion;
 
     if (piety_loss <= 0 && penance <= 0)
         return;
@@ -2305,9 +2305,7 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
         lose_piety(piety_loss);
     }
 
-    if (you.raw_piety < 1)
-        excommunication();
-    else if (penance)       // only if still in religion
+    if (you.religion == current_god && penance)       // only if still in religion
     {
         if (last_penance_lecture != you.num_turns && !no_lecture)
         {
@@ -2545,8 +2543,8 @@ static void _gain_piety_point()
     if (!you_worship(GOD_RU))
     {
         if (you.raw_piety >= MAX_PIETY
-            || you.raw_piety >= piety_breakpoint(5) && one_chance_in(3)
-            || you.raw_piety >= piety_breakpoint(3) && one_chance_in(3))
+            || you.raw_piety >= piety_breakpoint(5) && x_chance_in_y(2, 5)
+            || you.raw_piety >= piety_breakpoint(3) && x_chance_in_y(2, 5))
         {
             you.piety_info.register_piety_gain(PG_EVENT_STEPDOWN);
             do_god_gift();
@@ -2562,13 +2560,7 @@ static void _gain_piety_point()
     }
 
     int old_piety = you.piety();
-    // Apply hysteresis.
-    // piety_hysteresis is the amount of _loss_ stored up, so this
-    // may look backwards.
-    you.piety_info.register_piety_gain(PG_EVENT_TRUE_GAIN);
-    if (you.piety_hysteresis)
-        you.piety_hysteresis--;
-    else if (you.raw_piety < MAX_PIETY)
+    if (you.raw_piety < MAX_PIETY)
         you.raw_piety++;
 
     _handle_piety_gain(old_piety);
@@ -2721,18 +2713,6 @@ void lose_piety(int pgn)
     // disabled due to Ostracism.)
     const int old_piety = you.piety();
 
-    // Apply hysteresis.
-    const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = min<int>(PIETY_HYSTERESIS_LIMIT,
-                                    you.piety_hysteresis + pgn);
-    const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
-    pgn -= pgn_borrowed;
-#ifdef DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS,
-         "Piety decreasing by %d (and %d added to hysteresis)",
-         pgn, pgn_borrowed);
-#endif
-
     if (you.raw_piety - pgn < 0)
         you.raw_piety = 0;
     else
@@ -2745,6 +2725,9 @@ void lose_piety(int pgn)
         you.props[MIN_IGNIS_PIETY_KEY] = you.raw_piety;
 
     _handle_piety_loss(old_piety);
+
+    if (you.raw_piety < 1)
+        excommunication();
 }
 
 /// Whether Fedhas would set `target` to a neutral attitude
@@ -2888,7 +2871,6 @@ void excommunication(bool voluntary, god_type new_god)
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.duration[DUR_RECITE] = 0;
     you.raw_piety = 0;
-    you.piety_hysteresis = 0;
 
     // so that the player isn't punished for "switching" between good gods via aX
     if (is_good_god(old_god) && voluntary)
@@ -3591,14 +3573,12 @@ static void _set_initial_god_piety()
 
     case GOD_ASHENZARI:
         you.raw_piety = ASHENZARI_BASE_PIETY;
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         initialize_ashenzari_props();
         break;
 
     case GOD_RU:
         you.raw_piety = 10; // one moderate sacrifice should get you to *.
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
 
         // I'd rather this be in on_join(), but then it overrides the
@@ -3622,7 +3602,6 @@ static void _set_initial_god_piety()
             you.raw_piety = you.props[MIN_IGNIS_PIETY_KEY].get_int();
         else
             you.raw_piety = 130; // matches zealot with ecu bonus
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         break;
 
@@ -3630,7 +3609,6 @@ static void _set_initial_god_piety()
         you.raw_piety = 15; // to prevent near instant excommunication
         if (you.piety_max[you.religion] < 15)
             you.piety_max[you.religion] = 15;
-        you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         break;
     }
@@ -4217,12 +4195,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-void decay_piety()
-{
-    lose_piety(1);
-    you.piety_info.register_piety_decay();
-}
-
 void handle_god_time(int /*time_delta*/)
 {
     if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
@@ -4251,39 +4223,7 @@ void handle_god_time(int /*time_delta*/)
         int sacrifice_count;
         switch (you.religion)
         {
-        case GOD_TROG:
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-        case GOD_DITHMENOS:
-        case GOD_QAZLAL:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_VEHUMET:
-        case GOD_ZIN:
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-#endif
-        case GOD_JIYVA:
-        case GOD_WU_JIAN:
-        case GOD_SIF_MUNA:
-        case GOD_YREDELEMNUL:
-            if (one_chance_in(17))
-                decay_piety();
-            break;
-
-        case GOD_ELYVILON:
-        case GOD_HEPLIAKLQANA:
-        case GOD_FEDHAS:
-        case GOD_CHEIBRIADOS:
-        case GOD_SHINING_ONE:
-        case GOD_NEMELEX_XOBEH:
-            if (one_chance_in(35))
-                decay_piety();
-            break;
-
         case GOD_BEOGH:
-            if (one_chance_in(17))
-                decay_piety();
             maybe_generate_apostle_challenge();
             break;
 
@@ -4315,16 +4255,6 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
-        case GOD_IGNIS:
-            // Losing piety over time would be extremely annoying for people
-            // trying to get polytheist with Ignis. Almost impossible.
-        case GOD_USKAYAW:
-            // We handle Uskayaw elsewhere because this func gets called rarely
-        case GOD_GOZAG:
-        case GOD_XOM:
-            // Gods without normal piety do nothing each tick.
-            return;
-
         case GOD_NO_GOD:
         case GOD_RANDOM:
         case GOD_ECUMENICAL:
@@ -4332,11 +4262,9 @@ void handle_god_time(int /*time_delta*/)
         case NUM_GODS:
             die("Bad god, no bishop!");
             return;
-
+        default:
+            return;
         }
-
-        if (you.raw_piety < 1)
-            excommunication();
     }
 
     if (player_in_branch(BRANCH_CRUCIBLE))
