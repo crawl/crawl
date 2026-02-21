@@ -113,6 +113,10 @@ class TerminalRecorder(object):
             if self.game_cwd:
                 os.chdir(self.game_cwd)
             try:
+                # If using CFS scheduler or similar,
+                # we really want the webserver to be higher priority than the individual crawl processes
+                # So make the crawl process a little bit nicer after fork and before exec
+                os.nice(2)
                 os.execvpe(self.command[0], self.command, env)
             except OSError:
                 sys.exit(1)
