@@ -551,9 +551,6 @@ public:
         : final_effect(&you, nullptr, you.pos())
     {
     }
-protected:
-    int count;
-    int power;
 };
 
 class celebrant_bloodrite_fineff : public final_effect
