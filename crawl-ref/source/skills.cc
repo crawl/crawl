@@ -189,17 +189,31 @@ int skill_cost_baseline()
 }
 
 /**
- * The skill cost to increase the given skill from its current level by one.
+ * The skill cost to increase the given skill from its current level to
+ * the target or by one if no target has been set.
  *
  * @param sk the skill to check the player's level of
  * @returns the XP needed to increase from floor(level) to ceiling(level)
  */
-int one_level_cost(skill_type sk)
+int target_cost(skill_type sk)
 {
     if (you.skills[sk] >= MAX_SKILL_LEVEL)
         return 0;
-    return skill_exp_needed(you.skills[sk] + 1, sk)
-           - skill_exp_needed(you.skills[sk], sk);
+
+    // Normally, a player sets a target based on (possibly) modified
+    // skill levels. But the cost of improving that skill should be
+    // based on the unmodified skill level. So I adjust the target
+    // (generally downwards) by the amount the skill is currently
+    // boosted. Note that this adjustment is not exactly accurate
+    // for Ash skill boosts.
+    int you_deciskill = you.skill(sk, 10, true, false);
+    int you_deciskill_modified = you.skill(sk, 10, false, false);
+    int deciskill_diff = (you_deciskill_modified - you_deciskill);
+    int target = you.training_targets[sk] - deciskill_diff;
+    target = (target <= you_deciskill) ? you_deciskill + 10 : target;
+
+    return static_cast<int>(deciskill_exp_needed(target, sk)
+                            - deciskill_exp_needed(you_deciskill, sk));
 }
 
 /**
@@ -214,7 +228,7 @@ float scaled_skill_cost(skill_type sk)
     if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
         return 0;
     int baseline = skill_cost_baseline();
-    int next_level = one_level_cost(sk);
+    int next_level = target_cost(sk);
     if (you.skill_manual_points[sk])
         baseline *= 2;
 
@@ -1626,20 +1640,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 {
     // TODO: should this use skill_state?
     // TODO: can `amount` be converted to fixed point?
-    double level;
-    double fractional = modf(amount, &level);
-    if (level >= MAX_SKILL_LEVEL)
-    {
-        level = MAX_SKILL_LEVEL;
-        fractional = 0;
-    }
-
-    unsigned int target = skill_exp_needed(level, skill);
-    if (fractional)
-    {
-        target += (skill_exp_needed(level + 1, skill)
-                  - skill_exp_needed(level, skill)) * fractional + 1;
-    }
+    unsigned int target = deciskill_exp_needed(amount, skill);
 
     // We're calculating you.skill_points[skill] and calculating the new
     // you.total_experience to update skill cost.
@@ -2541,6 +2542,32 @@ static int _get_skill_cost_for(int level)
     }
     return skill_cost_table[level];
 }
+
+unsigned int deciskill_exp_needed(double amount, skill_type sk, species_type sp)
+{
+    double level;
+    double fractional = modf(amount, &level);
+    if (level >= MAX_SKILL_LEVEL)
+    {
+        level = MAX_SKILL_LEVEL;
+        fractional = 0;
+    }
+
+    unsigned int xp_needed = skill_exp_needed(level, sk, sp);
+    if (fractional)
+    {
+        xp_needed += (skill_exp_needed(level + 1, sk, sp)
+                      - xp_needed) * fractional + 1;
+    }
+    return xp_needed;
+}
+
+unsigned int deciskill_exp_needed(int decilev, skill_type sk, species_type sp)
+{
+    double amount = static_cast<double>(decilev) / 10;
+    return deciskill_exp_needed(amount, sk, sp);
+}
+
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {

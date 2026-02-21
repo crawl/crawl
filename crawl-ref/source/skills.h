@@ -54,7 +54,7 @@ typedef set<skill_type> skill_set;
 string skill_names(const skill_set &skills);
 
 int skill_cost_baseline();
-int one_level_cost(skill_type sk);
+int target_cost(skill_type sk);
 float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
@@ -125,6 +125,10 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+unsigned int deciskill_exp_needed(int decilev, skill_type sk,
+                                  species_type sp = you.species);
+unsigned int deciskill_exp_needed(double decilev, skill_type sk,
+                                  species_type sp = you.species);
 skill_diff skill_level_to_diffs(skill_type skill, double amount,
     int scaled_training=100, bool base_only=true);
 
