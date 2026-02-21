@@ -1144,6 +1144,23 @@ travel_open_doors = (avoid | approach | open)
             open = Autoexplore/travel will open doors. (default)
         This does not affect runed doors, which are always avoided.
 
+longwalk_range = (los | visible | unlimited | constant)
+        Set the maximum distance for longwalking (shift+direction by default).
+          los = Your current line of sight range. This is 7 for most species and
+                is affected by items such as scarf of shadows.
+          visible = Only visit visible tiles. This is limited by line of sight
+                range but also by clouds such as steam or fog that could limit
+                which tiles are visible.
+          unlimited = No distance limitation. You'll keep moving until something
+                else stops you.
+          constant = A constant maximum distance that you provide in
+                longwalk_range_constant.
+
+longwalk_range_constant = 7
+        If longwalk_range is set to constant, this will set the maximum distance
+        for longwalking (shift+direction by default). Otherwise, it will do
+        nothing.
+
 3-g     Command Enhancements.
 -----------------------------
 
