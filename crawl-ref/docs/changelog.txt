@@ -52,8 +52,8 @@ Branches, Environment
   - The orb type one will encounter that game is indicated via statues placed
     by the Temple entrance in the Dungeon and the Zot entrance in the Depths.
     This can also be viewed from the Dungeon overview screen (ctrl+O) once seen.
-* The last floor of Zot contains now contains two Boundless Tesseracts, immobile
-  enemy spawners with fast regeneration.
+* The last floor of Zot now contains two Boundless Tesseracts, immobile enemy
+  spawners with fast regeneration.
   - Tesseracts wake up the first time one kills an Orb Guardian. Once a
     tesseract wakes up, both are automatically detected, and 4 to 7 new monsters
     will appear outside of the Orb vault. Further monsters will spawn at random
@@ -125,7 +125,7 @@ Character
     create fragile clones of itself.
   - Bane of Paradox, which gives a small chance for each new monster you
     encounter to learn Manifold Assault with a chance to blink after casting it.
-  - Bane of Snow-blindness, which makes suffering cold damage something inflict
+  - Bane of Snow-blindness, which makes suffering cold damage sometimes inflict
     Blind and Weak.
   - Bane of Stumbling, which inflicts -25 EV when moving or standing still.
   - Bane of Succour, which makes killing enemies heal other nearby enemies
@@ -151,7 +151,7 @@ Character
   - Efficient Metabolism, which doubles the duration of potion status effects.
   - Feed Off Suffering, which restores HP and MP after killing poisoned or
     drained foes.
-  - Initially attractive, which sometimes pulls monsters close to the player
+  - Initially Attractive, which sometimes pulls monsters close to the player
     when first seen (and then sometimes wakes them up).
   - Lucky, which gives a small chance for floor items the player encounters to
     be randarts.
@@ -286,7 +286,7 @@ Interface and Options
 Items
 -----
 * Players now have four separate inventories: 52 pieces of gear (including
-  throwing weapons, and unlimited potions, scrolls, and evokable items.
+  throwing weapons), and unlimited potions, scrolls, and evokable items.
   - Each inventory uses a separate 52 letters (ie: both a scroll and a potion
     may be mapped to the same letter at the same time), and most consumables
     now have default letter assignments when identified.
@@ -299,7 +299,7 @@ Items
     contain an additional parchment shop.
   - Randbooks now only appear in select vaults or via acquirement and
     Sif Muna gifts.
-  - Higher-spell-level are now somewhat rarer early in the game and more
+  - Higher-level spells are now somewhat rarer early in the game and more
     common later.
 * New talismans:
   - Spore talismans, tier 2 talismans providing Spore Form. This melds one's
@@ -424,7 +424,7 @@ Monsters
 * Two new orb types rotate with orbs of fire in Zot each game:
   - Orbs of Winter, which cast Flash Freeze, Ozocubu's Refrigeration,
     and inflict a new Ostracism debuff that temporarily reduces one's piety.
-  - Orbs of Entropy, which cast Bolt of Draining, Acid Ball, and
+  - Orbs of Entropy, which cast Bolt of Draining and Acid Ball, and can
     inflict Doom upon their foes.
 * New unique: Cassandra, an oracle of Ashenzari who foresees great Doom in
   your future.
@@ -558,7 +558,7 @@ Tiles
   * Walls: Lair + Gloorx Vloq's rock walls, Lair + Orc + Elf + Depths entry +
            Zot:5 + Ossuary + Zonguldrok's Shrine stone walls, Vaults +
            Maxwell's Workshop metal walls, Vaults + Depths crystal walls.
-  * Floors: Lair, Elf's Hall of Blades, Vaults hard vaults, Vaults:$, Zot
+  * Floors: Lair, Elf's Hall of Blades, Vaults hard vaults, Vaults:5, Zot
             entry vaults, Cerebov's fortress, grassy vaults, crystal vaults.
   * GUI: exclusions.
 * New wall and floor tiles for vaults: stone magic shelves, magic crackling
