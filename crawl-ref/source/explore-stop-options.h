@@ -48,4 +48,5 @@ enum explore_stop_options
     ES_RUNED_DOOR                = 0x08000,
     ES_TRANSPORTER               = 0x10000,
     ES_RUNELIGHT                 = 0x20000,
+    ES_TALISMAN                  = 0x40000,
 };

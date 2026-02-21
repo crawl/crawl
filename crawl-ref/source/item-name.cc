@@ -3583,6 +3583,11 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
     case OBJ_TALISMANS:
+        if (item.base_type == OBJ_TALISMANS)
+        {
+            prefixes.push_back("talisman");
+            prefixes.push_back("talismans");
+        }
         if (is_unrandom_artefact(item))
             prefixes.push_back("unrand");
         if (is_artefact(item))

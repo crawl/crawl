@@ -630,6 +630,12 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
              autopickup_exceptions += inaccuracy, immolation
              autopickup_exceptions += uselessness, noise, torment
 
+        Several option keywords correspond to entire item classes. For example,
+        every talisman name now includes the prefix "talisman" and "talismans",
+        so a rule such as
+             autopickup_exceptions += >talismans
+        will match every talisman without enumerating their individual names.
+
         Unless you clear the list of exceptions, you won't need to set
         autopickup exceptions for potions except maybe for very special
         cases.
@@ -961,6 +967,14 @@ explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         greedy_visited_item_stack: Stop when visiting a stack of items
             previously unknown to the player, even if the stack contains
             nothing eligible for autopickup.
+
+        talismans: stop when talismans (regardless of their autopickup status)
+            come into view. This is useful when you want to ignore other item
+            types while still reacting to talismans, or vice versa. If you
+            previously listed item categories explicitly (e.g.
+            "explore_stop = items,stairs,...") add ",talismans" to that list to
+            retain the legacy behaviour of stopping for talismans alongside
+            other items.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
