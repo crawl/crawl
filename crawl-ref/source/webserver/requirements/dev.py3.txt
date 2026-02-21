@@ -129,7 +129,7 @@ typing-extensions==4.10.0
     # via mypy
 virtualenv==20.26.6
     # via tox
-wheel==0.43.0
+wheel==0.46.2
     # via pip-tools
 zipp==3.19.1
     # via importlib-metadata
