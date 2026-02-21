@@ -1092,6 +1092,12 @@ rest_wait_both = false
         when both HP and MP are fully restored, not when either one of
         them is restored.
 
+rest_wait_ignore_mp = false
+        Never continue to rest because MP are depleted. This option
+	overrules rest_wait_both. It is provided for characters who
+	are intermittently wielding antimagic weapons and have no use
+	for MP.
+
 rest_wait_ancestor = false
         If rest_wait_ancestor is set to true then resting will only stop when
         the ancestor's health is fully restored in addition to player HP or MP

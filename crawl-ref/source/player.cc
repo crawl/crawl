@@ -4044,7 +4044,8 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (_should_stop_resting(you.magic_points, you.max_magic_points))
+        if (_should_stop_resting(you.magic_points, you.max_magic_points)
+            && !Options.rest_wait_ignore_mp)
             interrupt_activity(activity_interrupt::full_mp);
         you.redraw_magic_points = true;
     }
@@ -5827,7 +5828,7 @@ bool player::is_sufficiently_rested(bool starting) const
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
                 || !hp_interrupts)
-        && (!player_regenerates_mp()
+        && (!player_regenerates_mp() || Options.rest_wait_ignore_mp
                 || _should_stop_resting(magic_points, max_magic_points, !starting)
                 || !mp_interrupts)
         && (can_freely_move || !hp_interrupts);
