@@ -32,7 +32,7 @@ vector<monster* > get_nearby_monsters(bool want_move = false,
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, bool check_dist = true,
-                 int range = -1);
+                 int range = -1, string* reason = nullptr);
 
 bool can_rest_here(bool announce = false);
 
