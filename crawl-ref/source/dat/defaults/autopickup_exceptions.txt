@@ -22,7 +22,7 @@ ae += scroll of noise
 
 # Autopickup elemental evokers after useless and forbidden exclusions,
 # so that autopickup for these items will respect god conducts.
-ae += >horn of Geryon, <evoker
+ae += <evoker
 
 ### good_item backstop (keep last) ###
 
