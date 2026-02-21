@@ -150,18 +150,18 @@ static string _seen_monsters_announcement(const vector<monster*> &visible,
     if (visible.size() == 1)
     {
         const monster& m = *visible[0];
-        return make_stringf("%s is nearby!", m.name(DESC_A).c_str());
+        return make_stringf("%s is nearby", m.name(DESC_A).c_str());
     }
     if (visible.size() > 1)
-        return "There are monsters nearby!";
+        return "there are monsters nearby";
     if (sensed_monster)
-        return "There is a strange disturbance nearby!";
+        return "there is a strange disturbance nearby";
     return "";
 }
 
 static void _announce_monsters(string announcement, vector<monster*> &visible)
 {
-    mprf(MSGCH_WARN, "%s", announcement.c_str());
+    mprf(MSGCH_WARN, "%s!", announcement.c_str());
 
     if (Options.use_animations & UA_MONSTER_IN_SIGHT)
     {
@@ -226,8 +226,18 @@ vector<monster* > get_nearby_monsters(bool want_move,
     return mons;
 }
 
+#define UNSAFE_MSG(msg) {                           \
+    if (announce || reason)                         \
+    {                                               \
+        if (announce)                               \
+            mprf(MSGCH_WARN, "%s!", msg);           \
+        if (reason)                                 \
+            *reason = msg;                          \
+        return false;                               \
+    }}
+
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
-                 bool check_dist, int range)
+                 bool check_dist, int range, string* reason)
 {
     if (!just_monsters)
     {
@@ -241,50 +251,20 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             // Qazlal immunity will allow for it, however.
             bool your_fault = cloud_is_yours_at(you.pos());
             if (cloud_damages_over_time(type, want_move, your_fault))
-            {
-                if (announce)
-                {
-                    mprf(MSGCH_WARN, "You are in a cloud of %s!",
-                         cloud_type_name(type).c_str());
-                }
-                return false;
-            }
+                UNSAFE_MSG(make_stringf("you are in a cloud of %s", cloud_type_name(type).c_str()).c_str());
         }
 
         if (poison_is_lethal())
-        {
-            if (announce)
-            {
-                mprf(MSGCH_WARN,
-                     "There is a lethal amount of poison in your body!");
-            }
-            return false;
-        }
+            UNSAFE_MSG("there is a lethal amount of poison in your body");
 
         if (contam_max_damage() >= you.hp)
-        {
-            if (announce)
-                mprf(MSGCH_WARN, "You are contaminated with a potentially lethal amount of magic!");
-            return false;
-        }
+            UNSAFE_MSG("you are contaminated with a potentially lethal amount of magic");
 
         if (you.duration[DUR_STICKY_FLAME])
-        {
-            if (announce)
-                mprf(MSGCH_WARN, "You are on fire!");
-
-            return false;
-        }
+            UNSAFE_MSG("you are on fire");
 
         if (you.props[EMERGENCY_FLIGHT_KEY])
-        {
-            if (announce)
-            {
-                mprf(MSGCH_WARN,
-                     "You are being drained by your emergency flight!");
-            }
-            return false;
-        }
+            UNSAFE_MSG("you are being drained by your emergency flight");
 
         // No monster will attack you inside a sanctuary,
         // so presence of monsters won't matter -- until it starts shrinking...
@@ -307,11 +287,17 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
                    });
 
     const string announcement = _seen_monsters_announcement(visible, sensed);
-    if (!announce || announcement.empty())
-        return announcement.empty();
-    _announce_monsters(announcement, visible);
+    if (announcement.empty())
+        return true;
+
+    if (announce)
+        _announce_monsters(announcement, visible);
+    if (reason)
+        *reason = announcement;
+
     return false;
 }
+#undef UNSAFE_MSG
 
 bool can_rest_here(bool announce)
 {
