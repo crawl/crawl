@@ -638,10 +638,14 @@ floor_nerves5
 floor_nerves6
 
 %variation FLOOR_NERVES blue
-%hue 0 240
-%hue 15 255
-%hue 17 257
-%hue 18 258
+%hue 0 225
+%hue 15 218
+%hue 17 219
+%hue 18 215
+%lum 0 3
+%lum 15 3
+%lum 17 3
+%lum 18 3
 %repeat FLOOR_NERVES FLOOR_NERVES_BLUE
 %resetcol
 
