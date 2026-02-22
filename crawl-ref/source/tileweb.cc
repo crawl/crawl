@@ -800,6 +800,11 @@ void TilesFramework::send_options()
     finish_message();
 }
 
+void TilesFramework::invalidate_item(int index)
+{
+    m_current_player_info.inv[index].clear();
+}
+
 #define ZOOM_INC 0.1
 
 static void _set_option_fixedp(string name, fixedp<int,100> value)
