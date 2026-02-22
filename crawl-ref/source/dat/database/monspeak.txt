@@ -7405,7 +7405,7 @@ _Wiglaf_common_
 
 @The_monster@ says, "Och, ye'r asking fur it now."
 
-VISUAL: @The_monster@ straightens out a crease in @possessive@ hat.
+VISUAL:@The_monster@ straightens out a crease in @possessive@ hat.
 %%%%
 _Wiglaf_rare_
 
@@ -7881,12 +7881,12 @@ VISUAL:@The_monster@ skips for a moment.
 %%%%
 Killer Klown triumphant
 
-VISUAL: @The_monster@ begins to take a bow, but slips on a banana peel.
+VISUAL:@The_monster@ begins to take a bow, but slips on a banana peel.
 
 @The_monster@ honks, delighted.
 
 # Yes, of course they could tie together a tree or a wisp.
-VISUAL: @The_monster@ begins to tie you into a balloon animal.
+VISUAL:@The_monster@ begins to tie you into a balloon animal.
 ## END Killer Klown ##
 %%%%
 ################## Laughing skull ###########################
