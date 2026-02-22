@@ -241,7 +241,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             return false;
 
         // Bane is a worse property than most negative values, so let's boost
-        // the resulting item a bit to temp people into using it.
+        // the resulting item a bit to tempt people into using it.
         if (artefact_property(item, ARTP_BANE))
             item.plus = min(12, item.plus + random_range(2, 5));
 
@@ -780,8 +780,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
     // Bane is a worse property than most negative values, so let's make them a
     // bit more tempting on average.
-    if (is_artefact(item) && artefact_property(item, ARTP_BANE))
-        item.plus = max((int)item.plus, armour_max_enchant(item) / 2 + random_range(1, 2));
+    if (is_artefact(item) && artefact_property(item, ARTP_BANE) && item.plus < armour_max_enchant(item) * 3 / 2)
+        item.plus += random_range(1, 3);
 
     // Having an ego before this function means that it was specifically requested
     // by itemspec, so we should try to honour that.
